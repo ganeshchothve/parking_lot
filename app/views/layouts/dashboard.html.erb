@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>EmbassyPortal</title>
+    <title>BookingPortal</title>
     <%= csrf_meta_tags %>
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
@@ -9,7 +9,7 @@
   </head>
 
   <body>
-    Welcome to Embassy Portal<br/>
+    Welcome to Booking Portal<br/>
     <% if user_signed_in? %>
       <%= link_to 'Dashbaord', dashboard_path %>
       <%= link_to 'Units', dashboard_project_units_path %>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>EmbassyPortal</title>
+    <title>BookingPortal</title>
     <%= csrf_meta_tags %>
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
@@ -9,7 +9,7 @@
   </head>
 
   <body>
-    Welcome to Embassy Portal
+    Welcome to Booking Portal
     <% unless user_signed_in? %>
       <%= link_to 'Register', register_path %>
     <% else %>
