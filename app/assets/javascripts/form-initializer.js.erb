@@ -1,0 +1,138 @@
+FormInitializer = (function(){
+  var initializeInputs = function(selector){
+    _.each($(selector).find('.selectize,.selectize-remote'), function(el){
+      if(!_.isEmpty($(el).data("selectize"))){
+        $(el).selectize("destroy");
+      }
+    });
+
+    _.each($(selector).find('.selectize'), function(e){
+      if($(e).data("create")){
+        $(e).selectize({create: true});
+      }else{
+        $(e).selectize();
+      }
+    });
+    $(selector).find('.phone, [type="tel"]').intlTelInput({
+			initialCountry: "in",
+			preferredCountries: ["in", "us", "gb"],
+			utilsScript: "<%= asset_path('intTelInputUtils.js') %>",
+			nationalMode: false
+		});
+    $(selector).find('.selectize-tags').selectize({create: true});
+    $(selector).find('.array-field').arrayField();
+    $(selector).find('.datepicker').each(function(){
+      var datepickerOptions = _.clone(Utils.datepickerOptions);
+      if($(this).data("minDate")){
+        datepickerOptions.minDate = moment($(this).data("minDate"), "DD/MM/YYYY")
+      }
+      if($(this).data("maxDate")){
+        datepickerOptions.maxDate = moment($(this).data("maxDate"), "DD/MM/YYYY")
+      }
+      if($(this).data("defaultDate")){
+        datepickerOptions.defaultDate = moment($(this).data("defaultDate"), "DD/MM/YYYY");
+      }
+      $(this).datetimepicker(datepickerOptions);
+    });
+
+    $(selector).find('.money-field').each(function(){
+      var value = $(this).val();
+      if(!_.isUndefined(value)) {
+        $(this).autoNumeric('init', Utils.autoNumericOptions);
+        if(_.isNumber(value)){
+          $(this).autoNumeric("set", value);
+        }
+      }
+    });
+
+    $(selector).find(".date_validation").datetimepicker(Utils.datepickerOptions);
+    $(selector).find('.datetimepicker').datetimepicker(Utils.datetimepickerOptions);
+    FileIcon.init($(".asset-delete"), $(".asset-icon"));
+    _.each($(selector).find(".fileupload"), function(){
+      $(this).fileUploader();
+    })
+    // _.each($(selector).find(".summernote"), function(el){
+    //   if(!$(el).attr("disabled")){
+    //     $(selector).find(".summernote").summernote({
+    //       disableDragAndDrop: true,
+    //       toolbar: [
+    //         // [groupName, [list of button]]
+    //         ['style', ['bold', 'italic', 'underline', 'clear']],
+    //         ['font', ['strikethrough', 'superscript', 'subscript']],
+    //         ['fontsize', ['fontsize']],
+    //         ['color', ['color']],
+    //         ['para', ['ul', 'ol', 'paragraph']],
+    //         ['link', ['link']],
+    //         ['table', ['table']],
+    //         ['height', ['height']]
+    //       ]
+    //     });
+    //   }
+    // });
+
+    _.each($(selector).find(".selectize-remote"), function(el){
+      var url = $(el).data("url");
+      var ds = $(el).data("ds");
+      if(!_.isEmpty(url)){
+        remote_selectize($(el), {ds: ds}, {url: url} );
+      }
+    });
+  };
+
+  var init = function(selector){
+    initializeInputs($(selector));
+
+    $('[data-toggle="popover"]').popover({
+      trigger: 'hover'
+    });
+    $(".link-to-add").data("association-insertion-method", 'prepend');
+    $(selector).on('cocoon:after-insert',function(e, field){
+      initializeInputs(field);
+    });
+  };
+
+  var remote_delectize_data = function(el){
+    var params = $(el).data("params");
+    params = params || {};
+    params = _.merge( params, {ds: true});
+    return params;
+  }
+
+  var remote_selectize = function(selector, data, options){
+    options = _.extend({}, options);
+    data = _.extend({}, data);
+    $(selector).selectize({
+      valueField: options.hasOwnProperty("valueField") ? options["valueField"] : "id",
+      labelField: 'name',
+      searchField: 'name',
+      create: false,
+      preload: ( _.isNull($(selector).data("preload")) || _.isUndefined($(selector).data("preload")) ) ? 'focus' : $(selector).data("preload") ,
+      load: function(query, callback){
+        $.ajax({
+          url: options["url"],
+          type: 'GET',
+          dataType: 'json',
+          data: _.merge(remote_delectize_data(this.$input), {
+            q: query
+          }),
+          error: function(one, two, three){
+            if(typeof callback == 'function'){
+              callback();
+            }
+          },
+          success: function(one, two, three){
+            if(typeof callback == 'function'){
+              callback(one);
+            }
+          }
+        });
+      }
+    });
+  };
+
+  return {
+    init: init,
+    remoteSelectize: remote_selectize
+  };
+
+})();

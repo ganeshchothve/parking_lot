@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>EmbassyPortal</title>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+    Welcome to Embassy Portal<br/>
+    <% if user_signed_in? %>
+      <%= link_to 'Dashbaord', dashboard_path %>
+      <%= link_to 'Units', dashboard_project_units_path %>
+      <%= link_to 'Receipts', dashboard_receipts_path %>
+    <% end %>
+
+    <p class="notice"><%= notice %></p>
+    <p class="alert"><%= alert %></p>
+    <%= yield %>
+  </body>
+</html>

@@ -1,0 +1,79 @@
+// TODO: handle case if sell.do throws error, the form is hidden and nothing will happen
+<% url = Rails.application.routes.url_helpers %>
+function sell_do_form_successfully_verified(e){
+  register_user_with_portal(e);
+}
+
+function sell_do_form_rendered(){
+  var variables = decodeURIComponent(window.location.search.substring(1)).split('&');
+  var params = {};
+  _.each(variables, function(v){
+    if(v.split("=").length == 2){
+      params[v.split("=")[0]] = v.split("=")[1];
+    }
+  });
+  if(params.name && params.phone && params.email && params.lead_id){
+    $('[name="sell_do[form][lead][name]"]').val(params.name);
+    $('[name="sell_do[form][lead][email]"]').val(params.email);
+    $('[name="sell_do[form][lead][phone]"]').val(params.phone);
+  }
+}
+
+function sell_do_form_successfully_submitted(e){
+  register_user_with_portal(e);
+}
+function register_user_with_portal(e){
+  var data = {
+    lead_id: e.lead_id,
+    name: unescape(e['sell_do[form][lead][name]'].replace("+", " ")),
+    email: unescape(e['sell_do[form][lead][email]']),
+    phone: unescape(e['sell_do[form][lead][phone]'])
+  }
+  $.ajax({
+    url: '<%= url.check_and_register_path %>',
+    data: data,
+    dataType: 'json',
+    type: 'POST',
+    success: function(one, two, three){
+      // show success message and redirect to after sign in path
+      new Noty({
+        text: one.responseJSON.success || 'Request completed successfully',
+        timeout: 3000,
+        type: 'success'
+      }).show();
+      setTimeout(function(){
+        window.location = '<%= url.root_path %>';
+      }, 1000);
+    },
+    error: function(one, two, three){
+      var str = ''
+      if(one.responseJSON.errors){
+        if(typeof one.responseJSON.errors == 'array'){
+          str += '<ul>';
+          _.each(one.responseJSON.errors, function(error){
+            str += '<li>' + error + '</li>';
+          });
+          str += '</ul>';
+        }
+        if(typeof one.responseJSON.errors == 'string'){
+          str = one.responseJSON.errors
+        }
+        if(str){
+          new Noty({
+            text: str,
+            timeout: 3000,
+            type: 'error'
+          }).show();
+        }
+      }
+      setTimeout(function(){
+        debugger;
+        if(_.isEmpty(one.responseJSON.url)){
+          window.location = '<%= url.register_path %>?email=' + data.email + '&phone=' + data.phone + '&name=' + data.name + '&lead_id=' + data.lead_id
+        }else{
+          window.location = one.responseJSON.url;
+        }
+      }, 3000);
+    }
+  });
+}

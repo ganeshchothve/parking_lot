@@ -1,0 +1,15 @@
+              Prefix Verb   URI Pattern                        Controller#Action
+    new_user_session GET    /users/sign_in(.:format)           devise/sessions#new
+        user_session POST   /users/sign_in(.:format)           devise/sessions#create
+destroy_user_session DELETE /users/sign_out(.:format)          devise/sessions#destroy
+   new_user_password GET    /users/password/new(.:format)      devise/passwords#new
+  edit_user_password GET    /users/password/edit(.:format)     devise/passwords#edit
+       user_password PATCH  /users/password(.:format)          devise/passwords#update
+                     PUT    /users/password(.:format)          devise/passwords#update
+                     POST   /users/password(.:format)          devise/passwords#create
+                root GET    /                                  home#index
+            register GET    /register(.:format)                home#register
+  check_and_register POST   /check_and_register(.:format)      home#check_and_register
+           dashboard GET    /dashboard(.:format)               dashboard#index
+       project_units GET    /dashboard/project_units(.:format) dashboard#project_units
+            receipts GET    /dashboard/receipts(.:format)      dashboard#receipts

@@ -1,0 +1,90 @@
+User Sign up
+  Clicks on the register link
+  We might have data on the user - like campaign, bedrooms preference, etc
+  Fills up sell.do form
+  On success from Sell.Do:
+    if user is new lead:
+      if user available on portal:
+        show already registered message user and ask to login
+        send error log email to us (this is not a valid state)
+      else
+        Register user on the portal
+        Auto login the user, send email, disable confirmations
+        Enable token authentication on the user - for easier emails, and possible sell.do sales auto-login on portal
+      end
+    if user is old lead:
+      if user available on portal:
+        show already registered message to user and ask to login
+      else
+        Register user on the portal, auto login
+      end
+    end
+  on error from sell.do:
+    refresh page, fill in the details again on the form (may be insert into URL before refresh or cookies), show error message and ask user to try again, raise error log email to us
+
+
+Block Unit or make blocking payment
+  User can browse Inventory
+  See available units and click on 'hold with Rs. 30,000'
+  Or the user can just click on pay Rs. 30,000 and lock the rate
+  User chooses any unit, send a request to sfdc, ask for price, availability and request hold for 5 min:
+    on success:
+      put the unit on hold in the portal
+        check if user.total_balance_pending <= -30,000 (he has already made a payment but not blocked the unit)
+        if yes
+          send the user to payment gateway
+        else
+          send user to payment success loop
+        end
+    on error:
+      display unable to block and refresh the page
+
+  User visits the payment page:
+    Completes transaction,
+      on payment success:
+        make entry in portal for a payment receipt, and send email to user
+        update user.total_amount_paid
+        send request to sfdc to move the unit to 'blocked'
+        on success:
+          block in the portal
+          update user.total_balance_pending
+          send email to user
+        on error:
+          show error to user
+          refresh page, if still available allow user to block again (now without payment); else ask to choose another unit, write in email log to us
+
+Inventory update API:
+  via URL
+    directly sent from sfdc
+    check nothing and directly update
+  via excel
+    uploaded in a pre-defined format, can be sent by sfdc to us or we will create a std format for them to generate
+
+
+User has many units -> with status (hold, block, booked tentative, booked confirmed)
+User has receipts -> which also belong to a unit.
+  field :receipt_id, type: String
+  field :acounting_date, type: Date
+  field :payment_mode, type: String
+  field :issued_date, type: String # Date when cheque / DD etc are issued
+  field :issuing_bank, type: String # Bank which issued cheque / DD etc
+  field :issuing_bank_branch, type: String # Branch of bank
+  field :payment_identifier, type: String # cheque / DD number / online transaction reference from gateway
+  field :tds_challan, type: Boolean
+  field :total_amount, type: Float # Total amount
+  field :payment_status, type: String # pending, success, failed
+  field :payment_type, type: String # blocking, booking
+  belongs_to :user -> always required
+  belongs_to :unit -> required unless payment_type == 'blocking' # allow the user to make a payment of 30,000 without any unit
+
+User has many refund requests:
+  belongs_to :unit
+  belongs_to :user
+  reason for request: String
+  status: "pending", "resolved"
+  on create send email to CRM team
+
+User
+  has_many :units
+  total_amount_paid:
+  total_balance_pending: # can be negative if payment is made without blocking any unit
