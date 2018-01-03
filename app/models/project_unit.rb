@@ -15,12 +15,13 @@ class ProjectUnit
   belongs_to :user, optional: true
   has_many :receipts
   has_many :user_requests
+  has_and_belongs_to_many :user_kycs
 
   validates :status, :name, :base_price, :booking_price, presence: true
   validates :base_price, numericality: { greater_than: 0 }
   validates :booking_price, numericality: { greater_than: ProjectUnit.blocking_amount }
   validates :status, inclusion: {in: Proc.new{ ProjectUnit.available_statuses.collect{|x| x[:id]} } }
-  validates :user_id, presence: true, if: Proc.new { |unit| ['available', 'not_available'].exclude?(unit.status) }
+  validates :user_id, :user_kyc_ids, presence: true, if: Proc.new { |unit| ['available', 'not_available'].exclude?(unit.status) }
 
   def self.available_statuses
     [

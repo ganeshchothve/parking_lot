@@ -43,6 +43,7 @@ class User
   has_many :receipts
   has_many :project_units
   has_many :user_requests
+  has_many :user_kycs
 
   validates :name, :phone, :lead_id, presence: true
   validates :lead_id, uniqueness: true
@@ -72,5 +73,9 @@ class User
 
   def total_unattached_balance
     self.receipts.where(status: 'success', project_unit_id: nil).sum(:total_amount)
+  end
+
+  def kyc_ready?
+    self.user_kycs.present?
   end
 end

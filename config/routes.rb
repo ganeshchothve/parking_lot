@@ -21,8 +21,9 @@ Rails.application.routes.draw do
     post 'project_units/:project_unit_id', to: 'dashboard#update_project_unit', as: :dashboard_update_project_unit
     post 'hold_project_unit/:project_unit_id', to: 'dashboard#hold_project_unit', as: :dashboard_hold_project_unit
     get 'checkout/(:project_unit_id)', to: 'dashboard#checkout', as: :dashboard_checkout
-    get 'payment/(:project_unit_id)', to: 'dashboard#payment', as: :dashboard_payment
+    match 'payment/(:project_unit_id)', to: 'dashboard#payment', as: :dashboard_payment, via: [:get, :patch]
     resources :receipts
+    resources :user_kycs, except: [:show, :destroy]
   end
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

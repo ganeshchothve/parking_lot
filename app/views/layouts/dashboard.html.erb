@@ -22,9 +22,12 @@
     <h6>Total Un-attached Balance: <%= current_user.total_unattached_balance %></h6>
     <% if user_signed_in? %>
       <%= link_to 'Dashboard', dashboard_path %>
+      <%= link_to 'KYCs', user_kycs_path %>
       <%= link_to 'Units', dashboard_project_units_path %>
       <%= link_to 'Receipts', receipts_path %>
-      <%= link_to 'Direct Blocking payment', dashboard_checkout_path %>
+      <% if ReceiptPolicy.new(current_user, Receipt.new(user: current_user)).new? %>
+        <%= link_to 'Direct Blocking payment', dashboard_checkout_path %>
+      <% end %>
       <%= link_to 'Logout', destroy_user_session_path, method: 'delete' %>
     <% end %>
     <p class="notice"><%= notice %></p>

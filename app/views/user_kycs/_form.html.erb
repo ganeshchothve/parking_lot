@@ -1,0 +1,95 @@
+<%= form_with(model: user_kyc, local: true, id: 'user_kyc_form') do |f| %>
+  <% if user_kyc.errors.any? %>
+    <div id="error_explanation" class="alert alert-danger">
+      <ul>
+      <% user_kyc.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="form-group">
+    <%= f.label :name, class: 'control-label label-required' %>
+    <%= f.text_field :name, class: 'form-control', required: 'required' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :email, class: 'control-label label-required' %>
+    <%= f.email_field :email, class: 'form-control', required: 'required' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :phone, class: 'control-label label-required' %><br/>
+    <%= f.text_field :phone, class: 'form-control phone', required: 'required' %>
+  </div>
+
+  <div class="form-group" style="position: relative">
+    <%= f.label :dob, class: 'control-label label-required' %>
+    <!-- TODO: check if you want to restrict the dob to 18 years age -->
+    <%= f.text_field :dob, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.dob.strftime("%d/%m/%Y"), "data-max-date": (Date.today - 1.day).strftime("%d/%m/%Y"), value: f.object.dob.strftime("%d/%m/%Y") %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :pan_number, class: 'control-label label-required' %>
+    <%= f.text_field :pan_number, class: 'form-control', required: 'required' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :aadhaar, class: 'control-label' %>
+    <%= f.text_field :aadhaar, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :aadhaar, class: 'control-label' %>
+    <%= f.text_field :aadhaar, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :anniversary, class: 'control-label' %>
+    <%= f.text_field :anniversary, class: 'form-control datepicker' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :nri, class: 'control-label' %><br/>
+    <%= f.check_box :nri %> Yes
+  </div>
+
+  <div class="form-group">
+    <%= f.label :poa, class: 'control-label' %><br/>
+    <%= f.check_box :poa %> Yes
+  </div>
+
+  <div class="form-group">
+    <%= f.label :gstn, class: 'control-label' %>
+    <%= f.text_field :gstn, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :company_name, class: 'control-label' %>
+    <%= f.text_field :company_name, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :loan_required, class: 'control-label' %><br/>
+    <%= f.check_box :loan_required %> Yes
+  </div>
+
+  <div class="form-group">
+    <%= f.label :existing_customer, class: 'control-label' %><br/>
+    <%= f.check_box :existing_customer %> Yes
+  </div>
+
+  <div class="form-group">
+    <%= f.label :comments, class: 'control-label' %>
+    <%= f.text_area :comments, class: 'form-control' %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit 'Save', class: 'btn btn-primary' %>
+  </div>
+<% end %>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($("#user_kyc_form"));
+  });
+<% end %>

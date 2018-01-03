@@ -4,31 +4,31 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def hold_project_unit?
-    record.status == 'available'
+    record.status == 'available' && user.kyc_ready?
   end
 
   def update_project_unit?
-    record.user_id == user.id
+    record.user_id == user.id && user.kyc_ready?
   end
 
   def payment?
-    checkout?
+    checkout? && user.kyc_ready?
   end
 
   def process_payment?
-    checkout?
+    checkout? && user.kyc_ready?
   end
 
   def checkout?
-    (['hold', 'blocked', 'booked_tentative', 'booked_confirmed'].include?(record.status) && record.user_id == user.id)
+    (['hold', 'blocked', 'booked_tentative', 'booked_confirmed'].include?(record.status) && record.user_id == user.id) && user.kyc_ready?
   end
 
   def block?
-    (['hold'].include?(record.status) && record.user_id == user.id)
+    (['hold'].include?(record.status) && record.user_id == user.id) && user.kyc_ready?
   end
 
   def permitted_attributes params={}
-    attributes = [:status, :user_id]
+    attributes = [:status, user_kyc_ids: []]
     attributes
   end
 end

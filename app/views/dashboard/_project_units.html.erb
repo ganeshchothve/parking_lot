@@ -10,12 +10,40 @@
   <tbody>
     <% project_units.each do |project_unit| %>
     <tr>
-      <td><%= project_unit.name %></td>
+      <td>
+        <%= project_unit.name %>
+        <div class="modal fade" id="unit_kyc_<%= project_unit.id %>" role="dialog">
+          <div class="modal-dialog" role="document">
+            <%= form_for project_unit, url: dashboard_hold_project_unit_path(project_unit_id: project_unit.id), html: {class: 'checkout_project_unit', method: 'post'} do |f| %>
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Choose your KYC</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <%= f.text_field :status, value: 'hold' %>
+                <div class="form-group">
+                  <%= f.label :user_kyc_ids %>
+                  <%= f.select :user_kyc_ids, current_user.user_kycs.collect{|x| [x.name, x.id.to_s]}, {prompt: 'Select'}, multiple: true, class: 'selectize', required: 'required' %>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <!-- , class: 'bpjs-project-unit-hold', data: {'bpjs-id': project_unit.id.to_s}  -->
+                <%= f.submit "Checkout", class: 'btn btn-primary' %>
+                <button type="button" class="btn btn-primary">Save changes</button>
+              </div>
+            </div>
+            <% end %>
+          </div>
+        </div>
+      </td>
       <td><%= project_unit.status %></td>
       <td><%= project_unit.user_id.present? ? project_unit.user.name : "-" %></td>
       <td class="text-right">
         <% if ProjectUnitPolicy.new(current_user, project_unit).hold_project_unit? %>
-          <%= link_to 'Hold', 'javascript:;', class: 'bpjs-project-unit-hold', data: {'bpjs-id': project_unit.id.to_s} %>
+          <%= link_to 'Hold', "#unit_kyc_#{ project_unit.id }", 'data-toggle': 'modal' %>
         <% end %>
         <% if ProjectUnitPolicy.new(current_user, project_unit).block? %>
           <%= link_to 'Make Payment', dashboard_checkout_path(project_unit_id: project_unit.id) %>
@@ -30,6 +58,6 @@
 </table>
 <%= javascript_tag do %>
 $(document).ready(function(){
-  Inventory.init();
+  FormInitializer.init($('.checkout_project_unit'));
 });
 <% end %>

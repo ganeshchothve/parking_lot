@@ -32,7 +32,6 @@
 //= require file-icon
 //= require form-initializer
 //= require registration
-//= require project-units
 
 $.ajaxSetup({
   headers: {

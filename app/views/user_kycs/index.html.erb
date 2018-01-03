@@ -1,0 +1,29 @@
+<table class='table table-responsive'>
+  <thead class='thead-default'>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>DOB</th>
+      <th>PAN</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @user_kycs.each do |user_kyc| %>
+      <tr>
+        <td><%= user_kyc.name %></td>
+        <td><%= user_kyc.email %></td>
+        <td><%= user_kyc.phone %></td>
+        <td><%= user_kyc.dob %></td>
+        <td><%= user_kyc.pan_number %></td>
+        <td><%= link_to 'Edit', edit_user_kyc_path(user_kyc) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New User Kyc', new_user_kyc_path %>

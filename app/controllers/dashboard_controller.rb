@@ -19,6 +19,8 @@ class DashboardController < ApplicationController
     if params[:project_unit_id].present?
       @project_unit = ProjectUnit.find(params[:project_unit_id])
       authorize @project_unit
+    else
+      authorize(Receipt.new(user: current_user), :new?)
     end
   end
 
@@ -33,6 +35,8 @@ class DashboardController < ApplicationController
       end
 
       @receipt.project_unit = @project_unit
+    else
+      authorize(Receipt.new(user: current_user), :new?)
     end
     if @receipt.save
       if @receipt.status == "pending" # if we are just tagging an already successful receipt, we dont need to send the user to payment gateway
@@ -67,19 +71,22 @@ class DashboardController < ApplicationController
   def hold_project_unit
     @project_unit = ProjectUnit.find(params[:project_unit_id])
     authorize @project_unit
+    @project_unit.attributes = permitted_attributes(@project_unit)
     # TODO: get a lock on this model. Nobody can modify it.
     respond_to do |format|
       # TODO: handle this API method for other status updates. Currently its assuming its a hold request
       case hold_on_third_party_inventory
       when 'hold'
-        format.json { render json: {project_unit: @project_unit}, status: 200 }
+        format.html { redirect_to dashboard_checkout_path(project_unit_id: @project_unit.id) }
       when 'not_available'
-        format.json { render json: {errors: 'The unit is not available'}, status: 422 }
+        flash[:notice] = 'The unit is not available'
+        format.html { redirect_to dashboard_project_units_path }
       when 'price_change'
         flash[:notice] = 'The Unit price has changed'
-        format.json { render json: {project_unit: @project_unit}, status: 200 }
+        format.html { redirect_to dashboard_checkout_path(project_unit_id: @project_unit.id) }
       when 'error'
-        format.json { render json: {errors: 'We cannot process your request at this time. Please retry'}, status: 422 }
+        flash[:notice] = 'We cannot process your request at this time. Please retry'
+        format.html { redirect_to dashboard_project_units_path }
       end
     end
   end
