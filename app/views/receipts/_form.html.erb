@@ -1,0 +1,14 @@
+<% if @receipt.errors.present? %>
+  <div class="alert alert-danger">
+    <ul>
+      <% @receipt.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+<%= form_for @receipt do |f| %>
+<%= f.text_field :total_amount, min: 0 %>
+<%= f.text_field :project_unit_id %>
+<%= f.submit :save %>
+<% end %>

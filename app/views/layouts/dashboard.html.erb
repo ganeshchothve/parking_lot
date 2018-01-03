@@ -6,16 +6,22 @@
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_tag do %>
+      <% if user_signed_in? %>
+        if(typeof App === "undefined"){
+          App = {};
+        }
+        App.current_user = <%= raw current_user.to_json %>;
+      <% end %>
+    <% end %>
   </head>
-
   <body>
     Welcome to Booking Portal<br/>
     <% if user_signed_in? %>
-      <%= link_to 'Dashbaord', dashboard_path %>
+      <%= link_to 'Dashboard', dashboard_path %>
       <%= link_to 'Units', dashboard_project_units_path %>
-      <%= link_to 'Receipts', dashboard_receipts_path %>
+      <%= link_to 'Receipts', receipts_path %>
     <% end %>
-
     <p class="notice"><%= notice %></p>
     <p class="alert"><%= alert %></p>
     <%= yield %>

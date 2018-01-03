@@ -1,0 +1,40 @@
+// TODO: handle blocking of UI across all ajax requests and forms
+<% url = Rails.application.routes.url_helpers %>
+var Inventory = (function(){
+  var _init = function(){
+    $(document).off('click', '.bpjs-project-unit-hold', _hold);
+    $(document).on('click', '.bpjs-project-unit-hold', _hold);
+  }
+  var _hold = function(){
+    var project_unit_id = $(this).data('bpjs-id');
+    $.ajax({
+      url: '/dashboard/hold_project_unit/' + project_unit_id,
+      data: {
+        project_unit: {
+          status: 'hold'
+        }
+      },
+      dataType: 'json',
+      type: 'POST',
+      success: function(one, two, three){
+        // send user to checkout page
+        window.location = '/dashboard/checkout/' + project_unit_id
+      },
+      error: function(one, two, three){
+        // notify user about unit not available and send back
+        new Noty({
+          text: one.responseJSON.errors,
+          timeout: 3000,
+          type: 'error'
+        }).show();
+        setTimeout(function(){
+          window.location = '<%= url.dashboard_project_units_path %>';
+        }, 3000);
+      }
+    })
+  }
+  return {
+    init: _init,
+    hold: _hold
+  };
+})();

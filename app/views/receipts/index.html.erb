@@ -1,0 +1,26 @@
+<table class='table table-responsive'>
+  <thead class="th-default">
+    <tr>
+      <th>Receipt ID</th>
+      <th>Amount</th>
+      <th>Project Unit</th>
+      <th>Status</th>
+      <th class="text-right">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @receipts.each do |receipt| %>
+    <tr>
+      <td><%= receipt.receipt_id %></td>
+      <td><%= receipt.total_amount %></td>
+      <td><%= receipt.project_unit.present? ? receipt.project_unit.name : '-' %></td>
+      <td><%= receipt.status %></td>
+      <td class="text-right">
+        <% if receipt.status == 'success' %>
+          <%= link_to 'Print', receipt_path(receipt) %> <!-- TODO: Implement this -->
+        <% end %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

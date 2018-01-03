@@ -18,11 +18,11 @@ class Receipt
   belongs_to :user, optional: true
   belongs_to :project_unit, optional: true
 
-  validates :total_amount, :status, :payment_mode, :payment_type, :user_id, presence: true
+  validates :receipt_id, :total_amount, :status, :payment_mode, :payment_type, :user_id, presence: true
   validates :project_unit_id, presence: true, if: Proc.new{|receipt| receipt.payment_type != 'blocking'} # allow the user to make a blocking payment without any unit
-  validates :total_amount, numericality: { greater_than: 0 }
   validates :status, inclusion: {in: Proc.new{ Receipt.available_statuses.collect{|x| x[:id]} } }
   validates :payment_type, inclusion: {in: Proc.new{ Receipt.available_payment_types.collect{|x| x[:id]} } }
+  validate :validate_total_amount
 
   default_scope -> {desc(:created_at)}
 
@@ -37,7 +37,20 @@ class Receipt
   def self.available_payment_types
     [
       {id: 'blocking', text: 'Blocking'},
-      {id: 'Booking', text: 'Booking'}
+      {id: 'booking', text: 'Booking'}
     ]
+  end
+
+  private
+  def validate_total_amount
+    if self.total_amount <= 0
+      self.errors.add :total_amount, ' cannot be less than 0'
+    end
+
+    if self.payment_type == 'booking'
+      if self.total_amount > self.project_unit.total_balance_pending
+        self.errors.add :total_amount, " cannot be greater than #{self.project_unit.total_balance_pending}"
+      end
+    end
   end
 end

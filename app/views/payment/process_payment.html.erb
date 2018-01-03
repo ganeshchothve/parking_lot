@@ -1,0 +1,13 @@
+<% case @receipt.status %>
+<% when 'success' %>
+<h4><%= @receipt.status %></h4>
+<% when 'pending' %>
+<!-- TODO -->
+Let the customer know that the payment processing had an issue or that they must have not made a payment.
+Retry option or to contact support - if the payment has already gone through
+<% when 'failed' %>
+<h4><%= @receipt.status %></h4>
+<% if ProjectUnitPolicy.new(current_user, @receipt.project_unit).hold_project_unit? %>
+  <%= link_to 'Hold', 'javascript:;', class: 'bpjs-project-unit-hold', data: {'bpjs-id': @receipt.project_unit.id} %>
+<% end %>
+<% end %>

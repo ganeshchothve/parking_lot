@@ -1,7 +1,9 @@
+# TODO: replace all messages & flash messages
 class DashboardController < ApplicationController
   before_action :authenticate_user!
 
   def index
+    @project_units = current_user.project_units
   end
 
   def project_units
@@ -10,9 +12,99 @@ class DashboardController < ApplicationController
 
   def project_unit
     @project_unit = ProjectUnit.find(params[:project_unit_id])
+    authorize @project_unit
   end
 
-  def receipts
-    @receipts = current_user.receipts
+  def checkout
+    @project_unit = ProjectUnit.find(params[:project_unit_id])
+    authorize @project_unit
+  end
+
+  def payment
+    @project_unit = ProjectUnit.find(params[:project_unit_id])
+    authorize @project_unit
+    @receipt = Receipt.new(user: current_user, receipt_id: SecureRandom.hex, acounting_date: Date.today, payment_mode: 'online', total_amount: ProjectUnit.blocking_amount, project_unit: @project_unit)
+    if @receipt.save
+      if Rails.env.development?
+        redirect_to "/payment/hdfc/process_payment?receipt_id=#{@receipt.id}"
+      else
+        # redirect_to external_payment_gateway_path
+      end
+    else
+      redirect_to dashboard_checkout_path(project_unit_id: @project_unit.id)
+    end
+  end
+
+  def update_project_unit
+    @project_unit = ProjectUnit.find(params[:project_unit_id])
+    authorize @project_unit
+    respond_to do |format|
+      if @project_unit.update_attributes(permitted_attributes(@project_unit))
+        format.html { redirect_to dashboard_project_units_path }
+        format.json { render json: {project_unit: @project_unit}, status: 200 }
+      else
+        flash[:notice] = 'Could not update the project unit. Please retry'
+        format.html { redirect_to request.referer.present? ? request.referer : dashboard_project_units_path }
+        format.json { render json: {errors: @project_unit.errors.full_messages.uniq}, status: 422 }
+      end
+    end
+  end
+
+  def hold_project_unit
+    @project_unit = ProjectUnit.find(params[:project_unit_id])
+    authorize @project_unit
+    # TODO: get a lock on this model. Nobody can modify it.
+    respond_to do |format|
+      # TODO: handle this API method for other status updates. Currently its assuming its a hold request
+      case hold_on_sfdc
+      when 'hold'
+        format.json { render json: {project_unit: @project_unit}, status: 200 }
+      when 'not_available'
+        format.json { render json: {errors: 'The unit is not available'}, status: 422 }
+      when 'price_change'
+        flash[:notice] = 'The Unit price has changed'
+        format.json { render json: {project_unit: @project_unit}, status: 200 }
+      when 'error'
+        format.json { render json: {errors: 'We cannot process your request at this time. Please retry'}, status: 422 }
+      end
+    end
+  end
+
+  private
+  def hold_on_sfdc
+    sfdc_response = {}
+    sfdc_response_code = 200
+    if Rails.env.development?
+      # sfdc_response = {code: 'hold', project_unit: {status: 'hold'}}
+      # sfdc_response_code = 200
+      sfdc_response = {code: 'hold', project_unit: { status: 'hold', base_price: @project_unit.base_price + 1 } }
+      sfdc_response_code = 200
+      # sfdc_response = {code: 'not_available', project_unit: {status: 'not_available'}}
+      # sfdc_response_code = 200
+    elsif Rails.env.staging?
+      # hit sandbox SFDC
+    elsif Rails.env.production?
+      # hit production SFDC
+    end
+    # TODO: if sfdc timesouts, need to revert the hold on the project unit in our db
+    if sfdc_response_code == 200
+      @project_unit.map_sfdc(sfdc_response)
+      if @project_unit.base_price_changed?
+        @project_unit.user = current_user
+        code = 'price_change'
+      elsif @project_unit.status == 'hold'
+        @project_unit.user = current_user
+        code = 'hold'
+      elsif @project_unit.status != 'hold'
+        code = 'not_available'
+      end
+      unless @project_unit.save
+        binding.pry
+        code = 'error'
+      end
+    else
+      code = 'error'
+    end
+    code
   end
 end

@@ -67,7 +67,6 @@ function register_user_with_portal(e){
         }
       }
       setTimeout(function(){
-        debugger;
         if(_.isEmpty(one.responseJSON.url)){
           window.location = '<%= url.register_path %>?email=' + data.email + '&phone=' + data.phone + '&name=' + data.name + '&lead_id=' + data.lead_id
         }else{

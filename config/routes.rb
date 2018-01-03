@@ -12,11 +12,17 @@ Rails.application.routes.draw do
     resources :user_requests
   end
 
+  get 'payment/:gateway/process_payment', to: 'payment#process_payment'
+
   get :dashboard, to: 'dashboard#index', as: :dashboard
   scope :dashboard do
     get :project_units, to: 'dashboard#project_units', as: :dashboard_project_units
     get 'project_units/:project_unit_id', to: 'dashboard#project_unit', as: :dashboard_project_unit
-    get :receipts, to: 'dashboard#receipts', as: :dashboard_receipts
+    post 'project_units/:project_unit_id', to: 'dashboard#update_project_unit', as: :dashboard_update_project_unit
+    post 'hold_project_unit/:project_unit_id', to: 'dashboard#hold_project_unit', as: :dashboard_hold_project_unit
+    get 'checkout/:project_unit_id', to: 'dashboard#checkout', as: :dashboard_checkout
+    get 'payment/:project_unit_id', to: 'dashboard#payment', as: :dashboard_payment
+    resources :receipts
   end
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

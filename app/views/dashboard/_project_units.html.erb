@@ -1,0 +1,35 @@
+<table class='table table-responsive'>
+  <thead class="th-default">
+    <tr>
+      <th>Name</th>
+      <th>Status</th>
+      <th>User</th>
+      <th class="text-right">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% project_units.each do |project_unit| %>
+    <tr>
+      <td><%= project_unit.name %></td>
+      <td><%= project_unit.status %></td>
+      <td><%= project_unit.user_id.present? ? project_unit.user.name : "-" %></td>
+      <td class="text-right">
+        <% if ProjectUnitPolicy.new(current_user, project_unit).hold_project_unit? %>
+          <%= link_to 'Hold', 'javascript:;', class: 'bpjs-project-unit-hold', data: {'bpjs-id': project_unit.id.to_s} %>
+        <% end %>
+        <% if ProjectUnitPolicy.new(current_user, project_unit).block? %>
+          <%= link_to 'Make Payment', dashboard_checkout_path(project_unit_id: project_unit.id) %>
+        <% end %>
+        <% if ReceiptPolicy.new(current_user, Receipt.new(project_unit: project_unit, user: current_user)).booking_payment? %>
+          <%= link_to 'Make booking payment', new_receipt_path(project_unit_id: project_unit.id) %>
+        <% end %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= javascript_tag do %>
+$(document).ready(function(){
+  Inventory.init();
+});
+<% end %>
