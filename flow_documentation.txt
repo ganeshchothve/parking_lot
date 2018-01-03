@@ -27,7 +27,7 @@ Block Unit or make blocking payment
   User can browse Inventory
   See available units and click on 'hold with Rs. 30,000'
   Or the user can just click on pay Rs. 30,000 and lock the rate
-  User chooses any unit, send a request to sfdc, ask for price, availability and request hold for 5 min:
+  User chooses any unit, send a request to third_party_inventory, ask for price, availability and request hold for 5 min:
     on success:
       put the unit on hold in the portal
         check if user.total_balance_pending <= -30,000 (he has already made a payment but not blocked the unit)
@@ -44,7 +44,7 @@ Block Unit or make blocking payment
       on payment success:
         make entry in portal for a payment receipt, and send email to user
         update user.total_amount_paid
-        send request to sfdc to move the unit to 'blocked'
+        send request to third_party_inventory to move the unit to 'blocked'
         on success:
           block in the portal
           update user.total_balance_pending
@@ -55,10 +55,10 @@ Block Unit or make blocking payment
 
 Inventory update API:
   via URL
-    directly sent from sfdc
+    directly sent from third_party_inventory
     check nothing and directly update
   via excel
-    uploaded in a pre-defined format, can be sent by sfdc to us or we will create a std format for them to generate
+    uploaded in a pre-defined format, can be sent by third_party_inventory to us or we will create a std format for them to generate
 
 
 User has many units -> with status (hold, block, booked tentative, booked confirmed)

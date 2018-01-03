@@ -11,8 +11,6 @@ class User
   field :email, type: String, default: ""
   field :phone, type: String, default: ""
   field :lead_id, type: String
-  field :total_amount_paid, type: Float, default: 0
-  field :total_balance_pending, type: Float, default: 0
 
 
   field :encrypted_password, type: String, default: ""
@@ -58,5 +56,21 @@ class User
   # use this instead of email_changed? for rails >= 5.1
   def will_save_change_to_email?
     false
+  end
+
+  def unattached_blocking_receipt
+    return self.receipts.where(project_unit_id: nil, status: 'success', payment_type: 'blocking', total_amount: ProjectUnit.blocking_amount).first
+  end
+
+  def total_amount_paid
+    self.receipts.where(status: 'success').sum(:total_amount)
+  end
+
+  def total_balance_pending
+    self.project_units.in(status: ['blocked', 'booked_tentative', 'booked_confirmed']).sum{|x| x.pending_balance}
+  end
+
+  def total_unattached_balance
+    self.receipts.where(status: 'success', project_unit_id: nil).sum(:total_amount)
   end
 end

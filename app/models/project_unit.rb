@@ -26,6 +26,7 @@ class ProjectUnit
     [
       {id: 'available', text: 'Available'},
       {id: 'not_available', text: 'Not Available'},
+      {id: 'error', text: 'Error'},
       {id: 'hold', text: 'Hold'},
       {id: 'blocked', text: 'Blocked'},
       {id: 'booked_tentative', text: 'Tentative Booked'},
@@ -33,19 +34,50 @@ class ProjectUnit
     ]
   end
 
-  # reset the userid always if status changes and is available or not_available
+  # TODO: reset the userid always if status changes and is available or not_available
 
-  # Takes the sfdc response json / xml & applies it to the model attributes
-  def map_sfdc(sfdc_response)
-    self.attributes = sfdc_response[:project_unit] #TODO: modify this based on sfdc's reposnse json / xml
-  end
-
-  def total_balance_pending
+  def pending_balance
     if self.user_id.present?
       receipts_total = Receipt.where(user_id: self.user_id, project_unit_id: self.id, status: "success").sum(:total_amount)
       return (self.booking_price - receipts_total)
     else
       return nil
     end
+  end
+
+  def self.sync_trigger_attributes
+    ['status', 'user_id']
+  end
+
+  def sync_with_third_party_inventory
+    # TODO: write the actual code here
+    third_party_inventory_response_status = 200
+    return (third_party_inventory_response_status == 200)
+  end
+
+  def sync_with_selldo
+    # TODO: write the actual code here
+    selldo_response_status = 200
+    return (selldo_response_status == 200)
+  end
+
+  def process_payment!(receipt)
+    if receipt.status == 'success'
+      if receipt.payment_type == 'blocking' && self.status == 'hold'
+        self.status = 'blocked'
+      elsif receipt.payment_type == 'booking' && (self.status == 'booked_tentative' || self.status == 'blocked')
+        if self.pending_balance == 0
+          self.status = 'booked_confirmed'
+        else
+          self.status = 'booked_tentative'
+        end
+      end
+    elsif receipt.status == 'failed'
+      if receipt.payment_type == 'blocking' && self.status == 'hold'
+        self.status = 'available'
+        self.user_id = nil
+      end
+    end
+    self.save(validate: false)
   end
 end

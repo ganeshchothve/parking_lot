@@ -12,9 +12,12 @@ class ReceiptsController < ApplicationController
   end
 
   def new
-    redirect_to receipts_path if params[:project_unit_id].blank?
+    if params[:project_unit_id].blank?
+      redirect_to(receipts_path)
+      return
+    end
     project_unit = ProjectUnit.find(params[:project_unit_id])
-    @receipt = Receipt.new(project_unit_id: project_unit.id, user_id: current_user.id, total_amount: project_unit.total_balance_pending, status: 'booking')
+    @receipt = Receipt.new(project_unit_id: project_unit.id, user_id: current_user.id, total_amount: project_unit.pending_balance, status: 'booking')
     authorize @receipt
   end
 

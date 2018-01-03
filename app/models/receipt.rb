@@ -48,8 +48,8 @@ class Receipt
     end
 
     if self.payment_type == 'booking'
-      if self.total_amount > self.project_unit.total_balance_pending
-        self.errors.add :total_amount, " cannot be greater than #{self.project_unit.total_balance_pending}"
+      if self.total_amount > self.project_unit.pending_balance
+        self.errors.add :total_amount, " cannot be greater than #{self.project_unit.pending_balance}"
       end
     end
   end

@@ -1,10 +1,15 @@
-<% if flash[:notice].present? %>
-  <div class="alert alert-warning"><%= flash[:notice] %></div>
-<% end %>
-<h4><%= @project_unit.name %></h4>
-<%= link_to "Checkout", dashboard_payment_path(project_unit_id: @project_unit.id) %>
-<br/>
-<%= form_for @project_unit, url: dashboard_update_project_unit_path(project_unit_id: @project_unit.id), method: 'post' do |f| %>
-<%= f.hidden_field :status, value: 'available' %>
-<%= f.submit 'Cancel', class: 'btn btn-primary' %>
+<% if @project_unit.present? %>
+  <% if flash[:notice].present? %>
+    <div class="alert alert-warning"><%= flash[:notice] %></div>
+  <% end %>
+  <h4><%= @project_unit.name %></h4>
+  <%= link_to "Checkout", dashboard_payment_path(project_unit_id: @project_unit.id) %>
+  <br/>
+  <%= form_for @project_unit, url: dashboard_update_project_unit_path(project_unit_id: @project_unit.id), method: 'post' do |f| %>
+  <%= f.hidden_field :status, value: 'available' %>
+  <%= f.submit 'Cancel', class: 'btn btn-primary' %>
+  <% end %>
+<% else %>
+<h4>You are making a payment without choosing any project_unit</h4>
+<%= link_to "Checkout", dashboard_payment_path %>
 <% end %>

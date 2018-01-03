@@ -17,10 +17,15 @@
   </head>
   <body>
     Welcome to Booking Portal<br/>
+    <h6>Total Paid: <%= current_user.total_amount_paid %></h6>
+    <h6>Total Balance Pending: <%= current_user.total_balance_pending %></h6>
+    <h6>Total Un-attached Balance: <%= current_user.total_unattached_balance %></h6>
     <% if user_signed_in? %>
       <%= link_to 'Dashboard', dashboard_path %>
       <%= link_to 'Units', dashboard_project_units_path %>
       <%= link_to 'Receipts', receipts_path %>
+      <%= link_to 'Direct Blocking payment', dashboard_checkout_path %>
+      <%= link_to 'Logout', destroy_user_session_path, method: 'delete' %>
     <% end %>
     <p class="notice"><%= notice %></p>
     <p class="alert"><%= alert %></p>

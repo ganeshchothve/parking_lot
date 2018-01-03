@@ -16,19 +16,33 @@ class DashboardController < ApplicationController
   end
 
   def checkout
-    @project_unit = ProjectUnit.find(params[:project_unit_id])
-    authorize @project_unit
+    if params[:project_unit_id].present?
+      @project_unit = ProjectUnit.find(params[:project_unit_id])
+      authorize @project_unit
+    end
   end
 
   def payment
-    @project_unit = ProjectUnit.find(params[:project_unit_id])
-    authorize @project_unit
-    @receipt = Receipt.new(user: current_user, receipt_id: SecureRandom.hex, acounting_date: Date.today, payment_mode: 'online', total_amount: ProjectUnit.blocking_amount, project_unit: @project_unit)
+    @receipt = Receipt.new(user: current_user, receipt_id: SecureRandom.hex, acounting_date: Date.today, payment_mode: 'online', total_amount: ProjectUnit.blocking_amount)
+
+    if params[:project_unit_id]
+      @project_unit = ProjectUnit.find(params[:project_unit_id])
+      authorize @project_unit
+      if(current_user.total_unattached_balance >= ProjectUnit.blocking_amount)
+        @receipt = current_user.unattached_blocking_receipt
+      end
+
+      @receipt.project_unit = @project_unit
+    end
     if @receipt.save
-      if Rails.env.development?
-        redirect_to "/payment/hdfc/process_payment?receipt_id=#{@receipt.id}"
-      else
-        # redirect_to external_payment_gateway_path
+      if @receipt.status == "pending" # if we are just tagging an already successful receipt, we dont need to send the user to payment gateway
+        if Rails.env.development?
+          redirect_to "/payment/hdfc/process_payment?receipt_id=#{@receipt.id}"
+        else
+          # TODO: redirect_to external_payment_gateway_path
+        end
+      elsif @receipt.status == "success"
+        redirect_to dashboard_path
       end
     else
       redirect_to dashboard_checkout_path(project_unit_id: @project_unit.id)
@@ -56,7 +70,7 @@ class DashboardController < ApplicationController
     # TODO: get a lock on this model. Nobody can modify it.
     respond_to do |format|
       # TODO: handle this API method for other status updates. Currently its assuming its a hold request
-      case hold_on_sfdc
+      case hold_on_third_party_inventory
       when 'hold'
         format.json { render json: {project_unit: @project_unit}, status: 200 }
       when 'not_available'
@@ -71,24 +85,12 @@ class DashboardController < ApplicationController
   end
 
   private
-  def hold_on_sfdc
-    sfdc_response = {}
-    sfdc_response_code = 200
-    if Rails.env.development?
-      # sfdc_response = {code: 'hold', project_unit: {status: 'hold'}}
-      # sfdc_response_code = 200
-      sfdc_response = {code: 'hold', project_unit: { status: 'hold', base_price: @project_unit.base_price + 1 } }
-      sfdc_response_code = 200
-      # sfdc_response = {code: 'not_available', project_unit: {status: 'not_available'}}
-      # sfdc_response_code = 200
-    elsif Rails.env.staging?
-      # hit sandbox SFDC
-    elsif Rails.env.production?
-      # hit production SFDC
-    end
-    # TODO: if sfdc timesouts, need to revert the hold on the project unit in our db
-    if sfdc_response_code == 200
-      @project_unit.map_sfdc(sfdc_response)
+  def hold_on_third_party_inventory
+    third_party_inventory_response, third_party_inventory_response_code = ThirdPartyInventory.hold_on_third_party_inventory(@project_unit)
+    # TODO: if third_party_inventory timesouts, need to revert the hold on the project unit in our db
+    if third_party_inventory_response_code == 200
+      ThirdPartyInventory.map_third_party_inventory(@project_unit, third_party_inventory_response)
+      # once we have the updated model, just set the code for the controller method and update the project unit
       if @project_unit.base_price_changed?
         @project_unit.user = current_user
         code = 'price_change'
@@ -99,7 +101,6 @@ class DashboardController < ApplicationController
         code = 'not_available'
       end
       unless @project_unit.save
-        binding.pry
         code = 'error'
       end
     else
