@@ -4,7 +4,7 @@ class User
   include ArrayBlankRejectable
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable #:registerable Disbaling registration because we always create user after set up sell.do
+  devise :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable #:registerable Disbaling registration because we always create user after set up sell.do
 
   ## Database authenticatable
   field :name, type: String, default: ""
@@ -30,10 +30,10 @@ class User
   field :last_sign_in_ip,    type: String
 
   ## Confirmable
-  # field :confirmation_token,   type: String
-  # field :confirmed_at,         type: Time
-  # field :confirmation_sent_at, type: Time
-  # field :unconfirmed_email,    type: String # Only if using reconfirmable
+  field :confirmation_token,   type: String
+  field :confirmed_at,         type: Time
+  field :confirmation_sent_at, type: Time
+  field :unconfirmed_email,    type: String # Only if using reconfirmable
 
   ## Lockable
   # field :failed_attempts, type: Integer, default: 0 # Only if lock strategy is :failed_attempts
@@ -47,17 +47,7 @@ class User
 
   validates :name, :phone, :lead_id, presence: true
   validates :lead_id, uniqueness: true
-  validates :email, uniqueness: true, allow_blank: true
   validates :phone, uniqueness: true, phone: true # TODO: we can remove phone validation, as the validation happens in sell.do
-
-  def email_required?
-    false
-  end
-
-  # use this instead of email_changed? for rails >= 5.1
-  def will_save_change_to_email?
-    false
-  end
 
   def unattached_blocking_receipt
     return self.receipts.where(project_unit_id: nil, status: 'success', payment_type: 'blocking', total_amount: ProjectUnit.blocking_amount).first

@@ -1,10 +1,9 @@
-<!-- TODO: Issue with phone number formatting and finding the user during login -->
 <h2>Log in</h2>
 
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
   <div class="field">
-    <%= f.label :phone %><br />
-    <%= f.phone_field :phone, autofocus: true, autocomplete: "phone" %>
+    <%= f.label :email %><br />
+    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
   </div>
 
   <div class="field">
