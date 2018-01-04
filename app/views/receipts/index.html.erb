@@ -19,6 +19,9 @@
         <% if receipt.status == 'success' %>
           <%= link_to 'Print', receipt_path(receipt) %> <!-- TODO: Implement this -->
         <% end %>
+        <% if ReceiptPolicy.new(current_user, receipt).edit? %>
+          <%= link_to 'Edit', edit_admin_user_receipt_path(receipt.user_id, receipt) %> <!-- TODO: Implement this -->
+        <% end %>
       </td>
     </tr>
     <% end %>

@@ -6,7 +6,7 @@ class Receipt
   field :receipt_id, type: String
   field :acounting_date, type: Date
   field :payment_mode, type: String, default: 'online'
-  field :issued_date, type: String # Date when cheque / DD etc are issued
+  field :issued_date, type: Date # Date when cheque / DD etc are issued
   field :issuing_bank, type: String # Bank which issued cheque / DD etc
   field :issuing_bank_branch, type: String # Branch of bank
   field :payment_identifier, type: String # cheque / DD number / online transaction reference from gateway
@@ -44,13 +44,10 @@ class Receipt
   private
   def validate_total_amount
     if self.total_amount <= 0
-      self.errors.add :total_amount, ' cannot be less than 0'
+      self.errors.add :total_amount, ' cannot be less than or equal to 0'
     end
-
-    if self.payment_type == 'booking'
-      if self.total_amount > self.project_unit.pending_balance
-        self.errors.add :total_amount, " cannot be greater than #{self.project_unit.pending_balance}"
-      end
+    if self.project_unit.present? && (self.total_amount > self.project_unit.pending_balance)
+      self.errors.add :total_amount, " cannot be greater than #{self.project_unit.pending_balance}"
     end
   end
 end

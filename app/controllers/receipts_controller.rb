@@ -23,7 +23,7 @@ class ReceiptsController < ApplicationController
     end
     if params[:project_unit_id].present?
       project_unit = ProjectUnit.find(params[:project_unit_id])
-      @receipt = Receipt.new(project_unit_id: project_unit.id, user_id: @user, total_amount: project_unit.pending_balance, status: 'booking')
+      @receipt = Receipt.new(project_unit_id: project_unit.id, user_id: @user, total_amount: project_unit.pending_balance, payment_type: 'booking')
     else
       @receipt = Receipt.new(user_id: @user, payment_mode: 'cheque', payment_type: 'booking')
     end
@@ -34,19 +34,43 @@ class ReceiptsController < ApplicationController
     @receipt = Receipt.new(permitted_attributes(Receipt.new))
     @receipt.user = @user
     @receipt.receipt_id = SecureRandom.hex
-    @receipt.payment_type = 'booking'
+    if @receipt.project_unit_id.present?
+      if ['blocked', 'booked_tentative'].include?(@receipt.project_unit.status)
+        @receipt.payment_type = 'booking'
+      end
+    else
+      @receipt.payment_type = 'blocking'
+    end
     authorize @receipt
     respond_to do |format|
       if @receipt.save
         format.html {
-          if Rails.env.development?
-            redirect_to "/payment/hdfc/process_payment?receipt_id=#{@receipt.id}"
+          if @receipt.payment_mode == 'online'
+            if Rails.env.development?
+              redirect_to "/payment/hdfc/process_payment?receipt_id=#{@receipt.id}"
+            else
+              redirect_to root_path # TODO: redirect the user to the payment gateway link
+            end
           else
-            redirect_to root_path # TODO: redirect the user to the payment gateway link
+            redirect_to current_user.role?('user') ? root_path : admin_user_receipts_path(@user)
           end
         }
       else
         format.html { render 'new' }
+      end
+    end
+  end
+
+  def edit
+  end
+
+  def update
+    respond_to do |format|
+      if @receipt.update(permitted_attributes(@receipt))
+        format.html { redirect_to admin_user_receipts_path(@user), notice: 'Receipt was successfully updated.' }
+      else
+        format.html { render :edit }
+        format.json { render json: @receipt.errors, status: :unprocessable_entity }
       end
     end
   end

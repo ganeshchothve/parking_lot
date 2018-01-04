@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     resources :project_units, except: [:destroy]
     resources :users, except: [:update] do
       get '/new/:role', action: 'new', on: :collection, as: :new_by_role
-      resources :receipts, only: [:show, :index, :new, :create], controller: '/receipts'
+      resources :receipts, only: [:update, :edit, :show, :index, :new, :create], controller: '/receipts'
       resources :user_kycs, except: [:show, :destroy], controller: '/user_kycs'
     end
     resources :user_kycs, only: [:index], controller: '/user_kycs'
