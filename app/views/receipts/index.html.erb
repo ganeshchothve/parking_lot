@@ -24,3 +24,10 @@
     <% end %>
   </tbody>
 </table>
+
+<br>
+<% if ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? %>
+  <% unless current_user.role?('user') %>
+    <%= link_to 'New Receipt', new_admin_user_receipt_path(@user) %>
+  <% end %>
+<% end %>

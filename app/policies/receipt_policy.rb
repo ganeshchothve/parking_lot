@@ -1,10 +1,18 @@
 class ReceiptPolicy < ApplicationPolicy
+  def index?
+    true
+  end
+
   def new?
-    user.kyc_ready? && (record.project_unit.blank? || booking_payment?)
+    if user.role?('user')
+      user.kyc_ready? && (record.project_unit.blank? || booking_payment?)
+    else
+      record.user_id.present? && record.user.kyc_ready? && (record.project_unit.blank? || booking_payment?)
+    end
   end
 
   def create?
-    user.kyc_ready? && (record.project_unit.blank? || booking_payment?)
+    new?
   end
 
   def booking_payment?
@@ -14,6 +22,9 @@ class ReceiptPolicy < ApplicationPolicy
 
   def permitted_attributes params={}
     attributes = [:status, :project_unit_id, :total_amount]
+    unless user.role?('user')
+      attributes += [:payment_mode, :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, :payment_type]
+    end
     attributes
   end
 end

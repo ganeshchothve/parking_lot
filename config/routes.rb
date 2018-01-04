@@ -6,10 +6,14 @@ Rails.application.routes.draw do
   post :check_and_register, to: 'home#check_and_register', as: :check_and_register
 
   namespace :admin do
-    resources :project_units
-    resources :users
-    resources :receipts
-    resources :user_requests
+    resources :project_units, except: [:destroy]
+    resources :users, except: [:update] do
+      get '/new/:role', action: 'new', on: :collection, as: :new_by_role
+      resources :receipts, only: [:show, :index, :new, :create], controller: '/receipts'
+      resources :user_kycs, except: [:show, :destroy], controller: '/user_kycs'
+    end
+    resources :user_kycs, only: [:index], controller: '/user_kycs'
+    resources :user_requests, except: [:destroy]
   end
 
   get 'payment/:gateway/process_payment', to: 'payment#process_payment'

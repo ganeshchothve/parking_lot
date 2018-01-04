@@ -1,18 +1,19 @@
 # TODO: replace all messages & flash messages
 class UserKycsController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_user
   before_action :set_user_kyc, only: [:show, :edit, :update, :destroy]
   around_action :apply_policy_scope
   before_action :authorize_resource
 
-  layout 'dashboard'
+  layout :set_layout
 
   def index
     @user_kycs = UserKyc.all
   end
 
   def new
-    @user_kyc = UserKyc.new(user: current_user)
+    @user_kyc = UserKyc.new(user: @user)
   end
 
   def edit
@@ -20,11 +21,11 @@ class UserKycsController < ApplicationController
 
   def create
     @user_kyc = UserKyc.new(permitted_attributes(UserKyc.new))
-    @user_kyc.user = current_user
+    @user_kyc.user = @user
 
     respond_to do |format|
       if @user_kyc.save
-        format.html { redirect_to user_kycs_path, notice: 'User kyc was successfully created.' }
+        format.html { redirect_to after_sign_in_path_for(current_user), notice: 'User kyc was successfully created.' }
         format.json { render :show, status: :created, location: @user_kyc }
       else
         format.html { render :new }
@@ -36,7 +37,7 @@ class UserKycsController < ApplicationController
   def update
     respond_to do |format|
       if @user_kyc.update(permitted_attributes(@user_kyc))
-        format.html { redirect_to user_kycs_path, notice: 'User kyc was successfully updated.' }
+        format.html { redirect_to after_sign_in_path_for(current_user), notice: 'User kyc was successfully updated.' }
         format.json { render :show, status: :ok, location: @user_kyc }
       else
         format.html { render :edit }
@@ -46,12 +47,17 @@ class UserKycsController < ApplicationController
   end
 
   private
+  def set_user
+    @user = (params[:user_id].present? ? User.find(params[:user_id]) : current_user)
+  end
+
   def set_user_kyc
     @user_kyc = UserKyc.find(params[:id])
   end
 
   def authorize_resource
     if params[:action] == "index"
+      authorize UserKyc
     elsif params[:action] == "new"
       authorize UserKyc.new
     elsif params[:action] == "create"
@@ -62,8 +68,21 @@ class UserKycsController < ApplicationController
   end
 
   def apply_policy_scope
-    # TODO: handle this for non current_user logins
-    UserKyc.with_scope(UserKyc.where(user_id: current_user.id)) do
+    custom_scope = UserKyc.all.criteria
+    if current_user.role?('admin')
+      if params[:user_id].present?
+        custom_scope = custom_scope.where(user_id: params[:user_id])
+      end
+    elsif current_user.role?('channel_partner')
+      if params[:user_id].present?
+        custom_scope = custom_scope.where(user_id: params[:user_id])
+      else
+        custom_scope = custom_scope.where(user_id: current_user.id)
+      end
+    else
+      custom_scope = custom_scope.where(user_id: current_user.id)
+    end
+    UserKyc.with_scope(policy_scope(custom_scope)) do
       yield
     end
   end

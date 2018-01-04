@@ -1,6 +1,7 @@
 class PaymentController < ApplicationController
   before_action :authenticate_user!
-  layout 'dashboard'
+
+  layout :set_layout
 
   def process_payment
     if Rails.env.development? || request.post?

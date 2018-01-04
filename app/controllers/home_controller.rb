@@ -12,17 +12,17 @@ class HomeController < ApplicationController
 
   def check_and_register
     unless request.xhr?
-      redirect_to root_path
+      redirect_to (user_signed_in? ? after_sign_in_path : root_path)
     else
-      if user_signed_in?
+      if user_signed_in? && ['channel_partner', 'admin'].exclude?(current_user.role)
         respond_to do |format|
-          format.json { render json: {error: "You have already been logged in", url: root_path}, status: :unprocessable_entity }
+          format.json { render json: {errors: "You have already been logged in", url: root_path}, status: :unprocessable_entity }
         end
       else
         @user = User.or([{email: params['email']}, {phone: params['phone']}, {lead_id: params['lead_id']}]).first #TODO: check if you want to find uniquess on lead id also
         if @user
           respond_to do |format|
-            format.json { render json: {error: 'You have already registered. Email or Phone already taken. Please login', url: new_user_session_path}, status: :unprocessable_entity }
+            format.json { render json: {errors: 'A user with these details has already registered', url: (user_signed_in? ? admin_users_path : new_user_session_path)}, status: :unprocessable_entity }
           end
         else
           generated_password = Devise.friendly_token.first(8)

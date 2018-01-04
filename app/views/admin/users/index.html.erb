@@ -1,0 +1,39 @@
+<table class='table table-responsive'>
+  <thead class="th-default">
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Role</th>
+      <th>Lead ID</th>
+      <th class="text-right">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+    <tr>
+      <td><%= user.name %></td>
+      <td><%= user.email %></td>
+      <td><%= user.phone %></td>
+      <td><%= user.role %></td>
+      <td><%= user.lead_id %></td>
+      <td class="text-right">
+        <%= link_to "View Receipts", admin_user_receipts_path(user_id: user.id) %>
+        <%= link_to "View User KYCs", admin_user_user_kycs_path(user_id: user.id) %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= will_paginate @users %>
+
+<br>
+<% if UserPolicy.new(current_user, User.new(role: 'user')).new? %>
+  <%= link_to 'New User', new_admin_user_path %>
+<% end %>
+<% if UserPolicy.new(current_user, User.new(role: 'admin')).new? %>
+  <%= link_to 'New Admin', new_by_role_admin_users_path(role: 'admin') %>
+<% end %>
+<% if UserPolicy.new(current_user, User.new(role: 'channel_partner')).new? %>
+  <%= link_to 'New Channel Partner', new_by_role_admin_users_path(role: 'channel_partner') %>
+<% end %>

@@ -1,10 +1,20 @@
 class UserKycPolicy < ApplicationPolicy
   def index?
-    record.user_id == user.id
+    true
+  end
+
+  def new?
+    true
   end
 
   def edit?
-    record.user_id == user.id
+    if user.role?('user')
+      record.user_id == user.id
+    elsif user.role?('channel_partner')
+      record.user.channel_partner_id == user.id
+    else
+      true
+    end
   end
 
   def create?
@@ -12,7 +22,7 @@ class UserKycPolicy < ApplicationPolicy
   end
 
   def update?
-    record.user_id == user.id
+    edit?
   end
 
   def permitted_attributes params={}

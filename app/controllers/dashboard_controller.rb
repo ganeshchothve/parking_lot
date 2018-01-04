@@ -1,12 +1,15 @@
 # TODO: replace all messages & flash messages
 class DashboardController < ApplicationController
   before_action :authenticate_user!
+  layout :set_layout
 
   def index
+    authorize :dashboard, :index?
     @project_units = current_user.project_units
   end
 
   def project_units
+    authorize :dashboard, :project_units?
     @project_units = current_user.project_units
   end
 

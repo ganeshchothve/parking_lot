@@ -11,7 +11,8 @@ class User
   field :email, type: String, default: ""
   field :phone, type: String, default: ""
   field :lead_id, type: String
-
+  field :role, type: String, default: "user"
+  field :channel_partner_id, type: BSON::ObjectId
 
   field :encrypted_password, type: String, default: ""
 
@@ -45,9 +46,11 @@ class User
   has_many :user_requests
   has_many :user_kycs
 
-  validates :name, :phone, :lead_id, presence: true
-  validates :lead_id, uniqueness: true
+  validates :name, :phone, :role, presence: true
+  validates :lead_id, uniqueness: true, allow_blank: true
   validates :phone, uniqueness: true, phone: true # TODO: we can remove phone validation, as the validation happens in sell.do
+  validates :role, inclusion: {in: Proc.new{ User.available_roles.collect{|x| x[:id]} } }
+  validates :lead_id, presence: true, if: Proc.new{ |user| user.role?('user') }
 
   def unattached_blocking_receipt
     return self.receipts.where(project_unit_id: nil, status: 'success', payment_type: 'blocking', total_amount: ProjectUnit.blocking_amount).first
@@ -67,5 +70,25 @@ class User
 
   def kyc_ready?
     self.user_kycs.present?
+  end
+
+  def self.available_roles
+    [
+      {id: 'user', text: 'User'},
+      {id: 'admin', text: 'Admin'},
+      {id: 'channel_partner', text: 'Channel Partner'}
+    ]
+  end
+
+  def role?(role)
+    return (self.role.to_s == role.to_s)
+  end
+
+  def self.build_criteria params={}
+    selector = {}
+    if params[:fltrs].present?
+      # TODO: handle search here
+    end
+    self.where(selector)
   end
 end

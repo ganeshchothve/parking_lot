@@ -1,4 +1,19 @@
-<%= form_with(model: user_kyc, local: true, id: 'user_kyc_form') do |f| %>
+<%
+  if current_user.role?('user')
+    if @user_kyc.persisted?
+      url = user_kyc_path(@user_kyc)
+    else
+      url = user_kycs_path
+    end
+  else
+    if @user_kyc.persisted?
+      url = admin_user_user_kyc_path(@user, @user_kyc)
+    else
+      url = admin_user_user_kycs_path(@user)
+    end
+  end
+%>
+<%= form_with(model: user_kyc, local: true, id: 'user_kyc_form', url: url) do |f| %>
   <% if user_kyc.errors.any? %>
     <div id="error_explanation" class="alert alert-danger">
       <ul>
@@ -23,7 +38,7 @@
     <%= f.text_field :phone, class: 'form-control phone', required: 'required' %>
   </div>
 
-  <div class="form-group" style="position: relative">
+  <div class="form-group position-relative">
     <%= f.label :dob, class: 'control-label label-required' %>
     <!-- TODO: check if you want to restrict the dob to 18 years age -->
     <%= f.text_field :dob, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.dob.present? ? f.object.dob.strftime("%d/%m/%Y") : '', "data-max-date": (Date.today - 1.day).strftime("%d/%m/%Y"), value: f.object.dob.present? ? f.object.dob.strftime("%d/%m/%Y") : "" %>

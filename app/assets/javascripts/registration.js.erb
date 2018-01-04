@@ -1,7 +1,8 @@
 // TODO: handle case if sell.do throws error, the form is hidden and nothing will happen
 <% url = Rails.application.routes.url_helpers %>
+// TODO: Keep this or the successfully submitted method. Both cannot be calling the registration method
 function sell_do_form_successfully_verified(e){
-  register_user_with_portal(e);
+  // register_user_with_portal(e);
 }
 
 function sell_do_form_rendered(){
@@ -20,8 +21,14 @@ function sell_do_form_rendered(){
 }
 
 function sell_do_form_successfully_submitted(e){
+  if(App.current_user){
+    $(".sell_do_form_container").html('<div class="thankyou">Please wait, we have registered the user; generating login details & sending confirmation email / SMS to the user.</div>');
+  }else{
+    $(".sell_do_form_container").html('<div class="thankyou">Thank you for registering with us. Please check your email inbox and confirm your account.</div>')
+  }
   register_user_with_portal(e);
 }
+
 function register_user_with_portal(e){
   var data = {
     lead_id: e.lead_id,
@@ -42,7 +49,11 @@ function register_user_with_portal(e){
         type: 'success'
       }).show();
       setTimeout(function(){
-        window.location = '<%= url.root_path %>';
+        if(App.current_user){
+          window.location = '<%= url.root_path %>';
+        }else{
+          window.location = '<%= url.admin_users_path %>';
+        }
       }, 1000);
     },
     error: function(one, two, three){
@@ -68,7 +79,11 @@ function register_user_with_portal(e){
       }
       setTimeout(function(){
         if(_.isEmpty(one.responseJSON.url)){
-          window.location = '<%= url.register_path %>?email=' + data.email + '&phone=' + data.phone + '&name=' + data.name + '&lead_id=' + data.lead_id
+          if(App.current_user){
+            window.location = '<%= url.new_admin_user_path %>?email=' + data.email + '&phone=' + data.phone + '&name=' + data.name + '&lead_id=' + data.lead_id;
+          }else{
+            window.location = '<%= url.register_path %>?email=' + data.email + '&phone=' + data.phone + '&name=' + data.name + '&lead_id=' + data.lead_id;
+          }
         }else{
           window.location = one.responseJSON.url;
         }
