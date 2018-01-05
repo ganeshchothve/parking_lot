@@ -1,8 +1,17 @@
-<table class='table table-responsive'>
+<% unless current_user.role?('user') %>
+  <% unless ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? %>
+    <div class="alert alert-warning">
+      You might need to complete the user's KYC before you can take payments.
+    </div>
+  <% end %>
+<% end %>
+<table class='table'>
   <thead class="th-default">
     <tr>
       <th>Receipt ID</th>
-      <th>Amount</th>
+      <th>Amount (Rs.)</th>
+      <th>Mode</th>
+      <th>Details</th>
       <th>Project Unit</th>
       <th>Status</th>
       <th class="text-right">Actions</th>
@@ -13,24 +22,40 @@
     <tr>
       <td><%= receipt.receipt_id %></td>
       <td><%= receipt.total_amount %></td>
+      <td><%= Receipt.available_payment_modes.find{|x| x[:id] == receipt.payment_mode}[:text] %></td>
+      <td>
+        <% if receipt.status == 'online' %>
+          TODO
+          <div class='small'>Transaction ID: <%= receipt.payment_identifier %></div>
+        <% else %>
+          <div class='small'>Bank: <%= receipt.issuing_bank %></div>
+          <div class='small'>Branch: <%= receipt.issuing_bank_branch %></div>
+          <div class='small'>Date: <%= receipt.issued_date %></div>
+          <div class='small'>ID: <%= receipt.payment_identifier %></div>
+        <% end %>
+      </td>
       <td><%= receipt.project_unit.present? ? receipt.project_unit.name : '-' %></td>
-      <td><%= receipt.status %></td>
+      <td><%= Receipt.available_statuses.find{|x| x[:id] == receipt.status}[:text] %></td>
       <td class="text-right">
-        <% if receipt.status == 'success' %>
-          <%= link_to 'Print', receipt_path(receipt) %> <!-- TODO: Implement this -->
-        <% end %>
-        <% if ReceiptPolicy.new(current_user, receipt).edit? %>
-          <%= link_to 'Edit', edit_admin_user_receipt_path(receipt.user_id, receipt) %> <!-- TODO: Implement this -->
-        <% end %>
+        <div class="dropdown show">
+          <a class="btn btn-light dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+          <div class="dropdown-menu dropdown-menu-right">
+            <% if receipt.status == 'success' %>
+              <%= link_to 'Print', receipt_path(receipt), class: 'dropdown-item' %> <!-- TODO: Implement this -->
+            <% end %>
+            <% if ReceiptPolicy.new(current_user, receipt).edit? %>
+              <%= link_to 'Edit', edit_admin_user_receipt_path(receipt.user_id, receipt), class: 'dropdown-item' %> <!-- TODO: Implement this -->
+            <% end %>
+          </div>
+        </div>
       </td>
     </tr>
     <% end %>
   </tbody>
 </table>
 
-<br>
 <% if ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? %>
   <% unless current_user.role?('user') %>
-    <%= link_to 'New Receipt', new_admin_user_receipt_path(@user) %>
+    <%= link_to 'Add Receipt', new_admin_user_receipt_path(@user), class: 'btn btn-primary' %>
   <% end %>
 <% end %>

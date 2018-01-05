@@ -16,7 +16,7 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def edit?
-    !user.role?('user') && record.status == 'pending'
+    !user.role?('user') && ((user.role?('admin') && ['pending', 'clearance_pending'].include?(record.status)) || (user.role?('channel_partner') && record.status == 'pending'))
   end
 
   def update?
@@ -25,12 +25,25 @@ class ReceiptPolicy < ApplicationPolicy
 
   def booking_payment?
     project_unit = record.project_unit
-    project_unit.present? && project_unit.user_id == user.id && (project_unit.status == 'blocked' || project_unit.status == 'booked_tentative') && project_unit.pending_balance > 0 && user.kyc_ready?
+    unit_user = project_unit.user
+
+    valid = project_unit.present? && (project_unit.status == 'blocked' || project_unit.status == 'booked_tentative') && project_unit.pending_balance > 0 && unit_user.kyc_ready?
+
+    if user.role?('user')
+      valid = valid && user.id == unit_user.id
+    end
+    valid
   end
 
   def permitted_attributes params={}
-    attributes = [:project_unit_id, :total_amount]
-    unless user.role?('user')
+    attributes = []
+    if user.role?('user') || (record.user_id.present? && record.user.project_unit_ids.present?) && record.new_record?
+      attributes += [:project_unit_id]
+    end
+    if record.new_record? || record.status == 'pending'
+      attributes += [:total_amount]
+    end
+    if !user.role?('user') && (record.new_record? || record.status == 'pending')
       attributes += [:payment_mode, :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier]
     end
     if user.role?('admin')

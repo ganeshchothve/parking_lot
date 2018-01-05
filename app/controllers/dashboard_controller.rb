@@ -48,7 +48,7 @@ class DashboardController < ApplicationController
         else
           # TODO: redirect_to external_payment_gateway_path
         end
-      elsif @receipt.status == "success"
+      elsif ['clearance_pending', "success"].include?(@receipt.status)
         redirect_to dashboard_path
       end
     else

@@ -1,6 +1,12 @@
-<% if @user.role?('user') %>
-  <script src='http://localhost:8888/t/57c59a7a09b225f97800004a.js'></script>
-  <script src="http://localhost:8888/t/forms/57c59a7a09b225f97800004a/57c59dfa09b22569e20000b4.js" data-form-id="57c59dfa09b22569e20000b4"></script>
-<% else %>
-  <%= render 'form' %>
-<% end %>
+<div class="row">
+  <div class="col-md-8 border border-left-0 border-top-0 border-bottom-0">
+    <% if @user.role?('user') %>
+      <script src='http://localhost:8888/t/57c59a7a09b225f97800004a.js'></script>
+      <script src="http://localhost:8888/t/forms/57c59a7a09b225f97800004a/57c59dfa09b22569e20000b4.js" data-form-id="57c59dfa09b22569e20000b4"></script>
+    <% else %>
+      <%= render 'form' %>
+    <% end %>
+  </div>
+  <div class="col-md-4">
+  </div>
+</div>

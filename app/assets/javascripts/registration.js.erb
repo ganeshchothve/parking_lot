@@ -44,15 +44,15 @@ function register_user_with_portal(e){
     success: function(one, two, three){
       // show success message and redirect to after sign in path
       new Noty({
-        text: one.responseJSON.success || 'Request completed successfully',
+        text: one.success || 'Request completed successfully',
         timeout: 3000,
         type: 'success'
       }).show();
       setTimeout(function(){
         if(App.current_user){
-          window.location = '<%= url.root_path %>';
-        }else{
           window.location = '<%= url.admin_users_path %>';
+        }else{
+          window.location = '<%= url.root_path %>';
         }
       }, 1000);
     },

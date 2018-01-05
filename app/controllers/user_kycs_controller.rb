@@ -9,11 +9,15 @@ class UserKycsController < ApplicationController
   layout :set_layout
 
   def index
-    @user_kycs = UserKyc.all
+    @user_kycs = UserKyc.paginate(page: params[:page] || 1, per_page: 15)
   end
 
   def new
-    @user_kyc = UserKyc.new(user: @user)
+    if @user.user_kyc_ids.blank?
+      @user_kyc = UserKyc.new(user: @user, name: @user.name, email: @user.email, phone: @user.phone)
+    else
+      @user_kyc = UserKyc.new(user: @user)
+    end
   end
 
   def edit
@@ -59,7 +63,7 @@ class UserKycsController < ApplicationController
     if params[:action] == "index"
       authorize UserKyc
     elsif params[:action] == "new"
-      authorize UserKyc.new
+      authorize UserKyc.new(user: @user)
     elsif params[:action] == "create"
       authorize UserKyc.new(permitted_attributes(UserKyc.new))
     else

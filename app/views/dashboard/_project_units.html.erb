@@ -23,15 +23,14 @@
                 </button>
               </div>
               <div class="modal-body">
-                <%= f.text_field :status, value: 'hold' %>
                 <div class="form-group">
+                  <%= f.hidden_field :status, value: 'hold' %>
                   <%= f.label :user_kyc_ids %>
                   <%= f.select :user_kyc_ids, current_user.user_kycs.collect{|x| [x.name, x.id.to_s]}, {prompt: 'Select'}, multiple: true, class: 'selectize', required: 'required' %>
                 </div>
               </div>
               <div class="modal-footer">
-                <!-- , class: 'bpjs-project-unit-hold', data: {'bpjs-id': project_unit.id.to_s}  -->
-                <%= f.submit "Checkout", class: 'btn btn-primary' %>
+                <%= f.submit "Continue", class: 'btn btn-primary' %>
               </div>
             </div>
             <% end %>

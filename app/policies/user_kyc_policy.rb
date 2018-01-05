@@ -4,7 +4,7 @@ class UserKycPolicy < ApplicationPolicy
   end
 
   def new?
-    true
+    record.user_id.present? && record.user.role?('user')
   end
 
   def edit?

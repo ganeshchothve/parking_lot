@@ -31,16 +31,20 @@ class ReceiptsController < ApplicationController
   end
 
   def create
-    @receipt = Receipt.new(permitted_attributes(Receipt.new))
-    @receipt.user = @user
-    @receipt.receipt_id = SecureRandom.hex
-    if @receipt.project_unit_id.present?
-      if ['blocked', 'booked_tentative'].include?(@receipt.project_unit.status)
-        @receipt.payment_type = 'booking'
+    if params[:receipt][:project_unit_id]
+      project_unit = ProjectUnit.find(params[:receipt][:project_unit_id])
+    end
+    base_params = {user: @user, project_unit_id: project_unit.id}
+    if project_unit.present?
+      if ['blocked', 'booked_tentative'].include?(project_unit.status)
+        base_params[:payment_type] = 'booking'
       end
     else
-      @receipt.payment_type = 'blocking'
+      base_params[:payment_type] = 'blocking'
     end
+    @receipt = Receipt.new base_params
+    @receipt.assign_attributes(permitted_attributes(@receipt))
+    @receipt.receipt_id = SecureRandom.hex
     authorize @receipt
     respond_to do |format|
       if @receipt.save

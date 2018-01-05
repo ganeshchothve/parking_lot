@@ -1,2 +1,16 @@
 @import "bootstrap";
 @import "intlTelInput";
+.intl-tel-input {width: 100%;}
+
+// Overriding sell.do form styling
+.selldof .title{
+  display: none;
+  padding: 0;
+}
+.selldof_row{
+  margin: 0 -15px;
+}
+.selldof .btn[type='submit'], .sell_do_ctc_btn[type='submit'], .sell_do_verify_btn[type='submit']{
+  @extend .btn;
+  @extend .btn-primary;
+}

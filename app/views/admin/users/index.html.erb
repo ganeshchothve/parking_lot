@@ -1,4 +1,4 @@
-<table class='table table-responsive'>
+<table class='table'>
   <thead class="th-default">
     <tr>
       <th>Name</th>
@@ -15,25 +15,33 @@
       <td><%= user.name %></td>
       <td><%= user.email %></td>
       <td><%= user.phone %></td>
-      <td><%= user.role %></td>
-      <td><%= user.lead_id %></td>
+      <td><%= User.available_roles.find{|x| x[:id] == user.role}[:text] %></td>
+      <td><%= user.lead_id.present? ? user.lead_id : '-' %></td>
       <td class="text-right">
-        <%= link_to "View Receipts", admin_user_receipts_path(user_id: user.id) %>
-        <%= link_to "View User KYCs", admin_user_user_kycs_path(user_id: user.id) %>
+        <div class="dropdown show">
+          <a class="btn btn-light dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+          <div class="dropdown-menu dropdown-menu-right">
+            <%= link_to "View Receipts", admin_user_receipts_path(user_id: user.id), class: "dropdown-item"  %>
+            <%= link_to "View User KYCs", admin_user_user_kycs_path(user_id: user.id), class: "dropdown-item"  %>
+          </div>
+        </div>
       </td>
     </tr>
     <% end %>
   </tbody>
 </table>
 <%= will_paginate @users %>
-
-<br>
-<% if UserPolicy.new(current_user, User.new(role: 'user')).new? %>
-  <%= link_to 'New User', new_admin_user_path %>
-<% end %>
-<% if UserPolicy.new(current_user, User.new(role: 'admin')).new? %>
-  <%= link_to 'New Admin', new_by_role_admin_users_path(role: 'admin') %>
-<% end %>
-<% if UserPolicy.new(current_user, User.new(role: 'channel_partner')).new? %>
-  <%= link_to 'New Channel Partner', new_by_role_admin_users_path(role: 'channel_partner') %>
-<% end %>
+<div class="dropdown show">
+  <a class="btn btn-primary dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add new</a>
+  <div class="dropdown-menu">
+    <% if UserPolicy.new(current_user, User.new(role: 'user')).new? %>
+      <%= link_to 'New User', new_admin_user_path, class: 'dropdown-item' %>
+    <% end %>
+    <% if UserPolicy.new(current_user, User.new(role: 'admin')).new? %>
+      <%= link_to 'New Admin', new_by_role_admin_users_path(role: 'admin'), class: 'dropdown-item' %>
+    <% end %>
+    <% if UserPolicy.new(current_user, User.new(role: 'channel_partner')).new? %>
+      <%= link_to 'New Channel Partner', new_by_role_admin_users_path(role: 'channel_partner'), class: 'dropdown-item' %>
+    <% end %>
+  </div>
+</div>

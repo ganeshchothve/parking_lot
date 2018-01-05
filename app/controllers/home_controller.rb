@@ -27,6 +27,9 @@ class HomeController < ApplicationController
         else
           generated_password = Devise.friendly_token.first(8)
           @user = User.new(email: params['email'], phone: params['phone'], name: params['name'], password: generated_password, lead_id: params[:lead_id])
+          if user_signed_in?
+            @user.channel_partner_id = current_user.id
+          end
           # RegistrationMailer.welcome(user, generated_password).deliver #TODO: enable this. We might not need this if we are to use OTP based login
 
           respond_to do |format|

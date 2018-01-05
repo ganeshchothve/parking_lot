@@ -5,7 +5,7 @@ class ReceiptObserver < Mongoid::Observer
       project_unit = receipt.project_unit
       if project_unit.present?
         if project_unit.process_payment!(receipt)
-        else
+        elsif receipt.status != 'clearance_pending'
           # TODO: send us and embassy team an error message. Escalate this.
         end
       end
@@ -21,7 +21,7 @@ class ReceiptObserver < Mongoid::Observer
 
     # update project unit if a successful receipt is getting attached to a project_unit
     # update the user balance if receipt has no project unit
-    if receipt.project_unit_id_changed? && receipt.project_unit_id_was.blank? && receipt.status == 'success' && !receipt.status_changed?
+    if receipt.project_unit_id_changed? && receipt.project_unit_id_was.blank? && ['success', 'clearance_pending'].include?(receipt.status) && !receipt.status_changed?
       user = receipt.user
       project_unit = receipt.project_unit
       project_unit.process_payment!(receipt)
@@ -36,7 +36,17 @@ class ReceiptObserver < Mongoid::Observer
         ReceiptMailer.send_success(receipt.receipt_id).deliver_later
       elsif receipt.status == 'failed'
         ReceiptMailer.send_failure(receipt.receipt_id).deliver_later
+      elsif receipt.status == 'clearance_pending'
+        ReceiptMailer.send_clearance_pending(receipt.receipt_id).deliver_later
       end
+    end
+  end
+
+  def after_create receipt
+    if receipt.status == 'success'
+      ReceiptMailer.send_success(receipt.receipt_id).deliver_later
+    elsif receipt.status == 'clearance_pending'
+      ReceiptMailer.send_clearance_pending(receipt.receipt_id).deliver_later
     end
   end
 end

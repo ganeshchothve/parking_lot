@@ -37,13 +37,23 @@ class ProjectUnit
 
   # TODO: reset the userid always if status changes and is available or not_available
 
-  def pending_balance
+  def pending_balance(strict=false)
     if self.user_id.present?
-      receipts_total = Receipt.where(user_id: self.user_id, project_unit_id: self.id, status: "success").sum(:total_amount)
+      receipts_total = Receipt.where(user_id: self.user_id, project_unit_id: self.id)
+      if strict
+        receipts_total = receipts_total.where(status: "success")
+      else
+        receipts_total = receipts_total.in(status: ['clearance_pending', "success"])
+      end
+      receipts_total = receipts_total.sum(:total_amount)
       return (self.booking_price - receipts_total)
     else
       return nil
     end
+  end
+
+  def total_amount_paid
+    self.receipts.where(status: 'success').sum(:total_amount)
   end
 
   def self.sync_trigger_attributes
@@ -63,20 +73,29 @@ class ProjectUnit
   end
 
   def process_payment!(receipt)
-    if receipt.status == 'success'
-      if receipt.payment_type == 'blocking' && self.status == 'hold'
+    if ['success', 'clearance_pending'].include?(receipt.status)
+      # if the receipt has an amount greater than blocking amount and current status is hold, we block it
+      if receipt.total_amount >= ProjectUnit.blocking_amount && self.status == 'hold'
         self.status = 'blocked'
-      elsif receipt.payment_type == 'booking' && (self.status == 'booked_tentative' || self.status == 'blocked')
-        if self.pending_balance == 0
+      # if the receipt is success & the unit has already reached or moved ahead of blocked stage, we if have nothing to pending (with a strict check on only successful payments) - we confirm the booking, else just mark it tentative
+      elsif receipt.status == 'success' && self.status == 'booked_tentative' || self.status == 'blocked'
+        if self.pending_balance(true) == 0
           self.status = 'booked_confirmed'
-        else
+        elsif self.total_amount_paid > ProjectUnit.blocking_amount
           self.status = 'booked_tentative'
         end
       end
     elsif receipt.status == 'failed'
-      if receipt.payment_type == 'blocking' && self.status == 'hold'
-        self.status = 'available'
-        self.user_id = nil
+      # if the unit has any successful or clearance_pending payments other than this, we keep it still blocked
+      # else we just release the unit
+      if self.pending_balance == self.booking_price # not success or clearance_pending receipts tagged against this unit
+        if self.status == 'hold'
+          self.status = 'available'
+          self.user_id = nil
+        else
+          # TODO: we should display a message on the UI before someone marks the receipt as 'failed'. Because the unit might just get released
+          self.status = 'error'
+        end
       end
     end
     self.save(validate: false)

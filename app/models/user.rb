@@ -53,7 +53,7 @@ class User
   validates :lead_id, presence: true, if: Proc.new{ |user| user.role?('user') }
 
   def unattached_blocking_receipt
-    return self.receipts.where(project_unit_id: nil, status: 'success', payment_type: 'blocking', total_amount: ProjectUnit.blocking_amount).first
+    return self.receipts.in(status: ['success', 'clearance_pending']).where(project_unit_id: nil, payment_type: 'blocking').where(total_amount: {"$gte": ProjectUnit.blocking_amount}).first
   end
 
   def total_amount_paid
@@ -65,7 +65,7 @@ class User
   end
 
   def total_unattached_balance
-    self.receipts.where(status: 'success', project_unit_id: nil).sum(:total_amount)
+    self.receipts.in(status: ['success', 'clearance_pending']).where(project_unit_id: nil).sum(:total_amount)
   end
 
   def kyc_ready?
