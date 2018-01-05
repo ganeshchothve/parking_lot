@@ -30,10 +30,10 @@
           <a class="btn btn-light dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
           <div class="dropdown-menu dropdown-menu-right">
             <% if ReceiptPolicy.new(current_user, Receipt).index?(user) %>
-              <%= link_to "View Receipts", admin_user_receipts_path(user_id: user.id), class: "dropdown-item"  %>
+              <%= link_to "View #{global_labels['receipts']}", admin_user_receipts_path(user_id: user.id), class: "dropdown-item"  %>
             <% end %>
             <% if UserKycPolicy.new(current_user, UserKyc).index?(user) %>
-              <%= link_to "View User KYCs", admin_user_user_kycs_path(user_id: user.id), class: "dropdown-item"  %>
+              <%= link_to "View #{global_labels['user_kycs']}", admin_user_user_kycs_path(user_id: user.id), class: "dropdown-item"  %>
             <% end %>
           </div>
         </div>

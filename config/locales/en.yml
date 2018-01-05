@@ -1,6 +1,13 @@
 en:
   global:
     receipt: 'Payment'
+    user_kyc: 'User KYC'
+    receipts: 'Payments'
+    user_kycs: 'User KYCs'
+    users: 'Users'
+    user: 'User'
+    project_unit: 'Unit'
+    project_unit: 'Units'
   mongoid:
     attributes:
       receipt:
@@ -15,7 +22,7 @@ en:
         payment_type: "Payment Type (Towards Blocking or Booking)"
         reference_project_unit_id: "Interested Unit (the customer may or may not block this)"
         user_id: "Customer"
-        project_unit_id: "Project Unit"
+        project_unit_id: "Unit"
         creator_id: "Created by"
       user_kyc:
         name: "Name"
@@ -34,7 +41,7 @@ en:
         comments: "Pleaes mention any specific notes for our team"
         user_id: "Customer"
         creator: "Created By"
-        project_units: "Project Units"
+        project_units: "Units"
       project_unit:
         user_id: "Customer"
         receipt_ids: "Payments (associated with this Unit)"

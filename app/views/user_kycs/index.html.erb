@@ -6,19 +6,20 @@
       <% if UserPolicy.new(current_user, User).index? %>
         <li class="breadcrumb-item"><a href="<%= admin_users_path %>">Users</a></li>
       <% end %>
-      <li class="breadcrumb-item active" aria-current="page">User KYCs</li>
+      <li class="breadcrumb-item active" aria-current="page"><%= global_labels['user_kycs'] %></li>
     </ol>
   </nav>
   <% end %>
 <% end %>
 <table class='table'>
   <thead class='thead-default'>
+    <% labels = t('mongoid.attributes.user_kyc').with_indifferent_access %>
     <tr>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Phone</th>
-      <th>DOB</th>
-      <th>PAN</th>
+      <th><%= labels['name'] %></th>
+      <th><%= labels['email'] %></th>
+      <th><%= labels['phone'] %></th>
+      <th><%= labels['dob'] %></th>
+      <th><%= labels['pan_number'] %></th>
       <th class="text-right">Actions</th>
     </tr>
   </thead>
@@ -52,8 +53,8 @@
 
 <% if UserKycPolicy.new(current_user, UserKyc.new(user: @user)).new? %>
   <% if current_user.role?('user') %>
-    <%= link_to 'Add User KYC', new_user_kyc_path, class: 'btn btn-primary' %>
+    <%= link_to "Add #{global_labels['user_kyc']}", new_user_kyc_path, class: 'btn btn-primary' %>
   <% else %>
-    <%= link_to 'Add User KYC', new_admin_user_user_kyc_path(@user), class: 'btn btn-primary' %>
+    <%= link_to "Add #{global_labels['user_kyc']}", new_admin_user_user_kyc_path(@user), class: 'btn btn-primary' %>
   <% end %>
 <% end %>

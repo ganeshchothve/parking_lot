@@ -6,7 +6,7 @@
       <% if UserPolicy.new(current_user, User).index? %>
         <li class="breadcrumb-item"><a href="<%= admin_users_path %>">Users</a></li>
       <% end %>
-      <li class="breadcrumb-item active" aria-current="page">Receipts</li>
+      <li class="breadcrumb-item active" aria-current="page"><%= global_labels['receipts'] %></li>
     </ol>
   </nav>
   <% end %>
@@ -20,13 +20,14 @@
 <% end %>
 <table class='table'>
   <thead class="th-default">
+    <% labels = t('mongoid.attributes.receipt').with_indifferent_access %>
     <tr>
-      <th>Receipt ID</th>
-      <th>Amount (Rs.)</th>
-      <th>Mode</th>
+      <th><%= labels['receipt_id'] %></th>
+      <th><%= labels['total_amount'] %></th>
+      <th><%= labels['payment_mode'] %></th>
       <th>Details</th>
-      <th>Project Unit</th>
-      <th>Status</th>
+      <th><%= labels['project_unit_id'] %></th>
+      <th><%= labels['status'] %></th>
       <th class="text-right">Actions</th>
     </tr>
   </thead>
@@ -69,6 +70,6 @@
 
 <% if ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? %>
   <% unless current_user.role?('user') %>
-    <%= link_to 'Add Receipt', new_admin_user_receipt_path(@user), class: 'btn btn-primary' %>
+    <%= link_to "Add #{global_labels['receipt']}", new_admin_user_receipt_path(@user), class: 'btn btn-primary' %>
   <% end %>
 <% end %>
