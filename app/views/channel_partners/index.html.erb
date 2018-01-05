@@ -1,0 +1,47 @@
+<%= content_for :breadcrumbs do %>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="<%= after_sign_in_path_for(current_user) %>">Dashboard</a></li>
+      <li class="breadcrumb-item active" aria-current="page"><%= global_labels[:channel_partners] %></li>
+    </ol>
+  </nav>
+<% end %>
+<table class="table">
+  <thead class="thead-default">
+    <% labels = t('mongoid.attributes.channel_partner').with_indifferent_access %>
+    <tr>
+      <th><%= labels[:name] %></th>
+      <th><%= labels[:email] %></th>
+      <th><%= labels[:phone] %></th>
+      <th><%= labels[:rera_id] %></th>
+      <th><%= labels[:location] %></th>
+      <th><%= labels[:status] %></th>
+      <th><%= labels[:associated_user_id] %></th>
+      <th class='text-right'>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @channel_partners.each do |channel_partner| %>
+      <tr>
+        <td><%= channel_partner.name %></td>
+        <td><%= channel_partner.email %></td>
+        <td><%= channel_partner.phone %></td>
+        <td><%= channel_partner.rera_id %></td>
+        <td><%= channel_partner.location %></td>
+        <td><%= ChannelPartner.available_statuses.find{|x| x[:id] == channel_partner.status}[:text] %></td>
+        <td><%= channel_partner.associated_user_id.present? ? link_to(channel_partner.associated_user.name, admin_user_path(channel_partner.associated_user_id)) : '-' %></td>
+        <td class="text-right">
+          <div class="dropdown show">
+            <a class="btn btn-light dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <% if ChannelPartnerPolicy.new(current_user, channel_partner).edit? %>
+                <%= link_to 'Edit', edit_channel_partner_path(channel_partner), class: 'dropdown-item' %>
+              <% end %>
+            </div>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

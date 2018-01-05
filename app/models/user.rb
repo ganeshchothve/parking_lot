@@ -13,6 +13,8 @@ class User
   field :lead_id, type: String
   field :role, type: String, default: "user"
   field :channel_partner_id, type: BSON::ObjectId
+  field :rera_id, type: String
+  field :location, type: String
 
   field :encrypted_password, type: String, default: ""
 
@@ -49,6 +51,8 @@ class User
   validates :name, :phone, :role, presence: true
   validates :lead_id, uniqueness: true, allow_blank: true
   validates :phone, uniqueness: true, phone: true # TODO: we can remove phone validation, as the validation happens in sell.do
+  validates :rera_id, :location, presence: true, if: Proc.new{ |user| user.role?('channel_partner') }
+  validates :rera_id, uniqueness: true, allow_blank: true
   validates :role, inclusion: {in: Proc.new{ User.available_roles.collect{|x| x[:id]} } }
   validates :lead_id, presence: true, if: Proc.new{ |user| user.role?('user') }
 
@@ -74,7 +78,7 @@ class User
 
   def self.available_roles
     [
-      {id: 'user', text: 'User'},
+      {id: 'user', text: 'Customer'},
       {id: 'admin', text: 'Admin'},
       {id: 'channel_partner', text: 'Channel Partner'}
     ]

@@ -41,17 +41,20 @@ class ReceiptPolicy < ApplicationPolicy
 
   def permitted_attributes params={}
     attributes = []
-    if user.role?('user') || (record.user_id.present? && record.user.project_unit_ids.present?) && record.new_record?
+    if record.new_record? || record.status == 'pending'
+      attributes += [:payment_mode]
+    end
+    if user.role?('user') || (record.user_id.present? && record.user.project_unit_ids.present?) && record.status == 'pending'
       attributes += [:project_unit_id]
     end
-    if !user.role?('user') && record.user_id.present? && record.user.project_unit_ids.blank? && record.new_record?
+    if !user.role?('user') && record.user_id.present? && record.user.project_unit_ids.blank? && record.status == 'pending'
       attributes += [:reference_project_unit_id]
     end
     if record.new_record? || record.status == 'pending'
       attributes += [:total_amount]
     end
     if !user.role?('user') && (record.new_record? || record.status == 'pending')
-      attributes += [:payment_mode, :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier]
+      attributes += [:issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier]
     end
     if user.role?('admin')
       attributes += [:status]

@@ -7,7 +7,9 @@ en:
     users: 'Users'
     user: 'User'
     project_unit: 'Unit'
-    project_unit: 'Units'
+    project_units: 'Units'
+    channel_partner: 'Partner Registration'
+    channel_partners: 'Partner Registrations'
   mongoid:
     attributes:
       receipt:
@@ -47,3 +49,18 @@ en:
         receipt_ids: "Payments (associated with this Unit)"
         user_request_ids: "User Requests (associated with this Unit)"
         user_kyc_ids: "User KYCs (associated with this Unit)"
+      user:
+        name: 'Name'
+        email: 'Email'
+        phone: 'Phone'
+        rera_id: 'RERA Registration Number'
+        location: 'Location'
+        lead_id: 'Sell.Do Lead ID'
+      channel_partner:
+        name: 'Name'
+        email: 'Email'
+        phone: 'Phone'
+        rera_id: 'RERA Registration Number'
+        location: 'Location'
+        associated_user_id: 'Associated User'
+        status: 'Status'

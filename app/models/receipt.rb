@@ -26,7 +26,7 @@ class Receipt
   validates :payment_mode, inclusion: {in: Proc.new{ Receipt.available_payment_modes.collect{|x| x[:id]} } }
   validates :reference_project_unit_id, presence: true, if: Proc.new{ |receipt| receipt.creator.role != 'user' }
   validate :validate_total_amount
-  validates :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, presence: true, if: Proc.new{|receipt| receipt.payment_type != 'online' }
+  validates :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, presence: true, if: Proc.new{|receipt| receipt.payment_mode != 'online' }
   validate :status_changed
 
   default_scope -> {desc(:created_at)}
@@ -66,16 +66,16 @@ class Receipt
 
   private
   def validate_total_amount
-    if self.total_amount < ProjectUnit.blocking_amount && self.project_unit_id.blank?
+    if self.total_amount < ProjectUnit.blocking_amount && self.project_unit_id.blank? && self.new_record?
       self.errors.add :total_amount, " cannot be less than or equal to #{ProjectUnit.blocking_amount}"
     end
     if self.total_amount <= 0
       self.errors.add :total_amount, " cannot be less than or equal to 0"
     end
-    if self.project_unit_id.present? && (self.total_amount > self.project_unit.pending_balance)
+    if self.project_unit_id.present? && (self.total_amount > self.project_unit.pending_balance) && self.new_record?
       self.errors.add :total_amount, " cannot be greater than #{self.project_unit.pending_balance}"
     end
-    if self.reference_project_unit_id.present? && (self.total_amount > self.reference_project_unit.pending_balance({user_id: self.user_id}))
+    if self.reference_project_unit_id.present? && (self.total_amount > self.reference_project_unit.pending_balance({user_id: self.user_id})) && self.new_record?
       self.errors.add :total_amount, " cannot be greater than #{self.reference_project_unit.pending_balance({user_id: self.user_id})}"
     end
   end

@@ -25,7 +25,7 @@
         <%= link_to 'Dashboard', dashboard_path %>
       <% end %>
       <% if UserKycPolicy.new(current_user, UserKyc).index? %>
-        <%= link_to "global_labels['user_kycs']", user_kycs_path %>
+        <%= link_to "#{global_labels['user_kycs']}", user_kycs_path %>
       <% end %>
       <% if policy(:dashboard).project_units? %>
         <%= link_to "#{global_labels['project_units']}", dashboard_project_units_path %>

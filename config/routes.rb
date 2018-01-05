@@ -1,10 +1,9 @@
 Rails.application.routes.draw do
-  devise_for :users
   root to: "home#index"
-
+  devise_for :users
   get :register, to: 'home#register', as: :register
   post :check_and_register, to: 'home#check_and_register', as: :check_and_register
-
+  resources :channel_partners, except: [:destroy]
   namespace :admin do
     resources :project_units, only: [:index]
     resources :users, except: [:update] do

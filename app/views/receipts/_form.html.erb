@@ -17,9 +17,13 @@
     <% end %>
     <% if current_user.role?('user') %>
       <%= form_for @receipt do |f| %>
-        <%= f.text_field :total_amount, min: 0 %>
-        <%= f.text_field :project_unit_id %>
-        <%= f.submit "Save", class: 'btn btn-primary' %>
+        <div class="form-group">
+          <%= f.label :total_amount, class: 'control-label label-required' %>
+          <%= f.text_field :total_amount, min: 0, class: "form-control", required: 'required' %>
+        </div>
+        <%= f.hidden_field :project_unit_id %>
+        <%= f.hidden_field :payment_mode %>
+        <%= f.submit "Proceed", class: 'btn btn-primary' %>
       <% end %>
     <% else %>
       <%= form_for [:admin, @user, @receipt], html: {id: 'receipt_form'} do |f| %>
@@ -58,9 +62,13 @@
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              <%= f.label :total_amount, class: 'control-label label-required' %>
-              <%= f.number_field :total_amount, class: 'form-control', required: 'required', disabled: (policy(@receipt).editable_field?("total_amount") ? false : true) %>
-              <%= f.hidden_field :payment_type, class: 'form-control', required: 'required', disabled: (policy(@receipt).editable_field?("payment_type") ? false : true) %>
+              <% if @user.project_unit_ids.present? %>
+                <%= f.label :project_unit_id, class: 'control-label' %>
+                <%= f.select :project_unit_id, @user.project_units.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', autofocus: true, disabled: (policy(@receipt).editable_field?("project_unit_id") ? false : true) %>
+              <% else %>
+                <%= f.label :reference_project_unit_id, class: 'control-label label-required' %>
+                <%= f.select :reference_project_unit_id, f.object.reference_project_unit.present? ? [[f.object.reference_project_unit.name, f.object.reference_project_unit.id]] : [], {prompt: true}, class: 'selectize-remote', autofocus: true, disabled: (policy(@receipt).editable_field?("reference_project_unit_id") ? false : true), "data-url": admin_project_units_path, "data-params": {status: 'available'}.to_json, 'data-ds': 'ds' %>
+              <% end %>
             </div>
           </div>
           <div class="col-md-6">
@@ -70,15 +78,11 @@
             </div>
           </div>
         </div>
-          <div class="form-group">
-            <% if @user.project_unit_ids.present? %>
-              <%= f.label :project_unit_id, class: 'control-label' %>
-              <%= f.select :project_unit_id, @user.project_units.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', autofocus: true, disabled: (policy(@receipt).editable_field?("project_unit_id") ? false : true) %>
-            <% else %>
-              <%= f.label :reference_project_unit_id, class: 'control-label label-required' %>
-              <%= f.select :reference_project_unit_id, f.object.reference_project_unit.present? ? [[f.object.reference_project_unit.name, f.object.reference_project_unit.id]] : [], {prompt: true}, class: 'selectize-remote', autofocus: true, disabled: (policy(@receipt).editable_field?("reference_project_unit_id") ? false : true), "data-url": admin_project_units_path, "data-params": {status: 'available'}.to_json, 'data-ds': 'ds' %>
-            <% end %>
-          </div>
+        <div class="form-group">
+          <%= f.label :total_amount, class: 'control-label label-required' %>
+          <%= f.number_field :total_amount, class: 'form-control', required: 'required', disabled: (policy(@receipt).editable_field?("total_amount") ? false : true) %>
+          <%= f.hidden_field :payment_type, class: 'form-control', required: 'required', disabled: (policy(@receipt).editable_field?("payment_type") ? false : true) %>
+        </div>
         <%= f.submit "Save", class: 'btn btn-primary' %>
       <% end %>
       <%= javascript_tag do %>

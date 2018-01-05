@@ -22,7 +22,7 @@ class UserPolicy < ApplicationPolicy
   def permitted_attributes params={}
     attributes = [:name, :email, :phone, :lead_id]
     attributes += [:channel_partner_id] if user.role?('channel_partner')
-    attributes += [:role, :channel_partner_id] if user.role?('admin')
+    attributes += [:role, :channel_partner_id, :rera_id, :location] if user.role?('admin')
     attributes
   end
 end

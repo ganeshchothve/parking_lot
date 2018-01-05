@@ -38,7 +38,7 @@
       <td><%= receipt.total_amount %></td>
       <td><%= Receipt.available_payment_modes.find{|x| x[:id] == receipt.payment_mode}[:text] %></td>
       <td>
-        <% if receipt.status == 'online' %>
+        <% if receipt.payment_mode == 'online' %>
           TODO
           <div class='small'>Transaction ID: <%= receipt.payment_identifier %></div>
         <% else %>

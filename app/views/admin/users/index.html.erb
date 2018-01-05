@@ -8,12 +8,13 @@
 <% end %>
 <table class='table'>
   <thead class="th-default">
+    <% labels = t('mongoid.attributes.user').with_indifferent_access %>
     <tr>
       <th>Name</th>
       <th>Email</th>
       <th>Phone</th>
       <th>Role</th>
-      <th>Lead ID</th>
+      <th><%= labels[:lead_id] %></th>
       <th class="text-right">Actions</th>
     </tr>
   </thead>
@@ -47,7 +48,7 @@
   <a class="btn btn-primary dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add new</a>
   <div class="dropdown-menu">
     <% if UserPolicy.new(current_user, User.new(role: 'user')).new? %>
-      <%= link_to 'New User', new_admin_user_path, class: 'dropdown-item' %>
+      <%= link_to 'New Customer', new_admin_user_path, class: 'dropdown-item' %>
     <% end %>
     <% if UserPolicy.new(current_user, User.new(role: 'admin')).new? %>
       <%= link_to 'New Admin', new_by_role_admin_users_path(role: 'admin'), class: 'dropdown-item' %>
