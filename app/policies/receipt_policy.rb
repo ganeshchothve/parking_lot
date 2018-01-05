@@ -1,6 +1,10 @@
 class ReceiptPolicy < ApplicationPolicy
-  def index?
-    true
+  def index?(for_user=nil)
+    if for_user.present?
+      for_user.role?('user')
+    else
+      true
+    end
   end
 
   def new?

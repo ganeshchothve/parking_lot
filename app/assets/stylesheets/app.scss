@@ -1,5 +1,10 @@
 @import "bootstrap";
 @import "intlTelInput";
+label.label-required:after {
+  content: " *";
+  color: theme-color('danger');
+  font-weight: normal;
+}
 .intl-tel-input {width: 100%;}
 
 // Overriding sell.do form styling

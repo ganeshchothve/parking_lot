@@ -28,7 +28,7 @@ class DashboardController < ApplicationController
   end
 
   def payment
-    @receipt = Receipt.new(creator: current_user, user: current_user, receipt_id: SecureRandom.hex, acounting_date: Date.today, payment_mode: 'online', total_amount: ProjectUnit.blocking_amount, payment_type: 'blocking')
+    @receipt = Receipt.new(creator: current_user, user: current_user, receipt_id: SecureRandom.hex, payment_mode: 'online', total_amount: ProjectUnit.blocking_amount, payment_type: 'blocking')
 
     if params[:project_unit_id]
       @project_unit = ProjectUnit.find(params[:project_unit_id])
