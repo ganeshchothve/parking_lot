@@ -1,0 +1,23 @@
+<table class='table'>
+  <thead class="thead-default">
+    <tr>
+      <th>Name</th>
+      <th>Status</th>
+      <th>User</th>
+      <th class="text-right">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% project_units.each do |project_unit| %>
+    <tr>
+      <td><%= project_unit.name %></td>
+      <td><%= ProjectUnit.available_statuses.find{|x| x[:id] == project_unit.status}[:text] %></td>
+      <td><%= project_unit.user_id.present? ? project_unit.user.name : "-" %></td>
+      <td class="text-right">
+        <!-- TODO: direct link to receipts for this unit for this user -->
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= will_paginate project_units %>

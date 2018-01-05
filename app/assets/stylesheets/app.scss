@@ -1,5 +1,8 @@
 @import "bootstrap";
 @import "intlTelInput";
+body{
+  color: #666;
+}
 label.label-required:after {
   content: " *";
   color: theme-color('danger');
@@ -18,4 +21,11 @@ label.label-required:after {
 .selldof .btn[type='submit'], .sell_do_ctc_btn[type='submit'], .sell_do_verify_btn[type='submit']{
   @extend .btn;
   @extend .btn-primary;
+}
+label.control-label{
+  font-size: 11px;
+  color: #999;
+  text-transform: uppercase;
+  margin-bottom: 0;
+  line-height: 11px;
 }

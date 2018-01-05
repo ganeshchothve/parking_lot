@@ -56,6 +56,11 @@ en:
         rera_id: 'RERA Registration Number'
         location: 'Location'
         lead_id: 'Sell.Do Lead ID'
+        role: 'Role'
+        kyc_ready: 'Is the Customer KYC Ready?'
+        total_amount_paid: "Total Paid (you might some payments pending clearance)"
+        total_balance_pending: "Total Balance Pending (you might some payments pending clearance)"
+        total_unattached_balance: "Total Un-attached Balance (subject to clearance)"
       channel_partner:
         name: 'Name'
         email: 'Email'

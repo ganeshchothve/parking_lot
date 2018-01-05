@@ -16,6 +16,7 @@ class Admin::UsersController < AdminController
   end
 
   def show
+    @project_units = @user.project_units.paginate(page: params[:page] || 1, per_page: 15)
   end
 
   def new
