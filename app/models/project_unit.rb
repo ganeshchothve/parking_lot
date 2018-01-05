@@ -74,16 +74,12 @@ class ProjectUnit
 
   def process_payment!(receipt)
     if ['success', 'clearance_pending'].include?(receipt.status)
-      # if the receipt has an amount greater than blocking amount and current status is hold, we block it
-      if receipt.total_amount >= ProjectUnit.blocking_amount && self.status == 'hold'
+      if self.pending_balance(true) == 0
+        self.status = 'booked_confirmed'
+      elsif self.total_amount_paid > ProjectUnit.blocking_amount
+        self.status = 'booked_tentative'
+      elsif receipt.total_amount >= ProjectUnit.blocking_amount && self.status == 'hold'
         self.status = 'blocked'
-      # if the receipt is success & the unit has already reached or moved ahead of blocked stage, we if have nothing to pending (with a strict check on only successful payments) - we confirm the booking, else just mark it tentative
-      elsif receipt.status == 'success' && self.status == 'booked_tentative' || self.status == 'blocked'
-        if self.pending_balance(true) == 0
-          self.status = 'booked_confirmed'
-        elsif self.total_amount_paid > ProjectUnit.blocking_amount
-          self.status = 'booked_tentative'
-        end
       end
     elsif receipt.status == 'failed'
       # if the unit has any successful or clearance_pending payments other than this, we keep it still blocked
@@ -99,5 +95,14 @@ class ProjectUnit
       end
     end
     self.save(validate: false)
+  end
+
+  def self.build_criteria params={}
+    selector = {}
+    if params[:fltrs].present?
+      # TODO: handle search here
+    end
+    selector[:name] = ::Regexp.new(::Regexp.escape(params[:q]), 'i') if params[:q].present?
+    self.where(selector)
   end
 end

@@ -16,7 +16,7 @@
 //= require popper
 //= require bootstrap-sprockets
 //= require noty
-//= require underscore
+//= require lodash
 //= require intlTelInput
 //= require jquery.ui.widget
 //= require jquery.validate

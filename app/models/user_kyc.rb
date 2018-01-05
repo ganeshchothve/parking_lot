@@ -21,6 +21,7 @@ class UserKyc
   field :comments, type: String
 
   belongs_to :user
+  belongs_to :creator, class_name: 'User'
   has_and_belongs_to_many :project_units
 
   validates :name, :email, :phone, :dob, :pan_number, presence: false

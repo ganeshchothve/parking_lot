@@ -14,9 +14,11 @@ class Receipt
   field :total_amount, type: Float, default: 0 # Total amount
   field :status, type: String, default: 'pending' # pending, success, failed, clearance_pending
   field :payment_type, type: String, default: 'blocking' # blocking, booking
+  field :reference_project_unit_id, type: BSON::ObjectId # the channel partner or admin can choose this, but its not binding on the user to choose this reference unit
 
   belongs_to :user, optional: true
   belongs_to :project_unit, optional: true
+  belongs_to :creator, class_name: 'User'
 
   validates :receipt_id, :total_amount, :status, :payment_mode, :payment_type, :user_id, presence: true
   validates :payment_identifier, presence: true, if: Proc.new{|receipt| receipt.payment_mode != 'online' || (receipt.payment_type == 'online' && receipt.status != 'pending')}
@@ -24,6 +26,7 @@ class Receipt
   validates :status, inclusion: {in: Proc.new{ Receipt.available_statuses.collect{|x| x[:id]} } }
   validates :payment_type, inclusion: {in: Proc.new{ Receipt.available_payment_types.collect{|x| x[:id]} } }
   validates :payment_mode, inclusion: {in: Proc.new{ Receipt.available_payment_modes.collect{|x| x[:id]} } }
+  validates :reference_project_unit_id, presence: true, if: Proc.new{ |receipt| receipt.creator.role != 'user' }
   validate :validate_total_amount
   validate :status_changed
 

@@ -23,18 +23,19 @@ class ReceiptsController < ApplicationController
     end
     if params[:project_unit_id].present?
       project_unit = ProjectUnit.find(params[:project_unit_id])
-      @receipt = Receipt.new(project_unit_id: project_unit.id, user_id: @user, total_amount: project_unit.pending_balance, payment_type: 'booking')
+      @receipt = Receipt.new(creator: current_user, project_unit_id: project_unit.id, user_id: @user, total_amount: project_unit.pending_balance, payment_type: 'booking')
     else
-      @receipt = Receipt.new(user_id: @user, payment_mode: 'cheque', payment_type: 'booking')
+      @receipt = Receipt.new(creator: current_user, user_id: @user, payment_mode: 'cheque', payment_type: 'booking')
     end
     authorize @receipt
   end
 
   def create
-    if params[:receipt][:project_unit_id]
+    base_params = {user: @user, reference_project_unit_id: params[:receipt][:reference_project_unit_id]}
+    if params[:receipt][:project_unit_id].present?
       project_unit = ProjectUnit.find(params[:receipt][:project_unit_id])
+      base_params.merge!({project_unit_id: project_unit.id, reference_project_unit_id: project_unit.id})
     end
-    base_params = {user: @user, project_unit_id: project_unit.id}
     if project_unit.present?
       if ['blocked', 'booked_tentative'].include?(project_unit.status)
         base_params[:payment_type] = 'booking'
@@ -43,6 +44,7 @@ class ReceiptsController < ApplicationController
       base_params[:payment_type] = 'blocking'
     end
     @receipt = Receipt.new base_params
+    @receipt.creator = current_user
     @receipt.assign_attributes(permitted_attributes(@receipt))
     @receipt.receipt_id = SecureRandom.hex
     authorize @receipt

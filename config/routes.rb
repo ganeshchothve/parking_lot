@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   post :check_and_register, to: 'home#check_and_register', as: :check_and_register
 
   namespace :admin do
-    resources :project_units, except: [:destroy]
+    resources :project_units, only: [:index]
     resources :users, except: [:update] do
       get '/new/:role', action: 'new', on: :collection, as: :new_by_role
       resources :receipts, only: [:update, :edit, :show, :index, :new, :create], controller: '/receipts'

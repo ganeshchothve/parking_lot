@@ -70,12 +70,19 @@
             </div>
           </div>
         </div>
-        <% if @user.project_unit_ids.present? %>
           <div class="form-group">
-            <%= f.label :project_unit_id, class: 'control-label' %>
-            <%= f.select :project_unit_id, @user.project_units.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', autofocus: true, disabled: (policy(@receipt).editable_field?("project_unit_id") ? false : true) %>
+            <% if @user.project_unit_ids.present? %>
+              <%= f.label :project_unit_id, class: 'control-label' %>
+              <%= f.select :project_unit_id, @user.project_units.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', autofocus: true, disabled: (policy(@receipt).editable_field?("project_unit_id") ? false : true) %>
+            <% else %>
+              <%= f.label :reference_project_unit_id, class: 'control-label' %>
+              <%
+                reference_project_unit = f.object.reference_project_unit_id.present? ? ProjectUnit.find(f.object.reference_project_unit_id) : nil
+
+              %>
+              <%= f.select :reference_project_unit_id, reference_project_unit.present? ? [[reference_project_unit.name, reference_project_unit.id]] : [], {prompt: true}, class: 'selectize-remote', autofocus: true, disabled: (policy(@receipt).editable_field?("reference_project_unit_id") ? false : true), "data-url": admin_project_units_path, "data-params": {status: 'available'}.to_json, 'data-ds': 'ds' %>
+            <% end %>
           </div>
-        <% end %>
         <%= f.submit "Save", class: 'btn btn-primary' %>
       <% end %>
       <%= javascript_tag do %>

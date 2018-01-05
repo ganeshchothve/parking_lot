@@ -40,6 +40,9 @@ class ReceiptPolicy < ApplicationPolicy
     if user.role?('user') || (record.user_id.present? && record.user.project_unit_ids.present?) && record.new_record?
       attributes += [:project_unit_id]
     end
+    if !user.role?('user') && record.user_id.present? && record.user.project_unit_ids.blank? && record.new_record?
+      attributes += [:reference_project_unit_id]
+    end
     if record.new_record? || record.status == 'pending'
       attributes += [:total_amount]
     end

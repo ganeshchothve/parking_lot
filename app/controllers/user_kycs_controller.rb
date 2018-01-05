@@ -14,9 +14,9 @@ class UserKycsController < ApplicationController
 
   def new
     if @user.user_kyc_ids.blank?
-      @user_kyc = UserKyc.new(user: @user, name: @user.name, email: @user.email, phone: @user.phone)
+      @user_kyc = UserKyc.new(creator: current_user, user: @user, name: @user.name, email: @user.email, phone: @user.phone)
     else
-      @user_kyc = UserKyc.new(user: @user)
+      @user_kyc = UserKyc.new(creator: current_user, user: @user)
     end
   end
 
@@ -26,6 +26,7 @@ class UserKycsController < ApplicationController
   def create
     @user_kyc = UserKyc.new(permitted_attributes(UserKyc.new))
     @user_kyc.user = @user
+    @user_kyc.creator = current_user
 
     respond_to do |format|
       if @user_kyc.save
