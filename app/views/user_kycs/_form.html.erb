@@ -16,7 +16,7 @@
         end
       end
     %>
-    <%= form_with(model: user_kyc, local: true, id: 'user_kyc_form', url: url) do |f| %>
+    <%= form_with(model: user_kyc, local: true, id: 'user_kyc_form', url: url, html: {class: 'validate-form'}) do |f| %>
       <% if user_kyc.errors.any? %>
         <div id="error_explanation" class="alert alert-danger">
           <ul>

@@ -11,7 +11,6 @@
 // about supported directives.
 //
 //= require rails-ujs
-//= require turbolinks
 //= require jquery3
 //= require popper
 //= require bootstrap-sprockets
@@ -32,6 +31,7 @@
 //= require utils
 //= require file-icon
 //= require form-initializer
+//= require validator
 //= require registration
 
 $.ajaxSetup({

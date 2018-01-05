@@ -29,3 +29,21 @@ label.control-label{
   margin-bottom: 0;
   line-height: 11px;
 }
+.form-group.has-error .form-control,
+.form-group.has-error .custom-select{
+  border-color: theme-color('danger') !important;
+}
+.form-group.has-error .help-block {
+  color: theme-color('danger') !important;
+  font-size: 12px;
+}
+[data-toggle="tab"].tab-error:after{
+  content: "\f071";
+  font: normal normal normal 14px/1 FontAwesome;
+  text-rendering: auto;
+  display: inline-block;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: theme-color('danger');
+  margin: 0 6px;
+}

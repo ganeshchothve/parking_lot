@@ -4,8 +4,8 @@
     <title>BookingPortal</title>
     <%= csrf_meta_tags %>
 
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
     <%= javascript_tag do %>
       <% if user_signed_in? %>
         if(typeof App === "undefined"){
@@ -26,7 +26,7 @@
         <ul class="navbar-nav mr-auto">
           <% if user_signed_in? %>
             <li class="nav-item">
-              <a class="nav-link" href="javascript:;">Dashoard</a>
+              <a class="nav-link" href="<%= after_sign_in_path_for(current_user) %>">Dashoard</a>
             </li>
             <% if UserPolicy.new(current_user, User).index? %>
               <li class="nav-item">

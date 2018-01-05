@@ -17,7 +17,7 @@
     </div>
     <% end %>
     <% if current_user.role?('user') %>
-      <%= form_for @receipt do |f| %>
+      <%= form_for @receipt, html: {class: 'validate-form'} do |f| %>
         <div class="form-group">
           <%= f.label :total_amount, class: 'control-label label-required' %>
           <%= f.text_field :total_amount, min: 0, class: "form-control", required: 'required' %>
@@ -27,7 +27,7 @@
         <%= f.submit "Proceed", class: 'btn btn-primary' %>
       <% end %>
     <% else %>
-      <%= form_for [:admin, @user, @receipt], html: {id: 'receipt_form'} do |f| %>
+      <%= form_for [:admin, @user, @receipt], html: {id: 'receipt_form', class: 'validate-form'} do |f| %>
         <div class="form-group">
           <%= f.label :payment_mode, class: 'control-label label-required' %>
           <%= f.select :payment_mode, Receipt.available_payment_modes.reject{|x| x[:id] == 'online'}.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true, disabled: (policy(@receipt).editable_field?("payment_mode") ? false : true) %>

@@ -7,7 +7,7 @@
     </ul>
   </div>
 <% end %>
-<%= form_for [:admin, @user] do |f| %>
+<%= form_for [:admin, @user], html: {class: "validate-form"} do |f| %>
 <div class="form-group">
   <%= f.label :name, class: 'control-label label-required' %>
   <%= f.text_field :name, class: 'form-control', autofocus: true, required: 'required', disabled: (policy(@user).editable_field?("name") ? false : true) %>

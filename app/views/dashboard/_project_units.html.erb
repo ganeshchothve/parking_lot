@@ -14,7 +14,7 @@
         <%= project_unit.name %>
         <div class="modal fade" id="unit_kyc_<%= project_unit.id %>" role="dialog">
           <div class="modal-dialog" role="document">
-            <%= form_for project_unit, url: dashboard_hold_project_unit_path(project_unit_id: project_unit.id), html: {class: 'checkout_project_unit', method: 'post'} do |f| %>
+            <%= form_for project_unit, url: dashboard_hold_project_unit_path(project_unit_id: project_unit.id), html: {class: 'validate-form checkout_project_unit', method: 'post'} do |f| %>
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title">Choose your KYC</h5>
