@@ -32,6 +32,14 @@ class Receipt
 
   default_scope -> {desc(:created_at)}
 
+  def reference_project_unit
+    if self.reference_project_unit_id.present?
+      ProjectUnit.find(self.reference_project_unit_id)
+    else
+      nil
+    end
+  end
+
   def self.available_statuses
     [
       {id: 'pending', text: 'Pending'},
@@ -65,8 +73,11 @@ class Receipt
     if self.total_amount <= 0
       self.errors.add :total_amount, " cannot be less than or equal to 0"
     end
-    if self.new_record? && self.project_unit.present? && (self.total_amount > self.project_unit.pending_balance)
+    if self.project_unit_id.present? && (self.total_amount > self.project_unit.pending_balance)
       self.errors.add :total_amount, " cannot be greater than #{self.project_unit.pending_balance}"
+    end
+    if self.reference_project_unit_id.present? && (self.total_amount > self.reference_project_unit.pending_balance({user_id: self.user_id}))
+      self.errors.add :total_amount, " cannot be greater than #{self.reference_project_unit.pending_balance({user_id: self.user_id})}"
     end
   end
 

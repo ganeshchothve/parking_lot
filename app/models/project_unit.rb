@@ -37,9 +37,11 @@ class ProjectUnit
 
   # TODO: reset the userid always if status changes and is available or not_available
 
-  def pending_balance(strict=false)
-    if self.user_id.present?
-      receipts_total = Receipt.where(user_id: self.user_id, project_unit_id: self.id)
+  def pending_balance(options={})
+    strict = options[:strict] || false
+    user_id = options[:user_id] || self.user_id
+    if user_id.present?
+      receipts_total = Receipt.where(user_id: user_id, project_unit_id: self.id)
       if strict
         receipts_total = receipts_total.where(status: "success")
       else
@@ -74,7 +76,7 @@ class ProjectUnit
 
   def process_payment!(receipt)
     if ['success', 'clearance_pending'].include?(receipt.status)
-      if self.pending_balance(true) == 0
+      if self.pending_balance({strict: true}) == 0
         self.status = 'booked_confirmed'
       elsif self.total_amount_paid > ProjectUnit.blocking_amount
         self.status = 'booked_tentative'
