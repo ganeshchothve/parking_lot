@@ -83,8 +83,6 @@ group :development, :test do
   gem 'pry-rails'
   # gives the documentation for standard ruby libary in pry
   gem 'pry-doc'
-  # debugger for rails
-  gem 'byebug', platform: :mri
   # parallelize your tests for faster testing
   gem 'parallel_tests'
   # generate fake values using faker
