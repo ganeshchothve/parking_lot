@@ -64,6 +64,43 @@ class Receipt
     ]
   end
 
+  def build_for_hdfc
+    payload = ""
+    payload += "merchant_id=#{PAYMENT_PROFILE[:CCAVENUE][:merchantid]}&" 
+    payload += "amount="+self.total_amount.to_s+"&" 
+    payload += "order_id="+self.receipt_id.to_s+"&" 
+    payload += "currency=INR&" 
+    payload += "language=EN&" 
+    payload += "redirect_url=http://www.embassyindia.com:3000/payment/hdfc/process_payment/success&" 
+    payload += "cancel_url=http://www.embassyindia.com:3000/payment/hdfc/process_payment/failure" 
+    crypto = Crypto.new
+    encrypted_data = crypto.encrypt(payload,PAYMENT_PROFILE[:CCAVENUE][:working_key])
+    return encrypted_data
+  end
+
+  class Crypto
+    INIT_VECTOR = (0..15).to_a.pack("C*")    
+    def encrypt(plain_text, key)
+        secret_key =  [Digest::MD5.hexdigest(key)].pack("H*") 
+        cipher = OpenSSL::Cipher::Cipher.new('aes-128-cbc')
+        cipher.encrypt
+        cipher.key = secret_key
+        cipher.iv  = INIT_VECTOR
+        encrypted_text = cipher.update(plain_text) + cipher.final
+        return (encrypted_text.unpack("H*")).first
+    end
+    def decrypt(cipher_text,key)
+        secret_key =  [Digest::MD5.hexdigest(key)].pack("H*")
+        encrypted_text = [cipher_text].pack("H*")
+        decipher = OpenSSL::Cipher::Cipher.new('aes-128-cbc')
+        decipher.decrypt
+        decipher.key = secret_key
+        decipher.iv  = INIT_VECTOR
+        decrypted_text = (decipher.update(encrypted_text) + decipher.final).gsub(/\0+$/, '')
+        return decrypted_text
+    end
+  end
+  
   private
   def validate_total_amount
     if self.total_amount < ProjectUnit.blocking_amount && self.project_unit_id.blank? && self.new_record?

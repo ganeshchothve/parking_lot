@@ -15,7 +15,7 @@ Rails.application.routes.draw do
     resources :user_requests, except: [:destroy]
   end
 
-  get 'payment/:gateway/process_payment', to: 'payment#process_payment'
+  get 'payment/:gateway/process_payment/:payment_status', to: 'payment#process_payment', as: :payment_process
 
   get :dashboard, to: 'dashboard#index', as: :dashboard
   scope :dashboard do

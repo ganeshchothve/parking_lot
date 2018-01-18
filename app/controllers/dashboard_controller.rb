@@ -44,9 +44,9 @@ class DashboardController < ApplicationController
     if @receipt.save
       if @receipt.status == "pending" # if we are just tagging an already successful receipt, we dont need to send the user to payment gateway
         if Rails.env.development?
-          redirect_to "/payment/hdfc/process_payment?receipt_id=#{@receipt.id}"
-        else
-          # TODO: redirect_to external_payment_gateway_path
+          encrypted_data = @receipt.build_for_hdfc
+          redirect_to "https://test.ccavenue.com/transaction/transaction.do?command=initiateTransaction&encRequest=#{encrypted_data}&access_code=#{PAYMENT_PROFILE[:CCAVENUE][:accesscode]}"
+          #redirect_to "/payment/hdfc/process_payment?receipt_id=#{@receipt.id}"
         end
       elsif ['clearance_pending', "success"].include?(@receipt.status)
         redirect_to dashboard_path
@@ -95,6 +95,7 @@ class DashboardController < ApplicationController
   end
 
   private
+
   def hold_on_third_party_inventory
     third_party_inventory_response, third_party_inventory_response_code = ThirdPartyInventory.hold_on_third_party_inventory(@project_unit)
     # TODO: if third_party_inventory timesouts, need to revert the hold on the project unit in our db
