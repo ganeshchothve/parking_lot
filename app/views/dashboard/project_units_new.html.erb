@@ -1,0 +1,200 @@
+<header>
+	<div class="container">
+		<div class="col-12 text-center">
+			<a href="javascript:void(0);" class="logo-wrapper">
+				<img src="<%= asset_path "embassy_springs_logo.png" %>" class="img-responsive" />
+			</a>
+		</div>
+		<div class="col-12 text-center">
+			<div class="step-bar-wrapper">
+				<div data-step="1" class="active">STEP 1</div>
+				<div data-step="2">STEP 2</div>
+				<div data-step="3">STEP 3</div>
+				<div data-step="4">STEP 4</div>
+				<div data-step="5">STEP 5</div>
+			</div>
+		</div>
+	</div>
+</header>
+<section class="screens-wrapper active" data-screen="5" data-next-screen="2" data-prev-screen="na">
+	<div class="container">
+		<div class="col-12">
+			<div class="col-7 floor-plan-wrapper">
+				<div class="col-12 text-center black pageTitle medium">
+					Floor Layout Plan
+				</div>
+				<div class="final-floor-plan">
+					<img src="<%= asset_path 'sample-floor-plan.jpg' %>" class="img-responsive">
+				</div>
+			</div>
+			<div class="col-5 client-details">
+				<p>Hi</p>
+				<div class="name-plate">
+					<div class="left-top"><img src="<%= asset_path 'Bolt.png'%>" class="img-responsive"></div>
+					<div class="right-top"><img src="<%= asset_path 'Bolt.png'%>" class="img-responsive"></div>
+					<div class="right-bottom"><img src="<%= asset_path 'Bolt.png'%>" class="img-responsive"></div>
+					<div class="left-bottom"><img src="<%= asset_path 'Bolt.png'%>" class="img-responsive"></div>
+					<span class="client-name">Mr. A.K. Suryavanshi</span><br/>
+					<span class="flat-no">Flat: 1104</span>
+				</div>
+				<p class="pageTitle pink medium">Selected flat<br/> details as follows:</p>
+				<div class="flat-details">
+					Tower: A<br/>
+					Floor: 11th<br/>
+					Flat no: 1104<br/>
+					Configuration: 2 BHK<br/> 
+					Min. Carpet Area: 1500 Sq.Ft.<br/>
+					Starting Price: 3500 / Sq. Ft.<br/>
+				</div>
+				<div class="col-12">
+					<button class="btn white navigate" data-goto="2">← Back</button><button class="btn black navigate" data-goto="2">Next →</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<section class="screens-wrapper next" data-screen="2" data-next-screen="3" data-prev-screen="1">
+	<div class="container">
+		<div class="col-12">
+			<div class="col-12 text-center pageTitle black big">
+				Choose tower
+			</div>
+			<div class="col-12 text-center" id="tower-selector">
+				
+			</div>
+			<div class="col-12 text-center">
+				<button class="btn black navigate" data-goto="1">&larr; Prev</button>
+				<button class="btn black navigate" data-goto="3">Next &rarr;</button>
+			</div>
+		</div>
+	</div>
+</section>
+<section class="screens-wrapper next" data-screen="3" data-next-screen="4" data-prev-screen="2">
+	<div class="container">
+		<div class="col-12">
+			<div class="col-12 text-center pageTitle black big">
+				Screen 3
+			</div>
+			<div class="col-12">
+				<div class="col-6" id="filter-wrapper">
+					<div class="col-12">
+						<div class="col-3">
+							<div class="col-12 filterBg">
+								<div class="col-12">
+									<div class="pageTitle medium pink">
+										Filter
+									</div>
+								</div>
+								<div class="col-12 filter-item-wrapper">
+									<form>
+										<div class="col-12 filter-item">
+											<div class="col-4 text-left">
+												<img src="<%= asset_path 'tower-icon.png' %>" />
+											</div>
+											<div class="col-8">
+												<div class="filter-title">
+													TOWER
+												</div>
+												<div class="filter-data">
+													<select class="init-selectize">
+														<option value="">Select tower</option>
+														<option value="Tower 1">Tower 1</option>
+														<option value="Tower 2">Tower 2</option>
+													</select>
+												</div>
+											</div>
+										</div>
+										<div class="col-12 filter-item">
+											<div class="col-4 text-left">
+												<img src="<%= asset_path 'wing-icon.png' %>" />
+											</div>
+											<div class="col-8">
+												<div class="filter-title">
+													WING
+												</div>
+												<div class="filter-data">
+													<select class="init-selectize">
+														<option value="">Select tower</option>
+														<option value="Tower 1">Tower 1</option>
+														<option value="Tower 2">Tower 2</option>
+													</select>
+												</div>
+											</div>
+										</div>
+										<div class="col-12 filter-item">
+											<div class="col-4 text-left">
+												<img src="<%= asset_path 'config-icon.png' %>" />
+											</div>
+											<div class="col-8">
+												<div class="filter-title">
+													CONFIGURATION
+												</div>
+												<div class="filter-data">
+													<select class="init-selectize">
+														<option value="">Select tower</option>
+														<option value="Tower 1">Tower 1</option>
+														<option value="Tower 2">Tower 2</option>
+													</select>
+												</div>
+											</div>
+										</div>
+										<div class="col-12 filter-item">
+											<div class="col-4 text-left">
+												<img src="<%= asset_path 'floor-icon.png' %>" />
+											</div>
+											<div class="col-8">
+												<div class="filter-title">
+													FLOOR
+												</div>
+												<div class="filter-data">
+													<select class="init-selectize">
+														<option value="">Select tower</option>
+														<option value="Tower 1">Tower 1</option>
+														<option value="Tower 2">Tower 2</option>
+													</select>
+												</div>
+											</div>
+										</div>
+										<div class="col-12 filter-item">
+											<div class="col-4 text-left">
+												<img src="<%= asset_path 'config-icon.png' %>" />
+											</div>
+											<div class="col-8">
+												<div class="filter-title">
+													CONFIGURATION
+												</div>
+												<div class="filter-data">
+													<select class="init-selectize">
+														<option value="">Select tower</option>
+														<option value="Tower 1">Tower 1</option>
+														<option value="Tower 2">Tower 2</option>
+													</select>
+												</div>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+						<div class="col-8">
+						</div>
+					</div>
+				</div>
+				<div class="col-6" id="draw-tower-container">
+				</div>
+			</div>
+			<div class="col-12 text-center">
+				<button class="btn black navigate" data-goto="2">&larr; Prev</button>
+				<button class="btn black navigate" data-goto="4">Next &rarr;</button>
+			</div>
+		</div>
+	</div>
+</section>
+<section class="screens-wrapper next" data-screen="4" data-next-screen="5" data-prev-screen="3">
+	
+</section>
+<section class="screens-wrapper next" data-screen="5" data-next-screen="na" data-prev-screen="4">
+	
+</section>
+
+<%#= render 'project_units', {project_units: ProjectUnit.all} %>

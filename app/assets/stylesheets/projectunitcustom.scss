@@ -1,0 +1,494 @@
+.floor-plan-wrapper{
+	padding-right:50px;
+}
+.client-details{
+    padding: 60px 0px 0px 60px;
+    position: relative;
+   	/*border-left:1px solid #d0d0d0;*/
+}
+.client-details:before{
+	content: '';
+	position: absolute;
+	left: 0px;
+	top: 30px;
+	width: 1px;
+	height: 100%;
+	background-color: #d0d0d0;
+}
+.name-plate{
+	display: inline-block;
+	background-color: #925347;
+	background-image: asset-url('Pattern.png');
+	background-repeat: repeat;
+	color: #fff;
+    padding: 20px;
+    position: relative;
+    line-height: 26px;
+    text-align: center;
+    outline: 2px solid #be8267;
+    outline-offset: -4px;
+}
+.client-name{
+	font-weight: 600;
+	font-size: 20px;
+	display: inline-block;
+}
+.flat-no{
+	font-size: 20px;
+	display: inline-block;	
+}
+.left-top{
+	position: absolute;
+	left: 4px;
+	top: -2px;
+}
+.right-top{
+	position: absolute;
+	right: 4px;
+	top: -2px;
+}
+.right-bottom{
+	position: absolute;
+	right: 4px;
+	bottom: -3px;
+}
+.left-bottom{
+	position: absolute;
+	left: 4px;
+	bottom: -3px;
+}
+.client-details .pageTitle.pink{
+	margin: 25px 0px;
+}
+.client-details .flat-details{
+    font-size: 18px;
+    color: #4a4a4c;
+    margin-bottom: 25px;
+    line-height: 30px;
+}
+.client-details .btn.white{
+	background-color: #fff;
+	color: #000;
+	border:1px solid #000;
+	margin-right: 10px;
+}
+.dashboard-menu{
+	width: 50px;
+	padding: 10px 0px;
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	height: 100%;
+	background-color: #fff;
+	z-index: 99;
+	-webkit-transition: all .2s ease-in;
+    transition: all .2s ease-in;
+    -webkit-transform: translateZ(0) scale(1,1);
+	overflow: hidden;
+	box-shadow: 1px 0px 5px #cacaca;
+}
+.dash-menu-wrapper div, .dash-menu-footer div{
+	width: 250px;
+}
+/*.dashboard-menu .menu-items, .dashboard-menu .menu-items-hide{
+	transition:0.7s;
+	display: none;
+}*/
+.dashboard-menu:hover{
+	width: 250px;
+}
+.dashboard-menu:hover .menu-items, .dashboard-menu:hover .menu-items-hide{
+	width: 190px;
+	display: inline-block;
+}
+.dash-logo{
+	height: 97px;
+	margin: 10px 0px 20px 0px;
+}
+.dash-menu-wrapper{
+	margin: 30px 0px;
+}
+.dash-menu-wrapper a, .dash-menu-footer a{
+    text-transform: uppercase;
+    color: #9b9b9e;
+    display: block;
+    border-left: 5px solid transparent;
+    padding: 15px 0px;
+    position: relative;
+}
+
+.dash-menu-wrapper a.active .menu-items:after{
+	content: '\2212';
+}
+.dash-menu-wrapper a .menu-items:after{
+	content: '\002B';
+	position: absolute;
+	right: 15px;
+	top: 15px;
+}
+.dash-menu-wrapper a:hover, .dash-menu-wrapper a.active{
+	color: #000;	
+	border-left: 5px solid #c558a1;
+}
+.dash-menu-wrapper .sprite-dasboard{
+	display: inline-block;
+	margin: 0 11px;
+	vertical-align: bottom;
+	background-image: asset-url('dash-board-Sprite-Icon.png');
+	background-repeat: no-repeat;
+}
+.dash-menu-footer .sprite-signout{
+	display: inline-block;
+	margin: 0 11px;
+	vertical-align: bottom;
+	background-image: asset-url('Signout-Icon.png');
+	background-repeat: no-repeat;	
+}
+.dash-menu-wrapper .booking-details{
+	background-position: -61px -0px;
+	width: 24px;
+	height: 26px;
+}
+.dash-menu-wrapper .kyc-form{
+	background-position: -64px -58px;
+	width: 24px;
+	height: 26px;
+}
+.dash-menu-wrapper .payment-details{
+	background-position: -65px -122px;
+	width: 24px;
+	height: 26px;
+}
+.dash-menu-wrapper .apartment-selector{
+	background-position: -63px -180px;
+	width: 24px;
+	height: 26px;
+}
+.dash-menu-wrapper a:hover .booking-details, .dash-menu-wrapper a.active .booking-details {
+	background-position: -0px -0px;
+	width: 24px;
+	height: 26px;
+}
+.dash-menu-wrapper a:hover .kyc-form, .dash-menu-wrapper a.active .kyc-form {
+	background-position: -3px -58px;
+	width: 24px;
+	height: 26px;
+}
+.dash-menu-wrapper a:hover .payment-details, .dash-menu-wrapper a.active .payment-details {
+	background-position: -4px -122px;
+	width: 24px;
+	height: 26px;
+}
+.dash-menu-wrapper a:hover .apartment-selector, .dash-menu-wrapper a.active .apartment-selector {
+	background-position: -2px -180px;
+	width: 24px;
+	height: 26px;
+}
+.dash-menu-footer .sign-out{
+	background-position: 0 0;
+	width: 24px;
+	height: 21px;
+}
+.dash-menu-footer a:hover .sign-out, .dash-menu-footer a.active .sign-out{
+	background-position: 0 -29px;
+	width: 24px;
+	height: 21px;
+}
+.dash-menu-wrapper .submenu{
+	display: none;
+}
+.dash-menu-wrapper .submenu a{
+	padding: 10px 0px;
+    margin-left: 15px;
+    color: #000;
+    border-left: 0px;
+}
+.dash-menu-footer{
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+}
+
+.dash-menu-footer .menu-items-hide{
+	width: 190px;
+	display: inline-block;
+}
+.mleft70{
+	padding-left: 100px;
+}
+.booking-detail-wrapper{
+    color: #74645c;
+    font-size: 18px;
+    width: 90%;
+    margin: 50px 0px;
+    background-color: #fff;
+    box-shadow: 0px 0px 13px #cacaca;
+    border-left:3px solid #46bfe9;
+}
+.booking-detail-wrapper hr{
+	display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0; 
+}
+.applicant-wrapper{
+	padding: 20px 0px 20px 20px
+}
+.payment-details-wrapper{
+	padding: 20px 20px 0px 20px
+}
+.applicant-wrapper .applicant{
+	font-weight: 600;
+	margin: 5px 0px;
+}
+.applicant-wrapper .applicant span{
+	display: inline-block;
+}
+.tower-info-wrapper{
+	padding: 20px 0px 20px 20px
+}
+.tower-info{
+	margin: 0px 20px;
+	font-size: 20px;
+}
+.tower-info span{
+	display: block;
+	color: #000;
+}
+.tower-specs{
+	padding: 30px 0px 20px 10px;
+}
+.tower-specs:last-child{
+	padding: 10px 0px 20px 10px;
+}
+.tower-specs .title{
+	color: #74645c;
+	font-size: 16px;
+	display: block;
+}
+.tower-specs .specs{
+	color: #000;
+	font-size: 16px;
+	font-weight: 600;
+}
+.booking-btn-wrapper{
+	padding: 20px 0px 20px 20px
+}
+.booking-btn-wrapper .btn{
+	display: inline-block;
+    border: 0;
+    background-color: #454545;
+    color: #fff;
+    line-height: 36px;
+    padding: 0 20px;
+    border-radius: 0px;
+    font-size: 16px;
+    text-transform: uppercase;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+    margin-right: 20px;
+}
+.booking-btn-wrapper .btn.pink{
+	background-color: #cf5d9c;
+}
+.mbottom50{
+	margin-bottom: 50px;
+}
+.form-field-wrapper label{
+	display: inline-block;
+	color: #9b9b9e;
+	width: 220px;
+	vertical-align: middle;
+}
+.form-field-wrapper label.black{
+	color: #000;
+}
+.form-field-wrapper .form-field, .form-field-wrapper select.form-field{
+	padding: 8px 5px;
+    width: 60%;
+    font-family: inherit;
+    background-color: #fff;
+    display: inline-block;
+    border: 1px solid #d2d2d2;
+}
+.cancel-booking-wrapper, .kyc-form-wrapper{
+	padding: 60px 0px 60px 0px;
+	width: 60%;
+}
+.form-field-wrapper{
+	margin-bottom: 20px;
+}
+
+.form-field-wrapper .dropdown-wrapper{
+	vertical-align: middle;
+}
+.light-grey{
+	color: #9b9b9e
+}
+.form-field-wrapper .checkbox{
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.form-field-wrapper .checkbox .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+.form-field-wrapper .checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Create a custom checkbox */
+.form-field-wrapper .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #fff;
+    border: 1px solid #d2d2d2;
+}
+
+/* On mouse-over, add a grey background color */
+.form-field-wrapper .checkbox:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.form-field-wrapper .checkbox input:checked ~ .checkmark {
+    background-color: #c7589e;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.form-field-wrapper .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.form-field-wrapper .checkbox input:checked ~ .checkmark:after {
+    display: block;
+}
+.form-field-wrapper .btn{
+	display: inline-block;
+    border: 0;
+    color: #000;
+    margin-top: 20px;
+    line-height: 36px;
+    border-radius: 0px;
+    padding: 0 20px;
+    font-size: 16px;
+    text-transform: uppercase;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+}
+.form-field-wrapper .btn.yellow{
+	background-color: #efa332
+}
+.radio {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.radio input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Create a custom radio button */
+.radio .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #eee;
+    border-radius: 50%;
+}
+
+/* On mouse-over, add a grey background color */
+.radio:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+/* When the radio button is checked, add a blue background */
+.radio input:checked ~ .checkmark {
+    background-color: #c7589e;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.radio input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.radio .checkmark:after {
+    top: 6px;
+    left: 6px;
+    width: 6px;
+    height: 6px;
+	border-radius: 50%;
+	background: white;
+}
+.form-field-wrapper label.radio{
+	width: 150px;
+}
+.hidden-field{
+	display: none;
+	margin-left: 225px;
+}
+.hidden-field-prev-prop{
+	display: none;
+	margin-left: 225px;
+}
+input[type="file"]::-webkit-file-upload-button{
+    display: inline-block;
+    background-color: #c2c3c5;
+    border: 0;
+    color: #000;
+    margin-top: 20px;
+    line-height: 36px;
+    border-radius: 0px;
+    padding: 0 20px;
+    font-size: 16px;
+    text-transform: capitalize;
+    font-weight: bold;
+    cursor: pointer;
+    outline: none;
+}
