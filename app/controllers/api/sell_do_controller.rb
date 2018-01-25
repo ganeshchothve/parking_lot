@@ -1,6 +1,6 @@
 CLIENT_ID = ""
 class Api::SellDoController < ApplicationController
-	before_filter :check_client_id
+	before_action :check_client_id
 
 	def create_project
 		project =Project.unscoped.find_by(selldo_id: @obj["_id"]) rescue nil
