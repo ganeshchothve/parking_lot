@@ -31,7 +31,7 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-
+gem 'mongoid-autoinc'
 # ORM for mongodb that supports rails 5
 gem 'mongoid', '~> 6.1.0'
 # Auto-incrementing Primary key like behavior in Mongoid
