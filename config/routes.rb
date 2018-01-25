@@ -15,7 +15,7 @@ Rails.application.routes.draw do
     resources :user_requests, except: [:destroy]
   end
 
-  get 'payment/:gateway/process_payment/:payment_status', to: 'payment#process_payment', as: :payment_process
+  post 'payment/:gateway/process_payment/:payment_status', to: 'payment#process_payment', as: :payment_process
   get '/dashboard/booking-details', to: 'dashboard#booking_details'
   get '/dashboard/cancel-booking', to: 'dashboard#cancel_booking'
   get '/dashboard/kyc-form', to: 'dashboard#kyc_form'

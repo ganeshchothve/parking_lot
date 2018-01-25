@@ -9,8 +9,10 @@ class Receipt
   field :issuing_bank, type: String # Bank which issued cheque / DD etc
   field :issuing_bank_branch, type: String # Branch of bank
   field :payment_identifier, type: String # cheque / DD number / online transaction reference from gateway
+  field :tracking_id, type: String
   field :total_amount, type: Float, default: 0 # Total amount
   field :status, type: String, default: 'pending' # pending, success, failed, clearance_pending
+  field :status_message, type: String
   field :payment_type, type: String, default: 'blocking' # blocking, booking
   field :reference_project_unit_id, type: BSON::ObjectId # the channel partner or admin can choose this, but its not binding on the user to choose this reference unit
 
@@ -70,12 +72,40 @@ class Receipt
     payload += "amount="+self.total_amount.to_s+"&" 
     payload += "order_id="+self.receipt_id.to_s+"&" 
     payload += "currency=INR&" 
-    payload += "language=EN&" 
-    payload += "redirect_url=http://www.embassyindia.com:3000/payment/hdfc/process_payment/success&" 
-    payload += "cancel_url=http://www.embassyindia.com:3000/payment/hdfc/process_payment/failure" 
+    payload += "language=EN&"
+    if Rails.env.production?
+      payload += "redirect_url=http://www.embassyindia.com/payment/hdfc/process_payment/success&"
+      payload += "cancel_url=http://www.embassyindia.com/payment/hdfc/process_payment/failure"
+    else
+      payload += "redirect_url=http://embassysprings2.amura.in//payment/hdfc/process_payment/success&"
+      payload += "cancel_url=http://embassysprings2.amura.in/payment/hdfc/process_payment/failure"
+    end
     crypto = Crypto.new
     encrypted_data = crypto.encrypt(payload,PAYMENT_PROFILE[:CCAVENUE][:working_key])
     return encrypted_data
+  end
+
+  def handle_response_for_hdfc(encResponse)
+    crypto = Crypto.new
+    decResp = crypto.decrypt(encResponse,PAYMENT_PROFILE[:CCAVENUE][:working_key])
+    decResp = decResp.split("&") rescue []
+    decResp.each do |key|
+    if key.from(0).to(key.index("=")-1)=='order_status'
+      self.status = key.from(key.index("=")+1).to(-1).downcase
+    end
+    if key.from(0).to(key.index("=")-1)=='tracking_id'
+      self.tracking_id = key.from(key.index("=")+1).to(-1)
+    end
+    if key.from(0).to(key.index("=")-1)=='bank_ref_no'
+      self.payment_identifier = key.from(key.index("=")+1).to(-1)
+    end
+    if key.from(0).to(key.index("=")-1)=='failure_message'
+      self.status_message = key.from(key.index("=")+1).to(-1).downcase 
+    end  
+    if key.from(0).to(key.index("=")-1)=='order_id'
+      self.id.to_s == key.from(key.index("=")+1).to(-1)
+    end
+    self.save(validate: false)
   end
 
   class Crypto
