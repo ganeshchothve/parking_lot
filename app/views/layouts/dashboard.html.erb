@@ -4,8 +4,8 @@
     <title>BookingPortal</title>
     <%= csrf_meta_tags %>
 
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag 'dashboard' %>
+    <%= javascript_include_tag 'dashboard' %>
     <%= javascript_tag do %>
       <% if user_signed_in? %>
         if(typeof App === "undefined"){
@@ -16,30 +16,97 @@
     <% end %>
   </head>
   <body>
-    Welcome to Booking Portal<br/>
-    <h6>Total Paid (you might some payments pending clearance): <%= current_user.total_amount_paid %></h6>
-    <h6>Total Balance Pending (you might some payments pending clearance): <%= current_user.total_balance_pending %></h6>
-    <h6>Total Un-attached Balance (subject to clearance): <%= current_user.total_unattached_balance %></h6>
-    <% if user_signed_in? %>
-      <% if policy(:dashboard).index? %>
-        <%= link_to 'Dashboard', dashboard_path %>
+    <div id="notify"></div>
+    <div class="dashboard-menu">
+      <div class="dash-logo text-center">
+        <img src="<%= asset_path "embassy_edge_logo.png" %>" class="img-responsive">
+      </div>
+      <div class="dash-menu-wrapper">
+        <div>
+            <a href="javascript:;" class="has-submenu" rel="booking"><span class="sprite-dasboard booking-details"></span><span class="menu-items">Booking Details</span></a>
+            <span class="submenu up" id="booking">
+              <a href="">One</a>
+              <a href="">Two</a>
+              <a href="">Three</a>
+            </span>
+        </div>
+        <div>
+          <a href="javascript:;"><span class="sprite-dasboard kyc-form"></span><span class="menu-items-hide">kyc form</span></a>
+        </div>
+        <div>
+          <a href="javascript:;" class="has-submenu" rel="payment-details"><span class="sprite-dasboard payment-details"></span><span class="menu-items">Receipts</span></a>
+          <span class="submenu up" id="payment-details">
+              <a href="">One</a>
+              <a href="">Two</a>
+              <a href="">Three</a>
+          </span>
+        </div>
+        <div>
+          <a href="/dashboard/project_units" <%= params[:action] == "project_units" ? "class=active" : "" %> ><span class="sprite-dasboard apartment-selector"></span><span class="menu-items-hide">apartment selector</span></a>
+        </div>
+      </div>
+      <div class="dash-menu-footer">
+        <div>
+          <a href="javascript:;"><span class="sprite-signout sign-out"></span><span class="menu-items-hide">sign out</span></a>
+        </div>
+      </div>
+    </div>
+    <div hidden>
+      Welcome to Booking Portal<br/>
+      <h6>Total Paid (you might some payments pending clearance): <%= current_user.total_amount_paid %></h6>
+      <h6>Total Balance Pending (you might some payments pending clearance): <%= current_user.total_balance_pending %></h6>
+      <h6>Total Un-attached Balance (subject to clearance): <%= current_user.total_unattached_balance %></h6>
+      <% if user_signed_in? %>
+        <% if policy(:dashboard).index? %>
+          <%= link_to 'Dashboard', dashboard_path %>
+        <% end %>
+        <% if UserKycPolicy.new(current_user, UserKyc).index? %>
+          <%= link_to "#{global_labels['user_kycs']}", user_kycs_path %>
+        <% end %>
+        <% if policy(:dashboard).project_units? %>
+          <%= link_to "#{global_labels['project_units']}", dashboard_project_units_path %>
+        <% end %>
+        <% if policy(:dashboard).receipts? %>
+          <%= link_to "#{global_labels['receipts']}", receipts_path %>
+        <% end %>
+        <% if ReceiptPolicy.new(current_user, Receipt.new(user: current_user)).new? %>
+          <%= link_to 'Direct Blocking payment', dashboard_checkout_path %>
+        <% end %>
+        <%= link_to 'Logout', destroy_user_session_path, method: 'delete' %>
       <% end %>
-      <% if UserKycPolicy.new(current_user, UserKyc).index? %>
-        <%= link_to "#{global_labels['user_kycs']}", user_kycs_path %>
-      <% end %>
-      <% if policy(:dashboard).project_units? %>
-        <%= link_to "#{global_labels['project_units']}", dashboard_project_units_path %>
-      <% end %>
-      <% if policy(:dashboard).receipts? %>
-        <%= link_to "#{global_labels['receipts']}", receipts_path %>
-      <% end %>
-      <% if ReceiptPolicy.new(current_user, Receipt.new(user: current_user)).new? %>
-        <%= link_to 'Direct Blocking payment', dashboard_checkout_path %>
-      <% end %>
-      <%= link_to 'Logout', destroy_user_session_path, method: 'delete' %>
-    <% end %>
+    </div>
     <p class="notice"><%= notice %></p>
     <p class="alert"><%= alert %></p>
     <%= yield %>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('.dash-menu-wrapper a').on('click',function(){
+          var link = $(this).attr('rel');
+          $(this).toggleClass("active").next('span').slideToggle(250).closest('div').siblings().find('a').removeClass('active').next('span').slideUp(250);
+        })
+        $('.dash-menu-wrapper').mouseleave(function(){
+          $('.submenu').hide();
+          $('.dash-menu-wrapper a').removeClass('active')
+        })
+        $('label.radio').on('click',function(){
+          var link = $(this).attr('data-link');
+          if(link == 'yes'){
+            $('.hidden-field').fadeIn();
+          }
+          else{
+            $('.hidden-field').hide(); 
+          }
+        })
+        $('label.prev-prop').on('click',function(){
+          var link = $(this).attr('data-href');
+          if(link == 'yes'){
+            $('.hidden-field-prev-prop').fadeIn();
+          }
+          else{
+            $('.hidden-field-prev-prop').hide(); 
+          }
+        })
+      })
+    </script>
   </body>
 </html>

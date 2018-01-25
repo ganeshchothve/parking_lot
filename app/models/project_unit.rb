@@ -97,6 +97,10 @@ class ProjectUnit
     ]
   end
 
+  def unit_configuration
+    UnitConfiguration.find(self.unit_configuration_id)
+  end
+
   # TODO: reset the userid always if status changes and is available or not_available
 
   def pending_balance(options={})

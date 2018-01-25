@@ -13,7 +13,7 @@ capybara-*.html
 **.orig
 rerun.txt
 pickle-email-*.html
-
+._*
 # TODO Comment out these rules if you are OK with secrets being uploaded to the repo
 config/initializers/secret_token.rb
 config/secrets.yml
@@ -41,3 +41,20 @@ bower.json
 .yardoc/*
 /doc
 dump.rdb
+
+
+# Mac OS X hidden files
+.DS_Store
+
+# Vim swap files
+.*.sw?
+
+# Pow and Powder config
+/.pow*
+
+# RVM and rbenv
+/.rvmrc
+/.rbenv-version
+
+# Bundler binstubs
+/bin/

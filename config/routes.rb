@@ -16,10 +16,18 @@ Rails.application.routes.draw do
   end
 
   get 'payment/:gateway/process_payment', to: 'payment#process_payment'
-
+  get '/dashboard/booking-details', to: 'dashboard#booking_details'
+  get '/dashboard/cancel-booking', to: 'dashboard#cancel_booking'
+  get '/dashboard/kyc-form', to: 'dashboard#kyc_form'
+  get '/dashboard/add-booking', to: 'dashboard#add_booking'
+  post '/dashboard/get_towers', to: 'dashboard#get_towers'
+  post '/dashboard/get_units', to: 'dashboard#get_units'
+  post '/dashboard/get_unit_details', to: 'dashboard#get_unit_details'
+  
   get :dashboard, to: 'dashboard#index', as: :dashboard
   scope :dashboard do
     get :project_units, to: 'dashboard#project_units', as: :dashboard_project_units
+    get :project_units_new, to: 'dashboard#project_units_new', as: :dashboard_project_units_new
     get 'project_units/:project_unit_id', to: 'dashboard#project_unit', as: :dashboard_project_unit
     post 'project_units/:project_unit_id', to: 'dashboard#update_project_unit', as: :dashboard_update_project_unit
     post 'hold_project_unit/:project_unit_id', to: 'dashboard#hold_project_unit', as: :dashboard_hold_project_unit

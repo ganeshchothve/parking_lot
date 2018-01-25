@@ -1,2 +1,24 @@
-Dashboard Page
-<%= render 'project_units', {project_units: current_user.project_units} %>
+<style type="text/css">
+	.table{
+		width: 100%;
+	}
+	.thead-default{
+		background-color: #edeef0;
+	}
+</style>
+<section>
+	<div class="col-12 text-center mbottom50">
+		<img src="<%= asset_path "embassy_springs_logo.png"%>" class="img-responsive">
+	</div>
+</section>
+<section class="mleft70">
+	<div class="col-12">
+		<p class="pageTitle pink big">Dashboard</p>
+	</div>
+	<div class="clearfix"></div>
+	<div class="col-12">
+		<div class="booking-detail-wrapper">
+			<%= render 'project_units', {project_units: current_user.project_units} %>
+		</div>
+	</div>
+</section>
