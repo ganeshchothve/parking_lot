@@ -1,4 +1,10 @@
+require "sidekiq/web"
 Rails.application.routes.draw do
+  Sidekiq::Web.use Rack::Auth::Basic do |username, password|
+    username == SIDEKIQ_CONFIG[:username] && password == SIDEKIQ_CONFIG[:password]
+  end if Rails.env.production? || Rails.env.staging?
+  mount Sidekiq::Web, at: "/sidekiq"
+
   root to: "home#index"
   devise_for :users
   get :register, to: 'home#register', as: :register
@@ -18,7 +24,6 @@ Rails.application.routes.draw do
     resources :user_requests, except: [:destroy]
   end
 
-  post 'payment/:gateway/process_payment/:payment_status', to: 'payment#process_payment', as: :payment_process
   get '/dashboard/booking-details', to: 'dashboard#booking_details'
   get '/dashboard/cancel-booking', to: 'dashboard#cancel_booking'
   get '/dashboard/kyc-form', to: 'dashboard#kyc_form'
@@ -26,7 +31,9 @@ Rails.application.routes.draw do
   post '/dashboard/get_towers', to: 'dashboard#get_towers'
   post '/dashboard/get_units', to: 'dashboard#get_units'
   post '/dashboard/get_unit_details', to: 'dashboard#get_unit_details'
-  
+
+  match 'payment/:receipt_id/process_payment', to: 'payment#process_payment', via: [:get, :post]
+
   get :dashboard, to: 'dashboard#index', as: :dashboard
   scope :dashboard do
     get :project_units, to: 'dashboard#project_units', as: :dashboard_project_units

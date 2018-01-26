@@ -16,5 +16,4 @@ module ProjectUnitRemindersAndAutoRelease
       end
     end
   end
-
 end

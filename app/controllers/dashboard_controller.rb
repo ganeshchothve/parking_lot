@@ -10,8 +10,8 @@ class DashboardController < ApplicationController
   end
 
   def get_towers
-    scope=ProjectUnit.all    
-    scope = scope.where(:bedrooms=>params[:configuration]) if params[:configuration]  
+    scope=ProjectUnit.all
+    scope = scope.where(:bedrooms=>params[:configuration]) if params[:configuration]
     if params[:base_price]
       budget= params[:base_price].split("-")
       scope=scope.where(base_price: (budget.first..budget.last))
@@ -34,7 +34,7 @@ class DashboardController < ApplicationController
     obj.keys.each do |key|
       @project_unit.send("#{key}=", obj[key]) if project_tower.respond_to?("#{key}")
     end
-    @project_unit.save    
+    @project_unit.save
     configuration=@project_unit.unit_configuration.to_json(:except => :_id)
     render json: JSON(configuration)
   end
@@ -74,13 +74,10 @@ class DashboardController < ApplicationController
     else
       authorize(Receipt.new(user: current_user), :new?)
     end
+    @receipt.payment_gateway = 'CCAvenue'
     if @receipt.save
       if @receipt.status == "pending" # if we are just tagging an already successful receipt, we dont need to send the user to payment gateway
-        if Rails.env.development?
-          encrypted_data = @receipt.build_for_hdfc
-          redirect_to "https://test.ccavenue.com/transaction/transaction.do?command=initiateTransaction&encRequest=#{encrypted_data}&access_code=#{PAYMENT_PROFILE[:CCAVENUE][:accesscode]}"
-          #redirect_to "/payment/hdfc/process_payment?receipt_id=#{@receipt.id}"
-        end
+        redirect_to @receipt.payment_gateway_service.gateway_url
       elsif ['clearance_pending', "success"].include?(@receipt.status)
         redirect_to dashboard_path
       end
