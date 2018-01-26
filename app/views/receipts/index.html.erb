@@ -39,7 +39,7 @@
       <td><%= Receipt.available_statuses.find{|x| x[:id] == receipt.status}[:text] %></td>
       <td class="text-right"><%= number_to_indian_currency(receipt.total_amount) %></td>
       <td class="text-right">
-        <div class="dropdown show">
+        <div class="dropdown">
           <a class="btn btn-light dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
           <div class="dropdown-menu dropdown-menu-right">
             <% if receipt.status == 'success' %>
@@ -55,9 +55,19 @@
     <% end %>
   </tbody>
 </table>
-
 <% if ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? %>
-  <% unless current_user.role?('user') %>
-    <%= link_to "Add #{global_labels['receipt']}", new_admin_user_receipt_path(@user), class: 'btn btn-primary' %>
+  <% units_for_payments = @user.project_units.in(status: ["blocked", 'booked_tentative']).all %>
+  <% if units_for_payments.present? %>
+    <% unless current_user.role?('user') %>
+      <div class="dropdown float-left mr-2">
+        <a class="btn btn-primary dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add <%= global_labels['receipt'] %> to Blocked Units</a>
+        <div class="dropdown-menu dropdown-menu-right">
+          <% units_for_payments.each do |project_unit| %>
+            <%= link_to "#{project_unit.name}", new_admin_user_project_unit_receipt_path(@user.id, project_unit.id), class: 'dropdown-item' %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
   <% end %>
+  <%= link_to "Add Blocking #{global_labels['receipt']}", new_admin_user_receipt_path(@user), class: 'btn btn-primary' %>
 <% end %>

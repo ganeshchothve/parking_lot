@@ -27,7 +27,7 @@
       <td><%= User.available_roles.find{|x| x[:id] == user.role}[:text] %></td>
       <td><%= user.lead_id.present? ? user.lead_id : '-' %></td>
       <td class="text-right">
-        <div class="dropdown show">
+        <div class="dropdown">
           <a class="btn btn-light dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
           <div class="dropdown-menu dropdown-menu-right">
             <% if ReceiptPolicy.new(current_user, Receipt).index?(user) %>
@@ -44,7 +44,7 @@
   </tbody>
 </table>
 <%= will_paginate @users %>
-<div class="dropdown show">
+<div class="dropdown">
   <a class="btn btn-primary dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add new</a>
   <div class="dropdown-menu">
     <% if UserPolicy.new(current_user, User.new(role: 'user')).new? %>

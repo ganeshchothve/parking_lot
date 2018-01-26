@@ -1,0 +1,5 @@
+<% @project_units.each do |project_unit| %>
+<%= project_unit.name %> will be released on <%= project_unit.auto_release_on.in_time_zone("Mumbai") %> & amount pending = Rs. <%= project_unit.pending_balance %><br/>
+<% end %>
+
+<!-- TODO: handle the timezone based on user -->

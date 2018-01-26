@@ -32,7 +32,7 @@
         <td><%= ChannelPartner.available_statuses.find{|x| x[:id] == channel_partner.status}[:text] %></td>
         <td><%= channel_partner.associated_user_id.present? ? link_to(channel_partner.associated_user.name, admin_user_path(channel_partner.associated_user_id)) : '-' %></td>
         <td class="text-right">
-          <div class="dropdown show">
+          <div class="dropdown">
             <a class="btn btn-light dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
             <div class="dropdown-menu dropdown-menu-right">
               <% if ChannelPartnerPolicy.new(current_user, channel_partner).edit? %>
