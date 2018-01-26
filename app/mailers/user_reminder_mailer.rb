@@ -1,6 +1,4 @@
 class UserReminderMailer < ApplicationMailer
-  default from: 'from@example.com'
-  layout 'mailer'
 
   def daily_reminder_for_booking_payment user_id
     @user = User.find(user_id)
@@ -11,6 +9,8 @@ class UserReminderMailer < ApplicationMailer
     else
       subject = "Payment for your unit #{@project_units.first.name} is pending"
     end
-    mail(to: @user.email, subject: subject)
+    @cp = @user.channel_partner
+    cc = @cp.present? ? [@cp.email] : []
+    mail(to: @user.email, cc: cc, subject: subject)
   end
 end

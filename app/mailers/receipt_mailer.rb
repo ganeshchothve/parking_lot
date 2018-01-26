@@ -1,25 +1,43 @@
 class ReceiptMailer < ApplicationMailer
-  default from: 'from@example.com'
-  layout 'mailer'
 
   def send_failure receipt_id
     @receipt = Receipt.find(receipt_id)
     @user = @receipt.user
     @project_unit = @receipt.project_unit
-    mail(to: @user.email, subject: "Payment #{@receipt.receipt_id} Failed")
+    @cp = @user.channel_partner
+    cc = @cp.present? ? [@cp.email] : []
+    cc += default_team
+    mail(to: @user.email, cc: cc, subject: "Payment #{@receipt.receipt_id} Failed")
   end
 
   def send_success receipt_id
     @receipt = Receipt.find(receipt_id)
     @user = @receipt.user
     @project_unit = @receipt.project_unit
-    mail(to: @user.email, subject: "Payment #{@receipt.receipt_id} Successful")
+    @cp = @user.channel_partner
+    cc = @cp.present? ? [@cp.email] : []
+    cc += default_team
+    mail(to: @user.email, cc: cc, subject: "Payment #{@receipt.receipt_id} Successful")
   end
 
   def send_clearance_pending receipt_id
     @receipt = Receipt.find(receipt_id)
     @user = @receipt.user
     @project_unit = @receipt.project_unit
-    mail(to: @user.email, subject: "Payment #{@receipt.receipt_id} has reached the developer and is pending clearance")
+    @cp = @user.channel_partner
+    cc = @cp.present? ? [@cp.email] : []
+    cc += default_team
+    mail(to: @user.email, cc: cc, subject: "Payment #{@receipt.receipt_id} has reached the developer and is pending clearance")
+  end
+
+  def send_pending_non_online receipt_id
+    @receipt = Receipt.find(receipt_id)
+    @user = @receipt.user
+    @project_unit = @receipt.project_unit
+    @cp = @user.channel_partner
+    cc = @cp.present? ? [@cp.email] : []
+    cc += default_team
+    cc += [@user.email]
+    mail(to: crm_team, cc: cc, subject: "Payment #{@receipt.receipt_id} has been collected by channel partner")
   end
 end

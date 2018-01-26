@@ -40,13 +40,10 @@ class ReceiptObserver < Mongoid::Observer
         ReceiptMailer.send_clearance_pending(receipt.id.to_s).deliver_later
       end
     end
-  end
 
-  def after_create receipt
-    if receipt.status == 'success'
-      ReceiptMailer.send_success(receipt.id.to_s).deliver_later
-    elsif receipt.status == 'clearance_pending'
-      ReceiptMailer.send_clearance_pending(receipt.id.to_s).deliver_later
+    # Send email to crm team if cheque non-online & pending
+    if receipt.status == 'pending' && receipt.payment_mode != 'online'
+      ReceiptMailer.send_pending_non_online(receipt.id.to_s).deliver_later
     end
   end
 end
