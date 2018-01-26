@@ -1,6 +1,7 @@
 class PaymentController < ApplicationController
   before_action :authenticate_user!
-
+  skip_before_action :verify_authenticity_token
+  
   layout :set_layout
 
   def process_payment
@@ -12,15 +13,18 @@ class PaymentController < ApplicationController
   end
 
   def handle_hdfc
-    @receipt = Receipt.find(params[:receipt_id])
-    handle_success(SecureRandom.hex) # TODO: handle this based on payment gateway response)
+    @receipt = Receipt.where(order_id:params[:orderNo]).first
+    encResponse = params[:encResp]
+    @receipt.handle_response_for_hdfc(encResponse)
+
+    #handle_success(encResponse) # TODO: handle this based on payment gateway response)
     # handle_failure # TODO: handle this based on payment gateway response)
   end
 
   private
-  def handle_success payment_identifier
-    @receipt.payment_identifier = payment_identifier
-    @receipt.status = 'success'
+  def handle_success response
+    
+    
     unless @receipt.save(validate: false)
       # TODO: send us and embassy team an error message. Escalate this.
     end

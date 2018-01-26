@@ -33,20 +33,20 @@ class ReceiptObserver < Mongoid::Observer
     # Send email to customer
     if receipt.status_changed?
       if receipt.status == 'success'
-        ReceiptMailer.send_success(receipt.receipt_id).deliver_later
+        ReceiptMailer.send_success(receipt.id).deliver
       elsif receipt.status == 'failed'
-        ReceiptMailer.send_failure(receipt.receipt_id).deliver_later
+        ReceiptMailer.send_failure(receipt.id).deliver
       elsif receipt.status == 'clearance_pending'
-        ReceiptMailer.send_clearance_pending(receipt.receipt_id).deliver_later
+        ReceiptMailer.send_clearance_pending(receipt.id).deliver
       end
     end
   end
 
   def after_create receipt
     if receipt.status == 'success'
-      ReceiptMailer.send_success(receipt.receipt_id).deliver_later
+      ReceiptMailer.send_success(receipt.id).deliver
     elsif receipt.status == 'clearance_pending'
-      ReceiptMailer.send_clearance_pending(receipt.receipt_id).deliver_later
+      ReceiptMailer.send_clearance_pending(receipt.id).deliver
     end
   end
 end
