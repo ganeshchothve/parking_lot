@@ -44,7 +44,6 @@ class ProjectUnit
   field :category, type: String
   field :client_id, type: String
   field :developer_id, type: String
-  field :project_id, type: String
   field :project_tower_id, type: String
   field :unit_configuration_id, type: String
   field :configuration_type, type: String

@@ -55,6 +55,14 @@ development:
 
     # Ensure all times are UTC in the app side. (default: false)
     # use_utc: false
+staging:
+  clients:
+    default:
+      database: booking_portal_staging
+      hosts:
+        - localhost:27017
+      options:
+  options:
 test:
   clients:
     default:
