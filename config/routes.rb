@@ -1,4 +1,10 @@
+require "sidekiq/web"
 Rails.application.routes.draw do
+  Sidekiq::Web.use Rack::Auth::Basic do |username, password|
+    username == SIDEKIQ_CONFIG[:username] && password == SIDEKIQ_CONFIG[:password]
+  end if Rails.env.production? || Rails.env.staging?
+  mount Sidekiq::Web, at: "/sidekiq"
+
   root to: "home#index"
   devise_for :users
   get :register, to: 'home#register', as: :register

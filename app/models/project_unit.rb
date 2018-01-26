@@ -7,6 +7,14 @@ class ProjectUnit
     30000
   end
 
+  def self.blocking_days
+    7
+  end
+
+  def self.holding_minutes
+    10
+  end
+
   # These fields are globally utlised on the server side
   field :name, type: String
   field :base_price, type: Float
