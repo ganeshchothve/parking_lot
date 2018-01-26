@@ -6,7 +6,12 @@ Rails.application.routes.draw do
   mount Sidekiq::Web, at: "/sidekiq"
 
   root to: "home#index"
-  devise_for :users
+
+  devise_for :users, :controllers => { confirmations: "confirmations" }
+  as :user do
+    put '/user/confirmation', to: 'confirmations#update', :as => :update_user_confirmation
+  end
+
   get :register, to: 'home#register', as: :register
   post :check_and_register, to: 'home#check_and_register', as: :check_and_register
   resources :channel_partners, except: [:destroy]
