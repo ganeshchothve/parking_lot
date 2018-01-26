@@ -214,7 +214,8 @@
 	display: inline-block;
 }
 .mleft70{
-	padding-left: 100px;
+	padding-left: 120px;
+    margin-top: 20px;
 }
 .booking-detail-wrapper{
     color: #74645c;
@@ -473,6 +474,18 @@
 	display: none;
 	margin-left: 225px;
 }
+.hidden-field.poa{
+	display: none;
+	margin-left: 0px;
+}
+.hidden-field.gstin{
+	display: none;
+	margin-left: 225px;
+}
+.hidden-field.bank{
+	display: none;
+	margin-left: 225px;
+}
 .hidden-field-prev-prop{
 	display: none;
 	margin-left: 225px;
@@ -492,3 +505,41 @@ input[type="file"]::-webkit-file-upload-button{
     cursor: pointer;
     outline: none;
 }
+.mediaCenterAccordion{
+		padding-left: 0px;
+	}
+	.mediaCenterAccordion> li {
+	    display: inline-block;
+	    list-style: none;
+	    width: 100%;
+	    margin: 0px 0%;
+	    vertical-align: top;
+	    color: #fff;
+	    border-bottom: 1px solid #9b9b9e;
+	    padding-bottom: 3px;
+	}
+	.mediaCenterAccordion > li > span {
+	    display: block;
+	    margin: 1px 3px;
+	    padding: 6px 0px;
+	    background-image: asset-url('Plus-Icon.png');
+	    background-repeat: no-repeat;
+	    background-position: 99.5% 9px;
+	    background-size: 23px;
+	    cursor: pointer;
+	    font-size: 18px;
+	    color: #9b9b9e;
+	    text-transform: uppercase !important;
+	}
+	.mediaCenterAccordion > li > div {
+	    list-style: none;
+	    padding: 6px;
+	    display: none;
+	    overflow: auto;
+	}
+	.mediaCenterAccordion li > span.active {
+	    background-image: asset-url('minus-Icon.png');
+	    background-repeat: no-repeat;
+	    background-position:  99.5% 9px;
+	    background-size: 26px;
+	}

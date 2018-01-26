@@ -19,7 +19,7 @@
     <div id="notify"></div>
     <div class="dashboard-menu">
       <div class="dash-logo text-center">
-        <img src="<%= asset_path "embassy_edge_logo.png" %>" class="img-responsive">
+        <img src="<%= asset_path "embassy_springs_logo.png" %>" class="img-responsive" style="padding:0 5px;">
       </div>
       <div class="dash-menu-wrapper">
         <div>
@@ -88,13 +88,49 @@
           $('.submenu').hide();
           $('.dash-menu-wrapper a').removeClass('active')
         })
-        $('label.radio').on('click',function(){
+        $('label.radio.nri').on('click',function(){
           var link = $(this).attr('data-link');
           if(link == 'yes'){
             $('.hidden-field').fadeIn();
           }
           else{
             $('.hidden-field').hide(); 
+          }
+        })
+        $('label.radio.attorney').on('click',function(){
+          var link = $(this).attr('data-link');
+          if(link == 'yes'){
+            $('.name-attorney').fadeIn();
+          }
+          else{
+            $('.name-attorney').hide(); 
+          }
+        })
+        $('label.radio.company').on('click',function(){
+          var link = $(this).attr('data-link');
+          if(link == 'yes'){
+            $('.gstin').fadeIn();
+          }
+          else{
+            $('.gstin').hide(); 
+          }
+        })
+        $('label.radio.bank-loan').on('click',function(){
+          var link = $(this).attr('data-link');
+          if(link == 'bank-loan'){
+            $('.bank').fadeIn();
+          }
+          else{
+            $('.bank').hide(); 
+          }
+        })
+        $('.show-co-apl').on('click',function(){
+          var link = $(this).attr('data-link');
+          if(link == 'show-co-applicant'){
+            $('#show-co-applicant').fadeIn();
+          }
+          else{
+            $('#show-co-applicant').hide(); 
           }
         })
         $('label.prev-prop').on('click',function(){
@@ -106,6 +142,20 @@
             $('.hidden-field-prev-prop').hide(); 
           }
         })
+        $(".mediaCenterAccordion > li > span").click(function() {
+          $(this).toggleClass("active").next('div').slideToggle(250).closest('li').siblings().find('span').removeClass('active').next('div').slideUp(250);
+        });
+        var password = document.getElementById("acc-number"),
+        confirm_password = document.getElementById("confirm-acc-number");
+        function validatePassword(){
+          if(password.value != confirm_password.value) {
+            confirm_password.setCustomValidity("Account Number Don't Match");
+          } else {
+            confirm_password.setCustomValidity('');
+          }
+        }
+        password.onchange = validatePassword;
+        confirm_password.onkeyup = validatePassword;
       })
     </script>
   </body>
