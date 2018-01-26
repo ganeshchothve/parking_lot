@@ -1,18 +1,26 @@
+require 'autoinc'
 class Receipt
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Autoinc
   include ArrayBlankRejectable
 
   field :receipt_id, type: String
+  field :order_id, type: String
   field :payment_mode, type: String, default: 'online'
   field :issued_date, type: Date # Date when cheque / DD etc are issued
   field :issuing_bank, type: String # Bank which issued cheque / DD etc
   field :issuing_bank_branch, type: String # Branch of bank
   field :payment_identifier, type: String # cheque / DD number / online transaction reference from gateway
+  field :tracking_id, type: String # cheque / DD number / online transaction reference from gateway
   field :total_amount, type: Float, default: 0 # Total amount
   field :status, type: String, default: 'pending' # pending, success, failed, clearance_pending
+  field :status_message, type: String # pending, success, failed, clearance_pending
   field :payment_type, type: String, default: 'blocking' # blocking, booking
   field :reference_project_unit_id, type: BSON::ObjectId # the channel partner or admin can choose this, but its not binding on the user to choose this reference unit
+  field :payment_gateway, type: BSON::ObjectId
+
+  increments :order_id
 
   belongs_to :user, optional: true
   belongs_to :project_unit, optional: true
@@ -27,6 +35,8 @@ class Receipt
   validates :reference_project_unit_id, presence: true, if: Proc.new{ |receipt| receipt.creator.role != 'user' }
   validate :validate_total_amount
   validates :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, presence: true, if: Proc.new{|receipt| receipt.payment_mode != 'online' }
+  validates :payment_gateway, presence: true, if: Proc.new{|receipt| receipt.payment_mode == 'online' }
+  validates :payment_gateway, inclusion: {in: PaymentGatewayService::Default.allowed_payment_gateways }, allow_blank: true
   validate :status_changed
 
   default_scope -> {desc(:created_at)}
@@ -62,6 +72,14 @@ class Receipt
       {id: 'blocking', text: 'Blocking'},
       {id: 'booking', text: 'Booking'}
     ]
+  end
+
+  def payment_gateway_service
+    if self.payment_gateway.present?
+      return eval("PaymentGatewayService::#{self.payment_gateway}").new(self)
+    else
+      return nil
+    end
   end
 
   private

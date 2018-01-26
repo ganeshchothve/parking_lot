@@ -180,4 +180,12 @@ class ProjectUnit
     selector[:name] = ::Regexp.new(::Regexp.escape(params[:q]), 'i') if params[:q].present?
     self.where(selector)
   end
+
+  def unit_configuration
+    if self.unit_configuration_id.present?
+      UnitConfiguration.find(self.unit_configuration_id)
+    else
+      nil
+    end
+  end
 end

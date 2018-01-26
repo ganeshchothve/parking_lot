@@ -41,13 +41,10 @@ class DashboardController < ApplicationController
     else
       authorize(Receipt.new(user: current_user), :new?)
     end
+    @receipt.payment_gateway = 'CCAvenue'
     if @receipt.save
       if @receipt.status == "pending" # if we are just tagging an already successful receipt, we dont need to send the user to payment gateway
-        if Rails.env.development?
-          redirect_to "/payment/hdfc/process_payment?receipt_id=#{@receipt.id}"
-        else
-          # TODO: redirect_to external_payment_gateway_path
-        end
+        redirect_to @receipt.payment_gateway_service.gateway_url
       elsif ['clearance_pending', "success"].include?(@receipt.status)
         redirect_to dashboard_path
       end
