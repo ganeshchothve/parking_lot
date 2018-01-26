@@ -12,6 +12,8 @@ class ProjectUnit
   field :base_price, type: Float
   field :booking_price, type: Float
   field :status, type: String, default: 'available'
+  field :blocked_on, type: Date
+  field :auto_release_on, type: Date
   field :selldo_id, type: String
 
   # These fields majorly are pulled from sell.do and may be used on the UI
@@ -169,6 +171,15 @@ class ProjectUnit
     selector = {}
     if params[:fltrs].present?
       # TODO: handle search here
+      if params[:fltrs][:status].present?
+        if params[:fltrs][:status].is_a?(Array)
+          selector = {status: {"$in": params[:fltrs][:status] }}
+        elsif params[:fltrs][:status].is_a?(ActionController::Parameters)
+          selector = {status: params[:fltrs][:status].to_hash }
+        else
+          selector = {status: params[:fltrs][:status] }
+        end
+      end
     end
     selector[:name] = ::Regexp.new(::Regexp.escape(params[:q]), 'i') if params[:q].present?
     self.where(selector)

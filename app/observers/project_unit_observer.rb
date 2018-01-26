@@ -3,6 +3,13 @@ class ProjectUnitObserver < Mongoid::Observer
     if project_unit.status_changed? && ['available', 'not_available'].include?(project_unit.status)
       project_unit.user_id = nil
     end
+    if project_unit.status_changed? && project_unit.status == 'blocked'
+      project_unit.blocked_on = Date.today
+      project_unit.auto_release_on = project_unit.blocked_on + 7.days
+    end
+    if project_unit.status != 'blocked' && project_unit.status != 'booked_tentative'
+      project_unit.auto_release_on = nil
+    end
   end
 
   def after_save project_unit
@@ -16,6 +23,16 @@ class ProjectUnitObserver < Mongoid::Observer
         project_unit.status = 'error'
         project_unit.save(validate: false)
       end
+    end
+  end
+
+  def after_update project_unit
+    if project_unit.status_changed? && ['blocked', 'booked_tentative', 'booked_confirmed'].include?(project_unit.status)
+      ProjectUnitMailer.send(project_unit.status, project_unit.id.to_s).deliver_later
+    end
+
+    if project_unit.auto_release_on_changed?
+      ProjectUnitMailer.auto_release_on_extended(project_unit.id.to_s, project_unit.auto_release_on_was).deliver_later
     end
   end
 end

@@ -95,4 +95,12 @@ class User
     end
     self.where(selector)
   end
+
+  def channel_partner
+    if self.channel_partner_id.present?
+      return User.find(self.channel_partner_id)
+    else
+      return nil
+    end
+  end
 end
