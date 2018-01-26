@@ -32,10 +32,7 @@ class Admin::UsersController < AdminController
   def create
     @user = User.new
     @user.assign_attributes(permitted_attributes(@user))
-    generated_password = Devise.friendly_token.first(8)
-    @user.password = generated_password
-    # RegistrationMailer.welcome(user, generated_password).deliver #TODO: enable this. We might not need this if we are to use OTP based login
-
+    
     respond_to do |format|
       if @user.save
         format.html { redirect_to admin_users_path, notice: 'User was successfully created.' }
