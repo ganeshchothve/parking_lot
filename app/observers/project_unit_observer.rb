@@ -32,10 +32,12 @@ class ProjectUnitObserver < Mongoid::Observer
   def after_update project_unit
     if project_unit.status_changed? && ['blocked', 'booked_tentative', 'booked_confirmed'].include?(project_unit.status)
       ProjectUnitMailer.send(project_unit.status, project_unit.id.to_s).deliver_later
+      SMSWorker.perform_async(to: "", content: "")
     end
 
     if project_unit.auto_release_on_changed?
       ProjectUnitMailer.auto_release_on_extended(project_unit.id.to_s, project_unit.auto_release_on_was).deliver_later
+      SMSWorker.perform_async(to: "", content: "")
     end
   end
 end

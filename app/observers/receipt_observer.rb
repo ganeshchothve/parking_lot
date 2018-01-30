@@ -34,16 +34,20 @@ class ReceiptObserver < Mongoid::Observer
     if receipt.status_changed?
       if receipt.status == 'success'
         ReceiptMailer.send_success(receipt.id.to_s).deliver_later
+        SMSWorker.perform_async(to: "", content: "")
       elsif receipt.status == 'failed'
         ReceiptMailer.send_failure(receipt.id.to_s).deliver_later
+        SMSWorker.perform_async(to: "", content: "")
       elsif receipt.status == 'clearance_pending'
         ReceiptMailer.send_clearance_pending(receipt.id.to_s).deliver_later
+        SMSWorker.perform_async(to: "", content: "")
       end
     end
 
     # Send email to crm team if cheque non-online & pending
     if receipt.status == 'pending' && receipt.payment_mode != 'online'
       ReceiptMailer.send_pending_non_online(receipt.id.to_s).deliver_later
+      SMSWorker.perform_async(to: "", content: "")
     end
   end
 end
