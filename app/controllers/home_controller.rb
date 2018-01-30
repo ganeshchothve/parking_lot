@@ -25,8 +25,7 @@ class HomeController < ApplicationController
             format.json { render json: {errors: 'A user with these details has already registered', url: (user_signed_in? ? admin_users_path : new_user_session_path)}, status: :unprocessable_entity }
           end
         else
-          generated_password = Devise.friendly_token.first(8)
-          @user = User.new(email: params['email'], phone: params['phone'], name: params['name'], password: generated_password, lead_id: params[:lead_id])
+          @user = User.new(email: params['email'], phone: params['phone'], name: params['name'], lead_id: params[:lead_id])
           if user_signed_in?
             @user.channel_partner_id = current_user.id
           end

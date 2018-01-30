@@ -5,7 +5,6 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.1.4'
 # Use Puma as the app server
@@ -59,7 +58,7 @@ gem 'fog-aws'
 gem 'httparty', '>= 0.14.0'
 # for creating and modifying spreadsheets / excel / CSVs
 gem 'spreadsheet', '>= 1.1.4'
-gem 'roo'
+gem "roo", "~> 2.7.0"
 gem 'whenever', :require => false
 gem 'asset_sync'
 
@@ -67,6 +66,7 @@ gem 'sprockets-rails', '>= 2.3.2' # force this version for bootstrap 4 gem
 # Bootstrap lib gem for rails. #TODO: upgrade this when B4 is out of beta
 gem 'bootstrap', '~> 4.0.0.beta3'
 gem 'jquery-rails'
+gem 'rest-client', '~> 1.6', '>= 1.6.7'
 
 # phone numbers on users -> model & validation
 gem 'phonelib'

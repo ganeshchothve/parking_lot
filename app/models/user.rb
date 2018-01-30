@@ -91,9 +91,16 @@ class User
   def self.build_criteria params={}
     selector = {}
     if params[:fltrs].present?
-      # TODO: handle search here
+      if params[:fltrs][:role].present?
+        selector[:role] = params[:fltrs][:role]
+      end
     end
-    self.where(selector)
+    or_selector = {}
+    if params[:q].present?
+      regex = ::Regexp.new(::Regexp.escape(params[:q]), 'i')
+      or_selector = {"$or": [{name: regex}, {email: regex}, {phone: regex}] }
+    end
+    self.where(selector).where(or_selector)
   end
 
   def channel_partner
@@ -137,5 +144,9 @@ class User
     else
       !password.nil? || !password_confirmation.nil?
     end
+  end
+
+  def ds_name
+    "#{name} - #{email} - #{phone}"
   end
 end

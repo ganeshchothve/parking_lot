@@ -6,7 +6,7 @@ class PaymentController < ApplicationController
   layout :set_layout
 
   def process_payment
-    @receipt = Receipt.where(receipt_id: params[:receipt_id])
+    @receipt = Receipt.where(receipt_id: params[:receipt_id]).first
     if Rails.env.development? || request.post?
       @receipt.payment_gateway_service.response_handler!(params)
     else

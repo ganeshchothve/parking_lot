@@ -7,6 +7,10 @@ class ReceiptPolicy < ApplicationPolicy
     end
   end
 
+  def export?
+    ['admin'].include?(user.role)
+  end
+
   def new?
     if user.role?('user')
       user.kyc_ready? && (record.project_unit.blank? || booking_payment?)

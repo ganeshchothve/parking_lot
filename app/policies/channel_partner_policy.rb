@@ -3,6 +3,10 @@ class ChannelPartnerPolicy < ApplicationPolicy
     user.role?('admin')
   end
 
+  def export?
+    ['admin'].include?(user.role)
+  end
+
   def new?
     !user.present?
   end
