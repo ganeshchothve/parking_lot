@@ -16,7 +16,11 @@ class Admin::UsersController < AdminController
   end
 
   def export
-    ChannelPartnerExportWorker.perform_async(current_user.email)
+    if Rails.env.development?
+      ChannelPartnerExportWorker.new.perform(current_user.email)
+    else
+      ChannelPartnerExportWorker.perform_async(current_user.email)
+    end
     flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
     redirect_to admin_users_path
   end

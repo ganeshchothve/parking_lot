@@ -17,38 +17,47 @@ module PaymentGatewayService
     def gateway_url
       if Rails.env.production?
         return "#"
+      elsif Rails.env.development?
+        return "/payment/#{@receipt.receipt_id}/process_payment?status=success"
       else
         return "https://test.ccavenue.com/transaction/transaction.do?command=initiateTransaction&encRequest=#{build_parameters}&access_code=#{payment_profile[:accesscode]}"
       end
     end
 
     def response_handler! params
-      encResponse = params[:encResp]
-      crypto = PaymentGatewayService::CCAvenueCrypto.new
-      decResp = crypto.decrypt(encResponse, payment_profile[:working_key])
-      decResp = decResp.split("&") rescue []
-      decResp.each do |key|
-        if key.from(0).to(key.index("=")-1)=='order_status'
-          status = key.from(key.index("=")+1).to(-1).downcase
-          if status == "failure"
-            @receipt.status = "failed"
-          else
-            @receipt.status = "success"
+      if Rails.env.development?
+        @receipt.status = params[:status]
+        @receipt.tracking_id = SecureRandom.hex
+        @receipt.payment_identifier = SecureRandom.hex
+        @receipt.status_message = ""
+      else
+        encResponse = params[:encResp]
+        crypto = PaymentGatewayService::CCAvenueCrypto.new
+        decResp = crypto.decrypt(encResponse, payment_profile[:working_key])
+        decResp = decResp.split("&") rescue []
+        decResp.each do |key|
+          if key.from(0).to(key.index("=")-1)=='order_status'
+            status = key.from(key.index("=")+1).to(-1).downcase
+            if status == "failure"
+              @receipt.status = "failed"
+            else
+              @receipt.status = "success"
+            end
           end
-        end
-        if key.from(0).to(key.index("=")-1)=='tracking_id'
-          @receipt.tracking_id = key.from(key.index("=")+1).to(-1)
-        end
-        if key.from(0).to(key.index("=")-1)=='bank_ref_no'
-          @receipt.payment_identifier = key.from(key.index("=")+1).to(-1)
-        end
-        if key.from(0).to(key.index("=")-1)=='failure_message'
-          @receipt.status_message = key.from(key.index("=")+1).to(-1).downcase
-        end
-        if key.from(0).to(key.index("=")-1)=='order_id'
-          @receipt.id.to_s == key.from(key.index("=")+1).to(-1)
-        else
-          # TODO: Raise an error email to us. Tampered data
+          if key.from(0).to(key.index("=")-1)=='tracking_id'
+            @receipt.tracking_id = key.from(key.index("=")+1).to(-1)
+          end
+          if key.from(0).to(key.index("=")-1)=='bank_ref_no'
+            @receipt.payment_identifier = key.from(key.index("=")+1).to(-1)
+          end
+          if key.from(0).to(key.index("=")-1)=='failure_message'
+            @receipt.status_message = key.from(key.index("=")+1).to(-1).downcase
+          end
+          if key.from(0).to(key.index("=")-1)=='order_id'
+            @receipt.id.to_s == key.from(key.index("=")+1).to(-1)
+          else
+            # TODO: Raise an error email to us. Tampered data
+          end
         end
       end
       @receipt.save(validate: false)

@@ -1,4 +1,4 @@
-<%= render 'breadcrumbs', {user: @user} %>
+<%= render 'breadcrumbs', {user: @user, project_unit: @project_unit} %>
 <% unless current_user.role?('user') %>
   <% unless ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? %>
     <div class="alert alert-warning">

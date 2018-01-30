@@ -22,11 +22,20 @@ function sell_do_form_rendered(){
 
 function sell_do_form_successfully_submitted(e){
   if(typeof App !== "undefined" && App.current_user){
-    $(".sell_do_form_container").html('<div class="thankyou">Please wait, we have registered the user; generating login details & sending confirmation email / SMS to the user.</div>');
+    if(e && e.sell_do_lead_details && e.sell_do_lead_details.lead_already_exists){
+      $(".sell_do_form_container").html('<div class="thankyou">This customer has already registered with us. We cannot register the same customer again.</div>');
+    }else{
+      $(".sell_do_form_container").html('<div class="thankyou">Please wait, we have registered the user; generating login details & sending confirmation email / SMS to the user.</div>');
+      register_user_with_portal(e);
+    }
   }else{
     $(".sell_do_form_container").html('<div class="thankyou">Thank you for registering with us. Please check your email inbox and confirm your account.</div>')
+    register_user_with_portal(e);
   }
-  register_user_with_portal(e);
+}
+
+function sell_do_form_submission_failed(e){
+  $(".sell_do_form_container").html('<div class="thankyou">This customer has already registered with us. We cannot register the same customer again.</div>');
 }
 
 function register_user_with_portal(e){

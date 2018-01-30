@@ -16,6 +16,7 @@
           <th>Email</th>
           <th>Phone</th>
           <th>Role</th>
+          <th>Account Confirmed?</th>
           <th><%= labels[:lead_id] %></th>
           <th class="text-right">Actions</th>
         </tr>
@@ -27,6 +28,7 @@
           <td><%= user.email %></td>
           <td><%= user.phone %></td>
           <td><%= User.available_roles.find{|x| x[:id] == user.role}[:text] %></td>
+          <td><%= user.confirmed_at.present? ? "Confirmed" : "Not confirmed" %></td>
           <td><%= user.lead_id.present? ? user.lead_id : '-' %></td>
           <td class="text-right">
             <div class="dropdown">

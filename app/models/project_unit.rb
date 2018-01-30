@@ -27,7 +27,7 @@ class ProjectUnit
   # These fields majorly are pulled from sell.do and may be used on the UI
   field :project_id, type: String
   field :data_attributes, type: Array, default: []
-  field :costs, type: Array
+  field :costs, type: Array, default: []
   field :project_tower_name, type: String
   field :project_name, type: String
   field :developer_name, type: String

@@ -1,0 +1,15 @@
+<% if @receipt.payment_mode == 'online' %>
+  <%= @receipt.receipt_id %><br/>
+  Rs. <%= @receipt.total_amount %><br/>
+  <%= @receipt.status %><br/>
+<% else %>
+  <%= @receipt.receipt_id %><br/>
+  Rs. <%= @receipt.total_amount %><br/>
+  <%= @receipt.status %><br/>
+<% end %>
+<hr/>
+<% if @project_unit.present? %>
+Project Unit Details
+<%= @project_unit.name %><br/>
+<%= @project_unit.status %><br/>
+<% end %>

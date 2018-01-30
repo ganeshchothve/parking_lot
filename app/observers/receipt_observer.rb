@@ -33,21 +33,57 @@ class ReceiptObserver < Mongoid::Observer
     # Send email to customer
     if receipt.status_changed?
       if receipt.status == 'success'
-        ReceiptMailer.send_success(receipt.id.to_s).deliver_later
-        SMSWorker.perform_async(to: "", content: "")
+        mailer = ReceiptMailer.send_success(receipt.id.to_s)
+        if Rails.env.development?
+          mailer.deliver
+        else
+          mailer.deliver_later
+        end
+        if Rails.env.development?
+          SMSWorker.new.perform("", "")
+        else
+          SMSWorker.perform_async(to: "", content: "")
+        end
       elsif receipt.status == 'failed'
-        ReceiptMailer.send_failure(receipt.id.to_s).deliver_later
-        SMSWorker.perform_async(to: "", content: "")
+        mailer = ReceiptMailer.send_failure(receipt.id.to_s)
+        if Rails.env.development?
+          mailer.deliver
+        else
+          mailer.deliver_later
+        end
+        if Rails.env.development?
+          SMSWorker.new.perform("", "")
+        else
+          SMSWorker.perform_async(to: "", content: "")
+        end
       elsif receipt.status == 'clearance_pending'
-        ReceiptMailer.send_clearance_pending(receipt.id.to_s).deliver_later
-        SMSWorker.perform_async(to: "", content: "")
+        mailer = ReceiptMailer.send_clearance_pending(receipt.id.to_s)
+        if Rails.env.development?
+          mailer.deliver
+        else
+          mailer.deliver_later
+        end
+        if Rails.env.development?
+          SMSWorker.new.perform("", "")
+        else
+          SMSWorker.perform_async(to: "", content: "")
+        end
       end
     end
 
     # Send email to crm team if cheque non-online & pending
     if receipt.status == 'pending' && receipt.payment_mode != 'online'
-      ReceiptMailer.send_pending_non_online(receipt.id.to_s).deliver_later
-      SMSWorker.perform_async(to: "", content: "")
+      mailer = ReceiptMailer.send_pending_non_online(receipt.id.to_s)
+      if Rails.env.development?
+        mailer.deliver
+      else
+        mailer.deliver_later
+      end
+      if Rails.env.development?
+        SMSWorker.new.perform("", "")
+      else
+        SMSWorker.perform_async(to: "", content: "")
+      end
     end
   end
 end

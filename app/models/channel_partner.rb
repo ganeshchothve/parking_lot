@@ -69,7 +69,7 @@ class ChannelPartner
   end
 
   def cannot_make_inactive
-    if self.status_changed? && self.status == 'inactive'
+    if self.status_changed? && self.status == 'inactive' && self.persisted?
       self.errors.add :status, ' cannot be reverted to "inactive" once activated'
     end
   end
