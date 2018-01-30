@@ -9,7 +9,9 @@ class ReceiptExportWorker
     Receipt.all.each_with_index do |receipt, index|
       sheet.insert_row(index+1, ReceiptExportWorker.get_receipt_row(receipt))
     end
-    file.write("#{Rails.root}/receipt-#{SecureRandom.hex}.xls")
+    file_name = "receipt-#{SecureRandom.hex}.xls"
+    file.write("#{Rails.root}/#{file_name}")
+    ExportMailer.notify file_name, emails, "Payments"
   end
 
   def self.get_column_names

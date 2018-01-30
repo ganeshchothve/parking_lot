@@ -1,8 +1,8 @@
 class Admin::UsersController < AdminController
   before_action :authenticate_user!
-  before_action :set_user, except: [:index, :new, :create]
+  before_action :set_user, except: [:index, :export, :new, :create]
   before_action :authorize_resource
-  around_action :apply_policy_scope, only: :index
+  around_action :apply_policy_scope, only: [:index, :export]
 
   layout :set_layout
 
@@ -13,6 +13,12 @@ class Admin::UsersController < AdminController
     else
       @users = @users.paginate(page: params[:page] || 1, per_page: 15)
     end
+  end
+
+  def export
+    ChannelPartnerExportWorker.perform_async(current_user.email)
+    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    redirect_to admin_users_path
   end
 
   def show
@@ -48,7 +54,7 @@ class Admin::UsersController < AdminController
   end
 
   def authorize_resource
-    if params[:action] == "index"
+    if params[:action] == "index" || params[:action] == "export"
       authorize User
     elsif params[:action] == "new" || params[:action] == "create"
       if params[:role].present?

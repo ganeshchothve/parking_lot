@@ -15,6 +15,12 @@ class ChannelPartnersController < ApplicationController
     end
   end
 
+  def export
+    UserExportWorker.perform_async(current_user.email)
+    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    redirect_to admin_users_path
+  end
+
   def show
   end
 
@@ -53,7 +59,7 @@ class ChannelPartnersController < ApplicationController
   end
 
   def authorize_resource
-    if params[:action] == "index"
+    if params[:action] == "index" || params[:action] == 'export'
       authorize ChannelPartner
     elsif params[:action] == "new"
       authorize ChannelPartner.new

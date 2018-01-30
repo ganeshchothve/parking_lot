@@ -9,7 +9,9 @@ class ChannelPartnerExportWorker
     ChannelPartner.all.each_with_index do |channel_partner, index|
       sheet.insert_row(index+1, ChannelPartnerExportWorker.get_channel_partner_row(channel_partner))
     end
-    file.write("#{Rails.root}/channel-partner-#{SecureRandom.hex}.xls")
+    file_name = "channel-partner-#{SecureRandom.hex}.xls"
+    file.write("#{Rails.root}/#{file_name}")
+    ExportMailer.notify file_name, emails, "Channel Partners"
   end
 
   def self.get_column_names

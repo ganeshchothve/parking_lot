@@ -14,7 +14,10 @@ class UserExportWorker
     UserKyc.all.each_with_index do |user_kyc, index|
       sheet.insert_row(index+1, UserExportWorker.get_user_kyc_row(user_kyc))
     end
-    file.write("#{Rails.root}/user-#{SecureRandom.hex}.xls")
+    file_name = "user-#{SecureRandom.hex}.xls"
+    file.write("#{Rails.root}/#{file_name}")
+
+    ExportMailer.notify file_name, emails, "Users & User KYCs"
   end
 
   def self.get_kyc_column_names

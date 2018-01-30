@@ -40,6 +40,9 @@
         <% end %>
       </tbody>
     </table>
+    <% if ChannelPartnerPolicy.new(current_user, ChannelPartner).export? %>
+      <%= link_to "Export all #{global_labels['channel_partners']}", export_channel_partners_path, class: 'btn btn-outline-primary float-left ml-2' %>
+    <% end %>
   </div>
   <div class="col-md-2">
     <%= render "filters" %>

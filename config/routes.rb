@@ -14,12 +14,17 @@ Rails.application.routes.draw do
 
   get :register, to: 'home#register', as: :register
   post :check_and_register, to: 'home#check_and_register', as: :check_and_register
-  resources :channel_partners, except: [:destroy]
+  resources :channel_partners, except: [:destroy] do
+    get 'export', action: 'export', on: :collection, as: :export
+  end
   namespace :admin do
-    resources :receipts, only: [:index], controller: '/receipts'
+    resources :receipts, only: [:index], controller: '/receipts' do
+      get 'export', action: 'export', on: :collection, as: :export
+    end
     resources :project_units, only: [:index]
     resources :users, except: [:update] do
       get '/new/:role', action: 'new', on: :collection, as: :new_by_role
+      get 'export', action: 'export', on: :collection, as: :export
       resources :receipts, only: [:update, :edit, :show, :index, :new, :create], controller: '/receipts'
       resources :user_kycs, except: [:show, :destroy], controller: '/user_kycs'
       resources :project_units, only: [:index] do

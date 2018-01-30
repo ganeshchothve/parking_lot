@@ -3,6 +3,10 @@ class UserPolicy < ApplicationPolicy
     ['channel_partner', 'admin'].include?(user.role)
   end
 
+  def export?
+    ['admin'].include?(user.role)
+  end
+
   def edit?
     record.user_id == user.id
   end

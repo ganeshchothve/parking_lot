@@ -73,6 +73,9 @@
       <% end %>
       <%= link_to "Add Blocking #{global_labels['receipt']}", new_admin_user_receipt_path(@user), class: 'btn btn-primary' %>
     <% end %>
+    <% if UserPolicy.new(current_user, User).export? && @user.blank? %>
+      <%= link_to "Export all #{global_labels['receipts']}", export_admin_receipts_path, class: 'btn btn-outline-primary float-left ml-2' %>
+    <% end %>
   </div>
   <div class="col-md-2">
     <%= render "filters" %>

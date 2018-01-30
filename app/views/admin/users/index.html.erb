@@ -46,7 +46,7 @@
       </tbody>
     </table>
     <%= will_paginate @users %>
-    <div class="dropdown">
+    <div class="dropdown float-left">
       <a class="btn btn-primary dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add new</a>
       <div class="dropdown-menu">
         <% if UserPolicy.new(current_user, User.new(role: 'user')).new? %>
@@ -60,6 +60,9 @@
         <% end %>
       </div>
     </div>
+    <% if UserPolicy.new(current_user, User).export? %>
+      <%= link_to "Export all #{global_labels['users']}", export_admin_users_path, class: 'btn btn-outline-primary float-left ml-2' %>
+    <% end %>
   </div>
   <div class="col-md-2">
     <%= render "filters" %>
