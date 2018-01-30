@@ -397,7 +397,7 @@ DEPENDENCIES
   rails-observers!
   redis-namespace
   rest-client (~> 1.6, >= 1.6.7)
-  roo
+  roo (~> 2.7.0)
   sass-rails (~> 5.0)
   selenium-webdriver
   sidekiq
