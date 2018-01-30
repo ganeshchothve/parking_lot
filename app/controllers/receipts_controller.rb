@@ -9,7 +9,8 @@ class ReceiptsController < ApplicationController
   layout :set_layout
 
   def index
-    @receipts = Receipt.paginate(page: params[:page] || 1, per_page: 15)
+    @receipts = Receipt.build_criteria params
+    @receipts = @receipts.paginate(page: params[:page] || 1, per_page: 15)
   end
 
   def show
@@ -88,7 +89,11 @@ class ReceiptsController < ApplicationController
   end
 
   def set_user
-    @user = (params[:user_id].present? ? User.find(params[:user_id]) : current_user)
+    if current_user.role?("user")
+      @user = current_user
+    else
+      @user = (params[:user_id].present? ? User.find(params[:user_id]) : nil)
+    end
   end
 
   def set_project_unit

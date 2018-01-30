@@ -9,7 +9,7 @@ class Admin::UsersController < AdminController
   def index
     @users = User.build_criteria params
     if params[:fltrs].present? && params[:fltrs][:_id].present?
-      redirect_to admin_users_path(params[:fltrs][:_id])
+      redirect_to admin_user_path(params[:fltrs][:_id])
     else
       @users = @users.paginate(page: params[:page] || 1, per_page: 15)
     end
@@ -32,7 +32,7 @@ class Admin::UsersController < AdminController
   def create
     @user = User.new
     @user.assign_attributes(permitted_attributes(@user))
-    
+
     respond_to do |format|
       if @user.save
         format.html { redirect_to admin_users_path, notice: 'User was successfully created.' }

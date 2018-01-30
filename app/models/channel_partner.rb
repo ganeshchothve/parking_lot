@@ -33,6 +33,31 @@ class ChannelPartner
     end
   end
 
+  def self.build_criteria params={}
+    selector = {}
+    if params[:fltrs].present?
+      if params[:fltrs][:rera_id].present?
+        selector[:rera_id] = params[:fltrs][:rera_id]
+      end
+      if params[:fltrs][:status].present?
+        selector[:status] = params[:fltrs][:status]
+      end
+      if params[:fltrs][:location].present?
+        selector[:location] = params[:fltrs][:location]
+      end
+    end
+    or_selector = {}
+    if params[:q].present?
+      regex = ::Regexp.new(::Regexp.escape(params[:q]), 'i')
+      or_selector = {"$or": [{name: regex}, {email: regex}, {phone: regex}] }
+    end
+    self.where(selector).where(or_selector)
+  end
+
+  def ds_name
+    "#{name} - #{email} - #{phone}"
+  end
+
   private
   def user_level_uniqueness
     if self.new_record? || (self.status_changed? && self.status == 'active')

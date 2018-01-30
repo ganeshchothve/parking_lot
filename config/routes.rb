@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   post :check_and_register, to: 'home#check_and_register', as: :check_and_register
   resources :channel_partners, except: [:destroy]
   namespace :admin do
+    resources :receipts, only: [:index], controller: '/receipts'
     resources :project_units, only: [:index]
     resources :users, except: [:update] do
       get '/new/:role', action: 'new', on: :collection, as: :new_by_role

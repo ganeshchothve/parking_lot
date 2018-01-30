@@ -7,7 +7,12 @@ class ChannelPartnersController < ApplicationController
   layout :set_layout
 
   def index
-    @channel_partners = ChannelPartner.all
+    @channel_partners = ChannelPartner.build_criteria params
+    if params[:fltrs].present? && params[:fltrs][:_id].present?
+      redirect_to edit_channel_partner_path(params[:fltrs][:_id])
+    else
+      @channel_partners = @channel_partners.paginate(page: params[:page] || 1, per_page: 15)
+    end
   end
 
   def show

@@ -82,6 +82,25 @@ class Receipt
     end
   end
 
+  def self.build_criteria params={}
+    selector = {}
+    if params[:fltrs].present?
+      if params[:fltrs][:status].present?
+        selector[:status] = params[:fltrs][:status]
+      end
+      if params[:fltrs][:user_id].present?
+        selector[:user_id] = params[:fltrs][:user_id]
+      end
+      if params[:fltrs][:payment_mode].present?
+        selector[:payment_mode] = params[:fltrs][:payment_mode]
+      end
+      if params[:fltrs][:payment_type].present?
+        selector[:payment_type] = params[:fltrs][:payment_type]
+      end
+    end
+    self.where(selector)
+  end
+
   private
   def validate_total_amount
     if self.total_amount < ProjectUnit.blocking_amount && self.project_unit_id.blank? && self.new_record?

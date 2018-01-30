@@ -3,11 +3,13 @@
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="<%= after_sign_in_path_for(current_user) %>">Dashboard</a></li>
-      <% if UserPolicy.new(current_user, User).index? %>
-        <li class="breadcrumb-item"><a href="<%= admin_users_path %>">Users</a></li>
-      <% end %>
-      <% if UserPolicy.new(current_user, user).show? %>
-        <li class="breadcrumb-item"><a href="<%= admin_user_path(user) %>"><%= user.name %></a></li>
+      <% if user.present? %>
+        <% if UserPolicy.new(current_user, User).index? %>
+          <li class="breadcrumb-item"><a href="<%= admin_users_path %>">Users</a></li>
+        <% end %>
+        <% if UserPolicy.new(current_user, user).show? %>
+          <li class="breadcrumb-item"><a href="<%= admin_user_path(user) %>"><%= user.name %></a></li>
+        <% end %>
       <% end %>
       <li class="breadcrumb-item active" aria-current="page"><%= global_labels['receipts'] %></li>
     </ol>
