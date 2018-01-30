@@ -1,18 +1,28 @@
 class Admin::UsersController < AdminController
   before_action :authenticate_user!
-  before_action :set_user, except: [:index, :new, :create]
+  before_action :set_user, except: [:index, :export, :new, :create]
   before_action :authorize_resource
-  around_action :apply_policy_scope, only: :index
+  around_action :apply_policy_scope, only: [:index, :export]
 
   layout :set_layout
 
   def index
     @users = User.build_criteria params
     if params[:fltrs].present? && params[:fltrs][:_id].present?
-      redirect_to admin_users_path(params[:fltrs][:_id])
+      redirect_to admin_user_path(params[:fltrs][:_id])
     else
       @users = @users.paginate(page: params[:page] || 1, per_page: 15)
     end
+  end
+
+  def export
+    if Rails.env.development?
+      ChannelPartnerExportWorker.new.perform(current_user.email)
+    else
+      ChannelPartnerExportWorker.perform_async(current_user.email)
+    end
+    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    redirect_to admin_users_path
   end
 
   def show
@@ -32,9 +42,6 @@ class Admin::UsersController < AdminController
   def create
     @user = User.new
     @user.assign_attributes(permitted_attributes(@user))
-    generated_password = Devise.friendly_token.first(8)
-    @user.password = generated_password
-    # RegistrationMailer.welcome(user, generated_password).deliver #TODO: enable this. We might not need this if we are to use OTP based login
 
     respond_to do |format|
       if @user.save
@@ -51,7 +58,7 @@ class Admin::UsersController < AdminController
   end
 
   def authorize_resource
-    if params[:action] == "index"
+    if params[:action] == "index" || params[:action] == "export"
       authorize User
     elsif params[:action] == "new" || params[:action] == "create"
       if params[:role].present?

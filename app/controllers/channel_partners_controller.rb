@@ -7,7 +7,22 @@ class ChannelPartnersController < ApplicationController
   layout :set_layout
 
   def index
-    @channel_partners = ChannelPartner.all
+    @channel_partners = ChannelPartner.build_criteria params
+    if params[:fltrs].present? && params[:fltrs][:_id].present?
+      redirect_to edit_channel_partner_path(params[:fltrs][:_id])
+    else
+      @channel_partners = @channel_partners.paginate(page: params[:page] || 1, per_page: 15)
+    end
+  end
+
+  def export
+    if Rails.env.development?
+      UserExportWorker.new.perform(current_user.email)
+    else
+      UserExportWorker.perform_async(current_user.email)
+    end
+    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    redirect_to admin_users_path
   end
 
   def show
@@ -48,7 +63,7 @@ class ChannelPartnersController < ApplicationController
   end
 
   def authorize_resource
-    if params[:action] == "index"
+    if params[:action] == "index" || params[:action] == 'export'
       authorize ChannelPartner
     elsif params[:action] == "new"
       authorize ChannelPartner.new

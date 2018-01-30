@@ -4,6 +4,10 @@
       <th>Name</th>
       <th>Status</th>
       <th>User</th>
+      <th>Agreement Value (Rs.)</th>
+      <th>All Incl. Price (Rs.)</th>
+      <th>Paid Amt. (Rs.)</th>
+      <th>Pending Amt. to confirm booking (Rs.)</th>
       <th class="text-right">Actions</th>
     </tr>
   </thead>
@@ -13,8 +17,20 @@
       <td><%= project_unit.name %></td>
       <td><%= ProjectUnit.available_statuses.find{|x| x[:id] == project_unit.status}[:text] %></td>
       <td><%= project_unit.user_id.present? ? project_unit.user.name : "-" %></td>
+      <td><%= project_unit.costs %></td>
+      <td><%= project_unit.costs %></td>
+      <td><%= project_unit.total_amount_paid %></td>
+      <td><%= project_unit.pending_balance %></td>
       <td class="text-right">
-        <!-- TODO: direct link to receipts for this unit for this user -->
+
+        <div class="dropdown">
+          <a class="btn btn-light dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+          <div class="dropdown-menu dropdown-menu-right">
+            <% if UserPolicy.new(current_user, Receipt).index? %>
+              <%= link_to "View #{global_labels[:receipts]}", admin_user_project_unit_receipts_path(project_unit.user, project_unit), class: 'dropdown-item' %>
+            <% end %>
+          </div>
+        </div>
       </td>
     </tr>
     <% end %>

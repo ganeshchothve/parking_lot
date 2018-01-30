@@ -2,14 +2,25 @@ class ReceiptsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user
   before_action :set_project_unit
-  before_action :set_receipt, except: [:index, :new, :create]
+  before_action :set_receipt, except: [:index, :export, :new, :create]
   before_action :authorize_resource
-  around_action :apply_policy_scope, only: :index
+  around_action :apply_policy_scope, only: [:index, :export]
 
   layout :set_layout
 
   def index
-    @receipts = Receipt.paginate(page: params[:page] || 1, per_page: 15)
+    @receipts = Receipt.build_criteria params
+    @receipts = @receipts.paginate(page: params[:page] || 1, per_page: 15)
+  end
+
+  def export
+    if Rails.env.development?
+      ReceiptExportWorker.new.perform(current_user.email)
+    else
+      ReceiptExportWorker.perform_async(current_user.email)
+    end
+    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    redirect_to admin_users_path
   end
 
   def show
@@ -88,7 +99,11 @@ class ReceiptsController < ApplicationController
   end
 
   def set_user
-    @user = (params[:user_id].present? ? User.find(params[:user_id]) : current_user)
+    if current_user.role?("user")
+      @user = current_user
+    else
+      @user = (params[:user_id].present? ? User.find(params[:user_id]) : nil)
+    end
   end
 
   def set_project_unit
@@ -96,7 +111,7 @@ class ReceiptsController < ApplicationController
   end
 
   def authorize_resource
-    if params[:action] == "index"
+    if params[:action] == "index" || params[:action] == 'export'
       authorize Receipt
     elsif params[:action] == "new" || params[:action] == "create"
       authorize Receipt.new(user_id: @user.id)

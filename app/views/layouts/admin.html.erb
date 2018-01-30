@@ -30,7 +30,12 @@
             </li>
             <% if UserPolicy.new(current_user, User).index? %>
               <li class="nav-item">
-                <%= link_to 'Users', admin_users_path, class: 'nav-link' %>
+                <%= link_to "#{global_labels['users']}", admin_users_path, class: 'nav-link' %>
+              </li>
+            <% end %>
+            <% if UserPolicy.new(current_user, Receipt).index? %>
+              <li class="nav-item">
+                <%= link_to "#{global_labels[:receipts]}", admin_receipts_path, class: 'nav-link' %>
               </li>
             <% end %>
             <% if policy(:dashboard).project_units? %>

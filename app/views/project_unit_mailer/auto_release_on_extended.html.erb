@@ -1,1 +1,5 @@
-You have an extension of <%= (Date.today - @auto_release_on_was).days %> days on Unit - <%= @project_unit.name %> 
+<% if @auto_release_on_was.present? %>
+  You have an extension of on Unit - <%= @project_unit.name %>
+<% else %>
+  You have a grace <%= (@project_unit.auto_release_on - Date.today).days %> days on Unit - <%= @project_unit.name %>
+<% end %>
