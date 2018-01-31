@@ -23,6 +23,13 @@ class ProjectTower
   field :project_tower_status,type: String
   field :selldo_id, type: String
   field :project_id, type: String
+  field :completed_floor, type: Integer
+  field :customized_additional_costs, type: Hash
+  field :customized_extra_costs, type: Hash
+  field :customized_gov_costs, type: Array
+  field :customized_grace_period, type: Integer
+  field :customized_interest_percentage, type: Integer
+  field :project_tower_stage, type: String
 
   belongs_to :project
 

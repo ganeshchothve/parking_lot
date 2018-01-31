@@ -2,7 +2,7 @@ class Project
   include Mongoid::Document
   include Mongoid::Timestamps
   include ArrayBlankRejectable
-  
+
   field :name, type: String
   field :developer_name, type: String
   field :subtype,type: String
@@ -38,6 +38,8 @@ class Project
   field :vastu,type: String
   field :loading,type: Float
   field :lock_in_period,type: String
+  field :micro_market, type: String
+  field :rera_project_id, type: String
   field :specifications,type: Hash ,default: {}
   field :approval,type: String
 
@@ -68,10 +70,9 @@ class Project
   field :secondary_developer_ids, type: Array, default: []
   field :secondary_developer_names, type: Array, default: []
 
-  #embeds_many :contacts, as: :contactable
   has_many :project_units
   has_many :project_towers
-  embeds_one :address, as: :addressable
+  has_one :address, as: :addressable
 
   accepts_nested_attributes_for :address, allow_destroy: true #, :brochure_templates, :price_quote_templates, :images
   index(client_id:1)
