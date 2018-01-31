@@ -1,5 +1,8 @@
 class ProjectUnitObserver < Mongoid::Observer
   def before_save project_unit
+    if project_unit.base_price.blank? && project_unit.data_attributes.with_indifferent_access[:base_price].present?
+      project_unit.base_price = project_unit.data_attributes.with_indifferent_access[:base_price].to_f
+    end
     if project_unit.booking_price.blank? && project_unit.base_price.present?
       project_unit.booking_price = project_unit.base_price * 0.1
     end
