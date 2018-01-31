@@ -31,7 +31,7 @@ class UserKycsController < ApplicationController
     respond_to do |format|
       if @user_kyc.save
         format.html { redirect_to after_sign_in_path_for(current_user), notice: 'User kyc was successfully created.' }
-        format.json { render :show, status: :created, location: @user_kyc }
+        format.json { render json: @user_kyc, status: :created, location: @user_kyc }
       else
         format.html { render :new }
         format.json { render json: @user_kyc.errors, status: :unprocessable_entity }
@@ -43,7 +43,7 @@ class UserKycsController < ApplicationController
     respond_to do |format|
       if @user_kyc.update(permitted_attributes(@user_kyc))
         format.html { redirect_to after_sign_in_path_for(current_user), notice: 'User kyc was successfully updated.' }
-        format.json { render :show, status: :ok, location: @user_kyc }
+        format.json { render json: @user_kyc, status: :ok, location: @user_kyc }
       else
         format.html { render :edit }
         format.json { render json: @user_kyc.errors, status: :unprocessable_entity }
