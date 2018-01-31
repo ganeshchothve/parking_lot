@@ -6,14 +6,17 @@ class UnitConfiguration
   field :costs, type: Array,default: []
   field :data_attributes, type: Array, default: []
   field :selldo_id, type: String
-  field :brochure_template_ids, type: Array,default: []
-  field :price_quote_template_ids, type: Array,default: []
   field :images, type: Array,default: []
   field :is_active,type: Boolean, default: true
   field :sync_data,type: Boolean
   field :unit_configuration_active, type: String, default: "Yes"
   field :promoted, type: Boolean, default: false
   field :offers, type: Boolean, default: false
+  field :customized_additional_costs, type: Hash
+  field :customized_extra_costs, type: Hash
+  field :customized_gov_costs, type: Array
+  field :customized_grace_period, type: Integer
+  field :customized_interest_percentage, type: Integer
 
   validates :name, presence: true
   validates :saleable,:carpet,:base_rate,:base_price,:numericality => {:greater_than => 0}
