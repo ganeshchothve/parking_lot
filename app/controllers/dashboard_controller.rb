@@ -1,4 +1,3 @@
-
 # TODO: replace all messages & flash messages
 class DashboardController < ApplicationController
   before_action :authenticate_user!
@@ -132,5 +131,9 @@ class DashboardController < ApplicationController
       code = 'error'
     end
     code
+  end
+
+  def set_project_unit
+    @project_unit = ProjectUnit.find(params[:project_unit_id])
   end
 end
