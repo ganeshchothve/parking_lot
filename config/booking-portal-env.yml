@@ -1,0 +1,14 @@
+asset_sync:
+  AWS_ACCESS_KEY_ID:
+  AWS_SECRET_ACCESS_KEY:
+  FOG_DIRECTORY:
+  run_on_precompile: false
+redis:
+  host: localhost
+  port: 6379
+  db: 0
+  namespace: booking_portal_dev
+  password: 
+sidekiq:
+  username: ihub_admin
+  password: 891d8e721a1184a0dbafcb95103a205f

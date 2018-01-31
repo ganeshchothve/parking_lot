@@ -1,7 +1,7 @@
 require "sidekiq/web"
 Rails.application.routes.draw do
   Sidekiq::Web.use Rack::Auth::Basic do |username, password|
-    username == SIDEKIQ_CONFIG[:username] && password == SIDEKIQ_CONFIG[:password]
+    username == ENV_CONFIG[:sidekiq][:username] && password == ENV_CONFIG[:sidekiq][:password]
   end if Rails.env.production? || Rails.env.staging?
   mount Sidekiq::Web, at: "/sidekiq"
 
@@ -61,12 +61,11 @@ Rails.application.routes.draw do
     resources :user_kycs, except: [:show, :destroy]
   end
 
-  scope :api do
-    get '/sell_do/create_project', controller: "sell_do"
-    get '/sell_do/create_project_tower', controller: "sell_do"
-    get '/sell_do/create_project_unit', controller: "sell_do"
-    get '/sell_do/create_uc', controller: "sell_do"
-  end
+  match '/api/sell_do/create_developer', to: 'api/sell_do#update', via: [:get, :post]
+  match '/api/sell_do/create_project', to: "api/sell_do#update", via: [:get, :post]
+  match '/api/sell_do/create_project_tower', to: "api/sell_do#update", via: [:get, :post]
+  match '/api/sell_do/create_unit_configuration', to: "api/sell_do#update", via: [:get, :post]
+  match '/api/sell_do/create_project_unit', to: "api/sell_do#update", via: [:get, :post]
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
