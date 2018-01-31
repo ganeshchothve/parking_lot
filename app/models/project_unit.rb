@@ -209,6 +209,7 @@ class ProjectUnit
 
   def self.build_criteria params={}
     selector = {}
+    data_attributes_query = []
     if params[:fltrs].present?
       # TODO: handle search here
       if params[:fltrs][:status].present?
@@ -220,9 +221,22 @@ class ProjectUnit
           selector = {status: params[:fltrs][:status] }
         end
       end
+      if params[:fltrs][:project_tower_id].present?
+        selector[:project_tower_id] = params[:fltrs][:project_tower_id]
+      end
+
+      if params[:fltrs][:data_attributes].present?
+        if params[:fltrs][:data_attributes][:bedrooms].present?
+          data_attributes_query << {data_attributes: {"$elemMatch" =>{"n" => "bedrooms", "v" => params[:fltrs][:data_attributes][:bedrooms].to_i }}}
+        end
+        if params[:fltrs][:data_attributes][:base_price].present?
+          budget = params[:fltrs][:data_attributes][:base_price].split("-")
+          data_attributes_query << {data_attributes: {"$elemMatch" =>{"n" => "base_price", "v" => {"$gte" => budget.first.to_i, "$lte" => budget.last.to_i}}}}
+        end
+      end
     end
     selector[:name] = ::Regexp.new(::Regexp.escape(params[:q]), 'i') if params[:q].present?
-    self.where(selector)
+    self.where(selector).and(data_attributes_query)
   end
 
   def unit_configuration
@@ -231,5 +245,14 @@ class ProjectUnit
     else
       nil
     end
+  end
+
+  def ui_json
+    hash = self.as_json
+    hash.delete(:data_attributes)
+    @@keys.each do |k, klass|
+      hash[k] = self.send(k)
+    end
+    hash
   end
 end
