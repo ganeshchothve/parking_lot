@@ -1,7 +1,8 @@
+
 # TODO: replace all messages & flash messages
 class DashboardController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_project_unit, only: [:filter_data,:project_unit, :update_project_unit, :hold_project_unit, :checkout, :payment]
+  before_action :set_project_unit, only: [:project_unit, :update_project_unit, :hold_project_unit, :checkout, :payment]
   layout :set_layout
 
   def index
@@ -10,33 +11,19 @@ class DashboardController < ApplicationController
   end
 
   def get_towers
-    scope=ProjectUnit.all
-    scope = scope.where(:bedrooms=>params[:configuration]) if params[:configuration]
-    if params[:base_price]
-      budget= params[:base_price].split("-")
-      scope=scope.where(base_price: (budget.first..budget.last))
-    end
-    towers=scope.order_by(:project_tower_id => "asc").only([:project_tower_id, :project_tower_name]).uniq! {|e| e[:project_tower_id] }.to_json(:except => :_id)
-    render json: JSON(towers)
+    parameters = {fltrs: { data_attributes: {bedrooms: params[:bedrooms], base_price: params[:base_price]}} }
+    scope = ProjectUnit.build_criteria(parameters)
+    towers = scope.uniq{|e| e.project_tower_id }.collect{|x| {project_tower_id: x.project_tower_id, project_tower_name:x.project_tower_name}}
+    render json: towers
   end
 
   def get_units
-    projectunit=ProjectUnit.where(:project_tower_id=>params[:project_tower_id]).order_by(:floor => "desc").to_json
-    render json: JSON(projectunit)
+    parameters = {fltrs: { project_tower_id: params[:project_tower_id] } }
+    render json: ProjectUnit.build_criteria(parameters).collect{|x| x.ui_json}
   end
 
   def get_unit_details
-    render json: JSON(ProjectUnit.find(params[:unit_id]).to_json)
-  end
-
-  def filter_data
-    obj=params[:filter]
-    obj.keys.each do |key|
-      @project_unit.send("#{key}=", obj[key]) if project_tower.respond_to?("#{key}")
-    end
-    @project_unit.save
-    configuration=@project_unit.unit_configuration.to_json(:except => :_id)
-    render json: JSON(configuration)
+    render json: ProjectUnit.find(params[:unit_id]).ui_json
   end
 
   def project_units
@@ -44,17 +31,14 @@ class DashboardController < ApplicationController
     @project_units = current_user.project_units
   end
 
-  def project_units_new
-    authorize :dashboard, :project_units?
-    @project_units = current_user.project_units
-  end
-
   def project_unit
+    @project_unit = ProjectUnit.find(params[:project_unit_id])
     authorize @project_unit
   end
 
   def checkout
     if params[:project_unit_id].present?
+      @project_unit = ProjectUnit.find(params[:project_unit_id])
       authorize @project_unit
     else
       authorize(Receipt.new(user: current_user), :new?)
@@ -65,6 +49,7 @@ class DashboardController < ApplicationController
     @receipt = Receipt.new(creator: current_user, user: current_user, receipt_id: SecureRandom.hex, payment_mode: 'online', total_amount: ProjectUnit.blocking_amount, payment_type: 'blocking')
 
     if params[:project_unit_id]
+      @project_unit = ProjectUnit.find(params[:project_unit_id])
       authorize @project_unit
       if(current_user.total_unattached_balance >= ProjectUnit.blocking_amount)
         @receipt = current_user.unattached_blocking_receipt
@@ -87,6 +72,7 @@ class DashboardController < ApplicationController
   end
 
   def update_project_unit
+    @project_unit = ProjectUnit.find(params[:project_unit_id])
     authorize @project_unit
     respond_to do |format|
       if @project_unit.update_attributes(permitted_attributes(@project_unit))
@@ -101,6 +87,7 @@ class DashboardController < ApplicationController
   end
 
   def hold_project_unit
+    @project_unit = ProjectUnit.find(params[:project_unit_id])
     authorize @project_unit
     @project_unit.attributes = permitted_attributes(@project_unit)
     # TODO: get a lock on this model. Nobody can modify it.
@@ -123,10 +110,6 @@ class DashboardController < ApplicationController
   end
 
   private
-  def set_project_unit
-    @project_unit = ProjectUnit.find(params[:project_unit_id])  if params[:project_unit_id].present?
-  end
-
   def hold_on_third_party_inventory
     third_party_inventory_response, third_party_inventory_response_code = ThirdPartyInventory.hold_on_third_party_inventory(@project_unit)
     # TODO: if third_party_inventory timesouts, need to revert the hold on the project unit in our db

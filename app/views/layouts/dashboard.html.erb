@@ -94,7 +94,7 @@
             $('.hidden-field').fadeIn();
           }
           else{
-            $('.hidden-field').hide(); 
+            $('.hidden-field').hide();
           }
         })
         $('label.radio.attorney').on('click',function(){
@@ -103,7 +103,7 @@
             $('.name-attorney').fadeIn();
           }
           else{
-            $('.name-attorney').hide(); 
+            $('.name-attorney').hide();
           }
         })
         $('label.radio.company').on('click',function(){
@@ -112,7 +112,7 @@
             $('.gstin').fadeIn();
           }
           else{
-            $('.gstin').hide(); 
+            $('.gstin').hide();
           }
         })
         $('label.radio.bank-loan').on('click',function(){
@@ -121,7 +121,7 @@
             $('.bank').fadeIn();
           }
           else{
-            $('.bank').hide(); 
+            $('.bank').hide();
           }
         })
         $('.show-co-apl').on('click',function(){
@@ -130,7 +130,7 @@
             $('#show-co-applicant').fadeIn();
           }
           else{
-            $('#show-co-applicant').hide(); 
+            $('#show-co-applicant').hide();
           }
         })
         $('label.prev-prop').on('click',function(){
@@ -139,7 +139,7 @@
             $('.hidden-field-prev-prop').fadeIn();
           }
           else{
-            $('.hidden-field-prev-prop').hide(); 
+            $('.hidden-field-prev-prop').hide();
           }
         })
         $(".mediaCenterAccordion > li > span").click(function() {
@@ -154,8 +154,12 @@
             confirm_password.setCustomValidity('');
           }
         }
-        password.onchange = validatePassword;
-        confirm_password.onkeyup = validatePassword;
+        if(password){
+          password.onchange = validatePassword;
+        }
+        if(confirm_password){
+          confirm_password.onkeyup = validatePassword;
+        }
       })
     </script>
   </body>
