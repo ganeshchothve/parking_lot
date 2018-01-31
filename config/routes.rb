@@ -58,11 +58,11 @@ Rails.application.routes.draw do
     resources :user_kycs, except: [:show, :destroy]
   end
 
-  match '/api/sell_do/create_developer', controller: 'api/sell_do', via: [:get, :post]
-  match '/api/sell_do/create_project', controller: "api/sell_do", via: [:get, :post]
-  match '/api/sell_do/create_project_tower', controller: "api/sell_do", via: [:get, :post]
-  match '/api/sell_do/create_project_unit', controller: "api/sell_do", via: [:get, :post]
-  match '/api/sell_do/create_uc', controller: "api/sell_do", via: [:get, :post]
+  match '/api/sell_do/create_developer', to: 'api/sell_do#update', via: [:get, :post]
+  match '/api/sell_do/create_project', to: "api/sell_do#update", via: [:get, :post]
+  match '/api/sell_do/create_project_tower', to: "api/sell_do#update", via: [:get, :post]
+  match '/api/sell_do/create_unit_configuration', to: "api/sell_do#update", via: [:get, :post]
+  match '/api/sell_do/create_project_unit', to: "api/sell_do#update", via: [:get, :post]
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

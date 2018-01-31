@@ -17,7 +17,6 @@ class ProjectUnit
 
   # These fields are globally utlised on the server side
   field :name, type: String
-  field :base_price, type: Float
   field :booking_price, type: Float
   field :status, type: String, default: 'available'
   field :blocked_on, type: Date
@@ -124,9 +123,7 @@ class ProjectUnit
   has_and_belongs_to_many :user_kycs
 
   validates :client_id, :project_id, :project_tower_id, presence: true
-  validates :status, :name, :base_price, :booking_price, presence: true
-  validates :base_price, numericality: { greater_than: 0 }
-  validates :booking_price, numericality: { greater_than: ProjectUnit.blocking_amount }
+  validates :status, :name, presence: true
   validates :status, inclusion: {in: Proc.new{ ProjectUnit.available_statuses.collect{|x| x[:id]} } }
   validates :user_id, :user_kyc_ids, presence: true, if: Proc.new { |unit| ['available', 'not_available'].exclude?(unit.status) }
 
