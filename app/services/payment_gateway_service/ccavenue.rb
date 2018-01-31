@@ -7,8 +7,8 @@ module PaymentGatewayService
       payload += "order_id=" + @receipt.order_id.to_s + "&"
       payload += "currency=INR&"
       payload += "language=EN&"
-      payload += "redirect_url=#{Rails.application.config.action_mailer.host}/payment/#{@receipt.receipt_id}/process_payment/success&"
-      payload += "cancel_url=#{Rails.application.config.action_mailer.host}/payment/#{@receipt.receipt_id}/process_payment/failure&"
+      payload += "redirect_url=#{Rails.application.config.action_mailer.default_url_options[:host]}/payment/#{@receipt.receipt_id}/process_payment/success&"
+      payload += "cancel_url=#{Rails.application.config.action_mailer.default_url_options[:host]}/payment/#{@receipt.receipt_id}/process_payment/failure&"
       crypto = PaymentGatewayService::CCAvenueCrypto.new
       encrypted_data = crypto.encrypt(payload, payment_profile[:working_key])
       return encrypted_data
