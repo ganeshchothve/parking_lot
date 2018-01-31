@@ -46,7 +46,7 @@ Rails.application.routes.draw do
   post '/dashboard/get_units', to: 'dashboard#get_units'
   post '/dashboard/get_unit_details', to: 'dashboard#get_unit_details'
 
-  match 'payment/:receipt_id/process_payment', to: 'payment#process_payment', via: [:get, :post]
+  match 'payment/:receipt_id/process_payment/:ignore', to: 'payment#process_payment', via: [:get, :post]
 
   get :dashboard, to: 'dashboard#index', as: :dashboard
   scope :dashboard do

@@ -46,7 +46,7 @@ class ProjectUnitObserver < Mongoid::Observer
       if Rails.env.development?
         SMSWorker.new.perform("", "")
       else
-        SMSWorker.perform_async(to: "", content: "")
+        SMSWorker.perform_async("", "")
       end
     end
 
@@ -60,7 +60,7 @@ class ProjectUnitObserver < Mongoid::Observer
       if Rails.env.development?
         SMSWorker.new.perform("", "")
       else
-        SMSWorker.perform_async(to: "", content: "")
+        SMSWorker.perform_async("", "")
       end
     end
   end
