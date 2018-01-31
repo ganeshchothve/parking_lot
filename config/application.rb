@@ -13,11 +13,10 @@ require "sprockets/railtie"
 require "rails/test_unit/railtie"
 
 if Rails.env == "production" || Rails.env == "staging"
-  ENV_CONFIG = YAML.load(File.open( "/usr/local/booking-portal-env.yml" ).read).symbolize_keys
+  ENV_CONFIG = (YAML.load(File.open( "/usr/local/booking-portal-env.yml" ).read).symbolize_keys).with_indifferent_access
 else
-  ENV_CONFIG = YAML.load(File.open( "config/booking-portal-env.yml" ).read).symbolize_keys
+  ENV_CONFIG = (YAML.load(File.open( "config/booking-portal-env.yml" ).read).symbolize_keys).with_indifferent_access
 end
-ENV_CONFIG = ENV_CONFIG.with_indifferent_access
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.

@@ -38,7 +38,7 @@ bower.json
 .yardoc/*
 /doc
 dump.rdb
-
+config/booking-portal-env.yml
 
 # Mac OS X hidden files
 .DS_Store
