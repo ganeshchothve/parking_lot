@@ -35,7 +35,7 @@ Rails.application.routes.draw do
     resources :user_requests, except: [:destroy]
   end
 
-  match 'payment/:receipt_id/process_payment', to: 'payment#process_payment', via: [:get, :post]
+  match 'payment/:receipt_id/process_payment/:ignore', to: 'payment#process_payment', via: [:get, :post]
 
   get :dashboard, to: 'dashboard#index', as: :dashboard
   scope :dashboard do

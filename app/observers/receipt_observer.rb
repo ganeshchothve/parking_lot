@@ -42,7 +42,7 @@ class ReceiptObserver < Mongoid::Observer
         if Rails.env.development?
           SMSWorker.new.perform("", "")
         else
-          SMSWorker.perform_async(to: "", content: "")
+          SMSWorker.perform_async("", "")
         end
       elsif receipt.status == 'failed'
         mailer = ReceiptMailer.send_failure(receipt.id.to_s)
@@ -54,7 +54,7 @@ class ReceiptObserver < Mongoid::Observer
         if Rails.env.development?
           SMSWorker.new.perform("", "")
         else
-          SMSWorker.perform_async(to: "", content: "")
+          SMSWorker.perform_async("", "")
         end
       elsif receipt.status == 'clearance_pending'
         mailer = ReceiptMailer.send_clearance_pending(receipt.id.to_s)
@@ -66,7 +66,7 @@ class ReceiptObserver < Mongoid::Observer
         if Rails.env.development?
           SMSWorker.new.perform("", "")
         else
-          SMSWorker.perform_async(to: "", content: "")
+          SMSWorker.perform_async("", "")
         end
       end
     end
@@ -82,7 +82,7 @@ class ReceiptObserver < Mongoid::Observer
       if Rails.env.development?
         SMSWorker.new.perform("", "")
       else
-        SMSWorker.perform_async(to: "", content: "")
+        SMSWorker.perform_async("", "")
       end
     end
   end

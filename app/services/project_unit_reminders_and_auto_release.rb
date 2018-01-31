@@ -10,7 +10,7 @@ module ProjectUnitRemindersAndAutoRelease
       if Rails.env.development?
         SMSWorker.new.perform("", "")
       else
-        SMSWorker.perform_async(to: "", content: "")
+        SMSWorker.perform_async("", "")
       end
     end
   end
@@ -29,7 +29,7 @@ module ProjectUnitRemindersAndAutoRelease
         if Rails.env.development?
           SMSWorker.new.perform("", "")
         else
-          SMSWorker.perform_async(to: "", content: "")
+          SMSWorker.perform_async("", "")
         end
       else
         #TODO: Notify Team amura about an issue
