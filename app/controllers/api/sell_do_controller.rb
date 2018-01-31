@@ -22,19 +22,19 @@ class Api::SellDoController < ApplicationController
 	end
 
   def prepare_parameters
-    if params[:developer].present? && params[:action] == "create_developer"
+    if params[:developer].present?
       @parameters = JSON(params[:developer])
       @klass = Developer
-    elsif params[:project].present? && params[:action] == "create_project"
+    elsif params[:project].present?
 			@parameters = JSON(params[:project])
       @klass = Project
-    elsif params[:project_tower].present? && params[:action] == "create_project_tower"
+    elsif params[:project_tower].present?
       @parameters = JSON(params[:project_tower])
       @klass = ProjectTower
-		elsif params[:unit_configuration].present? && params[:action] == "create_unit_configuration"
+		elsif params[:unit_configuration].present?
 			@parameters = JSON(params[:unit_configuration])
       @klass = UnitConfiguration
-		elsif params[:project_unit].present? && params[:action] == "create_project_unit"
+		elsif params[:project_unit].present?
 			@parameters = JSON(params[:project_unit])
       @klass = ProjectUnit
 		else
