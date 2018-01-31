@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>BookingPortal</title>
     <%= csrf_meta_tags %>
 
@@ -21,37 +22,49 @@
       <div class="dash-logo text-center">
         <img src="<%= asset_path "embassy_springs_logo.png" %>" class="img-responsive" style="padding:0 5px;">
       </div>
+      <% if user_signed_in? %>
       <div class="dash-menu-wrapper">
+        <% if policy(:dashboard).index? %>
+          <div>
+              <!-- <a href="javascript:;" class="has-submenu" rel="booking"><span class="sprite-dasboard booking-details"></span><span class="menu-items">Booking Details</span></a>
+              <span class="submenu up" id="booking">
+                <a href="">One</a>
+                <a href="">Two</a>
+                <a href="">Three</a>
+              </span> -->
+                <a href="/dashboard" <%= params[:controller] == "dashboard" && params[:action] == "index" ? "class=active" : "" %>><span class="sprite-dasboard booking-details"></span><span class="menu-items-hide">Dashboard</span></a>
+          </div>
+        <% end %>
+        <% if UserKycPolicy.new(current_user, UserKyc).index? %>
+          <div>
+              <a href="/dashboard/user_kycs" <%= (params[:controller] == "user_kycs" && params[:action] == "index") || (params[:controller] == "user_kycs" && params[:action] == "edit") || (params[:controller] == "user_kycs" && params[:action] == "new") ? "class=active" : "" %>><span class="sprite-dasboard kyc-form"></span><span class="menu-items-hide">user kyc</span></a>
+          </div>
+        <% end %>
+        <% if policy(:dashboard).receipts? %>
         <div>
-            <a href="javascript:;" class="has-submenu" rel="booking"><span class="sprite-dasboard booking-details"></span><span class="menu-items">Booking Details</span></a>
-            <span class="submenu up" id="booking">
-              <a href="">One</a>
-              <a href="">Two</a>
-              <a href="">Three</a>
-            </span>
-        </div>
-        <div>
-          <a href="javascript:;"><span class="sprite-dasboard kyc-form"></span><span class="menu-items-hide">kyc form</span></a>
-        </div>
-        <div>
-          <a href="javascript:;" class="has-submenu" rel="payment-details"><span class="sprite-dasboard payment-details"></span><span class="menu-items">Receipts</span></a>
+              <a href="/dashboard/receipts" <%= params[:controller] == "receipts" && params[:action] == "index" ? "class=active" : "" %>><span class="sprite-dasboard payment-details"></span><span class="menu-items-hide">Payments</span></a>
+          <!-- <a href="javascript:;" class="has-submenu" rel="payment-details"><span class="sprite-dasboard payment-details"></span><span class="menu-items">Receipts</span></a>
           <span class="submenu up" id="payment-details">
               <a href="">One</a>
               <a href="">Two</a>
               <a href="">Three</a>
-          </span>
+          </span> -->
         </div>
-        <div>
-          <a href="/dashboard/project_units" <%= params[:action] == "project_units" ? "class=active" : "" %> ><span class="sprite-dasboard apartment-selector"></span><span class="menu-items-hide">apartment selector</span></a>
-        </div>
+        <% end %>
+        <% if policy(:dashboard).project_units? %>
+          <div>
+              <a href="/dashboard/project_units" <%= params[:controller] == "dashboard" && params[:action] == "project_units" ? "class=active" : "" %> ><span class="sprite-dasboard apartment-selector"></span><span class="menu-items-hide">apartment selector</span></a>
+          </div>
+        <% end %>
       </div>
       <div class="dash-menu-footer">
         <div>
-          <a href="javascript:;"><span class="sprite-signout sign-out"></span><span class="menu-items-hide">sign out</span></a>
+          <a href="/users/sign_out" data-method="delete" rel="nofollow"><span class="sprite-signout sign-out"></span><span class="menu-items-hide">sign out</span></a>
         </div>
       </div>
+      <% end %>
     </div>
-    <div hidden>
+    <div hidden class="mleft70">
       Welcome to Booking Portal<br/>
       <h6>Total Paid (you might some payments pending clearance): <%= current_user.total_amount_paid %></h6>
       <h6>Total Balance Pending (you might some payments pending clearance): <%= current_user.total_balance_pending %></h6>
@@ -74,27 +87,35 @@
         <% end %>
         <%= link_to 'Logout', destroy_user_session_path, method: 'delete' %>
       <% end %>
+      <p class="notice"><%= notice %></p>
+      <p class="alert"><%= alert %></p>
+      <% if UserKycPolicy.new(current_user, UserKyc.new(user_id: current_user.id)).new? && current_user.user_kycs.blank? %>
+      <p>
+        Please set up your User KYC. 
+        <%= link_to "Set up #{global_labels['user_kycs']}", new_user_kyc_path %>
+      </p>
+      <% elsif policy(:dashboard).project_units? %>
+        <%= link_to "Start searching #{global_labels['project_units']}", dashboard_project_units_path %>
+      <% end %>
     </div>
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
     <%= yield %>
     <script type="text/javascript">
       $(document).ready(function(){
-        $('.dash-menu-wrapper a').on('click',function(){
-          var link = $(this).attr('rel');
-          $(this).toggleClass("active").next('span').slideToggle(250).closest('div').siblings().find('a').removeClass('active').next('span').slideUp(250);
-        })
-        $('.dash-menu-wrapper').mouseleave(function(){
-          $('.submenu').hide();
-          $('.dash-menu-wrapper a').removeClass('active')
-        })
+        // $('.dash-menu-wrapper a').on('click',function(){
+        //   var link = $(this).attr('rel');
+        //   $(this).toggleClass("active").next('span').slideToggle(250).closest('div').siblings().find('a').removeClass('active').next('span').slideUp(250);
+        // })
+        // $('.dash-menu-wrapper').mouseleave(function(){
+        //   $('.submenu').hide();
+        //   $('.dash-menu-wrapper a').removeClass('active')
+        // })
         $('label.radio.nri').on('click',function(){
           var link = $(this).attr('data-link');
           if(link == 'yes'){
-            $('.hidden-field').fadeIn();
+            $('.poa').fadeIn();
           }
           else{
-            $('.hidden-field').hide(); 
+            $('.poa').hide(); 
           }
         })
         $('label.radio.attorney').on('click',function(){
@@ -154,8 +175,10 @@
             confirm_password.setCustomValidity('');
           }
         }
-        password.onchange = validatePassword;
-        confirm_password.onkeyup = validatePassword;
+        if (password && confirm_password) {
+          password.onchange = validatePassword;
+          confirm_password.onkeyup = validatePassword;
+        }
       })
     </script>
   </body>

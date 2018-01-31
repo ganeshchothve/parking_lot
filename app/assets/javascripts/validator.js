@@ -61,10 +61,12 @@ $(document).ready(function(){
     $(".form-group.has-error").closest(".panel-collapse").collapse('show');
     if(!valid){
       var $div = $form.find('.form-group.has-error:first')
-      $div.find('input,select,textarea').focus();
-      $('html, body').animate({
-          scrollTop: $div.offset().top - 100
-      }, 1000);
+      if($div.length > 0){
+        $div.find('input,select,textarea').focus();
+        $('html, body').animate({
+            scrollTop: $div.offset().top - 100
+        }, 1000);  
+      }
       e.preventDefault();
     }
   });

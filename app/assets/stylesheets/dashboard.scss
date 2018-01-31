@@ -15,18 +15,21 @@
  *= require daterangepicker.css
  *= require intlTelInput
  *= require selectize.css
+ *= require tooltipster.bundle
+ *= require tooltipster-sideTip-borderless.min
  *= require projectunitcustom.css
  *= require jquery.fileupload.css
+ *= require colorbox
  *= require_self
 */
 
 @import url('https://fonts.googleapis.com/css?family=Vidaloka');
-@import url('https://fonts.googleapis.com/css?family=Poppins:400,600');
+@import url('https://fonts.googleapis.com/css?family=Poppins:300,400,600');
 
 html, body{
 	padding: 0;
 	margin: 0;
-	font-size: 16px;
+	font-size: 14px;
 	-webkit-font-smoothing: antialiased;
 	font-family: 'Poppins', sans-serif;
 	background-color: #edeef0;
@@ -157,6 +160,16 @@ header{
 	color: #fff;
 	line-height: 30px;
 	font-size: 16px;
+	opacity: 0;
+	visibility: hidden;
+
+	transition: all 0.3s ease-in;
+	-webkit-transition: all 0.3s ease-in;
+	-moz-transition: all 0.3s ease-in;
+}
+.step-bar-wrapper.active{
+	opacity: 1;
+	visibility: visible;	
 }
 .step-bar-wrapper>div{
 	display: inline-block;
@@ -169,6 +182,36 @@ header{
 .step-bar-wrapper>div.active{
 	background-color: #7fb440;
 	border-radius: 14px;
+}
+.toggle-layout{
+	display: block;
+	margin-bottom: 10px;
+}
+.toggle-layout>img:first-child, .toggle-layout.active>img:last-child{
+	display: block;
+	margin: 0 auto;
+}
+.toggle-layout>img:last-child, .toggle-layout.active>img:first-child{
+	display: none;
+}
+.form-field-wrapper{
+	position: relative;
+}
+.form-group{
+	position: relative;
+}
+.form-group>span.help-block{
+	position: absolute;
+	top: 100%;
+	font-size: 12px;
+	color: #ca3f3f;
+}
+#user_kyc_form .form-field-wrapper>span.help-block{
+	position: absolute;
+	top: 100%;
+	font-size: 12px;
+	color: #ca3f3f;
+	left: 223px;
 }
 .screens-wrapper{
 	position: absolute;
@@ -248,7 +291,7 @@ header{
 	line-height: 36px;
 	padding: 0 20px;
 	border-radius: 18px;
-	font-size: 16px;
+	font-size: 14px;
 	text-transform: uppercase;
 	font-weight: 600;
 	cursor: pointer;
@@ -265,20 +308,25 @@ header{
 	display: inline-block;
 	width: 60%;
 }
-.tower-design{
+.tower-design-wrapper{
 	display: inline-block;
-    margin: 0 5px;
-    line-height: 40px;
-    padding: 0 20px;
+	margin: 0 25px;
+	width: 15%;
+	padding: 0 20px;
+	cursor: pointer;
+}
+.tower-design{
+    height: 250px;
+    padding-top: 110px;
     color: #000000;
-    background-color: #cacbcc;
-    font-size: 16px;
-    box-shadow: 2px 2px 4px #adabab;
-    cursor: pointer;
+    font-size: 18px;
+    background-color: #dcdcdc;
+    box-shadow: 1px 1px 1px #b9b9b9;
 
     transition: all 0.3s ease-in;
     -webkit-transition: all 0.3s ease-in;
     -moz-transition: all 0.3s ease-in;
+    margin-bottom: 10px;
 }
 .tower-design.active{
 	background-color: #c658a1;
@@ -288,12 +336,9 @@ header{
 	margin-bottom: 80px;
 }
 .filterBg{
-	background-color: #fff;
-	padding: 30px;
-	border-radius: 10px;
-}
-.filter-item-wrapper{
-	margin: 20px 0;
+	/*background-color: #fff;*/
+	padding: 10px 10px 0 10px;
+	/*border-radius: 10px;*/
 }
 
 
@@ -382,14 +427,19 @@ header{
 
 /*==== Selectize Overwrite ====*/
 [data-screen="3"] .filter-title{
-	font-size: 16px;
-	color: #9c9c9c;
+	font-size: 13px;
+	/*color: #9c9c9c;*/
+	color: #000;
 }
 [data-screen="3"] .filter-item{
 	margin-bottom: 15px;
+	padding: 0 10px;
 }
 .filter-submit-wrapper{
 	margin-top: 20px;
+}
+.margin-top-30{
+	margin-top: 30px !important;
 }
 [data-screen="3"] .selectize-input{
 	border: 0;
@@ -556,13 +606,30 @@ header{
 	background-color: #ff882b;
 }
 .bstatus-selected{
-	background-color: #ff1814
+	background-color: #7eb440;
 }
 .building-main-wrapper{
 	padding-left: 50px;
 }
 .building-main-wrapper .pageTitle, .floor-layout-wrapper .pageTitle{
 	margin-top: 10px;
+	margin-bottom: 20px;
+}
+.padding-left-30{
+	padding-left: 30px;
+	padding-right: 30px;
+	border-right: 1px solid #cacbcc;
+}
+.padding-left-30.noborder{
+	border-right: none;
+}
+.inline-block-wrap>div{
+	display: inline-block;
+	vertical-align: top;
+}
+.flat-details{
+    color: #72645c;
+    padding: 7px 0;
 }
 .main-wrapper{
 	display: inline-block;

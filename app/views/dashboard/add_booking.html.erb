@@ -1,187 +1,182 @@
-<style type="text/css">
-	body{
-		background-color: #fff;
-	}
-</style>
-<!-- <section>
-	<div class="col-12 text-center mbottom50">
-		<img src="<%= asset_path "embassy_springs_logo.png"%>" class="img-responsive">
-	</div>
-</section> -->
 <section class="mleft70">
-	<div class="col-12">
-		<p class="pageTitle pink big">Add Booking</p>
-	</div>
-	<div class="kyc-form-wrapper">
-		<div class="form-wrapper">
-			<form>
-				<ul class="mediaCenterAccordion">
-					<li>
-						<span class="active">Add Customer Details</span>
-						<div class="mediaCentercontent" style="display:block">
-							<div class="form-field-wrapper">
-								<label>Name*</label>
-								<input type="text" class="form-field" />
-							</div>
-							<div class="form-field-wrapper">
-								<label>Phone*</label>
-								<input type="text" class="form-field" />
-							</div>
-							<div class="form-field-wrapper">
-								<label>Email*</label>
-								<input type="email" class="form-field" />
-							</div>
-							<div class="form-field-wrapper">
-								<label>Date of Birth*</label>
-								<input type="date" class="form-field" />
-							</div>
-							<div class="form-field-wrapper">
-								<label>PAN No.*</label>
-								<input type="text" class="form-field" />
-							</div>
-							<div class="form-field-wrapper">
-								<label>Aadhar No.</label>
-								<input type="text" class="form-field" />
-							</div>
-							<div class="form-field-wrapper">
-								<label>NRI</label>
-								<label class="radio nri" data-link="yes">Yes
-								  <input type="radio" name="radio">
-								  <span class="checkmark"></span>
-								</label>
-								<label class="radio nri" data-link="no">No
-								  <input type="radio" name="radio">
-								  <span class="checkmark"></span>
-								</label>
-								<div class="hidden-field">
-									<p>Do you have Power of Attorney in India?</p>
-									<!-- <input type="text" class="form-field"> -->
-									<label class="radio attorney" data-link="yes">Yes
-									  <input type="radio" name="radio">
-									  <span class="checkmark"></span>
-									</label>
-									<label class="radio attorney" data-link="no">No
-									  <input type="radio" name="radio">
-									  <span class="checkmark"></span>
-									</label>
-									<input type="text" class="form-field name-attorney" style="display:none" />
-								</div>
-							</div>
-							<div class="form-field-wrapper">
-								<label>Are you a corporate buying an apartment</label>
-								<label class="radio company" data-link="yes">Yes
-								  <input type="radio" name="radio">
-								  <span class="checkmark"></span>
-								</label>
-								<label class="radio company" data-link="no">No
-								  <input type="radio" name="radio">
-								  <span class="checkmark"></span>
-								</label>
-								<div class="hidden-field gstin" style="display:none">
-									<p>GSTIN</p>
-									<input type="text" class="form-field">
-								</div>
-							</div>
-							<div class="form-field-wrapper">
-								<label>Payment Source</label>
-								<label class="radio self-funded" data-link="self-funded">Self Funded
-								  <input type="radio" name="radio">
-								  <span class="checkmark"></span>
-								</label>
-								<label class="radio bank-loan" data-link="bank-loan">Bank Loan
-								  <input type="radio" name="radio">
-								  <span class="checkmark"></span>
-								</label>
-								<div class="hidden-field bank" style="display:none">
-									<div class="dropdown-wrapper">
-										<select class="init-selectize required" name="configuration">
-											<option value="">Select Bank</option>
-											<option value="1">HDFC</option>
-											<option value="2">Axis</option>
-											<option value="3">Other</option>
-										</select>
+	<div class="container">
+		<div class="col-12">
+			<div class="mtop10">
+					<p class="pageTitle pink big">Add Booking</p>
+			</div>
+				<div class="add-booking-wrapper">
+					<div class="form-wrapper">
+						<form>
+							<ul class="mediaCenterAccordion">
+								<li>
+									<span class="active">Add Customer Details</span>
+									<div class="mediaCentercontent" style="display:block">
+										<div class="form-field-wrapper">
+											<label>Name*</label>
+											<input type="text" class="form-field" />
+										</div>
+										<div class="form-field-wrapper">
+											<label>Phone*</label>
+											<input type="text" class="form-field" />
+										</div>
+										<div class="form-field-wrapper">
+											<label>Email*</label>
+											<input type="email" class="form-field" />
+										</div>
+										<div class="form-field-wrapper">
+											<label>Date of Birth*</label>
+											<input type="date" class="form-field" />
+										</div>
+										<div class="form-field-wrapper">
+											<label>PAN No.*</label>
+											<input type="text" class="form-field" />
+										</div>
+										<div class="form-field-wrapper">
+											<label>Aadhar No.</label>
+											<input type="text" class="form-field" />
+										</div>
+										<div class="form-field-wrapper">
+											<label>NRI</label>
+											<label class="radio nri" data-link="yes">Yes
+											  <input type="radio" name="radio">
+											  <span class="checkmark"></span>
+											</label>
+											<label class="radio nri" data-link="no">No
+											  <input type="radio" name="radio">
+											  <span class="checkmark"></span>
+											</label>
+											<div class="hidden-field">
+												<p>Do you have Power of Attorney in India?</p>
+												<!-- <input type="text" class="form-field"> -->
+												<label class="radio attorney" data-link="yes">Yes
+												  <input type="radio" name="radio">
+												  <span class="checkmark"></span>
+												</label>
+												<label class="radio attorney" data-link="no">No
+												  <input type="radio" name="radio">
+												  <span class="checkmark"></span>
+												</label>
+												<input type="text" class="form-field name-attorney" style="display:none" />
+											</div>
+										</div>
+										<div class="form-field-wrapper">
+											<label>Are you a corporate buying an apartment</label>
+											<label class="radio company" data-link="yes">Yes
+											  <input type="radio" name="radio">
+											  <span class="checkmark"></span>
+											</label>
+											<label class="radio company" data-link="no">No
+											  <input type="radio" name="radio">
+											  <span class="checkmark"></span>
+											</label>
+											<div class="hidden-field gstin" style="display:none">
+												<p>GSTIN</p>
+												<input type="text" class="form-field">
+											</div>
+										</div>
+										<div class="form-field-wrapper">
+											<label>Payment Source</label>
+											<label class="radio self-funded" data-link="self-funded">Self Funded
+											  <input type="radio" name="radio">
+											  <span class="checkmark"></span>
+											</label>
+											<label class="radio bank-loan" data-link="bank-loan">Bank Loan
+											  <input type="radio" name="radio">
+											  <span class="checkmark"></span>
+											</label>
+											<div class="hidden-field bank" style="display:none">
+												<div class="dropdown-wrapper">
+													<select class="init-selectize required" name="configuration">
+														<option value="">Select Bank</option>
+														<option value="1">HDFC</option>
+														<option value="2">Axis</option>
+														<option value="3">Other</option>
+													</select>
+												</div>
+											</div>
+										</div>
+										<div class="form-field-wrapper">
+											<label>Have you bought property at Embassy Previously?</label>
+											<label class="radio prev-prop" data-href="yes">Yes
+											  <input type="radio" name="radio">
+											  <span class="checkmark"></span>
+											</label>
+											<label class="radio prev-prop" data-href="no">No
+											  <input type="radio" name="radio">
+											  <span class="checkmark"></span>
+											</label>
+											<div class="hidden-field-prev-prop">
+												<p>If yes provide</p>
+												<div class="form-field-wrapper">
+													<label>Name of project</label><br/>
+													<input type="text" class="form-field" />
+												</div>
+												<div class="form-field-wrapper">
+													<label>Name of Owner</label><br/>
+													<input type="text" class="form-field" />
+												</div>
+											</div>
+										</div>
 									</div>
-								</div>
-							</div>
-							<div class="form-field-wrapper">
-								<label>Have you bought property at Embassy Previously?</label>
-								<label class="radio prev-prop" data-href="yes">Yes
-								  <input type="radio" name="radio">
-								  <span class="checkmark"></span>
-								</label>
-								<label class="radio prev-prop" data-href="no">No
-								  <input type="radio" name="radio">
-								  <span class="checkmark"></span>
-								</label>
-								<div class="hidden-field-prev-prop">
-									<p>If yes provide</p>
-									<div class="form-field-wrapper">
-										<label>Name of project</label><br/>
-										<input type="text" class="form-field" />
+								</li>
+								<li>
+									<span>Add Co Applicant</span>
+									<div class="mediaCentercontent">
+										<div class="form-field-wrapper">
+											<label>Name*</label>
+											<input type="text" class="form-field" />
+										</div>
+										<div class="form-field-wrapper">
+											<label>Phone*</label>
+											<input type="text" class="form-field" />
+										</div>
+										<div class="form-field-wrapper">
+											<label>Email*</label>
+											<input type="email" class="form-field" />
+										</div>
+										<div class="form-field-wrapper">
+											<label>Date of Birth*</label>
+											<input type="date" class="form-field" />
+										</div>
+										<div class="form-field-wrapper">
+											<label>PAN No.*</label>
+											<input type="text" class="form-field" />
+										</div>
+										<div class="form-field-wrapper">
+											<label>Aadhar No.</label>
+											<input type="text" class="form-field" />
+										</div>
 									</div>
-									<div class="form-field-wrapper">
-										<label>Name of Owner</label><br/>
-										<input type="text" class="form-field" />
+								</li>
+								<li>
+									<span>Add Payment Details</span>
+									<div class="mediaCentercontent">
+										<div class="form-field-wrapper">
+											<label>Cheque Number</label>
+											<input type="text" class="form-field" />
+										</div>
+										<div class="form-field-wrapper">
+											<label>Name of Bank</label>
+											<input type="text" class="form-field" />
+										</div>
+										<div class="form-field-wrapper">
+											<label>Booking Amount</label>
+											<input type="text" class="form-field" />
+										</div>
+										<div class="form-field-wrapper">
+											<label>Photo of Cheque</label>
+											<input type="file" id="upload-image"  accept="image/x-png,image/gif,image/jpeg" />
+										</div>
 									</div>
-								</div>
-							</div>
-						</div>
-					</li>
-					<li>
-						<span>Add Co Applicant</span>
-						<div class="mediaCentercontent">
+								</li>	
+							</ul>
 							<div class="form-field-wrapper">
-								<label>Name*</label>
-								<input type="text" class="form-field" />
+								<input type="submit" class="form-field btn yellow" style="width:auto" value="submit →" />
 							</div>
-							<div class="form-field-wrapper">
-								<label>Phone*</label>
-								<input type="text" class="form-field" />
-							</div>
-							<div class="form-field-wrapper">
-								<label>Email*</label>
-								<input type="email" class="form-field" />
-							</div>
-							<div class="form-field-wrapper">
-								<label>Date of Birth*</label>
-								<input type="date" class="form-field" />
-							</div>
-							<div class="form-field-wrapper">
-								<label>PAN No.*</label>
-								<input type="text" class="form-field" />
-							</div>
-							<div class="form-field-wrapper">
-								<label>Aadhar No.</label>
-								<input type="text" class="form-field" />
-							</div>
-						</div>
-					</li>
-					<li>
-						<span>Add Payment Details</span>
-						<div class="mediaCentercontent">
-							<div class="form-field-wrapper">
-								<label>Cheque Number</label>
-								<input type="text" class="form-field" />
-							</div>
-							<div class="form-field-wrapper">
-								<label>Name of Bank</label>
-								<input type="text" class="form-field" />
-							</div>
-							<div class="form-field-wrapper">
-								<label>Booking Amount</label>
-								<input type="text" class="form-field" />
-							</div>
-							<div class="form-field-wrapper">
-								<label>Photo of Cheque</label>
-								<input type="file" id="upload-image"  accept="image/x-png,image/gif,image/jpeg" />
-							</div>
-						</div>
-					</li>	
-				</ul>
-				<div class="form-field-wrapper">
-					<input type="submit" class="form-field btn yellow" style="width:auto" value="submit →" />
+						</form>
+					</div>
 				</div>
-			</form>
 		</div>
 	</div>
+	
 </section>

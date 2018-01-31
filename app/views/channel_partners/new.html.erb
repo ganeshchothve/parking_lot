@@ -1,1 +1,153 @@
-<%= render 'form', channel_partner: @channel_partner %>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>BookingPortal</title>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag 'dashboard' %>
+    <%= javascript_include_tag 'dashboard' %>
+    <%= javascript_tag do %>
+      <% if user_signed_in? %>
+        if(typeof App === "undefined"){
+          App = {};
+        }
+        App.current_user = <%= raw current_user.to_json %>;
+      <% end %>
+    <% end %>
+    <style type="text/css">
+    	.main-margin{
+    		margin-top: 150px;
+    	}
+    	header{
+    		padding-left: 0;
+    	}
+    	.sell_do_form_actual_container .title{
+			display: none;
+    	}
+    	.sell_do_form_actual_container .greeting{
+    		display: none;
+    	}
+    	body{
+    		background-image: url('<%= asset_path "screen-1-bg.jpg" %>');
+    		background-size: cover;
+    	}
+    	.separator{
+    		margin-top: 20px;
+    		padding-top: 20px;
+    		padding-bottom: 50px;
+    	}
+    	.separator::after{
+    		content: "";
+    		position: absolute;
+    		top: 0;
+    		left: 20px;
+    		right: 20px;
+    		height: 1px;
+    		background-color: #fff;
+    	}
+    	.form-group{
+    		text-align: left;
+    	}
+    	.selldof{
+    		font-family: 'Poppins', sans-serif !important;
+    		font-size: inherit !important;
+    	}
+    	label.control-label{
+    		color: #fff !important;
+    		font-weight: 400 !important;
+    		font-size: 12px !important;
+    	}
+    	#channel_partner_form .form-control, .sell_do_form_control{
+    		border-radius: 0 !important;
+    		box-shadow: 0 !important;
+    		-webkit-box-shadow: 0 !important;
+    		font-family: 'Poppins', sans-serif !important;
+    		outline: none !important;
+    		font-size: 14px !important;
+    	}
+    	#channel_partner_form .form-control:focus{
+    		outline: none !important;
+    	}
+    	.form-field-wrapper{
+    		text-align: left !important;
+    	}
+		.form-field-wrapper label.black{
+			color: #000;
+		}
+		.form-field-wrapper .form-field, .form-field-wrapper select.form-field{
+			padding: 8px 5px;
+		    width: 60%;
+		    font-family: inherit;
+		    background-color: #fff;
+		    display: inline-block;
+		    border: 1px solid #d2d2d2;
+		}
+		.cancel-booking-wrapper, .kyc-form-wrapper{
+			padding: 60px 0px 60px 0px;
+			width: 60%;
+		}
+		.form-field-wrapper{
+			margin-bottom: 20px;
+		}
+    	/*.padding-right-30{
+    		padding-right: 30px;
+    	}
+    	.padding-right-30.relative::after{
+    		content: "";
+			position: absolute;
+			right: 0;
+			top: 100px;
+			width: 1px;
+			bottom: 30px;
+			background-color: #fff;
+    	}
+    	.padding-left-30{
+    		padding-left: 30px;
+    	}*/
+    </style>
+  </head>
+
+  <body>
+    <div id="notify"></div>
+    
+<header>
+	<div class="container">
+		<div class="col-12 text-center">
+			<a href="javascript:void(0);" class="logo-wrapper">
+				<img src="<%= asset_path "embassy_springs_logo.png" %>" class="img-responsive" />
+			</a>
+		</div>
+	</div>
+</header>	
+
+   	<section>
+   		<div class="container">
+   			<div class="col-12 text-center main-margin">
+   				
+   			</div>
+   			<div class="col-12">
+   				<div class="col-3">&nbsp;</div>
+	   			<div class="col-6 text-center padding-right-30">
+	   				<div class="pageTitle big">Register Now</div>
+	   				<div>
+		   				<%= render 'form', channel_partner: @channel_partner %>
+					</div>
+					<div class="col-12 separator relative">
+						<div class="pageTitle medium">
+							Already Registered?
+						</div>
+						<div>
+							<a class="btn" href="/users/sign_in">Sign In</a>	
+						</div>
+					</div>
+	   			</div>
+	   			<!-- <div class="col-6 text-center padding-left-30">
+	   				<div class="pageTitle medium main-margin">Or</div>
+	   				
+	   			</div> -->
+	   		</div>
+   		</div>
+   	</section>
+
+  </body>
+</html>

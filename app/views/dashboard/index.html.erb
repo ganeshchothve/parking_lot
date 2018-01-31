@@ -6,19 +6,22 @@
 		background-color: #edeef0;
 	}
 </style>
-<section>
-	<div class="col-12 text-center mbottom50">
-		<img src="<%= asset_path "embassy_springs_logo.png"%>" class="img-responsive">
-	</div>
-</section>
 <section class="mleft70">
-	<div class="col-12">
-		<p class="pageTitle pink big">Dashboard</p>
-	</div>
-	<div class="clearfix"></div>
-	<div class="col-12">
-		<div class="booking-detail-wrapper">
-			<%= render 'project_units', {project_units: current_user.project_units} %>
+	<div class="container">
+		<div class="col-12 mtop10">
+			<p class="pageTitle pink big">Dashboard</p>
 		</div>
+		<div class="clearfix"></div>
+		<div class="col-12 dashboard-banner text-center">
+			<div class="pageTitle big">Book your Embassy home now by paying a token of just Rs. 30,000</div>
+			<div class="pageTitle medium">Book in 4 easy steps<br/>Home Prices starting from Rs. 43 lacs</div>
+			<a href="/dashboard/project_units" class="banner-btn">Choose Your Embassy Home</a>
+		</div>
+		<div class="clearfix"></div>
+		<div class="col-12">
+			<%= render 'project_units', {project_units: current_user.project_units.where(status: 'hold')} %>
+			<%= render 'project_units', {project_units: current_user.project_units.ne(status: 'hold')} %>
+		</div>
+		<div class="clearfix"></div>
 	</div>
 </section>

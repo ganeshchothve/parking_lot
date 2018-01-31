@@ -27,6 +27,9 @@
 //= require daterangepicker
 //= require fontawesome-all
 //= require bootstrap-datetimepicker.min
+//= require tooltipster.bundle.min
+//= require jquery.colorbox-min
+//= require jquery.zoom.min
 
 //= require utils
 //= require file-icon
@@ -41,6 +44,31 @@ $.ajaxSetup({
 });
 
 $(document).ready(function(){
+
+	$('body').on('mouseenter', '.unit-tooltip:not(.tooltipstered)', function(){
+	    $(this)
+	        .tooltipster({
+	        	theme: 'tooltipster-borderless',
+			 	contentAsHTML: true,
+			 	functionInit: function(instance, helper){
+			 		var content = instance.content(),
+		            	people = JSON.parse(content);
+
+		            newContent = '<div>Flat No: '+ people[0] +'</div><div>Bedrooms: '+ people[3] +'</div><div>Carpet Area: '+ people[1] +' Sq.Ft.</div><div>Base Price: Rs.'+ people[2] +'/-</div>';
+		        	instance.content(newContent);
+			 	}
+	        })
+	        .tooltipster('open');
+	});
+
+	$(".colorbox-init").colorbox({
+		maxWidth: "90%",
+		maxHeight: "90%",
+		onComplete: function(){
+			$('#cboxLoadedContent').zoom();
+		}
+	});
+
 	currentScreen = 1;
 	selectedTower = "";
 	var getAllHeights = [];
@@ -57,6 +85,23 @@ $(document).ready(function(){
 		goToNextScreen(currentScreen, navigateTo);
 	});
 
+	$(".hold-button").on("click", function(){
+		$("#existing_kyc_form").submit();
+	});
+
+	$("#user_kyc_form").on("submit", function(e){
+		ajaxUpdate($(this).serialize(), $(this).attr("action"), function(responseData){
+			var kyc_userid = responseData._id;
+			var kyc_name = responseData.name;
+
+			$('[name="project_unit[user_kyc_ids][]"]')[0].selectize.addOption({text: kyc_name, value: kyc_userid});
+			$('[name="project_unit[user_kyc_ids][]"]')[0].selectize.setValue(kyc_userid);
+
+			$("#existing_kyc_form").submit();
+		});
+		e.preventDefault();
+	});
+
 	$("#tower-selector").on("click", ".tower-design", function(){
 		if($(this).hasClass("active")){
 			$("#tower-selector .tower-design").removeClass("active");
@@ -68,8 +113,8 @@ $(document).ready(function(){
 	});
 
 	$("#append-floors, #append-floors-clone").on("click", ".apt-selector-box .apt.bstatus-available", function(){
-		$("#append-floors .apt-selector-box .apt.bstatus-available, #append-floors-clone .apt-selector-box .apt.bstatus-available").removeClass("bstatus-blocked");
-		$(this).addClass("bstatus-blocked");
+		$("#append-floors .apt-selector-box .apt.bstatus-available, #append-floors-clone .apt-selector-box .apt.bstatus-available").removeClass("bstatus-selected");
+		$(this).addClass("bstatus-selected");
 		var type = $(this).data("testcount");
 		var selectedValues = JSON.parse(localStorage.getItem("selectedValues"));
 		selectedValues.unit_id = $(this).data("unit-id");
@@ -77,12 +122,18 @@ $(document).ready(function(){
 
 		hightlightUnit(type);
 
-		if($(this).parents(".apt-selector-wrapper").attr("id") == "append-floors"){
-			goToNextScreen(currentScreen, 4);	
-		}
+		// if($(this).parents(".apt-selector-wrapper").attr("id") == "append-floors"){
+		// 	goToNextScreen(currentScreen, 4);	
+		// }
+	});
+
+	$(".preventSubmit").on("click", function(e){
+		e.preventDefault();
 	});
 
 	$(".filter-submit-wrapper button").on("click", function(e){
+
+		//clearHighlightedUnit();
 		var data = $("#filter-form").serializeArray();
 		var selectedValues = JSON.parse(localStorage.getItem("selectedValues"));
 
@@ -145,7 +196,7 @@ $(document).ready(function(){
 							finalStatus = status[0];
 						}
 
-						buildingHtml += '<span data-testcount="'+ testCount +'" data-unit-id="'+ unit._id +'" class="apt bstatus-' + finalStatus + '" title="'+ unit.name +'"></span>';
+						buildingHtml += '<span data-testcount="'+ testCount +'" data-unit-id="'+ unit._id +'" class="unit-tooltip apt bstatus-' + finalStatus + '" title=\'["' + unit.name + '","'+ unit.carpet.toFixed(2) +'","'+ unit.base_price +'","'+ unit.bedrooms +'"]\'></span>';
 						testCount++;
 					}
 					buildingHtml += '</div>';
@@ -163,11 +214,16 @@ $(window).on("load", function(){
 });
 
 function hightlightUnit(type){
+	$(".toggle-layout").toggleClass("active");
+	//clearHighlightedUnit();
+	//$("#floor-layout")[0].contentDocument.getElementsByClassName("type-"+type)[0].classList.add("active");
+}
+
+function clearHighlightedUnit(){
 	var typelength = $("#floor-layout")[0].contentDocument.getElementsByClassName("flattype").length;
 	for(let x = 0; x < typelength; x++){
 		$("#floor-layout")[0].contentDocument.getElementsByClassName("flattype")[x].classList.remove("active");
 	}
-	$("#floor-layout")[0].contentDocument.getElementsByClassName("type-"+type)[0].classList.add("active");
 }
 
 function goToNextScreen(cScreen, navigateTo){
@@ -187,7 +243,9 @@ function goToNextScreen(cScreen, navigateTo){
 		if(Object.keys(selectedValues).length > 0){
 			ajaxUpdate(selectedValues, "/dashboard/get_towers", function(responseData){
 				if(responseData){
-					console.log(responseData);
+
+					$(".step-bar-wrapper").addClass("active");
+
 					navigateScreens(navigateTo, currentScreen, function(){
 					//===== stuff to do with screen 2
 						var towerHtml = "";
@@ -195,7 +253,7 @@ function goToNextScreen(cScreen, navigateTo){
 							$('[name="tower"]').each(function(){
 								this.selectize.addOption({text: tower.project_tower_name, value: tower.project_tower_id});	
 							});
-							towerHtml += '<div class="tower-design" data-towerid="'+ tower.project_tower_id +'">'+ tower.project_tower_name +'</div>';
+							towerHtml += '<div class="tower-design-wrapper"><div class="tower-design" data-towerid="'+ tower.project_tower_id +'">'+ tower.project_tower_name +'</div><div>Total Units: 27<br />Available Units: 16</div></div>';
 						}
 
 						$("#tower-selector").html(towerHtml);
@@ -260,7 +318,8 @@ function goToNextScreen(cScreen, navigateTo){
 								finalStatus = status[0];
 							}
 
-							buildingHtml += '<span data-testcount="'+ testCount +'" data-unit-id="'+ unit._id +'" class="apt bstatus-' + finalStatus + '" title="'+ unit.name +'"></span>';
+							//buildingHtml += '<span data-testcount="'+ testCount +'" data-unit-id="'+ unit._id +'" class="apt bstatus-' + finalStatus + '" title="'+ unit.name +'"></span>';
+							buildingHtml += '<span data-testcount="'+ testCount +'" data-unit-id="'+ unit._id +'" class="unit-tooltip apt bstatus-' + finalStatus + '" title=\'["' + unit.name + '","'+ unit.carpet.toFixed(2) +'","'+ unit.base_price +'","'+ unit.bedrooms +'"]\'></span>';
 							testCount++;
 						}
 						buildingHtml += '</div>';
@@ -283,26 +342,29 @@ function goToNextScreen(cScreen, navigateTo){
 			notify("Please select a tower to proceed.", "error", 3000, 300);	
 		}
 	} else if (currentScreen == 3 && navigateTo == 4){
-		$("#append-floors-clone").html($("#append-floors").html());
-		navigateScreens(navigateTo, currentScreen);
-		currentScreen = navigateTo;
-	} else if(currentScreen == 4 && navigateTo == 5){
 		var selectedValues = JSON.parse(localStorage.getItem("selectedValues"));
 
+		$("#existing_kyc_form").attr("action", "/dashboard/hold_project_unit/"+selectedValues.unit_id);
+
 		ajaxUpdate({unit_id:selectedValues.unit_id}, "/dashboard/get_unit_details", function(responseData){
-			// console.log(responseData);
 			$(".flat-no").text("Flat: " + responseData.name);
-			
-			var flatDetailsHtml = 'Tower: '+ responseData.project_tower_name +'<br/>\
+			var flatDetailsHtml = '<div class="pull-left padding-left-30">';
+			flatDetailsHtml += 'Tower: '+ responseData.project_tower_name +'<br/>\
 					Floor: '+ responseData.floor +'<br/>\
-					Flat no: '+ responseData.name +'<br/>\
+					Flat no: '+ responseData.name +'<br/>';
+			flatDetailsHtml += '</div><div class="pull-left padding-left-30 noborder">\
 					Configuration: '+ responseData.bedrooms +' BHK<br/>\
-					Min. Carpet Area: '+ responseData.carpet +' Sq.Ft.<br/>\
-					Starting Price: '+ responseData.base_rate +' / Sq. Ft.<br/>';
-					$(".flat-details").html(flatDetailsHtml);
+					Min. Carpet Area: '+ responseData.carpet.toFixed(2) +' Sq.Ft.<br/>\
+					Starting Price: '+ responseData.base_rate +' / Sq. Ft.</div>';
+			
+			$(".flat-details").html(flatDetailsHtml);
+
 			navigateScreens(navigateTo, currentScreen);
 			currentScreen = navigateTo;
-		})
+		});
+	} else if(currentScreen == 4 && navigateTo == 5){
+		navigateScreens(navigateTo, currentScreen);
+		currentScreen = navigateTo;
 	} else {
 		navigateScreens(navigateTo, currentScreen);
 		currentScreen = navigateTo;
@@ -340,8 +402,12 @@ function notify(msg, type, display_msg_time, transition_delay=300){
 }
 
 function navigateScreens(navigateTo, cScreen, callback){
+	if(navigateTo == 1){
+		$(".step-bar-wrapper").removeClass("active");
+	}
 	$(".step-bar-wrapper>div").removeClass("active");
 	$(".step-bar-wrapper>div[data-step="+navigateTo+"]").addClass("active");
+
 	if(navigateTo>cScreen){ //next
 		$(".screens-wrapper[data-screen="+cScreen+"]").addClass("prev");
 		$(".screens-wrapper[data-screen="+navigateTo+"]").removeClass("next");
@@ -349,6 +415,7 @@ function navigateScreens(navigateTo, cScreen, callback){
 		$(".screens-wrapper[data-screen="+cScreen+"]").addClass("next");
 		$(".screens-wrapper[data-screen="+navigateTo+"]").removeClass("prev");
 	}
+	
 
 	// window.history.pushState("", "", '/step-'+navigateTo);
 

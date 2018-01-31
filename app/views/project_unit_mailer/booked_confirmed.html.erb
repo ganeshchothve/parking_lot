@@ -1,1 +1,56 @@
-<%= @project_unit.name %> is booked confirmed
+
+
+      <tr>
+            <td>
+                <table cellpadding="0" cellspacing="0" width="100%">
+                    <tr>
+                        <td style=" color: #000;font-size: 32px;font-weight: 600;line-height: 35px;vertical-align: bottom;">
+                           Booking Confirmed!
+                         </td>
+                         <td>
+                           <img src="http://www.embassysprings.com/images/Springs-logo.png" style="border:0px ;outline:0px;display:block;">
+                         </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+       
+        <tr>
+          <td>
+            <table cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+                <td><hr style="display: block;height: 1px;border: 0;border-top: 2px solid #c9579f;margin: 1em 0;padding: 0;"></td>
+                <td><hr style="display: block;height: 1px;border: 0;border-top: 2px solid #64c0e9;margin: 1em 0;padding: 0;"></td>
+                <td><hr style="display: block;height: 1px;border: 0;border-top: 2px solid #7eb53e;margin: 1em 0;padding: 0;"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <tr><td>&nbsp;</td></tr>
+
+       <tr>
+         <td>
+           Dear <%= @user.name %>, 
+         </td>
+       </tr>
+      
+        <tr><td>&nbsp;</td></tr>
+
+        <tr>
+          <td style="line-height:26px;">
+				
+				<p>
+				<span style="font-size:20px;line-height:26px;color:#000;font-weight:700;">Welcome to your new Embassy home! </span>
+				</p>
+				<br/>
+           		<p>
+				<strong>Here are some additional details for you </strong> </p>
+				<br/>
+
+				<p><span style="color:#64c0e9;font-weight:bold;">Name</span> - <%= @project_unit.name %></p>
+				<p><span style="color:#64c0e9;font-weight:bold;">Tower</span> - <%= @project_unit.project_tower_name %> </p>
+				<p><span style="color:#64c0e9;font-weight:bold;">Unit Facing</span> - <%= @project_unit.facing %> </p>
+				<p><span style="color:#64c0e9;font-weight:bold;">Amount Paid</span> - Rs. <%= @project_unit.total_amount_paid %> </p>
+				<p><span style="color:#64c0e9;font-weight:bold;">Agreement Value</span> - ____ SANJAY_TO_DO </p>
+        </tr>  

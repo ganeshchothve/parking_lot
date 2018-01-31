@@ -1,5 +1,46 @@
-<p>Welcome <%= @email %>!</p>
+        <tr>
+            <td>
+                <table cellpadding="0" cellspacing="0" width="100%">
+                    <tr>
+                        <td style=" color: #000;font-size: 32px;font-weight: 600;line-height: 35px;vertical-align: bottom;">
+                           Confirm Your Account!
+                         </td>
+                         <td>
+                           <img src="http://www.embassysprings.com/images/Springs-logo.png" style="border:0px ;outline:0px;display:block;">
+                         </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+       
+        <tr>
+          <td>
+            <table cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+                <td><hr style="display: block;height: 1px;border: 0;border-top: 2px solid #c9579f;margin: 1em 0;padding: 0;"></td>
+                <td><hr style="display: block;height: 1px;border: 0;border-top: 2px solid #64c0e9;margin: 1em 0;padding: 0;"></td>
+                <td><hr style="display: block;height: 1px;border: 0;border-top: 2px solid #7eb53e;margin: 1em 0;padding: 0;"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
 
-<p>You can confirm your account email through the link below:</p>
+        <tr><td>&nbsp;</td></tr>
 
-<p><%= link_to 'Confirm my account', confirmation_url(@resource, confirmation_token: @token) %></p>
+       <tr>
+         <td>
+           Welcome <%= @email %>, 
+         </td>
+       </tr>
+      
+        <tr><td>&nbsp;</td></tr>
+
+        <tr>
+          <td style="line-height:26px;">
+            <span style="font-size:20px;line-height:26px;color:#000;font-weight:700;">You can confirm your account email through the link below:</span>
+            <br/>
+			<p><%= link_to 'Confirm my account', confirmation_url(@resource, confirmation_token: @token) %></p>
+          </td>
+        </tr>  
+
+      

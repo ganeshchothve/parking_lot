@@ -1,15 +1,32 @@
-<% if @project_unit.present? %>
-  <% if flash[:notice].present? %>
-    <div class="alert alert-warning"><%= flash[:notice] %></div>
-  <% end %>
-  <h4><%= @project_unit.name %></h4>
-  <%= link_to "Checkout", dashboard_payment_path(project_unit_id: @project_unit.id) %>
-  <br/>
-  <%= form_for @project_unit, url: dashboard_update_project_unit_path(project_unit_id: @project_unit.id), method: 'post', html: {class: 'validate-form'} do |f| %>
-  <%= f.hidden_field :status, value: 'available' %>
-  <%= f.submit 'Cancel', class: 'btn btn-primary' %>
-  <% end %>
-<% else %>
-<h4>You are making a payment without choosing any project_unit</h4>
-<%= link_to "Checkout", dashboard_payment_path %>
-<% end %>
+<section class="mleft70">
+  <div class="alert alert-info col-12 text-center">
+    We have held this unit in your name for the next 10 minutes. Please make a payment to block; otherwise we will make it available to others.
+  </div>
+  <div class="clearfix"></div>
+  <div class="container">
+    <div class="col-12">
+        <% if @project_unit.present? %>
+          <% if flash[:notice].present? %>
+            <div class="alert alert-warning"><%= flash[:notice] %></div>
+          <% end %>
+          <%= render partial: "project_unit_cost", locals: {project_unit: @project_unit} %>
+          <div class="clearfix"></div>
+          <br/>
+          <div class="text-center">
+            <div class="pull-left" style="margin-right:20px;">
+              <%= link_to "I Agree", dashboard_payment_path(project_unit_id: @project_unit.id), class: 'checkout-btn'%>
+            </div>
+              <div class="pull-left">
+              <%= form_for @project_unit, url: dashboard_update_project_unit_path(project_unit_id: @project_unit.id), method: 'post', html: {class: 'validate-form'} do |f| %>
+                <%= f.hidden_field :status, value: 'available' %>
+              <%= f.submit 'Cancel', class: 'cancel-btn'%>
+              <% end %>
+              </div>
+            <% else %>
+            <h4>You are making a payment without choosing any project_unit</h4>
+              <%= link_to "I Agree", dashboard_payment_path, class: 'checkout-btn' %>
+            <% end %>
+          </div>
+    </div>
+  </div>
+</section>

@@ -16,7 +16,7 @@
     <% end %>
   </head>
   <body>
-    <div class="container-fluid">
+    <div class="container-fluid" style="<% if (params[:controller] == "channel_partners" && params[:action] == "new") || (params[:controller] == "devise/sessions" && params[:action] == "new") %>display:none;<% end %>">
       Welcome to Booking Portal
       <% unless user_signed_in? %>
         <%= link_to 'Register', register_path %>
@@ -27,7 +27,7 @@
       <% end %>
       <p class="notice"><%= notice %></p>
       <p class="alert"><%= alert %></p>
-      <%= yield %>
     </div>
+    <%= yield %>
   </body>
 </html>

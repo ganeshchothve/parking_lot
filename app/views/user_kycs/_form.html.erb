@@ -1,149 +1,222 @@
 <%= render 'breadcrumbs', {user: @user} %>
-<div class="row">
-  <div class="col-md-8 border border-left-0 border-top-0 border-bottom-0">
-    <%
-      if current_user.role?('user')
-        if @user_kyc.persisted?
-          url = user_kyc_path(@user_kyc)
-        else
-          url = user_kycs_path
-        end
-      else
-        if @user_kyc.persisted?
-          url = admin_user_user_kyc_path(@user, @user_kyc)
-        else
-          url = admin_user_user_kycs_path(@user)
-        end
-      end
-    %>
-    <%= form_with(model: user_kyc, local: true, id: 'user_kyc_form', url: url, html: {class: 'validate-form'}) do |f| %>
-      <% if user_kyc.errors.any? %>
-        <div id="error_explanation" class="alert alert-danger">
-          <ul>
-          <% user_kyc.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
+<!--<style type="text/css">
+ .kyc-form-wrapper .intl-tel-input{
+    width: 60%;
+ }
+</style>-->
+<section class="mleft10">
+  <div class="container">
+    <div class="col-12">
+      <div class="clearfix"></div>
+      <div class="kyc-form-wrapper">
+        <div class="row">
+        <div class="col-md-8 border border-left-0 border-top-0 border-bottom-0">
+          <%
+            if current_user.role?('user')
+              if @user_kyc.persisted?
+                url = user_kyc_path(@user_kyc)
+              else
+                url = user_kycs_path
+              end
+            else
+              if @user_kyc.persisted?
+                url = admin_user_user_kyc_path(@user, @user_kyc)
+              else
+                url = admin_user_user_kycs_path(@user)
+              end
+            end
+          %>
+          <%= form_with(model: user_kyc, local: true, id: 'user_kyc_form', url: url, html: {class: 'validate-form'}) do |f| %>
+            <% if user_kyc.errors.any? %>
+              <div id="error_explanation" class="alert alert-danger">
+                <ul>
+                <% user_kyc.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+                </ul>
+              </div>
+            <% end %>
+            <div class="form-group form-field-wrapper">
+              <%= f.label :name, class: 'control-label label-required' %>
+              <%= f.text_field :name, class: 'form-control form-field', required: 'required form-field' %>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group form-field-wrapper">
+                  <%= f.label :email, class: 'control-label label-required' %>
+                  <%= f.email_field :email, class: 'form-control form-field', required: 'required form-field' %>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group form-field-wrapper">
+                  <%= f.label :phone, class: 'control-label label-required' %>
+                  <%= f.text_field :phone, class: 'form-control phone form-field', required: 'required form-field', style: 'width:100%;' %>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group form-field-wrapper position-relative">
+                  <%= f.label :dob, class: 'control-label label-required' %>
+                  <!-- TODO: check if you want to restrict the dob to 18 years age -->
+                  <%= f.date_field :dob, class: 'form-control form-field', type:'date' %>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group form-field-wrapper">
+                  <%= f.label :pan_number, class: 'control-label label-required' %>
+                  <%= f.text_field :pan_number, class: 'form-control form-field', required: 'required', placeholder: 'AAAAA9999A' %>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group form-field-wrapper">
+                  <%= f.label :aadhaar, class: 'control-label' %>
+                  <%= f.text_field :aadhaar, class: 'form-control form-field', placeholder: 'Enter your 12 digit Aadhaar' %>
+                </div>
+              </div>
+              <div class="col-md-6">
+                
+              </div>
+            </div>
+            <hr class="divider" />
+            <div class="form-group form-field-wrapper">
+              <div class="form-check">
+                <%= f.label :nri, class: 'control-label' %>
+                <label class="radio nri" data-link="yes">Yes<%= f.radio_button :nri, class: "form-check-input" %><span class="checkmark"></span></label>
+                <label class="radio nri" data-link="no">No<%= f.radio_button :nri, class: "form-check-input" %><span class="checkmark"></span></label>
+                <div class="hidden-field poa" style="display:none">
+                  <p>Do you have Power of Attorney in India?</p>
+                  <!-- <input type="text" class="form-field"> -->
+                  <label class="radio attorney" data-link="yes">Yes
+                    <%= f.radio_button :poa, class: "form-check-input" %>
+                    <span class="checkmark"></span>
+                  </label>
+                  <label class="radio attorney" data-link="no">No
+                    <%= f.radio_button :poa, class: "form-check-input" %>
+                    <span class="checkmark"></span>
+                  </label>
+                  <div class="name-attorney" style="display:none">
+                    <%= f.text_field :poa_details, class: 'form-control form-field', placeholder: 'Name' %>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- <div class="form-group form-field-wrapper">
+              <div class="form-check">
+                <%= f.check_box :poa, class: "form-check-input" %>
+                <%= f.label :poa, class: 'control-label' %>
+              </div>
+            </div>
+            <div class="form-group form-field-wrapper">
+              <%= f.label :poa_details, class: 'control-label' %>
+              <%= f.text_field :poa_details, class: 'form-control' %>
+            </div> -->
+            <hr class="divider"/>
+            <div class="form-group form-field-wrapper">
+              <div class="form-check">
+                <label>Are you a corporate buying an apartment</label>
+                <%#= f.label :is_company, class: 'control-label' %>
+                <label class="radio company" data-link="yes">Yes<%= f.radio_button :is_company, class: "form-check-input" %><span class="checkmark"></span></label>
+                <label class="radio company" data-link="No">No<%= f.radio_button :is_company, class: "form-check-input" %><span class="checkmark"></span></label>
+                <div class="hidden-field gstin" style="display:none">
+                  <div style="margin-bottom:10px;"><%= f.text_field :gstn, class: 'form-control form-field', placeholder:'GSTIN' %></div>
+                  <div style="margin-bottom:10px;"><%= f.text_field :company_name, class: 'form-control form-field', placeholder: 'Company Name' %></div>
+                </div>
+              </div>
+            </div>
+           <!--  <div class="form-group form-field-wrapper">
+              <%= f.label :gstn, class: 'control-label' %>
+              <%= f.text_field :gstn, class: 'form-control' %>
+            </div>
+            <div class="form-group form-field-wrapper">
+              <%= f.label :company_name, class: 'control-label' %>
+              <%= f.text_field :company_name, class: 'form-control' %>
+            </div> -->
+            <hr class="divider"/>
+            <div class="form-group form-field-wrapper">
+              <div class="form-check">
+                <%= f.label :loan_required, class: 'control-label' %>
+                <label class="radio self-funded" data-link="self-funded">Self Funded<%= f.radio_button :loan_required, class: "form-check-input" %><span class="checkmark"></span></label>
+                <label class="radio bank-loan" data-link="bank-loan">Bank Loan<%= f.radio_button :loan_required, class: "form-check-input" %><span class="checkmark"></span></label>
+                <div class="hidden-field bank" style="display:none">
+                  <%= f.select :bank_name, ['HDFC', 'Axis Bank', 'SBI' , 'Other'], {},{class: "init-selectize required select-bank"}%>
+                </div>
+              </div>
+            </div>
+            <!-- <div class="form-group form-field-wrapper">
+              <%= f.label :bank_name, class: 'control-label' %>
+              <%= f.text_field :bank_name, class: "form-control" %>
+            </div> -->
+            <hr class="divider"/>
+            <div class="form-group form-field-wrapper">
+              <div class="form-check">
+                <%= f.label :existing_customer, class: 'control-label' %>
+                <label class="radio prev-prop" data-href="yes">Yes<%= f.radio_button :existing_customer, class: "form-check-input" %><span class="checkmark"></span></label>
+                <label class="radio prev-prop" data-href="no">No<%= f.radio_button :existing_customer, class: "form-check-input" %><span class="checkmark"></span></label>
+                <div class="hidden-field-prev-prop" style="display:none">
+                    <div style="margin-bottom:10px;"><%= f.text_field :existing_customer_name, class: "form-control form-field", placeholder: 'Customer Name' %></div>    
+                    <div><%= f.text_field :existing_customer_project, class: "form-control form-field", placeholder: 'Project Name' %></div>
+                </div>
+              </div>
+            </div>
+            <!-- <div class="form-group form-field-wrapper">
+              <%= f.label :existing_customer_name, class: 'form-label' %>
+              <%= f.text_field :existing_customer_name, class: "form-control" %>
+            </div>
+            <div class="form-group form-field-wrapper">
+              <%= f.label :existing_customer_project, class: 'form-label' %>
+              <%= f.text_field :existing_customer_project, class: "form-control" %>
+            </div> -->
+            <hr class="divider"/>
+            <div class="form-group form-field-wrapper">
+              <%= f.label :comments, class: 'control-label', style: 'vertical-align:middle' %>
+              <%= f.text_area :comments, class: 'form-control form-field', style: 'vertical-align:middle' %>
+            </div>
+            <hr class="divider"/>
+            <div class="booking-btn-wrapper" style="padding-left:0px">
+              <span class="btn pink show-co-apl" data-link="show-co-applicant">Add Co-Applicant</span>
+            </div>
+            <div id="show-co-applicant" style="display:none">
+                <div class="form-group form-field-wrapper">
+                  <%= f.label :name, class: 'control-label label-required' %>
+                  <%= f.text_field :name, class: 'form-control form-field', required: 'required form-field' %>
+                </div>
+                <div class="form-group form-field-wrapper">
+                  <%= f.label :email, class: 'control-label label-required' %>
+                  <%= f.email_field :email, class: 'form-control form-field', required: 'required form-field' %>
+                </div>
+                <div class="form-group form-field-wrapper">
+                  <%= f.label :phone, class: 'control-label label-required' %>
+                  <%= f.text_field :phone, class: 'form-control phone form-field', required: 'required form-field' %>
+                </div>
+                <div class="form-group form-field-wrapper position-relative">
+                  <%= f.label :dob, class: 'control-label label-required' %>
+                  <!-- TODO: check if you want to restrict the dob to 18 years age -->
+                  <%= f.date_field :dob, class: 'form-control form-field', type:'date' %>
+                </div>
+                 <div class="form-group form-field-wrapper">
+                  <%= f.label :pan_number, class: 'control-label label-required' %>
+                  <%= f.text_field :pan_number, class: 'form-control form-field', required: 'required', placeholder: 'AAAAA9999A' %>
+                </div>
+            </div>
+            <div class="form-field-wrapper">
+              <div class="actions">
+                <%= f.submit 'Submit →', class: 'form-field btn yellow', style: 'width:auto'%>
+              </div>
+            </div>
           <% end %>
-          </ul>
         </div>
-      <% end %>
-      <div class="form-group">
-        <%= f.label :name, class: 'control-label label-required' %>
-        <%= f.text_field :name, class: 'form-control', required: 'required' %>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-group">
-            <%= f.label :email, class: 'control-label label-required' %>
-            <%= f.email_field :email, class: 'form-control', required: 'required' %>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <%= f.label :phone, class: 'control-label label-required' %>
-            <%= f.text_field :phone, class: 'form-control phone', required: 'required' %>
-          </div>
+        <div class="col-md-4">
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-group position-relative">
-            <%= f.label :dob, class: 'control-label label-required' %>
-            <!-- TODO: check if you want to restrict the dob to 18 years age -->
-            <%= f.text_field :dob, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.dob.present? ? f.object.dob.strftime("%d/%m/%Y") : '', "data-max-date": (Date.today - 1.day).strftime("%d/%m/%Y"), value: f.object.dob.present? ? f.object.dob.strftime("%d/%m/%Y") : "" %>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <%= f.label :pan_number, class: 'control-label label-required' %>
-            <%= f.text_field :pan_number, class: 'form-control', required: 'required', placeholder: 'AAAAA9999A' %>
-          </div>
-        </div>
       </div>
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-group">
-            <%= f.label :aadhaar, class: 'control-label' %>
-            <%= f.text_field :aadhaar, class: 'form-control', placeholder: 'Enter your 12 digit Aadhaar' %>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <%= f.label :anniversary, class: 'control-label' %>
-            <%= f.text_field :anniversary, class: 'form-control datepicker' %>
-          </div>
-        </div>
-      </div>
-      <hr/>
-      <div class="form-group">
-        <div class="form-check">
-          <%= f.check_box :nri, class: "form-check-input" %>
-          <%= f.label :nri, class: 'control-label' %>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="form-check">
-          <%= f.check_box :poa, class: "form-check-input" %>
-          <%= f.label :poa, class: 'control-label' %>
-        </div>
-      </div>
-      <div class="form-group">
-        <%= f.label :poa_details, class: 'control-label' %>
-        <%= f.text_field :poa_details, class: 'form-control' %>
-      </div>
-      <hr/>
-      <div class="form-group">
-        <div class="form-check">
-          <%= f.check_box :is_company, class: "form-check-input" %>
-          <%= f.label :is_company, class: 'control-label' %>
-        </div>
-      </div>
-      <div class="form-group">
-        <%= f.label :gstn, class: 'control-label' %>
-        <%= f.text_field :gstn, class: 'form-control' %>
-      </div>
-      <div class="form-group">
-        <%= f.label :company_name, class: 'control-label' %>
-        <%= f.text_field :company_name, class: 'form-control' %>
-      </div>
-      <hr/>
-      <div class="form-group">
-        <div class="form-check">
-          <%= f.check_box :loan_required, class: "form-check-input" %>
-          <%= f.label :loan_required, class: 'control-label' %>
-        </div>
-      </div>
-      <div class="form-group">
-        <%= f.label :bank_name, class: 'control-label' %>
-        <%= f.text_field :bank_name, class: "form-control" %>
-      </div>
-      <hr/>
-      <div class="form-group">
-        <div class="form-check">
-          <%= f.check_box :existing_customer, class: "form-check-input" %>
-          <%= f.label :existing_customer, class: 'control-label' %>
-        </div>
-      </div>
-      <div class="form-group">
-        <%= f.label :existing_customer_name, class: 'form-label' %>
-        <%= f.text_field :existing_customer_name, class: "form-control" %>
-      </div>
-      <div class="form-group">
-        <%= f.label :existing_customer_project, class: 'form-label' %>
-        <%= f.text_field :existing_customer_project, class: "form-control" %>
-      </div>
-      <hr/>
-      <div class="form-group">
-        <%= f.label :comments, class: 'control-label' %>
-        <%= f.text_area :comments, class: 'form-control' %>
-      </div>
-      <div class="actions">
-        <%= f.submit 'Save', class: 'btn btn-primary' %>
-      </div>
-    <% end %>
+      
+    </div>
   </div>
-  <div class="col-md-4">
-  </div>
-</div>
+</section>
+
 <%= javascript_tag do %>
   $(document).ready(function(){
     FormInitializer.init($("#user_kyc_form"));

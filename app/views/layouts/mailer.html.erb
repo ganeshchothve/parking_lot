@@ -1,13 +1,43 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <style>
-      /* Email styles need to be inline */
-    </style>
-  </head>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Embassy Springs</title>
+<style>
+*{
+  padding: 0; margin: 0 auto;
+}
+ul li{margin-left: 20px;padding: 0px;}
+  html, body{margin: 0;padding: 0}
+  @media only screen and (max-width: 480px) {
+        body,table,td,p,a,li,blockquote {
+          -webkit-text-size-adjust:none !important;
+        }
+        table {width: 96% !important; margin: 0px 2% !important;}
+        
+        tr
+        {padding:0px !important;}
+      }
+</style>
+</head>
 
-  <body>
-    <%= yield %>
-  </body>
+<body style="font-family: 'Poppins', sans-serif; font-size:15px; line-height:24px; ">
+    <table width="650" align="center" cellpadding="0" cellspacing="0" border="0" style="border:3px solid #46bfe9;padding:10px;box-shadow: 0px 0px 20px #cacaca;    margin-bottom: 30px;color:#74645c;">
+
+        <tr><td>&nbsp;</td></tr>
+
+        <%= yield %>
+       
+
+        <tr><td>&nbsp;</td></tr>
+
+        <tr>
+          <td style="font-size:16px;line-height:26px;">
+            In case of any queries you can reach us at +91 1234567890 or write to us at <a href="mailto:dummy@embassysprings.com" style="text-decoration:underline;color:#64c0e9;"> sales@embassysprings.com</a>
+          </td>
+        </tr>
+  </table>
+</body>
 </html>
+
