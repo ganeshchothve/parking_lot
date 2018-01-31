@@ -30,8 +30,11 @@ class ProjectUnit
   field :transfer_charge, type: Float
 
   # These fields majorly are pulled from sell.do and may be used on the UI
-  field :project_id, type: String
   field :client_id, type: String
+  field :developer_id, type: String
+  field :project_id, type: String
+  field :project_tower_id, type: String
+  field :unit_configuration_id, type: String
   field :data_attributes, type: Array, default: []
   field :costs, type: Array, default: []
   field :customized_additional_costs, type: Hash
