@@ -8,6 +8,7 @@ redis:
   port: 6379
   db: 0
   namespace: booking_portal_dev
+  password: 
 sidekiq:
-  username:
-  password:
+  username: ihub_admin
+  password: 891d8e721a1184a0dbafcb95103a205f

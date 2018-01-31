@@ -1,5 +1,8 @@
 class ProjectUnitObserver < Mongoid::Observer
   def before_save project_unit
+    if project_unit.booking_price.blank? && project_unit.base_price.present?
+      project_unit.booking_price = project_unit.base_price * 0.1
+    end
     if project_unit.status_changed? && ['available', 'not_available'].include?(project_unit.status)
       project_unit.user_id = nil
     end
