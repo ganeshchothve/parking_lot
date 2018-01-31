@@ -13,7 +13,7 @@
           </div>
         <div class="pull-right text-right payment-details-wrapper">
           <div>
-            Booking Status: <span><%= project_unit.status %></span>
+            Booking Status: <span><%= project_unit.status.humanize %></span>
           </div>
           <% if project_unit.status == 'hold'%>
           <a href="javascript:;" class="checkout-btn">Make Payment</a>
