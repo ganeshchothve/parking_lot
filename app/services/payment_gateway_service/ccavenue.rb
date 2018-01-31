@@ -19,7 +19,7 @@ module PaymentGatewayService
       if Rails.env.production?
         return "#"
       elsif Rails.env.development?
-        return "/payment/#{@receipt.receipt_id}/process_payment?status=success"
+        return "/payment/#{@receipt.receipt_id}/process_payment/success?status=success"
       else
         return "https://test.ccavenue.com/transaction/transaction.do?command=initiateTransaction&encRequest=#{build_parameters}&access_code=#{payment_profile[:accesscode]}"
       end
