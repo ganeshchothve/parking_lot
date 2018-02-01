@@ -192,6 +192,9 @@ class ProjectUnit
       elsif receipt.total_amount >= ProjectUnit.blocking_amount && ['hold', 'available'].include?(self.status)
         if (self.user == receipt.user && self.status == 'hold') || self.status == "available"
           self.status = 'blocked'
+        else
+          receipt.project_unit_id = nil
+          receipt.save(validate: false)
         end
       end
     elsif receipt.status == 'failed'
