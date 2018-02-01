@@ -190,7 +190,9 @@ class ProjectUnit
       elsif self.total_amount_paid > ProjectUnit.blocking_amount
         self.status = 'booked_tentative'
       elsif receipt.total_amount >= ProjectUnit.blocking_amount && ['hold', 'available'].include?(self.status)
-        self.status = 'blocked'
+        if (self.user == receipt.user && self.status == 'hold') || self.status == "available"
+          self.status = 'blocked'
+        end
       end
     elsif receipt.status == 'failed'
       # if the unit has any successful or clearance_pending payments other than this, we keep it still blocked
