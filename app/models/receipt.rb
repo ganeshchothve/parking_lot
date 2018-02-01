@@ -78,7 +78,11 @@ class Receipt
 
   def payment_gateway_service
     if self.payment_gateway.present?
-      return eval("PaymentGatewayService::#{self.payment_gateway}").new(self)
+      if self.project_unit.present? && ["available", "not_available", "error", "booked_confirmed"].include?(self.project_unit.status)
+        return nil
+      else
+        return eval("PaymentGatewayService::#{self.payment_gateway}").new(self)
+      end
     else
       return nil
     end

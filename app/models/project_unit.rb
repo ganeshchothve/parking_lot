@@ -12,7 +12,7 @@ class ProjectUnit
   end
 
   def self.holding_minutes
-    10
+    10.minutes
   end
 
   # These fields are globally utlised on the server side
@@ -189,8 +189,13 @@ class ProjectUnit
         self.status = 'booked_confirmed'
       elsif self.total_amount_paid > ProjectUnit.blocking_amount
         self.status = 'booked_tentative'
-      elsif receipt.total_amount >= ProjectUnit.blocking_amount && self.status == 'hold'
-        self.status = 'blocked'
+      elsif receipt.total_amount >= ProjectUnit.blocking_amount && ['hold', 'available'].include?(self.status)
+        if (self.user == receipt.user && self.status == 'hold') || self.status == "available"
+          self.status = 'blocked'
+        else
+          receipt.project_unit_id = nil
+          receipt.save(validate: false)
+        end
       end
     elsif receipt.status == 'failed'
       # if the unit has any successful or clearance_pending payments other than this, we keep it still blocked

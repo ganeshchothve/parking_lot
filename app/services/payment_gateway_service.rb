@@ -21,6 +21,7 @@ module PaymentGatewayService
     end
   end
 end
+
 if Rails.env.development?
   Dir["#{Rails.root}/app/services/payment_gateway_service/**/*.rb"].each do |f|
     file = f.gsub("#{Rails.root}/", "")
