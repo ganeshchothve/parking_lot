@@ -86,10 +86,12 @@ $(document).ready(function(){
 	});
 
 	$(".hold-button").on("click", function(){
+		window.onbeforeunload = null;
 		$("#existing_kyc_form").submit();
 	});
 
 	$("#user_kyc_form").on("submit", function(e){
+		window.onbeforeunload = null;
 		ajaxUpdate($(this).serialize(), $(this).attr("action"), function(responseData){
 			var kyc_userid = responseData._id;
 			var kyc_name = responseData.name;

@@ -538,6 +538,9 @@ header{
     width: 1px;
 	background-color: #dddee0;
 }
+.apt-selector-box.flats-7 .apt:after{
+	margin-left: 23%;
+}
 .apt-selector-box.flats-6 .apt:after{
 	margin-left: 16%;
 }
@@ -650,6 +653,14 @@ header{
 	border:1px solid #d0d0d0;
 	margin-right: 10px;
 	padding: 5px;
+}
+.main-wrapper .flats-7 span{
+	float: left;
+  	display: block;
+    border: 1px solid #d0d0d0;
+    height: 18px;
+    width: 10.2857143%;
+    margin: 0 2% 0 2%;
 }
 .main-wrapper .flats-6 span{
 	float: left;

@@ -740,6 +740,13 @@ input[type="file"]::-webkit-file-upload-button{
 .mtop30{
 	margin-top: 30px;
 }
+.message-wrapper{
+	width: 80%;
+	margin: 20px auto;
+	background-color: #fff;
+	border: 1px solid #cacaca;
+	padding: 20px
+}
 @media all and (max-width: 1366px){
 	.mleft70{
 		padding-left: 50px;

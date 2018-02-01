@@ -1,7 +1,6 @@
 class PaymentController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :authenticate_user!
-  skip_before_action :verify_authenticity_token
 
   layout :set_layout
 
