@@ -23,11 +23,11 @@ class SMSWorker
   end
 
   def self.username
-    ""
+    ENV_CONFIG[:sms][:username]
   end
 
   def self.password
-    ""
+    ENV_CONFIG[:sms][:password]
   end
 
   def self.mask
