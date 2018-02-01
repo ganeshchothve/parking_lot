@@ -59,16 +59,13 @@ class ReceiptsController < ApplicationController
     @receipt.creator = current_user
     @receipt.assign_attributes(permitted_attributes(@receipt))
     @receipt.receipt_id = SecureRandom.hex
+    @receipt.payment_gateway = 'CCAvenue'
     authorize @receipt
     respond_to do |format|
       if @receipt.save
         format.html {
           if @receipt.payment_mode == 'online'
-            if Rails.env.development?
-              redirect_to "/payment/hdfc/process_payment?receipt_id=#{@receipt.id}"
-            else
-              redirect_to root_path # TODO: redirect the user to the payment gateway link
-            end
+            redirect_to @receipt.payment_gateway_service.gateway_url
           else
             redirect_to current_user.role?('user') ? root_path : admin_user_receipts_path(@user)
           end

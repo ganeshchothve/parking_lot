@@ -39,10 +39,10 @@ module PaymentGatewayService
         decResp.each do |key|
           if key.from(0).to(key.index("=")-1)=='order_status'
             status = key.from(key.index("=")+1).to(-1).downcase
-            if status == "failure"
-              @receipt.status = "failed"
-            else
+            if(status.downcase == "success")
               @receipt.status = "success"
+            else
+              @receipt.status = "failed"
             end
           end
           if key.from(0).to(key.index("=")-1)=='tracking_id'
