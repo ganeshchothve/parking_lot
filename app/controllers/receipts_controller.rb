@@ -65,7 +65,13 @@ class ReceiptsController < ApplicationController
       if @receipt.save
         format.html {
           if @receipt.payment_mode == 'online'
-            redirect_to @receipt.payment_gateway_service.gateway_url
+            if @receipt.payment_gateway_service.present?
+              redirect_to @receipt.payment_gateway_service.gateway_url
+            else
+              flash[:notice] = "We couldn't redirect you to the payment gateway, please try again"
+              @receipt.set(status: "failed")
+              redirect_to dashboard_path
+            end
           else
             redirect_to current_user.role?('user') ? root_path : admin_user_receipts_path(@user)
           end

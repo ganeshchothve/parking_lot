@@ -12,7 +12,7 @@ class ProjectUnit
   end
 
   def self.holding_minutes
-    10
+    10.minutes
   end
 
   # These fields are globally utlised on the server side
@@ -189,7 +189,7 @@ class ProjectUnit
         self.status = 'booked_confirmed'
       elsif self.total_amount_paid > ProjectUnit.blocking_amount
         self.status = 'booked_tentative'
-      elsif receipt.total_amount >= ProjectUnit.blocking_amount && self.status == 'hold'
+      elsif receipt.total_amount >= ProjectUnit.blocking_amount && ['hold', 'available'].include?(self.status)
         self.status = 'blocked'
       end
     elsif receipt.status == 'failed'
