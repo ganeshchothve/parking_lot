@@ -16,15 +16,15 @@ class Receipt
   field :issuing_bank, type: String # Bank which issued cheque / DD etc
   field :issuing_bank_branch, type: String # Branch of bank
   field :payment_identifier, type: String # cheque / DD number / online transaction reference from gateway
-  field :tracking_id, type: String # cheque / DD number / online transaction reference from gateway
+  field :tracking_id, type: String # online transaction reference from gateway or transaction id after the cheque is processed
   field :total_amount, type: Float, default: 0 # Total amount
   field :status, type: String, default: 'pending' # pending, success, failed, clearance_pending
   field :status_message, type: String # pending, success, failed, clearance_pending
   field :payment_type, type: String, default: 'blocking' # blocking, booking
   field :reference_project_unit_id, type: BSON::ObjectId # the channel partner or admin or crm can choose this, but its not binding on the user to choose this reference unit
   field :payment_gateway, type: BSON::ObjectId
-
   field :processed_on, type: Date
+  field :comments, type: String
 
   increments :order_id
 
@@ -44,6 +44,8 @@ class Receipt
   validates :payment_gateway, presence: true, if: Proc.new{|receipt| receipt.payment_mode == 'online' }
   validates :payment_gateway, inclusion: {in: PaymentGatewayService::Default.allowed_payment_gateways }, allow_blank: true
   validate :status_changed
+  validates :processed_on, :tracking_id, presence: true, if: Proc.new{|receipt| receipt.status == 'success'}
+  validates :comments, presence: true, if: Proc.new{|receipt| receipt.status == 'failed'}
 
   default_scope -> {desc(:created_at)}
 

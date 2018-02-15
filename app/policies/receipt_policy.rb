@@ -63,7 +63,7 @@ class ReceiptPolicy < ApplicationPolicy
       attributes += [:issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier]
     end
     if user.role?('admin') || user.role?('crm')
-      attributes += [:status]
+      attributes += [:status, :processed_on, :comments, :tracking_id]
     end
     attributes
   end

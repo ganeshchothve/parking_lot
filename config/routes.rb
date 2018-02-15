@@ -30,9 +30,10 @@ Rails.application.routes.draw do
       resources :project_units, only: [:index] do
         resources :receipts, only: [:update, :edit, :show, :index, :new, :create], controller: '/receipts'
       end
+      resources :user_requests, except: [:destroy], controller: 'user_requests'
     end
     resources :user_kycs, only: [:index], controller: '/user_kycs'
-    resources :user_requests, except: [:destroy]
+    resources :user_requests, except: [:destroy], controller: 'user_requests'
   end
 
   match 'payment/:receipt_id/process_payment/:ignore', to: 'payment#process_payment', via: [:get, :post]
@@ -47,6 +48,9 @@ Rails.application.routes.draw do
     get 'checkout_via_email/:project_unit_id/:receipt_id', to: 'dashboard#checkout_via_email', as: :dashboard_checkout_via_email
     match 'payment/(:project_unit_id)', to: 'dashboard#payment', as: :dashboard_payment, via: [:get, :patch]
     resources :receipts
+    resource :user do
+      resources :user_requests, except: [:destroy], controller: 'admin/user_requests'
+    end
     resources :user_kycs, except: [:show, :destroy]
   end
 

@@ -2,6 +2,8 @@ en:
   global:
     receipt: 'Payment'
     receipts: 'Payments'
+    user_request: 'Cancellation Request'
+    user_requests: 'Cancellation Requests'
     receipt_with_status: '%{status} Payment'
     receipts_with_status: '%{status} Payments'
     user_kyc: 'User KYC'
@@ -18,7 +20,16 @@ en:
     channel_partners: 'Partner Registrations'
   mongoid:
     attributes:
+      user_request:
+        user_id: 'Customer'
+        comments: 'Complain / Request'
+        status: 'Status'
+        project_unit_id: 'Related Unit'
+        receipt_id: 'Related Payment'
       receipt:
+        tracking_id: 'Transaction ID (Processed Payment)'
+        comments: 'Comments'
+        processed_on: 'Date of Clearance'
         receipt_id: "Receipt ID"
         payment_mode: "Mode of Payment"
         issued_date: "Date of issuance (e.g. Cheque Date)"
