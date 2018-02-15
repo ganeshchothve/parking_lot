@@ -1,10 +1,10 @@
 class UserPolicy < ApplicationPolicy
   def index?
-    ['channel_partner', 'admin'].include?(user.role)
+    ['channel_partner', 'admin', 'crm'].include?(user.role)
   end
 
   def export?
-    ['admin'].include?(user.role)
+    ['admin', 'crm'].include?(user.role)
   end
 
   def edit?

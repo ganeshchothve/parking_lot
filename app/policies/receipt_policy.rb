@@ -8,12 +8,14 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def export?
-    ['admin'].include?(user.role)
+    ['admin', 'crm'].include?(user.role)
   end
 
   def new?
     if user.role?('user')
       user.kyc_ready? && (record.project_unit.blank? || booking_payment?)
+    elsif user.role?('crm')
+      false
     else
       record.user_id.present? && record.user.kyc_ready? && (record.project_unit.blank? || booking_payment?)
     end
@@ -24,7 +26,7 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def edit?
-    !user.role?('user') && ((user.role?('admin') && ['pending', 'clearance_pending'].include?(record.status)) || (user.role?('channel_partner') && record.status == 'pending'))
+    !user.role?('user') && (((user.role?('admin') || user.role?('crm')) && ['pending', 'clearance_pending'].include?(record.status)) || (user.role?('channel_partner') && record.status == 'pending'))
   end
 
   def update?
@@ -60,7 +62,7 @@ class ReceiptPolicy < ApplicationPolicy
     if !user.role?('user') && (record.new_record? || record.status == 'pending')
       attributes += [:issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier]
     end
-    if user.role?('admin')
+    if user.role?('admin') || user.role?('crm')
       attributes += [:status]
     end
     attributes

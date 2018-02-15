@@ -80,6 +80,7 @@ class User
     [
       {id: 'user', text: 'Customer'},
       {id: 'admin', text: 'Admin'},
+      {id: 'crm', text: 'CRM User'},
       {id: 'channel_partner', text: 'Channel Partner'}
     ]
   end

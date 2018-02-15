@@ -86,4 +86,10 @@ class ReceiptObserver < Mongoid::Observer
       end
     end
   end
+
+  def before_save receipt
+    if receipt.status_changed? && receipt.status == 'success'
+      receipt.processed_on = Date.today
+    end
+  end
 end

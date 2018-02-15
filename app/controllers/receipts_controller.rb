@@ -58,7 +58,7 @@ class ReceiptsController < ApplicationController
     @receipt = Receipt.new base_params
     @receipt.creator = current_user
     @receipt.assign_attributes(permitted_attributes(@receipt))
-    @receipt.receipt_id = SecureRandom.hex
+    @receipt.receipt_id = Receipt.generate_receipt_id
     @receipt.payment_gateway = 'CCAvenue'
     authorize @receipt
     respond_to do |format|
@@ -125,7 +125,7 @@ class ReceiptsController < ApplicationController
 
   def apply_policy_scope
     custom_scope = Receipt.all.criteria
-    if current_user.role?('admin')
+    if current_user.role?('admin') || current_user.role?('crm')
       if params[:user_id].present?
         custom_scope = custom_scope.where(user_id: params[:user_id])
       end

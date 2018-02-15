@@ -1,2 +1,5 @@
-Dashboard Page
-<%= render 'project_units', {project_units: current_user.project_units} %>
+<% if current_user.role?('user') %>
+  <%= render 'project_units', {project_units: current_user.project_units} %>
+<% elsif current_user.role?('crm') %>
+  <%= render 'crm' %>
+<% end %>

@@ -1,0 +1,24 @@
+<% if ReceiptPolicy.new(current_user, Receipt).index? %>
+  <div class="card">
+    <div class="card-header">
+      <%= global_label('receipts_with_status', {status: 'Pending'}) %>
+      <%= link_to "View All #{global_label('receipts_with_status', {status: 'Pending'})}", admin_receipts_path(fltrs: { status: 'pending' }), class: 'float-right' %>
+    </div>
+    <div class="card-body">
+      <%= render 'receipts/index', {receipts: Receipt.where(status: 'pending').desc(:updated_at).paginate(page: 1 || 1, per_page: 5) } %>
+    </div>
+  </div>
+<% end %>
+<% if ProjectUnitPolicy.new(current_user, ProjectUnit).index? %>
+  <% ['blocked', 'booked'].each do |status| %>
+    <div class="card mt-4">
+      <div class="card-header">
+        <%= global_label('project_units_with_status', {status: status.titleize}) %>
+        <%= link_to 'View All', admin_project_units_path(fltrs: { status: status }), class: 'float-right' %>
+      </div>
+      <div class="card-body">
+        <%= render 'admin/project_units/index', {project_units: ProjectUnit.where(status: status).desc(:updated_at).paginate(page: 1 || 1, per_page: 5) } %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

@@ -1,5 +1,9 @@
 require 'autoinc'
 class Receipt
+  def self.generate_receipt_id
+    SecureRandom.hex
+  end
+
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Autoinc
@@ -17,8 +21,10 @@ class Receipt
   field :status, type: String, default: 'pending' # pending, success, failed, clearance_pending
   field :status_message, type: String # pending, success, failed, clearance_pending
   field :payment_type, type: String, default: 'blocking' # blocking, booking
-  field :reference_project_unit_id, type: BSON::ObjectId # the channel partner or admin can choose this, but its not binding on the user to choose this reference unit
+  field :reference_project_unit_id, type: BSON::ObjectId # the channel partner or admin or crm can choose this, but its not binding on the user to choose this reference unit
   field :payment_gateway, type: BSON::ObjectId
+
+  field :processed_on, type: Date
 
   increments :order_id
 
@@ -75,14 +81,10 @@ class Receipt
   end
 
   def payment_gateway_service
-    if self.payment_gateway.present?
-      if self.project_unit.present? && ["available", "not_available", "error", "booked_confirmed"].include?(self.project_unit.status)
-        return nil
-      else
-        return eval("PaymentGatewayService::#{self.payment_gateway}").new(self)
-      end
-    else
+    if self.payment_gateway.blank? || (self.project_unit.present? && ["hold", "blocked", "booking_tentative"].exclude?(self.project_unit.status)) || (self.project_unit.present? && self.project_unit.user_id != self.user_id)
       return nil
+    else
+      return eval("PaymentGatewayService::#{self.payment_gateway}").new(self)
     end
   end
 

@@ -1,13 +1,17 @@
 en:
   global:
     receipt: 'Payment'
-    user_kyc: 'User KYC'
     receipts: 'Payments'
+    receipt_with_status: '%{status} Payment'
+    receipts_with_status: '%{status} Payments'
+    user_kyc: 'User KYC'
     user_kycs: 'User KYCs'
     users: 'Users & Customers'
     user: 'User or Customer'
     project_unit: 'Unit'
     project_units: 'Units'
+    project_unit_with_status: '%{status} Unit'
+    project_units_with_status: '%{status} Units'
     channel_partner: 'Partner Registration'
     channel_partners: 'Partner Registrations'
   mongoid:
