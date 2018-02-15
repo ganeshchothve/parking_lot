@@ -36,6 +36,7 @@ gem 'mongoid', '~> 6.1.0'
 gem 'mongoid-autoinc'
 # Comprehensive solution for user authentication in rails
 gem 'devise'
+gem 'simple_token_authentication', '~> 1.0'
 # Simple solution for authorization of users
 gem 'pundit'
 # Background processing

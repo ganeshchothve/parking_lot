@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  acts_as_token_authentication_handler_for User
   include Pundit
   helper_method :after_sign_in_path_for
   protect_from_forgery with: :exception
@@ -22,5 +23,9 @@ class ApplicationController < ActionController::Base
     else
       'application'
     end
+  end
+
+  private
+  def after_successful_token_authentication
   end
 end

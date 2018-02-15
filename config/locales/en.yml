@@ -8,6 +8,8 @@ en:
     user_kycs: 'User KYCs'
     users: 'Users & Customers'
     user: 'User or Customer'
+    customers: 'Customers'
+    customer: 'Customer'
     project_unit: 'Unit'
     project_units: 'Units'
     project_unit_with_status: '%{status} Unit'

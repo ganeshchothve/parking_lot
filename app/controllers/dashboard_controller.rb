@@ -27,6 +27,20 @@ class DashboardController < ApplicationController
     end
   end
 
+  def checkout_via_email
+    if params[:project_unit_id].present? && params[:receipt_id].present?
+      receipt = current_user.receipts.where(receipt_id: params[:receipt_id]).where(payment_type: 'blocking').first
+      project_unit = ProjectUnit.find(params[:project_unit_id])
+      if receipt.present? && receipt.project_unit_id.blank? && project_unit.status == 'available' && receipt.reference_project_unit_id.to_s == project_unit.id.to_s
+        params[:project_unit] = {status: 'hold'}
+        hold_project_unit
+      else
+        flash[:notice] = 'The unit chosen may not be available. You can browse available inventory and block it against the payment done.'
+        redirect_to dashboard_path
+      end
+    end
+  end
+
   def payment
     @receipt = Receipt.new(creator: current_user, user: current_user, receipt_id: Receipt.generate_receipt_id, payment_mode: 'online', total_amount: ProjectUnit.blocking_amount, payment_type: 'blocking')
 

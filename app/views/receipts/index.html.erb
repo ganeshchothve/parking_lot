@@ -2,7 +2,11 @@
 <% unless current_user.role?('user') %>
   <% unless ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? || current_user.role?('crm') %>
     <div class="alert alert-warning">
-      You might need to complete the user's KYC before you can take payments.
+      <% if @user.confirmed? %>
+        You might need to complete the user's KYC before you can take payments.
+      <% else %>
+        The <%= global_labels['customer'] %> has not yet confirmed their account via email.
+      <% end %>
     </div>
   <% end %>
 <% end %>
