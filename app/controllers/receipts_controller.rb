@@ -73,7 +73,7 @@ class ReceiptsController < ApplicationController
               redirect_to dashboard_path
             end
           else
-            redirect_to current_user.role?('user') ? root_path : admin_user_receipts_path(@user)
+            redirect_to current_user.role?('user') ? root_path : edit_admin_user_receipt_path(@user, @receipt)
           end
         }
       else

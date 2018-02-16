@@ -12,6 +12,9 @@ Rails.application.routes.draw do
     put '/user/confirmation', to: 'confirmations#update', :as => :update_user_confirmation
   end
 
+  scope "*assetable_type/:assetable_id" do
+    resources :assets, controller: :assets
+  end
   get :register, to: 'home#register', as: :register
   post :check_and_register, to: 'home#check_and_register', as: :check_and_register
   resources :channel_partners, except: [:destroy] do

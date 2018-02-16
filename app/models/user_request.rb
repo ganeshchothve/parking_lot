@@ -9,6 +9,7 @@ class UserRequest
   belongs_to :project_unit, optional: true
   belongs_to :receipt, optional: true
   belongs_to :user, optional: true
+  has_many :assets, as: :assetable
 
   validates :user_id, :project_unit_id, :comments, presence: true
   validates :status, inclusion: {in: Proc.new{ UserRequest.available_statuses.collect{|x| x[:id]} } }

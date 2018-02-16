@@ -2,6 +2,8 @@ en:
   global:
     receipt: 'Payment'
     receipts: 'Payments'
+    asset: 'Reference Document'
+    assets: 'Reference Documents'
     user_request: 'Cancellation Request'
     user_requests: 'Cancellation Requests'
     receipt_with_status: '%{status} Payment'

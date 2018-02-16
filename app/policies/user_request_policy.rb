@@ -4,7 +4,7 @@ class UserRequestPolicy < ApplicationPolicy
   end
 
   def edit?
-    ['admin', 'crm'].include?(user.role) && record.status == 'pending'
+    (user.id == record.user_id && record.status == 'pending') || ['admin', 'crm'].include?(user.role)
   end
 
   def new?

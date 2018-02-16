@@ -28,7 +28,7 @@ class Admin::UserRequestsController < ApplicationController
 
     respond_to do |format|
       if @user_request.save
-        format.html { redirect_to user_user_requests_path, notice: 'Request registered successfully.' }
+        format.html { redirect_to edit_user_user_request_path(@user_request), notice: 'Request registered successfully.' }
       else
         format.html { render :new }
       end

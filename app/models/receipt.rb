@@ -31,6 +31,7 @@ class Receipt
   belongs_to :user, optional: true
   belongs_to :project_unit, optional: true
   belongs_to :creator, class_name: 'User'
+  has_many :assets, as: :assetable
 
   validates :receipt_id, :total_amount, :status, :payment_mode, :payment_type, :user_id, presence: true
   validates :payment_identifier, presence: true, if: Proc.new{|receipt| receipt.payment_type == 'online' && receipt.status != 'pending' }
