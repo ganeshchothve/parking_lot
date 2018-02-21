@@ -1,0 +1,315 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require noty.css
+ *= require bootstrap-datetimepicker.css
+ *= require daterangepicker.css
+ *= require intlTelInput
+ *= require selectize.css
+ *= require tooltipster.bundle
+ *= require tooltipster-sideTip-borderless.min
+ *= require projectunitcustom.css
+ *= require jquery.fileupload.css
+ *= require colorbox
+ *= require_self
+*/
+
+@import url('https://fonts.googleapis.com/css?family=Vidaloka');
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,700');
+
+html, body{
+	padding: 0;
+	margin: 0;
+	font-size: 14px;
+	-webkit-font-smoothing: antialiased;
+	font-family: 'Poppins', sans-serif;
+	overflow-x: hidden;
+	color: #616161;
+}
+a, img, button, input[type=submit]{
+	text-decoration: none;
+	outline: none;
+	border: 0;
+	font-family: 'Poppins', sans-serif;
+}
+*, *:after, *:before {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.container{
+	max-width: 1200px;
+	margin: 0px auto;
+	padding: 0 20px;
+}
+.clearfix{
+	clear: both;
+}
+.pull-left{
+	float: left !important;
+}
+.pull-right{
+	float: right !important;
+}
+.text-left{
+	text-align: left;
+}
+.text-center{
+	text-align: center;
+}
+.text-right{
+	text-align: right;
+}
+.text-justify{
+	text-align: justify;
+}
+.img-responsive{
+	max-width: 100%;
+	height: auto;
+}
+.img-full{
+	width: 100%;
+	height: auto;
+}
+.center-block{
+	margin: 0 auto;
+}
+.col-1{
+	width: 8.333333333333333%;
+}
+.col-2{
+	width: 16.66666666666667%;
+}
+.col-3{
+	width: 25%;
+}
+.col-4{
+	width: 33.33333333333333%;
+}
+.col-5{
+	width: 41.66666666666667%;
+}
+.col-6{
+	width: 50%;
+}
+.col-7{
+	width: 58.33333333333333%;
+}
+.col-8{
+	width: 66.66666666666667%;
+}
+.col-9{
+	width: 75%;
+}
+.col-10{
+	width: 83.33333333333333%;
+}
+.col-11{
+	width: 91.66666666666667%;
+}
+.col-12{
+	width: 100%;
+}
+.col-12-5{
+	width: 20%;
+}
+.w70{
+	width: 70%;
+}
+.w30{
+	width: 30%;
+}
+.col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12, .col-12-5, .w30, .w70{
+	float: left;
+}
+section{
+	float: left;
+	width: 100%;
+}
+.relative{
+	position: relative;
+}
+.absolute{
+	position: absolute;
+}
+.dashboard-bg{
+	background-image: asset-url('main-BG.jpg');
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+.login-card .logo-wrapper, .login-card .logo-wrapper img{
+	display: block;
+	background-color: #fff;
+	padding: 5px;
+}
+.login-card .logo-wrapper img{
+	width: 50px;
+}
+.login-card{
+	background-color: #fff;
+	float: none;
+	margin: 15% auto;
+	padding: 20px;
+	border-radius:20px;
+}
+.purple{
+	color: #5b429c;
+}
+.login-card .pageTitle{
+	font-size: 42px;
+	line-height: 50px;
+	font-weight: 700;
+	margin-top: -30px;
+}
+.login-card .subTitle{
+	font-size: 24px;
+	line-height: 30px;
+	margin: 5px 0px;
+}
+.form-wrapper{
+	margin: 30px 0px;
+	text-align: center;
+}
+.form-field-wrapper .form-field, .form-field-wrapper select.form-field {
+    padding: 8px 5px;
+    width: 60%;
+    font-family: inherit;
+    background-color: transparent;
+    display: inline-block;
+    border-bottom: 1px solid #d2d2d2;
+    border-top: 0px solid #d2d2d2;
+    border-left: 0px solid #d2d2d2;
+    border-right: 0px solid #d2d2d2;
+}
+.form-field-wrapper .form-field:focus, .form-field-wrapper select.form-field:focus{
+	outline: none !important;
+    border-bottom: 1px solid #c02580;
+}
+.form-field-wrapper .form-field:focus::-webkit-input-placeholder {
+    color: #c02580;
+}
+/* Firefox < 19 */
+.form-field-wrapper .form-field:focus:-moz-placeholder {
+    color: #c02580;
+}
+/* Firefox > 19 */
+.form-field-wrapper .form-field:focus::-moz-placeholder {
+    color: #c02580;
+}
+/* Internet Explorer 10 */
+.form-field-wrapper .form-field:focus:-ms-input-placeholder {
+    color: #c02580;
+}
+.pink-button{
+	display: inline-block;
+	padding: 5px 30px;
+	background-color: #c02580;
+	color: #fff;
+	text-transform: uppercase;
+}
+.form-field-wrapper .checkbox .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+.form-field-wrapper .checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Create a custom checkbox */
+.form-field-wrapper .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #fff;
+    border: 1px solid #d2d2d2;
+}
+
+/* On mouse-over, add a grey background color */
+.form-field-wrapper .checkbox:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.form-field-wrapper .checkbox input:checked ~ .checkmark {
+    background-color: #c7589e;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.form-field-wrapper .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.form-field-wrapper .checkbox input:checked ~ .checkmark:after {
+    display: block;
+}
+.login-card .form-field-wrapper .checkbox{
+    margin: 0 auto;
+    padding-left: 30px;
+    text-align: left;
+    width: 60%;
+}
+.login-card  .form-field-wrapper .checkmark{
+	width: 20px;
+	height: 20px;
+}
+.login-card .form-field-wrapper .checkbox .checkmark:after{
+	left: 7px;
+	top: 3px;
+}
+.separator{
+	margin: 10px 0px 30px 0px;
+	padding-top: 20px;
+}
+.separator::after{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 26%;
+    right: 20px;
+    height: 1px;
+    width: 50%;
+    background-color: #616161;
+}
+.part-links a:first-child{
+	color: #c7589e;
+	font-weight: 700;
+	font-size: 16px;
+}
+.part-links a{
+	color: #616161;
+	text-decoration: none;
+}
+.prompts-message p{
+	font-size: 18px;
+	font-weight: 700;
+	color: #fff;
+}
+.gradient-bg{
+	background:-webkit-linear-gradient(90deg, rgba(145,101,248,1) 0%, rgba(238,97,187,1) 100%);
+	background:-o-linear-gradient(90deg, rgba(145,101,248,1) 0%, rgba(238,97,187,1) 100%);
+	background:-moz-linear-gradient(90deg, rgba(145,101,248,1) 0%, rgba(238,97,187,1) 100%);
+	background:linear-gradient(90deg, rgba(145,101,248,1) 0%, rgba(238,97,187,1) 100%);
+}

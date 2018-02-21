@@ -73,6 +73,7 @@ $(document).ready(function(){
 	selectedTower = "";
 	var getAllHeights = [];
 	var winHeight = $(window).height();
+	$('.full-height').height(winHeight);
 	var getHeaderHeight = $("header").outerHeight();
 
 	$(".screens-wrapper").css({
