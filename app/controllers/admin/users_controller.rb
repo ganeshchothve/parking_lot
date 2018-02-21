@@ -73,8 +73,10 @@ class Admin::UsersController < AdminController
 
   def apply_policy_scope
     custom_scope = User.all.criteria
-    if current_user.role == 'channel_partner'
+    if current_user.role?('channel_partner')
       custom_scope = custom_scope.where(channel_partner_id: current_user.id).where(role: 'user')
+    elsif current_user.role?('crm')
+      custom_scope = custom_scope.where(role: 'user')
     end
     User.with_scope(policy_scope(custom_scope)) do
       yield

@@ -101,7 +101,7 @@
       </div>
     </div>
     <% end %>
-    <% if current_user.role?('admin') && @user.role?('user') %>
+    <% if (current_user.role?('admin') || current_user.role?('crm')) && @user.role?('user') %>
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
@@ -136,4 +136,5 @@
     <% end %>
   </div>
 </div>
+<hr/>
 <%= render file: 'admin/project_units/index', locals: {project_units: @project_units} %>

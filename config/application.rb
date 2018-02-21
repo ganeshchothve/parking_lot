@@ -30,7 +30,7 @@ module BookingPortal
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
-    config.autoload_paths += ["#{config.root}/app/observers/**/*", "#{config.root}/app/policies/**/*", "#{config.root}/app/services/**/*", "#{config.root}/app/workers/**/*"]
+    config.autoload_paths += ["#{config.root}/app/observers/**/*", "#{config.root}/app/policies/**/*", "#{config.root}/app/services/**/*", "#{config.root}/app/workers/**/*", "#{config.root}/app/uploaders/**/*"]
     config.mongoid.observers = Dir["#{Rails.root}/app/observers/**/*.rb"].collect{ |f| f.gsub!("#{Rails.root}/app/observers/", "").gsub!(".rb", "")}
     config.action_mailer.preview_path = "#{Rails.root}/spec/mailers/previews"
     config.active_job.queue_adapter = :sidekiq

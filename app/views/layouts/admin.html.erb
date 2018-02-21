@@ -33,14 +33,19 @@
                 <%= link_to "#{global_labels['users']}", admin_users_path, class: 'nav-link' %>
               </li>
             <% end %>
-            <% if UserPolicy.new(current_user, Receipt).index? %>
+            <% if ReceiptPolicy.new(current_user, Receipt).index? %>
               <li class="nav-item">
                 <%= link_to "#{global_labels[:receipts]}", admin_receipts_path, class: 'nav-link' %>
               </li>
             <% end %>
-            <% if policy(:dashboard).project_units? %>
+            <% if ProjectUnitPolicy.new(current_user, ProjectUnit).index? %>
               <li class="nav-item">
-                <%= link_to 'Units', dashboard_project_units_path, class: 'nav-link' %>
+                <%= link_to 'Units', admin_project_units_path, class: 'nav-link' %>
+              </li>
+            <% end %>
+            <% if UserRequestPolicy.new(current_user, UserRequest).index? %>
+              <li class="nav-item">
+                <%= link_to "#{global_labels[:user_requests]}", admin_user_requests_path, class: 'nav-link' %>
               </li>
             <% end %>
             <% if ChannelPartnerPolicy.new(current_user, ChannelPartner).index? %>

@@ -1,3 +1,4 @@
+<% if current_user.role?('user') %>
 <style type="text/css">
 	.table{
 		width: 100%;
@@ -25,3 +26,6 @@
 		<div class="clearfix"></div>
 	</div>
 </section>
+<% elsif current_user.role?('crm') %>
+  <%= render 'crm' %>
+<% end %>

@@ -3,6 +3,10 @@ module ApplicationHelper
     t('global').with_indifferent_access
   end
 
+  def global_label(key, params={})
+    t("global.#{key}", params)
+  end
+
   def number_to_indian_currency(number)
     if number
       string = number.to_s.split('.')

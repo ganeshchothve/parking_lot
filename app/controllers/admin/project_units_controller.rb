@@ -11,8 +11,10 @@ class Admin::ProjectUnitsController < AdminController
     respond_to do |format|
       if params[:ds].to_s == 'true'
         format.json { render json: @project_units.collect{|pu| {id: pu.id, name: "#{pu.name} - Booking Amount: Rs. #{pu.booking_price}"}} }
+        format.html {}
       else
         format.json { render json: @project_units }
+        format.html {}
       end
     end
   end

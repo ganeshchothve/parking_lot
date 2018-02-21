@@ -57,6 +57,9 @@
         <% if UserPolicy.new(current_user, User.new(role: 'admin')).new? %>
           <%= link_to 'New Admin', new_by_role_admin_users_path(role: 'admin'), class: 'dropdown-item' %>
         <% end %>
+        <% if UserPolicy.new(current_user, User.new(role: 'crm')).new? %>
+          <%= link_to 'New CRM User', new_by_role_admin_users_path(role: 'crm'), class: 'dropdown-item' %>
+        <% end %>
         <% if UserPolicy.new(current_user, User.new(role: 'channel_partner')).new? %>
           <%= link_to 'New Channel Partner', new_by_role_admin_users_path(role: 'channel_partner'), class: 'dropdown-item' %>
         <% end %>

@@ -27,6 +27,10 @@ class ProjectUnitPolicy < ApplicationPolicy
     (['hold', 'blocked', 'booked_tentative', 'booked_confirmed'].include?(record.status) && record.user_id == user.id) && user.kyc_ready?
   end
 
+  def checkout_via_email?
+    ['available'].include?(record.status) && user.kyc_ready?
+  end
+
   def block?
     (['hold'].include?(record.status) && record.user_id == user.id) && user.kyc_ready?
   end

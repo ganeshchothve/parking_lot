@@ -4,7 +4,8 @@ class ProjectUnitObserver < Mongoid::Observer
       project_unit.base_price = project_unit.data_attributes.find{|x| x["n"] == "base_price"}["v"].to_f
     end
     if project_unit.booking_price.blank? && project_unit.base_price.present?
-      project_unit.booking_price = project_unit.base_price * 0.1
+      project_unit.booking_price = project_unit.base_price * ProjectUnit.booking_price_percent_of_base_price
+      project_unit.tds_amount = project_unit.base_price * ProjectUnit.tds_amount_percent_of_base_price
     end
     if project_unit.status_changed? && ['available', 'not_available'].include?(project_unit.status)
       project_unit.user_id = nil
@@ -14,7 +15,7 @@ class ProjectUnitObserver < Mongoid::Observer
     end
     if project_unit.status_changed? && project_unit.status == 'blocked'
       project_unit.blocked_on = Date.today
-      project_unit.auto_release_on = project_unit.blocked_on + ProjectUnit.blocking_days.days
+      project_unit.auto_release_on = project_unit.blocked_on + project_unit.blocking_days.days
     end
     if project_unit.status != 'blocked' && project_unit.status != 'booked_tentative'
       project_unit.auto_release_on = nil
@@ -62,6 +63,10 @@ class ProjectUnitObserver < Mongoid::Observer
       else
         SMSWorker.perform_async("", "")
       end
+    end
+
+    if project_unit.status_changed?
+      project_unit.project_unit_state_changes.create!(changed_on: Time.now, status: project_unit.status, status_was: project_unit.status_was)
     end
   end
 end

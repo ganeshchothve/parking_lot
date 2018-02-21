@@ -12,6 +12,9 @@ Rails.application.routes.draw do
     put '/user/confirmation', to: 'confirmations#update', :as => :update_user_confirmation
   end
 
+  scope "*assetable_type/:assetable_id" do
+    resources :assets, controller: :assets
+  end
   get :register, to: 'home#register', as: :register
   post :check_and_register, to: 'home#check_and_register', as: :check_and_register
   resources :channel_partners, except: [:destroy] do
@@ -30,9 +33,10 @@ Rails.application.routes.draw do
       resources :project_units, only: [:index] do
         resources :receipts, only: [:update, :edit, :show, :index, :new, :create], controller: '/receipts'
       end
+      resources :user_requests, except: [:destroy], controller: 'user_requests'
     end
     resources :user_kycs, only: [:index], controller: '/user_kycs'
-    resources :user_requests, except: [:destroy]
+    resources :user_requests, except: [:destroy], controller: 'user_requests'
   end
 
   get '/dashboard/booking-details', to: 'dashboard#booking_details'
@@ -56,8 +60,12 @@ Rails.application.routes.draw do
     post 'project_units/:project_unit_id', to: 'dashboard#update_project_unit', as: :dashboard_update_project_unit
     post 'hold_project_unit/:project_unit_id', to: 'dashboard#hold_project_unit', as: :dashboard_hold_project_unit
     get 'checkout/(:project_unit_id)', to: 'dashboard#checkout', as: :dashboard_checkout
+    get 'checkout_via_email/:project_unit_id/:receipt_id', to: 'dashboard#checkout_via_email', as: :dashboard_checkout_via_email
     match 'payment/(:project_unit_id)', to: 'dashboard#payment', as: :dashboard_payment, via: [:get, :patch]
     resources :receipts
+    resource :user do
+      resources :user_requests, except: [:destroy], controller: 'admin/user_requests'
+    end
     resources :user_kycs, except: [:show, :destroy]
   end
 
