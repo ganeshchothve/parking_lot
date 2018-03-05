@@ -8,7 +8,7 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def hold_project_unit?
-    record.status == 'available' && user.role?('user') && user.kyc_ready?
+    record.status == 'available' && user.role?('user') && user.kyc_ready? && user.project_units.where(status: "hold").blank?
   end
 
   def update_project_unit?

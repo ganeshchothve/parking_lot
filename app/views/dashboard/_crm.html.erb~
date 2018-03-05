@@ -1,0 +1,63 @@
+<h1><%= UserRequest.count %><h1>
+<div class="row">
+  <div class="col-md-3">
+    <div class="card card-body">
+      <h2><%= ProjectUnit.where(status: 'blocked').count %></h2>
+      <h6>Blocked Units</h6>
+      <% if ProjectUnitPolicy.new(current_user, ProjectUnit).index? %>
+        <%= link_to 'View All', admin_project_units_path(fltrs: { status: 'blocked' }), class: 'position-absolute', style: 'right: 15px;' %>
+      <% end %>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card card-body">
+      <h2><%= ProjectUnit.where(status: 'booked_confirmed').count %></h2>
+      <h6>Booking Confirmed Units</h6>
+      <% if ProjectUnitPolicy.new(current_user, ProjectUnit).index? %>
+        <%= link_to 'View All', admin_project_units_path(fltrs: { status: 'booked_confirmed' }), class: 'position-absolute', style: 'right: 15px;' %>
+      <% end %>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card card-body">
+      <h2><%= Receipt.where(status: 'pending').count %></h2>
+      <h6>Pending Payments</h6>
+      <% if ReceiptPolicy.new(current_user, Receipt).index? %>
+        <%= link_to 'View All', admin_receipts_path(fltrs: { status: 'pending' }), class: 'position-absolute', style: 'right: 15px;' %>
+      <% end %>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card card-body">
+      <h2><%= Receipt.where(status: 'clearance_pending').count %></h2>
+      <h6>Pending clearance Payments</h6>
+      <% if ReceiptPolicy.new(current_user, Receipt).index? %>
+        <%= link_to 'View All', admin_receipts_path(fltrs: { status: 'clearance_pending' }), class: 'position-absolute', style: 'right: 15px;' %>
+      <% end %>
+    </div>
+  </div>
+</div>
+<% if ReceiptPolicy.new(current_user, Receipt).index? %>
+  <div class="card mt-4">
+    <div class="card-header">
+      <%= global_label('receipts_with_status', {status: 'Pending'}) %>
+      <%= link_to "View All #{global_label('receipts_with_status', {status: 'Pending'})}", admin_receipts_path(fltrs: { status: 'pending' }), class: 'float-right' %>
+    </div>
+    <div class="card-body">
+      <%= render 'receipts/index', {receipts: Receipt.where(status: 'pending').desc(:updated_at).paginate(page: 1 || 1, per_page: 5) } %>
+    </div>
+  </div>
+<% end %>
+<% if ProjectUnitPolicy.new(current_user, ProjectUnit).index? %>
+  <% ['blocked', 'booked'].each do |status| %>
+    <div class="card mt-4">
+      <div class="card-header">
+        <%= global_label('project_units_with_status', {status: status.titleize}) %>
+        <%= link_to 'View All', admin_project_units_path(fltrs: { status: status }), class: 'float-right' %>
+      </div>
+      <div class="card-body">
+        <%= render 'admin/project_units/index', {project_units: ProjectUnit.where(status: status).desc(:updated_at).paginate(page: 1 || 1, per_page: 5) } %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

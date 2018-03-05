@@ -7,7 +7,7 @@
       <% if assetable.persisted? %>
         <div class="form-group">
         <div class="btn btn-primary fileinput-button pull-right">
-          <input type="file" name="files[]" class="btn btn-primary fileupload" data-extensions="<%= allowed_file_extensions('AssetUploader') %>" data-url="<%= assets_path(assetable_type: assetable.class.model_name.i18n_key.to_s, assetable_id: assetable.id) %>" multiple=true data-target='.files-container' <%= policy(Asset.new(assetable_type: assetable.class.to_s, assetable_id: assetable.id)).create? ? "" : "disabled='disabled'" %> data-klass = 'Asset' data-field_name = 'file' />
+          <input type="file" name="files[]" class="btn btn-primary fileupload" data-extensions="<%= allowed_file_extensions('AssetUploader') %>" data-url="<%= assetables_path(assetable_type: assetable.class.model_name.i18n_key.to_s, assetable_id: assetable.id) %>" multiple=true data-target='.files-container' <%= policy(Asset.new(assetable_type: assetable.class.to_s, assetable_id: assetable.id)).create? ? "" : "disabled='disabled'" %> data-klass = 'Asset' data-field_name = 'file' />
         </div>
         <div class="small text-muted"><%= 'Please upload a jpeg, png, pdf or zip' %></div>
       </div>
@@ -18,7 +18,7 @@
             <%=
               links = {}
               if policy(asset).destroy?
-                links[:destroy] = asset_path(assetable_type: assetable.class.model_name.i18n_key.to_s, assetable_id: assetable.id, id: asset.id)
+                links[:destroy] = assetable_path(assetable_type: assetable.class.model_name.i18n_key.to_s, assetable_id: assetable.id, id: asset.id)
               end
               if asset.file.file.exists?
                 render "assets/file_icon", record: {id: asset.id, file_size: asset.file_size, url: asset.file.url, content_type: asset.file.content_type }, links: links

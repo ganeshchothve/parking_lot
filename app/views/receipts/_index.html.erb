@@ -1,8 +1,12 @@
-<table class='table'>
+<% if current_user.role?('user') %>
+  <div class="table-wrapper">
+<% end %>
+<table class="table payment-table <% if current_user.role?('user') %> reciept-table <% end %>" <% if current_user.role?('user') %> cellpadding="5" cellspacing="0" width="100%"<% end %>>
   <thead class="th-default">
     <% labels = t('mongoid.attributes.receipt').with_indifferent_access %>
     <tr>
       <th><%= labels['receipt_id'] %></th>
+      <th>User</th>
       <th><%= labels['payment_mode'] %></th>
       <th>Details</th>
       <th><%= labels['project_unit_id'] %></th>
@@ -15,15 +19,18 @@
     <% receipts.each do |receipt| %>
     <tr>
       <td><%= receipt.receipt_id %></td>
+      <td><%= receipt.user.name %></td>
       <td><%= Receipt.available_payment_modes.find{|x| x[:id] == receipt.payment_mode}[:text] %></td>
       <td>
         <% if receipt.payment_mode == 'online' %>
           TODO
           <div class='small'>Transaction ID: <%= receipt.payment_identifier %></div>
+	  <div class='small'>Processed Date: <%= receipt.processed_on %></div>
         <% else %>
           <div class='small'>Bank: <%= receipt.issuing_bank %></div>
           <div class='small'>Branch: <%= receipt.issuing_bank_branch %></div>
-          <div class='small'>Date: <%= receipt.issued_date %></div>
+          <div class='small'>Issued Date: <%= receipt.issued_date %></div>
+          <div class='small'>Processed Date: <%= receipt.processed_on %></div>
           <div class='small'>ID: <%= receipt.payment_identifier %></div>
         <% end %>
       </td>
@@ -35,7 +42,7 @@
           <a class="btn btn-light dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
           <div class="dropdown-menu dropdown-menu-right">
             <% if receipt.status == 'success' %>
-              <%= link_to 'Print', receipt_path(receipt), class: 'dropdown-item' %> <!-- TODO: Implement this -->
+              <%= link_to 'Print', receipt_path(receipt), class: 'dropdown-item nav-btn' %> <!-- TODO: Implement this -->
             <% end %>
             <% if ReceiptPolicy.new(current_user, receipt).edit? %>
               <%= link_to 'Edit', edit_admin_user_receipt_path(receipt.user_id, receipt), class: 'dropdown-item' %> <!-- TODO: Implement this -->
@@ -47,4 +54,8 @@
     <% end %>
   </tbody>
 </table>
+<% if current_user.role?('user') %>
+  </div>
+<% end %>
 <%= will_paginate receipts %>
+

@@ -1,29 +1,31 @@
 <% case @receipt.status %>
 <% when 'success' %>
-<section class="mleft70" style="margin-top:20px;">
-	<div class="container">
+<section class="main-wrapper">
+	<div class="container-fluid">
+		<div class="col-12 success-card-wrapper">	
+			<div class="col-7 success-card">
+				<h2 class="pageTitle pink">Congratulations</h2>
+				<p>
+					Your home at Embassy Edge has been reserved! You now have 7 days to pay the booking amount and call the township of Embassy Springs your home
+				</p>
+			</div>
+			<div class="col-5 text-center">
+				<img src="<%= asset_path 'congrats.png'%>" class="img-responsive">
+			</div>
+			<div class="clearfix"></div>
+		</div>
+		<div class="clearfix"></div>
 		<div class="col-12">
-				<div class="col-12">
-					<div class="pull-left">
-						<p class="pageTitle big pink">PAYMENT SUCCESS!</p>
-					</div>
-					<div class="pull-right">	
-						<a href="/dashboard/receipt-print" target="_blank"><img src="<%= asset_path 'printer-outline.png'%>" class="img-responsive"></a>
-					</div>
-					<div class="clearfix"></div>
-				</div>
-				<div class="clearfix"></div>
-				<div class="col-12">
-					<div class="receipt-wrapper">
+			<div class="receipt-wrapper">
 						<div class="applicant-wrapper pull-left text-left">
 							<img src="<%= asset_path 'embassy-springs.jpg' %>" class="img-responsive">
 						</div>
 						<div class="pull-right text-right payment-details-wrapper">
-							Date: <strong>23 Jan 18</strong><br/>
-							Receipt: <strong>035</strong>
+							Date: <strong><%= @receipt.created_at.strftime('%d %b %Y') %></strong><br/>
+							Receipt: <strong><%= @receipt.receipt_id %></strong>
 						</div>
 						<div class="clearfix"></div>
-						<div class="tower-info-wrapper grey">
+						<div class="tower-info-wrapper pink">
 							<div class="tower-specs">
 								<div class="col-6">
 									<span class="title">Paid By:</span>
@@ -47,7 +49,7 @@
 								</div>
 								<div class="col-4">
 									<span class="title">Unit No:</span>
-									<span class="specs">SP07-P01-18A02</span>
+									<span class="specs"><%= @receipt.project_unit.name %></span>
 								</div>
 								<div class="clearfix"></div>
 							</div>
@@ -65,14 +67,14 @@
 										Bank / Branch
 									</th>
 									<th>
-										Amount (Rs.)
+										Amount
 									</th>
 								</tr>
 								<tr>
-									<td>23 Jan 18</td>
-									<td>132546855</td>
-									<td>SBI - RTGS</td>
-									<td>92,000</td>
+									<td><%= @receipt.issued_date %></td>
+									<td><%= @receipt.payment_identifier %></td>
+									<td><%= @receipt.issuing_bank %> - <%= @receipt.issuing_bank_branch %> </td>
+									<td><%= number_to_indian_currency(@receipt.total_amount) %></td>
 								</tr>
 							</table>
 							<br/>
@@ -85,13 +87,13 @@
 										Towards
 									</th>
 									<th>
-										Amount (Rs.)
+										Amount
 									</th>
 								</tr>
 								<tr>
 									<td>Om booking - land charges<br/> dtd: 09 10 2017<br/> Ninty two thousand only</td>
 									<td>Demand Note: 90151463</td>
-									<td>92,000</td>
+									<td><%= number_to_indian_currency(@receipt.total_amount) %></td>
 								</tr>
 							</table>
 						</div>
@@ -102,10 +104,10 @@
 							<br/><br/>
 						</div>
 					</div>
-				</div>
 		</div>
 	</div>
 </section>
+
 
 <h4><%= @receipt.status %></h4>
 <% when 'pending' %>
@@ -113,11 +115,11 @@
 Let the customer know that the payment processing had an issue or that they must have not made a payment.
 Retry option or to contact support - if the payment has already gone through
 <% when 'failed' %>
-<section class="mleft70" style="margin-top:20px;">
-	<div class="container">
+<section class="main-wrapper" style="margin-top:20px;">
+	<div class="container-fluid">
 		<div class="col-12">
 			<div class="message-wrapper text-center">
-				<div class="pageTitle big pink">PAYMENT FAILURE!</div>
+				<div class="pageTitle pink">PAYMENT FAILURE!</div>
 				<p>
 					Your payment of was unsuccessful. Please check the credentials and try again.  
 				</p>

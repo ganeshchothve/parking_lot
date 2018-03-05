@@ -1,29 +1,11 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>BookingPortal</title>
-    <%= csrf_meta_tags %>
-
-    <%= stylesheet_link_tag 'dashboard_new' %>
-    <%= javascript_include_tag 'dashboard' %>
-    <%= javascript_tag do %>
-      <% if user_signed_in? %>
-        if(typeof App === "undefined"){
-          App = {};
-        }
-        App.current_user = <%= raw current_user.to_json %>;
-      <% end %>
-    <% end %>
-</head>
-<body>
-<div id="notify"></div>
-<section class="dashboard-bg full-height">
+<section class="dashboard-bg full-height white-bg-xs">
   <div class="container">
-    <div class="col-7 login-card">
-    <a href="javascript:void(0);" class="logo-wrapper">
-      <img src="<%= asset_path "embassy_springs_logo.png" %>" class="img-responsive" />
-    </a>
-    <div class="pageTitle purple text-center">Sign in</div>
+    <div class="col-7 login-card-wrapper">
+    <div class="login-card">
+      <a href="javascript:void(0);" class="logo-wrapper">
+        <img src="<%= asset_path "embassy_springs_logo.png" %>" class="img-responsive" />
+      </a>
+      <div class="pageTitle purple text-center">Sign in</div>
       <div class="subTitle purple text-center">Welcome Back!</div>
       <div class="form-wrapper">
         <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: {class: 'validate-form'}) do |f| %>
@@ -57,6 +39,7 @@
         </div>
       </div>
       <div class="clearfix"></div>
+    </div>
       <div class="col-12 prompts-message gradient-bg text-center">
         <p>XX people have booked a home since you last signed in</p>
       </div>
@@ -64,10 +47,6 @@
     </div>
   </div>
 </section>
-</body>
-</html>
-
-
 <%= javascript_tag do %>
 $(document).ready(function(){
   FormInitializer.init($("#new_user"));

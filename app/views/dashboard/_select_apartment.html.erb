@@ -1,0 +1,176 @@
+<div class="apartment-selector-wrapper">
+  <div class="title hiddex-xs">
+    Select your new home
+  </div>
+  <div class="filter-icon visible-xs">
+    <img src="<%= asset_path 'filter-outline.png'%>" class="img-responsive">
+  </div>
+  <div class="col-12 filter-item-wrapper">
+    <form id="filter-form">
+        <div class="col-12-5 filter-item">
+          <div class="filter-title">
+            Tower
+          </div>
+          <div class="dropdown-wrapper">
+            <select class="init-selectize" name="towerid">
+              <option value="">Select Tower</option>
+              <% ProjectTower.all.each do |t| %>
+              <option value="<%= t.id %>" <%= params[:project_tower_id].to_s == t.id.to_s ? "selected=selected" : "" %>><%= t.name %></option>
+              <% end %>
+            </select>
+          </div>
+        </div>
+        <div class="col-12-5 filter-item">
+          <div class="filter-title">
+            Bedrooms
+          </div>
+          <div class="dropdown-wrapper">
+            <select class="init-selectize" name="bedrooms">
+              <option value="">Select Bedrooms</option>
+              <% @configurations.each do |c| %>
+              <option value="<%= c[:bedrooms] %>"><%= c[:bedrooms] %> BHK (Starting from <%= number_to_indian_currency(c[:base_price]) %>)</option>
+              <% end %>
+            </select>
+          </div>
+        </div>
+        <!-- <div class="col-12-5 filter-item">
+          <div class="filter-title">
+            Facing
+          </div>
+          <div class="dropdown-wrapper">
+            <select class="init-selectize" name="facing">
+              <option value="">Select Facing</option>
+              <option value="1">North</option>
+              <option value="2">East</option>
+              <option value="3">North East</option>
+            </select>
+          </div>
+        </div> -->
+        <div class="col-12-5 filter-item">
+          <div class="filter-title">
+            Price
+          </div>
+          <div class="dropdown-wrapper">
+            <select class="init-selectize" name="base_price">
+              <option value="">Select Budget</option>
+              <option value="4000000-6000000" <%= params[:configuration].split(",")[1] == "4000000-6000000" ? "selected=selected" : "" %>>Rs.40 Lac - 60 Lac</option>
+              <option value="6000000-8000000" <%= params[:configuration].split(",")[1] == "6000000-8000000" ? "selected=selected" : "" %>>Rs.60 Lac - 80 Lac</option>
+              <option value="8000000-10000000" <%= params[:configuration].split(",")[1] == "8000000-10000000" ? "selected=selected" : "" %>>Rs.80 Lac - 1 Cr.</option>
+              <option value="10000000-100000000" <%= params[:configuration].split(",")[1] == "10000000-100000000" ? "selected=selected" : "" %>>1 Cr and above</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-12-5 filter-item">
+          <div class="filter-item filter-submit-wrapper">
+            <button class="apply-btn">Apply</button>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+    </form>
+  </div>
+  <div class="col-12">
+    <div class="col-6 text-center building-main-wrapper">
+      <div class="main-building">
+        <div class="caption-floor">
+          Floors
+        </div>
+        <div class="apt-selector-wrapper" id="append-floors">
+          <% bedrooms = params[:configuration].split(",")[0] != "NA" ? params[:configuration].split(",")[0] : "" %>
+          <% base_price = params[:configuration].split(",")[1] != "NA" ? params[:configuration].split(",")[1] : "" %>
+          <% minprice = base_price != "" ? base_price.split("-")[0] : "" %>
+          <% maxprice = base_price != "" ? base_price.split("-")[1] : "" %>
+
+          <% @units.each do |ur| %>
+          <div class="flats-<%= ur[1].count %> apt-selector-box">
+            <div class="floor-number"><%= ur[0] %></div>
+            
+            <% ur[1].each do |u| %>
+              <%
+                if (bedrooms.to_s != "" && base_price.to_s != "")
+                  if(bedrooms.to_s == u.bedrooms.to_s && (u.base_price.to_i <= maxprice.to_i && u.base_price.to_i >= minprice.to_i))
+                    status = u.status
+                  else
+                    status = "na"
+                  end
+                else 
+                  if (bedrooms.to_s != "" && bedrooms.to_s == u.bedrooms.to_s) || (u.base_price.to_i <= maxprice.to_i && u.base_price.to_i >= minprice.to_i)
+                    status = u.status
+                  else
+                    status = "na"
+                  end
+                end 
+                    
+                # if (bedrooms.to_s != "" && bedrooms.to_s == u.bedrooms.to_s) && (base_price.to_s != "" && (u.base_price.to_i <= maxprice.to_i && u.base_price.to_i >= minprice.to_i))
+                  
+                # else 
+                #   status = "na"
+                # end
+              %>
+              <span data-unit-id="<%= u.id %>" class="unit-tooltip apt bstatus-<%= status %>" title='["<%= u.name %>","<%= u.carpet %>","<%= number_to_indian_currency(u.base_price) %>","<%= u.bedrooms %>","<%= status %>"]' data-unit-details='["<%= u.name %>","<%= u.carpet %>","<%= number_to_indian_currency(u.base_price) %>","<%= u.bedrooms %>","<%= status %>"]'></span>
+            <% end %>
+          </div>
+          <% end %>
+        </div>
+	<div class="col-12 apt-index-wrapper">
+		<div class="apt-index">
+			<span class="bstatus-booked_confirmed"></span>Booked
+		</div>
+		<div class="apt-index">
+			<span class="bstatus-hold"></span>Hold
+		</div>
+		<div class="apt-index">
+			<span class="bstatus-na"></span>NA
+		</div>
+		<div class="apt-index">
+			<span class="bstatus-available"></span>Available
+		</div>
+		<div class="apt-index">
+			<span class="bstatus-selected"></span>Selected
+		</div>
+		<div class="clearfix"></div>
+	</div>
+      </div>
+    </div>
+    <div class="col-6 show-unit-details-wrapper close">
+      <div class="visible-xs pink open-details-wrapper"><</div>
+      <div class="pink close-btn visible-xs">X</div>
+      <div class="show-unit-details">
+    		<!-- <div>
+    			<div>UNIT DETAILS</div>
+    			<div>Flat No: 904</div>
+    			<div>Bedrooms: 2</div>
+    			<div>Carpet Area: 672.50</div>
+    			<div>Base Price: Rs.51,38,000/-</div>
+    			<div>Booking Status: available</div>
+    		</div> -->
+    	</div>
+    	<div class="show-unit-floor-plans hidden-xs">
+    		<span class="active" rel="fp">FLOOR PLANS</span><span rel="gallery">GALLERY</span><span rel="unit-plan">UNIT PLANS</span>
+    		<div class="unit-plans-wrapper" id="fp" style="display:block">
+    			<a href="<%= asset_path 'fp-type-2.jpg'%>" class="colorbox-init" rel="floorplan">
+    				<img src="<%= asset_path 'fp-type-2.jpg'%>" class="img-responsive">
+    			</a>
+    		</div>
+    		<div class="unit-plans-wrapper" id="gallery">
+    			<a href="<%= asset_path 'fp-type-2.jpg'%>" class="colorbox-init" rel="floorplan">
+    				<img src="<%= asset_path 'fp-type-2.jpg'%>" class="img-responsive">
+    			</a>
+    		</div>
+    		<div class="unit-plans-wrapper" id="unit-plan">
+    			<a href="<%= asset_path 'fp-type-2.jpg'%>" class="colorbox-init" rel="floorplan">
+    				<img src="<%= asset_path 'fp-type-2.jpg'%>" class="img-responsive">
+    			</a>
+    		</div>
+    	</div>
+      <div class="show-unit-floor-plans visible-xs">
+        <a href="<%= asset_path 'fp-type-2.jpg'%>" rel="floorplan" class="colorbox-init nav-btn">FLOOR PLANS</a><a href="<%= asset_path 'fp-type-2.jpg'%>" class="colorbox-init nav-btn" rel="gallery">GALLERY</a><a href="<%= asset_path 'fp-type-2.jpg'%>" class="colorbox-init nav-btn" rel="unit-plan">UNIT PLANS</a>
+      </div> 
+    	<div class="clearfix"></div>
+    </div>
+    	<div class="col-12 text-right center-btn-xs">
+      <a href="javascript:;" class="nav-btn btn-anim navigate" data-stage="choose-tower" data-navigate-to="prev">← PREV</a>
+      <a href="javascript:;" class="nav-btn btn-anim navigate" data-stage="kyc-details" data-navigate-to="next">NEXT →</a>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</div>

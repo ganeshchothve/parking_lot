@@ -19,6 +19,7 @@ class Admin::UserRequestsController < ApplicationController
 
   def new
     @user_request = @user.user_requests.new
+    @user_request.project_unit_id = params[:project_unit_id] if params[:project_unit_id].present?
     authorize @user_request
   end
 

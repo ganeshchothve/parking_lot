@@ -16,4 +16,8 @@ module ApplicationHelper
     end
     "Rs. #{number}"
   end
+
+  def calculate_percent(amount, percent)
+    amount = amount * percent/100 
+  end
 end

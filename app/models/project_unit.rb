@@ -7,6 +7,10 @@ class ProjectUnit
     30000
   end
 
+  def self.total_booked_revenue
+    ProjectUnit.where(status: "booked").sum(:base_price)
+  end
+
   def blocking_days
     if self.blocking_payment.present?
       if self.blocking_payment.payment_mode == "online"

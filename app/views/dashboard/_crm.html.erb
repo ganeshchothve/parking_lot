@@ -1,38 +1,126 @@
+<!-- <h1><%#= "Overall: #{UserRequest.count}" %><%#= "Pending: #{UserRequest.where(status: "pending").count}" %> - <%#= "Resolved: #{UserRequest.where(status: "resolved").count}" %></h1>
+<h1><%#= "Revenue: #{ProjectUnit.total_booked_revenue}" %></h1> -->
 <div class="row">
+  <div class="container-fluid">
+    <h2 class="bold">Summary</h2>
+  </div>
+</div>
+<div class="row summary-wrapper">
   <div class="col-md-3">
     <div class="card card-body">
-      <h2><%= ProjectUnit.where(status: 'blocked').count %></h2>
-      <h6>Blocked Units</h6>
+      <h2 class="pink"><%= ProjectUnit.where(status: 'blocked').count %></h2>
+      <h6 class="pink">Blocked Units</h6>
       <% if ProjectUnitPolicy.new(current_user, ProjectUnit).index? %>
-        <%= link_to 'View All', admin_project_units_path(fltrs: { status: 'blocked' }), class: 'position-absolute', style: 'right: 15px;' %>
+        <%= link_to 'View All', admin_project_units_path(fltrs: { status: 'blocked' }), class: 'position-absolute pink', style: 'right: 15px;' %>
       <% end %>
     </div>
   </div>
   <div class="col-md-3">
     <div class="card card-body">
-      <h2><%= ProjectUnit.where(status: 'booked_confirmed').count %></h2>
-      <h6>Booking Confirmed Units</h6>
+      <h2 class="pink"><%= ProjectUnit.where(status: 'booked_confirmed').count %></h2>
+      <h6 class="pink">Booking Confirmed Units</h6>
       <% if ProjectUnitPolicy.new(current_user, ProjectUnit).index? %>
-        <%= link_to 'View All', admin_project_units_path(fltrs: { status: 'booked_confirmed' }), class: 'position-absolute', style: 'right: 15px;' %>
+        <%= link_to 'View All', admin_project_units_path(fltrs: { status: 'booked_confirmed' }), class: 'position-absolute pink', style: 'right: 15px;' %>
       <% end %>
     </div>
   </div>
   <div class="col-md-3">
     <div class="card card-body">
-      <h2><%= Receipt.where(status: 'pending').count %></h2>
-      <h6>Pending Payments</h6>
+      <h2 class="pink"><%= Receipt.where(status: 'pending').count %></h2>
+      <h6 class="pink">Pending Payments</h6>
       <% if ReceiptPolicy.new(current_user, Receipt).index? %>
-        <%= link_to 'View All', admin_receipts_path(fltrs: { status: 'pending' }), class: 'position-absolute', style: 'right: 15px;' %>
+        <%= link_to 'View All', admin_receipts_path(fltrs: { status: 'pending' }), class: 'position-absolute pink', style: 'right: 15px;' %>
       <% end %>
     </div>
   </div>
   <div class="col-md-3">
     <div class="card card-body">
-      <h2><%= Receipt.where(status: 'clearance_pending').count %></h2>
-      <h6>Pending clearance Payments</h6>
+      <h2 class="pink"><%= Receipt.where(status: 'clearance_pending').count %></h2>
+      <h6 class="pink">Pending clearance Payments</h6>
       <% if ReceiptPolicy.new(current_user, Receipt).index? %>
-        <%= link_to 'View All', admin_receipts_path(fltrs: { status: 'clearance_pending' }), class: 'position-absolute', style: 'right: 15px;' %>
+        <%= link_to 'View All', admin_receipts_path(fltrs: { status: 'clearance_pending' }), class: 'position-absolute pink', style: 'right: 15px;' %>
       <% end %>
+    </div>
+  </div>
+</div>
+<div class="row summary-wrapper">
+  <div class="col-md-3">
+    <div class="card card-body">
+      <h2 class="pink"><%= UserRequest.count %></h2>
+      <h6 class="pink">Overall</h6>
+      <%# if ReceiptPolicy.new(current_user, Receipt).index? %>
+        <%#= link_to 'View All', admin_receipts_path(fltrs: { status: 'clearance_pending' }), class: 'position-absolute pink', style: 'right: 15px;' %>
+      <%# end %>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card card-body">
+      <h2 class="pink"><%= UserRequest.where(status: "pending").count %></h2>
+      <h6 class="pink">Pending</h6>
+      <%# if ReceiptPolicy.new(current_user, Receipt).index? %>
+        <%#= link_to 'View All', admin_receipts_path(fltrs: { status: 'clearance_pending' }), class: 'position-absolute pink', style: 'right: 15px;' %>
+      <%# end %>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card card-body">
+      <h2 class="pink"><%= UserRequest.where(status: "resolved").count %></h2>
+      <h6 class="pink">Resolved</h6>
+      <%# if ReceiptPolicy.new(current_user, Receipt).index? %>
+        <%#= link_to 'View All', admin_receipts_path(fltrs: { status: 'clearance_pending' }), class: 'position-absolute pink', style: 'right: 15px;' %>
+      <%# end %>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card card-body">
+      <h2 class="pink"><%= ProjectUnit.total_booked_revenue %></h2>
+      <h6 class="pink">Revenue</h6>
+      <%# if ReceiptPolicy.new(current_user, Receipt).index? %>
+        <%#= link_to 'View All', admin_receipts_path(fltrs: { status: 'clearance_pending' }), class: 'position-absolute pink', style: 'right: 15px;' %>
+      <%# end %>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="container-fluid">
+    <h2 class="bold">Aparments Sold</h2>
+  </div>
+</div>
+<div class="row summary-wrapper">
+  <div class="col-md-3">
+    <div class="card card-body">
+      <h2 class="pink">2</h2>
+      <h6 class="pink">1 BHK</h6>
+      <%# if ReceiptPolicy.new(current_user, Receipt).index? %>
+        <%#= link_to 'View All', admin_receipts_path(fltrs: { status: 'clearance_pending' }), class: 'position-absolute pink', style: 'right: 15px;' %>
+      <%# end %>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card card-body">
+      <h2 class="pink">12</h2>
+      <h6 class="pink">2 BHK</h6>
+      <%# if ReceiptPolicy.new(current_user, Receipt).index? %>
+        <%#= link_to 'View All', admin_receipts_path(fltrs: { status: 'clearance_pending' }), class: 'position-absolute pink', style: 'right: 15px;' %>
+      <%# end %>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card card-body">
+      <h2 class="pink">15</h2>
+      <h6 class="pink">2.5 BHK</h6>
+      <%# if ReceiptPolicy.new(current_user, Receipt).index? %>
+        <%#= link_to 'View All', admin_receipts_path(fltrs: { status: 'clearance_pending' }), class: 'position-absolute pink', style: 'right: 15px;' %>
+      <%# end %>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card card-body">
+      <h2 class="pink">6</h2>
+      <h6 class="pink">3 BHK</h6>
+      <%# if ReceiptPolicy.new(current_user, Receipt).index? %>
+        <%#= link_to 'View All', admin_receipts_path(fltrs: { status: 'clearance_pending' }), class: 'position-absolute pink', style: 'right: 15px;' %>
+      <%# end %>
     </div>
   </div>
 </div>

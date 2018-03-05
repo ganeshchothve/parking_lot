@@ -1,0 +1,112 @@
+<div class="apartment-selector-wrapper">
+       	<div class="col-12 client-detail-wrapper">
+       		<div class="pull-left client-detail">
+				<span class="pink"><%= current_user.name %></span>
+				<span class="pink">Flat No: <%= @unit.name %></span>
+			</div>
+       		<div class="pull-right tower-info-wrapper"> 
+       			<div class="pull-left">Tower: <%= @unit.project_tower_name %><br>Floor: <%= @unit.floor %><br>Flat no: <%= @unit.name %><br></div>
+       			<div class="pull-left padding-left-30">Configuration: <%= @unit.bedrooms %> BHK<br>Min. Carpet Area: <%= @unit.carpet %> Sq.Ft.<br>Starting Price: <%= @unit.base_price %></div>
+       			<div class="clearfix"></div>
+       		</div>
+       		<div class="clearfix"></div>
+       	</div>
+       	<div class="clearfix"></div>
+       	<div class="col-12">
+       		<div class="f22 bold">KYC Details</div>
+       		<div class="form-check">
+                <label class="radio kyc-radio" data-link="yes">Add New KYC Details<input type="radio" name="kyc" class="form-check-input"><span class="checkmark"></span></label>
+                <label class="radio kyc-radio" data-link="no">Select Existing<input type="radio" name="kyc" class="form-check-input"><span class="checkmark"></span></label>
+                <div class="hidden-field kyc-add" style="display:none">
+                  <div class="form-wrapper margin-top-30 text-left">
+			          <%
+			          user_kyc = current_user.user_kycs.blank? ? current_user.user_kycs.build(name: current_user.name, email: current_user.email, phone: current_user.phone) : current_user.user_kycs.new
+			          url = user_kycs_path
+			          %>
+			          <%= form_with(model: user_kyc, local: true, id: 'user_kyc_form', url: url, html: {class: 'validate-form'}) do |f| %>
+			            <% if user_kyc.errors.any? %>
+			              <div id="error_explanation" class="alert alert-danger">
+			                <ul>
+			                <% user_kyc.errors.full_messages.each do |message| %>
+			                  <li><%= message %></li>
+			                <% end %>
+			                </ul>
+			              </div>
+			            <% end %>
+			            <div class="form-group form-field-wrapper">
+			              <%#= f.label :name, class: 'control-label label-required' %>
+			              <%= f.text_field :name, class: 'form-control form-field', required: 'required form-field', placeholder:'Name' %>
+			            </div>
+			            <div class="row">
+			              <div class="col-md-6">
+			                <div class="form-group form-field-wrapper">
+			                  <%#= f.label :email, class: 'control-label label-required' %>
+			                  <%= f.email_field :email, class: 'form-control email form-field', required: 'required form-field', placeholder:'Email' %>
+			                </div>
+			              </div>
+			              <div class="col-md-6">
+			                <div class="form-group form-field-wrapper">
+			                  <%#= f.label :phone, class: 'control-label label-required' %>
+			                  <%= f.text_field :phone, class: 'form-control phone number form-field', required: 'required form-field', placeholder:'Phone' %>
+			                </div>
+			              </div>
+			            </div>
+			            <div class="row">
+			              <div class="col-md-6">
+			                <div class="form-group form-field-wrapper position-relative">
+			                  <%#= f.label :dob, class: 'control-label label-required' %>
+			                  <!-- TODO: check if you want to restrict the dob to 18 years age -->
+			                  <%= f.date_field :dob, class: 'form-control form-field required', type:'date', placeholder:'DOB' %>
+			                </div>
+			              </div>
+			              <div class="col-md-6">
+			                <!-- <div class="form-group form-field-wrapper">
+			                  <%= f.label :pan_number, class: 'control-label label-required' %>
+			                  <%= f.text_field :pan_number, class: 'form-control form-field', required: 'required', placeholder: 'AAAAA9999A' %>
+			                </div> -->
+			                <div class="form-group form-field-wrapper">
+				              <div class="form-check">
+				                <%= f.label :nri, class: 'control-label' %>
+				                <label class="radio oci" data-link="yes">Yes<%= f.radio_button :nri, class: "form-check-input", checked: 'checked' %><span class="checkmark"></span></label>
+				                <label class="radio oci" data-link="no">No<%= f.radio_button :nri, class: "form-check-input" %><span class="checkmark"></span></label>
+				                <div class="hidden-field oci" style="display:none">
+				                    <%= f.text_field :oci_number, class: 'form-control form-field', placeholder: 'OCI Number' %>
+				                </div>
+				                <div class="hidden-field pan" style="display:none">
+				                    <%= f.text_field :pan_number, class: 'form-control form-field', placeholder: 'PAN Number' %>
+				                </div>
+				              </div>
+				            </div>
+			              </div>
+			            </div>
+			            <% if policy(@unit).hold_project_unit? %>
+			            	<%= f.submit 'Add & Proceed', class: 'form-field save-btn', style: 'width:auto'%>
+			            <% end %>
+			          <% end %>
+			        </div>
+                  
+                </div>
+                <div class="hidden-field kyc-exist" style="display:none">
+                	<form id="existing_kyc_form" action="/dashboard/hold_project_unit/<%= @unit.id %>" class="validate-form checkout_project_unit" accept-charset="UTF-8" method="post">
+			          <input name="utf8" type="hidden" value="✓">
+			          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+			          <div class="form-group">
+			            <input value="hold" type="hidden" name="project_unit[status]" id="project_unit_status">
+			            <select multiple="multiple" class="init-selectize required" name="project_unit[user_kyc_ids][]" required="required">
+			              <option value="">Select KYC</option>
+			              <% current_user.user_kycs.each do |user_kyc| %>
+			              <% if user_kyc.persisted? %>
+			              	<option value="<%= user_kyc.id %>"><%= user_kyc.name %></option>
+			              <% end %>
+			              <% end %>
+			            </select>
+			          </div>
+			          <% if policy(@unit).hold_project_unit? %>
+			          	<input type="submit" value="Proceed" class="save-btn" />
+			          <% end %>
+			        </form>
+			        <div class="clearfix"></div>
+                </div>
+              </div>
+       	</div>
+      </div>

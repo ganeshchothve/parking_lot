@@ -1,0 +1,33 @@
+<div class="apartment-selector-wrapper">
+        <div class="title">
+          Choose tower
+        </div>
+        <div class="col-12 conf-select-wrapper">
+          <div class="tower-name-wrapper">
+            <% if @towers.count > 0 %>
+              <% @towers.each do |t| %>
+              <div class="col-3 pad-left text-center">
+                <div class="tower-name-box" data-towerid="<%= t[:project_tower_id] %>">
+                  <img src="<%= asset_path 'tower-feat.png'%>" class="img-responsive">
+                  <div class="">
+                    <span><%= t[:project_tower_name] %></span>
+                    <span>Tower Units: <%= t[:total_units] %></span>
+                    <span>Available Units: <%= t[:total_units_available] %></span>
+                  </div>
+                </div>
+              </div>
+              <% end %>
+            <% else %>
+            <div class="col-12 pad-left text-center">
+                No data found with the selected values.
+            </div>
+            <% end %>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+         <div class="col-12 text-right center-btn-xs">
+          <a href="/dashboard/apartment-selector" class="nav-btn btn-anim" data-stage="apartment-selector" data-navigate-to="prev">← PREV</a>
+          <a href="javascript:;" class="nav-btn btn-anim navigate" data-selected-towerid="0" data-stage="select-apartment" data-navigate-to="next">NEXT →</a>
+        </div>
+        <div class="clearfix"></div>
+      </div>

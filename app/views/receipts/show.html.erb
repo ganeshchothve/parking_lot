@@ -40,15 +40,15 @@
 	.img-responsive{
 		max-width: 100%
 	}
-	.tower-info-wrapper.grey .col-6 {
+	.tower-info-wrapper.pink .col-6 {
 	    padding-right: 20px;
 	    padding-bottom: 20px;
 	}
 	.tower-specs {
 	    padding: 30px 0px 20px 10px;
 	}
-	.tower-info-wrapper.grey {
-	    background-color: #f2f2f2;
+	.tower-info-wrapper.pink {
+	    background-color: #ffecf7;
 	}
 	.tower-info-wrapper {
 	    padding: 20px 0px 20px 20px;
@@ -66,7 +66,7 @@
 	    border-left: 1px solid #ccc;
 	}
 	.receipt-table th {
-	    background-color: #f2f2f2;
+	    background-color: #ffecf7;
 	    border-right: 1px solid #ccc;
 	    border-top: 1px solid #ccc;
 	    border-bottom: 1px solid #ccc;
@@ -101,7 +101,7 @@
 	    display: block;
 	}
 	.tower-specs .specs {
-	    color: #000;
+	    color: #383838;
 	    font-size: 16px;
 	    font-weight: 600;
 	}
@@ -109,8 +109,8 @@
 	   padding: 20px 0px 20px 20px;
 	}
 </style>
-<section class="mleft70">
-	<div class="container">
+<section class="main-wrapper">
+	<div class="container-fluid">
 		<div class="col-12">
 				<div class="col-12">
 					<div class="pull-left">
@@ -128,11 +128,11 @@
 							<img src="<%= asset_path 'embassy-springs.jpg' %>" class="img-responsive">
 						</div>
 						<div class="pull-right text-right payment-details-wrapper">
-							Date: <strong>23 Jan 18</strong><br/>
-							Receipt: <strong>035</strong>
+							Date: <strong><%= @receipt.created_at.strftime('%d %b %Y') %></strong><br/>
+							Receipt: <strong><%= @receipt.receipt_id %></strong>
 						</div>
 						<div class="clearfix"></div>
-						<div class="tower-info-wrapper grey">
+						<div class="tower-info-wrapper pink">
 							<div class="tower-specs">
 								<div class="col-6">
 									<span class="title">Paid By:</span>
@@ -156,7 +156,7 @@
 								</div>
 								<div class="col-4">
 									<span class="title">Unit No:</span>
-									<span class="specs">SP07-P01-18A02</span>
+									<span class="specs"><%= @receipt.project_unit.name %></span>
 								</div>
 								<div class="clearfix"></div>
 							</div>
@@ -174,14 +174,14 @@
 										Bank / Branch
 									</th>
 									<th>
-										Amount (Rs.)
+										Amount
 									</th>
 								</tr>
 								<tr>
-									<td>23 Jan 18</td>
-									<td>132546855</td>
-									<td>SBI - RTGS</td>
-									<td>92,000</td>
+									<td><%= @receipt.issued_date %></td>
+									<td><%= @receipt.payment_identifier %></td>
+									<td><%= @receipt.issuing_bank %> - <%= @receipt.issuing_bank_branch %> </td>
+									<td><%= number_to_indian_currency(@receipt.total_amount) %></td>
 								</tr>
 							</table>
 							<br/>
@@ -194,13 +194,13 @@
 										Towards
 									</th>
 									<th>
-										Amount (Rs.)
+										Amount
 									</th>
 								</tr>
 								<tr>
 									<td>Om booking - land charges<br/> dtd: 09 10 2017<br/> Ninty two thousand only</td>
 									<td>Demand Note: 90151463</td>
-									<td>92,000</td>
+									<td><%= number_to_indian_currency(@receipt.total_amount) %></td>
 								</tr>
 							</table>
 						</div>

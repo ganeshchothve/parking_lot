@@ -1,100 +1,93 @@
-<% project_units.each do |project_unit| %>
-    <div class="booking-detail-wrapper">
-      <div class="wrapper">
-          <div class="tower-specs pull-left text-left">
-            <div class="pull-left">
-              <img src="<%= asset_path "wing-icon.png" %>" class="img-responsive">
-            </div>
-            <div class="pull-left tower-info">
-              <span>Tower Name: <%= project_unit.project_tower_name %></span>
-              <span>Unit No: <%= project_unit.name %> | Floor: <%= project_unit.project_tower_name %>st Floor</span>
-            </div>
-            <div class="clearfix"></div>
-          </div>
-        <div class="pull-right text-right payment-details-wrapper">
-          <div>
-            Booking Status: <span><%= project_unit.status.humanize %></span>
-          </div>
-          <% if project_unit.status == 'hold'%>
-          <a href="javascript:;" class="checkout-btn">Make Payment</a>
-          <% end %>
+<% project_units.each_with_index do |project_unit, index| %>
+    <div class="col-12 booking-accordian-wrapper">
+      <div class="booking-accordian" data-acc="book-<%= index %>">
+        <div class="pull-left">
+          <span class="title">Booking <%= index + 1 %></span>
+        </div>
+        <div class="pull-left">
+          <span class="title">Tower Name: <%= project_unit.project_tower_name %></span><span class="title">Unit No: <%= project_unit.name %></span><span class="title">Floor: <%= project_unit.project_tower_name %></span>
         </div>
         <div class="clearfix"></div>
       </div>
-      <hr />
-      <div class="tower-info-wrapper">
-        <div class="applicant-wrapper pull-left text-left">
-          <div class="applicant">Applicant: <span><%= project_unit.user.name %></span></div>
-          <!-- <div class="applicant">Co-Applicant: <span>Mrs. John Doe</span></div> -->
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-12 booking-details-wrapper close" id="book-<%= index %>">
+      <div class="booking-detail">
+        <div class="title">Booking Details
+            <% if current_user.role?("user") && project_unit.user == current_user %>
+              <% if current_user.user_requests.where(project_unit_id: project_unit.id).blank? %>
+                <a href="<%= new_admin_user_request_path(project_unit_id: project_unit.id) %>" class="pink small-link">Cancel Booking</a>
+              <% else %>
+                <span class="unit-cancelled">Cancellation Request Generated</span>
+              <% end %>
+            <% end %>
         </div>
-        <div class="clearfix"></div>  
-        <div class="tower-specs">
+        <div class="unit-booking-details">
           <div class="col-4">
-            <span class="title">Unit View:</span>
-            <span class="specs"><%= project_unit.facing %></span>
+            <div>Applicant:</div><div class="dark"><%= project_unit.user.name %></div>
           </div>
           <div class="col-4">
-            <span class="title">Unit Type:</span>
-            <span class="specs"><%= project_unit.bedrooms %>BHK - 2T - A</span><a href="<%= asset_path 'fp-type-1.jpg'%>" class="colorbox-init small-link">View Floor Plan</a>
+            <div>Built-up Area:</div><div class="dark"><%= project_unit.saleable.round(2) %> sq.ft</div>
           </div>
           <div class="col-4">
-            <span class="title">Super Built-up Area:</span>
-            <span class="specs"><%= project_unit.saleable.round(2) %> sq.ft.</span>
+            <div>Super Built-up Area:</div><div class="dark"><%= project_unit.saleable.round(2) %> sq.ft</div>
+          </div>
+          <div class="col-4">
+            <div>Unit Type:</div><div class="dark"><%= project_unit.bedrooms %> BHK - 2T - A</div><a href="<%= asset_path 'fp-type-2.jpg'%>" rel="floorplan" class="colorbox-init small-link">View Floor Plan</a>
+          </div>
+          <div class="col-4">
+            <div>Carpet Area:</div><div class="dark"><%= project_unit.carpet.round(2) %> sq.ft</div>
+          </div>
+          <div class="col-4">
+            <div>Unit View:</div><div class="dark"><%= project_unit.facing %></div>
           </div>
           <div class="clearfix"></div>
         </div>
-        <div class="tower-specs">
-          <div class="col-4">
-            <span class="title">Built-up Area:</span>
-            <span class="specs"><%= project_unit.saleable.round(2) %> sq.ft.</span>
-          </div>
-          <div class="col-4">
-            <span class="title">Carpet Area:</span>
-            <span class="specs"><%= project_unit.carpet.round(2) %> sq.ft.</span>
-          </div>
+        <!-- <div class="unit-booking-details">
+
           <div class="clearfix"></div>
-        </div>
+        </div> -->
       </div>
-      <div class="tower-info-wrapper">
-        <div class="tower-info" style="margin-left:0px;background:#eee; padding:10px">
-          <span>Payment Details</span>
-          <!-- <span>Unit No: 101 | Floor: 1st Floor</span> -->
-        </div>
-        <div class="clearfix"></div>
-        <div class="tower-specs">
+      <div class="booking-detail light-purple">
+        <div class="title">Payment Details</div>
+        <div class="unit-booking-details">
           <div class="col-4">
-            <span class="title">All Inclusive Price:</span>
-            <span class="specs">Rs. 130 Cr +</span><a href="/dashboard/payment-breakup" target="_blank" class="small-link">Payment Break Up</a>
+            <div>All Inclusive Price:</div><div class="dark"><%= number_to_indian_currency(project_unit.base_price) %></div><a href="/dashboard/<%= project_unit.id %>/payment-breakup" class="small-link">Payment Break Up</a>
           </div>
           <div class="col-4">
-            <span class="title">Agreement Value:</span>
-            <span class="specs">Rs. 119 Cr +</span>
+            <div>Advance Payment:</div><div class="dark">0</div>
           </div>
           <div class="col-4">
-            <span class="title">Booking Amount:</span>
-            <span class="specs">Rs. <%= project_unit.booking_price %></span>
-          </div>
-          <div class="clearfix"></div>
-        </div>
-        <div class="tower-specs">
-          <div class="col-4">
-            <span class="title">Advance Payment: </span>
-            <span class="specs">Rs. 50,000</span>
+            <div>Booking Amount:</div><div class="dark"><%= number_to_indian_currency(project_unit.booking_price) %></div>
           </div>
           <div class="col-4">
-            <span class="title">Balance Payment:</span>
-            <span class="specs">Rs. <%= project_unit.user.total_balance_pending %></span>
+            <div>Agreement Value:</div><div class="dark"><%= number_to_indian_currency(project_unit.base_price) %></div>
+          </div>
+          <div class="col-4">
+            <div>Balance Payment:</div><div class="dark">Rs. <%= project_unit.user.total_balance_pending %></div>
           </div>
           <div class="clearfix"></div>
+          <!-- <div class="clearfix"></div> -->
         </div>
+        <!-- <div class="unit-booking-details">
+          <div class="col-4">
+            <div>Agreement Value:</div><div class="dark">Rs. 54,49,500</div>
+          </div>
+          <div class="col-4">
+            <div>Balance Payment:</div><div class="dark">Rs. <%= project_unit.user.total_balance_pending %></div>
+          </div>
+          <div class="clearfix"></div>
+        </div> -->
       </div>
-      <div class="imp-notes">
-        Please Note: 
+      <div class="booking-detail light-pink">
         <ul>
           <li>You need to pay 9.9% of agreement value to confirm the booking</li>
-          <li>You have % days remaining to confirm this booking please make remaining payment of Rs. TODO</li>
+          <li>You have 7 days remaining to confirm this booking please make remaining payment of Rs. 0</li>
         </ul>
       </div>
+      <a href="/dashboard/checkout/<%= project_unit.id %>" class="col-12 block pink payment-btn text-center">
+        MAKE THE REMAINING PAYMENT
+      </a>
     </div>
 <% end %>
 <%= javascript_tag do %>

@@ -1,7 +1,7 @@
 # TODO: replace all messages & flash messages
 class DashboardController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_project_unit, only: [:project_unit, :update_project_unit, :hold_project_unit, :checkout, :payment]
+  before_action :set_project_unit, only: [:project_unit, :update_project_unit, :hold_project_unit, :checkout, :payment, :payment_breakup]
   layout :set_layout
 
   def index
@@ -25,8 +25,32 @@ class DashboardController < ApplicationController
     render json: ProjectUnit.find(params[:unit_id]).ui_json
   end
 
+  def payment_breakup
+  end
+
   def project_units
     authorize :dashboard, :project_units?
+    if params[:stage] == "apartment_selector"
+      @configurations = ProjectUnit.all.collect{|x| {bedrooms: x.bedrooms, base_price: x.base_price}}.uniq!
+    elsif params[:stage] == "choose_tower"
+      bedroom = params[:configuration].split(",")[0]
+      budget = params[:configuration].split(",")[1]
+      parameters =  {fltrs: { data_attributes: {bedrooms: bedroom != "NA" ? bedroom : "", base_price: budget != "NA" ? budget : ""} } }
+      project_tower_ids = ProjectUnit.build_criteria(parameters).distinct(:project_tower_id)
+      @towers = ProjectTower.in(id: project_tower_ids).collect do |x|
+        hash = {project_tower_id: x.id, project_tower_name:x.name}
+        hash[:total_units] = ProjectUnit.where(project_tower_id: x.id).count
+        hash[:total_units_available] = ProjectUnit.where(project_tower_id: x.id).where(status: "available").count
+        hash
+      end
+    elsif params[:stage] == "select_apartment"
+      @configurations = ProjectUnit.all.collect{|x| {bedrooms: x.bedrooms, base_price: x.base_price}}.uniq!
+      parameters = {fltrs: { project_tower_id: params[:project_tower_id] } }
+      @units = ProjectUnit.build_criteria(parameters).sort{|x, y| y.floor <=> x.floor}.group_by(&:floor)
+    elsif params[:stage] == "kyc_details"
+      @unit = ProjectUnit.find(params[:unit_id])
+    end
+
     @project_units = current_user.project_units
   end
 
@@ -107,11 +131,12 @@ class DashboardController < ApplicationController
 
   def hold_project_unit
     @project_unit = ProjectUnit.find(params[:project_unit_id])
-    authorize @project_unit
+    authorize @project_unit 
     @project_unit.attributes = permitted_attributes(@project_unit)
     # TODO: get a lock on this model. Nobody can modify it.
     respond_to do |format|
       # TODO: handle this API method for other status updates. Currently its assuming its a hold request
+      Rails.logger.info "======#{hold_on_third_party_inventory}========"
       case hold_on_third_party_inventory
       when 'hold'
         format.html { redirect_to dashboard_checkout_path(project_unit_id: @project_unit.id) }

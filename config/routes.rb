@@ -12,8 +12,9 @@ Rails.application.routes.draw do
     put '/user/confirmation', to: 'confirmations#update', :as => :update_user_confirmation
   end
 
+  #TODO_Pankit - ASSET_PATH wont work if we uncomment the below scope
   scope "*assetable_type/:assetable_id" do
-    resources :assets, controller: :assets
+    resources :assets, controller: :assets, as: :assetables
   end
   get :register, to: 'home#register', as: :register
   post :check_and_register, to: 'home#check_and_register', as: :check_and_register
@@ -43,8 +44,9 @@ Rails.application.routes.draw do
   get '/dashboard/cancel-booking', to: 'dashboard#cancel_booking'
   get '/dashboard/kyc-form', to: 'dashboard#kyc_form'
   get '/dashboard/add-booking', to: 'dashboard#add_booking'
-  get '/dashboard/payment-breakup', to: 'dashboard#payment_breakup'
+  get '/dashboard/:project_unit_id/payment-breakup', to: 'dashboard#payment_breakup'
   get '/dashboard/receipt', to: 'dashboard#receipt'
+  get '/dashboard/payment-success', to: 'dashboard#payment_success'
   get '/dashboard/sales-booking', to: 'dashboard#sales_booking'
   post '/dashboard/get_towers', to: 'dashboard#get_towers'
   post '/dashboard/get_units', to: 'dashboard#get_units'
@@ -54,8 +56,14 @@ Rails.application.routes.draw do
 
   get :dashboard, to: 'dashboard#index', as: :dashboard
   scope :dashboard do
-    get :project_units, to: 'dashboard#project_units', as: :dashboard_project_units
+    # get :project_units, to: 'dashboard#project_units', as: :dashboard_project_units
     get :project_units_new, to: 'dashboard#project_units_new', as: :dashboard_project_units_new
+
+    get '/apartment-selector/:configuration/:project_tower_id/:unit_id', to: 'dashboard#project_units', stage: 'kyc_details', :constraints => {:configuration => /[^\/]+/}
+    get '/apartment-selector/:configuration/:project_tower_id', to: 'dashboard#project_units', stage: 'select_apartment', :constraints => {:configuration => /[^\/]+/}
+    get '/apartment-selector/:configuration', to: 'dashboard#project_units', stage: 'choose_tower', :constraints => {:configuration => /[^\/]+/}
+    get '/apartment-selector', to: 'dashboard#project_units', stage: 'apartment_selector'
+
     get 'project_units/:project_unit_id', to: 'dashboard#project_unit', as: :dashboard_project_unit
     post 'project_units/:project_unit_id', to: 'dashboard#update_project_unit', as: :dashboard_update_project_unit
     post 'hold_project_unit/:project_unit_id', to: 'dashboard#hold_project_unit', as: :dashboard_hold_project_unit

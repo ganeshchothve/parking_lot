@@ -12,17 +12,18 @@
     <% end %>
   <% end %>
 <% end %>
-<section class="mleft70">
-  <div class="container">
+<section class="main-wrapper">
+  <div class="container-fluid">
     <div class="col-12">
       <div class="col-12 text-left mtop10">
         <p class="pageTitle big pink">PAYMENTS</p>
         <br/>
       </div>
+      <div class="clearfix"></div>
       <div class="row">
           <div class="col-md-10 border border-left-0 border-top-0 border-bottom-0">
             <%= render 'index', {receipts: @receipts} %>
-            <div class="mtop30">
+            <div class="mtop30 pull-left" style="float:left">
               <% if ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? %>
                 <% units_for_payments = @user.project_units.in(status: ["blocked", 'booked_tentative']).all %>
                 <% if units_for_payments.present? %>

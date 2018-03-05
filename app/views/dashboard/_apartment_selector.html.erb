@@ -1,0 +1,42 @@
+<div class="apartment-selector-wrapper" id="stage-apartment-selector">
+  <div class="title">
+    Choose your apartment type before it's gone
+  </div>
+  <div class="col-12 conf-select-wrapper">
+    <div class="col-5 text-left">
+      <div class="subtitle">
+        Number of Bedrooms
+      </div>
+      <div class="dropdown-wrapper">
+        <select class="init-selectize required" name="bedrooms">
+          <option value="">Select Bedrooms</option>
+          <% @configurations.each do |c| %>
+          <option value="<%= c[:bedrooms] %>"><%= c[:bedrooms] %> BHK (Starting from <%= number_to_indian_currency(c[:base_price]) %>)</option>
+          <% end %>
+        </select>
+      </div>
+    </div>
+    <div class="col-2 subtitle">
+      OR
+    </div>
+    <div class="col-5 text-left">
+      <div class="subtitle">
+        Choose your budget
+      </div>
+      <div class="dropdown-wrapper">
+        <select class="init-selectize required" name="base_price">
+          <option value="">Select Budget</option>
+          <option value="4000000-6000000">Rs.40 Lac - 60 Lac</option>
+          <option value="6000000-8000000">Rs.60 Lac - 80 Lac</option>
+          <option value="8000000-10000000">Rs.80 Lac - 1 Cr.</option>
+          <option value="10000000-100000000">1 Cr and above</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+  <div class="col-12 text-right">
+    <a href="javascript:void(0);" class="nav-btn btn-anim navigate" data-stage="choose-tower" data-navigate-to="next">NEXT →</a>
+  </div>
+  <div class="clearfix"></div>
+</div>

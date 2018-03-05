@@ -5,7 +5,7 @@
     <title>BookingPortal</title>
     <%= csrf_meta_tags %>
 
-    <%= stylesheet_link_tag 'dashboard' %>
+    <%= stylesheet_link_tag 'dashboard_new' %>
     <%= javascript_include_tag 'dashboard' %>
     <%= javascript_tag do %>
       <% if user_signed_in? %>
@@ -17,101 +17,113 @@
     <% end %>
   </head>
   <body>
+  <div class="visible-xs prompts-message gradient-bg text-center white">
+    <span>Register now to book & save upto Rs. 10 Lac!</span>
+    <span>Prices rise with every 50 bookings</span>
+  </div>
     <div id="notify"></div>
+    <p class="notice"><%= notice %></p>
+    <p class="alert"><%= alert %></p>
+    <% if user_signed_in? %>
+    <div class="notification-header gradient-bg">
+        <div class="container-fluid">
+        </div>
+        <div class="col-12">
+          <div class="pull-left dash-logo">
+            <a href="/dashboard"><img src="<%= asset_path "embassy_springs_logo.png" %>" class="img-responsive" style="padding:0 5px;"></a>
+            <span>Embassy Springs<br/> Booking Portal</span>
+          </div>
+          <div class="container-fluid">
+            <div class="pull-left left-wrapper">
+              <span class="subTitle white bold">Dashboard</span>
+            </div>
+            <div class="pull-right right-wrapper">
+              <div class="dashboard-notify pull-left">
+                  <div class="notification-count">1</div>
+                  <div class="notification-dropdown-wrapper">
+                      <div class="notification-dropdown">
+                        <div class="title">Title</div>
+                        <p>Lorem Ipsum Lorem IpsumLorem IpsumLorem Ipsum</p>
+                      </div>
+                      <div class="notification-dropdown">
+                        <div class="title">Title</div>
+                        <p>Lorem Ipsum Lorem IpsumLorem IpsumLorem Ipsum</p>
+                      </div>
+                      <div class="notification-dropdown">
+                        <div class="title">Title</div>
+                        <p>Lorem Ipsum Lorem IpsumLorem IpsumLorem Ipsum</p>
+                      </div>
+                  </div>
+              </div>
+              <div class="pull-left">
+                <span class="hidden-xs"><img src="<%= asset_path 'user.png'%>" class="img-responsive"> &nbsp;Welcome <%= current_user.name %></span>
+                <div class="burger-menu visible-xs">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+    </div>
     <div class="dashboard-menu">
-      <div class="dash-logo text-center">
-        <img src="<%= asset_path "embassy_springs_logo.png" %>" class="img-responsive" style="padding:0 5px;">
-      </div>
-      <% if user_signed_in? %>
       <div class="dash-menu-wrapper">
         <% if policy(:dashboard).index? %>
           <div>
-              <!-- <a href="javascript:;" class="has-submenu" rel="booking"><span class="sprite-dasboard booking-details"></span><span class="menu-items">Booking Details</span></a>
-              <span class="submenu up" id="booking">
-                <a href="">One</a>
-                <a href="">Two</a>
-                <a href="">Three</a>
-              </span> -->
-                <a href="/dashboard" <%= params[:controller] == "dashboard" && params[:action] == "index" ? "class=active" : "" %>><span class="sprite-dasboard booking-details"></span><span class="menu-items-hide">Dashboard</span></a>
+                <a href="/dashboard" <%= params[:controller] == "dashboard" && params[:action] == "index" ? "class=active" : "" %>><span class="sprite-dasboard booking-details"></span><span>Dashboard</span></a>
           </div>
-        <% end %>
-        <% if UserKycPolicy.new(current_user, UserKyc).index? %>
-          <div>
-              <a href="/dashboard/user_kycs" <%= (params[:controller] == "user_kycs" && params[:action] == "index") || (params[:controller] == "user_kycs" && params[:action] == "edit") || (params[:controller] == "user_kycs" && params[:action] == "new") ? "class=active" : "" %>><span class="sprite-dasboard kyc-form"></span><span class="menu-items-hide">user kyc</span></a>
-          </div>
-        <% end %>
-        <% if UserRequestPolicy.new(current_user, UserRequest).index? %>
-          <%= link_to "<span class='sprite-dasboard kyc-form'></span><span class='menu-items-hide'>#{global_labels['user_requests']}</span>", user_user_requests_path, class: "#{(params[:controller] == "user_requests") ? "active" : "" }" %>
-        <% end %>
-        <% if policy(:dashboard).receipts? %>
-        <div>
-              <a href="/dashboard/receipts" <%= params[:controller] == "receipts" && params[:action] == "index" ? "class=active" : "" %>><span class="sprite-dasboard payment-details"></span><span class="menu-items-hide">Payments</span></a>
-          <!-- <a href="javascript:;" class="has-submenu" rel="payment-details"><span class="sprite-dasboard payment-details"></span><span class="menu-items">Receipts</span></a>
-          <span class="submenu up" id="payment-details">
-              <a href="">One</a>
-              <a href="">Two</a>
-              <a href="">Three</a>
-          </span> -->
-        </div>
         <% end %>
         <% if policy(:dashboard).project_units? %>
           <div>
-              <a href="/dashboard/project_units" <%= params[:controller] == "dashboard" && params[:action] == "project_units" ? "class=active" : "" %> ><span class="sprite-dasboard apartment-selector"></span><span class="menu-items-hide">apartment selector</span></a>
+              <a href="/dashboard/apartment-selector" <%= params[:controller] == "dashboard" && params[:action] == "project_units" ? "class=active" : "" %> ><span class="sprite-dasboard apartment-selector"></span><span>apartment selector</span></a>
           </div>
         <% end %>
+        <% if UserRequestPolicy.new(current_user, UserRequest).index? %>
+          <!-- <div>
+            <a href="/dashboard/user/user_requests" <%= (params[:controller] == "user_requests" && params[:action] == "index") || (params[:controller] == "user_requests" && params[:action] == "new") ? "class=active" : "" %>>
+                <span class="sprite-dasboard kyc-form"></span><span>cancellation requests</span>
+            </a>
+            <%#= link_to "<span class='sprite-dasboard kyc-form'></span><span class='menu-items-hide'>#{global_labels['user_requests']}</span>", user_user_requests_path, class: "#{(params[:controller] == "user_requests") ? "active" : "" }" %>
+          </div> -->
+        <% end %>
+        <% if UserKycPolicy.new(current_user, UserKyc).index? %>
+          <div>
+              <a href="/dashboard/user_kycs" <%= (params[:controller] == "user_kycs" && params[:action] == "index") || (params[:controller] == "user_kycs" && params[:action] == "edit") || (params[:controller] == "user_kycs" && params[:action] == "new") ? "class=active" : "" %>><span class="sprite-dasboard kyc-form"></span><span>user kyc</span></a>
+          </div>
+        <% end %>
+        <% if policy(:dashboard).receipts? %>
+        <div>
+              <a href="/dashboard/receipts" <%= params[:controller] == "receipts" && params[:action] == "index" ? "class=active" : "" %>><span class="sprite-dasboard payment-details"></span><span>Payments</span></a>
+        </div>
+        <% end %>
+        
+      </div>
+      <div class="prompts-message gradient-bg hidden-xs">
+        <ul>
+          <li>Register now to book & save upto Rs. 10 Lac!</li>
+          <li>Prices rise with every 50 bookings</li>
+        </ul>
       </div>
       <div class="dash-menu-footer">
         <div>
           <a href="/users/sign_out" data-method="delete" rel="nofollow"><span class="sprite-signout sign-out"></span><span class="menu-items-hide">sign out</span></a>
         </div>
       </div>
-      <% end %>
+      <div class="visible-xs help-wrapper text-center">
+          <p>Need Help?</p>
+          <div>
+            <a href="javascript:;">+91 1234 5678 90</a>
+            <a href="javascript:;">xyz@embassysprings.com</a>
+          </div>
+      </div>
     </div>
-    <div hidden class="mleft70">
-      Welcome to Booking Portal<br/>
-      <h6>Total Paid (you might some payments pending clearance): <%= current_user.total_amount_paid %></h6>
-      <h6>Total Balance Pending (you might some payments pending clearance): <%= current_user.total_balance_pending %></h6>
-      <h6>Total Un-attached Balance (subject to clearance): <%= current_user.total_unattached_balance %></h6>
-      <% if user_signed_in? %>
-        <% if policy(:dashboard).index? %>
-          <%= link_to 'Dashboard', dashboard_path %>
-        <% end %>
-        <% if UserKycPolicy.new(current_user, UserKyc).index? %>
-          <%= link_to "#{global_labels['user_kycs']}", user_kycs_path %>
-        <% end %>
-        <% if policy(:dashboard).project_units? %>
-          <%= link_to "#{global_labels['project_units']}", dashboard_project_units_path %>
-        <% end %>
-        <% if policy(:dashboard).receipts? %>
-          <%= link_to "#{global_labels['receipts']}", receipts_path %>
-        <% end %>
-        <% if ReceiptPolicy.new(current_user, Receipt.new(user: current_user)).new? %>
-          <%= link_to 'Direct Blocking payment', dashboard_checkout_path %>
-        <% end %>
-        <%= link_to 'Logout', destroy_user_session_path, method: 'delete' %>
-      <% end %>
-      <p class="notice"><%= notice %></p>
-      <p class="alert"><%= alert %></p>
-      <% if UserKycPolicy.new(current_user, UserKyc.new(user_id: current_user.id)).new? && current_user.user_kycs.blank? %>
-      <p>
-        Please set up your User KYC.
-        <%= link_to "Set up #{global_labels['user_kycs']}", new_user_kyc_path %>
-      </p>
-      <% elsif policy(:dashboard).project_units? %>
-        <%= link_to "Start searching #{global_labels['project_units']}", dashboard_project_units_path %>
-      <% end %>
-    </div>
+    <% end %>
+
     <%= yield %>
     <script type="text/javascript">
       $(document).ready(function(){
-        // $('.dash-menu-wrapper a').on('click',function(){
-        //   var link = $(this).attr('rel');
-        //   $(this).toggleClass("active").next('span').slideToggle(250).closest('div').siblings().find('a').removeClass('active').next('span').slideUp(250);
-        // })
-        // $('.dash-menu-wrapper').mouseleave(function(){
-        //   $('.submenu').hide();
-        //   $('.dash-menu-wrapper a').removeClass('active')
-        // })
         $('label.radio.nri').on('click',function(){
           var link = $(this).attr('data-link');
           if(link == 'yes'){
@@ -120,6 +132,32 @@
           else{
             $('.poa').hide();
             $('.hidden-field').hide();
+          }
+        })
+        $('label.radio.kyc-radio').on('click',function(){
+          var link = $(this).attr('data-link');
+
+          if(link == 'yes'){
+            $('.kyc-add').fadeIn();
+            $('.kyc-exist').hide();
+          }
+          else{
+           $('.kyc-add').hide();
+            $('.kyc-exist').fadeIn();
+           
+          }
+        })
+        $('label.radio.oci').on('click',function(){
+          var link = $(this).attr('data-link');
+
+          if(link == 'yes'){
+            $('.hidden-field.oci').fadeIn();
+            $('.hidden-field.pan').hide();
+          }
+          else{
+            $('.hidden-field.oci').hide();
+            $('.hidden-field.pan').fadeIn();
+           
           }
         })
         $('label.radio.attorney').on('click',function(){
@@ -170,21 +208,39 @@
         $(".mediaCenterAccordion > li > span").click(function() {
           $(this).toggleClass("active").next('div').slideToggle(250).closest('li').siblings().find('span').removeClass('active').next('div').slideUp(250);
         });
-        var password = document.getElementById("acc-number"),
-        confirm_password = document.getElementById("confirm-acc-number");
-        function validatePassword(){
-          if(password.value != confirm_password.value) {
-            confirm_password.setCustomValidity("Account Number Don't Match");
-          } else {
-            confirm_password.setCustomValidity('');
+        $('.booking-accordian-wrapper .booking-accordian').on('click',function(){
+          var link = $(this).attr('data-acc');
+          // $('.booking-accordian').removeClass('active')
+          $('#'+link).slideToggle();
+          $(this).toggleClass('active');
+        })
+        $('.dashboard-notify').on('click',function(){
+          $('.notification-dropdown-wrapper').slideToggle()
+        })
+        $('.show-unit-floor-plans span').on('click',function(){
+          var link = $(this).attr('rel');
+          $('.unit-plans-wrapper').hide();
+          $('.show-unit-floor-plans span').removeClass('active');
+          $('#'+link).fadeIn();
+          $(this).addClass('active')
+        })
+        $('.burger-menu').on('click',function(){
+          $('.dashboard-menu').slideToggle();
+        })
+        $('.filter-icon').on('click',function(){
+          $('.filter-item-wrapper').slideToggle();
+        })
+        $('.open-details-wrapper, .show-unit-details-wrapper .close-btn').on('click',function(){
+          console.log('hit');
+          if($('.show-unit-details-wrapper').hasClass('close')){
+            console.log('no')
+            $('.show-unit-details-wrapper').removeClass('close')
           }
-        }
-        if(password){
-          password.onchange = validatePassword;
-        }
-        if(confirm_password){
-          confirm_password.onkeyup = validatePassword;
-        }
+          else{
+            console.log('yes')
+            $('.show-unit-details-wrapper').addClass('close') 
+          }
+        })
       })
     </script>
   </body>

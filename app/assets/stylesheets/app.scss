@@ -47,3 +47,20 @@ label.control-label{
   color: theme-color('danger');
   margin: 0 6px;
 }
+.payment-table.table td {
+    word-break: break-all;
+    font-size: 14px;
+}
+.summary-wrapper{
+  padding:0px 0px 30px 0px;
+}
+.summary-wrapper .card-body h2{
+  font-size: 60px;
+  font-weight: bold;
+}
+.summary-wrapper .card-body h2.pink, .summary-wrapper .card-body h6.pink, .summary-wrapper .card-body a.pink{
+  color: #c02680;
+}
+.bold{
+  font-weight: bold;
+}

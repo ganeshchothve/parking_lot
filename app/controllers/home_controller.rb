@@ -9,6 +9,7 @@ class HomeController < ApplicationController
       redirect_to after_sign_in_path_for(current_user)
       flash[:notice] = "You have already been logged in"
     end
+    render layout: "dashboard"
   end
 
   def check_and_register
