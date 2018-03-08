@@ -31,7 +31,7 @@ class DashboardController < ApplicationController
   def project_units
     authorize :dashboard, :project_units?
     if params[:stage] == "apartment_selector"
-      @configurations = ProjectUnit.all.collect{|x| {bedrooms: x.bedrooms, base_price: x.base_price}}.uniq!
+      @configurations = ProjectUnit.all.collect{|x| {bedrooms: x.bedrooms, base_price: x.base_price}}.sort{|x, y| x[:base_price] <=> y[:base_price]}.uniq{|x| x[:bedrooms]}
     elsif params[:stage] == "choose_tower"
       bedroom = params[:configuration].split(",")[0]
       budget = params[:configuration].split(",")[1]
@@ -44,7 +44,7 @@ class DashboardController < ApplicationController
         hash
       end
     elsif params[:stage] == "select_apartment"
-      @configurations = ProjectUnit.all.collect{|x| {bedrooms: x.bedrooms, base_price: x.base_price}}.uniq!
+      @configurations = ProjectUnit.all.collect{|x| {bedrooms: x.bedrooms, base_price: x.base_price}}.sort{|x, y| x[:base_price] <=> y[:base_price]}.uniq{|x| x[:bedrooms]}
       parameters = {fltrs: { project_tower_id: params[:project_tower_id] } }
       @units = ProjectUnit.build_criteria(parameters).sort{|x, y| y.floor <=> x.floor}.group_by(&:floor)
     elsif params[:stage] == "kyc_details"

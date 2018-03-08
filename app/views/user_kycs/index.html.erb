@@ -8,7 +8,7 @@
       <% if current_user.role?('user') %>
         <div class="table-wrapper">
       <% end %>
-      <table class='table payment-breakup text-center' width="100%" cellspacing="0" cellpadding="2" border="0" outline="0">
+      <table class='striped-table table payment-breakup text-center' width="100%" cellspacing="0" cellpadding="2" border="0" outline="0">
         <thead class='thead-default'>
           <% labels = t('mongoid.attributes.user_kyc').with_indifferent_access %>
           <tr>
@@ -31,9 +31,9 @@
               <td class="text-right">
                 <% if UserKycPolicy.new(current_user, user_kyc).edit? %>
                   <% if current_user.role?('user') %>
-                    <%= link_to 'Edit', edit_user_kyc_path(user_kyc), class: 'btn nav-btn' %>
+                    <%= link_to 'Edit', edit_user_kyc_path(user_kyc), class: 'btn nav-btn pink-btn' %>
                   <% else %>
-                  <%= link_to 'Edit', edit_admin_user_user_kyc_path(@user, user_kyc), class: 'btn nav-btn' %>
+                  <%= link_to 'Edit', edit_admin_user_user_kyc_path(@user, user_kyc), class: 'btn nav-btn pink-btn' %>
                   <% end %>
                 <% end %>
               </td>
@@ -48,9 +48,9 @@
     <div style="margin-top:30px;">
     <% if UserKycPolicy.new(current_user, UserKyc.new(user: @user)).new? %>
       <% if current_user.role?('user') %>
-        <%= link_to "Add #{global_labels['user_kyc']}", new_user_kyc_path, class: 'btn nav-btn' %>
+        <%= link_to "Add #{global_labels['user_kyc']}", new_user_kyc_path, class: 'btn nav-btn pink-btn' %>
       <% else %>
-        <%= link_to "Add #{global_labels['user_kyc']}", new_admin_user_user_kyc_path(@user), class: 'btn nav-btn' %>
+        <%= link_to "Add #{global_labels['user_kyc']}", new_admin_user_user_kyc_path(@user), class: 'btn nav-btn pink-btn' %>
       <% end %>
     <% end %>
     </div>

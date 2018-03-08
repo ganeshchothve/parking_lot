@@ -14,14 +14,13 @@
 <% end %>
 <section class="main-wrapper">
   <div class="container-fluid">
-    <div class="col-12">
-      <div class="col-12 text-left mtop10">
-        <p class="pageTitle big pink">PAYMENTS</p>
-        <br/>
+    <div class="col-12 padding-xs-left-10">
+      <div class="col-12 text-left mtop10 padding-xs-0">
+          <p class="pageTitle big pink">PAYMENTS</p>
       </div>
       <div class="clearfix"></div>
       <div class="row">
-          <div class="col-md-10 border border-left-0 border-top-0 border-bottom-0">
+          <div class="col-md-10 border border-left-0 border-top-0 border-bottom-0 table-responsive">
             <%= render 'index', {receipts: @receipts} %>
             <div class="mtop30 pull-left" style="float:left">
               <% if ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? %>
@@ -41,7 +40,7 @@
                 <%= link_to "Add Blocking #{global_labels['receipt']}", new_admin_user_receipt_path(@user), class: 'btn btn-primary' %>
               <% end %>
               <% if UserPolicy.new(current_user, User).export? && @user.blank? %>
-                <%= link_to "Export all #{global_labels['receipts']}", export_admin_receipts_path, class: 'btn btn-outline-primary float-left ml-2' %>
+                <%= link_to "Export all #{global_labels['receipts']}", export_admin_receipts_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn' %>
               <% end %>
             </div>
           </div>

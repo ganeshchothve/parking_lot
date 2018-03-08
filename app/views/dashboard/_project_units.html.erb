@@ -64,7 +64,7 @@
             <div>Agreement Value:</div><div class="dark"><%= number_to_indian_currency(project_unit.base_price) %></div>
           </div>
           <div class="col-4">
-            <div>Balance Payment:</div><div class="dark">Rs. <%= project_unit.user.total_balance_pending %></div>
+            <div>Balance Payment:</div><div class="dark"><%= number_to_indian_currency(project_unit.user.total_balance_pending) %></div>
           </div>
           <div class="clearfix"></div>
           <!-- <div class="clearfix"></div> -->

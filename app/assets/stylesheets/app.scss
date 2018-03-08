@@ -1,7 +1,9 @@
 @import "bootstrap";
 @import "intlTelInput";
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,700');
 body{
-  color: #666;
+  color: #616161;
+  font-family: 'Poppins', sans-serif;
 }
 label.label-required:after {
   content: " *";
@@ -63,4 +65,438 @@ label.control-label{
 }
 .bold{
   font-weight: bold;
+}
+.navbar{
+    background-color: #fff !important;
+    width: 250px;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0px;
+    z-index: 1;
+    align-items:normal;
+    padding: 0px;
+    display: block;
+    box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.20);
+}
+.navbar-brand{
+  font-size: 16px;
+  display: block;
+  margin-right: 0px;
+  padding: 10px 20px;
+  border-bottom:1px solid #ccc;
+}
+.navbar img{
+  width: 50px;
+}
+.navbar-expand-lg .navbar-nav{
+  -webkit-box-orient: vertical;
+}
+.navbar-nav{
+  display: block;
+  width: 100%;
+}
+.nav-link{
+  padding: 20px 0px;
+  padding-left: 25px !important;
+}
+.navbar-nav .nav-item:hover .nav-link{
+  background-color: #fdecf7 !important;
+  color: #ce2691 !important;
+}
+.navbar-light .navbar-nav .nav-link{
+  color: #383838 !important;
+}
+.center-section{
+  padding-left: 250px;
+  padding-bottom: 50px;
+}
+.mt0{
+  margin-top: 0px;
+}
+.padding0{
+  padding: 0px;
+}
+.breadcrumb{
+  margin-bottom: 0px;
+  padding: 30px 40px;
+  background:-webkit-linear-gradient(90deg, rgba(145,101,248,1) 0%, rgba(238,97,187,1) 100%);
+  background:-o-linear-gradient(90deg, rgba(145,101,248,1) 0%, rgba(238,97,187,1) 100%);
+  background:-moz-linear-gradient(90deg, rgba(145,101,248,1) 0%, rgba(238,97,187,1) 100%);
+  background:linear-gradient(90deg, rgba(145,101,248,1) 0%, rgba(238,97,187,1) 100%);
+  border-radius: 0px;
+}
+.breadcrumb-item a, .breadcrumb-item.active, .breadcrumb-item + .breadcrumb-item::before{
+  color: #fff;
+}
+.mt50{
+  margin-top: 40px;
+}
+.th-pink{
+  background-color: #fdecf7;
+}
+.striped-table tr:nth-child(even){
+    background: #f1f1f1;
+}
+.striped-table thead th{
+  color: #ce2691;
+}
+.table th, .table td{
+  vertical-align: middle;
+}
+.pink-btn{
+  color: #fff;
+  background-color: #c02780 !important;
+  border-color: #c02780 !important;
+  border-radius: 0px;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+.pink-btn:focus{
+  -webkit-box-shadow: 0 0 0 0rem rgba(0, 123, 255, 0) !important;
+  box-shadow: 0 0 0 0rem rgba(0, 123, 255, 0) !important;
+}
+.pink-btn:not([disabled]):not(.disabled):active, .show > .pink-btn.dropdown-toggle, .pink-btn:hover{
+  color: #cf29af !important;
+  background-color: #fff !important;
+  border-color: #cf29af !important;
+}
+.dropdown-item.active, .dropdown-item:active{
+  background-color: #cf29af;
+}
+.pageTitle.big {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+.pink{
+  color: #cf29af;
+}
+.light-pink-btn{
+  background-color: #fdecf7;
+  color: #ce2691;
+  border-color: #ce2691;
+  border-radius: 0px;
+}
+.light-pink-btn:hover, .show > .light-pink-btn.dropdown-toggle{
+  background-color: #fff;
+  color: #ce2691;
+  border-color: #ce2691;
+}
+.pagination{
+  display: block;text-align: center;
+}
+.pagination a{
+  color: #ce2691;
+  display: inline-block;
+  margin: 0 5px;
+}
+.padding-side-22{
+  padding: 0 22px;
+}
+.padding-side-12{
+  padding: 0 12px;
+}
+.title{
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 20px;
+    color: #cf29af;
+}
+
+.radio {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.radio input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Create a custom radio button */
+.radio .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #fff;
+    border-radius: 50%;
+    border: 1px solid #c02680;
+}
+
+/* On mouse-over, add a grey background color */
+.radio:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+/* When the radio button is checked, add a blue background */
+.radio input:checked ~ .checkmark {
+    background-color: #c7589e;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.radio input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.radio .checkmark:after {
+    top: 6px;
+    left: 6px;
+    width: 6px;
+    height: 6px;
+  border-radius: 50%;
+  background: white;
+}
+label.control-label{
+  margin-bottom: 10px;
+}
+.form-group .form-control{
+    padding: 8px 5px;
+    font-family: inherit;
+    background-color: transparent;
+    display: inline-block;
+    border-bottom: 1px solid #d2d2d2;
+    border-top: 0px solid #d2d2d2;
+    border-left: 0px solid #d2d2d2;
+    border-right: 0px solid #d2d2d2;
+}
+.form-group .form-control:focus{
+  outline: none !important;
+  border-bottom: 1px solid #c02580 !important;
+  -webkit-box-shadow: 0 0 0 0rem rgba(0, 123, 255, 0);
+  box-shadow: 0 0 0 0rem rgba(0, 123, 255, 0);
+  border-radius: 0px;
+}
+.notification-header .subTitle {
+    vertical-align: middle;
+    display: inline-block;
+    font-size: 24px;
+    line-height: 30px;
+    padding-right: 20px;
+    margin-right: 20px;
+    color: #fff;
+}
+.notification-header {
+    z-index: 333;
+    width: 100%;
+    padding: 27px 0px;
+    padding-left: 30px;
+}
+.gradient-bg {
+    background: -webkit-gradient(linear, left top, right top, from(#9165f8), to(#ee61bb));
+    background: linear-gradient(90deg, #9165f8 0%, #ee61bb 100%);
+}
+.pink{
+  color: #c02680;
+}
+.card-body{
+  background-color: #fff;
+  border-radius: 0px;
+  -webkit-box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.2);
+}
+.card-header{
+  font-size: 24px;
+  font-weight: bold;
+  color: #c02680;
+}
+.card-header a{
+  font-size: 14px;
+  font-weight: normal;
+  color: #c02680;
+  vertical-align: middle;
+}
+.card-header{
+  background-color: #fdecf7;
+  border: 0px;
+}
+.border0{
+  border: 0px;
+}
+.no-shadow{
+  -webkit-box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+}
+.padding0{
+  padding: 0px;
+}
+.padding-side-30{
+  padding: 0 30px;
+}
+.logo-title{
+  display:inline-block;
+  vertical-align:middle;
+  font-weight:bold;
+  font-size: 14px;
+}
+.w50{
+  width: 50%;
+  padding: 10px 30px 10px 0px;
+  float: left;
+}
+.pink-title{
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #c02680;
+    text-align: left !important;
+}
+.selldof .form-control, .sell_do_form_control{
+  border-radius: 0px !important;
+  border: 0px solid #cccccc !important;
+  border-bottom: 1px solid #ccc !important;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0) !important;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0) !important;
+  -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+.selldof label{
+  display: block !important;
+}
+
+.selldof [type='submit'].btn, .selldof [type='submit'].btn:hover, .sell_do_ctc_btn[type='submit']:hover, .sell_do_verify_btn[type='submit']:hover, .btn-primary, .selldof [type='submit'].btn, .selldof [type='submit'].sell_do_ctc_btn, .selldof [type='submit'].sell_do_verify_btn, .sell_do_ctc_btn[type='submit'], .sell_do_verify_btn[type='submit']{
+    color: #fff !important;
+    background-color: #c02780 !important;
+    border-color: #c02780 !important;
+    border-radius: 0px !important;
+    text-transform: uppercase !important;
+    font-size: 14px !important;
+}
+@media all and (max-width: 1366px){
+  .padding-side-30 {
+      padding: 0 0px;
+  }
+  .table th, .table td{
+    padding: 5px;
+    font-size: 14px;
+  }
+  .card-body h6{
+    font-size: 14px;
+  }
+}
+@media all and (max-width: 768px){
+  .navbar{
+    width: 100%;
+    height: auto;
+  }
+  .notification-header{
+    display: none;
+  }
+  .center-section{
+    padding-left: 0px;
+    padding-top: 80px;
+  }
+  .navbar-brand{
+    padding: 10px;
+    float: left;
+    border-bottom: 0px solid #ccc;
+    clear: left;
+  }
+  .navbar-toggler{
+    float: right;
+    margin: 20px 20px;
+  }
+  .table-responsive{
+    width: 100%;
+    overflow-x:scroll;
+  }
+  .padding-side-30{
+    padding: 0px 0px;
+  }
+  #navbar-content{
+    margin-top: 90px;
+  }
+  .card-body{
+    margin-bottom: 20px;
+  }
+  .summary-wrapper {
+      padding: 0px 0px 0px 0px;
+  }
+  .navbar-collapse{
+    width: 100%;
+  }
+  .breadcrumb{
+    padding: 10px 15px;
+  }
+  .padding-side-22 {
+      padding: 0 20px 0px 0px;
+  }
+  .padding-xs-0{
+    padding: 0px;
+  }
+  .padding-xs-left-10{
+    padding-left: 0px;
+  }
+  .padding-xs-user{
+    padding: 0px 15px 0px 0px;
+  }
+  .margin-xs-bottom-10{
+    margin-bottom: 10px;
+  }
+  .margin-xs-left-0{
+    margin-left: 0px !important;
+  }
+  .pink-btn{
+    margin-bottom: 10px;
+  }
+  .margin-xs-right-15{
+    margin-right: 0px;
+  }
+  .mt50{
+    margin-top: 0px;
+  }
+  .tower-info-wrapper.pink {
+      padding: 10px;
+      margin-top: 20px;
+  }
+  .tower-specs .col-6, .tower-specs .col-4{
+    width: 100%;
+    max-width: 100%;
+  }
+  .tower-specs {
+    padding: 0px 0px 20px 0px !important;
+  }
+  .receipt-table-wrapper {
+      padding: 30px 0px 0px 0px !important;
+   }
+  .payment-details-wrapper{
+    text-align: left !important;
+    padding: 20px 0px 0px 20px;
+    word-break: break-word;
+  }
+  .receipt-wrapper{
+    border:0px;
+  }
+  .navbar{
+    z-index: 99;
+  }
+  .w50{
+    width: 100%;
+    max-width: 100%;
+    padding: 10px 0px 10px 0px;
+  }
+  .selldo-intl-tel-input{
+    width: 100%;
+  }
+  .dropdown-toggle.pink-btn{
+    margin-right: 10px;
+  }
 }

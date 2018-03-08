@@ -303,7 +303,7 @@ section{
 	margin: 30px 0px;
 	text-align: center;
 }
-.form-field-wrapper{
+.form-field-wrapper, .register-cp .form-group{
 	position: relative;
 	margin-bottom: 20px;
 }
@@ -313,11 +313,11 @@ section{
 .form-group>span.help-block{
 	position: absolute;
 	top: 100%;
-	font-size: 12px;
+	font-size: 11px;
 	color: #ca3f3f;
 	left: 0px;
 }
-.form-field-wrapper .form-field, .form-field-wrapper select.form-field {
+.form-field-wrapper .form-field, .form-field-wrapper select.form-field, .register-cp .form-group .form-control{
     padding: 8px 5px;
     width: 60%;
     font-family: inherit;
@@ -328,7 +328,19 @@ section{
     border-left: 0px solid #d2d2d2;
     border-right: 0px solid #d2d2d2;
 }
-.form-field-wrapper .form-field:focus, .form-field-wrapper select.form-field:focus, .login-card-wrapper .selldof .form-control:focus, .login-card-wrapper .selldof select.form-control:focus{
+.register-cp .form-group .intl-tel-input{
+	width: 60%;
+}
+.register-cp .form-group > span.help-block{
+	left: 20%;
+}
+.register-cp .form-group .form-control.phone{
+	width: 100%;
+}
+.register-cp .form-group .control-label{
+	display: none;
+}
+.form-field-wrapper .form-field:focus, .form-field-wrapper select.form-field:focus, .login-card-wrapper .selldof .form-control:focus, .login-card-wrapper .selldof select.form-control:focus, .register-cp .form-group .form-control:focus{
 	outline: none !important;
     border-bottom: 1px solid #c02580 !important;
 }
@@ -2179,7 +2191,171 @@ hr.divider {
 .cancel-booking-wrapper textarea{
 	width: 100%;
 }
+.login-card-wrapper .selldo-intl-tel-input{
+	width: 100%;
+}
+@media all and (max-width: 768px){
+	.notification-header .left-wrapper{
+		padding-left: 10px;
+	}
+	.notification-header .subTitle{
+		padding-right: 0px;
+	}
+	.dashboard-menu, .dash-menu-wrapper div, .dash-menu-footer div, .dashboard-menu .prompts-message{
+		width: 200px;
+	}
+	.dash-logo{
+		padding:12px 10px;
+	}
+	.dash-logo span{
+		font-size: 14px;
+	}
+	.dash-menu-wrapper a, .dash-menu-footer a{
+		font-size: 14px;
+	}
+	.prompts-message ul {
+	    padding: 10px 20px 10px 30px;
+	}
+	.prompts-message p, .prompts-message li{
+		font-size: 16px;
+	}
+	.main-wrapper {
+	    margin-top: 90px;
+	    padding-left: 200px;
+	}
+	.dashboard-banner .pageTitle{
+		font-size: 24px;
+		line-height: 30px;
+	}
+	.col-8.dashboard-banner .subTitle{
+		font-size: 16px;
+		margin-bottom: 10px;
+	}
+	.days-left{
+		top: 40%;
+		font-size: 36px;
+		line-height: 70px;
+	}
+	.mediaCentercontent .col-3, .mediaCentercontent .col-2-5{
+		width: 50%;
+		min-height: 350px;
+	}
+	.mediaCenterAccordion .pageTitle{
+		font-size: 20px;
+		padding-left: 15px;
+		margin-right:0px;
+	}
+	.reason-img-bg{
+		background-image: none;
+	}
+	.reasons-wrapper .left-wrapper .number-wrapper span{
+		font-size: 50px;
+		line-height: 40px;
+	}
+	.reasons-wrapper .left-wrapper .pageTitle{
+		font-size: 30px;
+		line-height: 28px;
+	}
+	.family-card{
+		min-height: 440px;
+	}
+	.aparment-sold-wrapper{
+		padding: 50px 20px;
+	}
+	.aparment-sold-wrapper .apartment-count-box-wrapper span{
+		font-size: 70px;
+	}
+	.aparment-sold-wrapper .apartment-count-box-wrapper p{
+		font-size: 20px;
+	}
+	.aparment-sold-wrapper .pageTitle{
+		font-size: 30px;
+	}
+	.booking-accordian span.title{
+		font-size: 16px;
+	}
+	.booking-detail .title{
+		font-size: 16px;
+	}
+	.small-link{
+		font-size: 12px;
+	}
+	.unit-booking-details .col-4 > div{
+		font-size: 14px;
+	}
+	.booking-detail ul{
+		font-size: 14px;
+	}
+	.apartment-selector-wrapper .title{
+		font-size: 22px;
+	}
+	.conf-select-wrapper .col-5 .subtitle{
+		font-size: 16px;
+	}
+	.tower-name-wrapper .col-3{
+		width: 50%;
+		margin-bottom: 20px;
+	}
+	.filter-item-wrapper .col-12-5{
+		width: 50%;
+	}
+	.main-building{
+		width: 100%;
+	}
+	.client-detail{
+		padding: 15px 0px 0px 0px;
+		width: 100%;
+	}
+	.tower-info-wrapper{
+		padding: 20px 0 20px 0px;
+		width:100%;
+	}
+	.tower-info-wrapper > div{
+		margin-left: 0px;
+		padding-left: 0px !important;
+		border-left: 0px;
+	}
+	.days-left-wrapper h1{
+		font-size: 36px;
+	}
+	.payment-breakup td, .receipt-table td{
+		font-size: 14px;
+	}
+	.table-responsive{
+		width: 100%;
+		overflow-x: scroll;
+	}
+	.payment-breakup td.pink{
+		font-size: 14px;
+	}
+	.success-card{
+		width: 100%;
+	}
+	.receipt-table-wrapper{
+		width: 100%;
+		overflow-x:scroll; 
+	}
+	.receipt-table-wrapper {
+	    padding: 30px 0px 0px 0px;
+	}
+	.receipt-table {
+	    background-color: #fff;
+	    padding: 0px;
+	}
+	.tower-specs .col-6, .tower-specs .col-4{
+		padding: 20px
+	}
+	.login-card-wrapper{
+		width: 80%;
+	}
+}
 @media all and (max-width: 700px){
+	.register-cp .col-6{
+		width: 100%;
+	}
+	.register-cp .form-group .form-control{
+		width: 100%;
+	}
 	.hidden-xs{
 		display: none;
 	}
@@ -2774,8 +2950,9 @@ hr.divider {
 	}
 	.payment-details-wrapper{
 		width: 100%;
-	    text-align: left;
+	    text-align: left !important;
 	    padding: 0px;
+	    word-wrap:break-word;
 	}
 	.tower-specs .col-6{
 		width: 100%;
@@ -2807,6 +2984,12 @@ hr.divider {
 	.cancel-booking-wrapper .title {
 	    font-weight: 400;
 	    font-size: 14px;
+	}
+	.register-cp .form-group > span.help-block {
+	    left: 0%;
+	}
+	.register-cp .form-group .intl-tel-input {
+	    width: 100%;
 	}
 }
 

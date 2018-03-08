@@ -30,6 +30,7 @@ class ChannelPartnersController < ApplicationController
 
   def new
     @channel_partner = ChannelPartner.new
+    render :layout => 'dashboard'
   end
 
   def edit

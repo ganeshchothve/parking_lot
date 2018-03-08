@@ -10,6 +10,30 @@ class ChannelPartner
   field :location, type: String
   field :associated_user_id, type: BSON::ObjectId
   field :status, type: String, default: 'inactive'
+  field :title, type: String
+  field :first_name, type: String
+  field :last_name, type: String
+  field :street, type: String
+  field :house_number, type: String
+  field :city, type: String
+  field :postal_code, type: String
+  field :country, type: String
+  field :mobile_phone, type: String
+  field :email, type: String
+  field :company_name, type: String
+  field :pan_no, type: String
+  field :gstin_no, type: String
+  field :rera_id, type: String
+  field :bank_name, type: String
+  field :bank_beneficiary_account_no, type: String
+  field :bank_account_type, type: String
+  field :bank_address, type: String
+  field :bank_city, type: String
+  field :bank_postal_Code, type: String
+  field :bank_region, type: String
+  field :bank_country, type: String
+  field :bank_ifsc_code, type: String
+
 
   validates :name, :email, :phone, :rera_id, :location, :status, presence: true
   validates :phone, uniqueness: true, phone: true # TODO: we can remove phone validation, as the validation happens in sell.do
