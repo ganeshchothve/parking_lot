@@ -1,5 +1,5 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: 'from@example.com'
+  default from: 'info@embassysprings.com'
   layout 'mailer'
 
   def crm_team

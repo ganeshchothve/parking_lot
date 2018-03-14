@@ -55,7 +55,7 @@
             <div>All Inclusive Price:</div><div class="dark"><%= number_to_indian_currency(project_unit.base_price.round(2)) %></div><a href="/dashboard/<%= project_unit.id %>/payment-breakup" class="small-link">Payment Break Up</a>
           </div>
           <div class="col-4">
-            <div>Advance Payment:</div><div class="dark">0</div>
+            <div>Payment Done:</div><div class="dark"><%= number_to_indian_currency(project_unit.total_amount_paid.round(2)) %></div>
           </div>
           <div class="col-4">
             <div>Booking Amount:</div><div class="dark"><%= number_to_indian_currency(project_unit.booking_price.round(2)) %></div>
@@ -82,7 +82,7 @@
       <div class="booking-detail light-pink">
         <ul>
           <li>You need to pay 9.9% of agreement value to confirm the booking</li>
-          <li>You have 7 days remaining to confirm this booking please make remaining payment of Rs. 0</li>
+          <li>You have 7 days remaining to confirm this booking please make remaining payment of Rs. <%= number_to_indian_currency(project_unit.user.total_balance_pending.round(2)) %></li>
         </ul>
       </div>
       <!-- dashboard/receipts/new?project_unit_id=5aa7816821b83d2f120f3e16 -->
