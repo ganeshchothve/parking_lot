@@ -35,6 +35,10 @@ class DashboardController < ApplicationController
   def make_remaining_payment
   end
 
+  def receipt_print
+    @receipt = Receipt.find(params[:id])
+  end
+
   def project_units
     authorize :dashboard, :project_units?
     if params[:stage] == "apartment_selector"
