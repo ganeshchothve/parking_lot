@@ -2106,7 +2106,7 @@ section.grey{
 .payment-breakup td.pink {
     background-color: #e6b7d2;
     color: #c02680;
-    font-size: 22px;
+    font-size: 18px;
 }
 .table-wrapper{
 	margin: 20px 0px;
@@ -2361,6 +2361,12 @@ hr.divider {
 .top-inline-block input[type=submit], .top-inline-block a{
 	vertical-align: top;
 }    
+.radio.oci .help-block{
+	width: 160%;
+	left: -180%;
+	top: 120%;
+
+}
 @media all and (max-width: 768px){
 	.notification-header .left-wrapper{
 		padding-left: 10px;

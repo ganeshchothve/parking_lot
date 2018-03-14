@@ -169,7 +169,6 @@ $(document).ready(function(){
 	$("#user_kyc_form").on("submit", function(e){
 		window.onbeforeunload = null;
 		ajaxUpdate($(this).serialize(), $(this).attr("action"), function(responseData, responseText){
-			$("#user_kyc_form input[type=submit]").removeAttr("disabled");
 			if(responseText == "success"){
 				var kyc_userid = responseData._id;
 				var kyc_name = responseData.name;
@@ -177,9 +176,11 @@ $(document).ready(function(){
 				$('[name="project_unit[user_kyc_ids][]"]')[0].selectize.addOption({text: kyc_name, value: kyc_userid});
 				$('[name="project_unit[user_kyc_ids][]"]')[0].selectize.setValue(kyc_userid);
 
-				$("#existing_kyc_form").submit();	
+				$("#existing_kyc_form").submit();
+				$("#user_kyc_form input[type=submit]").removeAttr("disabled");
 			} else {
 				notify(responseData.responseJSON.errors, "error", 3000, 300);
+				$("#user_kyc_form input[type=submit]").removeAttr("disabled");
 			}
 		});
 		e.preventDefault();
