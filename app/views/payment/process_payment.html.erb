@@ -17,6 +17,10 @@
 		<div class="clearfix"></div>
 		<div class="col-12">
 			<div class="receipt-wrapper">
+						<div class="pull-right">	
+							<a href="/dashboard/receipt-print/<%= @receipt.id %>" target="_blank"><img src="<%= asset_path 'printer-outline.png'%>" class="img-responsive"></a>
+						</div>
+					<div class="clearfix"></div>
 						<div class="applicant-wrapper pull-left text-left">
 							<img src="<%= asset_path 'embassy-springs.jpg' %>" class="img-responsive">
 						</div>
