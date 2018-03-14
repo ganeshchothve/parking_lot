@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   helper_method :after_sign_in_path_for
   protect_from_forgery with: :exception
   layout :set_layout
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
   
   def after_sign_in_path_for(current_user)
     if current_user.role?('user') || current_user.role?('crm')
@@ -40,5 +41,13 @@ class ApplicationController < ActionController::Base
 
   private
   def after_successful_token_authentication
+  end
+
+  def user_not_authorized
+    flash[:alert] = "You are not authorized to perform this action."
+    respond_to do |format|
+      format.html { redirect_to user_signed_in? ? after_sign_in_path_for(current_user) : root_path }
+      format.json { render json: {error: "You are not authorized to access this page"}, status: 403 }
+    end
   end
 end
