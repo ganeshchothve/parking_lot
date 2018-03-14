@@ -168,16 +168,19 @@ $(document).ready(function(){
 
 	$("#user_kyc_form").on("submit", function(e){
 		window.onbeforeunload = null;
-		ajaxUpdate($(this).serialize(), $(this).attr("action"), function(responseData){
+		ajaxUpdate($(this).serialize(), $(this).attr("action"), function(responseData, responseText){
+			$("#user_kyc_form input[type=submit]").removeAttr("disabled");
+			if(responseText == "success"){
+				var kyc_userid = responseData._id;
+				var kyc_name = responseData.name;
 
-			console.log(responseData);
-			// var kyc_userid = responseData._id;
-			// var kyc_name = responseData.name;
+				$('[name="project_unit[user_kyc_ids][]"]')[0].selectize.addOption({text: kyc_name, value: kyc_userid});
+				$('[name="project_unit[user_kyc_ids][]"]')[0].selectize.setValue(kyc_userid);
 
-			// $('[name="project_unit[user_kyc_ids][]"]')[0].selectize.addOption({text: kyc_name, value: kyc_userid});
-			// $('[name="project_unit[user_kyc_ids][]"]')[0].selectize.setValue(kyc_userid);
-
-			// $("#existing_kyc_form").submit();
+				$("#existing_kyc_form").submit();	
+			} else {
+				notify(responseData.responseJSON.errors, "error", 3000, 300);
+			}
 		});
 		e.preventDefault();
 	});
@@ -314,7 +317,13 @@ function notify(msg, type, display_msg_time, transition_delay=300){
 	if(typeof msg == "string"){
 		msg = msg;
 	} else {
-		msg = "We will make something else.";
+		msgHtml = '<ul>';
+		_.each(msg, function(error){
+			msgHtml += '<li>' + error + '</li>';
+		});
+		msgHtml += '</ul>';
+
+		msg = msgHtml;
 	}
 	$("#notify").html(msg).addClass("show "+type);
 	setTimeout(function(){

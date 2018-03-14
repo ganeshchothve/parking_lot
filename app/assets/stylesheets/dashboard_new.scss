@@ -214,6 +214,14 @@ a, img, button, input[type=submit]{
 #notify.success{
 	background-color: #037d23;
 }
+#notify ul{
+	padding: 7px 0px;
+	list-style-position: inside;
+	margin: 0px;
+}
+#notify ul li{
+	line-height: 20px;
+}
 p.notice, p.alert{
 position: fixed;
    top: 0;
@@ -1990,7 +1998,7 @@ section.grey{
 
 /* On mouse-over, add a grey background color */
 .radio:hover input ~ .checkmark {
-    background-color: #ccc;
+    background-color: #f0d6e5;
 }
 
 /* When the radio button is checked, add a blue background */

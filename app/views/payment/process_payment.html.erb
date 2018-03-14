@@ -29,8 +29,8 @@
 							<div class="tower-specs">
 								<div class="col-6">
 									<span class="title">Paid By:</span>
-									<span class="specs">Mr. Vinod Subramanian,</span>
-									<span class="specs">B2 - Haridra, Shree Sai Samrudddhi Apts, C.V. Raman Nagar, Bengaluru - 560093</span>
+									<span class="specs"><%= @receipt.user.name %></span>
+									<!-- <span class="specs">B2 - Haridra, Shree Sai Samrudddhi Apts, C.V. Raman Nagar, Bengaluru - 560093</span> -->
 								</div>
 								<div class="col-6">
 									<span class="title">Paid To:</span>
@@ -40,8 +40,8 @@
 							</div>
 							<div class="tower-specs">
 								<div class="col-4">
-									<span class="title">Pan Card:</span>
-									<span class="specs">NA</span>
+									<span class="title">PAN Card:</span>
+									<span class="specs"><%= @receipt.user.name %></span>
 								</div>
 								<div class="col-4">
 									<span class="title">Project:</span>
@@ -71,10 +71,10 @@
 									</th>
 								</tr>
 								<tr>
-									<td><%= @receipt.issued_date %></td>
+									<td><%= @receipt.created_at.strftime('%d %b %Y') %></td>
 									<td><%= @receipt.payment_identifier %></td>
 									<td><%= @receipt.issuing_bank %> - <%= @receipt.issuing_bank_branch %> </td>
-									<td><%= number_to_indian_currency(@receipt.total_amount) %></td>
+									<td><%= number_to_indian_currency(@receipt.total_amount.round) %></td>
 								</tr>
 							</table>
 							<br/>
@@ -93,7 +93,7 @@
 								<tr>
 									<td>Om booking - land charges<br/> dtd: 09 10 2017<br/> Ninty two thousand only</td>
 									<td>Demand Note: 90151463</td>
-									<td><%= number_to_indian_currency(@receipt.total_amount) %></td>
+									<td><%= number_to_indian_currency(@receipt.total_amount.round) %></td>
 								</tr>
 							</table>
 						</div>

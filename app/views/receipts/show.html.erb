@@ -1,4 +1,4 @@
-<link href="https://fonts.googleapis.com/css?family=Poppins:400,600" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet">
 <!--<script type="text/javascript">
 	function printReceipt(){
 		window.print();
@@ -6,7 +6,7 @@
 </script> -->
 <style type="text/css">
 	body{
-		font-family: 'Poppins', sans-serif;
+		font-family: 'Roboto', sans-serif;
 	}
 /*		.dashboard-menu{
 		display: none;
@@ -106,7 +106,7 @@
 	.tower-specs .specs {
 	    color: #383838;
 	    font-size: 16px;
-	    font-weight: 600;
+	    font-weight: 500;
 	}
 	.applicant-wrapper {
 	   padding: 20px 0px 20px 20px;
@@ -139,8 +139,8 @@
 							<div class="tower-specs">
 								<div class="col-6">
 									<span class="title">Paid By:</span>
-									<span class="specs">Mr. Vinod Subramanian,</span>
-									<span class="specs">B2 - Haridra, Shree Sai Samrudddhi Apts, C.V. Raman Nagar, Bengaluru - 560093</span>
+									<span class="specs"><%= @receipt.user.name %></span>
+									<!-- <span class="specs">B2 - Haridra, Shree Sai Samrudddhi Apts, C.V. Raman Nagar, Bengaluru - 560093</span> -->
 								</div>
 								<div class="col-6">
 									<span class="title">Paid To:</span>
@@ -184,7 +184,7 @@
 									<td><%= @receipt.issued_date %></td>
 									<td><%= @receipt.payment_identifier %></td>
 									<td><%= @receipt.issuing_bank %> - <%= @receipt.issuing_bank_branch %> </td>
-									<td><%= number_to_indian_currency(@receipt.total_amount) %></td>
+									<td><%= number_to_indian_currency(@receipt.total_amount.round) %></td>
 								</tr>
 							</table>
 							<br/>
@@ -203,7 +203,7 @@
 								<tr>
 									<td>Om booking - land charges<br/> dtd: 09 10 2017<br/> Ninty two thousand only</td>
 									<td>Demand Note: 90151463</td>
-									<td><%= number_to_indian_currency(@receipt.total_amount) %></td>
+									<td><%= number_to_indian_currency(@receipt.total_amount.round) %></td>
 								</tr>
 							</table>
 						</div>

@@ -34,7 +34,7 @@ class UserKycsController < ApplicationController
         format.json { render json: @user_kyc, status: :created, location: @user_kyc }
       else
         format.html { render :new }
-        format.json { render json: @user_kyc.errors, status: :unprocessable_entity }
+        format.json { render json: {errors: @user_kyc.errors.full_messages.uniq}, status: :unprocessable_entity }
       end
     end
   end

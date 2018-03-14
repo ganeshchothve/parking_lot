@@ -1,3 +1,8 @@
+<style type="text/css">
+	#user_kyc_form .intl-tel-input{
+		display: block;
+	}
+</style>
 <div class="apartment-selector-wrapper">
        	<div class="col-12 client-detail-wrapper">
        		<div class="pull-left client-detail">
@@ -47,7 +52,7 @@
 			              </div>
 			              <div class="col-md-6">
 			                <div class="form-group form-field-wrapper">
-			                  <%= f.text_field :phone, class: 'form-control phone number form-field', required: 'required form-field', placeholder:'Phone', maxlength:'12', minlength:'8'%>
+			                  <%= f.text_field :phone, class: 'form-control phone form-field', required: 'required form-field', placeholder:'Phone', maxlength:'12', minlength:'8'%>
 			                </div>
 			              </div>
 			            </div>
@@ -62,8 +67,16 @@
 			                <div class="form-group form-field-wrapper">
 				              <div class="form-check">
 				                <%= f.label :nri, class: 'control-label' %>
-				                <label class="radio oci" data-link="yes">Yes<%= f.radio_button :nri, class: "form-check-input required", checked: 'checked' %><span class="checkmark"></span></label>
-				                <label class="radio oci" data-link="no">No<%= f.radio_button :nri, class: "form-check-input required" %><span class="checkmark"></span></label>
+				                <label class="radio oci" data-link="yes">
+				                	Yes
+				                	<%= f.radio_button :nri, class: "form-check-input required" %>
+				                	<span class="checkmark"></span>
+				                </label>
+				                <label class="radio oci" data-link="no">
+				                	No
+				                	<%= f.radio_button :nri, class: "form-check-input required" %>
+				                	<span class="checkmark"></span>
+				                </label>
 				                <div class="hidden-field oci" style="display:none">
 				                    <%= f.text_field :oci_number, class: 'form-control form-field', placeholder: 'OCI Number' %>
 				                </div>
@@ -113,3 +126,10 @@
               </div>
        	</div>
       </div>
+
+
+      <script type="text/javascript">
+      	$(document).ready(function(){
+      		FormInitializer.init($("#user_kyc_form"));
+      	});
+      </script>
