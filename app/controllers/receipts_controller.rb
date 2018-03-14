@@ -58,8 +58,11 @@ class ReceiptsController < ApplicationController
     @receipt = Receipt.new base_params
     @receipt.creator = current_user
     @receipt.assign_attributes(permitted_attributes(@receipt))
-    @receipt.receipt_id = Receipt.generate_receipt_id
-    @receipt.payment_gateway = 'CCAvenue'
+    if @receipt.payment_type == "blocking"
+      @receipt.payment_gateway = 'CCAvenue'
+    else
+      @receipt.payment_gateway = 'Razorpay'
+    end
     authorize @receipt
     respond_to do |format|
       if @receipt.save

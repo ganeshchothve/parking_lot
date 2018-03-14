@@ -1,9 +1,5 @@
 require 'autoinc'
 class Receipt
-  def self.generate_receipt_id
-    SecureRandom.hex
-  end
-
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Autoinc
@@ -26,6 +22,7 @@ class Receipt
   field :payment_gateway, type: BSON::ObjectId
   field :processed_on, type: Date
   field :comments, type: String
+  field :gateway_response, type: Hash
 
   increments :order_id
 
@@ -34,7 +31,7 @@ class Receipt
   belongs_to :creator, class_name: 'User'
   has_many :assets, as: :assetable
 
-  validates :receipt_id, :total_amount, :status, :payment_mode, :payment_type, :user_id, presence: true
+  validates :total_amount, :status, :payment_mode, :payment_type, :user_id, presence: true
   validates :payment_identifier, presence: true, if: Proc.new{|receipt| receipt.payment_type == 'online' && receipt.status != 'pending' }
   validates :project_unit_id, presence: true, if: Proc.new{|receipt| receipt.payment_type != 'blocking'} # allow the user to make a blocking payment without any unit
   validates :status, inclusion: {in: Proc.new{ Receipt.available_statuses.collect{|x| x[:id]} } }
@@ -86,7 +83,7 @@ class Receipt
   end
 
   def payment_gateway_service
-    if self.payment_gateway.blank? || (self.project_unit.present? && ["hold", "blocked", "booking_tentative"].exclude?(self.project_unit.status)) || (self.project_unit.present? && self.project_unit.user_id != self.user_id)
+    if self.payment_gateway.blank? || (self.project_unit.present? && ["hold", "blocked", "booked_tentative"].exclude?(self.project_unit.status)) || (self.project_unit.present? && self.project_unit.user_id != self.user_id)
       return nil
     else
       return eval("PaymentGatewayService::#{self.payment_gateway}").new(self)
@@ -98,6 +95,9 @@ class Receipt
     if params[:fltrs].present?
       if params[:fltrs][:status].present?
         selector[:status] = params[:fltrs][:status]
+        if selector[:status] == "pending"
+	  selector[:payment_mode] = {"$ne" => "online"}
+	end
       end
       if params[:fltrs][:user_id].present?
         selector[:user_id] = params[:fltrs][:user_id]
@@ -109,7 +109,10 @@ class Receipt
         selector[:payment_type] = params[:fltrs][:payment_type]
       end
     end
-    self.where(selector)
+    selector = self.where(selector)
+    if params[:fltrs].blank? || params[:fltrs][:status].blank?
+      selector = selector.or({status: "pending", payment_mode: {"$ne" => "online"}}, {status: {"$ne" => "pending"}})
+    end
   end
 
   private

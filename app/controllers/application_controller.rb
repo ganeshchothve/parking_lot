@@ -29,7 +29,7 @@ class ApplicationController < ActionController::Base
       "dashboard"
     elsif is_a?(Devise::RegistrationsController)
       "dashboard"
-    elsif is_a?(Devise::RegistrationsController)      
+    elsif is_a?(Devise::ConfirmationsController)      
       "dashboard"
     elsif is_a?(ChannelPartnersController)      
       "dashboard"

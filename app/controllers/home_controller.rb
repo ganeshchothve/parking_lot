@@ -8,8 +8,9 @@ class HomeController < ApplicationController
     if user_signed_in?
       redirect_to after_sign_in_path_for(current_user)
       flash[:notice] = "You have already been logged in"
+    else
+      render layout: "dashboard"
     end
-    render layout: "dashboard"
   end
 
   def check_and_register

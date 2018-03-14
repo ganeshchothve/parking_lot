@@ -36,7 +36,7 @@
       </td>
       <td><%= receipt.project_unit.present? ? receipt.project_unit.name : '-' %></td>
       <td><%= Receipt.available_statuses.find{|x| x[:id] == receipt.status}[:text] %></td>
-      <td class="text-right"><%= number_to_indian_currency(receipt.total_amount) %></td>
+      <td class="text-right"><%= number_to_indian_currency(receipt.total_amount.round()) %></td>
       <td class="text-right">
         <div class="dropdown">
           <a class="btn btn-light dropdown-toggle light-pink-btn" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>

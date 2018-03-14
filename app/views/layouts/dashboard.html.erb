@@ -25,7 +25,7 @@
     <p class="notice"><%= notice %></p>
     <p class="alert"><%= alert %></p>
     <% if user_signed_in? %>
-    <div class="notification-header gradient-bg">
+    <div class="notification-header">
         <div class="container-fluid">
         </div>
         <div class="col-12">
@@ -35,28 +35,32 @@
           </div>
           <div class="container-fluid">
             <div class="pull-left left-wrapper">
-              <span class="subTitle white bold">Dashboard</span>
+              <% if params[:controller] == "dashboard" && params[:action] == "index" %>
+                <span class="subTitle white bold">Dashboard</span><span class="white f16">Welcome <%= current_user.name %></span>
+              <% elsif params[:controller] == "dashboard" && params[:action] == "project_units" %>
+                <span class="subTitle white bold">Apartment Selector</span><span class="white f16">Welcome <%= current_user.name %></span>
+              <% elsif params[:controller] == "dashboard" && params[:action] == "checkout" %>
+                <span class="subTitle white bold">Proceed To Payment</span><span class="white f16">Welcome <%= current_user.name %></span>
+              <% elsif params[:controller] == "user_kycs" %>
+                <span class="subTitle white bold">User KYCs</span><span class="white f16">Welcome <%= current_user.name %></span>
+              <% elsif params[:controller] == "receipts" && params[:action] == "index" %>
+                <span class="subTitle white bold">Payments</span><span class="white f16">Welcome <%= current_user.name %></span>
+              <% else %>
+                <span class="subTitle white bold">Dashboard</span><span class="white f16">Welcome <%= current_user.name %></span>
+              <% end %>
             </div>
             <div class="pull-right right-wrapper">
               <div class="dashboard-notify pull-left">
                   <div class="notification-count">1</div>
                   <div class="notification-dropdown-wrapper">
                       <div class="notification-dropdown">
-                        <div class="title">Title</div>
-                        <p>Lorem Ipsum Lorem IpsumLorem IpsumLorem Ipsum</p>
-                      </div>
-                      <div class="notification-dropdown">
-                        <div class="title">Title</div>
-                        <p>Lorem Ipsum Lorem IpsumLorem IpsumLorem Ipsum</p>
-                      </div>
-                      <div class="notification-dropdown">
-                        <div class="title">Title</div>
-                        <p>Lorem Ipsum Lorem IpsumLorem IpsumLorem Ipsum</p>
+                        <div class="title">7 Days Remaining</div>
+                        <p>Pay withing 7 days or the unit will be released</p>
                       </div>
                   </div>
               </div>
               <div class="pull-left">
-                <span class="hidden-xs"><img src="<%= asset_path 'user.png'%>" class="img-responsive"> &nbsp;Welcome <%= current_user.name %></span>
+                <span class="hidden-xs"><img src="<%= asset_path 'user.png'%>" class="img-responsive"> &nbsp;<%= current_user.name %></span>
                 <div class="burger-menu visible-xs">
                   <span></span>
                   <span></span>
@@ -100,7 +104,7 @@
         <% end %>
         
       </div>
-      <div class="prompts-message gradient-bg hidden-xs">
+      <div class="prompts-message hidden-xs">
         <ul>
           <li>Register now to book & save upto Rs. 10 Lac!</li>
           <li>Prices rise with every 50 bookings</li>
@@ -114,7 +118,7 @@
       <div class="visible-xs help-wrapper text-center">
           <p>Need Help?</p>
           <div>
-            <a href="javascript:;">+91 1234 5678 90</a>
+            <a href="tel:+911234567890">+91 1234 5678 90</a>
             <a href="javascript:;">xyz@embassysprings.com</a>
           </div>
       </div>

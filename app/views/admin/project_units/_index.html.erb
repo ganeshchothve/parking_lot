@@ -3,9 +3,10 @@
     <tr>
       <th>Name</th>
       <th>Status</th>
-      <th>User</th>
+      <th>Bedrooms</th>
+      <th>Tower</th>
       <th>Agreement (Rs.)</th>
-      <th>All Incl. (Rs.)</th>
+      <th>User</th>
       <th>Paid Amt. (Rs.)</th>
       <th>Booking Amt. Pending (Rs.)</th>
       <th class="text-right">Actions</th>
@@ -16,9 +17,10 @@
     <tr>
       <td><%= project_unit.name %></td>
       <td><%= ProjectUnit.available_statuses.find{|x| x[:id] == project_unit.status}[:text] rescue "-" %></td>
+      <td><%= project_unit.bedrooms %></td>
+      <td><%= project_unit.project_tower_name %></td>
+      <td><%= project_unit.base_price %></td>
       <td><%= project_unit.user_id.present? ? project_unit.user.name : "-" %></td>
-      <td><%= project_unit.costs %></td>
-      <td><%= project_unit.costs %></td>
       <td><%= project_unit.total_amount_paid %></td>
       <td><%= project_unit.pending_balance %></td>
       <td class="text-right">

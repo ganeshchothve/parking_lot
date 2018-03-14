@@ -36,6 +36,8 @@
                       </div>
                     </div>
                   <% end %>
+                <% else %>  
+                  <h2 class="subTitle pink">No Payments Made</h2>
                 <% end %>
                 <%= link_to "Add Blocking #{global_labels['receipt']}", new_admin_user_receipt_path(@user), class: 'btn btn-primary' %>
               <% end %>

@@ -22,15 +22,16 @@
  *= require_self
 */
 
-@import url('https://fonts.googleapis.com/css?family=Playfair+Display:400,700');
-@import url('https://fonts.googleapis.com/css?family=Poppins:400,700');
+/*font-family: 'Roboto Condensed', sans-serif;*/
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500');
+@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:300');
 
 html, body{
 	padding: 0;
 	margin: 0;
 	font-size: 14px;
 	-webkit-font-smoothing: antialiased;
-	font-family: 'Poppins', sans-serif;
+	font-family: 'Roboto', sans-serif;
 	overflow-x: hidden;
 	color: #616161;
 	background-color: #f6f6f6;
@@ -39,7 +40,7 @@ a, img, button, input[type=submit]{
 	text-decoration: none;
 	outline: none;
 	border: 0;
-	font-family: 'Poppins', sans-serif;
+	font-family: 'Roboto', sans-serif;
 }
 *, *:after, *:before {
 	-webkit-box-sizing: border-box;
@@ -125,7 +126,7 @@ a, img, button, input[type=submit]{
 	width: 100%;
 }
 .col-12-5{
-	width: 20%;
+	width: 25%;
 }
 .w70{
 	width: 70%;
@@ -279,7 +280,7 @@ section{
 .login-card .pageTitle{
 	font-size: 42px;
 	line-height: 50px;
-	font-weight: 700;
+	font-weight: 500;
 	margin-top: -30px;
 }
  .success-card{
@@ -288,7 +289,7 @@ section{
  .success-card .pageTitle{
  	font-size: 42px;
 	line-height: 50px;
-	font-weight: 700;
+	font-weight: 500;
  }
  .success-card p{
  	font-size: 20px;
@@ -328,11 +329,21 @@ section{
     border-left: 0px solid #d2d2d2;
     border-right: 0px solid #d2d2d2;
 }
+.cancel-booking-wrapper .form-field-wrapper .form-field{
+	width: 20%;
+}
+.cancel-booking-wrapper .form-field-wrapper textarea.form-field{
+	width: 60%;
+}
+/*.form-group > span.help-block{
+	top: 80%;
+}*/
 .register-cp .form-group .intl-tel-input{
 	width: 60%;
 }
 .register-cp .form-group > span.help-block{
 	left: 20%;
+	top: 100%;
 }
 .register-cp .form-group .form-control.phone{
 	width: 100%;
@@ -362,6 +373,8 @@ section{
 .pink-button{
 	display: inline-block;
 	padding: 5px 30px;
+	border-radius: 6px;
+	font-size: 16px;
 	background-color: #c02580;
 	color: #fff;
 	text-transform: uppercase;
@@ -445,7 +458,7 @@ section{
 }
 .part-links a:first-child{
 	color: #c7589e;
-	font-weight: 700;
+	font-weight: 400;
 	font-size: 16px;
 }
 .part-links a{
@@ -457,7 +470,8 @@ section{
 }
 .prompts-message p, .prompts-message li{
 	font-size: 18px;
-	font-weight: 700;
+	font-weight: 400;
+	line-height: 28px;
 	color: #fff;
 	margin: 10px 0px;
 }
@@ -466,9 +480,11 @@ section{
 	background:-o-linear-gradient(90deg, rgba(145,101,248,1) 0%, rgba(238,97,187,1) 100%);
 	background:-moz-linear-gradient(90deg, rgba(145,101,248,1) 0%, rgba(238,97,187,1) 100%);
 	background:linear-gradient(90deg, rgba(145,101,248,1) 0%, rgba(238,97,187,1) 100%);
+	background:none;
 }
 .login-card-wrapper .prompts-message{
 	border-radius: 0px 0px 6px 6px;
+	background-color: #3981b8;
 }
 .login-card-wrapper .selldof .title{
 	display: none !important;
@@ -477,7 +493,7 @@ section{
 	display: none !important;	
 }
 .selldof{
-	font-family: 'Poppins', sans-serif !important;
+	font-family: 'Roboto', sans-serif;
 }
 .login-card-wrapper .selldof .form-control, .login-card-wrapper .sell_do_form_control{
 	height: auto !important;
@@ -493,7 +509,9 @@ section{
 .login-card-wrapper .selldof .btn{
 	background-color: #c02580 !important;
     border-color: #c02580 !important;
-    border-radius: 0px !important;
+    border-radius: 6px !important;
+    font-weight: 500;
+    font-size: 16px;
     color: #fff !important;
     text-transform: uppercase !important;
     padding: 5px 30px !important;
@@ -512,7 +530,7 @@ section{
 	color: #c02580
 }
 .bold{
-	font-weight: 700
+	font-weight: 500
 }
 .dashboard-menu{
 	width: 250px;
@@ -545,7 +563,7 @@ section{
 	vertical-align: middle;
 }
 .dash-logo{
-	padding: 12px 28px;
+	padding: 12px 63px 12px 10px;
     background: #fff;
     /*-webkit-box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.2);
     box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.2);*/
@@ -553,7 +571,7 @@ section{
 .dash-logo span{
 	display: inline-block;
 	vertical-align: middle;
-	font-weight: 600;
+	font-weight: 400;
 	font-size: 16px;
 	color: #383838;
 }
@@ -563,16 +581,17 @@ section{
 	vertical-align: middle;
 }
 .dash-menu-wrapper{
-	margin: 80px 0px 30px 0px;
+	margin: 75px 0px 30px 0px;
     border-top: 1px solid #ececec;
 }
 .dash-menu-wrapper a, .dash-menu-footer a{
     text-transform: uppercase;
     color: #383838;
     display: block;
-    font-size: 16px;
+    font-size: 15px;
     border-left: 5px solid transparent;
     padding: 15px 0px;
+    font-weight: 400;
     position: relative;
 }
 
@@ -586,8 +605,8 @@ section{
 	top: 15px;
 }
 .dash-menu-wrapper a:hover, .dash-menu-wrapper a.active, .dash-menu-footer a:hover{
-	color: #c02680;	
-	background-color: #ffecf7;
+	color: #bf2482;	
+	background-color: #ffedf8;
 }
 .dash-menu-wrapper .sprite-dasboard{
 	display: inline-block;
@@ -722,6 +741,15 @@ section{
 }
 .dashboard-menu .prompts-message{
 	width: 250px;
+	background-color: #bf2482;
+	
+}
+.dashboard-menu .prompts-message li{
+	font-weight: 500;
+	font-size: 22px;
+}
+.dashboard-menu .prompts-message ul {
+    padding: 20px 20px 20px 40px;
 }
 .notification-header{
 	z-index: 333;
@@ -730,21 +758,30 @@ section{
 	right: 0px;
 	top: 0px;
 	padding-left: 0px;
+	background-color: #3981b8;
 }
 .white{
 	color: #fff;
+}
+.f16{
+	font-size: 16px;
 }
 .notification-header .subTitle{
 	vertical-align: middle;
 	display: inline-block;
 	font-size: 24px;
 	line-height: 30px;
+	border-right:1px solid;
+	font-weight: 500;
 	padding-right: 20px;
 	margin-right: 20px;
 }
 .notification-header .left-wrapper{
 	margin-top: 30px;
 	padding-left: 50px;
+}
+.notification-header .left-wrapper span{
+	vertical-align: middle;
 }
 .notification-header .right-wrapper span{
 	display: inline-block;
@@ -779,7 +816,7 @@ section{
 }
 .dashboard-notify:hover .notification-count{
 	color: #fff;
-	background-color: #dc62c7;	
+	background-color: #3980b8;	
 }
 .notification-count{
     text-align: center;
@@ -794,7 +831,7 @@ section{
     left: 50%;
     /* width: auto; */
     /* height: 30px; */
-    color: #dc62c7;
+    color: #3980b8;
     border-radius:6px;
     background-color: #fff;
     transition: all 0.3s ease-in;
@@ -828,16 +865,16 @@ section{
 }
 
 .dashboard-banner .pageTitle{
-	font-family: 'Playfair Display', serif;
+	font-family: 'Roboto Condensed', sans-serif;
 	font-size: 36px;
 	line-height: 40px;
-	font-weight: 700;
+	font-weight: 400;
 }
 .dashboard-banner .subTitle{
-	font-family: 'Playfair Display', serif;
+	font-family: 'Roboto Condensed', sans-serif;
 	font-size: 30px;
 	line-height: 26px;
-	font-weight: 700;
+	font-weight: 400;
 	margin-bottom: 30px;
 
 }
@@ -848,7 +885,7 @@ section{
 .payment-breakup.mediaCenterAccordion li > span{
 	background-image: asset-url('Plus-Icon.png');
 	background-repeat: no-repeat;
-    background-position: 99.5% 9px;
+    background-position: 99.5% 6px;
     background-size: 23px;
     cursor: pointer;
     font-size: 16px;
@@ -875,7 +912,7 @@ section{
 .payment-breakup.mediaCenterAccordion li>span.active {
     background-image: asset-url('minus-Icon.png');
     background-repeat: no-repeat;
-    background-position: 99.5% 9px;
+    background-position: 99.5% 6px;
     background-size: 23px;
     background-color: transparent;
     border-color: transparent;
@@ -886,7 +923,7 @@ section{
     padding: 6px 0px;
     background-image: asset-url('inactive_dropdown_arrow.png');
     background-repeat: no-repeat;
-    background-position: 98% 20px;
+    background-position: 98% 25px;
     background-size: 17px;
     cursor: pointer;
     font-size: 16px;
@@ -896,13 +933,13 @@ section{
     -webkit-transition:0.1s all ease-in-out;
 }
 .mediaCenterAccordion li > span:hover{
-	background-color: #ffecf7;
-	border-color:#c02680;
+	/*background-color: #ffecf7;
+	border-color:#c02680;*/
 }
 .mediaCenterAccordion li > span.active {
     background-image: asset-url('active_dropdown_arrow.png');
-    background-color: #ffecf7;
-    border-color: #c02680;
+    /*background-color: #ffecf7;
+    border-color: #c02680;*/
 }
 .dashboard-banner .subTitle span{
 	display: inline-block;
@@ -920,9 +957,11 @@ section{
 	background-color: #fff;
 }
 .mediaCenterAccordion .pageTitle{
-	font-weight: 700;
-	font-size: 24px;
-	color: #6c6c6c;
+	font-weight: 400;
+	font-family: 'Roboto Condensed', sans-serif;
+    font-size: 32px;
+    line-height: 46px;
+	color: #000;
 	padding-left: 30px;
 }
 .mediaCenterAccordion > li {
@@ -970,7 +1009,7 @@ section.grey{
 }
 .mediaCentercontent .col-3 .caption, .mediaCentercontent .col-2-5 .caption{
 	position: relative;
-	font-size: 14px;
+	font-size: 16px;
 	text-align: left;
 	margin: 10px 0px 0px 10px;
 	padding-left: 20px;
@@ -982,7 +1021,7 @@ section.grey{
 	left: 0px;
 	width: 5px;
 	height: 40px;
-	background-color: #a364ec;
+	background-color: #67c1ed;
 }
 .mediaCentercontent .col-3 .caption:before{
     content: '>';
@@ -990,21 +1029,22 @@ section.grey{
     right: 0px;
     top: 3px;
     font-size: 24px;
-    color: #a364ec;
+    color: #67c1ed;
 }
 .mediaCentercontent .col-3.last .caption:before{
 	color: #fff;
 }
 .mediaCentercontent .col-3 .caption span{
-	font-size: 10px;
+	font-size: 12px;
 }
 .banner-btn {
     display: inline-block;
     margin: 10px 0px;
     background-color: #fff;
     color: #c558a1;
-    padding: 8px 10px;
-    font-weight: 600;
+    padding: 10px 15px;
+    font-weight: 400;
+    border-radius: 6px;
     font-size: 18px;
 }
 .btn-anim{
@@ -1056,6 +1096,10 @@ section.grey{
 .aparment-sold-wrapper{
 	padding: 100px;
 	border-radius:6px;
+	background:-webkit-linear-gradient(90deg, rgba(61,145,184,1) 0%, rgba(64,170,144,1) 100%);
+	background:-o-linear-gradient(90deg, rgba(61,145,184,1) 0%, rgba(64,170,144,1) 100%);
+	background:-moz-linear-gradient(90deg, rgba(61,145,184,1) 0%, rgba(64,170,144,1) 100%);
+	background:linear-gradient(90deg, rgba(61,145,184,1) 0%, rgba(64,170,144,1) 100%);
 }
 .aparment-sold-wrapper .col-4{
 	padding: 0 20px
@@ -1083,7 +1127,7 @@ section.grey{
 	content: '';
 	position: absolute;
 	top: 34%;
-	border-top: 2px solid #6c429c;
+	border-top: 2px solid #2a6d77;
 	z-index: 1;
 	left: 0px;
 	width:100%;
@@ -1097,7 +1141,7 @@ section.grey{
     top: 30%;
     width: 10px;
     height: 30px;
-    background-color: #7d46a5;
+    background-color: #2a6d77;
 }
 .aparment-sold-wrapper .apartment-count-box-wrapper .box-clip-left{
     position: absolute;
@@ -1105,37 +1149,38 @@ section.grey{
     top: 30%;
     width: 10px;
     height: 30px;
-    background-color: #7d46a5;
+    background-color: #2a6d77;
 }
 .aparment-sold-wrapper .apartment-count-box-wrapper.last{
 	margin-right: 0px;
 }
 .aparment-sold-wrapper .apartment-count-box-wrapper span{
 	font-size: 130px;
-	font-weight: 700;
+	font-weight: 500;
 	display: inline-block;
 	color: #fff;
 
 	$shadows: ();
 	@for $i from 1 through 100{
-		$shadows: $shadows, $i*1px $i*1px 0px #4a2d6a;
+		$shadows: $shadows, $i*1px $i*1px 0px #0d2e33;
 	}
 	text-shadow: $shadows;
 }
 .aparment-sold-wrapper .apartment-count-box-wrapper p{
 	font-size: 40px;
-	font-weight: 700;
+	font-weight: 500;
 	color:#fff;
 	margin: 10px 0px;
 }
 .aparment-sold-wrapper .pageTitle{
+	font-weight: 400;
+    font-family: 'Roboto Condensed', sans-serif;
 	font-size: 40px;
 	color: #fff;
-	font-weight: 700;
 	margin: 30px 0px 0px 0px;
 }
 .col-8.dashboard-banner{
-	padding: 25px 30px;
+	padding: 20px 30px;
 	margin-top: 0px;
 	border-radius:6px;
 }
@@ -1143,9 +1188,9 @@ section.grey{
 	height: 0px;
 }
 .col-8.dashboard-banner .subTitle{
-	font-family: 'Poppins', sans-serif;
-	font-size: 20px;
-	font-weight: 700;
+	font-family: 'Roboto', sans-serif;
+	font-size: 18px;
+	font-weight: 500;
 	margin-bottom: 20px;
 }
 .col-8.dashboard-banner .subTitle span{
@@ -1172,7 +1217,7 @@ section.grey{
     text-align: center;
     font-size: 50px;
     line-height: 90px;
-    font-weight: 700;
+    font-weight: 500;
 }
 .block{
 	display: block;
@@ -1187,7 +1232,7 @@ section.grey{
     position: relative;
     font-size: 70px;
     line-height: 70px;
-    font-weight: 700;
+    font-weight: 500;
     color: #e462c2;
     display: inline-block;
     margin: 0 10px;
@@ -1219,12 +1264,12 @@ section.grey{
 .family-card .title{
 	font-size: 26px;
 	line-height: 30px;
-	font-weight: 700;
+	font-weight: 500;
 }
 .family-card .subTitle{
 	position: relative;
 	font-size: 16px;
-	font-weight: 700;
+	font-weight: 500;
 	margin-bottom: 20px; 
 	padding-bottom: 20px;
 }
@@ -1244,14 +1289,20 @@ section.grey{
 .pad-left{
 	padding-left: 20px;
 }
+/*.pad-left:first-child{
+	padding-left: 0px;
+}*/
+.tower-name-wrapper .col-3{
+	padding: 10px;
+}
 .days-left-wrapper{
 	background-color: #fff;
 	border: 2px solid #ececec;
 	border-radius:6px;
 	padding: 20px 20px;
 }
-.days-left-wrapper h2.bold{
-	color: #a364ec;
+.days-left-wrapper h2.blue{
+	color: #66c2ee;
 }
 .booking-accordian-wrapper{
 	margin: 20px 0px 0px 0px;
@@ -1273,7 +1324,7 @@ section.grey{
 }
 .booking-accordian span.title{
 	font-size: 20px;
-    font-weight: 700;
+    font-weight: 500;
     color: #066a9d;
     position: relative;
     display: inline-block;
@@ -1313,7 +1364,7 @@ section.grey{
 }
 .booking-detail .title{
 	font-size: 24px;
-	font-weight: 700;
+	font-weight: 500;
 	margin: 10px 0px;
 	color: #282828;
 }
@@ -1355,7 +1406,7 @@ section.grey{
     color: #fff;
     margin-bottom: 20px;
     padding: 8px 10px;
-    font-weight: 600;
+    font-weight: 500;
     font-size: 18px;
     border-radius:10px;
 }
@@ -1367,15 +1418,15 @@ section.grey{
 	position: absolute;
 	right: 0px;
 	top: 87px;
-	border:1px solid  #c02680;
+	border:1px solid  #3980b8;
 	border-radius: 0px;
 	width: 300px;
-    background-color: #ffecf7;
+    background-color: #f6f6f6;
 }
 .notification-dropdown{
 	padding: 0px 20px;
 	margin: 10px 0px;
-	border-bottom: 1px solid #616161;
+	border-bottom: 1px solid #3980b8;
 }
 .notification-dropdown:last-child{
 	border-bottom: 0px solid #e0e0e0;	
@@ -1385,7 +1436,7 @@ section.grey{
 	text-align: center;
 }
 .notification-dropdown .read-more a{
-	font-weight: 700;
+	font-weight: 500;
 	font-size: 20px;
 	color: #282828;
 	display: inline-block;
@@ -1393,18 +1444,18 @@ section.grey{
 }*/
 .notification-dropdown .title{
 	font-size: 16px;
-	font-weight: 700;
+	font-weight: 500;
 }
-.notification-dropdown p{
+/*.notification-dropdown p{
 	margin-top: 0px;
-}
+}*/
 .breadcrumbs-wrapper{
 	margin-bottom: 30px;
 }
 .breadcrumbs-wrapper span{
 	color: #ce2591;
 	display: inline-block;
-	margin: 0px 20px 0px 0px;
+	margin: 0px 10px 0px 0px;
 	padding: 0 20px 0px 0px;
 	position: relative;
 	font-size: 16px;
@@ -1418,21 +1469,22 @@ section.grey{
 .breadcrumbs-wrapper span:after{
 	content: '>';
 	position: absolute;
-	font-size: 20px;
+	font-size: 16px;
 	right: 0px;
 	top: 0px;
 	color: #bdbdbd;
+	line-height: 20px;
 }
 .apartment-selector-wrapper .title{
 	background-color: #fff;
-    margin: 10px 0px;
+    /*margin: 10px 0px;*/
     border: 2px solid #ececec;
     border-radius:6px;
-    font-weight: 700;
+    font-weight: 400;
     font-size: 28px;
     color: #6c6c6c;
     padding: 15px;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Roboto Condensed', sans-serif;
 }
 .conf-select-wrapper{
 	margin: 40px 0px;
@@ -1443,32 +1495,32 @@ section.grey{
 }
 .conf-select-wrapper .col-5 .subtitle{
 	font-size: 20px;
-	font-weight: 700;
+	font-weight: 500;
 	margin-bottom: 20px;
 }
 .conf-select-wrapper .col-2.subtitle{
 	text-align: center;
 	font-size: 30px;
-    font-weight: 700;
+    font-weight: 500;
     color: #c7c7c7;
     padding-top: 20px;
 }
 .selectize-input{
 	border:0px solid !important;
 	border-bottom:1px solid #d7d7d7 !important;
-	-webkit-box-shadow: inset 0 0px 0px rgba(0, 0, 0, 0.1); 
-    box-shadow: inset 0 0px 0px rgba(0, 0, 0, 0.1); 
+	-webkit-box-shadow: none;
+    box-shadow: none; 
 }
 .selectize-input{
 	background-color: transparent;
 }
 .nav-btn {
     display: inline-block;
-    margin: 10px 0px;
+    margin: 0px 0px;
     background-color: #c02680;
     color: #fff;
-    padding: 8px 20px;
-    font-weight: 600;
+    padding: 6px 20px;
+    font-weight: 500;
     font-size: 16px;
 }
 .tower-name-box{
@@ -1505,15 +1557,15 @@ section.grey{
 
 .tower-name-box span{
 	display: block;
-	font-family: 'Poppins', sans-serif;
+	font-family: 'Roboto', sans-serif;
 }
 .tower-name-box span:first-child{
-	font-weight: 700;
+	font-weight: 500;
 	font-size: 20px;
 	margin-bottom: 5px;
 }
 .tower-name-box span:nth-child(2), .tower-name-box span:last-child{
-	font-weight: 700;
+	font-weight: 500;
 	font-size: 14px;
 }
 .filter-item-wrapper{
@@ -1533,7 +1585,7 @@ section.grey{
     background-color: #d6d6d6;
     color: #323232;
     padding: 8px 20px;
-    font-weight: 600;
+    font-weight: 500;
     font-size: 16px;
 }
 .building-main-wrapper {
@@ -1708,7 +1760,7 @@ section.grey{
 
 	color: #505050;
 }
-.bstatus-booked_confirmed{
+.bstatus-booked{
 	background-color: #f2ca7c;
 }
 .bstatus-na{
@@ -1723,6 +1775,9 @@ section.grey{
 }
 .bstatus-selected{
 	background-color: #7eb440;
+}
+.bstatus-hold{
+	background-color: #ec62bd;
 }
 .building-main-wrapper{
 	padding-left: 50px;
@@ -1835,10 +1890,11 @@ section.grey{
 }
 .show-unit-details>div>div:first-child{
     color: #ce2591;
-    font-weight: 700;
+    font-weight: 500;
     font-size: 20px;
 }
 .show-unit-details-wrapper{
+	display: none;
 	padding-left: 60px;
 	border-left: 1px solid #ededed;
 }
@@ -1847,7 +1903,7 @@ section.grey{
 }
 .show-unit-floor-plans span{
 	color: #afafaf;
-    font-weight: 700;
+    font-weight: 500;
     font-size: 20px;	
     display: inline-block;
     margin: 0 20px;
@@ -1874,7 +1930,7 @@ section.grey{
     margin: 10px 0px;
     border: 2px solid #ececec;
     border-radius:6px;
-    font-weight: 700;
+    font-weight: 500;
     font-size: 28px;
     color: #6c6c6c;
     padding: 5px 15px;
@@ -1904,7 +1960,7 @@ section.grey{
 .radio {
     display: block;
     position: relative;
-    padding-left: 35px;
+    padding-left: 25px;
     margin-bottom: 12px;
     cursor: pointer;
     -webkit-user-select: none;
@@ -1923,7 +1979,7 @@ section.grey{
 /* Create a custom radio button */
 .radio .checkmark {
     position: absolute;
-    top: 0;
+    top: 0px;
     left: 0;
     height: 20px;
     width: 20px;
@@ -1964,7 +2020,7 @@ section.grey{
 	background: white;
 }
 .form-check{
-	margin: 20px 0px;
+	margin: 20px 0px 0px 0px;
 }
 .form-check label{
 	display: inline-block;
@@ -1980,11 +2036,10 @@ section.grey{
 }
 .save-btn{
 	display: inline-block;
-    margin: 20px 0px;
+    cursor: pointer;
     background-color: #f0d6e5;
     color: #c02680;
     padding: 8px 20px;
-    font-weight: 600;
     font-size: 16px;
 }
 .apartment-selector-wrapper .form-field-wrapper .form-field, .apartment-selector-wrapper .form-field-wrapper select.form-field{
@@ -2162,7 +2217,7 @@ hr.divider {
 	.tower-specs .specs {
 	    color: #383838;
 	    font-size: 16px;
-	    font-weight: 600;
+	    font-weight: 500;
 	}
 	.applicant-wrapper {
 	   padding: 20px 0px 20px 20px;
@@ -2183,7 +2238,7 @@ hr.divider {
     border-radius:6px;
 }
 .cancel-booking-wrapper .title{
-	font-weight: 700;
+	font-weight: 500;
     font-size: 16px;
     margin: 10px 0px;
     display: block;
@@ -2194,6 +2249,111 @@ hr.divider {
 .login-card-wrapper .selldo-intl-tel-input{
 	width: 100%;
 }
+.help-block{
+	position: absolute;
+    width: 100%;
+    left: 20%;
+    top: 100%;
+    text-align: left;
+    font-size: 10px;
+    color: #a94442;
+}
+#error_explanation{
+	color: #a94442;
+}
+#error_explanation h2{
+	font-size: 16px;
+	margin-bottom: 0px;
+}
+#error_explanation ul{
+	margin: 0px;
+}
+#error_explanation li{
+	list-style-type: none;
+}
+.selectize-input.full, .selectize-input.input-active{
+	background-color: transparent !important;
+}
+.selectize-input.focus{
+	box-shadow: none;
+	-webkit-box-shadow: none;
+}
+.filter-item .selectize-input .item {
+	width: 90%;
+	white-space: nowrap;
+	overflow: hidden;
+}
+.payment-breakup.mediaCenterAccordion{
+	border: none;
+}
+.banner-offer{
+	border: 1px solid #e5eaf4;
+	border-radius:6px;
+	background-color: #fff;
+	color: #000;
+	font-weight: 500;
+	font-size: 18px;
+}
+.banner-offer .green-bg{
+	padding: 15px;
+	color: #fff;
+}
+.banner-offer .pull-right span{
+	vertical-align: middle;
+	padding: 15px;
+	display: inline-block;
+}
+.green-bg{
+	background-color: #9dbd2c;
+}
+.white-bg{
+	background-color: #fff;
+}
+.steps-wrapper{
+	margin-top: 20px;
+	border-radius: 6px;
+	border: 1px solid #e5eaf4;
+	padding: 20px;
+}
+.steps-wrapper h1{
+	font-weight: 400;
+	font-family: 'Roboto Condensed', sans-serif;
+	font-size: 36px;
+	color: #000;
+	line-height: 46px;
+	margin: 0px;
+}
+.left-padding-0{
+	padding-left: 0px;
+}
+.kyc-form-wrapper{
+	margin-top: 20px;
+}
+.tooltipster-content .book-status, .show-unit-details .book-status{
+   text-transform: capitalize;
+ }
+ .section-title{
+	font-family: 'Roboto Condensed', sans-serif;
+	font-size: 30px;
+	font-weight: 400; 	
+ }
+.kyc-details-wrapper{
+	margin-top: 20px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 6px;
+}
+.kyc-message{
+	margin: 20px 0px;
+    background: #c2dc68;
+    color: #000;
+    padding: 10px;
+    border-radius: 6px;
+    border: 2px solid #9dbd2c;
+}
+.top-inline-block input[type=submit], .top-inline-block a{
+	vertical-align: top;
+}    
 @media all and (max-width: 768px){
 	.notification-header .left-wrapper{
 		padding-left: 10px;
@@ -2374,7 +2534,7 @@ hr.divider {
 	    border-bottom: 1px solid #efefef;
 	}
 	.notification-header .subTitle{
-		color: #232323;
+		color: #fff;
 		font-weight: 400;
 	}
 	.notification-header .left-wrapper {
@@ -2398,8 +2558,8 @@ hr.divider {
 	    margin-bottom: 5px;
 	    width: 25px;
 	    padding: 0px !important;
-	    height: 2px;
-	    background-color: #232323;
+	    height: 3px;
+	    background-color: #fff;
 	}
 	.notification-header .pull-right.right-wrapper {
 	    padding: 28px 0px 0px 0px;
@@ -2407,7 +2567,12 @@ hr.divider {
 	.dashboard-notify{
 		width: 30px;
     	height: 35px;
-    	background-position: 20px -2px;
+    	background-position: 20px -25px;
+    	border-right:0px;
+    	border-left: 0px;
+	}
+	.cancel-booking-wrapper .form-field-wrapper .form-field{
+		width: 100%;
 	}
 	.notification-header .subTitle {
 	    vertical-align: middle;
@@ -2448,17 +2613,18 @@ hr.divider {
 		width: 100%;
 	}
 	.main-wrapper {
-	    margin-top: 80px;
+	    margin-top: 100px;
 	    padding-left: 0px;
 	    padding-bottom: 80px;
 	}
 	.dashboard-notify:hover {
-	    background-color: #fff;
-	    background-position: 20px -2px;
+	    background-color: inherit;
+	    background-position: 20px -25px;
 	}
-	.dashboard-notify .notification-count {
-	    color: #fff;
-	    background-color: #dc62c7;
+
+	.dashboard-notify .notification-count, .dashboard-notify:hover .notification-count{
+	    color: #3980b8;
+    	background-color: #fff;
 	}
 	.dashboard-banner .pageTitle{
 		font-size: 24px;
@@ -2522,7 +2688,7 @@ hr.divider {
 	.aparment-sold-wrapper .pageTitle {
 	    font-size: 20px;
 	    color: #fff;
-	    font-weight: 700;
+	    font-weight: 500;
 	    margin: 10px 0px 0px 0px;
 	}
 	.days-left-wrapper .relative{
@@ -2533,14 +2699,14 @@ hr.divider {
 	}
 	.days-left{
 		font-size: 18px;
-		top: 5%;
+		top: 18%;
 	}
 	.days-left-wrapper h2{
 		font-size: 14px;
 		text-align: left;
 		padding-left: 70px;
 		padding-right: 20px;
-		margin-top: 3px;
+		margin-top: 16px;
 		margin-bottom: 20px;
 	}
 	.notification-dropdown-wrapper{
@@ -2552,6 +2718,15 @@ hr.divider {
 	}
 	.mediaCentercontent .col-3, .mediaCentercontent .col-2-5{
 		width: 100%;
+		min-height: auto;
+	}
+	.mediaCentercontent .col-3 .caption:before{
+		right: 50%;
+    	top: 100%;
+    	transform: rotate(90deg);
+    	-moz-transform: rotate(90deg);
+    	-webkit-transform: rotate(90deg);
+    	font-size: 40px;
 	}
 	.mediaCenterAccordion .col-6{
 		width: 100%;
@@ -2753,7 +2928,7 @@ hr.divider {
 		text-align: right;
 		margin: 10px 20px 0px 20px;
 		font-size: 20px;
-		font-weight: 700;
+		font-weight: 500;
 	}
 	.show-unit-floor-plans.visible-xs .nav-btn{
 		display: inline-block;
@@ -2769,11 +2944,15 @@ hr.divider {
 	    left: 0px;
 	    z-index: 99;
 	    padding: 10px 5px;
+	    background-color: #3980b8;
+	}
+	.notification-header .left-wrapper span.f16{
+		display: none;
 	}
 	.prompts-message span{
 		display: block;
 		font-size: 14px;
-		font-weight: 700;
+		font-weight: 500;
 	}
 	.help-wrapper p{
 		margin: 15px 0px;
@@ -2813,7 +2992,7 @@ hr.divider {
 		padding: 10px;
 		font-size: 14px;
 		color: #599214;
-		font-weight: 700;
+		font-weight: 500;
 		border-radius:6px;
 	}
 	.xs-100{
@@ -2936,7 +3115,7 @@ hr.divider {
 	.success-card .pageTitle {
 	    font-size: 24px;
 	    line-height: 24px;
-	    font-weight: 700;
+	    font-weight: 500;
 	}
 	.success-card p {
 	    font-size: 16px;

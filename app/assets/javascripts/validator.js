@@ -8,7 +8,7 @@ $.validator.setDefaults({
   errorElement: 'span',
   errorClass: 'help-block',
   errorPlacement: function(error, element) {
-    debugger;
+    //debugger;
     if(element.parent('.input-group').length > 0) {
       error.insertAfter(element.parent());
     } else if(element.parent().hasClass("selectize-input")) {

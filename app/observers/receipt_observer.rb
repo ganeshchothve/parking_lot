@@ -1,4 +1,13 @@
 class ReceiptObserver < Mongoid::Observer
+  def before_create receipt
+    project_unit = receipt.project_unit
+    if project_unit.present?
+      receipt.receipt_id = "ESE#{project_unit.project_tower_name[0]}#{project_unit.name.split("-").last.strip}-R#{receipt.order_id}"
+    else
+      receipt.receipt_id = SecureRandom.hex
+    end
+  end
+
   def after_save receipt
     # update project unit if receipt status has changed
     if receipt.status_changed?

@@ -52,19 +52,19 @@
         <div class="title">Payment Details</div>
         <div class="unit-booking-details">
           <div class="col-4">
-            <div>All Inclusive Price:</div><div class="dark"><%= number_to_indian_currency(project_unit.base_price) %></div><a href="/dashboard/<%= project_unit.id %>/payment-breakup" class="small-link">Payment Break Up</a>
+            <div>All Inclusive Price:</div><div class="dark"><%= number_to_indian_currency(project_unit.base_price.round(2)) %></div><a href="/dashboard/<%= project_unit.id %>/payment-breakup" class="small-link">Payment Break Up</a>
           </div>
           <div class="col-4">
             <div>Advance Payment:</div><div class="dark">0</div>
           </div>
           <div class="col-4">
-            <div>Booking Amount:</div><div class="dark"><%= number_to_indian_currency(project_unit.booking_price) %></div>
+            <div>Booking Amount:</div><div class="dark"><%= number_to_indian_currency(project_unit.booking_price.round(2)) %></div>
           </div>
           <div class="col-4">
-            <div>Agreement Value:</div><div class="dark"><%= number_to_indian_currency(project_unit.base_price) %></div>
+            <div>Agreement Value:</div><div class="dark"><%= number_to_indian_currency(project_unit.base_price.round(2)) %></div>
           </div>
           <div class="col-4">
-            <div>Balance Payment:</div><div class="dark"><%= number_to_indian_currency(project_unit.user.total_balance_pending) %></div>
+            <div>Balance Payment:</div><div class="dark"><%= number_to_indian_currency(project_unit.user.total_balance_pending.round(2)) %></div>
           </div>
           <div class="clearfix"></div>
           <!-- <div class="clearfix"></div> -->
@@ -85,9 +85,13 @@
           <li>You have 7 days remaining to confirm this booking please make remaining payment of Rs. 0</li>
         </ul>
       </div>
-      <a href="/dashboard/checkout/<%= project_unit.id %>" class="col-12 block pink payment-btn text-center">
+      <!-- dashboard/receipts/new?project_unit_id=5aa7816821b83d2f120f3e16 -->
+      <a href="/dashboard/receipts/new?project_unit_id=<%= project_unit.id %>" class="col-12 block pink payment-btn text-center">
         MAKE THE REMAINING PAYMENT
       </a>
+      <!-- <a href="/dashboard/make-remaining-payment/<%= project_unit.id %>" class="col-12 block pink payment-btn text-center">
+        MAKE THE REMAINING PAYMENT
+      </a> -->
     </div>
 <% end %>
 <%= javascript_tag do %>

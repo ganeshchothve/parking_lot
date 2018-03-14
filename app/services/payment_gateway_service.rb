@@ -17,7 +17,7 @@ module PaymentGatewayService
     end
 
     def self.allowed_payment_gateways
-      ['CCAvenue']
+      ['CCAvenue', "Razorpay"]
     end
   end
 end

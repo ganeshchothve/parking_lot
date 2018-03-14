@@ -1,15 +1,32 @@
 <%= render 'breadcrumbs', {user: @user, project_unit: @receipt.project_unit} %>
-<section class="padding-side-22">
-    <div class="container-fluid">
+<% if current_user.role?('user') %>
+  <section class="main-wrapper full-height grey">
+<% else %>
+  <section class="padding-side-22">
+<% end %>
+   <div class="container-fluid">
       <div class="row">
+        <% if current_user.role?('user') %>
+        <div class="apartment-selector-wrapper">
+          <div class="title">
+            Make Remaining Payment
+          </div>
+        </div>
+        <% else %>
         <div class="col-12 text-left mtop10">
             <p class="pageTitle big pink">EDIT PAYMENTS</p>
         </div>
-        <div class="col-md-12 border-left-0 border-top-0 border-bottom-0">
+        <% end %>
+        <div class="col-md-12 border-left-0 border-top-0 border-bottom-0 cancel-booking-wrapper">
           <% if @receipt.new_record? %>
             <div class="alert alert-warning">
               <!-- TODO: check if you want to update this message -->
-              Payments need to be for individual units, clubbed payments are not allowed. Please collect a cheque for individual units only.
+              <% if current_user.role?('user') %>
+                <div class="title">Payments need to be for individual units, clubbed payments are not allowed. Please collect a cheque for individual units only.</div>
+                <br/>
+              <% else %>
+                Payments need to be for individual units, clubbed payments are not allowed. Please collect a cheque for individual units only.
+              <% end %>
             </div>
           <% end %>
           <% if @receipt.errors.present? %>
@@ -23,13 +40,13 @@
           <% end %>
           <% if current_user.role?('user') %>
             <%= form_for @receipt, html: {class: 'validate-form'} do |f| %>
-              <div class="form-group">
+              <div class="form-group form-field-wrapper">
                 <%= f.label :total_amount, class: 'control-label label-required' %>
-                <%= f.text_field :total_amount, min: 0, class: "form-control", required: 'required' %>
+                <%= f.text_field :total_amount, min: 0, class: "form-field form-control", required: 'required', id:"totalAmount" %>
               </div>
               <%= f.hidden_field :project_unit_id %>
               <%= f.hidden_field :payment_mode %>
-              <%= f.submit "Proceed", class: 'btn btn-primary' %>
+              <%= f.submit "Proceed", class: 'btn btn-primary nav-btn' %>
             <% end %>
           <% else %>
             <%= form_for [:admin, @user, @receipt], html: {id: 'receipt_form', class: 'validate-form'} do |f| %>
@@ -125,3 +142,4 @@
         </div>
       </div>
     </div>
+  </section>

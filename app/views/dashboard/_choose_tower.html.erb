@@ -6,7 +6,7 @@
           <div class="tower-name-wrapper">
             <% if @towers.count > 0 %>
               <% @towers.each do |t| %>
-              <div class="col-3 pad-left text-center">
+              <div class="col-3 text-center">
                 <div class="tower-name-box" data-towerid="<%= t[:project_tower_id] %>">
                   <img src="<%= asset_path 'tower-feat.png'%>" class="img-responsive">
                   <div class="">

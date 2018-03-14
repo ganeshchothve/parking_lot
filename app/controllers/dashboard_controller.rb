@@ -1,7 +1,7 @@
 # TODO: replace all messages & flash messages
 class DashboardController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_project_unit, only: [:project_unit, :update_project_unit, :hold_project_unit, :checkout, :payment, :payment_breakup]
+  before_action :set_project_unit, only: [:project_unit, :update_project_unit, :hold_project_unit, :checkout, :payment, :payment_breakup, :make_remaining_payment]
   layout :set_layout
 
   def index
@@ -25,13 +25,20 @@ class DashboardController < ApplicationController
     render json: ProjectUnit.find(params[:unit_id]).ui_json
   end
 
+  def razorpay_payment
+    @receipt = Receipt.where(:receipt_id => params[:receipt_id]).first
+  end
+
   def payment_breakup
+  end
+
+  def make_remaining_payment
   end
 
   def project_units
     authorize :dashboard, :project_units?
     if params[:stage] == "apartment_selector"
-      @configurations = ProjectUnit.all.collect{|x| {bedrooms: x.bedrooms, base_price: x.base_price}}.sort{|x, y| x[:base_price] <=> y[:base_price]}.uniq{|x| x[:bedrooms]}
+      @configurations = ProjectUnit.all.collect{|x| {bedrooms: x.bedrooms, base_price: x.base_price.to_i}}.sort{|x, y| x[:base_price] <=> y[:base_price]}.uniq{|x| x[:bedrooms]}
     elsif params[:stage] == "choose_tower"
       bedroom = params[:configuration].split(",")[0]
       budget = params[:configuration].split(",")[1]
@@ -83,7 +90,7 @@ class DashboardController < ApplicationController
   end
 
   def payment
-    @receipt = Receipt.new(creator: current_user, user: current_user, receipt_id: Receipt.generate_receipt_id, payment_mode: 'online', total_amount: ProjectUnit.blocking_amount, payment_type: 'blocking')
+    @receipt = Receipt.new(creator: current_user, user: current_user, payment_mode: 'online', total_amount: ProjectUnit.blocking_amount, payment_type: 'blocking')
 
     if params[:project_unit_id]
       @project_unit = ProjectUnit.find(params[:project_unit_id])
@@ -96,7 +103,11 @@ class DashboardController < ApplicationController
     else
       authorize(Receipt.new(user: current_user), :new?)
     end
-    @receipt.payment_gateway = 'CCAvenue'
+    if @receipt.payment_type == "blocking"
+      @receipt.payment_gateway = 'CCAvenue'
+    else
+      @receipt.payment_gateway = 'Razorpay'
+    end
     if @receipt.save
       if @receipt.status == "pending" # if we are just tagging an already successful receipt, we dont need to send the user to payment gateway
         if @receipt.payment_gateway_service.present?

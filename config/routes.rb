@@ -40,6 +40,7 @@ Rails.application.routes.draw do
     resources :user_requests, except: [:destroy], controller: 'user_requests'
   end
 
+  get '/dashboard/make-remaining-payment/:project_unit_id', to: 'dashboard#make_remaining_payment'
   get '/dashboard/booking-details', to: 'dashboard#booking_details'
   get '/dashboard/cancel-booking', to: 'dashboard#cancel_booking'
   get '/dashboard/kyc-form', to: 'dashboard#kyc_form'
@@ -58,7 +59,7 @@ Rails.application.routes.draw do
   scope :dashboard do
     # get :project_units, to: 'dashboard#project_units', as: :dashboard_project_units
     get :project_units_new, to: 'dashboard#project_units_new', as: :dashboard_project_units_new
-
+    get '/:receipt_id/razorpay-payment', to: 'dashboard#razorpay_payment'
     get '/apartment-selector/:configuration/:project_tower_id/:unit_id', to: 'dashboard#project_units', stage: 'kyc_details', :constraints => {:configuration => /[^\/]+/}
     get '/apartment-selector/:configuration/:project_tower_id', to: 'dashboard#project_units', stage: 'select_apartment', :constraints => {:configuration => /[^\/]+/}
     get '/apartment-selector/:configuration', to: 'dashboard#project_units', stage: 'choose_tower', :constraints => {:configuration => /[^\/]+/}

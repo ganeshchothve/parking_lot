@@ -35,10 +35,10 @@
       </div>
       <div class="col-md-3">
         <div class="card card-body">
-          <h2 class="pink"><%= Receipt.where(status: 'pending').count %></h2>
+          <h2 class="pink"><%= Receipt.where(status: 'pending').ne(payment_mode: "online").count %></h2>
           <h6 class="pink">Pending Payments</h6>
           <% if ReceiptPolicy.new(current_user, Receipt).index? %>
-            <%= link_to 'View All', admin_receipts_path(fltrs: { status: 'pending' }), class: 'position-absolute pink', style: 'right: 15px;' %>
+            <%= link_to 'View All', admin_receipts_path(fltrs: { status: 'pending', "payment_mode" => {"$ne" => "online"} }), class: 'position-absolute pink', style: 'right: 15px;' %>
           <% end %>
         </div>
       </div>
@@ -142,7 +142,7 @@
               <%= link_to "View All #{global_label('receipts_with_status', {status: 'Pending'})}", admin_receipts_path(fltrs: { status: 'pending' }), class: 'float-right' %>
             </div>
             <div class="card-body no-shadow padding0 table-responsive">
-              <%= render 'receipts/index', {receipts: Receipt.where(status: 'pending').desc(:updated_at).paginate(page: 1 || 1, per_page: 5) } %>
+              <%= render 'receipts/index', {receipts: Receipt.where(status: 'pending').ne(payment_mode: "online").desc(:updated_at).paginate(page: 1 || 1, per_page: 5) } %>
             </div>
           </div>
         <% end %>

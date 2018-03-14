@@ -20,7 +20,7 @@
 							</div>
 				       		<div class="pull-right tower-info-wrapper"> 
 				       			<div class="pull-left">Tower: <%= @project_unit.project_tower_name %><br>Floor: <%= @project_unit.floor %><br>Flat no: <%= @project_unit.name %><br></div>
-				       			<div class="pull-left padding-left-30">Configuration: <%= @project_unit.bedrooms %> BHK<br>Min. Carpet Area: <%= @project_unit.carpet.round(2) %> Sq.Ft.<br>Starting Price: <%= number_to_indian_currency(@project_unit.base_price) %></div>
+				       			<div class="pull-left padding-left-30">Configuration: <%= @project_unit.bedrooms %> BHK<br>Min. Carpet Area: <%= @project_unit.carpet.round %> Sq.Ft.<br>Starting Price: <%= number_to_indian_currency(@project_unit.base_price.round) %></div>
 				       			<div class="clearfix"></div>
 				       		</div>
 				       		<div class="clearfix"></div>
@@ -65,7 +65,7 @@
 								Apartment Cost (Inclusive of right to use of 1 covered parking) - A
 							</td>
 							<td>
-								<%= number_to_indian_currency(@project_unit.base_price) %>
+								<%= number_to_indian_currency(@project_unit.base_price.round) %>
 							</td>
 						</tr>
 						<tr>
@@ -98,7 +98,7 @@
 								Total Cost without Taxes
 							</td>
 							<td>
-								<%= number_to_indian_currency(@project_unit.base_price) %>
+								<%= number_to_indian_currency(@project_unit.base_price.round) %>
 							</td>
 						</tr>
 						<tr>
@@ -120,7 +120,7 @@
 								RERA Carpet Area(sq.ft)
 							</td>
 							<td>
-								<%= @project_unit.carpet.round(2) %> sq.ft.
+								<%= @project_unit.carpet.round %> sq.ft.
 							</td>
 						</tr>
 						<tr>
@@ -131,7 +131,7 @@
 								Total Cost
 							</td>
 							<td class="pink">
-								<%= number_to_indian_currency(@project_unit.base_price) %>
+								<%= number_to_indian_currency(@project_unit.base_price.round) %>
 							</td>
 						</tr>
 					</table>
@@ -157,13 +157,13 @@
 								01
 							</td>
 							<td>
-								On Agreement
+								On Agreement / Booking
 							</td>
 							<td class="text-center">
 								10%
 							</td>
 							<td>
-								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,10)) %>
+								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price.round,10)) %>
 							</td>
 						</tr>
 						<tr>
@@ -174,10 +174,10 @@
 								On completion of Basement 
 							</td>
 							<td class="text-center">
-								10%
+								12.50%
 							</td>
 							<td>
-								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,10)) %>
+								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,12.5)) %>
 							</td>
 						</tr>
 						<tr>
@@ -185,13 +185,13 @@
 								03
 							</td>
 							<td>
-								On completion of First floor slab 
+								On completion of 3rd floor slab 
 							</td>
 							<td class="text-center">
-								10%
+								12.50%
 							</td>
 							<td>
-								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,10)) %>
+								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,12.5)) %>
 							</td>
 						</tr>
 						<tr>
@@ -199,13 +199,13 @@
 								04
 							</td>
 							<td>
-								On completion of Third floor slab
+								On completion of 6th floor slab
 							</td>
 							<td class="text-center">
-								10%
+								12.50%
 							</td>
 							<td>
-								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,10)) %>
+								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,12.5)) %>
 							</td>
 						</tr>
 						<tr>
@@ -213,13 +213,13 @@
 								05
 							</td>
 							<td>
-								On completion of Fifth floor slab
+								On completion of 9th floor slab
 							</td>
 							<td class="text-center">
-								10%
+								12.50%
 							</td>
 							<td>
-								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,10)) %>
+								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,12.5)) %>
 							</td>
 						</tr>
 						<tr>
@@ -227,13 +227,13 @@
 								06
 							</td>
 							<td>
-								On completion of Seventh floor slab
+								On completion of 12th floor slab
 							</td>
 							<td class="text-center">
-								10%
+								12.50%
 							</td>
 							<td>
-								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,10)) %>
+								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,12.5)) %>
 							</td>
 						</tr>
 						<tr>
@@ -241,13 +241,13 @@
 								07
 							</td>
 							<td>
-								On completion of Ninth floor slab
+								On completion of Terrace floor slab
 							</td>
 							<td class="text-center">
-								10%
+								12.50%
 							</td>
 							<td>
-								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,10)) %>
+								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,12.5)) %>
 							</td>
 						</tr>
 						<tr>
@@ -255,21 +255,7 @@
 								08
 							</td>
 							<td>
-								On completion of Eleventh floor slab
-							</td>
-							<td class="text-center">
-								10%
-							</td>
-							<td>
-								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,10)) %>
-							</td>
-						</tr>
-						<tr>
-							<td class="text-center">
-								09
-							</td>
-							<td>
-								On completion of Fourteenth floor slab
+								On completion of painting & finishes and deposits (power + water)
 							</td>
 							<td class="text-center">
 								10%
@@ -280,24 +266,10 @@
 						</tr>
 						<tr>
 							<td class="text-center">
-								10
-							</td>
-							<td>
-								On completion of painting & finishes
-							</td>
-							<td class="text-center">
-								5%
-							</td>
-							<td>
-								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,5)) %> 
-							</td>
-						</tr>
-						<tr>
-							<td class="text-center">
 								11
 							</td>
 							<td>
-								On Possession + Additional
+								On Possession + remaining additionals + regn
 							</td>
 							<td class="text-center">
 								5%
@@ -317,7 +289,7 @@
 								&nbsp;
 							</td>
 							<td class="pink">
-								<%= number_to_indian_currency(@project_unit.base_price) %>
+								<%= number_to_indian_currency(@project_unit.base_price.round) %>
 							</td>
 						</tr>
 						</table>

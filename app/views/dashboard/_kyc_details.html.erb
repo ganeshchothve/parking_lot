@@ -6,16 +6,19 @@
 			</div>
        		<div class="pull-right tower-info-wrapper"> 
        			<div class="pull-left">Tower: <%= @unit.project_tower_name %><br>Floor: <%= @unit.floor %><br>Flat no: <%= @unit.name %><br></div>
-       			<div class="pull-left padding-left-30">Configuration: <%= @unit.bedrooms %> BHK<br>Min. Carpet Area: <%= @unit.carpet %> Sq.Ft.<br>Starting Price: <%= @unit.base_price %></div>
+       			<div class="pull-left padding-left-30">Configuration: <%= @unit.bedrooms %> BHK<br>Min. Carpet Area: <%= @unit.carpet.round %> Sq.Ft.<br>Price: <%= number_to_indian_currency(@unit.base_price.round) %></div>
        			<div class="clearfix"></div>
        		</div>
        		<div class="clearfix"></div>
        	</div>
        	<div class="clearfix"></div>
-       	<div class="col-12">
+       	<div class="col-12 kyc-details-wrapper">
        		<div class="f22 bold">KYC Details</div>
+       		<div class="kyc-message">
+       		Details provided on KYC form will be used in Agreement Documentation. Kindly ensure that name, DOB and other information is entered correctly.
+       	</div>
        		<div class="form-check">
-                <label class="radio kyc-radio" data-link="yes">Add New KYC Details<input type="radio" name="kyc" class="form-check-input"><span class="checkmark"></span></label>
+                <label class="radio kyc-radio" data-link="yes">Add New<input type="radio" name="kyc" class="form-check-input"><span class="checkmark"></span></label>
                 <label class="radio kyc-radio" data-link="no">Select Existing<input type="radio" name="kyc" class="form-check-input"><span class="checkmark"></span></label>
                 <div class="hidden-field kyc-add" style="display:none">
                   <div class="form-wrapper margin-top-30 text-left">
@@ -34,41 +37,33 @@
 			              </div>
 			            <% end %>
 			            <div class="form-group form-field-wrapper">
-			              <%#= f.label :name, class: 'control-label label-required' %>
 			              <%= f.text_field :name, class: 'form-control form-field', required: 'required form-field', placeholder:'Name' %>
 			            </div>
 			            <div class="row">
 			              <div class="col-md-6">
 			                <div class="form-group form-field-wrapper">
-			                  <%#= f.label :email, class: 'control-label label-required' %>
 			                  <%= f.email_field :email, class: 'form-control email form-field', required: 'required form-field', placeholder:'Email' %>
 			                </div>
 			              </div>
 			              <div class="col-md-6">
 			                <div class="form-group form-field-wrapper">
-			                  <%#= f.label :phone, class: 'control-label label-required' %>
-			                  <%= f.text_field :phone, class: 'form-control phone number form-field', required: 'required form-field', placeholder:'Phone' %>
+			                  <%= f.text_field :phone, class: 'form-control phone number form-field', required: 'required form-field', placeholder:'Phone', maxlength:'12', minlength:'8'%>
 			                </div>
 			              </div>
 			            </div>
 			            <div class="row">
 			              <div class="col-md-6">
 			                <div class="form-group form-field-wrapper position-relative">
-			                  <%#= f.label :dob, class: 'control-label label-required' %>
 			                  <!-- TODO: check if you want to restrict the dob to 18 years age -->
-			                  <%= f.date_field :dob, class: 'form-control form-field required', type:'date', placeholder:'DOB' %>
+			                  <%= f.date_field :dob, class: 'form-control form-field required', type:'text', onfocus:"(this.type='date')", placeholder:'Date of birth' %>
 			                </div>
 			              </div>
 			              <div class="col-md-6">
-			                <!-- <div class="form-group form-field-wrapper">
-			                  <%= f.label :pan_number, class: 'control-label label-required' %>
-			                  <%= f.text_field :pan_number, class: 'form-control form-field', required: 'required', placeholder: 'AAAAA9999A' %>
-			                </div> -->
 			                <div class="form-group form-field-wrapper">
 				              <div class="form-check">
 				                <%= f.label :nri, class: 'control-label' %>
-				                <label class="radio oci" data-link="yes">Yes<%= f.radio_button :nri, class: "form-check-input", checked: 'checked' %><span class="checkmark"></span></label>
-				                <label class="radio oci" data-link="no">No<%= f.radio_button :nri, class: "form-check-input" %><span class="checkmark"></span></label>
+				                <label class="radio oci" data-link="yes">Yes<%= f.radio_button :nri, class: "form-check-input required", checked: 'checked' %><span class="checkmark"></span></label>
+				                <label class="radio oci" data-link="no">No<%= f.radio_button :nri, class: "form-check-input required" %><span class="checkmark"></span></label>
 				                <div class="hidden-field oci" style="display:none">
 				                    <%= f.text_field :oci_number, class: 'form-control form-field', placeholder: 'OCI Number' %>
 				                </div>
@@ -79,9 +74,13 @@
 				            </div>
 			              </div>
 			            </div>
-			            <% if policy(@unit).hold_project_unit? %>
-			            	<%= f.submit 'Add & Proceed', class: 'form-field save-btn', style: 'width:auto'%>
-			            <% end %>
+			            <%# if policy(@unit).hold_project_unit? %>
+			            <br clear="all" />
+			            <div class="col-12 top-inline-block">
+			            <a href="javascript:;" class="nav-btn btn-anim navigate" data-stage="select-apartment" data-navigate-to="prev">← PREV</a>
+			            <%= f.submit 'Add & Hold Unit', class: 'form-field save-btn', style: 'width:auto'%>
+			        	</div>
+			            <%# end %>
 			          <% end %>
 			        </div>
                   
@@ -101,9 +100,13 @@
 			              <% end %>
 			            </select>
 			          </div>
-			          <% if policy(@unit).hold_project_unit? %>
-			          	<input type="submit" value="Proceed" class="save-btn" />
-			          <% end %>
+			          <br clear="all" />
+			            <div class="col-12 top-inline-block">
+			          <%# if policy(@unit).hold_project_unit? %>
+			          	<a href="javascript:;" class="nav-btn btn-anim navigate" data-stage="select-apartment" data-navigate-to="prev">← PREV</a>
+			          	<input type="submit" value="Hold Unit" class="save-btn" />
+			          </div>
+			          <%# end %>
 			        </form>
 			        <div class="clearfix"></div>
                 </div>

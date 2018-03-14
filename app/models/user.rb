@@ -56,6 +56,7 @@ class User
   validates :name, :phone, :role, presence: true
   validates :lead_id, uniqueness: true, allow_blank: true
   validates :phone, uniqueness: true, phone: true # TODO: we can remove phone validation, as the validation happens in sell.do
+  #validates :email, uniqueness: true #TODO: if removed can sign up with registerd email id
   validates :rera_id, :location, presence: true, if: Proc.new{ |user| user.role?('channel_partner') }
   validates :rera_id, uniqueness: true, allow_blank: true
   validates :role, inclusion: {in: Proc.new{ User.available_roles.collect{|x| x[:id]} } }

@@ -14,10 +14,11 @@ module ApplicationHelper
       number = number.gsub(/^,/, '')
       number = number + '.' + string[1] if string[1].to_f > 0
     end
-    "Rs. #{number}"
+    "₹#{number}"
   end
 
   def calculate_percent(amount, percent)
     amount = amount * percent/100 
+    amount.round
   end
 end

@@ -1,9 +1,11 @@
 @import "bootstrap";
 @import "intlTelInput";
-@import url('https://fonts.googleapis.com/css?family=Poppins:400,700');
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500');
+@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:300');
 body{
   color: #616161;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400 !important;
 }
 label.label-required:after {
   content: " *";
@@ -120,10 +122,11 @@ label.control-label{
 .breadcrumb{
   margin-bottom: 0px;
   padding: 30px 40px;
-  background:-webkit-linear-gradient(90deg, rgba(145,101,248,1) 0%, rgba(238,97,187,1) 100%);
+  background-color: #3980b8;
+  /*background:-webkit-linear-gradient(90deg, rgba(145,101,248,1) 0%, rgba(238,97,187,1) 100%);
   background:-o-linear-gradient(90deg, rgba(145,101,248,1) 0%, rgba(238,97,187,1) 100%);
   background:-moz-linear-gradient(90deg, rgba(145,101,248,1) 0%, rgba(238,97,187,1) 100%);
-  background:linear-gradient(90deg, rgba(145,101,248,1) 0%, rgba(238,97,187,1) 100%);
+  background:linear-gradient(90deg, rgba(145,101,248,1) 0%, rgba(238,97,187,1) 100%);*/
   border-radius: 0px;
 }
 .breadcrumb-item a, .breadcrumb-item.active, .breadcrumb-item + .breadcrumb-item::before{
@@ -140,6 +143,7 @@ label.control-label{
 }
 .striped-table thead th{
   color: #ce2691;
+  font-weight: 500;
 }
 .table th, .table td{
   vertical-align: middle;
@@ -166,7 +170,7 @@ label.control-label{
 }
 .pageTitle.big {
     font-size: 24px;
-    font-weight: bold;
+    font-weight: 500;
     margin-top: 20px;
 }
 .pink{

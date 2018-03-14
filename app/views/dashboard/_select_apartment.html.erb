@@ -28,7 +28,7 @@
             <select class="init-selectize" name="bedrooms">
               <option value="">Select Bedrooms</option>
               <% @configurations.each do |c| %>
-              <option value="<%= c[:bedrooms] %>"><%= c[:bedrooms] %> BHK (Starting from <%= number_to_indian_currency(c[:base_price]) %>)</option>
+              <option value="<%= c[:bedrooms] %>" <%= params[:configuration].split(",")[0].to_s == c[:bedrooms].to_s ? "selected=selected" : "" %>><%= c[:bedrooms] %> BHK (Starting from <%= number_to_indian_currency(c[:base_price].round) %>)</option>
               <% end %>
             </select>
           </div>
@@ -88,32 +88,30 @@
               <%
                 if (bedrooms.to_s != "" && base_price.to_s != "")
                   if(bedrooms.to_s == u.bedrooms.to_s && (u.base_price.to_i <= maxprice.to_i && u.base_price.to_i >= minprice.to_i))
-                    status = u.status
+                    status = (u.status == "not_available") ? "na" : u.status.gsub("_", " ")
                   else
                     status = "na"
                   end
-                else 
-                  if (bedrooms.to_s != "" && bedrooms.to_s == u.bedrooms.to_s) || (u.base_price.to_i <= maxprice.to_i && u.base_price.to_i >= minprice.to_i)
-                    status = u.status
+                else
+                  if(bedrooms.to_s == "" && base_price.to_s == "")
+                    status = (u.status == "not_available") ? "na" : u.status.gsub("_", " ")
                   else
-                    status = "na"
+                    if (bedrooms.to_s != "" && bedrooms.to_s == u.bedrooms.to_s) || (u.base_price.to_i <= maxprice.to_i && u.base_price.to_i >= minprice.to_i)
+                      status = (u.status == "not_available") ? "na" : u.status.gsub("_", " ")
+                    else
+                      status = "na"
+                    end
                   end
-                end 
-                    
-                # if (bedrooms.to_s != "" && bedrooms.to_s == u.bedrooms.to_s) && (base_price.to_s != "" && (u.base_price.to_i <= maxprice.to_i && u.base_price.to_i >= minprice.to_i))
-                  
-                # else 
-                #   status = "na"
-                # end
+                end
               %>
-              <span data-unit-id="<%= u.id %>" class="unit-tooltip apt bstatus-<%= status %>" title='["<%= u.name %>","<%= u.carpet %>","<%= number_to_indian_currency(u.base_price) %>","<%= u.bedrooms %>","<%= status %>"]' data-unit-details='["<%= u.name %>","<%= u.carpet %>","<%= number_to_indian_currency(u.base_price) %>","<%= u.bedrooms %>","<%= status %>"]'></span>
+              <span data-unit-id="<%= u.id %>" class="unit-tooltip apt bstatus-<%= status %>" title='["<%= u.name %>","<%= u.carpet.round %>","<%= number_to_indian_currency(u.base_price.round) %>","<%= u.bedrooms %>","<%= status %>"]' data-unit-details='["<%= u.name %>","<%= u.carpet.round %>","<%= number_to_indian_currency(u.base_price.round) %>","<%= u.bedrooms %>","<%= status %>"]'></span>
             <% end %>
           </div>
           <% end %>
         </div>
 	<div class="col-12 apt-index-wrapper">
 		<div class="apt-index">
-			<span class="bstatus-booked_confirmed"></span>Booked
+			<span class="bstatus-booked"></span>Booked
 		</div>
 		<div class="apt-index">
 			<span class="bstatus-hold"></span>Hold
@@ -135,23 +133,16 @@
       <div class="visible-xs pink open-details-wrapper"><</div>
       <div class="pink close-btn visible-xs">X</div>
       <div class="show-unit-details">
-    		<!-- <div>
-    			<div>UNIT DETAILS</div>
-    			<div>Flat No: 904</div>
-    			<div>Bedrooms: 2</div>
-    			<div>Carpet Area: 672.50</div>
-    			<div>Base Price: Rs.51,38,000/-</div>
-    			<div>Booking Status: available</div>
-    		</div> -->
+    		
     	</div>
     	<div class="show-unit-floor-plans hidden-xs">
-    		<span class="active" rel="fp">FLOOR PLANS</span><span rel="gallery">GALLERY</span><span rel="unit-plan">UNIT PLANS</span>
+    		<span class="active" rel="fp">FLOOR PLANS</span><!-- <span rel="gallery">GALLERY</span><span rel="unit-plan">UNIT PLANS</span> -->
     		<div class="unit-plans-wrapper" id="fp" style="display:block">
-    			<a href="<%= asset_path 'fp-type-2.jpg'%>" class="colorbox-init" rel="floorplan">
-    				<img src="<%= asset_path 'fp-type-2.jpg'%>" class="img-responsive">
+    			<a href="<%= asset_path '1BHK-A.png'%>" class="colorbox-init" rel="floorplan">
+    				<img src="<%= asset_path '1BHK-A.png'%>" class="img-responsive">
     			</a>
     		</div>
-    		<div class="unit-plans-wrapper" id="gallery">
+    		<!-- <div class="unit-plans-wrapper" id="gallery">
     			<a href="<%= asset_path 'fp-type-2.jpg'%>" class="colorbox-init" rel="floorplan">
     				<img src="<%= asset_path 'fp-type-2.jpg'%>" class="img-responsive">
     			</a>
@@ -160,10 +151,10 @@
     			<a href="<%= asset_path 'fp-type-2.jpg'%>" class="colorbox-init" rel="floorplan">
     				<img src="<%= asset_path 'fp-type-2.jpg'%>" class="img-responsive">
     			</a>
-    		</div>
+    		</div> -->
     	</div>
       <div class="show-unit-floor-plans visible-xs">
-        <a href="<%= asset_path 'fp-type-2.jpg'%>" rel="floorplan" class="colorbox-init nav-btn">FLOOR PLANS</a><a href="<%= asset_path 'fp-type-2.jpg'%>" class="colorbox-init nav-btn" rel="gallery">GALLERY</a><a href="<%= asset_path 'fp-type-2.jpg'%>" class="colorbox-init nav-btn" rel="unit-plan">UNIT PLANS</a>
+        <a href="<%= asset_path '1BHK-A.png'%>" rel="floorplan" class="colorbox-init nav-btn">FLOOR PLANS</a><!-- <a href="<%= asset_path 'fp-type-2.jpg'%>" class="colorbox-init nav-btn" rel="gallery">GALLERY</a><a href="<%= asset_path 'fp-type-2.jpg'%>" class="colorbox-init nav-btn" rel="unit-plan">UNIT PLANS</a> -->
       </div> 
     	<div class="clearfix"></div>
     </div>
