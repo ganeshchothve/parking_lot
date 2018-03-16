@@ -1,9 +1,9 @@
 <link href="https://fonts.googleapis.com/css?family=Poppins:400,600" rel="stylesheet">
-<!-- <script type="text/javascript">
+<script type="text/javascript">
 	function printReceipt(){
 		window.print();
 	}
-</script> -->
+</script>
 <style type="text/css">
 	body{
 		font-family: 'Poppins', sans-serif;
@@ -78,29 +78,19 @@
 	.receipt-table th:first-child, .receipt-table td:first-child {
 	    border-left: 1px solid #ccc;
 	}
-	.tower-info-wrapper.pink {
-	    background: #ffecf7;
-	}
-	.receipt-table th {
-	    background-color: #ffecf7;
-	    border-right: 1px solid #ccc;
-	    border-top: 1px solid #ccc;
-	    border-bottom: 1px solid #ccc;
-	    font-weight: normal;
-	}
 	.receipt-table td {
 	    text-align: center;
 	    border-right: 1px solid #ccc;
 	    border-bottom: 1px solid #ccc;
 	}
-	.receipt-wrapper {
+		.receipt-wrapper {
 	    color: #74645c;
 	    font-size: 16px;
 	    width: 100%;
 	    margin: 20px 0px;
 	    background-color: #fff;
 	    border: 1px solid #c7c7c7;
-	    margin-bottom: 20px;
+	    margin-bottom: 30px;
 	}
 	.acknowledge-wrapper {
 	    padding: 30px;
@@ -121,30 +111,22 @@
 	.applicant-wrapper {
 	   padding: 20px 0px 20px 20px;
 	}
-	.pageTitle.big {
-	    font-size: 16px;
-	    font-weight: bold;
-	}
-	.pink {
-	    color: #c02580;
-	}
 </style>
 <div class="mleft70">
 	<div class="col-12">
 		<div class="pull-left">
 			<p class="pageTitle big pink">INVOICE</p>
 		</div>
-		<!-- <div class="pull-right">	
-			<img src="<%#= asset_path 'printer-outline.png'%>" class="img-responsive" onclick="printReceipt()">
-		</div> -->
+		<div class="pull-right">	
+			<img src="<%= asset_path 'printer-outline.png'%>" class="img-responsive" onclick="printReceipt()">
+		</div>
 		<div class="clearfix"></div>
 	</div>
 	<div class="clearfix"></div>
 	<div class="col-12">
 		<div class="receipt-wrapper">
 						<div class="applicant-wrapper pull-left text-left">
-							<!-- <img src="<%#= asset_path 'embassy-springs.jpg' %>" class="img-responsive"> -->
-							<img src="https://i.imgur.com/c3fcHYs.jpg" class="img-responsive">
+							<img src="<%= asset_path 'embassy-springs.jpg' %>" class="img-responsive">
 						</div>
 						<div class="pull-right text-right payment-details-wrapper">
 							Date: <strong><%= @receipt.created_at.strftime('%d %b %Y') %></strong><br/>
@@ -200,7 +182,7 @@
 									<td><%= @receipt.processed_on %></td>
 									<td><%= @receipt.payment_identifier %></td>
 									<td><%= @receipt.issuing_bank %> - <%= @receipt.issuing_bank_branch %> </td>
-									<td> Rs.<%= @receipt.total_amount.round %></td>
+									<td><%= number_to_indian_currency(@receipt.total_amount.round) %></td>
 								</tr>
 							</table>
 						</div>

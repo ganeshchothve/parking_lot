@@ -34,7 +34,7 @@ html, body{
 	font-family: 'Roboto', sans-serif;
 	overflow-x: hidden;
 	color: #616161;
-	background-color: #f6f6f6;
+	background-color: #f5f6fa;
 }
 a, img, button, input[type=submit]{
 	text-decoration: none;
@@ -283,7 +283,7 @@ section{
 	padding: 20px;
 }
 .purple{
-	color: #5b429c;
+	color: #3980b8;
 }
 .login-card .pageTitle{
 	font-size: 42px;
@@ -361,31 +361,31 @@ section{
 }
 .form-field-wrapper .form-field:focus, .form-field-wrapper select.form-field:focus, .login-card-wrapper .selldof .form-control:focus, .login-card-wrapper .selldof select.form-control:focus, .register-cp .form-group .form-control:focus{
 	outline: none !important;
-    border-bottom: 1px solid #c02580 !important;
+    border-bottom: 1px solid #80b441 !important;
 }
 .form-field-wrapper .form-field:focus::-webkit-input-placeholder, .form-group .form-control:focus::-webkit-input-placeholder {
-    color: #c02580;
+    color: #80b441;
 }
 /* Firefox < 19 */
 .form-field-wrapper .form-field:focus:-moz-placeholder, .form-group .form-control:focus:-moz-placeholder {
-    color: #c02580;
+    color: #80b441;
 }
 /* Firefox > 19 */
 .form-field-wrapper .form-field:focus::-moz-placeholder, .form-group .form-control:focus::-moz-placeholder {
-    color: #c02580;
+    color: #80b441;
 }
 /* Internet Explorer 10 */
 .form-field-wrapper .form-field:focus:-ms-input-placeholder, .form-group .form-control:focus:-ms-input-placeholder{
-    color: #c02580;
+    color: #80b441;
 }
 .pink-button{
 	display: inline-block;
 	padding: 5px 30px;
 	border-radius: 6px;
 	font-size: 16px;
-	background-color: #c02580;
+	background-color: #80b441;
 	color: #fff;
-	text-transform: uppercase;
+	text-transform: capitalize;
 }
 .form-field-wrapper .checkbox .checkmark:after {
     left: 9px;
@@ -422,7 +422,7 @@ section{
 
 /* When the checkbox is checked, add a blue background */
 .form-field-wrapper .checkbox input:checked ~ .checkmark {
-    background-color: #c7589e;
+    background-color: #7fb441;
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */
@@ -465,7 +465,7 @@ section{
     background-color: #616161;
 }
 .part-links a:first-child{
-	color: #c7589e;
+	color: #4f8013;
 	font-weight: 400;
 	font-size: 16px;
 }
@@ -515,8 +515,8 @@ section{
     border-radius: 0px !important;
 }
 .login-card-wrapper .selldof .btn{
-	background-color: #c02580 !important;
-    border-color: #c02580 !important;
+	background-color: #80b441 !important;
+    border-color: #80b441 !important;
     border-radius: 6px !important;
     font-weight: 500;
     font-size: 16px;
@@ -536,6 +536,9 @@ section{
 }
 .pink{
 	color: #c02580
+}
+.green{
+	color: #4f8013;
 }
 .bold{
 	font-weight: 500
@@ -613,8 +616,8 @@ section{
 	top: 15px;
 }
 .dash-menu-wrapper a:hover, .dash-menu-wrapper a.active, .dash-menu-footer a:hover{
-	color: #bf2482;	
-	background-color: #ffedf8;
+	color: #000;	
+	background-color: #edf9de;
 }
 .dash-menu-wrapper .sprite-dasboard{
 	display: inline-block;
@@ -733,7 +736,7 @@ section{
 
 /* When the checkbox is checked, add a blue background */
 .form-field-wrapper .checkbox input:checked ~ .checkmark {
-    background-color: #c7589e;
+    background-color: #80b441;
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */
@@ -749,7 +752,7 @@ section{
 }
 .dashboard-menu .prompts-message{
 	width: 250px;
-	background-color: #bf2482;
+	background-color: #80b441;
 	
 }
 .dashboard-menu .prompts-message li{
@@ -1002,14 +1005,17 @@ section.grey{
     border: 2px solid #ececec;
     border-radius:6px;
     margin: 10px 0px;
+    padding: 30px 0px;
 }
-
+.mtop30{
+	margin-top: 30px;
+}
 .col-2-5{
 	width: 20%;
 	float: left;
 }
 .mediaCentercontent .col-3, .mediaCentercontent .col-2-5{
-	padding: 30px !important;
+	padding: 0px 30px !important;
 	text-align: center;
 }
 .mediaCentercontent .col-3 img, .mediaCentercontent .col-2-5 img{
@@ -1047,7 +1053,7 @@ section.grey{
 }
 .banner-btn {
     display: inline-block;
-    margin: 10px 0px;
+    margin: 0px 0px;
     background-color: #fff;
     color: #c558a1;
     padding: 10px 15px;
@@ -1078,28 +1084,31 @@ section.grey{
     width: 100%;
     left: -100%;
     height: 100%;
-    background-color: #ffecf7;
+    background-color: #89bb50;
     -webkit-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
     z-index: -1;
 }
-.btn-anim:hover, .btn-anim-white:hover{
-	color: #c02680 !important;
-	border:2px solid #c02680;
-}
+
 .btn-anim:hover:before, .btn-anim-white:hover:before {
     left: 0%;
 }
 .pink.banner-btn{
-	background-color: #c02680;
-	color: #fff;
-	margin-bottom: 20px;
+    background-color: #edf9de;
+    color: #89bb50;
+    /*margin-bottom: 20px;*/
+    border: 2px solid;
 }
 .purple-bg{
 	background-color: #a364ec;
 }
 .padding{
 	padding: 50px 0px;
+}
+.btn-anim:hover, .btn-anim-white:hover{
+	color: #fff !important;
+	border:2px solid #89bb50;
+	background-color: #fff;
 }
 .aparment-sold-wrapper{
 	padding: 100px;
@@ -1314,8 +1323,8 @@ section.grey{
 }
 .booking-accordian-wrapper{
 	margin: 20px 0px 0px 0px;
-	padding: 10px 0px;
-	border:2px solid #32a3dd;
+	padding: 0px 0px;
+	border:1px solid #32a3dd;
 	border-radius:6px;
 	cursor: pointer;
 }
@@ -1323,7 +1332,7 @@ section.grey{
 	padding: 10px 20px;
 	background-color: #c3e0ef;
 	background-image: asset-url('inactive_dropdown_arrow_blue.png');
-    background-position: 98% 20px;
+    background-position: 98% 17px;
     background-repeat: no-repeat;
     width: 100%;
 }
@@ -1365,10 +1374,15 @@ section.grey{
 	width: 0px;
 }
 .booking-detail{
-	border:2px solid #cfcfcf;
+	border:1px solid #cfcfcf;
 	padding: 20px;
+	background-color: #fff;
 	border-radius:6px;
 	font-size:18px;
+	margin-bottom: 20px;
+}
+.booking-detail:first-child{
+	margin-top: 20px;
 }
 .booking-detail .title{
 	font-size: 24px;
@@ -1381,6 +1395,9 @@ section.grey{
 }
 .light-pink{
 	background-color: #f8c8e7;
+}
+.light-grey{
+	background-color: #f1f3f5;
 }
 .unit-booking-details{
 	margin: 10px 0px;
@@ -1403,20 +1420,20 @@ section.grey{
     font-size: 14px;
     text-decoration: underline;
     margin: 5px 0px;
-    color: #6b5194;
+    color: #3980b8;
     font-weight: 400;
 }
 .booking-details ul{
 	margin: 0px;
 }
 .payment-btn{
-	background-color: #c02680;
+	background-color: #7fb441;
     color: #fff;
     margin-bottom: 20px;
     padding: 8px 10px;
     font-weight: 500;
     font-size: 18px;
-    border-radius:10px;
+    border-radius:6px;
 }
 .booking-details-wrapper{
 	display: none;
@@ -1523,6 +1540,7 @@ section.grey{
 	background-color: transparent;
 }
 .nav-btn {
+	border-radius: 6px;
     display: inline-block;
     margin: 0px 0px;
     background-color: #c02680;
@@ -1546,12 +1564,11 @@ section.grey{
 	padding: 10px 0px;
 }
 .tower-name-box:hover div, .tower-name-box.active div{
-	background: -webkit-gradient(linear, left top, right top, from(#9165f8), to(#ee61bb));
-    background: linear-gradient(90deg, #9165f8 0%, #ee61bb 100%);
+	background-color: #9dbd2c;
     color: #fff;
 }
 .tower-name-box:hover, .tower-name-box.active{
-	outline: 1px dashed blue;
+	outline: 1px dashed #9dbd2c;
     outline-offset: 5px;	
 }
 .tower-name-box img {
@@ -1588,6 +1605,7 @@ section.grey{
     color: #000;
 }
 .apply-btn{
+	border-radius: 6px;
 	display: inline-block;
     background-color: #d6d6d6;
     color: #323232;
@@ -2366,6 +2384,9 @@ hr.divider {
 	left: -180%;
 	top: 120%;
 
+}
+.booking-btn-wrapper{
+	margin-bottom: 20px;
 }
 @media all and (max-width: 768px){
 	.notification-header .left-wrapper{

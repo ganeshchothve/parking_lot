@@ -37,8 +37,17 @@ class DashboardController < ApplicationController
 
   def receipt_print
     @receipt = Receipt.find(params[:id])
+    respond_to do |format|
+      format.html
+      format.pdf do
+        render  pdf: "Embassy Receipt",
+        template: "dashboard/receipt_print.html.erb",
+        # disposition: 'attachment',
+        title: 'Embassy Receipt'
+      end
+    end
   end
-
+  
   def project_units
     authorize :dashboard, :project_units?
     if params[:stage] == "apartment_selector"

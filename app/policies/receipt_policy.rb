@@ -14,8 +14,6 @@ class ReceiptPolicy < ApplicationPolicy
   def new?
     if user.role?('user')
       user.kyc_ready? && (record.project_unit.blank? || booking_payment?) && user.confirmed?
-    elsif user.role?('crm')
-      false
     else
       record.user_id.present? && record.user.kyc_ready? && (record.project_unit.blank? || booking_payment?) &&  record.user.confirmed?
     end

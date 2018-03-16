@@ -70,6 +70,9 @@ gem 'rest-client', '~> 1.6', '>= 1.6.7'
 
 # phone numbers on users -> model & validation
 gem 'phonelib'
+# generate pdf
+gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

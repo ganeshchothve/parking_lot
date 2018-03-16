@@ -48,7 +48,7 @@
           <div class="clearfix"></div>
         </div> -->
       </div>
-      <div class="booking-detail light-purple">
+      <div class="booking-detail light-grey">
         <div class="title">Payment Details</div>
         <div class="unit-booking-details">
           <div class="col-4">
@@ -79,14 +79,14 @@
           <div class="clearfix"></div>
         </div> -->
       </div>
-      <div class="booking-detail light-pink">
+      <div class="booking-detail">
         <ul>
           <li>You need to pay 9.9% of agreement value to confirm the booking</li>
           <li>You have 7 days remaining to confirm this booking please make remaining payment of Rs. <%= number_to_indian_currency(project_unit.user.total_balance_pending.round()) %></li>
         </ul>
       </div>
       <!-- dashboard/receipts/new?project_unit_id=5aa7816821b83d2f120f3e16 -->
-      <a href="/dashboard/receipts/new?project_unit_id=<%= project_unit.id %>" class="col-12 block pink payment-btn text-center">
+      <a href="/dashboard/receipts/new?project_unit_id=<%= project_unit.id %>" class="pink payment-btn text-center">
         MAKE THE REMAINING PAYMENT
       </a>
       <!-- <a href="/dashboard/make-remaining-payment/<%= project_unit.id %>" class="col-12 block pink payment-btn text-center">

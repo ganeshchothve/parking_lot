@@ -12,10 +12,10 @@
       <div class="col-12 text-left mtop10">
           <p class="pageTitle big pink">ADD USERS</p>
       </div>
-      <div class="col-md-10 border-left-0 border-top-0 border-bottom-0">
+      <div class="col-md-10 border-left-0 border-top-0 border-bottom-0 full-phone">
         <% if @user.role?('user') %>
-        	<script src='http://1.sell.do/t/587ddb2b5a9db31da9000002.js'></script>
-        	<script src="http://1.sell.do/t/forms/587ddb2b5a9db31da9000002/587ddb2f5a9db31da900004b.js" data-form-id="587ddb2f5a9db31da900004b"></script>
+        	<script src='//trkr.scdn1.secure.raxcdn.com/t/531de108a7a03997c3000002.js'></script>
+          <script src='//trkr.scdn1.secure.raxcdn.com/t/forms/531de108a7a03997c3000002/563498849ddc787cd80002a6.js' data-form-id='563498849ddc787cd80002a6'></script>
         <% else %>
           <%= render 'form' %>
         <% end %>
@@ -25,3 +25,8 @@
     </div>
   </div>
 </section>
+<style type="text/css">
+  .full-phone .selldo-intl-tel-input{
+    display: block;
+  }
+</style>
