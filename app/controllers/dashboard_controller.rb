@@ -43,11 +43,20 @@ class DashboardController < ApplicationController
         render  pdf: "Embassy Receipt",
         template: "dashboard/receipt_print.html.erb",
         # disposition: 'attachment',
-        title: 'Embassy Receipt'
+        title: 'Embassy Receipt',
+        save_to_file: Rails.root.join('tmp', "receipt.pdf")
+        ReceiptMailer.send_receipt(@receipt.id).deliver_now
       end
     end
   end
-  
+
+  def receipt_mail
+    # binding.pry
+    @receipt = Receipt.find(params[:id])
+    @project_unit = @receipt.project_unit
+    ReceiptMailer.send_receipt(@project_unit, @receipt.id).deliver
+  end
+
   def project_units
     authorize :dashboard, :project_units?
     if params[:stage] == "apartment_selector"

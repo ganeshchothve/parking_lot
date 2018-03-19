@@ -166,7 +166,7 @@ $(document).ready(function(){
 		window.onbeforeunload = null;
 	});
 
-	$("#user_kyc_form").on("submit", function(e){
+	$(".kyc-details-wrapper #user_kyc_form").on("submit", function(e){
 		window.onbeforeunload = null;
 		ajaxUpdate($(this).serialize(), $(this).attr("action"), function(responseData, responseText){
 			if(responseText == "success"){

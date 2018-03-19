@@ -54,6 +54,7 @@ Rails.application.routes.draw do
   post '/dashboard/get_unit_details', to: 'dashboard#get_unit_details'
   #get '/dashboard/receipt-print/:id', to: 'dashboard#receipt_print'
   get '/dashboard/receipt_print/:id', to: 'dashboard#receipt_print', as: :dashboard_receipt_print
+  get '/dashboard/send_receipt_mail/:id', to: 'dashboard#receipt_mail', as: :dashboard_receipt_mail
 
   match 'payment/:receipt_id/process_payment/:ignore', to: 'payment#process_payment', via: [:get, :post]
 

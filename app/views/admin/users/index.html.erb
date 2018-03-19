@@ -22,7 +22,7 @@
               <th>Phone</th>
               <th>Role</th>
               <th>Account Confirmed?</th>
-              <th><%= labels[:lead_id] %></th>
+              <!-- <th><%#= labels[:lead_id] %></th> -->
               <th class="text-right">Actions</th>
             </tr>
           </thead>
@@ -34,23 +34,28 @@
               <td><%= user.phone %></td>
               <td><%= User.available_roles.find{|x| x[:id] == user.role}[:text] %></td>
               <td><%= user.confirmed_at.present? ? "Confirmed" : "Not confirmed" %></td>
-              <td><%= user.lead_id.present? ? user.lead_id : '-' %></td>
               <td class="text-right">
+                <% if UserPolicy.new(current_user, user).show? %>
+                  <%= link_to "View Details", admin_user_path(user.id)  %>
+                <% end %>
+              </td>
+              <!-- <td><%#= user.lead_id.present? ? user.lead_id : '-' %></td> -->
+              <!-- <td class="text-right">
                 <div class="dropdown">
                   <a class="btn btn-light dropdown-toggle light-pink-btn" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
                   <div class="dropdown-menu dropdown-menu-right">
-                    <% if ReceiptPolicy.new(current_user, Receipt).index?(user) %>
-                      <%= link_to "View #{global_labels['receipts']}", admin_user_receipts_path(user_id: user.id), class: "dropdown-item"  %>
-                    <% end %>
-                    <% if UserKycPolicy.new(current_user, UserKyc).index?(user) %>
-                      <%= link_to "View #{global_labels['user_kycs']}", admin_user_user_kycs_path(user_id: user.id), class: "dropdown-item"  %>
-                    <% end %>
-		    <% if UserPolicy.new(current_user, user).show? %>
-                      <%= link_to "View Details", admin_user_path(user.id), class: "dropdown-item"  %>
-                    <% end %>
+                    <%# if ReceiptPolicy.new(current_user, Receipt).index?(user) %>
+                      <%#= link_to "View #{global_labels['receipts']}", admin_user_receipts_path(user_id: user.id), class: "dropdown-item"  %>
+                    <%# end %>
+                    <%# if UserKycPolicy.new(current_user, UserKyc).index?(user) %>
+                      <%#= link_to "View #{global_labels['user_kycs']}", admin_user_user_kycs_path(user_id: user.id), class: "dropdown-item"  %>
+                    <%# end %>
+		                <%# if UserPolicy.new(current_user, user).show? %>
+                      <%#= link_to "View Details", admin_user_path(user.id), class: "dropdown-item"  %>
+                    <%# end %>
                   </div>
                 </div>
-              </td>
+              </td> -->
             </tr>
             <% end %>
           </tbody>

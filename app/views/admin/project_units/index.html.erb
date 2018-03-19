@@ -1,10 +1,12 @@
+<% if params[:controller] != "admin/users" && params[:action] != "show" %>
 <%= content_for :breadcrumbs do %>
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="<%= after_sign_in_path_for(current_user) %>">Dashboard</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Users</li>
+      <li class="breadcrumb-item active" aria-current="page">Units</li>
     </ol>
   </nav>
+<% end %>
 <% end %>
 <section class="padding-side-22">
 	<div class="container-fluid">

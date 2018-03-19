@@ -2047,6 +2047,9 @@ section.grey{
 .form-check{
 	margin: 20px 0px 0px 0px;
 }
+.show-yes-nri .form-check, .show-yes-nri .form-check>p:first-child{
+	margin-top: 0;
+}
 .form-check label{
 	display: inline-block;
 	padding-right: 20px;
@@ -2387,6 +2390,28 @@ hr.divider {
 }
 .booking-btn-wrapper{
 	margin-bottom: 20px;
+}
+#error_explanation {
+  border: 1px solid #ccc;
+  padding: 7px;
+  padding-bottom: 7px;
+  margin-bottom: 20px;
+  background-color: #fff3cd;
+  border-radius: 6px;
+  h2 {
+    text-align: left;
+    font-weight: bold;
+    padding: 5px 5px 5px 15px;
+    font-size: 12px;
+    margin: -7px;
+    margin-bottom: 0px;
+    background-color: #c00;
+    color: #fff;
+  }
+  ul li {
+    font-size: 12px;
+    list-style: square;
+  }
 }
 @media all and (max-width: 768px){
 	.notification-header .left-wrapper{

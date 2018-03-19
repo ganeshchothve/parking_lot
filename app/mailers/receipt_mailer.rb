@@ -17,7 +17,9 @@ class ReceiptMailer < ApplicationMailer
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
     cc += default_team
-    mail(to: @user.email, cc: cc, subject: "Payment #{@receipt.receipt_id} Successful")
+    # mail(to: @user.email, cc: cc, subject: "Payment #{@receipt.receipt_id} Successful")
+
+    mail(to: "ashish.c@amuratech.com", cc: cc, subject: "Payment #{@receipt.receipt_id} Successful")
   end
 
   def send_clearance_pending receipt_id
@@ -39,5 +41,16 @@ class ReceiptMailer < ApplicationMailer
     cc += default_team
     cc += [@user.email]
     mail(to: crm_team, cc: cc, subject: "Payment #{@receipt.receipt_id} has been collected by channel partner")
+  end
+
+  def send_receipt receipt_id
+    @receipt = Receipt.find(receipt_id)
+    @user = @receipt.user
+    @project_unit = @receipt.project_unit
+    @cp = @user.channel_partner
+    cc = @cp.present? ? [@cp.email] : []
+    cc += default_team
+    cc += [@user.email]
+    mail(to: "ashish.c@amuratech.com", subject: "Payment #{@receipt.receipt_id} Successful")
   end
 end
