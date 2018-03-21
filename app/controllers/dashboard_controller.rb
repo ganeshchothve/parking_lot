@@ -38,13 +38,20 @@ class DashboardController < ApplicationController
   def receipt_print
     @receipt = Receipt.find(params[:id])
     respond_to do |format|
+
+      root = "#{Rails.root}/tmp/"
+      directory = "#{Rails.root}/tmp/pdf"
+      Dir.mkdir(root+'/'+"pdf") if !File.directory?(directory)
+      dir_path = root + "/tmp/pdf"
+      FileUtils.rm_rf Dir.glob(root + "/tmp/pdf/*") if dir_path.present?
+
       format.html
       format.pdf do
         render  pdf: "Embassy Receipt",
         template: "dashboard/receipt_print.html.erb",
         # disposition: 'attachment',
         title: 'Embassy Receipt',
-        save_to_file: Rails.root.join('tmp', "receipt.pdf")
+        save_to_file: Rails.root.join('tmp/pdf', "receipt.pdf")
         ReceiptMailer.send_receipt(@receipt.id).deliver_now
       end
     end
@@ -183,6 +190,43 @@ class DashboardController < ApplicationController
         flash[:notice] = 'We cannot process your request at this time. Please retry'
         format.html { redirect_to dashboard_project_units_path }
       end
+    end
+  end
+
+  def user_profile
+     Rails.logger.info "*************************************************************"
+     Rails.logger.info current_user.id
+     Rails.logger.info "*************************************************************"
+
+     @user = User.find(current_user.id)
+     Rails.logger.info "*************************************************************"
+     Rails.logger.info @user.password
+     Rails.logger.info "*************************************************************"
+
+  end
+
+  def user_update
+    Rails.logger.info params
+
+    Rails.logger.info "*************************************************************"
+    Rails.logger.info params
+    Rails.logger.info "*************************************************************"
+
+    user_params = params['user']
+    user = User.find(user_params[:id])
+    user.email = user_params[:name]
+    user.phone = user_params[:phone]
+    user.password = user_params[:password]
+
+    Rails.logger.info "*************************************************************"
+
+    user.save!
+    Rails.logger.info "*************************************************************"
+
+
+    respond_to do |format|
+      format.html
+      format.json
     end
   end
 
