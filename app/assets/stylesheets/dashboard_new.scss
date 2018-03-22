@@ -793,7 +793,7 @@ section{
 }
 .notification-header .left-wrapper span{
 	vertical-align: middle;
-	display: none;
+	/*display: none;*/
 }
 .notification-header .right-wrapper span{
 	display: inline-block;
@@ -2644,6 +2644,9 @@ hr.divider {
 	}
 }
 @media all and (max-width: 700px){
+	.notification-header .left-wrapper span{
+		display: none;
+	}
 	.hidden-field-prev-prop, .hidden-field.gstin, .nri-fields{
 	  width: 100%;
 	}
