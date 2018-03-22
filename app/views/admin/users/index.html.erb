@@ -9,10 +9,10 @@
 <section class="padding-side-30 padding-xs-user">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-12 text-left mtop10">
+      <div class="col-12 text-left mtop10 padding-0">
           <p class="pageTitle big pink">USERS</p>
       </div>
-      <div class="col-md-10 border border-left-0 border-top-0 border-bottom-0 table-responsive margin-xs-bottom-10">
+      <div class="col-md-10 border border-left-0 border-top-0 border-bottom-0 table-responsive margin-xs-bottom-10 padding-left-0">
         <table class='table striped-table'>
           <thead class="th-default th-pink">
             <% labels = t('mongoid.attributes.user').with_indifferent_access %>
@@ -23,7 +23,7 @@
               <th>Role</th>
               <th>Account Confirmed?</th>
               <!-- <th><%#= labels[:lead_id] %></th> -->
-              <th class="text-right">Actions</th>
+              <th class="text-right"></th>
             </tr>
           </thead>
           <tbody>
@@ -36,7 +36,8 @@
               <td><%= user.confirmed_at.present? ? "Confirmed" : "Not confirmed" %></td>
               <td class="text-right">
                 <% if UserPolicy.new(current_user, user).show? %>
-                  <%= link_to "View Details", admin_user_path(user.id)  %>
+                  <%= link_to "<i class='fas fa-eye'></i> View".html_safe, admin_user_path(user.id), class:'nav-btn'  %>
+
                 <% end %>
               </td>
               <!-- <td><%#= user.lead_id.present? ? user.lead_id : '-' %></td> -->

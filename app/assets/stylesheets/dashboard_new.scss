@@ -793,6 +793,7 @@ section{
 }
 .notification-header .left-wrapper span{
 	vertical-align: middle;
+	display: none;
 }
 .notification-header .right-wrapper span{
 	display: inline-block;
@@ -1345,7 +1346,7 @@ section.grey{
     color: #066a9d;
     position: relative;
     display: inline-block;
-    margin-right: 10px;
+    margin-right: 15px;
     padding-right: 15px;
 }
 .booking-accordian .pull-left:first-child span.title{
@@ -1543,7 +1544,7 @@ section.grey{
 	border-radius: 6px;
     display: inline-block;
     margin: 0px 0px;
-    background-color: #c02680;
+    background-color: #86b825;
     color: #fff;
     padding: 6px 20px;
     font-weight: 500;
@@ -2084,19 +2085,18 @@ section.grey{
     margin: 0px;
 }
 .payment-breakup th {
-    background-color: #e6b7d2;
-    color: #c02680;
+    background-color: #efefef;
+    color: #4c80bd;
     padding: 10px;
     font-size: 16px;
-    font-weight: 400;
-
+    font-weight: 500;
 }
 .reciept-table th{
-	background-color: #e6b7d2;
-    color: #c02680;
+	background-color: #f9f9f9;
+    color: #3981b8;
     font-size: 16px;
-    padding: 5px;
-    font-weight: 400;	
+    padding: 5px 20px;
+    font-weight: 500;	
 }
 .payment-breakup tr td:last-child, .payment-breakup tr th:last-child {
     text-align: right;
@@ -2111,14 +2111,14 @@ section.grey{
 }
 .payment-breakup td, .receipt-table td {
     border-bottom: 0px solid #ccc;
-    padding: 5px;
-    font-size: 16px;
+    padding: 15px;
+    font-size: 14px;
 }
 .payment-table, .payment-breakup{
 	border: 1px solid #ddd;
 }
 .payment-breakup tr:nth-child(odd), .payment-table tr:nth-child(odd) {
-    background: #fff;
+    background: #f9f9f9;
 }
 .payment-breakup td.pink {
     background-color: #e6b7d2;
@@ -2132,9 +2132,14 @@ section.grey{
 .table-wrapper{
 	margin: 20px 0px;
 }
+.th-pink{
+	background-color: #f9f9f9;
+}
 .pageTitle.big{
-	font-size: 24px;
-	font-weight: bold;
+	font-size: 28px;
+    font-weight: 400;
+    margin: 20px 0px;
+    font-family: 'Roboto Condensed', sans-serif;
 }
 hr.divider {
     margin: 20px 0px;
@@ -2150,13 +2155,13 @@ hr.divider {
     font-size: 14px;
 }
 .payment-breakup .nav-btn{
-    display: inline-block;
-    margin: 10px 0px;
-    background-color: #c02680;
+	display: inline-block;
+    background-color: #86b825;
     color: #fff;
-    padding: 8px 20px;
-    font-weight: 600;
+    padding: 5px 20px;
+    font-weight: 500;
     font-size: 16px;
+    vertical-align: top;
 }
 .unit-cancelled{
 	font-size: 14px;
@@ -2413,6 +2418,75 @@ hr.divider {
     list-style: square;
   }
 }
+.hidden-field-prev-prop, .hidden-field.gstin, .nri-fields{
+  width: 50%;
+}
+.w15{
+  width: 15%;
+}
+.striped-table{
+	margin-bottom: 20px;
+}
+.striped-table td{
+	vertical-align: top;
+	text-align: center;
+}
+.striped-table td:last-child{
+	text-align: right;
+}
+.print-btn{
+	border-radius: 6px;
+    display: inline-block;
+    margin: 0px 0px;
+    background-color: #86b825;
+    color: #fff;
+    padding: 5px 10px;
+    font-weight: 500;
+    font-size: 16px;
+    width: 90px;
+    text-align: center;
+}
+.black-font{
+	color: #000;
+}
+.striped-table td{
+	line-height: 24px;
+}
+.striped-table thead th {
+    color: #3981b8;
+    font-weight: 500;
+    border-bottom: 1px solid #dee2e6;
+}
+.striped-table tr:nth-child(odd) {
+    background: #fff;
+}
+.user-profile-wrapper{
+	border-radius: 6px;
+	border: 1px solid #ccc;
+}
+.user-profile-wrapper .pageTitle{
+	font-weight: 400;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 32px;
+    line-height: 46px;
+    color: #000;
+    padding: 20px;
+    border-radius: 6px 6px 0px 0px;
+    background-color: #fff;
+}
+.user-info-wrapper{
+	padding: 20px;
+	background-color: #f6f6f6;
+	border-radius: 0px 0px 6px 6px;
+}
+.fixed-nav-btn{
+	position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    background: #edf9de;
+    padding: 5px 50px 5px 0px;
+}
 @media all and (max-width: 768px){
 	.notification-header .left-wrapper{
 		padding-left: 10px;
@@ -2491,7 +2565,8 @@ hr.divider {
 		font-size: 30px;
 	}
 	.booking-accordian span.title{
-		font-size: 16px;
+		font-size: 14px;
+		line-height: 24px;
 	}
 	.booking-detail .title{
 		font-size: 16px;
@@ -2513,7 +2588,7 @@ hr.divider {
 	}
 	.tower-name-wrapper .col-3{
 		width: 50%;
-		margin-bottom: 20px;
+		margin-bottom:0px;
 	}
 	.filter-item-wrapper .col-12-5{
 		width: 50%;
@@ -2569,6 +2644,9 @@ hr.divider {
 	}
 }
 @media all and (max-width: 700px){
+	.hidden-field-prev-prop, .hidden-field.gstin, .nri-fields{
+	  width: 100%;
+	}
 	.register-cp .col-6{
 		width: 100%;
 	}
@@ -2607,10 +2685,18 @@ hr.divider {
 		font-size: 20px;
 	}
 	.notification-header .right-wrapper span{
-		display: none;
+		padding: 0px 0px;
+		padding-left: 10px;
+		margin-left: 10px;
+		border-left:1px solid #fff;
+		line-height: 28px;
 	}
 	.burger-menu{
-		margin-top: 5px;
+		padding-top: 5px;
+		float: right;
+		margin-left: 10px;
+	    padding-left: 10px;
+	    border-left: 1px solid #fff;
 	}
 	.burger-menu span{
 	    display: block !important;
@@ -2629,6 +2715,7 @@ hr.divider {
     	background-position: 20px -25px;
     	border-right:0px;
     	border-left: 0px;
+    	padding: 0 22px;
 	}
 	.cancel-booking-wrapper .form-field-wrapper .form-field{
 		width: 100%;
@@ -2636,7 +2723,7 @@ hr.divider {
 	.notification-header .subTitle {
 	    vertical-align: middle;
 	    display: inline-block;
-	    font-size: 18px;
+	    font-size: 16px;
 	    line-height: 24px;
 	    padding-right: 0px;
 	    margin-right: 0px;
@@ -2713,7 +2800,7 @@ hr.divider {
 		padding-left: 15px;
 	}
 	.mediaCenterAccordion > li > span{
-		background-position: 98% 14px;
+		background-position: 98% 24px;
 	}
 	.aparment-sold-wrapper .apartment-count-box-wrapper{
 		width: 100%;
@@ -2771,13 +2858,20 @@ hr.divider {
 	.notification-dropdown-wrapper{
 		width: 275px;
 		top: 55px;
+		left: -100px;
 	}
 	.notification-count{
 		top: 0px;
+		left: 65%;
+		padding: 0 5px;
+		font-size: 10px;
+		line-height: 16px;
+
 	}
 	.mediaCentercontent .col-3, .mediaCentercontent .col-2-5{
 		width: 100%;
 		min-height: auto;
+		margin-bottom: 50px;
 	}
 	.mediaCentercontent .col-3 .caption:before{
 		right: 50%;
@@ -2807,7 +2901,7 @@ hr.divider {
 		border-radius: 5px;
 	}
 	.booking-accordian-wrapper{
-		padding: 10px 0px;
+		padding: 0px 0px;
 	}
 	.booking-detail .title{
 		font-size: 16px;
@@ -2871,8 +2965,7 @@ hr.divider {
 		font-size: 12px;
 	}
 	.breadcrumbs-wrapper {
-	    margin-bottom: 0px;
-	    margin-top: 20px;
+	    margin: 20px 0px;
 	}
 	.apartment-selector-wrapper .title{
 		font-size: 16px;
@@ -2893,16 +2986,17 @@ hr.divider {
 	.nav-btn {
 		display: block;
 		text-align: center;
+		margin-top: 10px;
 	}
 	.tower-name-box{
 		text-align: left;
-		margin-bottom: 20px;
+		margin-bottom: 0px;
 	}
 	.tower-name-wrapper .col-3{
 		width: 100%;
 	}
 	.tower-name-box img{
-		width: 80px;
+		width: 60px;
 		vertical-align: top;
 		display: inline-block;
 		margin: 10px;
@@ -2937,7 +3031,7 @@ hr.divider {
 	    position: absolute;
 	    width: 100%;
 	    left: 0px;
-	    top: 145px;
+	    top: 155px;
 	    z-index: 9999;
 	    background-color: #fff;
 	    padding: 10px 15px;
@@ -2959,7 +3053,9 @@ hr.divider {
 	}
 	.main-building{
 		width: 100%;
+		margin: 30px 0px;
 	}
+
 	.show-unit-details-wrapper {
 	    width: 100%;
 	    padding-left: 0px;
@@ -3119,6 +3215,7 @@ hr.divider {
 	}
 	.reciept-table th{
 		font-size: 12px;
+
 	}
 	.payment-table.table td:first-child, .payment-table.table td:nth-child(3){
 		word-break:normal;
@@ -3228,6 +3325,38 @@ hr.divider {
 	}
 	.register-cp .form-group .intl-tel-input {
 	    width: 100%;
+	}
+	.steps-wrapper h1{
+		font-size: 28px;
+		line-height: 38px;
+	}
+	.mediaCentercontent .col-3 .caption, .mediaCentercontent .col-2-5 .caption{
+		padding-left: 0px;
+		font-size: 16px;
+		text-align: center;
+	}
+	.mediaCentercontent .col-3 .caption:after, .mediaCentercontent .col-2-5 .caption:after{
+		width: 0px;
+	}
+	.fixed-nav-btn {
+	    position: fixed;
+	    bottom: 50px;
+	    left: 0px;
+	    width: 100%;
+	    background: #edf9de;
+	    padding: 5px 0px 5px 0px;
+	}
+	.save-btn{
+		margin-top: 10px;
+	}
+	.table-wrapper table{
+		width: 800px;
+	}
+	.form-field-wrapper .nav-btn{
+		display: inline-block;
+	}
+	.receipt-table-wrapper {
+	    padding: 30px 30px 0px 0px;
 	}
 }
 

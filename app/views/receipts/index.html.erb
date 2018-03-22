@@ -15,7 +15,7 @@
 <section class="main-wrapper">
   <div class="container-fluid">
     <div class="col-12 padding-xs-left-10">
-      <div class="col-12 text-left mtop10 padding-xs-0">
+      <div class="text-left mtop10 padding-xs-0">
           <p class="pageTitle big pink">PAYMENTS</p>
       </div>
       <div class="clearfix"></div>
@@ -39,7 +39,7 @@
                 <% else %>  
                   <h2 class="subTitle pink">No Payments Made</h2>
                 <% end %>
-                <%= link_to "Add Blocking #{global_labels['receipt']}", new_admin_user_receipt_path(@user), class: 'btn btn-primary' %>
+                <%= link_to "Add Blocking #{global_labels['receipt']}", new_admin_user_receipt_path(@user), class: 'btn btn-primary nav-btn' %>
               <% end %>
               <% if UserPolicy.new(current_user, User).export? && @user.blank? %>
                 <%= link_to "Export all #{global_labels['receipts']}", export_admin_receipts_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn' %>

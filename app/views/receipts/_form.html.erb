@@ -77,6 +77,7 @@
                 </div>
                 <div class="col-md-6">
                   <div class="form-group position-relative">
+
                     <%= f.label :issued_date, class: 'control-label label-required' %>
                     <%= f.text_field :issued_date, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.issued_date.present? ? f.object.issued_date.strftime("%d/%m/%Y") : '', "data-max-date": Date.today.strftime("%d/%m/%Y"), disabled: (policy(@receipt).editable_field?("issued_date") ? false : true), value: f.object.issued_date.present? ? f.object.issued_date.strftime("%d/%m/%Y") : "" %>
                   </div>
@@ -86,11 +87,11 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <% if f.object.project_unit_id.present? %>
-                      <%= f.label :project_unit_id, class: 'control-label' %>
+                      <%= f.label :project_unit_id, class: 'control-label' %><a href="<%= asset_path 'fp-type-2.jpg'%>" class="colorbox-init small-link" style="font-size:12px;">Master Layout</a>
                       <div><%= f.object.project_unit.name %></div>
                       <%= f.hidden_field :project_unit_id %>
                     <% else %>
-                      <%= f.label :reference_project_unit_id, class: 'control-label' %>
+                      <%= f.label :reference_project_unit_id, class: 'control-label' %><a href="<%= asset_path 'fp-type-2.jpg'%>" class="colorbox-init small-link" style="font-size:12px;">Master Layout</a>
                       <%= f.select :reference_project_unit_id, f.object.reference_project_unit.present? ? [[f.object.reference_project_unit.name, f.object.reference_project_unit.id]] : [], {prompt: true}, class: 'selectize-remote', autofocus: true, disabled: (policy(@receipt).editable_field?("reference_project_unit_id") ? false : true), "data-url": admin_project_units_path, "data-params": {fltrs: {status: 'available'}}.to_json, 'data-ds': 'ds' %>
                     <% end %>
                   </div>
@@ -112,8 +113,9 @@
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
+                    <% tomorrow = Date.today+1%>
                     <%= f.label :processed_on, class: 'control-label' %>
-                    <%= f.text_field :processed_on, class: 'form-control datepicker', "data-default-date": f.object.processed_on.present? ? f.object.processed_on.strftime("%d/%m/%Y") : '', "data-max-date": Date.today.strftime("%d/%m/%Y"), value: f.object.processed_on.present? ? f.object.processed_on.strftime("%d/%m/%Y") : "" %>
+                    <%= f.text_field :processed_on, class: 'form-control datepicker', "data-default-date": f.object.processed_on.present? ? f.object.processed_on.strftime("%d/%m/%Y") : '', "data-max-date": tomorrow.strftime("%d/%m/%Y"), value: f.object.processed_on.present? ? f.object.processed_on.strftime("%d/%m/%Y") : "" %>
                   </div>
                 </div>
               </div>

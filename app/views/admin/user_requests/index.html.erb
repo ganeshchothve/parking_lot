@@ -1,14 +1,14 @@
 <%= render 'breadcrumbs', {user_request: @user_request, user: @user} %>
-<section class="padding-side-30">
+<section class="padding-side-30 main-wrapper">
 	<div class="container-fluid">
 		<div class="row">
-		  <div class="col-12 text-left mtop10">
+		  <div class="col-12 text-left mtop10 padding-0">
 	          <p class="pageTitle big pink">CANCELLATION REQUEST</p>
 	      </div>
-		  <div class="col-md-10 border border-left-0 border-top-0 border-bottom-0 table-responsive margin-xs-right-15">
+		  <div class="col-md-10 border border-left-0 border-top-0 border-bottom-0 table-responsive margin-xs-right-15 padding-left-0">
 		    <%= render 'index', {user_requests: @user_requests} %>
 		    <% if UserRequestPolicy.new(current_user, UserRequest.new(user: @user)).new? %>
-		      <%= link_to "Add #{global_labels['user_request']}", new_user_user_request_path, class: 'btn btn-primary' %>
+		      <%= link_to "Add #{global_labels['user_request']}", new_user_user_request_path, class: 'btn btn-primary nav-btn' %>
 		    <% end %>
 		  </div>
 		  <div class="col-md-2">

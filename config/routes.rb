@@ -22,7 +22,7 @@ Rails.application.routes.draw do
     get 'export', action: 'export', on: :collection, as: :export
   end
   namespace :admin do
-    resources :receipts, only: [:index], controller: '/receipts' do
+    resources :receipts, only: [:index, :show], controller: '/receipts' do
       get 'export', action: 'export', on: :collection, as: :export
     end
     resources :project_units, only: [:index]
@@ -40,6 +40,8 @@ Rails.application.routes.draw do
     resources :user_requests, except: [:destroy], controller: 'user_requests'
   end
 
+  post '/dashboard/user_update', to: 'dashboard#user_update'
+  get '/dashboard/user_profile', to: 'dashboard#user_profile'
   get '/dashboard/make-remaining-payment/:project_unit_id', to: 'dashboard#make_remaining_payment'
   get '/dashboard/booking-details', to: 'dashboard#booking_details'
   get '/dashboard/cancel-booking', to: 'dashboard#cancel_booking'

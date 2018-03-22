@@ -27,7 +27,8 @@
 //= require daterangepicker
 //= require fontawesome-all
 //= require bootstrap-datetimepicker.min
-
+//= require jquery.colorbox-min
+//= require jquery.zoom.min
 //= require utils
 //= require file-icon
 //= require form-initializer
@@ -39,3 +40,16 @@ $.ajaxSetup({
     'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
   }
 });
+$(document).ready(function(){
+	setTimeout(function(){
+		$("div.notice, div.alert").fadeOut();
+	}, 3000);
+
+	$(".colorbox-init").colorbox({
+		maxWidth: "90%",
+		maxHeight: "90%",
+		onComplete: function(){
+			$('#cboxLoadedContent').zoom();
+		}
+	});
+})

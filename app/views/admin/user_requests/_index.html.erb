@@ -1,4 +1,4 @@
-<table class='table striped-table'>
+<table class='table striped-table payment-breakup' width="100%" cellpadding="10" cellspacing="0">
   <thead class="th-default th-pink">
     <% labels = t('mongoid.attributes.user_request').with_indifferent_access %>
     <tr>
@@ -21,7 +21,7 @@
           <a class="btn btn-light light-pink-btn dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
           <div class="dropdown-menu dropdown-menu-right">
             <% if UserRequestPolicy.new(current_user, user_request).edit? %>
-              <%= link_to 'Edit', edit_admin_user_user_request_path(user_request.user_id, user_request), class: 'dropdown-item' %>
+              <%= link_to 'Edit', edit_admin_user_user_request_path(user_request.user_id, user_request), class: 'dropdown-item nav-btn' %>
             <% end %>
           </div>
         </div>

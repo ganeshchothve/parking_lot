@@ -48,7 +48,7 @@ class ReceiptPolicy < ApplicationPolicy
     if record.new_record? || record.status == 'pending'
       attributes += [:payment_mode]
     end
-    if user.role?('user') || (record.user_id.present? && record.user.project_unit_ids.present?) && record.status == 'pending'
+    if user.role?('user') || user.role?('channel_partner') || (record.user_id.present? && record.user.project_unit_ids.present?) && record.status == 'pending'
       attributes += [:project_unit_id]
     end
     if !user.role?('user') && record.user_id.present? && record.status == 'pending'

@@ -3,14 +3,15 @@ class Admin::ProjectUnitsController < AdminController
   before_action :set_project_unit, except: [:index]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: :index
-
+  include ApplicationHelper
   layout :set_layout
 
   def index
     @project_units = ProjectUnit.build_criteria(params).paginate(page: params[:page] || 1, per_page: 15)
     respond_to do |format|
       if params[:ds].to_s == 'true'
-        format.json { render json: @project_units.collect{|pu| {id: pu.id, name: "Tower: #{pu.project_tower_name} Beds: #{pu.bedrooms} Floor: #{pu.floor} Name: #{pu.name} - Booking Amount: Rs. #{pu.booking_price}"}} }
+        format.json { render json: @project_units.collect{|pu| {id: pu.id, name: "#{pu.project_tower_name} | #{pu.name} | #{pu.bedrooms}BHK | #{pu.carpet} Sq.Ft. | #{number_to_indian_currency(pu.booking_price.round)}"}} }
+        # format.json { render json: @project_units.collect{|pu| {id: pu.id, name: "Tower: #{pu.project_tower_name} Beds: #{pu.bedrooms} Floor: #{pu.floor} Name: #{pu.name} - Booking Amount: Rs. #{pu.booking_price}"}} }
         format.html {}
       else
         format.json { render json: @project_units }

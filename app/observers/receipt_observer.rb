@@ -42,6 +42,7 @@ class ReceiptObserver < Mongoid::Observer
     # Send email to customer
     if receipt.status_changed?
       if receipt.status == 'success'
+        # TODO : Sell.Do Receipt
         mailer = ReceiptMailer.send_success(receipt.id.to_s)
         if Rails.env.development?
           mailer.deliver
@@ -54,6 +55,7 @@ class ReceiptObserver < Mongoid::Observer
           SMSWorker.perform_async("", "")
         end
       elsif receipt.status == 'failed'
+        # TODO : Sell.Do Receipt
         mailer = ReceiptMailer.send_failure(receipt.id.to_s)
         if Rails.env.development?
           mailer.deliver

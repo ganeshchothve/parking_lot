@@ -43,8 +43,10 @@ class ChannelPartnersController < ApplicationController
       if @channel_partner.save
          ChannelPartnerMailer.send_create(@channel_partner.id).deliver
         format.html { redirect_to (user_signed_in? ? channel_partners_path : root_path), notice: 'Channel partner was successfully created.' }
+        format.json { render json: @channel_partner, status: :created, location: @channel_partner }
       else
         format.html { render :new }
+        format.json { render json: {errors: @channel_partner.errors.full_messages.uniq}, status: :unprocessable_entity }
       end
     end
   end

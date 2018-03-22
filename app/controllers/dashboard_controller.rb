@@ -39,11 +39,11 @@ class DashboardController < ApplicationController
     @receipt = Receipt.find(params[:id])
     respond_to do |format|
 
-      root = "#{Rails.root}/tmp/"
-      directory = "#{Rails.root}/tmp/pdf"
-      Dir.mkdir(root+'/'+"pdf") if !File.directory?(directory)
-      dir_path = root + "/tmp/pdf"
-      FileUtils.rm_rf Dir.glob(root + "/tmp/pdf/*") if dir_path.present?
+      # root = "#{Rails.root}/tmp/"
+      # directory = "#{Rails.root}/tmp/pdf"
+      # Dir.mkdir(root+'/'+"pdf") if !File.directory?(directory)
+      # dir_path = root + "/tmp/pdf"
+      # FileUtils.rm_rf Dir.glob(root + "/tmp/pdf/*") if dir_path.present?
 
       format.html
       format.pdf do

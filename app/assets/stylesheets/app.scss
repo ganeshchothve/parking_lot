@@ -1,3 +1,6 @@
+/*
+*= require colorbox
+*/
 @import "bootstrap";
 @import "intlTelInput";
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,500');
@@ -26,10 +29,14 @@ label.label-required:after {
   @extend .btn;
   @extend .btn-primary;
 }
+a:focus{
+  border: 0px;
+  outline: 0px;
+}
 label.control-label{
   font-size: 11px;
-  color: #999;
-  text-transform: uppercase;
+  color: #616161;
+  /*text-transform: uppercase;*/
   margin-bottom: 0;
   line-height: 11px;
 }
@@ -54,16 +61,17 @@ label.control-label{
 .payment-table.table td {
     word-break: break-all;
     font-size: 14px;
+    vertical-align: top;
 }
 .summary-wrapper{
   padding:0px 0px 30px 0px;
 }
 .summary-wrapper .card-body h2{
   font-size: 60px;
-  font-weight: bold;
+  font-weight: 500;
 }
 .summary-wrapper .card-body h2.pink, .summary-wrapper .card-body h6.pink, .summary-wrapper .card-body a.pink{
-  color: #c02680;
+  color: #4c80bd;
 }
 .bold{
   font-weight: bold;
@@ -104,8 +112,8 @@ label.control-label{
   padding-left: 25px !important;
 }
 .navbar-nav .nav-item:hover .nav-link{
-  background-color: #fdecf7 !important;
-  color: #ce2691 !important;
+  background-color: #edf9de !important;
+  color: #89bb50 !important;
 }
 .navbar-light .navbar-nav .nav-link{
   color: #383838 !important;
@@ -117,24 +125,24 @@ label.control-label{
 .mt0{
   margin-top: 0px;
 }
-.padding0{
+/*.padding0{
   padding: 0px;
+}*/
+.breadcrumb {
+    margin-bottom: 0px;
+    margin: 0px 30px;
+    background-color: transparent;
+    margin-top: 110px;
+    color: #3980b8;
+    border-radius: 0px;
+    font-size: 12px;
+    background-color: #f6f6f6;
+    border-radius: 6px;
 }
-.breadcrumb{
-  margin-bottom: 0px;
-  padding: 0px 40px;
-  background-color: transparent;
-  margin-top: 110px;
+.breadcrumb-item a, .breadcrumb-item + .breadcrumb-item::before{
   color: #3980b8;
-  /*background:-webkit-linear-gradient(90deg, rgba(145,101,248,1) 0%, rgba(238,97,187,1) 100%);
-  background:-o-linear-gradient(90deg, rgba(145,101,248,1) 0%, rgba(238,97,187,1) 100%);
-  background:-moz-linear-gradient(90deg, rgba(145,101,248,1) 0%, rgba(238,97,187,1) 100%);
-  background:linear-gradient(90deg, rgba(145,101,248,1) 0%, rgba(238,97,187,1) 100%);*/
-  border-radius: 0px;
 }
-.breadcrumb-item a, .breadcrumb-item.active, .breadcrumb-item + .breadcrumb-item::before{
-  color: #3980b8;
-}
+
 .notification-header{
   z-index: 333;
   width: 100%;
@@ -270,24 +278,40 @@ label.control-label{
     padding: 6px 20px;
     font-weight: 500;
     font-size: 16px;
+    border:1px solid transparent;
 }
+.table .nav-btn{
+    border:1px solid transparent;
+      border-radius: 6px;
+    display: inline-block;
+    margin: 0px 0px;
+    background-color: #86b825;
+    color: #fff;
+    padding: 5px 10px;
+    font-weight: 500;
+    font-size: 16px;
+    width: 90px;
+    text-align: center;
+}
+
 .th-pink{
-  background-color: #fdecf7;
+  background-color: #f9f9f9;
 }
 .striped-table tr:nth-child(even){
-    background: #f1f1f1;
+    background: #f9f9f9;
 }
 .striped-table thead th{
-  color: #ce2691;
+  color: #3981b8;
   font-weight: 500;
 }
 .table th, .table td{
-  vertical-align: middle;
+  vertical-align: top;
+  padding: 1.4rem 0.95rem;
 }
 .pink-btn{
   color: #fff;
-  background-color: #c02780 !important;
-  border-color: #c02780 !important;
+  background-color: #80b441 !important;
+  border-color: #80b441 !important;
   border-radius: 0px;
   font-size: 14px;
   text-transform: uppercase;
@@ -297,32 +321,33 @@ label.control-label{
   box-shadow: 0 0 0 0rem rgba(0, 123, 255, 0) !important;
 }
 .pink-btn:not([disabled]):not(.disabled):active, .show > .pink-btn.dropdown-toggle, .pink-btn:hover{
-  color: #cf29af !important;
+  color: #80b441 !important;
   background-color: #fff !important;
-  border-color: #cf29af !important;
+  border-color: #80b441 !important;
 }
 .dropdown-item.active, .dropdown-item:active{
-  background-color: #cf29af;
+  background-color: #80b441;
+  color: #fff;
 }
 .pageTitle.big {
     font-size: 28px;
     font-weight: 400;
-    margin-top: 20px;
+    margin: 20px 0px;
     font-family: 'Roboto Condensed', sans-serif;
 }
 .pink{
   color: #cf29af;
 }
 .light-pink-btn{
-  background-color: #fdecf7;
-  color: #ce2691;
-  border-color: #ce2691;
+  background-color: #edf9de;
+  color: #80b441;
+  border-color: #80b441;
   border-radius: 0px;
 }
 .light-pink-btn:hover, .show > .light-pink-btn.dropdown-toggle{
   background-color: #fff;
-  color: #ce2691;
-  border-color: #ce2691;
+  color: #80b441;
+  border-color: #80b441;
 }
 .pagination{
   display: block;text-align: center;
@@ -339,13 +364,15 @@ label.control-label{
   padding: 0 12px;
 }
 .title{
-    font-size: 24px;
-    font-weight: bold;
-    margin-top: 20px;
+    font-size: 28px;
+    font-weight: 500;
+    margin: 20px 20px;
     color: #cf29af;
+    font-family: 'Roboto Condensed', sans-serif;
 }
 
 .radio {
+  font-size: 14px;
     display: inline-block;
     position: relative;
     padding-left: 25px;
@@ -450,7 +477,7 @@ label.control-label{
     z-index: 3;
     width: 100%;
     padding: 0px 0px;
-    padding-left: 210px;
+    padding-left: 220px;
 }
 .gradient-bg {
     background: -webkit-gradient(linear, left top, right top, from(#9165f8), to(#ee61bb));
@@ -468,17 +495,18 @@ label.control-label{
 .card-header{
   font-size: 28px;
   font-family: 'Roboto Condensed', sans-serif;
-  color: #c02680;
+  color: #4c80bd;
 }
 .card-header a{
+  padding: 5px;
   font-size: 14px;
   font-weight: normal;
-  color: #c02680;
+  color: #3981b8;
   background-color: #fff;
   vertical-align: middle;
 }
 .card-header{
-  background-color: #fdecf7;
+  background-color: #f1f1f1;
   border: 0px;
 }
 .border0{
@@ -488,9 +516,9 @@ label.control-label{
   -webkit-box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
   box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
 }
-.padding0{
+/*.padding0{
   padding: 0px;
-}
+}*/
 .padding-side-30{
   padding: 0 30px;
 }
@@ -526,36 +554,119 @@ label.control-label{
 
 .selldof [type='submit'].btn, .selldof [type='submit'].btn:hover, .sell_do_ctc_btn[type='submit']:hover, .sell_do_verify_btn[type='submit']:hover, .btn-primary, .selldof [type='submit'].btn, .selldof [type='submit'].sell_do_ctc_btn, .selldof [type='submit'].sell_do_verify_btn, .sell_do_ctc_btn[type='submit'], .sell_do_verify_btn[type='submit']{
     color: #fff !important;
-    background-color: #c02780 !important;
-    border-color: #c02780 !important;
+    background-color: #80b441 !important;
+    border-color: #80b441 !important;
     border-radius: 0px !important;
     text-transform: uppercase !important;
     font-size: 14px !important;
 }
 label.control-label{
   font-size: 14px;
-  color: #383838;
+  color: #616161;
   line-height: 20px;
+}
+.hidden-field-prev-prop, .hidden-field.gstin, .nri-fields{
+  width: 50%;
+}
+.crm-wrapper{
+  padding: 150px 40px 0 40px;
+}
+.w15{
+  width: 15%;
+}
+.fa-eye{
+  color: #fff !important;
+}
+.black-font{
+  color: #000;
+}
+.striped-table td{
+  line-height: 24px;
+}
+.alert{
+   position: fixed;
+    padding: 0.6rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 0;
+    top: 87px;
+    left: 250px;
+    right: 0px;
+    z-index: 99;
+    color: #fff;
+    text-align: center;
+}
+div.notice{
+background-color: #b95555;
+}
+
+div.alert{
+background-color: #349e63;
+}
+.padding-0{
+  padding: 0px;
+}
+.padding-left-0{
+  padding-left: 0px;
+}
+.user-profile-wrapper{
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+.user-profile-wrapper .pageTitle{
+  font-weight: 400;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 32px;
+    line-height: 46px;
+    color: #000;
+    padding: 20px;
+    border-radius: 6px 6px 0px 0px;
+    background-color: #fff;
+}
+.user-info-wrapper{
+  padding: 20px;
+  background-color: #f6f6f6;
+  border-radius: 0px 0px 6px 6px;
+}
+.user-name:hover{
+  color: #fff;
+  text-decoration: none;
+}
+.padding-bottom30{
+  padding-bottom: 30px;
+}
+.padding-side-22 .col-md-2.float-right form, .padding-xs-left-10 .col-md-2 form, .padding-side-30 .col-md-2 form{
+  background-color: #edf9de;
+  padding: 10px;
+}
+.padding-side-22 .col-md-2.float-right label.control-label ,.padding-xs-left-10 .col-md-2 label.control-label , .padding-side-30 .col-md-2 label.control-label {
+  text-transform: capitalize;
+  /*color: #f1f1f1;*/
 }
 @media all and (max-width: 1366px){
   .padding-side-30 {
-      padding: 0 0px;
+      padding: 0 30px;
   }
   .table th, .table td{
-    padding: 5px;
+    padding: 20px;
     font-size: 14px;
+    vertical-align: top;
   }
   .card-body h6{
     font-size: 14px;
   }
 }
 @media all and (max-width: 768px){
+  .hidden-field-prev-prop, .hidden-field.gstin, .nri-fields{
+    width: 100%;
+  }
   .navbar{
     width: 100%;
     height: auto;
   }
   .notification-header{
-    display: none;
+    padding-left: 0px;
+    top: 84px;
   }
   .center-section{
     padding-left: 0px;
@@ -655,5 +766,70 @@ label.control-label{
   }
   .dropdown-toggle.pink-btn{
     margin-right: 10px;
+  }
+  .navbar-toggler:focus {
+    outline: 0px;
+  }
+  .alert{
+    left: 0px;
+  }
+  .breadcrumb{
+    margin: 0px 0px;
+    margin-top: 75px;
+  }
+  .table th, .table td{
+    padding: 10px;
+  }
+  .notification-header .right-wrapper span{
+    padding: 10px 10px;
+  }
+  .dashboard-notify{
+    background-position: 15px -15px;
+    height: 50px;
+    border-left: 0px;
+    padding: 0 30px;
+  }
+  .notification-header .left-wrapper{
+    margin-top: 0px;
+    padding-left: 0px;
+  }
+  .notification-header .left-wrapper span.f16{
+    display: none;
+  }
+  .notification-header .subTitle{
+    padding-right: 0px;
+    margin-right: 0px;
+    border-right: 0px;
+    font-size: 18px;
+    line-height: 50px;
+  }
+  .notification-count{
+    line-height: 5px;
+    padding: 5px;
+    font-size: 10px;
+  }
+  .card{
+    margin-top: 20px;
+  }
+  .card label.control-label{
+    color: #000;
+  }
+  .table-wrapper{
+    overflow-x:scroll;
+  }
+  .table-wrapper table, .table-responsive table, .card-body table{
+    width: 800px;
+  }
+  .crm-wrapper {
+      padding: 50px 0px 0 0px;
+  }
+  .border {
+    border: 0px solid #e9ecef !important; 
+  }
+  .pagination{
+    margin: 20px 0px;
+  }
+  .striped-table thead th{
+    width: 25%;
   }
 }

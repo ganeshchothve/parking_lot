@@ -131,9 +131,33 @@
     </div>
   </div>
 <% end %>
+<div class="cp-thankyou text-center" style="display: none;">
+  Thank you for registering with us. Please note that Embassy Property Developments Private Limited / [or any other company] will not be liable to pay commission to you on bookings, if you are not a registered Real Estate Agent under the RERA Act, 2016 read with the Karnataka Real Estate (Regulation and Development) Rules 2017.
+</div>
 <div class="clearfix"></div>
+<style type="text/css">
+  .cp-thankyou{
+    color: #4f8012;
+    font-size: 18px;
+    line-height: 28px;
+    padding: 0 20px;
+  }
+</style>
 <%= javascript_tag do %>
 $(document).ready(function(){
   FormInitializer.init($("#channel_partner_form"));
+  $(".register-cp #channel_partner_form").on("submit", function(e){
+    ajaxUpdate($(this).serialize(), $(this).attr("action"), function(responseData, responseText){
+      console.log(responseData);
+      if(responseText == "success"){
+        $("#channel_partner_form").hide();
+        $(".cp-thankyou").show();
+      } else {
+        notify(responseData.responseJSON.errors, "error", 3000, 300);
+        $("#channel_partner_form input[type=submit]").removeAttr("disabled");
+      }
+    });
+    e.preventDefault();
+  });
 });
 <% end %>

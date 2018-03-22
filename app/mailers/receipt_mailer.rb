@@ -51,7 +51,7 @@ class ReceiptMailer < ApplicationMailer
     cc = @cp.present? ? [@cp.email] : []
     cc += default_team
     cc += [@user.email]
-    attachments["receipt.pdf"] = File.read("#{Rails.root}/tmp/pdf/receipt.pdf")
+    mail.attachments["receipt.pdf"] = File.read("#{Rails.root}/tmp/pdf/receipt.pdf")
     mail(to: "ashish.c@amuratech.com", subject: "Payment #{@receipt.receipt_id} Successful")
   end
 end

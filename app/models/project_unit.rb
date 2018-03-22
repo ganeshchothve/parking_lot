@@ -206,7 +206,9 @@ class ProjectUnit
   end
 
   def sync_with_selldo
-    # TODO: write the actual code here
+    # TODO: Sell.Do write the actual code here
+    # if status == 'booked_tentative' || status == 'booked_confirmed' || status == 'available' update_project_unit_status
+    # if status == 'blocked' add_booking
     selldo_response_status = 200
     return (selldo_response_status == 200)
   end
