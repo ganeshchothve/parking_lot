@@ -80,7 +80,15 @@ Rails.application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
-  config.action_mailer.smtp_settings = ENV_CONFIG[:smtp]
+  config.action_mailer.smtp_settings = {
+      user_name: "amuratech",
+  password: "tech0liX",
+  domain: "amuratech.com",
+  address: "smtp.sendgrid.net",
+  port: 587,
+  authentication: :plain,
+  enable_starttls_auto: true
+  }
 
   # Use a different logger for distributed setups.
   # require 'syslog/logger'

@@ -52,6 +52,17 @@ class Admin::UsersController < AdminController
     end
   end
 
+  def update
+    @user.assign_attributes(permitted_attributes(@user))
+    respond_to do |format|
+      if @user.save
+        format.html { redirect_to edit_admin_user_path(@user), notice: 'User Profile updated successfully.' }
+      else
+        format.html { render :edit }
+      end
+    end
+  end
+
   private
   def set_user
     @user = User.find(params[:id])

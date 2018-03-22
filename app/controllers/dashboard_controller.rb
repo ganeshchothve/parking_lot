@@ -133,7 +133,7 @@ class DashboardController < ApplicationController
       authorize(Receipt.new(user: current_user), :new?)
     end
     if @receipt.payment_type == "blocking"
-      @receipt.payment_gateway = 'CCAvenue'
+      @receipt.payment_gateway = 'Razorpay'
     else
       @receipt.payment_gateway = 'Razorpay'
     end
@@ -176,7 +176,7 @@ class DashboardController < ApplicationController
     # TODO: get a lock on this model. Nobody can modify it.
     respond_to do |format|
       # TODO: handle this API method for other status updates. Currently its assuming its a hold request
-      Rails.logger.info "======#{hold_on_third_party_inventory}========"
+      # Rails.logger.info "======#{hold_on_third_party_inventory}========"
       case hold_on_third_party_inventory
       when 'hold'
         format.html { redirect_to dashboard_checkout_path(project_unit_id: @project_unit.id) }

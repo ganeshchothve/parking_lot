@@ -59,7 +59,7 @@ class ReceiptsController < ApplicationController
     @receipt.creator = current_user
     @receipt.assign_attributes(permitted_attributes(@receipt))
     if @receipt.payment_type == "blocking"
-      @receipt.payment_gateway = 'CCAvenue'
+      @receipt.payment_gateway = 'Razorpay'
     else
       @receipt.payment_gateway = 'Razorpay'
     end
@@ -136,7 +136,7 @@ class ReceiptsController < ApplicationController
       if params[:user_id].present?
         custom_scope = custom_scope.where(user_id: params[:user_id])
       else
-        custom_scope = custom_scope.where(user_id: current_user.id)
+        custom_scope = custom_scope.in(user_id: User.where(channel_partner_id: current_user.id).distinct(:id))
       end
     else
       custom_scope = custom_scope.where(user_id: current_user.id)

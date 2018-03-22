@@ -9,7 +9,7 @@ class ChannelPartner
   field :rera_id, type: String
   field :location, type: String
   field :associated_user_id, type: BSON::ObjectId
-  field :status, type: String, default: 'inactive'
+  field :status, type: String, default: 'active'
   field :title, type: String
   field :first_name, type: String
   field :last_name, type: String
