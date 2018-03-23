@@ -36,19 +36,15 @@ class DashboardController < ApplicationController
   end
 
   def receipt_print
+    Rails.logger.info "****************************"
+    Rails.logger.info params
     @receipt = Receipt.find(params[:id])
     respond_to do |format|
-
-      # root = "#{Rails.root}/tmp/"
-      # directory = "#{Rails.root}/tmp/pdf"
-      # Dir.mkdir(root+'/'+"pdf") if !File.directory?(directory)
-      # dir_path = root + "/tmp/pdf"
-      # FileUtils.rm_rf Dir.glob(root + "/tmp/pdf/*") if dir_path.present?
 
       format.html
       format.pdf do
         render  pdf: "Embassy Receipt",
-        template: "dashboard/receipt_print.html.erb",
+        # template: "dashboard/receipt.html.erb",
         # disposition: 'attachment',
         title: 'Embassy Receipt',
         save_to_file: Rails.root.join('tmp/pdf', "receipt.pdf")
@@ -80,6 +76,7 @@ class DashboardController < ApplicationController
         hash
       end
     elsif params[:stage] == "select_apartment"
+      @tower = ProjectTower.find(id: params[:project_tower_id])
       @configurations = ProjectUnit.all.collect{|x| {bedrooms: x.bedrooms, base_price: x.base_price}}.sort{|x, y| x[:base_price] <=> y[:base_price]}.uniq{|x| x[:bedrooms]}
       parameters = {fltrs: { project_tower_id: params[:project_tower_id] } }
       @units = ProjectUnit.build_criteria(parameters).sort{|x, y| y.floor <=> x.floor}.group_by(&:floor)
