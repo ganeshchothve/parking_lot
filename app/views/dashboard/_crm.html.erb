@@ -53,6 +53,11 @@
         </div>
       </div>
     </div>
+    <div class="row">
+      <div class="container-fluid">
+        <p class="pageTitle big pink">Cancellation Requests</p>
+      </div>
+    </div>
     <div class="row summary-wrapper">
       <div class="col-md-3">
         <div class="card card-body">
@@ -99,7 +104,7 @@
     <div class="row summary-wrapper">
       <div class="col-md-3">
         <div class="card card-body">
-          <h2 class="pink">2</h2>
+          <h2 class="pink"><%= ProjectUnit.in(status: ["booked_confirmed"]).where(data_attributes: {"$elemMatch" =>{"n" => "bedrooms", "v" => 1}}).count %></h2>
           <h6 class="pink">1 BHK</h6>
           <%# if ReceiptPolicy.new(current_user, Receipt).index? %>
             <%#= link_to 'View All', admin_receipts_path(fltrs: { status: 'clearance_pending' }), class: 'position-absolute pink', style: 'right: 15px;' %>
@@ -108,7 +113,7 @@
       </div>
       <div class="col-md-3">
         <div class="card card-body">
-          <h2 class="pink">12</h2>
+          <h2 class="pink"><%= ProjectUnit.in(status: ["booked_confirmed"]).where(data_attributes: {"$elemMatch" =>{"n" => "bedrooms", "v" => 2}}).count %></h2>
           <h6 class="pink">2 BHK</h6>
           <%# if ReceiptPolicy.new(current_user, Receipt).index? %>
             <%#= link_to 'View All', admin_receipts_path(fltrs: { status: 'clearance_pending' }), class: 'position-absolute pink', style: 'right: 15px;' %>
@@ -117,7 +122,7 @@
       </div>
       <div class="col-md-3">
         <div class="card card-body">
-          <h2 class="pink">15</h2>
+          <h2 class="pink"><%= ProjectUnit.in(status: ["booked_confirmed"]).where(data_attributes: {"$elemMatch" =>{"n" => "bedrooms", "v" => 2.5}}).count %></h2>
           <h6 class="pink">2.5 BHK</h6>
           <%# if ReceiptPolicy.new(current_user, Receipt).index? %>
             <%#= link_to 'View All', admin_receipts_path(fltrs: { status: 'clearance_pending' }), class: 'position-absolute pink', style: 'right: 15px;' %>
@@ -126,7 +131,7 @@
       </div>
       <div class="col-md-3">
         <div class="card card-body">
-          <h2 class="pink">6</h2>
+          <h2 class="pink"><%= ProjectUnit.in(status: ["booked_confirmed"]).where(data_attributes: {"$elemMatch" =>{"n" => "bedrooms", "v" => 3}}).count %></h2>
           <h6 class="pink">3 BHK</h6>
           <%# if ReceiptPolicy.new(current_user, Receipt).index? %>
             <%#= link_to 'View All', admin_receipts_path(fltrs: { status: 'clearance_pending' }), class: 'position-absolute pink', style: 'right: 15px;' %>

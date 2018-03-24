@@ -1,40 +1,45 @@
 <%= render 'breadcrumbs', {user: @user} %>
 <section class="main-wrapper">
   <div class="container-fluid">
-      <div class="col-12 text-left mtop10">  
+      <!-- <div class="col-12 text-left mtop10">  
         <p class="pageTitle big pink">USER KYCs</p>
-      </div>
+      </div> -->
       <div class="clearfix"></div>
       <div class="table-wrapper">
-      <table class='striped-table table payment-breakup text-center' width="100%" cellspacing="0" cellpadding="20" border="0" outline="0">
+      <table class='striped-table table payment-breakup' width="100%" cellspacing="0" cellpadding="20" border="0" outline="0">
         <thead class='thead-default'>
           <% labels = t('mongoid.attributes.user_kyc').with_indifferent_access %>
           <tr>
             <th><%= labels['name'] %></th>
-            <th><%= labels['email'] %></th>
-            <th><%= labels['phone'] %></th>
-            <th><%= labels['dob'] %></th>
+            <th>Details</th>
+            <!-- <th><%= labels['email'] %></th>
+            <th><%= labels['phone'] %></th>-->
+            <th><%= labels['dob'] %></th> 
             <th><%= labels['pan_number'] %></th>
-            <th class="text-center">Actions</th>
+            <!-- <th class="text-center">Actions</th> -->
           </tr>
         </thead>
         <tbody>
           <% @user_kycs.each do |user_kyc| %>
             <tr>
-              <td><%= user_kyc.name %></td>
-              <td><%= user_kyc.email %></td>
-              <td><%= user_kyc.phone %></td>
-              <td><%= user_kyc.dob %></td>
-              <td><%= user_kyc.pan_number %></td>
-              <td class="text-right">
+              <td>
+                <%= user_kyc.name %>
+                <br/>
                 <% if UserKycPolicy.new(current_user, user_kyc).edit? %>
                   <% if current_user.role?('user') %>
-                    <%= link_to '<i class="fas fa-edit"></i> Edit'.html_safe, edit_user_kyc_path(user_kyc), class: 'btn nav-btn pink-btn' %>
+                    <%= link_to 'Edit'.html_safe, edit_user_kyc_path(user_kyc), class: 'btn blue-link' %>
                   <% else %>
-                  <%= link_to '<i class="fas fa-edit"></i> Edit'.html_safe, edit_admin_user_user_kyc_path(@user, user_kyc), class: 'btn nav-btn pink-btn' %>
+                  <%= link_to 'Edit'.html_safe, edit_admin_user_user_kyc_path(@user, user_kyc), class: 'btn blue-link' %>
                   <% end %>
                 <% end %>
               </td>
+              <td><i class="far fa-envelope"></i> <%= user_kyc.email %><br/> <i class="fas fa-mobile-alt"></i> <%= user_kyc.phone %></td>
+              <!-- <td></td> -->
+              <td><%= user_kyc.dob.strftime("%d %b %Y") rescue "" %></td>
+              <td><%= user_kyc.pan_number %></td>
+              <!-- <td class="text-right">
+                
+              </td> -->
             </tr>
           <% end %>
         </tbody>

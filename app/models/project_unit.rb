@@ -28,11 +28,11 @@ class ProjectUnit
   end
 
   def self.booking_price_percent_of_base_price
-    0.98
+    0.098
   end
 
   def self.tds_amount_percent_of_base_price
-    0.01
+    0.001
   end
 
   # These fields are globally utlised on the server side

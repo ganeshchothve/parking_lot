@@ -20,8 +20,12 @@
 						<div class="pull-right">	
 							<!-- <a href="/dashboard/receipt-print/<%#= @receipt.id %>" target="_blank"><img src="<%#= asset_path 'printer-outline.png'%>" class="img-responsive"></a> -->
 							<%= link_to dashboard_receipt_print_path(@receipt.id, :format => 'pdf'), target: :_blank do %>
+								<i class="far fa-envelope" style="font-size:24px;color:#383838;display:inline-block;margin:0 10px;"></i>
+							<% end%>
+							<%= link_to dashboard_receipt_mail_path(@receipt.id, :format => 'pdf'), target: :_blank do %>
 								<img src="<%= asset_path 'printer-outline.png'%>" class="img-responsive">
 							<% end%>
+
 						</div>
 					<div class="clearfix"></div>
 						<div class="applicant-wrapper pull-left text-left">

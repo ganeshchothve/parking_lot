@@ -59,7 +59,7 @@ Project Unit Details
       <span style="color:#64c0e9;font-weight:bold;">Balance Payment </span> : <%= @project_unit.pending_balance%><br/>
     </p>
     <br/>
-    <p>Your Embassy home will be kept on hold for you for additional ____ SANJAY_TO_DO  days until your cheque is cleared. We will notify you once the cheque realizes. </p>
+    <p>Your Embassy home will be kept on hold for you for additional <%= (@project_unit.auto_release_on - Date.today).days %> days until your cheque is cleared. We will notify you once the cheque realizes. </p>
     <% if @receipt.status == 'clearance_pending' && @receipt.project_unit_id.blank? && @receipt.reference_project_unit_id.present? && @receipt.reference_project_unit.status == 'available' %>
       <p>
         To block this chosen unit <a href='<%= dashboard_checkout_via_email_url(project_unit_id: @receipt.reference_project_unit_id, receipt_id: @receipt.receipt_id, user_email: @user.email, user_token: @user.authentication_token) %>'>Click here</a>

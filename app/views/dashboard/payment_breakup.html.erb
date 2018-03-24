@@ -1,3 +1,120 @@
+<style type="text/css">
+.apartment-selector-wrapper .title {
+    background-color: #c4dfff;
+    margin: 20px 0px 5px 0;
+    /* border: 2px solid #ececec; */
+    border-radius: 6px;
+    font-weight: 400;
+    font-size: 18px;
+    color: #3165a2;
+    padding: 10px 15px;
+    font-family: 'Roboto Condensed', sans-serif;
+    /* font-weight: 900; */
+}
+.apartment-selector-wrapper .client-detail-wrapper {
+    background-color: #fff;
+    margin: 10px 0px;
+    /*border: 2px solid #ececec;*/
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 28px;
+    color: #6c6c6c;
+    padding: 5px 15px;
+    border-left: 15px solid #c02680;
+}
+.client-detail {
+    padding: 15px 0px 0px 0px;
+}
+.pull-left {
+    float: left !important;
+}
+.tower-info-wrapper {
+    padding: 20px 0px 20px 20px;
+}
+.pull-right {
+    float: right !important;
+}
+.tower-info-wrapper .padding-left-30 {
+    padding-left: 30px;
+}
+.tower-info-wrapper > div {
+    font-size: 16px;
+    line-height: 26px;
+    font-weight: 400;
+}
+.clearfix {
+    clear: both;
+}
+.f22 {
+    font-size: 22px;
+}
+.bold {
+    font-weight: 500;
+}
+.table-wrapper {
+    border-radius: 0px;
+    border-color: #ccc;
+}
+.payment-table, .payment-breakup {
+    border: 1px solid #ddd;
+}
+.payment-breakup tr:nth-child(odd), .payment-table tr:nth-child(odd) {
+    background: #f9f9f9;
+}
+.payment-breakup th {
+    background-color: #efefef;
+    color: #4c80bd;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 500;
+}
+.text-center {
+    text-align: center;
+}
+.payment-breakup td, .receipt-table td {
+    border-bottom: 0px solid #ccc;
+    padding: 15px;
+    font-size: 14px;
+}
+.payment-breakup td.pink {
+    background-color: #e6b7d2;
+    color: #c02680;
+    font-size: 18px;
+}
+.payment-breakup.mediaCenterAccordion {
+    border: none;
+}
+.payment-breakup.mediaCenterAccordion > li {
+    display: inline-block;
+    list-style: none;
+    width: 100%;
+    margin: 0px 0%;
+    vertical-align: top;
+    border-bottom: 1px solid #9b9b9e;
+    padding: 10px 0px;
+}
+.payment-breakup.mediaCenterAccordion li > span {
+    background-image: asset-url('Plus-Icon.png');
+    background-repeat: no-repeat;
+    background-position: 99.5% 6px;
+    background-size: 23px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #232323;
+    display: block;
+    margin: 1px 3px;
+    padding: 6px 0px;
+    background-color: transparent;
+    border: 0px;
+}
+.mediaCenterAccordion > li > div {
+    width: 100%;
+    list-style: none;
+    padding: 0px 0px 0px 0px;
+    /*display: none;*/
+    overflow: auto;
+}
+</style>
 <section class="main-wrapper">
 	<div class="container-fluid">
 		<div class="col-12">
@@ -19,8 +136,8 @@
 								<span class="pink">Flat No: <%= @project_unit.name %></span>
 							</div>
 				       		<div class="pull-right tower-info-wrapper"> 
-				       			<div class="pull-left">Tower: <%= @project_unit.project_tower_name %><br>Floor: <%= @project_unit.floor %><br>Flat no: <%= @project_unit.name %><br></div>
-				       			<div class="pull-left padding-left-30">Configuration: <%= @project_unit.bedrooms %> BHK<br>Min. Carpet Area: <%= @project_unit.carpet.round %> Sq.Ft.<br>Starting Price: <%= number_to_indian_currency(@project_unit.base_price.round) %></div>
+				       			<div class="pull-left">Tower: <%= @project_unit.project_tower_name %><br>Floor: <%= @project_unit.floor %><br>Flat No: <%= @project_unit.name %><br></div>
+				       			<div class="pull-left padding-left-30">Configuration: <%= @project_unit.bedrooms %> BHK<br>Carpet Area: <%= @project_unit.carpet.round %> Sq.Ft.<br>Starting Price: <%= number_to_indian_currency(@project_unit.base_price.round) %></div>
 				       			<div class="clearfix"></div>
 				       		</div>
 				       		<div class="clearfix"></div>
@@ -51,10 +168,10 @@
 								Sr.no.
 							</th>
 							<th>
-								Type of Apartment
+								Details
 							</th>
 							<th>
-								2BHK Compact
+								Costing
 							</th>
 						</tr>
 						<tr>
@@ -62,10 +179,10 @@
 								01
 							</td>
 							<td>
-								Apartment Cost (Inclusive of right to use of 1 covered parking) - A
+								Carpet area - 75% approx
 							</td>
 							<td>
-								<%= number_to_indian_currency(@project_unit.base_price.round) %>
+								Rs. 455.925<%#= number_to_indian_currency(@project_unit.base_price.round) %>
 							</td>
 						</tr>
 						<tr>
@@ -73,10 +190,10 @@
 								02
 							</td>
 							<td>
-								Club House Development Charges - B
+								Base Price
 							</td>
 							<td>
-								-
+								0
 							</td>
 						</tr>
 						<tr>
@@ -84,10 +201,10 @@
 								03
 							</td>
 							<td>
-								Floor Rise (If Any) - C - Ground Floor
+								Land Price
 							</td>
 							<td>
-								At actuals
+								1000
 							</td>
 						</tr>
 						<tr>
@@ -95,10 +212,11 @@
 								04
 							</td>
 							<td>
-								Total Cost without Taxes
+								Construction cost
 							</td>
 							<td>
-								<%= number_to_indian_currency(@project_unit.base_price.round) %>
+								-1000
+								<%#= number_to_indian_currency(@project_unit.base_price.round) %>
 							</td>
 						</tr>
 						<tr>
@@ -106,10 +224,11 @@
 								05
 							</td>
 							<td>
-								Exclusive Balcony Area
+								PLC
 							</td>
 							<td>
-								<%= @project_unit.terrace_area %> sq.ft.
+								0
+								<%#= @project_unit.terrace_area %> 
 							</td>
 						</tr>
 						<tr>
@@ -117,10 +236,47 @@
 								06
 							</td>
 							<td>
-								RERA Carpet Area(sq.ft)
+								FRP
 							</td>
 							<td>
-								<%= @project_unit.carpet.round %> sq.ft.
+								0
+								<%#= @project_unit.carpet.round %> 
+							</td>
+						</tr>
+						<tr>
+							<td class="text-center">
+								07
+							</td>
+							<td>
+								Base Price + PLC + FRP
+							</td>
+							<td>
+								-
+								<%#= @project_unit.carpet.round %> 
+							</td>
+						</tr>
+						<tr>
+							<td class="text-center">
+								08
+							</td>
+							<td>
+								Land Value
+							</td>
+							<td>
+								Rs. 9,07,800
+								<%#= @project_unit.carpet.round %> 
+							</td>
+						</tr>
+						<tr>
+							<td class="text-center">
+								09
+							</td>
+							<td>
+								Construction Value
+							</td>
+							<td>
+								Rs. 9,07,800
+								<%#= @project_unit.carpet.round %> 
 							</td>
 						</tr>
 						<tr>
@@ -128,13 +284,163 @@
 								&nbsp;
 							</td>
 							<td class="pink">
-								Total Cost
+								Agreement Value
 							</td>
 							<td class="pink">
-								<%= number_to_indian_currency(@project_unit.base_price.round) %>
+								Rs. 0
+								<%#= number_to_indian_currency(@project_unit.base_price.round) %>
 							</td>
 						</tr>
 					</table>
+	      		</div>
+	      		<h1 class="f22 bold">Additionals & Deposits</h1>
+	      		<div class="table-wrapper">
+	      			<table width="100%" cellspacing="0" cellpadding="5" class="payment-breakup" border="0" outline="1">
+	      				<tr>
+							<th>
+								Sr.no.
+							</th>
+							<th>
+								Additionals
+							</th>
+							<th>
+								Costing
+							</th>
+						</tr>
+	      				<tr>
+							<td class="text-center">
+								01
+							</td>
+							<td>
+								Water/Electricity/Power Backup @ Rs 150/- psft
+							</td>
+							<td>
+								Rs. -
+								<%#= @project_unit.carpet.round %> 
+							</td>
+						</tr>
+						<tr>
+							<td class="text-center">
+								02
+							</td>
+							<td>
+								Club house & amenities Charges @ Rs 125000/-
+							</td>
+							<td>
+								Rs. 0
+								<%#= @project_unit.carpet.round %> 
+							</td>
+						</tr>
+						<tr>
+							<td class="text-center">
+								03
+							</td>
+							<td>
+								Corpus Fund @ Rs 125/- psft
+							</td>
+							<td>
+								Rs. -
+								<%#= @project_unit.carpet.round %> 
+							</td>
+						</tr>
+						<tr>
+							<td class="text-center">
+								04
+							</td>
+							<td>
+								City infrastructure charges @ Rs 200/- psft
+							</td>
+							<td>
+								Rs. -
+								<%#= @project_unit.carpet.round %> 
+							</td>
+						</tr>
+						<tr>
+							<td class="text-center">
+								05
+							</td>
+							<td>
+								Advance Maintenance charges @ Rs. 3  psft per year - for 1 years (Rs 3 x 12 months)
+							</td>
+							<td>
+								Rs. 21,884
+								<%#= @project_unit.carpet.round %> 
+							</td>
+						</tr>
+						<tr>
+							<td class="text-center">
+								06
+							</td>
+							<td>
+								Carpark
+							</td>
+							<td>
+								Rs. 0
+								<%#= @project_unit.carpet.round %> 
+							</td>
+						</tr>
+						<tr>
+							<td class="text-center">
+								07
+							</td>
+							<td>
+								GST- 18% on additional charges
+							</td>
+							<td>
+								Rs. 26,439.19
+								<%#= @project_unit.carpet.round %> 
+							</td>
+						</tr>
+						<tr>
+							<td class="text-center">
+								08
+							</td>
+							<td>
+								Sub total
+							</td>
+							<td>
+								Rs. 1,73,324
+								<%#= @project_unit.carpet.round %> 
+							</td>
+						</tr>
+						<tr>
+							<td class="text-center">
+								09
+							</td>
+							<td>
+								Additional Charges & deposits in %
+							</td>
+							<td>
+								Rs. 0
+								<%#= @project_unit.carpet.round %> 
+							</td>
+						</tr>
+						<tr>
+							<td class="text-center"> 
+								10
+							</td>
+							<td>
+								All inclusive with GST except stamp duty & registration charges
+							</td>
+							<td>
+								Rs. 1,73,324
+								<%#= @project_unit.carpet.round %> 
+							</td>
+						</tr>
+						<tr>
+							<td class="text-center">
+								11
+							</td>
+							<td>
+								GST- 18% on basic agreement value
+							</td>
+							<td>
+								Rs. -
+								<%#= @project_unit.carpet.round %> 
+							</td>
+						</tr>
+						 
+	      			</table>
 	      		</div>
 	      		<div class="table-wrapper">
 	      			<table width="100%" cellspacing="0" cellpadding="5" class="payment-breakup" border="0" outline="1">
@@ -174,10 +480,10 @@
 								On completion of Basement 
 							</td>
 							<td class="text-center">
-								12.50%
+								25%
 							</td>
 							<td>
-								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,12.5)) %>
+								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,25)) %>
 							</td>
 						</tr>
 						<tr>
@@ -185,13 +491,13 @@
 								03
 							</td>
 							<td>
-								On completion of 3rd floor slab 
+								On completion of 5th floor slab 
 							</td>
 							<td class="text-center">
-								12.50%
+								25%
 							</td>
 							<td>
-								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,12.5)) %>
+								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,25)) %>
 							</td>
 						</tr>
 						<tr>
@@ -199,16 +505,16 @@
 								04
 							</td>
 							<td>
-								On completion of 6th floor slab
+								On completion of 10th floor slab
 							</td>
 							<td class="text-center">
-								12.50%
+								25%
 							</td>
 							<td>
-								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,12.5)) %>
+								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,25)) %>
 							</td>
 						</tr>
-						<tr>
+						<!-- <tr>
 							<td class="text-center">
 								05
 							</td>
@@ -249,10 +555,10 @@
 							<td>
 								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,12.5)) %>
 							</td>
-						</tr>
+						</tr> -->
 						<tr>
 							<td class="text-center">
-								08
+								05
 							</td>
 							<td>
 								On completion of painting & finishes and deposits (power + water)
@@ -266,10 +572,10 @@
 						</tr>
 						<tr>
 							<td class="text-center">
-								11
+								06
 							</td>
 							<td>
-								On Possession + remaining additionals + regn
+								On Possession + remaining additional deposits / charges + registration
 							</td>
 							<td class="text-center">
 								5%

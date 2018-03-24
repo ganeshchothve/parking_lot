@@ -7,7 +7,7 @@ class ProjectUnitMailer < ApplicationMailer
     cc = @cp.present? ? [@cp.email] : []
     cc += default_team
     cc += crm_team
-    mail(to: @user.email, cc: cc, subject: "Unit #{@project_unit.name} blocked")
+    mail(to: @user.email, cc: cc, subject: "Unit No.  #{@project_unit.name} has been blocked!")
   end
 
   def booked_tentative(project_unit_id)
@@ -27,7 +27,7 @@ class ProjectUnitMailer < ApplicationMailer
     cc = @cp.present? ? [@cp.email] : []
     cc += default_team
     cc += crm_team
-    mail(to: @user.email, cc: cc, subject: "Unit #{@project_unit.name} booked confirmed")
+    mail(to: @user.email, cc: cc, subject: "Congratulations on booking your home! ") #Unit #{@project_unit.name} booked confirmed
   end
 
   def auto_release_on_extended(project_unit_id, auto_release_on_was)

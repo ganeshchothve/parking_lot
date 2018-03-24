@@ -1,19 +1,21 @@
 <% if params[:controller] != "admin/users" && params[:action] != "show" %>
 <%= content_for :breadcrumbs do %>
+<div class="col-12">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="<%= after_sign_in_path_for(current_user) %>">Dashboard</a></li>
       <li class="breadcrumb-item active" aria-current="page">Units</li>
     </ol>
   </nav>
+</div>
 <% end %>
 <% end %>
 <section class="padding-side-22">
 	<div class="container-fluid">
 		<div class="row">
-		  <div class="col-12 text-left mtop10">
+		  <!-- <div class="col-12 text-left mtop10">
 	          <p class="pageTitle big pink">UNITS</p>
-	      </div>
+	      </div> -->
 		  <div class="col-md-10 border border-left-0 border-top-0 border-bottom-0 table-responsive float-left">
 		    <%= render '/admin/project_units/index', project_units: @project_units %>
 		  </div>

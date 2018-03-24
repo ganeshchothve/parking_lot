@@ -1,6 +1,6 @@
 <div class="apartment-selector-wrapper">
         <div class="title">
-          Choose tower
+          Showing <%= @title %>
         </div>
         <div class="col-12 conf-select-wrapper">
           <div class="tower-name-wrapper">
@@ -18,8 +18,9 @@
               </div>
               <% end %>
             <% else %>
-            <div class="col-12 pad-left text-center">
-                No data found with the selected values.
+            <div class="col-12 text-center">
+                <div class="not-found"><i class="far fa-frown" style="font-size:50px; margin-bottom:20px;
+                color:#3981b8;"></i><br/> No Apartments found in <%= @title %></div> 
             </div>
             <% end %>
           </div>

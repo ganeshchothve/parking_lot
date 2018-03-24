@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>BookingPortal</title>
     <%= csrf_meta_tags %>
 
@@ -17,9 +17,14 @@
     <% end %>
   </head>
   <body>
+
   <div class="visible-xs prompts-message gradient-bg text-center white">
-    <span>Register now to book & save upto Rs. 10 Lac!</span>
-    <span>Prices rise with every 50 bookings</span>
+    <% if user_signed_in? && current_user.sign_in_count > 1%>
+      <a href="/dashboard/apartment-selector" class="white">BOOK NOW</a>
+    <% else %>
+      <span>Register now to book & save upto Rs. 10 Lac!</span>
+      <span>Prices rise with every 50 bookings</span>
+    <% end %>
   </div>
     <div id="notify"></div>
     <p class="notice"><%= notice %></p>
@@ -29,28 +34,25 @@
         <!-- <div class="container-fluid">
         </div> -->
         <div class="col-12">
-          <div class="pull-left dash-logo">
-            <a href="/dashboard"><img src="<%= asset_path "embassy_springs_logo.png" %>" class="img-responsive" style="padding:0 5px;"></a>
-            <span>Embassy Springs<br/> Booking Portal</span>
-          </div>
           <div class="container-fluid">
             <div class="pull-left left-wrapper">
               <% if params[:controller] == "dashboard" && params[:action] == "index" %>
-                <span class="subTitle white bold">Dashboard</span><span class="white f16">Welcome <%= current_user.name %></span>
+                <span class="subTitle white bold">Dashboard</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
               <% elsif params[:controller] == "dashboard" && params[:action] == "project_units" %>
-                <span class="subTitle white bold">Apartment Selector</span><span class="white f16">Welcome <%= current_user.name %></span>
+                <span class="subTitle white bold">Apartment Selector</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
               <% elsif params[:controller] == "dashboard" && params[:action] == "checkout" %>
-                <span class="subTitle white bold">Proceed To Payment</span><span class="white f16">Welcome <%= current_user.name %></span>
+                <span class="subTitle white bold">Proceed To Payment</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
               <% elsif params[:controller] == "user_kycs" %>
-                <span class="subTitle white bold">User KYCs</span><span class="white f16">Welcome <%= current_user.name %></span>
+                <span class="subTitle white bold">User KYCs</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
               <% elsif params[:controller] == "receipts" && params[:action] == "index" %>
-                <span class="subTitle white bold">Payments</span><span class="white f16">Welcome <%= current_user.name %></span>
+                <span class="subTitle white bold">Payments</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
               <% else %>
-                <span class="subTitle white bold">Dashboard</span><span class="white f16">Welcome <%= current_user.name %></span>
+              
+                <span class="subTitle white bold">Dashboard</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
               <% end %>
             </div>
             <div class="pull-right right-wrapper">
-              <div class="dashboard-notify pull-left">
+              <!-- <div class="dashboard-notify pull-left">
                   <div class="notification-count">1</div>
                   <div class="notification-dropdown-wrapper">
                       <div class="notification-dropdown">
@@ -58,17 +60,12 @@
                         <p>Pay withing 7 days or the unit will be released</p>
                       </div>
                   </div>
-              </div>
+              </div> -->
               <div class="pull-left">
                 <span><img src="<%= asset_path 'user.png'%>" class="img-responsive"> &nbsp;<%#= current_user.name %>
-                  <%= link_to current_user.name, dashboard_user_profile_path , class:'white'%>
+                  <%= link_to "Welcome " + current_user.name, dashboard_user_profile_path , class:'white'%>
                 </span>
-                <div class="burger-menu visible-xs">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-              </a>
+               
             </div>
             <div class="clearfix"></div>
           </div>
@@ -76,6 +73,16 @@
     </div>
   </div>
     <div class="dashboard-menu">
+       <div class="burger-menu visible-xs">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      <div class="dash-logo">
+        <a href="/dashboard" style="text-align: left;display: inline-block;"><img src="<%= asset_path "embassy_springs_logo.png" %>" class="img-responsive" style="padding:0 5px;"></a>
+        <!-- <a href="/dashboard" style="text-align: right;display: inline-block;"><img src="<%= asset_path "logo-edge.png" %>" class="img-responsive" style="padding:0 5px;width:70%;"></a> -->
+        <span>Embassy Springs<br/> Booking Portal</span>
+      </div>
       <div class="dash-menu-wrapper">
         <% if policy(:dashboard).index? %>
           <div>
@@ -105,6 +112,16 @@
               <a href="/dashboard/receipts" <%= params[:controller] == "receipts" && params[:action] == "index" ? "class=active" : "" %>><span class="sprite-dasboard payment-details"></span><span>Payments</span></a>
         </div>
         <% end %>
+        <div>
+          <a href="/users/sign_out" data-method="delete" rel="nofollow"><span class="sprite-signout sign-out"></span><span class="menu-items-hide">sign out</span></a>
+        </div>
+        <div class="visible-xs help-wrapper text-center">
+            <p>Need Help?</p>
+            <div>
+              <a href="tel:+911234567890">+91 1234 5678 90</a>
+              <a href="javascript:;">xyz@embassysprings.com</a>
+            </div>
+        </div>
         
       </div>
       <div class="prompts-message hidden-xs">
@@ -113,18 +130,12 @@
           <li>Prices rise with every 50 bookings</li>
         </ul>
       </div>
-      <div class="dash-menu-footer">
+      <div class="dash-menu-footer hidden-xs">
         <div>
           <a href="/users/sign_out" data-method="delete" rel="nofollow"><span class="sprite-signout sign-out"></span><span class="menu-items-hide">sign out</span></a>
         </div>
       </div>
-      <div class="visible-xs help-wrapper text-center">
-          <p>Need Help?</p>
-          <div>
-            <a href="tel:+911234567890">+91 1234 5678 90</a>
-            <a href="javascript:;">xyz@embassysprings.com</a>
-          </div>
-      </div>
+      
     </div>
     <% end %>
 
@@ -217,6 +228,7 @@
           $('#'+link).slideToggle();
           $(this).toggleClass('active');
         })
+
         $('.dashboard-notify').on('click',function(){
           $('.notification-dropdown-wrapper').slideToggle()
         })
@@ -228,7 +240,16 @@
           $(this).addClass('active')
         })
         $('.burger-menu').on('click',function(){
-          $('.dashboard-menu').slideToggle();
+          if($('.dashboard-menu').hasClass('menu-open'))
+          {
+            $('.dashboard-menu').removeClass('menu-open')
+           
+          }
+          else
+          {
+            $('.dashboard-menu').addClass('menu-open')
+          
+          }
         })
         $('.filter-icon').on('click',function(){
           $('.filter-item-wrapper').slideToggle();
@@ -244,9 +265,20 @@
             $('.show-unit-details-wrapper').addClass('close') 
           }
         })
+
+        $('.booking-accordian-wrapper .first').trigger('click');
+
+        $('.apt-selector-box .apt').on('click',function(){
+            $('.open-details-wrapper').addClass('blink');
+            setTimeout(function(){
+              $('.open-details-wrapper').removeClass('blink');
+            },1500)   
+         
+        })
       })
     </script>
-    <!-- lsquare -->
+
+<!-- lsquare -->
 <script type="text/javascript">
   var _paq = _paq || [];
   _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);

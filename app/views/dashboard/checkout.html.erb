@@ -14,7 +14,7 @@
           <br/>
           <div class="text-center">
             <div class="pull-left" style="margin-right:20px;">
-              <%= link_to "I Agree", dashboard_payment_path(project_unit_id: @project_unit.id), class: 'checkout-btn nav-btn'%>
+              <%= link_to "I Agree", dashboard_payment_path(project_unit_id: @project_unit.id), class: 'checkout-btn nav-btn', style:'margin-top:0px'%>
             </div>
               <div class="pull-left">
               <%= form_for @project_unit, url: dashboard_update_project_unit_path(project_unit_id: @project_unit.id), method: 'post', html: {class: 'validate-form'} do |f| %>
@@ -24,7 +24,7 @@
               </div>
             <% else %>
             <h4>You are making a payment without choosing any project_unit</h4>
-              <%= link_to "I Agree", dashboard_payment_path, class: 'nav-btn' %>
+              <%= link_to "I Agree", dashboard_payment_path, class: 'nav-btn', style:'margin-top:0px' %>
             <% end %>
           </div>
     </div>

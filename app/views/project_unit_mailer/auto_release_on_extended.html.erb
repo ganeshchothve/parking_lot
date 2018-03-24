@@ -1,9 +1,9 @@
-<% if @auto_release_on_was.present? %>
-  You have an extension of on Unit - <%= @project_unit.name %>
-<% else %>
-  You have a grace <%= (@project_unit.auto_release_on - Date.today).days %> days on Unit - <%= @project_unit.name %>
-<% end %>
-
+<!-- <%# if @auto_release_on_was.present? %>
+  You have an extension of on Unit - <%#= @project_unit.name %>
+<%# else %>
+  You have a grace <%#= (@project_unit.auto_release_on - Date.today).days %> days on Unit - <%= @project_unit.name %>
+<%# end %> -->
+<!-- 
 Thank you for your cheque payment of Rs. abc. Following are your cheque details -
 
 Account no
@@ -14,7 +14,7 @@ Balance Payment
 Cheque details -
 PHoto of cheque, account number, bank name, ifsc code
 
-
+ -->
 
 
 
@@ -23,7 +23,7 @@ PHoto of cheque, account number, bank name, ifsc code
                 <table cellpadding="0" cellspacing="0" width="100%">
                     <tr>
                         <td style=" color: #000;font-size: 32px;font-weight: 600;line-height: 35px;vertical-align: bottom;">
-                           kept on hold for you for additional  days
+                           kept on hold for you for additional <%= (@project_unit.auto_release_on - Date.today).days %> days
                          </td>
                          <td>
                            <img src="http://www.embassysprings.com/images/Springs-logo.png" style="border:0px ;outline:0px;display:block;">
@@ -74,7 +74,7 @@ PHoto of cheque, account number, bank name, ifsc code
         <tr>
           <td style="font-size:16px;line-height:26px;">
             <span style="color:#64c0e9;font-weight:bold;">Name - </span> <%= @user.name %><br/>
-]            <span style="color:#64c0e9;font-weight:bold;">Agreement Value -</span>_____ SANJAY_TO_DO<br/>
+]            <span style="color:#64c0e9;font-weight:bold;">Agreement Value -</span>Rs. <%= @project_unit.base_price %>  <br/>
             <span style="color:#64c0e9;font-weight:bold;">Advance paid -</span>  <%= @project_unit.total_amount_paid%><br/>
             <span style="color:#64c0e9;font-weight:bold;">Balance Payment  -</span> <%= @project_unit.pending_balance%><br/>
 

@@ -18,14 +18,42 @@
     <% end %>
   </head>
   <body>
+  <%if params[:controller] != 'dashboard' %>
+  <div class="filter-icon visible-xs">
+    <img src="<%= asset_path 'filter-outline.png'%>" class="img-responsive">
+  </div>
+  <% end %>
     <div class="notification-header">
         <div class="col-12">
           <div class="container-fluid">
             <div class="pull-left left-wrapper">
-                <span class="subTitle white bold">Dashboard</span><span class="white f16">Welcome <%= current_user.name %></span>
+              <% if params[:controller] == "dashboard" && params[:action] == "index" %>
+                <span class="subTitle white bold">Dashboard</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
+              <% elsif params[:controller] == "dashboard" && params[:action] == "project_units" %>
+                <span class="subTitle white bold">Apartment Selector</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
+              <% elsif params[:controller] == "dashboard" && params[:action] == "checkout" %>
+                <span class="subTitle white bold">Proceed To Payment</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
+              <% elsif params[:controller] == "user_kycs" %>
+                <span class="subTitle white bold">User KYCs</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
+              <% elsif params[:controller] == "receipts" && params[:action] == "index" %>
+                <span class="subTitle white bold">Payments</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
+              <% elsif params[:controller] == "admin/users"%>
+                <span class="subTitle white bold">Users</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
+              <% elsif params[:controller] == "channel_partners" %>
+                <span class="subTitle white bold">Partner Registerations</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
+              <% elsif params[:controller] == "admin/user_requests" %>
+                <span class="subTitle white bold">Cancellation Request</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
+              <% elsif params[:controller] == "admin/project_units" %>
+                <span class="subTitle white bold">Units</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
+              <% else %>
+                <span class="subTitle white bold">Dashboard</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
+              <% end %>
             </div>
+            <!-- <div class="pull-left left-wrapper">
+                <span class="subTitle white bold">Dashboard</span> <span class="white f16">Welcome <%= current_user.name %></span> 
+            </div> -->
             <div class="pull-right right-wrapper">
-              <div class="dashboard-notify pull-left">
+              <!-- <div class="dashboard-notify pull-left">
                   <div class="notification-count">1</div>
                   <div class="notification-dropdown-wrapper">
                       <div class="notification-dropdown">
@@ -33,10 +61,10 @@
                         <p>Pay withing 7 days or the unit will be released</p>
                       </div>
                   </div>
-              </div>
+              </div> -->
               <div class="pull-left">
                 <span class="hidden-xs"><img src="<%= asset_path 'user.png'%>" class="img-responsive"> &nbsp;
-                    <%= link_to current_user.name, dashboard_user_profile_path , class:'white user-name'%>
+                    <%= link_to "Welcome " + current_user.name, dashboard_user_profile_path , class:'white user-name'%>
                 </span>
               </div>
             <div class="clearfix"></div>
@@ -178,6 +206,9 @@
         })
         $('.dashboard-notify').on('click',function(){
           $('.notification-dropdown-wrapper').slideToggle()
+        })
+        $('.filter-icon').on('click',function(){
+          $('.padding-side-22 .col-md-2.float-right form, .padding-xs-left-10 .col-md-2 form, .padding-side-30 .col-md-2 form').slideToggle();
         })
     </script>
   </body>

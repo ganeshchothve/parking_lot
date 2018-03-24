@@ -35,29 +35,36 @@ class DashboardController < ApplicationController
   def make_remaining_payment
   end
 
-  def receipt_print
-    Rails.logger.info "****************************"
-    Rails.logger.info params
+  def receipt_mail
     @receipt = Receipt.find(params[:id])
+    @user = @receipt.user
+    @project_unit = @receipt.project_unit
+    @cp = @user.channel_partner
     respond_to do |format|
-
       format.html
       format.pdf do
         render  pdf: "Embassy Receipt",
-        # template: "dashboard/receipt.html.erb",
-        # disposition: 'attachment',
         title: 'Embassy Receipt',
-        save_to_file: Rails.root.join('tmp/pdf', "receipt.pdf")
+        save_to_file: Rails.root.join('tmp', "receipt_mail.pdf")
         ReceiptMailer.send_receipt(@receipt.id).deliver_now
       end
     end
   end
 
-  def receipt_mail
-    # binding.pry
+  def receipt_print
     @receipt = Receipt.find(params[:id])
+    @user = @receipt.user
     @project_unit = @receipt.project_unit
-    ReceiptMailer.send_receipt(@project_unit, @receipt.id).deliver
+    @cp = @user.channel_partner
+    respond_to do |format|
+      format.html
+      format.pdf do
+        render  pdf: "Embassy Receipt",
+        title: 'Embassy Receipt',
+        save_to_file: Rails.root.join('tmp', "receipt.pdf")
+        ReceiptMailer.receipt_email(@receipt.id).deliver_now
+      end
+    end
   end
 
   def project_units

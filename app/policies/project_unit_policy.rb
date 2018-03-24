@@ -32,15 +32,11 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def block?
-    (['hold'].include?(record.status) && record.user_id == user.id) && user.kyc_ready?
+    (user.project_units.count < 3 && !record.is_a?(ProjectUnit)) || (record.is_a?(ProjectUnit) && (['hold'].include?(record.status) && record.user_id == user.id) && user.kyc_ready?)
   end
 
   def permitted_attributes params={}
-    attributes = []
-    if params[:status].present? && params[:status] == 'hold'
-      attributes += [:status]
-    end
-    attributes += [user_kyc_ids: []]
+    attributes = [:status, user_kyc_ids: []]
     attributes
   end
 end

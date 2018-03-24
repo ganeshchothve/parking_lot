@@ -1,8 +1,8 @@
 <table class='striped-table table' width="100%" cellpadding="0" cellspacing="0">
   <thead class="th-default th-pink">
     <tr>
-      <th>Tower</th>
-      <th>Name</th>
+      <!-- <th>Tower</th> -->
+      <th>Tower Name</th>
       <th>Bedrooms</th>
       <th>Status</th>
       <th>Agreement (Rs.)</th>
@@ -15,7 +15,7 @@
   <tbody>
     <% project_units.each do |project_unit| %>
     <tr>
-      <td><%= project_unit.project_tower_name %></td>
+      <!-- <td><%= project_unit.project_tower_name %></td> -->
       <td><%= project_unit.name %></td>
       <td><%= project_unit.bedrooms %></td>
       <td><%= ProjectUnit.available_statuses.find{|x| x[:id] == project_unit.status}[:text] rescue "-" %></td>

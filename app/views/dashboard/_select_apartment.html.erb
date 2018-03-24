@@ -1,6 +1,6 @@
 <div class="apartment-selector-wrapper">
-  <div class="title hiddex-xs">
-    Select your new home
+  <div class="title">
+    Showing <%= @title %>
   </div>
   <div class="filter-icon visible-xs">
     <img src="<%= asset_path 'filter-outline.png'%>" class="img-responsive">
@@ -61,9 +61,9 @@
           </div>
         </div>
         <div class="col-12-5 filter-item">
-          <div class="filter-item filter-submit-wrapper">
-            <button class="apply-btn">Apply</button>
-          </div>
+          <!-- <div class="filter-item filter-submit-wrapper"> -->
+            <button class="nav-btn">Apply</button>
+          <!-- </div> -->
         </div>
         <div class="clearfix"></div>
     </form>
@@ -130,7 +130,7 @@
       </div>
     </div>
     <div class="col-6 show-unit-details-wrapper close">
-      <div class="visible-xs pink open-details-wrapper"><</div>
+      <div class="visible-xs pink open-details-wrapper blink">View Floor Plans</div>
       <div class="pink close-btn visible-xs">X</div>
       <div class="show-unit-details">
     		
@@ -158,10 +158,17 @@
       </div> 
     	<div class="clearfix"></div>
     </div>
-    	<div class="col-12 text-right center-btn-xs fixed-nav-btn">
+    <% if ProjectUnitPolicy.new(current_user, ProjectUnit).block? %>
+  	<div class="col-12 text-right center-btn-xs fixed-nav-btn">
       <a href="javascript:;" class="nav-btn btn-anim navigate" data-stage="choose-tower" data-navigate-to="prev">← PREV</a>
       <a href="javascript:;" class="nav-btn btn-anim navigate" data-stage="kyc-details" data-navigate-to="next">NEXT →</a>
     </div>
+    <% else %>
+      <div class="col-12 text-right">
+      <a href="javascript:;" class="nav-btn btn-anim navigate" data-stage="choose-tower" data-navigate-to="prev" style="vertical-align:middle">← PREV</a>
+      <span style="display:inline-block;vertical-align:middle">Cannot Book More than 3 Apartments</span>
+      </div>
+    <% end %>
     <div class="clearfix"></div>
   </div>
 </div>

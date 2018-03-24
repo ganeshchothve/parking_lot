@@ -9,6 +9,7 @@ body{
   color: #616161;
   font-family: 'Roboto', sans-serif;
   font-weight: 400 !important;
+  background-color: #f1f1f1;
 }
 label.label-required:after {
   content: " *";
@@ -71,7 +72,7 @@ label.control-label{
   font-weight: 500;
 }
 .summary-wrapper .card-body h2.pink, .summary-wrapper .card-body h6.pink, .summary-wrapper .card-body a.pink{
-  color: #4c80bd;
+  color: #383838;
 }
 .bold{
   font-weight: bold;
@@ -125,24 +126,36 @@ label.control-label{
 .mt0{
   margin-top: 0px;
 }
+section{
+  width: 100%;
+  clear: right;
+}
 /*.padding0{
   padding: 0px;
 }*/
 .breadcrumb {
+  float: right !important;
+  clear: both;
+  background-color: transparent;
     margin-bottom: 0px;
-    margin: 0px 30px;
-    background-color: transparent;
-    margin-top: 110px;
+    margin: 10px 33px;
+    margin-top: 95px;
     color: #3980b8;
     border-radius: 0px;
     font-size: 12px;
-    background-color: #f6f6f6;
     border-radius: 6px;
+    padding: 0px;
 }
 .breadcrumb-item a, .breadcrumb-item + .breadcrumb-item::before{
   color: #3980b8;
 }
-
+.table{
+  border:1px solid #dcdcdc;
+  font-size: 14px;
+}
+.table thead th{
+  border-bottom: 1px solid #dcdcdc;
+}
 .notification-header{
   z-index: 333;
   width: 100%;
@@ -155,6 +168,7 @@ label.control-label{
 .notification-header .title{
   font-size: 18px;
   font-weight: normal;
+  padding: 10px 0px;
 }
 .notification-dropdown p{
   font-size: 14px;
@@ -243,7 +257,7 @@ label.control-label{
   display: inline-block;
   font-size: 24px;
   line-height: 30px;
-  border-right:1px solid;
+  /*border-right:1px solid;*/
   font-weight: 500;
   padding-right: 20px;
   margin-right: 20px;
@@ -273,12 +287,16 @@ label.control-label{
   border-radius: 6px;
     display: inline-block;
     margin: 0px 0px;
-    background-color: #c02680;
+    background-color: #86b825;
     color: #fff;
     padding: 6px 20px;
     font-weight: 500;
     font-size: 16px;
     border:1px solid transparent;
+}
+a.nav-btn:hover{
+  color: #fff;
+  text-decoration: none;
 }
 .table .nav-btn{
     border:1px solid transparent;
@@ -297,16 +315,20 @@ label.control-label{
 .th-pink{
   background-color: #f9f9f9;
 }
+.striped-table tr:nth-child(odd){
+    background-color: #fff;
+}
 .striped-table tr:nth-child(even){
-    background: #f9f9f9;
+    background-color: #f9f9f9;
 }
 .striped-table thead th{
-  color: #3981b8;
+  color: #f2f2f2;
   font-weight: 500;
+  background-color: #444444;
 }
 .table th, .table td{
   vertical-align: top;
-  padding: 1.4rem 0.95rem;
+  padding: 10px;
 }
 .pink-btn{
   color: #fff;
@@ -331,8 +353,9 @@ label.control-label{
 }
 .pageTitle.big {
     font-size: 28px;
+    line-height: 38px;
     font-weight: 400;
-    margin: 20px 0px;
+    margin: 0px 0px 10px 0px;
     font-family: 'Roboto Condensed', sans-serif;
 }
 .pink{
@@ -366,7 +389,7 @@ label.control-label{
 .title{
     font-size: 28px;
     font-weight: 500;
-    margin: 20px 20px;
+    margin: 10px 0px;
     color: #cf29af;
     font-family: 'Roboto Condensed', sans-serif;
 }
@@ -493,7 +516,7 @@ label.control-label{
   box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.2);
 }
 .card-header{
-  font-size: 28px;
+  font-size: 24px;
   font-family: 'Roboto Condensed', sans-serif;
   color: #4c80bd;
 }
@@ -506,7 +529,7 @@ label.control-label{
   vertical-align: middle;
 }
 .card-header{
-  background-color: #f1f1f1;
+  background-color: #f9f9f9;
   border: 0px;
 }
 .border0{
@@ -569,7 +592,7 @@ label.control-label{
   width: 50%;
 }
 .crm-wrapper{
-  padding: 150px 40px 0 40px;
+  padding: 100px 40px 0 40px;
 }
 .w15{
   width: 15%;
@@ -580,8 +603,11 @@ label.control-label{
 .black-font{
   color: #000;
 }
+span.black-font{
+  display: inline-block;
+}
 .striped-table td{
-  line-height: 24px;
+  line-height: 30px;
 }
 .alert{
    position: fixed;
@@ -628,6 +654,9 @@ background-color: #349e63;
   background-color: #f6f6f6;
   border-radius: 0px 0px 6px 6px;
 }
+.user-name{
+  text-transform: capitalize;
+}
 .user-name:hover{
   color: #fff;
   text-decoration: none;
@@ -636,19 +665,31 @@ background-color: #349e63;
   padding-bottom: 30px;
 }
 .padding-side-22 .col-md-2.float-right form, .padding-xs-left-10 .col-md-2 form, .padding-side-30 .col-md-2 form{
-  background-color: #edf9de;
+  background-color: #fff;
+  border: 1px solid #dcdcdc;
   padding: 10px;
 }
 .padding-side-22 .col-md-2.float-right label.control-label ,.padding-xs-left-10 .col-md-2 label.control-label , .padding-side-30 .col-md-2 label.control-label {
   text-transform: capitalize;
   /*color: #f1f1f1;*/
 }
+.filter-icon{
+  display: none;
+}
+.white-wrapper{
+    background-color: #fff;
+    padding: 20px 20px 0px 20px;
+    border-radius: 6px;
+    border: 1px solid #dcdcdc;
+}
+.light-blue-header{
+  background-color: #c3e0ef;
+}
 @media all and (max-width: 1366px){
   .padding-side-30 {
       padding: 0 30px;
   }
   .table th, .table td{
-    padding: 20px;
     font-size: 14px;
     vertical-align: top;
   }
@@ -657,6 +698,9 @@ background-color: #349e63;
   }
 }
 @media all and (max-width: 768px){
+  .notification-header .container-fluid{
+    padding: 0px;
+  }
   .hidden-field-prev-prop, .hidden-field.gstin, .nri-fields{
     width: 100%;
   }
@@ -666,7 +710,8 @@ background-color: #349e63;
   }
   .notification-header{
     padding-left: 0px;
-    top: 84px;
+    top: 83px;
+    z-index: 10;
   }
   .center-section{
     padding-left: 0px;
@@ -831,5 +876,47 @@ background-color: #349e63;
   }
   .striped-table thead th{
     width: 25%;
+  }
+  .notification-dropdown-wrapper{
+    right: -75px;
+    top: 50px;
+  }
+  .dashboard-notify:hover {
+      background-color: inherit;
+      background-position: 15px -15px;
+  }
+  .dashboard-notify:hover .notification-count {
+      color: #3980b8;
+      background-color: #fff;
+  }
+  .notification-header .title{
+    padding: 8px 0px;
+  }
+  .title{
+    margin: 10px 0px;
+  }
+  .padding-side-22 .col-md-2.float-right form, .padding-xs-left-10 .col-md-2 form, .padding-side-30 .col-md-2 form {
+      background-color: #edf9de;
+      padding: 10px;
+      position: fixed;
+      top: 270px;
+      left: 0px;
+      width: 100%;
+      border: 1px solid #86b825;
+      display: none;
+      min-height: 250px;
+      overflow-y: scroll;
+  }
+  .filter-icon {
+    position: absolute;
+    left: 10px;
+    top: 140px;
+    padding: 8px;
+    display: block;
+    background: #ccc;
+    z-index: 9;
+  }
+  .pageTitle.big{
+    font-size: 26px;
   }
 }
