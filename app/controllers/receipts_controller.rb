@@ -58,8 +58,11 @@ class ReceiptsController < ApplicationController
     @receipt = Receipt.new base_params
     @receipt.creator = current_user
     @receipt.assign_attributes(permitted_attributes(@receipt))
-    @receipt.receipt_id = SecureRandom.hex
-    @receipt.payment_gateway = 'CCAvenue'
+    if @receipt.payment_type == "blocking"
+      @receipt.payment_gateway = 'Razorpay'
+    else
+      @receipt.payment_gateway = 'Razorpay'
+    end
     authorize @receipt
     respond_to do |format|
       if @receipt.save
@@ -73,7 +76,7 @@ class ReceiptsController < ApplicationController
               redirect_to dashboard_path
             end
           else
-            redirect_to current_user.role?('user') ? root_path : admin_user_receipts_path(@user)
+            redirect_to current_user.role?('user') ? root_path : edit_admin_user_receipt_path(@user, @receipt)
           end
         }
       else
@@ -125,7 +128,7 @@ class ReceiptsController < ApplicationController
 
   def apply_policy_scope
     custom_scope = Receipt.all.criteria
-    if current_user.role?('admin')
+    if current_user.role?('admin') || current_user.role?('crm') || current_user.role?('channel_partner')
       if params[:user_id].present?
         custom_scope = custom_scope.where(user_id: params[:user_id])
       end
@@ -133,7 +136,7 @@ class ReceiptsController < ApplicationController
       if params[:user_id].present?
         custom_scope = custom_scope.where(user_id: params[:user_id])
       else
-        custom_scope = custom_scope.where(user_id: current_user.id)
+        custom_scope = custom_scope.in(user_id: User.where(channel_partner_id: current_user.id).distinct(:id))
       end
     else
       custom_scope = custom_scope.where(user_id: current_user.id)

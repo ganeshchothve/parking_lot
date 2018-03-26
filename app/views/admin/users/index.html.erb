@@ -1,72 +1,95 @@
 <%= content_for :breadcrumbs do %>
+<div class="col-12">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="<%= after_sign_in_path_for(current_user) %>">Dashboard</a></li>
       <li class="breadcrumb-item active" aria-current="page">Users</li>
     </ol>
   </nav>
+</div>
 <% end %>
-<div class="row">
-  <div class="col-md-10 border border-left-0 border-top-0 border-bottom-0">
-    <table class='table'>
-      <thead class="th-default">
-        <% labels = t('mongoid.attributes.user').with_indifferent_access %>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Phone</th>
-          <th>Role</th>
-          <th>Account Confirmed?</th>
-          <th><%= labels[:lead_id] %></th>
-          <th class="text-right">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @users.each do |user| %>
-        <tr>
-          <td><%= user.name %></td>
-          <td><%= user.email %></td>
-          <td><%= user.phone %></td>
-          <td><%= User.available_roles.find{|x| x[:id] == user.role}[:text] %></td>
-          <td><%= user.confirmed_at.present? ? "Confirmed" : "Not confirmed" %></td>
-          <td><%= user.lead_id.present? ? user.lead_id : '-' %></td>
-          <td class="text-right">
-            <div class="dropdown">
-              <a class="btn btn-light dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-              <div class="dropdown-menu dropdown-menu-right">
-                <% if ReceiptPolicy.new(current_user, Receipt).index?(user) %>
-                  <%= link_to "View #{global_labels['receipts']}", admin_user_receipts_path(user_id: user.id), class: "dropdown-item"  %>
+<section class="padding-side-30 padding-xs-user">
+  <div class="container-fluid">
+    <div class="row">
+      <!-- <div class="col-12 text-left mtop10 padding-0">
+          <p class="pageTitle big pink">USERS</p>
+      </div> -->
+      <div class="col-md-10 border border-left-0 border-top-0 border-bottom-0 table-responsive margin-xs-bottom-10 padding-left-0">
+        <table class='table striped-table'>
+          <thead class="th-default th-pink">
+            <% labels = t('mongoid.attributes.user').with_indifferent_access %>
+            <tr>
+              <th>Name</th>
+              <th>Details</th>
+              <!-- <th>Phone</th> -->
+              <th>Role</th>
+              <th>Account Confirmed?</th>
+              <!-- <th><%#= labels[:lead_id] %></th> -->
+              <!-- <th class="text-right"></th> -->
+            </tr>
+          </thead>
+          <tbody>
+            <% @users.each do |user| %>
+            <tr>
+              <td>
+                <%= user.name %><br/>
+                <% if UserPolicy.new(current_user, user).show? %>
+                  <%= link_to "View", admin_user_path(user.id) %>
                 <% end %>
-                <% if UserKycPolicy.new(current_user, UserKyc).index?(user) %>
-                  <%= link_to "View #{global_labels['user_kycs']}", admin_user_user_kycs_path(user_id: user.id), class: "dropdown-item"  %>
-                <% end %>
-              </div>
-            </div>
-          </td>
-        </tr>
-        <% end %>
-      </tbody>
-    </table>
-    <%= will_paginate @users %>
-    <div class="dropdown float-left">
-      <a class="btn btn-primary dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add new</a>
-      <div class="dropdown-menu">
-        <% if UserPolicy.new(current_user, User.new(role: 'user')).new? %>
-          <%= link_to 'New Customer', new_admin_user_path, class: 'dropdown-item' %>
-        <% end %>
-        <% if UserPolicy.new(current_user, User.new(role: 'admin')).new? %>
-          <%= link_to 'New Admin', new_by_role_admin_users_path(role: 'admin'), class: 'dropdown-item' %>
-        <% end %>
-        <% if UserPolicy.new(current_user, User.new(role: 'channel_partner')).new? %>
-          <%= link_to 'New Channel Partner', new_by_role_admin_users_path(role: 'channel_partner'), class: 'dropdown-item' %>
+              </td>
+              <td><i class="far fa-envelope"></i> <%= user.email %> <br/> <i class="fas fa-mobile-alt"></i> <%= user.phone %></td>
+              <!-- <td></td> -->
+              <td><%= User.available_roles.find{|x| x[:id] == user.role}[:text] %></td>
+              <td><%= user.confirmed_at.present? ? "Confirmed" : "Not confirmed" %></td>
+              <!-- <td class="text-right">
+                
+              </td> -->
+              <!-- <td><%#= user.lead_id.present? ? user.lead_id : '-' %></td> -->
+              <!-- <td class="text-right">
+                <div class="dropdown">
+                  <a class="btn btn-light dropdown-toggle light-pink-btn" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <%# if ReceiptPolicy.new(current_user, Receipt).index?(user) %>
+                      <%#= link_to "View #{global_labels['receipts']}", admin_user_receipts_path(user_id: user.id), class: "dropdown-item"  %>
+                    <%# end %>
+                    <%# if UserKycPolicy.new(current_user, UserKyc).index?(user) %>
+                      <%#= link_to "View #{global_labels['user_kycs']}", admin_user_user_kycs_path(user_id: user.id), class: "dropdown-item"  %>
+                    <%# end %>
+		                <%# if UserPolicy.new(current_user, user).show? %>
+                      <%#= link_to "View Details", admin_user_path(user.id), class: "dropdown-item"  %>
+                    <%# end %>
+                  </div>
+                </div>
+              </td> -->
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+        <%= will_paginate @users %>
+        <div class="dropdown float-left">
+          <a class="btn btn-primary dropdown-toggle pink-btn" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add new</a>
+          <div class="dropdown-menu">
+            <% if UserPolicy.new(current_user, User.new(role: 'user')).new? %>
+              <%= link_to 'New Customer', new_admin_user_path, class: 'dropdown-item' %>
+            <% end %>
+            <% if UserPolicy.new(current_user, User.new(role: 'admin')).new? %>
+              <%= link_to 'New Admin', new_by_role_admin_users_path(role: 'admin'), class: 'dropdown-item' %>
+            <% end %>
+            <% if UserPolicy.new(current_user, User.new(role: 'crm')).new? %>
+              <%= link_to 'New CRM User', new_by_role_admin_users_path(role: 'crm'), class: 'dropdown-item' %>
+            <% end %>
+            <% if UserPolicy.new(current_user, User.new(role: 'channel_partner')).new? %>
+              <%= link_to 'New Channel Partner', new_by_role_admin_users_path(role: 'channel_partner'), class: 'dropdown-item' %>
+            <% end %>
+          </div>
+        </div>
+        <% if UserPolicy.new(current_user, User).export? %>
+          <%= link_to "Export all #{global_labels['users']}", export_admin_users_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn margin-xs-left-0' %>
         <% end %>
       </div>
+      <div class="col-md-2">
+        <%= render "filters" %>
+      </div>
     </div>
-    <% if UserPolicy.new(current_user, User).export? %>
-      <%= link_to "Export all #{global_labels['users']}", export_admin_users_path, class: 'btn btn-outline-primary float-left ml-2' %>
-    <% end %>
   </div>
-  <div class="col-md-2">
-    <%= render "filters" %>
-  </div>
-</div>
+</section>

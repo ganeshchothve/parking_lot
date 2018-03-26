@@ -1,5 +1,4 @@
 class ReceiptMailer < ApplicationMailer
-
   def send_failure receipt_id
     @receipt = Receipt.find(receipt_id)
     @user = @receipt.user
@@ -7,7 +6,7 @@ class ReceiptMailer < ApplicationMailer
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
     cc += default_team
-    mail(to: @user.email, cc: cc, subject: "Payment #{@receipt.receipt_id} Failed")
+    mail(to: @user.email, cc: cc, subject: "Payment #{@receipt.receipt_id} Failed!")
   end
 
   def send_success receipt_id
@@ -18,6 +17,7 @@ class ReceiptMailer < ApplicationMailer
     cc = @cp.present? ? [@cp.email] : []
     cc += default_team
     mail(to: @user.email, cc: cc, subject: "Payment #{@receipt.receipt_id} Successful")
+    # mail(to: "ashish.c@amuratech.com", cc: cc, subject: "Payment #{@receipt.receipt_id} Successful")
   end
 
   def send_clearance_pending receipt_id
@@ -39,5 +39,29 @@ class ReceiptMailer < ApplicationMailer
     cc += default_team
     cc += [@user.email]
     mail(to: crm_team, cc: cc, subject: "Payment #{@receipt.receipt_id} has been collected by channel partner")
+  end
+
+  def receipt_email receipt_id
+    @receipt = Receipt.find(receipt_id)
+    @user = @receipt.user
+    @project_unit = @receipt.project_unit
+    @cp = @user.channel_partner
+    cc = @cp.present? ? [@cp.email] : []
+    cc += default_team
+    cc += [@user.email]
+    attachments["receipt_mail.pdf"] = File.read("#{Rails.root}/tmp/receipt_mail.pdf")
+    mail(to: @user.email, subject: "Payment #{@receipt.receipt_id} Structure")
+  end
+
+  def send_receipt receipt_id
+    @receipt = Receipt.find(receipt_id)
+    @user = @receipt.user
+    @project_unit = @receipt.project_unit
+    @cp = @user.channel_partner
+    cc = @cp.present? ? [@cp.email] : []
+    cc += default_team
+    cc += [@user.email]
+    attachments["receipt.pdf"] = File.read("#{Rails.root}/tmp/receipt.pdf")
+    mail(to: @user.email, subject: "Payment #{@receipt.receipt_id} Successful Slip")
   end
 end

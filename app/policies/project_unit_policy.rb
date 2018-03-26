@@ -8,7 +8,7 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def hold_project_unit?
-    record.status == 'available' && user.role?('user') && user.kyc_ready?
+    record.status == 'available' && user.role?('user') && user.kyc_ready? && user.project_units.where(status: "hold").blank?
   end
 
   def update_project_unit?
@@ -27,16 +27,16 @@ class ProjectUnitPolicy < ApplicationPolicy
     (['hold', 'blocked', 'booked_tentative', 'booked_confirmed'].include?(record.status) && record.user_id == user.id) && user.kyc_ready?
   end
 
+  def checkout_via_email?
+    ['available'].include?(record.status) && user.kyc_ready?
+  end
+
   def block?
-    (['hold'].include?(record.status) && record.user_id == user.id) && user.kyc_ready?
+    (user.project_units.count < 3 && !record.is_a?(ProjectUnit)) || (record.is_a?(ProjectUnit) && (['hold'].include?(record.status) && record.user_id == user.id) && user.kyc_ready?)
   end
 
   def permitted_attributes params={}
-    attributes = []
-    if params[:status].present? && params[:status] == 'hold'
-      attributes += [:status]
-    end
-    attributes += [user_kyc_ids: []]
+    attributes = [:status, user_kyc_ids: []]
     attributes
   end
 end

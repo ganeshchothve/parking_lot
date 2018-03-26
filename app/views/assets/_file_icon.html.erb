@@ -1,0 +1,23 @@
+<%
+  record = record.with_indifferent_access
+  file_name = record["name"]
+  if file_name.blank?
+    file_name = record["url"].split("/").last
+  end
+%>
+<div class="asset" title="<%= file_name %>" data-file-size= "<%= record[:file_size]%>" data-id = "<%= record[:id] %>">
+  <div class="asset-inner">
+    <div class="asset-icon" data-content-type="<%= record[:content_type] %>"></div>
+  </div>
+  <div class="asset-actions">
+    <a tabindex="-1" href="<%= record[:url] %>" target="_blank" title="Download" class="asset-download" download=""><i class="fa fa-download"></i></a>
+    <% links.each do |k, v|
+      if k == :destroy %>
+        <a tabindex="-1" href="<%= v %>" title="Destroy" class="asset-delete"><i class="mdi mdi-delete mdi-24px"></i></a>
+      <% else %>
+        <a tabindex="-1" href="<%= v %>" target="_blank" title="<%= k %>"><%= k %></a>
+      <% end
+    end %>
+  </div>
+  <div class="asset-name" title="<%= file_name %>"><%= file_name %></div>
+</div>

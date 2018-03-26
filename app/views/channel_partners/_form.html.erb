@@ -8,50 +8,156 @@
       </ul>
     </div>
   <% end %>
-  <div class="form-group">
-    <%= form.label :name, class: 'control-label label-required' %>
-    <%= form.text_field :name, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("name") ? false : true) %>
+  <div class="pull-left col-6 w50">
+    <div class="subTitle purple pink-title text-center">Personal Details</div>
+    <div class="form-wrapper">
+        <div class="form-group">
+          <%= form.label :title, class: 'control-label label-required' %>
+          <%= form.text_field :title, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("title") ? false : true), placeholder:'Title' %>
+        </div>          
+        <div class="form-group">
+          <%= form.label :name, class: 'control-label label-required' %>
+          <%= form.text_field :name, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("name") ? false : true), placeholder:'First Name' %>
+        </div>
+        <div class="form-group">
+          <%= form.label :last_name, class: 'control-label label-required' %>
+          <%= form.text_field :last_name, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("last_name") ? false : true), placeholder:'Last Name' %>
+        </div>
+        <div class="form-group">
+          <%= form.label :street, class: 'control-label label-required' %>
+          <%= form.text_field :street, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("street") ? false : true), placeholder:'Street Name' %>
+        </div>
+        <div class="form-group">
+          <%= form.label :house_number, class: 'control-label label-required' %>
+          <%= form.text_field :house_number, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("house_number") ? false : true), placeholder:'House Number' %>
+        </div>
+        <div class="form-group">
+          <%= form.label :location, class: 'control-label label-required' %>
+          <%= form.text_field :location, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("location") ? false : true), placeholder:'City' %>
+        </div>
+        <div class="form-group">
+          <%= form.label :postal_code, class: 'control-label label-required' %>
+          <%= form.text_field :postal_code, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("postal_code") ? false : true), placeholder:'Postal Code' %>
+        </div>
+        <div class="form-group">
+          <%= form.label :country, class: 'control-label label-required' %>
+          <%= form.text_field :country, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("country") ? false : true), placeholder:'Country' %>
+        </div>
+        <div class="form-group">
+          <%= form.label :phone, class: 'control-label label-required' %>
+          <%= form.text_field :phone, class: 'form-control phone', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("phone") ? false : true), placeholder:'Mobile Phone', minlength:'13' %>
+        </div>
+        <div class="form-group">
+          <%= form.label :email, class: 'control-label label-required' %>
+          <%= form.email_field :email, class: 'form-control email', required: 'required', disabled: (policy(channel_partner).editable_field?("email") ? false : true), placeholder:'Email' %>
+        </div>
+        <div class="form-group">
+          <%= form.label :company_name, class: 'control-label label-required' %>
+          <%= form.text_field :company_name, class: 'form-control', disabled: (policy(channel_partner).editable_field?("company_name") ? false : true), placeholder:'Company Name' %>
+        </div>
+        <div class="form-group">
+          <%= form.label :pan_no, class: 'control-label label-required' %>
+          <%= form.text_field :pan_no, class: 'form-control', required: 'required', disabled: (policy(channel_partner).editable_field?("pan_no") ? false : true), placeholder:'PAN Number' %>
+        </div>
+        <div class="form-group">
+          <%= form.label :gstin_no, class: 'control-label label-required' %>
+          <%= form.text_field :gstin_no, class: 'form-control', required: 'required', disabled: (policy(channel_partner).editable_field?("gstin_no") ? false : true), placeholder:'GSTIN Number' %>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <%= form.label :rera_id, class: 'control-label label-required' %>
+              <%= form.text_field :rera_id, class: 'form-control', required: 'required', disabled: (policy(channel_partner).editable_field?("rera_id") ? false : true), placeholder:'RERA Registration Number' %>
+            </div>
+          </div>
+          <!-- <div class="col-md-6">
+            <div class="form-group">
+              <%= form.label :location, class: 'control-label label-required' %>
+              <%= form.text_field :location, class: 'form-control', required: 'required', disabled: (policy(channel_partner).editable_field?("location") ? false : true), placeholder:'Location'  %>
+            </div>
+          </div> -->
+        </div>
+    </div>
   </div>
-  <div class="row">
-    <div class="col-md-6">
-      <div class="form-group">
-        <%= form.label :email, class: 'control-label label-required' %>
-        <%= form.email_field :email, class: 'form-control', required: 'required', disabled: (policy(channel_partner).editable_field?("email") ? false : true) %>
-      </div>
+  <div class="pull-right col-6 w50">
+     <div class="subTitle purple text-center pink-title">Bank Details</div>
+     <div class="form-wrapper">
+        <div class="form-group">
+          <%= form.label :bank_name, class: 'control-label label-required' %>
+          <%= form.text_field :bank_name, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("bank_name") ? false : true), placeholder:'Bank Name' %>
+        </div>  
+        <div class="form-group">
+          <%= form.label :bank_beneficiary_account_no, class: 'control-label label-required' %>
+          <%= form.text_field :bank_beneficiary_account_no, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("bank_beneficiary_account_no") ? false : true), placeholder:'Beneficiary Account Number' %>
+        </div>  
+        <div class="form-group">
+          <%= form.label :bank_account_type, class: 'control-label label-required' %>
+          <%= form.text_field :bank_account_type, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("bank_account_type") ? false : true), placeholder:'Bank Account Type' %>
+        </div>  
+        <div class="form-group">
+          <%= form.label :bank_address, class: 'control-label label-required' %>
+          <%= form.text_field :bank_address, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("bank_address") ? false : true), placeholder:'Bank Address' %>
+        </div>
+        <div class="form-group">
+          <%= form.label :bank_city, class: 'control-label label-required' %>
+          <%= form.text_field :bank_city, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("bank_city") ? false : true), placeholder:'Bank City' %>
+        </div>  
+        <div class="form-group">
+          <%= form.label :bank_postal_Code, class: 'control-label label-required' %>
+          <%= form.text_field :bank_postal_Code, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("bank_postal_Code") ? false : true), placeholder:'Bank Postal Code' %>
+        </div>  
+        <div class="form-group">
+          <%= form.label :bank_region, class: 'control-label label-required' %>
+          <%= form.text_field :bank_region, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("bank_region") ? false : true), placeholder:'Bank State' %>
+        </div>
+        <div class="form-group">
+          <%= form.label :bank_country, class: 'control-label label-required' %>
+          <%= form.text_field :bank_country, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("bank_country") ? false : true), placeholder:'Bank Country' %>
+        </div>  
+        <div class="form-group">
+          <%= form.label :bank_ifsc_code, class: 'control-label label-required' %>
+          <%= form.text_field :bank_ifsc_code, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("bank_ifsc_code") ? false : true), placeholder:'Bank IFSC Code' %>
+        </div>  
+        <% if user_signed_in? && current_user.role?('admin') %>
+          <div class="form-group">
+            <%= form.label :status, class: 'control-label label-required' %>
+            <%= form.select :status, ChannelPartner.available_statuses.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(channel_partner).editable_field?("status") ? false : true)  %>
+          </div>
+        <% end %>
+     </div>
+    
+    <div class="actions">
+      <%= form.submit "REGISTER", class: 'btn btn-primary pink-button pink-btn' %>
     </div>
-    <div class="col-md-6">
-      <div class="form-group">
-        <%= form.label :phone, class: 'control-label label-required' %>
-        <%= form.text_field :phone, class: 'form-control phone', required: 'required', disabled: (policy(channel_partner).editable_field?("phone") ? false : true) %>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-6">
-      <div class="form-group">
-        <%= form.label :rera_id, class: 'control-label label-required' %>
-        <%= form.text_field :rera_id, class: 'form-control', required: 'required', disabled: (policy(channel_partner).editable_field?("rera_id") ? false : true) %>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="form-group">
-        <%= form.label :location, class: 'control-label label-required' %>
-        <%= form.text_field :location, class: 'form-control', required: 'required', disabled: (policy(channel_partner).editable_field?("location") ? false : true)  %>
-      </div>
-    </div>
-  </div>
-  <% if user_signed_in? && current_user.role?('admin') %>
-    <div class="form-group">
-      <%= form.label :status, class: 'control-label label-required' %>
-      <%= form.select :status, ChannelPartner.available_statuses.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(channel_partner).editable_field?("status") ? false : true)  %>
-    </div>
-  <% end %>
-  <div class="actions">
-    <%= form.submit "Save", class: 'btn btn-primary' %>
   </div>
 <% end %>
+<div class="cp-thankyou text-center" style="display: none;">
+  Thank you for registering with us. Please note that Embassy Property Developments Private Limited / [or any other company] will not be liable to pay commission to you on bookings, if you are not a registered Real Estate Agent under the RERA Act, 2016 read with the Karnataka Real Estate (Regulation and Development) Rules 2017.
+</div>
+<div class="clearfix"></div>
+<style type="text/css">
+  .cp-thankyou{
+    color: #4f8012;
+    font-size: 18px;
+    line-height: 28px;
+    padding: 0 20px;
+  }
+</style>
 <%= javascript_tag do %>
 $(document).ready(function(){
   FormInitializer.init($("#channel_partner_form"));
+  $(".register-cp #channel_partner_form").on("submit", function(e){
+    ajaxUpdate($(this).serialize(), $(this).attr("action"), function(responseData, responseText){
+      console.log(responseData);
+      if(responseText == "success"){
+        $("#channel_partner_form").hide();
+        $(".cp-thankyou").show();
+      } else {
+        notify(responseData.responseJSON.errors, "error", 3000, 300);
+        $("#channel_partner_form input[type=submit]").removeAttr("disabled");
+      }
+    });
+    e.preventDefault();
+  });
 });
 <% end %>

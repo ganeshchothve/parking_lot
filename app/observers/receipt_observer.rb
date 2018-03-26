@@ -1,4 +1,13 @@
 class ReceiptObserver < Mongoid::Observer
+  def before_create receipt
+    project_unit = receipt.project_unit
+    if project_unit.present?
+      receipt.receipt_id = "ESE#{project_unit.project_tower_name[0]}#{project_unit.name.split("-").last.strip}-R#{receipt.order_id}"
+    else
+      receipt.receipt_id = SecureRandom.hex
+    end
+  end
+
   def after_save receipt
     # update project unit if receipt status has changed
     if receipt.status_changed?
@@ -33,6 +42,7 @@ class ReceiptObserver < Mongoid::Observer
     # Send email to customer
     if receipt.status_changed?
       if receipt.status == 'success'
+        # TODO : Sell.Do Receipt
         mailer = ReceiptMailer.send_success(receipt.id.to_s)
         if Rails.env.development?
           mailer.deliver
@@ -45,6 +55,7 @@ class ReceiptObserver < Mongoid::Observer
           SMSWorker.perform_async("", "")
         end
       elsif receipt.status == 'failed'
+        # TODO : Sell.Do Receipt
         mailer = ReceiptMailer.send_failure(receipt.id.to_s)
         if Rails.env.development?
           mailer.deliver
@@ -84,6 +95,12 @@ class ReceiptObserver < Mongoid::Observer
       else
         SMSWorker.perform_async("", "")
       end
+    end
+  end
+
+  def before_save receipt
+    if receipt.status_changed? && receipt.status == 'success' && receipt.processed_on.blank?
+      receipt.processed_on = Date.today
     end
   end
 end

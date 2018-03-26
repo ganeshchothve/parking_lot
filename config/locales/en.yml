@@ -1,18 +1,37 @@
 en:
   global:
     receipt: 'Payment'
-    user_kyc: 'User KYC'
     receipts: 'Payments'
-    user_kycs: 'User KYCs'
+    asset: 'Reference Document'
+    assets: 'Reference Documents'
+    user_request: 'Cancellation Request'
+    user_requests: 'Cancellation Requests'
+    receipt_with_status: '%{status} Payment'
+    receipts_with_status: '%{status} Payments'
+    user_kyc: 'Applicant'
+    user_kycs: 'Applicants'
     users: 'Users & Customers'
     user: 'User or Customer'
+    customers: 'Customers'
+    customer: 'Customer'
     project_unit: 'Unit'
     project_units: 'Units'
+    project_unit_with_status: '%{status} Unit'
+    project_units_with_status: '%{status} Units'
     channel_partner: 'Partner Registration'
     channel_partners: 'Partner Registrations'
   mongoid:
     attributes:
+      user_request:
+        user_id: 'Customer'
+        comments: 'Complain / Request'
+        status: 'Status'
+        project_unit_id: 'Related Unit'
+        receipt_id: 'Related Payment'
       receipt:
+        tracking_id: 'Transaction ID (Processed Payment)'
+        comments: 'Comments'
+        processed_on: 'Date of Clearance'
         receipt_id: "Receipt ID"
         payment_mode: "Mode of Payment"
         issued_date: "Date of issuance (e.g. Cheque Date)"
@@ -69,3 +88,4 @@ en:
         location: 'Location'
         associated_user_id: 'Associated User'
         status: 'Status'
+

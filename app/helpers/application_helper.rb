@@ -3,6 +3,10 @@ module ApplicationHelper
     t('global').with_indifferent_access
   end
 
+  def global_label(key, params={})
+    t("global.#{key}", params)
+  end
+
   def number_to_indian_currency(number)
     if number
       string = number.to_s.split('.')
@@ -10,6 +14,11 @@ module ApplicationHelper
       number = number.gsub(/^,/, '')
       number = number + '.' + string[1] if string[1].to_f > 0
     end
-    "Rs. #{number}"
+    "₹#{number}"
+  end
+
+  def calculate_percent(amount, percent)
+    amount = amount * percent/100 
+    amount.round
   end
 end

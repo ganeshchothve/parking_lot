@@ -10,5 +10,5 @@ redis:
   namespace: booking_portal_dev
   password: 
 sidekiq:
-  username: ihub_admin
-  password: 891d8e721a1184a0dbafcb95103a205f
+  username: 
+  password: 

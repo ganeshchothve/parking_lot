@@ -85,7 +85,7 @@
     transition: all .2s ease-in;
     -webkit-transform: translateZ(0) scale(1,1);
 	overflow: hidden;
-	box-shadow: 1px 0px 5px #cacaca;
+	/*box-shadow: 1px 0px 5px #cacaca;*/
 }
 .dash-menu-wrapper div, .dash-menu-footer div{
 	width: 250px;
@@ -127,8 +127,8 @@
 	top: 15px;
 }
 .dash-menu-wrapper a:hover, .dash-menu-wrapper a.active, .dash-menu-footer a:hover{
-	color: #454545;	
-	border-left: 5px solid #c558a1;
+	/*color: #454545;	
+	border-left: 5px solid #c558a1;*/
 }
 .dash-menu-wrapper .sprite-dasboard{
 	display: inline-block;
@@ -151,8 +151,6 @@
 }
 .dash-menu-wrapper .kyc-form{
 	background-position: -64px -58px;
-	width: 24px;
-	height: 26px;
 }
 .dash-menu-wrapper .payment-details{
 	background-position: -65px -122px;
@@ -161,8 +159,7 @@
 }
 .dash-menu-wrapper .apartment-selector{
 	background-position: -63px -180px;
-	width: 24px;
-	height: 26px;
+
 }
 .dash-menu-wrapper a:hover .booking-details, .dash-menu-wrapper a.active .booking-details {
 	background-position: -0px -0px;
@@ -171,8 +168,7 @@
 }
 .dash-menu-wrapper a:hover .kyc-form, .dash-menu-wrapper a.active .kyc-form {
 	background-position: -3px -58px;
-	width: 24px;
-	height: 26px;
+
 }
 .dash-menu-wrapper a:hover .payment-details, .dash-menu-wrapper a.active .payment-details {
 	background-position: -4px -122px;
@@ -181,8 +177,6 @@
 }
 .dash-menu-wrapper a:hover .apartment-selector, .dash-menu-wrapper a.active .apartment-selector {
 	background-position: -2px -180px;
-	width: 24px;
-	height: 26px;
 }
 .dash-menu-footer .sign-out{
 	background-position: 0 0;
@@ -557,7 +551,7 @@ input[type="file"]::-webkit-file-upload-button{
     cursor: pointer;
     outline: none;
 }
-.mediaCenterAccordion{
+/*.mediaCenterAccordion{
 		padding-left: 0px;
 		margin-top: 30px;
 }
@@ -598,7 +592,7 @@ input[type="file"]::-webkit-file-upload-button{
 }
 .mediaCenterAccordion li > span{
 	margin: 10px 0px;
-}
+}*/
 .subtitle{
 	font-size: 24px;
 	color:#666666;
@@ -693,11 +687,11 @@ input[type="file"]::-webkit-file-upload-button{
     margin-bottom: 30px;
 }
 .dashboard-banner{
-	margin-top: 30px;
+	/*margin-top: 30px;
 	padding: 70px 0px;
 	background-image: asset-url('screen-1-bg.jpg');
 	background-repeat: no-repeat;
-	background-size: cover
+	background-size: cover*/
 }
 .mtop10{
 	margin-top: 10px;
@@ -712,7 +706,7 @@ input[type="file"]::-webkit-file-upload-button{
 .mleft70{
 	padding-bottom: 50px;
 }
-.banner-btn{
+/*.banner-btn{
 	display: inline-block;
 	margin:10px 0px;
 	background-color: #fff;
@@ -720,7 +714,7 @@ input[type="file"]::-webkit-file-upload-button{
 	padding: 8px 10px;
 	font-weight: 600;
 	font-size: 18px;
-}
+}*/
 .small-link{
 	display: inline-block;
     font-size: 10px;

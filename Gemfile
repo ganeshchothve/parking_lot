@@ -26,7 +26,7 @@ gem 'jbuilder', '~> 2.5'
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-
+gem 'razorpay'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
@@ -36,6 +36,7 @@ gem 'mongoid', '~> 6.1.0'
 gem 'mongoid-autoinc'
 # Comprehensive solution for user authentication in rails
 gem 'devise'
+gem 'simple_token_authentication', '~> 1.0'
 # Simple solution for authorization of users
 gem 'pundit'
 # Background processing
@@ -69,6 +70,9 @@ gem 'rest-client', '~> 1.6', '>= 1.6.7'
 
 # phone numbers on users -> model & validation
 gem 'phonelib'
+# generate pdf
+gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

@@ -2,6 +2,7 @@ class User
   include Mongoid::Document
   include Mongoid::Timestamps
   include ArrayBlankRejectable
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable #:registerable Disbaling registration because we always create user after set up sell.do
@@ -38,6 +39,10 @@ class User
   field :confirmation_sent_at, type: Time
   field :unconfirmed_email,    type: String # Only if using reconfirmable
 
+  ## Token Authenticatable
+  acts_as_token_authenticatable
+  field :authentication_token
+
   ## Lockable
   # field :failed_attempts, type: Integer, default: 0 # Only if lock strategy is :failed_attempts
   # field :unlock_token,    type: String # Only if unlock strategy is :email or :both
@@ -51,6 +56,7 @@ class User
   validates :name, :phone, :role, presence: true
   validates :lead_id, uniqueness: true, allow_blank: true
   validates :phone, uniqueness: true, phone: true # TODO: we can remove phone validation, as the validation happens in sell.do
+  #validates :email, uniqueness: true #TODO: if removed can sign up with registerd email id
   validates :rera_id, :location, presence: true, if: Proc.new{ |user| user.role?('channel_partner') }
   validates :rera_id, uniqueness: true, allow_blank: true
   validates :role, inclusion: {in: Proc.new{ User.available_roles.collect{|x| x[:id]} } }
@@ -80,6 +86,7 @@ class User
     [
       {id: 'user', text: 'Customer'},
       {id: 'admin', text: 'Admin'},
+      {id: 'crm', text: 'CRM User'},
       {id: 'channel_partner', text: 'Channel Partner'}
     ]
   end

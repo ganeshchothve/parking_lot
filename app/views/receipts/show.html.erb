@@ -1,4 +1,4 @@
-<link href="https://fonts.googleapis.com/css?family=Poppins:400,600" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet">
 <!--<script type="text/javascript">
 	function printReceipt(){
 		window.print();
@@ -6,7 +6,7 @@
 </script> -->
 <style type="text/css">
 	body{
-		font-family: 'Poppins', sans-serif;
+		font-family: 'Roboto', sans-serif;
 	}
 /*		.dashboard-menu{
 		display: none;
@@ -40,15 +40,18 @@
 	.img-responsive{
 		max-width: 100%
 	}
-	.tower-info-wrapper.grey .col-6 {
+	.tower-info-wrapper.pink .col-6 {
 	    padding-right: 20px;
 	    padding-bottom: 20px;
+	}
+	.main-wrapper{
+		margin-top: 100px;
 	}
 	.tower-specs {
 	    padding: 30px 0px 20px 10px;
 	}
-	.tower-info-wrapper.grey {
-	    background-color: #f2f2f2;
+	.tower-info-wrapper.pink {
+	    background-color: #ffecf7;
 	}
 	.tower-info-wrapper {
 	    padding: 20px 0px 20px 20px;
@@ -66,7 +69,7 @@
 	    border-left: 1px solid #ccc;
 	}
 	.receipt-table th {
-	    background-color: #f2f2f2;
+	    background-color: #ffecf7;
 	    border-right: 1px solid #ccc;
 	    border-top: 1px solid #ccc;
 	    border-bottom: 1px solid #ccc;
@@ -101,23 +104,23 @@
 	    display: block;
 	}
 	.tower-specs .specs {
-	    color: #000;
+	    color: #383838;
 	    font-size: 16px;
-	    font-weight: 600;
+	    font-weight: 500;
 	}
 	.applicant-wrapper {
 	   padding: 20px 0px 20px 20px;
 	}
 </style>
-<section class="mleft70">
-	<div class="container">
-		<div class="col-12">
+<section class="main-wrapper">
+	<div class="container-fluid">
+		<div class="col-12 padding-xs-0">
 				<div class="col-12">
 					<div class="pull-left">
 						<p class="pageTitle big pink">RECEIPT</p>
 					</div>
 					<div class="pull-right">	
-						<a href="/dashboard/receipt-print"><img src="<%= asset_path 'printer-outline.png'%>" class="img-responsive"></a>
+						<a href="/dashboard/receipt-print/<%= @receipt.id %>" target="_blank"><img src="<%= asset_path 'printer-outline.png'%>" class="img-responsive"></a>
 					</div>
 					<div class="clearfix"></div>
 				</div>
@@ -128,16 +131,16 @@
 							<img src="<%= asset_path 'embassy-springs.jpg' %>" class="img-responsive">
 						</div>
 						<div class="pull-right text-right payment-details-wrapper">
-							Date: <strong>23 Jan 18</strong><br/>
-							Receipt: <strong>035</strong>
+							Date: <strong><%= @receipt.created_at.strftime('%d %b %Y') %></strong><br/>
+							Receipt: <strong><%= @receipt.receipt_id %></strong>
 						</div>
 						<div class="clearfix"></div>
-						<div class="tower-info-wrapper grey">
+						<div class="tower-info-wrapper pink">
 							<div class="tower-specs">
 								<div class="col-6">
 									<span class="title">Paid By:</span>
-									<span class="specs">Mr. Vinod Subramanian,</span>
-									<span class="specs">B2 - Haridra, Shree Sai Samrudddhi Apts, C.V. Raman Nagar, Bengaluru - 560093</span>
+									<span class="specs"><%= @receipt.user.name %></span>
+									<!-- <span class="specs">B2 - Haridra, Shree Sai Samrudddhi Apts, C.V. Raman Nagar, Bengaluru - 560093</span> -->
 								</div>
 								<div class="col-6">
 									<span class="title">Paid To:</span>
@@ -148,7 +151,7 @@
 							<div class="tower-specs">
 								<div class="col-4">
 									<span class="title">Pan Card:</span>
-									<span class="specs">NA</span>
+									<span class="specs"><%= @receipt.user.user_kycs.first.pan_number %></span>
 								</div>
 								<div class="col-4">
 									<span class="title">Project:</span>
@@ -156,53 +159,35 @@
 								</div>
 								<div class="col-4">
 									<span class="title">Unit No:</span>
-									<span class="specs">SP07-P01-18A02</span>
+									<span class="specs"><%= @receipt.project_unit.name %></span>
 								</div>
 								<div class="clearfix"></div>
 							</div>
 						</div>
-						<div class="receipt-table-wrapper">
+						<div class="receipt-table-wrapper table-responsive">
 							<table width="100%" cellpadding="10" cellspacing="0" border="0" outline="0" class="receipt-table" align="center">
 								<tr>
 									<th>
 										Date
 									</th>
 									<th>
-										Cheque / DD
+										Cheque / DD / Online
 									</th>
 									<th>
 										Bank / Branch
 									</th>
 									<th>
-										Amount (Rs.)
+										Amount
 									</th>
 								</tr>
 								<tr>
-									<td>23 Jan 18</td>
-									<td>132546855</td>
-									<td>SBI - RTGS</td>
-									<td>92,000</td>
+									<td><%= @receipt.processed_on %></td>
+									<td><%= @receipt.payment_identifier %></td>
+									<td><%= @receipt.issuing_bank %> - <%= @receipt.issuing_bank_branch %> </td>
+									<td><%= number_to_indian_currency(@receipt.total_amount.round) %></td>
 								</tr>
 							</table>
 							<br/>
-							<table width="100%" cellpadding="10" cellspacing="0" border="0" outline="0" class="receipt-table" align="center">
-								<tr>
-									<th>
-										Schedule Discription
-									</th>
-									<th>
-										Towards
-									</th>
-									<th>
-										Amount (Rs.)
-									</th>
-								</tr>
-								<tr>
-									<td>Om booking - land charges<br/> dtd: 09 10 2017<br/> Ninty two thousand only</td>
-									<td>Demand Note: 90151463</td>
-									<td>92,000</td>
-								</tr>
-							</table>
 						</div>
 						<div class="text-right acknowledge-wrapper">
 							<p>Nam Estate Pvt. Ltd.</p>

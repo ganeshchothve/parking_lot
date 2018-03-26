@@ -9,7 +9,19 @@ class UserKyc
   field :dob, type: Date
   field :pan_number,type: String
 
+  field :street, type: String
+  field :house_number, type: String
+  field :city, type: String
+  field :postal_code, type: String
+  field :country, type: String
+
+  mount_uploader :photo, DocUploader
+  mount_uploader :pancard_photo, DocUploader
+  mount_uploader :adharcard_photo, DocUploader
+  mount_uploader :address_proof, DocUploader
+
   field :aadhaar,type: String
+  field :oci,type: String
   field :gstn, type: String
   field :is_company, type: Boolean
   field :anniversary, type: Date
@@ -28,6 +40,7 @@ class UserKyc
   belongs_to :creator, class_name: 'User'
   has_and_belongs_to_many :project_units
 
+  
   validates :name, :email, :phone, :dob, :pan_number, presence: false
   validates :poa, inclusion: {in: [true]}, if: Proc.new{ |kyc| kyc.nri? }
   validates :email, uniqueness: true, allow_blank: true

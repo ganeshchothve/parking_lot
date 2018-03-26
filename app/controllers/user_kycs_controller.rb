@@ -34,7 +34,7 @@ class UserKycsController < ApplicationController
         format.json { render json: @user_kyc, status: :created, location: @user_kyc }
       else
         format.html { render :new }
-        format.json { render json: @user_kyc.errors, status: :unprocessable_entity }
+        format.json { render json: {errors: @user_kyc.errors.full_messages.uniq}, status: :unprocessable_entity }
       end
     end
   end
@@ -43,10 +43,10 @@ class UserKycsController < ApplicationController
     respond_to do |format|
       if @user_kyc.update(permitted_attributes(@user_kyc))
         format.html { redirect_to after_sign_in_path_for(current_user), notice: 'User kyc was successfully updated.' }
-        format.json { render json: @user_kyc, status: :ok, location: @user_kyc }
+        # format.json { render json: @user_kyc, status: :ok, location: @user_kyc }
       else
         format.html { render :edit }
-        format.json { render json: @user_kyc.errors, status: :unprocessable_entity }
+        # format.json { render json: @user_kyc.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -74,7 +74,7 @@ class UserKycsController < ApplicationController
 
   def apply_policy_scope
     custom_scope = UserKyc.all.criteria
-    if current_user.role?('admin')
+    if current_user.role?('admin') || current_user.role?('crm')
       if params[:user_id].present?
         custom_scope = custom_scope.where(user_id: params[:user_id])
       end

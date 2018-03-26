@@ -1,14 +1,14 @@
 class UserPolicy < ApplicationPolicy
   def index?
-    ['channel_partner', 'admin'].include?(user.role)
+    ['channel_partner', 'admin', 'crm'].include?(user.role)
   end
 
   def export?
-    ['admin'].include?(user.role)
+    ['admin', 'crm'].include?(user.role)
   end
 
   def edit?
-    record.user_id == user.id
+    record.id == user.id
   end
 
   def new?
@@ -20,7 +20,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def update?
-    user.role?('admin') || (user.role?('channel_partner') && record.channel_partner_id == user.id) || (record.user_id == user.id)
+    user.role?('admin') || (user.role?('channel_partner') && record.channel_partner_id == user.id) || (record.id == user.id)
   end
 
   def permitted_attributes params={}

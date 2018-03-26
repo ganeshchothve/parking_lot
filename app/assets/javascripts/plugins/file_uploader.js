@@ -5,9 +5,9 @@
       file_name = _.last(record.url.split("/"));
     }
 
-    var content_type_class = iHub.mime2class(record.content_type);
+    var content_type_class = FileIcon.mime2class(record.content_type);
     if(_.isEmpty(content_type_class) && !_.isEmpty(record.type)){
-      content_type_class = iHub.mime2class(record.type);
+      content_type_class = FileIcon.mime2class(record.type);
     }
 
     var progress_bar = '\ <div class="progress progress-height">\

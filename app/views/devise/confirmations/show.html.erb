@@ -1,31 +1,46 @@
+<section class="dashboard-bg full-height white-bg-xs">
+  <div class="container">
+    <div class="col-7 login-card-wrapper">
+      <div class="login-card">
+        <a href="javascript:void(0);" class="logo-wrapper">
+          <img src="<%= asset_path "embassy_springs_logo.png" %>" class="img-responsive" />
+        </a>
+        <div class="subTitle purple text-center">Create Password</div>
+        <div class="form-wrapper">
+            <%= form_for resource, :as => resource_name, :url => update_user_confirmation_path, :html => {:method => 'put', role: "form"}, :id => 'activation-form' do |f| %>
+              <% if resource.errors.present? %>
+              <div class="alert alert-danger">
+                <%= devise_error_messages! %>
+              </div>
+              <% end %>
+              <%= hidden_field_tag :confirmation_token, params[:confirmation_token] %>
+              <% if @requires_password %>
+                <div class="form-group form-field-wrapper">
+                  <%#= f.label :password, class: "control-label label-required" %>
+                  <%= f.password_field :password, autofocus: true, placeholder: "Password", tabindex: "1", required: "required", class: "form-control form-field" %>
+                </div>
+                <div class="form-group form-field-wrapper">
+                  <%#= f.label :password_confirmation, class: "control-label label-required" %>
+                  <%= f.password_field :password_confirmation, placeholder: "Password Confirmation", tabindex: "2", required: "required", class: 'form-control form-field' %>
+                </div>
+                <div class="form-group">
+                  <%= f.submit "Activate", class: 'btn btn-primary pink-button' %>
+                </div>
+                <div class="col-12 separator relative text-center">
+                  <div class="part-links">
+                    <%= render "devise/shared/links" %>
+                  </div>
+                </div>
+                <div class="clearfix"></div>
+              <% end %>
+            <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>  
 <div class="row">
   <div class="col-md-6">
-    <%= form_for resource, :as => resource_name, :url => update_user_confirmation_path, :html => {:method => 'put', role: "form"}, :id => 'activation-form' do |f| %>
-      <% if resource.errors.present? %>
-      <div class="alert alert-danger">
-        <%= devise_error_messages! %>
-      </div>
-      <% end %>
-      <%= hidden_field_tag :confirmation_token, params[:confirmation_token] %>
-      <% if @requires_password %>
-        <div class="form-group">
-          <%= f.label :password, class: "control-label label-required" %>
-          <%= f.password_field :password, autofocus: true, placeholder: "Password", tabindex: "1", required: "required", class: "form-control" %>
-        </div>
-        <div class="form-group">
-          <%= f.label :password_confirmation, class: "control-label label-required" %>
-          <%= f.password_field :password_confirmation, placeholder: "Password Confirmation", tabindex: "2", required: "required", class: 'form-control' %>
-        </div>
-        <div class="form-group">
-          <%= f.submit "Activate", class: 'btn btn-primary' %>
-        </div>
-        <hr/>
-        <div class="mt-2">
-          <div class='devise-shared-links'>
-            <%= render "devise/shared/links" %>
-          </div>
-        </div>
-      <% end %>
-    <% end %>
+    
   </div>
 </div>

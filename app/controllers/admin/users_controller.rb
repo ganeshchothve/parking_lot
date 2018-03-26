@@ -52,6 +52,17 @@ class Admin::UsersController < AdminController
     end
   end
 
+  def update
+    @user.assign_attributes(permitted_attributes(@user))
+    respond_to do |format|
+      if @user.save
+        format.html { redirect_to edit_admin_user_path(@user), notice: 'User Profile updated successfully.' }
+      else
+        format.html { render :edit }
+      end
+    end
+  end
+
   private
   def set_user
     @user = User.find(params[:id])
@@ -73,8 +84,10 @@ class Admin::UsersController < AdminController
 
   def apply_policy_scope
     custom_scope = User.all.criteria
-    if current_user.role == 'channel_partner'
+    if current_user.role?('channel_partner')
       custom_scope = custom_scope.where(channel_partner_id: current_user.id).where(role: 'user')
+    elsif current_user.role?('crm')
+      custom_scope = custom_scope.where(role: 'user')
     end
     User.with_scope(policy_scope(custom_scope)) do
       yield

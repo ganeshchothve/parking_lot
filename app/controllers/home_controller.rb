@@ -8,6 +8,8 @@ class HomeController < ApplicationController
     if user_signed_in?
       redirect_to after_sign_in_path_for(current_user)
       flash[:notice] = "You have already been logged in"
+    else
+      render layout: "dashboard"
     end
   end
 
@@ -15,7 +17,7 @@ class HomeController < ApplicationController
     unless request.xhr?
       redirect_to (user_signed_in? ? after_sign_in_path : root_path)
     else
-      if user_signed_in? && ['channel_partner', 'admin'].exclude?(current_user.role)
+      if user_signed_in? && ['channel_partner', 'admin', 'crm'].exclude?(current_user.role)
         respond_to do |format|
           format.json { render json: {errors: "You have already been logged in", url: root_path}, status: :unprocessable_entity }
         end

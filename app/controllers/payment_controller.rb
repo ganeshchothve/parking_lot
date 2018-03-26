@@ -6,10 +6,6 @@ class PaymentController < ApplicationController
 
   def process_payment
     @receipt = Receipt.where(receipt_id: params[:receipt_id]).first
-    if Rails.env.development? || request.post?
-      @receipt.payment_gateway_service.response_handler!(params)
-    else
-      redirect_to :dashboard_receipts_path
-    end
+    @receipt.payment_gateway_service.response_handler!(params)
   end
 end

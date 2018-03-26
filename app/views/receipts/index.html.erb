@@ -1,69 +1,29 @@
 <%= render 'breadcrumbs', {user: @user, project_unit: @project_unit} %>
 <% unless current_user.role?('user') %>
-  <% unless ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? %>
-    <div class="alert alert-warning">
-      You might need to complete the user's KYC before you can take payments.
-    </div>
+  <% unless ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? || current_user.role?('crm') %>
+    <% if @user.present? %>
+      <div class="alert alert-warning">
+        <% if @user.confirmed? %>
+          You might need to complete the user's KYC before you can take payments.
+        <% else %>
+          The <%= global_labels['customer'] %> has not yet confirmed their account via email.
+        <% end %>
+      </div>
+    <% end %>
   <% end %>
 <% end %>
-<section class="mleft70">
-  <div class="container">
-    <div class="col-12">
-      <div class="col-12 text-left mtop10">  
-        <p class="pageTitle big pink">PAYMENTS</p>
-        <br/>
-      </div>
+<section class="main-wrapper">
+  <div class="container-fluid">
+    <div class="col-12 padding-xs-left-10">
+      
+      <!-- <div class="text-left mtop10 padding-xs-0">
+          <p class="pageTitle big pink">PAYMENTS</p>
+      </div> -->
+      <div class="clearfix"></div>
       <div class="row">
-          <div class="col-md-10 border border-left-0 border-top-0 border-bottom-0">
-            <table class='table-white payment-breakup  text-center' width="100%" cellpadding="10" cellspacing="0" border="0" outline="0">
-              <thead class="th-default">
-                <% labels = t('mongoid.attributes.receipt').with_indifferent_access %>
-                <tr>
-                  <th><%= labels['receipt_id'] %></th>
-                  <th><%= labels['payment_mode'] %></th>
-                  <th>Details</th>
-                  <th><%= labels['project_unit_id'] %></th>
-                  <th><%= labels['status'] %></th>
-                  <th class="text-right"><%= labels['total_amount'] %></th>
-                  <th class="text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% @receipts.each do |receipt| %>
-                <tr>
-                  <td><%= receipt.receipt_id %></td>
-                  <td><%= Receipt.available_payment_modes.find{|x| x[:id] == receipt.payment_mode}[:text] %></td>
-                  <td>
-                    <% if receipt.payment_mode == 'online' %>
-                      <!-- TODO -->
-                      <div class='small'>Transaction ID: <%= receipt.payment_identifier %></div>
-                    <% else %>
-                      <div class='small'>Bank: <%= receipt.issuing_bank %></div>
-                      <div class='small'>Branch: <%= receipt.issuing_bank_branch %></div>
-                      <div class='small'>Date: <%= receipt.issued_date %></div>
-                      <div class='small'>ID: <%= receipt.payment_identifier %></div>
-                    <% end %>
-                  </td>
-                  <td><%= receipt.project_unit.present? ? receipt.project_unit.name : '-' %></td>
-                  <td><%= Receipt.available_statuses.find{|x| x[:id] == receipt.status}[:text] %></td>
-                  <td class="text-right"><%= number_to_indian_currency(receipt.total_amount) %></td>
-                  <td class="text-right">
-                    <div class="dropdown">
-                      <div class="dropdown-menu dropdown-menu-right">
-                        <% if receipt.status == 'success' %>
-                          <%= link_to 'Print', receipt_path(receipt), class: 'btn btn-primary' %> <!-- TODO: Implement this -->
-                        <% end %>
-                        <% if ReceiptPolicy.new(current_user, receipt).edit? %>
-                          <%= link_to 'Edit', edit_admin_user_receipt_path(receipt.user_id, receipt), class: 'dropdown-item' %> <!-- TODO: Implement this -->
-                        <% end %>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <% end %>
-              </tbody>
-            </table>
-            <div class="mtop30">
+          <div class="col-md-10 border border-left-0 border-top-0 border-bottom-0 table-responsive">
+            <%= render 'index', {receipts: @receipts} %>
+            <div class="mtop30 pull-left" style="float:left">
               <% if ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? %>
                 <% units_for_payments = @user.project_units.in(status: ["blocked", 'booked_tentative']).all %>
                 <% if units_for_payments.present? %>
@@ -77,11 +37,13 @@
                       </div>
                     </div>
                   <% end %>
+                <% else %>  
+                  <h2 class="subTitle pink">No Payments Made</h2>
                 <% end %>
-                <%= link_to "Add Blocking #{global_labels['receipt']}", new_admin_user_receipt_path(@user), class: 'btn btn-primary' %>
+                <%= link_to "Add Blocking #{global_labels['receipt']}", new_admin_user_receipt_path(@user), class: 'btn btn-primary nav-btn' %>
               <% end %>
               <% if UserPolicy.new(current_user, User).export? && @user.blank? %>
-                <%= link_to "Export all #{global_labels['receipts']}", export_admin_receipts_path, class: 'btn btn-outline-primary float-left ml-2' %>
+                <%= link_to "Export all #{global_labels['receipts']}", export_admin_receipts_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn' %>
               <% end %>
             </div>
           </div>
@@ -92,4 +54,3 @@
     </div>
   </div>
 </section>
-

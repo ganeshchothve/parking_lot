@@ -1,0 +1,57 @@
+<%= form_with(model: channel_partner, local: true, html: {id: 'channel_partner_form', class: 'validate-form'}) do |form| %>
+  <% if channel_partner.errors.any? %>
+    <div class="alert alert-danger">
+      <ul>
+      <% channel_partner.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="form-group">
+    <%= form.label :name, class: 'control-label label-required' %>
+    <%= form.text_field :name, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("name") ? false : true) %>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <%= form.label :email, class: 'control-label label-required' %>
+        <%= form.email_field :email, class: 'form-control', required: 'required', disabled: (policy(channel_partner).editable_field?("email") ? false : true) %>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <%= form.label :phone, class: 'control-label label-required' %>
+        <%= form.text_field :phone, class: 'form-control phone', required: 'required', disabled: (policy(channel_partner).editable_field?("phone") ? false : true) %>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <%= form.label :rera_id, class: 'control-label label-required' %>
+        <%= form.text_field :rera_id, class: 'form-control', required: 'required', disabled: (policy(channel_partner).editable_field?("rera_id") ? false : true) %>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <%= form.label :location, class: 'control-label label-required' %>
+        <%= form.text_field :location, class: 'form-control', required: 'required', disabled: (policy(channel_partner).editable_field?("location") ? false : true)  %>
+      </div>
+    </div>
+  </div>
+  <% if user_signed_in? && current_user.role?('admin') %>
+    <div class="form-group">
+      <%= form.label :status, class: 'control-label label-required' %>
+      <%= form.select :status, ChannelPartner.available_statuses.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(channel_partner).editable_field?("status") ? false : true)  %>
+    </div>
+  <% end %>
+  <div class="actions">
+    <%= form.submit "Save", class: 'btn btn-primary' %>
+  </div>
+<% end %>
+<%= javascript_tag do %>
+$(document).ready(function(){
+  FormInitializer.init($("#channel_partner_form"));
+});
+<% end %>

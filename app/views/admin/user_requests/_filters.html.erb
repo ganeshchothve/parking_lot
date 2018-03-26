@@ -1,0 +1,30 @@
+<% if @user.blank? %>
+<% url = admin_user_requests_path %>
+<%= form_tag url, method: "get", id: "user_request_search_form" do %>
+  <div class="form-group">
+    <%= label_tag "", 'Filters', class: "control-label" %>
+    <%= submit_tag :Apply, class: "btn btn-primary btn-sm float-right pink-btn" %>
+  </div>
+  <div class="clearfix"></div>
+  <hr/>
+  <div class="form-group">
+    <%= label_tag "fltrs", "Customer Name / Email / Phone", class: "control-label" %>
+    <%
+      if params[:fltrs].present? && params[:fltrs][:user_id].present?
+        user = User.find(params[:fltrs][:user_id])
+      end
+    %>
+    <%= select_tag "fltrs[user_id]", options_for_select((params[:fltrs].present? && params[:fltrs][:user_id].present?) ? [[user.ds_name, user.id]] : []), {class: "selectize-remote", data: {params: {fltrs: {role: "user"}}, url: admin_users_path }} %>
+  </div>
+  <div class="form-group">
+    <%= label_tag "fltrs", "status", class: "control-label" %>
+    <%= select_tag "fltrs[status]", options_for_select(UserRequest.available_statuses.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize"} %>
+  </div>
+<% end %>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($("#user_request_search_form"));
+  });
+<% end %>
+
+<% end %>
