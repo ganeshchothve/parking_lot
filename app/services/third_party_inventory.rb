@@ -15,6 +15,8 @@ module ThirdPartyInventory
       third_party_inventory_response_code = 200
     elsif Rails.env.production?
       # TODO: hit production third_party_inventory
+      third_party_inventory_response = {code: 'hold', project_unit: {status: 'hold'}}
+      third_party_inventory_response_code = 200
     end
     return third_party_inventory_response, third_party_inventory_response_code
   end

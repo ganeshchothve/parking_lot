@@ -40,7 +40,7 @@
             <div>Carpet Area:</div><div class="dark"><%= project_unit.carpet.round(2) rescue '' %> sq.ft</div>
           </div>
           <div class="col-4">
-            <div>Unit View:</div><div class="dark"><%= project_unit.facing %></div>
+            <div>Unit View:</div><div class="dark"><%= project_unit.category %></div>
           </div>
           <div class="clearfix"></div>
         </div>
@@ -51,7 +51,7 @@
         <div class="title">Payment Details</div>
           <div class="unit-booking-details">
             <div class="col-4">
-              <div>All Inclusive Price:</div><div class="dark"><%= number_to_indian_currency(project_unit.agreement_price.round) rescue '' %></div><a href="/dashboard/<%= project_unit.id %>/payment-breakup" class="small-link">Payment Break Up</a>
+              <div>All Inclusive Price:</div><div class="dark"><%= number_to_indian_currency(project_unit.all_inclusive_price.round) rescue '' %></div><a href="/dashboard/<%= project_unit.id %>/payment-breakup" class="small-link">Payment Break Up</a>
             </div>
             <div class="col-4">
               <div>Payment Done:</div><div class="dark"><%= number_to_indian_currency(project_unit.total_amount_paid.round) rescue '' %></div>

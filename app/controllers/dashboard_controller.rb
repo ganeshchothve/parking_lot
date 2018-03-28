@@ -113,7 +113,7 @@ class DashboardController < ApplicationController
       receipt = current_user.receipts.where(receipt_id: params[:receipt_id]).where(payment_type: 'blocking').first
       project_unit = ProjectUnit.find(params[:project_unit_id])
       if receipt.present? && receipt.project_unit_id.blank? && project_unit.status == 'available' && receipt.reference_project_unit_id.to_s == project_unit.id.to_s
-        params[:project_unit] = {status: 'hold'}
+        params[:project_unit] = {status: 'hold', user_kyc_ids: current_user.user_kyc_ids}
         hold_project_unit
       else
         flash[:notice] = 'The unit chosen may not be available. You can browse available inventory and block it against the payment done.'
@@ -177,6 +177,7 @@ class DashboardController < ApplicationController
     @project_unit = ProjectUnit.find(params[:project_unit_id])
     authorize @project_unit 
     @project_unit.attributes = permitted_attributes(@project_unit)
+    @project_unit.user_kyc_ids = current_user.user_kyc_ids if @project_unit.user_kyc_ids.blank?
     # TODO: get a lock on this model. Nobody can modify it.
     respond_to do |format|
       # TODO: handle this API method for other status updates. Currently its assuming its a hold request
@@ -191,6 +192,8 @@ class DashboardController < ApplicationController
         flash[:notice] = 'The Unit price has changed'
         format.html { redirect_to dashboard_checkout_path(project_unit_id: @project_unit.id) }
       when 'error'
+        Rails.logger.info "______________________________"
+	Rails.logger.info @project_unit.errors.full_messages
         flash[:notice] = 'We cannot process your request at this time. Please retry'
         format.html { redirect_to dashboard_path }
       end

@@ -256,7 +256,7 @@
 								Sub total
 							</td>
 							<td>
-								<%= number_to_indian_currency((project_unit.wep_price + project_unit.clubhouse_amenities_price + project_unit.corpus_fund + project_unit.city_infrastructure_fund + project_unit.advance_maintenance_charges + project_unit.car_park_price + project_unit.gst_on_additional_charges).round(2)) %> 
+								<%= number_to_indian_currency((project_unit.sub_total).round(2)) %>
 							</td>
 						</tr>
 						<tr>
@@ -278,7 +278,7 @@
 								All inclusive with GST except stamp duty & registration charges
 							</td>
 							<td>
-								<%= number_to_indian_currency((project_unit.agreement_price + project_unit.wep_price + project_unit.clubhouse_amenities_price + project_unit.corpus_fund + project_unit.city_infrastructure_fund + project_unit.advance_maintenance_charges + project_unit.car_park_price + project_unit.gst_on_additional_charges + project_unit.gst_on_agreement_price).round(2)) %>
+								<%= number_to_indian_currency((project_unit.all_inclusive_price).round(2)) %>
 							</td>
 						</tr>
 						<tr>
@@ -289,7 +289,7 @@
 								GST- 18% on basic agreement value
 							</td>
 							<td>
-								<%= number_to_indian_currency(project_unit.gst_on_agreement_price) %> 
+								<%= number_to_indian_currency((project_unit.gst_on_agreement_price).round(2)) %> 
 							</td>
 						</tr>
 						 

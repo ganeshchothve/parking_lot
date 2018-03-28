@@ -38,8 +38,8 @@ class ProjectUnit
   # These fields are globally utlised on the server side
   field :name, type: String
   field :sfdc_id, type: String
-  field :agreement_price, type: Float
-  field :booking_price, type: Float
+  field :agreement_price, type: Integer
+  field :booking_price, type: Integer
   field :status, type: String, default: 'available'
   field :blocked_on, type: Date
   field :auto_release_on, type: Date
@@ -178,7 +178,7 @@ class ProjectUnit
   end
 
   def construction_cost
-    base_rate - land_rate
+    base_rate + premium_location_charges + floor_rise - land_rate
   end
 
   def premium_location_charges
@@ -242,6 +242,13 @@ class ProjectUnit
     0.18 * construction_price
   end
 
+  def sub_total
+    wep_price + clubhouse_amenities_price + corpus_fund + city_infrastructure_fund + advance_maintenance_charges + car_park_price + gst_on_additional_charges
+  end
+
+  def all_inclusive_price
+    sub_total + agreement_price + gst_on_agreement_price
+  end
   # TODO: reset the userid always if status changes and is available or not_available
 
   def pending_balance(options={})

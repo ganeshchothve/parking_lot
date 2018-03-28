@@ -30,8 +30,7 @@ module SFDC
         "instrument_no" => receipt.payment_identifier.to_s,
         "instrument_date" => receipt.issued_date ? sfdc_date_format(Date.parse(receipt.issued_date)) : nil,
         "bank_name" => receipt.issuing_bank,
-        "branch_name" => receipt.issuing_bank_branch
-
+        "branch_name" => receipt.issuing_bank_branch,
           "selldo_lead_id": user.lead_id,
           "booking_stage": "blocked", 
           "booking_date": "2018-03-26",
