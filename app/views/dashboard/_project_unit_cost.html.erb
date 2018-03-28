@@ -64,7 +64,7 @@
 								Carpet area - 75% approx
 							</td>
 							<td>
-								Rs. 455.925<%#= number_to_indian_currency(@project_unit.agreement_price.round) %>
+								<%= @project_unit.carpet.round(2) %>
 							</td>
 						</tr>
 						<tr>
@@ -75,7 +75,7 @@
 								Base Price
 							</td>
 							<td>
-								0
+								<%= @project_unit.base.round(2) %>
 							</td>
 						</tr>
 						<tr>
@@ -86,7 +86,7 @@
 								Land Price
 							</td>
 							<td>
-								1000
+								<%= number_to_indian_currency(@project_unit.land_rate.round(2)) %>
 							</td>
 						</tr>
 						<tr>
@@ -97,8 +97,7 @@
 								Construction cost
 							</td>
 							<td>
-								-1000
-								<%#= number_to_indian_currency(@project_unit.agreement_price.round) %>
+								<%= number_to_indian_currency(@project_unit.construction_cost.round(2)) %>
 							</td>
 						</tr>
 						<tr>
@@ -109,8 +108,7 @@
 								PLC
 							</td>
 							<td>
-								0
-								<%#= @project_unit.terrace_area %> 
+								<%= number_to_indian_currency(@project_unit.premium_location_charges.round(2)) %> 
 							</td>
 						</tr>
 						<tr>
@@ -121,8 +119,7 @@
 								FRP
 							</td>
 							<td>
-								0
-								<%#= @project_unit.carpet.round %> 
+								<%= number_to_indian_currency(@project_unit.floor_rise.round(2)) %> 
 							</td>
 						</tr>
 						<tr>
@@ -133,8 +130,7 @@
 								Base Price + PLC + FRP
 							</td>
 							<td>
-								-
-								<%#= @project_unit.carpet.round %> 
+								<%= number_to_indian_currency((@project_unit.base)+(@project_unit.premium_location_charges)+(@project_unit.floor_rise).round) %>
 							</td>
 						</tr>
 						<tr>
@@ -145,8 +141,7 @@
 								Land Value
 							</td>
 							<td>
-								Rs. 9,07,800
-								<%#= @project_unit.carpet.round %> 
+								<%= number_to_indian_currency(@project_unit.land_price.round(2)) %> 
 							</td>
 						</tr>
 						<tr>
@@ -157,8 +152,7 @@
 								Construction Value
 							</td>
 							<td>
-								Rs. 9,07,800
-								<%#= @project_unit.carpet.round %> 
+								<%= number_to_indian_currency(@project_unit.construction_price.round(2)) %>
 							</td>
 						</tr>
 						<tr>
@@ -169,8 +163,7 @@
 								Agreement Value
 							</td>
 							<td class="pink">
-								Rs. 0
-								<%#= number_to_indian_currency(@project_unit.agreement_price.round) %>
+								<%= number_to_indian_currency(@project_unit.agreement_price.round(2)) %>
 							</td>
 						</tr>
 					</table>
@@ -197,8 +190,7 @@
 								Water/Electricity/Power Backup @ Rs 150/- psft
 							</td>
 							<td>
-								Rs. -
-								<%#= @project_unit.carpet.round %> 
+								<%= number_to_indian_currency(@project_unit.wep_price.round(2)) %> 
 							</td>
 						</tr>
 						<tr>
@@ -209,8 +201,7 @@
 								Club house & amenities Charges @ Rs 125000/-
 							</td>
 							<td>
-								Rs. 0
-								<%#= @project_unit.carpet.round %> 
+								<%= number_to_indian_currency(@project_unit.clubhouse_amenities_price.round(2)) %> 
 							</td>
 						</tr>
 						<tr>
@@ -221,8 +212,7 @@
 								Corpus Fund @ Rs 125/- psft
 							</td>
 							<td>
-								Rs. -
-								<%#= @project_unit.carpet.round %> 
+								<%= number_to_indian_currency(@project_unit.corpus_fund.round(2)) %> 
 							</td>
 						</tr>
 						<tr>
@@ -233,8 +223,7 @@
 								City infrastructure charges @ Rs 200/- psft
 							</td>
 							<td>
-								Rs. -
-								<%#= @project_unit.carpet.round %> 
+								<%= number_to_indian_currency(@project_unit.city_infrastructure_fund.round(2)) %> 
 							</td>
 						</tr>
 						<tr>
@@ -245,8 +234,7 @@
 								Advance Maintenance charges @ Rs. 3  psft per year - for 1 years (Rs 3 x 12 months)
 							</td>
 							<td>
-								Rs. 21,884
-								<%#= @project_unit.carpet.round %> 
+								<%= number_to_indian_currency(@project_unit.advance_maintenance_charges.round(2)) %> 
 							</td>
 						</tr>
 						<tr>
@@ -257,8 +245,7 @@
 								Carpark
 							</td>
 							<td>
-								Rs. 0
-								<%#= @project_unit.carpet.round %> 
+								<%= number_to_indian_currency(@project_unit.car_park_price.round(2)) %> 
 							</td>
 						</tr>
 						<tr>
@@ -269,8 +256,7 @@
 								GST- 18% on additional charges
 							</td>
 							<td>
-								Rs. 26,439.19
-								<%#= @project_unit.carpet.round %> 
+								<%= number_to_indian_currency(@project_unit.gst_on_additional_charges.round(2),18) %> 
 							</td>
 						</tr>
 						<tr>
@@ -281,8 +267,7 @@
 								Sub total
 							</td>
 							<td>
-								Rs. 1,73,324
-								<%#= @project_unit.carpet.round %> 
+								<%= number_to_indian_currency(@project_unit.wep_price + @project_unit.clubhouse_amenities_price + @project_unit.corpus_fund + @project_unit.city_infrastructure_fund + @project_unit.advance_maintenance_charges + @project_unit.car_park_price + @project_unit.gst_on_additional_charges) %> 
 							</td>
 						</tr>
 						<tr>
@@ -293,8 +278,7 @@
 								Additional Charges & deposits in %
 							</td>
 							<td>
-								Rs. 0
-								<%#= @project_unit.carpet.round %> 
+								<%= number_to_indian_currency((@project_unit.wep_price + @project_unit.clubhouse_amenities_price + @project_unit.corpus_fund + @project_unit.city_infrastructure_fund + @project_unit.advance_maintenance_charges + @project_unit.car_park_price + @project_unit.gst_on_additional_charges)/@project_unit.agreement_price,18) %> 
 							</td>
 						</tr>
 						<tr>
@@ -305,8 +289,7 @@
 								All inclusive with GST except stamp duty & registration charges
 							</td>
 							<td>
-								Rs. 1,73,324
-								<%#= @project_unit.carpet.round %> 
+								<%= number_to_indian_currency(@project_unit.wep_price + @project_unit.clubhouse_amenities_price + @project_unit.corpus_fund + @project_unit.city_infrastructure_fund + @project_unit.advance_maintenance_charges + @project_unit.car_park_price + @project_unit.gst_on_additional_charges)+(@project_unit.agreement_price)+(@project_unit.gst_on_agreement_price) %> 
 							</td>
 						</tr>
 						<tr>
@@ -317,8 +300,7 @@
 								GST- 18% on basic agreement value
 							</td>
 							<td>
-								Rs. -
-								<%#= @project_unit.carpet.round %> 
+								<%= number_to_indian_currency(@project_unit.gst_on_agreement_price) %> 
 							</td>
 						</tr>
 						 
