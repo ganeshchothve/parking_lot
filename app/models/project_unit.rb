@@ -201,6 +201,46 @@ class ProjectUnit
     floor < 3 ? 0 : (floor-2)*20
   end
 
+  def land_price
+    land_rate * saleable
+  end
+
+  def construction_price
+    construction_cost * saleable
+  end
+
+  def wep_price
+    150 * saleable
+  end
+
+  def clubhouse_amenities_price
+    125000
+  end
+
+  def corpus_fund
+    125 * saleable
+  end
+
+  def city_infrastructure_fund
+    200 * saleable
+  end
+
+  def advance_maintenance_charges
+    3 * 12 * saleable
+  end
+
+  def car_park_price
+    0
+  end
+
+  def gst_on_additional_charges
+    0.18 * (wep_price + clubhouse_amenities_price + corpus_fund + city_infrastructure_fund + advance_maintenance_charges + car_park_price)
+  end
+
+  def gst_on_agreement_price
+    0.18 * agreement_price
+  end
+
   # TODO: reset the userid always if status changes and is available or not_available
 
   def pending_balance(options={})
