@@ -49,6 +49,6 @@ class Api::SellDoController < ApplicationController
   end
 
   def client_id
-    "531de108a7a03997c3000002"
+	"531de108a7a03997c3000002"
   end
 end

@@ -43,6 +43,7 @@ class ProjectUnit
   field :status, type: String, default: 'available'
   field :blocked_on, type: Date
   field :auto_release_on, type: Date
+  field :held_on, type: DateTime
   field :tds_amount, type: Float
 
   # These fields majorly are pulled from sell.do and may be used on the UI
@@ -234,11 +235,11 @@ class ProjectUnit
   end
 
   def gst_on_additional_charges
-    0.18 * (wep_price + clubhouse_amenities_price + corpus_fund + city_infrastructure_fund + advance_maintenance_charges + car_park_price)
+    0.18 * (wep_price + clubhouse_amenities_price + city_infrastructure_fund + advance_maintenance_charges + car_park_price)
   end
 
   def gst_on_agreement_price
-    0.18 * agreement_price
+    0.18 * construction_price
   end
 
   # TODO: reset the userid always if status changes and is available or not_available

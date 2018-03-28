@@ -79,7 +79,7 @@ class DashboardController < ApplicationController
       @towers = ProjectTower.in(id: project_tower_ids).collect do |x|
         hash = {project_tower_id: x.id, project_tower_name:x.name}
         hash[:total_units] = ProjectUnit.where(project_tower_id: x.id).count
-        hash[:total_units_available] = ProjectUnit.where(project_tower_id: x.id).where(status: "available").count
+        hash[:total_units_available] = ProjectUnit.build_criteria(parameters).where(project_tower_id: x.id).where(status: "available").count
         hash
       end
     elsif params[:stage] == "select_apartment"
@@ -163,11 +163,11 @@ class DashboardController < ApplicationController
     authorize @project_unit
     respond_to do |format|
       if @project_unit.update_attributes(permitted_attributes(@project_unit))
-        format.html { redirect_to dashboard_project_units_path }
+        format.html { redirect_to dashboard_path }
         format.json { render json: {project_unit: @project_unit}, status: 200 }
       else
         flash[:notice] = 'Could not update the project unit. Please retry'
-        format.html { redirect_to request.referer.present? ? request.referer : dashboard_project_units_path }
+        format.html { redirect_to request.referer.present? ? request.referer : dashboard_path }
         format.json { render json: {errors: @project_unit.errors.full_messages.uniq}, status: 422 }
       end
     end
@@ -186,13 +186,13 @@ class DashboardController < ApplicationController
         format.html { redirect_to dashboard_checkout_path(project_unit_id: @project_unit.id) }
       when 'not_available'
         flash[:notice] = 'The unit is not available'
-        format.html { redirect_to dashboard_project_units_path }
+        format.html { redirect_to dashboard_path }
       when 'price_change'
         flash[:notice] = 'The Unit price has changed'
         format.html { redirect_to dashboard_checkout_path(project_unit_id: @project_unit.id) }
       when 'error'
         flash[:notice] = 'We cannot process your request at this time. Please retry'
-        format.html { redirect_to dashboard_project_units_path }
+        format.html { redirect_to dashboard_path }
       end
     end
   end
@@ -225,7 +225,7 @@ class DashboardController < ApplicationController
     if third_party_inventory_response_code == 200
       ThirdPartyInventory.map_third_party_inventory(@project_unit, third_party_inventory_response)
       # once we have the updated model, just set the code for the controller method and update the project unit
-      if @project_unit.base_price_changed?
+      if false #@project_unit.base_price_changed?
         @project_unit.user = current_user
         code = 'price_change'
       elsif @project_unit.status == 'hold'

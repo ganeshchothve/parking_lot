@@ -12,7 +12,10 @@ class ProjectUnitObserver < Mongoid::Observer
       project_unit.user_id = nil
     end
     if project_unit.status_changed? && project_unit.status == 'hold'
+      project_unit.held_on = Time.now
       ProjectUnitUnholdWorker.perform_in(ProjectUnit.holding_minutes, project_unit.id.to_s)
+    elsif project_unit.status_changed? && project_unit.status != 'hold'
+      project_unit.held_on = nil
     end
     if project_unit.status_changed? && project_unit.status == 'blocked'
       project_unit.blocked_on = Date.today
