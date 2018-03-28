@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  acts_as_token_authentication_handler_for User, unless: lambda { |controller| controller.is_a?(HomeController) || (controller.is_a?(ChannelPartnersController)) }
+  acts_as_token_authentication_handler_for User, unless: lambda { |controller| controller.is_a?(HomeController) || controller.is_a?(Api::SellDoController) || (controller.is_a?(ChannelPartnersController)) }
   include Pundit
   helper_method :after_sign_in_path_for
   protect_from_forgery with: :exception
