@@ -91,7 +91,7 @@ $(document).ready(function(){
 				notify("Please select atleast one field", "error", 3000, 300);
 			} else {
 				selectedValues = JSON.parse(localStorage.getItem("selectedValues"));
-				$navigate.attr("href", "/dashboard/apartment-selector/"+selectedValues.bedrooms+","+selectedValues.base_price);
+				$navigate.attr("href", "/dashboard/apartment-selector/"+selectedValues.bedrooms+","+selectedValues.agreement_price);
 			}
 		} else if($navigate.data("stage") == "select-apartment"){
 			if($navigate.data("navigate-to") == "next"){
@@ -103,16 +103,16 @@ $(document).ready(function(){
 					selectedValues.towerid = towerid;
 					localStorage.setItem('selectedValues', JSON.stringify(selectedValues));
 
-					$navigate.attr("href", "/dashboard/apartment-selector/"+selectedValues.bedrooms+","+selectedValues.base_price+"/"+selectedValues.towerid);
+					$navigate.attr("href", "/dashboard/apartment-selector/"+selectedValues.bedrooms+","+selectedValues.agreement_price+"/"+selectedValues.towerid);
 				}
 			} else {
 				selectedValues = JSON.parse(localStorage.getItem("selectedValues"));
-				$navigate.attr("href", "/dashboard/apartment-selector/"+selectedValues.bedrooms+","+selectedValues.base_price+"/"+selectedValues.towerid);
+				$navigate.attr("href", "/dashboard/apartment-selector/"+selectedValues.bedrooms+","+selectedValues.agreement_price+"/"+selectedValues.towerid);
 			}
 		} else if($navigate.data("stage") == "kyc-details"){
 			selectedValues = JSON.parse(localStorage.getItem("selectedValues"));
 			if(selectedValues.unit_id){
-				$navigate.attr("href", "/dashboard/apartment-selector/"+selectedValues.bedrooms+","+selectedValues.base_price+"/"+selectedValues.towerid+"/"+selectedValues.unit_id);
+				$navigate.attr("href", "/dashboard/apartment-selector/"+selectedValues.bedrooms+","+selectedValues.agreement_price+"/"+selectedValues.towerid+"/"+selectedValues.unit_id);
 			} else {
 				notify("Please select any unit to proceed.", "error", 3000, 300);
 			}
@@ -254,7 +254,7 @@ $(document).ready(function(){
 			}
 		}
 		if(redirect)
-			window.location.href = "/dashboard/apartment-selector/"+selectedValues.bedrooms+","+selectedValues.base_price+"/"+selectedValues.towerid;
+			window.location.href = "/dashboard/apartment-selector/"+selectedValues.bedrooms+","+selectedValues.agreement_price+"/"+selectedValues.towerid;
 		
 		e.preventDefault();
 	});

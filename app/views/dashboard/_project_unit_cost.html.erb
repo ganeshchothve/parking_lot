@@ -19,7 +19,7 @@
 							</div>
 				       		<div class="tower-info-wrapper left-padding-0"> 
 				       			<div class="pull-left">Tower: <%= project_unit.project_tower_name %><br>Floor: <%= project_unit.floor %><br>Flat no: <%= project_unit.name %><br></div>
-				       			<div class="pull-left padding-left-30">Configuration: <%= float_to_int(project_unit.bedrooms) %> BHK<br>Min. Carpet Area: <%= project_unit.carpet.round(2) %> Sq.Ft.<br>Starting Price: <%= number_to_indian_currency(project_unit.base_price) %></div>
+				       			<div class="pull-left padding-left-30">Configuration: <%= float_to_int(project_unit.bedrooms) %> BHK<br>Min. Carpet Area: <%= project_unit.carpet.round(2) %> Sq.Ft.<br>Starting Price: <%= number_to_indian_currency(project_unit.agreement_price) %></div>
 				       			<div class="clearfix"></div>
 				       		</div>
 				       		<div class="clearfix"></div>
@@ -64,7 +64,7 @@
 								Carpet area - 75% approx
 							</td>
 							<td>
-								Rs. 455.925<%#= number_to_indian_currency(@project_unit.base_price.round) %>
+								Rs. 455.925<%#= number_to_indian_currency(@project_unit.agreement_price.round) %>
 							</td>
 						</tr>
 						<tr>
@@ -98,7 +98,7 @@
 							</td>
 							<td>
 								-1000
-								<%#= number_to_indian_currency(@project_unit.base_price.round) %>
+								<%#= number_to_indian_currency(@project_unit.agreement_price.round) %>
 							</td>
 						</tr>
 						<tr>
@@ -170,7 +170,7 @@
 							</td>
 							<td class="pink">
 								Rs. 0
-								<%#= number_to_indian_currency(@project_unit.base_price.round) %>
+								<%#= number_to_indian_currency(@project_unit.agreement_price.round) %>
 							</td>
 						</tr>
 					</table>
@@ -351,7 +351,7 @@
 								10%
 							</td>
 							<td>
-								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price.round,10)) %>
+								<%= number_to_indian_currency(calculate_percent(@project_unit.agreement_price.round,10)) %>
 							</td>
 						</tr>
 						<tr>
@@ -365,7 +365,7 @@
 								25%
 							</td>
 							<td>
-								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,25)) %>
+								<%= number_to_indian_currency(calculate_percent(@project_unit.agreement_price,25)) %>
 							</td>
 						</tr>
 						<tr>
@@ -379,7 +379,7 @@
 								25%
 							</td>
 							<td>
-								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,25)) %>
+								<%= number_to_indian_currency(calculate_percent(@project_unit.agreement_price,25)) %>
 							</td>
 						</tr>
 						<tr>
@@ -393,7 +393,7 @@
 								25%
 							</td>
 							<td>
-								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,25)) %>
+								<%= number_to_indian_currency(calculate_percent(@project_unit.agreement_price,25)) %>
 							</td>
 						</tr>
 						<!-- <tr>
@@ -407,7 +407,7 @@
 								12.50%
 							</td>
 							<td>
-								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,12.5)) %>
+								<%= number_to_indian_currency(calculate_percent(@project_unit.agreement_price,12.5)) %>
 							</td>
 						</tr>
 						<tr>
@@ -421,7 +421,7 @@
 								12.50%
 							</td>
 							<td>
-								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,12.5)) %>
+								<%= number_to_indian_currency(calculate_percent(@project_unit.agreement_price,12.5)) %>
 							</td>
 						</tr>
 						<tr>
@@ -435,7 +435,7 @@
 								12.50%
 							</td>
 							<td>
-								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,12.5)) %>
+								<%= number_to_indian_currency(calculate_percent(@project_unit.agreement_price,12.5)) %>
 							</td>
 						</tr> -->
 						<tr>
@@ -449,7 +449,7 @@
 								10%
 							</td>
 							<td>
-								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,10)) %> 
+								<%= number_to_indian_currency(calculate_percent(@project_unit.agreement_price,10)) %> 
 							</td>
 						</tr>
 						<tr>
@@ -463,7 +463,7 @@
 								5%
 							</td>
 							<td>
-								<%= number_to_indian_currency(calculate_percent(@project_unit.base_price,5)) %>
+								<%= number_to_indian_currency(calculate_percent(@project_unit.agreement_price,5)) %>
 							</td>
 						</tr>
 						<tr>
@@ -477,7 +477,7 @@
 								&nbsp;
 							</td>
 							<td class="pink">
-								<%= number_to_indian_currency(@project_unit.base_price.round) %>
+								<%= number_to_indian_currency(@project_unit.agreement_price.round) %>
 							</td>
 						</tr>
 						</table>

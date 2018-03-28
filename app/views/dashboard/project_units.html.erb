@@ -33,15 +33,15 @@
   var selectedValues = JSON.parse(localStorage.getItem("selectedValues"));
   <% if params[:stage] == "choose_tower" %>
     selectedValues.bedrooms = "<%= params[:configuration].split(",")[0] %>";
-    selectedValues.base_price = "<%= params[:configuration].split(",")[1] %>";
+    selectedValues.agreement_price = "<%= params[:configuration].split(",")[1] %>";
   <% elsif params[:stage] == "select_apartment" %>
     selectedValues.bedrooms = "<%= params[:configuration].split(",")[0] %>";
-    selectedValues.base_price = "<%= params[:configuration].split(",")[1] %>";
+    selectedValues.agreement_price = "<%= params[:configuration].split(",")[1] %>";
     selectedValues.towerid = "<%= params[:project_tower_id] %>";
     delete selectedValues.unit_id;
   <% elsif params[:stage] == "kyc_details" %>
     selectedValues.bedrooms = "<%= params[:configuration].split(",")[0] %>";
-    selectedValues.base_price = "<%= params[:configuration].split(",")[1] %>";
+    selectedValues.agreement_price = "<%= params[:configuration].split(",")[1] %>";
     selectedValues.towerid = "<%= params[:project_tower_id] %>";
     selectedValues.unit_id = "<%= params[:unit_id] %>";
   <% end %>

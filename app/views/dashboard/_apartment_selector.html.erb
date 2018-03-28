@@ -11,7 +11,7 @@
         <select class="init-selectize required" name="bedrooms">
           <option value="">Select Bedrooms</option>
           <% @configurations.each do |c| %>
-          <option value="<%= c[:bedrooms] %>"><%= float_to_int(c[:bedrooms]) %> BHK (Starting from <%= number_to_indian_currency(c[:base_price]) %>)</option>
+          <option value="<%= c[:bedrooms] %>"><%= float_to_int(c[:bedrooms]) %> BHK (Starting from <%= number_to_indian_currency(c[:agreement_price]) %>)</option>
           <% end %>
         </select>
       </div>
@@ -24,7 +24,7 @@
         Choose your budget
       </div>
       <div class="dropdown-wrapper">
-        <select class="init-selectize required" name="base_price">
+        <select class="init-selectize required" name="agreement_price">
           <option value="">Select Budget</option>
           <option value="4000000-6000000">Rs.40 Lac - 60 Lac</option>
           <option value="6000000-8000000">Rs.60 Lac - 80 Lac</option>

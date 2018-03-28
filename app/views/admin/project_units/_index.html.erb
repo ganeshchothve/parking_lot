@@ -19,8 +19,8 @@
       <td><%= project_unit.name %></td>
       <td><%= project_unit.bedrooms %></td>
       <td><%= ProjectUnit.available_statuses.find{|x| x[:id] == project_unit.status}[:text] rescue "-" %></td>
-      <td><%= number_to_indian_currency(project_unit.base_price.round) %></td>
-      <td><%= number_to_indian_currency(project_unit.total_amount_paid.round) %></td>
+      <td><%= number_to_indian_currency(project_unit.agreement_price)  %></td>
+      <td><%= number_to_indian_currency(project_unit.total_amount_paid)  %></td>
       <td><%= number_to_indian_currency(project_unit.pending_balance.to_i) %></td>
       <td><%= project_unit.user_id.present? ? project_unit.user.name : "-" %></td>
       <td class="text-right">

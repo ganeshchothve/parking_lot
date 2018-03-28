@@ -28,16 +28,16 @@
             <div>Applicant:</div><div class="dark"><%= project_unit.user.name %></div>
           </div>
           <div class="col-4">
-            <div>Built-up Area:</div><div class="dark"><%= project_unit.saleable.round(2) %> sq.ft</div>
+            <div>Built-up Area:</div><div class="dark"><%= project_unit.saleable.round(2) rescue '' %> sq.ft</div>
           </div>
           <div class="col-4">
-            <div>Super Built-up Area:</div><div class="dark"><%= project_unit.saleable.round(2) %> sq.ft</div>
+            <div>Super Built-up Area:</div><div class="dark"><%= project_unit.saleable.round(2) rescue '' %> sq.ft</div>
           </div>
           <div class="col-4">
             <div>Unit Type:</div><div class="dark"><%= float_to_int(project_unit.bedrooms) %> BHK - 2T - A</div><a href="<%= asset_path 'fp-type-2.jpg'%>" rel="floorplan" class="colorbox-init small-link">View Floor Plan</a>
           </div>
           <div class="col-4">
-            <div>Carpet Area:</div><div class="dark"><%= project_unit.carpet.round(2) %> sq.ft</div>
+            <div>Carpet Area:</div><div class="dark"><%= project_unit.carpet.round(2) rescue '' %> sq.ft</div>
           </div>
           <div class="col-4">
             <div>Unit View:</div><div class="dark"><%= project_unit.facing %></div>
@@ -51,19 +51,19 @@
         <div class="title">Payment Details</div>
           <div class="unit-booking-details">
             <div class="col-4">
-              <div>All Inclusive Price:</div><div class="dark"><%= number_to_indian_currency(project_unit.base_price.round) %></div><a href="/dashboard/<%= project_unit.id %>/payment-breakup" class="small-link">Payment Break Up</a>
+              <div>All Inclusive Price:</div><div class="dark"><%= number_to_indian_currency(project_unit.agreement_price.round) rescue '' %></div><a href="/dashboard/<%= project_unit.id %>/payment-breakup" class="small-link">Payment Break Up</a>
             </div>
             <div class="col-4">
-              <div>Payment Done:</div><div class="dark"><%= number_to_indian_currency(project_unit.total_amount_paid.round) %></div>
+              <div>Payment Done:</div><div class="dark"><%= number_to_indian_currency(project_unit.total_amount_paid.round) rescue '' %></div>
             </div>
             <div class="col-4">
-              <div>Booking Amount:</div><div class="dark"><%= number_to_indian_currency(project_unit.booking_price.round) %></div>
+              <div>Booking Amount:</div><div class="dark"><%= number_to_indian_currency(project_unit.booking_price.round) rescue '' %></div>
             </div>
             <div class="col-4">
-              <div>Agreement Value:</div><div class="dark"><%= number_to_indian_currency(project_unit.base_price.round)%></div>
+              <div>Agreement Value:</div><div class="dark"><%= number_to_indian_currency(project_unit.agreement_price.round) rescue ''%></div>
             </div>
             <div class="col-4">
-              <div>Balance Payment:</div><div class="dark"><%= number_to_indian_currency(project_unit.pending_balance.round) %></div>
+              <div>Balance Payment:</div><div class="dark"><%= number_to_indian_currency(project_unit.pending_balance.round) rescue '' %></div>
             </div>
             <div class="clearfix"></div>
             <!-- <div class="clearfix"></div> -->
@@ -84,37 +84,7 @@
         </a>
         <% end %>
       </div>
-      <!-- <div class="booking-detail">
-        <div class="title">Payment Details</div>
-        <div class="unit-booking-details">
-          <div class="col-4">
-            <div>All Inclusive Price:</div><div class="dark"><%= number_to_indian_currency(project_unit.base_price.round) %></div><a href="/dashboard/<%= project_unit.id %>/payment-breakup" class="small-link">Payment Break Up</a>
-          </div>
-          <div class="col-4">
-            <div>Payment Done:</div><div class="dark"><%= number_to_indian_currency(project_unit.total_amount_paid.round) %></div>
-          </div>
-          <div class="col-4">
-            <div>Booking Amount:</div><div class="dark"><%= number_to_indian_currency(project_unit.booking_price.round) %></div>
-          </div>
-          <div class="col-4">
-            <div>Agreement Value:</div><div class="dark"><%= number_to_indian_currency(project_unit.base_price.round)%></div>
-          </div>
-          <div class="col-4">
-            <div>Balance Payment:</div><div class="dark"><%= number_to_indian_currency(project_unit.user.total_balance_pending.round) %></div>
-          </div>
-          <div class="clearfix"></div>
-        </div>
-       
-      </div> -->
-      <!-- <div class="booking-detail">
-        <ul>
-          <li>You need to pay 9.9% of agreement value to confirm the booking</li>
-          <li>You have 7 days remaining to confirm this booking please make remaining payment of Rs. <%= number_to_indian_currency(project_unit.user.total_balance_pending.round()) %></li>
-        </ul>
-      </div>
-      <a href="/dashboard/receipts/new?project_unit_id=<%= project_unit.id %>" class="pink payment-btn text-center">
-        MAKE THE REMAINING PAYMENT
-      </a> -->
+      
     </div>
 <% end %>
 <%= javascript_tag do %>

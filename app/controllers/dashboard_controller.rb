@@ -10,7 +10,7 @@ class DashboardController < ApplicationController
   end
 
   def get_towers
-    parameters = {fltrs: { data_attributes: {bedrooms: params[:bedrooms], base_price: params[:base_price]}} }
+    parameters = {fltrs: { data_attributes: {bedrooms: params[:bedrooms], agreement_price: params[:agreement_price]}} }
     scope = ProjectUnit.build_criteria(parameters)
     towers = scope.uniq{|e| e.project_tower_id }.collect{|x| {project_tower_id: x.project_tower_id, project_tower_name:x.project_tower_name}}
     render json: towers
@@ -70,11 +70,11 @@ class DashboardController < ApplicationController
   def project_units
     authorize :dashboard, :project_units?
     if params[:stage] == "apartment_selector"
-      @configurations = ProjectUnit.all.collect{|x| {bedrooms: x.bedrooms, base_price: x.base_price.to_i}}.sort{|x, y| x[:base_price] <=> y[:base_price]}.uniq{|x| x[:bedrooms]}
+      @configurations = ProjectUnit.all.collect{|x| {bedrooms: x.bedrooms, agreement_price: x.agreement_price.to_i}}.sort{|x, y| x[:agreement_price] <=> y[:agreement_price]}.uniq{|x| x[:bedrooms]}
     elsif params[:stage] == "choose_tower"
       bedroom = params[:configuration].split(",")[0]
       budget = params[:configuration].split(",")[1]
-      parameters =  {fltrs: { data_attributes: {bedrooms: bedroom != "NA" ? bedroom : "", base_price: budget != "NA" ? budget : ""} } }
+      parameters =  {fltrs: { data_attributes: {bedrooms: bedroom != "NA" ? bedroom : "", agreement_price: budget != "NA" ? budget : ""} } }
       project_tower_ids = ProjectUnit.build_criteria(parameters).distinct(:project_tower_id)
       @towers = ProjectTower.in(id: project_tower_ids).collect do |x|
         hash = {project_tower_id: x.id, project_tower_name:x.name}
@@ -84,7 +84,7 @@ class DashboardController < ApplicationController
       end
     elsif params[:stage] == "select_apartment"
       @tower = ProjectTower.find(id: params[:project_tower_id])
-      @configurations = ProjectUnit.all.collect{|x| {bedrooms: x.bedrooms, base_price: x.base_price}}.sort{|x, y| x[:base_price] <=> y[:base_price]}.uniq{|x| x[:bedrooms]}
+      @configurations = ProjectUnit.all.collect{|x| {bedrooms: x.bedrooms, agreement_price: x.agreement_price}}.sort{|x, y| x[:agreement_price] <=> y[:agreement_price]}.uniq{|x| x[:bedrooms]}
       parameters = {fltrs: { project_tower_id: params[:project_tower_id] } }
       @units = ProjectUnit.build_criteria(parameters).sort{|x, y| y.floor <=> x.floor}.group_by(&:floor)
     elsif params[:stage] == "kyc_details"
