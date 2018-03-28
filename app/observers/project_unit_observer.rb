@@ -3,6 +3,7 @@ class ProjectUnitObserver < Mongoid::Observer
     if project_unit.agreement_price.blank?
       project_unit.agreement_price = (project_unit.base_rate + project_unit.premium_location_charges + project_unit.floor_rise) * project_unit.saleable
     end
+
     if project_unit.booking_price.blank? && project_unit.agreement_price.present?
       project_unit.booking_price = project_unit.agreement_price * ProjectUnit.booking_price_percent_of_agreement_price
       project_unit.tds_amount = project_unit.agreement_price * ProjectUnit.tds_amount_percent_of_agreement_price

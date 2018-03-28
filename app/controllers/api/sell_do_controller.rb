@@ -38,6 +38,7 @@ class Api::SellDoController < ApplicationController
 			@parameters = JSON(params[:project_unit])
 			@parameters[:status] = @parameters["data_attributes"].find { |h| h['n'] == "status" }['v']
      			@klass = ProjectUnit
+			@parameters["name"] = @parameters["data_attributes"].select{|x| x["n"] == "name"}[0]["v"]
 		else
 			render :json => {"status" => "Error: params not present", "errors" =>  ["Project params not present"]}, status: 422
 			return
@@ -48,6 +49,6 @@ class Api::SellDoController < ApplicationController
   end
 
   def client_id
-    ""
+    "531de108a7a03997c3000002"
   end
 end
