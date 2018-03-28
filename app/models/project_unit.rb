@@ -294,10 +294,15 @@ class ProjectUnit
     if ['success', 'clearance_pending'].include?(receipt.status)
       if self.pending_balance({strict: true}) == 0
         self.status = 'booked_confirmed'
+        # Push data to SFDC
+        # Avoid hit to SFDC for subsequent payments
+        SFDC::ProjectUnitPusher.execute(self) if self.status != 'booked_confirmed'
       elsif self.total_amount_paid > ProjectUnit.blocking_amount
         self.status = 'booked_tentative'
       elsif receipt.total_amount >= ProjectUnit.blocking_amount && ['hold', 'available'].include?(self.status)
         if (self.user == receipt.user && self.status == 'hold') || self.status == "available"
+          # Push data to SFDC
+          SFDC::ProjectUnitPusher.execute(self)
           self.status = 'blocked'
         else
           receipt.project_unit_id = nil

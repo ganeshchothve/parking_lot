@@ -144,10 +144,11 @@ Project Unit Details
     </p>
     <% end %>
     <br/>
-  <p>You have balance payment of Rs. <%= @receipt.total_amount %> that needs to be delivered by <%= @receipt.created_at.to_date + 7.days %> </p>
-  <p>To visit the booking portal, click on the link below</p>
-  <p>Take me to the Portal <a href="embassysprings.com"></a></p></br></br>
-    <p>Also find attached the payment receipt. </p>
+    <p>You have balance payment of Rs. <%= @project_unit.pending_balance %> that needs to be delivered by <%= @receipt.created_at.to_date + 7.days %> </p>
+    <p>To visit the booking portal, click on the link below</p>
+    <p>Take me to the Portal <a href="http://embassysprings2.amura.in/users/sign_in">http://embassysprings2.amura.in/</a> </p>
+  </br></br>
+  <p>Also find attached the payment receipt. </p>
     
     
   </td>

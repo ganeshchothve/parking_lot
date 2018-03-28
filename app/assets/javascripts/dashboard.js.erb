@@ -64,7 +64,7 @@ $(document).ready(function(){
 			 		var content = instance.content(),
 		            	people = JSON.parse(content);
 
-		            newContent = '<div>Flat No: '+ people[0] +'</div><div>Bedrooms: '+ people[3] +'</div><div>Carpet Area: '+ people[1] +' Sq.Ft.</div><div>Base Price: '+ people[2] +'/-</div><div class="book-status">Booking Status: '+ people[4] +'</div>';
+		            newContent = '<div>Flat No: '+ people[0] +'</div><div>Bedrooms: '+ people[3] +'</div><div>Carpet Area: '+ people[1] +' Sq.Ft.</div><div>Agreement Value: '+ people[2] +'/-</div><div class="book-status">Booking Status: '+ people[4] +'</div>';
 		        	instance.content(newContent);
 			 	}
 	        })
@@ -219,7 +219,7 @@ $(document).ready(function(){
 		   unitHtml += '<div>Flat No: '+ unitData[0] +'</div>';
 		   unitHtml += '<div>Bedrooms: '+ unitData[3] +'</div>';
 		   unitHtml += '<div>Carpet Area: '+ unitData[1] +'</div>';
-		   unitHtml += '<div>Base Price: '+ unitData[2] +'/-</div>';
+		   unitHtml += '<div>Agreement Value: '+ unitData[2] +'/-</div>';
 		   unitHtml += '<div>Booking Status: <span class="book-status">'+ unitData[4] +'</span></div>';
 		   unitHtml += '</div>';
 

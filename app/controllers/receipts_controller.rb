@@ -30,6 +30,7 @@ class ReceiptsController < ApplicationController
 
   def new
     if params[:project_unit_id].blank? && current_user.role?('user')
+         flash[:notice] = "Please Select Apartment before making payment"
       redirect_to(receipts_path)
       return
     end
@@ -67,10 +68,9 @@ class ReceiptsController < ApplicationController
     respond_to do |format|
       if @receipt.save
         #SFDC Call
-        
-        Rails.logger.info "-------------------------FDC::ReceiptsPusher.execute(@receipt)------------------------------------"
-        SFDC::ReceiptsPusher.execute(@receipt)
-        Rails.logger.info "-------------------------------------------------------------------------------------------------"
+        # Rails.logger.info "-------------------------FDC::ReceiptsPusher.execute(@receipt)------------------------------------"
+        # # SFDC::ReceiptsPusher.execute(@receipt)
+        # Rails.logger.info "-------------------------------------------------------------------------------------------------"
 
 
         format.html {

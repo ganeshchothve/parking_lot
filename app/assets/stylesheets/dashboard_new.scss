@@ -2703,6 +2703,7 @@ input.nav-btn:hover{
 	}
 }
 @media all and (max-width: 700px){
+
 	.upload-cheque{
 		width:100%; display:block !important;text-align: left;
 	}
@@ -2713,7 +2714,7 @@ input.nav-btn:hover{
 		display: none;
 	}
 	.dash-logo img{
-		width: 170px;
+		width: 140px;
 	}
 	.login-card .form-field-wrapper .checkbox{
 		width: 100%;
@@ -2778,8 +2779,8 @@ input.nav-btn:hover{
 	}
 	.notification-header{
 		padding-left: 0px;
-		top: 73px;
-		padding: 10px;
+		top: 58px;
+		padding: 5px;
 	}
 	.menu-open{
 		height: 100% !important;
@@ -2809,11 +2810,14 @@ input.nav-btn:hover{
 	.notification-header .subTitle {
 	    vertical-align: middle;
 	    display: inline-block;
-	    font-size: 16px;
+	    font-size: 12px;
 	    line-height: 30px;
 	    padding-right: 0px;
 	    margin-right: 0px;
 	    border-right: 0px solid #fff;
+	}
+	.notification-header .right-wrapper .white{
+		font-size: 12px;
 	}
 	.dash-menu-wrapper{
 		position: absolute;
@@ -3403,7 +3407,7 @@ input.nav-btn:hover{
 		margin-bottom: 20px;
 	}
 	.login-card {
-	    padding: 10px 0px 50px 0px;
+	    padding: 10px 0px 140px 0px;
 	}
 	.sign-up.form-wrapper{
 		width: 100%;
@@ -3499,8 +3503,8 @@ input.nav-btn:hover{
 		width: 0px;
 	}
 	.fixed-nav-btn {
-	    position: fixed;
-	    bottom: 50px;
+	    position: relative;
+	    bottom: 0px;
 	    left: 0px;
 	    width: 100%;
 	    background: #f6f6fa;
@@ -3517,6 +3521,9 @@ input.nav-btn:hover{
 	}
 	.receipt-table-wrapper {
 	    padding: 30px 30px 0px 0px;
+	}
+	.apartment-selector-wrapper{
+		padding-bottom: 50px;
 	}
 }
 

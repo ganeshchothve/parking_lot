@@ -19,4 +19,9 @@ class ChannelPartnerObserver < Mongoid::Observer
       # ChannelPartnerMailer.send_active(channel_partner.id)
     end
   end
+
+  def after_create(channel_partner)
+    # Push data to SFDC
+    SFDC::ChannelPartnerPusher.execute(channel_partner)
+  end
 end

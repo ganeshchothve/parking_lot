@@ -1,20 +1,17 @@
 module SFDC
   class ProjectUnitPusher < Base
     def self.execute(project_unit)
-      if Rails.env.production?
-        client_id = project_unit.id
+      if Rails.env.production? || Rails.env.staging?
         begin
           project_unit_data = []
-          project_unit_data << receipt_json(project_unit)
+          project_unit_data << project_unit_json(project_unit)
           if project_unit_data.any?
            @project_unit_pusher = SFDC::Base.new
            response = @project_unit_pusher.push("/services/apexrest/Embassy/LeadInfo", project_unit_data)
           end
         rescue Exception => e
-          # Rails.logger.info "---------------------------Exception-----------------------------------"
-          options = { error_class: e.class, error_message: ('Exception in SFDC ReceiptsCron: ' + e.message), parameters: { client_id: client_id } }
-          # Rails.logger.info('error', options)
-          # Rails.logger.info("Exception in SFDC::ReceiptsCron >>>> #{e.message} \n #{e.backtrace}", "sfdc_cron.log")
+          Rails.logger.info "---------------------------Exception-----------------------------------"
+          Rails.logger.info("Exception in SFDC::ProjectUnitPusher >>>> #{e.message} \n #{e.backtrace}")
         end
       end
     end
@@ -37,7 +34,6 @@ module SFDC
           "birthdate": "1980-10-16",
           "pan_card_number": "ATZQWE3540P",
           "unit_sfdc_id": "a0K0l000000jhlk"
-
       }
       hash
     end

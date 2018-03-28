@@ -1,25 +1,20 @@
 module SFDC
   class ReceiptsPusher < Base
     def self.execute(receipt)
-      if Rails.env.production?
-        client_id = receipt.id
+      if Rails.env.production? || Rails.env.staging?
         begin
           receipts_data = []
           receipts_data << receipt_json(receipt)
           if receipts_data.any?
-            Rails.logger.info "---------------------------@receipts_pusher = SFDC::Base.new-----------------------------------"
-           @receipts_pusher = SFDC::Base.new
+            @receipts_pusher = SFDC::Base.new
             Rails.logger.info "---------------------------response ------------------------------------------------------------"
-           response = @receipts_pusher.push("/services/apexrest/Embassy/receiptsInfo", receipts_data)
+            response = @receipts_pusher.push("/services/apexrest/Embassy/receiptsInfo", receipts_data)
             Rails.logger.info "-------------------------------------------------------------------------------------------------"
-            Rails.logger.info("SFDC::ReceiptsCron >>>>> #{response}", "sfdc_cron.log")
-            # update_sync_status(response, client, { class_type: "Receipt" })
+            Rails.logger.info("SFDC::ReceiptsPusher >>>>> #{response}")
           end
         rescue Exception => e
           Rails.logger.info "---------------------------Exception-----------------------------------"
-          options = { error_class: e.class, error_message: ('Exception in SFDC ReceiptsCron: ' + e.message), parameters: { client_id: client_id } }
-          Rails.logger.info('error', options)
-          Rails.logger.info("Exception in SFDC::ReceiptsCron >>>> #{e.message} \n #{e.backtrace}", "sfdc_cron.log")
+          Rails.logger.info("Exception in SFDC::ReceiptsPusher >>>> #{e.message} \n #{e.backtrace}")
         end
       end
     end
