@@ -3,6 +3,8 @@ class ProjectUnit
   include Mongoid::Timestamps
   include ArrayBlankRejectable
 
+  require "sfdc"
+
   def self.blocking_amount
     30000
   end
@@ -169,6 +171,10 @@ class ProjectUnit
     ]
   end
 
+  def status_value
+    self.class.available_statuses.find { |status_hash| status_hash[:id] == self.status }[:text] rescue ""
+  end
+
   def unit_configuration
     UnitConfiguration.find(self.unit_configuration_id)
   end
@@ -302,8 +308,8 @@ class ProjectUnit
       elsif receipt.total_amount >= ProjectUnit.blocking_amount && ['hold', 'available'].include?(self.status)
         if (self.user == receipt.user && self.status == 'hold') || self.status == "available"
           # Push data to SFDC
-          SFDC::ProjectUnitPusher.execute(self)
           self.status = 'blocked'
+          SFDC::ProjectUnitPusher.execute(self)
         else
           receipt.project_unit_id = nil
           receipt.save(validate: false)

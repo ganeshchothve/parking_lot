@@ -39,7 +39,7 @@ class ChannelPartner
   mount_uploader :bank_check_doc, DocUploader
   
   validates :name, :email, :phone, :rera_id, :location, :status, presence: true
-  validates :phone, uniqueness: true, phone: true # TODO: we can remove phone validation, as the validation happens in sell.do
+  validates :phone, uniqueness: true#, phone: true # TODO: we can remove phone validation, as the validation happens in sell.do
   validates :email, :rera_id, uniqueness: true, allow_blank: true
   validates :status, inclusion: {in: Proc.new{ ChannelPartner.available_statuses.collect{|x| x[:id]} } }
   validate :user_level_uniqueness

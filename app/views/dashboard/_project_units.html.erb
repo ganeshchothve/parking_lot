@@ -2,7 +2,7 @@
     <div class="col-12 booking-accordian-wrapper">
       <div class="booking-accordian first" data-acc="book-<%= project_unit.id %>">
         <div class="pull-left">
-          <span class="title">Booking <%= project_unit.status %></span>
+          <span class="title"><%= project_unit.status_value %></span>
         </div>
         <div class="pull-left">
           <span class="title">Unit No: <%= project_unit.name %></span>
@@ -70,7 +70,9 @@
         </div>
         <ul>
           <li>You need to pay 9.9% of agreement value to confirm the booking</li>
+          <% if project_unit.status != "booked_confirmed"%>
           <li>You have 7 days remaining to confirm this booking please make remaining payment of Rs. <%= number_to_indian_currency(project_unit.user.total_balance_pending.round()) %></li>
+          <% end %>
           <li>Cancellation charges are &#8377;5,000</li>
         </ul>
         <% if project_unit.status == 'hold' %>

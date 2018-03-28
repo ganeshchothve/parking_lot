@@ -189,7 +189,13 @@
 								<tr>
 									<td><%= @receipt.processed_on %></td>
 									<td><%= @receipt.payment_mode %></td>
-									<td>Reference ID: <%= @receipt.payment_identifier %><br/> Cheque / DD Number:<%= @receipt.issuing_bank %><br/> Bank Details: <%= @receipt.issuing_bank_branch %> </td>
+									<td class="text-left">
+								  <% if @receipt.payment_mode == "online" %>
+									Reference ID: <%= @receipt.payment_identifier %>
+									<% else %>
+									Cheque / DD Number:<%= @receipt.issuing_bank %><br/> Bank Details: <%= @receipt.issuing_bank_branch %> 
+									<% end %>
+									</td>
 									<td><%= number_to_indian_currency(@receipt.total_amount.round) %></td>
 								</tr>
 							</table>

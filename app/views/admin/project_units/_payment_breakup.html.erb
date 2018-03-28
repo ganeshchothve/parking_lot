@@ -1,162 +1,3 @@
-<h1 class="f22 bold">APARTMENT TYPE & COSTING</h1>
-<div class="table-wrapper">
-<table width="100%" cellspacing="0" cellpadding="5" class="payment-breakup" border="0" outline="1">
-	<tr>
-		<th>
-			Sr.no.
-		</th>
-		<th>
-			Installment Details
-		</th>
-		<th>
-			Payment %
-		</th>
-		<th>
-			Installment Amount (Rs.)
-		</th>
-	</tr>
-	<tr>
-		<td class="text-center">
-			01
-		</td>
-		<td>
-			On Agreement / Booking
-		</td>
-		<td class="text-center">
-			10%
-		</td>
-		<td>
-			<%= number_to_indian_currency(calculate_percent(project_unit.agreement_price.round,10)) %>
-		</td>
-	</tr>
-	<tr>
-		<td class="text-center">
-			02
-		</td>
-		<td>
-			On completion of Basement 
-		</td>
-		<td class="text-center">
-			25%
-		</td>
-		<td>
-			<%= number_to_indian_currency(calculate_percent(project_unit.agreement_price,25)) %>
-		</td>
-	</tr>
-	<tr>
-		<td class="text-center">
-			03
-		</td>
-		<td>
-			On completion of 5th floor slab 
-		</td>
-		<td class="text-center">
-			25%
-		</td>
-		<td>
-			<%= number_to_indian_currency(calculate_percent(project_unit.agreement_price,25)) %>
-		</td>
-	</tr>
-	<tr>
-		<td class="text-center">
-			04
-		</td>
-		<td>
-			On completion of 10th floor slab
-		</td>
-		<td class="text-center">
-			25%
-		</td>
-		<td>
-			<%= number_to_indian_currency(calculate_percent(project_unit.agreement_price,25)) %>
-		</td>
-	</tr>
-	<!-- <tr>
-		<td class="text-center">
-			05
-		</td>
-		<td>
-			On completion of 9th floor slab
-		</td>
-		<td class="text-center">
-			12.50%
-		</td>
-		<td>
-			<%= number_to_indian_currency(calculate_percent(project_unit.agreement_price,12.5)) %>
-		</td>
-	</tr>
-	<tr>
-		<td class="text-center">
-			06
-		</td>
-		<td>
-			On completion of 12th floor slab
-		</td>
-		<td class="text-center">
-			12.50%
-		</td>
-		<td>
-			<%= number_to_indian_currency(calculate_percent(project_unit.agreement_price,12.5)) %>
-		</td>
-	</tr>
-	<tr>
-		<td class="text-center">
-			07
-		</td>
-		<td>
-			On completion of Terrace floor slab
-		</td>
-		<td class="text-center">
-			12.50%
-		</td>
-		<td>
-			<%= number_to_indian_currency(calculate_percent(project_unit.agreement_price,12.5)) %>
-		</td>
-	</tr> -->
-	<tr>
-		<td class="text-center">
-			05
-		</td>
-		<td>
-			On completion of painting & finishes and deposits (power + water)
-		</td>
-		<td class="text-center">
-			10%
-		</td>
-		<td>
-			<%= number_to_indian_currency(calculate_percent(project_unit.agreement_price,10)) %> 
-		</td>
-	</tr>
-	<tr>
-		<td class="text-center">
-			06
-		</td>
-		<td>
-			On Possession + remaining additional deposits / charges + registration
-		</td>
-		<td class="text-center">
-			5%
-		</td>
-		<td>
-			<%= number_to_indian_currency(calculate_percent(project_unit.agreement_price,5)) %>
-		</td>
-	</tr>
-	<tr>
-		<td class="pink">
-			&nbsp;
-		</td>
-		<td class="pink">
-			Total value including additionals
-		</td>
-		<td class="pink">
-			&nbsp;
-		</td>
-		<td class="pink">
-			<%= number_to_indian_currency(project_unit.agreement_price.round) %>
-		</td>
-	</tr>
-</table>
-</div>
 <h1 class="f22 bold">Additionals & Deposits</h1>
 	      		<div class="table-wrapper">
 	      			<table width="100%" cellspacing="0" cellpadding="5" class="payment-breakup" border="0" outline="1">
@@ -164,7 +5,7 @@
 							<th>
 								Sr.no.
 							</th>
-							<th>
+							<th class="text-left">
 								Additionals
 							</th>
 							<th>
@@ -301,7 +142,7 @@
 							<th>
 								Sr.no.
 							</th>
-							<th>
+							<th class="text-left">
 								Installment Details
 							</th>
 							<th>
