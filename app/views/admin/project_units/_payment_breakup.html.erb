@@ -1,8 +1,134 @@
+<h1 class="f22 bold">APARTMENT TYPE & COSTING</h1>	
+	      		<div class="table-wrapper">
+	      			<table width="100%" cellspacing="0" cellpadding="5" class="payment-breakup" border="0" outline="1">
+						<tr>
+							<th width="10%">
+								Sr.no.
+							</th>
+							<th class="text-left">
+								Details
+							</th>
+							<th>
+								Costing
+							</th>
+						</tr>
+						<tr>
+							<td class="text-center">
+								01
+							</td>
+							<td>
+								Saleable Area
+							</td>
+							<td>
+								<%= @project_unit.saleable.round(2) %>
+							</td>
+						</tr>
+						<tr>
+							<td class="text-center">
+								02
+							</td>
+							<td>
+								Base Price
+							</td>
+							<td>
+								<%= number_to_indian_currency(@project_unit.base_rate.round(2)) %>
+							</td>
+						</tr>
+						<tr>
+							<td class="text-center">
+								03
+							</td>
+							<td>
+								Land Price
+							</td>
+							<td>
+								<%= number_to_indian_currency(@project_unit.land_rate.round(2)) %>
+							</td>
+						</tr>
+						<tr>
+							<td class="text-center">
+								04
+							</td>
+							<td>
+								Construction cost
+							</td>
+							<td>
+								<%= number_to_indian_currency(@project_unit.base_rate - @project_unit.land_rate) %>
+							</td>
+						</tr>
+						<tr>
+							<td class="text-center">
+								05
+							</td>
+							<td>
+								PLC
+							</td>
+							<td>
+								<%= number_to_indian_currency(@project_unit.premium_location_charges.round(2)) %> 
+							</td>
+						</tr>
+						<tr>
+							<td class="text-center">
+								06
+							</td>
+							<td>
+								FRP
+							</td>
+							<td>
+								<%= number_to_indian_currency(@project_unit.floor_rise.round(2)) %> 
+							</td>
+						</tr>
+						<tr>
+							<td class="text-center">
+								07
+							</td>
+							<td>
+								Base Price + PLC + FRP
+							</td>
+							<td>
+								<%= @project_unit.base_rate + @project_unit.premium_location_charges + @project_unit.floor_rise %>
+							</td>
+						</tr>
+						<tr>
+							<td class="text-center">
+								08
+							</td>
+							<td>
+								Land Value
+							</td>
+							<td>
+								<%= number_to_indian_currency(@project_unit.land_price.round(2)) %>
+							</td>
+						</tr>
+						<tr>
+							<td class="text-center">
+								09
+							</td>
+							<td>
+								Construction Value
+							</td>
+							<td>
+								<%= number_to_indian_currency(((@project_unit.base_rate + @project_unit.premium_location_charges + @project_unit.floor_rise) - (@project_unit.land_rate))*(@project_unit.saleable).round(2)) %> 
+							</td>
+						</tr>
+						<tr>
+							<td class="pink">
+								&nbsp;
+							</td>
+							<td class="pink">
+								Agreement Value
+							</td>
+							<td class="pink">
+								<%= number_to_indian_currency((@project_unit.base_rate + @project_unit.premium_location_charges + @project_unit.floor_rise)* (@project_unit.saleable)) %>
+							</td>
+						</tr>
+					</table>
+	      		</div>
 <h1 class="f22 bold">Additionals & Deposits</h1>
 	      		<div class="table-wrapper">
 	      			<table width="100%" cellspacing="0" cellpadding="5" class="payment-breakup" border="0" outline="1">
 	      				<tr>
-							<th>
+							<th width="10%">
 								Sr.no.
 							</th>
 							<th class="text-left">
@@ -108,7 +234,7 @@
 								Additional Charges & deposits in %
 							</td>
 							<td>
-								<%= ((project_unit.wep_price + project_unit.clubhouse_amenities_price + project_unit.corpus_fund + project_unit.city_infrastructure_fund + project_unit.advance_maintenance_charges + project_unit.car_park_price + project_unit.gst_on_additional_charges)*100/project_unit.agreement_price).round(2) %>% 
+								<%= ((project_unit.sub_total * 100) / ((project_unit.base_rate + project_unit.premium_location_charges + project_unit.floor_rise) * (project_unit.saleable))).round %>%
 							</td>
 						</tr>
 						<tr>
@@ -119,7 +245,7 @@
 								All inclusive with GST except stamp duty & registration charges
 							</td>
 							<td>
-								<%= number_to_indian_currency((project_unit.all_inclusive_price).round(2)) %>
+								<%= number_to_indian_currency(project_unit.all_inclusive_price) %>
 							</td>
 						</tr>
 						<tr>
@@ -139,7 +265,7 @@
 	      		<div class="table-wrapper">
 	      			<table width="100%" cellspacing="0" cellpadding="5" class="payment-breakup" border="0" outline="1">
 						<tr>
-							<th>
+							<th width="10%">
 								Sr.no.
 							</th>
 							<th class="text-left">
