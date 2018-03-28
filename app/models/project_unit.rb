@@ -3,8 +3,6 @@ class ProjectUnit
   include Mongoid::Timestamps
   include ArrayBlankRejectable
 
-  require "sfdc"
-
   def self.blocking_amount
     30000
   end
