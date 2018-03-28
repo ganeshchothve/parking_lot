@@ -66,6 +66,13 @@ class ReceiptsController < ApplicationController
     authorize @receipt
     respond_to do |format|
       if @receipt.save
+        #SFDC Call
+        
+        Rails.logger.info "-------------------------FDC::ReceiptsPusher.execute(@receipt)------------------------------------"
+        SFDC::ReceiptsPusher.execute(@receipt)
+        Rails.logger.info "-------------------------------------------------------------------------------------------------"
+
+
         format.html {
           if @receipt.payment_mode == 'online'
             if @receipt.payment_gateway_service.present?

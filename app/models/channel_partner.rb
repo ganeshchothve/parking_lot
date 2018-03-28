@@ -33,14 +33,34 @@ class ChannelPartner
   field :bank_region, type: String
   field :bank_country, type: String
   field :bank_ifsc_code, type: String
-
-
+  field :region, type: String
+  
+  mount_uploader :pan_card_doc, DocUploader
+  mount_uploader :bank_check_doc, DocUploader
+  
   validates :name, :email, :phone, :rera_id, :location, :status, presence: true
   validates :phone, uniqueness: true, phone: true # TODO: we can remove phone validation, as the validation happens in sell.do
   validates :email, :rera_id, uniqueness: true, allow_blank: true
   validates :status, inclusion: {in: Proc.new{ ChannelPartner.available_statuses.collect{|x| x[:id]} } }
   validate :user_level_uniqueness
   validate :cannot_make_inactive
+
+
+  validates :name, :last_name, :city, :region, format: { with: /\A[a-zA-Z]*\z/}
+  validates :postal_code, format: { with: /\A[0-9]*\z/}
+  
+  # validates :city, format: { with: /\A[a-zA-Z]*\z/}
+  # validates :city,  format: { with: /[a-zA-Z]/}
+  # validates :postal_code, format: { with: /[0-9]/}
+  # validates :mobile_phone, format: { with: /\A\d+\z/ }
+  # validates :email, :presence => true, :format => { with: /\([\w\.%\+\-]+)@([\w\-]+\.)+([\w]{2,})\z/i }
+  # validates :mobile_phone, :presence => true, :uniqueness => true#, :min => 10, :max => 15
+  # validates :pan_no, format: { with: /[a-zA-Z0-9]/} #, :minimum => 10
+  # validates :bank_beneficiary_account_no, format: { with: /[0-9]/}
+  # EMAIL_REGEX = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i
+
+
+
 
   def self.available_statuses
     [
@@ -81,6 +101,9 @@ class ChannelPartner
   def ds_name
     "#{name} - #{email} - #{phone}"
   end
+
+def channel_partner_json
+end
 
   private
   def user_level_uniqueness

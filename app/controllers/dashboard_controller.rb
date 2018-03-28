@@ -45,7 +45,7 @@ class DashboardController < ApplicationController
       format.pdf do
         render  pdf: "Embassy Receipt",
         title: 'Embassy Receipt',
-        save_to_file: Rails.root.join('tmp', "receipt_mail.pdf")
+        save_to_file: Rails.root.join('tmp', "receipt.pdf")
         ReceiptMailer.send_receipt(@receipt.id).deliver_now
       end
     end
@@ -61,7 +61,7 @@ class DashboardController < ApplicationController
       format.pdf do
         render  pdf: "Embassy Receipt",
         title: 'Embassy Receipt',
-        save_to_file: Rails.root.join('tmp', "receipt.pdf")
+        save_to_file: Rails.root.join('tmp', "receipt_mail.pdf")
         ReceiptMailer.receipt_email(@receipt.id).deliver_now
       end
     end
@@ -198,39 +198,23 @@ class DashboardController < ApplicationController
   end
 
   def user_profile
-     Rails.logger.info "*************************************************************"
-     Rails.logger.info current_user.id
-     Rails.logger.info "*************************************************************"
-
      @user = User.find(current_user.id)
-     Rails.logger.info "*************************************************************"
-     Rails.logger.info @user.password
-     Rails.logger.info "*************************************************************"
-
   end
 
   def user_update
-    Rails.logger.info params
-
-    Rails.logger.info "*************************************************************"
-    Rails.logger.info params
-    Rails.logger.info "*************************************************************"
-
     user_params = params['user']
     user = User.find(user_params[:id])
-    user.email = user_params[:name]
+    user.email = user_params[:email]
     user.phone = user_params[:phone]
     user.password = user_params[:password]
-
-    Rails.logger.info "*************************************************************"
-
-    user.save!
-    Rails.logger.info "*************************************************************"
-
-
     respond_to do |format|
-      format.html
-      format.json
+      if user.save
+        format.html { redirect_to "/users/sign_in", notice: 'User updated successfully...' }
+        format.json
+      else
+        format.html { render :action => "user_profile" }
+        format.json
+      end
     end
   end
 

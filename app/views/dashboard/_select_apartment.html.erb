@@ -28,7 +28,7 @@
             <select class="init-selectize" name="bedrooms">
               <option value="">Select Bedrooms</option>
               <% @configurations.each do |c| %>
-              <option value="<%= c[:bedrooms] %>" <%= params[:configuration].split(",")[0].to_s == c[:bedrooms].to_s ? "selected=selected" : "" %>><%= c[:bedrooms] %> BHK (Starting from <%= number_to_indian_currency(c[:base_price].round) %>)</option>
+              <option value="<%= c[:bedrooms] %>" <%= params[:configuration].split(",")[0].to_s == c[:bedrooms].to_s ? "selected=selected" : "" %>><%= float_to_int(c[:bedrooms]) %> BHK (Starting from <%= number_to_indian_currency(c[:base_price].round) %>)</option>
               <% end %>
             </select>
           </div>
@@ -159,7 +159,7 @@
     	<div class="clearfix"></div>
     </div>
     <% if ProjectUnitPolicy.new(current_user, ProjectUnit).block? %>
-  	<div class="col-12 text-right center-btn-xs fixed-nav-btn">
+  	<div class="col-12 center-btn-xs fixed-nav-btn">
       <a href="javascript:;" class="nav-btn btn-anim navigate" data-stage="choose-tower" data-navigate-to="prev">← PREV</a>
       <a href="javascript:;" class="nav-btn btn-anim navigate" data-stage="kyc-details" data-navigate-to="next">NEXT →</a>
     </div>

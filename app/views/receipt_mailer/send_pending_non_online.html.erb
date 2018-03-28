@@ -55,6 +55,11 @@ Project Unit Details
 
         <tr>
           <td style="line-height:26px;">
-          		Your payment is pending. If the payment is not made in the next <%= receipt%> days, the apartment hold will be cancelled. 
+          		<!-- our payment is pending. If the payment is not made in the next <%#= receipt %> days, the apartment hold will be cancelled.  -->
+              Thanks for your payment.
+
+              <!-- <p><strong>  Mr. <%#= @user.channel_partner.name %> </strong> the Channel Partner has selected and booked an Apartment unit no. <%#= @project_unit.name  %> on your behalf at Embassy Springs Project and has paid a sum of Rs. <%= @receipt.total_amount %>/- towards the Booking amount. </p>
+              <p>We request you to kindly confirm the above booking by the return mail within 7 days, failing which the above booking will be cancelled without any further intimation to you or the Channel Partner.</p> -->
+
           </td>
         </tr>  

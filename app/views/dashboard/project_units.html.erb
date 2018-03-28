@@ -7,7 +7,7 @@
       <% minbudget = budget.split("-")[0]%>
       <% maxbudget = budget.split("-")[1]%>
     <% end %>
-    <% @title =  "#{bhk} BHK Apartments"  %>
+    <% @title =  "#{float_to_int(bhk)} BHK Apartments"  %>
      <% @title <<  " from #{number_to_indian_currency(minbudget)} to #{number_to_indian_currency(maxbudget)}"  if budget != 'NA' %>
      <% @title <<  " at #{@tower.name}" if params[:project_tower_id].present? %>
 <% end %>

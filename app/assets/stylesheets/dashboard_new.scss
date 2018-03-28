@@ -73,7 +73,7 @@ a, img, button, input[type=submit]{
 	text-align: center;
 }
 .text-right{
-	text-align: right;
+	text-align: right !important;
 }
 .text-justify{
 	text-align: justify;
@@ -483,6 +483,9 @@ section{
 	color: #fff;
 	margin: 10px 0px;
 }
+.dashboard-menu .prompts-message li{
+	line-height: 22px
+}
 .gradient-bg{
 	background:-webkit-linear-gradient(90deg, rgba(145,101,248,1) 0%, rgba(238,97,187,1) 100%);
 	background:-o-linear-gradient(90deg, rgba(145,101,248,1) 0%, rgba(238,97,187,1) 100%);
@@ -587,12 +590,12 @@ section{
 	color: #383838;
 }
 .dash-logo img{
-	width: 50px;
+	/*width: 50px;*/
 	padding: 0px 10px;
 	vertical-align: middle;
 }
 .dash-menu-wrapper{
-	margin: 0px 0px 30px 0px;
+	margin: 0px 0px 0px 0px;
     border-top: 1px solid #ececec;
 }
 .dash-menu-wrapper a, .dash-menu-footer a{
@@ -627,9 +630,9 @@ section{
 	background-repeat: no-repeat;
 	vertical-align: middle;
 }
-.dash-menu-footer .sprite-signout{
+.dash-menu-wrapper .sprite-signout{
 	display: inline-block;
-	margin: 0 11px;
+	margin: 0px 10px 0px 5px;
 	vertical-align: bottom;
 	background-image: asset-url('Signout-Icon.png');
 	background-repeat: no-repeat;	
@@ -666,12 +669,12 @@ section{
 .dash-menu-wrapper a:hover .apartment-selector, .dash-menu-wrapper a.active .apartment-selector {
 	background-position: -5px -38px;
 }
-.dash-menu-footer .sign-out{
+.dash-menu-wrapper .sign-out{
 	background-position: 0 0;
 	width: 24px;
 	height: 21px;
 }
-.dash-menu-footer a:hover .sign-out, .dash-menu-footer a.active .sign-out{
+.dash-menu-wrapper a:hover .sign-out, .dash-menu-wrapper a.active .sign-out{
 	background-position: 0 -29px;
 	width: 24px;
 	height: 21px;
@@ -686,6 +689,8 @@ section{
     border-left: 0px;
 }
 .dash-menu-footer{
+	width: 100%;
+	text-align: center;
 	position: absolute;
 	bottom: 0px;
 	left: 0px;
@@ -757,7 +762,7 @@ section{
 }
 .dashboard-menu .prompts-message li{
 	font-weight: 500;
-	font-size: 22px;
+	font-size: 18px;
 }
 .dashboard-menu .prompts-message ul {
     padding: 20px 20px 20px 40px;
@@ -2521,13 +2526,26 @@ input.nav-btn {
 }
 input.nav-btn:hover{
 	color: #86b825 !important;
+	background-color: #fff !important;
 }
 .blue-link{
 	color: #007bff
 }
+.white-wrapper{
+    background-color: #fff;
+    padding: 20px 20px 0px 20px;
+    border-radius: 6px;
+    border: 1px solid #dcdcdc;
+}
+.upload-cheque{
+	width:57%; display:block !important;text-align: center
+}
+.upload-pancard{
+	width:53%; display:block !important;text-align: center
+}
 @media all and (max-width: 768px){
 	.notification-header .left-wrapper{
-		padding-left: 10px;
+		padding-left: 80px;
 	}
 	.notification-header .subTitle{
 		padding-right: 0px;
@@ -2542,7 +2560,10 @@ input.nav-btn:hover{
 		font-size: 14px;
 	}
 	.dash-menu-wrapper a, .dash-menu-footer a{
-		font-size: 14px;
+		font-size: 13px;
+	}
+	.dashboard-menu .menu-items, .dashboard-menu:hover .menu-items-hide{
+		width: 150px;
 	}
 	.prompts-message ul {
 	    padding: 10px 20px 10px 30px;
@@ -2682,7 +2703,18 @@ input.nav-btn:hover{
 	}
 }
 @media all and (max-width: 700px){
-
+	.upload-cheque{
+		width:100%; display:block !important;text-align: left;
+	}
+	.upload-pancard{
+		width:100%; display:block !important;text-align: left;
+	}
+	.dash-menu-wrapper .sign-out{
+		display: none;
+	}
+	.dash-logo img{
+		width: 170px;
+	}
 	.login-card .form-field-wrapper .checkbox{
 		width: 100%;
 	}
@@ -3240,6 +3272,8 @@ input.nav-btn:hover{
 	.help-wrapper>div a{
 		display: block;
 		color: #616161;
+		padding: 10px 0px 0px 0px;
+    	font-size: 16px;
 	}
 	.padding-left-30 {
 	    padding-left: 0px;

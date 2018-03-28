@@ -15,6 +15,15 @@
         App.current_user = <%= raw current_user.to_json %>;
       <% end %>
     <% end %>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-116390336-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-116390336-1');
+    </script>
   </head>
   <body>
 
@@ -79,9 +88,9 @@
           <span></span>
         </div>
       <div class="dash-logo">
-        <a href="/dashboard" style="text-align: left;display: inline-block;"><img src="<%= asset_path "embassy_springs_logo.png" %>" class="img-responsive" style="padding:0 5px;"></a>
+        <a href="/dashboard" style="text-align: left;display: inline-block;"><img src="<%= asset_path "embassy_unit.png" %>" class="img-responsive" style="padding:0 5px;"></a>
         <!-- <a href="/dashboard" style="text-align: right;display: inline-block;"><img src="<%= asset_path "logo-edge.png" %>" class="img-responsive" style="padding:0 5px;width:70%;"></a> -->
-        <span>Embassy Springs<br/> Booking Portal</span>
+        <!-- <span>Embassy Springs<br/> Booking Portal</span> -->
       </div>
       <div class="dash-menu-wrapper">
         <% if policy(:dashboard).index? %>
@@ -115,6 +124,9 @@
         <div>
           <a href="/users/sign_out" data-method="delete" rel="nofollow"><span class="sprite-signout sign-out"></span><span class="menu-items-hide">sign out</span></a>
         </div>
+        <!-- <div class="visible-xs">
+          <a href="/users/sign_out" data-method="delete" rel="nofollow"><span class="sprite-signout sign-out"></span><span class="menu-items-hide">sign out</span></a>
+        </div> -->
         <div class="visible-xs help-wrapper text-center">
             <p>Need Help?</p>
             <div>
@@ -126,14 +138,12 @@
       </div>
       <div class="prompts-message hidden-xs">
         <ul>
-          <li>Register now to book & save upto Rs. 10 Lac!</li>
+          <li>Register now and have an Edge over others</li>
           <li>Prices rise with every 50 bookings</li>
         </ul>
       </div>
       <div class="dash-menu-footer hidden-xs">
-        <div>
-          <a href="/users/sign_out" data-method="delete" rel="nofollow"><span class="sprite-signout sign-out"></span><span class="menu-items-hide">sign out</span></a>
-        </div>
+         <img src="<%= asset_path "embassy_springs_logo.png" %>" class="img-responsive" style="padding:0 5px;width:70px;">
       </div>
       
     </div>

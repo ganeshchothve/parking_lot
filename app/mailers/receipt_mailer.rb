@@ -1,4 +1,6 @@
 class ReceiptMailer < ApplicationMailer
+  default from: "Embassy Springs <no-reply@embassysprings.com>"
+
   def send_failure receipt_id
     @receipt = Receipt.find(receipt_id)
     @user = @receipt.user
@@ -23,7 +25,7 @@ class ReceiptMailer < ApplicationMailer
   def send_clearance_pending receipt_id
     @receipt = Receipt.find(receipt_id)
     @user = @receipt.user
-    @project_unit = @receipt.project_unit
+    @project_unit = @receipt.project_unit || @receipt.reference_project_unit
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
     cc += default_team
@@ -33,7 +35,7 @@ class ReceiptMailer < ApplicationMailer
   def send_pending_non_online receipt_id
     @receipt = Receipt.find(receipt_id)
     @user = @receipt.user
-    @project_unit = @receipt.project_unit
+    @project_unit = @receipt.project_unit || @receipt.reference_project_unit
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
     cc += default_team

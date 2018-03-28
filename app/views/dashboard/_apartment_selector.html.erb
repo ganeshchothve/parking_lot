@@ -11,7 +11,7 @@
         <select class="init-selectize required" name="bedrooms">
           <option value="">Select Bedrooms</option>
           <% @configurations.each do |c| %>
-          <option value="<%= c[:bedrooms] %>"><%= c[:bedrooms] %> BHK (Starting from <%= number_to_indian_currency(c[:base_price]) %>)</option>
+          <option value="<%= c[:bedrooms] %>"><%= float_to_int(c[:bedrooms]) %> BHK (Starting from <%= number_to_indian_currency(c[:base_price]) %>)</option>
           <% end %>
         </select>
       </div>
@@ -35,7 +35,7 @@
     </div>
   </div>
   <div class="clearfix"></div>
-  <div class="col-12 text-right fixed-nav-btn">
+  <div class="col-12 fixed-nav-btn">
     <a href="javascript:void(0);" class="nav-btn btn-anim navigate" data-stage="choose-tower" data-navigate-to="next">NEXT →</a>
   </div>
   <div class="clearfix"></div>

@@ -6,7 +6,7 @@
 			<div class="col-7 success-card">
 				<h2 class="pageTitle pink">Congratulations</h2>
 				<p>
-					Your home at Embassy Edge has been reserved! You now have 7 days to pay the booking amount and call the township of Embassy Springs your home
+					Your home at Embassy Edge has been booked! You now have 7 days to pay the booking amount and call the township of Embassy Springs your home
 				</p>
 			</div>
 			<div class="col-5 text-center">
@@ -52,7 +52,7 @@
 							<div class="tower-specs">
 								<div class="col-4">
 									<span class="title">PAN Card:</span>
-									<span class="specs"><%= @receipt.user.name %></span>
+									<span class="specs"><%= @receipt.user.user_kycs.first.pan_number %></span>
 								</div>
 								<div class="col-4">
 									<span class="title">Project:</span>

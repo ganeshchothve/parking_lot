@@ -44,6 +44,7 @@ $.ajaxSetup({
 });
 
 $(document).ready(function(){
+
 	setTimeout(function(){
 		$("p.notice, p.alert").fadeOut();
 	}, 3000);
@@ -223,6 +224,9 @@ $(document).ready(function(){
 		   unitHtml += '</div>';
 
 		$(".show-unit-details").html(unitHtml);
+
+		var fpUrl = "/floorplans/" + unitData[3] + "-BHK-" + unitData[1] + "-SF.png";
+		$("#fp > a").attr("href", fpUrl).find("img").attr("src", fpUrl);
 	});
 
 	$(".preventSubmit").on("click", function(e){

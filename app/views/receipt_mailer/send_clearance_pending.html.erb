@@ -54,12 +54,16 @@ Project Unit Details
     <p> <strong>Following are your cheque details </strong></p>
     <p>
       <span style="color:#64c0e9; font-weight:bold">Name </span> : <%= @user.name %><br/>
-      <span style="color:#64c0e9; font-weight:bold">Agreement Value </span> : <%= number_to_indian_currency(@project_unit.base_price.round)%><br/>
-      <span style="color:#64c0e9;font-weight:bold;">Advance paid </span> :  <%= number_to_indian_currency(@project_unit.total_amount_paid) %><br/>
-      <span style="color:#64c0e9;font-weight:bold;">Balance Payment </span> : <%= @project_unit.pending_balance%><br/>
+      <span style="color:#64c0e9; font-weight:bold">Agreement Value </span> : Rs. <%= @project_unit.base_price rescue ''%><br/>
+      <span style="color:#64c0e9;font-weight:bold;">Advance paid </span> :  Rs. <%= @project_unit.total_amount_paid  rescue '' %><br/>
+      <span style="color:#64c0e9;font-weight:bold;">Balance Payment </span> : <%= @project_unit.pending_balance  rescue ''%><br/>
     </p>
     <br/>
-    <p>Your Embassy home will be kept on hold for you for additional <%= (@project_unit.auto_release_on - Date.today).days %> days until your cheque is cleared. We will notify you once the cheque realizes. </p>
+    <p>Your Embassy home will be kept on hold for you for additional 4 <%#= (@project_unit.auto_release_on - Date.today).days %> days until your cheque is cleared. We will notify you once the cheque realizes. </p>
+    <p>
+      <p><strong>  Mr. <%= @user.channel_partner.name %> </strong> the Channel Partner has selected and booked an Apartment unit no. <%= @project_unit.name  rescue ''  %> on your behalf at Embassy Springs Project and has paid a sum of Rs. <%= @receipt.total_amount %>/- towards the Booking amount. </p>
+              <p>We request you to kindly confirm the above booking by the return mail within 7 days, failing which the above booking will be cancelled without any further intimation to you or the Channel Partner.</p>
+    </p>
     <% if @receipt.status == 'clearance_pending' && @receipt.project_unit_id.blank? && @receipt.reference_project_unit_id.present? && @receipt.reference_project_unit.status == 'available' %>
       <p>
         To block this chosen unit <a href='<%= dashboard_checkout_via_email_url(project_unit_id: @receipt.reference_project_unit_id, receipt_id: @receipt.receipt_id, user_email: @user.email, user_token: @user.authentication_token) %>'>Click here</a>

@@ -120,7 +120,13 @@
 						<p class="pageTitle big pink">RECEIPT</p>
 					</div>
 					<div class="pull-right">	
-						<a href="/dashboard/receipt-print/<%= @receipt.id %>" target="_blank"><img src="<%= asset_path 'printer-outline.png'%>" class="img-responsive"></a>
+						<!-- <a href="/dashboard/receipt-print/<%#= @receipt.id %>" target="_blank"><img src="<%#= asset_path 'printer-outline.png'%>" class="img-responsive"></a> -->
+						<%#= link_to dashboard_receipt_print_path(@receipt.id, :format => 'pdf'), target: :_blank do %>
+							<!-- <i class="far fa-envelope" style="font-size:24px;color:#383838;display:inline-block;margin:0 10px;"></i> -->
+						<%# end%>
+						<%= link_to dashboard_receipt_mail_path(@receipt.id, :format => 'pdf'), target: :_blank do %>
+							<img src="<%= asset_path 'printer-outline.png'%>" class="img-responsive">
+						<% end%>
 					</div>
 					<div class="clearfix"></div>
 				</div>
@@ -159,7 +165,7 @@
 								</div>
 								<div class="col-4">
 									<span class="title">Unit No:</span>
-									<span class="specs"><%= @receipt.project_unit.name %></span>
+									<span class="specs"><%= @receipt.project_unit.present? ? @receipt.project_unit.name : @receipt.reference_project_unit.name%></span>
 								</div>
 								<div class="clearfix"></div>
 							</div>
@@ -193,6 +199,7 @@
 							<p>Nam Estate Pvt. Ltd.</p>
 							<br/><br/>
 							<p>Authorised Signature</p>
+							<span>This is a computer generated receipt no signature required</span>
 							<br/><br/>
 						</div>
 					</div>

@@ -83,10 +83,18 @@ class Receipt
   end
 
   def payment_gateway_service
-    if self.payment_gateway.blank? || (self.project_unit.present? && ["hold", "blocked", "booked_tentative"].exclude?(self.project_unit.status)) || (self.project_unit.present? && self.project_unit.user_id != self.user_id)
-      return nil
+    if self.payment_gateway.present?
+      if self.project_unit.present? && ["hold","blocked","booked_tentative"].exclude?(self.project_unit.status)
+        return nil
+      else
+        if(self.project_unit.blank? || self.project_unit.user_id == self.user_id)
+          return eval("PaymentGatewayService::#{self.payment_gateway}").new(self)
+        else
+          return nil
+        end
+      end
     else
-      return eval("PaymentGatewayService::#{self.payment_gateway}").new(self)
+      return nil
     end
   end
 
@@ -96,8 +104,8 @@ class Receipt
       if params[:fltrs][:status].present?
         selector[:status] = params[:fltrs][:status]
         if selector[:status] == "pending"
-	  selector[:payment_mode] = {"$ne" => "online"}
-	end
+      	  selector[:payment_mode] = {"$ne" => "online"}
+      	end
       end
       if params[:fltrs][:user_id].present?
         selector[:user_id] = params[:fltrs][:user_id]
@@ -113,6 +121,7 @@ class Receipt
     if params[:fltrs].blank? || params[:fltrs][:status].blank?
       selector = selector.or({status: "pending", payment_mode: {"$ne" => "online"}}, {status: {"$ne" => "pending"}})
     end
+    selector
   end
 
   private

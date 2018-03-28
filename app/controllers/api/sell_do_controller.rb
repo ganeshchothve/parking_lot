@@ -33,10 +33,11 @@ class Api::SellDoController < ApplicationController
       @klass = ProjectTower
 		elsif params[:unit_configuration].present?
 			@parameters = JSON(params[:unit_configuration])
-      @klass = UnitConfiguration
+		        @klass = UnitConfiguration
 		elsif params[:project_unit].present?
 			@parameters = JSON(params[:project_unit])
-      @klass = ProjectUnit
+			@parameters[:status] = @parameters["data_attributes"].find { |h| h['n'] == "status" }['v']
+     			@klass = ProjectUnit
 		else
 			render :json => {"status" => "Error: params not present", "errors" =>  ["Project params not present"]}, status: 422
 			return

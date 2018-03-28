@@ -18,7 +18,7 @@
 			<div class="user-info-wrapper">
 				<p class="pink">USERS INFO</p>
 				<div class="col-md-10 border border-left-0 border-top-0 border-bottom-0 table-responsive margin-xs-bottom-10">
-					<%= form_tag dashboard_user_update_path, :remote=>true do %>
+					<%= form_tag dashboard_user_update_path do %>
 					<%= hidden_field_tag 'user[id]', @user.id %>
 					<div class="form-field-wrapper">
 						<%#= label_tag :Name %>
