@@ -181,7 +181,7 @@ class ProjectUnit
   end
 
   def premium_location_charges
-    case p.category
+    case category
     when "Courtyard Facing"
 	100
     when "Outward Facing"
