@@ -435,6 +435,8 @@
 	</div>
 	
 </section>
-<% elsif current_user.role?('crm') || current_user.role?('channel_partner') %>
+<% elsif current_user.role?('crm') %>
   <%= render 'crm' %>
+<% elsif current_user.role?('channel_partner') %>
+  <%= render 'channel_partner' %>
 <% end %>
