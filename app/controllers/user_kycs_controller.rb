@@ -14,7 +14,7 @@ class UserKycsController < ApplicationController
 
   def new
     if @user.user_kyc_ids.blank?
-      @user_kyc = UserKyc.new(creator: current_user, user: @user, name: @user.name, email: @user.email, phone: @user.phone)
+      @user_kyc = UserKyc.new(creator: current_user, user: @user, first_name: @user.first_name, last_name: @user.last_name, email: @user.email, phone: @user.phone)
     else
       @user_kyc = UserKyc.new(creator: current_user, user: @user)
     end

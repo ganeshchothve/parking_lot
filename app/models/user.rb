@@ -157,4 +157,12 @@ class User
   def ds_name
     "#{name} - #{email} - #{phone}"
   end
+
+  def first_name
+    name.split(" ").first
+  end
+
+  def last_name
+    name.split(" ").last
+  end
 end
