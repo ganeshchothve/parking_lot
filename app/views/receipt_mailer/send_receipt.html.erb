@@ -124,7 +124,7 @@ Project Unit Details
 <tr>
   <td style="line-height:26px;">
 
-   
+
 
     <span><strong>Thank you for your payment of Rs. <%= @receipt.total_amount %></strong></span>
     <br/>
@@ -137,18 +137,19 @@ Project Unit Details
     <p> 
       <span style="color:#64c0e9; font-weight:bold">Unit </span> <%= @project_unit.name %><br/>  
       <span style="color:#64c0e9; font-weight:bold">Receipt </span> <%= @receipt.receipt_id %><br/>
-      <span style="color:#64c0e9; font-weight:bold">Date </span> <%= @receipt.issued_date %><br/>
+      <span style="color:#64c0e9; font-weight:bold">Date </span> <%= @receipt.created_at.strftime("%Y-%m-%d") %><br/>
       <span style="color:#64c0e9; font-weight:bold">Bank </span> <%= @receipt.issuing_bank %><br/>
       <span style="color:#64c0e9; font-weight:bold">Branch </span> <%= @receipt.issuing_bank_branch %><br/>
       <span style="color:#64c0e9; font-weight:bold">Tracking Id </span> <%= @receipt.tracking_id %><br/>
     </p>
     <% end %>
     <br/>
-  <p>You have balance payment of Rs. <%= @receipt.total_amount %> that needs to be delivered by <%= @receipt.created_at.to_date + 7.days %> </p>
-  <p>To visit the booking portal, click on the link below</p>
-  <p>Take me to the Portal <a href="embassysprings.com"></a></p></br></br>
-    <p>Also find attached the payment receipt. </p>
-    
-    
-  </td>
+    <p>You have balance payment of Rs. <%= @project_unit.pending_balance %> that needs to be delivered by <%= @receipt.created_at.to_date + 7.days %> </p>
+    <p>To visit the booking portal, click on the link below</p>
+    <p>Take me to the Portal <a href="http://embassysprings2.amura.in/users/sign_in">http://embassysprings2.amura.in/</a> </p>
+  </br></br>
+  <p>Also find attached the payment receipt. </p>
+
+
+</td>
 </tr> 

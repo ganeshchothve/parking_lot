@@ -44,6 +44,7 @@ $.ajaxSetup({
 });
 
 $(document).ready(function(){
+
 	setTimeout(function(){
 		$("p.notice, p.alert").fadeOut();
 	}, 3000);
@@ -63,7 +64,7 @@ $(document).ready(function(){
 			 		var content = instance.content(),
 		            	people = JSON.parse(content);
 
-		            newContent = '<div>Flat No: '+ people[0] +'</div><div>Bedrooms: '+ people[3] +'</div><div>Carpet Area: '+ people[1] +' Sq.Ft.</div><div>Base Price: '+ people[2] +'/-</div><div class="book-status">Booking Status: '+ people[4] +'</div>';
+		            newContent = '<div>Flat No: '+ people[0] +'</div><div>Bedrooms: '+ people[3] +'</div><div>Carpet Area: '+ people[1] +' Sq.Ft.</div><div>Agreement Value: '+ people[2] +'/-</div><div class="book-status">Booking Status: '+ people[4] +'</div>';
 		        	instance.content(newContent);
 			 	}
 	        })
@@ -90,7 +91,7 @@ $(document).ready(function(){
 				notify("Please select atleast one field", "error", 3000, 300);
 			} else {
 				selectedValues = JSON.parse(localStorage.getItem("selectedValues"));
-				$navigate.attr("href", "/dashboard/apartment-selector/"+selectedValues.bedrooms+","+selectedValues.base_price);
+				$navigate.attr("href", "/dashboard/apartment-selector/"+selectedValues.bedrooms+","+selectedValues.agreement_price);
 			}
 		} else if($navigate.data("stage") == "select-apartment"){
 			if($navigate.data("navigate-to") == "next"){
@@ -102,16 +103,16 @@ $(document).ready(function(){
 					selectedValues.towerid = towerid;
 					localStorage.setItem('selectedValues', JSON.stringify(selectedValues));
 
-					$navigate.attr("href", "/dashboard/apartment-selector/"+selectedValues.bedrooms+","+selectedValues.base_price+"/"+selectedValues.towerid);
+					$navigate.attr("href", "/dashboard/apartment-selector/"+selectedValues.bedrooms+","+selectedValues.agreement_price+"/"+selectedValues.towerid);
 				}
 			} else {
 				selectedValues = JSON.parse(localStorage.getItem("selectedValues"));
-				$navigate.attr("href", "/dashboard/apartment-selector/"+selectedValues.bedrooms+","+selectedValues.base_price+"/"+selectedValues.towerid);
+				$navigate.attr("href", "/dashboard/apartment-selector/"+selectedValues.bedrooms+","+selectedValues.agreement_price+"/"+selectedValues.towerid);
 			}
 		} else if($navigate.data("stage") == "kyc-details"){
 			selectedValues = JSON.parse(localStorage.getItem("selectedValues"));
 			if(selectedValues.unit_id){
-				$navigate.attr("href", "/dashboard/apartment-selector/"+selectedValues.bedrooms+","+selectedValues.base_price+"/"+selectedValues.towerid+"/"+selectedValues.unit_id);
+				$navigate.attr("href", "/dashboard/apartment-selector/"+selectedValues.bedrooms+","+selectedValues.agreement_price+"/"+selectedValues.towerid+"/"+selectedValues.unit_id);
 			} else {
 				notify("Please select any unit to proceed.", "error", 3000, 300);
 			}
@@ -218,11 +219,14 @@ $(document).ready(function(){
 		   unitHtml += '<div>Flat No: '+ unitData[0] +'</div>';
 		   unitHtml += '<div>Bedrooms: '+ unitData[3] +'</div>';
 		   unitHtml += '<div>Carpet Area: '+ unitData[1] +'</div>';
-		   unitHtml += '<div>Base Price: '+ unitData[2] +'/-</div>';
+		   unitHtml += '<div>Agreement Value: '+ unitData[2] +'/-</div>';
 		   unitHtml += '<div>Booking Status: <span class="book-status">'+ unitData[4] +'</span></div>';
 		   unitHtml += '</div>';
 
 		$(".show-unit-details").html(unitHtml);
+
+		var fpUrl = "/floorplans/" + unitData[3] + "-BHK-" + unitData[1] + "-SF.png";
+		$("#fp > a").attr("href", fpUrl).find("img").attr("src", fpUrl);
 	});
 
 	$(".preventSubmit").on("click", function(e){
@@ -250,7 +254,7 @@ $(document).ready(function(){
 			}
 		}
 		if(redirect)
-			window.location.href = "/dashboard/apartment-selector/"+selectedValues.bedrooms+","+selectedValues.base_price+"/"+selectedValues.towerid;
+			window.location.href = "/dashboard/apartment-selector/"+selectedValues.bedrooms+","+selectedValues.agreement_price+"/"+selectedValues.towerid;
 		
 		e.preventDefault();
 	});

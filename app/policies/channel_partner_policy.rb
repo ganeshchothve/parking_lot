@@ -24,7 +24,7 @@ class ChannelPartnerPolicy < ApplicationPolicy
   end
 
   def permitted_attributes params={}
-    attributes = [:name, :email, :phone, :rera_id, :location, :title, :first_name, :last_name, :street, :house_number, :city, :postal_code, :country, :mobile_phone, :email, :company_name, :pan_no, :gstin_no, :rera_id, :bank_name, :bank_beneficiary_account_no, :bank_account_type, :bank_address, :bank_city, :bank_postal_Code, :bank_region, :bank_country, :bank_ifsc_code]
+    attributes = [:name, :email, :phone, :rera_id, :location, :title, :first_name, :region, :last_name, :street, :house_number, :city, :postal_code, :country, :mobile_phone, :email, :company_name, :pan_no, :gstin_no, :rera_id, :bank_name, :bank_beneficiary_account_no, :bank_account_type, :bank_address, :bank_city, :bank_postal_Code, :bank_region, :bank_country, :bank_ifsc_code, :pan_card_doc, :bank_check_doc]
     attributes += [:status] if user.present? && user.role?('admin')
     attributes
   end

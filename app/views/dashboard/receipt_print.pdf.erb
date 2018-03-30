@@ -125,7 +125,7 @@
 					</div>
 					<div class="tower-info-wrapper left-padding-0"> 
 						<div class="pull-left">Tower: <%= @project_unit.project_tower_name %><br>Floor: <%= @project_unit.floor %><br>Flat no: <%= @project_unit.name %><br></div>
-						<div class="pull-left padding-left-30">Configuration: <%= @project_unit.bedrooms %> BHK<br>Min. Carpet Area: <%= @project_unit.carpet.round(2) %> Sq.Ft.<br>Starting Price: <%= (@project_unit.base_price) %></div>
+						<div class="pull-left padding-left-30">Configuration: <%= @project_unit.bedrooms %> BHK<br>Carpet Area: <%= @project_unit.carpet.round(2) %> Sq.Ft.<br>Starting Price: <%= (@project_unit.agreement_price) %></div>
 						<div class="clearfix"></div>
 					</div>
 					<div class="clearfix"></div>
@@ -158,7 +158,7 @@
 						Apartment Cost (Inclusive of right to use of 1 covered parking) - A
 					</td>
 					<td>
-						<%= (@project_unit.base_price.round) %>
+						<%= (@project_unit.agreement_price.round) %>
 					</td>
 				</tr>
 				<tr>
@@ -191,7 +191,7 @@
 						Total Cost without Taxes
 					</td>
 					<td>
-						Rs. <%= (@project_unit.base_price.round) %>
+						Rs. <%= (@project_unit.agreement_price.round) %>
 					</td>
 				</tr>
 				<tr>
@@ -224,7 +224,7 @@
 						Total Cost
 					</td>
 					<td class="pink">
-						Rs. <%= (@project_unit.base_price.round) %>
+						Rs. <%= (@project_unit.agreement_price.round) %>
 					</td>
 				</tr>
 			</table>
@@ -256,7 +256,7 @@
 						10%
 					</td>
 					<td>
-						Rs. <%= ((@project_unit.base_price.round)) %>
+						Rs. <%= ((@project_unit.agreement_price.round)) %>
 					</td>
 				</tr>
 				<tr>
@@ -270,7 +270,7 @@
 						12.50%
 					</td>
 					<td>
-						Rs. <%= ((@project_unit.base_price)) %>
+						Rs. <%= ((@project_unit.agreement_price)) %>
 					</td>
 				</tr>
 				<tr>
@@ -284,7 +284,7 @@
 						12.50%
 					</td>
 					<td>
-						Rs. <%= ((@project_unit.base_price)) %>
+						Rs. <%= ((@project_unit.agreement_price)) %>
 					</td>
 				</tr>
 				<tr>
@@ -298,7 +298,7 @@
 						12.50%
 					</td>
 					<td>
-						Rs. <%= ((@project_unit.base_price)) %>
+						Rs. <%= ((@project_unit.agreement_price)) %>
 					</td>
 				</tr>
 				<tr>
@@ -312,7 +312,7 @@
 						12.50%
 					</td>
 					<td>
-						Rs. <%= ((@project_unit.base_price)) %>
+						Rs. <%= ((@project_unit.agreement_price)) %>
 					</td>
 				</tr>
 				<tr>
@@ -326,7 +326,7 @@
 						12.50%
 					</td>
 					<td>
-						Rs. <%= ((@project_unit.base_price)) %>
+						Rs. <%= ((@project_unit.agreement_price)) %>
 					</td>
 				</tr>
 				<tr>
@@ -340,7 +340,7 @@
 						12.50%
 					</td>
 					<td>
-						Rs. <%= ((@project_unit.base_price)) %>
+						Rs. <%= ((@project_unit.agreement_price)) %>
 					</td>
 				</tr>
 				<tr>
@@ -354,7 +354,7 @@
 						10%
 					</td>
 					<td>
-						Rs. <%= ((@project_unit.base_price)) %> 
+						Rs. <%= ((@project_unit.agreement_price)) %> 
 					</td>
 				</tr>
 				<tr>
@@ -368,7 +368,7 @@
 						5%
 					</td>
 					<td>
-						Rs. <%= ((@project_unit.base_price)) %>
+						Rs. <%= ((@project_unit.agreement_price)) %>
 					</td>
 				</tr>
 				<tr>
@@ -382,7 +382,7 @@
 						&nbsp;
 					</td>
 					<td class="pink">
-						Rs. <%= (@project_unit.base_price.round) %>
+						Rs. <%= (@project_unit.agreement_price.round) %>
 					</td>
 				</tr>
 			</table>

@@ -13,8 +13,18 @@ module ApplicationHelper
       number = string[0].gsub(/(\d+)(\d{3})$/){ p = $2;"#{$1.reverse.gsub(/(\d{2})/,'\1,').reverse},#{p}"}
       number = number.gsub(/^,/, '')
       number = number + '.' + string[1] if string[1].to_f > 0
+      # number = (number.to_i).round(2)
+      
     end
     "₹#{number}"
+  end
+
+  def float_to_int (x)
+    Float(x)
+    i, f = x.to_i, x.to_f
+    i == f ? i : f
+  rescue ArgumentError
+    x
   end
 
   def calculate_percent(amount, percent)

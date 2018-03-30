@@ -21,6 +21,8 @@ class ReceiptObserver < Mongoid::Observer
 
       # update user stats if receipt status is success
       if receipt.status == 'success'
+        # push data to SFDC about payments
+        SFDC::ReceiptsPusher.execute(receipt)
         user = receipt.user
         unless user.save
           # TODO: notify us about this

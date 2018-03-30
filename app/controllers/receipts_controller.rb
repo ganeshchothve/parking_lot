@@ -30,6 +30,7 @@ class ReceiptsController < ApplicationController
 
   def new
     if params[:project_unit_id].blank? && current_user.role?('user')
+         flash[:notice] = "Please Select Apartment before making payment"
       redirect_to(receipts_path)
       return
     end
@@ -66,6 +67,12 @@ class ReceiptsController < ApplicationController
     authorize @receipt
     respond_to do |format|
       if @receipt.save
+        #SFDC Call
+        # Rails.logger.info "-------------------------FDC::ReceiptsPusher.execute(@receipt)------------------------------------"
+        # # SFDC::ReceiptsPusher.execute(@receipt)
+        # Rails.logger.info "-------------------------------------------------------------------------------------------------"
+
+
         format.html {
           if @receipt.payment_mode == 'online'
             if @receipt.payment_gateway_service.present?
@@ -128,7 +135,7 @@ class ReceiptsController < ApplicationController
 
   def apply_policy_scope
     custom_scope = Receipt.all.criteria
-    if current_user.role?('admin') || current_user.role?('crm') || current_user.role?('channel_partner')
+    if current_user.role?('admin') || current_user.role?('crm')
       if params[:user_id].present?
         custom_scope = custom_scope.where(user_id: params[:user_id])
       end

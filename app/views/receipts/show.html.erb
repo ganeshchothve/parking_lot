@@ -120,7 +120,13 @@
 						<p class="pageTitle big pink">RECEIPT</p>
 					</div>
 					<div class="pull-right">	
-						<a href="/dashboard/receipt-print/<%= @receipt.id %>" target="_blank"><img src="<%= asset_path 'printer-outline.png'%>" class="img-responsive"></a>
+						<!-- <a href="/dashboard/receipt-print/<%#= @receipt.id %>" target="_blank"><img src="<%#= asset_path 'printer-outline.png'%>" class="img-responsive"></a> -->
+						<%#= link_to dashboard_receipt_print_path(@receipt.id, :format => 'pdf'), target: :_blank do %>
+							<!-- <i class="far fa-envelope" style="font-size:24px;color:#383838;display:inline-block;margin:0 10px;"></i> -->
+						<%# end%>
+						<%= link_to dashboard_receipt_mail_path(@receipt.id, :format => 'pdf'), target: :_blank do %>
+							<img src="<%= asset_path 'printer-outline.png'%>" class="img-responsive">
+						<% end%>
 					</div>
 					<div class="clearfix"></div>
 				</div>
@@ -159,7 +165,7 @@
 								</div>
 								<div class="col-4">
 									<span class="title">Unit No:</span>
-									<span class="specs"><%= @receipt.project_unit.name %></span>
+									<span class="specs"><%= @receipt.project_unit.present? ? @receipt.project_unit.name : @receipt.reference_project_unit.name%></span>
 								</div>
 								<div class="clearfix"></div>
 							</div>
@@ -171,10 +177,10 @@
 										Date
 									</th>
 									<th>
-										Cheque / DD / Online
+										Payment Mode<!-- Cheque / DD / Online -->
 									</th>
 									<th>
-										Bank / Branch
+										Reference Details<!-- Bank / Branch -->
 									</th>
 									<th>
 										Amount
@@ -182,8 +188,14 @@
 								</tr>
 								<tr>
 									<td><%= @receipt.processed_on %></td>
-									<td><%= @receipt.payment_identifier %></td>
-									<td><%= @receipt.issuing_bank %> - <%= @receipt.issuing_bank_branch %> </td>
+									<td><%= @receipt.payment_mode %></td>
+									<td class="text-left">
+								  <% if @receipt.payment_mode == "online" %>
+									Reference ID: <%= @receipt.payment_identifier %>
+									<% else %>
+									Cheque / DD Number:<%= @receipt.issuing_bank %><br/> Bank Details: <%= @receipt.issuing_bank_branch %> 
+									<% end %>
+									</td>
 									<td><%= number_to_indian_currency(@receipt.total_amount.round) %></td>
 								</tr>
 							</table>
@@ -193,6 +205,7 @@
 							<p>Nam Estate Pvt. Ltd.</p>
 							<br/><br/>
 							<p>Authorised Signature</p>
+							<span>This is a computer generated receipt no signature required</span>
 							<br/><br/>
 						</div>
 					</div>

@@ -10,7 +10,7 @@ class DashboardController < ApplicationController
   end
 
   def get_towers
-    parameters = {fltrs: { data_attributes: {bedrooms: params[:bedrooms], base_price: params[:base_price]}} }
+    parameters = {fltrs: { data_attributes: {bedrooms: params[:bedrooms], agreement_price: params[:agreement_price]}} }
     scope = ProjectUnit.build_criteria(parameters)
     towers = scope.uniq{|e| e.project_tower_id }.collect{|x| {project_tower_id: x.project_tower_id, project_tower_name:x.project_tower_name}}
     render json: towers
@@ -45,7 +45,7 @@ class DashboardController < ApplicationController
       format.pdf do
         render  pdf: "Embassy Receipt",
         title: 'Embassy Receipt',
-        save_to_file: Rails.root.join('tmp', "receipt_mail.pdf")
+        save_to_file: Rails.root.join('tmp', "receipt.pdf")
         ReceiptMailer.send_receipt(@receipt.id).deliver_now
       end
     end
@@ -61,7 +61,7 @@ class DashboardController < ApplicationController
       format.pdf do
         render  pdf: "Embassy Receipt",
         title: 'Embassy Receipt',
-        save_to_file: Rails.root.join('tmp', "receipt.pdf")
+        save_to_file: Rails.root.join('tmp', "receipt_mail.pdf")
         ReceiptMailer.receipt_email(@receipt.id).deliver_now
       end
     end
@@ -70,21 +70,21 @@ class DashboardController < ApplicationController
   def project_units
     authorize :dashboard, :project_units?
     if params[:stage] == "apartment_selector"
-      @configurations = ProjectUnit.all.collect{|x| {bedrooms: x.bedrooms, base_price: x.base_price.to_i}}.sort{|x, y| x[:base_price] <=> y[:base_price]}.uniq{|x| x[:bedrooms]}
+      @configurations = ProjectUnit.all.collect{|x| {bedrooms: x.bedrooms, agreement_price: x.agreement_price.to_i}}.sort{|x, y| x[:agreement_price] <=> y[:agreement_price]}.uniq{|x| x[:bedrooms]}
     elsif params[:stage] == "choose_tower"
       bedroom = params[:configuration].split(",")[0]
       budget = params[:configuration].split(",")[1]
-      parameters =  {fltrs: { data_attributes: {bedrooms: bedroom != "NA" ? bedroom : "", base_price: budget != "NA" ? budget : ""} } }
+      parameters =  {fltrs: { data_attributes: {bedrooms: bedroom != "NA" ? bedroom : "", agreement_price: budget != "NA" ? budget : ""} } }
       project_tower_ids = ProjectUnit.build_criteria(parameters).distinct(:project_tower_id)
       @towers = ProjectTower.in(id: project_tower_ids).collect do |x|
         hash = {project_tower_id: x.id, project_tower_name:x.name}
         hash[:total_units] = ProjectUnit.where(project_tower_id: x.id).count
-        hash[:total_units_available] = ProjectUnit.where(project_tower_id: x.id).where(status: "available").count
+        hash[:total_units_available] = ProjectUnit.build_criteria(parameters).where(project_tower_id: x.id).where(status: "available").count
         hash
       end
     elsif params[:stage] == "select_apartment"
       @tower = ProjectTower.find(id: params[:project_tower_id])
-      @configurations = ProjectUnit.all.collect{|x| {bedrooms: x.bedrooms, base_price: x.base_price}}.sort{|x, y| x[:base_price] <=> y[:base_price]}.uniq{|x| x[:bedrooms]}
+      @configurations = ProjectUnit.all.collect{|x| {bedrooms: x.bedrooms, agreement_price: x.agreement_price}}.sort{|x, y| x[:agreement_price] <=> y[:agreement_price]}.uniq{|x| x[:bedrooms]}
       parameters = {fltrs: { project_tower_id: params[:project_tower_id] } }
       @units = ProjectUnit.build_criteria(parameters).sort{|x, y| y.floor <=> x.floor}.group_by(&:floor)
     elsif params[:stage] == "kyc_details"
@@ -113,7 +113,7 @@ class DashboardController < ApplicationController
       receipt = current_user.receipts.where(receipt_id: params[:receipt_id]).where(payment_type: 'blocking').first
       project_unit = ProjectUnit.find(params[:project_unit_id])
       if receipt.present? && receipt.project_unit_id.blank? && project_unit.status == 'available' && receipt.reference_project_unit_id.to_s == project_unit.id.to_s
-        params[:project_unit] = {status: 'hold'}
+        params[:project_unit] = {status: 'hold', user_kyc_ids: current_user.user_kyc_ids}
         hold_project_unit
       else
         flash[:notice] = 'The unit chosen may not be available. You can browse available inventory and block it against the payment done.'
@@ -163,11 +163,11 @@ class DashboardController < ApplicationController
     authorize @project_unit
     respond_to do |format|
       if @project_unit.update_attributes(permitted_attributes(@project_unit))
-        format.html { redirect_to dashboard_project_units_path }
+        format.html { redirect_to dashboard_path }
         format.json { render json: {project_unit: @project_unit}, status: 200 }
       else
         flash[:notice] = 'Could not update the project unit. Please retry'
-        format.html { redirect_to request.referer.present? ? request.referer : dashboard_project_units_path }
+        format.html { redirect_to request.referer.present? ? request.referer : dashboard_path }
         format.json { render json: {errors: @project_unit.errors.full_messages.uniq}, status: 422 }
       end
     end
@@ -177,6 +177,7 @@ class DashboardController < ApplicationController
     @project_unit = ProjectUnit.find(params[:project_unit_id])
     authorize @project_unit 
     @project_unit.attributes = permitted_attributes(@project_unit)
+    @project_unit.user_kyc_ids = current_user.user_kyc_ids if @project_unit.user_kyc_ids.blank?
     # TODO: get a lock on this model. Nobody can modify it.
     respond_to do |format|
       # TODO: handle this API method for other status updates. Currently its assuming its a hold request
@@ -186,51 +187,37 @@ class DashboardController < ApplicationController
         format.html { redirect_to dashboard_checkout_path(project_unit_id: @project_unit.id) }
       when 'not_available'
         flash[:notice] = 'The unit is not available'
-        format.html { redirect_to dashboard_project_units_path }
+        format.html { redirect_to dashboard_path }
       when 'price_change'
         flash[:notice] = 'The Unit price has changed'
         format.html { redirect_to dashboard_checkout_path(project_unit_id: @project_unit.id) }
       when 'error'
+        Rails.logger.info "______________________________"
+	Rails.logger.info @project_unit.errors.full_messages
         flash[:notice] = 'We cannot process your request at this time. Please retry'
-        format.html { redirect_to dashboard_project_units_path }
+        format.html { redirect_to dashboard_path }
       end
     end
   end
 
   def user_profile
-     Rails.logger.info "*************************************************************"
-     Rails.logger.info current_user.id
-     Rails.logger.info "*************************************************************"
-
      @user = User.find(current_user.id)
-     Rails.logger.info "*************************************************************"
-     Rails.logger.info @user.password
-     Rails.logger.info "*************************************************************"
-
   end
 
   def user_update
-    Rails.logger.info params
-
-    Rails.logger.info "*************************************************************"
-    Rails.logger.info params
-    Rails.logger.info "*************************************************************"
-
     user_params = params['user']
     user = User.find(user_params[:id])
-    user.email = user_params[:name]
+    user.email = user_params[:email]
     user.phone = user_params[:phone]
     user.password = user_params[:password]
-
-    Rails.logger.info "*************************************************************"
-
-    user.save!
-    Rails.logger.info "*************************************************************"
-
-
     respond_to do |format|
-      format.html
-      format.json
+      if user.save
+        format.html { redirect_to "/users/sign_in", notice: 'User updated successfully...' }
+        format.json
+      else
+        format.html { render :action => "user_profile" }
+        format.json
+      end
     end
   end
 
@@ -241,7 +228,7 @@ class DashboardController < ApplicationController
     if third_party_inventory_response_code == 200
       ThirdPartyInventory.map_third_party_inventory(@project_unit, third_party_inventory_response)
       # once we have the updated model, just set the code for the controller method and update the project unit
-      if @project_unit.base_price_changed?
+      if false #@project_unit.base_price_changed?
         @project_unit.user = current_user
         code = 'price_change'
       elsif @project_unit.status == 'hold'

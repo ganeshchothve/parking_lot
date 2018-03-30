@@ -1,17 +1,20 @@
 class ProjectUnitObserver < Mongoid::Observer
   def before_save project_unit
-    if project_unit.base_price.blank? && project_unit.data_attributes.find{|x| x["n"] == "base_price"}["v"].present?
-      project_unit.base_price = project_unit.data_attributes.find{|x| x["n"] == "base_price"}["v"].to_f
+    if project_unit.agreement_price.blank?
+      project_unit.agreement_price = (project_unit.base_rate + project_unit.premium_location_charges + project_unit.floor_rise) * project_unit.saleable
     end
-    if project_unit.booking_price.blank? && project_unit.base_price.present?
-      project_unit.booking_price = project_unit.base_price * ProjectUnit.booking_price_percent_of_base_price
-      project_unit.tds_amount = project_unit.base_price * ProjectUnit.tds_amount_percent_of_base_price
+    if project_unit.booking_price.blank? && project_unit.agreement_price.present?
+      project_unit.booking_price = project_unit.agreement_price * ProjectUnit.booking_price_percent_of_agreement_price
+      project_unit.tds_amount = project_unit.agreement_price * ProjectUnit.tds_amount_percent_of_agreement_price
     end
     if project_unit.status_changed? && ['available', 'not_available'].include?(project_unit.status)
       project_unit.user_id = nil
     end
     if project_unit.status_changed? && project_unit.status == 'hold'
+      project_unit.held_on = Time.now
       ProjectUnitUnholdWorker.perform_in(ProjectUnit.holding_minutes, project_unit.id.to_s)
+    elsif project_unit.status_changed? && project_unit.status != 'hold'
+      project_unit.held_on = nil
     end
     if project_unit.status_changed? && project_unit.status == 'blocked'
       project_unit.blocked_on = Date.today
@@ -42,6 +45,7 @@ class ProjectUnitObserver < Mongoid::Observer
       if Rails.env.development?
         mailer.deliver
       else
+	SelldoPusher.perform_async(project_unit.status, project_unit.id.to_s, Time.now.to_i)
         mailer.deliver_later
       end
       if Rails.env.development?

@@ -69,9 +69,11 @@ Project Unit Details
                     <p> 
                     <span style="color:#64c0e9; font-weight:bold">Unit </span> <%= @project_unit.name %><br/>  
                     <span style="color:#64c0e9; font-weight:bold">Receipt </span> <%= @receipt.receipt_id %><br/>
-                    <span style="color:#64c0e9; font-weight:bold">Date </span> <%= @receipt.issued_date %><br/>
+                    <span style="color:#64c0e9; font-weight:bold">Date </span> <%= @receipt.created_at.strftime("%Y-%m-%d") %><br/>
+                    <% if @receipt.payment_mode != 'online' %>
                     <span style="color:#64c0e9; font-weight:bold">Bank </span> <%= @receipt.issuing_bank %><br/>
                     <span style="color:#64c0e9; font-weight:bold">Branch </span> <%= @receipt.issuing_bank_branch %><br/>
+                    <% end %>
                     <span style="color:#64c0e9; font-weight:bold">Tracking Id </span> <%= @receipt.tracking_id %><br/>
                     </p>
                       		 

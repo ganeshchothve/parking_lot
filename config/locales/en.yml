@@ -59,7 +59,7 @@ en:
         company_name: "Company Name"
         loan_required: "Are you looking at taking a loan?"
         existing_customer: "Are you an existing customer with us?"
-        comments: "Pleaes mention any specific notes for our team"
+        comments: "Please mention any specific notes for our team"
         user_id: "Customer"
         creator: "Created By"
         project_units: "Units"

@@ -24,20 +24,24 @@
           <%= form.text_field :last_name, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("last_name") ? false : true), placeholder:'Last Name' %>
         </div>
         <div class="form-group">
-          <%= form.label :street, class: 'control-label label-required' %>
-          <%= form.text_field :street, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("street") ? false : true), placeholder:'Street Name' %>
-        </div>
-        <div class="form-group">
           <%= form.label :house_number, class: 'control-label label-required' %>
           <%= form.text_field :house_number, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("house_number") ? false : true), placeholder:'House Number' %>
+        </div>
+        <div class="form-group">
+          <%= form.label :street, class: 'control-label label-required' %>
+          <%= form.text_field :street, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("street") ? false : true), placeholder:'Street Name' %>
         </div>
         <div class="form-group">
           <%= form.label :location, class: 'control-label label-required' %>
           <%= form.text_field :location, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("location") ? false : true), placeholder:'City' %>
         </div>
         <div class="form-group">
+          <%#= form.label :region, class: 'control-label label-required' %>
+          <%= form.text_field :region, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("location") ? false : true), placeholder:'Region' %>
+        </div>
+        <div class="form-group">
           <%= form.label :postal_code, class: 'control-label label-required' %>
-          <%= form.text_field :postal_code, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("postal_code") ? false : true), placeholder:'Postal Code' %>
+          <%= form.text_field :postal_code, class: 'form-control number', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("postal_code") ? false : true), placeholder:'Postal Code' %>
         </div>
         <div class="form-group">
           <%= form.label :country, class: 'control-label label-required' %>
@@ -45,11 +49,11 @@
         </div>
         <div class="form-group">
           <%= form.label :phone, class: 'control-label label-required' %>
-          <%= form.text_field :phone, class: 'form-control phone', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("phone") ? false : true), placeholder:'Mobile Phone', minlength:'13' %>
+          <%= form.text_field :phone, class: 'form-control phone', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("phone") ? false : true), placeholder:'Mobile Phone', min: "10" %>
         </div>
         <div class="form-group">
           <%= form.label :email, class: 'control-label label-required' %>
-          <%= form.email_field :email, class: 'form-control email', required: 'required', disabled: (policy(channel_partner).editable_field?("email") ? false : true), placeholder:'Email' %>
+          <%= form.email_field :email, class: 'form-control email', required: 'required', disabled: (policy(channel_partner).editable_field?("email") ? false : true), placeholder:'Email'%>
         </div>
         <div class="form-group">
           <%= form.label :company_name, class: 'control-label label-required' %>
@@ -117,7 +121,19 @@
         <div class="form-group">
           <%= form.label :bank_ifsc_code, class: 'control-label label-required' %>
           <%= form.text_field :bank_ifsc_code, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("bank_ifsc_code") ? false : true), placeholder:'Bank IFSC Code' %>
-        </div>  
+        </div>
+
+        <div class="form-group">
+          <label class="control-label label-required upload-pancard">PAN Card</label>
+          <%= form.file_field :pan_card_doc, class: 'form-control', autofocus: true , id:'pan-card', placeholder: 'PAN Card'%>
+        </div>
+
+        <div class="form-group">
+          <%#= form.label :bank_check_doc, class: 'control-label label-required' %>
+          <label class="control-label label-required upload-cheque">Bank Cheque</label>
+          <%= form.file_field :bank_check_doc, class: 'form-control', autofocus: true %>
+        </div>
+
         <% if user_signed_in? && current_user.role?('admin') %>
           <div class="form-group">
             <%= form.label :status, class: 'control-label label-required' %>
@@ -159,5 +175,23 @@ $(document).ready(function(){
     });
     e.preventDefault();
   });
+  
+  $.validator.addMethod('custNumber', function(value, element) {
+    return value.match(/^\+(?:[0-9] ?){6,14}[0-9]$/);
+  },'Please enter valid phone number.');
+  $("#channel_partner_form").validate({
+    rules: {
+      "channel_partner[phone]" : {
+        custNumber : true,
+        minlength : 12
+      }
+    },
+    messages: {
+      "channel_partner[phone]" : {
+        minlength : "Please enter valid phone number."
+      }
+    }
+  });
+
 });
 <% end %>

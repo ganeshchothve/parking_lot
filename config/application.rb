@@ -39,3 +39,5 @@ module BookingPortal
     end
   end
 end
+
+require 'sfdc.rb'

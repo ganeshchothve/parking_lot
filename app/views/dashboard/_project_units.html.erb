@@ -2,7 +2,7 @@
     <div class="col-12 booking-accordian-wrapper">
       <div class="booking-accordian first" data-acc="book-<%= project_unit.id %>">
         <div class="pull-left">
-          <span class="title">Booking <%= project_unit.status %></span>
+          <span class="title"><%= project_unit.status_value %></span>
         </div>
         <div class="pull-left">
           <span class="title">Unit No: <%= project_unit.name %></span>
@@ -34,13 +34,13 @@
             <div>Super Built-up Area:</div><div class="dark"><%= project_unit.saleable.round(2) %> sq.ft</div>
           </div>
           <div class="col-4">
-            <div>Unit Type:</div><div class="dark"><%= project_unit.bedrooms %> BHK - 2T - A</div><a href="<%= asset_path 'fp-type-2.jpg'%>" rel="floorplan" class="colorbox-init small-link">View Floor Plan</a>
+            <div>Unit Type:</div><div class="dark"><%= float_to_int(project_unit.bedrooms) %> BHK - 2T - A</div><a href="<%= asset_path 'fp-type-2.jpg'%>" rel="floorplan" class="colorbox-init small-link">View Floor Plan</a>
           </div>
           <div class="col-4">
             <div>Carpet Area:</div><div class="dark"><%= project_unit.carpet.round(2) %> sq.ft</div>
           </div>
           <div class="col-4">
-            <div>Unit View:</div><div class="dark"><%= project_unit.facing %></div>
+            <div>Unit View:</div><div class="dark"><%= project_unit.category %></div>
           </div>
           <div class="clearfix"></div>
         </div>
@@ -51,7 +51,7 @@
         <div class="title">Payment Details</div>
           <div class="unit-booking-details">
             <div class="col-4">
-              <div>All Inclusive Price:</div><div class="dark"><%= number_to_indian_currency(project_unit.base_price.round) %></div><a href="/dashboard/<%= project_unit.id %>/payment-breakup" class="small-link">Payment Break Up</a>
+              <div>All Inclusive Price:</div><div class="dark"><%= number_to_indian_currency(project_unit.all_inclusive_price.round) rescue '' %></div><a href="/dashboard/<%= project_unit.id %>/payment-breakup" class="small-link">Payment Break Up</a>
             </div>
             <div class="col-4">
               <div>Payment Done:</div><div class="dark"><%= number_to_indian_currency(project_unit.total_amount_paid.round) %></div>
@@ -60,7 +60,7 @@
               <div>Booking Amount:</div><div class="dark"><%= number_to_indian_currency(project_unit.booking_price.round) %></div>
             </div>
             <div class="col-4">
-              <div>Agreement Value:</div><div class="dark"><%= number_to_indian_currency(project_unit.base_price.round)%></div>
+              <div>Agreement Value:</div><div class="dark"><%= number_to_indian_currency(project_unit.agreement_price.round) rescue ''%></div>
             </div>
             <div class="col-4">
               <div>Balance Payment:</div><div class="dark"><%= number_to_indian_currency(project_unit.pending_balance.round) %></div>
@@ -70,7 +70,9 @@
         </div>
         <ul>
           <li>You need to pay 9.9% of agreement value to confirm the booking</li>
-          <li>You have 7 days remaining to confirm this booking please make remaining payment of Rs. <%= number_to_indian_currency(project_unit.user.total_balance_pending.round()) %></li>
+          <% if (project_unit.status == "blocked" || project_unit.status == "booked_tentative") && project_unit.auto_release_on.present? && project_unit.auto_release_on > Date.today %>
+          <li>You have <%= (project_unit.auto_release_on - Date.today).to_i %> days (before <%= project_unit.auto_release_on.strftime("%d/%m/%Y") %>) remaining to confirm this booking please make remaining payment of Rs. <%= number_to_indian_currency(project_unit.user.total_balance_pending.round()) %></li>
+          <% end %>
           <li>Cancellation charges are &#8377;5,000</li>
         </ul>
         <% if project_unit.status == 'hold' %>
@@ -78,43 +80,13 @@
         <a href="/dashboard/checkout/<%= project_unit.id %>" class="pink payment-btn text-center">
           BOOK NOW 
         </a>  
-        <% else %>
+        <% elsif ReceiptPolicy.new(project_unit.user, project_unit.user.receipts.new(project_unit_id: project_unit.id)).new? %>
         <a href="/dashboard/receipts/new?project_unit_id=<%= project_unit.id %>" class="pink payment-btn text-center">
           MAKE THE REMAINING PAYMENT
         </a>
         <% end %>
       </div>
-      <!-- <div class="booking-detail">
-        <div class="title">Payment Details</div>
-        <div class="unit-booking-details">
-          <div class="col-4">
-            <div>All Inclusive Price:</div><div class="dark"><%= number_to_indian_currency(project_unit.base_price.round) %></div><a href="/dashboard/<%= project_unit.id %>/payment-breakup" class="small-link">Payment Break Up</a>
-          </div>
-          <div class="col-4">
-            <div>Payment Done:</div><div class="dark"><%= number_to_indian_currency(project_unit.total_amount_paid.round) %></div>
-          </div>
-          <div class="col-4">
-            <div>Booking Amount:</div><div class="dark"><%= number_to_indian_currency(project_unit.booking_price.round) %></div>
-          </div>
-          <div class="col-4">
-            <div>Agreement Value:</div><div class="dark"><%= number_to_indian_currency(project_unit.base_price.round)%></div>
-          </div>
-          <div class="col-4">
-            <div>Balance Payment:</div><div class="dark"><%= number_to_indian_currency(project_unit.user.total_balance_pending.round) %></div>
-          </div>
-          <div class="clearfix"></div>
-        </div>
-       
-      </div> -->
-      <!-- <div class="booking-detail">
-        <ul>
-          <li>You need to pay 9.9% of agreement value to confirm the booking</li>
-          <li>You have 7 days remaining to confirm this booking please make remaining payment of Rs. <%= number_to_indian_currency(project_unit.user.total_balance_pending.round()) %></li>
-        </ul>
-      </div>
-      <a href="/dashboard/receipts/new?project_unit_id=<%= project_unit.id %>" class="pink payment-btn text-center">
-        MAKE THE REMAINING PAYMENT
-      </a> -->
+      
     </div>
 <% end %>
 <%= javascript_tag do %>

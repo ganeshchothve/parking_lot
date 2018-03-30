@@ -175,7 +175,7 @@
 								</div>
 								<div class="col-4">
 									<span class="title">Unit No:</span>
-									<span class="specs"><%= @receipt.project_unit.name %></span>
+									<span class="specs"><%= @receipt.project_unit.present? ? @receipt.project_unit.name : @receipt.reference_project_unit.name %></span>
 								</div>
 								<div class="clearfix"></div>
 							</div>

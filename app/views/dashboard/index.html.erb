@@ -38,18 +38,18 @@
 		<%# end %>
 		<% if current_user.project_units.size < 1%>
 		<div class="col-12 text-center banner-offer">
-			<div class="col-1 green-bg pull-left">
-				OFFER
+			<div class="col-2 green-bg pull-left">
+				LAUNCHING
 			</div>
-			<div class="col-11 pull-right">
-				<span>Launching Embassy Apartments 1, 2 & 3 BHKs from Rs. 36 Lac at Embassy Springs</span>
+			<div class="col-10 pull-right">
+				<span>Embassy Edge - 1, 2 & 3 BHK Apartments from Rs. 36 Lac at Embassy Springs</span>
 			</div>
 			<div class="clearfix"></div>
 		</div>
 		<div class="clearfix"></div>
 		<div class="col-12 mediaCentercontent white-bg steps-wrapper">
 			<h1 class="text-center">
-				Reserve your apartment today by<br/> paying just Rs. 30,000* by 4 easy steps to book
+				Reserve your Embassy Home today by paying just Rs. 30,000*<br/> Book in 4 easy steps
 			</h1>
 			<div class="reasons-wrapper mtop30">
 				<div class="col-3">
@@ -93,31 +93,31 @@
 								<div class="col-2-5">
 									<img src="<%= asset_path '5reasonstolive_1.png'%>" class="img-responsive">
 									<div class="caption">
-										It's located within embassy Springs - a 254-acre township in Devanahalli
+										Discover an abundance of natural air and light. 
 									</div>
 								</div>
 								<div class="col-2-5">
 									<img src="<%= asset_path '5reasonstolive_2.png'%>" class="img-responsive">
 									<div class="caption">
-										The development itself sprawls out across 40 acres in the township
+										Smart Living - with Ample of built-in storage spaces
 									</div>
 								</div>
 								<div class="col-2-5">
 									<img src="<%= asset_path '5reasonstolive_3.png'%>" class="img-responsive">
 									<div class="caption">
-										You get your own range of amenities, in addition to township amenities
+										Discover a World of Amenities
 									</div>
 								</div>
 								<div class="col-2-5">
 									<img src="<%= asset_path '5reasonstolive_4.png'%>" class="img-responsive">
 									<div class="caption">
-										Your home comes with all the benefits, high quality and assurance of buying with Embassy
+										A part of Embassy Springs Township
 									</div>
 								</div>
 								<div class="col-2-5">
 									<img src="<%= asset_path '5reasonstolive_5.png'%>" class="img-responsive">
 									<div class="caption">
-										You can accomplish your dream of owing an Embassy home, at never-seen-before prices
+										Intelligent Design and Smart Homes designed for New Mindset
 									</div>
 								</div>
 								<div class="clearfix"></div>
@@ -423,16 +423,20 @@
 				MAKE THE REMAINING PAYMENT
 			</a>
 		</div> -->
-
+	<div class="col-12">
+		<% current_user.receipts.where(status: 'clearance_pending').each do |receipt| %>
+		<div>
+			<% if receipt.status == 'clearance_pending' && receipt.project_unit_id.blank? && receipt.reference_project_unit_id.present? && receipt.reference_project_unit.status == 'available' %>
+	        	To block chosen unit: <%= ProjectUnit.find(receipt.reference_project_unit_id).name %> <a href='<%= dashboard_checkout_via_email_url(project_unit_id: receipt.reference_project_unit_id, receipt_id: receipt.receipt_id) %>'>Click here</a>
+		    	<% end %>
+		</div>
+		<% end %>
 	</div>
-	<% current_user.receipts.where(status: 'clearance_pending').each do |receipt| %>
-	<div>
-		<% if receipt.status == 'clearance_pending' && receipt.project_unit_id.blank? && receipt.reference_project_unit_id.present? && receipt.reference_project_unit.status == 'available' %>
-        	To block chosen unit: <%= ProjectUnit.find(receipt.reference_project_unit_id).name %> <a href='<%= dashboard_checkout_via_email_url(project_unit_id: receipt.reference_project_unit_id, receipt_id: receipt.receipt_id) %>'>Click here</a>
-	    	<% end %>
 	</div>
-	<% end %>
+	
 </section>
-<% elsif current_user.role?('crm') || current_user.role?('channel_partner') %>
+<% elsif current_user.role?('crm') %>
   <%= render 'crm' %>
+<% elsif current_user.role?('channel_partner') %>
+  <%= render 'channel_partner' %>
 <% end %>
