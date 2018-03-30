@@ -10,6 +10,8 @@ class ReceiptObserver < Mongoid::Observer
   end
 
   def after_save receipt
+    user = receipt.user
+    project_unit = receipt.project_unit
     if receipt.receipt_id.starts_with?("tmp-") && receipt.project_unit_id_changed? && receipt.project_unit_id.present?
       project_unit = receipt.project_unit
       # order = receipt.user.receipts.count
@@ -39,8 +41,6 @@ class ReceiptObserver < Mongoid::Observer
     # update project unit if a successful receipt is getting attached to a project_unit
     # update the user balance if receipt has no project unit
     if receipt.project_unit_id_changed? && receipt.project_unit_id_was.blank? && ['success', 'clearance_pending'].include?(receipt.status) && !receipt.status_changed?
-      user = receipt.user
-      project_unit = receipt.project_unit
       project_unit.process_payment!(receipt)
       unless user.save
         # TODO: notify us about this
@@ -57,10 +57,11 @@ class ReceiptObserver < Mongoid::Observer
         else
           mailer.deliver_later
         end
+        message = "Dear #{user.name}, your payment of Rs. #{receipt.total_amount} for unit #{project_unit.name} was successful (##{receipt.receipt_id}). To print your receipt visit #{user.dashboard_url}"
         if Rails.env.development?
-          SMSWorker.new.perform("", "")
+          SMSWorker.new.perform(user.phone.to_s, message)
         else
-          SMSWorker.perform_async("", "")
+          SMSWorker.perform_async(user.phone.to_s, message)
         end
       elsif receipt.status == 'failed'
         # TODO : Sell.Do Receipt
@@ -70,10 +71,11 @@ class ReceiptObserver < Mongoid::Observer
         else
           mailer.deliver_later
         end
+        message = "Dear #{user.name}, your payment of Rs. #{receipt.total_amount} for unit #{project_unit.name} has failed (##{receipt.receipt_id})."
         if Rails.env.development?
-          SMSWorker.new.perform("", "")
+          SMSWorker.new.perform(user.phone.to_s, message)
         else
-          SMSWorker.perform_async("", "")
+          SMSWorker.perform_async(user.phone.to_s, message)
         end
       elsif receipt.status == 'clearance_pending'
         mailer = ReceiptMailer.send_clearance_pending(receipt.id.to_s)
@@ -82,10 +84,11 @@ class ReceiptObserver < Mongoid::Observer
         else
           mailer.deliver_later
         end
+        message = "Dear #{user.name}, your payment of Rs. #{receipt.total_amount} for unit #{project_unit.name} is under 'Pending Clearance' (##{receipt.receipt_id}). To print your receipt visit #{user.dashboard_url}"
         if Rails.env.development?
-          SMSWorker.new.perform("", "")
+          SMSWorker.new.perform(user.phone.to_s, message)
         else
-          SMSWorker.perform_async("", "")
+          SMSWorker.perform_async(user.phone.to_s, message)
         end
       end
     end
@@ -98,10 +101,11 @@ class ReceiptObserver < Mongoid::Observer
       else
         mailer.deliver_later
       end
+      message = "Dear #{user.name}, your payment of Rs. #{receipt.total_amount} for unit #{project_unit.name} has been received (##{receipt.receipt_id}). To print your receipt visit #{user.dashboard_url}"
       if Rails.env.development?
-        SMSWorker.new.perform("", "")
+        SMSWorker.new.perform(user.phone.to_s, message)
       else
-        SMSWorker.perform_async("", "")
+        SMSWorker.perform_async(user.phone.to_s, message)
       end
     end
   end

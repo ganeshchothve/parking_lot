@@ -1,16 +1,17 @@
 module ProjectUnitRemindersAndAutoRelease
   def daily_reminder_for_booking_payment
-    ProjectUnit.in(status: ["blocked", 'booked_tentative']).where(auto_release_on: {"$gte" => Date.today}).distinct(:user_id).each do |user_id|
-      mailer = UserReminderMailer.daily_reminder_for_booking_payment(user_id.to_s)
+    ProjectUnit.in(status: ["blocked", 'booked_tentative']).where(auto_release_on: {"$gte" => Date.today}).each do |project_unit|
+      mailer = UserReminderMailer.daily_reminder_for_booking_payment(project_unit.id.to_s)
       if Rails.env.development?
         mailer.deliver
       else
         mailer.deliver_later
       end
+      message = project_unit.promote_future_payment_message
       if Rails.env.development?
-        SMSWorker.new.perform("", "")
+        SMSWorker.new.perform(project_unit.user.phone.to_s, message)
       else
-        SMSWorker.perform_async("", "")
+        SMSWorker.perform_async(project_unit.user.phone.to_s, message)
       end
     end
   end

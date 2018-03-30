@@ -7,6 +7,16 @@ class UserRequestObserver < Mongoid::Observer
       else
         mailer.deliver_later
       end
+      user = user_request.user
+      project_unit = user_request.project_unit
+      if project_unit.present?
+        message = "We’re sorry to see you go! Your request for cancellation of booking for #{project_unit.name} has been received. Our CRM team will get in touch with you shortly."
+        if Rails.env.development?
+          SMSWorker.new.perform(user.phone.to_s, message)
+        else
+          SMSWorker.perform_async(user.phone.to_s, message)
+        end
+      end
     end
   end
 

@@ -1,17 +1,10 @@
-<!--
-<% @project_units.each do |project_unit| %>
-<%= project_unit.name %> will be released on <%= project_unit.auto_release_on.in_time_zone("Mumbai") %> & amount pending = Rs. <%= project_unit.pending_balance %><br/>
-<% end %>
--->
-
-<!-- TODO: handle the timezone based on user -->
 
 		<tr>
             <td>
                 <table cellpadding="0" cellspacing="0" width="100%">
                     <tr>
                         <td style=" color: #000;font-size: 32px;font-weight: 600;line-height: 35px;vertical-align: bottom;">
-                          Payment Pending 
+                          Payment Pending
                          </td>
                          <td>
                            <img src="http://www.embassysprings.com/images/Springs-logo.png" style="border:0px ;outline:0px;display:block;">
@@ -20,7 +13,7 @@
                 </table>
             </td>
         </tr>
-       
+
         <tr>
           <td>
             <table cellpadding="0" cellspacing="0" width="100%">
@@ -37,10 +30,10 @@
 
        <tr>
          <td>
-           Dear <%= @user.name %>, 
+           Dear <%= @user.name %>,
          </td>
        </tr>
-      
+
         <tr><td>&nbsp;</td></tr>
 
         <tr>
@@ -54,10 +47,6 @@
 				<p>Drop a cheque with one of our Sales team members at address: <span> Nam Estates Pvt. Ltd. No. 150, 1st floor, Embassy Point, Infratry Road, Bengaluru - 560001</span> </p>
 				<p>Payment through our online portal takes only 5 mins.Pay now to avoid cancellation of booking. </p>
 				<p>Charges applicable as per T&C</p>
-          
+
           </td>
-        </tr>  
-
-        
-
-
+        </tr>

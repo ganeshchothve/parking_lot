@@ -166,4 +166,13 @@ class User
   def last_name
     name.split(" ").last
   end
+
+  def dashboard_url
+    url = Rails.application.routes.url_helpers
+    host = Rails.application.config.action_mailer.default_url_options[:host]
+    port = Rails.application.config.action_mailer.default_url_options[:port].to_i
+    host = (port == 443 ? "https://" : "http://") + host
+    host = host + ((port == 443 || port == 80) ? "" : ":#{port}")
+    url.dashboard_url(user_email: self.email, user_token: self.authentication_token, host: host)
+  end
 end

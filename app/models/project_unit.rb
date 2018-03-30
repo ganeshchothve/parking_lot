@@ -390,4 +390,27 @@ class ProjectUnit
   def booking_detail
     BookingDetail.where(project_unit_id: self.id).ne(status: "cancelled").first
   end
+
+  def promote_future_payment_message
+    if self.auto_release_on.present? && self.auto_release_on > Date.today
+      days = (self.auto_release_on - Date.today).to_i
+      user = self.user
+      if days == 6
+        message = "Only 6 days to go! 6 days to being part of Embassy Springs - the 288 acre iconic township designed for happiness. Click here to pay the pending amount of Rs. #{self.pending_balance} for unit #{self.name} and secure your home at Embassy Edge: #{user.dashboard_url}"
+      elsif days == 5
+        message = "A home, an identity - come home to yours. Only 5 days to go before you miss your home at Embassy Edge! Get it before you regret it. Click here to complete paying the pending amount: #{user.dashboard_url}"
+      elsif days == 4
+        message = "You buy electronics online, you buy groceries online - why not a home? Complete your pending amount of Rs. #{self.pending_balance} for unit #{self.name} at Embassy Edge on the portal, before you miss your home. You’ve got only 4 days to go! Click to pay: #{user.dashboard_url}"
+      elsif days == 3
+        message = "A lot can happen in 3 days - today, you have a home at the prestigious Embassy Springs reserved in your name. 3 days from now, you could’ve missed that opportunity. Click here to pay the pending amount of Rs. #{self.pending_balance} for unit #{self.name} today: #{user.dashboard_url}"
+      elsif days == 2
+        message = "2 days to go! 2 days until you’ve missed your home at Embassy Edge - or, you could be the proud resident of Embassy Springs today. Click here to complete the transaction of Rs. #{self.pending_balance} for unit #{self.name}: #{user.dashboard_url}"
+      elsif days == 1
+        message = "Today’s your last chance to call #{self.name} at Embassy Edge your home! Complete the payment today, or the apartment will get auto-released for other users to book it. Click here to complete your payment of Rs. #{self.pending_balance}: #{user.dashboard_url}"
+      else
+        message = nil
+      end
+      message
+    end
+  end
 end
