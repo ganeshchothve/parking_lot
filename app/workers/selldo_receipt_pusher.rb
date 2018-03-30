@@ -9,7 +9,7 @@ class SelldoReceiptPusher
     params = {
       api_key: ENV_CONFIG[:selldo][:api_key],
       lead_id: user.lead_id,
-      unit_id: receipt.project_unit_id.to_,
+      unit_id: receipt.project_unit_id.to_s,
       mode_of_transfer: receipt.payment_mode,
       instrument_date: instrument_date.strftime("%d-%m-%Y"),
       bank_name: receipt.issuing_bank,

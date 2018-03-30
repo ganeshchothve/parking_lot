@@ -30,12 +30,21 @@
 			    	<div class="apartment-selector-wrapper">
 			        	<div class="days-left-wrapper text-center">
 							<% 
-								gap = 600 - (Time.now - project_unit.held_on.to_time)
-								gap = "#{(gap/60).to_i}:#{(gap%60).to_i}"
+								gap = (60*ProjectUnit.holding_minutes) - (Time.now - project_unit.held_on.to_time)
+								if gap < 0
+									gap = 0
+									ProjectUnitUnholdWorker.new.perform(project_unit.id)
+								end
+								gap_str = "#{(gap/60).to_i}:#{(gap%60).to_i}"
 							%>
-							<h1 class="bold green timer-show" data-start-time="<%= gap %>">
-								<%= gap %>
+							<h1 class="bold green timer-show" data-start-time="<%= gap_str %>">
+								<%= gap_str %>
 							</h1>
+							<% if gap == 0 %>
+							<script>
+								window.location = window.location;
+							</script>
+							<% end %>
 							<p class="green">
 								To be fair to other user interested in this<br/> apartment, you have the next 10 minutes
 							</p>
