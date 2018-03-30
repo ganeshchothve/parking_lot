@@ -59,10 +59,15 @@ class UserKyc
 
   def self.available_salutations
     [
-      {id: "mr", text: 'Mr.'},
-      {id: "ms", text: 'Ms.'},
-      {id: "mrs", text: 'Mrs.'},
-      {id: "dr", text: 'Dr.'}
+      {id: "Brig.", text: 'Brig.'},
+      {id: "Captain", text: 'Captain'},
+      {id: "Col", text: 'Col'},
+      {id: "Dr.", text: 'Dr.'},
+      {id: "Maharaj", text: 'Maharaj'},
+      {id: "Mr.", text: 'Mr.'},
+      {id: "Mrs.", text: 'Mrs.'},
+      {id: "Ms.", text: 'Ms.'},
+      {id: "Prof.", text: 'Prof.'}
     ]
   end
 
