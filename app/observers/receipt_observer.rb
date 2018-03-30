@@ -57,7 +57,7 @@ class ReceiptObserver < Mongoid::Observer
         else
           mailer.deliver_later
         end
-        message = "Dear #{user.name}, your payment of Rs. #{receipt.total_amount} for unit #{project_unit.name} was successful (##{receipt.receipt_id}). To print your receipt visit #{user.dashboard_url}"
+        message = "Dear #{user.name}, your payment of Rs. #{receipt.total_amount} was successful (##{receipt.receipt_id}). To print your receipt visit #{user.dashboard_url}"
         if Rails.env.development?
           SMSWorker.new.perform(user.phone.to_s, message)
         else
@@ -71,7 +71,7 @@ class ReceiptObserver < Mongoid::Observer
         else
           mailer.deliver_later
         end
-        message = "Dear #{user.name}, your payment of Rs. #{receipt.total_amount} for unit #{project_unit.name} has failed (##{receipt.receipt_id})."
+        message = "Dear #{user.name}, your payment of Rs. #{receipt.total_amount} has failed (##{receipt.receipt_id})."
         if Rails.env.development?
           SMSWorker.new.perform(user.phone.to_s, message)
         else
@@ -84,7 +84,7 @@ class ReceiptObserver < Mongoid::Observer
         else
           mailer.deliver_later
         end
-        message = "Dear #{user.name}, your payment of Rs. #{receipt.total_amount} for unit #{project_unit.name} is under 'Pending Clearance' (##{receipt.receipt_id}). To print your receipt visit #{user.dashboard_url}"
+        message = "Dear #{user.name}, your payment of Rs. #{receipt.total_amount} is under 'Pending Clearance' (##{receipt.receipt_id}). To print your receipt visit #{user.dashboard_url}"
         if Rails.env.development?
           SMSWorker.new.perform(user.phone.to_s, message)
         else
@@ -101,7 +101,7 @@ class ReceiptObserver < Mongoid::Observer
       else
         mailer.deliver_later
       end
-      message = "Dear #{user.name}, your payment of Rs. #{receipt.total_amount} has been received."
+      message = "Dear #{user.name}, your payment of Rs. #{receipt.total_amount} has been collected and will be sent to the Embassy Team for clearance."
       if Rails.env.development?
         SMSWorker.new.perform(user.phone.to_s, message)
       else
