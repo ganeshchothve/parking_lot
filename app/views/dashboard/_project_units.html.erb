@@ -70,8 +70,8 @@
         </div>
         <ul>
           <li>You need to pay 9.9% of agreement value to confirm the booking</li>
-          <% if project_unit.status != "booked_confirmed"%>
-          <li>You have 7 days remaining to confirm this booking please make remaining payment of Rs. <%= number_to_indian_currency(project_unit.user.total_balance_pending.round()) %></li>
+          <% if (project_unit.status == "blocked" || project_unit.status == "booked_tentative") && project_unit.auto_release_on.present? && project_unit.auto_release_on > Date.today %>
+          <li>You have <%= (project_unit.auto_release_on - Date.today).to_i %> days (before <%= project_unit.auto_release_on.strftime("%d/%m/%Y") %>) remaining to confirm this booking please make remaining payment of Rs. <%= number_to_indian_currency(project_unit.user.total_balance_pending.round()) %></li>
           <% end %>
           <li>Cancellation charges are &#8377;5,000</li>
         </ul>
@@ -80,7 +80,7 @@
         <a href="/dashboard/checkout/<%= project_unit.id %>" class="pink payment-btn text-center">
           BOOK NOW 
         </a>  
-        <% else %>
+        <% elsif ReceiptPolicy.new(project_unit.user, project_unit.user.receipts.new(project_unit_id: project_unit.id)).new? %>
         <a href="/dashboard/receipts/new?project_unit_id=<%= project_unit.id %>" class="pink payment-btn text-center">
           MAKE THE REMAINING PAYMENT
         </a>
