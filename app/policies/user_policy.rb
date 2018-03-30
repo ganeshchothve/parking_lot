@@ -8,7 +8,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def edit?
-    record.id == user.id
+    record.id == user.id || ['crm', 'admin'].include?(user.role)
   end
 
   def new?
