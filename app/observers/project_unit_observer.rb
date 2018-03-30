@@ -87,7 +87,7 @@ class ProjectUnitObserver < Mongoid::Observer
       end
 
       if project_unit.status_changed? && project_unit.status == 'booked_confirmed'
-        mailer = ProjectUnitMailer.send_allotment_letter(project_unit.id)
+        mailer = ProjectUnitMailer.send_allotment_letter(project_unit.id.to_s)
         if Rails.env.development?
           mailer.deliver
         else
