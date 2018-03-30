@@ -11,7 +11,7 @@ class ReceiptExportWorker
     end
     file_name = "receipt-#{SecureRandom.hex}.xls"
     file.write("#{Rails.root}/#{file_name}")
-    ExportMailer.notify file_name, emails, "Payments"
+    ExportMailer.notify(file_name, emails, "Payments").deliver
   end
 
   def self.get_column_names

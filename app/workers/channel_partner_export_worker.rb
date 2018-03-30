@@ -11,7 +11,7 @@ class ChannelPartnerExportWorker
     end
     file_name = "channel-partner-#{SecureRandom.hex}.xls"
     file.write("#{Rails.root}/#{file_name}")
-    ExportMailer.notify file_name, emails, "Channel Partners"
+    ExportMailer.notify(file_name, emails, "Channel Partners").deliver
   end
 
   def self.get_column_names
