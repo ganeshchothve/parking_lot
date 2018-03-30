@@ -76,7 +76,7 @@ class ProjectUnitObserver < Mongoid::Observer
 
       user = project_unit.user
       if project_unit.status == "blocked"
-        message = "Congratulations #{user.name}, #{project_unit.name} has been blocked for you for the next 7 days! To own the home, you’ll need to pay the pending amount of Rs. #{project_unit.pending_balance} within these 7 days. To complete the payment now, click here: #{user.dashboard_url}"
+        message = "Congratulations #{user.name}, #{project_unit.name} has been Blocked / Tentative Booked for you for the next 7 days! To own the home, you’ll need to pay the pending amount of Rs. #{project_unit.pending_balance} within these 7 days. To complete the payment now, click here: #{user.dashboard_url}"
       elsif project_unit.status == "booked_confirmed"
         message = "Welcome to the Embassy family! You're now the proud owner of #{project_unit.name} at Embassy Edge in Embassy Springs. Our executives will be in touch regarding agreement formalities."
       end
