@@ -35,6 +35,10 @@ class ProjectUnitObserver < Mongoid::Observer
       project_unit.set(user_id: nil, blocked_on: nil, auto_release_on: nil, held_on: nil, primary_user_kyc_id: nil, user_kyc_ids: [])
       project_unit.receipts.update_all(project_unit_id: nil, status: "cancelled")
 
+      # dashboard =  DashboardController.new
+      # dashboard.receipt_mail(project_unit.receipts.first, project_unit.status)
+      # dashboard.receipt_print(project_unit.receipts.first, project_unit.status)
+
       mailer = ProjectUnitMailer.released(user_id.to_s, unit.id.to_s)
       if Rails.env.development?
         mailer.deliver

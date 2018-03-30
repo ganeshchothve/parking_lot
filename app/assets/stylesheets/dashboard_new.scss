@@ -774,7 +774,7 @@ section{
 	right: 0px;
 	top: 0px;
 	padding-left: 15%;
-	background-color: #3981b8;
+	background-color: #7fb440;
 }
 .white{
 	color: #fff;
@@ -792,8 +792,22 @@ section{
 	padding-right: 20px;
 	margin-right: 20px;
 }
+.notification-header .d3-view-link{
+	display: inline-block;
+	margin-left: -20px;
+}
+.notification-header .d3-view-link>a{
+	font-size: 17px;
+    color: #000;
+    background-color: #ffffff;
+    display: block;
+    padding: 0 14px;
+    line-height: 30px;
+    vertical-align: middle;
+    border-radius: 5px;
+}
 .notification-header .left-wrapper{
-	margin-top: 30px;
+	margin-top: 16px;
 	padding-left: 50px;
 }
 .notification-header .left-wrapper span{
@@ -802,7 +816,8 @@ section{
 }
 .notification-header .right-wrapper span{
 	display: inline-block;
-	padding: 30px 30px;
+	/*padding: 30px 30px;*/
+	padding: 18px 30px;
 	color: #fff;
 	cursor: pointer;
 	font-size: 16px;
@@ -856,7 +871,8 @@ section{
     -webkit-transition: all 0.3s ease-in;
 }
 .main-wrapper{
-	margin-top: 110px;
+	/*margin-top: 110px;*/
+	margin-top: 90px;
 	padding-left: 250px;
 	padding-bottom: 50px;
 
@@ -1093,7 +1109,8 @@ section.grey{
     width: 100%;
     left: -100%;
     height: 100%;
-    background-color: #89bb50;
+    /*background-color: #89bb50;*/
+    background-color: #ffa53a;
     -webkit-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
     z-index: -1;
@@ -1103,8 +1120,10 @@ section.grey{
     left: 0%;
 }
 .pink.banner-btn{
-    background-color: #edf9de;
-    color: #89bb50;
+	background-color: #fff4e8;
+    color: #ec9834;
+    /*background-color: #edf9de;
+    color: #89bb50;*/
     /*margin-bottom: 20px;*/
     border: 2px solid;
 }
@@ -1116,7 +1135,8 @@ section.grey{
 }
 .btn-anim:hover, .btn-anim-white:hover, input.btn-anim:hover{
 	color: #fff !important;
-	border:2px solid #89bb50;
+	/*border:2px solid #89bb50;*/
+	border: 2px solid #ec9834;
 	background-color: #fff;
 }
 .aparment-sold-wrapper{
@@ -1334,12 +1354,13 @@ section.grey{
 .booking-accordian-wrapper{
 	margin: 20px 0px 0px 0px;
 	padding: 0px 0px;
-	border:1px solid #32a3dd;
+	/*border:1px solid #32a3dd;*/
 	cursor: pointer;
 }
 .booking-accordian{
 	padding: 10px 20px;
-	background-color: #c3e0ef;
+	/*background-color: #c3e0ef;*/
+	background-color: #444444;
 	background-image: asset-url('inactive_dropdown_arrow_blue.png');
     background-position: 98% 17px;
     background-repeat: no-repeat;
@@ -1351,7 +1372,8 @@ section.grey{
 .booking-accordian span.title{
 	font-size: 20px;
     font-weight: 500;
-    color: #066a9d;
+    /*color: #066a9d;*/
+    color: #fff;
     position: relative;
     display: inline-block;
     margin-right: 15px;
@@ -1369,7 +1391,8 @@ section.grey{
 	top: 0px;
 	width: 1px;
 	height: 100%;
-	background-color: #066a9d;
+	/*background-color: #066a9d;*/
+	background-color: #fff;
 }
 .booking-accordian span.title:after{
     content: '';
@@ -1437,7 +1460,8 @@ section.grey{
 	margin: 0px;
 }
 .payment-btn{
-	background-color: #7fb441;
+	/*background-color: #7fb441;*/
+	background-color: #ec9834;
     color: #fff;
     display: inline-block;
     margin-top: 10px;
@@ -1558,7 +1582,8 @@ section.grey{
 	border-radius: 6px;
     display: inline-block;
     margin: 0px 0px;
-    background-color: #86b825;
+    /*background-color: #86b825;*/
+    background-color: #ec9834;
     color: #fff;
     padding: 0 20px;
     line-height: 33px;
@@ -2452,7 +2477,8 @@ hr.divider {
 	border-radius: 6px;
     display: inline-block;
     margin: 0px 0px;
-    background-color: #86b825;
+    /*background-color: #86b825;*/
+    background-color: #ec9834;
     color: #fff;
     padding: 5px 10px;
     font-weight: 500;
@@ -2555,6 +2581,9 @@ input.nav-btn:hover{
 }
 .upload-pancard{
 	width:53%; display:block !important;text-align: center
+}
+.mobile-show{
+	display: none;
 }
 @media all and (max-width: 768px){
 	.notification-header .left-wrapper{
@@ -2716,6 +2745,20 @@ input.nav-btn:hover{
 	}
 }
 @media all and (max-width: 700px){
+	.mobile-show{
+		display: block;
+	}
+	.profile-link{
+		display: none;
+	}
+	.notification-header .d3-view-link{
+		margin-left: 0;
+	}
+	.notification-header .d3-view-link > a {
+	    font-size: 12px;
+	    padding: 0 10px;
+	    line-height: 27px;
+	}
 	#user_kyc_form .col-md-6, #user_kyc_form .col-6{
 		width: 100%;
     }
