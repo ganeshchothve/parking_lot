@@ -51,7 +51,7 @@ class ProjectUnitMailer < ApplicationMailer
     mail(to: @user.email, cc: cc, subject: "Unit #{@project_unit.name} has been released")
   end
 
-  def send_allotment_letter(project_unit_id, user)
+  def send_allotment_letter(project_unit_id)
     @project_unit = ProjectUnit.find(project_unit_id)
     @user = @project_unit.user
     @cp = @user.channel_partner
