@@ -28,7 +28,7 @@
                 <div class="hidden-field kyc-add" style="display:none">
                   <div class="form-wrapper margin-top-30 text-left">
 			          <%
-			          user_kyc = current_user.user_kycs.blank? ? current_user.user_kycs.build(name: current_user.name, email: current_user.email, phone: current_user.phone) : current_user.user_kycs.new
+			          user_kyc = current_user.user_kycs.blank? ? current_user.user_kycs.build(first_name: current_user.name.split(" ").first, last_name: current_user.name.split(" ").last, email: current_user.email, phone: current_user.phone) : current_user.user_kycs.new
 			          url = user_kycs_path
 			          %>
 			          <%= form_with(model: user_kyc, local: true, id: 'user_kyc_form', url: url, html: {class: 'validate-form'}) do |f| %>
