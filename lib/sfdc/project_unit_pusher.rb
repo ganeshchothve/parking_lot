@@ -20,6 +20,10 @@ module SFDC
       hash = {
         "receipt_selldo_id" => receipt.id.to_s,
         "selldo_lead_id" => receipt.project_unit.user.lead_id,
+        "street" => project_unit.primary_user_kyc.street,
+        "city" =>  project_unit.primary_user_kyc.city,
+        "country" => project_unit.primary_user_kyc.country,
+        "zip" =>  project_unit.primary_user_kyc.zip,
         "primary_email" => receipt.user.email,
         "receipt_date" => sfdc_date_format(receipt.created_at),
         "payment_amount" => receipt.total_amount,
@@ -28,12 +32,12 @@ module SFDC
         "instrument_date" => receipt.issued_date ? sfdc_date_format(Date.parse(receipt.issued_date)) : nil,
         "bank_name" => receipt.issuing_bank,
         "branch_name" => receipt.issuing_bank_branch,
-          "selldo_lead_id": user.lead_id,
-          "booking_stage": "blocked", 
-          "booking_date": "2018-03-26",
-          "birthdate": "1980-10-16",
-          "pan_card_number": "ATZQWE3540P",
-          "unit_sfdc_id": "a0K0l000000jhlk"
+        "selldo_lead_id": user.lead_id,
+        "booking_stage": project_unit.status,
+        "booking_date": project_unit.blocked_on,
+        "birthdate": project_unit.primary_user_kyc.dob,
+        "pan_card_number": project_unit.primary_user_kyc.pan_number,
+        "unit_sfdc_id": project_unit.sfdc_id
       }
       hash
     end

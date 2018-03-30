@@ -381,4 +381,8 @@ class ProjectUnit
     end
     hash
   end
+
+  def primary_user_kyc
+    user_kycs.first
+  end
 end
