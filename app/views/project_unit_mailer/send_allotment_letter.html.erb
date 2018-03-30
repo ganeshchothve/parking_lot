@@ -1,0 +1,83 @@
+<tr>
+  <td>
+    <table cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td style=" color: #000;font-size: 32px;font-weight: 600;line-height: 35px;vertical-align: bottom;">
+         Provisional Allotment of Apartment.
+       </td>
+       <td>
+         <img src="http://www.embassysprings.com/images/Springs-logo.png" style="border:0px ;outline:0px;display:block;">
+       </td>
+     </tr>
+   </table>
+ </td>
+</tr>
+
+<tr>
+  <td>
+    <table cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td><hr style="display: block;height: 1px;border: 0;border-top: 2px solid #c9579f;margin: 1em 0;padding: 0;"></td>
+        <td><hr style="display: block;height: 1px;border: 0;border-top: 2px solid #64c0e9;margin: 1em 0;padding: 0;"></td>
+        <td><hr style="display: block;height: 1px;border: 0;border-top: 2px solid #7eb53e;margin: 1em 0;padding: 0;"></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+
+<tr><td>&nbsp;</td></tr>
+
+
+<tr>
+ <td>
+   <div class="pull left">
+    <p><%= @project_unit.created_at.strftime("%d-%m-%Y") %>,</p>
+    <p>MS./ MR. <%= @user.name %>,</p>
+    <p>CONTACT NO: <%= @user.phone %></p>
+  </div>
+</td>
+</tr>
+
+<tr><td>&nbsp;</td></tr>
+
+<tr>
+  <td style="line-height:26px;">
+   <p>Dear Madam/Sir,</p></br>
+   <p>Ref: Booking Application dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %>.</p></br>
+   <p>
+    Pursuant of the above referred Booking Application dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %> in respect of Apartment No.<%= @project_unit.name rescue ''%> in the Project known as “Embassy Springs”, we have provisionally allotted Apartment No.
+    <%= @project_unit.name  rescue ''  %> having a Carpet Area of <%= @project_unit.carpet %> Square feet to you.
+    Further, we hereby confirm having received an amount of Rs.<%= @project_unit.booking_price %>/-
+    as advance vide reference no. made through online / Cheque bearing No. <%= @receipt.tracking_id rescue ''%>,
+    dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %>, drawn on <%= @user.name %>, along with your Booking Application .
+    The total sale consideration amount payable for the above subject Apartment is Rs <%= @project_unit.agreement_price %>/-
+    (“Total Sale Consideration”). The Total Consideration is
+    inclusive of land cost, construction cost, cost of providing power supply, cost of providing water and
+    sewage connections, maintenance deposit/corpus fund, city infrastructure charges, advance
+    maintenance charges for one year, cost towards club house and amenities, GST and other charges
+    as detailed in the Agreement for Sale.
+  </p></br>
+  <p>
+    Upon receiving intimation from us to execute the Agreement to Sell, you shall pay Rs. <%= @project_unit.pending_balance %>/-
+    within 10 working days being 10% of the cost of the Apartment and simultaneously execute the Agreement to Sell within 15 days.
+    In the event of you failing to execute the Agreement to Sell as mentioned above, the Booking
+    Application will stand rejected and this Provisional Allotment cancelled, and we shall deduct Rs. 5000
+    /- from the amount received from you as liquidated damages and refund the balance amount in 30
+    days from the date of cancellation.</p>
+  </br>
+  <p>
+    This Provisional Allotment does not confer any rights in you with respect to the subject Apartment
+    nor is this a concluded contract unless the Agreement for Sale is executed by you.</p>
+    <p>
+      We request you to kindly acknowledge the copy of this letter in token of your acceptance of the
+      above arrangement.
+    </p>
+    <p>This Provisional Allotment is subject to Bangalore jurisdiction.</p>
+  </br>
+  <div class="pull-left">
+    <p>Thanking you.</p></br>
+    <p>Yours truly,</p>
+    <p>For NAM ESTATES PRIVATE LIMITED</p></br>
+  </div>
+</td>
+</tr>

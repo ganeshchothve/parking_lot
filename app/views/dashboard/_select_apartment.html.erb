@@ -53,10 +53,9 @@
           <div class="dropdown-wrapper">
             <select class="init-selectize" name="agreement_price">
               <option value="">Select Budget</option>
-              <option value="4000000-6000000" <%= params[:configuration].split(",")[1] == "4000000-6000000" ? "selected=selected" : "" %>>Rs.40 Lac - 60 Lac</option>
-              <option value="6000000-8000000" <%= params[:configuration].split(",")[1] == "6000000-8000000" ? "selected=selected" : "" %>>Rs.60 Lac - 80 Lac</option>
-              <option value="8000000-10000000" <%= params[:configuration].split(",")[1] == "8000000-10000000" ? "selected=selected" : "" %>>Rs.80 Lac - 1 Cr.</option>
-              <option value="10000000-100000000" <%= params[:configuration].split(",")[1] == "10000000-100000000" ? "selected=selected" : "" %>>1 Cr and above</option>
+              <option value="2500000-4000000"  <%= params[:configuration].split(",")[1] == "2500000-4000000" ? "selected=selected" : "" %>>Rs.25 Lac - 40 Lac</option>
+              <option value="4000000-6000000"  <%= params[:configuration].split(",")[1] == "4000000-6000000" ? "selected=selected" : "" %>>Rs.40 Lac - 60 Lac</option>
+              <option value="6000000-100000000"  <%= params[:configuration].split(",")[1] == "6000000-100000000" ? "selected=selected" : "" %>>Rs.60 Lac and above</option>
             </select>
           </div>
         </div>
@@ -111,7 +110,7 @@
         </div>
 	<div class="col-12 apt-index-wrapper">
 		<div class="apt-index">
-			<span class="bstatus-booked"></span>Booked
+			<span class="bstatus-booked"></span>Blocked/Booked
 		</div>
 		<div class="apt-index">
 			<span class="bstatus-hold"></span>Hold
