@@ -14,6 +14,7 @@ class User
   field :lead_id, type: String
   field :role, type: String, default: "user"
   field :channel_partner_id, type: BSON::ObjectId
+  field :referenced_channel_partner_ids, type: Array, default: []
   field :rera_id, type: String
   field :location, type: String
 

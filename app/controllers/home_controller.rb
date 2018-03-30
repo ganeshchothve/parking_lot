@@ -23,9 +23,15 @@ class HomeController < ApplicationController
         end
       else
         @user = User.or([{email: params['email']}, {phone: params['phone']}, {lead_id: params['lead_id']}]).first #TODO: check if you want to find uniquess on lead id also
-        if @user
+        if @user.present?
+          message = 'A user with these details has already registered'
+          unless @user.confirmed?
+            @user.set(channel_partner_id: current_user.id)
+            message = "A user with these details has already registered, but hasn't confirmed their account. We have resent the confirmation email to them, which has an account activation link."
+            @user.resend_confirmation_instructions
+          end
           respond_to do |format|
-            format.json { render json: {errors: 'A user with these details has already registered', url: (user_signed_in? ? admin_users_path : new_user_session_path)}, status: :unprocessable_entity }
+            format.json { render json: {errors: message, url: (user_signed_in? ? admin_users_path : new_user_session_path)}, status: :unprocessable_entity }
           end
         else
           @user = User.new(email: params['email'], phone: params['phone'], name: params['name'], lead_id: params[:lead_id])
