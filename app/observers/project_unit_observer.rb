@@ -1,5 +1,8 @@
 class ProjectUnitObserver < Mongoid::Observer
   def before_save project_unit
+    if project_unit.user_kyc_ids_changed? && project_unit.user_kyc_ids_was.blank? && project_unit.user_kyc_ids.present?
+      project_unit.primary_user_kyc_id = project_unit.user_kyc_ids.first
+    end
     if project_unit.agreement_price.blank?
       project_unit.agreement_price = (project_unit.base_rate + project_unit.premium_location_charges + project_unit.floor_rise) * project_unit.saleable
     end

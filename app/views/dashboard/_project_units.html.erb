@@ -25,7 +25,13 @@
         </div>
         <div class="unit-booking-details">
           <div class="col-4">
-            <div>Applicant:</div><div class="dark"><%= project_unit.user.name %></div>
+            <div>Applicant:</div>
+            <div class="dark">
+              <%= project_unit.user.name %>
+              <span class="ml-2">(<%= project_unit.user_kyc_ids.length > 1 ? "#{(project_unit.user_kyc_ids.count - 1)} Co-applicants" : "No Co-applicants" %>)</span>
+              <br/>
+              <a href="<%= new_user_kyc_path(project_unit_id: project_unit.id) %>">Add Co-applicant</a>
+            </div>
           </div>
           <div class="col-4">
             <div>Built-up Area:</div><div class="dark"><%= project_unit.saleable.round(2) %> sq.ft</div>

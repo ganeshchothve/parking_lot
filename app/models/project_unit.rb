@@ -37,6 +37,7 @@ class ProjectUnit
   field :auto_release_on, type: Date
   field :held_on, type: DateTime
   field :tds_amount, type: Float
+  field :primary_user_kyc_id, type: BSON::ObjectId
 
   # These fields majorly are pulled from sell.do and may be used on the UI
   field :client_id, type: String
@@ -383,6 +384,6 @@ class ProjectUnit
   end
 
   def primary_user_kyc
-    user_kycs.first
+    UserKyc.find(self.primary_user_kyc_id)
   end
 end

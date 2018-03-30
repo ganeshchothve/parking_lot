@@ -84,6 +84,19 @@
               <%= f.date_field :dob, class: 'form-control form-field', type:'text', onfocus:"(this.type='date')", placeholder:'Date of birth' %>
             </div>
           </div>
+          <% if params[:project_unit_id].present? %>
+          <%
+          user_kyc.project_unit_ids += [params[:project_unit_id]]
+          user_kyc.project_unit_ids.uniq!
+          %>
+          <% end %>
+          <% if @user.project_unit_ids.present? %>
+            <div class="col-md-6 col-6">
+              <div class="form-group form-field-wrapper position-relative">
+                <%= f.select :project_unit_ids, @user.project_units.collect{|x| [x.name, x.id]}, {}, class: 'init-selectize', multiple: true, placeholder: "Related Project Units (Co-applicants for)" %>
+              </div>
+            </div>
+          <% end %>
         </div>
         <div class="clearfix"></div>
         <div class="row">
