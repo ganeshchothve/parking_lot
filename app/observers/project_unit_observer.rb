@@ -29,6 +29,13 @@ class ProjectUnitObserver < Mongoid::Observer
   end
 
   def after_save project_unit
+    BookingDetail.run_sync(project_unit.id, project_unit.changes)
+
+    if project_unit.status_changed? && ["blocked", "booked_tentative", "booked_confirmed", "error"].include?(project_unit.status_was) && ["available"].include?(project_unit.status)
+      project_unit.set(user_id: nil, blocked_on: nil, auto_release_on: nil, held_on: nil, primary_user_kyc_id: nil, user_kyc_ids: [])
+      project_unit.receipts.update_all(project_unit_id: nil, status: "cancelled")
+    end
+
     if (ProjectUnit.sync_trigger_attributes & project_unit.changes.keys).present?
       # TODO: Write to log file
       if project_unit.sync_with_third_party_inventory
@@ -48,7 +55,7 @@ class ProjectUnitObserver < Mongoid::Observer
       if Rails.env.development?
         mailer.deliver
       else
-	SelldoPusher.perform_async(project_unit.status, project_unit.id.to_s, Time.now.to_i)
+	       SelldoPusher.perform_async(project_unit.status, project_unit.id.to_s, Time.now.to_i)
         mailer.deliver_later
       end
       if Rails.env.development?
@@ -70,10 +77,6 @@ class ProjectUnitObserver < Mongoid::Observer
       else
         SMSWorker.perform_async("", "")
       end
-    end
-
-    if project_unit.status_changed?
-      project_unit.project_unit_state_changes.create!(changed_on: Time.now, status: project_unit.status, status_was: project_unit.status_was)
     end
   end
 end

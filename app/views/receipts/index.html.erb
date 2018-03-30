@@ -1,58 +1,57 @@
 <%= render 'breadcrumbs', {user: @user, project_unit: @project_unit} %>
 <% unless current_user.role?('user') %>
-  <% unless ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? || current_user.role?('crm') %>
-    <% if @user.present? %>
-      <div class="alert alert-warning">
-        <% if @user.confirmed? %>
-          You might need to complete the user's KYC before you can take payments.
-        <% else %>
-          The <%= global_labels['customer'] %> has not yet confirmed their account via email.
-        <% end %>
-      </div>
-    <% end %>
+<% unless ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? || current_user.role?('crm') %>
+<% if @user.present? %>
+<div class="alert alert-warning">
+  <% if @user.confirmed? %>
+  You might need to complete the user's KYC before you can take payments.
+  <% else %>
+  The <%= global_labels['customer'] %> has not yet confirmed their account via email.
   <% end %>
+</div>
+<% end %>
+<% end %>
 <% end %>
 <section class="main-wrapper">
   <div class="container-fluid">
     <div class="col-12 padding-xs-left-10">
-      
-      <!-- <div class="text-left mtop10 padding-xs-0">
-          <p class="pageTitle big pink">PAYMENTS</p>
-      </div> -->
-      <div class="clearfix"></div>
-      <div class="row">
-          <div class="col-md-10 border border-left-0 border-top-0 border-bottom-0 table-responsive">
-            <%= render 'index', {receipts: @receipts} %>
-            <div class="mtop30 pull-left" style="float:left">
-              <% if ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? %>
-                <% units_for_payments = @user.project_units.in(status: ["blocked", 'booked_tentative']).all %>
-                <% if units_for_payments.present? %>
-                  <% unless current_user.role?('user') %>
-                    <div class="dropdown float-left mr-2">
-                      <a class="btn btn-primary dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add <%= global_labels['receipt'] %> to Blocked Units</a>
-                      <div class="dropdown-menu dropdown-menu-right">
-                        <% units_for_payments.each do |project_unit| %>
-                          <%= link_to "#{project_unit.name}", new_admin_user_project_unit_receipt_path(@user.id, project_unit.id), class: 'dropdown-item' %>
-                        <% end %>
-                      </div>
-                    </div>
-                  <% end %>
-                             
-                <% end %>
-              <% end %>
-		<% if @user.present? %>
-              <%= link_to "Make #{global_labels['receipt']}", new_admin_user_receipt_path(@user), class: 'btn btn-primary nav-btn' %>
-		<% end %>
 
-              <% if UserPolicy.new(current_user, User).export? && @user.blank? %>
-                <%= link_to "Export all #{global_labels['receipts']}", export_admin_receipts_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn' %>
+      <!-- <div class="text-left mtop10 padding-xs-0">
+      <p class="pageTitle big pink">PAYMENTS</p>
+    </div> -->
+    <div class="clearfix"></div>
+    <div class="row">
+      <div class="col-md-10 border border-left-0 border-top-0 border-bottom-0 table-responsive">
+        <%= render 'index', {receipts: @receipts} %>
+        <div class="mtop30 pull-left" style="float:left">
+          <% if ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? %>
+          <% units_for_payments = @user.project_units.in(status: ["blocked", 'booked_tentative']).all %>
+          <% if units_for_payments.present? %>
+          <% unless current_user.role?('user') %>
+          <div class="dropdown float-left mr-2">
+            <a class="btn btn-primary dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add <%= global_labels['receipt'] %> to Blocked Units</a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <% units_for_payments.each do |project_unit| %>
+              <%= link_to "#{project_unit.name}", new_admin_user_project_unit_receipt_path(@user.id, project_unit.id), class: 'dropdown-item' %>
               <% end %>
             </div>
           </div>
-          <div class="col-md-2">
-            <%= render "filters" %>
-          </div>
+          <% end %>
+
+          <% end %>
+          <% end %>
+          <% if @user.present? && !current_user.role?('user') %>
+          <%= link_to "Make #{global_labels['receipt']}", new_admin_user_receipt_path(@user), class: 'btn btn-primary nav-btn' %>
+          <% end %>
+          <% if UserPolicy.new(current_user, User).export? && @user.blank? %>
+          <%= link_to "Export all #{global_labels['receipts']}", export_admin_receipts_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn' %>
+          <% end %>
         </div>
+      </div>
+      <div class="col-md-2">
+        <%= render "filters" %>
+      </div>
     </div>
   </div>
+</div>
 </section>

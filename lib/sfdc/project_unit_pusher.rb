@@ -37,7 +37,8 @@ module SFDC
         "booking_date": project_unit.blocked_on,
         "birthdate": project_unit.primary_user_kyc.dob,
         "pan_card_number": project_unit.primary_user_kyc.pan_number,
-        "unit_sfdc_id": project_unit.sfdc_id
+        "unit_sfdc_id": project_unit.sfdc_id,
+        "nri": project_unit.primary_user_kyc.nri
       }
       hash
     end

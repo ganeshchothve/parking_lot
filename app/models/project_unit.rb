@@ -61,8 +61,6 @@ class ProjectUnit
   field :calculated_agreement_value, type: Float
   field :images, type: Array
 
-  embeds_many :project_unit_state_changes
-
   @@keys =  {project_tower_name: "String", project_name: "String", developer_name: "String", bedrooms: "Float", bathrooms: "Float", saleable: "Float", carpet: "Float", loading: "Float", base_price: "Float", base_rate: "Float", sub_type: "String", type: "String", covered_area: "Float", terrace_area: "Float", category: "String",developer_id: "String",configuration_type: "String",construction_status: "String",transaction_type: "String",registration_date: "Date",floor: "Integer",assigned_to: "String",broker: "String",team: "String",date_of_possession: "Date",possession_status: "String",seller_type: "String",is_negotiable: "Boolean",amenities: "Hash",parking: "String",docs_verified: "Boolean",verification_date: "String",property_inspected: "Boolean",suitable_for: "String",entrance: "String",furnishing: "String",flooring: "String",facing: "String",unit_facing_direction: "String",project_status: "String",city: "String",state: "String",country: "String",resale: "Boolean",owner_count: "Integer",posted_by: "String",unit_configuration_id: "String",unit_configuration_name: "String"}
 
   @@keys.each do |k, klass|
@@ -387,5 +385,9 @@ class ProjectUnit
 
   def primary_user_kyc
     UserKyc.find(self.primary_user_kyc_id)
+  end
+
+  def booking_detail
+    BookingDetail.where(project_unit_id: self.id).ne(status: "cancelled").first
   end
 end

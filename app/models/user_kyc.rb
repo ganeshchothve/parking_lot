@@ -42,7 +42,7 @@ class UserKyc
   belongs_to :user
   belongs_to :creator, class_name: 'User'
   has_and_belongs_to_many :project_units
-
+  has_and_belongs_to_many :booking_details
 
   validates :first_name, :last_name, :email, :phone, :dob, :pan_number, :city, :state, :country, :street, presence: false
   validates :poa, inclusion: {in: [true]}, if: Proc.new{ |kyc| kyc.nri? }

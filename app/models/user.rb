@@ -51,6 +51,7 @@ class User
 
   has_many :receipts
   has_many :project_units
+  has_many :booking_details
   has_many :user_requests
   has_many :user_kycs
 

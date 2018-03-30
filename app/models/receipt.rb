@@ -15,7 +15,7 @@ class Receipt
   field :payment_identifier, type: String # cheque / DD number / online transaction reference from gateway
   field :tracking_id, type: String # online transaction reference from gateway or transaction id after the cheque is processed
   field :total_amount, type: Float, default: 0 # Total amount
-  field :status, type: String, default: 'pending' # pending, success, failed, clearance_pending
+  field :status, type: String, default: 'pending' # pending, success, failed, clearance_pending,cancelled
   field :status_message, type: String # pending, success, failed, clearance_pending
   field :payment_type, type: String, default: 'blocking' # blocking, booking
   field :reference_project_unit_id, type: BSON::ObjectId # the channel partner or admin or crm can choose this, but its not binding on the user to choose this reference unit
@@ -27,6 +27,7 @@ class Receipt
   increments :order_id
 
   belongs_to :user, optional: true
+  belongs_to :booking_detail, optional: true
   belongs_to :project_unit, optional: true
   belongs_to :creator, class_name: 'User'
   has_many :assets, as: :assetable
@@ -62,7 +63,8 @@ class Receipt
       {id: 'pending', text: 'Pending'},
       {id: 'success', text: 'Success'},
       {id: 'clearance_pending', text: 'Pending Clearance'},
-      {id: 'failed', text: 'Failed'}
+      {id: 'failed', text: 'Failed'},
+      {id: 'cancelled', text: 'Cancelled'}
     ]
   end
 
