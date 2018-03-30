@@ -1,7 +1,5 @@
-
 <% if params[:configuration].present? && params[:stage] != "kyc_details" %>
     <% bhk =  "#{params[:configuration].split(",")[0]}" %>
-
     <% budget =  "#{params[:configuration].split(",")[1]}" %>
     <% if budget != 'NA'%>
       <% minbudget = budget.split("-")[0]%>
@@ -11,8 +9,6 @@
      <% @title <<  " from #{number_to_indian_currency(minbudget)} to #{number_to_indian_currency(maxbudget)}"  if budget != 'NA' %>
      <% @title <<  " at #{@tower.name}" if params[:project_tower_id].present? %>
 <% end %>
-
-</script>
 <section class="main-wrapper full-height">
   <div class="container-fluid">
     <div class="col-12">
@@ -23,9 +19,7 @@
         <span <%= params[:stage] == "kyc_details" ? "class=active" : "" %>>KYC Details</span>
         <span>Proceed to payment</span>
       </div>
-
       <%= render partial: "#{params[:stage].to_s}" %>
-
     </div>
   </div>
 </section>

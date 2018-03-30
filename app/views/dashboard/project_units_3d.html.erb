@@ -1,0 +1,23 @@
+<%
+  data = ProjectUnit.all.collect do |x|
+    {
+      price: x.agreement_price,
+      apartment_ID: x.sfdc_id,
+      status: (x.status == "available" ? "Available" : "Booked")
+    }
+  end
+%>
+<script>
+var datajson = {
+    hotspots: <%= raw data.to_json %>
+};
+</script>
+<%= javascript_include_tag 'foyr/porthole.min' %>
+<%= javascript_include_tag 'foyr/parent' %>
+<section class="main-wrapper full-height">
+  <div class="container-fluid">
+    <div class="col-12">
+      <iframe id="foyrFrame1" name="foyrFrame1" width="1024px" height="640px" frameborder="1" src="http://storyteller.foyr.com/embassystage/index.html" scrolling="no"></iframe>
+    </div>
+  </div>
+</section>

@@ -67,6 +67,27 @@ class DashboardController < ApplicationController
     end
   end
 
+  def foyr_unit_status
+    project_unit = ProjectUnit.where(sfdc_id: params[:project_unit_id]).first
+    respond_to do |format|
+      format.json do
+        if project_unit.present?
+          render json: {
+            price: project_unit.agreement_price,
+            apartment_ID: project_unit.sfdc_id,
+            status: (project_unit.status == "available" ? "Available" : "Booked")
+          }
+        else
+          render json: {}, status: 404
+        end
+      end
+    end
+  end
+
+  def project_units_3d
+    authorize :dashboard, :project_units?
+  end
+
   def project_units
     authorize :dashboard, :project_units?
     if params[:stage] == "apartment_selector"
@@ -88,7 +109,11 @@ class DashboardController < ApplicationController
       parameters = {fltrs: { project_tower_id: params[:project_tower_id] } }
       @units = ProjectUnit.build_criteria(parameters).sort{|x, y| y.floor <=> x.floor}.group_by(&:floor)
     elsif params[:stage] == "kyc_details"
-      @unit = ProjectUnit.find(params[:unit_id])
+      if params[:configuration] == "3d"
+        @unit = ProjectUnit.where(sfdc_id: params[:unit_id]).first
+      else
+        @unit = ProjectUnit.find(params[:unit_id])
+      end
     end
 
     @project_units = current_user.project_units
@@ -175,7 +200,7 @@ class DashboardController < ApplicationController
 
   def hold_project_unit
     @project_unit = ProjectUnit.find(params[:project_unit_id])
-    authorize @project_unit 
+    authorize @project_unit
     @project_unit.attributes = permitted_attributes(@project_unit)
     @project_unit.user_kyc_ids = current_user.user_kyc_ids if @project_unit.user_kyc_ids.blank?
     # TODO: get a lock on this model. Nobody can modify it.

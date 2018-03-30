@@ -1,0 +1,49 @@
+var windowProxy1;
+var guestDomain = 'storyteller.foyr.com';
+
+/**
+ * Parent HTML callback which receives messages from child iframe.
+ */
+
+function onParentMessage(messageEvent) {
+    if (messageEvent.origin == "http://" + guestDomain) {
+        if (messageEvent.data["getapartmentstatus"]) {
+            var apartmentId = messageEvent.data["getapartmentstatus"];
+            fetchApartmentStatus(apartmentId);
+        }
+        else if (messageEvent.data["bookedapartment"]) {
+            /**
+            * sample - {"bookedapartment" : {"apartment_ID": "a0K0l000000jhle", "status": "booked", "name": "", "sales": ""}}
+            */
+            var apartmentdata = messageEvent.data["bookedapartment"];
+            window.location = "/dashboard/apartment-selector/3d/all-towers/" + apartmentdata.apartment_ID;
+        }
+    }
+}
+
+function fetchApartmentStatus(apartmentId) {
+  $.ajax({
+    url: "/dashboard/foyr-unit-status/" + apartmentId,
+    success: function(data){
+      windowProxy1.post({"apartmentstatus": data});
+    },
+    error: function(){
+      var unitdata;
+      for(var i=0; i<datajson.hotspots.length; i++) {
+          var dataval = datajson.hotspots[i];
+          if(dataval.apartment_ID == apartmentId) {
+              unitdata = dataval;
+              break;
+          }
+      }
+      unitdata.status = "Booked"
+      windowProxy1.post({"apartmentstatus": unitdata});
+    }
+  });
+}
+
+window.onload=function(){
+  windowProxy1 = new Porthole.WindowProxy("http://" + guestDomain +"/embassystage/proxy.html", 'foyrFrame1');
+  windowProxy1.addEventListener(onParentMessage);
+  windowProxy1.post({'availabilitydata':datajson})
+};
