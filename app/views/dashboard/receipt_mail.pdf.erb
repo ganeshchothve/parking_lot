@@ -167,7 +167,7 @@
 							<div class="tower-specs">
 								<div class="col-4">
 									<span class="title">PAN Card:</span>
-									<span class="specs"><%= @receipt.user.name %></span>
+									<span class="specs"><%= @receipt.user.user_kycs.first.try(:pan_number) %></span>
 								</div>
 								<div class="col-4">
 									<span class="title">Project:</span>
