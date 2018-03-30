@@ -2073,7 +2073,7 @@ section.grey{
 .hidden-field.kyc-exist, .hidden-field.kyc-add {
     display: none;
     margin-left: 0px; 
-    width: 60%;
+    width: 100%;
 }
 .form-wrapper.text-left{
 	text-align: left;
@@ -2434,7 +2434,7 @@ hr.divider {
   }
 }
 .hidden-field-prev-prop, .hidden-field.gstin, .nri-fields{
-  width: 50%;
+  width: 100%;
 }
 .w15{
   width: 15%;
@@ -2459,6 +2459,12 @@ hr.divider {
     font-size: 16px;
     width: 90px;
     text-align: center;
+}
+.salutation-fields .w60 .form-control, .salutation-fields .w60 .form-field{
+	width: 100%;
+}
+.salutation-fields .w60{
+	width: 60%;
 }
 .black-font{
 	color: #000;
@@ -2710,6 +2716,12 @@ input.nav-btn:hover{
 	}
 }
 @media all and (max-width: 700px){
+	#user_kyc_form .col-md-6, #user_kyc_form .col-6{
+		width: 100%;
+    }
+    .salutation-fields .w60{
+		width: 100%;
+    }
 	.banner-offer .green-bg{
 		width: 100%;
 		padding: 5px 0;

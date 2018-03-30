@@ -25,9 +25,9 @@
               <% if current_user.role?('user') %>
                 <div class="title">Payments need to be for individual units, clubbed payments are not allowed. Please collect a cheque for individual units only.</div>
                 Unit - <%= @receipt.project_unit.name %> <br/>
-                Amount paid - <%=  number_to_currency(@receipt.user.total_amount_paid.round(2)) %> <br/>
-                Pending amount - <%=  number_to_currency(@receipt.user.total_balance_pending.round(2)) %> <br/>
-                Agreement value  - <%= number_to_currency(@receipt.project_unit.agreement_price.round(2)) %> <br/>
+                Amount paid - <%=  number_to_indian_currency(@receipt.user.total_amount_paid.round(2)) %> <br/>
+                Pending amount - <%=  number_to_indian_currency(@receipt.user.total_balance_pending.round(2)) %> <br/>
+                Agreement value  - <%= number_to_indian_currency(@receipt.project_unit.agreement_price.round(2)) %> <br/>
                 <br/>
               <% else %>
                 Payments need to be for individual units, clubbed payments are not allowed. Please collect a cheque for individual units only.

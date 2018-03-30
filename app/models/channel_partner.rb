@@ -34,9 +34,11 @@ class ChannelPartner
   field :bank_country, type: String
   field :bank_ifsc_code, type: String
   field :region, type: String
+  field :aadhaar_no, type: String
   
   mount_uploader :pan_card_doc, DocUploader
   mount_uploader :bank_check_doc, DocUploader
+  mount_uploader :aadhaar_card_doc, DocUploader
   
   validates :name, :email, :phone, :rera_id, :location, :status, presence: true
   validates :phone, uniqueness: true#, phone: true # TODO: we can remove phone validation, as the validation happens in sell.do

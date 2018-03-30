@@ -81,7 +81,7 @@
           <div class="col-md-6 col-6">
             <div class="form-group form-field-wrapper position-relative">
               <!-- TODO: check if you want to restrict the dob to 18 years age -->
-              <%= f.date_field :dob, class: 'form-control form-field', type:'text', onfocus:"(this.type='date')", placeholder:'Date of birth' %>
+              <%= f.date_field :dob, class: 'form-control form-field', required: 'required', type:'text', onfocus:"(this.type='date')", placeholder:'Date of birth' %>
             </div>
           </div>
           <% if params[:project_unit_id].present? %>
@@ -181,7 +181,7 @@
           </div>
           <div class="col-md-6 col-6">
             <div class="form-group form-field-wrapper">
-              <%= f.text_field :aadhaar, class: 'form-control form-field', placeholder: 'Enter your 12 digit Aadhaar No.' %>
+              <%= f.text_field :aadhaar, class: 'form-control form-field', required: 'required', placeholder: 'Enter your 12 digit Aadhaar No.' %>
             </div>
           </div>
         </div>
@@ -238,18 +238,18 @@
         <div class="form-field-wrapper form-group">
           <%#= f.label :pancard_photo, class: 'control-label', style: 'vertical-align:middle' %>
           <label class="control-label">PAN card photo</label>
-          <input type="file" name="user_kyc[pancard_photo]">
+          <input type="file" name="user_kyc[pancard_photo]" class="required">
 
           <% if @user_kyc.pancard_photo %>
-          <a href="<%= @user_kyc.pancard_photo.url %>" class="nav-btn" target="_blank">View</a>
+          <a href="<%= @user_kyc.pancard_photo.url %>" class="nav-btn" target="_blank">View uploaded document</a>
           <% end %>
         </div>
         <div class="form-field-wrapper form-group">
           <%#= f.label :adharcard_photo, class: 'control-label', style: 'vertical-align:middle' %>
           <label class="control-label">Aadhaar card photo</label>
-          <input type="file" name="user_kyc[adharcard_photo]">
+          <input type="file" name="user_kyc[adharcard_photo]" class="required">
           <% if @user_kyc.adharcard_photo %>
-          <a href="<%= @user_kyc.adharcard_photo.url %>" class="nav-btn" target="_blank">View</a>
+          <a href="<%= @user_kyc.adharcard_photo.url %>" class="nav-btn" target="_blank">View uploaded document</a>
           <% end %>
         </div>
         <hr class="divider"/>

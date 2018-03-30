@@ -4,30 +4,15 @@
 	        	<span>Apartment Selector</span><span>Choose Tower</span><span>Select Apartment</span><span>KYC Details</span><span class="active">Proceed to payment</span>
 	      	</div>
 	      	<div class="col-12">
-		      	<div class="col-8 xs-100">
-		      		<div class="apartment-selector-wrapper">
-			        	<div class="title">
+	      		<div class="col-12">
+	      			<div class="apartment-selector-wrapper paddin-bottom-remove">
+	      				<div class="title">
 			          		Your time starts now!
 			        	</div>
-			        	<div class="time-left-wrapper visible-xs">
-			        	 To be fair to other users interested in this apartment, you have the next 10 minutes
-			        	</div>
-			        	<div class="col-12 client-detail-wrapper">
-				       		<div class="client-detail">
-								<span class="pink">Mr. <%= current_user.name %></span>
-								<span class="pink">Flat No: <%= project_unit.name %></span>
-							</div>
-				       		<div class="tower-info-wrapper left-padding-0"> 
-				       			<div class="pull-left">Tower: <%= project_unit.project_tower_name %><br>Floor: <%= project_unit.floor %><br>Flat no: <%= project_unit.name %><br></div>
-				       			<div class="pull-left padding-left-30">Configuration: <%= float_to_int(project_unit.bedrooms) %> BHK<br>Carpet Area: <%= project_unit.carpet.round(2) %> Sq.Ft.<br>Starting Price: <%= number_to_indian_currency(project_unit.agreement_price) %></div>
-				       			<div class="clearfix"></div>
-				       		</div>
-				       		<div class="clearfix"></div>
-				       	</div>
-			        </div>
-			    </div>
-			    <div class="col-4 pad-left xs-100">
-			    	<div class="apartment-selector-wrapper">
+	      			</div>
+	      		</div>
+	      		<div class="col-4 pull-right pad-left xs-100">
+			    	<div class="apartment-selector-wrapper paddin-bottom-remove">
 			        	<div class="days-left-wrapper text-center">
 							<% 
 								gap = (60*ProjectUnit.holding_minutes) - (Time.now - project_unit.held_on.to_time)
@@ -49,6 +34,25 @@
 								To be fair to other user interested in this<br/> apartment, you have the next 10 minutes
 							</p>
 						</div>
+			        </div>
+			    </div>
+		      	<div class="col-8 xs-100">
+		      		<div class="apartment-selector-wrapper paddin-bottom-remove">
+			        	<div class="time-left-wrapper visible-xs">
+			        	 To be fair to other users interested in this apartment, you have the next 10 minutes
+			        	</div>
+			        	<div class="col-12 client-detail-wrapper">
+				       		<div class="client-detail">
+								<span class="pink">Mr. <%= current_user.name %></span>
+								<span class="pink">Flat No: <%= project_unit.name %></span>
+							</div>
+				       		<div class="tower-info-wrapper left-padding-0"> 
+				       			<div class="pull-left">Tower: <%= project_unit.project_tower_name %><br>Floor: <%= project_unit.floor %><br>Flat no: <%= project_unit.name %><br></div>
+				       			<div class="pull-left padding-left-30">Configuration: <%= float_to_int(project_unit.bedrooms) %> BHK<br>Carpet Area: <%= project_unit.carpet.round(2) %> Sq.Ft.<br>Starting Price: <%= number_to_indian_currency(project_unit.agreement_price) %></div>
+				       			<div class="clearfix"></div>
+				       		</div>
+				       		<div class="clearfix"></div>
+				       	</div>
 			        </div>
 			    </div>
 			    <div class="clearfix"></div>

@@ -4,10 +4,15 @@
     <% if budget != 'NA'%>
       <% minbudget = budget.split("-")[0]%>
       <% maxbudget = budget.split("-")[1]%>
+      <% @title =  "Apartments from #{number_to_indian_currency(minbudget)} to #{number_to_indian_currency(maxbudget)}"  if budget != 'NA' %>
     <% end %>
-    <% @title =  "#{float_to_int(bhk)} BHK Apartments"  %>
-     <% @title <<  " from #{number_to_indian_currency(minbudget)} to #{number_to_indian_currency(maxbudget)}"  if budget != 'NA' %>
-     <% @title <<  " at #{@tower.name}" if params[:project_tower_id].present? %>
+    <% if bhk != 'NA'%>
+      <% @title =  "#{float_to_int(bhk)} BHK Apartments"  %>
+    <% end %>
+    <% if bhk != 'NA' && budget != 'NA' %>
+      <% @title <<  " from #{number_to_indian_currency(minbudget)} to #{number_to_indian_currency(maxbudget)}"  if budget != 'NA' %>
+    <% end %>
+    <% @title <<  " at #{@tower.name}" if params[:project_tower_id].present? %>
 <% end %>
 <section class="main-wrapper full-height">
   <div class="container-fluid">
