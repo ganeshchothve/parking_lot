@@ -67,13 +67,22 @@ class ProjectUnitObserver < Mongoid::Observer
       if Rails.env.development?
         mailer.deliver
       else
-	       SelldoPusher.perform_async(project_unit.status, project_unit.id.to_s, Time.now.to_i)
+        SelldoPusher.perform_async(project_unit.status, project_unit.id.to_s, Time.now.to_i)
         mailer.deliver_later
       end
       if Rails.env.development?
         SMSWorker.new.perform("", "")
       else
         SMSWorker.perform_async("", "")
+      end
+      
+      if project_unit.status_changed? && project_unit.status == 'booked_confirmed'
+        mailer = ProjectUnitMailer.send_allotment_letter(project_unit.id)
+        if Rails.env.development?
+          mailer.deliver
+        else
+          mailer.deliver_later
+        end
       end
     end
 

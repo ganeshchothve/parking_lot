@@ -37,6 +37,9 @@
                 <%= f.submit "Submit", class: 'btn nav-btn' %>
               </div>
             <% end %>
+            <div class="form-group">
+              <label class="control-label label-required title">You need to upload photo of cheque to process refund smoothly. </label>
+            </div>
             <%= render "assets/index", assetable: @user_request %>
             <br/><br/><br/>
             <%= javascript_tag do %>
