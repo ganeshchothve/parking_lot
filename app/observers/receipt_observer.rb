@@ -101,7 +101,7 @@ class ReceiptObserver < Mongoid::Observer
       else
         mailer.deliver_later
       end
-      message = "Dear #{user.name}, your payment of Rs. #{receipt.total_amount} for unit #{project_unit.name} has been received (##{receipt.receipt_id}). To print your receipt visit #{user.dashboard_url}"
+      message = "Dear #{user.name}, your payment of Rs. #{receipt.total_amount} has been received."
       if Rails.env.development?
         SMSWorker.new.perform(user.phone.to_s, message)
       else
