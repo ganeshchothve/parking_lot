@@ -17,6 +17,6 @@ class SelldoPusher
     user_kycs.each do |kyc|
       params["applicants"] << {name: kyc.name, email: kyc.email, phone: kyc.phone, pan_no: kyc.pan_number}
     end
-    RestClient.post("https://sn1.sell.do/api/leads/add_booking", params)
+    RestClient.post("https://app.sell.do/api/leads/add_booking", params)
   end
 end
