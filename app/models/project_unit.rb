@@ -27,14 +27,6 @@ class ProjectUnit
     10.minutes
   end
 
-  def self.booking_price_percent_of_agreement_price
-    0.098
-  end
-
-  def self.tds_amount_percent_of_agreement_price
-    0.001
-  end
-
   # These fields are globally utlised on the server side
   field :name, type: String
   field :sfdc_id, type: String
@@ -200,6 +192,18 @@ class ProjectUnit
     else
 	150
     end
+  end
+
+  def booking_price_percent_of_agreement_price
+    agreement_price > 5000000 ? 0.099 : 0.1
+  end
+
+  def tds_amount_percent_of_agreement_price
+    agreement_price > 5000000 ? 0.001 : 0
+  end
+
+  def tds_amount
+    agreement_price * tds_amount_percent_of_agreement_price
   end
 
   def floor_rise

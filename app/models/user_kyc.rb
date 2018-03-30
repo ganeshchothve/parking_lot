@@ -3,7 +3,9 @@ class UserKyc
   include Mongoid::Timestamps
   include ArrayBlankRejectable
 
-  field :name, type: String
+  field :salutation, type: String
+  field :first_name, type: String
+  field :last_name, type: String
   field :email, type: String
   field :phone, type: String
   field :dob, type: Date
@@ -13,6 +15,7 @@ class UserKyc
   field :house_number, type: String
   field :city, type: String
   field :postal_code, type: String
+  field :state, type: String
   field :country, type: String
 
   mount_uploader :photo, DocUploader
@@ -40,8 +43,8 @@ class UserKyc
   belongs_to :creator, class_name: 'User'
   has_and_belongs_to_many :project_units
 
-  
-  validates :name, :email, :phone, :dob, :pan_number, presence: false
+
+  validates :first_name, :last_name, :email, :phone, :dob, :pan_number, :city, :state, :country, :street, presence: false
   validates :poa, inclusion: {in: [true]}, if: Proc.new{ |kyc| kyc.nri? }
   validates :email, uniqueness: true, allow_blank: true
   validates :pan_number, uniqueness: true, allow_blank: true
@@ -52,4 +55,18 @@ class UserKyc
   validates :poa_details, presence: true, if: Proc.new{|kyc| kyc.poa?}
   validates :bank_name, presence: true, if: Proc.new{|kyc| kyc.loan_required?}
   validates :existing_customer_name, :existing_customer_project, presence: true, if: Proc.new{|kyc| kyc.existing_customer?}
+  validates :salutation, inclusion: {in: Proc.new{ UserKyc.available_salutations.collect{|x| x[:id]} } }
+
+  def self.available_salutations
+    [
+      {id: "mr", text: 'Mr.'},
+      {id: "ms", text: 'Ms.'},
+      {id: "mrs", text: 'Mrs.'},
+      {id: "dr", text: 'Dr.'}
+    ]
+  end
+
+  def name
+    "#{UserKyc.available_salutations.find{|x| x[:id] == salutation}[:text] rescue '' } #{first_name} #{last_name}"
+  end
 end

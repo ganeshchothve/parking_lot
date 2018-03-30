@@ -65,6 +65,9 @@
             <div class="col-4">
               <div>Balance Payment:</div><div class="dark"><%= number_to_indian_currency(project_unit.pending_balance.round) %></div>
             </div>
+            <div class="col-4">
+              <div>TDS Amount:</div><div class="dark"><%= number_to_indian_currency(project_unit.tds_amount.round) %></div>
+            </div>
             <div class="clearfix"></div>
             <!-- <div class="clearfix"></div> -->
         </div>
@@ -78,15 +81,15 @@
         <% if project_unit.status == 'hold' %>
         <%#= link_to "I Agree", dashboard_payment_path, class: 'nav-btn', style:'margin-top:0px' %>
         <a href="/dashboard/checkout/<%= project_unit.id %>" class="pink payment-btn text-center">
-          BOOK NOW 
-        </a>  
+          BOOK NOW
+        </a>
         <% elsif ReceiptPolicy.new(project_unit.user, project_unit.user.receipts.new(project_unit_id: project_unit.id)).new? %>
         <a href="/dashboard/receipts/new?project_unit_id=<%= project_unit.id %>" class="pink payment-btn text-center">
           MAKE THE REMAINING PAYMENT
         </a>
         <% end %>
       </div>
-      
+
     </div>
 <% end %>
 <%= javascript_tag do %>
