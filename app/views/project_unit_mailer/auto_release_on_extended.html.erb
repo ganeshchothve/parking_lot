@@ -3,7 +3,7 @@
 <%# else %>
   You have a grace <%#= (@project_unit.auto_release_on - Date.today).days %> days on Unit - <%= @project_unit.name %>
 <%# end %> -->
-<!-- 
+<!--
 Thank you for your cheque payment of Rs. abc. Following are your cheque details -
 
 Account no
@@ -87,6 +87,6 @@ PHoto of cheque, account number, bank name, ifsc code
 
         <tr>
           <td style="font-size:16px;line-height:26px;">
-           Your Embassy home will be kept on hold for you for additional <%= (Date.today - @auto_release_on_was).days %>  days until your cheque is cleared. We will notify you once the cheque realizes.
+           Your Embassy home will be kept on hold for you untill <%= @project_unit.auto_release_on_was %>; until your payments are cleared. We will notify you once the cheque realizes.
           </td>
         </tr>

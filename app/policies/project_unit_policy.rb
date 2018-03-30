@@ -3,6 +3,14 @@ class ProjectUnitPolicy < ApplicationPolicy
     true
   end
 
+  def edit?
+    record.auto_release_on.present? && ['crm', 'admin'].include?(user.role)
+  end
+
+  def update?
+    edit?
+  end
+
   def create?
     false
   end
@@ -36,7 +44,7 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def permitted_attributes params={}
-    attributes = [:status, user_kyc_ids: []]
+    attributes = [:status, :auto_release_on, user_kyc_ids: []]
     attributes
   end
 end

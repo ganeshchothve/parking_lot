@@ -1,0 +1,21 @@
+<section class="main-wrapper full-height grey" style="min-height: 764px;">
+  <%= render 'breadcrumbs', {project_unit: @project_unit} %>
+  <div class="container-fluid">
+    <div class="col-12">
+      <%= form_for [:admin, @project_unit], html: {class: 'validate-form', id: 'project_unit_form'} do |f| %>
+        <div class="form-group form-field-wrapper">
+          <%= f.label :auto_release_on, class: 'control-label label-required title' %>
+          <%= f.text_field :auto_release_on, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.auto_release_on.present? ? f.object.auto_release_on.strftime("%d/%m/%Y") : '', "data-min-date": Date.tomorrow.strftime("%d/%m/%Y"), disabled: (policy(@project_unit).editable_field?("auto_release_on") ? false : true), value: f.object.auto_release_on.present? ? f.object.auto_release_on.strftime("%d/%m/%Y") : "" %>
+        </div>
+        <div class="form-group">
+          <%= f.submit "Submit", class: 'btn nav-btn' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+<%= javascript_tag do %>
+$(document).ready(function(){
+  FormInitializer.init($('#project_unit_form'));
+});
+<% end %>

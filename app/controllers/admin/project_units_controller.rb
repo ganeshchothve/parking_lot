@@ -20,6 +20,17 @@ class Admin::ProjectUnitsController < AdminController
     end
   end
 
+  def update
+    respond_to do |format|
+      if @project_unit.update(permitted_attributes(@project_unit))
+        format.html { redirect_to admin_project_units_path, notice: 'Unit successfully updated.' }
+      else
+        format.html { render :edit }
+        format.json { render json: @project_unit.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   private
   def set_project_unit
     @project_unit = ProjectUnit.find(params[:id])

@@ -25,7 +25,7 @@ Rails.application.routes.draw do
     resources :receipts, only: [:index, :show], controller: '/receipts' do
       get 'export', action: 'export', on: :collection, as: :export
     end
-    resources :project_units, only: [:index]
+    resources :project_units, only: [:index, :edit, :update]
     resources :users do
       get '/new/:role', action: 'new', on: :collection, as: :new_by_role
       get 'export', action: 'export', on: :collection, as: :export
