@@ -155,7 +155,7 @@
         </ul>
       </div>
       <div class="dash-menu-footer hidden-xs">
-         <img src="<%= asset_path "embassy_springs_logo.png" %>" class="img-responsive" style="padding:0 5px;width:70px;">
+         Book your home, and make someone else's dream come true too! We will be donating 0.1% of every booking to NGO. Make a difference today! <%= number_to_indian_currency((ProjectUnit.in(status: ['blocked', 'booked_confirmed', 'booked_tentative']).sum(:agreement_price) * 0.1 / 100).round) %> have been donated so far to (The NGO).
       </div>
     </div>
     <% end %>
