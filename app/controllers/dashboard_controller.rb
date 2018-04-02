@@ -239,28 +239,7 @@ class DashboardController < ApplicationController
       end
     end
   end
-
-  def user_profile
-     @user = User.find(current_user.id)
-  end
-
-  def user_update
-    user_params = params['user']
-    user = User.find(user_params[:id])
-    user.email = user_params[:email]
-    user.phone = user_params[:phone]
-    user.password = user_params[:password]
-    respond_to do |format|
-      if user.save
-        format.html { redirect_to "/users/sign_in", notice: 'User updated successfully...' }
-        format.json
-      else
-        format.html { render :action => "user_profile" }
-        format.json
-      end
-    end
-  end
-
+  
   private
   def hold_on_third_party_inventory
     third_party_inventory_response, third_party_inventory_response_code = ThirdPartyInventory.hold_on_third_party_inventory(@project_unit)
