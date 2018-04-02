@@ -26,7 +26,7 @@ class HomeController < ApplicationController
         if @user.present?
           message = 'A user with these details has already registered'
           unless @user.confirmed?
-            @user.set(channel_partner_id: current_user.id)
+            @user.set(channel_partner_id: current_user.id) if current_user.present? && current_user.role?('channel_partner')
             message = "A user with these details has already registered, but hasn't confirmed their account. We have resent the confirmation email to them, which has an account activation link."
             @user.resend_confirmation_instructions
           end

@@ -14,10 +14,11 @@ class ProjectUnitMailer < ApplicationMailer
     @project_unit = ProjectUnit.find(project_unit_id)
     @user = @project_unit.user
     @cp = @user.channel_partner
-    cc = @cp.present? ? [@cp.email] : []
-    cc += default_team
-    cc += crm_team
-    mail(to: @user.email, cc: cc, subject: "Unit #{@project_unit.name} booked tentative")
+    # CC Removed as per the QA/Supriya Mam
+    # cc = @cp.present? ? [@cp.email] : []
+    # cc += default_team
+    # cc += crm_team
+    mail(to: @user.email, subject: "Unit #{@project_unit.name} booked tentative")# cc: cc
   end
 
   def booked_confirmed(project_unit_id)
