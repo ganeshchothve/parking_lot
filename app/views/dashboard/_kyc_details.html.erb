@@ -41,18 +41,22 @@
 			                </ul>
 			              </div>
 			            <% end %>
-                  <div class="row">
-                    <div class="col-md-2 col-2">
-                      <div class="form-group form-field-wrapper">
-                        <%= f.select :salutation, UserKyc.available_salutations.collect{|x| [x[:text], x[:id]]}, {}, class: 'required init-selectize' %>
+                  <div class="row salutation-fields">
+                    <div class="col-md-6 col-6">
+                      <div class="w60">
+                        <div class="col-md-4 col-4">
+                          <div class="form-group form-field-wrapper">
+                            <%= f.select :salutation, UserKyc.available_salutations.collect{|x| [x[:text], x[:id]]}, {}, class: 'required init-selectize' %>
+                          </div>
+                        </div>
+                        <div class="col-md-8 col-8">
+                          <div class="form-group form-field-wrapper">
+                            <%= f.text_field :first_name, class: 'form-control form-field', required: 'required form-field', placeholder: 'First Name' %>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <div class="col-md-5 col-5">
-                      <div class="form-group form-field-wrapper">
-                        <%= f.text_field :first_name, class: 'form-control form-field', required: 'required form-field', placeholder: 'First Name' %>
-                      </div>
-                    </div>
-                    <div class="col-md-5 col-5">
+                    <div class="col-md-6 col-6">
                       <div class="form-group form-field-wrapper">
                         <%= f.text_field :last_name, class: 'form-control form-field', required: 'required form-field', placeholder: 'Last Name' %>
                       </div>
@@ -169,8 +173,8 @@
 			            <% if policy(@unit).hold_project_unit? %>
 			            <br clear="all" />
 			            <div class="col-12 top-inline-block">
-			            <%= f.submit 'Add & Hold Unit', class: 'form-field nav-btn btn-anim', style: 'width:auto'%>
 			            <a href="javascript:;" class="nav-btn btn-anim navigate" data-stage="select-apartment" data-navigate-to="prev">← PREV</a>
+                  <%= f.submit 'Add & Hold Unit', class: 'form-field nav-btn btn-anim', style: 'width:auto'%>
 			        	</div>
 			            <% end %>
 			          <% end %>
@@ -195,8 +199,8 @@
 			          <br clear="all" />
 			            <div class="col-12 top-inline-block">
 			          <%# if policy(@unit).hold_project_unit? %>
-			          	<input type="submit" value="Hold Unit" class="nav-btn btn-anim" />
 			          	<a href="javascript:;" class="nav-btn btn-anim navigate" data-stage="select-apartment" data-navigate-to="prev">← PREV</a>
+                  <input type="submit" value="Hold Unit" class="nav-btn btn-anim" />
 			          </div>
 			          <%# end %>
 			        </form>

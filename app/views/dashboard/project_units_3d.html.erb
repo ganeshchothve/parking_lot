@@ -17,7 +17,16 @@ var datajson = {
 <section class="main-wrapper full-height">
   <div class="container-fluid">
     <div class="col-12">
-      <iframe id="foyrFrame1" name="foyrFrame1" width="1024px" height="640px" frameborder="1" src="http://storyteller.foyr.com/embassystage/index.html" scrolling="no"></iframe>
+      <iframe id="foyrFrame1" name="foyrFrame1" width="100%" height="640px" frameborder="0" src="http://storyteller.foyr.com/embassystage/index.html" scrolling="no" style="border:0"></iframe>
     </div>
   </div>
 </section>
+
+
+<script type="text/javascript">
+  jQuery(document).ready(function($){
+    wd=jQuery("#foyrFrame1").width();
+   jQuery("#foyrFrame1").css("height", wd*0.7)
+
+  });
+</script>

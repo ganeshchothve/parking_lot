@@ -36,6 +36,7 @@
 //= require form-initializer
 //= require validator
 //= require registration
+//= require jquery.form
 
 $.ajaxSetup({
   headers: {
@@ -47,7 +48,7 @@ $(document).ready(function(){
 
   setTimeout(function(){
     $("p.notice, p.alert").fadeOut();
-  }, 3000);
+  }, 5000);
 
   if($(".timer-show").length > 0){
     $(".timer-show").each(function(){
@@ -86,7 +87,7 @@ $(document).ready(function(){
         localStorage.setItem('selectedValues', JSON.stringify(selectedValues));
       }
       if(Object.values(selectedValues).filter(item => item == "NA").length > 1){
-        notify("Please select atleast one field", "error", 3000, 300);
+        notify("Please select atleast one field", "error", 5000, 500);
       } else {
         selectedValues = JSON.parse(localStorage.getItem("selectedValues"));
         $navigate.attr("href", "/dashboard/apartment-selector/"+selectedValues.bedrooms+","+selectedValues.agreement_price);
@@ -95,7 +96,7 @@ $(document).ready(function(){
       if($navigate.data("navigate-to") == "next"){
         var towerid = $navigate.data("selected-towerid");
         if(towerid == 0){
-          notify("Please select a tower to proceed.", "error", 3000, 300);
+          notify("Please select a tower to proceed.", "error", 5000, 500);
         } else {
           selectedValues = JSON.parse(localStorage.getItem("selectedValues"));
           selectedValues.towerid = towerid;
@@ -112,10 +113,10 @@ $(document).ready(function(){
       if(selectedValues.unit_id){
         $navigate.attr("href", "/dashboard/apartment-selector/"+selectedValues.bedrooms+","+selectedValues.agreement_price+"/"+selectedValues.towerid+"/"+selectedValues.unit_id);
       } else {
-        notify("Please select any unit to proceed.", "error", 3000, 300);
+        notify("Please select any unit to proceed.", "error", 5000, 500);
       }
     } else if($navigate.data("stage") == "proceed-to-payment"){
-      notify("Please Add or Select Exisiting KYC details to book.", "error", 3000, 300);
+      notify("Please Add or Select Exisiting KYC details to book.", "error", 5000, 500);
     }
   });
 
@@ -178,7 +179,7 @@ $(document).ready(function(){
         $("#existing_kyc_form").submit();
         $("#user_kyc_form input[type=submit]").removeAttr("disabled");
       } else {
-        notify(responseData.responseJSON.errors, "error", 3000, 300);
+        notify(responseData.responseJSON.errors, "error", 5000, 500);
         $("#user_kyc_form input[type=submit]").removeAttr("disabled");
       }
     });
@@ -231,12 +232,11 @@ $(document).ready(function(){
     e.preventDefault();
   });
 
-  $(".filter-submit-wrapper button").on("click", function(e){
+  $("#filter-form button.nav-btn").on("click", function(e){
 
     //clearHighlightedUnit();
     var redirect = true;
     var data = $("#filter-form").serializeArray();
-    console.log(data);
     var selectedValues = JSON.parse(localStorage.getItem("selectedValues"));
 
     for(let field of data){
@@ -245,7 +245,7 @@ $(document).ready(function(){
       else if(field.value==""){
         if(field.name == "towerid"){
           redirect = false;
-          notify("Tower value can't be blank. Please select a tower to proceed.", "error", 3000, 300);
+          notify("Tower value can't be blank. Please select a tower to proceed.", "error", 5000, 500);
         } else {
           selectedValues[field.name] = "NA"
         }
@@ -265,7 +265,7 @@ function startTimer($elem) {
   var s = parseInt(timeArray[1]);
 
   if(m == 0 && s == 0){
-    // console.log("stop counter");
+    location.reload(true);
   } else {
     s = s - 1;
     if(s < 0){
@@ -316,7 +316,7 @@ function ajaxUpdate(data, url, callback){
   });
 }
 
-function notify(msg, type, display_msg_time, transition_delay=300){
+function notify(msg, type, display_msg_time, transition_delay=500){
   if(typeof msg == "string"){
     msg = msg;
   } else {
