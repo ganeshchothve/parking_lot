@@ -21,3 +21,7 @@
 every 3.minutes do
   runner "Gamification::Job.new.execute"
 end
+every 1.day do
+  runner "ProjectUnitRemindersAndAutoRelease::Job.daily_reminder_for_booking_payment"
+  # runner "ProjectUnitRemindersAndAutoRelease::Job.release_project_unit"
+end

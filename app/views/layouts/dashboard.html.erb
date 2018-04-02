@@ -6,6 +6,7 @@
     <%= csrf_meta_tags %>
     <%= stylesheet_link_tag 'dashboard_new' %>
     <%= javascript_include_tag 'dashboard' %>
+    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
     <%= javascript_tag do %>
       <% if user_signed_in? %>
         if(typeof App === "undefined"){
@@ -13,10 +14,9 @@
         }
         App.current_user = <%= raw current_user.to_json %>;
       <% end %>
-    <% end %>
-    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
-    <% if Rails.env.development? || Rails.env.staging? %>
+      <% if Rails.env.development? || Rails.env.staging? %>
       Pusher.logToConsole = true;
+      <% end %>
     <% end %>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-116390336-1"></script>
@@ -31,12 +31,12 @@
   <body>
 
   <div class="visible-xs prompts-message gradient-bg text-center white">
-    <% if user_signed_in? && current_user.sign_in_count > 1%>
-      <a href="/dashboard/apartment-selector" class="white">BOOK NOW</a>
-    <% else %>
-      <span>Register now to book & save upto Rs. 10 Lac!</span>
-      <span>Prices rise with every 50 bookings</span>
-    <% end %>
+    <ul id="gamification_container">
+      <li><%= booked_today_count %> people have paid the token amount today</li>
+      <li><%= bhk_booked(1) %> 1 BHK Apartments sold</li>
+      <li><%= bhk_booked(2) %> 2 BHK Apartments sold</li>
+      <li><%= bhk_booked(3) %> 3 BHK Apartments sold</li>
+    </ul>
   </div>
     <div id="notify"></div>
     <p class="notice"><%= notice %></p>
@@ -146,12 +146,12 @@
             </div>
         </div>
       </div>
-      <div class="prompts-message hidden-xs">
+      <div class="prompts-message hidden-xs gradient-bg white">
         <ul id="gamification_container">
+          <li><%= booked_today_count %> people have paid the token amount today</li>
           <li><%= bhk_booked(1) %> 1 BHK Apartments sold</li>
           <li><%= bhk_booked(2) %> 2 BHK Apartments sold</li>
           <li><%= bhk_booked(3) %> 3 BHK Apartments sold</li>
-          <li><%= booked_today_count %> people have paid the token amount today</li>
         </ul>
       </div>
       <div class="dash-menu-footer hidden-xs">
