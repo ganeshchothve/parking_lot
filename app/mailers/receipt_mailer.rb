@@ -4,7 +4,7 @@ class ReceiptMailer < ApplicationMailer
   def send_failure receipt_id
     @receipt = Receipt.find(receipt_id)
     @user = @receipt.user
-    @project_unit = @receipt.project_unit
+    @project_unit = @receipt.project_unit || @receipt.reference_project_unit
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
     cc += default_team
@@ -14,7 +14,7 @@ class ReceiptMailer < ApplicationMailer
   def send_success receipt_id
     @receipt = Receipt.find(receipt_id)
     @user = @receipt.user
-    @project_unit = @receipt.project_unit
+    @project_unit = @receipt.project_unit || @receipt.reference_project_unit
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
     cc += default_team
@@ -46,7 +46,7 @@ class ReceiptMailer < ApplicationMailer
   def receipt_email receipt_id
     @receipt = Receipt.find(receipt_id)
     @user = @receipt.user
-    @project_unit = @receipt.project_unit
+    @project_unit = @receipt.project_unit || @receipt.reference_project_unit
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
     cc += default_team
@@ -58,7 +58,7 @@ class ReceiptMailer < ApplicationMailer
   def send_receipt receipt_id
     @receipt = Receipt.find(receipt_id)
     @user = @receipt.user
-    @project_unit = @receipt.project_unit
+    @project_unit = @receipt.project_unit || @receipt.reference_project_unit
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
     cc += default_team
