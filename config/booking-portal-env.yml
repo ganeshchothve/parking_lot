@@ -8,7 +8,12 @@ redis:
   port: 6379
   db: 0
   namespace: booking_portal_dev
-  password: 
+  password:
 sidekiq:
-  username: 
-  password: 
+  username:
+  password:
+pusher:
+  key: 'fe128113ca13812feaf0'
+  secret: 'c74d20f592399a3c6ba6'
+  app_id: '501969'
+  cluster: 'ap2'

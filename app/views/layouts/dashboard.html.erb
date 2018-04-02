@@ -4,7 +4,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>BookingPortal</title>
     <%= csrf_meta_tags %>
-
     <%= stylesheet_link_tag 'dashboard_new' %>
     <%= javascript_include_tag 'dashboard' %>
     <%= javascript_tag do %>
@@ -14,6 +13,10 @@
         }
         App.current_user = <%= raw current_user.to_json %>;
       <% end %>
+    <% end %>
+    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
+    <% if Rails.env.development? || Rails.env.staging? %>
+      Pusher.logToConsole = true;
     <% end %>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-116390336-1"></script>
@@ -75,7 +78,7 @@
                 <span><img src="<%= asset_path 'user.png'%>" class="img-responsive"> &nbsp;<%#= current_user.name %>
                   <%= link_to "Welcome " + current_user.name, dashboard_user_profile_path , class:'white'%>
                 </span>
-               
+
             </div>
             <div class="clearfix"></div>
           </div>
@@ -142,21 +145,20 @@
               <a href="javascript:;">xyz@embassysprings.com</a>
             </div>
         </div>
-        
       </div>
       <div class="prompts-message hidden-xs">
-        <ul>
-          <li>Register now and have an Edge over others</li>
-          <li>Prices rise with every 50 bookings</li>
+        <ul id="gamification_container">
+          <li><%= bhk_booked(1) %> 1 BHK Apartments sold</li>
+          <li><%= bhk_booked(2) %> 2 BHK Apartments sold</li>
+          <li><%= bhk_booked(3) %> 3 BHK Apartments sold</li>
+          <li><%= booked_today_count %> people have paid the token amount today</li>
         </ul>
       </div>
       <div class="dash-menu-footer hidden-xs">
          <img src="<%= asset_path "embassy_springs_logo.png" %>" class="img-responsive" style="padding:0 5px;width:70px;">
       </div>
-      
     </div>
     <% end %>
-
     <%= yield %>
     <script type="text/javascript">
       $(document).ready(function(){
@@ -165,7 +167,7 @@
           $(".nri-fields").hide();
           $(".show-"+link+"-nri").show();
         });
-        
+
         $('label.radio.kyc-radio').on('click',function(){
           var link = $(this).attr('data-link');
 
@@ -176,7 +178,7 @@
           else{
            $('.kyc-add').hide();
             $('.kyc-exist').show();
-           
+
           }
         })
         $('label.radio.oci').on('click',function(){
@@ -189,7 +191,7 @@
           else{
             $('.hidden-field.oci').hide();
             $('.hidden-field.pan').show();
-           
+
           }
         })
         $('label.radio.attorney').on('click',function(){
@@ -264,14 +266,11 @@
           $('.filter-item-wrapper').slideToggle();
         })
         $('.open-details-wrapper, .show-unit-details-wrapper .close-btn').on('click',function(){
-          console.log('hit');
           if($('.show-unit-details-wrapper').hasClass('close')){
-            console.log('no')
             $('.show-unit-details-wrapper').removeClass('close')
           }
           else{
-            console.log('yes')
-            $('.show-unit-details-wrapper').addClass('close') 
+            $('.show-unit-details-wrapper').addClass('close')
           }
         })
 
@@ -281,13 +280,12 @@
             $('.open-details-wrapper').addClass('blink');
             setTimeout(function(){
               $('.open-details-wrapper').removeClass('blink');
-            },1500)   
-         
+            },1500)
+
        })
         if($(window).width()<=700){
           var winHT = $(window).height();
           $('.dash-menu-wrapper').height(winHT);
-          console.log('hit')
         }
       })
     </script>

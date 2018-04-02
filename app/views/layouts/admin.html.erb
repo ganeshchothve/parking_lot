@@ -16,6 +16,10 @@
         App.current_user = <%= raw current_user.to_json %>;
       <% end %>
     <% end %>
+    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
+    <% if Rails.env.development? || Rails.env.staging? %>
+      Pusher.logToConsole = true;
+    <% end %>
   </head>
   <body>
   <%if params[:controller] != 'dashboard' %>
@@ -50,7 +54,7 @@
               <% end %>
             </div>
             <!-- <div class="pull-left left-wrapper">
-                <span class="subTitle white bold">Dashboard</span> <span class="white f16">Welcome <%= current_user.name %></span> 
+                <span class="subTitle white bold">Dashboard</span> <span class="white f16">Welcome <%= current_user.name %></span>
             </div> -->
             <div class="pull-right right-wrapper">
               <!-- <div class="dashboard-notify pull-left">
@@ -115,7 +119,7 @@
           <% end %>
         </ul>
         <!-- <ul class="navbar-nav mr-0">
-         
+
         </ul> -->
       </div>
     </nav>
@@ -152,7 +156,7 @@
           else{
            $('.kyc-add').hide();
             $('.kyc-exist').fadeIn();
-           
+
           }
         })
         $('label.radio.oci').on('click',function(){
@@ -165,7 +169,7 @@
           else{
             $('.hidden-field.oci').hide();
             $('.hidden-field.pan').fadeIn();
-           
+
           }
         })
         $('label.radio.attorney').on('click',function(){

@@ -4,6 +4,13 @@
         </div>
         <div class="col-12 conf-select-wrapper">
           <div class="tower-name-wrapper">
+            <%
+              ubbt = units_booked_by_towers
+              mst = ""
+              mst = ubbt.sort{|x| x["count"]}.first["_id"]["project_tower_id"] if ubbt.present?
+              lst = ""
+              lst = ubbt.sort{|x| x["count"]}.last["_id"]["project_tower_id"] if ubbt.present?
+            %>
             <% if @towers.count > 0 %>
               <% @towers.each do |t| %>
               <div class="col-3 text-center">
@@ -11,6 +18,9 @@
                   <img src="<%= asset_path 'tower-feat.png'%>" class="img-responsive">
                   <div class="">
                     <span><%= t[:project_tower_name] %></span>
+                    <span style="color:#f00;"><%= "Fast Selling" if mst.to_s == t[:project_tower_id].to_s %></span>
+                    <span style="color:#f00;"><%= "One of our hottest-selling towers at the moment" if lst.to_s == t[:project_tower_id].to_s && mst != lst %></span>
+                    <span class="show-on-active"><%= [2,3,4,5,6].sample %> apartments just sold in this tower</span>
                     <span>Tower Units: <%= t[:total_units] %></span>
                     <span>Available Units: <%= t[:total_units_available] %></span>
                   </div>
@@ -20,7 +30,7 @@
             <% else %>
             <div class="col-12 text-center">
                 <div class="not-found"><i class="far fa-frown" style="font-size:50px; margin-bottom:20px;
-                color:#3981b8;"></i><br/>No Apartments found matching your criteria</div> 
+                color:#3981b8;"></i><br/>No Apartments found matching your criteria</div>
             </div>
             <% end %>
           </div>

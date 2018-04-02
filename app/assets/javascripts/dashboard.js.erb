@@ -37,6 +37,7 @@
 //= require validator
 //= require registration
 //= require jquery.form
+//= require gamification
 
 $.ajaxSetup({
   headers: {
@@ -129,6 +130,7 @@ $(document).ready(function(){
       $(this).addClass("active");
       $('[data-stage="select-apartment"]').data("selected-towerid", $(this).data("towerid"));
     }
+    Gamification.gamifyTowerSelection(selectedTower);
   });
   /* New UI */
 
@@ -201,15 +203,12 @@ $(document).ready(function(){
     $(this).addClass("bstatus-selected");
 
     var selectedValues = JSON.parse(localStorage.getItem("selectedValues"));
-    console.log(selectedValues);
     selectedValues.unit_id = $(this).data("unit-id");
-    console.log(selectedValues);
     localStorage.setItem('selectedValues', JSON.stringify(selectedValues));
 
     // hightlightUnit(type);
-
     var unitData = $(this).data("unit-details");
-    console.log(unitData);
+    Gamification.gamifyUnitSelection(unitData);
 
     $(".show-unit-details-wrapper").show();
 

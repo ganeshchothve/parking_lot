@@ -351,14 +351,20 @@ class ProjectUnit
       if params[:fltrs][:project_tower_id].present?
         selector[:project_tower_id] = params[:fltrs][:project_tower_id]
       end
+      if params[:fltrs][:agreement_price].present?
+        budget = params[:fltrs][:agreement_price].split("-")
+        selector[:agreement_price] = {"$gte" => budget.first.to_i, "$lte" => budget.last.to_i}
+      end
 
       if params[:fltrs][:data_attributes].present?
         if params[:fltrs][:data_attributes][:bedrooms].present?
           data_attributes_query << {data_attributes: {"$elemMatch" =>{"n" => "bedrooms", "v" => params[:fltrs][:data_attributes][:bedrooms].to_i }}}
         end
-        if params[:fltrs][:data_attributes][:agreement_price].present?
-          budget = params[:fltrs][:data_attributes][:agreement_price].split("-")
-          data_attributes_query << {data_attributes: {"$elemMatch" =>{"n" => "agreement_price", "v" => {"$gte" => budget.first.to_i, "$lte" => budget.last.to_i}}}}
+      end
+      if params[:fltrs][:data_attributes].present?
+        if params[:fltrs][:data_attributes][:carpet].present?
+          carpet = params[:fltrs][:data_attributes][:carpet].split("-")
+          data_attributes_query << {data_attributes: {"$elemMatch" =>{"n" => "carpet", "v" => {"$gte" => carpet.first.to_i, "$lte" => carpet.last.to_i} }}}
         end
       end
     end

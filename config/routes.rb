@@ -77,6 +77,7 @@ Rails.application.routes.draw do
     post 'hold_project_unit/:project_unit_id', to: 'dashboard#hold_project_unit', as: :dashboard_hold_project_unit
     get 'checkout/(:project_unit_id)', to: 'dashboard#checkout', as: :dashboard_checkout
     get 'checkout_via_email/:project_unit_id/:receipt_id', to: 'dashboard#checkout_via_email', as: :dashboard_checkout_via_email
+    get "gamify-unit-selection", to: "dashboard#gamify_unit_selection"
     match 'payment/(:project_unit_id)', to: 'dashboard#payment', as: :dashboard_payment, via: [:get, :patch]
     resources :receipts
     resource :user do
