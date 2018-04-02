@@ -40,7 +40,7 @@
             <div>Super Built-up Area:</div><div class="dark"><%= project_unit.saleable.round(2) %> sq.ft</div>
           </div>
           <div class="col-4">
-            <div>Unit Type:</div><div class="dark"><%= float_to_int(project_unit.bedrooms) %> BHK - 2T - A</div><a href="<%= asset_path 'fp-type-2.jpg'%>" rel="floorplan" class="colorbox-init small-link">View Floor Plan</a>
+            <div>Unit Type:</div><div class="dark"><%= float_to_int(project_unit.bedrooms) %> BHK - 2T - A</div><a href="/floorplans/<%= project_unit.bedrooms %>-BHK-<%= project_unit.carpet.round %>-SF.png" rel="floorplan" class="colorbox-init small-link">View Floor Plan</a>
           </div>
           <div class="col-4">
             <div>Carpet Area:</div><div class="dark"><%= project_unit.carpet.round(2) %> sq.ft</div>

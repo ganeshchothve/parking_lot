@@ -17,116 +17,121 @@
 		<div class="clearfix"></div>
 		<div class="col-12">
 			<div class="receipt-wrapper">
-						<div class="pull-right">	
-							<!-- <a href="/dashboard/receipt-print/<%#= @receipt.id %>" target="_blank"><img src="<%#= asset_path 'printer-outline.png'%>" class="img-responsive"></a> -->
-							<%= link_to dashboard_receipt_print_path(@receipt.id, :format => 'pdf'), target: :_blank do %>
-								<i class="far fa-envelope" style="font-size:24px;color:#383838;display:inline-block;margin:0 10px;"></i>
-							<% end%>
-							<%= link_to dashboard_receipt_mail_path(@receipt.id, :format => 'pdf'), target: :_blank do %>
-								<img src="<%= asset_path 'printer-outline.png'%>" class="img-responsive">
-							<% end%>
+				<div class="pull-right">	
+					<!-- <a href="/dashboard/receipt-print/<%#= @receipt.id %>" target="_blank"><img src="<%#= asset_path 'printer-outline.png'%>" class="img-responsive"></a> -->
+					<%= link_to dashboard_receipt_print_path(@receipt.id, :format => 'pdf'), target: :_blank do %>
+						<i class="far fa-envelope" style="font-size:24px;color:#383838;display:inline-block;margin:0 10px;"></i>
+					<% end%>
+					<%= link_to dashboard_receipt_mail_path(@receipt.id, :format => 'pdf'), target: :_blank do %>
+						<img src="<%= asset_path 'printer-outline.png'%>" class="img-responsive">
+					<% end%>
 
+				</div>
+				<div class="clearfix"></div>
+				<div class="applicant-wrapper pull-left text-left">
+					<img src="<%= asset_path 'embassy-springs.jpg' %>" class="img-responsive">
+				</div>
+				<div class="pull-right text-right payment-details-wrapper">
+					Date: <strong><%= @receipt.created_at.strftime('%d %b %Y') %></strong><br/>
+					Receipt: <strong><%= @receipt.receipt_id %></strong><br/>
+					CIN No.: <strong>885110KA1995PTC01795</strong>
+				</div>
+				<div class="clearfix"></div>
+				<div class="tower-info-wrapper pink">
+					<div class="tower-specs">
+						<div class="col-6">
+							<span class="title">Paid By:</span>
+							<span class="specs"><%= @receipt.user.first_name %></span><br/>
+							<span class="specs"><%= @receipt.user.user_kycs.first.city %>,
+							<%= @receipt.user.user_kycs.first.state %>,
+							<%= @receipt.user.user_kycs.first.country %>,
+							<%= @receipt.user.user_kycs.first.street %></span><br/>
+							<span class="specs"><%= @receipt.user.user_kycs.first.phone %></span><br/>
+							<span class="specs"><%= @receipt.user.user_kycs.first.company_name %></span>
+							<!-- <span class="specs">B2 - Haridra, Shree Sai Samrudddhi Apts, C.V. Raman Nagar, Bengaluru - 560093</span> -->
 						</div>
-					<div class="clearfix"></div>
-						<div class="applicant-wrapper pull-left text-left">
-							<img src="<%= asset_path 'embassy-springs.jpg' %>" class="img-responsive">
-						</div>
-						<div class="pull-right text-right payment-details-wrapper">
-							Date: <strong><%= @receipt.created_at.strftime('%d %b %Y') %></strong><br/>
-							Receipt: <strong><%= @receipt.receipt_id %></strong>
+						<div class="col-6">
+							<span class="title">Paid To:</span>
+							<span class="specs">Nam Estates Pvt. Ltd. No. 150, 1st floor, Embassy Point, Infratry Road, Bengaluru - 560001</span>
 						</div>
 						<div class="clearfix"></div>
-						<div class="tower-info-wrapper pink">
-							<div class="tower-specs">
-								<div class="col-6">
-									<span class="title">Paid By:</span>
-									<span class="specs"><%= @receipt.user.name %></span>
-									<!-- <span class="specs">B2 - Haridra, Shree Sai Samrudddhi Apts, C.V. Raman Nagar, Bengaluru - 560093</span> -->
-								</div>
-								<div class="col-6">
-									<span class="title">Paid To:</span>
-									<span class="specs">Nam Estates Pvt. Ltd. No. 150, 1st floor, Embassy Point, Infratry Road, Bengaluru - 560001</span>
-								</div>
-								<div class="clearfix"></div>
-							</div>
-							<div class="tower-specs">
-								<div class="col-4">
-									<span class="title">PAN Card:</span>
-									<span class="specs"><%= @receipt.user.user_kycs.first.pan_number %></span>
-								</div>
-								<div class="col-4">
-									<span class="title">Project:</span>
-									<span class="specs">Embassy Springs</span>
-								</div>
-								<div class="col-4">
-									<span class="title">Unit No:</span>
-									<span class="specs"><%= @receipt.project_unit.name %></span>
-								</div>
-								<div class="clearfix"></div>
-							</div>
-						</div>
-						<div class="receipt-table-wrapper">
-							<table width="100%" cellpadding="10" cellspacing="0" border="0" outline="0" class="receipt-table" align="center">
-								<tr>
-									<th>
-										Date
-									</th>
-									<th>
-										Payment Mode
-									</th>
-									<th>
-										Reference Details
-									</th>
-									<th>
-										Amount
-									</th>
-								</tr>
-								<tr>
-									<td><%= @receipt.processed_on %></td>
-									<td> 
-										 <% if @receipt.payment_mode == "online" %>
-												Reference ID: <%= @receipt.payment_identifier %>
-										<% else %>
-												Cheque / DD Number:<%= @receipt.issuing_bank %><br/> Bank Details: <%= @receipt.issuing_bank_branch %> 
-										<% end %>
-									</td>
-									<td><%= @receipt.issuing_bank %> - <%= @receipt.issuing_bank_branch %> </td>
-									<td><%= number_to_indian_currency(@receipt.total_amount.round) %></td>
-								</tr>
-							</table>
-						</div>
-						<div class="text-right acknowledge-wrapper">
-							<p>Nam Estate Pvt. Ltd.</p>
-							<br/><br/>
-							<p>Authorised Signature</p>
-							<br/><br/>
-						</div>
 					</div>
-		</div>
-	</div>
-</section>
-
-
-<h4><%= @receipt.status %></h4>
-<% when 'pending' %>
-<!-- TODO -->
-Let the customer know that the payment processing had an issue or that they must have not made a payment.
-Retry option or to contact support - if the payment has already gone through
-<% when 'failed' %>
-<section class="main-wrapper full-height grey">
-	<div class="container-fluid">
-		<div class="col-12">
-			<div class="cancel-booking-wrapper text-center">
-				<div class="section-title pink">PAYMENT FAILURE!</div>
-				<p>
-					Your payment of was unsuccessful. Please check the credentials and try again.  
-				</p>
+					<div class="tower-specs">
+						<div class="col-4">
+							<span class="title">PAN Card:</span>
+							<span class="specs"><%= @receipt.user.user_kycs.first.pan_number %></span>
+						</div>
+						<div class="col-4">
+							<span class="title">Project:</span>
+							<span class="specs">Embassy Springs</span>
+						</div>
+						<div class="col-4">
+							<span class="title">Unit No:</span>
+							<span class="specs"><%= @receipt.project_unit.name %></span>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+				<div class="receipt-table-wrapper">
+					<table width="100%" cellpadding="10" cellspacing="0" border="0" outline="0" class="receipt-table" align="center">
+						<tr>
+							<th>
+								Date
+							</th>
+							<th>
+								Payment Mode
+							</th>
+							<th>
+								Reference Details
+							</th>
+							<th>
+								Amount
+							</th>
+						</tr>
+						<tr>
+							<td><%= @receipt.processed_on %></td>
+							<td> 
+								 <% if @receipt.payment_mode == "online" %>
+										Reference ID: <%= @receipt.payment_identifier %>
+								<% else %>
+										Cheque / DD Number:<%= @receipt.issuing_bank %><br/> Bank Details: <%= @receipt.issuing_bank_branch %> 
+								<% end %>
+							</td>
+							<td><%= @receipt.issuing_bank %> - <%= @receipt.issuing_bank_branch %> </td>
+							<td><%= number_to_indian_currency(@receipt.total_amount.round) %></td>
+						</tr>
+					</table>
+				</div>
+				<div class="text-right acknowledge-wrapper">
+					<p>Nam Estate Pvt. Ltd.</p>
+					<br/><br/>
+					<p>Authorised Signature</p>
+					<br/><br/>
+				</div>
 			</div>
 		</div>
 	</div>
 </section>
 <h4><%= @receipt.status %></h4>
-<% if ProjectUnitPolicy.new(current_user, @receipt.project_unit).hold_project_unit? %>
-  <%= link_to 'Hold', 'javascript:;', class: 'bpjs-project-unit-hold', data: {'bpjs-id': @receipt.project_unit.id} %>
-<% end %>
+<% when 'pending' %>
+<!-- TODO -->
+	Let the customer know that the payment processing had an issue or that they must have not made a payment.
+	Retry option or to contact support - if the payment has already gone through
+	<% when 'failed' %>
+	<section class="main-wrapper full-height grey">
+		<div class="container-fluid">
+			<div class="col-12">
+				<div class="cancel-booking-wrapper text-center">
+					<div class="section-title pink">PAYMENT FAILURE!</div>
+					<p>
+						Your payment of was unsuccessful. Please check the credentials and try again.  
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+	<h4><%= @receipt.status %></h4>
+	<% if ProjectUnitPolicy.new(current_user, @receipt.project_unit).hold_project_unit? %>
+	  <%= link_to 'Hold', 'javascript:;', class: 'bpjs-project-unit-hold', data: {'bpjs-id': @receipt.project_unit.id} %>
+	<% end %>
 <% end %>

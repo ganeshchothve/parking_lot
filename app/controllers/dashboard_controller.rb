@@ -51,6 +51,21 @@ class DashboardController < ApplicationController
     end
   end
 
+  def send_allotment
+    @receipt = Receipt.find(params[:id])
+    @user = @receipt.user
+    @project_unit = @receipt.project_unit
+    @cp = @user.channel_partner
+    respond_to do |format|
+      format.html
+      format.pdf do
+        render  pdf: "Embassy Allotment",
+        title: 'Embassy Allotment',
+        save_to_file: Rails.root.join('tmp', "allotment.pdf")
+      end
+    end
+  end
+
   def receipt_print
     @receipt = Receipt.find(params[:id])
     @user = @receipt.user

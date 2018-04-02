@@ -30,6 +30,7 @@
 //= require tooltipster.bundle.min
 //= require jquery.colorbox-min
 //= require jquery.zoom.min
+//= require jquery.bxslider
 
 //= require utils
 //= require file-icon
@@ -70,6 +71,17 @@ $(document).ready(function(){
       }
     })
     .tooltipster('open');
+  });
+
+  gamificationSlideCount = $(".gamification_container div").length;
+  sliderSelector = ".gamification_container."+ ($(window).width() > 700 ? "desktop" : "mobile");
+  
+  gamificationSlider = $(sliderSelector).bxSlider({
+    adaptiveHeight: true,
+    auto: true,
+    controls: false,
+    pager: false,
+    mode: "fade"
   });
 
   /* New UI */
@@ -122,15 +134,15 @@ $(document).ready(function(){
   });
 
   $(".tower-name-box").on("click", function(){
-    if($(this).hasClass("active")){
-      $(this).removeClass("active");
-      $('[data-stage="select-apartment"]').data("selected-towerid", 0);
-    } else {
+    // if($(this).hasClass("active")){
+    //   $(this).removeClass("active");
+    //   $('[data-stage="select-apartment"]').data("selected-towerid", 0);
+    // } else {
       $(".tower-name-box").removeClass("active");
       $(this).addClass("active");
       $('[data-stage="select-apartment"]').data("selected-towerid", $(this).data("towerid"));
-    }
-    Gamification.gamifyTowerSelection(selectedTower);
+    // }
+      Gamification.gamifyTowerSelection(selectedTower);
   });
   /* New UI */
 
@@ -285,6 +297,13 @@ function startTimer($elem) {
 
 $(window).on("load", function(){
   $('.init-selectize').selectize();
+
+  if($(window).width() < 700){
+    x = setInterval(function(){
+      if($(".mobilelivesquare").length > 0)
+        $(".mobilelivesquare").parent().remove(); clearInterval(x);
+    }, 100);  
+  }
 });
 
 function hightlightUnit(type){

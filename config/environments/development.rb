@@ -26,7 +26,7 @@ Rails.application.configure do
     config.cache_store = :null_store
   end
 
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3001 }
+  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
@@ -52,6 +52,7 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = { :address => "localhost", :port => 1025 }
+  config.action_mailer.smtp_settings = { :address => "192.168.0.211", :port => 1025 }
+  config.action_mailer.asset_host = "http://192.168.0.211:3000"
+  # config.action_mailer.default_url_options = { :host => 'http://192.168.0.211:3000' }
 end
-
