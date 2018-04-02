@@ -22,19 +22,19 @@
   <tr>
     <td style="line-height:26px;">
     <% if @day == 1 %>
-      Today’s your last chance to call <%= @receipt.project_unit.name %> at Embassy Edge your home! Complete the payment today, or the apartment will get auto-released for other users to book it. <%= link_to "Click Here", dashboard_url %> to complete your payment of <%= number_to_indian_currency(@receipt.user.total_balance_pending.round(2)) %>.
+      Today’s your last chance to call <%= @project_unit.name %> at Embassy Edge your home! Complete the payment today, or the apartment will get auto-released for other users to book it. <%= link_to "Click Here", dashboard_url %> to complete your payment of <%= number_to_indian_currency(@receipt.user.total_balance_pending.round(2)) %>.
       <% elsif @day == 2 %>
       2 days to go! 2 days until you’ve missed your home at Embassy Edge - or, you could be the proud resident of Embassy Springs today. <%= link_to "Click Here", dashboard_url %> to complete the transaction of <%= number_to_indian_currency(@receipt.user.total_balance_pending.round(2)) %> online.
       <% elsif @day == 3 %>
       A lot can happen in 3 days - today, you have a home at the prestigious Embassy Springs reserved in your name. 3 days from now, you could’ve missed that opportunity. <%= link_to "Click Here", dashboard_url %> to pay the pending amount of <%= number_to_indian_currency(@receipt.user.total_balance_pending.round(2)) %> today.
       <% elsif @day == 4 %>
-      You buy electronics online, you buy groceries online - why not a home? Complete your pending amount of <%= number_to_indian_currency(@receipt.user.total_balance_pending.round(2)) %> for unit <%= @receipt.project_unit.name %> at Embassy Edge on the portal, before you miss your home. You’ve got only 4 days to go! <%= link_to "Click Here", dashboard_url %>
+      You buy electronics online, you buy groceries online - why not a home? Complete your pending amount of <%= number_to_indian_currency(@receipt.user.total_balance_pending.round(2)) %> for unit <%= @project_unit.name %> at Embassy Edge on the portal, before you miss your home. You’ve got only 4 days to go! <%= link_to "Click Here", dashboard_url %>
       <% elsif @day == 5 %>
-      A home, an identity - come home to yours. Only 5 days to go before you miss your home at Embassy Edge! Get it before you regret it. <%= link_to "Click Here", dashboard_url %>  to complete paying the pending amount: <%= number_to_indian_currency(@receipt.user.total_balance_pending.round(2)) %> on unit <%= @receipt.project_unit.name %> to confirm your home.
+      A home, an identity - come home to yours. Only 5 days to go before you miss your home at Embassy Edge! Get it before you regret it. <%= link_to "Click Here", dashboard_url %>  to complete paying the pending amount: <%= number_to_indian_currency(@receipt.user.total_balance_pending.round(2)) %> on unit <%= @project_unit.name %> to confirm your home.
       <%else %>
       Only 6 days to go! </br>
       <p>6 days to being part of Embassy Springs - the 288 acre iconic township designed for happiness. <%= link_to "Click Here", dashboard_url %>
-        to pay the pending amount unit of <%= number_to_indian_currency(@receipt.user.total_balance_pending.round(2)) %> for unit <%= @receipt.project_unit.name %> and secure your home at Embassy Edge.</p>
+        to pay the pending amount unit of <%= number_to_indian_currency(@receipt.user.total_balance_pending.round(2)) %> for unit <%= @project_unit.name %> and secure your home at Embassy Edge.</p>
       <%end%>
       </td>
   </tr>
