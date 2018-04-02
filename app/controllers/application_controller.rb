@@ -7,10 +7,10 @@ class ApplicationController < ActionController::Base
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
   
   def after_sign_in_path_for(current_user)
-    if current_user.role?('user') || current_user.role?('crm') || current_user.role?('channel_partner')
-      dashboard_path
-    else
+    if current_user.role?('admin')
       admin_users_path
+    else
+      dashboard_path
     end
   end
 

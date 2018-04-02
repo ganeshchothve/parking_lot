@@ -15,12 +15,14 @@
               <% @towers.each do |t| %>
               <div class="col-3 text-center">
                 <div class="tower-name-box" data-towerid="<%= t[:project_tower_id] %>">
-                  <img src="<%= asset_path 'tower-feat.png'%>" class="img-responsive">
-                  <div class="">
+                  <span class="show-on-active"><i class='fas fa-bolt'></i> <%= [2,3,4,5,6].sample %> apartments just sold in this tower</span>
+                  <%= "<span class='fast-sell-tag'><i class='fas fa-bolt'></i> Fast Selling</span>".html_safe if mst.to_s == t[:project_tower_id].to_s %>
+                  <%= "<span class='fast-sell-tag'><i class='fas fa-fire'></i> One of our hottest-selling towers at the moment</span>".html_safe if lst.to_s == t[:project_tower_id].to_s && mst != lst %>
+                  <div class="tower-img-wrap">
+                    <img src="<%= asset_path 'tower-feat.png'%>" class="img-responsive">  
+                  </div>                  
+                  <div class="tower-details-box">
                     <span><%= t[:project_tower_name] %></span>
-                    <span style="color:#f00;"><%= "Fast Selling" if mst.to_s == t[:project_tower_id].to_s %></span>
-                    <span style="color:#f00;"><%= "One of our hottest-selling towers at the moment" if lst.to_s == t[:project_tower_id].to_s && mst != lst %></span>
-                    <span class="show-on-active"><%= [2,3,4,5,6].sample %> apartments just sold in this tower</span>
                     <span>Tower Units: <%= t[:total_units] %></span>
                     <span>Available Units: <%= t[:total_units_available] %></span>
                   </div>

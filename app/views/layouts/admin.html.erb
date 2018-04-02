@@ -49,6 +49,8 @@
                 <span class="subTitle white bold">Cancellation Request</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
               <% elsif params[:controller] == "admin/project_units" %>
                 <span class="subTitle white bold">Units</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
+              <% elsif params[:controller] == "dashboard" && params[:action] == "project_units_3d"  %>
+                <span class="subTitle white bold">3D Apartment Selector</span>
               <% else %>
                 <span class="subTitle white bold">Dashboard</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
               <% end %>
@@ -91,6 +93,14 @@
             <% if UserPolicy.new(current_user, User).index? %>
               <li class="nav-item">
                 <%= link_to "<span><i class='fa fa-user' aria-hidden='true'></i> Users & Customer</span>".html_safe, admin_users_path, class: 'nav-link' %>
+              </li>
+            <% end %>
+            <% if UserPolicy.new(current_user, User).index? %>
+              <li class="nav-item">
+                <a class="nav-link" href="/dashboard/3d-apartment-selector">
+                  <span><i class='fas fa-cube'></i> 3D Apartment Selector</span>
+                </a>
+                <%#= link_to "<span><i class='fas fa-cube'></i> 3D Apartment Selector</span>".html_safe, admin_users_path, class: 'nav-link' %>
               </li>
             <% end %>
             <% if ReceiptPolicy.new(current_user, Receipt).index? %>

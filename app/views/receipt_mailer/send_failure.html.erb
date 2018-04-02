@@ -18,60 +18,38 @@ Project Unit Details
 <%= @project_unit.status %><br/>
 <% end %>
 -->
+<table cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td style=" color: #000;font-size: 32px;font-weight: 600;line-height: 35px;vertical-align: bottom;">
+       Payment Failed!
+     </td>
+  </tr>
+   <tr><td>&nbsp;</td></tr>
+   <tr>
+     <td>
+       Dear <%= @user.name %>, 
+     </td>
+   </tr>
+  <tr><td>&nbsp;</td></tr>
+  <tr>
+    <td style="line-height:26px;">
+      <% if @receipt.payment_mode == 'cheque' %>
+        We are sorry to report that your cheque of <%= @receipt.total_amount %> - <%= @receipt.issuing_bank %> - <%= @receipt.issued_date %> - <%= @receipt.tracking_id %> was not honoured by the bank. The apartment kept on hold for you has been released. Please contact your Relationship Manager for further queries. 
+      <% else%>
+<!-- Your payment of was unsuccessful. Please check the credentials and try again. -->
+      <p>Your payment of Rs. <%= @receipt.total_amount %> has failed for some reason<br/>Please find below the details of the failed transaction:<br/> </p>
+      <p>
+        <b> Total Amount: </b> <%= @receipt.total_amount %><br/>
+        <b> Bank: </b> <%= @receipt.issuing_bank %></br>
+        <b> Total Amount: </b> <%= @receipt.issued_date %></br>
+        <b> Total Amount: </b> <%= @receipt.tracking_id %></br>
+      </p>
+      <% end %>
+    </td>
+  </tr>
+</table>
 
- 	<tr>
-            <td>
-                <table cellpadding="0" cellspacing="0" width="100%">
-                    <tr>
-                        <td style=" color: #000;font-size: 32px;font-weight: 600;line-height: 35px;vertical-align: bottom;">
-                           Payment Failed!
-                         </td>
-                         <td>
-                           <img src="http://www.embassysprings.com/images/Springs-logo.png" style="border:0px ;outline:0px;display:block;">
-                         </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
        
-        <tr>
-          <td>
-            <table cellpadding="0" cellspacing="0" width="100%">
-              <tr>
-                <td><hr style="display: block;height: 1px;border: 0;border-top: 2px solid #c9579f;margin: 1em 0;padding: 0;"></td>
-                <td><hr style="display: block;height: 1px;border: 0;border-top: 2px solid #64c0e9;margin: 1em 0;padding: 0;"></td>
-                <td><hr style="display: block;height: 1px;border: 0;border-top: 2px solid #7eb53e;margin: 1em 0;padding: 0;"></td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr><td>&nbsp;</td></tr>
-       <tr>
-         <td>
-           Dear <%= @user.name %>, 
-         </td>
-       </tr>
-        <tr><td>&nbsp;</td></tr>
-        <tr>
-          <td style="line-height:26px;">
-         	<% if @receipt.payment_mode == 'cheque' %>
-          			We are sorry to report that your cheque of <%= @receipt.total_amount %> - <%= @receipt.issuing_bank %> - <%= @receipt.issued_date %> - <%= @receipt.tracking_id %> was not honoured by the bank. The apartment kept on hold for you has been released. Please contact your Relationship Manager for further queries. 
-          	<% else%>
-  <!--         	   Your payment of was unsuccessful. Please check the credentials and try again. -->
-             <p>
-               Your payment of Rs. <%= @receipt.total_amount %> has failed for some reason<br/>
-               Please find below the details of the failed transaction:<br/>
-             </p>
-              <p>
-               <b> Total Amount: </b> <%= @receipt.total_amount %><br/>
-               <b> Bank: </b> <%= @receipt.issuing_bank %></br>
-               <b> Total Amount: </b> <%= @receipt.issued_date %></br>
-               <b> Total Amount: </b> <%= @receipt.tracking_id %></br>
-              </p>
-
-       		<% end %>
-          </td>
-        </tr>
 
 
 

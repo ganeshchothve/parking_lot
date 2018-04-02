@@ -18,7 +18,7 @@ function onParentMessage(messageEvent) {
             var apartmentdata = messageEvent.data["bookedapartment"];
             if(App.current_user.role == "user"){
               window.location = "/dashboard/apartment-selector/3d/all-towers/" + apartmentdata.apartment_ID;
-            }else if(App.current_user.role == "channel_partner" || App.current_user.role == "admin"){
+            }else{
               $("#user_dropdown_modal").modal("show");
               $("#user_dropdown_modal").find("[name='fltrs[project_unit_id]']").val(apartmentdata.apartment_ID);
             }

@@ -14,73 +14,40 @@ Project Unit Details
 <%= @project_unit.name %><br/>
 <%= @project_unit.status %><br/>
 <% end %>
- -->
+-->
+<table cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td style=" color: #000;font-size: 32px;font-weight: 600;line-height: 35px;vertical-align: bottom;">
+      Your Payment is Successfull!
+    </td>
+  </tr>
+  <tr><td>&nbsp;</td></tr>
+  <tr>
+    <td>Dear <%= @user.name %>,</td>
+  </tr>
+  <tr><td>&nbsp;</td></tr>
+  <tr>
+    <td style="line-height:26px;">
+      <span style="font-size:20px;line-height:26px;color:#000;font-weight:700;">Thank you for your payment of Rs. <%= @receipt.total_amount %> </span>
+      <br/>
+      <% if @receipt.payment_mode == 'cheque' %>
+      An Embassy home is yours to keep! Your cheque of Rs. <%= @receipt.total_amount %>  has been cleared by the bank. We will contact you shortly to discuss the next round of formalities. 
 
-    <tr>
-            <td>
-                <table cellpadding="0" cellspacing="0" width="100%">
-                    <tr>
-                        <td style=" color: #000;font-size: 32px;font-weight: 600;line-height: 35px;vertical-align: bottom;">
-                           Your Payment is Successfull!
-                         </td>
-                         <td>
-                           <img src="http://www.embassysprings.com/images/Springs-logo.png" style="border:0px ;outline:0px;display:block;">
-                         </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-       
-        <tr>
-          <td>
-            <table cellpadding="0" cellspacing="0" width="100%">
-              <tr>
-                <td><hr style="display: block;height: 1px;border: 0;border-top: 2px solid #c9579f;margin: 1em 0;padding: 0;"></td>
-                <td><hr style="display: block;height: 1px;border: 0;border-top: 2px solid #64c0e9;margin: 1em 0;padding: 0;"></td>
-                <td><hr style="display: block;height: 1px;border: 0;border-top: 2px solid #7eb53e;margin: 1em 0;padding: 0;"></td>
-              </tr>
-            </table>
-          </td>
-        </tr>
+      <% else %>
+      <p><strong> Following are the payment details.</strong> </p> <br/>
+      <p> 
+        <span style="color:#64c0e9; font-weight:bold">Unit </span> <%= @project_unit.name %><br/>  
+        <span style="color:#64c0e9; font-weight:bold">Receipt </span> <%= @receipt.receipt_id %><br/>
+        <span style="color:#64c0e9; font-weight:bold">Date </span> <%= @receipt.created_at.strftime("%Y-%m-%d") %><br/>
+        <% if @receipt.payment_mode != 'online' %>
+        <span style="color:#64c0e9; font-weight:bold">Bank </span> <%= @receipt.issuing_bank %><br/>
+        <span style="color:#64c0e9; font-weight:bold">Branch </span> <%= @receipt.issuing_bank_branch %><br/>
+        <% end %>
+        <span style="color:#64c0e9; font-weight:bold">Tracking Id </span> <%= @receipt.tracking_id %><br/>
+      </p>
+      <% end %>
+      <br/>
+    </td>
+  </tr> 
+</table>
 
-        <tr><td>&nbsp;</td></tr>
-
-       <tr>
-         <td>
-           Dear <%= @user.name %>, 
-         </td>
-       </tr>
-      
-        <tr><td>&nbsp;</td></tr>
-
-        <tr>
-          <td style="line-height:26px;">
-
-          	
-
-              <span style="font-size:20px;line-height:26px;color:#000;font-weight:700;">Thank you for your payment of Rs. <%= @receipt.total_amount %> </span>
-               <br/>
-               
-                <% if @receipt.payment_mode == 'cheque' %>
-                    An Embassy home is yours to keep! Your cheque of Rs. <%= @receipt.total_amount %>  has been cleared by the bank. We will contact you shortly to discuss the next round of formalities. 
-
-                <% else %>
-                    <p><strong> Following are the payment details.</strong> </p> <br/>
-                    <p> 
-                    <span style="color:#64c0e9; font-weight:bold">Unit </span> <%= @project_unit.name %><br/>  
-                    <span style="color:#64c0e9; font-weight:bold">Receipt </span> <%= @receipt.receipt_id %><br/>
-                    <span style="color:#64c0e9; font-weight:bold">Date </span> <%= @receipt.created_at.strftime("%Y-%m-%d") %><br/>
-                    <% if @receipt.payment_mode != 'online' %>
-                    <span style="color:#64c0e9; font-weight:bold">Bank </span> <%= @receipt.issuing_bank %><br/>
-                    <span style="color:#64c0e9; font-weight:bold">Branch </span> <%= @receipt.issuing_bank_branch %><br/>
-                    <% end %>
-                    <span style="color:#64c0e9; font-weight:bold">Tracking Id </span> <%= @receipt.tracking_id %><br/>
-                    </p>
-                      		 
-       		      <% end %>
-                  <br/>
-                 <!-- <p>Also find attached the payment receipt. </p> -->
-            
-           
-          </td>
-        </tr> 

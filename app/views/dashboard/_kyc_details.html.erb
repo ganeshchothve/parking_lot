@@ -46,7 +46,7 @@
                       <div class="w60">
                         <div class="col-md-4 col-4">
                           <div class="form-group form-field-wrapper">
-                            <%= f.select :salutation, UserKyc.available_salutations.collect{|x| [x[:text], x[:id]]}, {}, class: 'required init-selectize' %>
+                            <%= f.select :salutation, UserKyc.available_salutations.collect{|x| [x[:text], x[:id]]}, {prompt: "Select"}, class: 'required init-selectize' %>
                           </div>
                         </div>
                         <div class="col-md-8 col-8">

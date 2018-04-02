@@ -29,15 +29,16 @@
     </script>
   </head>
   <body>
-
+	<% if user_signed_in? %>
   <div class="visible-xs prompts-message gradient-bg text-center white">
-    <ul id="gamification_container">
-      <li><%= booked_today_count %> people have paid the token amount today</li>
-      <li><%= bhk_booked(1) %> 1 BHK Apartments sold</li>
-      <li><%= bhk_booked(2) %> 2 BHK Apartments sold</li>
-      <li><%= bhk_booked(3) %> 3 BHK Apartments sold</li>
-    </ul>
+    <div class="gamification_container mobile">
+      <div class="text-slide"><%= booked_today_count %> people have paid the token amount today</div>
+      <div class="text-slide"><%= bhk_booked(1) %> 1 BHK Apartments sold</div>
+      <div class="text-slide"><%= bhk_booked(2) %> 2 BHK Apartments sold</div>
+      <div class="text-slide"><%= bhk_booked(3) %> 3 BHK Apartments sold</div>
+    </div>
   </div>
+  <% end %>
     <div id="notify"></div>
     <p class="notice"><%= notice %></p>
     <p class="alert"><%= alert %></p>
@@ -51,9 +52,17 @@
               <% if params[:controller] == "dashboard" && params[:action] == "index" %>
                 <span class="subTitle white bold">Dashboard</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
               <% elsif params[:controller] == "dashboard" && params[:action] == "project_units" %>
-                <span class="subTitle white bold">Apartment Selector</span> <span class="d3-view-link"><a href="/dashboard/3d-apartment-selector">Book in 3D view</a></span>
+               
+                  <span class="subTitle white bold">Apartment Selector</span> 
+                   <% if ProjectUnitPolicy.new(current_user, ProjectUnit).block? %>
+                     <span class="d3-view-link"><a href="/dashboard/3d-apartment-selector">Book in 3D view</a></span>
+                  <% end %>
               <% elsif params[:controller] == "dashboard" && params[:action] == "project_units_3d" %>
-                <span class="subTitle white bold">3D Apartment Selector</span> <span class="d3-view-link"><a href="/dashboard/apartment-selector">Book in Normal view</a></span>
+              
+                <span class="subTitle white bold">3D Apartment Selector</span> 
+                 <% if ProjectUnitPolicy.new(current_user, ProjectUnit).block? %>
+                <span class="d3-view-link"><a href="/dashboard/apartment-selector">Book in Normal view</a></span>
+                 <% end %>
               <% elsif params[:controller] == "dashboard" && params[:action] == "checkout" %>
                 <span class="subTitle white bold">Proceed To Payment</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
               <% elsif params[:controller] == "user_kycs" %>
@@ -146,15 +155,16 @@
         </div>
       </div>
       <div class="prompts-message hidden-xs gradient-bg white">
-        <ul id="gamification_container">
-          <li><%= booked_today_count %> people have paid the token amount today</li>
-          <li><%= bhk_booked(1) %> 1 BHK Apartments sold</li>
-          <li><%= bhk_booked(2) %> 2 BHK Apartments sold</li>
-          <li><%= bhk_booked(3) %> 3 BHK Apartments sold</li>
-        </ul>
+        <div class="gamification_container desktop">
+          <div class="text-slide"><%= booked_today_count %> people have paid the token amount today</div>
+          <div class="text-slide"><%= bhk_booked(1) %> 1 BHK Apartments sold</div>
+          <div class="text-slide"><%= bhk_booked(2) %> 2 BHK Apartments sold</div>
+          <div class="text-slide"><%= bhk_booked(3) %> 3 BHK Apartments sold</div>
+        </div>
       </div>
       <div class="dash-menu-footer hidden-xs">
-         Book your home, and make someone else's dream come true too! We will be donating 0.1% of every booking to NGO. Make a difference today! <%= number_to_indian_currency((ProjectUnit.in(status: ['blocked', 'booked_confirmed', 'booked_tentative']).sum(:agreement_price) * 0.1 / 100).round) %> have been donated so far to (The NGO).
+        <div class="col-3"><img src="<%= asset_path 'donatecoin.gif'%>" class="img-responsive"></div>
+        <div class="col-9 donate-content">We will be donating 0.1% of every booking to NGO - Colors of Life. Make a difference today! <%= number_to_indian_currency((ProjectUnit.in(status: ['blocked', 'booked_confirmed', 'booked_tentative']).sum(:agreement_price) * 0.1 / 100).round) %> have been donated so far to <span><a href="http://www.coloursoflife.co.in/" target="_blank">Colors of Life.</a></span></div>
       </div>
     </div>
     <% end %>

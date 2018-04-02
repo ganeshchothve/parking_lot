@@ -13,18 +13,25 @@ var Gamification = (function(){
       }
     });
   }
-  var gamification_selector = '#gamification_container';
+  var gamification_selector = '.gamification_container';
 
   var show = function(message, message_for){
     if(message_for){
       if($(gamification_selector + " .for-" + message_for).length == 0){
-        $(gamification_selector).append("<li class='for-" + message_for + "'>" + message + "</li>");
+        $(gamification_selector).append("<div class='text-slide for-" + message_for + "'>" + message + "</div>");
       }else{
-        $(gamification_selector + " .for-" + message_for).replaceWith("<li class='for-" + message_for + "'>" + message + "</li>");
+        $(gamification_selector + " .for-" + message_for).replaceWith("<div class='text-slide for-" + message_for + "'>" + message + "</div>");
       }
     }else{
-      $(gamification_selector).append("<li>" + message + "</li>");
+      $(gamification_selector).append("<div class='text-slide'>" + message + "</div>");
     }
+
+    gamificationSlider.reloadSlider();
+    gamificationSlider.goToSlide(gamificationSlider.children().length - 1);
+    $(".dashboard-menu .prompts-message, .prompts-message.visible-xs").addClass("active");
+    setTimeout(function(){
+        $(".dashboard-menu .prompts-message, .prompts-message.visible-xs").removeClass("active");
+    }, 4000);
   }
 
   var gamifyUnitSelection = function(unitData){
