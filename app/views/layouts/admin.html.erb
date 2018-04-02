@@ -8,12 +8,16 @@
 
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
+    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
     <%= javascript_tag do %>
       <% if user_signed_in? %>
         if(typeof App === "undefined"){
           App = {};
         }
         App.current_user = <%= raw current_user.to_json %>;
+      <% end %>
+      <% if Rails.env.development? || Rails.env.staging? %>
+      Pusher.logToConsole = true;
       <% end %>
     <% end %>
   </head>
@@ -50,7 +54,7 @@
               <% end %>
             </div>
             <!-- <div class="pull-left left-wrapper">
-                <span class="subTitle white bold">Dashboard</span> <span class="white f16">Welcome <%= current_user.name %></span> 
+                <span class="subTitle white bold">Dashboard</span> <span class="white f16">Welcome <%= current_user.name %></span>
             </div> -->
             <div class="pull-right right-wrapper">
               <!-- <div class="dashboard-notify pull-left">
@@ -64,7 +68,7 @@
               </div> -->
               <div class="pull-left">
                 <span class="hidden-xs"><img src="<%= asset_path 'user.png'%>" class="img-responsive"> &nbsp;
-                    <%= link_to "Welcome " + current_user.name, dashboard_user_profile_path , class:'white user-name'%>
+                    <%= link_to "Welcome " + current_user.name, edit_admin_user_path(current_user) , class:'white user-name'%>
                 </span>
               </div>
             <div class="clearfix"></div>
@@ -115,7 +119,7 @@
           <% end %>
         </ul>
         <!-- <ul class="navbar-nav mr-0">
-         
+
         </ul> -->
       </div>
     </nav>
@@ -152,7 +156,7 @@
           else{
            $('.kyc-add').hide();
             $('.kyc-exist').fadeIn();
-           
+
           }
         })
         $('label.radio.oci').on('click',function(){
@@ -165,7 +169,7 @@
           else{
             $('.hidden-field.oci').hide();
             $('.hidden-field.pan').fadeIn();
-           
+
           }
         })
         $('label.radio.attorney').on('click',function(){
@@ -211,5 +215,42 @@
           $('.padding-side-22 .col-md-2.float-right form, .padding-xs-left-10 .col-md-2 form, .padding-side-30 .col-md-2 form').slideToggle();
         })
     </script>
+
+    <div class="modal fade" id="user_dropdown_modal" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Choose Customer</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group" id="user_dropdown_modal_form">
+              <%= label_tag "fltrs", "Name / Email / Phone", class: "control-label" %>
+              <%= select_tag "fltrs[user_id]", [], {class: "selectize-remote", data: {url: admin_users_path, params: {role: "user"} }} %>
+              <%= hidden_field_tag "fltrs[project_unit_id]" %>
+            </div>
+            <%= javascript_tag do %>
+              $(document).ready(function(){
+                FormInitializer.init($("#user_dropdown_modal_form"));
+                $("#user_dropdown_modal .next").click(function(){
+                  var user_id = $("#user_dropdown_modal").find("[name='fltrs[user_id]']").val();
+                  var sfdc_id = $("#user_dropdown_modal").find("[name='fltrs[project_unit_id]']").val();
+                  if(user_id != "" && sfdc_id != ""){
+                    window.location = "/admin/users/" + user_id + "/receipts/new?sfdc_reference_project_unit_id=" + sfdc_id;
+                  }else{
+                    alert("Please choose a customer & apartment to proceed");
+                  }
+                })
+              });
+            <% end %>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary next">Proceed</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

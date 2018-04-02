@@ -14,7 +14,7 @@
 	      		<div class="col-4 pull-right pad-left xs-100">
 			    	<div class="apartment-selector-wrapper paddin-bottom-remove">
 			        	<div class="days-left-wrapper text-center">
-							<% 
+							<%
 								gap = (60*ProjectUnit.holding_minutes) - (Time.now - project_unit.held_on.to_time)
 								if gap < 0
 									gap = 0
@@ -31,7 +31,7 @@
 							</script>
 							<% end %>
 							<p class="green">
-								To be fair to other user interested in this<br/> apartment, you have the next 10 minutes
+								To be fair to other user interested in this<br/> apartment, you have the next 10 minutes to pay the token amount of <%= number_to_indian_currency(ProjectUnit.blocking_amount) %>
 							</p>
 						</div>
 			        </div>
@@ -46,7 +46,7 @@
 								<span class="pink">Mr. <%= current_user.name %></span>
 								<span class="pink">Flat No: <%= project_unit.name %></span>
 							</div>
-				       		<div class="tower-info-wrapper left-padding-0"> 
+				       		<div class="tower-info-wrapper left-padding-0">
 				       			<div class="pull-left">Tower: <%= project_unit.project_tower_name %><br>Floor: <%= project_unit.floor %><br>Flat no: <%= project_unit.name %><br></div>
 				       			<div class="pull-left padding-left-30">Configuration: <%= float_to_int(project_unit.bedrooms) %> BHK<br>Carpet Area: <%= project_unit.carpet.round(2) %> Sq.Ft.<br>Starting Price: <%= number_to_indian_currency(project_unit.agreement_price) %></div>
 				       			<div class="clearfix"></div>

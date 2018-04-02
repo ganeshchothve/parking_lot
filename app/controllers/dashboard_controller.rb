@@ -95,7 +95,7 @@ class DashboardController < ApplicationController
     elsif params[:stage] == "choose_tower"
       bedroom = params[:configuration].split(",")[0]
       budget = params[:configuration].split(",")[1]
-      parameters =  {fltrs: { data_attributes: {bedrooms: bedroom != "NA" ? bedroom : "", agreement_price: budget != "NA" ? budget : ""} } }
+      parameters =  {fltrs: { data_attributes: {bedrooms: bedroom != "NA" ? bedroom : ""} }, agreement_price: budget != "NA" ? budget : ""}
       project_tower_ids = ProjectUnit.build_criteria(parameters).distinct(:project_tower_id)
       @towers = ProjectTower.in(id: project_tower_ids).collect do |x|
         hash = {project_tower_id: x.id, project_tower_name:x.name}
@@ -107,7 +107,7 @@ class DashboardController < ApplicationController
       @tower = ProjectTower.find(id: params[:project_tower_id])
       @configurations = ProjectUnit.all.collect{|x| {bedrooms: x.bedrooms, agreement_price: x.agreement_price}}.sort{|x, y| x[:agreement_price] <=> y[:agreement_price]}.uniq{|x| x[:bedrooms]}
       parameters = {fltrs: { project_tower_id: params[:project_tower_id] } }
-      @units = ProjectUnit.build_criteria(parameters).sort{|x, y| y.floor <=> x.floor}.group_by(&:floor)
+      @units = ProjectUnit.build_criteria(parameters).sort{|x, y| y.floor <=> x.floor}
     elsif params[:stage] == "kyc_details"
       if params[:configuration] == "3d"
         @unit = ProjectUnit.where(sfdc_id: params[:unit_id]).first
@@ -117,6 +117,21 @@ class DashboardController < ApplicationController
     end
 
     @project_units = current_user.project_units
+  end
+
+  def gamify_unit_selection
+    data = ProjectUnit.build_criteria({
+      fltrs: {
+        status: ["blocked", "booked_tentative", "booked_confirmed"],
+        data_attributes: {
+          bedrooms: params[:bedrooms].to_i,
+          carpet: "#{params[:carpet].to_f - 50}-#{params[:carpet].to_f + 50}"
+        },
+      }
+    }).count
+    respond_to do |format|
+      format.json {render json: {message: "#{data + 6} other such #{params[:bedrooms]} BHK apartments sold"}}
+    end
   end
 
   def project_unit
@@ -224,28 +239,7 @@ class DashboardController < ApplicationController
       end
     end
   end
-
-  def user_profile
-     @user = User.find(current_user.id)
-  end
-
-  def user_update
-    user_params = params['user']
-    user = User.find(user_params[:id])
-    user.email = user_params[:email]
-    user.phone = user_params[:phone]
-    user.password = user_params[:password]
-    respond_to do |format|
-      if user.save
-        format.html { redirect_to "/users/sign_in", notice: 'User updated successfully...' }
-        format.json
-      else
-        format.html { render :action => "user_profile" }
-        format.json
-      end
-    end
-  end
-
+  
   private
   def hold_on_third_party_inventory
     third_party_inventory_response, third_party_inventory_response_code = ThirdPartyInventory.hold_on_third_party_inventory(@project_unit)

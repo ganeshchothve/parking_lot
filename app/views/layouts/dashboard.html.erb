@@ -4,15 +4,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>BookingPortal</title>
     <%= csrf_meta_tags %>
-
     <%= stylesheet_link_tag 'dashboard_new' %>
     <%= javascript_include_tag 'dashboard' %>
+    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
     <%= javascript_tag do %>
       <% if user_signed_in? %>
         if(typeof App === "undefined"){
           App = {};
         }
         App.current_user = <%= raw current_user.to_json %>;
+      <% end %>
+      <% if Rails.env.development? || Rails.env.staging? %>
+      Pusher.logToConsole = true;
       <% end %>
     <% end %>
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -28,12 +31,12 @@
   <body>
 
   <div class="visible-xs prompts-message gradient-bg text-center white">
-    <% if user_signed_in? && current_user.sign_in_count > 1%>
-      <a href="/dashboard/apartment-selector" class="white">BOOK NOW</a>
-    <% else %>
-      <span>Register now to book & save upto Rs. 10 Lac!</span>
-      <span>Prices rise with every 50 bookings</span>
-    <% end %>
+    <ul id="gamification_container">
+      <li><%= booked_today_count %> people have paid the token amount today</li>
+      <li><%= bhk_booked(1) %> 1 BHK Apartments sold</li>
+      <li><%= bhk_booked(2) %> 2 BHK Apartments sold</li>
+      <li><%= bhk_booked(3) %> 3 BHK Apartments sold</li>
+    </ul>
   </div>
     <div id="notify"></div>
     <p class="notice"><%= notice %></p>
@@ -72,10 +75,10 @@
                   </div>
               </div> -->
               <div class="pull-left profile-link">
-                <span><img src="<%= asset_path 'user.png'%>" class="img-responsive"> &nbsp;<%#= current_user.name %>
-                  <%= link_to "Welcome " + current_user.name, dashboard_user_profile_path , class:'white'%>
+                <span>
+                  <img src="<%= asset_path 'user.png'%>" class="img-responsive"> &nbsp;<%#= current_user.name %>
+                  <%= link_to "Welcome " + current_user.name, edit_admin_user_path(current_user) , class:'white'%>
                 </span>
-               
             </div>
             <div class="clearfix"></div>
           </div>
@@ -126,8 +129,7 @@
         </div>
         <% end %>
         <div class="mobile-show">
-          <%= link_to "Profile", dashboard_user_profile_path %>
-          <!-- <a href="/" data-method="delete" rel="nofollow"><span class="sprite-signout sign-out"></span><span class="menu-items-hide">sign out</span></a> -->
+          <%= link_to "Profile", edit_admin_user_path(current_user) %>
         </div>
         <div>
           <a href="/users/sign_out" data-method="delete" rel="nofollow"><span class="sprite-signout sign-out"></span><span class="menu-items-hide">sign out</span></a>
@@ -142,21 +144,20 @@
               <a href="javascript:;">xyz@embassysprings.com</a>
             </div>
         </div>
-        
       </div>
-      <div class="prompts-message hidden-xs">
-        <ul>
-          <li>Register now and have an Edge over others</li>
-          <li>Prices rise with every 50 bookings</li>
+      <div class="prompts-message hidden-xs gradient-bg white">
+        <ul id="gamification_container">
+          <li><%= booked_today_count %> people have paid the token amount today</li>
+          <li><%= bhk_booked(1) %> 1 BHK Apartments sold</li>
+          <li><%= bhk_booked(2) %> 2 BHK Apartments sold</li>
+          <li><%= bhk_booked(3) %> 3 BHK Apartments sold</li>
         </ul>
       </div>
       <div class="dash-menu-footer hidden-xs">
-         <img src="<%= asset_path "embassy_springs_logo.png" %>" class="img-responsive" style="padding:0 5px;width:70px;">
+         Book your home, and make someone else's dream come true too! We will be donating 0.1% of every booking to NGO. Make a difference today! <%= number_to_indian_currency((ProjectUnit.in(status: ['blocked', 'booked_confirmed', 'booked_tentative']).sum(:agreement_price) * 0.1 / 100).round) %> have been donated so far to (The NGO).
       </div>
-      
     </div>
     <% end %>
-
     <%= yield %>
     <script type="text/javascript">
       $(document).ready(function(){
@@ -165,7 +166,7 @@
           $(".nri-fields").hide();
           $(".show-"+link+"-nri").show();
         });
-        
+
         $('label.radio.kyc-radio').on('click',function(){
           var link = $(this).attr('data-link');
 
@@ -176,7 +177,7 @@
           else{
            $('.kyc-add').hide();
             $('.kyc-exist').show();
-           
+
           }
         })
         $('label.radio.oci').on('click',function(){
@@ -189,7 +190,7 @@
           else{
             $('.hidden-field.oci').hide();
             $('.hidden-field.pan').show();
-           
+
           }
         })
         $('label.radio.attorney').on('click',function(){
@@ -264,14 +265,11 @@
           $('.filter-item-wrapper').slideToggle();
         })
         $('.open-details-wrapper, .show-unit-details-wrapper .close-btn').on('click',function(){
-          console.log('hit');
           if($('.show-unit-details-wrapper').hasClass('close')){
-            console.log('no')
             $('.show-unit-details-wrapper').removeClass('close')
           }
           else{
-            console.log('yes')
-            $('.show-unit-details-wrapper').addClass('close') 
+            $('.show-unit-details-wrapper').addClass('close')
           }
         })
 
@@ -281,13 +279,12 @@
             $('.open-details-wrapper').addClass('blink');
             setTimeout(function(){
               $('.open-details-wrapper').removeClass('blink');
-            },1500)   
-         
+            },1500)
+
        })
         if($(window).width()<=700){
           var winHT = $(window).height();
           $('.dash-menu-wrapper').height(winHT);
-          console.log('hit')
         }
       })
     </script>

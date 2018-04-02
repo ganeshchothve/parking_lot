@@ -6,12 +6,16 @@
 
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
+    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
     <%= javascript_tag do %>
       <% if user_signed_in? %>
         if(typeof App === "undefined"){
           App = {};
         }
         App.current_user = <%= raw current_user.to_json %>
+      <% end %>
+      <% if Rails.env.development? || Rails.env.staging? %>
+      Pusher.logToConsole = true;
       <% end %>
     <% end %>
   </head>

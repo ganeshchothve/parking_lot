@@ -37,4 +37,17 @@ class BookingDetail
       booking_detail.save!
     end
   end
+
+  def primary_user_kyc
+    if primary_user_kyc_id.present?
+      UserKyc.find(primary_user_kyc_id)
+    else
+      nil
+    end
+  end
+
+  def send_notification!
+    message = "#{self.primary_user_kyc.first_name} from #{self.primary_user_kyc.city} just booked #{self.project_unit.name}"
+    Gamification::PushNotification.new.push(message)
+  end
 end
