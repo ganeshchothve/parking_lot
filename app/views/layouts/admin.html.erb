@@ -215,5 +215,42 @@
           $('.padding-side-22 .col-md-2.float-right form, .padding-xs-left-10 .col-md-2 form, .padding-side-30 .col-md-2 form').slideToggle();
         })
     </script>
+
+    <div class="modal fade" id="user_dropdown_modal" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Choose Customer</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group" id="user_dropdown_modal_form">
+              <%= label_tag "fltrs", "Name / Email / Phone", class: "control-label" %>
+              <%= select_tag "fltrs[user_id]", [], {class: "selectize-remote", data: {url: admin_users_path, params: {role: "user"} }} %>
+              <%= hidden_field_tag "fltrs[project_unit_id]" %>
+            </div>
+            <%= javascript_tag do %>
+              $(document).ready(function(){
+                FormInitializer.init($("#user_dropdown_modal_form"));
+                $("#user_dropdown_modal .next").click(function(){
+                  var user_id = $("#user_dropdown_modal").find("[name='fltrs[user_id]']").val();
+                  var sfdc_id = $("#user_dropdown_modal").find("[name='fltrs[project_unit_id]']").val();
+                  if(user_id != "" && sfdc_id != ""){
+                    window.location = "/admin/users/" + user_id + "/receipts/new?sfdc_reference_project_unit_id=" + sfdc_id;
+                  }else{
+                    alert("Please choose a customer & apartment to proceed");
+                  }
+                })
+              });
+            <% end %>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary next">Proceed</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

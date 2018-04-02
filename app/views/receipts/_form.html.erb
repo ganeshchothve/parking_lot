@@ -11,7 +11,7 @@
           <div class="title">
             Make Remaining Payment
           </div>
-            
+
         </div>
         <% else %>
         <div class="col-12 text-left mtop10">
@@ -99,7 +99,10 @@
                       <%
                         if params[:reference_project_unit_id].present?
                           f.object.reference_project_unit_id = params[:reference_project_unit_id]
-                        end 
+                        end
+                        if params[:sfdc_reference_project_unit_id].present?
+                          f.object.reference_project_unit_id = ProjectUnit.where(sfdc_id: params[:sfdc_reference_project_unit_id]).first.id
+                        end
                       %>
                       <%= f.label :reference_project_unit_id, class: 'control-label' %><a href="<%= asset_path 'fp-type-2.jpg'%>" class="colorbox-init small-link" style="font-size:12px;">Master Layout</a>
                       <%= f.select :reference_project_unit_id, f.object.reference_project_unit.present? ? [[f.object.reference_project_unit.name, f.object.reference_project_unit.id]] : [], {prompt: true}, class: 'selectize-remote', autofocus: true, disabled: (policy(@receipt).editable_field?("reference_project_unit_id") ? false : true), "data-url": admin_project_units_path, "data-params": {fltrs: {status: 'available'}}.to_json, 'data-ds': 'ds' %>
