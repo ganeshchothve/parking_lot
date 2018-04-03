@@ -61,10 +61,8 @@ function register_user_with_portal(e){
       setTimeout(function(){
         if(typeof App !== "undefined" && App.current_user){
           window.location = '<%= url.admin_users_path %>';
-        }else{
-          window.location = '<%= url.root_path %>';
         }
-      }, 1000);
+      }, 3000);
     },
     error: function(one, two, three){
       var str = ''

@@ -102,7 +102,7 @@
             end
           end
           %>
-          <span data-unit-id="<%= u.id %>" class="unit-tooltip apt bstatus-<%= status %>" title='["<%= u.name %>","<%= u.carpet.round %>","<%= number_to_indian_currency(u.agreement_price.round) %>","<%= u.bedrooms %>","<%= status %>"]' data-unit-details='["<%= u.name %>","<%= u.carpet.round %>","<%= number_to_indian_currency(u.agreement_price.round)  %>","<%= u.bedrooms %>","<%= status %>","<%= u.floor %>"]'></span>
+          <span data-unit-id="<%= u.id %>" class="unit-tooltip apt bstatus-<%= status %>" title='["<%= u.name %>","<%= u.carpet.round %>","<%= number_to_indian_currency(u.agreement_price.round) %>","<%= u.bedrooms %>","<%= status %>","<%= u.floor %>","<%= u.category %>"]' data-unit-details='["<%= u.name %>","<%= u.carpet.round %>","<%= number_to_indian_currency(u.agreement_price.round)  %>","<%= u.bedrooms %>","<%= status %>","<%= u.floor %>","<%= u.category %>"]'></span>
           <% end %>
         </div>
         <% end %>
