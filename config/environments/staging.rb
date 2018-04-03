@@ -78,7 +78,6 @@ Rails.application.configure do
 
   # Use default mailer asset host
   config.action_mailer.asset_host = "embassysprings2.amura.in"
-
   config.action_mailer.default_url_options = {host: 'embassysprings2.amura.in'}
 
   config.action_mailer.delivery_method = :smtp
