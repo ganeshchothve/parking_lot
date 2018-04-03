@@ -34,7 +34,8 @@ class HomeController < ApplicationController
             format.json { render json: {errors: message, url: (user_signed_in? ? admin_users_path : new_user_session_path)}, status: :unprocessable_entity }
           end
         else
-          @user = User.new(email: params['email'], phone: params['phone'], name: params['name'], lead_id: params[:lead_id])
+          # splitted name into two firstname and lastname
+          @user = User.new(email: params['email'], phone: params['phone'], first_name: params['first_name'],last_name: params['last_name'], lead_id: params[:lead_id])
           if user_signed_in?
             @user.channel_partner_id = current_user.id
           end
