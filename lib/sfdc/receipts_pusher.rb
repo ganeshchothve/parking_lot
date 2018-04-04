@@ -7,13 +7,10 @@ module SFDC
           receipts_data << receipt_json(receipt)
           if receipts_data.any?
             @receipts_pusher = SFDC::Base.new
-            Rails.logger.info "---------------------------response ------------------------------------------------------------"
             response = @receipts_pusher.push("/services/apexrest/Embassy/receiptsInfo", receipts_data)
-            Rails.logger.info "-------------------------------------------------------------------------------------------------"
-            Rails.logger.info("SFDC::ReceiptsPusher >>>>> #{response}")
+            Rails.logger.info("SFDC::ReceiptsPusher >>>>> receipt_id: #{receipt.id.to_s}, SFDC response: #{response}")
           end
         rescue Exception => e
-          Rails.logger.info "---------------------------Exception-----------------------------------"
           Rails.logger.info("Exception in SFDC::ReceiptsPusher >>>> #{e.message} \n #{e.backtrace}")
         end
       end
@@ -28,7 +25,7 @@ module SFDC
         "payment_amount" => receipt.total_amount,
         "mode_of_transfer" => receipt.payment_mode,
         "instrument_no" => receipt.payment_identifier.to_s,
-        "instrument_date" => receipt.issued_date ? sfdc_date_format(Date.parse(receipt.issued_date)) : nil,
+        "instrument_date" => receipt.issued_date ? sfdc_date_format(Date.parse(receipt.issued_date)) : sfdc_date_format(receipt.created_at),
         "bank_name" => receipt.issuing_bank,
         "branch_name" => receipt.issuing_bank_branch
       }
