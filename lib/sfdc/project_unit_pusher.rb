@@ -31,7 +31,9 @@ module SFDC
         "city" => user_kyc.city,
         "country" => user_kyc.country,
         "zip" => user_kyc.postal_code,
-        "aadhar_number" => user_kyc.aadhaar
+        "aadhar_number" => user_kyc.aadhaar,
+        "salutation" => user_kyc.salutation,
+        "company_name" => user_kyc.company_name
       }
       hash
     end
