@@ -13,8 +13,9 @@ function sell_do_form_rendered(){
       params[v.split("=")[0]] = v.split("=")[1];
     }
   });
-  if(params.name && params.phone && params.email && params.lead_id){
-    $('[name="sell_do[form][lead][name]"]').val(params.name);
+  if(params.first_name && params.last_name && params.phone && params.email && params.lead_id){
+    $('[name="sell_do[form][lead][first_name]"]').val(params.first_name);
+    $('[name="sell_do[form][lead][last_name]"]').val(params.last_name);
     $('[name="sell_do[form][lead][email]"]').val(params.email);
     $('[name="sell_do[form][lead][phone]"]').val(params.phone);
   }
@@ -40,7 +41,8 @@ function sell_do_form_submission_failed(e){
 function register_user_with_portal(e){
   var data = {
     lead_id: e.lead_id,
-    name: unescape(e['sell_do[form][lead][name]'].replace("+", " ")),
+    first_name: unescape(e['sell_do[form][lead][first_name]'].replace("+", " ")),
+    last_name: unescape(e['sell_do[form][lead][last_name]'].replace("+", " ")),
     email: unescape(e['sell_do[form][lead][email]']),
     phone: unescape(e['sell_do[form][lead][phone]'])
   }
@@ -59,10 +61,8 @@ function register_user_with_portal(e){
       setTimeout(function(){
         if(typeof App !== "undefined" && App.current_user){
           window.location = '<%= url.admin_users_path %>';
-        }else{
-          window.location = '<%= url.root_path %>';
         }
-      }, 1000);
+      }, 3000);
     },
     error: function(one, two, three){
       var str = ''
@@ -88,9 +88,9 @@ function register_user_with_portal(e){
       setTimeout(function(){
         if(_.isEmpty(one.responseJSON.url)){
           if(typeof App !== "undefined" && App.current_user){
-            window.location = '<%= url.new_admin_user_path %>?email=' + data.email + '&phone=' + data.phone + '&name=' + data.name + '&lead_id=' + data.lead_id;
+            window.location = '<%= url.new_admin_user_path %>?email=' + data.email + '&phone=' + data.phone + '&first_name=' + data.first_name + '&last_name=' + data.last_name + '&lead_id=' + data.lead_id;
           }else{
-            window.location = '<%= url.register_path %>?email=' + data.email + '&phone=' + data.phone + '&name=' + data.name + '&lead_id=' + data.lead_id;
+            window.location = '<%= url.register_path %>?email=' + data.email + '&phone=' + data.phone + '&first_name=' + data.first_name + '&last_name=' + data.last_name + '&lead_id=' + data.lead_id;
           }
         }else{
           window.location = one.responseJSON.url;

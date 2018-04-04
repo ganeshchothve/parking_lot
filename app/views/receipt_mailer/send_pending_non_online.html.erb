@@ -1,73 +1,43 @@
-<!--
-<% if @receipt.payment_mode == 'online' %>
-  <%= @receipt.receipt_id %><br/>
-  Rs. <%= @receipt.total_amount %><br/>
-  <%= @receipt.status %><br/>
-<% else %>
-  <%= @receipt.receipt_id %><br/>
-  Rs. <%= @receipt.total_amount %><br/>
-  <%= @receipt.status %><br/>
-<% end %>
-<hr/>
-<% if @project_unit.present? %>
-Project Unit Details
-<%= @project_unit.name %><br/>
-<%= @project_unit.status %><br/>
-<% end %>
--->
-
 <tr>
   <td>
     <table cellpadding="0" cellspacing="0" width="100%">
       <tr>
         <td style=" color: #000;font-size: 32px;font-weight: 600;line-height: 35px;vertical-align: bottom;">
-        Payment Pending
-       </td>
-       <td>
-         <img src="http://www.embassysprings.com/images/Springs-logo.png" style="border:0px ;outline:0px;display:block;">
-       </td>
-     </tr>
-   </table>
- </td>
-</tr>
-
-<tr>
-  <td>
-    <table cellpadding="0" cellspacing="0" width="100%">
-      <tr>
-        <td><hr style="display: block;height: 1px;border: 0;border-top: 2px solid #c9579f;margin: 1em 0;padding: 0;"></td>
-        <td><hr style="display: block;height: 1px;border: 0;border-top: 2px solid #64c0e9;margin: 1em 0;padding: 0;"></td>
-        <td><hr style="display: block;height: 1px;border: 0;border-top: 2px solid #7eb53e;margin: 1em 0;padding: 0;"></td>
+          Payment Pending
+        </td>
+        <td>
+          <img src="http://www.embassysprings.com/images/Springs-logo.png" style="border:0px ;outline:0px;display:block;">
+        </td>
       </tr>
     </table>
   </td>
 </tr>
-
 <tr><td>&nbsp;</td></tr>
 
 <tr>
- <td>
-   Dear <%= @user.name %>,
- </td>
+  <td>
+    Dear <%= @user.name %>,
+  </td>
 </tr>
 <tr><td>&nbsp;</td></tr>
 <tr>
   <td style="line-height:26px;">
-    <!-- our payment is pending. If the payment is not made in the next <%#= receipt %> days, the apartment hold will be cancelled.  -->
-    <!-- Thanks for your payment. -->
     <p><strong>  Mr. <%= @user.channel_partner.name %> </strong> the Channel Partner has collected the cheque of Rs. <%= @receipt.total_amount %>/- towards the Booking amount. </p>
     <p>We will notify you once the cheque is processed by our team. </p>
 
     <p><strong> Following are the payment details.</strong> </p> <br/>
     <p>
+      <% if @receipt.project_unit_id.present? %>
       <span style="color:#64c0e9; font-weight:bold">Unit </span> <%= @receipt.project_unit.name %><br/>
+      <% end %>
+      <% if @receipt.reference_project_unit_id.present? %>
+      <span style="color:#64c0e9; font-weight:bold">Unit </span> <%= @receipt.reference_project_unit.name %><br/>
+      <% end %>
       <span style="color:#64c0e9; font-weight:bold">Receipt </span> <%= @receipt.receipt_id %><br/>
       <span style="color:#64c0e9; font-weight:bold">Date </span> <%= @receipt.created_at.strftime("%Y-%m-%d") %><br/>
       <span style="color:#64c0e9; font-weight:bold">Bank </span> <%= @receipt.issuing_bank %><br/>
       <span style="color:#64c0e9; font-weight:bold">Branch </span> <%= @receipt.issuing_bank_branch %><br/>
       <span style="color:#64c0e9; font-weight:bold">Tracking Id </span> <%= @receipt.tracking_id %><br/>
     </p>
-              <!-- <p><strong>  Mr. <%#= @user.channel_partner.name %> </strong> the Channel Partner has selected and booked an Apartment unit no. <%#= @project_unit.name  %> on your behalf at Embassy Springs Project and has paid a sum of Rs. <%= @receipt.total_amount %>/- towards the Booking amount. </p>
-              <p>We request you to kindly confirm the above booking by the return mail within 7 days, failing which the above booking will be cancelled without any further intimation to you or the Channel Partner.</p> -->
-            </td>
-          </tr>
+  </td>
+</tr>

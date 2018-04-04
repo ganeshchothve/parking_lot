@@ -16,7 +16,12 @@ function onParentMessage(messageEvent) {
             * sample - {"bookedapartment" : {"apartment_ID": "a0K0l000000jhle", "status": "booked", "name": "", "sales": ""}}
             */
             var apartmentdata = messageEvent.data["bookedapartment"];
-            window.location = "/dashboard/apartment-selector/3d/all-towers/" + apartmentdata.apartment_ID;
+            if(App.current_user.role == "user"){
+              window.location = "/dashboard/apartment-selector/3d/all-towers/" + apartmentdata.apartment_ID;
+            }else{
+              $("#user_dropdown_modal").modal("show");
+              $("#user_dropdown_modal").find("[name='fltrs[project_unit_id]']").val(apartmentdata.apartment_ID);
+            }
         }
     }
 }

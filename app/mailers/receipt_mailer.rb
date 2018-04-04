@@ -4,7 +4,7 @@ class ReceiptMailer < ApplicationMailer
   def send_failure receipt_id
     @receipt = Receipt.find(receipt_id)
     @user = @receipt.user
-    @project_unit = @receipt.project_unit
+    @project_unit = @receipt.project_unit || @receipt.reference_project_unit
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
     cc += default_team
@@ -14,12 +14,17 @@ class ReceiptMailer < ApplicationMailer
   def send_success receipt_id
     @receipt = Receipt.find(receipt_id)
     @user = @receipt.user
-    @project_unit = @receipt.project_unit
+    @project_unit = @receipt.project_unit || @receipt.reference_project_unit
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
     cc += default_team
+    attachments["Cost_structure.pdf"] = WickedPdf.new.pdf_from_string(
+      render_to_string(pdf: "cost_structure", template: "dashboard/receipt_print.pdf.erb"))
+    attachments["Invoice.pdf"] = WickedPdf.new.pdf_from_string(
+      render_to_string(pdf: "invoice", template: "dashboard/receipt_mail.pdf.erb"))
+    attachments["Allotment.pdf"] = WickedPdf.new.pdf_from_string(
+      render_to_string(pdf: "allotment", template: "project_unit_mailer/send_allotment_letter.pdf.erb"))
     mail(to: @user.email, cc: cc, subject: "Payment #{@receipt.receipt_id} Successful")
-    # mail(to: "ashish.c@amuratech.com", cc: cc, subject: "Payment #{@receipt.receipt_id} Successful")
   end
 
   def send_clearance_pending receipt_id
@@ -46,7 +51,7 @@ class ReceiptMailer < ApplicationMailer
   def receipt_email receipt_id
     @receipt = Receipt.find(receipt_id)
     @user = @receipt.user
-    @project_unit = @receipt.project_unit
+    @project_unit = @receipt.project_unit || @receipt.reference_project_unit
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
     cc += default_team
@@ -58,12 +63,23 @@ class ReceiptMailer < ApplicationMailer
   def send_receipt receipt_id
     @receipt = Receipt.find(receipt_id)
     @user = @receipt.user
-    @project_unit = @receipt.project_unit
+    @project_unit = @receipt.project_unit || @receipt.reference_project_unit
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
     cc += default_team
     cc += [@user.email]
     attachments["receipt.pdf"] = File.read("#{Rails.root}/tmp/receipt.pdf")
     mail(to: @user.email, subject: "Payment #{@receipt.receipt_id} Successful Slip")
+  end
+
+  def days_to_go(receipt_id, days)
+    @receipt = Receipt.find(receipt_id)
+    @user = @receipt.user
+    @project_unit = @receipt.project_unit
+    @cp = @user.channel_partner
+    cc = @cp.present? ? [@cp.email] : []
+    cc += default_team
+    @day = days.to_i
+    mail(to: @user.email, cc: cc, subject: "#{@day} days to go!")
   end
 end

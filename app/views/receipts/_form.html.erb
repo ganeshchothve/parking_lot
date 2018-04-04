@@ -7,11 +7,11 @@
    <div class="container-fluid">
       <div class="row">
         <% if current_user.role?('user') %>
-        <div class="apartment-selector-wrapper">
+        <div class="page-title-wrapper">
           <div class="title">
             Make Remaining Payment
           </div>
-            
+
         </div>
         <% else %>
         <div class="col-12 text-left mtop10">
@@ -24,11 +24,11 @@
               <!-- TODO: check if you want to update this message -->
               <% if current_user.role?('user') %>
                 <div class="title">Payments need to be for individual units, clubbed payments are not allowed. Please collect a cheque for individual units only.</div>
+                <strong>Payment Details</strong><br/>
                 Unit - <%= @receipt.project_unit.name %> <br/>
-                Amount paid - <%=  number_to_indian_currency(@receipt.user.total_amount_paid.round(2)) %> <br/>
+                Amount paid - <%=  number_to_indian_currency(@receipt.project_unit.total_amount_paid.round(2)) %> <br/>
                 Pending amount - <%=  number_to_indian_currency(@receipt.user.total_balance_pending.round(2)) %> <br/>
-                Agreement value  - <%= number_to_indian_currency(@receipt.project_unit.agreement_price.round(2)) %> <br/>
-                <br/>
+                Agreement value  - <%= number_to_indian_currency(@receipt.project_unit.agreement_price.round(2)) %> <br/><br/>
               <% else %>
                 Payments need to be for individual units, clubbed payments are not allowed. Please collect a cheque for individual units only.
               <% end %>
@@ -44,6 +44,7 @@
           </div>
           <% end %>
           <% if current_user.role?('user') %>
+            <strong>Make Payment</strong><br/>
             <%= form_for @receipt, html: {class: 'validate-form'} do |f| %>
               <div class="form-group form-field-wrapper">
                 <%= f.label :total_amount, class: 'control-label label-required' %>
@@ -53,6 +54,7 @@
               <%= f.hidden_field :payment_mode %>
               <%= f.submit "Proceed", class: 'btn btn-primary nav-btn' %>
             <% end %>
+
           <% else %>
             <%= form_for [:admin, @user, @receipt], html: {id: 'receipt_form', class: 'validate-form'} do |f| %>
               <div class="form-group">
@@ -99,7 +101,10 @@
                       <%
                         if params[:reference_project_unit_id].present?
                           f.object.reference_project_unit_id = params[:reference_project_unit_id]
-                        end 
+                        end
+                        if params[:sfdc_reference_project_unit_id].present?
+                          f.object.reference_project_unit_id = ProjectUnit.where(sfdc_id: params[:sfdc_reference_project_unit_id]).first.id
+                        end
                       %>
                       <%= f.label :reference_project_unit_id, class: 'control-label' %><a href="<%= asset_path 'fp-type-2.jpg'%>" class="colorbox-init small-link" style="font-size:12px;">Master Layout</a>
                       <%= f.select :reference_project_unit_id, f.object.reference_project_unit.present? ? [[f.object.reference_project_unit.name, f.object.reference_project_unit.id]] : [], {prompt: true}, class: 'selectize-remote', autofocus: true, disabled: (policy(@receipt).editable_field?("reference_project_unit_id") ? false : true), "data-url": admin_project_units_path, "data-params": {fltrs: {status: 'available'}}.to_json, 'data-ds': 'ds' %>
@@ -155,6 +160,7 @@
             });
             <% end %>
           <% end %>
+          <br/>
           <%= render "assets/index", assetable: @receipt %>
           <br/><br/><br/>
         </div>

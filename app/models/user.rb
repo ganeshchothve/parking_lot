@@ -8,7 +8,8 @@ class User
   devise :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable #:registerable Disbaling registration because we always create user after set up sell.do
 
   ## Database authenticatable
-  field :name, type: String, default: ""
+  field :first_name, type: String, default: ""
+  field :last_name, type: String, default: ""
   field :email, type: String, default: ""
   field :phone, type: String, default: ""
   field :lead_id, type: String
@@ -55,7 +56,7 @@ class User
   has_many :user_requests
   has_many :user_kycs
 
-  validates :name, :phone, :role, presence: true
+  validates :first_name, :last_name, :phone, :role, presence: true
   validates :lead_id, uniqueness: true, allow_blank: true
   validates :phone, uniqueness: true, phone: true # TODO: we can remove phone validation, as the validation happens in sell.do
   #validates :email, uniqueness: true #TODO: if removed can sign up with registerd email id
@@ -107,7 +108,7 @@ class User
     or_selector = {}
     if params[:q].present?
       regex = ::Regexp.new(::Regexp.escape(params[:q]), 'i')
-      or_selector = {"$or": [{name: regex}, {email: regex}, {phone: regex}] }
+      or_selector = {"$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] }
     end
     self.where(selector).where(or_selector)
   end
@@ -159,14 +160,6 @@ class User
     "#{name} - #{email} - #{phone}"
   end
 
-  def first_name
-    name.split(" ").first
-  end
-
-  def last_name
-    name.split(" ").last
-  end
-
   def dashboard_url
     url = Rails.application.routes.url_helpers
     host = Rails.application.config.action_mailer.default_url_options[:host]
@@ -174,5 +167,9 @@ class User
     host = (port == 443 ? "https://" : "http://") + host
     host = host + ((port == 443 || port == 80 || port == 0) ? "" : ":#{port}")
     url.dashboard_url(user_email: self.email, user_token: self.authentication_token, host: host)
+  end
+
+  def name
+    "#{first_name} #{last_name}"
   end
 end

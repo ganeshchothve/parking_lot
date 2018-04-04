@@ -24,7 +24,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def permitted_attributes params={}
-    attributes = [:name, :email, :phone, :lead_id]
+    attributes = [:first_name, :last_name, :email, :phone, :lead_id, :password, :password_confirmation]
     attributes += [:channel_partner_id] if user.role?('channel_partner')
     attributes += [:role, :channel_partner_id, :rera_id, :location] if user.role?('admin')
     attributes

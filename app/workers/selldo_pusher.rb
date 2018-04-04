@@ -11,7 +11,8 @@ class SelldoPusher
       lead_id: user.lead_id,
       stage: project_unit_status,
       booking_date: timestamp,
-      unit_id: project_unit.selldo_id
+      unit_id: project_unit.selldo_id,
+      project_id: project_unit.project_id
     }
     params["applicants"] = []
     user_kycs.each do |kyc|

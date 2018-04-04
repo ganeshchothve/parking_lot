@@ -1,8 +1,10 @@
 <section class="main-wrapper full-height grey">
   <div class="container-fluid">
     <div class="col-12 cancel-booking-wrapper text-center">
-      <div class="title"> You'll be redirected to RazorPay, where you can pay using UPI, credit/debit card or wallet</div>
-      <button id="rzp-button1" class="nav-btn">Pay Online</button>
+      <div class="payment-gateway-message">
+        <div class="title">You'll be redirected to RazorPay, where you can pay using UPI, credit/debit card or wallet</div>
+        <button id="rzp-button1" class="nav-btn">Pay Online</button>
+      </div>
     </div>
   </div>
 </section>
@@ -18,6 +20,7 @@ var options = {
   name: "Embassy Springs",
   description: "Embassy Springs",
   handler: function (response){
+    $(".payment-gateway-message").html('<div class="title">Thank you for the payment, please wait while we process your payment. You should be redirected once we have processed your request.</div>')
     window.location = "/payment/<%= @receipt.receipt_id %>/process_payment/razorpay?payment_id=" + response.razorpay_payment_id;
   },
   prefill: {

@@ -40,28 +40,26 @@ Rails.application.routes.draw do
     resources :user_requests, except: [:destroy], controller: 'user_requests'
   end
 
-  post '/dashboard/user_update', to: 'dashboard#user_update'
-  get '/dashboard/user_profile', to: 'dashboard#user_profile'
-  get '/dashboard/make-remaining-payment/:project_unit_id', to: 'dashboard#make_remaining_payment'
-  get '/dashboard/booking-details', to: 'dashboard#booking_details'
-  get '/dashboard/cancel-booking', to: 'dashboard#cancel_booking'
-  get '/dashboard/kyc-form', to: 'dashboard#kyc_form'
-  get '/dashboard/add-booking', to: 'dashboard#add_booking'
-  get '/dashboard/:project_unit_id/payment-breakup', to: 'dashboard#payment_breakup'
-  get '/dashboard/receipt', to: 'dashboard#receipt'
-  get '/dashboard/payment-success', to: 'dashboard#payment_success'
-  get '/dashboard/sales-booking', to: 'dashboard#sales_booking'
-  post '/dashboard/get_towers', to: 'dashboard#get_towers'
-  post '/dashboard/get_units', to: 'dashboard#get_units'
-  post '/dashboard/get_unit_details', to: 'dashboard#get_unit_details'
-  get '/dashboard/receipt-print/:id', to: 'dashboard#receipt_print'
-  get '/dashboard/receipt_print/:id', to: 'dashboard#receipt_print', as: :dashboard_receipt_print
-  get '/dashboard/send_receipt_mail/:id', to: 'dashboard#receipt_mail', as: :dashboard_receipt_mail
 
   match 'payment/:receipt_id/process_payment/:ignore', to: 'payment#process_payment', via: [:get, :post]
 
-  get :dashboard, to: 'dashboard#index', as: :dashboard
   scope :dashboard do
+    get 'make-remaining-payment/:project_unit_id', to: 'dashboard#make_remaining_payment'
+    get 'booking-details', to: 'dashboard#booking_details'
+    get 'cancel-booking', to: 'dashboard#cancel_booking'
+    get 'kyc-form', to: 'dashboard#kyc_form'
+    get 'add-booking', to: 'dashboard#add_booking'
+    get ':project_unit_id/payment-breakup', to: 'dashboard#payment_breakup'
+    get 'receipt', to: 'dashboard#receipt'
+    get 'payment-success', to: 'dashboard#payment_success'
+    get 'sales-booking', to: 'dashboard#sales_booking'
+    post 'get_towers', to: 'dashboard#get_towers'
+    post 'get_units', to: 'dashboard#get_units'
+    post 'get_unit_details', to: 'dashboard#get_unit_details'
+    get 'receipt-print/:id', to: 'dashboard#receipt_print'
+    get 'receipt_print/:id', to: 'dashboard#receipt_print', as: :dashboard_receipt_print
+    get 'send_receipt_mail/:id', to: 'dashboard#receipt_mail', as: :dashboard_receipt_mail
+    get '', to: 'dashboard#index', as: :dashboard
     # get :project_units, to: 'dashboard#project_units', as: :dashboard_project_units
     get :project_units_new, to: 'dashboard#project_units_new', as: :dashboard_project_units_new
     get '/:receipt_id/razorpay-payment', to: 'dashboard#razorpay_payment'

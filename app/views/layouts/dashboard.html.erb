@@ -6,6 +6,7 @@
     <%= csrf_meta_tags %>
     <%= stylesheet_link_tag 'dashboard_new' %>
     <%= javascript_include_tag 'dashboard' %>
+    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
     <%= javascript_tag do %>
       <% if user_signed_in? %>
         if(typeof App === "undefined"){
@@ -13,10 +14,9 @@
         }
         App.current_user = <%= raw current_user.to_json %>;
       <% end %>
-    <% end %>
-    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
-    <% if Rails.env.development? || Rails.env.staging? %>
+      <% if Rails.env.development? || Rails.env.staging? %>
       Pusher.logToConsole = true;
+      <% end %>
     <% end %>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-116390336-1"></script>
@@ -29,15 +29,16 @@
     </script>
   </head>
   <body>
-
+	<% if user_signed_in? %>
   <div class="visible-xs prompts-message gradient-bg text-center white">
-    <% if user_signed_in? && current_user.sign_in_count > 1%>
-      <a href="/dashboard/apartment-selector" class="white">BOOK NOW</a>
-    <% else %>
-      <span>Register now to book & save upto Rs. 10 Lac!</span>
-      <span>Prices rise with every 50 bookings</span>
-    <% end %>
+    <div class="gamification_container mobile">
+      <div class="text-slide"><%= booked_today_count %> people have paid the token amount today</div>
+      <div class="text-slide"><%= bhk_booked(1) %> 1-BHK Apartments sold</div>
+      <div class="text-slide"><%= bhk_booked(2) %> 2-BHK Apartments sold</div>
+      <div class="text-slide"><%= bhk_booked(3) %> 3-BHK Apartments sold</div>
+    </div>
   </div>
+  <% end %>
     <div id="notify"></div>
     <p class="notice"><%= notice %></p>
     <p class="alert"><%= alert %></p>
@@ -51,9 +52,17 @@
               <% if params[:controller] == "dashboard" && params[:action] == "index" %>
                 <span class="subTitle white bold">Dashboard</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
               <% elsif params[:controller] == "dashboard" && params[:action] == "project_units" %>
-                <span class="subTitle white bold">Apartment Selector</span> <span class="d3-view-link"><a href="/dashboard/3d-apartment-selector">Book in 3D view</a></span>
+
+                  <span class="subTitle white bold">Apartment Selector</span>
+                   <% if ProjectUnitPolicy.new(current_user, ProjectUnit).block? %>
+                     <span class="d3-view-link"><a href="/dashboard/3d-apartment-selector">Book in 3D view</a></span>
+                  <% end %>
               <% elsif params[:controller] == "dashboard" && params[:action] == "project_units_3d" %>
-                <span class="subTitle white bold">3D Apartment Selector</span> <span class="d3-view-link"><a href="/dashboard/apartment-selector">Book in Normal view</a></span>
+
+                <span class="subTitle white bold">3D Apartment Selector</span>
+                 <% if ProjectUnitPolicy.new(current_user, ProjectUnit).block? %>
+                <span class="d3-view-link"><a href="/dashboard/apartment-selector">Book in Normal view</a></span>
+                 <% end %>
               <% elsif params[:controller] == "dashboard" && params[:action] == "checkout" %>
                 <span class="subTitle white bold">Proceed To Payment</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
               <% elsif params[:controller] == "user_kycs" %>
@@ -75,10 +84,10 @@
                   </div>
               </div> -->
               <div class="pull-left profile-link">
-                <span><img src="<%= asset_path 'user.png'%>" class="img-responsive"> &nbsp;<%#= current_user.name %>
-                  <%= link_to "Welcome " + current_user.name, dashboard_user_profile_path , class:'white'%>
+                <span>
+                  <img src="<%= asset_path 'user.png'%>" class="img-responsive"> &nbsp;<%#= current_user.name %>
+                  <%= link_to "Welcome " + current_user.name, edit_admin_user_path(current_user) , class:'white'%>
                 </span>
-
             </div>
             <div class="clearfix"></div>
           </div>
@@ -129,8 +138,7 @@
         </div>
         <% end %>
         <div class="mobile-show">
-          <%= link_to "Profile", dashboard_user_profile_path %>
-          <!-- <a href="/" data-method="delete" rel="nofollow"><span class="sprite-signout sign-out"></span><span class="menu-items-hide">sign out</span></a> -->
+          <%= link_to "Profile", edit_admin_user_path(current_user) %>
         </div>
         <div>
           <a href="/users/sign_out" data-method="delete" rel="nofollow"><span class="sprite-signout sign-out"></span><span class="menu-items-hide">sign out</span></a>
@@ -146,16 +154,17 @@
             </div>
         </div>
       </div>
-      <div class="prompts-message hidden-xs">
-        <ul id="gamification_container">
-          <li><%= bhk_booked(1) %> 1 BHK Apartments sold</li>
-          <li><%= bhk_booked(2) %> 2 BHK Apartments sold</li>
-          <li><%= bhk_booked(3) %> 3 BHK Apartments sold</li>
-          <li><%= booked_today_count %> people have paid the token amount today</li>
-        </ul>
+      <div class="prompts-message hidden-xs gradient-bg white">
+        <div class="gamification_container desktop">
+          <div class="text-slide"><%= booked_today_count %> people have paid the token amount today</div>
+          <div class="text-slide"><%= bhk_booked(1) %> 1-BHK Apartments sold</div>
+          <div class="text-slide"><%= bhk_booked(2) %> 2-BHK Apartments sold</div>
+          <div class="text-slide"><%= bhk_booked(3) %> 3-BHK Apartments sold</div>
+        </div>
       </div>
       <div class="dash-menu-footer hidden-xs">
-         <img src="<%= asset_path "embassy_springs_logo.png" %>" class="img-responsive" style="padding:0 5px;width:70px;">
+        <div class="col-3"><img src="<%= asset_path 'donatecoin.gif'%>" class="img-responsive"></div>
+        <div class="col-9 donate-content">We will be donating 0.1% of every booking to NGO - Colors of Life. Make a difference today! <%= number_to_indian_currency((ProjectUnit.in(status: ['blocked', 'booked_confirmed', 'booked_tentative']).sum(:agreement_price) * 0.1 / 100).round) %> have been donated so far to <span><a href="http://www.coloursoflife.co.in/" target="_blank">Colors of Life.</a></span></div>
       </div>
     </div>
     <% end %>
@@ -281,8 +290,12 @@
             setTimeout(function(){
               $('.open-details-wrapper').removeClass('blink');
             },1500)
-
-       })
+       });
+       setTimeout(function(){
+         <% if current_user.user_kyc_ids.present? %>
+          $('label[data-link="no"].radio.kyc-radio').trigger("click");
+          <% end %>
+        }, 1000);
         if($(window).width()<=700){
           var winHT = $(window).height();
           $('.dash-menu-wrapper').height(winHT);

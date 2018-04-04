@@ -3,7 +3,8 @@ class ReceiptObserver < Mongoid::Observer
     project_unit = receipt.project_unit
     if project_unit.present?
       # order = receipt.user.receipts.count
-      receipt.receipt_id = "ESE#{project_unit.project_tower_name[0]}#{project_unit.name.split("-").last.strip}-R#{receipt.order_id}"
+      pre_name = project_unit.name.split("|").first
+      receipt.receipt_id = "ESE#{project_unit.project_tower_name[0]}#{pre_name.split("-").last.strip[0]}-R#{receipt.order_id}"
     else
       receipt.receipt_id = "tmp-#{SecureRandom.hex}"
     end

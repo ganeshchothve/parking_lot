@@ -51,6 +51,21 @@ class DashboardController < ApplicationController
     end
   end
 
+  def send_allotment
+    @receipt = Receipt.find(params[:id])
+    @user = @receipt.user
+    @project_unit = @receipt.project_unit
+    @cp = @user.channel_partner
+    respond_to do |format|
+      format.html
+      format.pdf do
+        render  pdf: "Embassy Allotment",
+        title: 'Embassy Allotment',
+        save_to_file: Rails.root.join('tmp', "allotment.pdf")
+      end
+    end
+  end
+
   def receipt_print
     @receipt = Receipt.find(params[:id])
     @user = @receipt.user
@@ -95,7 +110,7 @@ class DashboardController < ApplicationController
     elsif params[:stage] == "choose_tower"
       bedroom = params[:configuration].split(",")[0]
       budget = params[:configuration].split(",")[1]
-      parameters =  {fltrs: { data_attributes: {bedrooms: bedroom != "NA" ? bedroom : ""} }, agreement_price: budget != "NA" ? budget : ""}
+      parameters =  {fltrs: { data_attributes: {bedrooms: bedroom != "NA" ? bedroom : ""}, agreement_price: budget != "NA" ? budget : ""}}
       project_tower_ids = ProjectUnit.build_criteria(parameters).distinct(:project_tower_id)
       @towers = ProjectTower.in(id: project_tower_ids).collect do |x|
         hash = {project_tower_id: x.id, project_tower_name:x.name}
@@ -239,28 +254,7 @@ class DashboardController < ApplicationController
       end
     end
   end
-
-  def user_profile
-     @user = User.find(current_user.id)
-  end
-
-  def user_update
-    user_params = params['user']
-    user = User.find(user_params[:id])
-    user.email = user_params[:email]
-    user.phone = user_params[:phone]
-    user.password = user_params[:password]
-    respond_to do |format|
-      if user.save
-        format.html { redirect_to "/users/sign_in", notice: 'User updated successfully...' }
-        format.json
-      else
-        format.html { render :action => "user_profile" }
-        format.json
-      end
-    end
-  end
-
+  
   private
   def hold_on_third_party_inventory
     third_party_inventory_response, third_party_inventory_response_code = ThirdPartyInventory.hold_on_third_party_inventory(@project_unit)
