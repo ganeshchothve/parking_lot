@@ -42,7 +42,7 @@ module SFDC
       case status
       when "blocked"
         "blocked"
-      when "booked_tentative", "booked_confirmed"
+      when "booked_confirmed"
         "booking"
       end
     end
