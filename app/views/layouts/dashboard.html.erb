@@ -55,14 +55,14 @@
               <% if params[:controller] == "dashboard" && params[:action] == "index" %>
                 <span class="subTitle white bold">Dashboard</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
               <% elsif params[:controller] == "dashboard" && params[:action] == "project_units" %>
-               
-                  <span class="subTitle white bold">Apartment Selector</span> 
+
+                  <span class="subTitle white bold">Apartment Selector</span>
                    <% if ProjectUnitPolicy.new(current_user, ProjectUnit).block? %>
                      <span class="d3-view-link"><a href="/dashboard/3d-apartment-selector" data-event-category="header" data-event-action="click" data-event-name="Book in 3D view">Book in 3D view</a></span>
                   <% end %>
               <% elsif params[:controller] == "dashboard" && params[:action] == "project_units_3d" %>
-              
-                <span class="subTitle white bold">3D Apartment Selector</span> 
+
+                <span class="subTitle white bold">3D Apartment Selector</span>
                  <% if ProjectUnitPolicy.new(current_user, ProjectUnit).block? %>
                 <span class="d3-view-link"><a href="/dashboard/apartment-selector" data-event-category="header" data-event-action="click" data-event-name="Book in Normal view">Book in Normal view</a></span>
                  <% end %>
@@ -293,8 +293,12 @@
             setTimeout(function(){
               $('.open-details-wrapper').removeClass('blink');
             },1500)
-
-       })
+       });
+       setTimeout(function(){
+         <% if current_user.user_kyc_ids.present? %>
+          $('label[data-link="no"].radio.kyc-radio').trigger("click");
+          <% end %>
+        }, 1000);
         if($(window).width()<=700){
           var winHT = $(window).height();
           $('.dash-menu-wrapper').height(winHT);

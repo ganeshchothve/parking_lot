@@ -6,41 +6,45 @@ module SFDC
           project_unit_data = []
           project_unit_data << project_unit_json(project_unit)
           if project_unit_data.any?
-           @project_unit_pusher = SFDC::Base.new
-           response = @project_unit_pusher.push("/services/apexrest/Embassy/LeadInfo", project_unit_data)
+            @project_unit_pusher = SFDC::Base.new
+            response = @project_unit_pusher.push("/services/apexrest/Embassy/LeadInfo", project_unit_data)
+            Rails.logger.info("SFDC::ProjectUnitPusher >>>>> project_unit_id: #{project_unit.id.to_s}, SFDC response: #{response}")
           end
         rescue Exception => e
-          Rails.logger.info "---------------------------Exception-----------------------------------"
           Rails.logger.info("Exception in SFDC::ProjectUnitPusher >>>> #{e.message} \n #{e.backtrace}")
         end
       end
     end
 
     def self.project_unit_json(project_unit)
+      user = project_unit.user
+      user_kyc = project_unit.primary_user_kyc
       hash = {
-        "receipt_selldo_id" => receipt.id.to_s,
-        "selldo_lead_id" => receipt.project_unit.user.lead_id,
-        "street" => project_unit.primary_user_kyc.street,
-        "city" =>  project_unit.primary_user_kyc.city,
-        "country" => project_unit.primary_user_kyc.country,
-        "zip" =>  project_unit.primary_user_kyc.zip,
-        "primary_email" => receipt.user.email,
-        "receipt_date" => sfdc_date_format(receipt.created_at),
-        "payment_amount" => receipt.total_amount,
-        "mode_of_transfer" => receipt.payment_mode,
-        "instrument_no" => receipt.payment_identifier.to_s,
-        "instrument_date" => receipt.issued_date ? sfdc_date_format(Date.parse(receipt.issued_date)) : nil,
-        "bank_name" => receipt.issuing_bank,
-        "branch_name" => receipt.issuing_bank_branch,
         "selldo_lead_id": user.lead_id,
-        "booking_stage": project_unit.status,
-        "booking_date": project_unit.blocked_on,
-        "birthdate": project_unit.primary_user_kyc.dob,
-        "pan_card_number": project_unit.primary_user_kyc.pan_number,
         "unit_sfdc_id": project_unit.sfdc_id,
-        "nri": project_unit.primary_user_kyc.nri
+        "booking_stage": sfdc_stage_mapping(project_unit.status),
+        "booking_date": sfdc_date_format(project_unit.blocked_on),
+        "birthdate": sfdc_date_format(project_unit.primary_user_kyc.dob),
+        "pan_card_number": project_unit.primary_user_kyc.pan_number,
+        "nri": user_kyc.nri ? "NRI" : "Indian",
+        "street" => user_kyc.street,
+        "city" => user_kyc.city,
+        "country" => user_kyc.country,
+        "zip" => user_kyc.postal_code,
+        "aadhar_number" => user_kyc.aadhaar,
+        "salutation" => user_kyc.salutation,
+        "company_name" => user_kyc.company_name
       }
       hash
+    end
+
+    def self.sfdc_stage_mapping(status)
+      case status
+      when "blocked"
+        "blocked"
+      when "booked_tentative", "booked_confirmed"
+        "booking"
+      end
     end
   end
 end
