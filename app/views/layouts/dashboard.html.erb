@@ -101,8 +101,7 @@
       <div class="menu-top">
         <div class="dash-logo">
           <a href="/dashboard" style="text-align: left;display: inline-block;"><img src="<%= asset_path "embassy_unit.png" %>" class="img-responsive" style="padding:0 5px;" data-event-category="side bar" data-event-action="click" data-event-name="Logo"></a>
-          <!-- <a href="/dashboard" style="text-align: right;display: inline-block;"><img src="<%= asset_path "logo-edge.png" %>" class="img-responsive" style="padding:0 5px;width:70%;"></a> -->
-          <!-- <span>Embassy Springs<br/> Booking Portal</span> -->
+	  <div class="rera-id" style="font-size:11px;text-align:center;">RERA Ack. No.: PR/KN/180119/002674</div>
         </div>
         <div class="burger-menu visible-xs">
             <span></span>
@@ -295,7 +294,7 @@
             },1500)
        });
        setTimeout(function(){
-         <% if current_user.user_kyc_ids.present? %>
+         <% if user_signed_in? && current_user.user_kyc_ids.present? %>
           $('label[data-link="no"].radio.kyc-radio').trigger("click");
           <% end %>
         }, 1000);
