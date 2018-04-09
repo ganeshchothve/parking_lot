@@ -2,467 +2,539 @@
 	      		<div class="table-wrapper">
 	      			<table width="100%" cellspacing="0" cellpadding="5" class="payment-breakup" border="0" outline="1">
 						<tr>
-							<th width="10%">
-								Sr.no.
-							</th>
 							<th class="text-left">
-								Details
+								Particulars
 							</th>
 							<th>
-								Costing
+								Land
+							</th>
+							<th>
+								Construction
+							</th>
+							<th>
+								Total
 							</th>
 						</tr>
 						<tr>
-							<td class="text-center">
-								01
-							</td>
 							<td>
-								Saleable Area
+								SUPER BUILT UP AREA : SFT
+							</td>
+							<td class="text-center">
+								<%= @project_unit.saleable.round(2) %>
+							</td>
+							<td class="text-center">
+								<%= @project_unit.saleable.round(2) %>
 							</td>
 							<td>
 								<%= @project_unit.saleable.round(2) %>
 							</td>
 						</tr>
 						<tr>
-							<td class="text-center">
-								02
+							<td>
+								CARPET AREA - 75% APPORX: SFT
+							</td>
+							<td  class="text-center">
+								<%= @project_unit.carpet.round(2) %>
+							</td>
+							<td  class="text-center">
+								<%= @project_unit.carpet.round(2) %>
 							</td>
 							<td>
-								Base Price
-							</td>
-							<td>
-								<%= number_to_indian_currency(@project_unit.base_rate.round(2)) %>
+								<%= @project_unit.carpet.round(2) %>
 							</td>
 						</tr>
 						<tr>
-							<td class="text-center">
-								03
-							</td>
 							<td>
-								Land Price
+								BASE PRICE PER SFT
 							</td>
-							<td>
+							<td  class="text-center">
 								<%= number_to_indian_currency(@project_unit.land_rate.round(2)) %>
 							</td>
-						</tr>
-						<tr>
-							<td class="text-center">
-								04
+							<td  class="text-center">
+								<%= number_to_indian_currency(@project_unit.construction_cost.round(2)) %>
 							</td>
 							<td>
-								Construction cost
-							</td>
-							<td>
-								<%= number_to_indian_currency(@project_unit.base_rate - @project_unit.land_rate) %>
+								<%= number_to_indian_currency((@project_unit.land_rate.round(2)) + (@project_unit.construction_cost.round(2))) %>
 							</td>
 						</tr>
 						<tr>
-							<td class="text-center">
-								05
-							</td>
 							<td>
 								PLC
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(@project_unit.premium_location_charges.round(2)) %>
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(@project_unit.premium_location_charges.round(2)) %>
 							</td>
 							<td>
 								<%= number_to_indian_currency(@project_unit.premium_location_charges.round(2)) %>
 							</td>
 						</tr>
 						<tr>
-							<td class="text-center">
-								06
-							</td>
 							<td>
-								FRP
+								FLOOR RISE
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(@project_unit.floor_rise.round(2)) %>
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(@project_unit.floor_rise.round(2)) %>
 							</td>
 							<td>
 								<%= number_to_indian_currency(@project_unit.floor_rise.round(2)) %>
 							</td>
 						</tr>
 						<tr>
+							<td>
+								EFFIECTIVE PRICE PER SFT (BASIC PRICE +PLC+FLOOR RISE)
+							</td>
 							<td class="text-center">
-								07
+								
+							</td>
+							<td class="text-center">
+								
 							</td>
 							<td>
-								Base Price + PLC + FRP
-							</td>
-							<td>
-								<%= @project_unit.base_rate + @project_unit.premium_location_charges + @project_unit.floor_rise %>
+								<%= number_to_indian_currency((@project_unit.base_rate) + (@project_unit.premium_location_charges) + (@project_unit.floor_rise)) %>
 							</td>
 						</tr>
 						<tr>
-							<td class="text-center">
-								08
+							<td>
+								LAND COST 
 							</td>
 							<td>
-								Land Value
+								
+							</td>
+							<td>
+								
 							</td>
 							<td>
 								<%= number_to_indian_currency(@project_unit.land_price.round(2)) %>
 							</td>
 						</tr>
 						<tr>
-							<td class="text-center">
-								09
+							<td>
+								BASE CONSTRUCTION COST 
 							</td>
 							<td>
-								Construction Value
+								
 							</td>
 							<td>
-								<%= number_to_indian_currency(((@project_unit.base_rate + @project_unit.premium_location_charges + @project_unit.floor_rise) - (@project_unit.land_rate))*(@project_unit.saleable).round(2)) %>
+								
+							</td>
+							<td>
+								<%#= number_to_indian_currency(((@project_unit.base_rate + @project_unit.premium_location_charges + @project_unit.floor_rise) - (@project_unit.land_rate))*(@project_unit.saleable).round(2)) %>
+								<%= number_to_indian_currency(@project_unit.construction_price.round(2)) %>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								GST- 18% ON  CONSTRUCTION COST
+							</td>
+							<td>
+								
+							</td>
+							<td>
+								
+							</td>
+							<td>
+								<%= number_to_indian_currency(@project_unit.gst_on_agreement_price.round()) %>
 							</td>
 						</tr>
 						<tr>
 							<td class="pink">
-								&nbsp;
+								COST OF THE APARTMENT - AGREEMENT VALUE
 							</td>
 							<td class="pink">
-								Agreement Value
+								
 							</td>
 							<td class="pink">
-								<%= number_to_indian_currency(project_unit.agreement_price.round) %>
+								
+							</td>
+							<td class="pink">
+								<%= number_to_indian_currency((@project_unit.gst_on_agreement_price.round()) + (@project_unit.construction_price.round(2)) + (@project_unit.land_price.round(2))) %>
 							</td>
 						</tr>
 					</table>
 	      		</div>
-<h1 class="f22 bold">Additionals & Deposits</h1>
+				<h1 class="f22 bold">Additionals & Deposits</h1>
 	      		<div class="table-wrapper">
 	      			<table width="100%" cellspacing="0" cellpadding="5" class="payment-breakup" border="0" outline="1">
 	      				<tr>
-							<th width="10%">
-								Sr.no.
-							</th>
 							<th class="text-left">
-								Additionals
+								PARTICULARS 
 							</th>
 							<th>
-								Costing
+								PRICE PSFT
+							</th>
+							<th>
+								BASIC COST 
+							</th>
+							<th>
+								TAXES - CGST - 9%
+							</th>
+							<th>
+								TAXES - SGST - 9%
+							</th>
+							<th>
+								TOTAL COST 
 							</th>
 						</tr>
 	      				<tr>
-							<td class="text-center">
-								01
-							</td>
 							<td>
 								Water/Electricity/Power Backup @ Rs 150/- psft
 							</td>
-							<td>
+							<td class="text-center">
+								<%= number_to_indian_currency(150) %>
+							</td>
+							<td class="text-center">
 								<%= number_to_indian_currency(project_unit.wep_price.round(2)) %>
 							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.wep_price.round(2),9)) %>
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.wep_price.round(2),9)) %>
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency((project_unit.wep_price.round(2)) + (calculate_percent(project_unit.wep_price,9)) + (calculate_percent(project_unit.wep_price,9))) %>
+							</td>
 						</tr>
 						<tr>
+							<td>
+								City infrastructure charges @ Rs 200/- psft
+							</td>
 							<td class="text-center">
-								02
+								<%= number_to_indian_currency(200) %>
 							</td>
-							<td>
-								Club house & amenities Charges @ Rs 125000/-
-							</td>
-							<td>
+							<td class="text-center">
 								<%= number_to_indian_currency(project_unit.clubhouse_amenities_price.round(2)) %>
 							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.clubhouse_amenities_price.round(2),9)) %>
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.clubhouse_amenities_price.round(2),9)) %>
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency((project_unit.clubhouse_amenities_price.round(2)) + (calculate_percent(project_unit.clubhouse_amenities_price.round(2),9)) + (calculate_percent(project_unit.clubhouse_amenities_price.round(2),9))) %>
+							</td>
 						</tr>
 						<tr>
+							<td>
+								Advance Maintenance charges @ Rs. 3  psft per year - for 1 years (Rs 3 x 12 months)
+							</td>
 							<td class="text-center">
-								03
+								<%= number_to_indian_currency(3) %>
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(project_unit.advance_maintenance_charges.round(2)) %>
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.advance_maintenance_charges.round(2),9)) %>
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.advance_maintenance_charges.round(2),9)) %>
 							</td>
 							<td>
+								<%= number_to_indian_currency((project_unit.advance_maintenance_charges.round(2)) + (calculate_percent(project_unit.advance_maintenance_charges.round(2),9)) + (calculate_percent(project_unit.advance_maintenance_charges.round(2),9))) %>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Club house & amenities Charges @ <%= number_to_indian_currency(125000)%>
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(125000) %>
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(125000) %>
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(125000,9)) %>
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(125000,9)) %>
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(125000 + (calculate_percent(125000,9)) + (calculate_percent(125000,9))) %>
+							</td> 
+						</tr>
+
+						<tr>
+							<td>
 								Corpus Fund @ Rs 125/- psft
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(125) %>
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(project_unit.corpus_fund.round(2)) %>
+							</td>
+							<td class="text-center">
+								-
+							</td>
+							<td class="text-center">
+								-
 							</td>
 							<td>
 								<%= number_to_indian_currency(project_unit.corpus_fund.round(2)) %>
 							</td>
-						</tr>
-						<tr>
-							<td class="text-center">
-								04
-							</td>
-							<td>
-								City infrastructure charges @ Rs 200/- psft
-							</td>
-							<td>
-								<%= number_to_indian_currency(project_unit.city_infrastructure_fund.round(2)) %>
-							</td>
-						</tr>
-						<tr>
-							<td class="text-center">
-								05
-							</td>
-							<td>
-								Advance Maintenance charges @ Rs. 3  psft per year - for 1 years (Rs 3 x 12 months)
-							</td>
-							<td>
-								<%= number_to_indian_currency(project_unit.advance_maintenance_charges.round(2)) %>
-							</td>
-						</tr>
-						<tr>
-							<td class="text-center">
-								06
-							</td>
-							<td>
-								Carpark
-							</td>
-							<td>
-								FREE
-							</td>
-						</tr>
-						<tr>
-							<td class="text-center">
-								07
-							</td>
-							<td>
-								GST- 18% on additional charges
-							</td>
-							<td>
-								<%= number_to_indian_currency(project_unit.gst_on_additional_charges.round(2)) %>
-							</td>
-						</tr>
-						<tr>
-							<td class="text-center">
-								08
-							</td>
-							<td>
-								Sub total
-							</td>
-							<td>
-								<%= number_to_indian_currency((project_unit.sub_total).round(2)) %>
-							</td>
-						</tr>
-						<tr>
-							<td class="text-center">
-								09
-							</td>
-							<td>
-								Additional Charges & deposits in %
-							</td>
-							<td>
-								<%= ((project_unit.sub_total * 100) / ((project_unit.base_rate + project_unit.premium_location_charges + project_unit.floor_rise) * (project_unit.saleable))).round %>%
-							</td>
-						</tr>
-						<tr>
-							<td class="text-center">
-								10
-							</td>
-							<td>
-								All inclusive with GST except stamp duty & registration charges
-							</td>
-							<td>
-								<%= number_to_indian_currency(project_unit.all_inclusive_price) %>
-							</td>
-						</tr>
-						<tr>
-							<td class="text-center">
-								11
-							</td>
-							<td>
-								GST - 18% on construction value
-							</td>
-							<td>
-								<%= number_to_indian_currency((project_unit.gst_on_agreement_price).round(2)) %>
-							</td>
-						</tr>
 
+						</tr>
+						<tr>
+							<td>
+								TOTAL 
+							</td>
+							<td>
+								
+							</td>
+							<td>
+								<%= number_to_indian_currency((project_unit.corpus_fund.round(2)) + 125000 + (project_unit.advance_maintenance_charges.round(2)) + (project_unit.clubhouse_amenities_price.round(2)) + (project_unit.wep_price.round(2))) %>
+							</td>
+							<td>
+								<%= number_to_indian_currency(calculate_percent((project_unit.corpus_fund.round(2)) + 125000 + (project_unit.advance_maintenance_charges.round(2)) + (project_unit.clubhouse_amenities_price.round(2)) + (project_unit.wep_price.round(2)),9)) %>
+							</td>
+							<td>
+								<%= number_to_indian_currency(calculate_percent((project_unit.corpus_fund.round(2)) + 125000 + (project_unit.advance_maintenance_charges.round(2)) + (project_unit.clubhouse_amenities_price.round(2)) + (project_unit.wep_price.round(2)),9)) %>
+							</td>
+							<td>
+								<%= number_to_indian_currency((project_unit.corpus_fund.round(2)) + 125000 + (project_unit.advance_maintenance_charges.round(2)) + (project_unit.clubhouse_amenities_price.round(2)) + (project_unit.wep_price.round(2)) + calculate_percent((project_unit.corpus_fund.round(2)) + 125000 + (project_unit.advance_maintenance_charges.round(2)) + (project_unit.clubhouse_amenities_price.round(2)) + (project_unit.wep_price.round(2)),9) + calculate_percent((project_unit.corpus_fund.round(2)) + 125000 + (project_unit.advance_maintenance_charges.round(2)) + (project_unit.clubhouse_amenities_price.round(2)) + (project_unit.wep_price.round(2)),9))%>
+							</td>
+						</tr>
+						<tr>
+							<td class="pink">
+								GRAND TOTAL OF THE APARTMENT 
+							</td>
+							<td class="pink">
+								
+							</td>
+							<td class="pink">
+								
+							</td>
+							<td class="pink">
+								
+							</td>
+							<td class="pink">
+								
+							</td>
+							<td class="pink">
+								<%= number_to_indian_currency((@project_unit.gst_on_agreement_price.round()) + (@project_unit.construction_price.round(2)) + (@project_unit.land_price.round(2)) + (project_unit.corpus_fund.round(2)) + 125000 + (project_unit.advance_maintenance_charges.round(2)) + (project_unit.clubhouse_amenities_price.round(2)) + (project_unit.wep_price.round(2)) + calculate_percent((project_unit.corpus_fund.round(2)) + 125000 + (project_unit.advance_maintenance_charges.round(2)) + (project_unit.clubhouse_amenities_price.round(2)) + (project_unit.wep_price.round(2)),9) + calculate_percent((project_unit.corpus_fund.round(2)) + 125000 + (project_unit.advance_maintenance_charges.round(2)) + (project_unit.clubhouse_amenities_price.round(2)) + (project_unit.wep_price.round(2)),9)) %>
+							</td>
+						</tr>
 	      			</table>
 	      		</div>
+	      		<h1 class="f22 bold">Payment Schedule</h1>
 	      		<div class="table-wrapper">
 	      			<table width="100%" cellspacing="0" cellpadding="5" class="payment-breakup" border="0" outline="1">
 						<tr>
-							<th width="10%">
-								Sr.no.
-							</th>
 							<th class="text-left">
-								Installment Details
+								PARTICULARS 
 							</th>
 							<th>
-								Payment %
+								PERCENTAGE 
 							</th>
 							<th>
-								Installment Amount (Rs.)
+								LAND COST
+							</th>
+							<th>
+								CONSTRUCTION COST 
+							</th>
+							<th>
+								GST
+							</th>
+							<th>
+								TOTAL
 							</th>
 						</tr>
 						<tr>
-							<td class="text-center">
-								01
-							</td>
 							<td>
-								On Agreement / Booking
+								ON BOOKING / AGREEMENT 
 							</td>
 							<td class="text-center">
 								10%
 							</td>
-							<td>
-								<%= number_to_indian_currency(calculate_percent(project_unit.agreement_price.round,10).round(2)) %> + GST
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.land_price.round(2),10)) %> 
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.construction_price.round(2),10)) %> 
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.gst_on_agreement_price.round(2),10)) %> 
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.gst_on_agreement_price.round(2),10) + calculate_percent(project_unit.construction_price.round(2),10) + calculate_percent(project_unit.land_price.round(2),10)) %> 
 							</td>
 						</tr>
 						<tr>
-							<td class="text-center">
-								02
-							</td>
 							<td>
-								On completion of Basement
+								ON COMPLETION OF BASEMENT SLAB
 							</td>
 							<td class="text-center">
 								25%
 							</td>
-							<td>
-								<%= number_to_indian_currency(calculate_percent(project_unit.agreement_price,25).round(2)) %> + GST
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.land_price.round(2),25)) %> 
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.construction_price.round(2),25)) %> 
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.gst_on_agreement_price.round(2),25)) %> 
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.gst_on_agreement_price.round(2),25) + calculate_percent(project_unit.construction_price.round(2),25) + calculate_percent(project_unit.land_price.round(2),25)) %> 
 							</td>
 						</tr>
 						<tr>
-							<td class="text-center">
-								03
-							</td>
 							<td>
-								On completion of 5th floor slab
+								ON COMPLETION OF 5TH FLOOR SLAB
 							</td>
 							<td class="text-center">
 								25%
 							</td>
-							<td>
-								<%= number_to_indian_currency(calculate_percent(project_unit.agreement_price,25).round(2)) %> + GST
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.land_price.round(2),25)) %> 
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.construction_price.round(2),25)) %> 
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.gst_on_agreement_price.round(2),25)) %> 
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.gst_on_agreement_price.round(2),25) + calculate_percent(project_unit.construction_price.round(2),25) + calculate_percent(project_unit.land_price.round(2),25)) %> 
 							</td>
 						</tr>
 						<tr>
-							<td class="text-center">
-								04
-							</td>
 							<td>
-								On completion of 10th floor slab
+								ON COMPLETION OF 10TH FLOOR SLAB
 							</td>
 							<td class="text-center">
 								25%
 							</td>
-							<td>
-								<%= number_to_indian_currency(calculate_percent(project_unit.agreement_price,25).round(2)) %> + GST
-							</td>
-						</tr>
-						<!-- <tr>
 							<td class="text-center">
-								05
-							</td>
-							<td>
-								On completion of 9th floor slab
+								<%= number_to_indian_currency(calculate_percent(project_unit.land_price.round(2),25)) %> 
 							</td>
 							<td class="text-center">
-								12.50%
+								<%= number_to_indian_currency(calculate_percent(project_unit.construction_price.round(2),25)) %> 
 							</td>
-							<td>
-								<%= number_to_indian_currency(calculate_percent(project_unit.agreement_price,12.5).round(2)) %> + GST
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.gst_on_agreement_price.round(2),25)) %> 
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.gst_on_agreement_price.round(2),25) + calculate_percent(project_unit.construction_price.round(2),25) + calculate_percent(project_unit.land_price.round(2),25)) %> 
 							</td>
 						</tr>
 						<tr>
-							<td class="text-center">
-								06
-							</td>
 							<td>
-								On completion of 12th floor slab
-							</td>
-							<td class="text-center">
-								12.50%
-							</td>
-							<td>
-								<%= number_to_indian_currency(calculate_percent(project_unit.agreement_price,12.5).round(2)) %> + GST
-							</td>
-						</tr>
-						<tr>
-							<td class="text-center">
-								07
-							</td>
-							<td>
-								On completion of Terrace floor slab
-							</td>
-							<td class="text-center">
-								12.50%
-							</td>
-							<td>
-								<%= number_to_indian_currency(calculate_percent(project_unit.agreement_price,12.5).round(2)) %> + GST
-							</td>
-						</tr> -->
-						<tr>
-							<td class="text-center">
-								05
-							</td>
-							<td>
-								On completion of painting & finishes and deposits (power + water)
+								ON COMPLETION OF PAINTING & FINISHES AND DEPOSITS  (POWER + WATER)
 							</td>
 							<td class="text-center">
 								10%
 							</td>
-							<td>
-								<%= number_to_indian_currency(calculate_percent(project_unit.agreement_price,10).round(2)) %> + GST
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.land_price.round(2),10)) %> 
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.construction_price.round(2),10)) %> 
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.gst_on_agreement_price.round(2),10)) %> 
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.gst_on_agreement_price.round(2),10) + calculate_percent(project_unit.construction_price.round(2),10) + calculate_percent(project_unit.land_price.round(2),10)) %> 
 							</td>
 						</tr>
 						<tr>
-							<td class="text-center">
-								06
-							</td>
 							<td>
-								On Possession
+								ON POSSESSION + REMAINING ADDITIONAL DEPOSITS 
 							</td>
 							<td class="text-center">
 								5%
 							</td>
-							<td>
-								<%= number_to_indian_currency(calculate_percent(project_unit.agreement_price,5).round(2)) %> + GST
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.land_price.round(2),5)) %> 
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.construction_price.round(2),5)) %> 
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.gst_on_agreement_price.round(2),5)) %> 
+							</td>
+							<td class="text-center">
+								<%= number_to_indian_currency(calculate_percent(project_unit.gst_on_agreement_price.round(2),5) + calculate_percent(project_unit.construction_price.round(2),5) + calculate_percent(project_unit.land_price.round(2),5)) %> 
 							</td>
 						</tr>
-                                                <tr>
-                                                        <td class="text-center">
-                                                                07
-                                                        </td>
-                                                        <td>
-                                                                On Possession (Additionals & Deposits + Registration)
-                                                        </td>
-                                                        <td class="text-center">
-                                                        </td>
-                                                        <td>
-                                                                <%= number_to_indian_currency((project_unit.sub_total).round(2)) %> + GST
-                                                        </td>
-                                                </tr>
 						<tr>
-							<td class="pink">
-								&nbsp;
-							</td>
 							<td class="pink">
 								Total value including additionals
 							</td>
-							<td class="pink">
-								&nbsp;
+							<td class="pink text-center">
+								100%
 							</td>
-							<td class="pink">
-								<%= number_to_indian_currency((project_unit.sub_total + project_unit.agreement_price).round) %> + GST
+							<td class="pink text-center">
+								<%= number_to_indian_currency(project_unit.land_price.round(2)) %> 
+							</td>
+							<td class="pink text-center">
+								<%= number_to_indian_currency(project_unit.construction_price.round(2)) %> 
+							</td>
+							<td class="pink text-center">
+								<%= number_to_indian_currency(project_unit.gst_on_agreement_price.round(2)) %> 
+							</td>
+							<td class="pink text-center">
+								<%= number_to_indian_currency((@project_unit.gst_on_agreement_price.round()) + (@project_unit.construction_price.round(2)) + (@project_unit.land_price.round(2)) + (project_unit.corpus_fund.round(2)) + 125000 + (project_unit.advance_maintenance_charges.round(2)) + (project_unit.clubhouse_amenities_price.round(2)) + (project_unit.wep_price.round(2)) + calculate_percent((project_unit.corpus_fund.round(2)) + 125000 + (project_unit.advance_maintenance_charges.round(2)) + (project_unit.clubhouse_amenities_price.round(2)) + (project_unit.wep_price.round(2)),9) + calculate_percent((project_unit.corpus_fund.round(2)) + 125000 + (project_unit.advance_maintenance_charges.round(2)) + (project_unit.clubhouse_amenities_price.round(2)) + (project_unit.wep_price.round(2)),9)) %>
 							</td>
 						</tr>
 						</table>
 	      		</div>
-	      	</div>
+
 	      	<div class="clearfix"></div>
 	      	<ul class="payment-breakup mediaCenterAccordion">
 				<li>
 					<span class="small">TERMS &amp; CONDITIONS</span>
 					<div class="mediaCentercontent" style="display: none;">
 						<ul>
-							<li>This Application constitutes an offer by the Applicant/s to acquire an Apartment as mentioned in the Application and is not a concluded contract. The Application does not confer or constitute any right in favour of the Applicant/s for allotment. The Company reserves the right to accept or reject this Application, at its sole discretion and without assigning any reason for the same. </li>
-							<li>Only the Indian Residents/Non Resident Indians (NRIs)/Persons of Indian Origin (PIOs)/Companies/ Partnership Firms / LLPs who are competent to enter into contract under the Indian Contract Act, 1872 shall be eligible to apply.</li>
-							<li>The Applicant shall be responsible to comply with all the statutory compliances as required from time to time under the applicable laws prevailing in India including the laws applicable to NRIs/PIOs and the Company shall not be liable for the same in any manner whatsoever.</li>
-							<li>The online payment of <%= number_to_indian_currency(ProjectUnit.blocking_amount) %>/- (Rupees Thirty Thousand Only) herein is subject to the rules and regulations of Reserve Bank of India (RBI) as well as the rules and regulations framed of the VISA/MasterCard/Maestro/American Express or any other card organization applicable and prevailing from time to time.</li>
-							<li>The above payment of <%= number_to_indian_currency(ProjectUnit.blocking_amount) %>/- (Rupees Thirty Thousand Only) shall be applicable only for a single unit. </li>
-							<li>The Applicant shall be entitled to make Applications for booking of single unit only per transaction. However, same applicant can do multiple booking under same Applicant name. . . .  , Separate payments shall be made along with the Applications for booking of each unit.&nbsp;</li>
-							<li>The said payment is subject to the risks involved in any Electronic Payment Transactions including due to any technical failure in the payment gateway operations and the Company shall not be liable/responsible for any failure of any payment transactions or for any amounts debited from the Applicant account but not credited to the account of the Company due to any technical error in settlement or otherwise and the Applicant shall not have any claims against the Company for such transactions. Wherever possible, the Company will inform the Applicant about such failed transaction and refund, if any, due to the Applicant shall be processed via payment gateway.</li>
-							<li>The said payment is merely towards expressing an interest in a particular unit and by virtue of said payment no right, title, interest or claim of any nature is created in such unit. The allotment, if any, shall be done subject to the Applicant making payment of consideration value and other charges in accordance with the Application Form and complying with the terms and conditions contained therein. The Application Form can be viewed on www.______.</li>
-							<li>Subsequently, the applicant shall make the initial payment of __ % of the total sale consideration amount of the Unit within a period of 07 working days from the date of booking. The Applicant/s agree that in accordance to the Income Tax Act 194IA the Applicant shall remit 1% TDS of the total consideration (exclusive of taxes) at source made or to be made in  favour of the Company and all the instalments to be paid by the Applicant/s under the Agreement for Sale.  The Company shall not be held responsible for any non-payment/delay in remittance of TDS by the Applicant/s.</li>
-							<li>Upon said payment being credited to the account of the Company, an e-receipt number will be generated and emailed to the Applicant, which shall be mandatorily required for processing the application of the Applicant. The applicants are required to print or save the receipt for his transaction/records and submit the same to the Company as and when requested to do so.</li>
-							<li>In the event of the Applicant fails to make the initial payment of 10 % of the total sale consideration amount of the Unit within a period of 07 working days, then in such an event the booking made in favour of the Applicant shall be cancelled. </li>
-							<li>The payment made by the Applicant shall be refunded to the Applicant, subject to deduction of Rs. 5,000/- (Rupees Five Thousand Only) within a period of-- 45 working days from the date of request made by the Applicant for refund of the Booking amount or from the date of default committed by the Applicant in making the payment as mentioned in Clause 11 above. </li>
-							<li>This Booking Application of the Unit is not transferable to any other third party, but transfer to family members (father/mother/wife/husband/son/daughter, brother, sister, father in law, mother in law, daughter in law, son in law, grand father and grand mother grandson and grand daughter) would be allowed with prior approval of the Promoter.  Post execution of Agreement for Sale, transfer to any third party would be allowed only upon obtaining prior approval from the Company and payment of transfer fees plus applicable taxes as per the terms of the Agreement for Sale.</li>
-							<li>The Applicant/s understand that the Booking Amount is an interest free refundable earnest amount paid to the Company and constitutes an expression of interest of the Applicant/s in purchasing an Unit in the project “Embassy Springs” and in no manner to be considered as an assurances having been given by the Company for the sale of the Unit.</li>
-							<li>The consideration value and the other charges are payable as per the Payment Schedule mentioned in the Application Form.</li>
-							<li>The Developer reserves the right to change the pricing offered to other customers at their sold discretion without prior notice.  The Applicant/s will not question the sale price of any other applicant/s nor will the Applicant/s be entitled to compare the same with other applicant’s. </li>
-							<li>In case it is learnt that the Applicant has misrepresented any fact or information such applications will be summarily terminated and said payment shall stand forfeited.</li>
-							<li>The Applicant/s is/are also fully aware that the development of the layout is being done phase wise.   </li>
-							<li>The total consideration is exclusive of stamp duty, cess  and registration expenses etc.,</li>
-							<li>Increase in existing tax levies and fresh government levies, applicable during the contract period shall be met by the Applicant/s.  </li>
-							<li>The Applicant/s further agree that only after the Applicant/s executing Agreement for Sale and agreeing to abide by the terms and conditions laid down therein there would be a concluded contract.</li>
-							<li>The Courts in Bangalore, Karnataka shall have the exclusive jurisdiction pertaining to this  Expression of Interest. </li>
-						</ul>
+<li>This Application constitutes an offer by the Applicant/s to acquire an Apartment as mentioned in the Application and is not a concluded contract. The Application does not confer or constitute any right in favour of the Applicant/s for allotment. The Company reserves the right to accept or reject this Application, at its sole discretion and without assigning any reason for the same.</li>
+<li>Only the Indian Residents/Non Resident Indians (NRIs)/Persons of Indian Origin (PIOs)/Companies/ Partnership Firms / LLPs who are competent to enter into contract under the Indian Contract Act, 1872 shall be eligible to apply. </li>
+<li>The Applicant shall be responsible to comply with all the statutory compliances as required from time to time under the applicable laws prevailing in India including the laws applicable to NRIs/PIOs and the Company shall not be liable for the same in any manner whatsoever.</li>
+<li>The online payment of Rs. 30,000/-(Rupees Thirty Thousand Only) herein is subject to the rules and regulations of Reserve Bank of India (RBI) as well as the rules and regulations framed of the VISA/MasterCard/Maestro/American Express or any other card organization applicable and prevailing from time to time</li>
+<li>The above payment of Rs. 30,000/-(Rupees Thirty Thousand Only) shall be applicable only for a single unit.</li>
+<li>The said payment is subject to the risks involved in any Electronic Payment Transactions including due to any technical failure in the payment gateway operations and the Company shall not be liable/responsible for any failure of any payment transactions or for any amounts debited from the Applicant account but not credited to the account of the Company due to any technical error in settlement or otherwise and the Applicant shall not have any claims against the Company for such transactions. Wherever possible, the Company will inform the Applicant about such failed transaction and refund, if any, due to the Applicant shall be processed via payment gateway.</li>
+<li>The said payment is merely towards expressing an interest in a particular unit and by virtue of said payment no right, title, interest or claim of any nature is created in such unit. The allotment, if any, shall be done subject to the Applicant making payment of consideration value and other charges in accordance with the Application Form and complying with the terms and conditions contained therein. </li>
+<li>Subsequently, the applicant shall make the initial payment of 10 % of the total sale consideration amount of the Unit within a period of 07 working days from the date of booking. The Applicant/s agree that in accordance to the Income Tax Act 194IA the Applicant shall remit 1% TDS of the total consideration (exclusive of taxes) at source made or to be made in  favour of the Company and all the instalments to be paid by the Applicant/s under the Agreement for Sale.  The Company shall not be held responsible for any non-payment/delay in remittance of TDS by the Applicant/s.</li>
+<li>Upon said payment being credited to the account of the Company, an e-receipt number will be generated and emailed to the Applicant, which shall be mandatorily required for processing the application of the Applicant. The applicants are required to print or save the receipt for his transaction/records and submit the same to the Company as and when requested to do so.</li>
+<li>In the event of the Applicant fails to make the initial payment of 10 % of the total sale consideration amount of the Unit within a period of 07 working days, then in such an event the booking made in favour of the Applicant shall be cancelled.</li>
+<li>The payment made by the Applicant shall be refunded to the Applicant, subject to deduction of Rs. 5,000/- (Rupees Five Thousand Only) within a period of 45 working days from the date of request made by the Applicant for refund of the Booking amount or from the date of default committed by the Applicant in making the payment as mentioned in Clause 11 above.</li>
+<li>This Booking Application of the Unit is not transferable to any other third party, but transfer to family members (father/mother/wife/husband/son/daughter, brother, sister, father in law, mother in law, daughter in law, son in law, grand father and grand mothergrandson and grand daughter) would be allowed with prior approval of the Promoter.  Post execution of Agreement for Sale, transfer to any third party would be allowed only upon obtaining prior approval from the Company and payment of trans[NGR1] fer fees plus applicable taxes as per the terms of the Agreement for Sale.</li>
+<li>The Applicant/s understand that the Booking Amount is an interest free refundable earnest amount paid to the Company and constitutes an expression of interest of the Applicant/s in purchasing an Unit in the project “Embassy Springs” and in no manner to be considered as an assurances having been given by the Company for the sale of the Unit.</li>
+<li>The consideration value and the other charges are payable as per the Payment Schedule mentioned in the Application Form</li>
+<li>The Developer reserves the right to change the pricing offered to other customers at their sole discretion without prior notice.  The Applicant/s will not question the sale price of any other applicant/s nor will the Applicant/s be entitled to compare the same with other applicant’s. </li>
+<li>In case it is learnt that the Applicant has misrepresented any fact or information such applications will be summarily terminated and said payment shall stand forfeited.</li>
+<li>The Applicant/s is/are also fully aware that the development of the layout is being done phase wise.</li>
+<li>The total consideration is exclusive of stamp duty, cess  and registration expenses etc.,</li>
+<li>Increase in existing tax levies and fresh government levies, applicable during the contract period shall be met by the Applicant/s. </li>
+<li>The Applicant/s further agree that only after the Applicant/s executing Agreement for Sale and agreeing to abide by the terms and conditions laid down therein there would be a concluded contract.</li>
+<li>In the event of Promoter intimating the acceptance of the application and calling upon the Applicant to execute the agreement for sale for the Apartment applied for and the Applicant/s failing to come forward to execute the agreement for sale within 10 working days of such intimation, the Promoter at their discretion would be entitled to cancel this Application and on such cancellation the Promoter shall refund the amounts within 30 days after deducting an amount of Rs. 5,000/- as processing charges and the other expenses plus applicable GST.</li>
+<li>All payments should be made by way of account payee cheque / demand draft in favour of NAM Estates Private Limited, payable at Bangalore.</li>
+<li>The Applicant /s is / are aware that in the event of any of the initial booking cheque, not being honoured/cleared, the Application for allotment shall be invalid/ be deemed to have been rejected.</li>
+<li>Loan from financial institution to finance the purchase of the apartment may be availed by the Applicant/s. Any refusal of such financial assistance and the Applicant/s seeking to withdraw this Application,  it shall be considered as a cancellation by the Applicant/s and the Applicant/s shall be liable to pay the amounts set out in clause 9 above. </li>
+<li>The Applicant/s is/are also fully aware that the development of Embassy Springs layout is being done phase wise and comprises of mixed development, which would be undertaken from time to time.  </li>
+<li></li>
+<li></li>
+<li>The Total Consideration is inclusive of land cost, construction cost, cost of providing power supply, cost of providing water and sewage connections,  maintenance deposit/corpus fund, city infrastructure charges, advance maintenance charges for one year, cost towards club house and amenities, GST  as would be detailed in the agreement for sale to be executed.</li>
+<li></li>
+<li></li>
+<li>Increase in existing tax levies and fresh government levies, applicable during the contract period shall be met by the Applicant/s.</li>
+<li></li>
+<li></li>
+<li>The Applicant/s further agree that only after the Applicant/s executing agreement for sale and agreeing to abide by the terms and conditions laid down therein, there would be a concluded contract between the Promoter and the Applicant/s.</li>
+<li></li>
+<li>The Courts in Bangalore, Karnataka shall have the exclusive jurisdiction pertaining to this  Expression of Interest. </li>
+<li></li>
+</ul>
 					</div>
 				</li>
 				<li>
@@ -491,15 +563,11 @@
 				<li>
 					<span class="small">DECLARATION</span>
 					<div class="mediaCentercontent">
-						<p>
-							I/We hereby declare that the above particulars given by me/us are true and correct and no material fact has been concealed there from. I/We have gone through the terms and conditions written in this application. I/We declare that in case of non-allotment of the Unit upon receipt of Booking amount after deduction of charges as mentioned herein above, I/We shall have no claim against the Promoter. I /We are fully aware that this is only a Non-binding Booking by us to propose to acquire the Unit and not a concluded contract.
-						</p>
-						<p>
-							I/We undertake to inform the Company of any change in my/our address or in my other particular/information, given above, till the booked property is registered in my/our name(s) failing which the particulars shall be deemed to be correct and the letter sent at the recorded addresses by the Company shall be deemed to have received by me/us.  In case, any information furnished is found to be incorrect, false or concealed, Expression of Interest is liable to be rejected.
-						</p>
-						<p>
-							I/We do hereby solemnly accept and agree to abide by the terms and conditions as stipulated in the Application with respect to pricing, unit and payment schedule which shall be annexed to Agreement for Sale.
-						</p>
+					  	<p>I/We hereby declare that the above particulars given by me/us are true and correct and no material fact has been concealed there from. I/We have gone through the terms and conditions written in this application. I/We declare that in case of non-allotment of the Unit upon receipt of Booking amount after deduction of charges as mentioned herein above, I/We shall have no claim against the Promoter. I /We are fully aware that this is only a Non-binding Booking by us to propose to acquire the Unit and not a concluded contract.</p>
+
+					  	<p>I/We undertake to inform the Company of any change in my/our address or in my other particular/information, given above, till the booked property is registered in my/our name(s) failing which the particulars shall be deemed to be correct and the letter sent at the recorded addresses by the Company shall be deemed to have received by me/us. In case, any information furnished is found to be incorrect, false or concealed, Expression of Interest is liable to be rejected.</p>
+
+					  	<p>I/We do hereby solemnly accept and agree to abide by the terms and conditions as stipulated in the Application with respect to pricing, unit and payment schedule which shall be annexed to Agreement for Sale.</p>
 					</div>
 				</li>
 			</ul>
