@@ -5,10 +5,12 @@ set :application, "booking_portal"
 set :repo_url, "git@github.com:amuratech/booking_portal.git"
 
 # Default branch is :master
-# ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
+set :branch, "embassy_v2"
 
 # Default deploy_to directory is /var/www/my_app_name
-# set :deploy_to, "/var/www/my_app_name"
+set :deploy_to, "/home/appserver/booking_portal"
+set :scm, :git
+set :ssh_options, {forward_agent: true, keepalive: true}
 
 # Default value for :format is :airbrussh.
 # set :format, :airbrussh
