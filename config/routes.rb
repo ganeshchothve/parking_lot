@@ -40,7 +40,6 @@ Rails.application.routes.draw do
     resources :user_requests, except: [:destroy], controller: 'user_requests'
   end
 
-
   match 'payment/:receipt_id/process_payment/:ignore', to: 'payment#process_payment', via: [:get, :post]
 
   scope :dashboard do
@@ -57,6 +56,7 @@ Rails.application.routes.draw do
     post 'get_units', to: 'dashboard#get_units'
     post 'get_unit_details', to: 'dashboard#get_unit_details'
     get 'receipt-print/:id', to: 'dashboard#receipt_print'
+    get 'get_eoi_receipt/:id', to: 'dashboard#eoi_receipt', as: :dashboard_eoi_receipt
     get 'receipt_print/:id', to: 'dashboard#receipt_print', as: :dashboard_receipt_print
     get 'send_receipt_mail/:id', to: 'dashboard#receipt_mail', as: :dashboard_receipt_mail
     get '', to: 'dashboard#index', as: :dashboard
