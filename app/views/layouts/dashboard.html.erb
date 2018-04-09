@@ -21,11 +21,14 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-116390336-1"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'UA-116390336-1');
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-93219442-1', 'auto');
+      ga('require', 'ecommerce', 'ecommerce.js');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
     </script>
   </head>
   <body>
@@ -55,13 +58,13 @@
                
                   <span class="subTitle white bold">Apartment Selector</span> 
                    <% if ProjectUnitPolicy.new(current_user, ProjectUnit).block? %>
-                     <span class="d3-view-link"><a href="/dashboard/3d-apartment-selector">Book in 3D view</a></span>
+                     <span class="d3-view-link"><a href="/dashboard/3d-apartment-selector" data-event-category="header" data-event-action="click" data-event-name="Book in 3D view">Book in 3D view</a></span>
                   <% end %>
               <% elsif params[:controller] == "dashboard" && params[:action] == "project_units_3d" %>
               
                 <span class="subTitle white bold">3D Apartment Selector</span> 
                  <% if ProjectUnitPolicy.new(current_user, ProjectUnit).block? %>
-                <span class="d3-view-link"><a href="/dashboard/apartment-selector">Book in Normal view</a></span>
+                <span class="d3-view-link"><a href="/dashboard/apartment-selector" data-event-category="header" data-event-action="click" data-event-name="Book in Normal view">Book in Normal view</a></span>
                  <% end %>
               <% elsif params[:controller] == "dashboard" && params[:action] == "checkout" %>
                 <span class="subTitle white bold">Proceed To Payment</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
@@ -86,7 +89,7 @@
               <div class="pull-left profile-link">
                 <span>
                   <img src="<%= asset_path 'user.png'%>" class="img-responsive"> &nbsp;<%#= current_user.name %>
-                  <%= link_to "Welcome " + current_user.name, edit_admin_user_path(current_user) , class:'white'%>
+                  <%= link_to "Welcome " + current_user.name, edit_admin_user_path(current_user) , class:'white', data:{event_category: 'header', event_action: 'Click', event_name: 'User Profile'}%>
                 </span>
             </div>
             <div class="clearfix"></div>
@@ -97,7 +100,7 @@
     <div class="dashboard-menu">
       <div class="menu-top">
         <div class="dash-logo">
-          <a href="/dashboard" style="text-align: left;display: inline-block;"><img src="<%= asset_path "embassy_unit.png" %>" class="img-responsive" style="padding:0 5px;"></a>
+          <a href="/dashboard" style="text-align: left;display: inline-block;"><img src="<%= asset_path "embassy_unit.png" %>" class="img-responsive" style="padding:0 5px;" data-event-category="side bar" data-event-action="click" data-event-name="Logo"></a>
           <!-- <a href="/dashboard" style="text-align: right;display: inline-block;"><img src="<%= asset_path "logo-edge.png" %>" class="img-responsive" style="padding:0 5px;width:70%;"></a> -->
           <!-- <span>Embassy Springs<br/> Booking Portal</span> -->
         </div>
@@ -111,12 +114,12 @@
       <div class="dash-menu-wrapper">
         <% if policy(:dashboard).index? %>
           <div>
-                <a href="/dashboard" <%= params[:controller] == "dashboard" && params[:action] == "index" ? "class=active" : "" %>><span class="sprite-dasboard booking-details"></span><span>Dashboard</span></a>
+                <a href="/dashboard" <%= params[:controller] == "dashboard" && params[:action] == "index" ? "class=active" : "" %> data-event-category="side bar" data-event-action="click" data-event-name="Dashboard"><span class="sprite-dasboard booking-details" data-event-category="side bar" data-event-action="click" data-event-name="Dashboard"></span><span data-event-category="side bar" data-event-action="click" data-event-name="Dashboard">Dashboard</span></a>
           </div>
         <% end %>
         <% if policy(:dashboard).project_units? %>
           <div>
-              <a href="/dashboard/apartment-selector" <%= params[:controller] == "dashboard" && (params[:action] == "project_units" || params[:action] == "project_units_3d") ? "class=active" : "" %> ><span class="sprite-dasboard apartment-selector"></span><span>apartment selector</span></a>
+              <a href="/dashboard/apartment-selector" <%= params[:controller] == "dashboard" && (params[:action] == "project_units" || params[:action] == "project_units_3d") ? "class=active" : "" %> data-event-category="side bar" data-event-action="click" data-event-name="Apartment Selector" ><span class="sprite-dasboard apartment-selector" data-event-category="side bar" data-event-action="click" data-event-name="Apartment Selector"></span><span data-event-category="side bar" data-event-action="click" data-event-name="Apartment Selector">apartment selector</span></a>
           </div>
         <% end %>
         <% if UserRequestPolicy.new(current_user, UserRequest).index? %>
@@ -129,19 +132,19 @@
         <% end %>
         <% if UserKycPolicy.new(current_user, UserKyc).index? %>
           <div>
-              <a href="/dashboard/user_kycs" <%= (params[:controller] == "user_kycs" && params[:action] == "index") || (params[:controller] == "user_kycs" && params[:action] == "edit") || (params[:controller] == "user_kycs" && params[:action] == "new") ? "class=active" : "" %>><span class="sprite-dasboard kyc-form"></span><span>user kyc</span></a>
+              <a href="/dashboard/user_kycs" <%= (params[:controller] == "user_kycs" && params[:action] == "index") || (params[:controller] == "user_kycs" && params[:action] == "edit") || (params[:controller] == "user_kycs" && params[:action] == "new") ? "class=active" : "" %> data-event-category="side bar" data-event-action="click" data-event-name="User KYCs"><span class="sprite-dasboard kyc-form"  data-event-category="side bar" data-event-action="click" data-event-name="User KYCs"></span><span data-event-category="side bar" data-event-action="click" data-event-name="User KYCs">user kyc</span></a>
           </div>
         <% end %>
         <% if policy(:dashboard).receipts? %>
         <div>
-              <a href="/dashboard/receipts" <%= params[:controller] == "receipts" && params[:action] == "index" ? "class=active" : "" %>><span class="sprite-dasboard payment-details"></span><span>Payments</span></a>
+              <a href="/dashboard/receipts" <%= params[:controller] == "receipts" && params[:action] == "index" ? "class=active" : "" %>  data-event-category="side bar" data-event-action="click" data-event-name="Payments"><span class="sprite-dasboard payment-details"  data-event-category="side bar" data-event-action="click" data-event-name="User KYCs"></span><span  data-event-category="side bar" data-event-action="click" data-event-name="User KYCs">Payments</span></a>
         </div>
         <% end %>
         <div class="mobile-show">
           <%= link_to "Profile", edit_admin_user_path(current_user) %>
         </div>
         <div>
-          <a href="/users/sign_out" data-method="delete" rel="nofollow"><span class="sprite-signout sign-out"></span><span class="menu-items-hide">sign out</span></a>
+          <a href="/users/sign_out" data-method="delete" rel="nofollow" data-event-category="side bar" data-event-action="click" data-event-name="Sign out"><span class="sprite-signout sign-out" data-event-category="side bar" data-event-action="click" data-event-name="Sign out"></span><span class="menu-items-hide"  data-event-category="side bar" data-event-action="click" data-event-name="Sign out">sign out</span></a>
         </div>
         <!-- <div class="visible-xs">
           <a href="/users/sign_out" data-method="delete" rel="nofollow"><span class="sprite-signout sign-out"></span><span class="menu-items-hide">sign out</span></a>
@@ -149,8 +152,8 @@
         <div class="visible-xs help-wrapper text-center">
             <p>Need Help?</p>
             <div>
-              <a href="tel:+911234567890">+91 1234 5678 90</a>
-              <a href="javascript:;">xyz@embassysprings.com</a>
+              <a href="tel:+911234567890" data-event-category="nav" data-event-action="click" data-event-name="+91 1234 5678 90">+91 1234 5678 90</a>
+              <a href="javascript:;" data-event-category="nav" data-event-action="click" data-event-name="xyz@embassysprings.com">xyz@embassysprings.com</a>
             </div>
         </div>
       </div>
@@ -164,7 +167,7 @@
       </div>
       <div class="dash-menu-footer hidden-xs">
         <div class="col-3"><img src="<%= asset_path 'donatecoin.gif'%>" class="img-responsive"></div>
-        <div class="col-9 donate-content">We will be donating 0.1% of every booking to NGO - Colors of Life. Make a difference today! <%= number_to_indian_currency((ProjectUnit.in(status: ['blocked', 'booked_confirmed', 'booked_tentative']).sum(:agreement_price) * 0.1 / 100).round) %> have been donated so far to <span><a href="http://www.coloursoflife.co.in/" target="_blank">Colors of Life.</a></span></div>
+        <div class="col-9 donate-content">We will be donating 0.1% of every booking to NGO - Colors of Life. Make a difference today! <%= number_to_indian_currency((ProjectUnit.in(status: ['blocked', 'booked_confirmed', 'booked_tentative']).sum(:agreement_price) * 0.1 / 100).round) %> have been donated so far to <span><a href="http://www.coloursoflife.co.in/" target="_blank" data-event-category="side bar" data-event-action="click" data-event-name="Colors of Life">Colors of Life.</a></span></div>
       </div>
     </div>
     <% end %>
@@ -321,5 +324,6 @@ function(e){ LiveAgent.createButton('e97f6945', e); });
 </script>
 <noscript><p><img src="http://lswebanalytics.com/analytics/lsquare.php?idsite=78" style="border:0;" alt="" /></p></noscript>
 <!-- End lsquare Code -->
-  </body>
+<script src="http://s3-ap-southeast-1.amazonaws.com/assets.ngauge.co/javascripts/ecommerce.js" type="text/javascript"></script> 
+</body>
 </html>

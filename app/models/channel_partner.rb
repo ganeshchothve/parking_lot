@@ -48,8 +48,9 @@ class ChannelPartner
   validate :cannot_make_inactive
 
 
-  validates :name, :last_name, :city, :region, format: { with: /\A[a-zA-Z]*\z/}
+  validates :name, :last_name, :city, format: { with: /\A[a-zA-Z]*\z/}
   validates :postal_code, format: { with: /\A[0-9]*\z/}
+  validates :region, format: { with: /\A[a-zA-Z ]*\z/}
   
   # validates :city, format: { with: /\A[a-zA-Z]*\z/}
   # validates :city,  format: { with: /[a-zA-Z]/}

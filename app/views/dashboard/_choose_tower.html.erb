@@ -14,17 +14,17 @@
             <% if @towers.count > 0 %>
               <% @towers.each do |t| %>
               <div class="col-3 text-center">
-                <div class="tower-name-box" data-towerid="<%= t[:project_tower_id] %>">
+                <div class="tower-name-box" data-towerid="<%= t[:project_tower_id] %>" data-event-category="section" data-event-action="click" data-event-name="choose tower">
                   <span class="show-on-active"><i class='fas fa-bolt'></i> <%= [2,3,4,5,6].sample %> apartments just sold in this tower</span>
                   <%= "<span class='fast-sell-tag'><i class='fas fa-bolt'></i> Fast Selling</span>".html_safe if mst.to_s == t[:project_tower_id].to_s %>
                   <%= "<span class='fast-sell-tag'><i class='fas fa-fire'></i> One of our hottest-selling towers at the moment</span>".html_safe if lst.to_s == t[:project_tower_id].to_s && mst != lst %>
                   <div class="tower-img-wrap">
-                    <img src="<%= asset_path 'tower-feat.png'%>" class="img-responsive">  
+                    <img src="<%= asset_path 'tower-feat.png'%>" class="img-responsive" data-event-category="section" data-event-action="click" data-event-name="choose tower">  
                   </div>                  
                   <div class="tower-details-box">
-                    <span><%= t[:project_tower_name] %></span>
-                    <span>Tower Units: <%= t[:total_units] %></span>
-                    <span>Available Units: <%= t[:total_units_available] %></span>
+                    <span  data-event-category="section" data-event-action="click" data-event-name="choose tower"><%= t[:project_tower_name] %></span>
+                    <span  data-event-category="section" data-event-action="click" data-event-name="choose tower">Tower Units: <%= t[:total_units] %></span>
+                    <span  data-event-category="section" data-event-action="click" data-event-name="choose tower">Available Units: <%= t[:total_units_available] %></span>
                   </div>
                 </div>
               </div>
@@ -39,8 +39,8 @@
         </div>
         <div class="clearfix"></div>
          <div class="col-12 center-btn-xs fixed-nav-btn">
-          <a href="/dashboard/apartment-selector" class="nav-btn btn-anim" data-stage="apartment-selector" data-navigate-to="prev">← PREV</a>
-          <a href="javascript:;" class="nav-btn btn-anim navigate" data-selected-towerid="0" data-stage="select-apartment" data-navigate-to="next">NEXT →</a>
+          <a href="/dashboard/apartment-selector" class="nav-btn btn-anim" data-stage="apartment-selector" data-navigate-to="prev" data-navigate-to="next" data-event-category="section" data-event-action="click" data-event-name="choose tower prev">← PREV</a>
+          <a href="javascript:;" class="nav-btn btn-anim navigate" data-selected-towerid="0" data-stage="select-apartment" data-navigate-to="next" data-navigate-to="next" data-event-category="section" data-event-action="click" data-event-name="choose tower next">NEXT →</a>
         </div>
         <div class="clearfix"></div>
       </div>

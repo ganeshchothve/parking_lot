@@ -1,11 +1,11 @@
 <% project_units.each do |project_unit| %>
     <div class="col-12 booking-accordian-wrapper">
-      <div class="booking-accordian first" data-acc="book-<%= project_unit.id %>">
+      <div class="booking-accordian first" data-acc="book-<%= project_unit.id %>" data-event-category="section" data-event-action="click" data-event-name="aparament status accordian">
         <div class="pull-left">
-          <span class="title"><%= project_unit.status_value %></span>
+          <span class="title" data-event-category="section" data-event-action="click" data-event-name="aparament status accordian"><%= project_unit.status_value %></span>
         </div>
         <div class="pull-left">
-          <span class="title">Unit No: <%= project_unit.name %></span>
+          <span class="title" data-event-category="section" data-event-action="click" data-event-name="aparament status accordian">Unit No: <%= project_unit.name %></span>
         </div>
         <div class="clearfix"></div>
       </div>
@@ -17,7 +17,7 @@
         <div class="title">Booking Details
             <% if current_user.role?("user") && project_unit.user == current_user && project_unit.status != 'hold' %>
               <% if current_user.user_requests.where(project_unit_id: project_unit.id).blank? %>
-                <a href="<%= new_admin_user_request_path(project_unit_id: project_unit.id) %>" class="pink small-link">Cancel Booking</a>
+                <a href="<%= new_admin_user_request_path(project_unit_id: project_unit.id) %>" class="pink small-link" data-event-category="section" data-event-action="click" data-event-name="cancel booking">Cancel Booking</a>
               <% else %>
                 <span class="unit-cancelled">Cancellation Request Generated</span>
               <% end %>
@@ -30,7 +30,7 @@
               <%= project_unit.user.name %>
               <span class="ml-2">(<%= project_unit.user_kyc_ids.length > 1 ? "#{(project_unit.user_kyc_ids.count - 1)} Co-applicants" : "No Co-applicants" %>)</span>
               <br/>
-              <a href="<%= new_user_kyc_path(project_unit_id: project_unit.id) %>" class="small-link">Add Co-applicant</a>
+              <a href="<%= new_user_kyc_path(project_unit_id: project_unit.id) %>" class="small-link" data-event-category="section" data-event-action="click" data-event-name="add co applicant">Add Co-applicant</a>
             </div>
           </div>
           <div class="col-4">
@@ -40,7 +40,7 @@
             <div>Super Built-up Area:</div><div class="dark"><%= project_unit.saleable.round(2) %> sq.ft</div>
           </div>
           <div class="col-4">
-            <div>Unit Type:</div><div class="dark"><%= float_to_int(project_unit.bedrooms) %> BHK - 2T - A</div><a href="/floorplans/<%= project_unit.bedrooms %>-BHK-<%= project_unit.carpet.round %>-SF.png" rel="floorplan" class="colorbox-init small-link">View Floor Plan</a>
+            <div>Unit Type:</div><div class="dark"><%= float_to_int(project_unit.bedrooms) %> BHK - 2T - A</div><a href="/floorplans/<%= project_unit.bedrooms %>-BHK-<%= project_unit.carpet.round %>-SF.png" rel="floorplan" class="colorbox-init small-link" data-event-category="section" data-event-action="click" data-event-name="view floor plan">View Floor Plan</a>
           </div>
           <div class="col-4">
             <div>Carpet Area:</div><div class="dark"><%= project_unit.carpet.round(2) %> sq.ft</div>
@@ -57,7 +57,7 @@
         <div class="title">Payment Details</div>
           <div class="unit-booking-details">
             <div class="col-4">
-              <div>All Inclusive Price:</div><div class="dark"><%= number_to_indian_currency(project_unit.all_inclusive_price.round) rescue '' %></div><a href="/dashboard/<%= project_unit.id %>/payment-breakup" class="small-link">Payment Break Up</a>
+              <div>All Inclusive Price:</div><div class="dark"><%= number_to_indian_currency(project_unit.all_inclusive_price.round) rescue '' %></div><a href="/dashboard/<%= project_unit.id %>/payment-breakup" class="small-link" data-event-category="section" data-event-action="click" data-event-name="Payment Break Up">Payment Break Up</a>
             </div>
             <div class="col-4">
               <div>Payment Done:</div><div class="dark"><%= number_to_indian_currency(project_unit.total_amount_paid.round) %></div>
@@ -86,11 +86,11 @@
         </ul>
         <% if project_unit.status == 'hold' %>
         <%#= link_to "I Agree", dashboard_payment_path, class: 'nav-btn', style:'margin-top:0px' %>
-        <a href="/dashboard/checkout/<%= project_unit.id %>" class="pink payment-btn text-center">
+        <a href="/dashboard/checkout/<%= project_unit.id %>" class="pink payment-btn text-center" data-event-category="section" data-event-action="click" data-event-name="book now">
           BOOK NOW
         </a>
         <% elsif ReceiptPolicy.new(project_unit.user, project_unit.user.receipts.new(project_unit_id: project_unit.id)).new? %>
-        <a href="/dashboard/receipts/new?project_unit_id=<%= project_unit.id %>" class="pink payment-btn text-center">
+        <a href="/dashboard/receipts/new?project_unit_id=<%= project_unit.id %>" class="pink payment-btn text-center" data-event-category="section" data-event-action="click" data-event-name="make the remaining payment">
           MAKE THE REMAINING PAYMENT
         </a>
         <% end %>

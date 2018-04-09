@@ -14,17 +14,17 @@
           <br/>
           <div class="text-center">
             <div class="pull-left" style="margin-right:20px;">
-              <%= link_to "I Agree", dashboard_payment_path(project_unit_id: @project_unit.id), class: 'checkout-btn nav-btn', style:'margin-top:0px'%>
+              <%= link_to "I Agree", dashboard_payment_path(project_unit_id: @project_unit.id), class: 'checkout-btn nav-btn', style:'margin-top:0px' , data:{event_category: 'Section', event_action: 'Click', event_name: 'I Agree'}%>
             </div>
               <div class="pull-left">
               <%= form_for @project_unit, url: dashboard_update_project_unit_path(project_unit_id: @project_unit.id), method: 'post', html: {class: 'validate-form'} do |f| %>
                 <%= f.hidden_field :status, value: 'available' %>
-              <%= f.submit 'Cancel', class: 'cancel-btn apply-btn'%>
+              <%= f.submit 'Cancel', class: 'cancel-btn apply-btn' , data:{event_category: 'Section', event_action: 'Click', event_name: 'Cancel'}%>
               <% end %>
               </div>
             <% else %>
             <h4>You are making a payment without choosing any project_unit</h4>
-              <%= link_to "I Agree", dashboard_payment_path, class: 'nav-btn', style:'margin-top:0px' %>
+              <%= link_to "I Agree", dashboard_payment_path, class: 'nav-btn', style:'margin-top:0px' , data:{event_category: 'Section', event_action: 'Click', event_name: 'I Agree'}%>
             <% end %>
           </div>
     </div>

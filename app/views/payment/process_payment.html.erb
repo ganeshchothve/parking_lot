@@ -19,11 +19,11 @@
 			<div class="receipt-wrapper">
 				<div class="pull-right">	
 					<!-- <a href="/dashboard/receipt-print/<%#= @receipt.id %>" target="_blank"><img src="<%#= asset_path 'printer-outline.png'%>" class="img-responsive"></a> -->
-					<%= link_to dashboard_receipt_print_path(@receipt.id, :format => 'pdf'), target: :_blank do %>
-						<i class="far fa-envelope" style="font-size:24px;color:#383838;display:inline-block;margin:0 10px;"></i>
+					<%= link_to dashboard_receipt_print_path(@receipt.id, :format => 'pdf'), target: :_blank do , data:{event_category: 'Section', event_action: 'Click', event_name: 'Convert to PDF'}%>
+						<i class="far fa-envelope" style="font-size:24px;color:#383838;display:inline-block;margin:0 10px;" data-event-action="click" data-event-name="convert receipt to pdf"></i>
 					<% end%>
-					<%= link_to dashboard_receipt_mail_path(@receipt.id, :format => 'pdf'), target: :_blank do %>
-						<img src="<%= asset_path 'printer-outline.png'%>" class="img-responsive">
+					<%= link_to dashboard_receipt_mail_path(@receipt.id, :format => 'pdf') %>
+						<img src="<%= asset_path 'printer-outline.png'%>" class="img-responsive" data-event-action="click" data-event-name="send receipt on mail">
 					<% end%>
 
 				</div>

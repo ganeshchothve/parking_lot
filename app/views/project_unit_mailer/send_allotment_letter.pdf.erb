@@ -1,4 +1,4 @@
-<table cellpadding="0" cellspacing="0" width="100%">
+<!-- <table cellpadding="0" cellspacing="0" width="100%">
    <tr>
     <td style=" color: #000;font-size: 32px;font-weight: 600;line-height: 35px;vertical-align: bottom;">
      Provisional Allotment of Apartment.
@@ -8,9 +8,9 @@
   <tr>
     <td>
       <div class="pull left">
-        <p><%= @project_unit.created_at.strftime("%d-%m-%Y") %>,</p>
-        <p>MS./ MR. <%= @user.name %>,</p>
-        <p>CONTACT NO: <%= @user.phone %></p>
+        <p><%#= @project_unit.created_at.strftime("%d-%m-%Y") %>,</p>
+        <p>MS./ MR. <%#= @user.name %>,</p>
+        <p>CONTACT NO: <%#= @user.phone %></p>
       </div>
     </td>
   </tr>
@@ -18,12 +18,12 @@
   <tr>
     <td style="line-height:26px;">
       <p>Dear Madam/Sir,</p></br>
-      <p>Ref: Booking Application dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %>.</p></br>
-        <p>Pursuant of the above referred Booking Application dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %> in respect of Apartment No.<%= @project_unit.name rescue ''%> in the Project known as “Embassy Springs”, we have provisionally allotted Apartment No.
-        <%= @project_unit.name  rescue ''  %> having a Carpet Area of <%= @project_unit.carpet %> Square feet to you.
-        Further, we hereby confirm having received an amount of Rs.<%= @project_unit.booking_price %>/-
-        as advance vide reference no. made through online / Cheque bearing No. <%= @receipt.tracking_id rescue ''%>,
-        dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %>, drawn on <%= @user.name %>, along with your Booking Application .
+      <p>Ref: Booking Application dated <%#= @project_unit.created_at.strftime("%d-%m-%Y") %>.</p></br>
+        <p>Pursuant of the above referred Booking Application dated <%#= @project_unit.created_at.strftime("%d-%m-%Y") %> in respect of Apartment No.<%#= @project_unit.name rescue ''%> in the Project known as “Embassy Springs”, we have provisionally allotted Apartment No.
+        <%#= @project_unit.name  rescue ''  %> having a Carpet Area of <%#= @project_unit.carpet %> Square feet to you.
+        Further, we hereby confirm having received an amount of Rs.<%#= @project_unit.booking_price %>/-
+        as advance vide reference no. made through online / Cheque bearing No. <%#= @receipt.tracking_id rescue ''%>,
+        dated <%#= @project_unit.created_at.strftime("%d-%m-%Y") %>, drawn on <%#= @user.name %>, along with your Booking Application .
         The total sale consideration amount payable for the above subject Apartment is Rs <%= @project_unit.agreement_price %>/-
         (“Total Sale Consideration”). The Total Consideration is
         inclusive of land cost, construction cost, cost of providing power supply, cost of providing water and
@@ -49,6 +49,118 @@
     </div>
   </td>
 </tr>
-</table>
+</table> -->
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <style type="text/css">
+    html, body{padding: 0;margin: 0;font-size: 16px;-webkit-font-smoothing: antialiased;
+      font-weight: 400; color: #333;line-height: 1.2;letter-spacing: 0.7px;}
+    a, img, button, input[type=submit]{text-decoration: none; outline: none; border: 0;transition: .2s ease;}
+    input:focus{outline:none;}
+    b, strong{font-weight: 700;}
+    *, *:after, *:before {-webkit-box-sizing: border-box;-moz-box-sizing: border-box; box-sizing: border-box;}
+    p, ul, h1, h2, h3, h4, h5, h6{padding:0; margin:0;}
+    .container{max-width: 1200px;margin: 0px auto;padding: 0 20px;}
+    .clearfix{clear: both;}
+    .pull-left{float: left !important;}
+    .pull-right{float: right !important;}
+    .text-left{text-align: left;}
+    .text-center{text-align: center;}
+    .text-right{text-align: right;}
+    .text-justify{text-align: justify;}
+    .text-uppercase{text-transform: uppercase;}
+    .text-italic{font-style: italic;}
+    .text-light{font-weight: 400;}
+    .text-bold{font-weight: 600;}
+    .row:before, .row:after{display: table;content: " ";}
+    .row:after, .clearfix{clear: both;}
+    .col-1{width: 8.333333333333333%;}
+    .col-2{width: 16.66666666666667%;}
+    .col-3{width: 25%;}
+    .col-4{width: 33.33333333333333%;}
+    .col-5{width: 41.66666666666667%;}
+    .col-6{width: 50%;}
+    .col-7{width: 58.33333333333333%;}
+    .col-8{width: 66.66666666666667%;}
+    .col-9{width: 75%;}
+    .col-10{width: 83.33333333333333%;}
+    .col-11{width: 91.66666666666667%;}
+    .col-12{width: 100%;}
+    .col-12-5{width: 20%;}
+    .w70{width: 70%;}
+    .w30{width: 30%;}
+    .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12, .col-12-5, .w30, .w70{float: left;}
+    .allotment-letter-wrapper{padding: 50px 0;}
+    .mb30{margin-bottom: 20px;}
+  </style>
+</head>
+<body>
+<section class="allotment-letter-wrapper">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 mb30">
+        <div class="pull-left">
+            <img src="<%= asset_path 'logo2.png' %>">
+          </div>
+          <div class="pull-right">
+            <img src="<%= asset_path 'logo.png' %>">
+          </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 mb30 text-center">
+        <h1>Provisional Allotment of Apartment.</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 mb30 text-left">
+        <p><%= @project_unit.created_at.strftime("%d-%m-%Y") %>,</p>
+        <p>MS./ MR. <%= @user.name %>,</p>
+        <p>CONTACT NO: <%= @user.phone %></p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 mb30 text-justify">
+        <p>Dear Madam/Sir,</p></br>
+        <p>Ref: Booking Application dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %>.</p></br>
+          <p>Pursuant of the above referred Booking Application dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %> in respect of Apartment No.<%= @project_unit.name rescue ''%> in the Project known as “Embassy Springs”, we have provisionally allotted Apartment No.
+          <%= @project_unit.name  rescue ''  %> having a Carpet Area of <%= @project_unit.carpet %> Square feet to you.
+          Further, we hereby confirm having received an amount of Rs.<%= @project_unit.booking_price %>/-
+          as advance vide reference no. made through online / Cheque bearing No. <%= @receipt.tracking_id rescue ''%>,
+          dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %>, drawn on <%= @user.name %>, along with your Booking Application .
+          The total sale consideration amount payable for the above subject Apartment is Rs <%= @project_unit.agreement_price %>/-
+          (“Total Sale Consideration”). The Total Consideration is
+          inclusive of land cost, construction cost, cost of providing power supply, cost of providing water and
+          sewage connections, maintenance deposit/corpus fund, city infrastructure charges, advance
+          maintenance charges for one year, cost towards club house and amenities, GST and other charges
+          as detailed in the Agreement for Sale.
+        </p>
+        <p>
+          Upon receiving intimation from us to execute the Agreement to Sell, you shall pay Rs. <%= @project_unit.pending_balance %>/-
+          within 10 working days being 10% of the cost of the Apartment and simultaneously execute the Agreement to Sell within 15 days.
+          In the event of you failing to execute the Agreement to Sell as mentioned above, the Booking
+          Application will stand rejected and this Provisional Allotment cancelled, and we shall deduct Rs. 5000
+          /- from the amount received from you as liquidated damages and refund the balance amount in 30
+          days from the date of cancellation.</p></br>
+        <p>This Provisional Allotment does not confer any rights in you with respect to the subject Apartment nor is this a concluded contract unless the Agreement for Sale is executed by you.</p>
+        <p>We request you to kindly acknowledge the copy of this letter in token of your acceptance of the above arrangement.</p>
+        <p>This Provisional Allotment is subject to Bangalore jurisdiction.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 text-left">
+        <p>Thanking you.</p>
+        <p>Yours truly,</p>
+        <p>For NAM ESTATES PRIVATE LIMITED</p>
+      </div>
+    </div>
+  </div>
+</section>
+</body>
+</html>
 
 

@@ -119,7 +119,7 @@
           </div>
           <div class="col-md-6 col-6">
             <div class="form-group form-field-wrapper">
-              <%= f.text_field :postal_code, class: 'form-control form-field', required: 'required form-field', placeholder: 'Postal Code' %>
+              <%= f.text_field :postal_code, class: 'form-control form-field number', required: 'required form-field', placeholder: 'Postal Code' %>
             </div>
           </div>
         </div>
@@ -240,7 +240,7 @@
           <label class="control-label">PAN card photo</label>
           <input type="file" name="user_kyc[pancard_photo]" class="required">
 
-          <% if @user_kyc.pancard_photo %>
+          <% if @user_kyc.pancard_photo.present? %>
           <a href="<%= @user_kyc.pancard_photo.url %>" class="nav-btn" target="_blank">View uploaded document</a>
           <% end %>
         </div>
@@ -248,7 +248,7 @@
           <%#= f.label :adharcard_photo, class: 'control-label', style: 'vertical-align:middle' %>
           <label class="control-label">Aadhaar card photo</label>
           <input type="file" name="user_kyc[adharcard_photo]" class="required">
-          <% if @user_kyc.adharcard_photo %>
+          <% if @user_kyc.adharcard_photo.present? %>
           <a href="<%= @user_kyc.adharcard_photo.url %>" class="nav-btn" target="_blank">View uploaded document</a>
           <% end %>
         </div>
@@ -256,7 +256,7 @@
 
         <div class="form-field-wrapper">
           <div class="actions">
-            <%= f.submit 'Submit →', class: 'btn nav-btn', style: 'width:auto'%>
+            <%= f.submit 'Submit →', class: 'btn nav-btn', style: 'width:auto', data:{event_category: 'Section', event_action: 'Click', event_name: 'user kyc - submit'} %>
           </div>
         </div>
         <% end %>

@@ -345,6 +345,9 @@ section{
 .cancel-booking-wrapper .form-field-wrapper textarea.form-field{
 	width: 60%;
 }
+form#edit_user_form{}
+form#edit_user_form .form-field-wrapper label{display: block;}
+#edit_user_form .intl-tel-input{display:block;}
 /*.form-group > span.help-block{
 	top: 80%;
 }*/
@@ -1984,7 +1987,7 @@ section.grey{
     font-size: 16px;
 }
 .show-unit-details>div>div:first-child{
-    color: #ce2591;
+    color: #84b823;
     font-weight: 500;
     font-size: 20px;
 }
@@ -2005,7 +2008,7 @@ section.grey{
     cursor: pointer;
 }
 .show-unit-floor-plans span.active{
-	color: #ce2591;
+	color: #84b823;
 }
 
 .unit-plans-wrapper{
@@ -2029,7 +2032,7 @@ section.grey{
     font-size: 28px;
     color: #6c6c6c;
     padding: 5px 15px;
-    border-left:15px solid #c02680;
+    border-left:15px solid #444444;
 }
 .client-detail{
 	padding: 15px 0px 0px 0px;
@@ -2038,6 +2041,7 @@ section.grey{
 	display: block;
 	text-align: left;
 	font-size: 22px;
+	color: #444444;
 }
 .tower-info-wrapper>div{
 	font-size: 16px;
@@ -2190,13 +2194,13 @@ section.grey{
     background: #f9f9f9;
 }
 .payment-breakup td.pink {
-    background-color: #e6b7d2;
-    color: #c02680;
+    background-color: #c3c3c3;
+    color: #424242;
 }
 .payment-breakup td.pink {
-    background-color: #e6b7d2;
-    color: #c02680;
-    font-size: 18px;
+    background-color: #c3c3c3;
+    color: #424242;
+    font-size: 14px;
 }
 .table-wrapper{
 	margin: 20px 0px;
@@ -2782,6 +2786,7 @@ input.nav-btn:hover{
 	.mobile-show{
 		display: block;
 	}
+	
 	.profile-link{
 		display: none;
 	}
