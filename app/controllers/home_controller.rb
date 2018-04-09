@@ -35,7 +35,7 @@ class HomeController < ApplicationController
           end
         else
           # splitted name into two firstname and lastname
-          @user = User.new(email: params['email'], phone: params['phone'], first_name: params['first_name'],last_name: params['last_name'], lead_id: params[:lead_id])
+          @user = User.new(email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], lead_id: params[:lead_id])
           if user_signed_in?
             @user.channel_partner_id = current_user.id
           end
