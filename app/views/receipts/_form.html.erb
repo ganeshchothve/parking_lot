@@ -23,14 +23,18 @@
             <div class="alert alert-warning">
               <!-- TODO: check if you want to update this message -->
               <% if current_user.role?('user') %>
-                <div class="title">Payments need to be for individual units, clubbed payments are not allowed. Please collect a cheque for individual units only.</div>
+                <div class="title green">Payments need to be for individual units, clubbed payments are not allowed. <br/>Please collect a cheque for individual units only.</div>
                 <strong>Payment Details</strong><br/>
-                Unit - <%= @receipt.project_unit.name %> <br/>
-                Amount paid - <%=  number_to_indian_currency(@receipt.project_unit.total_amount_paid.round(2)) %> <br/>
-                Pending amount - <%=  number_to_indian_currency(@receipt.user.total_balance_pending.round(2)) %> <br/>
-                Agreement value  - <%= number_to_indian_currency(@receipt.project_unit.agreement_price.round(2)) %> <br/><br/>
+                <div class="col-6">
+                  Unit - <%= @receipt.project_unit.name %> <br/>
+                  Amount paid - <%=  number_to_indian_currency(@receipt.project_unit.total_amount_paid.round(2)) %> <br/>
+                </div>
+                <div class="col-6">
+                  Pending amount - <%=  number_to_indian_currency(@receipt.user.total_balance_pending.round(2)) %> <br/>
+                  Agreement value  - <%= number_to_indian_currency(@receipt.project_unit.agreement_price.round(2)) %> <br/><br/>
+                </div>
               <% else %>
-                Payments need to be for individual units, clubbed payments are not allowed. Please collect a cheque for individual units only.
+                <div class="title green">Payments need to be for individual units, clubbed payments are not allowed. <br/>Please collect a cheque for individual units only.</div>
               <% end %>
             </div>
           <% end %>
@@ -48,7 +52,7 @@
             <%= form_for @receipt, html: {class: 'validate-form'} do |f| %>
               <div class="form-group form-field-wrapper">
                 <%= f.label :total_amount, class: 'control-label label-required' %>
-                <%= f.text_field :total_amount, min: 0, class: "form-field form-control", required: 'required', id:"totalAmount" %>
+                <%= f.text_field :total_amount, min: 0, class: "form-field form-control green", required: 'required', id:"totalAmount" %>
               </div>
               <%= f.hidden_field :project_unit_id %>
               <%= f.hidden_field :payment_mode %>

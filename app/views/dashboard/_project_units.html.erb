@@ -1,3 +1,4 @@
+
 <% project_units.each do |project_unit| %>
     <div class="col-12 booking-accordian-wrapper">
       <div class="booking-accordian first" data-acc="book-<%= project_unit.id %>" data-event-category="section" data-event-action="click" data-event-name="aparament status accordian">
@@ -77,7 +78,7 @@
             <div class="clearfix"></div>
             <!-- <div class="clearfix"></div> -->
         </div>
-        <ul>
+        <ul class="ul-padding-20">
           <li>You need to pay 10% of agreement value to confirm the booking</li>
           <% if (project_unit.status == "blocked" || project_unit.status == "booked_tentative") && project_unit.auto_release_on.present? && project_unit.auto_release_on > Date.today %>
           <li>Cancellation charges are &#8377;5,000</li>

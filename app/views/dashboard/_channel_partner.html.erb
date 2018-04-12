@@ -9,50 +9,114 @@
 </div> -->
 <!-- <section class="main-wrapper full-height grey">
   <div class="container-fluid"> -->
+
   <div class="crm-wrapper">
-    <div class="row">
+    <div class="steps-wrapper">
+      <div class="row">
+        <div class="col-md-3 text-center">
+           Add Lead
+        </div>
+        <div class="col-md-3 text-center">
+           Add KYC Details
+        </div>
+        <div class="col-md-3 text-center">
+          Add Unit 
+        </div>
+        <div class="col-md-3 text-center">
+          Add Payment Details
+        </div>
+      </div>
+    </div>
+    <!-- <div class="row">
       <div class="container-fluid">
         <p class="pageTitle big text-gray">Summary</p>
       </div>
-    </div>
+    </div> -->
     <div class="row summary-wrapper">
       <div class="col-md-3">
-        <div class="card card-body">
-          <h2 class="pink"><%= ProjectUnit.where(status: 'blocked').in(user_id: User.where(referenced_channel_partner_ids: current_user.id).distinct(:id)).count %></h2>
+        <div class="card card-body green-card">
+          <div class="card-title">UNIT</div>
+          <h6 class="pink">All Leads</h6>
+          <div class="display-table">
+            <div class="table-cell text-left">
+              <h2 class="pink"><%= ProjectUnit.where(status: 'blocked').in(user_id: User.where(referenced_channel_partner_ids: current_user.id).distinct(:id)).count %></h2>
+            </div>
+            <div class="table-cell text-right">
+              <% if ProjectUnitPolicy.new(current_user, ProjectUnit).index? %>
+                <%= link_to 'View All', admin_project_units_path(fltrs: { status: 'blocked' }), class: 'pink', style: 'right: 15px;' %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card card-body yellow-card">
+          <div class="card-title">UNIT</div>
           <h6 class="pink">Blocked Units</h6>
-          <% if ProjectUnitPolicy.new(current_user, ProjectUnit).index? %>
-            <%= link_to 'View All', admin_project_units_path(fltrs: { status: 'blocked' }), class: 'position-absolute pink', style: 'right: 15px;' %>
-          <% end %>
+          <div class="display-table">
+            <div class="table-cell text-left">
+              <h2 class="pink">
+                <%= ProjectUnit.where(status: 'blocked').in(user_id: User.where(referenced_channel_partner_ids: current_user.id).distinct(:id)).count %>
+              </h2>
+            </div>
+            <div class="table-cell text-right">
+              <% if ProjectUnitPolicy.new(current_user, ProjectUnit).index? %>
+                <%= link_to 'View All', admin_project_units_path(fltrs: { status: 'blocked' }), class: 'pink', style: 'right: 15px;' %>
+              <% end %>
+            </div>
+          </div>
         </div>
       </div>
       <div class="col-md-3">
-        <div class="card card-body">
-          <h2 class="pink"><%= ProjectUnit.where(status: 'booked_confirmed').in(user_id: User.where(referenced_channel_partner_ids: current_user.id).distinct(:id)).count %></h2>
+        <div class="card card-body pink-card">
+          <div class="card-title">UNIT</div>
           <h6 class="pink">Booking Confirmed Units</h6>
-          <% if ProjectUnitPolicy.new(current_user, ProjectUnit).index? %>
-            <%= link_to 'View All', admin_project_units_path(fltrs: { status: 'booked_confirmed' }), class: 'position-absolute pink', style: 'right: 15px;' %>
-          <% end %>
+          <div class="display-table">
+            <div class="table-cell text-left">
+              <h2 class="pink"><%= ProjectUnit.where(status: 'booked_confirmed').in(user_id: User.where(referenced_channel_partner_ids: current_user.id).distinct(:id)).count %></h2>
+              </div>
+              <div class="table-cell text-right">
+              <% if ProjectUnitPolicy.new(current_user, ProjectUnit).index? %>
+                <%= link_to 'View All', admin_project_units_path(fltrs: { status: 'booked_confirmed' }), class: 'pink', style: 'right: 15px;' %>
+              </div>
+            <% end %>
+          </div>
         </div>
       </div>
       <div class="col-md-3">
-        <div class="card card-body">
-          <h2 class="pink"><%= Receipt.where(status: 'pending').ne(payment_mode: "online").in(user_id: User.where(referenced_channel_partner_ids: current_user.id).distinct(:id)).count %></h2>
+        <div class="card card-body orange-card">
+          <div class="card-title">PAYMENTS</div>
           <h6 class="pink">Pending Payments</h6>
-          <% if ReceiptPolicy.new(current_user, Receipt).index? %>
-            <%= link_to 'View All', admin_receipts_path(fltrs: { status: 'pending', "payment_mode" => {"$ne" => "online"} }), class: 'position-absolute pink', style: 'right: 15px;' %>
-          <% end %>
+          <div class="display-table">
+            <div class="table-cell text-left">
+              <h2 class="pink"><%= Receipt.where(status: 'pending').ne(payment_mode: "online").in(user_id: User.where(referenced_channel_partner_ids: current_user.id).distinct(:id)).count %></h2>
+            </div>
+            <div class="table-cell text-right">
+              <% if ReceiptPolicy.new(current_user, Receipt).index? %>
+                <%= link_to 'View All', admin_receipts_path(fltrs: { status: 'pending', "payment_mode" => {"$ne" => "online"} }), class: 'pink', style: 'right: 15px;' %>
+              <% end %>
+            </div>
+          </div>
         </div>
       </div>
       <div class="col-md-3">
-        <div class="card card-body">
-          <h2 class="pink"><%= Receipt.where(status: 'clearance_pending').in(user_id: User.where(referenced_channel_partner_ids: current_user.id).distinct(:id)).count %></h2>
+        <div class="card card-body green-card">
+          <div class="card-title">PAYMENTS</div>
           <h6 class="pink">Pending clearance Payments</h6>
-          <% if ReceiptPolicy.new(current_user, Receipt).index? %>
-            <%= link_to 'View All', admin_receipts_path(fltrs: { status: 'clearance_pending' }), class: 'position-absolute pink', style: 'right: 15px;' %>
-          <% end %>
+          <div class="display-table">
+            <div class="table-cell text-left">
+              <h2 class="pink"><%= Receipt.where(status: 'clearance_pending').in(user_id: User.where(referenced_channel_partner_ids: current_user.id).distinct(:id)).count %></h2>
+            </div>
+            <div class="table-cell text-right">
+            <% if ReceiptPolicy.new(current_user, Receipt).index? %>
+              <%= link_to 'View All', admin_receipts_path(fltrs: { status: 'clearance_pending' }), class: 'pink', style: 'right: 15px;' %>
+            </div>
+            <% end %>
+          </div>
         </div>
       </div>
     </div>
+    <% if current_user.role != "channel_partner" %>
     <div class="row">
       <div class="container-fluid">
         <p class="pageTitle big text-gray">Cancellation Requests</p>
@@ -89,6 +153,7 @@
       <div class="col-md-3">
       </div>
     </div>
+    <% end %>
     <% if current_user.role != "channel_partner" %>
     <div class="row">
       <div class="container-fluid">
@@ -134,13 +199,14 @@
       </div>
     </div>
     <% end %>
+    <%# if current_user.role != "channel_partner" %>
     <div class="row">
       <div class="col-md-12">
         <% if ReceiptPolicy.new(current_user, Receipt).index? %>
           <div class="card mt-4">
             <div class="card-header">
               <%= global_label('receipts_with_status', {status: 'Pending'}) %>
-              <%= link_to "View All #{global_label('receipts_with_status', {status: 'Pending'})}", admin_receipts_path(fltrs: { status: 'pending' }), class: 'float-right' %>
+              <%= link_to "View All #{global_label('receipts_with_status', {status: 'Pending'})}", admin_receipts_path(fltrs: { status: 'pending' }), class: 'pink-btn btn float-right' %>
             </div>
             <div class="card-body no-shadow padding0 table-responsive">
               <%= render 'receipts/index', {receipts: Receipt.where(status: 'pending').in(user_id: User.where(referenced_channel_partner_ids: current_user.id).distinct(:id)).ne(payment_mode: "online").desc(:updated_at).paginate(page: 1 || 1, per_page: 5) } %>
@@ -162,6 +228,7 @@
         <% end %>
       </div>
     </div>
+    <%# end %>
   </div>
   <!-- </div>
 </section> -->

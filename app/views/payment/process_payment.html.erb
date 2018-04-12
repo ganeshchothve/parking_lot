@@ -19,10 +19,10 @@
 			<div class="receipt-wrapper">
 				<div class="pull-right">	
 					<!-- <a href="/dashboard/receipt-print/<%#= @receipt.id %>" target="_blank"><img src="<%#= asset_path 'printer-outline.png'%>" class="img-responsive"></a> -->
-					<%= link_to dashboard_receipt_print_path(@receipt.id, :format => 'pdf'), target: :_blank do , data:{event_category: 'Section', event_action: 'Click', event_name: 'Convert to PDF'}%>
+					<%= link_to dashboard_receipt_print_path(@receipt.id, :format => 'pdf'), target: :_blank do %>
 						<i class="far fa-envelope" style="font-size:24px;color:#383838;display:inline-block;margin:0 10px;" data-event-action="click" data-event-name="convert receipt to pdf"></i>
 					<% end%>
-					<%= link_to dashboard_receipt_mail_path(@receipt.id, :format => 'pdf') %>
+					<%= link_to dashboard_receipt_mail_path(@receipt.id, :format => 'pdf') do %>
 						<img src="<%= asset_path 'printer-outline.png'%>" class="img-responsive" data-event-action="click" data-event-name="send receipt on mail">
 					<% end%>
 
@@ -120,7 +120,7 @@
 <!-- TODO -->
 	Let the customer know that the payment processing had an issue or that they must have not made a payment.
 	Retry option or to contact support - if the payment has already gone through
-	<% when 'failed' %>
+<% when 'failed' %>
 	<section class="main-wrapper full-height grey">
 		<div class="container-fluid">
 			<div class="col-12">

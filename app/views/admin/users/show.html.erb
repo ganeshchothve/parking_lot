@@ -14,11 +14,14 @@
       Overview
       <div class="float-right">
         <% if ReceiptPolicy.new(current_user, Receipt).index?(@user) %>
-        <%= link_to "View #{global_labels['receipts']}", admin_user_receipts_path(user_id: @user.id), class: 'btn btn-sm' %>
+        <%= link_to "View #{global_labels['receipts']}", admin_user_receipts_path(user_id: @user.id), class: 'btn pink-btn white' %>
         <% end %>
         <% if UserKycPolicy.new(current_user, UserKyc).index?(@user) %>
-        <%= link_to "View #{global_labels['user_kycs']}", admin_user_user_kycs_path(user_id: @user.id), class: 'btn btn-sm' %>
+        <%= link_to "View #{global_labels['user_kycs']}", admin_user_user_kycs_path(user_id: @user.id), class: 'btn pink-btn white' %>
         <% end %>
+        <%= link_to dashboard_eoi_receipt_path(@user.id, :format => 'pdf'), class: 'btn pink-btn',target: :_blank do %>
+          Show EOI Form
+      <% end%>
       </div>
     </div>
     <div class="card-body">
@@ -135,9 +138,7 @@
         </div>
       </div>
       <% end %>
-      <%= link_to dashboard_eoi_receipt_path(@user.id, :format => 'pdf'), target: :_blank do %>
-        <button class="btn btn-warning">Show EOI Receipt</button>
-      <% end%>
+      
     </div>
   </div>
 </div>

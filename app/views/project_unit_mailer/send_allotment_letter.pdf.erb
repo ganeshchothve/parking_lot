@@ -113,7 +113,7 @@
     </div>
     <div class="row">
       <div class="col-12 mb30 text-center">
-        <h1>Provisional Allotment of Apartment.</h1>
+        <h1>Provisional Allotment of Apartment</h1>
       </div>
     </div>
     <div class="row">
@@ -126,8 +126,9 @@
     <div class="row">
       <div class="col-12 mb30 text-justify">
         <p>Dear Madam/Sir,</p></br>
-        <p>Ref: Booking Application dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %>.</p></br>
-          <p>Pursuant of the above referred Booking Application dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %> in respect of Apartment No.<%= @project_unit.name rescue ''%> in the Project known as “Embassy Springs”, we have provisionally allotted Apartment No.
+        <p><strong>Sub:</strong> Provisional Allotment of Apartment No. <%= @project_unit.name  rescue ''  %> in Tower <%= @unit.project_tower_name %> Block <%= @unit.name %> of <%= @unit.floor %> Phase , being developed in the Project "Embassy EdgeSprings", located in Survey No. ________, situated at agamangala/Hegganahalli Village, Kundana Hobli, Devanahalli Taluka, Bangalore / Navarathna Agrahara Village, Jala Hobi, Bangalore North Taluka, Bangalore Urban District.</p><br/>
+        <p><strong>Ref:</strong> Booking Application dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %>.</p></br>
+        <p>Pursuant of the above referred Booking Application dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %> in respect of Apartment No.<%= @project_unit.name rescue ''%> in the Project known as “Embassy Springs”, we have provisionally allotted Apartment No.
           <%= @project_unit.name  rescue ''  %> having a Carpet Area of <%= @project_unit.carpet %> Square feet to you.
           Further, we hereby confirm having received an amount of Rs.<%= @project_unit.booking_price %>/-
           as advance vide reference no. made through online / Cheque bearing No. <%= @receipt.tracking_id rescue ''%>,

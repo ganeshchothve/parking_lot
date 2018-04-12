@@ -147,6 +147,14 @@
 		<div class="clearfix"></div>
 		<% else %>
 		<div class="col-12">
+		  <div class="col-6 page-title-wrapper">
+		    <div class="title">All Bookings</div>
+		  </div>
+		  <div class="col-6 text-right">
+		  	<a href="/dashboard/apartment-selector" class="nav-btn-green">Book Another Home</a>
+		  </div>
+		</div>
+		<div class="col-12">
 			<%= render 'project_units', {project_units: current_user.project_units.where(status: 'hold')} %>
 			<%= render 'project_units', {project_units: current_user.project_units.ne(status: 'hold')} %>
 		</div>

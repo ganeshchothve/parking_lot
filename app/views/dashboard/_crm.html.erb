@@ -17,7 +17,7 @@
     </div>
     <div class="row summary-wrapper">
       <div class="col-md-3">
-        <div class="card card-body">
+        <div class="card card-body green-card">
           <h2 class="pink"><%= ProjectUnit.where(status: 'blocked').count %></h2>
           <h6 class="pink">Blocked Units</h6>
           <% if ProjectUnitPolicy.new(current_user, ProjectUnit).index? %>
@@ -26,7 +26,7 @@
         </div>
       </div>
       <div class="col-md-3">
-        <div class="card card-body">
+        <div class="card card-body yellow-card">
           <h2 class="pink"><%= ProjectUnit.where(status: 'booked_confirmed').count %></h2>
           <h6 class="pink">Booking Confirmed Units</h6>
           <% if ProjectUnitPolicy.new(current_user, ProjectUnit).index? %>
@@ -35,7 +35,7 @@
         </div>
       </div>
       <div class="col-md-3">
-        <div class="card card-body">
+        <div class="card card-body pink-card">
           <h2 class="pink"><%= Receipt.where(status: 'pending').ne(payment_mode: "online").count %></h2>
           <h6 class="pink">Pending Payments</h6>
           <% if ReceiptPolicy.new(current_user, Receipt).index? %>
@@ -44,7 +44,7 @@
         </div>
       </div>
       <div class="col-md-3">
-        <div class="card card-body">
+        <div class="card card-body orange-card">
           <h2 class="pink"><%= Receipt.where(status: 'clearance_pending').count %></h2>
           <h6 class="pink">Pending clearance Payments</h6>
           <% if ReceiptPolicy.new(current_user, Receipt).index? %>
@@ -60,7 +60,7 @@
     </div>
     <div class="row summary-wrapper">
       <div class="col-md-3">
-        <div class="card card-body">
+        <div class="card card-body green-card">
           <h2 class="pink"><%= UserRequest.count %></h2>
           <h6 class="pink">Overall</h6>
           <%# if ReceiptPolicy.new(current_user, Receipt).index? %>
@@ -69,7 +69,7 @@
         </div>
       </div>
       <div class="col-md-3">
-        <div class="card card-body">
+        <div class="card card-body yellow-card">
           <h2 class="pink"><%= UserRequest.where(status: "pending").count %></h2>
           <h6 class="pink">Pending</h6>
           <%# if ReceiptPolicy.new(current_user, Receipt).index? %>
@@ -78,7 +78,7 @@
         </div>
       </div>
       <div class="col-md-3">
-        <div class="card card-body">
+        <div class="card card-body pink-card">
           <h2 class="pink"><%= UserRequest.where(status: "resolved").count %></h2>
           <h6 class="pink">Resolved</h6>
           <%# if ReceiptPolicy.new(current_user, Receipt).index? %>
@@ -87,7 +87,7 @@
         </div>
       </div>
       <div class="col-md-3">
-        <div class="card card-body">
+        <div class="card card-body orange-card">
           <h2 class="pink"><%= ProjectUnit.total_booked_revenue %></h2>
           <h6 class="pink">Revenue</h6>
           <%# if ReceiptPolicy.new(current_user, Receipt).index? %>
@@ -104,7 +104,7 @@
     </div>
     <div class="row summary-wrapper">
       <div class="col-md-3">
-        <div class="card card-body">
+        <div class="card card-body green-card">
           <h2 class="pink"><%= ProjectUnit.in(status: ["booked_confirmed"]).where(data_attributes: {"$elemMatch" =>{"n" => "bedrooms", "v" => 1}}).count %></h2>
           <h6 class="pink">1 BHK</h6>
           <%# if ReceiptPolicy.new(current_user, Receipt).index? %>
@@ -113,7 +113,7 @@
         </div>
       </div>
       <div class="col-md-3">
-        <div class="card card-body">
+        <div class="card card-body yellow-card">
           <h2 class="pink"><%= ProjectUnit.in(status: ["booked_confirmed"]).where(data_attributes: {"$elemMatch" =>{"n" => "bedrooms", "v" => 2}}).count %></h2>
           <h6 class="pink">2 BHK</h6>
           <%# if ReceiptPolicy.new(current_user, Receipt).index? %>
@@ -122,7 +122,7 @@
         </div>
       </div>
       <div class="col-md-3">
-        <div class="card card-body">
+        <div class="card card-body pink-card">
           <h2 class="pink"><%= ProjectUnit.in(status: ["booked_confirmed"]).where(data_attributes: {"$elemMatch" =>{"n" => "bedrooms", "v" => 2.5}}).count %></h2>
           <h6 class="pink">2.5 BHK</h6>
           <%# if ReceiptPolicy.new(current_user, Receipt).index? %>
@@ -131,7 +131,7 @@
         </div>
       </div>
       <div class="col-md-3">
-        <div class="card card-body">
+        <div class="card card-body orange-card">
           <h2 class="pink"><%= ProjectUnit.in(status: ["booked_confirmed"]).where(data_attributes: {"$elemMatch" =>{"n" => "bedrooms", "v" => 3}}).count %></h2>
           <h6 class="pink">3 BHK</h6>
           <%# if ReceiptPolicy.new(current_user, Receipt).index? %>

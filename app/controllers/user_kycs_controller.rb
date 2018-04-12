@@ -31,6 +31,7 @@ class UserKycsController < ApplicationController
     respond_to do |format|
       if @user_kyc.save
         format.html { redirect_to after_sign_in_path_for(current_user), notice: 'User kyc was successfully created.' }
+        # format.html { redirect_to admin_user_path(@user_kyc.user_id), notice: 'User kyc was successfully created.' }
         format.json { render json: @user_kyc, status: :created, location: @user_kyc }
       else
         format.html { render :new }

@@ -8,9 +8,19 @@
       </ul>
     </div>
   <% end %>
-  <div class="pull-left col-6 w50">
-    <div class="subTitle purple pink-title text-center">Personal Details</div>
+  <div class="col-12">
+    <div class="container">
+      <ul id="progressbar">
+        <li class="active">Personal Details</li>
+        <li>Bank Details</li>
+        <li>Documents</li>
+      </ul>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+  <div class="col-12 cp-form" id="personal-details" style="display:block" data-tab="tab1">
     <div class="form-wrapper">
+      <div class="col-6">
         <div class="form-group">
           <%= form.label :title, class: 'control-label label-required' %>
           <%= form.select :title, UserKyc.available_salutations.collect{|x| [x[:text], x[:id]]}, {}, class: 'required form-control' %>
@@ -44,6 +54,9 @@
           <%= form.label :postal_code, class: 'control-label label-required' %>
           <%= form.text_field :postal_code, class: 'form-control number', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("postal_code") ? false : true), placeholder:'Postal Code' %>
         </div>
+        
+      </div>
+      <div class="col-6">
         <div class="form-group">
           <%= form.label :country, class: 'control-label label-required' %>
           <%= form.text_field :country, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("country") ? false : true), placeholder:'Country' %>
@@ -86,11 +99,15 @@
             </div>
           </div> -->
         </div>
+        <div class="cp-form-btn text-right">
+          <a href="javascript:;" class="bank-details-next" rel="bank-details">NEXT</a>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="pull-right col-6 w50">
-     <div class="subTitle purple text-center pink-title">Bank Details</div>
-     <div class="form-wrapper">
+  <div class="col-12 cp-form" id="bank-details" data-tab="tab2">
+   <div class="form-wrapper">
+      <div class="col-6">
         <div class="form-group">
           <%= form.label :bank_name, class: 'control-label label-required' %>
           <%= form.text_field :bank_name, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("bank_name") ? false : true), placeholder:'Bank Name' %>
@@ -111,6 +128,8 @@
           <%= form.label :bank_address, class: 'control-label label-required' %>
           <%= form.text_field :bank_address, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("bank_address") ? false : true), placeholder:'Bank Address' %>
         </div>
+      </div>
+      <div class="col-6">
         <div class="form-group">
           <%= form.label :bank_city, class: 'control-label label-required' %>
           <%= form.text_field :bank_city, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("bank_city") ? false : true), placeholder:'Bank City' %>
@@ -127,23 +146,31 @@
           <%= form.label :bank_country, class: 'control-label label-required' %>
           <%= form.text_field :bank_country, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("bank_country") ? false : true), placeholder:'Bank Country' %>
         </div>  
-        
+        <div class="cp-form-btn text-right">
+          <a href="javascript:;" class="prev-personal-details" rel="personal-details">PREV</a> <a href="javascript:;" class="next-documents" rel="documents">NEXT</a>
+        </div>
+      </div>
 
-        <div class="form-group">
+     </div>
+  </div>
+  <div class="col-12 cp-form" id="documents" data-tab="tab3">
+    <div class=" form-wrapper">
+      <div class="form-group">
           <label class="control-label label-required upload-pancard">PAN Card</label>
           <%= form.file_field :pan_card_doc, class: 'form-control required', autofocus: true , id:'pan-card', placeholder: 'PAN Card'%>
         </div>
-
         <div class="form-group">
           <%#= form.label :bank_check_doc, class: 'control-label label-required' %>
           <label class="control-label label-required upload-cheque">Bank Cheque</label>
           <%= form.file_field :bank_check_doc, class: 'form-control required', autofocus: true %>
         </div>
-        
         <div class="form-group">
           <%#= form.label :bank_check_doc, class: 'control-label label-required' %>
           <label class="control-label label-required upload-cheque">Aadhaar Card</label>
           <%= form.file_field :aadhaar_card_doc, class: 'form-control required', autofocus: true %>
+        </div>
+        <div class="cp-form-btn text-right">
+          <a href="javascript:;" class="prev-bank-details" rel="bank-details">PREV</a>
         </div>
         <% if user_signed_in? && current_user.role?('admin') %>
           <div class="form-group">
@@ -151,10 +178,9 @@
             <%= form.select :status, ChannelPartner.available_statuses.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(channel_partner).editable_field?("status") ? false : true)  %>
           </div>
         <% end %>
-     </div>
-    
-    <div class="actions">
-      <%= form.submit "REGISTER", class: 'btn btn-primary pink-button pink-btn' %>
+        <div class="actions">
+          <%= form.submit "REGISTER", class: 'btn btn-primary pink-button pink-btn' %>
+        </div>
     </div>
   </div>
 <% end %>

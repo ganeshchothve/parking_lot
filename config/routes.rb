@@ -68,6 +68,7 @@ Rails.application.routes.draw do
     get '/apartment-selector/:configuration', to: 'dashboard#project_units', stage: 'choose_tower', :constraints => {:configuration => /[^\/]+/}
     get '/apartment-selector', to: 'dashboard#project_units', stage: 'apartment_selector'
     get '/3d-apartment-selector', to: 'dashboard#project_units_3d'
+    get '/faqs', to: 'dashboard#faqs'
     get '/foyr-unit-status/:project_unit_id', to: 'dashboard#foyr_unit_status'
 
     get 'project_units/:project_unit_id', to: 'dashboard#project_unit', as: :dashboard_project_unit
