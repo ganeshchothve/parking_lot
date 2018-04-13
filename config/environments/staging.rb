@@ -78,7 +78,7 @@ Rails.application.configure do
   config.log_formatter = ::Logger::Formatter.new
 
   # Use default mailer asset host
-  config.action_mailer.asset_host = "embassysprings2.amura.in"
+  config.action_mailer.asset_host = "http://embassysprings2.amura.in"
 
   config.action_mailer.default_url_options = {host: 'embassysprings2.amura.in'}
 
