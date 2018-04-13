@@ -267,6 +267,7 @@ section{
 	display: block;
 	background-color: #fff;
 	padding: 5px;
+	cursor: default;
 }
 .login-card .logo-wrapper img{
 	width: 50px;
@@ -393,7 +394,7 @@ form#edit_user_form .form-field-wrapper label{display: block;}
 	padding: 5px 30px;
 	border-radius: 6px;
 	font-size: 16px;
-	background-color: #80b441;
+	background-color: #cb793f;
 	color: #fff;
 	text-transform: capitalize;
 }
@@ -528,8 +529,8 @@ form#edit_user_form .form-field-wrapper label{display: block;}
     border-radius: 0px !important;
 }
 .login-card-wrapper .selldof .btn{
-	background-color: #80b441 !important;
-    border-color: #80b441 !important;
+	background-color: #cb793f !important;
+    border-color: #cb793f !important;
     border-radius: 6px !important;
     font-weight: 500;
     font-size: 16px;
@@ -646,37 +647,42 @@ form#edit_user_form .form-field-wrapper label{display: block;}
 	background-repeat: no-repeat;
 	vertical-align: middle;
 }
-.dash-menu-wrapper .sprite-signout{
+/*.dash-menu-wrapper .sprite-signout{
 	display: inline-block;
 	margin: 0px 10px 0px 5px;
 	vertical-align: bottom;
 	background-image: asset-url('Signout-Icon.png');
 	background-repeat: no-repeat;
-}
+}*/
 .dash-menu-wrapper .booking-details{
-	background-position: -46px -3px;
-	width: 26px;
-	height: 24px;
+	background-position: -1px 0px;
+	width: 14px;
+	height: 14px;
 }
 .dash-menu-wrapper .kyc-form{
-	background-position: -46px -78px;
-	width: 29px;
-	height: 23px;
+	background-position: 0 -104px;
+	width: 16px;
+	height: 15px;
 }
 .dash-menu-wrapper .payment-details{
-	background-position: -46px -108px;
-	width: 24px;
-	height: 26px;
+	background-position: -2px -154px;
+	width: 12px;
+	height: 17px;
 }
 .dash-menu-wrapper .apartment-selector{
-	background-position: -46px -38px;
-	width: 28px;
-	height: 28px;
+	background-position: 0 -54px;
+	width: 15px;
+	height: 17px;
 }
-.dash-menu-wrapper a:hover .booking-details, .dash-menu-wrapper a.active .booking-details {
+.dash-menu-wrapper .faqs{
+	background-position: 0 -205px;
+	width: 16px;
+	height: 20px;
+}
+/*.dash-menu-wrapper a:hover .booking-details, .dash-menu-wrapper a.active .booking-details {
 	background-position: -5px -3px;
-}
-.dash-menu-wrapper a:hover .kyc-form, .dash-menu-wrapper a.active .kyc-form {
+}*/
+/*.dash-menu-wrapper a:hover .kyc-form, .dash-menu-wrapper a.active .kyc-form {
 	background-position: -5px -78px;
 }
 .dash-menu-wrapper a:hover .payment-details, .dash-menu-wrapper a.active .payment-details {
@@ -684,17 +690,17 @@ form#edit_user_form .form-field-wrapper label{display: block;}
 }
 .dash-menu-wrapper a:hover .apartment-selector, .dash-menu-wrapper a.active .apartment-selector {
 	background-position: -5px -38px;
-}
+}*/
 .dash-menu-wrapper .sign-out{
-	background-position: 0 0;
-	width: 24px;
-	height: 21px;
+	background-position: 0 -252px;
+	width: 16px;
+	height: 14px;
 }
-.dash-menu-wrapper a:hover .sign-out, .dash-menu-wrapper a.active .sign-out{
+/*.dash-menu-wrapper a:hover .sign-out, .dash-menu-wrapper a.active .sign-out{
 	background-position: 0 -29px;
 	width: 24px;
 	height: 21px;
-}
+}*/
 .dash-menu-wrapper .submenu{
 	display: none;
 }
@@ -827,8 +833,8 @@ form#edit_user_form .form-field-wrapper label{display: block;}
 }
 .notification-header .d3-view-link>a{
 	font-size: 17px;
-    color: #000;
-    background-color: #ffffff;
+    color: #fff;
+    background-color: #6b7e34;
     display: block;
     padding: 0 14px;
     line-height: 30px;
@@ -1371,9 +1377,9 @@ section.grey{
 	padding: 10px;
 }
 .days-left-wrapper{
-	background-color: #fff;
+	background-color: #6b7e34;
 	/*border: 2px solid #ececec;*/
-	border-radius:6px;
+	border-radius:3px;
 	padding: 10px 20px;
 	margin-top: 10px;
 }
@@ -1467,7 +1473,8 @@ section.grey{
 	margin: 10px 0px;
 }
 .unit-booking-details .col-4{
-	min-height: 90px;
+	min-height: 110px;
+	padding-right: 10px;
 }
 .unit-booking-details .col-4>div{
 	font-size: 16px;
@@ -2186,7 +2193,7 @@ strong{
     font-size: 16px;
 }
 .apartment-selector-wrapper .form-field-wrapper .form-field, .apartment-selector-wrapper .form-field-wrapper select.form-field{
-	border-bottom: 1px solid #c02680;
+	border-bottom: 1px solid #d47847;
 }
 .hidden-field.oci, .hidden-field.pan{
 	margin: 20px 0px;
@@ -2199,8 +2206,8 @@ strong{
     margin: 0px;
 }
 .payment-breakup th {
-    background-color: #efefef;
-    color: #4c80bd;
+    background-color: #d3d3d3;
+    color: #515151;
     padding: 10px;
     font-size: 16px;
     font-weight: 500;
@@ -2298,7 +2305,7 @@ hr.divider {
 	border-left: 1px solid #ccc;
 }
 .tower-info-wrapper.pink{
-	background: #ffecf7
+	background: #f3f3f2
 }
 .tower-info-wrapper.grey .col-6 {
 	    padding-right: 20px;
@@ -2573,10 +2580,10 @@ hr.divider {
 	line-height: 24px;
 }
 .striped-table thead th {
-   	color: #f2f2f2;
+   	color: #515151;
    	text-align: left;
   	font-weight: 500;
-  	background-color: #444444;
+  	background-color: #d3d3d3;
 }
 .striped-table tr:nth-child(odd) {
     background: #fff;
@@ -2836,6 +2843,7 @@ input.nav-btn:hover{
 	.booking-accordian span.title{
 		font-size: 14px;
 		line-height: 24px;
+		padding: 15px 14px;
 	}
 	.booking-detail .title{
 		font-size: 16px;
@@ -2968,7 +2976,7 @@ input.nav-btn:hover{
 		display: none;
 	}
 	.dash-logo img{
-		width: 140px;
+		width: 67px;
 	}
 	.login-card .form-field-wrapper .checkbox{
 		width: 100%;
@@ -3080,7 +3088,7 @@ input.nav-btn:hover{
 		left: 0px;
 		height: 100%;
 		width: 100%;
-		background-color: #fff;
+		background-color: #2f2f2f;
 		display: none;
 		border-top:0px;
 		margin: 0px 0px 0px 0px;
@@ -3275,8 +3283,8 @@ input.nav-btn:hover{
 		margin-top: 10px;
 	}
 	.booking-accordian{
-		padding: 10px;
-		border-radius: 5px;
+		padding: 0px;
+		border-radius: 3px;
 	}
 	.booking-accordian-wrapper{
 		padding: 0px 0px;
@@ -3290,7 +3298,7 @@ input.nav-btn:hover{
 	.unit-booking-details .col-4{
 	    width: 50%;
 	    margin-bottom: 15px;
-	    /*min-height: 80px;*/
+	    min-height: 110px;
 	    padding-right: 10px;
 	}
 	.small-link{
@@ -3298,6 +3306,11 @@ input.nav-btn:hover{
 	}
 	.booking-detail{
 		font-size: 14px;
+		padding: 10px;
+	}
+	.accordian-xs{
+		width: 90%;
+    	background-color: #779520;
 	}
 	.booking-detail ul{
 		padding-left: 20px;
@@ -3564,15 +3577,20 @@ input.nav-btn:hover{
 	.help-wrapper p{
 		margin: 4px 0px;
 		font-size: 14px;
+		color: #fff;
 	}
 	.help-wrapper>div{
 		margin: 10px 0px;
 	}
+	.float-left-xs{
+		width: 100%;
+		text-align: left !important;
+	}
 	.help-wrapper>div a{
 		display: block;
-		color: #616161;
 		padding: 5px 0px 0px 0px;
     	font-size: 14px;
+    	color: #fff;
     	text-transform: none;
 	}
 	.padding-left-30 {
