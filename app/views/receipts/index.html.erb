@@ -37,14 +37,13 @@
             </div>
           </div>
           <% end %>
-
           <% end %>
           <% end %>
-          <% if @user.present? && !current_user.role?('user') %>
-          <%= link_to "Make #{global_labels['receipt']}", new_admin_user_receipt_path(@user), class: 'btn btn-primary nav-btn' %>
+          <% if false #@user.present? && !current_user.role?('user') %>
+            <%= link_to "Make #{global_labels['receipt']}", new_admin_user_receipt_path(@user), class: 'btn btn-primary nav-btn' %>
           <% end %>
           <% if UserPolicy.new(current_user, User).export? && @user.blank? %>
-          <%= link_to "Export all #{global_labels['receipts']}", export_admin_receipts_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn' %>
+            <%= link_to "Export all #{global_labels['receipts']}", export_admin_receipts_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn' %>
           <% end %>
         </div>
       </div>
