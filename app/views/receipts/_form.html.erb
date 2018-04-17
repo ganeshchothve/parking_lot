@@ -130,7 +130,7 @@
                   </div>
                 </div>
               </div>
-              <% if (current_user.role?("crm") || current_user.role?("admin")) && @receipt.persisted? && @receipt.status == 'clearance_pending' %>
+              <% if (current_user.role?("crm") || current_user.role?("sales") || current_user.role?("admin")) && @receipt.persisted? && @receipt.status == 'clearance_pending' %>
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">

@@ -23,6 +23,9 @@
             <% if UserPolicy.new(current_user, User.new(role: 'crm')).new? %>
               <%= link_to 'New CRM User', new_by_role_admin_users_path(role: 'crm'), class: 'dropdown-item' %>
             <% end %>
+            <% if UserPolicy.new(current_user, User.new(role: 'sales')).new? %>
+              <%= link_to 'New Sales User', new_by_role_admin_users_path(role: 'sales'), class: 'dropdown-item' %>
+            <% end %>
             <% if UserPolicy.new(current_user, User.new(role: 'channel_partner')).new? %>
               <%= link_to 'New Channel Partner', new_by_role_admin_users_path(role: 'channel_partner'), class: 'dropdown-item' %>
             <% end %>
@@ -53,7 +56,7 @@
                     <%= link_to 'Resend Confirmation Instructions', admin_user_resend_confirmation_instructions_path(user), class: 'blue-link', data: {event_category: 'Section', event_action: 'Click', event_name: 'Resend Confirmation Instructions'} %>
                   <% end %>
                 <% end %>
-                <% if ['crm', 'admin'].include?(current_user.role) %>
+                <% if ['crm', 'sales', 'admin'].include?(current_user.role) %>
                   <% if UserPolicy.new(current_user, user).edit? %>
                     | <%= link_to "Edit", edit_admin_user_path(user.id) %>
                   <% end %>

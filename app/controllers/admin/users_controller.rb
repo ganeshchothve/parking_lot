@@ -101,6 +101,8 @@ class Admin::UsersController < AdminController
       custom_scope = custom_scope.in(referenced_channel_partner_ids: current_user.id).where(role: 'user')
     elsif current_user.role?('crm')
       custom_scope = custom_scope.where(role: 'user')
+    elsif current_user.role?('sales')
+      custom_scope = custom_scope.where(role: 'user')
     end
     User.with_scope(policy_scope(custom_scope)) do
       yield
