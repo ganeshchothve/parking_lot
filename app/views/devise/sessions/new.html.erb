@@ -21,21 +21,30 @@
 
           <% if devise_mapping.rememberable? -%>
             <div class="form-field-wrapper">
-              <label class="checkbox">Remember Me
-                <%= f.check_box :remember_me, class: "form-check-input" %>
-                <span class="checkmark"></span>
+              <label class="checkbox" data-event-category="section" data-event-action="click" data-event-name="Remember Me">Remember Me
+                <%= f.check_box :remember_me, class: "form-check-input", data:{event_category: 'Section', event_action: 'Click', event_name: 'Remember Me'} %>
+                <span class="checkmark" data-event-category="section" data-event-action="click" data-event-name="Remember Me"></span>
               </label>
             </div>
           <% end -%>
 
           <div class="actions">
-            <%= f.submit "Log in", class: 'btn pink-button' %>
+            <%= f.submit "Log in", class: 'btn pink-button',  data:{event_category: 'Section', event_action: 'Click', event_name: 'Log In'} %>
           </div>
+            
         <% end %>
       </div>
       <div class="col-12 separator relative text-center">
-        <div class="part-links">
-          <%= render "devise/shared/links" %>
+        <div class="col-6 mtop10">
+          <div class="part-links">
+            <a href="/register" class="green" data-event-category="section" data-event-action="click" data-event-name="Sign Up">Sign Up</a>
+            <div>To Register</div>
+          </div>
+        </div>
+        <div class="col-6 padding-right-30 border-left">
+          <div class="part-links">
+            <%= render "devise/shared/links" %>
+          </div>
         </div>
       </div>
       <div class="clearfix"></div>

@@ -23,36 +23,36 @@
   </head>
   <body>
   <%if params[:controller] != 'dashboard' %>
-  <div class="filter-icon visible-xs">
-    <img src="<%= asset_path 'filter-outline.png'%>" class="img-responsive">
-  </div>
+    <div class="filter-icon visible-xs">
+      <img src="<%= asset_path 'filter-outline.png'%>" class="img-responsive">
+    </div>
   <% end %>
     <div class="notification-header">
         <div class="col-12">
           <div class="container-fluid">
             <div class="pull-left left-wrapper">
               <% if params[:controller] == "dashboard" && params[:action] == "index" %>
-                <span class="subTitle white bold">Dashboard</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
+                <span class="subTitle bold">Dashboard</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
               <% elsif params[:controller] == "dashboard" && params[:action] == "project_units" %>
-                <span class="subTitle white bold">Apartment Selector</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
+                <span class="subTitle  bold">Apartment Selector</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
               <% elsif params[:controller] == "dashboard" && params[:action] == "checkout" %>
-                <span class="subTitle white bold">Proceed To Payment</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
+                <span class="subTitle  bold">Proceed To Payment</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
               <% elsif params[:controller] == "user_kycs" %>
-                <span class="subTitle white bold">User KYCs</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
+                <span class="subTitle  bold">User KYCs</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
               <% elsif params[:controller] == "receipts" && params[:action] == "index" %>
-                <span class="subTitle white bold">Payments</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
+                <span class="subTitle  bold">Payments</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
               <% elsif params[:controller] == "admin/users"%>
-                <span class="subTitle white bold">Users</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
+                <span class="subTitle  bold">Users</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
               <% elsif params[:controller] == "channel_partners" %>
-                <span class="subTitle white bold">Partner Registerations</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
+                <span class="subTitle  bold">Partner Registerations</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
               <% elsif params[:controller] == "admin/user_requests" %>
-                <span class="subTitle white bold">Cancellation Request</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
+                <span class="subTitle  bold">Cancellation Request</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
               <% elsif params[:controller] == "admin/project_units" %>
-                <span class="subTitle white bold">Units</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
+                <span class="subTitle  bold">Units</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
               <% elsif params[:controller] == "dashboard" && params[:action] == "project_units_3d"  %>
-                <span class="subTitle white bold">3D Apartment Selector</span>
+                <span class="subTitle  bold">3D Apartment Selector</span>
               <% else %>
-                <span class="subTitle white bold">Dashboard</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
+                <span class="subTitle  bold">Dashboard</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
               <% end %>
             </div>
             <!-- <div class="pull-left left-wrapper">
@@ -69,9 +69,16 @@
                   </div>
               </div> -->
               <div class="pull-left">
-                <span class="hidden-xs"><img src="<%= asset_path 'user.png'%>" class="img-responsive"> &nbsp;
-                    <%= link_to "Welcome " + current_user.name, edit_admin_user_path(current_user) , class:'white user-name'%>
+                <a href="/admin/users/new" class="add-booking-btn">
+                  Add Booking
+                </a>
+                <span class="hidden-xs"><img src="<%= asset_path 'usernew.png'%>" class="img-responsive"> &nbsp; 
+                  
+                  <%#= link_to "Welcome " + current_user.name, edit_admin_user_path(current_user) , class:'white user-name'%>
                 </span>
+                <!-- <span>
+                  <img src="<%= asset_path 'logo2.png' %>" class="img-responsive">
+                </span> -->
               </div>
             <div class="clearfix"></div>
           </div>
@@ -79,11 +86,13 @@
     </div>
     </div>
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
-      <a class="navbar-brand" href="#"><img src="<%= asset_path "embassy_springs_logo.png" %>" class="img-responsive" style="padding:0 5px;"><span class="logo-title">Embassy Springs<br/> Booking Portal</span></a>
+      <a class="navbar-brand" href="#"><img src="<%= asset_path "logo-edge.png" %>" class="img-responsive" style="padding:0 5px;">
+        <div class="rera-id">RERA Ack. No.: PR/KN/180119/002674</div>
+      </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-content" aria-controls="navbar-content" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-
+      
       <div class="collapse navbar-collapse" id="navbar-content">
         <ul class="navbar-nav mr-auto">
           <% if user_signed_in? %>

@@ -14,12 +14,12 @@ class ProjectUnit
   def blocking_days
     if self.blocking_payment.present?
       if self.blocking_payment.payment_mode == "online"
-        7
+        10
       else
         10
       end
     else
-      7
+      10
     end
   end
 

@@ -109,6 +109,8 @@ group :development do
   gem 'capistrano-rails'
   # Restart phusion passenger on deployment
   gem 'capistrano-passenger'
+  gem 'capistrano-sidekiq', github: 'seuros/capistrano-sidekiq'
+  gem 'capistrano-rvm'
   # code documentation
   gem 'yard'
 end

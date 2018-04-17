@@ -5,7 +5,7 @@
         <%= render 'breadcrumbs', {user: @user, user_request: @user_request} %>
         <div class="apartment-selector-wrapper">
           <div class="title">
-            Cancel Booking - &#8377; 5,000 will be withheld from your paid amount
+            Cancel Booking - <span class="f18">&#8377;5,000 will be withheld from your paid amount</span>
           </div>
         </div>
         <% if @user_request.errors.present? %>
@@ -34,7 +34,7 @@
                 </div>
               <% end %>
               <div class="form-group">
-                <%= f.submit "Submit", class: 'btn nav-btn' %>
+                <%= f.submit "Submit", class: 'btn nav-btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'cancel booking - submit'}  %>
               </div>
             <% end %>
             <div class="form-group">

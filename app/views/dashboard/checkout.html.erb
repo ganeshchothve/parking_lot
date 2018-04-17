@@ -1,3 +1,34 @@
+<!--<style type="text/css">
+  .padding-top0{
+    padding-top: 0px;
+}
+.dark-green-bg{
+    background-color: #6b7e34
+}
+.light-green-bg{
+    background-color: #d8ddc8;
+}
+.col-4.light-green-bg{
+    padding: 20px;
+    line-height: 20px;
+}
+.col-4.dark-green-bg{
+    padding: 25px;
+    color: #fff;
+}
+.col-4.light-green-bg span.black{
+    color: #252525;
+    font-weight: 500;
+}
+.client-details-wrapper{
+    margin-top: 20px;
+}
+.client-detail span{
+    color: #fff;
+    font-size: 22px;
+    font-weight: 500;
+}
+</style>-->
 <section class="main-wrapper">
   <!-- <div class="alert alert-info col-12 text-center">
     We have held this unit in your name for the next 10 minutes. Please make a payment to block; otherwise we will make it available to others.
@@ -14,17 +45,17 @@
           <br/>
           <div class="text-center">
             <div class="pull-left" style="margin-right:20px;">
-              <%= link_to "I Agree", dashboard_payment_path(project_unit_id: @project_unit.id), class: 'checkout-btn nav-btn', style:'margin-top:0px'%>
+              <%= link_to "I Agree", dashboard_payment_path(project_unit_id: @project_unit.id), class: 'checkout-btn nav-btn', style:'margin-top:0px' , data:{event_category: 'Section', event_action: 'Click', event_name: 'I Agree'}%>
             </div>
               <div class="pull-left">
               <%= form_for @project_unit, url: dashboard_update_project_unit_path(project_unit_id: @project_unit.id), method: 'post', html: {class: 'validate-form'} do |f| %>
                 <%= f.hidden_field :status, value: 'available' %>
-              <%= f.submit 'Cancel', class: 'cancel-btn apply-btn'%>
+              <%= f.submit 'Cancel', class: 'cancel-btn apply-btn' , data:{event_category: 'Section', event_action: 'Click', event_name: 'Cancel'}%>
               <% end %>
               </div>
             <% else %>
             <h4>You are making a payment without choosing any project_unit</h4>
-              <%= link_to "I Agree", dashboard_payment_path, class: 'nav-btn', style:'margin-top:0px' %>
+              <%= link_to "I Agree", dashboard_payment_path, class: 'nav-btn', style:'margin-top:0px' , data:{event_category: 'Section', event_action: 'Click', event_name: 'I Agree'}%>
             <% end %>
           </div>
     </div>

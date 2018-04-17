@@ -27,6 +27,7 @@ Rails.application.routes.draw do
     end
     resources :project_units, only: [:index, :edit, :update]
     resources :users do
+      get :resend_confirmation_instructions, action: 'resend_confirmation_instructions', as: :resend_confirmation_instructions
       get '/new/:role', action: 'new', on: :collection, as: :new_by_role
       get 'export', action: 'export', on: :collection, as: :export
       resources :receipts, only: [:update, :edit, :show, :index, :new, :create], controller: '/receipts'
@@ -39,7 +40,6 @@ Rails.application.routes.draw do
     resources :user_kycs, only: [:index], controller: '/user_kycs'
     resources :user_requests, except: [:destroy], controller: 'user_requests'
   end
-
 
   match 'payment/:receipt_id/process_payment/:ignore', to: 'payment#process_payment', via: [:get, :post]
 
@@ -57,6 +57,7 @@ Rails.application.routes.draw do
     post 'get_units', to: 'dashboard#get_units'
     post 'get_unit_details', to: 'dashboard#get_unit_details'
     get 'receipt-print/:id', to: 'dashboard#receipt_print'
+    get 'get_eoi_receipt/:id', to: 'dashboard#eoi_receipt', as: :dashboard_eoi_receipt
     get 'receipt_print/:id', to: 'dashboard#receipt_print', as: :dashboard_receipt_print
     get 'send_receipt_mail/:id', to: 'dashboard#receipt_mail', as: :dashboard_receipt_mail
     get '', to: 'dashboard#index', as: :dashboard
@@ -68,6 +69,7 @@ Rails.application.routes.draw do
     get '/apartment-selector/:configuration', to: 'dashboard#project_units', stage: 'choose_tower', :constraints => {:configuration => /[^\/]+/}
     get '/apartment-selector', to: 'dashboard#project_units', stage: 'apartment_selector'
     get '/3d-apartment-selector', to: 'dashboard#project_units_3d'
+    get '/faqs', to: 'dashboard#faqs'
     get '/foyr-unit-status/:project_unit_id', to: 'dashboard#foyr_unit_status'
 
     get 'project_units/:project_unit_id', to: 'dashboard#project_unit', as: :dashboard_project_unit

@@ -1,0 +1,20 @@
+<table cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td style=" color: #000;font-size: 32px;font-weight: 600;line-height: 35px;vertical-align: bottom;">
+      5 Days to go!
+    </td>
+  </tr>
+  <tr><td>&nbsp;</td></tr>
+  <tr>
+    <td>Dear <%= @user.name %>,</td>
+  </tr>
+  <tr><td>&nbsp;</td></tr>
+  <tr>
+    <td style="line-height:26px;">
+      A home, an identity - come home to yours. Only 5 days to go before you miss your home at Embassy Edge! Get it before you regret it. Click here  #####  to complete paying the pending amount: <%= number_to_indian_currency(@receipt.user.total_balance_pending.round(2)) %> on unit <%= @receipt.project_unit.name %> to confirm your home.
+    </td>
+  </tr>
+</table>
+    
+
+        

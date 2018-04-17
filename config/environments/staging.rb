@@ -33,7 +33,8 @@ Rails.application.configure do
   # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  config.action_controller.asset_host = "//embassysprings2.amura.in"
+  config.action_controller.asset_host = "http://embassysprings2.amura.in"
+  config.action_mailer.asset_host = "http://embassysprings2.amura.in"
 
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
@@ -75,6 +76,9 @@ Rails.application.configure do
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
+
+  # Use default mailer asset host
+  config.action_mailer.asset_host = "http://embassysprings2.amura.in"
 
   config.action_mailer.default_url_options = {host: 'embassysprings2.amura.in'}
 

@@ -46,7 +46,7 @@ class DashboardController < ApplicationController
         render  pdf: "Embassy Receipt",
         title: 'Embassy Receipt',
         save_to_file: Rails.root.join('tmp', "receipt.pdf")
-        ReceiptMailer.send_receipt(@receipt.id).deliver_now
+        # ReceiptMailer.send_receipt(@receipt.id).deliver_now
       end
     end
   end
@@ -66,6 +66,21 @@ class DashboardController < ApplicationController
     end
   end
 
+  def eoi_receipt
+    @user = User.find(params[:id])
+    respond_to do |format|
+      format.html
+      format.pdf do
+        render  pdf: "EOI Receipt",
+        title: 'EOI Receipt'
+      end
+    end
+  end
+
+  def receipt
+    @receipt = Receipt.find(params[:format])
+  end
+
   def receipt_print
     @receipt = Receipt.find(params[:id])
     @user = @receipt.user
@@ -77,7 +92,7 @@ class DashboardController < ApplicationController
         render  pdf: "Embassy Receipt",
         title: 'Embassy Receipt',
         save_to_file: Rails.root.join('tmp', "receipt_mail.pdf")
-        ReceiptMailer.receipt_email(@receipt.id).deliver_now
+        # ReceiptMailer.receipt_email(@receipt.id).deliver_now
       end
     end
   end

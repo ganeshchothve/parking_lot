@@ -1,11 +1,11 @@
 <%= content_for :breadcrumbs do %>
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<%= after_sign_in_path_for(current_user) %>">Dashboard</a></li>
-      <li class="breadcrumb-item"><a href="<%= admin_users_path %>">Users</a></li>
-      <li class="breadcrumb-item active" aria-current="page"><%= @user.name %></li>
-    </ol>
-  </nav>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="<%= after_sign_in_path_for(current_user) %>">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="<%= admin_users_path %>">Users</a></li>
+    <li class="breadcrumb-item active" aria-current="page"><%= @user.name %></li>
+  </ol>
+</nav>
 <% end %>
 <% labels = t('mongoid.attributes.user').with_indifferent_access %>
 <div class="padding-side-30 mt50 padding-bottom30" style="clear:both">
@@ -14,11 +14,14 @@
       Overview
       <div class="float-right">
         <% if ReceiptPolicy.new(current_user, Receipt).index?(@user) %>
-          <%= link_to "View #{global_labels['receipts']}", admin_user_receipts_path(user_id: @user.id), class: 'btn btn-sm' %>
+        <%= link_to "View #{global_labels['receipts']}", admin_user_receipts_path(user_id: @user.id), class: 'btn pink-btn white' %>
         <% end %>
         <% if UserKycPolicy.new(current_user, UserKyc).index?(@user) %>
-          <%= link_to "View #{global_labels['user_kycs']}", admin_user_user_kycs_path(user_id: @user.id), class: 'btn btn-sm' %>
+        <%= link_to "View #{global_labels['user_kycs']}", admin_user_user_kycs_path(user_id: @user.id), class: 'btn pink-btn white' %>
         <% end %>
+        <%= link_to dashboard_eoi_receipt_path(@user.id, :format => 'pdf'), class: 'btn pink-btn',target: :_blank do %>
+          Show EOI Form
+      <% end%>
       </div>
     </div>
     <div class="card-body">
@@ -102,7 +105,7 @@
         </div>
       </div>
       <% end %>
-      <% if (current_user.role?('admin') || current_user.role?('crm')) && @user.role?('user') %>
+      <% if (current_user.role?('admin') || current_user.role?('crm') || current_user.role?('sales')) && @user.role?('user') %>
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
@@ -135,6 +138,7 @@
         </div>
       </div>
       <% end %>
+
     </div>
   </div>
 </div>

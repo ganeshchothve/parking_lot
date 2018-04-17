@@ -5,6 +5,14 @@ GIT
     rails-observers (0.2.0)
       activemodel (>= 4.2)
 
+GIT
+  remote: https://github.com/seuros/capistrano-sidekiq.git
+  revision: d5027765a2ff58239a015639a27033bb0daa41f7
+  specs:
+    capistrano-sidekiq (1.0.1)
+      capistrano (>= 3.9.0)
+      sidekiq (>= 3.4)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -79,6 +87,9 @@ GEM
     capistrano-rails (1.3.1)
       capistrano (~> 3.1)
       capistrano-bundler (~> 1.1)
+    capistrano-rvm (0.1.2)
+      capistrano (~> 3.0)
+      sshkit (~> 1.2)
     capybara (2.16.1)
       addressable
       mini_mime (>= 0.1.3)
@@ -387,6 +398,8 @@ DEPENDENCIES
   capistrano
   capistrano-passenger
   capistrano-rails
+  capistrano-rvm
+  capistrano-sidekiq!
   capybara (~> 2.13)
   carrierwave-mongoid
   cocoon

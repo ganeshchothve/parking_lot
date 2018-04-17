@@ -10,6 +10,7 @@ en:
     receipts_with_status: '%{status} Payments'
     user_kyc: 'Applicant'
     user_kycs: 'Applicants'
+    user_kyc_details: 'KYC Details'
     users: 'Users & Customers'
     user: 'User or Customer'
     customers: 'Customers'

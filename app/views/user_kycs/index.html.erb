@@ -27,9 +27,9 @@
                 <br/>
                 <% if UserKycPolicy.new(current_user, user_kyc).edit? %>
                   <% if current_user.role?('user') %>
-                    <%= link_to 'Edit'.html_safe, edit_user_kyc_path(user_kyc), class: 'btn blue-link' %>
+                    <%= link_to 'Edit'.html_safe, edit_user_kyc_path(user_kyc), class: 'blue-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit User KYC'} %>
                   <% else %>
-                  <%= link_to 'Edit'.html_safe, edit_admin_user_user_kyc_path(@user, user_kyc), class: 'btn blue-link' %>
+                  <%= link_to 'Edit'.html_safe, edit_admin_user_user_kyc_path(@user, user_kyc), class: 'blue-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit User KYC'} %>
                   <% end %>
                 <% end %>
               </td>
@@ -49,9 +49,9 @@
     <div style="margin-top:30px;">
     <% if UserKycPolicy.new(current_user, UserKyc.new(user: @user)).new? %>
       <% if current_user.role?('user') %>
-        <%= link_to "Add #{global_labels['user_kyc']}", new_user_kyc_path, class: 'btn nav-btn pink-btn' %>
+        <%= link_to "Add #{global_labels['user_kyc']}", new_user_kyc_path, class: 'btn nav-btn pink-btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
       <% else %>
-        <%= link_to "Add #{global_labels['user_kyc']}", new_admin_user_user_kyc_path(@user), class: 'btn nav-btn pink-btn' %>
+        <%= link_to "Add #{global_labels['user_kyc']}", new_admin_user_user_kyc_path(@user), class: 'btn nav-btn pink-btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
       <% end %>
     <% end %>
     </div>

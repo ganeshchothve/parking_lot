@@ -8,7 +8,7 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def export?
-    ['admin', 'crm'].include?(user.role)
+    ['admin', 'crm', 'sales'].include?(user.role)
   end
 
   def new?
@@ -24,7 +24,7 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def edit?
-    !user.role?('user') && (((user.role?('admin') || user.role?('crm')) && ['pending', 'clearance_pending'].include?(record.status)) || (user.role?('channel_partner') && record.status == 'pending'))
+    !user.role?('user') && (((user.role?('admin') || user.role?('crm') || user.role?('sales')) && ['pending', 'clearance_pending'].include?(record.status)) || (user.role?('channel_partner') && record.status == 'pending'))
   end
 
   def update?
@@ -60,7 +60,7 @@ class ReceiptPolicy < ApplicationPolicy
     if !user.role?('user') && (record.new_record? || record.status == 'pending')
       attributes += [:issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier]
     end
-    if user.role?('admin') || user.role?('crm')
+    if user.role?('admin') || user.role?('crm') || user.role?('sales')
       attributes += [:status]
       if record.persisted? && record.status == 'clearance_pending'
         attributes += [:processed_on, :comments, :tracking_id]

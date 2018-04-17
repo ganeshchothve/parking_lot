@@ -11,9 +11,28 @@
 <section class="padding-side-30 padding-xs-user">
   <div class="container-fluid">
     <div class="row">
-      <!-- <div class="col-12 text-left mtop10 padding-0">
-          <p class="pageTitle big pink">USERS</p>
-      </div> -->
+      <div class="dropdown float-left mbottom-20">
+          <a class="btn btn-primary dropdown-toggle pink-btn" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add new</a>
+          <div class="dropdown-menu">
+            <% if UserPolicy.new(current_user, User.new(role: 'user')).new? %>
+              <%= link_to 'New Customer', new_admin_user_path, class: 'dropdown-item' %>
+            <% end %>
+            <% if UserPolicy.new(current_user, User.new(role: 'admin')).new? %>
+              <%= link_to 'New Admin', new_by_role_admin_users_path(role: 'admin'), class: 'dropdown-item' %>
+            <% end %>
+            <% if UserPolicy.new(current_user, User.new(role: 'crm')).new? %>
+              <%= link_to 'New CRM User', new_by_role_admin_users_path(role: 'crm'), class: 'dropdown-item' %>
+            <% end %>
+            <% if UserPolicy.new(current_user, User.new(role: 'sales')).new? %>
+              <%= link_to 'New Sales User', new_by_role_admin_users_path(role: 'sales'), class: 'dropdown-item' %>
+            <% end %>
+            <% if UserPolicy.new(current_user, User.new(role: 'channel_partner')).new? %>
+              <%= link_to 'New Channel Partner', new_by_role_admin_users_path(role: 'channel_partner'), class: 'dropdown-item' %>
+            <% end %>
+          </div>
+        </div>
+    </div>
+    <div class="row">
       <div class="col-md-10 border border-left-0 border-top-0 border-bottom-0 table-responsive margin-xs-bottom-10 padding-left-0">
         <table class='table striped-table'>
           <thead class="th-default th-pink">
@@ -21,11 +40,8 @@
             <tr>
               <th>Name</th>
               <th>Details</th>
-              <!-- <th>Phone</th> -->
               <th>Role</th>
               <th>Account Confirmed?</th>
-              <!-- <th><%#= labels[:lead_id] %></th> -->
-              <!-- <th class="text-right"></th> -->
             </tr>
           </thead>
           <tbody>
@@ -34,9 +50,13 @@
               <td>
                 <%= user.name %><br/>
                 <% if UserPolicy.new(current_user, user).show? %>
-                  <%= link_to "View", admin_user_path(user.id) %>
+                  <%= link_to "View", admin_user_path(user.id) %> |
+                  <%= link_to "Add #{global_labels['user_kyc_details']}", new_admin_user_user_kyc_path(user), class: 'blue-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
+                  <% if !user.confirmed? && user.confirmation_token.present? %>
+                    <%= link_to 'Resend Confirmation Instructions', admin_user_resend_confirmation_instructions_path(user), class: 'blue-link', data: {event_category: 'Section', event_action: 'Click', event_name: 'Resend Confirmation Instructions'} %>
+                  <% end %>
                 <% end %>
-                <% if ['crm', 'admin'].include?(current_user.role) %>
+                <% if ['crm', 'sales', 'admin'].include?(current_user.role) %>
                   <% if UserPolicy.new(current_user, user).edit? %>
                     | <%= link_to "Edit", edit_admin_user_path(user.id) %>
                   <% end %>
@@ -50,23 +70,7 @@
           </tbody>
         </table>
         <%= will_paginate @users %>
-        <div class="dropdown float-left">
-          <a class="btn btn-primary dropdown-toggle pink-btn" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add new</a>
-          <div class="dropdown-menu">
-            <% if UserPolicy.new(current_user, User.new(role: 'user')).new? %>
-              <%= link_to 'New Customer', new_admin_user_path, class: 'dropdown-item' %>
-            <% end %>
-            <% if UserPolicy.new(current_user, User.new(role: 'admin')).new? %>
-              <%= link_to 'New Admin', new_by_role_admin_users_path(role: 'admin'), class: 'dropdown-item' %>
-            <% end %>
-            <% if UserPolicy.new(current_user, User.new(role: 'crm')).new? %>
-              <%= link_to 'New CRM User', new_by_role_admin_users_path(role: 'crm'), class: 'dropdown-item' %>
-            <% end %>
-            <% if UserPolicy.new(current_user, User.new(role: 'channel_partner')).new? %>
-              <%= link_to 'New Channel Partner', new_by_role_admin_users_path(role: 'channel_partner'), class: 'dropdown-item' %>
-            <% end %>
-          </div>
-        </div>
+
         <% if UserPolicy.new(current_user, User).export? %>
           <%= link_to "Export all #{global_labels['users']}", export_admin_users_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn margin-xs-left-0' %>
         <% end %>

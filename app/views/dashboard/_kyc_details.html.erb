@@ -23,8 +23,8 @@
        		Details provided on KYC form will be used in Agreement Documentation. Kindly ensure that name, DOB and other information is entered correctly.
        	</div>
        		<div class="form-check">
-                <label class="radio kyc-radio" data-link="no">Select Existing<input type="radio" name="kyc" class="form-check-input"><span class="checkmark"></span></label>
-                <label class="radio kyc-radio" data-link="yes">Add New<input type="radio" name="kyc" class="form-check-input"><span class="checkmark"></span></label>
+                <label class="radio kyc-radio" data-link="no" data-event-category="section" data-event-action="click" data-event-name="Select Existing">Select Existing<input type="radio" name="kyc" class="form-check-input" data-event-category="section" data-event-action="click" data-event-name="Select Existing"><span class="checkmark" data-event-category="section" data-event-action="click" data-event-name="Select Existing"></span></label>
+                <label class="radio kyc-radio" data-link="yes" data-event-category="section" data-event-action="click" data-event-name="Add New">Add New<input type="radio" name="kyc" class="form-check-input" data-event-category="section" data-event-action="click" data-event-name="Add New"><span class="checkmark" data-event-category="section" data-event-action="click" data-event-name="Add New"></span></label>
                 <div class="hidden-field kyc-add" style="display:none">
                   <div class="form-wrapper margin-top-30 text-left">
 			          <%
@@ -173,8 +173,8 @@
 			            <% if policy(@unit).hold_project_unit? %>
 			            <br clear="all" />
 			            <div class="col-12 top-inline-block">
-			            <a href="javascript:;" class="nav-btn btn-anim navigate" data-stage="select-apartment" data-navigate-to="prev">← PREV</a>
-                  <%= f.submit 'Add & Hold Unit', class: 'form-field nav-btn btn-anim', style: 'width:auto'%>
+			            <a href="javascript:;" class="nav-btn btn-anim navigate" data-stage="select-apartment" data-navigate-to="prev" data-event-category="section" data-event-action="click" data-event-name="add & hold - kyc details prev">← PREV</a>
+                  <%= f.submit 'Add & Hold Unit', class: 'form-field nav-btn btn-anim', style: 'width:auto', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add & Hold Unit'}  %>
 			        	</div>
 			            <% end %>
 			          <% end %>
@@ -199,8 +199,8 @@
 			          <br clear="all" />
 			            <div class="col-12 top-inline-block">
 			          <%# if policy(@unit).hold_project_unit? %>
-			          	<a href="javascript:;" class="nav-btn btn-anim navigate" data-stage="select-apartment" data-navigate-to="prev">← PREV</a>
-                  <input type="submit" value="Hold Unit" class="nav-btn btn-anim" />
+			          	<a href="javascript:;" class="nav-btn btn-anim navigate" data-stage="select-apartment" data-navigate-to="prev" data-navigate-to="prev" data-event-category="section" data-event-action="click" data-event-name="select existing kyc details prev">← PREV</a>
+                  <input type="submit" value="Hold Unit" class="nav-btn btn-anim" data-event-category="section" data-event-action="click" data-event-name="Hold Unit"/>
 			          </div>
 			          <%# end %>
 			        </form>

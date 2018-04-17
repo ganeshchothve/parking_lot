@@ -4,7 +4,7 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def edit?
-    record.auto_release_on.present? && ['crm', 'admin'].include?(user.role)
+    record.auto_release_on.present? && ['crm', 'sales', 'admin'].include?(user.role)
   end
 
   def update?

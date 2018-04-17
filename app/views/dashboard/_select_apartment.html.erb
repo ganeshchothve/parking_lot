@@ -61,7 +61,7 @@
 </div>
 <div class="col-12-5 filter-item">
   <!-- <div class="filter-item filter-submit-wrapper"> -->
-  <button class="nav-btn">Apply</button>
+  <button class="nav-btn" data-event-category="header" data-event-action="click" data-event-name="select apartment filter - Apply">Apply</button>
   <!-- </div> -->
 </div>
 <div class="clearfix"></div>
@@ -137,7 +137,7 @@
       <span class="active" rel="fp">FLOOR PLANS</span><!-- <span rel="gallery">GALLERY</span><span rel="unit-plan">UNIT PLANS</span> -->
       <div class="unit-plans-wrapper" id="fp" style="display:block">
         <a href="<%= asset_path '1BHK-A.png'%>" class="colorbox-init" rel="floorplan">
-          <img src="<%= asset_path '1BHK-A.png'%>" class="img-responsive">
+          <img src="<%= asset_path '1BHK-A.png'%>" class="img-responsive" data-event-category="section" data-event-action="click" data-event-name="floor plan pop up">
         </a>
       </div>
       <!-- <div class="unit-plans-wrapper" id="gallery">
@@ -152,19 +152,19 @@
 </div> -->
 </div>
 <div class="show-unit-floor-plans visible-xs">
-  <a href="<%= asset_path '1BHK-A.png'%>" rel="floorplan" class="colorbox-init nav-btn">FLOOR PLANS</a><!-- <a href="<%= asset_path 'fp-type-2.jpg'%>" class="colorbox-init nav-btn" rel="gallery">GALLERY</a><a href="<%= asset_path 'fp-type-2.jpg'%>" class="colorbox-init nav-btn" rel="unit-plan">UNIT PLANS</a> -->
+  <a href="<%= asset_path '1BHK-A.png'%>" rel="floorplan" class="colorbox-init nav-btn" data-event-category="section" data-event-action="click" data-event-name="floor plan pop up">FLOOR PLANS</a><!-- <a href="<%= asset_path 'fp-type-2.jpg'%>" class="colorbox-init nav-btn" rel="gallery">GALLERY</a><a href="<%= asset_path 'fp-type-2.jpg'%>" class="colorbox-init nav-btn" rel="unit-plan">UNIT PLANS</a> -->
 </div>
 <div class="clearfix"></div>
 </div>
 <% if ProjectUnitPolicy.new(current_user, ProjectUnit).block? %>
 <div class="col-12 center-btn-xs fixed-nav-btn">
-  <a href="javascript:;" class="nav-btn btn-anim navigate" data-stage="choose-tower" data-navigate-to="prev">← PREV</a>
-  <a href="javascript:;" class="nav-btn btn-anim navigate" data-stage="kyc-details" data-navigate-to="next">NEXT →</a>
+  <a href="javascript:;" class="nav-btn btn-anim navigate" data-stage="choose-tower" data-navigate-to="prev" data-event-category="section" data-event-action="click" data-event-name="select apartment prev">← PREV</a>
+  <a href="javascript:;" class="nav-btn btn-anim navigate" data-stage="kyc-details" data-navigate-to="next" data-event-category="section" data-event-action="click" data-event-name="select apartment next">NEXT →</a>
 </div>
 <% else %>
 <!-- <div class="col-12 text-right"> -->
   <div class="col-12 center-btn-xs fixed-nav-btn">
-  <a href="javascript:;" class="nav-btn btn-anim navigate" data-stage="choose-tower" data-navigate-to="prev" style="vertical-align:middle">← PREV</a>
+  <a href="javascript:;" class="nav-btn btn-anim navigate" data-stage="choose-tower" data-navigate-to="prev" style="vertical-align:middle" data-event-category="section" data-event-action="click" data-event-name="select apartment prev">← PREV</a>
   <span style="display:inline-block;vertical-align:middle">Cannot Book More than 3 Apartments</span>
 </div>
 <% end %>

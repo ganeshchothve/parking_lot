@@ -1,25 +1,41 @@
-<h2>Change your password</h2>
+<section class="dashboard-bg full-height white-bg-xs">
+  <div class="container">
+    <div class="col-7 login-card-wrapper">
+      <div class="login-card">
+        <a href="javascript:void(0);" class="logo-wrapper">
+          <img src="<%= asset_path "embassy_springs_logo.png" %>" class="img-responsive" />
+        </a>
+        <div class="subTitle purple text-center">Change your password</div>
+        <div class="form-wrapper">
+          <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: 'validate-form' }) do |f| %>
+            <%= devise_error_messages! %>
+            <%= f.hidden_field :reset_password_token %>
 
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: 'validate-form' }) do |f| %>
-  <%= devise_error_messages! %>
-  <%= f.hidden_field :reset_password_token %>
+            <div class="field form-field-wrapper">
+              <%#= f.label :password, "New password" %><br />
+             <!--  <%# if @minimum_password_length %>
+                <em>(<%#= @minimum_password_length %> characters minimum)</em><br />
+              <%# end %> -->
+              <%= f.password_field :password, autofocus: true, autocomplete: "off", class: 'form-field', placeholder:'New Password - Minimum 6 characters' %>
+            </div>
 
-  <div class="field">
-    <%= f.label :password, "New password" %><br />
-    <% if @minimum_password_length %>
-      <em>(<%= @minimum_password_length %> characters minimum)</em><br />
-    <% end %>
-    <%= f.password_field :password, autofocus: true, autocomplete: "off" %>
+            <div class="field form-field-wrapper">
+              <%#= f.label :password_confirmation, "Confirm new password" %><br />
+              <%= f.password_field :password_confirmation, autocomplete: "off", class: 'form-field', placeholder:'Confirm new password' %>
+            </div>
+
+            <div class="actions">
+              <%= f.submit "Change my password", class: 'btn pink-button' %>
+            </div>
+          <% end %>
+        </div>
+        <div class="col-12 separator relative text-center">
+          <div class="part-links">
+            <%= render "devise/shared/links" %>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+    </div>
   </div>
-
-  <div class="field">
-    <%= f.label :password_confirmation, "Confirm new password" %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "off" %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Change my password" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</section>

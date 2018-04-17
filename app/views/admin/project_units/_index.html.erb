@@ -8,7 +8,7 @@
       <th>Agreement (Rs.)</th>
       <th>Paid Amt. (Rs.)</th>
       <th>Booking Amt. Pending (Rs.)</th>
-      <th>User</th>
+      <!-- <th>User</th> -->
       <th class="text-right">Actions</th>
     </tr>
   </thead>
@@ -22,7 +22,7 @@
       <td><%= number_to_indian_currency(project_unit.agreement_price)  %></td>
       <td><%= number_to_indian_currency(project_unit.total_amount_paid)  %></td>
       <td><%= number_to_indian_currency(project_unit.pending_balance.to_i) %></td>
-      <td><%= project_unit.user_id.present? ? project_unit.user.name : "-" %></td>
+      <!-- <td><%#= project_unit.user_id.present? ? project_unit.user.name : "-" %></td> -->
       <td class="text-right">
         <div class="dropdown">
           <a class="btn btn-light light-pink-btn dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
@@ -39,6 +39,9 @@
               <% if UserPolicy.new(current_user, User).index? %>
                 <%= link_to "View Customer", admin_user_path(project_unit.user), class: 'dropdown-item' %>
               <% end %>
+              <%# if UserPolicy.new(current_user, User).index? %>
+                <%#= link_to "Add Co Applicant", admin_user_path(project_unit.user), class: 'dropdown-item' %>
+              <%# end %>
             <% end %>
           </div>
         </div>
