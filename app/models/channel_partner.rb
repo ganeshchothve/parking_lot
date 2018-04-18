@@ -38,7 +38,7 @@ class ChannelPartner
   mount_uploader :aadhaar_card_doc, DocUploader
 
   validates :first_name, :last_name, :email, :phone, :rera_id, :location, :status, presence: true
-  validates :phone, uniqueness: true#, phone: true # TODO: we can remove phone validation, as the validation happens in sell.do
+  validates :phone, uniqueness: true, phone: true
   validates :email, :rera_id, uniqueness: true, allow_blank: true
   validates :status, inclusion: {in: Proc.new{ ChannelPartner.available_statuses.collect{|x| x[:id]} } }
   validate :user_level_uniqueness
