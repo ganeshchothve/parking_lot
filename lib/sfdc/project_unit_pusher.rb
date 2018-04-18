@@ -52,9 +52,9 @@ module SFDC
     def self.sfdc_stage_mapping(status)
       case status
       when "blocked"
-        "blocked"
+        "Blocked"
       when "booked_confirmed"
-        "booking"
+        "Booking"
       end
     end
   end
