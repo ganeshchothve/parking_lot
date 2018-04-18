@@ -3,6 +3,10 @@ class UserPolicy < ApplicationPolicy
     ['channel_partner', 'admin', 'crm', 'sales'].include?(user.role)
   end
 
+  def resend_confirmation_instructions?
+    index?
+  end
+
   def export?
     ['admin', 'crm', 'sales'].include?(user.role)
   end

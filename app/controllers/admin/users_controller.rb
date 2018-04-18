@@ -16,7 +16,7 @@ class Admin::UsersController < AdminController
   end
 
   def resend_confirmation_instructions
-    @user = User.find(params[:user_id])
+    @user = User.find(params[:id])
     respond_to do |format|
       if @user.resend_confirmation_instructions
         flash[:notice] = "Confirmation instructions sent successfully."
