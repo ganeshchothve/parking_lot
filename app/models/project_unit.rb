@@ -310,6 +310,7 @@ class ProjectUnit
           self.status = 'blocked'
           # Push data to SFDC when 30K payment is made - blocked unit
           SFDC::ProjectUnitPusher.execute(self)
+          SFDC::PaymentSchedulePusher.execute(receipt.project_unit)
         else
           receipt.project_unit_id = nil
           receipt.save(validate: false)
