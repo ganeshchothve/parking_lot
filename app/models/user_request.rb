@@ -5,6 +5,7 @@ class UserRequest
 
   field :comments, type: String
   field :status, type: String, default: 'pending'
+  field :request_type, type: String, default: "cancellation"
 
   belongs_to :project_unit, optional: true
   belongs_to :receipt, optional: true

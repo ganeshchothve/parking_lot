@@ -74,4 +74,56 @@ class UserKyc
   def name
     "#{UserKyc.available_salutations.find{|x| x[:id] == salutation}[:text] rescue '' } #{first_name} #{last_name}"
   end
+
+  def api_json
+    data = []
+    self.project_units.each do |project_unit|
+      user = project_unit.user
+      opp_id = user.try(:lead_id).to_s + project_unit.sfdc_id
+      hash = {
+        opp_id: opp_id,
+        selldo_lead_id: user.try(:lead_id),
+        unit_sfdc_id: project_unit.sfdc_id,
+        applicants: []
+      }
+      applicants = []
+      count = 2
+      project_unit.user_kycs.asc(:created_at).each do |kyc|
+        is_primary_user_kyc = project_unit.primary_user_kyc_id == kyc.id
+        coapplicant_type = is_primary_user_kyc ? 'Co-Applicant 1' : "Co-Applicant #{count}"
+        count += 1 unless is_primary_user_kyc
+        applicants << user_kyc_json(kyc, coapplicant_type)
+      end
+
+      hash.merge!(applicants: applicants)
+
+      data << hash if applicants.any?
+    end
+    data
+  end
+
+  def user_kyc_json(kyc, coapplicant_type)
+    # extract phone and country code from phone field
+    phone = kyc.phone.split(' ')
+    country_code = phone.shift.gsub!(/[^0-9A-Za-z]/, '')
+
+    hash = {
+      applicant_id: kyc.id.to_s,
+      salutation: kyc.salutation,
+      first_name: kyc.first_name,
+      last_name: kyc.last_name,
+      email: kyc.email,
+      country_code_primary_phone: country_code,
+      phone: phone.join,
+      pan_no: kyc.pan_number,
+      dob: (kyc.dob.strftime("%Y-%m-%d") rescue nil),
+      anniversary: (kyc.anniversary.strftime("%Y-%m-%d") rescue nil),
+      nri: kyc.nri ? "NRI" : "Indian",
+      aadhaar: kyc.aadhaar,
+      marital_status: nil,
+      passport_number: nil,
+      gender: nil,
+      coapplicant_type: coapplicant_type
+    }
+  end
 end

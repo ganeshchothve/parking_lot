@@ -23,6 +23,11 @@ class UserRequestObserver < Mongoid::Observer
   def after_update user_request
     if user_request.status_changed? && user_request.status == 'resolved'
       mailer = UserRequestMailer.send_resolved(user_request.id.to_s)
+      if user_request.project_unit.present? && (user_request.request_type == "cancellation") && ["blocked", "booked_tentative", "booked_confirmed"].include?(user_request.project_unit.status)
+        project_unit = user_request.project_unit
+        project_unit.status = "available"
+        project_unit.save(validate: false)
+      end
       if Rails.env.development?
         mailer.deliver
       else
