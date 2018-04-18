@@ -408,7 +408,7 @@ DEPENDENCIES
   factory_bot_rails
   faker
   fog-aws
-  honeybadger
+  honeybadger (~> 3.1)
   httparty (>= 0.14.0)
   jbuilder (~> 2.5)
   jquery-rails
