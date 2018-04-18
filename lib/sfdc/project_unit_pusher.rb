@@ -1,13 +1,14 @@
 module SFDC
   class ProjectUnitPusher < Base
-    def self.execute(project_unit)
+    def self.execute(project_unit, options={})
       if Rails.env.production? || Rails.env.staging?
         begin
           project_unit_data = []
-          project_unit_data << project_unit_json(project_unit)
+          project_unit_data << project_unit_json(project_unit, options)
           if project_unit_data.any?
             @project_unit_pusher = SFDC::Base.new
             response = @project_unit_pusher.push("/services/apexrest/Embassy/LeadInfo", project_unit_data)
+            Rails.logger.info("SFDC::ProjectUnitPusher response >>>>> project_unit_id: #{project_unit.id.to_s}, SFDC response: #{response}")
           end
         rescue Exception => e
           Rails.logger.info("Exception in SFDC::ProjectUnitPusher >>>> #{e.message} \n #{e.backtrace}")
@@ -15,17 +16,28 @@ module SFDC
       end
     end
 
-    def self.project_unit_json(project_unit)
-      user = project_unit.user
-      user_kyc = project_unit.primary_user_kyc
+    def self.project_unit_json(project_unit, options={})
+      # If user has cancelled the booking, then that project may belong to other user, so need to depend on booking_detail's user_id
+      if options[:cancellation_request]
+        user = User.find(options[:user_id])
+        user_kyc = UserKyc.find(options[:primary_user_kyc_id])
+      else
+        user = project_unit.user
+        user_kyc = project_unit.primary_user_kyc
+      end
+      unit_sfdc_id = project_unit.sfdc_id
+      opp_id = user.lead_id.to_s + unit_sfdc_id.to_s
+
       hash = {
-        "selldo_lead_id": user.lead_id,
-        "unit_sfdc_id": project_unit.sfdc_id,
-        "booking_stage": sfdc_stage_mapping(project_unit.status),
-        "booking_date": sfdc_date_format(project_unit.blocked_on),
-        "birthdate": sfdc_date_format(project_unit.primary_user_kyc.dob),
-        "pan_card_number": project_unit.primary_user_kyc.pan_number,
-        "nri": user_kyc.nri ? "NRI" : "Indian",
+        "api_source" => "portal",
+        "opp_id" => opp_id,
+        "selldo_lead_id" => user.lead_id,
+        "unit_sfdc_id" => project_unit.sfdc_id,
+        "booking_stage" => options[:cancellation_request] ? 'Closed Lost' : sfdc_stage_mapping(project_unit.status),
+        "booking_date" => sfdc_date_format(project_unit.blocked_on),
+        "birthdate" => sfdc_date_format(project_unit.primary_user_kyc.dob),
+        "pan_card_number" => project_unit.primary_user_kyc.pan_number,
+        "nri" => user_kyc.nri ? "NRI" : "Indian",
         "street" => user_kyc.street,
         "city" => user_kyc.city,
         "country" => user_kyc.country,

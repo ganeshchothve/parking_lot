@@ -17,9 +17,15 @@ module SFDC
     end
 
     def self.receipt_json(receipt)
+      project_unit = receipt.project_unit
+      unit_sfdc_id = project_unit.try(:sfdc_id)
+      lead_id = receipt.user.lead_id
+      opp_id = lead_id.to_s + unit_sfdc_id.to_s
       hash = {
+        "opp_id" => opp_id,
         "receipt_selldo_id" => receipt.id.to_s,
-        "selldo_lead_id" => receipt.project_unit.user.lead_id,
+        "selldo_lead_id" => lead_id,
+        "unit_sfdc_id" => unit_sfdc_id,
         "primary_email" => receipt.user.email,
         "receipt_date" => sfdc_date_format(receipt.created_at),
         "payment_amount" => receipt.total_amount,
@@ -27,7 +33,8 @@ module SFDC
         "instrument_no" => receipt.payment_identifier.to_s,
         "instrument_date" => receipt.issued_date ? sfdc_date_format(Date.parse(receipt.issued_date)) : sfdc_date_format(receipt.created_at),
         "bank_name" => receipt.issuing_bank,
-        "branch_name" => receipt.issuing_bank_branch
+        "branch_name" => receipt.issuing_bank_branch,
+        "payment_type" => (project_unit.status == 'blocked' ? 'Advance' : 'Booking')
       }
       hash
     end
