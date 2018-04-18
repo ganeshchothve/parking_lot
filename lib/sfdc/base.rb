@@ -20,7 +20,7 @@ module SFDC
     def push(uri, data={})
       url = @instance_url + uri
       response = RestClient.post(url, data.to_json, { content_type: :json, accept: :json , authorization: "Bearer #{@access_token}"})
-      JSON.parse(response.body)
+      JSON.parse(response.body) rescue response
     end
 
     # Deprecated
