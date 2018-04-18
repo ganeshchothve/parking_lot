@@ -118,7 +118,7 @@ end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
-group :production do
+group :production, :staging do
   gem 'honeybadger', '~> 3.1'
   gem 'newrelic-redis'
   gem 'newrelic_rpm'
