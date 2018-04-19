@@ -3,22 +3,20 @@ class ProjectUnitObserver < Mongoid::Observer
     if project_unit.user_kyc_ids_changed? && project_unit.user_kyc_ids_was.blank? && project_unit.user_kyc_ids.present?
       project_unit.primary_user_kyc_id = project_unit.user_kyc_ids.first
     end
-    if project_unit.agreement_price.blank?
-      project_unit.agreement_price = (project_unit.base_rate + project_unit.premium_location_charges + project_unit.floor_rise) * project_unit.saleable
-    end
-    if project_unit.booking_price.blank? || project_unit.agreement_price_changed?
-      project_unit.booking_price = project_unit.agreement_price * project_unit.booking_price_percent_of_agreement_price
-      project_unit.tds_amount = project_unit.agreement_price * project_unit.tds_amount_percent_of_agreement_price
-    end
     if project_unit.status_changed? && ['hold', 'blocked', 'booked_tentative', 'booked_confirmed'].exclude?(project_unit.status)
       project_unit.user_id = nil
+      project_unit.applied_discount_rate = nil
+      project_unit.applied_discount_id = nil
     end
+    project_unit.calculate_agreement_price
     if project_unit.status == 'available'
       project_unit.status = 'employee' if project_unit.available_for == 'employee'
       project_unit.status = 'management' if project_unit.available_for == 'management'
     end
     if project_unit.status_changed? && project_unit.status == 'hold'
       project_unit.held_on = Time.now
+      project_unit.applied_discount_rate = project_unit.discount_rate(project_unit.user)
+      project_unit.applied_discount_id = project_unit.applicable_discount_id(project_unit.user)
       ProjectUnitUnholdWorker.perform_in(ProjectUnit.holding_minutes.minutes, project_unit.id.to_s)
     elsif project_unit.status_changed? && project_unit.status != 'hold'
       project_unit.held_on = nil

@@ -31,13 +31,13 @@ class ProjectUnit
   field :name, type: String
   field :sfdc_id, type: String
   field :agreement_price, type: Integer
-  field :booking_price, type: Integer
   field :status, type: String, default: 'available'
   field :available_for, type: String, default: 'user'
   field :blocked_on, type: Date
   field :auto_release_on, type: Date
   field :held_on, type: DateTime
-  field :tds_amount, type: Float
+  field :applied_discount_rate, type: Float, default: 0
+  field :applied_discount_id, type: String
   field :primary_user_kyc_id, type: BSON::ObjectId
 
   # These fields majorly are pulled from sell.do and may be used on the UI
@@ -247,17 +247,17 @@ class ProjectUnit
   def premium_location_charges
     case category
     when "Courtyard Facing"
-	100
+	     100
     when "Outward Facing"
-	75
+	     75
     when "Inward/Another tower"
-	0
+	     0
     when "Garden, sports zone & club facing"
-	150
+	     150
     when "Garden, sports zone, club & swimming pool facing"
-	150
+	     150
     else
-	150
+	     150
     end
   end
 
@@ -269,16 +269,43 @@ class ProjectUnit
     agreement_price > 5000000 ? 0.001 : 0
   end
 
-  def tds_amount
-    agreement_price * tds_amount_percent_of_agreement_price
-  end
-
   def floor_rise
     floor < 3 ? 0 : (floor-2)*20
   end
 
   def land_price
     land_rate * saleable
+  end
+
+  def booking_price
+    agreement_price * booking_price_percent_of_agreement_price
+  end
+
+  def tds_amount
+    agreement_price * tds_amount_percent_of_agreement_price
+  end
+
+  def discount(user)
+    discount_rate(user) * saleable
+  end
+
+  def discount_rate(user)
+    user = self.user if self.user_id.present?
+    if applied_discount_id.present? && applied_discount_rate.present?
+      return applied_discount_rate
+    else
+      discount_obj = applicable_discount_id(user)
+      return (discount_obj.present? ? discount_obj.value : 0)
+    end
+    0
+  end
+
+  def applicable_discount_id(user)
+    selector = []
+    selector << {user_id: user.id} if user.present?
+    selector << {user_role: user.role} if user.present?
+    selector << {project_unit_id: self.id}
+    discount_obj = Discount.or(selector).desc(:value).first
   end
 
   def construction_price
@@ -359,6 +386,11 @@ class ProjectUnit
   def sync_with_selldo
     selldo_response_status = 200
     return (selldo_response_status == 200)
+  end
+
+  def calculate_agreement_price
+    self.agreement_price = land_price + construction_price # TODO: Add GST if required
+    self.agreement_price -= (applied_discount_rate * saleable) if applied_discount_rate.present? && applied_discount_rate > 0
   end
 
   def process_payment!(receipt)
