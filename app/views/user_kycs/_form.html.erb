@@ -7,7 +7,7 @@
   width: 100%;
 }
 .kyc-form-wrapper .intl-tel-input, .show-co-applicant .intl-tel-input{
-  <% if !current_user.role?('user') %>
+  <% if !current_user.buyer? %>
   display: block;
   <% else %>
   width: 60%;
@@ -19,10 +19,10 @@
   <div class="clearfix"></div>
   <div class="kyc-form-wrapper">
     <div class="row">
-      <%# if current_user.role?('user') %>
+      <%# if current_user.buyer? %>
       <div class="col-md-12">
         <%
-        if current_user.role?('user')
+        if current_user.buyer?
           if @user_kyc.persisted?
             url = user_kyc_path(@user_kyc)
           else
@@ -292,7 +292,7 @@
     </div>
   </div>
 </div>
-<% if !current_user.role?('user') %>
+<% if !current_user.buyer? %>
   <%= javascript_tag do %>
   $(document).ready(function(){
     FormInitializer.init($("#user_kyc_form"));

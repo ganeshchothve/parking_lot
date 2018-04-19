@@ -46,60 +46,12 @@
       <p><strong>  Mr. <%= @user.channel_partner.name %> </strong> the Channel Partner has selected and booked an Apartment unit no. <%= @project_unit.name  rescue ''  %> on your behalf at Embassy Springs Project and has paid a sum of Rs. <%= @receipt.total_amount %>/- towards the Booking amount. </p>
               <p>We request you to kindly confirm the above booking by the return mail within 7 days, failing which the above booking will be cancelled without any further intimation to you or the Channel Partner.</p>
     </p>
-    <% if @receipt.status == 'clearance_pending' && @receipt.project_unit_id.blank? && @receipt.reference_project_unit_id.present? && @receipt.reference_project_unit.status == 'available' %>
-=======
-<!--
-<% if @receipt.payment_mode == 'online' %>
-  <%= @receipt.receipt_id %><br/>
-  Rs. <%= @receipt.total_amount %><br/>
-  <%= @receipt.status %><br/>
-<% else %>
-  <%= @receipt.receipt_id %><br/>
-  Rs. <%= @receipt.total_amount %><br/>
-  <%= @receipt.status %><br/>
-<% end %>
-<hr/>
-<% if @project_unit.present? %>
-Project Unit Details
-<%= @project_unit.name %><br/>
-<%= @project_unit.status %><br/>
-<% end %>
--->
-<table cellpadding="0" cellspacing="0" width="100%">
-  <tr>
-    <td style=" color: #000;font-size: 32px;font-weight: 600;line-height: 35px;vertical-align: bottom;">
-      Cheque received
-    </td>
-  </tr>
-  <tr><td>&nbsp;</td></tr>
-  <tr>
-    <td>
-      Dear <%= @user.name %>,
-    </td>
-  </tr>
-  <tr><td>&nbsp;</td></tr>
-  <tr>
-    <td style="line-height:26px;">
-      <p><span style="font-size:20px;line-height:26px;color:#000;font-weight:700;">Thank you for your payment of Rs. <%= @receipt.total_amount %> </span></p><br/>
-      <p> <strong>Following are your cheque details </strong></p>
+    <% if @receipt.status == 'clearance_pending' && @receipt.project_unit_id.blank? && @receipt.reference_project_unit_id.present? && @receipt.reference_project_unit.user_based_status(@receipt.user) == 'available' %>
+      <p><strong>  Mr. <%= @user.channel_partner.name %> </strong> the Channel Partner has selected and booked an Apartment unit no. <%= @project_unit.name  rescue ''  %> on your behalf at Embassy Springs Project and has paid a sum of Rs. <%= @receipt.total_amount %>/- towards the Booking amount. </p>
       <p>
-        <span style="color:#64c0e9; font-weight:bold">Name </span> : <%= @user.name %><br/>
-        <span style="color:#64c0e9; font-weight:bold">Agreement Value </span> : Rs. <%= @project_unit.agreement_price rescue ''%><br/>
-        <span style="color:#64c0e9;font-weight:bold;">Advance paid </span> :  Rs. <%= @project_unit.total_amount_paid  rescue '' %><br/>
-        <span style="color:#64c0e9;font-weight:bold;">Balance Payment </span> : <%= @project_unit.pending_balance  rescue ''%><br/>
+        To block this chosen unit <a href='<%= dashboard_checkout_via_email_url(project_unit_id: @receipt.reference_project_unit_id, receipt_id: @receipt.receipt_id, user_email: @user.email, user_token: @user.authentication_token) %>'>Click here</a>
       </p>
-      <br/>
-      <p>Your Embassy home will be kept on hold for you for additional 4 <%#= (@project_unit.auto_release_on - Date.today).days %> days until your cheque is cleared. We will notify you once the cheque realizes.</p>
->>>>>>> fa2ab61300a61b07d7f164f7f0f5d19aca169a8b
-      <p>
-        <p><strong>  Mr. <%= @user.channel_partner.name %> </strong> the Channel Partner has selected and booked an Apartment unit no. <%= @project_unit.name  rescue ''  %> on your behalf at Embassy Springs Project and has paid a sum of Rs. <%= @receipt.total_amount %>/- towards the Booking amount. </p>
-        <p>We request you to kindly confirm the above booking by the return mail within 7 days, failing which the above booking will be cancelled without any further intimation to you or the Channel Partner.</p>
-      </p>
-      <% if @receipt.status == 'clearance_pending' && @receipt.project_unit_id.blank? && @receipt.reference_project_unit_id.present? && @receipt.reference_project_unit.status == 'available' %>
-        <p>
-          To block this chosen unit <a href='<%= dashboard_checkout_via_email_url(project_unit_id: @receipt.reference_project_unit_id, receipt_id: @receipt.receipt_id, user_email: @user.email, user_token: @user.authentication_token) %>'>Click here</a>
-        </p>
-      <% end %>
+    <% end %>
     </td>
   </tr>
 </table>

@@ -1,18 +1,18 @@
 class UserKycPolicy < ApplicationPolicy
   def index?(for_user=nil)
     if for_user.present?
-      for_user.role?('user')
+      for_user.buyer?
     else
       true
     end
   end
 
   def new?
-    record.user_id.present? && record.user.role?('user')
+    record.user_id.present? && record.user.buyer?
   end
 
   def edit?
-    if user.role?('user')
+    if user.buyer?
       record.user_id == user.id
     elsif user.role?('channel_partner')
       record.user.channel_partner_id == user.id

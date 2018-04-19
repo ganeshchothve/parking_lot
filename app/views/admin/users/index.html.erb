@@ -17,6 +17,12 @@
             <% if UserPolicy.new(current_user, User.new(role: 'user')).new? %>
               <%= link_to 'New Customer', new_admin_user_path, class: 'dropdown-item' %>
             <% end %>
+            <% if UserPolicy.new(current_user, User.new(role: 'employee_user')).new? %>
+              <%= link_to 'New Employee', new_admin_user_path(role: 'employee_user'), class: 'dropdown-item' %>
+            <% end %>
+            <% if UserPolicy.new(current_user, User.new(role: 'management_user')).new? %>
+              <%= link_to 'New Management User', new_admin_user_path(role: 'management_user'), class: 'dropdown-item' %>
+            <% end %>
             <% if UserPolicy.new(current_user, User.new(role: 'admin')).new? %>
               <%= link_to 'New Admin', new_by_role_admin_users_path(role: 'admin'), class: 'dropdown-item' %>
             <% end %>

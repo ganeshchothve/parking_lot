@@ -63,7 +63,7 @@ class User
   validates :rera_id, :location, presence: true, if: Proc.new{ |user| user.role?('channel_partner') }
   validates :rera_id, uniqueness: true, allow_blank: true
   validates :role, inclusion: {in: Proc.new{ User.available_roles.collect{|x| x[:id]} } }
-  validates :lead_id, presence: true, if: Proc.new{ |user| user.role?('user') }
+  validates :lead_id, presence: true, if: Proc.new{ |user| user.buyer? }
 
   def unattached_blocking_receipt
     return self.receipts.in(status: ['success', 'clearance_pending']).where(project_unit_id: nil, payment_type: 'blocking').where(total_amount: {"$gte": ProjectUnit.blocking_amount}).first
@@ -85,9 +85,19 @@ class User
     self.user_kycs.present?
   end
 
+  def buyer?
+    ['user', 'management_user', 'employee_user'].include?(self.role)
+  end
+
+  def self.buyer_roles
+    ['user', 'management_user', 'employee_user']
+  end
+
   def self.available_roles
     [
       {id: 'user', text: 'Customer'},
+      {id: 'employee_user', text: 'Employee'},
+      {id: 'management_user', text: 'Management User'},
       {id: 'admin', text: 'Admin'},
       {id: 'crm', text: 'CRM User'},
       {id: 'sales', text: 'Sales User'},

@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   layout :set_layout
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
-  
+
   def after_sign_in_path_for(current_user)
     if current_user.role?('admin')
       admin_users_path
@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
   protected
   def set_layout
     if user_signed_in?
-      if current_user.role?('user')
+      if current_user.buyer?
         'dashboard'
       else
         'admin'
@@ -30,9 +30,9 @@ class ApplicationController < ActionController::Base
       "dashboard"
     elsif is_a?(Devise::RegistrationsController)
       "dashboard"
-    elsif is_a?(Devise::ConfirmationsController)      
+    elsif is_a?(Devise::ConfirmationsController)
       "dashboard"
-    elsif is_a?(ChannelPartnersController)      
+    elsif is_a?(ChannelPartnersController)
       "dashboard"
     else
       "application"

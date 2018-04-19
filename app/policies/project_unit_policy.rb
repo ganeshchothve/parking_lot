@@ -16,11 +16,11 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def hold_project_unit?
-    record.status == 'available' && user.role?('user') && user.kyc_ready? && user.project_units.where(status: "hold").blank?
+    record.user_based_status(user) == 'available' && user.buyer? && user.kyc_ready? && user.project_units.where(status: "hold").blank?
   end
 
   def update_project_unit?
-    record.user_id == user.id && user.role?('user') && user.kyc_ready?
+    record.user_id == user.id && user.buyer? && user.kyc_ready?
   end
 
   def payment?
@@ -36,7 +36,7 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def checkout_via_email?
-    ['available'].include?(record.status) && user.kyc_ready?
+    record.user_based_status(user) == "available" && user.kyc_ready?
   end
 
   def block?

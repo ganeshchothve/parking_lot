@@ -42,7 +42,7 @@ class Admin::UserRequestsController < ApplicationController
   def update
     respond_to do |format|
       if @user_request.update(permitted_attributes(@user_request))
-        format.html { redirect_to (current_user.role?('user') ? user_user_requests_path(@user) : admin_user_requests_path), notice: 'User Request was successfully updated.' }
+        format.html { redirect_to (current_user.buyer? ? user_user_requests_path(@user) : admin_user_requests_path), notice: 'User Request was successfully updated.' }
       else
         format.html { render :edit }
         format.json { render json: @user_request.errors, status: :unprocessable_entity }
@@ -56,7 +56,7 @@ class Admin::UserRequestsController < ApplicationController
   end
 
   def set_user
-    if current_user.role?("user")
+    if current_user.buyer?
       @user = current_user
     else
       @user = (params[:user_id].present? ? User.find(params[:user_id]) : nil)

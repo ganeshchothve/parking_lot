@@ -25,7 +25,7 @@ class BookingDetail
       if changes["status"].present? && ["blocked", "booked_tentative", "booked_confirmed", "error"].include?(changes["status"][0]) && ["blocked", "booked_tentative", "booked_confirmed", "error"].include?(project_unit.status)
         booking_detail.status = project_unit.status
       end
-      if changes["status"].present? && ["blocked", "booked_tentative", "booked_confirmed", "error"].include?(changes["status"][0]) && ["available"].include?(project_unit.status)
+      if changes["status"].present? && ["blocked", "booked_tentative", "booked_confirmed", "error"].include?(changes["status"][0]) && ProjectUnit.user_based_available_statuses(booking_detail.user).include?(project_unit.status)
         booking_detail.status = "cancelled"
       end
       if changes["user_kyc_ids"].present?

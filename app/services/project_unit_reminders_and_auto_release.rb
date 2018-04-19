@@ -20,7 +20,7 @@ module ProjectUnitRemindersAndAutoRelease
     def self.release_project_unit
       ProjectUnit.in(status: ["blocked", 'booked_tentative']).where(auto_release_on: Date.yesterday).each do |unit|
         user_id = unit.user_id
-        unit.status = 'available'
+        unit.make_available
         unit.save!
       end
     end

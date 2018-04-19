@@ -16,11 +16,11 @@ class UserPolicy < ApplicationPolicy
   end
 
   def new?
-    user.role?('admin') || (user.role?('channel_partner') && record.role?('user'))
+    user.role?('admin') || (user.role?('channel_partner') && record.buyer?)
   end
 
   def create?
-    user.role?('admin') || (user.role?('channel_partner') && record.role?('user'))
+    user.role?('admin') || (user.role?('channel_partner') && record.buyer?)
   end
 
   def update?

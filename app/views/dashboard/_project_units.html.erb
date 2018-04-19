@@ -16,7 +16,7 @@
     <div class="col-12 booking-details-wrapper close" id="book-<%= project_unit.id  %>">
       <div class="booking-detail">
         <div class="title">Booking Details
-            <% if current_user.role?("user") && project_unit.user == current_user && project_unit.status != 'hold' %>
+            <% if current_user.buyer? && project_unit.user == current_user && project_unit.status != 'hold' %>
               <% if current_user.user_requests.where(project_unit_id: project_unit.id).blank? %>
                 <a href="<%= new_admin_user_request_path(project_unit_id: project_unit.id) %>" class="pink small-link" data-event-category="section" data-event-action="click" data-event-name="cancel booking">Cancel Booking</a>
               <% else %>

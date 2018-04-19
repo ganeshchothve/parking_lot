@@ -1,12 +1,12 @@
 <%= render 'breadcrumbs', {user: @user, project_unit: @receipt.project_unit} %>
-<% if current_user.role?('user') %>
+<% if current_user.buyer? %>
   <section class="main-wrapper full-height grey">
 <% else %>
   <section class="padding-side-22">
 <% end %>
    <div class="container-fluid">
       <div class="row">
-        <% if current_user.role?('user') %>
+        <% if current_user.buyer? %>
         <div class="page-title-wrapper">
           <div class="title">
             Make Remaining Payment
@@ -22,7 +22,7 @@
           <% if @receipt.new_record? %>
             <div class="alert alert-warning">
               <!-- TODO: check if you want to update this message -->
-              <% if current_user.role?('user') %>
+              <% if current_user.buyer? %>
                 <div class="title green">Payments need to be for individual units, clubbed payments are not allowed. <br/>Please collect a cheque for individual units only.</div>
                 <strong>Payment Details</strong><br/>
                 <div class="col-6">
@@ -47,7 +47,7 @@
             </ul>
           </div>
           <% end %>
-          <% if current_user.role?('user') %>
+          <% if current_user.buyer? %>
             <strong>Make Payment</strong><br/>
             <%= form_for @receipt, html: {class: 'validate-form'} do |f| %>
               <div class="form-group form-field-wrapper">
