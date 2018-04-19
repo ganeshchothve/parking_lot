@@ -11,7 +11,6 @@ class Admin::ProjectUnitsController < AdminController
     respond_to do |format|
       if params[:ds].to_s == 'true'
         format.json { render json: @project_units.collect{|pu| {id: pu.id, name: "#{pu.project_tower_name} | #{pu.name} | #{pu.bedrooms}BHK | #{pu.carpet} Sq.Ft. | #{number_to_indian_currency(pu.booking_price.round)}"}} }
-        # format.json { render json: @project_units.collect{|pu| {id: pu.id, name: "Tower: #{pu.project_tower_name} Beds: #{pu.bedrooms} Floor: #{pu.floor} Name: #{pu.name} - Booking Amount: Rs. #{pu.booking_price}"}} }
         format.html {}
       else
         format.json { render json: @project_units }
@@ -52,14 +51,13 @@ class Admin::ProjectUnitsController < AdminController
       custom_project_unit_scope = custom_project_unit_scope.or([{status: "available"}, {status: {"$in": ["blocked", "booked_tentative", "booked_confirmed"]}, user_id: {"$in": User.where(referenced_channel_partner_ids: current_user.id).distinct(:id)}}])
     end
     ProjectUnit.with_scope(policy_scope(custom_project_unit_scope)) do
-      yield
-    end
-    custom_scope = User.all.criteria
-    if current_user.role == 'channel_partner'
-      custom_scope = custom_scope.in(referenced_channel_partner_ids: current_user.id).in(role: User.buyer_roles)
-    end
-    User.with_scope(policy_scope(custom_scope)) do
-      yield
+      custom_scope = User.all.criteria
+      if current_user.role == 'channel_partner'
+        custom_scope = custom_scope.in(referenced_channel_partner_ids: current_user.id).in(role: User.buyer_roles)
+      end
+      User.with_scope(policy_scope(custom_scope)) do
+        yield
+      end
     end
   end
 end

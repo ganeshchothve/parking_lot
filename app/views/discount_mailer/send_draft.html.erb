@@ -1,0 +1,17 @@
+Name: <%= @discount.name %><br/>
+Project: <%= @discount.project_id.present? ? @discount.project.name : '-' %><br/>
+Tower: <%= @discount.project_tower_id.present? ? @discount.project_tower.name : '-' %><br/>
+Unit: <%= @discount.project_unit_id.present? ? @discount.project_unit.name : '-' %><br/>
+User: <%= @discount.user_id.present? ? @discount.user.name : '-' %><br/>
+Role: <%= @discount.user_role.present? ? @discount.user_role : '-' %><br/>
+Discount (Rs): <%= @discount.value %><br/>
+Status: <%= @discount.status %><br/>
+<% if @discount.status == 'approved' %>
+  Approved At: <%= @discount.approved_at %><br/>
+  Approved By: <%= @discount.approved_by.name %><br/>
+<% end %>
+<% if @discount.status == 'draft' %>
+<a href="<%= approve_via_email_admin_discount_url(@discount, user_email: @user.email, user_token: @user.authentication_token) %>">Click here</a> to approve this discount
+<% end %>
+Created By: <%= @discount.created_by.name %><br/>
+Created At: <%= @discount.created_at %><br/>

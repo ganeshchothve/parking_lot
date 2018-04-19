@@ -25,7 +25,7 @@
       <!-- <td><%#= project_unit.user_id.present? ? project_unit.user.name : "-" %></td> -->
       <td class="text-right">
         <div class="dropdown">
-          <a class="btn btn-light light-pink-btn dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+          <a class="btn btn-light light-pink-btn dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
           <div class="dropdown-menu dropdown-menu-right">
             <% if ['blocked', 'booked_tentative', 'booked_confirmed', 'error'].include?(project_unit.status) %>
             <% if ProjectUnitPolicy.new(current_user, project_unit).edit? %>

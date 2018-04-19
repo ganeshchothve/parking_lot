@@ -412,7 +412,7 @@ class ProjectUnit
         if params[:fltrs][:status].is_a?(Array)
           selector = {status: {"$in": params[:fltrs][:status] }}
         elsif params[:fltrs][:status].is_a?(ActionController::Parameters)
-          selector = {status: params[:fltrs][:status].to_hash }
+          selector = {status: params[:fltrs][:status].to_unsafe_h }
         else
           selector = {status: params[:fltrs][:status] }
         end

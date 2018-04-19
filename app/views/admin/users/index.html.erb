@@ -12,7 +12,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="dropdown float-left mbottom-20">
-          <a class="btn btn-primary dropdown-toggle pink-btn" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add new</a>
+          <a class="btn btn-primary dropdown-toggle pink-btn" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add new</a>
           <div class="dropdown-menu">
             <% if UserPolicy.new(current_user, User.new(role: 'user')).new? %>
               <%= link_to 'New Customer', new_admin_user_path, class: 'dropdown-item' %>
