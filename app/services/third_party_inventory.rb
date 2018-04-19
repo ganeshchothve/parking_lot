@@ -8,7 +8,7 @@ module ThirdPartyInventory
     # if Rails.env.development?
     #   third_party_inventory_response = {code: 'hold', project_unit: {status: 'hold'}}
     #   third_party_inventory_response_code = 200
-    #   # third_party_inventory_response = {code: 'hold', project_unit: { status: 'hold', base_price: project_unit.base_price + 1 } }
+    #   # third_party_inventory_response = {code: 'hold', project_unit: { status: 'hold' } }
     #   # third_party_inventory_response_code = 200
     #   # third_party_inventory_response = {code: 'not_available', project_unit: {status: 'not_available'}}
     #   # third_party_inventory_response_code = 200
