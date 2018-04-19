@@ -163,9 +163,9 @@ class ProjectUnit
   end
 
   def self.user_based_available_statuses(user)
-    if user.role?("management")
+    if user.role?("management_user")
       statuses = ["available", "employee", "management"]
-    elsif user.role?("employee")
+    elsif user.role?("employee_user")
       statuses = ["available", "employee"]
     else
       statuses = ["available"]
@@ -184,14 +184,14 @@ class ProjectUnit
           return "not_available"
         end
       end
-      if user.role?("employee")
+      if user.role?("employee_user")
         if self.status == "available" || self.status == "employee"
           return "available"
         else
           return "not_available"
         end
       end
-      if user.role?("management")
+      if user.role?("management_user")
         if self.status == "available" || self.status == "employee" || self.status == "management"
           return "available"
         else
