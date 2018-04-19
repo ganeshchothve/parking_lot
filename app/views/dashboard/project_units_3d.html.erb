@@ -3,7 +3,7 @@
     {
       price: x.agreement_price,
       apartment_ID: x.sfdc_id,
-      status: (x.status == "available" ? "Available" : "Booked")
+      status: (x.user_based_status(current_user) == "available" ? "Available" : "Booked")
     }
   end
 %>

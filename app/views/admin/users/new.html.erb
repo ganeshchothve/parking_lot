@@ -14,7 +14,7 @@
       </div>
       <div class="col-md-10 border-left-0 border-top-0 border-bottom-0 full-phone white-wrapper">
         
-        <% if @user.role?('user') %>
+        <% if @user.buyer? %>
 		 <script src='//trkr.scdn1.secure.raxcdn.com/t/531de108a7a03997c3000002.js'></script>
                  <script src='//trkr.scdn1.secure.raxcdn.com/t/forms/531de108a7a03997c3000002/5abba073923d4a567f880952.js' data-form-id='5abba073923d4a567f880952'></script>
         <% else %>
@@ -31,7 +31,7 @@
     display: block;
   }
 </style>
-<% if @user.role?('user') %>
+<% if @user.buyer? %>
   <script type="text/javascript" data-tag="selldo">
       window.sell_do_form_rendered = function(){
           $('<input type="hidden" name="sell_do[campaign][srd]" value="<%= (user_signed_in? && current_user.role?('channel_partner')) ? '5a72c7a67c0dac7e854aca9e' : '' %>"/>').appendTo(".sell_do_form_actual_container");

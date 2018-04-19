@@ -1,7 +1,7 @@
 class ReceiptPolicy < ApplicationPolicy
   def index?(for_user=nil)
     if for_user.present?
-      for_user.role?('user')
+      for_user.buyer?
     else
       true
     end
@@ -12,7 +12,7 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def new?
-    if user.role?('user')
+    if user.buyer?
       user.kyc_ready? && (record.project_unit.blank? || booking_payment?) && user.confirmed?
     else
       record.user_id.present? && record.user.kyc_ready? && (record.project_unit.blank? || booking_payment?) &&  record.user.confirmed?
@@ -24,7 +24,7 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def edit?
-    !user.role?('user') && (((user.role?('admin') || user.role?('crm') || user.role?('sales')) && ['pending', 'clearance_pending'].include?(record.status)) || (user.role?('channel_partner') && record.status == 'pending'))
+    !user.buyer? && (((user.role?('admin') || user.role?('crm') || user.role?('sales')) && ['pending', 'clearance_pending'].include?(record.status)) || (user.role?('channel_partner') && record.status == 'pending'))
   end
 
   def update?
@@ -37,7 +37,7 @@ class ReceiptPolicy < ApplicationPolicy
 
     valid = project_unit.present? && (project_unit.status == 'blocked' || project_unit.status == 'booked_tentative') && project_unit.pending_balance > 0 && unit_user.kyc_ready?
 
-    if user.role?('user')
+    if user.buyer?
       valid = valid && user.id == unit_user.id
     end
     valid
@@ -48,16 +48,16 @@ class ReceiptPolicy < ApplicationPolicy
     if record.new_record? || record.status == 'pending'
       attributes += [:payment_mode]
     end
-    if user.role?('user') || user.role?('channel_partner') || (record.user_id.present? && record.user.project_unit_ids.present?) && record.status == 'pending'
+    if user.buyer? || user.role?('channel_partner') || (record.user_id.present? && record.user.project_unit_ids.present?) && record.status == 'pending'
       attributes += [:project_unit_id]
     end
-    if !user.role?('user') && record.user_id.present? && record.status == 'pending'
+    if !user.buyer? && record.user_id.present? && record.status == 'pending'
       attributes += [:reference_project_unit_id]
     end
     if record.new_record? || record.status == 'pending'
       attributes += [:total_amount]
     end
-    if !user.role?('user') && (record.new_record? || record.status == 'pending')
+    if !user.buyer? && (record.new_record? || record.status == 'pending')
       attributes += [:issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier]
     end
     if user.role?('admin') || user.role?('crm') || user.role?('sales')

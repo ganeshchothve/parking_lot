@@ -8,18 +8,18 @@ class DashboardPolicy < Struct.new(:user, :dashboard)
   end
 
   def receipts?
-    user.role?('user')
+    user.buyer?
   end
 
   def checkout?
-    user.role?('user')
+    user.buyer?
   end
 
   def update_project_unit?
-    user.role?('user')
+    user.buyer?
   end
 
   def hold_project_unit?
-    user.role?('user')
+    user.buyer?
   end
 end

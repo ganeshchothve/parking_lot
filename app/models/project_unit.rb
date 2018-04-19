@@ -33,6 +33,7 @@ class ProjectUnit
   field :agreement_price, type: Integer
   field :booking_price, type: Integer
   field :status, type: String, default: 'available'
+  field :available_for, type: String, default: 'user'
   field :blocked_on, type: Date
   field :auto_release_on, type: Date
   field :held_on, type: DateTime
@@ -142,21 +143,88 @@ class ProjectUnit
   validates :client_id, :project_id, :project_tower_id, presence: true
   validates :status, :name, :sfdc_id, presence: true
   validates :status, inclusion: {in: Proc.new{ ProjectUnit.available_statuses.collect{|x| x[:id]} } }
-  validates :user_id, :user_kyc_ids, presence: true, if: Proc.new { |unit| ['available', 'not_available'].exclude?(unit.status) }
+  validates :available_for, inclusion: {in: Proc.new{ ProjectUnit.available_available_fors.collect{|x| x[:id]} } }
+  validates :user_id, :user_kyc_ids, presence: true, if: Proc.new { |unit| ['available', 'not_available', 'management', 'employee'].exclude?(unit.status) }
 
   def blocking_payment
     receipts.where(payment_type: 'blocking').first
+  end
+
+  def make_available
+    if self.available_for == "user"
+      self.status = "available"
+    end
+    if self.available_for == "employee"
+      self.status = "employee"
+    end
+    if self.available_for == "management"
+      self.status = "management"
+    end
+  end
+
+  def self.user_based_available_statuses(user)
+    if user.role?("management")
+      statuses = ["available", "employee", "management"]
+    elsif user.role?("employee")
+      statuses = ["available", "employee"]
+    else
+      statuses = ["available"]
+    end
+    return statuses
+  end
+
+  def user_based_status(user)
+    if ["hold", "blocked", "booked_tentative", "booked_confirmed"].include?(self.status)
+      return "booked"
+    else
+      if user.role?("user")
+        if self.status == "available"
+          return "available"
+        else
+          return "not_available"
+        end
+      end
+      if user.role?("employee")
+        if self.status == "available" || self.status == "employee"
+          return "available"
+        else
+          return "not_available"
+        end
+      end
+      if user.role?("management")
+        if self.status == "available" || self.status == "employee" || self.status == "management"
+          return "available"
+        else
+          return "not_available"
+        end
+      end
+      if self.status == "available"
+        return "available"
+      else
+        return "not_available"
+      end
+    end
   end
 
   def self.available_statuses
     [
       {id: 'available', text: 'Available'},
       {id: 'not_available', text: 'Not Available'},
+      {id: 'management', text: 'Management Blocking'},
+      {id: 'employee', text: 'Employee Blocking'},
       {id: 'error', text: 'Error'},
       {id: 'hold', text: 'Hold'},
       {id: 'blocked', text: 'Blocked'},
       {id: 'booked_tentative', text: 'Tentative Booked'},
       {id: 'booked_confirmed', text: 'Confirmed Booked'}
+    ]
+  end
+
+  def self.available_available_fors
+    [
+      {id: "user", text: "User"},
+      {id: "management", text: "Management"},
+      {id: "employee", text: "Employee"}
     ]
   end
 
@@ -256,7 +324,6 @@ class ProjectUnit
   def all_inclusive_price
     sub_total + agreement_price + gst_on_agreement_price
   end
-  # TODO: reset the userid always if status changes and is available or not_available
 
   def pending_balance(options={})
     strict = options[:strict] || false
@@ -290,9 +357,6 @@ class ProjectUnit
   end
 
   def sync_with_selldo
-    # TODO: Sell.Do write the actual code here
-    # if status == 'booked_tentative' || status == 'booked_confirmed' || status == 'available' update_project_unit_status
-    # if status == 'blocked' add_booking
     selldo_response_status = 200
     return (selldo_response_status == 200)
   end
@@ -304,9 +368,14 @@ class ProjectUnit
         # Push data to SFDC once 10% payment is completed - booking unit
         SFDC::ProjectUnitPusher.execute(self)
       elsif self.total_amount_paid > ProjectUnit.blocking_amount
-        self.status = 'booked_tentative'
-      elsif receipt.total_amount >= ProjectUnit.blocking_amount && ['hold', 'available'].include?(self.status)
-        if (self.user == receipt.user && self.status == 'hold') || self.status == "available"
+        if self.status != 'booked_tentative'
+          # Push data to SFDC
+          # Avoid hitting to SFDC for subsequent payments
+          SFDC::ProjectUnitPusher.execute(self) if self.status != 'booked_tentative'
+          self.status = 'booked_tentative'
+	end
+      elsif receipt.total_amount >= ProjectUnit.blocking_amount && (self.status == "hold" || self.user_based_status(self.user) == "available")
+        if (self.user == receipt.user && self.status == 'hold') || self.user_based_status(self.user) == "available"
           self.status = 'blocked'
           # Push data to SFDC when 30K payment is made - blocked unit
           SFDC::ProjectUnitPusher.execute(self)
@@ -323,7 +392,7 @@ class ProjectUnit
       # else we just release the unit
       if self.pending_balance == self.booking_price # not success or clearance_pending receipts tagged against this unit
         if self.status == 'hold'
-          self.status = 'available'
+          self.make_available
           self.user_id = nil
         else
           # TODO: we should display a message on the UI before someone marks the receipt as 'failed'. Because the unit might just get released

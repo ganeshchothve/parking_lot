@@ -10,8 +10,12 @@ class ProjectUnitObserver < Mongoid::Observer
       project_unit.booking_price = project_unit.agreement_price * project_unit.booking_price_percent_of_agreement_price
       project_unit.tds_amount = project_unit.agreement_price * project_unit.tds_amount_percent_of_agreement_price
     end
-    if project_unit.status_changed? && ['available', 'not_available'].include?(project_unit.status)
+    if project_unit.status_changed? && ['hold', 'blocked', 'booked_tentative', 'booked_confirmed'].exclude?(project_unit.status)
       project_unit.user_id = nil
+    end
+    if project_unit.status == 'available'
+      project_unit.status = 'employee' if project_unit.available_for == 'employee'
+      project_unit.status = 'management' if project_unit.available_for == 'management'
     end
     if project_unit.status_changed? && project_unit.status == 'hold'
       project_unit.held_on = Time.now
@@ -31,7 +35,7 @@ class ProjectUnitObserver < Mongoid::Observer
   def after_save project_unit
     BookingDetail.run_sync(project_unit.id, project_unit.changes)
 
-    if project_unit.status_changed? && ["blocked", "booked_tentative", "booked_confirmed", "error"].include?(project_unit.status_was) && ["available"].include?(project_unit.status)
+    if project_unit.status_changed? && ["blocked", "booked_tentative", "booked_confirmed", "error"].include?(project_unit.status_was) && project_unit.user_based_status(project_unit.user) == "available"
       user = project_unit.user
       project_unit.set(user_id: nil, blocked_on: nil, auto_release_on: nil, held_on: nil, primary_user_kyc_id: nil, user_kyc_ids: [])
       project_unit.receipts.update_all(project_unit_id: nil, status: "cancelled")

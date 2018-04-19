@@ -1,6 +1,6 @@
 class UserRequestPolicy < ApplicationPolicy
   def index?
-    ['admin', 'crm', 'sales', 'user'].include?(user.role)
+    true
   end
 
   def edit?
@@ -20,8 +20,8 @@ class UserRequestPolicy < ApplicationPolicy
   end
 
   def permitted_attributes params={}
-    attributes = [:comments, :project_unit_id, :receipt_id, :user_id] if user.role?('user')
-    attributes = [:status] if user.role?('admin') || user.role?('crm') || user.role?('sales')
+    attributes = [:comments, :project_unit_id, :receipt_id, :user_id] if user.buyer?
+    attributes = [:status] if user.role?('admin') || user.role?('crm' || user.role?('sales')
     attributes
   end
 end

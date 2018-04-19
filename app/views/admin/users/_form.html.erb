@@ -37,7 +37,7 @@
         <% if @user.role.blank? %>
         <div class="form-group form-field-wrapper">
           <%= f.label :role, class: 'control-label label-required' %>
-          <%= f.select :role, User.available_roles.reject{|r| r[:id] == 'user'}.collect{|r| [r[:text], r[:id]] }, {prompt: true}, class: 'selectize form-field', required: 'required', disabled: (policy(@user).editable_field?("role") ? false : true) %>
+          <%= f.select :role, User.available_roles.reject{|r| User.buyer_roles.include?(r[:id])}.collect{|r| [r[:text], r[:id]] }, {prompt: true}, class: 'selectize form-field', required: 'required', disabled: (policy(@user).editable_field?("role") ? false : true) %>
         </div>
         <% else %>
         <%= f.hidden_field :role %>
@@ -52,7 +52,7 @@
           <%= f.text_field :location, class: 'form-control form-field', required: @user.role?('channel_partner') ? true : false, disabled: (policy(@user).editable_field?("location") ? false : true) %>
         </div>
         <% end %>
-        <% if @user.role?('user') && ["crm", "sales", "admin"].include?(current_user.role) %>
+        <% if @user.buyer? && ["crm", "sales", "admin"].include?(current_user.role) %>
         <div class="form-group">
           <%= f.label :channel_partner_id, class: "control-label" %>
           <%= f.select :channel_partner_id, f.object.channel_partner_id.present? ? [[f.object.channel_partner.name, f.object.channel_partner.id]] : [], {prompt: true}, class: 'selectize-remote', autofocus: true, disabled: (policy(@user).editable_field?("channel_partner_id") ? false : true), "data-url": admin_users_path, "data-params": {fltrs: {role: 'channel_partner'}}.to_json, 'data-ds': 'ds' %>

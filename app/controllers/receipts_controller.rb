@@ -29,7 +29,7 @@ class ReceiptsController < ApplicationController
   end
 
   def new
-    if params[:project_unit_id].blank? && current_user.role?('user')
+    if params[:project_unit_id].blank? && current_user.buyer?
          flash[:notice] = "Please Select Apartment before making payment"
       redirect_to(receipts_path)
       return
@@ -84,7 +84,7 @@ class ReceiptsController < ApplicationController
             end
           else
             flash[:notice] = "Receipt was successfully updated. Please upload documents"
-            redirect_to current_user.role?('user') ? root_path : edit_admin_user_receipt_path(@user, @receipt)
+            redirect_to current_user.buyer? ? root_path : edit_admin_user_receipt_path(@user, @receipt)
           end
         }
       else
@@ -113,7 +113,7 @@ class ReceiptsController < ApplicationController
   end
 
   def set_user
-    if current_user.role?("user")
+    if current_user.buyer?
       @user = current_user
     else
       @user = (params[:user_id].present? ? User.find(params[:user_id]) : nil)
