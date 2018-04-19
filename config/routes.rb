@@ -37,6 +37,9 @@ Rails.application.routes.draw do
       end
       resources :user_requests, except: [:destroy], controller: 'user_requests'
     end
+    resources :discounts, except: [:destroy], controller: 'discounts' do
+      get :approve_via_email, on: :member, action: 'approve_via_email'
+    end
     resources :user_kycs, only: [:index], controller: '/user_kycs'
     resources :user_requests, except: [:destroy], controller: 'user_requests'
   end

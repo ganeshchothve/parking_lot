@@ -112,8 +112,12 @@ class User
   def self.build_criteria params={}
     selector = {}
     if params[:fltrs].present?
-      if params[:fltrs][:role].present?
-        selector[:role] = params[:fltrs][:role]
+      if params[:fltrs][:role].is_a?(Array)
+        selector = {role: {"$in": params[:fltrs][:role] }}
+      elsif params[:fltrs][:role].is_a?(ActionController::Parameters)
+        selector = {role: params[:fltrs][:role].to_unsafe_h }
+      else
+        selector = {role: params[:fltrs][:role] }
       end
     end
     or_selector = {}

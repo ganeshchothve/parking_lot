@@ -18,7 +18,7 @@
       <td><%= user_request.project_unit_id.present? ? user_request.project_unit.name : '-' %></td>
       <td class="text-right">
         <div class="dropdown">
-          <a class="btn btn-light light-pink-btn dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+          <a class="btn btn-light light-pink-btn dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
           <div class="dropdown-menu dropdown-menu-right">
             <% if UserRequestPolicy.new(current_user, user_request).edit? %>
               <%= link_to 'Edit', edit_admin_user_user_request_path(user_request.user_id, user_request), class: 'dropdown-item nav-btn' %>

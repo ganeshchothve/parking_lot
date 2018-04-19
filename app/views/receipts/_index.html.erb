@@ -44,7 +44,7 @@
       <td class="text-right"><%= number_to_indian_currency(receipt.total_amount.round()) %></td>
       <td class="text-right">
         <div class="dropdown">
-          <a class="btn btn-light dropdown-toggle light-pink-btn" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+          <a class="btn btn-light dropdown-toggle light-pink-btn" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
           <div class="dropdown-menu dropdown-menu-right">
             <% if receipt.status == 'success' %>
               <%= link_to '<i class="fas fa-print"></i> Print'.html_safe, receipt_path(receipt), class: 'dropdown-item print-btn',data:{event_category: 'Section', event_action: 'Click', event_name: 'Print'} %> <!-- TODO: Implement this -->
