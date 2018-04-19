@@ -122,6 +122,11 @@
                 <%= link_to "<span><i class='far fa-building' aria-hidden='true'></i> Unit</span>".html_safe, admin_project_units_path, class: 'nav-link' %>
               </li>
             <% end %>
+            <% if DiscountPolicy.new(current_user, Discount).index? %>
+              <li class="nav-item">
+                <%= link_to "<span><i class='far fa-coupon' aria-hidden='true'></i> Discounts</span>".html_safe, admin_discounts_path, class: 'nav-link' %>
+              </li>
+            <% end %>
             <% if UserRequestPolicy.new(current_user, UserRequest).index? %>
               <li class="nav-item">
                 <%= link_to "<span><i class='fa fa-ban' aria-hidden='true'></i> Cancellation Requests</span>".html_safe, admin_user_requests_path, class: 'nav-link' %>
