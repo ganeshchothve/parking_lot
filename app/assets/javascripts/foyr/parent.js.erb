@@ -16,7 +16,7 @@ function onParentMessage(messageEvent) {
             * sample - {"bookedapartment" : {"apartment_ID": "a0K0l000000jhle", "status": "booked", "name": "", "sales": ""}}
             */
             var apartmentdata = messageEvent.data["bookedapartment"];
-            if(App.current_user.role == "user"){
+            if(_.includes(['user', 'management_user', 'employee_user'], App.current_user.role)){
               window.location = "/dashboard/apartment-selector/3d/all-towers/" + apartmentdata.apartment_ID;
             }else{
               $("#user_dropdown_modal").modal("show");

@@ -1,4 +1,4 @@
-<% if current_user.role?('user') %>
+<% if current_user.buyer? %>
   <%= render 'user' %>
 <% elsif current_user.role?('sales') %>
   <%= render 'crm' %>

@@ -6,6 +6,8 @@ en:
     assets: 'Reference Documents'
     user_request: 'Cancellation Request'
     user_requests: 'Cancellation Requests'
+    discount: 'Discount'
+    discounts: 'Discounts'
     receipt_with_status: '%{status} Payment'
     receipts_with_status: '%{status} Payments'
     user_kyc: 'Applicant'
@@ -69,6 +71,18 @@ en:
         receipt_ids: "Payments (associated with this Unit)"
         user_request_ids: "User Requests (associated with this Unit)"
         user_kyc_ids: "User KYCs (associated with this Unit)"
+      discount:
+        name: 'Name'
+        project_id: 'Project'
+        project_tower_id: 'Project Tower'
+        project_unit_id: 'Project Unit'
+        user_id: 'User'
+        user_role: 'User Role'
+        value: 'Discount (Rs.)'
+        status: 'Status'
+        approved_at: 'Approved At'
+        approved_by: 'Approved By'
+        created_by: 'Created By'
       user:
         name: 'Name'
         email: 'Email'
@@ -89,4 +103,3 @@ en:
         location: 'Location'
         associated_user_id: 'Associated User'
         status: 'Status'
-

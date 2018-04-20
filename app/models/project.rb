@@ -91,8 +91,6 @@ class Project
         hash = {"name" => k.to_s}
         hash["min_area"] = v.min_by{|obj| obj.saleable }.saleable.round
         hash["max_area"] = v.max_by{|obj| obj.saleable }.saleable.round
-        #hash["min_price"]= v.min_by{|obj| obj.base_price.to_i }.base_price.to_i
-        #hash["max_price"] = v.max_by{|obj| obj.base_price.to_i }.base_price.to_i
         hash["min_price"]= v.min_by{|obj| obj.display_price.values[0].to_i }.display_price.values[0].to_i
         hash["max_price"] = v.max_by{|obj| obj.display_price.values[0].to_i }.display_price.values[0].to_i
         self.area_price_data << hash

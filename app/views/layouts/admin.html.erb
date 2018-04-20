@@ -72,8 +72,8 @@
                 <a href="/admin/users/new" class="add-booking-btn">
                   Add Booking
                 </a>
-                <span class="hidden-xs"><img src="<%= asset_path 'usernew.png'%>" class="img-responsive"> &nbsp; 
-                  
+                <span class="hidden-xs"><img src="<%= asset_path 'usernew.png'%>" class="img-responsive"> &nbsp;
+
                   <%#= link_to "Welcome " + current_user.name, edit_admin_user_path(current_user) , class:'white user-name'%>
                 </span>
                 <!-- <span>
@@ -86,13 +86,13 @@
     </div>
     </div>
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
-      <a class="navbar-brand" href="#"><img src="<%= asset_path "logo-edge.png" %>" class="img-responsive" style="padding:0 5px;">
+      <a class="navbar-brand" href="javascript:;"><img src="<%= asset_path "logo-edge.png" %>" class="img-responsive" style="padding:0 5px;">
         <div class="rera-id">RERA Ack. No.: PR/KN/180119/002674</div>
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-content" aria-controls="navbar-content" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      
+
       <div class="collapse navbar-collapse" id="navbar-content">
         <ul class="navbar-nav mr-auto">
           <% if user_signed_in? %>
@@ -120,6 +120,11 @@
             <% if ProjectUnitPolicy.new(current_user, ProjectUnit).index? %>
               <li class="nav-item">
                 <%= link_to "<span><i class='far fa-building' aria-hidden='true'></i> Unit</span>".html_safe, admin_project_units_path, class: 'nav-link' %>
+              </li>
+            <% end %>
+            <% if DiscountPolicy.new(current_user, Discount).index? %>
+              <li class="nav-item">
+                <%= link_to "<span><i class='far fa-coupon' aria-hidden='true'></i> Discounts</span>".html_safe, admin_discounts_path, class: 'nav-link' %>
               </li>
             <% end %>
             <% if UserRequestPolicy.new(current_user, UserRequest).index? %>
@@ -247,7 +252,7 @@
           <div class="modal-body">
             <div class="form-group" id="user_dropdown_modal_form">
               <%= label_tag "fltrs", "Name / Email / Phone", class: "control-label" %>
-              <%= select_tag "fltrs[user_id]", [], {class: "selectize-remote", data: {url: admin_users_path, params: {role: "user"} }} %>
+              <%= select_tag "fltrs[user_id]", [], {class: "selectize-remote", data: {url: admin_users_path, params: {role: {"$in": User.buyer_roles}} }} %>
               <%= hidden_field_tag "fltrs[project_unit_id]" %>
             </div>
             <%= javascript_tag do %>

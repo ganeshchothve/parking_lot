@@ -94,7 +94,7 @@ class UserExportWorker
       user.name,
       user.email,
       user.phone,
-      user.role?("user") ? user.lead_id : "",
+      user.buyer? ? user.lead_id : "",
       User.available_roles.select{|x| x[:id] == user.role}.first[:text],
       user.channel_partner_id.present? ? User.find(user.channel_partner_id).name : "",
       user.role?("channel_partner") ? user.rera_id : "",

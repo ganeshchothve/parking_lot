@@ -1,5 +1,5 @@
 <%= content_for :breadcrumbs do %>
-  <% unless current_user.role?('user') %>
+  <% unless current_user.buyer? %>
   <div class="col-12">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb"   style="float:right;">

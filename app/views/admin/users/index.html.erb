@@ -12,10 +12,16 @@
   <div class="container-fluid">
     <div class="row">
       <div class="dropdown float-left mbottom-20">
-          <a class="btn btn-primary dropdown-toggle pink-btn" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add new</a>
+          <a class="btn btn-primary dropdown-toggle pink-btn" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add new</a>
           <div class="dropdown-menu">
             <% if UserPolicy.new(current_user, User.new(role: 'user')).new? %>
               <%= link_to 'New Customer', new_admin_user_path, class: 'dropdown-item' %>
+            <% end %>
+            <% if UserPolicy.new(current_user, User.new(role: 'employee_user')).new? %>
+              <%= link_to 'New Employee', new_admin_user_path(role: 'employee_user'), class: 'dropdown-item' %>
+            <% end %>
+            <% if UserPolicy.new(current_user, User.new(role: 'management_user')).new? %>
+              <%= link_to 'New Management User', new_admin_user_path(role: 'management_user'), class: 'dropdown-item' %>
             <% end %>
             <% if UserPolicy.new(current_user, User.new(role: 'admin')).new? %>
               <%= link_to 'New Admin', new_by_role_admin_users_path(role: 'admin'), class: 'dropdown-item' %>
@@ -53,7 +59,7 @@
                   <%= link_to "View", admin_user_path(user.id) %> |
                   <%= link_to "Add #{global_labels['user_kyc_details']}", new_admin_user_user_kyc_path(user), class: 'blue-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
                   <% if !user.confirmed? && user.confirmation_token.present? %>
-                    <%= link_to 'Resend Confirmation Instructions', admin_user_resend_confirmation_instructions_path(user), class: 'blue-link', data: {event_category: 'Section', event_action: 'Click', event_name: 'Resend Confirmation Instructions'} %>
+                    <%= link_to 'Resend Confirmation Instructions', resend_confirmation_instructions_admin_user_path(user), class: 'blue-link', data: {event_category: 'Section', event_action: 'Click', event_name: 'Resend Confirmation Instructions'} %>
                   <% end %>
                 <% end %>
                 <% if ['crm', 'sales', 'admin'].include?(current_user.role) %>

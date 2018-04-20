@@ -1,7 +1,7 @@
-<% if current_user.role?('user') %>
+<% if current_user.buyer? %>
   <div class="table-wrapper">
 <% end %>
-<table class="striped-table table payment-table <% if current_user.role?('user') %> reciept-table <% end %>"  width="100%" <% if current_user.role?('user') %> cellpadding="20" cellspacing="0"<% end %>>
+<table class="striped-table table payment-table <% if current_user.buyer? %> reciept-table <% end %>"  width="100%" <% if current_user.buyer? %> cellpadding="20" cellspacing="0"<% end %>>
   <thead class="th-default th-pink">
     <% labels = t('mongoid.attributes.receipt').with_indifferent_access %>
     <tr>
@@ -44,7 +44,7 @@
       <td class="text-right"><%= number_to_indian_currency(receipt.total_amount.round()) %></td>
       <td class="text-right">
         <div class="dropdown">
-          <a class="btn btn-light dropdown-toggle light-pink-btn" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+          <a class="btn btn-light dropdown-toggle light-pink-btn" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
           <div class="dropdown-menu dropdown-menu-right">
             <% if receipt.status == 'success' %>
               <%= link_to '<i class="fas fa-print"></i> Print'.html_safe, receipt_path(receipt), class: 'dropdown-item print-btn',data:{event_category: 'Section', event_action: 'Click', event_name: 'Print'} %> <!-- TODO: Implement this -->
@@ -59,7 +59,7 @@
     <% end %>
   </tbody>
 </table>
-<% if current_user.role?('user') %>
+<% if current_user.buyer? %>
   </div>
 <% end %>
 <%= will_paginate receipts %>

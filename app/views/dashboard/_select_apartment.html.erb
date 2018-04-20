@@ -81,21 +81,20 @@
         <% @units.group_by(&:floor).each do |ur| %>
         <div class="flats-<%= ur[1].count %> apt-selector-box">
           <div class="floor-number"><%= ur[0] %></div>
-
           <% ur[1].each do |u| %>
           <%
           if (bedrooms.to_s != "" && agreement_price.to_s != "")
             if(bedrooms.to_s == u.bedrooms.to_s && (u.agreement_price.to_i <= maxprice.to_i && u.agreement_price.to_i >= minprice.to_i))
-              status = (u.status == "not_available") ? "na" : u.status.gsub("_", " ")
+              status = u.user_based_status(current_user) == "not_available" ? "na" : u.user_based_status(current_user)
             else
               status = "na"
             end
           else
             if(bedrooms.to_s == "" && agreement_price.to_s == "")
-              status = (u.status == "not_available") ? "na" : u.status.gsub("_", " ")
+              status = u.user_based_status(current_user) == "not_available" ? "na" : u.user_based_status(current_user)
             else
               if (bedrooms.to_s != "" && bedrooms.to_s == u.bedrooms.to_s) || (u.agreement_price.to_i <= maxprice.to_i && u.agreement_price.to_i >= minprice.to_i)
-                status = (u.status == "not_available") ? "na" : u.status.gsub("_", " ")
+                status = u.user_based_status(current_user) == "not_available" ? "na" : u.user_based_status(current_user)
               else
                 status = "na"
               end

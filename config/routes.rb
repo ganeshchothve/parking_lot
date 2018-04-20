@@ -27,7 +27,7 @@ Rails.application.routes.draw do
     end
     resources :project_units, only: [:index, :edit, :update]
     resources :users do
-      get :resend_confirmation_instructions, action: 'resend_confirmation_instructions', as: :resend_confirmation_instructions
+      get :resend_confirmation_instructions, action: 'resend_confirmation_instructions', as: :resend_confirmation_instructions, on: :member
       get '/new/:role', action: 'new', on: :collection, as: :new_by_role
       get 'export', action: 'export', on: :collection, as: :export
       resources :receipts, only: [:update, :edit, :show, :index, :new, :create], controller: '/receipts'
@@ -36,6 +36,9 @@ Rails.application.routes.draw do
         resources :receipts, only: [:update, :edit, :show, :index, :new, :create], controller: '/receipts'
       end
       resources :user_requests, except: [:destroy], controller: 'user_requests'
+    end
+    resources :discounts, except: [:destroy], controller: 'discounts' do
+      get :approve_via_email, on: :member, action: 'approve_via_email'
     end
     resources :user_kycs, only: [:index], controller: '/user_kycs'
     resources :user_requests, except: [:destroy], controller: 'user_requests'

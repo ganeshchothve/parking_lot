@@ -3,6 +3,10 @@ class UserPolicy < ApplicationPolicy
     ['channel_partner', 'admin', 'crm', 'sales'].include?(user.role)
   end
 
+  def resend_confirmation_instructions?
+    index?
+  end
+
   def export?
     ['admin', 'crm', 'sales'].include?(user.role)
   end
@@ -12,11 +16,11 @@ class UserPolicy < ApplicationPolicy
   end
 
   def new?
-    user.role?('admin') || (user.role?('channel_partner') && record.role?('user'))
+    user.role?('admin') || (user.role?('channel_partner') && record.buyer?)
   end
 
   def create?
-    user.role?('admin') || (user.role?('channel_partner') && record.role?('user'))
+    user.role?('admin') || (user.role?('channel_partner') && record.buyer?)
   end
 
   def update?

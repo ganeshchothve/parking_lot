@@ -16,7 +16,7 @@ class Admin::UsersController < AdminController
   end
 
   def resend_confirmation_instructions
-    @user = User.find(params[:user_id])
+    @user = User.find(params[:id])
     respond_to do |format|
       if @user.resend_confirmation_instructions
         flash[:notice] = "Confirmation instructions sent successfully."
@@ -98,11 +98,11 @@ class Admin::UsersController < AdminController
   def apply_policy_scope
     custom_scope = User.all.criteria
     if current_user.role?('channel_partner')
-      custom_scope = custom_scope.in(referenced_channel_partner_ids: current_user.id).where(role: 'user')
+      custom_scope = custom_scope.in(referenced_channel_partner_ids: current_user.id).in(role: User.buyer_roles)
     elsif current_user.role?('crm')
-      custom_scope = custom_scope.where(role: 'user')
+      custom_scope = custom_scope.in(role: User.buyer_roles)
     elsif current_user.role?('sales')
-      custom_scope = custom_scope.where(role: 'user')
+      custom_scope = custom_scope.in(role: User.buyer_roles)
     end
     User.with_scope(policy_scope(custom_scope)) do
       yield

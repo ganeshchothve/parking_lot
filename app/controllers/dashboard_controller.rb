@@ -108,10 +108,11 @@ class DashboardController < ApplicationController
     respond_to do |format|
       format.json do
         if project_unit.present?
+          status = project_unit.user_based_status(current_user).titleize
           render json: {
             price: project_unit.agreement_price,
             apartment_ID: project_unit.sfdc_id,
-            status: (project_unit.status == "available" ? "Available" : "Booked")
+            status: status
           }
         else
           render json: {}, status: 404
@@ -136,7 +137,7 @@ class DashboardController < ApplicationController
       @towers = ProjectTower.in(id: project_tower_ids).collect do |x|
         hash = {project_tower_id: x.id, project_tower_name:x.name}
         hash[:total_units] = ProjectUnit.where(project_tower_id: x.id).count
-        hash[:total_units_available] = ProjectUnit.build_criteria(parameters).where(project_tower_id: x.id).where(status: "available").count
+        hash[:total_units_available] = ProjectUnit.build_criteria(parameters).where(project_tower_id: x.id).in(status: ProjectUnit.user_based_available_statuses(current_user)).count
         hash
       end
     elsif params[:stage] == "select_apartment"
@@ -188,7 +189,7 @@ class DashboardController < ApplicationController
     if params[:project_unit_id].present? && params[:receipt_id].present?
       receipt = current_user.receipts.where(receipt_id: params[:receipt_id]).where(payment_type: 'blocking').first
       project_unit = ProjectUnit.find(params[:project_unit_id])
-      if receipt.present? && receipt.project_unit_id.blank? && project_unit.status == 'available' && receipt.reference_project_unit_id.to_s == project_unit.id.to_s
+      if receipt.present? && receipt.project_unit_id.blank? && project_unit.user_based_status(current_user) == 'available' && receipt.reference_project_unit_id.to_s == project_unit.id.to_s
         params[:project_unit] = {status: 'hold', user_kyc_ids: current_user.user_kyc_ids}
         hold_project_unit
       else
@@ -254,53 +255,20 @@ class DashboardController < ApplicationController
     authorize @project_unit
     @project_unit.attributes = permitted_attributes(@project_unit)
     @project_unit.user_kyc_ids = current_user.user_kyc_ids if @project_unit.user_kyc_ids.blank?
-    # TODO: get a lock on this model. Nobody can modify it.
+    @project_unit.status = "hold"
+    @project_unit.user = current_user
+
     respond_to do |format|
-      # TODO: handle this API method for other status updates. Currently its assuming its a hold request
-      # Rails.logger.info "======#{hold_on_third_party_inventory}========"
-      case hold_on_third_party_inventory
-      when 'hold'
+      if @project_unit.save
         format.html { redirect_to dashboard_checkout_path(project_unit_id: @project_unit.id) }
-      when 'not_available'
-        flash[:notice] = 'The unit is not available'
-        format.html { redirect_to dashboard_path }
-      when 'price_change'
-        flash[:notice] = 'The Unit price has changed'
-        format.html { redirect_to dashboard_checkout_path(project_unit_id: @project_unit.id) }
-      when 'error'
-        Rails.logger.info "______________________________"
-	Rails.logger.info @project_unit.errors.full_messages
+      else
         flash[:notice] = 'We cannot process your request at this time. Please retry'
         format.html { redirect_to dashboard_path }
       end
     end
   end
-  
-  private
-  def hold_on_third_party_inventory
-    third_party_inventory_response, third_party_inventory_response_code = ThirdPartyInventory.hold_on_third_party_inventory(@project_unit)
-    # TODO: if third_party_inventory timesouts, need to revert the hold on the project unit in our db
-    if third_party_inventory_response_code == 200
-      ThirdPartyInventory.map_third_party_inventory(@project_unit, third_party_inventory_response)
-      # once we have the updated model, just set the code for the controller method and update the project unit
-      if false #@project_unit.base_price_changed?
-        @project_unit.user = current_user
-        code = 'price_change'
-      elsif @project_unit.status == 'hold'
-        @project_unit.user = current_user
-        code = 'hold'
-      elsif @project_unit.status != 'hold'
-        code = 'not_available'
-      end
-      unless @project_unit.save
-        code = 'error'
-      end
-    else
-      code = 'error'
-    end
-    code
-  end
 
+  private
   def set_project_unit
     @project_unit = ProjectUnit.find(params[:project_unit_id])
   end

@@ -50,7 +50,7 @@
               <div class="pull-left">
               <%= form_for @project_unit, url: dashboard_update_project_unit_path(project_unit_id: @project_unit.id), method: 'post', html: {class: 'validate-form'} do |f| %>
                 <%= f.hidden_field :status, value: 'available' %>
-              <%= f.submit 'Cancel', class: 'cancel-btn apply-btn' , data:{event_category: 'Section', event_action: 'Click', event_name: 'Cancel'}%>
+                <%= f.submit 'Cancel', class: 'cancel-btn apply-btn' , data:{event_category: 'Section', event_action: 'Click', event_name: 'Cancel'}%>
               <% end %>
               </div>
             <% else %>
