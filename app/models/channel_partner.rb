@@ -3,7 +3,6 @@ class ChannelPartner
   include Mongoid::Timestamps
   include ArrayBlankRejectable
 
-  field :name, type: String
   field :email, type: String
   field :phone, type: String
   field :rera_id, type: String
@@ -19,11 +18,9 @@ class ChannelPartner
   field :postal_code, type: String
   field :country, type: String
   field :mobile_phone, type: String
-  field :email, type: String
   field :company_name, type: String
   field :pan_no, type: String
   field :gstin_no, type: String
-  field :rera_id, type: String
   field :bank_name, type: String
   field :bank_beneficiary_account_no, type: String
   field :bank_account_type, type: String
@@ -35,12 +32,12 @@ class ChannelPartner
   field :bank_ifsc_code, type: String
   field :region, type: String
   field :aadhaar_no, type: String
-  
+
   mount_uploader :pan_card_doc, DocUploader
   mount_uploader :bank_check_doc, DocUploader
   mount_uploader :aadhaar_card_doc, DocUploader
-  
-  validates :name, :email, :phone, :rera_id, :location, :status, presence: true
+
+  validates :first_name, :last_name, :email, :phone, :rera_id, :location, :status, presence: true
   validates :phone, uniqueness: true#, phone: true # TODO: we can remove phone validation, as the validation happens in sell.do
   validates :email, :rera_id, uniqueness: true, allow_blank: true
   validates :status, inclusion: {in: Proc.new{ ChannelPartner.available_statuses.collect{|x| x[:id]} } }
@@ -48,10 +45,10 @@ class ChannelPartner
   validate :cannot_make_inactive
 
 
-  validates :name, :last_name, :city, format: { with: /\A[a-zA-Z]*\z/}
+  validates :first_name, :last_name, :city, format: { with: /\A[a-zA-Z]*\z/}
   validates :postal_code, format: { with: /\A[0-9]*\z/}
   validates :region, format: { with: /\A[a-zA-Z ]*\z/}
-  
+
   # validates :city, format: { with: /\A[a-zA-Z]*\z/}
   # validates :city,  format: { with: /[a-zA-Z]/}
   # validates :postal_code, format: { with: /[0-9]/}
@@ -96,9 +93,13 @@ class ChannelPartner
     or_selector = {}
     if params[:q].present?
       regex = ::Regexp.new(::Regexp.escape(params[:q]), 'i')
-      or_selector = {"$or": [{name: regex}, {email: regex}, {phone: regex}] }
+      or_selector = {"$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] }
     end
     self.where(selector).where(or_selector)
+  end
+
+  def name
+    "#{first_name} #{last_name}"
   end
 
   def ds_name

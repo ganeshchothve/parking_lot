@@ -30,6 +30,7 @@ class UserKycsController < ApplicationController
 
     respond_to do |format|
       if @user_kyc.save
+        UserKycPusher.execute(@user_kyc)
         format.html { redirect_to after_sign_in_path_for(current_user), notice: 'User kyc was successfully created.' }
         # format.html { redirect_to admin_user_path(@user_kyc.user_id), notice: 'User kyc was successfully created.' }
         format.json { render json: @user_kyc, status: :created, location: @user_kyc }
@@ -75,7 +76,7 @@ class UserKycsController < ApplicationController
 
   def apply_policy_scope
     custom_scope = UserKyc.all.criteria
-    if current_user.role?('admin') || current_user.role?('crm')
+    if current_user.role?('admin') || current_user.role?('crm') || current_user.role?('sales')
       if params[:user_id].present?
         custom_scope = custom_scope.where(user_id: params[:user_id])
       end

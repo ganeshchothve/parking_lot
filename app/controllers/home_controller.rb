@@ -21,7 +21,7 @@ class HomeController < ApplicationController
     unless request.xhr?
       redirect_to (user_signed_in? ? after_sign_in_path : root_path)
     else
-      if user_signed_in? && ['channel_partner', 'admin', 'crm'].exclude?(current_user.role)
+      if user_signed_in? && ['channel_partner', 'admin', 'crm', 'sales'].exclude?(current_user.role)
         respond_to do |format|
           format.json { render json: {errors: "You have already been logged in", url: root_path}, status: :unprocessable_entity }
         end
@@ -29,9 +29,13 @@ class HomeController < ApplicationController
         @user = User.or([{email: params['email']}, {phone: params['phone']}, {lead_id: params['lead_id']}]).first #TODO: check if you want to find uniquess on lead id also
         if @user.present?
           message = 'A user with these details has already registered'
-          unless @user.confirmed?
+          if !@user.confirmed? || (@user.channel_partner_id.blank? && @user.booking_details.blank?)
             @user.set(channel_partner_id: current_user.id) if current_user.present? && current_user.role?('channel_partner')
-            message = "A user with these details has already registered, but hasn't confirmed their account. We have resent the confirmation email to them, which has an account activation link."
+            if @user.confirmed?
+              message = "A user with these details has already registered and has confirmed their account. We have linked his account to you channel partner login."
+            else
+              message = "A user with these details has already registered, but hasn't confirmed their account. We have resent the confirmation email to them, which has an account activation link."
+            end
             @user.resend_confirmation_instructions
           end
           respond_to do |format|
