@@ -87,12 +87,12 @@ class UserKyc
         applicants: []
       }
       applicants = []
-      count = 2
+      count = 1
       project_unit.user_kycs.asc(:created_at).each do |kyc|
-        is_primary_user_kyc = project_unit.primary_user_kyc_id == kyc.id
-        coapplicant_type = is_primary_user_kyc ? 'Co-Applicant 1' : "Co-Applicant #{count}"
-        count += 1 unless is_primary_user_kyc
+        next if project_unit.primary_user_kyc_id == kyc.id
+        coapplicant_type = "Co-Applicant #{count}"
         applicants << user_kyc_json(kyc, coapplicant_type)
+        count += 1
       end
 
       hash.merge!(applicants: applicants)
