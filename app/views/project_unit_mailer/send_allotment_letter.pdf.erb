@@ -72,12 +72,12 @@
     <div class="row">
       <div class="col-12 mb30 text-justify">
         <p>Dear Madam/Sir,</p></br>
-        <p><strong>Sub:</strong> Provisional Allotment of Apartment No. <%= @project_unit.name  rescue ''  %> in Tower <%= @project_unit.project_tower_name %> <!-- Block <%#= @project_unit.name %> --> <!-- of <%#= @project_unit.floor %> -->, being developed in the Project "Embassy Edge", situated at Nagamangala/Hegganahalli Village, Kundana Hobli, Devanahalli Taluka, Bangalore / Navarathna Agrahara Village, Jala Hobi, Bangalore North Taluka, Bangalore Urban District.</p><br/>
+        <p><strong>Sub:</strong> Provisional Allotment of Apartment No. <%= @project_unit.name  %> in Tower <%= @project_unit.project_tower_name %> <!-- Block <%#= @project_unit.name %> --> <!-- of <%#= @project_unit.floor %> -->, being developed in the Project "Embassy Edge", situated at Nagamangala/Hegganahalli Village, Kundana Hobli, Devanahalli Taluka, Bangalore / Navarathna Agrahara Village, Jala Hobi, Bangalore North Taluka, Bangalore Urban District.</p><br/>
         <p><strong>Ref:</strong> Booking Application dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %>.</p></br>
-        <p>Pursuant of the above referred Booking Application dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %> in respect of Apartment No. <%= @project_unit.name rescue ''%> in the Project known as "Embassy Edge", we have provisionally allotted Apartment No.
-          <%= @project_unit.name  rescue ''  %> having a Carpet Area of <%= @project_unit.carpet %> Square feet &amp; Super Built-up Area of <%= %>to you.<br/><br/>
+        <p>Pursuant of the above referred Booking Application dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %> in respect of Apartment No. <%= @project_unit.name %> in the Project known as "Embassy Edge", we have provisionally allotted Apartment No.
+          <%= @project_unit.name %> having a Carpet Area of <%= @project_unit.carpet %> Square feet &amp; Super Built-up Area of <%= %>to you.<br/><br/>
           Further, we hereby confirm having received an amount of Rs.<%= @project_unit.booking_price %>/-
-          as advance vide reference no. <%= @receipt.receipt_id rescue ''%>  made through <%= @receipt.payment_mode rescue ''%> bearing No. <%= @receipt.payment_identifier rescue ''%>,
+          as advance vide reference no. <%= @receipt.receipt_id %>  made through <%= @receipt.payment_mode %> bearing No. <%= @receipt.payment_identifier %>,
           dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %>, drawn on <%= @user.name %>, along with your Booking Application .<br/><br/>
           The total sale consideration amount payable for the above subject Apartment is Rs <%#= @project_unit.agreement_price %> <%=@project_unit.all_inclusive_price.round %>/-
           ("Total Sale Consideration"). The Total Consideration is
