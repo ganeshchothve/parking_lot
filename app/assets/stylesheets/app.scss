@@ -654,7 +654,7 @@ label.control-label{
   line-height: 20px;
 }
 .hidden-field-prev-prop, .hidden-field.gstin, .nri-fields{
-  width: 50%;
+  width: 100%;
 }
 .crm-wrapper{
   padding: 100px 40px 0 40px;
@@ -826,6 +826,9 @@ background-color: #349e63;
 }
 }
 @media all and (max-width: 768px){
+  .white-wrapper .col-md-2, .white-wrapper .col-md-5, .white-wrapper .col-md-6{
+    max-width: 100%;
+  } 
   .steps-arrow-right{
     padding-bottom: 20px;
   }

@@ -807,7 +807,7 @@ form#edit_user_form .form-field-wrapper label{display: block;}
 	position: fixed;
 	right: 0px;
 	top: 0px;
-	padding-left: 15%;
+	padding-left: 200px;
 	background-color: #fff;
 	color: #252525;
 }
@@ -949,6 +949,7 @@ form#edit_user_form .form-field-wrapper label{display: block;}
 .mediaCenterAccordion{
 	padding-left: 0px;
 	margin: 20px 0px;
+	line-height: 26px;
 }
 .payment-breakup.mediaCenterAccordion li > span{
 	background-image: asset-url('Plus-Icon.png');
@@ -2333,7 +2334,7 @@ hr.divider {
 	    border-left: 1px solid #ccc;
 	}
 	.receipt-table th {
-	    background-color: #ffecf7;
+	    background-color: #f3f3f2;
 	    border-right: 1px solid #ccc;
 	    border-top: 1px solid #ccc;
 	    border-bottom: 1px solid #ccc;
@@ -2759,6 +2760,12 @@ input.nav-btn:hover{
 .white-font{
 	color: #fff
 }
+.table-white-wrapper{
+	background-color: #fff;
+	padding: 20px;
+	border-radius: 3px;
+	margin: 20px 0px;
+}
 /* end progress bar */
 @media all and (max-width: 768px){
 	.notification-header .left-wrapper{
@@ -2922,6 +2929,10 @@ input.nav-btn:hover{
 	}
 }
 @media all and (max-width: 700px){
+	.apply-btn{
+		padding: 4px 15px;
+		border-radius: 3px;
+	}
 	#progressbar{
 		padding-left: 0px;
 	}
@@ -3535,6 +3546,7 @@ input.nav-btn:hover{
 	    100% { background-color: #ec9834;color: #fff; }
 	}
 	.show-unit-details-wrapper .close-btn{
+		color: #ec9834 !important;
 		text-align: right;
 		margin: 10px 20px 0px 20px;
 		font-size: 20px;
@@ -3587,6 +3599,7 @@ input.nav-btn:hover{
 		text-align: left !important;
 	}
 	.help-wrapper>div a{
+		border: 0px;
 		display: block;
 		padding: 5px 0px 0px 0px;
     	font-size: 14px;
@@ -3690,6 +3703,8 @@ input.nav-btn:hover{
 	.pageTitle.big{
 		margin-bottom: 0px;
 		margin-top: 0px;
+		font-size: 20px !important;
+		padding: 0 10px;
 	}
 	.reciept-table th{
 		font-size: 12px;

@@ -127,7 +127,7 @@
 					<div class="pull-left">
 						<p class="pageTitle big pink">PAYMENT SUCCESS!</p>
 					</div>
-					<div class="pull-right">	
+					<div class="pull-right" style="padding-right:10px;">	
 						<!-- <a href="/dashboard/receipt-print"><img src="<%#= asset_path 'printer-outline.png'%>" class="img-responsive"></a> -->
 					<%= link_to dashboard_receipt_mail_path(@receipt.id, :format => 'pdf'), target: :_blank do %>
 						<img src="<%= asset_path 'printer-outline.png'%>" class="img-responsive">
@@ -143,7 +143,8 @@
 						</div>
 						<div class="pull-right text-right payment-details-wrapper">
 							Date: <strong><%= @receipt.created_at.strftime('%d %b %Y') %></strong><br/>
-							Receipt: <strong><%= @receipt.receipt_id %></strong>
+							Receipt: <strong><%= @receipt.receipt_id %></strong><br/>
+							CIN No. <strong>885110KA1995PTC01795</strong>
 						</div>
 						<div class="clearfix"></div>
 						<div class="tower-info-wrapper pink">
@@ -203,7 +204,7 @@
 								  <% if @receipt.payment_mode == "online" %>
 									Reference ID: <%= @receipt.payment_identifier %>
 									<% else %>
-									Cheque / DD Number:<%= @receipt.issuing_bank %><br/> Bank Details: <%= @receipt.issuing_bank_branch %> 
+									Cheque / DD Number:<%= @receipt.payment_identifier %><br/> Bank Name: <%= @receipt.issuing_bank %> <br/> Bank Branch :<%= @receipt.issuing_bank_branch %>
 									<% end %>
 									</td>
 									<td><%= number_to_indian_currency(@receipt.total_amount.round) %></td>
