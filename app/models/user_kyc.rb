@@ -104,8 +104,9 @@ class UserKyc
 
   def user_kyc_json(kyc, coapplicant_type)
     # extract phone and country code from phone field
-    phone = kyc.phone.split(' ')
-    country_code = phone.shift.gsub!(/[^0-9A-Za-z]/, '')
+    phone = Phonelib.parse(kyc.phone)
+    country_code = phone.country_code
+    kyc_phone = phone.national(false).sub(/^0/, "")
 
     hash = {
       applicant_id: kyc.id.to_s,
@@ -114,7 +115,7 @@ class UserKyc
       last_name: kyc.last_name,
       email: kyc.email,
       country_code_primary_phone: country_code,
-      phone: phone.join,
+      phone: kyc_phone,
       pan_no: kyc.pan_number,
       dob: (kyc.dob.strftime("%Y-%m-%d") rescue nil),
       anniversary: (kyc.anniversary.strftime("%Y-%m-%d") rescue nil),
