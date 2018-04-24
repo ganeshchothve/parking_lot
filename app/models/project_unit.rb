@@ -351,7 +351,7 @@ class ProjectUnit
   end
 
   def all_inclusive_price
-    sub_total + agreement_price + gst_on_agreement_price
+    sub_total + agreement_price
   end
 
   def pending_balance(options={})
@@ -391,7 +391,7 @@ class ProjectUnit
   end
 
   def calculate_agreement_price
-    self.agreement_price = land_price + construction_price # TODO: Add GST if required
+    self.agreement_price = land_price + construction_price + gst_on_agreement_price # TODO: Add GST if required
     self.agreement_price -= (applied_discount_rate * saleable) if applied_discount_rate.present? && applied_discount_rate > 0
   end
 
