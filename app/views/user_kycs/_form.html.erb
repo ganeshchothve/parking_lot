@@ -257,33 +257,34 @@
         <div class="small-title">
           &nbsp;
         </div>
-        <div class="col-md-6 pull-left">
-          <div class="form-field-wrapper form-group">
-            <%#= f.label :pancard_photo, class: 'control-label', style: 'vertical-align:middle' %>
-            <label class="control-label">PAN card photo</label>
-            <input type="file" name="user_kyc[pancard_photo]" class="required" style="margin-bottom:15px;">
+        <div class="white-wrapper">
+          <div class="col-md-6 pull-left">
+            <div class="form-field-wrapper form-group">
+              <%#= f.label :pancard_photo, class: 'control-label', style: 'vertical-align:middle' %>
+              <label class="control-label">PAN card photo</label>
+              <input type="file" name="user_kyc[pancard_photo]" class="required" style="margin-bottom:15px;">
 
-            <% if @user_kyc.pancard_photo.present? %>
-            <a href="<%= @user_kyc.pancard_photo.url %>" class="nav-btn" target="_blank">View uploaded document</a>
-            <% end %>
+              <% if @user_kyc.pancard_photo.present? %>
+              <a href="<%= @user_kyc.pancard_photo.url %>" class="nav-btn" target="_blank">View uploaded document</a>
+              <% end %>
+            </div>
           </div>
-        </div>
-        <div class="col-md-6 pull-left">
-          <div class="form-field-wrapper form-group">
-            <%#= f.label :adharcard_photo, class: 'control-label', style: 'vertical-align:middle' %>
-            <label class="control-label">Aadhaar card photo</label>
-            <input type="file" name="user_kyc[adharcard_photo]" class="required" style="margin-bottom:15px;">
-            <% if @user_kyc.adharcard_photo.present? %>
-            <a href="<%= @user_kyc.adharcard_photo.url %>" class="nav-btn" target="_blank">View uploaded document</a>
-            <% end %>
+          <div class="col-md-6 pull-left">
+            <div class="form-field-wrapper form-group">
+              <%#= f.label :adharcard_photo, class: 'control-label', style: 'vertical-align:middle' %>
+              <label class="control-label">Aadhaar card photo</label>
+              <input type="file" name="user_kyc[adharcard_photo]" class="required" style="margin-bottom:15px;">
+              <% if @user_kyc.adharcard_photo.present? %>
+              <a href="<%= @user_kyc.adharcard_photo.url %>" class="nav-btn" target="_blank">View uploaded document</a>
+              <% end %>
+            </div>
           </div>
-        </div>
-        <div class="clearfix"></div>
-        <br/>
-        <div class="col-12 form-field-wrapper">
-          <div class="actions">
-            <%= f.submit 'Submit →', class: 'btn nav-btn', style: 'width:auto', data:{event_category: 'Section', event_action: 'Click', event_name: 'user kyc - submit'} %>
+          <div class="col-12 form-field-wrapper">
+            <div class="actions">
+              <%= f.submit 'Submit →', class: 'btn nav-btn', style: 'width:auto', data:{event_category: 'Section', event_action: 'Click', event_name: 'user kyc - submit'} %>
+            </div>
           </div>
+          <div class="clearfix"></div>
         </div>
         <% end %>
       </div>

@@ -400,11 +400,11 @@ class ProjectUnit
         # Push data to SFDC once 10% payment is completed - booking unit
         SFDC::ProjectUnitPusher.execute(self)
       elsif self.total_amount_paid > ProjectUnit.blocking_amount
-        if self.status != 'booked_tentative'
+	if self.status != 'booked_tentative'
           # Push data to SFDC
           # Avoid hitting to SFDC for subsequent payments
-          SFDC::ProjectUnitPusher.execute(self) if self.status != 'booked_tentative'
-          self.status = 'booked_tentative'
+          SFDC::ProjectUnitPusher.execute(self)
+  	  self.status = 'booked_tentative'
 	end
       elsif receipt.total_amount >= ProjectUnit.blocking_amount && (self.status == "hold" || self.user_based_status(self.user) == "available")
         if (self.user == receipt.user && self.status == 'hold') || self.user_based_status(self.user) == "available"

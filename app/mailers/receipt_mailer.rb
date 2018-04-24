@@ -22,8 +22,6 @@ class ReceiptMailer < ApplicationMailer
       render_to_string(pdf: "cost_structure", template: "dashboard/receipt_print.pdf.erb"))
     attachments["Invoice.pdf"] = WickedPdf.new.pdf_from_string(
       render_to_string(pdf: "invoice", template: "dashboard/receipt_mail.pdf.erb"))
-    attachments["Allotment.pdf"] = WickedPdf.new.pdf_from_string(
-      render_to_string(pdf: "allotment", template: "project_unit_mailer/send_allotment_letter.pdf.erb"))
     mail(to: @user.email, cc: cc, subject: "Payment #{@receipt.receipt_id} Successful")
   end
 

@@ -65,42 +65,40 @@
     <div class="row">
       <div class="col-12 mb30 text-left">
         <p><%= @project_unit.created_at.strftime("%d-%m-%Y") %>,</p>
-        <p>MS./ MR. <%= @user.name %>,</p>
-        <p>CONTACT NO: <%= @user.phone %></p>
+        <p>Ms./ Mr. <%= @user.name %>,</p>
+        <p>Contact No.: <%= @user.phone %></p>
       </div>
     </div>
     <div class="row">
       <div class="col-12 mb30 text-justify">
         <p>Dear Madam/Sir,</p></br>
-        <p><strong>Sub:</strong> Provisional Allotment of Apartment No. <%= @project_unit.name  rescue ''  %> in Tower <%= @project_unit.project_tower_name %> Block <%= @project_unit.name %> of <%= @project_unit.floor %> Phase , being developed in the Project "Embassy EdgeSprings", located in Survey No. ________, situated at agamangala/Hegganahalli Village, Kundana Hobli, Devanahalli Taluka, Bangalore / Navarathna Agrahara Village, Jala Hobi, Bangalore North Taluka, Bangalore Urban District.</p><br/>
+        <p><strong>Sub:</strong> Provisional Allotment of Apartment No. <%= @project_unit.name  %> in Tower <%= @project_unit.project_tower_name %> <!-- Block <%#= @project_unit.name %> --> <!-- of <%#= @project_unit.floor %> -->, being developed in the Project "Embassy Edge", situated at Nagamangala/Hegganahalli Village, Kundana Hobli, Devanahalli Taluka, Bangalore / Navarathna Agrahara Village, Jala Hobi, Bangalore North Taluka, Bangalore Urban District.</p><br/>
         <p><strong>Ref:</strong> Booking Application dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %>.</p></br>
-        <p>Pursuant of the above referred Booking Application dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %> in respect of Apartment No.<%= @project_unit.name rescue ''%> in the Project known as “Embassy Springs”, we have provisionally allotted Apartment No.
-          <%= @project_unit.name  rescue ''  %> having a Carpet Area of <%= @project_unit.carpet %> Square feet to you.
+        <p>Pursuant of the above referred Booking Application dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %> in respect of Apartment No. <%= @project_unit.name %> in the Project known as "Embassy Edge", we have provisionally allotted Apartment No.
+          <%= @project_unit.name %> having a Carpet Area of <%= @project_unit.carpet %> Square feet &amp; Super Built-up Area of <%= %>to you.<br/><br/>
           Further, we hereby confirm having received an amount of Rs.<%= @project_unit.booking_price %>/-
-          as advance vide reference no. made through online / Cheque bearing No. <%= @receipt.tracking_id rescue ''%>,
-          dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %>, drawn on <%= @user.name %>, along with your Booking Application .
-          The total sale consideration amount payable for the above subject Apartment is Rs <%= @project_unit.agreement_price %>/-
-          (“Total Sale Consideration”). The Total Consideration is
+          as advance vide reference no. <%= @receipt.receipt_id %>  made through <%= @receipt.payment_mode %> bearing No. <%= @receipt.payment_identifier %>,
+          dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %>, drawn on <%= @user.name %>, along with your Booking Application .<br/><br/>
+          The total sale consideration amount payable for the above subject Apartment is Rs <%#= @project_unit.agreement_price %> <%=@project_unit.all_inclusive_price.round %>/-
+          ("Total Sale Consideration"). The Total Consideration is
           inclusive of land cost, construction cost, cost of providing power supply, cost of providing water and
           sewage connections, maintenance deposit/corpus fund, city infrastructure charges, advance
           maintenance charges for one year, cost towards club house and amenities, GST and other charges
-          as detailed in the Agreement for Sale.
-        </p>
-        <p>
-          Upon receiving intimation from us to execute the Agreement to Sell, you shall pay Rs. <%= @project_unit.pending_balance %>/-
-          within 10 working days being 10% of the cost of the Apartment and simultaneously execute the Agreement to Sell within 15 days.
+          as detailed in the Agreement for Sale.<br/><br/>
+          Upon receiving intimation from us to execute the Agreement to Sell, you shall <!-- pay Rs. <%#= @project_unit.pending_balance %>/-
+          within 10 working days being 10% of the cost of the Apartment and simultaneously --> execute the Agreement to Sell within 15 days.<br/><br/>
           In the event of you failing to execute the Agreement to Sell as mentioned above, the Booking
           Application will stand rejected and this Provisional Allotment cancelled, and we shall deduct Rs. 5000
           /- from the amount received from you as liquidated damages and refund the balance amount in 30
           days from the date of cancellation.</p></br>
-        <p>This Provisional Allotment does not confer any rights in you with respect to the subject Apartment nor is this a concluded contract unless the Agreement for Sale is executed by you.</p>
-        <p>We request you to kindly acknowledge the copy of this letter in token of your acceptance of the above arrangement.</p>
-        <p>This Provisional Allotment is subject to Bangalore jurisdiction.</p>
+        <p>This Provisional Allotment does not confer any rights in you with respect to the subject Apartment nor is this a concluded contract unless the Agreement for Sale is executed by you.</p><br/>
+        <p>We request you to kindly acknowledge the copy of this letter in token of your acceptance of the above arrangement.</p><br/>
+        <p>This Provisional Allotment is subject to Bangalore jurisdiction.</p><br/>
       </div>
     </div>
     <div class="row">
       <div class="col-12 text-left">
-        <p>Thanking you.</p>
+        <p>Thanking you.</p><br/>
         <p>Yours truly,</p>
         <p>For NAM ESTATES PRIVATE LIMITED</p>
       </div>

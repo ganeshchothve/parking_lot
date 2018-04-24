@@ -28,6 +28,10 @@ class ProjectUnitMailer < ApplicationMailer
     cc = @cp.present? ? [@cp.email] : []
     cc += default_team
     cc += crm_team
+    attachments["Allotment.pdf"] = WickedPdf.new.pdf_from_string(
+      render_to_string(pdf: "allotment", template: "project_unit_mailer/send_allotment_letter.pdf.erb"))
+    attachments["Welcome.pdf"] = WickedPdf.new.pdf_from_string(
+      render_to_string(pdf: "allotment", template: "dashboard/welcome.pdf.erb"))
     mail(to: @user.email, cc: cc, subject: "Congratulations on booking your home! ") #Unit #{@project_unit.name} booked confirmed
   end
 

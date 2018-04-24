@@ -100,7 +100,7 @@
           </div> -->
         </div>
         <div class="cp-form-btn text-right">
-          <a href="javascript:;" class="bank-details-next" rel="bank-details">NEXT</a>
+          <a href="javascript:;" class="bank-details-next" rel="bank-details" data-event-category="section" data-event-action="click" data-event-name="Personal Details - Next">NEXT</a>
         </div>
       </div>
     </div>
@@ -147,7 +147,7 @@
           <%= form.text_field :bank_country, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("bank_country") ? false : true), placeholder:'Bank Country' %>
         </div>  
         <div class="cp-form-btn text-right">
-          <a href="javascript:;" class="prev-personal-details" rel="personal-details">PREV</a> <a href="javascript:;" class="next-documents" rel="documents">NEXT</a>
+          <a href="javascript:;" class="prev-personal-details" rel="personal-details"  data-event-category="section" data-event-action="click" data-event-name="Bank Details - Prev">PREV</a> <a href="javascript:;" class="next-documents" rel="documents"  data-event-category="section" data-event-action="click" data-event-name="Bank Details - Next">NEXT</a>
         </div>
       </div>
 
@@ -170,7 +170,7 @@
           <%= form.file_field :aadhaar_card_doc, class: 'form-control required', autofocus: true %>
         </div>
         <div class="cp-form-btn text-right">
-          <a href="javascript:;" class="prev-bank-details" rel="bank-details">PREV</a>
+          <a href="javascript:;" class="prev-bank-details" rel="bank-details"  data-event-category="section" data-event-action="click" data-event-name="Bank Details - Prev">PREV</a>
         </div>
         <% if user_signed_in? && current_user.role?('admin') %>
           <div class="form-group">
