@@ -79,7 +79,7 @@ class ReceiptsController < ApplicationController
               redirect_to @receipt.payment_gateway_service.gateway_url
             else
               flash[:notice] = "We couldn't redirect you to the payment gateway, please try again"
-              @receipt.set(status: "failed")
+              @receipt.update_attributes(status: "failed")
               redirect_to dashboard_path
             end
           else
