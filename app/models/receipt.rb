@@ -44,7 +44,7 @@ class Receipt
   validates :payment_gateway, inclusion: {in: PaymentGatewayService::Default.allowed_payment_gateways }, allow_blank: true
   validate :status_changed
   validates :processed_on, :tracking_id, presence: true, if: Proc.new{|receipt| receipt.status == 'success'}
-  validates :comments, presence: true, if: Proc.new{|receipt| receipt.status == 'failed'}
+  validates :comments, presence: true, if: Proc.new{|receipt| receipt.status == 'failed' && receipt.payment_type != "online"}
 
   increments :order_id
   default_scope -> {desc(:created_at)}
