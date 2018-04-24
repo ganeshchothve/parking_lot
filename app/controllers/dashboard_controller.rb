@@ -223,7 +223,7 @@ class DashboardController < ApplicationController
         if @receipt.payment_gateway_service.present?
           redirect_to @receipt.payment_gateway_service.gateway_url
         else
-          @receipt.set(status: "failed")
+          @receipt.update_attributes(status: "failed")
           flash[:notice] = "We couldn't redirect you to the payment gateway, please try again"
           redirect_to dashboard_path
         end
