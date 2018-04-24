@@ -7,10 +7,10 @@ module SFDC
           if payment_schedule_data.any?
             @payment_schedule_pusher = SFDC::Base.new
             response = @payment_schedule_pusher.push("/services/apexrest/Embassy/PaymentSchedulesInfo", payment_schedule_data)
-            Rails.logger.info("SFDC::PaymentSchedulePusher response >>>>> project_unit_id: #{project_unit.id.to_s}, SFDC response: #{response}")
+            AmuraLog.debug("SFDC::PaymentSchedulePusher response >>>>> project_unit_id: #{project_unit.id.to_s}, SFDC response: #{response}", "sfdc_pusher.log")
           end
         rescue Exception => e
-          Rails.logger.info("Exception in SFDC::PaymentSchedulePusher >>>> #{e.message} \n #{e.backtrace}")
+          AmuraLog.debug("Exception in SFDC::PaymentSchedulePusher >>>> #{e.message} \n #{e.backtrace}", "sfdc_pusher.log")
         end
       end
     end

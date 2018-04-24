@@ -8,10 +8,10 @@ module SFDC
           if channel_partner_data.any?
             @channel_partner_pusher = SFDC::Base.new
             response = @channel_partner_pusher.push("/services/apexrest/Embassy/CPRegistrationsselldo", channel_partner_data)
-            Rails.logger.info("SFDC::ChannelPartnerPusher >>>>> cp_id: #{channel_partner.id.to_s}, SFDC response: #{response}")
+            AmuraLog.debug("SFDC::ChannelPartnerPusher >>>>> cp_id: #{channel_partner.id.to_s}, SFDC response: #{response}", "sfdc_pusher.log")
           end
         rescue Exception => e
-          Rails.logger.info("Exception in SFDC::ChannelPartnerPusher >>>> #{e.message} \n #{e.backtrace}")
+          AmuraLog.debug("Exception in SFDC::ChannelPartnerPusher >>>> #{e.message} \n #{e.backtrace}", "sfdc_pusher.log")
         end
       end
     end
