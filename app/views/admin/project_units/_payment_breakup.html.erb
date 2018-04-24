@@ -85,7 +85,7 @@
 								<%= number_to_indian_currency(@project_unit.floor_rise.round(2)) %>
 							</td>
 						</tr>
-            <% discount_rate = @project_unit.discount_rate(current_user) %>
+            <% discount_rate = @project_unit.discount_rate(@project_unit.user_id.present? @project_unit.user : current_user) %>
             <% if discount_rate > 0 %>
             <tr>
 							<td>
@@ -157,7 +157,7 @@
 
 							</td>
 							<td>
-								<%= number_to_indian_currency(@project_unit.discount(current_user).round(2)) %>
+								<%= number_to_indian_currency(@project_unit.discount(@project_unit.user_id.present? @project_unit.user : current_user).round(2)) %>
 							</td>
 						</tr>
             <% end %>
@@ -186,7 +186,7 @@
 
 							</td>
 							<td class="pink">
-								<%= number_to_indian_currency((@project_unit.agreement_price - @project_unit.discount(current_user)).round(2)) %>
+								<%= number_to_indian_currency((@project_unit.agreement_price - @project_unit.discount(@project_unit.user_id.present? @project_unit.user : current_user)).round(2)) %>
 							</td>
 						</tr>
 					</table>
@@ -547,7 +547,7 @@
 							Any disputes arising between the parties shall be governed by the laws of India and subject to exclusive jurisdiction of Courts in Bangalore, India.
 						</p>
 						<p>
-							The cost towards stamp duty and registration are additional and shall be paid by the Purchaser at prevailing rates during the time of registration. 
+							The cost towards stamp duty and registration are additional and shall be paid by the Purchaser at prevailing rates during the time of registration.
 						</p>
 						<p>
 							I/We, the undersigned Applicant and Co-Applicant accept all the above terms and agree to: (a) Pay the balance Application amount within stipulated time hereof, if any; and execute the Agreement to Sell within the stipulated time of the booking date, with payments as provided in the Payment Schedule. We further confirm that we have seen and understood the plans and specifications for the plot that we are hereby applying for.
