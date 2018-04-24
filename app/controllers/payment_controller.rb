@@ -10,7 +10,7 @@ class PaymentController < ApplicationController
       @receipt.payment_gateway_service.response_handler!(params)
     else
       flash[:notice] = 'You are not allowed to access this page'
-      redirect_to after_sign_in_path_for
+      redirect_to after_sign_in_path_for(current_user)
     end
   end
 end
