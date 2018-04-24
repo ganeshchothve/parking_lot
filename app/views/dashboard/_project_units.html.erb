@@ -2,7 +2,7 @@
 <% project_units.each do |project_unit| %>
     <div class="col-12 booking-accordian-wrapper">
       <div class="booking-accordian first" data-acc="book-<%= project_unit.id %>" data-event-category="section" data-event-action="click" data-event-name="aparament status accordian">
-        <div class="pull-left">
+        <div class="pull-left accordian-xs">
           <span class="title" data-event-category="section" data-event-action="click" data-event-name="aparament status accordian"><%= project_unit.status_value %></span>
         </div>
         <div class="pull-left">
@@ -58,7 +58,7 @@
         <div class="title">Payment Details</div>
           <div class="unit-booking-details">
             <div class="col-4">
-              <div>All Inclusive Price:</div><div class="dark"><%= number_to_indian_currency(project_unit.all_inclusive_price.round) rescue '' %></div><a href="/dashboard/<%= project_unit.id %>/payment-breakup" class="small-link" data-event-category="section" data-event-action="click" data-event-name="Payment Break Up">Payment Break Up</a>
+              <div>All Inclusive Price:</div><div class="dark"><%= number_to_indian_currency(project_unit.all_inclusive_price.round)  %></div><a href="/dashboard/<%= project_unit.id %>/payment-breakup" class="small-link" data-event-category="section" data-event-action="click" data-event-name="Payment Break Up">Payment Break Up</a>
             </div>
             <div class="col-4">
               <div>Payment Done:</div><div class="dark"><%= number_to_indian_currency(project_unit.total_amount_paid.round) %></div>
@@ -67,13 +67,16 @@
               <div>Booking Amount:</div><div class="dark"><%= number_to_indian_currency(project_unit.booking_price.round) %></div>
             </div>
             <div class="col-4">
-              <div>Agreement Value:</div><div class="dark"><%= number_to_indian_currency(project_unit.agreement_price.round) rescue ''%></div>
+              <div>Agreement Value:</div><div class="dark"><%= number_to_indian_currency(project_unit.agreement_price.round) %></div>
             </div>
             <div class="col-4">
               <div>Balance Payment:</div><div class="dark"><%= number_to_indian_currency(project_unit.pending_balance.round) %></div>
             </div>
             <div class="col-4">
               <div>TDS Amount:</div><div class="dark"><%= number_to_indian_currency(project_unit.tds_amount.round) %></div>
+              <% if project_unit.tds_amount > 0 %>
+              <div><a href="/eTutorial_TDS_on_property_etax.pdf" target="_blank" class="pink small-link" data-event-category="section" data-event-action="click" data-event-name="Tutorial for TDS">Tutorial for TDS</a></div>
+              <% end %>
             </div>
             <div class="clearfix"></div>
             <!-- <div class="clearfix"></div> -->
@@ -82,7 +85,7 @@
           <li>You need to pay 10% of agreement value to confirm the booking</li>
           <% if (project_unit.status == "blocked" || project_unit.status == "booked_tentative") && project_unit.auto_release_on.present? && project_unit.auto_release_on > Date.today %>
           <li>Cancellation charges are &#8377;5,000</li>
-          <li><strong>You have <%= (project_unit.auto_release_on - Date.today).to_i %> days (before <%= project_unit.auto_release_on.strftime("%d/%m/%Y") %>) remaining to confirm this booking please make remaining payment of Rs. <%= number_to_indian_currency(project_unit.user.total_balance_pending.round()) %></strong></li>
+          <li><strong>You have <%= (project_unit.auto_release_on - Date.today).to_i %> days (before <%= project_unit.auto_release_on.strftime("%d/%m/%Y") %>) remaining to confirm this booking please make remaining payment of Rs. <%= number_to_indian_currency(project_unit.pending_balance.round()) %></strong></li>
           <% end %>
         </ul>
         <% if project_unit.status == 'hold' %>

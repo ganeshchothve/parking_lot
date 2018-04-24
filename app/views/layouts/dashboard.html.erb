@@ -141,13 +141,16 @@
         </div>
         <% end %>
         <div>
-              <a href="/dashboard/faqs" <%= params[:controller] == "dashboard" && params[:action] == "faqs" ? "class=active" : "" %>  data-event-category="side bar" data-event-action="click" data-event-name="FAQs"><span class="sprite-dasboard payment-details"  data-event-category="side bar" data-event-action="click" data-event-name="Payments"></span><span  data-event-category="side bar" data-event-action="click" data-event-name="User KYCs">FAQs</span></a>
+              <a href="/dashboard/faqs" <%= params[:controller] == "dashboard" && params[:action] == "faqs" ? "class=active" : "" %>  data-event-category="side bar" data-event-action="click" data-event-name="FAQs"><span class="sprite-dasboard faqs"  data-event-category="side bar" data-event-action="click" data-event-name="FAQs"></span><span  data-event-category="side bar" data-event-action="click" data-event-name="FAQs">FAQs</span></a>
+        </div>
+        <div>
+              <a href="/dashboard/terms-and-conditions" <%= params[:controller] == "dashboard" && params[:action] == "terms_and_condition" ? "class=active" : "" %>  data-event-category="side bar" data-event-action="click" data-event-name="terms-and-conditions"><span class="sprite-dasboard faqs"  data-event-category="side bar" data-event-action="click" data-event-name="terms-and-conditions"></span><span  data-event-category="side bar" data-event-action="click" data-event-name="terms-and-conditions">Terms & Conditions</span></a>
         </div>
         <div class="mobile-show">
           <%= link_to "Profile", edit_admin_user_path(current_user) %>
         </div>
         <div>
-          <a href="/users/sign_out" data-method="delete" rel="nofollow" data-event-category="side bar" data-event-action="click" data-event-name="Sign out"><span class="sprite-signout sign-out" data-event-category="side bar" data-event-action="click" data-event-name="Sign out"></span><span class="menu-items-hide"  data-event-category="side bar" data-event-action="click" data-event-name="Sign out">sign out</span></a>
+          <a href="/users/sign_out" data-method="delete" rel="nofollow" data-event-category="side bar" data-event-action="click" data-event-name="Sign out"><span class="sprite-dasboard sign-out" data-event-category="side bar" data-event-action="click" data-event-name="Sign out"></span><span class="menu-items-hide"  data-event-category="side bar" data-event-action="click" data-event-name="Sign out">sign out</span></a>
         </div>
         <!-- <div class="visible-xs">
           <a href="/users/sign_out" data-method="delete" rel="nofollow"><span class="sprite-signout sign-out"></span><span class="menu-items-hide">sign out</span></a>

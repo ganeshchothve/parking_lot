@@ -145,6 +145,26 @@
     font-size: 22px;
     font-weight: 500;
 }
+@media all and (max-width: 1366px){
+  .col-4.light-green-bg, .col-4.dark-green-bg{
+    min-height: 160px;
+  }
+}
+@media all and (max-width: 768px){
+  .col-4.light-green-bg{
+    width: 50%;
+  }
+}
+@media all and (max-width: 700px){
+    .col-4.light-green-bg{
+        width: 100%;
+        min-height: auto;
+    }
+    .col-4.dark-green-bg{
+        width: 100%;
+        min-height: auto;
+    }
+}
 </style>
 <section class="main-wrapper">
 	<div class="container-fluid">
@@ -172,7 +192,7 @@
                                     <div class=""><span class="black">Tower:</span> <%= @project_unit.project_tower_name %><br><span class="black">Floor: </span><%= @project_unit.floor %><br><span class="black">Flat No:</span> <%= @project_unit.name %><br></div>
                                 </div>
                                 <div class="col-4 light-green-bg">
-                                    <div class=""><span class="black">Configuration:</span> <%= @project_unit.bedrooms %> BHK<br><span class="black">Carpet Area:</span> <%= @project_unit.carpet.round %> Sq.Ft.<br><span class="black">Starting Price:</span> <%= number_to_indian_currency(@project_unit.agreement_price.round) %></div>
+				     <div class=""><span class="black">Configuration:</span> <%= @project_unit.bedrooms %> BHK<br><span class="black">Carpet Area:</span> <%= @project_unit.carpet.round %> Sq.Ft.<br><span class="black">Starting Price:</span> <%= number_to_indian_currency(@project_unit.agreement_price.round) %></div>
                                 </div>
                                 <div class="clearfix"></div>
                             </div>

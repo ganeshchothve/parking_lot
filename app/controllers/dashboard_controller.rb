@@ -35,6 +35,12 @@ class DashboardController < ApplicationController
   def make_remaining_payment
   end
 
+  def faq
+  end
+
+  def terms_and_conditions
+  end
+
   def receipt_mail
     @receipt = Receipt.find(params[:id])
     @user = @receipt.user

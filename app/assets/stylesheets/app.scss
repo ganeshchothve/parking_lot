@@ -654,7 +654,7 @@ label.control-label{
   line-height: 20px;
 }
 .hidden-field-prev-prop, .hidden-field.gstin, .nri-fields{
-  width: 50%;
+  width: 100%;
 }
 .crm-wrapper{
   padding: 100px 40px 0 40px;
@@ -792,7 +792,21 @@ background-color: #349e63;
 .help-block{
   display: block;
 }
-
+.steps-arrow-right{
+  position: relative;
+}
+.steps-arrow-right:after{
+  content: '';
+  position: absolute;
+  right: 0px;
+  top: 5px;
+  background-image: asset-url('active_dropdown_arrow_blue.png');
+  width: 18px;
+  height: 12px;
+  transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
+}
 @media all and (max-width: 1366px){
   .padding-side-30 {
       padding: 0 30px;
@@ -812,6 +826,19 @@ background-color: #349e63;
 }
 }
 @media all and (max-width: 768px){
+  .white-wrapper .col-md-2, .white-wrapper .col-md-5, .white-wrapper .col-md-6{
+    max-width: 100%;
+  } 
+  .steps-arrow-right{
+    padding-bottom: 20px;
+  }
+  .steps-arrow-right:after{
+    right: 50%;
+    top: 30px;
+    transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+  }
   .notification-header .container-fluid{
     padding: 0px;
   }

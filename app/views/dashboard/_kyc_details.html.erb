@@ -2,9 +2,55 @@
 	#user_kyc_form .intl-tel-input{
 		display: block;
 	}
+  .padding-top0{
+    padding-top: 0px;
+}
+.dark-green-bg{
+    background-color: #6b7e34
+}
+.light-green-bg{
+    background-color: #d8ddc8;
+}
+.col-4.light-green-bg{
+    padding: 20px;
+    line-height: 26px;
+    font-size: 16px;
+}
+.col-4.dark-green-bg{
+    padding: 34px 15px;
+    color: #fff;
+}
+.col-4.light-green-bg span.black{
+    color: #252525;
+    font-weight: 500;
+
+}
+.client-details-wrapper{
+    margin-bottom: 20px;
+}
+.client-detail span{
+    color: #fff;
+    font-size: 22px;
+    font-weight: 500;
+}
+.kyc-details-wrapper{
+  padding: 0px;
+}
+.kyc-message {
+    margin: 0px 0px 20px 0;
+    background: #d8dec8;
+    color: #000;
+    padding: 20px;
+    border-radius: 0px;
+    border: 0px solid #9dbd2c;
+}
+.form-check{
+  margin-top: 0px;
+  padding: 30px;
+}
 </style>
 <div class="apartment-selector-wrapper">
-       	<div class="col-12 client-detail-wrapper">
+       	<!-- <div class="col-12 client-detail-wrapper">
        		<div class="pull-left client-detail">
 				<span class="pink"><%= current_user.name %></span>
 				<span class="pink">Flat No: <%= @unit.name %></span>
@@ -15,10 +61,32 @@
        			<div class="clearfix"></div>
        		</div>
        		<div class="clearfix"></div>
-       	</div>
+       	</div> -->
+
+        <div class="col-12">
+          <div class="client-details-wrapper">
+              <div class="col-4 client-detail padding-top0 dark-green-bg">
+                  <span class="white-font">Mr. <%= current_user.name %></span>
+                  <span class="white-font">Flat No: <%= @unit.name %></span>
+              </div>
+              <div class="col-4 light-green-bg">
+                  <div class=""><span class="black">Tower:</span> <%= @unit.project_tower_name %><br><span class="black">Floor: </span><%= @unit.floor %><br><span class="black">Flat No:</span> <%= @unit.name %><br></div>
+              </div>
+              <div class="col-4 light-green-bg">
+                  <div class=""><span class="black">Configuration:</span> <%= float_to_int(@unit.bedrooms) %> BHK<br><span class="black">Carpet Area:</span> <%= @unit.carpet.round %> Sq.Ft.<br><span class="black">Starting Price:</span> <%= number_to_indian_currency(@unit.agreement_price.round) %></div>
+              </div>
+              <div class="clearfix"></div>
+          </div>
+          <div class="clearfix"></div>
+      </div>
+
+      <div class="col-12">
+        <div class="f22 bold">KYC Details</div>
+      </div>
+
        	<div class="clearfix"></div>
        	<div class="col-12 kyc-details-wrapper">
-       		<div class="f22 bold">KYC Details</div>
+       		
        		<div class="kyc-message">
        		Details provided on KYC form will be used in Agreement Documentation. Kindly ensure that name, DOB and other information is entered correctly.
        	</div>

@@ -61,3 +61,13 @@
     </div>
   </div>
 </section>
+<script type="text/javascript">
+  ga('ecommerce:addItem', {
+    'id': '<%= @project_unit.id %>',// Transaction ID. Required.
+    'name': '<%= @project_unit.name %>',// Product name. Required.
+    'sku': '<%= @project_unit.name %>', // SKU/code.
+    'category': 'Flat',// Category or variation.
+    'price': '<%= @project_unit.agreement_price %>',// Unit price.
+    'quantity': '1' // Quantity.
+  });
+</script>
