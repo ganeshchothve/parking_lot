@@ -414,7 +414,7 @@ class ProjectUnit
           SFDC::PaymentSchedulePusher.execute(receipt.project_unit)
         else
           receipt.project_unit_id = nil
-          receipt.save(validate: false)
+          receipt.save
         end
       end
       # Send payments data to Sell.Do CRM

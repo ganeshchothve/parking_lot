@@ -61,7 +61,7 @@ module PaymentGatewayService
           end
         end
       end
-      @receipt.save(validate: false)
+      @receipt.save
     end
 
     def payment_profile
