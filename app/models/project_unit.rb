@@ -39,6 +39,7 @@ class ProjectUnit
   field :applied_discount_rate, type: Float, default: 0
   field :applied_discount_id, type: String
   field :primary_user_kyc_id, type: BSON::ObjectId
+  field :base_rate, type: Float
 
   # These fields majorly are pulled from sell.do and may be used on the UI
   field :client_id, type: String
@@ -62,7 +63,7 @@ class ProjectUnit
   field :calculated_agreement_value, type: Float
   field :images, type: Array
 
-  @@keys =  {project_tower_name: "String", project_name: "String", developer_name: "String", bedrooms: "Float", bathrooms: "Float", saleable: "Float", carpet: "Float", loading: "Float", base_rate: "Float", sub_type: "String", type: "String", covered_area: "Float", terrace_area: "Float", category: "String",developer_id: "String",configuration_type: "String",construction_status: "String",transaction_type: "String",registration_date: "Date",floor: "Integer",assigned_to: "String",broker: "String",team: "String",date_of_possession: "Date",possession_status: "String",seller_type: "String",is_negotiable: "Boolean",amenities: "Hash",parking: "String",docs_verified: "Boolean",verification_date: "String",property_inspected: "Boolean",suitable_for: "String",entrance: "String",furnishing: "String",flooring: "String",facing: "String",unit_facing_direction: "String",project_status: "String",city: "String",state: "String",country: "String",resale: "Boolean",owner_count: "Integer",posted_by: "String",unit_configuration_id: "String",unit_configuration_name: "String"}
+  @@keys =  {project_tower_name: "String", project_name: "String", developer_name: "String", bedrooms: "Float", bathrooms: "Float", saleable: "Float", carpet: "Float", loading: "Float", sub_type: "String", type: "String", covered_area: "Float", terrace_area: "Float", category: "String",developer_id: "String",configuration_type: "String",construction_status: "String",transaction_type: "String",registration_date: "Date",floor: "Integer",assigned_to: "String",broker: "String",team: "String",date_of_possession: "Date",possession_status: "String",seller_type: "String",is_negotiable: "Boolean",amenities: "Hash",parking: "String",docs_verified: "Boolean",verification_date: "String",property_inspected: "Boolean",suitable_for: "String",entrance: "String",furnishing: "String",flooring: "String",facing: "String",unit_facing_direction: "String",project_status: "String",city: "String",state: "String",country: "String",resale: "Boolean",owner_count: "Integer",posted_by: "String",unit_configuration_id: "String",unit_configuration_name: "String"}
 
   @@keys.each do |k, klass|
     define_method(k) do
@@ -160,6 +161,7 @@ class ProjectUnit
     if self.available_for == "management"
       self.status = "management"
     end
+    self.base_rate = UpgradePricing.get_upgraded_base_rate
   end
 
   def self.user_based_available_statuses(user)
