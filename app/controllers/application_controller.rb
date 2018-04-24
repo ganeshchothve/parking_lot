@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  before_action :set_cache_headers
   acts_as_token_authentication_handler_for User, unless: lambda { |controller| controller.is_a?(HomeController) || controller.is_a?(Api::SellDoController) || (controller.is_a?(ChannelPartnersController)) }
   include Pundit
   helper_method :after_sign_in_path_for
@@ -48,6 +49,14 @@ class ApplicationController < ActionController::Base
     respond_to do |format|
       format.html { redirect_to user_signed_in? ? after_sign_in_path_for(current_user) : root_path }
       format.json { render json: {error: "You are not authorized to access this page"}, status: 403 }
+    end
+  end
+
+  def set_cache_headers
+    if user_signed_in?
+      response.headers["Cache-Control"] = "no-cache, no-store"
+      response.headers["Pragma"] = "no-cache"
+      response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
     end
   end
 end

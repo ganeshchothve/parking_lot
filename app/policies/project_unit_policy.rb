@@ -40,7 +40,7 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def block?
-    (user.project_units.count < 4 && !record.is_a?(ProjectUnit)) || (record.is_a?(ProjectUnit) && (['hold'].include?(record.status) && record.user_id == user.id) && user.kyc_ready?)
+    (user.project_units.count < 3 && !record.is_a?(ProjectUnit)) || (record.is_a?(ProjectUnit) && (['hold'].include?(record.status) && record.user_id == user.id) && user.kyc_ready?)
   end
 
   def permitted_attributes params={}
