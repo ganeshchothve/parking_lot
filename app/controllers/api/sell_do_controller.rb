@@ -33,11 +33,12 @@ class Api::SellDoController < ApplicationController
       @klass = ProjectTower
 		elsif params[:unit_configuration].present?
 			@parameters = JSON(params[:unit_configuration])
-		        @klass = UnitConfiguration
+		  @klass = UnitConfiguration
 		elsif params[:project_unit].present?
 			@parameters = JSON(params[:project_unit])
 			@parameters[:status] = @parameters["data_attributes"].find { |h| h['n'] == "status" }['v']
-     			@klass = ProjectUnit
+      @parameters[:base_rate] = @parameters["data_attributes"].find { |h| h['n'] == "base_rate" }['v']
+     	@klass = ProjectUnit
 			@parameters["name"] = @parameters["data_attributes"].select{|x| x["n"] == "name"}[0]["v"]
 		else
 			render :json => {"status" => "Error: params not present", "errors" =>  ["Project params not present"]}, status: 422
