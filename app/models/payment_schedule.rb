@@ -21,7 +21,7 @@ class PaymentSchedule
   field :payment_schedule_type, type: String
 
   # Associations
-  belongs_to :project_unit
+  # belongs_to :project_unit
 
   # Validations
   validates :name, :display_order, :due_date, :land_cost, :construction_cost, :installment_percent, :basic_installment_amount, :tds_percent, :tds_amount, :amount_received, :infrastructure_charges, :maintenance_deposit, :power_supply, :club_charges, :corpus_fund_charges, :payment_schedule_type, presence: true

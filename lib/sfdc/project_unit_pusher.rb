@@ -38,8 +38,10 @@ module SFDC
         "birthdate" => sfdc_date_format(project_unit.primary_user_kyc.dob),
         "pan_card_number" => project_unit.primary_user_kyc.pan_number,
         "nri" => user_kyc.nri ? "NRI" : "Indian",
+        "house_number" => user_kyc.house_number,
         "street" => user_kyc.street,
         "city" => user_kyc.city,
+        "state" => user_kyc.state,
         "country" => user_kyc.country,
         "zip" => user_kyc.postal_code,
         "aadhar_number" => user_kyc.aadhaar,
@@ -52,9 +54,9 @@ module SFDC
     def self.sfdc_stage_mapping(status)
       case status
       when "blocked"
-        "blocked"
+        "Blocked"
       when "booked_confirmed"
-        "booking"
+        "Booking"
       end
     end
   end
