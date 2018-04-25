@@ -140,6 +140,7 @@ class ProjectUnit
   has_many :receipts
   has_many :user_requests
   has_and_belongs_to_many :user_kycs
+  has_many :payment_schedules
 
   validates :client_id, :project_id, :project_tower_id, presence: true
   validates :status, :name, :sfdc_id, presence: true
