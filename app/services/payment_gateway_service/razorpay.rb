@@ -23,8 +23,7 @@ module PaymentGatewayService
         @receipt.status = "failed"
         @receipt.status_message = e.to_s
       end
-      @receipt.save(validate: false)
+      @receipt.save
     end
   end
 end
-

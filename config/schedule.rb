@@ -25,3 +25,6 @@ every 1.day do
   runner "ProjectUnitRemindersAndAutoRelease::Job.daily_reminder_for_booking_payment"
   # runner "ProjectUnitRemindersAndAutoRelease::Job.release_project_unit"
 end
+every 30.minutes do
+  runner "UpgradePricing.perform"
+end

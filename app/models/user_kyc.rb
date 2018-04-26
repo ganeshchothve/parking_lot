@@ -87,12 +87,12 @@ class UserKyc
         applicants: []
       }
       applicants = []
-      count = 2
+      count = 1
       project_unit.user_kycs.asc(:created_at).each do |kyc|
-        is_primary_user_kyc = project_unit.primary_user_kyc_id == kyc.id
-        coapplicant_type = is_primary_user_kyc ? 'Co-Applicant 1' : "Co-Applicant #{count}"
-        count += 1 unless is_primary_user_kyc
+        next if project_unit.primary_user_kyc_id == kyc.id
+        coapplicant_type = "Co-Applicant #{count}"
         applicants << user_kyc_json(kyc, coapplicant_type)
+        count += 1
       end
 
       hash.merge!(applicants: applicants)
@@ -104,8 +104,9 @@ class UserKyc
 
   def user_kyc_json(kyc, coapplicant_type)
     # extract phone and country code from phone field
-    phone = kyc.phone.split(' ')
-    country_code = phone.shift.gsub!(/[^0-9A-Za-z]/, '')
+    phone = Phonelib.parse(kyc.phone)
+    country_code = phone.country_code
+    kyc_phone = phone.national(false).sub(/^0/, "")
 
     hash = {
       applicant_id: kyc.id.to_s,
@@ -114,7 +115,7 @@ class UserKyc
       last_name: kyc.last_name,
       email: kyc.email,
       country_code_primary_phone: country_code,
-      phone: phone.join,
+      phone: kyc_phone,
       pan_no: kyc.pan_number,
       dob: (kyc.dob.strftime("%Y-%m-%d") rescue nil),
       anniversary: (kyc.anniversary.strftime("%Y-%m-%d") rescue nil),
