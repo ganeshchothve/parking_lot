@@ -1,6 +1,4 @@
-<% case @receipt.status %>
-<% when 'success' %>
-<section class="main-wrapper">
+<% case @receipt.status %> <% when 'success' %> <section class="main-wrapper">
 	<div class="container-fluid">
 		<div class="col-12 success-card-wrapper">	
 			<div class="col-7 success-card">
@@ -41,7 +39,7 @@
 					<div class="tower-specs">
 						<div class="col-6">
 							<span class="title">Paid By:</span>
-							<span class="specs"><%= @receipt.user.first_name %></span><br/>
+							<span class="specs"><%= @receipt.user.name %></span><br/>
 							<span class="specs"><%= @receipt.user.user_kycs.first.city %>,
 							<%= @receipt.user.user_kycs.first.state %>,
 							<%= @receipt.user.user_kycs.first.country %>,
@@ -52,7 +50,7 @@
 						</div>
 						<div class="col-6">
 							<span class="title">Paid To:</span>
-							<span class="specs">Nam Estates Pvt. Ltd. No. 150, 1st floor, Embassy Point, Infratry Road, Bengaluru - 560001</span>
+							<span class="specs">NAM Estates Pvt. Ltd. No., Embassy Point, 1st Floor,150, Infantry Road, Bangalore - 560 001, India</span>
 						</div>
 						<div class="clearfix"></div>
 					</div>
