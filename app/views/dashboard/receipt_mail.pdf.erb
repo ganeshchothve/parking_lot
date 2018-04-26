@@ -79,10 +79,10 @@
 		border-left: 1px solid #ccc;
 	}
 	.tower-info-wrapper.pink {
-		background: #ffecf7;
+		background: #f3f3f2;
 	}
 	.receipt-table th {
-		background-color: #ffecf7;
+		background-color: #f2f2f2;
 		border-right: 1px solid #ccc;
 		border-top: 1px solid #ccc;
 		border-bottom: 1px solid #ccc;
@@ -126,7 +126,7 @@
 		font-weight: bold;
 	}
 	.pink {
-		color: #c02580;
+		color: #6b7e34;
 	}
 </style>
 <div class="mleft70">
@@ -148,19 +148,27 @@
 			</div>
 			<div class="pull-right text-right payment-details-wrapper">
 				Date: <strong><%= @receipt.created_at.strftime('%d %b %Y') %></strong><br/>
-				Receipt: <strong><%= @receipt.receipt_id %></strong>
+				Receipt: <strong><%= @receipt.receipt_id %></strong><br/>
+				CIN No.: <strong>885110KA1995PTC01795</strong>
 			</div>
 			<div class="clearfix"></div>
 			<div class="tower-info-wrapper pink">
 				<div class="tower-specs">
 					<div class="col-6">
 						<span class="title">Paid By:</span>
-						<span class="specs"><%= @receipt.user.name %></span>
+						<span class="specs"><%= @receipt.user.name %></span><br/>
+						<span class="specs"><%= @receipt.user.user_kycs.first.house_number %>, </span>
+						<span class="specs"><%= @receipt.user.user_kycs.first.street %>, </span><br/>
+						<span class="specs"><%= @receipt.user.user_kycs.first.city %> -  </span>
+						<span class="specs"><%= @receipt.user.user_kycs.first.postal_code %>, </span><br/>
+						<span class="specs"><%= @receipt.user.user_kycs.first.state %>, </span>
+						<span class="specs"><%= @receipt.user.user_kycs.first.country %></span>
+						
 						<!-- <span class="specs">B2 - Haridra, Shree Sai Samrudddhi Apts, C.V. Raman Nagar, Bengaluru - 560093</span> -->
 					</div>
 					<div class="col-6">
 						<span class="title">Paid To:</span>
-						<span class="specs">Nam Estates Pvt. Ltd. No. 150, 1st floor, Embassy Point, Infratry Road, Bengaluru - 560001</span>
+						<span class="specs">NAM Estates Pvt. Ltd. No., Embassy Point, 1st Floor,150, Infantry Road, Bangalore - 560 001, India</span>
 					</div>
 					<div class="clearfix"></div>
 				</div>
@@ -187,10 +195,10 @@
 							Date
 						</th>
 						<th>
-							Cheque / DD /Online
+							Payment Mode
 						</th>
 						<th>
-							Bank / Branch
+							Reference Details
 						</th>
 						<th>
 							Amount
@@ -198,9 +206,15 @@
 					</tr>
 					<tr>
 						<td><%= @receipt.processed_on %></td>
-						<td><%= @receipt.payment_identifier %></td>
-						<td><%= @receipt.issuing_bank %> - <%= @receipt.issuing_bank_branch %> </td>
-						<td> Rs.<%= @receipt.total_amount.round %></td>
+						<td><%= @receipt.payment_mode %></td>
+						<td class="text-left">
+					  <% if @receipt.payment_mode == "online" %>
+						Reference ID: <%= @receipt.payment_identifier %>
+						<% else %>
+						Cheque / DD Number:<%= @receipt.payment_identifier %><br/> Bank Name: <%= @receipt.issuing_bank %> <br/> Bank Branch :<%= @receipt.issuing_bank_branch %>
+						<% end %>
+						</td>
+						<td><%= number_to_indian_currency(@receipt.total_amount.round) %></td>
 					</tr>
 				</table>
 			</div>
