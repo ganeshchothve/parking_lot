@@ -7,10 +7,12 @@ module SFDC
           if kyc_data.any?
             @payment_schedule_pusher = SFDC::Base.new
             response = @payment_schedule_pusher.push("/services/apexrest/Embassy/PersonAccountInfo", kyc_data)
-            AmuraLog.debug("SFDC::UserKycPusher response >>>>> user_kyc_id: #{user_kyc.id.to_s}, SFDC response: #{response}", "sfdc_pusher.log")
+            options = {}
+            options[:payload] = kyc_data unless Rails.env.production?
+            AmuraLog.debug("SFDC::UserKycPusher response >>>>> user_kyc_id: #{user_kyc.id.to_s}, SFDC response: #{response}", "sfdc_pusher.log", options)
           end
         rescue Exception => e
-          AmuraLog.debug("Exception in SFDC::UserKycPusher >>>> #{e.message} \n #{e.backtrace}", "sfdc_pusher.log")
+          AmuraLog.debug("Exception in SFDC::UserKycPusher >>>>> user_kyc_id: #{user_kyc.id.to_s} >>>> #{e.message} \n #{e.backtrace}", "sfdc_pusher.log")
         end
       end
     end

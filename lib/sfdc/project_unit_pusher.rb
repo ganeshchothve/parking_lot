@@ -8,10 +8,12 @@ module SFDC
           if project_unit_data.any?
             @project_unit_pusher = SFDC::Base.new
             response = @project_unit_pusher.push("/services/apexrest/Embassy/LeadInfo", project_unit_data)
-            AmuraLog.debug("SFDC::ProjectUnitPusher response >>>>> project_unit_id: #{project_unit.id.to_s}, SFDC response: #{response}", "sfdc_pusher.log")
+            options = {}
+            options[:payload] = project_unit_data unless Rails.env.production?
+            AmuraLog.debug("SFDC::ProjectUnitPusher response >>>>> project_unit_id: #{project_unit.id.to_s}, SFDC response: #{response}", "sfdc_pusher.log", options)
           end
         rescue Exception => e
-          AmuraLog.debug("Exception in SFDC::ProjectUnitPusher >>>> #{e.message} \n #{e.backtrace}", "sfdc_pusher.log")
+          AmuraLog.debug("Exception in SFDC::ProjectUnitPusher >>>>> project_unit_id: #{project_unit.id.to_s} >>>> #{e.message} \n #{e.backtrace}", "sfdc_pusher.log")
         end
       end
     end
