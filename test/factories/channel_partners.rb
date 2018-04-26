@@ -5,6 +5,6 @@ FactoryBot.define do
     phone "MyString"
     rera_id "MyString"
     string "MyString"
-    location "MyString"
+    city "MyString"
   end
 end

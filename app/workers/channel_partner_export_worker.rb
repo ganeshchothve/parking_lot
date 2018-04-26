@@ -20,7 +20,7 @@ class ChannelPartnerExportWorker
       "Email",
       "Phone",
       "RERA ID",
-      "Location",
+      "City",
       "Associated User",
       "Associated User ID (used for VLOOKUP)",
       "Status"
@@ -33,7 +33,7 @@ class ChannelPartnerExportWorker
       channel_partner.email,
       channel_partner.phone,
       channel_partner.rera_id,
-      channel_partner.location,
+      channel_partner.city,
       channel_partner.associated_user_id.present? ? channel_partner.associated_user.name : "",
       channel_partner.associated_user_id.to_s,
       ChannelPartner.available_statuses.select{|x| x[:id] == channel_partner.status}.first[:text],
