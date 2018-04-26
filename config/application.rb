@@ -41,3 +41,4 @@ module BookingPortal
 end
 
 require 'sfdc.rb'
+require 'amura_log.rb'

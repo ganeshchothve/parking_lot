@@ -8,10 +8,12 @@ module SFDC
           if receipts_data.any?
             @receipts_pusher = SFDC::Base.new
             response = @receipts_pusher.push("/services/apexrest/Embassy/receiptsInfo", receipts_data)
-            Rails.logger.info("SFDC::ReceiptsPusher >>>>> receipt_id: #{receipt.id.to_s}, SFDC response: #{response}")
+            options = {}
+            options[:payload] = receipts_data unless Rails.env.production?
+            AmuraLog.debug("SFDC::ReceiptsPusher >>>>> receipt_id: #{receipt.id.to_s}, SFDC response: #{response}", "sfdc_pusher.log", options)
           end
         rescue Exception => e
-          Rails.logger.info("Exception in SFDC::ReceiptsPusher >>>> #{e.message} \n #{e.backtrace}")
+          AmuraLog.debug("Exception in SFDC::ReceiptsPusher >>>>> receipt_id: #{receipt.id.to_s} >>>> #{e.message} \n #{e.backtrace}", "sfdc_pusher.log")
         end
       end
     end

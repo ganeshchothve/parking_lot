@@ -85,7 +85,7 @@
 								<%= number_to_indian_currency(@project_unit.floor_rise.round(2)) %>
 							</td>
 						</tr>
-            <% discount_rate = @project_unit.discount_rate(@project_unit.user_id.present? @project_unit.user : current_user) %>
+            <% discount_rate = @project_unit.discount_rate(@project_unit.user_id.present? ? @project_unit.user : current_user) %>
             <% if discount_rate > 0 %>
             <tr>
 							<td>
@@ -157,7 +157,7 @@
 
 							</td>
 							<td>
-								<%= number_to_indian_currency(@project_unit.discount(@project_unit.user_id.present? @project_unit.user : current_user).round(2)) %>
+								<%= number_to_indian_currency(@project_unit.discount(@project_unit.user_id.present? ? @project_unit.user : current_user).round(2)) %>
 							</td>
 						</tr>
             <% end %>
@@ -186,7 +186,7 @@
 
 							</td>
 							<td class="pink">
-								<%= number_to_indian_currency((@project_unit.agreement_price - @project_unit.discount(@project_unit.user_id.present? @project_unit.user : current_user)).round(2)) %>
+								<%= number_to_indian_currency((@project_unit.agreement_price - @project_unit.discount(@project_unit.user_id.present? ? @project_unit.user : current_user)).round(2)) %>
 							</td>
 						</tr>
 					</table>

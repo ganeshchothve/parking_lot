@@ -235,9 +235,9 @@ $(document).ready(function(){
     unitHtml += '<div>Booking Status: <span class="book-status">'+ unitData[4] +'</span></div>';
     unitHtml += '</div>';
 
+    var fpUrl = $(this).data("fp-url");
     $(".show-unit-details").html(unitHtml);
 
-    var fpUrl = "/floorplans/" + unitData[3] + "-BHK-" + unitData[1] + "-SF.png";
     $("#fp > a").attr("href", fpUrl).find("img").attr("src", fpUrl);
   });
 
