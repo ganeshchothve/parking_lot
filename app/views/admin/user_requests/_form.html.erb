@@ -18,11 +18,22 @@
           </div>
         <% end %>
         <div class="cancel-booking-wrapper">
-          <%= form_for [:user, @user_request], html: {class: 'validate-form'} do |f| %>
+          <%
+            hash = {}
+            has = {confirm: 'This will immediately release the unit and you will not be able to claim it again. Are you sure you want to proceed?'} if @user_request.new_record?
+          %>
+          <%= form_for [:user, @user_request], html: {class: 'validate-form'}, data: hash do |f| %>
+            <% if @user_request.new_record? %>
               <div class="form-group form-field-wrapper">
                 <%= f.label :project_unit_id, class: 'control-label label-required title' %>
                 <%= f.select :project_unit_id, @user_request.user.project_units.collect{|x| [x.name, x.id] }, {prompt: true}, class: 'selectize', disabled: (policy(@user_request).editable_field?("project_unit_id") ? false : true), required: "required" %>
               </div>
+            <% else %>
+            <div class="form-group form-field-wrapper">
+              <%= f.label :project_unit_id, class: 'control-label label-required title' %>
+              <div><%= @user_request.project_unit.name %></div>
+            </div>
+            <% end %>
               <div class="form-group form-field-wrapper">
                 <%= f.label :comments, class: 'control-label label-required title' %>
                 <%= f.text_area :comments, autofocus: true, class: "form-control form-field", required: 'required', disabled: (policy(@user_request).editable_field?("comments") ? false : true) %>
@@ -102,6 +113,3 @@
     </div>
   </section>
 <% end %>
-
-
-

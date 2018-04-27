@@ -1,6 +1,5 @@
 class UserRequestObserver < Mongoid::Observer
   def after_create user_request
-    
     if user_request.status == 'pending'
       mailer = UserRequestMailer.send_pending(user_request.id.to_s)
       if Rails.env.development?
@@ -18,6 +17,12 @@ class UserRequestObserver < Mongoid::Observer
           SMSWorker.perform_async(user.phone.to_s, message)
         end
       end
+    end
+    # release the unit immediately
+    if user_request.project_unit_id.present?
+      unit = user_request.project_unit
+      unit.make_available
+      unit.save!
     end
   end
 
