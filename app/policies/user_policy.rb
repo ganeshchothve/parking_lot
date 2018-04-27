@@ -16,7 +16,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def new?
-    user.role?('admin') || (user.role?('channel_partner') && record.buyer?)
+    user.role?('admin') || (user.role?('channel_partner') && ['user'].include?(record.role))
   end
 
   def create?

@@ -45,7 +45,7 @@ Rails.application.routes.draw do
   end
 
   match 'payment/:receipt_id/process_payment/:ignore', to: 'payment#process_payment', via: [:get, :post]
-  
+
   get '/dashboard/faqs', to: 'dashboard#faqs'
   get '/dashboard/terms-and-conditions', to: 'dashboard#terms_and_condition'
 
@@ -75,12 +75,13 @@ Rails.application.routes.draw do
     get '/apartment-selector/:configuration', to: 'dashboard#project_units', stage: 'choose_tower', :constraints => {:configuration => /[^\/]+/}
     get '/apartment-selector', to: 'dashboard#project_units', stage: 'apartment_selector'
     get '/3d-apartment-selector', to: 'dashboard#project_units_3d'
-        
+
     get '/foyr-unit-status/:project_unit_id', to: 'dashboard#foyr_unit_status'
 
     get 'project_units/:project_unit_id', to: 'dashboard#project_unit', as: :dashboard_project_unit
     post 'project_units/:project_unit_id', to: 'dashboard#update_project_unit', as: :dashboard_update_project_unit
     post 'hold_project_unit/:project_unit_id', to: 'dashboard#hold_project_unit', as: :dashboard_hold_project_unit
+    post 'update_co_applicants/:project_unit_id', to: 'dashboard#update_co_applicants', as: :dashboard_update_co_applicants
     get 'checkout/(:project_unit_id)', to: 'dashboard#checkout', as: :dashboard_checkout
     get 'checkout_via_email/:project_unit_id/:receipt_id', to: 'dashboard#checkout_via_email', as: :dashboard_checkout_via_email
     get "gamify-unit-selection", to: "dashboard#gamify_unit_selection"

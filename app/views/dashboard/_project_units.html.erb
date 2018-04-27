@@ -28,10 +28,35 @@
           <div class="col-4">
             <div>Applicant:</div>
             <div class="dark">
-              <%= project_unit.user.name %>
-              <span class="ml-2">(<%= project_unit.user_kyc_ids.length > 1 ? "#{(project_unit.user_kyc_ids.count - 1)} Co-applicants" : "No Co-applicants" %>)</span>
+              <%= project_unit.primary_user_kyc.name %>
+              <span class="ml-2">(<%= project_unit.user_kyc_ids.length > 0 ? "#{(project_unit.user_kyc_ids.count)} Co-applicants" : "No Co-applicants" %>)</span>
               <br/>
-              <a href="<%= new_user_kyc_path(project_unit_id: project_unit.id) %>" class="small-link" data-event-category="section" data-event-action="click" data-event-name="add co applicant">Add Co-applicant</a>
+              <a class="small-link colorbox-inline-init" data-event-category="section" data-event-action="click" data-event-name="add co applicant" href="#kyc_<%= project_unit.id %>">
+                Update Co-applicants
+              </a>
+              <div style="display:none;">
+                <div id="kyc_<%= project_unit.id %>" role="dialog" style="width:400px;height:400px;padding:30px;background-color:#fff;">
+                  <h2>Manage Co-applicants</h2>
+                  <form id="existing_kyc_form" action="/dashboard/update_co_applicants/<%= project_unit.id %>" class="validate-form checkout_project_unit" accept-charset="UTF-8" method="POST">
+                    <input name="utf8" type="hidden" value="✓">
+                    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                    <div class="form-group">
+                      <select multiple="multiple" class="init-selectize required" name="project_unit[user_kyc_ids][]" required="required">
+                        <option value="">Select KYC</option>
+                        <% current_user.user_kycs.each_with_index do |user_kyc, index| %>
+                        <% if user_kyc.persisted? %>
+                        <option value="<%= user_kyc.id %>" <%= (project_unit.user_kyc_ids.include?(user_kyc.id)) ? "selected=selected" : "" %>><%= user_kyc.name %></option>
+                        <% end %>
+                        <% end %>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <br/><br/>
+                      <input type="submit" class="pink payment-btn" />
+                    </div>
+                  </form>
+                </div>
+              </div>
             </div>
           </div>
           <div class="col-4">
@@ -105,5 +130,8 @@
 <%= javascript_tag do %>
 $(document).ready(function(){
   FormInitializer.init($('.checkout_project_unit'));
+  $(".colorbox-inline-init").colorbox({
+    inline: true
+  })
 });
 <% end %>

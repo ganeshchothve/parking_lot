@@ -5,6 +5,7 @@ class BookingDetail
 
   field :primary_user_kyc_id, type: BSON::ObjectId
   field :status, type: String
+  field :channel_partner_id, type: BSON::ObjectId
 
   belongs_to :project_unit
   belongs_to :user
@@ -21,7 +22,7 @@ class BookingDetail
 
     if booking_detail.blank?
       if ["blocked", "booked_tentative", "booked_confirmed"].include?(project_unit.status)
-        BookingDetail.create(project_unit_id: project_unit.id, user_id: project_unit.user_id, receipt_ids: project_unit.receipt_ids, user_kyc_ids: project_unit.user_kyc_ids, primary_user_kyc_id: project_unit.primary_user_kyc_id, status: project_unit.status)
+        BookingDetail.create(project_unit_id: project_unit.id, user_id: project_unit.user_id, receipt_ids: project_unit.receipt_ids, user_kyc_ids: project_unit.user_kyc_ids, primary_user_kyc_id: project_unit.primary_user_kyc_id, status: project_unit.status, channel_partner_id: project_unit.user.channel_partner_id)
       end
     elsif booking_detail.status != "cancelled"
       if changes["status"].present? && ["blocked", "booked_tentative", "booked_confirmed", "error"].include?(changes["status"][0]) && ["blocked", "booked_tentative", "booked_confirmed", "error"].include?(project_unit.status)

@@ -1,7 +1,10 @@
 class ProjectUnitObserver < Mongoid::Observer
   def before_save project_unit
-    if project_unit.user_kyc_ids_changed? && project_unit.user_kyc_ids_was.blank? && project_unit.user_kyc_ids.present?
+    if project_unit.primary_user_kyc_id.blank? && project_unit.user_kyc_ids.present?
       project_unit.primary_user_kyc_id = project_unit.user_kyc_ids.first
+    end
+    if project_unit.primary_user_kyc_id.present? && project_unit.user_kyc_ids.present?
+      project_unit.user_kyc_ids.reject!{|x| x == project_unit.primary_user_kyc_id}
     end
     if project_unit.status_changed? && ['hold', 'blocked', 'booked_tentative', 'booked_confirmed'].exclude?(project_unit.status)
       project_unit.user_id = nil

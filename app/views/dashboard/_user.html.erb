@@ -151,7 +151,9 @@
 		    <div class="title">All Bookings</div>
 		  </div>
 		  <div class="col-6 text-right float-left-xs">
-		  	<a href="/dashboard/apartment-selector" class="nav-btn-green">Book Another Home</a>
+        <% if ProjectUnitPolicy.new(current_user, ProjectUnit.new).block? %>
+		  	   <a href="/dashboard/apartment-selector" class="nav-btn-green">Book Another Home</a>
+        <% end %>
 		  </div>
 		</div>
 		<div class="col-12">

@@ -187,8 +187,8 @@ $(document).ready(function(){
         var kyc_userid = responseData._id;
         var kyc_name = responseData.name;
 
-        $('[name="project_unit[user_kyc_ids][]"]')[0].selectize.addOption({text: kyc_name, value: kyc_userid});
-        $('[name="project_unit[user_kyc_ids][]"]')[0].selectize.setValue(kyc_userid);
+        $('[name="project_unit[primary_user_kyc_id]"]')[0].selectize.addOption({text: kyc_name, value: kyc_userid});
+        $('[name="project_unit[primary_user_kyc_id]"]')[0].selectize.setValue(kyc_userid);
 
         $("#existing_kyc_form").submit();
         $("#user_kyc_form input[type=submit]").removeAttr("disabled");

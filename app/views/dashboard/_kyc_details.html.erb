@@ -1,48 +1,48 @@
 <style type="text/css">
-	#user_kyc_form .intl-tel-input{
-		display: block;
-	}
-  .padding-top0{
-    padding-top: 0px;
+#user_kyc_form .intl-tel-input{
+  display: block;
+}
+.padding-top0{
+  padding-top: 0px;
 }
 .dark-green-bg{
-    background-color: #6b7e34
+  background-color: #6b7e34
 }
 .light-green-bg{
-    background-color: #d8ddc8;
+  background-color: #d8ddc8;
 }
 .col-4.light-green-bg{
-    padding: 20px;
-    line-height: 26px;
-    font-size: 16px;
+  padding: 20px;
+  line-height: 26px;
+  font-size: 16px;
 }
 .col-4.dark-green-bg{
-    padding: 34px 15px;
-    color: #fff;
+  padding: 34px 15px;
+  color: #fff;
 }
 .col-4.light-green-bg span.black{
-    color: #252525;
-    font-weight: 500;
+  color: #252525;
+  font-weight: 500;
 
 }
 .client-details-wrapper{
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 .client-detail span{
-    color: #fff;
-    font-size: 22px;
-    font-weight: 500;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 500;
 }
 .kyc-details-wrapper{
   padding: 0px;
 }
 .kyc-message {
-    margin: 0px 0px 20px 0;
-    background: #d8dec8;
-    color: #000;
-    padding: 20px;
-    border-radius: 0px;
-    border: 0px solid #9dbd2c;
+  margin: 0px 0px 20px 0;
+  background: #d8dec8;
+  color: #000;
+  padding: 20px;
+  border-radius: 0px;
+  border: 0px solid #9dbd2c;
 }
 .form-check{
   margin-top: 0px;
@@ -50,237 +50,238 @@
 }
 </style>
 <div class="apartment-selector-wrapper">
-       	<!-- <div class="col-12 client-detail-wrapper">
-       		<div class="pull-left client-detail">
-				<span class="pink"><%= current_user.name %></span>
-				<span class="pink">Flat No: <%= @unit.name %></span>
-			</div>
-       		<div class="pull-right tower-info-wrapper">
-       			<div class="pull-left">Tower: <%= @unit.project_tower_name %><br>Floor: <%= @unit.floor %><br>Flat no: <%= @unit.name %><br></div>
-       			<div class="pull-left padding-left-30">Configuration: <%= float_to_int(@unit.bedrooms) %> BHK<br>Carpet Area: <%= @unit.carpet.round %> Sq.Ft.<br>Price: <%= number_to_indian_currency(@unit.agreement_price.round) %></div>
-       			<div class="clearfix"></div>
-       		</div>
-       		<div class="clearfix"></div>
-       	</div> -->
+  <div class="col-12">
+    <div class="client-details-wrapper">
+      <div class="col-4 client-detail padding-top0 dark-green-bg">
+        <span class="white-font">Mr. <%= current_user.name %></span>
+        <span class="white-font">Flat No: <%= @unit.name %></span>
+      </div>
+      <div class="col-4 light-green-bg">
+        <div class=""><span class="black">Tower:</span> <%= @unit.project_tower_name %><br><span class="black">Floor: </span><%= @unit.floor %><br><span class="black">Flat No:</span> <%= @unit.name %><br></div>
+      </div>
+      <div class="col-4 light-green-bg">
+        <div class=""><span class="black">Configuration:</span> <%= float_to_int(@unit.bedrooms) %> BHK<br><span class="black">Carpet Area:</span> <%= @unit.carpet.round %> Sq.Ft.<br><span class="black">Starting Price:</span> <%= number_to_indian_currency(@unit.agreement_price.round) %></div>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+    <div class="clearfix"></div>
+  </div>
 
-        <div class="col-12">
-          <div class="client-details-wrapper">
-              <div class="col-4 client-detail padding-top0 dark-green-bg">
-                  <span class="white-font">Mr. <%= current_user.name %></span>
-                  <span class="white-font">Flat No: <%= @unit.name %></span>
+  <div class="col-12">
+    <div class="f22 bold">KYC Details</div>
+  </div>
+
+  <div class="clearfix"></div>
+  <div class="col-12 kyc-details-wrapper">
+
+    <div class="kyc-message">
+      Details provided on KYC form will be used in Agreement Documentation. Kindly ensure that name, DOB and other information is entered correctly.
+    </div>
+    <div class="form-check">
+      <label class="radio kyc-radio" data-link="no" data-event-category="section" data-event-action="click" data-event-name="Select Existing">Select Existing<input type="radio" name="kyc" class="form-check-input" data-event-category="section" data-event-action="click" data-event-name="Select Existing"><span class="checkmark" data-event-category="section" data-event-action="click" data-event-name="Select Existing"></span></label>
+      <label class="radio kyc-radio" data-link="yes" data-event-category="section" data-event-action="click" data-event-name="Add New">Add New<input type="radio" name="kyc" class="form-check-input" data-event-category="section" data-event-action="click" data-event-name="Add New"><span class="checkmark" data-event-category="section" data-event-action="click" data-event-name="Add New"></span></label>
+      <div class="hidden-field kyc-add" style="display:none">
+        <div class="form-wrapper margin-top-30 text-left">
+          <%
+          user_kyc = current_user.user_kycs.blank? ? current_user.user_kycs.build(first_name: current_user.first_name, last_name: current_user.last_name, email: current_user.email, phone: current_user.phone) : current_user.user_kycs.new
+          url = user_kycs_path
+          %>
+          <%= form_with(model: user_kyc, local: true, id: 'user_kyc_form', url: url, html: {class: 'validate-form'}) do |f| %>
+          <% if user_kyc.errors.any? %>
+          <div id="error_explanation" class="alert alert-danger">
+            <ul>
+              <% user_kyc.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+          <% end %>
+          <div class="row salutation-fields">
+            <div class="col-md-6 col-6">
+              <div class="w60">
+                <div class="col-md-4 col-4">
+                  <div class="form-group form-field-wrapper">
+                    <%= f.select :salutation, UserKyc.available_salutations.collect{|x| [x[:text], x[:id]]}, {prompt: "Select"}, class: 'required init-selectize' %>
+                  </div>
+                </div>
+                <div class="col-md-8 col-8">
+                  <div class="form-group form-field-wrapper">
+                    <%= f.text_field :first_name, class: 'form-control form-field', required: 'required form-field', placeholder: 'First Name' %>
+                  </div>
+                </div>
               </div>
-              <div class="col-4 light-green-bg">
-                  <div class=""><span class="black">Tower:</span> <%= @unit.project_tower_name %><br><span class="black">Floor: </span><%= @unit.floor %><br><span class="black">Flat No:</span> <%= @unit.name %><br></div>
+            </div>
+            <div class="col-md-6 col-6">
+              <div class="form-group form-field-wrapper">
+                <%= f.text_field :last_name, class: 'form-control form-field', required: 'required form-field', placeholder: 'Last Name' %>
               </div>
-              <div class="col-4 light-green-bg">
-                  <div class=""><span class="black">Configuration:</span> <%= float_to_int(@unit.bedrooms) %> BHK<br><span class="black">Carpet Area:</span> <%= @unit.carpet.round %> Sq.Ft.<br><span class="black">Starting Price:</span> <%= number_to_indian_currency(@unit.agreement_price.round) %></div>
-              </div>
-              <div class="clearfix"></div>
+            </div>
           </div>
           <div class="clearfix"></div>
-      </div>
-
-      <div class="col-12">
-        <div class="f22 bold">KYC Details</div>
-      </div>
-
-       	<div class="clearfix"></div>
-       	<div class="col-12 kyc-details-wrapper">
-       		
-       		<div class="kyc-message">
-       		Details provided on KYC form will be used in Agreement Documentation. Kindly ensure that name, DOB and other information is entered correctly.
-       	</div>
-       		<div class="form-check">
-                <label class="radio kyc-radio" data-link="no" data-event-category="section" data-event-action="click" data-event-name="Select Existing">Select Existing<input type="radio" name="kyc" class="form-check-input" data-event-category="section" data-event-action="click" data-event-name="Select Existing"><span class="checkmark" data-event-category="section" data-event-action="click" data-event-name="Select Existing"></span></label>
-                <label class="radio kyc-radio" data-link="yes" data-event-category="section" data-event-action="click" data-event-name="Add New">Add New<input type="radio" name="kyc" class="form-check-input" data-event-category="section" data-event-action="click" data-event-name="Add New"><span class="checkmark" data-event-category="section" data-event-action="click" data-event-name="Add New"></span></label>
-                <div class="hidden-field kyc-add" style="display:none">
-                  <div class="form-wrapper margin-top-30 text-left">
-			          <%
-			          user_kyc = current_user.user_kycs.blank? ? current_user.user_kycs.build(first_name: current_user.name.split(" ").first, last_name: current_user.name.split(" ").last, email: current_user.email, phone: current_user.phone) : current_user.user_kycs.new
-			          url = user_kycs_path
-			          %>
-			          <%= form_with(model: user_kyc, local: true, id: 'user_kyc_form', url: url, html: {class: 'validate-form'}) do |f| %>
-			            <% if user_kyc.errors.any? %>
-			              <div id="error_explanation" class="alert alert-danger">
-			                <ul>
-			                <% user_kyc.errors.full_messages.each do |message| %>
-			                  <li><%= message %></li>
-			                <% end %>
-			                </ul>
-			              </div>
-			            <% end %>
-                  <div class="row salutation-fields">
-                    <div class="col-md-6 col-6">
-                      <div class="w60">
-                        <div class="col-md-4 col-4">
-                          <div class="form-group form-field-wrapper">
-                            <%= f.select :salutation, UserKyc.available_salutations.collect{|x| [x[:text], x[:id]]}, {prompt: "Select"}, class: 'required init-selectize' %>
-                          </div>
-                        </div>
-                        <div class="col-md-8 col-8">
-                          <div class="form-group form-field-wrapper">
-                            <%= f.text_field :first_name, class: 'form-control form-field', required: 'required form-field', placeholder: 'First Name' %>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6 col-6">
-                      <div class="form-group form-field-wrapper">
-                        <%= f.text_field :last_name, class: 'form-control form-field', required: 'required form-field', placeholder: 'Last Name' %>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="clearfix"></div>
-                  <div class="row">
-                    <div class="col-md-6 col-6">
-                      <div class="form-group form-field-wrapper">
-                        <%= f.text_field :phone, class: 'form-control phone form-field', required: 'required form-field', placeholder:'Phone'%>
-                      </div>
-                    </div>
-                    <div class="col-md-6 col-6">
-                      <div class="form-group form-field-wrapper">
-                        <%= f.email_field :email, class: 'form-control form-field', required: 'required form-field', placeholder:'Email' %>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6 col-6">
-                      <div class="form-group form-field-wrapper position-relative">
-                        <!-- TODO: check if you want to restrict the dob to 18 years age -->
-                        <%= f.date_field :dob, class: 'form-control form-field', type:'text', onfocus:"(this.type='date')", placeholder:'Date of birth' %>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="clearfix"></div>
+          <div class="row">
+            <div class="col-md-6 col-6">
+              <div class="form-group form-field-wrapper">
+                <%= f.text_field :phone, class: 'form-control phone form-field', required: 'required form-field', placeholder:'Phone'%>
+              </div>
+            </div>
+            <div class="col-md-6 col-6">
+              <div class="form-group form-field-wrapper">
+                <%= f.email_field :email, class: 'form-control form-field', required: 'required form-field', placeholder:'Email' %>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 col-6">
+              <div class="form-group form-field-wrapper position-relative">
+                <!-- TODO: check if you want to restrict the dob to 18 years age -->
+                <%= f.date_field :dob, class: 'form-control form-field', type:'text', onfocus:"(this.type='date')", placeholder:'Date of birth' %>
+              </div>
+            </div>
+          </div>
+          <div class="clearfix"></div>
+          <div class="form-group form-field-wrapper">
+            <div class="form-check">
+              <%= f.label :nri, class: 'control-label' %>
+              <label class="radio nri" data-link="yes">Yes<%= f.radio_button :nri, "yes", class: "form-check-input" %><span class="checkmark"></span></label>
+              <label class="radio nri" data-link="no">No<%= f.radio_button :nri , "no", class: "form-check-input", checked: "checked" %><span class="checkmark"></span></label>
+            </div>
+          </div>
+          <div class="row nri-fields show-yes-nri" style="display:none">
+            <div class="col-md-12 col-12">
+              <div class="form-group form-field-wrapper">
+                <%= f.text_field :oci, class: 'form-control form-field', placeholder: 'OCI' %>
+              </div>
+            </div>
+            <div class="col-md-12 col-12">
+              <div class="poa form-check">
+                <label class="control-label">Do you have Power of Attorney in India?</label>
+                <label class="radio attorney" data-link="yes">Yes
+                  <%= f.radio_button :poa, class: "form-check-input" %>
+                  <span class="checkmark"></span>
+                </label>
+                <label class="radio attorney" data-link="no">No
+                  <%= f.radio_button :poa, class: "form-check-input" %>
+                  <span class="checkmark"></span>
+                </label>
+                <div class="name-attorney" style="display:none">
                   <div class="form-group form-field-wrapper">
-                    <div class="form-check">
-                      <%= f.label :nri, class: 'control-label' %>
-                      <label class="radio nri" data-link="yes">Yes<%= f.radio_button :nri, "yes", class: "form-check-input" %><span class="checkmark"></span></label>
-                      <label class="radio nri" data-link="no">No<%= f.radio_button :nri , "no", class: "form-check-input", checked: "checked" %><span class="checkmark"></span></label>
-                    </div>
+                    <%= f.text_field :poa_details, class: 'form-control form-field', placeholder: 'Name' %>
                   </div>
-                  <div class="row nri-fields show-yes-nri" style="display:none">
-                    <div class="col-md-12 col-12">
-                      <div class="form-group form-field-wrapper">
-                        <%= f.text_field :oci, class: 'form-control form-field', placeholder: 'OCI' %>
-                      </div>
-                    </div>
-                    <div class="col-md-12 col-12">
-                      <div class="poa form-check">
-                        <label class="control-label">Do you have Power of Attorney in India?</label>
-                        <label class="radio attorney" data-link="yes">Yes
-                          <%= f.radio_button :poa, class: "form-check-input" %>
-                          <span class="checkmark"></span>
-                        </label>
-                        <label class="radio attorney" data-link="no">No
-                          <%= f.radio_button :poa, class: "form-check-input" %>
-                          <span class="checkmark"></span>
-                        </label>
-                        <div class="name-attorney" style="display:none">
-                          <div class="form-group form-field-wrapper">
-                            <%= f.text_field :poa_details, class: 'form-control form-field', placeholder: 'Name' %>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-                  <!-- If NRI -->
-                  <!-- If Not NRI -->
-                  <div class="row nri-fields show-no-nri">
-                    <div class="col-md-6 col-6">
-                      <div class="form-group form-field-wrapper">
-                        <%= f.text_field :pan_number, class: 'form-control form-field', required: 'required', placeholder: 'PAN Number' %>
-                      </div>
-                    </div>
-                    <div class="col-md-6 col-6">
-                      <div class="form-group form-field-wrapper">
-                        <%= f.text_field :aadhaar, class: 'form-control form-field', placeholder: 'Enter your 12 digit Aadhaar No.' %>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- If Not NRI -->
-                  <div class="clearfix"></div>
-                  <div class="row">
-                    <div class="col-md-6 col-6">
-                      <div class="form-group form-field-wrapper">
-                        <%= f.text_field :street, class: 'form-control form-field', required: 'required form-field', placeholder: 'Street Name' %>
-                      </div>
-                    </div>
-                    <div class="col-md-6 col-6">
-                      <div class="form-group form-field-wrapper">
-                        <%= f.text_field :house_number, class: 'form-control form-field', required: 'required form-field', placeholder: 'House Number' %>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6 col-6">
-                      <div class="form-group form-field-wrapper">
-                        <%= f.text_field :city, class: 'form-control form-field', required: 'required form-field', placeholder: 'City' %>
-                      </div>
-                    </div>
-                    <div class="col-md-6 col-6">
-                      <div class="form-group form-field-wrapper">
-                        <%= f.text_field :postal_code, class: 'form-control form-field', required: 'required form-field', placeholder: 'Postal Code' %>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6 col-6">
-                      <div class="form-group form-field-wrapper">
-                        <%= f.text_field :state, class: 'form-control form-field', required: 'required form-field', placeholder: 'State' %>
-                      </div>
-                    </div>
-                    <div class="col-md-6 col-6">
-                      <div class="form-group form-field-wrapper">
-                        <%= f.text_field :country, class: 'form-control form-field', required: 'required form-field', placeholder: 'Country' %>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="clearfix"></div>
-			            <% if policy(@unit).hold_project_unit? %>
-			            <br clear="all" />
-			            <div class="col-12 top-inline-block">
-			            <a href="javascript:;" class="nav-btn btn-anim navigate" data-stage="select-apartment" data-navigate-to="prev" data-event-category="section" data-event-action="click" data-event-name="add & hold - kyc details prev">← PREV</a>
-                  <%= f.submit 'Add & Hold Unit', class: 'form-field nav-btn btn-anim', style: 'width:auto', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add & Hold Unit'}  %>
-			        	</div>
-			            <% end %>
-			          <% end %>
-			        </div>
-
-                </div>
-                <div class="hidden-field kyc-exist" style="display:none">
-                	<form id="existing_kyc_form" action="/dashboard/hold_project_unit/<%= @unit.id %>" class="validate-form checkout_project_unit" accept-charset="UTF-8" method="post">
-			          <input name="utf8" type="hidden" value="✓">
-			          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-			          <div class="form-group">
-			            <input value="hold" type="hidden" name="project_unit[status]" id="project_unit_status">
-			            <select multiple="multiple" class="init-selectize required" name="project_unit[user_kyc_ids][]" required="required">
-			              <option value="">Select KYC</option>
-			              <% current_user.user_kycs.each_with_index do |user_kyc, index| %>
-			              <% if user_kyc.persisted? %>
-			              	<option value="<%= user_kyc.id %>" <%= index == 0 ? "selected=selected" : "" %>><%= user_kyc.name %></option>
-			              <% end %>
-			              <% end %>
-			            </select>
-			          </div>
-			          <br clear="all" />
-			            <div class="col-12 top-inline-block">
-			          <%# if policy(@unit).hold_project_unit? %>
-			          	<a href="javascript:;" class="nav-btn btn-anim navigate" data-stage="select-apartment" data-navigate-to="prev" data-navigate-to="prev" data-event-category="section" data-event-action="click" data-event-name="select existing kyc details prev">← PREV</a>
-                  <input type="submit" value="Hold Unit" class="nav-btn btn-anim" data-event-category="section" data-event-action="click" data-event-name="Hold Unit"/>
-			          </div>
-			          <%# end %>
-			        </form>
-			        <div class="clearfix"></div>
                 </div>
               </div>
-       	</div>
+            </div>
+
+          </div>
+          <!-- If NRI -->
+          <!-- If Not NRI -->
+          <div class="row nri-fields show-no-nri">
+            <div class="col-md-6 col-6">
+              <div class="form-group form-field-wrapper">
+                <%= f.text_field :pan_number, class: 'form-control form-field', required: 'required', placeholder: 'PAN Number' %>
+              </div>
+            </div>
+            <div class="col-md-6 col-6">
+              <div class="form-group form-field-wrapper">
+                <%= f.text_field :aadhaar, class: 'form-control form-field', placeholder: 'Enter your 12 digit Aadhaar No.' %>
+              </div>
+            </div>
+          </div>
+          <!-- If Not NRI -->
+          <div class="clearfix"></div>
+          <div class="row">
+            <div class="col-md-6 col-6">
+              <div class="form-group form-field-wrapper">
+                <%= f.text_field :street, class: 'form-control form-field', required: 'required form-field', placeholder: 'Street Name' %>
+              </div>
+            </div>
+            <div class="col-md-6 col-6">
+              <div class="form-group form-field-wrapper">
+                <%= f.text_field :house_number, class: 'form-control form-field', required: 'required form-field', placeholder: 'House Number' %>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 col-6">
+              <div class="form-group form-field-wrapper">
+                <%= f.text_field :city, class: 'form-control form-field', required: 'required form-field', placeholder: 'City' %>
+              </div>
+            </div>
+            <div class="col-md-6 col-6">
+              <div class="form-group form-field-wrapper">
+                <%= f.text_field :postal_code, class: 'form-control form-field', required: 'required form-field', placeholder: 'Postal Code' %>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 col-6">
+              <div class="form-group form-field-wrapper">
+                <%= f.text_field :state, class: 'form-control form-field', required: 'required form-field', placeholder: 'State' %>
+              </div>
+            </div>
+            <div class="col-md-6 col-6">
+              <div class="form-group form-field-wrapper">
+                <%= f.text_field :country, class: 'form-control form-field', required: 'required form-field', placeholder: 'Country' %>
+              </div>
+            </div>
+          </div>
+          <div class="clearfix"></div>
+          <% if policy(@unit).hold_project_unit? %>
+          <br clear="all" />
+          <div class="col-12 top-inline-block">
+            <a href="javascript:;" class="nav-btn btn-anim navigate" data-stage="select-apartment" data-navigate-to="prev" data-event-category="section" data-event-action="click" data-event-name="add & hold - kyc details prev">← PREV</a>
+            <%= f.submit 'Add & Hold Unit', class: 'form-field nav-btn btn-anim', style: 'width:auto', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add & Hold Unit'}  %>
+          </div>
+          <% end %>
+          <% end %>
+        </div>
+
       </div>
+      <div class="hidden-field kyc-exist" style="display:none">
+        <form id="existing_kyc_form" action="/dashboard/hold_project_unit/<%= @unit.id %>" class="validate-form checkout_project_unit" accept-charset="UTF-8" method="post">
+          <input name="utf8" type="hidden" value="✓">
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+          <input value="hold" type="hidden" name="project_unit[status]" id="project_unit_status">
+          <br/>
+          <div class="form-group">
+            <label>Primary Applicant</label>
+            <select class="init-selectize required" name="project_unit[primary_user_kyc_id]" required="required">
+              <option value="">Select Primary Applicant</option>
+              <% current_user.user_kycs.each_with_index do |user_kyc, index| %>
+              <% if user_kyc.persisted? %>
+              <option value="<%= user_kyc.id %>" <%= index == 0 ? "selected=selected" : "" %>><%= user_kyc.name %></option>
+              <% end %>
+              <% end %>
+            </select>
+          </div>
+          <br/>
+          <div class="form-group">
+            <label>Co Applicants</label>
+            <select multiple="multiple" class="init-selectize" name="project_unit[user_kyc_ids][]">
+              <option value="">Select Co-applicants</option>
+              <% current_user.user_kycs.each_with_index do |user_kyc, index| %>
+              <% if user_kyc.persisted? %>
+              <option value="<%= user_kyc.id %>"><%= user_kyc.name %></option>
+              <% end %>
+              <% end %>
+            </select>
+          </div>
+          <br clear="all" />
+          <div class="col-12 top-inline-block">
+            <%# if policy(@unit).hold_project_unit? %>
+            <a href="javascript:;" class="nav-btn btn-anim navigate" data-stage="select-apartment" data-navigate-to="prev" data-navigate-to="prev" data-event-category="section" data-event-action="click" data-event-name="select existing kyc details prev">← PREV</a>
+            <input type="submit" value="Hold Unit" class="nav-btn btn-anim" data-event-category="section" data-event-action="click" data-event-name="Hold Unit"/>
+          </div>
+          <%# end %>
+        </form>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 
-      <script type="text/javascript">
-      	$(document).ready(function(){
-      		FormInitializer.init($("#user_kyc_form"));
-      	});
-      </script>
+<script type="text/javascript">
+$(document).ready(function(){
+  FormInitializer.init($("#user_kyc_form"));
+});
+</script>
