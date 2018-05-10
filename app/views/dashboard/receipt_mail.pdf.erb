@@ -134,7 +134,7 @@
 		<div class="pull-left">
 			<p class="pageTitle big pink">INVOICE</p>
 		</div>
-		<!-- <div class="pull-right">	
+		<!-- <div class="pull-right">
 			<img src="<%#= asset_path 'printer-outline.png'%>" class="img-responsive" onclick="printReceipt()">
 		</div> -->
 		<div class="clearfix"></div>
@@ -163,7 +163,7 @@
 						<span class="specs"><%= @receipt.user.user_kycs.first.postal_code %>, </span><br/>
 						<span class="specs"><%= @receipt.user.user_kycs.first.state %>, </span>
 						<span class="specs"><%= @receipt.user.user_kycs.first.country %></span>
-						
+
 						<!-- <span class="specs">B2 - Haridra, Shree Sai Samrudddhi Apts, C.V. Raman Nagar, Bengaluru - 560093</span> -->
 					</div>
 					<div class="col-6">
@@ -214,7 +214,7 @@
 						Cheque / DD Number:<%= @receipt.payment_identifier %><br/> Bank Name: <%= @receipt.issuing_bank %> <br/> Bank Branch :<%= @receipt.issuing_bank_branch %>
 						<% end %>
 						</td>
-						<td><%= number_to_indian_currency(@receipt.total_amount.round) %></td>
+						<td><%= number_to_indian_currency(@receipt.total_amount.round(2)) %></td>
 					</tr>
 				</table>
 			</div>

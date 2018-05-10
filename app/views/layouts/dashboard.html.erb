@@ -171,7 +171,7 @@
 </div>
 <!-- <div class="dash-menu-footer hidden-xs">
 <div class="col-3"><img src="<%= asset_path 'donatecoin.gif'%>" class="img-responsive"></div>
-<div class="col-9 donate-content">We will be donating 0.1% of every booking to NGO - Colors of Life. Make a difference today! <%= number_to_indian_currency((ProjectUnit.in(status: ['blocked', 'booked_confirmed', 'booked_tentative']).sum(:agreement_price) * 0.1 / 100).round) %> have been donated so far to <span><a href="http://www.coloursoflife.co.in/" target="_blank" data-event-category="side bar" data-event-action="click" data-event-name="Colors of Life">Colors of Life.</a></span></div>
+<div class="col-9 donate-content">We will be donating 0.1% of every booking to NGO - Colors of Life. Make a difference today! <%= number_to_indian_currency((ProjectUnit.in(status: ['blocked', 'booked_confirmed', 'booked_tentative']).sum(:agreement_price) * 0.1 / 100).round(2)) %> have been donated so far to <span><a href="http://www.coloursoflife.co.in/" target="_blank" data-event-category="side bar" data-event-action="click" data-event-name="Colors of Life">Colors of Life.</a></span></div>
 </div> -->
 </div>
 <% end %>

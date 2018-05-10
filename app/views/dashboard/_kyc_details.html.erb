@@ -60,7 +60,7 @@
         <div class=""><span class="black">Tower:</span> <%= @unit.project_tower_name %><br><span class="black">Floor: </span><%= @unit.floor %><br><span class="black">Flat No:</span> <%= @unit.name %><br></div>
       </div>
       <div class="col-4 light-green-bg">
-        <div class=""><span class="black">Configuration:</span> <%= float_to_int(@unit.bedrooms) %> BHK<br><span class="black">Carpet Area:</span> <%= @unit.carpet.round %> Sq.Ft.<br><span class="black">Starting Price:</span> <%= number_to_indian_currency(@unit.agreement_price.round) %></div>
+        <div class=""><span class="black">Configuration:</span> <%= float_to_int(@unit.bedrooms) %> BHK<br><span class="black">Carpet Area:</span> <%= @unit.carpet %> Sq.Ft.<br><span class="black">Starting Price:</span> <%= number_to_indian_currency(@unit.agreement_price.round(2)) %></div>
       </div>
       <div class="clearfix"></div>
     </div>
@@ -177,7 +177,7 @@
           <div class="row nri-fields show-no-nri">
             <div class="col-md-6 col-6">
               <div class="form-group form-field-wrapper">
-                <%= f.text_field :pan_number, class: 'form-control form-field', required: 'required', placeholder: 'PAN Number' %>
+                <%= f.text_field :pan_number, class: 'form-control form-field', placeholder: 'PAN Number' %>
               </div>
             </div>
             <div class="col-md-6 col-6">

@@ -134,7 +134,7 @@
 		<div class="pull-left">
 			<p class="pageTitle big pink">INVOICE</p>
 		</div> -->
-		<!-- <div class="pull-right">	
+		<!-- <div class="pull-right">
 			<img src="<%#= asset_path 'printer-outline.png'%>" class="img-responsive" onclick="printReceipt()">
 		</div> -->
 <!-- 		<div class="clearfix"></div>
@@ -200,7 +200,7 @@
 									<td><%= @receipt.processed_on %></td>
 									<td><%= @receipt.payment_identifier %></td>
 									<td><%= @receipt.issuing_bank %> - <%= @receipt.issuing_bank_branch %> </td>
-									<td> Rs.<%= @receipt.total_amount.round %></td>
+									<td> Rs.<%= @receipt.total_amount.round(2) %></td>
 								</tr>
 							</table>
 						</div>
@@ -241,7 +241,7 @@ Project Unit Details
 	<tr><td>&nbsp;</td></tr>
 	<tr>
 	 <td>
-	   Dear <%= @user.name %>, 
+	   Dear <%= @user.name %>,
 	 </td>
 	</tr>
 	<tr><td>&nbsp;</td></tr>
@@ -249,14 +249,14 @@ Project Unit Details
 	  	<td style="line-height:26px;">
 	    	<span><strong>Thank you for your payment of Rs. <%= @receipt.total_amount %></strong></span>
 	    	<br/>
-	    	<% if @receipt.payment_mode == 'cheque' %>An Embassy home is yours to keep! Your cheque of Rs. <%= @receipt.total_amount %>  has been cleared by the bank. We will contact you shortly to discuss the next round of formalities. 
+	    	<% if @receipt.payment_mode == 'cheque' %>An Embassy home is yours to keep! Your cheque of Rs. <%= @receipt.total_amount %>  has been cleared by the bank. We will contact you shortly to discuss the next round of formalities.
 	   	    <% else %>
 			<span><strong>Congratulations!</strong></span>
 			<p>You now officially belong to a community where people with a new mindset reside. </p>
 			</br>
 	    	<p><strong> Please find below the booking details: </strong> </p> <br/>
-	    	<p> 
-		      	<span style="color:#64c0e9; font-weight:bold">Unit </span> <%= @project_unit.name %><br/>  
+	    	<p>
+		      	<span style="color:#64c0e9; font-weight:bold">Unit </span> <%= @project_unit.name %><br/>
 		      	<span style="color:#64c0e9; font-weight:bold">Receipt </span> <%= @receipt.receipt_id %><br/>
 		      	<span style="color:#64c0e9; font-weight:bold">Date </span> <%= @receipt.issued_date %><br/>
 		      	<span style="color:#64c0e9; font-weight:bold">Bank </span> <%= @receipt.issuing_bank %><br/>
@@ -267,6 +267,5 @@ Project Unit Details
 	    <!-- <br/> -->
 		<!-- <p>The allotment letter has been attached with this mail. </p> -->
 	  </td>
-	</tr> 
+	</tr>
 </table>
-

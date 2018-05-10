@@ -28,7 +28,7 @@
           <select class="init-selectize" name="bedrooms">
             <option value="">Select Bedrooms</option>
             <% @configurations.each do |c| %>
-            <option value="<%= c[:bedrooms] %>" <%= params[:configuration].split(",")[0].to_s == c[:bedrooms].to_s ? "selected=selected" : "" %>><%= float_to_int(c[:bedrooms]) %> BHK (Starting from <%= number_to_indian_currency(c[:agreement_price].round) %>)</option>
+            <option value="<%= c[:bedrooms] %>" <%= params[:configuration].split(",")[0].to_s == c[:bedrooms].to_s ? "selected=selected" : "" %>><%= float_to_int(c[:bedrooms]) %> BHK (Starting from <%= number_to_indian_currency(c[:agreement_price].round(2)) %>)</option>
             <% end %>
           </select>
         </div>
@@ -101,7 +101,7 @@
             end
           end
           %>
-          <span data-unit-id="<%= u.id %>" class="unit-tooltip apt bstatus-<%= status %>" title='["<%= u.name %>","<%= u.carpet.round %>","<%= number_to_indian_currency(u.agreement_price.round) %>","<%= u.bedrooms %>","<%= status %>","<%= u.floor %>","<%= u.category %>"]' data-fp-url="<%= asset_path("floorplans/#{u.project_tower_name.gsub(" ", '')}-#{u.unit_configuration_name.gsub(" ", '')}.jpg") %>" data-unit-details='["<%= u.name %>","<%= u.carpet.round %>","<%= number_to_indian_currency(u.agreement_price.round)  %>","<%= u.bedrooms %>","<%= status %>","<%= u.floor %>","<%= u.category %>"]'></span>
+          <span data-unit-id="<%= u.id %>" class="unit-tooltip apt bstatus-<%= status %>" title='["<%= u.name %>","<%= u.carpet.round %>","<%= number_to_indian_currency(u.agreement_price.round(2)) %>","<%= u.bedrooms %>","<%= status %>","<%= u.floor %>","<%= u.category %>"]' data-fp-url="<%= asset_path("floorplans/#{u.project_tower_name.gsub(" ", '')}-#{u.unit_configuration_name.gsub(" ", '')}.jpg") %>" data-unit-details='["<%= u.name %>","<%= u.carpet.round %>","<%= number_to_indian_currency(u.agreement_price.round(2))  %>","<%= u.bedrooms %>","<%= status %>","<%= u.floor %>","<%= u.category %>"]'></span>
           <% end %>
         </div>
         <% end %>

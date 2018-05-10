@@ -20,7 +20,7 @@
         <div class="cancel-booking-wrapper">
           <%
             hash = {}
-            has = {confirm: 'This will immediately release the unit and you will not be able to claim it again. Are you sure you want to proceed?'} if @user_request.new_record?
+            has = {confirm: 'Your unit will be released immediately after raising the cancellation request. For booking the same unit again, you will have to go through the selection process again which will also be subject to availability. Are you sure you want to proceed?'} if @user_request.new_record?
           %>
           <%= form_for [:user, @user_request], html: {class: 'validate-form'}, data: hash do |f| %>
             <% if @user_request.new_record? %>
@@ -45,7 +45,14 @@
                 </div>
               <% end %>
               <div class="form-group">
-                <%= f.submit "Submit", class: 'btn nav-btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'cancel booking - submit'}  %>
+                <div style="color:#f00;">
+                  Your unit will be released immediately after raising the cancellation request. For booking the same unit again, you will have to go through the selection process again which will also be subject to availability.
+                </div>
+                <input type="checkbox" id="accepted" /> I Agree
+              </div>
+              <br/>
+              <div class="form-group">
+                <%= f.submit "Submit", class: 'btn nav-btn', id: "submit_request", disabled: "disabled", data:{event_category: 'Section', event_action: 'Click', event_name: 'cancel booking - submit'}  %>
               </div>
             <% end %>
             <div class="form-group">
@@ -56,6 +63,13 @@
             <%= javascript_tag do %>
             $(document).ready(function(){
               FormInitializer.init($('.validate-form'));
+              $("#accepted").change(function(){
+                if($(this).is(":checked")){
+                  $("#submit_request").removeAttr("disabled");
+                }else{
+                  $("#submit_request").attr("disabled", "disabled");
+                }
+              })
             });
           <% end %>
         </div>
@@ -63,7 +77,7 @@
     </div>
   </section>
 <% else %>
-<%= render 'breadcrumbs', {user: @user, user_request: @user_request} %>
+  <%= render 'breadcrumbs', {user: @user, user_request: @user_request} %>
   <section class="padding-side-22">
     <div class="container-fluid">
       <div class="row">

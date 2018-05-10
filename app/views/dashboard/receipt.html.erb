@@ -127,7 +127,7 @@
 					<div class="pull-left">
 						<p class="pageTitle big pink">PAYMENT SUCCESS!</p>
 					</div>
-					<div class="pull-right" style="padding-right:10px;">	
+					<div class="pull-right" style="padding-right:10px;">
 						<!-- <a href="/dashboard/receipt-print"><img src="<%#= asset_path 'printer-outline.png'%>" class="img-responsive"></a> -->
 					<%= link_to dashboard_receipt_mail_path(@receipt.id, :format => 'pdf'), target: :_blank do %>
 						<img src="<%= asset_path 'printer-outline.png'%>" class="img-responsive">
@@ -207,7 +207,7 @@
 									Cheque / DD Number:<%= @receipt.payment_identifier %><br/> Bank Name: <%= @receipt.issuing_bank %> <br/> Bank Branch :<%= @receipt.issuing_bank_branch %>
 									<% end %>
 									</td>
-									<td><%= number_to_indian_currency(@receipt.total_amount.round) %></td>
+									<td><%= number_to_indian_currency(@receipt.total_amount.round(2)) %></td>
 								</tr>
 							</table>
 							<br/>
