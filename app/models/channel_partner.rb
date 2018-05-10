@@ -98,7 +98,7 @@ class ChannelPartner
   end
 
   def name
-    "#{first_name} #{last_name}"
+    "#{title} #{first_name} #{last_name}"
   end
 
   def ds_name
