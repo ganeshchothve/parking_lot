@@ -56,7 +56,7 @@ gem 'rails-observers',  github: 'rails/rails-observers'
 # for file upload
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 gem 'fog-aws'
-gem "fog-azure-rm"
+# gem "fog-azure-rm"
 # for simplified HTTP requests
 gem 'httparty', '>= 0.14.0'
 # for creating and modifying spreadsheets / excel / CSVs
@@ -124,7 +124,4 @@ group :production, :staging do
   gem 'newrelic-redis'
   gem 'newrelic_rpm'
 end
-
-group :production do
-  gem 'asset_sync'
-end
+gem 'asset_sync', '>= 2.4.0'

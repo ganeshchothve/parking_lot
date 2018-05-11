@@ -1,6 +1,6 @@
 if defined?(AssetSync)
   AssetSync.configure do |config|
-    config.fog_provider = 'Azure Blob'
+    config.fog_provider = 'AzureRM'
     config.azure_storage_account_name = ENV_CONFIG[:asset_sync]['AZURE_STORAGE_ACCOUNT_NAME']
     config.azure_storage_access_key = ENV_CONFIG[:asset_sync]['AZURE_STORAGE_ACCESS_KEY']
     config.fog_directory = ENV_CONFIG[:asset_sync]['FOG_DIRECTORY']
