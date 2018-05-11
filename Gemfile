@@ -56,7 +56,7 @@ gem 'rails-observers',  github: 'rails/rails-observers'
 # for file upload
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 gem 'fog-aws'
-# gem "fog-azure-rm"
+gem "fog-azure-rm"
 # for simplified HTTP requests
 gem 'httparty', '>= 0.14.0'
 # for creating and modifying spreadsheets / excel / CSVs
