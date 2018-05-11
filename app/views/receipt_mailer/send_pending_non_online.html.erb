@@ -22,7 +22,13 @@
 <tr><td>&nbsp;</td></tr>
 <tr>
   <td style="line-height:26px;">
-    <p><strong>  Mr. <%= @user.channel_partner.name %> </strong> the Channel Partner has collected the cheque of Rs. <%= @receipt.total_amount %>/- towards the Booking amount. </p>
+    <p>
+      <% if @cp.present? %>
+        <strong>  Mr. <%= @cp.name %> </strong> the Channel Partner has collected the cheque of Rs. <%= @receipt.total_amount %>/- towards the Booking amount.
+      <% end %>
+      Your cheque of Rs. <%= @receipt.total_amount %>/- towards the Booking amount has been collected.
+      <% end %>
+    </p>
     <p>We will notify you once the cheque is processed by our team. </p>
 
     <p><strong> Following are the payment details.</strong> </p> <br/>

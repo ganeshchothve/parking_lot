@@ -43,7 +43,16 @@
     <br/>
     <p>Your Embassy home will be kept on hold for you for additional 4 <%#= (@project_unit.auto_release_on - Date.today).days %> days until your cheque is cleared. We will notify you once the cheque realizes. </p>
     <p>
-      <p><strong>  Mr. <%= @user.channel_partner.name %> </strong> the Channel Partner has selected and booked an Apartment unit no. <%= @project_unit.name  %> on your behalf at Embassy Springs Project and has paid a sum of Rs. <%= @receipt.total_amount %>/- towards the Booking amount. </p>
+      <% if @cp.present? %>
+      <p>
+        <strong>  Mr. <%= @cp.name %> </strong> the Channel Partner has selected and booked an Apartment unit no. <%= @project_unit.name  %> on your behalf at Embassy Springs Project and has paid a sum of Rs. <%= @receipt.total_amount %>/- towards the Booking amount.
+      </p>
+      <% else %>
+      <p>
+        The Channel Partner has selected and booked an Apartment unit no. <%= @project_unit.name  %> on your behalf at Embassy Springs Project and has paid a sum of Rs. <%= @receipt.total_amount %>/- towards the Booking amount.
+      </p>
+      <% end %>
+
               <p>We request you to kindly confirm the above booking by the return mail within 7 days, failing which the above booking will be cancelled without any further intimation to you or the Channel Partner.</p>
     </p>
     <% if @receipt.status == 'clearance_pending' && @receipt.project_unit_id.blank? && @receipt.reference_project_unit_id.present? && @receipt.reference_project_unit.status == 'available' %>
