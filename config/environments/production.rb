@@ -82,8 +82,17 @@ Rails.application.configure do
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
   config.action_mailer.delivery_method = :smtp
+  config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
-  config.action_mailer.smtp_settings = ENV_CONFIG[:smtp]
+  config.action_mailer.smtp_settings = {
+    user_name: ENV_CONFIG[:smtp][:user_name],
+    password: ENV_CONFIG[:smtp][:password],
+    domain: ENV_CONFIG[:smtp][:domain],
+    address: ENV_CONFIG[:smtp][:address],
+    port: ENV_CONFIG[:smtp][:port],
+    authentication: ENV_CONFIG[:smtp][:authentication],
+    enable_starttls_auto: ENV_CONFIG[:smtp][:enable_starttls_auto]
+  }
 
   if ENV["RAILS_LOG_TO_STDOUT"].present?
     logger           = ActiveSupport::Logger.new(STDOUT)
