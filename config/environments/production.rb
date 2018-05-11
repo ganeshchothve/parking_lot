@@ -34,6 +34,7 @@ Rails.application.configure do
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   config.action_controller.asset_host = "//#{ENV_CONFIG[:asset_sync]['AZURE_STORAGE_ACCOUNT_NAME']}.blob.core.windows.net/#{ENV_CONFIG[:asset_sync]['FOG_DIRECTORY']}"
+  config.action_mailer.default_url_options = {host: 'booking.embassysprings.com'}
 
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
