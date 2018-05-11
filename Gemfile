@@ -55,6 +55,7 @@ gem 'mongoid-observers', '~> 0.3.0'
 gem 'rails-observers',  github: 'rails/rails-observers'
 # for file upload
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
+gem 'carrierwave-azure'
 gem 'fog-aws'
 gem "fog-azure-rm"
 # for simplified HTTP requests
