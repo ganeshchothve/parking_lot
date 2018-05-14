@@ -1,11 +1,18 @@
-<% case @receipt.status %> <% when 'success' %> <section class="main-wrapper">
+<% case @receipt.status %>
+<% when 'success' %>
+<section class="main-wrapper">
 	<div class="container-fluid">
-		<div class="col-12 success-card-wrapper">	
+		<div class="col-12 success-card-wrapper">
 			<div class="col-7 success-card">
 				<h2 class="pageTitle pink">Congratulations</h2>
 				<p>
-					Thank you for your payment of <%= number_to_indian_currency(@receipt.total_amount.round) %>. You will receive an email from us with detailed information on next steps.
-				</p>
+					Thank you for your payment of <%= number_to_indian_currency(@receipt.total_amount.round(2)) %>. You will receive an email from us with detailed information on next steps.
+        </p>
+        <% if @receipt.payment_type == 'blocking' %>
+          <p>
+            This unit will remain blocked for you for the next 10 days. Please complete your payment of remaining amount within this duration to confirm your unit. To make additional payment please click here <%= dashboard_path %>
+          </p>
+        <% end %>
 			</div>
 			<div class="col-5 text-center">
 				<img src="<%= asset_path 'congrats.png'%>" class="img-responsive">
@@ -15,7 +22,7 @@
 		<div class="clearfix"></div>
 		<div class="col-12">
 			<div class="receipt-wrapper">
-				<div class="pull-right">	
+				<div class="pull-right">
 					<!-- <a href="/dashboard/receipt-print/<%#= @receipt.id %>" target="_blank"><img src="<%#= asset_path 'printer-outline.png'%>" class="img-responsive"></a> -->
 					<%= link_to dashboard_receipt_print_path(@receipt.id, :format => 'pdf'), target: :_blank do %>
 						<i class="far fa-envelope" style="font-size:24px;color:#383838;display:inline-block;margin:0 10px;" data-event-action="click" data-event-name="convert receipt to pdf"></i>
@@ -88,11 +95,11 @@
 						</tr>
 						<tr>
 							<td><%= @receipt.processed_on %></td>
-							<td> 
+							<td>
 								 <% if @receipt.payment_mode == "online" %>
 										Reference ID: <%= @receipt.payment_identifier %>
 								<% else %>
-										Cheque / DD Number:<%= @receipt.issuing_bank %><br/> Bank Details: <%= @receipt.issuing_bank_branch %> 
+										Cheque / DD Number:<%= @receipt.issuing_bank %><br/> Bank Details: <%= @receipt.issuing_bank_branch %>
 								<% end %>
 							</td>
 							<td><%= @receipt.issuing_bank %> - <%= @receipt.issuing_bank_branch %> </td>
@@ -125,7 +132,7 @@
 				<div class="cancel-booking-wrapper text-center">
 					<div class="section-title pink">PAYMENT FAILURE!</div>
 					<p>
-						Your payment of was unsuccessful. Please check the credentials and try again.  
+						Your payment of was unsuccessful. Please check the credentials and try again.
 					</p>
 				</div>
 			</div>

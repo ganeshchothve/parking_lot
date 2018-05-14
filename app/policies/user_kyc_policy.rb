@@ -30,7 +30,7 @@ class UserKycPolicy < ApplicationPolicy
   end
 
   def permitted_attributes params={}
-    attributes = [:salutation, :first_name, :last_name, :email, :phone, :dob, :pan_number, :aadhaar, :oci, :gstn, :anniversary, :nri, :poa, :company_name, :loan_required, :existing_customer, :comments, :existing_customer_name, :existing_customer_project, :bank_name, :poa_details, :is_company, :street, :house_number, :state, :city, :postal_code, :country, :pancard_photo, :adharcard_photo, project_unit_ids: []]
+    attributes = [:salutation, :first_name, :last_name, :email, :phone, :dob, :pan_number, :aadhaar, :oci, :gstn, :anniversary, :nri, :poa, :company_name, :loan_required, :existing_customer, :comments, :existing_customer_name, :existing_customer_project, :bank_name, :poa_details, :is_company, :street, :house_number, :state, :city, :postal_code, :country, :pancard_photo, :adharcard_photo, :correspondence_street, :correspondence_house_number, :correspondence_city, :correspondence_postal_code, :correspondence_state, :correspondence_country, :son_daughter_of, :education_qualification, :designation, :company_name, :poa_details_phone_no, project_unit_ids: []]
     attributes
   end
 end

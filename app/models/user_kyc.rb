@@ -18,6 +18,20 @@ class UserKyc
   field :state, type: String
   field :country, type: String
 
+
+  field :correspondence_street, type: String
+  field :correspondence_house_number, type: String
+  field :correspondence_city, type: String
+  field :correspondence_postal_code, type: String
+  field :correspondence_state, type: String
+  field :correspondence_country, type: String
+  field :son_daughter_of, type: String
+  field :education_qualification, type: String
+  field :designation, type: String
+  field :company_name, type: String
+  field :poa_details_phone_no, type: String
+
+
   mount_uploader :photo, DocUploader
   mount_uploader :pancard_photo, DocUploader
   mount_uploader :adharcard_photo, DocUploader
@@ -44,12 +58,14 @@ class UserKyc
   has_and_belongs_to_many :project_units
   has_and_belongs_to_many :booking_details
 
-  validates :first_name, :last_name, :email, :phone, :dob, :pan_number, :city, :state, :country, :street, presence: false
+  validates :first_name, :last_name, :email, :phone, :dob, :city, :state, :country, :street, presence: false
   validates :poa, inclusion: {in: [true]}, if: Proc.new{ |kyc| kyc.nri? }
+  validates :pan_number, presence: true, unless: Proc.new{ |kyc| kyc.nri? }
+  validates :oci, presence: true, if: Proc.new{ |kyc| kyc.nri? }
   validates :email, uniqueness: {scope: :user_id}, allow_blank: true
   validates :pan_number, uniqueness: {scope: :user_id}, allow_blank: true
   validates :phone, uniqueness: {scope: :user_id}, phone: true # TODO: we can remove phone validation, as the validation happens in
-  validates :pan_number, format: {with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A'}
+  validates :pan_number, format: {with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A'}, allow_blank: true
   validates :aadhaar, format: {with: /\A\d{12}\z/i, message: 'is not a valid aadhaar number'}, allow_blank: true
   validates :company_name, :gstn, presence: true, if: Proc.new{|kyc| kyc.is_company?}
   validates :poa_details, presence: true, if: Proc.new{|kyc| kyc.poa?}

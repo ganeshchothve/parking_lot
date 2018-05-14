@@ -20,7 +20,8 @@ class UserRequestPolicy < ApplicationPolicy
   end
 
   def permitted_attributes params={}
-    attributes = [:comments, :project_unit_id, :receipt_id, :user_id] if user.buyer?
+    attributes = [:comments, :receipt_id, :user_id] if user.buyer?
+    attributes += [:project_unit_id] if user.buyer? && record.new_record?
     attributes = [:status] if user.role?('admin') || user.role?('crm') || user.role?('sales')
     attributes
   end

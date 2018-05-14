@@ -119,7 +119,7 @@
 					<div class="pull-left">
 						<p class="pageTitle big pink">RECEIPT</p>
 					</div>
-					<div class="pull-right">	
+					<div class="pull-right">
 						<!-- <a href="/dashboard/receipt-print/<%#= @receipt.id %>" target="_blank"><img src="<%#= asset_path 'printer-outline.png'%>" class="img-responsive"></a> -->
 						<%#= link_to dashboard_receipt_print_path(@receipt.id, :format => 'pdf'), target: :_blank do %>
 							<!-- <i class="far fa-envelope" style="font-size:24px;color:#383838;display:inline-block;margin:0 10px;"></i> -->
@@ -193,10 +193,10 @@
 								  <% if @receipt.payment_mode == "online" %>
 									Reference ID: <%= @receipt.payment_identifier %>
 									<% else %>
-									Cheque / DD Number:<%= @receipt.issuing_bank %><br/> Bank Details: <%= @receipt.issuing_bank_branch %> 
+									Cheque / DD Number:<%= @receipt.issuing_bank %><br/> Bank Details: <%= @receipt.issuing_bank_branch %>
 									<% end %>
 									</td>
-									<td><%= number_to_indian_currency(@receipt.total_amount.round) %></td>
+									<td><%= number_to_indian_currency(@receipt.total_amount.round(2)) %></td>
 								</tr>
 							</table>
 							<br/>

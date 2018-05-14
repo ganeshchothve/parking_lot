@@ -100,6 +100,6 @@ en:
         email: 'Email'
         phone: 'Phone'
         rera_id: 'RERA Registration Number'
-        location: 'Location'
+        city: 'City'
         associated_user_id: 'Associated User'
         status: 'Status'

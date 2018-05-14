@@ -6,7 +6,6 @@ class ChannelPartner
   field :email, type: String
   field :phone, type: String
   field :rera_id, type: String
-  field :location, type: String
   field :associated_user_id, type: BSON::ObjectId
   field :status, type: String, default: 'active'
   field :title, type: String
@@ -37,7 +36,7 @@ class ChannelPartner
   mount_uploader :bank_check_doc, DocUploader
   mount_uploader :aadhaar_card_doc, DocUploader
 
-  validates :first_name, :last_name, :email, :phone, :rera_id, :location, :status, presence: true
+  validates :first_name, :last_name, :email, :phone, :rera_id, :status, presence: true
   validates :phone, uniqueness: true, phone: true
   validates :email, :rera_id, uniqueness: true, allow_blank: true
   validates :status, inclusion: {in: Proc.new{ ChannelPartner.available_statuses.collect{|x| x[:id]} } }
@@ -86,8 +85,8 @@ class ChannelPartner
       if params[:fltrs][:status].present?
         selector[:status] = params[:fltrs][:status]
       end
-      if params[:fltrs][:location].present?
-        selector[:location] = params[:fltrs][:location]
+      if params[:fltrs][:city].present?
+        selector[:city] = params[:fltrs][:city]
       end
     end
     or_selector = {}
@@ -99,7 +98,7 @@ class ChannelPartner
   end
 
   def name
-    "#{first_name} #{last_name}"
+    "#{title} #{first_name} #{last_name}"
   end
 
   def ds_name

@@ -54,7 +54,7 @@
 								<%= number_to_indian_currency(@project_unit.construction_cost.round(2)) %>
 							</td>
 							<td>
-								<%= number_to_indian_currency((@project_unit.land_rate.round(2)) + (@project_unit.construction_cost.round(2))) %>
+								<%= number_to_indian_currency(((@project_unit.land_rate) + (@project_unit.construction_cost)).round(2)) %>
 							</td>
 						</tr>
 						<tr>
@@ -113,7 +113,7 @@
 
 							</td>
 							<td>
-								<%= number_to_indian_currency(@project_unit.base_rate + @project_unit.premium_location_charges + @project_unit.floor_rise - discount_rate) %>
+								<%= number_to_indian_currency((@project_unit.base_rate + @project_unit.premium_location_charges + @project_unit.floor_rise - discount_rate).round(2)) %>
 							</td>
 						</tr>
 						<tr>
@@ -141,7 +141,6 @@
 
 							</td>
 							<td>
-								<%#= number_to_indian_currency(((@project_unit.base_rate + @project_unit.premium_location_charges + @project_unit.floor_rise) - (@project_unit.land_rate))*(@project_unit.saleable).round(2)) %>
 								<%= number_to_indian_currency(@project_unit.construction_price.round(2)) %>
 							</td>
 						</tr>
@@ -172,7 +171,7 @@
 
 							</td>
 							<td>
-								<%= number_to_indian_currency(@project_unit.gst_on_agreement_price.round()) %>
+								<%= number_to_indian_currency(@project_unit.gst_on_agreement_price.round(2)) %>
 							</td>
 						</tr>
 						<tr>
@@ -219,19 +218,19 @@
 								Water/Electricity/Power Backup @ Rs 150/- psft
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(150) %>
+								<%= number_to_indian_currency(150.round(2)) %>
 							</td>
 							<td class="text-center">
 								<%= number_to_indian_currency(project_unit.wep_price.round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.wep_price.round(2),9)) %>
+								<%= number_to_indian_currency(calculate_percent(project_unit.wep_price,9).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.wep_price.round(2),9)) %>
+								<%= number_to_indian_currency(calculate_percent(project_unit.wep_price,9).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency((project_unit.wep_price.round(2)) + (calculate_percent(project_unit.wep_price,9)) + (calculate_percent(project_unit.wep_price,9))) %>
+								<%= number_to_indian_currency((project_unit.wep_price + calculate_percent(project_unit.wep_price,9) + calculate_percent(project_unit.wep_price,9)).round(2)) %>
 							</td>
 						</tr>
 						<tr>
@@ -239,59 +238,59 @@
 								City infrastructure charges @ Rs 200/- psft
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(200) %>
+								<%= number_to_indian_currency(200.round(2)) %>
 							</td>
 							<td class="text-center">
 								<%= number_to_indian_currency(project_unit.clubhouse_amenities_price.round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.clubhouse_amenities_price.round(2),9)) %>
+								<%= number_to_indian_currency(calculate_percent(project_unit.clubhouse_amenities_price,9).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.clubhouse_amenities_price.round(2),9)) %>
+								<%= number_to_indian_currency(calculate_percent(project_unit.clubhouse_amenities_price,9).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency((project_unit.clubhouse_amenities_price.round(2)) + (calculate_percent(project_unit.clubhouse_amenities_price.round(2),9)) + (calculate_percent(project_unit.clubhouse_amenities_price.round(2),9))) %>
+								<%= number_to_indian_currency((project_unit.clubhouse_amenities_price + calculate_percent(project_unit.clubhouse_amenities_price,9) + calculate_percent(project_unit.clubhouse_amenities_price,9)).round(2)) %>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								Advance Maintenance charges @ Rs. 3  psft per year - for 1 years (Rs 3 x 12 months)
+								Advance Maintenance charges @ Rs. 3 psft per year - for 1 years (Rs 3 x 12 months)
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(3) %>
+								<%= number_to_indian_currency(3.round(2)) %>
 							</td>
 							<td class="text-center">
 								<%= number_to_indian_currency(project_unit.advance_maintenance_charges.round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.advance_maintenance_charges.round(2),9)) %>
+								<%= number_to_indian_currency(calculate_percent(project_unit.advance_maintenance_charges,9).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.advance_maintenance_charges.round(2),9)) %>
+								<%= number_to_indian_currency(calculate_percent(project_unit.advance_maintenance_charges,9).round(2)) %>
 							</td>
 							<td>
-								<%= number_to_indian_currency((project_unit.advance_maintenance_charges.round(2)) + (calculate_percent(project_unit.advance_maintenance_charges.round(2),9)) + (calculate_percent(project_unit.advance_maintenance_charges.round(2),9))) %>
+								<%= number_to_indian_currency((project_unit.advance_maintenance_charges + calculate_percent(project_unit.advance_maintenance_charges,9) + calculate_percent(project_unit.advance_maintenance_charges,9)).round(2)) %>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								Club house & amenities Charges @ <%= number_to_indian_currency(125000)%>
+								Club house & amenities Charges @ <%= number_to_indian_currency(125000.round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(125000) %>
+								<%= number_to_indian_currency(125000.round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(125000) %>
+								<%= number_to_indian_currency(125000.round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(125000,9)) %>
+								<%= number_to_indian_currency(calculate_percent(125000,9).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(125000,9)) %>
+								<%= number_to_indian_currency(calculate_percent(125000,9).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(125000 + (calculate_percent(125000,9)) + (calculate_percent(125000,9))) %>
+								<%= number_to_indian_currency((125000 + calculate_percent(125000,9) + calculate_percent(125000,9)).round(2)) %>
 							</td>
 						</tr>
 
@@ -300,7 +299,7 @@
 								Corpus Fund @ Rs 125/- psft
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(125) %>
+								<%= number_to_indian_currency(125.round(2)) %>
 							</td>
 							<td class="text-center">
 								<%= number_to_indian_currency(project_unit.corpus_fund.round(2)) %>
@@ -324,16 +323,16 @@
 
 							</td>
 							<td>
-								<%= number_to_indian_currency((project_unit.corpus_fund.round(2)) + 125000 + (project_unit.advance_maintenance_charges.round(2)) + (project_unit.clubhouse_amenities_price.round(2)) + (project_unit.wep_price.round(2))) %>
+								<%= number_to_indian_currency(((project_unit.corpus_fund) + 125000 + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price)).round(2)) %>
 							</td>
 							<td>
-								<%= number_to_indian_currency(calculate_percent((project_unit.corpus_fund.round(2)) + 125000 + (project_unit.advance_maintenance_charges.round(2)) + (project_unit.clubhouse_amenities_price.round(2)) + (project_unit.wep_price.round(2)),9)) %>
+								<%= number_to_indian_currency((calculate_percent((project_unit.corpus_fund) + 125000 + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price),9)).round(2)) %>
 							</td>
 							<td>
-								<%= number_to_indian_currency(calculate_percent((project_unit.corpus_fund.round(2)) + 125000 + (project_unit.advance_maintenance_charges.round(2)) + (project_unit.clubhouse_amenities_price.round(2)) + (project_unit.wep_price.round(2)),9)) %>
+								<%= number_to_indian_currency((calculate_percent((project_unit.corpus_fund) + 125000 + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price),9)).round(2)) %>
 							</td>
 							<td>
-								<%= number_to_indian_currency((project_unit.corpus_fund.round(2)) + 125000 + (project_unit.advance_maintenance_charges.round(2)) + (project_unit.clubhouse_amenities_price.round(2)) + (project_unit.wep_price.round(2)) + calculate_percent((project_unit.corpus_fund.round(2)) + 125000 + (project_unit.advance_maintenance_charges.round(2)) + (project_unit.clubhouse_amenities_price.round(2)) + (project_unit.wep_price.round(2)),9) + calculate_percent((project_unit.corpus_fund.round(2)) + 125000 + (project_unit.advance_maintenance_charges.round(2)) + (project_unit.clubhouse_amenities_price.round(2)) + (project_unit.wep_price.round(2)),9))%>
+								<%= number_to_indian_currency(((project_unit.corpus_fund) + 125000 + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price) + calculate_percent((project_unit.corpus_fund) + 125000 + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price),9) + calculate_percent((project_unit.corpus_fund) + 125000 + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price),9)).round(2))%>
 							</td>
 						</tr>
 						<tr>
@@ -353,7 +352,7 @@
 
 							</td>
 							<td class="pink">
-								<%= number_to_indian_currency((@project_unit.gst_on_agreement_price.round()) + (@project_unit.construction_price.round(2)) + (@project_unit.land_price.round(2)) + (project_unit.corpus_fund.round(2)) + 125000 + (project_unit.advance_maintenance_charges.round(2)) + (project_unit.clubhouse_amenities_price.round(2)) + (project_unit.wep_price.round(2)) + calculate_percent((project_unit.corpus_fund.round(2)) + 125000 + (project_unit.advance_maintenance_charges.round(2)) + (project_unit.clubhouse_amenities_price.round(2)) + (project_unit.wep_price.round(2)),9) + calculate_percent((project_unit.corpus_fund.round(2)) + 125000 + (project_unit.advance_maintenance_charges.round(2)) + (project_unit.clubhouse_amenities_price.round(2)) + (project_unit.wep_price.round(2)),9)) %>
+								<%= number_to_indian_currency(((@project_unit.gst_on_agreement_price) + (@project_unit.construction_price) + (@project_unit.land_price) + (project_unit.corpus_fund) + 125000 + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price) + calculate_percent((project_unit.corpus_fund) + 125000 + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price),9) + calculate_percent((project_unit.corpus_fund) + 125000 + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price),9)).round(2)) %>
 							</td>
 						</tr>
 	      			</table>
@@ -389,16 +388,16 @@
 								10%
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.land_price.round(2),10)) %>
+								<%= number_to_indian_currency((calculate_percent(project_unit.land_price,10)).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.construction_price.round(2),10)) %>
+								<%= number_to_indian_currency((calculate_percent(project_unit.construction_price,10)).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.gst_on_agreement_price.round(2),10)) %>
+								<%= number_to_indian_currency((calculate_percent(project_unit.gst_on_agreement_price,10)).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.gst_on_agreement_price.round(2),10) + calculate_percent(project_unit.construction_price.round(2),10) + calculate_percent(project_unit.land_price.round(2),10)) %>
+								<%= number_to_indian_currency((calculate_percent(project_unit.gst_on_agreement_price,10) + calculate_percent(project_unit.construction_price,10) + calculate_percent(project_unit.land_price,10)).round(2)) %>
 							</td>
 						</tr>
 						<tr>
@@ -409,16 +408,16 @@
 								25%
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.land_price.round(2),25)) %>
+								<%= number_to_indian_currency((calculate_percent(project_unit.land_price,25)).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.construction_price.round(2),25)) %>
+								<%= number_to_indian_currency((calculate_percent(project_unit.construction_price,25)).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.gst_on_agreement_price.round(2),25)) %>
+								<%= number_to_indian_currency((calculate_percent(project_unit.gst_on_agreement_price,25)).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.gst_on_agreement_price.round(2),25) + calculate_percent(project_unit.construction_price.round(2),25) + calculate_percent(project_unit.land_price.round(2),25)) %>
+								<%= number_to_indian_currency((calculate_percent(project_unit.gst_on_agreement_price,25) + calculate_percent(project_unit.construction_price,25) + calculate_percent(project_unit.land_price,25)).round(2)) %>
 							</td>
 						</tr>
 						<tr>
@@ -429,16 +428,16 @@
 								25%
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.land_price.round(2),25)) %>
+								<%= number_to_indian_currency((calculate_percent(project_unit.land_price,25)).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.construction_price.round(2),25)) %>
+								<%= number_to_indian_currency((calculate_percent(project_unit.construction_price,25)).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.gst_on_agreement_price.round(2),25)) %>
+								<%= number_to_indian_currency((calculate_percent(project_unit.gst_on_agreement_price,25)).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.gst_on_agreement_price.round(2),25) + calculate_percent(project_unit.construction_price.round(2),25) + calculate_percent(project_unit.land_price.round(2),25)) %>
+								<%= number_to_indian_currency((calculate_percent(project_unit.gst_on_agreement_price,25) + calculate_percent(project_unit.construction_price,25) + calculate_percent(project_unit.land_price,25)).round(2)) %>
 							</td>
 						</tr>
 						<tr>
@@ -449,16 +448,16 @@
 								25%
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.land_price.round(2),25)) %>
+								<%= number_to_indian_currency((calculate_percent(project_unit.land_price,25)).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.construction_price.round(2),25)) %>
+								<%= number_to_indian_currency((calculate_percent(project_unit.construction_price,25)).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.gst_on_agreement_price.round(2),25)) %>
+								<%= number_to_indian_currency((calculate_percent(project_unit.gst_on_agreement_price,25)).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.gst_on_agreement_price.round(2),25) + calculate_percent(project_unit.construction_price.round(2),25) + calculate_percent(project_unit.land_price.round(2),25)) %>
+								<%= number_to_indian_currency((calculate_percent(project_unit.gst_on_agreement_price,25) + calculate_percent(project_unit.construction_price,25) + calculate_percent(project_unit.land_price,25)).round(2)) %>
 							</td>
 						</tr>
 						<tr>
@@ -469,16 +468,16 @@
 								10%
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.land_price.round(2),10)) %>
+								<%= number_to_indian_currency((calculate_percent(project_unit.land_price,10)).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.construction_price.round(2),10)) %>
+								<%= number_to_indian_currency((calculate_percent(project_unit.construction_price,10)).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.gst_on_agreement_price.round(2),10)) %>
+								<%= number_to_indian_currency((calculate_percent(project_unit.gst_on_agreement_price,10)).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.gst_on_agreement_price.round(2),10) + calculate_percent(project_unit.construction_price.round(2),10) + calculate_percent(project_unit.land_price.round(2),10)) %>
+								<%= number_to_indian_currency((calculate_percent(project_unit.gst_on_agreement_price,10) + calculate_percent(project_unit.construction_price,10) + calculate_percent(project_unit.land_price,10)).round(2)) %>
 							</td>
 						</tr>
 						<tr>
@@ -489,16 +488,16 @@
 								5%
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.land_price.round(2),5)) %>
+								<%= number_to_indian_currency((calculate_percent(project_unit.land_price,5)).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.construction_price.round(2),5)) %>
+								<%= number_to_indian_currency((calculate_percent(project_unit.construction_price,5)).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.gst_on_agreement_price.round(2),5)) %>
+								<%= number_to_indian_currency((calculate_percent(project_unit.gst_on_agreement_price,5)).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.gst_on_agreement_price.round(2),5) + calculate_percent(project_unit.construction_price.round(2),5) + calculate_percent(project_unit.land_price.round(2),5)) %>
+								<%= number_to_indian_currency((calculate_percent(project_unit.gst_on_agreement_price,5) + calculate_percent(project_unit.construction_price,5) + calculate_percent(project_unit.land_price,5)).round(2)) %>
 							</td>
 						</tr>
 						<tr>
@@ -518,7 +517,7 @@
 								<%= number_to_indian_currency(project_unit.gst_on_agreement_price.round(2)) %>
 							</td>
 							<td class="pink text-center">
-								<%= number_to_indian_currency((@project_unit.gst_on_agreement_price.round()) + (@project_unit.construction_price.round(2)) + (@project_unit.land_price.round(2)) + (project_unit.corpus_fund.round(2)) + 125000 + (project_unit.advance_maintenance_charges.round(2)) + (project_unit.clubhouse_amenities_price.round(2)) + (project_unit.wep_price.round(2)) + calculate_percent((project_unit.corpus_fund.round(2)) + 125000 + (project_unit.advance_maintenance_charges.round(2)) + (project_unit.clubhouse_amenities_price.round(2)) + (project_unit.wep_price.round(2)),9) + calculate_percent((project_unit.corpus_fund.round(2)) + 125000 + (project_unit.advance_maintenance_charges.round(2)) + (project_unit.clubhouse_amenities_price.round(2)) + (project_unit.wep_price.round(2)),9)) %>
+								<%= number_to_indian_currency(((@project_unit.gst_on_agreement_price) + (@project_unit.construction_price) + (@project_unit.land_price) + (project_unit.corpus_fund) + 125000 + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price) + calculate_percent((project_unit.corpus_fund) + 125000 + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price),9) + calculate_percent((project_unit.corpus_fund) + 125000 + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price),9)).round(2)) %>
 							</td>
 						</tr>
 						</table>

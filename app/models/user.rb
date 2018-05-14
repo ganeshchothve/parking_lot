@@ -14,6 +14,7 @@ class User
   field :phone, type: String, default: ""
   field :lead_id, type: String
   field :role, type: String, default: "user"
+  field :allowed_bookings, type: Integer, default: 3
   field :channel_partner_id, type: BSON::ObjectId
   field :referenced_channel_partner_ids, type: Array, default: []
   field :rera_id, type: String
@@ -56,7 +57,7 @@ class User
   has_many :user_requests
   has_many :user_kycs
 
-  validates :first_name, :last_name, :phone, :role, presence: true
+  validates :first_name, :last_name, :phone, :role, :allowed_bookings, presence: true
   validates :lead_id, uniqueness: true, allow_blank: true
   validates :phone, uniqueness: true, phone: true # TODO: we can remove phone validation, as the validation happens in sell.do
   #validates :email, uniqueness: true #TODO: if removed can sign up with registerd email id

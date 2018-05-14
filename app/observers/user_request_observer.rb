@@ -18,6 +18,12 @@ class UserRequestObserver < Mongoid::Observer
         end
       end
     end
+    # release the unit immediately
+    if user_request.project_unit_id.present?
+      unit = user_request.project_unit
+      unit.make_available
+      unit.save!
+    end
   end
 
   def after_update user_request

@@ -15,8 +15,8 @@
     <%= select_tag "fltrs[status]", options_for_select(ChannelPartner.available_statuses.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize"} %>
   </div>
   <div class="form-group">
-    <%= label_tag "fltrs", "location", class: "control-label" %>
-    <%= select_tag "fltrs[location]", options_for_select(ChannelPartner.distinct(:location).collect{|x| [x, x]}, (params[:fltrs].present? ? params[:fltrs][:location] : "")), {prompt: "Select", class: "selectize"} %>
+    <%= label_tag "fltrs", "city", class: "control-label" %>
+    <%= select_tag "fltrs[city]", options_for_select(ChannelPartner.distinct(:city).collect{|x| [x, x]}, (params[:fltrs].present? ? params[:fltrs][:city] : "")), {prompt: "Select", class: "selectize"} %>
   </div>
   <div class="form-group">
     <%= label_tag "fltrs", "rera_id", class: "control-label" %>

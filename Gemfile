@@ -55,7 +55,9 @@ gem 'mongoid-observers', '~> 0.3.0'
 gem 'rails-observers',  github: 'rails/rails-observers'
 # for file upload
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
+gem 'carrierwave-azure'
 gem 'fog-aws'
+gem "fog-azure-rm"
 # for simplified HTTP requests
 gem 'httparty', '>= 0.14.0'
 # for creating and modifying spreadsheets / excel / CSVs
@@ -67,7 +69,7 @@ gem 'sprockets-rails', '>= 2.3.2' # force this version for bootstrap 4 gem
 # Bootstrap lib gem for rails. #TODO: upgrade this when B4 is out of beta
 gem 'bootstrap', '~> 4.0.0.beta3'
 gem 'jquery-rails'
-gem 'rest-client', '2.0.2'
+gem 'rest-client'
 
 # phone numbers on users -> model & validation
 gem 'phonelib'
@@ -123,7 +125,4 @@ group :production, :staging do
   gem 'newrelic-redis'
   gem 'newrelic_rpm'
 end
-
-group :production do
-  gem 'asset_sync'
-end
+gem 'asset_sync', '>= 2.4.0'

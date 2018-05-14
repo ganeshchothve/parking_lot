@@ -25,7 +25,7 @@
           <%= form.label :title, class: 'control-label label-required' %>
           <%= form.select :title, UserKyc.available_salutations.collect{|x| [x[:text], x[:id]]}, {}, class: 'required form-control' %>
           <%#= form.select :title, ["Brig.", "Captain", "Col", "Dr.", "Maharaj.", "Mr.", "Mrs.", "Ms.", "Prof."],{:prompt => "Select"}, class: 'form-control', required: 'required', autofocus: true , disabled: (policy(channel_partner).editable_field?("title") ? false : true), placeholder:'Title' %>
-        </div>          
+        </div>
         <div class="form-group">
           <%= form.label :first_name, class: 'control-label label-required' %>
           <%= form.text_field :first_name, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("first_name") ? false : true), placeholder:'First Name' %>
@@ -43,18 +43,18 @@
           <%= form.text_field :street, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("street") ? false : true), placeholder:'Street Name' %>
         </div>
         <div class="form-group">
-          <%= form.label :location, class: 'control-label label-required' %>
-          <%= form.text_field :location, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("location") ? false : true), placeholder:'City' %>
+          <%= form.label :city, class: 'control-label label-required' %>
+          <%= form.text_field :city, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("city") ? false : true), placeholder:'City' %>
         </div>
         <div class="form-group">
           <%#= form.label :region, class: 'control-label label-required' %>
-          <%= form.text_field :region, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("location") ? false : true), placeholder:'Region' %>
+          <%= form.text_field :region, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("region") ? false : true), placeholder:'Region' %>
         </div>
         <div class="form-group">
           <%= form.label :postal_code, class: 'control-label label-required' %>
           <%= form.text_field :postal_code, class: 'form-control number', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("postal_code") ? false : true), placeholder:'Postal Code' %>
         </div>
-        
+
       </div>
       <div class="col-6">
         <div class="form-group">
@@ -92,12 +92,6 @@
               <%= form.text_field :rera_id, class: 'form-control', required: 'required', disabled: (policy(channel_partner).editable_field?("rera_id") ? false : true), placeholder:'RERA Registration Number' %>
             </div>
           </div>
-          <!-- <div class="col-md-6">
-            <div class="form-group">
-              <%= form.label :location, class: 'control-label label-required' %>
-              <%= form.text_field :location, class: 'form-control', required: 'required', disabled: (policy(channel_partner).editable_field?("location") ? false : true), placeholder:'Location'  %>
-            </div>
-          </div> -->
         </div>
         <div class="cp-form-btn text-right">
           <a href="javascript:;" class="bank-details-next" rel="bank-details" data-event-category="section" data-event-action="click" data-event-name="Personal Details - Next">NEXT</a>
@@ -111,15 +105,15 @@
         <div class="form-group">
           <%= form.label :bank_name, class: 'control-label label-required' %>
           <%= form.text_field :bank_name, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("bank_name") ? false : true), placeholder:'Bank Name' %>
-        </div>  
+        </div>
         <div class="form-group">
           <%= form.label :bank_beneficiary_account_no, class: 'control-label label-required' %>
           <%= form.text_field :bank_beneficiary_account_no, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("bank_beneficiary_account_no") ? false : true), placeholder:'Beneficiary Account Number' %>
-        </div>  
+        </div>
         <div class="form-group">
           <%= form.label :bank_account_type, class: 'control-label label-required' %>
           <%= form.text_field :bank_account_type, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("bank_account_type") ? false : true), placeholder:'Bank Account Type' %>
-        </div>  
+        </div>
         <div class="form-group">
           <%= form.label :bank_ifsc_code, class: 'control-label label-required' %>
           <%= form.text_field :bank_ifsc_code, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("bank_ifsc_code") ? false : true), placeholder:'Bank IFSC Code' %>
@@ -133,11 +127,11 @@
         <div class="form-group">
           <%= form.label :bank_city, class: 'control-label label-required' %>
           <%= form.text_field :bank_city, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("bank_city") ? false : true), placeholder:'Bank City' %>
-        </div>  
+        </div>
         <div class="form-group">
           <%= form.label :bank_postal_Code, class: 'control-label label-required' %>
           <%= form.text_field :bank_postal_Code, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("bank_postal_Code") ? false : true), placeholder:'Bank Postal Code' %>
-        </div>  
+        </div>
         <div class="form-group">
           <%= form.label :bank_region, class: 'control-label label-required' %>
           <%= form.text_field :bank_region, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("bank_region") ? false : true), placeholder:'Bank State' %>
@@ -145,7 +139,7 @@
         <div class="form-group">
           <%= form.label :bank_country, class: 'control-label label-required' %>
           <%= form.text_field :bank_country, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(channel_partner).editable_field?("bank_country") ? false : true), placeholder:'Bank Country' %>
-        </div>  
+        </div>
         <div class="cp-form-btn text-right">
           <a href="javascript:;" class="prev-personal-details" rel="personal-details"  data-event-category="section" data-event-action="click" data-event-name="Bank Details - Prev">PREV</a> <a href="javascript:;" class="next-documents" rel="documents"  data-event-category="section" data-event-action="click" data-event-name="Bank Details - Next">NEXT</a>
         </div>
@@ -213,7 +207,7 @@ $(document).ready(function(){
       });
     e.preventDefault();
   });
-  
+
   $.validator.addMethod('custNumber', function(value, element) {
     return value.match(/^\+(?:[0-9] ?){6,14}[0-9]$/);
   },'Please enter valid phone number.');
