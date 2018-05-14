@@ -1,4 +1,4 @@
-if defined?(AssetSync)
+if defined?(AssetSync) && Rails.env.production?
   AssetSync.configure do |config|
     config.fog_provider = 'AzureRM'
     config.azure_storage_account_name = ENV_CONFIG[:asset_sync]['AZURE_STORAGE_ACCOUNT_NAME']
