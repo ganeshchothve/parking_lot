@@ -72,8 +72,10 @@
                 <a href="/admin/users/new" class="add-booking-btn">
                   Add Booking
                 </a>
-                <span class="hidden-xs"><img src="<%= asset_path 'usernew.png'%>" class="img-responsive"> &nbsp;
-
+                <span class="hidden-xs profile-icon"><!-- <img src="<%= asset_path 'usernew.png'%>" class="img-responsive"> &nbsp; -->
+                  <%= link_to edit_admin_user_path(current_user) do %>
+                     <img src="<%= asset_path 'usernew.png'%>" class="img-responsive" data-event-category="header" data-event-action="click" data-event-name="user profile"> &nbsp;
+                  <% end %>
                   <%#= link_to "Welcome " + current_user.name, edit_admin_user_path(current_user) , class:'white user-name'%>
                 </span>
                 <!-- <span>
@@ -97,7 +99,7 @@
         <ul class="navbar-nav mr-auto">
           <% if user_signed_in? %>
             <li class="nav-item">
-              <a class="nav-link" href="<%= after_sign_in_path_for(current_user) %>"><i class="fa fa-th-large" aria-hidden="true"></i> Dashoard</a>
+              <a class="nav-link" href="<%= after_sign_in_path_for(current_user) %>"><i class="fa fa-th-large" aria-hidden="true"></i> Dashboard</a>
             </li>
             <% if UserPolicy.new(current_user, User).index? %>
               <li class="nav-item">
