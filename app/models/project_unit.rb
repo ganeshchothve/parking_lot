@@ -166,10 +166,14 @@ class ProjectUnit
   end
 
   def self.user_based_available_statuses(user)
-    if user.role?("management_user")
-      statuses = ["available", "employee", "management"]
-    elsif user.role?("employee_user")
-      statuses = ["available", "employee"]
+    if user.present?
+      if user.role?("management_user")
+        statuses = ["available", "employee", "management"]
+      elsif user.role?("employee_user")
+        statuses = ["available", "employee"]
+      else
+        statuses = ["available"]
+      end
     else
       statuses = ["available"]
     end
