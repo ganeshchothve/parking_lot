@@ -24,10 +24,9 @@
   <td style="line-height:26px;">
     <p>
       <% if @cp.present? %>
-        <strong>  Mr. <%= @cp.name %> </strong> the Channel Partner has collected the cheque of Rs. <%= @receipt.total_amount %>/- towards the Booking amount.
+      <strong>  Mr. <%= @cp.name %> </strong> the Channel Partner has collected the cheque of Rs. <%= @receipt.total_amount %>/- towards the Booking amount.
       <% end %>
       Your cheque of Rs. <%= @receipt.total_amount %>/- towards the Booking amount has been collected.
-      <% end %>
     </p>
     <p>We will notify you once the cheque is processed by our team. </p>
 
