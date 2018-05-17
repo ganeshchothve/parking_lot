@@ -28,7 +28,7 @@ class UserKyc
   field :son_daughter_of, type: String
   field :education_qualification, type: String
   field :designation, type: String
-  field :company_name, type: String
+  field :customer_company_name, type: String
   field :poa_details_phone_no, type: String
 
 
