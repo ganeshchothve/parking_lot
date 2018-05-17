@@ -1,21 +1,5 @@
 <tr>
   <td>
-    <table cellpadding="0" cellspacing="0" width="100%">
-      <tr>
-        <td style=" color: #000;font-size: 32px;font-weight: 600;line-height: 35px;vertical-align: bottom;">
-          Payment Pending
-        </td>
-        <td>
-          <img src="http://www.embassysprings.com/images/Springs-logo.png" style="border:0px ;outline:0px;display:block;">
-        </td>
-      </tr>
-    </table>
-  </td>
-</tr>
-<tr><td>&nbsp;</td></tr>
-
-<tr>
-  <td>
     Dear <%= @user.name %>,
   </td>
 </tr>
@@ -29,20 +13,18 @@
       Your cheque of Rs. <%= @receipt.total_amount %>/- towards the Booking amount has been collected.
     </p>
     <p>We will notify you once the cheque is processed by our team. </p>
-
-    <p><strong> Following are the payment details.</strong> </p> <br/>
-    <p>
+    <p>Following are the payment details.<br/>
       <% if @receipt.project_unit_id.present? %>
-      <span style="color:#64c0e9; font-weight:bold">Unit </span> <%= @receipt.project_unit.name %><br/>
+      <span style="font-weight:bold">Unit </span> <%= @receipt.project_unit.name %><br/>
       <% end %>
       <% if @receipt.reference_project_unit_id.present? %>
-      <span style="color:#64c0e9; font-weight:bold">Unit </span> <%= @receipt.reference_project_unit.name %><br/>
+      <span style="font-weight:bold">Unit </span> <%= @receipt.reference_project_unit.name %><br/>
       <% end %>
-      <span style="color:#64c0e9; font-weight:bold">Receipt </span> <%= @receipt.receipt_id %><br/>
-      <span style="color:#64c0e9; font-weight:bold">Date </span> <%= @receipt.created_at.strftime("%Y-%m-%d") %><br/>
-      <span style="color:#64c0e9; font-weight:bold">Bank </span> <%= @receipt.issuing_bank %><br/>
-      <span style="color:#64c0e9; font-weight:bold">Branch </span> <%= @receipt.issuing_bank_branch %><br/>
-      <span style="color:#64c0e9; font-weight:bold">Tracking Id </span> <%= @receipt.tracking_id %><br/>
+      <span style="font-weight:bold">Receipt </span> <%= @receipt.receipt_id %><br/>
+      <span style="font-weight:bold">Date </span> <%= @receipt.created_at.strftime("%Y-%m-%d") %><br/>
+      <span style="font-weight:bold">Bank </span> <%= @receipt.issuing_bank %><br/>
+      <span style="font-weight:bold">Branch </span> <%= @receipt.issuing_bank_branch %><br/>
+      <span style="font-weight:bold">Tracking Id </span> <%= @receipt.tracking_id %><br/>
     </p>
   </td>
 </tr>
