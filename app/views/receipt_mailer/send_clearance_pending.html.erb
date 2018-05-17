@@ -32,13 +32,13 @@
 <tr><td>&nbsp;</td></tr>
 <tr>
   <td style="line-height:26px;">
-    <p><span style="font-size:20px;line-height:26px;color:#000;font-weight:700;">Thank you for your payment of Rs. <%= @receipt.total_amount %> </span></p><br/>
-    <p> <strong>Following are your cheque details </strong></p>
+    <p><span style="font-size:18px;line-height:26px;color:#000;font-weight:700;">Thank you for your payment of Rs. <%= @receipt.total_amount %> </span></p><br/>
     <p>
-      <span style="color:#64c0e9; font-weight:bold">Name </span> : <%= @user.name %><br/>
-      <span style="color:#64c0e9; font-weight:bold">Agreement Value </span> : Rs. <%= @project_unit.agreement_price %><br/>
-      <span style="color:#64c0e9;font-weight:bold;">Advance paid </span> :  Rs. <%= @project_unit.total_amount_paid %><br/>
-      <span style="color:#64c0e9;font-weight:bold;">Balance Payment </span> : <%= @project_unit.pending_balance %><br/>
+      <span>Following are your cheque details</span><br/>
+      <span style="font-weight:bold">Name </span> : <%= @user.name %><br/>
+      <span style="font-weight:bold">Agreement Value </span> : Rs. <%= @project_unit.agreement_price %><br/>
+      <span style="font-weight:bold;">Advance paid </span> :  Rs. <%= @project_unit.total_amount_paid %><br/>
+      <span style="font-weight:bold;">Balance Payment </span> : <%= @project_unit.pending_balance %><br/>
     </p>
     <br/>
     <p>Your Embassy home will be kept on hold for you for additional 4 <%#= (@project_unit.auto_release_on - Date.today).days %> days until your cheque is cleared. We will notify you once the cheque realizes. </p>
@@ -53,12 +53,12 @@
       </p>
       <% end %>
 
-              <p>We request you to kindly confirm the above booking by the return mail within 7 days, failing which the above booking will be cancelled without any further intimation to you or the Channel Partner.</p>
+              <p>We request you to kindly confirm the above booking by the return mail within 10 days, failing which the above booking will be cancelled without any further intimation to you or the Channel Partner.</p>
     </p>
     <% if @receipt.status == 'clearance_pending' && @receipt.project_unit_id.blank? && @receipt.reference_project_unit_id.present? && @receipt.reference_project_unit.status == 'available' %>
       <p>
         <p><strong>  Mr. <%= @user.channel_partner.name %> </strong> the Channel Partner has selected and booked an Apartment unit no. <%= @project_unit.name  %> on your behalf at Embassy Springs Project and has paid a sum of Rs. <%= @receipt.total_amount %>/- towards the Booking amount. </p>
-        <p>We request you to kindly confirm the above booking by the return mail within 7 days, failing which the above booking will be cancelled without any further intimation to you or the Channel Partner.</p>
+        <p>We request you to kindly confirm the above booking by the return mail within 10 days, failing which the above booking will be cancelled without any further intimation to you or the Channel Partner.</p>
       </p>
     <% end %>
     </td>

@@ -64,6 +64,7 @@
 	}
 	.receipt-table {
 		margin-bottom: 30px;
+		font-size: 12px;
 	}
 	.receipt-table th:first-child, .receipt-table td:first-child {
 		border-left: 1px solid #ccc;
@@ -179,7 +180,7 @@
 					</div>
 					<div class="col-4">
 						<span class="title">Project:</span>
-						<span class="specs">Embassy Springs</span>
+						<span class="specs">Embassy Edge</span>
 					</div>
 					<div class="col-4">
 						<span class="title">Unit No:</span>
@@ -214,15 +215,18 @@
 						Cheque / DD Number:<%= @receipt.payment_identifier %><br/> Bank Name: <%= @receipt.issuing_bank %> <br/> Bank Branch :<%= @receipt.issuing_bank_branch %>
 						<% end %>
 						</td>
-						<td><%= number_to_indian_currency(@receipt.total_amount.round(2)) %></td>
+						<td> &#8377; <%= @receipt.total_amount.round(2) %></td>
 					</tr>
 				</table>
 			</div>
 			<div class="text-right acknowledge-wrapper">
 				<p>Nam Estate Pvt. Ltd.</p>
-				<br/><br/>
+				<br/>
 				<p>Authorised Signature</p>
-				<br/><br/>
+				<br/>
+			</div>
+			<div class="text-center" style="font-size: 10px;text-align: center;">
+				<p>This is a computer generated receipt</p>
 			</div>
 		</div>
 	</div>
