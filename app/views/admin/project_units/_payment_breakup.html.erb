@@ -324,16 +324,16 @@
 
 							</td>
 							<td>
-								<%= number_to_indian_currency(((project_unit.corpus_fund) + 125000 + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price)).round(2)) %>
+								<%= number_to_indian_currency(((project_unit.corpus_fund) + city_infra + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price)).round(2)) %>
 							</td>
 							<td>
-								<%= number_to_indian_currency((calculate_percent((project_unit.corpus_fund) + 125000 + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price),9)).round(2)) %>
+								<%= number_to_indian_currency((calculate_percent((project_unit.corpus_fund) + city_infra + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price),9)).round(2)) %>
 							</td>
 							<td>
-								<%= number_to_indian_currency((calculate_percent((project_unit.corpus_fund) + 125000 + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price),9)).round(2)) %>
+								<%= number_to_indian_currency((calculate_percent((project_unit.corpus_fund) + city_infra + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price),9)).round(2)) %>
 							</td>
 							<td>
-								<%= number_to_indian_currency(((project_unit.corpus_fund) + 125000 + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price) + calculate_percent((project_unit.corpus_fund) + 125000 + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price),9) + calculate_percent((project_unit.corpus_fund) + 125000 + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price),9)).round(2))%>
+								<%= number_to_indian_currency(((project_unit.corpus_fund) + city_infra + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price) + calculate_percent((project_unit.corpus_fund) + city_infra + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price),9) + calculate_percent((project_unit.corpus_fund) + city_infra + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price),9)).round(2))%>
 							</td>
 						</tr>
 						<tr>
