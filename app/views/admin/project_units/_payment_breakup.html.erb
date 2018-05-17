@@ -113,7 +113,7 @@
 
 							</td>
 							<td>
-								<%= number_to_indian_currency((@project_unit.land_rate + @project_unit.construction_rate + @project_unit.premium_location_charges + @project_unit.floor_rise - discount_rate).round(2)) %>
+								<%= number_to_indian_currency((@project_unit.land_rate + @project_unit.construction_cost + @project_unit.premium_location_charges + @project_unit.floor_rise - discount_rate).round(2)) %>
 							</td>
 						</tr>
 						<tr>
