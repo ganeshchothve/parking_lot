@@ -252,7 +252,7 @@
 								<%= number_to_indian_currency(calculate_percent(city_infra,9).round(2)) %>
 							</td>
 							<td class="text-center">
-                <%= total_city_infra = (city_infra + calculate_percent(city_infra,9) + calculate_percent(city_infra,9)) %>
+                <% total_city_infra = (city_infra + calculate_percent(city_infra,9) + calculate_percent(city_infra,9)) %>
 								<%= number_to_indian_currency(total_city_infra.round(2)) %>
 							</td>
 						</tr>
@@ -273,7 +273,7 @@
 								<%= number_to_indian_currency(calculate_percent(project_unit.advance_maintenance_charges,9).round(2)) %>
 							</td>
 							<td>
-                <%= total_advance = (project_unit.advance_maintenance_charges + calculate_percent(project_unit.advance_maintenance_charges,9) + calculate_percent(project_unit.advance_maintenance_charges,9)) %>
+                <% total_advance = (project_unit.advance_maintenance_charges + calculate_percent(project_unit.advance_maintenance_charges,9) + calculate_percent(project_unit.advance_maintenance_charges,9)) %>
 								<%= number_to_indian_currency(total_advance.round(2)) %>
 							</td>
 						</tr>
@@ -331,12 +331,11 @@
 								<%= number_to_indian_currency(((project_unit.corpus_fund) + city_infra + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price)).round(2)) %>
 							</td>
 							<td>
-                <% cgst_total = calculate_percent((project_unit.corpus_fund + city_infra + project_unit.advance_maintenance_charges + project_unit.clubhouse_amenities_price + project_unit.wep_price),9) %>
+                <% cgst_total = calculate_percent((city_infra + project_unit.advance_maintenance_charges + project_unit.clubhouse_amenities_price + project_unit.wep_price),9) %>
 								<%= number_to_indian_currency(cgst_total.round(2)) %>
 							</td>
 							<td>
-                <% cgst_total = calculate_percent((project_unit.corpus_fund + city_infra + project_unit.advance_maintenance_charges + project_unit.clubhouse_amenities_price + project_unit.wep_price),9) %>
-								<%= number_to_indian_currency(cgst_total.round(2)) %>
+                <%= number_to_indian_currency(cgst_total.round(2)) %>
 							</td>
 							<td>
 								<%= number_to_indian_currency((total_wep + total_city_infra + total_advance + total_club_house + project_unit.corpus_fund).round(2)) %>
