@@ -359,7 +359,7 @@
 
 							</td>
 							<td class="pink">
-								<%= number_to_indian_currency(((@project_unit.gst_on_agreement_price) + (@project_unit.construction_price) + (@project_unit.land_price) + (project_unit.corpus_fund) + 125000 + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price) + calculate_percent((project_unit.corpus_fund) + 125000 + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price),9) + calculate_percent((project_unit.corpus_fund) + 125000 + (project_unit.advance_maintenance_charges) + (project_unit.clubhouse_amenities_price) + (project_unit.wep_price),9)).round(2)) %>
+                <%= number_to_indian_currency((total_wep + total_city_infra + total_advance + total_club_house + project_unit.corpus_fund + @project_unit.agreement_price - @project_unit.discount(@project_unit.user_id.present? ? @project_unit.user : current_user)).round(2)) %>
 							</td>
 						</tr>
 	      			</table>
