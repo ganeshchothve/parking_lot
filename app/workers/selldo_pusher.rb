@@ -1,5 +1,5 @@
 require 'net/http'
-class SelldoPusher
+class SelldoInventoryPusher
   include Sidekiq::Worker
 
   def perform(project_unit_status, project_unit_id, timestamp)
@@ -7,7 +7,7 @@ class SelldoPusher
     user = project_unit.user
     user_kycs = project_unit.user_kycs
     params = {
-      api_key: "bcdd92826cf283603527bd6d832d16c4",
+      api_key: ENV_CONFIG['selldo']['api_key'],
       lead_id: user.lead_id,
       stage: project_unit_status,
       booking_date: timestamp,

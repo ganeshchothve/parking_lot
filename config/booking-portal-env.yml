@@ -1,37 +1,37 @@
 asset_sync:
-  AZURE_STORAGE_ACCOUNT_NAME: 
-  AZURE_STORAGE_ACCESS_KEY: 
-  FOG_DIRECTORY: 
-  run_on_precompile: 
+  AZURE_STORAGE_ACCOUNT_NAME:
+  AZURE_STORAGE_ACCESS_KEY:
+  FOG_DIRECTORY:
+  run_on_precompile:
 redis:
   host: localhost
   port: 6379
   namespace: booking_portal_dev
-  password: 
+  password:
 sidekiq:
-  username: 
+  username:
   password:
 smtp:
-  user_name: 
-  password: 
-  domain: 
-  address: 
-  port: 
-  authentication: 
+  user_name:
+  password:
+  domain:
+  address:
+  port:
+  authentication:
   enable_starttls_auto:
 sms:
-  username: 
-  password: 
+  username:
+  password:
 selldo:
-  api_key: 
+  api_key: 'bcdd92826cf283603527bd6d832d16c4'
 pusher:
   key: 'fe128113ca13812feaf0'
   secret: 'c74d20f592399a3c6ba6'
   app_id: '501969'
   cluster: 'ap2'
 global:
-  SECRET_KEY_BASE: 
+  SECRET_KEY_BASE:
 db:
-  database: 
-  host: 
+  database:
+  host:
   password:
