@@ -1,6 +1,6 @@
 class UserKycObserver < Mongoid::Observer
   def after_create user_kyc
-    SelldoLeadUpdater.perform_async(user_kyc.user_id)
+    SelldoLeadUpdater.perform_async(user_kyc.user_id.to_s)
 
     mailer = UserKycMailer.send_applicant(user_kyc.id.to_s)
     if Rails.env.development?
