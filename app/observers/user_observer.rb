@@ -1,5 +1,5 @@
 class UserObserver < Mongoid::Observer
-  def before_create
+  def before_create user
     if user.role?("user") && user.email.include?("@embassyindia.com")
       user.role = "employee_user"
     end
