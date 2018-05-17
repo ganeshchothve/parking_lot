@@ -17,7 +17,7 @@ class SelldoLeadUpdater
     if stage.present?
       params = {
         'api_key': ENV_CONFIG['selldo']['api_key'],
-        'sell_do[form][lead][lead_id]': user.lead_id
+        'sell_do[form][lead][lead_id]': user.lead_id,
         'sell_do[form][custom][portal_stage]': stage
       }
       RestClient.post("https://app.sell.do/api/leads/create", params)
