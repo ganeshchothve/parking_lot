@@ -240,17 +240,18 @@
 							<td class="text-center">
 								<%= number_to_indian_currency(200.round(2)) %>
 							</td>
+              <% city_infra = 200*project_unit.saleable %>
 							<td class="text-center">
-								<%= number_to_indian_currency(project_unit.clubhouse_amenities_price.round(2)) %>
+								<%= number_to_indian_currency(city_infra.round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.clubhouse_amenities_price,9).round(2)) %>
+								<%= number_to_indian_currency(calculate_percent(city_infra,9).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency(calculate_percent(project_unit.clubhouse_amenities_price,9).round(2)) %>
+								<%= number_to_indian_currency(calculate_percent(city_infra,9).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency((project_unit.clubhouse_amenities_price + calculate_percent(project_unit.clubhouse_amenities_price,9) + calculate_percent(project_unit.clubhouse_amenities_price,9)).round(2)) %>
+								<%= number_to_indian_currency((city_infra + calculate_percent(city_infra,9) + calculate_percent(city_infra,9)).round(2)) %>
 							</td>
 						</tr>
 						<tr>
