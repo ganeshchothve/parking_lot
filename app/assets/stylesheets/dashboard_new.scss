@@ -10,14 +10,14 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *
- *= require noty.css
- *= require bootstrap-datetimepicker.css
- *= require daterangepicker.css
+ *= require noty
+ *= require bootstrap-datetimepicker
+ *= require daterangepicker
  *= require intlTelInput
- *= require selectize.css
+ *= require selectize
  *= require tooltipster.bundle
  *= require tooltipster-sideTip-borderless.min
- *= require jquery.fileupload.css
+ *= require jquery.fileupload
  *= require colorbox
  *= require_self
 */
@@ -1640,7 +1640,7 @@ section.grey{
     padding: 5px 20px;
     line-height: 33px;
     font-weight: 500;
-    font-size: 16px;	
+    font-size: 16px;
 }
 strong{
 	font-weight: 500;
@@ -2732,7 +2732,7 @@ input.nav-btn:hover{
 }
 #progressbar li:first-child:after {
 	/*connector not needed before the first step*/
-	content: none; 
+	content: none;
 }
 /*marking active/completed steps green*/
 /*The number of the step and the connector before it = green*/
@@ -2742,7 +2742,7 @@ input.nav-btn:hover{
 }
 .cp-form{
 	display: none;
-}	
+}
 .cp-form-btn{
 	padding: 0 110px;
 }
@@ -2873,7 +2873,7 @@ input.nav-btn:hover{
 	.tower-name-wrapper .col-3{
 		width: 50%;
 		margin-bottom:0px;
-		padding: 5px 0; 
+		padding: 5px 0;
 	}
 	.filter-item-wrapper .col-12-5{
 		width: 50%;
@@ -2942,7 +2942,7 @@ input.nav-btn:hover{
 	.mobile-show{
 		display: block;
 	}
-	
+
 	.profile-link{
 		display: none;
 	}
@@ -3416,7 +3416,7 @@ input.nav-btn:hover{
 	.tower-name-box:hover div.tower-details-box, .tower-name-box.active div.tower-details-box{
 		background-color: #9dbd2c;
 	    color: #fff;
-	    
+
 	    border-radius: 0;
 	    border-top-left-radius: 6px;
 	    border-bottom-left-radius: 6px;
@@ -3860,7 +3860,7 @@ input.nav-btn:hover{
 		margin-top: 30px;
 	}
 	.page-title-wrapper{
-		margin-top: 30px;	
+		margin-top: 30px;
 	}
 }
 .tower-name-wrapper .show-on-active, .tower-name-wrapper .active .fast-sell-tag{
