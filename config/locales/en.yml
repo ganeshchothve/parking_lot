@@ -66,6 +66,38 @@ en:
         user_id: "Customer"
         creator: "Created By"
         project_units: "Units"
+        street: 'Street'
+        house_number: 'House Number'
+        city: 'City'
+        postal_code: 'Postal Code'
+        state: 'State'
+        country: 'Country'
+        correspondence_street: 'Street'
+        correspondence_house_number: 'House Number'
+        correspondence_city: 'City'
+        correspondence_postal_code: 'Postal Code'
+        correspondence_state: 'State'
+        correspondence_country: 'Country'
+        son_daughter_of: 'Son / Daughter Of'
+        education_qualification: 'Educational Qualification'
+        designation: 'Designation'
+        company_name: 'Company Name'
+        poa_details_phone_no: 'Power of Attorney - Phone'
+        photo: 'Photo'
+        pancard_photo: 'PAN Card Photo'
+        adharcard_photo: 'Aadhaar Photo'
+        address_proof: 'Address Proof'
+        aadhaar: 'Aadhaar'
+        oci: 'OCI'
+        gstn: 'GSTN'
+        is_company: 'Is a company'
+        anniversary: 'Anniversary'
+        poa_details: 'Power of Attorney Details'
+        loan_required: 'Do you require a Loan'
+        bank_name: 'Bank Name'
+        existing_customer_name: 'Customer Name'
+        existing_customer_project: 'Project you have already bought'
+        customer_company_name: 'Company Name'
       project_unit:
         user_id: "Customer"
         receipt_ids: "Payments (associated with this Unit)"
