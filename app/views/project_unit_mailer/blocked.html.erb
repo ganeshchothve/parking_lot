@@ -24,7 +24,10 @@ This unit will remain blocked for you for the next <%= @project_unit.blocking_da
 <p>
   Additionally, we are hereby enclosing Applicability of TDS on purchase of immovable properties, process and mandates to be followed. <br/>
   Your TDS amount is - <%= number_to_indian_currency(@project_unit.tds_amount) %><br/>
-  To know more about TDS, click <a href="https://www.tin-nsdl.com/faqs/tds-on-sale-of-property/TDS-FAQ.html" target="_blank">here</a>. To view the e-Tutorial to make payment for TDS on sale of property click <a href="<%= asset_url('eTutorial_TDS on property_etax.pdf') %>">here</a><br/>
+  To view the e-Tutorial to make payment for TDS on sale of property click <a href="<%= asset_url('eTutorial_TDS on property_etax.pdf') %>">here</a>.<br/><br/>
+  For more information on the TDS process, click <a href="<%= asset_url('TDS Process - note - NAM.pdf') %>">here</a>.<br/>
+  Please find a copy of NAM Estates Private Limited - PAN Card <a href="<%= asset_url('pan-card.pdf') %>">here</a>
+  To know more about TDS, click <a href="https://www.tin-nsdl.com/faqs/tds-on-sale-of-property/TDS-FAQ.html" target="_blank">here</a>.<br/>
 </p>
 <% end %>
 <p>
