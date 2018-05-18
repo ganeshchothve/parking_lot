@@ -503,7 +503,7 @@
 								<%= number_to_indian_currency((calculate_percent(project_unit.gst_on_agreement_price,5)).round(2)) %>
 							</td>
 							<td class="text-center">
-								<%= number_to_indian_currency((calculate_percent(project_unit.gst_on_agreement_price,5) + calculate_percent(project_unit.construction_price,5) + calculate_percent(project_unit.land_price,5)).round(2)) %>
+								<%= number_to_indian_currency((total_wep + total_city_infra + total_advance + total_club_house + project_unit.corpus_fund + calculate_percent(project_unit.gst_on_agreement_price,5) + calculate_percent(project_unit.construction_price,5) + calculate_percent(project_unit.land_price,5)).round(2)) %>
 							</td>
 						</tr>
 						<tr>
