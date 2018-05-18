@@ -7,10 +7,10 @@ class SelldoLeadUpdater
     project_units = user.project_units.all
     stage = nil
 
-    stage = 'booked_confirmed' if stage.blank? && project_units.find{|x| x.status == 'booked_confirmed'}.present?
-    stage = 'booked_tentative' if stage.blank? && project_units.find{|x| x.status == 'booked_tentative'}.present?
-    stage = 'blocked' if stage.blank? && project_units.find{|x| x.status == 'blocked'}.present?
-    stage = 'hold' if stage.blank? && project_units.find{|x| x.status == 'hold'}.present?
+    stage = 'booked_confirmed' if stage.blank? && project_units.select{|x| x.status == 'booked_confirmed'}.present?
+    stage = 'booked_tentative' if stage.blank? && project_units.select{|x| x.status == 'booked_tentative'}.present?
+    stage = 'blocked' if stage.blank? && project_units.select{|x| x.status == 'blocked'}.present?
+    stage = 'hold' if stage.blank? && project_units.select{|x| x.status == 'hold'}.present?
     stage = 'hold_payment_dropoff' if stage.blank? && st == "hold_payment_dropoff"
     stage = 'user_kyc_done' if stage.blank? && user.user_kycs.present?
 
