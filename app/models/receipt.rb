@@ -133,14 +133,6 @@ class Receipt
     if self.total_amount <= 0
       self.errors.add :total_amount, " cannot be less than or equal to 0"
     end
-=begin
-    if self.project_unit_id.present? && (self.total_amount > self.project_unit.pending_balance) && self.new_record?
-      self.errors.add :total_amount, " cannot be greater than #{self.project_unit.pending_balance}"
-    end
-    if self.reference_project_unit_id.present? && (self.total_amount > self.reference_project_unit.pending_balance({user_id: self.user_id})) && self.new_record?
-      self.errors.add :total_amount, " cannot be greater than #{self.reference_project_unit.pending_balance({user_id: self.user_id})}"
-    end
-=end
   end
 
   def status_changed
