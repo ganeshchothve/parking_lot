@@ -3,8 +3,8 @@
 <head>
   <title></title>
   <style type="text/css">
-    html, body{padding: 0;margin: 0;font-size: 16px;-webkit-font-smoothing: antialiased;
-      font-weight: 400; color: #333;line-height: 1.2;letter-spacing: 0.7px;}
+  html, body{padding: 0;margin: 0;font-size: 16px;-webkit-font-smoothing: antialiased;
+    font-weight: 400; color: #333;line-height: 1.2;letter-spacing: 0.7px;}
     a, img, button, input[type=submit]{text-decoration: none; outline: none; border: 0;transition: .2s ease;}
     input:focus{outline:none;}
     b, strong{font-weight: 700;}
@@ -42,79 +42,80 @@
     .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12, .col-12-5, .w30, .w70{float: left;}
     .allotment-letter-wrapper{padding: 50px 0;}
     .mb30{margin-bottom: 20px;}
-  </style>
-</head>
-<body>
-<section class="allotment-letter-wrapper">
-  <div class="container">
-    <div class="row">
-      <div class="col-12 mb30">
-        <div class="pull-left">
-            <img src="<%= asset_path 'logo2.png' %>">
+    </style>
+  </head>
+  <body>
+    <section class="allotment-letter-wrapper">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 mb30">
+            <div class="pull-left">
+              <img src="<%= asset_path 'logo2.png' %>">
+            </div>
+            <div class="pull-right">
+              <img src="<%= asset_path 'logo.png' %>">
+            </div>
           </div>
-          <div class="pull-right">
-            <img src="<%= asset_path 'logo.png' %>">
+        </div>
+        <div class="row">
+          <div class="col-12 mb30 text-center">
+            <h1>Provisional Allotment of Apartment</h1>
           </div>
+        </div>
+        <div class="row">
+          <div class="col-12 mb30 text-left">
+            <p><%= @project_unit.created_at.strftime("%B %d, %Y") %></p>
+            <p><%= @project_unit.primary_user_kyc.name %></p>
+            <% @project_unit.user_kycs.each do |kyc| %>
+            <p><%= kyc.name %></p>
+            <% end %>
+            <p>Contact No.: <%= @user.phone %></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 mb30 text-justify">
+            <p>Dear Madam/Sir,</p></br>
+            <p><strong>Sub:</strong> Provisional Allotment of Apartment No. <%= @project_unit.name  %> in Tower <%= @project_unit.project_tower_name %> <!-- Block <%#= @project_unit.name %> --> <!-- of <%#= @project_unit.floor %> -->, being developed in the Project "Embassy Edge", situated at Nagamangala/Hegganahalli Village, Kundana Hobli, Devanahalli Taluka, Bangalore / Navarathna Agrahara Village, Jala Hobi, Bangalore North Taluka, Bangalore Urban District.</p><br/>
+            <p><strong>Ref:</strong> Booking Application dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %>.</p></br>
+            <p>Pursuant of the above referred Booking Application dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %> in respect of Apartment No. <%= @project_unit.name %> in the Project known as "Embassy Edge", we have provisionally allotted Apartment No.
+              <%= @project_unit.name %> having a Carpet Area of <%= @project_unit.carpet %> square feet &amp; Super Built-up Area of <%= @project_unit.saleable %> square feet to you.<br/><br/>
+              Further, we hereby confirm having received an amount of Rs.<%= @project_unit.total_amount_paid %>/-
+              as advance vide, along with your Booking Application .<br/><br/>
+              The total sale consideration amount payable for the above subject Apartment is <%= number_to_indian_currency(@project_unit.all_inclusive_price.round) %>/-
+              ("Total Sale Consideration"). The Total Consideration is
+              inclusive of land cost, construction cost, cost of providing power supply, cost of providing water and
+              sewage connections, maintenance deposit/corpus fund, city infrastructure charges, advance
+              maintenance charges for one year, cost towards club house and amenities, GST and other charges
+              as detailed in the Agreement for Sale.<br/><br/>
+              Upon receiving intimation from us to execute the Agreement to Sell, you shall <!-- pay Rs. <%#= @project_unit.pending_balance %>/-
+                within 10 working days being 10% of the cost of the Apartment and simultaneously --> execute the Agreement to Sell within 15 days.<br/><br/>
+                In the event of you failing to execute the Agreement to Sell as mentioned above, the Booking
+                Application will stand rejected and this Provisional Allotment cancelled, and we shall deduct Rs. 1,00,000/- from the amount received from you as liquidated damages and refund the balance amount in 30
+                days from the date of cancellation. Then in such an event the booking made in the favour of the applicant shall be cancelled, and unit shall get automatically released and the Company shall be at liberty to offer the said unit to any other third parties.
+              </p></br>
+              <p>This Provisional Allotment does not confer any rights in you with respect to the subject Apartment nor is this a concluded contract unless the Agreement for Sale is executed by you.</p><br/>
+              <p>We request you to kindly acknowledge the copy of this letter in token of your acceptance of the above arrangement.</p><br/>
+              <p>This Provisional Allotment is subject to Bangalore jurisdiction.</p><br/>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 text-left">
+              <p>Thanking you.</p><br/>
+              <p>Yours truly,</p>
+              <p>For NAM Estates Private Limited</p>
+              <br/><br/>
+              <p>Authorized Signatory</p>
+              <br/><br/>
+              <p><%= @project_unit.primary_user_kyc.name %></p>
+              <% @project_unit.user_kycs.each do |kyc| %>
+              <br/><br/>
+              <p><%= kyc.name %></p>
+              <% end %>
+              <br/><br/>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-12 mb30 text-center">
-        <h1>Provisional Allotment of Apartment</h1>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12 mb30 text-left">
-        <p><%= @project_unit.created_at.strftime("%B %d, %Y") %></p>
-        <p><%= @project_unit.primary_user_kyc.name %></p>
-        <% @project_unit.user_kycs.each do |kyc| %>
-        <p><%= kyc.name %></p>
-        <% end %>
-        <p>Contact No.: <%= @user.phone %></p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12 mb30 text-justify">
-        <p>Dear Madam/Sir,</p></br>
-        <p><strong>Sub:</strong> Provisional Allotment of Apartment No. <%= @project_unit.name  %> in Tower <%= @project_unit.project_tower_name %> <!-- Block <%#= @project_unit.name %> --> <!-- of <%#= @project_unit.floor %> -->, being developed in the Project "Embassy Edge", situated at Nagamangala/Hegganahalli Village, Kundana Hobli, Devanahalli Taluka, Bangalore / Navarathna Agrahara Village, Jala Hobi, Bangalore North Taluka, Bangalore Urban District.</p><br/>
-        <p><strong>Ref:</strong> Booking Application dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %>.</p></br>
-        <p>Pursuant of the above referred Booking Application dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %> in respect of Apartment No. <%= @project_unit.name %> in the Project known as "Embassy Edge", we have provisionally allotted Apartment No.
-          <%= @project_unit.name %> having a Carpet Area of <%= @project_unit.carpet %> square feet &amp; Super Built-up Area of <%= @project_unit.saleable %> square feet to you.<br/><br/>
-          Further, we hereby confirm having received an amount of Rs.<%= @project_unit.total_amount_paid %>/-
-          as advance vide, along with your Booking Application .<br/><br/>
-          The total sale consideration amount payable for the above subject Apartment is <%= number_to_indian_currency(@project_unit.all_inclusive_price.round) %>/-
-          ("Total Sale Consideration"). The Total Consideration is
-          inclusive of land cost, construction cost, cost of providing power supply, cost of providing water and
-          sewage connections, maintenance deposit/corpus fund, city infrastructure charges, advance
-          maintenance charges for one year, cost towards club house and amenities, GST and other charges
-          as detailed in the Agreement for Sale.<br/><br/>
-          Upon receiving intimation from us to execute the Agreement to Sell, you shall <!-- pay Rs. <%#= @project_unit.pending_balance %>/-
-          within 10 working days being 10% of the cost of the Apartment and simultaneously --> execute the Agreement to Sell within 15 days.<br/><br/>
-          In the event of you failing to execute the Agreement to Sell as mentioned above, the Booking
-          Application will stand rejected and this Provisional Allotment cancelled, and we shall deduct Rs. 1,00,000/- from the amount received from you as liquidated damages and refund the balance amount in 30
-          days from the date of cancellation. Then in such an event the booking made in the favour of the applicant shall be cancelled, and unit shall get automatically released and the Company shall be at liberty to offer the said unit to any other third parties.
-	</p></br>
-        <p>This Provisional Allotment does not confer any rights in you with respect to the subject Apartment nor is this a concluded contract unless the Agreement for Sale is executed by you.</p><br/>
-        <p>We request you to kindly acknowledge the copy of this letter in token of your acceptance of the above arrangement.</p><br/>
-        <p>This Provisional Allotment is subject to Bangalore jurisdiction.</p><br/>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12 text-left">
-        <p>Thanking you.</p><br/>
-        <p>Yours truly,</p>
-        <p>For NAM Estates Private Limited</p>
-        <br/><br/>
-				<p>Authorized Signatory</p>
-				<br/><br/>
-        <p><%= @project_unit.primary_user_kyc.name %></p>
-        <% @project_unit.user_kycs.each do |kyc| %>
-          <br/><br/>
-          <p><%= kyc.name %></p>
-        <% end %>
-        <br/><br/>
-      </div>
-    </div>
-  </div>
-</section>
-</body>
-</html>
+    </section>
+  </body>
+  </html>
