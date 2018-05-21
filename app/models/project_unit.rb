@@ -252,7 +252,7 @@ class ProjectUnit
   end
 
   def construction_cost
-    base_rate + premium_location_charges + floor_rise - land_rate
+    base_rate + premium_location_charges + floor_rise
   end
 
   def booking_price_percent_of_agreement_price
