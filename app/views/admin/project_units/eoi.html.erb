@@ -75,7 +75,7 @@
 							<td>&nbsp;</td>
 						</tr>
 					</table>
-					<p><strong>2. Total Sale Consideration:</strong>&nbsp;The total sale consideration for the Apartment is <%= number_to_indian_currency(@project_unit.agreement_price) %>/- (Rupees <%= @project_unit.agreement_price.humanize %> only), made up of the following:</p><br/>
+					<p><strong>2. Total Sale Consideration:</strong>&nbsp;The total sale consideration for the Apartment is <%= number_to_indian_currency(@project_unit.all_inclusive_price) %>/- (Rupees <%= @project_unit.all_inclusive_price.humanize %> only), made up of the following:</p><br/>
 					<table cellpadding="10" cellspacing="0">
 						<tr>
 							<th>Rate per square feet</th>

@@ -9,8 +9,8 @@ module InventoryImport
         unit_name = row[3].strip
         unit_number = row[4].strip
         floor = row[5].strip
-        carpet = row[6].strip
-        saleable = row[7].strip
+        carpet = row[6].strip.to_f.round(2)
+        saleable = row[7].strip.to_f.round(2)
         base_rate = row[8].strip
         category = row[9].strip
         unit_configuration_name = row[10].strip

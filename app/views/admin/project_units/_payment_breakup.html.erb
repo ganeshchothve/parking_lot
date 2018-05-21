@@ -358,7 +358,7 @@
 
       </td>
       <td class="pink">
-        <%= number_to_indian_currency((total_wep + total_city_infra + total_advance + total_club_house + project_unit.corpus_fund + @project_unit.agreement_price - @project_unit.discount(@project_unit.user_id.present? ? @project_unit.user : current_user)).round(2)) %>
+        <%= number_to_indian_currency(@project_unit.all_inclusive_price.round(2)) %>
       </td>
     </tr>
   </table>
