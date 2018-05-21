@@ -22,8 +22,10 @@
 		<div class="clearfix"></div>
 		<div class="col-12">
 			<div class="receipt-wrapper">
+        <div class="pull-left">
+          <strong style="font-size:22px;">Receipt</strong>
+        </div>
 				<div class="pull-right">
-					<!-- <a href="/dashboard/receipt-print/<%#= @receipt.id %>" target="_blank"><img src="<%#= asset_path 'printer-outline.png'%>" class="img-responsive"></a> -->
 					<%= link_to dashboard_receipt_print_path(@receipt.id, :format => 'pdf'), target: :_blank do %>
 						<i class="far fa-envelope" style="font-size:24px;color:#383838;display:inline-block;margin:0 10px;" data-event-action="click" data-event-name="convert receipt to pdf"></i>
 					<% end%>
