@@ -49,6 +49,7 @@ class ProjectUnit
   field :unit_configuration_id, type: String
   field :data_attributes, type: Array, default: []
   field :selldo_id, type: String
+  field :sap_id, type: String
   field :maintenance_per_month, type: Float
   field :property_tax, type: Float
   field :total_property_tax_month, type: Float
@@ -60,7 +61,10 @@ class ProjectUnit
   field :customized_gov_costs, type: Array
   field :customized_grace_period, type: Integer
   field :customized_interest_percentage, type: Integer
-  field :calculated_agreement_value, type: Float
+  field :clubhouse_amenities_price, type: Float
+  field :premium_location_charges, type: Float
+  field :floor_rise, type: Float
+  field :land_rate, type: Float
   field :images, type: Array
 
   @@keys =  {project_tower_name: "String", project_name: "String", developer_name: "String", bedrooms: "Float", bathrooms: "Float", saleable: "Float", carpet: "Float", loading: "Float", sub_type: "String", type: "String", covered_area: "Float", terrace_area: "Float", category: "String",developer_id: "String",configuration_type: "String",construction_status: "String",transaction_type: "String",registration_date: "Date",floor: "Integer",assigned_to: "String",broker: "String",team: "String",date_of_possession: "Date",possession_status: "String",seller_type: "String",is_negotiable: "Boolean",amenities: "Hash",parking: "String",docs_verified: "Boolean",verification_date: "String",property_inspected: "Boolean",suitable_for: "String",entrance: "String",furnishing: "String",flooring: "String",facing: "String",unit_facing_direction: "String",project_status: "String",city: "String",state: "String",country: "String",resale: "Boolean",owner_count: "Integer",posted_by: "String",unit_configuration_id: "String",unit_configuration_name: "String"}
@@ -146,7 +150,7 @@ class ProjectUnit
   validates :status, :name, :sfdc_id, presence: true
   validates :status, inclusion: {in: Proc.new{ ProjectUnit.available_statuses.collect{|x| x[:id]} } }
   validates :available_for, inclusion: {in: Proc.new{ ProjectUnit.available_available_fors.collect{|x| x[:id]} } }
-  validates :user_id, :user_kyc_ids, presence: true, if: Proc.new { |unit| ['available', 'not_available', 'management', 'employee'].exclude?(unit.status) }
+  validates :user_id, :primary_user_kyc_id, presence: true, if: Proc.new { |unit| ['available', 'not_available', 'management', 'employee'].exclude?(unit.status) }
 
   def blocking_payment
     receipts.where(payment_type: 'blocking').first
@@ -166,10 +170,14 @@ class ProjectUnit
   end
 
   def self.user_based_available_statuses(user)
-    if user.role?("management_user")
-      statuses = ["available", "employee", "management"]
-    elsif user.role?("employee_user")
-      statuses = ["available", "employee"]
+    if user.present?
+      if user.role?("management_user")
+        statuses = ["available", "employee", "management"]
+      elsif user.role?("employee_user")
+        statuses = ["available", "employee"]
+      else
+        statuses = ["available"]
+      end
     else
       statuses = ["available"]
     end
@@ -231,6 +239,10 @@ class ProjectUnit
     ]
   end
 
+  def effective_rate
+    self.base_rate - self.applied_discount_rate
+  end
+
   def status_value
     self.class.available_statuses.find { |status_hash| status_hash[:id] == self.status }[:text] rescue ""
   end
@@ -239,29 +251,8 @@ class ProjectUnit
     UnitConfiguration.find(self.unit_configuration_id)
   end
 
-  def land_rate
-    1000
-  end
-
   def construction_cost
     base_rate + premium_location_charges + floor_rise - land_rate
-  end
-
-  def premium_location_charges
-    case category
-    when "Courtyard Facing"
-	     100
-    when "Outward Facing"
-	     75
-    when "Inward/Another tower"
-	     0
-    when "Garden, sports zone & club facing"
-	     150
-    when "Garden, sports zone, club & swimming pool facing"
-	     150
-    else
-	     150
-    end
   end
 
   def booking_price_percent_of_agreement_price
@@ -270,10 +261,6 @@ class ProjectUnit
 
   def tds_amount_percent_of_agreement_price
     agreement_price > 5000000 ? 0.001 : 0
-  end
-
-  def floor_rise
-    floor < 3 ? 0 : (floor-2)*20
   end
 
   def land_price
@@ -317,10 +304,6 @@ class ProjectUnit
 
   def wep_price
     150 * saleable
-  end
-
-  def clubhouse_amenities_price
-    125000
   end
 
   def corpus_fund

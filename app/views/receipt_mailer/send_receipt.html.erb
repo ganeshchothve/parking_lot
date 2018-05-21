@@ -83,12 +83,12 @@ Project Unit Details
   </td>
 </tr>  -->
 <table cellpadding="0" cellspacing="0" width="100%">
-  <tr>
+<!--   <tr>
     <td style=" color: #000;font-size: 32px;font-weight: 600;line-height: 35px;vertical-align: bottom;">
       Your Payment is Successful!
     </td>
   </tr>
-  <tr><td>&nbsp;</td></tr>
+  <tr><td>&nbsp;</td></tr> -->
   <tr>
     <td>
       Dear <%= @user.name %>,
@@ -101,22 +101,23 @@ Project Unit Details
       <br/>
       <% if @receipt.payment_mode == 'cheque' %>An Embassy home is yours to keep! Your cheque of Rs. <%= @receipt.total_amount %>  has been cleared by the bank. We will contact you shortly to discuss the next round of formalities. 
       <% else %>
-      <p><strong> Following are the payment details.</strong> </p> <br/>
+      <p>Following are the payment details.</p> <br/>
       <p> 
-        <span style="color:#64c0e9; font-weight:bold">Unit </span> <%= @project_unit.name %><br/>  
-        <span style="color:#64c0e9; font-weight:bold">Receipt </span> <%= @receipt.receipt_id %><br/>
-        <span style="color:#64c0e9; font-weight:bold">Date </span> <%= @receipt.created_at.strftime("%Y-%m-%d") %><br/>
-        <span style="color:#64c0e9; font-weight:bold">Bank </span> <%= @receipt.issuing_bank %><br/>
-        <span style="color:#64c0e9; font-weight:bold">Branch </span> <%= @receipt.issuing_bank_branch %><br/>
-        <span style="color:#64c0e9; font-weight:bold">Tracking Id </span> <%= @receipt.tracking_id %><br/>
+        <span style="font-weight:bold">Unit </span> <%= @project_unit.name %><br/>  
+        <span style="font-weight:bold">Receipt </span> <%= @receipt.receipt_id %><br/>
+        <span style="font-weight:bold">Date </span> <%= @receipt.created_at.strftime("%Y-%m-%d") %><br/>
+        <span style="font-weight:bold">Bank </span> <%= @receipt.issuing_bank %><br/>
+        <span style="font-weight:bold">Branch </span> <%= @receipt.issuing_bank_branch %><br/>
+        <span style="font-weight:bold">Tracking Id </span> <%= @receipt.tracking_id %><br/>
       </p>
       <% end %>
       <br/>
-      <p>You have balance payment of Rs. <%= @project_unit.pending_balance %> that needs to be delivered by <%= @receipt.created_at.to_date + 7.days %> </p>
+      <p>You have balance payment of Rs. <%= @project_unit.pending_balance %> that needs to be delivered by <%= @receipt.created_at.to_date + 10.days %> </p>
       <p>To visit the booking portal, click on the link below</p>
-      <p>Take me to the Portal <a href="http://embassysprings2.amura.in/users/sign_in">http://embassysprings2.amura.in/</a> </p>
+      <!-- <p>Take me to the Portal <a href="http://embassysprings2.amura.in/users/sign_in">http://embassysprings2.amura.in/</a> </p> -->
+      <p>Take me to the Portal <a href="http://booking.embassysprings.com/">http://booking.embassysprings.com/</a> </p>
       </br></br>
-      <p>Also find attached the payment receipt. </p>
+      <p>Also find attached the payment receipt. </p> 
     </td>
   </tr> 
 </table>

@@ -1,20 +1,44 @@
-<table cellpadding="0" cellspacing="0" width="100%">
-  <tr>
-      <td style=" color: #000;font-size: 32px;font-weight: 600;line-height: 35px;vertical-align: bottom;">
-          <%= @project_unit.name %> is Blocked
-       </td>
-  </tr>
-  <tr><td>&nbsp;</td></tr>
-  <tr>
-    <td>Dear <%= @user.name %>, </td>
-  </tr>
-  <tr><td>&nbsp;</td></tr>
-  <tr>
-    <td style="line-height:26px;">
-      <p><span>Congratulations! </span></p>
-      <p><span>Your first step towards living the coveted Embassy life has been successful.</span></p>
-      <p><span>You have 7 days to pay the balance amount of <%= number_to_indian_currency(@project_unit.user.total_balance_pending.round()) %> . You can use the Embassy Booking Portal to make the remaining payment. The unit will be released after 7 days if your balance payment is not received and the </span></p>
-      <p><span>invested amount will be refunded* to you. For more information please visit <a href="javascript:;">www.embassyedge.com</a></span></p>
-    </td>
-  </tr>
-</table>
+Dear <%= @user.name %>,<br/>
+<br/>
+<p>
+Welcome to the 'Embassy' community, an exclusive world for the like-minded to live, share and appreciate.
+</p>
+<p>
+At Embassy our commitment to you does not end with a sale. It begins here. We value relationships and believe in the long-term.
+</p>
+<p>
+We are pleased to inform that you are among the esteemed circle of customers who have booked an apartment at Embassy Edge.
+</p>
+
+<strong>Details of Unit:</strong><br/>
+Name - <%= @project_unit.name %><br/>
+Tower - <%= @project_unit.project_tower_name %><br/>
+Unit Facing - <%= @project_unit.category %><br/>
+Agreement Value - <%= number_to_indian_currency(@project_unit.agreement_price) %><br/>
+Date - <%= @project_unit.blocked_on %><br/>
+<br/>
+<p>
+This unit will remain blocked for you for the next <%= @project_unit.blocking_days %> days. Please complete your payment of remaining amount within this duration to confirm your unit. To make additional payment please click <a href="<%= dashboard_url(user_email: @user.email, user_token: @user.authentication_token) %>" target="_blank">here</a>
+</p>
+<% if @project_unit.tds_amount_percent_of_agreement_price > 0 %>
+<p>
+  Additionally, we are hereby enclosing Applicability of TDS on purchase of immovable properties, process and mandates to be followed. <br/>
+  Your TDS amount is - <%= number_to_indian_currency(@project_unit.tds_amount) %><br/>
+  To view the e-Tutorial to make payment for TDS on sale of property click <a href="<%= asset_url('eTutorial_TDS on property_etax.pdf') %>">here</a>.<br/><br/>
+  For more information on the TDS process, click <a href="<%= asset_url('TDS Process - note - NAM.pdf') %>">here</a>.<br/>
+  Please find a copy of NAM Estates Private Limited - PAN Card <a href="<%= asset_url('pan-card.pdf') %>">here</a>
+  To know more about TDS, click <a href="https://www.tin-nsdl.com/faqs/tds-on-sale-of-property/TDS-FAQ.html" target="_blank">here</a>.<br/>
+</p>
+<% end %>
+<p>
+Thank you for placing your trust in us. You can be assured of our commitment to deliver on every count.
+</p>
+<p>
+Welcome once again and do share with us your views and feedback.
+</p>
+<br/>
+Thanking you.
+<br/><br/>
+Yours truly,<br/>
+NAM Estates Private Limited
+<br/><br/><br/>

@@ -10,14 +10,14 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *
- *= require noty.css
- *= require bootstrap-datetimepicker.css
- *= require daterangepicker.css
+ *= require noty
+ *= require bootstrap-datetimepicker
+ *= require daterangepicker
  *= require intlTelInput
- *= require selectize.css
+ *= require selectize
  *= require tooltipster.bundle
  *= require tooltipster-sideTip-borderless.min
- *= require jquery.fileupload.css
+ *= require jquery.fileupload
  *= require colorbox
  *= require_self
 */
@@ -1640,7 +1640,7 @@ section.grey{
     padding: 5px 20px;
     line-height: 33px;
     font-weight: 500;
-    font-size: 16px;	
+    font-size: 16px;
 }
 strong{
 	font-weight: 500;
@@ -1655,28 +1655,45 @@ strong{
 }
 .tower-name-box{
 	position: relative;
-	background-color: #fff;
+	/*background-color: #fff;*/
 	color: #6c6c6c;
+	/*margin-bottom: 20px;*/
 	cursor: pointer;
 	text-align: center;
 	border-radius:6px;
 	transition:0.3s all ease-in-out;
-	padding-top: 36px;
+	padding-top: 15px;
 }
 .tower-name-box>div.tower-details-box{
+	border: 1px solid #6b7e34;
 	border-radius:10px;
 	transition:0.3s all ease-in-out;
 	padding: 5px 0px 5px 0;
 	position: relative;
 }
+.tower-layout-wrapper{
+	padding: 0 0px 0px 50px;
+}
+.tower-layout{
+	display: none;
+}
+.scrolled-fixed{
+    position: fixed;
+    right: 30px;
+    top: 195px;
+    width: 52%;
+}
+.tower-layout img{
+	display: block;
+}
 .tower-name-box:hover div.tower-details-box, .tower-name-box.active div.tower-details-box{
 	background-color: #6b7e34;
     color: #fff;
 }
-.tower-name-box:hover, .tower-name-box.active{
+/*.tower-name-box:hover, .tower-name-box.active{
 	outline: 1px dashed #9dbd2c;
     outline-offset: 5px;
-}
+}*/
 .tower-name-box img {
     -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
     filter: grayscale(100%);
@@ -1691,9 +1708,9 @@ strong{
 	font-family: 'Roboto', sans-serif;
 }
 .tower-name-box span.fast-sell-tag, .tower-name-box span.show-on-active, .tower-name-box span.show-on-active:first-child{
-    position: absolute;
+    /*position: absolute;
     top: 0;
-    left: 0;
+    left: 0;*/
     width: 100%;
     text-align: center;
     color:#ec9835;
@@ -2732,7 +2749,7 @@ input.nav-btn:hover{
 }
 #progressbar li:first-child:after {
 	/*connector not needed before the first step*/
-	content: none; 
+	content: none;
 }
 /*marking active/completed steps green*/
 /*The number of the step and the connector before it = green*/
@@ -2742,7 +2759,7 @@ input.nav-btn:hover{
 }
 .cp-form{
 	display: none;
-}	
+}
 .cp-form-btn{
 	padding: 0 110px;
 }
@@ -2873,7 +2890,7 @@ input.nav-btn:hover{
 	.tower-name-wrapper .col-3{
 		width: 50%;
 		margin-bottom:0px;
-		padding: 5px 0; 
+		padding: 5px 0;
 	}
 	.filter-item-wrapper .col-12-5{
 		width: 50%;
@@ -2929,6 +2946,16 @@ input.nav-btn:hover{
 	}
 }
 @media all and (max-width: 700px){
+	.w100-xs{
+		width: 100%;
+	}
+	.scrolled-fixed{
+		position: relative;
+		width: 100%;
+		padding: 0px;
+		top: 0px;
+		right: 0px;
+	}
 	.apply-btn{
 		padding: 4px 15px;
 		border-radius: 3px;
@@ -2942,7 +2969,7 @@ input.nav-btn:hover{
 	.mobile-show{
 		display: block;
 	}
-	
+
 	.profile-link{
 		display: none;
 	}
@@ -3412,15 +3439,28 @@ input.nav-btn:hover{
 	.tower-name-box > div.tower-details-box{
 		padding: 5px 10px;
 		margin-top: 10px;
+		text-align: center;
 	}
 	.tower-name-box:hover div.tower-details-box, .tower-name-box.active div.tower-details-box{
 		background-color: #9dbd2c;
 	    color: #fff;
-	    
-	    border-radius: 0;
 	    border-top-left-radius: 6px;
 	    border-bottom-left-radius: 6px;
+	    text-align: center;
+	    border-radius: 6px;
+	    /*border-top-left-radius: 6px;
+	    border-bottom-left-radius: 6px;*/
 	}
+	/*.tower-name-wrapper{
+		width: 200%
+	}*/
+	/*.w25-xs{
+		width: 25%;
+		float: left;
+	}*/
+	/*.tower-name-box span.fast-sell-tag, .tower-name-box span.show-on-active, .tower-name-box span.show-on-active:first-child{
+		text-shadow: 1px 1px 1px #060606;
+	}*/
 	.tower-name-box > div.tower-img-wrap{
 		float: left;
 		width: 35%;
@@ -3429,7 +3469,7 @@ input.nav-btn:hover{
 		display: block;
 	    padding: 13px;
 	    float: right;
-	    width: 65%;
+	    width: 100%;
 	}
 	.tower-name-box span:first-child{
 		font-size: 16px;
@@ -3860,7 +3900,7 @@ input.nav-btn:hover{
 		margin-top: 30px;
 	}
 	.page-title-wrapper{
-		margin-top: 30px;	
+		margin-top: 30px;
 	}
 }
 .tower-name-wrapper .show-on-active, .tower-name-wrapper .active .fast-sell-tag{

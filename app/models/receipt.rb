@@ -83,6 +83,14 @@ class Receipt
     ]
   end
 
+  def primary_user_kyc
+    if self.project_unit_id.present?
+      return self.project_unit.primary_user_kyc
+    else
+      return UserKyc.where(user_id: self.user_id).asc(:created_at).first
+    end
+  end
+
   def payment_gateway_service
     if self.payment_gateway.present?
       if self.project_unit.present? && ["hold","blocked","booked_tentative"].exclude?(self.project_unit.status)
@@ -133,14 +141,6 @@ class Receipt
     if self.total_amount <= 0
       self.errors.add :total_amount, " cannot be less than or equal to 0"
     end
-=begin
-    if self.project_unit_id.present? && (self.total_amount > self.project_unit.pending_balance) && self.new_record?
-      self.errors.add :total_amount, " cannot be greater than #{self.project_unit.pending_balance}"
-    end
-    if self.reference_project_unit_id.present? && (self.total_amount > self.reference_project_unit.pending_balance({user_id: self.user_id})) && self.new_record?
-      self.errors.add :total_amount, " cannot be greater than #{self.reference_project_unit.pending_balance({user_id: self.user_id})}"
-    end
-=end
   end
 
   def status_changed

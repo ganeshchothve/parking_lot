@@ -1,7 +1,7 @@
 # TODO: replace all messages & flash messages
 class DashboardController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_project_unit, only: [:project_unit, :update_project_unit, :hold_project_unit, :checkout, :payment, :payment_breakup, :make_remaining_payment]
+  before_action :set_project_unit, only: [:project_unit, :update_project_unit, :update_co_applicants, :hold_project_unit, :checkout, :payment, :payment_breakup, :make_remaining_payment]
   layout :set_layout
 
   def index
@@ -36,6 +36,9 @@ class DashboardController < ApplicationController
   end
 
   def faq
+  end
+
+  def tds_process
   end
 
   def terms_and_conditions
@@ -190,7 +193,7 @@ class DashboardController < ApplicationController
       receipt = current_user.receipts.where(receipt_id: params[:receipt_id]).where(payment_type: 'blocking').first
       project_unit = ProjectUnit.find(params[:project_unit_id])
       if receipt.present? && receipt.project_unit_id.blank? && project_unit.user_based_status(current_user) == 'available' && receipt.reference_project_unit_id.to_s == project_unit.id.to_s
-        params[:project_unit] = {status: 'hold', user_kyc_ids: current_user.user_kyc_ids}
+        params[:project_unit] = {status: 'hold', primary_user_kyc_id: current_user.user_kyc_ids.first}
         hold_project_unit
       else
         flash[:notice] = 'The unit chosen may not be available. You can browse available inventory and block it against the payment done.'
@@ -250,11 +253,25 @@ class DashboardController < ApplicationController
     end
   end
 
+  def update_co_applicants
+    @project_unit = ProjectUnit.find(params[:project_unit_id])
+    authorize @project_unit
+    @project_unit.attributes = permitted_attributes(@project_unit)
+    respond_to do |format|
+      if @project_unit.save
+        format.html { redirect_to dashboard_path }
+      else
+        flash[:notice] = 'We cannot process your request at this time. Please retry'
+        format.html { redirect_to dashboard_path }
+      end
+    end
+  end
+
   def hold_project_unit
     @project_unit = ProjectUnit.find(params[:project_unit_id])
     authorize @project_unit
     @project_unit.attributes = permitted_attributes(@project_unit)
-    @project_unit.user_kyc_ids = current_user.user_kyc_ids if @project_unit.user_kyc_ids.blank?
+    @project_unit.primary_user_kyc_id = current_user.user_kyc_ids.first if @project_unit.primary_user_kyc_id.blank?
     @project_unit.status = "hold"
     @project_unit.user = current_user
 

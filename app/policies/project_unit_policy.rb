@@ -7,6 +7,10 @@ class ProjectUnitPolicy < ApplicationPolicy
     record.auto_release_on.present? && ['crm', 'sales', 'admin'].include?(user.role)
   end
 
+  def eoi?
+    ['crm', 'sales', 'admin'].include?(user.role)
+  end
+
   def update?
     edit?
   end
@@ -17,6 +21,10 @@ class ProjectUnitPolicy < ApplicationPolicy
 
   def hold_project_unit?
     record.user_based_status(user) == 'available' && user.buyer? && user.kyc_ready? && user.project_units.where(status: "hold").blank?
+  end
+
+  def update_co_applicants?
+    record.user_id == user.id && ["blocked", "booked_confirmed", "booked_tentative"].include?(record.status)
   end
 
   def update_project_unit?
@@ -40,11 +48,11 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def block?
-    (user.project_units.count < 3 && !record.is_a?(ProjectUnit)) || (record.is_a?(ProjectUnit) && (['hold'].include?(record.status) && record.user_id == user.id) && user.kyc_ready?)
+    (user.project_units.count < user.allowed_bookings && !record.is_a?(ProjectUnit)) || (record.is_a?(ProjectUnit) && (['hold'].include?(record.status) && record.user_id == user.id) && user.kyc_ready?)
   end
 
   def permitted_attributes params={}
-    attributes = [:status, :auto_release_on, user_kyc_ids: []]
+    attributes = [:status, :auto_release_on, :primary_user_kyc_id, user_kyc_ids: []]
     attributes
   end
 end

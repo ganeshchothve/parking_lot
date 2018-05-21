@@ -172,7 +172,7 @@
 			<!-- <div class="breadcrumbs-wrapper">
 	        	<span>Apartment Selector</span><span>Choose Tower</span><span>Select Apartment</span><span>KYC Details</span><span class="active">Proceed to payment</span>
 	      	</div> -->
-            
+
 	      	<div class="col-12">
 		      	<div class="col-12 xs-100">
 		      		<div class="apartment-selector-wrapper">
@@ -185,14 +185,14 @@
 			        	<div class="col-12">
                             <div class="client-details-wrapper">
                                 <div class="col-4 client-detail padding-top0 dark-green-bg">
-                                    <span class="white-font">Mr. <%= current_user.name %></span>
+                                    <span class="white-font">Name: <%= current_user.name %></span>
                                     <span class="white-font">Flat No: <%= @project_unit.name %></span>
                                 </div>
                                 <div class="col-4 light-green-bg">
                                     <div class=""><span class="black">Tower:</span> <%= @project_unit.project_tower_name %><br><span class="black">Floor: </span><%= @project_unit.floor %><br><span class="black">Flat No:</span> <%= @project_unit.name %><br></div>
                                 </div>
                                 <div class="col-4 light-green-bg">
-				     <div class=""><span class="black">Configuration:</span> <%= @project_unit.bedrooms %> BHK<br><span class="black">Carpet Area:</span> <%= @project_unit.carpet.round %> Sq.Ft.<br><span class="black">Starting Price:</span> <%= number_to_indian_currency(@project_unit.agreement_price.round) %></div>
+				     <div class=""><span class="black">Configuration:</span> <%= @project_unit.bedrooms %> BHK<br><span class="black">Carpet Area:</span> <%= @project_unit.carpet.round %> Sq.Ft.<br><span class="black">Starting Price:</span> <%= number_to_indian_currency(@project_unit.agreement_price.round(2)) %></div>
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
@@ -220,4 +220,3 @@
 		</div>
 	</div>
 </section>
-		

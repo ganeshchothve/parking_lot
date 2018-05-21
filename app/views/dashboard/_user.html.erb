@@ -12,7 +12,7 @@
 		<% if current_user.project_units.size < 1%>
 		<div class="col-12 text-center banner-offer">
 			<div class="col-12" style="padding:15px 0;">
-				<span>Launching Embassy Apartments - 1, 2 & 3 BHKs from Rs. 26 Lac at Embassy Springs</span>
+				<span>Launching Embassy Apartments - 1, 2 & 3 BHKs from &#8377;26 Lac at Embassy Springs</span>
 			</div>
 			<div class="clearfix"></div>
 		</div>
@@ -51,7 +51,7 @@
 					<a href="/dashboard/apartment-selector" class="pink payment-btn" data-event-category="section" data-event-action="click" data-event-name="Choose Your Home">Choose Your Home</a>
 				</div>
 			</div>
-      <small class="pull-right">*Rs.25,000 refundable</small>
+      <small class="pull-right">*&#8377;25,000 refundable</small>
 		</div>
 		<div class="col-12">
 			<ul class="mediaCenterAccordion">
@@ -150,10 +150,19 @@
 		  <div class="col-6 page-title-wrapper">
 		    <div class="title">All Bookings</div>
 		  </div>
-		  <div class="col-6 text-right float-left-xs">
-		  	<a href="/dashboard/apartment-selector" class="nav-btn-green">Book Another Home</a>
+      <div class="col-6 text-right float-left-xs">
+        <% if ProjectUnitPolicy.new(current_user, ProjectUnit.new).block? %>
+		  	   <a href="/dashboard/apartment-selector" class="nav-btn-green">Book Another Home</a>
+        <% end %>
 		  </div>
 		</div>
+    <% if current_user.kyc_ready? && current_user.project_units.count >= current_user.allowed_bookings %>
+    <div class="col-12">
+      <div style="padding:15px; background-color:#fff3cd; border-color: #ffeeba;color: #856404;margin-top:15px;">
+        You cannot book any more apartments as you have reached the maximum bookings allowed per customer.
+      </div>
+    </div>
+    <% end %>
 		<div class="col-12">
 			<%= render 'project_units', {project_units: current_user.project_units.where(status: 'hold')} %>
 			<%= render 'project_units', {project_units: current_user.project_units.ne(status: 'hold')} %>

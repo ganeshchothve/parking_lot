@@ -73,3 +73,11 @@ test:
         read:
           mode: :primary
         max_pool_size: 1
+production:
+  clients:
+    default:
+      database: <%= ENV_CONFIG['db']['database'] %>
+      hosts:
+        - <%= ENV_CONFIG['db']['host'] %>
+      options:
+  options:

@@ -1,7 +1,10 @@
 class ProjectUnitObserver < Mongoid::Observer
   def before_save project_unit
-    if project_unit.user_kyc_ids_changed? && project_unit.user_kyc_ids_was.blank? && project_unit.user_kyc_ids.present?
+    if project_unit.primary_user_kyc_id.blank? && project_unit.user_kyc_ids.present?
       project_unit.primary_user_kyc_id = project_unit.user_kyc_ids.first
+    end
+    if project_unit.primary_user_kyc_id.present? && project_unit.user_kyc_ids.present?
+      project_unit.user_kyc_ids.reject!{|x| x == project_unit.primary_user_kyc_id}
     end
     if project_unit.status_changed? && ['hold', 'blocked', 'booked_tentative', 'booked_confirmed'].exclude?(project_unit.status)
       project_unit.user_id = nil
@@ -32,23 +35,22 @@ class ProjectUnitObserver < Mongoid::Observer
 
   def after_save project_unit
     BookingDetail.run_sync(project_unit.id, project_unit.changes)
-
-    if project_unit.status_changed? && ["blocked", "booked_tentative", "booked_confirmed", "error"].include?(project_unit.status_was) && project_unit.user_based_status(project_unit.user) == "available"
-      user = project_unit.user
+    if project_unit.status_changed? && ["blocked", "booked_tentative", "booked_confirmed", "error"].include?(project_unit.status_was) && ["available", "employee", "management"].include?(project_unit.status)
+      user_was = User.find(project_unit.user_id_was)
       project_unit.set(user_id: nil, blocked_on: nil, auto_release_on: nil, held_on: nil, primary_user_kyc_id: nil, user_kyc_ids: [])
       project_unit.receipts.update_all(project_unit_id: nil, status: "cancelled")
 
-      mailer = ProjectUnitMailer.released(user.id.to_s, project_unit.id.to_s)
+      mailer = ProjectUnitMailer.released(user_was.id.to_s, project_unit.id.to_s)
       if Rails.env.development?
         mailer.deliver
       else
         mailer.deliver_later
       end
-      message = "Dear #{user.name}, you missed out! We regret to inform you that the apartment you shortlisted has been released. Click here if you'd like to re-start the process: #{user.dashboard_url} Your cust ref id is #{user.lead_id}"
+      message = "Dear #{user_was.name}, you missed out! We regret to inform you that the apartment you shortlisted has been released. Click here if you'd like to re-start the process: #{user_was.dashboard_url} Your cust ref id is #{user_was.lead_id}"
       if Rails.env.development?
-        SMSWorker.new.perform(user.phone.to_s, message)
+        SMSWorker.new.perform(user_was.phone.to_s, message)
       else
-        SMSWorker.perform_async(user.phone.to_s, message)
+        SMSWorker.perform_async(user_was.phone.to_s, message)
       end
     end
 
@@ -71,11 +73,9 @@ class ProjectUnitObserver < Mongoid::Observer
       if Rails.env.development?
         mailer.deliver
       else
-        SelldoPusher.perform_async(project_unit.status, project_unit.id.to_s, Time.now.to_i)
+        SelldoInventoryPusher.perform_async(project_unit.status, project_unit.id.to_s, Time.now.to_i)
         mailer.deliver_later
       end
-
-
       user = project_unit.user
       if project_unit.status == "blocked"
         message = "Congratulations #{user.name}, #{project_unit.name} has been Blocked / Tentative Booked for you for the next 7 days! To own the home, you’ll need to pay the pending amount of Rs. #{project_unit.pending_balance} within these 7 days. To complete the payment now, click here: #{user.dashboard_url}"

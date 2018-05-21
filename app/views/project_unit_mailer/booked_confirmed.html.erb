@@ -1,27 +1,14 @@
-<table cellpadding="0" cellspacing="0" width="100%">
-  <tr>
-    <td style=" color: #000;font-size: 32px;font-weight: 600;line-height: 35px;vertical-align: bottom;">
-       Booking Confirmed!
-     </td>
-  </tr>
-  <tr><td>&nbsp;</td></tr>
-  <tr>
-    <td>Dear <%= @user.name %>, </td>
-  </tr>
-  <tr><td>&nbsp;</td></tr>
-  <tr>
-    <td style="line-height:26px;">
-      <p><span style="font-size:20px;line-height:26px;color:#000;font-weight:700;">Congratulations! </span></p>
-      <br/>
-      <p>Welcome to the Embassy family! You're now the proud owner of <%= @project_unit.name %> at Embassy Edge in Embassy Springs.</p>
-      <p>Our executives will be in touch regarding agreement formalities.</p>
-      <p>Please find below the booking details: </p>
-      <p><span style="color:#64c0e9;font-weight:bold;">Name</span> - <%= @project_unit.name %></p>
-      <p><span style="color:#64c0e9;font-weight:bold;">Tower</span> - <%= @project_unit.project_tower_name %> </p>
-      <p><span style="color:#64c0e9;font-weight:bold;">Unit Facing</span> - <%= @project_unit.category %> </p>
-      <p><span style="color:#64c0e9;font-weight:bold;">Amount Paid</span> - Rs. <%= @project_unit.total_amount_paid %> </p>
-      <p><span style="color:#64c0e9;font-weight:bold;">Agreement Value</span> - Rs. <%= @project_unit.agreement_price %> </p>
-    </td>
-  </tr>
-</table>
-
+Dear lead name, <br/>
+<br/>
+Congratulations!<br/>
+<br/>
+Welcome to the Embassy family! You're now the proud owner of <Unit Name> at Embassy Edge in Embassy Springs.<br/>
+<br/>
+Our executives will be in touch regarding agreement formalities.<br/>
+<br/>
+<strong>Please find below the booking details:</strong><br/>
+Name - <%= @project_unit.name %><br/>
+Tower - <%= @project_unit.project_tower_name %><br/>
+Unit Facing - <%= @project_unit.category %><br/>
+Amount Paid - <%= number_to_indian_currency(@project_unit.total_amount_paid) %><br/>
+Agreement Value - <%= number_to_indian_currency(@project_unit.agreement_price) %><br/>

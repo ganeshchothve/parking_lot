@@ -16,7 +16,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def new?
-    user.role?('admin') || (user.role?('channel_partner') && record.buyer?)
+    user.role?('admin') || (user.role?('channel_partner') && ['user'].include?(record.role))
   end
 
   def create?
@@ -30,7 +30,7 @@ class UserPolicy < ApplicationPolicy
   def permitted_attributes params={}
     attributes = [:first_name, :last_name, :email, :phone, :lead_id, :password, :password_confirmation]
     attributes += [:channel_partner_id] if user.role?('channel_partner')
-    attributes += [:role, :channel_partner_id, :rera_id, :location] if user.role?('admin')
+    attributes += [:role, :channel_partner_id, :rera_id, :location, :allowed_bookings] if user.role?('admin')
     attributes
   end
 end

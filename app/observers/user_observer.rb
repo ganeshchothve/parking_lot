@@ -1,4 +1,10 @@
 class UserObserver < Mongoid::Observer
+  def before_create user
+    if user.role?("user") && user.email.include?("@embassyindia.com")
+      user.role = "employee_user"
+    end
+  end
+
   def before_save user
     if user.channel_partner_id_changed? && user.channel_partner_id.present?
       user.referenced_channel_partner_ids << user.channel_partner_id

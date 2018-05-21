@@ -17,7 +17,7 @@
       <div class="booking-detail">
         <div class="title">Booking Details
             <% if current_user.buyer? && project_unit.user == current_user && project_unit.status != 'hold' %>
-              <% if current_user.user_requests.where(project_unit_id: project_unit.id).blank? %>
+              <% if current_user.user_requests.where(project_unit_id: project_unit.id).ne(status: 'resolved').blank? %>
                 <a href="<%= new_admin_user_request_path(project_unit_id: project_unit.id) %>" class="pink small-link" data-event-category="section" data-event-action="click" data-event-name="cancel booking">Cancel Booking</a>
               <% else %>
                 <span class="unit-cancelled">Cancellation Request Generated</span>
@@ -28,10 +28,35 @@
           <div class="col-4">
             <div>Applicant:</div>
             <div class="dark">
-              <%= project_unit.user.name %>
-              <span class="ml-2">(<%= project_unit.user_kyc_ids.length > 1 ? "#{(project_unit.user_kyc_ids.count - 1)} Co-applicants" : "No Co-applicants" %>)</span>
+              <%= project_unit.primary_user_kyc.name %>
+              <span class="ml-2">(<%= project_unit.user_kyc_ids.length > 0 ? "#{(project_unit.user_kyc_ids.count)} Co-applicants" : "No Co-applicants" %>)</span>
               <br/>
-              <a href="<%= new_user_kyc_path(project_unit_id: project_unit.id) %>" class="small-link" data-event-category="section" data-event-action="click" data-event-name="add co applicant">Add Co-applicant</a>
+              <a class="small-link colorbox-inline-init" data-event-category="section" data-event-action="click" data-event-name="add co applicant" href="#kyc_<%= project_unit.id %>">
+                Update Co-applicants
+              </a>
+              <div style="display:none;">
+                <div id="kyc_<%= project_unit.id %>" role="dialog" style="width:400px;height:400px;padding:30px;background-color:#fff;">
+                  <h2>Manage Co-applicants</h2>
+                  <form id="existing_kyc_form" action="/dashboard/update_co_applicants/<%= project_unit.id %>" class="validate-form checkout_project_unit" accept-charset="UTF-8" method="POST">
+                    <input name="utf8" type="hidden" value="✓">
+                    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                    <div class="form-group">
+                      <select multiple="multiple" class="init-selectize required" name="project_unit[user_kyc_ids][]" required="required">
+                        <option value="">Select KYC</option>
+                        <% current_user.user_kycs.each_with_index do |user_kyc, index| %>
+                        <% if user_kyc.persisted? %>
+                        <option value="<%= user_kyc.id %>" <%= (project_unit.user_kyc_ids.include?(user_kyc.id)) ? "selected=selected" : "" %>><%= user_kyc.name %></option>
+                        <% end %>
+                        <% end %>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <br/><br/>
+                      <input type="submit" class="pink payment-btn" />
+                    </div>
+                  </form>
+                </div>
+              </div>
             </div>
           </div>
           <div class="col-4">
@@ -58,22 +83,22 @@
         <div class="title">Payment Details</div>
           <div class="unit-booking-details">
             <div class="col-4">
-              <div>All Inclusive Price:</div><div class="dark"><%= number_to_indian_currency(project_unit.all_inclusive_price.round)  %></div><a href="/dashboard/<%= project_unit.id %>/payment-breakup" class="small-link" data-event-category="section" data-event-action="click" data-event-name="Payment Break Up">Payment Break Up</a>
+              <div>All Inclusive Price:</div><div class="dark"><%= number_to_indian_currency(project_unit.all_inclusive_price.round(2))  %></div><a href="/dashboard/<%= project_unit.id %>/payment-breakup" class="small-link" data-event-category="section" data-event-action="click" data-event-name="Payment Break Up">Payment Break Up</a>
             </div>
             <div class="col-4">
-              <div>Payment Done:</div><div class="dark"><%= number_to_indian_currency(project_unit.total_amount_paid.round) %></div>
+              <div>Payment Done:</div><div class="dark"><%= number_to_indian_currency(project_unit.total_amount_paid.round(2)) %></div>
             </div>
             <div class="col-4">
-              <div>Booking Amount:</div><div class="dark"><%= number_to_indian_currency(project_unit.booking_price.round) %></div>
+              <div>Booking Amount:</div><div class="dark"><%= number_to_indian_currency(project_unit.booking_price.round(2)) %></div>
             </div>
             <div class="col-4">
-              <div>Agreement Value:</div><div class="dark"><%= number_to_indian_currency(project_unit.agreement_price.round) %></div>
+              <div>Agreement Value:</div><div class="dark"><%= number_to_indian_currency(project_unit.agreement_price.round(2)) %></div>
             </div>
             <div class="col-4">
-              <div>Balance Payment:</div><div class="dark"><%= number_to_indian_currency(project_unit.pending_balance.round) %></div>
+              <div>Balance Payment:</div><div class="dark"><%= number_to_indian_currency(project_unit.pending_balance.round(2)) %></div>
             </div>
             <div class="col-4">
-              <div>TDS Amount:</div><div class="dark"><%= number_to_indian_currency(project_unit.tds_amount.round) %></div>
+              <div>TDS Amount:</div><div class="dark"><%= number_to_indian_currency(project_unit.tds_amount.round(2)) %></div>
               <% if project_unit.tds_amount > 0 %>
               <div><a href="/eTutorial_TDS_on_property_etax.pdf" target="_blank" class="pink small-link" data-event-category="section" data-event-action="click" data-event-name="Tutorial for TDS">Tutorial for TDS</a></div>
               <% end %>
@@ -85,11 +110,10 @@
           <li>You need to pay 10% of agreement value to confirm the booking</li>
           <% if (project_unit.status == "blocked" || project_unit.status == "booked_tentative") && project_unit.auto_release_on.present? && project_unit.auto_release_on > Date.today %>
           <li>Cancellation charges are &#8377;5,000</li>
-          <li><strong>You have <%= (project_unit.auto_release_on - Date.today).to_i %> days (before <%= project_unit.auto_release_on.strftime("%d/%m/%Y") %>) remaining to confirm this booking please make remaining payment of Rs. <%= number_to_indian_currency(project_unit.pending_balance.round()) %></strong></li>
+          <li><strong>You have <%= (project_unit.auto_release_on - Date.today).to_i %> days (before <%= project_unit.auto_release_on.strftime("%d/%m/%Y") %>) remaining to confirm this booking please make remaining payment of Rs. <%= number_to_indian_currency(project_unit.pending_balance.round(2)) %></strong></li>
           <% end %>
         </ul>
         <% if project_unit.status == 'hold' %>
-        <%#= link_to "I Agree", dashboard_payment_path, class: 'nav-btn', style:'margin-top:0px' %>
         <a href="/dashboard/checkout/<%= project_unit.id %>" class="pink payment-btn text-center" data-event-category="section" data-event-action="click" data-event-name="book now">
           BOOK NOW
         </a>
@@ -105,5 +129,8 @@
 <%= javascript_tag do %>
 $(document).ready(function(){
   FormInitializer.init($('.checkout_project_unit'));
+  $(".colorbox-inline-init").colorbox({
+    inline: true
+  })
 });
 <% end %>

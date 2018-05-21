@@ -19,7 +19,7 @@ class UnitConfiguration
   field :customized_interest_percentage, type: Integer
 
   validates :name, presence: true
-  validates :saleable,:carpet,:base_rate,:base_price,:numericality => {:greater_than => 0}
+  validates :saleable,:carpet,:base_rate,:numericality => {:greater_than => 0}
 
   default_scope -> { where(:unit_configuration_active=> {"$ne" => "No"})}
 

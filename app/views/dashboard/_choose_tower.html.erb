@@ -3,39 +3,83 @@
           Showing <%= @title %>
         </div>
         <div class="col-12 conf-select-wrapper">
-          <div class="tower-name-wrapper">
-            <%
-              ubbt = units_booked_by_towers
-              mst = ""
-              mst = ubbt.sort{|x| x["count"]}.first["_id"]["project_tower_id"] if ubbt.present?
-              lst = ""
-              lst = ubbt.sort{|x| x["count"]}.last["_id"]["project_tower_id"] if ubbt.present?
-            %>
-            <% if @towers.count > 0 %>
-              <% @towers.each do |t| %>
-              <div class="col-3 text-center">
-                <div class="tower-name-box" data-towerid="<%= t[:project_tower_id] %>" data-event-category="section" data-event-action="click" data-event-name="choose tower">
-                  <span class="show-on-active"><i class='fas fa-bolt'></i> <%= [2,3,4,5,6].sample %> apartments just sold in this tower</span>
-                  <%= "<span class='fast-sell-tag'><i class='fas fa-bolt'></i> Fast Selling</span>".html_safe if mst.to_s == t[:project_tower_id].to_s %>
-                  <%= "<span class='fast-sell-tag'><i class='fas fa-fire'></i> One of our hottest-selling towers at the moment</span>".html_safe if lst.to_s == t[:project_tower_id].to_s && mst != lst %>
-                  <div class="tower-img-wrap">
-                    <img src="<%= asset_path 'tower-feat.png'%>" class="img-responsive" data-event-category="section" data-event-action="click" data-event-name="choose tower">  
-                  </div>                  
-                  <div class="tower-details-box">
-                    <span  data-event-category="section" data-event-action="click" data-event-name="choose tower"><%= t[:project_tower_name] %></span>
-                    <span  data-event-category="section" data-event-action="click" data-event-name="choose tower">Tower Units: <%= t[:total_units] %></span>
-                    <span  data-event-category="section" data-event-action="click" data-event-name="choose tower">Available Units: <%= t[:total_units_available] %></span>
+           <div class="col-8 tower-layout-wrapper scrolled-fixed pull-right">
+            <div class="tower-layout" style="display:block">
+              <img src="<%= asset_path '1-Default-Image.jpg' %>" class="img-responsive">
+            </div>
+            <div class="tower-layout" id="Daisy-A">
+              <img src="<%= asset_path 'DaisyA.jpg' %>" class="img-responsive">
+            </div>
+            <div class="tower-layout" id="Daisy-B">
+              <img src="<%= asset_path 'DaisyB.jpg' %>" class="img-responsive">
+            </div>
+            <div class="tower-layout" id="Gardenia-A">
+              <img src="<%= asset_path 'GardeniaA.jpg' %>" class="img-responsive">
+            </div>
+            <div class="tower-layout" id="Gardenia-B">
+              <img src="<%= asset_path 'GardeniaB.jpg' %>" class="img-responsive">
+            </div>
+            <div class="tower-layout" id="Gardenia-C">
+              <img src="<%= asset_path 'GardeniaC.jpg' %>" class="img-responsive">
+            </div>
+            <div class="tower-layout" id="Elderberry-B">
+              <img src="<%= asset_path 'ElderberryB.jpg' %>" class="img-responsive">
+            </div>
+            <div class="tower-layout" id="Fucshia-A">
+              <img src="<%= asset_path 'FuschiaA.jpg' %>" class="img-responsive">
+            </div>
+            <div class="tower-layout" id="Fucshia-B">
+              <img src="<%= asset_path 'FuschiaB.jpg' %>" class="img-responsive">
+            </div>
+            <div class="tower-layout" id="Hibisicus-A">
+              <img src="<%= asset_path 'HibisicusA.jpg' %>" class="img-responsive">
+            </div>
+            <div class="tower-layout" id="Hibisicus-B">
+              <img src="<%= asset_path 'HibisicusB.jpg' %>" class="img-responsive">
+            </div>
+            <div class="tower-layout" id="Elderberry-A">
+              <img src="<%= asset_path 'ElderberryA.jpg' %>" class="img-responsive">
+            </div>
+            
+          </div>
+          <div class="col-4 w100-xs pull-left">
+            <div class="tower-name-wrapper">
+              <%
+                ubbt = units_booked_by_towers
+                mst = ""
+                mst = ubbt.sort{|x| x["count"]}.first["_id"]["project_tower_id"] if ubbt.present?
+                lst = ""
+                lst = ubbt.sort{|x| x["count"]}.last["_id"]["project_tower_id"] if ubbt.present?
+              %>
+              <% if @towers.count > 0 %>
+                <% @towers.each do |t| %>
+                <div class="col-12 text-center w25-xs">
+                  <div class="tower-name-box" data-towername="<%= t[:project_tower_name] %>" data-towerid="<%= t[:project_tower_id] %>" data-event-category="section" data-event-action="click" data-event-name="choose tower">
+                    
+                    <!-- <div class="tower-img-wrap">
+                      <img src="<%= asset_path 'tower-feat.png'%>" class="img-responsive" data-event-category="section" data-event-action="click" data-event-name="choose tower">  
+                    </div>  -->                 
+                    <div class="tower-details-box">
+                      <span class="show-on-active"><i class='fas fa-bolt'></i> <%= [2,3,4,5,6].sample %> apartments just sold in this tower</span>
+                    <%= "<span class='fast-sell-tag'><i class='fas fa-bolt'></i> Fast Selling</span>".html_safe if mst.to_s == t[:project_tower_id].to_s %>
+                    <%= "<span class='fast-sell-tag'><i class='fas fa-fire'></i> One of our hottest-selling towers at the moment</span>".html_safe if lst.to_s == t[:project_tower_id].to_s && mst != lst %>
+                      <span  data-event-category="section" data-event-action="click" data-event-name="choose tower"><%= t[:project_tower_name] %></span>
+                      <span  data-event-category="section" data-event-action="click" data-event-name="choose tower">Tower Units: <%= t[:total_units] %></span>
+                      <span  data-event-category="section" data-event-action="click" data-event-name="choose tower">Available Units: <%= t[:total_units_available] %></span>
+                    </div>
                   </div>
                 </div>
+                <div class="clearfix"></div>
+                <% end %>
+              <% else %>
+              <div class="col-12 text-center">
+                  <div class="not-found"><i class="far fa-frown" style="font-size:50px; margin-bottom:20px;
+                  color:#3981b8;"></i><br/>No Apartments found matching your criteria</div>
               </div>
               <% end %>
-            <% else %>
-            <div class="col-12 text-center">
-                <div class="not-found"><i class="far fa-frown" style="font-size:50px; margin-bottom:20px;
-                color:#3981b8;"></i><br/>No Apartments found matching your criteria</div>
             </div>
-            <% end %>
           </div>
+         
         </div>
         <div class="clearfix"></div>
          <div class="col-12 center-btn-xs fixed-nav-btn">
@@ -44,3 +88,33 @@
         </div>
         <div class="clearfix"></div>
       </div>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.tower-name-box').on('click',function(){
+      var tower = $(this).data('towername');
+      var towerName = tower.replace(/\s/g, '');
+      $('.tower-layout').hide();
+      $('#'+towerName).fadeIn();
+      console.log(towerName)
+    })
+    if($(window).width() <= 700){
+      $('.tower-name-box').on('click',function(){
+        $('html,body').animate({
+          scrollTop:0
+        }, 1000)
+      })
+    }
+    // $(window).scroll(function(){
+    //   var scroll = $(window).scrollTop()
+    //   if(scroll > 20){
+    //     $('.tower-layout-wrapper').addClass('scrolled-fixed');
+    //     // $('.tower-layout-wrapper').css('padding','0px 60px 0px 50px')
+    //   }
+    //   else{
+    //     $('.tower-layout-wrapper').removeClass('scrolled-fixed') 
+    //     // $('.tower-layout-wrapper').css('padding','0px 0px 0px 50px')
+    //   }
+    //   console.log(scroll)
+    // })
+  })
+</script>

@@ -17,7 +17,7 @@ class ChannelPartnersControllerTest < ActionDispatch::IntegrationTest
 
   test "should create channel_partner" do
     assert_difference('ChannelPartner.count') do
-      post channel_partners_url, params: { channel_partner: { email: @channel_partner.email, location: @channel_partner.location, name: @channel_partner.name, phone: @channel_partner.phone, rera_id: @channel_partner.rera_id, string: @channel_partner.string } }
+      post channel_partners_url, params: { channel_partner: { email: @channel_partner.email, city: @channel_partner.city, name: @channel_partner.name, phone: @channel_partner.phone, rera_id: @channel_partner.rera_id, string: @channel_partner.string } }
     end
 
     assert_redirected_to channel_partner_url(ChannelPartner.last)
@@ -34,7 +34,7 @@ class ChannelPartnersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update channel_partner" do
-    patch channel_partner_url(@channel_partner), params: { channel_partner: { email: @channel_partner.email, location: @channel_partner.location, name: @channel_partner.name, phone: @channel_partner.phone, rera_id: @channel_partner.rera_id, string: @channel_partner.string } }
+    patch channel_partner_url(@channel_partner), params: { channel_partner: { email: @channel_partner.email, city: @channel_partner.city, name: @channel_partner.name, phone: @channel_partner.phone, rera_id: @channel_partner.rera_id, string: @channel_partner.string } }
     assert_redirected_to channel_partner_url(@channel_partner)
   end
 

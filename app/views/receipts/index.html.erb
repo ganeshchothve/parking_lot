@@ -39,7 +39,7 @@
           <% end %>
           <% end %>
           <% end %>
-          <% if false #@user.present? && !current_user.buyer? %>
+          <% if @user.present? && !current_user.buyer? %>
             <%= link_to "Make #{global_labels['receipt']}", new_admin_user_receipt_path(@user), class: 'btn btn-primary nav-btn' %>
           <% end %>
           <% if UserPolicy.new(current_user, User).export? && @user.blank? %>

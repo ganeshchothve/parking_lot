@@ -5,11 +5,11 @@ class DocUploader < CarrierWave::Uploader::Base
   # include CarrierWave::MiniMagick
 
   # Choose what kind of storage to use for this uploader:
-  # if Rails.env.production?
-  #   storage :fog
-  # else
+  if Rails.env.production?
+    storage :azure
+  else
     storage :file
-  # end
+  end
 
   # process :save_file_size_in_model
 
