@@ -126,3 +126,4 @@ group :production, :staging do
   gem 'newrelic_rpm'
 end
 gem 'asset_sync', '>= 2.4.0'
+gem 'humanize', require: 'humanize'

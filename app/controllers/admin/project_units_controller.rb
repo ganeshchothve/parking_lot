@@ -30,6 +30,10 @@ class Admin::ProjectUnitsController < AdminController
     end
   end
 
+  def eoi
+    render layout: false
+  end
+
   private
   def set_project_unit
     @project_unit = ProjectUnit.find(params[:id])

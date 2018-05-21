@@ -7,6 +7,10 @@ class ProjectUnitPolicy < ApplicationPolicy
     record.auto_release_on.present? && ['crm', 'sales', 'admin'].include?(user.role)
   end
 
+  def eoi?
+    ['crm', 'sales', 'admin'].include?(user.role)
+  end
+
   def update?
     edit?
   end

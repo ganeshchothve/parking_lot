@@ -239,6 +239,10 @@ class ProjectUnit
     ]
   end
 
+  def effective_rate
+    self.base_rate - self.applied_discount_rate
+  end
+
   def status_value
     self.class.available_statuses.find { |status_hash| status_hash[:id] == self.status }[:text] rescue ""
   end
