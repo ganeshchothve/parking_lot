@@ -107,14 +107,11 @@
               </li>
             <% end %>
             <% if UserPolicy.new(current_user, User).index? %>
-              <% if !current_user.role?('channel_partner')  %>
-                <li class="nav-item">
-                  <a class="nav-link" href="/dashboard/3d-apartment-selector">
-                    <span><i class='fas fa-cube'></i> 3D Apartment Selector</span>
-                  </a>
-                  <%#= link_to "<span><i class='fas fa-cube'></i> 3D Apartment Selector</span>".html_safe, admin_users_path, class: 'nav-link' %>
-                </li>
-              <% end %>
+              <li class="nav-item">
+                <a class="nav-link" href="/dashboard/3d-apartment-selector">
+                  <span><i class='fas fa-cube'></i> 3D Apartment Selector</span>
+                </a>
+              </li>
             <% end %>
             <% if ReceiptPolicy.new(current_user, Receipt).index? %>
               <li class="nav-item">
