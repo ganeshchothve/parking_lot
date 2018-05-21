@@ -33,8 +33,8 @@ module SFDC
         "payment_amount" => receipt.total_amount,
         "mode_of_transfer" => receipt.payment_mode,
         "instrument_no" => receipt.payment_identifier.to_s,
-        "instrument_date" => receipt.issued_date ? sfdc_date_format(Date.parse(receipt.issued_date)) : sfdc_date_format(receipt.created_at),
-        "instrument_received_date" => receipt.issued_date ? sfdc_date_format(Date.parse(receipt.issued_date)) : sfdc_date_format(receipt.created_at),
+        "instrument_date" => receipt.issued_date ? sfdc_date_format(receipt.issued_date) : sfdc_date_format(receipt.created_at),
+        "instrument_received_date" => receipt.issued_date ? sfdc_date_format(receipt.issued_date) : sfdc_date_format(receipt.created_at),
         "bank_name" => receipt.issuing_bank,
         "branch_name" => receipt.issuing_bank_branch,
         "payment_type" => (project_unit.status == 'blocked' ? 'Advance' : 'Booking')
