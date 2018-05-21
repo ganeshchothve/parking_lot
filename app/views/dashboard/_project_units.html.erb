@@ -114,7 +114,6 @@
           <% end %>
         </ul>
         <% if project_unit.status == 'hold' %>
-        <%#= link_to "I Agree", dashboard_payment_path, class: 'nav-btn', style:'margin-top:0px' %>
         <a href="/dashboard/checkout/<%= project_unit.id %>" class="pink payment-btn text-center" data-event-category="section" data-event-action="click" data-event-name="book now">
           BOOK NOW
         </a>
