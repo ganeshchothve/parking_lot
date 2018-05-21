@@ -1,0 +1,74 @@
+<style type="text/css">
+	.payment-breakup.mediaCenterAccordion>li{
+		border-bottom: 1px solid #c4c4c3;
+		padding: 0px 0px;
+	}
+	.payment-breakup.mediaCenterAccordion li>span{
+		background-color: #d3d3d3;
+		padding: 15px 15px;
+		border-radius: 0px;
+		margin: 0px;
+		background-position: 98.5% 15px;
+	}
+	.payment-breakup.mediaCenterAccordion li > span.active{
+		background-position: 98.5% 15px;
+	}
+	.payment-breakup.mediaCenterAccordion li>span.active, .payment-breakup.mediaCenterAccordion li>span:hover{
+		background-color: #d3d3d3;
+		padding: 15px 15px;
+	}
+	.mediaCenterAccordion>li>div{
+		background-color: #fff;
+		padding:20px;
+	}
+	.mediaCenterAccordion>li>div a{
+		color: #6b7e34;
+		text-decoration: underline;
+	}
+	.mediaCentercontent ul{
+		padding-left: 20px;
+	}
+	strong.black{
+		font-weight: 500;
+		color: #252525;
+	}
+</style>
+<section class="main-wrapper">
+	<div class="container-fluid">
+		<div class="col-12">
+      <ul class="payment-breakup mediaCenterAccordion">
+				<li>
+					<span class="small" data-event-category="section" data-event-action="click" data-event-name="FAQs"><strong class="black">01</strong>&nbsp;&nbsp;&nbsp;How to make payment for TDS on sale of property?</span>
+					<div class="mediaCentercontent" style="display: none;">
+						<p>
+							To view the e-Tutorial to make payment for TDS on sale of property click <a target="_blank" href="<%= asset_url('eTutorial_TDS on property_etax.pdf') %>">here</a>
+						</p>
+					</div>
+				</li>
+        <li>
+					<span class="small" data-event-category="section" data-event-action="click" data-event-name="FAQs"><strong class="black">02</strong>&nbsp;&nbsp;&nbsp;TDS process</span>
+					<div class="mediaCentercontent" style="display: none;">
+						<p>
+							For more information on the TDS process, click <a target="_blank" href="<%= asset_url('TDS Process - note - NAM.pdf') %>">here</a>
+						</p>
+					</div>
+				</li>
+        <li>
+					<span class="small" data-event-category="section" data-event-action="click" data-event-name="FAQs"><strong class="black">03</strong>&nbsp;&nbsp;&nbsp;NAM Estates Private Limited - PAN Card</span>
+					<div class="mediaCentercontent" style="display: none;">
+						<p>
+							Please find a copy of NAM Estates Private Limited - PAN Card <a target="_blank" href="<%= asset_url('pan-card.pdf') %>">here</a>
+						</p>
+					</div>
+				</li>
+        <li>
+					<span class="small" data-event-category="section" data-event-action="click" data-event-name="FAQs"><strong class="black">04</strong>&nbsp;&nbsp;&nbsp;About TDS</span>
+					<div class="mediaCentercontent" style="display: none;">
+						<p>
+							To know more about TDS, click <a target="_blank" href="https://www.tin-nsdl.com/faqs/tds-on-sale-of-property/TDS-FAQ.html">here</a>.
+						</p>
+					</div>
+				</li>
+		</div>
+	</div>
+</section>

@@ -38,6 +38,9 @@ class DashboardController < ApplicationController
   def faq
   end
 
+  def tds_process
+  end
+
   def terms_and_conditions
   end
 

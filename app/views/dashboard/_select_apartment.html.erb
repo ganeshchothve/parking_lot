@@ -101,7 +101,7 @@
             end
           end
           %>
-          <span data-unit-id="<%= u.id %>" class="unit-tooltip apt bstatus-<%= status %>" title='["<%= u.name %>","<%= u.carpet.round %>","<%= number_to_indian_currency(u.agreement_price.round(2)) %>","<%= u.bedrooms %>","<%= status %>","<%= u.floor %>","<%= u.category %>"]' data-fp-url="<%= asset_path("floorplans/#{u.project_tower_name.gsub(" ", '')}-#{u.unit_configuration_name.gsub(" ", '')}.jpg") %>" data-unit-details='["<%= u.name %>","<%= u.carpet.round %>","<%= number_to_indian_currency(u.agreement_price.round(2))  %>","<%= u.bedrooms %>","<%= status %>","<%= u.floor %>","<%= u.category %>"]'></span>
+          <span data-unit-id="<%= u.id %>" class="unit-tooltip apt bstatus-<%= status %>" title='["<%= u.name %>","<%= u.carpet.round %>","<%= number_to_indian_currency(u.agreement_price.round(2)) %>","<%= u.bedrooms %>","<%= status %>","<%= u.floor %>","<%= u.category %>","<%= u.saleable.round %>"]' data-fp-url="<%= asset_path("floorplans/#{u.project_tower_name.gsub(" ", '')}-#{u.unit_configuration_name.gsub(" ", '')}.jpg") %>" data-unit-details='["<%= u.name %>","<%= u.carpet.round %>","<%= number_to_indian_currency(u.agreement_price.round(2))  %>","<%= u.bedrooms %>","<%= status %>","<%= u.floor %>","<%= u.category %>","<%= u.saleable.round %>"]'></span>
           <% end %>
         </div>
         <% end %>

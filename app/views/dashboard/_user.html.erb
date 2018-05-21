@@ -150,12 +150,19 @@
 		  <div class="col-6 page-title-wrapper">
 		    <div class="title">All Bookings</div>
 		  </div>
-		  <div class="col-6 text-right float-left-xs">
+      <div class="col-6 text-right float-left-xs">
         <% if ProjectUnitPolicy.new(current_user, ProjectUnit.new).block? %>
 		  	   <a href="/dashboard/apartment-selector" class="nav-btn-green">Book Another Home</a>
         <% end %>
 		  </div>
 		</div>
+    <% if current_user.kyc_ready? && current_user.project_units.count >= current_user.allowed_bookings %>
+    <div class="col-12">
+      <div style="padding:15px; background-color:#fff3cd; border-color: #ffeeba;color: #856404;margin-top:15px;">
+        You cannot book any more apartments as you have reached the maximum bookings allowed per customer.
+      </div>
+    </div>
+    <% end %>
 		<div class="col-12">
 			<%= render 'project_units', {project_units: current_user.project_units.where(status: 'hold')} %>
 			<%= render 'project_units', {project_units: current_user.project_units.ne(status: 'hold')} %>

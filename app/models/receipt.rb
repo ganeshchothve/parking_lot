@@ -83,6 +83,14 @@ class Receipt
     ]
   end
 
+  def primary_user_kyc
+    if self.project_unit_id.present?
+      return self.project_unit.primary_user_kyc
+    else
+      return UserKyc.where(user_id: self.user_id).asc(:created_at).first
+    end
+  end
+
   def payment_gateway_service
     if self.payment_gateway.present?
       if self.project_unit.present? && ["hold","blocked","booked_tentative"].exclude?(self.project_unit.status)

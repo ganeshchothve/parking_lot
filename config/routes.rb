@@ -47,6 +47,7 @@ Rails.application.routes.draw do
   match 'payment/:receipt_id/process_payment/:ignore', to: 'payment#process_payment', via: [:get, :post]
 
   get '/dashboard/faqs', to: 'dashboard#faqs'
+  get '/dashboard/tds-process', to: 'dashboard#tds_process'
   get '/dashboard/terms-and-conditions', to: 'dashboard#terms_and_condition'
 
   scope :dashboard do

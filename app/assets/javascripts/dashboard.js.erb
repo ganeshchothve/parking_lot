@@ -66,7 +66,7 @@ $(document).ready(function(){
       functionInit: function(instance, helper){
         var content = instance.content(),
         people = JSON.parse(content);
-        newContent = '<div>Flat No: '+ people[0] +'</div><div>Bedrooms: '+ people[3] +'</div><div>Carpet Area: '+ people[1] +' Sq.Ft.</div><div>Facing: '+ people[6] +'</div><div>Agreement Value: '+ people[2] +'/-</div><div class="book-status">Booking Status: '+ people[4] +'</div>';
+        newContent = '<div>Flat No: '+ people[0] +'</div><div>Bedrooms: '+ people[3] +'</div><div>Carpet Area: '+ people[1] +' Sq.Ft.</div><div>Super Built-up Area: '+ people[7] +' Sq.Ft.</div><div>Facing: '+ people[6] +'</div><div>Agreement Value: '+ people[2] +'/-</div><div class="book-status">Booking Status: '+ people[4] +'</div>';
         instance.content(newContent);
       }
     })
@@ -228,8 +228,8 @@ $(document).ready(function(){
     unitHtml += '<div>UNIT DETAILS</div>';
     unitHtml += '<div>Flat No: '+ unitData[0] +'</div>';
     unitHtml += '<div>Bedrooms: '+ parseInt(unitData[3]) +'</div>';
-    // unitHtml += '<div>Bedrooms: '+ unitData[3] +'</div>';
-    unitHtml += '<div>Carpet Area: '+ unitData[1] +'</div>';
+    unitHtml += '<div>Carpet Area: '+ unitData[1] +' sq. ft.</div>';
+    unitHtml += '<div>Super Built-up Area: '+ unitData[7] +' sq. ft.</div>';
     unitHtml += '<div>Facing: '+ unitData[6] +'</div>';
     unitHtml += '<div>Agreement Value: '+ unitData[2] +'/-</div>';
     unitHtml += '<div>Booking Status: <span class="book-status">'+ unitData[4] +'</span></div>';

@@ -51,32 +51,6 @@
           </div>
         </div>
       </div>
-      <!-- <div class="row mt-3">
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="control-label"><%= labels[:role] %></label>
-            <div class="control-data">
-              <%= @user.role.present? ? User.available_roles.find{|x| x[:id] == @user.role}[:text] : '-' %>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="control-label">Last Signed In At</label>
-            <div class="control-data">
-              <%= @user.last_sign_in_at.present? ? @user.last_sign_in_at : "Hasn't logged-in yet" %>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="control-label"><%= labels[:kyc_ready] %></label>
-            <div class="control-data">
-              <%= @user.kyc_ready? ? 'Yes' : "No" %>
-            </div>
-          </div>
-        </div>
-      </div> -->
       <% if @user.buyer? %>
       <div class="row mt-3">
         <div class="col-md-4">
