@@ -120,13 +120,9 @@
 					<p>Phone no.: <%= primary_user_kyc.phone %> </p>
 					<p>Email ID: <%= primary_user_kyc.email %> </p>
 					<p>Income Tax/PAN/GIR No.: <%= primary_user_kyc.pan_number %> </p>
-					<p>STATUS: &nbsp; </p>
-					<p>Resident Indian:  &nbsp; </p>
 					<p>NRI:  <%= primary_user_kyc.nri? ? "Yes" : "No" %> </p>
-					<p>PIO:  &nbsp; </p>
-					<p>Citizen of: <%= "" %> </p>
+					<p>PIO/OCI:  <%= primary_user_kyc.oci %> </p>
 					<p>Educational qualification: <%= primary_user_kyc.education_qualification %> </p>
-					<p>Profession: <%= "" %> </p>
 					<p>Name of the Company: <%= primary_user_kyc.customer_company_name %> </p>
 					<p class="mb30">Designation: <%= primary_user_kyc.designation %> </p>
 
@@ -138,13 +134,9 @@
   					<p>Phone no.: <%= user_kyc.phone %> </p>
   					<p>Email ID: <%= user_kyc.email %> </p>
   					<p>Income Tax/PAN/GIR No.: <%= user_kyc.pan_number %> </p>
-  					<p>STATUS: &nbsp; </p>
-  					<p>Resident Indian:  &nbsp; </p>
   					<p>NRI:  <%= user_kyc.nri? ? "Yes" : "No" %> </p>
-  					<p>PIO:  &nbsp; </p>
-  					<p>Citizen of: <%= "" %> </p>
+  					<p>PIO / OCI:  <%= primary_user_kyc.oci %> </p>
   					<p>Educational qualification: <%= user_kyc.education_qualification %> </p>
-  					<p>Profession: <%= "" %> </p>
   					<p>Name of the Company: <%= user_kyc.customer_company_name %> </p>
   					<p class="mb30">Designation: <%= user_kyc.designation %> </p>
           <% end %>
@@ -160,12 +152,7 @@
 					<p class="mb30">PIN: <%= primary_user_kyc.postal_code %></p>
 
 					<p class="mb30"><strong>Correspondence Address</strong></p>
-					<p>Mr./Mrs./Miss./Dr./M/s. ____________________</p>
-					<p>Address: ____________________</p>
-					<p class="mb30">PIN: ____________________</p>
-
-					<p class="mb30"><strong>Details of General Power of Attorney Holder (If any)</strong></p>
-					<p>Mr./Mrs./Miss./Dr./M/s. <%= primary_user_kyc.name %></p>
+          <p>Mr./Mrs./Miss./Dr./M/s. <%= primary_user_kyc.name %></p>
           <p>
             Address:<br/>
             <%= primary_user_kyc.correspondence_house_number %>, <%= primary_user_kyc.correspondence_street %><br/>
@@ -173,6 +160,16 @@
             <%= primary_user_kyc.correspondence_state %>, <%= primary_user_kyc.correspondence_country %><br/>
           </p>
 					<p class="mb30">PIN: <%= primary_user_kyc.correspondence_postal_code %></p>
+
+					<p class="mb30"><strong>Details of General Power of Attorney Holder (If any)</strong></p>
+					<p>Mr./Mrs./Miss./Dr./M/s. ____________________</p>
+          <p>
+            Address:<br/>
+            ____________________<br/>
+            ____________________<br/>
+            ____________________<br/>
+          </p>
+					<p class="mb30">PIN: ____________________</p>
 
 					<p>Email ID: <%= primary_user_kyc.email %></p>
 					<p>Mobile: <%= primary_user_kyc.phone %></p>
@@ -188,28 +185,24 @@
 					<p>Name : ____________________</p>
 					<p>Address: ____________________</p>
 					<p>Contact No.: ____________________</p>
-					<p>Finance: ____________________<br/>(Self, Bank)</p>
-					<p>Bank name: ____________________</p>
+					<p>Finance: <%= primary_user_kyc.loan_required %><br/>(Self, Bank)</p>
+					<p>Bank name: <%= primary_user_kyc.bank_name %></p>
 					<p class="mb30">This booking is for own use/Investment</p>
 					<p class="mb30"><strong>Signatures of Applicant/s</strong></p>
 					<p><strong>1st Applicant</strong></p>
-					<p>Name: ____________________</p>
+					<p>Name: <%= primary_user_kyc.name %></p>
 					<p>Signature: ____________________</p>
 					<p>Date: ____________________</p>
 					<p class="mb30">Place: ____________________</p>
 
-
-					<p class="mb30">2nd Applicant</p>
-					<p>Name: ____________________</p>
+          <% @project_unit.user_kycs.each_with_index do |user_kyc| %>
+					<p class="mb30">Applicant <%= index + 2 %></p>
+					<p>Name: <%= user_kyc.name %></p>
 					<p>Signature: ____________________</p>
 					<p>Date: ____________________</p>
 					<p>Place: ____________________</p>
-
-					<p class="mb30">3rd Applicant</p>
-					<p>Name: ____________________</p>
-					<p>Signature: ____________________</p>
-					<p>Date: ____________________</p>
-					<p>Place: ____________________</p>
+          <br/><br/><br/>
+          <% end %>
 					<br/><br/><hr/><br/><br/>
 					<p class="mb30"><strong>Terms & Conditions </strong></p>
 					<ul class="mb30">
