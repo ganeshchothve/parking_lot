@@ -7,6 +7,8 @@
 # server "example.com", user: "deploy", roles: %w{app web}, other_property: :other_value
 # server "db.example.com", user: "deploy", roles: %w{db}
 server "13.71.17.176", user: "appserver", roles: %w{app db web}
+server "13.71.31.136", user: "appserver", roles: %w{app db}
+
 set :rvm_type, :user
 set :rvm_ruby_version, '2.4.3'
 set :default_env, { rvm_bin_path: '~/.rvm/bin' }
