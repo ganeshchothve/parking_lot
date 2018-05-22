@@ -110,10 +110,10 @@
             <!-- <div class="clearfix"></div> -->
         </div>
         <ul class="ul-padding-20">
-          <li>You need to pay 10% of agreement value to confirm the booking</li>
           <% if (project_unit.status == "blocked" || project_unit.status == "booked_tentative") && project_unit.auto_release_on.present? && project_unit.auto_release_on > Date.today %>
-          <li>Cancellation charges are &#8377;5,000</li>
-          <li><strong>You have <%= (project_unit.auto_release_on - Date.today).to_i %> days (before <%= project_unit.auto_release_on.strftime("%d/%m/%Y") %>) remaining to confirm this booking please make remaining payment of <%= number_to_indian_currency(project_unit.pending_balance.round(2)) %></strong></li>
+            <li>You need to pay 10% of agreement value to confirm the booking</li>
+            <li>Cancellation charges are &#8377;5,000</li>
+            <li><strong>You have <%= (project_unit.auto_release_on - Date.today).to_i %> days (before <%= project_unit.auto_release_on.strftime("%d/%m/%Y") %>) remaining to confirm this booking please make remaining payment of <%= number_to_indian_currency(project_unit.pending_balance.round(2)) %></strong></li>
           <% end %>
         </ul>
         <% if project_unit.status == 'hold' %>
