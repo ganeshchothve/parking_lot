@@ -11,10 +11,10 @@
   <tr><td>&nbsp;</td></tr>
   <tr>
     <td style="line-height:26px;">
-      <span style="line-height:26px;color:#000;font-weight:700;">Thank you for your payment of Rs. <%= @receipt.total_amount %> </span>
+      <span style="line-height:26px;color:#000;font-weight:700;">Thank you for your payment of <%= number_to_indian_currency(@receipt.total_amount) %> </span>
       <br/>
       <% if @receipt.payment_mode == 'cheque' %>
-      An Embassy home is yours to keep! Your cheque of Rs. <%= @receipt.total_amount %>  has been cleared by the bank. We will contact you shortly to discuss the next round of formalities.
+      An Embassy home is yours to keep! Your cheque of <%= number_to_indian_currency(@receipt.total_amount) %>  has been cleared by the bank. We will contact you shortly to discuss the next round of formalities.
 
       <% else %>
       <p>

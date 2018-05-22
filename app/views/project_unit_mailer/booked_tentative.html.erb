@@ -1,5 +1,5 @@
 Dear <%= @user.name %>,<br/><br/>
 <p>
 Thank you for your payment for unit <%= @project_unit.name %> at Embassy Edge Apartments.
-You have <%= (@project_unit.auto_release_on - Date.today).to_i %> days left to pay the remanining amount of Rs. <%= number_to_indian_currency(@project_unit.pending_balance) %> to confirm your booking.
+You have <%= (@project_unit.auto_release_on - Date.today).to_i %> days left to pay the remanining amount of <%= number_to_indian_currency(@project_unit.pending_balance) %> to confirm your booking.
 </p>

@@ -10,7 +10,7 @@
       <div class="dropdown-wrapper">
         <select class="init-selectize required" name="bedrooms">
           <option value="">Select Bedrooms</option>
-          <% @configurations.each do |c| %>
+          <% @configurations.sort{|x, y| x[:bedrooms] <=> y[:bedrooms]}.each do |c| %>
           <option value="<%= c[:bedrooms] %>"><%= float_to_int(c[:bedrooms]) %> BHK (Starting from <%= number_to_indian_currency(c[:agreement_price]) %>)</option>
           <% end %>
         </select>

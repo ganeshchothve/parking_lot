@@ -63,17 +63,15 @@
 								<span class="pink">Flat No: <%= project_unit.name %></span>
 							</div>
 				       		<div class="tower-info-wrapper left-padding-0">
-				       			<div class="pull-left"><span class="black">Tower:</span> <%= project_unit.project_tower_name %><br><span class="black">Floor:</span> <%= project_unit.floor %><br>
-				       			</div>
-				       			<div class="pull-left padding-left-30">
+				       			<div>
+                      <span class="black">Tower:</span> <%= project_unit.project_tower_name %><br><span class="black">Floor:</span> <%= project_unit.floor %><br>
 				       				<span class="black">Flat no:</span> <%= project_unit.name %><br>
 				       				<span class="black">Configuration:</span> <%= float_to_int(project_unit.bedrooms) %> BHK<br>
-				       			</div>
-				       			<div class="pull-left padding-left-30">
                       <span class="black">Super Built-Up Area:</span> <%= project_unit.saleable %> Sq.Ft.<br/>
                       <span class="black">Usable Area:</span> <%= project_unit.usable %> Sq.Ft.<br/>
                       <span class="black">Carpet Area:</span> <%= project_unit.carpet %> Sq.Ft.<br/>
-                      <span class="black">Starting Price:</span> <%= number_to_indian_currency(project_unit.agreement_price) %>
+                      <span class="black">Agreement Price:</span> <%= number_to_indian_currency(project_unit.agreement_price) %><br/>
+                      <span class="black">All inclusive total (excluding registration charges):</span> <%= number_to_indian_currency(project_unit.all_inclusive_price) %>
                     </div>
 				       			<div class="clearfix"></div>
 				       		</div>

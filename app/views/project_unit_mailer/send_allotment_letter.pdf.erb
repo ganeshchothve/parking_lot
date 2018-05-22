@@ -79,16 +79,14 @@
             <p><strong>Ref:</strong> Booking Application dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %>.</p></br>
             <p>Pursuant of the above referred Booking Application dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %> in respect of Apartment No. <%= @project_unit.name %> in the Project known as "Embassy Edge", we have provisionally allotted Apartment No.
               <%= @project_unit.name %> having a Super Built-up Area of <%= @project_unit.saleable %> square feet &amp; Usable Area of <%= @project_unit.usable %> square feet &amp; Carpet Area of <%= @project_unit.carpet %> square feet &amp; to you.<br/><br/>
-              Further, we hereby confirm having received an amount of Rs.<%= @project_unit.total_amount_paid %>/-
+              Further, we hereby confirm having received an amount of <%= number_to_indian_currency(@project_unit.total_amount_paid) %>/-
               as advance vide, along with your Booking Application .<br/><br/>
               The total sale consideration amount payable for the above subject Apartment is <%= number_to_indian_currency(@project_unit.all_inclusive_price.round) %>/-
               ("Total Sale Consideration"). The Total Consideration is
               inclusive of land cost, construction cost, cost of providing power supply, cost of providing water and
               sewage connections, maintenance deposit/corpus fund, city infrastructure charges, advance
-              maintenance charges for one year, cost towards club house and amenities, GST and other charges
-              as detailed in the Agreement for Sale.<br/><br/>
-              Upon receiving intimation from us to execute the Agreement to Sell, you shall <!-- pay Rs. <%#= @project_unit.pending_balance %>/-
-                within 10 working days being 10% of the cost of the Apartment and simultaneously --> execute the Agreement to Sell within 15 days.<br/><br/>
+              maintenance charges for one year, cost towards club house and amenities, GST, PLC, Floor rise and other charges as detailed in the Cost Structure.<br/><br/>
+              Upon receiving intimation from us to execute the Agreement to Sell, you shall execute the Agreement to Sell within 15 days.<br/><br/>
                 In the event of you failing to execute the Agreement to Sell as mentioned above, the Booking
                 Application will stand rejected and this Provisional Allotment cancelled, and we shall deduct Rs. 1,00,000/- from the amount received from you as liquidated damages and refund the balance amount in 30
                 days from the date of cancellation. Then in such an event the booking made in the favour of the applicant shall be cancelled, and unit shall get automatically released and the Company shall be at liberty to offer the said unit to any other third parties.

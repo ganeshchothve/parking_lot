@@ -335,7 +335,7 @@ class ProjectUnit
   end
 
   def all_inclusive_price
-    sub_total + agreement_price
+    (sub_total + agreement_price).round(2)
   end
 
   def pending_balance(options={})

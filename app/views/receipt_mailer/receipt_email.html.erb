@@ -13,9 +13,9 @@
 	<tr><td>&nbsp;</td></tr>
 	<tr>
 	  	<td style="line-height:26px;">
-	    	<span><strong>Thank you for your payment of Rs. <%= @receipt.total_amount %></strong></span>
+	    	<span><strong>Thank you for your payment of <%= number_to_indian_currency(@receipt.total_amount) %></strong></span>
 	    	<br/>
-	    	<% if @receipt.payment_mode == 'cheque' %>An Embassy home is yours to keep! Your cheque of Rs. <%= @receipt.total_amount %>  has been cleared by the bank. We will contact you shortly to discuss the next round of formalities.
+	    	<% if @receipt.payment_mode == 'cheque' %>An Embassy home is yours to keep! Your cheque of <%= number_to_indian_currency(@receipt.total_amount) %>  has been cleared by the bank. We will contact you shortly to discuss the next round of formalities.
 	   	    <% else %>
 			<span><strong>Congratulations!</strong></span>
 			<p>You now officially belong to a community where people with a new mindset reside. </p>
