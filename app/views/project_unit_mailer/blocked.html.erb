@@ -20,6 +20,11 @@ Date - <%= @project_unit.blocked_on %><br/>
 <p>
 This unit will remain blocked for you for the next <%= @project_unit.blocking_days %> days. Please complete your payment of remaining amount within this duration to confirm your unit. To make additional payment please click <a href="<%= dashboard_url(user_email: @user.email, user_token: @user.authentication_token) %>" target="_blank">here</a>
 </p>
+<% if @project_unit.primary_user_kyc_id.present? %>
+  <p>
+    Your KYC details are incomplete, to complete your registration you can update them <a href="<%= edit_user_kyc_url(@project_unit.primary_user_kyc_id, user_email: @user.email, user_token: @user.authentication_token) %>" target="_blank">here</a>
+  </p>
+<% end %>
 <% if @project_unit.tds_amount_percent_of_agreement_price > 0 %>
 <p>
   Additionally, we are hereby enclosing Applicability of TDS on purchase of immovable properties, process and mandates to be followed. <br/>

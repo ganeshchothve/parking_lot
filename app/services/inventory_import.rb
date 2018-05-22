@@ -9,8 +9,8 @@ module InventoryImport
         unit_name = row[3].strip
         unit_number = row[4].strip
         floor = row[5].strip
-        carpet = row[6].strip
-        saleable = row[7].strip
+        carpet = row[6].strip.to_f.round(2)
+        saleable = row[7].strip.to_f.round(2)
         base_rate = row[8].strip
         category = row[9].strip
         unit_configuration_name = row[10].strip
@@ -30,6 +30,8 @@ module InventoryImport
         agreement_price = row[23].strip
         land_rate = row[24].strip
         unit_facing_direction = row[25].strip
+        usable = row[26].strip
+        uds = row[26].strip
 
         client_id = ENV_CONFIG['selldo']['client_id'] || "531de108a7a03997c3000002"
 
@@ -69,7 +71,7 @@ module InventoryImport
         end
         project_unit.base_rate = base_rate.to_f
         project_unit.client_id = client_id
-        project_unit.data_attributes = [{"n"=>"unit_configuration_id", "v"=>"#{unit_configuration.id}"}, {"n"=>"project_name", "v"=>"#{project_name}"}, {"n"=>"project_tower_name", "v"=>"#{project_tower_name}"}, {"n"=>"unit_configuration_name", "v"=>"#{unit_configuration_name}"}, {"n"=>"floor", "v"=> floor}, {"n"=>"resale", "v"=>false}, {"n"=>"bedrooms", "v"=>bedrooms.to_f}, {"n"=>"bathrooms", "v"=>bathrooms.to_f}, {"n"=>"category", "v"=>category}, {"n"=>"facing", "v"=>unit_facing_direction}, {"n"=>"type", "v"=>"apartment"}, {"n"=>"saleable", "v"=>saleable.to_f}, {"n"=>"carpet", "v"=>carpet.to_f}, {"n"=>"city", "v"=>"Banglore"}, {"n"=>"state", "v"=>"Karnataka"}, {"n"=>"country", "v"=>"India"}, {"n"=>"amenities", "v"=>{}}, {"n"=>"project_status", "v"=>nil}]
+        project_unit.data_attributes = [{"n"=>"unit_configuration_id", "v"=>"#{unit_configuration.id}"}, {"n"=>"project_name", "v"=>"#{project_name}"}, {"n"=>"project_tower_name", "v"=>"#{project_tower_name}"}, {"n"=>"unit_configuration_name", "v"=>"#{unit_configuration_name}"}, {"n"=>"floor", "v"=> floor}, {"n"=>"resale", "v"=>false}, {"n"=>"bedrooms", "v"=>bedrooms.to_f}, {"n"=>"bathrooms", "v"=>bathrooms.to_f}, {"n"=>"category", "v"=>category}, {"n"=>"facing", "v"=>unit_facing_direction}, {"n"=>"type", "v"=>"apartment"}, {"n"=>"saleable", "v"=>saleable.to_f}, {"n"=>"carpet", "v"=>carpet.to_f}, {"n"=>"usable", "v"=>usable.to_f}, {"n"=>"uds", "v"=>uds.to_f}, {"n"=>"city", "v"=>"Banglore"}, {"n"=>"state", "v"=>"Karnataka"}, {"n"=>"country", "v"=>"India"}, {"n"=>"amenities", "v"=>{}}, {"n"=>"project_status", "v"=>nil}]
         project_unit.selldo_id = unit_sap_id # TODO
         project_unit.sap_id = unit_sap_id # TODO
         project_unit.agreement_price = agreement_price.to_f

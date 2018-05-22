@@ -33,19 +33,6 @@
           </select>
         </div>
       </div>
-      <!-- <div class="col-12-5 filter-item">
-      <div class="filter-title">
-      Facing
-    </div>
-    <div class="dropdown-wrapper">
-    <select class="init-selectize" name="facing">
-    <option value="">Select Facing</option>
-    <option value="1">North</option>
-    <option value="2">East</option>
-    <option value="3">North East</option>
-  </select>
-</div>
-</div> -->
 <div class="col-12-5 filter-item">
   <div class="filter-title">
     Price
@@ -101,7 +88,7 @@
             end
           end
           %>
-          <span data-unit-id="<%= u.id %>" class="unit-tooltip apt bstatus-<%= status %>" title='["<%= u.name %>","<%= u.carpet.round %>","<%= number_to_indian_currency(u.agreement_price.round(2)) %>","<%= u.bedrooms %>","<%= status %>","<%= u.floor %>","<%= u.category %>","<%= u.saleable.round %>"]' data-fp-url="<%= asset_path("floorplans/#{u.project_tower_name.gsub(" ", '')}-#{u.unit_configuration_name.gsub(" ", '')}.jpg") %>" data-unit-details='["<%= u.name %>","<%= u.carpet.round %>","<%= number_to_indian_currency(u.agreement_price.round(2))  %>","<%= u.bedrooms %>","<%= status %>","<%= u.floor %>","<%= u.category %>","<%= u.saleable.round %>"]'></span>
+          <span data-unit-id="<%= u.id %>" class="unit-tooltip apt bstatus-<%= status %>" title='["<%= u.name %>","<%= u.carpet.round(2) %>","<%= number_to_indian_currency(u.agreement_price.round(2)) %>","<%= u.bedrooms %>","<%= status %>","<%= u.floor %>","<%= u.category %>","<%= u.saleable.round(2) %>","<%= u.usable.round(2) %>","<%= number_to_indian_currency(u.all_inclusive_price.round(2)) %>"]' data-fp-url="<%= asset_path("floorplans/#{u.project_tower_name.gsub(" ", '')}-#{u.unit_configuration_name.gsub(" ", '')}.jpg") %>" data-unit-details='["<%= u.name %>","<%= u.carpet.round(2) %>","<%= number_to_indian_currency(u.agreement_price.round(2))  %>","<%= u.bedrooms %>","<%= status %>","<%= u.floor %>","<%= u.category %>","<%= u.saleable.round(2) %>","<%= u.usable.round(2) %>","<%= number_to_indian_currency(u.all_inclusive_price.round(2)) %>"]'></span>
           <% end %>
         </div>
         <% end %>
@@ -133,25 +120,16 @@
 
     </div>
     <div class="show-unit-floor-plans hidden-xs">
-      <span class="active" rel="fp">FLOOR PLANS</span><!-- <span rel="gallery">GALLERY</span><span rel="unit-plan">UNIT PLANS</span> -->
+      <span class="active" rel="fp">FLOOR PLANS</span>
+      <span style="font-size:11px;">The floorplan images shown are for representation only. Actual plan may differ</span>
       <div class="unit-plans-wrapper" id="fp" style="display:block">
         <a href="<%= asset_path '1BHK-A.png'%>" class="colorbox-init" rel="floorplan">
           <img src="<%= asset_path '1BHK-A.png'%>" class="img-responsive" data-event-category="section" data-event-action="click" data-event-name="floor plan pop up">
         </a>
       </div>
-      <!-- <div class="unit-plans-wrapper" id="gallery">
-      <a href="<%= asset_path 'fp-type-2.jpg'%>" class="colorbox-init" rel="floorplan">
-      <img src="<%= asset_path 'fp-type-2.jpg'%>" class="img-responsive">
-    </a>
-  </div>
-  <div class="unit-plans-wrapper" id="unit-plan">
-  <a href="<%= asset_path 'fp-type-2.jpg'%>" class="colorbox-init" rel="floorplan">
-  <img src="<%= asset_path 'fp-type-2.jpg'%>" class="img-responsive">
-</a>
-</div> -->
 </div>
 <div class="show-unit-floor-plans visible-xs">
-  <a href="<%= asset_path '1BHK-A.png'%>" rel="floorplan" class="colorbox-init nav-btn" data-event-category="section" data-event-action="click" data-event-name="floor plan pop up">FLOOR PLANS</a><!-- <a href="<%= asset_path 'fp-type-2.jpg'%>" class="colorbox-init nav-btn" rel="gallery">GALLERY</a><a href="<%= asset_path 'fp-type-2.jpg'%>" class="colorbox-init nav-btn" rel="unit-plan">UNIT PLANS</a> -->
+  <a href="<%= asset_path '1BHK-A.png'%>" rel="floorplan" class="colorbox-init nav-btn" data-event-category="section" data-event-action="click" data-event-name="floor plan pop up">FLOOR PLANS</a>
 </div>
 <div class="clearfix"></div>
 </div>
