@@ -15,7 +15,7 @@
 var amt = $('#totalAmount').val();
 
 var options = {
-  key: "rzp_test_NTQGRS3ia0hiWY",
+  key: "<%= Rails.env.production? ? ENV_CONFIG['razorpay']['key'] : 'rzp_test_NTQGRS3ia0hiWY' %>",
   amount: <%= @receipt.total_amount.to_i * 100 %>, // 2000 paise = INR 20
   name: "Embassy Springs",
   description: "Embassy Springs",

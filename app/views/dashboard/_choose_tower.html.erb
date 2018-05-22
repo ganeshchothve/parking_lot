@@ -25,10 +25,10 @@
             <div class="tower-layout" id="Elderberry-B">
               <img src="<%= asset_path 'ElderberryB.jpg' %>" class="img-responsive">
             </div>
-            <div class="tower-layout" id="Fucshia-A">
+            <div class="tower-layout" id="Fuschia-A">
               <img src="<%= asset_path 'FuschiaA.jpg' %>" class="img-responsive">
             </div>
-            <div class="tower-layout" id="Fucshia-B">
+            <div class="tower-layout" id="Fuschia-B">
               <img src="<%= asset_path 'FuschiaB.jpg' %>" class="img-responsive">
             </div>
             <div class="tower-layout" id="Hibisicus-A">
@@ -40,7 +40,7 @@
             <div class="tower-layout" id="Elderberry-A">
               <img src="<%= asset_path 'ElderberryA.jpg' %>" class="img-responsive">
             </div>
-            
+
           </div>
           <div class="col-4 w100-xs pull-left">
             <div class="tower-name-wrapper">
@@ -55,10 +55,10 @@
                 <% @towers.each do |t| %>
                 <div class="col-12 text-center w25-xs">
                   <div class="tower-name-box" data-towername="<%= t[:project_tower_name] %>" data-towerid="<%= t[:project_tower_id] %>" data-event-category="section" data-event-action="click" data-event-name="choose tower">
-                    
+
                     <!-- <div class="tower-img-wrap">
-                      <img src="<%= asset_path 'tower-feat.png'%>" class="img-responsive" data-event-category="section" data-event-action="click" data-event-name="choose tower">  
-                    </div>  -->                 
+                      <img src="<%= asset_path 'tower-feat.png'%>" class="img-responsive" data-event-category="section" data-event-action="click" data-event-name="choose tower">
+                    </div>  -->
                     <div class="tower-details-box">
                       <span class="show-on-active"><i class='fas fa-bolt'></i> <%= [2,3,4,5,6].sample %> apartments just sold in this tower</span>
                     <%= "<span class='fast-sell-tag'><i class='fas fa-bolt'></i> Fast Selling</span>".html_safe if mst.to_s == t[:project_tower_id].to_s %>
@@ -79,7 +79,7 @@
               <% end %>
             </div>
           </div>
-         
+
         </div>
         <div class="clearfix"></div>
          <div class="col-12 center-btn-xs fixed-nav-btn">
@@ -111,7 +111,7 @@
     //     // $('.tower-layout-wrapper').css('padding','0px 60px 0px 50px')
     //   }
     //   else{
-    //     $('.tower-layout-wrapper').removeClass('scrolled-fixed') 
+    //     $('.tower-layout-wrapper').removeClass('scrolled-fixed')
     //     // $('.tower-layout-wrapper').css('padding','0px 0px 0px 50px')
     //   }
     //   console.log(scroll)
