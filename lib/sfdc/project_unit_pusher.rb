@@ -36,7 +36,7 @@ module SFDC
         "selldo_lead_id" => user.lead_id,
         "unit_sfdc_id" => project_unit.sfdc_id,
         "booking_stage" => options[:cancellation_request] ? 'Closed Lost' : sfdc_stage_mapping(project_unit.status),
-        "booking_date" => sfdc_date_format(project_unit.blocked_on),
+        "booking_date" => sfdc_date_format(Date.today),
         "birthdate" => sfdc_date_format(project_unit.primary_user_kyc.dob),
         "pan_card_number" => project_unit.primary_user_kyc.pan_number,
         "nri" => user_kyc.nri ? "NRI" : "Indian",
