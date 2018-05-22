@@ -31,6 +31,20 @@
     </tr>
     <tr>
       <td>
+        USABLE AREA : SFT
+      </td>
+      <td class="text-center">
+        <%= @project_unit.usable.round(2) %>
+      </td>
+      <td class="text-center">
+        <%= @project_unit.usable.round(2) %>
+      </td>
+      <td>
+        <%= @project_unit.usable.round(2) %>
+      </td>
+    </tr>
+    <tr>
+      <td>
         CARPET AREA : SFT
       </td>
       <td  class="text-center">
@@ -215,7 +229,7 @@
     </tr>
     <tr>
       <td>
-        Water/Electricity/Power Backup @ Rs 150/- psft
+        Water/Electricity/Power Backup
       </td>
       <td class="text-center">
         <%= number_to_indian_currency(150.round(2)) %>
@@ -236,7 +250,7 @@
     </tr>
     <tr>
       <td>
-        City infrastructure charges @ Rs 200/- psft
+        City infrastructure charges
       </td>
       <td class="text-center">
         <%= number_to_indian_currency(200.round(2)) %>
@@ -279,7 +293,7 @@
     </tr>
     <tr>
       <td>
-        Club house & amenities Charges @ <%= number_to_indian_currency(125000.round(2)) %>
+        Club house & amenities Charges
       </td>
       <td class="text-center">
         <%= number_to_indian_currency(125000.round(2)) %>
@@ -301,7 +315,7 @@
 
     <tr>
       <td>
-        Corpus Fund @ Rs 125/- psft
+        Corpus Fund
       </td>
       <td class="text-center">
         <%= number_to_indian_currency(125.round(2)) %>

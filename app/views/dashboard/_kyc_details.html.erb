@@ -60,7 +60,13 @@
         <div class=""><span class="black">Tower:</span> <%= @unit.project_tower_name %><br><span class="black">Floor: </span><%= @unit.floor %><br><span class="black">Flat No:</span> <%= @unit.name %><br></div>
       </div>
       <div class="col-4 light-green-bg">
-        <div class=""><span class="black">Configuration:</span> <%= float_to_int(@unit.bedrooms) %> BHK<br><span class="black">Carpet Area:</span> <%= @unit.carpet %> Sq.Ft.<br><span class="black">Starting Price:</span> <%= number_to_indian_currency(@unit.agreement_price.round(2)) %></div>
+        <div class="">
+          <span class="black">Configuration:</span> <%= float_to_int(@unit.bedrooms) %> BHK<br/>
+          <span class="black">Super Built-Up Area:</span> <%= @unit.saleable %> Sq.Ft.<br/>
+          <span class="black">Usable Area:</span> <%= @unit.usable %> Sq.Ft.<br/>
+          <span class="black">Carpet Area:</span> <%= @unit.carpet %> Sq.Ft.<br/>
+          <span class="black">Starting Price:</span> <%= number_to_indian_currency(@unit.agreement_price.round(2)) %>
+        </div>
       </div>
       <div class="clearfix"></div>
     </div>

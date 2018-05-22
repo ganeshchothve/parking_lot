@@ -133,7 +133,12 @@
           </div>
           <div class="tower-info-wrapper left-padding-0">
             <div class="pull-left">Tower: <%= @project_unit.project_tower_name %><br>Floor: <%= @project_unit.floor %><br>Flat no: <%= @project_unit.name %><br></div>
-            <div class="pull-left padding-left-30">Configuration: <%= @project_unit.bedrooms %> BHK<br>Carpet Area: <%= @project_unit.carpet.round(2) %> Sq.Ft.<br>Starting Price: <%= number_to_indian_currency(@project_unit.agreement_price) %></div>
+            <div class="pull-left padding-left-30">
+              Configuration: <%= @project_unit.bedrooms %> BHK<br/>
+              Super Built-Up Area: <%= @project_unit.saleable %> Sq.Ft.<br/>
+              Usable Area: <%= @project_unit.usable %> Sq.Ft.<br/>
+              Carpet Area: <%= @project_unit.carpet %> Sq.Ft.<br/>
+              Starting Price: <%= number_to_indian_currency(@project_unit.agreement_price) %></div>
             <div class="clearfix"></div>
           </div>
           <div class="clearfix"></div>

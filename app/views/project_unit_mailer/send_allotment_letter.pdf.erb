@@ -78,7 +78,7 @@
             <p><strong>Sub:</strong> Provisional Allotment of Apartment No. <%= @project_unit.name  %> in Tower <%= @project_unit.project_tower_name %> <!-- Block <%#= @project_unit.name %> --> <!-- of <%#= @project_unit.floor %> -->, being developed in the Project "Embassy Edge", situated at Nagamangala/Hegganahalli Village, Kundana Hobli, Devanahalli Taluka, Bangalore / Navarathna Agrahara Village, Jala Hobi, Bangalore North Taluka, Bangalore Urban District.</p><br/>
             <p><strong>Ref:</strong> Booking Application dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %>.</p></br>
             <p>Pursuant of the above referred Booking Application dated <%= @project_unit.created_at.strftime("%d-%m-%Y") %> in respect of Apartment No. <%= @project_unit.name %> in the Project known as "Embassy Edge", we have provisionally allotted Apartment No.
-              <%= @project_unit.name %> having a Carpet Area of <%= @project_unit.carpet %> square feet &amp; Super Built-up Area of <%= @project_unit.saleable %> square feet to you.<br/><br/>
+              <%= @project_unit.name %> having a Super Built-up Area of <%= @project_unit.saleable %> square feet &amp; Usable Area of <%= @project_unit.usable %> square feet &amp; Carpet Area of <%= @project_unit.carpet %> square feet &amp; to you.<br/><br/>
               Further, we hereby confirm having received an amount of Rs.<%= @project_unit.total_amount_paid %>/-
               as advance vide, along with your Booking Application .<br/><br/>
               The total sale consideration amount payable for the above subject Apartment is <%= number_to_indian_currency(@project_unit.all_inclusive_price.round) %>/-
