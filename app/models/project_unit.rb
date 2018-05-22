@@ -268,7 +268,7 @@ class ProjectUnit
   end
 
   def booking_price
-    agreement_price * booking_price_percent_of_agreement_price
+    (agreement_price * booking_price_percent_of_agreement_price).to_i
   end
 
   def tds_amount
