@@ -73,7 +73,13 @@
             </p>
             <% @project_unit.user_kycs.each do |kyc| %>
             <p><%= kyc.name %></p>
-            <p><%= kyc.address %></p>
+            <p>
+              Address:<br/>
+              <%= kyc.street %>  <%= kyc.house_number %> <br/>
+              <%= kyc.city %>, <%= kyc.postal_code %> <br/>
+              <%= kyc.state%> <%= kyc.country %>
+            </p>
+            <br/><br/><br/>
             <% end %>
             <p>Contact No.: <%= @user.phone %></p>
           </div>
@@ -110,7 +116,7 @@
               <br/><br/>
               <p>Authorized Signatory</p>
               <br/><br/><br/>
-              Agreed & Confirmed By 
+              Agreed & Confirmed By
               <p>Name : <%= @project_unit.primary_user_kyc.name %></p>
               <br/><br/>
               <p>Signature</p>
