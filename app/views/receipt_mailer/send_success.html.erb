@@ -19,7 +19,7 @@
       <% else %>
       <p>
         <span>Following are the payment details.</span><br/>
-        <span style="font-weight:bold">Unit </span> <%= @project_unit.name %><br/>
+        <span style="font-weight:bold">Apartment </span> <%= @project_unit.name %><br/>
         <span style="font-weight:bold">Receipt </span> <%= @receipt.receipt_id %><br/>
         <span style="font-weight:bold">Date </span> <%= @receipt.created_at.strftime("%Y-%m-%d") %><br/>
         <% if @receipt.payment_mode != 'online' %>

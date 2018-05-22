@@ -69,7 +69,11 @@
 				       				<span class="black">Flat no:</span> <%= project_unit.name %><br>
 				       				<span class="black">Configuration:</span> <%= float_to_int(project_unit.bedrooms) %> BHK<br>
 				       			</div>
-				       			<div class="pull-left padding-left-30"><span class="black">Carpet Area:</span> <%= project_unit.carpet.round(2) %> Sq.Ft.<br><span class="black">Starting Price:</span> <%= number_to_indian_currency(project_unit.agreement_price) %></div>
+				       			<div class="pull-left padding-left-30">
+				       				<span class="black">Carpet Area:</span> <%= project_unit.carpet.round(2) %> Sq.Ft.<br>
+				       				<span class="black">Saleable Area:</span> <%= project_unit.saleable.round(2) %> Sq.Ft.<br>
+				       				<span class="black">Starting Price:</span> <%= number_to_indian_currency(project_unit.agreement_price) %>
+				       			 </div>
 				       			<div class="clearfix"></div>
 				       		</div>
 				       		<div class="clearfix"></div>
