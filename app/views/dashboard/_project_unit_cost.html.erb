@@ -31,11 +31,15 @@
 			    	<div class="apartment-selector-wrapper paddin-bottom-remove">
 			        	<div class="days-left-wrapper text-center">
 							<%
-								gap = (60*ProjectUnit.holding_minutes) - (Time.now - project_unit.held_on.to_time)
-								if gap < 0
-									gap = 0
-									ProjectUnitUnholdWorker.new.perform(project_unit.id)
-								end
+                if project_unit.held_on.present?
+  								gap = (60*ProjectUnit.holding_minutes) - (Time.now - project_unit.held_on.to_time)
+  								if gap < 0
+  									gap = 0
+  									ProjectUnitUnholdWorker.new.perform(project_unit.id)
+  								end
+                else
+                  gap = 0
+                end
 								gap_str = "#{(gap/60).to_i}:#{(gap%60).to_i}"
 							%>
 							<h1 class="bold white timer-show" data-start-time="<%= gap_str %>">
