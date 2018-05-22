@@ -60,19 +60,19 @@
             </div>
           </div>
           <div class="col-4">
-            <div>Built-up Area:</div><div class="dark"><%= project_unit.saleable.round(2) %> sq.ft</div>
-          </div>
-          <div class="col-4">
-            <div>Super Built-up Area:</div><div class="dark"><%= project_unit.saleable.round(2) %> sq.ft</div>
-          </div>
-          <div class="col-4">
             <div>Unit Type:</div><div class="dark"><%= float_to_int(project_unit.bedrooms) %> BHK - 2T - A</div><a href="<%= asset_path("floorplans/#{project_unit.project_tower_name.gsub(" ", '')}-#{project_unit.unit_configuration_name.gsub(" ", '')}.jpg") %>" rel="floorplan" class="colorbox-init small-link" data-event-category="section" data-event-action="click" data-event-name="view floor plan">View Floor Plan</a>
           </div>
           <div class="col-4">
-            <div>Carpet Area:</div><div class="dark"><%= project_unit.carpet.round(2) %> sq.ft</div>
+            <div>Unit View:</div><div class="dark"><%= project_unit.category %></div>
           </div>
           <div class="col-4">
-            <div>Unit View:</div><div class="dark"><%= project_unit.category %></div>
+            <div>Super Built-up Area:</div><div class="dark"><%= project_unit.saleable %> sq.ft</div>
+          </div>
+          <div class="col-4">
+            <div>Usable Area:</div><div class="dark"><%= project_unit.usable %> sq.ft</div>
+          </div>
+          <div class="col-4">
+            <div>Carpet Area:</div><div class="dark"><%= project_unit.carpet %> sq.ft</div>
           </div>
           <div class="clearfix"></div>
         </div>
@@ -95,6 +95,9 @@
               <div>Agreement Value:</div><div class="dark"><%= number_to_indian_currency(project_unit.agreement_price.round(2)) %></div>
             </div>
             <div class="col-4">
+              <div>All inclusive total (excluding registration charges):</div><div class="dark"><%= number_to_indian_currency(project_unit.all_inclusive_price.round(2)) %></div>
+            </div>
+            <div class="col-4">
               <div>Balance Payment:</div><div class="dark"><%= number_to_indian_currency(project_unit.pending_balance.round(2)) %></div>
             </div>
             <div class="col-4">
@@ -110,7 +113,7 @@
           <li>You need to pay 10% of agreement value to confirm the booking</li>
           <% if (project_unit.status == "blocked" || project_unit.status == "booked_tentative") && project_unit.auto_release_on.present? && project_unit.auto_release_on > Date.today %>
           <li>Cancellation charges are &#8377;5,000</li>
-          <li><strong>You have <%= (project_unit.auto_release_on - Date.today).to_i %> days (before <%= project_unit.auto_release_on.strftime("%d/%m/%Y") %>) remaining to confirm this booking please make remaining payment of Rs. <%= number_to_indian_currency(project_unit.pending_balance.round(2)) %></strong></li>
+          <li><strong>You have <%= (project_unit.auto_release_on - Date.today).to_i %> days (before <%= project_unit.auto_release_on.strftime("%d/%m/%Y") %>) remaining to confirm this booking please make remaining payment of <%= number_to_indian_currency(project_unit.pending_balance.round(2)) %></strong></li>
           <% end %>
         </ul>
         <% if project_unit.status == 'hold' %>

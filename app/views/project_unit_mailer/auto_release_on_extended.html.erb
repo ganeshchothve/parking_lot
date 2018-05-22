@@ -1,20 +1,3 @@
-<!-- <%# if @auto_release_on_was.present? %>
-  You have an extension of on Unit - <%#= @project_unit.name %>
-<%# else %>
-  You have a grace <%#= (@project_unit.auto_release_on - Date.today).days %> days on Unit - <%= @project_unit.name %>
-<%# end %> -->
-<!--
-Thank you for your cheque payment of Rs. abc. Following are your cheque details -
-
-Account no
-Agreement Value
-Advance paid
-Balance Payment
-
-Cheque details -
-PHoto of cheque, account number, bank name, ifsc code
-
- -->
 <table cellpadding="0" cellspacing="0" width="100%">
   <tr>
       <td style=" color: #000;font-size: 32px;font-weight: 600;line-height: 35px;vertical-align: bottom;">
@@ -39,9 +22,10 @@ PHoto of cheque, account number, bank name, ifsc code
   <tr>
     <td style="font-size:16px;line-height:26px;">
       <span style="color:#64c0e9;font-weight:bold;">Name - </span> <%= @user.name %><br/>
-      <span style="color:#64c0e9;font-weight:bold;">Agreement Value -</span>Rs. <%= @project_unit.agreement_price %>  <br/>
-      <span style="color:#64c0e9;font-weight:bold;">Advance paid -</span>  <%= @project_unit.total_amount_paid%><br/>
-      <span style="color:#64c0e9;font-weight:bold;">Balance Payment  -</span> <%= @project_unit.pending_balance%><br/>
+      <span style="color:#64c0e9;font-weight:bold;">Agreement Value -</span>  <%= number_to_indian_currency(@project_unit.agreement_price)  %>  <br/>
+      <span style="color:#64c0e9;font-weight:bold;">All inclusive total (excluding registration charges) -</span>  <%= number_to_indian_currency(@project_unit.all_inclusive_price)  %>  <br/>
+      <span style="color:#64c0e9;font-weight:bold;">Advance paid -</span>  <%= number_to_indian_currency(@project_unit.total_amount_paid) %><br/>
+      <span style="color:#64c0e9;font-weight:bold;">Balance Payment  -</span> <%= number_to_indian_currency(@project_unit.pending_balance) %><br/>
       <!-- Cheque details - -->
       <!-- PHoto of cheque, account number, bank Name, ifsc code -->
     </td>
@@ -53,7 +37,3 @@ PHoto of cheque, account number, bank name, ifsc code
     </td>
   </tr>
 </table>
-
-
-
-        

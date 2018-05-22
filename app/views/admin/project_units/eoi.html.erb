@@ -61,16 +61,18 @@
 						<tr>
 							<th>Apartment No.</th>
 							<th>Block</th>
+              <th>Super Built Up Area(sq. ft.)</th>
+              <th>Usable Area(sq. ft.)</th>
 							<th>Carpet Area(sq. ft.)</th>
-							<th>Super Built Up Area(sq. ft.)</th>
 							<th>Exclusive Garden Area/Terrace Area</th>
 							<th>No. of Car Parks</th>
 						</tr>
 						<tr>
 							<td><%= @project_unit.name %></td>
 							<td><%= @project_unit.project_tower_name %></td>
+              <td><%= @project_unit.saleable %></td>
+              <td><%= @project_unit.usable %></td>
 							<td><%= @project_unit.carpet %></td>
-							<td><%= @project_unit.saleable %></td>
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
 						</tr>

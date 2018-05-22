@@ -4,7 +4,7 @@ Tower: <%= @discount.project_tower_id.present? ? @discount.project_tower.name : 
 Unit: <%= @discount.project_unit_id.present? ? @discount.project_unit.name : '-' %><br/>
 User: <%= @discount.user_id.present? ? @discount.user.name : '-' %><br/>
 Role: <%= @discount.user_role.present? ? @discount.user_role : '-' %><br/>
-Discount (Rs): <%= @discount.value %><br/>
+Discount: <%= number_to_indian_currency(@discount.value) %><br/>
 Status: <%= @discount.status %><br/>
 <% if @discount.status == 'approved' %>
   Approved At: <%= @discount.approved_at %><br/>
