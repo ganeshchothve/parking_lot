@@ -27,8 +27,8 @@
         </div>
 				<div class="pull-right">
 					<%#= link_to dashboard_receipt_print_path(@receipt.id, :format => 'pdf'), target: :_blank do %>
-						<i class="far fa-envelope" style="font-size:24px;color:#383838;display:inline-block;margin:0 10px;" data-event-action="click" data-event-name="convert receipt to pdf"></i>
-					<% end%>
+						<!-- <i class="far fa-envelope" style="font-size:24px;color:#383838;display:inline-block;margin:0 10px;" data-event-action="click" data-event-name="convert receipt to pdf"></i> -->
+					<%# end %>
 					<%= link_to dashboard_receipt_mail_path(@receipt.id, :format => 'pdf'), target: "_blank" do %>
 						<img src="<%= asset_path 'printer-outline.png'%>" class="img-responsive" data-event-action="click" data-event-name="send receipt on mail">
 					<% end%>
