@@ -22,6 +22,12 @@ class ProjectUnitObserver < Mongoid::Observer
       project_unit.applied_discount_id = project_unit.applicable_discount_id(project_unit.user)
       ProjectUnitUnholdWorker.perform_in(ProjectUnit.holding_minutes.minutes, project_unit.id.to_s)
       SelldoLeadUpdater.perform_async(project_unit.user_id.to_s)
+      ApplicationLog.log("unit_hold", {
+        id: project_unit.id,
+        base_rate: project_unit.base_rate,
+        discount: project_unit.applied_discount_rate,
+        discount_id: project_unit.applied_discount_id
+      }, RequestStore.store[:logging])
     elsif project_unit.status_changed? && project_unit.status != 'hold'
       project_unit.held_on = nil
     end

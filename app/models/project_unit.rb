@@ -167,6 +167,15 @@ class ProjectUnit
       self.status = "management"
     end
     self.base_rate = UpgradePricing.get_upgraded_base_rate
+
+    SelldoLeadUpdater.perform_async(self.user_id.to_s, "hold_payment_dropoff")
+    ApplicationLog.log("unit_made_available", {
+      id: self.id,
+      from_status: self.status_was,
+      status: self.status,
+      base_rate_was: self.base_rate_was,
+      base_rate: self.base_rate
+    })
   end
 
   def self.user_based_available_statuses(user)

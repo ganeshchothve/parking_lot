@@ -99,7 +99,7 @@
         <ul class="navbar-nav mr-auto">
           <% if user_signed_in? %>
             <li class="nav-item">
-              <a class="nav-link" href="<%= after_sign_in_path_for(current_user) %>"><i class="fa fa-th-large" aria-hidden="true"></i> Dashboard</a>
+              <a class="nav-link" href="<%= home_path(current_user) %>"><i class="fa fa-th-large" aria-hidden="true"></i> Dashboard</a>
             </li>
             <% if UserPolicy.new(current_user, User).index? %>
               <li class="nav-item">

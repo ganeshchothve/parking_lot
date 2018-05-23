@@ -27,6 +27,13 @@ class DashboardController < ApplicationController
 
   def razorpay_payment
     @receipt = Receipt.where(:receipt_id => params[:receipt_id]).first
+
+    ApplicationLog.log("sent_to_payment_gateway", {
+      receipt_id: @receipt.id,
+      unit_id: @receipt.project_unit_id,
+      user_id: @receipt.user_id
+    }, RequestStore.store[:logging])
+    SelldoLeadUpdater.perform_async(@receipt.user_id.to_s, "sent_to_payment_gateway")
   end
 
   def payment_breakup
@@ -143,6 +150,7 @@ class DashboardController < ApplicationController
         hash[:total_units_available] = ProjectUnit.build_criteria(parameters).where(project_tower_id: x.id).in(status: ProjectUnit.user_based_available_statuses(current_user)).count
         hash
       end
+      SelldoLeadUpdater.perform_async(current_user.id.to_s, "unit_browsing")
     elsif params[:stage] == "select_apartment"
       @tower = ProjectTower.find(id: params[:project_tower_id])
       @configurations = ProjectUnit.all.collect{|x| {bedrooms: x.bedrooms, agreement_price: x.agreement_price}}.sort{|x, y| x[:agreement_price] <=> y[:agreement_price]}.uniq{|x| x[:bedrooms]}
@@ -154,6 +162,7 @@ class DashboardController < ApplicationController
       else
         @unit = ProjectUnit.find(params[:unit_id])
       end
+      SelldoLeadUpdater.perform_async(current_user.id.to_s, "unit_selected")
     end
 
     @project_units = current_user.project_units

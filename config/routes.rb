@@ -7,7 +7,12 @@ Rails.application.routes.draw do
 
   root to: "home#index"
 
-  devise_for :users, :controllers => { confirmations: "confirmations" }
+  devise_for :users, controllers: {confirmations: 'local_devise/confirmations',
+                                   registrations: 'local_devise/registrations',
+                                   unlocks: 'local_devise/unlocks',
+                                   passwords: 'local_devise/passwords'}
+
+
   as :user do
     put '/user/confirmation', to: 'confirmations#update', :as => :update_user_confirmation
   end

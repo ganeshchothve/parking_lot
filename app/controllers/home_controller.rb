@@ -10,7 +10,7 @@ class HomeController < ApplicationController
 
   def register
     if user_signed_in?
-      redirect_to after_sign_in_path_for(current_user)
+      redirect_to home_path(current_user)
       flash[:notice] = "You have already been logged in"
     else
       render layout: "dashboard"
@@ -31,6 +31,7 @@ class HomeController < ApplicationController
           message = 'A user with these details has already registered'
           if (!@user.confirmed? || (@user.channel_partner_id.blank? && @user.booking_details.blank?)) && @user.role?('user')
             @user.set(referenced_channel_partner_ids: [current_user.id], channel_partner_id: current_user.id) if current_user.present? && current_user.role?('channel_partner')
+            ApplicationLog.log("channel_partner_changed", {from: @user.channel_partner_id, to: current_user.id}, RequestStore.store[:logging])
             if @user.confirmed?
               message = "A user with these details has already registered and has confirmed their account. We have linked his account to you channel partner login."
             else
@@ -48,9 +49,9 @@ class HomeController < ApplicationController
             @user.channel_partner_id = current_user.id
           end
           # RegistrationMailer.welcome(user, generated_password).deliver #TODO: enable this. We might not need this if we are to use OTP based login
-
           respond_to do |format|
             if @user.save
+              ApplicationLog.log("user_registered", {user_id: @user.id, role: @user.role}, RequestStore.store[:logging])
               format.json { render json: {user: @user, success: 'User registration completed'}, status: :created }
             else
               format.json { render json: {errors: @user.errors.full_messages.uniq}, status: :unprocessable_entity }

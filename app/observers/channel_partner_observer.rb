@@ -1,5 +1,6 @@
 class ChannelPartnerObserver < Mongoid::Observer
   def after_create channel_partner
+    ApplicationLog.log("channel_partner_registered", {id: channel_partner.id}, RequestStore.store[:logging])
     ChannelPartnerMailer.send_create(channel_partner.id)
   end
 
@@ -8,6 +9,8 @@ class ChannelPartnerObserver < Mongoid::Observer
     if channel_partner.status_changed? && channel_partner.status == 'active'
       user = User.create!(first_name: channel_partner.first_name, last_name: channel_partner.last_name, email: channel_partner.email, phone: channel_partner.phone, rera_id: channel_partner.rera_id, location: "#{channel_partner.city} #{channel_partner.region}", role: 'channel_partner')
       # RegistrationMailer.welcome(user, generated_password).deliver #TODO: enable this. We might not need this if we are to use OTP based login
+
+      ApplicationLog.log("channel_partner_approved", {id: channel_partner.id}, RequestStore.store[:logging])
 
       channel_partner.associated_user_id = user.id
     end

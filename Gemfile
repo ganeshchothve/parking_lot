@@ -127,3 +127,4 @@ group :production, :staging do
 end
 gem 'asset_sync', '>= 2.4.0'
 gem 'humanize', require: 'humanize'
+gem 'request_store'

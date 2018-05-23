@@ -1,5 +1,5 @@
 # app/controllers/confirmations_controller.rb
-class ConfirmationsController < Devise::ConfirmationsController
+class LocalDevise::ConfirmationsController < Devise::ConfirmationsController
   # Remove the first skip_before_filter (:require_no_authentication) if you
   # don't want to enable logged users to access the confirmation page.
   # skip_before_filter :require_no_authentication
@@ -65,5 +65,16 @@ class ConfirmationsController < Devise::ConfirmationsController
     end
     set_flash_message :notice, :confirmed
     sign_in_and_redirect(resource_name, @confirmable)
+  end
+
+  private
+  def after_confirmation_path_for(resource_name, resource)
+    ApplicationLog.user_log(resource.id, 'confirmed', RequestStore.store[:logging])
+    new_session_path(resource_name)
+  end
+
+  def after_confirmation_set_password_path_for(token)
+    ApplicationLog.user_log(resource.id, 'confirmed', RequestStore.store[:logging])
+    edit_user_password_path(reset_password_token: token)
   end
 end

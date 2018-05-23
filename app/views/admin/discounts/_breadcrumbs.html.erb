@@ -2,7 +2,7 @@
   <% unless current_user.buyer? %>
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<%= after_sign_in_path_for(current_user) %>">Dashboard</a></li>
+      <li class="breadcrumb-item"><a href="<%= home_path(current_user) %>">Dashboard</a></li>
       <% if discount.present? %>
         <% if DiscountPolicy.new(current_user, Discount).index? %>
           <li class="breadcrumb-item"><a href="<%= admin_discounts_path %>">Discounts</a></li>
