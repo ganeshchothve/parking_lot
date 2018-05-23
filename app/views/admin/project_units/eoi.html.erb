@@ -2,15 +2,17 @@
 <html>
   <head>
   <title></title>
-  <style type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet">
+  <style type="text/css" media="all">
     html, body{padding: 0;margin: 0;font-size: 16px;-webkit-font-smoothing: antialiased;
-      font-weight: 400; color: #333;line-height: 1.2;letter-spacing: 0.7px;}
+      font-weight: 400; color: #333;line-height: 1.6;letter-spacing: 0.7px; font-family: 'Roboto', sans-serif;}
       a, img, button, input[type=submit]{text-decoration: none; outline: none; border: 0;transition: .2s ease;}
       input:focus{outline:none;}
       b, strong{font-weight: 700;}
       *, *:after, *:before {-webkit-box-sizing: border-box;-moz-box-sizing: border-box; box-sizing: border-box;}
       p, ul, h1, h2, h3, h4, h5, h6{padding:0; margin:0;}
       .container{max-width: 1200px;margin: 0px auto;padding: 0 20px;}
+      .pg-break{ page-break-after: always;}
       .clearfix{clear: both;}
       .pull-left{float: left !important;}
       .pull-right{float: right !important;}
@@ -40,10 +42,10 @@
       .w70{width: 70%;}
       .w30{width: 30%;}
       .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12, .col-12-5, .w30, .w70{float: left;}
-      .application-letter-wrapper {padding:50px 0;}
+      .application-letter-wrapper {}
       .mb30{margin-bottom: 30px;}
       table{width: 100%;margin-bottom: 30px;border-collapse: collapse;}
-      table thead{background-color: #6c7d35;color:#fff;font-weight: 500;}
+      table thead{background-color: #6c7d35;color:#fff;font-weight: 500;-webkit-print-color-adjust: exact;}
       table th{font-size: 16px;font-weight: 400;}
       table th, table td{text-align: center;padding:5px;border:1px solid #ccc;}
       ul{padding-left: 20px;}
@@ -51,19 +53,24 @@
       .row:after, .clearfix{clear: both;}
       .text-white{color: #fff;}
       .text-green{color:#6c7d35;}
-      .bg-green{background-color:#6c7d35;}
+      .bg-green{background:#6c7d35;padding: 10px 0;-webkit-print-color-adjust: exact;}
     </style>
   </head>
   <body>
     <section class="application-letter-wrapper">
       <div class="container">
         <div class="row">
+          <div class="col-12" style="border-bottom: 1px solid #efefef;padding: 10px 0; text-align:right;margin-bottom: 10px;">
+            <a href="javascript:window.print();" style="color: #666;font-size: 12px;background: #666; padding: 5px 10px; color: #fff;">Print</a>
+          </div>
+        </div>
+        <div class="row">
           <div class="col-12">
             <div class="pull-left">
-              <img src="http://www.embassysprings.com/images/embassy_edge/logo2.png">
+              <img src="<%= asset_path("logo2.png") %>">
             </div>
             <div class="pull-right">
-              <img src="http://embassysprings2.amura.in/assets/logo-edge-35ef0706ab1ce7ef6fa205c1135e1269cfdf0a591cf07961e9c7c4c4e9cf09da.png">
+              <img src="<%= asset_path("logo-edge.png") %>">
             </div>
           </div>
         </div>
@@ -79,9 +86,9 @@
             <table>
               <thead>
                 <tr>
-                  <th>Photo<br/>Applicant 1</th>
-                  <th>Photo<br/>Applicant 2</th>
-                  <th>Photo<br/>Applicant 3</th>
+                  <th>Photo Applicant 1</th>
+                  <th>Photo Applicant 2</th>
+                  <th>Photo Applicant 3</th>
                 </tr>
               </thead>
               <tbody>
@@ -97,7 +104,7 @@
                 </tr>
               </tbody>
             </table>
-            <p><strong>1. Details of Apartment:</strong></p><br/>
+            <p><strong>1. Details of Apartment:</strong></p>
             <table cellpadding="10" cellspacing="0">
               <thead>
                 <tr>
@@ -120,7 +127,7 @@
                 </tr>
               </tbody>
             </table>
-            <p><strong>2. Total Sale Consideration:</strong>&nbsp;The total sale consideration for the Apartment is<br/><%= number_to_indian_currency(@project_unit.all_inclusive_price) %>/- (Rupees <%= @project_unit.all_inclusive_price.humanize %> only), made up of the following:</p><br/>
+            <p><strong>2. Total Sale Consideration:</strong>&nbsp;The total sale consideration for the Apartment is<br/><%= number_to_indian_currency(@project_unit.all_inclusive_price) %>/- (Rupees <%= @project_unit.all_inclusive_price.humanize %> only), made up of the following:</p>
             <table cellpadding="10" cellspacing="0">
               <thead>
                 <tr>
@@ -141,6 +148,7 @@
                 </tr>
               </tbody>
             </table>
+            <div class="pg-break"></div>
             <p class="mb30 bg-green text-white text-center"><strong>Documents to be furnished by the Applicant/s</strong></p>
             <ul class="mb30">
               <li>Business Card</li>
@@ -181,6 +189,7 @@
                 <td class="text-left">http://www.embassysprings.com/</td>
               </tr>
             </table>
+            <div class="pg-break"></div>
             <p class="mb30 bg-green text-white text-center"><strong>Details of the Applicant/s: </strong></p>
             <p><strong>First Applicant (As in the Passport)</strong></p><br/>
             <% primary_user_kyc = @project_unit.primary_user_kyc %>
@@ -208,6 +217,7 @@
             <p style="border-bottom:1px solid #000;">Name of the Company: <%= user_kyc.customer_company_name %> </p><br/>
             <p class="mb30" style="border-bottom:1px solid #000;">Designation: <%= user_kyc.designation %></p><br/>
             <% end %>
+            <div class="pg-break"></div>
             <p class="mb30 bg-green text-white text-center"><strong>Agreement Address (Permanent Address)</strong></p>
             <p style="border-bottom:1px solid #000;">Mr./Mrs./Miss./Dr./M/s.  <%= primary_user_kyc.name %><br/><br/><br/></p><br/>
             <p style="border-bottom:1px solid #000;">Street/House No:<%= primary_user_kyc.house_number %></p><br/>
@@ -216,7 +226,6 @@
             <p style="border-bottom:1px solid #000;">State:<%= primary_user_kyc.state %></p><br/>
             <p style="border-bottom:1px solid #000;">Country:<%= primary_user_kyc.country %></p><br/>
             <p class="mb30" style="border-bottom:1px solid #000;page-break-after: always;">PIN: <%= primary_user_kyc.postal_code %></p>
-
             <p class="mb30 bg-green text-white text-center"><strong>Correspondence Address</strong></p>
             <p style="border-bottom:1px solid #000;">Mr./Mrs./Miss./Dr./M/s. <%= primary_user_kyc.name %><br/><br/><br/></p><br/>
             <p style="border-bottom:1px solid #000;">Street/House No: <%= primary_user_kyc.correspondence_house_number %> </p><br/>
@@ -226,6 +235,7 @@
             <p style="border-bottom:1px solid #000;">Country:  <%= primary_user_kyc.correspondence_country %></p><br/>
             <p class="mb30" style="border-bottom:1px solid #000;">PIN: <%= primary_user_kyc.correspondence_postal_code %></p>
 
+            <div class="pg-break"></div>
             <p class="mb30 bg-green text-white text-center"><strong>Details of General Power of Attorney Holder (If any)</strong></p>
             <p style="border-bottom:1px solid #000;">Mr./Mrs./Miss./Dr./M/s.<br/><br/><br/></p><br/>
             <p style="border-bottom:1px solid #000;">Street/House No: </p>  <br/>
@@ -240,6 +250,7 @@
             <p style="border-bottom:1px solid #000;">Phone (Resi): </p><br/>
             <p style="border-bottom:1px solid #000;" class="mb30">Relationship: </p>
 
+            <div class="pg-break"></div>
             <p class="mb30 bg-green text-white text-center"><strong>Additional Details</strong></p>
             <p style="border-bottom:1px solid #000;">Source of enquiry: <br/>(Newspaper advertisement, Website, Hoarding, Site walk-in, Office walk-in, Road show, Exhibition)</p><br/>
             <p style="border-bottom:1px solid #000;">Referred by: </p><br/>
@@ -257,7 +268,7 @@
             <p style="border-bottom:1px solid #000;">Finance: <%= primary_user_kyc.loan_required %><br/>(Self, Bank)</p><br/>
             <p style="border-bottom:1px solid #000;">Bank name:<%= primary_user_kyc.bank_name %></p><br/>
             <p style="border-bottom:1px solid #000;" class="mb30">This booking is for own use/Investment</p>
-
+            <div class="pg-break"></div>
             <p class="mb30 bg-green text-white text-center"><strong>Signatures of Applicant/s</strong></p>
             <p><strong>1st Applicant</strong></p>
             <p>Name: <%= primary_user_kyc.name %></p>
@@ -280,4 +291,4 @@
       </div>
     </section>
   </body>
-  </html>
+</html>
