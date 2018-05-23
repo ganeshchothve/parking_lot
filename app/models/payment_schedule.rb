@@ -99,10 +99,11 @@ class PaymentSchedule
         "corpus_fund_charges" => corpus_fund_charges,
         "payment_schedule_type" => data[:name]
       }
-      if project_unit.payment_schedules.empty?
-        project_unit.payment_schedules.create!(hash)
+      ps = project_unit.payment_schedules.where(name: data[:name]).first
+      if ps
+        ps.update_attributes(hash)
       else
-        project_unit.payment_schedules.where(name: data[:name]).first.try(:update_attributes, hash)
+        project_unit.payment_schedules.create!(hash)
       end
     end
   end
