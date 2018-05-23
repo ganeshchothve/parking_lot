@@ -14,7 +14,7 @@ Rails.application.routes.draw do
 
 
   as :user do
-    put '/user/confirmation', to: 'confirmations#update', :as => :update_user_confirmation
+    put '/user/confirmation', to: 'local_devise/confirmations#update', :as => :update_user_confirmation
   end
 
   #TODO_Pankit - ASSET_PATH wont work if we uncomment the below scope
