@@ -13,6 +13,7 @@
     App = {};
   }
   App.current_user = <%= raw current_user.to_json %>;
+  App.current_user.name = App.current_user.first_name + " " + App.current_user.last_name
   <% end %>
   <% if Rails.env.development? || Rails.env.staging? %>
   Pusher.logToConsole = true;
