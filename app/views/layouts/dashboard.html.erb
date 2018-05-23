@@ -87,7 +87,8 @@
   <div class="pull-left profile-link">
     <span>
       <%= link_to edit_admin_user_path(current_user) do %>
-      <img src="<%= asset_path 'usernew.png'%>" class="img-responsive" data-event-category="header" data-event-action="click" data-event-name="user profile"> &nbsp;
+        <div class="user-name">Welcome <%= current_user.name %></div>
+        <img src="<%= asset_path 'usernew.png'%>" class="img-responsive" data-event-category="header" data-event-action="click" data-event-name="user profile"> &nbsp;
       <% end %>
     </span>
   </div>
@@ -140,6 +141,9 @@
 <% end %>
 <div>
   <a href="/dashboard/faqs" <%= params[:controller] == "dashboard" && params[:action] == "faqs" ? "class=active" : "" %>  data-event-category="side bar" data-event-action="click" data-event-name="FAQs"><span class="sprite-dasboard faqs"  data-event-category="side bar" data-event-action="click" data-event-name="FAQs"></span><span  data-event-category="side bar" data-event-action="click" data-event-name="FAQs">FAQs</span></a>
+</div>
+<div>
+  <a href="/dashboard/rera" <%= params[:controller] == "dashboard" && params[:action] == "rera" ? "class=active" : "" %>  data-event-category="side bar" data-event-action="click" data-event-name="RERA"><span class="sprite-dasboard faqs"  data-event-category="side bar" data-event-action="click" data-event-name="RERA"></span><span  data-event-category="side bar" data-event-action="click" data-event-name="RERA">RERA</span></a>
 </div>
 <div>
   <a href="/dashboard/tds-process" <%= params[:controller] == "dashboard" && params[:action] == "tds_process" ? "class=active" : "" %>  data-event-category="side bar" data-event-action="click" data-event-name="TDS Process"><span class="sprite-dasboard faqs"  data-event-category="side bar" data-event-action="click" data-event-name="TDS Process"></span><span  data-event-category="side bar" data-event-action="click" data-event-name="TDS Process">TDS Process</span></a>

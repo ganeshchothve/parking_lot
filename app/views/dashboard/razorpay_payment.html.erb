@@ -40,6 +40,7 @@ document.getElementById('rzp-button1').onclick = function(e){
 </script>
 <script type="text/javascript">
   $(document).ready(function(){
+    ChatHelp.message(App.current_user.name + " has held a unit <%= @receipt.project_unit.name %>; filled up KYC details and is on the payment page");
     $('#rzp-button1').trigger("click")
   })
 </script>

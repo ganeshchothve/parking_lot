@@ -32,6 +32,7 @@
 //= require jquery.zoom.min
 //= require jquery.bxslider
 
+//= require olark
 //= require utils
 //= require file-icon
 //= require form-initializer
@@ -134,15 +135,10 @@ $(document).ready(function(){
   });
 
   $(".tower-name-box").on("click", function(){
-    // if($(this).hasClass("active")){
-    //   $(this).removeClass("active");
-    //   $('[data-stage="select-apartment"]').data("selected-towerid", 0);
-    // } else {
-      $(".tower-name-box").removeClass("active");
-      $(this).addClass("active");
-      $('[data-stage="select-apartment"]').data("selected-towerid", $(this).data("towerid"));
-    // }
-      Gamification.gamifyTowerSelection(selectedTower);
+    $(".tower-name-box").removeClass("active");
+    $(this).addClass("active");
+    $('[data-stage="select-apartment"]').data("selected-towerid", $(this).data("towerid"));
+    Gamification.gamifyTowerSelection(selectedTower);
   });
   /* New UI */
 

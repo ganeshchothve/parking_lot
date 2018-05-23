@@ -54,7 +54,7 @@
     <div class="client-details-wrapper">
       <div class="col-4 client-detail padding-top0 dark-green-bg">
         <span class="white-font">Name: <%= current_user.name %></span>
-        <span class="white-font">Flat No: <%= @unit.name %></span> 
+        <span class="white-font">Flat No: <%= @unit.name %></span>
         <br/>
       </div>
       <div class="col-4 light-green-bg">
@@ -290,5 +290,6 @@
 <script type="text/javascript">
 $(document).ready(function(){
   FormInitializer.init($("#user_kyc_form"));
+  ChatHelp.message(App.current_user.name + " has chosen a unit <%= @unit.name %>");
 });
 </script>

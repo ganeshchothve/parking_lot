@@ -56,10 +56,28 @@
 </div>
 <div class="col-12">
   <div class="col-6 text-center building-main-wrapper">
-    <div class="main-building">
-      <div class="caption-floor">
-        Floors
+    <div class="col-12" style="margin: 0 0 40px 0;font-size:16px;">
+      Select Apartment to View Plan
+    </div>
+    <div class="col-12">
+      <div class="apt-index">
+        <span class="bstatus-booked"></span>Blocked/Booked
       </div>
+      <div class="apt-index">
+        <span class="bstatus-hold"></span>Hold
+      </div>
+      <div class="apt-index">
+        <span class="bstatus-na"></span>NA
+      </div>
+      <div class="apt-index">
+        <span class="bstatus-available"></span>Available
+      </div>
+      <div class="apt-index">
+        <span class="bstatus-selected"></span>Selected
+      </div>
+      <div class="clearfix"></div>
+    </div>
+    <div class="main-building">
       <div class="apt-selector-wrapper" id="append-floors">
         <% bedrooms = params[:configuration].split(",")[0] != "NA" ? params[:configuration].split(",")[0] : "" %>
         <% agreement_price = params[:configuration].split(",")[1] != "NA" ? params[:configuration].split(",")[1] : "" %>
@@ -92,24 +110,6 @@
           <% end %>
         </div>
         <% end %>
-      </div>
-      <div class="col-12 apt-index-wrapper">
-        <div class="apt-index">
-          <span class="bstatus-booked"></span>Blocked/Booked
-        </div>
-        <div class="apt-index">
-          <span class="bstatus-hold"></span>Hold
-        </div>
-        <div class="apt-index">
-          <span class="bstatus-na"></span>NA
-        </div>
-        <div class="apt-index">
-          <span class="bstatus-available"></span>Available
-        </div>
-        <div class="apt-index">
-          <span class="bstatus-selected"></span>Selected
-        </div>
-        <div class="clearfix"></div>
       </div>
     </div>
   </div>

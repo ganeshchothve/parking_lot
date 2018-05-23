@@ -45,6 +45,9 @@ class DashboardController < ApplicationController
   def faq
   end
 
+  def rera
+  end
+
   def tds_process
   end
 
