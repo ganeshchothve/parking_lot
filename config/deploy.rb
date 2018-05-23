@@ -9,7 +9,6 @@ set :branch, "embassy_v2"
 
 # Default deploy_to directory is /var/www/my_app_name
 set :deploy_to, "/home/appserver/booking_portal"
-set :scm, :git
 set :ssh_options, {forward_agent: true, keepalive: true}
 
 # Default value for :format is :airbrussh.
