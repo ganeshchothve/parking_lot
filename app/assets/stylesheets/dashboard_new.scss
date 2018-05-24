@@ -3922,3 +3922,7 @@ input.nav-btn:hover{
   display: inline-block;
   font-size: 16px;
 }
+.fill-height-or-more{
+  display: flex;
+  flex-direction: row;
+}

@@ -30,8 +30,7 @@
 }
 .client-detail span{
   color: #fff;
-  font-size: 22px;
-  font-weight: 500;
+  font-size: 16px;
 }
 .kyc-details-wrapper{
   padding: 0px;
@@ -51,18 +50,22 @@
 </style>
 <div class="apartment-selector-wrapper">
   <div class="col-12">
-    <div class="client-details-wrapper">
+    <div class="client-details-wrapper fill-height-or-more">
       <div class="col-4 client-detail padding-top0 dark-green-bg">
-        <span class="white-font">Name: <%= current_user.name %></span>
-        <span class="white-font">Flat No: <%= @unit.name %></span>
+        <span class="white-font"><strong>Name:</strong><br/><%= current_user.name %></span><br/>
+        <span class="white-font"><strong>Flat No:</strong><br/><%= @unit.name %></span>
         <br/>
       </div>
       <div class="col-4 light-green-bg">
-        <div class=""><span class="black">Tower:</span> <%= @unit.project_tower_name %><br><span class="black">Floor: </span><%= @unit.floor %><br><span class="black">Flat No:</span> <%= @unit.name %><br>  <br/></div>
+        <div class="">
+          <span class="black">Tower:</span> <%= @unit.project_tower_name %><br>
+          <span class="black">Floor: </span><%= @unit.floor %><br><span class="black">Flat No:</span> <%= @unit.name %><br>
+          <span class="black">Configuration:</span> <%= @unit.bedrooms %> BHK<br/>
+          <br/>
+        </div>
       </div>
       <div class="col-4 light-green-bg">
         <div class="">
-          <span class="black">Configuration:</span> <%= @unit.bedrooms %> BHK<br/>
           <span class="black">Super Built-Up Area:</span> <%= @unit.saleable %> Sq.Ft.<br/>
           <span class="black">Usable Area:</span> <%= @unit.usable %> Sq.Ft.<br/>
           <span class="black">Carpet Area:</span> <%= @unit.carpet %> Sq.Ft.<br/>

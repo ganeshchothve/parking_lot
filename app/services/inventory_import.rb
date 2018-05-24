@@ -22,7 +22,7 @@ module InventoryImport
         corpus_fund_charges = row[15].strip
         premium_location_charges = row[16].strip
         floor_rise = row[17].strip
-        unit_sap_id = row[18].strip
+        unit_sap_id = row[18]
         status = row[19].strip
         maintenance_deposit = row[20].strip
         bedrooms = row[21].strip
