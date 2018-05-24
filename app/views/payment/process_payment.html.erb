@@ -6,7 +6,9 @@
 			<div class="col-7 success-card">
 				<h2 class="pageTitle pink">Congratulations</h2>
 				<p>
-					Thank you for your payment of <%= number_to_indian_currency(@receipt.total_amount.round(2)) %>. You will receive an email from us with detailed information on next steps.
+					Thank you for your payment of <%= number_to_indian_currency(@receipt.total_amount.round(2)) %>.
+          <br/>
+          <strong>You will receive an email from us with detailed information on next steps.</strong>
         </p>
         <% if @receipt.payment_type == 'blocking' %>
           <p>

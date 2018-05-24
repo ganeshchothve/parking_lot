@@ -24,7 +24,7 @@ class ProjectUnit
   end
 
   def self.holding_minutes
-    10
+    15
   end
 
   # These fields are globally utlised on the server side

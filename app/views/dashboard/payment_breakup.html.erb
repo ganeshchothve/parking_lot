@@ -189,7 +189,12 @@
                                     <span class="white-font">Flat No: <%= @project_unit.name %></span>
                                 </div>
                                 <div class="col-4 light-green-bg">
-                                    <div class=""><span class="black">Tower:</span> <%= @project_unit.project_tower_name %><br><span class="black">Floor: </span><%= @project_unit.floor %><br><span class="black">Flat No:</span> <%= @project_unit.name %><br></div>
+                                    <div class="">
+                                      <span class="black">Tower:</span> <%= @project_unit.project_tower_name.split("-")[0].strip %><br>
+                                      <span class="black">Block:</span> <%= @project_unit.project_tower_name.split("-")[1].strip %><br>
+                                      <span class="black">Floor: </span><%= @project_unit.floor %><br>
+                                      <span class="black">Flat No:</span> <%= @project_unit.name %><br>
+                                    </div>
                                 </div>
                                 <div class="col-4 light-green-bg">
 				     <div class="">

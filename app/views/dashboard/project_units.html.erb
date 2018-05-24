@@ -13,6 +13,7 @@
       <% @title <<  " from #{number_to_indian_currency(minbudget)} to #{number_to_indian_currency(maxbudget)}"  if budget != 'NA' %>
     <% end %>
     <% @title <<  " at #{@tower.name}" if params[:project_tower_id].present? %>
+    <% @title = @title.html_safe %>
 <% end %>
 <section class="main-wrapper full-height">
   <div class="container-fluid">

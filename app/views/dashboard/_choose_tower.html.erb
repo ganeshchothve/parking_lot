@@ -1,6 +1,6 @@
 <div class="apartment-selector-wrapper">
   <div class="title">
-    Showing <%= @title %>
+    Showing <%= @title.html_safe %>
   </div>
   <div class="col-12 conf-select-wrapper">
     <div class="col-4 w100-xs pull-left">
@@ -13,6 +13,17 @@
         lst = ubbt.sort{|x| x["count"]}.last["_id"]["project_tower_id"] if ubbt.present?
         %>
         <% if @towers.count > 0 %>
+        <%
+          order = ["G", "H", "F", "D", "E"]
+          block_order = ["A", "B", "C", "D", "E"]
+          @towers = @towers.sort do |x, y|
+            tmp1 = order.index(x[:project_tower_name][0])
+            tmp2 = order.index(y[:project_tower_name][0])
+            tmp1 += block_order.index(x[:project_tower_name].gsub(" ", "").split("-")[1][0])
+            tmp2 += block_order.index(y[:project_tower_name].gsub(" ", "").split("-")[1][0])
+            tmp1 <=> tmp2
+          end
+        %>
         <% @towers.each do |t| %>
         <div class="col-12 text-center w25-xs">
           <div class="tower-name-box" data-towername="<%= t[:project_tower_name] %>" data-towerid="<%= t[:project_tower_id] %>" data-event-category="section" data-event-action="click" data-event-name="choose tower">
@@ -21,15 +32,7 @@
             <%= "<span class='fast-sell-tag'><i class='fas fa-bolt'></i> Fast Selling</span>".html_safe if mst.to_s == t[:project_tower_id].to_s %>
             <%= "<span class='fast-sell-tag'><i class='fas fa-fire'></i> One of our hottest-selling towers at the moment</span>".html_safe if lst.to_s == t[:project_tower_id].to_s && mst != lst %>
             <span  data-event-category="section" data-event-action="click" data-event-name="choose tower">
-              <%
-                block = ""
-                block = "Block A" if t[:project_tower_name].index("Gardenia") == 0
-                block = "Block B" if t[:project_tower_name].index("Hibisicus") == 0
-                block = "Block C" if t[:project_tower_name].index("Fuchsia") == 0
-                block = "Block D" if t[:project_tower_name].index("Daisy") == 0
-                block = "Block E" if t[:project_tower_name].index("Elderberry") == 0
-              %>
-              <%= t[:project_tower_name] %> <%= "(#{block})" if block.present? %>
+              <%= t[:project_tower_name].split("-")[0].strip %> <%= "(Block #{t[:project_tower_name].split("-")[1].strip})" %>
             </span>
             <span  data-event-category="section" data-event-action="click" data-event-name="choose tower">Tower Units: <%= t[:total_units] %></span>
             <span  data-event-category="section" data-event-action="click" data-event-name="choose tower">Available Units: <%= t[:total_units_available] %></span>
@@ -39,11 +42,20 @@
       <div class="clearfix"></div>
       <% end %>
       <% else %>
-      <div class="col-12 text-center">
-        <div class="not-found"><i class="far fa-frown" style="font-size:50px; margin-bottom:20px;
-          color:#3981b8;"></i><br/>No Apartments found matching your criteria</div>
+        <div class="col-12 text-center">
+          <div class="not-found">
+          <% if @alternative_count > 0 && @parameters[:fltrs][:data_attributes][:bedrooms].present? %>
+            We have <%= @alternative_count %> <% @parameters[:fltrs][:data_attributes][:bedrooms] %> apartments available, but slightly out of the budget chosen. To view them, click <a href="/dashboard/apartment-selector/<%= @parameters[:fltrs][:data_attributes][:bedrooms] %>">here</a>
+          <% elsif @alternative_count > 0 && @parameters[:fltrs][:data_attributes][:agreement_price].present? %>
+            We have <%= @alternative_count %> apartments available in your budget in different bedroom configurations. To view them, click <a href="/dashboard/apartment-selector/<%= @parameters[:fltrs][:data_attributes][:bedrooms] %>">here</a>
+          <% else %>
+            <i class="far fa-frown" style="font-size:50px; margin-bottom:20px;color:#3981b8;"></i>
+            <br/>
+            No Apartments found matching your criteria
+          <% end %>
+          </div>
         </div>
-        <% end %>
+      <% end %>
       </div>
     </div>
     <div class="col-8 tower-layout-wrapper scrolled-fixed pull-right">

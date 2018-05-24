@@ -145,20 +145,30 @@ class DashboardController < ApplicationController
     elsif params[:stage] == "choose_tower"
       bedroom = params[:configuration].split(",")[0]
       budget = params[:configuration].split(",")[1]
-      parameters =  {fltrs: { data_attributes: {bedrooms: bedroom != "NA" ? bedroom : ""}, agreement_price: budget != "NA" ? budget : ""}}
-      project_tower_ids = ProjectUnit.build_criteria(parameters).distinct(:project_tower_id)
+      @parameters =  {fltrs: { data_attributes: {bedrooms: bedroom != "NA" ? bedroom : ""}, agreement_price: budget != "NA" ? budget : ""}}
+      project_tower_ids = ProjectUnit.build_criteria(@parameters).distinct(:project_tower_id)
       @towers = ProjectTower.in(id: project_tower_ids).collect do |x|
         hash = {project_tower_id: x.id, project_tower_name:x.name}
         hash[:total_units] = ProjectUnit.where(project_tower_id: x.id).count
-        hash[:total_units_available] = ProjectUnit.build_criteria(parameters).where(project_tower_id: x.id).in(status: ProjectUnit.user_based_available_statuses(current_user)).count
+        hash[:total_units_available] = ProjectUnit.build_criteria(@parameters).where(project_tower_id: x.id).in(status: ProjectUnit.user_based_available_statuses(current_user)).count
         hash
+      end
+      if @towers.blank?
+        alternative_params = {}
+        @alternative_count = 0
+        if bedroom != "NA"
+          alternative_params =  {fltrs: { data_attributes: {bedrooms: bedroom != "NA" ? bedroom : ""}}}
+        elsif agreement_price != "NA"
+          alternative_params =  {fltrs: { data_attributes: {agreement_price: budget != "NA" ? budget : ""}}}
+        end
+        @alternative_count = ProjectUnit.build_criteria(parameters).in(status: ProjectUnit.user_based_available_statuses(current_user)).count if alternative_params.present?
       end
       SelldoLeadUpdater.perform_async(current_user.id.to_s, "unit_browsing")
     elsif params[:stage] == "select_apartment"
       @tower = ProjectTower.find(id: params[:project_tower_id])
       @configurations = ProjectUnit.all.collect{|x| {bedrooms: x.bedrooms, agreement_price: x.agreement_price}}.sort{|x, y| x[:agreement_price] <=> y[:agreement_price]}.uniq{|x| x[:bedrooms]}
       parameters = {fltrs: { project_tower_id: params[:project_tower_id] } }
-      @units = ProjectUnit.build_criteria(parameters).sort{|x, y| y.floor <=> x.floor}
+      @units = ProjectUnit.build_criteria(parameters).sort{|x, y| y.floor <=> x.floor}.to_a
     elsif params[:stage] == "kyc_details"
       if params[:configuration] == "3d"
         @unit = ProjectUnit.where(sfdc_id: params[:unit_id]).first

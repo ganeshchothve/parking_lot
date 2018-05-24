@@ -21,7 +21,7 @@ class SelldoLeadUpdater
       params = {
         'api_key': ENV_CONFIG['selldo']['api_key'],
         'sell_do[form][lead][lead_id]': user.lead_id,
-        'sell_do[form][custom][portal_stage]': stage
+        'sell_do[form][custom][portal_stage]': stage,
         'sell_do[campaign][srd]': DEFAULT_SRD
       }
       RestClient.post("https://app.sell.do/api/leads/create", params)

@@ -1,6 +1,6 @@
 <div class="apartment-selector-wrapper">
   <div class="title">
-    Showing <%= @title %>
+    Showing <%= @title.html_safe %>
   </div>
   <div class="filter-icon visible-xs">
     <img src="<%= asset_path 'filter-outline.png'%>" class="img-responsive">
@@ -57,7 +57,11 @@
 <div class="col-12">
   <div class="col-6 text-center building-main-wrapper">
     <div class="col-12" style="margin: 0 0 40px 0;font-size:16px;">
-      Select Apartment to View Plan
+      <% bedrooms = params[:configuration].split(",")[0] != "NA" ? params[:configuration].split(",")[0] : "" %>
+      <% agreement_price = params[:configuration].split(",")[1] != "NA" ? params[:configuration].split(",")[1] : "" %>
+      <% minprice = agreement_price != "" ? agreement_price.split("-")[0] : "" %>
+      <% maxprice = agreement_price != "" ? agreement_price.split("-")[1] : "" %>
+      <div class="tower-title"></div>
     </div>
     <div class="col-12">
       <div class="apt-index">
@@ -79,10 +83,7 @@
     </div>
     <div class="main-building">
       <div class="apt-selector-wrapper" id="append-floors">
-        <% bedrooms = params[:configuration].split(",")[0] != "NA" ? params[:configuration].split(",")[0] : "" %>
-        <% agreement_price = params[:configuration].split(",")[1] != "NA" ? params[:configuration].split(",")[1] : "" %>
-        <% minprice = agreement_price != "" ? agreement_price.split("-")[0] : "" %>
-        <% maxprice = agreement_price != "" ? agreement_price.split("-")[1] : "" %>
+        <% found = false %>
         <% @units.group_by(&:floor).each do |ur| %>
         <div class="flats-<%= ur[1].count %> apt-selector-box">
           <div class="floor-number"><%= ur[0] %></div>
@@ -91,15 +92,18 @@
           if (bedrooms.to_s != "" && agreement_price.to_s != "")
             if(bedrooms.to_s == u.bedrooms.to_s && (u.agreement_price.to_i <= maxprice.to_i && u.agreement_price.to_i >= minprice.to_i))
               status = u.user_based_status(current_user) == "not_available" ? "na" : u.user_based_status(current_user)
+              found = true
             else
               status = "na"
             end
           else
             if(bedrooms.to_s == "" && agreement_price.to_s == "")
               status = u.user_based_status(current_user) == "not_available" ? "na" : u.user_based_status(current_user)
+              found = true
             else
               if (bedrooms.to_s != "" && bedrooms.to_s == u.bedrooms.to_s) || (u.agreement_price.to_i <= maxprice.to_i && u.agreement_price.to_i >= minprice.to_i)
                 status = u.user_based_status(current_user) == "not_available" ? "na" : u.user_based_status(current_user)
+                found = true
               else
                 status = "na"
               end
@@ -148,3 +152,17 @@
 <div class="clearfix"></div>
 </div>
 </div>
+
+<% unless found %>
+  <%
+    @alternative_parameters = {fltrs: { project_tower_id: params[:project_tower_id], data_attributes: {bedrooms: bedrooms != "NA" ? bedrooms : ""}}}
+    @alternative_count = ProjectUnit.build_criteria(@alternative_parameters).in(status: ProjectUnit.user_based_available_statuses(current_user)).count
+  %>
+  <%= javascript_tag do %>
+    <% if @alternative_count.present? && @alternative_count > 0 %>
+      $(".tower-title").html('We couldn\'t find apartments for your requirement. However, we have <%= @alternative_count %> <% @alternative_parameters[:fltrs][:data_attributes][:bedrooms] %> apartments available in this tower, but slightly out of the budget chosen. To view them, click <a href="/dashboard/apartment-selector/<%= @alternative_parameters[:fltrs][:data_attributes][:bedrooms] %>,NA/<%= @alternative_parameters[:fltrs][:project_tower_id] %>">here</a>');
+    <% else %>
+      $(".tower-title").html("Select Apartment to View Plan");
+    <% end %>
+  <% end %>
+<% end %>

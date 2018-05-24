@@ -58,7 +58,8 @@
       </div>
       <div class="col-4 light-green-bg">
         <div class="">
-          <span class="black">Tower:</span> <%= @unit.project_tower_name %><br>
+          <span class="black">Tower:</span> <%= @unit.project_tower_name.split("-")[0].strip %><br>
+          <span class="black">Block:</span> <%= @unit.project_tower_name.split("-")[1].strip %><br>
           <span class="black">Floor: </span><%= @unit.floor %><br><span class="black">Flat No:</span> <%= @unit.name %><br>
           <span class="black">Configuration:</span> <%= @unit.bedrooms %> BHK<br/>
           <br/>
@@ -230,7 +231,7 @@
             </div>
             <div class="col-md-6 col-6">
               <div class="form-group form-field-wrapper">
-                <%= f.text_field :country, class: 'form-control form-field', required: 'required form-field', placeholder: 'Country' %>
+                <%= f.text_field :country, class: 'form-control form-field', required: 'required form-field', placeholder: 'Country', value: (f.object.country.blank? ? "India" : f.object.country) %>
               </div>
             </div>
           </div>

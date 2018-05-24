@@ -77,7 +77,7 @@
           Cheque / DD Number:<%= receipt.payment_identifier %><br/> Bank Name: <%= receipt.issuing_bank %> <br/> Bank Branch :<%= receipt.issuing_bank_branch %>
           <% end %>
           </td>
-          <td> &#8377; <%= receipt.total_amount.round(2) %></td>
+          <td><%= <%= number_to_indian_currency(receipt.total_amount.round(2)) %></td>
         </tr>
       </table>
     </div>

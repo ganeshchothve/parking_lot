@@ -68,7 +68,9 @@
 							</div>
 				       		<div class="tower-info-wrapper left-padding-0">
 				       			<div>
-					                      <span class="black">Tower:</span> <%= project_unit.project_tower_name %><br><span class="black">Floor:</span> <%= project_unit.floor %><br>
+                      <span class="black">Tower:</span> <%= project_unit.project_tower_name.split("-")[0].strip %><br>
+                      <span class="black">Block:</span> <%= project_unit.project_tower_name.split("-")[1].strip %><br>
+                      <span class="black">Floor:</span> <%= project_unit.floor %><br>
 				       				<span class="black">Flat no:</span> <%= project_unit.name %><br>
 				       				<span class="black">Configuration:</span> <%= float_to_int(project_unit.bedrooms) %> BHK<br>
 					                      <span class="black">Super Built-Up Area:</span> <%= project_unit.saleable.round(2) %> Sq.Ft.<br/>

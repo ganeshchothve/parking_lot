@@ -132,7 +132,12 @@
             <span class="pink">Flat No: <%= @project_unit.name %></span>
           </div>
           <div class="tower-info-wrapper left-padding-0">
-            <div class="pull-left">Tower: <%= @project_unit.project_tower_name %><br>Floor: <%= @project_unit.floor %><br>Flat no: <%= @project_unit.name %><br></div>
+            <div class="pull-left">
+              Tower: <%= @project_unit.project_tower_name.split("-")[0].strip %><br>
+              Block: <%= @project_unit.project_tower_name.split("-")[1].strip %><br>
+              Floor: <%= @project_unit.floor %><br>
+              Flat no: <%= @project_unit.name %><br>
+            </div>
             <div class="pull-left padding-left-30">
               Configuration: <%= @project_unit.bedrooms %> BHK<br/>
               Super Built-Up Area: <%= @project_unit.saleable %> Sq.Ft.<br/>
