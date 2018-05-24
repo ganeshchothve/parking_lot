@@ -8,7 +8,7 @@ class ProjectUnitObserver < Mongoid::Observer
     end
     if project_unit.status_changed? && ['hold', 'blocked', 'booked_tentative', 'booked_confirmed'].exclude?(project_unit.status)
       project_unit.user_id = nil
-      project_unit.applied_discount_rate = nil
+      project_unit.applied_discount_rate = 0
       project_unit.applied_discount_id = nil
     end
     project_unit.calculate_agreement_price

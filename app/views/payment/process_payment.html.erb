@@ -13,7 +13,7 @@
         </p>
         <% if @receipt.payment_type == 'blocking' %>
           <p>
-            This unit will remain blocked for you for the next 10 days. Please complete your payment of remaining amount within this duration to confirm your unit. To make additional payment please click <a href="<%= dashboard_path %>" target="_blank">here</a>
+            This unit will remain blocked for you for the next 10 days. Please complete your payment of remaining amount within this duration to confirm your unit. To make additional payment please click <a href="/dashboard/receipts/new?project_unit_id=<%= @receipt.project_unit_id %>" data-event-category="section" data-event-action="click" data-event-name="make the remaining payment" target="_blank">here</a>
           </p>
         <% end %>
 			</div>

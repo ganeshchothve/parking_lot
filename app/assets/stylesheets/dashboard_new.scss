@@ -494,7 +494,7 @@ form#edit_user_form .form-field-wrapper label{display: block;}
 	color: #fff;
 	margin: 10px 0px;
 }
-.dashboard-menu .prompts-message li{
+.prompts-message li{
 	line-height: 22px
 }
 .gradient-bg{
@@ -784,21 +784,27 @@ form#edit_user_form .form-field-wrapper label{display: block;}
 .form-field-wrapper .checkbox input:checked ~ .checkmark:after {
     display: block;
 }
-.dashboard-menu .prompts-message{
-	width: 250px;
-	background-color: #fff;
-	color: #80b441;
-	transition: all 0.3s ease-in;
+.prompts-message{
+  width: 260px;
+  min-height: 80px;
+  background-color: #6b7e34;
+  color: #fff;
+  transition: all 0.3s ease-in;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 100;
+  border-radius: 8px;
 }
-.dashboard-menu .prompts-message.active{
+.prompts-message.active{
 	background-color: #ec9834;
 	color: #fff;
 }
-.dashboard-menu .prompts-message li{
+.prompts-message li{
 	font-weight: 500;
 	font-size: 18px;
 }
-.dashboard-menu .prompts-message ul {
+.prompts-message ul {
     padding: 20px 20px 20px 40px;
 }
 .notification-header{
@@ -1713,9 +1719,6 @@ strong{
 	font-family: 'Roboto', sans-serif;
 }
 .tower-name-box span.fast-sell-tag, .tower-name-box span.show-on-active, .tower-name-box span.show-on-active:first-child{
-    /*position: absolute;
-    top: 0;
-    left: 0;*/
     width: 100%;
     text-align: center;
     color:#ec9835;
@@ -1723,10 +1726,10 @@ strong{
     padding: 3px;
 }
 .gamification_container .text-slide{
-	font-size: 18px;
-	padding: 10px 40px;
-	line-height: 24px;
-	font-weight: 500;
+  font-size: 16px;
+  padding: 20px 10px 20px 45px;
+  line-height: 18px;
+  font-weight: 500;
 }
 .tower-name-box span:first-child{
 	font-weight: 500;
@@ -2281,9 +2284,9 @@ strong{
 }
 .pageTitle.big{
 	font-size: 28px;
-    font-weight: 400;
-    margin: 20px 0px;
-    font-family: 'Roboto Condensed', sans-serif;
+  font-weight: 400;
+  margin: 20px 0px;
+  font-family: 'Roboto Condensed', sans-serif;
 }
 hr.divider {
     margin: 20px 0px;
