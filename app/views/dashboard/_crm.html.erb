@@ -1,6 +1,46 @@
 <div class="crm-wrapper">
   <div class="row">
     <div class="container-fluid">
+      <p class="pageTitle big text-gray">Availability by Bedroom Configurations</p>
+    </div>
+  </div>
+  <div class="row summary-wrapper">
+    <% [1, 2, 2.5, 3].each do |beds| %>
+      <div class="col-md-3">
+        <div class="card card-body">
+          <h2 class="pink" style="color:#000;">
+            <%= ProjectUnit.build_criteria({fltrs: { data_attributes: {bedrooms: beds }}}).where(status: "available").count %>
+          </h2>
+          <h6 class="pink" style="color:#000;"><%= beds %> BHK Units Available</h6>
+          <% if ProjectUnitPolicy.new(current_user, ProjectUnit).index? %>
+            <%= link_to 'View All', admin_project_units_path(fltrs: { data_attributes: {bedrooms: beds }, status: 'available' }), class: 'position-absolute', style: 'right: 15px;' %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <div class="row">
+    <div class="container-fluid">
+      <p class="pageTitle big text-gray">Availability by Towers</p>
+    </div>
+  </div>
+  <div class="row summary-wrapper">
+    <% ProjectTower.all.each do |project_tower| %>
+      <div class="col-md-3">
+        <div class="card card-body">
+          <h2 class="pink" style="color:#000;">
+            <%= ProjectUnit.build_criteria({fltrs: { project_tower_id: project_tower.id}}).where(status: "available").count %>
+          </h2>
+          <h6 class="pink" style="color:#000;">Available in <%= project_tower.name %></h6>
+          <% if ProjectUnitPolicy.new(current_user, ProjectUnit).index? %>
+            <%= link_to 'View All', admin_project_units_path(fltrs: { project_tower_id: project_tower.id, status: 'available' }), class: 'position-absolute', style: 'right: 15px;' %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <div class="row">
+    <div class="container-fluid">
       <p class="pageTitle big text-gray">Summary</p>
     </div>
   </div>
