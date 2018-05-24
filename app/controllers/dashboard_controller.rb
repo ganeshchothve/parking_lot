@@ -161,14 +161,14 @@ class DashboardController < ApplicationController
         elsif agreement_price != "NA"
           alternative_params =  {fltrs: { data_attributes: {agreement_price: budget != "NA" ? budget : ""}}}
         end
-        @alternative_count = ProjectUnit.build_criteria(parameters).in(status: ProjectUnit.user_based_available_statuses(current_user)).count if alternative_params.present?
+        @alternative_count = ProjectUnit.build_criteria(@parameters).in(status: ProjectUnit.user_based_available_statuses(current_user)).count if alternative_params.present?
       end
       SelldoLeadUpdater.perform_async(current_user.id.to_s, "unit_browsing")
     elsif params[:stage] == "select_apartment"
       @tower = ProjectTower.find(id: params[:project_tower_id])
       @configurations = ProjectUnit.all.collect{|x| {bedrooms: x.bedrooms, agreement_price: x.agreement_price}}.sort{|x, y| x[:agreement_price] <=> y[:agreement_price]}.uniq{|x| x[:bedrooms]}
-      parameters = {fltrs: { project_tower_id: params[:project_tower_id] } }
-      @units = ProjectUnit.build_criteria(parameters).sort{|x, y| y.floor <=> x.floor}.to_a
+      @parameters = {fltrs: { project_tower_id: params[:project_tower_id] } }
+      @units = ProjectUnit.build_criteria(@parameters).sort{|x, y| y.floor <=> x.floor}.to_a
     elsif params[:stage] == "kyc_details"
       if params[:configuration] == "3d"
         @unit = ProjectUnit.where(sfdc_id: params[:unit_id]).first
