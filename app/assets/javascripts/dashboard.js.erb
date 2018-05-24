@@ -58,7 +58,7 @@ $(document).ready(function(){
       startTimer($(this));
     });
   }
-  
+
   $('body').on('mouseenter', '.unit-tooltip:not(.tooltipstered)', function(){
     $(this)
     .tooltipster({
@@ -145,6 +145,7 @@ $(document).ready(function(){
   $(".colorbox-init").colorbox({
     maxWidth: "90%",
     maxHeight: "90%",
+    rel: false,
     onComplete: function(){
       $('#cboxLoadedContent').zoom();
     }
@@ -236,7 +237,7 @@ $(document).ready(function(){
     var fpUrl = $(this).data("fp-url");
     $(".show-unit-details").html(unitHtml);
 
-    $("#fp > a").attr("href", fpUrl).find("img").attr("src", fpUrl);
+    $("#fp > a").attr("href", fpUrl).attr("title", unitData[0] + ". <br/><div style='font-size:11px;padding-left:5px;padding-top:10px;'>The floorplan images shown are for representation only. Actual plan may differ.</div>").find("img").attr("src", fpUrl);
   });
 
   $(".preventSubmit").on("click", function(e){

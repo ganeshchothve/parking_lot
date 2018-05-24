@@ -45,11 +45,17 @@
 							<h1 class="bold white timer-show" data-start-time="<%= gap_str %>">
 								<%= gap_str %>
 							</h1>
-							<% if gap == 0 %>
-							<script>
-								window.location = window.location;
-							</script>
-							<% end %>
+              <script>
+                <% ten_minutes_timeout = (gap - 5*60) %>
+                <% if ten_minutes_timeout > 0 %>
+                  setTimeout(function(){
+                    alert("You have only 5 more minutes to complete your payment.")
+                  }, <%= ten_minutes_timeout * 1000 %>);
+                <% end %>
+  							<% if gap == 0 %>
+  								window.location = window.location;
+  							<% end %>
+              </script>
 							<p class="white">
 								To be fair to other user interested in this<br/> apartment, you have the next 10 minutes to pay the token amount of <%= number_to_indian_currency(ProjectUnit.blocking_amount) %>
 							</p>

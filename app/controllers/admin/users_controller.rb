@@ -44,9 +44,7 @@ class Admin::UsersController < AdminController
 
   def new
     @user = User.new
-    if params[:role].present?
-      @user.role = params[:role]
-    end
+    @user.role = params[:role].blank? ? "user" : params[:role]
   end
 
   def edit

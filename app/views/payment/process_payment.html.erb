@@ -9,6 +9,7 @@
 					Thank you for your payment of <%= number_to_indian_currency(@receipt.total_amount.round(2)) %>.
           <br/>
           <strong>You will receive an email from us with detailed information on next steps.</strong>
+          <br/>
         </p>
         <% if @receipt.payment_type == 'blocking' %>
           <p>

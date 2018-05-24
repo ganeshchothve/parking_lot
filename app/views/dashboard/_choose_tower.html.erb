@@ -17,8 +17,8 @@
           order = ["G", "H", "F", "D", "E"]
           block_order = ["A", "B", "C", "D", "E"]
           @towers = @towers.sort do |x, y|
-            tmp1 = order.index(x[:project_tower_name][0])
-            tmp2 = order.index(y[:project_tower_name][0])
+            tmp1 = order.index(x[:project_tower_name][0]) * 5
+            tmp2 = order.index(y[:project_tower_name][0]) * 5
             tmp1 += block_order.index(x[:project_tower_name].gsub(" ", "").split("-")[1][0])
             tmp2 += block_order.index(y[:project_tower_name].gsub(" ", "").split("-")[1][0])
             tmp1 <=> tmp2

@@ -454,7 +454,7 @@ class ProjectUnit
 
       if params[:fltrs][:data_attributes].present?
         if params[:fltrs][:data_attributes][:bedrooms].present?
-          data_attributes_query << {data_attributes: {"$elemMatch" =>{"n" => "bedrooms", "v" => params[:fltrs][:data_attributes][:bedrooms].to_i }}}
+          data_attributes_query << {data_attributes: {"$elemMatch" =>{"n" => "bedrooms", "v" => params[:fltrs][:data_attributes][:bedrooms].to_f }}}
         end
       end
       if params[:fltrs][:data_attributes].present?

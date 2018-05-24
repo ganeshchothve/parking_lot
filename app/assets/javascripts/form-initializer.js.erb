@@ -51,24 +51,6 @@ FormInitializer = (function(){
     _.each($(selector).find(".fileupload"), function(){
       $(this).fileUploader();
     })
-    // _.each($(selector).find(".summernote"), function(el){
-    //   if(!$(el).attr("disabled")){
-    //     $(selector).find(".summernote").summernote({
-    //       disableDragAndDrop: true,
-    //       toolbar: [
-    //         // [groupName, [list of button]]
-    //         ['style', ['bold', 'italic', 'underline', 'clear']],
-    //         ['font', ['strikethrough', 'superscript', 'subscript']],
-    //         ['fontsize', ['fontsize']],
-    //         ['color', ['color']],
-    //         ['para', ['ul', 'ol', 'paragraph']],
-    //         ['link', ['link']],
-    //         ['table', ['table']],
-    //         ['height', ['height']]
-    //       ]
-    //     });
-    //   }
-    // });
 
     _.each($(selector).find(".selectize-remote"), function(el){
       var url = $(el).data("url");
