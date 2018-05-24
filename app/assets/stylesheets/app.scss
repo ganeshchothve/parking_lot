@@ -73,9 +73,12 @@ label.control-label{
   padding:0px 0px 30px 0px;
 }
 .summary-wrapper .card-body h2{
-  font-size: 60px;
+  font-size: 24px;
   font-weight: 500;
-  line-height: 50px;
+  line-height: 28px;
+}
+.summary-wrapper a.pink{
+  font-size: 12px;
 }
 .summary-wrapper .card-body h2.pink, .summary-wrapper .card-body h6.pink, .summary-wrapper .card-body a.pink{
   color: #fff;
@@ -754,8 +757,8 @@ background-color: #349e63;
   background-color: #c3e0ef;
 }
 .card-body h6{
-  font-size: 20px;
-  line-height: 26px;
+  font-size: 14px;
+  line-height: 16px;
 }
 .mbottom-20{
   margin-bottom: 20px;
