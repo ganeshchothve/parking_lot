@@ -30,8 +30,10 @@ class HomeController < ApplicationController
         if @user.present?
           message = 'A user with these details has already registered'
           if (!@user.confirmed? || (@user.channel_partner_id.blank? && @user.booking_details.blank?)) && @user.role?('user')
-            @user.set(referenced_channel_partner_ids: [current_user.id], channel_partner_id: current_user.id) if current_user.present? && current_user.role?('channel_partner')
-            ApplicationLog.log("channel_partner_changed", {from: @user.channel_partner_id, to: current_user.id}, RequestStore.store[:logging])
+            if current_user.present? && current_user.role?('channel_partner')
+              @user.set(referenced_channel_partner_ids: [current_user.id], channel_partner_id: current_user.id)
+              ApplicationLog.log("channel_partner_changed", {from: @user.channel_partner_id, to: current_user.id}, RequestStore.store[:logging])
+            end
             if @user.confirmed?
               message = "A user with these details has already registered and has confirmed their account. We have linked his account to you channel partner login."
             else
