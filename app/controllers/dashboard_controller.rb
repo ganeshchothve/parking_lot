@@ -27,13 +27,16 @@ class DashboardController < ApplicationController
 
   def razorpay_payment
     @receipt = Receipt.where(:receipt_id => params[:receipt_id]).first
-
-    ApplicationLog.log("sent_to_payment_gateway", {
-      receipt_id: @receipt.id,
-      unit_id: @receipt.project_unit_id,
-      user_id: @receipt.user_id
-    }, RequestStore.store[:logging])
-    SelldoLeadUpdater.perform_async(@receipt.user_id.to_s, "sent_to_payment_gateway")
+    if @receipt.present? && @receipt.status == "pending"
+      ApplicationLog.log("sent_to_payment_gateway", {
+        receipt_id: @receipt.id,
+        unit_id: @receipt.project_unit_id,
+        user_id: @receipt.user_id
+      }, RequestStore.store[:logging])
+      SelldoLeadUpdater.perform_async(@receipt.user_id.to_s, "sent_to_payment_gateway")
+    else
+      redirect_to home_path(current_user)
+    end
   end
 
   def payment_breakup
