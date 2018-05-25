@@ -13,6 +13,7 @@ function sell_do_form_rendered(){
       params[v.split("=")[0]] = v.split("=")[1];
     }
   });
+  $('[name="sell_do[form][custom][portal_stage]"]').closest(".selldof_row").hide();
   if(params.first_name && params.last_name && params.phone && params.email && params.lead_id){
     $('[name="sell_do[form][lead][first_name]"]').val(params.first_name);
     $('[name="sell_do[form][lead][last_name]"]').val(params.last_name);
