@@ -28,7 +28,7 @@ function onParentMessage(messageEvent) {
 
 function fetchApartmentStatus(apartmentId) {
   $.ajax({
-    url: "/dashboard/foyr-unit-status/" + apartmentId,
+    url: "/foyr-unit-status/" + apartmentId,
     success: function(data){
       windowProxy1.post({"apartmentstatus": data});
     },
