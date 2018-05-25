@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   end if Rails.env.production? || Rails.env.staging?
   mount Sidekiq::Web, at: "/sidekiq"
 
-  root to: "home#index"
+  root to: "home#register"
 
   devise_for :users, controllers: {confirmations: 'local_devise/confirmations',
                                    registrations: 'local_devise/registrations',
