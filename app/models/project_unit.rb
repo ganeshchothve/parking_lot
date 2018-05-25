@@ -290,11 +290,13 @@ class ProjectUnit
 
   def discount_rate(user)
     user = self.user if self.user_id.present?
-    if applied_discount_id.present? && applied_discount_rate.present?
-      return applied_discount_rate
-    else
-      discount_obj = applicable_discount_id(user)
-      return (discount_obj.present? ? discount_obj.value : 0)
+    if ProjectUnit.user_based_available_statuses(user).include?(self.status) || self.status == "hold"
+      if applied_discount_id.present? && applied_discount_rate.present?
+        return applied_discount_rate
+      else
+        discount_obj = applicable_discount_id(user)
+        return (discount_obj.present? ? discount_obj.value : 0)
+      end
     end
     0
   end
