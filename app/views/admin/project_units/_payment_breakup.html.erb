@@ -199,7 +199,7 @@
 
       </td>
       <td class="pink">
-        <% if ProjectUnit.user_based_available_statuses(user).include?(@project_unit.status) || @project_unit.status == "hold" %>
+        <% if ProjectUnit.user_based_available_statuses(current_user).include?(@project_unit.status) || @project_unit.status == "hold" %>
           <%= number_to_indian_currency((@project_unit.agreement_price - @project_unit.discount(@project_unit.user_id.present? ? @project_unit.user : current_user)).round(2)) %>
         <% else %>
           <%= number_to_indian_currency(@project_unit.agreement_price.round(2)) %>
