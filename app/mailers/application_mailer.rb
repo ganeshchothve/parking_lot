@@ -1,5 +1,5 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: "Embassy Springs <no-reply@embassysprings.com>"
+  default from: "Embassy Edge <no-reply@embassyedge.com>"
   layout 'mailer'
   helper ApplicationHelper
 

@@ -1,5 +1,5 @@
 class ReceiptMailer < ApplicationMailer
-  default from: "Embassy Springs <no-reply@embassysprings.com>"
+  default from: "Embassy Edge <no-reply@embassyedge.com>"
 
   def send_failure receipt_id
     @receipt = Receipt.find(receipt_id)

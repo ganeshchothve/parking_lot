@@ -5,3 +5,5 @@ PAYMENT_PROFILE={
         working_key: '57F79DB81A6FEAB473AC2A6076B90B4A'
     }
 }
+SUPPORT_NUMBER = "+91 80660 85665"
+SUPPORT_EMAIL = "helpdesk@embassyedge.com"

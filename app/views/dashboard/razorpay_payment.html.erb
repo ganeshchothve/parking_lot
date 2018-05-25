@@ -23,8 +23,8 @@ var amt = $('#totalAmount').val();
 var options = {
   key: "<%= Rails.env.production? ? ENV_CONFIG['razorpay']['key'] : 'rzp_test_NTQGRS3ia0hiWY' %>",
   amount: <%= @receipt.total_amount.to_i * 100 %>, // 2000 paise = INR 20
-  name: "Embassy Springs",
-  description: "Embassy Springs",
+  name: "Embassy Edge",
+  description: "Embassy Edge",
   handler: function (response){
     $(".payment-gateway-message").html('<div class="title">Thank you for the payment, please wait while we process your payment. You should be redirected once we have processed your request.</div>')
     window.location = "/payment/<%= @receipt.receipt_id %>/process_payment/razorpay?payment_id=" + response.razorpay_payment_id;
