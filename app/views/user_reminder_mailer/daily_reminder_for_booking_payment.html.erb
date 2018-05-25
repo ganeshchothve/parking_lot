@@ -14,7 +14,7 @@
   <tr>
     <td style="line-height:26px;">
       <p>Last <%= (@project_unit.auto_release_on - Date.today).days %> days left. Hurry and pay your balance amount of <%= number_to_indian_currency(@project_unit.pending_balance)%> to confirm your Embassy home today. Your home will be kept on hold only for <%= (@project_unit.auto_release_on - Date.today).days %> days more. </p>
-      <p>Click on the link below to make the payment <a href="http://embassysprings.com/dashboard"></a></p>
+      <p>Click on the link below to make the payment <a href="<%= dashboard_url %>"></a></p>
       <br/>
       <p><strong>OR</strong></p>
       <br/>
