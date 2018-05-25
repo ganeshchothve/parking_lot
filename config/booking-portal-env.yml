@@ -39,3 +39,9 @@ db:
   database:
   host:
   password:
+sfdc:
+  client_id: '3MVG99S6MzYiT5k8pDDngbEuIdjQgxMrvQDHXT33pepb0GPZj0SYndRVh40HSnyBLoEycm5UC62qNIf5csU4d'
+  client_secret: '1280246260883601346'
+  username: 'adminselldo@embassygroup.com.selldo'
+  password: 'selldo@2018'
+  url: 'https://test.salesforce.com/services/oauth2/token'
