@@ -8,15 +8,15 @@ class UserPolicy < ApplicationPolicy
   end
 
   def export?
-    ['admin', 'crm', 'sales'].include?(user.role)
+    ['admin', 'crm'].include?(user.role)
   end
 
   def edit?
-    record.id == user.id || ['crm', 'sales', 'admin'].include?(user.role)
+    record.id == user.id || ['crm', 'admin'].include?(user.role)
   end
 
   def new?
-    user.role?('admin') || ((user.role?('channel_partner') || user.role?('crm') || user.role?('sales')) && record.buyer?)
+    user.role?('admin') || ((user.role?('channel_partner') || user.role?('crm')) && record.buyer?)
   end
 
   def create?
