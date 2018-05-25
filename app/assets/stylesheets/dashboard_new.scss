@@ -793,7 +793,7 @@ form#edit_user_form .form-field-wrapper label{display: block;}
   position: fixed;
   bottom: 20px;
   right: 20px;
-  z-index: 100;
+  z-index: 99;
   border-radius: 8px;
 }
 .prompts-message.active{
@@ -2797,9 +2797,17 @@ input.nav-btn:hover{
 	.notification-header .subTitle{
 		padding-right: 0px;
 	}
-	.dashboard-menu, .dash-menu-wrapper div, .dash-menu-footer div, .dashboard-menu .prompts-message{
+	.dash-menu-wrapper div, .dash-menu-footer div{
 		width: 200px;
 	}
+  .prompts-message{
+    width: 100%;
+    top: 96px;
+    left: 0;
+    height: 32px;
+    min-height: 32px;
+    border-radius: 0;
+  }
 	.dash-logo{
 		padding:12px 10px;
 	}
@@ -3137,6 +3145,7 @@ input.nav-btn:hover{
 		border-top:0px;
 		margin: 0px 0px 0px 0px;
 		text-align: center;
+    z-index: 101;
 	}
 	.dash-menu-wrapper .sprite-dasboard{
 		display: none;
@@ -3531,7 +3540,7 @@ input.nav-btn:hover{
 	    padding-left: 0px;
 	    position: fixed;
 	    right: 0%;
-	    top: 145px;
+	    top: 129px;
 	    background: #fff;
 	    transition:0.5s all ease-in-out;
 	    z-index: 999;
@@ -3594,7 +3603,7 @@ input.nav-btn:hover{
 	.show-unit-details-wrapper .close-btn{
 		color: #ec9834 !important;
 		text-align: right;
-		margin: 10px 20px 0px 20px;
+		margin: 2px 20px 0px 20px;
 		font-size: 20px;
 		font-weight: 500;
 	}
@@ -3603,7 +3612,7 @@ input.nav-btn:hover{
 		margin: 10px;
 	}
 	.show-unit-details > div{
-		padding: 10px;
+		padding: 0 10px;
 	}
 	.prompts-message.visible-xs{
 		position: fixed;
@@ -3616,10 +3625,9 @@ input.nav-btn:hover{
     transition: all 0.3s ease-in;
 	}
 	.gamification_container .text-slide{
-		font-size: 14px;
 		line-height: 19px;
-		border-top: 1px solid #fff;
-		padding: 5px 10px;
+    padding: 3px 10px;
+    font-size: 12px;
 	}
 	.prompts-message.active{
 		background-color: #de8d2d;

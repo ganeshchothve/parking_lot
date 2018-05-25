@@ -57,7 +57,7 @@
 						<% end %>
           </script>
 					<p class="white">
-						To be fair to other user interested in this<br/> apartment, you have the next 10 minutes to pay the token amount of <%= number_to_indian_currency(ProjectUnit.blocking_amount) %>
+						To be fair to other user interested in this<br/> apartment, you have the next <%= ProjectUnit.holding_minutes %> minutes to pay the token amount of <%= number_to_indian_currency(ProjectUnit.blocking_amount) %>
 					</p>
 				</div>
 	        </div>
@@ -65,7 +65,7 @@
       	<div class="col-8 xs-100">
       		<div class="apartment-selector-wrapper paddin-bottom-remove">
 	        	<div class="time-left-wrapper visible-xs">
-	        	 To be fair to other users interested in this apartment, you have the next 10 minutes
+	        	 To be fair to other users interested in this apartment, you have the next <%= ProjectUnit.holding_minutes %> minutes
 	        	</div>
 	        	<div class="col-12 client-detail-wrapper">
 		       		<div class="client-detail">

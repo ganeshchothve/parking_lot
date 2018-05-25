@@ -33,8 +33,8 @@
   </script>
 </head>
 <body>
-  <div class="gamification-container prompts-message hidden-xs gradient-bg">
-    <%= image_tag("icon.png", style: "position: absolute;left: 10px;top: 22px;width: 30px;") %>
+  <div class="gamification-container prompts-message gradient-bg">
+    <%= image_tag("icon.png", style: "position: absolute;left: 10px;top: 22px;width: 30px;", class: "hidden-xs") %>
     <div class="gamification_container desktop">
       <div class="text-slide"><%= booked_today_count %> people have paid the token amount today</div>
       <div class="text-slide"><%= bhk_booked(1) %> 1-BHK Apartments sold</div>
@@ -42,16 +42,6 @@
       <div class="text-slide"><%= bhk_booked(3) %> 3-BHK Apartments sold</div>
     </div>
   </div>
-  <% if user_signed_in? %>
-  <div class="visible-xs prompts-message gamification-container gradient-bg text-center white">
-    <div class="gamification_container mobile">
-      <div class="text-slide"><%= booked_today_count %> people have paid the token amount today</div>
-      <div class="text-slide"><%= bhk_booked(1) %> 1-BHK Apartments sold</div>
-      <div class="text-slide"><%= bhk_booked(2) %> 2-BHK Apartments sold</div>
-      <div class="text-slide"><%= bhk_booked(3) %> 3-BHK Apartments sold</div>
-    </div>
-  </div>
-  <% end %>
   <div id="notify"></div>
   <p class="notice"><%= notice %></p>
   <p class="alert"><%= alert %></p>
