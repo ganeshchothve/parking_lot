@@ -5,6 +5,18 @@ function sell_do_form_successfully_verified(e){
   // register_user_with_portal(e);
 }
 
+document.addEventListener("sell_do_form_submitted_with_error", function(){
+  setTimeout(function(){
+    $('[name="sell_do[form][custom][portal_stage]"]').closest(".selldof_row").hide();
+    $(".sell_do_form_actual_container .form_error_message").remove();
+    new Noty({
+      text: "A user with this email or phone has already registered",
+      timeout: 3000,
+      type: 'error'
+    }).show();
+  }, 100);
+}, false);
+
 function sell_do_form_rendered(){
   var variables = decodeURIComponent(window.location.search.substring(1)).split('&');
   var params = {};
@@ -13,7 +25,9 @@ function sell_do_form_rendered(){
       params[v.split("=")[0]] = v.split("=")[1];
     }
   });
-  $('[name="sell_do[form][custom][portal_stage]"]').closest(".selldof_row").hide();
+  setTimeout(function(){
+    $('[name="sell_do[form][custom][portal_stage]"]').closest(".selldof_row").hide();
+  }, 100);
   if(params.first_name && params.last_name && params.phone && params.email && params.lead_id){
     $('[name="sell_do[form][lead][first_name]"]').val(params.first_name);
     $('[name="sell_do[form][lead][last_name]"]').val(params.last_name);
