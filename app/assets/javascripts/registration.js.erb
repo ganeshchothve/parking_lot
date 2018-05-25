@@ -17,7 +17,7 @@ document.addEventListener("sell_do_form_submitted_with_error", function(){
   }, 100);
 }, false);
 
-function sell_do_form_rendered(){
+document.addEventListener("sell_do_form_rendered", function(){
   var variables = decodeURIComponent(window.location.search.substring(1)).split('&');
   var params = {};
   _.each(variables, function(v){
@@ -34,7 +34,7 @@ function sell_do_form_rendered(){
     $('[name="sell_do[form][lead][email]"]').val(params.email);
     $('[name="sell_do[form][lead][phone]"]').val(params.phone);
   }
-}
+}, false);
 
 function sell_do_form_successfully_submitted(e){
   if(typeof App !== "undefined" && App.current_user){
