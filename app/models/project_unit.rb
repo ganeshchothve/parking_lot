@@ -290,13 +290,11 @@ class ProjectUnit
 
   def discount_rate(user)
     user = self.user if self.user_id.present?
-    if ProjectUnit.user_based_available_statuses(user).include?(self.status) || self.status == "hold"
-      if applied_discount_id.present? && applied_discount_rate.present?
-        return applied_discount_rate
-      else
-        discount_obj = applicable_discount_id(user)
-        return (discount_obj.present? ? discount_obj.value : 0)
-      end
+    if applied_discount_id.present? && applied_discount_rate.present?
+      return applied_discount_rate
+    else
+      discount_obj = applicable_discount_id(user)
+      return (discount_obj.present? ? discount_obj.value : 0)
     end
     0
   end
@@ -386,7 +384,7 @@ class ProjectUnit
   end
 
   def calculate_agreement_price
-    self.agreement_price = land_price + construction_price + gst_on_agreement_price # TODO: Add GST if required
+    self.agreement_price = (land_price + construction_price + gst_on_agreement_price).round(2)
   end
 
   def process_payment!(receipt)
