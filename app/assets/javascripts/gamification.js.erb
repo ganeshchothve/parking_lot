@@ -28,9 +28,9 @@ var Gamification = (function(){
 
     gamificationSlider.reloadSlider();
     gamificationSlider.goToSlide(gamificationSlider.children().length - 1);
-    $(".prompts-message, .prompts-message.visible-xs").addClass("active");
+    $(".gamification-container").addClass("active");
     setTimeout(function(){
-        $(".prompts-message, .prompts-message.visible-xs").removeClass("active");
+        $(".gamification-container").removeClass("active");
     }, 4000);
   }
 
