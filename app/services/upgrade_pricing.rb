@@ -2,12 +2,18 @@ class UpgradePricing
   def self.perform
     sold_count = ProjectUnit.in(status: ['blocked', 'booked_tentative', 'booked_confirmed']).count
     updated_rate = get_upgraded_base_rate(sold_count)
-    ProjectUnit.where(status: "available").update_all(base_rate: updated_rate)
+    current_max_rate = ProjectUnit.max(:base_rate)
+    if updated_rate > current_max_rate
+      ids = ProjectUnit.where(status: "available").distinct(:id)
+      ProjectUnit.where(status: "available").update_all(base_rate: updated_rate)
+      ApplicationLog.log("price_upgraded", {
+        updated_rate: updated_rate,
+        current_max_rate: current_max_rate,
+        sold_count: sold_count,
+        ids: ids.collect{|x| x.to_s}
+      })
+    end
 
-    ApplicationLog.log("price_upgraded", {
-      updated_rate: updated_rate,
-      sold_count: sold_count
-    })
   end
 
   def self.get_upgraded_base_rate sold_count=nil
