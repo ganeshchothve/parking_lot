@@ -59,9 +59,7 @@ module SFDC
     private
 
     def get_token
-      url = "https://login.salesforce.com/services/oauth2/token"
-
-      # TODO - add production values
+      url = ENV_CONFIG['sfdc']['url']
       client_id = ENV_CONFIG['sfdc']['client_id']
       client_secret = ENV_CONFIG['sfdc']['client_secret']
       username = ENV_CONFIG['sfdc']['username']
