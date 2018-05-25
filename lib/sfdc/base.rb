@@ -59,21 +59,13 @@ module SFDC
     private
 
     def get_token
-      if Rails.env.production?
-        url = "https://login.salesforce.com/services/oauth2/token"
-        # TODO - add production values
-        client_id = ""
-        client_token = ""
-        username = ""
-        password = ""
-      else
-        # Sandbox url
-        url = "https://test.salesforce.com/services/oauth2/token"
-        client_id = "3MVG99S6MzYiT5k8pDDngbEuIdjQgxMrvQDHXT33pepb0GPZj0SYndRVh40HSnyBLoEycm5UC62qNIf5csU4d"
-        client_secret = "1280246260883601346"
-        username = "adminselldo@embassygroup.com.selldo"
-        password = "selldo@2018"
-      end
+      url = "https://login.salesforce.com/services/oauth2/token"
+
+      # TODO - add production values
+      client_id = ENV_CONFIG['sfdc']['client_id']
+      client_secret = ENV_CONFIG['sfdc']['client_secret']
+      username = ENV_CONFIG['sfdc']['username']
+      password = ENV_CONFIG['sfdc']['password']
 
       uri = URI.parse(url)
       http = Net::HTTP.new(uri.host, uri.port)
