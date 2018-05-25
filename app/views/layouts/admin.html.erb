@@ -55,24 +55,14 @@
                 <span class="subTitle  bold">Dashboard</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
               <% end %>
             </div>
-            <!-- <div class="pull-left left-wrapper">
-                <span class="subTitle white bold">Dashboard</span> <span class="white f16">Welcome <%= current_user.name %></span>
-            </div> -->
             <div class="pull-right right-wrapper">
-              <!-- <div class="dashboard-notify pull-left">
-                  <div class="notification-count">1</div>
-                  <div class="notification-dropdown-wrapper">
-                      <div class="notification-dropdown">
-                        <div class="title">7 Days Remaining</div>
-                        <p>Pay withing 7 days or the unit will be released</p>
-                      </div>
-                  </div>
-              </div> -->
               <div class="pull-left">
-                <a href="/admin/users/new?role=user" class="add-booking-btn">
-                  Add Booking
-                </a>
-                <span class="hidden-xs profile-icon"><!-- <img src="<%= asset_path 'usernew.png'%>" class="img-responsive"> &nbsp; -->
+                <% if UserPolicy.new(current_user, User.new(role: 'user')).new? %>
+                  <a href="/admin/users/new?role=user" class="add-booking-btn">
+                    Add Booking
+                  </a>
+                <% end %>
+                <span class="hidden-xs profile-icon">
                   <%= link_to edit_admin_user_path(current_user) do %>
                      <img src="<%= asset_path 'usernew.png'%>" class="img-responsive" data-event-category="header" data-event-action="click" data-event-name="user profile"> &nbsp;
                   <% end %>
