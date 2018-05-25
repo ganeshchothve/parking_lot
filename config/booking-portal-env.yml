@@ -24,6 +24,10 @@ sms:
   password:
 selldo:
   api_key: 'bcdd92826cf283603527bd6d832d16c4'
+  client_id: '531de108a7a03997c3000002'
+  form_id: '5abba073923d4a567f880952'
+  default_srd: '5a72c7a67c0dac7e854aca9e'
+  instacall_srd: '5a72c7a67c0dac7e854aca9e'
 pusher:
   key: 'fe128113ca13812feaf0'
   secret: 'c74d20f592399a3c6ba6'
