@@ -59,7 +59,7 @@ class UserKyc
   has_and_belongs_to_many :booking_details
 
   validates :first_name, :last_name, :email, :phone, :dob, :city, :state, :country, :street, presence: false
-  validates :poa, inclusion: {in: [true]}, if: Proc.new{ |kyc| kyc.nri? }
+  # validates :poa, inclusion: {in: [true]}, if: Proc.new{ |kyc| kyc.nri? }
   validates :pan_number, presence: true, unless: Proc.new{ |kyc| kyc.nri? }
   validates :oci, presence: true, if: Proc.new{ |kyc| kyc.nri? }
   validates :email, uniqueness: {scope: :user_id}, allow_blank: true
