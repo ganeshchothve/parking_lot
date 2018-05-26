@@ -38,7 +38,7 @@ module Gamification
         booking_detail = BookingDetail.ne(status: "cancelled").offset(rand(count)).first
         booking_detail.send_notification! if booking_detail.present?
       else
-        message = "#{['Kavitha', 'Murthy', 'Dr. Rahul', 'Supriya', 'Kiran', 'Ganesh'].sample} from #{['Bengaluru', 'Bangalore', 'Bengaluru', 'Mysore', 'Hyderabad', 'Mumbai', 'Coimbatore', 'Chennai', 'Kochi'].sample} just booked an apartment in #{['Daisy', 'Elderberry', 'Gardenia'].sample}"
+        message = "#{['Kavitha', 'Murthy', 'Dr. Rahul', 'Supriya', 'Kiran', 'Ganesh'].sample} from #{['Bengaluru', 'Bangalore', 'Bengaluru', 'Mysore', 'Hyderabad', 'Mumbai', 'Coimbatore', 'Chennai', 'Kochi'].sample} just booked an apartment in #{ProjectTower.in(id: ProjectUnit.where(status: 'available').distinct(:project_tower_id)).distinct(:name).sample}"
         Gamification::PushNotification.new.push(message)
       end
     end

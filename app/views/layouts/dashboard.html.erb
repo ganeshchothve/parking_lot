@@ -56,7 +56,7 @@
         <span class="subTitle bold">Dashboard</span><!-- <span class="white f16">Welcome <%= current_user.name %></span> -->
         <% elsif params[:controller] == "dashboard" && params[:action] == "project_units" %>
         <span class="subTitle bold">Apartment Selector</span>
-        <% if ProjectUnitPolicy.new(current_user, ProjectUnit).block? %>
+        <% if false && ProjectUnitPolicy.new(current_user, ProjectUnit).block? %>
         <span class="d3-view-link"><a href="/dashboard/3d-apartment-selector" data-event-category="header" data-event-action="click" data-event-name="Book in 3D view">Book in 3D view</a></span>
         <% end %>
         <% elsif params[:controller] == "dashboard" && params[:action] == "project_units_3d" %>
