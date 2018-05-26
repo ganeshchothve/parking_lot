@@ -33,7 +33,8 @@
 <% if @user.buyer? %>
 <script type="text/javascript" data-tag="selldo">
 window.sell_do_form_rendered = function(){
-  $('<input type="hidden" name="sell_do[campaign][srd]" value="<%= (user_signed_in? && current_user.role?('channel_partner')) ? ENV_CONFIG['selldo']['default_srd'] : '' %>"/>').appendTo(".sell_do_form_actual_container");
+  $('<input type="hidden" name="sell_do[campaign][srd]" value="<%= (user_signed_in? && current_user.role?('channel_partner')) ? ENV_CONFIG['selldo']['cp_srd'] : '' %>"/>').appendTo(".sell_do_form_actual_container");
+  $('<input type="hidden" name="sell_do[lead][sub_source]" value="<%= (user_signed_in? && current_user.role?('channel_partner')) ? current_user.name : '' %>"/>').appendTo(".sell_do_form_actual_container");
   $('[name="sell_do[form][custom][portal_cp_id]"]').val("<%= (user_signed_in? && current_user.role?('channel_partner')) ? current_user.id : '' %>");
   $('[name="sell_do[form][custom][portal_cp_id]"]').closest('.selldof_row').hide();
 };
