@@ -50,6 +50,6 @@ class Api::SellDoController < ApplicationController
   end
 
   def client_id
-	"531de108a7a03997c3000002"
+	ENV_CONFIG['selldo']['client_id']
   end
 end
