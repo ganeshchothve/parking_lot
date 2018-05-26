@@ -5,16 +5,16 @@ class ApplicationMailer < ActionMailer::Base
 
   def crm_team
     # TODO: Implement this with default cc - Embassy CRM Team
-    ["supriya@amuratech.com"]
+    ["bhuvaneshwari.v@embassyindia.com", "nagaveni@embassyindia.com"]
   end
 
   def default_team
     # TODO: Implement this with default cc - Embassy CRM Team
-    ["supriya@amuratech.com"]
+    ["bhuvaneshwari.v@embassyindia.com", "nagaveni@embassyindia.com"]
   end
 
   def channel_partner_management_team
     # TODO: Implement this with default cc - Embassy CRM Team
-    ["supriya@amuratech.com"]
+    ["bhuvaneshwari.v@embassyindia.com", "nagaveni@embassyindia.com"]
   end
 end
