@@ -1,7 +1,7 @@
 module SFDC
   class LeadsPusher < Base
     def self.execute(user)
-      if Rails.env.production?
+      if Rails.env.production? || Rails.env.staging?
         begin
           leads_data = [lead_json(user)]
           @leads_cron = SFDC::Base.new
