@@ -9,20 +9,12 @@ class ApplicationController < ActionController::Base
 
   def after_sign_in_path_for(current_user)
     ApplicationLog.user_log(current_user.id, 'sign_in', RequestStore.store[:logging])
-    if current_user.role?('admin')
-      admin_users_path
-    else
-      dashboard_path
-    end
+    dashboard_path
   end
 
   def home_path(current_user)
     if current_user
-      if current_user.role?('admin')
-        return admin_users_path
-      else
-        return dashboard_path
-      end
+      return dashboard_path
     else
       return root_path
     end

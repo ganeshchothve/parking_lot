@@ -13,6 +13,11 @@
     <div class="card-header light-blue-header">
       Overview
       <div class="float-right">
+        <% if ['crm', 'sales', 'admin'].include?(current_user.role) %>
+          <% if UserPolicy.new(current_user, @user).edit? %>
+            <%= link_to "Edit", edit_admin_user_path(@user.id), class: 'btn pink-btn white'  %>
+          <% end %>
+        <% end %>
         <% if ReceiptPolicy.new(current_user, Receipt).index?(@user) %>
         <%= link_to "View #{global_labels['receipts']}", admin_user_receipts_path(user_id: @user.id), class: 'btn pink-btn white' %>
         <% end %>

@@ -195,7 +195,7 @@
             <% primary_user_kyc = @project_unit.primary_user_kyc %>
             <p style="border-bottom:1px solid #000;">Name: <%= primary_user_kyc.name %> <br/><br/><br/></p><br/>
             <p style="border-bottom:1px solid #000;">Son/Daughter/Wife of: <%= primary_user_kyc.son_daughter_of %> <br/><br/><br/></p><br/>
-            <p style="border-bottom:1px solid #000;"><span style="width:50%;display: inline-block;">Date of birth: <%= primary_user_kyc.dob.strftime("%b %d, %Y") %> </span><span style="width:50%;display: inline-block;">Phone no.: <%= primary_user_kyc.phone %> </span></p><br/>
+            <p style="border-bottom:1px solid #000;"><span style="width:50%;display: inline-block;">Date of birth: <%= primary_user_kyc.dob.strftime("%b %d, %Y") rescue "-" %> </span><span style="width:50%;display: inline-block;">Phone no.: <%= primary_user_kyc.phone %> </span></p><br/>
             <p style="border-bottom:1px solid #000;">Email ID:  <%= primary_user_kyc.email %> </p><br/>
             <p style="border-bottom:1px solid #000;"><span style="width:50%;display: inline-block;">Income Tax/PAN/GIR No.: <%= primary_user_kyc.pan_number %> </span><span style="width:50%;display: inline-block;">STATUS:</span></p><br/>
             <p style="border-bottom:1px solid #000;"><span style="width:50%;display: inline-block;">Resident Indian: <%= primary_user_kyc.nri? ? "Yes" : "No" %></span><span style="width:50%;display: inline-block;">NRI: <%= primary_user_kyc.nri? ? "Yes" : "No" %></span></p><br/>
@@ -208,7 +208,7 @@
             <p class="mb30"><strong>Applicant - <%= index + 2 %> (As in the Passport)</strong></p>
             <p style="border-bottom:1px solid #000;">Name:<%= user_kyc.name %><br/><br/><br/></p><br/>
             <p style="border-bottom:1px solid #000;">Son/Daughter/Wife of:<%= user_kyc.son_daughter_of %><br/><br/><br/></p><br/>
-            <p style="border-bottom:1px solid #000;"><span style="width:50%;display: inline-block;">Date of birth:<%= user_kyc.dob.strftime("%b %d, %Y") %></span><span style="width:50%;display: inline-block;">Phone no.<%= user_kyc.phone %>:</span></p><br/>
+            <p style="border-bottom:1px solid #000;"><span style="width:50%;display: inline-block;">Date of birth:<%= user_kyc.dob.strftime("%b %d, %Y") rescue "-" %></span><span style="width:50%;display: inline-block;">Phone no.<%= user_kyc.phone %>:</span></p><br/>
             <p style="border-bottom:1px solid #000;">Email ID:%= user_kyc.email %> </p><br/>
             <p style="border-bottom:1px solid #000;"><span style="width:50%;display: inline-block;">Income Tax/PAN/GIR No.<%= user_kyc.pan_number %>:</span></p><br/>
             <p style="border-bottom:1px solid #000;"><span style="width:50%;display: inline-block;">Resident Indian:<%= user_kyc.nri? ? "Yes" : "No" %></span><span style="width:50%;display: inline-block;">NRI:<%= user_kyc.nri? ? "Yes" : "No" %></span></p><br/>

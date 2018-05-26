@@ -2,6 +2,8 @@
   <%= render 'user' %>
 <% elsif current_user.role?('sales') %>
   <%= render 'crm' %>
+<% elsif current_user.role?('admin') %>
+    <%= render 'crm' %>
 <% elsif current_user.role?('crm') %>
   <%= render 'crm' %>
 <% elsif current_user.role?('channel_partner') %>
