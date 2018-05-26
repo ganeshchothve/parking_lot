@@ -41,6 +41,23 @@
   </div>
   <div class="row">
     <div class="container-fluid">
+      <p class="pageTitle big text-gray">Units Sold / Total Available per Tower</p>
+    </div>
+  </div>
+  <div class="row summary-wrapper">
+    <% ProjectTower.all.each do |project_tower| %>
+      <div class="col-md-3">
+        <div class="card card-body">
+          <h2 class="pink" style="color:#000;">
+            <%= ProjectUnit.build_criteria({fltrs: { project_tower_id: project_tower.id}}).in(status: ["blocked", "booked_tentative", "booked_confirmed"]).count %>
+          </h2>
+          <h6 class="pink" style="color:#000;">sold of <%= ProjectUnit.build_criteria({fltrs: { project_tower_id: project_tower.id}}).count %> in <%= project_tower.name %></h6>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <div class="row">
+    <div class="container-fluid">
       <p class="pageTitle big text-gray">Summary</p>
     </div>
   </div>
