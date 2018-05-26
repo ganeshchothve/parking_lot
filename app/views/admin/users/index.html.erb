@@ -40,43 +40,7 @@
     </div>
     <div class="row">
       <div class="col-md-10 border border-left-0 border-top-0 border-bottom-0 table-responsive margin-xs-bottom-10 padding-left-0">
-        <table class='table striped-table'>
-          <thead class="th-default th-pink">
-            <% labels = t('mongoid.attributes.user').with_indifferent_access %>
-            <tr>
-              <th>Name</th>
-              <th>Details</th>
-              <th>Role</th>
-              <th>Account Confirmed?</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @users.each do |user| %>
-            <tr>
-              <td>
-                <%= user.name %><br/>
-                <% if UserPolicy.new(current_user, user).show? %>
-                  <%= link_to "View", admin_user_path(user.id) %> |
-                  <%= link_to "Add #{global_labels['user_kyc_details']}", new_admin_user_user_kyc_path(user), class: 'blue-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
-                  <% if !user.confirmed? && user.confirmation_token.present? %>
-                    <%= link_to 'Resend Confirmation Instructions', resend_confirmation_instructions_admin_user_path(user), class: 'blue-link', data: {event_category: 'Section', event_action: 'Click', event_name: 'Resend Confirmation Instructions'} %>
-                  <% end %>
-                <% end %>
-                <% if ['crm', 'sales', 'admin'].include?(current_user.role) %>
-                  <% if UserPolicy.new(current_user, user).edit? %>
-                    | <%= link_to "Edit", edit_admin_user_path(user.id) %>
-                  <% end %>
-                <% end %>
-              </td>
-              <td><i class="far fa-envelope"></i> <%= user.email %> <br/> <i class="fas fa-mobile-alt"></i> <%= user.phone %></td>
-              <td><%= User.available_roles.find{|x| x[:id] == user.role}[:text] %></td>
-              <td><%= user.confirmed_at.present? ? "Confirmed" : "Not confirmed" %></td>
-            </tr>
-            <% end %>
-          </tbody>
-        </table>
-        <%= will_paginate @users %>
-
+        <%= render "admin/users/index", users: @users %>
         <% if UserPolicy.new(current_user, User).export? %>
           <%= link_to "Export all #{global_labels['users']}", export_admin_users_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn margin-xs-left-0' %>
         <% end %>

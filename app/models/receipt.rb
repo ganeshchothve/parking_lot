@@ -119,6 +119,12 @@ class Receipt
       if params[:fltrs][:user_id].present?
         selector[:user_id] = params[:fltrs][:user_id]
       end
+      if params[:fltrs][:project_unit_id].present?
+        selector[:project_unit_id] = params[:fltrs][:project_unit_id]
+      end
+      if params[:project_unit_id].present?
+        selector[:project_unit_id] = params[:project_unit_id]
+      end
       if params[:fltrs][:payment_mode].present?
         selector[:payment_mode] = params[:fltrs][:payment_mode]
       end
