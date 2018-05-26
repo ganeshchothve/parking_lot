@@ -202,12 +202,15 @@
                   $(document).ready(function(){
                     FormInitializer.init($("#channel_partner_form"));
                     $(".register-cp #channel_partner_form").on("submit", function(e){
+                        $("#channel_partner_form").find("input, select, textarea").attr("disabled", "disabled");
                         $(this).ajaxSubmit({
                           success:function(responseData, responseText){
+                            $("#channel_partner_form").find("input, select, textarea").removeAttr("disabled");
                             $("#channel_partner_form").hide();
                             $(".cp-thankyou").show();
                           },
                           error: function(responseData, responseText){
+                            $("#channel_partner_form").find("input, select, textarea").removeAttr("disabled");
                             notify(responseData.responseJSON.errors, "error", 5000, 500);
                             $("#channel_partner_form input[type=submit]").removeAttr("disabled");
                           },
