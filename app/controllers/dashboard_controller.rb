@@ -124,7 +124,7 @@ class DashboardController < ApplicationController
     respond_to do |format|
       format.json do
         if project_unit.present?
-          status = project_unit.user_based_status(current_user).titleize
+          status = project_unit.user_based_status(current_user) == "available" ? "Available" : "Booked"
           render json: {
             price: project_unit.agreement_price,
             apartment_ID: project_unit.sfdc_id,
@@ -178,6 +178,10 @@ class DashboardController < ApplicationController
       else
         @unit = ProjectUnit.find(params[:unit_id])
       end
+      # unless @unit
+      #   flash[:message] = "The unit you are looking for is not available"
+      #   redirect_to dashboard_path & return
+      # end
       SelldoLeadUpdater.perform_async(current_user.id.to_s, "unit_selected")
     end
 
