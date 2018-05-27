@@ -1,8 +1,9 @@
 <%
   data = ProjectUnit.all.collect do |x|
     {
-      price: x.agreement_price,
+      price: x.all_inclusive_price,
       apartment_ID: x.sfdc_id,
+      "Agreement_value__c": x.agreement_price,
       status: (x.user_based_status(current_user) == "available" ? "Available" : "Booked")
     }
   end

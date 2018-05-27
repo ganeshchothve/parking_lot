@@ -96,7 +96,7 @@
                 <%= link_to "<span><i class='fa fa-user' aria-hidden='true'></i> Users & Customer</span>".html_safe, admin_users_path, class: 'nav-link' %>
               </li>
             <% end %>
-            <% if false && UserPolicy.new(current_user, User).index? %>
+            <% if UserPolicy.new(current_user, User).index? %>
               <li class="nav-item">
                 <a class="nav-link" href="/dashboard/3d-apartment-selector">
                   <span><i class='fas fa-cube'></i> 3D Apartment Selector</span>
