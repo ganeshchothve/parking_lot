@@ -48,7 +48,7 @@ function fetchApartmentStatus(apartmentId) {
 }
 
 window.onload=function(){
-  windowProxy1 = new Porthole.WindowProxy("http://" + guestDomain +"/embassy/proxy.html", 'foyrFrame1');
+  windowProxy1 = new Porthole.WindowProxy("http://storyteller.foyr.com/embassyclient/proxy.html");
   windowProxy1.addEventListener(onParentMessage);
   windowProxy1.post({'availabilitydata':datajson})
 };
