@@ -271,7 +271,7 @@ class DashboardController < ApplicationController
     @project_unit = ProjectUnit.find(params[:project_unit_id])
     authorize @project_unit
     respond_to do |format|
-      if @project_unit.update_attributes(permitted_attributes(@project_unit))
+      if @project_unit.status == "hold" && @project_unit.update_attributes(permitted_attributes(@project_unit))
         format.html { redirect_to dashboard_path }
         format.json { render json: {project_unit: @project_unit}, status: 200 }
       else
