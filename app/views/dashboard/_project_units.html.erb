@@ -60,7 +60,7 @@
             </div>
           </div>
           <div class="col-4">
-            <div>Unit Type:</div><div class="dark"><%= float_to_int(project_unit.bedrooms) %> BHK - 2T - A</div><a href="<%= asset_path("floorplans/#{project_unit.project_tower_name.gsub(" ", '')}-#{project_unit.unit_configuration_name.gsub(" ", '')}.jpg") %>" title="Floorplan for <%= project_unit.name %>. <br/><div style='font-size:11px;padding-left:5px;padding-top:10px;'>The floorplan images shown are for representation only. Actual plan may differ.</div>" class="colorbox-init small-link" data-event-category="section" data-event-action="click" data-event-name="view floor plan">View Floor Plan</a>
+            <div>Unit Type:</div><div class="dark"><%= float_to_int(project_unit.bedrooms) %> BHK</div><a href="<%= asset_path("floorplans/#{project_unit.project_tower_name.gsub(" ", '')}-#{project_unit.unit_configuration_name.gsub(" ", '')}.jpg") %>" title="Floorplan for <%= project_unit.name %>. <br/><div style='font-size:11px;padding-left:5px;padding-top:10px;'>The floorplan images shown are for representation only. Actual plan may differ.</div>" class="colorbox-init small-link" data-event-category="section" data-event-action="click" data-event-name="view floor plan">View Floor Plan</a>
           </div>
           <div class="col-4">
             <div>Unit View:</div><div class="dark"><%= project_unit.category %></div>
