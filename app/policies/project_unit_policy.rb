@@ -20,7 +20,12 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def hold_project_unit?
-    record.user_based_status(user) == 'available' && user.buyer? && user.kyc_ready? && user.project_units.where(status: "hold").blank?
+    valid = record.user_based_status(user) == 'available' && user.buyer? && user.kyc_ready? && user.project_units.where(status: "hold").blank?
+    if user.role?("employee_user")
+      eids = User.where(role: "employee_user").where(confirmed_at: {"$exists": true}).pluck(:id)
+      valid = valid && ProjectUnit.in(status: ['blocked', 'booked_tentative', 'booked_confirmed']).in(user_id: eids).count <= 75
+    end
+    valid
   end
 
   def update_co_applicants?
