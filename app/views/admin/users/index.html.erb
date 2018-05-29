@@ -32,6 +32,9 @@
             <% if UserPolicy.new(current_user, User.new(role: 'sales')).new? %>
               <%= link_to 'New Sales User', new_by_role_admin_users_path(role: 'sales'), class: 'dropdown-item' %>
             <% end %>
+            <% if UserPolicy.new(current_user, User.new(role: 'cp')).new? %>
+              <%= link_to 'New Channel Partner Manager', new_by_role_admin_users_path(role: 'cp'), class: 'dropdown-item' %>
+            <% end %>
             <% if UserPolicy.new(current_user, User.new(role: 'channel_partner')).new? %>
               <%= link_to 'New Channel Partner', new_by_role_admin_users_path(role: 'channel_partner'), class: 'dropdown-item' %>
             <% end %>

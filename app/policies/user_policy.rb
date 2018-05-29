@@ -1,6 +1,6 @@
 class UserPolicy < ApplicationPolicy
   def index?
-    ['channel_partner', 'admin', 'crm', 'sales'].include?(user.role)
+    ['channel_partner', 'admin', 'crm', 'sales', 'cp'].include?(user.role)
   end
 
   def resend_confirmation_instructions?

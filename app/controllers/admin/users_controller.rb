@@ -101,6 +101,8 @@ class Admin::UsersController < AdminController
       custom_scope = custom_scope.in(role: User.buyer_roles)
     elsif current_user.role?('sales')
       custom_scope = custom_scope.in(role: User.buyer_roles)
+    elsif current_user.role?('cp')
+      custom_scope = custom_scope.or([{role: 'user', channel_partner_id: {"$exists": true}}, {role: "channel_partner"}])
     end
     User.with_scope(policy_scope(custom_scope)) do
       yield

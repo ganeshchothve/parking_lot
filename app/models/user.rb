@@ -102,6 +102,7 @@ class User
       {id: 'admin', text: 'Admin'},
       {id: 'crm', text: 'CRM User'},
       {id: 'sales', text: 'Sales User'},
+      {id: 'cp', text: 'Channel Partner Manager'},
       {id: 'channel_partner', text: 'Channel Partner'}
     ]
   end

@@ -1,6 +1,6 @@
 class DiscountPolicy < ApplicationPolicy
   def index?
-    user.role?('admin') || user.role?('sales') || user.role?('crm')
+    user.role?('admin') || user.role?('sales') || user.role?('crm') || user.role?('cp')
   end
 
   def edit?

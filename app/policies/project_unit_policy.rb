@@ -8,7 +8,7 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def eoi?
-    ['crm', 'sales', 'admin'].include?(user.role)
+    ['crm', 'sales', 'cp', 'admin'].include?(user.role)
   end
 
   def update?

@@ -23,13 +23,19 @@
               <%= link_to 'Resend Confirmation Instructions', resend_confirmation_instructions_admin_user_path(user), class: 'blue-link', data: {event_category: 'Section', event_action: 'Click', event_name: 'Resend Confirmation Instructions'} %>
             <% end %>
           <% end %>
-          <% if ['crm', 'sales', 'admin'].include?(current_user.role) %>
+          <% if ['crm', 'sales', 'cp', 'admin'].include?(current_user.role) %>
             <% if UserPolicy.new(current_user, user).edit? %>
               | <%= link_to "Edit", edit_admin_user_path(user.id) %>
             <% end %>
           <% end %>
         </td>
-        <td><i class="far fa-envelope"></i> <%= user.email %> <br/> <i class="fas fa-mobile-alt"></i> <%= user.phone %></td>
+        <td>
+          <i class="far fa-envelope"></i> <%= user.email %> <br/>
+          <i class="fas fa-mobile-alt"></i><%= user.phone %><br/>
+          <% if user.role?("user") && user.channel_partner_id.present? %>
+            CP: <%= user.channel_partner.name %><br/>
+          <% end %>
+        </td>
         <td><%= User.available_roles.find{|x| x[:id] == user.role}[:text] %></td>
         <td><%= user.confirmed_at.present? ? "Confirmed" : "Not confirmed" %></td>
       </tr>

@@ -63,7 +63,7 @@
           <%= f.text_field :location, class: 'form-control form-field', required: @user.role?('channel_partner') ? true : false, disabled: (policy(@user).editable_field?("location") ? false : true) %>
         </div>
         <% end %>
-        <% if @user.buyer? && ["crm", "sales", "admin"].include?(current_user.role) %>
+        <% if @user.buyer? && ["crm", "sales", "cp", "admin"].include?(current_user.role) %>
         <div class="form-group">
           <%= f.label :channel_partner_id, class: "control-label" %>
           <%= f.select :channel_partner_id, f.object.channel_partner_id.present? ? [[f.object.channel_partner.name, f.object.channel_partner.id]] : [], {prompt: true}, class: 'selectize-remote', autofocus: true, disabled: (policy(@user).editable_field?("channel_partner_id") ? false : true), "data-url": admin_users_path, "data-params": {fltrs: {role: 'channel_partner'}}.to_json, 'data-ds': 'ds' %>

@@ -1,0 +1,262 @@
+<div class="crm-wrapper">
+  <div class="row">
+    <div class="container-fluid">
+      <p class="pageTitle big text-gray">Channel Partners</p>
+    </div>
+  </div>
+  <div class="row summary-wrapper">
+    <div class="col-md-3">
+      <div class="card card-body green-card">
+        <h2 class="pink">
+          <%= User.where(role: "channel_partner", confirmed_at: {"$exists": true}).count %> / <%= User.where(role: "channel_partner").count %>
+        </h2>
+        <h6 class="pink">Channel Partners Confirmed / Registered</h6>
+        <% if ProjectUnitPolicy.new(current_user, User).index? %>
+          <%= link_to 'View All', admin_users_path(fltrs: {role: "channel_partner"}), class: 'position-absolute white', style: 'right: 15px;' %>
+        <% end %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card card-body green-card">
+        <h2 class="pink">
+          <%= User.where(channel_partner_id: {"$exists": true}).count %> / <%= User.where(channel_partner_id: {"$exists": true}).where(confirmed_at: {"$exists": true}).count %>
+        </h2>
+        <h6 class="pink">Customers Confirmed / Registered</h6>
+        <% if ProjectUnitPolicy.new(current_user, User).index? %>
+          <%= link_to 'View All', admin_users_path(fltrs: {role: "user"}), class: 'position-absolute white', style: 'right: 15px;' %>
+        <% end %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card card-body green-card">
+        <h2 class="pink">
+          <%= BookingDetail.in(status: "blocked").where(channel_partner_id: {"$exists": true}).count %>
+        </h2>
+        <h6 class="pink">Blocked Units by channel partners</h6>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card card-body green-card">
+        <h2 class="pink">
+          <%= BookingDetail.in(status: ["booked_confirmed"]).where(channel_partner_id: {"$exists": true}).count %>
+        </h2>
+        <h6 class="pink">Confirmed Bookings</h6>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="container-fluid">
+      <p class="pageTitle big text-gray">Availability by Bedroom Configurations</p>
+    </div>
+  </div>
+  <div class="row summary-wrapper">
+    <% [1, 2, 2.5, 3].each do |beds| %>
+      <div class="col-md-3">
+        <div class="card card-body">
+          <h2 class="pink" style="color:#000;">
+            <%= ProjectUnit.build_criteria({fltrs: { data_attributes: {bedrooms: beds }}}).where(status: "available").count %>
+          </h2>
+          <h6 class="pink" style="color:#000;"><%= beds %> BHK Units Available</h6>
+          <% if ProjectUnitPolicy.new(current_user, ProjectUnit).index? %>
+            <%= link_to 'View All', admin_project_units_path(fltrs: { data_attributes: {bedrooms: beds }, status: 'available' }), class: 'position-absolute', style: 'right: 15px;' %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <div class="row">
+    <div class="container-fluid">
+      <p class="pageTitle big text-gray">Availability by Towers</p>
+    </div>
+  </div>
+  <div class="row summary-wrapper">
+    <% ProjectTower.all.each do |project_tower| %>
+      <div class="col-md-3">
+        <div class="card card-body">
+          <h2 class="pink" style="color:#000;">
+            <%= ProjectUnit.build_criteria({fltrs: { project_tower_id: project_tower.id}}).where(status: "available").count %>
+          </h2>
+          <h6 class="pink" style="color:#000;">Available in <%= project_tower.name %></h6>
+          <% if ProjectUnitPolicy.new(current_user, ProjectUnit).index? %>
+            <%= link_to 'View All', admin_project_units_path(fltrs: { project_tower_id: project_tower.id, status: 'available' }), class: 'position-absolute', style: 'right: 15px;' %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <div class="row">
+    <div class="container-fluid">
+      <p class="pageTitle big text-gray">Units Sold / Total Available per Tower</p>
+    </div>
+  </div>
+  <div class="row summary-wrapper">
+    <% ProjectTower.all.each do |project_tower| %>
+      <div class="col-md-3">
+        <div class="card card-body">
+          <h2 class="pink" style="color:#000;">
+            <%= ProjectUnit.build_criteria({fltrs: { project_tower_id: project_tower.id}}).in(status: ["blocked", "booked_tentative", "booked_confirmed"]).count %>
+          </h2>
+          <h6 class="pink" style="color:#000;">sold of <%= ProjectUnit.build_criteria({fltrs: { project_tower_id: project_tower.id}}).count %> in <%= project_tower.name %></h6>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <div class="row">
+    <div class="container-fluid">
+      <p class="pageTitle big text-gray">Summary</p>
+    </div>
+  </div>
+  <div class="row summary-wrapper">
+    <div class="col-md-3">
+      <div class="card card-body green-card">
+        <h2 class="pink"><%= ProjectUnit.where(status: 'blocked').count %></h2>
+        <h6 class="pink">Blocked Units</h6>
+        <% if ProjectUnitPolicy.new(current_user, ProjectUnit).index? %>
+          <%= link_to 'View All', admin_project_units_path(fltrs: { status: 'blocked' }), class: 'position-absolute pink', style: 'right: 15px;' %>
+        <% end %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card card-body yellow-card">
+        <h2 class="pink"><%= ProjectUnit.where(status: 'booked_confirmed').count %></h2>
+        <h6 class="pink">Booking Confirmed Units</h6>
+        <% if ProjectUnitPolicy.new(current_user, ProjectUnit).index? %>
+          <%= link_to 'View All', admin_project_units_path(fltrs: { status: 'booked_confirmed' }), class: 'position-absolute pink', style: 'right: 15px;' %>
+        <% end %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card card-body pink-card">
+        <h2 class="pink"><%= Receipt.where(status: 'pending').ne(payment_mode: "online").count %></h2>
+        <h6 class="pink">Pending Payments</h6>
+        <% if ReceiptPolicy.new(current_user, Receipt).index? %>
+          <%= link_to 'View All', admin_receipts_path(fltrs: { status: 'pending', "payment_mode" => {"$ne" => "online"} }), class: 'position-absolute pink', style: 'right: 15px;' %>
+        <% end %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card card-body orange-card">
+        <h2 class="pink"><%= Receipt.where(status: 'clearance_pending').count %></h2>
+        <h6 class="pink">Pending clearance Payments</h6>
+        <% if ReceiptPolicy.new(current_user, Receipt).index? %>
+          <%= link_to 'View All', admin_receipts_path(fltrs: { status: 'clearance_pending' }), class: 'position-absolute pink', style: 'right: 15px;' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="container-fluid">
+      <p class="pageTitle big text-gray">Cancellation Requests</p>
+    </div>
+  </div>
+  <div class="row summary-wrapper">
+    <div class="col-md-3">
+      <div class="card card-body green-card">
+        <h2 class="pink"><%= UserRequest.count %></h2>
+        <h6 class="pink">Overall</h6>
+        <%# if ReceiptPolicy.new(current_user, Receipt).index? %>
+          <%#= link_to 'View All', admin_receipts_path(fltrs: { status: 'clearance_pending' }), class: 'position-absolute pink', style: 'right: 15px;' %>
+        <%# end %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card card-body yellow-card">
+        <h2 class="pink"><%= UserRequest.where(status: "pending").count %></h2>
+        <h6 class="pink">Pending</h6>
+        <%# if ReceiptPolicy.new(current_user, Receipt).index? %>
+          <%#= link_to 'View All', admin_receipts_path(fltrs: { status: 'clearance_pending' }), class: 'position-absolute pink', style: 'right: 15px;' %>
+        <%# end %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card card-body pink-card">
+        <h2 class="pink"><%= UserRequest.where(status: "resolved").count %></h2>
+        <h6 class="pink">Resolved</h6>
+        <%# if ReceiptPolicy.new(current_user, Receipt).index? %>
+          <%#= link_to 'View All', admin_receipts_path(fltrs: { status: 'clearance_pending' }), class: 'position-absolute pink', style: 'right: 15px;' %>
+        <%# end %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card card-body orange-card">
+        <h2 class="pink"><%= ProjectUnit.total_booked_revenue %></h2>
+        <h6 class="pink">Revenue</h6>
+        <%# if ReceiptPolicy.new(current_user, Receipt).index? %>
+          <%#= link_to 'View All', admin_receipts_path(fltrs: { status: 'clearance_pending' }), class: 'position-absolute pink', style: 'right: 15px;' %>
+        <%# end %>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="container-fluid">
+      <p class="pageTitle big text-gray">Aparments Sold</p>
+    </div>
+  </div>
+  <div class="row summary-wrapper">
+    <div class="col-md-3">
+      <div class="card card-body green-card">
+        <h2 class="pink"><%= ProjectUnit.in(status: ["booked_confirmed"]).where(data_attributes: {"$elemMatch" =>{"n" => "bedrooms", "v" => 1}}).count %></h2>
+        <h6 class="pink">1 BHK</h6>
+        <%# if ReceiptPolicy.new(current_user, Receipt).index? %>
+          <%#= link_to 'View All', admin_receipts_path(fltrs: { status: 'clearance_pending' }), class: 'position-absolute pink', style: 'right: 15px;' %>
+        <%# end %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card card-body yellow-card">
+        <h2 class="pink"><%= ProjectUnit.in(status: ["booked_confirmed"]).where(data_attributes: {"$elemMatch" =>{"n" => "bedrooms", "v" => 2}}).count %></h2>
+        <h6 class="pink">2 BHK</h6>
+        <%# if ReceiptPolicy.new(current_user, Receipt).index? %>
+          <%#= link_to 'View All', admin_receipts_path(fltrs: { status: 'clearance_pending' }), class: 'position-absolute pink', style: 'right: 15px;' %>
+        <%# end %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card card-body pink-card">
+        <h2 class="pink"><%= ProjectUnit.in(status: ["booked_confirmed"]).where(data_attributes: {"$elemMatch" =>{"n" => "bedrooms", "v" => 2.5}}).count %></h2>
+        <h6 class="pink">2.5 BHK</h6>
+        <%# if ReceiptPolicy.new(current_user, Receipt).index? %>
+          <%#= link_to 'View All', admin_receipts_path(fltrs: { status: 'clearance_pending' }), class: 'position-absolute pink', style: 'right: 15px;' %>
+        <%# end %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card card-body orange-card">
+        <h2 class="pink"><%= ProjectUnit.in(status: ["booked_confirmed"]).where(data_attributes: {"$elemMatch" =>{"n" => "bedrooms", "v" => 3}}).count %></h2>
+        <h6 class="pink">3 BHK</h6>
+        <%# if ReceiptPolicy.new(current_user, Receipt).index? %>
+          <%#= link_to 'View All', admin_receipts_path(fltrs: { status: 'clearance_pending' }), class: 'position-absolute pink', style: 'right: 15px;' %>
+        <%# end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <% if ReceiptPolicy.new(current_user, Receipt).index? %>
+        <div class="card mt-4">
+          <div class="card-header">
+            <%= global_label('receipts_with_status', {status: 'Pending'}) %>
+            <%= link_to "View All #{global_label('receipts_with_status', {status: 'Pending'})}", admin_receipts_path(fltrs: { status: 'pending' }), class: 'float-right' %>
+          </div>
+          <div class="card-body no-shadow padding0 table-responsive">
+            <%= render 'receipts/index', {receipts: Receipt.where(status: 'pending').ne(payment_mode: "online").desc(:updated_at).paginate(page: 1 || 1, per_page: 5) } %>
+          </div>
+        </div>
+      <% end %>
+      <% if ProjectUnitPolicy.new(current_user, ProjectUnit).index? %>
+        <% ['blocked', 'booked_confirmed'].each do |status| %>
+          <div class="card mt-4">
+            <div class="card-header">
+              <%= global_label('project_units_with_status', {status: status.titleize}) %>
+              <%= link_to 'View All', admin_project_units_path(fltrs: { status: status }), class: 'float-right' %>
+            </div>
+            <div class="card-body no-shadow padding0 table-responsive">
+              <%= render 'admin/project_units/index', {project_units: ProjectUnit.where(status: status).desc(:updated_at).paginate(page: 1 || 1, per_page: 5) } %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -13,7 +13,7 @@
     <div class="card-header light-blue-header">
       Overview
       <div class="float-right">
-        <% if ['crm', 'sales', 'admin'].include?(current_user.role) %>
+        <% if ['crm', 'sales', 'cp', 'admin'].include?(current_user.role) %>
           <% if UserPolicy.new(current_user, @user).edit? %>
             <%= link_to "Edit", edit_admin_user_path(@user.id), class: 'btn pink-btn white'  %>
           <% end %>
@@ -86,7 +86,7 @@
         </div>
       </div>
       <% end %>
-      <% if (current_user.role?('admin') || current_user.role?('crm') || current_user.role?('sales')) && @user.buyer? %>
+      <% if (current_user.role?('admin') || current_user.role?('crm') || current_user.role?('sales') || current_user.role?('cp')) && @user.buyer? %>
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">

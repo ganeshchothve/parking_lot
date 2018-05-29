@@ -73,7 +73,7 @@ class UserKycsController < ApplicationController
 
   def apply_policy_scope
     custom_scope = UserKyc.all.criteria
-    if current_user.role?('admin') || current_user.role?('crm') || current_user.role?('sales')
+    if current_user.role?('admin') || current_user.role?('crm') || current_user.role?('sales') || current_user.role?('cp')
       if params[:user_id].present?
         custom_scope = custom_scope.where(user_id: params[:user_id])
       end
