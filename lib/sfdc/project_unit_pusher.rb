@@ -29,7 +29,7 @@ module SFDC
       end
       unit_sfdc_id = project_unit.sfdc_id
       opp_id = user.lead_id.to_s + unit_sfdc_id.to_s
-      booking_date = project_unit.blocked_on.present? project_unit.blocked_on : Date.today
+      booking_date = project_unit.blocked_on.present? ? project_unit.blocked_on : Date.today
 
       hash = {
         "api_source" => "portal",

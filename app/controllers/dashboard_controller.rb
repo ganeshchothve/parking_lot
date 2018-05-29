@@ -275,7 +275,6 @@ class DashboardController < ApplicationController
         format.html { redirect_to dashboard_path }
         format.json { render json: {project_unit: @project_unit}, status: 200 }
       else
-        flash[:notice] = 'Could not update the project unit. Please retry'
         format.html { redirect_to request.referer.present? ? request.referer : dashboard_path }
         format.json { render json: {errors: @project_unit.errors.full_messages.uniq}, status: 422 }
       end
