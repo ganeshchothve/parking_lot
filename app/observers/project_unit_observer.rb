@@ -17,7 +17,7 @@ class ProjectUnitObserver < Mongoid::Observer
       project_unit.status = 'management' if project_unit.available_for == 'management'
     end
     if project_unit.status_changed? && project_unit.status == 'hold'
-      project_unit.held_on = Time.now
+      project_unit.held_on = DateTime.now
       project_unit.applied_discount_rate = project_unit.discount_rate(project_unit.user)
       project_unit.applied_discount_id = project_unit.applicable_discount_id(project_unit.user)
       ProjectUnitUnholdWorker.perform_in(ProjectUnit.holding_minutes.minutes, project_unit.id.to_s)
