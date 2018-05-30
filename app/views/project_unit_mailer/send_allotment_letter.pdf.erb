@@ -114,7 +114,9 @@
               <p>Yours truly,</p>
               <br/>
               <p>For NAM Estates Private Limited</p>
-              <p><%= image_tag("reeza-signature.jpg") %></p>
+              <p>
+              <img src="<%= asset_url("reeza-signature.jpg") %>">
+              </p>
               <br/><br/><br/>
               Agreed & Confirmed By
               <p>Name : <%= @project_unit.primary_user_kyc.name %></p>
