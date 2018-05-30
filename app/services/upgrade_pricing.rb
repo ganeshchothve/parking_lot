@@ -5,7 +5,7 @@ class UpgradePricing
       updated_rate = get_upgraded_base_rate(project_tower_name, project_tower_ids)
       current_max_rate = ProjectUnit.in(project_tower_id: project_tower_ids).max(:base_rate)
       if updated_rate > current_max_rate
-        ProjectUnit.where(status: "available").in(project_tower_id: project_tower_ids).each do |project_unit|
+        ProjectUnit.in(status: ["available", "not_available"]).in(project_tower_id: project_tower_ids).each do |project_unit|
           project_unit.base_rate = updated_rate
           project_unit.calculate_agreement_price
           if project_unit.save
