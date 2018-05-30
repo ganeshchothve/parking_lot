@@ -35,7 +35,7 @@ module InventoryImport
 
         client_id = ENV_CONFIG['selldo']['client_id'] || "531de108a7a03997c3000002"
 
-        project_unit = ProjectUnit.in(status: ["available", "employee", "management"]).where(sfdc_id: sfdc_id).first
+        project_unit = ProjectUnit.in(status: ["not_available", "available", "employee", "management"]).where(sfdc_id: sfdc_id).first
         if project_unit.present?
           project_unit.sfdc_id = sfdc_id
           project_unit.name = "#{unit_name} | #{unit_configuration_name}"

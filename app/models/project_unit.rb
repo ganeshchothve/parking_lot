@@ -166,7 +166,7 @@ class ProjectUnit
     if self.available_for == "management"
       self.status = "management"
     end
-    self.base_rate = UpgradePricing.get_upgraded_base_rate
+    self.base_rate = UpgradePricing.get_upgraded_base_rate(self.project_tower_name.split("-")[0].strip)
 
     SelldoLeadUpdater.perform_async(self.user_id.to_s, "hold_payment_dropoff")
     ApplicationLog.log("unit_made_available", {
