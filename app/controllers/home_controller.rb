@@ -4,6 +4,15 @@ class HomeController < ApplicationController
     render layout: false
   end
 
+  def employee_register
+    if user_signed_in?
+      redirect_to home_path(current_user)
+      flash[:notice] = "You have already been logged in"
+    else
+      render layout: "dashboard"
+    end
+  end
+
   def register
     if user_signed_in?
       redirect_to home_path(current_user)

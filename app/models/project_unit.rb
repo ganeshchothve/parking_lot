@@ -294,7 +294,11 @@ class ProjectUnit
       return applied_discount_rate
     else
       discount_obj = applicable_discount_id(user)
-      return (discount_obj.present? ? discount_obj.value : 0)
+      discount = (discount_obj.present? ? discount_obj.value : 0)
+      if user.role?("employee_user") || user.role?("management_user")
+        e_discount = ((base_rate > 4100) ? (base_rate - 4100) : 0)
+      end
+      return discount > e_discount ? discount : e_discount
     end
     0
   end

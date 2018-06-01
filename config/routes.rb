@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   mount Sidekiq::Web, at: "/sidekiq"
 
   root to: "home#register"
+  get "employee-register", to: "home#employee_register", as: :employee_register
 
   devise_for :users, controllers: {confirmations: 'local_devise/confirmations',
                                    registrations: 'local_devise/registrations',
