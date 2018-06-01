@@ -43,7 +43,7 @@ Blocked on - <%= @project_unit.blocked_on %><br/>
 <% end %>
 <% if @project_unit.tds_amount_percent_of_agreement_price > 0 %>
 <p>
-  Additionally, we are hereby enclosing Applicability of TDS on purchase of immovable properties, process and mandates to be followed. <br/>
+  Additionally, we are hereby enclosing Applicability of TDS on purchase of immovable properties, process and mandates to be followed. It is mandatory to complete the TDS payment before signing of your agreement.<br/>
   Your TDS amount is - <%= number_to_indian_currency(@project_unit.tds_amount) %><br/>
   To view the e-Tutorial to make payment for TDS on sale of property click <a href="<%= asset_url('eTutorial_TDS.pdf') %>">here</a>.<br/><br/>
   For more information on the TDS process, click <a href="<%= asset_url('TDS Process - note - NAM.pdf') %>">here</a>.<br/>
