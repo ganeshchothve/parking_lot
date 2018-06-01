@@ -106,7 +106,7 @@ class ProjectUnitObserver < Mongoid::Observer
     end
 
     if project_unit.auto_release_on_changed? && project_unit.auto_release_on.present? && project_unit.auto_release_on_was.present?
-      mailer = ProjectUnitMailer.auto_release_on_extended(project_unit.id.to_s, project_unit.auto_release_on_was)
+      mailer = ProjectUnitMailer.auto_release_on_extended(project_unit.id.to_s, project_unit.auto_release_on_was.to_s)
       if Rails.env.development?
         mailer.deliver
       else
