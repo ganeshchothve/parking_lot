@@ -7,6 +7,13 @@
           <%= f.label :auto_release_on, class: 'control-label label-required title' %>
           <%= f.text_field :auto_release_on, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.auto_release_on.present? ? f.object.auto_release_on.strftime("%d/%m/%Y") : '', "data-min-date": Date.tomorrow.strftime("%d/%m/%Y"), disabled: (policy(@project_unit).editable_field?("auto_release_on") ? false : true), value: f.object.auto_release_on.present? ? f.object.auto_release_on.strftime("%d/%m/%Y") : "" %>
         </div>
+        <% statuses = ["available", "not_available", "employee", "management"] %>
+        <% if statuses.include?(@project_unit.status) %>
+          <div class="form-group form-field-wrapper">
+            <%= f.label :status, class: 'control-label title' %>
+            <%= f.select :status, ProjectUnit.available_statuses.select{|x| statuses.include?(x[:id])}.collect{|x| [x[:text], x[:id]]}, {prompt: "Select", class: "selectize"} %>
+          </div>
+        <% end %>
         <div class="form-group">
           <%= f.submit "Submit", class: 'btn nav-btn' %>
         </div>
