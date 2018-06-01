@@ -4,7 +4,7 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def edit?
-    record.auto_release_on.present? && ['crm', 'admin'].include?(user.role)
+    (record.auto_release_on.present? || ["available", "not_available", "employee", "management"].include?(record.status)) && ['crm', 'admin'].include?(user.role)
   end
 
   def eoi?
