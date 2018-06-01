@@ -24,15 +24,12 @@
       <td><%= number_to_indian_currency(project_unit.all_inclusive_price)  %></td>
       <td><%= number_to_indian_currency(project_unit.total_amount_paid)  %></td>
       <td><%= number_to_indian_currency(project_unit.pending_balance.to_i) %></td>
-      <!-- <td><%#= project_unit.user_id.present? ? project_unit.user.name : "-" %></td> -->
       <td class="text-right">
         <div class="dropdown">
           <a class="btn btn-light light-pink-btn dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
           <div class="dropdown-menu dropdown-menu-right">
-            <% if ['blocked', 'booked_tentative', 'booked_confirmed', 'error'].include?(project_unit.status) %>
             <% if ProjectUnitPolicy.new(current_user, project_unit).edit? %>
               <%= link_to "Edit #{global_labels[:project_unit]}", edit_admin_project_unit_path(project_unit), class: 'dropdown-item' %>
-            <% end %>
             <% end %>
             <% if ['blocked', 'booked_tentative', 'booked_confirmed'].include?(project_unit.status) %>
               <% if ReceiptPolicy.new(current_user, Receipt).index? %>
