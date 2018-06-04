@@ -12,7 +12,7 @@ class SelldoInventoryPusher
       stage: project_unit_status,
       booking_date: timestamp,
       unit_id: project_unit.selldo_id,
-      project_id: project_unit.project_id
+      project_id: project_unit.project_id.to_s
     }
     params["applicants"] = []
     user_kycs.each do |kyc|
