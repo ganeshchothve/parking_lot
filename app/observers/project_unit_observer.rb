@@ -94,15 +94,6 @@ class ProjectUnitObserver < Mongoid::Observer
       else
         SMSWorker.perform_async(user.phone.to_s, message)
       end
-
-      if project_unit.status_changed? && project_unit.status == 'booked_confirmed'
-        mailer = ProjectUnitMailer.send_allotment_letter(project_unit.id.to_s)
-        if Rails.env.development?
-          mailer.deliver
-        else
-          mailer.deliver_later
-        end
-      end
     end
 
     if project_unit.auto_release_on_changed? && project_unit.auto_release_on.present? && project_unit.auto_release_on_was.present?

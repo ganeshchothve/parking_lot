@@ -261,8 +261,8 @@
             <p style="border-bottom:1px solid #000;">Channel Partner/Agent’s Contact No. and Email ID: <%= channel_partner.present? ? "#{channel_partner.phone} - #{channel_partner.email}" : "" %></p><br/>
             <p style="border-bottom:1px solid #000;">and RERA registration No.: <%= channel_partner.present? ? channel_partner.rera_id : "" %></p><br/>
             <p style="border-bottom:1px solid #000;">Name : <%= channel_partner.present? ? channel_partner.name : "" %></p><br/>
-            <p style="border-bottom:1px solid #000;">House No: <%= (channel_partner.present? && channel_partner.channel_partner.present?)Street channel_partner.channel_partner.house_number : "" %></p><br/>
-            <p style="border-bottom:1px solid #000;">Landmark: <%= (channel_partner.present? && channel_partner.channel_partner.present?) ? channel_partner.channel_partner.street : "" %></p><br/>
+            <p style="border-bottom:1px solid #000;">House No: <%= (channel_partner.present? && channel_partner.channel_partner.present?) ? channel_partner.channel_partner.house_number : "" %></p><br/>
+            <p style="border-bottom:1px solid #000;">Street: <%= (channel_partner.present? && channel_partner.channel_partner.present?) ? channel_partner.channel_partner.street : "" %></p><br/>
             <p style="border-bottom:1px solid #000;">City: <%= (channel_partner.present? && channel_partner.channel_partner.present?) ? channel_partner.channel_partner.city : "" %></p><br/>
             <p style="border-bottom:1px solid #000;">State: <%= (channel_partner.present? && channel_partner.channel_partner.present?) ? channel_partner.channel_partner.state : "" %></p><br/>
             <p style="border-bottom:1px solid #000;">Country: <%= (channel_partner.present? && channel_partner.channel_partner.present?) ? channel_partner.channel_partner.country : "" %></p><br/>
