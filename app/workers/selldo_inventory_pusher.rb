@@ -12,6 +12,7 @@ class SelldoInventoryPusher
       stage: project_unit_status,
       booking_date: timestamp,
       unit_id: project_unit.selldo_id,
+      payment_schedule_id: "test payment schedule id value",
       project_id: project_unit.project_id.to_s
     }
     params["applicants"] = []

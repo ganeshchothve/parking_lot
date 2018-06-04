@@ -23,4 +23,3 @@ class SelldoReceiptPusher
     RestClient.post(base_url + "/api/leads/add_payment", params.to_json, { content_type: :json, accept: :json })
   end
 end
-
