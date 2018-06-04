@@ -5,7 +5,7 @@ class SelldoInventoryPusher
   def perform(project_unit_status, project_unit_id, timestamp)
     project_unit = ProjectUnit.find(project_unit_id)
     user = project_unit.user
-    user_kycs = project_unit.user_kycs
+    user_kycs = [project_unit.primary_user_kyc] + project_unit.user_kycs
     params = {
       api_key: ENV_CONFIG['selldo']['api_key'],
       lead_id: user.lead_id,
