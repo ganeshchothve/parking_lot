@@ -200,7 +200,7 @@
             <p style="border-bottom:1px solid #000;">Son/Daughter/Wife of: <%= primary_user_kyc.son_daughter_of %> <br/><br/><br/></p><br/>
             <p style="border-bottom:1px solid #000;"><span style="width:50%;display: inline-block;">Date of birth: <%= primary_user_kyc.dob.strftime("%b %d, %Y") rescue "-" %> </span><span style="width:50%;display: inline-block;">Phone no.: <%= primary_user_kyc.phone %> </span></p><br/>
             <p style="border-bottom:1px solid #000;">Email ID:  <%= primary_user_kyc.email %> </p><br/>
-            <p style="border-bottom:1px solid #000;"><span style="width:50%;display: inline-block;">Income Tax/PAN/GIR No.: <%= primary_user_kyc.pan_number %> </span><span style="width:50%;display: inline-block;">STATUS:</span></p><br/>
+            <p style="border-bottom:1px solid #000;"><span style="width:50%;display: inline-block;">Income Tax/PAN/GIR No.: <%= primary_user_kyc.pan_number %> </span><span style="width:50%;display: inline-block;">Aadhar: <%= primary_user_kyc.aadhaar %></span></p><br/>
             <p style="border-bottom:1px solid #000;"><span style="width:50%;display: inline-block;">Resident Indian: <%= primary_user_kyc.nri? ? "Yes" : "No" %></span><span style="width:50%;display: inline-block;">NRI: <%= primary_user_kyc.nri? ? "Yes" : "No" %></span></p><br/>
             <p style="border-bottom:1px solid #000;"><span style="width:50%;display: inline-block;">PIO: <%= primary_user_kyc.oci %></span><span style="width:50%;display: inline-block;">Citizen of:</span></p><br/>
             <p style="border-bottom:1px solid #000;"><span style="width:50%;display: inline-block;">Educational qualification: <%= primary_user_kyc.education_qualification %></span><span style="width:50%;display: inline-block;">Profession: </span></p><br/>
@@ -223,16 +223,16 @@
             <div class="pg-break"></div>
             <p class="mb30 bg-green text-white text-center"><strong>Agreement Address (Permanent Address)</strong></p>
             <p style="border-bottom:1px solid #000;">Mr./Mrs./Miss./Dr./M/s.  <%= primary_user_kyc.name %><br/><br/><br/></p><br/>
-            <p style="border-bottom:1px solid #000;">Street/House No:<%= primary_user_kyc.house_number %></p><br/>
-            <p style="border-bottom:1px solid #000;">Landmark:<%= primary_user_kyc.street %></p><br/>
+            <p style="border-bottom:1px solid #000;">House No:<%= primary_user_kyc.house_number %></p><br/>
+            <p style="border-bottom:1px solid #000;">Street:<%= primary_user_kyc.street %></p><br/>
             <p style="border-bottom:1px solid #000;">City:<%= primary_user_kyc.city %></p><br/>
             <p style="border-bottom:1px solid #000;">State:<%= primary_user_kyc.state %></p><br/>
             <p style="border-bottom:1px solid #000;">Country:<%= primary_user_kyc.country %></p><br/>
             <p class="mb30" style="border-bottom:1px solid #000;page-break-after: always;">PIN: <%= primary_user_kyc.postal_code %></p>
             <p class="mb30 bg-green text-white text-center"><strong>Correspondence Address</strong></p>
             <p style="border-bottom:1px solid #000;">Mr./Mrs./Miss./Dr./M/s. <%= primary_user_kyc.name %><br/><br/><br/></p><br/>
-            <p style="border-bottom:1px solid #000;">Street/House No: <%= primary_user_kyc.correspondence_house_number %> </p><br/>
-            <p style="border-bottom:1px solid #000;">Landmark:  <%= primary_user_kyc.correspondence_street %></p><br/>
+            <p style="border-bottom:1px solid #000;">House No: <%= primary_user_kyc.correspondence_house_number %> </p><br/>
+            <p style="border-bottom:1px solid #000;">Street:  <%= primary_user_kyc.correspondence_street %></p><br/>
             <p style="border-bottom:1px solid #000;">City:  <%= primary_user_kyc.correspondence_city %></p><br/>
             <p style="border-bottom:1px solid #000;">State:  <%= primary_user_kyc.correspondence_state %></p><br/>
             <p style="border-bottom:1px solid #000;">Country:  <%= primary_user_kyc.correspondence_country %></p><br/>
@@ -241,8 +241,8 @@
             <div class="pg-break"></div>
             <p class="mb30 bg-green text-white text-center"><strong>Details of General Power of Attorney Holder (If any)</strong></p>
             <p style="border-bottom:1px solid #000;">Mr./Mrs./Miss./Dr./M/s.<br/><br/><br/></p><br/>
-            <p style="border-bottom:1px solid #000;">Street/House No: </p>  <br/>
-            <p style="border-bottom:1px solid #000;">Landmark: </p><br/>
+            <p style="border-bottom:1px solid #000;">House No: </p>  <br/>
+            <p style="border-bottom:1px solid #000;">Street: </p><br/>
             <p style="border-bottom:1px solid #000;">City: </p><br/>
             <p style="border-bottom:1px solid #000;">State: </p><br/>
             <p style="border-bottom:1px solid #000;">Country: </p><br/>
@@ -255,22 +255,19 @@
 
             <div class="pg-break"></div>
             <p class="mb30 bg-green text-white text-center"><strong>Additional Details</strong></p>
-            <p style="border-bottom:1px solid #000;">Source of enquiry: <br/>(Newspaper advertisement, Website, Hoarding, Site walk-in, Office walk-in, Road show, Exhibition)</p><br/>
-            <p style="border-bottom:1px solid #000;">Referred by: </p><br/>
-            <p style="border-bottom:1px solid #000;">Channel Partner / Agent: </p><br/>
-            <p style="border-bottom:1px solid #000;">Channel Partner/Agent’s Contact No. and Email ID: </p><br/>
-            <p style="border-bottom:1px solid #000;">and RERA registration No.: </p><br/>
-            <p style="border-bottom:1px solid #000;">Name : </p><br/>
-            <p style="border-bottom:1px solid #000;">Street/House No: </p><br/>
-            <p style="border-bottom:1px solid #000;">Landmark: </p><br/>
-            <p style="border-bottom:1px solid #000;">City: </p><br/>
-            <p style="border-bottom:1px solid #000;">State: </p><br/>
-            <p style="border-bottom:1px solid #000;">Country: </p><br/>
-            <p style="border-bottom:1px solid #000;">PIN: </p><br/>
-            <p style="border-bottom:1px solid #000;">Contact No.: </p><br/>
-            <p style="border-bottom:1px solid #000;">Finance: <%= primary_user_kyc.loan_required %><br/>(Self, Bank)</p><br/>
-            <p style="border-bottom:1px solid #000;">Bank name:<%= primary_user_kyc.bank_name %></p><br/>
-            <p style="border-bottom:1px solid #000;" class="mb30">This booking is for own use/Investment</p>
+            <% channel_partner = @project_unit.user.channel_partner %>
+            <p style="border-bottom:1px solid #000;">Source of enquiry: <%= channel_partner.present? ? "Channel Partner" : "(Newspaper advertisement, Website, Hoarding, Site walk-in, Office walk-in, Road show, Exhibition)" %><br/></p><br/>
+            <p style="border-bottom:1px solid #000;">Channel Partner / Agent: <%= channel_partner.present? ? channel_partner.name : "" %></p><br/>
+            <p style="border-bottom:1px solid #000;">Channel Partner/Agent’s Contact No. and Email ID: <%= channel_partner.present? ? "#{channel_partner.phone} - #{channel_partner.email}" : "" %></p><br/>
+            <p style="border-bottom:1px solid #000;">and RERA registration No.: <%= channel_partner.present? ? channel_partner.rera_id : "" %></p><br/>
+            <p style="border-bottom:1px solid #000;">Name : <%= channel_partner.present? ? channel_partner.name : "" %></p><br/>
+            <p style="border-bottom:1px solid #000;">House No: <%= (channel_partner.present? && channel_partner.channel_partner.present?)Street channel_partner.channel_partner.house_number : "" %></p><br/>
+            <p style="border-bottom:1px solid #000;">Landmark: <%= (channel_partner.present? && channel_partner.channel_partner.present?) ? channel_partner.channel_partner.street : "" %></p><br/>
+            <p style="border-bottom:1px solid #000;">City: <%= (channel_partner.present? && channel_partner.channel_partner.present?) ? channel_partner.channel_partner.city : "" %></p><br/>
+            <p style="border-bottom:1px solid #000;">State: <%= (channel_partner.present? && channel_partner.channel_partner.present?) ? channel_partner.channel_partner.state : "" %></p><br/>
+            <p style="border-bottom:1px solid #000;">Country: <%= (channel_partner.present? && channel_partner.channel_partner.present?) ? channel_partner.channel_partner.country : "" %></p><br/>
+            <p style="border-bottom:1px solid #000;">PIN: <%= (channel_partner.present? && channel_partner.channel_partner.present?) ? channel_partner.channel_partner.postal_code : "" %></p><br/>
+            <p style="border-bottom:1px solid #000;">Contact No.: <%= channel_partner.present? ? channel_partner.phone : "" %></p><br/>
             <div class="pg-break"></div>
             <p class="mb30 bg-green text-white text-center"><strong>Signatures of Applicant/s</strong></p>
             <p><strong>1st Applicant</strong></p>

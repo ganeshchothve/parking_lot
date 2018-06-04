@@ -11,6 +11,10 @@ class ProjectUnitPolicy < ApplicationPolicy
     ['crm', 'sales', 'cp', 'admin'].include?(user.role)
   end
 
+  def breakup?
+    ['crm', 'sales', 'cp', 'admin'].include?(user.role)
+  end
+
   def update?
     edit?
   end

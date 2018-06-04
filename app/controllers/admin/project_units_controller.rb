@@ -38,6 +38,9 @@ class Admin::ProjectUnitsController < AdminController
     render layout: false
   end
 
+  def breakup
+  end
+
   private
   def set_project_unit
     @project_unit = ProjectUnit.find(params[:id])

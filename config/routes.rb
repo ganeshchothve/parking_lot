@@ -34,6 +34,7 @@ Rails.application.routes.draw do
     end
     resources :project_units, only: [:index, :edit, :update] do
       get 'eoi', action: 'eoi', on: :member, as: :eoi
+      get 'breakup', action: 'breakup', on: :member, as: :breakup
     end
     resources :users do
       get :resend_confirmation_instructions, action: 'resend_confirmation_instructions', as: :resend_confirmation_instructions, on: :member
