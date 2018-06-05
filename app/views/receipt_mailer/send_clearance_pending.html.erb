@@ -34,8 +34,9 @@
   <td style="line-height:26px;">
     <p><span style="font-size:18px;line-height:26px;color:#000;font-weight:700;">Thank you for your payment of <%= number_to_indian_currency(@receipt.total_amount) %> </span></p><br/>
     <p>
-      <span>Following are your cheque details</span><br/>
+      <span>Following are your unit details</span><br/>
       <span style="font-weight:bold">Name </span> : <%= @user.name %><br/>
+      <span style="font-weight:bold">Unit Name </span> : <%= @project_unit.name %><br/>
       <span style="font-weight:bold">Agreement Value </span> : <%= number_to_indian_currency(@project_unit.agreement_price) %><br/>
       <span style="font-weight:bold">All inclusive total (excluding registration charges)  </span> : <%= number_to_indian_currency(@project_unit.all_inclusive_price) %><br/>
       <span style="font-weight:bold;">Advance paid </span> :  <%= number_to_indian_currency(@project_unit.total_amount_paid) %><br/>
@@ -43,7 +44,7 @@
     </p>
     <br/>
     <p>
-      Your Embassy home will be kept on hold for you for additional <%= (@project_unit.auto_release_on - Date.today).days %> days until your cheque is cleared. We will notify you once the cheque realizes.
+      Your Embassy home will be kept on hold for you till <%= @project_unit.auto_release_on.strftime("%d %b, %Y") %>. We will notify you once the cheque realizes.
     </p>
     </td>
   </tr>
