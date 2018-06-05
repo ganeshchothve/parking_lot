@@ -22,5 +22,10 @@
       <span style="font-weight:bold">Branch: </span> <%= @receipt.issuing_bank_branch %><br/>
       <span style="font-weight:bold">Cheque / DD number / Payment Identifier: </span> <%= @receipt.payment_identifier %><br/>
     </p>
+    <% if @receipt.project_unit.present? %>
+      <p>
+        Your Embassy home will be kept on hold for you till <%= @receipt.project_unit.auto_release_on.strftime("%d %b, %Y") %>. We will notify you once the cheque realizes.
+      </p>
+    <% end %>
   </td>
 </tr>
