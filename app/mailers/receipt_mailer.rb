@@ -32,7 +32,7 @@ class ReceiptMailer < ApplicationMailer
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
     cc += default_team
-    mail(to: @user.email, cc: cc, subject: "Payment #{@receipt.receipt_id} has reached the developer and is pending clearance")
+    mail(to: @user.email, cc: cc, subject: "Payment #{@receipt.receipt_id} is pending clearance")
   end
 
   def send_pending_non_online receipt_id
