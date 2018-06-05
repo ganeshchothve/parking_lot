@@ -135,8 +135,8 @@
               <thead>
                 <tr>
                   <th>Rate per square feet</th>
-                  <th>Floor rise charges</th>
-                  <th>Statutory payments/charges</th>
+                  <th>Floor-rise / PLC charges</th>
+                  <th>GST</th>
                   <th>Deposits and other charges</th>
                   <th style="padding:0 50px;">Total</th>
                 </tr>
@@ -144,10 +144,10 @@
               <tbody>
                 <tr>
                   <td><%= @project_unit.effective_rate %></td>
-                  <td><%= @project_unit.floor_rise %></td>
-                  <td>&nbsp;</td>
-                  <td>&nbsp;</td>
-                  <td>&nbsp;</td>
+                  <td><%= number_to_indian_currency((@project_unit.floor_rise + @project_unit.premium_location_charges).round(2)) %></td>
+                  <td><%= number_to_indian_currency(@project_unit.gst_on_agreement_price.round(2)) %></td>
+                  <td><%= number_to_indian_currency(@project_unit.sub_total.round(2)) %></td>
+                  <td><%= number_to_indian_currency(@project_unit.all_inclusive_price.round(2)) %></td>
                 </tr>
               </tbody>
             </table>

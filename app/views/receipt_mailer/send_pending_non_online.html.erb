@@ -7,9 +7,6 @@
 <tr>
   <td style="line-height:26px;">
     <p>
-      <% if @cp.present? %>
-      <strong>  <%= @cp.name %> </strong> the Channel Partner has collected the cheque of <%= number_to_indian_currency(@receipt.total_amount) %>/- towards the Booking amount.
-      <% end %>
       Your cheque of <%= number_to_indian_currency(@receipt.total_amount) %>/- towards the Booking amount has been collected.
     </p>
     <p>We will notify you once the cheque is processed by our team. </p>
