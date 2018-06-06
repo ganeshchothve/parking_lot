@@ -1,15 +1,44 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title></title>
 <style type="text/css">
-	body, html{
-		padding: 0px;
-		margin: 0px;
-	}
+  .login-card .pageTitle{
+    font-size: 28px;
+    line-height: 40px;
+ }
+ .login-card .subTitle{
+     font-size: 20px;
+    line-height: 25px;
+    margin: 0px 0px;
+ }
+ .steps-li li{
+  list-style-type: none;
+  line-height: 26px;
+ }
 </style>
-</head>
-<body>
-	<a href="/register?srd=<%= ENV_CONFIG['selldo']['default_srd'] %>"><img src="/Embassy-Edge-SIngle-Page-Web-Design.png" style="display:block;width:100%"></a>
-</body>
-</html>
+<section class="dashboard-bg full-height white-bg-xs">
+  <div class="container">
+    <div class="col-7 login-card-wrapper">
+      <div class="login-card">
+        <a href="javascript:void(0);" class="logo-wrapper pull-left">
+          <img src="<%= asset_path "embassy_springs_logo.png" %>" class="img-responsive" />
+        </a>
+        <img src="<%= asset_path "logo-edge.png" %>" class="img-responsive pull-right" />
+        <div class="clearfix"></div>
+        <br/><br/><br/>
+        <div class="pageTitle purple text-center">Welcome to Embassy Edge Booking Portal</div>
+        <div class="subTitle purple text-center" style="margin-bottom:25px;">Now you can book your home in 3 easy steps</div>
+        <div style="width:60%; margin:0 auto">
+          <ul class="text-left steps-li">
+              <li><strong>Step 1:</strong> Choose your perfect home</li>
+              <li><strong>Step 2:</strong> Pay the blocking amount</li>
+              <li><strong>Step 3:</strong> Pay booking amount within 7 days</li>
+          </ul>
+        </div>
+        <p class="subTitle text-center" style="font-size:18px;">We have sent  confirmation link to your registered email address. Please verify your account to go ahead and book your dream home today.</p>
+        <div class="clearfix"></div>
+      </div>
+      <div class="col-12 gradient-bg text-center" style="border-radius: 0px 0px 6px 6px;background-color: #3981b8;color:#fff;font-size: 18px;">
+        <p>Book online by paying <%= number_to_indian_currency(ProjectUnit.blocking_amount) %></p>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</section>
