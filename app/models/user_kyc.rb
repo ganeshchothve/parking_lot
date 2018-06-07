@@ -103,10 +103,15 @@ class UserKyc
         applicants: []
       }
       applicants = []
+      coapplicant_type = "Primary"
+      applicants << user_kyc_json(project_unit.primary_user_kyc, coapplicant_type)
       count = 1
       project_unit.user_kycs.asc(:created_at).each do |kyc|
-        next if project_unit.primary_user_kyc_id == kyc.id
-        coapplicant_type = "Co-Applicant #{count}"
+        if project_unit.primary_user_kyc_id == kyc.id
+          coapplicant_type = "Primary"
+        else
+          coapplicant_type = "Co-Applicant #{count}"
+        end
         applicants << user_kyc_json(kyc, coapplicant_type)
         count += 1
       end
@@ -137,6 +142,12 @@ class UserKyc
       anniversary: (kyc.anniversary.strftime("%Y-%m-%d") rescue nil),
       nri: kyc.nri ? "NRI" : "Indian",
       aadhaar: kyc.aadhaar,
+      house_number: kyc.house_number,
+      street: kyc.street,
+      city: kyc.city,
+      state: kyc.state,
+      country: kyc.country,
+      zip: kyc.postal_code,
       marital_status: nil,
       passport_number: nil,
       gender: nil,
