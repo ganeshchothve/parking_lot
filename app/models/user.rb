@@ -19,6 +19,7 @@ class User
   field :referenced_channel_partner_ids, type: Array, default: []
   field :rera_id, type: String
   field :location, type: String
+  field :mixpanel_id, type: String
 
   field :encrypted_password, type: String, default: ""
 

@@ -16,7 +16,7 @@ class SelldoLeadUpdater
       stage = 'hold' if stage.blank? && project_units.select{|x| x.status == 'hold'}.present?
       stage = 'user_kyc_done' if stage.blank? && user.user_kycs.present?
     end
-
+    MixpanelPusherWorker.perform_async(user.mixpanel_id, stage, {})
     if stage.present?
       params = {
         'api_key': ENV_CONFIG['selldo']['api_key'],
