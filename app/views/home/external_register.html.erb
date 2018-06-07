@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>BookingPortal</title>
+  <%= csrf_meta_tags %>
+  <%= stylesheet_link_tag 'dashboard_new' %>
+  <%= javascript_include_tag 'dashboard' %>
+  <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
+  <%= javascript_tag do %>
+  <% if user_signed_in? %>
+  if(typeof App === "undefined"){
+    App = {};
+  }
+  App.current_user = <%= raw current_user.to_json %>;
+  App.current_user.name = App.current_user.first_name + " " + App.current_user.last_name
+  <% end %>
+  <% if Rails.env.development? || Rails.env.staging? %>
+  Pusher.logToConsole = true;
+  <% end %>
+  <% end %>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-116390336-1"></script>
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-93219442-4', 'auto');
+  ga('require', 'ecommerce', 'ecommerce.js');
+  ga('require', 'displayfeatures');
+  ga('require', 'ec');
+  </script>
+  <style>
+  .selldof .title{
+    display: none;
+  }
+  </style>
+</head>
+<body>
+  <div id="notify"></div>
+  <p class="notice"><%= notice %></p>
+  <p class="alert"><%= alert %></p>
+
+  <script type="text/javascript">
+    ga('send', 'pageview');
+  </script>
+  <div class="container">
+    <div class="login-card">
+      <div class="subTitle purple text-center" style="margin-bottom:25px;">Register now to book your </div>
+      <div class="pageTitle purple text-center">Embassy Edge Home</div>
+      <div class="sign-up form-wrapper">
+        <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= ENV_CONFIG['selldo']['client_id'] %>.js'></script>
+        <script src='//trkr.scdn1.secure.raxcdn.com/t/forms/<%= ENV_CONFIG['selldo']['client_id'] %>/<%= ENV_CONFIG['selldo']['form_id'] %>.js' data-form-id='<%= ENV_CONFIG['selldo']['form_id'] %>'></script>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+  <script type="text/javascript" data-tag="selldo">
+  window.sell_do_form_rendered = function(){
+    $('[name="sell_do[form][custom][portal_cp_id]"]').closest('.selldof_row').hide();
+    $(".selldof .btn").attr("data-event-category","section").attr("data-event-action","click").attr("data-event-name","submit")
+  };
+  window.sell_do_form_submitted = function(data, event){
+
+  };
+  </script>
+</body>
+</html>
