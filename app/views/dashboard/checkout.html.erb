@@ -30,13 +30,14 @@
   </div>
 </section>
 <script type="text/javascript">
-  ga('ecommerce:addItem', {
+  ga('ec:addProduct', {
     'id': '<%= @project_unit.id %>',// Transaction ID. Required.
     'name': '<%= @project_unit.name %>',// Product name. Required.
-    'sku': '<%= @project_unit.name %>', // SKU/code.
-    'category': 'Flat',// Category or variation.
+    //'sku': '<%= @project_unit.name %>', // SKU/code.
+    'category': 'Apartment',// Category or variation.
     'price': '<%= @project_unit.agreement_price %>',// Unit price.
     'quantity': '1' // Quantity.
   });
+  ga('ec:setAction', 'add');  
   ChatHelp.message(App.current_user.name + " has held a unit <%= @project_unit.name %>; filled up KYC details.");
 </script>

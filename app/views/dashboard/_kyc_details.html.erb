@@ -297,3 +297,24 @@ $(document).ready(function(){
   ChatHelp.message(App.current_user.name + " has chosen a unit <%= @unit.name %>");
 });
 </script>
+<script type="text/javascript">
+ga('ec:addImpression', {            // Provide product details in an impressionFieldObject.
+    'id': '<%= @unit.id %>',                   // Product ID (string).
+    'name': '<%= @unit.name %>', // Product name (string).
+    'variant': '<%= @unit.bedrooms %> BHK',               // Product variant (string).
+    'list': 'KYC Details Page',
+    'category': 'Apartment',// Category or variation.
+    'price': '<%= @unit.agreement_price %>',// Unit price.
+    'quantity': '1'         // Product list (string).
+  });
+ga('ec:addProduct', {
+    'id': '<%= @unit.id %>',// Transaction ID. Required.
+    'name': '<%= @unit.name %>',// Product name. Required.
+    'variant': '<%= @unit.bedrooms %> BHK',
+    'list': 'KYC Details Page',
+    'category': 'Apartment',// Category or variation.
+    'price': '<%= @unit.agreement_price %>',// Unit price.
+    'quantity': '1' // Quantity.
+  });
+  ga('ec:setAction', 'detail');
+</script>
