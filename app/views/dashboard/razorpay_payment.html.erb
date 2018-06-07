@@ -50,3 +50,17 @@ document.getElementById('rzp-button1').onclick = function(e){
     $('#rzp-button1').trigger("click")
   })
 </script>
+<script type="text/javascript">
+  ga('ec:addProduct', {
+    'id': '<%= @receipt.project_unit.present? ? @receipt.project_unit.id : @receipt.reference_project_unit.id %>', // Product ID (string).
+    'name': '<%= @receipt.project_unit.present? ? @receipt.project_unit.name : @receipt.reference_project_unit.name %> | Embassy Edge', // Product name (string).
+    'category': 'Apartment', // Product category (string).
+    'brand': 'Embassy Edge', // Product brand (string).
+    'price': '<%= @receipt.total_amount.to_i * 100 %>',
+    'quantity': 1
+  });
+  ga('ec:setAction', 'add');  
+  ga('ec:setAction','checkout', {
+  'step': 1
+  });
+</script>

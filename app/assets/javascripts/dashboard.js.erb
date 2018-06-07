@@ -206,7 +206,7 @@ $(document).ready(function(){
       selectedTower = $(this).addClass("active").data("towerid");
     }
   });
-
+ ga('require', 'ec'); //Step 1
   $("#append-floors, #append-floors-clone").on("click", ".apt-selector-box .apt.bstatus-available", function(){
     $("#append-floors .apt-selector-box .apt.bstatus-available, #append-floors-clone .apt-selector-box .apt.bstatus-available").removeClass("bstatus-selected");
     $(this).addClass("bstatus-selected");
@@ -233,6 +233,24 @@ $(document).ready(function(){
     unitHtml += '<div>All Inclusive: '+ unitData[9] +'/-</div>';
     unitHtml += '<div>Booking Status: <span class="book-status">'+ unitData[4] +'</span></div>';
     unitHtml += '</div>';
+
+    ga('ec:addImpression', {            // Provide product details in an impressionFieldObject.
+      'id': selectedValues.unit_id,                   // Product ID (string).
+      'name': unitData[0], // Product name (string).
+      'category': parseInt(unitData[3]) + ' BHK',   // Product category (string).
+      'list': 'Apartment Selector Stage 3',
+      'brand': 'Embassy Edge',                // Product brand (string).
+   });
+    ga('ec:setAction', 'click', {       
+      'list': 'Search Results'          // Product list for impression or click
+      });
+    ga('send', 'pageview');      //step 4
+
+    ga('send', 'event', {
+       eventCategory: unitData[0],
+       eventAction: 'Select Unit',
+       eventLabel: event.target.href
+     });
 
     var fpUrl = $(this).data("fp-url");
     $(".show-unit-details").html(unitHtml);
