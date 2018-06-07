@@ -247,9 +247,9 @@ $(document).ready(function(){
     ga('send', 'pageview');      //step 4
 
     ga('send', 'event', {
-       eventCategory: unitData[0],
-       eventAction: 'Select Unit',
-       eventLabel: event.target.href
+       eventCategory: 'Apartment Selector',
+       eventAction: 'click',
+       eventLabel: unitData[0]
      });
 
     var fpUrl = $(this).data("fp-url");
