@@ -103,6 +103,8 @@ class UserKyc
         applicants: []
       }
       applicants = []
+      coapplicant_type = "Primary"
+      applicants << user_kyc_json(project_unit.primary_user_kyc, coapplicant_type)
       count = 1
       project_unit.user_kycs.asc(:created_at).each do |kyc|
         if project_unit.primary_user_kyc_id == kyc.id
