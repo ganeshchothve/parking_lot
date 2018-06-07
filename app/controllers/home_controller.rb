@@ -1,5 +1,8 @@
 # TODO: replace all messages & flash messages
 class HomeController < ApplicationController
+  def index
+  end
+
   def eoi
     render layout: false
   end
