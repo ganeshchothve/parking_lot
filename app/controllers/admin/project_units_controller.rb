@@ -1,6 +1,6 @@
 class Admin::ProjectUnitsController < AdminController
   before_action :authenticate_user!
-  before_action :set_project_unit, except: [:index]
+  before_action :set_project_unit, except: [:index, :export]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: :index
   include ApplicationHelper
@@ -57,7 +57,7 @@ class Admin::ProjectUnitsController < AdminController
   end
 
   def authorize_resource
-    if params[:action] == "index"
+    if params[:action] == "index"  || params[:action] == "export"
       authorize ProjectUnit
     elsif params[:action] == "new" || params[:action] == "create"
       authorize ProjectUnit.new
