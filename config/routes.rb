@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   root to: "home#register"
   get "/welcome", to: "home#index"
   get "employee-register", to: "home#employee_register", as: :employee_register
+  get "external-register", to: "home#external_register", as: :external_register
   get "priority-register", to: "home#employee_register"
 
   devise_for :users, controllers: {confirmations: 'local_devise/confirmations',
