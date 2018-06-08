@@ -1,5 +1,8 @@
 # TODO: replace all messages & flash messages
 class HomeController < ApplicationController
+  def index
+  end
+
   def eoi
     render layout: false
   end
@@ -11,6 +14,11 @@ class HomeController < ApplicationController
     else
       render layout: "dashboard"
     end
+  end
+
+  def external_register
+    response.headers["X-FRAME-OPTIONS"] = "ALLOWALL"
+    render layout: false
   end
 
   def register
@@ -47,7 +55,7 @@ class HomeController < ApplicationController
             end
           end
           respond_to do |format|
-            format.json { render json: {errors: message, url: (user_signed_in? ? admin_users_path : new_user_session_path)}, status: :unprocessable_entity }
+            format.json { render json: {errors: message}, status: :unprocessable_entity }
           end
         else
           # splitted name into two firstname and lastname

@@ -20,19 +20,8 @@
     <% end %>
   </head>
   <body>
-    <div class="container-fluid" style="<% if (params[:controller] == "channel_partners" && params[:action] == "new") || (params[:controller] == "devise/sessions" && params[:action] == "new") %>display:none;<% end %>">
-      Welcome to Booking Portal
-      <% unless user_signed_in? %>
-        <%= link_to 'Register', register_path %>
-        <%= link_to 'Sign in', new_user_session_path %>
-        <%= link_to 'Register as Channel Partner', new_channel_partner_path %>
-      <% else %>
-        <%= link_to 'Dashboard', dashboard_path %>
-      <% end %>
-      <div class="rera-id">RERA Ack. No.: PR/KN/180119/002674</div>
-      <p class="notice"><%= notice %></p>
-      <p class="alert"><%= alert %></p>
-    </div>
+    <p class="notice"><%= notice %></p>
+    <p class="alert"><%= alert %></p>
     <%= yield %>
   </body>
 </html>
