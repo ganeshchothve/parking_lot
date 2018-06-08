@@ -21,7 +21,7 @@ class HomeController < ApplicationController
           else
             @user = User.or([{email: params['email']}, {phone: params['phone']}, {lead_id: params['lead_id']}]).first #TODO: check if you want to find uniquess on lead id also
             if @user.present?
-              message = 'A user with these details has already registered'
+              flash[:notice]  = 'A user with these details has already registered'
               if (!@user.confirmed? || (@user.channel_partner_id.blank? && @user.booking_details.blank?)) && @user.role?('user')
                 if current_user.present? && current_user.role?('channel_partner')
                   @user.set(referenced_channel_partner_ids: [current_user.id], channel_partner_id: current_user.id)
