@@ -30,7 +30,15 @@ module SFDC
       unit_sfdc_id = project_unit.sfdc_id
       opp_id = user.lead_id.to_s + unit_sfdc_id.to_s
       booking_date = project_unit.blocked_on.present? ? project_unit.blocked_on : Date.today
-
+      applicants = []
+      applicants << project_unit.primary_user_kyc.api_json("Primary")
+      count = 1
+      project_unit.user_kycs.asc(:created_at).each do |kyc|
+        coapplicant_type = "Co-Applicant #{count}"
+        applicants << kyc.api_json(coapplicant_type)
+        count += 1
+      end
+      
       hash = {
         "api_source" => "portal",
         "opp_id" => opp_id,
@@ -49,7 +57,8 @@ module SFDC
         "zip" => user_kyc.postal_code,
         "aadhar_number" => user_kyc.aadhaar,
         "salutation" => user_kyc.salutation,
-        "company_name" => user_kyc.company_name
+        "company_name" => user_kyc.company_name,
+        "applicants": applicants
       }
       # We do not have booking date once project unit is cancelled
       hash.delete("booking_date") if options[:cancellation_request]

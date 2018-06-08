@@ -90,8 +90,41 @@ class UserKyc
   def name
     "#{UserKyc.available_salutations.find{|x| x[:id] == salutation}[:text] rescue '' } #{first_name} #{last_name}"
   end
+  
+  def api_json(coapplicant_type="Primary")
+    # extract phone and country code from phone field
+    phone = Phonelib.parse(self.phone)
+    country_code = phone.country_code
+    kyc_phone = phone.national(false).sub(/^0/, "")
 
+    hash = {
+      applicant_id: self.id.to_s,
+      salutation: self.salutation,
+      first_name: self.first_name,
+      last_name: self.last_name,
+      email: self.email,
+      country_code_primary_phone: country_code,
+      phone: kyc_phone,
+      pan_no: self.pan_number,
+      dob: (self.dob.strftime("%Y-%m-%d") rescue nil),
+      anniversary: (self.anniversary.strftime("%Y-%m-%d") rescue nil),
+      nri: self.nri ? "NRI" : "Indian",
+      aadhaar: self.aadhaar,
+      house_number: self.house_number,
+      street: self.street,
+      city: self.city,
+      state: self.state,
+      country: self.country,
+      zip: self.postal_code,
+      marital_status: nil,
+      passport_number: nil,
+      gender: nil,
+      coapplicant_type: coapplicant_type
+    }
+  end
+=begin
   def api_json
+    
     data = []
     self.project_units.each do |project_unit|
       user = project_unit.user
@@ -154,4 +187,5 @@ class UserKyc
       coapplicant_type: coapplicant_type
     }
   end
+=end
 end

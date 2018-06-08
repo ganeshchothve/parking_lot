@@ -61,6 +61,22 @@
       </div>
     </div>
     <div class="col-md-3">
+      <div class="card card-body orange-card">
+        <div class="card-title">UNIT</div>
+        <h6 class="pink">Booking Tentative Units</h6>
+        <div class="display-table">
+          <div class="table-cell text-left">
+            <h2 class="pink"><%= ProjectUnit.where(status: 'booked_tentative').in(user_id: User.where(referenced_channel_partner_ids: current_user.id).distinct(:id)).count %></h2>
+          </div>
+          <div class="table-cell text-right">
+            <% if ProjectUnitPolicy.new(current_user, ProjectUnit).index? %>
+              <%= link_to 'View All', admin_project_units_path(fltrs: { status: 'booked_tentative' }), class: 'pink', style: 'right: 15px;' %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
       <div class="card card-body pink-card">
         <div class="card-title">UNIT</div>
         <h6 class="pink">Booking Confirmed Units</h6>
@@ -73,22 +89,6 @@
               <%= link_to 'View All', admin_project_units_path(fltrs: { status: 'booked_confirmed' }), class: 'pink', style: 'right: 15px;' %>
             </div>
           <% end %>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card card-body orange-card">
-        <div class="card-title">PAYMENTS</div>
-        <h6 class="pink">Pending Payments</h6>
-        <div class="display-table">
-          <div class="table-cell text-left">
-            <h2 class="pink"><%= Receipt.where(status: 'pending').ne(payment_mode: "online").in(user_id: User.where(referenced_channel_partner_ids: current_user.id).distinct(:id)).count %></h2>
-          </div>
-          <div class="table-cell text-right">
-            <% if ReceiptPolicy.new(current_user, Receipt).index? %>
-              <%= link_to 'View All', admin_receipts_path(fltrs: { status: 'pending', "payment_mode" => {"$ne" => "online"} }), class: 'pink', style: 'right: 15px;' %>
-            <% end %>
-          </div>
         </div>
       </div>
     </div>

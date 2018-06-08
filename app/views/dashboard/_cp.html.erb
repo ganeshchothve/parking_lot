@@ -117,20 +117,21 @@
       </div>
     </div>
     <div class="col-md-3">
+      <div class="card card-body green-card">
+        <h2 class="pink"><%= ProjectUnit.where(status: 'booked_tentative').count %></h2>
+        <h6 class="pink">Booked Tentative Units</h6>
+        <% if ProjectUnitPolicy.new(current_user, ProjectUnit).index? %>
+          <%= link_to 'View All', admin_project_units_path(fltrs: { status: 'booked_tentative' }), class: 'position-absolute pink', style: 'right: 15px;' %>
+        <% end %>
+      </div>
+    </div>
+    
+    <div class="col-md-3">
       <div class="card card-body yellow-card">
         <h2 class="pink"><%= ProjectUnit.where(status: 'booked_confirmed').count %></h2>
         <h6 class="pink">Booking Confirmed Units</h6>
         <% if ProjectUnitPolicy.new(current_user, ProjectUnit).index? %>
           <%= link_to 'View All', admin_project_units_path(fltrs: { status: 'booked_confirmed' }), class: 'position-absolute pink', style: 'right: 15px;' %>
-        <% end %>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card card-body pink-card">
-        <h2 class="pink"><%= Receipt.where(status: 'pending').ne(payment_mode: "online").count %></h2>
-        <h6 class="pink">Pending Payments</h6>
-        <% if ReceiptPolicy.new(current_user, Receipt).index? %>
-          <%= link_to 'View All', admin_receipts_path(fltrs: { status: 'pending', "payment_mode" => {"$ne" => "online"} }), class: 'position-absolute pink', style: 'right: 15px;' %>
         <% end %>
       </div>
     </div>
