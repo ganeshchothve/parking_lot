@@ -1,6 +1,6 @@
 # TODO: replace all messages & flash messages
 class DashboardController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:gamify_unit_selection]
   before_action :set_project_unit, only: [:project_unit, :update_project_unit, :update_co_applicants, :hold_project_unit, :checkout, :payment, :payment_breakup, :make_remaining_payment]
   layout :set_layout
 
