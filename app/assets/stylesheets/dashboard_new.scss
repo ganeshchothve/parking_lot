@@ -549,7 +549,7 @@ form#edit_user_form .form-field-wrapper label{display: block;}
 	text-align: center !important;
 }
 .pink{
-	color: #c02580
+	color: #6b7e34
 }
 .green{
 	color: #6b7e34;
@@ -604,8 +604,8 @@ form#edit_user_form .form-field-wrapper label{display: block;}
 	display: inline-block;
 	vertical-align: middle;
 	font-weight: 400;
-	font-size: 16px;
-	color: #383838;
+	font-size: 11px;
+	color: #fff;
 }
 .dash-logo img{
 	/*width: 50px;*/
@@ -1110,7 +1110,7 @@ section.grey{
     content: '>';
     position: absolute;
     right: 0px;
-    top: 3px;
+    top: 12px;
     font-size: 24px;
     color: #67c1ed;
 }
@@ -2789,6 +2789,10 @@ input.nav-btn:hover{
 	border-radius: 3px;
 	margin: 20px 0px;
 }
+.xs-block-rera{
+	display: inline-block !important;
+
+}
 /* end progress bar */
 @media all and (max-width: 768px){
 	.notification-header .left-wrapper{
@@ -2802,10 +2806,11 @@ input.nav-btn:hover{
 	}
   .prompts-message{
     width: 100%;
-    top: 96px;
-    left: 0;
-    height: 32px;
-    min-height: 32px;
+    top: 115px;
+    right: 0;
+    height: 45px;
+    min-height: auto;
+    text-align: center;
     border-radius: 0;
   }
 	.dash-logo{
@@ -2960,6 +2965,62 @@ input.nav-btn:hover{
 	}
 }
 @media all and (max-width: 700px){
+	.receipt-wrapper{
+		padding: 10px;
+	}
+	.payment-details-wrapper{
+		font-size: 14px;
+	}
+	.receipt-wrapper .tower-specs .col-6, .receipt-wrapper .tower-specs .col-4{
+		padding: 10px !important;
+	}
+	.receipt-wrapper  .tower-specs .specs{
+		font-size: 13px;
+		line-height: 20px;
+	}
+	.banner-offer{
+		margin-top: 20px;
+	}
+	.payment-breakup.mediaCenterAccordion li>span{
+		padding: 10px 15px;
+		font-size: 14px;
+	}
+	.conf-select-wrapper{
+		margin-top: 20px !important;
+	}
+	.gradient-bg{
+		font-size: 16px;
+	}
+	.login-card .logo-wrapper, .login-card .logo-wrapper img{
+		padding: 0px;
+	}
+	.login-card .subTitle{
+		margin-bottom: 15px;
+	}
+	.login-card>img{
+		width: 90px;
+	}
+	.fill-height-or-more{
+		display: block !important;
+	}
+	.col-4.dark-green-bg{
+		padding: 15px 15px;
+	}
+	input.nav-btn{
+		line-height: 26px;
+		padding: 0px 16px;
+	}
+	.col-4.light-green-bg{
+		width: 100%;
+	}
+	.notification-header>div{
+		padding: 10px 0px;
+	}
+	.xs-block-rera{
+		display: block !important;
+		font-size: 10px !important;
+		color: #fff !important;
+	}
 	.w100-xs{
 		width: 100%;
 	}
@@ -3016,7 +3077,7 @@ input.nav-btn:hover{
 		font-size: 16px;
 	}
 	.apartment-selector-wrapper.paddin-bottom-remove{
-		padding-bottom: 20px;
+		padding-bottom: 0px;
 	}
 	.upload-cheque{
 		width:100%; display:block !important;text-align: left;
@@ -3060,6 +3121,7 @@ input.nav-btn:hover{
 	.dash-logo{
 		padding: 5px 10px 5px 10px;
 		display: inline-block;
+		width: 80%;
 	    /*border-right: 1px solid #efefef;*/
 	    /*border-bottom: 1px solid #efefef;*/
 	}
@@ -3085,15 +3147,15 @@ input.nav-btn:hover{
 		line-height: 28px;
 	}
 	.burger-menu{
-		padding-top: 22px;
+		padding-top: 25px;
 		float: right;
-		margin-right: 20px;
+		margin-right: 17px;
 	    padding-left: 2px;
 	    border-left: 1px solid #fff;
 	}
 	.notification-header{
 		padding-left: 0px;
-		top: 60px;
+		top: 65px;
 		padding: 5px;
 		background-color: #444444;
 	}
@@ -3198,7 +3260,7 @@ input.nav-btn:hover{
 		padding: 5px 0px;
 	}
 	.main-wrapper {
-	    margin-top: 120px;
+	    margin-top: 160px;
 	    padding-left: 0px;
 	    padding-bottom: 80px;
 	}
@@ -3314,12 +3376,15 @@ input.nav-btn:hover{
 	}
 	.mediaCentercontent .col-3 .caption:before{
 		right: 50%;
-    	top: 100%;
+    	top: 140%;
     	transform: rotate(90deg);
     	-moz-transform: rotate(90deg);
     	-webkit-transform: rotate(90deg);
     	font-size: 40px;
 	}
+	/*.reasons-wrapper .mediaCentercontent .col-3 .caption, .reasons-wrapper .mediaCentercontent .col-2-5 .caption{
+		margin-left: 0px;
+	}*/
 	.mediaCenterAccordion .col-6{
 		width: 100%;
 		padding-left: 0px;
@@ -3413,10 +3478,12 @@ input.nav-btn:hover{
 	}
 	.apartment-selector-wrapper .title, .page-title-wrapper .title{
 		font-size: 16px;
+		margin-bottom: 0px;
 	}
 	.conf-select-wrapper .col-5{
 		width: 100%;
 	}
+
 	.conf-select-wrapper .col-2.subtitle{
 		text-align: center;
 		width: 100%;
@@ -3494,7 +3561,7 @@ input.nav-btn:hover{
 		padding-left: 0px;
 	}
 	.conf-select-wrapper{
-		margin: 20px 0px;
+		margin: 0px 0px;
 	}
 	.center-btn-xs{
 		text-align: center;
@@ -3529,12 +3596,18 @@ input.nav-btn:hover{
 	.building-main-wrapper{
 		width: 100%;
 		padding-left: 0px;
+		margin-top: 20px;
 	}
 	.main-building{
 		width: 100%;
 		margin: 30px 0px;
 	}
-
+	.col-4.dark-green-bg{
+		padding: 15px 15px !important;
+	}
+	.col-4.light-green-bg:first-child{
+		padding-bottom: 0px;
+	}
 	.show-unit-details-wrapper {
 	    width: 100%;
 	    padding-left: 0px;
@@ -3551,8 +3624,8 @@ input.nav-btn:hover{
 
 	.open-details-wrapper {
 	    position: absolute;
-	    left: -93px;
-	    top: 50px;
+	    left: -90px;
+	    top: 120px;
 	    font-size: 16px;
 	    color: #fff;
 	    background-color: #ec9834;
@@ -3616,13 +3689,13 @@ input.nav-btn:hover{
 	}
 	.prompts-message.visible-xs{
 		position: fixed;
-    width: 100%;
-    top: 96px;
-    left: 0px;
-    z-index: 99;
-    padding: 0 5px 1px 5px;
-    background-color: #80b441;
-    transition: all 0.3s ease-in;
+	    width: 100%;
+	    top: 115px;
+	    left: 0px;
+	    z-index: 99;
+	    padding: 0 5px 1px 5px;
+	    background-color: #80b441;
+	    transition: all 0.3s ease-in;
 	}
 	.gamification_container .text-slide{
 		line-height: 19px;
@@ -3666,7 +3739,7 @@ input.nav-btn:hover{
 	    border-right: 0px solid #cacbcc;
 	}
 	.client-detail span{
-		font-size: 18px;
+		font-size: 16px;
 	}
 	.tower-info-wrapper > div {
 	    font-size: 14px;
@@ -3774,6 +3847,7 @@ input.nav-btn:hover{
 		width: 100%;
 		margin: 0px auto;
 		border-radius: 0px;
+		margin-bottom: 20px;
 	}
 	.login-card .pageTitle{
 		margin-top: 0px;
@@ -3785,9 +3859,10 @@ input.nav-btn:hover{
 		line-height: 20px;
 	}
 	.login-card .logo-wrapper img{
-		margin: 0 auto;
-		width: 70px;
-		margin-bottom: 20px;
+		/*margin: 0 auto;*/
+		width: 45px;
+		margin-bottom: 0px;
+		padding: 0px;
 	}
 	.login-card {
 	    padding: 10px 0px 40px 0px;
@@ -3882,6 +3957,9 @@ input.nav-btn:hover{
 		font-size: 16px;
 		text-align: center;
 	}
+	.reasons-wrapper .mediaCentercontent .col-3 .caption{
+		margin: 10px 0px 0px 0px;
+	}
 	.mediaCentercontent .col-3 .caption:after, .mediaCentercontent .col-2-5 .caption:after{
 		width: 0px;
 	}
@@ -3910,11 +3988,11 @@ input.nav-btn:hover{
 	    padding: 30px 30px 0px 0px;
 	}
 	.apartment-selector-wrapper{
-		padding-bottom: 50px;
+		padding-bottom: 0px;
 		margin-top: 30px;
 	}
 	.page-title-wrapper{
-		margin-top: 30px;
+		margin-top: 0px;
 	}
 }
 .tower-name-wrapper .show-on-active, .tower-name-wrapper .active .fast-sell-tag{
