@@ -3,7 +3,7 @@ module SFDC
     def self.execute(user_kyc)
       if Rails.env.production? || Rails.env.staging?
         begin
-          kyc_data = user_kyc.api_json
+          kyc_data = [user_kyc.api_json]
           if kyc_data.any?
             @payment_schedule_pusher = SFDC::Base.new
             response = @payment_schedule_pusher.push("/services/apexrest/Embassy/PersonAccountInfo", kyc_data)
