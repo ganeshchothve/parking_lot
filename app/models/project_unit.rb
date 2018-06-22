@@ -297,7 +297,8 @@ class ProjectUnit
       discount = (discount_obj.present? ? discount_obj.value : 0)
       e_discount = 0
       if user.role?("employee_user") || user.role?("management_user")
-        e_discount = ((base_rate > 4100) ? (base_rate - 4100) : 0)
+        #e_discount = ((base_rate > 4100) ? (base_rate - 4100) : 0)
+        e_discount = base_rate*0.05
       end
       return (discount > e_discount ? discount : e_discount)
     end
