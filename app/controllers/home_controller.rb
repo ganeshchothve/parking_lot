@@ -39,6 +39,8 @@ class HomeController < ApplicationController
               @user = User.new(email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], lead_id: params[:lead_id], mixpanel_id: params[:mixpanel_id])
               if user_signed_in?
                 @user.channel_partner_id = current_user.id
+              elsif(cookies[:portal_cp_id].present?)
+                @user.channel_partner_id = cookies[:portal_cp_id]
               end
               # RegistrationMailer.welcome(user, generated_password).deliver #TODO: enable this. We might not need this if we are to use OTP based login
 

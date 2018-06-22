@@ -41,6 +41,7 @@ Rails.application.routes.draw do
     end
     resources :users do
       get :resend_confirmation_instructions, action: 'resend_confirmation_instructions', as: :resend_confirmation_instructions, on: :member
+      get :resend_password_instructions, action: 'resend_password_instructions', as: :resend_password_instructions, on: :member
       get '/new/:role', action: 'new', on: :collection, as: :new_by_role
       get 'export', action: 'export', on: :collection, as: :export
       resources :receipts, only: [:update, :edit, :show, :index, :new, :create], controller: '/receipts'

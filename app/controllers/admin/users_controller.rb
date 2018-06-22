@@ -27,6 +27,19 @@ class Admin::UsersController < AdminController
       end
     end
   end
+  
+  def resend_password_instructions
+    @user = User.find(params[:id])
+    respond_to do |format|
+      if @user.send_reset_password_instructions
+        flash[:notice] = "Reset password instructions sent successfully."
+        format.html { redirect_to admin_users_path }
+      else
+        flash[:error] = "Couldn't send Reset password instructions."
+        format.html { redirect_to admin_users_path }
+      end
+    end
+  end
 
   def export
     if Rails.env.development?
