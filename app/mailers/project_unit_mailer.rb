@@ -20,6 +20,21 @@ class ProjectUnitMailer < ApplicationMailer
     # cc += crm_team
     mail(to: @user.email, subject: "Unit #{@project_unit.name} booked tentative")# cc: cc
   end
+  
+  def send_revised_letter(project_unit_id)
+    @project_unit = ProjectUnit.find(project_unit_id)
+    @user = @project_unit.user
+    @cp = @user.channel_partner
+    cc = @cp.present? ? [@cp.email] : []
+    cc += default_team
+    cc += crm_team
+    attachments["Allotment.pdf"] = WickedPdf.new.pdf_from_string(
+    render_to_string(pdf: "allotment", template: "project_unit_mailer/send_allotment_letter.pdf.erb"))
+    #Removed by Ashish
+    #attachments["Welcome.pdf"] = WickedPdf.new.pdf_from_string(
+    #render_to_string(pdf: "allotment", template: "dashboard/welcome.pdf.erb"))
+    mail(to: @user.email, cc: cc, subject: "Revised Allotment Letter") #Unit #{@project_unit.name} booked confirmed
+  end
 
   def booked_confirmed(project_unit_id)
     @project_unit = ProjectUnit.find(project_unit_id)
