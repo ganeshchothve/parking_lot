@@ -62,10 +62,4 @@ window.sell_do_form_rendered = function(){
   $('[name="sell_do[form][custom][portal_cp_id]"]').closest('.selldof_row').hide();
   $(".selldof .btn").attr("data-event-category","section").attr("data-event-action","click").attr("data-event-name","submit")
 };
-window.sell_do_form_successfully_submitted = function(data, event){
-    var obj = {};
-    var lead_id= decodeURIComponent(data.lead_id); 
-    $('body').append("<iframe src='https://mediadecks.com/p.ashx?o=1569&e=2&t="+lead_id+"' height='1' width='1' frameborder='0'></iframe>")
-    
-};
 </script>
