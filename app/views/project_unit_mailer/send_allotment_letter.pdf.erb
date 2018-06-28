@@ -67,7 +67,7 @@
             <p><%= @project_unit.booking_detail.created_at.strftime("%B %d, %Y") %></p>
             <p><%= @project_unit.primary_user_kyc.name %></p>
             <p>
-                <%= @project_unit.primary_user_kyc.street %>  <%= @project_unit.primary_user_kyc.house_number %> <br/>
+                <%= @project_unit.primary_user_kyc.house_number %>, <%= @project_unit.primary_user_kyc.street %> <br/>
                 <%= @project_unit.primary_user_kyc.city %>, <%= @project_unit.primary_user_kyc.postal_code %> <br/>
                 <%= @project_unit.primary_user_kyc.state%> <%= @project_unit.primary_user_kyc.country %>
             </p>
