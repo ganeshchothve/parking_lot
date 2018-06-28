@@ -92,9 +92,8 @@ class ApplicationController < ActionController::Base
       end
     end
     
-    tmp2= params[:portal_cp_id]
-    if cookies[:portal_cp_id].present? 
-        cookies[:portal_cp_id] = tmp2     
+    if params[:portal_cp_id].present? 
+      cookies[:portal_cp_id] = params[:portal_cp_id] 
     end
 
   end  
