@@ -10,6 +10,10 @@ class UserRequestPolicy < ApplicationPolicy
   def new?
     record.user_id == user.id
   end
+  
+  def export?
+    ['admin', 'crm'].include?(user.role)
+  end
 
   def create?
     new?

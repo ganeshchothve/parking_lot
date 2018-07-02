@@ -29,10 +29,18 @@ class ReceiptExportWorker
       "Status Message",
       "Payment Type",
       "Payment Gateway",
-      "Customer",
+      "Client Name",
       "User ID (Used for VLOOKUP)",
       "Project Unit",
-      "Created By"
+      "Applied Discount Rate",
+      "Base Rate",
+      "Land Rate",
+      "Floor Rise",
+      "PLC",
+      "Clubhouse Amenities Price",
+      "Created By",
+      "Receipt Date",
+      "Amount Received"
     ]
   end
 
@@ -53,8 +61,16 @@ class ReceiptExportWorker
       receipt.payment_gateway,
       receipt.user.name,
       receipt.user_id,
-      receipt.project_unit_id.present? ? receipt.project_unit.name : "",
-      receipt.creator.name
+      receipt.project_unit_id.present? ? receipt.project_unit.name : "N/A",
+      (receipt.project_unit.applied_discount_rate rescue "N/A"),
+      (receipt.project_unit.base_rate rescue "N/A"),
+      (receipt.project_unit.land_rate rescue "N/A"),
+      (receipt.project_unit.floor_rise rescue "N/A"),
+      (receipt.project_unit.premium_location_charges rescue "N/A"),
+      (receipt.project_unit.clubhouse_amenities_price rescue "N/A"),
+      receipt.creator.name,
+      receipt.created_at,
+      (receipt.project_unit.receipts.where(status:"success").sum(&:total_amount) rescue "0")
     ]
   end
 end

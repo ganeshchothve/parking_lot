@@ -35,6 +35,16 @@ class Admin::UserRequestsController < ApplicationController
       end
     end
   end
+  
+  def export
+    if Rails.env.development?
+      UserRequestExportWorker.new.perform(current_user.email)
+    else
+      UserRequestExportWorker.perform_async(current_user.email)
+    end
+    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    redirect_to admin_user_requests_path
+  end
 
   def edit
   end
