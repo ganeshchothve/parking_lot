@@ -22,7 +22,7 @@ class ReceiptExportWorker
       "Issued Date",
       "Issuing Bank",
       "Issuing Bank Branch",
-      "Payment IDentifier",
+      "Payment Identifier",
       "Tracking ID",
       "Total Amount",
       "Status",
