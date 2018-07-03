@@ -55,7 +55,9 @@ Rails.application.routes.draw do
       get :approve_via_email, on: :member, action: 'approve_via_email'
     end
     resources :user_kycs, only: [:index], controller: '/user_kycs'
-    resources :user_requests, except: [:destroy], controller: 'user_requests'
+    resources :user_requests, except: [:destroy], controller: 'user_requests' do
+	get 'export', action: 'export', on: :collection, as: :export
+	end
   end
 
   match 'payment/:receipt_id/process_payment/:ignore', to: 'payment#process_payment', via: [:get, :post]
