@@ -7,7 +7,7 @@ class UserRequestExportWorker
     sheet = file.create_worksheet(name: "Cancellation Report")
     sheet.insert_row(0, UserRequestExportWorker.get_column_names)
     UserRequest.where(request_type:"cancellation").all.each_with_index do |user_request, index|
-      sheet.insert_row(index+1, get_user_request_row(user_request))
+      sheet.insert_row(index+1, UserRequestExportWorker.get_user_request_row(user_request))
     end
     file_name = "cancellation-#{SecureRandom.hex}.xls"
     file.write("#{Rails.root}/#{file_name}")
