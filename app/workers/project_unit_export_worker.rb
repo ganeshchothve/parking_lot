@@ -18,7 +18,7 @@ class ProjectUnitExportWorker
     [
       "Unit Name",
       "Unit Type",
-      "Unit Number"
+      "Unit Number",
       "Unit SFDC ID",
       "Status",
       "Available for",
