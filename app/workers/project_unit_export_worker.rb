@@ -17,6 +17,8 @@ class ProjectUnitExportWorker
   def self.get_column_names
     [
       "Unit Name",
+      "Unit Type",
+      "Unit Number"
       "Unit SFDC ID",
       "Status",
       "Available for",
@@ -51,12 +53,15 @@ class ProjectUnitExportWorker
       "User Email",
       "User ID (Used for VLOOKUP)",
       "Amount Received"
+      "Current Due"
     ]
   end
 
   def self.get_project_unit_row(project_unit)
     [
       project_unit.name,
+      project_unit.unit_configuration_name,
+      project_unit.name.split("|")[0].split("-")[1].strip,
       project_unit.sfdc_id,
       project_unit.status,
       project_unit.available_for,

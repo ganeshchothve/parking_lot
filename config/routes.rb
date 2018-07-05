@@ -54,7 +54,9 @@ Rails.application.routes.draw do
     resources :discounts, except: [:destroy], controller: 'discounts' do
       get :approve_via_email, on: :member, action: 'approve_via_email'
     end
-    resources :user_kycs, only: [:index], controller: '/user_kycs'
+    resources :user_kycs, only: [:index], controller: '/user_kycs' do 
+      get 'export', action: 'export', on: :collection, as: :export
+    end
     resources :user_requests, except: [:destroy], controller: 'user_requests' do
       get 'export', action: 'export', on: :collection, as: :export
     end

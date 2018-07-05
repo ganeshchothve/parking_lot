@@ -18,6 +18,16 @@ class ReceiptObserver < Mongoid::Observer
       # order = receipt.user.receipts.count
       receipt.receipt_id = "ESE#{project_unit.project_tower_name[0]}#{project_unit.name.split("-").last.strip}-R#{receipt.order_id}"
     end
+    
+    # update project unit if a successful receipt is getting attached to a project_unit
+    # update the user balance if receipt has no project unit
+    if receipt.project_unit_id_changed? && receipt.project_unit_id_was.blank? && ['success', 'clearance_pending'].include?(receipt.status) && !receipt.status_changed?
+      project_unit.process_payment!(receipt)
+      unless user.save
+        # TODO: notify us about this
+      end
+    end
+    
     # update project unit if receipt status has changed
     if receipt.status_changed?
       ApplicationLog.log("receipt_updated", {
@@ -54,14 +64,7 @@ class ReceiptObserver < Mongoid::Observer
       end
     end
 
-    # update project unit if a successful receipt is getting attached to a project_unit
-    # update the user balance if receipt has no project unit
-    if receipt.project_unit_id_changed? && receipt.project_unit_id_was.blank? && ['success', 'clearance_pending'].include?(receipt.status) && !receipt.status_changed?
-      project_unit.process_payment!(receipt)
-      unless user.save
-        # TODO: notify us about this
-      end
-    end
+    
 
     # Send email to customer
     if receipt.status_changed?

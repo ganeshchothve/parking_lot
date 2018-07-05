@@ -24,6 +24,10 @@ class UserKycPolicy < ApplicationPolicy
   def create?
     true
   end
+  
+  def export?
+    ['admin', 'crm'].include?(user.role)
+  end
 
   def update?
     edit?

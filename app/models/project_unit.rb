@@ -395,7 +395,7 @@ class ProjectUnit
 
   def process_payment!(receipt)
     if ['success', 'clearance_pending'].include?(receipt.status)
-      if self.pending_balance({strict: true}) == 0
+      if self.pending_balance({strict: true}) <= 0
         self.status = 'booked_confirmed'
         # Push data to SFDC once 10% payment is completed - booking unit
         SFDC::ProjectUnitPusher.execute(self)

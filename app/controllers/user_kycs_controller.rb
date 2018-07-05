@@ -49,6 +49,16 @@ class UserKycsController < ApplicationController
       end
     end
   end
+  
+  def export
+    if Rails.env.development?
+      UserKycExportWorker.new.perform(current_user.email)
+    else
+      UserKycExportWorker.perform_async(current_user.email)
+    end
+    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    redirect_to admin_user_requests_path
+  end
 
   private
   def set_user
