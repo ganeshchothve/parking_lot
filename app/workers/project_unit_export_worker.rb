@@ -52,7 +52,7 @@ class ProjectUnitExportWorker
       "User Name",
       "User Email",
       "User ID (Used for VLOOKUP)",
-      "Amount Received"
+      "Amount Received",
       "Current Due"
     ]
   end
@@ -95,7 +95,8 @@ class ProjectUnitExportWorker
       (project_unit.user.name rescue "N/A"),
       (project_unit.user.email rescue "N/A"),
       project_unit.user_id,
-      project_unit.receipts.where(status:"success").sum(&:total_amount)
+      project_unit.receipts.where(status:"success").sum(&:total_amount),
+      project_unit.pending_balance({strict: true})
     ]
   end
 end
