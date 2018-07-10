@@ -45,7 +45,7 @@ class ProjectUnitObserver < Mongoid::Observer
     if project_unit.status_changed? && ["blocked", "booked_tentative", "booked_confirmed", "error"].include?(project_unit.status_was) && ["available", "employee", "management"].include?(project_unit.status)
       user_was = User.find(project_unit.user_id_was)
       project_unit.set(user_id: nil, blocked_on: nil, auto_release_on: nil, held_on: nil, primary_user_kyc_id: nil, user_kyc_ids: [])
-      project_unit.receipts.where(status:"success").each{|x| x.project_unit_id = nil; x.status = "cancelled"; x.comments ||= ""; x.comments += " Cancelling as the unit (#{project_unit.name}) has been released.")
+      project_unit.receipts.where(status:"success").each{|x| x.project_unit_id = nil; x.status = "cancelled"; x.comments ||= ""; x.comments += " Cancelling as the unit (#{project_unit.name}) has been released."}
 
       mailer = ProjectUnitMailer.released(user_was.id.to_s, project_unit.id.to_s)
       if Rails.env.development?
