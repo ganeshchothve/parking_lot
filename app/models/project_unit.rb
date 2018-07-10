@@ -369,6 +369,27 @@ class ProjectUnit
       return nil
     end
   end
+  
+  def ageing
+    if(self.status == "booked_confirmed")
+      last_booking_payment = self.receipts.where(status:"success").where(payment_type:"booking").desc(:created_at).first.created_at.to_date
+      due_since = self.receipts.where(status:"success").asc(:created_at).first.created_at.to_date
+      age = (last_booking_payment - due_since).to_i
+    else
+      age = (Date.today - self.receipts.where(status:"success").asc(:created_at).first.created_at.to_date).to_i
+    end
+    if age < 15
+      return "< 15 days"
+    elsif age < 30
+      return "< 30 days"
+    elsif age < 45
+      return "< 45 days"
+    elsif age < 60
+      return "< 60 days"
+    else
+      return "> 60 days"
+    end
+  end
 
   def total_amount_paid
     self.receipts.where(status: 'success').sum(:total_amount)

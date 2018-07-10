@@ -23,7 +23,7 @@
 <!--       <td></td> -->
       <td>
         <div>Receipt No.: <span class="black-font"><%= receipt.receipt_id %></span></div>
-        <div>Unit ID: <span class="black-font"><%= receipt.project_unit.present? ? receipt.project_unit.name : '' %><span style="display:inline-block">Reference Project</span> <%= receipt.reference_project_unit.present? ? receipt.reference_project_unit.name : '' %></span></div>
+        <div>Unit ID: <span class="black-font"><%= receipt.project_unit.present? ? receipt.project_unit.name : '' %><span style="display:inline-block">,Reference Project</span> <%= receipt.reference_project_unit.present? ? receipt.reference_project_unit.name : '' %></span></div>
 
 
         <% if receipt.payment_mode == 'online' %>

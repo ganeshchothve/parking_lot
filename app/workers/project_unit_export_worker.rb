@@ -51,9 +51,12 @@ class ProjectUnitExportWorker
       "Primary User KYC Name",
       "User Name",
       "User Email",
+      "User Phone",
       "User ID (Used for VLOOKUP)",
+      "SellDo Lead ID",
       "Amount Received",
-      "Current Due"
+      "Current Due",
+      "Ageing"
     ]
   end
 
@@ -94,9 +97,12 @@ class ProjectUnitExportWorker
       (project_unit.primary_user_kyc.name rescue "N/A"),
       (project_unit.user.name rescue "N/A"),
       (project_unit.user.email rescue "N/A"),
+      (project_unit.user.phone rescue "N/A"),
       project_unit.user_id,
+      project_unit.user.lead_id,
       project_unit.receipts.where(status:"success").sum(&:total_amount),
-      project_unit.pending_balance({strict: true})
+      project_unit.pending_balance({strict: true}),
+      project_unit.ageing
     ]
   end
 end
