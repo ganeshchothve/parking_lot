@@ -33,7 +33,7 @@ class Admin::ProjectUnitsController < AdminController
       end
     end
   end
-  
+
   def export
     if Rails.env.development?
       ProjectUnitExportWorker.new.perform(current_user.email)
@@ -49,6 +49,15 @@ class Admin::ProjectUnitsController < AdminController
   end
 
   def breakup
+  end
+
+  def swap_request
+  end
+
+  def swap_request_initiate
+    ProjectUnitMailer.swap_request(params[:id], params[:alternate_project_unit_id]).deliver
+    flash[:notice] = 'Swap initiation request has been sent'
+    redirect_to admin_project_units_path
   end
 
   private

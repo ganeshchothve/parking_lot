@@ -38,6 +38,8 @@ Rails.application.routes.draw do
       get 'eoi', action: 'eoi', on: :member, as: :eoi
       get 'breakup', action: 'breakup', on: :member, as: :breakup
       get 'export', action: 'export', on: :collection, as: :export
+      get 'swap_request', action: 'swap_request', on: :member, as: :swap_request
+      get 'swap_request_initiate', action: 'swap_request_initiate', on: :member, as: :swap_request_initiate
     end
     resources :users do
       get :resend_confirmation_instructions, action: 'resend_confirmation_instructions', as: :resend_confirmation_instructions, on: :member
@@ -54,7 +56,7 @@ Rails.application.routes.draw do
     resources :discounts, except: [:destroy], controller: 'discounts' do
       get :approve_via_email, on: :member, action: 'approve_via_email'
     end
-    resources :user_kycs, only: [:index], controller: '/user_kycs' do 
+    resources :user_kycs, only: [:index], controller: '/user_kycs' do
       get 'export', action: 'export', on: :collection, as: :export
     end
     resources :user_requests, except: [:destroy], controller: 'user_requests' do
@@ -104,6 +106,7 @@ Rails.application.routes.draw do
     post 'update_co_applicants/:project_unit_id', to: 'dashboard#update_co_applicants', as: :dashboard_update_co_applicants
     get 'checkout/(:project_unit_id)', to: 'dashboard#checkout', as: :dashboard_checkout
     get 'checkout_via_email/:project_unit_id/:receipt_id', to: 'dashboard#checkout_via_email', as: :dashboard_checkout_via_email
+    get 'swap_request/:project_unit_id', to: 'dashboard#swap_request', as: :dashboard_swap_request
     get "gamify-unit-selection", to: "dashboard#gamify_unit_selection"
     match 'payment/(:project_unit_id)', to: 'dashboard#payment', as: :dashboard_payment, via: [:get, :patch]
     resources :receipts
