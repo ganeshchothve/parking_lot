@@ -16,6 +16,7 @@ class UserRequestMailer < ApplicationMailer
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
     cc += crm_team
+    cc << "crm.embassyedge@embassyindia.com"
     mail(to: @user.email, cc: cc, subject: "Cancellation Request for Unit: #{@project_unit.name} Resolved")
   end
 end
