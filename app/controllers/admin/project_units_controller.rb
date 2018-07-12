@@ -55,7 +55,12 @@ class Admin::ProjectUnitsController < AdminController
   end
 
   def swap_request_initiate
-    ProjectUnitMailer.swap_request(params[:id], params[:alternate_project_unit_id]).deliver
+    if Rails.env.production? || Rails.env.staging?
+      ProjectUnitMailer.swap_request(params[:id], params[:alternate_project_unit_id]).deliver_later
+    else
+      ProjectUnitMailer.swap_request(params[:id], params[:alternate_project_unit_id]).deliver
+    end
+
     flash[:notice] = 'Swap initiation request has been sent'
     redirect_to admin_project_units_path
   end
