@@ -520,4 +520,18 @@ class ProjectUnit
       message
     end
   end
+
+  def lead_source
+    if self.user_id.present?
+      if self.user.role == "employee_user"
+        return "Employee"
+      elsif self.user.role == "channel_partner"
+        return "Channel Partner"
+      else
+        return "Retail"
+      end
+    else
+      return "NA"
+    end
+  end
 end
