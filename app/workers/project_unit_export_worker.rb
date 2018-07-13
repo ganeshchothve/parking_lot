@@ -2,17 +2,17 @@ require 'spreadsheet'
 class ProjectUnitExportWorker
   include Sidekiq::Worker
 
-  def perform current_user
+  def perform emails
 
     file = Spreadsheet::Workbook.new
     sheet = file.create_worksheet(name: "Receipts")
     sheet.insert_row(0, ProjectUnitExportWorker.get_column_names)
     ProjectUnit.all.each_with_index do |project_unit, index|
-      sheet.insert_row(index+1, ProjectUnitExportWorker.get_project_unit_row(project_unit,current_user))
+      sheet.insert_row(index+1, ProjectUnitExportWorker.get_project_unit_row(project_unit))
     end
     file_name = "project_unit-#{SecureRandom.hex}.xls"
     file.write("#{Rails.root}/#{file_name}")
-    ExportMailer.notify(file_name, current_user.email, "Units").deliver
+    ExportMailer.notify(file_name, emails, "Units").deliver
   end
 
   def self.get_column_names
@@ -57,7 +57,7 @@ class ProjectUnitExportWorker
     ]
   end
 
-  def self.get_project_unit_row(project_unit,current_user)
+  def self.get_project_unit_row(project_unit)
     [
       project_unit.name,
       project_unit.unit_configuration_name,
@@ -71,9 +71,9 @@ class ProjectUnitExportWorker
       project_unit.floor_rise,
       project_unit.premium_location_charges,
       project_unit.applied_discount_rate,
-      project_unit.effective_price(current_user),
+      project_unit.effective_price,
       project_unit.land_rate,
-      project_unit.construction_rate(current_user),
+      project_unit.construction_rate,
       project_unit.land_price,
       project_unit.construction_price,
       project_unit.gst_on_agreement_price,
