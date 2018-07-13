@@ -10,7 +10,7 @@ class UserRequestPolicy < ApplicationPolicy
   def new?
     record.user_id == user.id
   end
-  
+
   def export?
     ['admin', 'crm'].include?(user.role)
   end
@@ -26,7 +26,7 @@ class UserRequestPolicy < ApplicationPolicy
   def permitted_attributes params={}
     attributes = [:comments, :receipt_id, :user_id] if user.buyer?
     attributes += [:project_unit_id] if user.buyer? && record.new_record?
-    attributes = [:status] if user.role?('admin') || user.role?('crm') || user.role?('sales') || user.role?('cp')
+    attributes = [:status, :crm_comments, :reply_for_customer] if user.role?('admin') || user.role?('crm') || user.role?('sales') || user.role?('cp')
     attributes
   end
 end

@@ -6,6 +6,8 @@ class UserRequest
   field :comments, type: String
   field :status, type: String, default: 'pending'
   field :request_type, type: String, default: "cancellation"
+  field :crm_comments, type: String # Comments from crm team
+  field :reply_for_customer, type: String #reply from crm team to customer
 
   belongs_to :project_unit, optional: true
   belongs_to :receipt, optional: true

@@ -1,3 +1,8 @@
+<div class="row">
+  <div class="col-12">
+    <p>Total Project Units : <%= project_units.count %></p>
+  </div>
+</div>
 <table class='striped-table table' width="100%" cellpadding="0" cellspacing="0">
   <thead class="th-default th-pink">
     <tr>
@@ -43,6 +48,9 @@
               <% end %>
               <% if UserPolicy.new(current_user, User).index? %>
                 <%= link_to "View Customer", admin_user_path(project_unit.user), class: 'dropdown-item' %>
+              <% end %>
+              <% if ProjectUnitPolicy.new(current_user, project_unit).swap_request? %>
+                <%= link_to "Initiate swap request", swap_request_admin_project_unit_path(project_unit), class: 'dropdown-item', target: '_blank' %>
               <% end %>
               <%# if UserPolicy.new(current_user, User).index? %>
                 <%#= link_to "Add Co Applicant", admin_user_path(project_unit.user), class: 'dropdown-item' %>

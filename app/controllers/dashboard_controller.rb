@@ -231,6 +231,27 @@ class DashboardController < ApplicationController
     end
   end
 
+  def swap_request
+    if params[:project_unit_id].present? && params[:alternate_project_unit_id].present?
+      alternate_project_unit = ProjectUnit.find params[:alternate_project_unit_id]
+      project_unit = ProjectUnit.find params[:project_unit_id]
+
+      if(alternate_project_unit.status == "available" || (alternate_project_unit.status == "hold" && alternate_project_unit.user_id == project_unit.user_id))
+
+        ProjectUnitSwapService.new(params[:project_unit_id], params[:alternate_project_unit_id]).swap
+        flash[:notice] = 'The swap request completed successfully.'
+        redirect_to dashboard_path
+
+      else
+        flash[:notice] = 'The unit that you are requesting for swapping is not available now. Please raise a fresh request to CRM team.'
+        redirect_to dashboard_path
+      end
+    else
+      flash[:notice] = 'There is some issue with the system'
+      redirect_to dashboard_path
+    end
+  end
+
   def payment
     @receipt = Receipt.new(creator: current_user, user: current_user, payment_mode: 'online', total_amount: ProjectUnit.blocking_amount, payment_type: 'blocking')
 
