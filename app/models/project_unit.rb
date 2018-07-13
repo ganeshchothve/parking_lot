@@ -537,11 +537,11 @@ class ProjectUnit
 
   def effective_price(*current_user)
     if current_user.present?
-      discount_rate = self.discount_rate(self.user_id.present? ? self.user : current_user)
+      discount_rate_value = self.discount_rate(self.user_id.present? ? self.user : current_user)
     else
-      discount_rate = 0
+      discount_rate_value = 0
     end
-    (self.base_rate + self.premium_location_charges + self.floor_rise - discount_rate).round(2)
+    (self.base_rate + self.premium_location_charges + self.floor_rise - discount_rate_value).round(2)
   end
 
   def construction_rate
