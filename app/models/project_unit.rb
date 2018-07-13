@@ -534,4 +534,18 @@ class ProjectUnit
       return "NA"
     end
   end
+
+  def effective_price(current_user)
+    discount_rate = self.discount_rate(self.user_id.present? ? self.user : current_user)
+    (self.base_rate + self.premium_location_charges + self.floor_rise - discount_rate).round(2)
+  end
+
+  def construction_rate(current_user)
+    self.effective_price(current_user) - self.land_rate
+  end
+
+  def ninetynine_percent
+    (self.pending_balance - self.tds_amount) rescue nil
+  end
+
 end

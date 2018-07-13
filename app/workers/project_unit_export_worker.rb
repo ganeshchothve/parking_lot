@@ -2,17 +2,17 @@ require 'spreadsheet'
 class ProjectUnitExportWorker
   include Sidekiq::Worker
 
-  def perform emails
+  def perform current_user
 
     file = Spreadsheet::Workbook.new
     sheet = file.create_worksheet(name: "Receipts")
     sheet.insert_row(0, ProjectUnitExportWorker.get_column_names)
     ProjectUnit.all.each_with_index do |project_unit, index|
-      sheet.insert_row(index+1, ProjectUnitExportWorker.get_project_unit_row(project_unit))
+      sheet.insert_row(index+1, ProjectUnitExportWorker.get_project_unit_row(project_unit,current_user))
     end
     file_name = "project_unit-#{SecureRandom.hex}.xls"
     file.write("#{Rails.root}/#{file_name}")
-    ExportMailer.notify(file_name, emails, "Units").deliver
+    ExportMailer.notify(file_name, current_user.email, "Units").deliver
   end
 
   def self.get_column_names
@@ -45,7 +45,7 @@ class ProjectUnitExportWorker
       "Sub total",
       "All inclusive price",
       "Current Due",
-      # "99%",
+      "99%",
       "TDS amount",
       "Total amount paid",
       "Pending balance",
@@ -57,7 +57,7 @@ class ProjectUnitExportWorker
     ]
   end
 
-  def self.get_project_unit_row(project_unit)
+  def self.get_project_unit_row(project_unit,current_user)
     [
       project_unit.name,
       project_unit.unit_configuration_name,
@@ -71,9 +71,9 @@ class ProjectUnitExportWorker
       project_unit.floor_rise,
       project_unit.premium_location_charges,
       project_unit.applied_discount_rate,
-      "effective price",
+      project_unit.effective_price(current_user),
       project_unit.land_rate,
-      "construction rate",
+      project_unit.construction_rate(current_user),
       project_unit.land_price,
       project_unit.construction_price,
       project_unit.gst_on_agreement_price,
@@ -87,7 +87,7 @@ class ProjectUnitExportWorker
       project_unit.sub_total,
       project_unit.all_inclusive_price,
       project_unit.pending_balance({strict: true}),
-      # 99%
+      project_unit.ninetynine_percent,
       project_unit.tds_amount,
       project_unit.total_amount_paid,
       project_unit.pending_balance,
