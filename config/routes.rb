@@ -52,6 +52,7 @@ Rails.application.routes.draw do
         resources :receipts, only: [:update, :edit, :show, :index, :new, :create], controller: '/receipts'
       end
       resources :user_requests, except: [:destroy], controller: 'user_requests'
+      resources :booking_details, only: [:update], controller: 'booking_details'
     end
     resources :discounts, except: [:destroy], controller: 'discounts' do
       get :approve_via_email, on: :member, action: 'approve_via_email'
