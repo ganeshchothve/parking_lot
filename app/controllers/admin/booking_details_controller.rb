@@ -11,7 +11,7 @@ class Admin::BookingDetailsController < ApplicationController
       else
         format.html { redirect_to home_path(current_user), notice: 'Please try to upload again.'}
       end
-  	end
+    end
   end
 
   def set_booking_detail

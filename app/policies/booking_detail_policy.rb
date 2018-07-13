@@ -6,6 +6,6 @@ class BookingDetailPolicy < ApplicationPolicy
   end
 
   def permitted_attributes params={}
-	[:TDS_Doc]
+    [:TDS_Doc]
   end
 end
