@@ -541,4 +541,36 @@ class ProjectUnit
       message
     end
   end
+
+  def lead_source
+    if self.user_id.present?
+      if self.user.role == "employee_user"
+        return "Employee"
+      elsif self.user.channel_partner_id.present?
+        return "Channel Partner"
+      else
+        return "Retail"
+      end
+    else
+      return "NA"
+    end
+  end
+
+  def effective_price(*current_user)
+    if current_user.present?
+      discount_rate_value = self.discount_rate(self.user_id.present? ? self.user : current_user)
+    else
+      discount_rate_value = 0
+    end
+    (self.base_rate + self.premium_location_charges + self.floor_rise - discount_rate_value).round(2)
+  end
+
+  def construction_rate
+    self.effective_price - self.land_rate
+  end
+
+  def ninetynine_percent
+    (self.pending_balance - self.tds_amount) rescue nil
+  end
+
 end
