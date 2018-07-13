@@ -6,7 +6,8 @@ class BookingDetail
   field :primary_user_kyc_id, type: BSON::ObjectId
   field :status, type: String
   field :channel_partner_id, type: BSON::ObjectId
-
+  mount_uploader :TDS_Doc, DocUploader
+  
   belongs_to :project_unit
   belongs_to :user
   has_many :receipts
