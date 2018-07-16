@@ -99,7 +99,7 @@ class ProjectUnitExportWorker
       (project_unit.user.email rescue "N/A"),
       (project_unit.user.phone rescue "N/A"),
       project_unit.user_id,
-      project_unit.user.lead_id,
+      (project_unit.user.lead_id rescue "N/A"),
       project_unit.receipts.where(status:"success").sum(&:total_amount),
       project_unit.pending_balance({strict: true}),
       project_unit.ageing
