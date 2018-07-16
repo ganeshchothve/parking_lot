@@ -1,6 +1,11 @@
 <% if current_user.buyer? %>
   <div class="table-wrapper">
 <% end %>
+<div class="row">
+  <div class="col-12">
+    <p>Total Payments : <%= receipts.count %></p>
+  </div>
+</div>
 <table class="striped-table table payment-table <% if current_user.buyer? %> reciept-table <% end %>"  width="100%" <% if current_user.buyer? %> cellpadding="20" cellspacing="0"<% end %>>
   <thead class="th-default th-pink">
     <% labels = t('mongoid.attributes.receipt').with_indifferent_access %>

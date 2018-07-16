@@ -20,7 +20,7 @@ class ProjectUnitMailer < ApplicationMailer
     # cc += crm_team
     mail(to: @user.email, subject: "Unit #{@project_unit.name} booked tentative")# cc: cc
   end
-  
+
   def send_revised_letter(project_unit_id)
     @project_unit = ProjectUnit.find(project_unit_id)
     @user = @project_unit.user
@@ -80,5 +80,16 @@ class ProjectUnitMailer < ApplicationMailer
     cc += default_team
     cc += crm_team
     mail(to: @user.email, cc: cc, subject: "Provisional Allotment of Apartment! ")
+  end
+
+  def swap_request(project_unit_id, alternate_project_unit_id)
+    @project_unit = ProjectUnit.find(project_unit_id)
+    @alternate_project_unit = ProjectUnit.find(alternate_project_unit_id)
+    @user = @project_unit.user
+    @cp = @user.channel_partner
+    cc = @cp.present? ? [@cp.email] : []
+    cc += default_team
+    cc += crm_team
+    mail(to: @user.email, cc: cc, subject: "Swap request")
   end
 end

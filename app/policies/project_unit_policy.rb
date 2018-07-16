@@ -14,11 +14,11 @@ class ProjectUnitPolicy < ApplicationPolicy
   def breakup?
     ['crm', 'sales', 'cp', 'admin'].include?(user.role)
   end
-  
+
   def export?
     ['admin', 'crm'].include?(user.role)
   end
-  
+
   def update?
     edit?
   end
@@ -62,6 +62,14 @@ class ProjectUnitPolicy < ApplicationPolicy
 
   def block?
     (user.project_units.count < user.allowed_bookings && !record.is_a?(ProjectUnit)) || (record.is_a?(ProjectUnit) && (['hold'].include?(record.status) && record.user_id == user.id) && user.kyc_ready?)
+  end
+
+  def swap_request?
+    ['crm', 'admin'].include?(user.role) && ["blocked", "booked_confirmed", "booked_tentative"].include?(record.status)
+  end
+
+  def swap_request_initiate?
+    ['crm', 'admin'].include?(user.role)
   end
 
   def permitted_attributes params={}
