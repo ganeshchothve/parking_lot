@@ -53,7 +53,8 @@ class ProjectUnitExportWorker
       "Available for",
       "Blocked on",
       "Auto Release On",
-      "Lead Source"
+      "Lead Source",
+      "Ageing"
     ]
   end
 
@@ -95,7 +96,8 @@ class ProjectUnitExportWorker
       project_unit.available_for,
       project_unit.blocked_on,
       project_unit.auto_release_on,
-      project_unit.lead_source
+      project_unit.lead_source,
+      project_unit.ageing
     ]
   end
 end
