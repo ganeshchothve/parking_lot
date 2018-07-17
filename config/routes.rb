@@ -47,12 +47,14 @@ Rails.application.routes.draw do
       get :resend_password_instructions, action: 'resend_password_instructions', as: :resend_password_instructions, on: :member
       get '/new/:role', action: 'new', on: :collection, as: :new_by_role
       get 'export', action: 'export', on: :collection, as: :export
+      get 'export_cp_report', action: 'export_cp_report', on: :collection, as: :export_cp_report
       resources :receipts, only: [:update, :edit, :show, :index, :new, :create], controller: '/receipts'
       resources :user_kycs, except: [:show, :destroy], controller: '/user_kycs'
       resources :project_units, only: [:index] do
         resources :receipts, only: [:update, :edit, :show, :index, :new, :create], controller: '/receipts'
       end
       resources :user_requests, except: [:destroy], controller: 'user_requests'
+      resources :booking_details, only: [:update], controller: 'booking_details'
     end
     resources :discounts, except: [:destroy], controller: 'discounts' do
       get :approve_via_email, on: :member, action: 'approve_via_email'

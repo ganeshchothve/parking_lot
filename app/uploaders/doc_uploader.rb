@@ -6,7 +6,7 @@ class DocUploader < CarrierWave::Uploader::Base
 
   # Choose what kind of storage to use for this uploader:
   if Rails.env.production?
-    storage :azure_rm
+    storage :file
   else
     storage :file
   end

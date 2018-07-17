@@ -304,6 +304,14 @@ class ProjectUnit
     end
     0
   end
+  
+  def blocking_date
+    if(["blocked","booked_tentative","booked_confirmed"].include?(self.status))
+      self.booking_detail.created_at
+    else
+      BookingDetail.where(project_unit_id:self.id).first.created_at rescue "N/A"
+    end
+  end
 
   def applicable_discount_id(user)
     selector = []
