@@ -6,13 +6,17 @@ class UserPolicy < ApplicationPolicy
   def resend_confirmation_instructions?
     index?
   end
-  
+
   def resend_password_instructions?
     index?
   end
 
   def export?
     ['admin', 'crm'].include?(user.role)
+  end
+
+  def export_cp_report?
+    ['admin', 'cp'].include?(user.role)
   end
 
   def edit?
