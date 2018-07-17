@@ -20,6 +20,7 @@
 		    <%= render '/admin/project_units/index', project_units: @project_units %>
         <% if ProjectUnitPolicy.new(current_user, ProjectUnit).export? %>
           <%= link_to "Export all #{global_labels['units']}", export_admin_project_units_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn margin-xs-left-0' %>
+          <%= link_to "MIS report #{global_labels['units']}", mis_report_admin_project_units_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn margin-xs-left-0' %>
         <% end %>
 		  </div>
 		  <div class="col-md-2 float-right">
