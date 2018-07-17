@@ -371,12 +371,13 @@ class ProjectUnit
   end
   
   def ageing
-    if(self.status == "booked_confirmed")
+    if(["blocked", "booked_tentative", "booked_confirmed"].include?self.status)
       last_booking_payment = self.receipts.where(status:"success").where(payment_type:"booking").desc(:created_at).first.created_at.to_date
       due_since = self.receipts.where(status:"success").asc(:created_at).first.created_at.to_date
       age = (last_booking_payment - due_since).to_i
     else
-      age = (Date.today - self.receipts.where(status:"success").asc(:created_at).first.created_at.to_date).to_i
+      return "NA"
+      # age = (Date.today - self.receipts.where(status:"success").asc(:created_at).first.created_at.to_date).to_i
     end
     if age < 15
       return "< 15 days"
@@ -571,6 +572,18 @@ class ProjectUnit
 
   def ninetynine_percent
     (self.pending_balance - self.tds_amount) rescue nil
+  end
+
+  def channel_partner_name
+    if self.user_id.present?
+      if self.user.channel_partner_id.present?
+        return self.user.channel_partner.name
+      else
+        return "NA"
+      end
+    else
+      return "NA"
+    end
   end
 
 end

@@ -54,6 +54,7 @@ class ProjectUnitExportWorker
       "Blocked on",
       "Auto Release On",
       "Lead Source",
+      "Channel Parter",
       "Ageing"
     ]
   end
@@ -97,6 +98,7 @@ class ProjectUnitExportWorker
       project_unit.blocked_on,
       project_unit.auto_release_on,
       project_unit.lead_source,
+      project_unit.channel_partner_name,
       project_unit.ageing
     ]
   end
