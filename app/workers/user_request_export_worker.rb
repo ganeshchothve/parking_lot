@@ -24,6 +24,8 @@ class UserRequestExportWorker
       "Amount Paid",
       "User ID (Used for VLOOKUP)",
       "Client Name",
+      "Client Phone",
+      "Client Email",
       "Client Comments",
       "CRM Comments"
     ]
@@ -39,6 +41,8 @@ class UserRequestExportWorker
       user_request.project_unit.receipts.where(status:"success").sum(&:total_amount),
       user_request.user_id,
       user_request.user.name,
+      user_request.user.phone,
+      user_request.user.email,
       user_request.comments,
       "N/A"
     ]
