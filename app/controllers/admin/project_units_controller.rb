@@ -46,9 +46,9 @@ class Admin::ProjectUnitsController < AdminController
 
   def mis_report
     if Rails.env.development?
-      ProjectUnitExportWorker.new.perform_for_mis(current_user.email)
+      ProjectUnitMisReportWorker.new.perform(current_user.email)
     else
-      ProjectUnitExportWorker.perform_for_mis_async(current_user.email)
+      ProjectUnitMisReportWorker.perform_async(current_user.email)
     end
     flash[:notice] = 'Your mis-report has been scheduled and will be emailed to you in some time'
     redirect_to admin_project_units_path
