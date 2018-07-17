@@ -1,3 +1,8 @@
+<div class="row">
+  <div class="col-12">
+    <p>Total Cancellation Requests : <%= user_requests.count %></p>
+  </div>
+</div>
 <table class='table striped-table payment-breakup' width="100%" cellpadding="10" cellspacing="0">
   <thead class="th-default th-pink">
     <% labels = t('mongoid.attributes.user_request').with_indifferent_access %>

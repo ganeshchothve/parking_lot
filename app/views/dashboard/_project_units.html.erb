@@ -106,6 +106,18 @@
               <div><a href="/eTutorial_TDS_on_property_etax.pdf" target="_blank" class="pink small-link" data-event-category="section" data-event-action="click" data-event-name="Tutorial for TDS">Tutorial for TDS</a></div>
               <% end %>
             </div>
+            <div class="col-6">
+              <div class="form-group form-field-wrapper">
+                <%= form_with(model: project_unit, local: true, id: 'project_unit_form', url: admin_user_booking_detail_path(user_id: current_user.id, id: project_unit.booking_detail.id), html: {class: 'validate-form',multipart: true}) do |f|%> 
+                  <label class="control-label">TDS Doc</label>
+                  <input type="file" name="booking_detail[tds_doc]" style="margin-bottom:20px;">
+                  <%= f.submit 'Upload', class: 'btn apply-btn', style: 'width:auto'%>
+                  <% if project_unit.booking_detail.tds_doc.present? %>
+                    <a href="<%= project_unit.booking_detail.tds_doc.url %>" class="small-link"  target="_blank">View uploaded document</a>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
             <div class="clearfix"></div>
             <!-- <div class="clearfix"></div> -->
         </div>

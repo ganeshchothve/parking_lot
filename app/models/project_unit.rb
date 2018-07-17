@@ -304,6 +304,14 @@ class ProjectUnit
     end
     0
   end
+  
+  def blocking_date
+    if(["blocked","booked_tentative","booked_confirmed"].include?(self.status))
+      self.booking_detail.created_at
+    else
+      BookingDetail.where(project_unit_id:self.id).first.created_at rescue "N/A"
+    end
+  end
 
   def applicable_discount_id(user)
     selector = []
@@ -367,6 +375,29 @@ class ProjectUnit
       return (self.booking_price - receipts_total)
     else
       return nil
+    end
+  end
+  
+  def ageing
+    if(self.status == "booked_confirmed")
+      last_booking_payment = self.receipts.where(status:"success").where(payment_type:"booking").desc(:created_at).first.created_at.to_date
+      due_since = self.receipts.where(status:"success").asc(:created_at).first.created_at.to_date
+      age = (last_booking_payment - due_since).to_i
+    elsif(["blocked", "booked_tentative"].include?(self.status))
+      age = (Date.today - self.receipts.where(status:"success").asc(:created_at).first.created_at.to_date).to_i
+    else
+      return "N/A"
+    end
+    if age < 15
+      return "< 15 days"
+    elsif age < 30
+      return "< 30 days"
+    elsif age < 45
+      return "< 45 days"
+    elsif age < 60
+      return "< 60 days"
+    else
+      return "> 60 days"
     end
   end
 
@@ -520,4 +551,36 @@ class ProjectUnit
       message
     end
   end
+
+  def lead_source
+    if self.user_id.present?
+      if self.user.role == "employee_user"
+        return "Employee"
+      elsif self.user.channel_partner_id.present?
+        return "Channel Partner"
+      else
+        return "Retail"
+      end
+    else
+      return "NA"
+    end
+  end
+
+  def effective_price(*current_user)
+    if current_user.present?
+      discount_rate_value = self.discount_rate(self.user_id.present? ? self.user : current_user)
+    else
+      discount_rate_value = 0
+    end
+    (self.base_rate + self.premium_location_charges + self.floor_rise - discount_rate_value).round(2)
+  end
+
+  def construction_rate
+    self.effective_price - self.land_rate
+  end
+
+  def ninetynine_percent
+    (self.pending_balance - self.tds_amount) rescue nil
+  end
+
 end

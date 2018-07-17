@@ -150,7 +150,7 @@ class Receipt
   end
 
   def status_changed
-    if self.status_changed? && ['success', 'failed'].include?(self.status_was)
+    if self.status_changed? && ['success', 'failed'].include?(self.status_was) && ['cancelled'].exclude?(self.status)
       self.errors.add :status, ' cannot be modified for a successful or failed payments'
     end
     if self.status_changed? && ['clearance_pending'].include?(self.status_was) && self.status == 'pending'
