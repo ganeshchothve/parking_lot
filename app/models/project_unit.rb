@@ -379,13 +379,12 @@ class ProjectUnit
   end
   
   def ageing
-    if(["blocked", "booked_tentative", "booked_confirmed"].include?(self.status))
+    if(["booked_confirmed"].include?(self.status))
       last_booking_payment = self.receipts.where(status:"success").where(payment_type:"booking").desc(:created_at).first.created_at.to_date
       due_since = self.receipts.where(status:"success").asc(:created_at).first.created_at.to_date
       age = (last_booking_payment - due_since).to_i
     else
-      return "NA"
-      # age = (Date.today - self.receipts.where(status:"success").asc(:created_at).first.created_at.to_date).to_i
+      age = (Date.today - self.receipts.where(status:"success").asc(:created_at).first.created_at.to_date).to_i
     end
     if age < 15
       return "< 15 days"
