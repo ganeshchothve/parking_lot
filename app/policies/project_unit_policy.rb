@@ -19,6 +19,10 @@ class ProjectUnitPolicy < ApplicationPolicy
     ['admin', 'crm'].include?(user.role)
   end
 
+  def mis_report?
+    export?
+  end
+
   def update?
     edit?
   end

@@ -127,7 +127,7 @@
         -
       </td>
       <td>
-        <%= number_to_indian_currency(@project_unit.effective_price(current_user)) %>
+        <%= number_to_indian_currency(@project_unit.effective_price(@project_unit.user_id.present? ? @project_unit.user : current_user )) %>
       </td>
     </tr>
     <tr>

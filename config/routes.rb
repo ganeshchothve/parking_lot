@@ -38,6 +38,7 @@ Rails.application.routes.draw do
       get 'eoi', action: 'eoi', on: :member, as: :eoi
       get 'breakup', action: 'breakup', on: :member, as: :breakup
       get 'export', action: 'export', on: :collection, as: :export
+      get 'mis_report', action: 'mis_report', on: :collection, as: :mis_report
       get 'swap_request', action: 'swap_request', on: :member, as: :swap_request
       get 'swap_request_initiate', action: 'swap_request_initiate', on: :member, as: :swap_request_initiate
     end

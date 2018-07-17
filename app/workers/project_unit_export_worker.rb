@@ -3,17 +3,31 @@ class ProjectUnitExportWorker
   include Sidekiq::Worker
 
   def perform emails
-
-    file = Spreadsheet::Workbook.new
-    sheet = file.create_worksheet(name: "Receipts")
-    sheet.insert_row(0, ProjectUnitExportWorker.get_column_names)
-    ProjectUnit.all.each_with_index do |project_unit, index|
-      sheet.insert_row(index+1, ProjectUnitExportWorker.get_project_unit_row(project_unit))
-    end
+    project_units = ProjectUnit.all
+    file = make_spread_sheet project_units
     file_name = "project_unit-#{SecureRandom.hex}.xls"
     file.write("#{Rails.root}/#{file_name}")
     ExportMailer.notify(file_name, emails, "Units").deliver
   end
+
+  def perform_for_mis emails
+    project_units = ProjectUnit.in(status: ["blocked","booked_tentative","booked_confirmed"])
+    file = make_spread_sheet project_units
+    file_name = "project_unit_mis-#{SecureRandom.hex}.xls"
+    file.write("#{Rails.root}/#{file_name}")
+    MisReportMailer.notify(file_name, emails, "Units").deliver
+  end
+
+  def make_spread_sheet project_units
+    file = Spreadsheet::Workbook.new
+    sheet = file.create_worksheet(name: "Receipts")
+    sheet.insert_row(0, ProjectUnitExportWorker.get_column_names)
+    project_units.each_with_index do |project_unit, index|
+      sheet.insert_row(index+1, ProjectUnitExportWorker.get_project_unit_row(project_unit)) 
+    end
+    file
+  end
+
 
   def self.get_column_names
     [
@@ -53,7 +67,9 @@ class ProjectUnitExportWorker
       "Available for",
       "Blocked on",
       "Auto Release On",
-      "Lead Source"
+      "Lead Source",
+      "Channel Parter",
+      "Ageing"
     ]
   end
 
@@ -95,7 +111,9 @@ class ProjectUnitExportWorker
       project_unit.available_for,
       project_unit.blocked_on,
       project_unit.auto_release_on,
-      project_unit.lead_source
+      project_unit.lead_source,
+      project_unit.channel_partner_name,
+      project_unit.ageing
     ]
   end
 end
