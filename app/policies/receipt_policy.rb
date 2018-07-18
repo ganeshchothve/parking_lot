@@ -35,7 +35,7 @@ class ReceiptPolicy < ApplicationPolicy
     project_unit = record.project_unit
     unit_user = project_unit.user
 
-    valid = project_unit.present? && (project_unit.status == 'blocked' || project_unit.status == 'booked_tentative') && project_unit.pending_balance > 0 && unit_user.kyc_ready?
+    valid = project_unit.present? && (project_unit.status == 'blocked' || project_unit.status == 'booked_tentative') && project_unit.pending_balance > 0 && unit_user.kyc_ready? && record.total_amount <= project_unit.pending_balance
 
     if user.buyer?
       valid = valid && user.id == unit_user.id
