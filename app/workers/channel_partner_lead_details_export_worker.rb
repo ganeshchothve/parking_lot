@@ -7,8 +7,12 @@ class ChannelPartnerLeadDetailsExportWorker
     sheet = file.create_worksheet(name: "ChannelPartnerLeads")
     sheet.insert_row(0, ChannelPartnerLeadDetailsExportWorker.get_column_names)
     User.where(:channel_partner_id.ne => nil).each_with_index do |user, index|
-      user.project_units.each do |project_unit|
-        sheet.insert_row(index+1, ChannelPartnerLeadDetailsExportWorker.get_channel_partner_lead_row(project_unit))
+      if user.project_units.present?
+        user.project_units.each do |project_unit|
+          sheet.insert_row(index+1, ChannelPartnerLeadDetailsExportWorker.get_channel_partner_lead_row(project_unit))
+        end
+      else
+        sheet.insert_row(index+1, ChannelPartnerLeadDetailsExportWorker.get_channel_partner_lead_without_pu_row(user))
       end
     end
     file_name = "channel-partner-lead-#{SecureRandom.hex}.xls"
@@ -55,7 +59,6 @@ class ChannelPartnerLeadDetailsExportWorker
       "Total amount paid",
       "Pending balance",
       "Unit SFDC ID",
-      "Available for",
     ]
   end
 
@@ -97,8 +100,17 @@ class ChannelPartnerLeadDetailsExportWorker
       project_unit.tds_amount,
       project_unit.total_amount_paid,
       project_unit.pending_balance,
-      project_unit.sfdc_id,
-      project_unit.available_for
+      project_unit.sfdc_id
     ]    
+  end
+
+  def self.get_channel_partner_lead_without_pu_row(user)
+    [
+      user.name,
+      user.email,
+      user.phone,
+      user.channel_partner.name,
+      user.confirmed? ? "Y" : "N"
+    ]  
   end
 end
