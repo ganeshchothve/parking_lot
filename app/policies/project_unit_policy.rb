@@ -77,7 +77,8 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def permitted_attributes params={}
-    attributes = [:status, :auto_release_on, :primary_user_kyc_id, user_kyc_ids: []]
+    attributes = ["crm","admin"].include?(user.role) ? [:status] : []
+    attributes += [:auto_release_on, :primary_user_kyc_id, user_kyc_ids: []]
     attributes
   end
 end
