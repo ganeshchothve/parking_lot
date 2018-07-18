@@ -113,7 +113,7 @@
                   <input type="file" name="booking_detail[tds_doc]" style="margin-bottom:20px;">
                   <%= f.submit 'Upload', class: 'btn apply-btn', style: 'width:auto'%>
                   <% if project_unit.booking_detail.tds_doc.present? %>
-                    <a href="<%= project_unit.booking_detail.tds_doc.url %>" class="small-link"  target="_blank">View uploaded document</a>
+                    <a href="<%= project_unit.booking_detail.tds_doc.url %>" class="small-link"  target="_blank">View TDS challan</a>
                   <% end %>
                 <% end %>
               </div>
