@@ -4,19 +4,19 @@
 		<div class="row">
 		  <!-- <div class="col-12 text-left mtop10 padding-0">
 	          <p class="pageTitle big pink">CANCELLATION REQUEST</p>
-	      </div> -->
-		  <div class="col-md-10 border border-left-0 border-top-0 border-bottom-0 table-responsive margin-xs-right-15 padding-left-0">
-		    <%= render 'index', {user_requests: @user_requests} %>
-		    <% if UserRequestPolicy.new(current_user, UserRequest.new(user: @user)).new? %>
-		      <%= link_to "Add #{global_labels['user_request']}", new_user_user_request_path, class: 'btn btn-primary nav-btn' %>
-		    <% end %>
-			<% if UserRequestPolicy.new(current_user, UserRequest).export? %>
-          <%= link_to "Export all #{global_labels['user_request']}", export_admin_user_requests_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn margin-xs-left-0' %>
-        <% end %>
-		  </div>
-		  <div class="col-md-2">
-		    <%= render "filters" %>
-		  </div>
-		</div>
-	</div>
-</section>
+	        </div> -->
+	        <div class="col-md-10 border border-left-0 border-top-0 border-bottom-0 table-responsive margin-xs-right-15 padding-left-0">
+	        	<%= render 'index', {user_requests: @user_requests} %>
+	        	<% if UserRequestPolicy.new(current_user, UserRequest.new(user: @user)).new? %>
+	        	<%= link_to "Add #{global_labels['user_request']}", new_user_user_request_path, class: 'btn btn-primary nav-btn' %>
+	        	<% end %>
+	        	<% if UserRequestPolicy.new(current_user, UserRequest).export? %>
+	        	<%= link_to "Export all #{global_labels['user_request']}", export_admin_user_requests_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn margin-xs-left-0' %>
+	        	<% end %>
+	        </div>
+	        <div class="col-md-2">
+	        	<%= render "filters" %>
+	        </div>
+	      </div>
+	    </div>
+	  </section>

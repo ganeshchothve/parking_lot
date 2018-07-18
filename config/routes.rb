@@ -48,6 +48,7 @@ Rails.application.routes.draw do
       get '/new/:role', action: 'new', on: :collection, as: :new_by_role
       get 'export', action: 'export', on: :collection, as: :export
       get 'export_cp_report', action: 'export_cp_report', on: :collection, as: :export_cp_report
+      get 'export_cp_lead_report', action: 'export_cp_lead_report', on: :collection, as: :export_cp_lead_report
       resources :receipts, only: [:update, :edit, :show, :index, :new, :create], controller: '/receipts'
       resources :user_kycs, except: [:show, :destroy], controller: '/user_kycs'
       resources :project_units, only: [:index] do

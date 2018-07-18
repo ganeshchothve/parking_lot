@@ -19,6 +19,10 @@ class UserPolicy < ApplicationPolicy
     ['admin', 'cp'].include?(user.role)
   end
 
+  def export_cp_lead_report?
+    ['admin', 'cp'].include?(user.role)
+  end
+
   def edit?
     record.id == user.id || ['crm', 'admin'].include?(user.role)
   end
