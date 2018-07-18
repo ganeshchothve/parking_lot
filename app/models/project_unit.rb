@@ -67,6 +67,8 @@ class ProjectUnit
   field :land_rate, type: Float
   field :images, type: Array
 
+  attr_accessor :processing_user_request, :processing_swap_request
+
   @@keys =  {project_tower_name: "String", project_name: "String", developer_name: "String", bedrooms: "Float", bathrooms: "Float", uds: "Float", usable: "Float", saleable: "Float", carpet: "Float", loading: "Float", sub_type: "String", type: "String", covered_area: "Float", terrace_area: "Float", category: "String",developer_id: "String",configuration_type: "String",construction_status: "String",transaction_type: "String",registration_date: "Date",floor: "Integer",assigned_to: "String",broker: "String",team: "String",date_of_possession: "Date",possession_status: "String",seller_type: "String",is_negotiable: "Boolean",amenities: "Hash",parking: "String",docs_verified: "Boolean",verification_date: "String",property_inspected: "Boolean",suitable_for: "String",entrance: "String",furnishing: "String",flooring: "String",facing: "String",unit_facing_direction: "String",project_status: "String",city: "String",state: "String",country: "String",resale: "Boolean",owner_count: "Integer",posted_by: "String",unit_configuration_id: "String",unit_configuration_name: "String"}
 
   @@keys.each do |k, klass|
@@ -304,7 +306,7 @@ class ProjectUnit
     end
     0
   end
-  
+
   def blocking_date
     if(["blocked","booked_tentative","booked_confirmed"].include?(self.status))
       self.booking_detail.created_at
@@ -377,7 +379,7 @@ class ProjectUnit
       return nil
     end
   end
-  
+
   def ageing
     if(["booked_confirmed"].include?(self.status))
       last_booking_payment = self.receipts.where(status:"success").where(payment_type:"booking").desc(:created_at).first.created_at.to_date

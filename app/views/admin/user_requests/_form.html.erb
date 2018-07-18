@@ -20,7 +20,7 @@
         <div class="cancel-booking-wrapper">
           <%
             hash = {}
-            has = {confirm: 'Your unit will be released immediately after raising the cancellation request. For booking the same unit again, you will have to go through the selection process again which will also be subject to availability. Are you sure you want to proceed?'} if @user_request.new_record?
+            # hash = {confirm: 'Your unit will be released immediately after raising the cancellation request. For booking the same unit again, you will have to go through the selection process again which will also be subject to availability. Are you sure you want to proceed?'} if @user_request.new_record?
           %>
           <%= form_for [:user, @user_request], html: {class: 'validate-form'}, data: hash do |f| %>
             <% if @user_request.new_record? %>
@@ -43,16 +43,20 @@
                   <%= f.label :status, class: 'control-label label-required' %>
                   <%= f.select :status, UserRequest.available_statuses.collect{|x| [x[:text], x[:id]] }, {prompt: true}, class: 'selectize', required: "required" %>
                 </div>
+              <% else %>
+                <div>
+                  status: <%= f.object.status %>
+                </div>
               <% end %>
-              <div class="form-group">
+              <!-- <div class="form-group">
                 <div style="color:#f00;">
                   Your unit will be released immediately after raising the cancellation request. For booking the same unit again, you will have to go through the selection process again which will also be subject to availability.
                 </div>
                 <input type="checkbox" id="accepted" /> I Agree
               </div>
-              <br/>
+              <br/> -->
               <div class="form-group">
-                <%= f.submit "Submit", class: 'btn nav-btn', id: "submit_request", disabled: "disabled", data:{event_category: 'Section', event_action: 'Click', event_name: 'cancel booking - submit'}  %>
+                <%= f.submit "Submit", class: 'btn nav-btn', id: "submit_request", data:{event_category: 'Section', event_action: 'Click', event_name: 'cancel booking - submit'}  %>
               </div>
             <% end %>
             <div class="form-group">
@@ -63,13 +67,13 @@
             <%= javascript_tag do %>
             $(document).ready(function(){
               FormInitializer.init($('.validate-form'));
-              $("#accepted").change(function(){
+              /*$("#accepted").change(function(){
                 if($(this).is(":checked")){
                   $("#submit_request").removeAttr("disabled");
                 }else{
                   $("#submit_request").attr("disabled", "disabled");
                 }
-              })
+              })*/
             });
           <% end %>
         </div>
@@ -112,6 +116,20 @@
                 <%= f.label :status, class: 'control-label label-required' %>
                 <%= f.select :status, UserRequest.available_statuses.collect{|x| [x[:text], x[:id]] }, {prompt: true}, class: 'selectize', required: "required" %>
               </div>
+            <% else %>
+              <div>Status</div>
+              <div> <%= f.object.status %> </div>
+              <br/>
+            <% end %>
+            <% if policy(@user_request).editable_field?("alternate_project_unit_id") %>
+              <div class="form-group d-none">
+                <%= f.label :alternate_project_unit_id, class: 'control-label label-required' %>
+                <%= f.select :alternate_project_unit_id, ProjectUnit.in(status: ["available"]).collect{|x| [x.name, x.id] }, {include_blank: true}, class: 'selectize' %>
+              </div>
+            <% elsif(f.object.alternate_project_unit_id.present?) %>
+              <div>Alternate project unit</div>
+              <div> <%= f.object.alternate_project_unit.name %> </div>
+              <br/>
             <% end %>
             <div class="form-group">
               <%= f.label :crm_comments, class: 'control-label label-required' %>
@@ -138,4 +156,19 @@
       </div>
     </div>
   </section>
+<% end %>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    $('[name="user_request[status]"').change(function(e){
+      debugger
+      var status = $(e.currentTarget).val();
+      if(status == "swapped"){
+        $('[name="user_request[alternate_project_unit_id]"').closest(".form-group").removeClass("d-none");
+      }else{
+        $('[name="user_request[alternate_project_unit_id]"').val("");
+        $('[name="user_request[alternate_project_unit_id]"').data("selectize").setValue("");
+        $('[name="user_request[alternate_project_unit_id]"').closest(".form-group").addClass("d-none");
+      }
+    }).trigger("change");
+  })
 <% end %>

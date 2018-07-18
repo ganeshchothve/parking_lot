@@ -19,11 +19,11 @@ class UserRequestObserver < Mongoid::Observer
       end
     end
     # release the unit immediately
-    if user_request.project_unit_id.present?
-      unit = user_request.project_unit
-      unit.make_available
-      unit.save!
-    end
+    # if user_request.project_unit_id.present?
+    #   unit = user_request.project_unit
+    #   unit.make_available
+    #   unit.save!
+    # end
   end
 
   def after_update user_request
@@ -31,6 +31,7 @@ class UserRequestObserver < Mongoid::Observer
       mailer = UserRequestMailer.send_resolved(user_request.id.to_s)
       if user_request.project_unit.present? && (user_request.request_type == "cancellation") && ["blocked", "booked_tentative", "booked_confirmed"].include?(user_request.project_unit.status)
         project_unit = user_request.project_unit
+        project_unit.processing_user_request = true
         project_unit.make_available
         project_unit.save(validate: false)
       end
@@ -39,6 +40,14 @@ class UserRequestObserver < Mongoid::Observer
       else
         mailer.deliver_later
       end
+    elsif user_request.status_changed? && user_request.status == 'swapped'
+      mailer = UserRequestMailer.send_swapped(user_request.id.to_s)
+      if Rails.env.development?
+        mailer.deliver
+      else
+        mailer.deliver_later
+      end
+      ProjectUnitSwapService.new(user_request.project_unit_id, user_request.alternate_project_unit_id).swap
     end
   end
 end

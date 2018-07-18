@@ -14,7 +14,7 @@ class ProjectUnitSwapService
       user_kycs = @project_unit.user_kycs
       user = @project_unit.user
 
-      @project_unit[:swap_request_initiated] = true
+      @project_unit.processing_swap_request = true
       @project_unit.make_available
       @project_unit.save!
 
@@ -36,7 +36,6 @@ class ProjectUnitSwapService
         new_receipt.project_unit = @alternate_project_unit
         new_receipt.save!
       end
-      @project_unit.unset(:swap_request_initiated)
       booking_detail.unset(:swap_request_initiated)
     else
       puts "error. #{@alternate_project_unit.name} is #{@alternate_project_unit.status}"

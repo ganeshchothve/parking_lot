@@ -47,7 +47,7 @@ class ProjectUnitObserver < Mongoid::Observer
       project_unit.set(user_id: nil, blocked_on: nil, auto_release_on: nil, held_on: nil, primary_user_kyc_id: nil, user_kyc_ids: [])
       project_unit.receipts.where(status:"success").each{|x| x.project_unit_id = nil; x.status = "cancelled"; x.comments ||= ""; x.comments += " Cancelling as the unit (#{project_unit.name}) has been released."}
 
-      if !project_unit[:swap_request_initiated]
+      if !project_unit.processing_user_request && !project_unit.processing_swap_request
         mailer = ProjectUnitMailer.released(user_was.id.to_s, project_unit.id.to_s)
         if Rails.env.development?
           mailer.deliver
