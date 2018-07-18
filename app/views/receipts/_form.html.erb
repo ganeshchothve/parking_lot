@@ -51,8 +51,9 @@
       <strong>Make Payment</strong><br/>
       <%= form_for @receipt, html: {class: 'validate-form'} do |f| %>
       <div class="form-group form-field-wrapper">
+      <% binding.pry%>
         <%= f.label :total_amount, class: 'control-label label-required' %>
-        <%= f.text_field :total_amount, min: 0, max: @receipt.total_amount, class: "form-field form-control green", required: 'required', id:"totalAmount" %>
+        <%= f.text_field :total_amount, min: 0, max: @project_unit.pending_balance, class: "form-field form-control green", required: 'required', id:"totalAmount" %>
       </div>
       <%= f.hidden_field :project_unit_id %>
       <%= f.hidden_field :payment_mode %>
