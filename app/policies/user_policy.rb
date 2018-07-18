@@ -15,6 +15,10 @@ class UserPolicy < ApplicationPolicy
     ['admin', 'crm'].include?(user.role)
   end
 
+  def export_customer_book?
+    ['admin', 'crm'].include?(user.role)
+  end
+  
   def edit?
     record.id == user.id || ['crm', 'admin'].include?(user.role)
   end

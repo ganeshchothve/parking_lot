@@ -51,6 +51,16 @@ class Admin::UsersController < AdminController
     redirect_to admin_users_path
   end
 
+  def export_customer_book
+    if Rails.env.development?
+      UserContactBookExportWorker.new.perform(current_user.email)
+    else
+      UserContactBookExportWorker.perform_async(current_user.email)
+    end
+    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    redirect_to admin_users_path
+  end
+
   def show
     @project_units = @user.project_units.paginate(page: params[:page] || 1, per_page: 15)
   end
