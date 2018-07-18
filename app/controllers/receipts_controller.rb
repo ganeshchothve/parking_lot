@@ -69,12 +69,17 @@ class ReceiptsController < ApplicationController
       if @receipt.save
         format.html {
           if @receipt.payment_mode == 'online'
-            if @receipt.payment_gateway_service.present?
-              redirect_to @receipt.payment_gateway_service.gateway_url
+            if @receipt.total_amount <= project_unit.pending_balance
+              if @receipt.payment_gateway_service.present?
+                redirect_to @receipt.payment_gateway_service.gateway_url
+              else
+                flash[:notice] = "We couldn't redirect you to the payment gateway, please try again"
+                @receipt.update_attributes(status: "failed")
+                redirect_to dashboard_path
+              end
             else
-              flash[:notice] = "We couldn't redirect you to the payment gateway, please try again"
-              @receipt.update_attributes(status: "failed")
-              redirect_to dashboard_path
+              flash[:notice] = "Entered amount exceeds balance amount"
+              redirect_to request.referrer
             end
           else
             flash[:notice] = "Receipt was successfully updated. Please upload documents"
