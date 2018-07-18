@@ -16,10 +16,10 @@ class ProjectUnitObserver < Mongoid::Observer
       project_unit.available_for = 'user'
     end
     if project_unit.status == 'employee'
-      project_unit.status = 'employee' if project_unit.available_for == 'employee'
+      project_unit.available_for = 'employee'
     end
-    if project_unit.status == 'employee'
-      project_unit.status = 'employee' if project_unit.available_for == 'employee'
+    if project_unit.status == 'management'
+      project_unit.available_for = 'management'
     end
     if project_unit.status_changed? && project_unit.status == 'hold'
       project_unit.held_on = DateTime.now
