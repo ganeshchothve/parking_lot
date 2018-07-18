@@ -11,7 +11,7 @@ document.addEventListener("sell_do_form_submitted_with_error", function(){
     $(".sell_do_form_actual_container .form_error_message").remove();
     new Noty({
       text: "A user with this email or phone has already registered",
-      timeout: 3000,
+      timeout: 5000,
       type: 'error'
     }).show();
   }, 100);
@@ -38,11 +38,11 @@ document.addEventListener("sell_do_form_rendered", function(){
 
 function sell_do_form_successfully_submitted(e){
   if(typeof App !== "undefined" && App.current_user){
-    if(e && e.sell_do_lead_details && e.sell_do_lead_details.lead_already_exists){
-      $(".sell_do_form_container").html('<div class="thankyou">This customer has already registered with us. Please wait.</div>');
-    }else{
+    // if(e && e.sell_do_lead_details && e.sell_do_lead_details.lead_already_exists){
+    //   $(".sell_do_form_container").html('<div class="thankyou">This customer has already registered with us. Please wait.</div>');
+    // }else{
       $(".sell_do_form_container").html('<div class="thankyou">Please wait, we have registered the user; generating login details & sending confirmation email / SMS to the user.</div>');
-    }
+    // }
   }else{
     $(".sell_do_form_container").html('<div class="thankyou">Thank you for registering with us. Please check your email inbox and confirm your account.</div>')
   }
@@ -71,7 +71,7 @@ function register_user_with_portal(e){
       // show success message and redirect to after sign in path
       new Noty({
         text: one.success || 'Request completed successfully',
-        timeout: 3000,
+        timeout: 5000,
         type: 'success'
       }).show();
       setTimeout(function(){
@@ -96,7 +96,7 @@ function register_user_with_portal(e){
         if(str){
           new Noty({
             text: str,
-            timeout: 3000,
+            timeout: 5000,
             type: 'error'
           }).show();
         }
