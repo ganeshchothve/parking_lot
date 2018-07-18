@@ -8,6 +8,7 @@ class UserRequest
   field :request_type, type: String, default: "cancellation"
   field :crm_comments, type: String # Comments from crm team
   field :reply_for_customer, type: String #reply from crm team to customer
+  field :alternate_project_unit_id, type: BSON::ObjectId # in case of swap resolve
 
   belongs_to :project_unit, optional: true
   belongs_to :receipt, optional: true
@@ -21,7 +22,8 @@ class UserRequest
   def self.available_statuses
     [
       {id: 'pending', text: 'Pending'},
-      {id: 'resolved', text: 'Resolved'}
+      {id: 'resolved', text: 'Resolved'},
+      {id: 'swapped', text: 'Swap resolved'}
     ]
   end
 
@@ -38,5 +40,9 @@ class UserRequest
       end
     end
     self.where(selector)
+  end
+
+  def alternate_project_unit
+    ProjectUnit.where(id: self.alternate_project_unit_id).first
   end
 end

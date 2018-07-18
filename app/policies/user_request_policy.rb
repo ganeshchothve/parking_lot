@@ -24,9 +24,13 @@ class UserRequestPolicy < ApplicationPolicy
   end
 
   def permitted_attributes params={}
-    attributes = [:comments, :receipt_id, :user_id] if user.buyer?
-    attributes += [:project_unit_id] if user.buyer? && record.new_record?
-    attributes = [:status, :crm_comments, :reply_for_customer] if user.role?('admin') || user.role?('crm') || user.role?('sales') || user.role?('cp')
-    attributes
+    if ["resolved", "swapped"].exclude?(record.status)
+      attributes = [:comments, :receipt_id, :user_id] if user.buyer?
+      attributes += [:project_unit_id] if user.buyer? && record.new_record?
+      attributes = [:status, :crm_comments, :reply_for_customer, :alternate_project_unit_id] if user.role?('admin') || user.role?('crm') || user.role?('sales') || user.role?('cp')
+      attributes
+    else
+      []
+    end
   end
 end
