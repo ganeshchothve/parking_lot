@@ -1,6 +1,6 @@
 class Admin::ProjectUnitsController < AdminController
   before_action :authenticate_user!
-  before_action :set_project_unit, except: [:index, :export]
+  before_action :set_project_unit, except: [:index, :export, :mis_report]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: :index
   include ApplicationHelper
@@ -44,6 +44,16 @@ class Admin::ProjectUnitsController < AdminController
     redirect_to admin_project_units_path
   end
 
+  def mis_report
+    if Rails.env.development?
+      ProjectUnitMisReportWorker.new.perform(current_user.email)
+    else
+      ProjectUnitMisReportWorker.perform_async(current_user.email)
+    end
+    flash[:notice] = 'Your mis-report has been scheduled and will be emailed to you in some time'
+    redirect_to admin_project_units_path
+  end
+
   def eoi
     render layout: false
   end
@@ -71,7 +81,7 @@ class Admin::ProjectUnitsController < AdminController
   end
 
   def authorize_resource
-    if params[:action] == "index"  || params[:action] == "export"
+    if params[:action] == "index"  || params[:action] == "export" || params[:action] == "mis_report"
       authorize ProjectUnit
     elsif params[:action] == "new" || params[:action] == "create"
       authorize ProjectUnit.new

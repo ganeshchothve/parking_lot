@@ -116,7 +116,7 @@
                 <div class="col-md-6 col-6 pull-left">
                   <div class="form-group form-field-wrapper position-relative">
                     <%= f.label :project_unit_ids, class: 'required' %>
-                    <%= f.select :project_unit_ids, @user.project_units.collect{|x| [x.name, x.id]}, {}, class: 'selectize-input init-selectize custom-selectize', multiple: true, placeholder: "Related Project Units (Co-applicants for)" %>
+                    <%= f.select :project_unit_ids, @user.project_units.collect{|x| [x.name, x.id]}, {prompt: "Select"}, class: 'custom-selectize init-selectize', multiple: true, placeholder: "Related Project Units (Co-applicants for)" %>
                   </div>
                 </div>
               <% end %>

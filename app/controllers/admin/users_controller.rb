@@ -1,8 +1,8 @@
 class Admin::UsersController < AdminController
   before_action :authenticate_user!
-  before_action :set_user, except: [:index, :export, :new, :create]
+  before_action :set_user, except: [:index, :export, :new, :create, :export_cp_report]
   before_action :authorize_resource
-  around_action :apply_policy_scope, only: [:index, :export]
+  around_action :apply_policy_scope, only: [:index, :export, :export_cp_report]
 
   layout :set_layout
 
@@ -27,7 +27,7 @@ class Admin::UsersController < AdminController
       end
     end
   end
-  
+
   def resend_password_instructions
     @user = User.find(params[:id])
     respond_to do |format|
@@ -56,6 +56,16 @@ class Admin::UsersController < AdminController
       UserContactBookExportWorker.new.perform(current_user.email)
     else
       UserContactBookExportWorker.perform_async(current_user.email)
+    end
+    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    redirect_to admin_users_path
+  end
+
+  def export_cp_report
+    if Rails.env.development?
+      ChannelPartnerBookingDetailsExportWorker.new.perform(current_user.email)
+    else
+      ChannelPartnerBookingDetailsExportWorker.perform_async(current_user.email)
     end
     flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
     redirect_to admin_users_path
@@ -103,7 +113,7 @@ class Admin::UsersController < AdminController
   end
 
   def authorize_resource
-    if params[:action] == "index" || params[:action] == "export"
+    if ['index', 'export', 'export_cp_report'].include?(params[:action])
       authorize User
     elsif params[:action] == "new" || params[:action] == "create"
       if params[:role].present?

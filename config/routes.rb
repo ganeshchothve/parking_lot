@@ -38,6 +38,7 @@ Rails.application.routes.draw do
       get 'eoi', action: 'eoi', on: :member, as: :eoi
       get 'breakup', action: 'breakup', on: :member, as: :breakup
       get 'export', action: 'export', on: :collection, as: :export
+      get 'mis_report', action: 'mis_report', on: :collection, as: :mis_report
       get 'swap_request', action: 'swap_request', on: :member, as: :swap_request
       get 'swap_request_initiate', action: 'swap_request_initiate', on: :member, as: :swap_request_initiate
     end
@@ -47,6 +48,7 @@ Rails.application.routes.draw do
       get '/new/:role', action: 'new', on: :collection, as: :new_by_role
       get 'export', action: 'export', on: :collection, as: :export
       get 'export_customer_book', action: 'export_customer_book', on: :collection, as: :export_customer_book
+      get 'export_cp_report', action: 'export_cp_report', on: :collection, as: :export_cp_report
       resources :receipts, only: [:update, :edit, :show, :index, :new, :create], controller: '/receipts'
       resources :user_kycs, except: [:show, :destroy], controller: '/user_kycs'
       resources :project_units, only: [:index] do

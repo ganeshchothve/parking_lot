@@ -6,7 +6,7 @@ class UserPolicy < ApplicationPolicy
   def resend_confirmation_instructions?
     index?
   end
-  
+
   def resend_password_instructions?
     index?
   end
@@ -19,6 +19,10 @@ class UserPolicy < ApplicationPolicy
     ['admin', 'crm'].include?(user.role)
   end
   
+  def export_cp_report?
+    ['admin', 'cp'].include?(user.role)
+  end
+
   def edit?
     record.id == user.id || ['crm', 'admin'].include?(user.role)
   end
