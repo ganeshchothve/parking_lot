@@ -13,9 +13,13 @@ class ProjectUnitObserver < Mongoid::Observer
     end
     project_unit.calculate_agreement_price
     if project_unit.status == 'available'
-      # project_unit.status = 'employee' if project_unit.available_for == 'employee'
-      # project_unit.status = 'management' if project_unit.available_for == 'management'
       project_unit.available_for = 'user'
+    end
+    if project_unit.status == 'employee'
+      project_unit.status = 'employee' if project_unit.available_for == 'employee'
+    end
+    if project_unit.status == 'employee'
+      project_unit.status = 'employee' if project_unit.available_for == 'employee'
     end
     if project_unit.status_changed? && project_unit.status == 'hold'
       project_unit.held_on = DateTime.now
