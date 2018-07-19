@@ -15,7 +15,15 @@ class UserPolicy < ApplicationPolicy
     ['admin', 'crm'].include?(user.role)
   end
 
+  def export_customer_book?
+    ['admin', 'crm'].include?(user.role)
+  end
+  
   def export_cp_report?
+    ['admin', 'cp'].include?(user.role)
+  end
+
+  def export_cp_lead_report?
     ['admin', 'cp'].include?(user.role)
   end
 

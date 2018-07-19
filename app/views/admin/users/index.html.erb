@@ -47,8 +47,14 @@
         <% if UserPolicy.new(current_user, User).export? %>
           <%= link_to "Export all #{global_labels['users']}", export_admin_users_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn margin-xs-left-0' %>
         <% end %>
+        <% if UserPolicy.new(current_user, User).export_customer_book? %>
+          <%= link_to "Export Customer Book", export_customer_book_admin_users_path(id: current_user.id), class: 'btn btn-outline-primary float-left ml-2 pink-btn margin-xs-left-0' %>
+        <% end %>
         <% if UserPolicy.new(current_user, User).export_cp_report? %>
           <%= link_to "Export report of channel partners", export_cp_report_admin_users_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn margin-xs-left-0' %>
+        <% end %>
+        <% if UserPolicy.new(current_user, User).export_cp_lead_report? %>
+          <%= link_to "Channel partners lead details", export_cp_lead_report_admin_users_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn margin-xs-left-0' %>
         <% end %>
       </div>
       <div class="col-md-2">

@@ -1,8 +1,8 @@
 class Admin::UsersController < AdminController
   before_action :authenticate_user!
-  before_action :set_user, except: [:index, :export, :new, :create, :export_cp_report]
+  before_action :set_user, except: [:index, :export, :new, :create, :export_cp_report, :export_cp_lead_report]
   before_action :authorize_resource
-  around_action :apply_policy_scope, only: [:index, :export, :export_cp_report]
+  around_action :apply_policy_scope, only: [:index, :export, :export_cp_report, :export_cp_lead_report]
 
   layout :set_layout
 
@@ -51,11 +51,31 @@ class Admin::UsersController < AdminController
     redirect_to admin_users_path
   end
 
+  def export_customer_book
+    if Rails.env.development?
+      UserContactBookExportWorker.new.perform(current_user.email)
+    else
+      UserContactBookExportWorker.perform_async(current_user.email)
+    end
+    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    redirect_to admin_users_path
+  end
+
   def export_cp_report
     if Rails.env.development?
       ChannelPartnerBookingDetailsExportWorker.new.perform(current_user.email)
     else
       ChannelPartnerBookingDetailsExportWorker.perform_async(current_user.email)
+    end
+    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    redirect_to admin_users_path
+  end
+
+  def export_cp_lead_report
+    if Rails.env.development?
+      ChannelPartnerLeadDetailsExportWorker.new.perform(current_user.email)
+    else
+      ChannelPartnerLeadDetailsExportWorker.perform_async(current_user.email)
     end
     flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
     redirect_to admin_users_path
@@ -103,7 +123,7 @@ class Admin::UsersController < AdminController
   end
 
   def authorize_resource
-    if ['index', 'export', 'export_cp_report'].include?(params[:action])
+    if ['index', 'export', 'export_cp_report', 'export_cp_lead_report'].include?(params[:action])
       authorize User
     elsif params[:action] == "new" || params[:action] == "create"
       if params[:role].present?
