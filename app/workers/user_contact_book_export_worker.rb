@@ -6,9 +6,9 @@ class UserContactBookExportWorker
     file = Spreadsheet::Workbook.new
     sheet = file.create_worksheet(name: "Customer Contact Book Report")
     sheet.insert_row(0, UserContactBookExportWorker.get_column_names)
-    BookingDetail.each_with_index do |booking_detail, index|
-      sheet.insert_row(index+1, UserContactBookExportWorker.get_user_request_row(booking_detail.project_unit.primary_user_kyc,booking_detail))
-      booking_detail.project_unit.user_kycs.each do |co_applicant_kyc|
+    BookingDetail.where(status: {"$ne" => "cancelled"}).each_with_index do |booking_detail, index|
+      sheet.insert_row(index+1, UserContactBookExportWorker.get_user_request_row(booking_detail.primary_user_kyc, booking_detail))
+      booking_detail.user_kycs.each do |co_applicant_kyc|
         sheet.insert_row(index+1, UserContactBookExportWorker.get_user_request_row(co_applicant_kyc,booking_detail))
       end
     end
