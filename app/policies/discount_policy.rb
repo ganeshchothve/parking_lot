@@ -1,10 +1,10 @@
 class DiscountPolicy < ApplicationPolicy
   def index?
-    user.role?('admin') || user.role?('sales') || user.role?('crm') || user.role?('cp')
+    user.role?('superadmin') || user.role?('admin') || user.role?('sales') || user.role?('crm') || user.role?('cp')
   end
 
   def edit?
-    (index? && record.status == 'draft') || ['admin'].include?(user.role)
+    (index? && record.status == 'draft') || ['superadmin', 'admin'].include?(user.role)
   end
 
   def new?
@@ -12,7 +12,7 @@ class DiscountPolicy < ApplicationPolicy
   end
 
   def create?
-    (index? && record.status == 'draft') || ['admin'].include?(user.role)
+    (index? && record.status == 'draft') || ['superadmin', 'admin'].include?(user.role)
   end
 
   def update?
@@ -28,7 +28,7 @@ class DiscountPolicy < ApplicationPolicy
     if record.new_record? || record.status == 'draft' || record.status_was == 'draft'
       attributes += [:project_id, :project_unit_id, :project_tower_id, :user_id, :user_role, :value]
     end
-    attributes += [:status] if user.role?('admin')
+    attributes += [:status] if user.role?('admin') || user.role?('superadmin')
     attributes
   end
 end

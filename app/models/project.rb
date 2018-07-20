@@ -69,10 +69,15 @@ class Project
   field :video, type: String
   field :secondary_developer_ids, type: Array, default: []
   field :secondary_developer_names, type: Array, default: []
+  field :foyer_link, type: String
+  field :rera_registration_no, type: String
+
+  field :logo, type: String
 
   has_many :project_units
   has_many :project_towers
   has_one :address, as: :addressable
+  belongs_to :booking_portal_client, class_name: 'Client'
 
   accepts_nested_attributes_for :address, allow_destroy: true #, :brochure_templates, :price_quote_templates, :images
   index(client_id:1)

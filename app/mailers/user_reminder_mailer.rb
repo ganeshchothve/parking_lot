@@ -6,6 +6,7 @@ class UserReminderMailer < ApplicationMailer
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
     @days = (@project_unit.auto_release_on - Date.today).to_i
-    mail(to: @user.email, cc: cc, subject: "Comfirm Your Booking - Embassy Edge at Embassy Springs")
+    @client = @user.client
+    mail(to: @user.email, cc: cc, subject: "Comfirm Your Booking - " + @project_unit.project_name + " at " + @client.name)
   end
 end

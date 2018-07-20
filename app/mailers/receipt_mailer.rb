@@ -1,6 +1,4 @@
 class ReceiptMailer < ApplicationMailer
-  default from: "Embassy Edge <no-reply@embassyedge.com>"
-
   def send_failure receipt_id
     @receipt = Receipt.find(receipt_id)
     @user = @receipt.user
@@ -43,7 +41,7 @@ class ReceiptMailer < ApplicationMailer
     cc = @cp.present? ? [@cp.email] : []
     cc += default_team
     cc += [@user.email]
-    mail(to: crm_team, cc: cc, subject: "Payment #{@receipt.receipt_id} has been collected for your Embassy Edge Home")
+    mail(to: crm_team, cc: cc, subject: "Payment #{@receipt.receipt_id} has been collected for your " + @project_unit.project_name)
   end
 
   def receipt_email receipt_id

@@ -8,7 +8,7 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def export?
-    ['admin', 'crm', 'sales', 'cp'].include?(user.role)
+    ['superadmin', 'admin', 'crm', 'sales', 'cp'].include?(user.role)
   end
 
   def new?
@@ -24,7 +24,7 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def edit?
-    !user.buyer? && (((user.role?('admin') || user.role?('crm') || user.role?('sales')) && ['pending', 'clearance_pending'].include?(record.status)) || (user.role?('channel_partner') && record.status == 'pending'))
+    !user.buyer? && (((user.role?('superadmin') || user.role?('admin') || user.role?('crm') || user.role?('sales')) && ['pending', 'clearance_pending'].include?(record.status)) || (user.role?('channel_partner') && record.status == 'pending'))
   end
 
   def update?

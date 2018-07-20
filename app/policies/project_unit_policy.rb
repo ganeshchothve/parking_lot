@@ -4,19 +4,19 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def edit?
-    ((['blocked', 'booked_tentative', 'booked_confirmed', 'error'].include?(record.status) && record.auto_release_on.present?) || ["available", "not_available", "employee", "management"].include?(record.status)) && ['crm', 'admin'].include?(user.role)
+    ((['blocked', 'booked_tentative', 'booked_confirmed', 'error'].include?(record.status) && record.auto_release_on.present?) || ["available", "not_available", "employee", "management"].include?(record.status)) && ['crm', 'admin', 'superadmin'].include?(user.role)
   end
 
   def eoi?
-    ['crm', 'sales', 'cp', 'admin'].include?(user.role)
+    ['superadmin', 'crm', 'sales', 'cp', 'admin'].include?(user.role)
   end
 
   def breakup?
-    ['crm', 'sales', 'cp', 'admin'].include?(user.role)
+    ['superadmin', 'crm', 'sales', 'cp', 'admin'].include?(user.role)
   end
 
   def export?
-    ['admin', 'crm'].include?(user.role)
+    ['superadmin', 'admin', 'crm'].include?(user.role)
   end
 
   def mis_report?

@@ -1,20 +1,12 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: "Embassy Edge <no-reply@embassyedge.com>"
+  default from: -> {
+    client = Client.where(id: RequestStore::Base.get("client_id")).first
+    if client.present?
+      client.name + " <" + client.notification_email + ">"
+    else
+      "Notification <no-reply@bookingportal.com>"
+    end
+  }
   layout 'mailer'
   helper ApplicationHelper
-
-  def crm_team
-    # TODO: Implement this with default cc - Embassy CRM Team
-    ["bhuvaneshwari.v@embassyindia.com", "nagaveni@embassyindia.com"]
-  end
-
-  def default_team
-    # TODO: Implement this with default cc - Embassy CRM Team
-    ["bhuvaneshwari.v@embassyindia.com", "nagaveni@embassyindia.com"]
-  end
-
-  def channel_partner_management_team
-    # TODO: Implement this with default cc - Embassy CRM Team
-    ["bhuvaneshwari.v@embassyindia.com", "nagaveni@embassyindia.com"]
-  end
 end

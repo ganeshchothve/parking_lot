@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  before_action :set_cache_headers, :set_request_store, :set_cookies
+  before_action :set_cache_headers, :set_request_store, :set_cookies, :load_and_store_client, :load_project
   acts_as_token_authentication_handler_for User, unless: lambda { |controller| controller.is_a?(HomeController) || controller.is_a?(Api::SellDoController) || (controller.is_a?(ChannelPartnersController)) }
   include Pundit
   helper_method :home_path
@@ -91,11 +91,22 @@ class ApplicationController < ActionController::Base
         cookies[:portal_cp_id] =  "5b08fa89f294971c8184aa68"
       end
     end
-    
-    if params[:portal_cp_id].present? 
-      cookies[:portal_cp_id] = params[:portal_cp_id] 
+
+    if params[:portal_cp_id].present?
+      cookies[:portal_cp_id] = params[:portal_cp_id]
     end
 
-  end  
+  end
+
+  def load_and_store_client
+    domain = "#{request.subdomain}.#{request.domain}"
+    @client = Client.where(domain: domain).first
+    RequestStore::Base.set "client_id", @client.id
+  end
+
+  def load_project
+    # TODO: for now we are considering one project per client only so loading first client project here
+    @project = @client.projects.first if @client.present?
+  end
 end
 

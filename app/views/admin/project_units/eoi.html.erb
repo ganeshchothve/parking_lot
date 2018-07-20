@@ -79,9 +79,9 @@
         </div>
         <div class="row">
           <div class="col-12 text-center mb30">
-            <p style="font-size:20px;"><strong>NAM ESTATES PRIVATE LIMITED</strong></p>
-            <p class="mb30"><strong>BOOKING APPLICATION FOR ALLOTMENT OF <br/>APARTMENTS IN “EMBASSY EDGE"</strong></p>
-            <p class="text-center text-white bg-green pos-rel">RERA REGISTRATION NO. PRM/KA/RERA/1250/303/PR/180526/001825</p>
+            <p style="font-size:20px;"><strong><% @client.registration_name.upcase %></strong></p>
+            <p class="mb30"><strong>BOOKING APPLICATION FOR ALLOTMENT OF <br/>APARTMENTS IN "<%= @project.name.upcase %>"</strong></p>
+            <p class="text-center text-white bg-green pos-rel">RERA REGISTRATION NO. <%= @project.rera_registration_no %></p>
           </div>
         </div>
         <div class="row">
@@ -162,14 +162,14 @@
               <li>AADHAR Card</li>
             </ul>
             <p class="mb30 bg-green text-white text-center"><strong>Details of the Promoter:</strong></p>
-            <p><strong>Name of the Promoter:</strong> NAM ESTATES PRIVATE LIMITED</p>
-            <p class="mb30"><strong>Address of the Promoter:</strong> No.150, 1st Floor, Embassy Point, Infantry Road, Bangalore - 560001</p>
+            <p><strong>Name of the Promoter:</strong> <% @client.registration_name.upcase %></p>
+            <p class="mb30"><strong>Address of the Promoter:</strong> <%= @client.address.to_sentence %></p>
 
             <p class="mb30 bg-green text-white text-center"><strong>Details of the Project:</strong></p>
             <table class="" cellpadding="10" cellspacing="0">
               <tr>
                 <td style="width:30%;font-weight: 600" class="text-right">Land:</td>
-                <td class="text-left">Sy.No.67/287 measuring 4.24 Acres situated at Navarathna Agrahara Village, Jala Hobli, Bangalore North Taluk, Sy.No.72/2 measuring 2.20 Acres and Sy.No.72/3 measuring 1.33 Acres both situated at Hegganahalli Village, Kasaba Hobli, Devanahalli Taluk</td>
+                <td class="text-left"><%= @project.address.to_sentence %></td>
               </tr>
               <tr>
                 <td style="width:30%;font-weight: 600" class="text-right">Project:</td>

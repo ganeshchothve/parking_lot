@@ -3,11 +3,6 @@
 		background-color: #fff;
 	}
 </style>
-<!-- <section>
-	<div class="col-12 text-center mbottom50">
-		<img src="<%= asset_path "embassy_springs_logo.png"%>" class="img-responsive">
-	</div>
-</section> -->
 <section class="mleft70">
 	<div class="col-12">
 		<p class="pageTitle pink big">KYC Form</p>
@@ -104,7 +99,7 @@
 					</div>
 				</div>
 				<div class="form-field-wrapper">
-					<label>Have you bought property at Embassy Previously?</label>
+					<label>Have you bought property at <%= @client.name %> Previously?</label>
 					<label class="radio prev-prop" data-href="yes">Yes
 					  <input type="radio" name="radio">
 					  <span class="checkmark"></span>

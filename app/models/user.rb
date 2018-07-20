@@ -52,6 +52,7 @@ class User
   # field :unlock_token,    type: String # Only if unlock strategy is :email or :both
   # field :locked_at,       type: Time
 
+  belongs_to :booking_portal_client, class_name: 'Client', inverse_of: :users
   has_many :receipts
   has_many :project_units
   has_many :booking_details
@@ -97,6 +98,7 @@ class User
 
   def self.available_roles
     [
+      {id: 'superadmin', text: 'Superadmin'},
       {id: 'user', text: 'Customer'},
       {id: 'employee_user', text: 'Employee'},
       {id: 'management_user', text: 'Management User'},

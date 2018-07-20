@@ -65,8 +65,8 @@ class DashboardController < ApplicationController
     respond_to do |format|
       format.html
       format.pdf do
-        render  pdf: "Embassy Receipt",
-        title: 'Embassy Receipt',
+        render  pdf: @client.name + " Receipt",
+        title: @client.name + 'Receipt',
         save_to_file: Rails.root.join('tmp', "receipt.pdf")
         # ReceiptMailer.send_receipt(@receipt.id).deliver_now
       end
@@ -81,8 +81,8 @@ class DashboardController < ApplicationController
     respond_to do |format|
       format.html
       format.pdf do
-        render  pdf: "Embassy Allotment",
-        title: 'Embassy Allotment',
+        render  pdf: @client.name + "Allotment",
+        title: @client.name + 'Allotment',
         save_to_file: Rails.root.join('tmp', "allotment.pdf")
       end
     end
@@ -111,8 +111,8 @@ class DashboardController < ApplicationController
     respond_to do |format|
       format.html
       format.pdf do
-        render  pdf: "Embassy Receipt",
-        title: 'Embassy Receipt',
+        render  pdf: @client.name + " Receipt",
+        title: @client.name + ' Receipt',
         save_to_file: Rails.root.join('tmp', "receipt_mail.pdf")
         # ReceiptMailer.receipt_email(@receipt.id).deliver_now
       end

@@ -147,6 +147,7 @@ class ProjectUnit
   has_many :user_requests
   has_and_belongs_to_many :user_kycs
   has_many :payment_schedules
+  belongs_to :booking_portal_client, class_name: 'Client'
 
   validates :client_id, :project_id, :project_tower_id, presence: true
   validates :status, :name, :sfdc_id, presence: true
@@ -388,7 +389,7 @@ class ProjectUnit
     elsif(["blocked", "booked_tentative"].include?(self.status))
       age = (Date.today - self.receipts.where(status:"success").asc(:created_at).first.created_at.to_date).to_i
     else
-      return "NA"  
+      return "NA"
     end
     if age < 15
       return "< 15 days"
@@ -536,17 +537,17 @@ class ProjectUnit
       days = (self.auto_release_on - Date.today).to_i
       user = self.user
       if days == 6
-        message = "Only 6 days to go! 6 days to being part of Embassy Springs - the 288 acre iconic township designed for happiness. Click here to pay the pending amount of Rs. #{self.pending_balance} for unit #{self.name} and secure your home at Embassy Edge: #{user.dashboard_url}"
+        message = "Only 6 days to go! 6 days to being part of #{self.booking_portal_client.name} - the 288 acre iconic township designed for happiness. Click here to pay the pending amount of Rs. #{self.pending_balance} for unit #{self.name} and secure your home at #{self.project_name}: #{user.dashboard_url}"
       elsif days == 5
-        message = "A home, an identity - come home to yours. Only 5 days to go before you miss your home at Embassy Edge! Get it before you regret it. Click here to complete paying the pending amount: #{user.dashboard_url}"
+        message = "A home, an identity - come home to yours. Only 5 days to go before you miss your home at #{self.project_name}! Get it before you regret it. Click here to complete paying the pending amount: #{user.dashboard_url}"
       elsif days == 4
-        message = "You buy electronics online, you buy groceries online - why not a home? Complete your pending amount of Rs. #{self.pending_balance} for unit #{self.name} at Embassy Edge on the portal, before you miss your home. You’ve got only 4 days to go! Click to pay: #{user.dashboard_url}"
+        message = "You buy electronics online, you buy groceries online - why not a home? Complete your pending amount of Rs. #{self.pending_balance} for unit #{self.name} at #{self.project_name} on the portal, before you miss your home. You’ve got only 4 days to go! Click to pay: #{user.dashboard_url}"
       elsif days == 3
-        message = "A lot can happen in 3 days - today, you have a home at the prestigious Embassy Springs reserved in your name. 3 days from now, you could’ve missed that opportunity. Click here to pay the pending amount of Rs. #{self.pending_balance} for unit #{self.name} today: #{user.dashboard_url}"
+        message = "A lot can happen in 3 days - today, you have a home at the prestigious #{self.booking_portal_client.name} reserved in your name. 3 days from now, you could’ve missed that opportunity. Click here to pay the pending amount of Rs. #{self.pending_balance} for unit #{self.name} today: #{user.dashboard_url}"
       elsif days == 2
-        message = "2 days to go! 2 days until you’ve missed your home at Embassy Edge - or, you could be the proud resident of Embassy Springs today. Click here to complete the transaction of Rs. #{self.pending_balance} for unit #{self.name}: #{user.dashboard_url}"
+        message = "2 days to go! 2 days until you’ve missed your home at #{self.project_name} - or, you could be the proud resident of #{self.booking_portal_client.name} today. Click here to complete the transaction of Rs. #{self.pending_balance} for unit #{self.name}: #{user.dashboard_url}"
       elsif days == 1
-        message = "Today’s your last chance to call #{self.name} at Embassy Edge your home! Complete the payment today, or the apartment will get auto-released for other users to book it. Click here to complete your payment of Rs. #{self.pending_balance}: #{user.dashboard_url}"
+        message = "Today’s your last chance to call #{self.name} at #{self.project_name} your home! Complete the payment today, or the apartment will get auto-released for other users to book it. Click here to complete your payment of Rs. #{self.pending_balance}: #{user.dashboard_url}"
       else
         message = nil
       end

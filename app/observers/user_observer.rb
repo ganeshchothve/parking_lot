@@ -8,7 +8,8 @@ class UserObserver < Mongoid::Observer
   def before_create user
     if user.role?("user")
       email = user.email
-      if email.include?("@embassyindia.com") || email.include?("@embassyservices.in") || email.include?("@embassygroupinternational.com")
+      client = user.client
+      if client.domains.include?(email.split("@")[1])
         user.role = "employee_user"
       end
     end

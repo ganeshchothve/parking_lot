@@ -23,8 +23,8 @@ var amt = $('#totalAmount').val();
 var options = {
   key: "<%= Rails.env.production? ? ENV_CONFIG['razorpay']['key'] : 'rzp_test_NTQGRS3ia0hiWY' %>",
   amount: <%= @receipt.total_amount.to_i * 100 %>, // 2000 paise = INR 20
-  name: "Embassy Edge",
-  description: "Embassy Edge",
+  name: "<%= @project.name %>",
+  description: "<%= @project.name %>",
   handler: function (response){
     $(".payment-gateway-message").html('<div class="title">Thank you for the payment, please wait while we process your payment. You should be redirected once we have processed your request.</div>')
     window.location = "/payment/<%= @receipt.receipt_id %>/process_payment/razorpay?payment_id=" + response.razorpay_payment_id;
@@ -53,13 +53,13 @@ document.getElementById('rzp-button1').onclick = function(e){
 <script type="text/javascript">
   ga('ec:addProduct', {
     'id': '<%= @receipt.project_unit.present? ? @receipt.project_unit.id : @receipt.reference_project_unit.id %>', // Product ID (string).
-    'name': '<%= @receipt.project_unit.present? ? @receipt.project_unit.name : @receipt.reference_project_unit.name %> | Embassy Edge', // Product name (string).
+    'name': '<%= @receipt.project_unit.present? ? @receipt.project_unit.name : @receipt.reference_project_unit.name %> | <%= @project.name %>', // Product name (string).
     'category': 'Apartment', // Product category (string).
-    'brand': 'Embassy Edge', // Product brand (string).
+    'brand': '<%= @project.name %>', // Product brand (string).
     'price': '<%= @receipt.total_amount.to_i * 100 %>',
     'quantity': 1
   });
-  ga('ec:setAction', 'add');  
+  ga('ec:setAction', 'add');
   ga('ec:setAction','checkout', {
   'step': 1
   });

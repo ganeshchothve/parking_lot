@@ -11,10 +11,10 @@
     <td style="line-height:26px;">
       <span style="font-size:15px;line-height:26px;color:#000;font-weight:700;">
       <%if @resource.channel_partner.present? %>
-        <span> <%= @resource.channel_partner.name %>,has registered your interest for Embassy Edge Apartments. 
-        Please confirm your account by clicking the link below and book your Embassy Home in 4 easy steps!</span>
+        <span> <%= @resource.channel_partner.name %>,has registered your interest for <%= @project.name %>.
+        Please confirm your account by clicking the link below and book your <%= @client.name %> Home in 4 easy steps!</span>
       <%else%>
-         Thank you for registering at Embassy Edge Apartments. Please confirm your account by clicking the link below and book your Embassy Home in 4 easy steps!</span>
+         Thank you for registering at <%= @project.name %>. Please confirm your account by clicking the link below and book your <%= @client.name %> in 4 easy steps!</span>
       <%end%>
         <br/>
         <p><%= link_to 'Confirm my account', confirmation_url(@resource, confirmation_token: @token, channel_partner_id: @resource.channel_partner_id) %></p>

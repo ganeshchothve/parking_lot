@@ -18,7 +18,7 @@ class ReceiptObserver < Mongoid::Observer
       # order = receipt.user.receipts.count
       receipt.receipt_id = "ESE#{project_unit.project_tower_name[0]}#{project_unit.name.split("-").last.strip}-R#{receipt.order_id}"
     end
-    
+
     # update project unit if a successful receipt is getting attached to a project_unit
     # update the user balance if receipt has no project unit
     if receipt.project_unit_id_changed? && receipt.project_unit_id_was.blank? && ['success', 'clearance_pending'].include?(receipt.status) && !receipt.status_changed?
@@ -27,7 +27,7 @@ class ReceiptObserver < Mongoid::Observer
         # TODO: notify us about this
       end
     end
-    
+
     # update project unit if receipt status has changed
     if receipt.status_changed?
       ApplicationLog.log("receipt_updated", {
@@ -49,7 +49,7 @@ class ReceiptObserver < Mongoid::Observer
       if project_unit.present?
         if project_unit.process_payment!(receipt)
         elsif receipt.status != 'clearance_pending'
-          # TODO: send us and embassy team an error message. Escalate this.
+          # TODO: send us and client team an error message. Escalate this.
         end
       end
 
@@ -64,7 +64,7 @@ class ReceiptObserver < Mongoid::Observer
       end
     end
 
-    
+
 
     # Send email to customer
     if receipt.status_changed?
@@ -120,7 +120,7 @@ class ReceiptObserver < Mongoid::Observer
       else
         mailer.deliver_later
       end
-      message = "Dear #{user.name}, your payment of Rs. #{receipt.total_amount} has been collected and will be sent to the Embassy Team for clearance."
+      message = "Dear #{user.name}, your payment of Rs. #{receipt.total_amount} has been collected and will be sent to the #{user.name} Team for clearance."
       if Rails.env.development?
         SMSWorker.new.perform(user.phone.to_s, message)
       else

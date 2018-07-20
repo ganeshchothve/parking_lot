@@ -3,13 +3,13 @@
     <div class="col-7 login-card-wrapper">
       <div class="login-card">
         <a href="javascript:void(0);" class="logo-wrapper pull-left">
-          <img src="<%= asset_path "embassy_springs_logo.png" %>" class="img-responsive" />
+          <img src="<%= asset_path "<%= @client.logo.url %>" %>" class="img-responsive" />
         </a>
         <img src="<%= asset_path "logo-edge.png" %>" class="img-responsive pull-right" />
         <div class="clearfix"></div>
         <br/><br/><br/>
         <div class="subTitle purple text-center" style="margin-bottom:25px;">Register now to book your </div>
-        <div class="pageTitle purple text-center">Embassy Edge Home</div>
+        <div class="pageTitle purple text-center"><%= @project.name %> Home</div>
         <div class="sign-up form-wrapper">
           <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= ENV_CONFIG['selldo']['client_id'] %>.js'></script>
           <script src='//trkr.scdn1.secure.raxcdn.com/t/forms/<%= ENV_CONFIG['selldo']['client_id'] %>/<%= ENV_CONFIG['selldo']['form_id'] %>.js' data-form-id='<%= ENV_CONFIG['selldo']['form_id'] %>'></script>

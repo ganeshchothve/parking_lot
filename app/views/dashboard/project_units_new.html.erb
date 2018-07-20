@@ -2,7 +2,7 @@
 	<div class="container">
 		<div class="col-12 text-center">
 			<a href="javascript:void(0);" class="logo-wrapper">
-				<img src="<%= asset_path "embassy_springs_logo.png" %>" class="img-responsive" />
+				<img src="<%= asset_path "<%= @client.logo.url %>" %>" class="img-responsive" />
 			</a>
 		</div>
 		<div class="col-12 text-center">
@@ -42,7 +42,7 @@
 					Tower: A<br/>
 					Floor: 11th<br/>
 					Flat no: 1104<br/>
-					Configuration: 2 BHK<br/> 
+					Configuration: 2 BHK<br/>
 					Min. Carpet Area: 1500 Sq.Ft.<br/>
 					Starting Price: 3500 / Sq. Ft.<br/>
 				</div>
@@ -60,7 +60,7 @@
 				Choose tower
 			</div>
 			<div class="col-12 text-center" id="tower-selector">
-				
+
 			</div>
 			<div class="col-12 text-center">
 				<button class="btn black navigate" data-goto="1">&larr; Prev</button>
@@ -191,10 +191,10 @@
 	</div>
 </section>
 <section class="screens-wrapper next" data-screen="4" data-next-screen="5" data-prev-screen="3">
-	
+
 </section>
 <section class="screens-wrapper next" data-screen="5" data-next-screen="na" data-prev-screen="4">
-	
+
 </section>
 
 <%#= render 'project_units', {project_units: ProjectUnit.all} %>

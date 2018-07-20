@@ -1,5 +1,4 @@
 class DiscountMailer < ApplicationMailer
-  default from: "Embassy Edge <no-reply@embassyedge.com>"
 
   def send_draft discount_id, user_id
     @discount = Discount.find(discount_id)
