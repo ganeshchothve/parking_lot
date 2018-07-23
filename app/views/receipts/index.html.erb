@@ -46,7 +46,7 @@
               new_admin_user_receipt_path(@user)
             end
             %>
-            <%= link_to "Make #{global_labels['receipt']}", form_for_objects, class: 'btn btn-primary nav-btn' %>
+            <%= link_to "Make #{global_labels['receipt']}", url_for_new_receipt, class: 'btn btn-primary nav-btn' %>
           <% end %>
           <% if UserPolicy.new(current_user, User).export? && @user.blank? %>
             <%= link_to "Export all #{global_labels['receipts']}", export_admin_receipts_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn' %>
