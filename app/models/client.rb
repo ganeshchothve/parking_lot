@@ -3,7 +3,6 @@ class Client
   include Mongoid::Timestamps
 
   field :name, type: String
-  field :logo, type: String
   field :selldo_client_id, type: String
   field :selldo_form_id, type: String
   field :cp_srd, type: String
@@ -16,6 +15,12 @@ class Client
   field :registration_name, type: String
   field :website_link, type: String
   field :cp_disclaimer, type: String
+  field :support_number, type: String
+  field :support_email, type: String
+  field :channel_partner_support_number, type: String
+  field :ccavenue_credentials, type: Hash # merchantid, accesscode, working_key
+
+  mount_uploader :logo, DocUploader
 
   has_many :users, class_name: 'User', inverse_of: 'booking_portal_client'
   has_many :project_units

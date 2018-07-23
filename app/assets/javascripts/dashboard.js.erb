@@ -68,9 +68,9 @@ $(document).ready(function(){
         var content = instance.content(),
         people = JSON.parse(content);
         if(people[4] == "available"){
-          newContent = '<div>Flat No: '+ people[0] +'</div><div>Bedrooms: '+ people[3] +'</div><div>Super Built-up Area: '+ people[7] +' Sq.Ft.</div><div>Usable Area: '+ people[8] +' Sq.Ft.</div><div>Carpet Area: '+ people[1] +' Sq.Ft.</div><div>Facing: '+ people[6] +'</div><div>Agreement Value: '+ people[2] +'/-</div><div class="book-status">Booking Status: '+ people[4] +'</div>';  
+          newContent = '<div>Flat No: '+ people[0] +'</div><div>Bedrooms: '+ people[3] +'</div><div>Super Built-up Area: '+ people[7] +' Sq.Ft.</div><div>Usable Area: '+ people[8] +' Sq.Ft.</div><div>Carpet Area: '+ people[1] +' Sq.Ft.</div><div>Facing: '+ people[6] +'</div><div>Agreement Value: '+ people[2] +'/-</div><div class="book-status">Booking Status: '+ people[4] +'</div>';
         }else{
-          newContent = '<div>Flat No: '+ people[0] +'</div><div>Bedrooms: '+ people[3] +'</div><div>Super Built-up Area: '+ people[7] +' Sq.Ft.</div><div>Usable Area: '+ people[8] +' Sq.Ft.</div><div>Carpet Area: '+ people[1] +' Sq.Ft.</div><div>Facing: '+ people[6] +'</div><div class="book-status">Booking Status: '+ people[4] +'</div>';  
+          newContent = '<div>Flat No: '+ people[0] +'</div><div>Bedrooms: '+ people[3] +'</div><div>Super Built-up Area: '+ people[7] +' Sq.Ft.</div><div>Usable Area: '+ people[8] +' Sq.Ft.</div><div>Carpet Area: '+ people[1] +' Sq.Ft.</div><div>Facing: '+ people[6] +'</div><div class="book-status">Booking Status: '+ people[4] +'</div>';
         }
         instance.content(newContent);
       }
@@ -243,9 +243,9 @@ $(document).ready(function(){
       'name': unitData[0], // Product name (string).
       'category': parseInt(unitData[3]) + ' BHK',   // Product category (string).
       'list': 'Apartment Selector Stage 3',
-      'brand': 'Embassy Edge',                // Product brand (string).
+      'brand': App.project.name,                // Product brand (string).
    });
-    ga('ec:setAction', 'click', {       
+    ga('ec:setAction', 'click', {
       'list': 'Search Results'          // Product list for impression or click
       });
     ga('send', 'pageview');      //step 4

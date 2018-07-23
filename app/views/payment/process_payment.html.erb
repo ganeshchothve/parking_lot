@@ -4,10 +4,10 @@
 ga('set', '&cu', 'INR');
 ga('ec:addProduct', { // Provide product details in a productFieldObject.
 'id': '<%= @receipt.project_unit.present? ? @receipt.project_unit.id : @receipt.reference_project_unit.id %>', // Product ID (string).
-'name': '<%= @receipt.project_unit.present? ? @receipt.project_unit.name : @receipt.reference_project_unit.name %> | Embassy Edge', // Product name (string).
- 'variant': '<%= @receipt.project_unit.present? ? @receipt.project_unit.bedrooms : @receipt.reference_project_unit.bedrooms %> BHK',   
+'name': '<%= @receipt.project_unit.present? ? @receipt.project_unit.name : @receipt.reference_project_unit.name %> | <%= @project.name %>', // Product name (string).
+ 'variant': '<%= @receipt.project_unit.present? ? @receipt.project_unit.bedrooms : @receipt.reference_project_unit.bedrooms %> BHK',
 'category': 'Apartment', // Product category (string).
-'brand': 'Embassy Edge', // Product brand (string).
+'brand': '<%= @project.name %>', // Product brand (string).
 'price': '<%= @receipt.total_amount %>',
 'quantity': 1
 });
@@ -15,7 +15,7 @@ ga('ec:addProduct', { // Provide product details in a productFieldObject.
 
   ga('ec:setAction', 'purchase', { // Transaction details are provided in an actionFieldObject.
     'id ':  '<%= @receipt.receipt_id %>', // Transaction ID. Required.
-    'affiliation': '<%= @receipt.project_unit.present? ? @receipt.project_unit.name : @receipt.reference_project_unit.name %> | Embassy Edge', // Affiliation (string).
+    'affiliation': '<%= @receipt.project_unit.present? ? @receipt.project_unit.name : @receipt.reference_project_unit.name %> | <%= @project.name %>', // Affiliation (string).
     'revenue': '<%= @receipt.total_amount %>', // Revenue (currency).
     'tax': '0.0', // Tax.
     'shipping': '0.0', // Shipping.

@@ -87,9 +87,9 @@
         <div class="row">
           <div class="col-12 mb30 text-justify">
             <p>Dear Sir/Madam,</p></br>
-            <p><strong>Sub:</strong> Provisional Allotment of Apartment No. <%= @project_unit.name  %> in Tower <%= @project_unit.project_tower_name %> <!-- Block <%#= @project_unit.name %> --> <!-- of <%#= @project_unit.floor %> -->, being developed in the Project "Embassy Edge", situated at  Navarathna Agrahara / Hegganahalli Village, Kundana Hobli, Devanahalli Taluk, Pin Code - 562110.</p><br/>
+            <p><strong>Sub:</strong> Provisional Allotment of Apartment No. <%= @project_unit.name  %> in Tower <%= @project_unit.project_tower_name %> <!-- Block <%#= @project_unit.name %> --> <!-- of <%#= @project_unit.floor %> -->, being developed in the Project "<%= project_unit.project_name %>", situated at  Navarathna Agrahara / Hegganahalli Village, Kundana Hobli, Devanahalli Taluk, Pin Code - 562110.</p><br/>
             <p><strong>Ref:</strong> Booking Application dated <%= @project_unit.booking_detail.created_at.strftime("%d-%m-%Y") %>.</p></br>
-            <p>Pursuant of the above referred Booking Application dated <%= @project_unit.booking_detail.created_at.strftime("%d-%m-%Y") %> in respect of Apartment No. <%= @project_unit.name %> in the Project known as "Embassy Edge", we have provisionally allotted Apartment No.
+            <p>Pursuant of the above referred Booking Application dated <%= @project_unit.booking_detail.created_at.strftime("%d-%m-%Y") %> in respect of Apartment No. <%= @project_unit.name %> in the Project known as "<%= project_unit.project_name %>", we have provisionally allotted Apartment No.
               <%= @project_unit.name %> having a Super Built-up Area of <%= @project_unit.saleable.round(2) %> square feet &amp; Usable Area of <%= @project_unit.usable.round(2) %> square feet &amp; Carpet Area of <%= @project_unit.carpet.round(2) %> square feet &amp; to you.<br/><br/>
               Further, we hereby confirm having received an amount of <%= number_to_indian_currency(@project_unit.total_amount_paid.round(2)) %>/-
               as advance vide, along with your Booking Application .<br/><br/>
@@ -113,10 +113,6 @@
               <p>Thanking you.</p><br/>
               <p>Yours truly,</p>
               <br/>
-              <p>For NAM Estates Private Limited</p>
-              <p>
-                <%= wicked_pdf_image_tag("reeza-signature.jpg") %>
-              </p>
               <br/><br/><br/>
               Agreed & Confirmed By
               <p>Name : <%= @project_unit.primary_user_kyc.name %></p>

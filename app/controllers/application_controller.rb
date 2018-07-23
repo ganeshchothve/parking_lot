@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
-  before_action :set_cache_headers, :set_request_store, :set_cookies, :load_and_store_client, :load_project
+  before_action :set_cache_headers, :set_request_store, :set_cookies
+  before_action :load_and_store_client, :load_project
   acts_as_token_authentication_handler_for User, unless: lambda { |controller| controller.is_a?(HomeController) || controller.is_a?(Api::SellDoController) || (controller.is_a?(ChannelPartnersController)) }
   include Pundit
   helper_method :home_path
@@ -100,7 +101,7 @@ class ApplicationController < ActionController::Base
 
   def load_and_store_client
     domain = "#{request.subdomain}.#{request.domain}"
-    @client = Client.where(domain: domain).first
+    @client = Client.where(booking_portal_domains: domain).first
     RequestStore::Base.set "client_id", @client.id
   end
 

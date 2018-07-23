@@ -1,6 +1,6 @@
 Dear <%= @user.name %>,<br/><br/>
 <p>
-Thank you for your payment for unit <%= @project_unit.name %> at Embassy Edge Apartments.
+Thank you for your payment for unit <%= @project_unit.name %> at <% @project_unit.project_name %>.
 </p>
 <p>
   <span>Following are your unit details</span><br/>
@@ -13,5 +13,5 @@ Thank you for your payment for unit <%= @project_unit.name %> at Embassy Edge Ap
 </p>
 <br/>
 <p>
-Your Embassy home will be kept on hold for you till <%= @project_unit.auto_release_on.strftime("%d %b, %Y") %>.
+Your <%= @project_unit.booking_portal_client.name %> home will be kept on hold for you till <%= @project_unit.auto_release_on.strftime("%d %b, %Y") %>.
 </p>

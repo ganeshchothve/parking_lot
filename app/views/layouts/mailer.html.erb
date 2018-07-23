@@ -3,7 +3,7 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title>Embassy Edge</title>
+  <title><%= @project.name %></title>
   <style>
   *{padding: 0; margin: 0 auto;}
   ul li{margin-left: 20px;padding: 0px;}
@@ -42,21 +42,12 @@
       </td>
     </tr>
     <tr>
-      <td>
-        <table cellpadding="0" cellspacing="0" width="100%">
-          <tr>
-            <td><img src="<%= asset_url('embassymailer-image-2.jpg')%>"></td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-    <tr>
       <td style="padding:20px;">
         <%= yield %>
       </td>
     </tr>
        <tr>
-      <td style="font-size:16px;line-height:26px;padding:10px 20px;">If you have any queries you can reach us at <%= SUPPORT_NUMBER %> or write to us at <a href="mailto:<%= SUPPORT_EMAIL %>" style="text-decoration:underline;color:#64c0e9;"><%= SUPPORT_EMAIL %></a>
+      <td style="font-size:16px;line-height:26px;padding:10px 20px;">If you have any queries you can reach us at <%= @client.support_number %> or write to us at <a href="mailto:<%= SUPPORT_EMAIL %>" style="text-decoration:underline;color:#64c0e9;"><%= @client.support_email %></a>
       </td>
     </tr>
   </table>
