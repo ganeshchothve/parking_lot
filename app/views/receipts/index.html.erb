@@ -39,8 +39,14 @@
           <% end %>
           <% end %>
           <% end %>
-          <% if @user.present? && !current_user.buyer? %>
-            <%= link_to "Make #{global_labels['receipt']}", new_admin_user_receipt_path(@user), class: 'btn btn-primary nav-btn' %>
+          <% if @user.present? && !current_user.buyer?
+            url_for_new_receipt = if @project_unit.present?
+              new_admin_user_project_unit_receipt_path(@user, @project_unit)
+            else
+              new_admin_user_receipt_path(@user)
+            end
+            %>
+            <%= link_to "Make #{global_labels['receipt']}", form_for_objects, class: 'btn btn-primary nav-btn' %>
           <% end %>
           <% if UserPolicy.new(current_user, User).export? && @user.blank? %>
             <%= link_to "Export all #{global_labels['receipts']}", export_admin_receipts_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn' %>
