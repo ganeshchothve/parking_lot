@@ -11,8 +11,8 @@
         <div class="subTitle purple text-center" style="margin-bottom:25px;">Register now to book your </div>
         <div class="pageTitle purple text-center"><%= @project.name %> Home</div>
         <div class="sign-up form-wrapper">
-          <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= ENV_CONFIG['selldo']['client_id'] %>.js'></script>
-          <script src='//trkr.scdn1.secure.raxcdn.com/t/forms/<%= ENV_CONFIG['selldo']['client_id'] %>/<%= ENV_CONFIG['selldo']['form_id'] %>.js' data-form-id='<%= ENV_CONFIG['selldo']['form_id'] %>'></script>
+          <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= @client.selldo_client_id %>.js'></script>
+          <script src='//trkr.scdn1.secure.raxcdn.com/t/forms/<%= @client.selldo_client_id %>/<%= @client.selldo_form_id %>.js' data-form-id='<%= @client.selldo_form_id %>'></script>
         </div>
         <div class="clearfix"></div>
       </div>

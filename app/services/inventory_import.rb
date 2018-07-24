@@ -1,5 +1,6 @@
 module InventoryImport
-  def self.update(filepath)
+  def self.update(filepath, booking_portal_client_id)
+    booking_portal_client = Client.find booking_portal_client_id
     count = 0
     CSV.foreach(filepath) do |row|
       unless count == 0
@@ -33,7 +34,7 @@ module InventoryImport
         usable = row[26].strip
         uds = row[26].strip
 
-        client_id = ENV_CONFIG['selldo']['client_id'] || "531de108a7a03997c3000002"
+        client_id = booking_portal_client.selldo_client_id
 
         project_unit = ProjectUnit.in(status: ["not_available", "available", "employee", "management"]).where(sfdc_id: sfdc_id).first
         if project_unit.present?
@@ -54,6 +55,7 @@ module InventoryImport
           end
           project_unit.base_rate = base_rate.to_f
           project_unit.client_id = client_id
+          project_unit.booking_portal_client_id = booking_portal_client.id
           project_unit.selldo_id = unit_sap_id # TODO
           project_unit.agreement_price = agreement_price.to_f
           project_unit.clubhouse_amenities_price = clubhouse_amenities_price
@@ -74,7 +76,8 @@ module InventoryImport
     end
   end
 
-  def self.perform(filepath)
+  def self.perform(filepath, booking_portal_client_id)
+    booking_portal_client = Client.find booking_portal_client_id
     count = 0
     CSV.foreach(filepath) do |row|
       unless count == 0
@@ -108,11 +111,11 @@ module InventoryImport
         usable = row[26].strip
         uds = row[26].strip
 
-        client_id = ENV_CONFIG['selldo']['client_id'] || "531de108a7a03997c3000002"
+        client_id = booking_portal_client.selldo_client_id
 
         project = Project.where(name: project_name).first
         unless project.present?
-          project = Project.create!(name: project_name, client_id: client_id)
+          project = Project.create!(name: project_name, client_id: client_id, booking_portal_client_id: booking_portal_client.id)
         end
 
         project_tower = ProjectTower.where(name: project_tower_name).where(project_id: project.id).first
@@ -130,6 +133,7 @@ module InventoryImport
         project_unit.project_id = project.id
         project_unit.project_tower_id = project_tower.id
         project_unit.unit_configuration_id = unit_configuration.id
+        project_unit.booking_portal_client_id = booking_portal_client.id
         project_unit.name = "#{unit_name} | #{unit_configuration_name}"
         if status == "Available"
           project_unit.status = "available"

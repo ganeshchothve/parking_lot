@@ -7,7 +7,7 @@ class SelldoReceiptPusher
     user = receipt.user
     instrument_date = receipt.issued_date || receipt.created_at
     params = {
-      api_key: ENV_CONFIG[:selldo][:api_key],
+      api_key: user.booking_portal_client.selldo_api_key,
       lead_id: user.lead_id,
       unit_id: receipt.project_unit_id.to_s,
       mode_of_transfer: receipt.payment_mode,
