@@ -50,7 +50,7 @@
           </div>
         <% end %>
         <% if current_user.buyer? %>
-          <%= form_for @receipt, html: {class: 'validate-form', "data-resource-type": global_labels['receipt'], "data-type": "json", id: "receipt_form"} do |f| %>
+          <%= form_for @receipt, local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['receipt'], "data-type": "json", id: "receipt_form"} do |f| %>
           <div class="form-group form-field-wrapper">
             <%= f.label :total_amount, class: 'label-required' %>
             <%= f.text_field :total_amount, min: 0, max: @project_unit.pending_balance, class: "form-field form-control green", required: 'required', id:"totalAmount" %>
@@ -60,7 +60,7 @@
           <%= f.submit "Proceed", class: 'btn btn-primary nav-btn' %>
           <% end %>
         <% else %>
-          <%= form_for [:admin, @user, @receipt], html: {id: 'receipt_form', class: 'validate-form'} do |f| %>
+          <%= form_for [:admin, @user, @receipt], local: true, remote: true, html: {id: 'receipt_form', class: 'modal-remote-form validate-form', "data-resource-type": global_labels['receipt'], "data-type": "json"} do |f| %>
             <div class="form-group">
               <%= f.label :payment_mode, class: 'label-required' %>
               <%= f.select :payment_mode, Receipt.available_payment_modes.reject{|x| x[:id] == 'online'}.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true, disabled: (policy(@receipt).editable_field?("payment_mode") ? false : true) %>
@@ -123,6 +123,9 @@
                     statuses = statuses.reject{|x| x[1] == 'success'}
                   elsif @receipt.status == 'clearance_pending'
                     statuses = statuses.reject{|x| x[1] == 'pending'}
+                  end
+                  if policy(@receipt).editable_field?("status")
+                    statuses = statuses.reject{|x| x[1] == "pending"}
                   end
                   %>
                   <%= f.select :status, statuses, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(@receipt).editable_field?("status") ? false : true) %>

@@ -88,6 +88,16 @@ class SearchesController < ApplicationController
   def checkout
     @project_unit = ProjectUnit.find(@search.project_unit_id)
     authorize @project_unit
+    if @project_unit.status != "hold"
+      if current_user.buyer?
+        redirect_to dashboard_path and return
+      else
+        redirect_to (@project_unit.user_id.present? ? admin_user_path(@project_unit.user_id) : dashboard_path) and return
+      end
+    elsif @project_unit.user_id.present? && @project_unit.user.receipts.where(reference_project_unit_id: @project_unit.id, status: "pending").present?
+      flash[:notice] = "We already have collected a payment for this unit from the same customer."
+      redirect_to admin_user_path(@project_unit.user_id) and return
+    end
   end
 
   def checkout_via_email

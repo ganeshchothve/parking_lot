@@ -37,7 +37,9 @@
             <a class="btn btn-light light-pink-btn dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
             <div class="dropdown-menu dropdown-menu-right">
               <% if UserPolicy.new(current_user, user).show? %>
-                <%= link_to "Take a Booking", new_admin_user_search_path(user.id), class: "dropdown-item" %>
+                <% if ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: user, status: "available")).hold? %>
+                  <%= link_to "Take a Booking", new_admin_user_search_path(user.id), class: "dropdown-item" %>
+                <% end %>
                 <%= link_to "View", admin_user_path(user.id), class: "dropdown-item" %>
                 <%= link_to "Add #{global_labels['user_kyc_details']}", new_admin_user_user_kyc_path(user), class: 'dropdown-item', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
                 <% if !user.confirmed? && user.confirmation_token.present? %>

@@ -150,6 +150,9 @@ class ReceiptsController < ApplicationController
     else
       custom_scope = custom_scope.where(user_id: current_user.id)
     end
+    if params[:project_unit_id].present?
+      custom_scope = custom_scope.where(project_unit_id: params[:project_unit_id])
+    end
     Receipt.with_scope(policy_scope(custom_scope)) do
       yield
     end

@@ -24,7 +24,13 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def hold?
-    record.user_based_status(record.user) == 'available' && record.user.kyc_ready? && record.user.project_units.where(status: "hold").blank?
+    valid = record.user_based_status(record.user) == 'available' && record.user.kyc_ready? && record.user.project_units.where(status: "hold").blank?
+    _role_based_check(valid)
+  end
+
+  def block?
+    valid = ['hold'].include?(record.status) && record.user.kyc_ready?
+    _role_based_check(valid)
   end
 
   def make_available?
@@ -57,11 +63,6 @@ class ProjectUnitPolicy < ApplicationPolicy
 
   def checkout_via_email?
     valid = record.user_based_status(user) == "available" && user.kyc_ready?
-    _role_based_check(valid)
-  end
-
-  def block?
-    valid = (record.user.project_units.count < record.user.allowed_bookings && !record.is_a?(ProjectUnit)) || (record.is_a?(ProjectUnit) && ['hold'].include?(record.status) && user.kyc_ready?)
     _role_based_check(valid)
   end
 

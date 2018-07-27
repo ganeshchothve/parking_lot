@@ -9,8 +9,8 @@
             </a>
             <h3 class="text-center">Register</h3>
             <div class="sign-up">
-              <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= ENV_CONFIG['selldo']['client_id'] %>.js'></script>
-              <script src='//trkr.scdn1.secure.raxcdn.com/t/forms/<%= ENV_CONFIG['selldo']['client_id'] %>/<%= ENV_CONFIG['selldo']['form_id'] %>.js' data-form-id='<%= ENV_CONFIG['selldo']['form_id'] %>'></script>
+              <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= @client.selldo_client_id %>.js'></script>
+              <script src='//trkr.scdn1.secure.raxcdn.com/t/forms/<%= @client.selldo_client_id %>/<%= @client.selldo_form_id %>.js' data-form-id='<%= @client.selldo_form_id %>'></script>
             </div>
           </div>
         </div>

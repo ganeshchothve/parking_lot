@@ -11,7 +11,7 @@
           <a class="nav-link" href="<%= dashboard_path %>">Dashboard</a>
         </li>
         <% end %>
-        <% if current_user.buyer? && policy(:dashboard).project_units? && ProjectUnitPolicy.new(current_user, ProjectUnit).block? %>
+        <% if current_user.buyer? && policy(:dashboard).project_units? && ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: current_user, status: "available")).hold? %>
         <li class="nav-item">
           <a class="nav-link" href="<%= new_search_path %>">Apartment Selector</a>
         </li>

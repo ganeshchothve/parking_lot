@@ -35,7 +35,7 @@ class ReceiptMailer < ApplicationMailer
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
     cc += [@user.email]
-    mail(to: crm_team, cc: cc, subject: "Payment #{@receipt.receipt_id} has been collected for your " + @project_unit.project_name)
+    mail(to: cc, subject: "Payment #{@receipt.receipt_id} has been collected for your " + @project_unit.project_name)
   end
 
   def receipt_email receipt_id

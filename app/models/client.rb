@@ -5,6 +5,8 @@ class Client
   field :name, type: String
   field :selldo_client_id, type: String
   field :selldo_form_id, type: String
+  field :selldo_api_key, type: String
+  field :selldo_default_srd, type: String
   field :cp_srd, type: String
   field :sfdc_enabled?, type: Boolean
   field :helpdesk_number, type: String

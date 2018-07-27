@@ -44,7 +44,7 @@ en:
         total_amount: "Total Amount (Rs.)"
         status: "Payment Status"
         payment_type: "Payment Type (Towards Blocking or Booking)"
-        reference_project_unit_id: "Interested Unit (the customer may or may not block this)"
+        reference_project_unit_id: "Interested Unit (won't be blocked)"
         user_id: "Customer"
         project_unit_id: "Unit"
         creator_id: "Created by"

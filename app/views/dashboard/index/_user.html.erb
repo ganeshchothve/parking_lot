@@ -21,7 +21,7 @@
       <% else %>
       <div class="card">
         <div class="card-body">
-          <% if policy(:dashboard).project_units? && ProjectUnitPolicy.new(current_user, ProjectUnit).block? %>
+          <% if policy(:dashboard).project_units? && ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: current_user, status: "available")).hold? %>
             <a class="btn btn-primary" href="<%= new_search_path %>">Apartment Selector</a>
           <% end %>
           <% if current_user.kyc_ready? %>

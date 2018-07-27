@@ -8,11 +8,16 @@
           Overview
           <ul class="nav float-right">
             <% if ['crm', 'sales', 'cp', 'admin'].include?(current_user.role) %>
-            <% if UserPolicy.new(current_user, @user).edit? %>
-            <li class="nav-item">
-              <%= link_to "Edit", edit_admin_user_path(@user.id), class: 'modal-remote-form-link nav-link'  %>
-            </li>
+              <% if UserPolicy.new(current_user, @user).edit? %>
+                <li class="nav-item">
+                  <%= link_to "Edit", edit_admin_user_path(@user.id), class: 'modal-remote-form-link nav-link'  %>
+                </li>
+              <% end %>
             <% end %>
+            <% if ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: @user, status: "available")).hold? %>
+              <li class="nav-item">
+                <%= link_to "Take a Booking", new_admin_user_search_path(@user.id), class: "nav-link" %>
+              </li>
             <% end %>
             <% if ReceiptPolicy.new(current_user, Receipt).index?(@user) %>
             <li class="nav-item">

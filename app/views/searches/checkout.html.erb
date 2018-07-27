@@ -10,7 +10,14 @@
             <% if current_user.buyer? %>
               <%= link_to "I Agree", payment_user_search_path(@search), class: 'btn btn-primary', style:'margin-top:0px' , data:{event_category: 'Section', event_action: 'Click', event_name: 'I Agree'}, onclick: 'alert("Rs. 5,000 processing charges will be applied on cancellation of booking")' %>
             <% else %>
-              <%= link_to "I Agree", payment_user_search_path(@search), class: 'btn btn-primary', style:'margin-top:0px' , data:{event_category: 'Section', event_action: 'Click', event_name: 'I Agree'}, onclick: 'alert("Rs. 5,000 processing charges will be applied on cancellation of booking")' %>
+              <%
+                if policy(Receipt.new(project_unit_id: @project_unit)).editable_field?("status")
+                  url = new_admin_user_receipt_path(@user, project_unit_id: @project_unit.id)
+                else
+                  url = new_admin_user_receipt_path(@user, reference_project_unit_id: @project_unit.id)
+                end
+              %>
+              <%= link_to "Add #{global_labels['receipt']}", url, class: 'btn btn-primary modal-remote-form-link', style:'margin-top:0px' , data:{event_category: 'Section', event_action: 'Click', event_name: 'I Agree'}, onclick: 'alert("Rs. 5,000 processing charges will be applied on cancellation of booking to the customer.")' %>
             <% end %>
             <%= f.submit 'Cancel', class: 'btn btn-danger' , data:{event_category: 'Section', event_action: 'Click', event_name: 'Cancel'}%>
           <% end %>
