@@ -1,0 +1,54 @@
+<div class="row justify-content-center">
+  <div class="col-7">
+    <%= render 'dashboard/project_unit_overview', {project_unit: @project_unit} %>
+    <div class="mt-3"></div>
+    <div class="card">
+      <div class="card-body payment-gateway-message">
+        <div class="title">You'll be redirected to RazorPay, where you can pay using UPI, credit/debit card or wallet</div>
+        <div class="mt-3"></div>
+        <a href="javascript:;" id="rzp-button" class="float-left btn btn-primary">Pay Online</a>
+        <% if @project_unit.status == "hold" %>
+          <%= form_for @project_unit, url: make_available_user_search_path(@search), method: 'post', html: {class: 'validate-form'} do |f| %>
+            <%= f.hidden_field :status, value: 'available' %>
+            <%= f.submit 'Cancel', class: 'btn btn-danger float-left ml-2' , data:{event_category: 'Section', event_action: 'Click', event_name: 'Cancel'}%>
+          <% end %>
+        <% end %>
+    </div>
+  </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+var amt = $('#totalAmount').val();
+
+var options = {
+  key: "<%= Rails.env.production? ? ENV_CONFIG['razorpay']['key'] : 'rzp_test_NTQGRS3ia0hiWY' %>",
+  amount: <%= @receipt.total_amount.to_i * 100 %>, // 2000 paise = INR 20
+  name: "<%= @project_unit.project_name %>",
+  description: "<%= @project_unit.project_name %>",
+  handler: function (response){
+    $(".payment-gateway-message").html('<div class="title">Thank you for the payment, please wait while we process your payment. You should be redirected once we have processed your request.</div>')
+    window.location = "/payment/<%= @receipt.receipt_id %>/process_payment/razorpay?payment_id=" + response.razorpay_payment_id;
+  },
+  prefill: {
+    "name": "<%= current_user.name %>",
+    "email": "<%= current_user.email %>",
+    "contact": "<%= current_user.phone %>"
+  },
+  theme: {
+    "color": "#bf2482"
+  }
+};
+var rzp1 = new Razorpay(options);
+document.getElementById('rzp-button').onclick = function(e){
+  rzp1.open();
+  e.preventDefault();
+}
+</script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    ChatHelp.message(App.current_user.name + " has held a unit <%= @receipt.project_unit.name %>; filled up KYC details and is on the payment page");
+    $('#rzp-button').trigger("click")
+  })
+</script>
+<!-- GENERICTODO : GA Integration -->

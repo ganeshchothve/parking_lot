@@ -103,6 +103,7 @@ en:
         receipt_ids: "Payments (associated with this Unit)"
         user_request_ids: "User Requests (associated with this Unit)"
         user_kyc_ids: "User KYCs (associated with this Unit)"
+        primary_user_kyc_id: "Primary User KYC"
       discount:
         name: 'Name'
         project_id: 'Project'

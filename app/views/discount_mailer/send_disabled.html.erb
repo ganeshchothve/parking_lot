@@ -1,14 +1,1 @@
-Name: <%= @discount.name %><br/>
-Project: <%= @discount.project_id.present? ? @discount.project.name : '-' %><br/>
-Tower: <%= @discount.project_tower_id.present? ? @discount.project_tower.name : '-' %><br/>
-Unit: <%= @discount.project_unit_id.present? ? @discount.project_unit.name : '-' %><br/>
-User: <%= @discount.user_id.present? ? @discount.user.name : '-' %><br/>
-Role: <%= @discount.user_role.present? ? @discount.user_role : '-' %><br/>
-Discount: <%= number_to_indian_currency(@discount.value) %><br/>
-Status: <%= @discount.status %><br/>
-<% if @discount.status == 'approved' %>
-  Approved At: <%= @discount.approved_at %><br/>
-  Approved By: <%= @discount.approved_by.name %><br/>
-<% end %>
-Created By: <%= @discount.created_by.name %><br/>
-Created At: <%= @discount.created_at %><br/>
+<%= @discount.to_json %>

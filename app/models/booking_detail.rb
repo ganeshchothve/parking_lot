@@ -7,7 +7,7 @@ class BookingDetail
   field :status, type: String
   field :channel_partner_id, type: BSON::ObjectId
   mount_uploader :tds_doc, DocUploader
-  
+
   belongs_to :project_unit
   belongs_to :user
   has_many :receipts
@@ -51,7 +51,7 @@ class BookingDetail
   end
 
   def send_notification!
-    message = "#{self.primary_user_kyc.first_name} from #{self.primary_user_kyc.city} just booked #{self.project_unit.name}"
+    message = "#{self.primary_user_kyc.first_name} from #{self.primary_user_kyc.address.city rescue "-"} just booked #{self.project_unit.name}"
     Gamification::PushNotification.new.push(message)
   end
 end

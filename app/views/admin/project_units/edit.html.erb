@@ -1,28 +1,53 @@
-<section class="main-wrapper full-height grey" style="min-height: 764px;">
-  <%= render 'breadcrumbs', {project_unit: @project_unit} %>
-  <div class="container-fluid">
-    <div class="col-12">
-      <%= form_for [:admin, @project_unit], html: {class: 'validate-form', id: 'project_unit_form'} do |f| %>
-        <% if @project_unit.auto_release_on.present? %>
-        <div class="form-group form-field-wrapper">
-          <%= f.label :auto_release_on, class: 'control-label label-required title' %>
-          <%= f.text_field :auto_release_on, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.auto_release_on.present? ? f.object.auto_release_on.strftime("%d/%m/%Y") : '', "data-min-date": Date.tomorrow.strftime("%d/%m/%Y"), disabled: (policy(@project_unit).editable_field?("auto_release_on") ? false : true), value: f.object.auto_release_on.present? ? f.object.auto_release_on.strftime("%d/%m/%Y") : "" %>
-        </div>
-        <% end %>
-        <% statuses = ["available", "not_available", "employee", "management"] %>
-        <% if statuses.include?(@project_unit.status) %>
-          <div class="form-group form-field-wrapper">
-            <%= f.label :status, class: 'control-label title' %>
-            <%= f.select :status, ProjectUnit.available_statuses.select{|x| statuses.include?(x[:id])}.collect{|x| [x[:text], x[:id]]}, {prompt: "Select", class: "selectize"} %>
+<%= form_for([:admin, @project_unit], remote: true, html: {"data-resource-type": global_labels['project_unit'], "data-type": "json", class: 'modal-remote-form validate-form', id: 'project_unit_form'}) do |f| %>
+  <div class="form-group">
+    <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <% if current_user.buyer? %>
+                <%= @project_unit.new_record? ? "New" : "Edit" %> <%= "#{global_labels['project_unit']}" %>
+              <% else %>
+                Edit Booking
+              <% end %>
+            </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
-        <% end %>
-        <div class="form-group">
-          <%= f.submit "Submit", class: 'btn nav-btn' %>
+          <div class="modal-body">
+            <div class="form-group">
+              <%= f.label :primary_user_kyc_id %>
+              <%= f.select :primary_user_kyc_id, @project_unit.user.user_kycs.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
+            </div>
+            <div class="form-group">
+              <%= f.label :user_kyc_ids %>
+              <%= f.select :user_kyc_ids, @project_unit.user.user_kycs.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', multiple: true %>
+            </div>
+            <div class="form-group">
+              <% if policy(@project_unit).editable_field?("auto_release_on") && @project_unit.auto_release_on.present? %>
+              <div class="form-group form-field-wrapper">
+                <%= f.label :auto_release_on, class: 'label-required title' %>
+                <%= f.text_field :auto_release_on, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.auto_release_on.present? ? f.object.auto_release_on.strftime("%d/%m/%Y") : '', "data-min-date": Date.tomorrow.strftime("%d/%m/%Y"), disabled: (policy(@project_unit).editable_field?("auto_release_on") ? false : true), value: f.object.auto_release_on.present? ? f.object.auto_release_on.strftime("%d/%m/%Y") : "" %>
+              </div>
+              <% end %>
+              <% statuses = ["available", "not_available", "employee", "management"] %>
+              <% if policy(@project_unit).editable_field?("status") && statuses.include?(@project_unit.status) %>
+                <div class="form-group form-field-wrapper">
+                  <%= f.label :status, class: 'title' %>
+                  <%= f.select :status, ProjectUnit.available_statuses.select{|x| statuses.include?(x[:id])}.collect{|x| [x[:text], x[:id]]}, {prompt: "Select", class: "selectize", disabled: (policy(@project_unit).editable_field?("status") ? false : true)} %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <%= f.submit "Submit", class: 'btn btn-primary' %>
+          </div>
         </div>
-      <% end %>
+      </div>
     </div>
   </div>
-</section>
+<% end %>
 <%= javascript_tag do %>
 $(document).ready(function(){
   FormInitializer.init($('#project_unit_form'));

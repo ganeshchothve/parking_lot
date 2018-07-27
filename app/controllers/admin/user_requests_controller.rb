@@ -21,6 +21,7 @@ class Admin::UserRequestsController < ApplicationController
     @user_request = @user.user_requests.new
     @user_request.project_unit_id = params[:project_unit_id] if params[:project_unit_id].present?
     authorize @user_request
+    render layout: false
   end
 
   def create
@@ -35,7 +36,7 @@ class Admin::UserRequestsController < ApplicationController
       end
     end
   end
-  
+
   def export
     if Rails.env.development?
       UserRequestExportWorker.new.perform(current_user.email)
@@ -47,6 +48,7 @@ class Admin::UserRequestsController < ApplicationController
   end
 
   def edit
+    render layout: false
   end
 
   def update

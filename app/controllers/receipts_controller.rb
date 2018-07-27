@@ -30,7 +30,7 @@ class ReceiptsController < ApplicationController
 
   def new
     if params[:project_unit_id].blank? && current_user.buyer?
-         flash[:notice] = "Please Select Apartment before making payment"
+      flash[:notice] = "Please Select Apartment before making payment"
       redirect_to(receipts_path)
       return
     end
@@ -41,6 +41,7 @@ class ReceiptsController < ApplicationController
       @receipt = Receipt.new(creator: current_user, user_id: @user, payment_mode: 'cheque', payment_type: 'blocking')
     end
     authorize @receipt
+    render layout: false
   end
 
   def create
@@ -71,7 +72,7 @@ class ReceiptsController < ApplicationController
           if @receipt.payment_mode == 'online'
             if @receipt.total_amount <= project_unit.pending_balance
               if @receipt.payment_gateway_service.present?
-                redirect_to @receipt.payment_gateway_service.gateway_url
+                redirect_to @receipt.payment_gateway_service.gateway_url(@receipt.user.get_search(@receipt.project_unit_id).id)
               else
                 flash[:notice] = "We couldn't redirect you to the payment gateway, please try again"
                 @receipt.update_attributes(status: "failed")
@@ -93,6 +94,7 @@ class ReceiptsController < ApplicationController
   end
 
   def edit
+    render layout: false
   end
 
   def update

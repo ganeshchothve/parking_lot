@@ -87,10 +87,12 @@ class Admin::UsersController < AdminController
 
   def new
     @user = User.new
+    render layout: false
     @user.role = params[:role].blank? ? "user" : params[:role]
   end
 
   def edit
+    render layout: false
   end
 
   def create
@@ -100,8 +102,10 @@ class Admin::UsersController < AdminController
     respond_to do |format|
       if @user.save
         format.html { redirect_to admin_users_path, notice: 'User was successfully created.' }
+        format.json { render json: @user, status: :created }
       else
         format.html { render :new }
+        format.json { render json: {errors: @user.errors.full_messages.uniq}, status: :unprocessable_entity }
       end
     end
   end
@@ -111,8 +115,10 @@ class Admin::UsersController < AdminController
     respond_to do |format|
       if @user.save
         format.html { redirect_to edit_admin_user_path(@user), notice: 'User Profile updated successfully.' }
+        format.json { render json: @user }
       else
         format.html { render :edit }
+        format.json { render json: {errors: @user.errors.full_messages.uniq}, status: :unprocessable_entity }
       end
     end
   end

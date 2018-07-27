@@ -1,11 +1,13 @@
+require "active_model_otp"
 class User
   include Mongoid::Document
   include Mongoid::Timestamps
   include ArrayBlankRejectable
+  include ActiveModel::OneTimePassword
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable #:registerable Disbaling registration because we always create user after set up sell.do
+  devise :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, authentication_keys: [:login] #:registerable Disbaling registration because we always create user after set up sell.do
 
   ## Database authenticatable
   field :first_name, type: String, default: ""
@@ -52,16 +54,24 @@ class User
   # field :unlock_token,    type: String # Only if unlock strategy is :email or :both
   # field :locked_at,       type: Time
 
+  # field for active_model_otp
+  field :otp_secret_key
+  has_one_time_password length: 6
+
+  # key to handle both phone or email as a login
+  attr_accessor :login, :login_otp
+
   belongs_to :booking_portal_client, class_name: 'Client', inverse_of: :users
   has_many :receipts
   has_many :project_units
   has_many :booking_details
   has_many :user_requests
   has_many :user_kycs
+  has_many :searches
 
   validates :first_name, :last_name, :phone, :role, :allowed_bookings, presence: true
+  validates :phone, uniqueness: true, phone: { possible: true, allow_blank: false, types: [:voip, :personal_number, :fixed_or_mobile]}
   validates :lead_id, uniqueness: true, allow_blank: true
-  validates :phone, uniqueness: true, phone: true # TODO: we can remove phone validation, as the validation happens in sell.do
   #validates :email, uniqueness: true #TODO: if removed can sign up with registerd email id
   validates :rera_id, :location, presence: true, if: Proc.new{ |user| user.role?('channel_partner') }
   validates :rera_id, uniqueness: true, allow_blank: true
@@ -191,5 +201,30 @@ class User
 
   def name
     "#{first_name} #{last_name}"
+  end
+
+  def login
+    @login || self.phone || self.email
+  end
+
+  def self.find_for_database_authentication(conditions)
+    login = conditions.delete(:login)
+    any_of({phone: login}, email: login).first
+  end
+
+  def self.find_record login
+    where("function() {return this.phone == '#{login}' || this.email == '#{login}'}")
+  end
+
+  def email_required?
+    false
+  end
+
+  def will_save_change_to_email?
+    false
+  end
+
+  def get_search project_unit_id
+    searches.where(project_unit_id: project_unit_id).desc(:created_at).first
   end
 end

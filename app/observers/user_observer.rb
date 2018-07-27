@@ -8,8 +8,8 @@ class UserObserver < Mongoid::Observer
   def before_create user
     if user.role?("user")
       email = user.email
-      client = user.client
-      if client.domains.include?(email.split("@")[1])
+      client = user.booking_portal_client
+      if client.email_domains.include?(email.split("@")[1])
         user.role = "employee_user"
       end
     end

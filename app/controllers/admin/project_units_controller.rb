@@ -19,6 +19,10 @@ class Admin::ProjectUnitsController < AdminController
     end
   end
 
+  def edit
+    render layout: false
+  end
+
   def update
     parameters = permitted_attributes(@project_unit)
     if ["available", "not_available", "employee", "management"].exclude?(@project_unit.status)

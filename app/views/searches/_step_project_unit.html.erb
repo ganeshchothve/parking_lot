@@ -1,0 +1,70 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <% unless current_user.buyer? %>
+        <div class="alert alert-danger">
+          You are taking a booking for <%= @user.name %>
+        </div>
+        <div class="mt-3"></div>
+      <% end %>
+      <%= render 'dashboard/project_unit_overview', {project_unit: @unit} %>
+      <div class="mt-3"></div>
+      <div class="card">
+        <div class="card-body">
+          <%= render 'user_kycs/index', {user_kycs: @user_kycs} %>
+          <% if UserKycPolicy.new(current_user, UserKyc.new(user: @user)).new? %>
+            <% if current_user.buyer? %>
+              <%= link_to "Add #{global_labels['user_kyc']}", new_user_kyc_path, class: 'btn btn-primary modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
+            <% else %>
+              <%= link_to "Add #{global_labels['user_kyc']}", new_admin_user_user_kyc_path(@user), class: 'btn btn-primary modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+      <div class="mt-3"></div>
+      <div class="card">
+        <div class="card-body">
+          <%= form_for(@unit, url: hold_user_search_path(@search), html: {method: "post", class: 'validate-form', id: 'hold_booking_detail_form'}) do |f| %>
+            <div class="form-group">
+              <%= f.hidden_field :user_id, value: @user.id %><br/>
+              <%= f.label :primary_user_kyc_id %>
+              <%= f.select :primary_user_kyc_id, @user.user_kycs.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
+            </div>
+            <div class="form-group">
+              <%= f.label :user_kyc_ids %>
+              <%= f.select :user_kyc_ids, @user.user_kycs.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', multiple: true %>
+            </div>
+            <div class="form-group">
+              <%= f.submit "Next", class: "btn btn-primary float-left" %>
+            </div>
+          <% end %>
+          <% if @search.previous_step.present? %>
+            <%= form_for [:user, @search], html: {class: 'validate-form'} do |f| %>
+              <div class="form-group">
+                <%= f.hidden_field :step, value: @search.previous_step %>
+              </div>
+              <div class="form-group">
+                <%= f.submit "Previous", class: "btn btn-secondary float-right" %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+      <!-- GENERICTODO: Fire aparment selected (CART) event in GA -->
+    </div>
+  </div>
+</div>
+<%= javascript_tag do %>
+  $(document).on("ajax:success", '#user_kyc_form', function(evt, data, status, xhr){
+    var $this = $(this);
+    window.location = window.location;
+  });
+  $(document).on("ajax:error", '#otp_user_form', function(evt, data, status, xhr){
+    if(xhr.status == 201){
+      // GENERICTODO: Handle error
+    }
+  });
+  $(document).ready(function(){
+    FormInitializer.init($('#hold_booking_detail_form'));
+  });
+<% end %>

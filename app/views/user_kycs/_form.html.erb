@@ -1,462 +1,162 @@
-<%= render 'breadcrumbs', {user: @user} %>
-<style type="text/css">
-.form-group{
-  padding-right: 30px;
-}
-.form-field-wrapper .form-field{
-  width: 100%;
-}
-.kyc-form-wrapper .intl-tel-input, .show-co-applicant .intl-tel-input{
-  display: block;
-}
-@media all and (max-width: 700px){
-  .col-12, .col-md-12{
-    padding: 0px;
-  }
-  .subTitle{
-    margin-left: 10px;
-  }
-  .form-group{
-    padding-right: 0px;
-  }
-}
-</style>
-<div class="col-12">
-  <div class="clearfix"></div>
-  <div class="kyc-form-wrapper">
-    <div class="row">
-      <%# if current_user.buyer? %>
-      <div class="col-md-12">
+<%
+if current_user.buyer?
+  if @user_kyc.persisted?
+    url = user_kyc_path(@user_kyc)
+  else
+    url = user_kycs_path
+  end
+else
+  if @user_kyc.persisted?
+    url = admin_user_user_kyc_path(@user, @user_kyc)
+  else
+    url = admin_user_user_kycs_path(@user)
+  end
+end
+%>
+<%= form_for(@user_kyc, local: true, url: url, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['user_kycs'], "data-type": "json", id: 'user_kyc_form'}) do |f| %>
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><%= @user_kyc.new_record? ? "New" : "Edit" %> <%= "#{global_labels['user_kyc']}" %></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-2">
+            <div class="form-group">
+              <%= f.label :salutation, class: 'required' %>
+              <%= f.select :salutation, UserKyc.available_salutations.collect{|x| [x[:text], x[:id]]}, {prompt: "Select"}, class: 'required selectize' %>
+            </div>
+          </div>
+          <div class="col-5">
+            <div class="form-group">
+          <%= f.label :first_name, class: 'required' %>
+          <%= f.text_field :first_name, class: 'form-control', required: 'required', placeholder: 'First Name' %>
+        </div>
+          </div>
+          <div class="col-5">
+            <div class="form-group">
+          <%= f.label :last_name, class: 'required' %>
+          <%= f.text_field :last_name, class: 'form-control', required: 'required', placeholder: 'Last Name' %>
+        </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group">
+          <%= f.label :phone, class: 'required' %>
+          <%= f.text_field :phone, class: 'form-control phone', required: 'required', placeholder:'Phone'%>
+        </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+          <%= f.label :email, class: 'required' %>
+          <%= f.email_field :email, class: 'form-control', required: 'required', placeholder:'Email' %>
+        </div>
+          </div>
+        </div>
+        <div class="form-group position-relative">
+          <!-- TODO: check if you want to restrict the dob to 18 years age -->
+          <%= f.label :dob, class: 'required' %>
+          <% date = (f.object.dob.present? ? f.object.dob.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y")) %>
+          <%= f.text_field :dob, class: 'form-control datepicker', required: 'required', type:'text', placeholder:'Date of birth', data: {"default-date": date}, value: date %>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group">
+              <%= f.label :pan_number %>
+              <%= f.text_field :pan_number, class: 'form-control', required: 'required', placeholder: 'PAN Number' %>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <%= f.label :aadhaar %>
+              <%= f.text_field :aadhaar, class: 'form-control', required: 'required', placeholder: 'Enter your 12 digit Aadhaar No.' %>
+            </div>
+          </div>
+        </div>
+        <% if params[:project_unit_id].present? %>
         <%
-        if current_user.buyer?
-          if @user_kyc.persisted?
-            url = user_kyc_path(@user_kyc)
-          else
-            url = user_kycs_path
-          end
-        else
-          if @user_kyc.persisted?
-            url = admin_user_user_kyc_path(@user, @user_kyc)
-          else
-            url = admin_user_user_kycs_path(@user)
-          end
-        end
+        @user_kyc.project_unit_ids += [params[:project_unit_id]]
+        @user_kyc.project_unit_ids.uniq!
         %>
-
-        <%= form_with(model: user_kyc, local: true, id: 'user_kyc_form', url: url, html: {class: 'validate-form', multipart: true}) do |f| %>
-        <% if user_kyc.errors.any? %>
-        <div id="error_explanation" class="alert alert-danger">
-          <ul>
-            <% user_kyc.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
-            <% end %>
-          </ul>
+        <% end %>
+        <% if @user.project_unit_ids.present? %>
+        <div class="form-group position-relative">
+          <%= f.label :project_unit_ids, class: 'required' %>
+          <%= f.select :project_unit_ids, @user.project_units.collect{|x| [x.name, x.id]}, {prompt: "Select"}, class: 'selectize', multiple: true, placeholder: "Related Project Units (Co-applicants for)" %>
         </div>
         <% end %>
-        <div class="small-title">
-          Personal Details (All fields in this section are mandatory)
-        </div>
-        <div class="white-wrapper">
-          <div class="row">
-            <div class="col-12">
-                <div class="col-md-2 col-2 pull-left">
-                  <div class="form-group form-field-wrapper">
-                    <%= f.label :salutation, class: 'required' %>
-                    <%= f.select :salutation, UserKyc.available_salutations.collect{|x| [x[:text], x[:id]]}, {prompt: "Select"}, class: 'required custom-selectize init-selectize' %>
-                  </div>
-                </div>
-                <div class="col-md-5 col-5 pull-left">
-                  <div class="form-group form-field-wrapper">
-                    <%= f.label :first_name, class: 'required' %>
-                    <%= f.text_field :first_name, class: 'form-control form-field', required: 'required form-field', placeholder: 'First Name' %>
-                  </div>
-                </div>
-                <div class="col-md-5 col-5 pull-left">
-                  <div class="form-group form-field-wrapper">
-                    <%= f.label :last_name, class: 'required' %>
-                    <%= f.text_field :last_name, class: 'form-control form-field', required: 'required form-field', placeholder: 'Last Name' %>
-                  </div>
-                </div>
+        <% if !defined?(small) || small == false %>
+          <div class="form-group">
+            <%= f.label :nri %><br/>
+            <div class="form-check form-check-inline">
+              <%= f.radio_button :nri, "yes", class: "form-check-input" %>
+              <%= f.label :nri, "Yes", class: "form-check-label" %>
+            </div>
+            <div class="form-check form-check-inline">
+              <%= f.radio_button :nri, "no", class: "form-check-input" %>
+              <%= f.label :nri, "No", class: "form-check-label" %>
             </div>
           </div>
-          <div class="clearfix"></div>
-          <div class="row">
-            <div class="col-12">
-              <div class="col-md-6 col-6 pull-left">
-                <div class="form-group form-field-wrapper">
-                  <%= f.label :phone, class: 'required' %>
-                  <%= f.text_field :phone, class: 'form-control phone form-field', required: 'required form-field', placeholder:'Phone'%>
-                </div>
-              </div>
-              <div class="col-md-6 col-6 pull-left">
-                <div class="form-group form-field-wrapper">
-                  <%= f.label :email, class: 'required' %>
-                  <%= f.email_field :email, class: 'form-control form-field', required: 'required form-field', placeholder:'Email' %>
-                </div>
-              </div>
+          <div class="form-field-wrapper">
+            <%= f.label :oci %>
+            <%= f.text_field :oci, class: 'form-control', placeholder: 'OCI' %>
+          </div>
+          <div class="form-group">
+            <%= f.label :poa %><br/>
+            <div class="form-check form-check-inline">
+              <%= f.radio_button :poa, "yes", class: "form-check-input" %>
+              <%= f.label :poa, "Yes", class: "form-check-label" %>
+            </div>
+            <div class="form-check form-check-inline">
+              <%= f.radio_button :poa, "no", class: "form-check-input" %>
+              <%= f.label :poa, "No", class: "form-check-label" %>
             </div>
           </div>
-          <div class="row">
-            <div class="col-12">
-              <div class="col-md-6 col-6 pull-left">
-                <div class="form-group form-field-wrapper position-relative">
-                  <!-- TODO: check if you want to restrict the dob to 18 years age -->
-                  <%= f.label :dob, class: 'required' %>
-                  <% date = (f.object.dob.present? ? f.object.dob.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y")) %>
-                  <%= f.text_field :dob, class: 'form-control form-field datepicker', required: 'required', type:'text', placeholder:'Date of birth', data: {"default-date": date}, value: date %>
-                </div>
-              </div>
-              <% if params[:project_unit_id].present? %>
-              <%
-              user_kyc.project_unit_ids += [params[:project_unit_id]]
-              user_kyc.project_unit_ids.uniq!
-              %>
-              <% end %>
-              <% if @user.project_unit_ids.present? %>
-                <div class="col-md-6 col-6 pull-left">
-                  <div class="form-group form-field-wrapper position-relative">
-                    <%= f.label :project_unit_ids, class: 'required' %>
-                    <%= f.select :project_unit_ids, @user.project_units.collect{|x| [x.name, x.id]}, {prompt: "Select"}, class: 'custom-selectize init-selectize', multiple: true, placeholder: "Related Project Units (Co-applicants for)" %>
-                  </div>
-                </div>
-              <% end %>
+          <div class="form-group">
+            <%= f.label :poa_details %>
+            <%= f.text_field :poa_details, class: 'form-control', placeholder: 'Name' %>
+          </div>
+          <div class="form-group">
+            <%= f.label :poa_details_phone_no %>
+            <%= f.text_field :poa_details_phone_no, class: 'phone form-control', placeholder: 'Phone No.' %>
+          </div>
+          <div class="form-group">
+            <%= f.label :gstn %>
+            <%= f.text_field :gstn, class: 'form-control', placeholder:'GSTIN' %>
+          </div>
+          <div class="form-group">
+            <%= f.label :is_company %><br/>
+            <div class="form-check form-check-inline">
+              <%= f.radio_button :is_company, "yes", class: "form-check-input" %>
+              <%= f.label :is_company, "Yes", class: "form-check-label" %>
+            </div>
+            <div class="form-check form-check-inline">
+              <%= f.radio_button :is_company, "no", class: "form-check-input" %>
+              <%= f.label :is_company, "No", class: "form-check-label" %>
             </div>
           </div>
-          <div class="clearfix"></div>
-        </div>
-        <div class="small-title">
-         Permanent Address (All fields in this section are mandatory)
-        </div>
-        <div class="white-wrapper">
-          <div class="row">
-            <div class="col-12">
-              <div class="col-md-6 col-6 pull-left">
-                <div class="form-group form-field-wrapper">
-                  <%= f.label :street, class: 'required' %>
-                  <%= f.text_field :street, class: 'form-control form-field', required: 'required form-field', placeholder: 'Street Name' %>
-                </div>
-              </div>
-              <div class="col-md-6 col-6 pull-left">
-                <div class="form-group form-field-wrapper">
-                  <%= f.label :house_number, class: 'required' %>
-                  <%= f.text_field :house_number, class: 'form-control form-field', required: 'required form-field', placeholder: 'House Number' %>
-                </div>
-              </div>
-            </div>
+          <div class="form-group">
+            <%= f.label :company_name %>
+            <%= f.text_field :company_name, class: 'form-control', placeholder: 'Company Name' %>
           </div>
-          <div class="row">
-            <div class="col-12">
-              <div class="col-md-6 col-6 pull-left">
-                <div class="form-group form-field-wrapper">
-                  <%= f.label :city, class: 'required' %>
-                  <%= f.text_field :city, class: 'form-control form-field', required: 'required form-field', placeholder: 'City' %>
-                </div>
-              </div>
-              <div class="col-md-6 col-6 pull-left">
-                <div class="form-group form-field-wrapper">
-                  <%= f.label :postal_code, class: 'required' %>
-                  <%= f.text_field :postal_code, class: 'form-control form-field number', required: 'required form-field', placeholder: 'Postal Code' %>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-12">
-              <div class="col-md-6 col-6 pull-left">
-                <div class="form-group form-field-wrapper">
-                  <%= f.label :state, class: 'required' %>
-                  <%= f.text_field :state, class: 'form-control form-field', required: 'required form-field', placeholder: 'State' %>
-                </div>
-              </div>
-              <div class="col-md-6 col-6 pull-left">
-                <div class="form-group form-field-wrapper">
-                  <%= f.label :country, class: 'required' %>
-                  <%= f.text_field :country, class: 'form-control form-field', required: 'required form-field', placeholder: 'Country' %>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="clearfix"></div>
-        </div>
-        <div class="small-title">
-          Correspondence Address
-        </div>
-        <div class="white-wrapper">
-          <div class="row">
-            <div class="col-12">
-              <div class="col-md-6 col-6 pull-left">
-                <div class="form-group form-field-wrapper">
-                  <%= f.label :correspondence_street %>
-                  <%= f.text_field :correspondence_street, class: 'form-control form-field', required: 'required form-field', placeholder: 'Street Name' %>
-                </div>
-              </div>
-              <div class="col-md-6 col-6 pull-left">
-                <div class="form-group form-field-wrapper">
-                  <%= f.label :correspondence_house_number %>
-                  <%= f.text_field :correspondence_house_number, class: 'form-control form-field', required: 'required form-field', placeholder: 'House Number' %>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-12">
-              <div class="col-md-6 col-6 pull-left">
-                <div class="form-group form-field-wrapper">
-                  <%= f.label :correspondence_city %>
-                  <%= f.text_field :correspondence_city, class: 'form-control form-field', required: 'required form-field', placeholder: 'City' %>
-                </div>
-              </div>
-              <div class="col-md-6 col-6 pull-left">
-                <div class="form-group form-field-wrapper">
-                  <%= f.label :correspondence_postal_code %>
-                  <%= f.text_field :correspondence_postal_code, class: 'form-control form-field number', required: 'required form-field', placeholder: 'Postal Code' %>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-12">
-              <div class="col-md-6 col-6 pull-left">
-                <div class="form-group form-field-wrapper">
-                  <%= f.label :correspondence_state %>
-                  <%= f.text_field :correspondence_state, class: 'form-control form-field', required: 'required form-field', placeholder: 'State' %>
-                </div>
-              </div>
-              <div class="col-md-6 col-6 pull-left">
-                <div class="form-group form-field-wrapper">
-                  <%= f.label :correspondence_country %>
-                  <%= f.text_field :correspondence_country, class: 'form-control form-field', required: 'required form-field', placeholder: 'Country' %>
-                </div>
-              </div>
-              <div class="clearfix"></div>
-            </div>
-            <div class="clearfix"></div>
-          </div>
-          <div class="clearfix"></div>
-        </div>
-        <!-- <hr class="divider" /> -->
-        <div class="small-title">
-          PAN / OCI (All fields in this section are mandatory)
-        </div>
-        <div class="white-wrapper">
-        <div class="form-group form-field-wrapper">
-          <div class="form-check">
-            <%= f.label :nri, class: 'control-label' %><br/>
-            <label class="radio nri" data-link="yes">Yes<%= f.radio_button :nri, "yes", class: "form-check-input" %><span class="checkmark"></span></label>
-            <label class="radio nri" data-link="no">No<%= f.radio_button :nri , "no", class: "form-check-input", checked: "checked" %><span class="checkmark"></span></label>
-          </div>
-        </div>
-        <!-- If NRI -->
-        <div class="row nri-fields show-yes-nri" style="display:none">
-          <div class="col-md-12 col-12">
-            <div class="form-field-wrapper">
-              <%= f.label :oci, class: 'control-label' %>
-              <%= f.text_field :oci, class: 'form-control form-field', placeholder: 'OCI' %>
-            </div>
-          </div>
-          <div class="col-md-12 col-12">
-            <div class="poa form-check">
-              <label class="control-label">Do you have Power of Attorney in India?</label><br/>
-              <label class="radio attorney" data-link="yes">Yes
-                <%= f.radio_button :poa, class: "form-check-input" %>
-                <span class="checkmark"></span>
-              </label>
-              <label class="radio attorney" data-link="no">No
-                <%= f.radio_button :poa, class: "form-check-input" %>
-                <span class="checkmark"></span>
-              </label>
-              <div class="name-attorney" style="display:none">
-                <div class="form-group form-field-wrapper col-md-6 col-6 pull-left">
-                  <%= f.label :poa_details %>
-                  <%= f.text_field :poa_details, class: 'form-control form-field', placeholder: 'Name' %>
-                </div>
-                <div class="form-group form-field-wrapper col-md-6 col-6 pull-left">
-                  <%= f.label :poa_details_phone_no %>
-                  <%= f.text_field :poa_details_phone_no, class: 'phone form-control form-field', placeholder: 'Phone No.' %>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-        <!-- If NRI -->
-        <!-- If Not NRI -->
-        <div class="row nri-fields show-no-nri">
-          <div class="col-12">
-            <div class="col-md-6 col-6 pull-left">
-              <div class="form-group form-field-wrapper">
-                <%= f.label :pan_number %>
-                <%= f.text_field :pan_number, class: 'form-control form-field', required: 'required', placeholder: 'PAN Number' %>
-              </div>
-            </div>
-            <div class="col-md-6 col-6 pull-left">
-              <div class="form-group form-field-wrapper">
-                <%= f.label :aadhaar %>
-                <%= f.text_field :aadhaar, class: 'form-control form-field', required: 'required', placeholder: 'Enter your 12 digit Aadhaar No.' %>
-              </div>
-            </div>
-            <div class="clearfix"></div>
-          </div>
-          <div class="clearfix"></div>
-        </div>
-        <!-- If Not NRI -->
-        <div class="clearfix"></div>
-        </div>
-        <!-- <hr class="divider"/> -->
-        <div class="small-title">
-          &nbsp;
-        </div>
-        <div class="white-wrapper">
-          <div class="form-group form-field-wrapper">
-            <div class="form-check">
-              <label class="control-label">Are you a corporate buying an apartment</label>
-              <%#= f.label :is_company, class: 'control-label' %>
-              <label class="radio company" data-link="yes">Yes<%= f.radio_button :is_company, class: "form-check-input" %><span class="checkmark"></span></label>
-              <label class="radio company" data-link="No">No<%= f.radio_button :is_company, class: "form-check-input" %><span class="checkmark"></span></label>
-              <div class="hidden-field gstin" style="display:none">
-                <div class="col-12">
-                  <div class="col-md-6 col-6 pull-left">
-                    <div style="margin-bottom:10px;">
-                      <%= f.label :gstn %>
-                      <%= f.text_field :gstn, class: 'form-control form-field', placeholder:'GSTIN' %>
-                  </div>
-                  </div>
-                  <div class="col-md-6 col-6 pull-left">
-                    <div style="margin-bottom:10px;">
-                      <%= f.label :company_name %>
-                      <%= f.text_field :company_name, class: 'form-control form-field', placeholder: 'Company Name' %>
-                    </div>
-                  </div>
-                  <div class="clearfix"></div>
-                </div>
-                <div class="clearfix"></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="clearfix"></div>
-          <!-- <hr class="divider"/> -->
-          <div class="form-group form-field-wrapper">
-            <div class="form-check">
-              <%= f.label :loan_required, class: 'control-label' %>
-              <label class="radio self-funded" data-link="self-funded">Self Funded<%= f.radio_button :loan_required, class: "form-check-input" %><span class="checkmark"></span></label>
-              <label class="radio bank-loan" data-link="bank-loan">Bank Loan<%= f.radio_button :loan_required, class: "form-check-input" %><span class="checkmark"></span></label>
-              <div class="hidden-field bank" style="display:none">
-                <%= f.label :bank_name %>
-                <%= f.select :bank_name, ['HDFC', 'Axis Bank', 'SBI' , 'Other'], {},{class: "init-selectize selectize required select-bank", style:'width:50%'} %>
-              </div>
-            </div>
-          </div>
-
-          <!-- <hr class="divider"/> -->
-
-          <div class="form-group form-field-wrapper">
-            <div class="form-check">
-              <%= f.label :existing_customer, class: 'control-label' %>
-              <label class="radio prev-prop" data-href="yes">Yes<%= f.radio_button :existing_customer, class: "form-check-input" %><span class="checkmark"></span></label>
-              <label class="radio prev-prop" data-href="no">No<%= f.radio_button :existing_customer, class: "form-check-input" %><span class="checkmark"></span></label>
-              <div class="hidden-field-prev-prop" style="display:none">
-                <div class="col-12">
-                  <div class="col-md-6 col-6 pull-left">
-                    <div style="margin-bottom:10px;">
-                      <%= f.label :existing_customer_name %>
-                      <%= f.text_field :existing_customer_name, class: "form-control form-field", placeholder: 'Customer Name' %>
-                    </div>
-                  </div>
-                  <div class="col-md-6 col-6 pull-left">
-                    <div>
-                      <%= f.label :existing_customer_project %>
-                      <%= f.text_field :existing_customer_project, class: "form-control form-field", placeholder: 'Project Name' %>
-                    </div>
-                  </div>
-                </div>
-                <div class="clearfix"></div>
-              </div>
-            </div>
-          </div>
-          <hr/>
-          <div class="row">
-            <div class="col-12">
-              <div class="col-md-6 col-6 pull-left">
-                <div class="form-group form-field-wrapper">
-                  <%= f.label :son_daughter_of %>
-                  <%= f.text_field :son_daughter_of, class: 'form-control form-field', required: 'required form-field', placeholder: 'Son / Daughter / Wife of' %>
-                </div>
-              </div>
-              <div class="col-md-6 col-6 pull-left">
-                <div class="form-group form-field-wrapper">
-                  <%= f.label :education_qualification %>
-                  <%= f.text_field :education_qualification, class: 'form-control form-field', required: 'required form-field', placeholder: 'Educational Qualifications (B.Com., B.Tech. etc)' %>
-                </div>
-              </div>
-            </div>
-            <div class="clearfix"></div>
-          </div>
-          <div class="row">
-            <div class="col-12">
-              <div class="col-md-6 col-6 pull-left">
-                <div class="form-group form-field-wrapper">
-                  <%= f.label :designation %>
-                  <%= f.text_field :designation, class: 'form-control form-field', required: 'required form-field', placeholder: 'Designation' %>
-                </div>
-              </div>
-              <div class="col-md-6 col-6 pull-left">
-                <div class="form-group form-field-wrapper">
-                  <%= f.label :customer_company_name %>
-                  <%= f.text_field :customer_company_name, class: 'form-control form-field', required: 'required form-field', placeholder: 'Company Name' %>
-                </div>
-              </div>
-              <div class="clearfix"></div>
-            </div>
-          </div>
-          <div class="clearfix"></div>
-          <!-- <hr class="divider"/> -->
-
-          <div class="form-group form-field-wrapper">
+          <div class="form-group">
             <%= f.label :comments, class: 'control-label', style: 'vertical-align:middle' %>
-            <%= f.text_area :comments, class: 'form-control form-field', style: 'vertical-align:middle' %>
+            <%= f.text_area :comments, class: 'form-control', style: 'vertical-align:middle' %>
           </div>
-        </div>
-        <div class="small-title">
-          &nbsp;
-        </div>
-        <div class="white-wrapper">
-          <div class="col-md-6 pull-left">
-            <div class="form-field-wrapper form-group">
-              <%#= f.label :pancard_photo, class: 'control-label', style: 'vertical-align:middle' %>
-              <label class="control-label">PAN card photo</label>
-              <input type="file" name="user_kyc[pancard_photo]" style="margin-bottom:15px;">
-
-              <% if @user_kyc.pancard_photo.present? %>
-              <a href="<%= @user_kyc.pancard_photo.url %>" class="nav-btn" target="_blank">View uploaded document</a>
-              <% end %>
-            </div>
-          </div>
-          <div class="col-md-6 pull-left">
-            <div class="form-field-wrapper form-group">
-              <%#= f.label :adharcard_photo, class: 'control-label', style: 'vertical-align:middle' %>
-              <label class="control-label">Aadhaar card photo</label>
-              <input type="file" name="user_kyc[adharcard_photo]" style="margin-bottom:15px;">
-              <% if @user_kyc.adharcard_photo.present? %>
-              <a href="<%= @user_kyc.adharcard_photo.url %>" class="nav-btn" target="_blank">View uploaded document</a>
-              <% end %>
-            </div>
-          </div>
-          <div class="clearfix"></div>
-          <div class="col-12 form-field-wrapper">
-            <div class="actions">
-              <%= f.submit 'Submit →', class: 'btn nav-btn', style: 'width:auto', data:{event_category: 'Section', event_action: 'Click', event_name: 'user kyc - submit'} %>
-            </div>
-          </div>
-          <div class="clearfix"></div>
-        </div>
         <% end %>
       </div>
-      <div class="col-md-4">
+      <div class="modal-footer">
+        <%= f.submit "Save", class: "btn btn-primary" %>
       </div>
     </div>
   </div>
 </div>
+<% end %>
 <%= javascript_tag do %>
 $(document).ready(function(){
   FormInitializer.init($("#user_kyc_form"));

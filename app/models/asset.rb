@@ -6,6 +6,7 @@ class Asset
 
   field :file_size, type: Integer
   field :file_name, type: String
+  field :asset_type, type: String
 
   belongs_to :assetable, polymorphic: true
 

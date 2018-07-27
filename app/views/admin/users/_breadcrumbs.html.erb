@@ -1,0 +1,13 @@
+<%= content_for :breadcrumbs do %>
+  <div class="col-12">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%= home_path(current_user) %>">Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Users</li>
+        <% if defined?(user) && user.present? %>
+          <li class="breadcrumb-item active" aria-current="page"><%= @user.name %></li>
+        <% end %>
+      </ol>
+    </nav>
+  </div>
+<% end %>

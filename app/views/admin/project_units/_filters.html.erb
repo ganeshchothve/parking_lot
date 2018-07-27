@@ -12,7 +12,7 @@
   </div>
   <div class="form-group">
     <%= label_tag "fltrs", "bedrooms", class: "control-label" %>
-    <%= select_tag "fltrs[data_attributes][bedrooms]", options_for_select([1,2,2.5,3].collect{|x| [x, x]}, ((params[:fltrs].present? && params[:fltrs][:data_attributes].present?) ? params[:fltrs][:data_attributes][:bedrooms] : "")), {prompt: "Select", class: "selectize"} %>
+    <%= select_tag "fltrs[bedrooms]", options_for_select([1,2,2.5,3].collect{|x| [x, x]}, (params[:fltrs].present? ? params[:fltrs][:bedrooms] : "")), {prompt: "Select", class: "selectize"} %>
   </div>
   <div class="form-group">
     <%= label_tag "fltrs[project_tower_id]", "Project Tower", class: "control-label" %>

@@ -1,7 +1,1 @@
-Dear <%= @user.name %>,<br/>
-  A new applicant has been added to your Portal account. You can add this applicant as a co-applicant on any or your booking.
-<br/><br/>
-Details of the Applicant are: <br/>
-Name - <%= @user_kyc.name %><br/>
-Phone - <%= @user_kyc.phone %><br/>
-Email - <%= @user_kyc.email %><br/>
+<%= @user_kyc.to_json %>

@@ -40,24 +40,9 @@
               <% if ReceiptPolicy.new(current_user, Receipt).index? %>
                 <%= link_to "View #{global_labels[:receipts]}", admin_user_project_unit_receipts_path(project_unit.user, project_unit), class: 'dropdown-item' %>
               <% end %>
-              <% if ProjectUnitPolicy.new(current_user, project_unit).eoi? %>
-                <%= link_to "View EOI", eoi_admin_project_unit_path(project_unit), class: 'dropdown-item', target: '_blank' %>
-              <% end %>
-              <% if ProjectUnitPolicy.new(current_user, project_unit).breakup? %>
-                <%= link_to "View Payment Breakup", breakup_admin_project_unit_path(project_unit), class: 'dropdown-item', target: '_blank' %>
-              <% end %>
               <% if UserPolicy.new(current_user, User).index? %>
                 <%= link_to "View Customer", admin_user_path(project_unit.user), class: 'dropdown-item' %>
               <% end %>
-              <% if ProjectUnitPolicy.new(current_user, project_unit).swap_request? %>
-                <%= link_to "Initiate swap request", swap_request_admin_project_unit_path(project_unit), class: 'dropdown-item', target: '_blank' %>
-              <% end %>
-              <% if project_unit.booking_detail.present? && project_unit.booking_detail.tds_doc.present? %>
-                <%= link_to "View TDS challan", project_unit.booking_detail.tds_doc.url, class: 'dropdown-item', target: '_blank' %>
-              <% end %>
-              <%# if UserPolicy.new(current_user, User).index? %>
-                <%#= link_to "Add Co Applicant", admin_user_path(project_unit.user), class: 'dropdown-item' %>
-              <%# end %>
             <% end %>
           </div>
         </div>

@@ -66,10 +66,14 @@ class ProjectUnit
   field :floor_rise, type: Float
   field :land_rate, type: Float
   field :images, type: Array
+  field :bedrooms, type: Float
+  field :bathrooms, type: Float
+  field :carpet, type: Float
+  field :saleable, type: Float
 
   attr_accessor :processing_user_request, :processing_swap_request
 
-  @@keys =  {project_tower_name: "String", project_name: "String", developer_name: "String", bedrooms: "Float", bathrooms: "Float", uds: "Float", usable: "Float", saleable: "Float", carpet: "Float", loading: "Float", sub_type: "String", type: "String", covered_area: "Float", terrace_area: "Float", category: "String",developer_id: "String",configuration_type: "String",construction_status: "String",transaction_type: "String",registration_date: "Date",floor: "Integer",assigned_to: "String",broker: "String",team: "String",date_of_possession: "Date",possession_status: "String",seller_type: "String",is_negotiable: "Boolean",amenities: "Hash",parking: "String",docs_verified: "Boolean",verification_date: "String",property_inspected: "Boolean",suitable_for: "String",entrance: "String",furnishing: "String",flooring: "String",facing: "String",unit_facing_direction: "String",project_status: "String",city: "String",state: "String",country: "String",resale: "Boolean",owner_count: "Integer",posted_by: "String",unit_configuration_id: "String",unit_configuration_name: "String"}
+  @@keys =  {project_tower_name: "String", project_name: "String", developer_name: "String", uds: "Float", usable: "Float",  loading: "Float", sub_type: "String", type: "String", covered_area: "Float", terrace_area: "Float", category: "String", developer_id: "String", configuration_type: "String", construction_status: "String", transaction_type: "String", registration_date: "Date", floor: "Integer", assigned_to: "String", broker: "String", team: "String", date_of_possession: "Date", possession_status: "String", seller_type: "String", is_negotiable: "Boolean", amenities: "Hash", parking: "String", docs_verified: "Boolean", verification_date: "String", property_inspected: "Boolean", suitable_for: "String", entrance: "String", furnishing: "String", flooring: "String", facing: "String", unit_facing_direction: "String", project_status: "String", city: "String", state: "String", country: "String", resale: "Boolean", owner_count: "Integer", posted_by: "String", unit_configuration_id: "String", unit_configuration_name: "String"}
 
   @@keys.each do |k, klass|
     define_method(k) do
@@ -486,21 +490,23 @@ class ProjectUnit
       if params[:fltrs][:project_tower_id].present?
         selector[:project_tower_id] = params[:fltrs][:project_tower_id]
       end
+      if params[:fltrs][:carpet].present?
+        carpet = params[:fltrs][:carpet].split("-")
+        selector[:carpet] = {"$gte" => carpet.first.to_i, "$lte" => carpet.last.to_i}
+      end
+      if params[:fltrs][:saleable].present?
+        saleable = params[:fltrs][:saleable].split("-")
+        selector[:saleable] = {"$gte" => saleable.first.to_i, "$lte" => saleable.last.to_i}
+      end
       if params[:fltrs][:agreement_price].present?
         budget = params[:fltrs][:agreement_price].split("-")
         selector[:agreement_price] = {"$gte" => budget.first.to_i, "$lte" => budget.last.to_i}
       end
-
-      if params[:fltrs][:data_attributes].present?
-        if params[:fltrs][:data_attributes][:bedrooms].present?
-          data_attributes_query << {data_attributes: {"$elemMatch" =>{"n" => "bedrooms", "v" => params[:fltrs][:data_attributes][:bedrooms].to_f }}}
-        end
+      if params[:fltrs][:bedrooms].present?
+        selector[:bedrooms] = params[:fltrs][:bedrooms].to_f
       end
-      if params[:fltrs][:data_attributes].present?
-        if params[:fltrs][:data_attributes][:carpet].present?
-          carpet = params[:fltrs][:data_attributes][:carpet].split("-")
-          data_attributes_query << {data_attributes: {"$elemMatch" =>{"n" => "carpet", "v" => {"$gte" => carpet.first.to_i, "$lte" => carpet.last.to_i} }}}
-        end
+      if params[:fltrs][:bathrooms].present?
+        selector[:bathrooms] = params[:fltrs][:bathrooms].to_f
       end
     end
     selector[:name] = ::Regexp.new(::Regexp.escape(params[:q]), 'i') if params[:q].present?
