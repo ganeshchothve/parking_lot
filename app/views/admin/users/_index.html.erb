@@ -40,8 +40,11 @@
                 <% if ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: user, status: "available")).hold? %>
                   <%= link_to "Take a Booking", new_admin_user_search_path(user.id), class: "dropdown-item" %>
                 <% end %>
+                <% if !current_user.buyer? && ReceiptPolicy.new(current_user, Receipt.new(user: user)).new? %>
+                <%= link_to "Add Direct #{global_labels['receipt']}", direct_admin_user_receipts_path(user), class: 'dropdown-item modal-remote-form-link' %>
+                <% end %>
                 <%= link_to "View", admin_user_path(user.id), class: "dropdown-item" %>
-                <%= link_to "Add #{global_labels['user_kyc_details']}", new_admin_user_user_kyc_path(user), class: 'dropdown-item', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
+                <%= link_to "Add #{global_labels['user_kyc_details']}", new_admin_user_user_kyc_path(user), class: 'modal-remote-form-link dropdown-item', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
                 <% if !user.confirmed? && user.confirmation_token.present? %>
                   <%= link_to 'Resend Confirmation Instructions', resend_confirmation_instructions_admin_user_path(user), class: 'dropdown-item', data: {event_category: 'Section', event_action: 'Click', event_name: 'Resend Confirmation Instructions'} %>
                 <% else %>

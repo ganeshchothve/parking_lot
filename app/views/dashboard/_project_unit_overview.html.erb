@@ -39,7 +39,7 @@
         <div class="form-group">
           <label class="small">Carpet</label>
           <div>
-            <%= project_unit.carpet %> <%= @client.area_unit %>
+            <%= project_unit.carpet %> <%= current_client.area_unit %>
           </div>
         </div>
       </div>
@@ -47,7 +47,7 @@
         <div class="form-group">
           <label class="small">Saleable</label>
           <div>
-            <%= project_unit.saleable %> <%= @client.area_unit %>
+            <%= project_unit.saleable %> <%= current_client.area_unit %>
           </div>
         </div>
       </div>
@@ -57,7 +57,7 @@
         <div class="form-group">
           <label class="small">Effective Rate</label>
           <div>
-            <%= number_to_indian_currency(project_unit.effective_rate) %> <%= @client.area_unit %>
+            <%= number_to_indian_currency(project_unit.effective_rate) %> <%= current_client.area_unit %>
           </div>
         </div>
       </div>

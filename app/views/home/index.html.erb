@@ -18,11 +18,11 @@
     <div class="col-7 login-card-wrapper" style="margin-left: 20%;">
       <div class="login-card">
         <a href="javascript:void(0);" class="logo-wrapper pull-left">
-          <img src="<%= asset_path @client.logo.url %>" class="img-responsive" />
+          <img src="<%= asset_path current_client.logo.url %>" class="img-responsive" />
         </a>
         <div class="clearfix"></div>
         <br/><br/><br/>
-        <div class="pageTitle purple text-center">Welcome to <%= @project.name %> Booking Portal</div>
+        <div class="pageTitle purple text-center">Welcome to <%= current_project.name %> Booking Portal</div>
         <div class="subTitle purple text-center" style="margin-bottom:25px;">Now you can book your home in 3 easy steps</div>
         <div style="width:60%; margin:0 auto">
           <ul class="text-left steps-li">

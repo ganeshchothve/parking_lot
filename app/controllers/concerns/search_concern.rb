@@ -5,6 +5,7 @@ module SearchConcern
     @tower = ProjectTower.find(id: @search.project_tower_id)
     parameters = @search.params_json
     parameters[:status] = ProjectUnit.user_based_available_statuses(@search.user)
+    parameters[:project_tower_id] = @search.project_tower_id if @search.project_tower_id.present?
     @units = ProjectUnit.build_criteria({fltrs: parameters}).sort{|x, y| y.floor <=> x.floor}.to_a
   end
 

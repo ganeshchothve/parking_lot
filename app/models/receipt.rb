@@ -139,6 +139,22 @@ class Receipt
     selector
   end
 
+  def generate_receipt_id
+    if self.project_unit_id.present?
+      if self.status == "success" || self.status == "clearance_pending"
+        "#{self.project_unit.name[0..1]}-#{self.order_id}"
+      else
+        "#{self.project_unit.name[0..1]}-tmp-#{SecureRandom.hex}"
+      end
+    else
+      if self.status == "success" || self.status == "clearance_pending"
+        "RECEIPT-#{self.order_id}"
+      else
+        "RECEIPT-tmp-#{SecureRandom.hex}"
+      end
+    end
+  end
+
   private
   def validate_total_amount
     if self.total_amount < ProjectUnit.blocking_amount && self.project_unit_id.blank? && self.new_record?

@@ -15,6 +15,7 @@ FormInitializer = (function(){
     });
     $(selector).find('.phone, [type="tel"]').intlTelInput({
 			initialCountry: "in",
+      formatOnDisplay: false,
 			preferredCountries: ["in", "us", "gb"],
 			utilsScript: "<%= asset_path('intTelInputUtils.js') %>",
 			nationalMode: false

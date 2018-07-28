@@ -117,6 +117,7 @@ en:
         approved_by: 'Approved By'
         created_by: 'Created By'
       user:
+        login_otp: 'Verification / Login OTP'
         name: 'Name'
         email: 'Email'
         phone: 'Phone'

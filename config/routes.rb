@@ -14,9 +14,13 @@ Rails.application.routes.draw do
     unlocks: 'local_devise/unlocks',
     passwords: 'local_devise/passwords'
   }
+
+  devise_scope :user do
+    post 'users/otp', :to => 'local_devise/sessions#otp', :as => :users_otp
+  end
+
   as :user do
     put '/user/confirmation', to: 'local_devise/confirmations#update', :as => :update_user_confirmation
-    post '/user/otp', to: 'local_devise/sessions#otp', :as => :user_otp
   end
 
   scope "*assetable_type/:assetable_id" do
@@ -30,12 +34,8 @@ Rails.application.routes.draw do
       get 'export', action: 'export', on: :collection, as: :export
     end
     resources :project_units, only: [:index, :edit, :update] do
-      get 'eoi', action: 'eoi', on: :member, as: :eoi
-      get 'breakup', action: 'breakup', on: :member, as: :breakup
       get 'export', action: 'export', on: :collection, as: :export
       get 'mis_report', action: 'mis_report', on: :collection, as: :mis_report
-      get 'swap_request', action: 'swap_request', on: :member, as: :swap_request
-      get 'swap_request_initiate', action: 'swap_request_initiate', on: :member, as: :swap_request_initiate
     end
     resources :users do
       get :resend_confirmation_instructions, action: 'resend_confirmation_instructions', as: :resend_confirmation_instructions, on: :member
@@ -45,7 +45,9 @@ Rails.application.routes.draw do
       get 'export_customer_book', action: 'export_customer_book', on: :collection, as: :export_customer_book
       get 'export_cp_report', action: 'export_cp_report', on: :collection, as: :export_cp_report
       get 'export_cp_lead_report', action: 'export_cp_lead_report', on: :collection, as: :export_cp_lead_report
-      resources :receipts, only: [:update, :edit, :show, :index, :new, :create], controller: '/receipts'
+      resources :receipts, only: [:update, :edit, :show, :index, :new, :create], controller: '/receipts' do
+        get :direct, on: :collection, as: :direct
+      end
       resources :user_kycs, except: [:show, :destroy], controller: '/user_kycs'
       resources :project_units, only: [:index] do
         resources :receipts, only: [:update, :edit, :show, :index, :new, :create], controller: '/receipts'
@@ -112,7 +114,9 @@ Rails.application.routes.draw do
         get :payment, on: :member
         get ":step", on: :member, to: "searches#show", as: :step
       end
-      resources :receipts, only: [:update, :edit, :show, :index, :new, :create], controller: 'receipts'
+      resources :receipts, only: [:update, :edit, :show, :index, :new, :create], controller: 'receipts' do
+        get :direct, on: :collection, as: :direct
+      end
     end
     resources :user_kycs, except: [:show, :destroy]
     resources :searches, except: [:destroy], controller: 'searches'

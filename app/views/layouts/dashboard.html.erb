@@ -8,18 +8,18 @@
   <%= javascript_include_tag 'dashboard' %>
   <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
   <%= javascript_tag do %>
-  <% if user_signed_in? %>
-  if(typeof App === "undefined"){
-    App = {};
-  }
-  App.current_user = <%= raw current_user.to_json %>;
-  App.current_user.name = App.current_user.first_name + " " + App.current_user.last_name
-  App.client = <%= raw @client.to_json %>
-  App.project = <%= raw @project.to_json %>
-  <% end %>
-  <% if Rails.env.development? || Rails.env.staging? %>
-  Pusher.logToConsole = true;
-  <% end %>
+    if(typeof App === "undefined"){
+      App = {};
+    }
+    App.client = <%= raw current_client.to_json %>;
+    App.project = <%= raw current_project.to_json %>;
+    <% if user_signed_in? %>
+      App.current_user = <%= raw current_user.to_json %>;
+      App.current_user.name = App.current_user.first_name + " " + App.current_user.last_name;
+    <% end %>
+    <% if Rails.env.development? || Rails.env.staging? %>
+      Pusher.logToConsole = true;
+    <% end %>
   <% end %>
   <!--  GA & GTM go here -->
 </head>

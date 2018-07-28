@@ -1,9 +1,11 @@
 class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_cache_headers, :set_request_store, :set_cookies
-  before_action :load_and_store_client, :load_project, :load_hold_unit
+  before_action :load_hold_unit
+
   acts_as_token_authentication_handler_for User, unless: lambda { |controller| controller.is_a?(HomeController) || controller.is_a?(Api::SellDoController) || (controller.is_a?(ChannelPartnersController)) }
   include Pundit
+  include ApplicationHelper
   helper_method :home_path
   protect_from_forgery with: :exception, prepend: true
   layout :set_layout
@@ -98,17 +100,6 @@ class ApplicationController < ActionController::Base
       cookies[:portal_cp_id] = params[:portal_cp_id]
     end
 
-  end
-
-  def load_and_store_client
-    domain = (request.subdomain.present? ? "#{request.subdomain}." : "") + "#{request.domain}"
-    @client = Client.in(booking_portal_domains: domain).first
-    RequestStore::Base.set "client_id", @client.id
-  end
-
-  def load_project
-    # TODO: for now we are considering one project per client only so loading first client project here
-    @project = @client.projects.first if @client.present?
   end
 
   def load_hold_unit

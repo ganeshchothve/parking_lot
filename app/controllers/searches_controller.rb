@@ -19,7 +19,6 @@ class SearchesController < ApplicationController
       eval("search_for_#{@search.next_step}")
     elsif @search.project_unit_id.present?
       @user_kycs = @user.user_kycs.paginate(per_page: 100, page: 1)
-      @user_kyc = (@user_kycs.first.present? ? @user_kycs.first : @user.user_kycs.build)
       @unit = ProjectUnit.find(@search.project_unit_id)
     end
     authorize @search
@@ -168,7 +167,7 @@ class SearchesController < ApplicationController
 
   def razorpay_payment
     @receipt = Receipt.where(:receipt_id => params[:receipt_id]).first
-    @project_unit = ProjectUnit.find(@receipt.project_unit_id)
+    @project_unit = ProjectUnit.find(@receipt.project_unit_id) if @receipt.project_unit_id.present?
     if @receipt.present? && @receipt.status == "pending"
       ApplicationLog.log("sent_to_payment_gateway", {
         receipt_id: @receipt.id,

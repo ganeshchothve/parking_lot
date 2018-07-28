@@ -36,10 +36,6 @@ class DashboardController < ApplicationController
       else
         @unit = ProjectUnit.find(params[:unit_id])
       end
-      # unless @unit
-      #   flash[:message] = "The unit you are looking for is not available"
-      #   redirect_to dashboard_path & return
-      # end
       SelldoLeadUpdater.perform_async(current_user.id.to_s, "unit_selected")
     end
 

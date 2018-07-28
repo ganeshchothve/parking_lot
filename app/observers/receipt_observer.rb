@@ -1,23 +1,8 @@
 class ReceiptObserver < Mongoid::Observer
-  def before_create receipt
-    project_unit = receipt.project_unit
-    if project_unit.present?
-      # order = receipt.user.receipts.count
-      pre_name = project_unit.name.split("|").first
-      receipt.receipt_id = "ESE#{project_unit.project_tower_name[0]}#{pre_name.split("-").last.strip[0]}-R#{receipt.order_id}"
-    else
-      receipt.receipt_id = "tmp-#{SecureRandom.hex}"
-    end
-  end
 
   def after_save receipt
     user = receipt.user
     project_unit = receipt.project_unit
-    if receipt.receipt_id.starts_with?("tmp-") && receipt.project_unit_id_changed? && receipt.project_unit_id.present?
-      project_unit = receipt.project_unit
-      # order = receipt.user.receipts.count
-      receipt.receipt_id = "ESE#{project_unit.project_tower_name[0]}#{project_unit.name.split("-").last.strip}-R#{receipt.order_id}"
-    end
 
     # update project unit if a successful receipt is getting attached to a project_unit
     # update the user balance if receipt has no project unit
@@ -132,6 +117,9 @@ class ReceiptObserver < Mongoid::Observer
   def before_save receipt
     if receipt.status_changed? && receipt.status == 'success' && receipt.processed_on.blank?
       receipt.processed_on = Date.today
+    end
+    if receipt.new_record? || receipt.receipt_id.include?("tmp-") && receipt.status_changed? && receipt.status != "pending"
+      receipt.receipt_id = receipt.generate_receipt_id
     end
   end
 end

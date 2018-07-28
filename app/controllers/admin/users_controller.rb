@@ -86,7 +86,7 @@ class Admin::UsersController < AdminController
   end
 
   def new
-    @user = User.new
+    @user = User.new(booking_portal_client_id: current_client.id)
     render layout: false
     @user.role = params[:role].blank? ? "user" : params[:role]
   end
@@ -96,7 +96,7 @@ class Admin::UsersController < AdminController
   end
 
   def create
-    @user = User.new
+    @user = User.new(booking_portal_client_id: current_client.id)
     @user.assign_attributes(permitted_attributes(@user))
 
     respond_to do |format|
@@ -133,9 +133,9 @@ class Admin::UsersController < AdminController
       authorize User
     elsif params[:action] == "new" || params[:action] == "create"
       if params[:role].present?
-        authorize User.new(role: params[:role])
+        authorize User.new(role: params[:role], booking_portal_client_id: current_client.id)
       else
-        authorize User.new
+        authorize User.new(booking_portal_client_id: current_client.id)
       end
     else
       authorize @user

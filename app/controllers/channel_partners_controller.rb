@@ -45,7 +45,7 @@ class ChannelPartnersController < ApplicationController
         # SFDC::ReceiptsPusher.execute(@channel_partner)
         ChannelPartnerMailer.send_create(@channel_partner.id).deliver
         format.html { redirect_to (user_signed_in? ? channel_partners_path : root_path), notice: 'Channel partner was successfully created.' }
-        format.json { render json: @channel_partner, status: :created, location: @channel_partner }
+        format.json { render json: @channel_partner, status: :created }
       else
         format.html { render :new }
         format.json { render json: {errors: @channel_partner.errors.full_messages.uniq}, status: :unprocessable_entity }

@@ -58,27 +58,6 @@ class Admin::ProjectUnitsController < AdminController
     redirect_to admin_project_units_path
   end
 
-  def eoi
-    render layout: false
-  end
-
-  def breakup
-  end
-
-  def swap_request
-  end
-
-  def swap_request_initiate
-    if Rails.env.production? || Rails.env.staging?
-      ProjectUnitMailer.swap_request(params[:id], params[:alternate_project_unit_id]).deliver_later
-    else
-      ProjectUnitMailer.swap_request(params[:id], params[:alternate_project_unit_id]).deliver
-    end
-
-    flash[:notice] = 'Swap initiation request has been sent'
-    redirect_to admin_project_units_path
-  end
-
   private
   def set_project_unit
     @project_unit = ProjectUnit.find(params[:id])

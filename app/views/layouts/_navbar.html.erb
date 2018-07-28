@@ -1,6 +1,6 @@
 <% if user_signed_in? %>
   <nav class="navbar navbar-expand-lg fixed-top navbar navbar-dark bg-secondary">
-    <a class="navbar-brand" href="javascript:;"><%= @client.name %></a>
+    <a class="navbar-brand" href="javascript:;"><%= current_client.name %></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle main navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -14,6 +14,11 @@
         <% if current_user.buyer? && policy(:dashboard).project_units? && ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: current_user, status: "available")).hold? %>
         <li class="nav-item">
           <a class="nav-link" href="<%= new_search_path %>">Apartment Selector</a>
+        </li>
+        <% end %>
+        <% if current_user.buyer? %>
+        <li class="nav-item">
+          <%= link_to "Make #{global_labels['receipt']}", direct_user_receipts_path(current_user), class: 'nav-link modal-remote-form-link' %>
         </li>
         <% end %>
         <% if UserPolicy.new(current_user, User).index? %>

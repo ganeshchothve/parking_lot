@@ -56,7 +56,10 @@ class User
 
   # field for active_model_otp
   field :otp_secret_key
-  has_one_time_password length: 6
+  def self.otp_length
+    6
+  end
+  has_one_time_password length: User.otp_length
 
   # key to handle both phone or email as a login
   attr_accessor :login, :login_otp
@@ -69,10 +72,11 @@ class User
   has_many :user_kycs
   has_many :searches
 
-  validates :first_name, :last_name, :phone, :role, :allowed_bookings, presence: true
-  validates :phone, uniqueness: true, phone: { possible: true, allow_blank: false, types: [:voip, :personal_number, :fixed_or_mobile]}
+  validates :first_name, :last_name, :role, :allowed_bookings, presence: true
+  validates :phone, uniqueness: true, phone: { possible: true, allow_blank: true, types: [:voip, :personal_number, :fixed_or_mobile]}
   validates :lead_id, uniqueness: true, allow_blank: true
-  #validates :email, uniqueness: true #TODO: if removed can sign up with registerd email id
+  validates :email, uniqueness: true, if: Proc.new{|user| user.phone.blank? }
+  validates :phone, uniqueness: true, if: Proc.new{|user| user.email.blank? }
   validates :rera_id, :location, presence: true, if: Proc.new{ |user| user.role?('channel_partner') }
   validates :rera_id, uniqueness: true, allow_blank: true
   validates :role, inclusion: {in: Proc.new{ User.available_roles.collect{|x| x[:id]} } }
@@ -209,6 +213,8 @@ class User
 
   def self.find_for_database_authentication(conditions)
     login = conditions.delete(:login)
+    login = conditions.delete(:email) if login.blank? && conditions.keys.include?(:email)
+    login = conditions.delete(:phone) if login.blank? && conditions.keys.include?(:phone)
     any_of({phone: login}, email: login).first
   end
 
@@ -225,6 +231,10 @@ class User
   end
 
   def get_search project_unit_id
-    searches.where(project_unit_id: project_unit_id).desc(:created_at).first
+    search = searches.where(project_unit_id: project_unit_id).desc(:created_at).first
+    if search.blank?
+      search = Search.new(user: self)
+    end
+    search
   end
 end

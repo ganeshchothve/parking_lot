@@ -4,18 +4,27 @@
 function sell_do_form_successfully_verified(e){
   // register_user_with_portal(e);
 }
-$(document).on("ajax:success", '#otp_user_form', function(evt, data, status, xhr){
+$(document).on("ajax:success", '#otp_user_form', function(evt){
+  var detail = evt.detail;
+  var data = detail[0], status = detail[1], xhr = detail[2];
   var $this = $(this);
   $(this).find('[name="user[login]"]').closest(".form-group").attr("hidden", "hidden");
   $(this).find('[name="user[login_otp]"]').closest(".form-group").removeAttr("hidden");
   $(this).find('[name="user[login_otp]"]').focus();
   $(this).removeAttr("data-type").removeAttr("data-remote");
   setTimeout(function(){
-    $this.find('input[type="submit"]').val("Log In").attr("data-disable-with", "Logging in");
+    if(data.confirmed){
+      $this.find('input[type="submit"]').val("Log In").attr("data-disable-with", "Logging in");
+    }else{
+      $this.find('input[type="submit"]').val("Verfiy your Account").attr("data-disable-with", "Verifying & Logging you in");
+    }
   }, 200);
   $(this).attr("action", "<%= url.user_session_path %>");
 });
-$(document).on("ajax:error", '#otp_user_form', function(evt, data, status, xhr){
+
+$(document).on("ajax:error", '#otp_user_form', function(evt){
+  var detail = evt.detail;
+  var data = detail[0], status = detail[1], xhr = detail[2];
   if(xhr.status == 201){
     new Noty({
       text: "Invalid Phone Number",
@@ -57,19 +66,19 @@ document.addEventListener("sell_do_form_rendered", function(){
 
 function sell_do_form_successfully_submitted(e){
   if(typeof App !== "undefined" && App.current_user){
-    // if(e && e.sell_do_lead_details && e.sell_do_lead_details.lead_already_exists){
-    //   $(".sell_do_form_container").html('<div class="thankyou">This customer has already registered with us. Please wait.</div>');
-    // }else{
-      $(".sell_do_form_container").html('<div class="thankyou">Please wait, we have registered the user; generating login details & sending confirmation email / SMS to the user.</div>');
-    // }
+    $(".sell_do_form_container").html('<div class="alert alert-success">Please wait, we have registered the user; generating login details & sending confirmation email / SMS to the user.</div>');
   }else{
-    $(".sell_do_form_container").html('<div class="thankyou">Thank you for registering with us. Please check your email inbox and confirm your account.</div>')
+    var message = 'Thank you for registering with us.'
+    if(App.client.preferred_login == "phone"){
+      message += ' Please wait while we redirect you to verify your phone number.'
+    }
+    $(".sell_do_form_container").html('<div class="alert alert-success">' + message + '</div>');
   }
   register_user_with_portal(e);
 }
 
 function sell_do_form_submission_failed(e){
-  $(".sell_do_form_container").html('<div class="thankyou">This customer has already registered with us. We cannot register the same customer again.</div>');
+  $(".sell_do_form_container").html('<div class="alert alert-success">This customer has already registered with us. We cannot register the same customer again.</div>');
 }
 
 function register_user_with_portal(e){
@@ -96,6 +105,12 @@ function register_user_with_portal(e){
       setTimeout(function(){
         if(typeof App !== "undefined" && App.current_user){
           window.location = '<%= url.admin_users_path %>';
+        }else{
+          if(App.client.preferred_login == "phone" && data.phone){
+            window.location = encodeURI('<%= url.new_user_session_path %>?user[login]=' + encodeURIComponent(data.phone));
+          }else{
+            // Do Nothing as the user has been created
+          }
         }
       }, 3000);
     },

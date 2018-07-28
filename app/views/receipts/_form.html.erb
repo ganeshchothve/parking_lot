@@ -1,3 +1,6 @@
+<%
+  direct = (defined?(direct) && direct == true) ? true : false
+%>
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -9,8 +12,8 @@
       </div>
       <div class="modal-body">
         <% if @receipt.new_record? %>
+          <% if current_user.buyer? && !direct %>
           <div class="alert alert-info">
-            <% if current_user.buyer? %>
             <p>
               Payments need to be for individual units, clubbed payments are not allowed. <br/>Please collect a cheque for individual units only.
             </p>
@@ -42,20 +45,18 @@
                 </div>
               </div>
             </div>
-            <% else %>
-              <p>
-                Payments need to be for individual units, clubbed payments are not allowed. <br/>Please collect a cheque for individual units only.
-              </p>
-            <% end %>
           </div>
+          <% end %>
         <% end %>
         <% if current_user.buyer? %>
           <%= form_for @receipt, local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['receipt'], "data-type": "json", id: "receipt_form"} do |f| %>
           <div class="form-group form-field-wrapper">
             <%= f.label :total_amount, class: 'label-required' %>
-            <%= f.text_field :total_amount, min: 0, max: @project_unit.pending_balance, class: "form-field form-control green", required: 'required', id:"totalAmount" %>
+            <%= f.text_field :total_amount, min: 0, max: (@project_unit.present? ? @project_unit.pending_balance : ProjectUnit.blocking_amount), class: "form-field form-control green", required: 'required' %>
           </div>
-          <%= f.hidden_field :project_unit_id %>
+          <% if !direct %>
+            <%= f.hidden_field :project_unit_id %>
+          <% end %>
           <%= f.hidden_field :payment_mode %>
           <%= f.submit "Proceed", class: 'btn btn-primary nav-btn' %>
           <% end %>
@@ -96,21 +97,23 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                  <% if f.object.project_unit_id.present? %>
-                  <%= f.label :project_unit_id, class: 'control-label' %>
-                  <div><%= f.object.project_unit.name %></div>
-                  <%= f.hidden_field :project_unit_id %>
-                  <% else %>
-                  <%
-                  if params[:reference_project_unit_id].present?
-                    f.object.reference_project_unit_id = params[:reference_project_unit_id]
-                  end
-                  if params[:sfdc_reference_project_unit_id].present?
-                    f.object.reference_project_unit_id = ProjectUnit.where(sfdc_id: params[:sfdc_reference_project_unit_id]).first.id
-                  end
-                  %>
-                  <%= f.label :reference_project_unit_id, class: 'control-label' %>
-                  <%= f.select :reference_project_unit_id, f.object.reference_project_unit.present? ? [[f.object.reference_project_unit.name, f.object.reference_project_unit.id]] : [], {prompt: true}, class: 'selectize-remote', autofocus: true, disabled: (policy(@receipt).editable_field?("reference_project_unit_id") ? false : true), "data-url": admin_project_units_path, "data-params": {fltrs: {status: 'available'}}.to_json, 'data-ds': 'ds' %>
+                  <% if !direct %>
+                    <% if f.object.project_unit_id.present? %>
+                    <%= f.label :project_unit_id, class: 'control-label' %>
+                    <div><%= f.object.project_unit.name %></div>
+                    <%= f.hidden_field :project_unit_id %>
+                    <% else %>
+                    <%
+                    if params[:reference_project_unit_id].present?
+                      f.object.reference_project_unit_id = params[:reference_project_unit_id]
+                    end
+                    if params[:sfdc_reference_project_unit_id].present?
+                      f.object.reference_project_unit_id = ProjectUnit.where(sfdc_id: params[:sfdc_reference_project_unit_id]).first.id
+                    end
+                    %>
+                    <%= f.label :reference_project_unit_id, class: 'control-label' %>
+                    <%= f.select :reference_project_unit_id, f.object.reference_project_unit.present? ? [[f.object.reference_project_unit.name, f.object.reference_project_unit.id]] : [], {prompt: true}, class: 'selectize-remote', autofocus: true, disabled: (policy(@receipt).editable_field?("reference_project_unit_id") ? false : true), "data-url": admin_project_units_path, "data-params": {fltrs: {status: 'available'}}.to_json, 'data-ds': 'ds' %>
+                    <% end %>
                   <% end %>
                 </div>
               </div>

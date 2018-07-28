@@ -15,7 +15,7 @@ class ProjectUnitMailer < ApplicationMailer
     @cp = @user.channel_partner
     # CC Removed as per the QA/Supriya Mam
     # cc = @cp.present? ? [@cp.email] : []
-    # cc +project_unit.= @client.notification_email
+    # cc +project_unit.= current_client.notification_email
     mail(to: @user.email, subject: "Unit #{@project_unit.name} booked tentative")# cc: cc
   end
 
