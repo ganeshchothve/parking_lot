@@ -1,15 +1,18 @@
-<%= form_with(model: @channel_partner, local: true, html: {id: 'channel_partner_form', class: 'validate-form', multipart: true}) do |form| %>
+<%= form_with(model: @channel_partner, local: true, url: url, html: {"data-resource-type": global_labels['channel_partner'], "data-type": "json", id: 'channel_partner_form', class: 'modal-remote-form validate-form'}) do |form| %>
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title"><%= @user_kyc.new_record? ? "New" : "Edit" %> <%= "#{global_labels['user_kyc']}" %></h5>
+        <h5 class="modal-title"><%= @channel_partner.new_record? ? "New" : "Edit" %> <%= "#{global_labels['channel_partner']}" %></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <%= render "form_fields", {form: form} %>
+      </div>
+      <div class="modal-footer">
+        <%= form.submit "Save", class: "btn btn-primary" %>
       </div>
     </div>
   </div>

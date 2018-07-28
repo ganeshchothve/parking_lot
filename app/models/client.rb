@@ -26,6 +26,8 @@ class Client
   field :cancellation_amount, type: Float
   field :area_unit, type: String, default: "sqft"
   field :preferred_login, type: String, default: "phone"
+  field :enable_actual_inventory, type: Boolean, default: false
+  field :enable_channel_partners, type: Boolean, default: false
 
   mount_uploader :logo, DocUploader
 

@@ -63,6 +63,9 @@ var modal_remote_form_link_click_handler = function(remote_href){
     });
   }
 }
+$(document).on("ajax:beforeSend", '.modal-remote-form', function(event){
+  $("#modal-remote-form-container .modal-body .modal-remote-form-errors").html('');
+});
 $(document).on("ajax:success", '.modal-remote-form', function(event){
   var detail = event.detail;
   var data = detail[0], status = detail[1], xhr = detail[2];
@@ -99,13 +102,21 @@ $(document).on("ajax:success", '.modal-remote-form', function(event){
 $(document).on("ajax:error", '.modal-remote-form', function(event){
   var detail = event.detail;
   var data = detail[0], status = detail[1], xhr = detail[2];
-  if( data ){
-    if ( data.errors ){
-      Amura.global_error_handler(data.errors);
-    }else{
-      Amura.global_error_handler(errors);
-    }
-  }else{
-    Amura.global_error_handler("We could not update your record.");
+  var resource = $(event.currentTarget).attr("data-resource-type");
+  if($("#modal-remote-form-container .modal-body .modal-remote-form-errors").length == 0){
+    $("#modal-remote-form-container .modal-body").prepend("<div class='modal-remote-form-errors'></div>");
   }
+  if(data && data.errors){
+    var html = '<div class="mb-3 alert alert-danger">';
+    html += '<strong>The form contains ' + data.errors.length + ' errors.</strong>';
+    html += '<ul class="mt-3 pl-3">';
+    _.each(data.errors, function(error){
+      html += '<li>' + error + '</li>';
+    });
+    html += '</ul>'
+    html += '</div>';
+  }else{
+    html = "We could not update the " + (resource ? resource : "record");
+  }
+  $("#modal-remote-form-container .modal-body .modal-remote-form-errors").html(html);
 });

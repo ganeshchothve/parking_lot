@@ -6,6 +6,9 @@
       <div class="card">
         <div class="card-body">
           <%= render "form_fields", {form: form} %>
+          <div class="form-group">
+            <%= form.submit "Register", class: "btn btn-primary" %>
+          </div>
         </div>
       </div>
       <%= render "devise/shared/links" %>
