@@ -50,7 +50,7 @@
         <% end %>
         <% if current_user.buyer? %>
           <%= form_for @receipt, local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['receipt'], "data-type": "json", id: "receipt_form"} do |f| %>
-          <div class="form-group form-field-wrapper">
+          <div class="form-group">
             <%= f.label :total_amount, class: 'label-required' %>
             <%= f.text_field :total_amount, min: 0, max: (@project_unit.present? ? @project_unit.pending_balance : ProjectUnit.blocking_amount), class: "form-field form-control green", required: 'required' %>
           </div>

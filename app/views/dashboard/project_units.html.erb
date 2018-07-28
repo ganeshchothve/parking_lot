@@ -1,23 +1,21 @@
-<section class="dashboard-bg">
-  <div class="row justify-content-center">
-    <div class="col-7">
-      <div class="card">
-        <div class="card-body">
-          <%= form_for [:user, @search], html: {class: 'validate-form'} do |f| %>
-            <div class="form-group">
-              <%= f.label :bedrooms %>
-              <%= f.select :bedrooms, @configurations.collect{|x| ["#{x[:bedrooms]} BHK starting at #{number_to_indian_currency(x[:agreement_price])}".html_safe, x[:bedrooms]]}, {prompt: true}, class: 'selectize', disabled: (policy(@search).editable_field?("bedrooms") ? false : true), required: "required" %>
-              <%= f.hidden_field :user_id %>
-            </div>
-            <div class="form-group">
-              <%= f.submit "Search", class: "btn btn-primary" %>
-            </div>
-          <% end %>
+<div class="row justify-content-center">
+  <div class="col-7">
+    <div class="card">
+      <div class="card-body">
+        <%= form_for [:user, @search], html: {class: 'validate-form'} do |f| %>
+        <div class="form-group">
+          <%= f.label :bedrooms %>
+          <%= f.select :bedrooms, @configurations.collect{|x| ["#{x[:bedrooms]} BHK starting at #{number_to_indian_currency(x[:agreement_price])}".html_safe, x[:bedrooms]]}, {prompt: true}, class: 'selectize', disabled: (policy(@search).editable_field?("bedrooms") ? false : true), required: "required" %>
+          <%= f.hidden_field :user_id %>
         </div>
+        <div class="form-group">
+          <%= f.submit "Search", class: "btn btn-primary" %>
+        </div>
+        <% end %>
       </div>
     </div>
   </div>
-</section>
+</div>
 <%= javascript_tag do %>
 $(document).ready(function(){
   FormInitializer.init($("#new_search"));

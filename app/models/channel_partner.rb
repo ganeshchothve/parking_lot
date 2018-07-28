@@ -13,9 +13,9 @@ class ChannelPartner
   field :status, type: String, default: 'active'
 
   field :company_name, type: String
-  field :pan_no, type: String
-  field :gstin_no, type: String
-  field :aadhaar_no, type: String
+  field :pan_number, type: String
+  field :gstin_number, type: String
+  field :aadhaar, type: String
 
   has_one :address, as: :addressable
   has_one :bank_detail, as: :bankable

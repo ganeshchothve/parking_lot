@@ -137,3 +137,6 @@ en:
         city: 'City'
         associated_user_id: 'Associated User'
         status: 'Status'
+        gstin_number: "GSTIN Number"
+        pan_number: "PAN Number"
+        aadhaar: "Aadhaar"

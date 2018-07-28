@@ -1,0 +1,54 @@
+@import "custom_variables";
+@import "bootstrap/bootstrap";
+
+html, body{
+	padding: 0;
+	margin: 0;
+	font-size: 14px;
+	-webkit-font-smoothing: antialiased;
+	font-family: 'Poppins', sans-serif;
+	background-color: $body-bg;
+}
+.logo-wrapper img{
+  width: 50px;
+}
+.intl-tel-input {
+  display: block;
+  width: 100%;
+}
+.continuous-row > [class*="col-"] {
+  margin-bottom: 15px;
+}
+.blockUI h1{
+  font-size: 14px;
+  padding: 10px 0 5px 0;
+}
+.help-block {
+	display: block;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	color: #a6a6a6;
+}
+.form-group.has-error .form-control,
+.form-group.has-error .custom-select{
+  border-color: $form-feedback-invalid-color !important;
+}
+.form-group.has-error .help-block {
+  color: $form-feedback-invalid-color !important;
+}
+label.label-required:after {
+  content: " *";
+  color: $form-feedback-invalid-color;
+  font-weight: normal;
+}
+
+[data-toggle="tab"].tab-error:after{
+  content: "\f071";
+  font: normal normal normal 14px/1 FontAwesome;
+  text-rendering: auto;
+  display: inline-block;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: $form-feedback-invalid-color;
+  margin: 0 6px;
+}
