@@ -19,6 +19,10 @@ class Admin::ProjectUnitsController < AdminController
     end
   end
 
+  def edit
+    render layout: false
+  end
+
   def update
     parameters = permitted_attributes(@project_unit)
     if ["available", "not_available", "employee", "management"].exclude?(@project_unit.status)
@@ -51,27 +55,6 @@ class Admin::ProjectUnitsController < AdminController
       ProjectUnitMisReportWorker.perform_async(current_user.email)
     end
     flash[:notice] = 'Your mis-report has been scheduled and will be emailed to you in some time'
-    redirect_to admin_project_units_path
-  end
-
-  def eoi
-    render layout: false
-  end
-
-  def breakup
-  end
-
-  def swap_request
-  end
-
-  def swap_request_initiate
-    if Rails.env.production? || Rails.env.staging?
-      ProjectUnitMailer.swap_request(params[:id], params[:alternate_project_unit_id]).deliver_later
-    else
-      ProjectUnitMailer.swap_request(params[:id], params[:alternate_project_unit_id]).deliver
-    end
-
-    flash[:notice] = 'Swap initiation request has been sent'
     redirect_to admin_project_units_path
   end
 

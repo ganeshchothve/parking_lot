@@ -3,7 +3,7 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title><%= @project.name %></title>
+  <title><%= current_client.name %></title>
   <style>
   *{padding: 0; margin: 0 auto;}
   ul li{margin-left: 20px;padding: 0px;}
@@ -21,10 +21,9 @@
         <table cellpadding="0" cellspacing="0" width="100%">
           <tr>
             <td align="left">
-              <img src="<%= asset_url("logo2.png") %>">
+              <img src="<%= asset_url(current_client.logo.url) %>">
             </td>
             <td align="right">
-              <img src="<%= asset_url("logo-edge.png") %>">
             </td>
           </tr>
         </table>
@@ -47,7 +46,7 @@
       </td>
     </tr>
        <tr>
-      <td style="font-size:16px;line-height:26px;padding:10px 20px;">If you have any queries you can reach us at <%= @client.support_number %> or write to us at <a href="mailto:<%= SUPPORT_EMAIL %>" style="text-decoration:underline;color:#64c0e9;"><%= @client.support_email %></a>
+      <td style="font-size:16px;line-height:26px;padding:10px 20px;">If you have any queries you can reach us at <%= current_client.support_number %> or write to us at <a href="mailto:<%= current_client.support_email %>" style="text-decoration:underline;color:#64c0e9;"><%= current_client.support_email %></a>
       </td>
     </tr>
   </table>

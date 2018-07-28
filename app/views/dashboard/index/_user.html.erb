@@ -1,0 +1,74 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          Need Help?
+        </div>
+        <div class="card-body text-center">
+          You can connect with us at <strong style="display:contents;"><%= current_client.support_number %></strong> or write us at <strong style="display:contents;"><%= current_client.support_email %></strong>
+        </div>
+      </div>
+      <div class="mt-3"></div>
+      <% if current_user.project_units.size < 1 %>
+        <div class="mt-3"></div>
+        <div class="card">
+          <div class="card-body">
+            <h1 class="text-center">Your promotional content goes here</h1>
+            <h2 class="text-center">For users with no project units</h2>
+          </div>
+        </div>
+      <% else %>
+      <div class="card">
+        <div class="card-body">
+          <% if policy(:dashboard).project_units? && ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: current_user, status: "available")).hold? %>
+            <a class="btn btn-primary" href="<%= new_search_path %>">Apartment Selector</a>
+          <% end %>
+          <% if current_user.kyc_ready? %>
+            <% hold_unit = current_user.project_units.where(status: 'hold').first %>
+            <% if hold_unit.present? %>
+              <p>
+                We have kept a unit on hold for you; to proceed with booking it, click <a href="/search/checkout/<%= hold_unit.id %>" data-event-category="section" data-event-action="click" data-event-name="book now">here</a>
+              </p>
+            <% end %>
+          <% end %>
+          <% if current_user.kyc_ready? && current_user.project_units.in(status: ['blocked', 'booked_tentative', 'booked_confirmed']).count >= current_user.allowed_bookings %>
+            <p>
+              You cannot book any more apartments as you have reached the maximum bookings allowed per customer.
+            </p>
+          <% end %>
+        </div>
+      </div>
+      <div class="mt-3"></div>
+      <div class="card">
+        <div class="card-body">
+          <% current_user.project_units.where(status: 'hold').each do |project_unit| %>
+            <%= render 'dashboard/project_unit_overview', {project_unit: project_unit, with_actions: true} %>
+            <div class="mt-3"></div>
+          <% end %>
+          <% current_user.project_units.ne(status: 'hold').each do |project_unit| %>
+            <%= render 'dashboard/project_unit_overview', {project_unit: project_unit, with_actions: true} %>
+            <div class="mt-3"></div>
+          <% end %>
+          <a href="/dashboard/apartment-selector" class="btn btn-primary mt-3" data-event-category="section" data-event-action="click" data-event-name="Book Another Home">
+            Book Another Home
+          </a>
+        </div>
+      </div>
+      <% receipts = current_user.receipts.where(status: 'clearance_pending') %>
+      <% if receipts.present? %>
+        <div class="mt-3"></div>
+        <div class="card">
+          <div class="card-body">
+            <% receipts.each do |receipt| %>
+              <% if receipt.status == 'clearance_pending' && receipt.project_unit_id.blank? && receipt.reference_project_unit_id.present? && receipt.reference_project_unit.user_based_status(receipt.user) == 'available' %>
+                 To block chosen unit: <%= ProjectUnit.find(receipt.reference_project_unit_id).name %> <a href='<%= dashboard_checkout_via_email_url(project_unit_id: receipt.reference_project_unit_id, receipt_id: receipt.receipt_id) %>'>Click here</a>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

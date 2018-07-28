@@ -4,15 +4,7 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def edit?
-    ((['blocked', 'booked_tentative', 'booked_confirmed', 'error'].include?(record.status) && record.auto_release_on.present?) || ["available", "not_available", "employee", "management"].include?(record.status)) && ['crm', 'admin', 'superadmin'].include?(user.role)
-  end
-
-  def eoi?
-    ['superadmin', 'crm', 'sales', 'cp', 'admin'].include?(user.role)
-  end
-
-  def breakup?
-    ['superadmin', 'crm', 'sales', 'cp', 'admin'].include?(user.role)
+    ((['blocked', 'booked_tentative', 'booked_confirmed', 'error'].include?(record.status) && record.auto_release_on.present?) || ["available", "not_available", "employee", "management"].include?(record.status))
   end
 
   def export?
@@ -31,54 +23,62 @@ class ProjectUnitPolicy < ApplicationPolicy
     false
   end
 
-  def hold_project_unit?
-    valid = record.user_based_status(user) == 'available' && user.buyer? && user.kyc_ready? && user.project_units.where(status: "hold").blank?
-    if user.role?("employee_user")
-      eids = User.where(role: "employee_user").where(confirmed_at: {"$exists": true}).pluck(:id)
-      valid = valid && ProjectUnit.in(status: ['blocked', 'booked_tentative', 'booked_confirmed']).in(user_id: eids).count <= 75
-    end
-    valid
-  end
-
-  def update_co_applicants?
-    record.user_id == user.id && ["blocked", "booked_confirmed", "booked_tentative"].include?(record.status)
-  end
-
-  def update_project_unit?
-    record.user_id == user.id && user.buyer? && user.kyc_ready?
-  end
-
-  def payment?
-    checkout? && user.kyc_ready?
-  end
-
-  def process_payment?
-    checkout? && user.kyc_ready?
-  end
-
-  def checkout?
-    (['hold', 'blocked', 'booked_tentative', 'booked_confirmed'].include?(record.status) && record.user_id == user.id) && user.kyc_ready?
-  end
-
-  def checkout_via_email?
-    record.user_based_status(user) == "available" && user.kyc_ready?
+  def hold?
+    valid = record.user_based_status(record.user) == 'available' && record.user.kyc_ready? && record.user.project_units.where(status: "hold").blank?
+    _role_based_check(valid)
   end
 
   def block?
-    (user.project_units.count < user.allowed_bookings && !record.is_a?(ProjectUnit)) || (record.is_a?(ProjectUnit) && (['hold'].include?(record.status) && record.user_id == user.id) && user.kyc_ready?)
+    valid = ['hold'].include?(record.status) && record.user.kyc_ready?
+    _role_based_check(valid)
   end
 
-  def swap_request?
-    ['crm', 'admin'].include?(user.role) && ["blocked", "booked_confirmed", "booked_tentative"].include?(record.status)
+  def make_available?
+    valid = (record.status == 'hold')
+    _role_based_check(valid)
   end
 
-  def swap_request_initiate?
-    ['crm', 'admin'].include?(user.role)
+  def update_co_applicants?
+    valid = (["blocked", "booked_confirmed", "booked_tentative"].include?(record.status))
+    _role_based_check(valid)
+  end
+
+  def update_project_unit?
+    valid = record.user.kyc_ready?
+    _role_based_check(valid)
+  end
+
+  def payment?
+    checkout? && record.user.kyc_ready?
+  end
+
+  def process_payment?
+    checkout? && record.user.kyc_ready?
+  end
+
+  def checkout?
+    valid = (record.user_based_status(record.user) == "booked") && record.user.kyc_ready?
+    _role_based_check(valid)
+  end
+
+  def checkout_via_email?
+    valid = record.user_based_status(user) == "available" && user.kyc_ready?
+    _role_based_check(valid)
   end
 
   def permitted_attributes params={}
-    attributes = ["crm","admin"].include?(user.role) ? [:status] : []
-    attributes += [:auto_release_on, :primary_user_kyc_id, user_kyc_ids: []]
+    attributes = ["crm","admin"].include?(user.role) ? [:auto_release_on] : []
+    attributes += (["crm","admin"].include?(user.role) || make_available?) ? [:status] : []
+    attributes += [:user_id] if record.user_id.blank?
+    attributes += [:primary_user_kyc_id, user_kyc_ids: []]
     attributes
+  end
+
+  private
+  def _role_based_check(valid)
+    valid = (valid && (record.user_id == user.id)) if user.buyer?
+    valid = (valid && (record.user.referenced_channel_partner_ids.include?(user.id))) if user.role == "channel_partner"
+    valid = (valid && true) if ['cp', 'sales', 'admin'].include?(user.role)
+    valid
   end
 end

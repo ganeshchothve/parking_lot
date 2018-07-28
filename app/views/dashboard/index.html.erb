@@ -1,13 +1,13 @@
 <% if current_user.buyer? %>
-  <%= render 'user' %>
+  <%= render 'dashboard/index/user' %>
 <% elsif current_user.role?('sales') %>
-  <%= render 'crm' %>
+  <%= render 'dashboard/index/crm' %>
 <% elsif current_user.role?('cp') %>
-  <%= render 'cp' %>
+  <%= render 'dashboard/index/cp' %>
 <% elsif current_user.role?('admin') %>
-    <%= render 'crm' %>
+    <%= render 'dashboard/index/crm' %>
 <% elsif current_user.role?('crm') %>
-  <%= render 'crm' %>
+  <%= render 'dashboard/index/crm' %>
 <% elsif current_user.role?('channel_partner') %>
-  <%= render 'channel_partner' %>
+  <%= render 'dashboard/index/channel_partner' %>
 <% end %>

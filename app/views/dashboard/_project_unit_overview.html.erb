@@ -1,0 +1,106 @@
+<div class="card">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-4">
+        <div class="form-group">
+          <label class="small">Name</label>
+          <div>
+            <%= project_unit.name %>
+          </div>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="form-group">
+          <label class="small">Tower</label>
+          <div>
+            <%= project_unit.project_tower_name %>
+          </div>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="form-group">
+          <label class="small">Status</label>
+          <div>
+            <%= ProjectUnit.available_statuses.find{|x| x[:id] == project_unit.status}[:text] %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <div class="form-group">
+          <label class="small">Beds / Baths</label>
+          <div>
+            project_unit.bedrooms / <%= project_unit.bathrooms %>
+          </div>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="form-group">
+          <label class="small">Carpet</label>
+          <div>
+            <%= project_unit.carpet %> <%= current_client.area_unit %>
+          </div>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="form-group">
+          <label class="small">Saleable</label>
+          <div>
+            <%= project_unit.saleable %> <%= current_client.area_unit %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <div class="form-group">
+          <label class="small">Effective Rate</label>
+          <div>
+            <%= number_to_indian_currency(project_unit.effective_rate) %> <%= current_client.area_unit %>
+          </div>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="form-group">
+          <label class="small">Agreement Price</label>
+          <div>
+            <%= number_to_indian_currency(project_unit.agreement_price) %>
+          </div>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="form-group">
+          <label class="small">All Inclusive Price</label>
+          <div>
+            <%= number_to_indian_currency(project_unit.all_inclusive_price) %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% if defined?(with_actions) && with_actions == true %>
+    <div class="dropdown float-left mbottom-20">
+      <a class="btn btn-primary dropdown-toggle pink-btn" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</a>
+      <div class="dropdown-menu">
+        <% if current_user.buyer? && project_unit.user == current_user && ["blocked", "booked_tentative", "booked_confirmed"].include?(project_unit.status) %>
+          <% if current_user.user_requests.where(project_unit_id: project_unit.id).ne(status: 'resolved').blank? %>
+            <a href="<%= new_admin_user_request_path(project_unit_id: project_unit.id) %>" class="text-danger dropdown-item" data-event-category="section" data-event-action="click" data-event-name="cancel booking">Cancel Booking</a>
+          <% else %>
+            <span class="unit-cancelled">Cancellation Requested</span>
+          <% end %>
+          <%= link_to "Update #{global_labels['user_kycs']}", edit_admin_project_unit_path(project_unit), class: "modal-remote-form-link dropdown-item" %>
+        <% end %>
+        <% if current_user.buyer? && project_unit.user == current_user && ["hold"].include?(project_unit.status) %>
+          <a href="<%= checkout_user_search_path(current_user.get_search(project_unit.id)) %>" data-event-category="section" data-event-action="click" data-event-name="book now" class="dropdown-item">
+          Book Now
+        </a>
+        <% elsif ReceiptPolicy.new(project_unit.user, project_unit.user.receipts.new(project_unit_id: project_unit.id)).new? %>
+          <a href="/dashboard/receipts/new?project_unit_id=<%= project_unit.id %>" class="dropdown-item modal-remote-form-link" data-event-category="section" data-event-action="click" data-event-name="make the remaining payment">
+          Pay Remaining Amount
+        </a>
+        <% end %>
+      </div>
+    </div>
+    <% end %>
+  </div>
+</div>

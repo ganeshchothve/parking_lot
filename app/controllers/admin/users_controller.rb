@@ -86,22 +86,26 @@ class Admin::UsersController < AdminController
   end
 
   def new
-    @user = User.new
+    @user = User.new(booking_portal_client_id: current_client.id)
+    render layout: false
     @user.role = params[:role].blank? ? "user" : params[:role]
   end
 
   def edit
+    render layout: false
   end
 
   def create
-    @user = User.new
+    @user = User.new(booking_portal_client_id: current_client.id)
     @user.assign_attributes(permitted_attributes(@user))
 
     respond_to do |format|
       if @user.save
         format.html { redirect_to admin_users_path, notice: 'User was successfully created.' }
+        format.json { render json: @user, status: :created }
       else
         format.html { render :new }
+        format.json { render json: {errors: @user.errors.full_messages.uniq}, status: :unprocessable_entity }
       end
     end
   end
@@ -111,8 +115,10 @@ class Admin::UsersController < AdminController
     respond_to do |format|
       if @user.save
         format.html { redirect_to edit_admin_user_path(@user), notice: 'User Profile updated successfully.' }
+        format.json { render json: @user }
       else
         format.html { render :edit }
+        format.json { render json: {errors: @user.errors.full_messages.uniq}, status: :unprocessable_entity }
       end
     end
   end
@@ -127,9 +133,9 @@ class Admin::UsersController < AdminController
       authorize User
     elsif params[:action] == "new" || params[:action] == "create"
       if params[:role].present?
-        authorize User.new(role: params[:role])
+        authorize User.new(role: params[:role], booking_portal_client_id: current_client.id)
       else
-        authorize User.new
+        authorize User.new(booking_portal_client_id: current_client.id)
       end
     else
       authorize @user

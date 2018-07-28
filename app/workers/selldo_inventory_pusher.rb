@@ -7,7 +7,7 @@ class SelldoInventoryPusher
     user = project_unit.user
     user_kycs = [project_unit.primary_user_kyc] + project_unit.user_kycs
     params = {
-      api_key: ENV_CONFIG['selldo']['api_key'],
+      api_key: project_unit.booking_portal_client.selldo_api_key,
       lead_id: user.lead_id,
       stage: project_unit_status,
       booking_date: timestamp,

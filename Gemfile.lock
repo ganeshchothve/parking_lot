@@ -39,6 +39,9 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.3)
+    active_model_otp (1.2.0)
+      activemodel
+      rotp
     activejob (5.1.6)
       activesupport (= 5.1.6)
       globalid (>= 0.3.6)
@@ -381,6 +384,7 @@ GEM
     roo (2.7.1)
       nokogiri (~> 1)
       rubyzip (~> 1.1, < 2.0.0)
+    rotp (3.3.1)
     ruby-ole (1.2.12.1)
     ruby_dep (1.5.0)
     rubyzip (1.2.1)
@@ -464,8 +468,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active_model_otp
   asset_sync (>= 2.4.0)
-  bootstrap (~> 4.0.0.beta3)
+  bootstrap
   byebug
   capistrano
   capistrano-passenger
@@ -529,4 +534,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   1.16.0
+   1.16.1

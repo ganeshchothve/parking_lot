@@ -1,12 +1,8 @@
 class ApplicationMailer < ActionMailer::Base
+  helper ApplicationHelper
+  include ApplicationHelper
   default from: -> {
-    client = Client.where(id: RequestStore::Base.get("client_id")).first
-    if client.present?
-      client.name + " <" + client.notification_email + ">"
-    else
-      "Notification <no-reply@bookingportal.com>"
-    end
+    current_client.name + " <" + current_client.notification_email + ">"
   }
   layout 'mailer'
-  helper ApplicationHelper
 end

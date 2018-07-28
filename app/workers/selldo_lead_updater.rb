@@ -17,7 +17,7 @@ class SelldoLeadUpdater
     MixpanelPusherWorker.perform_async(user.mixpanel_id, stage, {})
     if stage.present?
       params = {
-        'api_key': ENV_CONFIG['selldo']['api_key'],
+        'api_key': project_unit.booking_portal_client.selldo_api_key,
         'sell_do[form][lead][lead_id]': user.lead_id,
         'sell_do[form][custom][portal_stage]': stage,
         'sell_do[campaign][srd]': ENV_CONFIG['selldo']['default_srd']

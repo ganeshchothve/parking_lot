@@ -1,65 +1,61 @@
-<%= content_for :breadcrumbs do %>
-<div class="col-12">
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<%= home_path(current_user) %>">Dashboard</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Users</li>
-    </ol>
-  </nav>
-</div>
-<% end %>
-<section class="padding-side-30 padding-xs-user">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="dropdown float-left mbottom-20">
-          <a class="btn btn-primary dropdown-toggle pink-btn" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add new</a>
-          <div class="dropdown-menu">
-            <% if UserPolicy.new(current_user, User.new(role: 'user')).new? %>
-              <%= link_to 'New Customer', new_admin_user_path, class: 'dropdown-item' %>
-            <% end %>
-            <% if UserPolicy.new(current_user, User.new(role: 'employee_user')).new? %>
-              <%= link_to 'New Employee', new_admin_user_path(role: 'employee_user'), class: 'dropdown-item' %>
-            <% end %>
-            <% if UserPolicy.new(current_user, User.new(role: 'management_user')).new? %>
-              <%= link_to 'New Management User', new_admin_user_path(role: 'management_user'), class: 'dropdown-item' %>
-            <% end %>
-            <% if UserPolicy.new(current_user, User.new(role: 'admin')).new? %>
-              <%= link_to 'New Admin', new_by_role_admin_users_path(role: 'admin'), class: 'dropdown-item' %>
-            <% end %>
-            <% if UserPolicy.new(current_user, User.new(role: 'crm')).new? %>
-              <%= link_to 'New CRM User', new_by_role_admin_users_path(role: 'crm'), class: 'dropdown-item' %>
-            <% end %>
-            <% if UserPolicy.new(current_user, User.new(role: 'sales')).new? %>
-              <%= link_to 'New Sales User', new_by_role_admin_users_path(role: 'sales'), class: 'dropdown-item' %>
-            <% end %>
-            <% if UserPolicy.new(current_user, User.new(role: 'cp')).new? %>
-              <%= link_to 'New Channel Partner Manager', new_by_role_admin_users_path(role: 'cp'), class: 'dropdown-item' %>
-            <% end %>
-            <% if UserPolicy.new(current_user, User.new(role: 'channel_partner')).new? %>
-              <%= link_to 'New Channel Partner', new_by_role_admin_users_path(role: 'channel_partner'), class: 'dropdown-item' %>
-            <% end %>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="<%= @user.blank? ? 'col-md-9' : 'col-md-12' %>">
+      <%= render 'breadcrumbs' %>
+      <div class="card h-100">
+        <div class="card-body">
+          <%= render "admin/users/index", users: @users %>
+          <div class="dropdown float-left">
+            <a class="btn btn-primary dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add new</a>
+            <div class="dropdown-menu">
+              <% if UserPolicy.new(current_user, User.new(role: 'user')).new? %>
+                <%= link_to 'New Customer', new_admin_user_path, class: 'dropdown-item' %>
+              <% end %>
+              <% if UserPolicy.new(current_user, User.new(role: 'employee_user')).new? %>
+                <%= link_to 'New Employee', new_admin_user_path(role: 'employee_user'), class: 'dropdown-item' %>
+              <% end %>
+              <% if UserPolicy.new(current_user, User.new(role: 'management_user')).new? %>
+                <%= link_to 'New Management User', new_admin_user_path(role: 'management_user'), class: 'dropdown-item' %>
+              <% end %>
+              <% if UserPolicy.new(current_user, User.new(role: 'admin')).new? %>
+                <%= link_to 'New Admin', new_by_role_admin_users_path(role: 'admin'), class: 'dropdown-item' %>
+              <% end %>
+              <% if UserPolicy.new(current_user, User.new(role: 'crm')).new? %>
+                <%= link_to 'New CRM User', new_by_role_admin_users_path(role: 'crm'), class: 'dropdown-item' %>
+              <% end %>
+              <% if UserPolicy.new(current_user, User.new(role: 'sales')).new? %>
+                <%= link_to 'New Sales User', new_by_role_admin_users_path(role: 'sales'), class: 'dropdown-item' %>
+              <% end %>
+              <% if UserPolicy.new(current_user, User.new(role: 'cp')).new? %>
+                <%= link_to 'New Channel Partner Manager', new_by_role_admin_users_path(role: 'cp'), class: 'dropdown-item' %>
+              <% end %>
+              <% if UserPolicy.new(current_user, User.new(role: 'channel_partner')).new? %>
+                <%= link_to 'New Channel Partner', new_by_role_admin_users_path(role: 'channel_partner'), class: 'dropdown-item' %>
+              <% end %>
+            </div>
+          </div>
+          <div class="dropdown float-left ml-2">
+            <a class="btn btn-primary dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
+            <div class="dropdown-menu">
+              <% if UserPolicy.new(current_user, User).export? %>
+                <%= link_to "Export all #{global_labels['users']}", export_admin_users_path, class: 'dropdown-item' %>
+              <% end %>
+              <% if UserPolicy.new(current_user, User).export_customer_book? %>
+                <%= link_to "Export Customer Book", export_customer_book_admin_users_path(id: current_user.id), class: 'dropdown-item' %>
+              <% end %>
+              <% if UserPolicy.new(current_user, User).export_cp_report? %>
+                <%= link_to "Export report of channel partners", export_cp_report_admin_users_path, class: 'dropdown-item' %>
+              <% end %>
+              <% if UserPolicy.new(current_user, User).export_cp_lead_report? %>
+                <%= link_to "Channel partners lead details", export_cp_lead_report_admin_users_path, class: 'dropdown-item' %>
+              <% end %>
+            </div>
           </div>
         </div>
+      </div>
     </div>
-    <div class="row">
-      <div class="col-md-10 border border-left-0 border-top-0 border-bottom-0 table-responsive margin-xs-bottom-10 padding-left-0">
-        <%= render "admin/users/index", users: @users %>
-        <% if UserPolicy.new(current_user, User).export? %>
-          <%= link_to "Export all #{global_labels['users']}", export_admin_users_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn margin-xs-left-0' %>
-        <% end %>
-        <% if UserPolicy.new(current_user, User).export_customer_book? %>
-          <%= link_to "Export Customer Book", export_customer_book_admin_users_path(id: current_user.id), class: 'btn btn-outline-primary float-left ml-2 pink-btn margin-xs-left-0' %>
-        <% end %>
-        <% if UserPolicy.new(current_user, User).export_cp_report? %>
-          <%= link_to "Export report of channel partners", export_cp_report_admin_users_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn margin-xs-left-0' %>
-        <% end %>
-        <% if UserPolicy.new(current_user, User).export_cp_lead_report? %>
-          <%= link_to "Channel partners lead details", export_cp_lead_report_admin_users_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn margin-xs-left-0' %>
-        <% end %>
-      </div>
-      <div class="col-md-2">
-        <%= render "filters" %>
-      </div>
+    <div class="col-md-3">
+      <%= render "filters" %>
     </div>
   </div>
-</section>
+</div>

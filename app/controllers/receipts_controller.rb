@@ -2,7 +2,7 @@ class ReceiptsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user
   before_action :set_project_unit
-  before_action :set_receipt, except: [:index, :export, :new, :create]
+  before_action :set_receipt, except: [:index, :export, :new, :create, :direct]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: [:index, :export]
 
@@ -30,7 +30,7 @@ class ReceiptsController < ApplicationController
 
   def new
     if params[:project_unit_id].blank? && current_user.buyer?
-         flash[:notice] = "Please Select Apartment before making payment"
+      flash[:notice] = "Please Select Apartment before making payment"
       redirect_to(receipts_path)
       return
     end
@@ -38,9 +38,16 @@ class ReceiptsController < ApplicationController
       project_unit = ProjectUnit.find(params[:project_unit_id])
       @receipt = Receipt.new(creator: current_user, project_unit_id: project_unit.id, user_id: @user, total_amount: project_unit.pending_balance, payment_type: 'booking')
     else
-      @receipt = Receipt.new(creator: current_user, user_id: @user, payment_mode: 'cheque', payment_type: 'blocking')
+      @receipt = Receipt.new(creator: current_user, user_id: @user, payment_mode: 'cheque', payment_type: 'blocking', total_amount: ProjectUnit.blocking_amount)
     end
     authorize @receipt
+    render layout: false
+  end
+
+  def direct
+    @receipt = Receipt.new(creator: current_user, user_id: @user, payment_mode: (current_user.buyer? ? 'online' : 'cheque'), payment_type: 'blocking', total_amount: ProjectUnit.blocking_amount)
+    authorize @receipt
+    render layout: false
   end
 
   def create
@@ -67,32 +74,37 @@ class ReceiptsController < ApplicationController
     authorize @receipt
     respond_to do |format|
       if @receipt.save
-        format.html {
-          if @receipt.payment_mode == 'online'
-            if @receipt.total_amount <= project_unit.pending_balance
-              if @receipt.payment_gateway_service.present?
-                redirect_to @receipt.payment_gateway_service.gateway_url
-              else
-                flash[:notice] = "We couldn't redirect you to the payment gateway, please try again"
-                @receipt.update_attributes(status: "failed")
-                redirect_to dashboard_path
-              end
+        url = dashboard_path
+        if @receipt.payment_mode == 'online'
+          if project_unit.blank? || @receipt.total_amount <= project_unit.pending_balance
+            if @receipt.payment_gateway_service.present?
+              url = @receipt.payment_gateway_service.gateway_url(@receipt.user.get_search(@receipt.project_unit_id).id)
+              format.html{ redirect_to url }
+              format.json{ render json: {}, location: url }
             else
-              flash[:notice] = "Entered amount exceeds balance amount"
-              redirect_to request.referrer
+              flash[:notice] = "We couldn't redirect you to the payment gateway, please try again"
+              @receipt.update_attributes(status: "failed")
+              url = dashboard_path
             end
           else
-            flash[:notice] = "Receipt was successfully updated. Please upload documents"
-            redirect_to current_user.buyer? ? root_path : edit_admin_user_receipt_path(@user, @receipt)
+            flash[:notice] = "Entered amount exceeds balance amount"
+            url = request.referrer
           end
-        }
+        else
+          flash[:notice] = "Receipt was successfully updated. Please upload documents"
+          url = (current_user.buyer? ? dashboard_path : admin_user_path(@user))
+        end
+        format.json{ render json: @receipt, location: url }
+        format.html{ redirect_to url }
       else
+        format.json { render json: @receipt.errors, status: :unprocessable_entity }
         format.html { render 'new' }
       end
     end
   end
 
   def edit
+    render layout: false
   end
 
   def update
@@ -126,7 +138,7 @@ class ReceiptsController < ApplicationController
   def authorize_resource
     if params[:action] == "index" || params[:action] == 'export'
       authorize Receipt
-    elsif params[:action] == "new" || params[:action] == "create"
+    elsif params[:action] == "new" || params[:action] == "create" || params[:action] == "direct"
       authorize Receipt.new(user_id: @user.id)
     else
       authorize @receipt
@@ -147,6 +159,9 @@ class ReceiptsController < ApplicationController
       end
     else
       custom_scope = custom_scope.where(user_id: current_user.id)
+    end
+    if params[:project_unit_id].present?
+      custom_scope = custom_scope.where(project_unit_id: params[:project_unit_id])
     end
     Receipt.with_scope(policy_scope(custom_scope)) do
       yield

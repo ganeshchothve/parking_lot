@@ -1,49 +1,23 @@
-<% if params[:configuration].present? && params[:stage] != "kyc_details" %>
-    <% bhk =  "#{params[:configuration].split(",")[0]}" %>
-    <% budget =  "#{params[:configuration].split(",")[1]}" %>
-    <% if budget != 'NA'%>
-      <% minbudget = budget.split("-")[0]%>
-      <% maxbudget = budget.split("-")[1]%>
-      <% @title =  "Apartments from #{number_to_indian_currency(minbudget)} to #{number_to_indian_currency(maxbudget)}"  if budget != 'NA' %>
-    <% end %>
-    <% if bhk != 'NA'%>
-      <% @title =  "#{float_to_int(bhk)} BHK Apartments"  %>
-    <% end %>
-    <% if bhk != 'NA' && budget != 'NA' %>
-      <% @title <<  " from #{number_to_indian_currency(minbudget)} to #{number_to_indian_currency(maxbudget)}"  if budget != 'NA' %>
-    <% end %>
-    <% @title <<  " at #{@tower.name}" if params[:project_tower_id].present? %>
-    <% @title = @title.html_safe %>
-<% end %>
-<section class="main-wrapper full-height">
-  <div class="container-fluid">
-    <div class="col-12">
-      <div class="breadcrumbs-wrapper">
-        <span <%= params[:stage] == "apartment_selector" ? "class=active" : "" %>>Apartment Selector</span>
-        <span <%= params[:stage] == "choose_tower" ? "class=active" : "" %>>Choose Tower</span>
-        <span <%= params[:stage] == "select_apartment" ? "class=active" : "" %>>Select Apartment</span>
-        <span <%= params[:stage] == "kyc_details" ? "class=active" : "" %>>KYC Details</span>
-        <span>Proceed to payment</span>
+<div class="row justify-content-center">
+  <div class="col-7">
+    <div class="card">
+      <div class="card-body">
+        <%= form_for [:user, @search], html: {class: 'validate-form'} do |f| %>
+        <div class="form-group">
+          <%= f.label :bedrooms %>
+          <%= f.select :bedrooms, @configurations.collect{|x| ["#{x[:bedrooms]} BHK starting at #{number_to_indian_currency(x[:agreement_price])}".html_safe, x[:bedrooms]]}, {prompt: true}, class: 'selectize', disabled: (policy(@search).editable_field?("bedrooms") ? false : true), required: "required" %>
+          <%= f.hidden_field :user_id %>
+        </div>
+        <div class="form-group">
+          <%= f.submit "Search", class: "btn btn-primary" %>
+        </div>
+        <% end %>
       </div>
-      <%= render partial: "#{params[:stage].to_s}" %>
     </div>
   </div>
-</section>
-<script type="text/javascript">
-  var selectedValues = JSON.parse(localStorage.getItem("selectedValues"));
-  <% if params[:stage] == "choose_tower" %>
-    selectedValues.bedrooms = "<%= params[:configuration].split(",")[0] %>";
-    selectedValues.agreement_price = "<%= params[:configuration].split(",")[1] %>";
-  <% elsif params[:stage] == "select_apartment" %>
-    selectedValues.bedrooms = "<%= params[:configuration].split(",")[0] %>";
-    selectedValues.agreement_price = "<%= params[:configuration].split(",")[1] %>";
-    selectedValues.towerid = "<%= params[:project_tower_id] %>";
-    delete selectedValues.unit_id;
-  <% elsif params[:stage] == "kyc_details" %>
-    selectedValues.bedrooms = "<%= params[:configuration].split(",")[0] %>";
-    selectedValues.agreement_price = "<%= params[:configuration].split(",")[1] %>";
-    selectedValues.towerid = "<%= params[:project_tower_id] %>";
-    selectedValues.unit_id = "<%= params[:unit_id] %>";
-  <% end %>
-  localStorage.setItem('selectedValues', JSON.stringify(selectedValues));
-</script>
+</div>
+<%= javascript_tag do %>
+$(document).ready(function(){
+  FormInitializer.init($("#new_search"));
+});
+<% end %>

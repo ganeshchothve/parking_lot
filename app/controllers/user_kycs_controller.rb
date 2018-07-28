@@ -18,9 +18,11 @@ class UserKycsController < ApplicationController
     else
       @user_kyc = UserKyc.new(creator: current_user, user: @user)
     end
+    render layout: false
   end
 
   def edit
+    render layout: false
   end
 
   def create
@@ -32,7 +34,7 @@ class UserKycsController < ApplicationController
       if @user_kyc.save
         SFDC::UserKycPusher.execute(@user_kyc)
         format.html { redirect_to home_path(current_user), notice: 'User kyc was successfully created.' }
-        format.json { render json: @user_kyc, status: :created, location: @user_kyc }
+        format.json { render json: @user_kyc, status: :created }
       else
         format.html { render :new }
         format.json { render json: {errors: @user_kyc.errors.full_messages.uniq}, status: :unprocessable_entity }
@@ -44,12 +46,14 @@ class UserKycsController < ApplicationController
     respond_to do |format|
       if @user_kyc.update(permitted_attributes(@user_kyc))
         format.html { redirect_to home_path(current_user), notice: 'User kyc was successfully updated.' }
+        format.json { render json: @user_kyc }
       else
         format.html { render :edit }
+        format.json { render json: {errors: @user_kyc.errors.full_messages.uniq}, status: :unprocessable_entity }
       end
     end
   end
-  
+
   def export
     if Rails.env.development?
       UserKycExportWorker.new.perform(current_user.email)

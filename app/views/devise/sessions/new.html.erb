@@ -1,78 +1,56 @@
-<style type="text/css">
-@media all and (max-width: 700px){
-  .login-card .pageTitle{
-    margin-top: 80px;
-  }
-  .prompts-message{
-    position: absolute;
-    top: 90px;
-  }
-  .login-card .pageTitle {
-      margin-top: 60px;
-  }
-}
-
-</style>
-<section class="dashboard-bg full-height white-bg-xs">
-  <div class="container">
-    <div class="col-7 login-card-wrapper">
-    <div class="login-card">
-      <a href="javascript:void(0);" class="logo-wrapper">
-        <img src="<%= asset_path @client.logo.url %>" class="img-responsive" />
-      </a>
-      <div class="pageTitle purple text-center">Sign in</div>
-      <div class="subTitle purple text-center">Welcome Back!</div>
-      <div class="form-wrapper">
-        <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: {class: 'validate-form'}) do |f| %>
-          <div class="form-field-wrapper">
-            <%#= f.label :email %>
-            <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-field', placeholder: 'Email' %>
+<div class="row justify-content-center">
+  <div class="col-7">
+    <div class="card">
+      <div class="card-body">
+        <a href="javascript:void(0);" class="logo-wrapper text-center">
+          <img src="<%= asset_path current_client.logo.url %>" class="img-responsive" />
+        </a>
+        <h3 class="text-center">Sign in</h3>
+        <% if current_client.preferred_login == "phone" %>
+          <%= form_for(resource, as: resource_name, url: users_otp_path, authenticity_token: true, remote: true, html: {:'data-type' => 'json', class: 'validate-form', id: "otp_user_form"}) do |f| %>
+          <div class="form-group">
+            <%= f.label :phone %><br/>
+            <%= f.phone_field :login, autofocus: true, autocomplete: "phone", class: 'form-control', placeholder: 'Phone' %>
           </div>
-
-          <div class="form-field-wrapper">
-            <%#= f.label :password %>
-            <%= f.password_field :password, autocomplete: "off", class: 'form-field', placeholder: 'Password' %>
+          <div class="form-group" hidden>
+            <%= f.label :login_otp %><br/>
+            <%= f.number_field :login_otp, class: 'form-control', placeholder: 'OTP', maxlength: resource_class.otp_length, minlength: resource_class.otp_length %>
           </div>
-
-          <% if devise_mapping.rememberable? -%>
-            <div class="form-field-wrapper">
-              <label class="checkbox" data-event-category="section" data-event-action="click" data-event-name="Remember Me">Remember Me
-                <%= f.check_box :remember_me, class: "form-check-input", data:{event_category: 'Section', event_action: 'Click', event_name: 'Remember Me'} %>
-                <span class="checkmark" data-event-category="section" data-event-action="click" data-event-name="Remember Me"></span>
-              </label>
-            </div>
-          <% end -%>
-
           <div class="actions">
-            <%= f.submit "Log in", class: 'btn pink-button',  data:{event_category: 'Section', event_action: 'Click', event_name: 'Log In'} %>
+            <%= f.submit "Get OTP", class: 'btn btn-primary',  data:{event_category: 'Section', event_action: 'Click', event_name: 'Get OTP'} %>
           </div>
-
+          <% end %>
+        <% else %>
+          <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: {class: 'validate-form'}) do |f| %>
+            <div class="form-group">
+              <%= f.label :email %>
+              <%= f.email_field :login, autofocus: true, autocomplete: "email", class: 'form-control', placeholder: 'Email' %>
+            </div>
+            <div class="form-group">
+              <%= f.label :password %>
+              <%= f.password_field :password, autocomplete: "off", class: 'form-control', placeholder: 'Password' %>
+            </div>
+            <% if devise_mapping.rememberable? -%>
+            <div class="form-group">
+              <div class="form-check">
+                <%= f.check_box :remember_me, class: "form-check-input" %>
+                <%= f.label :remember_me, class: "form-check-label" %>
+              </div>
+            </div>
+            <% end -%>
+            <div class="actions">
+              <%= f.submit "Log in", class: 'btn btn-primary',  data:{event_category: 'Section', event_action: 'Click', event_name: 'Log In'} %>
+            </div>
+          <% end %>
         <% end %>
       </div>
-      <div class="col-12 separator relative text-center">
-        <div class="col-6 mtop10">
-          <div class="part-links">
-            <a href="/register" class="green" data-event-category="section" data-event-action="click" data-event-name="Sign Up">Sign Up</a>
-            <div>To Register</div>
-          </div>
-        </div>
-        <div class="col-6 padding-right-30 border-left">
-          <div class="part-links">
-            <%= render "devise/shared/links" %>
-          </div>
-        </div>
-      </div>
-      <div class="clearfix"></div>
     </div>
-      <div class="col-12 gradient-bg text-center" style="border-radius: 0px 0px 6px 6px;background-color: #3981b8;color:#fff;font-size: 18px;">
-        <p><%= booked_homes_count %> people have booked a home since you last signed in</p>
-      </div>
-      <div class="clearfix"></div>
-    </div>
+    <%= render "devise/shared/links" %>
   </div>
-</section>
+</div>
 <%= javascript_tag do %>
 $(document).ready(function(){
   FormInitializer.init($("#new_user"));
+  FormInitializer.init($("#otp_user_form"));
 });
 <% end %>
