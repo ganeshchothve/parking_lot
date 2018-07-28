@@ -231,9 +231,11 @@ class User
   end
 
   def get_search project_unit_id
-    search = searches.where(project_unit_id: project_unit_id).desc(:created_at).first
+    search = searches
+    search = search.where(project_unit_id: project_unit_id) if project_unit_id.present?
+    search = search.desc(:created_at).first
     if search.blank?
-      search = Search.new(user: self)
+      search = Search.create(user: self)
     end
     search
   end

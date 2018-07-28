@@ -1,5 +1,8 @@
 class ApplicationMailer < ActionMailer::Base
   helper ApplicationHelper
-  default from: :current_from_address
+  include ApplicationHelper
+  default from: -> {
+    current_client.name + " <" + current_client.notification_email + ">"
+  }
   layout 'mailer'
 end

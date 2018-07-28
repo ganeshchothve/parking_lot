@@ -99,7 +99,6 @@ $(document).on("ajax:success", '.modal-remote-form', function(event){
 $(document).on("ajax:error", '.modal-remote-form', function(event){
   var detail = event.detail;
   var data = detail[0], status = detail[1], xhr = detail[2];
-
   if( data ){
     if ( data.errors ){
       Amura.global_error_handler(data.errors);

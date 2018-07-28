@@ -28,7 +28,7 @@ end
           <div class="col-2">
             <div class="form-group">
               <%= f.label :salutation, class: 'required' %>
-              <%= f.select :salutation, UserKyc.available_salutations.collect{|x| [x[:text], x[:id]]}, {prompt: "Select"}, class: 'required selectize' %>
+              <%= f.select :salutation, UserKyc.available_salutations.collect{|x| [x[:text], x[:id]]}, {prompt: "Select"}, class: 'selectize', required: 'required' %>
             </div>
           </div>
           <div class="col-5">

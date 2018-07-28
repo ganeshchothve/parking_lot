@@ -30,9 +30,9 @@ Amura.global_success_handler = function(message){
 };
 Amura.global_error_handler = function(errors){
   if(errors){
-    if(errors || typeof errors == "string"){
-      if(errors){
-        new Noty({text:"There was some issue with the system. Please contact sell.do support", type:"error"}); // TODO: Finalize this message
+    if(typeof errors == "string"){
+      if(errors != ""){
+        new Noty({text:"There was some issue with the system. Please contact " + App.client.name + " support", type:"error"});
       }else{
         new Noty({text:errors, type:"error"});
       }

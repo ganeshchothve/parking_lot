@@ -16,9 +16,9 @@
           <a class="nav-link" href="<%= new_search_path %>">Apartment Selector</a>
         </li>
         <% end %>
-        <% if current_user.buyer? %>
+        <% if current_user.buyer? && policy(Receipt.new(user: current_user)).direct? %>
         <li class="nav-item">
-          <%= link_to "Make #{global_labels['receipt']}", direct_user_receipts_path(current_user), class: 'nav-link modal-remote-form-link' %>
+          <%= link_to "Make #{global_labels['receipt']}", direct_user_receipts_path, class: 'nav-link modal-remote-form-link' %>
         </li>
         <% end %>
         <% if UserPolicy.new(current_user, User).index? %>

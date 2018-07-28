@@ -46,7 +46,6 @@ class ReceiptsController < ApplicationController
 
   def direct
     @receipt = Receipt.new(creator: current_user, user_id: @user, payment_mode: (current_user.buyer? ? 'online' : 'cheque'), payment_type: 'blocking', total_amount: ProjectUnit.blocking_amount)
-
     authorize @receipt
     render layout: false
   end

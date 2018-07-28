@@ -32,7 +32,7 @@ module ApplicationHelper
 
   def current_client
     return @current_client if @current_client.present?
-    if defined?(request) && request.subdomain.present? && request.domain.present?
+    if defined?(request) && request && request.subdomain.present? && request.domain.present?
       domain = (request.subdomain.present? ? "#{request.subdomain}." : "") + "#{request.domain}"
       @current_client = Client.in(booking_portal_domains: domain).first
     else
@@ -44,9 +44,5 @@ module ApplicationHelper
     return @current_project if @current_project.present?
     # TODO: for now we are considering one project per client only so loading first client project here
     @current_project = current_client.projects.first if current_client.present?
-  end
-
-  def current_from_address
-    current_client.name + " <" + current_client.notification_email + ">"
   end
 end
