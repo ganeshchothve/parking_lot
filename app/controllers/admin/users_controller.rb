@@ -87,8 +87,8 @@ class Admin::UsersController < AdminController
 
   def new
     @user = User.new(booking_portal_client_id: current_client.id)
-    render layout: false
     @user.role = params[:role].blank? ? "user" : params[:role]
+    render layout: false
   end
 
   def edit
