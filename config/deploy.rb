@@ -2,7 +2,7 @@
 lock "~> 3.11.0"
 
 set :application, "booking_portal"
-set :repo_url, "git@github.com:amuratech/booking_portal.git"
+set :repo_url, "git@github.com:ketansabnis/booking_portal.git"
 
 # Default branch is :master
 set :branch, "generic"
