@@ -26,6 +26,13 @@ class Client
   field :cancellation_amount, type: Float
   field :area_unit, type: String, default: "sqft"
   field :preferred_login, type: String, default: "phone"
+  field :pusher_api_key, type: String
+  field :pusher_api_secret, type: String
+  field :pusher_api_app_id, type: String
+  field :pusher_api_cluster, type: String
+  field :mixpanel_token, type: String
+  field :sms_provider_username, type: String
+  field :sms_provider_password, type: String
   field :enable_actual_inventory, type: Boolean, default: false
   field :enable_channel_partners, type: Boolean, default: false
 
