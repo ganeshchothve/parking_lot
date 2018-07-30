@@ -1,8 +1,8 @@
 var Gamification = (function(){
   var pusher, gamification_channel;
   var init = function(){
-    pusher = new Pusher("<%= ENV_CONFIG['pusher']['key'] %>", {
-      cluster: "<%= ENV_CONFIG['pusher']['cluster'] %>",
+    pusher = new Pusher("<%= current_client.pusher_api_key %>", {
+      cluster: "<%= current_client.pusher_api_cluster %>",
       encrypted: true
     });
 

@@ -1,6 +1,8 @@
 require 'net/http'
 class SelldoLeadUpdater
   include Sidekiq::Worker
+  include ApplicationHelper
+
   def perform(user_id, st=nil)
     user = User.find user_id
     project_units = user.project_units.all
@@ -20,7 +22,7 @@ class SelldoLeadUpdater
         'api_key': project_unit.booking_portal_client.selldo_api_key,
         'sell_do[form][lead][lead_id]': user.lead_id,
         'sell_do[form][custom][portal_stage]': stage,
-        'sell_do[campaign][srd]': ENV_CONFIG['selldo']['default_srd']
+        'sell_do[campaign][srd]': current_client.selldo_default_srd
       }
       RestClient.post("https://app.sell.do/api/leads/create", params)
     end

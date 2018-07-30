@@ -33,8 +33,8 @@ Rails.application.configure do
   # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  config.action_controller.asset_host = "//#{ENV_CONFIG[:asset_sync]['AZURE_STORAGE_ACCOUNT_NAME']}.blob.core.windows.net/#{ENV_CONFIG[:asset_sync]['FOG_DIRECTORY']}"
-  config.action_mailer.asset_host = "//#{ENV_CONFIG[:asset_sync]['AZURE_STORAGE_ACCOUNT_NAME']}.blob.core.windows.net/#{ENV_CONFIG[:asset_sync]['FOG_DIRECTORY']}"
+  config.action_controller.asset_host = ENV_CONFIG[:asset_sync]['ASSET_HOST']
+  config.action_mailer.asset_host = ENV_CONFIG[:asset_sync]['ASSET_HOST']
 
   config.action_mailer.default_url_options = {host: 'booking.embassysprings.com'}
 

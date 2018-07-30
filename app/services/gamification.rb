@@ -1,4 +1,5 @@
 module Gamification
+  include ApplicationHelper
   DEFAULT_CHANNEL = "gamification"
   DEFAULT_EVENT = "update"
 
@@ -7,10 +8,10 @@ module Gamification
 
     def initialize
       @pusher_client = Pusher::Client.new(
-        app_id: ENV_CONFIG['pusher']['app_id'],
-        key: ENV_CONFIG['pusher']['key'],
-        secret: ENV_CONFIG['pusher']['secret'],
-        cluster: ENV_CONFIG['pusher']['cluster'],
+        app_id: current_client.pusher_api_app_id,
+        key: current_client.pusher_api_key,
+        secret: current_client.pusher_api_secret,
+        cluster: current_client.pusher_api_cluster,
         encrypted: true
       )
     end
