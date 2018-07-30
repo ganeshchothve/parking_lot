@@ -55,8 +55,8 @@ gem 'will_paginate_mongoid'
 gem 'mongoid-observers', '~> 0.3.0'
 gem 'rails-observers',  github: 'rails/rails-observers'
 # for file upload
-gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 gem 'fog-aws'
+gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 
 # for simplified HTTP requests
 gem 'httparty', '>= 0.14.0'
