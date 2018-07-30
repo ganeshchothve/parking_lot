@@ -1,10 +1,6 @@
 # TODO: replace all messages & flash messages
 class HomeController < ApplicationController
 
-  def eoi
-    render layout: false
-  end
-
   def index
     first_name = params[:first_name]
     last_name = params[:last_name]
@@ -35,7 +31,7 @@ class HomeController < ApplicationController
         end
       else
         # splitted name into two firstname and lastname
-        @user = User.new(email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], lead_id: params[:lead_id], mixpanel_id: params[:mixpanel_id])
+        @user = User.new(booking_portal_client_id: current_client.id, email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], lead_id: params[:lead_id], mixpanel_id: params[:mixpanel_id])
         if user_signed_in?
           @user.channel_partner_id = current_user.id
         elsif(cookies[:portal_cp_id].present?)
@@ -53,20 +49,6 @@ class HomeController < ApplicationController
       end
     end
     render layout: "dashboard"
-  end
-
-  def employee_register
-    if user_signed_in?
-      redirect_to home_path(current_user)
-      flash[:notice] = "You have already been logged in"
-    else
-      render layout: "dashboard"
-    end
-  end
-
-  def external_register
-    response.headers["X-FRAME-OPTIONS"] = "ALLOWALL"
-    render layout: false
   end
 
   def register
@@ -107,7 +89,7 @@ class HomeController < ApplicationController
           end
         else
           # splitted name into two firstname and lastname
-          @user = User.new(email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], lead_id: params[:lead_id], mixpanel_id: params[:mixpanel_id])
+          @user = User.new(booking_portal_client_id: current_client.id, email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], lead_id: params[:lead_id], mixpanel_id: params[:mixpanel_id])
           if user_signed_in?
             @user.channel_partner_id = current_user.id
           elsif(cookies[:portal_cp_id].present?)

@@ -1,11 +1,13 @@
+require "active_model_otp"
 class User
   include Mongoid::Document
   include Mongoid::Timestamps
   include ArrayBlankRejectable
+  include ActiveModel::OneTimePassword
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable #:registerable Disbaling registration because we always create user after set up sell.do
+  devise :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, authentication_keys: [:login] #:registerable Disbaling registration because we always create user after set up sell.do
 
   ## Database authenticatable
   field :first_name, type: String, default: ""
@@ -18,7 +20,6 @@ class User
   field :channel_partner_id, type: BSON::ObjectId
   field :referenced_channel_partner_ids, type: Array, default: []
   field :rera_id, type: String
-  field :location, type: String
   field :mixpanel_id, type: String
 
   field :encrypted_password, type: String, default: ""
@@ -52,18 +53,29 @@ class User
   # field :unlock_token,    type: String # Only if unlock strategy is :email or :both
   # field :locked_at,       type: Time
 
+  # field for active_model_otp
+  field :otp_secret_key
+  def self.otp_length
+    6
+  end
+  has_one_time_password length: User.otp_length
+
+  # key to handle both phone or email as a login
+  attr_accessor :login, :login_otp
+
   belongs_to :booking_portal_client, class_name: 'Client', inverse_of: :users
   has_many :receipts
   has_many :project_units
   has_many :booking_details
   has_many :user_requests
   has_many :user_kycs
+  has_many :searches
 
-  validates :first_name, :last_name, :phone, :role, :allowed_bookings, presence: true
+  validates :first_name, :last_name, :role, :allowed_bookings, presence: true
+  validates :phone, uniqueness: true, phone: { possible: true, types: [:voip, :personal_number, :fixed_or_mobile]}, if: Proc.new{|user| user.email.blank? }
   validates :lead_id, uniqueness: true, allow_blank: true
-  validates :phone, uniqueness: true, phone: true # TODO: we can remove phone validation, as the validation happens in sell.do
-  #validates :email, uniqueness: true #TODO: if removed can sign up with registerd email id
-  validates :rera_id, :location, presence: true, if: Proc.new{ |user| user.role?('channel_partner') }
+  validates :email, uniqueness: true, if: Proc.new{|user| user.phone.blank? }
+  validates :rera_id, presence: true, if: Proc.new{ |user| user.role?('channel_partner') }
   validates :rera_id, uniqueness: true, allow_blank: true
   validates :role, inclusion: {in: Proc.new{ User.available_roles.collect{|x| x[:id]} } }
   validates :lead_id, presence: true, if: Proc.new{ |user| user.buyer? }
@@ -191,5 +203,38 @@ class User
 
   def name
     "#{first_name} #{last_name}"
+  end
+
+  def login
+    @login || self.phone || self.email
+  end
+
+  def self.find_for_database_authentication(conditions)
+    login = conditions.delete(:login)
+    login = conditions.delete(:email) if login.blank? && conditions.keys.include?(:email)
+    login = conditions.delete(:phone) if login.blank? && conditions.keys.include?(:phone)
+    any_of({phone: login}, email: login).first
+  end
+
+  def self.find_record login
+    where("function() {return this.phone == '#{login}' || this.email == '#{login}'}")
+  end
+
+  def email_required?
+    false
+  end
+
+  def will_save_change_to_email?
+    false
+  end
+
+  def get_search project_unit_id
+    search = searches
+    search = search.where(project_unit_id: project_unit_id) if project_unit_id.present?
+    search = search.desc(:created_at).first
+    if search.blank?
+      search = Search.create(user: self)
+    end
+    search
   end
 end

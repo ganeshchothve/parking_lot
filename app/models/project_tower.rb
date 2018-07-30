@@ -33,7 +33,7 @@ class ProjectTower
 
   belongs_to :project
 
-  validates :name,:client_id,:project_id,:total_floors,:presence => true
+  validates :name, :client_id, :project_id, :total_floors, presence: true
   validate :validate_floor_rise
 
   def unit_configurations

@@ -1,0 +1,24 @@
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">New <%= "#{global_labels['user']}" %></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= current_client.selldo_client_id %>.js'></script>
+        <script src='//trkr.scdn1.secure.raxcdn.com/t/forms/<%= current_client.selldo_client_id %>/<%= current_client.selldo_form_id %>.js' data-form-id='<%= current_client.selldo_form_id %>'></script>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" data-tag="selldo">
+  window.sell_do_form_rendered = function(){
+    $('<input type="hidden" name="sell_do[campaign][srd]" value="<%= (user_signed_in? && current_user.role?('channel_partner')) ? current_client.cp_srd : '' %>"/>').appendTo(".sell_do_form_actual_container");
+    $('<input type="hidden" name="sell_do[lead][sub_source]" value="<%= (user_signed_in? && current_user.role?('channel_partner')) ? current_user.name : '' %>"/>').appendTo(".sell_do_form_actual_container");
+    $('[name="sell_do[form][custom][portal_cp_id]"]').val("<%= (user_signed_in? && current_user.role?('channel_partner')) ? current_user.id : '' %>");
+    $('[name="sell_do[form][custom][portal_cp_id]"]').closest('.selldof_row').hide();
+  };
+</script>

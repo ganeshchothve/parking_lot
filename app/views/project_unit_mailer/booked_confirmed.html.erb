@@ -1,17 +1,1 @@
-Dear <%= @user.name %>, <br/>
-<br/>
-Congratulations!<br/>
-<br/>
-Welcome to the <%= @project_unit.booking_portal_client.name %> family! You're now the proud owner of <%= @project_unit.name %> at <%= @project_unit.project_name%> in <%= @project_unit.booking_portal_client.name %>.<br/>
-<br/>
-Our executives will be in touch regarding agreement formalities.<br/>
-<br/>
-<strong>Please find below the booking details:</strong><br/>
-Name - <%= @project_unit.name %><br/>
-Tower - <%= @project_unit.project_tower_name %><br/>
-Unit Facing - <%= @project_unit.category %><br/>
-Amount Paid - <%= number_to_indian_currency(@project_unit.total_amount_paid) %><br/>
-Agreement Value - <%= number_to_indian_currency(@project_unit.agreement_price) %><br/>
-All inclusive total (excluding registration charges) - <%= number_to_indian_currency(@project_unit.all_inclusive_price) %><br/>
-<br/>
-<p>
+<%= @project_unit.to_json %>

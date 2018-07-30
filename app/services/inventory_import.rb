@@ -150,7 +150,12 @@ module InventoryImport
         end
         project_unit.base_rate = base_rate.to_f
         project_unit.client_id = client_id
-        project_unit.data_attributes = [{"n"=>"unit_configuration_id", "v"=>"#{unit_configuration.id}"}, {"n"=>"project_name", "v"=>"#{project_name}"}, {"n"=>"project_tower_name", "v"=>"#{project_tower_name}"}, {"n"=>"unit_configuration_name", "v"=>"#{unit_configuration_name}"}, {"n"=>"floor", "v"=> floor}, {"n"=>"resale", "v"=>false}, {"n"=>"bedrooms", "v"=>bedrooms.to_f}, {"n"=>"bathrooms", "v"=>bathrooms.to_f}, {"n"=>"category", "v"=>category}, {"n"=>"facing", "v"=>unit_facing_direction}, {"n"=>"type", "v"=>"apartment"}, {"n"=>"saleable", "v"=>saleable.to_f}, {"n"=>"carpet", "v"=>carpet.to_f}, {"n"=>"usable", "v"=>usable.to_f}, {"n"=>"uds", "v"=>uds.to_f}, {"n"=>"city", "v"=>"Banglore"}, {"n"=>"state", "v"=>"Karnataka"}, {"n"=>"country", "v"=>"India"}, {"n"=>"amenities", "v"=>{}}, {"n"=>"project_status", "v"=>nil}]
+        project_unit.bedrooms = bedrooms.to_f
+        project_unit.bathrooms = bathrooms.to_f
+        project_unit.carpet = carpet.to_f
+        project_unit.saleable = saleable.to_f
+
+        project_unit.data_attributes = [{"n"=>"unit_configuration_id", "v"=>"#{unit_configuration.id}"}, {"n"=>"project_name", "v"=>"#{project_name}"}, {"n"=>"project_tower_name", "v"=>"#{project_tower_name}"}, {"n"=>"unit_configuration_name", "v"=>"#{unit_configuration_name}"}, {"n"=>"floor", "v"=> floor}, {"n"=>"resale", "v"=>false}, {"n"=>"category", "v"=>category}, {"n"=>"facing", "v"=>unit_facing_direction}, {"n"=>"type", "v"=>"apartment"}, {"n"=>"usable", "v"=>usable.to_f}, {"n"=>"uds", "v"=>uds.to_f}, {"n"=>"city", "v"=>"Banglore"}, {"n"=>"state", "v"=>"Karnataka"}, {"n"=>"country", "v"=>"India"}, {"n"=>"amenities", "v"=>{}}, {"n"=>"project_status", "v"=>nil}]
         project_unit.selldo_id = unit_sap_id # TODO
         project_unit.sap_id = unit_sap_id # TODO
         project_unit.agreement_price = agreement_price.to_f

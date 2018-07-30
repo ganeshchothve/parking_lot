@@ -50,6 +50,6 @@ class Api::SellDoController < ApplicationController
   end
 
   def client_id
-    @client.selldo_client_id
+    current_client.selldo_client_id
   end
 end

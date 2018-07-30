@@ -15,9 +15,7 @@ module GamificationHelper
     ProjectUnit.build_criteria({
       fltrs: {
         status: ["blocked", "booked_tentative", "booked_confirmed"],
-        data_attributes: {
-          bedrooms: bedrooms
-        }
+        bedrooms: bedrooms
       }
     }).count + 30
   end

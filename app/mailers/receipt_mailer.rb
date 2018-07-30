@@ -14,10 +14,8 @@ class ReceiptMailer < ApplicationMailer
     @project_unit = @receipt.project_unit || @receipt.reference_project_unit
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
-    attachments["Cost_structure.pdf"] = WickedPdf.new.pdf_from_string(
-      render_to_string(pdf: "cost_structure", template: "dashboard/receipt_print.pdf.erb"))
     attachments["Receipt.pdf"] = WickedPdf.new.pdf_from_string(
-      render_to_string(pdf: "receipt", template: "dashboard/receipt_mail.pdf.erb"))
+      render_to_string(pdf: "receipt", template: "receipts/show.pdf.erb"))
     mail(to: @user.email, cc: cc, subject: "Payment #{@receipt.receipt_id} Successful")
   end
 
@@ -37,9 +35,9 @@ class ReceiptMailer < ApplicationMailer
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
     cc += [@user.email]
-    @project = @project_unit.project
-    @client = @user.booking_portal_client
-    mail(to: cc, cc: cc, subject: "Payment #{@receipt.receipt_id} has been collected for your " + @project_unit.project_name)
+    subject = "Payment #{@receipt.receipt_id} has been collected"
+    subject += @project_unit.present? ? "for your Unit - #{@project_unit.project_name}." : "."
+    mail(to: cc, subject: subject)
   end
 
   def receipt_email receipt_id

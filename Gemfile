@@ -37,6 +37,7 @@ gem 'mongoid', '~> 6.1.0'
 gem 'mongoid-autoinc'
 # Comprehensive solution for user authentication in rails
 gem 'devise'
+gem 'active_model_otp'
 gem 'simple_token_authentication', '~> 1.0'
 # Simple solution for authorization of users
 gem 'pundit'
@@ -54,10 +55,8 @@ gem 'will_paginate_mongoid'
 gem 'mongoid-observers', '~> 0.3.0'
 gem 'rails-observers',  github: 'rails/rails-observers'
 # for file upload
-gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
-gem 'carrierwave-azure'
 gem 'fog-aws'
-gem "fog-azure-rm"
+gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 
 # for simplified HTTP requests
 gem 'httparty', '>= 0.14.0'
@@ -68,7 +67,7 @@ gem 'whenever', :require => false
 
 gem 'sprockets-rails', '>= 2.3.2' # force this version for bootstrap 4 gem
 # Bootstrap lib gem for rails. #TODO: upgrade this when B4 is out of beta
-gem 'bootstrap', '~> 4.0.0.beta3'
+gem 'bootstrap'
 gem 'jquery-rails'
 gem 'rest-client'
 

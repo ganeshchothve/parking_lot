@@ -1,8 +1,11 @@
 class ApplicationController < ActionController::Base
+  before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_cache_headers, :set_request_store, :set_cookies
-  before_action :load_and_store_client, :load_project
+  before_action :load_hold_unit
+
   acts_as_token_authentication_handler_for User, unless: lambda { |controller| controller.is_a?(HomeController) || controller.is_a?(Api::SellDoController) || (controller.is_a?(ChannelPartnersController)) }
   include Pundit
+  include ApplicationHelper
   helper_method :home_path
   protect_from_forgery with: :exception, prepend: true
   layout :set_layout
@@ -99,15 +102,16 @@ class ApplicationController < ActionController::Base
 
   end
 
-  def load_and_store_client
-    domain = "#{request.subdomain}.#{request.domain}"
-    @client = Client.where(booking_portal_domains: domain).first
-    RequestStore::Base.set "client_id", @client.id
+  def load_hold_unit
+    if current_user
+      @current_unit = current_user.project_units.where(status: "hold").first
+    end
   end
 
-  def load_project
-    # TODO: for now we are considering one project per client only so loading first client project here
-    @project = @client.projects.first if @client.present?
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:phone, :email, :password, :password_confirmation])
+    devise_parameter_sanitizer.permit(:sign_in, keys: [:login, :password, :password_confirmation])
+    devise_parameter_sanitizer.permit(:otp, keys: [:login, :password, :password_confirmation])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:phone, :email, :password, :password_confirmation, :current_password])
   end
 end
-

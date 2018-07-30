@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,500');
+
+// override bootstrap varialbes start
+$body-bg: #fcfcfc;
+
+$primary: #673ab7;
+$secondary: #3c91e6;
+$success: #4CAF50;
+$info: #00BCD4;
+$warning: #FFC107;
+$danger: #F44336;
+$light: #f8f9fa;
+$dark: #666;
+
+$font-family-base:  'Roboto', sans-serif !default;
+
+$dropdown-link-color: #343a40;
+$btn-focus-box-shadow: none !important;
+$border-radius: 4px;
+
+$font-weight-normal: 400 !default;
+$font-weight-bold: 700 !default;
+$breadcrumb-divider: "\f3d3";
+
+$modal-backdrop-opacity: 0.9 !default;
+$modal-backdrop-bg: #5a6775;
+
+// override bootstrap varialbes end

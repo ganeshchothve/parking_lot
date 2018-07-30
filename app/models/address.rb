@@ -2,8 +2,6 @@ class Address
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  belongs_to :addressable, polymorphic: true
-
   field :address1, type: String
   field :address2, type: String
   field :city, type: String
@@ -14,6 +12,8 @@ class Address
   field :primary, type: Boolean, default: false
   field :address_type, type: String #TODO: Must be personal, work etc
   field :selldo_id, type: String
+
+  belongs_to :addressable, polymorphic: true
 
   def ui_json
     to_json

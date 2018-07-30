@@ -1,33 +1,35 @@
-<% if params[:controller] != "admin/users" && params[:action] != "show" %>
-<%= content_for :breadcrumbs do %>
-<div class="col-12">
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<%= home_path(current_user) %>">Dashboard</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Units</li>
-    </ol>
-  </nav>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <% if params[:controller] != "admin/users" && params[:action] != "show" %>
+        <%= content_for :breadcrumbs do %>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="<%= home_path(current_user) %>">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Units</li>
+          </ol>
+        </nav>
+        <% end %>
+      <% end %>
+      <div class="mt-3"></div>
+      <div class="row">
+        <div class="col-9">
+          <div class="card">
+            <div class="card-body">
+              <%= render '/admin/project_units/index', project_units: @project_units %>
+              <% if ProjectUnitPolicy.new(current_user, ProjectUnit).export? %>
+                <%= link_to "Export all #{global_labels['units']}", export_admin_project_units_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn margin-xs-left-0' %>
+              <% end %>
+              <% if ProjectUnitPolicy.new(current_user, ProjectUnit).mis_report? %>
+                <%= link_to "MIS report #{global_labels['units']}", mis_report_admin_project_units_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn margin-xs-left-0' %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        <div class="col-3">
+          <%= render "filters" %>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-<% end %>
-<% end %>
-<section class="padding-side-22">
-	<div class="container-fluid">
-		<div class="row">
-		  <!-- <div class="col-12 text-left mtop10">
-	          <p class="pageTitle big pink">UNITS</p>
-	      </div> -->
-		  <div class="col-md-10 border border-left-0 border-top-0 border-bottom-0 table-responsive float-left">
-		    <%= render '/admin/project_units/index', project_units: @project_units %>
-        <% if ProjectUnitPolicy.new(current_user, ProjectUnit).export? %>
-          <%= link_to "Export all #{global_labels['units']}", export_admin_project_units_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn margin-xs-left-0' %>
-        <% end %>
-        <% if ProjectUnitPolicy.new(current_user, ProjectUnit).mis_report? %>
-          <%= link_to "MIS report #{global_labels['units']}", mis_report_admin_project_units_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn margin-xs-left-0' %>
-        <% end %>
-		  </div>
-		  <div class="col-md-2 float-right">
-		    <%= render "filters" %>
-		  </div>
-		</div>
-	</div>
-</section>

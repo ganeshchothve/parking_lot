@@ -86,6 +86,8 @@ class Project
 
   default_scope -> { where(is_active: true)}
 
+  validates :name, :logo, :rera_registration_no, presence: true
+
   def unit_configurations
     UnitConfiguration.where(data_attributes: {"$elemMatch" => {"n" => "project_id", "v" => self.selldo_id}})
   end

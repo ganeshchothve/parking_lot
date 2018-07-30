@@ -1,4 +1,1 @@
-Resolved Swap request for <%= @project_unit.name %> with <%= @alternate_project_unit.name %>.
-<% if @user_request.reply_for_customer %>
-  <div>comments from CRM team: <%= @user_request.reply_for_customer %></div>
-<% end %>
+<%= @user_request.to_json %>

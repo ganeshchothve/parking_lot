@@ -13,10 +13,14 @@ class ReceiptPolicy < ApplicationPolicy
 
   def new?
     if user.buyer?
-      user.kyc_ready? && (record.project_unit.blank? || booking_payment?) && user.confirmed?
+      user.kyc_ready? && (record.project_unit_id.blank? || after_hold_payment?) && user.confirmed?
     else
-      record.user_id.present? && record.user.kyc_ready? && (record.project_unit.blank? || booking_payment?) &&  record.user.confirmed?
+      record.user_id.present? && record.user.kyc_ready? && (record.project_unit_id.blank? || after_hold_payment?) &&  record.user.confirmed?
     end
+  end
+
+  def direct?
+    new?
   end
 
   def create?
@@ -31,11 +35,11 @@ class ReceiptPolicy < ApplicationPolicy
     edit?
   end
 
-  def booking_payment?
+  def after_hold_payment?
     project_unit = record.project_unit
     unit_user = project_unit.user
 
-    valid = project_unit.present? && (project_unit.status == 'blocked' || project_unit.status == 'booked_tentative') && project_unit.pending_balance > 0 && unit_user.kyc_ready?
+    valid = project_unit.present? && project_unit.user_based_status(unit_user) == 'booked'
 
     if user.buyer?
       valid = valid && user.id == unit_user.id

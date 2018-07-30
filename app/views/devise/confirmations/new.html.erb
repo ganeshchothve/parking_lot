@@ -1,27 +1,22 @@
-<section class="dashboard-bg full-height white-bg-xs">
-  <div class="container">
-    <div class="col-7 login-card-wrapper">
-    <div class="login-card">
-      <a href="javascript:void(0);" class="logo-wrapper">
-        <img src="<%= asset_path @client.logo.url %>" class="img-responsive" />
-      </a>
-      <div class="subTitle purple text-center">Resend confirmation instructions</div>
-      <div class="form-wrapper">
-          <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post, class: "validate-form" }) do |f| %>
-          <%= devise_error_messages! %>
-          <div class="form-group form-field-wrapper">
-            <%= f.email_field :email, autofocus: true, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), class: "form-control form-field", placeholder: "example@amuratech.com" %>
-          </div>
-          <button type="submit" class="btn btn-primary pink-button">Resend confirmation instructions</button>
+<div class="row justify-content-center">
+  <div class="col-7">
+    <div class="card">
+      <div class="card-body">
+        <a href="javascript:void(0);" class="logo-wrapper text-center">
+          <img src="<%= asset_path current_client.logo.url %>" class="img-responsive" />
+        </a>
+        <h3 class="text-center">Resend Confirmation Instructions</h3>
+        <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post, class: "validate-form" }) do |f| %>
+        <%= devise_error_messages! %>
+        <div class="form-group">
+          <%= f.email_field :email, autofocus: true, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), class: "form-control", placeholder: "example@amuratech.com" %>
+        </div>
+        <div class="form-group">
+          <%= f.submit "Resend confirmation instructions", class: 'btn btn-primary' %>
+        </div>
         <% end %>
       </div>
-      <div class="col-12 separator relative text-center">
-        <div class="part-links">
-          <%= render "devise/shared/links" %>
-        </div>
-      </div>
-      <div class="clearfix"></div>
     </div>
-    </div>
+    <%= render "devise/shared/links" %>
   </div>
-</section>
+</div>

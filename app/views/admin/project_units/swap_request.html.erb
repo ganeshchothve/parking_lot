@@ -8,7 +8,7 @@
         <%= form_tag swap_request_initiate_admin_project_unit_path(@project_unit), class: 'validate-form', method: "get" do |f| %>
           <div> Current project unit: <%= @project_unit.name %></div>
           <div class="form-group">
-            <%= label_tag :alternate_project_unit_id, nil, class: 'control-label label-required' %>
+            <%= label_tag :alternate_project_unit_id, nil, class: 'label-required' %>
             <%= select_tag :alternate_project_unit_id, options_for_select(ProjectUnit.where(status: "available").collect{|x| [x.name, x.id] }), class: 'selectize', required: "required" %>
           </div>
           <div class="form-group">

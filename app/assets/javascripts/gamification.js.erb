@@ -1,8 +1,8 @@
 var Gamification = (function(){
   var pusher, gamification_channel;
   var init = function(){
-    pusher = new Pusher("<%= ENV_CONFIG['pusher']['key'] %>", {
-      cluster: "<%= ENV_CONFIG['pusher']['cluster'] %>",
+    pusher = new Pusher("<%= ENV_CONFIG[:pusher]['pusher_api_key'] %>", {
+      cluster: "<%= ENV_CONFIG[:pusher]['pusher_api_cluster'] %>",
       encrypted: true
     });
 
@@ -26,8 +26,8 @@ var Gamification = (function(){
       $(gamification_selector).append("<div class='text-slide'>" + message + "</div>");
     }
 
-    gamificationSlider.reloadSlider();
-    gamificationSlider.goToSlide(gamificationSlider.children().length - 1);
+    // gamificationSlider.reloadSlider();
+    // gamificationSlider.goToSlide(gamificationSlider.children().length - 1);
     $(".gamification-container").addClass("active");
     setTimeout(function(){
         $(".gamification-container").removeClass("active");

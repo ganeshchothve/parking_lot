@@ -1,0 +1,13 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <% unless current_user.buyer? %>
+        <div class="alert alert-danger">
+          You are taking a booking for <%= @user.name %>
+        </div>
+        <div class="mt-3"></div>
+      <% end %>
+      <%= render "form", {data: @data} %>
+    </div>
+  </div>
+</div>

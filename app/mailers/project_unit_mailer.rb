@@ -5,8 +5,7 @@ class ProjectUnitMailer < ApplicationMailer
     @user = @project_unit.user
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
-    cc += default_team
-    cc += crm_team
+    cc += [@project_unit.booking_portal_client.notification_email]
     mail(to: @user.email, cc: cc, subject: "Unit No.  #{@project_unit.name} has been blocked!")
   end
 
@@ -16,8 +15,7 @@ class ProjectUnitMailer < ApplicationMailer
     @cp = @user.channel_partner
     # CC Removed as per the QA/Supriya Mam
     # cc = @cp.present? ? [@cp.email] : []
-    # cc += default_team
-    # cc += crm_team
+    # cc +project_unit.= current_client.notification_email
     mail(to: @user.email, subject: "Unit #{@project_unit.name} booked tentative")# cc: cc
   end
 
@@ -26,8 +24,7 @@ class ProjectUnitMailer < ApplicationMailer
     @user = @project_unit.user
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
-    cc += default_team
-    cc += crm_team
+    cc += [@project_unit.booking_portal_client.notification_email]
     attachments["Allotment.pdf"] = WickedPdf.new.pdf_from_string(
     render_to_string(pdf: "allotment", template: "project_unit_mailer/send_allotment_letter.pdf.erb"))
     #Removed by Ashish
@@ -41,8 +38,7 @@ class ProjectUnitMailer < ApplicationMailer
     @user = @project_unit.user
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
-    cc += default_team
-    cc += crm_team
+    cc += [@project_unit.booking_portal_client.notification_email]
     attachments["Allotment.pdf"] = WickedPdf.new.pdf_from_string(
       render_to_string(pdf: "allotment", template: "project_unit_mailer/send_allotment_letter.pdf.erb"))
     #Removed by Ashish
@@ -57,8 +53,7 @@ class ProjectUnitMailer < ApplicationMailer
     @auto_release_on_was = auto_release_on_was
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
-    cc += default_team
-    cc += crm_team
+    cc += [@project_unit.booking_portal_client.notification_email]
     mail(to: @user.email, cc: cc, subject: "Received an extension to hold the unit")
   end
 
@@ -67,8 +62,7 @@ class ProjectUnitMailer < ApplicationMailer
     @user = User.find(user_id) # This is not the user available on project_unit.user; which has already been set to nil
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
-    cc += default_team
-    cc += crm_team
+    cc += [@project_unit.booking_portal_client.notification_email]
     mail(to: @user.email, cc: cc, subject: "Unit #{@project_unit.name} has been released")
   end
 
@@ -77,8 +71,7 @@ class ProjectUnitMailer < ApplicationMailer
     @user = @project_unit.user
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
-    cc += default_team
-    cc += crm_team
+    cc += [@project_unit.booking_portal_client.notification_email]
     mail(to: @user.email, cc: cc, subject: "Provisional Allotment of Apartment! ")
   end
 
@@ -88,8 +81,7 @@ class ProjectUnitMailer < ApplicationMailer
     @user = @project_unit.user
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
-    cc += default_team
-    cc += crm_team
+    cc += [@project_unit.booking_portal_client.notification_email]
     mail(to: @user.email, cc: cc, subject: "Swap request")
   end
 end

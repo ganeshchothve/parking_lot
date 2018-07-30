@@ -11,132 +11,13 @@
  * It is generally better to create a new file per style scope.
  *
  *= require app
- *= require noty.css
+ *= require noty
  *= require noty_theme
- *= require bootstrap-datetimepicker.css
- *= require daterangepicker.css
+ *= require bootstrap-datetimepicker
+ *= require daterangepicker
  *= require intlTelInput
- *= require selectize.css
- *= require files-list
- *= require jquery.fileupload.css
+ *= require selectize
+ *= require sidebar-modal
+ *= require jquery.fileupload
  *= require_self
 */
-
-@import url('https://fonts.googleapis.com/css?family=Vidaloka');
-@import url('https://fonts.googleapis.com/css?family=Poppins:300,400,600');
-
-html, body{
-	padding: 0;
-	margin: 0;
-	font-size: 14px;
-	-webkit-font-smoothing: antialiased;
-	font-family: 'Poppins', sans-serif;
-	background-color: #edeef0;
-	overflow-x: hidden;
-}
-a, img, button, input[type=submit]{
-	text-decoration: none;
-	outline: none;
-	border: 0;
-	font-family: 'Poppins', sans-serif;
-}
-*, *:after, *:before {
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-}
-.container{
-	max-width: 1200px;
-	margin: 0px auto;
-	padding: 0 20px;
-}
-.clearfix{
-	clear: both;
-}
-.pull-left{
-	float: left !important;
-}
-.pull-right{
-	float: right !important;
-}
-.text-left{
-	text-align: left;
-}
-.text-center{
-	text-align: center;
-}
-.text-right{
-	text-align: right;
-}
-.text-justify{
-	text-align: justify;
-}
-.img-responsive{
-	max-width: 100%;
-	height: auto;
-}
-.img-full{
-	width: 100%;
-	height: auto;
-}
-.center-block{
-	margin: 0 auto;
-}
-.col-1{
-	width: 8.333333333333333%;
-}
-.col-2{
-	width: 16.66666666666667%;
-}
-.col-3{
-	width: 25%;
-}
-.col-4{
-	width: 33.33333333333333%;
-}
-.col-5{
-	width: 41.66666666666667%;
-}
-.col-6{
-	width: 50%;
-}
-.col-7{
-	width: 58.33333333333333%;
-}
-.col-8{
-	width: 66.66666666666667%;
-}
-.col-9{
-	width: 75%;
-}
-.col-10{
-	width: 83.33333333333333%;
-}
-.col-11{
-	width: 91.66666666666667%;
-}
-.col-12{
-	width: 100%;
-}
-.col-12-5{
-	width: 20%;
-}
-.w70{
-	width: 70%;
-}
-.w30{
-	width: 30%;
-}
-.col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12, .col-12-5, .w30, .w70{
-	float: left;
-}
-section{
-	float: left;
-	width: 100%;
-}
-.relative{
-	position: relative;
-}
-.absolute{
-	position: absolute;
-}

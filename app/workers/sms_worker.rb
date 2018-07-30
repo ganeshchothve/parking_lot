@@ -1,6 +1,7 @@
 require 'net/http'
 class SMSWorker
   include Sidekiq::Worker
+  extend ApplicationHelper
 
   def perform(to, content)
     unless Rails.env.development?
@@ -25,14 +26,14 @@ class SMSWorker
   end
 
   def self.username
-    ENV_CONFIG[:sms][:username]
+    current_client.sms_provider_username
   end
 
   def self.password
-    ENV_CONFIG[:sms][:password]
+    current_client.sms_provider_password
   end
 
   def self.mask
-    "SellDo"
+    current_client.sms_mask
   end
 end

@@ -21,14 +21,13 @@
 //= require jquery.validate
 //= require moment
 //= require jquery.fileupload
+//= require jquery.blockUI.js
 //= require selectize
 //= require plugins/array_field
 //= require plugins/file_uploader
 //= require daterangepicker
 //= require fontawesome-all
 //= require bootstrap-datetimepicker.min
-//= require jquery.colorbox-min
-//= require jquery.zoom.min
 //= require utils
 //= require file-icon
 //= require form-initializer
@@ -41,10 +40,6 @@ $.ajaxSetup({
   }
 });
 $(document).ready(function(){
-	setTimeout(function(){
-		$("div.notice, div.alert").fadeOut();
-	}, 3000);
-
 	$(".colorbox-init").colorbox({
 		maxWidth: "90%",
 		maxHeight: "90%",

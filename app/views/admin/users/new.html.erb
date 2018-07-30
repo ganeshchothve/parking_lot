@@ -1,45 +1,5 @@
-<%= content_for :breadcrumbs do %>
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="<%= home_path(current_user) %>">Dashboard</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Users</li>
-  </ol>
-</nav>
-<% end %>
-<section class="padding-side-30 padding-xs-user">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-12 text-left mtop10">
-        <p class="pageTitle big pink">ADD USERS</p>
-      </div>
-      <div class="col-md-10 border-left-0 border-top-0 border-bottom-0 full-phone white-wrapper">
-        <% if @user.buyer? %>
-          <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= @client.selldo_client_id %>.js'></script>
-          <script src='//trkr.scdn1.secure.raxcdn.com/t/forms/<%= @client.selldo_client_id %>/<%= @client.selldo_form_id %>.js' data-form-id='<%= @client.selldo_form_id %>'></script>
-        <% else %>
-          <%= render 'form' %>
-        <% end %>
-      </div>
-      <div class="col-md-4">
-      </div>
-    </div>
-  </div>
-</section>
-<style type="text/css">
-.full-phone .selldo-intl-tel-input{
-  display: block;
-}
-</style>
 <% if @user.buyer? %>
-<script type="text/javascript" data-tag="selldo">
-window.sell_do_form_rendered = function(){
-  $('<input type="hidden" name="sell_do[campaign][srd]" value="<%= (user_signed_in? && current_user.role?('channel_partner')) ? @client.cp_srd : '' %>"/>').appendTo(".sell_do_form_actual_container");
-  $('<input type="hidden" name="sell_do[lead][sub_source]" value="<%= (user_signed_in? && current_user.role?('channel_partner')) ? current_user.name : '' %>"/>').appendTo(".sell_do_form_actual_container");
-  $('[name="sell_do[form][custom][portal_cp_id]"]').val("<%= (user_signed_in? && current_user.role?('channel_partner')) ? current_user.id : '' %>");
-  $('[name="sell_do[form][custom][portal_cp_id]"]').closest('.selldof_row').hide();
-};
-window.sell_do_form_submitted = function(data, event){
-
-};
-</script>
+  <%= render 'selldo_form' %>
+<% else %>
+  <%= render 'form' %>
 <% end %>
