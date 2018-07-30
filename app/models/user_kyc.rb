@@ -11,33 +11,40 @@ class UserKyc
   field :dob, type: Date
   field :pan_number,type: String
   field :aadhaar,type: String
-  field :oci,type: String
-  field :gstn, type: String
-  field :is_company, type: Boolean
   field :anniversary, type: Date
-  field :nri, type: Boolean
-  field :poa, type: Boolean
-  field :poa_details, type: String
-  field :company_name, type: String
-  field :existing_customer, type: Boolean
-  field :existing_customer_name, type: String
-  field :existing_customer_project, type: String
-  field :comments, type: String
-
   field :education_qualification, type: String
   field :designation, type: String
   field :customer_company_name, type: String
+  field :comments, type: String
+
+  field :nri, type: Boolean, default: false
+  field :oci,type: String
+
+  field :poa, type: Boolean, default: false
+  field :poa_details, type: String
   field :poa_details_phone_no, type: String
 
+  field :is_company, type: Boolean, default: false
+  field :gstn, type: String
+  field :company_name, type: String
+
+  field :existing_customer, type: Boolean, default: false
+  field :existing_customer_name, type: String
+  field :existing_customer_project, type: String
+
+
   has_many :assets, as: :assetable
-  has_one :bank_detail
+  has_one :bank_detail, as: :bankable
+  # has_one :correspondence_address, as: :addressable, class_name: "Address"
+  has_one :permanent_address, as: :addressable, class_name: "Address"
   belongs_to :user
   belongs_to :creator, class_name: 'User'
   has_and_belongs_to_many :project_units
   has_and_belongs_to_many :booking_details
 
-  validates :first_name, :last_name, :email, :phone, :dob, presence: false
-  # validates :poa, inclusion: {in: [true]}, if: Proc.new{ |kyc| kyc.nri? }
+  accepts_nested_attributes_for :bank_detail, :permanent_address#, :correspondence_address
+
+  validates :first_name, :last_name, :email, :phone, presence: true
   validates :pan_number, presence: true, unless: Proc.new{ |kyc| kyc.nri? }
   validates :oci, presence: true, if: Proc.new{ |kyc| kyc.nri? }
   validates :email, uniqueness: {scope: :user_id}, allow_blank: true
