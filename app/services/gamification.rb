@@ -8,10 +8,10 @@ module Gamification
 
     def initialize
       @pusher_client = Pusher::Client.new(
-        app_id: current_client.pusher_api_app_id,
-        key: current_client.pusher_api_key,
-        secret: current_client.pusher_api_secret,
-        cluster: current_client.pusher_api_cluster,
+        app_id: ENV_CONFIG[:pusher]['pusher_api_app_id'],
+        key: ENV_CONFIG[:pusher]['pusher_api_key'],
+        secret: ENV_CONFIG[:pusher]['pusher_api_secret'],
+        cluster: ENV_CONFIG[:pusher]['pusher_api_cluster'],
         encrypted: true
       )
     end
