@@ -107,7 +107,7 @@ function register_user_with_portal(e){
           window.location = '<%= url.admin_users_path %>';
         }else{
           if(App.client.preferred_login == "phone" && data.phone){
-            window.location = encodeURI('<%= url.new_user_session_path %>?user[login]=' + encodeURIComponent(data.phone));
+            window.location = encodeURI('<%= url.new_user_session_path %>?force=true&user[login]=' + encodeURIComponent(data.phone));
           }else{
             // Do Nothing as the user has been created
           }

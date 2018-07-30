@@ -1,0 +1,39 @@
+asset_sync:
+  FOG_DIRECTORY:
+  AWS_ACCESS_KEY_ID:
+  AWS_SECRET_ACCESS_KEY:
+  FOG_REGION:
+redis:
+  host: localhost
+  port: 6379
+  db: 0
+  namespace: booking_portal_generic
+  password:
+sidekiq:
+  username:
+  password:
+smtp:
+  user_name:
+  password:
+  authentication:
+  address:
+  port:
+  domain:
+global:
+  SECRET_KEY_BASE:
+db:
+  database:
+  hosts:
+  options:
+    user:
+    password:
+    auth_source:
+    ssl:
+razorpay:
+  key:
+  secret:
+pusher:
+  pusher_api_app_id: "568634"
+  pusher_api_key: "5dc34608bfcefde0e495"
+  pusher_api_secret: "2796b4e60ccae832e378"
+  pusher_api_cluster: "ap2"
