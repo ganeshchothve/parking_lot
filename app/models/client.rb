@@ -28,6 +28,7 @@ class Client
   field :mixpanel_token, type: String
   field :sms_provider_username, type: String
   field :sms_provider_password, type: String
+  field :sms_mask, type: String, default: "SellDo"
   field :enable_actual_inventory, type: Boolean, default: false
   field :enable_channel_partners, type: Boolean, default: false
 
@@ -46,7 +47,7 @@ class Client
       {id: 'email', text: 'Email Based'}
     ]
   end
-  validates :preferred_login, inclusion: {in: Proc.new{ ProjectUnit.available_preferred_logins.collect{|x| x[:id]} } }
+  validates :preferred_login, inclusion: {in: Proc.new{ Client.available_preferred_logins.collect{|x| x[:id]} } }
 end
 
 =begin
@@ -77,4 +78,17 @@ c.sms_provider_password = "aJ_Z-1j4"
 c.enable_actual_inventory = false
 c.enable_channel_partners = false
 c.remote_logo_url = "https://image4.owler.com/logo/amura_owler_20160227_194208_large.png"
+c.save
+
+p = Project.new
+p.name = "Amura Towers"
+p.remote_logo_url = "https://image4.owler.com/logo/amura_owler_20160227_194208_large.png"
+p.rera_registration_no = "RERA-AMURA-123"
+p.booking_portal_client = Client.first
+p.save
+
+u = User.new(first_name: "Ketan", last_name: "Sabnis", role: "admin", booking_portal_client: Client.first, email: "ketan@amuratech.com", phone: "+919552523663")
+u.confirm
+u.skip_confirmation_notification!
+u.save
 =end

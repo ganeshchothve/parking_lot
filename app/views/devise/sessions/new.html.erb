@@ -52,5 +52,8 @@
 $(document).ready(function(){
   FormInitializer.init($("#new_user"));
   FormInitializer.init($("#otp_user_form"));
+  <% if params[:login].present? && current_client.preferred_login == "phone" && params[:force].to_s == "true" %>
+    $("#otp_user_form").submit();
+  <% end %>
 });
 <% end %>

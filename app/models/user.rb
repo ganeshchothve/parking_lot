@@ -20,7 +20,6 @@ class User
   field :channel_partner_id, type: BSON::ObjectId
   field :referenced_channel_partner_ids, type: Array, default: []
   field :rera_id, type: String
-  field :location, type: String
   field :mixpanel_id, type: String
 
   field :encrypted_password, type: String, default: ""
@@ -73,11 +72,10 @@ class User
   has_many :searches
 
   validates :first_name, :last_name, :role, :allowed_bookings, presence: true
-  validates :phone, uniqueness: true, phone: { possible: true, allow_blank: true, types: [:voip, :personal_number, :fixed_or_mobile]}
+  validates :phone, uniqueness: true, phone: { possible: true, types: [:voip, :personal_number, :fixed_or_mobile]}, if: Proc.new{|user| user.email.blank? }
   validates :lead_id, uniqueness: true, allow_blank: true
   validates :email, uniqueness: true, if: Proc.new{|user| user.phone.blank? }
-  validates :phone, uniqueness: true, if: Proc.new{|user| user.email.blank? }
-  validates :rera_id, :location, presence: true, if: Proc.new{ |user| user.role?('channel_partner') }
+  validates :rera_id, presence: true, if: Proc.new{ |user| user.role?('channel_partner') }
   validates :rera_id, uniqueness: true, allow_blank: true
   validates :role, inclusion: {in: Proc.new{ User.available_roles.collect{|x| x[:id]} } }
   validates :lead_id, presence: true, if: Proc.new{ |user| user.buyer? }
