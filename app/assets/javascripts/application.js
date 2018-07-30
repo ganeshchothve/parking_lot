@@ -20,6 +20,7 @@
 //= require jquery.ui.widget
 //= require jquery.validate
 //= require moment
+//= require jquery.crs
 //= require jquery.fileupload
 //= require jquery.blockUI.js
 //= require selectize

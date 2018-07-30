@@ -1,0 +1,23 @@
+<div class="card">
+  <div class="card-header">
+    <%= global_labels[:channel_partners] %>
+  </div>
+  <div class="card-body">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Status</th>
+          <th class="text-right">Count</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% DashboardDataProvider.channel_partners_dashboard.each do |d| %>
+        <tr>
+          <td><%= ChannelPartner.available_statuses.find{|x| x[:id] == d[:status]}[:text] %></td>
+          <td class="text-right"><%= d[:count] %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
