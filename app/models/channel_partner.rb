@@ -27,8 +27,9 @@ class ChannelPartner
   validates :status, inclusion: {in: Proc.new{ ChannelPartner.available_statuses.collect{|x| x[:id]} } }
   validate :user_level_uniqueness
   validate :cannot_make_inactive
-
   validates :first_name, :last_name, format: { with: /\A[a-zA-Z]*\z/}
+
+  accepts_nested_attributes_for :bank_detail, :address
 
   def self.available_statuses
     [

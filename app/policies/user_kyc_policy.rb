@@ -24,7 +24,7 @@ class UserKycPolicy < ApplicationPolicy
   def create?
     true
   end
-  
+
   def export?
     ['admin', 'crm'].include?(user.role)
   end
@@ -34,7 +34,7 @@ class UserKycPolicy < ApplicationPolicy
   end
 
   def permitted_attributes params={}
-    attributes = [:salutation, :first_name, :last_name, :email, :phone, :dob, :pan_number, :aadhaar, :oci, :gstn, :anniversary, :nri, :poa, :customer_company_name, :loan_required, :existing_customer, :comments, :existing_customer_name, :existing_customer_project, :bank_name, :poa_details, :is_company, :street, :house_number, :state, :city, :postal_code, :country, :pancard_photo, :adharcard_photo, :correspondence_street, :correspondence_house_number, :correspondence_city, :correspondence_postal_code, :correspondence_state, :correspondence_country, :son_daughter_of, :education_qualification, :designation, :company_name, :poa_details_phone_no, project_unit_ids: []]
+    attributes = [:salutation, :first_name, :last_name, :email, :phone, :dob, :pan_number, :aadhaar, :oci, :gstn, :anniversary, :nri, :poa, :customer_company_name, :existing_customer, :comments, :existing_customer_name, :existing_customer_project, :poa_details, :is_company, :education_qualification, :designation, :company_name, :poa_details_phone_no, correspondence_address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes, permanent_address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes, bank_detail_attributes: BankDetailPolicy.new(user, BankDetail.new).permitted_attributes, project_unit_ids: []]
     attributes
   end
 end

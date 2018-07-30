@@ -7,9 +7,7 @@ class Address
   field :city, type: String
   field :state, type: String
   field :country, type: String
-  field :country_code, type: String
   field :zip, type: String
-  field :primary, type: Boolean, default: false
   field :address_type, type: String #TODO: Must be personal, work etc
   field :selldo_id, type: String
 
