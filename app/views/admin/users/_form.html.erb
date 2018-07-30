@@ -49,10 +49,6 @@
               <%= f.label :rera_id, class: "#{@user.role?('channel_partner') ? 'label-required' : ''}" %>
               <%= f.text_field :rera_id, class: 'form-control', required: @user.role?('channel_partner') ? true : false, disabled: (policy(@user).editable_field?("rera_id") ? false : true) %>
             </div>
-            <div class="form-group">
-              <%= f.label :location, class: "#{@user.role?('channel_partner') ? 'label-required' : ''}" %>
-              <%= f.text_field :location, class: 'form-control', required: @user.role?('channel_partner') ? true : false, disabled: (policy(@user).editable_field?("location") ? false : true) %>
-            </div>
           <% end %>
           <% if @user.buyer? && ["crm", "sales", "cp", "admin"].include?(current_user.role) %>
             <div class="form-group">

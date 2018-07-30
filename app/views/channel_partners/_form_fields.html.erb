@@ -70,10 +70,9 @@
   <div class="col-6">
     <div class="form-group">
       <% if policy(@channel_partner).editable_field?("status") %>
-        <%= form.label :status, class: 'label-required' %>
         <div class="form-group">
-          <%= form.label :status, class: 'title' %>
-          <%= form.select :status, ChannelPartner.available_statuses.select{|x| statuses.include?(x[:id])}.collect{|x| [x[:text], x[:id]]}, {prompt: "Select", class: "selectize", disabled: (policy(@channel_partner).editable_field?("status") ? false : true)} %>
+          <%= form.label :status, class: 'title label-required' %>
+          <%= form.select :status, ChannelPartner.available_statuses.collect{|x| [x[:text], x[:id]]}, {prompt: "Select"}, {class: "selectize", disabled: (policy(@channel_partner).editable_field?("status") ? false : true)} %>
         </div>
       <% end %>
     </div>
