@@ -22,6 +22,8 @@ class SMSWorker
       else
         return {status:"success", remote_id: response}
       end
+    else
+      return {status:"success", remote_id: ""}
     end
   end
 

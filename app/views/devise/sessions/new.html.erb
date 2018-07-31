@@ -1,3 +1,4 @@
+<%= javascript_include_tag 'otp_based_login' %>
 <div class="row justify-content-center">
   <div class="col-7">
     <div class="card">
@@ -24,6 +25,9 @@
         </div>
         <div class="actions">
           <%= f.submit "Get OTP", class: 'btn btn-primary',  data:{event_category: 'Section', event_action: 'Click', event_name: 'Get OTP'} %>
+
+          <a href="javascript:;" class="resend-otp d-none small" data-resend-time="<%= User.otp_resend_wait_time %>", data-max-limit="<%= User.otp_resend_max_limit %>" data-counter=0>Resend OTP</a>
+
           <a href="javascript:;" class="toggle_signin_form float-right" data-target="#standard_login_form">Login with password instead</a>
         </div>
         <% end %>
@@ -63,15 +67,9 @@
 </div>
 <%= javascript_tag do %>
 $(document).ready(function(){
-  FormInitializer.init($("#standard_login_form"));
-  FormInitializer.init($("#otp_user_form"));
   <% if params[:login].present? && current_client.preferred_login == "phone" && params[:force].to_s == "true" %>
     $("#otp_user_form").submit();
   <% end %>
-  $(".toggle_signin_form").click(function(e){
-    var target = $(e.currentTarget).data("target");
-    $("form").addClass("d-none");
-    $(target).removeClass("d-none");
-  })
+  OtpBasedLogin.init();
 });
 <% end %>

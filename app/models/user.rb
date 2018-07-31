@@ -4,6 +4,7 @@ class User
   include Mongoid::Timestamps
   include ArrayBlankRejectable
   include ActiveModel::OneTimePassword
+  include OtpLoginHelperMethods
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -55,6 +56,7 @@ class User
 
   # field for active_model_otp
   field :otp_secret_key
+
   def self.otp_length
     6
   end
