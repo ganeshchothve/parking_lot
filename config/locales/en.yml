@@ -10,8 +10,8 @@ en:
     discounts: 'Discounts'
     receipt_with_status: '%{status} Payment'
     receipts_with_status: '%{status} Payments'
-    user_kyc: 'Applicant'
-    user_kycs: 'Applicants'
+    user_kyc: 'KYC'
+    user_kycs: 'KYCs'
     user_kyc_details: 'KYC Details'
     users: 'Users & Customers'
     user: 'User or Customer'
@@ -145,7 +145,8 @@ en:
         pan_number: "PAN Number"
         aadhaar: "Aadhaar"
       bank_detail:
-        name: "Account Holder's Name"
+        name: "Bank Name"
+        account_holder_name: "Account Holder's Name"
         branch: 'Branch'
         account_type: 'Account Type'
         ifsc_code: 'IFSC Code'
