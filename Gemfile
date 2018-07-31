@@ -28,6 +28,8 @@ gem 'jbuilder', '~> 2.5'
 # gem 'bcrypt', '~> 3.1.7'
 gem 'razorpay'
 gem 'pusher'
+gem 'active_link_to'
+gem "font-awesome-sass"
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

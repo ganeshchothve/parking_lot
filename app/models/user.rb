@@ -97,7 +97,7 @@ class User
   end
 
   def kyc_ready?
-    self.user_kycs.present?
+    self.user_kyc_ids.present?
   end
 
   def buyer?

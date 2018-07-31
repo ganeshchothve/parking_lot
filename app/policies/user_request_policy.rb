@@ -8,7 +8,7 @@ class UserRequestPolicy < ApplicationPolicy
   end
 
   def new?
-    record.user_id == user.id
+    record.user_id == user.id && user.booking_detail_ids.present?
   end
 
   def export?
