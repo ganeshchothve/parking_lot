@@ -3,38 +3,40 @@
     <p>Total Discounts : <%= discounts.count %></p>
   </div>
 </div>
-<table class='table striped-table payment-breakup' width="100%" cellpadding="10" cellspacing="0">
-  <thead class="th-default th-pink">
-    <% labels = t('mongoid.attributes.discount').with_indifferent_access %>
-    <tr>
-      <th><%= labels['name'] %></th>
-      <th><%= labels['status'] %></th>
-      <th><%= labels['value'] %></th>
-      <th><%= labels['created_by'] %></th>
-      <th><%= labels['approved_by'] %></th>
-      <th class="text-right">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% discounts.each do |discount| %>
-    <tr>
-      <td><%= discount.name %></td>
-      <td><%= Discount.available_statuses.find{|x| x[:id] == discount.status}[:text] %></td>
-      <td><%= discount.value %></td>
-      <td><%= discount.created_by.present? ? discount.created_by.name : '-' %></td>
-      <td><%= discount.approved_by.present? ? "#{discount.approved_by.name}<br/><small>Approved at #{discount.approved_at.strftime("%Y-%m-%d %H:%M:%S")}</small>".html_safe : '-' %></td>
-      <td class="text-right">
-        <div class="dropdown">
-          <a class="btn btn-light light-pink-btn dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-          <div class="dropdown-menu dropdown-menu-right">
-            <% if DiscountPolicy.new(current_user, discount).edit? %>
-              <%= link_to 'Edit', edit_admin_discount_path(discount), class: 'dropdown-item nav-btn' %>
-            <% end %>
+<div class="table-responsive-md">
+  <table class='table striped-table payment-breakup' width="100%" cellpadding="10" cellspacing="0">
+    <thead class="th-default th-pink">
+      <% labels = t('mongoid.attributes.discount').with_indifferent_access %>
+      <tr>
+        <th><%= labels['name'] %></th>
+        <th><%= labels['status'] %></th>
+        <th><%= labels['value'] %></th>
+        <th><%= labels['created_by'] %></th>
+        <th><%= labels['approved_by'] %></th>
+        <th class="text-right">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% discounts.each do |discount| %>
+      <tr>
+        <td><%= discount.name %></td>
+        <td><%= Discount.available_statuses.find{|x| x[:id] == discount.status}[:text] %></td>
+        <td><%= discount.value %></td>
+        <td><%= discount.created_by.present? ? discount.created_by.name : '-' %></td>
+        <td><%= discount.approved_by.present? ? "#{discount.approved_by.name}<br/><small>Approved at #{discount.approved_at.strftime("%Y-%m-%d %H:%M:%S")}</small>".html_safe : '-' %></td>
+        <td class="text-right">
+          <div class="dropdown">
+            <a class="btn btn-light light-pink-btn dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <% if DiscountPolicy.new(current_user, discount).edit? %>
+                <%= link_to 'Edit', edit_admin_discount_path(discount), class: 'dropdown-item nav-btn' %>
+              <% end %>
+            </div>
           </div>
-        </div>
-      </td>
-    </tr>
-    <% end %>
-  </tbody>
-</table>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 <%= will_paginate discounts %>

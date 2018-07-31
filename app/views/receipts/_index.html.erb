@@ -6,54 +6,56 @@
     <p>Total Payments : <%= receipts.count %></p>
   </div>
 </div>
-<table class="striped-table table payment-table <% if current_user.buyer? %> reciept-table <% end %>"  width="100%" <% if current_user.buyer? %> cellpadding="20" cellspacing="0"<% end %>>
-  <thead class="th-default th-pink">
-    <% labels = t('mongoid.attributes.receipt').with_indifferent_access %>
-    <tr>
-      <th class="w15 text-left">User</th>
-      <th>Details</th>
-      <th><%= labels['status'] %></th>
-      <th class="text-right"><%= labels['total_amount'] %></th>
-      <th class="text-right"></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% receipts.each do |receipt| %>
-    <tr>
-      <td><%= receipt.user.name %></td>
-      <td>
-        <div>Receipt No.: <span class="muted"><%= receipt.receipt_id %></span></div>
-        <div class="small">Unit ID: <span class="muted"><%= receipt.project_unit.present? ? receipt.project_unit.name : '' %><span style="display:inline-block">,Reference Project</span> <%= receipt.reference_project_unit.present? ? receipt.reference_project_unit.name : '' %></span></div>
-        <% if receipt.payment_mode == 'online' %>
-          <div class="small">Trans ID: <span class="muted"><%= receipt.payment_identifier %></span></div>
-	        <div class="small">Processed Date: <span class="muted"><%= receipt.processed_on %></span></div>
-        <% else %>
-          <div class="small">Bank: <span class="muted"><%= receipt.issuing_bank %></span> / Branch: <span class="muted"><%= receipt.issuing_bank_branch %></span></div>
-          <div class="small">Issued Date: <span class="muted"><%= receipt.issued_date %></span></div>
-          <div class="small">Processed Date: <span class="muted"><%= receipt.processed_on %></span></div>
-          <div class="small">ID: <span class="muted"><%= receipt.payment_identifier %></span></div>
-        <% end %>
-        <div class="small">Payment: <span class="muted"><%= Receipt.available_payment_modes.find{|x| x[:id] == receipt.payment_mode}[:text] %></span></div>
-      </td>
-      <td><%= Receipt.available_statuses.find{|x| x[:id] == receipt.status}[:text] %></td>
-      <td class="text-right"><%= number_to_indian_currency(receipt.total_amount.round(2)) %></td>
-      <td class="text-right">
-        <div class="dropdown">
-          <a class="btn btn-light dropdown-toggle light-pink-btn" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-          <div class="dropdown-menu dropdown-menu-right">
-            <% if receipt.status == 'success' %>
-              <%= link_to '<i class="fas fa-print"></i> Print'.html_safe, receipt_path(receipt, format: "pdf"), target:"_blank", class: 'dropdown-item print-btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>
-            <% end %>
-            <% if ReceiptPolicy.new(current_user, receipt).edit? %>
-              <%= link_to 'Edit', edit_admin_user_receipt_path(receipt.user_id, receipt), class: 'dropdown-item modal-remote-form-link' %>
-            <% end %>
+<div class="table-responsive-md">
+  <table class="striped-table table payment-table <% if current_user.buyer? %> reciept-table <% end %>"  width="100%" <% if current_user.buyer? %> cellpadding="20" cellspacing="0"<% end %>>
+    <thead class="th-default th-pink">
+      <% labels = t('mongoid.attributes.receipt').with_indifferent_access %>
+      <tr>
+        <th class="w15 text-left">User</th>
+        <th>Details</th>
+        <th><%= labels['status'] %></th>
+        <th class="text-right"><%= labels['total_amount'] %></th>
+        <th class="text-right"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% receipts.each do |receipt| %>
+      <tr>
+        <td><%= receipt.user.name %></td>
+        <td>
+          <div>Receipt No.: <span class="muted"><%= receipt.receipt_id %></span></div>
+          <div class="small">Unit ID: <span class="muted"><%= receipt.project_unit.present? ? receipt.project_unit.name : '' %><span style="display:inline-block">,Reference Project</span> <%= receipt.reference_project_unit.present? ? receipt.reference_project_unit.name : '' %></span></div>
+          <% if receipt.payment_mode == 'online' %>
+            <div class="small">Trans ID: <span class="muted"><%= receipt.payment_identifier %></span></div>
+  	        <div class="small">Processed Date: <span class="muted"><%= receipt.processed_on %></span></div>
+          <% else %>
+            <div class="small">Bank: <span class="muted"><%= receipt.issuing_bank %></span> / Branch: <span class="muted"><%= receipt.issuing_bank_branch %></span></div>
+            <div class="small">Issued Date: <span class="muted"><%= receipt.issued_date %></span></div>
+            <div class="small">Processed Date: <span class="muted"><%= receipt.processed_on %></span></div>
+            <div class="small">ID: <span class="muted"><%= receipt.payment_identifier %></span></div>
+          <% end %>
+          <div class="small">Payment: <span class="muted"><%= Receipt.available_payment_modes.find{|x| x[:id] == receipt.payment_mode}[:text] %></span></div>
+        </td>
+        <td><%= Receipt.available_statuses.find{|x| x[:id] == receipt.status}[:text] %></td>
+        <td class="text-right"><%= number_to_indian_currency(receipt.total_amount.round(2)) %></td>
+        <td class="text-right">
+          <div class="dropdown">
+            <a class="btn btn-light dropdown-toggle light-pink-btn" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <% if receipt.status == 'success' %>
+                <%= link_to '<i class="fas fa-print"></i> Print'.html_safe, receipt_path(receipt, format: "pdf"), target:"_blank", class: 'dropdown-item print-btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>
+              <% end %>
+              <% if ReceiptPolicy.new(current_user, receipt).edit? %>
+                <%= link_to 'Edit', edit_admin_user_receipt_path(receipt.user_id, receipt), class: 'dropdown-item modal-remote-form-link' %>
+              <% end %>
+            </div>
           </div>
-        </div>
-      </td>
-    </tr>
-    <% end %>
-  </tbody>
-</table>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 <% if current_user.buyer? %>
   </div>
 <% end %>

@@ -5,42 +5,44 @@
   </div>
 </div>
 <% end %>
-<table class='table striped-table' width="100%" cellpadding="10" cellspacing="0">
-  <thead class="th-default">
-    <% labels = t('mongoid.attributes.user_kyc').with_indifferent_access %>
-    <tr>
-      <th><%= labels['name'] %></th>
-      <th><%= "#{labels['phone']} & #{labels['email']}" %></th>
-      <th><%= labels['dob'] %></th>
-      <th><%= labels['pan_number'] %></th>
-      <th class="text-right">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% user_kycs.each do |user_kyc| %>
-    <tr>
-      <td><%= user_kyc.name %></td>
-      <td>
-        <i class="far fa-envelope"></i> <%= user_kyc.email %><br/> <i class="fas fa-mobile-alt"></i> <%= user_kyc.phone %>
-      </td>
-      <td><%= user_kyc.dob.strftime("%d %b %Y") rescue "" %></td>
-      <td><%= user_kyc.pan_number %></td>
-      <td class="text-right">
-        <div class="dropdown">
-          <a class="btn btn-light light-pink-btn dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-          <div class="dropdown-menu dropdown-menu-right">
-            <% if UserKycPolicy.new(current_user, user_kyc).edit? %>
-              <% if current_user.buyer? %>
-                <%= link_to 'Edit', edit_user_kyc_path(user_kyc), class: 'dropdown-item nav-btn modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit User KYC'} %>
-              <% else %>
-                <%= link_to 'Edit', edit_admin_user_user_kyc_path(@user, user_kyc), class: 'dropdown-item nav-btn modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit User KYC'} %>
+<div class="table-responsive-md">
+  <table class='table striped-table' width="100%" cellpadding="10" cellspacing="0">
+    <thead class="th-default">
+      <% labels = t('mongoid.attributes.user_kyc').with_indifferent_access %>
+      <tr>
+        <th><%= labels['name'] %></th>
+        <th><%= "#{labels['phone']} & #{labels['email']}" %></th>
+        <th><%= labels['dob_short'] %></th>
+        <th><%= labels['pan_number'] %></th>
+        <th class="text-right">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% user_kycs.each do |user_kyc| %>
+      <tr>
+        <td><%= user_kyc.name %></td>
+        <td>
+          <i class="far fa-envelope"></i> <%= user_kyc.email %><br/> <i class="fas fa-mobile-alt"></i> <%= user_kyc.phone %>
+        </td>
+        <td><%= user_kyc.dob.strftime("%d %b %Y") rescue "" %></td>
+        <td><%= user_kyc.pan_number %></td>
+        <td class="text-right">
+          <div class="dropdown">
+            <a class="btn btn-light light-pink-btn dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <% if UserKycPolicy.new(current_user, user_kyc).edit? %>
+                <% if current_user.buyer? %>
+                  <%= link_to 'Edit', edit_user_kyc_path(user_kyc), class: 'dropdown-item nav-btn modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit User KYC'} %>
+                <% else %>
+                  <%= link_to 'Edit', edit_admin_user_user_kyc_path(@user, user_kyc), class: 'dropdown-item nav-btn modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit User KYC'} %>
+                <% end %>
               <% end %>
-            <% end %>
+            </div>
           </div>
-        </div>
-      </td>
-    </tr>
-    <% end %>
-  </tbody>
-</table>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 <%= will_paginate user_kycs %>

@@ -53,6 +53,7 @@ en:
         email: "Email"
         phone: "Phone"
         dob: "Date of Birth"
+        dob_short: "DOB"
         pan_number: "PAN Number"
         aadhaar: "Aadhaar Number"
         gstn: "GSTN"
