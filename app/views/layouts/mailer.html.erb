@@ -1,54 +1,37 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title><%= current_client.name %></title>
-  <style>
-  *{padding: 0; margin: 0 auto;}
-  ul li{margin-left: 20px;padding: 0px;}
-  html, body{margin: 0;padding: 0}
-  @media only screen and (max-width: 480px) {
-  body,table,td,p,a,li,blockquote {-webkit-text-size-adjust:none !important;}
-  table {width: 96% !important; margin: 0px 2% !important;}
-  tr{padding:0px !important;}
-  </style>
+  <%= stylesheet_link_tag "mailer", media: "all" %>
 </head>
-<body style="font-family: 'Poppins', sans-serif; font-size:15px; line-height:24px; ">
-  <table width="650" align="center" cellpadding="0" cellspacing="0" border="0" style="border:3px solid #6c7d35;box-shadow: 0px 0px 20px #cacaca; margin-bottom: 30px;color:#74645c;">
-    <tr>
-      <td>
-        <table cellpadding="0" cellspacing="0" width="100%">
-          <tr>
-            <td align="left">
-              <img src="<%= asset_url(current_client.logo.url) %>">
-            </td>
-            <td align="right">
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <table cellpadding="0" cellspacing="0" width="100%">
-          <tr>
-            <td><hr style="display: block;height: 1px;border: 0;border-top: 2px solid #c9579f;padding: 0;"></td>
-            <td><hr style="display: block;height: 1px;border: 0;border-top: 2px solid #64c0e9;padding: 0;"></td>
-            <td><hr style="display: block;height: 1px;border: 0;border-top: 2px solid #7eb53e;padding: 0;"></td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-    <tr>
-      <td style="padding:20px;">
-        <%= yield %>
-      </td>
-    </tr>
-       <tr>
-      <td style="font-size:16px;line-height:26px;padding:10px 20px;">If you have any queries you can reach us at <%= current_client.support_number %> or write to us at <a href="mailto:<%= current_client.support_email %>" style="text-decoration:underline;color:#64c0e9;"><%= current_client.support_email %></a>
-      </td>
-    </tr>
-  </table>
+<body class="bg-light">
+  <% if @preview.present? %>
+    <preview><%= @preview %></preview>
+  <% end %>
+  <div class="container">
+    <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
+    <div class="mt-3"></div>
+    <%= yield %>
+    <div class="mt-3"></div>
+    <div class="card mb-3">
+      <div class="card-body">
+        Thanks,<br/>
+        <%= current_project.name %>
+      </div>
+    </div>
+    <div style="font-size: 12px;">
+      If you have any queries you can reach us at <%= current_client.support_number %> or write to us at <%= current_client.support_email %>. Please click <a href="<%= current_client.website_link %>">here</a> to visit our website.
+    </div>
+    <hr/>
+    <div class="text-muted text-center" style="font-size: 12px;">
+      © <%= Date.today.year %> <%= current_client.name %>. All Rights Reserved. | MAHARERA ID: <%= current_project.rera_project_id %>
+    </div>
+    <% if current_client.address.present? %>
+      <div class="text-muted text-center" style="font-size: 12px;">
+        <%= current_client.address.to_sentence %>
+      </div>
+    <% end %>
+    <div class="mt-3"></div>
+  </div>
 </body>
 </html>

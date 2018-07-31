@@ -132,6 +132,9 @@ en:
         total_unattached_balance: "Total Un-attached Balance (subject to clearance)"
       channel_partner:
         name: 'Name'
+        company_name: "Company Name"
+        address: "Address"
+        bank_detail: "Bank Details"
         email: 'Email'
         phone: 'Phone'
         rera_id: 'RERA Registration Number'

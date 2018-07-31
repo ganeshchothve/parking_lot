@@ -10,7 +10,7 @@ class ChannelPartner
   field :phone, type: String
   field :rera_id, type: String
   field :associated_user_id, type: BSON::ObjectId
-  field :status, type: String, default: 'active'
+  field :status, type: String
 
   field :company_name, type: String
   field :pan_number, type: String

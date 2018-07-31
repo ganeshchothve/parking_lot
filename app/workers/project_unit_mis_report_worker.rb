@@ -7,11 +7,11 @@ class ProjectUnitMisReportWorker
     sheet = file.create_worksheet(name: "Receipts")
     sheet.insert_row(0, ProjectUnitMisReportWorker.get_column_names)
     ProjectUnit.in(status: ["blocked","booked_tentative","booked_confirmed"]).each_with_index do |project_unit, index|
-      sheet.insert_row(index+1, ProjectUnitMisReportWorker.get_project_unit_row(project_unit)) 
+      sheet.insert_row(index+1, ProjectUnitMisReportWorker.get_project_unit_row(project_unit))
     end
     file_name = "project_unit_mis-#{SecureRandom.hex}.xls"
     file.write("#{Rails.root}/#{file_name}")
-    MisReportMailer.notify(file_name, emails, "Units").deliver
+    ExportMailer.notify(file_name, emails, "Units").deliver
   end
 
   def self.get_column_names

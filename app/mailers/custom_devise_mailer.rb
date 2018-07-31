@@ -10,3 +10,11 @@ class CustomDeviseMailer < Devise::Mailer
   end
   layout 'mailer'
 end
+
+module Devise::Mailers::Helpers
+  protected
+  def devise_mail record, action, opts = {}, &block
+    initialize_from_record(record)
+    make_bootstrap_mail headers_for(action, opts), &block
+  end
+end
