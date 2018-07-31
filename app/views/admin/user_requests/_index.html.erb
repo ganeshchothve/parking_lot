@@ -24,6 +24,9 @@
             <% if UserRequestPolicy.new(current_user, user_request).edit? %>
             <%= link_to 'Edit', edit_admin_user_user_request_path(user_request.user_id, user_request), class: 'modal-remote-form-link dropdown-item' %>
             <% end %>
+            <% if AssetPolicy.new(current_user, Asset.new(assetable: user_request)).index? %>
+              <%= link_to 'Documents', assetables_path(assetable_type: user_request.class.model_name.i18n_key.to_s, assetable_id: user_request.id), class: 'dropdown-item modal-remote-form-link' %>
+            <% end %>
           </div>
         </div>
       </td>

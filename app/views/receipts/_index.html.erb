@@ -47,6 +47,9 @@
             <% if ReceiptPolicy.new(current_user, receipt).edit? %>
               <%= link_to 'Edit', edit_admin_user_receipt_path(receipt.user_id, receipt), class: 'dropdown-item modal-remote-form-link' %>
             <% end %>
+            <% if AssetPolicy.new(current_user, Asset.new(assetable: receipt)).index? %>
+              <%= link_to 'Documents', assetables_path(assetable_type: receipt.class.model_name.i18n_key.to_s, assetable_id: receipt.id), class: 'dropdown-item modal-remote-form-link' %>
+            <% end %>
           </div>
         </div>
       </td>

@@ -6,11 +6,12 @@ class AssetsController < ApplicationController
   around_action :apply_policy_scope, only: :index
 
   def index
-    @assets = Asset.where(assetable: @asset)
+    @assets = Asset.where(assetable: @assetable)
+    render layout: false
   end
 
   def create
-    asset = Asset.create(assetable: @asset, file: params[:files][0])
+    asset = Asset.create(assetable: @assetable, file: params[:files][0])
     if asset.persisted?
       render partial: "assets/asset.json", locals: {asset: asset}
     else
@@ -29,25 +30,25 @@ class AssetsController < ApplicationController
 
   private
   def set_assetable
-    @asset = params[:assetable_type].classify.constantize.find params[:assetable_id]
+    @assetable = params[:assetable_type].classify.constantize.find params[:assetable_id]
   end
 
   def set_asset
-    @asset = Asset.where(assetable: @asset).find params[:id]
+    @asset = Asset.where(assetable: @assetable).find params[:id]
   end
 
   def authorize_resource
-    authorize @asset, :show?
+    authorize @assetable, :show?
     if params[:action] == "index"
     elsif params[:action] == "new" || params[:action] == "create"
-      authorize Asset.new(assetable: @asset)
+      authorize Asset.new(assetable: @assetable)
     else
       authorize @asset
     end
   end
 
   def apply_policy_scope
-    Asset.with_scope(policy_scope(Asset)) do
+    Asset.with_scope(policy_scope(Asset.all)) do
       yield
     end
   end
