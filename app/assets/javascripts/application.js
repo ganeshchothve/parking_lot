@@ -34,6 +34,7 @@
 //= require form-initializer
 //= require validator
 //= require registration
+//= require otp_based_login
 
 $.ajaxSetup({
   headers: {
