@@ -16,7 +16,7 @@ class User
   field :phone, type: String, default: ""
   field :lead_id, type: String
   field :role, type: String, default: "user"
-  field :allowed_bookings, type: Integer, default: 3
+  field :allowed_bookings, type: Integer, default: 5
   field :channel_partner_id, type: BSON::ObjectId
   field :referenced_channel_partner_ids, type: Array, default: []
   field :rera_id, type: String

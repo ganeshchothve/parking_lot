@@ -15,6 +15,8 @@ class Client
   field :email_domains, type: Array, default: []
   field :booking_portal_domains, type: Array, default: []
   field :registration_name, type: String
+  field :cin_number, type: String
+  field :billing_name, type: String
   field :website_link, type: String
   field :cp_disclaimer, type: String
   field :support_number, type: String
@@ -32,6 +34,7 @@ class Client
   field :enable_actual_inventory, type: Boolean, default: false
   field :enable_channel_partners, type: Boolean, default: false
   field :blocking_amount, type: Integer, default: 30000
+  field :blocking_amount_editable, type: Boolean, default: false
   field :blocking_days, type: Integer, default: 10
   field :holding_minutes, type: Integer, default: 15
 
@@ -42,7 +45,7 @@ class Client
   has_many :projects
   has_one :address, as: :addressable
 
-  validate :name, :selldo_client_id, :selldo_form_id, :helpdesk_email, :helpdesk_number, :notification_email, :email_domains, :booking_portal_domains, :registration_name, :website_link, :support_email, :support_number
+  validate :name, :selldo_client_id, :selldo_form_id, :helpdesk_email, :helpdesk_number, :notification_email, :email_domains, :booking_portal_domains, :registration_name, :cin_number, :billing_name, :website_link, :support_email, :support_number
 
   def self.available_preferred_logins
     [
@@ -66,7 +69,7 @@ c.helpdesk_email = "supriya@amuratech.com"
 c.notification_email = "supriya@amuratech.com"
 c.email_domains = ["amuratech.com"]
 c.booking_portal_domains = ["bookingportal.withamura.com"]
-c.registration_name = "Amura Marketing Technologies Pvt. Ltd."
+c.billing_name = c.registration_name = "Amura Marketing Technologies Pvt. Ltd."
 c.website_link = "www.amuratech.com"
 c.cp_disclaimer = "CP Disclaimer"
 c.support_number = "9922410908"
@@ -75,6 +78,7 @@ c.channel_partner_support_number = "9922410908"
 c.channel_partner_support_email = "supriya@amuratech.com"
 c.cancellation_amount = 5000
 c.area_unit = "psqft."
+c.cin_number = "TMP CIN Number"
 c.preferred_login = "phone"
 c.sms_provider_username = "amuramarketing"
 c.sms_provider_password = "aJ_Z-1j4"

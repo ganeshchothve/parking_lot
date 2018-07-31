@@ -4,33 +4,31 @@
       <% case @receipt.status %>
       <% when 'success' %>
       <div class="card">
-        <div class="card-header">
-          <span class="card-title">Congratulations</span>
-        </div>
         <div class="card-body">
-          <p>
-  					Thank you for your payment of <%= number_to_indian_currency(@receipt.total_amount.round(2)) %>.
-            <br/>
-            <strong>You will receive an email from us with detailed information on next steps.</strong>
-            <br/>
-          </p>
-          <% if @receipt.payment_type == 'blocking' && @receipt.project_unit_id.present? %>
-            <p>
-              This unit will remain blocked for you for the next <%= @receipt.project_unit.blocking_days %> days. Please complete your payment of remaining amount within this duration to confirm your unit. To make additional payment please click <a href="/dashboard/receipts/new?project_unit_id=<%= @receipt.project_unit_id %>" class="modal-remote-form-link" data-event-category="section" data-event-action="click" data-event-name="make the remaining payment" target="_blank">here</a>
-            </p>
-          <% end %>
+          <div class="row">
+            <div class="col-md-2 text-center">
+              <%= icon "fas", "certificate", class: "fa-7x text-warning" %>
+            </div>
+            <div class="col-md-10">
+              <h3 class="card-title font-weight-bold text-uppercase">Congratulations</h3>
+              <p>
+                Thank you for your payment of <%= number_to_indian_currency(@receipt.total_amount.round(2)) %>.
+                <br/>
+                <strong>You will receive an email from us with detailed information on next steps.</strong>
+                <br/>
+              </p>
+              <% if @receipt.payment_type == 'blocking' && @receipt.project_unit_id.present? %>
+              <p>
+                This unit will remain blocked for you for the next <%= @receipt.project_unit.blocking_days %> days. Please complete your payment of remaining amount within this duration to confirm your unit. To make additional payment please click <a href="/dashboard/receipts/new?project_unit_id=<%= @receipt.project_unit_id %>" class="modal-remote-form-link" data-event-category="section" data-event-action="click" data-event-name="make the remaining payment" target="_blank">here</a>
+              </p>
+              <% end %>
+            </div>
+          </div>
         </div>
       </div>
       <div class="mt-3"></div>
-      <div class="card">
-        <div class="card-header">
-          Receipt (<%= @receipt.receipt_id %>)
-          <%= link_to "Print", receipt_path(@receipt.id, :format => 'pdf'), target: "_blank", class: "pull-right" %>
-        </div>
-        <div class="card-body">
-          <%= render '/receipts/show', receipt: @receipt %>
-        </div>
-      </div>
+      <%= link_to "Print", receipt_path(@receipt.id, :format => 'pdf'), target: "_blank", class: "text-right d-block btn" %>
+      <%= render '/receipts/show', receipt: @receipt %>
       <% when 'failed' %>
         <div class="card">
           <div class="card-header">
