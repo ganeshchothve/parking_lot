@@ -1,1 +1,51 @@
-<%= @channel_partner.to_json %>
+<div class="card w-100">
+  <div class="card-body">
+    <p>
+      A new channel partner has registered for <%= current_project.name %> on your website. Please login on to the portal to approve or reject the registration request.
+    </p>
+  </div>
+</div>
+<div class="card mt-3">
+  <div class="card-body">
+    <h5 class="text-center"><strong><%= global_labels[:channel_partner] %> Details</strong></h5>
+    <% labels = t('mongoid.attributes.channel_partner').with_indifferent_access %>
+    <table class="table table-striped table-sm mt-3">
+      <tbody>
+        <tr>
+          <td><%= labels['name'] %></td>
+          <td class="text-right"><%= @channel_partner.name %></td>
+        </tr>
+        <tr>
+          <td><%= labels['rera_id'] %></td>
+          <td class="text-right"><%= @channel_partner.rera_id %></td>
+        </tr>
+        <tr>
+          <td><%= labels['status'] %></td>
+          <td class="text-right"><%= ChannelPartner.available_statuses.find{|x| x[:id] == @channel_partner.status}[:text] %></td>
+        </tr>
+        <tr>
+          <td><%= labels['company_name'] %></td>
+          <td class="text-right"><%= @channel_partner.company_name %></td>
+        </tr>
+        <tr>
+          <td><%= labels['pan_number'] %></td>
+          <td class="text-right"><%= @channel_partner.pan_number %></td>
+        </tr>
+        <tr>
+          <td><%= labels['gstin_number'] %></td>
+          <td class="text-right"><%= @channel_partner.gstin_number %></td>
+        </tr>
+        <tr>
+          <td><%= labels['aadhaar'] %></td>
+          <td class="text-right"><%= @channel_partner.aadhaar %></td>
+        </tr>
+        <% if @channel_partner.address.present? %>
+          <tr>
+            <td><%= labels['address'] %></td>
+            <td class="text-right"><%= @channel_partner.address.to_sentence %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

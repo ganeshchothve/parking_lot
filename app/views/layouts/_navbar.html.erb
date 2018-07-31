@@ -1,6 +1,6 @@
 <% if user_signed_in? %>
   <nav class="navbar navbar-expand-lg fixed-top navbar navbar-light bg-white border-bottom">
-    <a class="navbar-brand" href="javascript:;" title="<%= current_project.name %> | <%= current_client.name %>">
+    <a class="navbar-brand" href="<%= home_path(current_user) %>" title="<%= current_project.name %> | <%= current_client.name %>">
       <img src="<%= asset_path current_client.logo.url %>" class="img-responsive">
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle main navigation">
@@ -61,7 +61,7 @@
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <span class="small">Copyright © <%= Date.today.year %> <%= current_client.name %>. All Rights Reserved.</span>
+          <span class="small">© <%= Date.today.year %> <%= current_client.name %>. All Rights Reserved.</span>
         </li>
       </ul>
       <ul class="navbar-nav pull-right">

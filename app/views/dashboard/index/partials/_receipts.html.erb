@@ -3,25 +3,27 @@
     <%= global_labels[:receipts] %>
   </div>
   <div class="card-body">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Status</th>
-          <th>Payment Mode</th>
-          <th class="text-right">Count</th>
-          <th class="text-right">Total Amount</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% DashboardDataProvider.receipts_dashboard.each do |d| %>
-        <tr>
-          <td><%= Receipt.available_statuses.find{|x| x[:id] == d[:status]}[:text] %></td>
-          <td><%= Receipt.available_payment_modes.find{|x| x[:id] == d[:payment_mode]}[:text]  %></td>
-          <td class="text-right"><%= d[:count] %></td>
-          <td class="text-right"><%= number_to_indian_currency(d[:total_amount]) %></td>
-        </tr>
-        <% end %>
-      </tbody>
-    </table>
+    <div class="table-responsive-md">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Status</th>
+            <th>Payment Mode</th>
+            <th class="text-right">Count</th>
+            <th class="text-right">Total Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% DashboardDataProvider.receipts_dashboard.each do |d| %>
+          <tr>
+            <td><%= Receipt.available_statuses.find{|x| x[:id] == d[:status]}[:text] %></td>
+            <td><%= Receipt.available_payment_modes.find{|x| x[:id] == d[:payment_mode]}[:text]  %></td>
+            <td class="text-right"><%= d[:count] %></td>
+            <td class="text-right"><%= number_to_indian_currency(d[:total_amount]) %></td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

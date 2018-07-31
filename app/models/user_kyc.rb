@@ -48,7 +48,7 @@ class UserKyc
   validates :pan_number, presence: true, unless: Proc.new{ |kyc| kyc.nri? }
   validates :oci, presence: true, if: Proc.new{ |kyc| kyc.nri? }
   validates :email, uniqueness: {scope: :user_id}, allow_blank: true
-  validates :pan_number, uniqueness: {scope: :user_id}, allow_blank: true
+  validates :pan_number, :aadhaar, uniqueness: {scope: :user_id}, allow_blank: true
   validates :phone, uniqueness: {scope: :user_id}, phone: true # TODO: we can remove phone validation, as the validation happens in
   validates :pan_number, format: {with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A'}, allow_blank: true
   validates :aadhaar, format: {with: /\A\d{12}\z/i, message: 'is not a valid aadhaar number'}, allow_blank: true

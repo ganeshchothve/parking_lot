@@ -1,18 +1,18 @@
 class UserRequestPolicy < ApplicationPolicy
   def index?
-    true
+    current_client.enable_actual_inventory?
   end
 
   def edit?
-    (user.id == record.user_id && record.status == 'pending') || ['admin', 'crm', 'sales', 'cp'].include?(user.role)
+    ((user.id == record.user_id && record.status == 'pending') || ['admin', 'crm', 'sales', 'cp'].include?(user.role)) && current_client.enable_actual_inventory?
   end
 
   def new?
-    record.user_id == user.id && user.booking_detail_ids.present?
+    record.user_id == user.id && user.booking_detail_ids.present? && current_client.enable_actual_inventory?
   end
 
   def export?
-    ['admin', 'crm'].include?(user.role)
+    ['admin', 'crm'].include?(user.role) && current_client.enable_actual_inventory?
   end
 
   def create?

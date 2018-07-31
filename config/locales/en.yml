@@ -53,6 +53,7 @@ en:
         email: "Email"
         phone: "Phone"
         dob: "Date of Birth"
+        dob_short: "DOB"
         pan_number: "PAN Number"
         aadhaar: "Aadhaar Number"
         gstn: "GSTN"
@@ -131,6 +132,9 @@ en:
         total_unattached_balance: "Total Un-attached Balance (subject to clearance)"
       channel_partner:
         name: 'Name'
+        company_name: "Company Name"
+        address: "Address"
+        bank_detail: "Bank Details"
         email: 'Email'
         phone: 'Phone'
         rera_id: 'RERA Registration Number'
@@ -140,3 +144,17 @@ en:
         gstin_number: "GSTIN Number"
         pan_number: "PAN Number"
         aadhaar: "Aadhaar"
+      bank_detail:
+        name: 'Name'
+        branch: 'Branch'
+        account_type: 'Account Type'
+        ifsc_code: 'IFSC Code'
+        account_number: 'Account Number'
+        loan_required: 'Do you need a loan?'
+      address:
+        address1: 'Address'
+        address2: 'Street'
+        city: 'City'
+        state: 'State / Region'
+        country: 'Country'
+        zip: 'Zip / Pin Code'
