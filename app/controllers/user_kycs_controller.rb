@@ -43,7 +43,6 @@ class UserKycsController < ApplicationController
   end
 
   def update
-    binding.pry
     respond_to do |format|
       if @user_kyc.update(permitted_attributes(@user_kyc))
         format.html { redirect_to home_path(current_user), notice: 'User kyc was successfully updated.' }

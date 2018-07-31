@@ -55,10 +55,14 @@ class User
 
   # field for active_model_otp
   field :otp_secret_key
+
   def self.otp_length
     6
   end
+
   has_one_time_password length: User.otp_length
+
+  include OtpLoginHelperMethods
 
   # key to handle both phone or email as a login
   attr_accessor :login, :login_otp

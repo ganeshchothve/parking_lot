@@ -16,9 +16,7 @@
               <tr>
                 <th><%= labels[:name] %></th>
                 <th>Details</th>
-                <!-- <th><%= labels[:phone] %></th> -->
                 <th><%= labels[:rera_id] %></th>
-                <th><%= labels[:city] %></th>
                 <th><%= labels[:status] %></th>
                 <th><%= labels[:associated_user_id] %></th>
                 <th class='text-right'>Actions</th>
@@ -40,7 +38,10 @@
                       <a class="btn btn-light light-pink-btn dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
                       <div class="dropdown-menu dropdown-menu-right">
                         <% if ChannelPartnerPolicy.new(current_user, channel_partner).edit? %>
-                          <%= link_to 'Edit', edit_channel_partner_path(channel_partner), class: 'dropdown-item' %>
+                          <%= link_to 'Edit', edit_channel_partner_path(channel_partner), class: 'dropdown-item modal-remote-form-link' %>
+                        <% end %>
+                        <% if AssetPolicy.new(current_user, Asset.new(assetable: channel_partner)).index? %>
+                          <%= link_to 'Documents', assetables_path(assetable_type: channel_partner.class.model_name.i18n_key.to_s, assetable_id: channel_partner.id), class: 'dropdown-item modal-remote-form-link' %>
                         <% end %>
                       </div>
                     </div>

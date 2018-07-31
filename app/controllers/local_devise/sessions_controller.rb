@@ -27,17 +27,21 @@ class LocalDevise::SessionsController < Devise::SessionsController
     respond_to do |format|
       if self.resource
         # TODO: handle max attempts to be 3 in 60 min
-        SMSWorker.perform_async(self.resource.phone, "Your OTP for login is #{resource.otp_code}. ")
+        otp_sent_status = self.resource.send_otp
         if Rails.env.development?
           Rails.logger.info "---------------- #{resource.otp_code} ----------------"
         end
-        format.json { render json: {confirmed: resource.confirmed?, errors: ""}, status: 200 }
+        if otp_sent_status[:status]
+          format.json { render json: {confirmed: resource.confirmed?, errors: ""}, status: 200 }
+        else
+          format.json { render json: {errors: otp_sent_status[:error]}, status: 422 }
+        end
       else
         format.json { render json: {errors: "Please enter a valid login"}, status: :unprocessable_entity }
       end
     end
   end
-  
+
   protected
   # GENERICTODO: check if this can be handled better. phone with + in param replaced as a space. So need to decode it back
   def sign_in_params
