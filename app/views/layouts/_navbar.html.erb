@@ -1,6 +1,8 @@
 <% if user_signed_in? %>
-  <nav class="navbar navbar-expand-lg fixed-top navbar navbar-dark bg-secondary">
-    <a class="navbar-brand" href="javascript:;"><%= current_client.name %></a>
+  <nav class="navbar navbar-expand-lg fixed-top navbar navbar-light bg-white">
+    <a class="navbar-brand" href="javascript:;" title="<%= current_project.name %> | <%= current_client.name %>">
+      <img src="<%= asset_path current_client.logo.url %>" class="img-responsive">
+    </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle main navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -8,50 +10,50 @@
       <ul class="navbar-nav mr-auto">
         <% if policy(:dashboard).index? %>
         <li class="nav-item">
-          <a class="nav-link" href="<%= dashboard_path %>">Dashboard</a>
+          <%= active_link_to "Dashboard", dashboard_path, active: :exclusive, class: "nav-link" %>
         </li>
         <% end %>
         <% if current_user.buyer? && policy(:dashboard).project_units? && ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: current_user, status: "available")).hold? %>
         <li class="nav-item">
-          <a class="nav-link" href="<%= new_search_path %>">Apartment Selector</a>
+          <%= active_link_to "Apartment Selector", new_search_path, active: :inclusive, class: "nav-link" %>
         </li>
         <% end %>
         <% if current_user.buyer? && policy(Receipt.new(user: current_user)).direct? %>
         <li class="nav-item">
-          <%= link_to "Make #{global_labels['receipt']}", direct_user_receipts_path, class: 'nav-link modal-remote-form-link' %>
+          <%= active_link_to "Make #{global_labels['receipt']}", direct_user_receipts_path, active: :inclusive, class: 'nav-link modal-remote-form-link' %>
         </li>
         <% end %>
         <% if UserPolicy.new(current_user, User).index? %>
           <li class="nav-item">
-            <a class="nav-link" href="<%= admin_users_path %>"><%= global_labels['users'] %></a>
+            <%= active_link_to global_labels['users'], admin_users_path, active: :inclusive, class: "nav-link" %>
           </li>
         <% end %>
         <% if UserRequestPolicy.new(current_user, UserRequest).index? %>
           <li class="nav-item">
-            <a class="nav-link" href="<%= user_user_requests_path %>"><%= global_labels['user_requests'] %></a>
+            <%= active_link_to global_labels['user_requests'], user_user_requests_path, active: :inclusive, class: "nav-link" %>
           </li>
         <% end %>
         <% if UserKycPolicy.new(current_user, UserKyc).index? %>
           <li class="nav-item">
-            <a class="nav-link" href="<%= user_user_kycs_path %>"><%= global_labels['user_kycs'] %></a>
+            <%= active_link_to global_labels['user_kycs'], user_user_kycs_path, active: :inclusive, class: "nav-link" %>
           </li>
         <% end %>
         <% if policy(:dashboard).receipts? %>
           <li class="nav-item">
-            <a class="nav-link" href="<%= user_receipts_path %>">Receipts</a>
+            <%= active_link_to global_labels['receipts'], user_receipts_path, active: :inclusive, class: "nav-link" %>
           </li>
         <% end %>
         <li class="nav-item">
-          <a class="nav-link" href="<%= dashboard_faqs_path %>">FAQs</a>
+          <%= active_link_to "FAQs", dashboard_faqs_path, active: :exclusive, class: "nav-link" %>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="<%= dashboard_rera_path %>">RERA</a>
+          <%= active_link_to "RERA", dashboard_rera_path, active: :exclusive, class: "nav-link" %>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="<%= dashboard_tds_process_path %>">TDS Process</a>
+          <%= active_link_to "TDS Process", dashboard_tds_process_path, active: :exclusive, class: "nav-link" %>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="<%= dashboard_terms_and_condition_path %>">Terms & Conditions</a>
+          <%= active_link_to "Terms & Conditions", dashboard_terms_and_condition_path, active: :exclusive, class: "nav-link" %>
         </li>
       </ul>
       <ul class="navbar-nav pull-right">
