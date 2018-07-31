@@ -145,7 +145,7 @@ en:
         pan_number: "PAN Number"
         aadhaar: "Aadhaar"
       bank_detail:
-        name: 'Name'
+        name: "Account Holder's Name"
         branch: 'Branch'
         account_type: 'Account Type'
         ifsc_code: 'IFSC Code'
