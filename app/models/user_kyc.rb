@@ -3,7 +3,7 @@ class UserKyc
   include Mongoid::Timestamps
   include ArrayBlankRejectable
 
-  field :salutation, type: String
+  field :salutation, type: String, default: "Mr."
   field :first_name, type: String
   field :last_name, type: String
   field :email, type: String

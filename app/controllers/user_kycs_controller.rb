@@ -32,7 +32,6 @@ class UserKycsController < ApplicationController
 
     respond_to do |format|
       if @user_kyc.save
-        SFDC::UserKycPusher.execute(@user_kyc)
         format.html { redirect_to home_path(current_user), notice: 'User kyc was successfully created.' }
         format.json { render json: @user_kyc, status: :created }
       else

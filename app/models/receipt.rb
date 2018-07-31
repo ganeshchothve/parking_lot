@@ -157,8 +157,11 @@ class Receipt
 
   private
   def validate_total_amount
-    if self.total_amount < ProjectUnit.blocking_amount && self.project_unit_id.blank? && self.new_record?
+    if self.total_amount < ProjectUnit.blocking_amount && self.payment_type == "blocking" && self.new_record?
       self.errors.add :total_amount, " cannot be less than #{ProjectUnit.blocking_amount}"
+    end
+    if self.total_amount != ProjectUnit.blocking_amount && current_client.blocking_amount_editable && self.new_record? && self.payment_type == "blocking"
+      self.errors.add :total_amount, " has to be #{ProjectUnit.blocking_amount}"
     end
     if self.total_amount <= 0
       self.errors.add :total_amount, " cannot be less than or equal to 0"
