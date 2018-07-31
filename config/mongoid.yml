@@ -60,7 +60,7 @@ staging:
     default:
       database: <%= ENV_CONFIG['db']['database'] %>
       hosts:
-        <%= ENV_CONFIG['db']['hosts'] %>
+        - localhost:27017
       options:
   options:
 test:
