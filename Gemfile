@@ -78,9 +78,9 @@ gem 'phonelib'
 # generate pdf
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
+gem 'bootstrap-email'
 
 group :development, :test do
-  gem 'bootstrap-email'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   # Adds support for Capybara system testing and selenium driver
