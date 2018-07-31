@@ -3,6 +3,7 @@ class ProjectUnit
   include Mongoid::Timestamps
   include ArrayBlankRejectable
   include ApplicationHelper
+  extend ApplicationHelper
 
   def self.blocking_amount
     current_client.blocking_amount
