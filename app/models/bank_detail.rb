@@ -12,5 +12,12 @@ class BankDetail
 
   belongs_to :bankable, polymorphic: true
 
-  # has_one :cheque, as: :assetable
+  validates :account_type, inclusion: {in: Proc.new{ BankDetail.available_account_types.collect{|x| x[:id]} } }
+
+  def self.available_account_types
+    [
+      {id: 'savings', text: 'Savings'},
+      {id: 'current', text: 'Current'}
+    ]
+  end
 end

@@ -3,52 +3,54 @@
     <p>Total Project Units : <%= project_units.count %></p>
   </div>
 </div>
-<table class='striped-table table' width="100%" cellpadding="0" cellspacing="0">
-  <thead class="th-default th-pink">
-    <tr>
-      <!-- <th>Tower</th> -->
-      <th>Tower Name</th>
-      <th>Bedrooms</th>
-      <th>Status</th>
-      <th>Agreement</th>
-      <th>All inclusive total (excluding registration charges)</th>
-      <th>Paid Amt.</th>
-      <th>Booking Amt. Pending</th>
-      <!-- <th>User</th> -->
-      <th class="text-right">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% project_units.each do |project_unit| %>
-    <tr>
-      <!-- <td><%= project_unit.project_tower_name %></td> -->
-      <td><%= project_unit.name %></td>
-      <td><%= project_unit.bedrooms %></td>
-      <td><%= ProjectUnit.available_statuses.find{|x| x[:id] == project_unit.status}[:text] rescue "-" %></td>
-      <td><%= number_to_indian_currency(project_unit.agreement_price)  %></td>
-      <td><%= number_to_indian_currency(project_unit.all_inclusive_price)  %></td>
-      <td><%= number_to_indian_currency(project_unit.total_amount_paid)  %></td>
-      <td><%= number_to_indian_currency(project_unit.pending_balance.to_i) %></td>
-      <td class="text-right">
-        <div class="dropdown">
-          <a class="btn btn-light light-pink-btn dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-          <div class="dropdown-menu dropdown-menu-right">
-            <% if ProjectUnitPolicy.new(current_user, project_unit).edit? %>
-              <%= link_to "Edit #{global_labels[:project_unit]}", edit_admin_project_unit_path(project_unit), class: 'dropdown-item' %>
-            <% end %>
-            <% if ['blocked', 'booked_tentative', 'booked_confirmed'].include?(project_unit.status) %>
-              <% if ReceiptPolicy.new(current_user, Receipt).index? %>
-                <%= link_to "View #{global_labels[:receipts]}", admin_user_project_unit_receipts_path(project_unit.user, project_unit), class: 'dropdown-item' %>
+<div class="table-responsive-md">
+  <table class='striped-table table' width="100%" cellpadding="0" cellspacing="0">
+    <thead class="th-default th-pink">
+      <tr>
+        <!-- <th>Tower</th> -->
+        <th>Tower Name</th>
+        <th>Bedrooms</th>
+        <th>Status</th>
+        <th>Agreement</th>
+        <th>All inclusive total (excluding registration charges)</th>
+        <th>Paid Amt.</th>
+        <th>Booking Amt. Pending</th>
+        <!-- <th>User</th> -->
+        <th class="text-right">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% project_units.each do |project_unit| %>
+      <tr>
+        <!-- <td><%= project_unit.project_tower_name %></td> -->
+        <td><%= project_unit.name %></td>
+        <td><%= project_unit.bedrooms %></td>
+        <td><%= ProjectUnit.available_statuses.find{|x| x[:id] == project_unit.status}[:text] rescue "-" %></td>
+        <td><%= number_to_indian_currency(project_unit.agreement_price)  %></td>
+        <td><%= number_to_indian_currency(project_unit.all_inclusive_price)  %></td>
+        <td><%= number_to_indian_currency(project_unit.total_amount_paid)  %></td>
+        <td><%= number_to_indian_currency(project_unit.pending_balance.to_i) %></td>
+        <td class="text-right">
+          <div class="dropdown">
+            <a class="btn btn-light light-pink-btn dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <% if ProjectUnitPolicy.new(current_user, project_unit).edit? %>
+                <%= link_to "Edit #{global_labels[:project_unit]}", edit_admin_project_unit_path(project_unit), class: 'dropdown-item' %>
               <% end %>
-              <% if UserPolicy.new(current_user, User).index? %>
-                <%= link_to "View Customer", admin_user_path(project_unit.user), class: 'dropdown-item' %>
+              <% if ['blocked', 'booked_tentative', 'booked_confirmed'].include?(project_unit.status) %>
+                <% if ReceiptPolicy.new(current_user, Receipt).index? %>
+                  <%= link_to "View #{global_labels[:receipts]}", admin_user_project_unit_receipts_path(project_unit.user, project_unit), class: 'dropdown-item' %>
+                <% end %>
+                <% if UserPolicy.new(current_user, User).index? %>
+                  <%= link_to "View Customer", admin_user_path(project_unit.user), class: 'dropdown-item' %>
+                <% end %>
               <% end %>
-            <% end %>
+            </div>
           </div>
-        </div>
-      </td>
-    </tr>
-    <% end %>
-  </tbody>
-</table>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 <%= will_paginate project_units %>

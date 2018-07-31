@@ -9,46 +9,48 @@
         <p>Total Channel Partner Registrations : <%= @channel_partners. count %></p>
       </div>
       <div class="col-md-10 border border-left-0 border-top-0 border-bottom-0 table-responsive padding-left-0">
-        <table class="table striped-table">
-          <thead class="thead-default th-pink">
-            <% labels = t('mongoid.attributes.channel_partner').with_indifferent_access %>
-            <tr>
-              <th><%= labels[:name] %></th>
-              <th>Details</th>
-              <!-- <th><%= labels[:phone] %></th> -->
-              <th><%= labels[:rera_id] %></th>
-              <th><%= labels[:status] %></th>
-              <th><%= labels[:associated_user_id] %></th>
-              <th class='text-right'>Actions</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <% @channel_partners.each do |channel_partner| %>
+        <div class="table-responsive-md">
+          <table class="table striped-table">
+            <thead class="thead-default th-pink">
+              <% labels = t('mongoid.attributes.channel_partner').with_indifferent_access %>
               <tr>
-                <td><%= channel_partner.name %></td>
-                <td><i class="far fa-envelope"></i> <%= channel_partner.email %><br/><i class="fas fa-mobile-alt"></i> <%= channel_partner.phone %></td>
-                <!-- <td></td> -->
-                <td><%= channel_partner.rera_id %></td>
-                <td><%= ChannelPartner.available_statuses.find{|x| x[:id] == channel_partner.status}[:text] %></td>
-                <td><%= channel_partner.associated_user_id.present? ? link_to(channel_partner.associated_user.name, admin_user_path(channel_partner.associated_user_id)) : '-' %></td>
-                <td class="text-right">
-                  <div class="dropdown">
-                    <a class="btn btn-light light-pink-btn dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-                    <div class="dropdown-menu dropdown-menu-right">
-                      <% if ChannelPartnerPolicy.new(current_user, channel_partner).edit? %>
-                        <%= link_to 'Edit', edit_channel_partner_path(channel_partner), class: 'dropdown-item modal-remote-form-link' %>
-                      <% end %>
-                      <% if AssetPolicy.new(current_user, Asset.new(assetable: channel_partner)).index? %>
-                        <%= link_to 'Documents', assetables_path(assetable_type: channel_partner.class.model_name.i18n_key.to_s, assetable_id: channel_partner.id), class: 'dropdown-item modal-remote-form-link' %>
-                      <% end %>
-                    </div>
-                  </div>
-                </td>
+                <th><%= labels[:name] %></th>
+                <th>Details</th>
+                <th><%= labels[:rera_id] %></th>
+                <th><%= labels[:status] %></th>
+                <th><%= labels[:associated_user_id] %></th>
+                <th class='text-right'>Actions</th>
               </tr>
-            <% end %>
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody>
+              <% @channel_partners.each do |channel_partner| %>
+                <tr>
+                  <td><%= channel_partner.name %></td>
+                  <td><i class="far fa-envelope"></i> <%= channel_partner.email %><br/><i class="fas fa-mobile-alt"></i> <%= channel_partner.phone %></td>
+                  <!-- <td></td> -->
+                  <td><%= channel_partner.rera_id %></td>
+                  <td><%= channel_partner.city %></td>
+                  <td><%= ChannelPartner.available_statuses.find{|x| x[:id] == channel_partner.status}[:text] %></td>
+                  <td><%= channel_partner.associated_user_id.present? ? link_to(channel_partner.associated_user.name, admin_user_path(channel_partner.associated_user_id)) : '-' %></td>
+                  <td class="text-right">
+                    <div class="dropdown">
+                      <a class="btn btn-light light-pink-btn dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+                      <div class="dropdown-menu dropdown-menu-right">
+                        <% if ChannelPartnerPolicy.new(current_user, channel_partner).edit? %>
+                          <%= link_to 'Edit', edit_channel_partner_path(channel_partner), class: 'dropdown-item modal-remote-form-link' %>
+                        <% end %>
+                        <% if AssetPolicy.new(current_user, Asset.new(assetable: channel_partner)).index? %>
+                          <%= link_to 'Documents', assetables_path(assetable_type: channel_partner.class.model_name.i18n_key.to_s, assetable_id: channel_partner.id), class: 'dropdown-item modal-remote-form-link' %>
+                        <% end %>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
         <% if ChannelPartnerPolicy.new(current_user, ChannelPartner).export? %>
           <%= link_to "Export all #{global_labels['channel_partners']}", export_channel_partners_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn' %>
         <% end %>

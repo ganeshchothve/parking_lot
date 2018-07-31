@@ -8,7 +8,7 @@ set :repo_url, "git@github.com:amuratech/booking_portal.git"
 set :branch, "generic"
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, "/var/www/vtp"
+set :deploy_to, "/var/www/generic"
 set :ssh_options, {forward_agent: true, keepalive: true}
 
 # Default value for :format is :airbrussh.

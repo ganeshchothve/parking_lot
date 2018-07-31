@@ -1,3 +1,4 @@
+<% random_id = "crs_#{11**11}" %>
 <div class="row">
   <div class="col-md-6">
     <div class="form-group">
@@ -22,7 +23,7 @@
   <div class="col-md-6">
     <div class="form-group">
       <%= f.label :state %>
-      <%= f.text_field :state, class: 'form-control' %>
+      <%= f.select :state, [], {prompt: true}, class: 'form-control', id: random_id %>
     </div>
   </div>
 </div>
@@ -30,7 +31,7 @@
   <div class="col-md-6">
     <div class="form-group">
       <%= f.label :country %>
-      <%= f.text_field :country, class: 'form-control' %>
+      <%= f.select :country, [], {prompt: true}, class: 'form-control crs-country', "data-region-id": random_id %>
     </div>
   </div>
   <div class="col-md-6">

@@ -1,0 +1,25 @@
+<div class="card">
+  <div class="card-header">
+    <%= global_labels[:users] %>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive-md">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Role</th>
+            <th class="text-right">Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% DashboardDataProvider.users_dashboard.each do |d| %>
+          <tr>
+            <td><%= User.available_roles.find{|x| x[:id] == d[:role]}[:text] %></td>
+            <td class="text-right"><%= d[:count] %></td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

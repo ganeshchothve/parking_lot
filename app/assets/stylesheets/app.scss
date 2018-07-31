@@ -1,12 +1,14 @@
 @import "custom_variables";
 @import "bootstrap/bootstrap";
+@import "font-awesome-sprockets";
+@import "font-awesome";
+@import "custom"; // this is the css to be modified per client
 
 html, body{
 	padding: 0;
 	margin: 0;
-	font-size: 14px;
 	-webkit-font-smoothing: antialiased;
-	font-family: 'Poppins', sans-serif;
+	font-family: 'Nunito Sans', sans-serif;
 	background-color: $body-bg;
 }
 .logo-wrapper img{
@@ -20,8 +22,9 @@ html, body{
   margin-bottom: 15px;
 }
 .blockUI h1{
-  font-size: 14px;
-  padding: 10px 0 5px 0;
+  padding-top: 10px;
+  font-size: $font-size-base;
+  color: $gray-600;
 }
 .help-block {
 	display: block;
@@ -51,4 +54,13 @@ label.label-required:after {
   -moz-osx-font-smoothing: grayscale;
   color: $form-feedback-invalid-color;
   margin: 0 6px;
+}
+.body-padding{
+  padding-top: 105px;
+}
+.navbar-brand img{
+  max-height: 65px;
+}
+#main-navbar a.nav-link{
+  font-size: $font-size-base * 1.125;
 }

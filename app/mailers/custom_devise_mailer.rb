@@ -3,6 +3,18 @@ class CustomDeviseMailer < Devise::Mailer
   include ApplicationHelper
   extend ApplicationHelper
   include Devise::Controllers::UrlHelpers # Optional. eg. `confirmation_url`
-  default from: current_client.name + " <" + current_client.notification_email + ">"
+  if current_client.present?
+    default from: current_client.name + " <" + current_client.notification_email + ">"
+  else
+    default from: "Sell.Do <support@sell.do>"
+  end
   layout 'mailer'
+end
+
+module Devise::Mailers::Helpers
+  protected
+  def devise_mail record, action, opts = {}, &block
+    initialize_from_record(record)
+    make_bootstrap_mail headers_for(action, opts), &block
+  end
 end

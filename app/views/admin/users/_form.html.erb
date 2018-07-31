@@ -3,34 +3,52 @@
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title"><%= @user.new_record? ? "New" : "Edit" %> <%= "#{global_labels['user']}" %></h5>
+          <h5 class="modal-title">
+            <% if current_user == @user %>
+              Edit Profile
+            <% else %>
+              <%= @user.new_record? ? "New" : "Edit" %> <%= "#{global_labels['user']}" %>
+            <% end %>
+          </h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          <div class="form-group">
-            <%= f.label :first_name, class: 'label-required' %>
-            <%= f.text_field :first_name, class: 'form-control', autofocus: true, required: 'required', disabled: (policy(@user).editable_field?("first_name") ? false : true) %>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <%= f.label :first_name, class: 'label-required' %>
+                <%= f.text_field :first_name, class: 'form-control', autofocus: true, required: 'required', disabled: (policy(@user).editable_field?("first_name") ? false : true) %>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <%= f.label :last_name, class: 'label-required' %>
+                <%= f.text_field :last_name, class: 'form-control', autofocus: true, required: 'required', disabled: (policy(@user).editable_field?("last_name") ? false : true) %>
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <%= f.label :last_name, class: 'label-required' %>
-            <%= f.text_field :last_name, class: 'form-control', autofocus: true, required: 'required', disabled: (policy(@user).editable_field?("last_name") ? false : true) %>
-          </div>
-          <div class="form-group">
-            <%= f.label :email, class: 'label-required' %>
-            <%= f.email_field :email, class: 'form-control', required: 'required', disabled: (policy(@user).editable_field?("email") ? false : true) %>
-          </div>
-          <div class="form-group">
-            <%= f.label :phone, class: 'label-required' %>
-            <%= f.text_field :phone, class: 'form-control phone', required: 'required', disabled: (policy(@user).editable_field?("phone") ? false : true) %>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <%= f.label :email, class: 'label-required' %>
+                <%= f.email_field :email, class: 'form-control', required: 'required', disabled: (policy(@user).editable_field?("email") ? false : true) %>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <%= f.label :phone, class: 'label-required' %>
+                <%= f.text_field :phone, class: 'form-control phone', required: 'required', disabled: (policy(@user).editable_field?("phone") ? false : true) %>
+              </div>
+            </div>
           </div>
           <% if @user.role.blank? %>
           <div class="form-group">
             <%= f.label :role, class: 'label-required' %>
             <%= f.select :role, User.available_roles.reject{|r| User.buyer_roles.include?(r[:id])}.collect{|r| [r[:text], r[:id]] }, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(@user).editable_field?("role") ? false : true) %>
           </div>
-          <% elsif User.buyer_roles.include?(@user.role) %>
+          <% elsif policy(@user).editable_field?("role") && User.buyer_roles.include?(@user.role) %>
           <div class="form-group">
             <%= f.label :role, class: 'label-required' %>
             <%= f.select :role, User.available_roles.select{|r| User.buyer_roles.include?(r[:id])}.collect{|r| [r[:text], r[:id]] }, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(@user).editable_field?("role") ? false : true) %>

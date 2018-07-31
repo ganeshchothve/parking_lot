@@ -19,8 +19,6 @@ class ChannelPartnerObserver < Mongoid::Observer
 
   def after_save channel_partner
     if channel_partner.status_changed? && channel_partner.status == 'active'
-      # send email. Currently we dont need to implement this, because user anyway gets a notification on user creation
-      # ChannelPartnerMailer.send_active(channel_partner.id)
     end
   end
 
