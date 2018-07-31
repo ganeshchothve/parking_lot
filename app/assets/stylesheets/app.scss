@@ -22,7 +22,9 @@ html, body{
   margin-bottom: 15px;
 }
 .blockUI h1{
-  padding: 10px 0 5px 0;
+  padding-top: 10px;
+  font-size: $font-size-base;
+  color: $gray-600;
 }
 .help-block {
 	display: block;
