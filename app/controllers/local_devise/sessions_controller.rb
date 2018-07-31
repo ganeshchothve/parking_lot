@@ -6,7 +6,6 @@ class LocalDevise::SessionsController < Devise::SessionsController
       user = self.resource_class.find_for_database_authentication(params[resource_name])
       if user.authenticate_otp(params[self.resource_name][:login_otp], drift: 60)
         self.resource = user
-        self.resource.successful_otp_login
         # Also confirm the user if they have verified the OTP
         unless self.resource.confirmed?
           self.resource.confirm

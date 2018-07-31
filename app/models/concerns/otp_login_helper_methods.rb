@@ -5,8 +5,6 @@ module OtpLoginHelperMethods
 
     base.field :last_otp_sent_at, type: Time
     base.field :resend_otp_counter, type: Integer
-    base.field :last_otp_login_attempt, type: Time
-    base.field :otp_login_locked, type: Boolean, default: false
   end
 
   module ClassMethods
@@ -19,13 +17,15 @@ module OtpLoginHelperMethods
     end
 
     def otp_locked_time
-      @@otp_locked_time ||= 900
+      @@otp_locked_time ||= 1800
     end
   end
 
   module InstanceMethods
 
     def send_otp
+      self.reset_lock_status
+
       otp_sent_status = self.can_send_otp?
 
       if otp_sent_status[:status]
@@ -35,7 +35,15 @@ module OtpLoginHelperMethods
       otp_sent_status
     end
 
-    def check_otp_limit
+    def reset_lock_status
+      if self.otp_limit_crossed? && self.last_otp_sent_at.present?
+        if (self.last_otp_sent_at + self.class.otp_locked_time.seconds) <= Time.now
+          self.reset_otp_counters
+        end
+      end
+    end
+
+    def otp_limit_crossed?
       self.resend_otp_counter.present? && self.resend_otp_counter >= self.class.otp_resend_max_limit
     end
 
@@ -47,30 +55,32 @@ module OtpLoginHelperMethods
       valid = true
       error_message = ""
 
-      if self.check_otp_limit
+      if self.otp_limit_crossed?
         valid = false
-        error_message = "Maximum limit reached to resend OTP code."
+        error_message = "Maximum limit reached to get OTP code. Please try again after #{(self.last_otp_sent_at + self.class.otp_locked_time.seconds).in_time_zone("Mumbai").strftime("%d/%m/%Y %l:%M %p")}"
+
       end
 
       if self.check_otp_duration
         valid = false
         error_message = "Please wait for #{self.class.otp_resend_wait_time} seconds to resend OTP."
       end
-
-      if self.otp_login_locked
-        valid = false
-        error_message = "Your OTP login is locked for #{self.class.otp_locked_time / 60} min. Please try again after #{Time.parse(self.last_otp_sent_at.to_i + self.class.otp_locked_time)}"
-      end
       {status: valid, error: error_message}
     end
 
-    def successful_otp_login
+    def reset_otp_counters
       self.set({
         last_otp_sent_at: nil,
         resend_otp_counter: nil,
-        last_otp_login_attempt: nil,
-        otp_login_locked: false
       })
+    end
+
+    def authenticate_otp (code, options = {})
+      result = super
+      if result
+        self.reset_otp_counters
+      end
+      result
     end
   end
 end
