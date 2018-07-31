@@ -31,6 +31,9 @@ class Client
   field :sms_mask, type: String, default: "SellDo"
   field :enable_actual_inventory, type: Boolean, default: false
   field :enable_channel_partners, type: Boolean, default: false
+  field :blocking_amount, type: Integer, default: 30000
+  field :blocking_days, type: Integer, default: 10
+  field :holding_minutes, type: Integer, default: 15
 
   mount_uploader :logo, DocUploader
 
@@ -52,7 +55,7 @@ end
 
 =begin
 c = Client.new
-c.name = "Amura"
+c.name = "VTP Realty"
 c.selldo_client_id = "531de108a7a03997c3000002"
 c.selldo_form_id = "5abba073923d4a567f880952"
 c.selldo_api_key = "bcdd92826cf283603527bd6d832d16c4"
@@ -61,16 +64,16 @@ c.cp_srd = "5a72c7a67c0dac7e854aca9e"
 c.helpdesk_number = "9922410908"
 c.helpdesk_email = "supriya@amuratech.com"
 c.notification_email = "supriya@amuratech.com"
-c.email_domains = ["amuratech.com"]
-c.booking_portal_domains = ["bookingportal.withamura.com"]
-c.registration_name = "Amura Marketing Technologies Pvt. Ltd."
-c.website_link = "www.amuratech.com"
+c.email_domains = ["vtprealty.in"]
+c.booking_portal_domains = ["vtp.bookingportal.withamura.com"]
+c.registration_name = "VTP Realty Ltd."
+c.website_link = "www.vtprealty.in"
 c.cp_disclaimer = "CP Disclaimer"
 c.support_number = "9922410908"
 c.support_email = "supriya@amuratech.com"
 c.channel_partner_support_number = "9922410908"
 c.channel_partner_support_email = "supriya@amuratech.com"
-c.cancellation_amount = 5000
+c.cancellation_amount = 0
 c.area_unit = "psqft."
 c.preferred_login = "phone"
 c.sms_provider_username = "amuramarketing"

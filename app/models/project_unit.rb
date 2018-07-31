@@ -2,9 +2,10 @@ class ProjectUnit
   include Mongoid::Document
   include Mongoid::Timestamps
   include ArrayBlankRejectable
+  include ApplicationHelper
 
   def self.blocking_amount
-    30000
+    current_client.blocking_amount
   end
 
   def self.total_booked_revenue
@@ -12,19 +13,11 @@ class ProjectUnit
   end
 
   def blocking_days
-    if self.blocking_payment.present?
-      if self.blocking_payment.payment_mode == "online"
-        10
-      else
-        10
-      end
-    else
-      10
-    end
+    current_client.blocking_days
   end
 
   def self.holding_minutes
-    15
+    current_client.holding_minutes
   end
 
   # These fields are globally utlised on the server side
