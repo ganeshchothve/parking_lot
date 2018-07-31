@@ -61,7 +61,9 @@
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <span class="small">© <%= Date.today.year %> <%= current_client.name %>. All Rights Reserved.</span>
+          <span class="small">
+            <%= current_project.name %> is registered via MahaRERA No.: <%= current_project.rera_project_id %> & is available on <a href="https://maharera.mahaonline.gov.in" target="_blank">https://maharera.mahaonline.gov.in</a>.
+          </span>
         </li>
       </ul>
       <ul class="navbar-nav pull-right">
@@ -76,6 +78,9 @@
         </li>
         <li class="nav-item">
           <%= active_link_to "Terms & Conditions", dashboard_terms_and_condition_path, active: :exclusive, class: "small nav-link" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Powered by Amura", "https://www.amuratech.com", class: "small nav-link" %>
         </li>
       </ul>
     </div>
