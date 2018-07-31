@@ -35,20 +35,6 @@
 <div class="row">
   <div class="col-6">
     <div class="form-group">
-      <%= form.label :company_name, class: 'label-required' %>
-      <%= form.text_field :company_name, class: 'form-control', disabled: (policy(@channel_partner).editable_field?("company_name") ? false : true), placeholder:'Company Name' %>
-    </div>
-  </div>
-  <div class="col-6">
-    <div class="form-group">
-      <%= form.label :gstin_number, class: 'label-required' %>
-      <%= form.text_field :gstin_number, class: 'form-control', required: 'required', disabled: (policy(@channel_partner).editable_field?("gstin_number") ? false : true), placeholder:'GSTIN Number' %>
-    </div>
-  </div>
-</div>
-<div class="row">
-  <div class="col-6">
-    <div class="form-group">
       <%= form.label :aadhaar, class: 'label-required' %>
       <%= form.text_field :aadhaar, class: 'form-control', required: 'required', disabled: (policy(@channel_partner).editable_field?("aadhaar") ? false : true), placeholder:'Aadhaar Number' %>
     </div>
@@ -65,6 +51,20 @@
     <div class="form-group">
       <%= form.label :rera_id, class: 'label-required' %>
       <%= form.text_field :rera_id, class: 'form-control', required: 'required', disabled: (policy(@channel_partner).editable_field?("rera_id") ? false : true), placeholder:'RERA Registration Number' %>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="form-group">
+      <%= form.label :company_name, class: 'label-required' %>
+      <%= form.text_field :company_name, class: 'form-control', disabled: (policy(@channel_partner).editable_field?("company_name") ? false : true), placeholder:'Company Name' %>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-6">
+    <div class="form-group">
+      <%= form.label :gstin_number, class: 'label-required' %>
+      <%= form.text_field :gstin_number, class: 'form-control', disabled: (policy(@channel_partner).editable_field?("gstin_number") ? false : true), placeholder:'GSTIN Number' %>
     </div>
   </div>
   <div class="col-6">

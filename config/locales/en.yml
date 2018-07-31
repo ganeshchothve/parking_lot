@@ -144,3 +144,17 @@ en:
         gstin_number: "GSTIN Number"
         pan_number: "PAN Number"
         aadhaar: "Aadhaar"
+      bank_detail:
+        name: 'Name'
+        branch: 'Branch'
+        account_type: 'Account Type'
+        ifsc_code: 'IFSC Code'
+        account_number: 'Account Number'
+        loan_required: 'Do you need a loan?'
+      address:
+        address1: 'Address'
+        address2: 'Street'
+        city: 'City'
+        state: 'State / Region'
+        country: 'Country'
+        zip: 'Zip / Pin Code'

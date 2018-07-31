@@ -10,7 +10,7 @@ class ChannelPartner
   field :phone, type: String
   field :rera_id, type: String
   field :associated_user_id, type: BSON::ObjectId
-  field :status, type: String
+  field :status, type: String, default: "inactive"
 
   field :company_name, type: String
   field :pan_number, type: String
@@ -21,10 +21,13 @@ class ChannelPartner
   has_one :bank_detail, as: :bankable
   has_many :assets, as: :assetable
 
-  validates :first_name, :last_name, :email, :phone, :rera_id, :status, presence: true
+  validates :first_name, :last_name, :email, :phone, :rera_id, :status, :aadhaar, presence: true
+  validates :aadhaar, format: {with: /\A\d{12}\z/i, message: 'is not a valid aadhaar number'}, allow_blank: true
   validates :phone, uniqueness: true, phone: true
   validates :email, :rera_id, uniqueness: true, allow_blank: true
   validates :status, inclusion: {in: Proc.new{ ChannelPartner.available_statuses.collect{|x| x[:id]} } }
+  validates :pan_number, :aadhaar, uniqueness: true, allow_blank: true
+  validates :pan_number, format: {with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A'}, allow_blank: true
   validate :user_level_uniqueness
   validate :cannot_make_inactive
   validates :first_name, :last_name, format: { with: /\A[a-zA-Z]*\z/}
