@@ -55,3 +55,12 @@ label.label-required:after {
   color: $form-feedback-invalid-color;
   margin: 0 6px;
 }
+.body-padding{
+  padding-top: 105px;
+}
+#main-navbar a.nav-link{
+  font-size: $font-size-lg;
+}
+.navbar-brand img{
+  max-height: 65px;
+}
