@@ -31,6 +31,9 @@ class Client
   field :sms_mask, type: String, default: "SellDo"
   field :enable_actual_inventory, type: Boolean, default: false
   field :enable_channel_partners, type: Boolean, default: false
+  field :blocking_amount, type: Integer, default: 30000
+  field :blocking_days, type: Integer, default: 10
+  field :holding_minutes, type: Integer, default: 15
 
   mount_uploader :logo, DocUploader
 

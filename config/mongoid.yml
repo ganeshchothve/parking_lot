@@ -58,10 +58,15 @@ development:
 staging:
   clients:
     default:
-      database: booking_portal_staging
+      database: <%= ENV_CONFIG['db']['database'] %>
       hosts:
-        - localhost:27017
+        <%= ENV_CONFIG['db']['hosts'] %>
       options:
+        user: <%= ENV_CONFIG['db']['username'] %>
+        password: <%= ENV_CONFIG['db']['password'] %>
+        ssl: true
+        replica_set: <%= ENV_CONFIG['db']['replica'] %>
+        auth_source: <%= ENV_CONFIG['db']['auth_source'] %>
   options:
 test:
   clients:
