@@ -29,6 +29,7 @@ gem 'jbuilder', '~> 2.5'
 gem 'razorpay'
 gem 'pusher'
 gem 'active_link_to'
+gem "font-awesome-sass"
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

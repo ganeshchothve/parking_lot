@@ -1,5 +1,8 @@
 @import "custom_variables";
 @import "bootstrap/bootstrap";
+@import "font-awesome-sprockets";
+@import "font-awesome";
+@import "custom"; // this is the css to be modified per client
 
 html, body{
 	padding: 0;
