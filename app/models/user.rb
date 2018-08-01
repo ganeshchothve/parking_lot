@@ -19,6 +19,7 @@ class User
   field :role, type: String, default: "user"
   field :allowed_bookings, type: Integer, default: 5
   field :channel_partner_id, type: BSON::ObjectId
+  field :channel_partner_change_reason, type: String
   field :referenced_channel_partner_ids, type: Array, default: []
   field :rera_id, type: String
   field :mixpanel_id, type: String
@@ -84,6 +85,7 @@ class User
   validates :rera_id, uniqueness: true, allow_blank: true
   validates :role, inclusion: {in: Proc.new{ User.available_roles.collect{|x| x[:id]} } }
   validates :lead_id, presence: true, if: Proc.new{ |user| user.buyer? }
+  validate :channel_partner_change_reason_present?
 
   def unattached_blocking_receipt
     return self.receipts.in(status: ['success', 'clearance_pending']).where(project_unit_id: nil, payment_type: 'blocking').where(total_amount: {"$gte": ProjectUnit.blocking_amount}).first
@@ -241,5 +243,12 @@ class User
       search = Search.create(user: self)
     end
     search
+  end
+
+  private
+  def channel_partner_change_reason_present?
+    if self.persisted? && self.channel_partner_id_changed? && self.channel_partner_change_reason.blank?
+      self.errors.add :channel_partner_change_reason, " is required"
+    end
   end
 end

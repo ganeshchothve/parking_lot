@@ -73,6 +73,10 @@
               <%= f.label :channel_partner_id, class: "control-label" %>
               <%= f.select :channel_partner_id, f.object.channel_partner_id.present? ? [[f.object.channel_partner.name, f.object.channel_partner.id]] : [], {prompt: true}, class: 'selectize-remote', autofocus: true, disabled: (policy(@user).editable_field?("channel_partner_id") ? false : true), "data-url": admin_users_path, "data-params": {fltrs: {role: 'channel_partner'}}.to_json, 'data-ds': 'ds' %>
             </div>
+            <div class="form-group">
+              <%= f.label :channel_partner_change_reason, class: "control-label" %>
+              <%= f.text_area :channel_partner_change_reason, class: 'form-control', disabled: (policy(@user).editable_field?("channel_partner_change_reason") ? false : true) %>
+            </div>
           <% end %>
         </div>
         <div class="modal-footer">
