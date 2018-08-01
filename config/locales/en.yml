@@ -105,6 +105,13 @@ en:
         user_request_ids: "User Requests (associated with this Unit)"
         user_kyc_ids: "User KYCs (associated with this Unit)"
         primary_user_kyc_id: "Primary User KYC"
+        name: 'Name'
+        project_tower_name: 'Project Tower'
+        project_name: 'Project'
+        blocked_on: 'Blocked On'
+        unit_facing_direction: 'Facing'
+        all_inclusive_price: 'All Inclusive Price (excluding registration charges)'
+        agreement_price: 'Agreement Value'
       discount:
         name: 'Name'
         project_id: 'Project'

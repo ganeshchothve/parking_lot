@@ -39,7 +39,6 @@ class Project
   field :loading,type: Float
   field :lock_in_period,type: String
   field :micro_market, type: String
-  field :rera_project_id, type: String
   field :specifications,type: Hash ,default: {}
   field :approval,type: String
 
