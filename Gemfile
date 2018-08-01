@@ -28,6 +28,8 @@ gem 'jbuilder', '~> 2.5'
 # gem 'bcrypt', '~> 3.1.7'
 gem 'razorpay'
 gem 'pusher'
+gem 'active_link_to'
+gem "font-awesome-sass"
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
@@ -76,6 +78,7 @@ gem 'phonelib'
 # generate pdf
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
+gem 'bootstrap-email'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

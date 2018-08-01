@@ -1,10 +1,4 @@
 class UserObserver < Mongoid::Observer
-  def after_create user
-    if user.role?("user")
-      SFDC::LeadsPusher.execute(user)
-    end
-  end
-
   def before_create user
     if user.role?("user")
       email = user.email

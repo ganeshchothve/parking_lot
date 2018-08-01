@@ -3,6 +3,10 @@ class ApplicationMailer < ActionMailer::Base
   include ApplicationHelper
   extend ApplicationHelper
 
-  default from: current_client.name + " <" + current_client.notification_email + ">"
+  if current_client
+    default from: current_client.name + " <" + current_client.notification_email + ">"
+  else
+    default from: "Sell.Do <support@sell.do>"
+  end
   layout 'mailer'
 end

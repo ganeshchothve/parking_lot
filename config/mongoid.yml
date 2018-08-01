@@ -58,7 +58,7 @@ development:
 staging:
   clients:
     default:
-      database: booking_portal_staging
+      database: <%= ENV_CONFIG['db']['database'] %>
       hosts:
         - localhost:27017
       options:
