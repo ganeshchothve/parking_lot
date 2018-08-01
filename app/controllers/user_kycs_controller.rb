@@ -29,7 +29,6 @@ class UserKycsController < ApplicationController
     @user_kyc = UserKyc.new(permitted_attributes(UserKyc.new))
     @user_kyc.user = @user
     @user_kyc.creator = current_user
-
     respond_to do |format|
       if @user_kyc.save
         format.html { redirect_to home_path(current_user), notice: 'User kyc was successfully created.' }

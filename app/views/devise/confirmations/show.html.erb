@@ -22,6 +22,9 @@
               <%= f.label :password_confirmation, class: "label-required" %>
               <%= f.password_field :password_confirmation, placeholder: "Password Confirmation", tabindex: "2", required: "required", class: 'form-control' %>
             </div>
+            <% if params[:channel_partner_id].present? %>
+              <%= f.hidden_field :channel_partner_id, value: params[:channel_partner_id], class: "form-control" %>
+            <% end %>
             <div class="form-group">
               <%= f.submit "Activate", class: 'btn btn-primary' %>
             </div>
