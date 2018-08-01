@@ -27,11 +27,11 @@
         min = data.first["min_agreement_price"]
         max = data.last["max_agreement_price"]
         slab = (max - min)/4
-        agreement_price_slabs = ["#{number_to_indian_currency(min)} - #{number_to_indian_currency(min+slab)}".html_safe]
-        agreement_price_slabs << "#{number_to_indian_currency(min+slab)} - #{number_to_indian_currency(min+2*slab)}".html_safe
-        agreement_price_slabs << "#{number_to_indian_currency(min+2*slab)} - #{number_to_indian_currency(min+3*slab)}".html_safe
+        agreement_price_slabs = [["#{number_to_indian_currency(min)} - #{number_to_indian_currency(min+slab)}".html_safe, "#{min}-#{min + slab}"]]
+        agreement_price_slabs << ["#{number_to_indian_currency(min+slab)} - #{number_to_indian_currency(min+2*slab)}".html_safe, "#{min+slab}-#{min + 2*slab}"]
+        agreement_price_slabs << ["#{number_to_indian_currency(min+2*slab)} - #{number_to_indian_currency(min+3*slab)}".html_safe, "#{min+2*slab}-#{max}"]
       %>
-      <%= f.select :agreement_price, agreement_price_slabs.collect{|x| [x, x.gsub(" ", "")]}, {prompt: true}, class: 'selectize', disabled: (policy(@search).editable_field?("bedrooms") ? false : true) %>
+      <%= f.select :agreement_price, agreement_price_slabs, {prompt: true}, class: 'selectize', disabled: (policy(@search).editable_field?("bedrooms") ? false : true) %>
     </div>
     <div class="form-group">
       <%= f.submit "Search", class: "btn btn-primary" %>
