@@ -24,8 +24,6 @@ class Receipt
   field :comments, type: String
   field :gateway_response, type: Hash
 
-  increments :order_id
-
   belongs_to :user, optional: true
   belongs_to :booking_detail, optional: true
   belongs_to :project_unit, optional: true
@@ -46,7 +44,7 @@ class Receipt
   validates :tracking_id, presence: true, if: Proc.new{|receipt| receipt.status == 'success' && receipt.payment_type != "online"}
   validates :comments, presence: true, if: Proc.new{|receipt| receipt.status == 'failed' && receipt.payment_type != "online"}
 
-  increments :order_id
+  increments :order_id, auto: false
   default_scope -> {desc(:created_at)}
 
   def reference_project_unit
@@ -140,18 +138,17 @@ class Receipt
   end
 
   def generate_receipt_id
-    if self.project_unit_id.present?
-      if self.status == "success" || self.status == "clearance_pending"
-        "#{self.project_unit.name[0..1]}-#{self.order_id}"
+    if self.status == "success"
+      self.assign!(:order_id) if self.order_id.blank?
+      if self.project_unit_id.present?
+        "#{current_project.name[0..1}-#{self.project_unit.name[0..1]}-#{self.order_id}"
       else
-        "#{self.project_unit.name[0..1]}-tmp-#{SecureRandom.hex}"
+        "#{current_project.name[0..1}-#{self.order_id}"
       end
+    elsif self.receipt_id.blank?
+      "#{current_project.name[0..1}-tmp-#{SecureRandom.hex(4)}"
     else
-      if self.status == "success" || self.status == "clearance_pending"
-        "RECEIPT-#{self.order_id}"
-      else
-        "RECEIPT-tmp-#{SecureRandom.hex}"
-      end
+      self.receipt_id
     end
   end
 
