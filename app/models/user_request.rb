@@ -2,6 +2,7 @@ class UserRequest
   include Mongoid::Document
   include Mongoid::Timestamps
   include ArrayBlankRejectable
+  include InsertionStringMethods
 
   field :comments, type: String
   field :status, type: String, default: 'pending'

@@ -5,6 +5,7 @@ class Receipt
   include Mongoid::Autoinc
   include ArrayBlankRejectable
   include Mongoid::Autoinc
+  include InsertionStringMethods
 
   field :receipt_id, type: String
   field :order_id, type: String
