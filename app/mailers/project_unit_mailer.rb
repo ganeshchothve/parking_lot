@@ -6,7 +6,7 @@ class ProjectUnitMailer < ApplicationMailer
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
     cc += [@project_unit.booking_portal_client.notification_email]
-    mail(to: @user.email, cc: cc, subject: "Unit No.  #{@project_unit.name} has been blocked!")
+    make_bootstrap_mail(to: @user.email, cc: cc, subject: "Unit No.  #{@project_unit.name} has been blocked!")
   end
 
   def booked_tentative(project_unit_id)
@@ -16,21 +16,7 @@ class ProjectUnitMailer < ApplicationMailer
     # CC Removed as per the QA/Supriya Mam
     # cc = @cp.present? ? [@cp.email] : []
     # cc +project_unit.= current_client.notification_email
-    mail(to: @user.email, subject: "Unit #{@project_unit.name} booked tentative")# cc: cc
-  end
-
-  def send_revised_letter(project_unit_id)
-    @project_unit = ProjectUnit.find(project_unit_id)
-    @user = @project_unit.user
-    @cp = @user.channel_partner
-    cc = @cp.present? ? [@cp.email] : []
-    cc += [@project_unit.booking_portal_client.notification_email]
-    attachments["Allotment.pdf"] = WickedPdf.new.pdf_from_string(
-    render_to_string(pdf: "allotment", template: "project_unit_mailer/send_allotment_letter.pdf.erb"))
-    #Removed by Ashish
-    #attachments["Welcome.pdf"] = WickedPdf.new.pdf_from_string(
-    #render_to_string(pdf: "allotment", template: "dashboard/welcome.pdf.erb"))
-    mail(to: @user.email, cc: cc, subject: "Revised Allotment Letter") #Unit #{@project_unit.name} booked confirmed
+    make_bootstrap_mail(to: @user.email, subject: "Unit #{@project_unit.name} booked tentative")# cc: cc
   end
 
   def booked_confirmed(project_unit_id)
@@ -40,11 +26,9 @@ class ProjectUnitMailer < ApplicationMailer
     cc = @cp.present? ? [@cp.email] : []
     cc += [@project_unit.booking_portal_client.notification_email]
     attachments["Allotment.pdf"] = WickedPdf.new.pdf_from_string(
-      render_to_string(pdf: "allotment", template: "project_unit_mailer/send_allotment_letter.pdf.erb"))
-    #Removed by Ashish
-    #attachments["Welcome.pdf"] = WickedPdf.new.pdf_from_string(
-      #render_to_string(pdf: "allotment", template: "dashboard/welcome.pdf.erb"))
-    mail(to: @user.email, cc: cc, subject: "Congratulations on booking your home! ") #Unit #{@project_unit.name} booked confirmed
+      render_to_string(pdf: "allotment", template: "project_unit_mailer/send_allotment_letter.pdf.erb")
+    )
+    make_bootstrap_mail(to: @user.email, cc: cc, subject: "Congratulations on booking your home! ") #Unit #{@project_unit.name} booked confirmed
   end
 
   def auto_release_on_extended(project_unit_id, auto_release_on_was)
@@ -54,7 +38,7 @@ class ProjectUnitMailer < ApplicationMailer
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
     cc += [@project_unit.booking_portal_client.notification_email]
-    mail(to: @user.email, cc: cc, subject: "Received an extension to hold the unit")
+    make_bootstrap_mail(to: @user.email, cc: cc, subject: "Received an extension to hold the unit")
   end
 
   def released(user_id, project_unit_id)
@@ -63,25 +47,6 @@ class ProjectUnitMailer < ApplicationMailer
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
     cc += [@project_unit.booking_portal_client.notification_email]
-    mail(to: @user.email, cc: cc, subject: "Unit #{@project_unit.name} has been released")
-  end
-
-  def send_allotment_letter(project_unit_id)
-    @project_unit = ProjectUnit.find(project_unit_id)
-    @user = @project_unit.user
-    @cp = @user.channel_partner
-    cc = @cp.present? ? [@cp.email] : []
-    cc += [@project_unit.booking_portal_client.notification_email]
-    mail(to: @user.email, cc: cc, subject: "Provisional Allotment of Apartment! ")
-  end
-
-  def swap_request(project_unit_id, alternate_project_unit_id)
-    @project_unit = ProjectUnit.find(project_unit_id)
-    @alternate_project_unit = ProjectUnit.find(alternate_project_unit_id)
-    @user = @project_unit.user
-    @cp = @user.channel_partner
-    cc = @cp.present? ? [@cp.email] : []
-    cc += [@project_unit.booking_portal_client.notification_email]
-    mail(to: @user.email, cc: cc, subject: "Swap request")
+    make_bootstrap_mail(to: @user.email, cc: cc, subject: "Unit #{@project_unit.name} has been released")
   end
 end
