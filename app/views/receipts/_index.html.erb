@@ -11,7 +11,8 @@
     <thead class="th-default th-pink">
       <% labels = t('mongoid.attributes.receipt').with_indifferent_access %>
       <tr>
-        <th class="w15 text-left">User</th>
+        <th><%= labels[:user_id] %></th>
+        <th><%= labels[:receipt_id] %></th>
         <th>Details</th>
         <th><%= labels['status'] %></th>
         <th class="text-right"><%= labels['total_amount'] %></th>
@@ -22,8 +23,8 @@
       <% receipts.each do |receipt| %>
       <tr>
         <td><%= receipt.user.name %></td>
+        <td><%= receipt.status == "success" ? receipt.receipt_id : "Pending" %></td>
         <td>
-          <div><%= labels[:receipt_id] %>: <span class="muted"><%= receipt.receipt_id %></span></div>
           <div class="small muted">
             <div>
               <%= receipt.project_unit_id.present? ? "Project: #{receipt.project_unit.name}" : '' %>

@@ -69,7 +69,7 @@
           <% labels = t('mongoid.attributes.receipt').with_indifferent_access %>
           <%= form_for [:admin, @user, @receipt], local: true, remote: true, html: {id: 'receipt_form', class: 'modal-remote-form validate-form', "data-resource-type": global_labels['receipt'], "data-type": "json"} do |f| %>
             <div class="alert alert-warning">
-              The <%= labels[:receipt_id] %> will be generated after successful processing of payment.
+              The <%= labels[:receipt_id] %> will be generated only after successful processing of payment.
             </div>
             <div class="form-group">
               <%= f.label :payment_mode, class: 'label-required' %>
