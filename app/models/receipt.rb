@@ -151,12 +151,12 @@ class Receipt
     if self.status == "success"
       self.assign!(:order_id) if self.order_id.blank?
       if self.project_unit_id.present?
-        "#{current_project.name[0..1}-#{self.project_unit.name[0..1]}-#{self.order_id}"
+        "#{current_project.name[0..1]}-#{self.project_unit.name[0..1]}-#{self.order_id}"
       else
-        "#{current_project.name[0..1}-#{self.order_id}"
+        "#{current_project.name[0..1]}-#{self.order_id}"
       end
     elsif self.receipt_id.blank?
-      "#{current_project.name[0..1}-tmp-#{SecureRandom.hex(4)}"
+      "#{current_project.name[0..1]}-tmp-#{SecureRandom.hex(4)}"
     else
       self.receipt_id
     end
