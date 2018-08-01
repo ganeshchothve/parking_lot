@@ -17,6 +17,13 @@ class ChannelPartner
   field :gstin_number, type: String
   field :aadhaar, type: String
 
+  enable_audit({
+    audit_fields: [:title, :rera_id, :status, :gstin_number, :aadhaar],
+    reference_ids_without_associations: [
+      {field: 'associated_user_id', klass: 'User'},
+    ]
+  })
+
   has_one :address, as: :addressable
   has_one :bank_detail, as: :bankable
   has_many :assets, as: :assetable

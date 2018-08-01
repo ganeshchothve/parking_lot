@@ -25,7 +25,7 @@ class Receipt
   field :comments, type: String
   field :gateway_response, type: Hash
 
-  belongs_to :user, optional: true
+  belongs_to :user
   belongs_to :booking_detail, optional: true
   belongs_to :project_unit, optional: true
   belongs_to :creator, class_name: 'User'
@@ -47,6 +47,15 @@ class Receipt
 
   increments :order_id, auto: false
   default_scope -> {desc(:created_at)}
+
+  enable_audit({
+    associated_with: ["user"],
+    indexed_fields: [:receipt_id, :order_id, :payment_mode, :tracking_id, :payment_type, :creator_id],
+    audit_fields: [:payment_mode, :tracking_id, :total_amount, :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, :status, :status_message, :reference_project_unit_id, :project_unit_id, :booking_detail_id],
+    reference_ids_without_associations: [
+      {field: 'reference_project_unit_id', klass: 'ProjectUnit'},
+    ]
+  })
 
   def reference_project_unit
     if self.reference_project_unit_id.present?

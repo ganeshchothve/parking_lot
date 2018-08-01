@@ -65,6 +65,14 @@ class User
 
   include OtpLoginHelperMethods
 
+  enable_audit({
+    indexed_fields: [:first_name, :last_name],
+    audit_fields: [:status, :lead_id, :role, :allowed_bookings, :channel_partner_id, :referenced_channel_partner_ids, :rera_id, :mixpanel_id, :email, :phone],
+    reference_ids_without_associations: [
+      {field: 'referenced_channel_partner_ids', klass: 'ChannelPartner'},
+    ]
+  })
+
   # key to handle both phone or email as a login
   attr_accessor :login, :login_otp
 

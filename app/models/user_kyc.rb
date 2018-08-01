@@ -32,6 +32,12 @@ class UserKyc
   field :existing_customer_name, type: String
   field :existing_customer_project, type: String
 
+  enable_audit({
+    associated_with: ["user"],
+    indexed_fields: [:creator_id],
+    audit_fields: [:creator_id, :pan_number, :aadhaar, :is_company, :gstn, :company_name]
+  })
+
 
   has_many :assets, as: :assetable
   has_one :bank_detail, as: :bankable

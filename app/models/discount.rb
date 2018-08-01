@@ -12,6 +12,11 @@ class Discount
   field :status, type: String, default: "draft"
   field :approved_at, type: DateTime
 
+  enable_audit({
+    indexed_fields: [:project_id, :project_tower_id, :project_unit_id, :user_id],
+    audit_fields: [:name, :project_unit_id, :user_id, :user_role, :value, :status, :approved_by_id, :created_by_id],
+  })
+
   belongs_to :approved_by, class_name: "User", optional: true
   belongs_to :created_by, class_name: "User"
 

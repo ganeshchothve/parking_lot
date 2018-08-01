@@ -140,6 +140,11 @@ class ProjectUnit
     end
   end
 
+  enable_audit({
+    indexed_fields: [:project_id, :project_tower_id, :unit_configuration_id, :client_id, :booking_portal_client_id, :selldo_id, :developer_id],
+    audit_fields: [:sfdc_id, :status, :available_for, :blocked_on, :auto_release_on, :held_on, :applied_discount_rate, :applied_discount_id, :primary_user_kyc_id, :base_rate]
+  })
+
   belongs_to :project
   belongs_to :user, optional: true
   has_many :receipts
@@ -295,7 +300,7 @@ class ProjectUnit
     if applied_discount_id.present? && applied_discount_rate.present?
       return applied_discount_rate
     else
-      discount_obj = applicable_discount_id(user)
+      discount_obj = applicable_discount(user)
       discount = (discount_obj.present? ? discount_obj.value : 0)
       e_discount = 0
       if user.role?("employee_user") || user.role?("management_user")
@@ -315,7 +320,7 @@ class ProjectUnit
     end
   end
 
-  def applicable_discount_id(user)
+  def applicable_discount(user)
     selector = []
     selector << {user_id: user.id} if user.present?
     selector << {user_role: user.role} if user.present?

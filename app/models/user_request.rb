@@ -11,9 +11,18 @@ class UserRequest
   field :reply_for_customer, type: String #reply from crm team to customer
   field :alternate_project_unit_id, type: BSON::ObjectId # in case of swap resolve
 
+  enable_audit({
+    associated_with: ["user"],
+    indexed_fields: [:project_unit_id, :receipt_id],
+    audit_fields: [:status, :request_type, :alternate_project_unit_id],
+    reference_ids_without_associations: [
+      {field: 'alternate_project_unit_id', klass: 'ProjectUnit'},
+    ]
+  })
+
   belongs_to :project_unit, optional: true
   belongs_to :receipt, optional: true
-  belongs_to :user, optional: true
+  belongs_to :user
   has_many :assets, as: :assetable
 
   validates :user_id, :project_unit_id, :comments, presence: true
