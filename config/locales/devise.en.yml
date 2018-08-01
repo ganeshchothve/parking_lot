@@ -18,15 +18,15 @@ en:
       unconfirmed: "You have to confirm your email address before continuing."
     mailer:
       confirmation_instructions:
-        subject: "Welcome to Embassy Edge - Validate your account"
+        subject: "Welcome to Amura IRIS - Validate your account"
       reset_password_instructions:
-        subject: "Embassy Edge - Reset password instructions"
+        subject: "Amura IRIS - Reset password instructions"
       unlock_instructions:
-        subject: "Embassy Edge - Unlock instructions"
+        subject: "Amura IRIS - Unlock instructions"
       email_changed:
-        subject: "Embassy Edge - Email Changed"
+        subject: "Amura IRIS - Email Changed"
       password_change:
-        subject: "Embassy Edge - Password Changed"
+        subject: "Amura IRIS - Password Changed"
     omniauth_callbacks:
       failure: "Could not authenticate you from %{kind} because \"%{reason}\"."
       success: "Successfully authenticated from %{kind} account."

@@ -6,7 +6,7 @@ class ProjectUnitMailer < ApplicationMailer
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
     cc += [@project_unit.booking_portal_client.notification_email]
-    make_bootstrap_mail(to: @user.email, cc: cc, subject: "Unit No.  #{@project_unit.name} has been blocked!")
+    make_bootstrap_mail(to: @user.email, cc: cc, subject: "Unit No. #{@project_unit.name} has been blocked!")
   end
 
   def booked_tentative(project_unit_id)
@@ -28,7 +28,7 @@ class ProjectUnitMailer < ApplicationMailer
     attachments["Allotment.pdf"] = WickedPdf.new.pdf_from_string(
       render_to_string(pdf: "allotment", template: "project_unit_mailer/send_allotment_letter.pdf.erb")
     )
-    make_bootstrap_mail(to: @user.email, cc: cc, subject: "Congratulations on booking your home! ") #Unit #{@project_unit.name} booked confirmed
+    make_bootstrap_mail(to: @user.email, cc: cc, subject: "Congratulations on booking your home! ")
   end
 
   def auto_release_on_extended(project_unit_id, auto_release_on_was)
