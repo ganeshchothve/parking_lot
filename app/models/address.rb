@@ -13,6 +13,11 @@ class Address
 
   belongs_to :addressable, polymorphic: true
 
+  enable_audit({
+    audit_fields: [:city, :state, :country, :address_type, :selldo_id],
+    associated_with: ["addressable"]
+  })
+
   def ui_json
     to_json
   end

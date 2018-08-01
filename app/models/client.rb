@@ -34,6 +34,8 @@ class Client
 
   mount_uploader :logo, DocUploader
 
+  enable_audit track: ["update"]
+
   has_many :users, class_name: 'User', inverse_of: 'booking_portal_client'
   has_many :project_units
   has_many :projects

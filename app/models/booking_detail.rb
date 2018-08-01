@@ -8,11 +8,19 @@ class BookingDetail
   field :channel_partner_id, type: BSON::ObjectId
   mount_uploader :tds_doc, DocUploader
 
+  enable_audit({
+    indexed_fields: [:channel_partner_id, :project_unit_id],
+    audit_fields: [:channel_partner_id, :status, :channel_partner_id, :project_unit_id, :user_id, :user_kyc_ids],
+    reference_ids_without_associations: [
+      {field: 'channel_partner_id', klass: 'ChannelPartner'},
+      {field: 'primary_user_kyc_id', klass: 'UserKyc'}
+    ]
+  })
+
   belongs_to :project_unit
   belongs_to :user
   has_many :receipts
   has_and_belongs_to_many :user_kycs
-  embeds_many :booking_detail_status_changes
 
   validates :status, :primary_user_kyc_id, presence: true
 
