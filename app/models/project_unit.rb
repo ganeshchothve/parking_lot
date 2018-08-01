@@ -2,9 +2,12 @@ class ProjectUnit
   include Mongoid::Document
   include Mongoid::Timestamps
   include ArrayBlankRejectable
+  include ApplicationHelper
+  extend ApplicationHelper
+  include InsertionStringMethods
 
   def self.blocking_amount
-    30000
+    current_client.blocking_amount
   end
 
   def self.total_booked_revenue
@@ -12,19 +15,11 @@ class ProjectUnit
   end
 
   def blocking_days
-    if self.blocking_payment.present?
-      if self.blocking_payment.payment_mode == "online"
-        10
-      else
-        10
-      end
-    else
-      10
-    end
+    current_client.blocking_days
   end
 
   def self.holding_minutes
-    15
+    current_client.holding_minutes
   end
 
   # These fields are globally utlised on the server side
@@ -440,21 +435,13 @@ class ProjectUnit
     if ['success', 'clearance_pending'].include?(receipt.status)
       if self.pending_balance({strict: true}) <= 0
         self.status = 'booked_confirmed'
-        # Push data to SFDC once 10% payment is completed - booking unit
-        SFDC::ProjectUnitPusher.execute(self)
       elsif self.total_amount_paid > ProjectUnit.blocking_amount
       	if self.status != 'booked_tentative'
-                # Push data to SFDC
-                # Avoid hitting to SFDC for subsequent payments
-                SFDC::ProjectUnitPusher.execute(self)
         	  self.status = 'booked_tentative'
       	end
       elsif receipt.total_amount >= ProjectUnit.blocking_amount && (self.status == "hold" || self.user_based_status(self.user) == "available")
         if (self.user == receipt.user && self.status == 'hold') || self.user_based_status(self.user) == "available"
           self.status = 'blocked'
-          # Push data to SFDC when 30K payment is made - blocked unit
-          SFDC::ProjectUnitPusher.execute(self)
-          SFDC::PaymentSchedulePusher.execute(receipt.project_unit)
         else
           receipt.project_unit_id = nil
           receipt.save
@@ -546,23 +533,12 @@ class ProjectUnit
   def promote_future_payment_message
     if self.auto_release_on.present? && self.auto_release_on > Date.today
       days = (self.auto_release_on - Date.today).to_i
-      user = self.user
-      if days == 6
-        message = "Only 6 days to go! 6 days to being part of #{self.booking_portal_client.name} - the 288 acre iconic township designed for happiness. Click here to pay the pending amount of Rs. #{self.pending_balance} for unit #{self.name} and secure your home at #{self.project_name}: #{user.dashboard_url}"
-      elsif days == 5
-        message = "A home, an identity - come home to yours. Only 5 days to go before you miss your home at #{self.project_name}! Get it before you regret it. Click here to complete paying the pending amount: #{user.dashboard_url}"
-      elsif days == 4
-        message = "You buy electronics online, you buy groceries online - why not a home? Complete your pending amount of Rs. #{self.pending_balance} for unit #{self.name} at #{self.project_name} on the portal, before you miss your home. You’ve got only 4 days to go! Click to pay: #{user.dashboard_url}"
-      elsif days == 3
-        message = "A lot can happen in 3 days - today, you have a home at the prestigious #{self.booking_portal_client.name} reserved in your name. 3 days from now, you could’ve missed that opportunity. Click here to pay the pending amount of Rs. #{self.pending_balance} for unit #{self.name} today: #{user.dashboard_url}"
-      elsif days == 2
-        message = "2 days to go! 2 days until you’ve missed your home at #{self.project_name} - or, you could be the proud resident of #{self.booking_portal_client.name} today. Click here to complete the transaction of Rs. #{self.pending_balance} for unit #{self.name}: #{user.dashboard_url}"
-      elsif days == 1
-        message = "Today’s your last chance to call #{self.name} at #{self.project_name} your home! Complete the payment today, or the apartment will get auto-released for other users to book it. Click here to complete your payment of Rs. #{self.pending_balance}: #{user.dashboard_url}"
+      template = SmsTemplate.where(name: "promote_future_payment_#{days}").first
+      if template.present?
+        template.parsed_content(self)
       else
-        message = nil
+        nil
       end
-      message
     end
   end
 

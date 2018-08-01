@@ -23,8 +23,8 @@
 var options = {
   key: "<%= Rails.env.production? ? ENV_CONFIG['razorpay']['key'] : 'rzp_test_NTQGRS3ia0hiWY' %>",
   amount: <%= @receipt.total_amount.to_i * 100 %>, // 2000 paise = INR 20
-  name: "<%= @project_unit.present? ? @project_unit.project_name : 'Block Payment without Unit' %>",
-  description: "<%= @project_unit.present? ? @project_unit.project_name : 'Block Payment without Unit' %>",
+  name: "<%= @project_unit.present? ? @project_unit.project_name : 'Direct Payment' %>",
+  description: "<%= @project_unit.present? ? @project_unit.project_name : '' %>",
   handler: function (response){
     $(".payment-gateway-message").html('<div class="title">Thank you for the payment, please wait while we process your payment. You should be redirected once we have processed your request.</div>')
     window.location = "/payment/<%= @receipt.receipt_id %>/process_payment/razorpay?payment_id=" + response.razorpay_payment_id;
@@ -35,7 +35,7 @@ var options = {
     "contact": "<%= current_user.phone %>"
   },
   theme: {
-    "color": "#bf2482"
+    "color": "#46a044"
   }
 };
 var rzp1 = new Razorpay(options);

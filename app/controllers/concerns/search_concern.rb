@@ -19,15 +19,6 @@ module SearchConcern
       hash[:total_units_available] = ProjectUnit.build_criteria({fltrs: parameters}).where(project_tower_id: x.id).in(status: ProjectUnit.user_based_available_statuses(current_user)).count
       hash
     end
-    if @towers.blank?
-      alternative_params = {}
-      @alternative_count = 0
-      if bedroom != "NA"
-        alternative_params =  {fltrs: {bedrooms: bedroom != "NA" ? bedroom : ""}}
-      elsif agreement_price != "NA"
-        alternative_params =  {fltrs: {agreement_price: budget != "NA" ? budget : ""}}
-      end
-      @alternative_count = ProjectUnit.build_criteria({fltrs: parameters}).in(status: ProjectUnit.user_based_available_statuses(current_user)).count if alternative_params.present?
-    end
+    # GENERIC TODO: If no results found we should display alternate towers
   end
 end

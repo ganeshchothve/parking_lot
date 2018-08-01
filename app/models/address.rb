@@ -23,6 +23,6 @@ class Address
   end
 
   def to_sentence
-    return "#{self.address1}  #{self.address2},#{self.city},#{self.state},#{self.country},#{self.zip}"
+    return "#{self.address1} #{self.address2}, #{self.city}, #{self.state}, #{self.country}, #{self.zip}"
   end
 end

@@ -4,8 +4,8 @@ class Search
   include ArrayBlankRejectable
 
   field :bedrooms, type: Float
-  field :carpet, type: Float
-  field :agreement_price, type: Float
+  field :carpet, type: String
+  field :agreement_price, type: String
   field :project_tower_id, type: String
   field :floor, type: Integer
   field :project_unit_id, type: String
@@ -18,16 +18,8 @@ class Search
   def params_json
     params = {}
     params[:bedrooms] = bedrooms if bedrooms.present?
-    if carpet.present?
-      params[:carpet] = {}
-      params[:carpet]["$gte"] = carpet.split("-")[0]
-      params[:carpet]["$lte"] = carpet.split("-")[1]
-    end
-    if agreement_price.present?
-      params[:agreement_price] = {}
-      params[:agreement_price]["$gte"] = agreement_price.split("-")[0]
-      params[:agreement_price]["$lte"] = agreement_price.split("-")[1]
-    end
+    params[:carpet] = carpet if carpet.present?
+    params[:agreement_price] = agreement_price if agreement_price.present?
     params
   end
   # GENERIC_TODO SelldoLeadUpdater.perform_async(current_user.id.to_s, "unit_browsing")

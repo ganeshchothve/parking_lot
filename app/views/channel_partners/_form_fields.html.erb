@@ -35,20 +35,6 @@
 <div class="row">
   <div class="col-6">
     <div class="form-group">
-      <%= form.label :company_name, class: 'label-required' %>
-      <%= form.text_field :company_name, class: 'form-control', disabled: (policy(@channel_partner).editable_field?("company_name") ? false : true), placeholder:'Company Name' %>
-    </div>
-  </div>
-  <div class="col-6">
-    <div class="form-group">
-      <%= form.label :gstin_number, class: 'label-required' %>
-      <%= form.text_field :gstin_number, class: 'form-control', required: 'required', disabled: (policy(@channel_partner).editable_field?("gstin_number") ? false : true), placeholder:'GSTIN Number' %>
-    </div>
-  </div>
-</div>
-<div class="row">
-  <div class="col-6">
-    <div class="form-group">
       <%= form.label :aadhaar, class: 'label-required' %>
       <%= form.text_field :aadhaar, class: 'form-control', required: 'required', disabled: (policy(@channel_partner).editable_field?("aadhaar") ? false : true), placeholder:'Aadhaar Number' %>
     </div>
@@ -69,10 +55,24 @@
   </div>
   <div class="col-6">
     <div class="form-group">
+      <%= form.label :company_name %>
+      <%= form.text_field :company_name, class: 'form-control', disabled: (policy(@channel_partner).editable_field?("company_name") ? false : true), placeholder:'Company Name' %>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-6">
+    <div class="form-group">
+      <%= form.label :gstin_number %>
+      <%= form.text_field :gstin_number, class: 'form-control', disabled: (policy(@channel_partner).editable_field?("gstin_number") ? false : true), placeholder:'GSTIN Number' %>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="form-group">
       <% if policy(@channel_partner).editable_field?("status") %>
         <div class="form-group">
           <%= form.label :status, class: 'title label-required' %>
-          <%= form.select :status, ChannelPartner.available_statuses.collect{|x| [x[:text], x[:id]]}, {prompt: "Select"}, {class: "selectize", disabled: (policy(@channel_partner).editable_field?("status") ? false : true)} %>
+          <%= form.select :status, ChannelPartner.available_statuses.collect{|x| [x[:text], x[:id]]}, {prompt: "Select"}, {required: "required", class: "selectize", disabled: (policy(@channel_partner).editable_field?("status") ? false : true)} %>
         </div>
       <% end %>
     </div>

@@ -15,8 +15,7 @@ class BookingDetailObserver < Mongoid::Observer
       }, RequestStore.store[:logging])
 
       if booking_detail.status == "cancelled"
-        # Push data to SFDC when unit is cancelled by user - closed_lost unit
-        SFDC::ProjectUnitPusher.execute(booking_detail.project_unit, { cancellation_request: true, user_id: booking_detail.user_id, primary_user_kyc_id: booking_detail.primary_user_kyc_id })
+        
       end
     end
   end

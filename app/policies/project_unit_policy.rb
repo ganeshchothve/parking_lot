@@ -1,14 +1,14 @@
 class ProjectUnitPolicy < ApplicationPolicy
   def index?
-    true
+    current_client.enable_actual_inventory?
   end
 
   def edit?
-    ((['blocked', 'booked_tentative', 'booked_confirmed', 'error'].include?(record.status) && record.auto_release_on.present?) || ["available", "not_available", "employee", "management"].include?(record.status))
+    ((['blocked', 'booked_tentative', 'booked_confirmed', 'error'].include?(record.status) && record.auto_release_on.present?) || ["available", "not_available", "employee", "management"].include?(record.status)) && current_client.enable_actual_inventory?
   end
 
   def export?
-    ['superadmin', 'admin', 'crm'].include?(user.role)
+    ['superadmin', 'admin', 'crm'].include?(user.role) && current_client.enable_actual_inventory?
   end
 
   def mis_report?
@@ -24,45 +24,45 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def hold?
-    valid = record.user_based_status(record.user) == 'available' && record.user.kyc_ready? && record.user.project_units.where(status: "hold").blank?
+    valid = record.user_based_status(record.user) == 'available' && record.user.kyc_ready? && record.user.project_units.where(status: "hold").blank? && current_client.enable_actual_inventory?
     _role_based_check(valid)
   end
 
   def block?
-    valid = ['hold'].include?(record.status) && record.user.kyc_ready?
+    valid = ['hold'].include?(record.status) && record.user.kyc_ready? && current_client.enable_actual_inventory?
     _role_based_check(valid)
   end
 
   def make_available?
-    valid = (record.status == 'hold')
+    valid = (record.status == 'hold' && current_client.enable_actual_inventory?)
     _role_based_check(valid)
   end
 
   def update_co_applicants?
-    valid = (["blocked", "booked_confirmed", "booked_tentative"].include?(record.status))
+    valid = (["blocked", "booked_confirmed", "booked_tentative"].include?(record.status) && current_client.enable_actual_inventory?)
     _role_based_check(valid)
   end
 
   def update_project_unit?
-    valid = record.user.kyc_ready?
+    valid = record.user.kyc_ready? && current_client.enable_actual_inventory?
     _role_based_check(valid)
   end
 
   def payment?
-    checkout? && record.user.kyc_ready?
+    checkout? && record.user.kyc_ready? && current_client.enable_actual_inventory?
   end
 
   def process_payment?
-    checkout? && record.user.kyc_ready?
+    checkout? && record.user.kyc_ready? && current_client.enable_actual_inventory?
   end
 
   def checkout?
-    valid = (record.user_based_status(record.user) == "booked") && record.user.kyc_ready?
+    valid = (record.user_based_status(record.user) == "booked") && record.user.kyc_ready? && current_client.enable_actual_inventory?
     _role_based_check(valid)
   end
 
   def checkout_via_email?
-    valid = record.user_based_status(user) == "available" && user.kyc_ready?
+    valid = record.user_based_status(user) == "available" && user.kyc_ready? && current_client.enable_actual_inventory?
     _role_based_check(valid)
   end
 
