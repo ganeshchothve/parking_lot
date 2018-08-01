@@ -29,7 +29,7 @@ module OtpLoginHelperMethods
       otp_sent_status = self.can_send_otp?
 
       if otp_sent_status[:status]
-        SMSWorker.perform_async(self.phone, "Your OTP for login is #{self.otp_code}. ")
+        SMSWorker.perform_async(self.phone, SmsTemplate.find_by(name: "otp").parsed_content(self))
         self.set({last_otp_sent_at: Time.now, resend_otp_counter: (self.resend_otp_counter.present? ? self.resend_otp_counter : 0 )+ 1})
       end
       otp_sent_status

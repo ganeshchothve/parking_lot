@@ -4,6 +4,7 @@ class User
   include Mongoid::Timestamps
   include ArrayBlankRejectable
   include ActiveModel::OneTimePassword
+  include InsertionStringMethods
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
