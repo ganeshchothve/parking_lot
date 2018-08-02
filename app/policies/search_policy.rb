@@ -3,6 +3,10 @@ class SearchPolicy < ApplicationPolicy
     true
   end
 
+  def tower?
+    index?
+  end
+
   def new?
     valid = true
     valid = valid && (record.user_id == user.id) if user.buyer?

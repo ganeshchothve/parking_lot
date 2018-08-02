@@ -72,6 +72,7 @@ class Project
   field :rera_registration_no, type: String
 
   mount_uploader :logo, DocUploader
+  mount_uploader :mobile_logo, DocUploader
 
   has_many :project_units
   has_many :project_towers

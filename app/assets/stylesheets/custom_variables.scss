@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css?family=Nunito+Sans:400,700');
+// @import url('https://fonts.googleapis.com/css?family=Nunito+Sans:400,700');
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,700');
 
 // override bootstrap varialbes start
 // $font-size-base: 1.125rem;
@@ -9,9 +10,8 @@ $success: #56b654;
 $info: #00BCD4;
 $warning: #FFC107;
 $danger: #F44336;
-$light: #f8f9fa;
 $dark: #666;
-$font-family-base:  'Roboto', sans-serif !default;
+$font-family-base: "Poppins", Helvetica, Arial, sans-serif !default;
 $dropdown-link-color: #343a40;
 $btn-focus-box-shadow: none !important;
 $border-radius: 4px;

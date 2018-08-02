@@ -1,34 +1,32 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <title><%= current_project.name %> | <%= current_client.name %></title>
-  <%= csrf_meta_tags %>
-  <%= stylesheet_link_tag 'dashboard' %>
-  <%= javascript_include_tag 'dashboard' %>
-  <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
-  <%= javascript_tag do %>
-    if(typeof App === "undefined"){
-      App = {};
-    }
-    App.client = <%= raw current_client.to_json %>;
-    App.project = <%= raw current_project.to_json %>;
-    <% if user_signed_in? %>
-      App.current_user = <%= raw current_user.to_json %>;
-      App.current_user.name = App.current_user.first_name + " " + App.current_user.last_name;
+  <head>
+    <title><%= current_project.name %> | <%= current_client.name %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <%= csrf_meta_tags %>
+    <%= stylesheet_link_tag 'dashboard', media: 'all' %>
+    <%= javascript_include_tag 'dashboard' %>
+
+    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
+    <%= javascript_tag do %>
+      if(typeof App === "undefined"){
+        App = {};
+      }
+      App.client = <%= raw current_client.to_json %>;
+      App.project = <%= raw current_project.to_json %>;
+      <% if user_signed_in? %>
+        App.current_user = <%= raw current_user.to_json %>;
+        App.current_user.name = App.current_user.first_name + " " + App.current_user.last_name;
+      <% end %>
+      <% if Rails.env.development? || Rails.env.staging? %>
+        Pusher.logToConsole = true;
+      <% end %>
     <% end %>
-    <% if Rails.env.development? || Rails.env.staging? %>
-      Pusher.logToConsole = true;
-    <% end %>
-  <% end %>
-  <!--  GA & GTM go here -->
-</head>
-<body>
-  <div id="notify"></div>
-  <div class="container-fluid">
+    <!--  GENERICTODO: GA & GTM go here -->
+  </head>
+  <body>
     <%= render "layouts/navbar" %>
     <%= yield %>
     <div class="pt-5 mt-4"></div>
-  </div>
-</body>
+  </body>
 </html>

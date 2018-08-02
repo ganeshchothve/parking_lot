@@ -107,6 +107,7 @@ Rails.application.routes.draw do
       resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
       resources :searches, except: [:destroy], controller: 'searches' do
         post :hold, on: :member
+        get 'tower/details', on: :collection, action: :tower, as: :tower
         get :checkout, on: :member
         get :checkout_via_email, on: :member
         post :make_available, on: :member

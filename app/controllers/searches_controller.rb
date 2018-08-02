@@ -1,9 +1,9 @@
 class SearchesController < ApplicationController
   include SearchConcern
   before_action :authenticate_user!
-  before_action :set_search, except: [:index, :export, :new, :create]
+  before_action :set_search, except: [:index, :export, :new, :create, :tower]
   before_action :set_user, except: [:export]
-  before_action :set_form_data, only: [:new, :show, :edit]
+  before_action :set_form_data, only: [:show, :edit]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: [:index, :export]
 
@@ -11,21 +11,18 @@ class SearchesController < ApplicationController
 
   def show
     # GENERICTODO: Handle current user to be from a user based route path
-    @search = Search.find(params[:id])
-    if params[:step].present?
-      @search.step = params[:step]
+  end
+
+  def tower
+    @tower = ProjectTower.find(params[:project_tower_id])
+    respond_to do |format|
+      format.json { render json: @tower.to_json }
     end
-    if @search.next_step.present?
-      eval("search_for_#{@search.next_step}")
-    elsif @search.project_unit_id.present?
-      @user_kycs = @user.user_kycs.paginate(per_page: 100, page: 1)
-      @unit = ProjectUnit.find(@search.project_unit_id)
-    end
-    authorize @search
   end
 
   def new
     @search = @user.searches.new
+    set_form_data
     authorize @search
   end
 
@@ -53,6 +50,7 @@ class SearchesController < ApplicationController
   end
 
   def edit
+    render layout: false
   end
 
   def update
@@ -197,7 +195,7 @@ class SearchesController < ApplicationController
   end
 
   def authorize_resource
-    if params[:action] == "index" || params[:action] == 'export'
+    if params[:action] == "index" || params[:action] == 'export' || params[:action] == 'tower'
       authorize Search
     elsif params[:action] == "new" || params[:action] == "create"
       authorize Search.new(user_id: @user.id)
@@ -249,5 +247,15 @@ class SearchesController < ApplicationController
         bedrooms: "$bedrooms"
       }
     }]).to_a
+
+    if params[:step].present?
+      @search.step = params[:step]
+    end
+    if @search.next_step.present?
+      eval("search_for_#{@search.next_step}")
+    elsif @search.project_unit_id.present?
+      @user_kycs = @user.user_kycs.paginate(per_page: 100, page: 1)
+      @unit = ProjectUnit.find(@search.project_unit_id)
+    end
   end
 end

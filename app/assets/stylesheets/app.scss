@@ -62,5 +62,21 @@ label.label-required:after {
   max-height: 65px;
 }
 #main-navbar a.nav-link{
-  font-size: $font-size-base * 1.125;
+  font-size: $font-size-base * 1.1;
+}
+.dot {
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  display: inline-block;
+  line-height: 34px;
+}
+.border-thick{
+  border-width: 5px !important;
+}
+.fill-white{
+  fill: #fff;
+}
+figure.wave {
+  margin: 0 0 0;
 }

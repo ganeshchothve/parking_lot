@@ -1,70 +1,116 @@
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-12">
-      <% unless current_user.buyer? %>
-        <div class="alert alert-danger">
-          You are taking a booking for <%= @user.name %>
-        </div>
-        <div class="mt-3"></div>
-      <% end %>
-      <%= render "form", {data: @data} %>
-      <div class="mt-3"></div>
-      <div class="row continuous-row">
-        <% @towers.sort{|a,b| a[:project_tower_name] <=> b[:project_tower_name]}.each do |tower| %>
-          <div class="col-4">
-            <div class="card" data-jquery-selector="tower-card" data-tower-id="<%= tower[:project_tower_id] %>">
-              <div class="card-body">
-                <div class="form-group">
-                  <%= tower[:project_tower_name] %>
-                </div>
-                <div class="row">
-                  <div class="col-6">
-                    <div class="form-group">
-                      <label class="small">Tower Units</label>
-                      <div><%= tower[:total_units] %></div>
-                    </div>
-                  </div>
-                  <div class="col-6">
-                    <div class="form-group">
-                      <label class="small">Available Units</label>
-                      <div><%= tower[:total_units_available] %></div>
-                    </div>
-                  </div>
-                </div>
-                <!-- GENERIC_TODO : implement floorplan image here -->
+<div class="text-right">
+  <% if @search.next_step.present? %>
+    <%= form_for [:user, @search], html: {class: 'validate-form', id: "edit_search_form"} do |f| %>
+      <div class="form-group">
+        <%= f.hidden_field :step, value: @search.next_step %>
+        <%= f.hidden_field :project_tower_id %>
+      </div>
+      <div class="form-group">
+        <%= f.submit "Next", class: "btn btn-primary", disabled: 'disabled' %>
+      </div>
+    <% end %>
+  <% end %>
+  <% if @search.previous_step.present? %>
+    <%= form_for [:user, @search], html: {class: 'validate-form'} do |f| %>
+      <div class="form-group">
+        <%= f.hidden_field :step, value: @search.previous_step %>
+      </div>
+      <div class="form-group">
+        <%= f.submit "Previous", class: "btn btn-secondary float-right" %>
+      </div>
+    <% end %>
+  <% end %>
+</div>
+<div class="row justify-content-center mt-3">
+  <div class="col-md-7" id="tower-selection">
+    <div class="row continuous-row">
+      <% @towers.sort{|a,b| a[:project_tower_name] <=> b[:project_tower_name]}.each do |tower| %>
+        <div class="col-md-4" style="cursor:pointer;">
+          <div class="card" data-jquery-selector="tower-card" data-tower-id="<%= tower[:project_tower_id] %>">
+            <div class="pt-2">
+              <h6 class="ml-3 mb-2">
+                <%= tower[:project_tower_name] %>
+                <%= icon "far", "check-circle", class: "mr-2 text-primary float-right d-none" %>
+              </h6>
+              <div class="col-6 float-left border-top border-right mx-0">
+                <label class="text-muted small mb-0">Total</label>
+                <div><%= tower[:total_units] %></div>
               </div>
+              <div class="col-6 float-left border-top mx-0">
+                <label class="text-muted small mb-0">Available</label>
+                <div><%= tower[:total_units_available] %></div>
+              </div>
+              <!-- GENERIC_TODO : implement floorplan image here -->
             </div>
           </div>
-        <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <div class="col-md-5 d-none" id="tower-description">
+    <div class="card h-100">
+      <div class="bg-primary text-white">
+        <%= icon "fas", "building", class: "fa-2x position-absolute", style: "right:10px; top:10px;" %>
+        <div class="p-3">
+          <h2 class="font-weight-bold mb-3">Daisy A</h2>
+          <h6>This is one of our fastest selling tower. Over 15 people are currently viewing apartments in this tower.</h6>
+        </div>
+        <figure class="w-100 wave">
+          <svg preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="20 -20 300 100" style="margin-bottom: -38px;margin-top: -54px;" xml:space="preserve">
+            <path class="fill-white" opacity=".4" d="M30.913,43.944c0,0,42.911-34.464,87.51-14.191c77.31,35.14,113.304-1.952,146.638-4.729
+            c48.654-4.056,69.94,16.218,69.94,16.218v54.396H30.913V43.944z"></path>
+            <path class="fill-white" opacity=".4" d="M-35.667,44.628c0,0,42.91-34.463,87.51-14.191c77.31,35.141,113.304-1.952,146.639-4.729
+            c48.653-4.055,69.939,16.218,69.939,16.218v54.396H-35.667V44.628z"></path>
+            <path class="fill-white" opacity="0" d="M43.415,98.342c0,0,48.283-68.927,109.133-68.927c65.886,0,97.983,67.914,97.983,67.914v3.716
+            H42.401L43.415,98.342z"></path>
+            <path class="fill-white" d="M-34.667,62.998c0,0,56-45.667,120.316-27.839C167.484,57.842,197,41.332,232.286,30.428
+            c53.07-16.399,104.047,36.903,104.047,36.903l1.333,36.667l-372-2.954L-34.667,62.998z"></path>
+          </svg>
+        </figure>
       </div>
-      <% if @search.next_step.present? %>
-        <%= form_for [:user, @search], html: {class: 'validate-form', id: "edit_search_form"} do |f| %>
-          <div class="form-group">
-            <%= f.hidden_field :step, value: @search.next_step %>
-            <%= f.hidden_field :project_tower_id %>
-          </div>
-          <div class="form-group">
-            <%= f.submit "Next", class: "btn btn-primary float-left", disabled: 'disabled' %>
-          </div>
-        <% end %>
-      <% end %>
-      <% if @search.previous_step.present? %>
-        <%= form_for [:user, @search], html: {class: 'validate-form'} do |f| %>
-          <div class="form-group">
-            <%= f.hidden_field :step, value: @search.previous_step %>
-          </div>
-          <div class="form-group">
-            <%= f.submit "Previous", class: "btn btn-secondary float-right" %>
-          </div>
-        <% end %>
-      <% end %>
+      <div class="row p-3">
+        <div class="col-md-4">
+          <label class="mb-0 small">Floors</label>
+          <h2 class="text-black font-weight">12</h2>
+        </div>
+        <div class="col-md-4">
+          <label class="mb-0 small">Total Apartments</label>
+          <h2 class="text-black font-weight">98</h2>
+        </div>
+        <div class="col-md-4">
+          <label class="mb-0 small">Available</label>
+          <h2 class="text-black font-weight">28</h2>
+        </div>
+      </div>
+      <div class="p-3">
+        <img data-src="holder.js/100px250" class="img-fluid" alt="100%x250" style="height: 250px; width: 100%; display: block;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22843%22%20height%3D%22250%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20843%20250%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_164fb347916%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A42pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_164fb347916%22%3E%3Crect%20width%3D%22843%22%20height%3D%22250%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22314.0703125%22%20y%3D%22144.2%22%3E843x250%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E">
+      </div>
     </div>
   </div>
 </div>
 <%= javascript_tag do %>
 $(document).on('click', '[data-jquery-selector="tower-card"]', function(){
   var $form = $("#edit_search_form");
+  $('[data-jquery-selector="tower-card"] svg').addClass('d-none');
+  $(this).find('svg').removeClass('d-none');
   $form.find('[name="search[project_tower_id]"]').val($(this).data("tower-id"));
   $form.find('input[type="submit"]').removeAttr("disabled");
+
+  if($("#tower-description").hasClass('d-none')){
+    $("#tower-selection").addClass('animated fadeInRight faster');
+    $("#tower-description").addClass('animated fadeIn slow').removeClass('d-none');
+  }
+
+  $.ajax({
+    url: "<%= tower_user_searches_path %>",
+    data: {
+      project_tower_id: $(this).data("tower-id")
+    },
+    dataType: "json",
+    type: "GET",
+    success: function(data){
+
+    }
+  });
 });
 <% end %>

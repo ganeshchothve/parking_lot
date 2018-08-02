@@ -17,19 +17,27 @@ en:
     user: 'User or Customer'
     customers: 'Customers'
     customer: 'Customer'
-    project_unit: 'Unit'
-    project_units: 'Units'
+    project_unit: 'Apartment'
+    project_units: 'Apartments'
     project_unit_with_status: '%{status} Unit'
     project_units_with_status: '%{status} Units'
     channel_partner: 'Partner Registration'
     channel_partners: 'Partner Registrations'
+    search: "Filter"
+    searches: "Filter"
   mongoid:
     attributes:
+      search:
+        bedrooms: "Beds"
+        agreement_price: "Agreement Value"
+        carpet: "Carpet Area"
+        project_tower_id: "Tower"
+        project_unit_id: "Apartment"
       user_request:
         user_id: 'Customer'
         comments: 'Complain / Request'
         status: 'Status'
-        project_unit_id: 'Related Unit'
+        project_unit_id: 'Related Apartment'
         receipt_id: 'Related Payment'
       receipt:
         tracking_id: 'Transaction ID (Processed Payment)'
@@ -44,9 +52,9 @@ en:
         total_amount: "Total Amount (Rs.)"
         status: "Payment Status"
         payment_type: "Payment Type (Towards Blocking or Booking)"
-        reference_project_unit_id: "Interested Unit (won't be blocked)"
+        reference_project_unit_id: "Interested Apartment (won't be blocked)"
         user_id: "Customer"
-        project_unit_id: "Unit"
+        project_unit_id: "Apartment"
         creator_id: "Created by"
       user_kyc:
         name: "Name"
@@ -66,7 +74,7 @@ en:
         comments: "Please mention any specific notes for our team"
         user_id: "Customer"
         creator: "Created By"
-        project_units: "Units"
+        project_units: "Apartments"
         street: 'Street'
         house_number: 'House Number'
         city: 'City'
@@ -101,9 +109,9 @@ en:
         customer_company_name: 'Company Name'
       project_unit:
         user_id: "Customer"
-        receipt_ids: "Payments (associated with this Unit)"
-        user_request_ids: "User Requests (associated with this Unit)"
-        user_kyc_ids: "User KYCs (associated with this Unit)"
+        receipt_ids: "Payments (associated with this Apartment)"
+        user_request_ids: "User Requests (associated with this Apartment)"
+        user_kyc_ids: "User KYCs (associated with this Apartment)"
         primary_user_kyc_id: "Primary User KYC"
         name: 'Name'
         project_tower_name: 'Project Tower'
@@ -116,7 +124,7 @@ en:
         name: 'Name'
         project_id: 'Project'
         project_tower_id: 'Project Tower'
-        project_unit_id: 'Project Unit'
+        project_unit_id: 'Apartment'
         user_id: 'User'
         user_role: 'User Role'
         value: 'Discount (Rs.)'
