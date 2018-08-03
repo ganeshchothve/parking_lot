@@ -71,7 +71,7 @@
           <div class="card-body">
             <% receipts.each do |receipt| %>
               <% if receipt.status == 'clearance_pending' && receipt.project_unit_id.blank? && receipt.reference_project_unit_id.present? && receipt.reference_project_unit.user_based_status(receipt.user) == 'available' %>
-                 To block chosen unit: <%= ProjectUnit.find(receipt.reference_project_unit_id).name %> <a href='<%= dashboard_checkout_via_email_url(project_unit_id: receipt.reference_project_unit_id, receipt_id: receipt.receipt_id) %>'>Click here</a>
+                 To block chosen unit: <%= ProjectUnit.find(receipt.reference_project_unit_id).name %> <a href='<%#= dashboard_checkout_via_email_url(project_unit_id: receipt.reference_project_unit_id, receipt_id: receipt.receipt_id) %>'>Click here</a>
               <% end %>
             <% end %>
           </div>

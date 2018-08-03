@@ -75,15 +75,13 @@ class ReceiptObserver < Mongoid::Observer
         end
       end
       unless receipt.status == "pending"
-        template = SmsTemplate.where(name: "receipt_#{receipt.status}").first
-        if template.present?
-          message = template.parsed_content(receipt)
-          if Rails.env.development?
-            SMSWorker.new.perform(user.phone.to_s, message)
-          else
-            SMSWorker.perform_async(user.phone.to_s, message)
-          end
-        end
+        Sms.create!(
+          booking_portal_client_id: project_unit.booking_portal_client_id,
+          recipient_id: receipt.user_id,
+          sms_template_id: SmsTemplate.find_by(name: "receipt_#{receipt.status}").id,
+          triggered_by_id: receipt.id,
+          triggered_by_type: receipt.class.to_s
+        )
       end
     end
 
@@ -95,12 +93,13 @@ class ReceiptObserver < Mongoid::Observer
       else
         mailer.deliver_later
       end
-      message =
-      if Rails.env.development?
-        SMSWorker.new.perform(user.phone.to_s, message)
-      else
-        SMSWorker.perform_async(user.phone.to_s, message)
-      end
+      Sms.create!(
+        booking_portal_client_id: project_unit.booking_portal_client_id,
+        recipient_id: receipt.user_id,
+        sms_template_id: SmsTemplate.find_by(name: "receipt_pending").id,
+        triggered_by_id: receipt.id,
+          triggered_by_type: receipt.class.to_s
+      )
     end
   end
 

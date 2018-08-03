@@ -30,6 +30,7 @@ class Receipt
   belongs_to :project_unit, optional: true
   belongs_to :creator, class_name: 'User'
   has_many :assets, as: :assetable
+  has_many :smses, as: :triggered_by, class_name: "Sms"
 
   validates :total_amount, :status, :payment_mode, :payment_type, :user_id, presence: true
   validates :payment_identifier, presence: true, if: Proc.new{|receipt| receipt.payment_type == 'online' && receipt.status != 'pending' }
@@ -151,12 +152,12 @@ class Receipt
     if self.status == "success"
       self.assign!(:order_id) if self.order_id.blank?
       if self.project_unit_id.present?
-        "#{current_project.name[0..1]}-#{self.project_unit.name[0..1]}-#{self.order_id}"
+        "#{self.project_unit.project_name[0..1]}-#{self.project_unit.name[0..1]}-#{self.order_id}"
       else
-        "#{current_project.name[0..1]}-#{self.order_id}"
+        "#{self.project_unit.project_name[0..1]}-#{self.order_id}"
       end
     elsif self.receipt_id.blank?
-      "#{current_project.name[0..1]}-tmp-#{SecureRandom.hex(4)}"
+      "#{self.project_unit.project_name[0..1]}-tmp-#{SecureRandom.hex(4)}"
     else
       self.receipt_id
     end

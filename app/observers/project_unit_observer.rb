@@ -24,7 +24,8 @@ class ProjectUnitObserver < Mongoid::Observer
     if project_unit.status_changed? && project_unit.status == 'hold'
       project_unit.held_on = DateTime.now
       project_unit.applied_discount_rate = project_unit.discount_rate(project_unit.user)
-      project_unit.applied_discount_id = project_unit.applicable_discount(project_unit.user).id
+      discount = project_unit.applicable_discount(project_unit.user)
+      project_unit.applied_discount_id = discount.id if discount.present?
       ProjectUnitUnholdWorker.perform_in(ProjectUnit.holding_minutes.minutes, project_unit.id.to_s)
       SelldoLeadUpdater.perform_async(project_unit.user_id.to_s)
       ApplicationLog.log("unit_hold", {
@@ -59,12 +60,14 @@ class ProjectUnitObserver < Mongoid::Observer
         else
           mailer.deliver_later
         end
-        message = "Dear #{user_was.name}, you missed out! We regret to inform you that the apartment you shortlisted has been released. Click here if you'd like to re-start the process: #{user_was.dashboard_url} Your cust ref id is #{user_was.lead_id}"
-        if Rails.env.development?
-          SMSWorker.new.perform(user_was.phone.to_s, message)
-        else
-          SMSWorker.perform_async(user_was.phone.to_s, message)
-        end
+
+        Sms.create!(
+          booking_portal_client_id: user_was.booking_portal_client_id,
+          recipient_id: user_was.id,
+          sms_template_id: SmsTemplate.find_by(name: "project_unit_released").id,
+          triggered_by_id: user_was.id,
+          triggered_by_type: user_was.class.to_s
+        )
       end
     end
 
@@ -75,8 +78,7 @@ class ProjectUnitObserver < Mongoid::Observer
       else
         # TODO: send escalation mail to us and third_party_inventory dev team
         # TODO: Let the customer know that their might be some issue and the team will get back via email
-        project_unit.status = 'error'
-        project_unit.save(validate: false)
+        project_unit.set(status: 'error')
       end
     end
   end
@@ -92,14 +94,21 @@ class ProjectUnitObserver < Mongoid::Observer
       end
       user = project_unit.user
       if project_unit.status == "blocked"
-        message = "Congratulations #{user.name}, #{project_unit.name} has been Blocked / Tentative Booked for you for the next 7 days! To own the home, you’ll need to pay the pending amount of Rs. #{project_unit.pending_balance} within these 7 days. To complete the payment now, click here: #{user.dashboard_url}"
+        Sms.create!(
+          booking_portal_client_id: project_unit.booking_portal_client_id,
+          recipient_id: user.id,
+          sms_template_id: SmsTemplate.find_by(name: "project_unit_blocked").id,
+          triggered_by_id: project_unit.id,
+          triggered_by_type: project_unit.class.to_s
+        )
       elsif project_unit.status == "booked_confirmed"
-        message = "Welcome to the #{project_unit.booking_portal_client.name} family! You're now the proud owner of #{project_unit.name} at #{project_unit.project_name} in #{project_unit.booking_portal_client.name}. Our executives will be in touch regarding agreement formalities."
-      end
-      if Rails.env.development?
-        SMSWorker.new.perform(user.phone.to_s, message)
-      else
-        SMSWorker.perform_async(user.phone.to_s, message)
+        Sms.create!(
+          booking_portal_client_id: project_unit.booking_portal_client_id,
+          recipient_id: user.id,
+          sms_template_id: SmsTemplate.find_by(name: "project_unit_booked_confirmed").id,
+          triggered_by_id: project_unit.id,
+          triggered_by_type: project_unit.class.to_s
+        )
       end
     end
 

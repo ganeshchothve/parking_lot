@@ -152,6 +152,7 @@ class ProjectUnit
   has_and_belongs_to_many :user_kycs
   has_many :payment_schedules
   belongs_to :booking_portal_client, class_name: 'Client'
+  has_many :smses, as: :triggered_by, class_name: "Sms"
 
   validates :client_id, :project_id, :project_tower_id, presence: true
   validates :status, :name, :sfdc_id, presence: true
@@ -387,7 +388,7 @@ class ProjectUnit
 
   def ageing
     if(["booked_confirmed"].include?(self.status))
-      last_booking_payment = self.receipts.where(status:"success").where(payment_type:"booking").desc(:created_at).first.created_at.to_date
+      last_booking_payment = self.receipts.where(status:"success").desc(:created_at).first.created_at.to_date
       due_since = self.receipts.where(status:"success").asc(:created_at).first.created_at.to_date
       age = (last_booking_payment - due_since).to_i
     elsif(["blocked", "booked_tentative"].include?(self.status))
@@ -530,15 +531,11 @@ class ProjectUnit
     BookingDetail.where(project_unit_id: self.id).ne(status: "cancelled").first
   end
 
-  def promote_future_payment_message
+  def promote_future_payment_days
     if self.auto_release_on.present? && self.auto_release_on > Date.today
       days = (self.auto_release_on - Date.today).to_i
-      template = SmsTemplate.where(name: "promote_future_payment_#{days}").first
-      if template.present?
-        template.parsed_content(self)
-      else
-        nil
-      end
+    else
+      nil
     end
   end
 

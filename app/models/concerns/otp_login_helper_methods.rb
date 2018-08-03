@@ -29,7 +29,13 @@ module OtpLoginHelperMethods
       otp_sent_status = self.can_send_otp?
 
       if otp_sent_status[:status]
-        SMSWorker.perform_async(self.phone, SmsTemplate.find_by(name: "otp").parsed_content(self))
+        Sms.create!(
+          booking_portal_client_id: self.booking_portal_client_id,
+          recipient_id: self.id,
+          sms_template_id: SmsTemplate.find_by(name: "otp").id,
+          triggered_by_id: self.id,
+          triggered_by_type: self.class.to_s
+        )
         self.set({last_otp_sent_at: Time.now, resend_otp_counter: (self.resend_otp_counter.present? ? self.resend_otp_counter : 0 )+ 1})
       end
       otp_sent_status

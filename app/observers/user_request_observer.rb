@@ -12,12 +12,14 @@ class UserRequestObserver < Mongoid::Observer
       if project_unit.present?
         template = SmsTemplate.where(name: "#{user_request.request_type}_request_created").first
         if template.present?
-          message = template.parsed_content(user_request)
-          if Rails.env.development?
-            SMSWorker.new.perform(user.phone.to_s, message)
-          else
-            SMSWorker.perform_async(user.phone.to_s, message)
-          end
+          receipt = user_request.receipt
+          Sms.create!(
+            booking_portal_client_id: project_unit.booking_portal_client_id,
+            recipient_id: user_request.user_id,
+            sms_template_id: template.id,
+            triggered_by_id: receipt.id,
+            triggered_by_type: receipt.class.to_s,
+          )
         end
       end
     end
@@ -49,12 +51,14 @@ class UserRequestObserver < Mongoid::Observer
 
     template = SmsTemplate.where(name: "#{user_request.request_type}_request_resolved").first
     if template.present?
-      message = template.parsed_content(user_request)
-      if Rails.env.development?
-        SMSWorker.new.perform(user.phone.to_s, message)
-      else
-        SMSWorker.perform_async(user.phone.to_s, message)
-      end
+      receipt = user_request.receipt
+      Sms.create!(
+        booking_portal_client_id: user_request.project_unit.booking_portal_client_id,
+        recipient_id: user_request.user_id,
+        sms_template_id: template.id,
+        triggered_by_id: receipt.id,
+        triggered_by_type: receipt.class.to_s
+      )
     end
   end
 end
