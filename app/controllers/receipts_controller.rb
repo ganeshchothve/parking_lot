@@ -107,7 +107,7 @@ class ReceiptsController < ApplicationController
         format.json{ render json: @receipt, location: url }
         format.html{ redirect_to url }
       else
-        format.json { render json: @receipt.errors, status: :unprocessable_entity }
+        format.json { render json: {errors: @receipt.errors.full_messages}, status: :unprocessable_entity }
         format.html { render 'new' }
       end
     end
@@ -123,7 +123,7 @@ class ReceiptsController < ApplicationController
         format.html { redirect_to admin_user_receipts_path(@user), notice: 'Receipt was successfully updated.' }
       else
         format.html { render :edit }
-        format.json { render json: @receipt.errors, status: :unprocessable_entity }
+        format.json { render json: {errors: @receipt.errors.full_messages}, status: :unprocessable_entity }
       end
     end
   end

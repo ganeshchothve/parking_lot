@@ -9,6 +9,7 @@
       <% labels = t('mongoid.attributes.user').with_indifferent_access %>
       <tr>
         <th>Name</th>
+        <th><%= global_labels[:receipts] %></th>
         <th>Details</th>
         <th>Role</th>
         <th>Account Confirmed?</th>
@@ -26,6 +27,7 @@
               </div>
             <% end %>
           </td>
+          <td><%= user.receipts.where(status: "success").present? ? "Y" : "N" %></td>
           <td>
             <i class="far fa-envelope"></i> <%= user.email %> <br/>
             <i class="fas fa-mobile-alt"></i><%= user.phone %><br/>
@@ -40,7 +42,7 @@
               <a class="btn btn-light light-pink-btn dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
               <div class="dropdown-menu dropdown-menu-right">
                 <% if UserPolicy.new(current_user, user).show? %>
-                  <% if ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: user, status: "available")).hold? %>
+                  <% if current_client.enable_actual_inventory? && ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: user, status: "available")).hold? %>
                     <%= link_to "Choose #{global_labels[:project_unit]} & Add Booking", new_admin_user_search_path(user.id), class: "dropdown-item" %>
                   <% end %>
                   <% if !current_user.buyer? && ReceiptPolicy.new(current_user, Receipt.new(user: user)).new? %>
