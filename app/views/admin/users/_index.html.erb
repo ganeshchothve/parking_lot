@@ -12,7 +12,7 @@
         <th>Details</th>
         <th>Role</th>
         <th>Account Confirmed?</th>
-        <th>Actions</th>
+        <th class="text-right">Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -21,7 +21,9 @@
           <td>
             <%= user.name %><br/>
             <% if user.role?("channel_partner") %>
-              Registered: <%= User.where(channel_partner_id: user.id).count %> | Confirmed: <%= User.where(channel_partner_id: user.id).ne(confirmed_at: nil).count %> | Blocked: <%= ProjectUnit.in(user_id: User.where(channel_partner_id: user.id).distinct(:id)).in(status: ['blocked', 'booked_tentative', 'booked_confirmed']).count %><br/>
+              <div class="small">
+                Registered: <%= User.where(channel_partner_id: user.id).count %> | Confirmed: <%= User.where(channel_partner_id: user.id).ne(confirmed_at: nil).count %> | Blocked: <%= ProjectUnit.in(user_id: User.where(channel_partner_id: user.id).distinct(:id)).in(status: ['blocked', 'booked_tentative', 'booked_confirmed']).count %><br/>
+              </div>
             <% end %>
           </td>
           <td>
@@ -33,7 +35,7 @@
           </td>
           <td><%= User.available_roles.find{|x| x[:id] == user.role}[:text] %></td>
           <td><%= user.confirmed_at.present? ? "Confirmed" : "Not confirmed" %></td>
-          <td>
+          <td class="text-right">
             <div class="dropdown">
               <a class="btn btn-light light-pink-btn dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
               <div class="dropdown-menu dropdown-menu-right">
@@ -42,10 +44,14 @@
                     <%= link_to "Choose #{global_labels[:project_unit]} & Add Booking", new_admin_user_search_path(user.id), class: "dropdown-item" %>
                   <% end %>
                   <% if !current_user.buyer? && ReceiptPolicy.new(current_user, Receipt.new(user: user)).new? %>
-                  <%= link_to "Add Direct #{global_labels['receipt']}", direct_admin_user_receipts_path(user), class: 'dropdown-item modal-remote-form-link' %>
+                    <%= link_to "Add Direct #{global_labels['receipt']}", direct_admin_user_receipts_path(user), class: 'dropdown-item modal-remote-form-link' %>
                   <% end %>
-                  <%= link_to "View", admin_user_path(user.id), class: "dropdown-item" %>
-                  <%= link_to "Add #{global_labels['user_kyc_details']}", new_admin_user_user_kyc_path(user), class: 'modal-remote-form-link dropdown-item', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
+                  <% if UserPolicy.new(current_user, user).show? %>
+                    <%= link_to "View Details", admin_user_path(user.id), class: "dropdown-item" %>
+                  <% end %>
+                  <% if UserKycPolicy.new(current_user, UserKyc.new(user: user)).new? %>
+                    <%= link_to "Add #{global_labels['user_kyc_details']}", new_admin_user_user_kyc_path(user), class: 'modal-remote-form-link dropdown-item', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
+                  <% end %>
                   <% if !user.confirmed? && user.confirmation_token.present? %>
                     <%= link_to 'Resend Confirmation Instructions', resend_confirmation_instructions_admin_user_path(user), class: 'dropdown-item', data: {event_category: 'Section', event_action: 'Click', event_name: 'Resend Confirmation Instructions'} %>
                   <% else %>
@@ -55,6 +61,9 @@
                 <% if ['crm', 'sales', 'cp', 'admin'].include?(current_user.role) %>
                   <% if UserPolicy.new(current_user, user).edit? %>
                     <%= link_to "Edit", edit_admin_user_path(user.id), class: "dropdown-item modal-remote-form-link" %>
+                  <% end %>
+                  <% if UserPolicy.new(current_user, user).update_password? %>
+                    <%= link_to "Update Password", update_password_admin_user_path(user), class: "dropdown-item modal-remote-form-link" %>
                   <% end %>
                 <% end %>
               </div>

@@ -56,6 +56,7 @@
             </button>
             <div class="dropdown-menu dropdown-menu-right">
               <%= link_to "Profile", edit_admin_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
+              <%= link_to "Change Password", update_password_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
               <%= link_to "Sign out", destroy_session_path(current_user), class: "dropdown-item", method: :delete %>
             </div>
           </div>

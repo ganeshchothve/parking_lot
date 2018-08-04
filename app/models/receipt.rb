@@ -121,9 +121,6 @@ class Receipt
     if params[:fltrs].present?
       if params[:fltrs][:status].present?
         selector[:status] = params[:fltrs][:status]
-        if selector[:status] == "pending"
-      	  selector[:payment_mode] = {"$ne" => "online"}
-      	end
       end
       if params[:fltrs][:user_id].present?
         selector[:user_id] = params[:fltrs][:user_id]
