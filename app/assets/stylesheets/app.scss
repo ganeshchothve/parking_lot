@@ -80,3 +80,15 @@ label.label-required:after {
 figure.wave {
   margin: 0 0 0;
 }
+.selldof .title{
+  display: none !important;
+}
+.selldof .btn, .sell_do_ctc_btn, .selldof .btn, .sell_do_verify_btn{
+  color: #fff !important;
+  background-color: #56b654 !important;
+  border-color: #56b654 !important;
+  font-size: 16px !important;
+}
+.selldof{
+  font-family: 'Nunito Sans', sans-serif !important;
+}

@@ -33,17 +33,17 @@ class ApplicationController < ActionController::Base
         'admin'
       end
     elsif is_a?(Devise::SessionsController)
-      "dashboard"
+      "application"
     elsif is_a?(Devise::PasswordsController)
-      "dashboard"
+      "application"
     elsif is_a?(Devise::UnlocksController)
-      "dashboard"
+      "application"
     elsif is_a?(Devise::RegistrationsController)
-      "dashboard"
+      "application"
     elsif is_a?(Devise::ConfirmationsController)
-      "dashboard"
+      "application"
     elsif is_a?(ChannelPartnersController)
-      "dashboard"
+      "application"
     else
       "application"
     end

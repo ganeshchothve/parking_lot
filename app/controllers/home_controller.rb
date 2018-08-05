@@ -56,7 +56,7 @@ class HomeController < ApplicationController
       redirect_to home_path(current_user)
       flash[:notice] = "You have already been logged in"
     else
-      render layout: "dashboard"
+      render layout: "application"
     end
   end
 
