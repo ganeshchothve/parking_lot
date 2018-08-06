@@ -25,26 +25,41 @@
   </head>
   <body>
     <div class="container-fluid">
-      <header class="fixed-top z-index-2 pt-3 pb-3 col-md-12">
-        <%= link_to "Register as Channel Partner", new_channel_partner_path, data:{event_category: 'Section', event_action: 'Click', event_name: 'Register Channel Partner'}, class: "float-right btn btn-secondary" %>
-        <%= link_to "Register Now", register_path, data:{event_category: 'Section', event_action: 'Click', event_name: 'Sign Up'}, class: "float-right mr-2 btn btn-primary" %>
-    </header>
-    <div class="row align-middle" style="height:100vh;">
-      <div class="col-md-5 col-sm-12 bg-light d-flex align-items-center text-center">
-        <div>
-          <img src="<%= current_client.logo.url %>" class="img-responsive mb-5">
-          <h5 class="mt-5">Lorem Ipsum is simply dummy text of the printing and typesetting industry. </h5>
+      <nav id="top_navigation" class="navbar navbar-expand-lg fixed-top navbar navbar-light bg-white border-bottom">
+        <a class="navbar-brand" href="<%= root_path %>" title="<%= current_project.name %> | <%= current_client.name %>">
+          <img src="<%= asset_path current_client.logo.url %>" class="img-responsive d-none d-sm-block">
+          <img src="<%= asset_path current_client.mobile_logo.url %>" class="img-responsive d-sm-none">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle main navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="main-navbar">
+          <ul class="navbar-nav ml-auto mt-2">
+            <li class="nav-item">
+              <%= link_to "Register as Channel Partner", new_channel_partner_path, data:{event_category: 'Section', event_action: 'Click', event_name: 'Register Channel Partner'}, class: "mr-2 btn btn-secondary" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "Register Now", register_path, data:{event_category: 'Section', event_action: 'Click', event_name: 'Sign Up'}, class: "btn btn-primary" %>
+            </li>
+          </ul>
         </div>
-      </div>
-      <div class="col-md-7 col-sm-12 d-flex align-items-center">
-        <div class="col-md-12 mx-auto">
-          <% if notice %>
-            <p class="alert alert-success notice"><%= notice %></p>
-          <% end %>
-          <% if alert %>
-            <p class="alert alert-danger"><%= alert %></p>
-          <% end %>
-          <%= yield %>
+      </nav>
+      <div class="body-padding"></div>
+      <% if notice %>
+      <p class="alert alert-success notice"><%= notice %></p>
+      <% end %>
+      <% if alert %>
+      <p class="alert alert-danger"><%= alert %></p>
+      <% end %>
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10">
+            <div class="card">
+              <div class="card-body">
+                <%= yield %>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
