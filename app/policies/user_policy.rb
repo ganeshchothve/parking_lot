@@ -51,7 +51,7 @@ class UserPolicy < ApplicationPolicy
     attributes = [:first_name, :last_name, :email, :phone, :lead_id, :password, :password_confirmation]
     attributes += [:channel_partner_id] if user.role?('channel_partner')
     attributes += [:channel_partner_id, :rera_id, :location, :allowed_bookings, :channel_partner_change_reason] if user.role?('admin') || user.role?("superadmin")
-    attributes += [:role] if user.role?('superadmin')
+    attributes += [:role] if user.role?('superadmin') || user.role?("admin")
     attributes
   end
 end

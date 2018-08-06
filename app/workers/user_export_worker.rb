@@ -35,8 +35,6 @@ class UserExportWorker
       "POA",
       "POA Details",
       "Company Name",
-      "Loan Required",
-      "Bank Name",
       "Is an Existing Customer",
       "Existing Customer Name",
       "Existing Customer Project Name",
@@ -61,8 +59,6 @@ class UserExportWorker
       user_kyc.poa? ? "Yes" : "No",
       user_kyc.poa_details,
       user_kyc.company_name,
-      user_kyc.loan_required? ? "Yes" : "No",
-      user_kyc.bank_name,
       user_kyc.existing_customer? ? "Yes" : "No",
       user_kyc.existing_customer_name,
       user_kyc.existing_customer_project,
@@ -82,7 +78,6 @@ class UserExportWorker
       "Role",
       "Referred by Partner",
       "RERA ID",
-      "Location",
       "Last Sign In At",
       "Account Confirmed At"
     ]
@@ -98,7 +93,6 @@ class UserExportWorker
       User.available_roles.select{|x| x[:id] == user.role}.first[:text],
       user.channel_partner_id.present? ? User.find(user.channel_partner_id).name : "",
       user.role?("channel_partner") ? user.rera_id : "",
-      user.role?("channel_partner") ? user.location : "",
       user.last_sign_in_at,
       user.confirmed_at
     ]

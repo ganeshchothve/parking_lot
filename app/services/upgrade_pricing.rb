@@ -8,19 +8,7 @@ class UpgradePricing
         ProjectUnit.in(status: ["available", "not_available"]).in(project_tower_id: project_tower_ids).each do |project_unit|
           project_unit.base_rate = updated_rate
           project_unit.calculate_agreement_price
-          if project_unit.save
-            ApplicationLog.log("price_upgraded", {
-              updated_rate: updated_rate,
-              current_max_rate: current_max_rate,
-              project_unit_id: project_unit.id.to_s
-            })
-          else
-            ApplicationLog.log("error_in_price_upgrad", {
-              updated_rate: updated_rate,
-              current_max_rate: current_max_rate,
-              project_unit_id: project_unit.id.to_s
-            })
-          end
+          project_unit.save
         end
       end
     end

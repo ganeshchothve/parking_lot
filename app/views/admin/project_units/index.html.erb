@@ -16,12 +16,17 @@
         <div class="col-9">
           <div class="card">
             <div class="card-body">
+              <div class="row">
+                <div class="col-12">
+                  <p>Total Project Units : <%= project_units.count %></p>
+                </div>
+              </div>
               <%= render '/admin/project_units/index', project_units: @project_units %>
               <% if ProjectUnitPolicy.new(current_user, ProjectUnit).export? %>
-                <%= link_to "Export all #{global_labels['units']}", export_admin_project_units_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn margin-xs-left-0' %>
+                <%= link_to "Export all #{global_labels['units']}", export_admin_project_units_path, class: 'btn btn-primary float-left ml-2 pink-btn margin-xs-left-0' %>
               <% end %>
               <% if ProjectUnitPolicy.new(current_user, ProjectUnit).mis_report? %>
-                <%= link_to "MIS report #{global_labels['units']}", mis_report_admin_project_units_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn margin-xs-left-0' %>
+                <%= link_to "MIS report #{global_labels['units']}", mis_report_admin_project_units_path, class: 'btn btn-primary float-left ml-2 pink-btn margin-xs-left-0' %>
               <% end %>
             </div>
           </div>
