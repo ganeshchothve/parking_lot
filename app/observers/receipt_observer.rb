@@ -94,7 +94,7 @@ class ReceiptObserver < Mongoid::Observer
       receipt.processed_on = Date.today
       receipt.assign!(:order_id) if receipt.order_id.blank?
     end
-    if receipt.new_record? || receipt.receipt_id.include?("tmp-") && receipt.status_changed? && receipt.status != "pending"
+    if receipt.new_record? || receipt.receipt_id.include?("TMP-") && receipt.status_changed? && receipt.status != "pending"
       receipt.receipt_id = receipt.generate_receipt_id
     end
   end
