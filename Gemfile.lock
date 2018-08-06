@@ -1,5 +1,5 @@
 GIT
-  remote: https://51789d55fec920a398c8e61ddf5c592567f9a5a1:x-oauth-basic@github.com/amuratech/audit.git
+  remote: https://github.com/amuratech/audit.git
   revision: 8f7b0b6d1e773f438ad814a7169c13a2b89d651d
   specs:
     audit (0.1.0)
