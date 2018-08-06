@@ -84,6 +84,9 @@ class User
   has_many :user_requests
   has_many :user_kycs
   has_many :searches
+  has_many :received_smses, class_name: "Sms", inverse_of: :recipient
+
+  has_many :smses, as: :triggered_by, class_name: "Sms"
 
   validates :first_name, :last_name, :role, :allowed_bookings, presence: true
   validates :phone, uniqueness: true, phone: { possible: true, types: [:voip, :personal_number, :fixed_or_mobile]}, if: Proc.new{|user| user.email.blank? }

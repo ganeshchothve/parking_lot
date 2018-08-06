@@ -47,6 +47,8 @@ class Client
   has_many :project_units
   has_many :projects
   has_one :address, as: :addressable
+  has_many :sms_templates, class_name: 'SmsTemplate'
+  has_many :smses, class_name: 'Sms'
 
   validate :name, :selldo_client_id, :selldo_form_id, :helpdesk_email, :helpdesk_number, :notification_email, :email_domains, :booking_portal_domains, :registration_name, :cin_number, :billing_name, :website_link, :support_email, :support_number
 
