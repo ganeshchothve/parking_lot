@@ -80,7 +80,7 @@ gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
 gem 'bootstrap-email'
 
-gem 'audit', git: 'https://#{ENV['GITHUB_TOKEN']}:x-oauth-basic@github.com/amuratech/audit.git'
+gem 'audit', git: "https://#{ENV['GITHUB_TOKEN']}:x-oauth-basic@github.com/amuratech/audit.git"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
