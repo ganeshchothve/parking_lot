@@ -12,7 +12,7 @@
           </tr>
         </thead>
         <tbody>
-          <% DashboardDataProvider.channel_partners_dashboard.each do |d| %>
+          <% DashboardDataProvider.channel_partners_dashboard(current_user).each do |d| %>
           <tr>
             <td><%= ChannelPartner.available_statuses.find{|x| x[:id] == d[:status]}[:text] %></td>
             <td class="text-right"><%= d[:count] %></td>

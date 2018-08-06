@@ -14,7 +14,7 @@
           </tr>
         </thead>
         <tbody>
-          <% DashboardDataProvider.receipts_dashboard.each do |d| %>
+          <% DashboardDataProvider.receipts_dashboard(current_user).each do |d| %>
           <tr>
             <td><%= Receipt.available_statuses.find{|x| x[:id] == d[:status]}[:text] %></td>
             <td><%= Receipt.available_payment_modes.find{|x| x[:id] == d[:payment_mode]}[:text]  %></td>

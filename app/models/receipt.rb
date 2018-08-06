@@ -6,6 +6,7 @@ class Receipt
   include ArrayBlankRejectable
   include Mongoid::Autoinc
   include InsertionStringMethods
+  include ApplicationHelper
 
   field :receipt_id, type: String
   field :order_id, type: String
@@ -120,9 +121,6 @@ class Receipt
     if params[:fltrs].present?
       if params[:fltrs][:status].present?
         selector[:status] = params[:fltrs][:status]
-        if selector[:status] == "pending"
-      	  selector[:payment_mode] = {"$ne" => "online"}
-      	end
       end
       if params[:fltrs][:user_id].present?
         selector[:user_id] = params[:fltrs][:user_id]
@@ -167,7 +165,7 @@ class Receipt
     if self.total_amount < ProjectUnit.blocking_amount && self.payment_type == "blocking" && self.new_record?
       self.errors.add :total_amount, " cannot be less than #{ProjectUnit.blocking_amount}"
     end
-    if self.total_amount != ProjectUnit.blocking_amount && current_client.blocking_amount_editable && self.new_record? && self.payment_type == "blocking"
+    if self.total_amount != ProjectUnit.blocking_amount && current_client.blocking_amount_editable && self.new_record? && self.payment_type == "blocking" && !current_client.blocking_amount_editable?
       self.errors.add :total_amount, " has to be #{ProjectUnit.blocking_amount}"
     end
     if self.total_amount <= 0

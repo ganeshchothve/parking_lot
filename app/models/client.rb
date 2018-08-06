@@ -39,6 +39,7 @@ class Client
   field :holding_minutes, type: Integer, default: 15
 
   mount_uploader :logo, DocUploader
+  mount_uploader :mobile_logo, DocUploader
 
   enable_audit track: ["update"]
 

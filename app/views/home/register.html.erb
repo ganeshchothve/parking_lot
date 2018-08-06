@@ -1,21 +1,11 @@
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-7">
-      <div class="card">
-        <div class="card-body">
-          <a href="javascript:void(0);" class="logo-wrapper text-center d-block mb-3">
-            <img src="<%= asset_path current_client.logo.url %>" class="img-responsive" />
-          </a>
-          <h3 class="text-center">Register</h3>
-          <div class="sign-up">
-            <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= current_client.selldo_client_id %>.js'></script>
-            <script src='//trkr.scdn1.secure.raxcdn.com/t/forms/<%= current_client.selldo_client_id %>/<%= current_client.selldo_form_id %>.js' data-form-id='<%= current_client.selldo_form_id %>'></script>
-          </div>
-        </div>
-      </div>
-      <%= render "devise/shared/links" %>
-    </div>
+<div class="col-md-12 mx-auto">
+  <h2 class="font-weight-bold text-success">Sign Up</h2>
+  <p class="text-muted">Lorem ipsum.</p>
+  <div class="sign-up" style="margin-left:-15px;">
+    <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= current_client.selldo_client_id %>.js'></script>
+    <script src='//trkr.scdn1.secure.raxcdn.com/t/forms/<%= current_client.selldo_client_id %>/<%= current_client.selldo_form_id %>.js' data-form-id='<%= current_client.selldo_form_id %>'></script>
   </div>
+  <%= render "devise/shared/links" %>
 </div>
 <script type="text/javascript" data-tag="selldo">
 window.sell_do_form_rendered = function(){

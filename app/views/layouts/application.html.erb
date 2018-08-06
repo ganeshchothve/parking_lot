@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>BookingPortal</title>
+    <title><%= current_project.name %> | <%= current_client.name %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <%= csrf_meta_tags %>
-
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
+
     <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
     <%= javascript_tag do %>
       if(typeof App === "undefined"){
@@ -14,29 +15,34 @@
       App.client = <%= raw current_client.to_json %>;
       App.project = <%= raw current_project.to_json %>;
       <% if user_signed_in? %>
-        App.current_user = <%= raw current_user.to_json %>
+        App.current_user = <%= raw current_user.to_json %>;
         App.current_user.name = App.current_user.first_name + " " + App.current_user.last_name;
       <% end %>
       <% if Rails.env.development? || Rails.env.staging? %>
         Pusher.logToConsole = true;
       <% end %>
     <% end %>
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-K4Z8SL');</script>
-    <!-- End Google Tag Manager -->
   </head>
   <body>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K4Z8SL"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
-    <%= yield %>
+    <div class="container-fluid">
+      <header class="fixed-top z-index-2 pt-3 pb-3 col-md-12">
+        <%= link_to "Register as Channel Partner", new_channel_partner_path, data:{event_category: 'Section', event_action: 'Click', event_name: 'Register Channel Partner'}, class: "float-right btn btn-secondary" %>
+        <%= link_to "Register Now", register_path, data:{event_category: 'Section', event_action: 'Click', event_name: 'Sign Up'}, class: "float-right mr-2 btn btn-primary" %>
+    </header>
+    <div class="row align-middle" style="height:100vh;">
+      <div class="col-md-5 col-sm-12 bg-light d-flex align-items-center text-center">
+        <div>
+          <img src="<%= current_client.logo.url %>" class="img-responsive mb-5">
+          <h5 class="mt-5">Lorem Ipsum is simply dummy text of the printing and typesetting industry. </h5>
+        </div>
+      </div>
+      <div class="col-md-7 col-sm-12 d-flex align-items-center">
+        <div class="col-md-12 mx-auto">
+          <p class="notice"><%= notice %></p>
+          <p class="alert"><%= alert %></p>
+          <%= yield %>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

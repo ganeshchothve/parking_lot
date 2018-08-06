@@ -1,44 +1,41 @@
-<div class="card">
-  <div class="card-body">
-    <%
-      if current_user.buyer?
-        if @search.persisted?
-          url = user_search_path(@search)
-        else
-          url = user_searches_path
-        end
-      else
-        if @search.persisted?
-          url = admin_user_search_path(@user, @search)
-        else
-          url = admin_user_searches_path(@user)
-        end
-      end
-    %>
-    <%= form_for @search, url: url, html: {class: 'validate-form', id: "search_form"} do |f| %>
-    <%= f.hidden_field :user_id %>
-    <div class="form-group">
-      <%= f.label :bedrooms %>
-      <%= f.select :bedrooms, data.collect{|x| ["#{x["_id"]["bedrooms"]} BHK starting at #{number_to_indian_currency(x["min_agreement_price"])}".html_safe, x["_id"]["bedrooms"]]}, {prompt: true}, class: 'selectize', disabled: (policy(@search).editable_field?("bedrooms") ? false : true) %>
+<%
+  if current_user.buyer?
+    if @search.persisted?
+      url = user_search_path(@search)
+    else
+      url = user_searches_path
+    end
+  else
+    if @search.persisted?
+      url = admin_user_search_path(@user, @search)
+    else
+      url = admin_user_searches_path(@user)
+    end
+  end
+%>
+
+<%= form_for @search, remote: true, url: url, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['search'], "data-type": "json", id: "search_form"} do |f| %>
+  <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            <%= global_labels[:search] %>
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <%= render "form_fields", {data: data, f: f} %>
+        </div>
+        <div class="modal-footer">
+          <%= f.submit "Search", class: "btn btn-primary" %>
+        </div>
+      </div>
     </div>
-    <div class="form-group">
-      <%= f.label :agreement_price %>
-      <%
-        min = data.first["min_agreement_price"]
-        max = data.last["max_agreement_price"]
-        slab = (max - min)/4
-        agreement_price_slabs = [["#{number_to_indian_currency(min)} - #{number_to_indian_currency(min+slab)}".html_safe, "#{min}-#{min + slab}"]]
-        agreement_price_slabs << ["#{number_to_indian_currency(min+slab)} - #{number_to_indian_currency(min+2*slab)}".html_safe, "#{min+slab}-#{min + 2*slab}"]
-        agreement_price_slabs << ["#{number_to_indian_currency(min+2*slab)} - #{number_to_indian_currency(min+3*slab)}".html_safe, "#{min+2*slab}-#{max}"]
-      %>
-      <%= f.select :agreement_price, agreement_price_slabs, {prompt: true}, class: 'selectize', disabled: (policy(@search).editable_field?("bedrooms") ? false : true) %>
-    </div>
-    <div class="form-group">
-      <%= f.submit "Search", class: "btn btn-primary" %>
-    </div>
-    <% end %>
   </div>
-</div>
+<% end %>
 <%= javascript_tag do %>
 $(document).ready(function(){
   FormInitializer.init($("#search_form"));

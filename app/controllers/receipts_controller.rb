@@ -23,6 +23,16 @@ class ReceiptsController < ApplicationController
     redirect_to admin_users_path
   end
 
+  def resend_success
+    mailer = ReceiptMailer.send_success(@receipt)
+    if Rails.env.development?
+      mailer.deliver
+    else
+      mailer.deliver_later
+    end
+    redirect_to (request.referrer.present? ? request.referrer : dashboard_path)
+  end
+
   def show
     @receipt = Receipt.find(params[:id])
     authorize @receipt
@@ -97,7 +107,7 @@ class ReceiptsController < ApplicationController
         format.json{ render json: @receipt, location: url }
         format.html{ redirect_to url }
       else
-        format.json { render json: @receipt.errors, status: :unprocessable_entity }
+        format.json { render json: {errors: @receipt.errors.full_messages}, status: :unprocessable_entity }
         format.html { render 'new' }
       end
     end
@@ -113,7 +123,7 @@ class ReceiptsController < ApplicationController
         format.html { redirect_to admin_user_receipts_path(@user), notice: 'Receipt was successfully updated.' }
       else
         format.html { render :edit }
-        format.json { render json: @receipt.errors, status: :unprocessable_entity }
+        format.json { render json: {errors: @receipt.errors.full_messages}, status: :unprocessable_entity }
       end
     end
   end

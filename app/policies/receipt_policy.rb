@@ -31,6 +31,10 @@ class ReceiptPolicy < ApplicationPolicy
     !user.buyer? && (((user.role?('superadmin') || user.role?('admin') || user.role?('crm') || user.role?('sales')) && ['pending', 'clearance_pending'].include?(record.status)) || (user.role?('channel_partner') && record.status == 'pending'))
   end
 
+  def resend_success?
+    show?
+  end
+
   def update?
     edit?
   end
