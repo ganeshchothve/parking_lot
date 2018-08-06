@@ -87,12 +87,11 @@ class User
 
   validates :first_name, :last_name, :role, :allowed_bookings, presence: true
   validates :phone, uniqueness: true, phone: { possible: true, types: [:voip, :personal_number, :fixed_or_mobile]}, if: Proc.new{|user| user.email.blank? }
-  validates :lead_id, uniqueness: true, allow_blank: true
   validates :email, uniqueness: true, if: Proc.new{|user| user.phone.blank? }
   validates :rera_id, presence: true, if: Proc.new{ |user| user.role?('channel_partner') }
   validates :rera_id, uniqueness: true, allow_blank: true
   validates :role, inclusion: {in: Proc.new{ User.available_roles.collect{|x| x[:id]} } }
-  validates :lead_id, presence: true, if: Proc.new{ |user| user.buyer? }
+  validates :lead_id, uniqueness: true, presence: true, if: Proc.new{ |user| user.buyer? }
   validate :channel_partner_change_reason_present?
 
   def unattached_blocking_receipt

@@ -59,9 +59,11 @@
             <%= render 'dashboard/project_unit_overview', {project_unit: project_unit, with_actions: true} %>
             <div class="mt-3"></div>
           <% end %>
-          <a href="/dashboard/apartment-selector" class="btn btn-primary mt-3" data-event-category="section" data-event-action="click" data-event-name="Book Another Home">
-            Book Another Home
-          </a>
+          <% if current_user.buyer? && policy(:dashboard).project_units? && ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: current_user, status: "available")).hold? %>
+            <a href="/dashboard/apartment-selector" class="btn btn-primary mt-3" data-event-category="section" data-event-action="click" data-event-name="Book Another Home">
+              Book Another Home
+            </a>
+          <% end %>
         </div>
       </div>
       <% receipts = current_user.receipts.where(status: 'clearance_pending') %>
