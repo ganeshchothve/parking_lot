@@ -39,7 +39,6 @@ class UserKyc
     audit_fields: [:creator_id, :pan_number, :aadhaar, :is_company, :gstn, :company_name]
   })
 
-
   has_many :assets, as: :assetable
   has_one :bank_detail, as: :bankable
   # has_one :correspondence_address, as: :addressable, class_name: "Address"
