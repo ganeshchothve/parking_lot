@@ -155,7 +155,7 @@ class Receipt
         "#{self.project_unit.project_name[0..1]}-#{self.order_id}"
       end
     elsif self.receipt_id.blank?
-      "#{self.project_unit.project_name[0..1]}-tmp-#{SecureRandom.hex(4)}"
+      "#{self.project_unit.project_name[0..1]}-TMP-#{SecureRandom.hex(4)}"
     else
       self.receipt_id
     end
