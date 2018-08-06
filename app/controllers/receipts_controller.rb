@@ -24,7 +24,7 @@ class ReceiptsController < ApplicationController
   end
 
   def resend_success
-    mailer = ReceiptMailer.send_success(@receipt)
+    mailer = ReceiptMailer.send_success(@receipt.id.to_s)
     if Rails.env.development?
       mailer.deliver
     else

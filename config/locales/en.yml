@@ -87,7 +87,7 @@ en:
         aadhaar: 'Aadhaar'
         oci: 'OCI'
         gstn: 'GSTN'
-        is_company: 'Is a company'
+        is_company: 'Are you a corporate buying an Apartment?'
         anniversary: 'Anniversary'
         poa_details: 'Power of Attorney Details'
         loan_required: 'Do you require a Loan'

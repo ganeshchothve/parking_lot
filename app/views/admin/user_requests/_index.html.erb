@@ -1,4 +1,3 @@
-<p>Total <%= "#{global_labels['user_requests']}" %> : <%= user_requests.count %></p>
 <div class="table-responsive-md">
   <table class='table striped-table' width="100%" cellpadding="10" cellspacing="0">
     <thead class="th-default">
@@ -36,4 +35,4 @@
     </tbody>
   </table>
 </div>
-<%= will_paginate user_requests %>
+<%= will_paginate user_requests, list_classes: %w(pagination justify-content-center) %>
