@@ -18,7 +18,7 @@ module DashboardDataProvider
   end
 
   def self.receipts_dashboard(user, matcher={})
-    if matcher.present? && matcher[:user_id].present?
+    unless matcher.present? && matcher[:user_id].present?
       if user.role?('channel_partner')
         matcher = {user_id: { "$in": User.where(referenced_channel_partner_ids: user.id).distinct(:id) }}
       elsif user.role?("cp")
