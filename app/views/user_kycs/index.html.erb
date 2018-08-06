@@ -4,14 +4,21 @@
       <%= render 'breadcrumbs', {user_kyc: @user_kyc, user: @user} %>
       <div class="card">
         <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-md-7">
+              <% if UserKycPolicy.new(current_user, UserKyc.new(user: @user)).new? %>
+                <% if current_user.buyer? %>
+                  <%= link_to "Add #{global_labels['user_kyc']}", new_user_kyc_path, class: 'btn btn-primary modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
+                <% else %>
+                  <%= link_to "Add #{global_labels['user_kyc']}", new_admin_user_user_kyc_path(@user), class: 'btn btn-primary modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
+                <% end %>
+              <% end %>
+            </div>
+            <div class="col-md-5 text-right">
+              <h6 class="mt-2">Total <%= global_labels[:user_kycs] %>: <%= @user_kycs.count %></h6>
+            </div>
+          </div>
           <%= render 'index', {user_kycs: @user_kycs} %>
-          <% if UserKycPolicy.new(current_user, UserKyc.new(user: @user)).new? %>
-            <% if current_user.buyer? %>
-              <%= link_to "Add #{global_labels['user_kyc']}", new_user_kyc_path, class: 'btn btn-primary modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
-            <% else %>
-              <%= link_to "Add #{global_labels['user_kyc']}", new_admin_user_user_kyc_path(@user), class: 'btn btn-primary modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
-            <% end %>
-          <% end %>
         </div>
       </div>
     </div>

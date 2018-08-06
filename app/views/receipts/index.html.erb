@@ -1,6 +1,6 @@
 <div class="container">
   <div class="row justify-content-center">
-    <div class="<%= @user.blank? ? 'col-md-10' : 'col-md-12' %>">
+    <div class="<%= @user.blank? ? 'col-md-9' : 'col-md-12' %>">
       <%= render 'breadcrumbs', {user: @user, project_unit: @project_unit} %>
       <% unless current_user.buyer? %>
         <% unless ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? || current_user.role?('crm') || current_user.role?('sales') || current_user.role?('cp') %>
@@ -17,42 +17,49 @@
       <% end %>
       <div class="card">
         <div class="card-body">
-          <%= render 'index', {receipts: @receipts} %>
-          <% if ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? %>
-          <% units_for_payments = @user.project_units.in(status: ["blocked", 'booked_tentative']).all %>
-          <% if units_for_payments.present? %>
-          <% unless current_user.buyer? %>
-          <div class="dropdown float-left mr-2">
-            <a class="btn btn-primary dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add <%= global_labels['receipt'] %> to Blocked Units</a>
-            <div class="dropdown-menu dropdown-menu-right">
-              <% units_for_payments.each do |project_unit| %>
-              <%= link_to "#{project_unit.name}", new_admin_user_project_unit_receipt_path(@user.id, project_unit.id), class: 'dropdown-item modal-remote-form-link' %>
+          <div class="row mb-3">
+            <div class="col-md-7">
+              <% if ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? %>
+              <% units_for_payments = @user.project_units.in(status: ["blocked", 'booked_tentative']).all %>
+              <% if units_for_payments.present? %>
+              <% unless current_user.buyer? %>
+              <div class="dropdown float-left mr-2">
+                <a class="btn btn-primary dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add <%= global_labels['receipt'] %> to Blocked Units</a>
+                <div class="dropdown-menu dropdown-menu-right">
+                  <% units_for_payments.each do |project_unit| %>
+                  <%= link_to "#{project_unit.name}", new_admin_user_project_unit_receipt_path(@user.id, project_unit.id), class: 'dropdown-item modal-remote-form-link' %>
+                  <% end %>
+                </div>
+              </div>
+              <% end %>
+              <% end %>
+              <% end %>
+              <%
+                if @user.present? && !current_user.buyer?
+                url_for_new_receipt = if @project_unit.present?
+                  new_admin_user_project_unit_receipt_path(@user, @project_unit)
+                else
+                  new_admin_user_receipt_path(@user)
+                end
+              %>
+              <% if !current_user.buyer? && ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? %>
+              <%= link_to "Make #{global_labels['receipt']}", url_for_new_receipt, class: 'btn btn-primary modal-remote-form-link' %>
+              <% end %>
+              <% end %>
+              <% if UserPolicy.new(current_user, User).export? && @user.blank? %>
+                <%= link_to "Export all #{global_labels['receipts']}", export_admin_receipts_path, class: 'btn btn-primary modal-remote-form-link' %>
               <% end %>
             </div>
+            <div class="col-md-5 text-right">
+              <h6 class="mt-2">Total <%= global_labels[:receipts] %>: <%= @receipts.count %></h6>
+            </div>
           </div>
-          <% end %>
-          <% end %>
-          <% end %>
-          <%
-            if @user.present? && !current_user.buyer?
-            url_for_new_receipt = if @project_unit.present?
-              new_admin_user_project_unit_receipt_path(@user, @project_unit)
-            else
-              new_admin_user_receipt_path(@user)
-            end
-          %>
-          <% if !current_user.buyer? && ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? %>
-          <%= link_to "Make #{global_labels['receipt']}", url_for_new_receipt, class: 'btn btn-primary modal-remote-form-link' %>
-          <% end %>
-          <% end %>
-          <% if UserPolicy.new(current_user, User).export? && @user.blank? %>
-            <%= link_to "Export all #{global_labels['receipts']}", export_admin_receipts_path, class: 'btn btn-outline-primary modal-remote-form-link' %>
-          <% end %>
+          <%= render 'index', {receipts: @receipts} %>
         </div>
       </div>
     </div>
     <% if @user.blank? %>
-      <div class="col-md-2">
+      <div class="col-md-3">
         <%= render "filters" %>
       </div>
     <% end %>

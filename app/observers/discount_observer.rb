@@ -6,19 +6,6 @@ class DiscountObserver < Mongoid::Observer
   end
 
   def after_save discount
-    ApplicationLog.log("discount_updated", {
-      discount_id: discount.id,
-      status: discount.status,
-      project_id: discount.project_id,
-      project_tower_id: discount.project_tower_id,
-      project_unit_id: discount.project_unit_id,
-      user_id: discount.user_id,
-      user_role: discount.user_role,
-      value: discount.value,
-      approved_at: discount.approved_at,
-      approved_by: discount.approved_by
-    }, RequestStore.store[:logging])
-
     if discount.status_changed?
       case discount.status
       when 'draft'

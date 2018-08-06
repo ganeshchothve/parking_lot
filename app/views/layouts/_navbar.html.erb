@@ -44,7 +44,7 @@
             <%= active_link_to global_labels['user_kycs'], user_user_kycs_path, active: :inclusive, class: "nav-link" %>
           </li>
         <% end %>
-        <% if policy(:dashboard).receipts? %>
+        <% if ReceiptPolicy.new(current_user, Receipt).index? %>
           <li class="nav-item">
             <%= active_link_to global_labels['receipts'], user_receipts_path, active: :inclusive, class: "nav-link" %>
           </li>
@@ -94,9 +94,11 @@
   </nav>
   <div class="body-padding"></div>
 <% end %>
-<% if notice %>
-  <p class="alert alert-success notice"><%= notice %></p>
-<% end %>
-<% if alert %>
-  <p class="alert alert-danger"><%= alert %></p>
-<% end %>
+<div class="container">
+  <% if notice %>
+    <p class="alert alert-success notice"><%= notice %></p>
+  <% end %>
+  <% if alert %>
+    <p class="alert alert-danger"><%= alert %></p>
+  <% end %>
+</div>

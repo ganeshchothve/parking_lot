@@ -10,7 +10,7 @@ document.addEventListener("sell_do_form_submitted_with_error", function(){
     $(".sell_do_form_actual_container .form_error_message").remove();
     new Noty({
       text: "A user with this email or phone has already registered",
-      timeout: 5000,
+      timeout: 7000,
       type: 'error'
     }).show();
   }, 100);
@@ -70,7 +70,7 @@ function register_user_with_portal(e){
       // show success message and redirect to after sign in path
       new Noty({
         text: one.success || 'Request completed successfully',
-        timeout: 5000,
+        timeout: 7000,
         type: 'success'
       }).show();
       setTimeout(function(){
@@ -101,7 +101,7 @@ function register_user_with_portal(e){
         if(str){
           new Noty({
             text: str,
-            timeout: 5000,
+            timeout: 7000,
             type: 'error'
           }).show();
         }

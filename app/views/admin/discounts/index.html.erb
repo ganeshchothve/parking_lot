@@ -1,16 +1,25 @@
-<%= render 'breadcrumbs', {discount: @discount} %>
-<section class="padding-side-30 main-wrapper">
-	<div class="container-fluid">
-		<div class="row">
-		  <div class="col-md-10 border border-left-0 border-top-0 border-bottom-0 table-responsive margin-xs-right-15 padding-left-0">
-		    <%= render 'index', {discounts: @discounts} %>
-		    <% if DiscountPolicy.new(current_user, Discount.new).new? %>
-		      <%= link_to "Add #{global_labels['discount']}", new_admin_discount_path, class: 'btn btn-primary nav-btn' %>
-		    <% end %>
-		  </div>
-		  <div class="col-md-2">
-		    <%= render "filters" %>
-		  </div>
-		</div>
-	</div>
-</section>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-9">
+      <%= render 'breadcrumbs', {discount: @discount} %>
+      <div class="card h-100">
+        <div class="row mb-3">
+          <div class="col-md-7">
+            <% if DiscountPolicy.new(current_user, Discount.new).new? %>
+              <%= link_to "Add #{global_labels['discount']}", new_admin_discount_path, class: 'btn btn-primary nav-btn' %>
+            <% end %>
+          </div>
+          <div class="col-md-5 text-right">
+            <h6 class="mt-2">Total <%= global_labels[:discounts] %>: <%= @discounts.count %></h6>
+          </div>
+        </div>
+        <div class="card-body">
+          <%= render 'index', {discounts: @discounts} %>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <%= render "filters" %>
+    </div>
+  </div>
+</div>

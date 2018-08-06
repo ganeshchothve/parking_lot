@@ -27,13 +27,13 @@ var OtpBasedLogin = (function(){
     if(xhr.status == 201){
       new Noty({
         text: "Invalid Phone Number",
-        timeout: 5000,
+        timeout: 7000,
         type: 'error'
       }).show();
     }else if(xhr.status == 422){
       new Noty({
         text: data["errors"],
-        timeout: 5000,
+        timeout: 7000,
         type: 'error'
       }).show();
     }
