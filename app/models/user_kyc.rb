@@ -15,7 +15,7 @@ class UserKyc
   field :education_qualification, type: String
   field :designation, type: String
   field :customer_company_name, type: String
-  field :configurations, type: Array
+  field :configurations, type: Array, default: []
   field :comments, type: String
 
   field :nri, type: Boolean, default: false
@@ -56,7 +56,7 @@ class UserKyc
   validates :email, uniqueness: {scope: :user_id}, allow_blank: true
   validates :pan_number, :aadhaar, uniqueness: {scope: :user_id}, allow_blank: true
   validates :phone, uniqueness: {scope: :user_id}, phone: true # TODO: we can remove phone validation, as the validation happens in
-  validates :configurations, inclusion: {in: Proc.new{ UserKyc.available_configurations.collect{|x| x[:id]} } }
+  validates :configurations, array: {inclusion: {in: Proc.new{ |kyc| UserKyc.available_configurations.collect{|x| x[:id]} } }}
   validates :pan_number, format: {with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A'}, allow_blank: true
   validates :aadhaar, format: {with: /\A\d{12}\z/i, message: 'is not a valid aadhaar number'}, allow_blank: true
   validates :company_name, :gstn, presence: true, if: Proc.new{|kyc| kyc.is_company?}

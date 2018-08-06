@@ -20,6 +20,7 @@ FormInitializer = (function(){
 			utilsScript: "<%= asset_path('intTelInputUtils.js') %>",
 			nationalMode: false
 		});
+    crs.init();
     $(selector).find('.selectize-tags').selectize({create: true});
     $(selector).find('.array-field').arrayField();
     $(selector).find('.datepicker').each(function(){

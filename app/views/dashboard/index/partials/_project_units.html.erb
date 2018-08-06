@@ -14,7 +14,7 @@
           </tr>
         </thead>
         <tbody>
-          <% DashboardDataProvider.project_units_dashboard.each do |d| %>
+          <% DashboardDataProvider.project_units_dashboard(current_user).each do |d| %>
           <tr>
             <td><%= d[:bedrooms] %></td>
             <td><%= ProjectUnit.available_statuses.find{|x| x[:id] == d[:status]}[:text] %></td>

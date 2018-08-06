@@ -15,6 +15,11 @@ class Admin::UsersController < AdminController
     end
   end
 
+  def update_password
+    render layout: false
+  end
+
+
   def resend_confirmation_instructions
     @user = User.find(params[:id])
     respond_to do |format|
@@ -83,6 +88,7 @@ class Admin::UsersController < AdminController
 
   def show
     @project_units = @user.project_units.paginate(page: params[:page] || 1, per_page: 15)
+    @receipts = @user.receipts.paginate(page: params[:page] || 1, per_page: 15)
   end
 
   def new
@@ -114,6 +120,9 @@ class Admin::UsersController < AdminController
     @user.assign_attributes(permitted_attributes(@user))
     respond_to do |format|
       if @user.save
+        if current_user == @user && permitted_attributes(@user).keys.include?("password")
+          bypass_sign_in(@user)
+        end
         format.html { redirect_to edit_admin_user_path(@user), notice: 'User Profile updated successfully.' }
         format.json { render json: @user }
       else
@@ -125,7 +134,11 @@ class Admin::UsersController < AdminController
 
   private
   def set_user
-    @user = User.find(params[:id])
+    if params[:id].blank?
+      @user = current_user
+    else
+      @user = User.find(params[:id])
+    end
   end
 
   def authorize_resource

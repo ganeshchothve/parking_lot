@@ -33,17 +33,17 @@ class ApplicationController < ActionController::Base
         'admin'
       end
     elsif is_a?(Devise::SessionsController)
-      "dashboard"
+      "application"
     elsif is_a?(Devise::PasswordsController)
-      "dashboard"
+      "application"
     elsif is_a?(Devise::UnlocksController)
-      "dashboard"
+      "application"
     elsif is_a?(Devise::RegistrationsController)
-      "dashboard"
+      "application"
     elsif is_a?(Devise::ConfirmationsController)
-      "dashboard"
+      "application"
     elsif is_a?(ChannelPartnersController)
-      "dashboard"
+      "application"
     else
       "application"
     end
@@ -109,9 +109,9 @@ class ApplicationController < ActionController::Base
   end
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:phone, :email, :password, :password_confirmation])
-    devise_parameter_sanitizer.permit(:sign_in, keys: [:login, :login_otp, :password, :password_confirmation])
-    devise_parameter_sanitizer.permit(:otp, keys: [:login, :login_otp, :password, :password_confirmation])
-    devise_parameter_sanitizer.permit(:account_update, keys: [:phone, :email, :password, :password_confirmation, :current_password])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:phone, :email, :password, :password_confirmation, :channel_partner_id])
+    devise_parameter_sanitizer.permit(:sign_in, keys: [:login, :login_otp, :password, :password_confirmation, :channel_partner_id])
+    devise_parameter_sanitizer.permit(:otp, keys: [:login, :login_otp, :password, :password_confirmation, :channel_partner_id])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:phone, :email, :password, :password_confirmation, :current_password, :channel_partner_id])
   end
 end

@@ -41,7 +41,9 @@
               new_admin_user_receipt_path(@user)
             end
           %>
+          <% if !current_user.buyer? && ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? %>
           <%= link_to "Make #{global_labels['receipt']}", url_for_new_receipt, class: 'btn btn-primary modal-remote-form-link' %>
+          <% end %>
           <% end %>
           <% if UserPolicy.new(current_user, User).export? && @user.blank? %>
             <%= link_to "Export all #{global_labels['receipts']}", export_admin_receipts_path, class: 'btn btn-outline-primary modal-remote-form-link' %>

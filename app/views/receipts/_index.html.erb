@@ -3,7 +3,7 @@
 <% end %>
 <div class="row">
   <div class="col-12">
-    <p>Total Payments : <%= receipts.count %></p>
+    <p>Total <%= global_labels[:receipts] %> : <%= receipts.count %></p>
   </div>
 </div>
 <div class="table-responsive-md">
@@ -11,7 +11,8 @@
     <thead class="th-default th-pink">
       <% labels = t('mongoid.attributes.receipt').with_indifferent_access %>
       <tr>
-        <th class="w15 text-left">User</th>
+        <th><%= labels[:user_id] %></th>
+        <th><%= labels[:receipt_id] %></th>
         <th>Details</th>
         <th><%= labels['status'] %></th>
         <th class="text-right"><%= labels['total_amount'] %></th>
@@ -22,8 +23,8 @@
       <% receipts.each do |receipt| %>
       <tr>
         <td><%= receipt.user.name %></td>
+        <td><%= receipt.status == "success" ? receipt.receipt_id : "Pending" %></td>
         <td>
-          <div><%= labels[:receipt_id] %>: <span class="muted"><%= receipt.receipt_id %></span></div>
           <div class="small muted">
             <div>
               <%= receipt.project_unit_id.present? ? "Project: #{receipt.project_unit.name}" : '' %>
@@ -49,7 +50,14 @@
             <a class="btn btn-light dropdown-toggle light-pink-btn" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
             <div class="dropdown-menu dropdown-menu-right">
               <% if receipt.status == 'success' %>
-                <%= link_to 'Print'.html_safe, receipt_path(receipt, format: "pdf"), target:"_blank", class: 'dropdown-item print-btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>
+                <% if current_user.buyer? %>
+                  <%= link_to 'Print'.html_safe, user_receipt_path(receipt, format: "pdf"), target:"_blank", class: 'dropdown-item print-btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>
+                <% else %>
+                  <%= link_to 'Print'.html_safe, admin_receipt_path(receipt, format: "pdf"), target:"_blank", class: 'dropdown-item print-btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>
+                <% end %>
+                <% if ReceiptPolicy.new(current_user, receipt).resend_success? %>
+                  <%= link_to 'Resend Email'.html_safe, resend_success_admin_receipt_path(receipt), class: 'dropdown-item' %>
+                <% end %>
               <% end %>
               <% if ReceiptPolicy.new(current_user, receipt).edit? %>
                 <%= link_to 'Edit', edit_admin_user_receipt_path(receipt.user_id, receipt), class: 'dropdown-item modal-remote-form-link' %>

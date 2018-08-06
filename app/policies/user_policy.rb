@@ -31,6 +31,10 @@ class UserPolicy < ApplicationPolicy
     record.id == user.id || ['superadmin', 'crm', 'admin'].include?(user.role)
   end
 
+  def update_password?
+    edit?
+  end
+
   def new?
     user.role?('superadmin') || user.role?('admin') || ((user.role?('channel_partner') && record.role?("user")) || (user.role?('crm') && record.buyer?))
   end

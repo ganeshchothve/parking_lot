@@ -32,6 +32,7 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :receipts, only: [:index, :show], controller: '/receipts' do
       get 'export', action: 'export', on: :collection, as: :export
+      get :resend_success, on: :member, as: :resend_success
     end
     resources :project_units, only: [:index, :edit, :update] do
       get 'export', action: 'export', on: :collection, as: :export
@@ -39,6 +40,7 @@ Rails.application.routes.draw do
     end
     resources :users do
       get :resend_confirmation_instructions, action: 'resend_confirmation_instructions', as: :resend_confirmation_instructions, on: :member
+      match 'update_password', on: :member, via: [:get, :patch], action: "update_password", as: :update_password
       get :resend_password_instructions, action: 'resend_password_instructions', as: :resend_password_instructions, on: :member
       get '/new/:role', action: 'new', on: :collection, as: :new_by_role
       get 'export', action: 'export', on: :collection, as: :export
@@ -47,6 +49,7 @@ Rails.application.routes.draw do
       get 'export_cp_lead_report', action: 'export_cp_lead_report', on: :collection, as: :export_cp_lead_report
       resources :receipts, only: [:update, :edit, :show, :index, :new, :create], controller: '/receipts' do
         get :direct, on: :collection, as: :direct
+        get :resend_success, on: :member, as: :resend_success
       end
       resources :user_kycs, except: [:show, :destroy], controller: '/user_kycs'
       resources :project_units, only: [:index] do
@@ -99,14 +102,13 @@ Rails.application.routes.draw do
     get 'make-remaining-payment/:project_unit_id', to: 'dashboard#make_remaining_payment'
     get ':project_unit_id/payment-breakup', to: 'dashboard#payment_breakup'
     get "gamify-unit-selection", to: "dashboard#gamify_unit_selection"
-    resources :receipts do
-      get :mail, on: :member
-    end
     resource :user do
       resources :user_requests, except: [:destroy], controller: 'admin/user_requests'
+      match 'update_password', via: [:get, :patch], action: "update_password", as: :update_password, controller: 'admin/users'
       resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
       resources :searches, except: [:destroy], controller: 'searches' do
         post :hold, on: :member
+        get 'tower/details', on: :collection, action: :tower, as: :tower
         get :checkout, on: :member
         get :checkout_via_email, on: :member
         post :make_available, on: :member

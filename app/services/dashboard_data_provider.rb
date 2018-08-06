@@ -1,5 +1,5 @@
 module DashboardDataProvider
-  def self.channel_partners_dashboard
+  def self.channel_partners_dashboard(user)
     data = ChannelPartner.collection.aggregate([{
       "$group": {
         "_id": {
@@ -17,8 +17,17 @@ module DashboardDataProvider
     out
   end
 
-  def self.receipts_dashboard
+  def self.receipts_dashboard(user, matcher={})
+    if matcher.present? && matcher[:user_id].present?
+      if user.role?('channel_partner')
+        matcher = {user_id: { "$in": User.where(referenced_channel_partner_ids: user.id).distinct(:id) }}
+      elsif user.role?("cp")
+        matcher = {user_id: { "$in": User.where(channel_partner_id: {"$exists": true}).distinct(:id) }}
+      end
+    end
     data = Receipt.collection.aggregate([{
+        "$match": matcher
+      }, {
       "$group": {
         "_id": {
           payment_mode: "$payment_mode",
@@ -50,8 +59,17 @@ module DashboardDataProvider
     out
   end
 
-  def self.users_dashboard
+  def self.users_dashboard(user)
+    matcher = {}
+    if user.role?('channel_partner')
+      matcher = {channel_partner_id: user.id}
+    elsif user.role?("cp")
+      matcher = {channel_partner_id: {"$exists": true}}
+    end
+
     data = User.collection.aggregate([{
+        "$match": matcher
+      },{
       "$group": {
         "_id": {
           role: "$role"
@@ -68,7 +86,7 @@ module DashboardDataProvider
     out
   end
 
-  def self.project_units_dashboard
+  def self.project_units_dashboard(user)
     data = ProjectUnit.collection.aggregate([{
       "$group": {
         "_id": {
