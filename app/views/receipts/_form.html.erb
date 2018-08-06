@@ -49,7 +49,7 @@
           <% end %>
         <% end %>
         <% if current_user.buyer? %>
-          <%= form_for @receipt, local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['receipt'], "data-type": "json", id: "receipt_form"} do |f| %>
+          <%= form_for [:user, @receipt], local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['receipt'], "data-type": "json", id: "receipt_form"} do |f| %>
           <div class="form-group">
             <%= f.label :total_amount, class: 'label-required' %>
             <% if current_client.blocking_amount_editable %>
