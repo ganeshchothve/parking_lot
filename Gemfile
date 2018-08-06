@@ -81,6 +81,8 @@ gem 'wkhtmltopdf-binary'
 gem 'bootstrap-email'
 
 # TODO: run this command on server before deployment on a new server
+# TO GET TOKEN: curl -u 'username' -d '{"scopes":["repo"],"note": "Audit app by Sell.Do"}' https://api.github.com/authorizations
+# bundle config GITHUB__COM <YOUR TOKEN>:x-oauth-basic
 gem 'audit', git: 'https://github.com/amuratech/audit.git'
 
 group :development, :test do
