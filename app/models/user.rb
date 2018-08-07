@@ -244,7 +244,8 @@ class User
     @login || self.phone || self.email
   end
 
-  def self.find_for_database_authentication(conditions)
+  def self.find_first_by_auth_conditions(warden_conditions)
+    conditions = warden_conditions.dup
     login = conditions.delete(:login)
     login = conditions.delete(:email) if login.blank? && conditions.keys.include?(:email)
     login = conditions.delete(:phone) if login.blank? && conditions.keys.include?(:phone)
@@ -271,6 +272,24 @@ class User
       search = Search.create(user: self)
     end
     search
+  end
+
+  def send_registration_sms
+    if self.buyer? && self.channel_partner_id.present?
+      template_id = SmsTemplate.find_by(name: "user_registered_by_channel_partner").id
+    elsif self.role == "channel_partner"
+      template_id = SmsTemplate.find_by(name: "channel_partner_user_registered").id
+    else
+      template_id = SmsTemplate.find_by(name: "user_registered").id
+    end
+
+    Sms.create!(
+      booking_portal_client_id: self.booking_portal_client_id,
+      recipient_id: self.id,
+      sms_template_id: template_id,
+      triggered_by_id: self.id,
+      triggered_by_type: self.class.to_s
+    )
   end
 
   private

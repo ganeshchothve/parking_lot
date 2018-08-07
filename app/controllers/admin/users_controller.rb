@@ -24,6 +24,7 @@ class Admin::UsersController < AdminController
     @user = User.find(params[:id])
     respond_to do |format|
       if @user.resend_confirmation_instructions
+        @user.send_registration_sms
         flash[:notice] = "Confirmation instructions sent successfully."
         format.html { redirect_to admin_users_path }
       else

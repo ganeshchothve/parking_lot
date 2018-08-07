@@ -1,10 +1,17 @@
 <h2 class="font-weight-bold text-success">Reset Password</h2>
 <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, class: 'validate-form' }) do |f| %>
 <%= devise_error_messages! %>
-<div class="form-group">
-  <%= f.label :email %><br />
-  <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control', placeholder:'Email' %>
-</div>
+<% if current_client.preferred_login == "phone" %>
+  <div class="form-group">
+    <%= f.label :phone %><br />
+    <%= f.phone_field :login, autofocus: true, autocomplete: "phone", class: 'form-control', placeholder: 'Phone' %>
+  </div>
+<% else %>
+  <div class="form-group">
+    <%= f.label :email %><br />
+    <%= f.email_field :login, autofocus: true, autocomplete: "email", class: 'form-control', placeholder: 'Email' %>
+  </div>
+<% end %>
 <div class="form-group">
   <%= f.submit "Send reset password instructions", class: 'btn btn-primary',  data:{event_category: 'Section', event_action: 'Click', event_name: 'Send me reset password instructions'}  %>
 </div>
