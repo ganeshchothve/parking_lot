@@ -31,6 +31,8 @@ class Client
   field :sms_provider_username, type: String
   field :sms_provider_password, type: String
   field :sms_mask, type: String, default: "SellDo"
+  field :mailgun_private_api_key, type: String
+  field :mailgun_email_domain, type: String
   field :enable_actual_inventory, type: Boolean, default: false
   field :enable_channel_partners, type: Boolean, default: false
   field :blocking_amount, type: Integer, default: 30000
@@ -49,8 +51,9 @@ class Client
   has_one :address, as: :addressable
   has_many :sms_templates, class_name: 'SmsTemplate'
   has_many :smses, class_name: 'Sms'
+  has_many :emails, class_name: 'Email', inverse_of: :booking_portal_client
 
-  validate :name, :selldo_client_id, :selldo_form_id, :helpdesk_email, :helpdesk_number, :notification_email, :email_domains, :booking_portal_domains, :registration_name, :cin_number, :billing_name, :website_link, :support_email, :support_number
+  validate :name, :selldo_client_id, :selldo_form_id, :helpdesk_email, :helpdesk_number, :notification_email, :email_domains, :booking_portal_domains, :registration_name, :cin_number, :billing_name, :website_link, :support_email, :support_number, :mailgun_private_api_key, :mailgun_email_domain, :sms_provider_username, :sms_provider_password, :sms_mask, presence: true
 
   def self.available_preferred_logins
     [

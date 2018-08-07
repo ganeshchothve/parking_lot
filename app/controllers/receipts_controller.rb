@@ -24,12 +24,13 @@ class ReceiptsController < ApplicationController
   end
 
   def resend_success
-    mailer = ReceiptMailer.send_success(@receipt)
-    if Rails.env.development?
-      mailer.deliver
-    else
-      mailer.deliver_later
-    end
+    Email.create!({
+      booking_portal_client_id: @receipt.booking_portal_client_id,
+      email_template_id: EmailTemplate.find_by(name: "receipt_success").id,
+      recipient_id: @receipt.user_id,
+      triggered_by_id: @receipt.id,
+      triggered_by_type: @receipt.class.to_s
+    })
     redirect_to (request.referrer.present? ? request.referrer : dashboard_path)
   end
 

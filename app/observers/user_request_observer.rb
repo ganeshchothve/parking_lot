@@ -1,6 +1,13 @@
 class UserRequestObserver < Mongoid::Observer
   def after_create user_request
     if user_request.status == 'pending'
+      Email.create!({
+        booking_portal_client_id: @receipt.booking_portal_client_id,
+        email_template_id: EmailTemplate.find_by(name: "receipt_success").id,
+        recipient_id: @receipt.user_id,
+        triggered_by_id: @receipt.id,
+        triggered_by_type: @receipt.class.to_s
+      })
       mailer = UserRequestMailer.send_pending(user_request.id.to_s)
       if Rails.env.development?
         mailer.deliver

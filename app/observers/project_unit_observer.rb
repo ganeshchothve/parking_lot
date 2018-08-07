@@ -54,12 +54,12 @@ class ProjectUnitObserver < Mongoid::Observer
       project_unit.receipts.where(status:"success").each{|x| x.project_unit_id = nil; x.status = "cancelled"; x.comments ||= ""; x.comments += " Cancelling as the unit (#{project_unit.name}) has been released."}
 
       if !project_unit.processing_user_request && !project_unit.processing_swap_request
-        mailer = ProjectUnitMailer.released(user_was.id.to_s, project_unit.id.to_s)
-        if Rails.env.development?
-          mailer.deliver
-        else
-          mailer.deliver_later
-        end
+        Email.create!({
+          booking_portal_client_id: project_unit.booking_portal_client_id,
+          email_template_id: EmailTemplate.find_by(name: "project_unit_released").id,
+          recipient_id: user.id,
+          triggered_by_id: project_unit.id
+        })
 
         Sms.create!(
           booking_portal_client_id: user_was.booking_portal_client_id,
@@ -85,12 +85,15 @@ class ProjectUnitObserver < Mongoid::Observer
 
   def after_update project_unit
     if project_unit.status_changed? && ['blocked', 'booked_tentative', 'booked_confirmed'].include?(project_unit.status)
-      mailer = ProjectUnitMailer.send(project_unit.status, project_unit.id.to_s)
-      if Rails.env.development?
-        mailer.deliver
-      else
+      Email.create!({
+        booking_portal_client_id: project_unit.booking_portal_client_id,
+        email_template_id: EmailTemplate.find_by(name: "project_unit_#{project_unit.status}").id,
+        recipient_id: user.id,
+        triggered_by_id: project_unit.id
+      })
+
+      if !Rails.env.development?
         SelldoInventoryPusher.perform_async(project_unit.status, project_unit.id.to_s, Time.now.to_i)
-        mailer.deliver_later
       end
       user = project_unit.user
       if project_unit.status == "blocked"
@@ -103,7 +106,7 @@ class ProjectUnitObserver < Mongoid::Observer
         )
       elsif project_unit.status == "booked_confirmed"
         Sms.create!(
-          booking_portal_client_id: project_unit.booking_portal_client_id,
+          booking_portal_client_id: user.booking_portal_client_id,
           recipient_id: user.id,
           sms_template_id: SmsTemplate.find_by(name: "project_unit_booked_confirmed").id,
           triggered_by_id: project_unit.id,
@@ -113,12 +116,14 @@ class ProjectUnitObserver < Mongoid::Observer
     end
 
     if project_unit.auto_release_on_changed? && project_unit.auto_release_on.present? && project_unit.auto_release_on_was.present?
-      mailer = ProjectUnitMailer.auto_release_on_extended(project_unit.id.to_s, project_unit.auto_release_on_was.to_s)
-      if Rails.env.development?
-        mailer.deliver
-      else
-        mailer.deliver_later
-      end
+      Email.create!({
+        booking_portal_client_id: user.booking_portal_client_id,
+        email_template_id: EmailTemplate.find_by(name: "project_unit_released").id,
+        recipient_id: user.id,
+        triggered_by_id: receipt.id
+        triggered_by_type: receipt.class.to_s
+      })
+
       if Rails.env.development?
         SMSWorker.new.perform("", "")
       else

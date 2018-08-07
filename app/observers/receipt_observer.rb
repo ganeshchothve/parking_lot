@@ -52,32 +52,35 @@ class ReceiptObserver < Mongoid::Observer
     if receipt.status_changed?
       if receipt.status == 'success'
         # TODO : Sell.Do Receipt
-        mailer = ReceiptMailer.send_success(receipt.id.to_s)
-        if Rails.env.development?
-          mailer.deliver
-        else
-          mailer.deliver_later
-        end
+        Email.create!({
+          booking_portal_client_id: user.booking_portal_client_id,
+          email_template_id: EmailTemplate.find_by(name: "receipt_success").id,
+          recipient_id: project_unit.user_id,
+          triggered_by_id: receipt.id,
+          triggered_by_type: receipt.class.to_s
+        })
       elsif receipt.status == 'failed'
         # TODO : Sell.Do Receipt
-        mailer = ReceiptMailer.send_failure(receipt.id.to_s)
-        if Rails.env.development?
-          mailer.deliver
-        else
-          mailer.deliver_later
-        end
+        Email.create!({
+          booking_portal_client_id: project_unit.booking_portal_client_id,
+          email_template_id: EmailTemplate.find_by(name: "receipt_failed").id,
+          recipient_id: project_unit.user_id,
+          triggered_by_id: receipt.id,
+          triggered_by_type: receipt.class.to_s
+        })
       elsif receipt.status == 'clearance_pending'
-        mailer = ReceiptMailer.send_clearance_pending(receipt.id.to_s)
-        if Rails.env.development?
-          mailer.deliver
-        else
-          mailer.deliver_later
-        end
+        Email.create!({
+          booking_portal_client_id: project_unit.booking_portal_client_id,
+          email_template_id: EmailTemplate.find_by(name: "receipt_clearance_pending").id,
+          recipient_id: project_unit.user_id,
+          triggered_by_id: receipt.id,
+          triggered_by_type: receipt.class.to_s
+        })
       end
       unless receipt.status == "pending"
         Sms.create!(
-          booking_portal_client_id: project_unit.booking_portal_client_id,
-          recipient_id: receipt.user_id,
+          booking_portal_client_id: user.booking_portal_client_id,
+          recipient_id: user.id,
           sms_template_id: SmsTemplate.find_by(name: "receipt_#{receipt.status}").id,
           triggered_by_id: receipt.id,
           triggered_by_type: receipt.class.to_s
@@ -87,18 +90,20 @@ class ReceiptObserver < Mongoid::Observer
 
     # Send email to crm team if cheque non-online & pending
     if receipt.status == 'pending' && receipt.payment_mode != 'online'
-      mailer = ReceiptMailer.send_pending_non_online(receipt.id.to_s)
-      if Rails.env.development?
-        mailer.deliver
-      else
-        mailer.deliver_later
-      end
+      Email.create!({
+        booking_portal_client_id: user.booking_portal_client_id,
+        email_template_id: EmailTemplate.find_by(name: "receipt_pending_offline").id,
+        recipient_id: project_unit.user_id,
+        triggered_by_id: receipt.id,
+        triggered_by_type: receipt.class.to_s
+      })
+
       Sms.create!(
         booking_portal_client_id: project_unit.booking_portal_client_id,
-        recipient_id: receipt.user_id,
+        recipient_id: user.id,
         sms_template_id: SmsTemplate.find_by(name: "receipt_pending").id,
         triggered_by_id: receipt.id,
-          triggered_by_type: receipt.class.to_s
+        triggered_by_type: receipt.class.to_s
       )
     end
   end
