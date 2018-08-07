@@ -44,7 +44,7 @@ class HomeController < ApplicationController
             end
           end
           respond_to do |format|
-            format.json { render json: {errors: message}, status: :unprocessable_entity }
+            format.json { render json: {errors: message, already_exists: true}, status: :unprocessable_entity }
           end
         else
           # splitted name into two firstname and lastname

@@ -10,6 +10,7 @@ class UserObserver < Mongoid::Observer
   end
 
   def before_save user
+    user.phone.gsub(" ", "")
     if user.channel_partner_id_changed? && user.channel_partner_id.present?
       user.referenced_channel_partner_ids << user.channel_partner_id
     end
