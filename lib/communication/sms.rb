@@ -4,12 +4,12 @@ module Communication
   module Sms
     class Smsjust
       def self.execute sms_id
-        sms = Sms.find sms_id
-        client = sms.client
+        sms = ::Sms.find sms_id
+        client = sms.booking_portal_client
         params = {}
         params[:senderid] = client.sms_mask
-        params[:dest_mobileno] = phone_number
-        params[:message] = content
+        params[:dest_mobileno] = sms.recipient.phone
+        params[:message] = sms.body
         params[:username] = client.sms_provider_username
         params[:pass] = client.sms_provider_password
         params[:response] = "Y"

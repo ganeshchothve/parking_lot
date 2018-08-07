@@ -114,9 +114,9 @@ class ProjectUnitObserver < Mongoid::Observer
         mailer.deliver_later
       end
       if Rails.env.development?
-        SMSWorker.new.perform("", "")
+        ::SMSWorker.new.perform("", "")
       else
-        SMSWorker.perform_async("", "")
+        ::SMSWorker.perform_async("", "")
       end
     end
   end
