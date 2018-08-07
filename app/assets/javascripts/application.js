@@ -41,12 +41,3 @@ $.ajaxSetup({
     'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
   }
 });
-$(document).ready(function(){
-	$(".colorbox-init").colorbox({
-		maxWidth: "90%",
-		maxHeight: "90%",
-		onComplete: function(){
-			$('#cboxLoadedContent').zoom();
-		}
-	});
-})
