@@ -14,7 +14,7 @@ class UserRequestObserver < Mongoid::Observer
         if template.present?
           receipt = user_request.receipt
           Sms.create!(
-            booking_portal_client_id: project_unit.booking_portal_client_id,
+            booking_portal_client_id: user.booking_portal_client_id,
             recipient_id: user_request.user_id,
             sms_template_id: template.id,
             triggered_by_id: receipt.id,
@@ -53,7 +53,7 @@ class UserRequestObserver < Mongoid::Observer
     if template.present?
       receipt = user_request.receipt
       Sms.create!(
-        booking_portal_client_id: user_request.project_unit.booking_portal_client_id,
+        booking_portal_client_id: user_request.user.booking_portal_client_id,
         recipient_id: user_request.user_id,
         sms_template_id: template.id,
         triggered_by_id: receipt.id,

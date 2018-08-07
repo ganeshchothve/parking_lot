@@ -56,7 +56,7 @@ class ProjectUnitObserver < Mongoid::Observer
         end
 
         Sms.create!(
-          booking_portal_client_id: user_was.booking_portal_client_id,
+          booking_portal_client_id: project_unit.booking_portal_client_id,
           recipient_id: user_was.id,
           sms_template_id: SmsTemplate.find_by(name: "project_unit_released").id,
           triggered_by_id: user_was.id,
