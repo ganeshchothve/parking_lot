@@ -1,6 +1,6 @@
 <%= content_for :breadcrumbs do %>
   <% unless current_user.buyer? %>
-  <div class="col-12">
+  <div class="col-md-12">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb"   style="float:right;">
         <li class="breadcrumb-item"><a href="<%= home_path(current_user) %>">Dashboard</a></li>

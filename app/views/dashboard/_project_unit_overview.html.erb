@@ -1,7 +1,7 @@
 <div class="card">
   <div class="card-body">
     <div class="row">
-      <div class="col-4">
+      <div class="col-md-4">
         <div class="form-group">
           <label class="small">Name</label>
           <div>
@@ -9,7 +9,7 @@
           </div>
         </div>
       </div>
-      <div class="col-4">
+      <div class="col-md-4">
         <div class="form-group">
           <label class="small">Tower</label>
           <div>
@@ -17,7 +17,7 @@
           </div>
         </div>
       </div>
-      <div class="col-4">
+      <div class="col-md-4">
         <div class="form-group">
           <label class="small">Status</label>
           <div>
@@ -27,7 +27,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-4">
+      <div class="col-md-4">
         <div class="form-group">
           <label class="small">Beds / Baths</label>
           <div>
@@ -35,7 +35,7 @@
           </div>
         </div>
       </div>
-      <div class="col-4">
+      <div class="col-md-4">
         <div class="form-group">
           <label class="small">Carpet</label>
           <div>
@@ -43,7 +43,7 @@
           </div>
         </div>
       </div>
-      <div class="col-4">
+      <div class="col-md-4">
         <div class="form-group">
           <label class="small">Saleable</label>
           <div>
@@ -53,7 +53,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-4">
+      <div class="col-md-4">
         <div class="form-group">
           <label class="small">Effective Rate</label>
           <div>
@@ -61,7 +61,7 @@
           </div>
         </div>
       </div>
-      <div class="col-4">
+      <div class="col-md-4">
         <div class="form-group">
           <label class="small">Agreement Price</label>
           <div>
@@ -69,7 +69,7 @@
           </div>
         </div>
       </div>
-      <div class="col-4">
+      <div class="col-md-4">
         <div class="form-group">
           <label class="small">All Inclusive Price</label>
           <div>
@@ -80,7 +80,7 @@
     </div>
     <% if defined?(with_actions) && with_actions == true %>
     <div class="dropdown float-left mbottom-20">
-      <a class="btn btn-primary dropdown-toggle pink-btn" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</a>
+      <a class="btn btn-primary dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</a>
       <div class="dropdown-menu">
         <% if current_user.buyer? && project_unit.user == current_user && ["blocked", "booked_tentative", "booked_confirmed"].include?(project_unit.status) %>
           <% if current_user.user_requests.where(project_unit_id: project_unit.id).ne(status: 'resolved').blank? %>

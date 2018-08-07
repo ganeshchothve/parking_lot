@@ -50,7 +50,7 @@
                 <%= link_to "Export all #{global_labels['receipts']}", export_admin_receipts_path, class: 'btn btn-primary modal-remote-form-link' %>
               <% end %>
             </div>
-            <div class="col-md-5 text-right">
+            <div class="col-md-5 text-md-right">
               <h6 class="mt-2">Total <%= global_labels[:receipts] %>: <%= @receipts.count %></h6>
             </div>
           </div>
@@ -60,6 +60,7 @@
     </div>
     <% if @user.blank? %>
       <div class="col-md-3">
+        <div class="d-md-none mt-3"></div>
         <%= render "filters" %>
       </div>
     <% end %>

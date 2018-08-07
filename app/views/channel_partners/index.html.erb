@@ -9,10 +9,10 @@
               <div class="row mb-3">
                 <div class="col-md-7">
                   <% if ChannelPartnerPolicy.new(current_user, ChannelPartner).export? %>
-                    <%= link_to "Export all #{global_labels['channel_partners']}", export_channel_partners_path, class: 'btn btn-primary float-left ml-2 pink-btn' %>
+                    <%= link_to "Export all #{global_labels['channel_partners']}", export_channel_partners_path, class: 'btn btn-primary float-left ml-2' %>
                   <% end %>
                 </div>
-                <div class="col-md-5 text-right">
+                <div class="col-md-5 text-md-right">
                   <h6 class="mt-2">Total <%= global_labels[:channel_partners] %>: <%= @channel_partners.count %></h6>
                 </div>
               </div>
@@ -21,6 +21,7 @@
           </div>
         </div>
         <div class="col-md-3">
+          <div class="d-md-none mt-3"></div>
           <%= render "filters" %>
         </div>
       </div>

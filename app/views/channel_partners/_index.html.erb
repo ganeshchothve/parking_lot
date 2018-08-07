@@ -1,6 +1,6 @@
-<div class="table-responsive-md">
+<div class="table-responsive-lg">
   <table class='table striped-table'>
-    <thead class="th-default th-pink">
+    <thead class="th-default">
       <% labels = t('mongoid.attributes.channel_partner').with_indifferent_access %>
       <tr>
         <th><%= labels[:name] %></th>
@@ -21,7 +21,7 @@
           <td><%= channel_partner.associated_user_id.present? ? link_to(channel_partner.associated_user.name, admin_user_path(channel_partner.associated_user_id)) : '-' %></td>
           <td class="text-right">
             <div class="dropdown">
-              <a class="btn btn-light light-pink-btn dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+              <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
               <div class="dropdown-menu dropdown-menu-right">
                 <% if ChannelPartnerPolicy.new(current_user, channel_partner).edit? %>
                   <%= link_to 'Edit', edit_channel_partner_path(channel_partner), class: 'dropdown-item modal-remote-form-link' %>

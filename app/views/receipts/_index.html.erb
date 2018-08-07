@@ -1,6 +1,6 @@
-<div class="table-responsive-md">
+<div class="table-responsive-lg">
   <table class="striped-table table">
-    <thead class="th-default th-pink">
+    <thead class="th-default">
       <% labels = t('mongoid.attributes.receipt').with_indifferent_access %>
       <tr>
         <th><%= labels[:user_id] %></th>
@@ -39,7 +39,7 @@
         <td class="text-right"><%= number_to_indian_currency(receipt.total_amount.round(2)) %></td>
         <td class="text-right">
           <div class="dropdown">
-            <a class="btn btn-light dropdown-toggle light-pink-btn" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+            <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
             <div class="dropdown-menu dropdown-menu-right">
               <% if receipt.status == 'success' %>
                 <% if current_user.buyer? %>
