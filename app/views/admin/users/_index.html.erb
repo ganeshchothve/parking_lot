@@ -1,6 +1,6 @@
-<div class="table-responsive-md">
+<div class="table-responsive-lg">
   <table class='table striped-table'>
-    <thead class="th-default th-pink">
+    <thead class="th-default">
       <% labels = t('mongoid.attributes.user').with_indifferent_access %>
       <tr>
         <th>Name</th>
@@ -24,9 +24,9 @@
           </td>
           <td><%= user.receipts.where(status: "success").present? ? "Y" : "N" %></td>
           <td>
-            <%= user.email %> <br/>
-            </i><%= user.phone %><br/>
-            <% if user.role?("user") && user.channel_partner_id.present? %>
+            <%= user.email.present? ? user.email : "" %> <br/>
+            <%= user.phone.present? ? user.phone : "" %><br/>
+            <% if user.role?("user") && user.channel_partner_id.present? && current_user.role != "channel_partner" %>
               CP: <%= user.channel_partner.name %><br/>
             <% end %>
           </td>
@@ -34,7 +34,7 @@
           <td><%= user.confirmed_at.present? ? "Confirmed" : "Not confirmed" %></td>
           <td class="text-right">
             <div class="dropdown">
-              <a class="btn btn-light light-pink-btn dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+              <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
               <div class="dropdown-menu dropdown-menu-right">
                 <% if UserPolicy.new(current_user, user).show? %>
                   <% if current_client.enable_actual_inventory? && ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: user, status: "available")).hold? %>

@@ -98,7 +98,7 @@
           <% end %>
           <div class="row">
             <div class="col-md-4">
-              <% if @user.buyer? %>
+              <% if @user.buyer? && current_user.role != "channel_partner" %>
               <div class="form-group">
                 <label>Channel Partner</label>
                 <div>
