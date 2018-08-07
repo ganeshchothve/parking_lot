@@ -36,7 +36,7 @@
         </tr>
         <tr>
           <td><%= labels['processed_on'] %></td>
-          <td class="text-right"><%= receipt.processed_on %></td>
+          <td class="text-right"><%= receipt.processed_on.present? ? l(receipt.processed_on) : "-" %></td>
         </tr>
         <tr>
           <td><%= labels['total_amount'] %></td>

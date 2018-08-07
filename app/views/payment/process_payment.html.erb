@@ -28,9 +28,9 @@
       </div>
       <div class="mt-3"></div>
       <% if current_user.buyer? %>
-        <%= link_to 'Print', user_receipt_path(receipt), target:"_blank", class: 'text-right d-block btn' %>
+        <%= link_to 'Print', user_receipt_path(@receipt), target:"_blank", class: 'text-right d-block btn' %>
       <% else %>
-        <%= link_to 'Print', admin_receipt_path(receipt), target:"_blank", class: 'text-right d-block btn' %>
+        <%= link_to 'Print', admin_receipt_path(@receipt), target:"_blank", class: 'text-right d-block btn' %>
       <% end %>
       <%= render '/receipts/show', receipt: @receipt %>
       <% when 'failed' %>

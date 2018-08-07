@@ -1,0 +1,307 @@
+<%= form_for @client, url: admin_client_path, remote: true, local: true, html: {id: "client_form", class: "modal-remote-form validate-form", "data-resource-type": global_labels['client'], "data-type": "json"} do |f| %>
+  <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            Edit Client
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <nav>
+            <div class="nav nav-tabs" role="tablist">
+              <a class="nav-item nav-link active" data-toggle="tab" href="#nav-client-basic" role="tab">Basic Details</a>
+              <a class="nav-item nav-link" data-toggle="tab" href="#nav-client-contacts" role="tab">Contacts & Notifications</a>
+              <a class="nav-item nav-link" data-toggle="tab" href="#nav-client-assets" role="tab">Uploads / Marketing Collateral</a>
+              <a class="nav-item nav-link" data-toggle="tab" href="#nav-client-integrations" role="tab">Integrations</a>
+            </div>
+          </nav>
+          <div class="mt-3"></div>
+          <div class="tab-content">
+            <div class="tab-pane fade show active" id="nav-client-basic" role="tabpanel">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :name, class: 'label-required' %>
+                    <%= f.text_field :name, class: 'form-control', autofocus: true, required: 'required', disabled: (policy(@client).editable_field?("name") ? false : true) %>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :registration_name, class: 'label-required' %>
+                    <%= f.text_field :registration_name, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("registration_name") ? false : true) %>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :email_domains, class: 'label-required' %>
+                    <%= f.select :email_domains, @client.email_domains, {}, class: 'selectize-tags domain', multiple: true, required: 'required', disabled: (policy(@client).editable_field?("email_domains") ? false : true) %>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :cin_number, class: 'label-required' %>
+                    <%= f.text_field :cin_number, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("cin_number") ? false : true) %>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :disclaimer, class: 'label-required' %>
+                    <%= f.text_area :disclaimer, class: 'form-control', disabled: (policy(@client).editable_field?("disclaimer") ? false : true) %>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :cp_disclaimer, class: 'label-required' %>
+                    <%= f.text_area :cp_disclaimer, class: 'form-control', disabled: (policy(@client).editable_field?("cp_disclaimer") ? false : true) %>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :website_link, class: 'label-required' %>
+                    <%= f.url_field :website_link, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("website_link") ? false : true) %>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :cancellation_amount, class: 'label-required' %>
+                    <%= f.text_field :cancellation_amount, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("cancellation_amount") ? false : true) %>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :area_unit, class: 'label-required' %>
+                    <%= f.text_field :area_unit, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("area_unit") ? false : true) %>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :preferred_login, class: 'label-required' %>
+                    <%= f.select :preferred_login, Client.available_preferred_logins.collect{|x| [x[:text], x[:id]]}, {}, class: 'selectize', required: 'required', disabled: (policy(@client).editable_field?("preferred_login") ? false : true) %>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <% if policy(@client).editable_field?("enable_actual_inventory") %>
+                  <div class="form-group">
+                    <%= f.label :enable_actual_inventory %><br/>
+                    <div class="form-check form-check-inline">
+                      <%= f.radio_button :enable_actual_inventory, true, class: "form-check-input" %>
+                      <%= f.label :enable_actual_inventory, "Yes", class: "form-check-label" %>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <%= f.radio_button :enable_actual_inventory, false, class: "form-check-input" %>
+                      <%= f.label :enable_actual_inventory, "No", class: "form-check-label" %>
+                    </div>
+                  </div>
+                  <% end %>
+                </div>
+                <div class="col-md-6">
+                  <% if policy(@client).editable_field?("enable_channel_partners") %>
+                  <div class="form-group">
+                    <%= f.label :enable_channel_partners %><br/>
+                    <div class="form-check form-check-inline">
+                      <%= f.radio_button :enable_channel_partners, true, class: "form-check-input" %>
+                      <%= f.label :enable_channel_partners, "Yes", class: "form-check-label" %>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <%= f.radio_button :enable_channel_partners, false, class: "form-check-input" %>
+                      <%= f.label :enable_channel_partners, "No", class: "form-check-label" %>
+                    </div>
+                  </div>
+                  <% end %>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :blocking_amount, class: 'label-required' %>
+                    <%= f.number_field :blocking_amount, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("blocking_amount") ? false : true), min: 0 %>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <% if policy(@client).editable_field?("blocking_amount_editable") %>
+                  <div class="form-group">
+                    <%= f.label :blocking_amount_editable %><br/>
+                    <div class="form-check form-check-inline">
+                      <%= f.radio_button :blocking_amount_editable, true, class: "form-check-input" %>
+                      <%= f.label :blocking_amount_editable, "Yes", class: "form-check-label" %>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <%= f.radio_button :blocking_amount_editable, false, class: "form-check-input" %>
+                      <%= f.label :blocking_amount_editable, "No", class: "form-check-label" %>
+                    </div>
+                  </div>
+                  <% end %>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :blocking_days, class: 'label-required' %>
+                    <%= f.number_field :blocking_days, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("blocking_days") ? false : true), min: 0, max: 30 %>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :holding_minutes, class: 'label-required' %>
+                    <%= f.text_field :holding_minutes, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("holding_minutes") ? false : true), min: 0, max: 30 %>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="nav-client-contacts" role="tabpanel">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :helpdesk_email, class: 'label-required' %>
+                    <%= f.email_field :helpdesk_email, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("helpdesk_email") ? false : true) %>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :helpdesk_number, class: 'label-required' %>
+                    <%= f.phone_field :helpdesk_number, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("helpdesk_number") ? false : true) %>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :support_email, class: 'label-required' %>
+                    <%= f.email_field :support_email, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("support_email") ? false : true) %>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :support_number, class: 'label-required' %>
+                    <%= f.phone_field :support_number, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("support_number") ? false : true) %>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :channel_partner_support_email, class: 'label-required' %>
+                    <%= f.phone_field :channel_partner_support_email, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("channel_partner_support_email") ? false : true) %>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :channel_partner_support_number, class: 'label-required' %>
+                    <%= f.phone_field :channel_partner_support_number, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("channel_partner_support_number") ? false : true) %>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :notification_email, class: 'label-required' %>
+                    <%= f.email_field :notification_email, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("notification_email") ? false : true) %>
+                  </div>
+                </div>
+                <div class="col-md-6">
+
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="nav-client-assets" role="tabpanel">
+            </div>
+            <div class="tab-pane fade" id="nav-client-integrations" role="tabpanel">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :booking_portal_domains, class: 'label-required' %>
+                    <%= f.select :booking_portal_domains, @client.booking_portal_domains, {}, class: 'selectize-tags domain', multiple: true, required: 'required', disabled: (policy(@client).editable_field?("booking_portal_domains") ? false : true) %>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :selldo_client_id, class: 'label-required' %>
+                    <%= f.text_field :selldo_client_id, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("selldo_client_id") ? false : true) %>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :selldo_form_id, class: 'label-required' %>
+                    <%= f.text_field :selldo_form_id, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("selldo_form_id") ? false : true) %>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :selldo_api_key, class: 'label-required' %>
+                    <%= f.text_field :selldo_api_key, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("selldo_api_key") ? false : true) %>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :selldo_default_srd, class: 'label-required' %>
+                    <%= f.text_field :selldo_default_srd, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("selldo_default_srd") ? false : true) %>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :selldo_cp_srd, class: 'label-required' %>
+                    <%= f.text_field :selldo_cp_srd, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("selldo_cp_srd") ? false : true) %>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :mixpanel_token, class: 'label-required' %>
+                    <%= f.text_field :mixpanel_token, class: 'form-control', disabled: (policy(@client).editable_field?("mixpanel_token") ? false : true) %>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :sms_mask, class: 'label-required' %>
+                    <%= f.text_field :sms_mask, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("sms_mask") ? false : true) %>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :sms_provider_username, class: 'label-required' %>
+                    <%= f.text_field :sms_provider_username, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("sms_provider_username") ? false : true) %>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :sms_provider_password, class: 'label-required' %>
+                    <%= f.text_field :sms_provider_password, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("sms_provider_password") ? false : true) %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <%= f.submit "Save", class: 'btn btn-primary' %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($("#client_form"));
+  });
+<% end %>

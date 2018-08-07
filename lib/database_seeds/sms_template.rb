@@ -30,6 +30,8 @@ module DatabaseSeeds
       ::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "ProjectUnit", name: "project_unit_blocked", content: "Congratulations {{user.name}}, {{name}} has been Blocked / Tentative Booked for you for the next 7 days! To own the home, you'll need to pay the pending amount of Rs. {{project_unit.pending_balance}} within these 7 days. To complete the payment now, click here: {{user.dashboard_url}}")
 
       ::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "ProjectUnit", name: "project_unit_booked_confirmed", content: "Welcome to the {{booking_portal_client.name}} family! You're now the proud owner of {{name}} at {{project_name}} in {{booking_portal_client.name}}. Our executives will be in touch regarding agreement formalities.")
+
+      ::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "User", name: "user_registered_by_channel_partner", content: "{{channel_partner.name}} has registered you with {{booking_portal_client.name}}'s Portal. To confirm your account with this partner, please visit {{confirmation_url}}.")
     end
   end
 end

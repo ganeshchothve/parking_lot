@@ -45,24 +45,24 @@
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
-                <label class="control-label"><%= labels[:name] %></label>
-                <div class="control-data">
+                <label><%= labels[:name] %></label>
+                <div>
                   <%= @user.name.present? ? @user.name : '-' %>
                 </div>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label class="control-label"><%= labels[:email] %></label>
-                <div class="control-data">
+                <label><%= labels[:email] %></label>
+                <div>
                   <%= @user.email.present? ? @user.email : '-' %>
                 </div>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label class="control-label"><%= labels[:phone] %></label>
-                <div class="control-data">
+                <label><%= labels[:phone] %></label>
+                <div>
                   <%= @user.phone.present? ? @user.phone : '-' %>
                 </div>
               </div>
@@ -72,49 +72,65 @@
           <div class="row mt-3">
             <div class="col-md-4">
               <div class="form-group">
-                <label class="control-label"><%= labels[:total_amount_paid] %></label>
-                <div class="control-data">
+                <label><%= labels[:total_amount_paid] %></label>
+                <div>
                   <%= @user.total_amount_paid.present? ? number_to_indian_currency(@user.total_amount_paid.round(2)) : '-' %>
                 </div>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label class="control-label"><%= labels[:total_balance_pending] %></label>
-                <div class="control-data">
+                <label><%= labels[:total_balance_pending] %></label>
+                <div>
                   <%= @user.total_balance_pending.present? ? number_to_indian_currency(@user.total_balance_pending.round(2)) : '-' %>
                 </div>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label class="control-label"><%= labels[:total_unattached_balance] %></label>
-                <div class="control-data">
+                <label><%= labels[:total_unattached_balance] %></label>
+                <div>
                   <%= @user.total_unattached_balance.present? ? number_to_indian_currency(@user.total_unattached_balance.round(2)) : '-' %>
                 </div>
               </div>
             </div>
           </div>
           <% end %>
-          <% if (current_user.role?('admin') || current_user.role?('crm') || current_user.role?('sales') || current_user.role?('cp')) && @user.buyer? %>
           <div class="row">
             <div class="col-md-4">
+              <% if @user.buyer? %>
               <div class="form-group">
-                <label class="control-label">Channel Partner</label>
-                <div class="control-data">
+                <label>Channel Partner</label>
+                <div>
                   <% channel_partner_user = @user.channel_partner_id.present? ? User.find(@user.channel_partner_id) : nil %>
                   <%= channel_partner_user.present? ? link_to(channel_partner_user.name, admin_user_path(channel_partner_user)) : '-' %>
                 </div>
               </div>
+              <% end %>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Account Confirmed?</label>
+                <div>
+                  <%= @user.confirmed? ? "At #{l(@user.confirmed_at)}" : "No" %>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Last Signed In</label>
+                <div>
+                  <%= @user.sign_in_count > 0 ? "#{l(@user.last_sign_in_at)} (Signed In #{@user.sign_in_count} times)" : "Never Signed In" %>
+                </div>
+              </div>
             </div>
           </div>
-          <% end %>
           <% if @user.role?('channel_partner') %>
           <div class="row mt-3">
             <div class="col-md-4">
               <div class="form-group">
-                <label class="control-label"><%= labels[:rera_id] %></label>
-                <div class="control-data">
+                <label><%= labels[:rera_id] %></label>
+                <div>
                   <%= @user.rera_id.present? ? @user.rera_id : '-' %>
                 </div>
               </div>

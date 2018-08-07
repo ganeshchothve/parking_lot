@@ -1,9 +1,19 @@
 en:
+  date:
+    default: "%d/%m/%Y"
+  time:
+    formats:
+      default: "%d/%m/%Y %I:%M %p"
+  date_time:
+    formats:
+      default: "%d/%m/%Y %I:%M %p"
   global:
+    assets: 'Documents'
+    asset: 'Documents'
+    client: 'Client'
+    clients: 'Clients'
     receipt: 'Payment'
     receipts: 'Payments'
-    asset: 'Reference Document'
-    assets: 'Reference Documents'
     user_request: 'Cancellation Request'
     user_requests: 'Cancellation Requests'
     discount: 'Discount'
@@ -27,6 +37,45 @@ en:
     searches: "Filter"
   mongoid:
     attributes:
+      asset:
+        file_size: 'Size'
+        file_name: 'Name'
+        asset_type: 'Type'
+      client:
+        name: 'Client Name (Used across the app)'
+        selldo_client_id: 'SellDo Client ID'
+        selldo_form_id: 'SellDo Form ID'
+        selldo_api_key: 'SellDo API Key (Use generic Api Client)'
+        selldo_default_srd: 'SellDo Default SRD'
+        selldo_cp_srd: 'SellDo Channel Partner SRD'
+        notification_email: 'Notification Email (all emails are sent here)'
+        email_domains: 'Email Domains (to detect employee users)'
+        booking_portal_domains: 'Booking Portal Domains (where the portal is hosted)'
+        registration_name: 'Registration Name (Used in Payments)'
+        cin_number: 'CIN Number'
+        website_link: 'Website Link (Used in email communication)'
+        cp_disclaimer: 'Channel Partner Disclaimer (to be shown to Channel Partners during registration)'
+        disclaimer: 'End User Disclaimer (to be shown to End Users during registration)'
+        support_number: 'Support Phone'
+        support_email: 'Support Email'
+        helpdesk_number: 'Helpdesk Phone (For after booking CRM Help)'
+        helpdesk_email: 'Helpdesk Email (For after booking CRM Help)'
+        channel_partner_support_number: 'Support Number (For Channel Partners)'
+        channel_partner_support_email: 'Support Email (For Channel Partner)'
+        erp: 'ERP'
+        cancellation_amount: 'Cancellation Amount (displayed to Customers)'
+        area_unit: 'Unit of Area (used to display inventory)'
+        preferred_login: 'Preferred Login Method'
+        mixpanel_token: 'Mixpanel Token'
+        sms_provider_username: 'SMS Provider Username'
+        sms_provider_password: 'SMS Provider Password'
+        sms_mask: 'SMS Mask'
+        enable_actual_inventory: 'Enable Inventory'
+        enable_channel_partners: 'Enable Channel Partners'
+        blocking_amount: 'Min. Amount for Blocking an Unit'
+        blocking_amount_editable: 'Can End Users pay larger blocking amounts?'
+        blocking_days: 'Unit to be blocked for (Days)'
+        holding_minutes: 'Unit to be held for (Minutes)'
       search:
         bedrooms: "Beds"
         agreement_price: "Agreement Value"

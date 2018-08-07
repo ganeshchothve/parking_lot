@@ -15,7 +15,7 @@
       <% receipts.each do |receipt| %>
       <tr>
         <td><%= receipt.user.name %></td>
-        <td><%= receipt.status == "success" ? receipt.receipt_id : "Pending" %></td>
+        <td><%= receipt.status == "success" ? receipt.receipt_id : "Not Generated" %></td>
         <td>
           <div class="small muted">
             <div>
@@ -24,12 +24,12 @@
               <%= receipt.project_unit_id.blank? && receipt.reference_project_unit_id.blank? ? "Direct Payment" : '' %>
             </div>
             <% if receipt.payment_mode == 'online' %>
-              <div>Trans ID:<%= receipt.payment_identifier %></div>
-    	        <div>Processed Date:<%= receipt.processed_on %></div>
+              <div>Trans ID: <%= receipt.payment_identifier %></div>
+    	        <div>Processed Date:<%= receipt.processed_on.present? ? l(receipt.processed_on) : "-" %></div>
             <% else %>
               <div>Bank: <%= receipt.issuing_bank %> / Branch: <%= receipt.issuing_bank_branch %></div>
               <div>Issued Date: <%= receipt.issued_date.present? ? receipt.issued_date : "-" %></div>
-              <div>Processed Date: <%= receipt.processed_on.present? ? receipt.processed_on : "-" %></div>
+              <div>Processed Date: <%= receipt.processed_on.present? ? l(receipt.processed_on) : "-" %></div>
               <div>ID: <%= receipt.payment_identifier %></div>
             <% end %>
             <div>Payment: <%= Receipt.available_payment_modes.find{|x| x[:id] == receipt.payment_mode}[:text] %></div>
@@ -55,7 +55,7 @@
                 <%= link_to 'Edit', edit_admin_user_receipt_path(receipt.user_id, receipt), class: 'dropdown-item modal-remote-form-link' %>
               <% end %>
               <% if AssetPolicy.new(current_user, Asset.new(assetable: receipt)).index? %>
-                <%= link_to 'Documents', assetables_path(assetable_type: receipt.class.model_name.i18n_key.to_s, assetable_id: receipt.id), class: 'dropdown-item modal-remote-form-link' %>
+                <%= link_to global_labels[:assets], assetables_path(assetable_type: receipt.class.model_name.i18n_key.to_s, assetable_id: receipt.id), class: 'dropdown-item modal-remote-form-link' %>
               <% end %>
             </div>
           </div>

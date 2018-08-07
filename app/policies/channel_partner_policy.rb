@@ -1,26 +1,26 @@
 class ChannelPartnerPolicy < ApplicationPolicy
   def index?
-    user.role?('admin') || user.role?('superadmin')
+    current_client.enable_channel_partners? && (user.role?('admin') || user.role?('superadmin'))
   end
 
   def export?
-    ['superadmin', 'admin'].include?(user.role)
+    current_client.enable_channel_partners? && ['superadmin', 'admin'].include?(user.role)
   end
 
   def new?
-    !user.present?
+    current_client.enable_channel_partners? && !user.present?
   end
 
   def edit?
-    user.role?('admin') || user.role?('superadmin')
+    current_client.enable_channel_partners? && (user.role?('admin') || user.role?('superadmin'))
   end
 
   def create?
-    !user.present?
+    current_client.enable_channel_partners? && !user.present?
   end
 
   def update?
-    user.role?('admin') || user.role?('superadmin')
+    current_client.enable_channel_partners? && (user.role?('admin') || user.role?('superadmin'))
   end
 
   def permitted_attributes params={}

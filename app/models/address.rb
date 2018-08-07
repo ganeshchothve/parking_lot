@@ -11,7 +11,7 @@ class Address
   field :address_type, type: String #TODO: Must be personal, work etc
   field :selldo_id, type: String
 
-  belongs_to :addressable, polymorphic: true
+  belongs_to :addressable, polymorphic: true, optional: true
 
   enable_audit({
     audit_fields: [:city, :state, :country, :address_type, :selldo_id],
