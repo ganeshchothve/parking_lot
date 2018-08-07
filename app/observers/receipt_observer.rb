@@ -32,7 +32,6 @@ class ReceiptObserver < Mongoid::Observer
     end
 
 
-
     # Send email to customer
     if receipt.status_changed?
       if receipt.status == 'success'
@@ -61,7 +60,7 @@ class ReceiptObserver < Mongoid::Observer
       end
       unless receipt.status == "pending"
         Sms.create!(
-          booking_portal_client_id: project_unit.booking_portal_client_id,
+          booking_portal_client_id: user.booking_portal_client_id,
           recipient_id: receipt.user_id,
           sms_template_id: SmsTemplate.find_by(name: "receipt_#{receipt.status}").id,
           triggered_by_id: receipt.id,
@@ -79,7 +78,7 @@ class ReceiptObserver < Mongoid::Observer
         mailer.deliver_later
       end
       Sms.create!(
-        booking_portal_client_id: project_unit.booking_portal_client_id,
+        booking_portal_client_id: user.booking_portal_client_id,
         recipient_id: receipt.user_id,
         sms_template_id: SmsTemplate.find_by(name: "receipt_pending").id,
         triggered_by_id: receipt.id,
