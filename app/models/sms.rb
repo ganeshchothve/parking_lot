@@ -16,6 +16,8 @@ class Sms
 
   enable_audit audit_fields: [:body, :sent_on], reference_ids_without_associations: [{field: "sms_template_id", klass: "SmsTemplate"}]
 
+  default_scope -> {desc(:created_at)}
+
   # returns array having statuses, which are allowed on models
   # allowed statuses are used in select2 for populating data on UI side. they also help in validations
   #

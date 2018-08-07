@@ -25,6 +25,8 @@ class BookingDetail
 
   validates :status, :primary_user_kyc_id, presence: true
 
+  default_scope -> {desc(:created_at)}
+
   def self.run_sync project_unit_id, changes={}
     project_unit = ProjectUnit.find(project_unit_id)
     changes = changes.with_indifferent_access
