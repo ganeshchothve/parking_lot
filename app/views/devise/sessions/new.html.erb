@@ -7,44 +7,46 @@ else
   otp_signin_class = "d-none"
   username_signin_class = ""
 end %>
-<%= form_for(resource, as: resource_name, url: users_otp_path, authenticity_token: true, remote: true, html: {:'data-type' => 'json', class: 'validate-form ' + otp_signin_class, id: "otp_user_form"}) do |f| %>
-<div class="form-group">
-  <%= f.label :phone %><br/>
-  <%= f.phone_field :login, autofocus: true, autocomplete: "phone", class: 'form-control', placeholder: 'Phone' %>
-</div>
-<div class="form-group" hidden>
-  <%= f.label :login_otp %><br/>
-  <%= f.number_field :login_otp, class: 'form-control', placeholder: 'OTP', maxlength: resource_class.otp_length, minlength: resource_class.otp_length %>
-</div>
-<div class="actions">
-  <%= f.submit "Get OTP", class: 'btn btn-primary',  data:{event_category: 'Section', event_action: 'Click', event_name: 'Get OTP'} %>
-  <a href="javascript:;" class="resend-otp d-none small" data-resend-time="<%= User.otp_resend_wait_time %>", data-max-limit="<%= User.otp_resend_max_limit %>" data-counter=0>Resend OTP</a>
-  <a href="javascript:;" class="toggle_signin_form float-right btn small pr-0" data-target="#standard_login_form">Login with password instead</a>
-</div>
+<% if current_client.preferred_login == "phone" %>
+  <%= form_for(resource, as: resource_name, url: users_otp_path, authenticity_token: true, remote: true, html: {:'data-type' => 'json', class: 'validate-form ' + otp_signin_class, id: "otp_user_form"}) do |f| %>
+    <div class="form-group">
+      <%= f.label :phone %><br/>
+      <%= f.phone_field :login, autofocus: true, autocomplete: "phone", class: 'form-control', placeholder: 'Phone' %>
+    </div>
+    <div class="form-group" hidden>
+      <%= f.label :login_otp %><br/>
+      <%= f.number_field :login_otp, class: 'form-control', placeholder: 'OTP', maxlength: resource_class.otp_length, minlength: resource_class.otp_length %>
+    </div>
+    <div class="actions">
+      <%= f.submit "Get OTP", class: 'btn btn-primary',  data:{event_category: 'Section', event_action: 'Click', event_name: 'Get OTP'} %>
+      <a href="javascript:;" class="resend-otp d-none small" data-resend-time="<%= User.otp_resend_wait_time %>", data-max-limit="<%= User.otp_resend_max_limit %>" data-counter=0>Resend OTP</a>
+      <a href="javascript:;" class="toggle_signin_form float-right btn small pr-0" data-target="#standard_login_form">Login with password instead</a>
+    </div>
+  <% end %>
 <% end %>
 <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: {class: 'validate-form ' + username_signin_class, id: "standard_login_form"}) do |f| %>
 <% if current_client.preferred_login == "phone" %>
-<div class="form-group">
-  <%= f.label :phone %>
-  <%= f.phone_field :login, autofocus: true, autocomplete: "phone", class: 'form-control', placeholder: 'Phone' %>
-</div>
-<% else %>
-<div class="form-group">
-  <%= f.label :email %>
-  <%= f.email_field :login, autofocus: true, autocomplete: "email", class: 'form-control', placeholder: 'Email' %>
-</div>
-<% end %>
-<div class="form-group">
-  <%= f.label :password %>
-  <%= f.password_field :password, autocomplete: "off", class: 'form-control', placeholder: 'Password' %>
-</div>
-<% if devise_mapping.rememberable? -%>
-<div class="form-group">
-  <div class="form-check">
-    <%= f.check_box :remember_me, class: "form-check-input" %>
-    <%= f.label :remember_me, class: "form-check-label" %>
+  <div class="form-group">
+    <%= f.label :phone %>
+    <%= f.phone_field :login, autofocus: true, autocomplete: "phone", class: 'form-control', placeholder: 'Phone' %>
   </div>
-</div>
+  <% else %>
+  <div class="form-group">
+    <%= f.label :email %>
+    <%= f.email_field :login, autofocus: true, autocomplete: "email", class: 'form-control', placeholder: 'Email' %>
+  </div>
+  <% end %>
+  <div class="form-group">
+    <%= f.label :password %>
+    <%= f.password_field :password, autocomplete: "off", class: 'form-control', placeholder: 'Password' %>
+  </div>
+  <% if devise_mapping.rememberable? -%>
+  <div class="form-group">
+    <div class="form-check">
+      <%= f.check_box :remember_me, class: "form-check-input" %>
+      <%= f.label :remember_me, class: "form-check-label" %>
+    </div>
+  </div>
 <% end -%>
 <div class="actions">
   <%= f.submit "Log in", class: 'btn btn-primary',  data:{event_category: 'Section', event_action: 'Click', event_name: 'Log In'} %>
