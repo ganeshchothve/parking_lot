@@ -17,6 +17,8 @@ class ChannelPartner
   field :gstin_number, type: String
   field :aadhaar, type: String
 
+  default_scope -> {desc(:created_at)}
+
   enable_audit({
     audit_fields: [:title, :rera_id, :status, :gstin_number, :aadhaar],
     reference_ids_without_associations: [
@@ -82,6 +84,7 @@ class ChannelPartner
     if company_name.present?
       str += " (#{company_name})"
     end
+    str
   end
 
   def ds_name

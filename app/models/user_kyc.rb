@@ -64,6 +64,8 @@ class UserKyc
   validates :existing_customer_name, :existing_customer_project, presence: true, if: Proc.new{|kyc| kyc.existing_customer?}
   validates :salutation, inclusion: {in: Proc.new{ UserKyc.available_salutations.collect{|x| x[:id]} } }
 
+  default_scope -> {desc(:created_at)}
+
   def self.available_salutations
     [
       {id: "Mr.", text: 'Mr.'},

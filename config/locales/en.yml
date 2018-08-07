@@ -171,6 +171,7 @@ en:
         approved_by: 'Approved By'
         created_by: 'Created By'
       user:
+        created_at: "Registered At"
         login_otp: 'Verification / Login OTP'
         name: 'Name'
         email: 'Email'

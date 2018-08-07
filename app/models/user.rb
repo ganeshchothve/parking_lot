@@ -63,6 +63,7 @@ class User
   end
 
   has_one_time_password length: User.otp_length
+  default_scope -> {desc(:created_at)}
 
   include OtpLoginHelperMethods
 
@@ -229,7 +230,14 @@ class User
   end
 
   def name
-    "#{first_name} #{last_name}"
+    str = "#{first_name} #{last_name}"
+    if self.role == "channel_partner"
+      cp = ChannelPartner.where(associated_user_id: self.id).first
+      if cp.present?
+        str += " (#{cp.company_name})"
+      end
+    end
+    str
   end
 
   def login
