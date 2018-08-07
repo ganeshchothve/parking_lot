@@ -249,7 +249,15 @@ class User
     login = conditions.delete(:login)
     login = conditions.delete(:email) if login.blank? && conditions.keys.include?(:email)
     login = conditions.delete(:phone) if login.blank? && conditions.keys.include?(:phone)
-    any_of({phone: login}, email: login).first
+    if login.blank? && warden_conditions[:confirmation_token].present?
+      confirmation_token = warden_conditions.delete(:confirmation_token)
+      where(confirmation_token: confirmation_token).first
+    elsif login.blank? && warden_conditions[:reset_password_token].present?
+      reset_password_token = warden_conditions.delete(:reset_password_token)
+      where(reset_password_token: reset_password_token).first
+    else
+      any_of({phone: login}, email: login).first
+    end
   end
 
   def self.find_record login

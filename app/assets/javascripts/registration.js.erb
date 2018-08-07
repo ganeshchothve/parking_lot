@@ -58,7 +58,7 @@ function register_user_with_portal(e){
     first_name: unescape(e['sell_do[form][lead][first_name]'].replace("+", " ")),
     last_name: unescape(e['sell_do[form][lead][last_name]'].replace("+", " ")),
     email: unescape(e['sell_do[form][lead][email]']),
-    phone: unescape(e['sell_do[form][lead][phone]']),
+    phone: unescape(e['sell_do[form][lead][phone]'].replace(/\+/ig, "")),
     mixpanel_id: unescape(e['sell_do[campaign][mixpanel_id]'])
   }
   $.ajax({
@@ -110,6 +110,8 @@ function register_user_with_portal(e){
         if(_.isEmpty(one.responseJSON.url)){
           if(typeof App !== "undefined" && App.current_user){
             window.location = '<%= url.admin_users_path %>';
+          }else if(one.responseJSON.already_exists){
+            window.location = '<%= url.new_user_session_path %>';
           }else{
             window.location = window.location.protocol + "//" + window.location.host + window.location.pathname + '?email=' + data.email + '&phone=' + data.phone + '&first_name=' + data.first_name + '&last_name=' + data.last_name + '&lead_id=' + data.lead_id;
           }

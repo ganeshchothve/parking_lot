@@ -20,7 +20,7 @@ end %>
     <div class="actions">
       <%= f.submit "Get OTP", class: 'btn btn-primary',  data:{event_category: 'Section', event_action: 'Click', event_name: 'Get OTP'} %>
       <a href="javascript:;" class="resend-otp d-none small" data-resend-time="<%= User.otp_resend_wait_time %>", data-max-limit="<%= User.otp_resend_max_limit %>" data-counter=0>Resend OTP</a>
-      <a href="javascript:;" class="toggle_signin_form float-right btn small pr-0" data-target="#standard_login_form">Login with password instead</a>
+      <a href="javascript:;" class="toggle_signin_form d-block d-md-inline float-md-right pr-0" data-target="#standard_login_form">Login with password instead</a>
     </div>
   <% end %>
 <% end %>
@@ -50,7 +50,7 @@ end %>
 <% end -%>
 <div class="actions">
   <%= f.submit "Log in", class: 'btn btn-primary',  data:{event_category: 'Section', event_action: 'Click', event_name: 'Log In'} %>
-  <a href="javascript:;" class="toggle_signin_form btn float-right small pr-0" data-target="#otp_user_form">Login with OTP instead</a>
+  <a href="javascript:;" class="toggle_signin_form d-block d-md-inline float-md-right pr-0" data-target="#otp_user_form">Login with OTP instead</a>
 </div>
 <% end %>
 <%= render "devise/shared/links" %>
