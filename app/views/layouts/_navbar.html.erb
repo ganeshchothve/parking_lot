@@ -49,6 +49,16 @@
             <%= active_link_to global_labels['receipts'], user_receipts_path, active: :inclusive, class: "nav-link" %>
           </li>
         <% end %>
+        <% if ClientPolicy.new(current_user, current_client).edit? %>
+          <li class="nav-item">
+            <%= link_to "Edit #{global_labels['client']}", edit_admin_client_path, class: "nav-link modal-remote-form-link" %>
+          </li>
+        <% end %>
+        <% if AssetPolicy.new(current_user, Asset.new(assetable: current_client)).index? %>
+          <li class="nav-item">
+            <%= link_to "Client #{global_labels[:assets]}", assetables_path(assetable_type: current_client.class.model_name.i18n_key.to_s, assetable_id: current_client.id), class: 'nav-link modal-remote-form-link' %>
+          </li>
+        <% end %>
         <li class="nav-item">
           <div class="dropdown">
             <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
@@ -74,6 +84,9 @@
         </li>
       </ul>
       <ul class="navbar-nav pull-right">
+        <li class="nav-item">
+          <%= active_link_to "Documents", dashboard_documents_path, active: :exclusive, class: "small nav-link" %>
+        </li>
         <li class="nav-item">
           <%= active_link_to "FAQs", dashboard_faqs_path, active: :exclusive, class: "small nav-link" %>
         </li>

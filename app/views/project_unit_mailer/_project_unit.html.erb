@@ -14,7 +14,7 @@
         </tr>
         <tr>
           <td><%= labels['blocked_on'] %></td>
-          <td class="text-right"><%= project_unit.blocked_on %></td>
+          <td class="text-right"><%= project_unit.blocked_on.present? ? l(project_unit.blocked_on) : "-" %></td>
         </tr>
         <tr>
           <td><%= labels['unit_facing_direction'] %></td>

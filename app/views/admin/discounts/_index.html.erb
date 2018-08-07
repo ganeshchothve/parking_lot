@@ -18,7 +18,7 @@
         <td><%= Discount.available_statuses.find{|x| x[:id] == discount.status}[:text] %></td>
         <td><%= discount.value %></td>
         <td><%= discount.created_by.present? ? discount.created_by.name : '-' %></td>
-        <td><%= discount.approved_by.present? ? "#{discount.approved_by.name}<br/><small>Approved at #{discount.approved_at.strftime("%Y-%m-%d %H:%M:%S")}</small>".html_safe : '-' %></td>
+        <td><%= discount.approved_by.present? ? "#{discount.approved_by.name}<br/><small>Approved at #{discount.approved_at.present? ? l(discount.approved_at) : '-'}</small>".html_safe : '-' %></td>
         <td class="text-right">
           <div class="dropdown">
             <a class="btn btn-light light-pink-btn dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>

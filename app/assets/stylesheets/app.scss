@@ -92,3 +92,8 @@ figure.wave {
 .selldof{
   font-family: 'Nunito Sans', sans-serif !important;
 }
+.control-label, label{
+  font-size: $font-size-base * 0.70;
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}

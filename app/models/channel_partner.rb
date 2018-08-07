@@ -24,8 +24,8 @@ class ChannelPartner
     ]
   })
 
-  has_one :address, as: :addressable
-  has_one :bank_detail, as: :bankable
+  has_one :address, as: :addressable, validate: false
+  has_one :bank_detail, as: :bankable, validate: false
   has_many :assets, as: :assetable
 
   validates :first_name, :last_name, :email, :phone, :rera_id, :status, :aadhaar, presence: true
@@ -78,7 +78,10 @@ class ChannelPartner
   end
 
   def name
-    "#{title} #{first_name} #{last_name}"
+    str = "#{title} #{first_name} #{last_name}"
+    if company_name.present?
+      str += " (#{company_name})"
+    end
   end
 
   def ds_name

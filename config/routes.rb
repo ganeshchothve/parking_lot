@@ -30,6 +30,7 @@ Rails.application.routes.draw do
     get 'export', action: 'export', on: :collection, as: :export
   end
   namespace :admin do
+    resource :client, except: [:show, :new, :create]
     resources :receipts, only: [:index, :show], controller: '/receipts' do
       get 'export', action: 'export', on: :collection, as: :export
       get :resend_success, on: :member, as: :resend_success
@@ -88,6 +89,7 @@ Rails.application.routes.draw do
     # read only pages
     get '', to: 'dashboard#index', as: :dashboard
     get 'faqs', to: 'dashboard#faqs', as: :dashboard_faqs
+    get 'documents', to: 'dashboard#documents', as: :dashboard_documents
     get 'rera', to: 'dashboard#rera', as: :dashboard_rera
     get 'tds-process', to: 'dashboard#tds_process', as: :dashboard_tds_process
     get 'terms-and-conditions', to: 'dashboard#terms_and_condition', as: :dashboard_terms_and_condition

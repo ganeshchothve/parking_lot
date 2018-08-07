@@ -40,9 +40,9 @@ class UserKyc
   })
 
   has_many :assets, as: :assetable
-  has_one :bank_detail, as: :bankable
-  # has_one :correspondence_address, as: :addressable, class_name: "Address"
-  has_one :permanent_address, as: :addressable, class_name: "Address"
+  has_one :bank_detail, as: :bankable, validate: false
+  # has_one :correspondence_address, as: :addressable, class_name: "Address", validate: false
+  has_one :permanent_address, as: :addressable, class_name: "Address", validate: false
   belongs_to :user
   belongs_to :creator, class_name: 'User'
   has_and_belongs_to_many :project_units

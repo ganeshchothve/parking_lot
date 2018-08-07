@@ -218,6 +218,16 @@ class User
     url.dashboard_url(user_email: self.email, user_token: self.authentication_token, host: host)
   end
 
+  # GENERICTODO: handle this with a way to replace urls in SMS or Email Templates
+  def confirmation_url
+    url = Rails.application.routes.url_helpers
+    host = Rails.application.config.action_mailer.default_url_options[:host]
+    port = Rails.application.config.action_mailer.default_url_options[:port].to_i
+    host = (port == 443 ? "https://" : "http://") + host
+    host = host + ((port == 443 || port == 80 || port == 0) ? "" : ":#{port}")
+    url.user_confirmation_url(confirmation_token: self.confirmation_token, channel_partner_id: self.channel_partner_id, host: host)
+  end
+
   def name
     "#{first_name} #{last_name}"
   end
@@ -258,7 +268,7 @@ class User
   private
   def channel_partner_change_reason_present?
     if self.persisted? && self.channel_partner_id_changed? && self.channel_partner_change_reason.blank?
-      self.errors.add :channel_partner_change_reason, " is required"
+      self.errors.add :channel_partner_change_reason, "is required"
     end
   end
 end
