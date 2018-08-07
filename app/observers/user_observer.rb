@@ -25,24 +25,28 @@ class UserObserver < Mongoid::Observer
       # end
       user.referenced_channel_partner_ids = [user.channel_partner_id]
     end
-    if user.buyer? && user.channel_partner_id.present?
-      template_id = SmsTemplate.find_by(name: "user_registered_by_channel_partner").id
-    elsif user.role == "channel_partner"
-      template_id = SmsTemplate.find_by(name: "channel_partner_user_registered").id
-    else
-      template_id = SmsTemplate.find_by(name: "user_registered").id
-    end
-
-    Sms.create!(
-      booking_portal_client_id: user.booking_portal_client_id,
-      recipient_id: user.id,
-      sms_template_id: template_id,
-      triggered_by_id: user.id,
-      triggered_by_type: user.class.to_s
-    )
-
     unless user.authentication_token?
       user.reset_authentication_token!
+    end
+  end
+
+  def after_save user
+    if user.confirmed_at_changed? && user.confirmed?
+      if user.buyer? && user.channel_partner_id.present?
+        template_id = SmsTemplate.find_by(name: "user_registered_by_channel_partner").id
+      elsif user.role == "channel_partner"
+        template_id = SmsTemplate.find_by(name: "channel_partner_user_registered").id
+      else
+        template_id = SmsTemplate.find_by(name: "user_registered").id
+      end
+
+      Sms.create!(
+        booking_portal_client_id: user.booking_portal_client_id,
+        recipient_id: user.id,
+        sms_template_id: template_id,
+        triggered_by_id: user.id,
+        triggered_by_type: user.class.to_s
+      )
     end
   end
 end
