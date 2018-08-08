@@ -1,4 +1,4 @@
-<%= form_with(model: @channel_partner, local: true, html: {"data-resource-type": global_labels['channel_partner'], "data-type": "json", id: 'channel_partner_form', class: 'modal-remote-form validate-form'}) do |form| %>
+<%= form_for(@channel_partner, local: true, remote: true, html: {"data-resource-type": global_labels['channel_partner'], "data-type": "json", id: 'channel_partner_form', class: 'modal-remote-form validate-form'}) do |form| %>
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -18,7 +18,6 @@
   </div>
 </div>
 <% end %>
-
 <%= javascript_tag do %>
   $(document).ready(function(){
     FormInitializer.init($("#channel_partner_form"));

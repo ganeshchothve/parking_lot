@@ -150,12 +150,16 @@ class Receipt
     if self.status == "success"
       self.assign!(:order_id) if self.order_id.blank?
       if self.project_unit_id.present?
-        "#{self.project_unit.project_name[0..1].upcase}-#{self.project_unit.name[0..1].upcase}-#{self.order_id}"
+        "#{self.user.booking_portal_client.name[0..1].upcase}-#{self.project_unit.name[0..1].upcase}-#{self.order_id}"
       else
-        "#{self.project_unit.project_name[0..1].upcase}-#{self.order_id}"
+        "#{self.user.booking_portal_client.name[0..1].upcase}-#{self.order_id}"
       end
     elsif self.receipt_id.blank?
-      "#{self.project_unit.project_name[0..1].upcase}-TMP-#{SecureRandom.hex(4)}"
+      if self.project_unit_id.present?
+        "#{self.user.booking_portal_client.name[0..1].upcase}-TMP-#{SecureRandom.hex(4)}"
+      else
+        "#{self.user.booking_portal_client.name[0..1].upcase}-TMP-#{SecureRandom.hex(4)}"
+      end
     else
       self.receipt_id
     end

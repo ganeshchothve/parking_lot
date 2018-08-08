@@ -15,7 +15,6 @@
             <div class="nav nav-tabs" role="tablist">
               <a class="nav-item nav-link active" data-toggle="tab" href="#nav-client-basic" role="tab">Basic Details</a>
               <a class="nav-item nav-link" data-toggle="tab" href="#nav-client-contacts" role="tab">Contacts & Notifications</a>
-              <a class="nav-item nav-link" data-toggle="tab" href="#nav-client-assets" role="tab">Uploads / Marketing Collateral</a>
               <a class="nav-item nav-link" data-toggle="tab" href="#nav-client-integrations" role="tab">Integrations</a>
             </div>
           </nav>
@@ -216,8 +215,17 @@
 
                 </div>
               </div>
-            </div>
-            <div class="tab-pane fade" id="nav-client-assets" role="tabpanel">
+              <div class="card">
+                <div class="card-header">
+                  Address
+                </div>
+                <div class="card-body">
+                  <% f.object.build_address if f.object.address.blank? %>
+                  <%= f.fields_for :address do |address_form| %>
+                    <%= render "addresses/form_fields", f: address_form %>
+                  <% end %>
+                </div>
+              </div>
             </div>
             <div class="tab-pane fade" id="nav-client-integrations" role="tabpanel">
               <div class="row">
