@@ -46,6 +46,7 @@ class Receipt
   validate :status_changed
   validates :tracking_id, presence: true, if: Proc.new{|receipt| receipt.status == 'success' && receipt.payment_type != "online"}
   validates :comments, presence: true, if: Proc.new{|receipt| receipt.status == 'failed' && receipt.payment_type != "online"}
+  validate :tracking_id_processed_on_only_on_success
 
   increments :order_id, auto: false
   default_scope -> {desc(:created_at)}
@@ -123,6 +124,9 @@ class Receipt
       if params[:fltrs][:status].present?
         selector[:status] = params[:fltrs][:status]
       end
+      if params[:fltrs][:receipt_id].present?
+        selector[:receipt_id] = params[:fltrs][:receipt_id]
+      end
       if params[:fltrs][:user_id].present?
         selector[:user_id] = params[:fltrs][:user_id]
       end
@@ -143,6 +147,12 @@ class Receipt
     if params[:fltrs].blank? || params[:fltrs][:status].blank?
       selector = selector.or({status: "pending", payment_mode: {"$ne" => "online"}}, {status: {"$ne" => "pending"}})
     end
+    or_selector = {}
+    if params[:q].present?
+      regex = ::Regexp.new(::Regexp.escape(params[:q]), 'i')
+      or_selector = {"$or": [{receip_id: regex}, {tracking_id: regex}, {payment_identifier: regex}] }
+    end
+    selector = selector.where(or_selector)
     selector
   end
 
@@ -168,22 +178,29 @@ class Receipt
   private
   def validate_total_amount
     if self.total_amount < ProjectUnit.blocking_amount && self.payment_type == "blocking" && self.new_record?
-      self.errors.add :total_amount, " cannot be less than #{ProjectUnit.blocking_amount}"
+      self.errors.add :total_amount, "cannot be less than #{ProjectUnit.blocking_amount}"
     end
     if self.total_amount != ProjectUnit.blocking_amount && current_client.blocking_amount_editable && self.new_record? && self.payment_type == "blocking" && !current_client.blocking_amount_editable?
-      self.errors.add :total_amount, " has to be #{ProjectUnit.blocking_amount}"
+      self.errors.add :total_amount, "has to be #{ProjectUnit.blocking_amount}"
     end
     if self.total_amount <= 0
-      self.errors.add :total_amount, " cannot be less than or equal to 0"
+      self.errors.add :total_amount, "cannot be less than or equal to 0"
     end
   end
 
   def status_changed
     if self.status_changed? && ['success', 'failed'].include?(self.status_was) && ['cancelled'].exclude?(self.status)
-      self.errors.add :status, ' cannot be modified for a successful or failed payments'
+      self.errors.add :status, 'cannot be modified for a successful or failed payments'
     end
     if self.status_changed? && ['clearance_pending'].include?(self.status_was) && self.status == 'pending'
-      self.errors.add :status, ' cannot be modified to "pending" from "Pending Clearance" status'
+      self.errors.add :status, 'cannot be modified to "pending" from "Pending Clearance" status'
+    end
+  end
+
+  def tracking_id_processed_on_only_on_success
+    if self.status_changed? && self.status != "success" && self.payment_mode != "online"
+      self.errors.add :tracking_id, 'cannot be set unless the status is marked as success' if self.tracking_id_changed?
+      self.errors.add :processed_on, 'cannot be set unless the status is marked as success' if self.processed_on_changed?
     end
   end
 end
