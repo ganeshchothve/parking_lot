@@ -8,7 +8,7 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def export?
-    ['superadmin', 'admin', 'crm', 'sales', 'cp'].include?(user.role)
+    ['superadmin', 'admin'].include?(user.role)
   end
 
   def new?

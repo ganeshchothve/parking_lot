@@ -12,7 +12,7 @@ class UserRequestPolicy < ApplicationPolicy
   end
 
   def export?
-    ['admin', 'crm'].include?(user.role) && current_client.enable_actual_inventory?
+    ['admin'].include?(user.role) && current_client.enable_actual_inventory?
   end
 
   def create?

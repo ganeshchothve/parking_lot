@@ -212,7 +212,10 @@
                   </div>
                 </div>
                 <div class="col-md-6">
-
+                  <div class="form-group">
+                    <%= f.label :sender_email, class: 'label-required' %>
+                    <%= f.email_field :sender_email, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("sender_email") ? false : true) %>
+                  </div>
                 </div>
               </div>
               <div class="card">

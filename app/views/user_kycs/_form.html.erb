@@ -114,7 +114,7 @@ end
                 <div class="form-group position-relative">
                   <!-- TODO: check if you want to restrict the dob to 18 years age -->
                   <%= f.label :dob, class: 'required' %>
-                  <% date = (f.object.dob.present? ? f.object.dob.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y")) %>
+                  <% date = (f.object.dob.present? ? f.object.dob.strftime("%d/%m/%Y") : "") %>
                   <%= f.text_field :dob, class: 'form-control datepicker', required: 'required', type:'text', data: {"default-date": date}, value: date %>
                 </div>
               </div>

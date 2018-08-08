@@ -57,36 +57,6 @@ class Admin::UsersController < AdminController
     redirect_to admin_users_path
   end
 
-  def export_customer_book
-    if Rails.env.development?
-      UserContactBookExportWorker.new.perform(current_user.email)
-    else
-      UserContactBookExportWorker.perform_async(current_user.email)
-    end
-    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
-    redirect_to admin_users_path
-  end
-
-  def export_cp_report
-    if Rails.env.development?
-      ChannelPartnerBookingDetailsExportWorker.new.perform(current_user.email)
-    else
-      ChannelPartnerBookingDetailsExportWorker.perform_async(current_user.email)
-    end
-    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
-    redirect_to admin_users_path
-  end
-
-  def export_cp_lead_report
-    if Rails.env.development?
-      ChannelPartnerLeadDetailsExportWorker.new.perform(current_user.email)
-    else
-      ChannelPartnerLeadDetailsExportWorker.perform_async(current_user.email)
-    end
-    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
-    redirect_to admin_users_path
-  end
-
   def show
     @project_units = @user.project_units.paginate(page: params[:page] || 1, per_page: 15)
     @receipts = @user.receipts.paginate(page: params[:page] || 1, per_page: 15)

@@ -35,23 +35,9 @@
                   <% end %>
                 </div>
               </div>
-              <div class="dropdown float-left ml-2">
-                <a class="btn btn-primary dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
-                <div class="dropdown-menu">
-                  <% if UserPolicy.new(current_user, User).export? %>
-                    <%= link_to "Export all #{global_labels['users']}", export_admin_users_path, class: 'dropdown-item' %>
-                  <% end %>
-                  <% if UserPolicy.new(current_user, User).export_customer_book? %>
-                    <%= link_to "Export Customer Book", export_customer_book_admin_users_path(id: current_user.id), class: 'dropdown-item' %>
-                  <% end %>
-                  <% if UserPolicy.new(current_user, User).export_cp_report? %>
-                    <%= link_to "Export report of channel partners", export_cp_report_admin_users_path, class: 'dropdown-item' %>
-                  <% end %>
-                  <% if UserPolicy.new(current_user, User).export_cp_lead_report? %>
-                    <%= link_to "Channel partners lead details", export_cp_lead_report_admin_users_path, class: 'dropdown-item' %>
-                  <% end %>
-                </div>
-              </div>
+              <% if UserPolicy.new(current_user, User).export? %>
+                <%= link_to "Export all #{global_labels['users']}", export_admin_users_path, class: 'btn btn-primary ml-2' %>
+              <% end %>
             </div>
             <div class="col-md-5 text-md-right">
               <h6 class="mt-2">Total <%= global_labels[:users] %>: <%= @users.count %></h6>

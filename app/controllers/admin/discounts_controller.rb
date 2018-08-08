@@ -37,8 +37,10 @@ class Admin::DiscountsController < ApplicationController
     respond_to do |format|
       if @discount.save
         format.html { redirect_to admin_discounts_path, notice: 'Discount registered successfully and sent for approval.' }
+        format.json { render json: @discount, status: :created }
       else
         format.html { render :new }
+        format.json { render json: {errors: @discount.errors.full_messages.uniq}, status: :unprocessable_entity }
       end
     end
   end
@@ -52,9 +54,10 @@ class Admin::DiscountsController < ApplicationController
     respond_to do |format|
       if @discount.save
         format.html { redirect_to admin_discounts_path, notice: 'Discount was successfully updated.' }
+        format.json { render json: @discount }
       else
         format.html { render :edit }
-        format.json { render json: @discount.errors, status: :unprocessable_entity }
+        format.json { render json: {errors: @discount.errors.full_messages.uniq}, status: :unprocessable_entity }
       end
     end
   end

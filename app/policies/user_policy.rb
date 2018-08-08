@@ -12,19 +12,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def export?
-    ['superadmin', 'admin', 'crm'].include?(user.role)
-  end
-
-  def export_customer_book?
-    ['superadmin', 'admin', 'crm'].include?(user.role)
-  end
-
-  def export_cp_report?
-    ['superadmin', 'admin', 'cp'].include?(user.role)
-  end
-
-  def export_cp_lead_report?
-    ['superadmin', 'admin', 'cp'].include?(user.role)
+    ['superadmin', 'admin'].include?(user.role)
   end
 
   def edit?

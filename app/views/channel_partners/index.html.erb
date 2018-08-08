@@ -9,7 +9,7 @@
               <div class="row mb-3">
                 <div class="col-md-7">
                   <% if ChannelPartnerPolicy.new(current_user, ChannelPartner).export? %>
-                    <%= link_to "Export all #{global_labels['channel_partners']}", export_channel_partners_path, class: 'btn btn-primary float-left ml-2' %>
+                    <%= link_to "Export all #{global_labels['channel_partners']}", export_channel_partners_path, class: 'btn btn-primary' %>
                   <% end %>
                 </div>
                 <div class="col-md-5 text-md-right">

@@ -8,7 +8,7 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def export?
-    ['superadmin', 'admin', 'crm'].include?(user.role) && current_client.enable_actual_inventory?
+    ['superadmin', 'admin'].include?(user.role) && current_client.enable_actual_inventory?
   end
 
   def mis_report?

@@ -8,6 +8,8 @@ en:
     formats:
       default: "%d/%m/%Y %I:%M %p"
   global:
+    sms_template: 'SMS Template'
+    sms_templates: 'SMS Templates'
     assets: 'Documents'
     asset: 'Documents'
     client: 'Client'
@@ -41,6 +43,9 @@ en:
         file_size: 'Size'
         file_name: 'Name'
         asset_type: 'Type'
+      sms_template:
+        name: 'Name'
+        content: 'Content'
       client:
         name: 'Client Name (Used across the app)'
         selldo_client_id: 'SellDo Client ID'
@@ -49,6 +54,7 @@ en:
         selldo_default_srd: 'SellDo Default SRD'
         selldo_cp_srd: 'SellDo Channel Partner SRD'
         notification_email: 'Notification Email (all emails are sent here)'
+        sender_email: 'Sender Email Address'
         email_domains: 'Email Domains (to detect employee users)'
         booking_portal_domains: 'Booking Portal Domains (where the portal is hosted)'
         registration_name: 'Registration Name (Used in Payments)'

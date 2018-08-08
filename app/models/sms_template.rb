@@ -13,4 +13,9 @@ class SmsTemplate
   def parsed_content object
     TemplateParser.parse(self.content, object)
   end
+
+  def self.build_criteria params={}
+    selector = {}
+    self.where(selector)
+  end
 end
