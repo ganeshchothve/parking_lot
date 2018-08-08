@@ -251,7 +251,7 @@ class User
     login = conditions.delete(:phone) if login.blank? && conditions.keys.include?(:phone)
     if login.blank? && warden_conditions[:confirmation_token].present?
       confirmation_token = warden_conditions.delete(:confirmation_token)
-      where(confirmation_token: confirmation_token).where(confirmed_at: nil).first
+      where(confirmation_token: confirmation_token).first
     elsif login.blank? && warden_conditions[:reset_password_token].present?
       reset_password_token = warden_conditions.delete(:reset_password_token)
       where(reset_password_token: reset_password_token).first
