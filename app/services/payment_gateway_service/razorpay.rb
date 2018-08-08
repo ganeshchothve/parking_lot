@@ -9,9 +9,8 @@ module PaymentGatewayService
         response = ::Razorpay::Payment.fetch(params[:payment_id]).capture({
           amount: @receipt.total_amount.to_i * 100
         })
-        @receipt.tracking_id = params[:payment_id]
         @receipt.payment_identifier = params[:payment_id]
-        # @receipt.gateway_response = response
+        @receipt.tracking_id = params[:payment_id]
         if response.status == 'captured'
           @receipt.status = "success"
           @receipt.status_message = "success"
