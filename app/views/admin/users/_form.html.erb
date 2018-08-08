@@ -78,6 +78,10 @@
               <%= f.text_area :channel_partner_change_reason, class: 'form-control', disabled: (policy(@user).editable_field?("channel_partner_change_reason") ? false : true) %>
             </div>
           <% end %>
+          <div class="form-group">
+            <%= f.label :time_zone, class: "control-label" %>
+            <%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.all.sort, {}, class: 'selectize', disabled: (policy(@user).editable_field?("time_zone") ? false : true) %>
+          </div>
         </div>
         <div class="modal-footer">
           <%= f.submit "Save", class: 'btn btn-primary' %>

@@ -23,6 +23,7 @@ class User
   field :referenced_channel_partner_ids, type: Array, default: []
   field :rera_id, type: String
   field :mixpanel_id, type: String
+  field :time_zone, type: String, default: "Mumbai"
 
   field :encrypted_password, type: String, default: ""
 

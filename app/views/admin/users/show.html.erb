@@ -101,7 +101,7 @@
               <div class="form-group">
                 <label>Registered At</label>
                 <div>
-                  <%= l(@user.created_at) %>
+                  <%= l(@user.created_at.in_time_zone(current_user.time_zone)) %>
                 </div>
               </div>
             </div>
@@ -109,7 +109,7 @@
               <div class="form-group">
                 <label>Account Confirmed?</label>
                 <div>
-                  <%= @user.confirmed? ? "At #{l(@user.confirmed_at)}" : "No" %>
+                  <%= @user.confirmed? ? "At #{l(@user.confirmed_at.in_time_zone(current_user.time_zone))}" : "No" %>
                 </div>
               </div>
             </div>
@@ -117,7 +117,7 @@
               <div class="form-group">
                 <label>Last Signed In</label>
                 <div>
-                  <%= @user.sign_in_count > 0 ? "#{l(@user.last_sign_in_at)} (Signed In #{@user.sign_in_count} times)" : "Never Signed In" %>
+                  <%= @user.sign_in_count > 0 ? "#{l(@user.last_sign_in_at.in_time_zone(current_user.time_zone))} (Signed In #{@user.sign_in_count} times)" : "Never Signed In" %>
                 </div>
               </div>
             </div>
