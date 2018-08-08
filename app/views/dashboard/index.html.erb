@@ -4,7 +4,7 @@
   <%= render 'dashboard/index/crm' %>
 <% elsif current_user.role?('cp') %>
   <%= render 'dashboard/index/cp' %>
-<% elsif current_user.role?('admin') %>
+<% elsif current_user.role?('admin') || current_user.role?('superadmin') %>
     <%= render 'dashboard/index/crm' %>
 <% elsif current_user.role?('crm') %>
   <%= render 'dashboard/index/crm' %>

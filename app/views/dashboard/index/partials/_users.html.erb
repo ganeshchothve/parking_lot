@@ -1,25 +1,33 @@
+<% users = [] # DashboardDataProvider.users_dashboard(current_user) %>
 <div class="card">
   <div class="card-header">
     <%= global_labels[:users] %>
   </div>
   <div class="card-body">
-    <div class="table-responsive-lg">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Role</th>
-            <th class="text-right">Count</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% DashboardDataProvider.users_dashboard(current_user).each do |d| %>
-          <tr>
-            <td><%= User.available_roles.find{|x| x[:id] == d[:role]}[:text] %></td>
-            <td class="text-right"><%= d[:count] %></td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
+    <% if users.present? %>
+      <div class="table-responsive-lg">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Role</th>
+              <th class="text-right">Count</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% users.each do |d| %>
+            <tr>
+              <td><%= User.available_roles.find{|x| x[:id] == d[:role]}[:text] %></td>
+              <td class="text-right"><%= d[:count] %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      No <%= global_labels[:users] %> yet.
+      <% if UserPolicy.new(current_user, User.new(role: 'user')).new? %>
+        <%= link_to 'Add a Customer', new_admin_user_path, class: 'modal-remote-form-link' %>
+      <% end %>
+    <% end %>
   </div>
 </div>

@@ -25,11 +25,11 @@
             </div>
             <% if receipt.payment_mode == 'online' %>
               <div>Trans ID: <%= receipt.payment_identifier %></div>
-    	        <div>Processed Date:<%= receipt.processed_on.present? ? l(receipt.processed_on) : "-" %></div>
+    	        <div>Processed Date:<%= receipt.processed_on.present? ? l(receipt.processed_on.in_time_zone(user.time_zone)) : "-" %></div>
             <% else %>
               <div>Bank: <%= receipt.issuing_bank %> / Branch: <%= receipt.issuing_bank_branch %></div>
               <div>Issued Date: <%= receipt.issued_date.present? ? receipt.issued_date : "-" %></div>
-              <div>Processed Date: <%= receipt.processed_on.present? ? l(receipt.processed_on) : "-" %></div>
+              <div>Processed Date: <%= receipt.processed_on.present? ? l(receipt.processed_on.in_time_zone(user.time_zone)) : "-" %></div>
               <div>ID: <%= receipt.payment_identifier %></div>
             <% end %>
             <div>Payment: <%= Receipt.available_payment_modes.find{|x| x[:id] == receipt.payment_mode}[:text] %></div>

@@ -39,10 +39,7 @@ function sell_do_form_successfully_submitted(e){
   if(typeof App !== "undefined" && App.current_user){
     $(".sell_do_form_container").html('<div class="alert alert-success">Please wait, we have registered the user; generating login details & sending confirmation email / SMS to the user.</div>');
   }else{
-    var message = 'Thank you for registering with us.'
-    if(App.client.preferred_login == "phone"){
-      message += ' Please wait while we redirect you to verify your phone number.'
-    }
+    var message = 'Thank you for registering with us. Please wait while we generate login details & send you confirmation email / SMS.'
     $(".sell_do_form_container").html('<div class="alert alert-success">' + message + '</div>');
   }
   register_user_with_portal(e);
@@ -118,7 +115,7 @@ function register_user_with_portal(e){
         }else{
           window.location = one.responseJSON.url;
         }
-      }, 3000);
+      }, 5000);
     }
   });
 }

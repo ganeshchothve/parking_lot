@@ -5,13 +5,13 @@ module DatabaseSeeds
 
       ::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "UserRequest", name: "cancellation_request_created", content: "We're sorry to see you go! Your request for cancellation of booking for {{project_unit.name}} has been received. Our CRM team will get in touch with you shortly.") if ::SmsTemplate.where(name: "cancellation_request_created").blank?
 
-      ::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "Receipt", name: "receipt_success", content: "Dear {{user.name}}, your payment of Rs. {{total_amount}} was successful ({{receipt_id}}). To print your receipt visit {{user.dashboard_url}}") if ::SmsTemplate.where(name: "receipt_success").blank?
+      ::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "Receipt", name: "receipt_success", content: "Dear {{user.name}}, your payment of Rs. {{total_amount}} was successful ({{receipt_id}}). To view your receipt visit your Portal Dashboard {{user.dashboard_url}}") if ::SmsTemplate.where(name: "receipt_success").blank?
 
       ::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "Receipt", name: "receipt_failed", content: "Dear {{user.name}}, your payment of Rs. {{total_amount}} has failed ({{receipt_id}}).") if ::SmsTemplate.where(name: "receipt_failed").blank?
 
       ::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "Receipt", name: "receipt_pending", content: "Dear {{user.name}}, your payment of Rs. {{total_amount}} has been collected and will be sent to the {{user.name}} Team for clearance.") if ::SmsTemplate.where(name: "receipt_pending").blank?
 
-      ::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "Receipt", name: "receipt_clearance_pending", content: "Dear {{user.name}}, your payment of Rs. {{total_amount}} is under 'Pending Clearance' ({{receipt_id}}). To print your receipt visit {{user.dashboard_url}}") if ::SmsTemplate.where(name: "receipt_clearance_pending").blank?
+      ::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "Receipt", name: "receipt_clearance_pending", content: "Dear {{user.name}}, your payment of Rs. {{total_amount}} is under 'Pending Clearance' ({{receipt_id}}). To view your receipt visit your Portal Dashboard {{user.dashboard_url}}") if ::SmsTemplate.where(name: "receipt_clearance_pending").blank?
 
       ::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "ProjectUnit", name: "promote_future_payment_6", content: "Only 6 days to go! 6 days to being part of {{booking_portal_client.name}}. Click here to pay the pending amount of Rs. {{pending_balance}} for unit {{name}} and secure your home at {{project_name}}: {{user.dashboard_url}}") if ::SmsTemplate.where(name: "promote_future_payment_6").blank?
 
@@ -31,11 +31,11 @@ module DatabaseSeeds
 
       ::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "ProjectUnit", name: "project_unit_booked_confirmed", content: "Welcome to the {{booking_portal_client.name}} family! You're now the proud owner of {{name}} at {{project_name}} in {{booking_portal_client.name}}. Our executives will be in touch regarding agreement formalities.") if ::SmsTemplate.where(name: "project_unit_booked_confirmed").blank?
 
-      ::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "User", name: "user_registered_by_channel_partner", content: "{{channel_partner.name}} has registered you with {{booking_portal_client.name}}'s Portal. To confirm your account with this partner, please click {{confirmation_url}}.") if ::SmsTemplate.where(name: "user_registered_by_channel_partner").blank?
+      ::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "User", name: "user_registered_by_channel_partner", content: "{{channel_partner.name}} has registered you with {{booking_portal_client.name}}. To confirm your account with this partner, please click {{confirmation_url}}. You can also confirm your account using your phone & OTP.") if ::SmsTemplate.where(name: "user_registered_by_channel_partner").blank?
 
-      ::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "User", name: "channel_partner_user_registered", content: "Dear {{name}}, thank you for registering as a Channel Partner at {{booking_portal_client.name}}. To confirm your account, please click {{confirmation_url}}.") if ::SmsTemplate.where(name: "channel_partner_user_registered").blank?
+      ::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "User", name: "channel_partner_user_registered", content: "Dear {{name}}, thank you for registering as a Channel Partner at {{booking_portal_client.name}}. To confirm your account, please click {{confirmation_url}}. You can also confirm your account using your phone & OTP.") if ::SmsTemplate.where(name: "channel_partner_user_registered").blank?
 
-      ::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "User", name: "user_registered", content: "Dear {{name}}, thank you for registering at {{booking_portal_client.name}}. To confirm your account, please click {{confirmation_url}}.") if ::SmsTemplate.where(name: "user_registered").blank?
+      ::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "User", name: "user_registered", content: "Dear {{name}}, thank you for registering at {{booking_portal_client.name}}. To confirm your account, please click {{confirmation_url}}. You can also confirm your account using your phone & OTP.") if ::SmsTemplate.where(name: "user_registered").blank?
 
       return ::SmsTemplate.where(booking_portal_client_id: client_id).count
     end
