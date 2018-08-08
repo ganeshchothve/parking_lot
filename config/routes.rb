@@ -30,7 +30,9 @@ Rails.application.routes.draw do
     get 'export', action: 'export', on: :collection, as: :export
   end
   namespace :admin do
-    resource :client, except: [:show, :new, :create]
+    resource :client, except: [:show, :new, :create] do
+      resources :sms_templates, only: [:edit, :update, :index]
+    end
     resources :receipts, only: [:index, :show], controller: '/receipts' do
       get 'export', action: 'export', on: :collection, as: :export
       get :resend_success, on: :member, as: :resend_success

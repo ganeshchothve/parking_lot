@@ -1,0 +1,32 @@
+<%= form_for([:admin, :client, @sms_template], local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['sms_templates'], "data-type": "json", id: 'sms_template_form'}) do |f| %>
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><%= @sms_template.new_record? ? "New" : "Edit" %> <%= "#{global_labels['sms_template']}" %></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <%= f.label :name %>
+          <div><%= @sms_template.name.titleize %></div>
+        </div>
+        <div class="form-group">
+          <%= f.label :content %>
+          <%= f.text_area :content, class: 'form-control' %>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <%= f.submit "Save", class: "btn btn-primary" %>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>
+<%= javascript_tag do %>
+$(document).ready(function(){
+  FormInitializer.init($("#sms_template_form"));
+});
+<% end %>

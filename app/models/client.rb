@@ -11,6 +11,7 @@ class Client
   field :helpdesk_number, type: String
   field :helpdesk_email, type: String
   field :notification_email, type: String
+  field :sender_email, type: String
   field :email_domains, type: Array, default: []
   field :booking_portal_domains, type: Array, default: []
   field :registration_name, type: String
@@ -50,7 +51,7 @@ class Client
   has_many :smses, class_name: 'Sms'
   has_many :assets, as: :assetable
 
-  validate :name, :selldo_client_id, :selldo_form_id, :helpdesk_email, :helpdesk_number, :notification_email, :email_domains, :booking_portal_domains, :registration_name, :cin_number, :website_link, :support_email, :support_number
+  validate :name, :selldo_client_id, :selldo_form_id, :helpdesk_email, :helpdesk_number, :notification_email, :sender_email, :email_domains, :booking_portal_domains, :registration_name, :cin_number, :website_link, :support_email, :support_number
 
   def self.available_preferred_logins
     [
@@ -80,6 +81,7 @@ c.cp_disclaimer = "CP Disclaimer"
 c.disclaimer = "End User Disclaimer"
 c.support_number = "9922410908"
 c.support_email = "supriya@amuratech.com"
+c.sender_email = "supriya@amuratech.com"
 c.channel_partner_support_number = "9922410908"
 c.channel_partner_support_email = "supriya@amuratech.com"
 c.cancellation_amount = 5000
