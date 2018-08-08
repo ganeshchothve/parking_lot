@@ -61,7 +61,7 @@ class LocalDevise::ConfirmationsController < Devise::ConfirmationsController
   def do_confirm
     @confirmable.confirm
     if params[:user].present? && params[:user][:channel_partner_id].present?
-      @confirmable.set(channel_partner_id: params[:user][:channel_partner_id], referenced_channel_partner_ids: [params[:user][:channel_partner_id]])
+      @confirmable.set(channel_partner_id: params[:user][:channel_partner_id], referenced_channel_partner_ids: [ BSON::ObjectId(params[:user][:channel_partner_id]) ])
     end
     set_flash_message :notice, :confirmed
     sign_in_and_redirect(resource_name, @confirmable)
