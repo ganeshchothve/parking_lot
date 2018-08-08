@@ -30,8 +30,4 @@ class UserObserver < Mongoid::Observer
       user.reset_authentication_token!
     end
   end
-
-  def after_create user
-    user.send_registration_sms
-  end
 end

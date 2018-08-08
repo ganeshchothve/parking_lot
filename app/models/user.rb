@@ -251,7 +251,7 @@ class User
     login = conditions.delete(:phone) if login.blank? && conditions.keys.include?(:phone)
     if login.blank? && warden_conditions[:confirmation_token].present?
       confirmation_token = warden_conditions.delete(:confirmation_token)
-      where(confirmation_token: confirmation_token).first
+      where(confirmation_token: confirmation_token).where(confirmed_at: nil).first
     elsif login.blank? && warden_conditions[:reset_password_token].present?
       reset_password_token = warden_conditions.delete(:reset_password_token)
       where(reset_password_token: reset_password_token).first
@@ -280,24 +280,6 @@ class User
       search = Search.create(user: self)
     end
     search
-  end
-
-  def send_registration_sms
-    if self.buyer? && self.channel_partner_id.present?
-      template_id = SmsTemplate.find_by(name: "user_registered_by_channel_partner").id
-    elsif self.role == "channel_partner"
-      template_id = SmsTemplate.find_by(name: "channel_partner_user_registered").id
-    else
-      template_id = SmsTemplate.find_by(name: "user_registered").id
-    end
-
-    Sms.create!(
-      booking_portal_client_id: self.booking_portal_client_id,
-      recipient_id: self.id,
-      sms_template_id: template_id,
-      triggered_by_id: self.id,
-      triggered_by_type: self.class.to_s
-    )
   end
 
   private
