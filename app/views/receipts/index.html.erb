@@ -47,7 +47,7 @@
               <% end %>
               <% end %>
               <% if UserPolicy.new(current_user, User).export? && @user.blank? %>
-                <%= link_to "Export all #{global_labels['receipts']}", export_admin_receipts_path, class: 'btn btn-primary modal-remote-form-link' %>
+                <%= link_to "Export all #{global_labels['receipts']}", export_admin_receipts_path, class: 'btn btn-primary' %>
               <% end %>
             </div>
             <div class="col-md-5 text-md-right">
