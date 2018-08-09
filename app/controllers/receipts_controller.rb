@@ -77,11 +77,6 @@ class ReceiptsController < ApplicationController
     @receipt = Receipt.new base_params
     @receipt.creator = current_user
     @receipt.assign_attributes(permitted_attributes(@receipt))
-    if @receipt.payment_type == "blocking"
-      @receipt.payment_gateway = 'Razorpay'
-    else
-      @receipt.payment_gateway = 'Razorpay'
-    end
     authorize @receipt
     respond_to do |format|
       if @receipt.save
@@ -158,7 +153,7 @@ class ReceiptsController < ApplicationController
 
   def apply_policy_scope
     custom_scope = Receipt.all.criteria
-    if current_user.role?('admin') || current_user.role?('crm') || current_user.role?('sales') || current_user.role?('cp')
+    if current_user.role?('admin') || current_user.role?('superadmin') || current_user.role?('crm') || current_user.role?('sales') || current_user.role?('cp')
       if params[:user_id].present?
         custom_scope = custom_scope.where(user_id: params[:user_id])
       end

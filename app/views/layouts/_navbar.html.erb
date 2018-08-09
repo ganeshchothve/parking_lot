@@ -1,8 +1,8 @@
 <% if user_signed_in? %>
   <nav id="top_navigation" class="navbar navbar-expand-lg fixed-top navbar navbar-light bg-white border-bottom">
     <a class="navbar-brand" href="<%= home_path(current_user) %>" title="<%= current_project.name %> | <%= current_client.name %>">
-      <img src="<%= asset_path current_client.logo.url %>" class="img-responsive d-none d-sm-block">
-      <img src="<%= asset_path current_client.mobile_logo.url %>" class="img-responsive d-sm-none">
+      <img src="<%= asset_path current_client.logo.url %>" class="img-responsive d-none d-lg-block">
+      <img src="<%= asset_path current_client.mobile_logo.url %>" class="img-responsive d-lg-none">
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle main navigation">
       <span class="navbar-toggler-icon"></span>
@@ -44,16 +44,16 @@
             <%= active_link_to global_labels['user_kycs'], user_user_kycs_path, active: :inclusive, class: "nav-link" %>
           </li>
         <% end %>
-        <% if policy(:dashboard).receipts? %>
+        <% if ReceiptPolicy.new(current_user, Receipt).index? %>
           <li class="nav-item">
             <%= active_link_to global_labels['receipts'], user_receipts_path, active: :inclusive, class: "nav-link" %>
           </li>
         <% end %>
-        <li class="nav-item">
+        <li class="nav-item d-none d-lg-block">
           <div class="dropdown">
-            <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+            <a href="javascript:;" class="btn dropdown-toggle" data-toggle="dropdown">
               <%= icon "far", "user-circle", class: "text-muted fa-2x" %>
-            </button>
+            </a>
             <div class="dropdown-menu dropdown-menu-right">
               <%= link_to "Profile", edit_admin_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
               <%= link_to "Change Password", update_password_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
@@ -61,10 +61,26 @@
             </div>
           </div>
         </li>
+        <li class="nav-item d-lg-none">
+          <%= link_to "Profile", edit_admin_user_path(current_user), class: "nav-link modal-remote-form-link" %>
+        </li>
+        <hr/>
+        <li class="nav-item d-lg-none">
+          <%= link_to "Change Password", update_password_user_path(current_user), class: "nav-link modal-remote-form-link" %>
+        </li>
+        <%= bottom_navigation('d-lg-none') %>
+        <li class="nav-item d-lg-none">
+          <%= link_to "Sign out", destroy_session_path(current_user), class: "nav-link", method: :delete %>
+        </li>
+        <hr/>
+        <li class='nav-item d-lg-none'>
+          <%= link_to 'Powered by Amura', 'https://www.amuratech.com', class: 'small nav-link' %>
+          <div class="d-md-none mt-3"></div>
+        </li>
       </ul>
     </div>
   </nav>
-  <nav id="bottom_navigation" class="navbar navbar-expand-lg navbar-light bg-white fixed-bottom border-top">
+  <nav id="bottom_navigation" class="navbar navbar-expand-lg navbar-light bg-white fixed-bottom border-top d-none d-lg-flex">
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
@@ -74,29 +90,20 @@
         </li>
       </ul>
       <ul class="navbar-nav pull-right">
-        <li class="nav-item">
-          <%= active_link_to "FAQs", dashboard_faqs_path, active: :exclusive, class: "small nav-link" %>
-        </li>
-        <li class="nav-item">
-          <%= active_link_to "RERA", dashboard_rera_path, active: :exclusive, class: "small nav-link" %>
-        </li>
-        <li class="nav-item">
-          <%= active_link_to "TDS Process", dashboard_tds_process_path, active: :exclusive, class: "small nav-link" %>
-        </li>
-        <li class="nav-item">
-          <%= active_link_to "Terms & Conditions", dashboard_terms_and_condition_path, active: :exclusive, class: "small nav-link" %>
-        </li>
-        <li class="nav-item">
-          <%= link_to "Powered by Amura", "https://www.amuratech.com", class: "small nav-link" %>
+        <%= bottom_navigation('d-none d-lg-block') %>
+        <li class='nav-item d-none d-lg-block'>
+          <%= link_to 'Powered by Amura', 'https://www.amuratech.com', class: 'small nav-link' %>
         </li>
       </ul>
     </div>
   </nav>
   <div class="body-padding"></div>
 <% end %>
-<% if notice %>
-  <p class="alert alert-success notice"><%= notice %></p>
-<% end %>
-<% if alert %>
-  <p class="alert alert-danger"><%= alert %></p>
-<% end %>
+<div class="container">
+  <% if notice %>
+    <p class="alert alert-success notice"><%= notice %></p>
+  <% end %>
+  <% if alert %>
+    <p class="alert alert-danger"><%= alert %></p>
+  <% end %>
+</div>

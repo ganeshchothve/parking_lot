@@ -12,7 +12,7 @@ class SmsObserver < Mongoid::Observer
 
   def after_create sms
     if Rails.env.production? || Rails.env.staging?
-      SmsWorker.perform_async(sms.id.to_s)
+      ::SMSWorker.perform_async(sms.id.to_s)
     else
       sms.set(status: "sent")
     end

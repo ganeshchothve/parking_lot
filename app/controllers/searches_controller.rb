@@ -167,11 +167,7 @@ class SearchesController < ApplicationController
     @receipt = Receipt.where(:receipt_id => params[:receipt_id]).first
     @project_unit = ProjectUnit.find(@receipt.project_unit_id) if @receipt.project_unit_id.present?
     if @receipt.present? && @receipt.status == "pending"
-      ApplicationLog.log("sent_to_payment_gateway", {
-        receipt_id: @receipt.id,
-        unit_id: @receipt.project_unit_id,
-        user_id: @receipt.user_id
-      }, RequestStore.store[:logging])
+
     else
       redirect_to home_path(@search.user)
     end
@@ -206,7 +202,7 @@ class SearchesController < ApplicationController
 
   def apply_policy_scope
     custom_scope = Search.all.criteria
-    if current_user.role?('admin') || current_user.role?('crm') || current_user.role?('sales') || current_user.role?('cp')
+    if current_user.role?('admin') || current_user.role?('superadmin') || current_user.role?('crm') || current_user.role?('sales') || current_user.role?('cp')
       if params[:user_id].present?
         custom_scope = custom_scope.where(user_id: params[:user_id])
       end

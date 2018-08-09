@@ -2,20 +2,20 @@
 <div class="mt-3"></div>
 <div class="row continuous-row">
   <% @units.each do |unit| %>
-    <div class="col-4">
+    <div class="col-md-4">
       <div class="card" data-jquery-selector="unit-card" data-unit-id="<%= unit.id %>">
         <div class="card-body">
           <div class="form-group">
             <%= unit.name %>
           </div>
           <div class="row">
-            <div class="col-6">
+            <div class="col-md-6">
               <div class="form-group">
                 <label class="small">Carpet</label>
                 <div><%= unit.carpet %></div>
               </div>
             </div>
-            <div class="col-6">
+            <div class="col-md-6">
               <div class="form-group">
                 <label class="small">Status</label>
                 <div><%= unit.status %></div>
@@ -23,13 +23,13 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-6">
+            <div class="col-md-6">
               <div class="form-group">
                 <label class="small">Agreement</label>
                 <div><%= unit.agreement_price %></div>
               </div>
             </div>
-            <div class="col-6">
+            <div class="col-md-6">
               <div class="form-group">
                 <label class="small">All Inclusive</label>
                 <div><%= unit.all_inclusive_price %></div>

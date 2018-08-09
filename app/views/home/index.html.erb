@@ -15,7 +15,7 @@
 </style>
 <section class="dashboard-bg full-height white-bg-xs">
   <div class="container">
-    <div class="col-7 login-card-wrapper" style="margin-left: 20%;">
+    <div class="col-md-7 login-card-wrapper" style="margin-left: 20%;">
       <div class="login-card">
         <a href="javascript:void(0);" class="logo-wrapper pull-left">
           <img src="<%= asset_path current_client.logo.url %>" class="img-responsive" />
@@ -34,7 +34,7 @@
         <p class="subTitle text-center" style="font-size:18px;">We have sent  confirmation link to your registered email address. Please verify your account to go ahead and book your dream home today.</p>
         <div class="clearfix"></div>
       </div>
-      <div class="col-12 gradient-bg text-center" style="border-radius: 0px 0px 6px 6px;background-color: #3981b8;color:#fff;font-size: 18px;">
+      <div class="col-md-12 gradient-bg text-center" style="border-radius: 0px 0px 6px 6px;background-color: #3981b8;color:#fff;font-size: 18px;">
         <p>Book online by paying <%= number_to_indian_currency(ProjectUnit.blocking_amount) %></p>
       </div>
       <div class="clearfix"></div>

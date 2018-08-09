@@ -10,7 +10,7 @@ document.addEventListener("sell_do_form_submitted_with_error", function(){
     $(".sell_do_form_actual_container .form_error_message").remove();
     new Noty({
       text: "A user with this email or phone has already registered",
-      timeout: 5000,
+      timeout: 7000,
       type: 'error'
     }).show();
   }, 100);
@@ -39,10 +39,7 @@ function sell_do_form_successfully_submitted(e){
   if(typeof App !== "undefined" && App.current_user){
     $(".sell_do_form_container").html('<div class="alert alert-success">Please wait, we have registered the user; generating login details & sending confirmation email / SMS to the user.</div>');
   }else{
-    var message = 'Thank you for registering with us.'
-    if(App.client.preferred_login == "phone"){
-      message += ' Please wait while we redirect you to verify your phone number.'
-    }
+    var message = 'Thank you for registering with us. Please wait while we generate login details & send you confirmation email / SMS.'
     $(".sell_do_form_container").html('<div class="alert alert-success">' + message + '</div>');
   }
   register_user_with_portal(e);
@@ -58,7 +55,7 @@ function register_user_with_portal(e){
     first_name: unescape(e['sell_do[form][lead][first_name]'].replace("+", " ")),
     last_name: unescape(e['sell_do[form][lead][last_name]'].replace("+", " ")),
     email: unescape(e['sell_do[form][lead][email]']),
-    phone: unescape(e['sell_do[form][lead][phone]']),
+    phone: unescape(e['sell_do[form][lead][phone]'].replace(/\+/ig, "")),
     mixpanel_id: unescape(e['sell_do[campaign][mixpanel_id]'])
   }
   $.ajax({
@@ -70,7 +67,7 @@ function register_user_with_portal(e){
       // show success message and redirect to after sign in path
       new Noty({
         text: one.success || 'Request completed successfully',
-        timeout: 5000,
+        timeout: 7000,
         type: 'success'
       }).show();
       setTimeout(function(){
@@ -101,7 +98,7 @@ function register_user_with_portal(e){
         if(str){
           new Noty({
             text: str,
-            timeout: 5000,
+            timeout: 7000,
             type: 'error'
           }).show();
         }
@@ -110,13 +107,15 @@ function register_user_with_portal(e){
         if(_.isEmpty(one.responseJSON.url)){
           if(typeof App !== "undefined" && App.current_user){
             window.location = '<%= url.admin_users_path %>';
+          }else if(one.responseJSON.already_exists){
+            window.location = '<%= url.new_user_session_path %>';
           }else{
             window.location = window.location.protocol + "//" + window.location.host + window.location.pathname + '?email=' + data.email + '&phone=' + data.phone + '&first_name=' + data.first_name + '&last_name=' + data.last_name + '&lead_id=' + data.lead_id;
           }
         }else{
           window.location = one.responseJSON.url;
         }
-      }, 3000);
+      }, 5000);
     }
   });
 }

@@ -56,7 +56,7 @@
           <% else %>
           <%= f.hidden_field :role %>
           <% end %>
-          <% if policy(@user).editable_field?("allowed_bookings") %>
+          <% if policy(@user).editable_field?("allowed_bookings") && @user.buyer? %>
             <div class="form-group">
               <%= f.label :allowed_bookings, class: 'label-required' %>
               <%= f.select :allowed_bookings, [1,2,3,4,5,6,100], {prompt: true}, class: 'selectize', required: 'required' %>
@@ -78,6 +78,10 @@
               <%= f.text_area :channel_partner_change_reason, class: 'form-control', disabled: (policy(@user).editable_field?("channel_partner_change_reason") ? false : true) %>
             </div>
           <% end %>
+          <div class="form-group">
+            <%= f.label :time_zone, class: "control-label" %>
+            <%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.all.sort, {}, class: 'selectize', disabled: (policy(@user).editable_field?("time_zone") ? false : true) %>
+          </div>
         </div>
         <div class="modal-footer">
           <%= f.submit "Save", class: 'btn btn-primary' %>

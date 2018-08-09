@@ -6,14 +6,22 @@
           <%= render 'breadcrumbs', {channel_partner: @channel_partner, user: @user} %>
           <div class="card h-100">
             <div class="card-body">
+              <div class="row mb-3">
+                <div class="col-md-7">
+                  <% if ChannelPartnerPolicy.new(current_user, ChannelPartner).export? %>
+                    <%= link_to "Export all #{global_labels['channel_partners']}", export_channel_partners_path, class: 'btn btn-primary' %>
+                  <% end %>
+                </div>
+                <div class="col-md-5 text-md-right">
+                  <h6 class="mt-2">Total <%= global_labels[:channel_partners] %>: <%= @channel_partners.count %></h6>
+                </div>
+              </div>
               <%= render 'index', {channel_partners: @channel_partners} %>
-              <% if ChannelPartnerPolicy.new(current_user, ChannelPartner).export? %>
-                <%= link_to "Export all #{global_labels['channel_partners']}", export_channel_partners_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn' %>
-              <% end %>
             </div>
           </div>
         </div>
         <div class="col-md-3">
+          <div class="d-md-none mt-3"></div>
           <%= render "filters" %>
         </div>
       </div>

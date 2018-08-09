@@ -14,21 +14,6 @@ class ReceiptObserver < Mongoid::Observer
 
     # update project unit if receipt status has changed
     if receipt.status_changed?
-      ApplicationLog.log("receipt_updated", {
-        id: receipt.id,
-        unit_id: receipt.project_unit_id,
-        user_id: receipt.user_id,
-        status: receipt.status,
-        total_amount: receipt.total_amount,
-        status_message: receipt.status_message,
-        payment_type: receipt.payment_type,
-        processed_on: receipt.processed_on,
-        payment_mode: receipt.payment_mode,
-        receipt_id: receipt.receipt_id,
-        payment_identifier: receipt.payment_identifier,
-        tracking_id: receipt.tracking_id
-      }, RequestStore.store[:logging])
-
       project_unit = receipt.project_unit
       if project_unit.present?
         if project_unit.process_payment!(receipt)
@@ -45,7 +30,6 @@ class ReceiptObserver < Mongoid::Observer
         end
       end
     end
-
 
 
     # Send email to customer
@@ -80,7 +64,7 @@ class ReceiptObserver < Mongoid::Observer
       unless receipt.status == "pending"
         Sms.create!(
           booking_portal_client_id: user.booking_portal_client_id,
-          recipient_id: user.id,
+          recipient_id: receipt.user_id,
           sms_template_id: SmsTemplate.find_by(name: "receipt_#{receipt.status}").id,
           triggered_by_id: receipt.id,
           triggered_by_type: receipt.class.to_s
@@ -99,8 +83,8 @@ class ReceiptObserver < Mongoid::Observer
       })
 
       Sms.create!(
-        booking_portal_client_id: project_unit.booking_portal_client_id,
-        recipient_id: user.id,
+        booking_portal_client_id: user.booking_portal_client_id,
+        recipient_id: receipt.user_id,
         sms_template_id: SmsTemplate.find_by(name: "receipt_pending").id,
         triggered_by_id: receipt.id,
         triggered_by_type: receipt.class.to_s
@@ -113,7 +97,7 @@ class ReceiptObserver < Mongoid::Observer
       receipt.processed_on = Date.today
       receipt.assign!(:order_id) if receipt.order_id.blank?
     end
-    if receipt.new_record? || receipt.receipt_id.include?("tmp-") && receipt.status_changed? && receipt.status != "pending"
+    if receipt.new_record? || receipt.receipt_id.downcase.include?("tmp-") && receipt.status_changed? && receipt.status != "pending"
       receipt.receipt_id = receipt.generate_receipt_id
     end
   end

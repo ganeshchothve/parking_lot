@@ -29,6 +29,8 @@ class UserRequest
   validates :status, inclusion: {in: Proc.new{ UserRequest.available_statuses.collect{|x| x[:id]} } }
   validates :project_unit_id, uniqueness: {scope: :user_id, message: 'already has a cancellation request.'}
 
+  default_scope -> {desc(:created_at)}
+
   def self.available_statuses
     [
       {id: 'pending', text: 'Pending'},

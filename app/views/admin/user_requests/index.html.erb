@@ -4,18 +4,26 @@
       <%= render 'breadcrumbs', {user_request: @user_request, user: @user} %>
       <div class="card h-100">
         <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-md-7">
+              <% if UserRequestPolicy.new(current_user, UserRequest.new(user: @user)).new? %>
+                <%= link_to "Add #{global_labels['user_request']}", new_user_user_request_path, class: 'btn btn-primary nav-btn modal-remote-form-link' %>
+              <% end %>
+              <% if UserRequestPolicy.new(current_user, UserRequest).export? %>
+                <%= link_to "Export all #{global_labels['user_request']}", export_admin_user_requests_path, class: 'btn btn-primary float-left ml-2 margin-xs-left-0' %>
+              <% end %>
+            </div>
+            <div class="col-md-5 text-md-right">
+              <h6 class="mt-2">Total <%= global_labels[:user_requests] %>: <%= @user_requests.count %></h6>
+            </div>
+          </div>
           <%= render 'index', {user_requests: @user_requests} %>
-          <% if UserRequestPolicy.new(current_user, UserRequest.new(user: @user)).new? %>
-            <%= link_to "Add #{global_labels['user_request']}", new_user_user_request_path, class: 'btn btn-primary nav-btn modal-remote-form-link' %>
-          <% end %>
-          <% if UserRequestPolicy.new(current_user, UserRequest).export? %>
-            <%= link_to "Export all #{global_labels['user_request']}", export_admin_user_requests_path, class: 'btn btn-outline-primary float-left ml-2 pink-btn margin-xs-left-0' %>
-          <% end %>
         </div>
       </div>
     </div>
     <% if @user.blank? %>
       <div class="col-md-3">
+        <div class="d-md-none mt-3"></div>
         <%= render "filters" %>
       </div>
     <% end %>

@@ -18,13 +18,13 @@
               Payments need to be for individual units, clubbed payments are not allowed. <br/>Please collect a cheque for individual units only.
             </p>
             <div class="row">
-              <div class="col-6">
+              <div class="col-md-6">
                 <div class="form-group">
                   <label class="small">Unit</label>
                   <div><%= @receipt.project_unit.name %></div>
                 </div>
               </div>
-              <div class="col-6">
+              <div class="col-md-6">
                 <div class="form-group">
                   <label class="small">Agreement Price</label>
                   <div><%= number_to_indian_currency(@receipt.project_unit.agreement_price.round) %></div>
@@ -32,13 +32,13 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-6">
+              <div class="col-md-6">
                 <div class="form-group">
                   <label class="small">Amount Paid</label>
                   <div><%= number_to_indian_currency(@receipt.project_unit.total_amount_paid.round) %></div>
                 </div>
               </div>
-              <div class="col-6">
+              <div class="col-md-6">
                 <div class="form-group">
                   <label class="small">Amount Pending</label>
                   <div><%= number_to_indian_currency(@receipt.user.total_balance_pending.round) %></div>
@@ -49,7 +49,7 @@
           <% end %>
         <% end %>
         <% if current_user.buyer? %>
-          <%= form_for @receipt, local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['receipt'], "data-type": "json", id: "receipt_form"} do |f| %>
+          <%= form_for [:user, @receipt], local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['receipt'], "data-type": "json", id: "receipt_form"} do |f| %>
           <div class="form-group">
             <%= f.label :total_amount, class: 'label-required' %>
             <% if current_client.blocking_amount_editable %>
@@ -76,13 +76,13 @@
               <%= f.select :payment_mode, Receipt.available_payment_modes.reject{|x| x[:id] == 'online'}.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true, disabled: (policy(@receipt).editable_field?("payment_mode") ? false : true) %>
             </div>
             <div class="row">
-              <div class="col-6">
+              <div class="col-md-6">
                 <div class="form-group">
                   <%= f.label :issuing_bank, class: 'label-required' %>
                   <%= f.text_field :issuing_bank, class: 'form-control', required: 'required', disabled: (policy(@receipt).editable_field?("issuing_bank") ? false : true) %>
                 </div>
               </div>
-              <div class="col-6">
+              <div class="col-md-6">
                 <div class="form-group">
                   <%= f.label :issuing_bank_branch, class: 'label-required' %>
                   <%= f.text_field :issuing_bank_branch, class: 'form-control', required: 'required', disabled: (policy(@receipt).editable_field?("issuing_bank_branch") ? false : true) %>

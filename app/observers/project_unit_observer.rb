@@ -28,12 +28,6 @@ class ProjectUnitObserver < Mongoid::Observer
       project_unit.applied_discount_id = discount.id if discount.present?
       ProjectUnitUnholdWorker.perform_in(ProjectUnit.holding_minutes.minutes, project_unit.id.to_s)
       SelldoLeadUpdater.perform_async(project_unit.user_id.to_s)
-      ApplicationLog.log("unit_hold", {
-        id: project_unit.id,
-        base_rate: project_unit.base_rate,
-        discount: project_unit.applied_discount_rate,
-        discount_id: project_unit.applied_discount_id
-      }, RequestStore.store[:logging])
     elsif project_unit.status_changed? && project_unit.status != 'hold'
       project_unit.held_on = nil
     end
@@ -62,7 +56,7 @@ class ProjectUnitObserver < Mongoid::Observer
         })
 
         Sms.create!(
-          booking_portal_client_id: user_was.booking_portal_client_id,
+          booking_portal_client_id: project_unit.booking_portal_client_id,
           recipient_id: user_was.id,
           sms_template_id: SmsTemplate.find_by(name: "project_unit_released").id,
           triggered_by_id: user_was.id,
@@ -125,9 +119,9 @@ class ProjectUnitObserver < Mongoid::Observer
       })
 
       if Rails.env.development?
-        SMSWorker.new.perform("", "")
+        ::SMSWorker.new.perform("", "")
       else
-        SMSWorker.perform_async("", "")
+        ::SMSWorker.perform_async("", "")
       end
     end
   end

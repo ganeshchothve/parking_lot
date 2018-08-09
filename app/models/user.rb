@@ -23,6 +23,7 @@ class User
   field :referenced_channel_partner_ids, type: Array, default: []
   field :rera_id, type: String
   field :mixpanel_id, type: String
+  field :time_zone, type: String, default: "Mumbai"
 
   field :encrypted_password, type: String, default: ""
 
@@ -63,6 +64,7 @@ class User
   end
 
   has_one_time_password length: User.otp_length
+  default_scope -> {desc(:created_at)}
 
   include OtpLoginHelperMethods
 
@@ -92,12 +94,11 @@ class User
 
   validates :first_name, :last_name, :role, :allowed_bookings, presence: true
   validates :phone, uniqueness: true, phone: { possible: true, types: [:voip, :personal_number, :fixed_or_mobile]}, if: Proc.new{|user| user.email.blank? }
-  validates :lead_id, uniqueness: true, allow_blank: true
   validates :email, uniqueness: true, if: Proc.new{|user| user.phone.blank? }
   validates :rera_id, presence: true, if: Proc.new{ |user| user.role?('channel_partner') }
   validates :rera_id, uniqueness: true, allow_blank: true
   validates :role, inclusion: {in: Proc.new{ User.available_roles.collect{|x| x[:id]} } }
-  validates :lead_id, presence: true, if: Proc.new{ |user| user.buyer? }
+  validates :lead_id, uniqueness: true, presence: true, if: Proc.new{ |user| user.buyer? }
   validate :channel_partner_change_reason_present?
 
   def unattached_blocking_receipt
@@ -221,19 +222,45 @@ class User
     url.dashboard_url(user_email: self.email, user_token: self.authentication_token, host: host)
   end
 
+  # GENERICTODO: handle this with a way to replace urls in SMS or Email Templates
+  def confirmation_url
+    url = Rails.application.routes.url_helpers
+    host = Rails.application.config.action_mailer.default_url_options[:host]
+    port = Rails.application.config.action_mailer.default_url_options[:port].to_i
+    host = (port == 443 ? "https://" : "http://") + host
+    host = host + ((port == 443 || port == 80 || port == 0) ? "" : ":#{port}")
+    url.user_confirmation_url(confirmation_token: self.confirmation_token, channel_partner_id: self.channel_partner_id, host: host)
+  end
+
   def name
-    "#{first_name} #{last_name}"
+    str = "#{first_name} #{last_name}"
+    if self.role == "channel_partner"
+      cp = ChannelPartner.where(associated_user_id: self.id).first
+      if cp.present?
+        str += " (#{cp.company_name})"
+      end
+    end
+    str
   end
 
   def login
     @login || self.phone || self.email
   end
 
-  def self.find_for_database_authentication(conditions)
+  def self.find_first_by_auth_conditions(warden_conditions)
+    conditions = warden_conditions.dup
     login = conditions.delete(:login)
     login = conditions.delete(:email) if login.blank? && conditions.keys.include?(:email)
     login = conditions.delete(:phone) if login.blank? && conditions.keys.include?(:phone)
-    any_of({phone: login}, email: login).first
+    if login.blank? && warden_conditions[:confirmation_token].present?
+      confirmation_token = warden_conditions.delete(:confirmation_token)
+      where(confirmation_token: confirmation_token).first
+    elsif login.blank? && warden_conditions[:reset_password_token].present?
+      reset_password_token = warden_conditions.delete(:reset_password_token)
+      where(reset_password_token: reset_password_token).first
+    else
+      any_of({phone: login}, email: login).first
+    end
   end
 
   def self.find_record login
@@ -261,7 +288,7 @@ class User
   private
   def channel_partner_change_reason_present?
     if self.persisted? && self.channel_partner_id_changed? && self.channel_partner_change_reason.blank?
-      self.errors.add :channel_partner_change_reason, " is required"
+      self.errors.add :channel_partner_change_reason, "is required"
     end
   end
 end

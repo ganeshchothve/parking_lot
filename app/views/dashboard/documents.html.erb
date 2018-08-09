@@ -1,0 +1,32 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <h4>Important Marketing & Other Documents</h4><br/>
+          <% labels = t('mongoid.attributes.asset').with_indifferent_access %>
+          <table class="table">
+            <thead>
+              <tr>
+                <th><%= labels[:file_name] %></th>
+                <th class="text-right"><%= labels[:file_size] %></th>
+                <th class="text-right">Download</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% current_client.assets.each do |asset| %>
+              <tr>
+                <td><%= asset.file_name %></td>
+                <td class="text-right"><%= (asset.file_size.to_f / 1024 / 1024).round(2) %> MB</td>
+                <td class="text-right">
+                  <%= link_to "Download", asset.file.url, target: "_blank" %>
+                </td>
+              </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

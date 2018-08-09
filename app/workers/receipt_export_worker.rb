@@ -40,7 +40,8 @@ class ReceiptExportWorker
       "Clubhouse Amenities Price",
       "Created By",
       "Receipt Date",
-      "Amount Received"
+      "Amount Received",
+      "Comments"
     ]
   end
 
@@ -70,7 +71,8 @@ class ReceiptExportWorker
       (receipt.project_unit.clubhouse_amenities_price rescue "N/A"),
       receipt.creator.name,
       receipt.created_at,
-      (receipt.project_unit.receipts.where(status:"success").sum(&:total_amount) rescue "0")
+      (receipt.project_unit.receipts.where(status:"success").sum(&:total_amount) rescue "0"),
+      receipt.comments
     ]
   end
 end

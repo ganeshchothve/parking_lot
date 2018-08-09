@@ -12,19 +12,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def export?
-    ['superadmin', 'admin', 'crm'].include?(user.role)
-  end
-
-  def export_customer_book?
-    ['superadmin', 'admin', 'crm'].include?(user.role)
-  end
-
-  def export_cp_report?
-    ['superadmin', 'admin', 'cp'].include?(user.role)
-  end
-
-  def export_cp_lead_report?
-    ['superadmin', 'admin', 'cp'].include?(user.role)
+    ['superadmin', 'admin'].include?(user.role)
   end
 
   def edit?
@@ -48,10 +36,10 @@ class UserPolicy < ApplicationPolicy
   end
 
   def permitted_attributes params={}
-    attributes = [:first_name, :last_name, :email, :phone, :lead_id, :password, :password_confirmation]
+    attributes = [:first_name, :last_name, :email, :phone, :lead_id, :password, :password_confirmation, :time_zone]
     attributes += [:channel_partner_id] if user.role?('channel_partner')
     attributes += [:channel_partner_id, :rera_id, :location, :allowed_bookings, :channel_partner_change_reason] if user.role?('admin') || user.role?("superadmin")
-    attributes += [:role] if user.role?('superadmin')
+    attributes += [:role] if user.role?('superadmin') || user.role?("admin")
     attributes
   end
 end

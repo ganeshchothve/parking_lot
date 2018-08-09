@@ -56,10 +56,10 @@ label.label-required:after {
   margin: 0 6px;
 }
 .body-padding{
-  padding-top: 105px;
+  padding-top: 87px;
 }
 .navbar-brand img{
-  max-height: 65px;
+  max-height: 45px;
 }
 #main-navbar a.nav-link{
   font-size: $font-size-base * 1.1;
@@ -91,4 +91,21 @@ figure.wave {
 }
 .selldof{
   font-family: 'Nunito Sans', sans-serif !important;
+}
+.control-label, label{
+  font-size: $font-size-base * 0.70;
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}
+.navbar-light .navbar-toggler{
+  border: none;
+}
+@include media-breakpoint-down(md) {
+  .modal-lg{
+    width: 100%;
+  }
+  .navbar-collapse {
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+  }
 }

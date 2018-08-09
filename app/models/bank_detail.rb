@@ -11,7 +11,7 @@ class BankDetail
   field :account_number, type: String
   field :loan_required, type: Boolean, default: false
 
-  belongs_to :bankable, polymorphic: true
+  belongs_to :bankable, polymorphic: true, optional: true
 
   enable_audit({
     associated_with: ["bankable"],

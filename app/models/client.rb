@@ -7,18 +7,18 @@ class Client
   field :selldo_form_id, type: String
   field :selldo_api_key, type: String
   field :selldo_default_srd, type: String
-  field :cp_srd, type: String
-  field :sfdc_enabled, type: Boolean
+  field :selldo_cp_srd, type: String
   field :helpdesk_number, type: String
   field :helpdesk_email, type: String
   field :notification_email, type: String
+  field :sender_email, type: String
   field :email_domains, type: Array, default: []
   field :booking_portal_domains, type: Array, default: []
   field :registration_name, type: String
   field :cin_number, type: String
-  field :billing_name, type: String
   field :website_link, type: String
   field :cp_disclaimer, type: String
+  field :disclaimer, type: String
   field :support_number, type: String
   field :support_email, type: String
   field :channel_partner_support_number, type: String
@@ -51,9 +51,11 @@ class Client
   has_one :address, as: :addressable
   has_many :sms_templates, class_name: 'SmsTemplate'
   has_many :smses, class_name: 'Sms'
+
+  has_many :assets, as: :assetable
   has_many :emails, class_name: 'Email', inverse_of: :booking_portal_client
 
-  validate :name, :selldo_client_id, :selldo_form_id, :helpdesk_email, :helpdesk_number, :notification_email, :email_domains, :booking_portal_domains, :registration_name, :cin_number, :billing_name, :website_link, :support_email, :support_number, :mailgun_private_api_key, :mailgun_email_domain, :sms_provider_username, :sms_provider_password, :sms_mask, presence: true
+  validate :name, :selldo_client_id, :selldo_form_id, :helpdesk_email, :helpdesk_number, :notification_email, :sender_email, :email_domains, :booking_portal_domains, :registration_name, :cin_number, :website_link, :support_email, :support_number, :mailgun_private_api_key, :mailgun_email_domain, :sms_provider_username, :sms_provider_password, :sms_mask, presence: true
 
   def self.available_preferred_logins
     [
@@ -71,17 +73,19 @@ c.selldo_client_id = "531de108a7a03997c3000002"
 c.selldo_form_id = "5abba073923d4a567f880952"
 c.selldo_api_key = "bcdd92826cf283603527bd6d832d16c4"
 c.selldo_default_srd = "5a72c7a67c0dac7e854aca9e"
-c.cp_srd = "5a72c7a67c0dac7e854aca9e"
+c.selldo_cp_srd = "5a72c7a67c0dac7e854aca9e"
 c.helpdesk_number = "9922410908"
 c.helpdesk_email = "supriya@amuratech.com"
 c.notification_email = "supriya@amuratech.com"
 c.email_domains = ["amuratech.com"]
 c.booking_portal_domains = ["bookingportal.withamura.com"]
-c.billing_name = c.registration_name = "Amura Marketing Technologies Pvt. Ltd."
+c.registration_name = "Amura Marketing Technologies Pvt. Ltd."
 c.website_link = "www.amuratech.com"
 c.cp_disclaimer = "CP Disclaimer"
+c.disclaimer = "End User Disclaimer"
 c.support_number = "9922410908"
 c.support_email = "supriya@amuratech.com"
+c.sender_email = "supriya@amuratech.com"
 c.channel_partner_support_number = "9922410908"
 c.channel_partner_support_email = "supriya@amuratech.com"
 c.cancellation_amount = 5000

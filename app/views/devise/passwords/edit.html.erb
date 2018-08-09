@@ -1,15 +1,14 @@
 <h2 class="font-weight-bold text-success">Change your Password</h2>
-<p class="text-muted">lorem ipsum.</p>
 <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: 'validate-form' }) do |f| %>
   <%= devise_error_messages! %>
   <%= f.hidden_field :reset_password_token %>
   <div class="form-group">
     <%= f.label :password %>
-    <%= f.password_field :password, autofocus: true, autocomplete: "off", class: 'form-field', placeholder:'New Password - Minimum 6 characters' %>
+    <%= f.password_field :password, autofocus: true, autocomplete: "off", class: 'form-control', placeholder:'New Password - Minimum 6 characters' %>
   </div>
   <div class="form-group">
     <%= f.label :password_confirmation %>
-    <%= f.password_field :password_confirmation, autocomplete: "off", class: 'form-field', placeholder:'Confirm new password' %>
+    <%= f.password_field :password_confirmation, autocomplete: "off", class: 'form-control', placeholder:'Confirm new password' %>
   </div>
   <div class="form-group">
     <%= f.submit "Change password", class: 'btn btn-primary' %>

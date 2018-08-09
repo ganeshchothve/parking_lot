@@ -1,11 +1,6 @@
-<div class="row">
-  <div class="col-12">
-    <p>Total Project Units : <%= project_units.count %></p>
-  </div>
-</div>
-<div class="table-responsive-md">
+<div class="table-responsive-lg">
   <table class='striped-table table' width="100%" cellpadding="0" cellspacing="0">
-    <thead class="th-default th-pink">
+    <thead class="th-default">
       <tr>
         <!-- <th>Tower</th> -->
         <th>Tower Name</th>
@@ -32,7 +27,7 @@
         <td><%= number_to_indian_currency(project_unit.pending_balance.to_i) %></td>
         <td class="text-right">
           <div class="dropdown">
-            <a class="btn btn-light light-pink-btn dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+            <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
             <div class="dropdown-menu dropdown-menu-right">
               <% if ProjectUnitPolicy.new(current_user, project_unit).edit? %>
                 <%= link_to "Edit #{global_labels[:project_unit]}", edit_admin_project_unit_path(project_unit), class: 'dropdown-item modal-remote-form-link' %>
@@ -53,4 +48,4 @@
     </tbody>
   </table>
 </div>
-<%= will_paginate project_units %>
+<%= will_paginate project_units, list_classes: %w(pagination justify-content-center) %>

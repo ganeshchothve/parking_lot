@@ -1,11 +1,4 @@
-<% if @user.blank? %>
-<div class="row">
-  <div class="col-12">
-    <p>Total <%= "#{global_labels['user_kycs']}" %> : <%= user_kycs.count %></p>
-  </div>
-</div>
-<% end %>
-<div class="table-responsive-md">
+<div class="table-responsive-lg">
   <table class='table striped-table' width="100%" cellpadding="10" cellspacing="0">
     <thead class="th-default">
       <% labels = t('mongoid.attributes.user_kyc').with_indifferent_access %>
@@ -28,7 +21,7 @@
         <td><%= user_kyc.pan_number %></td>
         <td class="text-right">
           <div class="dropdown">
-            <a class="btn btn-light light-pink-btn dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+            <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
             <div class="dropdown-menu dropdown-menu-right">
               <% if UserKycPolicy.new(current_user, user_kyc).edit? %>
                 <% if current_user.buyer? %>
@@ -48,4 +41,4 @@
     </tbody>
   </table>
 </div>
-<%= will_paginate user_kycs %>
+<%= will_paginate user_kycs, list_classes: %w(pagination justify-content-center) %>

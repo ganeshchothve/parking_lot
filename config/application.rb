@@ -39,9 +39,4 @@ module BookingPortal
     end
   end
 end
-
-require 'erp.rb'
-require 'amura_log.rb'
-require 'application_log.rb'
-require 'request_store_base.rb'
-require 'booking_portal.rb'
+require 'booking_portal'

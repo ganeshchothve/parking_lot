@@ -1,14 +1,6 @@
-<% if current_user.buyer? %>
-  <div class="table-wrapper">
-<% end %>
-<div class="row">
-  <div class="col-12">
-    <p>Total <%= global_labels[:receipts] %> : <%= receipts.count %></p>
-  </div>
-</div>
-<div class="table-responsive-md">
-  <table class="striped-table table payment-table <% if current_user.buyer? %> reciept-table <% end %>"  width="100%" <% if current_user.buyer? %> cellpadding="20" cellspacing="0"<% end %>>
-    <thead class="th-default th-pink">
+<div class="table-responsive-lg">
+  <table class="striped-table table">
+    <thead class="th-default">
       <% labels = t('mongoid.attributes.receipt').with_indifferent_access %>
       <tr>
         <th><%= labels[:user_id] %></th>
@@ -23,7 +15,7 @@
       <% receipts.each do |receipt| %>
       <tr>
         <td><%= receipt.user.name %></td>
-        <td><%= receipt.status == "success" ? receipt.receipt_id : "Pending" %></td>
+        <td><%= receipt.status == "success" ? receipt.receipt_id : "Not Generated" %></td>
         <td>
           <div class="small muted">
             <div>
@@ -32,12 +24,12 @@
               <%= receipt.project_unit_id.blank? && receipt.reference_project_unit_id.blank? ? "Direct Payment" : '' %>
             </div>
             <% if receipt.payment_mode == 'online' %>
-              <div>Trans ID:<%= receipt.payment_identifier %></div>
-    	        <div>Processed Date:<%= receipt.processed_on %></div>
+              <div>Trans ID: <%= receipt.payment_identifier %></div>
+    	        <div>Processed Date:<%= receipt.processed_on.present? ? l(receipt.processed_on.in_time_zone(current_user.time_zone)) : "-" %></div>
             <% else %>
               <div>Bank: <%= receipt.issuing_bank %> / Branch: <%= receipt.issuing_bank_branch %></div>
               <div>Issued Date: <%= receipt.issued_date.present? ? receipt.issued_date : "-" %></div>
-              <div>Processed Date: <%= receipt.processed_on.present? ? receipt.processed_on : "-" %></div>
+              <div>Processed Date: <%= receipt.processed_on.present? ? l(receipt.processed_on.in_time_zone(current_user.time_zone)) : "-" %></div>
               <div>ID: <%= receipt.payment_identifier %></div>
             <% end %>
             <div>Payment: <%= Receipt.available_payment_modes.find{|x| x[:id] == receipt.payment_mode}[:text] %></div>
@@ -47,13 +39,13 @@
         <td class="text-right"><%= number_to_indian_currency(receipt.total_amount.round(2)) %></td>
         <td class="text-right">
           <div class="dropdown">
-            <a class="btn btn-light dropdown-toggle light-pink-btn" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+            <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
             <div class="dropdown-menu dropdown-menu-right">
               <% if receipt.status == 'success' %>
                 <% if current_user.buyer? %>
-                  <%= link_to 'Print'.html_safe, user_receipt_path(receipt, format: "pdf"), target:"_blank", class: 'dropdown-item print-btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>
+                  <%= link_to 'Print'.html_safe, user_receipt_path(receipt), target:"_blank", class: 'dropdown-item print-btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>
                 <% else %>
-                  <%= link_to 'Print'.html_safe, admin_receipt_path(receipt, format: "pdf"), target:"_blank", class: 'dropdown-item print-btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>
+                  <%= link_to 'Print'.html_safe, admin_receipt_path(receipt), target:"_blank", class: 'dropdown-item print-btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>
                 <% end %>
                 <% if ReceiptPolicy.new(current_user, receipt).resend_success? %>
                   <%= link_to 'Resend Email'.html_safe, resend_success_admin_receipt_path(receipt), class: 'dropdown-item' %>
@@ -63,7 +55,7 @@
                 <%= link_to 'Edit', edit_admin_user_receipt_path(receipt.user_id, receipt), class: 'dropdown-item modal-remote-form-link' %>
               <% end %>
               <% if AssetPolicy.new(current_user, Asset.new(assetable: receipt)).index? %>
-                <%= link_to 'Documents', assetables_path(assetable_type: receipt.class.model_name.i18n_key.to_s, assetable_id: receipt.id), class: 'dropdown-item modal-remote-form-link' %>
+                <%= link_to global_labels[:assets], assetables_path(assetable_type: receipt.class.model_name.i18n_key.to_s, assetable_id: receipt.id), class: 'dropdown-item modal-remote-form-link' %>
               <% end %>
             </div>
           </div>
@@ -73,7 +65,4 @@
     </tbody>
   </table>
 </div>
-<% if current_user.buyer? %>
-  </div>
-<% end %>
-<%= will_paginate receipts %>
+<%= will_paginate receipts, list_classes: %w(pagination justify-content-center) %>

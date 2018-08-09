@@ -55,8 +55,10 @@ class ChannelPartnersController < ApplicationController
     respond_to do |format|
       if @channel_partner.update(permitted_attributes(@channel_partner))
         format.html { redirect_to channel_partners_path, notice: 'Channel partner was successfully updated.' }
+        format.json { render json: @channel_partner }
       else
         format.html { render :edit }
+        format.json { render json: {errors: @channel_partner.errors.full_messages.uniq}, status: :unprocessable_entity }
       end
     end
   end

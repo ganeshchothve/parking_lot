@@ -26,7 +26,7 @@ class ProjectUnitMailer < ApplicationMailer
     cc = @cp.present? ? [@cp.email] : []
     cc += [@project_unit.booking_portal_client.notification_email]
     attachments["Allotment.pdf"] = WickedPdf.new.pdf_from_string(
-      render_to_string(pdf: "allotment", template: "project_unit_mailer/send_allotment_letter.pdf.erb")
+      render_to_string(pdf: "allotment", template: "project_unit_mailer/send_allotment_letter.pdf.erb", layout: "pdf")
     )
     make_bootstrap_mail(to: @user.email, cc: cc, subject: "Congratulations on booking your home! ")
   end

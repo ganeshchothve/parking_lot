@@ -28,6 +28,8 @@ class Discount
   validate :project_related
   validate :user_related
 
+  default_scope -> {desc(:created_at)}
+
   def self.available_statuses
     [
       {id: "draft", text: "Draft"},

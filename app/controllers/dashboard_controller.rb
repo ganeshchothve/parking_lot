@@ -18,6 +18,9 @@ class DashboardController < ApplicationController
   def faq
   end
 
+  def documents
+  end
+
   def rera
   end
 

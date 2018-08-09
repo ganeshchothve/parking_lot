@@ -24,6 +24,7 @@ class Admin::UsersController < AdminController
     @user = User.find(params[:id])
     respond_to do |format|
       if @user.resend_confirmation_instructions
+        @user.send_registration_sms
         flash[:notice] = "Confirmation instructions sent successfully."
         format.html { redirect_to admin_users_path }
       else
@@ -51,36 +52,6 @@ class Admin::UsersController < AdminController
       UserExportWorker.new.perform(current_user.email)
     else
       UserExportWorker.perform_async(current_user.email)
-    end
-    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
-    redirect_to admin_users_path
-  end
-
-  def export_customer_book
-    if Rails.env.development?
-      UserContactBookExportWorker.new.perform(current_user.email)
-    else
-      UserContactBookExportWorker.perform_async(current_user.email)
-    end
-    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
-    redirect_to admin_users_path
-  end
-
-  def export_cp_report
-    if Rails.env.development?
-      ChannelPartnerBookingDetailsExportWorker.new.perform(current_user.email)
-    else
-      ChannelPartnerBookingDetailsExportWorker.perform_async(current_user.email)
-    end
-    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
-    redirect_to admin_users_path
-  end
-
-  def export_cp_lead_report
-    if Rails.env.development?
-      ChannelPartnerLeadDetailsExportWorker.new.perform(current_user.email)
-    else
-      ChannelPartnerLeadDetailsExportWorker.perform_async(current_user.email)
     end
     flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
     redirect_to admin_users_path

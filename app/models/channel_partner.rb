@@ -17,6 +17,8 @@ class ChannelPartner
   field :gstin_number, type: String
   field :aadhaar, type: String
 
+  default_scope -> {desc(:created_at)}
+
   enable_audit({
     audit_fields: [:title, :rera_id, :status, :gstin_number, :aadhaar],
     reference_ids_without_associations: [
@@ -24,8 +26,8 @@ class ChannelPartner
     ]
   })
 
-  has_one :address, as: :addressable
-  has_one :bank_detail, as: :bankable
+  has_one :address, as: :addressable, validate: false
+  has_one :bank_detail, as: :bankable, validate: false
   has_many :assets, as: :assetable
 
   validates :first_name, :last_name, :email, :phone, :rera_id, :status, :aadhaar, presence: true
@@ -78,7 +80,11 @@ class ChannelPartner
   end
 
   def name
-    "#{title} #{first_name} #{last_name}"
+    str = "#{title} #{first_name} #{last_name}"
+    if company_name.present?
+      str += " (#{company_name})"
+    end
+    str
   end
 
   def ds_name
@@ -97,7 +103,7 @@ class ChannelPartner
 
   def cannot_make_inactive
     if self.status_changed? && self.status == 'inactive' && self.persisted?
-      self.errors.add :status, ' cannot be reverted to "inactive" once activated'
+      self.errors.add :status, 'cannot be reverted to "inactive" once activated'
     end
   end
 end
