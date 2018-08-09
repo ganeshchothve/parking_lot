@@ -1,19 +1,19 @@
 <div class="container">
   <div class="row justify-content-center">
-    <div class="col-md-9">
+    <div class="<%= @discount.blank? ? 'col-md-9' : 'col-md-12' %>">
       <%= render 'breadcrumbs', {discount: @discount} %>
-      <div class="card h-100">
-        <div class="row mb-3">
-          <div class="col-md-7">
-            <% if DiscountPolicy.new(current_user, Discount.new).new? %>
-              <%= link_to "Add #{global_labels['discount']}", new_admin_discount_path, class: 'btn btn-primary nav-btn' %>
-            <% end %>
-          </div>
-          <div class="col-md-5 text-md-right">
-            <h6 class="mt-2">Total <%= global_labels[:discounts] %>: <%= @discounts.count %></h6>
-          </div>
-        </div>
+      <div class="card">
         <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-md-7">
+              <% if DiscountPolicy.new(current_user, Discount.new).new? %>
+                <%= link_to "Add #{global_labels['discount']}", new_admin_discount_path, class: 'btn btn-primary modal-remote-form-link' %>
+              <% end %>
+            </div>
+            <div class="col-md-5 text-md-right">
+              <h6 class="mt-2">Total <%= global_labels[:discounts] %>: <%= @discounts.count %></h6>
+            </div>
+          </div>
           <%= render 'index', {discounts: @discounts} %>
         </div>
       </div>

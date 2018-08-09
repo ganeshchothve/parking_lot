@@ -1,67 +1,62 @@
-<%= render 'breadcrumbs', {discount: @discount} %>
-<section class="padding-side-22">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12 border-left-0 border-top-0 border-bottom-0">
-        <% if @discount.errors.present? %>
-        <div class="alert alert-danger">
-          <ul>
-            <% @discount.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
-            <% end %>
-          </ul>
+
+<%= form_for([:admin, @discount], local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['discounts'], "data-type": "json", id: 'discount_form'}) do |f| %>
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><%= @discount.new_record? ? "New" : "Edit" %> <%= "#{global_labels['discount']}" %></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <%= f.label :name, class: 'label-required' %>
+          <%= f.text_field :name, autofocus: true, class: "form-control", required: 'required', disabled: (policy(@discount).editable_field?("name") ? false : true) %>
         </div>
-        <% end %>
-        <%= form_for [:admin, @discount], html: {class: 'validate-form'} do |f| %>
+        <div class="form-group">
+          <%= f.label :project_unit_id, class: 'control-label' %>
+          <%= f.select :project_unit_id, f.object.project_unit_id.present? ? [[f.object.project_unit.name, f.object.project_unit.id]] : [], {prompt: true}, class: 'selectize-remote', disabled: (policy(@discount).editable_field?("project_unit_id") ? false : true), "data-url": admin_project_units_path, "data-params": {fltrs: {status: {"$in": ['available', 'management', 'employee']}}}.to_json, 'data-ds': 'ds' %>
+        </div>
+        <div class="form-group">
+          <%= f.label :user_role, class: 'control-label' %>
+          <%= f.select :user_role, User.available_roles.select{|x| User.buyer_roles.include?(x[:id])}.collect{|x| [x[:text], x[:id]] }, {prompt: true}, class: 'selectize', disabled: (policy(@discount).editable_field?("user_role") ? false : true) %>
+        </div>
+        <div class="form-group">
+          <%= f.label :user_id, class: 'control-label' %>
+          <%= f.select :user_id, f.object.user_id.present? ? [[f.object.user.name, f.object.user.id]] : [], {prompt: true}, class: 'selectize-remote', disabled: (policy(@discount).editable_field?("user_id") ? false : true), "data-url": admin_users_path, "data-params": {fltrs: {role: {"$in": User.buyer_roles }}}.to_json, 'data-ds': 'ds' %>
+        </div>
+        <div class="form-group">
+          <%= f.label :value, class: 'label-required' %>
+          <%= f.number_field :value, class: "form-control", required: 'required', disabled: (policy(@discount).editable_field?("value") ? false : true) %>
+          <p class="small text-muted">Total Discount will be calculated as Rs. (saleable) * (discount mentioned here)</p>
+        </div>
+        <% if policy(@discount).editable_field?("status") %>
           <div class="form-group">
-            <%= f.label :name, class: 'label-required' %>
-            <%= f.text_field :name, autofocus: true, class: "form-control", required: 'required', disabled: (policy(@discount).editable_field?("name") ? false : true) %>
+            <%= f.label :status, class: 'label-required' %>
+            <%
+              if @discount.new_record?
+                statuses = Discount.available_statuses.select{|x| x[:id] == 'draft' }
+              elsif @discount.status == 'approved' || @discount.status == 'disabled'
+                statuses = Discount.available_statuses.select{|x| ['disabled', 'approved'].include?(x[:id]) }
+              else
+                statuses = Discount.available_statuses
+              end
+              statuses = statuses.collect{|x| [x[:text], x[:id]] }
+            %>
+            <%= f.select :status, statuses, {prompt: true}, class: 'selectize', required: "required" %>
           </div>
-          <div class="form-group">
-            <%= f.label :project_unit_id, class: 'control-label' %>
-            <%= f.select :project_unit_id, f.object.project_unit_id.present? ? [[f.object.project_unit.name, f.object.project_unit.id]] : [], {prompt: true}, class: 'selectize-remote', disabled: (policy(@discount).editable_field?("project_unit_id") ? false : true), "data-url": admin_project_units_path, "data-params": {fltrs: {status: {"$in": ['available', 'management', 'employee']}}}.to_json, 'data-ds': 'ds' %>
-          </div>
-          <div class="form-group">
-            <%= f.label :user_role, class: 'control-label' %>
-            <%= f.select :user_role, User.available_roles.select{|x| User.buyer_roles.include?(x[:id])}.collect{|x| [x[:text], x[:id]] }, {prompt: true}, class: 'selectize', disabled: (policy(@discount).editable_field?("user_role") ? false : true) %>
-          </div>
-          <div class="form-group">
-            <%= f.label :user_id, class: 'control-label' %>
-            <%= f.select :user_id, f.object.user_id.present? ? [[f.object.user.name, f.object.user.id]] : [], {prompt: true}, class: 'selectize-remote', disabled: (policy(@discount).editable_field?("user_id") ? false : true), "data-url": admin_users_path, "data-params": {fltrs: {role: {"$in": User.buyer_roles }}}.to_json, 'data-ds': 'ds' %>
-          </div>
-          <div class="form-group">
-            <%= f.label :value, class: 'label-required' %>
-            <%= f.number_field :value, class: "form-control", required: 'required', disabled: (policy(@discount).editable_field?("value") ? false : true) %>
-            <p>Discount will be calculated as saleable * discount mentioned here</p>
-          </div>
-          <% if policy(@discount).editable_field?("status") %>
-            <div class="form-group">
-              <%= f.label :status, class: 'label-required' %>
-              <%
-                if @discount.new_record?
-                  statuses = Discount.available_statuses.select{|x| x[:id] == 'draft' }
-                elsif @discount.status == 'approved' || @discount.status == 'disabled'
-                  statuses = Discount.available_statuses.select{|x| ['disabled', 'approved'].include?(x[:id]) }
-                else
-                  statuses = Discount.available_statuses
-                end
-                statuses = statuses.collect{|x| [x[:text], x[:id]] }
-              %>
-              <%= f.select :status, statuses, {prompt: true}, class: 'selectize', required: "required" %>
-            </div>
-          <% end %>
-          <div class="form-group">
-            <%= f.submit "Submit", class: 'btn btn-primary' %>
-          </div>
-        <% end %>
-        <%= javascript_tag do %>
-        $(document).ready(function(){
-          FormInitializer.init($('.validate-form'));
-        });
         <% end %>
       </div>
-      <div class="col-md-4">
+      <div class="modal-footer">
+        <%= f.submit "Save", class: "btn btn-primary" %>
       </div>
     </div>
   </div>
-</section>
+</div>
+<% end %>
+<%= javascript_tag do %>
+$(document).ready(function(){
+  FormInitializer.init($("#discount_form"));
+});
+<% end %>

@@ -7,7 +7,6 @@
         <th>Bedrooms</th>
         <th>Status</th>
         <th>Agreement</th>
-        <th>All inclusive total (excluding registration charges)</th>
         <th>Paid Amt.</th>
         <th>Booking Amt. Pending</th>
         <!-- <th>User</th> -->
@@ -22,13 +21,15 @@
         <td><%= project_unit.bedrooms %></td>
         <td><%= ProjectUnit.available_statuses.find{|x| x[:id] == project_unit.status}[:text] rescue "-" %></td>
         <td><%= number_to_indian_currency(project_unit.agreement_price)  %></td>
-        <td><%= number_to_indian_currency(project_unit.all_inclusive_price)  %></td>
         <td><%= number_to_indian_currency(project_unit.total_amount_paid)  %></td>
         <td><%= number_to_indian_currency(project_unit.pending_balance.to_i) %></td>
         <td class="text-right">
           <div class="dropdown">
             <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
             <div class="dropdown-menu dropdown-menu-right">
+              <% if !current_user.buyer? && ReceiptPolicy.new(current_user, Receipt.new(user: @user, project_unit: project_unit)).new? %>
+                <%= link_to "Add #{global_labels['receipt']}", new_admin_user_receipt_path(@user, project_unit_id: project_unit), class: 'dropdown-item modal-remote-form-link' %>
+              <% end %>
               <% if ProjectUnitPolicy.new(current_user, project_unit).edit? %>
                 <%= link_to "Edit #{global_labels[:project_unit]}", edit_admin_project_unit_path(project_unit), class: 'dropdown-item modal-remote-form-link' %>
               <% end %>

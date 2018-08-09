@@ -28,6 +28,7 @@ class Admin::DiscountsController < ApplicationController
   def new
     @discount = Discount.new(created_by: current_user)
     authorize @discount
+    render layout: false
   end
 
   def create
@@ -46,6 +47,7 @@ class Admin::DiscountsController < ApplicationController
   end
 
   def edit
+    render layout: false
   end
 
   def approve_via_email
@@ -91,7 +93,7 @@ class Admin::DiscountsController < ApplicationController
   end
 
   def apply_policy_scope
-    custom_scope = Discount.all.criteria
+    custom_scope = Discount.criteria
     Discount.with_scope(policy_scope(custom_scope)) do
       yield
     end

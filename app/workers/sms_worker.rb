@@ -1,7 +1,6 @@
 require 'net/http'
 class SMSWorker
   include Sidekiq::Worker
-  extend ApplicationHelper
 
   def perform sms_id
     unless Rails.env.development?

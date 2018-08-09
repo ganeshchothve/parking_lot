@@ -1,6 +1,3 @@
-<%
-  direct = (defined?(direct) && direct == true) ? true : false
-%>
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -12,10 +9,13 @@
       </div>
       <div class="modal-body">
         <% if @receipt.new_record? %>
-          <% if current_user.buyer? && !direct %>
+          <% unless @receipt.project_unit_id.blank? %>
           <div class="alert alert-info">
             <p>
-              Payments need to be for individual units, clubbed payments are not allowed. <br/>Please collect a cheque for individual units only.
+              Payments need to be for individual units, clubbed payments are not allowed.
+              <% unless current_user.buyer? %>
+                Please collect a cheque for individual units only.
+              <% end %>
             </p>
             <div class="row">
               <div class="col-md-6">
@@ -53,13 +53,13 @@
           <div class="form-group">
             <%= f.label :total_amount, class: 'label-required' %>
             <% if current_client.blocking_amount_editable %>
-              <%= f.number_field :total_amount, min: 0, max: (@project_unit.present? ? @project_unit.pending_balance : ProjectUnit.blocking_amount), class: "form-field form-control green", required: 'required' %>
+              <%= f.number_field :total_amount, min: 0, max: (@project_unit.present? ? @project_unit.agreement_price : current_client.blocking_amount), class: "form-field form-control green", required: 'required' %>
             <% else %>
-              <h5><%= number_to_indian_currency(ProjectUnit.blocking_amount) %></h5>
-              <%= f.hidden_field :total_amount, value: ProjectUnit.blocking_amount %>
+              <h5><%= number_to_indian_currency(current_client.blocking_amount) %></h5>
+              <%= f.hidden_field :total_amount, value: current_client.blocking_amount %>
             <% end %>
           </div>
-          <% if !direct %>
+          <% if current_client.enable_actual_inventory? && @receipt.project_unit_id.present? %>
             <%= f.hidden_field :project_unit_id %>
           <% end %>
           <%= f.hidden_field :payment_mode %>
@@ -68,7 +68,7 @@
         <% else %>
           <% labels = t('mongoid.attributes.receipt').with_indifferent_access %>
           <%= form_for [:admin, @user, @receipt], local: true, remote: true, html: {id: 'receipt_form', class: 'modal-remote-form validate-form', "data-resource-type": global_labels['receipt'], "data-type": "json"} do |f| %>
-            <div class="alert alert-warning">
+            <div class="alert alert-info">
               The <%= labels[:receipt_id] %> will be generated only after successful processing of payment.
             </div>
             <div class="form-group">
@@ -114,34 +114,25 @@
                   elsif @receipt.status == 'clearance_pending'
                     statuses = statuses.reject{|x| x[1] == 'pending'}
                   end
-                  if policy(@receipt).editable_field?("status")
-                    statuses = statuses.reject{|x| x[1] == "pending"}
-                  end
                   %>
                   <%= f.select :status, statuses, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(@receipt).editable_field?("status") ? false : true) %>
                 </div>
               </div>
               <div class="col-md-6">
-                <div class="form-group">
-                  <% if !direct && current_client.enable_actual_inventory %>
-                    <% if f.object.project_unit_id.present? %>
+                <% if current_client.enable_actual_inventory %>
+                  <div class="form-group">
                     <%= f.label :project_unit_id, class: 'control-label' %>
-                    <div><%= f.object.project_unit.name %></div>
-                    <%= f.hidden_field :project_unit_id %>
-                    <% else %>
-                    <%
-                    if params[:reference_project_unit_id].present?
-                      f.object.reference_project_unit_id = params[:reference_project_unit_id]
-                    end
-                    if params[:sfdc_reference_project_unit_id].present?
-                      f.object.reference_project_unit_id = ProjectUnit.where(sfdc_id: params[:sfdc_reference_project_unit_id]).first.id
-                    end
-                    %>
-                    <%= f.label :reference_project_unit_id, class: 'control-label' %>
-                    <%= f.select :reference_project_unit_id, f.object.reference_project_unit.present? ? [[f.object.reference_project_unit.name, f.object.reference_project_unit.id]] : [], {prompt: true}, class: 'selectize-remote', autofocus: true, disabled: (policy(@receipt).editable_field?("reference_project_unit_id") ? false : true), "data-url": admin_project_units_path, "data-params": {fltrs: {status: 'available'}}.to_json, 'data-ds': 'ds' %>
+                    <% if @receipt.project_unit_id.present? %>
+                      <div><%= f.object.project_unit.name %></div>
+                      <%= f.hidden_field :project_unit_id %>
+                    <% elsif @receipt.payment_mode != 'online' && @receipt.persisted? %>
+                      <% user_units = @receipt.user.project_units.ne(status: 'hold') %>
+                      <% if user_units.present? %>
+                      <%= f.select :project_unit_id, user_units.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(@receipt).editable_field?("project_unit_id") ? false : true) %>
+                      <% end %>
                     <% end %>
-                  <% end %>
-                </div>
+                  </div>
+                <% end %>
               </div>
             </div>
             <% if (current_user.role?("crm") || current_user.role?("sales") || current_user.role?("cp") || current_user.role?("cp") || current_user.role?("admin")) && @receipt.persisted? && @receipt.status == 'clearance_pending' %>
@@ -170,8 +161,8 @@
               <% if current_client.blocking_amount_editable %>
                 <%= f.number_field :total_amount, min: 0, class: "form-field form-control green", required: 'required', disabled: (policy(@receipt).editable_field?("total_amount") ? false : true) %>
               <% else %>
-                <h5><%= number_to_indian_currency(ProjectUnit.blocking_amount) %></h5>
-                <%= f.hidden_field :total_amount, value: ProjectUnit.blocking_amount %>
+                <h5><%= number_to_indian_currency(current_client.blocking_amount) %></h5>
+                <%= f.hidden_field :total_amount, value: current_client.blocking_amount %>
               <% end %>
               <%= f.hidden_field :payment_type, class: 'form-control', required: 'required', disabled: (policy(@receipt).editable_field?("payment_type") ? false : true) %>
             </div>

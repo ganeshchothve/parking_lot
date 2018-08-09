@@ -19,9 +19,7 @@
         <td>
           <div class="small muted">
             <div>
-              <%= receipt.project_unit_id.present? ? "Project: #{receipt.project_unit.name}" : '' %>
-              <%= receipt.reference_project_unit_id.present? ? "Reference Project: #{receipt.reference_project_unit.name}" : '' %>
-              <%= receipt.project_unit_id.blank? && receipt.reference_project_unit_id.blank? ? "Direct Payment" : '' %>
+              <%= receipt.project_unit_id.present? ? "Project: #{receipt.project_unit.name}" : 'Direct Payment' %>
             </div>
             <% if receipt.payment_mode == 'online' %>
               <div>Trans ID: <%= receipt.payment_identifier %></div>

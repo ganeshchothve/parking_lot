@@ -20,7 +20,6 @@ class Receipt
   field :status, type: String, default: 'pending' # pending, success, failed, clearance_pending,cancelled
   field :status_message, type: String # pending, success, failed, clearance_pending
   field :payment_type, type: String, default: 'blocking' # blocking, booking
-  field :reference_project_unit_id, type: BSON::ObjectId # the channel partner or admin or crm can choose this, but its not binding on the user to choose this reference unit
   field :payment_gateway, type: BSON::ObjectId
   field :processed_on, type: Date
   field :comments, type: String
@@ -54,19 +53,8 @@ class Receipt
   enable_audit({
     associated_with: ["user"],
     indexed_fields: [:receipt_id, :order_id, :payment_mode, :tracking_id, :payment_type, :creator_id],
-    audit_fields: [:payment_mode, :tracking_id, :total_amount, :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, :status, :status_message, :reference_project_unit_id, :project_unit_id, :booking_detail_id],
-    reference_ids_without_associations: [
-      {field: 'reference_project_unit_id', klass: 'ProjectUnit'},
-    ]
+    audit_fields: [:payment_mode, :tracking_id, :total_amount, :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, :status, :status_message, :project_unit_id, :booking_detail_id]
   })
-
-  def reference_project_unit
-    if self.reference_project_unit_id.present?
-      ProjectUnit.find(self.reference_project_unit_id)
-    else
-      nil
-    end
-  end
 
   def self.available_statuses
     [
@@ -104,7 +92,7 @@ class Receipt
 
   def payment_gateway_service
     if self.payment_gateway.present?
-      if self.project_unit.present? && ["hold","blocked","booked_tentative"].exclude?(self.project_unit.status)
+      if self.project_unit.present? && ["hold", "blocked", "booked_tentative", "booked_confirmed"].exclude?(self.project_unit.status)
         return nil
       else
         if(self.project_unit.blank? || self.project_unit.user_id == self.user_id)
@@ -177,11 +165,11 @@ class Receipt
 
   private
   def validate_total_amount
-    if self.total_amount < ProjectUnit.blocking_amount && self.payment_type == "blocking" && self.new_record?
-      self.errors.add :total_amount, "cannot be less than #{ProjectUnit.blocking_amount}"
+    if self.total_amount < current_client.blocking_amount && self.payment_type == "blocking" && self.new_record?
+      self.errors.add :total_amount, "cannot be less than #{current_client.blocking_amount}"
     end
-    if self.total_amount != ProjectUnit.blocking_amount && current_client.blocking_amount_editable && self.new_record? && self.payment_type == "blocking" && !current_client.blocking_amount_editable?
-      self.errors.add :total_amount, "has to be #{ProjectUnit.blocking_amount}"
+    if self.total_amount != current_client.blocking_amount && current_client.blocking_amount_editable && self.new_record? && self.payment_type == "blocking" && !current_client.blocking_amount_editable?
+      self.errors.add :total_amount, "has to be #{current_client.blocking_amount}"
     end
     if self.total_amount <= 0
       self.errors.add :total_amount, "cannot be less than or equal to 0"

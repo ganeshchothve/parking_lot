@@ -35,9 +35,11 @@
         </button>
         <div class="collapse navbar-collapse" id="main-navbar">
           <ul class="navbar-nav ml-auto mt-2">
+            <% if current_client.enable_channel_partners? %>
             <li class="nav-item">
               <%= link_to "Register as Channel Partner", new_channel_partner_path, data:{event_category: 'Section', event_action: 'Click', event_name: 'Register Channel Partner'}, class: "mr-2 btn btn-secondary" %>
             </li>
+            <% end %>
             <li class="nav-item">
               <%= link_to "Register Now", register_path, data:{event_category: 'Section', event_action: 'Click', event_name: 'Sign Up'}, class: "btn btn-primary" %>
             </li>

@@ -5,7 +5,7 @@ class CustomDeviseMailer < Devise::Mailer
   include Devise::Controllers::UrlHelpers # Optional. eg. `confirmation_url`
 
   if current_client.present?
-    default from: current_client.name + " <" + current_client.sender_email + ">"
+    default from: "#{current_client.name} <#{current_client.sender_email}>"
   else
     default from: "Sell.Do <support@sell.do>"
   end

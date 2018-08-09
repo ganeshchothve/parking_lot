@@ -107,7 +107,6 @@ en:
         total_amount: "Total Amount (Rs.)"
         status: "Payment Status"
         payment_type: "Payment Type (Towards Blocking or Booking)"
-        reference_project_unit_id: "Interested Apartment (won't be blocked)"
         user_id: "Customer"
         project_unit_id: "Apartment"
         creator_id: "Created by"
@@ -162,7 +161,6 @@ en:
         project_name: 'Project'
         blocked_on: 'Blocked On'
         unit_facing_direction: 'Facing'
-        all_inclusive_price: 'All Inclusive Price (excluding registration charges)'
         agreement_price: 'Agreement Value'
       discount:
         name: 'Name'

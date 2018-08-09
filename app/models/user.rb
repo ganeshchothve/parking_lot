@@ -5,6 +5,7 @@ class User
   include ArrayBlankRejectable
   include ActiveModel::OneTimePassword
   include InsertionStringMethods
+  include ApplicationHelper
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -100,7 +101,7 @@ class User
   validate :channel_partner_change_reason_present?
 
   def unattached_blocking_receipt
-    return self.receipts.in(status: ['success', 'clearance_pending']).where(project_unit_id: nil, payment_type: 'blocking').where(total_amount: {"$gte": ProjectUnit.blocking_amount}).first
+    return self.receipts.in(status: ['success', 'clearance_pending']).where(project_unit_id: nil, payment_type: 'blocking').where(total_amount: {"$gte": current_client.blocking_amount}).first
   end
 
   def total_amount_paid

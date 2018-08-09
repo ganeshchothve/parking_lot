@@ -93,7 +93,6 @@ Amura.removeParamFromURL = function(sourceURL, key) {
   return rtn;
 }
 
-
 Amura.getParamFromURL = function(url, key){
   var urlParams = {};
   var key = key || "";
@@ -108,4 +107,19 @@ Amura.getParamFromURL = function(url, key){
   }else{
     return urlParams;
   }
+}
+
+Amura.formatMoney = function(string){
+  string = string || 0;
+  string = string.toString();
+  regex = /(\d)((\d)(\d{2}?)+)$/;
+  var split_at_decimal = string.split(".");
+  var s = split_at_decimal[0];
+  while (regex.test(s)){
+    s = s.replace(regex, '$1' + ',' + '$2');
+  }
+  if(split_at_decimal.length > 1){
+    s = s + "." + split_at_decimal[1];
+  }
+  return "&#8377; " + s;
 }

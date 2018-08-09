@@ -12,9 +12,11 @@ class ReceiptMailer < ApplicationMailer
     @user = @receipt.user
     @cp = @user.channel_partner
     cc = @cp.present? ? [@cp.email] : []
-    attachments["Receipt.pdf"] = WickedPdf.new.pdf_from_string(
-      render_to_string(pdf: "receipt", template: "receipts/_show.html.erb", layout: "pdf")
-    )
+    unless Rails.env.development?
+      attachments["Receipt.pdf"] = WickedPdf.new.pdf_from_string(
+        render_to_string(pdf: "receipt", template: "receipts/_show.html.erb", layout: "pdf")
+      )
+    end
     make_bootstrap_mail(to: @user.email, cc: cc, subject: "Payment #{@receipt.receipt_id} Successful")
   end
 

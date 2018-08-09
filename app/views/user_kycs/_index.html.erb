@@ -25,9 +25,9 @@
             <div class="dropdown-menu dropdown-menu-right">
               <% if UserKycPolicy.new(current_user, user_kyc).edit? %>
                 <% if current_user.buyer? %>
-                  <%= link_to 'Edit', edit_user_kyc_path(user_kyc), class: 'dropdown-item nav-btn modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit User KYC'} %>
+                  <%= link_to 'Edit', edit_user_kyc_path(user_kyc), class: 'dropdown-item modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit User KYC'} %>
                 <% else %>
-                  <%= link_to 'Edit', edit_admin_user_user_kyc_path(@user, user_kyc), class: 'dropdown-item nav-btn modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit User KYC'} %>
+                  <%= link_to 'Edit', edit_admin_user_user_kyc_path(@user, user_kyc), class: 'dropdown-item modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit User KYC'} %>
                 <% end %>
               <% end %>
               <% if AssetPolicy.new(current_user, Asset.new(assetable: user_kyc)).index? %>

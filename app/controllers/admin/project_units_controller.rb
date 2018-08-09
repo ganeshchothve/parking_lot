@@ -10,7 +10,7 @@ class Admin::ProjectUnitsController < AdminController
     @project_units = ProjectUnit.build_criteria(params).paginate(page: params[:page] || 1, per_page: 1000)
     respond_to do |format|
       if params[:ds].to_s == 'true'
-        format.json { render json: @project_units.collect{|pu| {id: pu.id, name: "#{pu.project_tower_name} | #{pu.name} | #{pu.bedrooms}BHK | #{pu.carpet} Sq. Ft. | Rs. #{pu.booking_price.round}" }} }
+        format.json { render json: @project_units.collect{|pu| {id: pu.id, name: "#{pu.project_tower_name} | #{pu.name} | #{pu.bedrooms}BHK | #{pu.carpet} Sq. Ft." }} }
         format.html {}
       else
         format.json { render json: @project_units }

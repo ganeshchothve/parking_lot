@@ -24,15 +24,8 @@
               <%= link_to "View #{global_labels['receipts']}", admin_user_receipts_path(user_id: @user.id), class: "nav-link" %>
             </li>
             <% end %>
-            <% if @user.present? && !current_user.buyer? && ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? %>
-            <%
-                url_for_new_receipt = if @project_unit.present?
-                direct_admin_user_project_unit_receipt_path(@user, @project_unit)
-              else
-                direct_admin_user_receipts_path(@user)
-              end
-            %>
-            <%= link_to "Add #{global_labels['receipt']}", url_for_new_receipt, class: 'nav-link modal-remote-form-link' %>
+            <% if @user.present? && !current_user.buyer? && ReceiptPolicy.new(current_user, Receipt.new(user: @user)).direct? %>
+              <%= link_to "Add Direct #{global_labels['receipt']}", direct_admin_user_receipts_path(@user), class: 'nav-link modal-remote-form-link' %>
             <% end %>
             <% if UserKycPolicy.new(current_user, UserKyc).index?(@user) %>
               <li class="nav-item">

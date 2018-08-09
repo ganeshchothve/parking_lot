@@ -54,9 +54,16 @@ class SearchesController < ApplicationController
   end
 
   def update
+    @search.assign_attributes(permitted_attributes(@search))
+    location = nil
+    if (permitted_attributes(@search).keys.collect{|x| x.to_s} & ['bedrooms', 'agreement_price']).present?
+      @search.step = 'filter'
+      location = step_user_search_path(@search, step: @search.step)
+    end
     respond_to do |format|
-      if @search.update(permitted_attributes(@search))
+      if @search.save
         format.html { redirect_to step_user_search_path(@search, step: @search.step) }
+        format.json { render json: @search, location: location }
       else
         format.html { render :edit }
         format.json { render json: @search.errors, status: :unprocessable_entity }
@@ -91,24 +98,9 @@ class SearchesController < ApplicationController
       else
         redirect_to (@project_unit.user_id.present? ? admin_user_path(@project_unit.user_id) : dashboard_path) and return
       end
-    elsif @project_unit.user_id.present? && @project_unit.user.receipts.where(reference_project_unit_id: @project_unit.id, status: "pending").present?
+    elsif @project_unit.user_id.present? && @project_unit.user.receipts.where(project_unit_id: @project_unit.id, status: "pending").present?
       flash[:notice] = "We already have collected a payment for this unit from the same customer."
       redirect_to admin_user_path(@project_unit.user_id) and return
-    end
-  end
-
-  def checkout_via_email
-    project_unit = ProjectUnit.find(@search.project_unit_id)
-    authorize @project_unit
-    if params[:receipt_id].present?
-      receipt = current_user.receipts.where(receipt_id: params[:receipt_id]).where(payment_type: 'blocking').first
-      if receipt.present? && receipt.project_unit_id.blank? && project_unit.user_based_status(current_user) == 'available' && receipt.reference_project_unit_id.to_s == project_unit.id.to_s
-        params[:project_unit] = {status: 'hold', primary_user_kyc_id: current_user.user_kyc_ids.first}
-        hold
-      else
-        flash[:notice] = 'The previously chosen unit may not be available now. You can browse available inventory and block it against the payment done.'
-        redirect_to new_search_path
-      end
     end
   end
 
@@ -128,20 +120,19 @@ class SearchesController < ApplicationController
   end
 
   def payment
-    @receipt = Receipt.new(creator: @search.user, user: @search.user, payment_mode: 'online', total_amount: ProjectUnit.blocking_amount, payment_type: 'blocking')
+    @receipt = Receipt.new(creator: @search.user, user: @search.user, payment_mode: 'online', total_amount: current_client.blocking_amount, payment_type: 'blocking')
 
-    if @search.project_unit_id
+    if @search.project_unit_id.present?
       @project_unit = ProjectUnit.find(@search.project_unit_id)
       authorize @project_unit
-      if(@search.user.total_unattached_balance >= ProjectUnit.blocking_amount)
+      if(@search.user.total_unattached_balance >= current_client.blocking_amount)
         @receipt = @search.user.unattached_blocking_receipt
       end
-
       @receipt.project_unit = @project_unit
     else
       authorize(Receipt.new(user: @search.user), :new?)
     end
-    if @receipt.payment_type == "blocking"
+    if @receipt.payment_type == "blocking" && @receipt.new_record?
       @receipt.payment_gateway = 'Razorpay'
     else
       @receipt.payment_gateway = 'Razorpay'
@@ -156,7 +147,7 @@ class SearchesController < ApplicationController
           redirect_to dashboard_path
         end
       elsif ['clearance_pending', "success"].include?(@receipt.status)
-        redirect_to dashboard_path
+        redirect_to admin_user_path(@receipt.user)
       end
     else
       redirect_to checkout_user_search_path(project_unit_id: @project_unit.id)

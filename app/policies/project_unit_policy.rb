@@ -4,7 +4,7 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def edit?
-    ((['blocked', 'booked_tentative', 'booked_confirmed', 'error'].include?(record.status) && record.auto_release_on.present?) || ["available", "not_available", "employee", "management"].include?(record.status)) && current_client.enable_actual_inventory?
+    _role_based_check(true)
   end
 
   def export?
@@ -25,6 +25,7 @@ class ProjectUnitPolicy < ApplicationPolicy
 
   def hold?
     valid = record.user_based_status(record.user) == 'available' && record.user.kyc_ready? && record.user.project_units.where(status: "hold").blank? && current_client.enable_actual_inventory?
+    valid = valid && (record.user.total_unattached_balance >= current_client.blocking_amount) if user.role?('channel_partner')
     _role_based_check(valid)
   end
 
@@ -61,15 +62,10 @@ class ProjectUnitPolicy < ApplicationPolicy
     _role_based_check(valid)
   end
 
-  def checkout_via_email?
-    valid = record.user_based_status(user) == "available" && user.kyc_ready? && current_client.enable_actual_inventory?
-    _role_based_check(valid)
-  end
-
   def permitted_attributes params={}
     attributes = ["crm","admin"].include?(user.role) ? [:auto_release_on] : []
     attributes += (["crm","admin"].include?(user.role) || make_available?) ? [:status] : []
-    attributes += [:user_id] if record.user_id.blank?
+    attributes += [:user_id] if record.user_id.blank? && record.user_based_status(user) == 'available'
     attributes += [:primary_user_kyc_id, user_kyc_ids: []]
     attributes
   end

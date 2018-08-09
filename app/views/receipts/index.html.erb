@@ -5,7 +5,7 @@
       <% unless current_user.buyer? %>
         <% unless ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? || current_user.role?('crm') || current_user.role?('sales') || current_user.role?('cp') %>
           <% if @user.present? %>
-            <div class="alert alert-warning mt-3">
+            <div class="alert alert-info mt-3">
               <% if @user.confirmed? %>
               You might need to complete the user's KYC before you can take payments.
               <% else %>

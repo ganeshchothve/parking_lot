@@ -15,12 +15,12 @@ class ReceiptPolicy < ApplicationPolicy
     if user.buyer?
       user.kyc_ready? && (record.project_unit_id.blank? || after_hold_payment?) && user.confirmed?
     else
-      record.user_id.present? && record.user.kyc_ready? && (record.project_unit_id.blank? || after_hold_payment?) &&  record.user.confirmed?
+      record.user_id.present? && record.user.kyc_ready? && (record.project_unit_id.blank? || after_blocked_payment?) &&  record.user.confirmed?
     end
   end
 
   def direct?
-    new?
+    current_client.enable_direct_payment? && new?
   end
 
   def create?
@@ -41,14 +41,12 @@ class ReceiptPolicy < ApplicationPolicy
 
   def after_hold_payment?
     project_unit = record.project_unit
-    unit_user = project_unit.user
-
-    valid = project_unit.present? && project_unit.user_based_status(unit_user) == 'booked'
-
-    if user.buyer?
-      valid = valid && user.id == unit_user.id
-    end
+    valid = project_unit.present? && project_unit.user_based_status(project_unit.user) == 'booked'
     valid
+  end
+
+  def after_blocked_payment?
+    record.project_unit.present? && record.project_unit.status != 'hold' && after_hold_payment?
   end
 
   def permitted_attributes params={}
@@ -58,9 +56,6 @@ class ReceiptPolicy < ApplicationPolicy
     end
     if user.buyer? || user.role?('channel_partner') || (record.user_id.present? && record.user.project_unit_ids.present?) && record.status == 'pending'
       attributes += [:project_unit_id]
-    end
-    if !user.buyer? && record.user_id.present? && record.status == 'pending'
-      attributes += [:reference_project_unit_id]
     end
     if record.new_record? || record.status == 'pending'
       attributes += [:total_amount]

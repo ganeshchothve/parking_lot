@@ -4,7 +4,7 @@ module InventoryImport
     count = 0
     CSV.foreach(filepath) do |row|
       unless count == 0
-        sfdc_id = row[0].strip
+        erp_id = row[0].strip
         project_name = row[1].strip
         project_tower_name = row[2].strip
         unit_name = row[3].strip
@@ -13,32 +13,23 @@ module InventoryImport
         carpet = row[6].strip.to_f.round(2)
         saleable = row[7].strip.to_f.round(2)
         base_rate = row[8].strip
-        category = row[9].strip
-        unit_configuration_name = row[10].strip
-        record_type = row[11].strip
+        unit_configuration_name = row[9].strip
+        record_type = row[10].strip
 
-        infrastructure_charges = row[12].strip
-        power_supply = row[13].strip
-        clubhouse_amenities_price = row[14].strip
-        corpus_fund_charges = row[15].strip
-        premium_location_charges = row[16].strip
-        floor_rise = row[17].strip
-        unit_sap_id = row[18]
-        status = row[19].strip
-        maintenance_deposit = row[20].strip
-        bedrooms = row[21].strip
-        bathrooms = row[22].strip
-        agreement_price = row[23].strip
-        land_rate = row[24].strip
-        unit_facing_direction = row[25].strip
-        usable = row[26].strip
-        uds = row[26].strip
+        floor_rise = row[11].strip
+        unit_erp_id = row[12]
+        status = row[13].strip
+        bedrooms = row[14].strip
+        bathrooms = row[15].strip
+        agreement_price = row[16].strip
+        unit_facing_direction = row[17].strip
+        uds = row[18].strip
 
         client_id = booking_portal_client.selldo_client_id
 
-        project_unit = ProjectUnit.in(status: ["not_available", "available", "employee", "management"]).where(sfdc_id: sfdc_id).first
+        project_unit = ProjectUnit.in(status: ["not_available", "available", "employee", "management"]).where(erp_id: erp_id).first
         if project_unit.present?
-          project_unit.sfdc_id = sfdc_id
+          project_unit.erp_id = erp_id
           project_unit.name = "#{unit_name} | #{unit_configuration_name}"
           if status == "Available"
             project_unit.status = "available"
@@ -56,12 +47,8 @@ module InventoryImport
           project_unit.base_rate = base_rate.to_f
           project_unit.client_id = client_id
           project_unit.booking_portal_client_id = booking_portal_client.id
-          project_unit.selldo_id = unit_sap_id # TODO
-          project_unit.agreement_price = agreement_price.to_f
-          project_unit.clubhouse_amenities_price = clubhouse_amenities_price
-          project_unit.premium_location_charges = premium_location_charges.to_f
+          project_unit.selldo_id = unit_erp_id # TODO
           project_unit.floor_rise = floor_rise.to_f
-          project_unit.land_rate = land_rate.to_f
 
           if project_unit.save
             puts "Saved #{project_unit.name}"
@@ -69,7 +56,7 @@ module InventoryImport
             puts "Error in saving #{project_unit.name} : #{project_unit.errors.full_messages}"
           end
         else
-          puts "Not updating project unit: #{unit_name} - #{sfdc_id}"
+          puts "Not updating project unit: #{unit_name} - #{erp_id}"
         end
       end
       count += 1
@@ -78,10 +65,13 @@ module InventoryImport
 
   def self.perform(filepath, booking_portal_client_id)
     booking_portal_client = Client.find booking_portal_client_id
+    client_id = booking_portal_client.selldo_client_id
+
+    Developer.create(name: booking_portal_client.name, client_id: client_id, booking_portal_client_id: booking_portal_client.id)
     count = 0
     CSV.foreach(filepath) do |row|
       unless count == 0
-        sfdc_id = row[0].strip
+        erp_id = row[0].strip
         project_name = row[1].strip
         project_tower_name = row[2].strip
         unit_name = row[3].strip
@@ -90,28 +80,17 @@ module InventoryImport
         carpet = row[6].strip.to_f.round(2)
         saleable = row[7].strip.to_f.round(2)
         base_rate = row[8].strip
-        category = row[9].strip
-        unit_configuration_name = row[10].strip
-        record_type = row[11].strip
+        unit_configuration_name = row[9].strip
+        record_type = row[10].strip
 
-        infrastructure_charges = row[12].strip
-        power_supply = row[13].strip
-        clubhouse_amenities_price = row[14].strip
-        corpus_fund_charges = row[15].strip
-        premium_location_charges = row[16].strip
-        floor_rise = row[17].strip
-        unit_sap_id = row[18]
-        status = row[19].strip
-        maintenance_deposit = row[20].strip
-        bedrooms = row[21].strip
-        bathrooms = row[22].strip
-        agreement_price = row[23].strip
-        land_rate = row[24].strip
-        unit_facing_direction = row[25].strip
-        usable = row[26].strip
-        uds = row[26].strip
-
-        client_id = booking_portal_client.selldo_client_id
+        floor_rise = row[11].strip
+        unit_erp_id = row[12]
+        status = row[13].strip
+        bedrooms = row[14].strip
+        bathrooms = row[15].strip
+        agreement_price = row[16].strip
+        unit_facing_direction = row[17].strip
+        uds = row[18].strip
 
         project = Project.where(name: project_name).first
         unless project.present?
@@ -129,11 +108,17 @@ module InventoryImport
         end
 
         project_unit = ProjectUnit.new
-        project_unit.sfdc_id = sfdc_id
+        project_unit.erp_id = erp_id
+        project_unit.developer_id = developer.id
         project_unit.project_id = project.id
         project_unit.project_tower_id = project_tower.id
         project_unit.unit_configuration_id = unit_configuration.id
         project_unit.booking_portal_client_id = booking_portal_client.id
+
+        project_unit.project_name = project_name
+        project_unit.project_tower_name = project_tower_name
+        project_unit.unit_configuration_name = unit_configuration_name
+
         project_unit.name = "#{unit_name} | #{unit_configuration_name}"
         if status == "Available"
           project_unit.status = "available"
@@ -155,14 +140,14 @@ module InventoryImport
         project_unit.carpet = carpet.to_f
         project_unit.saleable = saleable.to_f
 
-        project_unit.data_attributes = [{"n"=>"unit_configuration_id", "v"=>"#{unit_configuration.id}"}, {"n"=>"project_name", "v"=>"#{project_name}"}, {"n"=>"project_tower_name", "v"=>"#{project_tower_name}"}, {"n"=>"unit_configuration_name", "v"=>"#{unit_configuration_name}"}, {"n"=>"floor", "v"=> floor}, {"n"=>"resale", "v"=>false}, {"n"=>"category", "v"=>category}, {"n"=>"facing", "v"=>unit_facing_direction}, {"n"=>"type", "v"=>"apartment"}, {"n"=>"usable", "v"=>usable.to_f}, {"n"=>"uds", "v"=>uds.to_f}, {"n"=>"city", "v"=>"Banglore"}, {"n"=>"state", "v"=>"Karnataka"}, {"n"=>"country", "v"=>"India"}, {"n"=>"amenities", "v"=>{}}, {"n"=>"project_status", "v"=>nil}]
-        project_unit.selldo_id = unit_sap_id # TODO
-        project_unit.sap_id = unit_sap_id # TODO
+        project_unit.floor = floor
+        project_unit.facing = unit_facing_direction
+        project_unit.type = "apartment"
+        project_unit.uds = uds.to_f
+        project_unit.selldo_id = unit_erp_id # TODO
+        project_unit.erp_id = unit_erp_id # TODO
         project_unit.agreement_price = agreement_price.to_f
-        project_unit.clubhouse_amenities_price = clubhouse_amenities_price
-        project_unit.premium_location_charges = premium_location_charges.to_f
         project_unit.floor_rise = floor_rise.to_f
-        project_unit.land_rate = land_rate.to_f
 
         if project_unit.save
           puts "Saved #{project_unit.name}"
