@@ -12,7 +12,7 @@ class Developer
   validates :name, uniqueness: {case_sensitive: false} #, scope: :client}
 
   has_many :project_units
-  belongs_to :booking_portal_client
+  belongs_to :booking_portal_client, class_name: "Client"
 
   def unit_configurations
     UnitConfiguration.where(data_attributes: {"$elemMatch" => {"n" => "developer_id", "v" => self.selldo_id}})

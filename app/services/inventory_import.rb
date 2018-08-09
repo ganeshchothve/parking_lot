@@ -4,26 +4,22 @@ module InventoryImport
     count = 0
     CSV.foreach(filepath) do |row|
       unless count == 0
-        erp_id = row[0].strip
+        rera_registration_no = row[0].strip
         project_name = row[1].strip
         project_tower_name = row[2].strip
         unit_name = row[3].strip
-        unit_number = row[4].strip
+        unit_configuration_name = row[4].strip
         floor = row[5].strip
-        carpet = row[6].strip.to_f.round(2)
-        saleable = row[7].strip.to_f.round(2)
-        base_rate = row[8].strip
-        unit_configuration_name = row[9].strip
-        record_type = row[10].strip
-
-        floor_rise = row[11].strip
-        unit_erp_id = row[12]
-        status = row[13].strip
-        bedrooms = row[14].strip
-        bathrooms = row[15].strip
-        agreement_price = row[16].strip
-        unit_facing_direction = row[17].strip
-        uds = row[18].strip
+        floor_order = row[6].strip
+        carpet = row[7].strip.to_f.round(2)
+        saleable = row[8].strip.to_f.round(2)
+        base_rate = row[9].strip
+        floor_rise = row[10].strip
+        status = row[11].strip
+        bedrooms = row[12].strip
+        bathrooms = row[13].strip
+        unit_facing_direction = row[14].strip
+        erp_id = row[15].strip
 
         client_id = booking_portal_client.selldo_client_id
 
@@ -45,9 +41,6 @@ module InventoryImport
             project_unit.available_for = "user"
           end
           project_unit.base_rate = base_rate.to_f
-          project_unit.client_id = client_id
-          project_unit.booking_portal_client_id = booking_portal_client.id
-          project_unit.selldo_id = unit_erp_id # TODO
           project_unit.floor_rise = floor_rise.to_f
 
           if project_unit.save
@@ -67,34 +60,30 @@ module InventoryImport
     booking_portal_client = Client.find booking_portal_client_id
     client_id = booking_portal_client.selldo_client_id
 
-    Developer.create(name: booking_portal_client.name, client_id: client_id, booking_portal_client_id: booking_portal_client.id)
+    developer = Developer.create(name: booking_portal_client.name, client_id: client_id, booking_portal_client_id: booking_portal_client.id)
     count = 0
     CSV.foreach(filepath) do |row|
       unless count == 0
-        erp_id = row[0].strip
+        rera_registration_no = row[0].strip
         project_name = row[1].strip
         project_tower_name = row[2].strip
         unit_name = row[3].strip
-        unit_number = row[4].strip
+        unit_configuration_name = row[4].strip
         floor = row[5].strip
-        carpet = row[6].strip.to_f.round(2)
-        saleable = row[7].strip.to_f.round(2)
-        base_rate = row[8].strip
-        unit_configuration_name = row[9].strip
-        record_type = row[10].strip
-
-        floor_rise = row[11].strip
-        unit_erp_id = row[12]
-        status = row[13].strip
-        bedrooms = row[14].strip
-        bathrooms = row[15].strip
-        agreement_price = row[16].strip
-        unit_facing_direction = row[17].strip
-        uds = row[18].strip
+        floor_order = row[6].strip
+        carpet = row[7].strip.to_f.round(2)
+        saleable = row[8].strip.to_f.round(2)
+        base_rate = row[9].strip
+        floor_rise = row[10].strip
+        status = row[11].strip
+        bedrooms = row[12].strip
+        bathrooms = row[13].strip
+        unit_facing_direction = row[14].strip
+        erp_id = row[15].strip
 
         project = Project.where(name: project_name).first
         unless project.present?
-          project = Project.create!(name: project_name, client_id: client_id, booking_portal_client_id: booking_portal_client.id)
+          project = Project.create!(rera_registration_no: rera_registration_no, name: project_name, client_id: client_id, booking_portal_client_id: booking_portal_client.id)
         end
 
         project_tower = ProjectTower.where(name: project_tower_name).where(project_id: project.id).first
@@ -109,17 +98,18 @@ module InventoryImport
 
         project_unit = ProjectUnit.new
         project_unit.erp_id = erp_id
-        project_unit.developer_id = developer.id
-        project_unit.project_id = project.id
-        project_unit.project_tower_id = project_tower.id
-        project_unit.unit_configuration_id = unit_configuration.id
-        project_unit.booking_portal_client_id = booking_portal_client.id
+        project_unit.developer = developer
+        project_unit.project = project
+        project_unit.project_tower = project_tower
+        project_unit.unit_configuration = unit_configuration
+        project_unit.booking_portal_client = booking_portal_client
 
+        project_unit.developer_name = developer.name
         project_unit.project_name = project_name
         project_unit.project_tower_name = project_tower_name
         project_unit.unit_configuration_name = unit_configuration_name
 
-        project_unit.name = "#{unit_name} | #{unit_configuration_name}"
+        project_unit.name = unit_name
         if status == "Available"
           project_unit.status = "available"
           project_unit.available_for = "user"
@@ -133,20 +123,18 @@ module InventoryImport
           project_unit.status = "error"
           project_unit.available_for = "user"
         end
+
         project_unit.base_rate = base_rate.to_f
         project_unit.client_id = client_id
         project_unit.bedrooms = bedrooms.to_f
         project_unit.bathrooms = bathrooms.to_f
         project_unit.carpet = carpet.to_f
         project_unit.saleable = saleable.to_f
-
         project_unit.floor = floor
-        project_unit.facing = unit_facing_direction
+        project_unit.floor_order = floor_order
+        project_unit.unit_facing_direction = unit_facing_direction
         project_unit.type = "apartment"
-        project_unit.uds = uds.to_f
-        project_unit.selldo_id = unit_erp_id # TODO
-        project_unit.erp_id = unit_erp_id # TODO
-        project_unit.agreement_price = agreement_price.to_f
+        project_unit.selldo_id = erp_id
         project_unit.floor_rise = floor_rise.to_f
 
         if project_unit.save
