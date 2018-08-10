@@ -1,5 +1,6 @@
 require 'database_seeds/sms_template'
 require 'communication/sms'
+require 'communication/email'
 require 'amura_log'
 require 'application_log'
 require 'request_store_base'

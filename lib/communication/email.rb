@@ -41,18 +41,10 @@ module Communication
       def self.get_message_object email_json
         email_json = email_json.with_indifferent_access
         message = ::Mailgun::MessageBuilder.new
-        message.add_recipient(:to,email_json[:to][:email])
+        message.add_recipient(:to, email_json[:to])
+        message.add_recipient(:cc, email_json[:cc])
 
-
-        email_json[:cc].each do |to_address|
-          message.add_recipient(:cc,to_address[:email])
-        end if email_json[:cc].present?
-
-        email_json[:bcc].each do |to_address|
-          message.add_recipient(:bcc,to_address[:email])
-        end if email_json[:bcc].present?
-
-        message.from(email_json[:from][:email])
+        message.from("notifications@sell.do")
         message.subject(email_json[:subject])
         message.body_text(email_json[:text_only_body])
         message.body_html(email_json[:body])

@@ -1,8 +1,9 @@
 class Email
   include Mongoid::Document
-  include HubDocument
   include Mongoid::Timestamps
 
+  field :to, type: String
+  field :cc, type: Array
   field :subject, type: String
   field :body, type: String
   field :text_only_body, type: String
@@ -20,7 +21,8 @@ class Email
   enable_audit reference_ids_without_associations: [{name_of_key: 'email_template_id', method: 'email_template', klass: 'EmailTemplate'}]
 
   belongs_to :booking_portal_client, class_name: 'Client', inverse_of: :emails
-  belongs_to :recipient, class_name: 'User', inverse_of: :emails
+  has_and_belongs_to_many :recipients, class_name: "User", inverse_of: :received_emails
+  has_and_belongs_to_many :cc_recipients, class_name: "User", inverse_of: :cced_emails
   belongs_to :triggered_by, polymorphic: true
 
 

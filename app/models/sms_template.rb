@@ -6,7 +6,7 @@ class SmsTemplate
   field :name, type: String
   field :content, type: String
 
-  validates :name, :content, presence: true
+  validates :name, :content, :subject_class, presence: true
 
   belongs_to :booking_portal_client, class_name: 'Client', inverse_of: :sms_templates
 

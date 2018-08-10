@@ -7,8 +7,10 @@ module ProjectUnitRemindersAndAutoRelease
           Email.create!({
             booking_portal_client_id: project_unit.booking_portal_client_id,
             email_template_id: EmailTemplate.find_by(name: "daily_reminder_for_booking_payment").id,
-            recipient_id: project_unit.user_id,
-            triggered_by_id: project_unit.id
+            recipients: [project_unit.user],
+            cc_recipients: (project_unit.user.channel_partner_id.present? ? [project_unit.user.channel_partner] : []),
+            triggered_by_id: project_unit.id,
+            triggered_by_type: project_unit.class.to_s
           })
         end
         days = project_unit.promote_future_payment_days

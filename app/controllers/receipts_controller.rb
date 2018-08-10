@@ -24,10 +24,12 @@ class ReceiptsController < ApplicationController
   end
 
   def resend_success
+    user = @receipt.user
     Email.create!({
-      booking_portal_client_id: @receipt.booking_portal_client_id,
+      booking_portal_client_id: user.booking_portal_client_id,
       email_template_id: EmailTemplate.find_by(name: "receipt_success").id,
-      recipient_id: @receipt.user_id,
+      recipients: [@receipt.user],
+      cc_recipients: (user.channel_partner_id.present? ? [user.channel_partner] : []),
       triggered_by_id: @receipt.id,
       triggered_by_type: @receipt.class.to_s
     })

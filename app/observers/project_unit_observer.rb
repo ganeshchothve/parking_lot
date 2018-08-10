@@ -51,7 +51,9 @@ class ProjectUnitObserver < Mongoid::Observer
         Email.create!({
           booking_portal_client_id: project_unit.booking_portal_client_id,
           email_template_id: EmailTemplate.find_by(name: "project_unit_released").id,
-          recipient_id: user.id,
+          cc: [project_unit.booking_portal_client.notification_email],
+          recipients: [user_was],
+          cc_recipients: (user_was.channel_partner_id.present? ? [user_was.channel_partner] : []).push(),
           triggered_by_id: project_unit.id
         })
 
@@ -79,17 +81,20 @@ class ProjectUnitObserver < Mongoid::Observer
 
   def after_update project_unit
     if project_unit.status_changed? && ['blocked', 'booked_tentative', 'booked_confirmed'].include?(project_unit.status)
+      user = project_unit.user
+
       Email.create!({
         booking_portal_client_id: project_unit.booking_portal_client_id,
         email_template_id: EmailTemplate.find_by(name: "project_unit_#{project_unit.status}").id,
-        recipient_id: user.id,
+        cc: [project_unit.booking_portal_client.notification_email],
+        recipients: [user],
+        cc_recipients: (user.channel_partner_id.present? ? [user.channel_partner] : []).push(),
         triggered_by_id: project_unit.id
       })
 
       if !Rails.env.development?
         SelldoInventoryPusher.perform_async(project_unit.status, project_unit.id.to_s, Time.now.to_i)
       end
-      user = project_unit.user
       if project_unit.status == "blocked"
         Sms.create!(
           booking_portal_client_id: project_unit.booking_portal_client_id,
@@ -112,9 +117,11 @@ class ProjectUnitObserver < Mongoid::Observer
     if project_unit.auto_release_on_changed? && project_unit.auto_release_on.present? && project_unit.auto_release_on_was.present?
       Email.create!({
         booking_portal_client_id: user.booking_portal_client_id,
-        email_template_id: EmailTemplate.find_by(name: "project_unit_released").id,
-        recipient_id: user.id,
-        triggered_by_id: receipt.id
+        email_template_id: EmailTemplate.find_by(name: "auto_release_on_extended").id,
+        cc: [project_unit.booking_portal_client.notification_email],
+        recipients: [user],
+        cc_recipients: (user.channel_partner_id.present? ? [user.channel_partner] : []).push(),
+        triggered_by_id: receipt.id,
         triggered_by_type: receipt.class.to_s
       })
 

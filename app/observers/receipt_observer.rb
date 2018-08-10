@@ -39,7 +39,8 @@ class ReceiptObserver < Mongoid::Observer
         Email.create!({
           booking_portal_client_id: user.booking_portal_client_id,
           email_template_id: EmailTemplate.find_by(name: "receipt_success").id,
-          recipient_id: project_unit.user_id,
+          recipients: [user],
+          cc_recipients: (user.channel_partner_id.present? ? [user.channel_partner] : []).push(),
           triggered_by_id: receipt.id,
           triggered_by_type: receipt.class.to_s
         })
@@ -48,7 +49,8 @@ class ReceiptObserver < Mongoid::Observer
         Email.create!({
           booking_portal_client_id: project_unit.booking_portal_client_id,
           email_template_id: EmailTemplate.find_by(name: "receipt_failed").id,
-          recipient_id: project_unit.user_id,
+          recipients: [user],
+          cc_recipients: (user.channel_partner_id.present? ? [user.channel_partner] : []).push(),
           triggered_by_id: receipt.id,
           triggered_by_type: receipt.class.to_s
         })
@@ -56,7 +58,8 @@ class ReceiptObserver < Mongoid::Observer
         Email.create!({
           booking_portal_client_id: project_unit.booking_portal_client_id,
           email_template_id: EmailTemplate.find_by(name: "receipt_clearance_pending").id,
-          recipient_id: project_unit.user_id,
+          recipients: [user],
+          cc_recipients: (user.channel_partner_id.present? ? [user.channel_partner] : []).push(),
           triggered_by_id: receipt.id,
           triggered_by_type: receipt.class.to_s
         })
@@ -77,7 +80,8 @@ class ReceiptObserver < Mongoid::Observer
       Email.create!({
         booking_portal_client_id: user.booking_portal_client_id,
         email_template_id: EmailTemplate.find_by(name: "receipt_pending_offline").id,
-        recipient_id: project_unit.user_id,
+        recipients: [user],
+        cc_recipients: (user.channel_partner_id.present? ? [user.channel_partner] : []).push(),
         triggered_by_id: receipt.id,
         triggered_by_type: receipt.class.to_s
       })

@@ -431,7 +431,7 @@ class ProjectUnit
         self.status = 'booked_confirmed'
       elsif self.total_amount_paid > ProjectUnit.blocking_amount
       	if self.status != 'booked_tentative'
-        	  self.status = 'booked_tentative'
+        	self.status = 'booked_tentative'
       	end
       elsif receipt.total_amount >= ProjectUnit.blocking_amount && (self.status == "hold" || self.user_based_status(self.user) == "available")
         if (self.user == receipt.user && self.status == 'hold') || self.user_based_status(self.user) == "available"
