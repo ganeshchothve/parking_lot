@@ -7,12 +7,10 @@
         <div class="card-header">
           Overview
           <ul class="nav float-right">
-            <% if ['crm', 'sales', 'cp', 'admin'].include?(current_user.role) %>
-              <% if UserPolicy.new(current_user, @user).edit? %>
-                <li class="nav-item">
-                  <%= link_to "Edit", edit_admin_user_path(@user.id), class: 'modal-remote-form-link nav-link'  %>
-                </li>
-              <% end %>
+            <% if UserPolicy.new(current_user, @user).edit? %>
+              <li class="nav-item">
+                <%= link_to "Edit", edit_admin_user_path(@user.id), class: 'modal-remote-form-link nav-link'  %>
+              </li>
             <% end %>
             <% if ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: @user, status: "available")).hold? %>
               <li class="nav-item">

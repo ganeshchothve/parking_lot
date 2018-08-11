@@ -135,7 +135,7 @@
                 <% end %>
               </div>
             </div>
-            <% if (current_user.role?("crm") || current_user.role?("sales") || current_user.role?("cp") || current_user.role?("cp") || current_user.role?("admin") || current_user.role?("superadmin")) && @receipt.persisted? && @receipt.status == 'clearance_pending' %>
+            <% if (policy(@receipt).editable_field?("tracking_id") ? false : true) && (policy(@receipt).editable_field?("processed_on") ? false : true) %>
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">

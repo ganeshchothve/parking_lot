@@ -131,14 +131,16 @@ class User
   def self.available_roles
     [
       {id: 'superadmin', text: 'Superadmin'},
+      {id: 'admin', text: 'Administrator'},
+      {id: 'crm', text: 'CRM User'},
+      {id: 'cp_admin', text: 'Channel Partner Head'},
+      {id: 'cp', text: 'Channel Partner Manager'},
+      {id: 'sales', text: 'Sales User'},
+      {id: 'channel_partner', text: 'Channel Partner'},
       {id: 'user', text: 'Customer'},
       {id: 'employee_user', text: 'Employee'},
       {id: 'management_user', text: 'Management User'},
-      {id: 'admin', text: 'Admin'},
-      {id: 'crm', text: 'CRM User'},
-      {id: 'sales', text: 'Sales User'},
-      {id: 'cp', text: 'Channel Partner Manager'},
-      {id: 'channel_partner', text: 'Channel Partner'}
+      {id: 'gre', text: 'GRE or Pre-sales'}
     ]
   end
 

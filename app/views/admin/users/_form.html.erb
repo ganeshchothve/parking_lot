@@ -62,13 +62,13 @@
               <%= f.select :allowed_bookings, [1,2,3,4,5,6,100], {prompt: true}, class: 'selectize', required: 'required' %>
             </div>
           <% end %>
-          <% if @user.role?('channel_partner') %>
+          <% if policy(@user).editable_field?("rera_id") %>
             <div class="form-group">
               <%= f.label :rera_id, class: "#{@user.role?('channel_partner') ? 'label-required' : ''}" %>
               <%= f.text_field :rera_id, class: 'form-control', required: @user.role?('channel_partner') ? true : false, disabled: (policy(@user).editable_field?("rera_id") ? false : true) %>
             </div>
           <% end %>
-          <% if @user.buyer? && ["crm", "sales", "cp", "admin", "superadmin"].include?(current_user.role) %>
+          <% if policy(@user).editable_field?("channel_partner_id") %>
             <div class="form-group">
               <%= f.label :channel_partner_id, class: "control-label" %>
               <%= f.select :channel_partner_id, f.object.channel_partner_id.present? ? [[f.object.channel_partner.name, f.object.channel_partner.id]] : [], {prompt: true}, class: 'selectize-remote', autofocus: true, disabled: (policy(@user).editable_field?("channel_partner_id") ? false : true), "data-url": admin_users_path, "data-params": {fltrs: {role: 'channel_partner'}}.to_json, 'data-ds': 'ds' %>

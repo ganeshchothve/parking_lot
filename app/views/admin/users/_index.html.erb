@@ -53,13 +53,11 @@
                 <% else %>
                   <%= link_to 'Send Password Reset Instructions', resend_password_instructions_admin_user_path(user), class: 'dropdown-item', data: {event_category: 'Section', event_action: 'Click', event_name: 'Reset Password Instructions'} %>
                 <% end %>
-                <% if ['superadmin', 'crm', 'sales', 'cp', 'admin'].include?(current_user.role) %>
-                  <% if UserPolicy.new(current_user, user).edit? %>
-                    <%= link_to "Edit", edit_admin_user_path(user.id), class: "dropdown-item modal-remote-form-link" %>
-                  <% end %>
-                  <% if UserPolicy.new(current_user, user).update_password? %>
-                    <%= link_to "Update Password", update_password_admin_user_path(user), class: "dropdown-item modal-remote-form-link" %>
-                  <% end %>
+                <% if UserPolicy.new(current_user, user).edit? %>
+                  <%= link_to "Edit", edit_admin_user_path(user.id), class: "dropdown-item modal-remote-form-link" %>
+                <% end %>
+                <% if UserPolicy.new(current_user, user).update_password? %>
+                  <%= link_to "Update Password", update_password_admin_user_path(user), class: "dropdown-item modal-remote-form-link" %>
                 <% end %>
               </div>
             </div>

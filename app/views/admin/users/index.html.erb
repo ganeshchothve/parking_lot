@@ -9,29 +9,10 @@
               <div class="dropdown float-left">
                 <a class="btn btn-primary dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add new</a>
                 <div class="dropdown-menu">
-                  <% if UserPolicy.new(current_user, User.new(role: 'user')).new? %>
-                    <%= link_to 'New Customer', new_admin_user_path, class: 'modal-remote-form-link dropdown-item' %>
-                  <% end %>
-                  <% if UserPolicy.new(current_user, User.new(role: 'employee_user')).new? %>
-                    <%= link_to 'New Employee', new_admin_user_path(role: 'employee_user'), class: 'modal-remote-form-link dropdown-item' %>
-                  <% end %>
-                  <% if UserPolicy.new(current_user, User.new(role: 'management_user')).new? %>
-                    <%= link_to 'New Management User', new_admin_user_path(role: 'management_user'), class: 'modal-remote-form-link dropdown-item' %>
-                  <% end %>
-                  <% if UserPolicy.new(current_user, User.new(role: 'admin')).new? %>
-                    <%= link_to 'New Admin', new_by_role_admin_users_path(role: 'admin'), class: 'modal-remote-form-link dropdown-item' %>
-                  <% end %>
-                  <% if UserPolicy.new(current_user, User.new(role: 'crm')).new? %>
-                    <%= link_to 'New CRM User', new_by_role_admin_users_path(role: 'crm'), class: 'modal-remote-form-link dropdown-item' %>
-                  <% end %>
-                  <% if UserPolicy.new(current_user, User.new(role: 'sales')).new? %>
-                    <%= link_to 'New Sales User', new_by_role_admin_users_path(role: 'sales'), class: 'modal-remote-form-link dropdown-item' %>
-                  <% end %>
-                  <% if UserPolicy.new(current_user, User.new(role: 'cp')).new? %>
-                    <%= link_to 'New Channel Partner Manager', new_by_role_admin_users_path(role: 'cp'), class: 'modal-remote-form-link dropdown-item' %>
-                  <% end %>
-                  <% if UserPolicy.new(current_user, User.new(role: 'channel_partner')).new? %>
-                    <%= link_to 'New Channel Partner', new_by_role_admin_users_path(role: 'channel_partner'), class: 'modal-remote-form-link dropdown-item' %>
+                  <% User.available_roles.each do |role| %>
+                    <% if UserPolicy.new(current_user, User.new(role: role[:id])).new? %>
+                      <%= link_to "New #{role[:text]}", new_admin_user_path(role: role[:id]), class: 'modal-remote-form-link dropdown-item' %>
+                      <% end %>
                   <% end %>
                 </div>
               </div>

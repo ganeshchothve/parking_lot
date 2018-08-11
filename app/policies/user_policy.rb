@@ -24,7 +24,13 @@ class UserPolicy < ApplicationPolicy
   end
 
   def new?
-    user.role?('superadmin') || user.role?('admin') || ((user.role?('channel_partner') && record.role?("user")) || (user.role?('crm') && record.buyer?))
+    if user.role?('superadmin') || user.role?('admin')
+      return true
+    elsif user.role?('channel_partner')
+      return record.role?("user")
+    else
+      return record.buyer?
+    end
   end
 
   def create?
@@ -37,8 +43,10 @@ class UserPolicy < ApplicationPolicy
 
   def permitted_attributes params={}
     attributes = [:first_name, :last_name, :email, :phone, :lead_id, :password, :password_confirmation, :time_zone]
-    attributes += [:channel_partner_id] if user.role?('channel_partner')
-    attributes += [:channel_partner_id, :rera_id, :location, :allowed_bookings, :channel_partner_change_reason] if user.role?('admin') || user.role?("superadmin")
+    attributes += [:channel_partner_id] if user.role?('channel_partner') && record.new_record? && record.buyer?
+    attributes += [:channel_partner_id, :allowed_bookings] if user.role?('admin') || user.role?("superadmin") && record.buyer?
+    attributes += [:channel_partner_change_reason] if user.role?('admin') || user.role?("superadmin")
+    attributes += [:rera_id] if record.role?("channel_partner")
     attributes += [:role] if user.role?('superadmin') || user.role?("admin")
     attributes
   end
