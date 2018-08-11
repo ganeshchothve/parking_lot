@@ -98,7 +98,7 @@ class SearchesController < ApplicationController
       else
         redirect_to (@project_unit.user_id.present? ? admin_user_path(@project_unit.user_id) : dashboard_path) and return
       end
-    elsif @project_unit.user_id.present? && @project_unit.user.receipts.where(project_unit_id: @project_unit.id, status: "pending").present?
+    elsif @project_unit.user_id.present? && @project_unit.user.receipts.where(project_unit_id: @project_unit.id, status: "pending", payment_mode: {"$ne": "online"}).present?
       flash[:notice] = "We already have collected a payment for this unit from the same customer."
       redirect_to admin_user_path(@project_unit.user_id) and return
     end

@@ -20,6 +20,7 @@ module InventoryImport
         bathrooms = row[13].strip
         unit_facing_direction = row[14].strip
         erp_id = row[15].strip
+        agreement_price = row[15].strip.to_f.round(2)
 
         client_id = booking_portal_client.selldo_client_id
 
@@ -42,6 +43,7 @@ module InventoryImport
           end
           project_unit.base_rate = base_rate.to_f
           project_unit.floor_rise = floor_rise.to_f
+          project_unit.agreement_price = agreement_price
 
           if project_unit.save
             puts "Saved #{project_unit.name}"
@@ -80,6 +82,7 @@ module InventoryImport
         bathrooms = row[13].strip
         unit_facing_direction = row[14].strip
         erp_id = row[15].strip
+        agreement_price = row[15].strip.to_f.round(2)
 
         project = Project.where(name: project_name).first
         unless project.present?
@@ -136,6 +139,7 @@ module InventoryImport
         project_unit.type = "apartment"
         project_unit.selldo_id = erp_id
         project_unit.floor_rise = floor_rise.to_f
+        project_unit.agreement_price = agreement_price
 
         if project_unit.save
           puts "Saved #{project_unit.name}"

@@ -41,7 +41,7 @@ module CostCalculator
   end
 
   def booking_price_percent_of_agreement_price
-    agreement_price > 5000000 ? 0.099 : 0.01
+    agreement_price > 5000000 ? 0.099 : 0.1
   end
 
   def pending_balance(options={})
