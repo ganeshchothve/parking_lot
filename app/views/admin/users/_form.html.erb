@@ -7,7 +7,7 @@
             <% if current_user == @user %>
               Edit Profile
             <% else %>
-              <%= @user.new_record? ? "New" : "Edit" %> <%= "#{global_labels['user']}" %>
+              <%= @user.new_record? ? "New" : "Edit" %> <%= User.available_roles(current_client).find{|x| x[:id] == @user.role}[:text] %>
             <% end %>
           </h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -46,12 +46,12 @@
           <% if @user.role.blank? %>
           <div class="form-group">
             <%= f.label :role, class: 'label-required' %>
-            <%= f.select :role, User.available_roles.reject{|r| User.buyer_roles.include?(r[:id])}.collect{|r| [r[:text], r[:id]] }, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(@user).editable_field?("role") ? false : true) %>
+            <%= f.select :role, User.available_roles(current_client).reject{|r| User.buyer_roles(current_client).include?(r[:id])}.collect{|r| [r[:text], r[:id]] }, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(@user).editable_field?("role") ? false : true) %>
           </div>
-          <% elsif policy(@user).editable_field?("role") && User.buyer_roles.include?(@user.role) %>
+          <% elsif policy(@user).editable_field?("role") && User.buyer_roles(current_client).include?(@user.role) %>
           <div class="form-group">
             <%= f.label :role, class: 'label-required' %>
-            <%= f.select :role, User.available_roles.select{|r| User.buyer_roles.include?(r[:id])}.collect{|r| [r[:text], r[:id]] }, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(@user).editable_field?("role") ? false : true) %>
+            <%= f.select :role, User.available_roles(current_client).select{|r| User.buyer_roles(current_client).include?(r[:id])}.collect{|r| [r[:text], r[:id]] }, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(@user).editable_field?("role") ? false : true) %>
           </div>
           <% else %>
           <%= f.hidden_field :role %>
@@ -68,19 +68,38 @@
               <%= f.text_field :rera_id, class: 'form-control', required: @user.role?('channel_partner') ? true : false, disabled: (policy(@user).editable_field?("rera_id") ? false : true) %>
             </div>
           <% end %>
-          <% if policy(@user).editable_field?("channel_partner_id") %>
+          <% if policy(@user).editable_field?("manager_id") %>
             <div class="form-group">
-              <%= f.label :channel_partner_id, class: "control-label" %>
-              <%= f.select :channel_partner_id, f.object.channel_partner_id.present? ? [[f.object.channel_partner.name, f.object.channel_partner.id]] : [], {prompt: true}, class: 'selectize-remote', autofocus: true, disabled: (policy(@user).editable_field?("channel_partner_id") ? false : true), "data-url": admin_users_path, "data-params": {fltrs: {role: 'channel_partner'}}.to_json, 'data-ds': 'ds' %>
-            </div>
-            <div class="form-group">
-              <%= f.label :channel_partner_change_reason, class: "control-label" %>
-              <%= f.text_area :channel_partner_change_reason, class: 'form-control', disabled: (policy(@user).editable_field?("channel_partner_change_reason") ? false : true) %>
+              <%= f.label :manager_id, class: "control-label" %>
+              <%= f.select :manager_id, f.object.manager_id.present? ? [[f.object.manager.name, f.object.manager.id]] : [], {prompt: true}, class: 'selectize-remote', autofocus: true, disabled: (policy(@user).editable_field?("manager_id") ? false : true), "data-url": admin_users_path, "data-params": {fltrs: {role: @user.buyer? ? 'channel_partner' : 'cp' }}.to_json, 'data-ds': 'ds' %>
             </div>
           <% end %>
-          <div class="form-group">
-            <%= f.label :time_zone, class: "control-label" %>
-            <%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.all.sort, {}, class: 'selectize', disabled: (policy(@user).editable_field?("time_zone") ? false : true) %>
+          <% if policy(@user).editable_field?("manager_change_reason") %>
+            <div class="form-group">
+              <%= f.label :manager_change_reason, class: "control-label" %>
+              <%= f.text_area :manager_change_reason, class: 'form-control', disabled: (policy(@user).editable_field?("manager_change_reason") ? false : true) %>
+            </div>
+          <% end %>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <%= f.label :time_zone, class: "control-label" %>
+                <%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.all.sort, {}, class: 'selectize', disabled: (policy(@user).editable_field?("time_zone") ? false : true) %>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <%= f.label :is_active %><br/>
+                <div class="form-check form-check-inline">
+                  <%= f.radio_button :is_active, true, class: "form-check-input" %>
+                  <%= f.label :is_active, "Yes", class: "form-check-label" %>
+                </div>
+                <div class="form-check form-check-inline">
+                  <%= f.radio_button :is_active, false, class: "form-check-input" %>
+                  <%= f.label :is_active, "No", class: "form-check-label" %>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="modal-footer">

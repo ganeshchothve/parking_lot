@@ -18,7 +18,7 @@
             <%= user.name %><br/>
             <% if user.role?("channel_partner") %>
               <div class="small">
-                Registered: <%= User.where(channel_partner_id: user.id).count %> | Confirmed: <%= User.where(channel_partner_id: user.id).ne(confirmed_at: nil).count %> | Blocked: <%= ProjectUnit.in(user_id: User.where(channel_partner_id: user.id).distinct(:id)).in(status: ['blocked', 'booked_tentative', 'booked_confirmed']).count %><br/>
+                Registered: <%= User.where(manager_id: user.id).count %> | Confirmed: <%= User.where(manager_id: user.id).ne(confirmed_at: nil).count %> | Blocked: <%= ProjectUnit.in(user_id: User.where(manager_id: user.id).distinct(:id)).in(status: ['blocked', 'booked_tentative', 'booked_confirmed']).count %><br/>
               </div>
             <% end %>
           </td>
@@ -26,11 +26,11 @@
           <td>
             <%= user.email.present? ? user.email : "" %> <br/>
             <%= user.phone.present? ? user.phone : "" %><br/>
-            <% if user.role?("user") && user.channel_partner_id.present? && current_user.role != "channel_partner" %>
-              CP: <%= user.channel_partner.name %><br/>
+            <% if user.role?("user") && user.manager_id.present? && current_user.role != "channel_partner" %>
+              CP: <%= user.manager.name %><br/>
             <% end %>
           </td>
-          <td><%= User.available_roles.find{|x| x[:id] == user.role}[:text] %></td>
+          <td><%= User.available_roles(current_client).find{|x| x[:id] == user.role}[:text] %></td>
           <td><%= user.confirmed_at.present? ? "Confirmed" : "Not confirmed" %></td>
           <td class="text-right">
             <div class="dropdown">

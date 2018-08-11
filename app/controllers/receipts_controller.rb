@@ -163,7 +163,7 @@ class ReceiptsController < ApplicationController
       if params[:user_id].present?
         custom_scope = custom_scope.where(user_id: params[:user_id])
       else
-        custom_scope = custom_scope.in(user_id: User.where(referenced_channel_partner_ids: current_user.id).distinct(:id))
+        custom_scope = custom_scope.in(user_id: User.where(referenced_manager_ids: current_user.id).distinct(:id))
       end
     else
       custom_scope = custom_scope.where(user_id: current_user.id)

@@ -1,6 +1,6 @@
 class UserPolicy < ApplicationPolicy
   def index?
-    ['superadmin', 'channel_partner', 'admin', 'crm', 'sales', 'cp'].include?(user.role)
+    !user.buyer?
   end
 
   def resend_confirmation_instructions?
@@ -12,11 +12,11 @@ class UserPolicy < ApplicationPolicy
   end
 
   def export?
-    ['superadmin', 'admin'].include?(user.role)
+    index?
   end
 
   def edit?
-    record.id == user.id || ['superadmin', 'crm', 'admin'].include?(user.role)
+    record.id == user.id || new?
   end
 
   def update_password?
@@ -24,12 +24,16 @@ class UserPolicy < ApplicationPolicy
   end
 
   def new?
-    if user.role?('superadmin') || user.role?('admin')
-      return true
+    if user.role?('superadmin')
+      true
+    elsif user.role?('admin')
+      !record.role?("superadmin")
     elsif user.role?('channel_partner')
-      return record.role?("user")
-    else
-      return record.buyer?
+      record.role?("user")
+    elsif user.role?('cp') || user.role?('cp_admin')
+      record.buyer? || record.role?('channel_partner')
+    elsif !user.buyer?
+      record.buyer?
     end
   end
 
@@ -38,14 +42,15 @@ class UserPolicy < ApplicationPolicy
   end
 
   def update?
-    user.role?('superadmin') || user.role?('admin') || (user.role?('channel_partner') && record.channel_partner_id == user.id) || (record.id == user.id)
+    edit?
   end
 
   def permitted_attributes params={}
     attributes = [:first_name, :last_name, :email, :phone, :lead_id, :password, :password_confirmation, :time_zone]
-    attributes += [:channel_partner_id] if user.role?('channel_partner') && record.new_record? && record.buyer?
-    attributes += [:channel_partner_id, :allowed_bookings] if user.role?('admin') || user.role?("superadmin") && record.buyer?
-    attributes += [:channel_partner_change_reason] if user.role?('admin') || user.role?("superadmin")
+    attributes += [:is_active] if record.persisted? && record.id != user.id
+    attributes += [:manager_id] if user.role?('channel_partner') && record.new_record? && record.buyer?
+    attributes += [:manager_id, :allowed_bookings] if (user.role?('admin') || user.role?("superadmin")) && (record.buyer? || record.role?("channel_partner"))
+    attributes += [:manager_change_reason] if (user.role?('admin') || user.role?("superadmin")) && record.persisted?
     attributes += [:rera_id] if record.role?("channel_partner")
     attributes += [:role] if user.role?('superadmin') || user.role?("admin")
     attributes

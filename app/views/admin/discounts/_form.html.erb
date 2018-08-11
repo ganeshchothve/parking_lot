@@ -20,11 +20,11 @@
         </div>
         <div class="form-group">
           <%= f.label :user_role, class: 'control-label' %>
-          <%= f.select :user_role, User.available_roles.select{|x| User.buyer_roles.include?(x[:id])}.collect{|x| [x[:text], x[:id]] }, {prompt: true}, class: 'selectize', disabled: (policy(@discount).editable_field?("user_role") ? false : true) %>
+          <%= f.select :user_role, User.available_roles(current_client).select{|x| User.buyer_roles(current_client).include?(x[:id])}.collect{|x| [x[:text], x[:id]] }, {prompt: true}, class: 'selectize', disabled: (policy(@discount).editable_field?("user_role") ? false : true) %>
         </div>
         <div class="form-group">
           <%= f.label :user_id, class: 'control-label' %>
-          <%= f.select :user_id, f.object.user_id.present? ? [[f.object.user.name, f.object.user.id]] : [], {prompt: true}, class: 'selectize-remote', disabled: (policy(@discount).editable_field?("user_id") ? false : true), "data-url": admin_users_path, "data-params": {fltrs: {role: {"$in": User.buyer_roles }}}.to_json, 'data-ds': 'ds' %>
+          <%= f.select :user_id, f.object.user_id.present? ? [[f.object.user.name, f.object.user.id]] : [], {prompt: true}, class: 'selectize-remote', disabled: (policy(@discount).editable_field?("user_id") ? false : true), "data-url": admin_users_path, "data-params": {fltrs: {role: {"$in": User.buyer_roles(current_client) }}}.to_json, 'data-ds': 'ds' %>
         </div>
         <div class="form-group">
           <%= f.label :value, class: 'label-required' %>

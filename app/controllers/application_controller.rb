@@ -109,9 +109,9 @@ class ApplicationController < ActionController::Base
   end
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:phone, :email, :password, :password_confirmation, :channel_partner_id])
-    devise_parameter_sanitizer.permit(:sign_in, keys: [:login, :login_otp, :password, :password_confirmation, :channel_partner_id])
-    devise_parameter_sanitizer.permit(:otp, keys: [:login, :login_otp, :password, :password_confirmation, :channel_partner_id])
-    devise_parameter_sanitizer.permit(:account_update, keys: [:phone, :email, :password, :password_confirmation, :current_password, :channel_partner_id])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:phone, :email, :password, :password_confirmation, :manager_id])
+    devise_parameter_sanitizer.permit(:sign_in, keys: [:login, :login_otp, :password, :password_confirmation, :manager_id])
+    devise_parameter_sanitizer.permit(:otp, keys: [:login, :login_otp, :password, :password_confirmation, :manager_id])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:phone, :email, :password, :password_confirmation, :current_password, :manager_id])
   end
 end

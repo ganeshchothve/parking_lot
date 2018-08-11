@@ -39,6 +39,7 @@ class Client
   field :blocking_days, type: Integer, default: 10
   field :holding_minutes, type: Integer, default: 15
   field :payment_gateway, type: String, default: 'Razorpay'
+  field :enable_company_users, type: Boolean
 
   mount_uploader :logo, DocUploader
   mount_uploader :mobile_logo, DocUploader
@@ -101,6 +102,7 @@ c.sms_provider_username = "amuramarketing"
 c.sms_provider_password = "aJ_Z-1j4"
 c.enable_actual_inventory = false
 c.enable_channel_partners = false
+c.enable_company_users = true
 c.remote_logo_url = "https://image4.owler.com/logo/amura_owler_20160227_194208_large.png"
 c.save
 

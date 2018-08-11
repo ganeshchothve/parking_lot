@@ -20,9 +20,9 @@ module DashboardDataProvider
   def self.receipts_dashboard(user, matcher={})
     unless matcher.present? && matcher[:user_id].present?
       if user.role?('channel_partner')
-        matcher = {user_id: { "$in": User.where(referenced_channel_partner_ids: user.id).distinct(:id) }}
+        matcher = {user_id: { "$in": User.where(referenced_manager_ids: user.id).distinct(:id) }}
       elsif user.role?("cp")
-        matcher = {user_id: { "$in": User.where(channel_partner_id: {"$exists": true}).distinct(:id) }}
+        matcher = {user_id: { "$in": User.where(manager_id: {"$exists": true}).distinct(:id) }}
       end
     end
     data = Receipt.collection.aggregate([{
@@ -62,9 +62,9 @@ module DashboardDataProvider
   def self.users_dashboard(user)
     matcher = {}
     if user.role?('channel_partner')
-      matcher = {channel_partner_id: user.id}
+      matcher = {manager_id: user.id}
     elsif user.role?("cp")
-      matcher = {channel_partner_id: {"$exists": true}}
+      matcher = {manager_id: {"$exists": true}}
     end
 
     data = User.collection.aggregate([{

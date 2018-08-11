@@ -10,7 +10,7 @@ class SearchPolicy < ApplicationPolicy
   def new?
     valid = true
     valid = valid && (record.user_id == user.id) if user.buyer?
-    valid = valid && record.user.referenced_channel_partner_ids.include?(user.id) if user.role == "channel_partner"
+    valid = valid && record.user.referenced_manager_ids.include?(user.id) if user.role == "channel_partner"
     valid = valid && true if ['cp', 'sales', 'admin'].include?(user.role)
     valid
   end

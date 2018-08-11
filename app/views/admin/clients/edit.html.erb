@@ -183,6 +183,21 @@
                   </div>
                 </div>
               </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :enable_company_users %><br/>
+                    <div class="form-check form-check-inline">
+                      <%= f.radio_button :enable_company_users, true, class: "form-check-input" %>
+                      <%= f.label :enable_company_users, "Yes", class: "form-check-label" %>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <%= f.radio_button :enable_company_users, false, class: "form-check-input" %>
+                      <%= f.label :enable_company_users, "No", class: "form-check-label" %>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="tab-pane fade" id="nav-client-contacts" role="tabpanel">
               <div class="row">

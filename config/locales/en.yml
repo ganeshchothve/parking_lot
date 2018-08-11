@@ -82,6 +82,7 @@ en:
         blocking_amount_editable: 'Can End Users pay larger blocking amounts?'
         blocking_days: 'Unit to be blocked for (Days)'
         holding_minutes: 'Unit to be held for (Minutes)'
+        enable_company_users: 'Allow Company Users & Benefits'
       search:
         bedrooms: "Beds"
         agreement_price: "Agreement Value"
@@ -184,12 +185,13 @@ en:
         location: 'Location'
         lead_id: 'Sell.Do Lead ID'
         role: 'Role'
-        channel_partner_id: "Partner"
-        channel_partner_change_reason: "Reason for changing Partner"
+        manager_id: "Partner / Manager"
+        manager_change_reason: "Reason for changing Partner"
         kyc_ready: 'Is the Customer KYC Ready?'
         total_amount_paid: "Total Paid (you might some payments pending clearance)"
         total_balance_pending: "Total Balance Pending (you might some payments pending clearance)"
         total_unattached_balance: "Total Un-attached Balance (subject to clearance)"
+        is_active: 'Allow the user to login?'
       channel_partner:
         name: 'Name'
         company_name: "Company Name"

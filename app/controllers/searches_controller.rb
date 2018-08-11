@@ -198,7 +198,7 @@ class SearchesController < ApplicationController
         custom_scope = custom_scope.where(user_id: params[:user_id])
       end
     elsif current_user.role?('channel_partner')
-      user_ids = User.in(referenced_channel_partner_ids: current_user.id).in(role: User.buyer_roles).distinct(:id)
+      user_ids = User.in(referenced_manager_ids: current_user.id).in(role: User.buyer_roles(current_client)).distinct(:id)
       custom_scope = custom_scope.in(user_id: user_ids)
     else
       custom_scope = custom_scope.where(user_id: current_user.id)
