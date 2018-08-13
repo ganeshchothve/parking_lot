@@ -17,6 +17,8 @@ class ChannelPartner
   field :gstin_number, type: String
   field :aadhaar, type: String
 
+  field :manager_id, type: BSON::ObjectId
+
   default_scope -> {desc(:created_at)}
 
   enable_audit({

@@ -114,10 +114,10 @@
             </div>
           </div>
           <div class="row mt-3">
-            <% if @user.buyer? && !current_user.role?("channel_partner") %>
+            <% if @user.buyer? && !current_user.role?("channel_partner") || @user.role?('channel_partner') %>
             <div class="col-md-4">
               <div class="form-group">
-                <label>Channel Partner</label>
+                <label><%= labels[:manager_id] %></label>
                 <div>
                   <% manager_user = @user.manager_id.present? ? User.find(@user.manager_id) : nil %>
                   <%= manager_user.present? ? link_to(manager_user.name, admin_user_path(manager_user)) : '-' %>

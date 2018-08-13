@@ -137,7 +137,7 @@ class Admin::UsersController < AdminController
     elsif current_user.role?('sales')
       custom_scope = custom_scope.in(role: User.buyer_roles(current_client))
     elsif current_user.role?('cp_admin')
-      custom_scope = custom_scope.or([{role: 'user', manager_id: {"$exists": true}}, {role: "channel_partner"}])
+      custom_scope = custom_scope.or([{role: 'user', manager_id: {"$exists": true}}, {role: "cp"}, {role: "channel_partner"}])
     elsif current_user.role?('cp')
       custom_scope = custom_scope.or([{role: 'user', referenced_manager_ids: {"$in": User.where(role: 'channel_partner').where(manager_id: current_user.id).distinct(:id)}}, {role: "channel_partner", manager_id: current_user.id}])
     end

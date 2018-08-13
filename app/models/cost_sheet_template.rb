@@ -24,10 +24,10 @@ class CostSheetTemplate
 
   validates :content, presence: true
 
-  def parsed_content booking_detail
-    unless booking_detail.is_a?(BookingDetail)
+  def parsed_content project_unit
+    unless project_unit.is_a?(ProjectUnit)
       return nil
     end
-    return TemplateParser.parse(self.content, booking_detail)
+    return TemplateParser.parse(self.content, project_unit)
   end
 end

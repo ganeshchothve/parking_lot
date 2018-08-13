@@ -34,13 +34,15 @@ module InsertionStringMethods
       object ||= self
       value = (get_insertion_values(insertion_string, object) rescue []).to_sentence
       class_name = self.class.fields[insertion_string].try(:type)
-      case class_name.to_s
-      when "Time"
-        value = Time.parse(value).strftime("%I:%M %p")
-      when "Date"
-        value = Date.parse(value).strftime("%d/%m/%Y")
-      when "DateTime"
-        value = DateTime.parse(value).strftime("%d/%m/%Y %I:%M %p")
+      if value.present?
+        case class_name.to_s
+        when "Time"
+          value = Time.parse(value).strftime("%I:%M %p")
+        when "Date"
+          value = Date.parse(value).strftime("%d/%m/%Y")
+        when "DateTime"
+          value = DateTime.parse(value).strftime("%d/%m/%Y %I:%M %p")
+        end
       end
       value
     end

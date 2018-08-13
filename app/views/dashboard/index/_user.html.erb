@@ -39,7 +39,7 @@
             <% hold_unit = current_user.project_units.where(status: 'hold').first %>
             <% if hold_unit.present? %>
               <p>
-                We have kept a unit on hold for you; to proceed with booking it, click <a href="<%= checkout_user_search_path(current_user.get_search(project_unit.id)) %>" class="nav-link pl-0">
+                We have kept a unit on hold for you; to proceed with booking it, click <a href="<%= checkout_user_search_path(current_user.get_search(hold_unit.id)) %>">
                   here
                 </a>
               </p>
