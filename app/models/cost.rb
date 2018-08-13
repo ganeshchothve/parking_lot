@@ -25,8 +25,8 @@ class Cost
   def self.available_categories
     [
       {id: 'agreement', text: 'Part of Agreement Value'},
-      {id: 'outside_agreement', text: 'In addition to Agreement Value'},
-      {id: 'tax', text: 'Government Tax'}
+      {id: 'outside_agreement', text: 'In addition to Agreement Value'} #,
+      # {id: 'tax', text: 'Government Tax'}
     ]
   end
 

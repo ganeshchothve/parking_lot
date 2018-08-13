@@ -47,11 +47,11 @@ class PaymentScheduleTemplate
           <tr>
             <td><%= k %></td>
             <td><%= v %></td>
-            <td><%= current_value %></td>
-            <td><%= cgst %></td>
-            <td><%= sgst %></td>
-            <td><%= tds %></td>
-            <td><%= current_value + cgst + sgst - tds %></td>
+            <td><%= number_to_indian_currency(current_value) %></td>
+            <td><%= number_to_indian_currency(cgst) %></td>
+            <td><%= number_to_indian_currency(sgst) %></td>
+            <td><%= number_to_indian_currency(tds) %></td>
+            <td><%= number_to_indian_currency(current_value + cgst + sgst - tds) %></td>
           </tr>
         <% end %>
       </tbody>

@@ -1,6 +1,6 @@
 module CostCalculator
   def effective_rate
-    self.base_rate - self.applied_discount_rate
+    self.base_rate + self.floor_rise - self.applied_discount_rate
   end
 
   def discount(user)
@@ -89,6 +89,7 @@ module CostCalculator
   end
 
   def calculate_agreement_price
-    agreement_price = saleable * effective_rate
+    base_price = saleable * effective_rate
+    base_price + self.costs.where(category: 'agreement').collect{|x| x.value}.sum
   end
 end

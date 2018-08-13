@@ -40,6 +40,8 @@ class ProjectUnit
   field :type, type: String
   field :unit_facing_direction, type: String
   field :primary_user_kyc_id, type: BSON::ObjectId
+  field :payment_schedule_template_id, type: BSON::ObjectId
+  field :cost_sheet_template_id, type: BSON::ObjectId
 
   attr_accessor :processing_user_request, :processing_swap_request
 
@@ -64,7 +66,7 @@ class ProjectUnit
 
   accepts_nested_attributes_for :data, :costs, allow_destroy: true
 
-  validates :client_id, :agreement_price, :project_id, :project_tower_id, :unit_configuration_id, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :type, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, presence: true
+  validates :client_id, :agreement_price, :project_id, :project_tower_id, :unit_configuration_id, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :type, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, :payment_schedule_template_id, :cost_sheet_template_id, presence: true
   validates :status, :name, :erp_id, presence: true
   validates :status, inclusion: {in: Proc.new{ ProjectUnit.available_statuses.collect{|x| x[:id]} } }
   validates :available_for, inclusion: {in: Proc.new{ ProjectUnit.available_available_fors.collect{|x| x[:id]} } }
@@ -262,5 +264,13 @@ class ProjectUnit
 
   def primary_user_kyc
     primary_user_kyc_id.present? ? UserKyc.find(primary_user_kyc_id) : nil
+  end
+
+  def payment_schedule_template
+    PaymentScheduleTemplate.find self.payment_schedule_template_id
+  end
+
+  def cost_sheet_template
+    CostSheetTemplate.find self.cost_sheet_template_id
   end
 end
