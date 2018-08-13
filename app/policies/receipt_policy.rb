@@ -63,7 +63,7 @@ class ReceiptPolicy < ApplicationPolicy
     if !user.buyer? && (record.new_record? || record.status == 'pending')
       attributes += [:issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier]
     end
-    if ['admin', 'crm', 'superamdin'].include?(user.role)
+    if ['admin', 'crm', 'superadmin'].include?(user.role)
       attributes += [:status]
       if record.persisted? && record.status == 'clearance_pending'
         attributes += [:processed_on, :comments, :tracking_id]

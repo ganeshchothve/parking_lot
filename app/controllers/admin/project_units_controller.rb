@@ -33,7 +33,7 @@ class Admin::ProjectUnitsController < AdminController
         format.html { redirect_to admin_project_units_path, notice: 'Unit successfully updated.' }
       else
         format.html { render :edit }
-        format.json { render json: @project_unit.errors, status: :unprocessable_entity }
+        format.json { render json: {errors: @project_unit.errors.full_messages}, status: :unprocessable_entity }
       end
     end
   end
