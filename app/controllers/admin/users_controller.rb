@@ -129,18 +129,7 @@ class Admin::UsersController < AdminController
   end
 
   def apply_policy_scope
-    custom_scope = User.all.criteria
-    if current_user.role?('channel_partner')
-      custom_scope = custom_scope.in(referenced_manager_ids: current_user.id).in(role: User.buyer_roles(current_client))
-    elsif current_user.role?('crm')
-      custom_scope = custom_scope.in(role: User.buyer_roles(current_client))
-    elsif current_user.role?('sales')
-      custom_scope = custom_scope.in(role: User.buyer_roles(current_client))
-    elsif current_user.role?('cp_admin')
-      custom_scope = custom_scope.or([{role: 'user', manager_id: {"$exists": true}}, {role: "cp"}, {role: "channel_partner"}])
-    elsif current_user.role?('cp')
-      custom_scope = custom_scope.or([{role: 'user', referenced_manager_ids: {"$in": User.where(role: 'channel_partner').where(manager_id: current_user.id).distinct(:id)}}, {role: "channel_partner", manager_id: current_user.id}])
-    end
+    custom_scope = User.where(User.user_based_scope(current_user, params))
     User.with_scope(policy_scope(custom_scope)) do
       yield
     end

@@ -154,24 +154,7 @@ class ReceiptsController < ApplicationController
   end
 
   def apply_policy_scope
-    custom_scope = Receipt.all.criteria
-    if current_user.role?('admin') || current_user.role?('superadmin') || current_user.role?('crm') || current_user.role?('sales') || current_user.role?('cp')
-      if params[:user_id].present?
-        custom_scope = custom_scope.where(user_id: params[:user_id])
-      end
-    elsif current_user.role?('channel_partner')
-      if params[:user_id].present?
-        custom_scope = custom_scope.where(user_id: params[:user_id])
-      else
-        custom_scope = custom_scope.in(user_id: User.where(referenced_manager_ids: current_user.id).distinct(:id))
-      end
-    else
-      custom_scope = custom_scope.where(user_id: current_user.id)
-    end
-    if params[:project_unit_id].present?
-      custom_scope = custom_scope.where(project_unit_id: params[:project_unit_id])
-    end
-
+    custom_scope = Receipt.where(Receipt.user_based_scope(current_user, params))
     Receipt.with_scope(policy_scope(custom_scope)) do
       yield
     end

@@ -252,7 +252,7 @@ class User
     str = "#{first_name} #{last_name}"
     if self.role?("channel_partner")
       cp = ChannelPartner.where(associated_user_id: self.id).first
-      if cp.present?
+      if cp.present? && cp.company_name.present?
         str += " (#{cp.company_name})"
       end
     end
@@ -307,6 +307,22 @@ class User
       search = Search.create(user: self)
     end
     search
+  end
+
+  def self.user_based_scope(user, params={})
+    custom_scope = {}
+    if user.role?('channel_partner')
+      custom_scope = {referenced_manager_ids: {"$in": user.id}, role: User.buyer_roles(current_client)}
+    elsif user.role?('crm')
+      custom_scope = {role: User.buyer_roles(current_client)}
+    elsif user.role?('sales')
+      custom_scope = {role: User.buyer_roles(current_client)}
+    elsif user.role?('cp_admin')
+      custom_scope = {"$or": [{role: 'user', manager_id: {"$exists": true}}, {role: "cp"}, {role: "channel_partner"}]}
+    elsif user.role?('cp')
+      custom_scope = {"$or": [{role: 'user', referenced_manager_ids: {"$in": User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)}}, {role: "channel_partner", manager_id: user.id}]}
+    end
+    custom_scope
   end
 
   private
