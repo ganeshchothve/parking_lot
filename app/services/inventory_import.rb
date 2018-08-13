@@ -7,8 +7,8 @@ module InventoryImport
         rera_registration_no = row[0].strip
         project_name = row[1].strip
         project_tower_name = row[2].strip
-        unit_name = row[3].strip
-        unit_configuration_name = row[4].strip
+        unit_configuration_name = row[3].strip
+        unit_name = row[4].strip
         floor = row[5].strip
         floor_order = row[6].strip
         carpet = row[7].strip.to_f.round(2)
@@ -19,8 +19,8 @@ module InventoryImport
         bedrooms = row[12].strip
         bathrooms = row[13].strip
         unit_facing_direction = row[14].strip
-        erp_id = row[15].strip
         agreement_price = row[15].strip.to_f.round(2)
+        erp_id = row[16].strip
 
         client_id = booking_portal_client.selldo_client_id
 
@@ -69,8 +69,8 @@ module InventoryImport
         rera_registration_no = row[0].strip
         project_name = row[1].strip
         project_tower_name = row[2].strip
-        unit_name = row[3].strip
-        unit_configuration_name = row[4].strip
+        unit_configuration_name = row[3].strip
+        unit_name = row[4].strip
         floor = row[5].strip
         floor_order = row[6].strip
         carpet = row[7].strip.to_f.round(2)
@@ -81,8 +81,8 @@ module InventoryImport
         bedrooms = row[12].strip
         bathrooms = row[13].strip
         unit_facing_direction = row[14].strip
-        erp_id = row[15].strip
         agreement_price = row[15].strip.to_f.round(2)
+        erp_id = row[16].strip
 
         project = Project.where(name: project_name).first
         unless project.present?

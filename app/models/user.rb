@@ -98,7 +98,7 @@ class User
   validates :email, uniqueness: true, if: Proc.new{|user| user.phone.blank? }
   validates :rera_id, presence: true, if: Proc.new{ |user| user.role?('channel_partner') }
   validates :rera_id, uniqueness: true, allow_blank: true
-  validates :role, inclusion: {in: Proc.new{ User.available_roles.collect{|x| x[:id]} } }
+  validates :role, inclusion: {in: Proc.new{ |user| User.available_roles(user.booking_portal_client).collect{|x| x[:id]} } }
   validates :lead_id, uniqueness: true, presence: true, if: Proc.new{ |user| user.buyer? }
   validate :manager_change_reason_present?
 
@@ -149,12 +149,12 @@ class User
       {id: 'sales', text: 'Sales User'},
       {id: 'channel_partner', text: 'Channel Partner'},
       {id: 'user', text: 'Customer'},
-      {id: 'employee_user', text: 'Employee'}
+      {id: 'gre', text: 'GRE or Pre-sales'}
     ]
     if current_client.present? && current_client.enable_company_users?
       roles += [
         {id: 'management_user', text: 'Management User'},
-        {id: 'gre', text: 'GRE or Pre-sales'}
+        {id: 'employee_user', text: 'Employee'}
       ]
     end
     roles
@@ -317,7 +317,7 @@ class User
     elsif user.role?('crm')
       custom_scope = {role: {"$in": User.buyer_roles(user.booking_portal_client)}}
     elsif user.role?('sales_admin')
-      custom_scope = {role: {"$in": User.buyer_roles(user.booking_portal_client)}}
+      custom_scope = {"$or": [{role: {"$in": User.buyer_roles(user.booking_portal_client)}}, {role: "sales"}]}
     elsif user.role?('sales')
       custom_scope = {role: {"$in": User.buyer_roles(user.booking_portal_client)}}
     elsif user.role?('cp_admin')

@@ -110,13 +110,13 @@
                   <%
                   statuses = Receipt.available_statuses.collect{|x| [x[:text], x[:id]]}
                   if @receipt.new_record?
+                    statuses = statuses.select{|x| x[1] == "pending"}
+                  else
                     if @receipt.status == 'pending'
                       statuses = statuses.reject{|x| x[1] == 'success'}
                     elsif @receipt.status == 'clearance_pending'
                       statuses = statuses.reject{|x| x[1] == 'pending'}
                     end
-                  else
-                    statuses = statuses.select{|x| x[:id] == "pending"}
                   end
                   %>
                   <%= f.select :status, statuses, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(@receipt).editable_field?("status") ? false : true) %>
