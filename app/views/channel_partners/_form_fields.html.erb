@@ -64,7 +64,7 @@
   <div class="col-md-6">
     <div class="form-group">
       <%= form.label :manager_id %>
-      <%= f.select :manager_id, f.object.user_id.present? ? [[f.object.user.name, f.object.user.id]] : [], {prompt: true}, class: 'selectize-remote', disabled: (policy(@channel_partner).editable_field?("manager_id") ? false : true), "data-url": admin_users_path, "data-params": {fltrs: {role: 'cp'}}.to_json, 'data-ds': 'ds' %>
+      <%= form.select :manager_id, form.object.user_id.present? ? [[form.object.user.name, form.object.user.id]] : [], {prompt: true}, class: 'selectize-remote', disabled: (policy(@channel_partner).editable_field?("manager_id") ? false : true), "data-url": admin_users_path, "data-params": {fltrs: {role: 'cp'}}.to_json, 'data-ds': 'ds' %>
     </div>
   </div>
 </div>
