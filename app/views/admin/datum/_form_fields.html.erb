@@ -9,8 +9,8 @@
       </div>
       <div class="col-md-6">
         <div class="form-group">
-          <%= f.label :order, class: 'label-required' %>
-          <%= f.select :order, (1..30).collect{|x| [x, x]}, {prompt: true}, class: 'selectize', required: 'required' %>
+          <%= f.label :key, class: 'label-required' %>
+          <%= f.text_field :key, class: "form-control", required: 'required' %>
         </div>
       </div>
     </div>
@@ -25,6 +25,14 @@
         <div class="form-group">
           <%= f.label :formula, class: 'label-required' %>
           <%= f.text_field :formula, class: "form-control" %>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <%= f.label :order, class: 'label-required' %>
+          <%= f.select :order, (1..30).collect{|x| [x, x]}, {prompt: true}, class: 'selectize', required: 'required' %>
         </div>
       </div>
     </div>

@@ -30,8 +30,10 @@ class UserPolicy < ApplicationPolicy
       !record.role?("superadmin")
     elsif user.role?('channel_partner')
       record.role?("user")
-    elsif user.role?('cp') || user.role?('cp_admin')
+    elsif user.role?('cp_admin')
       record.buyer? || record.role?('channel_partner') || record.role?('cp')
+    elsif user.role?('cp')
+      record.buyer? || record.role?('channel_partner')
     elsif !user.buyer?
       record.buyer?
     end
@@ -48,12 +50,11 @@ class UserPolicy < ApplicationPolicy
   def permitted_attributes params={}
     attributes = [:first_name, :last_name, :email, :phone, :lead_id, :password, :password_confirmation, :time_zone]
     attributes += [:is_active] if record.persisted? && record.id != user.id
-    attributes += [:manager_id] if user.role?('channel_partner') && record.new_record? && record.buyer?
     if (user.role?('admin') || user.role?("superadmin") || user.role?('cp_admin')) && record.role?("channel_partner")
       attributes += [:manager_id]
       attributes += [:manager_change_reason] if record.persisted?
     end
-    if (user.role?('admin') || user.role?("superadmin")) && record.buyer?
+    if (user.role?('admin') || user.role?("superadmin") || user.role?('cp_admin')) && record.buyer?
       attributes += [:manager_id, :allowed_bookings]
       attributes += [:manager_change_reason] if record.persisted?
     end

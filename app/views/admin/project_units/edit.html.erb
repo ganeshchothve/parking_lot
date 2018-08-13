@@ -40,7 +40,7 @@
             <div class="tab-pane fade" id="nav-project-unit-data" role="tabpanel">
               <div id="data_container">
                 <%= f.fields_for :data do |data_form| %>
-                <%= render "admin/project_units/data_attribute", f: data_form %>
+                <%= render "admin/datum/form_fields", f: data_form %>
                 <% end %>
               </div>
               <%= f.link_to_add "Add", :data, :data => { :target => "#data_container" } %>
@@ -50,7 +50,7 @@
               <div class="tab-pane fade" id="nav-project-unit-costs" role="tabpanel">
                 <div id="costs_container">
                   <%= f.fields_for :costs do |costs_form| %>
-                  <%= render "admin/project_units/costs_attribute", f: costs_form %>
+                  <%= render "admin/cost/form_fields", f: costs_form %>
                   <% end %>
                 </div>
                 <%= f.link_to_add "Add", :costs, :data => { :target => "#costs_container" } %>

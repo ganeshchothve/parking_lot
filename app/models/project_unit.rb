@@ -87,13 +87,13 @@ class ProjectUnit
 
   def calculated_costs
     out = {}
-    costs.each{|c| out[c.name] = c.value }
+    costs.each{|c| out[c.key] = c.value }
     out
   end
 
   def calculated_data
     out = {}
-    data.each{|c| out[c.name] = c.value }
+    data.each{|c| out[c.key] = c.value }
     out
   end
 

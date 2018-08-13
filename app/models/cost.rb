@@ -6,6 +6,7 @@ class Cost
   include InsertionStringMethods
 
   field :name, type: String
+  field :key, type: String
   field :formula, type: String
   field :absolute_value, type: Float
   field :category, type: String
@@ -13,7 +14,8 @@ class Cost
 
   embedded_in :costable, polymorphic: true
 
-  validates :name, :category, presence: true
+  validates :name, :key, :category, presence: true
+  validates :key, uniqueness: {scope: :costable_id}, format: {with: /\A[a-z_]+\z/, message: "Only small letters & underscore allowed"}
   validates :formula, presence: true, if: Proc.new{|cost| cost.absolute_value.blank? }
   validates :absolute_value, presence: true, numericality: { greater_than: 0 }, if: Proc.new{|cost| cost.formula.blank? }
   validates :category, inclusion: {in: Proc.new{ Cost.available_categories.collect{|x| x[:id]} } }
@@ -29,7 +31,8 @@ class Cost
   end
 
   def value
-    absolute_value.present? && absolute_value > 0 ? absolute_value : calculate
+    val = (absolute_value.present? && absolute_value > 0 ? absolute_value : calculate)
+    number_to_indian_currency(val)
   end
 
   private
