@@ -315,9 +315,11 @@ class User
     if user.role?('channel_partner')
       custom_scope = {referenced_manager_ids: {"$in": user.id}, role: User.buyer_roles(user.booking_portal_client)}
     elsif user.role?('crm')
-      custom_scope = {role: User.buyer_roles(user.booking_portal_client)}
+      custom_scope = {role: {"$in": User.buyer_roles(user.booking_portal_client)}}
+    elsif user.role?('sales_admin')
+      custom_scope = {role: {"$in": User.buyer_roles(user.booking_portal_client)}}
     elsif user.role?('sales')
-      custom_scope = {role: User.buyer_roles(user.booking_portal_client)}
+      custom_scope = {role: {"$in": User.buyer_roles(user.booking_portal_client)}}
     elsif user.role?('cp_admin')
       custom_scope = {"$or": [{role: 'user', manager_id: {"$exists": true}}, {role: "cp"}, {role: "channel_partner"}]}
     elsif user.role?('cp')

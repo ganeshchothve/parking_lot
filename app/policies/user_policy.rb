@@ -54,7 +54,7 @@ class UserPolicy < ApplicationPolicy
       attributes += [:manager_id]
       attributes += [:manager_change_reason] if record.persisted?
     end
-    if (user.role?('admin') || user.role?("superadmin") || user.role?('cp_admin')) && record.buyer?
+    if (user.role?('admin') || user.role?("superadmin") || user.role?('cp_admin') || user.role?('sales_admin')) && record.buyer?
       attributes += [:manager_id, :allowed_bookings]
       attributes += [:manager_change_reason] if record.persisted?
     end
