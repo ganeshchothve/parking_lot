@@ -145,6 +145,7 @@ class User
       {id: 'crm', text: 'CRM User'},
       {id: 'cp_admin', text: 'Channel Partner Head'},
       {id: 'cp', text: 'Channel Partner Manager'},
+      {id: 'sales_admin', text: 'Sales Head'},
       {id: 'sales', text: 'Sales User'},
       {id: 'channel_partner', text: 'Channel Partner'},
       {id: 'user', text: 'Customer'},
@@ -312,11 +313,11 @@ class User
   def self.user_based_scope(user, params={})
     custom_scope = {}
     if user.role?('channel_partner')
-      custom_scope = {referenced_manager_ids: {"$in": user.id}, role: User.buyer_roles(current_client)}
+      custom_scope = {referenced_manager_ids: {"$in": user.id}, role: User.buyer_roles(user.booking_portal_client)}
     elsif user.role?('crm')
-      custom_scope = {role: User.buyer_roles(current_client)}
+      custom_scope = {role: User.buyer_roles(user.booking_portal_client)}
     elsif user.role?('sales')
-      custom_scope = {role: User.buyer_roles(current_client)}
+      custom_scope = {role: User.buyer_roles(user.booking_portal_client)}
     elsif user.role?('cp_admin')
       custom_scope = {"$or": [{role: 'user', manager_id: {"$exists": true}}, {role: "cp"}, {role: "channel_partner"}]}
     elsif user.role?('cp')
