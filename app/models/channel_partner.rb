@@ -45,6 +45,10 @@ class ChannelPartner
 
   accepts_nested_attributes_for :bank_detail, :address
 
+  def manager
+    manager_id.present? ? User.find(manager_id) : nil
+  end
+
   def self.available_statuses
     [
       {id: 'active', text: 'Active'},
