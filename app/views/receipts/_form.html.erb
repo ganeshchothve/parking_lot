@@ -109,10 +109,14 @@
                   <%= f.label :status, class: 'control-label' %>
                   <%
                   statuses = Receipt.available_statuses.collect{|x| [x[:text], x[:id]]}
-                  if @receipt.status == 'pending'
-                    statuses = statuses.reject{|x| x[1] == 'success'}
-                  elsif @receipt.status == 'clearance_pending'
-                    statuses = statuses.reject{|x| x[1] == 'pending'}
+                  if @receipt.new_record?
+                    if @receipt.status == 'pending'
+                      statuses = statuses.reject{|x| x[1] == 'success'}
+                    elsif @receipt.status == 'clearance_pending'
+                      statuses = statuses.reject{|x| x[1] == 'pending'}
+                    end
+                  else
+                    statuses = statuses.select{|x| x[:id] == "pending"}
                   end
                   %>
                   <%= f.select :status, statuses, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(@receipt).editable_field?("status") ? false : true) %>
@@ -135,7 +139,7 @@
                 <% end %>
               </div>
             </div>
-            <% if (policy(@receipt).editable_field?("tracking_id") ? false : true) && (policy(@receipt).editable_field?("processed_on") ? false : true) %>
+            <% if policy(@receipt).editable_field?("tracking_id") && policy(@receipt).editable_field?("processed_on") %>
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
@@ -151,6 +155,8 @@
                   </div>
                 </div>
               </div>
+            <% end %>
+            <% if policy(@receipt).editable_field?("comments") %>
               <div class="form-group">
                 <%= f.label :comments, class: 'control-label' %>
                 <%= f.text_area :comments, class: 'form-control' %>

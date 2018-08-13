@@ -27,6 +27,10 @@ module InsertionStringMethods
     end
   end
   module InstanceMethods
+    def get_binding
+      binding
+    end
+
     # format for insertion strings should be Klass.(AssociationKlass|method)+
     # example1 contacts.address.address => self.contacts.addresses.collect(&:address).to_sentence
     #

@@ -38,10 +38,9 @@ class Cost
   private
   def calculate
     begin
-      f = TemplateParser.parse(self.formula, self)
-      eval(f).to_f
+      return ERB.new("<%= #{self.formula} %>").result( binding )
     rescue
-
+      return ""
     end
   end
 end
