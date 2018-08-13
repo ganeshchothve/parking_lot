@@ -152,6 +152,11 @@ en:
         customer_company_name: 'Company Name'
         configurations: 'Preferences'
       project_unit:
+        costs: "Costs"
+        data: "Data"
+        bedrooms: "Beds"
+        bathrooms: "Baths"
+        status: "Status"
         user_id: "Customer"
         receipt_ids: "Payments (associated with this Apartment)"
         user_request_ids: "User Requests (associated with this Apartment)"
@@ -163,6 +168,17 @@ en:
         blocked_on: 'Blocked On'
         unit_facing_direction: 'Facing'
         agreement_price: 'Agreement Value'
+      cost:
+        name: "Name"
+        formula: "Formula"
+        absolute_value: "Absolute Value"
+        category: "Category"
+        order: "Order"
+      data_attribute:
+        name: "Name"
+        formula: "Formula"
+        absolute_value: "Absolute Value"
+        order: "Order"
       discount:
         name: 'Name'
         project_id: 'Project'

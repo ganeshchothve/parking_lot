@@ -50,6 +50,7 @@ class Client
   has_many :project_units
   has_many :projects
   has_one :address, as: :addressable
+  has_one :cost_sheet_template
   has_many :sms_templates, class_name: 'SmsTemplate'
   has_many :smses, class_name: 'Sms'
   has_many :assets, as: :assetable

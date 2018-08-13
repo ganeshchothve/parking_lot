@@ -1,28 +1,30 @@
 <div class="table-responsive-lg">
   <table class='striped-table table' width="100%" cellpadding="0" cellspacing="0">
     <thead class="th-default">
+      <% labels = t('mongoid.attributes.project_unit').with_indifferent_access %>
       <tr>
-        <!-- <th>Tower</th> -->
-        <th>Tower Name</th>
-        <th>Bedrooms</th>
-        <th>Status</th>
-        <th>Agreement</th>
-        <th>Paid Amt.</th>
-        <th>Booking Amt. Pending</th>
-        <!-- <th>User</th> -->
+        <th><%= labels[:name] %></th>
+        <th><%= labels[:bedrooms] %> / <%= labels[:bathrooms] %></th>
+        <th><%= labels[:status] %></th>
+        <th><%= labels[:agreement_price] %></th>
         <th class="text-right">Actions</th>
       </tr>
     </thead>
     <tbody>
       <% project_units.each do |project_unit| %>
       <tr>
-        <!-- <td><%= project_unit.project_tower_name %></td> -->
-        <td><%= project_unit.name %></td>
-        <td><%= project_unit.bedrooms %></td>
+        <td>
+          <%= project_unit.name %>
+          <div class="small">Project: <%= project_unit.project_name %></div>
+          <div class="small">Tower: <%= project_unit.project_tower_name %></div>
+        </td>
+        <td><%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></td>
         <td><%= ProjectUnit.available_statuses.find{|x| x[:id] == project_unit.status}[:text] rescue "-" %></td>
-        <td><%= number_to_indian_currency(project_unit.agreement_price)  %></td>
-        <td><%= number_to_indian_currency(project_unit.total_amount_paid)  %></td>
-        <td><%= number_to_indian_currency(project_unit.pending_balance.to_i) %></td>
+        <td>
+          <%= number_to_indian_currency(project_unit.agreement_price)  %>
+          <div class="small">Paid Amt.: <%= number_to_indian_currency(project_unit.total_amount_paid)  %></div>
+          <div class="small">Booking Amt. Pending: <%= number_to_indian_currency(project_unit.pending_balance.to_i) %></div>
+        </td>
         <td class="text-right">
           <div class="dropdown">
             <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
@@ -31,7 +33,7 @@
                 <%= link_to "Add #{global_labels['receipt']}", new_admin_user_receipt_path(@user, project_unit_id: project_unit), class: 'dropdown-item modal-remote-form-link' %>
               <% end %>
               <% if ProjectUnitPolicy.new(current_user, project_unit).edit? %>
-                <%= link_to "Edit #{global_labels[:project_unit]}", edit_admin_project_unit_path(project_unit), class: 'dropdown-item modal-remote-form-link' %>
+                <%= link_to "Edit", edit_admin_project_unit_path(project_unit), class: 'dropdown-item modal-remote-form-link' %>
               <% end %>
               <% if ['blocked', 'booked_tentative', 'booked_confirmed'].include?(project_unit.status) %>
                 <% if ReceiptPolicy.new(current_user, Receipt).index? %>

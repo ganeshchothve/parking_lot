@@ -76,7 +76,7 @@ end
           <div class="col-12">
             <div class="form-group">
               <%= f.label :configurations %>
-              <%= f.select :configurations, UserKyc.available_configurations.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', multiple: true, required: 'required', disabled: (policy(@user_kyc).editable_field?("configurations") ? false : true) %>
+              <%= f.select :configurations, UserKyc.available_configurations.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', multiple: true, disabled: (policy(@user_kyc).editable_field?("configurations") ? false : true) %>
             </div>
           </div>
         </div>

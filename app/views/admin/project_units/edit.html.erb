@@ -1,4 +1,6 @@
-<%= form_for([:admin, @project_unit], remote: true, html: {"data-resource-type": global_labels['project_unit'], "data-type": "json", class: 'modal-remote-form validate-form', id: 'project_unit_form'}) do |f| %>
+<% render_nav = policy(@project_unit).editable_field?("data_attributes") || policy(@project_unit).editable_field?("cost_attributes") %>
+
+<%= nested_form_for([:admin, @project_unit], remote: true, html: {"data-resource-type": global_labels['project_unit'], "data-type": "json", class: 'modal-remote-form validate-form', id: 'project_unit_form'}) do |f| %>
   <div class="form-group">
     <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
       <div class="modal-dialog modal-lg" role="document">
@@ -16,29 +18,47 @@
             </button>
           </div>
           <div class="modal-body">
-            <div class="form-group">
-              <%= f.label :primary_user_kyc_id %>
-              <%= f.select :primary_user_kyc_id, @project_unit.user.user_kycs.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
-            </div>
-            <div class="form-group">
-              <%= f.label :user_kyc_ids %>
-              <%= f.select :user_kyc_ids, @project_unit.user.user_kycs.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', multiple: true %>
-            </div>
-            <div class="form-group">
-              <% if policy(@project_unit).editable_field?("auto_release_on") && @project_unit.auto_release_on.present? %>
-              <div class="form-group">
-                <%= f.label :auto_release_on, class: 'label-required title' %>
-                <%= f.text_field :auto_release_on, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.auto_release_on.present? ? f.object.auto_release_on.strftime("%d/%m/%Y") : '', "data-min-date": Date.tomorrow.strftime("%d/%m/%Y"), disabled: (policy(@project_unit).editable_field?("auto_release_on") ? false : true), value: f.object.auto_release_on.present? ? f.object.auto_release_on.strftime("%d/%m/%Y") : "" %>
+            <% if render_nav %>
+            <nav>
+              <div class="nav nav-tabs" role="tablist">
+                <a class="nav-item nav-link active" data-toggle="tab" href="#nav-project-unit-basic" role="tab">Basic Details</a>
+                <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-unit-data" role="tab">Data</a>
+                <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-unit-costs" role="tab">Costs</a>
               </div>
-              <% end %>
-              <% statuses = ["available", "not_available", "employee", "management"] %>
-              <% if policy(@project_unit).editable_field?("status") && statuses.include?(@project_unit.status) %>
-                <div class="form-group">
-                  <%= f.label :status, class: 'title' %>
-                  <%= f.select :status, ProjectUnit.available_statuses.select{|x| statuses.include?(x[:id])}.collect{|x| [x[:text], x[:id]]}, {prompt: "Select", class: "selectize", disabled: (policy(@project_unit).editable_field?("status") ? false : true)} %>
-                </div>
-              <% end %>
+            </nav>
+            <% end %>
+            <% if render_nav %>
+            <div class="mt-3"></div>
+            <div class="tab-content">
+              <div class="tab-pane fade show active" id="nav-project-unit-basic" role="tabpanel">
+            <% end %>
+                <%= render "admin/project_units/form_fields", f: f %>
+            <% if render_nav %>
+              </div>
+            <% end %>
+            <% if policy(@project_unit).editable_field?("data_attributes") %>
+            <div class="tab-pane fade" id="nav-project-unit-data" role="tabpanel">
+              <div id="data_container">
+                <%= f.fields_for :data do |data_form| %>
+                <%= render "admin/project_units/data_attribute", f: data_form %>
+                <% end %>
+              </div>
+              <%= f.link_to_add "Add", :data, :data => { :target => "#data_container" } %>
             </div>
+            <% end %>
+            <% if policy(@project_unit).editable_field?("costs_attributes") %>
+              <div class="tab-pane fade" id="nav-project-unit-costs" role="tabpanel">
+                <div id="costs_container">
+                  <%= f.fields_for :costs do |costs_form| %>
+                  <%= render "admin/project_units/costs_attribute", f: costs_form %>
+                  <% end %>
+                </div>
+                <%= f.link_to_add "Add", :costs, :data => { :target => "#costs_container" } %>
+              </div>
+            <% end %>
+            <% if render_nav %>
+              </div>
+            <% end %>
           </div>
           <div class="modal-footer">
             <%= f.submit "Submit", class: 'btn btn-primary' %>

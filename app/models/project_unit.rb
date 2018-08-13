@@ -29,8 +29,6 @@ class ProjectUnit
   field :selldo_id, type: String
   field :erp_id, type: String
 
-  field :images, type: Array
-
   field :floor_rise, type: Float
   field :floor, type: Integer
   field :floor_order, type: Integer
@@ -38,7 +36,6 @@ class ProjectUnit
   field :bathrooms, type: Float
   field :carpet, type: Float
   field :saleable, type: Float
-  field :uds, type: Float
   field :sub_type, type: String
   field :type, type: String
   field :unit_facing_direction, type: String
@@ -63,6 +60,9 @@ class ProjectUnit
   has_and_belongs_to_many :user_kycs
   has_many :smses, as: :triggered_by, class_name: "Sms"
   embeds_many :costs, as: :costable
+  embeds_many :data, as: :data_attributable
+
+  accepts_nested_attributes_for :data, :costs, allow_destroy: true
 
   validates :client_id, :agreement_price, :project_id, :project_tower_id, :unit_configuration_id, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :type, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, presence: true
   validates :status, :name, :erp_id, presence: true
@@ -83,6 +83,18 @@ class ProjectUnit
     self.base_rate = UpgradePricing.get_upgraded_base_rate(self.project_tower_name.split("-")[0].strip)
 
     SelldoLeadUpdater.perform_async(self.user_id.to_s, "hold_payment_dropoff")
+  end
+
+  def calculated_costs
+    out = {}
+    costs.each{|c| out[c.name] = c.value }
+    out
+  end
+
+  def calculated_data
+    out = {}
+    data.each{|c| out[c.name] = c.value }
+    out
   end
 
   def self.user_based_available_statuses(user)

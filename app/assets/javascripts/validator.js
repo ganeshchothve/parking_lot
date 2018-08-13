@@ -8,7 +8,6 @@ $.validator.setDefaults({
   errorElement: 'span',
   errorClass: 'help-block',
   errorPlacement: function(error, element) {
-    //debugger;
     if(element.parent('.input-group').length > 0) {
       error.insertAfter(element.parent());
     } else if(element.parent().hasClass("selectize-input")) {
@@ -65,7 +64,7 @@ $(document).ready(function(){
         $div.find('input,select,textarea').focus();
         $('html, body').animate({
             scrollTop: $div.offset().top - 100
-        }, 1000);  
+        }, 1000);
       }
       e.preventDefault();
     }

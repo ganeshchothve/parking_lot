@@ -1,0 +1,44 @@
+<div class="row">
+  <div class="col-md-11">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <%= f.label :name, class: 'label-required' %>
+          <%= f.text_field :name, class: "form-control", required: 'required' %>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <%= f.label :order, class: 'label-required' %>
+          <%= f.select :order, (1..30).collect{|x| [x, x]}, {prompt: true}, class: 'selectize', required: 'required' %>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <%= f.label :absolute_value, class: 'label-required' %>
+          <%= f.number_field :absolute_value, class: "form-control", step: 0.01 %>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <%= f.label :formula, class: 'label-required' %>
+          <%= f.text_field :formula, class: "form-control" %>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <%= f.label :category, class: 'label-required' %>
+          <%= f.select :category, Cost.available_categories.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-1">
+    <%= f.link_to_remove icon("far", "times-circle") %>
+  </div>
+</div>
+<hr/>
