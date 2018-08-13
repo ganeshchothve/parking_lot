@@ -11,7 +11,7 @@ class CostSheetTemplate
     "<tr><td>Flat type</td><td>{{unit_configuration_name}}</td></tr>" +
     "<tr><td>RERA Carpet Area ({{booking_portal_client.area_unit}})</td><td>{{carpet}}</td></tr>" +
     "<tr><td>Balcony Area ({{booking_portal_client.area_unit}})</td><td>{{calculated_data.Balcony}}</td></tr>" +
-    "<tr><td>Enclosed Balcony Area ({{booking_portal_client.area_unit}})</td><td>{{calculated_data.Balcony}}</td></tr>" +
+    "<tr><td>Enclosed Balcony Area ({{booking_portal_client.area_unit}})</td><td>{{calculated_data.Covered Balcony}}</td></tr>" +
     "<tr><td>Parking</td><td>{{calculated_costs.Parking}}</td></tr>" +
     "<tr><td>Agreement Value</td><td>{{agreement_price}}</td></tr>" +
     "</tbody>" +
