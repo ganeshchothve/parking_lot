@@ -167,7 +167,7 @@ class Receipt
     custom_scope = {}
     if params[:user_id].blank? && !user.buyer?
       if user.role?('channel_partner')
-        custom_scope = {user_id: {"$in": User.where(referenced_manager_ids: current_user.id).distinct(:id)}}
+        custom_scope = {user_id: {"$in": User.where(referenced_manager_ids: user.id).distinct(:id)}}
       elsif user.role?('cp_admin')
         custom_scope = {user_id: {"$in": User.where(role: "user").where(manager_id: {"$exists": true}).distinct(:id)}}
       elsif user.role?('cp')
