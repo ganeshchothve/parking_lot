@@ -5,7 +5,7 @@ class CustomDeviseMailer < Devise::Mailer
   include Devise::Controllers::UrlHelpers # Optional. eg. `confirmation_url`
 
   if current_client.present?
-    default from: current_client.name + " <" + current_client.sender_email + ">"
+    default from: "#{current_client.name} <#{current_client.sender_email}>"
   else
     default from: "Sell.Do <support@sell.do>"
   end
@@ -23,9 +23,9 @@ module Devise::Mailers::Helpers
   def devise_sms record, action, opts = {}
     begin
       if action.to_s == "confirmation_instructions"
-        if record.buyer? && record.channel_partner_id.present?
+        if record.buyer? && record.manager_id.present?
           template_id = SmsTemplate.find_by(name: "user_registered_by_channel_partner").id
-        elsif record.role == "channel_partner"
+        elsif record.role?("channel_partner")
           template_id = SmsTemplate.find_by(name: "channel_partner_user_registered").id
         else
           template_id = SmsTemplate.find_by(name: "user_registered").id

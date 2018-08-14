@@ -125,6 +125,29 @@
               </div>
               <div class="row">
                 <div class="col-md-6">
+                  <% if policy(@client).editable_field?("enable_direct_payment") %>
+                  <div class="form-group">
+                    <%= f.label :enable_direct_payment %><br/>
+                    <div class="form-check form-check-inline">
+                      <%= f.radio_button :enable_direct_payment, true, class: "form-check-input" %>
+                      <%= f.label :enable_direct_payment, "Yes", class: "form-check-label" %>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <%= f.radio_button :enable_direct_payment, false, class: "form-check-input" %>
+                      <%= f.label :enable_direct_payment, "No", class: "form-check-label" %>
+                    </div>
+                  </div>
+                  <% end %>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :payment_gateway, class: 'label-required' %>
+                    <%= f.select :payment_gateway, Client.available_payment_gateways.collect{|x| [x[:text], x[:id]]}, {}, class: 'selectize', required: 'required', disabled: (policy(@client).editable_field?("payment_gateway") ? false : true) %>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
                   <div class="form-group">
                     <%= f.label :blocking_amount, class: 'label-required' %>
                     <%= f.number_field :blocking_amount, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("blocking_amount") ? false : true), min: 0 %>
@@ -157,6 +180,21 @@
                   <div class="form-group">
                     <%= f.label :holding_minutes, class: 'label-required' %>
                     <%= f.text_field :holding_minutes, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("holding_minutes") ? false : true), min: 0, max: 30 %>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :enable_company_users %><br/>
+                    <div class="form-check form-check-inline">
+                      <%= f.radio_button :enable_company_users, true, class: "form-check-input" %>
+                      <%= f.label :enable_company_users, "Yes", class: "form-check-label" %>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <%= f.radio_button :enable_company_users, false, class: "form-check-input" %>
+                      <%= f.label :enable_company_users, "No", class: "form-check-label" %>
+                    </div>
                   </div>
                 </div>
               </div>

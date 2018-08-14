@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="small">Name</label>
+          <label>Name</label>
           <div>
             <%= project_unit.name %>
           </div>
@@ -11,7 +11,7 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="small">Tower</label>
+          <label>Tower</label>
           <div>
             <%= project_unit.project_tower_name %>
           </div>
@@ -19,7 +19,7 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="small">Status</label>
+          <label>Status</label>
           <div>
             <%= ProjectUnit.available_statuses.find{|x| x[:id] == project_unit.status}[:text] %>
           </div>
@@ -29,15 +29,15 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="small">Beds / Baths</label>
+          <label>Beds / Baths</label>
           <div>
-            project_unit.bedrooms / <%= project_unit.bathrooms %>
+            <%= project_unit.bedrooms %> / <%= project_unit.bathrooms %>
           </div>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="small">Carpet</label>
+          <label>Carpet</label>
           <div>
             <%= project_unit.carpet %> <%= current_client.area_unit %>
           </div>
@@ -45,7 +45,7 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="small">Saleable</label>
+          <label>Saleable</label>
           <div>
             <%= project_unit.saleable %> <%= current_client.area_unit %>
           </div>
@@ -55,7 +55,7 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="small">Effective Rate</label>
+          <label>Effective Rate</label>
           <div>
             <%= number_to_indian_currency(project_unit.effective_rate) %> <%= current_client.area_unit %>
           </div>
@@ -63,44 +63,37 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="small">Agreement Price</label>
+          <label>Agreement Price</label>
           <div>
             <%= number_to_indian_currency(project_unit.agreement_price) %>
           </div>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="small">All Inclusive Price</label>
-          <div>
-            <%= number_to_indian_currency(project_unit.all_inclusive_price) %>
-          </div>
-        </div>
-      </div>
     </div>
+  </div>
+  <div class="card-footer">
     <% if defined?(with_actions) && with_actions == true %>
-    <div class="dropdown float-left mbottom-20">
-      <a class="btn btn-primary dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</a>
-      <div class="dropdown-menu">
+      <nav class="nav">
         <% if current_user.buyer? && project_unit.user == current_user && ["blocked", "booked_tentative", "booked_confirmed"].include?(project_unit.status) %>
-          <% if current_user.user_requests.where(project_unit_id: project_unit.id).ne(status: 'resolved').blank? %>
-            <a href="<%= new_admin_user_request_path(project_unit_id: project_unit.id) %>" class="text-danger dropdown-item modal-remote-form-link" data-event-category="section" data-event-action="click" data-event-name="cancel booking">Cancel Booking</a>
-          <% else %>
-            <span class="unit-cancelled">Cancellation Requested</span>
+          <% if ProjectUnitPolicy.new(current_user, project_unit).edit? %>
+          <%= link_to "Update #{global_labels['user_kycs']}", edit_admin_project_unit_path(project_unit), class: "modal-remote-form-link nav-link pl-0" %>
           <% end %>
-          <%= link_to "Update #{global_labels['user_kycs']}", edit_admin_project_unit_path(project_unit), class: "modal-remote-form-link dropdown-item" %>
+          <% if ReceiptPolicy.new(current_user, project_unit.user.receipts.new(project_unit_id: project_unit.id)).new? %>
+            <a href="<%= new_user_receipt_path(project_unit_id: project_unit.id) %>" class="nav-link modal-remote-form-link">
+            Pay Remaining Amount
+            </a>
+          <% end %>
+          <% if current_user.user_requests.where(project_unit_id: project_unit.id).ne(status: 'resolved').blank? %>
+            <a href="<%= new_admin_user_request_path(project_unit_id: project_unit.id) %>" class="nav-link text-danger modal-remote-form-link">Cancel Booking</a>
+          <% else %>
+            <span class="nav-link unit-cancelled">Cancellation Requested</span>
+          <% end %>
+        <% elsif current_user.buyer? && project_unit.user == current_user && ["hold"].include?(project_unit.status) %>
+          <a href="<%= checkout_user_search_path(current_user.get_search(project_unit.id)) %>" class="nav-link pl-0">
+            Book Now
+          </a>
         <% end %>
-        <% if current_user.buyer? && project_unit.user == current_user && ["hold"].include?(project_unit.status) %>
-          <a href="<%= checkout_user_search_path(current_user.get_search(project_unit.id)) %>" data-event-category="section" data-event-action="click" data-event-name="book now" class="dropdown-item">
-          Book Now
-        </a>
-        <% elsif ReceiptPolicy.new(project_unit.user, project_unit.user.receipts.new(project_unit_id: project_unit.id)).new? %>
-          <a href="/dashboard/receipts/new?project_unit_id=<%= project_unit.id %>" class="dropdown-item modal-remote-form-link" data-event-category="section" data-event-action="click" data-event-name="make the remaining payment">
-          Pay Remaining Amount
-        </a>
-        <% end %>
-      </div>
-    </div>
+      </nav>
     <% end %>
   </div>
 </div>

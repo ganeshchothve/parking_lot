@@ -7,10 +7,10 @@ class Admin::ProjectUnitsController < AdminController
   layout :set_layout
 
   def index
-    @project_units = ProjectUnit.build_criteria(params).paginate(page: params[:page] || 1, per_page: 1000)
+    @project_units = ProjectUnit.build_criteria(params).paginate(page: params[:page] || 1, per_page: 15)
     respond_to do |format|
       if params[:ds].to_s == 'true'
-        format.json { render json: @project_units.collect{|pu| {id: pu.id, name: "#{pu.project_tower_name} | #{pu.name} | #{pu.bedrooms}BHK | #{pu.carpet} Sq. Ft. | Rs. #{pu.booking_price.round}" }} }
+        format.json { render json: @project_units.collect{|pu| {id: pu.id, name: "#{pu.project_tower_name} | #{pu.name} | #{pu.bedrooms}BHK | #{pu.carpet} Sq. Ft." }} }
         format.html {}
       else
         format.json { render json: @project_units }
@@ -33,7 +33,7 @@ class Admin::ProjectUnitsController < AdminController
         format.html { redirect_to admin_project_units_path, notice: 'Unit successfully updated.' }
       else
         format.html { render :edit }
-        format.json { render json: @project_unit.errors, status: :unprocessable_entity }
+        format.json { render json: {errors: @project_unit.errors.full_messages}, status: :unprocessable_entity }
       end
     end
   end
@@ -76,12 +76,12 @@ class Admin::ProjectUnitsController < AdminController
   def apply_policy_scope
     custom_project_unit_scope = ProjectUnit.all.criteria
     if current_user.role == "channel_partner"
-      custom_project_unit_scope = custom_project_unit_scope.or([{status: "available"}, {status: {"$in": ["blocked", "booked_tentative", "booked_confirmed"]}, user_id: {"$in": User.where(referenced_channel_partner_ids: current_user.id).distinct(:id)}}])
+      custom_project_unit_scope = custom_project_unit_scope.or([{status: "available"}, {status: {"$in": ["blocked", "booked_tentative", "booked_confirmed"]}, user_id: {"$in": User.where(referenced_manager_ids: current_user.id).distinct(:id)}}])
     end
     ProjectUnit.with_scope(policy_scope(custom_project_unit_scope)) do
       custom_scope = User.all.criteria
       if current_user.role == 'channel_partner'
-        custom_scope = custom_scope.in(referenced_channel_partner_ids: current_user.id).in(role: User.buyer_roles)
+        custom_scope = custom_scope.in(referenced_manager_ids: current_user.id).in(role: User.buyer_roles(current_client))
       end
       User.with_scope(policy_scope(custom_scope)) do
         yield

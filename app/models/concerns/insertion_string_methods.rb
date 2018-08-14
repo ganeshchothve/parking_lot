@@ -27,6 +27,10 @@ module InsertionStringMethods
     end
   end
   module InstanceMethods
+    def get_binding
+      binding
+    end
+
     # format for insertion strings should be Klass.(AssociationKlass|method)+
     # example1 contacts.address.address => self.contacts.addresses.collect(&:address).to_sentence
     #
@@ -34,13 +38,15 @@ module InsertionStringMethods
       object ||= self
       value = (get_insertion_values(insertion_string, object) rescue []).to_sentence
       class_name = self.class.fields[insertion_string].try(:type)
-      case class_name.to_s
-      when "Time"
-        value = Time.parse(value).strftime("%I:%M %p")
-      when "Date"
-        value = Date.parse(value).strftime("%d/%m/%Y")
-      when "DateTime"
-        value = DateTime.parse(value).strftime("%d/%m/%Y %I:%M %p")
+      if value.present?
+        case class_name.to_s
+        when "Time"
+          value = Time.parse(value).strftime("%I:%M %p")
+        when "Date"
+          value = Date.parse(value).strftime("%d/%m/%Y")
+        when "DateTime"
+          value = DateTime.parse(value).strftime("%d/%m/%Y %I:%M %p")
+        end
       end
       value
     end
@@ -52,7 +58,7 @@ module InsertionStringMethods
           method_name = insertion_string.split(".", 2).first
           insertion_string = insertion_string.split(".", 2).last
           object = object.send(method_name.to_sym)
-          if object.class.include?(Enumerable)
+          if object.class.include?(Enumerable) && object.class != Hash
             object.each do |obj|
               values.push(get_insertion_values(insertion_string, obj))
             end

@@ -31,8 +31,10 @@ class Admin::UserRequestsController < ApplicationController
     respond_to do |format|
       if @user_request.save
         format.html { redirect_to edit_user_user_request_path(@user_request), notice: 'Request registered successfully.' }
+        format.json { render json: @user_request, status: :created }
       else
         format.html { render :new }
+        format.json { render json: {errors: @user_request.errors.full_messages.uniq}, status: :unprocessable_entity }
       end
     end
   end
@@ -55,9 +57,10 @@ class Admin::UserRequestsController < ApplicationController
     respond_to do |format|
       if @user_request.update(permitted_attributes(@user_request))
         format.html { redirect_to (current_user.buyer? ? user_user_requests_path(@user) : admin_user_requests_path), notice: 'User Request was successfully updated.' }
+        format.json { render json: @user_request }
       else
         format.html { render :edit }
-        format.json { render json: @user_request.errors, status: :unprocessable_entity }
+        format.json { render json: @user_request.errors.full_messages, status: :unprocessable_entity }
       end
     end
   end
@@ -92,7 +95,7 @@ class Admin::UserRequestsController < ApplicationController
         custom_scope = custom_scope.where(user_id: params[:user_id])
       end
     elsif current_user.role?('channel_partner')
-      user_ids = User.in(referenced_channel_partner_ids: current_user.id).in(role: User.buyer_roles).distinct(:id)
+      user_ids = User.in(referenced_manager_ids: current_user.id).in(role: User.buyer_roles(current_client)).distinct(:id)
       custom_scope = custom_scope.in(user_id: user_ids)
     else
       custom_scope = custom_scope.where(user_id: current_user.id)

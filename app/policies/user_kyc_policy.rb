@@ -8,25 +8,29 @@ class UserKycPolicy < ApplicationPolicy
   end
 
   def new?
-    record.user_id.present? && record.user.buyer?
+    if record.user_id.present? && user.buyer?
+      record.user_id == user.id
+    elsif record.user_id.present?
+      record.user.buyer? && UserPolicy.new(user, record.user).edit?
+    else
+      false
+    end
   end
 
   def edit?
     if user.buyer?
       record.user_id == user.id
-    elsif user.role?('channel_partner')
-      record.user.channel_partner_id == user.id
     else
-      true
+      record.user.buyer? && UserPolicy.new(user, record.user).edit?
     end
   end
 
   def create?
-    true
+    new?
   end
 
   def export?
-    ['admin'].include?(user.role)
+    UserPolicy.new(user, record.user).export?
   end
 
   def update?

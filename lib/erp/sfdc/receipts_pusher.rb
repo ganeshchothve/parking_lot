@@ -20,14 +20,14 @@ module SFDC
 
     def self.receipt_json(receipt)
       project_unit = receipt.project_unit
-      unit_sfdc_id = project_unit.try(:sfdc_id)
+      unit_erp_id = project_unit.try(:erp_id)
       lead_id = receipt.user.lead_id
-      opp_id = lead_id.to_s + unit_sfdc_id.to_s
+      opp_id = lead_id.to_s + unit_erp_id.to_s
       hash = {
         "opp_id" => opp_id,
         "receipt_selldo_id" => receipt.id.to_s,
         "selldo_lead_id" => lead_id,
-        "unit_sfdc_id" => unit_sfdc_id,
+        "unit_sfdc_id" => unit_erp_id,
         "primary_email" => receipt.user.email,
         "receipt_date" => sfdc_date_format(receipt.created_at),
         "payment_amount" => receipt.total_amount,

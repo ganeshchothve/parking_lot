@@ -360,6 +360,7 @@ GEM
     multi_json (1.13.1)
     multi_xml (0.6.0)
     multipart-post (2.0.0)
+    nested_form (0.3.2)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (5.0.2)
@@ -609,6 +610,7 @@ DEPENDENCIES
   mongoid (~> 6.1.0)
   mongoid-autoinc
   mongoid-observers (~> 0.3.0)
+  nested_form
   newrelic-redis
   newrelic_rpm
   omniauth

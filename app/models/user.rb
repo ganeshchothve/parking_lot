@@ -5,6 +5,7 @@ class User
   include ArrayBlankRejectable
   include ActiveModel::OneTimePassword
   include InsertionStringMethods
+  include ApplicationHelper
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -18,9 +19,9 @@ class User
   field :lead_id, type: String
   field :role, type: String, default: "user"
   field :allowed_bookings, type: Integer, default: 5
-  field :channel_partner_id, type: BSON::ObjectId
-  field :channel_partner_change_reason, type: String
-  field :referenced_channel_partner_ids, type: Array, default: []
+  field :manager_id, type: BSON::ObjectId
+  field :manager_change_reason, type: String
+  field :referenced_manager_ids, type: Array, default: []
   field :rera_id, type: String
   field :mixpanel_id, type: String
   field :time_zone, type: String, default: "Mumbai"
@@ -51,6 +52,8 @@ class User
   acts_as_token_authenticatable
   field :authentication_token
 
+  field :is_active, type: Boolean, default: true
+
   ## Lockable
   # field :failed_attempts, type: Integer, default: 0 # Only if lock strategy is :failed_attempts
   # field :unlock_token,    type: String # Only if unlock strategy is :email or :both
@@ -70,9 +73,9 @@ class User
 
   enable_audit({
     indexed_fields: [:first_name, :last_name],
-    audit_fields: [:status, :lead_id, :role, :allowed_bookings, :channel_partner_id, :referenced_channel_partner_ids, :rera_id, :mixpanel_id, :email, :phone],
+    audit_fields: [:status, :lead_id, :role, :allowed_bookings, :manager_id, :referenced_manager_ids, :rera_id, :mixpanel_id, :email, :phone],
     reference_ids_without_associations: [
-      {field: 'referenced_channel_partner_ids', klass: 'ChannelPartner'},
+      {field: 'referenced_manager_ids', klass: 'ChannelPartner'},
     ]
   })
 
@@ -95,12 +98,12 @@ class User
   validates :email, uniqueness: true, if: Proc.new{|user| user.phone.blank? }
   validates :rera_id, presence: true, if: Proc.new{ |user| user.role?('channel_partner') }
   validates :rera_id, uniqueness: true, allow_blank: true
-  validates :role, inclusion: {in: Proc.new{ User.available_roles.collect{|x| x[:id]} } }
+  validates :role, inclusion: {in: Proc.new{ |user| User.available_roles(user.booking_portal_client).collect{|x| x[:id]} } }
   validates :lead_id, uniqueness: true, presence: true, if: Proc.new{ |user| user.buyer? }
-  validate :channel_partner_change_reason_present?
+  validate :manager_change_reason_present?
 
   def unattached_blocking_receipt
-    return self.receipts.in(status: ['success', 'clearance_pending']).where(project_unit_id: nil, payment_type: 'blocking').where(total_amount: {"$gte": ProjectUnit.blocking_amount}).first
+    return self.receipts.in(status: ['success', 'clearance_pending']).where(project_unit_id: nil, payment_type: 'blocking').where(total_amount: {"$gte": current_client.blocking_amount}).first
   end
 
   def total_amount_paid
@@ -120,25 +123,41 @@ class User
   end
 
   def buyer?
-    ['user', 'management_user', 'employee_user'].include?(self.role)
+    if current_client.enable_company_users?
+      ['user', 'management_user', 'employee_user'].include?(self.role)
+    else
+      self.role == 'user'
+    end
   end
 
-  def self.buyer_roles
-    ['user', 'management_user', 'employee_user']
+  def self.buyer_roles(current_client=nil)
+    if current_client.present? && current_client.enable_company_users?
+      ['user', 'management_user', 'employee_user']
+    else
+      ['user']
+    end
   end
 
-  def self.available_roles
-    [
+  def self.available_roles(current_client=nil)
+    roles = [
       {id: 'superadmin', text: 'Superadmin'},
-      {id: 'user', text: 'Customer'},
-      {id: 'employee_user', text: 'Employee'},
-      {id: 'management_user', text: 'Management User'},
-      {id: 'admin', text: 'Admin'},
+      {id: 'admin', text: 'Administrator'},
       {id: 'crm', text: 'CRM User'},
-      {id: 'sales', text: 'Sales User'},
+      {id: 'cp_admin', text: 'Channel Partner Head'},
       {id: 'cp', text: 'Channel Partner Manager'},
-      {id: 'channel_partner', text: 'Channel Partner'}
+      {id: 'sales_admin', text: 'Sales Head'},
+      {id: 'sales', text: 'Sales User'},
+      {id: 'channel_partner', text: 'Channel Partner'},
+      {id: 'user', text: 'Customer'},
+      {id: 'gre', text: 'GRE or Pre-sales'}
     ]
+    if current_client.present? && current_client.enable_company_users?
+      roles += [
+        {id: 'management_user', text: 'Management User'},
+        {id: 'employee_user', text: 'Employee'}
+      ]
+    end
+    roles
   end
 
   def role?(role)
@@ -164,9 +183,9 @@ class User
     self.where(selector).where(or_selector)
   end
 
-  def channel_partner
-    if self.channel_partner_id.present?
-      return User.find(self.channel_partner_id)
+  def manager
+    if self.manager_id.present?
+      return User.find(self.manager_id)
     else
       return nil
     end
@@ -227,14 +246,14 @@ class User
     port = Rails.application.config.action_mailer.default_url_options[:port].to_i
     host = (port == 443 ? "https://" : "http://") + host
     host = host + ((port == 443 || port == 80 || port == 0) ? "" : ":#{port}")
-    url.user_confirmation_url(confirmation_token: self.confirmation_token, channel_partner_id: self.channel_partner_id, host: host)
+    url.user_confirmation_url(confirmation_token: self.confirmation_token, manager_id: self.manager_id, host: host)
   end
 
   def name
     str = "#{first_name} #{last_name}"
-    if self.role == "channel_partner"
+    if self.role?("channel_partner")
       cp = ChannelPartner.where(associated_user_id: self.id).first
-      if cp.present?
+      if cp.present? && cp.company_name.present?
         str += " (#{cp.company_name})"
       end
     end
@@ -261,6 +280,14 @@ class User
     end
   end
 
+  def active_for_authentication?
+    super && is_active
+  end
+
+  def inactive_message
+    is_active ? super : :is_active
+  end
+
   def self.find_record login
     where("function() {return this.phone == '#{login}' || this.email == '#{login}'}")
   end
@@ -283,10 +310,28 @@ class User
     search
   end
 
+  def self.user_based_scope(user, params={})
+    custom_scope = {}
+    if user.role?('channel_partner')
+      custom_scope = {referenced_manager_ids: {"$in": user.id}, role: User.buyer_roles(user.booking_portal_client)}
+    elsif user.role?('crm')
+      custom_scope = {role: {"$in": User.buyer_roles(user.booking_portal_client)}}
+    elsif user.role?('sales_admin')
+      custom_scope = {"$or": [{role: {"$in": User.buyer_roles(user.booking_portal_client)}}, {role: "sales"}]}
+    elsif user.role?('sales')
+      custom_scope = {role: {"$in": User.buyer_roles(user.booking_portal_client)}}
+    elsif user.role?('cp_admin')
+      custom_scope = {"$or": [{role: 'user', manager_id: {"$exists": true}}, {role: "cp"}, {role: "channel_partner"}]}
+    elsif user.role?('cp')
+      custom_scope = {"$or": [{role: 'user', referenced_manager_ids: {"$in": User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)}}, {role: "channel_partner", manager_id: user.id}]}
+    end
+    custom_scope
+  end
+
   private
-  def channel_partner_change_reason_present?
-    if self.persisted? && self.channel_partner_id_changed? && self.channel_partner_change_reason.blank?
-      self.errors.add :channel_partner_change_reason, "is required"
+  def manager_change_reason_present?
+    if self.persisted? && self.manager_id_changed? && self.manager_change_reason.blank?
+      self.errors.add :manager_change_reason, "is required"
     end
   end
 end

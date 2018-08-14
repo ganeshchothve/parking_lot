@@ -19,11 +19,7 @@ module DashboardDataProvider
 
   def self.receipts_dashboard(user, matcher={})
     unless matcher.present? && matcher[:user_id].present?
-      if user.role?('channel_partner')
-        matcher = {user_id: { "$in": User.where(referenced_channel_partner_ids: user.id).distinct(:id) }}
-      elsif user.role?("cp")
-        matcher = {user_id: { "$in": User.where(channel_partner_id: {"$exists": true}).distinct(:id) }}
-      end
+      matcher = Receipt.user_based_scope(user)
     end
     data = Receipt.collection.aggregate([{
         "$match": matcher
@@ -60,15 +56,8 @@ module DashboardDataProvider
   end
 
   def self.users_dashboard(user)
-    matcher = {}
-    if user.role?('channel_partner')
-      matcher = {channel_partner_id: user.id}
-    elsif user.role?("cp")
-      matcher = {channel_partner_id: {"$exists": true}}
-    end
-
     data = User.collection.aggregate([{
-        "$match": matcher
+        "$match": User.user_based_scope(user)
       },{
       "$group": {
         "_id": {

@@ -58,7 +58,6 @@ Rails.application.routes.draw do
       resources :searches, except: [:destroy], controller: '/searches' do
         post :hold, on: :member
         get :checkout, on: :member
-        get :checkout_via_email, on: :member
         post :make_available, on: :member
         get '/razorpay-payment/:receipt_id', to: 'searches#razorpay_payment', on: :member
         get :payment, on: :member
@@ -111,7 +110,6 @@ Rails.application.routes.draw do
         post :hold, on: :member
         get 'tower/details', on: :collection, action: :tower, as: :tower
         get :checkout, on: :member
-        get :checkout_via_email, on: :member
         post :make_available, on: :member
         get '/razorpay-payment/:receipt_id', to: 'searches#razorpay_payment', on: :member
         get :payment, on: :member

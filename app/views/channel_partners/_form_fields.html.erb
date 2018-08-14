@@ -63,10 +63,18 @@
 <div class="row">
   <div class="col-md-6">
     <div class="form-group">
+      <%= form.label :manager_id %>
+      <%= form.select :manager_id, User.in(role: "cp").collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', disabled: (policy(@channel_partner).editable_field?("manager_id") ? false : true) %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
       <%= form.label :gstin_number %>
       <%= form.text_field :gstin_number, class: 'form-control', disabled: (policy(@channel_partner).editable_field?("gstin_number") ? false : true), placeholder:'GSTIN Number' %>
     </div>
   </div>
+</div>
+<div class="row">
   <div class="col-md-6">
     <div class="form-group">
       <% if policy(@channel_partner).editable_field?("status") %>

@@ -35,7 +35,7 @@ class DashboardController < ApplicationController
     @search = current_user.searches.new
     if params[:stage] == "kyc_details"
       if params[:configuration] == "3d"
-        @unit = ProjectUnit.where(sfdc_id: params[:unit_id]).first
+        @unit = ProjectUnit.where(erp_id: params[:unit_id]).first
       else
         @unit = ProjectUnit.find(params[:unit_id])
       end

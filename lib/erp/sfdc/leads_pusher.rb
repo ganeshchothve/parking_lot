@@ -47,7 +47,7 @@ module SFDC
         "Project_Interested" => "Embassy Springs Apartments",
         "LeadSource" => "Web",
         "Sub_Source" => "Website",
-        "portal_cp_id" => user.channel_partner_id
+        "portal_cp_id" => user.manager_id
       }
 
       hash

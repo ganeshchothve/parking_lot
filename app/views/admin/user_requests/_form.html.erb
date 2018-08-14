@@ -1,6 +1,6 @@
 <%
   hash = {"data-resource-type": global_labels['user_request'], "data-type": "json"}
-  hash = {confirm: 'Your unit will be released immediately after raising the cancellation request. For booking the same unit again, you will have to go through the selection process again which will also be subject to availability. Are you sure you want to proceed?'} if @user_request.new_record?
+  hash = {confirm: 'Are you sure you want to proceed?'} if @user_request.new_record?
 %>
 <%= form_for [:user, @user_request], remote: true, html: {class: 'modal-remote-form validate-form'}, data: hash do |f| %>
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
@@ -39,8 +39,8 @@
           </div>
         <% end %>
         <div class="form-group">
-          <div class="alert alert-warning">
-            Your unit will be released immediately after raising the cancellation request. For booking the same unit again, you will have to go through the selection process again which will also be subject to availability.<br/>
+          <div class="alert alert-info">
+            Your unit will be released once the cancellation request is processed. For booking the same unit again, you will have to go through the selection process again which will also be subject to availability.<br/>
             <div class="form-check mt-3">
               <input type="checkbox" id="accepted" class="form-check-input" />
               <label class="form-check-label">I Agree</label>

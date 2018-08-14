@@ -17,6 +17,8 @@ class ChannelPartner
   field :gstin_number, type: String
   field :aadhaar, type: String
 
+  field :manager_id, type: BSON::ObjectId
+
   default_scope -> {desc(:created_at)}
 
   enable_audit({
@@ -42,6 +44,10 @@ class ChannelPartner
   validates :first_name, :last_name, format: { with: /\A[a-zA-Z]*\z/}
 
   accepts_nested_attributes_for :bank_detail, :address
+
+  def manager
+    manager_id.present? ? User.find(manager_id) : nil
+  end
 
   def self.available_statuses
     [

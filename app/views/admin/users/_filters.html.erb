@@ -14,7 +14,7 @@
       </div>
       <div class="form-group">
         <%= label_tag "fltrs", "role", class: "control-label" %>
-        <%= select_tag "fltrs[role]", options_for_select(User.available_roles.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:role] : "")), {prompt: "Select", class: "selectize"} %>
+        <%= select_tag "fltrs[role]", options_for_select(User.available_roles(current_client).collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:role] : "")), {prompt: "Select", class: "selectize"} %>
       </div>
     <% end %>
   </div>

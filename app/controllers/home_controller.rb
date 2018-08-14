@@ -27,7 +27,7 @@ class HomeController < ApplicationController
           message = 'A user with these details has already registered.'
           if !@user.confirmed? && @user.role?('user')
             if current_user.present? && current_user.role?('channel_partner')
-              @user.set(referenced_channel_partner_ids: ([current_user.id] + @user.referenced_channel_partner_ids).uniq, channel_partner_id: current_user.id)
+              @user.set(referenced_manager_ids: ([current_user.id] + @user.referenced_manager_ids).uniq, manager_id: current_user.id)
             end
             if @user.confirmed?
               message = "A user with these details has already registered and has confirmed their account. We have linked his account to you channel partner login."
@@ -43,9 +43,9 @@ class HomeController < ApplicationController
           # splitted name into two firstname and lastname
           @user = User.new(booking_portal_client_id: current_client.id, email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], lead_id: params[:lead_id], mixpanel_id: params[:mixpanel_id])
           if user_signed_in?
-            @user.channel_partner_id = current_user.id
+            @user.manager_id = current_user.id
           elsif(cookies[:portal_cp_id].present?)
-            @user.channel_partner_id = cookies[:portal_cp_id]
+            @user.manager_id = cookies[:portal_cp_id]
           end
           # RegistrationMailer.welcome(user, generated_password).deliver #TODO: enable this. We might not need this if we are to use OTP based login
           respond_to do |format|

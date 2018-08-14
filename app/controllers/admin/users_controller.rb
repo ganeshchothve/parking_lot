@@ -73,8 +73,10 @@ class Admin::UsersController < AdminController
   end
 
   def create
-    @user = User.new(booking_portal_client_id: current_client.id)
+    # sending the role upfront to ensure the permitted_attributes in next step is updated
+    @user = User.new(booking_portal_client_id: current_client.id, role: params[:user][:role])
     @user.assign_attributes(permitted_attributes(@user))
+    @user.manager_id = current_user.id if @user.role?('channel_partner') && current_user.role?('cp')
 
     respond_to do |format|
       if @user.save
@@ -127,16 +129,7 @@ class Admin::UsersController < AdminController
   end
 
   def apply_policy_scope
-    custom_scope = User.all.criteria
-    if current_user.role?('channel_partner')
-      custom_scope = custom_scope.in(referenced_channel_partner_ids: current_user.id).in(role: User.buyer_roles)
-    elsif current_user.role?('crm')
-      custom_scope = custom_scope.in(role: User.buyer_roles)
-    elsif current_user.role?('sales')
-      custom_scope = custom_scope.in(role: User.buyer_roles)
-    elsif current_user.role?('cp')
-      custom_scope = custom_scope.or([{role: 'user', channel_partner_id: {"$exists": true}}, {role: "channel_partner"}])
-    end
+    custom_scope = User.where(User.user_based_scope(current_user, params))
     User.with_scope(policy_scope(custom_scope)) do
       yield
     end

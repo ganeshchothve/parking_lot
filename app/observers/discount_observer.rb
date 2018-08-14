@@ -9,13 +9,11 @@ class DiscountObserver < Mongoid::Observer
     if discount.status_changed?
       case discount.status
       when 'draft'
-        User.where(role: 'admin').distinct(:id).each do |user_id|
-          mailer = DiscountMailer.send_draft(discount.id.to_s, user_id.to_s)
-          if Rails.env.development?
-            mailer.deliver
-          else
-            mailer.deliver_later
-          end
+        mailer = DiscountMailer.send_draft(discount.id.to_s)
+        if Rails.env.development?
+          mailer.deliver
+        else
+          mailer.deliver_later
         end
       when 'approved'
         mailer = DiscountMailer.send_approved(discount.id.to_s)

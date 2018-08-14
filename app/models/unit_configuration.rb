@@ -3,7 +3,6 @@ class UnitConfiguration
   include Mongoid::Timestamps
   include ArrayBlankRejectable
 
-  field :costs, type: Array,default: []
   field :data_attributes, type: Array, default: []
   field :selldo_id, type: String
   field :images, type: Array,default: []
@@ -12,14 +11,11 @@ class UnitConfiguration
   field :unit_configuration_active, type: String, default: "Yes"
   field :promoted, type: Boolean, default: false
   field :offers, type: Boolean, default: false
-  field :customized_additional_costs, type: Hash
-  field :customized_extra_costs, type: Hash
-  field :customized_gov_costs, type: Array
-  field :customized_grace_period, type: Integer
-  field :customized_interest_percentage, type: Integer
 
   validates :name, presence: true
   validates :saleable,:carpet,:base_rate,:numericality => {:greater_than => 0}
+
+  has_many :project_units
 
   default_scope -> { where(:unit_configuration_active=> {"$ne" => "No"})}
 
