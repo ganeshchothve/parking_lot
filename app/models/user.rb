@@ -180,7 +180,7 @@ class User
       regex = ::Regexp.new(::Regexp.escape(params[:q]), 'i')
       or_selector = {"$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] }
     end
-    self.where(selector).where(or_selector)
+    self.and([selector, or_selector])
   end
 
   def manager

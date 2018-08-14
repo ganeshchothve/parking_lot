@@ -131,16 +131,16 @@ class Receipt
         selector[:payment_type] = params[:fltrs][:payment_type]
       end
     end
-    selector = self.where(selector)
+    selector1 = {}
     if params[:fltrs].blank? || params[:fltrs][:status].blank?
-      selector = selector.or({status: "pending", payment_mode: {"$ne" => "online"}}, {status: {"$ne" => "pending"}})
+      selector1 = {"$or": [{status: "pending", payment_mode: {"$ne" => "online"}}, {status: {"$ne" => "pending"}}]}
     end
     or_selector = {}
     if params[:q].present?
       regex = ::Regexp.new(::Regexp.escape(params[:q]), 'i')
       or_selector = {"$or": [{receip_id: regex}, {tracking_id: regex}, {payment_identifier: regex}] }
     end
-    selector = selector.where(or_selector)
+    selector = self.and([selector, selector1, or_selector])
     selector
   end
 
