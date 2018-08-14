@@ -3,7 +3,7 @@
 # Defines a single server with a list of roles and multiple properties.
 # You can define all roles on a single server, or split them:
 server "13.127.234.53", user: "ubuntu", roles: %w{app db web}
-set :branch, :generic
+set :branch, :amanora
 set :rvm_type, :user
 set :rvm_ruby_version, '2.4.2'
 set :default_env, { rvm_bin_path: '~/.rvm/bin' }
