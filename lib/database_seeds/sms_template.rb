@@ -31,7 +31,7 @@ module DatabaseSeeds
 
       ::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "ProjectUnit", name: "project_unit_booked_confirmed", content: "Welcome to the {{booking_portal_client.name}} family! You're now the proud owner of {{name}} at {{project_name}} in {{booking_portal_client.name}}. Our executives will be in touch regarding agreement formalities.") if ::SmsTemplate.where(name: "project_unit_booked_confirmed").blank?
 
-      ::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "User", name: "user_registered_by_channel_partner", content: "{{channel_partner.name}} has registered you with {{booking_portal_client.name}}. To confirm your account with this partner, please click {{confirmation_url}}. You can also confirm your account using your phone & OTP.") if ::SmsTemplate.where(name: "user_registered_by_channel_partner").blank?
+      ::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "User", name: "user_registered_by_channel_partner", content: "{{manager.name}} has registered you with {{booking_portal_client.name}}. To confirm your account with this partner, please click {{confirmation_url}}. You can also confirm your account using your phone & OTP.") if ::SmsTemplate.where(name: "user_registered_by_channel_partner").blank?
 
       ::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "User", name: "channel_partner_user_registered", content: "Dear {{name}}, thank you for registering as a Channel Partner at {{booking_portal_client.name}}. To confirm your account, please click {{confirmation_url}}. You can also confirm your account using your phone & OTP.") if ::SmsTemplate.where(name: "channel_partner_user_registered").blank?
 
