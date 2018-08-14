@@ -84,7 +84,7 @@ class ProjectUnit
     if self.available_for == "management"
       self.status = "management"
     end
-    self.base_rate = UpgradePricing.get_upgraded_base_rate(self.project_tower_name.split("-")[0].strip)
+    # GENERICTODO: self.base_rate = upgraded rate based on timely upgrades
 
     SelldoLeadUpdater.perform_async(self.user_id.to_s, "hold_payment_dropoff")
   end
