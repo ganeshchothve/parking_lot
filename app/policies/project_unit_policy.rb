@@ -60,7 +60,7 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def checkout?
-    valid = (record.user_based_status(record.user) == "booked") && record.user.kyc_ready? && current_client.enable_actual_inventory?
+    valid = record.user_id.present? && (record.user_based_status(record.user) == "booked") && record.user.kyc_ready? && current_client.enable_actual_inventory?
     _role_based_check(valid)
   end
 
@@ -81,7 +81,7 @@ class ProjectUnitPolicy < ApplicationPolicy
   def _role_based_check(valid)
     valid = (valid && (record.user_id == user.id)) if user.buyer?
     valid = (valid && (record.user.referenced_manager_ids.include?(user.id))) if user.role == "channel_partner"
-    valid = (valid && true) if ['cp', 'sales', 'admin'].include?(user.role)
+    valid = (valid && true) if ['cp', 'sales', 'sales_admin', 'cp_admin', 'admin'].include?(user.role)
     valid
   end
 end

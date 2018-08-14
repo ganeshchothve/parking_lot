@@ -11,9 +11,11 @@ class CostSheetTemplate
         </tr>
       </thead>
       <tbody>
+        <% if blocked_on.present? %>
         <tr>
           <td>Date of Issue</td><td class='text-right'><%= blocked_on %></td>
         </tr>
+        <% end %>
         <tr>
           <td>Flat type</td><td class='text-right'><%= unit_configuration_name %></td>
         </tr>
@@ -21,25 +23,25 @@ class CostSheetTemplate
           <td>Flat No.</td><td class='text-right'><%= name %></td>
         </tr>
         <tr>
-          <td>RERA Carpet Area (<%= booking_portal_client.area_unit %>)</td><td class='text-right'><%= carpet %></td>
+          <td>RERA Carpet Area (sq. mtr.)</td><td class='text-right'><%= carpet / 10.7639 %></td>
         </tr>
         <tr>
-          <td>Balcony Area (<%= booking_portal_client.area_unit %>)</td><td class='text-right'><%= (calculated_data['balcony'] + calculated_data['dry_balcony']).round(2) %></td>
+          <td>Balcony Area (sq. mtr.)</td><td class='text-right'><%= calculated_data['total_balcony_area'] %></td>
         </tr>
         <tr>
-          <td>Enclosed Balcony Area (<%= booking_portal_client.area_unit %>)</td><td class='text-right'><%= calculated_data['enclosed_balcony'] %></td>
+          <td>Enclosed Balcony Area (sq. mtr.)</td><td class='text-right'><%= calculated_data['enclosed_balcony'] %></td>
         </tr>
         <tr>
-          <td>Premium inclusive of proportionate price for common amenities & facilities ….(i) (<%= booking_portal_client.area_unit %>)</td><td class='text-right'><%= number_to_indian_currency(base_price) %></td>
+          <td>Premium inclusive of proportionate price for common amenities & facilities.(i)</td><td class='text-right'><%= number_to_indian_currency(base_price) %></td>
         </tr>
         <tr>
-          <td>Covered Car Parking premium (Rs.)….(ii)</td>
+          <td>Covered Car Parking premium (Rs.) (ii)</td>
           <td class='text-right'><%= number_to_indian_currency(calculated_costs['car_parking']) %></td>
         </tr>
-        <tr>
+        <tr class='text-white bg-primary'>
           <td>Agreement Value (Rs.) (i) +(ii)---{A}</td><td class='text-right'><%= number_to_indian_currency(agreement_price) %></td>
         </tr>
-        <tr>
+        <tr class='text-white bg-secondary'>
           <td colspan='2'>Legal charges</td>
         </tr>
         <tr>
@@ -59,11 +61,11 @@ class CostSheetTemplate
           <td>VAT / Goods & Service Tax </td>
           <td class='text-right'><%= number_to_indian_currency(calculated_costs['vat_gst']) %></td>
         </tr>
-        <tr>
+        <tr class='text-white bg-primary'>
           <% legal_total = calculated_costs['stamp_duty_charges'] + calculated_costs['reg_charges'] + calculated_costs['incidental_charges'] + calculated_costs['vat_gst'] + calculated_costs['estamping_charges'] %>
           <td>Sub total - legal charges ---{B}</td><td class='text-right'><%= number_to_indian_currency(legal_total) %></td>
         </tr>
-        <tr>
+        <tr class='text-white bg-secondary'>
           <td colspan='2'>At the time of possession</td>
         </tr>
         <tr>
@@ -78,12 +80,12 @@ class CostSheetTemplate
         <tr>
           <td>Amanora Environment Fund (Yearly)</td><td class='text-right'><%= number_to_indian_currency(calculated_costs['env_fund']) %></td>
         </tr>
-        <tr>
+        <tr class='text-white bg-primary'>
           <% sub_total = calculated_costs['utility_charges'] + calculated_costs['amanora_cluster_fund'] + calculated_costs['env_fund'] + calculated_costs['infra_charges']%>
           <td>SUBTOTAL - ON POSSESSION ---{C}</td>
           <td class='text-right'><%= number_to_indian_currency(sub_total) %></td>
         </tr>
-        <tr>
+        <tr class='text-white bg-primary'>
           <td>TOTAL COST OF THE UNIT - {A+B+C} </td>
           <td class='text-right'><%= number_to_indian_currency(sub_total + legal_total + agreement_price) %></td>
         </tr>
@@ -108,7 +110,7 @@ class CostSheetTemplate
           <td colspan='2' class='small'>All cheques/ Demand Draft should be drawn in the name of 'City Corporation Limited'(account of project as per RERA) </td>
         </tr>
         <tr>
-          <td colspan='2' class='small'>Stamp duty/Registration/VAT/GST/Incidental charges/E-stamping charges/service tax: cheque/demand draft to be drawn in the name of “City Corporation Limited” (account of project as per RERA) </td>
+          <td colspan='2' class='small'>Stamp duty/Registration/VAT/GST/Incidental charges/E-stamping charges/service tax: cheque/demand draft to be drawn in the name of 'City Corporation Limited' (account of project as per RERA) </td>
         </tr>
         <tr>
           <td colspan='2' class='small'>TDS @ 1 % on agreement value more than 50 lakh to be borne by customer against each payment made. Copy of receipt of payments to be submitted to CRM.   </td>

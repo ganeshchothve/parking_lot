@@ -48,7 +48,7 @@ class SearchPolicy < ApplicationPolicy
   end
 
   def make_available?
-    user.buyer? && record.project_unit_id.present? && ProjectUnit.find(record.project_unit_id).status == "hold"
+    record.project_unit_id.present? && ProjectUnit.find(record.project_unit_id).status == "hold"
   end
 
   def permitted_attributes params={}
