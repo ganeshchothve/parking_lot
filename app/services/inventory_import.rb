@@ -181,5 +181,12 @@ module InventoryImport
       end
       count += 1
     end
+
+    results = ProjectUnit.collection.aggregate([{"$group" => {"_id" => "$project_tower_id", max: {"$max" => "$floor"}}}]).to_a
+    results.each do |result|
+      tower = ProjectTower.find result["_id"]
+      tower.total_floors = result["max"]
+      tower.save
+    end
   end
 end
