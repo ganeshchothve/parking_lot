@@ -130,7 +130,23 @@
         </div>
       </div>
       <div class="p-3">
-        <img class="img-fluid" style="width: 100%; display: block;" data-placeholder="unit_image" />
+        <a data-toggle="modal" data-target="#floorPlanImage" href="javascript:;">
+          <img class="img-fluid" style="width: 100%; display: block;" data-placeholder="unit_image" />
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade right fixed-header-footer" role="dialog" id="floorPlanImage">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <img data-placeholder="unit_image" style="width: 100%" />
       </div>
     </div>
   </div>
@@ -159,10 +175,10 @@
     $("#unit-description").find('[data-placeholder="agreement_price"]').html(Amura.formatMoney(unit.agreement_price));
     $("#unit-description").find('[data-placeholder="all_inclusive_price"]').html(Amura.formatMoney(unit.all_inclusive_price));
     if(unit.assets.length > 0){
-      $("#unit-description").find('[data-placeholder="unit_image"]').attr("src", _.first(unit.assets).file.url);
-      $("#unit-description").find('[data-placeholder="unit_image"]').show();
+      $('[data-placeholder="unit_image"]').attr("src", _.first(unit.assets).file.url);
+      $('[data-placeholder="unit_image"]').show();
     }else{
-      $("#unit-description").find('[data-placeholder="unit_image"]').hide();
+      $('[data-placeholder="unit_image"]').hide();
     }
     $("#unit-description").find('[data-placeholder="facing"]').html(unit.facing);
     if($("#unit-description").hasClass('d-none')){
