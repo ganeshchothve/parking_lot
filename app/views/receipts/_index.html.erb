@@ -14,7 +14,13 @@
     <tbody>
       <% receipts.each do |receipt| %>
       <tr>
-        <td><%= receipt.user.name %></td>
+        <td>
+          <% if UserPolicy.new(current_user, receipt.user).show? %>
+            <%= link_to receipt.user.name, admin_user_path(receipt.user_id) %>
+          <% else %>
+            <%= receipt.user.name %>
+          <% end %>
+        </td>
         <td><%= receipt.status == "success" ? receipt.receipt_id : "Not Generated" %></td>
         <td>
           <div class="small muted">

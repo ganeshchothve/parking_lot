@@ -152,7 +152,7 @@
   </div>
 </div>
 <%= javascript_tag do %>
-  var units = <%= raw @units.to_json(include: [:assets]) %>;
+  var units = <%= raw @units.to_json(include: [:assets], methods: [:all_inclusive_price, :effective_rate]) %>;
   $(document).on('click', '[data-jquery-selector="unit-card"]', function(){
     var unit_id = $(this).data("unit-id");
     $('[data-jquery-selector="unit-card"]').removeClass("active");
@@ -180,7 +180,7 @@
     }else{
       $('[data-placeholder="unit_image"]').hide();
     }
-    $("#unit-description").find('[data-placeholder="facing"]').html(unit.facing);
+    $("#unit-description").find('[data-placeholder="unit_facing_direction"]').html(unit.unit_facing_direction);
     if($("#unit-description").hasClass('d-none')){
       $("#unit-selection").addClass('animated fadeInRight faster');
       $("#unit-description").addClass('animated fadeIn slow').removeClass('d-none');
