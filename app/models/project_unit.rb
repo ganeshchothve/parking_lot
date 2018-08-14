@@ -64,6 +64,8 @@ class ProjectUnit
   embeds_many :costs, as: :costable
   embeds_many :data, as: :data_attributable
 
+  has_many :assets, as: :assetable
+
   accepts_nested_attributes_for :data, :costs, allow_destroy: true
 
   validates :client_id, :agreement_price, :project_id, :project_tower_id, :unit_configuration_id, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :type, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, :payment_schedule_template_id, :cost_sheet_template_id, presence: true
@@ -272,5 +274,17 @@ class ProjectUnit
 
   def cost_sheet_template
     CostSheetTemplate.find self.cost_sheet_template_id
+  end
+
+  def total_outside_agreement_costs
+    costs.where(category: 'outside_agreement').collect{|x| x.value}.sum
+  end
+
+  def total_agreement_costs
+    costs.where(category: 'agreement').collect{|x| x.value}.sum
+  end
+
+  def all_inclusive_price
+    agreement_price + total_outside_agreement_costs
   end
 end

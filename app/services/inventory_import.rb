@@ -10,7 +10,7 @@ module InventoryImport
         unit_configuration_name = row[3].strip
         unit_name = row[4].strip
         floor = row[5].strip
-        floor_order = row[6].strip
+        floor_order = row[6].to_s.strip
         carpet = row[7].strip.to_f.round(2)
         saleable = row[8].strip.to_f.round(2)
         base_rate = row[9].strip
@@ -19,8 +19,7 @@ module InventoryImport
         bedrooms = row[12].strip
         bathrooms = row[13].strip
         unit_facing_direction = row[14].strip
-        agreement_price = row[15].strip.to_f.round(2)
-        erp_id = row[16].strip
+        erp_id = row[15].strip
 
         client_id = booking_portal_client.selldo_client_id
 
@@ -30,6 +29,9 @@ module InventoryImport
           project_unit.name = "#{unit_name} | #{unit_configuration_name}"
           if status == "Available"
             project_unit.status = "available"
+            project_unit.available_for = "user"
+          elsif status == "Not Available"
+            project_unit.status = "not_available"
             project_unit.available_for = "user"
           elsif status == "Management Blocking"
             project_unit.status = "management"
@@ -43,7 +45,6 @@ module InventoryImport
           end
           project_unit.base_rate = base_rate.to_f
           project_unit.floor_rise = floor_rise.to_f
-          project_unit.agreement_price = agreement_price
 
           if project_unit.save
             puts "Saved #{project_unit.name}"
@@ -64,15 +65,25 @@ module InventoryImport
 
     developer = Developer.create(name: booking_portal_client.name, client_id: client_id, booking_portal_client_id: booking_portal_client.id)
     count = 0
+    costs = {}
+    data = {}
     CSV.foreach(filepath) do |row|
-      unless count == 0
+      if count == 0
+        row.each_with_index do |value, index|
+          if value.match(/^cost\|/i)
+            costs[index] = value.split("|")[1..2]
+          elsif value.match(/^data\|/i)
+            data[index] = value.split("|").last
+          end
+        end
+      else
         rera_registration_no = row[0].strip
         project_name = row[1].strip
         project_tower_name = row[2].strip
         unit_configuration_name = row[3].strip
         unit_name = row[4].strip
         floor = row[5].strip
-        floor_order = row[6].strip
+        floor_order = row[6].to_s.strip
         carpet = row[7].strip.to_f.round(2)
         saleable = row[8].strip.to_f.round(2)
         base_rate = row[9].strip
@@ -81,8 +92,8 @@ module InventoryImport
         bedrooms = row[12].strip
         bathrooms = row[13].strip
         unit_facing_direction = row[14].strip
-        agreement_price = row[15].strip.to_f.round(2)
-        erp_id = row[16].strip
+        erp_id = row[15].strip
+        floor_plan_urls = row[16].strip
 
         project = Project.where(name: project_name).first
         unless project.present?
@@ -116,6 +127,9 @@ module InventoryImport
         if status == "Available"
           project_unit.status = "available"
           project_unit.available_for = "user"
+        elsif status == "Not Available"
+          project_unit.status = "not_available"
+          project_unit.available_for = "user"
         elsif status == "Management Blocking"
           project_unit.status = "management"
           project_unit.available_for = "management"
@@ -139,11 +153,29 @@ module InventoryImport
         project_unit.type = "apartment"
         project_unit.selldo_id = erp_id
         project_unit.floor_rise = floor_rise.to_f
-        project_unit.agreement_price = agreement_price
+        project_unit.payment_schedule_template_id = PaymentScheduleTemplate.first.id
+        project_unit.cost_sheet_template_id = CostSheetTemplate.first.id
 
+        costs.each do |index, arr|
+          if row[index].to_i > 0
+            project_unit.costs.build(category: arr[0], name: arr[1], absolute_value: row[index], key: arr[1].gsub(/[\W_]+/i, "_").downcase)
+          end
+        end
+
+        data.each do |index, name|
+          if row[index].to_i > 0
+            project_unit.data.build(name: name, absolute_value: row[index], key: name.downcase.gsub(/[\W_]+/i, "_").downcase)
+          end
+        end
         if project_unit.save
+          if floor_plan_urls.present?
+            floor_plan_urls.split(",").each do |url|
+              Asset.create(remote_file_url: url, assetable: project_unit, asset_type: "floor_plan")
+            end
+          end
           puts "Saved #{project_unit.name}"
         else
+          binding.pry
           puts "Error in saving #{project_unit.name} : #{project_unit.errors.full_messages}"
         end
       end

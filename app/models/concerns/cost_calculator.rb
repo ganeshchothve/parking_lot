@@ -89,7 +89,9 @@ module CostCalculator
   end
 
   def calculate_agreement_price
-    base_price = saleable * effective_rate
     base_price + self.costs.where(category: 'agreement').collect{|x| x.value}.sum
+  end
+  def base_price
+    saleable * effective_rate
   end
 end
