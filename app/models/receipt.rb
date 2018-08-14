@@ -207,8 +207,8 @@ class Receipt
 
   def tracking_id_processed_on_only_on_success
     if self.status_changed? && self.status != "success" && self.payment_mode != "online"
-      self.errors.add :tracking_id, 'cannot be set unless the status is marked as success' if self.tracking_id_changed?
-      self.errors.add :processed_on, 'cannot be set unless the status is marked as success' if self.processed_on_changed?
+      self.errors.add :tracking_id, 'cannot be set unless the status is marked as success' if self.tracking_id_changed? && self.tracking_id.present?
+      self.errors.add :processed_on, 'cannot be set unless the status is marked as success' if self.processed_on_changed? && self.processed_on.present?
     end
   end
 end
