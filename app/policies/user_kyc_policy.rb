@@ -11,7 +11,7 @@ class UserKycPolicy < ApplicationPolicy
     if record.user_id.present? && user.buyer?
       record.user_id == user.id
     elsif record.user_id.present?
-      record.user.buyer? && UserPolicy.new(user, record.user).edit?
+      record.user.buyer?
     else
       false
     end
@@ -21,7 +21,7 @@ class UserKycPolicy < ApplicationPolicy
     if user.buyer?
       record.user_id == user.id
     else
-      record.user.buyer? && UserPolicy.new(user, record.user).edit?
+      record.user.buyer?
     end
   end
 
