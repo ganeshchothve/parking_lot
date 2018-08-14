@@ -1,4 +1,7 @@
 class ProjectUnitObserver < Mongoid::Observer
+  def before_validation project_unit
+    project_unit.agreement_price = project_unit.calculate_agreement_price if project_unit.agreement_price.blank?
+  end
   def before_save project_unit
     if project_unit.primary_user_kyc_id.blank? && project_unit.user_kyc_ids.present?
       project_unit.primary_user_kyc_id = project_unit.user_kyc_ids.first
@@ -11,7 +14,6 @@ class ProjectUnitObserver < Mongoid::Observer
       project_unit.applied_discount_rate = 0
       project_unit.applied_discount_id = nil
     end
-    project_unit.calculate_agreement_price
     if project_unit.status == 'available'
       project_unit.available_for = 'user'
     end
