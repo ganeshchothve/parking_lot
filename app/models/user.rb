@@ -317,7 +317,7 @@ class User
     elsif user.role?('crm')
       custom_scope = {role: {"$in": User.buyer_roles(user.booking_portal_client)}}
     elsif user.role?('sales_admin')
-      custom_scope = {"$or": [{role: {"$in": User.buyer_roles(user.booking_portal_client)}}, {role: "sales"}]}
+      custom_scope = {"$or": [{role: {"$in": User.buyer_roles(user.booking_portal_client)}}, {role: "sales"}, {role: "channel_partner"}]}
     elsif user.role?('sales')
       custom_scope = {role: {"$in": User.buyer_roles(user.booking_portal_client)}}
     elsif user.role?('cp_admin')
