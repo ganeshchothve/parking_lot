@@ -16,13 +16,17 @@ class SelldoLeadUpdater
       stage = 'user_kyc_done' if user.user_kycs.present?
       stage = 'hold' if project_units.select{|x| x.status == 'hold'}.present?
     end
-    MixpanelPusherWorker.perform_async(user.mixpanel_id, stage, {})
-    if stage.present?
+    score = 0
+    MixpanelPusherWorker.perform_async(user.mixpanel_id, stage, {}) if current_client.mixpanel_token.present?
+    if user.buyer? && stage.present? && user.lead_id.present?
       params = {
-        'api_key': current_client.selldo_api_key,
-        'sell_do[form][lead][lead_id]': user.lead_id,
-        'sell_do[form][custom][portal_stage]': stage,
-        'sell_do[campaign][srd]': current_client.selldo_default_srd
+        lead_id: user.lead_id,
+        mixpanel_id: (user.mixpanel_id.present? && user.mixpanel_id != "undefined" && user.mixpanel_id != "null") ? user.mixpanel_id : nil,
+        score: score,
+        custom_data: {
+          portal_stage: stage
+        },
+        api_key: current_client.selldo_api_key
       }
       RestClient.post("https://app.sell.do/api/leads/create", params)
     end
