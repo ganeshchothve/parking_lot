@@ -123,6 +123,6 @@ Rails.application.routes.draw do
     resources :searches, except: [:destroy], controller: 'searches'
   end
 
-  post '/sell_do/lead_created', to: "api/sell_do/leads#lead_created"
-  post '/sell_do/pushed_to_sales', to: "api/sell_do/leads#pushed_to_sales"
+  match '/sell_do/lead_created', to: "api/sell_do/leads#lead_created", via: [:get, :post]
+  match '/sell_do/pushed_to_sales', to: "api/sell_do/leads#pushed_to_sales", via: [:get, :post]
 end

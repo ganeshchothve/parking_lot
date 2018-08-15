@@ -27,7 +27,6 @@ class ProjectUnit
   field :unit_configuration_name, type: String
 
   field :selldo_id, type: String
-  field :erp_id, type: String
 
   field :floor_rise, type: Float
   field :floor, type: Integer

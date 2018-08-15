@@ -93,7 +93,7 @@ class User
 
   has_many :smses, as: :triggered_by, class_name: "Sms"
 
-  validates :first_name, :last_name, :role, :allowed_bookings, presence: true
+  validates :first_name, :role, :allowed_bookings, presence: true
   validates :phone, uniqueness: true, phone: { possible: true, types: [:voip, :personal_number, :fixed_or_mobile]}, if: Proc.new{|user| user.email.blank? }
   validates :email, uniqueness: true, if: Proc.new{|user| user.phone.blank? }
   validates :rera_id, presence: true, if: Proc.new{ |user| user.role?('channel_partner') }
@@ -167,12 +167,17 @@ class User
   def self.build_criteria params={}
     selector = {}
     if params[:fltrs].present?
-      if params[:fltrs][:role].is_a?(Array)
-        selector = {role: {"$in": params[:fltrs][:role] }}
-      elsif params[:fltrs][:role].is_a?(ActionController::Parameters)
-        selector = {role: params[:fltrs][:role].to_unsafe_h }
-      else
-        selector = {role: params[:fltrs][:role] }
+      if params[:fltrs][:role].present?
+        if params[:fltrs][:role].is_a?(Array)
+          selector = {role: {"$in": params[:fltrs][:role] }}
+        elsif params[:fltrs][:role].is_a?(ActionController::Parameters)
+          selector = {role: params[:fltrs][:role].to_unsafe_h }
+        else
+          selector = {role: params[:fltrs][:role] }
+        end
+      end
+      if params[:fltrs][:lead_id].present?
+        selector[:lead_id] = params[:fltrs][:lead_id]
       end
     end
     or_selector = {}

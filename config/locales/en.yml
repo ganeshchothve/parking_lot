@@ -50,6 +50,8 @@ en:
         name: 'Client Name (Used across the app)'
         selldo_client_id: 'SellDo Client ID'
         selldo_form_id: 'SellDo Form ID'
+        selldo_channel_partner_form_id: 'SellDo Form ID - For Channel Partners'
+        selldo_gre_form_id: 'SellDo Form ID - Used by Non Channel Partners'
         selldo_api_key: 'SellDo API Key (Use generic Api Client)'
         selldo_default_srd: 'SellDo Default SRD'
         selldo_cp_srd: 'SellDo Channel Partner SRD'
@@ -200,6 +202,7 @@ en:
         rera_id: 'RERA Registration Number'
         location: 'Location'
         lead_id: 'Sell.Do Lead ID'
+        time_zone: "User's Time Zone"
         role: 'Role'
         manager_id: "Partner / Manager"
         manager_change_reason: "Reason for changing Partner"
