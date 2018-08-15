@@ -5,6 +5,8 @@ class Client
   field :name, type: String
   field :selldo_client_id, type: String
   field :selldo_form_id, type: String
+  field :selldo_channel_partner_form_id, type: String
+  field :selldo_gre_form_id, type: String
   field :selldo_api_key, type: String
   field :selldo_default_srd, type: String
   field :selldo_cp_srd, type: String
@@ -56,7 +58,7 @@ class Client
   has_many :smses, class_name: 'Sms'
   has_many :assets, as: :assetable
 
-  validate :name, :selldo_client_id, :selldo_form_id, :helpdesk_email, :helpdesk_number, :notification_email, :sender_email, :email_domains, :booking_portal_domains, :registration_name, :cin_number, :website_link, :support_email, :support_number, :payment_gateway
+  validate :name, :selldo_client_id, :selldo_form_id, :selldo_channel_partner_form_id, :selldo_gre_form_id, :helpdesk_email, :helpdesk_number, :notification_email, :sender_email, :email_domains, :booking_portal_domains, :registration_name, :cin_number, :website_link, :support_email, :support_number, :payment_gateway
   validates :preferred_login, inclusion: {in: Proc.new{ Client.available_preferred_logins.collect{|x| x[:id]} } }
   validates :payment_gateway, inclusion: {in: Proc.new{ Client.available_payment_gateways.collect{|x| x[:id]} } }
 
@@ -79,6 +81,8 @@ c = Client.new
 c.name = "Amura"
 c.selldo_client_id = "531de108a7a03997c3000002"
 c.selldo_form_id = "5abba073923d4a567f880952"
+c.selldo_gre_form_id = "5abba073923d4a567f880952"
+c.selldo_channel_partner_form_id = "5abba073923d4a567f880952"
 c.selldo_api_key = "bcdd92826cf283603527bd6d832d16c4"
 c.selldo_default_srd = "5a72c7a67c0dac7e854aca9e"
 c.selldo_cp_srd = "5a72c7a67c0dac7e854aca9e"

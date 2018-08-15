@@ -4,8 +4,8 @@
       <% labels = t('mongoid.attributes.user').with_indifferent_access %>
       <tr>
         <th>Name</th>
+        <th><%= labels[:lead_id] %></th>
         <th><%= global_labels[:receipts] %></th>
-        <th>Details</th>
         <th>Role</th>
         <th>Account Confirmed?</th>
         <th class="text-right">Actions</th>
@@ -15,23 +15,21 @@
       <% users.each do |user| %>
         <tr>
           <td>
-            <%= user.name %><br/>
-            <% if user.role?("channel_partner") %>
-              <div class="small">
-                Registered: <%= User.where(manager_id: user.id).count %> | Confirmed: <%= User.where(manager_id: user.id).ne(confirmed_at: nil).count %> | Blocked: <%= ProjectUnit.in(user_id: User.where(manager_id: user.id).distinct(:id)).in(status: ['blocked', 'booked_tentative', 'booked_confirmed']).count %><br/>
-              </div>
-            <% end %>
+            <%= user.name %>
+            <div class="small">
+              <%= user.email.present? ? user.email : "" %> <br/>
+              <%= user.phone.present? ? user.phone : "" %><br/>
+              <% if user.role?("user") && user.manager_id.present? && current_user.role != "channel_partner" %>
+                CP: <%= user.manager.name %><br/>
+              <% end %>
+            </div>
           </td>
           <td><%= user.receipts.where(status: "success").present? ? "Y" : "N" %></td>
-          <td>
-            <%= user.email.present? ? user.email : "" %> <br/>
-            <%= user.phone.present? ? user.phone : "" %><br/>
-            <% if user.role?("user") && user.manager_id.present? && current_user.role != "channel_partner" %>
-              CP: <%= user.manager.name %><br/>
-            <% end %>
-          </td>
+          <td><%= user.lead_id %></td>
           <td><%= User.available_roles(current_client).find{|x| x[:id] == user.role}[:text] %></td>
-          <td><%= user.confirmed_at.present? ? "Confirmed" : "Not confirmed" %></td>
+          <td>
+            <%= user.confirmed_at.present? ? "Confirmed" : "Not confirmed" %>
+          </td>
           <td class="text-right">
             <div class="dropdown">
               <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>

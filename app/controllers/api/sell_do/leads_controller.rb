@@ -5,9 +5,9 @@ class Api::SellDo::LeadsController < Api::SellDoController
   def lead_created
     respond_to do |format|
       if @user.save
-        format.json { render json: @user, status: :created }
+        format.json { render json: @user }
       else
-        format.json { render json: {errors: @user.errors.full_messages.uniq}, status: :unprocessable_entity }
+        format.json { render json: {errors: @user.errors.full_messages.uniq} }
       end
     end
   end
@@ -16,7 +16,7 @@ class Api::SellDo::LeadsController < Api::SellDoController
     @user.confirm # also confirm the user in case of a push to sales event
     respond_to do |format|
       if @user.save
-        format.json { render json: @user, status: :created }
+        format.json { render json: @user }
       else
         format.json { render json: {errors: @user.errors.full_messages.uniq} }
       end
@@ -24,9 +24,16 @@ class Api::SellDo::LeadsController < Api::SellDoController
   end
 
   def set_user
-    @user = User.where(lead_id: params[:lead_id].to_s).first
-    if @user.blank?
-      @user = User.new(booking_portal_client_id: current_client.id, email: params[:lead][:email], phone: params[:lead][:phone], first_name: params[:lead][:first_name], last_name: params[:lead][:last_name], lead_id: params[:lead_id])
+    if params[:lead_id].present?
+      @user = User.where(lead_id: params[:lead_id].to_s).first
+      if @user.blank?
+        @user = User.new(booking_portal_client_id: current_client.id, email: params[:lead][:email], phone: params[:lead][:phone], first_name: params[:lead][:first_name], last_name: params[:lead][:last_name], lead_id: params[:lead_id])
+        @user.first_name = "Customer" if @user.first_name.blank?
+      end
+    else
+      respond_to do |format|
+        format.json { render json: {} and return }
+      end
     end
   end
 end
