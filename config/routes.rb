@@ -122,4 +122,7 @@ Rails.application.routes.draw do
     resources :user_kycs, except: [:show, :destroy]
     resources :searches, except: [:destroy], controller: 'searches'
   end
+
+  match '/sell_do/lead_created', to: "api/sell_do/leads#lead_created", via: [:get, :post]
+  match '/sell_do/pushed_to_sales', to: "api/sell_do/leads#pushed_to_sales", via: [:get, :post]
 end
