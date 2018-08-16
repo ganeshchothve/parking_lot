@@ -17,13 +17,13 @@
   <div class="col-md-6">
     <div class="form-group">
       <%= f.label :country %>
-      <%= f.select :country, [], {prompt: true}, class: 'form-control crs-country', "data-region-id": random_id, "data-default-value": f.object.country %>
+      <%= f.select :country, [], {prompt: true}, class: 'form-control crs-country', "data-region-id": random_id, "data-default-value": f.object.present? ? f.object.country : "" %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="form-group">
       <%= f.label :state %>
-      <%= f.select :state, [], {prompt: true}, class: 'form-control', id: random_id, "data-default-value": f.object.state %>
+      <%= f.select :state, [], {prompt: true}, class: 'form-control', id: random_id, "data-default-value": f.object.present? ? f.object.state : "" %>
     </div>
   </div>
 </div>
