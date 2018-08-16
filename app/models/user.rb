@@ -18,7 +18,7 @@ class User
   field :phone, type: String, default: ""
   field :lead_id, type: String
   field :role, type: String, default: "user"
-  field :allowed_bookings, type: Integer, default: 5
+  field :allowed_bookings, type: Integer
   field :manager_id, type: BSON::ObjectId
   field :manager_change_reason, type: String
   field :referenced_manager_ids, type: Array, default: []
@@ -93,7 +93,7 @@ class User
 
   has_many :smses, as: :triggered_by, class_name: "Sms"
 
-  validates :first_name, :role, :allowed_bookings, presence: true
+  validates :first_name, :role, presence: true
   validates :phone, uniqueness: true, phone: { possible: true, types: [:voip, :personal_number, :fixed_or_mobile]}, if: Proc.new{|user| user.email.blank? }
   validates :email, uniqueness: true, if: Proc.new{|user| user.phone.blank? }
   validates :rera_id, presence: true, if: Proc.new{ |user| user.role?('channel_partner') }

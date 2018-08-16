@@ -2,6 +2,7 @@ class UserObserver < Mongoid::Observer
   include ApplicationHelper
 
   def before_create user
+    user.allowed_bookings = current_client.allowed_bookings_per_user
     user.booking_portal_client_id = current_client.id
     if user.role?("user")
       email = user.email

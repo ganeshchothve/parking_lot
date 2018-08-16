@@ -198,6 +198,14 @@
                   </div>
                 </div>
               </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :allowed_bookings_per_user, class: 'label-required' %>
+                    <%= f.number_field :allowed_bookings_per_user, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("allowed_bookings_per_user") ? false : true), min: 0 %>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="tab-pane fade" id="nav-client-contacts" role="tabpanel">
               <div class="row">
