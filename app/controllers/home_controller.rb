@@ -16,7 +16,7 @@ class HomeController < ApplicationController
     unless request.xhr?
       redirect_to (user_signed_in? ? after_sign_in_path : root_path)
     else
-      if user_signed_in? && ['channel_partner', 'admin', 'crm', 'sales', 'cp'].exclude?(current_user.role)
+      if user_signed_in? && user.buyer?
         message = "You have already been logged in"
         respond_to do |format|
           format.json { render json: {errors: "You have already been logged in", url: root_path}, status: :unprocessable_entity }
