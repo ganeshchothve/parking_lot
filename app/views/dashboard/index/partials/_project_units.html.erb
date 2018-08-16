@@ -1,29 +1,31 @@
-<div class="card">
-  <div class="card-header">
-    Inventory
-  </div>
-  <div class="card-body">
-    <div class="table-responsive">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Bedrooms</th>
-            <th>Status</th>
-            <th class="text-right">Count</th>
-            <th class="text-right">Total Agreement Price</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% DashboardDataProvider.project_units_dashboard(current_user).each do |d| %>
-          <tr>
-            <td><%= d[:bedrooms] %></td>
-            <td><%= ProjectUnit.available_statuses.find{|x| x[:id] == d[:status]}[:text] %></td>
-            <td class="text-right"><%= d[:count] %></td>
-            <td class="text-right"><%= number_to_indian_currency(d[:total_agreement_price]) %></td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
+<% if current_client.enable_actual_inventory? %>
+  <div class="card">
+    <div class="card-header">
+      Inventory
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Bedrooms</th>
+              <th>Status</th>
+              <th class="text-right">Count</th>
+              <th class="text-right">Total Agreement Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% DashboardDataProvider.project_units_dashboard(current_user).each do |d| %>
+            <tr>
+              <td><%= d[:bedrooms] %></td>
+              <td><%= ProjectUnit.available_statuses.find{|x| x[:id] == d[:status]}[:text] %></td>
+              <td class="text-right"><%= d[:count] %></td>
+              <td class="text-right"><%= number_to_indian_currency(d[:total_agreement_price]) %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
-</div>
+<% end %>
