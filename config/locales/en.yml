@@ -141,6 +141,8 @@ en:
         pancard_photo: 'PAN Card Photo'
         adharcard_photo: 'Aadhaar Photo'
         address_proof: 'Address Proof'
+        permanent_address: "Permanent Address"
+        correspondence_address: "Correspondence Address"
         aadhaar: 'Aadhaar'
         oci: 'OCI'
         gstn: 'GSTN'

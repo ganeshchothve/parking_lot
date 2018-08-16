@@ -1,8 +1,4 @@
-# GENERICTODO: To be replaced with Email Template at a later stage
-class CostSheetTemplate
-  include Mongoid::Document
-  include Mongoid::Timestamps
-
+class Template::CostSheetTemplate < Template
   def self.default_content
     "<table class='table'>
       <thead>
@@ -117,18 +113,5 @@ class CostSheetTemplate
         </tr>
       </tbody>
     </table>"
-  end
-
-  field :content, type: String, default: CostSheetTemplate.default_content
-
-  belongs_to :booking_portal_client, class_name: "Client"
-
-  validates :content, presence: true
-
-  def parsed_content project_unit
-    unless project_unit.is_a?(ProjectUnit)
-      return ""
-    end
-    return ERB.new(content).result( project_unit.get_binding ).html_safe
   end
 end
