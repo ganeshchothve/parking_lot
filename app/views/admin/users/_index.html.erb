@@ -24,8 +24,8 @@
               <% end %>
             </div>
           </td>
-          <td><%= user.receipts.where(status: "success").present? ? "Y" : "N" %></td>
           <td><%= user.lead_id %></td>
+          <td><%= user.receipts.where(status: "success").present? ? "Y" : "N" %></td>
           <td><%= User.available_roles(current_client).find{|x| x[:id] == user.role}[:text] %></td>
           <td>
             <%= user.confirmed_at.present? ? "Confirmed" : "Not confirmed" %>
