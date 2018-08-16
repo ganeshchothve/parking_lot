@@ -44,7 +44,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="small text-muted"><%= labels[:manager_id] %></label>
-            <div><%= @user.manager.name %></div>
+            <div><%= @user.manager_id.present? ? @user.manager.name : "" %></div>
           </div>
         </div>
       </div>
