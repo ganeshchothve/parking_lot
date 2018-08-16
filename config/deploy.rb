@@ -5,10 +5,10 @@ set :application, "booking_portal"
 set :repo_url, "git@github.com:amuratech/booking_portal.git"
 
 # Default branch is :master
-set :branch, "generic"
+set :branch, "amanora"
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, "/var/www/generic"
+set :deploy_to, "/var/www/amanora"
 set :ssh_options, {forward_agent: true, keepalive: true}
 
 # Default value for :format is :airbrussh.
