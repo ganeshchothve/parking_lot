@@ -1,6 +1,7 @@
 require 'spreadsheet'
 class UserExportWorker
   include Sidekiq::Worker
+  extend ApplicationHelper
 
   def perform emails
     file = Spreadsheet::Workbook.new
