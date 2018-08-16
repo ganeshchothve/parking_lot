@@ -1,10 +1,10 @@
 class DiscountPolicy < ApplicationPolicy
   def index?
-    current_client.enable_actual_inventory? && user.role?('superadmin') || user.role?('admin') || user.role?('sales') || user.role?('crm') || user.role?('cp')
+    current_client.enable_actual_inventory? && (user.role?('superadmin') || user.role?('admin') || user.role?('sales') || user.role?('crm') || user.role?('cp'))
   end
 
   def edit?
-    current_client.enable_actual_inventory? && (index? && record.status == 'draft') || ['superadmin', 'admin'].include?(user.role)
+    create?
   end
 
   def new?
@@ -12,7 +12,7 @@ class DiscountPolicy < ApplicationPolicy
   end
 
   def create?
-    current_client.enable_actual_inventory? && (index? && record.status == 'draft') || ['superadmin', 'admin'].include?(user.role)
+    current_client.enable_actual_inventory? && ((index? && record.status == 'draft') || ['superadmin', 'admin'].include?(user.role))
   end
 
   def update?
