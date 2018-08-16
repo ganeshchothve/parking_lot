@@ -314,14 +314,14 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <%= f.label :selldo_default_srd, class: 'label-required' %>
-                    <%= f.text_field :selldo_default_srd, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("selldo_default_srd") ? false : true) %>
+                    <%= f.label :selldo_default_srd %>
+                    <%= f.text_field :selldo_default_srd, class: 'form-control', disabled: (policy(@client).editable_field?("selldo_default_srd") ? false : true) %>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
-                    <%= f.label :selldo_cp_srd, class: 'label-required' %>
-                    <%= f.text_field :selldo_cp_srd, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("selldo_cp_srd") ? false : true) %>
+                    <%= f.label :selldo_cp_srd %>
+                    <%= f.text_field :selldo_cp_srd, class: 'form-control', disabled: (policy(@client).editable_field?("selldo_cp_srd") ? false : true) %>
                   </div>
                 </div>
               </div>

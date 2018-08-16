@@ -13,10 +13,12 @@ class ReceiptPolicy < ApplicationPolicy
 
   def new?
     if user.buyer?
-      user.kyc_ready? && (record.project_unit_id.blank? || after_hold_payment?) && user.confirmed?
+      valid = user.kyc_ready? && (record.project_unit_id.blank? || after_hold_payment?) && user.confirmed?
     else
-      record.user_id.present? && record.user.kyc_ready? && (record.project_unit_id.blank? || after_blocked_payment?) &&  record.user.confirmed?
+      valid = record.user_id.present? && record.user.kyc_ready? && (record.project_unit_id.blank? || after_blocked_payment?) && record.user.confirmed?
     end
+    valid = valid && current_client.payment_gateway.present? if record.payment_mode == "online"
+    valid
   end
 
   def direct?
