@@ -1,8 +1,5 @@
 # GENERICTODO: To be replaced with Email Template at a later stage
-class PaymentScheduleTemplate
-  include Mongoid::Document
-  include Mongoid::Timestamps
-
+class Template::PaymentScheduleTemplate < Template
   def self.default_content
     '<table class="table">
       <thead>
@@ -56,18 +53,5 @@ class PaymentScheduleTemplate
         <% end %>
       </tbody>
     </table>'
-  end
-
-  field :content, type: String, default: PaymentScheduleTemplate.default_content
-
-  belongs_to :booking_portal_client, class_name: "Client"
-
-  validates :content, presence: true
-
-  def parsed_content project_unit
-    unless project_unit.is_a?(ProjectUnit)
-      return nil
-    end
-    return ERB.new(self.content).result( project_unit.get_binding ).html_safe
   end
 end

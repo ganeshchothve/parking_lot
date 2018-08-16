@@ -1,0 +1,123 @@
+<div class="container form-group mt-3 text-right pr-0">
+  <button onclick="window.print();" class="btn btn-primary d-print-none">Print</button>
+</div>
+<% labels = t("mongoid.attributes.user").with_indifferent_access %>
+<div class="container bg-light">
+  <div class="pt-3"></div>
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="logo-wrapper">
+            <%= image_tag current_client.logo.url %>
+          </div>
+        </div>
+        <div class="col-md-6 text-right">
+          <div class="mt-2 mb-1 small text-muted"><%= labels[:lead_id] %></div>
+          <h5><%= @user.lead_id %></h5>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mt-3"></div>
+  <div class="card">
+    <div class="card-header">
+      Customer Details
+    </div>
+    <div class="card-body">
+      <div class="form-group">
+        <h5><%= @user.name %></h5>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="small text-muted"><%= labels[:email] %></label>
+            <div><%= @user.email %></div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="small text-muted"><%= labels[:phone] %></label>
+            <div><%= @user.phone %></div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="small text-muted"><%= labels[:manager_id] %></label>
+            <div><%= @user.manager.name %></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mt-3"></div>
+  <% user_kycs = @user.user_kycs.all %>
+  <% kyc_labels = t("mongoid.attributes.user_kyc").with_indifferent_access %>
+  <% if user_kycs.present? %>
+    <div class="card h-100">
+      <div class="card-header">
+        <%= global_labels[:user_kyc] %>
+      </div>
+      <div class="card-body">
+        <% user_kycs.each do |user_kyc| %>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="small text-muted"><%= kyc_labels[:name] %></label>
+              <div><%= user_kyc.name %></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="small text-muted"><%= kyc_labels[:pan_number] %></label>
+              <div><%= user_kyc.pan_number %></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="small text-muted"><%= kyc_labels[:aadhaar] %></label>
+              <div><%= user_kyc.aadhaar %></div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="small text-muted"><%= kyc_labels[:configurations] %></label>
+              <div><%= user_kyc.configurations.to_sentence %></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="small text-muted"><%= kyc_labels[:permanent_address] %></label>
+              <div><%= user_kyc.permanent_address.present? ? user_kyc.permanent_address.to_sentence : "" %></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="small text-muted"><%= kyc_labels[:dob] %></label>
+              <div><%= user_kyc.dob.present? ? l(user_kyc.dob) : "" %></div>
+            </div>
+          </div>
+        </div>
+        <hr/>
+        <% end %>
+      </div>
+    </div>
+    <div class="mt-3"></div>
+  <% end %>
+  <div class="card">
+    <div class="card-body">
+      <div class="float-right text-right">
+        <strong>For <%= current_client.registration_name %></strong>
+        <br/><br/><br/>
+        Authorized Signatory
+      </div>
+    </div>
+  </div>
+  <div class="text-center text-muted small mt-3">This is an electronically generated customer form.</div>
+  <div class="pt-3"></div>
+</div>
+<%= javascript_tag do %>
+  window.print();
+<% end %>

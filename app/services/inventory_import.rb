@@ -153,8 +153,8 @@ module InventoryImport
         project_unit.type = "apartment"
         project_unit.selldo_id = erp_id
         project_unit.floor_rise = floor_rise.to_f
-        project_unit.payment_schedule_template_id = PaymentScheduleTemplate.first.id
-        project_unit.cost_sheet_template_id = CostSheetTemplate.first.id
+        project_unit.payment_schedule_template_id = Template::PaymentScheduleTemplate.first.id
+        project_unit.cost_sheet_template_id = Template::CostSheetTemplate.first.id
 
         costs.each do |index, arr|
           if row[index].to_i > 0

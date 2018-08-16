@@ -1,8 +1,8 @@
 class Admin::UsersController < AdminController
   before_action :authenticate_user!
-  before_action :set_user, except: [:index, :export, :new, :create, :export_cp_report, :export_cp_lead_report]
+  before_action :set_user, except: [:index, :export, :new, :create]
   before_action :authorize_resource
-  around_action :apply_policy_scope, only: [:index, :export, :export_cp_report, :export_cp_lead_report]
+  around_action :apply_policy_scope, only: [:index, :export]
 
   layout :set_layout
 
@@ -55,6 +55,9 @@ class Admin::UsersController < AdminController
     end
     flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
     redirect_to admin_users_path
+  end
+
+  def print
   end
 
   def show
@@ -115,7 +118,7 @@ class Admin::UsersController < AdminController
   end
 
   def authorize_resource
-    if ['index', 'export', 'export_cp_report', 'export_cp_lead_report'].include?(params[:action])
+    if ['index', 'export'].include?(params[:action])
       authorize User
     elsif params[:action] == "new" || params[:action] == "create"
       if params[:role].present?

@@ -19,6 +19,10 @@ class UserPolicy < ApplicationPolicy
     record.id == user.id || new?
   end
 
+  def print?
+    record.buyer?
+  end
+
   def update_password?
     edit?
   end
