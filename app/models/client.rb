@@ -13,6 +13,7 @@ class Client
   field :helpdesk_number, type: String
   field :helpdesk_email, type: String
   field :notification_email, type: String
+  field :allowed_bookings_per_user, type: Integer, default: 3
   field :sender_email, type: String
   field :email_domains, type: Array, default: []
   field :booking_portal_domains, type: Array, default: []
@@ -57,7 +58,7 @@ class Client
   has_many :smses, class_name: 'Sms'
   has_many :assets, as: :assetable
 
-  validate :name, :selldo_client_id, :selldo_form_id, :selldo_channel_partner_form_id, :selldo_gre_form_id, :helpdesk_email, :helpdesk_number, :notification_email, :sender_email, :email_domains, :booking_portal_domains, :registration_name, :cin_number, :website_link, :support_email, :support_number, :payment_gateway
+  validate :name, :allowed_bookings_per_user, :selldo_client_id, :selldo_form_id, :selldo_channel_partner_form_id, :selldo_gre_form_id, :helpdesk_email, :helpdesk_number, :notification_email, :sender_email, :email_domains, :booking_portal_domains, :registration_name, :cin_number, :website_link, :support_email, :support_number, :payment_gateway
   validates :preferred_login, inclusion: {in: Proc.new{ Client.available_preferred_logins.collect{|x| x[:id]} } }
   validates :payment_gateway, inclusion: {in: Proc.new{ Client.available_payment_gateways.collect{|x| x[:id]} } }, allow_blank: true
 
@@ -109,6 +110,7 @@ c.enable_actual_inventory = false
 c.enable_channel_partners = false
 c.enable_company_users = true
 c.remote_logo_url = "https://image4.owler.com/logo/amura_owler_20160227_194208_large.png"
+c.allowed_bookings_per_user = 5
 c.save
 
 p = Project.new

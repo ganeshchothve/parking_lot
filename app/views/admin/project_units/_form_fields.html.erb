@@ -7,7 +7,7 @@
 <% if policy(@project_unit).editable_field?("user_kyc_ids") %>
 <div class="form-group">
   <%= f.label :user_kyc_ids %>
-  <%= f.select :user_kyc_ids, @project_unit.user.user_kycs.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', multiple: true %>
+  <%= f.select :user_kyc_ids, (@project_unit.user.present? && @project_unit.user.user_kycs.present?) ? @project_unit.user.user_kycs.collect{|x| [x.name, x.id]}, [], {prompt: true}, class: 'selectize', multiple: true %>
 </div>
 <% end %>
 <div class="form-group">

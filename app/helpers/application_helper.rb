@@ -36,7 +36,7 @@ module ApplicationHelper
       domain = (request.subdomain.present? ? "#{request.subdomain}." : "") + "#{request.domain}"
       @current_client = Client.in(booking_portal_domains: domain).first
     else
-      @current_client = Client.first # GENERICTODO: handle this
+      @current_client = Client.asc(:created_at).first # GENERICTODO: handle this
     end
   end
 
