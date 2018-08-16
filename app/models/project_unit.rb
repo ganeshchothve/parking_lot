@@ -268,11 +268,11 @@ class ProjectUnit
   end
 
   def payment_schedule_template
-    PaymentScheduleTemplate.find self.payment_schedule_template_id
+    Template::PaymentScheduleTemplate.find self.payment_schedule_template_id
   end
 
   def cost_sheet_template
-    CostSheetTemplate.find self.cost_sheet_template_id
+    Template::CostSheetTemplate.find self.cost_sheet_template_id
   end
 
   def total_outside_agreement_costs
