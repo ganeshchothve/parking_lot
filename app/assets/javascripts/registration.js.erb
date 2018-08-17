@@ -51,12 +51,12 @@ function sell_do_form_submission_failed(e){
 
 function register_user_with_portal(e){
   var data = {
-    lead_id: e.lead_id,
-    first_name: unescape(e['sell_do[form][lead][first_name]'].replace("+", " ")),
-    last_name: unescape(e['sell_do[form][lead][last_name]'].replace("+", " ")),
-    email: unescape(e['sell_do[form][lead][email]']),
-    phone: unescape(e['sell_do[form][lead][phone]'].replace(/\+/ig, "")),
-    mixpanel_id: unescape(e['sell_do[campaign][mixpanel_id]'])
+    lead_id: (e.lead_id ? e.lead_id : ""),
+    first_name: unescape(e['sell_do[form][lead][first_name]'] ? (e['sell_do[form][lead][first_name]'].replace("+", " ")) : ""),
+    last_name: unescape(e['sell_do[form][lead][last_name]'] ? (e['sell_do[form][lead][last_name]'].replace("+", " ")) : ""),
+    email: unescape(e['sell_do[form][lead][email]'] ? e['sell_do[form][lead][email]'] : ""),
+    phone: unescape(e['sell_do[form][lead][phone]'] ? e['sell_do[form][lead][phone]'].replace(/\+/ig, "") : ""),
+    mixpanel_id: unescape(e['sell_do[campaign][mixpanel_id]'] ? e['sell_do[campaign][mixpanel_id]'] : "")
   }
   $.ajax({
     url: '<%= url.check_and_register_path %>',
