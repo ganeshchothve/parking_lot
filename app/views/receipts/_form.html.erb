@@ -110,7 +110,11 @@
                   <%
                   statuses = Receipt.available_statuses.collect{|x| [x[:text], x[:id]]}
                   if @receipt.new_record?
-                    statuses = statuses.select{|x| x[1] == "pending"}
+                    tmp = statuses.select{|x| x[1] == "pending"}
+                    if @receipt.project_unit_id.present? && @receipt.project_unit.status == "hold"
+                      tmp = statuses.select{|x| x[1] == "clearance_pending"}
+                    end
+                    statuses = tmp
                   else
                     if @receipt.status == 'pending'
                       statuses = statuses.reject{|x| x[1] == 'success'}

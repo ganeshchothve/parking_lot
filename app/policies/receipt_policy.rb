@@ -15,7 +15,9 @@ class ReceiptPolicy < ApplicationPolicy
     if user.buyer?
       valid = user.kyc_ready? && (record.project_unit_id.blank? || after_hold_payment?) && user.confirmed?
     else
-      valid = record.user_id.present? && record.user.kyc_ready? && (record.project_unit_id.blank? || after_blocked_payment?) && record.user.confirmed?
+      valid = record.user_id.present? && record.user.kyc_ready? && record.user.confirmed?
+      valid = valid && (record.project_unit_id.blank? || after_blocked_payment? || (after_hold_payment? && editable_field?('status')))
+
     end
     valid = valid && current_client.payment_gateway.present? if record.payment_mode == "online"
     valid
@@ -43,7 +45,7 @@ class ReceiptPolicy < ApplicationPolicy
 
   def after_hold_payment?
     project_unit = record.project_unit
-    valid = project_unit.present? && project_unit.user_based_status(project_unit.user) == 'booked'
+    valid = project_unit.present? && project_unit.status == "hold"
     valid
   end
 
@@ -64,6 +66,9 @@ class ReceiptPolicy < ApplicationPolicy
     end
     if !user.buyer? && (record.new_record? || record.status == 'pending')
       attributes += [:issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier]
+    end
+    if ['sales', 'sales_admin'].include?(user.role) && record.status == "pending"
+      attributes += [:status]
     end
     if ['admin', 'crm', 'superadmin'].include?(user.role)
       attributes += [:status]

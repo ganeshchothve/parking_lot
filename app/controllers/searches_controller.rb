@@ -133,9 +133,9 @@ class SearchesController < ApplicationController
       authorize(Receipt.new(user: @search.user), :new?)
     end
     if @receipt.payment_type == "blocking" && @receipt.new_record?
-      @receipt.payment_gateway = 'Razorpay'
+      @receipt.payment_gateway = current_client.payment_gateway
     else
-      @receipt.payment_gateway = 'Razorpay'
+      @receipt.payment_gateway = current_client.payment_gateway
     end
     if @receipt.save
       if @receipt.status == "pending" # if we are just tagging an already successful receipt, we dont need to send the user to payment gateway
