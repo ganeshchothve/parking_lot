@@ -15,10 +15,12 @@
           <%= f.hidden_field :status, value: 'available' %>
           <% if current_user.buyer? %>
             <%= link_to "I Agree", payment_user_search_path(@search), class: 'btn btn-primary', style:'margin-top:0px' , data:{event_category: 'Section', event_action: 'Click', event_name: 'I Agree'}, onclick: alert %>
-          <% else %>
-            <% if ReceiptPolicy.new(current_user, Receipt.new(user: @user, status: "clearance_pending", project_unit: @project_unit)).new? %>
+          <% elsif ReceiptPolicy.new(current_user, Receipt.new(user: @user, status: "clearance_pending", project_unit: @project_unit)).new? %>
               <%= link_to "I Agree on behalf of #{@user.name}", new_admin_user_project_unit_receipt_path(@user.id, @project_unit.id), class: 'btn btn-primary modal-remote-form-link', style:'margin-top:0px', onclick: alert %>
-            <% end %>
+          <% else %>
+            <div class="alert alert-danger">
+              You do not have access to take a <%= Receipt.available_statuses.find{|x| x[:id] == 'clearance_pending'}[:text] %> <%= global_labels[:receipt] %> on behalf of <%= @user.name %>.
+            </div>
           <% end %>
           <%= f.submit 'Cancel', class: 'btn btn-danger' , data:{event_category: 'Section', event_action: 'Click', event_name: 'Cancel'} %>
         <% end %>

@@ -15,7 +15,9 @@ class ReceiptPolicy < ApplicationPolicy
     if user.buyer?
       valid = user.kyc_ready? && (record.project_unit_id.blank? || after_hold_payment?) && user.confirmed?
     else
-      valid = record.user_id.present? && record.user.kyc_ready? && (record.project_unit_id.blank? || after_blocked_payment? || after_hold_payment?) && record.user.confirmed?
+      valid = record.user_id.present? && record.user.kyc_ready? && record.user.confirmed?
+      valid = valid && (record.project_unit_id.blank? || after_blocked_payment? || (after_hold_payment? && editable_field?('status')))
+
     end
     valid = valid && current_client.payment_gateway.present? if record.payment_mode == "online"
     valid
