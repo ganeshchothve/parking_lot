@@ -185,7 +185,7 @@
 
   var showUnitData = function(unit_id){
     var unit = _.find(units, function(u){ return u._id == unit_id });
-    $("#unit-description").find('[data-placeholder="name"]').html(unit.name);
+    $("#unit-description").find('[data-placeholder="name"]').html('Unit No.: ' + unit.name);
     $("#unit-description").find('[data-placeholder="floor"]').html(unit.floor);
     $("#unit-description").find('[data-placeholder="bedrooms"]').html(unit.bedrooms);
     $("#unit-description").find('[data-placeholder="bathrooms"]').html(unit.bathrooms);

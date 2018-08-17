@@ -58,7 +58,7 @@ class Client
   has_many :smses, class_name: 'Sms'
   has_many :assets, as: :assetable
 
-  validate :name, :allowed_bookings_per_user, :selldo_client_id, :selldo_form_id, :selldo_channel_partner_form_id, :selldo_gre_form_id, :helpdesk_email, :helpdesk_number, :notification_email, :sender_email, :email_domains, :booking_portal_domains, :registration_name, :cin_number, :website_link, :support_email, :support_number, :payment_gateway
+  validate :name, :allowed_bookings_per_user, :selldo_client_id, :selldo_form_id, :selldo_channel_partner_form_id, :selldo_gre_form_id, :helpdesk_email, :helpdesk_number, :notification_email, :sender_email, :email_domains, :booking_portal_domains, :registration_name, :website_link, :support_email, :support_number, :payment_gateway
   validates :preferred_login, inclusion: {in: Proc.new{ Client.available_preferred_logins.collect{|x| x[:id]} } }
   validates :payment_gateway, inclusion: {in: Proc.new{ Client.available_payment_gateways.collect{|x| x[:id]} } }, allow_blank: true
 
@@ -102,7 +102,6 @@ c.channel_partner_support_number = "9922410908"
 c.channel_partner_support_email = "supriya@amuratech.com"
 c.cancellation_amount = 5000
 c.area_unit = "psqft."
-c.cin_number = "TMP CIN Number"
 c.preferred_login = "phone"
 c.sms_provider_username = "amuramarketing"
 c.sms_provider_password = "aJ_Z-1j4"
