@@ -207,7 +207,7 @@ en:
         lead_id: 'Sell.Do Lead ID'
         time_zone: "User's Time Zone"
         role: 'Role'
-        manager_id: "Partner / Manager"
+        manager_id: "Partner / Manager / Added by"
         manager_change_reason: "Reason for changing Partner"
         kyc_ready: 'Is the Customer KYC Ready?'
         total_amount_paid: "Total Paid (you might some payments pending clearance)"
