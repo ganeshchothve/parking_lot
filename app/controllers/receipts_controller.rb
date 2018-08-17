@@ -46,7 +46,7 @@ class ReceiptsController < ApplicationController
     end
     if params[:project_unit_id].present?
       project_unit = ProjectUnit.find(params[:project_unit_id])
-      @receipt = Receipt.new(creator: current_user, project_unit_id: project_unit.id, user_id: @user, total_amount: project_unit.pending_balance, payment_type: 'booking')
+      @receipt = Receipt.new(creator: current_user, project_unit_id: project_unit.id, user_id: @user, total_amount: (project_unit.status == "hold" ? current_client.blocking_amount : project_unit.pending_balance), payment_type: (project_unit.status == "hold" ? 'blocking' : 'booking'))
     else
       @receipt = Receipt.new(creator: current_user, user_id: @user, payment_mode: 'cheque', payment_type: 'blocking', total_amount: current_client.blocking_amount)
     end

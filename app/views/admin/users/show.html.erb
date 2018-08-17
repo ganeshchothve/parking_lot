@@ -71,20 +71,22 @@
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label><%= labels[:manager_change_reason] %></label>
-                <div>
-                  <%= @user.manager_change_reason.present? ? @user.manager_change_reason : '-' %>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
                 <label><%= labels[:time_zone] %></label>
                 <div>
                   <%= @user.time_zone.present? ? @user.time_zone : '-' %>
                 </div>
               </div>
             </div>
+            <% if current_client.enable_channel_partners? %>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label><%= labels[:manager_change_reason] %></label>
+                <div>
+                  <%= @user.manager_change_reason.present? ? @user.manager_change_reason : '-' %>
+                </div>
+              </div>
+            </div>
+            <% end %>
           </div>
           <% end %>
           <% if @user.buyer? && current_client.enable_actual_inventory? %>

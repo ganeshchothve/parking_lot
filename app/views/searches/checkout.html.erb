@@ -13,7 +13,13 @@
       <% if @project_unit.status == "hold" %>
         <%= form_for @project_unit, url: make_available_user_search_path(@search), method: 'post', html: {class: 'validate-form'} do |f| %>
           <%= f.hidden_field :status, value: 'available' %>
-          <%= link_to (current_user.buyer? ? "I Agree" : "I Agree on behalf of #{@project_unit.user.name}"), payment_user_search_path(@search), class: 'btn btn-primary', style:'margin-top:0px' , data:{event_category: 'Section', event_action: 'Click', event_name: 'I Agree'}, onclick: alert %>
+          <% if current_user.buyer? %>
+            <%= link_to "I Agree", payment_user_search_path(@search), class: 'btn btn-primary', style:'margin-top:0px' , data:{event_category: 'Section', event_action: 'Click', event_name: 'I Agree'}, onclick: alert %>
+          <% else %>
+            <% if ReceiptPolicy.new(current_user, Receipt.new(user: @user, status: "clearance_pending", project_unit: @project_unit)).new? %>
+              <%= link_to "I Agree on behalf of #{@user.name}", new_admin_user_project_unit_receipt_path(@user.id, @project_unit.id), class: 'btn btn-primary modal-remote-form-link', style:'margin-top:0px', onclick: alert %>
+            <% end %>
+          <% end %>
           <%= f.submit 'Cancel', class: 'btn btn-danger' , data:{event_category: 'Section', event_action: 'Click', event_name: 'Cancel'} %>
         <% end %>
       <% end %>
