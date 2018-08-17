@@ -143,14 +143,18 @@ class User
       {id: 'superadmin', text: 'Superadmin'},
       {id: 'admin', text: 'Administrator'},
       {id: 'crm', text: 'CRM User'},
-      {id: 'cp_admin', text: 'Channel Partner Head'},
-      {id: 'cp', text: 'Channel Partner Manager'},
       {id: 'sales_admin', text: 'Sales Head'},
       {id: 'sales', text: 'Sales User'},
-      {id: 'channel_partner', text: 'Channel Partner'},
       {id: 'user', text: 'Customer'},
       {id: 'gre', text: 'GRE or Pre-sales'}
     ]
+    if current_client.enable_channel_partners?
+      roles += [
+        {id: 'cp_admin', text: 'Channel Partner Head'},
+        {id: 'cp', text: 'Channel Partner Manager'},
+        {id: 'channel_partner', text: 'Channel Partner'}
+      ]
+    end
     if current_client.present? && current_client.enable_company_users?
       roles += [
         {id: 'management_user', text: 'Management User'},

@@ -44,10 +44,12 @@
             <label class="small text-muted">Paid To:</label>
             <div><%= current_client.registration_name %></div>
           </div>
-          <div class="form-group">
-            <label class="small text-muted">CIN Number:</label>
-            <div><%= current_client.cin_number %></div>
-          </div>
+          <% if current_client.cin_number.present? %>
+            <div class="form-group">
+              <label class="small text-muted">CIN Number:</label>
+              <div><%= current_client.cin_number %></div>
+            </div>
+          <% end %>
           <% if current_client.address.present? %>
             <div class="form-group">
               <label class="small text-muted">Address: </label>
