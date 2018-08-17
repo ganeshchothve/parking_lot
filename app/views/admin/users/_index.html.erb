@@ -37,6 +37,10 @@
                 <% if current_client.enable_actual_inventory? && ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: user, status: "available")).hold? %>
                   <%= link_to "Choose #{global_labels[:project_unit]} & Add Booking", new_admin_user_search_path(user.id), class: "dropdown-item" %>
                 <% end %>
+                <% hold_unit = user.project_units.where(status: 'hold').first %>
+                <% if hold_unit.present? && ProjectUnitPolicy.new(current_user, hold_unit).block? %>
+                  <%= link_to "Checkout using unit already held", checkout_user_search_path(user.get_search(hold_unit.id)), class: "dropdown-item" %>
+                <% end %>
                 <% if !current_user.buyer? && ReceiptPolicy.new(current_user, Receipt.new(user: user)).direct? %>
                   <%= link_to "Add Direct #{global_labels['receipt']}", direct_admin_user_receipts_path(user), class: 'dropdown-item modal-remote-form-link' %>
                 <% end %>
