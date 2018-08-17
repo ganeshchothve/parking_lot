@@ -20,7 +20,7 @@
               <%= user.email.present? ? user.email : "" %> <br/>
               <%= user.phone.present? ? user.phone : "" %><br/>
               <% if user.role?("user") && user.manager_id.present? && current_user.role != "channel_partner" %>
-                CP: <%= user.manager.name %><br/>
+                <%= labels[:manager_id] %><%= user.manager.name %><br/>
               <% end %>
             </div>
           </td>

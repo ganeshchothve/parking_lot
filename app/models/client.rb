@@ -43,6 +43,7 @@ class Client
   field :holding_minutes, type: Integer, default: 15
   field :payment_gateway, type: String, default: 'Razorpay'
   field :enable_company_users, type: Boolean
+  field :terms_and_conditions, type: String
 
   mount_uploader :logo, DocUploader
   mount_uploader :mobile_logo, DocUploader
