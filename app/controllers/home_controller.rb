@@ -16,13 +16,17 @@ class HomeController < ApplicationController
     unless request.xhr?
       redirect_to (user_signed_in? ? after_sign_in_path : root_path)
     else
-      if user_signed_in? && user.buyer?
+      if user_signed_in? && current_user.buyer?
         message = "You have already been logged in"
         respond_to do |format|
           format.json { render json: {errors: "You have already been logged in", url: root_path}, status: :unprocessable_entity }
         end
       else
-        @user = User.or([{email: params['email']}, {phone: params['phone']}, {lead_id: params['lead_id']}]).first #TODO: check if you want to find uniquess on lead id also
+        query = []
+        query << {email: params['email']} if params[:email].present?
+        query << {phone: params['phone']} if params[:phone].present?
+        query << {leaD_id: params['leaD_id']} if params[:leaD_id].present?
+        @user = User.or(query).first #TODO: check if you want to find uniquess on lead id also
         if @user.present?
           message = 'A user with these details has already registered.'
           if !@user.confirmed? && @user.role?('user')
