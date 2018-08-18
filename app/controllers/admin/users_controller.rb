@@ -74,6 +74,31 @@ class Admin::UsersController < AdminController
     render layout: false
   end
 
+  def confirm_via_otp
+    @otp_sent_status = {}
+    unless request.patch?
+      @otp_sent_status = @user.send_otp
+      if Rails.env.development?
+        Rails.logger.info "---------------- #{@user.otp_code} ----------------"
+      end
+    else
+      if @user.authenticate_otp(params[:user][:login_otp], drift: 60)
+        unless @user.confirmed?
+          @user.confirm
+        end
+      end
+    end
+    respond_to do |format|
+      if @otp_sent_status[:status] || @user.save
+        format.html { render layout: false }
+        format.json { render json: @user }
+      else
+        format.html { render layout: false }
+        format.json { render json: {errors: @user.errors.full_messages}, status: 422 }
+      end
+    end
+  end
+
   def create
     # sending the role upfront to ensure the permitted_attributes in next step is updated
     @user = User.new(booking_portal_client_id: current_client.id, role: params[:user][:role])

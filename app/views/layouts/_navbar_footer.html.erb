@@ -1,0 +1,17 @@
+<nav id="bottom_navigation" class="navbar navbar-expand-lg navbar-light bg-white fixed-bottom border-top d-none d-lg-flex">
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <span class="small">
+          <%= current_project.name %> is registered via MahaRERA No.: <%= current_project.rera_registration_no %> & is available on <a href="https://maharera.mahaonline.gov.in" target="_blank">https://maharera.mahaonline.gov.in</a>.
+        </span>
+      </li>
+    </ul>
+    <ul class="navbar-nav pull-right">
+      <%= bottom_navigation('d-none d-lg-block') %>
+      <li class='nav-item d-none d-lg-block'>
+        <%= link_to 'Powered by Amura', 'https://www.amuratech.com', class: 'small nav-link' %>
+      </li>
+    </ul>
+  </div>
+</nav>

@@ -8,6 +8,12 @@ en:
     formats:
       default: "%d/%m/%Y %I:%M %p"
   global:
+    sign_in_h1: "Welcome back"
+    sign_in_h2: "Login to Book an Apartment online"
+    register_h1: "Sign Up"
+    register_h2: "Register Now and book an apartment by paying just Rs. Blocking Amount (just takes 3 minutes)"
+    note: "Note"
+    notes: "Notes"
     sms_template: 'SMS Template'
     sms_templates: 'SMS Templates'
     assets: 'Documents'
@@ -98,6 +104,8 @@ en:
         status: 'Status'
         project_unit_id: 'Related Apartment'
         receipt_id: 'Related Payment'
+      note:
+        note: 'Note'
       receipt:
         tracking_id: 'Transaction ID (Processed Payment)'
         comments: 'Comments'

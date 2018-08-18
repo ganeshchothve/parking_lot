@@ -1,0 +1,6 @@
+<% if note.persisted? %>
+  <div class="card card-body mb-3">
+    <div><%= note.note %></div>
+      <div class="small">Added on <%= l(note.created_at.in_time_zone(current_user.time_zone)) %></div>
+  </div>
+<% end %>

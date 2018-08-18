@@ -90,7 +90,7 @@ class User
   has_many :user_kycs
   has_many :searches
   has_many :received_smses, class_name: "Sms", inverse_of: :recipient
-
+  has_many :notes, as: :notable
   has_many :smses, as: :triggered_by, class_name: "Sms"
 
   validates :first_name, :role, presence: true
