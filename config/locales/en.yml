@@ -18,6 +18,7 @@ en:
     sms_templates: 'SMS Templates'
     assets: 'Documents'
     asset: 'Documents'
+    gallery: "Gallery"
     client: 'Client'
     clients: 'Clients'
     receipt: 'Payment'

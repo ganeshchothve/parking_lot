@@ -92,6 +92,7 @@ Rails.application.routes.draw do
     # read only pages
     get '', to: 'dashboard#index', as: :dashboard
     get 'faqs', to: 'dashboard#faqs', as: :dashboard_faqs
+    get 'gallery', to: 'dashboard#gallery', as: :dashboard_gallery
     get 'documents', to: 'dashboard#documents', as: :dashboard_documents
     get 'rera', to: 'dashboard#rera', as: :dashboard_rera
     get 'tds-process', to: 'dashboard#tds_process', as: :dashboard_tds_process
