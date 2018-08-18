@@ -1,0 +1,45 @@
+class NotesController < ApplicationController
+  before_action :authenticate_user!
+  before_action :set_notable
+  before_action :authorize_resource
+  around_action :apply_policy_scope, only: :index
+
+  def new
+    @note = Note.new(notable: @notable)
+    render layout: false
+  end
+
+  def create
+    @note = Note.new(notable: @notable)
+    @note.assign_attributes(permitted_attributes(Note.new))
+    authorize @note
+    respond_to do |format|
+      if @note.save
+        format.json { render json: @note, status: :created }
+      else
+        format.json { render json: {errors: @note.errors.full_messages.uniq}, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  private
+  def set_notable
+    @notable = params[:notable_type].classify.constantize.find params[:notable_id]
+  end
+
+  def authorize_resource
+    authorize @notable, :show?
+    if params[:action] == "index"
+    elsif params[:action] == "new" || params[:action] == "create"
+      authorize Note.new(notable: @notable)
+    else
+      authorize @note
+    end
+  end
+
+  def apply_policy_scope
+    Note.with_scope(policy_scope(Note.all)) do
+      yield
+    end
+  end
+end

@@ -26,6 +26,9 @@ Rails.application.routes.draw do
   scope "*assetable_type/:assetable_id" do
     resources :assets, controller: :assets, as: :assetables
   end
+  scope "*notable_type/:notable_id" do
+    resources :notes, controller: :notes, as: :notables
+  end
   resources :channel_partners, except: [:destroy] do
     get 'export', action: 'export', on: :collection, as: :export
   end
@@ -45,6 +48,7 @@ Rails.application.routes.draw do
       get :resend_confirmation_instructions, action: 'resend_confirmation_instructions', as: :resend_confirmation_instructions, on: :member
       match 'update_password', on: :member, via: [:get, :patch], action: "update_password", as: :update_password
       get :resend_password_instructions, action: 'resend_password_instructions', as: :resend_password_instructions, on: :member
+      match :confirm_via_otp, action: 'confirm_via_otp', as: :confirm_via_otp, on: :member, via: [:get, :patch]
       get '/new/:role', action: 'new', on: :collection, as: :new_by_role
       get 'export', action: 'export', on: :collection, as: :export
       get 'print', action: 'print', on: :member, as: :print

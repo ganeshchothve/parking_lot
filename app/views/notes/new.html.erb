@@ -1,0 +1,28 @@
+<%= form_for(@note, url: notables_path(notable_type: @notable.class.model_name.i18n_key.to_s, notable_id: @notable.id), local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['notes'], "data-type": "json", id: 'note_form'}) do |f| %>
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add <%= "#{global_labels['note']}" %></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <%= f.label :note, class: 'label-required' %>
+          <%= f.text_area :note, autofocus: true, class: "form-control", required: 'required', disabled: (policy(@note).editable_field?("note") ? false : true) %>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <%= f.submit "Add #{global_labels['note']}", class: "btn btn-primary" %>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>
+<%= javascript_tag do %>
+$(document).ready(function(){
+  FormInitializer.init($("#note_form"));
+});
+<% end %>
