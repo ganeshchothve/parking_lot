@@ -10,7 +10,7 @@ en:
   global:
     sign_in_h1: "Welcome back"
     sign_in_h2: "Login to Book an Apartment online"
-    register_h1: ""
+    register_h1: "Sign Up"
     register_h2: "Register Now and book an apartment by paying just Rs. Blocking Amount (just takes 3 minutes)"
     note: "Note"
     notes: "Notes"
