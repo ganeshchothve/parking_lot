@@ -1,5 +1,6 @@
 <div class="col-md-12 mx-auto">
-  <h2 class="font-weight-bold text-success">Sign Up</h2>
+  <h2 class="font-weight-bold text-success"><%= global_labels[:register_h1] %></h2>
+  <%= if global_labels[:register_h2] %><p class="text-muted"><%= global_labels[:register_h2] %></p><% end %>
   <div class="sign-up" style="margin-left:-15px;">
     <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= current_client.selldo_client_id %>.js'></script>
     <script src='//trkr.scdn1.secure.raxcdn.com/t/forms/<%= current_client.selldo_client_id %>/<%= current_client.selldo_form_id %>.js' data-form-id='<%= current_client.selldo_form_id %>'></script>

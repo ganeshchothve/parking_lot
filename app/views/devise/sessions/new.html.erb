@@ -1,5 +1,5 @@
-<h2 class="font-weight-bold text-success">Sign In</h2>
-<p class="text-muted">Login to manage your account.</p>
+<h2 class="font-weight-bold text-success"><%= global_labels[:sign_in_h1] %></h2>
+<%= if global_labels[:sign_in_h2] %><p class="text-muted"><%= global_labels[:sign_in_h2] %></p><% end %>
 <% if current_client.preferred_login == "phone"
   otp_signin_class = ""
   username_signin_class = "d-none"

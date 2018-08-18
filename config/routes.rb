@@ -17,6 +17,7 @@ Rails.application.routes.draw do
 
   devise_scope :user do
     post 'users/otp', :to => 'local_devise/sessions#otp', :as => :users_otp
+    root to: "devise/sessions#new"
   end
 
   as :user do
@@ -86,7 +87,6 @@ Rails.application.routes.draw do
   match 'payment/:receipt_id/process_payment/:ignore', to: 'payment#process_payment', via: [:get, :post]
   get :register, to: 'home#register', as: :register
   post :check_and_register, to: 'home#check_and_register', as: :check_and_register
-  root to: "home#register"
 
   scope :dashboard do
     # read only pages
