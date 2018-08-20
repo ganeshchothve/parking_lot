@@ -7,7 +7,7 @@ redis:
   host: localhost
   port: 6379
   db: 0
-  namespace: booking_portal_amanora
+  namespace: booking_portal_generic
   password:
 sidekiq:
   username:
