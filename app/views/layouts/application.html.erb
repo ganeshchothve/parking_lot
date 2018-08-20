@@ -12,8 +12,8 @@
       if(typeof App === "undefined"){
         App = {};
       }
-      App.client = <%= raw current_client.to_json %>;
-      App.project = <%= raw current_project.to_json %>;
+      App.client = <%= raw current_client.to_json(only: [:name, :_id, :preferred_login]) %>;
+      App.project = <%= raw current_project.to_json(only: [:name, :_id]) %>;
       <% if user_signed_in? %>
         App.current_user = <%= raw current_user.to_json %>;
         App.current_user.name = App.current_user.first_name + " " + App.current_user.last_name;
