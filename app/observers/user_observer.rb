@@ -17,6 +17,14 @@ class UserObserver < Mongoid::Observer
     user.phone.gsub(" ", "") if user.phone.present?
     if user.manager_id_changed? && user.manager_id.present?
       user.referenced_manager_ids << user.manager_id
+      if user.buyer?
+        mailer = UserMailer.send_change_in_manager(user.id.to_s)
+        if Rails.env.development?
+          mailer.deliver
+        else
+          mailer.deliver_later
+        end
+      end
     end
     if user.confirmed_at_changed?
       # manager_ids = user.referenced_manager_ids - [user.manager_id]

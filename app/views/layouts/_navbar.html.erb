@@ -19,7 +19,7 @@
           <%= active_link_to "#{global_labels[:project_units]}", admin_project_units_path, active: :exclusive, class: "nav-link" %>
         </li>
         <% end %>
-        <% if current_user.buyer? && policy(:dashboard).project_units? && ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: current_user, status: "available")).hold? %>
+        <% if current_user.buyer? && ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: current_user, status: "available")).hold? %>
         <li class="nav-item">
           <%= active_link_to "Apartment Selector", new_search_path, active: :inclusive, class: "nav-link" %>
         </li>

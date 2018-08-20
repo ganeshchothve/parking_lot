@@ -1,5 +1,4 @@
 class ProjectUnitMailer < ApplicationMailer
-
   def blocked(project_unit_id)
     @project_unit = ProjectUnit.find(project_unit_id)
     @user = @project_unit.user

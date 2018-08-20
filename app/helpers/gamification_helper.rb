@@ -8,7 +8,7 @@ module GamificationHelper
   end
 
   def booked_today_count
-    BookingDetail.where(created_at: {"$gte" => Time.now.in_time_zone("Mumbai").beginning_of_day}).count + 6
+    BookingDetail.where(created_at: {"$gte" => Time.now.in_time_zone(current_user.time_zone).beginning_of_day}).count + 6
   end
 
   def bhk_booked(bedrooms)
