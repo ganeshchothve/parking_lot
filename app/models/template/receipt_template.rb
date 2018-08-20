@@ -38,7 +38,7 @@ class Template::ReceiptTemplate < Template
             </tr>
             <tr>
               <td><%= labels["processed_on"] %></td>
-              <td class="text-right"><%= self.processed_on.present? ? I18n.l(self.processed_on.in_time_zone(self.user.time_zone)) : "-" %></td>
+              <td class="text-right"><%= self.processed_on.present? ? I18n.l(self.processed_on) : "-" %></td>
             </tr>
             <tr>
               <td><%= labels["total_amount"] %></td>
@@ -47,6 +47,12 @@ class Template::ReceiptTemplate < Template
           </tbody>
         </table>
         <div class="mt-3 text-muted small">Please note that cheque / RTGS / NEFT payments are subject to clearance</div>
+        <% if self.booking_portal_client.disclaimer.present? %>
+          <div class="mt-3 text-muted small">
+            <strong>Disclaimer:</strong><br/>
+            <%= self.booking_portal_client.disclaimer %>
+          </div>
+        <% end %>
       </div>
     </div>'
   end
