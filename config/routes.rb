@@ -97,16 +97,6 @@ Rails.application.routes.draw do
     get 'rera', to: 'dashboard#rera', as: :dashboard_rera
     get 'tds-process', to: 'dashboard#tds_process', as: :dashboard_tds_process
     get 'terms-and-conditions', to: 'dashboard#terms_and_condition', as: :dashboard_terms_and_condition
-
-    # related to apartment selector
-    get '/apartment-selector/:configuration/:project_tower_id/:unit_id', to: 'dashboard#project_units', stage: 'kyc_details', :constraints => {:configuration => /[^\/]+/}
-    get '/apartment-selector/:configuration/:project_tower_id', to: 'dashboard#project_units', stage: 'select_apartment', :constraints => {:configuration => /[^\/]+/}
-    get '/apartment-selector/:configuration', to: 'dashboard#project_units', stage: 'choose_tower', :constraints => {:configuration => /[^\/]+/}
-    get '/apartment-selector', to: 'dashboard#project_units', stage: 'apartment_selector', as: :dashboard_project_units
-
-    # project unit & payment related
-    get 'make-remaining-payment/:project_unit_id', to: 'dashboard#make_remaining_payment'
-    get ':project_unit_id/payment-breakup', to: 'dashboard#payment_breakup'
     get "gamify-unit-selection", to: "dashboard#gamify_unit_selection"
     resource :user do
       resources :user_requests, except: [:destroy], controller: 'admin/user_requests'
