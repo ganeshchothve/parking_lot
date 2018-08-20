@@ -67,6 +67,8 @@ class Client
   validates :preferred_login, inclusion: {in: Proc.new{ Client.available_preferred_logins.collect{|x| x[:id]} } }
   validates :payment_gateway, inclusion: {in: Proc.new{ Client.available_payment_gateways.collect{|x| x[:id]} } }, allow_blank: true
 
+  accepts_nested_attributes_for :address
+
   def self.available_preferred_logins
     [
       {id: 'phone', text: 'Phone Based'},
