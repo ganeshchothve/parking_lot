@@ -188,6 +188,7 @@ class User
         selector[:lead_id] = params[:fltrs][:lead_id]
       end
     end
+    selector = {role: {"$ne": "superadmin"} } if selector[:role].blank?
     or_selector = {}
     if params[:q].present?
       regex = ::Regexp.new(::Regexp.escape(params[:q]), 'i')
@@ -337,6 +338,8 @@ class User
       custom_scope = {"$or": [{role: 'user', manager_id: {"$exists": true}}, {role: "cp"}, {role: "channel_partner"}]}
     elsif user.role?('cp')
       custom_scope = {"$or": [{role: 'user', referenced_manager_ids: {"$in": User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)}}, {role: "channel_partner", manager_id: user.id}]}
+    elsif user.role?("admin")
+      custom_scope = {role: {"$ne": "superadmin"}}
     end
     custom_scope
   end

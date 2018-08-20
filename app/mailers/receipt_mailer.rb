@@ -3,7 +3,8 @@ class ReceiptMailer < ApplicationMailer
     @receipt = Receipt.find(receipt_id)
     @user = @receipt.user
     @cp = @user.manager
-    cc = @cp.present? ? [@cp.email] : []
+    cc = @cp.present? ? [@cp.email, current_client.notification_email] : [current_client.notification_email]
+    cc += [current_client.helpdesk_email]
     make_bootstrap_mail(to: @user.email, cc: cc, subject: "Payment #{@receipt.receipt_id} Failed!")
   end
 
@@ -11,7 +12,8 @@ class ReceiptMailer < ApplicationMailer
     @receipt = Receipt.find(receipt_id)
     @user = @receipt.user
     @cp = @user.manager
-    cc = @cp.present? ? [@cp.email] : []
+    cc = @cp.present? ? [@cp.email, current_client.notification_email] : [current_client.notification_email]
+    cc += [current_client.helpdesk_email]
     unless Rails.env.development?
       attachments["Receipt.pdf"] = WickedPdf.new.pdf_from_string(
         render_to_string(pdf: "receipt", template: "receipts/_show.html.erb", layout: "pdf")
@@ -24,7 +26,8 @@ class ReceiptMailer < ApplicationMailer
     @receipt = Receipt.find(receipt_id)
     @user = @receipt.user
     @cp = @user.manager
-    cc = @cp.present? ? [@cp.email] : []
+    cc = @cp.present? ? [@cp.email, current_client.notification_email] : [current_client.notification_email]
+    cc += [current_client.helpdesk_email]
     make_bootstrap_mail(to: @user.email, cc: cc, subject: "Payment #{@receipt.receipt_id} is pending clearance")
   end
 
@@ -32,10 +35,10 @@ class ReceiptMailer < ApplicationMailer
     @receipt = Receipt.find(receipt_id)
     @user = @receipt.user
     @cp = @user.manager
-    cc = @cp.present? ? [@cp.email] : []
-    cc += [@user.email]
+    cc = @cp.present? ? [@cp.email, current_client.notification_email] : [current_client.notification_email]
+    cc += [current_client.helpdesk_email]
     subject = "Payment Receipt #{@receipt.receipt_id} Collected"
     @preview = "Thank you for your payment of #{number_to_indian_currency(@receipt.total_amount)}"
-    make_bootstrap_mail(to: cc, subject: subject)
+    make_bootstrap_mail(to: @user.email, cc: cc, subject: subject)
   end
 end
