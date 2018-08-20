@@ -252,7 +252,7 @@ class ProjectUnit
   end
 
   def booking_detail
-    BookingDetail.where(project_unit_id: self.id).ne(status: "cancelled").first
+    BookingDetail.where(project_unit_id: self.id).ne(status: ["cancelled", "swapped"]).first
   end
 
   def blocking_days
