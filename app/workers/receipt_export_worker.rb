@@ -56,7 +56,7 @@ class ReceiptExportWorker
       receipt.payment_identifier,
       receipt.tracking_id,
       receipt.total_amount,
-      Receipt.available_statuses.select{|x| x[:id] == receipt.status}.first[:text],
+      receipt.status.titleize,
       receipt.status_message,
       Receipt.available_payment_types.select{|x| x[:id] == receipt.payment_type}.first[:text],
       receipt.payment_gateway,

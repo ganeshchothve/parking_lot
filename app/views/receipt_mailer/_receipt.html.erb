@@ -32,7 +32,7 @@
         </tr>
         <tr>
           <td><%= labels['status'] %></td>
-          <td class="text-right"><%= Receipt.available_statuses.find{|x| x[:id] == receipt.status}[:text] %></td>
+          <td class="text-right"><%= receipt.status.titleize %></td>
         </tr>
         <tr>
           <td><%= labels['processed_on'] %></td>

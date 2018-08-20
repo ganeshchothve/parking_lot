@@ -30,7 +30,7 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def edit?
-    !user.buyer? && (((user.role?('superadmin') || user.role?('admin') || user.role?('crm') || user.role?('sales')) && ['pending', 'clearance_pending'].include?(record.status)) || (user.role?('channel_partner') && record.status == 'pending'))
+    !user.buyer? && (((user.role?('superadmin') || user.role?('admin') || user.role?('crm') || user.role?('sales')) && ['pending', 'clearance_pending', 'available_for_refund'].include?(record.status)) || (user.role?('channel_partner') && record.status == 'pending'))
   end
 
   def resend_success?
@@ -56,7 +56,7 @@ class ReceiptPolicy < ApplicationPolicy
     if record.new_record? || record.status == 'pending'
       attributes += [:payment_mode]
     end
-    if user.buyer? || user.role?('channel_partner') || (record.user_id.present? && record.user.project_unit_ids.present?) && record.status == 'pending'
+    if user.buyer? || user.role?('channel_partner') || (record.user_id.present? && record.user.project_unit_ids.present?) && (record.status == 'pending' || record.status == 'available_for_refund')
       attributes += [:project_unit_id]
     end
     if record.new_record? || record.status == 'pending'
@@ -66,7 +66,7 @@ class ReceiptPolicy < ApplicationPolicy
       attributes += [:issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier]
     end
     if ['admin', 'crm', 'superadmin'].include?(user.role)
-      attributes += [:status]
+      attributes += [:event]
       if record.persisted? && record.status == 'clearance_pending'
         attributes += [:processed_on, :comments, :tracking_id]
       end

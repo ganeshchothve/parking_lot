@@ -39,7 +39,7 @@
             <div>Payment: <%= Receipt.available_payment_modes.find{|x| x[:id] == receipt.payment_mode}[:text] %></div>
           </div>
         </td>
-        <td><%= Receipt.available_statuses.find{|x| x[:id] == receipt.status}[:text] %></td>
+        <td><%= receipt.status.titleize %></td>
         <td class="text-right"><%= number_to_indian_currency(receipt.total_amount.round(2)) %></td>
         <td class="text-right">
           <div class="dropdown">

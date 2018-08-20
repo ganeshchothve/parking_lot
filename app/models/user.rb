@@ -103,7 +103,7 @@ class User
   validate :manager_change_reason_present?
 
   def unattached_blocking_receipt
-    return self.receipts.in(status: ['success', 'clearance_pending']).where(project_unit_id: nil, payment_type: 'blocking').where(total_amount: {"$gte": current_client.blocking_amount}).first
+    return self.receipts.in(status: ['success', 'clearance_pending', 'available_for_refund']).where(project_unit_id: nil, payment_type: 'blocking').where(total_amount: {"$gte": current_client.blocking_amount}).first
   end
 
   def total_amount_paid
@@ -115,7 +115,7 @@ class User
   end
 
   def total_unattached_balance
-    self.receipts.in(status: ['success', 'clearance_pending']).where(project_unit_id: nil).sum(:total_amount)
+    self.receipts.in(status: ['success', 'clearance_pending', 'available_for_refund']).where(project_unit_id: nil).sum(:total_amount)
   end
 
   def kyc_ready?
@@ -326,7 +326,7 @@ class User
     elsif user.role?('sales')
       custom_scope = {role: {"$in": User.buyer_roles(user.booking_portal_client)}}
     elsif user.role?('cp_admin')
-      custom_scope = {"$or": [{role: 'user', manager_id: {"$exists": true}}, {role: "cp"}, {role: "channel_partner"}]}
+      custom_scope = {"$or": [{role: 'user', manager_id: {"$nin": [nil, ""]}}, {role: "cp"}, {role: "channel_partner"}]}
     elsif user.role?('cp')
       custom_scope = {"$or": [{role: 'user', referenced_manager_ids: {"$in": User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)}}, {role: "channel_partner", manager_id: user.id}]}
     end

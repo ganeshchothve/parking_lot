@@ -7,6 +7,7 @@ class Receipt
   include Mongoid::Autoinc
   include InsertionStringMethods
   include ApplicationHelper
+  include ReceiptStateMachine
 
   field :receipt_id, type: String
   field :order_id, type: String
@@ -35,7 +36,7 @@ class Receipt
   validates :total_amount, :status, :payment_mode, :payment_type, :user_id, presence: true
   validates :payment_identifier, presence: true, if: Proc.new{|receipt| receipt.payment_type == 'online' && receipt.status != 'pending' }
   validates :project_unit_id, presence: true, if: Proc.new{|receipt| receipt.payment_type != 'blocking'} # allow the user to make a blocking payment without any unit
-  validates :status, inclusion: {in: Proc.new{ Receipt.available_statuses.collect{|x| x[:id]} } }
+  validates :status, inclusion: {in: Proc.new{ Receipt.aasm.states.collect(&:name).collect(&:to_s) } }
   validates :payment_type, inclusion: {in: Proc.new{ Receipt.available_payment_types.collect{|x| x[:id]} } }
   validates :payment_mode, inclusion: {in: Proc.new{ Receipt.available_payment_modes.collect{|x| x[:id]} } }
   validate :validate_total_amount
@@ -55,16 +56,6 @@ class Receipt
     indexed_fields: [:receipt_id, :order_id, :payment_mode, :tracking_id, :payment_type, :creator_id],
     audit_fields: [:payment_mode, :tracking_id, :total_amount, :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, :status, :status_message, :project_unit_id, :booking_detail_id]
   })
-
-  def self.available_statuses
-    [
-      {id: 'pending', text: 'Pending'},
-      {id: 'success', text: 'Success'},
-      {id: 'clearance_pending', text: 'Pending Clearance'},
-      {id: 'failed', text: 'Failed'},
-      {id: 'cancelled', text: 'Cancelled'}
-    ]
-  end
 
   def self.available_payment_modes
     [
@@ -169,7 +160,7 @@ class Receipt
       if user.role?('channel_partner')
         custom_scope = {user_id: {"$in": User.where(referenced_manager_ids: user.id).distinct(:id)}}
       elsif user.role?('cp_admin')
-        custom_scope = {user_id: {"$in": User.where(role: "user").where(manager_id: {"$exists": true}).distinct(:id)}}
+        custom_scope = {user_id: {"$in": User.where(role: "user").nin(manager_id: [nil, ""]).distinct(:id)}}
       elsif user.role?('cp')
         channel_partner_ids = User.where(role: "channel_partner").where(manager_id: user.id).distinct(:id)
         custom_scope = {user_id: {"$in": User.in(referenced_manager_ids: channel_partner_ids).distinct(:id)}}

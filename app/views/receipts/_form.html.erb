@@ -107,19 +107,7 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <%= f.label :status, class: 'control-label' %>
-                  <%
-                  statuses = Receipt.available_statuses.collect{|x| [x[:text], x[:id]]}
-                  if @receipt.new_record?
-                    statuses = statuses.select{|x| x[1] == "pending"}
-                  else
-                    if @receipt.status == 'pending'
-                      statuses = statuses.reject{|x| x[1] == 'success'}
-                    elsif @receipt.status == 'clearance_pending'
-                      statuses = statuses.reject{|x| x[1] == 'pending'}
-                    end
-                  end
-                  %>
-                  <%= f.select :status, statuses, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(@receipt).editable_field?("status") ? false : true) %>
+                  <%= f.select :event, options_for_select(@receipt.aasm.events(permitted: true).collect{|rec| [rec.name.to_s.titleize, rec.name.to_s]}, @receipt.status), {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(@receipt).editable_field?("event") ? false : true) %>
                 </div>
               </div>
               <div class="col-md-6">
