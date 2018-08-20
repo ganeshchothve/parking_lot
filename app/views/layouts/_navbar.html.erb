@@ -14,7 +14,7 @@
           <%= active_link_to "Dashboard", dashboard_path, active: :exclusive, class: "nav-link" %>
         </li>
         <% end %>
-        <% if policy(ProjectUnit).index? && current_user.role?('superadmin') %>
+        <% if policy(ProjectUnit).index? %>
         <li class="nav-item">
           <%= active_link_to "#{global_labels[:project_units]}", admin_project_units_path, active: :exclusive, class: "nav-link" %>
         </li>

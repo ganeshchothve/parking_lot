@@ -96,6 +96,7 @@ en:
       search:
         bedrooms: "Beds"
         agreement_price: "Agreement Value"
+        all_inclusive_price: 'All Inclusive Price'
         carpet: "Carpet Area"
         project_tower_id: "Tower"
         project_unit_id: "Apartment"
@@ -182,6 +183,7 @@ en:
         blocked_on: 'Blocked On'
         unit_facing_direction: 'Facing'
         agreement_price: 'Agreement Value'
+        all_inclusive_price: 'All Inclusive Price'
       cost:
         name: "Name"
         formula: "Formula"
@@ -219,8 +221,8 @@ en:
         manager_id: "Partner / Manager / Added by"
         manager_change_reason: "Reason for changing Partner"
         kyc_ready: 'Is the Customer KYC Ready?'
-        total_amount_paid: "Total Paid (you might some payments pending clearance)"
-        total_balance_pending: "Total Balance Pending (you might some payments pending clearance)"
+        total_amount_paid: "Total Paid (you might have some payments pending clearance)"
+        total_balance_pending: "Total Balance Pending (you might have some payments pending clearance)"
         total_unattached_balance: "Total Un-attached Balance (subject to clearance)"
         is_active: 'Allow the user to login?'
       channel_partner:
