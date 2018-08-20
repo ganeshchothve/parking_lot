@@ -44,6 +44,9 @@ class Client
   field :payment_gateway, type: String, default: 'Razorpay'
   field :enable_company_users, type: Boolean
   field :terms_and_conditions, type: String
+  field :faqs, type: String
+  field :rera, type: String
+  field :tds_process, type: String
 
   mount_uploader :logo, DocUploader
   mount_uploader :mobile_logo, DocUploader
