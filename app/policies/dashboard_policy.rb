@@ -3,15 +3,27 @@ class DashboardPolicy < Struct.new(:user, :dashboard)
     true
   end
 
-  def project_units?
+  def faqs?
     true
   end
 
-  def receipts?
-    user.buyer?
+  def documents?
+    true
   end
 
-  def update_co_applicants?
-    user.buyer?
+  def rera?
+    true
+  end
+
+  def tds_process?
+    true
+  end
+
+  def terms_and_conditions?
+    true
+  end
+
+  def gamify_unit_selection?
+    true
   end
 end

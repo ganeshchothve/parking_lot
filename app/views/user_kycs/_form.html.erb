@@ -76,7 +76,7 @@ end
           <div class="col-12">
             <div class="form-group">
               <%= f.label :configurations %>
-              <%= f.select :configurations, UserKyc.available_configurations.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', multiple: true, required: 'required', disabled: (policy(@user_kyc).editable_field?("configurations") ? false : true) %>
+              <%= f.select :configurations, UserKyc.available_configurations.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', multiple: true, disabled: (policy(@user_kyc).editable_field?("configurations") ? false : true) %>
             </div>
           </div>
         </div>
@@ -97,7 +97,7 @@ end
         @user_kyc.project_unit_ids.uniq!
         %>
         <% end %>
-        <% if @user.project_unit_ids.present? %>
+        <% if @user.project_unit_ids.present? && (@user_kyc.persisted? || !current_user.buyer?) %>
         <div class="form-group position-relative">
           <%= f.label :project_unit_ids, class: 'required' %>
           <%= f.select :project_unit_ids, @user.project_units.collect{|x| [x.name, x.id]}, {prompt: "Select"}, class: 'selectize', multiple: true %>
@@ -115,7 +115,7 @@ end
                   <!-- TODO: check if you want to restrict the dob to 18 years age -->
                   <%= f.label :dob, class: 'required' %>
                   <% date = (f.object.dob.present? ? f.object.dob.strftime("%d/%m/%Y") : "") %>
-                  <%= f.text_field :dob, class: 'form-control datepicker', required: 'required', type:'text', data: {"default-date": date}, value: date %>
+                  <%= f.text_field :dob, class: 'form-control datepicker', type:'text', data: {"default-date": date}, value: date %>
                 </div>
               </div>
               <div class="col-md-6">

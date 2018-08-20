@@ -2,17 +2,18 @@ class BookingDetail
   include Mongoid::Document
   include Mongoid::Timestamps
   include ArrayBlankRejectable
+  include InsertionStringMethods
 
   field :primary_user_kyc_id, type: BSON::ObjectId
   field :status, type: String
-  field :channel_partner_id, type: BSON::ObjectId
+  field :manager_id, type: BSON::ObjectId
   mount_uploader :tds_doc, DocUploader
 
   enable_audit({
-    indexed_fields: [:channel_partner_id, :project_unit_id],
-    audit_fields: [:channel_partner_id, :status, :channel_partner_id, :project_unit_id, :user_id, :user_kyc_ids],
+    indexed_fields: [:manager_id, :project_unit_id],
+    audit_fields: [:manager_id, :status, :manager_id, :project_unit_id, :user_id, :user_kyc_ids],
     reference_ids_without_associations: [
-      {field: 'channel_partner_id', klass: 'ChannelPartner'},
+      {field: 'manager_id', klass: 'ChannelPartner'},
       {field: 'primary_user_kyc_id', klass: 'UserKyc'}
     ]
   })
@@ -22,6 +23,7 @@ class BookingDetail
   has_many :receipts
   has_and_belongs_to_many :user_kycs
   has_many :smses, as: :triggered_by, class_name: "Sms"
+  # has_one :cost_sheet
 
   validates :status, :primary_user_kyc_id, presence: true
 
@@ -34,7 +36,7 @@ class BookingDetail
 
     if booking_detail.blank?
       if ["blocked", "booked_tentative", "booked_confirmed"].include?(project_unit.status)
-        BookingDetail.create(project_unit_id: project_unit.id, user_id: project_unit.user_id, receipt_ids: project_unit.receipt_ids, user_kyc_ids: project_unit.user_kyc_ids, primary_user_kyc_id: project_unit.primary_user_kyc_id, status: project_unit.status, channel_partner_id: project_unit.user.channel_partner_id)
+        BookingDetail.create(project_unit_id: project_unit.id, user_id: project_unit.user_id, receipt_ids: project_unit.receipt_ids, user_kyc_ids: project_unit.user_kyc_ids, primary_user_kyc_id: project_unit.primary_user_kyc_id, status: project_unit.status, manager_id: project_unit.user.manager_id)
       end
     elsif booking_detail.status != "cancelled"
       if changes["status"].present? && ["blocked", "booked_tentative", "booked_confirmed", "error"].include?(changes["status"][0]) && ["blocked", "booked_tentative", "booked_confirmed", "error"].include?(project_unit.status)

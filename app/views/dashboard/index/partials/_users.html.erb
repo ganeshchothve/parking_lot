@@ -5,7 +5,7 @@
   </div>
   <div class="card-body">
     <% if users.present? %>
-      <div class="table-responsive-lg">
+      <div class="table-responsive">
         <table class="table">
           <thead>
             <tr>
@@ -16,7 +16,7 @@
           <tbody>
             <% users.each do |d| %>
             <tr>
-              <td><%= User.available_roles.find{|x| x[:id] == d[:role]}[:text] %></td>
+              <td><%= User.available_roles(current_client).find{|x| x[:id] == d[:role]}[:text] %></td>
               <td class="text-right"><%= d[:count] %></td>
             </tr>
             <% end %>

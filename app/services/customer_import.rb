@@ -7,12 +7,12 @@ module CustomerImport
         last_name = row[1]
         email = row[2]
         phone = row[3]
-        channel_partner = row[4]
+        manager = row[4]
         customer = User.where(role: "customer").or({email: email}, {phone: phone}).first
         if customer.present?
-          customer.update({first_name: first_name, last_name: last_name, phone: phone, email: email, channel_partner_id: channel_partner})
+          customer.update({first_name: first_name, last_name: last_name, phone: phone, email: email, manager_id: manager})
         else
-          User.create({first_name: first_name, last_name: last_name, phone: phone, email: email, channel_partner_id: channel_partner})
+          User.create({first_name: first_name, last_name: last_name, phone: phone, email: email, manager_id: manager})
         end
       end
     end

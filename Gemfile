@@ -27,6 +27,7 @@ gem 'jbuilder', '~> 2.5'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 gem 'razorpay'
+gem 'nested_form'
 gem 'pusher'
 gem 'active_link_to'
 gem "font-awesome-sass"

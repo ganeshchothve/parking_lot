@@ -1,22 +1,31 @@
-<div class="row border-top border-thick <%= search.crossed_step('towers') ? 'border-primary' : 'border-light' %> py-2">
+<div class="row border-top border-thick <%= search.crossed_step('towers') ? 'border-primary' : (search.step == 'towers' ? 'border-secondary' : 'border-light') %> py-2">
   <div class="col-md-2">
     <% if search.crossed_step('towers') %>
       <h4 class="mt-3">
         <%= icon "far", "check-circle", class: "text-primary" %>
       </h4>
     <% else %>
-      <h1 class="text-muted mt-2"><%= search.allowed_steps.index(search.step) + 2 %></h1>
+      <h1 class="text-muted mt-2"><%= search.allowed_steps.index("towers") + 2 %></h1>
     <% end %>
   </div>
   <div class="col-md-10">
     <h6 class="d-inline">
-      <%= labels[:project_unit_id] %>
+      Choose <%= labels[:project_unit_id] %>
     </h6>
     <div class="text-muted small">
       <% if search.crossed_step('towers') %>
         <%= search.project_tower.name %><br/>
         Lorem ipsum Helo Lowad adf2
-        <%= link_to "Change", "javascript:;", class: "modal-remote-form-link small position-absolute", style: "right:10px; top:0;" %>
+        <% if @search.previous_step.present? %>
+          <%= form_for [:user, @search], html: {class: 'validate-form'} do |f| %>
+            <div class="form-group">
+              <%= f.hidden_field :step, value: "towers" %>
+            </div>
+            <div class="form-group">
+              <%= f.submit "Change", class: "small position-absolute", style: "right: 10px; top:0;" %>
+            </div>
+          <% end %>
+        <% end %>
       <% else %>
         Choose towers that suit your requirements
       <% end %>

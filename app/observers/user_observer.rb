@@ -1,30 +1,34 @@
 class UserObserver < Mongoid::Observer
+  include ApplicationHelper
+
   def before_create user
+    user.allowed_bookings = current_client.allowed_bookings_per_user
+    user.booking_portal_client_id = current_client.id
     if user.role?("user")
       email = user.email
       client = user.booking_portal_client
-      if client.email_domains.include?(email.split("@")[1])
+      if client.email_domains.include?(email.split("@")[1]) && current_client.enable_company_users?
         user.role = "employee_user"
       end
     end
   end
 
   def before_save user
-    user.phone.gsub(" ", "")
-    if user.channel_partner_id_changed? && user.channel_partner_id.present?
-      user.referenced_channel_partner_ids << user.channel_partner_id
+    user.phone.gsub(" ", "") if user.phone.present?
+    if user.manager_id_changed? && user.manager_id.present?
+      user.referenced_manager_ids << user.manager_id
     end
     if user.confirmed_at_changed?
-      # channel_partner_ids = user.referenced_channel_partner_ids - [user.channel_partner_id]
-      # channel_partner_ids.each do |channel_partner_id|
-      #   mailer = ChannelPartnerMailer.send_user_activated_with_other(channel_partner_id, user.id)
+      # manager_ids = user.referenced_manager_ids - [user.manager_id]
+      # manager_ids.each do |manager_id|
+      #   mailer = ChannelPartnerMailer.send_user_activated_with_other(manager_id, user.id)
       #   if Rails.env.development?
       #     mailer.deliver
       #   else
       #     mailer.deliver_later
       #   end
       # end
-      user.referenced_channel_partner_ids = [user.channel_partner_id]
+      user.referenced_manager_ids = [user.manager_id]
     end
     unless user.authentication_token?
       user.reset_authentication_token!

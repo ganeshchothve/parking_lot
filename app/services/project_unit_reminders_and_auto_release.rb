@@ -13,7 +13,11 @@ module ProjectUnitRemindersAndAutoRelease
             triggered_by_type: project_unit.class.to_s
           })
         end
-        days = project_unit.promote_future_payment_days
+        if project_unit.auto_release_on.present? && project_unit.auto_release_on > Date.today
+          days = (project_unit.auto_release_on - Date.today).to_i
+        else
+          days = nil
+        end
         if days.present?
           template = SmsTemplate.where(name: "promote_future_payment_#{days}").first
           Sms.create!(

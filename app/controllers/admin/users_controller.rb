@@ -1,8 +1,8 @@
 class Admin::UsersController < AdminController
   before_action :authenticate_user!
-  before_action :set_user, except: [:index, :export, :new, :create, :export_cp_report, :export_cp_lead_report]
+  before_action :set_user, except: [:index, :export, :new, :create]
   before_action :authorize_resource
-  around_action :apply_policy_scope, only: [:index, :export, :export_cp_report, :export_cp_lead_report]
+  around_action :apply_policy_scope, only: [:index, :export]
 
   layout :set_layout
 
@@ -24,7 +24,6 @@ class Admin::UsersController < AdminController
     @user = User.find(params[:id])
     respond_to do |format|
       if @user.resend_confirmation_instructions
-        @user.send_registration_sms
         flash[:notice] = "Confirmation instructions sent successfully."
         format.html { redirect_to admin_users_path }
       else
@@ -57,6 +56,9 @@ class Admin::UsersController < AdminController
     redirect_to admin_users_path
   end
 
+  def print
+  end
+
   def show
     @project_units = @user.project_units.paginate(page: params[:page] || 1, per_page: 15)
     @receipts = @user.receipts.paginate(page: params[:page] || 1, per_page: 15)
@@ -72,9 +74,36 @@ class Admin::UsersController < AdminController
     render layout: false
   end
 
+  def confirm_via_otp
+    @otp_sent_status = {}
+    unless request.patch?
+      @otp_sent_status = @user.send_otp
+      if Rails.env.development?
+        Rails.logger.info "---------------- #{@user.otp_code} ----------------"
+      end
+    else
+      if @user.authenticate_otp(params[:user][:login_otp], drift: 60)
+        unless @user.confirmed?
+          @user.confirm
+        end
+      end
+    end
+    respond_to do |format|
+      if @otp_sent_status[:status] || @user.save
+        format.html { render layout: false }
+        format.json { render json: @user }
+      else
+        format.html { render layout: false }
+        format.json { render json: {errors: @user.errors.full_messages}, status: 422 }
+      end
+    end
+  end
+
   def create
-    @user = User.new(booking_portal_client_id: current_client.id)
+    # sending the role upfront to ensure the permitted_attributes in next step is updated
+    @user = User.new(booking_portal_client_id: current_client.id, role: params[:user][:role])
     @user.assign_attributes(permitted_attributes(@user))
+    @user.manager_id = current_user.id if @user.role?('channel_partner') && current_user.role?('cp')
 
     respond_to do |format|
       if @user.save
@@ -113,7 +142,7 @@ class Admin::UsersController < AdminController
   end
 
   def authorize_resource
-    if ['index', 'export', 'export_cp_report', 'export_cp_lead_report'].include?(params[:action])
+    if ['index', 'export'].include?(params[:action])
       authorize User
     elsif params[:action] == "new" || params[:action] == "create"
       if params[:role].present?
@@ -127,16 +156,7 @@ class Admin::UsersController < AdminController
   end
 
   def apply_policy_scope
-    custom_scope = User.all.criteria
-    if current_user.role?('channel_partner')
-      custom_scope = custom_scope.in(referenced_channel_partner_ids: current_user.id).in(role: User.buyer_roles)
-    elsif current_user.role?('crm')
-      custom_scope = custom_scope.in(role: User.buyer_roles)
-    elsif current_user.role?('sales')
-      custom_scope = custom_scope.in(role: User.buyer_roles)
-    elsif current_user.role?('cp')
-      custom_scope = custom_scope.or([{role: 'user', channel_partner_id: {"$exists": true}}, {role: "channel_partner"}])
-    end
+    custom_scope = User.where(User.user_based_scope(current_user, params))
     User.with_scope(policy_scope(custom_scope)) do
       yield
     end

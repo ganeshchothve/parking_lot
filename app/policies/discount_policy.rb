@@ -1,26 +1,26 @@
 class DiscountPolicy < ApplicationPolicy
   def index?
-    user.role?('superadmin') || user.role?('admin') || user.role?('sales') || user.role?('crm') || user.role?('cp')
+    current_client.enable_actual_inventory? && (user.role?('superadmin') || user.role?('admin') || user.role?('sales') || user.role?('crm') || user.role?('cp'))
   end
 
   def edit?
-    (index? && record.status == 'draft') || ['superadmin', 'admin'].include?(user.role)
+    create?
   end
 
   def new?
-    index?
+    current_client.enable_actual_inventory? && index?
   end
 
   def create?
-    (index? && record.status == 'draft') || ['superadmin', 'admin'].include?(user.role)
+    current_client.enable_actual_inventory? && ((index? && record.status == 'draft') || ['superadmin', 'admin'].include?(user.role))
   end
 
   def update?
-    edit?
+    current_client.enable_actual_inventory? && edit?
   end
 
   def approve_via_email?
-    edit?
+    current_client.enable_actual_inventory? && edit?
   end
 
   def permitted_attributes params={}

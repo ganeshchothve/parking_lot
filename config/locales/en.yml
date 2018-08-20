@@ -8,10 +8,17 @@ en:
     formats:
       default: "%d/%m/%Y %I:%M %p"
   global:
+    sign_in_h1: "Welcome back"
+    sign_in_h2: "Login to Book an Apartment online"
+    register_h1: "Sign Up"
+    register_h2: "Register Now and book an apartment by paying just Rs. Blocking Amount (just takes 3 minutes)"
+    note: "Note"
+    notes: "Notes"
     sms_template: 'SMS Template'
     sms_templates: 'SMS Templates'
     assets: 'Documents'
     asset: 'Documents'
+    gallery: "Gallery"
     client: 'Client'
     clients: 'Clients'
     receipt: 'Payment'
@@ -48,8 +55,11 @@ en:
         content: 'Content'
       client:
         name: 'Client Name (Used across the app)'
+        allowed_bookings_per_user: 'Bookings allowed per user'
         selldo_client_id: 'SellDo Client ID'
         selldo_form_id: 'SellDo Form ID'
+        selldo_channel_partner_form_id: 'SellDo Form ID - For Channel Partners'
+        selldo_gre_form_id: 'SellDo Form ID - Used by Non Channel Partners'
         selldo_api_key: 'SellDo API Key (Use generic Api Client)'
         selldo_default_srd: 'SellDo Default SRD'
         selldo_cp_srd: 'SellDo Channel Partner SRD'
@@ -82,6 +92,7 @@ en:
         blocking_amount_editable: 'Can End Users pay larger blocking amounts?'
         blocking_days: 'Unit to be blocked for (Days)'
         holding_minutes: 'Unit to be held for (Minutes)'
+        enable_company_users: 'Allow Company Users & Benefits'
       search:
         bedrooms: "Beds"
         agreement_price: "Agreement Value"
@@ -94,6 +105,8 @@ en:
         status: 'Status'
         project_unit_id: 'Related Apartment'
         receipt_id: 'Related Payment'
+      note:
+        note: 'Note'
       receipt:
         tracking_id: 'Transaction ID (Processed Payment)'
         comments: 'Comments'
@@ -107,7 +120,6 @@ en:
         total_amount: "Total Amount (Rs.)"
         status: "Payment Status"
         payment_type: "Payment Type (Towards Blocking or Booking)"
-        reference_project_unit_id: "Interested Apartment (won't be blocked)"
         user_id: "Customer"
         project_unit_id: "Apartment"
         creator_id: "Created by"
@@ -139,6 +151,8 @@ en:
         pancard_photo: 'PAN Card Photo'
         adharcard_photo: 'Aadhaar Photo'
         address_proof: 'Address Proof'
+        permanent_address: "Permanent Address"
+        correspondence_address: "Correspondence Address"
         aadhaar: 'Aadhaar'
         oci: 'OCI'
         gstn: 'GSTN'
@@ -152,6 +166,11 @@ en:
         customer_company_name: 'Company Name'
         configurations: 'Preferences'
       project_unit:
+        costs: "Costs"
+        data: "Data"
+        bedrooms: "Beds"
+        bathrooms: "Baths"
+        status: "Status"
         user_id: "Customer"
         receipt_ids: "Payments (associated with this Apartment)"
         user_request_ids: "User Requests (associated with this Apartment)"
@@ -162,8 +181,18 @@ en:
         project_name: 'Project'
         blocked_on: 'Blocked On'
         unit_facing_direction: 'Facing'
-        all_inclusive_price: 'All Inclusive Price (excluding registration charges)'
         agreement_price: 'Agreement Value'
+      cost:
+        name: "Name"
+        formula: "Formula"
+        absolute_value: "Absolute Value"
+        category: "Category"
+        order: "Order"
+      data_attribute:
+        name: "Name"
+        formula: "Formula"
+        absolute_value: "Absolute Value"
+        order: "Order"
       discount:
         name: 'Name'
         project_id: 'Project'
@@ -185,13 +214,15 @@ en:
         rera_id: 'RERA Registration Number'
         location: 'Location'
         lead_id: 'Sell.Do Lead ID'
+        time_zone: "User's Time Zone"
         role: 'Role'
-        channel_partner_id: "Partner"
-        channel_partner_change_reason: "Reason for changing Partner"
+        manager_id: "Partner / Manager / Added by"
+        manager_change_reason: "Reason for changing Partner"
         kyc_ready: 'Is the Customer KYC Ready?'
         total_amount_paid: "Total Paid (you might some payments pending clearance)"
         total_balance_pending: "Total Balance Pending (you might some payments pending clearance)"
         total_unattached_balance: "Total Un-attached Balance (subject to clearance)"
+        is_active: 'Allow the user to login?'
       channel_partner:
         name: 'Name'
         company_name: "Company Name"

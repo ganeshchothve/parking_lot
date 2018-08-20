@@ -1,11 +1,11 @@
-<div class="table-responsive-lg">
+<div class="table-responsive">
   <table class='table striped-table'>
     <thead class="th-default">
       <% labels = t('mongoid.attributes.user').with_indifferent_access %>
       <tr>
         <th>Name</th>
+        <th><%= labels[:lead_id] %></th>
         <th><%= global_labels[:receipts] %></th>
-        <th>Details</th>
         <th>Role</th>
         <th>Account Confirmed?</th>
         <th class="text-right">Actions</th>
@@ -15,54 +15,26 @@
       <% users.each do |user| %>
         <tr>
           <td>
-            <%= user.name %><br/>
-            <% if user.role?("channel_partner") %>
-              <div class="small">
-                Registered: <%= User.where(channel_partner_id: user.id).count %> | Confirmed: <%= User.where(channel_partner_id: user.id).ne(confirmed_at: nil).count %> | Blocked: <%= ProjectUnit.in(user_id: User.where(channel_partner_id: user.id).distinct(:id)).in(status: ['blocked', 'booked_tentative', 'booked_confirmed']).count %><br/>
-              </div>
-            <% end %>
+            <%= user.name %>
+            <div class="small">
+              <%= user.email.present? ? user.email : "" %> <br/>
+              <%= user.phone.present? ? user.phone : "" %><br/>
+              <% if user.role?("user") && user.manager_id.present? && current_user.role != "channel_partner" %>
+                <%= labels[:manager_id] %><%= user.manager.name %><br/>
+              <% end %>
+            </div>
           </td>
+          <td><%= user.lead_id %></td>
           <td><%= user.receipts.where(status: "success").present? ? "Y" : "N" %></td>
+          <td><%= User.available_roles(current_client).find{|x| x[:id] == user.role}[:text] %></td>
           <td>
-            <%= user.email.present? ? user.email : "" %> <br/>
-            <%= user.phone.present? ? user.phone : "" %><br/>
-            <% if user.role?("user") && user.channel_partner_id.present? && current_user.role != "channel_partner" %>
-              CP: <%= user.channel_partner.name %><br/>
-            <% end %>
+            <%= user.confirmed_at.present? ? "Confirmed" : "Not confirmed" %>
           </td>
-          <td><%= User.available_roles.find{|x| x[:id] == user.role}[:text] %></td>
-          <td><%= user.confirmed_at.present? ? "Confirmed" : "Not confirmed" %></td>
           <td class="text-right">
             <div class="dropdown">
               <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
               <div class="dropdown-menu dropdown-menu-right">
-                <% if UserPolicy.new(current_user, user).show? %>
-                  <% if current_client.enable_actual_inventory? && ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: user, status: "available")).hold? %>
-                    <%= link_to "Choose #{global_labels[:project_unit]} & Add Booking", new_admin_user_search_path(user.id), class: "dropdown-item" %>
-                  <% end %>
-                  <% if !current_user.buyer? && ReceiptPolicy.new(current_user, Receipt.new(user: user)).new? %>
-                    <%= link_to "Add Direct #{global_labels['receipt']}", direct_admin_user_receipts_path(user), class: 'dropdown-item modal-remote-form-link' %>
-                  <% end %>
-                  <% if UserPolicy.new(current_user, user).show? %>
-                    <%= link_to "View Details", admin_user_path(user.id), class: "dropdown-item" %>
-                  <% end %>
-                  <% if UserKycPolicy.new(current_user, UserKyc.new(user: user)).new? %>
-                    <%= link_to "Add #{global_labels['user_kyc_details']}", new_admin_user_user_kyc_path(user), class: 'modal-remote-form-link dropdown-item', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
-                  <% end %>
-                  <% if !user.confirmed? && user.confirmation_token.present? %>
-                    <%= link_to 'Resend Confirmation Instructions', resend_confirmation_instructions_admin_user_path(user), class: 'dropdown-item', data: {event_category: 'Section', event_action: 'Click', event_name: 'Resend Confirmation Instructions'} %>
-                  <% else %>
-                    <%= link_to 'Send Password Reset Instructions', resend_password_instructions_admin_user_path(user), class: 'dropdown-item', data: {event_category: 'Section', event_action: 'Click', event_name: 'Reset Password Instructions'} %>
-                  <% end %>
-                <% end %>
-                <% if ['crm', 'sales', 'cp', 'admin'].include?(current_user.role) %>
-                  <% if UserPolicy.new(current_user, user).edit? %>
-                    <%= link_to "Edit", edit_admin_user_path(user.id), class: "dropdown-item modal-remote-form-link" %>
-                  <% end %>
-                  <% if UserPolicy.new(current_user, user).update_password? %>
-                    <%= link_to "Update Password", update_password_admin_user_path(user), class: "dropdown-item modal-remote-form-link" %>
-                  <% end %>
-                <% end %>
+                <%= render "admin/users/links", user: user %>
               </div>
             </div>
           </td>

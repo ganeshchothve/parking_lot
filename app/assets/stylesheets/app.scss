@@ -2,6 +2,7 @@
 @import "bootstrap/bootstrap";
 @import "font-awesome-sprockets";
 @import "font-awesome";
+@import "building";
 @import "custom"; // this is the css to be modified per client
 
 html, body{
@@ -108,4 +109,7 @@ figure.wave {
     max-height: calc(100vh - 60px);
     overflow-y: auto;
   }
+}
+.popover{
+  max-width: 450px;
 }

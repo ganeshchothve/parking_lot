@@ -27,8 +27,8 @@ module SFDC
         user = project_unit.user
         user_kyc = project_unit.primary_user_kyc
       end
-      unit_sfdc_id = project_unit.sfdc_id
-      opp_id = user.lead_id.to_s + unit_sfdc_id.to_s
+      unit_erp_id = project_unit.erp_id
+      opp_id = user.lead_id.to_s + unit_erp_id.to_s
       booking_date = project_unit.blocked_on.present? ? project_unit.blocked_on : Date.today
       applicants = []
       applicants << project_unit.primary_user_kyc.api_json("Primary")
@@ -38,12 +38,12 @@ module SFDC
         applicants << kyc.api_json(coapplicant_type)
         count += 1
       end
-      
+
       hash = {
         "api_source" => "portal",
         "opp_id" => opp_id,
         "selldo_lead_id" => user.lead_id,
-        "unit_sfdc_id" => project_unit.sfdc_id,
+        "unit_sfdc_id" => project_unit.erp_id,
         "booking_stage" => options[:cancellation_request] ? 'Closed Lost' : sfdc_stage_mapping(project_unit.status),
         "booking_date" => sfdc_date_format(booking_date),
         "birthdate" => sfdc_date_format(project_unit.primary_user_kyc.dob),

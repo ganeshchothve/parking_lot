@@ -3,31 +3,35 @@
     <div class="col-md-12">
       <%= render 'dashboard/project_unit_overview', {project_unit: @project_unit} %>
       <div class="mt-3"></div>
-      <div class="card">
-        <div class="card-body">
-          <%
-            alert = (current_client.cancellation_amount.present? && current_client.cancellation_amount.to_f > 0) ? "#{number_to_indian_currency(current_client.cancellation_amount)} processing charges will be applied on cancellation of booking" : ""
-          %>
-          <% if @project_unit.status == "hold" %>
-            <%= form_for @project_unit, url: make_available_user_search_path(@search), method: 'post', html: {class: 'validate-form'} do |f| %>
-              <%= f.hidden_field :status, value: 'available' %>
-              <% if current_user.buyer? %>
-                <%= link_to "I Agree", payment_user_search_path(@search), class: 'btn btn-primary', style:'margin-top:0px' , data:{event_category: 'Section', event_action: 'Click', event_name: 'I Agree'}, onclick: alert %>
-              <% else %>
-                <%
-                  if policy(Receipt.new(project_unit_id: @project_unit)).editable_field?("status")
-                    url = new_admin_user_receipt_path(@user, project_unit_id: @project_unit.id)
-                  else
-                    url = new_admin_user_receipt_path(@user, reference_project_unit_id: @project_unit.id)
-                  end
-                %>
-                <%= link_to "Add #{global_labels['receipt']}", url, class: 'btn btn-primary modal-remote-form-link', style:'margin-top:0px' , data:{event_category: 'Section', event_action: 'Click', event_name: 'I Agree'}, onclick: alert %>
-              <% end %>
-              <%= f.submit 'Cancel', class: 'btn btn-danger' , data:{event_category: 'Section', event_action: 'Click', event_name: 'Cancel'} %>
-            <% end %>
-          <% end %>
+      <%= render 'dashboard/project_unit_cost_sheet', {project_unit: @project_unit} %>
+      <div class="mt-3"></div>
+      <%= render "dashboard/project_unit_payment_schedule", project_unit: @project_unit %>
+      <div class="mt-3"></div>
+      <%
+        alert = (current_client.cancellation_amount.present? && current_client.cancellation_amount.to_f > 0) ? "#{number_to_indian_currency(current_client.cancellation_amount)} processing charges will be applied on cancellation of booking" : ""
+      %>
+      <% if current_client.disclaimer.present? %>
+        <div class="card card-body small" style="height: 100px; overflow: auto;">
+          <div class="font-weight-bold mb-2">Disclaimer:</div>
+          <%= current_client.disclaimer %>
         </div>
-      </div>
+        <div class="mt-3"></div>
+      <% end %>
+      <% if @project_unit.status == "hold" %>
+        <%= form_for @project_unit, url: make_available_user_search_path(@search), method: 'post', html: {class: 'validate-form'} do |f| %>
+          <%= f.hidden_field :status, value: 'available' %>
+          <% if current_user.buyer? %>
+            <%= link_to "I Agree", payment_user_search_path(@search), class: 'btn btn-primary', style:'margin-top:0px' , data:{event_category: 'Section', event_action: 'Click', event_name: 'I Agree'}, onclick: alert %>
+          <% elsif ReceiptPolicy.new(current_user, Receipt.new(user: @user, status: "clearance_pending", project_unit: @project_unit)).new? %>
+              <%= link_to "I Agree on behalf of #{@user.name}", new_admin_user_project_unit_receipt_path(@user.id, @project_unit.id), class: 'btn btn-primary modal-remote-form-link', style:'margin-top:0px', onclick: alert %>
+          <% else %>
+            <div class="alert alert-danger">
+              You do not have access to take a <%= Receipt.available_statuses.find{|x| x[:id] == 'clearance_pending'}[:text] %> <%= global_labels[:receipt] %> on behalf of <%= @user.name %>.
+            </div>
+          <% end %>
+          <%= f.submit 'Cancel', class: 'btn btn-danger' , data:{event_category: 'Section', event_action: 'Click', event_name: 'Cancel'} %>
+        <% end %>
+      <% end %>
     </div>
   </div>
 </div>

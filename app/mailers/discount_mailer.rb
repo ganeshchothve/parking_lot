@@ -1,9 +1,8 @@
 class DiscountMailer < ApplicationMailer
 
-  def send_draft discount_id, user_id
+  def send_draft discount_id
     @discount = Discount.find(discount_id)
-    @user = User.find(user_id)
-    mail(to: @user.email, subject: "Discount #{@discount.name} Requested")
+    mail(to: @discount.created_by.email, subject: "Discount #{@discount.name} Requested")
   end
 
   def send_approved discount_id

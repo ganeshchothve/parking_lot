@@ -25,15 +25,17 @@
             <div><%= @receipt.primary_user_kyc.name %></div>
           </div>
           <div class="form-group">
+            <label class="small text-muted">Email:</label>
+            <div><%= @receipt.primary_user_kyc.email %></div>
+          </div>
+          <div class="form-group">
+            <label class="small text-muted">Phone:</label>
+            <div><%= @receipt.primary_user_kyc.phone %></div>
+          </div>
+          <div class="form-group">
             <label class="small text-muted">PAN Number:</label>
             <div><%= @receipt.primary_user_kyc.pan_number %></div>
           </div>
-          <% if @receipt.primary_user_kyc.permanent_address.present? %>
-            <div class="form-group">
-              <label class="small text-muted">Address: </label>
-              <div><%= @receipt.primary_user_kyc.permanent_address.to_sentence %></div>
-            </div>
-          <% end %>
         </div>
       </div>
     </div>
@@ -44,10 +46,12 @@
             <label class="small text-muted">Paid To:</label>
             <div><%= current_client.registration_name %></div>
           </div>
-          <div class="form-group">
-            <label class="small text-muted">CIN Number:</label>
-            <div><%= current_client.cin_number %></div>
-          </div>
+          <% if current_client.cin_number.present? %>
+            <div class="form-group">
+              <label class="small text-muted">CIN Number:</label>
+              <div><%= current_client.cin_number %></div>
+            </div>
+          <% end %>
           <% if current_client.address.present? %>
             <div class="form-group">
               <label class="small text-muted">Address: </label>

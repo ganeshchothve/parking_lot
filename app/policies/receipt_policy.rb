@@ -13,14 +13,18 @@ class ReceiptPolicy < ApplicationPolicy
 
   def new?
     if user.buyer?
-      user.kyc_ready? && (record.project_unit_id.blank? || after_hold_payment?) && user.confirmed?
+      valid = user.kyc_ready? && (record.project_unit_id.blank? || after_hold_payment?) && user.confirmed?
     else
-      record.user_id.present? && record.user.kyc_ready? && (record.project_unit_id.blank? || after_hold_payment?) &&  record.user.confirmed?
+      valid = record.user_id.present? && record.user.kyc_ready? && record.user.confirmed?
+      valid = valid && (record.project_unit_id.blank? || after_blocked_payment? || (after_hold_payment? && editable_field?('status')))
+
     end
+    valid = valid && current_client.payment_gateway.present? if record.payment_mode == "online"
+    valid
   end
 
   def direct?
-    new?
+    current_client.enable_direct_payment? && new?
   end
 
   def create?
@@ -41,14 +45,12 @@ class ReceiptPolicy < ApplicationPolicy
 
   def after_hold_payment?
     project_unit = record.project_unit
-    unit_user = project_unit.user
-
-    valid = project_unit.present? && project_unit.user_based_status(unit_user) == 'booked'
-
-    if user.buyer?
-      valid = valid && user.id == unit_user.id
-    end
+    valid = project_unit.present? && project_unit.status == "hold"
     valid
+  end
+
+  def after_blocked_payment?
+    record.project_unit.present? && record.project_unit.status != 'hold' && after_hold_payment?
   end
 
   def permitted_attributes params={}
@@ -59,16 +61,16 @@ class ReceiptPolicy < ApplicationPolicy
     if user.buyer? || user.role?('channel_partner') || (record.user_id.present? && record.user.project_unit_ids.present?) && record.status == 'pending'
       attributes += [:project_unit_id]
     end
-    if !user.buyer? && record.user_id.present? && record.status == 'pending'
-      attributes += [:reference_project_unit_id]
-    end
     if record.new_record? || record.status == 'pending'
       attributes += [:total_amount]
     end
     if !user.buyer? && (record.new_record? || record.status == 'pending')
       attributes += [:issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier]
     end
-    if user.role?('admin') || user.role?('crm') || user.role?('sales')
+    if ['sales', 'sales_admin'].include?(user.role) && (record.status == "pending" || record.status == "clearance_pending")
+      attributes += [:status]
+    end
+    if ['admin', 'crm', 'superadmin'].include?(user.role)
       attributes += [:status]
       if record.persisted? && record.status == 'clearance_pending'
         attributes += [:processed_on, :comments, :tracking_id]

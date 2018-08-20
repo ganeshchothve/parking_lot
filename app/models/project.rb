@@ -79,14 +79,12 @@ class Project
   has_one :address, as: :addressable
   belongs_to :booking_portal_client, class_name: 'Client'
 
-  validates :logo, :rera_registration_no, presence: true
+  validates :name, :rera_registration_no, presence: true
 
   accepts_nested_attributes_for :address, allow_destroy: true #, :brochure_templates, :price_quote_templates, :images
   index(client_id:1)
 
   default_scope -> { where(is_active: true)}
-
-  validates :name, :logo, :rera_registration_no, presence: true
 
   def unit_configurations
     UnitConfiguration.where(data_attributes: {"$elemMatch" => {"n" => "project_id", "v" => self.selldo_id}})

@@ -10,7 +10,7 @@ class SearchPolicy < ApplicationPolicy
   def new?
     valid = true
     valid = valid && (record.user_id == user.id) if user.buyer?
-    valid = valid && record.user.referenced_channel_partner_ids.include?(user.id) if user.role == "channel_partner"
+    valid = valid && record.user.referenced_manager_ids.include?(user.id) if user.role == "channel_partner"
     valid = valid && true if ['cp', 'sales', 'admin'].include?(user.role)
     valid
   end
@@ -48,7 +48,7 @@ class SearchPolicy < ApplicationPolicy
   end
 
   def make_available?
-    user.buyer? && record.project_unit_id.present? && ProjectUnit.find(record.project_unit_id).status == "hold"
+    record.project_unit_id.present? && ProjectUnit.find(record.project_unit_id).status == "hold"
   end
 
   def permitted_attributes params={}

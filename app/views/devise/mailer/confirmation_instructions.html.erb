@@ -5,12 +5,12 @@
     </p>
     <div class="mb-3"></div>
     <p>
-      <% if @resource.role == "channel_partner" %>
+      <% if @resource.role?("channel_partner") %>
         Thank you for registering as a Channel Partner at <%= current_project.name %>. Please confirm your account by clicking the link below. <br/>
         You can start entering your leads as soon as your account is confirmed.
       <% elsif @resource.buyer? %>
-        <% if @resource.channel_partner_id.present? %>
-          Your interest for <%= current_project.name %> has been registered by <%= @resource.channel_partner.name %>. Please confirm your account by clicking the link below and book your Home in 4 easy steps!<br/>
+        <% if @resource.manager_id.present? %>
+          Your interest for <%= current_project.name %> has been registered by <%= @resource.manager.name %>. Please confirm your account by clicking the link below and book your Home in 4 easy steps!<br/>
         <% else %>
           Thank you for registering at <%= current_project.name %>. Please confirm your account by clicking the link below and book your Home in 4 easy steps!
         <% end %>
@@ -19,6 +19,6 @@
       <% end %>
     </p>
     <div class="mb-3"></div>
-    <%= link_to 'Confirm account', confirmation_url(@resource, confirmation_token: @token, channel_partner_id: @resource.channel_partner_id) %>
+    <%= link_to 'Confirm account', confirmation_url(@resource, confirmation_token: @token, manager_id: @resource.manager_id) %>
   </div>
 </div>

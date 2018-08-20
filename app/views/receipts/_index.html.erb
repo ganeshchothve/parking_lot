@@ -1,4 +1,4 @@
-<div class="table-responsive-lg">
+<div class="table-responsive">
   <table class="striped-table table">
     <thead class="th-default">
       <% labels = t('mongoid.attributes.receipt').with_indifferent_access %>
@@ -14,22 +14,26 @@
     <tbody>
       <% receipts.each do |receipt| %>
       <tr>
-        <td><%= receipt.user.name %></td>
+        <td>
+          <% if UserPolicy.new(current_user, receipt.user).show? %>
+            <%= link_to receipt.user.name, admin_user_path(receipt.user_id) %>
+          <% else %>
+            <%= receipt.user.name %>
+          <% end %>
+        </td>
         <td><%= receipt.status == "success" ? receipt.receipt_id : "Not Generated" %></td>
         <td>
           <div class="small muted">
             <div>
-              <%= receipt.project_unit_id.present? ? "Project: #{receipt.project_unit.name}" : '' %>
-              <%= receipt.reference_project_unit_id.present? ? "Reference Project: #{receipt.reference_project_unit.name}" : '' %>
-              <%= receipt.project_unit_id.blank? && receipt.reference_project_unit_id.blank? ? "Direct Payment" : '' %>
+              <%= receipt.project_unit_id.present? ? "Project: #{receipt.project_unit.name}" : 'Direct Payment' %>
             </div>
             <% if receipt.payment_mode == 'online' %>
               <div>Trans ID: <%= receipt.payment_identifier %></div>
-    	        <div>Processed Date:<%= receipt.processed_on.present? ? l(receipt.processed_on.in_time_zone(current_user.time_zone)) : "-" %></div>
+              <div>Processed Date:<%= receipt.processed_on.present? ? l(receipt.processed_on) : "-" %></div>
             <% else %>
               <div>Bank: <%= receipt.issuing_bank %> / Branch: <%= receipt.issuing_bank_branch %></div>
               <div>Issued Date: <%= receipt.issued_date.present? ? receipt.issued_date : "-" %></div>
-              <div>Processed Date: <%= receipt.processed_on.present? ? l(receipt.processed_on.in_time_zone(current_user.time_zone)) : "-" %></div>
+              <div>Processed Date: <%= receipt.processed_on.present? ? l(receipt.processed_on) : "-" %></div>
               <div>ID: <%= receipt.payment_identifier %></div>
             <% end %>
             <div>Payment: <%= Receipt.available_payment_modes.find{|x| x[:id] == receipt.payment_mode}[:text] %></div>

@@ -3,28 +3,12 @@ class ProjectUnit
   include Mongoid::Timestamps
   include ArrayBlankRejectable
   include ApplicationHelper
-  extend ApplicationHelper
   include InsertionStringMethods
-
-  def self.blocking_amount
-    current_client.blocking_amount
-  end
-
-  def self.total_booked_revenue
-    ProjectUnit.where(status: "booked").sum(:agreement_price)
-  end
-
-  def blocking_days
-    current_client.blocking_days
-  end
-
-  def self.holding_minutes
-    current_client.holding_minutes
-  end
+  include CostCalculator
 
   # These fields are globally utlised on the server side
   field :name, type: String
-  field :sfdc_id, type: String
+  field :erp_id, type: String
   field :agreement_price, type: Integer
   field :status, type: String, default: 'available'
   field :available_for, type: String, default: 'user'
@@ -33,136 +17,61 @@ class ProjectUnit
   field :held_on, type: DateTime
   field :applied_discount_rate, type: Float, default: 0
   field :applied_discount_id, type: String
-  field :primary_user_kyc_id, type: BSON::ObjectId
   field :base_rate, type: Float
 
   # These fields majorly are pulled from sell.do and may be used on the UI
   field :client_id, type: String
-  field :developer_id, type: String
-  field :project_id, type: String
-  field :project_tower_id, type: String
-  field :unit_configuration_id, type: String
-  field :data_attributes, type: Array, default: []
+  field :developer_name, type: String
+  field :project_name, type: String
+  field :project_tower_name, type: String
+  field :unit_configuration_name, type: String
+
   field :selldo_id, type: String
-  field :sap_id, type: String
-  field :maintenance_per_month, type: Float
-  field :property_tax, type: Float
-  field :total_property_tax_month, type: Float
-  field :registration_cost, type: Float
-  field :transfer_charge, type: Float
-  field :costs, type: Array, default: []
-  field :customized_additional_costs, type: Hash
-  field :customized_extra_costs, type: Hash
-  field :customized_gov_costs, type: Array
-  field :customized_grace_period, type: Integer
-  field :customized_interest_percentage, type: Integer
-  field :clubhouse_amenities_price, type: Float
-  field :premium_location_charges, type: Float
+
   field :floor_rise, type: Float
-  field :land_rate, type: Float
-  field :images, type: Array
+  field :floor, type: Integer
+  field :floor_order, type: Integer
   field :bedrooms, type: Float
   field :bathrooms, type: Float
   field :carpet, type: Float
   field :saleable, type: Float
+  field :sub_type, type: String
+  field :type, type: String
+  field :unit_facing_direction, type: String
+  field :primary_user_kyc_id, type: BSON::ObjectId
+  field :payment_schedule_template_id, type: BSON::ObjectId
+  field :cost_sheet_template_id, type: BSON::ObjectId
 
   attr_accessor :processing_user_request, :processing_swap_request
 
-  @@keys =  {project_tower_name: "String", project_name: "String", developer_name: "String", uds: "Float", usable: "Float",  loading: "Float", sub_type: "String", type: "String", covered_area: "Float", terrace_area: "Float", category: "String", developer_id: "String", configuration_type: "String", construction_status: "String", transaction_type: "String", registration_date: "Date", floor: "Integer", assigned_to: "String", broker: "String", team: "String", date_of_possession: "Date", possession_status: "String", seller_type: "String", is_negotiable: "Boolean", amenities: "Hash", parking: "String", docs_verified: "Boolean", verification_date: "String", property_inspected: "Boolean", suitable_for: "String", entrance: "String", furnishing: "String", flooring: "String", facing: "String", unit_facing_direction: "String", project_status: "String", city: "String", state: "String", country: "String", resale: "Boolean", owner_count: "Integer", posted_by: "String", unit_configuration_id: "String", unit_configuration_name: "String"}
-
-  @@keys.each do |k, klass|
-    define_method(k) do
-      if self.data_attributes.collect{|x| x['n']}.include?("#{k}")
-        val = self.data_attributes.find { |h| h['n'] == "#{k}" }['v']
-        case "#{klass}"
-        when "Hash"
-          val
-        when "String"
-          val
-        when "Integer"
-          val.to_i
-        when "Float"
-          val.to_f
-        when "Boolean"
-          if(val == "true" || val == true)
-            true
-          else
-            false
-          end
-        when "Date"
-          if(!val.blank?)
-            Date.parse(val)
-          end
-        end
-      elsif "#{klass}" == "String"
-        nil
-      elsif "#{klass}" == "Integer"
-        nil
-      elsif "#{klass}" == "Float"
-        nil
-      elsif "#{klass}" == "Array"
-        []
-      elsif "#{klass}" == "Hash"
-        {}
-      else
-        nil
-      end
-    end
-    define_method("#{k}=") do |arg|
-      val = arg
-      case "#{klass}"
-      when "String"
-        val = arg
-      when "Integer"
-        val = arg.to_i
-      when "Float"
-        val = arg.to_f
-      when "Array"
-        val = arg
-      when "Hash"
-        val = arg
-      when "Boolean"
-        if(val == "true" || val == true)
-          true
-        else
-          false
-        end
-      when "Date"
-        if(!val.blank? && val.class == String)
-          Date.parse(val)
-        end
-      end
-      if self.data_attributes.collect{|x| x['n']}.include?("#{k}")
-        self.data_attributes.find { |h| h['n'] == "#{k}" }['v'] = val
-      else
-        self.data_attributes.push({"n" => "#{k}", "v" => val})
-      end
-    end
-  end
-
   enable_audit({
     indexed_fields: [:project_id, :project_tower_id, :unit_configuration_id, :client_id, :booking_portal_client_id, :selldo_id, :developer_id],
-    audit_fields: [:sfdc_id, :status, :available_for, :blocked_on, :auto_release_on, :held_on, :applied_discount_rate, :applied_discount_id, :primary_user_kyc_id, :base_rate]
+    audit_fields: [:erp_id, :status, :available_for, :blocked_on, :auto_release_on, :held_on, :applied_discount_rate, :applied_discount_id, :primary_user_kyc_id, :base_rate]
   })
 
   belongs_to :project
+  belongs_to :developer
+  belongs_to :project_tower
+  belongs_to :unit_configuration
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :user, optional: true
+
   has_many :receipts
   has_many :user_requests
   has_and_belongs_to_many :user_kycs
-  has_many :payment_schedules
-  belongs_to :booking_portal_client, class_name: 'Client'
   has_many :smses, as: :triggered_by, class_name: "Sms"
+  embeds_many :costs, as: :costable
+  embeds_many :data, as: :data_attributable
 
-  validates :client_id, :project_id, :project_tower_id, presence: true
-  validates :status, :name, :sfdc_id, presence: true
+  has_many :assets, as: :assetable
+
+  accepts_nested_attributes_for :data, :costs, allow_destroy: true
+
+  validates :client_id, :agreement_price, :project_id, :project_tower_id, :unit_configuration_id, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :type, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, :payment_schedule_template_id, :cost_sheet_template_id, presence: true
+  validates :status, :name, :erp_id, presence: true
   validates :status, inclusion: {in: Proc.new{ ProjectUnit.available_statuses.collect{|x| x[:id]} } }
   validates :available_for, inclusion: {in: Proc.new{ ProjectUnit.available_available_fors.collect{|x| x[:id]} } }
   validates :user_id, :primary_user_kyc_id, presence: true, if: Proc.new { |unit| ['available', 'not_available', 'management', 'employee'].exclude?(unit.status) }
-
-  def blocking_payment
-    receipts.where(payment_type: 'blocking').first
-  end
 
   def make_available
     if self.available_for == "user"
@@ -174,9 +83,21 @@ class ProjectUnit
     if self.available_for == "management"
       self.status = "management"
     end
-    self.base_rate = UpgradePricing.get_upgraded_base_rate(self.project_tower_name.split("-")[0].strip)
+    # GENERICTODO: self.base_rate = upgraded rate based on timely upgrades
 
     SelldoLeadUpdater.perform_async(self.user_id.to_s, "hold_payment_dropoff")
+  end
+
+  def calculated_costs
+    out = {}
+    costs.each{|c| out[c.key] = c.value }
+    out
+  end
+
+  def calculated_data
+    out = {}
+    data.each{|c| out[c.key] = c.value }
+    out
   end
 
   def self.user_based_available_statuses(user)
@@ -249,191 +170,15 @@ class ProjectUnit
     ]
   end
 
-  def effective_rate
-    self.base_rate - self.applied_discount_rate
-  end
-
-  def status_value
-    self.class.available_statuses.find { |status_hash| status_hash[:id] == self.status }[:text] rescue ""
-  end
-
-  def unit_configuration
-    UnitConfiguration.find(self.unit_configuration_id)
-  end
-
-  def construction_cost
-    base_rate + premium_location_charges + floor_rise - land_rate - applied_discount_rate
-  end
-
-  def booking_price_percent_of_agreement_price
-    agreement_price > 5000000 ? 0.099 : 0.1
-  end
-
-  def tds_amount_percent_of_agreement_price
-    agreement_price > 5000000 ? 0.001 : 0
-  end
-
-  def land_price
-    land_rate * saleable
-  end
-
-  def booking_price
-    (agreement_price * booking_price_percent_of_agreement_price).to_i
-  end
-
-  def tds_amount
-    agreement_price * tds_amount_percent_of_agreement_price
-  end
-
-  def discount(user)
-    discount_rate(user) * saleable
-  end
-
-  def discount_rate(user)
-    user = self.user if self.user_id.present?
-    if applied_discount_id.present? && applied_discount_rate.present?
-      return applied_discount_rate
-    else
-      discount_obj = applicable_discount(user)
-      discount = (discount_obj.present? ? discount_obj.value : 0)
-      e_discount = 0
-      if user.role?("employee_user") || user.role?("management_user")
-        #e_discount = ((base_rate > 4100) ? (base_rate - 4100) : 0)
-        e_discount = base_rate*0.05
-      end
-      return (discount > e_discount ? discount : e_discount)
-    end
-    0
-  end
-
-  def blocking_date
-    if(["blocked","booked_tentative","booked_confirmed"].include?(self.status))
-      self.booking_detail.created_at
-    else
-      BookingDetail.where(project_unit_id:self.id).first.created_at rescue "N/A"
-    end
-  end
-
-  def applicable_discount(user)
-    selector = []
-    selector << {user_id: user.id} if user.present?
-    selector << {user_role: user.role} if user.present?
-    selector << {project_unit_id: self.id}
-    discount_obj = Discount.or(selector).desc(:value).first
-  end
-
-  def construction_price
-    construction_cost * saleable
-  end
-
-  def wep_price
-    150 * saleable
-  end
-
-  def corpus_fund
-    125 * saleable
-  end
-
-  def city_infrastructure_fund
-    200 * saleable
-  end
-
-  def advance_maintenance_charges
-    3 * 12 * saleable
-  end
-
-  def car_park_price
-    0
-  end
-
-  def gst_on_additional_charges
-    0.18 * (wep_price + clubhouse_amenities_price + city_infrastructure_fund + advance_maintenance_charges + car_park_price)
-  end
-
-  def gst_on_agreement_price
-    0.18 * construction_price
-  end
-
-  def sub_total
-    wep_price + clubhouse_amenities_price + corpus_fund + city_infrastructure_fund + advance_maintenance_charges + car_park_price + gst_on_additional_charges
-  end
-
-  def all_inclusive_price
-    (sub_total + agreement_price).round(2)
-  end
-
-  def pending_balance(options={})
-    strict = options[:strict] || false
-    user_id = options[:user_id] || self.user_id
-    if user_id.present?
-      receipts_total = Receipt.where(user_id: user_id, project_unit_id: self.id)
-      if strict
-        receipts_total = receipts_total.where(status: "success")
-      else
-        receipts_total = receipts_total.in(status: ['clearance_pending', "success"])
-      end
-      receipts_total = receipts_total.sum(:total_amount)
-      return (self.booking_price - receipts_total)
-    else
-      return nil
-    end
-  end
-
-  def ageing
-    if(["booked_confirmed"].include?(self.status))
-      last_booking_payment = self.receipts.where(status:"success").desc(:created_at).first.created_at.to_date
-      due_since = self.receipts.where(status:"success").asc(:created_at).first.created_at.to_date
-      age = (last_booking_payment - due_since).to_i
-    elsif(["blocked", "booked_tentative"].include?(self.status))
-      age = (Date.today - self.receipts.where(status:"success").asc(:created_at).first.created_at.to_date).to_i
-    else
-      return "NA"
-    end
-    if age < 15
-      return "< 15 days"
-    elsif age < 30
-      return "< 30 days"
-    elsif age < 45
-      return "< 45 days"
-    elsif age < 60
-      return "< 60 days"
-    else
-      return "> 60 days"
-    end
-  end
-
-  def total_amount_paid
-    self.receipts.where(status: 'success').sum(:total_amount)
-  end
-
-  def self.sync_trigger_attributes
-    ['status', 'user_id']
-  end
-
-  def sync_with_third_party_inventory
-    # TODO: write the actual code here
-    third_party_inventory_response_status = 200
-    return (third_party_inventory_response_status == 200)
-  end
-
-  def sync_with_selldo
-    selldo_response_status = 200
-    return (selldo_response_status == 200)
-  end
-
-  def calculate_agreement_price
-    self.agreement_price = (land_price + construction_price + gst_on_agreement_price).round(2)
-  end
-
   def process_payment!(receipt)
     if ['success', 'clearance_pending'].include?(receipt.status)
       if self.pending_balance({strict: true}) <= 0
         self.status = 'booked_confirmed'
-      elsif self.total_amount_paid > ProjectUnit.blocking_amount
+      elsif self.total_amount_paid > current_client.blocking_amount
       	if self.status != 'booked_tentative'
-        	self.status = 'booked_tentative'
+          self.status = 'booked_tentative'
       	end
-      elsif receipt.total_amount >= ProjectUnit.blocking_amount && (self.status == "hold" || self.user_based_status(self.user) == "available")
+      elsif receipt.total_amount >= current_client.blocking_amount && (self.status == "hold" || self.user_based_status(self.user) == "available")
         if (self.user == receipt.user && self.status == 'hold') || self.user_based_status(self.user) == "available"
           self.status = 'blocked'
         else
@@ -442,7 +187,7 @@ class ProjectUnit
         end
       end
       # Send payments data to Sell.Do CRM
-      SelldoReceiptPusher.perform_async(receipt.id.to_s, Time.now.to_i)
+      # SelldoReceiptPusher.perform_async(receipt.id.to_s, Time.now.to_i)
     elsif receipt.status == 'failed'
       # if the unit has any successful or clearance_pending payments other than this, we keep it still blocked
       # else we just release the unit
@@ -461,7 +206,6 @@ class ProjectUnit
 
   def self.build_criteria params={}
     selector = {}
-    data_attributes_query = []
     if params[:fltrs].present?
       # TODO: handle search here
       if params[:fltrs][:status].present?
@@ -496,83 +240,50 @@ class ProjectUnit
       end
     end
     selector[:name] = ::Regexp.new(::Regexp.escape(params[:q]), 'i') if params[:q].present?
-    self.where(selector).and(data_attributes_query)
-  end
-
-  def unit_configuration
-    if self.unit_configuration_id.present?
-      UnitConfiguration.find(self.unit_configuration_id)
-    else
-      nil
-    end
+    self.where(selector)
   end
 
   def ui_json
     hash = self.as_json
-    hash.delete(:data_attributes)
     @@keys.each do |k, klass|
       hash[k] = self.send(k)
     end
     hash
   end
 
-  def primary_user_kyc
-    UserKyc.find(self.primary_user_kyc_id)
-  end
-
   def booking_detail
     BookingDetail.where(project_unit_id: self.id).ne(status: "cancelled").first
   end
 
-  def promote_future_payment_days
-    if self.auto_release_on.present? && self.auto_release_on > Date.today
-      days = (self.auto_release_on - Date.today).to_i
-    else
-      nil
-    end
+  def blocking_days
+    current_client.blocking_days
   end
 
-  def lead_source
-    if self.user_id.present?
-      if self.user.role == "employee_user"
-        return "Employee"
-      elsif self.user.channel_partner_id.present?
-        return "Channel Partner"
-      else
-        return "Retail"
-      end
-    else
-      return "NA"
-    end
+  def holding_minutes
+    current_client.holding_minutes
   end
 
-  def effective_price(*current_user)
-    if current_user.present?
-      discount_rate_value = self.discount_rate(self.user_id.present? ? self.user : current_user)
-    else
-      discount_rate_value = 0
-    end
-    (self.base_rate + self.premium_location_charges + self.floor_rise - discount_rate_value).round(2)
+  def primary_user_kyc
+    primary_user_kyc_id.present? ? UserKyc.find(primary_user_kyc_id) : nil
   end
 
-  def construction_rate
-    self.effective_price - self.land_rate
+  def payment_schedule_template
+    Template::PaymentScheduleTemplate.find self.payment_schedule_template_id
   end
 
-  def ninetynine_percent
-    (self.pending_balance - self.tds_amount) rescue nil
+  def cost_sheet_template
+    Template::CostSheetTemplate.find self.cost_sheet_template_id
   end
 
-  def channel_partner_name
-    if self.user_id.present?
-      if self.user.channel_partner_id.present?
-        return self.user.channel_partner.name
-      else
-        return "NA"
-      end
-    else
-      return "NA"
-    end
+  def total_outside_agreement_costs
+    costs.where(category: 'outside_agreement').collect{|x| x.value}.sum
   end
 
+  def total_agreement_costs
+    costs.where(category: 'agreement').collect{|x| x.value}.sum
+  end
+
+  def all_inclusive_price
+    agreement_price + total_outside_agreement_costs
+  end
 end

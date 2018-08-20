@@ -8,7 +8,6 @@ $.validator.setDefaults({
   errorElement: 'span',
   errorClass: 'help-block',
   errorPlacement: function(error, element) {
-    //debugger;
     if(element.parent('.input-group').length > 0) {
       error.insertAfter(element.parent());
     } else if(element.parent().hasClass("selectize-input")) {
@@ -27,7 +26,7 @@ $.validator.setDefaults({
 $(document).ready(function(){
   // to ensure that this is only called after all other default trigger change events are fired in our Javascripts
   setTimeout(function(){
-    $('.validate-form').find('input, textarea, select').change(function(){
+    $('.validate-form').find('input, textarea, select, not:[type="tel"]').change(function(){
       if(typeof window.onbeforeunload !== "function"){
         window.onbeforeunload = function(){
           return 'You have made changes to the form which will be lost if you refresh the page. Are you sure?'
@@ -65,7 +64,7 @@ $(document).ready(function(){
         $div.find('input,select,textarea').focus();
         $('html, body').animate({
             scrollTop: $div.offset().top - 100
-        }, 1000);  
+        }, 1000);
       }
       e.preventDefault();
     }

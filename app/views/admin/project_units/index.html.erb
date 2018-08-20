@@ -1,27 +1,11 @@
 <div class="container">
   <div class="row justify-content-center">
-    <div class="col-md-12">
-      <% if params[:controller] != "admin/users" && params[:action] != "show" %>
-        <%= content_for :breadcrumbs do %>
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="<%= home_path(current_user) %>">Dashboard</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Units</li>
-          </ol>
-        </nav>
-        <% end %>
-      <% end %>
-      <div class="mt-3"></div>
-      <div class="row">
-        <div class="col-md-9">
-          <div class="card">
-            <div class="card-body">
-              <div class="row">
-                <div class="col-md-12">
-                  <p>Total Project Units : <%= project_units.count %></p>
-                </div>
-              </div>
-              <%= render '/admin/project_units/index', project_units: @project_units %>
+    <div class="<%= @project_unit.blank? ? 'col-md-9' : 'col-md-12' %>">
+      <%= render 'breadcrumbs', {project_unit: @project_unit} %>
+      <div class="card">
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-md-7">
               <% if ProjectUnitPolicy.new(current_user, ProjectUnit).export? %>
                 <%= link_to "Export all #{global_labels['units']}", export_admin_project_units_path, class: 'btn btn-primary float-left ml-2 margin-xs-left-0' %>
               <% end %>
@@ -29,13 +13,17 @@
                 <%= link_to "MIS report #{global_labels['units']}", mis_report_admin_project_units_path, class: 'btn btn-primary float-left ml-2 margin-xs-left-0' %>
               <% end %>
             </div>
+            <div class="col-md-5 text-md-right">
+              <h6 class="mt-2">Total <%= global_labels[:project_units] %>: <%= @project_units.count %></h6>
+            </div>
           </div>
-        </div>
-        <div class="col-md-3">
-          <div class="d-md-none mt-3"></div>
-          <%= render "filters" %>
+          <%= render '/admin/project_units/index', project_units: @project_units %>
         </div>
       </div>
+    </div>
+    <div class="col-md-3">
+      <div class="d-md-none mt-3"></div>
+      <%= render "filters" %>
     </div>
   </div>
 </div>

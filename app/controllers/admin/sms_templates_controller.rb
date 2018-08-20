@@ -51,7 +51,7 @@ class Admin::SmsTemplatesController < ApplicationController
   end
 
   def apply_policy_scope
-    custom_scope = SmsTemplate.all.criteria
+    custom_scope = SmsTemplate.criteria
     SmsTemplate.with_scope(policy_scope(custom_scope)) do
       yield
     end
