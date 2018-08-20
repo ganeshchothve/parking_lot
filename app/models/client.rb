@@ -44,6 +44,9 @@ class Client
   field :payment_gateway, type: String, default: 'Razorpay'
   field :enable_company_users, type: Boolean
   field :terms_and_conditions, type: String
+  field :faqs, type: String
+  field :rera, type: String
+  field :tds_process, type: String
 
   mount_uploader :logo, DocUploader
   mount_uploader :mobile_logo, DocUploader
@@ -58,6 +61,7 @@ class Client
   has_many :sms_templates, class_name: 'SmsTemplate'
   has_many :smses, class_name: 'Sms'
   has_many :assets, as: :assetable
+  has_one :gallery
 
   validate :name, :allowed_bookings_per_user, :selldo_client_id, :selldo_form_id, :selldo_channel_partner_form_id, :selldo_gre_form_id, :helpdesk_email, :helpdesk_number, :notification_email, :sender_email, :email_domains, :booking_portal_domains, :registration_name, :website_link, :support_email, :support_number, :payment_gateway
   validates :preferred_login, inclusion: {in: Proc.new{ Client.available_preferred_logins.collect{|x| x[:id]} } }

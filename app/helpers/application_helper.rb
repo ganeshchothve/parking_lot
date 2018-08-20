@@ -49,22 +49,40 @@ module ApplicationHelper
   def bottom_navigation(classes='')
     html = "<li class='nav-item #{classes}'>
       #{active_link_to 'Docs', dashboard_documents_path, active: :exclusive, class: 'small nav-link'}
-    </li>
-    <li class='nav-item #{classes}'>
-      #{active_link_to 'FAQs', dashboard_faqs_path, active: :exclusive, class: 'small nav-link'}
-    </li>
-    <li class='nav-item #{classes}'>
-      #{active_link_to 'RERA', dashboard_rera_path, active: :exclusive, class: 'small nav-link'}
-    </li>
-    <li class='nav-item #{classes}'>
-      #{active_link_to 'TDS', dashboard_tds_process_path, active: :exclusive, class: 'small nav-link'}
-    </li>
-    <li class='nav-item #{classes}'>
-      #{active_link_to 'T & C', dashboard_terms_and_condition_path, active: :exclusive, class: 'small nav-link'}
     </li>"
+    if current_client.gallery.present? && current_client.gallery.assets.select{|x| x.persisted?}.present?
+      html += "<li class='nav-item #{classes}'>
+        #{active_link_to 'Gallery', dashboard_gallery_path, active: :exclusive, class: 'small nav-link'}
+      </li>"
+    end
+    if current_client.faqs.present?
+      html += "<li class='nav-item #{classes}'>
+        #{active_link_to 'FAQs', dashboard_faqs_path, active: :exclusive, class: 'small nav-link'}
+      </li>"
+    end
+    if current_client.rera.present?
+      html += "<li class='nav-item #{classes}'>
+        #{active_link_to 'RERA', dashboard_rera_path, active: :exclusive, class: 'small nav-link'}
+      </li>"
+    end
+    if current_client.tds_process.present?
+      html += "<li class='nav-item #{classes}'>
+        #{active_link_to 'TDS', dashboard_tds_process_path, active: :exclusive, class: 'small nav-link'}
+      </li>"
+    end
+    if current_client.terms_and_conditions.present?
+      html += "<li class='nav-item #{classes}'>
+        #{active_link_to 'T & C', dashboard_terms_and_condition_path, active: :exclusive, class: 'small nav-link'}
+      </li>"
+    end
     if user_signed_in? && ClientPolicy.new(current_user, current_client).edit?
       html += "<li class='nav-item #{classes}'>
         #{link_to('Edit ' + global_labels['client'], edit_admin_client_path, class: 'small nav-link modal-remote-form-link')}
+      </li>"
+    end
+    if user_signed_in? && current_client.gallery.present? && AssetPolicy.new(current_user, Asset.new(assetable: current_client.gallery)).index? && current_user.role?("superadmin")
+      html += "<li class='nav-item #{classes}'>
+        #{link_to('Edit ' + global_labels[:gallery], assetables_path(assetable_type: current_client.gallery.class.model_name.i18n_key.to_s, assetable_id: current_client.gallery.id), class: 'small nav-link modal-remote-form-link')}
       </li>"
     end
     if user_signed_in? && SmsTemplatePolicy.new(current_user, SmsTemplate).index?

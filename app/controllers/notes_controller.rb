@@ -10,7 +10,7 @@ class NotesController < ApplicationController
   end
 
   def create
-    @note = Note.new(notable: @notable)
+    @note = Note.new(notable: @notable, creator: current_user)
     @note.assign_attributes(permitted_attributes(Note.new))
     authorize @note
     respond_to do |format|
