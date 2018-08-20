@@ -17,6 +17,7 @@ Rails.application.routes.draw do
 
   devise_scope :user do
     post 'users/otp', :to => 'local_devise/sessions#otp', :as => :users_otp
+    root to: "devise/sessions#new"
   end
 
   as :user do
@@ -25,6 +26,9 @@ Rails.application.routes.draw do
 
   scope "*assetable_type/:assetable_id" do
     resources :assets, controller: :assets, as: :assetables
+  end
+  scope "*notable_type/:notable_id" do
+    resources :notes, controller: :notes, as: :notables
   end
   resources :channel_partners, except: [:destroy] do
     get 'export', action: 'export', on: :collection, as: :export
@@ -45,6 +49,7 @@ Rails.application.routes.draw do
       get :resend_confirmation_instructions, action: 'resend_confirmation_instructions', as: :resend_confirmation_instructions, on: :member
       match 'update_password', on: :member, via: [:get, :patch], action: "update_password", as: :update_password
       get :resend_password_instructions, action: 'resend_password_instructions', as: :resend_password_instructions, on: :member
+      match :confirm_via_otp, action: 'confirm_via_otp', as: :confirm_via_otp, on: :member, via: [:get, :patch]
       get '/new/:role', action: 'new', on: :collection, as: :new_by_role
       get 'export', action: 'export', on: :collection, as: :export
       get 'print', action: 'print', on: :member, as: :print
@@ -82,26 +87,16 @@ Rails.application.routes.draw do
   match 'payment/:receipt_id/process_payment/:ignore', to: 'payment#process_payment', via: [:get, :post]
   get :register, to: 'home#register', as: :register
   post :check_and_register, to: 'home#check_and_register', as: :check_and_register
-  root to: "home#register"
 
   scope :dashboard do
     # read only pages
     get '', to: 'dashboard#index', as: :dashboard
     get 'faqs', to: 'dashboard#faqs', as: :dashboard_faqs
+    get 'gallery', to: 'dashboard#gallery', as: :dashboard_gallery
     get 'documents', to: 'dashboard#documents', as: :dashboard_documents
     get 'rera', to: 'dashboard#rera', as: :dashboard_rera
     get 'tds-process', to: 'dashboard#tds_process', as: :dashboard_tds_process
     get 'terms-and-conditions', to: 'dashboard#terms_and_condition', as: :dashboard_terms_and_condition
-
-    # related to apartment selector
-    get '/apartment-selector/:configuration/:project_tower_id/:unit_id', to: 'dashboard#project_units', stage: 'kyc_details', :constraints => {:configuration => /[^\/]+/}
-    get '/apartment-selector/:configuration/:project_tower_id', to: 'dashboard#project_units', stage: 'select_apartment', :constraints => {:configuration => /[^\/]+/}
-    get '/apartment-selector/:configuration', to: 'dashboard#project_units', stage: 'choose_tower', :constraints => {:configuration => /[^\/]+/}
-    get '/apartment-selector', to: 'dashboard#project_units', stage: 'apartment_selector', as: :dashboard_project_units
-
-    # project unit & payment related
-    get 'make-remaining-payment/:project_unit_id', to: 'dashboard#make_remaining_payment'
-    get ':project_unit_id/payment-breakup', to: 'dashboard#payment_breakup'
     get "gamify-unit-selection", to: "dashboard#gamify_unit_selection"
     resource :user do
       resources :user_requests, except: [:destroy], controller: 'admin/user_requests'

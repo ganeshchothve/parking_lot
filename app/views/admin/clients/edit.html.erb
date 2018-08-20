@@ -16,6 +16,7 @@
               <a class="nav-item nav-link active" data-toggle="tab" href="#nav-client-basic" role="tab">Basic Details</a>
               <a class="nav-item nav-link" data-toggle="tab" href="#nav-client-contacts" role="tab">Contacts & Notifications</a>
               <a class="nav-item nav-link" data-toggle="tab" href="#nav-client-integrations" role="tab">Integrations</a>
+              <a class="nav-item nav-link" data-toggle="tab" href="#nav-client-pages" role="tab">Content Pages</a>
             </div>
           </nav>
           <div class="mt-3"></div>
@@ -198,6 +199,14 @@
                   </div>
                 </div>
               </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :allowed_bookings_per_user, class: 'label-required' %>
+                    <%= f.number_field :allowed_bookings_per_user, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("allowed_bookings_per_user") ? false : true), min: 0 %>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="tab-pane fade" id="nav-client-contacts" role="tabpanel">
               <div class="row">
@@ -352,6 +361,24 @@
                     <%= f.text_field :sms_provider_password, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("sms_provider_password") ? false : true) %>
                   </div>
                 </div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="nav-client-pages" role="tabpanel">
+              <div class="form-group">
+                <%= f.label :terms_and_conditions, class: 'label-required' %>
+                <%= f.text_area :terms_and_conditions, class: 'form-control summernote', disabled: (policy(@client).editable_field?("terms_and_conditions") ? false : true) %>
+              </div>
+              <div class="form-group">
+                <%= f.label :faqs, class: 'label-required' %>
+                <%= f.text_area :faqs, class: 'form-control summernote', disabled: (policy(@client).editable_field?("faqs") ? false : true) %>
+              </div>
+              <div class="form-group">
+                <%= f.label :rera, class: 'label-required' %>
+                <%= f.text_area :rera, class: 'form-control summernote', disabled: (policy(@client).editable_field?("rera") ? false : true) %>
+              </div>
+              <div class="form-group">
+                <%= f.label :tds_process, class: 'label-required' %>
+                <%= f.text_area :tds_process, class: 'form-control summernote', disabled: (policy(@client).editable_field?("tds_process") ? false : true) %>
               </div>
             </div>
           </div>

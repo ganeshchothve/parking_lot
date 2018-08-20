@@ -18,7 +18,7 @@ class User
   field :phone, type: String, default: ""
   field :lead_id, type: String
   field :role, type: String, default: "user"
-  field :allowed_bookings, type: Integer, default: 5
+  field :allowed_bookings, type: Integer
   field :manager_id, type: BSON::ObjectId
   field :manager_change_reason, type: String
   field :referenced_manager_ids, type: Array, default: []
@@ -90,10 +90,10 @@ class User
   has_many :user_kycs
   has_many :searches
   has_many :received_smses, class_name: "Sms", inverse_of: :recipient
-
+  has_many :notes, as: :notable
   has_many :smses, as: :triggered_by, class_name: "Sms"
 
-  validates :first_name, :role, :allowed_bookings, presence: true
+  validates :first_name, :role, presence: true
   validates :phone, uniqueness: true, phone: { possible: true, types: [:voip, :personal_number, :fixed_or_mobile]}, if: Proc.new{|user| user.email.blank? }
   validates :email, uniqueness: true, if: Proc.new{|user| user.phone.blank? }
   validates :rera_id, presence: true, if: Proc.new{ |user| user.role?('channel_partner') }
@@ -143,14 +143,18 @@ class User
       {id: 'superadmin', text: 'Superadmin'},
       {id: 'admin', text: 'Administrator'},
       {id: 'crm', text: 'CRM User'},
-      {id: 'cp_admin', text: 'Channel Partner Head'},
-      {id: 'cp', text: 'Channel Partner Manager'},
       {id: 'sales_admin', text: 'Sales Head'},
       {id: 'sales', text: 'Sales User'},
-      {id: 'channel_partner', text: 'Channel Partner'},
       {id: 'user', text: 'Customer'},
       {id: 'gre', text: 'GRE or Pre-sales'}
     ]
+    if current_client.enable_channel_partners?
+      roles += [
+        {id: 'cp_admin', text: 'Channel Partner Head'},
+        {id: 'cp', text: 'Channel Partner Manager'},
+        {id: 'channel_partner', text: 'Channel Partner'}
+      ]
+    end
     if current_client.present? && current_client.enable_company_users?
       roles += [
         {id: 'management_user', text: 'Management User'},

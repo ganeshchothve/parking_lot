@@ -187,7 +187,7 @@ class ProjectUnit
         end
       end
       # Send payments data to Sell.Do CRM
-      SelldoReceiptPusher.perform_async(receipt.id.to_s, Time.now.to_i)
+      # SelldoReceiptPusher.perform_async(receipt.id.to_s, Time.now.to_i)
     elsif receipt.status == 'failed'
       # if the unit has any successful or clearance_pending payments other than this, we keep it still blocked
       # else we just release the unit

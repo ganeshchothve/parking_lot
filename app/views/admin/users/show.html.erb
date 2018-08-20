@@ -6,31 +6,12 @@
       <div class="card">
         <div class="card-header">
           Overview
-          <ul class="nav float-right">
-            <% if UserPolicy.new(current_user, @user).edit? %>
-              <li class="nav-item">
-                <%= link_to "Edit", edit_admin_user_path(@user.id), class: 'modal-remote-form-link nav-link'  %>
-              </li>
-            <% end %>
-            <% if ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: @user, status: "available")).hold? %>
-              <li class="nav-item">
-                <%= link_to "Take a Booking", new_admin_user_search_path(@user.id), class: "nav-link" %>
-              </li>
-            <% end %>
-            <% if ReceiptPolicy.new(current_user, Receipt).index?(@user) %>
-            <li class="nav-item">
-              <%= link_to "View #{global_labels['receipts']}", admin_user_receipts_path(user_id: @user.id), class: "nav-link" %>
-            </li>
-            <% end %>
-            <% if @user.present? && !current_user.buyer? && ReceiptPolicy.new(current_user, Receipt.new(user: @user)).direct? %>
-              <%= link_to "Add Direct #{global_labels['receipt']}", direct_admin_user_receipts_path(@user), class: 'nav-link modal-remote-form-link' %>
-            <% end %>
-            <% if UserKycPolicy.new(current_user, UserKyc).index?(@user) %>
-              <li class="nav-item">
-                <%= link_to "View #{global_labels['user_kycs']}", admin_user_user_kycs_path(user_id: @user.id), class: "nav-link" %>
-              </li>
-            <% end %>
-          </ul>
+          <div class="dropdown float-right">
+            <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <%= render "admin/users/links", user: @user %>
+            </div>
+          </div>
         </div>
         <div class="card-body">
           <div class="row">
@@ -71,20 +52,22 @@
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label><%= labels[:manager_change_reason] %></label>
-                <div>
-                  <%= @user.manager_change_reason.present? ? @user.manager_change_reason : '-' %>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
                 <label><%= labels[:time_zone] %></label>
                 <div>
                   <%= @user.time_zone.present? ? @user.time_zone : '-' %>
                 </div>
               </div>
             </div>
+            <% if current_client.enable_channel_partners? %>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label><%= labels[:manager_change_reason] %></label>
+                <div>
+                  <%= @user.manager_change_reason.present? ? @user.manager_change_reason : '-' %>
+                </div>
+              </div>
+            </div>
+            <% end %>
           </div>
           <% end %>
           <% if @user.buyer? && current_client.enable_actual_inventory? %>
@@ -164,6 +147,15 @@
             </div>
             <% end %>
           </div>
+        </div>
+      </div>
+      <div class="mt-3"></div>
+      <div class="card">
+        <div class="card-header">
+          <%= global_labels[:notes] %>
+        </div>
+        <div class="card-body">
+          <%= render "notes/index", notable: @user %>
         </div>
       </div>
       <% if @user.role?("channel_partner") || @user.role?("cp") %>

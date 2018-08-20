@@ -29,7 +29,7 @@ module CostCalculator
     selector << {user_id: user.id} if user.present?
     selector << {user_role: user.role} if user.present?
     selector << {project_unit_id: self.id}
-    discount_obj = Discount.or(selector).desc(:value).first
+    discount_obj = Discount.where(status: "approved").or(selector).desc(:value).first
   end
 
   def blocking_payment

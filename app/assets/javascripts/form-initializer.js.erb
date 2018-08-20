@@ -61,6 +61,26 @@ FormInitializer = (function(){
         remote_selectize($(el), {ds: ds}, {url: url} );
       }
     });
+
+    _.each($(selector).find(".summernote"), function(el){
+      if(!$(el).attr("disabled")){
+        $(selector).find(".summernote").summernote({
+          disableDragAndDrop: true,
+          toolbar: [
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['font', ['strikethrough', 'superscript', 'subscript']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['link', ['link']],
+            ['table', ['table']],
+            ['height', ['height']]
+          ],
+          tabsize: 2,
+          height: 200
+        });
+      }
+    });
   };
 
   var init = function(selector){

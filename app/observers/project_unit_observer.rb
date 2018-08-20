@@ -74,7 +74,7 @@ class ProjectUnitObserver < Mongoid::Observer
       if Rails.env.development?
         mailer.deliver
       else
-        SelldoInventoryPusher.perform_async(project_unit.status, project_unit.id.to_s, Time.now.to_i)
+        # SelldoInventoryPusher.perform_async(project_unit.status, project_unit.id.to_s, Time.now.to_i)
         mailer.deliver_later
       end
       user = project_unit.user
