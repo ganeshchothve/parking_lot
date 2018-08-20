@@ -175,7 +175,6 @@ module InventoryImport
           end
           puts "Saved #{project_unit.name}"
         else
-          binding.pry
           puts "Error in saving #{project_unit.name} : #{project_unit.errors.full_messages}"
         end
       end
