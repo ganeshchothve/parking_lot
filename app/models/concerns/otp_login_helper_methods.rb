@@ -63,7 +63,7 @@ module OtpLoginHelperMethods
 
       if self.otp_limit_crossed?
         valid = false
-        error_message = "Maximum limit reached to get OTP code. Please try again after #{(self.last_otp_sent_at + self.class.otp_locked_time.seconds).in_time_zone("Mumbai").strftime("%d/%m/%Y %l:%M %p")}"
+        error_message = "Maximum limit reached to get OTP code. Please try again after #{(self.last_otp_sent_at + self.class.otp_locked_time.seconds).in_time_zone(self.time_zone).strftime("%d/%m/%Y %l:%M %p")}"
 
       end
 
