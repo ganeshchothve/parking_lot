@@ -61,9 +61,10 @@ module ApplicationHelper
       </li>"
     end
     if current_client.rera.present?
-    html += "<li class='nav-item #{classes}'>
-      #{active_link_to 'RERA', dashboard_rera_path, active: :exclusive, class: 'small nav-link'}
-    </li>"
+      html += "<li class='nav-item #{classes}'>
+        #{active_link_to 'RERA', dashboard_rera_path, active: :exclusive, class: 'small nav-link'}
+      </li>"
+    end
     if current_client.tds_process.present?
       html += "<li class='nav-item #{classes}'>
         #{active_link_to 'TDS', dashboard_tds_process_path, active: :exclusive, class: 'small nav-link'}
