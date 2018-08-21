@@ -219,7 +219,7 @@ class SearchesController < ApplicationController
         },
         all_inclusive_price: {
           "$addToSet": "$all_inclusive_price"
-        }
+        },
         carpet: {
           "$addToSet": "$carpet"
         }
