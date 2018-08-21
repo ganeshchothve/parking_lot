@@ -113,3 +113,9 @@ figure.wave {
 .popover{
   max-width: 450px;
 }
+.full-bg{
+  min-height: 100vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}

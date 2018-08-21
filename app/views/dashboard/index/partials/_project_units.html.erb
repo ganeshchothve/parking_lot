@@ -21,6 +21,7 @@
               <td><%= ProjectUnit.available_statuses.find{|x| x[:id] == d[:status]}[:text] %></td>
               <td class="text-right"><%= d[:count] %></td>
               <td class="text-right"><%= number_to_indian_currency(d[:total_agreement_price]) %></td>
+              <td class="text-right"><%= number_to_indian_currency(d[:total_all_inclusive_price]) %></td>
             </tr>
             <% end %>
           </tbody>

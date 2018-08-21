@@ -91,7 +91,20 @@ module CostCalculator
   def calculate_agreement_price
     base_price + self.costs.where(category: 'agreement').collect{|x| x.value}.sum
   end
+
+  def calculate_all_inclusive_price
+    agreement_price + total_outside_agreement_costs
+  end
+
   def base_price
     saleable * effective_rate
+  end
+
+  def total_outside_agreement_costs
+    costs.where(category: 'outside_agreement').collect{|x| x.value}.sum
+  end
+
+  def total_agreement_costs
+    costs.where(category: 'agreement').collect{|x| x.value}.sum
   end
 end

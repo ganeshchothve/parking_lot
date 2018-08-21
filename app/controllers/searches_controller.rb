@@ -56,7 +56,7 @@ class SearchesController < ApplicationController
   def update
     @search.assign_attributes(permitted_attributes(@search))
     location = nil
-    if (permitted_attributes(@search).keys.collect{|x| x.to_s} & ['bedrooms', 'agreement_price']).present?
+    if (permitted_attributes(@search).keys.collect{|x| x.to_s} & ['bedrooms', 'agreement_price', 'all_inclusive_price']).present?
       @search.step = 'filter'
       location = step_user_search_path(@search, step: @search.step)
     end
@@ -217,6 +217,9 @@ class SearchesController < ApplicationController
         agreement_price: {
           "$addToSet": "$agreement_price"
         },
+        all_inclusive_price: {
+          "$addToSet": "$all_inclusive_price"
+        }
         carpet: {
           "$addToSet": "$carpet"
         }
@@ -229,6 +232,8 @@ class SearchesController < ApplicationController
       "$project": {
         min_agreement_price: {"$min": "$agreement_price"},
         max_agreement_price: {"$max": "$agreement_price"},
+        min_all_inclusive_price: {"$min": "$all_inclusive_price"},
+        max_all_inclusive_price: {"$max": "$all_inclusive_price"},
         min_carpet: {"$min": "$carpet"},
         max_carpet: {"$max": "$carpet"},
         bedrooms: "$bedrooms"

@@ -13,7 +13,7 @@
       <div class="modal-body">
         <% if @receipt.new_record? %>
           <% unless @receipt.project_unit_id.blank? %>
-          <div class="alert alert-info">
+          <div class="alert alert-primary">
             <p>
               Payments need to be for individual units, clubbed payments are not allowed.
               <% unless current_user.buyer? %>
@@ -21,16 +21,22 @@
               <% end %>
             </p>
             <div class="row">
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <div class="form-group">
                   <label class="small">Unit</label>
                   <div><%= @receipt.project_unit.name %></div>
                 </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <div class="form-group">
                   <label class="small">Agreement Price</label>
                   <div><%= number_to_indian_currency(@receipt.project_unit.agreement_price.round) %></div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="small">All Inclusive Price</label>
+                  <div><%= number_to_indian_currency(@receipt.project_unit.all_inclusive_price.round) %></div>
                 </div>
               </div>
             </div>
@@ -83,7 +89,7 @@
         <% else %>
           <% labels = t('mongoid.attributes.receipt').with_indifferent_access %>
           <%= form_for [:admin, @user, @receipt], local: true, remote: true, html: {id: 'receipt_form', class: 'modal-remote-form validate-form', "data-resource-type": global_labels['receipt'], "data-type": "json"} do |f| %>
-            <div class="alert alert-info">
+            <div class="alert alert-primary">
               The <%= labels[:receipt_id] %> will be generated only after successful processing of payment.
             </div>
             <div class="form-group">
@@ -144,11 +150,12 @@
               <div class="col-md-6">
                 <% if current_client.enable_actual_inventory %>
                   <div class="form-group">
-                    <%= f.label :project_unit_id, class: 'control-label' %>
                     <% if @receipt.project_unit_id.present? %>
+                      <%= f.label :project_unit_id, class: 'control-label' %>
                       <div><%= f.object.project_unit.name %></div>
                       <%= f.hidden_field :project_unit_id %>
                     <% elsif @receipt.payment_mode != 'online' && @receipt.persisted? %>
+                      <%= f.label :project_unit_id, class: 'control-label' %>
                       <% user_units = @receipt.user.project_units.ne(status: 'hold') %>
                       <% if user_units.present? %>
                       <%= f.select :project_unit_id, user_units.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', disabled: (policy(@receipt).editable_field?("project_unit_id") ? false : true) %>

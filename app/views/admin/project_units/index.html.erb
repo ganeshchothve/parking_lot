@@ -14,7 +14,7 @@
               <% end %>
             </div>
             <div class="col-md-5 text-md-right">
-              <h6 class="mt-2">Total <%= global_labels[:project_units] %>: <%= @project_units.count %></h6>
+              <h6 class="mt-2">Total <%= global_labels[:project_units] %>: <%= @project_units.total_entries %></h6>
             </div>
           </div>
           <%= render '/admin/project_units/index', project_units: @project_units %>

@@ -4,11 +4,13 @@
     <p>
       Channel Partner has been changed on customer <strong><%= @user.name %></strong>. New assigned channel partner is <strong><%= @user.manager.name %></strong>
     </p>
-    <br/>
-    <p>
-      <% labels = t('mongoid.attributes.user').with_indifferent_access %>
-      <div class="small"><%= labels[:manager_change_reason] %></div>
-      <%= @user.manager_change_reason %>
-    </p>
+    <% if @user.manager_change_reason.present? %>
+      <br/>
+      <p>
+        <% labels = t('mongoid.attributes.user').with_indifferent_access %>
+        <div class="small"><%= labels[:manager_change_reason] %></div>
+        <%= @user.manager_change_reason %>
+      </p>
+    <% end %>
   </div>
 </div>

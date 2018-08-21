@@ -17,7 +17,6 @@ class ReceiptPolicy < ApplicationPolicy
     else
       valid = record.user_id.present? && record.user.kyc_ready? && record.user.confirmed?
       valid = valid && (record.project_unit_id.blank? || after_blocked_payment? || (after_hold_payment? && editable_field?('status')))
-
     end
     valid = valid && current_client.payment_gateway.present? if record.payment_mode == "online"
     valid
@@ -50,7 +49,7 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def after_blocked_payment?
-    record.project_unit.present? && record.project_unit.status != 'hold' && after_hold_payment?
+    record.project_unit.present? && record.project_unit.status != 'hold' && record.project_unit.user_based_status(record.user) == "booked"
   end
 
   def permitted_attributes params={}

@@ -15,6 +15,9 @@
       <% if search.agreement_price.present? %>
         <%= search.agreement_price_to_s %>
       <% end %>
+      <% if search.all_inclusive_price.present? %>
+        <%= search.all_inclusive_price_to_s %>
+      <% end %>
       <%= link_to "Change", edit_search_path, class: "modal-remote-form-link small position-absolute", style: "right:10px; top:0;" %>
     </div>
   </div>
