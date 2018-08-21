@@ -13,6 +13,7 @@
               <th>Payment Mode</th>
               <th class="text-right">Count</th>
               <th class="text-right">Total Amount</th>
+              <th class="text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -22,6 +23,11 @@
               <td><%= Receipt.available_payment_modes.find{|x| x[:id] == d[:payment_mode]}[:text]  %></td>
               <td class="text-right"><%= d[:count] %></td>
               <td class="text-right"><%= number_to_indian_currency(d[:total_amount]) %></td>
+              <td class="text-right">
+                <% if policy(Receipt).index? %>
+                  <%= link_to "View", user_receipts_path(fltrs: {status: d[:status], payment_mode: d[:payment_mode]}), target: "_blank" %>
+                <% end %>
+              </td>
             </tr>
             <% end %>
           </tbody>

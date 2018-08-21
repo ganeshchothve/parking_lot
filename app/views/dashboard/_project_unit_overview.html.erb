@@ -82,24 +82,58 @@
   <div class="card-footer">
     <% if defined?(with_actions) && with_actions == true %>
       <nav class="nav">
-        <% if current_user.buyer? && project_unit.user == current_user && ["blocked", "booked_tentative", "booked_confirmed"].include?(project_unit.status) %>
-          <% if ProjectUnitPolicy.new(current_user, project_unit).edit? %>
-          <%= link_to "Update #{global_labels['user_kycs']}", edit_admin_project_unit_path(project_unit), class: "modal-remote-form-link nav-link pl-0" %>
-          <% end %>
-          <% if ReceiptPolicy.new(current_user, project_unit.user.receipts.new(project_unit_id: project_unit.id)).new? %>
-            <a href="<%= new_user_receipt_path(project_unit_id: project_unit.id) %>" class="nav-link modal-remote-form-link">
-            Pay Remaining Amount
-            </a>
-          <% end %>
-          <% if current_user.user_requests.where(project_unit_id: project_unit.id).ne(status: 'resolved').blank? %>
-            <a href="<%= new_admin_user_request_path(project_unit_id: project_unit.id) %>" class="nav-link text-danger modal-remote-form-link">Cancel Booking</a>
-          <% else %>
-            <span class="nav-link unit-cancelled">Cancellation Requested</span>
-          <% end %>
-        <% elsif current_user.buyer? && project_unit.user == current_user && ["hold"].include?(project_unit.status) %>
+        <% if ProjectUnitPolicy.new(current_user, project_unit).edit? %>
+        <%= link_to "Update #{global_labels['user_kycs']}", edit_admin_project_unit_path(project_unit), class: "modal-remote-form-link nav-link pl-0" %>
+        <% end %>
+        <% if ProjectUnitPolicy.new(current_user, project_unit).block? %>
           <a href="<%= checkout_user_search_path(current_user.get_search(project_unit.id)) %>" class="nav-link pl-0">
             Book Now
           </a>
+        <% elsif ReceiptPolicy.new(current_user, project_unit.user.receipts.new(project_unit_id: project_unit.id)).new? %>
+          <a href="<%= new_user_receipt_path(project_unit_id: project_unit.id) %>" class="nav-link modal-remote-form-link">
+          Pay Remaining Amount
+          </a>
+        <% end %>
+        <% if UserRequestPolicy.new(current_user, UserRequest.new(user: project_unit.user, project_unit: project_unit, request_type: "cancellation")).new? %>
+          <a href="<%= new_admin_user_request_path(project_unit_id: project_unit.id) %>" class="nav-link text-danger modal-remote-form-link">Cancel Booking</a>
+        <% end %>
+        <% if project_unit.assets.present? %>
+        <%= link_to "Images", "javascript:;", data: {toggle: "modal", target: "#floor_plan_modal_#{project_unit.id}"}, class: "nav-link" %>
+          <div class="modal fade" role="dialog" id="floor_plan_modal_<%= project_unit.id %>">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div id="project_unit_gallery_<%= project_unit.id %>" class="carousel slide" data-ride="carousel">
+                    <ol class="carousel-indicators">'
+                      <% project_unit.assets.each_with_index do |asset, index| %>
+                        <li data-target="#project_unit_gallery_<%= project_unit.id %>" data-slide-to="<%= index %>" class="<%= index.zero? ? "active" : "" %>"></li>
+                      <% end %>
+                    </ol>
+                    <div class="carousel-inner">
+                      <% project_unit.assets.each_with_index do |asset, index| %>
+                        <div class="carousel-item <%= index.zero? ? "active" : "" %>">
+                          <img class="d-block w-100" src="<%= asset.file.url %>" />
+                        </div>
+                      <% end %>
+                    </div>
+                    <a class="carousel-control-prev" href="#project_unit_gallery_<%= project_unit.id %>" role="button" data-slide="prev">
+                      <span class="fas fa-chevron-left text-dark" aria-hidden="true"></span>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#project_unit_gallery_<%= project_unit.id %>" role="button" data-slide="next">
+                      <span class="fas fa-chevron-right text-dark" aria-hidden="true"></span>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         <% end %>
       </nav>
     <% end %>

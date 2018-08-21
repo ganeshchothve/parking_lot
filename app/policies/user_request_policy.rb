@@ -8,7 +8,9 @@ class UserRequestPolicy < ApplicationPolicy
   end
 
   def new?
-    record.user_id == user.id && user.booking_detail_ids.present? && current_client.enable_actual_inventory?
+    valid = (record.user_id == user.id && user.booking_detail_ids.present? && current_client.enable_actual_inventory?)
+    valid = (record.project_unit.user_based_status(user) == "booked" && record.project_unit.status != "hold") if record.project_unit_id.present?
+    valid
   end
 
   def export?

@@ -15,7 +15,7 @@
     <div class="text-muted small">
       <% if search.crossed_step('project_unit') %>
         <%= search.project_tower.name %><br/>
-        Lorem ipsum Helo Lowad adf2
+        <br/>
         <% if @search.previous_step.present? %>
           <%= form_for [:user, @search], html: {class: 'validate-form'} do |f| %>
             <div class="form-group">
