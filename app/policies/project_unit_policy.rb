@@ -4,7 +4,9 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def edit?
-    _role_based_check(true)
+    valid = true
+    valid = (record.status != "hold") if user.buyer?
+    _role_based_check(valid)
   end
 
   def export?
