@@ -38,6 +38,8 @@ class UserPolicy < ApplicationPolicy
       !record.role?("superadmin")
     elsif user.role?('channel_partner')
       record.role?("user")
+    elsif user.role?('sales_admin')
+      record.buyer? || record.role?('sales')
     elsif user.role?('cp_admin')
       record.buyer? || record.role?('channel_partner') || record.role?('cp')
     elsif user.role?('cp')
