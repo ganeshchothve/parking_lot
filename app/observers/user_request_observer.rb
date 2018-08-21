@@ -6,7 +6,7 @@ class UserRequestObserver < Mongoid::Observer
 
       Email.create!({
         booking_portal_client_id: user.booking_portal_client_id,
-        email_template_id: EmailTemplate.find_by(name: "#{user_request.request_type}_request_created").id,
+        email_template_id:Template::EmailTemplate.find_by(name: "#{user_request.request_type}_request_created").id,
         recipients: [user],
         cc_recipients: (user.channel_partner_id.present? ? [user.channel_partner] : []),
         triggered_by_id: user_request.id,
@@ -43,7 +43,7 @@ class UserRequestObserver < Mongoid::Observer
 
       Email.create!({
         booking_portal_client_id: user_request.user.booking_portal_client_id,
-        email_template_id: EmailTemplate.find_by(name: "#{user_request.request_type}_request_#{user_request.status}").id,
+        email_template_id:Template::EmailTemplate.find_by(name: "#{user_request.request_type}_request_#{user_request.status}").id,
         recipients: [user_request.user],
         cc_recipients: (user_request.user.channel_partner_id.present? ? [user_request.user.channel_partner] : []),
         triggered_by_id: user_request.id,

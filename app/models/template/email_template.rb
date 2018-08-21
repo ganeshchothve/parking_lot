@@ -18,6 +18,10 @@ class Template::EmailTemplate < Template
     self.agency.docs.in(id: self.attachment_ids)
   end
 
+  def parsed_subject object
+    return ERB.new(self.subject).result( object.get_binding ).html_safe
+  end
+
   private
   # for email template we require body or text. Otherwisse we won't have any content to send to the sender / reciever
   # throws error if the both are blank

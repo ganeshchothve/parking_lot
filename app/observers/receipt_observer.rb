@@ -38,9 +38,9 @@ class ReceiptObserver < Mongoid::Observer
         # TODO : Sell.Do Receipt
         Email.create!({
           booking_portal_client_id: user.booking_portal_client_id,
-          email_template_id: EmailTemplate.find_by(name: "receipt_success").id,
+          email_template_id:Template::EmailTemplate.find_by(name: "receipt_success").id,
           recipients: [user],
-          cc_recipients: (user.channel_partner_id.present? ? [user.channel_partner] : []).push(),
+          cc_recipients: (user.manager_id.present? ? [user.manager] : []),
           triggered_by_id: receipt.id,
           triggered_by_type: receipt.class.to_s
         })
@@ -48,18 +48,18 @@ class ReceiptObserver < Mongoid::Observer
         # TODO : Sell.Do Receipt
         Email.create!({
           booking_portal_client_id: project_unit.booking_portal_client_id,
-          email_template_id: EmailTemplate.find_by(name: "receipt_failed").id,
+          email_template_id:Template::EmailTemplate.find_by(name: "receipt_failed").id,
           recipients: [user],
-          cc_recipients: (user.channel_partner_id.present? ? [user.channel_partner] : []).push(),
+          cc_recipients: (user.manager_id.present? ? [user.manager] : []),
           triggered_by_id: receipt.id,
           triggered_by_type: receipt.class.to_s
         })
       elsif receipt.status == 'clearance_pending'
         Email.create!({
           booking_portal_client_id: project_unit.booking_portal_client_id,
-          email_template_id: EmailTemplate.find_by(name: "receipt_clearance_pending").id,
+          email_template_id:Template::EmailTemplate.find_by(name: "receipt_clearance_pending").id,
           recipients: [user],
-          cc_recipients: (user.channel_partner_id.present? ? [user.channel_partner] : []).push(),
+          cc_recipients: (user.manager_id.present? ? [user.manager] : []),
           triggered_by_id: receipt.id,
           triggered_by_type: receipt.class.to_s
         })
@@ -79,9 +79,9 @@ class ReceiptObserver < Mongoid::Observer
     if receipt.status == 'pending' && receipt.payment_mode != 'online'
       Email.create!({
         booking_portal_client_id: user.booking_portal_client_id,
-        email_template_id: EmailTemplate.find_by(name: "receipt_pending_offline").id,
+        email_template_id:Template::EmailTemplate.find_by(name: "receipt_pending_offline").id,
         recipients: [user],
-        cc_recipients: (user.channel_partner_id.present? ? [user.channel_partner] : []).push(),
+        cc_recipients: (user.manager_id.present? ? [user.manager] : []),
         triggered_by_id: receipt.id,
         triggered_by_type: receipt.class.to_s
       })

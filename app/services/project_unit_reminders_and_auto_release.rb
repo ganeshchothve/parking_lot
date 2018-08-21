@@ -6,7 +6,7 @@ module ProjectUnitRemindersAndAutoRelease
         if [9,7,5,3,2,1].include?(days)
           Email.create!({
             booking_portal_client_id: project_unit.booking_portal_client_id,
-            email_template_id: EmailTemplate.find_by(name: "daily_reminder_for_booking_payment").id,
+            email_template_id:Template::EmailTemplate.find_by(name: "daily_reminder_for_booking_payment").id,
             recipients: [project_unit.user],
             cc_recipients: (project_unit.user.channel_partner_id.present? ? [project_unit.user.channel_partner] : []),
             triggered_by_id: project_unit.id,

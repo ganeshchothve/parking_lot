@@ -23,8 +23,8 @@ module Communication
 
         begin
           message = get_message_object(email_json)
-          mailgun = ::Mailgun::Client.new setting[:private_api_key]
-          mailgun.send_message(::Email.default_email_domain, message)
+          mailgun = ::Mailgun::Client.new email.booking_portal_client.mailgun_private_api_key
+          mailgun.send_message(email.booking_portal_client.mailgun_email_domain, message)
           email.set({sent_on: Time.now})
         rescue StandardError => e
           if Rails.env.production? || Rails.env.staging?
@@ -41,13 +41,15 @@ module Communication
       def self.get_message_object email_json
         email_json = email_json.with_indifferent_access
         message = ::Mailgun::MessageBuilder.new
-        message.add_recipient(:to, email_json[:to])
-        message.add_recipient(:cc, email_json[:cc])
+        email_json[:to].each{|to| message.add_recipient(:to, to)}
+        email_json[:cc].each{|cc| message.add_recipient(:cc, cc)}
+
+        action_mailer_email = ApplicationMailer.test(to: email_json[:to],cc: email_json[:cc], subject: email_json[:subject], body: email_json[:body])
 
         message.from("notifications@sell.do")
         message.subject(email_json[:subject])
         message.body_text(email_json[:text_only_body])
-        message.body_html(email_json[:body])
+        message.body_html(action_mailer_email.html_part.to_s.html_safe)
 
         if(email_json[:tracking].present?)
           message.add_campaign_id(email_json[:tracking][:campaign_id]) if(email_json[:tracking][:campaign_id])

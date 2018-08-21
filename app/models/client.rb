@@ -50,29 +50,29 @@ class Client
   field :rera, type: String
   field :tds_process, type: String
 
-  field :email_header, type: String, default: '<div class="container">\
-    <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />\
+  field :email_header, type: String, default: '<div class="container">
+    <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
     <div class="mt-3"></div>'
-  field :email_footer, type: String, default: '<div class="mt-3"></div>\
-    <div class="card mb-3">\
-      <div class="card-body">\
-        Thanks,<br/>\
-        <%= current_project.name %>\
-      </div>\
-    </div>\
-    <div style="font-size: 12px;">\
-      If you have any queries you can reach us at <%= current_client.support_number %> or write to us at <%= current_client.support_email %>. Please click <a href="<%= current_client.website_link %>">here</a> to visit our website.\
-    </div>\
-    <hr/>\
-    <div class="text-muted text-center" style="font-size: 12px;">\
-      © <%= Date.today.year %> <%= current_client.name %>. All Rights Reserved. | MAHARERA ID: <%= current_project.rera_registration_no %>\
-    </div>\
-    <% if current_client.address.present? %>\
-      <div class="text-muted text-center" style="font-size: 12px;">\
-        <%= current_client.address.to_sentence %>\
-      </div>\
-    <% end %>\
-    <div class="mt-3"></div>\
+  field :email_footer, type: String, default: '<div class="mt-3"></div>
+    <div class="card mb-3">
+      <div class="card-body">
+        Thanks,<br/>
+        <%= current_project.name %>
+      </div>
+    </div>
+    <div style="font-size: 12px;">
+      If you have any queries you can reach us at <%= current_client.support_number %> or write to us at <%= current_client.support_email %>. Please click <a href="<%= current_client.website_link %>">here</a> to visit our website.
+    </div>
+    <hr/>
+    <div class="text-muted text-center" style="font-size: 12px;">
+      © <%= Date.today.year %> <%= current_client.name %>. All Rights Reserved. | MAHARERA ID: <%= current_project.rera_registration_no %>
+    </div>
+    <% if current_client.address.present? %>
+      <div class="text-muted text-center" style="font-size: 12px;">
+        <%= current_client.address.to_sentence %>
+      </div>
+    <% end %>
+    <div class="mt-3"></div>
   </div>'
 
   mount_uploader :logo, DocUploader
@@ -86,7 +86,7 @@ class Client
   has_one :address, as: :addressable
   has_many :templates
   has_many :sms_templates, class_name: 'SmsTemplate'
-  has_many :email_templates, class_name: 'EmailTemplate'
+  has_many :email_templates, class_name: 'Template::EmailTemplate'
   has_many :smses, class_name: 'Sms'
 
   has_many :assets, as: :assetable

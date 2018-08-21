@@ -2,7 +2,7 @@ class Email
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  field :to, type: String
+  field :to, type: Array
   field :cc, type: Array
   field :subject, type: String
   field :body, type: String
@@ -18,7 +18,7 @@ class Email
   validate :body_or_text_only_body_present?
   validates_inclusion_of :status, in: Proc.new {  self.allowed_statuses.collect{ |hash| hash[:id] } }
 
-  enable_audit reference_ids_without_associations: [{name_of_key: 'email_template_id', method: 'email_template', klass: 'EmailTemplate'}]
+  enable_audit reference_ids_without_associations: [{name_of_key: 'email_template_id', method: 'email_template', klass: 'Template::EmailTemplate'}]
 
   belongs_to :booking_portal_client, class_name: 'Client', inverse_of: :emails
   has_and_belongs_to_many :recipients, class_name: "User", inverse_of: :received_emails
@@ -68,7 +68,7 @@ class Email
   end
 
   def email_template
-    EmailTemplate.where(id: self.email_template_id).first
+    Template::EmailTemplate.where(id: self.email_template_id).first
   end
 
   private

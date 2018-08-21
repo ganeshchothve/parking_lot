@@ -52,11 +52,12 @@ class ProjectUnitObserver < Mongoid::Observer
       if !project_unit.processing_user_request && !project_unit.processing_swap_request
         Email.create!({
           booking_portal_client_id: project_unit.booking_portal_client_id,
-          email_template_id: EmailTemplate.find_by(name: "project_unit_released").id,
+          email_template_id:Template::EmailTemplate.find_by(name: "project_unit_released").id,
           cc: [project_unit.booking_portal_client.notification_email],
           recipients: [user_was],
-          cc_recipients: (user_was.channel_partner_id.present? ? [user_was.channel_partner] : []).push(),
-          triggered_by_id: project_unit.id
+          cc_recipients: (user_was.manager_id.present? ? [user_was.manager] : []),
+          triggered_by_id: project_unit.id,
+          triggered_by_type: project_unit.class.to_s,
         })
 
         Sms.create!(
@@ -76,11 +77,12 @@ class ProjectUnitObserver < Mongoid::Observer
 
       Email.create!({
         booking_portal_client_id: project_unit.booking_portal_client_id,
-        email_template_id: EmailTemplate.find_by(name: "project_unit_#{project_unit.status}").id,
+        email_template_id:Template::EmailTemplate.find_by(name: "project_unit_#{project_unit.status}").id,
         cc: [project_unit.booking_portal_client.notification_email],
         recipients: [user],
-        cc_recipients: (user.channel_partner_id.present? ? [user.channel_partner] : []).push(),
-        triggered_by_id: project_unit.id
+        cc_recipients: (user.manager_id.present? ? [user.manager] : []),
+        triggered_by_id: project_unit.id,
+        triggered_by_type: project_unit.class.to_s,
       })
 
       if !Rails.env.development?
@@ -108,10 +110,10 @@ class ProjectUnitObserver < Mongoid::Observer
     if project_unit.auto_release_on_changed? && project_unit.auto_release_on.present? && project_unit.auto_release_on_was.present?
       Email.create!({
         booking_portal_client_id: user.booking_portal_client_id,
-        email_template_id: EmailTemplate.find_by(name: "auto_release_on_extended").id,
+        email_template_id:Template::EmailTemplate.find_by(name: "auto_release_on_extended").id,
         cc: [project_unit.booking_portal_client.notification_email],
         recipients: [user],
-        cc_recipients: (user.channel_partner_id.present? ? [user.channel_partner] : []).push(),
+        cc_recipients: (user.manager_id.present? ? [user.manager] : []),
         triggered_by_id: receipt.id,
         triggered_by_type: receipt.class.to_s
       })

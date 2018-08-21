@@ -60,6 +60,7 @@ class ProjectUnit
   has_many :user_requests
   has_and_belongs_to_many :user_kycs
   has_many :smses, as: :triggered_by, class_name: "Sms"
+  has_many :emails, as: :triggered_by, class_name: "Email"
   embeds_many :costs, as: :costable
   embeds_many :data, as: :data_attributable
 
