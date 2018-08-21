@@ -15,7 +15,7 @@
               <% end %>
             </div>
             <div class="col-md-5 text-md-right">
-              <h6 class="mt-2">Total <%= global_labels[:user_kycs] %>: <%= @user_kycs.count %></h6>
+              <h6 class="mt-2">Total <%= global_labels[:user_kycs] %>: <%= @user_kycs.total_entries %></h6>
             </div>
           </div>
           <%= render 'index', {user_kycs: @user_kycs} %>

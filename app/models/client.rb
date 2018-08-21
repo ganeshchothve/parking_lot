@@ -49,6 +49,8 @@ class Client
   field :faqs, type: String
   field :rera, type: String
   field :tds_process, type: String
+  field :ga_code, type: String
+  field :gtm_tag, type: String
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
@@ -77,6 +79,7 @@ class Client
 
   mount_uploader :logo, DocUploader
   mount_uploader :mobile_logo, DocUploader
+  mount_uploader :background_image, DocUploader
 
   enable_audit track: ["update"]
 
@@ -97,6 +100,7 @@ class Client
 
   validates :preferred_login, inclusion: {in: Proc.new{ Client.available_preferred_logins.collect{|x| x[:id]} } }
   validates :payment_gateway, inclusion: {in: Proc.new{ Client.available_payment_gateways.collect{|x| x[:id]} } }, allow_blank: true
+  validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
 
   accepts_nested_attributes_for :address
 
@@ -126,6 +130,8 @@ c.selldo_default_srd = "5a72c7a67c0dac7e854aca9e"
 c.selldo_cp_srd = "5a72c7a67c0dac7e854aca9e"
 c.helpdesk_number = "9922410908"
 c.helpdesk_email = "supriya@amuratech.com"
+c.ga_code = ""
+c.gtm_tag = ""
 c.notification_email = "supriya@amuratech.com"
 c.email_domains = ["amuratech.com"]
 c.booking_portal_domains = ["bookingportal.withamura.com"]

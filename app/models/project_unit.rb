@@ -10,6 +10,7 @@ class ProjectUnit
   field :name, type: String
   field :erp_id, type: String
   field :agreement_price, type: Integer
+  field :all_inclusive_price, type: Integer
   field :status, type: String, default: 'available'
   field :available_for, type: String, default: 'user'
   field :blocked_on, type: Date
@@ -68,7 +69,7 @@ class ProjectUnit
 
   accepts_nested_attributes_for :data, :costs, allow_destroy: true
 
-  validates :client_id, :agreement_price, :project_id, :project_tower_id, :unit_configuration_id, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :type, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, :payment_schedule_template_id, :cost_sheet_template_id, presence: true
+  validates :client_id, :agreement_price, :all_inclusive_price, :project_id, :project_tower_id, :unit_configuration_id, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :type, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, :payment_schedule_template_id, :cost_sheet_template_id, presence: true
   validates :status, :name, :erp_id, presence: true
   validates :status, inclusion: {in: Proc.new{ ProjectUnit.available_statuses.collect{|x| x[:id]} } }
   validates :available_for, inclusion: {in: Proc.new{ ProjectUnit.available_available_fors.collect{|x| x[:id]} } }
@@ -221,6 +222,12 @@ class ProjectUnit
       if params[:fltrs][:project_tower_id].present?
         selector[:project_tower_id] = params[:fltrs][:project_tower_id]
       end
+      if params[:fltrs][:unit_facing_direction].present?
+        selector[:unit_facing_direction] = params[:fltrs][:unit_facing_direction]
+      end
+      if params[:fltrs][:floor].present?
+        selector[:floor] = params[:fltrs][:floor]
+      end
       if params[:fltrs][:carpet].present?
         carpet = params[:fltrs][:carpet].split("-")
         selector[:carpet] = {"$gte" => carpet.first.to_i, "$lte" => carpet.last.to_i}
@@ -232,6 +239,10 @@ class ProjectUnit
       if params[:fltrs][:agreement_price].present?
         budget = params[:fltrs][:agreement_price].split("-")
         selector[:agreement_price] = {"$gte" => budget.first.to_i, "$lte" => budget.last.to_i}
+      end
+      if params[:fltrs][:all_inclusive_price].present?
+        budget = params[:fltrs][:all_inclusive_price].split("-")
+        selector[:all_inclusive_price] = {"$gte" => budget.first.to_i, "$lte" => budget.last.to_i}
       end
       if params[:fltrs][:bedrooms].present?
         selector[:bedrooms] = params[:fltrs][:bedrooms].to_f
@@ -274,17 +285,5 @@ class ProjectUnit
 
   def cost_sheet_template
     Template::CostSheetTemplate.find self.cost_sheet_template_id
-  end
-
-  def total_outside_agreement_costs
-    costs.where(category: 'outside_agreement').collect{|x| x.value}.sum
-  end
-
-  def total_agreement_costs
-    costs.where(category: 'agreement').collect{|x| x.value}.sum
-  end
-
-  def all_inclusive_price
-    agreement_price + total_outside_agreement_costs
   end
 end

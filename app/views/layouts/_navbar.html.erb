@@ -14,7 +14,7 @@
           <%= active_link_to "Dashboard", dashboard_path, active: :exclusive, class: "nav-link" %>
         </li>
         <% end %>
-        <% if policy(ProjectUnit).index? && current_user.role?('superadmin') %>
+        <% if policy(ProjectUnit).index? %>
         <li class="nav-item">
           <%= active_link_to "#{global_labels[:project_units]}", admin_project_units_path, active: :exclusive, class: "nav-link" %>
         </li>
@@ -84,7 +84,7 @@
         </li>
         <hr/>
         <li class='nav-item d-lg-none'>
-          <%= link_to 'Powered by Amura', 'https://www.amuratech.com', class: 'small nav-link' %>
+          <%= link_to 'Powered by Amura', 'https://www.amuratech.com', class: 'small nav-link', target: "_blank" %>
           <div class="d-md-none mt-3"></div>
         </li>
       </ul>

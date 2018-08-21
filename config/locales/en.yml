@@ -76,6 +76,8 @@ en:
         support_email: 'Support Email'
         helpdesk_number: 'Helpdesk Phone (For after booking CRM Help)'
         helpdesk_email: 'Helpdesk Email (For after booking CRM Help)'
+        ga_code: "Google Analytics Code (UA-XXXXXXXXX-Y)"
+        gtm_tag: "GTM Tag (Please add a the entire JS code)"
         channel_partner_support_number: 'Support Number (For Channel Partners)'
         channel_partner_support_email: 'Support Email (For Channel Partner)'
         erp: 'ERP'
@@ -96,6 +98,7 @@ en:
       search:
         bedrooms: "Beds"
         agreement_price: "Agreement Value"
+        all_inclusive_price: 'All Inclusive Price'
         carpet: "Carpet Area"
         project_tower_id: "Tower"
         project_unit_id: "Apartment"
@@ -182,6 +185,7 @@ en:
         blocked_on: 'Blocked On'
         unit_facing_direction: 'Facing'
         agreement_price: 'Agreement Value'
+        all_inclusive_price: 'All Inclusive Price'
       cost:
         name: "Name"
         formula: "Formula"
@@ -219,8 +223,8 @@ en:
         manager_id: "Partner / Manager / Added by"
         manager_change_reason: "Reason for changing Partner"
         kyc_ready: 'Is the Customer KYC Ready?'
-        total_amount_paid: "Total Paid (you might some payments pending clearance)"
-        total_balance_pending: "Total Balance Pending (you might some payments pending clearance)"
+        total_amount_paid: "Total Paid (you might have some payments pending clearance)"
+        total_balance_pending: "Total Balance Pending (you might have some payments pending clearance)"
         total_unattached_balance: "Total Un-attached Balance (subject to clearance)"
         is_active: 'Allow the user to login?'
       channel_partner:

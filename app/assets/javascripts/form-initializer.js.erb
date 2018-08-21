@@ -51,7 +51,9 @@ FormInitializer = (function(){
     $(selector).find('.datetimepicker').datetimepicker(Utils.datetimepickerOptions);
     FileIcon.init($(".asset-delete"), $(".asset-icon"));
     _.each($(selector).find(".fileupload"), function(){
-      $(this).fileUploader();
+      $(this).fileUploader({
+        download_all: false
+      });
     })
 
     _.each($(selector).find(".selectize-remote"), function(el){

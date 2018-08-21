@@ -85,6 +85,9 @@ module DashboardDataProvider
         agreement_price: {
           "$addToSet": "$agreement_price"
         },
+        all_inclusive_price: {
+          "$addToSet": "$all_inclusive_price"
+        },
         count: {
           "$sum": 1
         }
@@ -96,6 +99,7 @@ module DashboardDataProvider
     },{
       "$project": {
         total_agreement_price: {"$sum": "$agreement_price"},
+        total_all_inclusive_price: {"$sum": "$all_inclusive_price"},
         bedrooms: "$bedrooms",
         status: "$status",
         count: "$count"
@@ -103,7 +107,7 @@ module DashboardDataProvider
     }]).to_a
     out = []
     data.each do |d|
-      out << {bedrooms: d["_id"]["bedrooms"], status: d["_id"]["status"], count: d["count"], total_agreement_price: d["total_agreement_price"]}.with_indifferent_access
+      out << {bedrooms: d["_id"]["bedrooms"], status: d["_id"]["status"], count: d["count"], total_all_inclusive_price: d["total_all_inclusive_price"], total_agreement_price: d["total_agreement_price"]}.with_indifferent_access
     end
     out
   end

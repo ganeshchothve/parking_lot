@@ -42,7 +42,8 @@ class UserContactBookExportWorker
       "Created by",
       "Property Name",
       "Status",
-      "Aggrement Amount"
+      "Aggrement Amount",
+      "All Inclusive Price"
       ]
   end
 
@@ -71,7 +72,8 @@ class UserContactBookExportWorker
       user_kyc.creator.name,
       booking_detail.project_unit.name,
       booking_detail.project_unit.status.humanize,
-      booking_detail.project_unit.agreement_price
+      booking_detail.project_unit.agreement_price,
+      booking_detail.project_unit.all_inclusive_price
     ]
   end
 end
