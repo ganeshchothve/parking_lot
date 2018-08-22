@@ -76,7 +76,6 @@ class SearchesController < ApplicationController
     @project_unit.assign_attributes(permitted_attributes(@project_unit))
     @project_unit.user = current_user if @project_unit.user_id.blank?
     authorize @project_unit # Has to be done after user is assigned and before status is updated
-
     @project_unit.primary_user_kyc_id = @user.user_kyc_ids.first if @project_unit.primary_user_kyc_id.blank?
     @project_unit.status = "hold"
     respond_to do |format|

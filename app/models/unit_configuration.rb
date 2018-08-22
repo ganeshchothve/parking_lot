@@ -16,6 +16,7 @@ class UnitConfiguration
   validates :saleable,:carpet,:base_rate,:numericality => {:greater_than => 0}
 
   has_many :project_units
+  has_many :assets, as: :assetable
 
   default_scope -> { where(:unit_configuration_active=> {"$ne" => "No"})}
 
