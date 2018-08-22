@@ -32,10 +32,6 @@ module CostCalculator
     discount_obj = Discount.or(selector).desc(:value).first
   end
 
-  def blocking_payment
-    receipts.where(payment_type: 'blocking').first
-  end
-
   def booking_price
     (agreement_price * booking_price_percent_of_agreement_price).to_i
   end

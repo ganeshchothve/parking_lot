@@ -46,16 +46,16 @@ class ReceiptsController < ApplicationController
     end
     if params[:project_unit_id].present?
       project_unit = ProjectUnit.find(params[:project_unit_id])
-      @receipt = Receipt.new(creator: current_user, project_unit_id: project_unit.id, user_id: @user, total_amount: project_unit.pending_balance, payment_type: 'booking')
+      @receipt = Receipt.new(creator: current_user, project_unit_id: project_unit.id, user_id: @user, total_amount: project_unit.pending_balance)
     else
-      @receipt = Receipt.new(creator: current_user, user_id: @user, payment_mode: 'cheque', payment_type: 'blocking', total_amount: current_client.blocking_amount)
+      @receipt = Receipt.new(creator: current_user, user_id: @user, payment_mode: 'cheque', total_amount: current_client.blocking_amount)
     end
     authorize @receipt
     render layout: false
   end
 
   def direct
-    @receipt = Receipt.new(creator: current_user, user_id: @user, payment_mode: (current_user.buyer? ? 'online' : 'cheque'), payment_type: 'blocking', total_amount: current_client.blocking_amount)
+    @receipt = Receipt.new(creator: current_user, user_id: @user, payment_mode: (current_user.buyer? ? 'online' : 'cheque'), total_amount: current_client.blocking_amount)
     authorize @receipt
     render layout: false
   end
@@ -65,13 +65,6 @@ class ReceiptsController < ApplicationController
     if params[:receipt][:project_unit_id].present?
       project_unit = ProjectUnit.find(params[:receipt][:project_unit_id])
       base_params.merge!({project_unit_id: project_unit.id})
-    end
-    if project_unit.present?
-      if ['blocked', 'booked_tentative', 'booked_confirmed'].include?(project_unit.status)
-        base_params[:payment_type] = 'booking'
-      end
-    else
-      base_params[:payment_type] = 'blocking'
     end
     @receipt = Receipt.new base_params
     @receipt.creator = current_user

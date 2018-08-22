@@ -36,10 +36,6 @@
         <%= label_tag "fltrs", "Payment Mode", class: "control-label" %>
         <%= select_tag "fltrs[payment_mode]", options_for_select(Receipt.available_payment_modes.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:payment_mode] : "")), {prompt: "Select", class: "selectize"} %>
       </div>
-      <div class="form-group">
-        <%= label_tag "fltrs", "Payment Type", class: "control-label" %>
-        <%= select_tag "fltrs[payment_type]", options_for_select(Receipt.available_payment_types.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:payment_type] : "")), {prompt: "Select", class: "selectize"} %>
-      </div>
     <% end %>
     <%= javascript_tag do %>
       $(document).ready(function(){

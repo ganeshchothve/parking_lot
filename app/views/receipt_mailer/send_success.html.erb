@@ -2,7 +2,7 @@
   <div class="card-body">
     <p>Dear <%= @user.name %>,</p>
     <p>
-      <% if @receipt.payment_type == "blocking" %>
+      <% if @receipt.blocking_payment? %>
         Welcome to <%= current_project.name %>. Thank you for your payment of <%= number_to_indian_currency(@receipt.total_amount) %>. We will contact you shortly to discuss the next round of formalities.
       <% else %>
         Thank you for your payment of <%= number_to_indian_currency(@receipt.total_amount) %>. We are happy to inform that your payment has cleared. We will contact you shortly to discuss the next round of formalities.

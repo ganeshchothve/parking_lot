@@ -15,7 +15,6 @@ class SelldoReceiptPusher
       bank_name: receipt.issuing_bank,
       branch_name: receipt.issuing_bank_branch,
       instrument_no: receipt.payment_identifier,
-      payment_type: receipt.payment_type,
       remarks: receipt.comments,
       payment_amount: receipt.total_amount
     }

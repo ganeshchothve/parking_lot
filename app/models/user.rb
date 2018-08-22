@@ -103,7 +103,7 @@ class User
   validate :manager_change_reason_present?
 
   def unattached_blocking_receipt
-    return self.receipts.in(status: ['success', 'clearance_pending', 'available_for_refund']).where(project_unit_id: nil, payment_type: 'blocking').where(total_amount: {"$gte": current_client.blocking_amount}).first
+    return self.receipts.in(status: ['success', 'clearance_pending', 'available_for_refund']).where(project_unit_id: nil).where(total_amount: {"$gte": current_client.blocking_amount}).first
   end
 
   def total_amount_paid

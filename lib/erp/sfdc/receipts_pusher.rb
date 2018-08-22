@@ -37,7 +37,6 @@ module SFDC
         "instrument_received_date" => receipt.issued_date ? sfdc_date_format(receipt.issued_date) : sfdc_date_format(receipt.created_at),
         "bank_name" => receipt.issuing_bank,
         "branch_name" => receipt.issuing_bank_branch,
-        "payment_type" => (project_unit.status == 'blocked' ? 'Advance' : 'Booking'),
         "portal_receipt_id" => receipt.receipt_id
       }
       hash
