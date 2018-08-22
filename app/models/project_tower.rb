@@ -31,6 +31,7 @@ class ProjectTower
 
   validates :name, :client_id, :project_id, :total_floors, presence: true
   validate :validate_floor_rise
+  has_many :assets, as: :assetable
 
   def unit_configurations
     UnitConfiguration.where(data_attributes: {"$elemMatch" => {"n" => "project_tower_id", "v" => self.selldo_id}})

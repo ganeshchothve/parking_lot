@@ -41,7 +41,7 @@ module SearchConcern
     parameters = @search.params_json
     project_tower_ids = ProjectUnit.build_criteria({fltrs: parameters}).in(status: ProjectUnit.user_based_available_statuses(current_user)).distinct(:project_tower_id)
     @towers = ProjectTower.in(id: project_tower_ids).collect do |x|
-      hash = {project_tower_id: x.id, project_tower_name: x.name}
+      hash = {project_tower_id: x.id, project_tower_name: x.name, assets: x.assets.as_json}
       # GENERIC_TODO: handle floor plan url here
       hash[:floors] = x.total_floors
       hash[:total_units] = ProjectUnit.where(project_tower_id: x.id).count
