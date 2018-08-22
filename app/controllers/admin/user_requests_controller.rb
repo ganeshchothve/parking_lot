@@ -41,9 +41,9 @@ class Admin::UserRequestsController < ApplicationController
 
   def export
     if Rails.env.development?
-      UserRequestExportWorker.new.perform(current_user.email)
+      UserRequestExportWorker.new.perform(current_user.id.to_s)
     else
-      UserRequestExportWorker.perform_async(current_user.email)
+      UserRequestExportWorker.perform_async(current_user.id.to_s)
     end
     flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
     redirect_to admin_user_requests_path
@@ -89,17 +89,7 @@ class Admin::UserRequestsController < ApplicationController
   end
 
   def apply_policy_scope
-    custom_scope = UserRequest.all.criteria
-    if current_user.role?('admin') || current_user.role?('superadmin') || current_user.role?('crm') || current_user.role?('sales') || current_user.role?('cp')
-      if params[:user_id].present?
-        custom_scope = custom_scope.where(user_id: params[:user_id])
-      end
-    elsif current_user.role?('channel_partner')
-      user_ids = User.in(referenced_manager_ids: current_user.id).in(role: User.buyer_roles(current_client)).distinct(:id)
-      custom_scope = custom_scope.in(user_id: user_ids)
-    else
-      custom_scope = custom_scope.where(user_id: current_user.id)
-    end
+    custom_scope = UserRequest.where(UserRequest.user_based_scope(current_user, params))
     UserRequest.with_scope(policy_scope(custom_scope)) do
       yield
     end

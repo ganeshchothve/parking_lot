@@ -2,16 +2,17 @@ require 'spreadsheet'
 class ReceiptExportWorker
   include Sidekiq::Worker
 
-  def perform emails
+  def perform user_id
+    user = User.find(user_id)
     file = Spreadsheet::Workbook.new
     sheet = file.create_worksheet(name: "Receipts")
     sheet.insert_row(0, ReceiptExportWorker.get_column_names)
-    Receipt.all.each_with_index do |receipt, index|
+    Receipt.where(Receipt.user_based_scope(user)).each_with_index do |receipt, index|
       sheet.insert_row(index+1, ReceiptExportWorker.get_receipt_row(receipt))
     end
     file_name = "receipt-#{SecureRandom.hex}.xls"
     file.write("#{Rails.root}/#{file_name}")
-    ExportMailer.notify(file_name, emails, "Payments").deliver
+    ExportMailer.notify(file_name, user.email, "Payments").deliver
   end
 
   def self.get_column_names
