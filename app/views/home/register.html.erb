@@ -19,8 +19,8 @@
 <script type="text/javascript" data-tag="selldo">
 window.sell_do_form_rendered = function(){
   var default_srd = Amura.readCookie("sell_do[campaign][srd]") ? Amura.readCookie("sell_do[campaign][srd]") : "<%= default_system_srd %>";
-  $('<input type="hidden" name="sell_do[campaign][srd]" value="' + default_srd + '"/>').appendTo(".sell_do_form_actual_container");
-  $('[name="sell_do[form][custom][portal_cp_id]"]').closest('.selldof_row').hide();
-  $(".selldof .btn").attr("data-event-category","section").attr("data-event-action","click").attr("data-event-name","submit")
+  if(default_srd){
+    $('<input type="hidden" name="sell_do[campaign][srd]" value="' + default_srd + '"/>').appendTo(".sell_do_form_actual_container");
+  }
 };
 </script>
