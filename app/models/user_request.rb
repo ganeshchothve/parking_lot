@@ -57,4 +57,18 @@ class UserRequest
   def alternate_project_unit
     ProjectUnit.where(id: self.alternate_project_unit_id).first
   end
+
+  def self.user_based_scope user, params={}
+    custom_scope = {}
+    if user.role?('channel_partner')
+      user_ids = User.in(referenced_manager_ids: user.id).in(role: User.buyer_roles(current_client)).distinct(:id)
+      custom_scope = {user_id: {"$in": user_ids}}
+    else
+      custom_scope = {user_id: user.id}
+    end
+    if params[:user_id].present?
+      custom_scope = {user_id: params[:user_id]}
+    end
+    custom_scope
+  end
 end

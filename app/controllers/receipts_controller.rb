@@ -15,12 +15,12 @@ class ReceiptsController < ApplicationController
 
   def export
     if Rails.env.development?
-      ReceiptExportWorker.new.perform(current_user.email)
+      ReceiptExportWorker.new.perform(current_user.id.to_s)
     else
-      ReceiptExportWorker.perform_async(current_user.email)
+      ReceiptExportWorker.perform_async(current_user.id.to_s)
     end
     flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
-    redirect_to admin_users_path
+    redirect_to admin_receipts_path
   end
 
   def resend_success

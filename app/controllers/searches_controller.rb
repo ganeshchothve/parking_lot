@@ -41,9 +41,9 @@ class SearchesController < ApplicationController
 
   def export
     if Rails.env.development?
-      SearchExportWorker.new.perform(current_user.email)
+      SearchExportWorker.new.perform(current_user.id.to_s)
     else
-      SearchExportWorker.perform_async(current_user.email)
+      SearchExportWorker.perform_async(current_user.id.to_s)
     end
     flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
     redirect_to admin_searches_path
