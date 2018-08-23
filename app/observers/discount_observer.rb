@@ -6,7 +6,7 @@ class DiscountObserver < Mongoid::Observer
   end
 
   def after_save discount
-    if discount.status_changed?
+    if discount.status_changed? && discount.booking_portal_client.email_enabled?
       case discount.status
       when 'draft'
         Email.create!({

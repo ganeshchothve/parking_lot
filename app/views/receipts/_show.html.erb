@@ -63,7 +63,7 @@
     </div>
   </div>
   <div class="mt-3"></div>
-  <%= render "receipt_mailer/receipt", {receipt: @receipt} %>
+  <%= current_client.templates.where(_type: "Template::ReceiptTemplate").first.parsed_content(@receipt) %>
   <div class="mt-3"></div>
   <div class="card">
     <div class="card-body">
