@@ -1,7 +1,13 @@
+<% if policy(@project_unit).editable_field?("booking_price") %>
+  <div class="form-group">
+    <%= f.label :booking_price %>
+    <%= f.text_field :booking_price, class: 'form-control', autofocus: true, required: 'required', disabled: (policy(@project_unit).editable_field?("booking_price") ? false : true) %>
+  </div>
+<% end %>
 <% if policy(@project_unit).editable_field?("primary_user_kyc_id") %>
 <div class="form-group">
   <%= f.label :primary_user_kyc_id %>
-  <%= f.select :primary_user_kyc_id, @project_unit.user.user_kycs.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
+  <%= f.select :primary_user_kyc_id, @project_unit.user.user_kycs.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', required: 'required' %>
 </div>
 <% end %>
 <% if policy(@project_unit).editable_field?("user_kyc_ids") %>

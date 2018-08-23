@@ -89,7 +89,14 @@ class SearchesController < ApplicationController
   end
 
   def checkout
+    if @search.project_unit_id.blank?
+      redirect_to step_user_search_path(@search, step: @search.step)
+      return
+    end
     @project_unit = ProjectUnit.find(@search.project_unit_id)
+    if @project_unit.held_on.present? && (@project_unit.held_on + @project_unit.holding_minutes.minutes) < Time.now
+      ProjectUnitUnholdWorker.new.perform(@project_unit.id)
+    end
     authorize @project_unit
     if @project_unit.status != "hold"
       if current_user.buyer?

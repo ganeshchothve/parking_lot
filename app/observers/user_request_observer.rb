@@ -14,7 +14,7 @@ class UserRequestObserver < Mongoid::Observer
         if template.present?
           Sms.create!(
             booking_portal_client_id: user.booking_portal_client_id,
-            recipient_id: user_request.user_id,
+            recipient_id: user.id,
             sms_template_id: template.id,
             triggered_by_id: user_request.id,
             triggered_by_type: user_request.class.to_s,

@@ -1,7 +1,7 @@
 <% if @towers.present? %>
   <div class="text-right">
     <% if @search.next_step.present? %>
-      <%= form_for [:user, @search], html: {class: 'validate-form', id: "edit_search_form"} do |f| %>
+      <%= form_for [:user, @search], html: {class: "validate-form edit_search_form"} do |f| %>
         <div class="form-group">
           <%= f.hidden_field :step, value: @search.next_step %>
           <%= f.hidden_field :project_tower_id %>
@@ -49,7 +49,7 @@
       </div>
     </div>
     <div class="col-md-5 d-none" id="tower-description">
-      <div class="card h-100">
+      <div class="card h-md-100">
         <div class="bg-primary text-white">
           <%= icon "fas", "building", class: "fa-2x position-absolute", style: "right:10px; top:10px;" %>
           <div class="p-3">
@@ -106,6 +106,29 @@
       </div>
     </div>
   </div>
+  <div class="text-right">
+    <% if @search.next_step.present? %>
+      <%= form_for [:user, @search], html: {class: "validate-form edit_search_form"} do |f| %>
+        <div class="form-group">
+          <%= f.hidden_field :step, value: @search.next_step %>
+          <%= f.hidden_field :project_tower_id %>
+        </div>
+        <div class="form-group">
+          <%= f.submit "Next", class: "btn btn-primary", disabled: 'disabled' %>
+        </div>
+      <% end %>
+    <% end %>
+    <% if @search.previous_step.present? %>
+      <%= form_for [:user, @search], html: {class: 'validate-form'} do |f| %>
+        <div class="form-group">
+          <%= f.hidden_field :step, value: @search.previous_step %>
+        </div>
+        <div class="form-group">
+          <%= f.submit "Previous", class: "btn btn-secondary float-right" %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
 <% else %>
   <div class="alert alert-primary">
     We couldn't find any towers for your selection, would you like to change your search?
@@ -116,7 +139,7 @@
 <%= javascript_tag do %>
   var towers = <%= raw @towers.to_json(include: [:assets]) %>;
   $(document).on('click', '[data-jquery-selector="tower-card"]', function(){
-    var $form = $("#edit_search_form");
+    var $form = $(".edit_search_form");
     var tower_id = $(this).data("tower-id");
     $('[data-jquery-selector="tower-card"] svg').addClass('d-none');
     $(this).find('svg').removeClass('d-none');
@@ -133,9 +156,9 @@
     $("#tower-description").find('[data-placeholder="total-apartments"]').html(tower.total_units);
     $("#tower-description").find('[data-placeholder="available-apartments"]').html(tower.total_units_available);
     if($("#tower-description").hasClass('d-none')){
-      $("#tower-selection").addClass('animated fadeInRight faster');
-      $("#tower-description").addClass('animated fadeIn slow').removeClass('d-none');
+      $("#tower-description").removeClass('d-none');
     }
+    $.scrollTo($("#tower-description").offset().top, 800);
 
     if(tower.assets.length > 0){
       $(".tower_image_container").show();

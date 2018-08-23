@@ -20,7 +20,7 @@ class Receipt
   field :status, type: String, default: 'pending' # pending, success, failed, clearance_pending,cancelled
   field :status_message, type: String # pending, success, failed, clearance_pending
   field :payment_type, type: String, default: 'blocking' # blocking, booking
-  field :payment_gateway, type: BSON::ObjectId
+  field :payment_gateway, type: String
   field :processed_on, type: Date
   field :comments, type: String
   field :gateway_response, type: Hash

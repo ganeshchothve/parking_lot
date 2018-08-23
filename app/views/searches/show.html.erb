@@ -8,7 +8,7 @@
         <div class="mt-3"></div>
       <% end %>
       <% labels = t('mongoid.attributes.search').with_indifferent_access %>
-      <div class="card">
+      <div class="card d-none d-md-block">
         <div class="row">
           <div class="col-md-3 border-right">
             <%= render "searches/tabs/new", {search: @search, labels: labels} %>
@@ -23,6 +23,15 @@
             <%= render "searches/tabs/project_unit", {search: @search, labels: labels} %>
           </div>
         </div>
+      </div>
+      <div class="card p-2 d-block d-md-none">
+        <% if @search.step == "filter" %>
+          Step 2: <span class="font-weight-bold">Choose <%= labels[:project_tower_id] %></span>
+        <% elsif @search.step == "towers" %>
+          Step 3: <span class="font-weight-bold">Choose <%= labels[:project_unit_id] %></span>
+        <% elsif @search.step == "project_unit" %>
+          Step 4: <span class="font-weight-bold">Set up your <%= global_labels[:user_kyc] %></span>
+        <% end %>
       </div>
       <div class="mt-3"></div>
       <%= render "step_#{@search.step}" %>
