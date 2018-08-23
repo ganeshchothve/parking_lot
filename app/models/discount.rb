@@ -1,6 +1,7 @@
 class Discount
   include Mongoid::Document
   include Mongoid::Timestamps
+  include InsertionStringMethods
 
   field :name, type: String
   field :project_id, type: String
@@ -19,6 +20,7 @@ class Discount
 
   belongs_to :approved_by, class_name: "User", optional: true
   belongs_to :created_by, class_name: "User"
+  belongs_to :booking_portal_client, class_name: "Client"
 
   validates :name, :status, presence: true
   validates :name, uniqueness: true, allow_blank: true

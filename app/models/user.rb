@@ -90,8 +90,12 @@ class User
   has_many :user_kycs
   has_many :searches
   has_many :received_smses, class_name: "Sms", inverse_of: :recipient
+  has_and_belongs_to_many :received_emails, class_name: "Email", inverse_of: :recipients
+  has_and_belongs_to_many :cced_emails, class_name: "Email", inverse_of: :cc_recipients
+
   has_many :notes, as: :notable
   has_many :smses, as: :triggered_by, class_name: "Sms"
+  has_many :emails, as: :triggered_by, class_name: "Email"
 
   validates :first_name, :role, presence: true
   validates :phone, uniqueness: true, phone: { possible: true, types: [:voip, :personal_number, :fixed_or_mobile]}, if: Proc.new{|user| user.email.blank? }

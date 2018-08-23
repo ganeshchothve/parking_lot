@@ -9,4 +9,15 @@ class ApplicationMailer < ActionMailer::Base
     default from: "Sell.Do <support@sell.do>"
   end
   layout 'mailer'
+
+  def test params
+    body = params.delete :body
+    bootstrap = BootstrapEmail::Compiler.new(
+      mail(params) do |format|
+        format.html{ render(layout: "layouts/mailer.html.erb", body: body) }
+      end
+    )
+    bootstrap.perform_full_compile
+    bootstrap
+  end
 end

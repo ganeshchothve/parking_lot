@@ -34,6 +34,8 @@ class Client
   field :sms_provider_username, type: String
   field :sms_provider_password, type: String
   field :sms_mask, type: String, default: "SellDo"
+  field :mailgun_private_api_key, type: String
+  field :mailgun_email_domain, type: String
   field :enable_actual_inventory, type: Boolean, default: false
   field :enable_channel_partners, type: Boolean, default: false
   field :enable_direct_payment, type: Boolean, default: false
@@ -49,6 +51,31 @@ class Client
   field :ga_code, type: String
   field :gtm_tag, type: String
 
+  field :email_header, type: String, default: '<div class="container">
+    <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
+    <div class="mt-3"></div>'
+  field :email_footer, type: String, default: '<div class="mt-3"></div>
+    <div class="card mb-3">
+      <div class="card-body">
+        Thanks,<br/>
+        <%= current_project.name %>
+      </div>
+    </div>
+    <div style="font-size: 12px;">
+      If you have any queries you can reach us at <%= current_client.support_number %> or write to us at <%= current_client.support_email %>. Please click <a href="<%= current_client.website_link %>">here</a> to visit our website.
+    </div>
+    <hr/>
+    <div class="text-muted text-center" style="font-size: 12px;">
+      © <%= Date.today.year %> <%= current_client.name %>. All Rights Reserved. | MAHARERA ID: <%= current_project.rera_registration_no %>
+    </div>
+    <% if current_client.address.present? %>
+      <div class="text-muted text-center" style="font-size: 12px;">
+        <%= current_client.address.to_sentence %>
+      </div>
+    <% end %>
+    <div class="mt-3"></div>
+  </div>'
+
   mount_uploader :logo, DocUploader
   mount_uploader :mobile_logo, DocUploader
   mount_uploader :background_image, DocUploader
@@ -61,11 +88,16 @@ class Client
   has_one :address, as: :addressable
   has_many :templates
   has_many :sms_templates, class_name: 'SmsTemplate'
+  has_many :email_templates, class_name: 'Template::EmailTemplate'
   has_many :smses, class_name: 'Sms'
-  has_many :assets, as: :assetable
-  has_one :gallery
 
-  validate :name, :allowed_bookings_per_user, :selldo_client_id, :selldo_form_id, :selldo_channel_partner_form_id, :selldo_gre_form_id, :helpdesk_email, :helpdesk_number, :notification_email, :sender_email, :email_domains, :booking_portal_domains, :registration_name, :website_link, :support_email, :support_number, :payment_gateway
+  has_many :assets, as: :assetable
+  has_many :emails, class_name: 'Email', inverse_of: :booking_portal_client
+  has_one :gallery
+  has_many :discounts, class_name: "Discount"
+
+  validates :name, :allowed_bookings_per_user, :selldo_client_id, :selldo_form_id, :selldo_channel_partner_form_id, :selldo_gre_form_id, :helpdesk_email, :helpdesk_number, :notification_email, :sender_email, :email_domains, :booking_portal_domains, :registration_name, :website_link, :support_email, :support_number, :payment_gateway, :cin_number, :mailgun_private_api_key, :mailgun_email_domain, :sms_provider_username, :sms_provider_password, :sms_mask, presence: true
+
   validates :preferred_login, inclusion: {in: Proc.new{ Client.available_preferred_logins.collect{|x| x[:id]} } }
   validates :payment_gateway, inclusion: {in: Proc.new{ Client.available_payment_gateways.collect{|x| x[:id]} } }, allow_blank: true
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
