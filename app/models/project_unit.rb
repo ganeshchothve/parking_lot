@@ -11,6 +11,7 @@ class ProjectUnit
   field :erp_id, type: String
   field :agreement_price, type: Integer
   field :all_inclusive_price, type: Integer
+  field :booking_price, type: Integer
   field :status, type: String, default: 'available'
   field :available_for, type: String, default: 'user'
   field :blocked_on, type: Date
@@ -68,7 +69,7 @@ class ProjectUnit
 
   accepts_nested_attributes_for :data, :costs, allow_destroy: true
 
-  validates :client_id, :agreement_price, :all_inclusive_price, :project_id, :project_tower_id, :unit_configuration_id, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :type, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, :payment_schedule_template_id, :cost_sheet_template_id, presence: true
+  validates :client_id, :agreement_price, :all_inclusive_price, :booking_price, :project_id, :project_tower_id, :unit_configuration_id, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :type, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, :payment_schedule_template_id, :cost_sheet_template_id, presence: true
   validates :status, :name, :erp_id, presence: true
   validates :status, inclusion: {in: Proc.new{ ProjectUnit.available_statuses.collect{|x| x[:id]} } }
   validates :available_for, inclusion: {in: Proc.new{ ProjectUnit.available_available_fors.collect{|x| x[:id]} } }
