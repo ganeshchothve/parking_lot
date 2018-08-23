@@ -28,7 +28,7 @@ module OtpLoginHelperMethods
 
       otp_sent_status = self.can_send_otp?
 
-      if otp_sent_status[:status]
+      if otp_sent_status[:status] && self.booking_portal_client.sms_enabled?
         Sms.create!(
           booking_portal_client_id: self.booking_portal_client_id,
           recipient_id: self.id,

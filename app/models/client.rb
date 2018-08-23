@@ -50,7 +50,7 @@ class Client
   field :tds_process, type: String
   field :ga_code, type: String
   field :gtm_tag, type: String
-  field :enable_communication, type: Hash, default: {email: true, sms: true}
+  field :enable_communication, type: Hash, default: {"email": true, "sms": true}
   field :allow_multiple_bookings_per_user_kyc, type: Boolean, default: true
 
   field :email_header, type: String, default: '<div class="container">
@@ -117,6 +117,14 @@ class Client
     [
       {id: "Razorpay", text: "Razorpay Payment Gateway"}
     ]
+  end
+
+  def sms_enabled?
+    self.enable_communication["sms"]
+  end
+
+  def email_enabled?
+    self.enable_communication["email"]
   end
 end
 
