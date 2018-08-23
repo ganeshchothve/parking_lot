@@ -336,6 +336,8 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.7.0)
       mini_mime (>= 0.1.1)
+    mailgun-ruby (1.1.10)
+      rest-client (~> 2.0)
     memoist (0.16.0)
     method_source (0.9.0)
     mime-types (3.1)
@@ -606,6 +608,7 @@ DEPENDENCIES
   jbuilder (~> 2.5)
   jquery-rails
   listen (>= 3.0.5, < 3.2)
+  mailgun-ruby
   mixpanel-ruby
   mongoid (~> 6.1.0)
   mongoid-autoinc

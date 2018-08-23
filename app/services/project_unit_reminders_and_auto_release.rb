@@ -4,12 +4,14 @@ module ProjectUnitRemindersAndAutoRelease
       ProjectUnit.in(status: ["blocked", 'booked_tentative']).where(auto_release_on: {"$gte" => Date.today}).each do |project_unit|
         days = (project_unit.auto_release_on - Date.today).to_i
         if [9,7,5,3,2,1].include?(days)
-          mailer = UserReminderMailer.daily_reminder_for_booking_payment(project_unit.id.to_s)
-          if Rails.env.development?
-            mailer.deliver
-          else
-            mailer.deliver_later
-          end
+          Email.create!({
+            booking_portal_client_id: project_unit.booking_portal_client_id,
+            email_template_id:Template::EmailTemplate.find_by(name: "daily_reminder_for_booking_payment").id,
+            recipients: [project_unit.user],
+            cc_recipients: (project_unit.user.channel_partner_id.present? ? [project_unit.user.channel_partner] : []),
+            triggered_by_id: project_unit.id,
+            triggered_by_type: project_unit.class.to_s
+          })
         end
         if project_unit.auto_release_on.present? && project_unit.auto_release_on > Date.today
           days = (project_unit.auto_release_on - Date.today).to_i

@@ -26,13 +26,13 @@ class Admin::DiscountsController < ApplicationController
   end
 
   def new
-    @discount = Discount.new(created_by: current_user)
+    @discount = Discount.new(created_by: current_user, booking_portal_client_id: current_user.booking_portal_client_id)
     authorize @discount
     render layout: false
   end
 
   def create
-    @discount = Discount.new(created_by: current_user)
+    @discount = Discount.new(created_by: current_user, booking_portal_client_id: current_user.booking_portal_client_id)
     @discount.assign_attributes(permitted_attributes(@discount))
 
     respond_to do |format|
@@ -86,7 +86,7 @@ class Admin::DiscountsController < ApplicationController
     if params[:action] == "index" || params[:action] == 'export'
       authorize Discount
     elsif params[:action] == "new" || params[:action] == "create"
-      authorize Discount.new(created_by: current_user)
+      authorize Discount.new(created_by: current_user, booking_portal_client_id: current_user.booking_portal_client_id)
     else
       authorize @discount
     end
