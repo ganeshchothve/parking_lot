@@ -58,17 +58,24 @@ class UserRequest
     ProjectUnit.where(id: self.alternate_project_unit_id).first
   end
 
-  def self.user_based_scope user, params={}
+
+  def self.user_based_scope(user, params={})
     custom_scope = {}
-    if user.role?('channel_partner')
-      user_ids = User.in(referenced_manager_ids: user.id).in(role: User.buyer_roles(current_client)).distinct(:id)
-      custom_scope = {user_id: {"$in": user_ids}}
-    else
-      custom_scope = {user_id: user.id}
+    if params[:user_id].blank? && !user.buyer?
+      if user.role?('channel_partner')
+        custom_scope = {user_id: {"$in": User.where(referenced_manager_ids: user.id).distinct(:id)}}
+      elsif user.role?('cp_admin')
+        custom_scope = {user_id: {"$in": User.where(role: "user").nin(manager_id: [nil, ""]).distinct(:id)}}
+      elsif user.role?('cp')
+        channel_partner_ids = User.where(role: "channel_partner").where(manager_id: user.id).distinct(:id)
+        custom_scope = {user_id: {"$in": User.in(referenced_manager_ids: channel_partner_ids).distinct(:id)}}
+      end
     end
-    if params[:user_id].present?
-      custom_scope = {user_id: params[:user_id]}
-    end
+
+    custom_scope = {user_id: params[:user_id]} if params[:user_id].present?
+    custom_scope = {user_id: user.id} if user.buyer?
+
+    custom_scope[:project_unit_id] = params[:project_unit_id] if params[:project_unit_id].present?
     custom_scope
   end
 end
