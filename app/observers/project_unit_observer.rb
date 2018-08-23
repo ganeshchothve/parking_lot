@@ -97,7 +97,7 @@ class ProjectUnitObserver < Mongoid::Observer
       })
 
       if !Rails.env.development?
-        SelldoInventoryPusher.perform_async(project_unit.status, project_unit.id.to_s, Time.now.to_i)
+        # SelldoInventoryPusher.perform_async(project_unit.status, project_unit.id.to_s, Time.now.to_i)
       end
       if ['blocked', 'booked_tentative'].include?(project_unit.status) && ['available', 'hold'].include?(project_unit.status_was)
         Sms.create!(
