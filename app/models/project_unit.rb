@@ -75,6 +75,7 @@ class ProjectUnit
   validates :status, inclusion: {in: Proc.new{ ProjectUnit.available_statuses.collect{|x| x[:id]} } }
   validates :available_for, inclusion: {in: Proc.new{ ProjectUnit.available_available_fors.collect{|x| x[:id]} } }
   validates :user_id, :primary_user_kyc_id, presence: true, if: Proc.new { |unit| ['available', 'not_available', 'management', 'employee'].exclude?(unit.status) }
+  validate :pan_uniqueness
 
   def make_available
     if self.available_for == "user"
@@ -286,5 +287,12 @@ class ProjectUnit
 
   def cost_sheet_template
     Template::CostSheetTemplate.find self.cost_sheet_template_id
+  end
+
+  private
+  def pan_uniqueness
+    if self.user.unused_user_kyc_ids.blank?
+      self.errors.add :primary_user_kyc_id, "already has a booking"
+    end
   end
 end

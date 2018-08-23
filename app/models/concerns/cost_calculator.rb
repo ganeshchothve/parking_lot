@@ -59,11 +59,11 @@ module CostCalculator
 
   def ageing
     if(["booked_confirmed"].include?(self.status))
-      last_booking_payment = self.receipts.where(status:"success").desc(:created_at).first.created_at.to_date
-      due_since = self.receipts.where(status:"success").asc(:created_at).first.created_at.to_date
+      last_booking_payment = self.receipts.in(status:["clearance_pending", "success"]).desc(:created_at).first.created_at.to_date
+      due_since = self.receipts.in(status:["clearance_pending", "success"]).asc(:created_at).first.created_at.to_date
       age = (last_booking_payment - due_since).to_i
     elsif(["blocked", "booked_tentative"].include?(self.status))
-      age = (Date.today - self.receipts.where(status:"success").asc(:created_at).first.created_at.to_date).to_i
+      age = (Date.today - self.receipts.in(status:["clearance_pending", "success"]).asc(:created_at).first.created_at.to_date).to_i
     else
       return "NA"
     end
