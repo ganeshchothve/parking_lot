@@ -58,7 +58,7 @@ class Template::CostSheetTemplate < Template
           <td class='text-right'><%= number_to_indian_currency(calculated_costs['vat_gst']) %></td>
         </tr>
         <tr class='text-white bg-primary'>
-          <% legal_total = calculated_costs['stamp_duty_charges'] + calculated_costs['reg_charges'] + calculated_costs['incidental_charges'] + calculated_costs['vat_gst'] + calculated_costs['estamping_charges'] %>
+          <% legal_total = calculated_costs['stamp_duty_charges'] + calculated_costs['reg_charges'] + calculated_costs['incidental_charges'] + calculated_costs['vat_gst'] + calculated_costs['estamping_charges'] rescue 0 %>
           <td>Sub total - legal charges ---{B}</td><td class='text-right'><%= number_to_indian_currency(legal_total) %></td>
         </tr>
         <tr class='text-white bg-secondary'>
@@ -77,7 +77,7 @@ class Template::CostSheetTemplate < Template
           <td>Amanora Environment Fund (Yearly)</td><td class='text-right'><%= number_to_indian_currency(calculated_costs['env_fund']) %></td>
         </tr>
         <tr class='text-white bg-primary'>
-          <% sub_total = calculated_costs['utility_charges'] + calculated_costs['amanora_cluster_fund'] + calculated_costs['env_fund'] + calculated_costs['infra_charges']%>
+          <% sub_total = calculated_costs['utility_charges'] + calculated_costs['amanora_cluster_fund'] + calculated_costs['env_fund'] + calculated_costs['infra_charges']  rescue 0  %>
           <td>SUBTOTAL - ON POSSESSION ---{C}</td>
           <td class='text-right'><%= number_to_indian_currency(sub_total) %></td>
         </tr>

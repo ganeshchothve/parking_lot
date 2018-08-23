@@ -90,8 +90,12 @@ class User
   has_many :user_kycs
   has_many :searches
   has_many :received_smses, class_name: "Sms", inverse_of: :recipient
+  has_and_belongs_to_many :received_emails, class_name: "Email", inverse_of: :recipients
+  has_and_belongs_to_many :cced_emails, class_name: "Email", inverse_of: :cc_recipients
+
   has_many :notes, as: :notable
   has_many :smses, as: :triggered_by, class_name: "Sms"
+  has_many :emails, as: :triggered_by, class_name: "Email"
 
   validates :first_name, :role, presence: true
   validates :phone, uniqueness: true, phone: { possible: true, types: [:voip, :personal_number, :fixed_or_mobile]}, if: Proc.new{|user| user.email.blank? }
@@ -103,7 +107,7 @@ class User
   validate :manager_change_reason_present?
 
   def unattached_blocking_receipt
-    return self.receipts.in(status: ['success', 'clearance_pending']).where(project_unit_id: nil, payment_type: 'blocking').where(total_amount: {"$gte": current_client.blocking_amount}).first
+    return self.receipts.in(status: ['success', 'clearance_pending', 'available_for_refund']).where(project_unit_id: nil).where(total_amount: {"$gte": current_client.blocking_amount}).first
   end
 
   def total_amount_paid
@@ -115,7 +119,7 @@ class User
   end
 
   def total_unattached_balance
-    self.receipts.in(status: ['success', 'clearance_pending']).where(project_unit_id: nil).sum(:total_amount)
+    self.receipts.in(status: ['success', 'clearance_pending', 'available_for_refund']).where(project_unit_id: nil).sum(:total_amount)
   end
 
   def kyc_ready?

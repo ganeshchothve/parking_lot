@@ -1,8 +1,8 @@
 class ReceiptsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user
-  before_action :set_project_unit
   before_action :set_receipt, except: [:index, :export, :new, :create, :direct]
+  before_action :set_project_unit
   before_action :authorize_resource
   around_action :apply_policy_scope, only: [:index, :export]
 
@@ -24,12 +24,15 @@ class ReceiptsController < ApplicationController
   end
 
   def resend_success
-    mailer = ReceiptMailer.send_success(@receipt.id.to_s)
-    if Rails.env.development?
-      mailer.deliver
-    else
-      mailer.deliver_later
-    end
+    user = @receipt.user
+    Email.create!({
+      booking_portal_client_id: user.booking_portal_client_id,
+      email_template_id:Template::EmailTemplate.find_by(name: "receipt_success").id,
+      recipients: [@receipt.user],
+      cc_recipients: (user.channel_partner_id.present? ? [user.channel_partner] : []),
+      triggered_by_id: @receipt.id,
+      triggered_by_type: @receipt.class.to_s
+    })
     redirect_to (request.referrer.present? ? request.referrer : dashboard_path)
   end
 
@@ -46,16 +49,16 @@ class ReceiptsController < ApplicationController
     end
     if params[:project_unit_id].present?
       project_unit = ProjectUnit.find(params[:project_unit_id])
-      @receipt = Receipt.new(creator: current_user, project_unit_id: project_unit.id, user_id: @user, total_amount: (project_unit.status == "hold" ? current_client.blocking_amount : project_unit.pending_balance), payment_type: (project_unit.status == "hold" ? 'blocking' : 'booking'))
+      @receipt = Receipt.new(creator: current_user, project_unit_id: project_unit.id, user_id: @user, total_amount: (project_unit.status == "hold" ? current_client.blocking_amount : project_unit.pending_balance))
     else
-      @receipt = Receipt.new(creator: current_user, user_id: @user, payment_mode: 'cheque', payment_type: 'blocking', total_amount: current_client.blocking_amount)
+      @receipt = Receipt.new(creator: current_user, user_id: @user, payment_mode: 'cheque', total_amount: current_client.blocking_amount)
     end
     authorize @receipt
     render layout: false
   end
 
   def direct
-    @receipt = Receipt.new(creator: current_user, user_id: @user, payment_mode: (current_user.buyer? ? 'online' : 'cheque'), payment_type: 'blocking', total_amount: current_client.blocking_amount)
+    @receipt = Receipt.new(creator: current_user, user_id: @user, payment_mode: (current_user.buyer? ? 'online' : 'cheque'), total_amount: current_client.blocking_amount)
     authorize @receipt
     render layout: false
   end
@@ -65,13 +68,6 @@ class ReceiptsController < ApplicationController
     if params[:receipt][:project_unit_id].present?
       project_unit = ProjectUnit.find(params[:receipt][:project_unit_id])
       base_params.merge!({project_unit_id: project_unit.id})
-    end
-    if project_unit.present?
-      if ['blocked', 'booked_tentative', 'booked_confirmed'].include?(project_unit.status)
-        base_params[:payment_type] = 'booking'
-      end
-    else
-      base_params[:payment_type] = 'blocking'
     end
     @receipt = Receipt.new base_params
     @receipt.creator = current_user
@@ -140,7 +136,11 @@ class ReceiptsController < ApplicationController
   end
 
   def set_project_unit
-    @project_unit = (params[:project_unit_id].present? ? ProjectUnit.find(params[:project_unit_id]) : nil)
+    @project_unit = if params[:project_unit_id].present?
+      ProjectUnit.find(params[:project_unit_id])
+    elsif @receipt.present?
+      @receipt.project_unit
+    end
   end
 
   def authorize_resource

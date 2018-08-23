@@ -80,11 +80,15 @@ gem 'phonelib'
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
 gem 'bootstrap-email'
+gem 'premailer'
 
 # TODO: run this command on server before deployment on a new server
 # TO GET TOKEN: curl -u 'username' -d '{"scopes":["repo"],"note": "Audit app by Sell.Do"}' https://api.github.com/authorizations
 # bundle config GITHUB__COM <YOUR TOKEN>:x-oauth-basic
 gem 'audit', git: 'https://github.com/amuratech/audit.git'
+
+gem 'aasm'
+gem 'mailgun-ruby'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

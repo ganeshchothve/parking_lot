@@ -102,3 +102,6 @@ Rails.application.configure do
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
   end
 end
+
+Rails.application.routes.default_url_options = { host: 'bookingportal.withamura.com' }
+

@@ -9,26 +9,32 @@ class DiscountObserver < Mongoid::Observer
     if discount.status_changed?
       case discount.status
       when 'draft'
-        mailer = DiscountMailer.send_draft(discount.id.to_s)
-        if Rails.env.development?
-          mailer.deliver
-        else
-          mailer.deliver_later
-        end
+        Email.create!({
+          booking_portal_client_id: discount.booking_portal_client_id,
+          email_template_id:Template::EmailTemplate.find_by(name: "discount_draft").id,
+          cc: [discount.booking_portal_client.notification_email],
+          recipients: [discount.created_by],
+          triggered_by_id: discount.id,
+          triggered_by_type: discount.class.to_s,
+        })
       when 'approved'
-        mailer = DiscountMailer.send_approved(discount.id.to_s)
-        if Rails.env.development?
-          mailer.deliver
-        else
-          mailer.deliver_later
-        end
+        Email.create!({
+          booking_portal_client_id: discount.booking_portal_client_id,
+          email_template_id:Template::EmailTemplate.find_by(name: "discount_approved").id,
+          cc: [discount.booking_portal_client.notification_email],
+          recipients: [discount.created_by],
+          triggered_by_id: discount.id,
+          triggered_by_type: discount.class.to_s,
+        })
       when 'disabled'
-        mailer = DiscountMailer.send_disabled(discount.id.to_s)
-        if Rails.env.development?
-          mailer.deliver
-        else
-          mailer.deliver_later
-        end
+        Email.create!({
+          booking_portal_client_id: discount.booking_portal_client_id,
+          email_template_id:Template::EmailTemplate.find_by(name: "discount_disabled").id,
+          cc: [discount.booking_portal_client.notification_email],
+          recipients: [discount.created_by],
+          triggered_by_id: discount.id,
+          triggered_by_type: discount.class.to_s,
+        })
       end
     end
   end

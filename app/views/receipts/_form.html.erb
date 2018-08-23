@@ -61,7 +61,7 @@
           <%= form_for [:user, @receipt], local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['receipt'], "data-type": "json", id: "receipt_form"} do |f| %>
           <div class="form-group">
             <%= f.label :total_amount, class: 'label-required' %>
-            <% if !current_client.blocking_amount_editable? && @receipt.new_record? && @receipt.payment_type == "blocking" %>
+            <% if !policy(@receipt).editable_field?("total_amount") %>
               <h5><%= number_to_indian_currency(current_client.blocking_amount) %></h5>
               <%= f.hidden_field :total_amount, value: current_client.blocking_amount %>
             <% else %>
@@ -128,23 +128,7 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <%= f.label :status, class: 'control-label' %>
-                  <%
-                  statuses = Receipt.available_statuses.collect{|x| [x[:text], x[:id]]}
-                  if @receipt.new_record?
-                    tmp = statuses.select{|x| x[1] == "pending"}
-                    if @receipt.project_unit_id.present? && @receipt.project_unit.status == "hold"
-                      tmp = statuses.select{|x| x[1] == "clearance_pending"}
-                    end
-                    statuses = tmp
-                  else
-                    if @receipt.status == 'pending'
-                      statuses = statuses.reject{|x| x[1] == 'success'}
-                    elsif @receipt.status == 'clearance_pending'
-                      statuses = statuses.reject{|x| x[1] == 'pending'}
-                    end
-                  end
-                  %>
-                  <%= f.select :status, statuses, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(@receipt).editable_field?("status") ? false : true) %>
+                  <%= f.select :event, options_for_select(@receipt.aasm.events(permitted: true).collect{|rec| [rec.name.to_s.titleize, rec.name.to_s]}, @receipt.status), {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(@receipt).editable_field?("event") ? false : true) %>
                 </div>
               </div>
               <div class="col-md-6">
@@ -190,13 +174,12 @@
             <% end %>
             <div class="form-group">
               <%= f.label :total_amount, class: 'label-required' %>
-              <% if current_client.blocking_amount_editable %>
-                <%= f.number_field :total_amount, min: 0, class: "form-field form-control green", required: 'required', disabled: (policy(@receipt).editable_field?("total_amount") ? false : true) %>
-              <% else %>
+              <% if !policy(@receipt).editable_field?("total_amount") %>
                 <h5><%= number_to_indian_currency(current_client.blocking_amount) %></h5>
                 <%= f.hidden_field :total_amount, value: current_client.blocking_amount %>
+              <% else %>
+                <%= f.number_field :total_amount, min: 0, max: (@project_unit.present? ? @project_unit.agreement_price : current_client.blocking_amount), class: "form-field form-control green", required: 'required' %>
               <% end %>
-              <%= f.hidden_field :payment_type, class: 'form-control', required: 'required', disabled: (policy(@receipt).editable_field?("payment_type") ? false : true) %>
             </div>
             <% if i_agree_required %>
               <div class="form-group">

@@ -107,7 +107,7 @@ class UserKyc
       if user.role?('channel_partner')
         custom_scope = {user_id: {"$in": User.where(referenced_manager_ids: user.id).distinct(:id)}}
       elsif user.role?('cp_admin')
-        custom_scope = {user_id: {"$in": User.where(role: "user").where(manager_id: {"$exists": true}).distinct(:id)}}
+        custom_scope = {user_id: {"$in": User.where(role: "user").where(manager_id: {"$nin": [nil, ""]}).distinct(:id)}}
       elsif user.role?('cp')
         channel_partner_ids = User.where(role: "channel_partner").where(manager_id: user.id).distinct(:id)
         custom_scope = {user_id: {"$in": User.in(referenced_manager_ids: channel_partner_ids).distinct(:id)}}

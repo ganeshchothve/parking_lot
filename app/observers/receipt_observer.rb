@@ -30,61 +30,6 @@ class ReceiptObserver < Mongoid::Observer
         end
       end
     end
-
-
-    # Send email to customer
-    if receipt.status_changed?
-      if receipt.status == 'success'
-        # TODO : Sell.Do Receipt
-        mailer = ReceiptMailer.send_success(receipt.id.to_s)
-        if Rails.env.development?
-          mailer.deliver
-        else
-          mailer.deliver_later
-        end
-      elsif receipt.status == 'failed'
-        # TODO : Sell.Do Receipt
-        mailer = ReceiptMailer.send_failure(receipt.id.to_s)
-        if Rails.env.development?
-          mailer.deliver
-        else
-          mailer.deliver_later
-        end
-      elsif receipt.status == 'clearance_pending'
-        mailer = ReceiptMailer.send_clearance_pending(receipt.id.to_s)
-        if Rails.env.development?
-          mailer.deliver
-        else
-          mailer.deliver_later
-        end
-      end
-      unless receipt.status == "pending"
-        Sms.create!(
-          booking_portal_client_id: user.booking_portal_client_id,
-          recipient_id: receipt.user_id,
-          sms_template_id: SmsTemplate.find_by(name: "receipt_#{receipt.status}").id,
-          triggered_by_id: receipt.id,
-          triggered_by_type: receipt.class.to_s
-        )
-      end
-    end
-
-    # Send email to crm team if cheque non-online & pending
-    if receipt.status == 'pending' && receipt.payment_mode != 'online'
-      mailer = ReceiptMailer.send_pending_non_online(receipt.id.to_s)
-      if Rails.env.development?
-        mailer.deliver
-      else
-        mailer.deliver_later
-      end
-      Sms.create!(
-        booking_portal_client_id: user.booking_portal_client_id,
-        recipient_id: receipt.user_id,
-        sms_template_id: SmsTemplate.find_by(name: "receipt_pending").id,
-        triggered_by_id: receipt.id,
-          triggered_by_type: receipt.class.to_s
-      )
-    end
   end
 
   def before_save receipt
@@ -92,6 +37,8 @@ class ReceiptObserver < Mongoid::Observer
       receipt.processed_on = Date.today
       receipt.assign!(:order_id) if receipt.order_id.blank?
     end
+
+    receipt.send(receipt.event) if receipt.event.present?
     receipt.receipt_id = receipt.generate_receipt_id
   end
 end
