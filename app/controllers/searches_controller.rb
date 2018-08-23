@@ -41,9 +41,9 @@ class SearchesController < ApplicationController
 
   def export
     if Rails.env.development?
-      SearchExportWorker.new.perform(current_user.email)
+      SearchExportWorker.new.perform(current_user.id.to_s)
     else
-      SearchExportWorker.perform_async(current_user.email)
+      SearchExportWorker.perform_async(current_user.id.to_s)
     end
     flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
     redirect_to admin_searches_path
@@ -76,7 +76,6 @@ class SearchesController < ApplicationController
     @project_unit.assign_attributes(permitted_attributes(@project_unit))
     @project_unit.user = current_user if @project_unit.user_id.blank?
     authorize @project_unit # Has to be done after user is assigned and before status is updated
-
     @project_unit.primary_user_kyc_id = @user.user_kyc_ids.first if @project_unit.primary_user_kyc_id.blank?
     @project_unit.status = "hold"
     respond_to do |format|
@@ -90,7 +89,14 @@ class SearchesController < ApplicationController
   end
 
   def checkout
+    if @search.project_unit_id.blank?
+      redirect_to step_user_search_path(@search, step: @search.step)
+      return
+    end
     @project_unit = ProjectUnit.find(@search.project_unit_id)
+    if @project_unit.held_on.present? && (@project_unit.held_on + @project_unit.holding_minutes.minutes) < Time.now
+      ProjectUnitUnholdWorker.new.perform(@project_unit.id)
+    end
     authorize @project_unit
     if @project_unit.status != "hold"
       if current_user.buyer?

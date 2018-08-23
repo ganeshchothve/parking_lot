@@ -22,7 +22,7 @@
         Pusher.logToConsole = true;
       <% end %>
     <% end %>
-    <!--  GENERICTODO: GA & GTM go here -->
+    <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= current_client.selldo_client_id %>.js'></script>
   </head>
   <body>
     <%= render "layouts/navbar" %>
@@ -41,7 +41,7 @@
     </script>
     <% end %>
     <% if current_client.gtm_tag.present? %>
-    <%= current_client.gtm_tag %>
+    <%= current_client.gtm_tag.html_safe %>
     <% end %>
   </body>
 </html>

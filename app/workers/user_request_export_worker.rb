@@ -2,16 +2,17 @@ require 'spreadsheet'
 class UserRequestExportWorker
   include Sidekiq::Worker
 
-  def perform emails
+  def perform user_id
+    user = User.find(user_id)
     file = Spreadsheet::Workbook.new
     sheet = file.create_worksheet(name: "Cancellation Report")
     sheet.insert_row(0, UserRequestExportWorker.get_column_names)
-    UserRequest.where(request_type:"cancellation").all.each_with_index do |user_request, index|
+    UserRequest.where(UserRequest.user_based_scope(user)).each_with_index do |user_request, index|
       sheet.insert_row(index+1, UserRequestExportWorker.get_user_request_row(user_request))
     end
     file_name = "cancellation-#{SecureRandom.hex}.xls"
     file.write("#{Rails.root}/#{file_name}")
-    ExportMailer.notify(file_name, emails, "Cancellation Report").deliver
+    ExportMailer.notify(file_name, user.email, "Cancellation Report").deliver
   end
 
   def self.get_column_names

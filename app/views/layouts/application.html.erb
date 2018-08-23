@@ -22,6 +22,7 @@
         Pusher.logToConsole = true;
       <% end %>
     <% end %>
+    <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= current_client.selldo_client_id %>.js'></script>
   </head>
   <% if !current_client.background_image.present? %>
   <body class="full-bg" style="background-image: url('<%= current_client.background_image.url %>');">
@@ -51,14 +52,13 @@
         </div>
       </nav>
       <%= render "layouts/navbar_footer" %>
-      <div class="body-padding"></div>
-      <div class="body-padding"></div>
       <% if notice %>
       <p class="alert alert-success notice"><%= notice %></p>
       <% end %>
       <% if alert %>
       <p class="alert alert-danger"><%= alert %></p>
       <% end %>
+      <div class="body-padding"></div>
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-md-9">
@@ -85,7 +85,7 @@
     </script>
     <% end %>
     <% if current_client.gtm_tag.present? %>
-    <%= current_client.gtm_tag %>
+    <%= current_client.gtm_tag.html_safe %>
     <% end %>
   </body>
 </html>

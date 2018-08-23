@@ -1,6 +1,6 @@
 <div class="text-right">
   <% if @search.next_step.present? %>
-    <%= form_for [:user, @search], html: {class: 'validate-form', id: "edit_search_form"} do |f| %>
+    <%= form_for [:user, @search], html: {class: "validate-form edit_search_form"} do |f| %>
       <div class="form-group">
         <%= f.hidden_field :step, value: @search.next_step %>
         <%= f.hidden_field :project_unit_id %>
@@ -75,8 +75,8 @@
       </div>
     </div>
   </div>
-  <div class="col-md-7 d-none" id="unit-description">
-    <div class="card h-100">
+  <div class="col-md-7 d-none mt-3 mt-md-0" id="unit-description">
+    <div class="card h-md-100">
       <div class="bg-primary text-white">
         <%= icon "fas", "home", class: "fa-2x position-absolute", style: "right:10px; top:10px;" %>
         <div class="p-3">
@@ -96,7 +96,7 @@
           </svg>
         </figure>
       </div>
-      <div class="row p-3">
+      <div class="row pl-3 pb-0 pb-md-3 pr-3 pt-3">
         <div class="col-md-4">
           <label>Floor</label>
           <h6 class="text-black font-weight" data-placeholder='floor'></h6>
@@ -110,7 +110,7 @@
           <h6 class="text-black font-weight" data-placeholder='bathrooms'></h6>
         </div>
       </div>
-      <div class="row p-3">
+      <div class="row pl-3 pb-0 pb-md-3 pr-3 pt-0 pt-md-3">
         <div class="col-md-4">
           <label>Saleable</label>
           <h6 class="text-black font-weight">
@@ -133,7 +133,7 @@
           </h6>
         </div>
       </div>
-      <div class="row p-3">
+      <div class="row pl-3 pb-0 pb-md-3 pr-3 pt-0 pt-md-3">
         <div class="col-md-4">
           <label>Agreement Price</label>
           <h6 class="text-black font-weight" data-placeholder='agreement_price'></h6>
@@ -147,7 +147,7 @@
           <h6 class="text-black font-weight" data-placeholder='unit_facing_direction'></h6>
         </div>
       </div>
-      <div class="p-3">
+      <div class="pl-3 pb-0 pb-md-3 pr-3 pt-0 pt-md-3">
         <a data-toggle="modal" data-target="#floorPlanImage" href="javascript:;" class="unit_image_container" style="display:none;">
           <img class="img-fluid" style="width: 100%; display: block;" data-placeholder="unit_image" />
           <br/>
@@ -157,6 +157,29 @@
     </div>
   </div>
 </div>
+<div class="clearfix"></div>
+<% if @search.next_step.present? %>
+  <%= form_for [:user, @search], html: {class: "validate-form edit_search_form"} do |f| %>
+    <div class="form-group">
+      <%= f.hidden_field :step, value: @search.next_step %>
+      <%= f.hidden_field :project_unit_id %>
+    </div>
+    <div class="form-group">
+      <%= f.submit "Next", class: "btn btn-primary float-right ml-2", disabled: 'disabled' %>
+    </div>
+  <% end %>
+<% end %>
+<% if @search.previous_step.present? %>
+  <%= form_for [:user, @search], html: {class: 'validate-form'} do |f| %>
+    <div class="form-group">
+      <%= f.hidden_field :step, value: @search.previous_step %>
+    </div>
+    <div class="form-group">
+      <%= f.submit "Previous", class: "btn btn-secondary float-right" %>
+    </div>
+  <% end %>
+<% end %>
+<div class="clearfix"></div>
 <div class="modal fade" role="dialog" id="floorPlanImage">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -172,16 +195,19 @@
 </div>
 <%= javascript_tag do %>
   var units = <%= raw @units.to_json(include: [:assets], methods: [:all_inclusive_price, :effective_rate]) %>;
-  $('[data-toggle="popover"]').popover({
-    html: true,
-    trigger: 'hover',
-    placement: 'top'
-  });
+  var is_touch_device = ("ontouchstart" in window) || window.DocumentTouch && document instanceof DocumentTouch;
+  if(!is_touch_device){
+    $('[data-toggle="popover"]').popover({
+      html: true,
+      trigger: 'hover',
+      placement: 'top'
+    });
+  }
   $(document).on('click', '[data-jquery-selector="unit-card"]', function(){
     var unit_id = $(this).data("unit-id");
     $('[data-jquery-selector="unit-card"]').removeClass("active");
     $(this).addClass("active");
-    var $form = $("#edit_search_form");
+    var $form = $(".edit_search_form");
     $form.find('[name="search[project_unit_id]"]').val(unit_id);
     $form.find('input[type="submit"]').removeAttr("disabled");
     showUnitData(unit_id);
@@ -237,8 +263,8 @@
     }
     $("#unit-description").find('[data-placeholder="unit_facing_direction"]').html(unit.unit_facing_direction);
     if($("#unit-description").hasClass('d-none')){
-      $("#unit-selection").addClass('animated fadeInRight faster');
-      $("#unit-description").addClass('animated fadeIn slow').removeClass('d-none');
+      $("#unit-description").removeClass('d-none');
     }
+    $.scrollTo($("#unit-description").offset().top, 800);
   }
 <% end %>

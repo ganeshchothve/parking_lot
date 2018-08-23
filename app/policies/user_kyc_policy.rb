@@ -29,10 +29,6 @@ class UserKycPolicy < ApplicationPolicy
     new?
   end
 
-  def export?
-    UserPolicy.new(user, record.user).export?
-  end
-
   def update?
     edit?
   end
