@@ -40,7 +40,6 @@ class Client
   field :enable_channel_partners, type: Boolean, default: false
   field :enable_direct_payment, type: Boolean, default: false
   field :blocking_amount, type: Integer, default: 30000
-  field :blocking_amount_editable, type: Boolean, default: false
   field :blocking_days, type: Integer, default: 10
   field :holding_minutes, type: Integer, default: 15
   field :payment_gateway, type: String, default: 'Razorpay'

@@ -38,7 +38,7 @@
             <%= link_to "I Agree on behalf of #{@user.name}", new_admin_user_project_unit_receipt_path(@user.id, @project_unit.id), class: 'btn btn-primary modal-remote-form-link', style:'margin-top:0px', onclick: alert %>
           <% else %>
             <div class="alert alert-danger">
-              You do not have access to take a <%= Receipt.available_statuses.find{|x| x[:id] == 'clearance_pending'}[:text] %> <%= global_labels[:receipt] %> on behalf of <%= @user.name %>.
+              You do not have access to take a Clearance pending <%= global_labels[:receipt] %> on behalf of <%= @user.name %>.
             </div>
           <% end %>
           <%= f.submit 'Cancel', class: 'btn btn-danger mt-1 mt-md-0' , data:{event_category: 'Section', event_action: 'Click', event_name: 'Cancel'} %>

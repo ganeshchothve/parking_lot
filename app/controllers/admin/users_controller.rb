@@ -61,7 +61,7 @@ class Admin::UsersController < AdminController
 
   def show
     @project_units = @user.project_units.paginate(page: params[:page] || 1, per_page: 15)
-    @receipts = @user.receipts.paginate(page: params[:page] || 1, per_page: 15)
+    @receipts = @user.receipts.where({"$or": [{status: "pending", payment_mode: {"$ne" => "online"}}, {status: {"$ne" => "pending"}}]}).paginate(page: params[:page] || 1, per_page: 15)
   end
 
   def new

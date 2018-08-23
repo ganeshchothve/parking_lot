@@ -7,6 +7,7 @@ class Receipt
   include Mongoid::Autoinc
   include InsertionStringMethods
   include ApplicationHelper
+  include ReceiptStateMachine
 
   field :receipt_id, type: String
   field :order_id, type: String
@@ -19,7 +20,6 @@ class Receipt
   field :total_amount, type: Float, default: 0 # Total amount
   field :status, type: String, default: 'pending' # pending, success, failed, clearance_pending,cancelled
   field :status_message, type: String # pending, success, failed, clearance_pending
-  field :payment_type, type: String, default: 'blocking' # blocking, booking
   field :payment_gateway, type: String
   field :processed_on, type: Date
   field :comments, type: String
@@ -32,19 +32,17 @@ class Receipt
   has_many :assets, as: :assetable
   has_many :smses, as: :triggered_by, class_name: "Sms"
 
-  validates :total_amount, :status, :payment_mode, :payment_type, :user_id, presence: true
-  validates :payment_identifier, presence: true, if: Proc.new{|receipt| receipt.payment_type == 'online' && receipt.status != 'pending' }
-  validates :project_unit_id, presence: true, if: Proc.new{|receipt| receipt.payment_type != 'blocking'} # allow the user to make a blocking payment without any unit
-  validates :status, inclusion: {in: Proc.new{ Receipt.available_statuses.collect{|x| x[:id]} } }
-  validates :payment_type, inclusion: {in: Proc.new{ Receipt.available_payment_types.collect{|x| x[:id]} } }
+  validates :total_amount, :status, :payment_mode, :user_id, presence: true
+  validates :payment_identifier, presence: true, if: Proc.new{|receipt| receipt.payment_mode == 'online' && receipt.status != 'pending' }
+  validates :status, inclusion: {in: Proc.new{ Receipt.aasm.states.collect(&:name).collect(&:to_s) } }
   validates :payment_mode, inclusion: {in: Proc.new{ Receipt.available_payment_modes.collect{|x| x[:id]} } }
   validate :validate_total_amount
   validates :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, presence: true, if: Proc.new{|receipt| receipt.payment_mode != 'online' }
   validates :payment_gateway, presence: true, if: Proc.new{|receipt| receipt.payment_mode == 'online' }
   validates :payment_gateway, inclusion: {in: PaymentGatewayService::Default.allowed_payment_gateways }, allow_blank: true
   validate :status_changed
-  validates :tracking_id, presence: true, if: Proc.new{|receipt| receipt.status == 'success' && receipt.payment_type != "online"}
-  validates :comments, presence: true, if: Proc.new{|receipt| receipt.status == 'failed' && receipt.payment_type != "online"}
+  validates :tracking_id, presence: true, if: Proc.new{|receipt| receipt.status == 'success' && receipt.payment_mode != "online"}
+  validates :comments, presence: true, if: Proc.new{|receipt| receipt.status == 'failed' && receipt.payment_mode != "online"}
   validate :tracking_id_processed_on_only_on_success
 
   increments :order_id, auto: false
@@ -52,19 +50,9 @@ class Receipt
 
   enable_audit({
     associated_with: ["user"],
-    indexed_fields: [:receipt_id, :order_id, :payment_mode, :tracking_id, :payment_type, :creator_id],
+    indexed_fields: [:receipt_id, :order_id, :payment_mode, :tracking_id, :creator_id],
     audit_fields: [:payment_mode, :tracking_id, :total_amount, :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, :status, :status_message, :project_unit_id, :booking_detail_id]
   })
-
-  def self.available_statuses
-    [
-      {id: 'pending', text: 'Pending'},
-      {id: 'success', text: 'Success'},
-      {id: 'clearance_pending', text: 'Pending Clearance'},
-      {id: 'failed', text: 'Failed'},
-      {id: 'cancelled', text: 'Cancelled'}
-    ]
-  end
 
   def self.available_payment_modes
     [
@@ -72,13 +60,6 @@ class Receipt
       {id: 'cheque', text: 'Cheque'},
       {id: 'rtgs', text: 'RTGS'},
       {id: 'neft', text: 'NEFT'}
-    ]
-  end
-
-  def self.available_payment_types
-    [
-      {id: 'blocking', text: 'Blocking'},
-      {id: 'booking', text: 'Booking'}
     ]
   end
 
@@ -106,6 +87,10 @@ class Receipt
     end
   end
 
+  def blocking_payment?
+    self.project_unit_id.present? && self.project_unit.receipts.in(status: ["success", "clearance_pending"]).count == 0
+  end
+
   def self.build_criteria params={}
     selector = {}
     if params[:fltrs].present?
@@ -126,9 +111,6 @@ class Receipt
       end
       if params[:fltrs][:payment_mode].present?
         selector[:payment_mode] = params[:fltrs][:payment_mode]
-      end
-      if params[:fltrs][:payment_type].present?
-        selector[:payment_type] = params[:fltrs][:payment_type]
       end
     end
     selector1 = {}
@@ -153,11 +135,7 @@ class Receipt
         "#{self.user.booking_portal_client.name[0..1].upcase}-#{self.order_id}"
       end
     elsif self.receipt_id.blank?
-      if self.project_unit_id.present?
-        "#{self.user.booking_portal_client.name[0..1].upcase}-TMP-#{SecureRandom.hex(4)}"
-      else
-        "#{self.user.booking_portal_client.name[0..1].upcase}-TMP-#{SecureRandom.hex(4)}"
-      end
+      "#{self.user.booking_portal_client.name[0..1].upcase}-TMP-#{SecureRandom.hex(4)}"
     else
       self.receipt_id
     end
@@ -169,7 +147,7 @@ class Receipt
       if user.role?('channel_partner')
         custom_scope = {user_id: {"$in": User.where(referenced_manager_ids: user.id).distinct(:id)}}
       elsif user.role?('cp_admin')
-        custom_scope = {user_id: {"$in": User.where(role: "user").where(manager_id: {"$exists": true}).distinct(:id)}}
+        custom_scope = {user_id: {"$in": User.where(role: "user").nin(manager_id: [nil, ""]).distinct(:id)}}
       elsif user.role?('cp')
         channel_partner_ids = User.where(role: "channel_partner").where(manager_id: user.id).distinct(:id)
         custom_scope = {user_id: {"$in": User.in(referenced_manager_ids: channel_partner_ids).distinct(:id)}}
@@ -185,14 +163,12 @@ class Receipt
 
   private
   def validate_total_amount
-    if self.total_amount < current_client.blocking_amount && self.payment_type == "blocking" && self.new_record?
-      self.errors.add :total_amount, "cannot be less than #{current_client.blocking_amount}"
-    end
-    if self.total_amount != current_client.blocking_amount && current_client.blocking_amount_editable && self.new_record? && self.payment_type == "blocking" && !current_client.blocking_amount_editable?
-      self.errors.add :total_amount, "has to be #{current_client.blocking_amount}"
-    end
     if self.total_amount <= 0
       self.errors.add :total_amount, "cannot be less than or equal to 0"
+    end
+
+    if (self.project_unit_id.blank? || self.blocking_payment?) && self.total_amount < self.user.booking_portal_client.blocking_amount
+      self.errors.add :total_amount, "cannot be less than blocking amount #{self.user.booking_portal_client.blocking_amount}"
     end
   end
 

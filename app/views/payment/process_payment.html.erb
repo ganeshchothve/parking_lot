@@ -17,7 +17,7 @@
                 <strong>You will receive an email from us with detailed information on next steps.</strong>
                 <br/>
               </p>
-              <% if @receipt.payment_type == 'blocking' && @receipt.project_unit_id.present? %>
+              <% if @receipt.blocking_payment? %>
               <p>
                 This unit will remain blocked for you for the next <%= @receipt.project_unit.blocking_days %> days. Please complete your payment of remaining amount within this duration to confirm your unit. To make additional payment please click <a href="/dashboard/receipts/new?project_unit_id=<%= @receipt.project_unit_id %>" class="modal-remote-form-link" data-event-category="section" data-event-action="click" data-event-name="make the remaining payment" target="_blank">here</a>
               </p>

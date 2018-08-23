@@ -30,70 +30,6 @@ class ReceiptObserver < Mongoid::Observer
         end
       end
     end
-
-
-    # Send email to customer
-    if receipt.status_changed?
-      if receipt.status == 'success'
-        # TODO : Sell.Do Receipt
-        Email.create!({
-          booking_portal_client_id: user.booking_portal_client_id,
-          email_template_id:Template::EmailTemplate.find_by(name: "receipt_success").id,
-          recipients: [user],
-          cc_recipients: (user.manager_id.present? ? [user.manager] : []),
-          triggered_by_id: receipt.id,
-          triggered_by_type: receipt.class.to_s
-        })
-      elsif receipt.status == 'failed'
-        # TODO : Sell.Do Receipt
-        Email.create!({
-          booking_portal_client_id: project_unit.booking_portal_client_id,
-          email_template_id:Template::EmailTemplate.find_by(name: "receipt_failed").id,
-          recipients: [user],
-          cc_recipients: (user.manager_id.present? ? [user.manager] : []),
-          triggered_by_id: receipt.id,
-          triggered_by_type: receipt.class.to_s
-        })
-      elsif receipt.status == 'clearance_pending'
-        Email.create!({
-          booking_portal_client_id: project_unit.booking_portal_client_id,
-          email_template_id:Template::EmailTemplate.find_by(name: "receipt_clearance_pending").id,
-          recipients: [user],
-          cc_recipients: (user.manager_id.present? ? [user.manager] : []),
-          triggered_by_id: receipt.id,
-          triggered_by_type: receipt.class.to_s
-        })
-      end
-      unless receipt.status == "pending"
-        Sms.create!(
-          booking_portal_client_id: user.booking_portal_client_id,
-          recipient_id: receipt.user_id,
-          sms_template_id: SmsTemplate.find_by(name: "receipt_#{receipt.status}").id,
-          triggered_by_id: receipt.id,
-          triggered_by_type: receipt.class.to_s
-        )
-      end
-    end
-
-    # Send email to crm team if cheque non-online & pending
-    if receipt.status == 'pending' && receipt.payment_mode != 'online'
-      Email.create!({
-        booking_portal_client_id: user.booking_portal_client_id,
-        email_template_id:Template::EmailTemplate.find_by(name: "receipt_pending_offline").id,
-        recipients: [user],
-        cc_recipients: (user.manager_id.present? ? [user.manager] : []),
-        triggered_by_id: receipt.id,
-        triggered_by_type: receipt.class.to_s
-      })
-
-      Sms.create!(
-        booking_portal_client_id: user.booking_portal_client_id,
-        recipient_id: receipt.user_id,
-        sms_template_id: SmsTemplate.find_by(name: "receipt_pending").id,
-        triggered_by_id: receipt.id,
-        triggered_by_type: receipt.class.to_s
-      )
-    end
   end
 
   def before_save receipt
@@ -101,6 +37,8 @@ class ReceiptObserver < Mongoid::Observer
       receipt.processed_on = Date.today
       receipt.assign!(:order_id) if receipt.order_id.blank?
     end
+
+    receipt.send(receipt.event) if receipt.event.present?
     receipt.receipt_id = receipt.generate_receipt_id
   end
 end

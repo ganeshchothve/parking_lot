@@ -91,7 +91,6 @@ en:
         enable_actual_inventory: 'Enable Inventory'
         enable_channel_partners: 'Enable Channel Partners'
         blocking_amount: 'Min. Amount for Blocking an Unit'
-        blocking_amount_editable: 'Can End Users pay larger blocking amounts?'
         blocking_days: 'Unit to be blocked for (Days)'
         holding_minutes: 'Unit to be held for (Minutes)'
         enable_company_users: 'Allow Company Users & Benefits'
@@ -122,7 +121,6 @@ en:
         payment_identifier: "Transaction Identifier"
         total_amount: "Total Amount (Rs.)"
         status: "Payment Status"
-        payment_type: "Payment Type (Towards Blocking or Booking)"
         user_id: "Customer"
         project_unit_id: "Apartment"
         creator_id: "Created by"

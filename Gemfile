@@ -87,6 +87,7 @@ gem 'premailer'
 # bundle config GITHUB__COM <YOUR TOKEN>:x-oauth-basic
 gem 'audit', git: 'https://github.com/amuratech/audit.git'
 
+gem 'aasm'
 gem 'mailgun-ruby'
 
 group :development, :test do

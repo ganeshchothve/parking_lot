@@ -155,21 +155,6 @@
                     <%= f.number_field :blocking_amount, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("blocking_amount") ? false : true), min: 0 %>
                   </div>
                 </div>
-                <div class="col-md-6">
-                  <% if policy(@client).editable_field?("blocking_amount_editable") %>
-                  <div class="form-group">
-                    <%= f.label :blocking_amount_editable %><br/>
-                    <div class="form-check form-check-inline">
-                      <%= f.radio_button :blocking_amount_editable, true, class: "form-check-input" %>
-                      <%= f.label :blocking_amount_editable, "Yes", class: "form-check-label" %>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <%= f.radio_button :blocking_amount_editable, false, class: "form-check-input" %>
-                      <%= f.label :blocking_amount_editable, "No", class: "form-check-label" %>
-                    </div>
-                  </div>
-                  <% end %>
-                </div>
               </div>
               <div class="row">
                 <div class="col-md-6">
