@@ -20,7 +20,7 @@ class Receipt
   field :total_amount, type: Float, default: 0 # Total amount
   field :status, type: String, default: 'pending' # pending, success, failed, clearance_pending,cancelled
   field :status_message, type: String # pending, success, failed, clearance_pending
-  field :payment_gateway, type: BSON::ObjectId
+  field :payment_gateway, type: String
   field :processed_on, type: Date
   field :comments, type: String
   field :gateway_response, type: Hash
@@ -33,7 +33,7 @@ class Receipt
   has_many :smses, as: :triggered_by, class_name: "Sms"
 
   validates :total_amount, :status, :payment_mode, :user_id, presence: true
-  validates :payment_identifier, presence: true, if: Proc.new{|receipt| receipt.payment_model == 'online' && receipt.status != 'pending' }
+  validates :payment_identifier, presence: true, if: Proc.new{|receipt| receipt.payment_mode == 'online' && receipt.status != 'pending' }
   validates :status, inclusion: {in: Proc.new{ Receipt.aasm.states.collect(&:name).collect(&:to_s) } }
   validates :payment_mode, inclusion: {in: Proc.new{ Receipt.available_payment_modes.collect{|x| x[:id]} } }
   validate :validate_total_amount

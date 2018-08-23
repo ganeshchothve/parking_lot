@@ -121,13 +121,14 @@ class SearchesController < ApplicationController
 
   def payment
     @receipt = Receipt.new(creator: @search.user, user: @search.user, payment_mode: 'online', total_amount: current_client.blocking_amount)
-
     if @search.project_unit_id.present?
       @project_unit = ProjectUnit.find(@search.project_unit_id)
       authorize @project_unit
       if(@search.user.total_unattached_balance >= current_client.blocking_amount)
         unattached_blocking_receipt = @search.user.unattached_blocking_receipt
         @receipt = unattached_blocking_receipt if unattached_blocking_receipt.present?
+      else
+        @receipt.payment_gateway = current_client.payment_gateway
       end
       @receipt.project_unit = @project_unit
     else

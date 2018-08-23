@@ -50,6 +50,7 @@ class ReceiptsController < ApplicationController
     else
       @receipt = Receipt.new(creator: current_user, user_id: @user, payment_mode: 'cheque', total_amount: current_client.blocking_amount)
     end
+    @receipt.status = "clearance_pending"
     authorize @receipt
     render layout: false
   end
