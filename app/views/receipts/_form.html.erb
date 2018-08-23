@@ -65,7 +65,7 @@
               <h5><%= number_to_indian_currency(current_client.blocking_amount) %></h5>
               <%= f.hidden_field :total_amount, value: current_client.blocking_amount %>
             <% else %>
-              <%= f.number_field :total_amount, min: 0, max: (@project_unit.present? ? @project_unit.agreement_price : current_client.blocking_amount), class: "form-field form-control green", required: 'required' %>
+              <%= f.number_field :total_amount, min: (@project_unit.present? ? 0 : current_client.blocking_amount), class: "form-field form-control green", required: 'required' %>
             <% end %>
           </div>
           <% if current_client.enable_actual_inventory? && @receipt.project_unit_id.present? %>
