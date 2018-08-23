@@ -85,7 +85,7 @@ function register_user_with_portal(e){
     error: function(one, two, three){
       var str = ''
       if(one.responseJSON.errors){
-        if(typeof one.responseJSON.errors == 'array'){
+        if(typeof one.responseJSON.errors == 'object'){
           str += '<ul>';
           _.each(one.responseJSON.errors, function(error){
             str += '<li>' + error + '</li>';
