@@ -119,3 +119,11 @@ figure.wave {
   background-repeat: no-repeat;
   background-size: cover;
 }
+.jquery-countdown-container{
+  font-size: 56px;
+}
+@include media-breakpoint-up(md){
+  .h-md-100 {
+    height: 100% !important;
+  }
+}

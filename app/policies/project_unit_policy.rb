@@ -26,7 +26,7 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def hold?
-    valid = record.user_based_status(record.user) == 'available' && record.user.kyc_ready? && record.user.project_units.where(status: "hold").blank? && current_client.enable_actual_inventory?
+    valid = record.user.kyc_ready? && current_client.enable_actual_inventory? && ((record.user.project_units.where(status: "hold").blank? && record.user_based_status(record.user) == 'available') || record.user.project_units.where(status: "hold").count == 1 && record.user.project_units.where(status: "hold").first.id == record.id)
     valid = valid && (record.user.total_unattached_balance >= current_client.blocking_amount) if user.role?('channel_partner')
     valid = (valid && user.allowed_bookings > user.booking_details.count)
     _role_based_check(valid)
@@ -67,10 +67,10 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def permitted_attributes params={}
-    attributes = ["crm", "admin", "superadmin"].include?(user.role) ? [:auto_release_on] : []
+    attributes = ["crm", "admin", "superadmin"].include?(user.role) ? [:auto_release_on, :booking_price] : []
     attributes += (["crm", "admin", "superadmin"].include?(user.role) || make_available?) ? [:status] : []
     attributes += [:user_id] if record.user_id.blank? && record.user_based_status(user) == 'available'
-    attributes += [:primary_user_kyc_id, user_kyc_ids: []]
+    attributes += [:primary_user_kyc_id, user_kyc_ids: []] if record.user_id.present?
 
     if user.role?('superadmin') && ['hold', 'blocked', 'booked_tentative', 'booked_confirmed'].exclude?(record.status)
       attributes += [:name, :agreement_price, :all_inclusive_price, :status, :available_for, :blocked_on, :auto_release_on, :held_on, :applied_discount_rate, :applied_discount_id, :base_rate, :client_id, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, :selldo_id, :erp_id, :floor_rise, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :sub_type, :type, :unit_facing_direction, costs_attributes: CostPolicy.new(user, Cost.new).permitted_attributes, data_attributes: DatumPolicy.new(user, Cost.new).permitted_attributes]
