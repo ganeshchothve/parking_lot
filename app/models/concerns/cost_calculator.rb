@@ -35,7 +35,7 @@ module CostCalculator
   def blocking_payment
     receipts.where(payment_type: 'blocking').first
   end
-  
+
   def booking_price_percent_of_agreement_price
     agreement_price > 5000000 ? 0.099 : 0.1
   end

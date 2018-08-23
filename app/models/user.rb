@@ -340,6 +340,18 @@ class User
     custom_scope
   end
 
+  def unused_user_kyc_ids
+    if allow_multiple_bookings_per_user_kyc
+      user_kyc_ids = self.user_kycs.collect{|x| x.id}
+    else
+      user_kyc_ids = self.user_kycs.collect{|x| x.id}
+      self.project_units.each do |x|
+        user_kyc_ids = user_kyc_ids - [x.primary_user_kyc_id] - x.user_kyc_ids
+      end
+    end
+    user_kyc_ids
+  end
+
   private
   def manager_change_reason_present?
     if self.persisted? && self.manager_id_changed? && self.manager_change_reason.blank?

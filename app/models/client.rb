@@ -49,6 +49,8 @@ class Client
   field :tds_process, type: String
   field :ga_code, type: String
   field :gtm_tag, type: String
+  field :enable_communication, type: Hash, default: {email: true, sms: true}
+  field :allow_multiple_bookings_per_user_kyc, type: Boolean, default: true
 
   mount_uploader :logo, DocUploader
   mount_uploader :mobile_logo, DocUploader
