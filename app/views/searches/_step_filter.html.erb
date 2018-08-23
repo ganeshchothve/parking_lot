@@ -84,20 +84,37 @@
           </div>
         </div>
         <div class="p-3">
-          <img data-src="holder.js/100px250" class="img-fluid" alt="100%x250" style="height: 250px; width: 100%; display: block;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22843%22%20height%3D%22250%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20843%20250%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_164fb347916%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A42pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_164fb347916%22%3E%3Crect%20width%3D%22843%22%20height%3D%22250%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22314.0703125%22%20y%3D%22144.2%22%3E843x250%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E">
+          <a data-toggle="modal" data-target="#towerImage" href="javascript:;" class="tower_image_container" style="display:none;">
+            <img class="img-fluid" style="width: 100%; display: block;" data-placeholder="tower_image" />
+            <br/>
+            Click to view details
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" role="dialog" id="towerImage">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" data-placeholder="gallery_tower_images">
         </div>
       </div>
     </div>
   </div>
 <% else %>
-  <div class="alert alert-info">
+  <div class="alert alert-primary">
     We couldn't find any towers for your selection, would you like to change your search?
     <br/>
     <%= link_to "Search Again", edit_search_path, class: "modal-remote-form-link" %>
   </div>
 <% end %>
 <%= javascript_tag do %>
-  var towers = <%= raw @towers.to_json %>;
+  var towers = <%= raw @towers.to_json(include: [:assets]) %>;
   $(document).on('click', '[data-jquery-selector="tower-card"]', function(){
     var $form = $("#edit_search_form");
     var tower_id = $(this).data("tower-id");
@@ -118,6 +135,44 @@
     if($("#tower-description").hasClass('d-none')){
       $("#tower-selection").addClass('animated fadeInRight faster');
       $("#tower-description").addClass('animated fadeIn slow').removeClass('d-none');
+    }
+
+    if(tower.assets.length > 0){
+      $(".tower_image_container").show();
+      $('[data-placeholder="tower_image"]').attr("src", _.first(tower.assets).file.url);
+      $('[data-placeholder="tower_image"]').show();
+      var gallery_html = '<div id="tower_gallery" class="carousel slide" data-ride="carousel">'
+      gallery_html += '<ol class="carousel-indicators">'
+      var count = 0;
+      _.each(tower.assets, function(asset){
+        gallery_html += '<li data-target="#tower_gallery" data-slide-to="' + count + '" class="' + (count == 0 ? "active" : "") + '"></li>';
+        count += 1;
+      });
+      gallery_html += '</ol>'
+      gallery_html += '<div class="carousel-inner">'
+      var count = 0;
+      _.each(tower.assets, function(asset){
+        gallery_html += '<div class="carousel-item ' + (count == 0 ? "active" : "") + '">\
+          <img class="d-block w-100" src="' + asset.file.url + '">\
+        </div>'
+        count += 1;
+      });
+      gallery_html += '</div>';
+      gallery_html += '<a class="carousel-control-prev" href="#tower_gallery" role="button" data-slide="prev">\
+          <span class="fas fa-chevron-left text-dark" aria-hidden="true"></span>\
+          <span class="sr-only">Previous</span>\
+        </a>\
+        <a class="carousel-control-next" href="#tower_gallery" role="button" data-slide="next">\
+          <span class="fas fa-chevron-right text-dark" aria-hidden="true"></span>\
+          <span class="sr-only">Next</span>\
+        </a>\
+      </div>';
+      $('[data-placeholder="gallery_tower_images"]').html(gallery_html);
+      $('#tower_gallery').carousel();
+    }else{
+      $(".tower_image_container").hide();
+      $('[data-placeholder="tower_image"]').hide();
+      $('[data-placeholder="gallery_tower_images"]').html("");
     }
   }
 <% end %>

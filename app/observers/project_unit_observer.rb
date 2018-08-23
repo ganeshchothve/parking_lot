@@ -1,7 +1,9 @@
 class ProjectUnitObserver < Mongoid::Observer
   def before_validation project_unit
     project_unit.agreement_price = project_unit.calculate_agreement_price if project_unit.agreement_price.blank?
+    project_unit.all_inclusive_price = project_unit.calculate_all_inclusive_price if project_unit.all_inclusive_price.blank?
   end
+
   def before_save project_unit
     if project_unit.primary_user_kyc_id.blank? && project_unit.user_kyc_ids.present?
       project_unit.primary_user_kyc_id = project_unit.user_kyc_ids.first
@@ -82,7 +84,7 @@ class ProjectUnitObserver < Mongoid::Observer
       if Rails.env.development?
         mailer.deliver
       else
-        SelldoInventoryPusher.perform_async(project_unit.status, project_unit.id.to_s, Time.now.to_i)
+        # SelldoInventoryPusher.perform_async(project_unit.status, project_unit.id.to_s, Time.now.to_i)
         mailer.deliver_later
       end
       user = project_unit.user

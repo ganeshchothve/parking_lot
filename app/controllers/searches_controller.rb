@@ -41,9 +41,9 @@ class SearchesController < ApplicationController
 
   def export
     if Rails.env.development?
-      SearchExportWorker.new.perform(current_user.email)
+      SearchExportWorker.new.perform(current_user.id.to_s)
     else
-      SearchExportWorker.perform_async(current_user.email)
+      SearchExportWorker.perform_async(current_user.id.to_s)
     end
     flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
     redirect_to admin_searches_path
@@ -56,7 +56,7 @@ class SearchesController < ApplicationController
   def update
     @search.assign_attributes(permitted_attributes(@search))
     location = nil
-    if (permitted_attributes(@search).keys.collect{|x| x.to_s} & ['bedrooms', 'agreement_price']).present?
+    if (permitted_attributes(@search).keys.collect{|x| x.to_s} & ['bedrooms', 'agreement_price', 'all_inclusive_price']).present?
       @search.step = 'filter'
       location = step_user_search_path(@search, step: @search.step)
     end
@@ -76,7 +76,6 @@ class SearchesController < ApplicationController
     @project_unit.assign_attributes(permitted_attributes(@project_unit))
     @project_unit.user = current_user if @project_unit.user_id.blank?
     authorize @project_unit # Has to be done after user is assigned and before status is updated
-
     @project_unit.primary_user_kyc_id = @user.user_kyc_ids.first if @project_unit.primary_user_kyc_id.blank?
     @project_unit.status = "hold"
     respond_to do |format|
@@ -120,15 +119,13 @@ class SearchesController < ApplicationController
   end
 
   def payment
-    @receipt = Receipt.new(creator: @search.user, user: @search.user, payment_mode: 'online', total_amount: current_client.blocking_amount)
+    @receipt = Receipt.new(creator: @search.user, user: @search.user, payment_mode: 'online', total_amount: current_client.blocking_amount, payment_gateway: current_client.payment_gateway)
     if @search.project_unit_id.present?
       @project_unit = ProjectUnit.find(@search.project_unit_id)
       authorize @project_unit
       if(@search.user.total_unattached_balance >= current_client.blocking_amount)
         unattached_blocking_receipt = @search.user.unattached_blocking_receipt
         @receipt = unattached_blocking_receipt if unattached_blocking_receipt.present?
-      else
-        @receipt.payment_gateway = current_client.payment_gateway
       end
       @receipt.project_unit = @project_unit
     else
@@ -215,6 +212,9 @@ class SearchesController < ApplicationController
         agreement_price: {
           "$addToSet": "$agreement_price"
         },
+        all_inclusive_price: {
+          "$addToSet": "$all_inclusive_price"
+        },
         carpet: {
           "$addToSet": "$carpet"
         }
@@ -227,6 +227,8 @@ class SearchesController < ApplicationController
       "$project": {
         min_agreement_price: {"$min": "$agreement_price"},
         max_agreement_price: {"$max": "$agreement_price"},
+        min_all_inclusive_price: {"$min": "$all_inclusive_price"},
+        max_all_inclusive_price: {"$max": "$all_inclusive_price"},
         min_carpet: {"$min": "$carpet"},
         max_carpet: {"$max": "$carpet"},
         bedrooms: "$bedrooms"

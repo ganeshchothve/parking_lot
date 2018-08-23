@@ -29,7 +29,7 @@ module CostCalculator
     selector << {user_id: user.id} if user.present?
     selector << {user_role: user.role} if user.present?
     selector << {project_unit_id: self.id}
-    discount_obj = Discount.or(selector).desc(:value).first
+    discount_obj = Discount.where(status: "approved").or(selector).desc(:value).first
   end
 
   def booking_price
@@ -87,7 +87,20 @@ module CostCalculator
   def calculate_agreement_price
     base_price + self.costs.where(category: 'agreement').collect{|x| x.value}.sum
   end
+
+  def calculate_all_inclusive_price
+    agreement_price + total_outside_agreement_costs
+  end
+
   def base_price
     saleable * effective_rate
+  end
+
+  def total_outside_agreement_costs
+    costs.where(category: 'outside_agreement').collect{|x| x.value}.sum
+  end
+
+  def total_agreement_costs
+    costs.where(category: 'agreement').collect{|x| x.value}.sum
   end
 end

@@ -8,19 +8,29 @@
         <table class="table">
           <thead>
             <tr>
+              <th>Tower</th>
               <th>Bedrooms</th>
               <th>Status</th>
               <th class="text-right">Count</th>
               <th class="text-right">Total Agreement Price</th>
+              <th class="text-right">Total All Inclusive Price</th>
+              <th class="text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
-            <% DashboardDataProvider.project_units_dashboard(current_user).each do |d| %>
+            <% DashboardDataProvider.project_units_dashboard(current_user).sort{|x, y | [x[:project_tower_name], x[:bedrooms], x[:status]] <=> [y[:project_tower_name], y[:bedrooms], y[:status]]}.each do |d| %>
             <tr>
+              <td><%= d[:project_tower_name] %></td>
               <td><%= d[:bedrooms] %></td>
               <td><%= ProjectUnit.available_statuses.find{|x| x[:id] == d[:status]}[:text] %></td>
               <td class="text-right"><%= d[:count] %></td>
               <td class="text-right"><%= number_to_indian_currency(d[:total_agreement_price]) %></td>
+              <td class="text-right"><%= number_to_indian_currency(d[:total_all_inclusive_price]) %></td>
+              <td class="text-right">
+                <% if policy(ProjectUnit).index? %>
+                  <%= link_to "View", admin_project_units_path(fltrs: {status: d[:status], project_tower_id: d[:project_tower_id], bedrooms: d[:bedrooms]}), target: "_blank" %>
+                <% end %>
+              </td>
             </tr>
             <% end %>
           </tbody>

@@ -170,6 +170,10 @@ class Receipt
     if self.total_amount <= 0
       self.errors.add :total_amount, "cannot be less than or equal to 0"
     end
+
+    if self.project_unit_id.blank? || self.blocking_payment?
+      self.errors.add :total_amount, "cannot be less than blocking amount #{self.booking_portal_client.blocking_amount}"
+    end
   end
 
   def status_changed

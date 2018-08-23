@@ -3,7 +3,8 @@ class ApplicationController < ActionController::Base
   before_action :set_cache_headers, :set_request_store, :set_cookies
   before_action :load_hold_unit
 
-  acts_as_token_authentication_handler_for User, unless: lambda { |controller| controller.is_a?(HomeController) || controller.is_a?(Api::SellDoController) || (controller.is_a?(ChannelPartnersController)) }
+  acts_as_token_authentication_handler_for User, if: :token_authentication_valid_params?
+
   include Pundit
   include ApplicationHelper
   helper_method :home_path
@@ -113,5 +114,9 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:sign_in, keys: [:login, :login_otp, :password, :password_confirmation, :manager_id])
     devise_parameter_sanitizer.permit(:otp, keys: [:login, :login_otp, :password, :password_confirmation, :manager_id])
     devise_parameter_sanitizer.permit(:account_update, keys: [:phone, :email, :password, :password_confirmation, :current_password, :manager_id])
+  end
+
+  def token_authentication_valid_params?
+    params[:user_email].present? && params[:user_token].present?
   end
 end

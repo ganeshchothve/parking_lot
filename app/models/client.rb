@@ -13,6 +13,7 @@ class Client
   field :helpdesk_number, type: String
   field :helpdesk_email, type: String
   field :notification_email, type: String
+  field :allowed_bookings_per_user, type: Integer, default: 3
   field :sender_email, type: String
   field :email_domains, type: Array, default: []
   field :booking_portal_domains, type: Array, default: []
@@ -41,9 +42,16 @@ class Client
   field :holding_minutes, type: Integer, default: 15
   field :payment_gateway, type: String, default: 'Razorpay'
   field :enable_company_users, type: Boolean
+  field :terms_and_conditions, type: String
+  field :faqs, type: String
+  field :rera, type: String
+  field :tds_process, type: String
+  field :ga_code, type: String
+  field :gtm_tag, type: String
 
   mount_uploader :logo, DocUploader
   mount_uploader :mobile_logo, DocUploader
+  mount_uploader :background_image, DocUploader
 
   enable_audit track: ["update"]
 
@@ -55,10 +63,14 @@ class Client
   has_many :sms_templates, class_name: 'SmsTemplate'
   has_many :smses, class_name: 'Sms'
   has_many :assets, as: :assetable
+  has_one :gallery
 
-  validate :name, :selldo_client_id, :selldo_form_id, :selldo_channel_partner_form_id, :selldo_gre_form_id, :helpdesk_email, :helpdesk_number, :notification_email, :sender_email, :email_domains, :booking_portal_domains, :registration_name, :cin_number, :website_link, :support_email, :support_number, :payment_gateway
+  validate :name, :allowed_bookings_per_user, :selldo_client_id, :selldo_form_id, :selldo_channel_partner_form_id, :selldo_gre_form_id, :helpdesk_email, :helpdesk_number, :notification_email, :sender_email, :email_domains, :booking_portal_domains, :registration_name, :website_link, :support_email, :support_number, :payment_gateway
   validates :preferred_login, inclusion: {in: Proc.new{ Client.available_preferred_logins.collect{|x| x[:id]} } }
   validates :payment_gateway, inclusion: {in: Proc.new{ Client.available_payment_gateways.collect{|x| x[:id]} } }, allow_blank: true
+  validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
+
+  accepts_nested_attributes_for :address
 
   def self.available_preferred_logins
     [
@@ -86,6 +98,8 @@ c.selldo_default_srd = "5a72c7a67c0dac7e854aca9e"
 c.selldo_cp_srd = "5a72c7a67c0dac7e854aca9e"
 c.helpdesk_number = "9922410908"
 c.helpdesk_email = "supriya@amuratech.com"
+c.ga_code = ""
+c.gtm_tag = ""
 c.notification_email = "supriya@amuratech.com"
 c.email_domains = ["amuratech.com"]
 c.booking_portal_domains = ["bookingportal.withamura.com"]
@@ -100,7 +114,6 @@ c.channel_partner_support_number = "9922410908"
 c.channel_partner_support_email = "supriya@amuratech.com"
 c.cancellation_amount = 5000
 c.area_unit = "psqft."
-c.cin_number = "TMP CIN Number"
 c.preferred_login = "phone"
 c.sms_provider_username = "amuramarketing"
 c.sms_provider_password = "aJ_Z-1j4"
@@ -108,6 +121,7 @@ c.enable_actual_inventory = false
 c.enable_channel_partners = false
 c.enable_company_users = true
 c.remote_logo_url = "https://image4.owler.com/logo/amura_owler_20160227_194208_large.png"
+c.allowed_bookings_per_user = 5
 c.save
 
 p = Project.new

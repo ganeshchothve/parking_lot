@@ -51,7 +51,9 @@ FormInitializer = (function(){
     $(selector).find('.datetimepicker').datetimepicker(Utils.datetimepickerOptions);
     FileIcon.init($(".asset-delete"), $(".asset-icon"));
     _.each($(selector).find(".fileupload"), function(){
-      $(this).fileUploader();
+      $(this).fileUploader({
+        download_all: false
+      });
     })
 
     _.each($(selector).find(".selectize-remote"), function(el){
@@ -59,6 +61,26 @@ FormInitializer = (function(){
       var ds = $(el).data("ds");
       if(!_.isEmpty(url)){
         remote_selectize($(el), {ds: ds}, {url: url} );
+      }
+    });
+
+    _.each($(selector).find(".summernote"), function(el){
+      if(!$(el).attr("disabled")){
+        $(selector).find(".summernote").summernote({
+          disableDragAndDrop: true,
+          toolbar: [
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['font', ['strikethrough', 'superscript', 'subscript']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['link', ['link']],
+            ['table', ['table']],
+            ['height', ['height']]
+          ],
+          tabsize: 2,
+          height: 200
+        });
       }
     });
   };

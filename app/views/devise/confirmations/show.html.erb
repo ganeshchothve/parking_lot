@@ -1,4 +1,5 @@
 <h2 class="font-weight-bold text-success">Create Password</h2>
+<p class="text-muted">Please choose a password of your choice and confirm your account</p>
 <%= form_for resource, :as => resource_name, :url => update_user_confirmation_path, :html => {:method => 'put', role: "form"}, :id => 'activation-form' do |f| %>
   <% if resource.errors.present? %>
   <div class="alert alert-danger">

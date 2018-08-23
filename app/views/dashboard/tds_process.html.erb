@@ -3,36 +3,8 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-body">
-          <div class="accordion" id="tds_process_accordion">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="mb-0">
-                  <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#tds_process_accordion_1" aria-expanded="true" aria-controls="tds_process_accordion_1">
-                    <strong class="black">01</strong>&nbsp;&nbsp;&nbsp;Placeholder title
-                  </button>
-                </h5>
-              </div>
-              <div id="tds_process_accordion_1" class="collapse show" aria-labelledby="headingOne" data-parent="#tds_process_accordion">
-                <div class="card-body">
-                  Placeholder content
-                </div>
-              </div>
-            </div>
-            <div class="card">
-              <div class="card-header">
-                <h5 class="mb-0">
-                  <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#tds_process_accordion_2" aria-expanded="true" aria-controls="tds_process_accordion_2">
-                    <strong class="black">02</strong>&nbsp;&nbsp;&nbsp;Placeholder title
-                  </button>
-                </h5>
-              </div>
-              <div id="tds_process_accordion_2" class="collapse" aria-labelledby="headingOne" data-parent="#tds_process_accordion">
-                <div class="card-body">
-                  Placeholder content
-                </div>
-              </div>
-            </div>
-          </div>
+          <h4 class="mb-3">TDS Process</h4>
+          <%= current_client.tds_process.html_safe %>
         </div>
       </div>
     </div>

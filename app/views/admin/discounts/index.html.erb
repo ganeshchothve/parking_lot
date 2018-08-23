@@ -11,7 +11,7 @@
               <% end %>
             </div>
             <div class="col-md-5 text-md-right">
-              <h6 class="mt-2">Total <%= global_labels[:discounts] %>: <%= @discounts.count %></h6>
+              <h6 class="mt-2">Total <%= global_labels[:discounts] %>: <%= @discounts.total_entries %></h6>
             </div>
           </div>
           <%= render 'index', {discounts: @discounts} %>

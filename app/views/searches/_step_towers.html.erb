@@ -50,7 +50,25 @@
                   end
                 end
               %>
-              <span data-jquery-selector="<%= data_selector %>" data-unit-id="<%= unit.present? ? unit.id : '' %>" class="apartment <%= klass %>" style="width: <%= width %>%;height: <%= height %>px;"></span>
+              <% if unit.present? %>
+                <% html_content = "<div class='row mb-3' style='width:350px;'>
+                  <div class='col-md-3'><label>Beds</label><div>#{unit.bedrooms}</div></div>
+                  <div class='col-md-4'><label>Carpet</label><div>#{unit.carpet} #{current_client.area_unit}</div></div>
+                  <div class='col-md-5'><label>Saleable</label><div>#{unit.saleable} #{current_client.area_unit}</div></div>
+                </div>
+                <div class='row mb-3'>
+                  <div class='col-md-3'><label>Facing</label><div>#{unit.unit_facing_direction}</div></div>
+                  <div class='col-md-4'><label>Effective Rate</label><div>#{number_to_indian_currency(unit.effective_rate)} #{current_client.area_unit}</div></div>
+                  <div class='col-md-5'><label>Agreement Value</label><div>#{number_to_indian_currency(unit.agreement_price)}</div></div>
+                </div>
+                <div class='row mb-3'>
+                  <div class='col-md-5'><label>All Inclusive Price</label><div>#{number_to_indian_currency(unit.all_inclusive_price)}</div></div>
+                </div>"
+                %>
+                <span data-jquery-selector="<%= data_selector %>" data-toggle="popover" data-content="<%= html_content %>" data-title="Details for <%= unit.name %>" data-unit-id="<%= unit.present? ? unit.id : '' %>" class="apartment <%= klass %>" style="width: <%= width %>%;height: <%= height %>px;"></span>
+              <% else %>
+                <span data-jquery-selector="<%= data_selector %>" class="apartment <%= klass %>" style="width: <%= width %>%;height: <%= height %>px;"></span>
+              <% end %>
             <% end %>
           </div>
         <% end %>
@@ -130,14 +148,16 @@
         </div>
       </div>
       <div class="p-3">
-        <a data-toggle="modal" data-target="#floorPlanImage" href="javascript:;">
+        <a data-toggle="modal" data-target="#floorPlanImage" href="javascript:;" class="unit_image_container" style="display:none;">
           <img class="img-fluid" style="width: 100%; display: block;" data-placeholder="unit_image" />
+          <br/>
+          Click to view details
         </a>
       </div>
     </div>
   </div>
 </div>
-<div class="modal fade right fixed-header-footer" role="dialog" id="floorPlanImage">
+<div class="modal fade" role="dialog" id="floorPlanImage">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -145,14 +165,18 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <img data-placeholder="unit_image" style="width: 100%" />
+      <div class="modal-body" data-placeholder="gallery_unit_images">
       </div>
     </div>
   </div>
 </div>
 <%= javascript_tag do %>
   var units = <%= raw @units.to_json(include: [:assets], methods: [:all_inclusive_price, :effective_rate]) %>;
+  $('[data-toggle="popover"]').popover({
+    html: true,
+    trigger: 'hover',
+    placement: 'top'
+  });
   $(document).on('click', '[data-jquery-selector="unit-card"]', function(){
     var unit_id = $(this).data("unit-id");
     $('[data-jquery-selector="unit-card"]').removeClass("active");
@@ -165,7 +189,7 @@
 
   var showUnitData = function(unit_id){
     var unit = _.find(units, function(u){ return u._id == unit_id });
-    $("#unit-description").find('[data-placeholder="name"]').html(unit.name);
+    $("#unit-description").find('[data-placeholder="name"]').html('Unit No.: ' + unit.name);
     $("#unit-description").find('[data-placeholder="floor"]').html(unit.floor);
     $("#unit-description").find('[data-placeholder="bedrooms"]').html(unit.bedrooms);
     $("#unit-description").find('[data-placeholder="bathrooms"]').html(unit.bathrooms);
@@ -175,10 +199,41 @@
     $("#unit-description").find('[data-placeholder="agreement_price"]').html(Amura.formatMoney(unit.agreement_price));
     $("#unit-description").find('[data-placeholder="all_inclusive_price"]').html(Amura.formatMoney(unit.all_inclusive_price));
     if(unit.assets.length > 0){
+      $(".unit_image_container").show();
       $('[data-placeholder="unit_image"]').attr("src", _.first(unit.assets).file.url);
       $('[data-placeholder="unit_image"]').show();
+      var gallery_html = '<div id="unit_gallery" class="carousel slide" data-ride="carousel">'
+      gallery_html += '<ol class="carousel-indicators">'
+      var count = 0;
+      _.each(unit.assets, function(asset){
+        gallery_html += '<li data-target="#unit_gallery" data-slide-to="' + count + '" class="' + (count == 0 ? "active" : "") + '"></li>';
+        count += 1;
+      });
+      gallery_html += '</ol>'
+      gallery_html += '<div class="carousel-inner">'
+      var count = 0;
+      _.each(unit.assets, function(asset){
+        gallery_html += '<div class="carousel-item ' + (count == 0 ? "active" : "") + '">\
+          <img class="d-block w-100" src="' + asset.file.url + '">\
+        </div>'
+        count += 1;
+      });
+      gallery_html += '</div>';
+      gallery_html += '<a class="carousel-control-prev" href="#unit_gallery" role="button" data-slide="prev">\
+          <span class="fas fa-chevron-left text-dark" aria-hidden="true"></span>\
+          <span class="sr-only">Previous</span>\
+        </a>\
+        <a class="carousel-control-next" href="#unit_gallery" role="button" data-slide="next">\
+          <span class="fas fa-chevron-right text-dark" aria-hidden="true"></span>\
+          <span class="sr-only">Next</span>\
+        </a>\
+      </div>';
+      $('[data-placeholder="gallery_unit_images"]').html(gallery_html);
+      $('#unit_gallery').carousel();
     }else{
+      $(".unit_image_container").hide();
       $('[data-placeholder="unit_image"]').hide();
+      $('[data-placeholder="gallery_unit_images"]').html("");
     }
     $("#unit-description").find('[data-placeholder="unit_facing_direction"]').html(unit.unit_facing_direction);
     if($("#unit-description").hasClass('d-none')){

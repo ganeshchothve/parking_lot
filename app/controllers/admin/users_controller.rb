@@ -48,9 +48,9 @@ class Admin::UsersController < AdminController
 
   def export
     if Rails.env.development?
-      UserExportWorker.new.perform(current_user.email)
+      UserExportWorker.new.perform(current_user.id.to_s)
     else
-      UserExportWorker.perform_async(current_user.email)
+      UserExportWorker.perform_async(current_user.id.to_s)
     end
     flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
     redirect_to admin_users_path
@@ -72,6 +72,31 @@ class Admin::UsersController < AdminController
 
   def edit
     render layout: false
+  end
+
+  def confirm_via_otp
+    @otp_sent_status = {}
+    unless request.patch?
+      @otp_sent_status = @user.send_otp
+      if Rails.env.development?
+        Rails.logger.info "---------------- #{@user.otp_code} ----------------"
+      end
+    else
+      if @user.authenticate_otp(params[:user][:login_otp], drift: 60)
+        unless @user.confirmed?
+          @user.confirm
+        end
+      end
+    end
+    respond_to do |format|
+      if @otp_sent_status[:status] || @user.save
+        format.html { render layout: false }
+        format.json { render json: @user }
+      else
+        format.html { render layout: false }
+        format.json { render json: {errors: @user.errors.full_messages}, status: 422 }
+      end
+    end
   end
 
   def create

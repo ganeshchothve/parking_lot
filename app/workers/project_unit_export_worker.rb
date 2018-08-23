@@ -2,7 +2,8 @@ require 'spreadsheet'
 class ProjectUnitExportWorker
   include Sidekiq::Worker
 
-  def perform emails
+  def perform user_id
+    user = User.find(user_id)
     file = Spreadsheet::Workbook.new
     sheet = file.create_worksheet(name: "Receipts")
     sheet.insert_row(0, ProjectUnitExportWorker.get_column_names)
@@ -11,7 +12,7 @@ class ProjectUnitExportWorker
     end
     file_name = "project_unit-#{SecureRandom.hex}.xls"
     file.write("#{Rails.root}/#{file_name}")
-    ExportMailer.notify(file_name, emails, "Units").deliver
+    ExportMailer.notify(file_name, user.email, "Units").deliver
   end
 
   def self.get_column_names

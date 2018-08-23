@@ -19,6 +19,10 @@ class UserPolicy < ApplicationPolicy
     record.id == user.id || new?
   end
 
+  def confirm_via_otp?
+    !record.confirmed? && record.phone.present? && new? && !user.buyer?
+  end
+
   def print?
     record.buyer?
   end
@@ -34,6 +38,8 @@ class UserPolicy < ApplicationPolicy
       !record.role?("superadmin")
     elsif user.role?('channel_partner')
       record.role?("user")
+    elsif user.role?('sales_admin')
+      record.buyer? || record.role?('sales')
     elsif user.role?('cp_admin')
       record.buyer? || record.role?('channel_partner') || record.role?('cp')
     elsif user.role?('cp')
@@ -62,6 +68,7 @@ class UserPolicy < ApplicationPolicy
       attributes += [:manager_id, :allowed_bookings]
       attributes += [:manager_change_reason] if record.persisted?
     end
+    attributes += [:login_otp] if confirm_via_otp?
     attributes += [:rera_id] if record.role?("channel_partner")
     attributes += [:role] if user.role?('superadmin') || user.role?("admin")
     attributes

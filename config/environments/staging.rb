@@ -78,9 +78,9 @@ Rails.application.configure do
   config.log_formatter = ::Logger::Formatter.new
 
   # Use default mailer asset host
-  config.action_mailer.asset_host = "http://amanora.bookingportal.withamura.com"
+  config.action_mailer.asset_host = "http://bookingportal.withamura.com"
 
-  config.action_mailer.default_url_options = {host: 'amanora.bookingportal.withamura.com'}
+  config.action_mailer.default_url_options = {host: 'bookingportal.withamura.com'}
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true

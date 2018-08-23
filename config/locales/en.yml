@@ -8,10 +8,17 @@ en:
     formats:
       default: "%d/%m/%Y %I:%M %p"
   global:
+    sign_in_h1: "Welcome back"
+    sign_in_h2: "Login to Book an Apartment online"
+    register_h1: "Sign Up"
+    register_h2: "Register Now and book an apartment by paying just Rs. Blocking Amount (just takes 3 minutes)"
+    note: "Note"
+    notes: "Notes"
     sms_template: 'SMS Template'
     sms_templates: 'SMS Templates'
     assets: 'Documents'
     asset: 'Documents'
+    gallery: "Gallery"
     client: 'Client'
     clients: 'Clients'
     receipt: 'Payment'
@@ -48,6 +55,7 @@ en:
         content: 'Content'
       client:
         name: 'Client Name (Used across the app)'
+        allowed_bookings_per_user: 'Bookings allowed per user'
         selldo_client_id: 'SellDo Client ID'
         selldo_form_id: 'SellDo Form ID'
         selldo_channel_partner_form_id: 'SellDo Form ID - For Channel Partners'
@@ -68,6 +76,8 @@ en:
         support_email: 'Support Email'
         helpdesk_number: 'Helpdesk Phone (For after booking CRM Help)'
         helpdesk_email: 'Helpdesk Email (For after booking CRM Help)'
+        ga_code: "Google Analytics Code (UA-XXXXXXXXX-Y)"
+        gtm_tag: "GTM Tag (Please add a the entire JS code)"
         channel_partner_support_number: 'Support Number (For Channel Partners)'
         channel_partner_support_email: 'Support Email (For Channel Partner)'
         erp: 'ERP'
@@ -87,6 +97,7 @@ en:
       search:
         bedrooms: "Beds"
         agreement_price: "Agreement Value"
+        all_inclusive_price: 'All Inclusive Price'
         carpet: "Carpet Area"
         project_tower_id: "Tower"
         project_unit_id: "Apartment"
@@ -96,6 +107,8 @@ en:
         status: 'Status'
         project_unit_id: 'Related Apartment'
         receipt_id: 'Related Payment'
+      note:
+        note: 'Note'
       receipt:
         tracking_id: 'Transaction ID (Processed Payment)'
         comments: 'Comments'
@@ -170,6 +183,7 @@ en:
         blocked_on: 'Blocked On'
         unit_facing_direction: 'Facing'
         agreement_price: 'Agreement Value'
+        all_inclusive_price: 'All Inclusive Price'
       cost:
         name: "Name"
         formula: "Formula"
@@ -204,11 +218,11 @@ en:
         lead_id: 'Sell.Do Lead ID'
         time_zone: "User's Time Zone"
         role: 'Role'
-        manager_id: "Partner / Manager"
+        manager_id: "Partner / Manager / Added by"
         manager_change_reason: "Reason for changing Partner"
         kyc_ready: 'Is the Customer KYC Ready?'
-        total_amount_paid: "Total Paid (you might some payments pending clearance)"
-        total_balance_pending: "Total Balance Pending (you might some payments pending clearance)"
+        total_amount_paid: "Total Paid (you might have some payments pending clearance)"
+        total_balance_pending: "Total Balance Pending (you might have some payments pending clearance)"
         total_unattached_balance: "Total Un-attached Balance (subject to clearance)"
         is_active: 'Allow the user to login?'
       channel_partner:

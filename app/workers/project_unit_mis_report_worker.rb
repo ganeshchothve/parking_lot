@@ -2,7 +2,8 @@ require 'spreadsheet'
 class ProjectUnitMisReportWorker
   include Sidekiq::Worker
 
-  def perform emails
+  def perform user_id
+    user = User.find(user_id)
     file = Spreadsheet::Workbook.new
     sheet = file.create_worksheet(name: "Receipts")
     sheet.insert_row(0, ProjectUnitMisReportWorker.get_column_names)
@@ -11,7 +12,7 @@ class ProjectUnitMisReportWorker
     end
     file_name = "project_unit_mis-#{SecureRandom.hex}.xls"
     file.write("#{Rails.root}/#{file_name}")
-    ExportMailer.notify(file_name, emails, "Units").deliver
+    ExportMailer.notify(file_name, user.email, "Units").deliver
   end
 
   def self.get_column_names
@@ -27,6 +28,7 @@ class ProjectUnitMisReportWorker
       "Base Rate",
       "Floor Rise",
       "Agreement price",
+      "All Inclusive Price",
       "Current Due",
       "Total amount paid",
       "Pending balance",
@@ -50,6 +52,7 @@ class ProjectUnitMisReportWorker
       project_unit.base_rate,
       project_unit.floor_rise,
       project_unit.agreement_price,
+      project_unit.all_inclusive_price,
       project_unit.pending_balance({strict: true}),
       project_unit.total_amount_paid,
       project_unit.pending_balance,

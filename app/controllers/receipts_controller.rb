@@ -15,12 +15,12 @@ class ReceiptsController < ApplicationController
 
   def export
     if Rails.env.development?
-      ReceiptExportWorker.new.perform(current_user.email)
+      ReceiptExportWorker.new.perform(current_user.id.to_s)
     else
-      ReceiptExportWorker.perform_async(current_user.email)
+      ReceiptExportWorker.perform_async(current_user.id.to_s)
     end
     flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
-    redirect_to admin_users_path
+    redirect_to admin_receipts_path
   end
 
   def resend_success
@@ -46,7 +46,7 @@ class ReceiptsController < ApplicationController
     end
     if params[:project_unit_id].present?
       project_unit = ProjectUnit.find(params[:project_unit_id])
-      @receipt = Receipt.new(creator: current_user, project_unit_id: project_unit.id, user_id: @user, total_amount: project_unit.pending_balance)
+      @receipt = Receipt.new(creator: current_user, project_unit_id: project_unit.id, user_id: @user, total_amount: (project_unit.status == "hold" ? current_client.blocking_amount : project_unit.pending_balance))
     else
       @receipt = Receipt.new(creator: current_user, user_id: @user, payment_mode: 'cheque', total_amount: current_client.blocking_amount)
     end
