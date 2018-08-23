@@ -135,11 +135,7 @@ class Receipt
         "#{self.user.booking_portal_client.name[0..1].upcase}-#{self.order_id}"
       end
     elsif self.receipt_id.blank?
-      if self.project_unit_id.present?
-        "#{self.user.booking_portal_client.name[0..1].upcase}-TMP-#{SecureRandom.hex(4)}"
-      else
-        "#{self.user.booking_portal_client.name[0..1].upcase}-TMP-#{SecureRandom.hex(4)}"
-      end
+      "#{self.user.booking_portal_client.name[0..1].upcase}-TMP-#{SecureRandom.hex(4)}"
     else
       self.receipt_id
     end
@@ -171,8 +167,8 @@ class Receipt
       self.errors.add :total_amount, "cannot be less than or equal to 0"
     end
 
-    if self.project_unit_id.blank? || self.blocking_payment?
-      self.errors.add :total_amount, "cannot be less than blocking amount #{self.booking_portal_client.blocking_amount}"
+    if (self.project_unit_id.blank? || self.blocking_payment?) && self.total_amount < self.user.booking_portal_client.blocking_amount
+      self.errors.add :total_amount, "cannot be less than blocking amount #{self.user.booking_portal_client.blocking_amount}"
     end
   end
 

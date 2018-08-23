@@ -1,8 +1,8 @@
 class ReceiptsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user
-  before_action :set_project_unit
   before_action :set_receipt, except: [:index, :export, :new, :create, :direct]
+  before_action :set_project_unit
   before_action :authorize_resource
   around_action :apply_policy_scope, only: [:index, :export]
 
@@ -50,7 +50,6 @@ class ReceiptsController < ApplicationController
     else
       @receipt = Receipt.new(creator: current_user, user_id: @user, payment_mode: 'cheque', total_amount: current_client.blocking_amount)
     end
-    @receipt.status = "clearance_pending"
     authorize @receipt
     render layout: false
   end
@@ -134,7 +133,11 @@ class ReceiptsController < ApplicationController
   end
 
   def set_project_unit
-    @project_unit = (params[:project_unit_id].present? ? ProjectUnit.find(params[:project_unit_id]) : nil)
+    @project_unit = if params[:project_unit_id].present?
+      ProjectUnit.find(params[:project_unit_id])
+    elsif @receipt.present?
+      @receipt.project_unit
+    end
   end
 
   def authorize_resource

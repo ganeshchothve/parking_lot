@@ -16,7 +16,7 @@ class ReceiptPolicy < ApplicationPolicy
       valid = user.kyc_ready? && (record.project_unit_id.blank? || after_hold_payment?) && user.confirmed?
     else
       valid = record.user_id.present? && record.user.kyc_ready? && record.user.confirmed?
-      valid = valid && (record.project_unit_id.blank? || after_blocked_payment? || (after_hold_payment? && editable_field?('status')))
+      valid = valid && (record.project_unit_id.blank? || after_blocked_payment? || (after_hold_payment? && editable_field?('event')))
     end
     valid = valid && current_client.payment_gateway.present? if record.payment_mode == "online"
     valid
@@ -60,14 +60,14 @@ class ReceiptPolicy < ApplicationPolicy
     if user.buyer? || user.role?('channel_partner') || (record.user_id.present? && record.user.project_unit_ids.present?) && (record.status == 'pending' || record.status == 'available_for_refund')
       attributes += [:project_unit_id]
     end
-    if record.new_record? || record.status == 'pending'
+    if !record.blocking_payment? && record.project_unit_id.present?
       attributes += [:total_amount]
     end
     if !user.buyer? && (record.new_record? || record.status == 'pending')
       attributes += [:issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier]
     end
     if ['sales', 'sales_admin'].include?(user.role) && (record.status == "pending" || record.status == "clearance_pending")
-      attributes += [:status]
+      attributes += [:event]
     end
     if ['admin', 'crm', 'superadmin'].include?(user.role)
       attributes += [:event]

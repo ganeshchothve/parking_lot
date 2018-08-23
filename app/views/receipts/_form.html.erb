@@ -61,7 +61,7 @@
           <%= form_for [:user, @receipt], local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['receipt'], "data-type": "json", id: "receipt_form"} do |f| %>
           <div class="form-group">
             <%= f.label :total_amount, class: 'label-required' %>
-            <% if @receipt.blocking_payment? || @receipt.project_unit_id.blank? %>
+            <% if !policy(@receipt).editable_field?("total_amount") %>
               <h5><%= number_to_indian_currency(current_client.blocking_amount) %></h5>
               <%= f.hidden_field :total_amount, value: current_client.blocking_amount %>
             <% else %>
@@ -174,8 +174,12 @@
             <% end %>
             <div class="form-group">
               <%= f.label :total_amount, class: 'label-required' %>
-              <h5><%= number_to_indian_currency(current_client.blocking_amount) %></h5>
-              <%= f.hidden_field :total_amount, value: current_client.blocking_amount %>
+              <% if !policy(@receipt).editable_field?("total_amount") %>
+                <h5><%= number_to_indian_currency(current_client.blocking_amount) %></h5>
+                <%= f.hidden_field :total_amount, value: current_client.blocking_amount %>
+              <% else %>
+                <%= f.number_field :total_amount, min: 0, max: (@project_unit.present? ? @project_unit.agreement_price : current_client.blocking_amount), class: "form-field form-control green", required: 'required' %>
+              <% end %>
             </div>
             <% if i_agree_required %>
               <div class="form-group">

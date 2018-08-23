@@ -13,7 +13,7 @@ module ReceiptStateMachine
       end
 
       event :pending_clearance do
-        transitions from: :pending, to: :clearance_pending, if: :can_move_tp_clearance?, after: :send_sms_notification
+        transitions from: :pending, to: :clearance_pending, if: :can_move_to_clearance?, after: :send_sms_notification
       end
 
       event :clearance_pending do
@@ -22,7 +22,7 @@ module ReceiptStateMachine
 
       event :success do
         transitions from: :success, to: :success
-        transitions from: :clearance_pending, to: :success, after: [:send_sms_notification, :send_success_notification]
+        transitions from: :clearance_pending, to: :success, after: [:send_sms_notification, :send_success_notification], unless: :new_record?
       end
 
       event :available_for_refund do
@@ -49,7 +49,7 @@ module ReceiptStateMachine
       self.booking_detail.blank? || self.booking_detail.status == "cancelled"
     end
 
-    def can_move_tp_clearance
+    def can_move_to_clearance?
       self.persisted? || (self.project_unit_id.present? && self.project_unit.status == "hold")
     end
 
