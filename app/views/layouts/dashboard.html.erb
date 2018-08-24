@@ -27,6 +27,11 @@
   <body>
     <%= render "layouts/navbar" %>
     <%= yield %>
+    <div class="container">
+      <div class="card card-body d-block d-md-none mt-3">
+        <%= current_project.name %> is registered via MahaRERA No.: <%= current_project.rera_registration_no %> & is available on <a href="https://maharera.mahaonline.gov.in" target="_blank">https://maharera.mahaonline.gov.in</a>.
+      </div>
+    </div>
     <div class="pt-5 mt-4"></div>
     <% if current_client.ga_code.present? %>
     <script>

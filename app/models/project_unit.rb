@@ -3,6 +3,7 @@ class ProjectUnit
   include Mongoid::Timestamps
   include ArrayBlankRejectable
   include ApplicationHelper
+  extend ApplicationHelper
   include InsertionStringMethods
   include CostCalculator
 
@@ -153,17 +154,22 @@ class ProjectUnit
   end
 
   def self.available_statuses
-    [
+    out = [
       {id: 'available', text: 'Available'},
       {id: 'not_available', text: 'Not Available'},
-      {id: 'management', text: 'Management Blocking'},
-      {id: 'employee', text: 'Employee Blocking'},
       {id: 'error', text: 'Error'},
       {id: 'hold', text: 'Hold'},
       {id: 'blocked', text: 'Blocked'},
       {id: 'booked_tentative', text: 'Tentative Booked'},
       {id: 'booked_confirmed', text: 'Confirmed Booked'}
     ]
+    if current_client.enable_company_users?
+      out += [
+        {id: 'management', text: 'Management Blocking'},
+        {id: 'employee', text: 'Employee Blocking'}
+      ]
+    end
+    out
   end
 
   def self.available_available_fors
@@ -291,7 +297,7 @@ class ProjectUnit
 
   private
   def pan_uniqueness
-    if self.user.unused_user_kyc_ids.blank?
+    if self.user_id.present? && self.user.unused_user_kyc_ids.blank?
       self.errors.add :primary_user_kyc_id, "already has a booking"
     end
   end

@@ -2,7 +2,14 @@
   hash = {"data-resource-type": global_labels['user_request'], "data-type": "json"}
   hash = {confirm: 'Are you sure you want to proceed?'} if @user_request.new_record?
 %>
-<%= form_for [:user, @user_request], remote: true, html: {class: 'modal-remote-form validate-form'}, data: hash do |f| %>
+<%
+  if current_user.buyer?
+    url = user_user_requests_path
+  else
+    url = admin_user_user_requests_path(user_id: @user_request.user_id)
+  end
+%>
+<%= form_for @user_request, url: url, remote: true, html: {class: 'modal-remote-form validate-form'}, data: hash do |f| %>
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -24,14 +31,22 @@
           <div><%= @user_request.project_unit.name %></div>
         </div>
         <% end %>
+        <% if policy(@user_request).editable_field?("comments") %>
         <div class="form-group">
           <%= f.label :comments, class: 'label-required' %>
           <%= f.text_area :comments, autofocus: true, class: "form-control", required: 'required', disabled: (policy(@user_request).editable_field?("comments") ? false : true) %>
         </div>
+        <% end %>
+        <% if policy(@user_request).editable_field?("crm_comments") %>
+        <div class="form-group">
+          <%= f.label :crm_comments, class: 'label-required' %>
+          <%= f.text_area :crm_comments, autofocus: true, class: "form-control", required: 'required' %>
+        </div>
+        <% end %>
         <% if policy(@user_request).editable_field?("status") %>
           <div class="form-group">
             <%= f.label :status, class: 'label-required' %>
-            <%= f.select :status, UserRequest.available_statuses.collect{|x| [x[:text], x[:id]] }, {prompt: true}, class: 'selectize', required: "required" %>
+            <%= f.select :status, UserRequest.available_statuses.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', required: "required" %>
           </div>
         <% elsif @user_request.persisted? %>
           <div>
@@ -43,7 +58,7 @@
             Your unit will be released once the cancellation request is processed. For booking the same unit again, you will have to go through the selection process again which will also be subject to availability.<br/>
             <div class="form-check mt-3">
               <input type="checkbox" id="accepted" class="form-check-input" />
-              <label class="form-check-label">I Agree</label>
+              <label class="form-check-label">I Agree <%= @user_request.user_id == current_user.id ? "" : " on behalf of #{@user_request.user.name}" %></label>
             </div>
           </div>
         </div>

@@ -1,6 +1,7 @@
 en:
   date:
-    default: "%d/%m/%Y"
+    formats:
+      default: "%d/%m/%Y"
   time:
     formats:
       default: "%d/%m/%Y %I:%M %p"
@@ -90,6 +91,7 @@ en:
         sms_mask: 'SMS Mask'
         enable_actual_inventory: 'Enable Inventory'
         enable_channel_partners: 'Enable Channel Partners'
+        enable_discounts: 'Enable Discounts'
         blocking_amount: 'Min. Amount for Blocking an Unit'
         blocking_days: 'Unit to be blocked for (Days)'
         holding_minutes: 'Unit to be held for (Minutes)'

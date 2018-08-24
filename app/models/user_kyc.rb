@@ -2,6 +2,8 @@ class UserKyc
   include Mongoid::Document
   include Mongoid::Timestamps
   include ArrayBlankRejectable
+  include InsertionStringMethods
+  include ApplicationHelper
 
   field :salutation, type: String, default: "Mr."
   field :first_name, type: String

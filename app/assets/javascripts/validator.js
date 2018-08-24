@@ -26,7 +26,7 @@ $.validator.setDefaults({
 $(document).ready(function(){
   // to ensure that this is only called after all other default trigger change events are fired in our Javascripts
   setTimeout(function(){
-    $('.validate-form').find('input[type="text"], input[type="radio"], input[type="checkbox"], input[type="number"], textarea, select, input[type="email"], input[type="password"]').change(function(){
+    $('.validate-form').find('input[type="text"], input[type="radio"], input[type="checkbox"], input[type="number"], textarea, select, input[type="email"]').change(function(){
       if(typeof window.onbeforeunload !== "function"){
         window.onbeforeunload = function(){
           return 'You have made changes to the form which will be lost if you refresh the page. Are you sure?'

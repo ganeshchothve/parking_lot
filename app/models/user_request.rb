@@ -10,6 +10,7 @@ class UserRequest
   field :crm_comments, type: String # Comments from crm team
   field :reply_for_customer, type: String #reply from crm team to customer
   field :alternate_project_unit_id, type: BSON::ObjectId # in case of swap resolve
+  field :resolved_at, type: DateTime
 
   enable_audit({
     associated_with: ["user"],
@@ -23,9 +24,13 @@ class UserRequest
   belongs_to :project_unit, optional: true
   belongs_to :receipt, optional: true
   belongs_to :user
+  belongs_to :resolved_by, class_name: "User", optional: true
+  belongs_to :created_by, class_name: "User"
   has_many :assets, as: :assetable
 
-  validates :user_id, :project_unit_id, :comments, presence: true
+  validates :user_id, :project_unit_id, presence: true
+  validates :comments, presence: true, if: Proc.new{|user_request| user_request.created_by.buyer? }
+  validates :resolved_by, presence: true, if: Proc.new{|user_request| user_request.status == 'resolved' }
   validates :status, inclusion: {in: Proc.new{ UserRequest.available_statuses.collect{|x| x[:id]} } }
   validates :project_unit_id, uniqueness: {scope: :user_id, message: 'already has a cancellation request.'}
 
@@ -58,17 +63,24 @@ class UserRequest
     ProjectUnit.where(id: self.alternate_project_unit_id).first
   end
 
-  def self.user_based_scope user, params={}
+
+  def self.user_based_scope(user, params={})
     custom_scope = {}
-    if user.role?('channel_partner')
-      user_ids = User.in(referenced_manager_ids: user.id).in(role: User.buyer_roles(current_client)).distinct(:id)
-      custom_scope = {user_id: {"$in": user_ids}}
-    else
-      custom_scope = {user_id: user.id}
+    if params[:user_id].blank? && !user.buyer?
+      if user.role?('channel_partner')
+        custom_scope = {user_id: {"$in": User.where(referenced_manager_ids: user.id).distinct(:id)}}
+      elsif user.role?('cp_admin')
+        custom_scope = {user_id: {"$in": User.where(role: "user").nin(manager_id: [nil, ""]).distinct(:id)}}
+      elsif user.role?('cp')
+        channel_partner_ids = User.where(role: "channel_partner").where(manager_id: user.id).distinct(:id)
+        custom_scope = {user_id: {"$in": User.in(referenced_manager_ids: channel_partner_ids).distinct(:id)}}
+      end
     end
-    if params[:user_id].present?
-      custom_scope = {user_id: params[:user_id]}
-    end
+
+    custom_scope = {user_id: params[:user_id]} if params[:user_id].present?
+    custom_scope = {user_id: user.id} if user.buyer?
+
+    custom_scope[:project_unit_id] = params[:project_unit_id] if params[:project_unit_id].present?
     custom_scope
   end
 end

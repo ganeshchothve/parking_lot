@@ -95,38 +95,6 @@
               </div>
               <div class="row">
                 <div class="col-md-6">
-                  <% if policy(@client).editable_field?("enable_actual_inventory") %>
-                  <div class="form-group">
-                    <%= f.label :enable_actual_inventory %><br/>
-                    <div class="form-check form-check-inline">
-                      <%= f.radio_button :enable_actual_inventory, true, class: "form-check-input" %>
-                      <%= f.label :enable_actual_inventory, "Yes", class: "form-check-label" %>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <%= f.radio_button :enable_actual_inventory, false, class: "form-check-input" %>
-                      <%= f.label :enable_actual_inventory, "No", class: "form-check-label" %>
-                    </div>
-                  </div>
-                  <% end %>
-                </div>
-                <div class="col-md-6">
-                  <% if policy(@client).editable_field?("enable_channel_partners") %>
-                  <div class="form-group">
-                    <%= f.label :enable_channel_partners %><br/>
-                    <div class="form-check form-check-inline">
-                      <%= f.radio_button :enable_channel_partners, true, class: "form-check-input" %>
-                      <%= f.label :enable_channel_partners, "Yes", class: "form-check-label" %>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <%= f.radio_button :enable_channel_partners, false, class: "form-check-input" %>
-                      <%= f.label :enable_channel_partners, "No", class: "form-check-label" %>
-                    </div>
-                  </div>
-                  <% end %>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
                   <% if policy(@client).editable_field?("enable_direct_payment") %>
                   <div class="form-group">
                     <%= f.label :enable_direct_payment %><br/>
@@ -204,6 +172,55 @@
                       <%= f.label :allow_multiple_bookings_per_user_kyc, "No", class: "form-check-label" %>
                     </div>
                   </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <% if policy(@client).editable_field?("enable_actual_inventory") %>
+                  <div class="form-group">
+                    <%= f.label :enable_actual_inventory %><br/>
+                    <div class="form-check form-check-inline">
+                      <%= f.radio_button :enable_actual_inventory, true, class: "form-check-input" %>
+                      <%= f.label :enable_actual_inventory, "Yes", class: "form-check-label" %>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <%= f.radio_button :enable_actual_inventory, false, class: "form-check-input" %>
+                      <%= f.label :enable_actual_inventory, "No", class: "form-check-label" %>
+                    </div>
+                  </div>
+                  <% end %>
+                </div>
+                <div class="col-md-6">
+                  <% if policy(@client).editable_field?("enable_channel_partners") %>
+                  <div class="form-group">
+                    <%= f.label :enable_channel_partners %><br/>
+                    <div class="form-check form-check-inline">
+                      <%= f.radio_button :enable_channel_partners, true, class: "form-check-input" %>
+                      <%= f.label :enable_channel_partners, "Yes", class: "form-check-label" %>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <%= f.radio_button :enable_channel_partners, false, class: "form-check-input" %>
+                      <%= f.label :enable_channel_partners, "No", class: "form-check-label" %>
+                    </div>
+                  </div>
+                  <% end %>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <% if policy(@client).editable_field?("enable_discounts") %>
+                  <div class="form-group">
+                    <%= f.label :enable_discounts %><br/>
+                    <div class="form-check form-check-inline">
+                      <%= f.radio_button :enable_discounts, true, class: "form-check-input" %>
+                      <%= f.label :enable_discounts, "Yes", class: "form-check-label" %>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <%= f.radio_button :enable_discounts, false, class: "form-check-input" %>
+                      <%= f.label :enable_discounts, "No", class: "form-check-label" %>
+                    </div>
+                  </div>
+                  <% end %>
                 </div>
               </div>
             </div>
@@ -358,6 +375,20 @@
                   <div class="form-group">
                     <%= f.label :sms_provider_password, class: 'label-required' %>
                     <%= f.text_field :sms_provider_password, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("sms_provider_password") ? false : true) %>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :mailgun_private_api_key, class: 'label-required' %>
+                    <%= f.text_field :mailgun_private_api_key, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("mailgun_private_api_key") ? false : true) %>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :mailgun_email_domain, class: 'label-required' %>
+                    <%= f.text_field :mailgun_email_domain, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("mailgun_email_domain") ? false : true) %>
                   </div>
                 </div>
               </div>

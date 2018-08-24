@@ -3,7 +3,7 @@ module ProjectUnitRemindersAndAutoRelease
     def self.daily_reminder_for_booking_payment
       ProjectUnit.in(status: ["blocked", 'booked_tentative']).where(auto_release_on: {"$gte" => Date.today}).each do |project_unit|
         days = (project_unit.auto_release_on - Date.today).to_i
-        if [9,7,5,3,2,1].include?(days)
+        if [9,7,5,3,2,1].include?(days) && project_unit.booking_portal_client.email_enabled?
           Email.create!({
             booking_portal_client_id: project_unit.booking_portal_client_id,
             email_template_id:Template::EmailTemplate.find_by(name: "daily_reminder_for_booking_payment").id,
@@ -18,7 +18,7 @@ module ProjectUnitRemindersAndAutoRelease
         else
           days = nil
         end
-        if days.present?
+        if days.present? && project_unit.booking_portal_client.sms_enabled?
           template = SmsTemplate.where(name: "promote_future_payment_#{days}").first
           Sms.create!(
             booking_portal_client_id: project_unit.booking_portal_client_id,

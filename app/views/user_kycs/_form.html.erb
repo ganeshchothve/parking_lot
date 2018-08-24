@@ -27,19 +27,19 @@ end
         <div class="row">
           <div class="col-md-2">
             <div class="form-group">
-              <%= f.label :salutation, class: 'required' %>
+              <%= f.label :salutation, class: 'label-required' %>
               <%= f.select :salutation, UserKyc.available_salutations.collect{|x| [x[:text], x[:id]]}, {prompt: "Select"}, class: 'selectize', required: 'required' %>
             </div>
           </div>
           <div class="col-md-5">
             <div class="form-group">
-              <%= f.label :first_name, class: 'required' %>
+              <%= f.label :first_name, class: 'label-required' %>
               <%= f.text_field :first_name, class: 'form-control', required: 'required' %>
             </div>
           </div>
           <div class="col-md-5">
             <div class="form-group">
-              <%= f.label :last_name, class: 'required' %>
+              <%= f.label :last_name, class: 'label-required' %>
               <%= f.text_field :last_name, class: 'form-control', required: 'required' %>
             </div>
           </div>
@@ -47,13 +47,13 @@ end
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              <%= f.label :phone, class: 'required' %>
+              <%= f.label :phone, class: 'label-required' %>
               <%= f.text_field :phone, class: 'form-control phone', required: 'required' %>
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              <%= f.label :email, class: 'required' %>
+              <%= f.label :email, class: 'label-required' %>
               <%= f.email_field :email, class: 'form-control', required: 'required' %>
             </div>
           </div>
@@ -61,7 +61,7 @@ end
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              <%= f.label :pan_number %>
+              <%= f.label :pan_number, class: 'label-required' %>
               <%= f.text_field :pan_number, class: 'form-control', required: 'required' %>
             </div>
           </div>
@@ -99,7 +99,7 @@ end
         <% end %>
         <% if @user.project_unit_ids.present? && (@user_kyc.persisted? || !current_user.buyer?) %>
         <div class="form-group position-relative">
-          <%= f.label :project_unit_ids, class: 'required' %>
+          <%= f.label :project_unit_ids %>
           <%= f.select :project_unit_ids, @user.project_units.collect{|x| [x.name, x.id]}, {prompt: "Select"}, class: 'selectize', multiple: true %>
         </div>
         <% end %>
@@ -113,7 +113,7 @@ end
               <div class="col-md-6">
                 <div class="form-group position-relative">
                   <!-- TODO: check if you want to restrict the dob to 18 years age -->
-                  <%= f.label :dob, class: 'required' %>
+                  <%= f.label :dob %>
                   <% date = (f.object.dob.present? ? f.object.dob.strftime("%d/%m/%Y") : "") %>
                   <%= f.text_field :dob, class: 'form-control datepicker', type:'text', data: {"default-date": date}, value: date %>
                 </div>
