@@ -344,12 +344,12 @@ class User
     custom_scope
   end
 
-  def unused_user_kyc_ids
+  def unused_user_kyc_ids project_unit_id
     if self.booking_portal_client.allow_multiple_bookings_per_user_kyc
       user_kyc_ids = self.user_kycs.collect{|x| x.id}
     else
       user_kyc_ids = self.user_kycs.collect{|x| x.id}
-      self.project_units.each do |x|
+      self.project_units.ne(id: project_unit_id).each do |x|
         user_kyc_ids = user_kyc_ids - [x.primary_user_kyc_id] - x.user_kyc_ids
       end
     end
