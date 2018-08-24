@@ -7,13 +7,13 @@
     if @user_request.new_record?
       url = user_user_requests_path
     else
-      url = user_user_requests_path(@user_request)
+      url = user_user_request_path(@user_request)
     end
   else
     if @user_request.new_record?
-      url = admin_user_user_requests_path(user_id: @user_request.user_id)
+      url = admin_user_user_requests_path(@user_request.user_id)
     else
-      url = admin_user_user_requests_path(user_id: @user_request.user_id, @user_request)
+      url = admin_user_user_request_path(@user_request.user_id, @user_request.id)
     end
   end
 %>
@@ -61,6 +61,7 @@
             Status: <%= f.object.status %>
           </div>
         <% end %>
+        <% if @user_request.new_record? %>
         <div class="form-group">
           <div class="alert alert-primary">
             Your unit will be released once the cancellation request is processed. For booking the same unit again, you will have to go through the selection process again which will also be subject to availability.<br/>
@@ -70,9 +71,10 @@
             </div>
           </div>
         </div>
+        <% end %>
       </div>
       <div class="modal-footer">
-        <%= f.submit "Submit", class: 'btn btn-primary', disabled: "disabled", id: "submit_request", data:{event_category: 'Section', event_action: 'Click', event_name: 'cancel booking - submit'}  %>
+        <%= f.submit "Submit", class: 'btn btn-primary', disabled: (@user_request.new_record? ? true : false), id: "submit_request", data:{event_category: 'Section', event_action: 'Click', event_name: 'cancel booking - submit'}  %>
       </div>
     </div>
   </div>
