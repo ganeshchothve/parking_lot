@@ -76,7 +76,7 @@
               <div class="form-group">
                 <label><%= labels[:total_amount_paid] %></label>
                 <div>
-                  <%= @user.total_amount_paid.present? ? number_to_indian_currency(@user.total_amount_paid.round(2)) : '-' %>
+                  <%= @user.total_amount_paid.present? ? number_to_indian_currency(@user.total_amount_paid.round) : '-' %>
                 </div>
               </div>
             </div>
@@ -84,7 +84,7 @@
               <div class="form-group">
                 <label><%= labels[:total_balance_pending] %></label>
                 <div>
-                  <%= @user.total_balance_pending.present? ? number_to_indian_currency(@user.total_balance_pending.round(2)) : '-' %>
+                  <%= @user.total_balance_pending.present? ? number_to_indian_currency(@user.total_balance_pending.round) : '-' %>
                 </div>
               </div>
             </div>
@@ -92,7 +92,7 @@
               <div class="form-group">
                 <label><%= labels[:total_unattached_balance] %></label>
                 <div>
-                  <%= @user.total_unattached_balance.present? ? number_to_indian_currency(@user.total_unattached_balance.round(2)) : '-' %>
+                  <%= @user.total_unattached_balance.present? ? number_to_indian_currency(@user.total_unattached_balance.round) : '-' %>
                 </div>
               </div>
             </div>

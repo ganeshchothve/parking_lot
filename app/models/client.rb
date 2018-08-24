@@ -38,6 +38,7 @@ class Client
   field :mailgun_email_domain, type: String
   field :enable_actual_inventory, type: Boolean, default: false
   field :enable_channel_partners, type: Boolean, default: false
+  field :enable_discounts, type: Boolean, default: false
   field :enable_direct_payment, type: Boolean, default: false
   field :blocking_amount, type: Integer, default: 30000
   field :blocking_days, type: Integer, default: 10
@@ -161,6 +162,7 @@ c.sms_provider_username = "amuramarketing"
 c.sms_provider_password = "aJ_Z-1j4"
 c.enable_actual_inventory = false
 c.enable_channel_partners = false
+c.enable_discounts = false
 c.enable_company_users = true
 c.remote_logo_url = "https://image4.owler.com/logo/amura_owler_20160227_194208_large.png"
 c.allowed_bookings_per_user = 5

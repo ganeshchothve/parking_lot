@@ -60,8 +60,8 @@ module ReceiptStateMachine
           email_template_id:Template::EmailTemplate.find_by(name: "receipt_success").id,
           recipients: [user],
           cc_recipients: (user.manager_id.present? ? [user.manager] : []),
-          triggered_by_id: receipt.id,
-          triggered_by_type: receipt.class.to_s
+          triggered_by_id: self.id,
+          triggered_by_type: self.class.to_s
         })
       end
     end
@@ -73,8 +73,8 @@ module ReceiptStateMachine
           email_template_id:Template::EmailTemplate.find_by(name: "receipt_failed").id,
           recipients: [user],
           cc_recipients: (user.manager_id.present? ? [user.manager] : []),
-          triggered_by_id: receipt.id,
-          triggered_by_type: receipt.class.to_s
+          triggered_by_id: self.id,
+          triggered_by_type: self.class.to_s
         })
       end
     end
@@ -86,8 +86,8 @@ module ReceiptStateMachine
           email_template_id:Template::EmailTemplate.find_by(name: "receipt_clearance_pending").id,
           recipients: [user],
           cc_recipients: (user.manager_id.present? ? [user.manager] : []),
-          triggered_by_id: receipt.id,
-          triggered_by_type: receipt.class.to_s
+          triggered_by_id: self.id,
+          triggered_by_type: self.class.to_s
         })
       end
     end
@@ -113,8 +113,8 @@ module ReceiptStateMachine
             email_template_id:Template::EmailTemplate.find_by(name: "receipt_pending_offline").id,
             recipients: [user],
             cc_recipients: (user.manager_id.present? ? [user.manager] : []),
-            triggered_by_id: receipt.id,
-            triggered_by_type: receipt.class.to_s
+            triggered_by_id: self.id,
+            triggered_by_type: self.class.to_s
           })
         end
         if self.user.booking_portal_client.sms_enabled?

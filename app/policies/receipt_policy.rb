@@ -13,7 +13,7 @@ class ReceiptPolicy < ApplicationPolicy
 
   def new?
     if user.buyer?
-      valid = user.kyc_ready? && (record.project_unit_id.blank? || after_hold_payment?) && user.confirmed?
+      valid = user.kyc_ready? && user.confirmed? && (record.project_unit_id.blank? || after_hold_payment? || after_blocked_payment?)
     else
       valid = record.user_id.present? && record.user.kyc_ready? && record.user.confirmed?
       valid = valid && (record.project_unit_id.blank? || after_blocked_payment? || (after_hold_payment? && editable_field?('event')))
@@ -60,9 +60,7 @@ class ReceiptPolicy < ApplicationPolicy
     if user.buyer? || user.role?('channel_partner') || (record.user_id.present? && record.user.project_unit_ids.present?) && (record.status == 'pending' || record.status == 'available_for_refund')
       attributes += [:project_unit_id]
     end
-    if !record.blocking_payment? && record.project_unit_id.present?
-      attributes += [:total_amount]
-    end
+    attributes += [:total_amount] if record.new_record?
     if !user.buyer? && (record.new_record? || record.status == 'pending')
       attributes += [:issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier]
     end

@@ -1,7 +1,9 @@
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-md-12">
-      <%= current_client.rera.html_safe %>
+      <% if current_client.rera.present? %>
+        <%= current_client.rera.html_safe %>
+      <% end %>
     </div>
   </div>
 </div>

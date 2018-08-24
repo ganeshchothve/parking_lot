@@ -41,8 +41,11 @@
                   <%= link_to "View #{global_labels[:receipts]}", admin_user_project_unit_receipts_path(project_unit.user, project_unit), class: 'dropdown-item' %>
                 <% end %>
                 <% if UserPolicy.new(current_user, User).index? %>
-                  <%= link_to "View Customer", admin_user_path(project_unit.user), class: 'dropdown-item modal-remote-form-link' %>
+                  <%= link_to "View Customer", admin_user_path(project_unit.user), class: 'dropdown-item' %>
                 <% end %>
+              <% end %>
+              <% if UserRequestPolicy.new(current_user, UserRequest.new(user_id: project_unit.user_id, project_unit_id: project_unit.id, request_type: "cancellation")).new? %>
+                <a href="<%= new_admin_user_user_request_path(user_id: project_unit.user_id, project_unit_id: project_unit.id) %>" class="dropdown-item text-danger modal-remote-form-link">Cancel Booking</a>
               <% end %>
             </div>
           </div>

@@ -1,8 +1,8 @@
 class ProjectUnitObserver < Mongoid::Observer
   def before_validation project_unit
-    project_unit.agreement_price = project_unit.calculate_agreement_price if project_unit.agreement_price.blank?
-    project_unit.all_inclusive_price = project_unit.calculate_all_inclusive_price if project_unit.all_inclusive_price.blank?
-    project_unit.booking_price = project_unit.agreement_price * project_unit.booking_price_percent_of_agreement_price if project_unit.booking_price.blank?
+    project_unit.agreement_price = project_unit.calculate_agreement_price if project_unit.agreement_price.blank? || project_unit.agreement_price.zero?
+    project_unit.all_inclusive_price = project_unit.calculate_all_inclusive_price if project_unit.all_inclusive_price.blank? || project_unit.all_inclusive_price.zero?
+    project_unit.booking_price = project_unit.agreement_price * project_unit.booking_price_percent_of_agreement_price if project_unit.booking_price.blank? || project_unit.booking_price.zero?
   end
 
   def before_save project_unit
@@ -102,7 +102,7 @@ class ProjectUnitObserver < Mongoid::Observer
       end
 
       if !Rails.env.development?
-        SelldoInventoryPusher.perform_async(project_unit.status, project_unit.id.to_s, Time.now.to_i)
+        # SelldoInventoryPusher.perform_async(project_unit.status, project_unit.id.to_s, Time.now.to_i)
       end
 
       if project_unit.booking_portal_client.sms_enabled?

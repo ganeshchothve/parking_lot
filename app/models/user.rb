@@ -188,7 +188,7 @@ class User
         selector[:lead_id] = params[:fltrs][:lead_id]
       end
     end
-    selector[:role] =  {"$ne": "superadmin"} if selector[:role].blank?
+    selector[:role] = {"$ne": "superadmin"} if selector[:role].blank?
     or_selector = {}
     if params[:q].present?
       regex = ::Regexp.new(::Regexp.escape(params[:q]), 'i')
@@ -345,7 +345,7 @@ class User
   end
 
   def unused_user_kyc_ids
-    if allow_multiple_bookings_per_user_kyc
+    if self.booking_portal_client.allow_multiple_bookings_per_user_kyc
       user_kyc_ids = self.user_kycs.collect{|x| x.id}
     else
       user_kyc_ids = self.user_kycs.collect{|x| x.id}

@@ -25,9 +25,8 @@ class Admin::UserRequestsController < ApplicationController
   end
 
   def create
-    @user_request = @user.user_requests.new
+    @user_request = @user.user_requests.new(created_by: current_user)
     @user_request.assign_attributes(permitted_attributes(@user_request))
-
     respond_to do |format|
       if @user_request.save
         format.html { redirect_to edit_user_user_request_path(@user_request), notice: 'Request registered successfully.' }
@@ -54,8 +53,13 @@ class Admin::UserRequestsController < ApplicationController
   end
 
   def update
+    @user_request.assign_attributes(permitted_attributes(@user_request))
+    if @user_request.status == "resolved"
+      @user_request.resolved_by = current_user
+      @user_request.resolved_at = Time.now
+    end
     respond_to do |format|
-      if @user_request.update(permitted_attributes(@user_request))
+      if @user_request.save
         format.html { redirect_to (current_user.buyer? ? user_user_requests_path(@user) : admin_user_requests_path), notice: 'User Request was successfully updated.' }
         format.json { render json: @user_request }
       else

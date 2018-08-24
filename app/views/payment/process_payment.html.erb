@@ -12,7 +12,7 @@
             <div class="col-md-10">
               <h3 class="card-title font-weight-bold text-uppercase">Congratulations</h3>
               <p>
-                Thank you for your payment of <%= number_to_indian_currency(@receipt.total_amount.round(2)) %>.
+                Thank you for your payment of <%= number_to_indian_currency(@receipt.total_amount.round) %>.
                 <br/>
                 <strong>You will receive an email from us with detailed information on next steps.</strong>
                 <br/>

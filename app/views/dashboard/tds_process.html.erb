@@ -4,7 +4,9 @@
       <div class="card">
         <div class="card-body">
           <h4 class="mb-3">TDS Process</h4>
-          <%= current_client.tds_process.html_safe %>
+          <% if current_client.tds_process.present? %>
+            <%= current_client.tds_process.html_safe %>
+          <% end %>
         </div>
       </div>
     </div>

@@ -49,7 +49,7 @@ module Communication
         message.from("notifications@sell.do")
         message.subject(email_json[:subject])
         message.body_text(email_json[:text_only_body])
-        message.body_html(action_mailer_email.html_part.to_s.html_safe)
+        message.body_html(action_mailer_email.html_part.body.to_s)
 
         if(email_json[:tracking].present?)
           message.add_campaign_id(email_json[:tracking][:campaign_id]) if(email_json[:tracking][:campaign_id])
