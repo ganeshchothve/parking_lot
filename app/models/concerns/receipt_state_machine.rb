@@ -12,11 +12,8 @@ module ReceiptStateMachine
         transitions from: :pending, to: :pending
       end
 
-      event :pending_clearance do
-        transitions from: :pending, to: :clearance_pending, if: :can_move_to_clearance?
-      end
-
       event :clearance_pending do
+        transitions from: :pending, to: :clearance_pending, if: :can_move_to_clearance?
         transitions from: :clearance_pending, to: :clearance_pending
       end
 
@@ -39,7 +36,7 @@ module ReceiptStateMachine
       end
 
       event :failed do
-        transitions from: :pending, to: :failed
+        transitions from: :pending, to: :failed, unless: :new_record?
         transitions from: :failed, to: :failed
       end
 
@@ -50,7 +47,7 @@ module ReceiptStateMachine
     end
 
     def can_move_to_clearance?
-      self.persisted? || (self.project_unit_id.present? && self.project_unit.status == "hold")
+      self.persisted? || self.project_unit_id.present?
     end
   end
 end

@@ -10,10 +10,12 @@ module Notification
     def execute
       if @changes[:status].present?
         if @client.sms_enabled?
-          Notification::Sms.execute self.sms_params
+          params = self.sms_params
+          Notification::Sms.execute(params) if params[:template_name].present?
         end
         if @client.email_enabled?
-          Notification::Email.execute self.email_params
+          params = self.email_params
+          Notification::Email.execute(params) if params[:template_name].present?
         end
       end
     end
