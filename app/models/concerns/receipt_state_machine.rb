@@ -37,6 +37,7 @@ module ReceiptStateMachine
 
       event :failed do
         transitions from: :pending, to: :failed, unless: :new_record?
+        transitions from: :clearance_pending, to: :failed
         transitions from: :failed, to: :failed
       end
 
