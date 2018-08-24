@@ -188,7 +188,7 @@ class User
         selector[:lead_id] = params[:fltrs][:lead_id]
       end
     end
-    selector = {role: {"$ne": "superadmin"} } if selector[:role].blank?
+    selector[:role] =  {"$ne": "superadmin"} if selector[:role].blank?
     or_selector = {}
     if params[:q].present?
       regex = ::Regexp.new(::Regexp.escape(params[:q]), 'i')
