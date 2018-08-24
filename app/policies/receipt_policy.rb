@@ -60,8 +60,8 @@ class ReceiptPolicy < ApplicationPolicy
     if user.buyer? || user.role?('channel_partner') || (record.user_id.present? && record.user.project_unit_ids.present?) && (record.status == 'pending' || record.status == 'available_for_refund')
       attributes += [:project_unit_id]
     end
-    attributes += [:total_amount] if record.new_record?
-    if !user.buyer? && (record.new_record? || record.status == 'pending')
+    attributes += [:total_amount] if record.new_record? || ['pending', 'clearance_pending'].include?(record.status)
+    if !user.buyer? && (record.new_record? || ['pending', 'clearance_pending'].include?(record.status))
       attributes += [:issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier]
     end
     if ['sales', 'sales_admin'].include?(user.role) && (record.status == "pending" || record.status == "clearance_pending")
