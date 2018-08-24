@@ -153,8 +153,8 @@ module InventoryImport
         project_unit.type = "apartment"
         project_unit.selldo_id = erp_id
         project_unit.floor_rise = floor_rise.to_f
-        project_unit.payment_schedule_template_id = Template::PaymentScheduleTemplate.where(client_id: booking_portal_client_id).first.id
-        project_unit.cost_sheet_template_id = Template::CostSheetTemplate.where(client_id: booking_portal_client_id).first.id
+        project_unit.payment_schedule_template_id = Template::PaymentScheduleTemplate.where(booking_portal_client_id: booking_portal_client_id).first.id
+        project_unit.cost_sheet_template_id = Template::CostSheetTemplate.where(booking_portal_client_id: booking_portal_client_id).first.id
 
         costs.each do |index, arr|
           if row[index].to_i > 0
