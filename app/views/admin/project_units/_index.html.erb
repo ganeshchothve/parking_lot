@@ -44,6 +44,9 @@
                   <%= link_to "View Customer", admin_user_path(project_unit.user), class: 'dropdown-item' %>
                 <% end %>
               <% end %>
+              <% if UserRequestPolicy.new(current_user, UserRequest.new(user_id: project_unit.user_id, project_unit_id: project_unit.id, request_type: "cancellation")).new? %>
+                <a href="<%= new_admin_user_user_request_path(user_id: project_unit.user_id, project_unit_id: project_unit.id) %>" class="dropdown-item text-danger modal-remote-form-link">Cancel Booking</a>
+              <% end %>
             </div>
           </div>
         </td>

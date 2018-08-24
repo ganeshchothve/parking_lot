@@ -1,5 +1,4 @@
 class SmsObserver < Mongoid::Observer
-
   def before_create sms
     if sms.sms_template_id.present?
       sms_template = SmsTemplate.find sms.sms_template_id

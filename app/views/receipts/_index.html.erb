@@ -46,7 +46,7 @@
           </div>
         </td>
         <td><%= receipt.status.titleize %></td>
-        <td class="text-right"><%= number_to_indian_currency(receipt.total_amount.round(2)) %></td>
+        <td class="text-right"><%= number_to_indian_currency(receipt.total_amount.round) %></td>
         <td class="text-right">
           <div class="dropdown">
             <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>

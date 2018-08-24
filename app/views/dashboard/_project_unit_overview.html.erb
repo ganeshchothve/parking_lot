@@ -176,14 +176,14 @@
         </div>
       </div>
     </div>
-    <div class="alert alert-primary">
-      <% if (project_unit.status == "blocked" || project_unit.status == "booked_tentative") && project_unit.auto_release_on.present? && project_unit.auto_release_on > Date.today %>
+    <% if (project_unit.status == "blocked" || project_unit.status == "booked_tentative") && project_unit.auto_release_on.present? && project_unit.auto_release_on > Date.today %>
+      <div class="alert alert-primary">
         <ul>
           <li>You need to pay <%= number_to_indian_currency(project_unit.booking_price) %> to confirm the booking</li>
           <li>Cancellation charges are <%= number_to_indian_currency(current_client.cancellation_amount) %></li>
           <li>You have <%= (project_unit.auto_release_on - Date.today).to_i %> days (before <%= I18n.l(project_unit.auto_release_on) %>) remaining to confirm this booking. Please make a remaining payment of <%= number_to_indian_currency(project_unit.pending_balance.round) %></li>
         </ul>
-      <% end %>
-    </div>
+      </div>
+    <% end %>
   </div>
 </div>

@@ -8,8 +8,12 @@ class UserRequestPolicy < ApplicationPolicy
   end
 
   def new?
-    valid = (record.user_id == user.id && user.booking_detail_ids.present? && current_client.enable_actual_inventory?)
-    valid = (record.project_unit.user_based_status(user) == "booked" && record.project_unit.status != "hold") if record.project_unit_id.present?
+    valid = true
+    if record.project_unit_id.present?
+      valid = valid && (record.project_unit.user_based_status(user) == "booked" && record.project_unit.status != "hold")
+    end
+    valid = valid && UserRequest.where(request_type: record.request_type).where(user_id: record.user.id).where(project_unit_id: record.project_unit_id).where(status: "pending").blank? if record.project_unit_id.present?
+    valid = valid && (user.buyer? ? (record.user_id == user.id) : ['superadmin', 'admin', 'crm'].include?(user.role))
     valid
   end
 
@@ -26,13 +30,13 @@ class UserRequestPolicy < ApplicationPolicy
   end
 
   def permitted_attributes params={}
+    attributes = []
     if ["resolved", "swapped"].exclude?(record.status)
-      attributes = [:comments, :receipt_id, :user_id] if user.buyer?
-      attributes += [:project_unit_id] if user.buyer? && record.new_record?
-      attributes = [:status, :crm_comments, :reply_for_customer, :alternate_project_unit_id] if ['admin', 'crm', 'sales', 'superadmin', 'cp'].include?(user.role)
-      attributes || []
-    else
-      []
+      attributes += [:comments, :receipt_id, :user_id] if user.buyer?
+      attributes += [:project_unit_id] if record.new_record?
+      attributes += [:crm_comments, :reply_for_customer, :alternate_project_unit_id] if ['admin', 'crm', 'sales', 'superadmin', 'cp'].include?(user.role)
+      attributes += [:status] if record.persisted?
     end
+    attributes
   end
 end
