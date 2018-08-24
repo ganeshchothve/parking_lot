@@ -289,7 +289,7 @@ class User
     elsif login.blank? && warden_conditions[:reset_password_token].present?
       reset_password_token = warden_conditions.delete(:reset_password_token)
       where(reset_password_token: reset_password_token).first
-    else
+    elsif login.present?
       any_of({phone: login}, email: login).first
     end
   end

@@ -4,9 +4,17 @@
 %>
 <%
   if current_user.buyer?
-    url = user_user_requests_path
+    if @user_request.new_record?
+      url = user_user_requests_path
+    else
+      url = user_user_requests_path(@user_request)
+    end
   else
-    url = admin_user_user_requests_path(user_id: @user_request.user_id)
+    if @user_request.new_record?
+      url = admin_user_user_requests_path(user_id: @user_request.user_id)
+    else
+      url = admin_user_user_requests_path(user_id: @user_request.user_id, @user_request)
+    end
   end
 %>
 <%= form_for @user_request, url: url, remote: true, html: {class: 'modal-remote-form validate-form'}, data: hash do |f| %>
