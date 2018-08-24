@@ -4,6 +4,6 @@
   <%= render 'dashboard/index/channel_partner' %>
 <% elsif current_user.role?('cp') %>
   <%= render 'dashboard/index/cp' %>
-<% elsif ['superadmin', 'admin', 'cp_admin', 'sales_admin', 'sales', 'gre'].include?(current_user.role) %>
+<% elsif ['superadmin', 'admin', 'crm', 'cp_admin', 'sales_admin', 'sales', 'gre'].include?(current_user.role) %>
   <%= render 'dashboard/index/crm' %>
 <% end %>

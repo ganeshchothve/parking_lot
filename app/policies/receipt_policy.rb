@@ -13,7 +13,7 @@ class ReceiptPolicy < ApplicationPolicy
 
   def new?
     if user.buyer?
-      valid = user.kyc_ready? && (record.project_unit_id.blank? || after_hold_payment?) && user.confirmed?
+      valid = user.kyc_ready? && user.confirmed? && (record.project_unit_id.blank? || after_hold_payment? || after_blocked_payment?)
     else
       valid = record.user_id.present? && record.user.kyc_ready? && record.user.confirmed?
       valid = valid && (record.project_unit_id.blank? || after_blocked_payment? || (after_hold_payment? && editable_field?('event')))

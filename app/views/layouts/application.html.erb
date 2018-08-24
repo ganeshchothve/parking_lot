@@ -24,40 +24,13 @@
     <% end %>
     <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= current_client.selldo_client_id %>.js'></script>
   </head>
-  <% if !current_client.background_image.present? %>
+  <% if current_client.background_image.present? %>
   <body class="full-bg" style="background-image: url('<%= current_client.background_image.url %>');">
   <% else %>
   <body>
   <% end %>
     <div class="container-fluid">
-      <nav id="top_navigation" class="navbar navbar-expand-lg fixed-top navbar navbar-light bg-white border-bottom">
-        <a class="navbar-brand" href="<%= root_path %>" title="<%= current_project.name %> | <%= current_client.name %>">
-          <img src="<%= asset_path current_client.logo.url %>" class="img-responsive d-none d-sm-block">
-          <img src="<%= asset_path current_client.mobile_logo.url %>" class="img-responsive d-sm-none">
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle main navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="main-navbar">
-          <ul class="navbar-nav ml-auto mt-2">
-            <% if current_client.enable_channel_partners? %>
-            <li class="nav-item">
-              <%= link_to "Register as Channel Partner", new_channel_partner_path, data:{event_category: 'Section', event_action: 'Click', event_name: 'Register Channel Partner'}, class: "mr-2 btn btn-secondary" %>
-            </li>
-            <% end %>
-            <li class="nav-item">
-              <%= link_to "Register Now", register_path, data:{event_category: 'Section', event_action: 'Click', event_name: 'Sign Up'}, class: "btn btn-primary" %>
-            </li>
-          </ul>
-        </div>
-      </nav>
-      <%= render "layouts/navbar_footer" %>
-      <% if notice %>
-      <p class="alert alert-success notice"><%= notice %></p>
-      <% end %>
-      <% if alert %>
-      <p class="alert alert-danger"><%= alert %></p>
-      <% end %>
+      <%= render "layouts/navbar" %>
       <div class="body-padding"></div>
       <div class="container">
         <div class="row justify-content-center">
@@ -66,6 +39,9 @@
               <div class="card-body">
                 <%= yield %>
               </div>
+            </div>
+            <div class="card card-body d-block d-md-none mt-3">
+              <%= current_project.name %> is registered via MahaRERA No.: <%= current_project.rera_registration_no %> & is available on <a href="https://maharera.mahaonline.gov.in" target="_blank">https://maharera.mahaonline.gov.in</a>.
             </div>
           </div>
         </div>

@@ -2,7 +2,7 @@ class Template::AllotmentLetterTemplate < Template
   def self.default_content
     '<div class="card w-100">
       <div class="card-body">
-        <p>Dear <%= @user.name %>,</p>
+        <p>Dear <%= self.user.name %>,</p>
         Congratulations!<br/><br/>
         Welcome to the <%= current_project.name %>! You\'re now the proud owner of Unit - <%= self.name %>.<br/><br/>
         Our executives will be in touch regarding agreement formalities.

@@ -65,8 +65,9 @@ class UserPolicy < ApplicationPolicy
       attributes += [:manager_change_reason] if record.persisted?
     end
     if (user.role?('admin') || user.role?("superadmin") || user.role?('cp_admin') || user.role?('sales_admin')) && record.buyer?
-      attributes += [:manager_id, :allowed_bookings]
+      attributes += [:manager_id]
       attributes += [:manager_change_reason] if record.persisted?
+      attributes += [:allowed_bookings] if current_client.allow_multiple_bookings_per_user_kyc?
     end
     attributes += [:login_otp] if confirm_via_otp?
     attributes += [:rera_id] if record.role?("channel_partner")

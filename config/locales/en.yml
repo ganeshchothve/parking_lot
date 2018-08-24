@@ -1,6 +1,7 @@
 en:
   date:
-    default: "%d/%m/%Y"
+    formats:
+      default: "%d/%m/%Y"
   time:
     formats:
       default: "%d/%m/%Y %I:%M %p"

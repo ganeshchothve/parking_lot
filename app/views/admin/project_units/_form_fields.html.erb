@@ -23,11 +23,18 @@
     <%= f.text_field :auto_release_on, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.auto_release_on.present? ? f.object.auto_release_on.strftime("%d/%m/%Y") : '', "data-min-date": Date.tomorrow.strftime("%d/%m/%Y"), disabled: (policy(@project_unit).editable_field?("auto_release_on") ? false : true), value: f.object.auto_release_on.present? ? f.object.auto_release_on.strftime("%d/%m/%Y") : "" %>
   </div>
   <% end %>
-  <% statuses = ["available", "not_available", "employee", "management"] %>
-  <% if policy(@project_unit).editable_field?("status") && statuses.include?(@project_unit.status) %>
+  <%
+    statuses = []
+    if ["available", "not_available", "employee", "management"].include?(@project_unit.status)
+      statuses = ["available", "not_available", "employee", "management"]
+    elsif ["blocked", "booked_tentative"].include?(@project_unit.status) && @project_unit.pending_balance <= 0
+      statuses = ["booked_confirmed"]
+    end
+  %>
+  <% if policy(@project_unit).editable_field?("status") && statuses.present? %>
     <div class="form-group">
       <%= f.label :status, class: 'title' %>
-      <%= f.select :status, ProjectUnit.available_statuses.select{|x| statuses.include?(x[:id])}.collect{|x| [x[:text], x[:id]]}, {}, {prompt: "Select", class: "selectize", disabled: (policy(@project_unit).editable_field?("status") ? false : true)} %>
+      <%= f.select :status, ProjectUnit.available_statuses.select{|x| statuses.include?(x[:id]) || x[:id] == @project_unit.status }.collect{|x| [x[:text], x[:id]]}, {}, {prompt: "Select", class: "selectize", disabled: (policy(@project_unit).editable_field?("status") ? false : true)} %>
     </div>
   <% end %>
 </div>
