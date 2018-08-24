@@ -190,7 +190,7 @@
                 <h5><%= number_to_indian_currency(total_amount) %></h5>
                 <%= f.hidden_field :total_amount, value: total_amount %>
               <% else %>
-                <%= f.number_field :total_amount, min: 0, max: (@project_unit.present? ? @project_unit.agreement_price : current_client.blocking_amount), class: "form-field form-control green", required: 'required' %>
+                <%= f.number_field :total_amount, min: 0, class: "form-field form-control green", required: 'required' %>
               <% end %>
             </div>
             <% if i_agree_required %>
