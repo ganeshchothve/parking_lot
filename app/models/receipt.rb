@@ -58,6 +58,7 @@ class Receipt
       {id: 'online', text: 'Online'},
       {id: 'cheque', text: 'Cheque'},
       {id: 'rtgs', text: 'RTGS'},
+      {id: 'imps', text: 'IMPS'},
       {id: 'neft', text: 'NEFT'}
     ]
   end
