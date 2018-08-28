@@ -120,7 +120,7 @@ en:
         issued_date: "Date of issuance (e.g. Cheque Date)"
         issuing_bank: "Issuing Bank"
         issuing_bank_branch: "Issuing Bank Branch"
-        payment_identifier: "Transaction Identifier"
+        payment_identifier: "Cheque Number / Transaction Identifier"
         total_amount: "Total Amount (Rs.)"
         status: "Payment Status"
         user_id: "Customer"

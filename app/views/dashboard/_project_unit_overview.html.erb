@@ -177,6 +177,26 @@
       </div>
     </div>
     <% if (project_unit.status == "blocked" || project_unit.status == "booked_tentative") && project_unit.auto_release_on.present? && project_unit.auto_release_on > Date.today %>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Amount Paid</label>
+            <div>
+              <%= number_to_indian_currency(project_unit.total_amount_paid) %>
+            </div>
+            <div class="small">* Considers processed <%= global_labels[:receipts] %> only</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Pending Balance</label>
+            <div>
+              <%= number_to_indian_currency(project_unit.pending_balance({strict: true})) %>
+            </div>
+            <div class="small">* Considers processed <%= global_labels[:receipts] %> only</div>
+          </div>
+        </div>
+      </div>
       <div class="alert alert-primary">
         <ul>
           <li>You need to pay <%= number_to_indian_currency(project_unit.booking_price) %> to confirm the booking</li>

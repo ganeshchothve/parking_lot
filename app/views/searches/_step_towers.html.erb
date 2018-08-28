@@ -201,78 +201,13 @@
   </div>
 </div>
 <%= javascript_tag do %>
-  var units = <%= raw @units.to_json(include: [:assets], methods: [:all_inclusive_price, :effective_rate]) %>;
-  var is_touch_device = ("ontouchstart" in window) || window.DocumentTouch && document instanceof DocumentTouch;
-  if(!is_touch_device){
-    $('[data-toggle="popover"]').popover({
-      html: true,
-      trigger: 'hover',
-      placement: 'top'
-    });
-  }
+  var units = <%= raw @units.to_json(include: [:assets], methods: [:all_inclusive_price, :effective_rate, :calculated_costs, :calculated_data]) %>;
+
   $(document).on('click', '[data-jquery-selector="unit-card"]', function(){
     var unit_id = $(this).data("unit-id");
     $('[data-jquery-selector="unit-card"]').removeClass("active");
     $(this).addClass("active");
-    var $form = $(".edit_search_form");
-    $form.find('[name="search[project_unit_id]"]').val(unit_id);
-    $form.find('input[type="submit"]').removeAttr("disabled");
-    showUnitData(unit_id);
-  });
-
-  var showUnitData = function(unit_id){
     var unit = _.find(units, function(u){ return u._id == unit_id });
-    $("#unit-description").find('[data-placeholder="name"]').html('Unit No.: ' + unit.name);
-    $("#unit-description").find('[data-placeholder="floor"]').html(unit.floor);
-    $("#unit-description").find('[data-placeholder="bedrooms"]').html(unit.bedrooms);
-    $("#unit-description").find('[data-placeholder="bathrooms"]').html(unit.bathrooms);
-    $("#unit-description").find('[data-placeholder="saleable"]').html(unit.saleable);
-    $("#unit-description").find('[data-placeholder="carpet"]').html(unit.carpet);
-    $("#unit-description").find('[data-placeholder="effective_rate"]').html(Amura.formatMoney(unit.effective_rate));
-    $("#unit-description").find('[data-placeholder="agreement_price"]').html(Amura.formatMoney(unit.agreement_price));
-    $("#unit-description").find('[data-placeholder="all_inclusive_price"]').html(Amura.formatMoney(unit.all_inclusive_price));
-    Gamification.gamifyUnitSelection(unit, $('#unit-description [data-placeholder="gamification"]'));
-    if(unit.assets.length > 0){
-      $(".unit_image_container").show();
-      $('[data-placeholder="unit_image"]').attr("src", _.first(unit.assets).file.url);
-      $('[data-placeholder="unit_image"]').show();
-      var gallery_html = '<div id="unit_gallery" class="carousel slide" data-ride="carousel">'
-      gallery_html += '<ol class="carousel-indicators">'
-      var count = 0;
-      _.each(unit.assets, function(asset){
-        gallery_html += '<li data-target="#unit_gallery" data-slide-to="' + count + '" class="' + (count == 0 ? "active" : "") + '"></li>';
-        count += 1;
-      });
-      gallery_html += '</ol>'
-      gallery_html += '<div class="carousel-inner">'
-      var count = 0;
-      _.each(unit.assets, function(asset){
-        gallery_html += '<div class="carousel-item ' + (count == 0 ? "active" : "") + '">\
-          <img class="d-block w-100" src="' + asset.file.url + '">\
-        </div>'
-        count += 1;
-      });
-      gallery_html += '</div>';
-      gallery_html += '<a class="carousel-control-prev" href="#unit_gallery" role="button" data-slide="prev">\
-          <span class="fas fa-chevron-left text-dark" aria-hidden="true"></span>\
-          <span class="sr-only">Previous</span>\
-        </a>\
-        <a class="carousel-control-next" href="#unit_gallery" role="button" data-slide="next">\
-          <span class="fas fa-chevron-right text-dark" aria-hidden="true"></span>\
-          <span class="sr-only">Next</span>\
-        </a>\
-      </div>';
-      $('[data-placeholder="gallery_unit_images"]').html(gallery_html);
-      $('#unit_gallery').carousel();
-    }else{
-      $(".unit_image_container").hide();
-      $('[data-placeholder="unit_image"]').hide();
-      $('[data-placeholder="gallery_unit_images"]').html("");
-    }
-    $("#unit-description").find('[data-placeholder="unit_facing_direction"]').html(unit.unit_facing_direction);
-    if($("#unit-description").hasClass('d-none')){
-      $("#unit-description").removeClass('d-none');
-    }
-    $.scrollTo($("#unit-description").offset().top, 800);
-  }
+    showUnitData(unit);
+  });
 <% end %>
