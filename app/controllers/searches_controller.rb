@@ -137,9 +137,9 @@ class SearchesController < ApplicationController
     if @search.project_unit_id.present?
       @project_unit = ProjectUnit.find(@search.project_unit_id)
       authorize @project_unit
-      if(@search.user.total_unattached_balance >= current_client.blocking_amount)
-        unattached_blocking_receipt = @search.user.unattached_blocking_receipt
-        @receipt = unattached_blocking_receipt if unattached_blocking_receipt.present?
+      unattached_blocking_receipt = @search.user.unattached_blocking_receipt
+      if unattached_blocking_receipt.present?
+        @receipt = unattached_blocking_receipt
       end
       @receipt.project_unit = @project_unit
     else
