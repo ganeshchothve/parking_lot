@@ -180,7 +180,7 @@ en:
         user_id: "Customer"
         receipt_ids: "Payments (associated with this Apartment)"
         user_request_ids: "User Requests (associated with this Apartment)"
-        user_kyc_ids: "User KYCs (associated with this Apartment)"
+        user_kyc_ids: "Co-Applicants (KYCs associated with this Apartment)"
         primary_user_kyc_id: "Primary User KYC"
         name: 'Name'
         project_tower_name: 'Project Tower'

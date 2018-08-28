@@ -56,9 +56,7 @@ class Search
   def agreement_price_to_s
     range_string(agreement_price)
   end
-  # GENERIC_TODO SelldoLeadUpdater.perform_async(current_user.id.to_s, "unit_browsing")
-  # GENERIC_TODO SelldoLeadUpdater.perform_async(current_user.id.to_s, "unit_selected")
-
+  
   # GENERIC_TODO : remove a step from here to modify the flow
   def allowed_steps
     ["filter", "towers", "project_unit"]
