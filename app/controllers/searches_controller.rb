@@ -10,6 +10,11 @@ class SearchesController < ApplicationController
   layout :set_layout
 
   def show
+    if @search.project_unit.present? && @search.project_unit.status == 'hold'
+      if @search.user_id == @search.project_unit.user_id
+        redirect_to checkout_user_search_path(@search)
+      end
+    end
     # GENERICTODO: Handle current user to be from a user based route path
   end
 

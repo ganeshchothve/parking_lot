@@ -30,6 +30,10 @@ class Search
     project_tower_id.present? ? ProjectTower.find(project_tower_id) : nil
   end
 
+  def project_unit
+    project_unit_id.present? ? ProjectUnit.find(project_unit_id) : nil
+  end
+
   def range_string price
     if price.present?
       min_price = price.split("-")[0]
@@ -56,7 +60,7 @@ class Search
   def agreement_price_to_s
     range_string(agreement_price)
   end
-  
+
   # GENERIC_TODO : remove a step from here to modify the flow
   def allowed_steps
     ["filter", "towers", "project_unit"]

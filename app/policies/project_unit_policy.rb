@@ -26,7 +26,8 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def hold?
-    valid = record.user.kyc_ready? && current_client.enable_actual_inventory? && ((record.user.project_units.where(status: "hold").blank? && record.user_based_status(record.user) == 'available') || record.user.project_units.where(status: "hold").count == 1 && record.user.project_units.where(status: "hold").first.id == record.id)
+    valid = record.user.kyc_ready? && current_client.enable_actual_inventory?
+    valid = valid && (record.user.project_units.where(status: "hold").blank? && record.user_based_status(record.user) == 'available')
     valid = valid && (record.user.total_unattached_balance >= current_client.blocking_amount) if user.role?('channel_partner')
     valid = (valid && user.allowed_bookings > user.booking_details.ne(status: "cancelled").count)
     valid = (valid && record.user.unused_user_kyc_ids(record.id).present?)
