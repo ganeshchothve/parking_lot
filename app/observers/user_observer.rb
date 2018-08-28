@@ -32,7 +32,7 @@ class UserObserver < Mongoid::Observer
     end
   end
 
-  def before_update user
+  def after_update user
     if user.manager_id_changed? && user.manager_id.present?
       user.referenced_manager_ids << user.manager_id
       if user.buyer?
