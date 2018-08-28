@@ -127,3 +127,19 @@ figure.wave {
     height: 100% !important;
   }
 }
+#gamification-container{
+  position: fixed;
+  width: 100%;
+  border-radius: 0;
+  z-index: 100;
+}
+@include media-breakpoint-up(md){
+  #gamification-container{
+    bottom: 52px;
+  }
+}
+@include media-breakpoint-down(md){
+  #gamification-container{
+    bottom: 0;
+  }
+}

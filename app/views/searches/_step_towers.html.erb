@@ -23,7 +23,7 @@
 </div>
 <div class="clearfix"></div>
 <div class="row justify-content-center mt-3">
-  <div class="col-sm-5" id="unit-selection">
+  <div class="col-md-5" id="unit-selection">
     <div class="tower-container">
       <div class="tower-wrapper">
         <% max_floor = @all_units.collect{|x| x[:_id]}.max %>
@@ -80,8 +80,15 @@
       <div class="bg-primary text-white">
         <%= icon "fas", "home", class: "fa-2x position-absolute", style: "right:10px; top:10px;" %>
         <div class="p-3">
-          <h3 class="font-weight-bold mb-3" data-placeholder='name'></h3>
-          <h6 data-placeholder="gamification"></h6>
+          <h4 class="font-weight-bold mb-3" data-placeholder='name'></h4>
+          <div class="row">
+            <div class="col-1">
+              <i class="fas fa-bell" style="font-size:32px;"></i>
+            </div>
+            <div class="col-11">
+              <h6 data-placeholder="gamification"></h6>
+            </div>
+          </div>
         </div>
         <figure class="w-100 wave">
           <svg preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="20 -20 300 100" style="margin-bottom: -38px;margin-top: -54px;" xml:space="preserve">
@@ -224,6 +231,7 @@
     $("#unit-description").find('[data-placeholder="effective_rate"]').html(Amura.formatMoney(unit.effective_rate));
     $("#unit-description").find('[data-placeholder="agreement_price"]').html(Amura.formatMoney(unit.agreement_price));
     $("#unit-description").find('[data-placeholder="all_inclusive_price"]').html(Amura.formatMoney(unit.all_inclusive_price));
+    Gamification.gamifyUnitSelection(unit, $('#unit-description [data-placeholder="gamification"]'));
     if(unit.assets.length > 0){
       $(".unit_image_container").show();
       $('[data-placeholder="unit_image"]').attr("src", _.first(unit.assets).file.url);

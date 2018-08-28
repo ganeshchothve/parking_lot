@@ -53,8 +53,15 @@
         <div class="bg-primary text-white">
           <%= icon "fas", "building", class: "fa-2x position-absolute", style: "right:10px; top:10px;" %>
           <div class="p-3">
-            <h3 class="font-weight-bold mb-3" data-placeholder="name"></h3>
-            <h6 data-placeholder="gamification"></h6>
+            <h4 class="font-weight-bold mb-3" data-placeholder="name"></h4>
+            <div class="row">
+              <div class="col-1">
+                <i class="fas fa-bell" style="font-size:32px;"></i>
+              </div>
+              <div class="col-11">
+                <h6 data-placeholder="gamification"></h6>
+              </div>
+            </div>
           </div>
           <figure class="w-100 wave">
             <svg preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="20 -20 300 100" style="margin-bottom: -38px;margin-top: -54px;" xml:space="preserve">
@@ -159,7 +166,7 @@
       $("#tower-description").removeClass('d-none');
     }
     $.scrollTo($("#tower-description").offset().top, 800);
-
+    Gamification.gamifyTowerSelection(tower, $('#tower-description [data-placeholder="gamification"]'));
     if(tower.assets.length > 0){
       $(".tower_image_container").show();
       $('[data-placeholder="tower_image"]').attr("src", _.first(tower.assets).file.url);
