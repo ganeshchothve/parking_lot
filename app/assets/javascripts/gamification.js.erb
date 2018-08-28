@@ -16,7 +16,7 @@ var Gamification = (function(){
   var gamification_selector = '#gamification-container';
 
   var show = function(message, $container){
-    if($container.length > 0){
+    if($container && $container.length > 0){
       $($container).html(message);
     }else{
       $(gamification_selector).find('.carousel-inner').prepend('<div class="carousel-item"><span>' + message + "</span></div>").carousel(0);
