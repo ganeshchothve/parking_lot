@@ -1,35 +1,38 @@
 module Gamification
-  include ApplicationHelper
   DEFAULT_CHANNEL = "gamification"
   DEFAULT_EVENT = "update"
-  class Base
-    def self.dashboard_data
-      messages = []
-      random_starter = [11, 12, 15, 14, 18, 13, 12, 17, 16, 15, 11, 12]
-      messages << "#{BookingDetail.where(created_at: {"$gte": Time.now.beginning_of_day}).count + random_starter[0]} people have paid the token amount today"
 
-      data = ProjectUnit.collection.aggregate([{
-        "$match": {
-          status: {
-            "$in": ['blocked', 'booked_tentative', 'booked_confirmed']
+  class Base
+    include ApplicationHelper
+    def dashboard_data
+      messages = []
+      if current_client.enable_actual_inventory?
+        random_starter = [11, 12, 15, 14, 18, 13, 12, 17, 16, 15, 11, 12]
+        messages << "#{BookingDetail.where(created_at: {"$gte": Time.now.beginning_of_day}).count + random_starter[0]} people have paid the token amount today"
+
+        data = ProjectUnit.collection.aggregate([{
+          "$match": {
+            status: {
+              "$in": ['blocked', 'booked_tentative', 'booked_confirmed']
+            }
           }
-        }
-      },{
-        "$group": {
-          "_id": {
-            bedrooms: "$bedrooms",
-          },
-          count: {
-            "$sum": 1
+        },{
+          "$group": {
+            "_id": {
+              bedrooms: "$bedrooms",
+            },
+            count: {
+              "$sum": 1
+            }
           }
-        }
-      },{
-        "$sort": {
-          "_id.bedrooms": 1
-        }
-      }]).to_a
-      data.each_with_index do |d, index|
-        messages << "#{random_starter[index+1] + d["count"]} #{d["_id"]["bedrooms"]} BHK Apartments Already Sold"
+        },{
+          "$sort": {
+            "_id.bedrooms": 1
+          }
+        }]).to_a
+        data.each_with_index do |d, index|
+          messages << "#{random_starter[index+1] + d["count"]} #{d["_id"]["bedrooms"]} BHK Apartments Already Sold"
+        end
       end
       messages
     end
