@@ -8,7 +8,9 @@ class Template::PaymentScheduleTemplate < Template
         <td width="10%">Amount(Rs.)</td>
         <td width="5%">CGST-6%</td>
         <td width="5%">SGST-6%</td>
-        <td width="5%">Less - TDS</td>
+        <% if self.agreement_price > 5000000 %>
+          <td width="5%">Less - TDS</td>
+        <% end %>
         <td width="10%">Total Payable on milestone</td>
       </thead>
       <tbody>
@@ -47,7 +49,9 @@ class Template::PaymentScheduleTemplate < Template
             <td><%= number_to_indian_currency(current_value) %></td>
             <td><%= number_to_indian_currency(cgst) %></td>
             <td><%= number_to_indian_currency(sgst) %></td>
-            <td><%= number_to_indian_currency(tds) %></td>
+            <% if self.agreement_price > 5000000 %>
+              <td><%= number_to_indian_currency(tds) %></td>
+            <% end %>
             <td><%= number_to_indian_currency(current_value + cgst + sgst - tds) %></td>
           </tr>
         <% end %>
