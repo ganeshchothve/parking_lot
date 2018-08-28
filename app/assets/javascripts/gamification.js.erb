@@ -16,7 +16,7 @@ var Gamification = (function(){
   var gamification_selector = '#gamification-container';
 
   var show = function(message, $container){
-    if(App.current_client.enable_actual_inventory){
+    if(App.client.enable_actual_inventory){
       if($container && $container.length > 0){
         $($container).html(message);
       }else{
