@@ -71,7 +71,7 @@ Rails.application.routes.draw do
       end
       resources :user_requests, except: [:destroy], controller: 'user_requests'
       nested do
-        namespace ':request_type' do
+        scope ':request_type' do
           resources :user_requests, except: [:destroy], controller: 'user_requests'
         end
       end
