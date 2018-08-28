@@ -6,15 +6,15 @@ module Communication
       def self.execute email_id
         email = ::Email.find email_id
         email_json = email.as_json.with_indifferent_access
-        # if email.attachment_ids.present?
-        #   email_json[:attachments] = email.attachments.collect do |doc|
-        #     if Rails.env.production? || Rails.env.staging?
-        #       CarrierWave::Uploader::Download::RemoteFile.new(doc.file.url)
-        #     else
-        #       File.open("#{Rails.root}/public" + doc.file.url,'r')
-        #     end
-        #   end
-        # end
+        if email.attachments.present?
+          email_json[:attachments] = email.attachments.collect do |doc|
+            if Rails.env.production? || Rails.env.staging?
+              CarrierWave::Uploader::Download::RemoteFile.new(doc.file.url)
+            else
+              File.open("#{Rails.root}/public" + doc.file.url,'r')
+            end
+          end
+        end
 
         # unless setting[:provider]
         #   fail "An Email Setting json must contain 'provider' key"
