@@ -17,21 +17,35 @@ module DashboardDataProvider
     out
   end
 
-  def self.receipts_dashboard(user, matcher={})
+  def self.receipts_available_group_by
+    [
+      {id: "status", text: "Status"},
+      {id: "payment_mode", text: "Payment Mode"}
+    ]
+  end
+
+  def self.receipts_dashboard(user, options={})
+    options ||= {}
+    matcher = options[:matcher]
+    group_by = options[:group_by]
     unless matcher.present? && matcher[:user_id].present?
       matcher = Receipt.user_based_scope(user)
+    end
+    grouping = {
+      payment_mode: "$payment_mode",
+      status: "$status"
+    }
+    if group_by.present?
+      grouping = {}
+      grouping[:status] = "$status" if group_by.include?("status")
+      grouping[:payment_mode] = "$payment_mode" if group_by.include?("payment_mode")
     end
     data = Receipt.collection.aggregate([{
         "$match": matcher
       }, {
       "$group": {
-        "_id": {
-          payment_mode: "$payment_mode",
-          status: "$status"
-        },
-        total_amount: {
-          "$addToSet": "$total_amount"
-        },
+        "_id": grouping,
+        total_amount: {"$sum": "$total_amount"},
         count: {
           "$sum": 1
         }
@@ -42,7 +56,7 @@ module DashboardDataProvider
       }
     },{
       "$project": {
-        total_amount: {"$sum": "$total_amount"},
+        total_amount: "$total_amount",
         payment_mode: "$payment_mode",
         status: "$status",
         count: "$count"
@@ -104,20 +118,32 @@ module DashboardDataProvider
     out
   end
 
-  def self.project_units_dashboard(user)
+  def self.project_units_available_group_by
+    [
+      {id: "status", text: "Status"},
+      {id: "bedrooms", text: "Bedrooms"},
+      {id: "project_tower_id", text: "Project Tower"}
+    ]
+  end
+
+  def self.project_units_dashboard(user, options={})
+    options ||= {}
+    grouping = {
+      status: "$status",
+      bedrooms: "$bedrooms",
+      project_tower_id: "$project_tower_id"
+    }
+    if options[:group_by].present?
+      grouping = {}
+      grouping[:status] = "$status" if options[:group_by].include?("status")
+      grouping[:bedrooms] = "$bedrooms" if options[:group_by].include?("bedrooms")
+      grouping[:project_tower_id] = "$project_tower_id" if options[:group_by].include?("project_tower_id")
+    end
     data = ProjectUnit.collection.aggregate([{
       "$group": {
-        "_id": {
-          status: "$status",
-          bedrooms: "$bedrooms",
-          project_tower_id: "$project_tower_id"
-        },
-        agreement_price: {
-          "$addToSet": "$agreement_price"
-        },
-        all_inclusive_price: {
-          "$addToSet": "$all_inclusive_price"
-        },
+        "_id": grouping,
+        agreement_price: {"$sum": "$agreement_price"},
+        all_inclusive_price: {"$sum": "$all_inclusive_price"},
         project_tower_name: {
           "$addToSet": "$project_tower_name"
         },
@@ -131,8 +157,8 @@ module DashboardDataProvider
       }
     },{
       "$project": {
-        total_agreement_price: {"$sum": "$agreement_price"},
-        total_all_inclusive_price: {"$sum": "$all_inclusive_price"},
+        total_agreement_price: "$agreement_price",
+        total_all_inclusive_price: "$all_inclusive_price",
         bedrooms: "$bedrooms",
         project_tower_name: {"$arrayElemAt": ["$project_tower_name", 0]},
         status: "$status",
