@@ -8,12 +8,12 @@ class Admin::UserRequestsController < ApplicationController
   layout :set_layout
 
   def index
-    @user_requests = UserRequest.build_criteria params
+    @user_requests = associated_class.build_criteria params
     @user_requests = @user_requests.paginate(page: params[:page] || 1, per_page: 15)
   end
 
   def show
-    @user_request = UserRequest.find(params[:id])
+    @user_request = associated_class.find(params[:id])
     authorize @user_request
   end
 
@@ -71,7 +71,7 @@ class Admin::UserRequestsController < ApplicationController
 
   private
   def set_user_request
-    @user_request = UserRequest.find(params[:id])
+    @user_request = associated_class.find(params[:id])
   end
 
   def set_user
@@ -86,15 +86,29 @@ class Admin::UserRequestsController < ApplicationController
     if params[:action] == "index" || params[:action] == 'export'
       authorize UserRequest
     elsif params[:action] == "new" || params[:action] == "create"
-      authorize UserRequest.new(user_id: @user.id)
+      authorize associated_class.new(user_id: @user.id)
     else
       authorize @user_request
     end
   end
 
+  def associated_class
+    if params[:request_type] == "swap"
+        UserRequest::Swap
+    elsif params[:request_type] == "cancellation"
+      UserRequest::Cancellation
+    else
+      UserRequest
+    end
+  end
+
   def apply_policy_scope
-    custom_scope = UserRequest.where(UserRequest.user_based_scope(current_user, params))
-    UserRequest.with_scope(policy_scope(custom_scope)) do
+    custom_scope = associated_class.where(associated_class.user_based_scope(current_user, params))
+    if params[:request_type].present?
+      type =
+      custom_scope = custom_scope.where(_type: type)
+    end
+    associated_class.with_scope(policy_scope(custom_scope)) do
       yield
     end
   end
