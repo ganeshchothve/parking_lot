@@ -1,4 +1,7 @@
 class ReceiptObserver < Mongoid::Observer
+  def before_validation receipt
+    receipt.send(receipt.event) if receipt.event.present?
+  end
   def after_save receipt
     user = receipt.user
     project_unit = receipt.project_unit
@@ -14,6 +17,8 @@ class ReceiptObserver < Mongoid::Observer
 
     # update project unit if receipt status has changed
     if receipt.status_changed?
+      Notification::Receipt.new(receipt.id, receipt.changes).execute
+
       project_unit = receipt.project_unit
       if project_unit.present?
         if project_unit.process_payment!(receipt)
@@ -37,8 +42,6 @@ class ReceiptObserver < Mongoid::Observer
       receipt.processed_on = Date.today
       receipt.assign!(:order_id) if receipt.order_id.blank?
     end
-
-    receipt.send(receipt.event) if receipt.event.present?
     receipt.receipt_id = receipt.generate_receipt_id
   end
 end

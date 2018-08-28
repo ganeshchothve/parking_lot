@@ -297,7 +297,7 @@ class ProjectUnit
 
   private
   def pan_uniqueness
-    if self.user_id.present? && self.user.unused_user_kyc_ids.blank?
+    if self.user_id.present? && self.user.unused_user_kyc_ids(self.id).blank?
       self.errors.add :primary_user_kyc_id, "already has a booking"
     end
   end

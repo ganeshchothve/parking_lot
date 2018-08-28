@@ -34,7 +34,7 @@ class UserKycPolicy < ApplicationPolicy
   end
 
   def permitted_attributes params={}
-    attributes = [:salutation, :first_name, :last_name, :email, :phone, :dob, :pan_number, :aadhaar, :oci, :gstn, :anniversary, :nri, :poa, :customer_company_name, :existing_customer, :comments, :existing_customer_name, :existing_customer_project, :poa_details, :is_company, :education_qualification, :designation, :company_name, :poa_details_phone_no, correspondence_address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes, permanent_address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes, bank_detail_attributes: BankDetailPolicy.new(user, BankDetail.new).permitted_attributes, configurations:[], project_unit_ids: []]
+    attributes = [:salutation, :first_name, :last_name, :email, :phone, :dob, :pan_number, :aadhaar, :oci, :gstn, :anniversary, :nri, :poa, :customer_company_name, :existing_customer, :comments, :existing_customer_name, :existing_customer_project, :poa_details, :is_company, :education_qualification, :designation, :company_name, :poa_details_phone_no, :min_budget, :max_budget, correspondence_address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes, permanent_address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes, bank_detail_attributes: BankDetailPolicy.new(user, BankDetail.new).permitted_attributes, configurations:[], project_unit_ids: []]
     attributes
   end
 end

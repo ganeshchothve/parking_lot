@@ -86,8 +86,8 @@ class ProjectUnitObserver < Mongoid::Observer
   end
 
   def after_update project_unit
+    user = project_unit.user
     if project_unit.status_changed? && ['blocked', 'booked_tentative', 'booked_confirmed'].include?(project_unit.status)
-      user = project_unit.user
 
       if project_unit.booking_portal_client.email_enabled?
         Email.create!({
@@ -134,8 +134,8 @@ class ProjectUnitObserver < Mongoid::Observer
           cc: [project_unit.booking_portal_client.notification_email],
           recipients: [user],
           cc_recipients: (user.manager_id.present? ? [user.manager] : []),
-          triggered_by_id: receipt.id,
-          triggered_by_type: receipt.class.to_s
+          triggered_by_id: project_unit.id,
+          triggered_by_type: project_unit.class.to_s
         })
       end
 

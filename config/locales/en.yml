@@ -168,6 +168,9 @@ en:
         existing_customer_project: 'Project you have already bought'
         customer_company_name: 'Company Name'
         configurations: 'Preferences'
+        min_budget: 'Min. Budget (Rs.)'
+        max_budget: 'Max. Budget (Rs.)'
+        budget: 'Budget (Rs.)'
       project_unit:
         costs: "Costs"
         data: "Data"

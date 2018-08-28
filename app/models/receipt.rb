@@ -40,7 +40,6 @@ class Receipt
   validates :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, presence: true, if: Proc.new{|receipt| receipt.payment_mode != 'online' }
   validates :payment_gateway, presence: true, if: Proc.new{|receipt| receipt.payment_mode == 'online' }
   validates :payment_gateway, inclusion: {in: PaymentGatewayService::Default.allowed_payment_gateways }, allow_blank: true
-  validate :status_changed
   validates :tracking_id, presence: true, if: Proc.new{|receipt| receipt.status == 'success' && receipt.payment_mode != "online"}
   validates :comments, presence: true, if: Proc.new{|receipt| receipt.status == 'failed' && receipt.payment_mode != "online"}
   validate :tracking_id_processed_on_only_on_success
@@ -59,6 +58,7 @@ class Receipt
       {id: 'online', text: 'Online'},
       {id: 'cheque', text: 'Cheque'},
       {id: 'rtgs', text: 'RTGS'},
+      {id: 'imps', text: 'IMPS'},
       {id: 'neft', text: 'NEFT'}
     ]
   end
@@ -169,15 +169,6 @@ class Receipt
 
     if (self.project_unit_id.blank? || self.blocking_payment?) && self.total_amount < self.user.booking_portal_client.blocking_amount
       self.errors.add :total_amount, "cannot be less than blocking amount #{self.user.booking_portal_client.blocking_amount}"
-    end
-  end
-
-  def status_changed
-    if self.status_changed? && ['success', 'failed'].include?(self.status_was) && ['cancelled'].exclude?(self.status)
-      self.errors.add :status, 'cannot be modified for a successful or failed payments'
-    end
-    if self.status_changed? && ['clearance_pending'].include?(self.status_was) && self.status == 'pending'
-      self.errors.add :status, 'cannot be modified to "pending" from "Pending Clearance" status'
     end
   end
 
