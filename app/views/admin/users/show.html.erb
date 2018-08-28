@@ -163,7 +163,7 @@
         <div class="card">
           <div class="card-header"><%= global_labels[:users] %> registered under <%= @user.name %></div>
           <div class="card-body">
-            <%= render "admin/users/index", users: User.where(manager_id: @user.id).paginate(page: 1, per_page: 100) %>
+            <%= render "admin/users/index", users: User.where(manager_id: @user.id).paginate(page: 1, per_page: 15) %>
           </div>
         </div>
       <% end %>

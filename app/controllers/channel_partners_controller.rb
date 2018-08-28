@@ -11,7 +11,7 @@ class ChannelPartnersController < ApplicationController
     if params[:fltrs].present? && params[:fltrs][:_id].present?
       redirect_to edit_channel_partner_path(params[:fltrs][:_id])
     else
-      @channel_partners = @channel_partners.paginate(page: params[:page] || 1, per_page: 15)
+      @channel_partners = @channel_partners.paginate(page: params[:page], per_page: 15)
     end
   end
 
