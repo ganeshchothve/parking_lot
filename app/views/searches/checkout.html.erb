@@ -52,13 +52,13 @@
   $(document).ready(function(){
     var countdown_time = "<%= (@project_unit.held_on + @project_unit.holding_minutes.minutes).in_time_zone(current_user.time_zone).strftime("%m/%d/%Y %H:%M:%S") %>";
     $("#held-until-countdown").countdown(countdown_time, {
-      elapse: true
+      elapse: false
     }).on('update.countdown', function(event) {
-      if (event.elapsed) {
-        window.location = window.location;
-      }else{
+      if (!event.elapsed) {
         $(this).text(event.strftime('%M:%S'));
       }
+    }).on('finish.countdown', function(){
+      window.location = window.location;
     });
   });
 <% end %>

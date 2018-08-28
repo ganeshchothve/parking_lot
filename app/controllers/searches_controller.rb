@@ -95,7 +95,9 @@ class SearchesController < ApplicationController
     end
     @project_unit = ProjectUnit.find(@search.project_unit_id)
     if @project_unit.held_on.present? && (@project_unit.held_on + @project_unit.holding_minutes.minutes) < Time.now
+      flash[:notice] = "We've released the unit which was held for #{@project_unit.holding_minutes} minutes. Please re-select the unit and try booking again."
       ProjectUnitUnholdWorker.new.perform(@project_unit.id)
+      redirect_to dashboard_path and return
     end
     authorize @project_unit
     if @project_unit.status != "hold"

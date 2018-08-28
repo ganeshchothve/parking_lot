@@ -78,6 +78,10 @@ class ProjectUnit
   validates :user_id, :primary_user_kyc_id, presence: true, if: Proc.new { |unit| ['available', 'not_available', 'management', 'employee'].exclude?(unit.status) }
   validate :pan_uniqueness
 
+  def ds_name
+    "#{project_tower_name} | #{name} | #{bedrooms}BHK"
+  end
+
   def make_available
     if self.available_for == "user"
       self.status = "available"
@@ -216,7 +220,7 @@ class ProjectUnit
 
   def self.build_criteria params={}
     selector = {}
-    if params[:fltrs].present?
+    if params[:fltrs].present? && params[:fltrs][:_id].blank?
       # TODO: handle search here
       if params[:fltrs][:status].present?
         if params[:fltrs][:status].is_a?(Array)
@@ -235,6 +239,9 @@ class ProjectUnit
       end
       if params[:fltrs][:floor].present?
         selector[:floor] = params[:fltrs][:floor]
+      end
+      if params[:fltrs][:floor_order].present?
+        selector[:floor_order] = params[:fltrs][:floor_order]
       end
       if params[:fltrs][:carpet].present?
         carpet = params[:fltrs][:carpet].split("-")
@@ -258,7 +265,10 @@ class ProjectUnit
       if params[:fltrs][:bathrooms].present?
         selector[:bathrooms] = params[:fltrs][:bathrooms].to_f
       end
+    elsif params[:fltrs].present? && params[:fltrs][:_id].present?
+      selector[:id] = params[:fltrs][:_id]
     end
+
     selector[:name] = ::Regexp.new(::Regexp.escape(params[:q]), 'i') if params[:q].present?
     self.where(selector)
   end
