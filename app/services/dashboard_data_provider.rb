@@ -93,14 +93,8 @@ module DashboardDataProvider
     out = []
     ["pending", "resolved"].each do |status|
       user_requests = UserRequest.where(request_type: "cancellation").where(status: status)
-      unit_ids = user_requests.distinct(:project_unit_id)
+      # unit_ids = user_requests.distinct(:project_unit_id)
       data = ProjectUnit.collection.aggregate([{
-        "$match": {
-          _id: {
-            "$in": unit_ids
-          }
-        }
-      }, {
         "$project": {
           total_agreement_price: "$agreement_price",
           total_all_inclusive_price: "$all_inclusive_price"

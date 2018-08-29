@@ -37,8 +37,8 @@
       </div>
       <div class="col-md-6">
         <div class="form-group">
-          <%= f.label :order, class: 'label-required' %>
-          <%= f.select :order, (1..30).collect{|x| [x, x]}, {prompt: true}, class: 'selectize', required: 'required' %>
+          <%= f.label :order %>
+          <%= f.select :order, (1..30).collect{|x| [x, x]}, {prompt: true}, class: 'selectize' %>
         </div>
       </div>
     </div>

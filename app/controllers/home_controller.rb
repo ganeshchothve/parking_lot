@@ -37,7 +37,7 @@ class HomeController < ApplicationController
               message = "A user with these details has already registered and has confirmed their account. We have linked his account to you channel partner login."
             else
               message = "A user with these details has already registered, but hasn't confirmed their account. We have resent the confirmation email to them, which has an account activation link."
-              @user.send_confirmation_instructions
+              @user.send_confirmation_instructions if @user.email.present?
             end
           end
           respond_to do |format|

@@ -165,9 +165,8 @@ class SearchesController < ApplicationController
 
   def razorpay_payment
     @receipt = Receipt.where(:receipt_id => params[:receipt_id]).first
-    @project_unit = ProjectUnit.find(@receipt.project_unit_id) if @receipt.project_unit_id.present?
     if @receipt.present? && @receipt.status == "pending"
-
+      @project_unit = ProjectUnit.find(@receipt.project_unit_id) if @receipt.project_unit_id.present?
     else
       redirect_to home_path(@search.user)
     end
