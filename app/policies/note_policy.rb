@@ -20,6 +20,6 @@ class NotePolicy < ApplicationPolicy
   end
 
   def permitted_attributes params={}
-    [ :note ]
+    [ :id, :note, :note_type, :creator_id ]
   end
 end

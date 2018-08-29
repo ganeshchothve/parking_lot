@@ -57,12 +57,39 @@
         <% end %>
         <% if policy(@user_request).editable_field?("notes_attributes") %>
           <% f.object.notes.new(creator_id: current_user.id) %>
-          <%= f.fields_for :notes do |note|%>
-            <div class="form-group">
-              <%= note.label :comments, class: 'label-required' %>
-              <%= note.text_area :note, autofocus: true, class: "form-control", required: 'required' %>
-              <%= note.hidden_field :creator_id %>
-            </div>
+          <%= f.fields_for :notes do |note_field|%>
+            <% if (note_field.object.new_record? && policy(note_field.object).create?) || policy(note_field.object).edit? %>
+              <div class="form-group">
+                <% if note_field.object.creator.role == "user" %>
+                  <%= note_field.hidden_field :note_type, value: (note_field.object.note_type.present? ? note_field.object.note_type : "user") %>
+                <% else %>
+                  <div class="row">
+                    <div class="col-md-2">
+                      <%= note_field.label :note_type %>
+                      <%= note_field.select :note_type, Note.available_note_types.collect{|x| [x[:text], x[:id]] }, {prompt: true}, class: 'selectize' %>
+                    </div>
+                    <div class="col-md-10">
+                <% end %>
+                    <%= note_field.label :comments %>
+                    <%= note_field.text_area :note, autofocus: true, class: "form-control" %>
+                <% if note_field.object.creator.role != "user" %>
+                    </div>
+                  </div>
+                <% end %>
+                <%= note_field.hidden_field :creator_id %>
+              </div>
+            <% else %>
+              <div>
+                <%= note_field.hidden_field :creator_id %>
+                <%= note_field.hidden_field :note %>
+                <%= note_field.hidden_field :note_type %>
+                <div><%= note_field.object.note %></div>
+                <small class="text-muted">
+                  created by <%= note_field.object.creator.name %> on <%= l(note_field.object.created_at.present? ? note_field.object.created_at : Time.now) %>
+                </small>
+              </div>
+              <hr/>
+            <% end %>
           <% end %>
         <% end %>
         <% if @user_request.new_record? %>
