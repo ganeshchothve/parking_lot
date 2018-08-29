@@ -35,7 +35,7 @@ Rails.application.routes.draw do
   end
   namespace :admin do
     resource :client, except: [:show, :new, :create] do
-      resources :sms_templates, only: [:edit, :update, :index]
+      resources :templates, only: [:edit, :update, :index]
     end
     resources :receipts, only: [:index, :show], controller: '/receipts' do
       get 'export', action: 'export', on: :collection, as: :export

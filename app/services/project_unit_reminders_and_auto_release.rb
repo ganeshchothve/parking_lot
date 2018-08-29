@@ -17,7 +17,7 @@ module ProjectUnitRemindersAndAutoRelease
           })
         end
         if days > 0 && project_unit.booking_portal_client.sms_enabled?
-          template = SmsTemplate.where(name: "promote_future_payment_#{days}").first
+          template = Template::SmsTemplate.where(name: "promote_future_payment_#{days}").first
           Sms.create!(
             booking_portal_client_id: project_unit.booking_portal_client_id,
             recipient_id: project_unit.user_id,

@@ -4,7 +4,6 @@ class Receipt
   include Mongoid::Timestamps
   include Mongoid::Autoinc
   include ArrayBlankRejectable
-  include Mongoid::Autoinc
   include InsertionStringMethods
   include ApplicationHelper
   include ReceiptStateMachine

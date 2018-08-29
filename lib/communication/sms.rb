@@ -8,7 +8,7 @@ module Communication
         client = sms.booking_portal_client
         params = {}
         params[:senderid] = client.sms_mask
-        params[:dest_mobileno] = sms.recipient.phone
+        params[:dest_mobileno] = sms.to.join(",")
         params[:message] = sms.body
         params[:username] = client.sms_provider_username
         params[:pass] = client.sms_provider_password

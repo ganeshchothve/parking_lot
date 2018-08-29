@@ -15,8 +15,8 @@ en:
     register_h2: "Register Now and book an apartment by paying just Rs. Blocking Amount (just takes 3 minutes)"
     note: "Note"
     notes: "Notes"
-    sms_template: 'SMS Template'
-    sms_templates: 'SMS Templates'
+    template: 'Template'
+    templates: 'Templates'
     assets: 'Documents'
     asset: 'Documents'
     gallery: "Gallery"
@@ -51,7 +51,7 @@ en:
         file_size: 'Size'
         file_name: 'Name'
         asset_type: 'Type'
-      sms_template:
+      template:
         name: 'Name'
         content: 'Content'
       client:
@@ -65,6 +65,7 @@ en:
         selldo_default_srd: 'SellDo Default SRD'
         selldo_cp_srd: 'SellDo Channel Partner SRD'
         notification_email: 'Notification Email (all emails are sent here)'
+        notification_numbers: 'Notification Numbers (Key SMS Reports are sent here)'
         sender_email: 'Sender Email Address'
         email_domains: 'Email Domains (to detect employee users)'
         booking_portal_domains: 'Booking Portal Domains (where the portal is hosted)'

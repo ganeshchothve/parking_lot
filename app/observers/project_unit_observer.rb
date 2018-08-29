@@ -78,7 +78,7 @@ class ProjectUnitObserver < Mongoid::Observer
           Sms.create!(
             booking_portal_client_id: project_unit.booking_portal_client_id,
             recipient_id: user_was.id,
-            sms_template_id: SmsTemplate.find_by(name: "project_unit_released").id,
+            sms_template_id: Template::SmsTemplate.find_by(name: "project_unit_released").id,
             triggered_by_id: user_was.id,
             triggered_by_type: user_was.class.to_s
           )
@@ -112,7 +112,7 @@ class ProjectUnitObserver < Mongoid::Observer
           Sms.create!(
             booking_portal_client_id: project_unit.booking_portal_client_id,
             recipient_id: user.id,
-            sms_template_id: SmsTemplate.find_by(name: "project_unit_blocked").id,
+            sms_template_id: Template::SmsTemplate.find_by(name: "project_unit_blocked").id,
             triggered_by_id: project_unit.id,
             triggered_by_type: project_unit.class.to_s
           )
@@ -120,7 +120,7 @@ class ProjectUnitObserver < Mongoid::Observer
           Sms.create!(
             booking_portal_client_id: user.booking_portal_client_id,
             recipient_id: user.id,
-            sms_template_id: SmsTemplate.find_by(name: "project_unit_booked_confirmed").id,
+            sms_template_id: Template::SmsTemplate.find_by(name: "project_unit_booked_confirmed").id,
             triggered_by_id: project_unit.id,
             triggered_by_type: project_unit.class.to_s
           )

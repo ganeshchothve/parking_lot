@@ -22,7 +22,7 @@ class UserRequestObserver < Mongoid::Observer
       end
 
       if project_unit.present? && user.booking_portal_client.sms_enabled?
-        template = SmsTemplate.where(name: "#{user_request.request_type}_request_created").first
+        template = Template::SmsTemplate.where(name: "#{user_request.request_type}_request_created").first
         if template.present?
           Sms.create!(
             booking_portal_client_id: user.booking_portal_client_id,
@@ -60,7 +60,7 @@ class UserRequestObserver < Mongoid::Observer
         })
       end
 
-      template = SmsTemplate.where(name: "#{user_request.request_type}_request_resolved").first
+      template = Template::SmsTemplate.where(name: "#{user_request.request_type}_request_resolved").first
       if template.present? && user_request.user.booking_portal_client.sms_enabled?
         receipt = user_request.receipt
         Sms.create!(

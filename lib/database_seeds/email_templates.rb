@@ -5,6 +5,7 @@ module DatabaseSeeds
       DatabaseSeeds::EmailTemplates::Receipt.seed client_id
       DatabaseSeeds::EmailTemplates::ProjectUnit.seed client_id
       DatabaseSeeds::EmailTemplates::UserRequest.seed client_id
+      DatabaseSeeds::EmailTemplates::Discount.seed client_id
 
       Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "UserKyc", name: "user_kyc_added", subject: "User kyc added <%= self.name %>", content: 'test') if ::Template::EmailTemplate.where(name: "user_kyc_added").blank?
     end

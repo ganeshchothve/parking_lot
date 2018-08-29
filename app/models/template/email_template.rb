@@ -2,11 +2,11 @@ class Template::EmailTemplate < Template
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  field :name,type: String
+  field :name, type: String
   field :subject_class, type: String
-  field :description,type: String
-  field :subject,type: String
-  field :text_only_body,type: String
+  field :subject, type: String
+  field :description, type: String
+  field :text_only_body, type: String
   field :attachment_ids, type: Array, default: []
 
   validates :name, :subject, :subject_class, presence: true

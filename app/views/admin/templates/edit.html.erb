@@ -1,9 +1,9 @@
-<%= form_for([:admin, :client, @sms_template], local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['sms_templates'], "data-type": "json", id: 'sms_template_form'}) do |f| %>
+<%= form_for(@template, url: admin_client_template_path(@template), local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['templates'], "data-type": "json", id: 'template_form'}) do |f| %>
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title"><%= @sms_template.new_record? ? "New" : "Edit" %> <%= "#{global_labels['sms_template']}" %></h5>
+        <h5 class="modal-title"><%= @template.new_record? ? "New" : "Edit" %> <%= "#{global_labels['template']}" %></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -11,7 +11,7 @@
       <div class="modal-body">
         <div class="form-group">
           <%= f.label :name %>
-          <div><%= @sms_template.name.titleize %></div>
+          <div><%= @template.name.titleize rescue @template._type.split("::").last %></div>
         </div>
         <div class="form-group">
           <%= f.label :content %>
@@ -27,6 +27,6 @@
 <% end %>
 <%= javascript_tag do %>
 $(document).ready(function(){
-  FormInitializer.init($("#sms_template_form"));
+  FormInitializer.init($("#template_form"));
 });
 <% end %>

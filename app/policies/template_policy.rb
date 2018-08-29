@@ -1,4 +1,4 @@
-class SmsTemplatePolicy < ApplicationPolicy
+class TemplatePolicy < ApplicationPolicy
   def index?
     user.role?('superadmin')
   end
