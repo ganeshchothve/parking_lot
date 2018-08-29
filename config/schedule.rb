@@ -29,3 +29,6 @@ end
 every 1.minute do
   runner "UpgradePricing.perform"
 end
+every 1.day, at: "7:00 pm" do
+  runnner "DailySmsReportWorker.new.perform"
+end
