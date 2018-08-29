@@ -28,7 +28,7 @@
           </div>
         </td>
         <td>
-          <%= receipt.status == "success" ? receipt.receipt_id : "Not Generated" %>
+          <%= ["success", "available_for_refund", "refunded", "cancelled"].include?(receipt.status) ? receipt.receipt_id : "Not Generated" %>
           <div class="small muted">
             <div>
               <%= receipt.project_unit_id.present? ? "Project: #{receipt.project_unit.name}" : 'Direct Payment' %>

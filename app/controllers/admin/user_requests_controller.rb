@@ -58,6 +58,7 @@ class Admin::UserRequestsController < ApplicationController
       @user_request.resolved_by = current_user
       @user_request.resolved_at = Time.now
     end
+
     respond_to do |format|
       if @user_request.save
         format.html { redirect_to (current_user.buyer? ? user_user_requests_path(@user) : admin_user_requests_path), notice: 'User Request was successfully updated.' }
