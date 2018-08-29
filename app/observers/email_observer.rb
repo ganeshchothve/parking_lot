@@ -19,9 +19,6 @@ class EmailObserver < Mongoid::Observer
       email.body = ERB.new(email.booking_portal_client.email_header).result( binding ) + email_template.parsed_content(triggered_by) + ERB.new(email.booking_portal_client.email_footer).result( binding )
       email.text_only_body = TemplateParser.parse(email_template.text_only_body, triggered_by)
       email.subject = email_template.parsed_subject(triggered_by)
-      # email.attachment_ids ||= []
-      # email.attachment_ids += email_template.docs.distinct(:id)
-      # email.attachment_ids += email_template.attachment_ids
     else
       email.body = TemplateParser.parse(email.body, triggered_by)
       email.text_only_body = TemplateParser.parse(email.text_only_body, triggered_by)
@@ -33,29 +30,17 @@ class EmailObserver < Mongoid::Observer
     if Rails.env.production? || Rails.env.staging?
       Communication::Email::Mailgun.execute(email.id.to_s)
     else
+      attachments = {}
+      email.attachments.collect do |doc|
+        attachments[doc.file_name] = File.read("#{Rails.root}/public/#{doc.file.url}")
+      end
       ApplicationMailer.test({
         to: email.recipients.distinct(:email),
         cc: email.cc,
         body: email.body,
-        subject: email.subject
+        subject: email.subject,
+        attachments: attachments
       }).deliver
     end
-    # if email.attachment_ids.present?
-    #   email.attachments.each do |attachment|
-    #     if attachment.associations.where(subject_class: "Email",subject_id: email.id).count == 0
-    #       attachment.associations.create(subject_class: "Email",subject_id: email.id)
-    #     end
-    #   end
-    # end
-  end
-
-  def after_update email
-    # if email.attachment_ids.present?
-    #   email.attachments.each do |attachment|
-    #     if attachment.associations.where(subject_class: "Email",subject_id: email.id).count == 0
-    #       attachment.associations.create(subject_class: "Email",subject_id: email.id)
-    #     end
-    #   end
-    # end
   end
 end

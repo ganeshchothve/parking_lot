@@ -92,6 +92,17 @@ class ProjectUnitObserver < Mongoid::Observer
     if project_unit.status_changed? && ['blocked', 'booked_tentative', 'booked_confirmed'].include?(project_unit.status)
 
       if project_unit.booking_portal_client.email_enabled?
+        attachments_attributes = []
+        if project_unit.status == "booked_confirmed"
+          action_mailer_email = ApplicationMailer.test(body: project_unit.booking_portal_client.templates.where(_type: "Template::AllotmentLetterTemplate").first.parsed_content(project_unit))
+
+          pdf = WickedPdf.new.pdf_from_string(action_mailer_email.html_part.body.to_s)
+          File.open("#{Rails.root}/allotment_letter-#{project_unit.name}.pdf", "wb") do |file|
+            file << pdf
+          end
+          attachments_attributes << {file: File.open("#{Rails.root}/allotment_letter-#{project_unit.name}.pdf")}
+        end
+
         Email.create!({
           booking_portal_client_id: project_unit.booking_portal_client_id,
           email_template_id:Template::EmailTemplate.find_by(name: "project_unit_#{project_unit.status}").id,
@@ -100,6 +111,7 @@ class ProjectUnitObserver < Mongoid::Observer
           cc_recipients: (user.manager_id.present? ? [user.manager] : []),
           triggered_by_id: project_unit.id,
           triggered_by_type: project_unit.class.to_s,
+          attachments_attributes: attachments_attributes
         })
       end
 
