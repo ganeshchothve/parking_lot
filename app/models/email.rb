@@ -24,6 +24,8 @@ class Email
   has_and_belongs_to_many :recipients, class_name: "User", inverse_of: :received_emails
   has_and_belongs_to_many :cc_recipients, class_name: "User", inverse_of: :cced_emails
   belongs_to :triggered_by, polymorphic: true
+  has_many :attachments, as: :assetable, class_name: "Asset"
+  accepts_nested_attributes_for :attachments
 
 
   # returns array having statuses, which are allowed on models
@@ -61,10 +63,6 @@ class Email
   # @return [String]
   def name
     self.subject
-  end
-
-  def attachments
-    self.agency.docs.in(id: self.attachment_ids)
   end
 
   def email_template
