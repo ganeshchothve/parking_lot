@@ -18,14 +18,14 @@ class Admin::UserRequestsController < ApplicationController
   end
 
   def new
-    @user_request = @user.user_requests.new
+    @user_request = associated_class.new(user_id: @user.id)
     @user_request.project_unit_id = params[:project_unit_id] if params[:project_unit_id].present?
     authorize @user_request
     render layout: false
   end
 
   def create
-    @user_request = @user.user_requests.new(created_by: current_user)
+    @user_request = associated_class.new(user_id: @user.id, created_by: current_user)
     @user_request.assign_attributes(permitted_attributes(@user_request))
     respond_to do |format|
       if @user_request.save

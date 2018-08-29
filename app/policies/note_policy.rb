@@ -11,6 +11,10 @@ class NotePolicy < ApplicationPolicy
     true
   end
 
+  def edit?
+    false
+  end
+
   def index?
     true
   end

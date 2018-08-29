@@ -18,7 +18,7 @@ class UserRequest
   validates :user_id, :project_unit_id, presence: true
   validates :resolved_by, presence: true, if: Proc.new{|user_request| user_request.status == 'resolved' }
   validates :status, inclusion: {in: Proc.new{ |record| record.class.available_statuses.collect{|x| x[:id]} } }
-  validates :project_unit_id, uniqueness: {scope: :user_id, message: 'already has a cancellation request.'}
+  # validates :project_unit_id, uniqueness: {scope: :user_id, message: 'already has a cancellation request.'}
 
   accepts_nested_attributes_for :notes
 

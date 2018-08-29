@@ -69,12 +69,9 @@ Rails.application.routes.draw do
         get :payment, on: :member
         get ":step", on: :member, to: "searches#show", as: :step
       end
+
       resources :user_requests, except: [:destroy], controller: 'user_requests'
-      nested do
-        scope ':request_type' do
-          resources :user_requests, except: [:destroy], controller: 'user_requests'
-        end
-      end
+
       resources :booking_details, only: [:update], controller: 'booking_details'
     end
     resources :discounts, except: [:destroy], controller: 'discounts' do

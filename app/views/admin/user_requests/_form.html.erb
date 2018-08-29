@@ -4,9 +4,13 @@
 %>
 <%
   if current_user.buyer?
-    url = user_user_requests_path
+    url = user_user_requests_path(request_type: @user_request.class.model_name.element)
   else
-    url = admin_user_user_requests_path(user_id: @user_request.user_id)
+    if @user_request.new_record?
+      url = admin_user_user_requests_path(user_id: @user_request.user_id, request_type: @user_request.class.model_name.element)
+    else
+      url = admin_user_user_request_path(user_id: @user_request.user_id, request_type: @user_request.class.model_name.element, id: @user_request.id)
+    end
   end
 %>
 <%= form_for @user_request, url: url, remote: true, html: {class: 'modal-remote-form validate-form'}, data: hash do |f| %>
@@ -31,6 +35,12 @@
             <div><%= @user_request.project_unit.name %></div>
           </div>
         <% end %>
+        <% begin %>
+          <%= render "admin/user_requests/#{@user_request.class.model_name.element}", f: f %>
+          <hr/>
+        <% rescue ActionView::MissingTemplate %>
+        <% end %>
+
         <% if policy(@user_request).editable_field?("status") %>
           <div class="form-group">
             <%= f.label :status, class: 'label-required' %>
@@ -42,23 +52,29 @@
           </div>
         <% end %>
         <% if policy(@user_request).editable_field?("notes_attributes") %>
-          <div class="form-group">
-            <%= f.label :comments, class: 'label-required' %>
-            <%= f.text_area "notes_attributes[note]", autofocus: true, class: "form-control", required: 'required' %>
-          </div>
+          <% f.object.notes.new(creator_id: current_user.id) %>
+          <%= f.fields_for :notes do |note|%>
+            <div class="form-group">
+              <%= note.label :comments, class: 'label-required' %>
+              <%= note.text_area :note, autofocus: true, class: "form-control", required: 'required' %>
+              <%= note.hidden_field :creator_id %>
+            </div>
+          <% end %>
         <% end %>
-        <div class="form-group">
-          <div class="alert alert-primary">
-            Your unit will be released once the cancellation request is processed. For booking the same unit again, you will have to go through the selection process again which will also be subject to availability.<br/>
-            <div class="form-check mt-3">
-              <input type="checkbox" id="accepted" class="form-check-input" />
-              <label class="form-check-label">I Agree <%= @user_request.user_id == current_user.id ? "" : " on behalf of #{@user_request.user.name}" %></label>
+        <% if @user_request.new_record? %>
+          <div class="form-group">
+            <div class="alert alert-primary">
+              Your unit will be released once the cancellation request is processed. For booking the same unit again, you will have to go through the selection process again which will also be subject to availability.<br/>
+              <div class="form-check mt-3">
+                <input type="checkbox" id="accepted" class="form-check-input" />
+                <label class="form-check-label">I Agree <%= @user_request.user_id == current_user.id ? "" : " on behalf of #{@user_request.user.name}" %></label>
+              </div>
             </div>
           </div>
-        </div>
+          <% end %>
       </div>
       <div class="modal-footer">
-        <%= f.submit "Submit", class: 'btn btn-primary', disabled: "disabled", id: "submit_request", data:{event_category: 'Section', event_action: 'Click', event_name: 'cancel booking - submit'}  %>
+        <%= f.submit "Submit", class: 'btn btn-primary', disabled: (@user_request.new_record? ? true : false), id: "submit_request", data:{event_category: 'Section', event_action: 'Click', event_name: 'cancel booking - submit'}  %>
       </div>
     </div>
   </div>

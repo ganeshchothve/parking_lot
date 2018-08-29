@@ -36,6 +36,7 @@ class UserRequestPolicy < ApplicationPolicy
       attributes += [:project_unit_id] if record.new_record?
       attributes += [:status] if record.persisted?
     end
+    attributes += [notes_attributes: [:note, :creator_id]]
     attributes
   end
 end

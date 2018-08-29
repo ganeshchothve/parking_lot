@@ -17,7 +17,7 @@ class UserRequestObserver < Mongoid::Observer
           booking_portal_client_id: user.booking_portal_client_id,
           email_template_id:Template::EmailTemplate.find_by(name: "#{request_type}_request_created").id,
           recipients: [user],
-          cc_recipients: (user.channel_partner_id.present? ? [user.channel_partner] : []),
+          cc_recipients: (user.manager_id.present? ? [user.manager] : []),
           triggered_by_id: user_request.id,
           triggered_by_type: user_request.class.to_s
         })
@@ -48,7 +48,7 @@ class UserRequestObserver < Mongoid::Observer
           booking_portal_client_id: user_request.user.booking_portal_client_id,
           email_template_id: Template::EmailTemplate.find_by(name: "#{request_type}_request_#{user_request.status}").id,
           recipients: [user_request.user],
-          cc_recipients: (user_request.user.channel_partner_id.present? ? [user_request.user.channel_partner] : []),
+          cc_recipients: (user_request.user.manager_id.present? ? [user_request.user.manager] : []),
           triggered_by_id: user_request.id,
           triggered_by_type: user_request.class.to_s
         })

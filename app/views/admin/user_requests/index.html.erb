@@ -6,11 +6,14 @@
         <div class="card-body">
           <div class="row mb-3">
             <div class="col-md-7">
-              <% if UserRequestPolicy.new(current_user, UserRequest.new(user: @user)).new? %>
-                <%= link_to "Add #{global_labels['user_request']}", new_user_user_request_path, class: 'btn btn-primary nav-btn modal-remote-form-link' %>
+              <% if @user.present? && UserRequest::CancellationPolicy.new(current_user, UserRequest::Cancellation.new(user: @user)).new? %>
+                <%= link_to "Add #{global_labels['user_request_cancellation']}", new_user_user_request_path, class: 'btn btn-primary nav-btn modal-remote-form-link' %>
+              <% end %>
+              <% if @user.present? && UserRequest::SwapPolicy.new(current_user, UserRequest::Swap.new(user: @user)).new? %>
+                <%= link_to "Add #{global_labels['user_request_swap']}", new_user_user_request_path, class: 'btn btn-primary nav-btn modal-remote-form-link' %>
               <% end %>
               <% if UserRequestPolicy.new(current_user, UserRequest).export? %>
-                <%= link_to "Export all #{global_labels['user_request']}", export_admin_user_requests_path, class: 'btn btn-primary float-left ml-md-2 mt-md-0 mt-2 margin-xs-left-0' %>
+                <%= link_to "Export all #{global_labels['user_request']}", export_admin_user_requests_path, class: 'btn btn-primary mt-2' %>
               <% end %>
             </div>
             <div class="col-md-5 text-md-right">
