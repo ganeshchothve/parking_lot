@@ -8,7 +8,7 @@ module ProjectUnitRemindersAndAutoRelease
             booking_portal_client_id: project_unit.booking_portal_client_id,
             email_template_id:Template::EmailTemplate.find_by(name: "daily_reminder_for_booking_payment").id,
             recipients: [project_unit.user],
-            cc_recipients: (project_unit.user.channel_partner_id.present? ? [project_unit.user.channel_partner] : []),
+            cc_recipients: (project_unit.user.manager_id.present? ? [project_unit.user.manager] : []),
             triggered_by_id: project_unit.id,
             triggered_by_type: project_unit.class.to_s
           })

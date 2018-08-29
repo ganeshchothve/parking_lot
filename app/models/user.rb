@@ -289,7 +289,7 @@ class User
     elsif login.blank? && warden_conditions[:reset_password_token].present?
       reset_password_token = warden_conditions.delete(:reset_password_token)
       where(reset_password_token: reset_password_token).first
-    else
+    elsif login.present?
       any_of({phone: login}, email: login).first
     end
   end
@@ -344,12 +344,12 @@ class User
     custom_scope
   end
 
-  def unused_user_kyc_ids
+  def unused_user_kyc_ids project_unit_id
     if self.booking_portal_client.allow_multiple_bookings_per_user_kyc
       user_kyc_ids = self.user_kycs.collect{|x| x.id}
     else
       user_kyc_ids = self.user_kycs.collect{|x| x.id}
-      self.project_units.each do |x|
+      self.project_units.ne(id: project_unit_id).each do |x|
         user_kyc_ids = user_kyc_ids - [x.primary_user_kyc_id] - x.user_kyc_ids
       end
     end

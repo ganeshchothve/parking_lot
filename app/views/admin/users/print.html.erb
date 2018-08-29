@@ -83,12 +83,6 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label class="small text-muted"><%= kyc_labels[:configurations] %></label>
-              <div><%= user_kyc.configurations.to_sentence %></div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group">
               <label class="small text-muted"><%= kyc_labels[:permanent_address] %></label>
               <div><%= user_kyc.permanent_address.present? ? user_kyc.permanent_address.to_sentence : "" %></div>
             </div>
@@ -97,6 +91,20 @@
             <div class="form-group">
               <label class="small text-muted"><%= kyc_labels[:dob] %></label>
               <div><%= user_kyc.dob.present? ? l(user_kyc.dob) : "" %></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="small text-muted"><%= kyc_labels[:configurations] %></label>
+              <div><%= user_kyc.configurations.to_sentence %></div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="small text-muted"><%= kyc_labels[:budget] %></label>
+              <div><%= user_kyc.min_budget.present? ? "From #{user_kyc.min_budget} " : "" %><%= user_kyc.max_budget.present? ? "To #{user_kyc.max_budget}" : "" %></div>
             </div>
           </div>
         </div>

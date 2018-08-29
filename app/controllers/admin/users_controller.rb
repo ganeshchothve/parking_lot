@@ -19,7 +19,6 @@ class Admin::UsersController < AdminController
     render layout: false
   end
 
-
   def resend_confirmation_instructions
     @user = User.find(params[:id])
     respond_to do |format|

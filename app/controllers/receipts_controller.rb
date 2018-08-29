@@ -30,7 +30,7 @@ class ReceiptsController < ApplicationController
         booking_portal_client_id: user.booking_portal_client_id,
         email_template_id:Template::EmailTemplate.find_by(name: "receipt_success").id,
         recipients: [@receipt.user],
-        cc_recipients: (user.channel_partner_id.present? ? [user.channel_partner] : []),
+        cc_recipients: (user.manager_id.present? ? [user.manager] : []),
         triggered_by_id: @receipt.id,
         triggered_by_type: @receipt.class.to_s
       })

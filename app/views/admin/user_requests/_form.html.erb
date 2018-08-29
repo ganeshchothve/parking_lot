@@ -3,17 +3,21 @@
   hash = {confirm: 'Are you sure you want to proceed?'} if @user_request.new_record? && current_user.buyer?
 %>
 <%
-  if current_user.buyer?
-    url = user_user_requests_path(request_type: @user_request.class.model_name.element)
+  url = if current_user.buyer?
+    if @user_request.new_record?
+      user_user_requests_path(request_type: @user_request.class.model_name.element)
+    else
+      user_user_request_path(request_type: @user_request.class.model_name.element, id: @user_request.id)
+    end
   else
     if @user_request.new_record?
-      url = admin_user_user_requests_path(user_id: @user_request.user_id, request_type: @user_request.class.model_name.element)
+      admin_user_user_requests_path(user_id: @user_request.user_id, request_type: @user_request.class.model_name.element)
     else
-      url = admin_user_user_request_path(user_id: @user_request.user_id, request_type: @user_request.class.model_name.element, id: @user_request.id)
+      admin_user_user_request_path(user_id: @user_request.user_id, request_type: @user_request.class.model_name.element, id: @user_request.id)
     end
   end
 %>
-<%= form_for @user_request, url: url, remote: true, html: {class: 'modal-remote-form validate-form'}, data: hash do |f| %>
+<%= form_for @user_request, url: url, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['user_requests'], "data-type": "json"}, data: hash do |f| %>
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -71,7 +75,7 @@
               </div>
             </div>
           </div>
-          <% end %>
+        <% end %>
       </div>
       <div class="modal-footer">
         <%= f.submit "Submit", class: 'btn btn-primary', disabled: (@user_request.new_record? ? true : false), id: "submit_request", data:{event_category: 'Section', event_action: 'Click', event_name: 'cancel booking - submit'}  %>

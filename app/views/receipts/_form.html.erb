@@ -131,7 +131,13 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <%= f.label :status, class: 'control-label' %>
-                  <%= f.select :event, options_for_select(@receipt.aasm.events(permitted: true).collect{|rec| [rec.name.to_s.titleize, rec.name.to_s]}, @receipt.status), {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(@receipt).editable_field?("event") ? false : true) %>
+                  <%
+                    statuses = @receipt.aasm.events(permitted: true).collect{|x| x.name.to_s}
+                    if statuses.include?("clearance_pending") && @receipt.new_record?
+                      statuses.reject!{|x| x == "pending"}
+                    end
+                  %>
+                  <%= f.select :event, options_for_select(statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, @receipt.status), {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(@receipt).editable_field?("event") ? false : true) %>
                 </div>
               </div>
               <div class="col-md-6">
@@ -184,7 +190,7 @@
                 <h5><%= number_to_indian_currency(total_amount) %></h5>
                 <%= f.hidden_field :total_amount, value: total_amount %>
               <% else %>
-                <%= f.number_field :total_amount, min: 0, max: (@project_unit.present? ? @project_unit.agreement_price : current_client.blocking_amount), class: "form-field form-control green", required: 'required' %>
+                <%= f.number_field :total_amount, min: 0, class: "form-field form-control green", required: 'required' %>
               <% end %>
             </div>
             <% if i_agree_required %>

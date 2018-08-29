@@ -13,10 +13,10 @@
                 <%= link_to "Add #{global_labels['user_request_swap']}", new_user_user_request_path, class: 'btn btn-primary nav-btn modal-remote-form-link' %>
               <% end %>
               <% if UserRequestPolicy.new(current_user, UserRequest).export? %>
-                <%= link_to "Export all #{global_labels['user_request']}", export_admin_user_requests_path, class: 'btn btn-primary mt-2' %>
+                <%= link_to "Export all #{global_labels['user_request']}", export_admin_user_requests_path, class: 'btn btn-primary ml-md-1 mt-md-0 mt-2 margin-xs-left-0' %>
               <% end %>
             </div>
-            <div class="col-md-5 text-md-right">
+            <div class="col-md-4 text-md-right">
               <h6 class="mt-2">Total <%= global_labels[:user_requests] %>: <%= @user_requests.total_entries %></h6>
             </div>
           </div>
