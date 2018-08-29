@@ -152,12 +152,6 @@ class ProjectUnitObserver < Mongoid::Observer
           triggered_by_type: project_unit.class.to_s
         })
       end
-
-      if Rails.env.development?
-        ::SMSWorker.new.perform("", "")
-      else
-        ::SMSWorker.perform_async("", "")
-      end
     end
   end
 end

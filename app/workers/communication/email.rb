@@ -1,9 +1,10 @@
 module Communication
   module Email
-    module Mailgun
+    class MailgunWorker
+      include Sidekiq::Worker
 
       # finds the email object, and email_settings from agency, finds the correct provider and sends the email's json to provider_object for sending the email
-      def self.execute email_id
+      def perform email_id
         email = ::Email.find email_id
         email_json = email.as_json.with_indifferent_access
         if email.attachments.present?
@@ -38,7 +39,7 @@ module Communication
         end
       end
 
-      def self.get_message_object email_json
+      def get_message_object email_json
         email_json = email_json.with_indifferent_access
         message = ::Mailgun::MessageBuilder.new
         email_json[:to].each{|to| message.add_recipient(:to, to)}

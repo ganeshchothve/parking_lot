@@ -71,7 +71,6 @@ module DatabaseSeeds
 
         Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "ProjectUnit", name: "project_unit_released", subject: "Test", content: '<div class="card w-100">
             <div class="card-body">
-              <p>Dear <%= self.user.name %>,</p>
               Your Unit - <%= self.name %> has been released.<br/><br/>
               In case you need any assistance, please get in touch with our support team.
             </div>

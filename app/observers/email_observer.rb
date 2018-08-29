@@ -28,7 +28,7 @@ class EmailObserver < Mongoid::Observer
 
   def after_create email
     if Rails.env.production? || Rails.env.staging?
-      Communication::Email::Mailgun.execute(email.id.to_s)
+      Communication::Email::MailgunWorker.perform_async(email.id.to_s)
     else
       attachments = {}
       email.attachments.collect do |doc|

@@ -2,8 +2,10 @@ require 'net/http'
 require 'rexml/document'
 module Communication
   module Sms
-    class Smsjust
-      def self.execute sms_id
+    class SmsjustWorker
+      include Sidekiq::Worker
+
+      def perform sms_id
         sms = ::Sms.find sms_id
         client = sms.booking_portal_client
         params = {}
@@ -19,8 +21,10 @@ module Communication
         response = Net::HTTP.get_response(uri).body
 
         if response.starts_with?("ES")
+          sms.set(status: "fail")
           return {status:"fail", remote_id: response}
         else
+          sms.set(status: "sent")
           return {status:"success", remote_id: response}
         end
       end
