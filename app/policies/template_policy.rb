@@ -12,7 +12,7 @@ class TemplatePolicy < ApplicationPolicy
   end
 
   def permitted_attributes params={}
-    attributes = [:content]
+    attributes = [:content, :subject]
     attributes
   end
 end

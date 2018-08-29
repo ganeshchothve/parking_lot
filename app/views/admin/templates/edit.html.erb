@@ -13,6 +13,12 @@
           <%= f.label :name %>
           <div><%= @template.name.titleize rescue @template._type.split("::").last %></div>
         </div>
+        <% if @template.is_a?(::Template::EmailTemplate) %>
+        <div class="form-group">
+          <%= f.label :subject %>
+          <%= f.text_field :subject, class: 'form-control' %>
+        </div>
+        <% end %>
         <div class="form-group">
           <%= f.label :content %>
           <%= f.text_area :content, class: 'form-control' %>
