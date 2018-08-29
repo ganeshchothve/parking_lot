@@ -1,17 +1,18 @@
 # GENERICTODO: To be replaced with Email Template at a later stage
 class Template::PaymentScheduleTemplate < Template
   def self.default_content
-    '<table class="table">
+    '<h3 class="mb-3">Payment Schedule</h3>
+    <table class="table">
       <thead>
-        <td width="60%">Milestone</td>
-        <td width="5%">%</td>
-        <td width="10%">Amount(Rs.)</td>
-        <td width="5%">CGST-6%</td>
-        <td width="5%">SGST-6%</td>
+        <th width="60%">Milestone</th>
+        <th width="5%">%</th>
+        <th width="10%">Amount(Rs.)</th>
+        <th width="5%">CGST-6%</th>
+        <th width="5%">SGST-6%</th>
         <% if self.agreement_price > 5000000 %>
-          <td width="5%">Less - TDS</td>
+          <th width="5%">Less - TDS</th>
         <% end %>
-        <td width="10%">Total Payable on milestone</td>
+        <th width="10%">Total Payment</th>
       </thead>
       <tbody>
         <%
@@ -33,7 +34,8 @@ class Template::PaymentScheduleTemplate < Template
             "Completion of the external plumbing and external plaster, elevation, terraces with waterproofing, of the building or wing in which the said unit is located": 5,
             "Completion of  the lifts, water pumps, electrical fittings, electro, mechanical and environmental requirements of the building in which the said unit is located":  5,
             "Completion of  the entrance lobby/s, plinth protection, paving of area appertain and all other requirements  of the building in which the said unit is located":  5,
-            "At the time of Taking Possession of the said unit on or after receipt of occupancy certificate from the concerned government authority.": 5
+            "At the time of Taking Possession of the said unit on or after receipt of occupancy certificate from the concerned government authority.": 5,
+            "Total": 100
           }
         %>
         <% hash.each do |k, v| %>
@@ -43,14 +45,14 @@ class Template::PaymentScheduleTemplate < Template
             sgst = (current_value * 0.06).round()
             tds = (current_value * 0.01).round()
           %>
-          <tr>
+          <tr class="<%= v == 100 ? "bg-primary text-white" : "" %>">
             <td><%= k %></td>
-            <td><%= v %></td>
-            <td><%= number_to_indian_currency(current_value) %></td>
-            <td><%= number_to_indian_currency(cgst) %></td>
-            <td><%= number_to_indian_currency(sgst) %></td>
+            <td class="text-right"><%= v %></td>
+            <td class="text-right"><%= number_to_indian_currency(current_value) %></td>
+            <td class="text-right"><%= number_to_indian_currency(cgst) %></td>
+            <td class="text-right"><%= number_to_indian_currency(sgst) %></td>
             <% if self.agreement_price > 5000000 %>
-              <td><%= number_to_indian_currency(tds) %></td>
+              <td class="text-right"><%= number_to_indian_currency(tds) %></td>
             <% end %>
             <td><%= number_to_indian_currency(current_value + cgst + sgst - tds) %></td>
           </tr>

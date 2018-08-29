@@ -87,19 +87,21 @@
                 <%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.all.sort, {}, class: 'selectize', disabled: (policy(@user).editable_field?("time_zone") ? false : true) %>
               </div>
             </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <%= f.label :is_active %><br/>
-                <div class="form-check form-check-inline">
-                  <%= f.radio_button :is_active, true, class: "form-check-input" %>
-                  <%= f.label :is_active, "Yes", class: "form-check-label" %>
-                </div>
-                <div class="form-check form-check-inline">
-                  <%= f.radio_button :is_active, false, class: "form-check-input" %>
-                  <%= f.label :is_active, "No", class: "form-check-label" %>
+            <% if policy(@user).editable_field?("is_active") %>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :is_active %><br/>
+                  <div class="form-check form-check-inline">
+                    <%= f.radio_button :is_active, true, class: "form-check-input" %>
+                    <%= f.label :is_active, "Yes", class: "form-check-label" %>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <%= f.radio_button :is_active, false, class: "form-check-input" %>
+                    <%= f.label :is_active, "No", class: "form-check-label" %>
+                  </div>
                 </div>
               </div>
-            </div>
+            <% end %>
           </div>
         </div>
         <div class="modal-footer">
