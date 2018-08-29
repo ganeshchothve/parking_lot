@@ -3,8 +3,12 @@ class SmsObserver < Mongoid::Observer
     sms.to ||= []
     sms.to += [sms.recipient.phone] if sms.recipient_id.present? && sms.recipient.phone.present?
     if sms.sms_template_id.present?
-      sms_template = Template::SmsTemplate.find sms.sms_template_id
-      sms.body = sms_template.parsed_content(sms.triggered_by)
+      begin
+        sms_template = Template::SmsTemplate.find sms.sms_template_id
+        sms.body = sms_template.parsed_content(sms.triggered_by)
+      rescue => e
+        sms.body = ""
+      end
     else
       sms.body = TemplateParser.parse(sms.body, sms.triggered_by)
     end
