@@ -142,7 +142,7 @@ class User
     end
   end
 
-  def self.available_roles(current_client=nil)
+  def self.available_roles(current_client)
     roles = [
       {id: 'superadmin', text: 'Superadmin'},
       {id: 'admin', text: 'Administrator'},
