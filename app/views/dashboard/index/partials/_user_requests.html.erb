@@ -10,19 +10,17 @@
           <table class="table">
             <thead>
               <tr>
+                <th>Type</th>
                 <th>Status</th>
                 <th class="text-right">Count</th>
-                <th class="text-right">Total Agreement Price</th>
-                <th class="text-right">Total All Inclusive Price</th>
               </tr>
             </thead>
             <tbody>
               <% user_requests.each do |d| %>
               <tr>
+                <td><%= d[:request_type].titleize %></td>
                 <td><%= UserRequest.available_statuses.find{|x| x[:id] == d[:status]}[:text] %></td>
                 <td class="text-right"><%= d[:count] %></td>
-                <td class="text-right"><%= number_to_indian_currency(d[:total_agreement_price]) %></td>
-                <td class="text-right"><%= number_to_indian_currency(d[:total_all_inclusive_price]) %></td>
               </tr>
               <% end %>
             </tbody>

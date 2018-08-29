@@ -90,24 +90,20 @@ module DashboardDataProvider
   end
 
   def self.cancellation_user_requests_dashboard(user)
+    data = UserRequest.collection.aggregate([{
+      "$group": {
+        "_id":{
+          "request_type": "$request_type",
+          "status": "$status"
+        },
+        count: {
+          "$sum": 1
+        }
+      }
+    }]).to_a
     out = []
-    ["pending", "resolved"].each do |status|
-      user_requests = UserRequest.where(request_type: "cancellation").where(status: status)
-      # unit_ids = user_requests.distinct(:project_unit_id)
-      data = ProjectUnit.collection.aggregate([{
-        "$project": {
-          total_agreement_price: "$agreement_price",
-          total_all_inclusive_price: "$all_inclusive_price"
-        }
-      }]).to_a
-      if data.length > 0
-        out << {
-          status: status,
-          total_agreement_price: data.sum{|x| x["total_agreement_price"]},
-          total_all_inclusive_price: data.sum{|x| x["total_all_inclusive_price"]},
-          count: data.length
-        }
-      end
+    data.each do |d|
+      out << {request_type: d["_id"]["request_type"], status: d["_id"]["status"], count: d["count"]}.with_indifferent_access
     end
     out
   end
