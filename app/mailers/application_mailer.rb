@@ -12,6 +12,11 @@ class ApplicationMailer < ActionMailer::Base
 
   def test params
     body = params.delete :body
+    if params[:attachment_urls].present?
+      params[:attachment_urls].each do |name, url|
+        attachments[name] = File.read("#{Rails.root}/public/#{url}")
+      end
+    end
     bootstrap = BootstrapEmail::Compiler.new(
       mail(params) do |format|
         format.html{ render(layout: "layouts/mailer.html.erb", body: body) }

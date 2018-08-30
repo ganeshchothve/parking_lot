@@ -34,16 +34,16 @@ class EmailObserver < Mongoid::Observer
     if Rails.env.production? || Rails.env.staging?
       Communication::Email::MailgunWorker.perform_async(email.id.to_s)
     else
-      attachments = {}
+      attachment_urls = {}
       email.attachments.collect do |doc|
-        attachments[doc.file_name] = File.read("#{Rails.root}/public/#{doc.file.url}")
+        attachment_urls[doc.file_name] = doc.file.url
       end
       ApplicationMailer.test({
         to: email.recipients.distinct(:email),
         cc: email.cc,
         body: email.body,
         subject: email.subject,
-        attachments: attachments
+        attachment_urls: attachment_urls
       }).deliver
     end
   end

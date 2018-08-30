@@ -39,18 +39,18 @@ module DatabaseSeeds
           </div>
           <div class="mt-3"></div>
           ' + DatabaseSeeds::EmailTemplates.project_unit_overview + '
-        <div class="mt-3"></div>
+          <div class="mt-3"></div>
         ' + DatabaseSeeds::EmailTemplates.project_unit_cost_sheet + '
-        <div class="mt-3"></div>
+          <div class="mt-3"></div>
         ' + DatabaseSeeds::EmailTemplates.project_unit_payment_schedule + '
           <div class="mt-3"></div>
-          <div class="card w-100">
+          <div class="card">
             <div class="card-body">
               <% if self.auto_release_on.present? %>
               This unit will remain blocked for you until <%= I18n.l(self.auto_release_on) %>. Please complete your payment of remaining amount within this duration to confirm your unit. To make additional payment please click <a href="<%= Rails.application.routes.url_helpers.dashboard_url %>">here</a>.
               <% end %>
               <br/><br/>
-              In case your KYC details are incomplete, you can update them <a href="<%= Rails.application.routes.url_helpers.user_user_kycs_url %>here</a>.<br/><br/>
+              In case your KYC details are incomplete, you can update them <a href="<%= Rails.application.routes.url_helpers.user_user_kycs_url %>">here</a>.<br/><br/>
             </div>
           </div>') if ::Template::EmailTemplate.where(name: "project_unit_booked_tentative").blank?
 

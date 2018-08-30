@@ -200,7 +200,9 @@
       <div class="alert alert-primary">
         <ul>
           <li>You need to pay <%= number_to_indian_currency(project_unit.booking_price) %> to confirm the booking</li>
-          <li>Cancellation charges are <%= number_to_indian_currency(current_client.cancellation_amount) %></li>
+          <% unless current_client.cancellation_amount.zero? %>
+            <li>Cancellation charges are <%= number_to_indian_currency(current_client.cancellation_amount) %></li>
+          <% end %>
           <li>You have <%= (project_unit.auto_release_on - Date.today).to_i %> days (before <%= I18n.l(project_unit.auto_release_on) %>) remaining to confirm this booking. Please make a remaining payment of <%= number_to_indian_currency(project_unit.pending_balance.round) %></li>
         </ul>
       </div>
