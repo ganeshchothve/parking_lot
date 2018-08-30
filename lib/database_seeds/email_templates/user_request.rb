@@ -17,7 +17,7 @@ module DatabaseSeeds
             <p>
               We are sorry to see you go. <br/>
               Cancellation request on your booking of <%= project_unit.name%> at <%= project_unit.project_name%> has been processed and your amount will be refunded to you in a few days.<br/><br/>
-              To book another unit visit <%= user.dashboard_url %>
+              To book another unit please click <a href="<%= user.dashboard_url %>">here</a>.
             </p>
           </div>
         </div>') if ::Template::EmailTemplate.where(name: "cancellation_request_resolved").blank?

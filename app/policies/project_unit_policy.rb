@@ -29,14 +29,14 @@ class ProjectUnitPolicy < ApplicationPolicy
     valid = record.user.kyc_ready? && current_client.enable_actual_inventory?
     valid = valid && (record.user.project_units.where(status: "hold").blank? && record.user_based_status(record.user) == 'available')
     valid = valid && record.user.unattached_blocking_receipt.present? if user.role?('channel_partner')
-    valid = (valid && user.allowed_bookings > user.booking_details.ne(status: "cancelled").count)
+    valid = (valid && record.user.allowed_bookings > record.user.booking_details.ne(status: "cancelled").count)
     valid = (valid && record.user.unused_user_kyc_ids(record.id).present?)
     _role_based_check(valid)
   end
 
   def block?
     valid = ['hold'].include?(record.status) && record.user.kyc_ready? && current_client.enable_actual_inventory?
-    valid = (valid && user.allowed_bookings > user.booking_details.ne(status: "cancelled").count)
+    valid = (valid && record.user.allowed_bookings > record.user.booking_details.ne(status: "cancelled").count)
     _role_based_check(valid)
   end
 
