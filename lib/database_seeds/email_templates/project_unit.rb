@@ -96,7 +96,17 @@ module DatabaseSeeds
           <div class="mt-3"></div>
           ' + DatabaseSeeds::EmailTemplates.project_unit_payment_schedule) if ::Template::EmailTemplate.where(name: "auto_release_on_extended").blank?
 
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "ProjectUnit", name: "daily_reminder_for_booking_payment", subject: "Payment reminder for <%= self.name %>", content: '<%= self.name %>') if ::Template::EmailTemplate.where(name: "daily_reminder_for_booking_payment").blank?
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "ProjectUnit", name: "daily_reminder_for_booking_payment", subject: "Payment reminder for <%= self.name %>", content: '<div class="card w-100">
+          <div class="card-body">
+            <p>Dear <%= self.user.name %>,</p>
+            <p>
+              You have booked your spot among the privileged few in <%= name %> at <%= project_name %>. <br/>
+              Kindly pay the remaining balance to complete the booking process. The due date is <%= I18n.l(auto_release_on) %>.
+              <br/><br/>
+              Visit <%= user.dashboard_url %>.
+            </p>
+          </div>
+        </div>') if ::Template::EmailTemplate.where(name: "daily_reminder_for_booking_payment").blank?
       end
     end
   end
