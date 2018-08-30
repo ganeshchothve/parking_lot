@@ -69,7 +69,7 @@ module DatabaseSeeds
           <div class="mt-3"></div>
           ' + DatabaseSeeds::EmailTemplates.project_unit_payment_schedule) if ::Template::EmailTemplate.where(name: "project_unit_booked_confirmed").blank?
 
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "ProjectUnit", name: "project_unit_released", subject: "Test", content: '<div class="card w-100">
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "ProjectUnit", name: "project_unit_released", subject: "Your Booking for Unit <%= self.name %> has been cancelled", content: '<div class="card w-100">
             <div class="card-body">
               Your Unit - <%= self.name %> has been released.<br/><br/>
               In case you need any assistance, please get in touch with our support team.
