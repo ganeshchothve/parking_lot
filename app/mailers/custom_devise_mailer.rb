@@ -9,7 +9,7 @@ class CustomDeviseMailer < Devise::Mailer
   else
     default from: "Sell.Do <support@sell.do>"
   end
-  layout 'mailer'
+  layout 'devise_mailer'
 end
 
 module Devise::Mailers::Helpers
