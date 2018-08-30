@@ -49,7 +49,7 @@ class ProjectUnitObserver < Mongoid::Observer
 
   def after_save project_unit
     BookingDetail.run_sync(project_unit.id, project_unit.changes)
-    if project_unit.status_changed? && ["blocked", "booked_tentative", "booked_confirmed", "error"].include?(project_unit.status_was) && ["available", "employee", "management"].include?(project_unit.status)
+    if project_unit.status_changed? && ["hold", "blocked", "booked_tentative", "booked_confirmed", "error"].include?(project_unit.status_was) && ["available", "employee", "management"].include?(project_unit.status)
       user_was = User.find(project_unit.user_id_was)
 
       project_unit.set(user_id: nil, blocked_on: nil, auto_release_on: nil, held_on: nil, primary_user_kyc_id: nil, user_kyc_ids: [])
