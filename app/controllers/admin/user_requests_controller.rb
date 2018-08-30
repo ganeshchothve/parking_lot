@@ -26,7 +26,7 @@ class Admin::UserRequestsController < ApplicationController
 
   def create
     @user_request = associated_class.new(user_id: @user.id, created_by: current_user)
-    @user_request.assign_attributes(permitted_attributes(@user_request))
+    @user_request.assign_attributes(permitted_user_request_attributes)
     respond_to do |format|
       if @user_request.save
         format.html { redirect_to edit_user_user_request_path(@user_request), notice: 'Request registered successfully.' }
@@ -53,7 +53,7 @@ class Admin::UserRequestsController < ApplicationController
   end
 
   def update
-    @user_request.assign_attributes(permitted_attributes(@user_request))
+    @user_request.assign_attributes(permitted_user_request_attributes)
     if @user_request.status == "resolved"
       @user_request.resolved_by = current_user
       @user_request.resolved_at = Time.now
@@ -73,6 +73,16 @@ class Admin::UserRequestsController < ApplicationController
   private
   def set_user_request
     @user_request = associated_class.find(params[:id])
+  end
+
+  def permitted_user_request_attributes
+    attributes = permitted_attributes(@user_request)
+    attributes[:notes_attributes].each do |k, v|
+      if v["note"].blank?
+        attributes[:notes_attributes].delete(k)
+      end
+    end
+    attributes
   end
 
   def set_user
@@ -95,7 +105,7 @@ class Admin::UserRequestsController < ApplicationController
 
   def associated_class
     if params[:request_type] == "swap"
-        UserRequest::Swap
+      UserRequest::Swap
     elsif params[:request_type] == "cancellation"
       UserRequest::Cancellation
     else

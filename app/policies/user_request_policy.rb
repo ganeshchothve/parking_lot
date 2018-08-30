@@ -12,7 +12,7 @@ class UserRequestPolicy < ApplicationPolicy
     if record.project_unit_id.present?
       valid = valid && (record.project_unit.user_based_status(user) == "booked" && record.project_unit.status != "hold")
     end
-    valid = valid && UserRequest.where(_type: record._type).where(user_id: record.user.id).where(project_unit_id: record.project_unit_id).where(status: "pending").blank? if record.project_unit_id.present?
+    valid = valid && UserRequest.where(project_unit_id: record.project_unit_id).where(status: "pending").blank? if record.project_unit_id.present?
     valid = valid && (user.buyer? ? (record.user_id == user.id) : ['superadmin', 'admin', 'crm'].include?(user.role))
     valid
   end
