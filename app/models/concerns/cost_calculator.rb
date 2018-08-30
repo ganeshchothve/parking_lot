@@ -77,7 +77,7 @@ module CostCalculator
   end
 
   def total_amount_paid
-    receipts.where(status: 'success').sum(:total_amount)
+    receipts.where(user_id: self.user_id).where(status: 'success').sum(:total_amount)
   end
 
   def calculate_agreement_price

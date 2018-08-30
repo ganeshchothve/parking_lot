@@ -33,7 +33,7 @@ class EmailObserver < Mongoid::Observer
   def after_create email
     if Rails.env.production? || Rails.env.staging?
       if email.attachments.present?
-        Communication::Email::MailgunWorker.perform_in(email.id.to_s, 2.minutes)
+        Communication::Email::MailgunWorker.perform_in(2.minutes, email.id.to_s)
       else
         Communication::Email::MailgunWorker.perform_async(email.id.to_s)
       end

@@ -161,7 +161,7 @@ class UserKyc
   private
   def min_max_budget
     if min_budget.present? && max_budget.present?
-      self.errors.add :min_budget, "cannot be smaller than max." if min_budget > max_budget 
+      self.errors.add :min_budget, "cannot be smaller than max." if min_budget > max_budget
     end
   end
 end
