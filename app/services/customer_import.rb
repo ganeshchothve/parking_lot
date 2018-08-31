@@ -7,9 +7,9 @@ module CustomerImport
         lead_id = row[0].strip
         first_name = row[1].present? ? row[1].strip : "Customer"
         last_name = row[2].present? ? row[2].strip : "."
-        email = row[4].present? ? row[4].strip : ""
-        phone = row[3].present? ? "+91#{row[3].strip}" : ""
-        manager_email = row[5].present? ? row[5].strip : ""
+        email = row[3].present? ? row[3].downcase.strip : ""
+        phone = row[4].present? ? "+91#{row[4].strip}" : ""
+        manager_email = row[5].present? ? row[5].downcase.strip : ""
         manager = User.nin(role: User.buyer_roles(booking_portal_client)).where(email: manager_email).first
         query = []
         query << {email: email} if email.present?
@@ -26,8 +26,10 @@ module CustomerImport
             puts "#{user.errors.full_messages} #{user.lead_id} #{user.name} #{user.email} #{user.phone}"
           end
           # user.skip_confirmation_notification!
-          # puts "#{user.save} #{user.lead_id} #{user.name} #{user.email} #{user.phone}"
-          # user.confirm
+          # if user.save
+          #   puts "#{user.lead_id} #{user.name} #{user.email} #{user.phone}"
+          #   user.confirm
+          # end
         end
       end
       count += 1
