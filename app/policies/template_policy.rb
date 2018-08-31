@@ -1,4 +1,4 @@
-class SmsTemplatePolicy < ApplicationPolicy
+class TemplatePolicy < ApplicationPolicy
   def index?
     user.role?('superadmin')
   end
@@ -12,7 +12,7 @@ class SmsTemplatePolicy < ApplicationPolicy
   end
 
   def permitted_attributes params={}
-    attributes = [:content]
+    attributes = [:content, :subject]
     attributes
   end
 end

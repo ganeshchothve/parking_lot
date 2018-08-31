@@ -15,8 +15,8 @@ en:
     register_h2: "Register Now and book an apartment by paying just Rs. Blocking Amount (just takes 3 minutes)"
     note: "Note"
     notes: "Notes"
-    sms_template: 'SMS Template'
-    sms_templates: 'SMS Templates'
+    template: 'Template'
+    templates: 'Templates'
     assets: 'Documents'
     asset: 'Documents'
     gallery: "Gallery"
@@ -53,7 +53,7 @@ en:
         file_size: 'Size'
         file_name: 'Name'
         asset_type: 'Type'
-      sms_template:
+      template:
         name: 'Name'
         content: 'Content'
       client:
@@ -67,6 +67,7 @@ en:
         selldo_default_srd: 'SellDo Default SRD'
         selldo_cp_srd: 'SellDo Channel Partner SRD'
         notification_email: 'Notification Email (all emails are sent here)'
+        notification_numbers: 'Notification Numbers (Key SMS Reports are sent here)'
         sender_email: 'Sender Email Address'
         email_domains: 'Email Domains (to detect employee users)'
         booking_portal_domains: 'Booking Portal Domains (where the portal is hosted)'
@@ -123,7 +124,7 @@ en:
         issued_date: "Date of issuance (e.g. Cheque Date)"
         issuing_bank: "Issuing Bank"
         issuing_bank_branch: "Issuing Bank Branch"
-        payment_identifier: "Transaction Identifier"
+        payment_identifier: "Cheque Number / Transaction Identifier"
         total_amount: "Total Amount (Rs.)"
         status: "Payment Status"
         user_id: "Customer"
@@ -183,7 +184,7 @@ en:
         user_id: "Customer"
         receipt_ids: "Payments (associated with this Apartment)"
         user_request_ids: "User Requests (associated with this Apartment)"
-        user_kyc_ids: "User KYCs (associated with this Apartment)"
+        user_kyc_ids: "Co-Applicants (KYCs associated with this Apartment)"
         primary_user_kyc_id: "Primary User KYC"
         name: 'Name'
         project_tower_name: 'Project Tower'

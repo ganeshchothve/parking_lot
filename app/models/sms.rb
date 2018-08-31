@@ -2,6 +2,7 @@ class Sms
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  field :to, type: Array
   field :body, type: String
   field :sms_template_id, type: BSON::ObjectId
   field :sent_on, type: DateTime
@@ -14,7 +15,7 @@ class Sms
   validates :body, presence: true, if: Proc.new{ |model| model.sms_template_id.blank? }
   validates_inclusion_of :status, in: Proc.new { |_model| self.allowed_statuses.collect{ |hash| hash[:id] } }
 
-  enable_audit audit_fields: [:body, :sent_on], reference_ids_without_associations: [{field: "sms_template_id", klass: "SmsTemplate"}]
+  enable_audit audit_fields: [:body, :sent_on], reference_ids_without_associations: [{field: "sms_template_id", klass: "Template::SmsTemplate"}]
 
   default_scope -> {desc(:created_at)}
 
@@ -35,6 +36,6 @@ class Sms
   # returns an instance of sms_template associated to to entity
   #
   def sms_template
-    SmsTemplate.where(id: self.sms_template_id).first
+    Template::SmsTemplate.where(id: self.sms_template_id).first
   end
 end

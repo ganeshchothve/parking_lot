@@ -4,7 +4,7 @@ class Template::AllotmentLetterTemplate < Template
       <div class="card-body">
         <p>Dear <%= self.user.name %>,</p>
         Congratulations!<br/><br/>
-        Welcome to the <%= current_project.name %>! You\'re now the proud owner of Unit - <%= self.name %>.<br/><br/>
+        Welcome to the <%= project_name %>! You\'re now the proud owner of Unit - <%= self.name %>.<br/><br/>
         Our executives will be in touch regarding agreement formalities.
       </div>
     </div>

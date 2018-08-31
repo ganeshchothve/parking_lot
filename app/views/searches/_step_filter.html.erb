@@ -53,8 +53,15 @@
         <div class="bg-primary text-white">
           <%= icon "fas", "building", class: "fa-2x position-absolute", style: "right:10px; top:10px;" %>
           <div class="p-3">
-            <h3 class="font-weight-bold mb-3" data-placeholder="name"></h3>
-            <h6 data-placeholder="gamification"></h6>
+            <h4 class="font-weight-bold mb-3" data-placeholder="name"></h4>
+            <div class="row">
+              <div class="col-1">
+                <i class="fas fa-bell" style="font-size:32px;"></i>
+              </div>
+              <div class="col-11">
+                <h6 data-placeholder="gamification"></h6>
+              </div>
+            </div>
           </div>
           <figure class="w-100 wave">
             <svg preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="20 -20 300 100" style="margin-bottom: -38px;margin-top: -54px;" xml:space="preserve">
@@ -146,56 +153,7 @@
     $form.find('[name="search[project_tower_id]"]').val(tower_id);
     $form.find('input[type="submit"]').removeAttr("disabled");
 
-    showTowerData(tower_id);
-  });
-
-  var showTowerData = function(tower_id){
     var tower = _.find(towers, function(u){ return u.project_tower_id == tower_id });
-    $("#tower-description").find('[data-placeholder="name"]').html(tower.project_tower_name);
-    $("#tower-description").find('[data-placeholder="floors"]').html(tower.floors);
-    $("#tower-description").find('[data-placeholder="total-apartments"]').html(tower.total_units);
-    $("#tower-description").find('[data-placeholder="available-apartments"]').html(tower.total_units_available);
-    if($("#tower-description").hasClass('d-none')){
-      $("#tower-description").removeClass('d-none');
-    }
-    $.scrollTo($("#tower-description").offset().top, 800);
-
-    if(tower.assets.length > 0){
-      $(".tower_image_container").show();
-      $('[data-placeholder="tower_image"]').attr("src", _.first(tower.assets).file.url);
-      $('[data-placeholder="tower_image"]').show();
-      var gallery_html = '<div id="tower_gallery" class="carousel slide" data-ride="carousel">'
-      gallery_html += '<ol class="carousel-indicators">'
-      var count = 0;
-      _.each(tower.assets, function(asset){
-        gallery_html += '<li data-target="#tower_gallery" data-slide-to="' + count + '" class="' + (count == 0 ? "active" : "") + '"></li>';
-        count += 1;
-      });
-      gallery_html += '</ol>'
-      gallery_html += '<div class="carousel-inner">'
-      var count = 0;
-      _.each(tower.assets, function(asset){
-        gallery_html += '<div class="carousel-item ' + (count == 0 ? "active" : "") + '">\
-          <img class="d-block w-100" src="' + asset.file.url + '">\
-        </div>'
-        count += 1;
-      });
-      gallery_html += '</div>';
-      gallery_html += '<a class="carousel-control-prev" href="#tower_gallery" role="button" data-slide="prev">\
-          <span class="fas fa-chevron-left text-dark" aria-hidden="true"></span>\
-          <span class="sr-only">Previous</span>\
-        </a>\
-        <a class="carousel-control-next" href="#tower_gallery" role="button" data-slide="next">\
-          <span class="fas fa-chevron-right text-dark" aria-hidden="true"></span>\
-          <span class="sr-only">Next</span>\
-        </a>\
-      </div>';
-      $('[data-placeholder="gallery_tower_images"]').html(gallery_html);
-      $('#tower_gallery').carousel();
-    }else{
-      $(".tower_image_container").hide();
-      $('[data-placeholder="tower_image"]').hide();
-      $('[data-placeholder="gallery_tower_images"]').html("");
-    }
-  }
+    showTowerData(tower);
+  });
 <% end %>

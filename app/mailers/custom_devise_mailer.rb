@@ -9,7 +9,7 @@ class CustomDeviseMailer < Devise::Mailer
   else
     default from: "Sell.Do <support@sell.do>"
   end
-  layout 'mailer'
+  layout 'devise_mailer'
 end
 
 module Devise::Mailers::Helpers
@@ -23,18 +23,18 @@ module Devise::Mailers::Helpers
   def devise_sms record, action, opts = {}
     begin
       if action.to_s == "confirmation_instructions"
-        if record.buyer? && record.manager_id.present?
-          template_id = SmsTemplate.find_by(name: "user_registered_by_channel_partner").id
+        if record.buyer? && record.manager_id.present? && record.manager.role?("channel_partner")
+          template_id = Template::SmsTemplate.find_by(name: "user_registered_by_channel_partner").id
         elsif record.role?("channel_partner")
-          template_id = SmsTemplate.find_by(name: "channel_partner_user_registered").id
+          template_id = Template::SmsTemplate.find_by(name: "channel_partner_user_registered").id
         else
-          template_id = SmsTemplate.find_by(name: "user_registered").id
+          template_id = Template::SmsTemplate.find_by(name: "user_registered").id
         end
       elsif action.to_s == "resend_confirmation_instructions"
-        template_id = SmsTemplate.find_by(name: "user_registered").id
+        template_id = Template::SmsTemplate.find_by(name: "user_registered").id
       else
         # GENERICTODO : Will work once we get urls to start working in templates
-        # template_id = SmsTemplate.find_by(name: "devise_#{action}").id
+        # template_id = Template::SmsTemplate.find_by(name: "devise_#{action}").id
       end
       if template_id && record.booking_portal_client.sms_enabled?
         Sms.create!(

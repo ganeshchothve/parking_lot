@@ -64,7 +64,7 @@ class BookingDetail
   end
 
   def send_notification!
-    message = "#{self.primary_user_kyc.first_name} from #{self.primary_user_kyc.address.city rescue "-"} just booked #{self.project_unit.name}"
+    message = "#{self.primary_user_kyc.name} just booked apartment #{self.project_unit.name} in #{self.project_unit.project_tower_name}"
     Gamification::PushNotification.new.push(message) if Rails.env.staging? || Rails.env.production?
   end
 end

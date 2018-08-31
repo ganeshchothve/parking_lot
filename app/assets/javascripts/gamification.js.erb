@@ -13,51 +13,46 @@ var Gamification = (function(){
       }
     });
   }
-  var gamification_selector = '.gamification_container';
+  var gamification_selector = '#gamification-container';
 
-  var show = function(message, message_for){
-    if(message_for){
-      if($(gamification_selector + " .for-" + message_for).length == 0){
-        $(gamification_selector).append("<div class='text-slide for-" + message_for + "'>" + message + "</div>");
+  var show = function(message, $container){
+    if(App.client.enable_actual_inventory){
+      if($container && $container.length > 0){
+        $($container).html(message);
       }else{
-        $(gamification_selector + " .for-" + message_for).replaceWith("<div class='text-slide for-" + message_for + "'>" + message + "</div>");
+        $(gamification_selector).find('.carousel-inner').prepend('<div class="carousel-item"><span>' + message + "</span></div>").carousel(0);
+        $(gamification_selector).addClass("bg-primary");
+        setTimeout(function(){
+          $(gamification_selector).removeClass("bg-primary");
+        }, 4000);
       }
-    }else{
-      $(gamification_selector).append("<div class='text-slide'>" + message + "</div>");
     }
-
-    // gamificationSlider.reloadSlider();
-    // gamificationSlider.goToSlide(gamificationSlider.children().length - 1);
-    $(".gamification-container").addClass("active");
-    setTimeout(function(){
-        $(".gamification-container").removeClass("active");
-    }, 4000);
   }
 
-  var gamifyUnitSelection = function(unitData){
+  var gamifyUnitSelection = function(unit, $container){
     var rand = _.random(7);
     if(rand == 0 || rand == 2){
       $.ajax({
         url: "/dashboard/gamify-unit-selection",
         data: {
-          carpet: parseFloat(unitData[1]),
-          bedrooms: parseInt(unitData[3])
+          carpet: parseFloat(unit.carpet),
+          bedrooms: parseInt(unit.bedrooms)
         },
         success: function(data){
-          show(data.message, 'unit');
+          show(data.message, $container);
         }
       });
-    }else if(rand == 3 && unitData[5] > 5){
-      show("This is one of our most popular floors with stunning views", 'unit');
-    }else if((rand == 4 || rand == 5) && parseInt(unitData[3]) > 1){
-      show("Popular choice of first-time home buyers", 'unit');
+    }else if(rand == 3 && unit.floor > 5){
+      show("This is one of our most popular floors with stunning views", $container);
+    }else if((rand == 4 || rand == 5) && parseInt(unit.bedrooms) > 1){
+      show("Popular choice of first-time home buyers", $container);
     }else{
-      show((_.random(5) + 8) + " other people are viewing the apartments on this floor", 'unit');
+      show((_.random(5) + 8) + " other people are viewing the apartments on this floor", $container);
     }
   }
 
-  var gamifyTowerSelection = function(tower_id){
-    show((_.random(25) + 23) + " other people like you are looking for a home in this tower", 'tower');
+  var gamifyTowerSelection = function(tower, $container){
+    show((_.random(25) + 23) + " other people like you are looking for a home in this tower", $container);
   }
 
   return {

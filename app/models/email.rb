@@ -27,6 +27,7 @@ class Email
   has_many :attachments, as: :assetable, class_name: "Asset"
   accepts_nested_attributes_for :attachments
 
+  default_scope -> {desc(:created_at)}
 
   # returns array having statuses, which are allowed on models
   # allowed statuses are used in select2 for populating data on UI side. they also help in validations

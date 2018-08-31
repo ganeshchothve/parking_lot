@@ -14,7 +14,7 @@
     </h6>
     <div class="text-muted small">
       <% if search.crossed_step('towers') %>
-        <%= search.project_tower.name %><br/>
+        <%= search.project_unit.name %><br/>
         <br/>
         <% if @search.previous_step.present? %>
           <%= form_for [:user, @search], html: {class: 'validate-form'} do |f| %>

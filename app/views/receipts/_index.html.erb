@@ -31,7 +31,7 @@
           <%= ["success", "available_for_refund", "refunded", "cancelled"].include?(receipt.status) ? receipt.receipt_id : "Not Generated" %>
           <div class="small muted">
             <div>
-              <%= receipt.project_unit_id.present? ? "Project: #{receipt.project_unit.name}" : 'Direct Payment' %>
+              <%= receipt.project_unit_id.present? ? "Unit: #{receipt.project_unit.name}" : 'Direct Payment' %>
             </div>
             <% if receipt.payment_mode == 'online' %>
               <div>Trans ID: <%= receipt.payment_identifier %></div>

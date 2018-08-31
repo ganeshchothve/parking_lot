@@ -81,7 +81,7 @@ class Admin::UsersController < AdminController
         Rails.logger.info "---------------- #{@user.otp_code} ----------------"
       end
     else
-      if @user.authenticate_otp(params[:user][:login_otp], drift: 60)
+      if params[:user].present? && params[:user][:login_otp].present? && @user.authenticate_otp(params[:user][:login_otp], drift: 60)
         unless @user.confirmed?
           @user.confirm
         end

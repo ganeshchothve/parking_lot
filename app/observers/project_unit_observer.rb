@@ -26,13 +26,15 @@ class ProjectUnitObserver < Mongoid::Observer
     if project_unit.status == 'management'
       project_unit.available_for = 'management'
     end
+    if project_unit.status_changed?
+      SelldoLeadUpdater.perform_async(project_unit.user_id.to_s)
+    end
     if project_unit.status_changed? && project_unit.status == 'hold'
       project_unit.held_on = DateTime.now
       project_unit.applied_discount_rate = project_unit.discount_rate(project_unit.user)
       discount = project_unit.applicable_discount(project_unit.user)
       project_unit.applied_discount_id = discount.id if discount.present?
       ProjectUnitUnholdWorker.perform_in(project_unit.holding_minutes.minutes, project_unit.id.to_s)
-      SelldoLeadUpdater.perform_async(project_unit.user_id.to_s)
     elsif project_unit.status_changed? && project_unit.status != 'hold'
       project_unit.held_on = nil
     end
@@ -47,7 +49,7 @@ class ProjectUnitObserver < Mongoid::Observer
 
   def after_save project_unit
     BookingDetail.run_sync(project_unit.id, project_unit.changes)
-    if project_unit.status_changed? && ["blocked", "booked_tentative", "booked_confirmed", "error"].include?(project_unit.status_was) && ["available", "employee", "management"].include?(project_unit.status)
+    if project_unit.status_changed? && ["hold", "blocked", "booked_tentative", "booked_confirmed", "error"].include?(project_unit.status_was) && ["available", "employee", "management"].include?(project_unit.status)
       user_was = User.find(project_unit.user_id_was)
 
       project_unit.set(user_id: nil, blocked_on: nil, auto_release_on: nil, held_on: nil, primary_user_kyc_id: nil, user_kyc_ids: [])
@@ -76,7 +78,7 @@ class ProjectUnitObserver < Mongoid::Observer
           Sms.create!(
             booking_portal_client_id: project_unit.booking_portal_client_id,
             recipient_id: user_was.id,
-            sms_template_id: SmsTemplate.find_by(name: "project_unit_released").id,
+            sms_template_id: Template::SmsTemplate.find_by(name: "project_unit_released").id,
             triggered_by_id: user_was.id,
             triggered_by_type: user_was.class.to_s
           )
@@ -122,7 +124,7 @@ class ProjectUnitObserver < Mongoid::Observer
           Sms.create!(
             booking_portal_client_id: project_unit.booking_portal_client_id,
             recipient_id: user.id,
-            sms_template_id: SmsTemplate.find_by(name: "project_unit_blocked").id,
+            sms_template_id: Template::SmsTemplate.find_by(name: "project_unit_blocked").id,
             triggered_by_id: project_unit.id,
             triggered_by_type: project_unit.class.to_s
           )
@@ -130,7 +132,7 @@ class ProjectUnitObserver < Mongoid::Observer
           Sms.create!(
             booking_portal_client_id: user.booking_portal_client_id,
             recipient_id: user.id,
-            sms_template_id: SmsTemplate.find_by(name: "project_unit_booked_confirmed").id,
+            sms_template_id: Template::SmsTemplate.find_by(name: "project_unit_booked_confirmed").id,
             triggered_by_id: project_unit.id,
             triggered_by_type: project_unit.class.to_s
           )
@@ -149,12 +151,6 @@ class ProjectUnitObserver < Mongoid::Observer
           triggered_by_id: project_unit.id,
           triggered_by_type: project_unit.class.to_s
         })
-      end
-
-      if Rails.env.development?
-        ::SMSWorker.new.perform("", "")
-      else
-        ::SMSWorker.perform_async("", "")
       end
     end
   end

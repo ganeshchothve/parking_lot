@@ -2,24 +2,22 @@ module ProjectUnitRemindersAndAutoRelease
   class Job
     def self.daily_reminder_for_booking_payment
       ProjectUnit.in(status: ["blocked", 'booked_tentative']).where(auto_release_on: {"$gte" => Date.today}).each do |project_unit|
-        days = (project_unit.auto_release_on - Date.today).to_i
-        if [9,7,5,3,2,1].include?(days) && project_unit.booking_portal_client.email_enabled?
+        days = 0
+        if project_unit.auto_release_on.present? && project_unit.auto_release_on > Date.today
+          days = (project_unit.auto_release_on - Date.today).to_i
+        end
+        if days > 0 && project_unit.booking_portal_client.email_enabled?
           Email.create!({
             booking_portal_client_id: project_unit.booking_portal_client_id,
-            email_template_id:Template::EmailTemplate.find_by(name: "daily_reminder_for_booking_payment").id,
+            email_template_id: Template::EmailTemplate.find_by(name: "daily_reminder_for_booking_payment").id,
             recipients: [project_unit.user],
             cc_recipients: (project_unit.user.manager_id.present? ? [project_unit.user.manager] : []),
             triggered_by_id: project_unit.id,
             triggered_by_type: project_unit.class.to_s
           })
         end
-        if project_unit.auto_release_on.present? && project_unit.auto_release_on > Date.today
-          days = (project_unit.auto_release_on - Date.today).to_i
-        else
-          days = nil
-        end
-        if days.present? && project_unit.booking_portal_client.sms_enabled?
-          template = SmsTemplate.where(name: "promote_future_payment_#{days}").first
+        if days > 0 && project_unit.booking_portal_client.sms_enabled?
+          template = Template::SmsTemplate.where(name: "daily_reminder_for_booking_payment").first
           Sms.create!(
             booking_portal_client_id: project_unit.booking_portal_client_id,
             recipient_id: project_unit.user_id,

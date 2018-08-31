@@ -3,6 +3,16 @@ class SearchPolicy < ApplicationPolicy
     true
   end
 
+  def show?
+    valid = true
+    if record.project_unit.present? && record.project_unit.status == 'hold'
+      if record.user_id != record.project_unit.user_id
+        valid = false
+      end
+    end
+    valid
+  end
+
   def tower?
     index?
   end

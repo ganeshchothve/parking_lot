@@ -229,7 +229,7 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <%= f.label :helpdesk_email, class: 'label-required' %>
-                    <%= f.email_field :helpdesk_email, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("helpdesk_email") ? false : true) %>
+                    <%= f.text_field :helpdesk_email, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("helpdesk_email") ? false : true) %>
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -274,6 +274,14 @@
                     <%= f.email_field :notification_email, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("notification_email") ? false : true) %>
                   </div>
                 </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :notification_numbers, class: 'label-required' %>
+                    <%= f.text_field :notification_numbers, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("notification_numbers") ? false : true) %>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
                     <%= f.label :sender_email, class: 'label-required' %>

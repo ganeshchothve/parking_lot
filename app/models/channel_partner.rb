@@ -82,7 +82,11 @@ class ChannelPartner
       regex = ::Regexp.new(::Regexp.escape(params[:q]), 'i')
       or_selector = {"$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] }
     end
-    self.and([selector, or_selector])
+    if params[:fltrs].present? && params[:fltrs][:_id].present?
+      self.where(id: params[:fltrs][:_id])
+    else
+      self.and([selector, or_selector])
+    end
   end
 
   def name

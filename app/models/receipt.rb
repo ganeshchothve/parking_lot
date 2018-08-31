@@ -4,7 +4,6 @@ class Receipt
   include Mongoid::Timestamps
   include Mongoid::Autoinc
   include ArrayBlankRejectable
-  include Mongoid::Autoinc
   include InsertionStringMethods
   include ApplicationHelper
   include ReceiptStateMachine
@@ -45,6 +44,7 @@ class Receipt
   validates :tracking_id, presence: true, if: Proc.new{|receipt| receipt.status == 'success' && receipt.payment_mode != "online"}
   validates :comments, presence: true, if: Proc.new{|receipt| receipt.status == 'failed' && receipt.payment_mode != "online"}
   validate :tracking_id_processed_on_only_on_success
+  validate :processed_on_greater_than_issued_date
 
   increments :order_id, auto: false
   default_scope -> {desc(:created_at)}
@@ -66,7 +66,7 @@ class Receipt
   end
 
   def primary_user_kyc
-    if self.project_unit_id.present?
+    if self.project_unit_id.present? && self.project_unit.user_id == self.user_id
       return self.project_unit.primary_user_kyc
     else
       return UserKyc.where(user_id: self.user_id).asc(:created_at).first
@@ -178,6 +178,12 @@ class Receipt
     if self.status_changed? && self.status != "success" && self.payment_mode != "online"
       self.errors.add :tracking_id, 'cannot be set unless the status is marked as success' if self.tracking_id_changed? && self.tracking_id.present?
       self.errors.add :processed_on, 'cannot be set unless the status is marked as success' if self.processed_on_changed? && self.processed_on.present?
+    end
+  end
+
+  def processed_on_greater_than_issued_date
+    if self.processed_on.present? && self.issued_date.present? && self.processed_on < self.issued_date
+      self.errors.add :processed_on, 'cannot be older than the Issued Date'
     end
   end
 end
