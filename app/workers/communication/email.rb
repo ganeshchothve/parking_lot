@@ -47,7 +47,7 @@ module Communication
 
         action_mailer_email = ApplicationMailer.test(to: email_json[:to],cc: email_json[:cc], subject: email_json[:subject], body: email_json[:body])
 
-        message.from("notifications@sell.do")
+        message.from(email.booking_portal_client.sender_email)
         message.subject(email_json[:subject])
         message.body_text(email_json[:text_only_body])
         message.body_html(action_mailer_email.html_part.body.to_s)
