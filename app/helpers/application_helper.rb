@@ -85,9 +85,9 @@ module ApplicationHelper
         #{link_to('Edit ' + global_labels[:gallery], assetables_path(assetable_type: current_client.gallery.class.model_name.i18n_key.to_s, assetable_id: current_client.gallery.id), class: 'small nav-link modal-remote-form-link')}
       </li>"
     end
-    if user_signed_in? && SmsTemplatePolicy.new(current_user, SmsTemplate).index?
+    if user_signed_in? && TemplatePolicy.new(current_user, Template).index?
       html += "<li class='nav-item #{classes}'>
-        #{link_to('Manage ' + global_labels['sms_templates'], admin_client_sms_templates_path, class: 'small nav-link')}
+        #{link_to('Manage ' + global_labels['templates'], admin_client_templates_path, class: 'small nav-link')}
       </li>"
     end
     if user_signed_in? && AssetPolicy.new(current_user, Asset.new(assetable: current_client)).index? && current_user.role?("superadmin")

@@ -10,6 +10,12 @@ class Template::ReceiptTemplate < Template
               <td><%= labels["receipt_id"] %></td>
               <td class="text-right"><%= self.receipt_id %></td>
             </tr>
+            <% if self.project_unit_id.present? %>
+            <tr>
+              <td>Towards <%= labels["project_unit_id"] %></td>
+              <td class="text-right"><%= self.project_unit.name %></td>
+            </tr>
+            <% end %>
             <tr>
               <td><%= labels["payment_mode"] %></td>
               <td class="text-right"><%= self.class.available_payment_modes.find{|x| x[:id] == self.payment_mode}[:text] %></td>

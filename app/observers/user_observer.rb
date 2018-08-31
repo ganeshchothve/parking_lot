@@ -15,17 +15,6 @@ class UserObserver < Mongoid::Observer
 
   def before_save user
     user.phone.gsub(" ", "") if user.phone.present?
-    if user.manager_id_changed? && user.manager_id.present?
-      user.referenced_manager_ids << user.manager_id
-      if user.buyer?
-        mailer = UserMailer.send_change_in_manager(user.id.to_s)
-        if Rails.env.development?
-          mailer.deliver
-        else
-          mailer.deliver_later
-        end
-      end
-    end
     if user.confirmed_at_changed?
       # manager_ids = user.referenced_manager_ids - [user.manager_id]
       # manager_ids.each do |manager_id|
@@ -40,6 +29,20 @@ class UserObserver < Mongoid::Observer
     end
     unless user.authentication_token?
       user.reset_authentication_token!
+    end
+  end
+
+  def after_update user
+    if user.manager_id_changed? && user.manager_id.present?
+      user.referenced_manager_ids << user.manager_id
+      if user.buyer?
+        mailer = UserMailer.send_change_in_manager(user.id.to_s)
+        if Rails.env.development?
+          mailer.deliver
+        else
+          mailer.deliver_later
+        end
+      end
     end
   end
 end

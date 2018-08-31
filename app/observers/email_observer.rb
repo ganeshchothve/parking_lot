@@ -16,7 +16,11 @@ class EmailObserver < Mongoid::Observer
       email_template = Template::EmailTemplate.find email.email_template_id
       current_client = email.booking_portal_client
       current_project = current_client.projects.first
-      email.body = ERB.new(email.booking_portal_client.email_header).result( binding ) + email_template.parsed_content(triggered_by) + ERB.new(email.booking_portal_client.email_footer).result( binding )
+      begin
+        email.body = ERB.new(email.booking_portal_client.email_header).result( binding ) + email_template.parsed_content(triggered_by) + ERB.new(email.booking_portal_client.email_footer).result( binding )
+      rescue => e
+        email.body = ""
+      end
       email.text_only_body = TemplateParser.parse(email_template.text_only_body, triggered_by)
       email.subject = email_template.parsed_subject(triggered_by)
     else
@@ -28,18 +32,22 @@ class EmailObserver < Mongoid::Observer
 
   def after_create email
     if Rails.env.production? || Rails.env.staging?
-      Communication::Email::Mailgun.execute(email.id.to_s)
+      if email.attachments.present?
+        Communication::Email::MailgunWorker.perform_in(2.minutes, email.id.to_s)
+      else
+        Communication::Email::MailgunWorker.perform_async(email.id.to_s)
+      end
     else
-      attachments = {}
+      attachment_urls = {}
       email.attachments.collect do |doc|
-        attachments[doc.file_name] = File.read("#{Rails.root}/public/#{doc.file.url}")
+        attachment_urls[doc.file_name] = doc.file.url
       end
       ApplicationMailer.test({
         to: email.recipients.distinct(:email),
         cc: email.cc,
         body: email.body,
         subject: email.subject,
-        attachments: attachments
+        attachment_urls: attachment_urls
       }).deliver
     end
   end

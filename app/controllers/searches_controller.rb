@@ -10,6 +10,11 @@ class SearchesController < ApplicationController
   layout :set_layout
 
   def show
+    if @search.project_unit.present? && @search.project_unit.status == 'hold'
+      if @search.user_id == @search.project_unit.user_id
+        redirect_to checkout_user_search_path(@search)
+      end
+    end
     # GENERICTODO: Handle current user to be from a user based route path
   end
 
@@ -74,7 +79,7 @@ class SearchesController < ApplicationController
   def hold
     @project_unit = ProjectUnit.find(@search.project_unit_id)
     @project_unit.assign_attributes(permitted_attributes(@project_unit))
-    @project_unit.user = current_user if @project_unit.user_id.blank?
+    @project_unit.user = @user if @project_unit.user_id.blank?
     authorize @project_unit # Has to be done after user is assigned and before status is updated
     @project_unit.primary_user_kyc_id = @user.user_kyc_ids.first if @project_unit.primary_user_kyc_id.blank?
     @project_unit.status = "hold"
@@ -95,7 +100,9 @@ class SearchesController < ApplicationController
     end
     @project_unit = ProjectUnit.find(@search.project_unit_id)
     if @project_unit.held_on.present? && (@project_unit.held_on + @project_unit.holding_minutes.minutes) < Time.now
+      flash[:notice] = "We've released the unit which was held for #{@project_unit.holding_minutes} minutes. Please re-select the unit and try booking again."
       ProjectUnitUnholdWorker.new.perform(@project_unit.id)
+      redirect_to dashboard_path and return
     end
     authorize @project_unit
     if @project_unit.status != "hold"
@@ -130,9 +137,9 @@ class SearchesController < ApplicationController
     if @search.project_unit_id.present?
       @project_unit = ProjectUnit.find(@search.project_unit_id)
       authorize @project_unit
-      if(@search.user.total_unattached_balance >= current_client.blocking_amount)
-        unattached_blocking_receipt = @search.user.unattached_blocking_receipt
-        @receipt = unattached_blocking_receipt if unattached_blocking_receipt.present?
+      unattached_blocking_receipt = @search.user.unattached_blocking_receipt
+      if unattached_blocking_receipt.present?
+        @receipt = unattached_blocking_receipt
       end
       @receipt.project_unit = @project_unit
     else
@@ -158,9 +165,8 @@ class SearchesController < ApplicationController
 
   def razorpay_payment
     @receipt = Receipt.where(:receipt_id => params[:receipt_id]).first
-    @project_unit = ProjectUnit.find(@receipt.project_unit_id) if @receipt.project_unit_id.present?
     if @receipt.present? && @receipt.status == "pending"
-
+      @project_unit = ProjectUnit.find(@receipt.project_unit_id) if @receipt.project_unit_id.present?
     else
       redirect_to home_path(@search.user)
     end

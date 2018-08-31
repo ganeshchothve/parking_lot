@@ -20,7 +20,7 @@ $.validator.setDefaults({
       error.insertAfter(element);
     }
   },
-  ignore: ".selectize-input input, :hidden"
+  ignore: ":hidden:not([class~=selectized]), :hidden > .selectized, .selectize-control .selectize-input input"
 });
 
 $(document).ready(function(){

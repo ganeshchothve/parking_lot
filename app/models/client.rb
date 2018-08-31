@@ -1,6 +1,8 @@
 class Client
   include Mongoid::Document
   include Mongoid::Timestamps
+  include ArrayBlankRejectable
+  include InsertionStringMethods
 
   field :name, type: String
   field :selldo_client_id, type: String
@@ -13,6 +15,7 @@ class Client
   field :helpdesk_number, type: String
   field :helpdesk_email, type: String
   field :notification_email, type: String
+  field :notification_numbers, type: String
   field :allowed_bookings_per_user, type: Integer, default: 3
   field :sender_email, type: String
   field :email_domains, type: Array, default: []
@@ -90,7 +93,7 @@ class Client
   has_many :projects
   has_one :address, as: :addressable
   has_many :templates
-  has_many :sms_templates, class_name: 'SmsTemplate'
+  has_many :sms_templates, class_name: 'Template::SmsTemplate'
   has_many :email_templates, class_name: 'Template::EmailTemplate'
   has_many :smses, class_name: 'Sms'
 
@@ -99,7 +102,7 @@ class Client
   has_one :gallery
   has_many :discounts, class_name: "Discount"
 
-  validates :name, :allowed_bookings_per_user, :selldo_client_id, :selldo_form_id, :selldo_channel_partner_form_id, :selldo_gre_form_id, :helpdesk_email, :helpdesk_number, :notification_email, :sender_email, :email_domains, :booking_portal_domains, :registration_name, :website_link, :support_email, :support_number, :payment_gateway, :cin_number, :mailgun_private_api_key, :mailgun_email_domain, :sms_provider_username, :sms_provider_password, :sms_mask, presence: true
+  validates :name, :allowed_bookings_per_user, :selldo_client_id, :selldo_form_id, :selldo_channel_partner_form_id, :selldo_gre_form_id, :helpdesk_email, :helpdesk_number, :notification_email, :notification_numbers, :sender_email, :email_domains, :booking_portal_domains, :registration_name, :website_link, :support_email, :support_number, :payment_gateway, :cin_number, :mailgun_private_api_key, :mailgun_email_domain, :sms_provider_username, :sms_provider_password, :sms_mask, presence: true
 
   validates :preferred_login, inclusion: {in: Proc.new{ Client.available_preferred_logins.collect{|x| x[:id]} } }
   validates :payment_gateway, inclusion: {in: Proc.new{ Client.available_payment_gateways.collect{|x| x[:id]} } }, allow_blank: true
@@ -144,6 +147,7 @@ c.helpdesk_email = "supriya@amuratech.com"
 c.ga_code = ""
 c.gtm_tag = ""
 c.notification_email = "supriya@amuratech.com"
+c.notification_numbers = "9552523663, 9011099941"
 c.email_domains = ["amuratech.com"]
 c.booking_portal_domains = ["bookingportal.withamura.com"]
 c.registration_name = "Amura Marketing Technologies Pvt. Ltd."

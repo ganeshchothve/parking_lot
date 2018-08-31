@@ -1,6 +1,6 @@
 <div class="card">
   <div class="card-header">
-    <h5 class="float-left card-title mt-2 mb-0"><%= project_unit.name %></h5>
+    <h5 class="float-left card-title mt-2 mb-0"><%= global_labels[:project_unit] %> <%= project_unit.name %></h5>
     <% if defined?(with_actions) && with_actions == true %>
       <div class="dropdown float-right">
         <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Update Booking</a>
@@ -177,10 +177,32 @@
       </div>
     </div>
     <% if (project_unit.status == "blocked" || project_unit.status == "booked_tentative") && project_unit.auto_release_on.present? && project_unit.auto_release_on > Date.today %>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Amount Paid</label>
+            <div>
+              <%= number_to_indian_currency(project_unit.total_amount_paid) %>
+            </div>
+            <div class="small">* Considers processed <%= global_labels[:receipts] %> only</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Pending Balance</label>
+            <div>
+              <%= number_to_indian_currency(project_unit.pending_balance({strict: true})) %>
+            </div>
+            <div class="small">* Considers processed <%= global_labels[:receipts] %> only</div>
+          </div>
+        </div>
+      </div>
       <div class="alert alert-primary">
         <ul>
           <li>You need to pay <%= number_to_indian_currency(project_unit.booking_price) %> to confirm the booking</li>
-          <li>Cancellation charges are <%= number_to_indian_currency(current_client.cancellation_amount) %></li>
+          <% unless current_client.cancellation_amount.zero? %>
+            <li>Cancellation charges are <%= number_to_indian_currency(current_client.cancellation_amount) %></li>
+          <% end %>
           <li>You have <%= (project_unit.auto_release_on - Date.today).to_i %> days (before <%= I18n.l(project_unit.auto_release_on) %>) remaining to confirm this booking. Please make a remaining payment of <%= number_to_indian_currency(project_unit.pending_balance.round) %></li>
         </ul>
       </div>

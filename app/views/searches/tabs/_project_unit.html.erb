@@ -13,22 +13,7 @@
       Set up your <%= global_labels[:user_kyc] %>
     </h6>
     <div class="text-muted small">
-      <% if search.crossed_step('project_unit') %>
-        <%= search.project_tower.name %><br/>
-        <br/>
-        <% if @search.previous_step.present? %>
-          <%= form_for [:user, @search], html: {class: 'validate-form'} do |f| %>
-            <div class="form-group">
-              <%= f.hidden_field :step, value: "project_unit" %>
-            </div>
-            <div class="form-group">
-              <%= f.submit "Change", class: "small position-absolute", style: "right: 10px; top:0;" %>
-            </div>
-          <% end %>
-        <% end %>
-      <% else %>
-        Set up your <%= global_labels[:user_kyc] %> & hold your <%= global_labels[:project_unit] %>
-      <% end %>
+      Set up your <%= global_labels[:user_kyc] %> & hold your <%= global_labels[:project_unit] %>
     </div>
   </div>
 </div>

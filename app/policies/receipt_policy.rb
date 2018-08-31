@@ -8,7 +8,7 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def export?
-    ['superadmin', 'admin'].include?(user.role)
+    ['superadmin', 'admin', 'sales_admin'].include?(user.role)
   end
 
   def new?
@@ -17,6 +17,9 @@ class ReceiptPolicy < ApplicationPolicy
     else
       valid = record.user_id.present? && record.user.kyc_ready? && record.user.confirmed?
       valid = valid && (record.project_unit_id.blank? || after_blocked_payment? || (after_hold_payment? && editable_field?('event')))
+    end
+    if record.project_unit_id.present?
+      valid = valid && record.user.user_requests.where(project_unit_id: record.project_unit_id).where(status: "pending").blank?
     end
     valid = valid && current_client.payment_gateway.present? if record.payment_mode == "online"
     valid

@@ -12,7 +12,7 @@
       if(typeof App === "undefined"){
         App = {};
       }
-      App.client = <%= raw current_client.to_json(only: [:name, :_id, :preferred_login]) %>;
+      App.client = <%= raw current_client.to_json(only: [:name, :_id, :preferred_login, :enable_actual_inventory]) %>;
       App.project = <%= raw current_project.to_json(only: [:name, :_id]) %>;
       <% if user_signed_in? %>
         App.current_user = <%= raw current_user.to_json %>;
@@ -46,6 +46,8 @@
           </div>
         </div>
       </div>
+      <%= render "layouts/gamification" %>
+      <div class="pt-5 mt-4 d-none d-md-block"></div>
       <div class="body-padding"></div>
     </div>
     <% if current_client.ga_code.present? %>

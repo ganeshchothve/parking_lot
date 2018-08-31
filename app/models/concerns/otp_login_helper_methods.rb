@@ -32,7 +32,7 @@ module OtpLoginHelperMethods
         Sms.create!(
           booking_portal_client_id: self.booking_portal_client_id,
           recipient_id: self.id,
-          sms_template_id: SmsTemplate.find_by(name: "otp").id,
+          sms_template_id: Template::SmsTemplate.find_by(name: "otp").id,
           triggered_by_id: self.id,
           triggered_by_type: self.class.to_s
         )

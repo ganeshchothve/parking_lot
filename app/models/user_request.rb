@@ -40,7 +40,7 @@ class UserRequest
     [
       {id: 'pending', text: 'Pending'},
       {id: 'resolved', text: 'Resolved'},
-      {id: 'swapped', text: 'Swap resolved'}
+      # {id: 'swapped', text: 'Swap resolved'} commented till implementation is complete
     ]
   end
 
