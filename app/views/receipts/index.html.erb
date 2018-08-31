@@ -2,9 +2,11 @@
   <div class="row justify-content-center">
     <div class="<%= @user.blank? ? 'col-md-9' : 'col-md-12' %>">
       <%= render 'breadcrumbs', {user: @user, project_unit: @project_unit} %>
+      <% if current_client.cancellation_amount > 0 %>
       <div class="alert alert-danger">
         Refund Payments will be subject to cancellation charges
       </div>
+      <% end %>
       <% unless current_user.buyer? %>
         <% unless ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? %>
           <% if @user.present? %>
