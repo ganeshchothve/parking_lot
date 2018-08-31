@@ -54,10 +54,10 @@
                   <%= f.link_to_add "Add", :costs, :data => { :target => "#costs_container" } %>
                 </div>
               <% end %>
-              <div class="tab-pane fade show active" id="nav-project-unit-cost-sheet" role="tabpanel">
+              <div class="tab-pane fade" id="nav-project-unit-cost-sheet" role="tabpanel">
                 <%= render 'dashboard/project_unit_cost_sheet', {project_unit: @project_unit} %>
               </div>
-              <div class="tab-pane fade show active" id="nav-project-unit-payment-schedule" role="tabpanel">
+              <div class="tab-pane fade" id="nav-project-unit-payment-schedule" role="tabpanel">
                 <%= render "dashboard/project_unit_payment_schedule", project_unit: @project_unit %>
               </div>
             </div>
