@@ -155,7 +155,7 @@ class SearchesController < ApplicationController
           flash[:notice] = "We couldn't redirect you to the payment gateway, please try again"
           redirect_to dashboard_path
         end
-      elsif ['clearance_pending', "success"].include?(@receipt.status)
+      else
         redirect_to admin_user_path(@receipt.user)
       end
     else
