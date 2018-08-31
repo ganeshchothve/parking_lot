@@ -23,7 +23,7 @@ module Communication
         # setting[:domain] = ::Email.default_email_domain
 
         begin
-          message = get_message_object(email_json)
+          message = get_message_object(email_json, email.booking_portal_client.sender_email)
           mailgun = ::Mailgun::Client.new email.booking_portal_client.mailgun_private_api_key
           mailgun.send_message(email.booking_portal_client.mailgun_email_domain, message)
           email.set({sent_on: Time.now})
@@ -39,7 +39,7 @@ module Communication
         end
       end
 
-      def get_message_object email_json
+      def get_message_object email_json, sender_email
         email_json = email_json.with_indifferent_access
         message = ::Mailgun::MessageBuilder.new
         email_json[:to].each{|to| message.add_recipient(:to, to)}
@@ -47,7 +47,7 @@ module Communication
 
         action_mailer_email = ApplicationMailer.test(to: email_json[:to],cc: email_json[:cc], subject: email_json[:subject], body: email_json[:body])
 
-        message.from(email.booking_portal_client.sender_email)
+        message.from(sender_email)
         message.subject(email_json[:subject])
         message.body_text(email_json[:text_only_body])
         message.body_html(action_mailer_email.html_part.body.to_s)
