@@ -4,22 +4,22 @@ class UserExportWorker
   extend ApplicationHelper
 
   def perform user_id
-    user = User.find(user_id)
+    current_user = User.find(user_id)
     file = Spreadsheet::Workbook.new
     sheet = file.create_worksheet(name: "Users")
     sheet.insert_row(0, UserExportWorker.get_column_names)
-    User.where(User.user_based_scope(user)).all.each_with_index do |user, index|
-      sheet.insert_row(index+1, UserExportWorker.get_user_row(user))
+    User.where(User.user_based_scope(current_user)).all.each_with_index do |user, index|
+      sheet.insert_row(index+1, UserExportWorker.get_user_row(user, current_user))
     end
     sheet = file.create_worksheet(name: "User KYCs")
     sheet.insert_row(0, UserExportWorker.get_kyc_column_names)
-    UserKyc.where(UserKyc.user_based_scope(user)).all.each_with_index do |user_kyc, index|
-      sheet.insert_row(index+1, UserExportWorker.get_user_kyc_row(user_kyc))
+    UserKyc.where(UserKyc.user_based_scope(current_user)).all.each_with_index do |user_kyc, index|
+      sheet.insert_row(index+1, UserExportWorker.get_user_kyc_row(user_kyc, current_user))
     end
     file_name = "user-#{SecureRandom.hex}.xls"
     file.write("#{Rails.root}/#{file_name}")
 
-    ExportMailer.notify(file_name, user.email, "Users & User KYCs").deliver
+    ExportMailer.notify(file_name, current_user.email, "Users & User KYCs").deliver
   end
 
   def self.get_kyc_column_names
@@ -46,7 +46,7 @@ class UserExportWorker
     ]
   end
 
-  def self.get_user_kyc_row user_kyc
+  def self.get_user_kyc_row user_kyc, current_user
     [
       user_kyc.name,
       user_kyc.email,
@@ -81,11 +81,12 @@ class UserExportWorker
       "Referred by Partner",
       "RERA ID",
       "Last Sign In At",
-      "Account Confirmed At"
+      "Confirmed",
+      "Confirmed At"
     ]
   end
 
-  def self.get_user_row(user)
+  def self.get_user_row user, current_user
     [
       user.id.to_s,
       user.name,
@@ -95,8 +96,9 @@ class UserExportWorker
       User.available_roles(current_client).select{|x| x[:id] == user.role}.first[:text],
       user.manager_id.present? ? User.find(user.manager_id).name : "",
       user.role?("channel_partner") ? user.rera_id : "",
-      user.last_sign_in_at,
-      user.confirmed_at
+      user.last_sign_in_at.present? ? I18n.l(user.last_sign_in_at.in_time_zone(current_user.time_zone)) : "",
+      user.confirmed? ? "Yes" : "No",
+      user.confirmed_at.present? ? I18n.l(user.confirmed_at.in_time_zone(current_user.time_zone)) : ""
     ]
   end
 end
