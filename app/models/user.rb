@@ -107,7 +107,7 @@ class User
   validate :manager_change_reason_present?
 
   def unattached_blocking_receipt
-    return self.receipts.in(status: ['success', 'clearance_pending', 'available_for_refund']).where(project_unit_id: nil).where(total_amount: {"$gte": current_client.blocking_amount}).first
+    return Receipt.where(user_id: self.id).in(status: ['success', 'clearance_pending', 'available_for_refund']).where(project_unit_id: nil).where(total_amount: {"$gte": current_client.blocking_amount}).first
   end
 
   def total_amount_paid
@@ -140,6 +140,13 @@ class User
     else
       ['user']
     end
+  end
+
+  def self.available_confirmation_statuses
+    [
+      {id: "confirmed", text: "Confirmed"},
+      {id: "not_confirmed", text: "Not Confirmed"}
+    ]
   end
 
   def self.available_roles(current_client)
@@ -186,6 +193,13 @@ class User
       end
       if params[:fltrs][:lead_id].present?
         selector[:lead_id] = params[:fltrs][:lead_id]
+      end
+      if params[:fltrs][:confirmation].present?
+        if params[:fltrs][:confirmation].eql?("not_confirmed")
+          selector[:confirmed_at] = nil
+        else
+          selector[:confirmed_at] = {"$ne": nil}
+        end
       end
     end
     selector[:role] = {"$ne": "superadmin"} if selector[:role].blank?
