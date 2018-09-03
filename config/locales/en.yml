@@ -124,6 +124,7 @@ en:
         payment_identifier: "Cheque Number / Transaction Identifier"
         total_amount: "Total Amount (Rs.)"
         status: "Payment Status"
+        user: "Customer"
         user_id: "Customer"
         project_unit_id: "Apartment"
         creator_id: "Created by"
@@ -223,6 +224,8 @@ en:
         location: 'Location'
         lead_id: 'Sell.Do Lead ID'
         time_zone: "User's Time Zone"
+        manager_role: "Sales Manager / Added by Role"
+        confirmed: "Confirmed"
         role: 'Role'
         manager_id: "Partner / Manager / Added by"
         manager_change_reason: "Reason for changing Partner"
