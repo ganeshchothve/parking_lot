@@ -19,6 +19,12 @@ class Admin::ProjectUnitsController < AdminController
     end
   end
 
+  def show
+    respond_to do |format|
+      format.json { render json: @project_unit }
+    end
+  end
+
   def edit
     render layout: false
   end

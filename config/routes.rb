@@ -41,7 +41,7 @@ Rails.application.routes.draw do
       get 'export', action: 'export', on: :collection, as: :export
       get :resend_success, on: :member, as: :resend_success
     end
-    resources :project_units, only: [:index, :edit, :update] do
+    resources :project_units, only: [:index, :show, :edit, :update] do
       get 'export', action: 'export', on: :collection, as: :export
       get 'mis_report', action: 'mis_report', on: :collection, as: :mis_report
     end
@@ -62,6 +62,7 @@ Rails.application.routes.draw do
         resources :receipts, only: [:update, :edit, :show, :index, :new, :create], controller: '/receipts'
       end
       resources :searches, except: [:destroy], controller: '/searches' do
+        get :"3d", on: :collection, action: "three_d", as: "three_d"
         post :hold, on: :member
         get :checkout, on: :member
         post :make_available, on: :member

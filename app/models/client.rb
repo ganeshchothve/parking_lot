@@ -96,11 +96,11 @@ class Client
   has_many :sms_templates, class_name: 'Template::SmsTemplate'
   has_many :email_templates, class_name: 'Template::EmailTemplate'
   has_many :smses, class_name: 'Sms'
-
   has_many :assets, as: :assetable
   has_many :emails, class_name: 'Email', inverse_of: :booking_portal_client
-  has_one :gallery
   has_many :discounts, class_name: "Discount"
+  has_one :gallery
+  has_one :external_inventory_view_config, inverse_of: :booking_portal_client
 
   validates :name, :allowed_bookings_per_user, :selldo_client_id, :selldo_form_id, :selldo_channel_partner_form_id, :selldo_gre_form_id, :helpdesk_email, :helpdesk_number, :notification_email, :notification_numbers, :sender_email, :email_domains, :booking_portal_domains, :registration_name, :website_link, :support_email, :support_number, :payment_gateway, :cin_number, :mailgun_private_api_key, :mailgun_email_domain, :sms_provider_username, :sms_provider_password, :sms_mask, presence: true
 
@@ -108,7 +108,7 @@ class Client
   validates :payment_gateway, inclusion: {in: Proc.new{ Client.available_payment_gateways.collect{|x| x[:id]} } }, allow_blank: true
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
 
-  accepts_nested_attributes_for :address
+  accepts_nested_attributes_for :address, :external_inventory_view_config
 
   def self.available_preferred_logins
     [

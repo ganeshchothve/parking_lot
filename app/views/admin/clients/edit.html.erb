@@ -271,7 +271,7 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <%= f.label :notification_email, class: 'label-required' %>
-                    <%= f.email_field :notification_email, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("notification_email") ? false : true) %>
+                    <%= f.text_field :notification_email, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("notification_email") ? false : true) %>
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -425,6 +425,35 @@
                   <% end %>
                 <% end %>
               </div>
+              <div class="mt-3"></div>
+              <% f.object.build_external_inventory_view_config if f.object.external_inventory_view_config.blank? %>
+              <%= f.fields_for :external_inventory_view_config do |eivc_form| %>
+                <div class="card">
+                  <div class="card-header">
+                    External Inventory View Configuration
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <%= eivc_form.label :provider, class: 'label-required' %>
+                          <%= eivc_form.select :provider, ExternalInventoryViewConfig.available_providers.collect{|x| [x[:text], x[:id]]}, {}, class: 'selectize-tags', required: 'required', disabled: (policy(eivc_form.object).editable_field?("provider") ? false : true) %>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <%= eivc_form.label :url, class: 'label-required' %>
+                          <%= eivc_form.url_field :url, class: 'form-control', disabled: (policy(eivc_form.object).editable_field?("url") ? false : true) %>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <%= eivc_form.label :status, class: 'label-required' %>
+                      <%= eivc_form.select :status, ExternalInventoryViewConfig.available_statuses.collect{|x| [x[:text], x[:id]]}, {}, class: 'selectize-tags', required: 'required', disabled: (policy(eivc_form.object).editable_field?("status") ? false : true) %>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
             </div>
             <div class="tab-pane fade" id="nav-client-pages" role="tabpanel">
               <div class="form-group">

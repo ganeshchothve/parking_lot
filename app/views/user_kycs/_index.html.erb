@@ -4,6 +4,7 @@
       <% labels = t('mongoid.attributes.user_kyc').with_indifferent_access %>
       <tr>
         <th><%= labels['name'] %></th>
+        <th><%= labels['user_id'] %></th>
         <th><%= "#{labels['phone']} & #{labels['email']}" %></th>
         <th><%= labels['dob_short'] %></th>
         <th><%= labels['pan_number'] %></th>
@@ -14,6 +15,13 @@
       <% user_kycs.each do |user_kyc| %>
       <tr>
         <td><%= user_kyc.name %></td>
+        <td>
+          <% if UserPolicy.new(current_user, user_kyc.user).show? %>
+            <%= link_to user_kyc.user.name, admin_user_path(user_kyc.user_id) %>
+          <% else %>
+            <%= user_kyc.user.name %>
+          <% end %>
+        </td>
         <td>
           <i class="far fa-envelope"></i> <%= user_kyc.email %><br/> <i class="fas fa-mobile-alt"></i> <%= user_kyc.phone %>
         </td>

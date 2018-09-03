@@ -1,13 +1,17 @@
 class SearchesController < ApplicationController
   include SearchConcern
   before_action :authenticate_user!
-  before_action :set_search, except: [:index, :export, :new, :create, :tower]
+  before_action :set_search, except: [:index, :export, :new, :create, :tower, :three_d]
   before_action :set_user, except: [:export]
   before_action :set_form_data, only: [:show, :edit]
   before_action :authorize_resource
-  around_action :apply_policy_scope, only: [:index, :export]
+  around_action :apply_policy_scope, only: [:index, :export, :three_d]
 
   layout :set_layout
+
+  def three_d
+
+  end
 
   def show
     if @search.project_unit.present? && @search.project_unit.status == 'hold'
@@ -38,8 +42,10 @@ class SearchesController < ApplicationController
     respond_to do |format|
       if @search.save
         format.html { redirect_to step_user_search_path(@search, step: @search.step) }
+        format.json { render json: {model: @search, location: step_user_search_path(@search, step: @search.step)} }
       else
         format.html { render :new }
+        format.json { render json: {errors: @search.errors.full_messages} }
       end
     end
   end
@@ -190,7 +196,7 @@ class SearchesController < ApplicationController
   end
 
   def authorize_resource
-    if params[:action] == "index" || params[:action] == 'export' || params[:action] == 'tower'
+    if params[:action] == "index" || params[:action] == 'export' || params[:action] == 'tower' || params[:action] == 'three_d'
       authorize Search
     elsif params[:action] == "new" || params[:action] == "create"
       authorize Search.new(user_id: @user.id)

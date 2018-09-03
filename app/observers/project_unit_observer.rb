@@ -50,7 +50,6 @@ class ProjectUnitObserver < Mongoid::Observer
   def after_save project_unit
     BookingDetail.run_sync(project_unit.id, project_unit.changes)
     if project_unit.status_changed? && ["hold", "blocked", "booked_tentative", "booked_confirmed", "error"].include?(project_unit.status_was) && ["available", "employee", "management"].include?(project_unit.status)
-      user_was = User.find(project_unit.user_id_was)
 
       project_unit.set(user_id: nil, blocked_on: nil, auto_release_on: nil, held_on: nil, primary_user_kyc_id: nil, user_kyc_ids: [])
 
@@ -62,26 +61,29 @@ class ProjectUnitObserver < Mongoid::Observer
         receipt.save
       end
 
-      if !project_unit.processing_user_request && !project_unit.processing_swap_request
-        if project_unit.booking_portal_client.email_enabled?
-          Email.create!({
-            booking_portal_client_id: project_unit.booking_portal_client_id,
-            email_template_id:Template::EmailTemplate.find_by(name: "project_unit_released").id,
-            cc: [project_unit.booking_portal_client.notification_email],
-            recipients: [user_was],
-            cc_recipients: (user_was.manager_id.present? ? [user_was.manager] : []),
-            triggered_by_id: project_unit.id,
-            triggered_by_type: project_unit.class.to_s,
-          })
-        end
-        if project_unit.booking_portal_client.sms_enabled?
-          Sms.create!(
-            booking_portal_client_id: project_unit.booking_portal_client_id,
-            recipient_id: user_was.id,
-            sms_template_id: Template::SmsTemplate.find_by(name: "project_unit_released").id,
-            triggered_by_id: user_was.id,
-            triggered_by_type: user_was.class.to_s
-          )
+      if project_unit.user_id_was.present?
+        user_was = User.find(project_unit.user_id_was)
+        if !project_unit.processing_user_request && !project_unit.processing_swap_request
+          if project_unit.booking_portal_client.email_enabled?
+            Email.create!({
+              booking_portal_client_id: project_unit.booking_portal_client_id,
+              email_template_id:Template::EmailTemplate.find_by(name: "project_unit_released").id,
+              cc: [project_unit.booking_portal_client.notification_email],
+              recipients: [user_was],
+              cc_recipients: (user_was.manager_id.present? ? [user_was.manager] : []),
+              triggered_by_id: project_unit.id,
+              triggered_by_type: project_unit.class.to_s,
+            })
+          end
+          if project_unit.booking_portal_client.sms_enabled?
+            Sms.create!(
+              booking_portal_client_id: project_unit.booking_portal_client_id,
+              recipient_id: user_was.id,
+              sms_template_id: Template::SmsTemplate.find_by(name: "project_unit_released").id,
+              triggered_by_id: user_was.id,
+              triggered_by_type: user_was.class.to_s
+            )
+          end
         end
       end
     end
