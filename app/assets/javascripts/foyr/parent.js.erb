@@ -14,7 +14,7 @@ var Foyr = (function(user, url, div_id, datajson){
     }
     else if (messageEvent.data["bookedapartment"]) {
       var apartmentdata = messageEvent.data["bookedapartment"];
-      var unit = _.find(datajson, function(x){ return x.apartment_ID == apartmentdata.apartment_ID });
+      var unit = _.find(datajson.hotspots, function(x){ return x.apartment_ID == apartmentdata.apartment_ID });
       if(unit){
         $.ajax({
           url: (user.buyer ? "<%= url.user_searches_path %>" : "/admin/users/" + user.id + "/searches"),
@@ -40,7 +40,7 @@ var Foyr = (function(user, url, div_id, datajson){
   }
 
   function fetchApartmentStatus(apartment_ID) {
-    var unit = _.find(datajson, function(x){ return x.apartment_ID == apartment_ID });
+    var unit = _.find(datajson.hotspots, function(x){ return x.apartment_ID == apartment_ID });
     if(unit){
       $.ajax({
         url: "<%= url.admin_project_units_path %>/" + unit.id,
