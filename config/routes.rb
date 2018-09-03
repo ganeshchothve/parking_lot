@@ -102,6 +102,7 @@ Rails.application.routes.draw do
       match 'update_password', via: [:get, :patch], action: "update_password", as: :update_password, controller: 'admin/users'
       resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
       resources :searches, except: [:destroy], controller: 'searches' do
+        get :"3d", on: :collection, action: "three_d", as: "three_d"
         post :hold, on: :member
         get 'tower/details', on: :collection, action: :tower, as: :tower
         get :checkout, on: :member

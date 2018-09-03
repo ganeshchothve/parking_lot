@@ -5,7 +5,7 @@ class SearchesController < ApplicationController
   before_action :set_user, except: [:export]
   before_action :set_form_data, only: [:show, :edit]
   before_action :authorize_resource
-  around_action :apply_policy_scope, only: [:index, :export, :three_d]
+  around_action :apply_policy_scope, only: [:index, :export]
 
   layout :set_layout
 
@@ -196,9 +196,9 @@ class SearchesController < ApplicationController
   end
 
   def authorize_resource
-    if params[:action] == "index" || params[:action] == 'export' || params[:action] == 'tower' || params[:action] == 'three_d'
+    if params[:action] == "index" || params[:action] == 'export' || params[:action] == 'tower'
       authorize Search
-    elsif params[:action] == "new" || params[:action] == "create"
+    elsif params[:action] == "new" || params[:action] == "create" || params[:action] == 'three_d'
       authorize Search.new(user_id: @user.id)
     else
       authorize @search

@@ -38,7 +38,14 @@
         <div class="card h-100">
           <div class="card-body text-center">
             <h5 class="mb-3">Book in 3D View</h5>
-            <%= link_to (image_tag("3d-building.jpg", class: "img-fluid")).html_safe, three_d_admin_user_searches_path %>
+            <%
+              if current_user.buyer?
+                url = three_d_user_searches_path
+              else
+                url = three_d_admin_user_searches_path(@user)
+              end
+            %>
+            <%= link_to (image_tag("3d-building.jpg", class: "img-fluid")).html_safe, url %>
           </div>
         </div>
       </div>

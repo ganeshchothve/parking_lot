@@ -9,13 +9,11 @@
 </div>
 <script type="text/javascript">
   $(document).ready(function($){
-    wd = $("#external_inventory_iframe").width();
-    $("#external_inventory_iframe").css("height", wd * 0.7);
     <%
       data = ProjectUnit.only(:erp_id, :status).collect do |x|
         {
           apartment_ID: x.erp_id,
-          status: (x.user_based_status(current_user) == "available" ? "Available" : "Booked"),
+          status: (x.user_based_status(current_user) == "available" ? "open" : "booked"),
           id: x.id.to_s
         }
       end
@@ -28,7 +26,7 @@
         role: @user.role
       }
     %>
-    var provider = new <%= current_client.external_inventory_view_config.provider %>(<%= raw user.to_json %>, "<%= current_client.external_inventory_view_config.url %>", "external_inventory_iframe", <%= raw data.to_json %>)
+    var provider = new <%= current_client.external_inventory_view_config.provider %>(<%= raw user.to_json %>, "<%= current_client.external_inventory_view_config.url %>", "external_inventory_iframe", {hotspots: <%= raw data.to_json %>})
     provider.init();
   });
 </script>

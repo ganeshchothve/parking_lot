@@ -10,8 +10,8 @@ class ExternalInventoryViewConfig
 
   belongs_to :booking_portal_client, class_name: "Client"
 
-  validates :provider, inclusion: {in: Proc.new{ ExternalInventoryViewConfig.available_providers.collect{|x| x[:id]} } }
-  validates :status, inclusion: {in: Proc.new{ ExternalInventoryViewConfig.available_statuses.collect{|x| x[:id]} } }
+  validates :provider, inclusion: {in: Proc.new{ ExternalInventoryViewConfig.available_providers.collect{|x| x[:id]} } }, if: Proc.new{|e| e.enabled?}
+  validates :status, inclusion: {in: Proc.new{ ExternalInventoryViewConfig.available_statuses.collect{|x| x[:id]} } }, if: Proc.new{|e| e.enabled?}
   validates :url, presence: true
 
   def self.available_providers
