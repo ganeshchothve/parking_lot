@@ -1,4 +1,4 @@
-module SearchConcern
+module CustomConcern
   extend ActiveSupport::Concern
 
 end
