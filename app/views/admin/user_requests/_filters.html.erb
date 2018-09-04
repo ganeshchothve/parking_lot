@@ -18,6 +18,11 @@
           %>
           <%= select_tag "fltrs[user_id]", options_for_select((params[:fltrs].present? && params[:fltrs][:user_id].present?) ? [[user.ds_name, user.id]] : []), {class: "selectize-remote", data: {params: {fltrs: {role: {"$in": User.buyer_roles(current_client)}}}, url: admin_users_path }} %>
         </div>
+        <% [UserRequest::Cancellation, UserRequest::Swap] if Rails.env.development? %>
+        <div class="form-group">
+          <%= label_tag "fltrs", "type", class: "control-label" %>
+          <%= select_tag "fltrs[_type]", options_for_select(::UserRequest.descendants.collect{|x| [x.to_s.split("::").last.gsub("Template", "").titleize, x.to_s]}.sort, (params[:fltrs].present? ? params[:fltrs][:_type] : "")), {prompt: "Select", class: "selectize"} %>
+        </div>
         <div class="form-group">
           <%= label_tag "fltrs", "status", class: "control-label" %>
           <%= select_tag "fltrs[status]", options_for_select(UserRequest.available_statuses.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize"} %>

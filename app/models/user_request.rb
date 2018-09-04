@@ -44,6 +44,9 @@ class UserRequest
       if params[:fltrs][:user_id].present?
         selector[:user_id] = params[:fltrs][:user_id]
       end
+      if params[:fltrs][:_type].present?
+        selector[:_type] = params[:fltrs][:_type]
+      end
     end
     self.where(selector)
   end
