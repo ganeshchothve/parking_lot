@@ -1,8 +1,8 @@
 <div class="card">
   <div class="card-body">
     <div class="table-responsive">
-      <% if policy(@search).update_template?(::Template::PaymentScheduleTemplate) %>
-        <%= form_for project_unit, url: update_template_user_search_path(@search), method: 'post', html: {class: 'validate-form', id: "payment_schedule_template_form"} do |f| %>
+      <% if defined?(search) && search.is_a?(Search) && policy(search).update_template?(::Template::PaymentScheduleTemplate) %>
+        <%= form_for project_unit, url: update_template_user_search_path(search), method: 'post', html: {class: 'validate-form', id: "payment_schedule_template_form"} do |f| %>
         <div class="input-group mb-3">
           <%= f.select :payment_schedule_template_id, ::Template::PaymentScheduleTemplate.where(booking_portal_client_id: current_client.id).collect{|x| [x.name, x.id]}, {}, class: "form-control" %>
           <div class="input-group-append">
