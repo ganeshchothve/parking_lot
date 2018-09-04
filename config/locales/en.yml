@@ -46,6 +46,7 @@ en:
     channel_partners: 'Partner Registrations'
     search: "Filter"
     searches: "Filter"
+    otp: "OTP"
   mongoid:
     attributes:
       asset:

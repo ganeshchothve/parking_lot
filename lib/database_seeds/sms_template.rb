@@ -1,7 +1,7 @@
 module DatabaseSeeds
   module SmsTemplate
     def self.seed client_id
-      Template::SmsTemplate.create({booking_portal_client_id: client_id, subject_class: "User", name: "otp", content: "Your OTP for logging into <%= booking_portal_client.name %> is <%= otp_code %>."})  if Template::SmsTemplate.where(name: "otp").blank?
+      Template::SmsTemplate.create({booking_portal_client_id: client_id, subject_class: "User", name: "otp", content: "Your <%= I18n.t('global.otp') %> for logging into <%= booking_portal_client.name %> is <%= otp_code %>."})  if Template::SmsTemplate.where(name: "otp").blank?
 
       Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "UserRequest", name: "cancellation_request_created", content: "A cancellation has been requested on your booking of <%= project_unit.name %> at <%= project_unit.project_name %>. Our CRM team is reviewing your request and will get in touch with you shortly.") if Template::SmsTemplate.where(name: "cancellation_request_created").blank?
 
@@ -35,11 +35,11 @@ module DatabaseSeeds
 
       Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "ProjectUnit", name: "project_unit_booked_confirmed", content: "Welcome to the <%= booking_portal_client.name %> family! You're now the proud owner of <%= name %> at <%= project_name %> in <%= booking_portal_client.name %>. Our executives will be in touch regarding agreement formalities.") if Template::SmsTemplate.where(name: "project_unit_booked_confirmed").blank?
 
-      Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "User", name: "user_registered_by_channel_partner", content: "<%= manager.name %> has registered you with <%= booking_portal_client.name %>. To confirm your account with this partner, please click <%= confirmation_url %>. You can also confirm your account using your phone & OTP.") if Template::SmsTemplate.where(name: "user_registered_by_channel_partner").blank?
+      Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "User", name: "user_registered_by_channel_partner", content: "<%= manager.name %> has registered you with <%= booking_portal_client.name %>. To confirm your account with this partner, please click <%= confirmation_url %>. You can also confirm your account using your phone & <%= I18n.t('global.otp') %>.") if Template::SmsTemplate.where(name: "user_registered_by_channel_partner").blank?
 
-      Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "User", name: "channel_partner_user_registered", content: "Dear <%= name %>, thank you for registering as a Channel Partner at <%= booking_portal_client.name %>. To confirm your account, please click <%= confirmation_url %>. You can also confirm your account using your phone & OTP.") if Template::SmsTemplate.where(name: "channel_partner_user_registered").blank?
+      Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "User", name: "channel_partner_user_registered", content: "Dear <%= name %>, thank you for registering as a Channel Partner at <%= booking_portal_client.name %>. To confirm your account, please click <%= confirmation_url %>. You can also confirm your account using your phone & <%= I18n.t('global.otp') %>.") if Template::SmsTemplate.where(name: "channel_partner_user_registered").blank?
 
-      Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "User", name: "user_registered", content: "Dear <%= name %>, thank you for registering at <%= booking_portal_client.name %>. To confirm your account, please click <%= confirmation_url %>. You can also confirm your account using your phone & OTP.") if Template::SmsTemplate.where(name: "user_registered").blank?
+      Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "User", name: "user_registered", content: "Dear <%= name %>, thank you for registering at <%= booking_portal_client.name %>. To confirm your account, please click <%= confirmation_url %>. You can also confirm your account using your phone & <%= I18n.t('global.otp') %>.") if Template::SmsTemplate.where(name: "user_registered").blank?
 
       Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "Client", name: "daily_sms_report", content: 'Blocked: <%= ProjectUnit.where(status: "blocked").count %>. Tentative: <%= ProjectUnit.where(status: "booked_tentative").count %>. Confirmed: <%= ProjectUnit.where(status: "booked_confirmed").count %>. Blocked Today: <%= ProjectUnit.where(blocked_on: Date.today).count %>.     *subject to cancellations') if Template::SmsTemplate.where(name: "daily_sms_report").blank?
 

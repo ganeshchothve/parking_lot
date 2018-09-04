@@ -112,6 +112,14 @@ class Receipt
       if params[:fltrs][:payment_mode].present?
         selector[:payment_mode] = params[:fltrs][:payment_mode]
       end
+      [:issued_date, :created_at, :processed_on].each do |key|
+        if params[:fltrs][key].present?
+          start_date, end_date = params[:fltrs][key].split("-")
+          selector[key] = {}
+          selector[key]["$gte"] = start_date if start_date.present?
+          selector[key]["$lte"] = end_date if end_date.present?
+        end
+      end
     end
     selector1 = {}
     if params[:fltrs].blank? || params[:fltrs][:status].blank?
