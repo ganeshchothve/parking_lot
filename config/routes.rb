@@ -88,6 +88,10 @@ Rails.application.routes.draw do
   get :register, to: 'home#register', as: :register
   post :check_and_register, to: 'home#check_and_register', as: :check_and_register
 
+  scope :custom do
+    
+  end
+
   scope :dashboard do
     # read only pages
     get '', to: 'dashboard#index', as: :dashboard
