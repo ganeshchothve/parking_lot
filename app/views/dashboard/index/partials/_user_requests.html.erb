@@ -1,5 +1,5 @@
 <% if current_client.enable_actual_inventory? %>
-  <% user_requests = DashboardDataProvider.cancellation_user_requests_dashboard(current_user) %>
+  <% user_requests = DashboardDataProvider.user_requests_dashboard(current_user) %>
   <div class="card">
     <div class="card-header">
       <%= global_labels[:user_requests] %>

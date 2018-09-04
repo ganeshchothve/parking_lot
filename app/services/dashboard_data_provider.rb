@@ -89,7 +89,7 @@ module DashboardDataProvider
     out
   end
 
-  def self.cancellation_user_requests_dashboard(user)
+  def self.user_requests_dashboard(user)
     data = UserRequest.collection.aggregate([{
       "$group": {
         "_id":{
