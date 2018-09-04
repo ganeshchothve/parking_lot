@@ -45,36 +45,25 @@
         <% rescue ActionView::MissingTemplate %>
         <% end %>
 
-        <% if policy(@user_request).editable_field?("status") %>
           <div class="form-group">
             <%= f.label :status, class: 'label-required' %>
-            <%= f.select :status, UserRequest.available_statuses.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', required: "required" %>
+            <% if policy(@user_request).editable_field?("status") %>
+              <%= f.select :status, UserRequest.available_statuses.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', required: "required" %>
+            <% else %>
+              <h6><%= f.object.class.available_statuses.find{|x| x[:id] == f.object.status}[:text] %></h6>
+            <% end %>
           </div>
-        <% else %>
-          <div>
-            Status: <%= f.object.status %>
-          </div>
-        <% end %>
         <% if policy(@user_request).editable_field?("notes_attributes") %>
           <% f.object.notes.new(creator_id: current_user.id) %>
           <%= f.fields_for :notes do |note_field|%>
             <% if (note_field.object.new_record? && policy(note_field.object).create?) || policy(note_field.object).edit? %>
               <div class="form-group">
+                <%= note_field.label :comments %>
+                <%= note_field.text_area :note, autofocus: true, class: "form-control" %>
                 <% if note_field.object.creator.role == "user" %>
                   <%= note_field.hidden_field :note_type, value: (note_field.object.note_type.present? ? note_field.object.note_type : "user") %>
                 <% else %>
-                  <div class="row">
-                    <div class="col-md-2">
-                      <%= note_field.label :note_type %>
-                      <%= note_field.select :note_type, Note.available_note_types.collect{|x| [x[:text], x[:id]] }, {prompt: true}, class: 'selectize' %>
-                    </div>
-                    <div class="col-md-10">
-                <% end %>
-                    <%= note_field.label :comments %>
-                    <%= note_field.text_area :note, autofocus: true, class: "form-control" %>
-                <% if note_field.object.creator.role != "user" %>
-                    </div>
-                  </div>
+                  <%#= note_field.select :note_type, Note.available_note_types.collect{|x| [x[:text], x[:id]] }, {prompt: true}, class: 'textr-right mt-2 form-control-sm' %>
                 <% end %>
                 <%= note_field.hidden_field :creator_id %>
               </div>
@@ -92,7 +81,7 @@
             <% end %>
           <% end %>
         <% end %>
-        <% if @user_request.new_record? %>
+        <% if @user_request.new_record? && @user_request.is_a?(UserRequest::Cancellation) %>
           <div class="form-group">
             <div class="alert alert-primary">
               Your unit will be released once the cancellation request is processed. For booking the same unit again, you will have to go through the selection process again which will also be subject to availability.<br/>
@@ -105,7 +94,7 @@
         <% end %>
       </div>
       <div class="modal-footer">
-        <%= f.submit "Submit", class: 'btn btn-primary', disabled: (@user_request.new_record? ? true : false), id: "submit_request", data:{event_category: 'Section', event_action: 'Click', event_name: 'cancel booking - submit'}  %>
+        <%= f.submit "Submit", class: 'btn btn-primary', disabled: ((@user_request.new_record? && @user_request.is_a?(UserRequest::Cancellation)) ? true : false), id: "submit_request", data:{event_category: 'Section', event_action: 'Click', event_name: 'cancel booking - submit'}  %>
       </div>
     </div>
   </div>

@@ -9,9 +9,11 @@
     </ul>
     <ul class="navbar-nav pull-right">
       <%= bottom_navigation('d-none d-lg-block') %>
-      <li class='nav-item d-none d-lg-block'>
-        <%= link_to 'Powered by Amura', 'https://www.amuratech.com', class: 'small nav-link', target: "_blank" %>
-      </li>
+      <% if !user_signed_in? || !current_user.role?('superadmin') %>
+        <li class='nav-item d-none d-lg-block'>
+          <%= link_to 'Powered by Amura', 'https://www.amuratech.com', class: 'small nav-link', target: "_blank" %>
+        </li>
+      <% end %>
     </ul>
   </div>
 </nav>

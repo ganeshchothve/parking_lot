@@ -72,7 +72,9 @@ Rails.application.routes.draw do
         get ":step", on: :member, to: "searches#show", as: :step
       end
 
-      resources :user_requests, except: [:destroy], controller: 'user_requests'
+      scope ":request_type" do
+        resources :user_requests, except: [:destroy], controller: 'user_requests'
+      end
 
       resources :booking_details, only: [:update], controller: 'booking_details'
     end
@@ -80,8 +82,10 @@ Rails.application.routes.draw do
       get :approve_via_email, on: :member, action: 'approve_via_email'
     end
     resources :user_kycs, only: [:index], controller: '/user_kycs'
-    resources :user_requests, except: [:destroy], controller: 'user_requests' do
-      get 'export', action: 'export', on: :collection, as: :export
+    scope ":request_type" do
+      resources :user_requests, except: [:destroy], controller: 'user_requests' do
+        get 'export', action: 'export', on: :collection, as: :export
+      end
     end
   end
 
@@ -91,7 +95,7 @@ Rails.application.routes.draw do
   post :check_and_register, to: 'home#check_and_register', as: :check_and_register
 
   scope :custom do
-    
+
   end
 
   scope :dashboard do
@@ -105,7 +109,9 @@ Rails.application.routes.draw do
     get 'terms-and-conditions', to: 'dashboard#terms_and_condition', as: :dashboard_terms_and_condition
     get "gamify-unit-selection", to: "dashboard#gamify_unit_selection"
     resource :user do
-      resources :user_requests, except: [:destroy], controller: 'admin/user_requests'
+      scope ":request_type" do
+        resources :user_requests, except: [:destroy], controller: 'admin/user_requests'
+      end
       match 'update_password', via: [:get, :patch], action: "update_password", as: :update_password, controller: 'admin/users'
       resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
       resources :searches, except: [:destroy], controller: 'searches' do

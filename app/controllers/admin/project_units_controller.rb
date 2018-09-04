@@ -67,7 +67,13 @@ class Admin::ProjectUnitsController < AdminController
   end
 
   def authorize_resource
-    if params[:action] == "index"  || params[:action] == "export" || params[:action] == "mis_report"
+    if params[:action] == "index"
+      if params[:ds].to_s == "true"
+        authorize(ProjectUnit, :ds?)
+      else
+        authorize ProjectUnit
+      end
+    elsif params[:action] == "export" || params[:action] == "mis_report"
       authorize ProjectUnit
     elsif params[:action] == "new" || params[:action] == "create"
       authorize ProjectUnit.new

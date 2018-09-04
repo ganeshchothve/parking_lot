@@ -46,7 +46,7 @@
         <% end %>
         <% if UserRequestPolicy.new(current_user, UserRequest).index? %>
           <li class="nav-item">
-            <%= active_link_to global_labels['user_requests'], user_user_requests_path, active: :inclusive, class: "nav-link" %>
+            <%= active_link_to global_labels['user_requests'], (current_user.buyer? ? user_user_requests_path(@user, request_type: "all") : admin_user_requests_path(request_type: "all")), active: :inclusive, class: "nav-link" %>
           </li>
         <% end %>
         <% if UserKycPolicy.new(current_user, UserKyc).index? %>
