@@ -119,7 +119,7 @@ class User
   end
 
   def total_unattached_balance
-    self.receipts.in(status: ['success', 'clearance_pending', 'available_for_refund']).where(project_unit_id: nil).sum(:total_amount)
+    self.receipts.in(status: ['success', 'clearance_pending']).where(project_unit_id: nil).sum(:total_amount)
   end
 
   def kyc_ready?

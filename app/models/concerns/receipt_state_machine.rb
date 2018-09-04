@@ -6,7 +6,7 @@ module ReceiptStateMachine
 
     aasm column: :status do
       state :pending, initial: true
-      state :success, :clearance_pending, :failed, :available_for_refund, :refunded
+      state :success, :clearance_pending, :failed, :available_for_refund, :refunded, :cancelled
 
       event :pending do
         transitions from: :pending, to: :pending
@@ -24,7 +24,7 @@ module ReceiptStateMachine
 
       event :available_for_refund do
         transitions from: :available_for_refund, to: :available_for_refund
-        transitions from: :success, to: :available_for_refund, if: :available_for_refund?
+        transitions from: :success, to: :available_for_refund, if: :can_available_for_refund?
       end
 
       event :refunded do
@@ -41,14 +41,22 @@ module ReceiptStateMachine
         transitions from: :failed, to: :failed
       end
 
+      event :cancel do
+        transitions from: :success, to: :cancelled, if: :swap_request_initiated?
+      end
+
     end
 
-    def available_for_refund?
+    def can_available_for_refund?
       self.booking_detail.blank? || self.booking_detail.status == "cancelled"
     end
 
     def can_move_to_clearance?
       self.persisted? || self.project_unit_id.present?
+    end
+
+    def swap_request_initiated?
+      self.swap_request_initiated == true
     end
   end
 end

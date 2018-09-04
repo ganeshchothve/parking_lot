@@ -26,8 +26,7 @@ class UserRequestExportWorker
       "Client Name",
       "Client Phone",
       "Client Email",
-      "Client Comments",
-      "CRM Comments"
+      "Comments",
     ]
   end
 
@@ -42,8 +41,7 @@ class UserRequestExportWorker
       user_request.user.name,
       user_request.user.phone,
       user_request.user.email,
-      user_request.comments,
-      "N/A"
+      user_request.notes.collect{|note|  note.note + " - " + note.creator.name}.join("\n")
     ]
   end
 end

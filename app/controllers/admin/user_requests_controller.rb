@@ -8,25 +8,25 @@ class Admin::UserRequestsController < ApplicationController
   layout :set_layout
 
   def index
-    @user_requests = UserRequest.build_criteria params
+    @user_requests = associated_class.build_criteria params
     @user_requests = @user_requests.paginate(page: params[:page] || 1, per_page: 15)
   end
 
   def show
-    @user_request = UserRequest.find(params[:id])
+    @user_request = associated_class.find(params[:id])
     authorize @user_request
   end
 
   def new
-    @user_request = @user.user_requests.new
+    @user_request = associated_class.new(user_id: @user.id)
     @user_request.project_unit_id = params[:project_unit_id] if params[:project_unit_id].present?
     authorize @user_request
     render layout: false
   end
 
   def create
-    @user_request = @user.user_requests.new(created_by: current_user)
-    @user_request.assign_attributes(permitted_attributes(@user_request))
+    @user_request = associated_class.new(user_id: @user.id, created_by: current_user)
+    @user_request.assign_attributes(permitted_user_request_attributes)
     respond_to do |format|
       if @user_request.save
         format.html { redirect_to edit_user_user_request_path(@user_request), notice: 'Request registered successfully.' }
@@ -53,11 +53,12 @@ class Admin::UserRequestsController < ApplicationController
   end
 
   def update
-    @user_request.assign_attributes(permitted_attributes(@user_request))
+    @user_request.assign_attributes(permitted_user_request_attributes)
     if @user_request.status == "resolved"
       @user_request.resolved_by = current_user
       @user_request.resolved_at = Time.now
     end
+
     respond_to do |format|
       if @user_request.save
         format.html { redirect_to (current_user.buyer? ? user_user_requests_path(@user) : admin_user_requests_path), notice: 'User Request was successfully updated.' }
@@ -71,7 +72,17 @@ class Admin::UserRequestsController < ApplicationController
 
   private
   def set_user_request
-    @user_request = UserRequest.find(params[:id])
+    @user_request = associated_class.find(params[:id])
+  end
+
+  def permitted_user_request_attributes
+    attributes = permitted_attributes(@user_request)
+    attributes[:notes_attributes].each do |k, v|
+      if v["note"].blank?
+        attributes[:notes_attributes].delete(k)
+      end
+    end
+    attributes
   end
 
   def set_user
@@ -86,15 +97,29 @@ class Admin::UserRequestsController < ApplicationController
     if params[:action] == "index" || params[:action] == 'export'
       authorize UserRequest
     elsif params[:action] == "new" || params[:action] == "create"
-      authorize UserRequest.new(user_id: @user.id)
+      authorize associated_class.new(user_id: @user.id)
     else
       authorize @user_request
     end
   end
 
+  def associated_class
+    if params[:request_type] == "swap"
+      UserRequest::Swap
+    elsif params[:request_type] == "cancellation"
+      UserRequest::Cancellation
+    else
+      UserRequest
+    end
+  end
+
   def apply_policy_scope
-    custom_scope = UserRequest.where(UserRequest.user_based_scope(current_user, params))
-    UserRequest.with_scope(policy_scope(custom_scope)) do
+    custom_scope = associated_class.where(associated_class.user_based_scope(current_user, params))
+    if params[:request_type].present?
+      type =
+      custom_scope = custom_scope.where(_type: type)
+    end
+    associated_class.with_scope(policy_scope(custom_scope)) do
       yield
     end
   end
