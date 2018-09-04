@@ -78,13 +78,14 @@ class ProjectUnitPolicy < ApplicationPolicy
 
   def permitted_attributes params={}
     attributes = ["crm", "admin", "superadmin"].include?(user.role) ? [:auto_release_on, :booking_price] : []
-    attributes += (["crm", "admin", "superadmin"].include?(user.role) || make_available?) ? [:status, :payment_schedule_template_id, :cost_sheet_template_id] : []
+    attributes += (make_available? ? [:status, :payment_schedule_template_id, :cost_sheet_template_id] : [])
     attributes += [:user_id] if record.user_id.blank? && record.user_based_status(user) == 'available'
-    attributes += [:primary_user_kyc_id, user_kyc_ids: []] if record.user_id.present?
 
-    if user.role?('superadmin') && ['hold', 'blocked', 'booked_tentative', 'booked_confirmed'].exclude?(record.status)
+    if ['superadmin', 'admin'].include?(user.role) && ['hold', 'blocked', 'booked_tentative', 'booked_confirmed'].exclude?(record.status)
       attributes += [:name, :agreement_price, :all_inclusive_price, :status, :available_for, :blocked_on, :auto_release_on, :held_on, :applied_discount_rate, :applied_discount_id, :base_rate, :client_id, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, :selldo_id, :erp_id, :floor_rise, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :sub_type, :type, :unit_facing_direction, costs_attributes: CostPolicy.new(user, Cost.new).permitted_attributes, data_attributes: DatumPolicy.new(user, Cost.new).permitted_attributes]
     end
+
+    attributes += [:primary_user_kyc_id, user_kyc_ids: []] if record.user_id.present?
 
     attributes.uniq
   end

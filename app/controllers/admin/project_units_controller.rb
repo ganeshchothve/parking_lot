@@ -31,9 +31,6 @@ class Admin::ProjectUnitsController < AdminController
 
   def update
     parameters = permitted_attributes(@project_unit)
-    if ["available", "not_available", "employee", "management"].exclude?(@project_unit.status)
-      parameters.delete :status
-    end
     respond_to do |format|
       if @project_unit.update(parameters)
         format.html { redirect_to admin_project_units_path, notice: 'Unit successfully updated.' }
