@@ -42,6 +42,7 @@ class ChannelPartner
   validate :user_level_uniqueness
   validate :cannot_make_inactive
   validates :first_name, :last_name, format: { with: /\A[a-zA-Z]*\z/}
+  validate :user_based_uniqueness
 
   accepts_nested_attributes_for :bank_detail, :address
 
@@ -114,6 +115,14 @@ class ChannelPartner
   def cannot_make_inactive
     if self.status_changed? && self.status == 'inactive' && self.persisted?
       self.errors.add :status, 'cannot be reverted to "inactive" once activated'
+    end
+  end
+
+  def user_based_uniqueness
+    query = User.or([{phone: c.phone}, {email: c.email}, {rera_id: c.rera_id}])
+    query = query.ne(id: c.associated_user_id) if c.associated_user_id.present?
+    if query.present?
+      self.errors.add :base, 'We have a user with similar details already registered'
     end
   end
 end
