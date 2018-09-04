@@ -123,6 +123,21 @@ class SearchesController < ApplicationController
     end
   end
 
+  def update_template
+    @project_unit = ProjectUnit.find(@search.project_unit_id)
+    authorize @project_unit
+    respond_to do |format|
+      if @project_unit.update_attributes(permitted_attributes(@project_unit))
+        format.html { redirect_to checkout_user_search_path(@search) }
+        format.json { render json: {project_unit: @project_unit}, status: 200 }
+      else
+        flash[:notice] = 'Could not update the project unit. Please retry'
+        format.html { redirect_to checkout_user_search_path(@search) }
+        format.json { render json: {errors: @project_unit.errors.full_messages.uniq}, status: 422 }
+      end
+    end
+  end
+
   def make_available
     @project_unit = ProjectUnit.find(@search.project_unit_id)
     authorize @project_unit

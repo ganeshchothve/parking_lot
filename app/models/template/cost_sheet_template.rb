@@ -1,4 +1,9 @@
 class Template::CostSheetTemplate < Template
+  field :name, type: String
+  field :default, type: Boolean, default: false
+
+  validates :name, presence: true
+
   def self.default_content
     "<h3 class='mb-3'>Cost Sheet</h3>
     <table class='table'>

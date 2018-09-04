@@ -26,7 +26,9 @@
         role: @user.role
       }
     %>
-    var provider = new <%= current_client.external_inventory_view_config.provider %>(<%= raw user.to_json %>, "<%= current_client.external_inventory_view_config.url %>", "external_inventory_iframe", {hotspots: <%= raw data.to_json %>})
-    provider.init();
+    var provider = new <%= current_client.external_inventory_view_config.provider %>(<%= raw user.to_json %>, "<%= current_client.external_inventory_view_config.url %>", "external_inventory_iframe", {hotspots: <%= raw data.to_json %>});
+    document.getElementById('external_inventory_iframe').onload = function() {
+      provider.init();
+    };
   });
 </script>

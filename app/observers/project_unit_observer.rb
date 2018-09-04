@@ -12,11 +12,6 @@ class ProjectUnitObserver < Mongoid::Observer
     if project_unit.primary_user_kyc_id.present? && project_unit.user_kyc_ids.present?
       project_unit.user_kyc_ids.reject!{|x| x == project_unit.primary_user_kyc_id}
     end
-    if project_unit.status_changed? && ['hold', 'blocked', 'booked_tentative', 'booked_confirmed'].exclude?(project_unit.status)
-      project_unit.user_id = nil
-      project_unit.applied_discount_rate = 0
-      project_unit.applied_discount_id = nil
-    end
     if project_unit.status == 'available'
       project_unit.available_for = 'user'
     end
@@ -51,7 +46,7 @@ class ProjectUnitObserver < Mongoid::Observer
     BookingDetail.run_sync(project_unit.id, project_unit.changes)
     if project_unit.status_changed? && ["hold", "blocked", "booked_tentative", "booked_confirmed", "error"].include?(project_unit.status_was) && ["available", "employee", "management"].include?(project_unit.status)
 
-      project_unit.set(user_id: nil, blocked_on: nil, auto_release_on: nil, held_on: nil, primary_user_kyc_id: nil, user_kyc_ids: [])
+      project_unit.set(applied_discount_rate: 0, applied_discount_id: 0, user_id: nil, blocked_on: nil, auto_release_on: nil, held_on: nil, primary_user_kyc_id: nil, user_kyc_ids: [], payment_schedule_template_id: Template::PaymentScheduleTemplate.where(booking_portal_client_id: project_unit.booking_portal_client_id, default: true).first.id, cost_sheet_template_id: Template::CostSheetTemplate.where(booking_portal_client_id: project_unit.booking_portal_client_id, default: true).first.id)
 
       project_unit.receipts.where(status: "success").each do |receipt|
         receipt.project_unit_id = nil;

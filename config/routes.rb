@@ -64,6 +64,7 @@ Rails.application.routes.draw do
       resources :searches, except: [:destroy], controller: '/searches' do
         get :"3d", on: :collection, action: "three_d", as: "three_d"
         post :hold, on: :member
+        post :update_template, on: :member
         get :checkout, on: :member
         post :make_available, on: :member
         get '/razorpay-payment/:receipt_id', to: 'searches#razorpay_payment', on: :member
@@ -106,6 +107,7 @@ Rails.application.routes.draw do
         post :hold, on: :member
         get 'tower/details', on: :collection, action: :tower, as: :tower
         get :checkout, on: :member
+        post :update_template, on: :member
         post :make_available, on: :member
         get '/razorpay-payment/:receipt_id', to: 'searches#razorpay_payment', on: :member
         get :payment, on: :member

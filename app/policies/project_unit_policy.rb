@@ -49,6 +49,10 @@ class ProjectUnitPolicy < ApplicationPolicy
     _role_based_check(valid)
   end
 
+  def update_template?
+    make_available?
+  end
+
   def update_co_applicants?
     valid = (["blocked", "booked_confirmed", "booked_tentative"].include?(record.status) && current_client.enable_actual_inventory?)
     _role_based_check(valid)
@@ -74,7 +78,7 @@ class ProjectUnitPolicy < ApplicationPolicy
 
   def permitted_attributes params={}
     attributes = ["crm", "admin", "superadmin"].include?(user.role) ? [:auto_release_on, :booking_price] : []
-    attributes += (["crm", "admin", "superadmin"].include?(user.role) || make_available?) ? [:status] : []
+    attributes += (["crm", "admin", "superadmin"].include?(user.role) || make_available?) ? [:status, :payment_schedule_template_id, :cost_sheet_template_id] : []
     attributes += [:user_id] if record.user_id.blank? && record.user_based_status(user) == 'available'
     attributes += [:primary_user_kyc_id, user_kyc_ids: []] if record.user_id.present?
 

@@ -62,10 +62,18 @@ class SearchPolicy < ApplicationPolicy
   end
 
   def make_available?
-    record.project_unit_id.present? && ProjectUnit.find(record.project_unit_id).status == "hold"
+    record.project_unit_id.present? && ProjectUnitPolicy.new(user, record.project_unit).make_available?
+  end
+
+  def update_template?(template_klass=nil)
+    valid = record.project_unit_id.present? && ProjectUnitPolicy.new(user, record.project_unit).make_available?
+    if template_klass.present?
+      valid = valid && template_klass.where(booking_portal_client_id: user.booking_portal_client_id).count > 1
+    end
+    valid
   end
 
   def permitted_attributes params={}
-    [:bedrooms, :carpet, :agreement_price, :all_inclusive_price, :project_unit_id, :project_tower_id, :floor, :step]
+    [:bedrooms, :carpet, :agreement_price, :all_inclusive_price, :project_unit_id, :project_tower_id, :floor, :step, :payment_schedule_template_id, :cost_sheet_template_id]
   end
 end
