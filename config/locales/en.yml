@@ -110,6 +110,7 @@ en:
         project_unit_id: "Apartment"
       user_request:
         request_type: 'Request type'
+        _type: 'Request type'
         user_id: 'Customer'
         comments: 'Complain / Request'
         status: 'Status'
