@@ -27,6 +27,10 @@ class UserObserver < Mongoid::Observer
       # end
       user.referenced_manager_ids = [user.manager_id]
     end
+    if user.manager_id_changed? && user.manager_id.present?
+      user.referenced_manager_ids << user.manager_id
+      user.referenced_manager_ids.uniq!
+    end
     unless user.authentication_token?
       user.reset_authentication_token!
     end
@@ -34,7 +38,6 @@ class UserObserver < Mongoid::Observer
 
   def after_update user
     if user.manager_id_changed? && user.manager_id.present?
-      user.referenced_manager_ids << user.manager_id
       if user.buyer?
         mailer = UserMailer.send_change_in_manager(user.id.to_s)
         if Rails.env.development?
