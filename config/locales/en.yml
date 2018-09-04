@@ -24,8 +24,10 @@ en:
     clients: 'Clients'
     receipt: 'Payment'
     receipts: 'Payments'
-    user_request: 'Cancellation Request'
-    user_requests: 'Cancellation Requests'
+    user_request: 'User Request'
+    user_requests: 'User Requests'
+    user_request_cancellation: 'Cancellation Request'
+    user_request_swap: 'Swap Request'
     discount: 'Discount'
     discounts: 'Discounts'
     receipt_with_status: '%{status} Payment'
@@ -105,6 +107,7 @@ en:
         project_tower_id: "Tower"
         project_unit_id: "Apartment"
       user_request:
+        request_type: 'Request type'
         user_id: 'Customer'
         comments: 'Complain / Request'
         status: 'Status'

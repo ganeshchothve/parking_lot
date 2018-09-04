@@ -11,11 +11,15 @@ class NotePolicy < ApplicationPolicy
     true
   end
 
+  def edit?
+    false
+  end
+
   def index?
     true
   end
 
   def permitted_attributes params={}
-    [ :note ]
+    [ :id, :note, :note_type, :creator_id ]
   end
 end

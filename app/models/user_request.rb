@@ -4,22 +4,8 @@ class UserRequest
   include ArrayBlankRejectable
   include InsertionStringMethods
 
-  field :comments, type: String
   field :status, type: String, default: 'pending'
-  field :request_type, type: String, default: "cancellation"
-  field :crm_comments, type: String # Comments from crm team
-  field :reply_for_customer, type: String #reply from crm team to customer
-  field :alternate_project_unit_id, type: BSON::ObjectId # in case of swap resolve
   field :resolved_at, type: DateTime
-
-  enable_audit({
-    associated_with: ["user"],
-    indexed_fields: [:project_unit_id, :receipt_id],
-    audit_fields: [:status, :request_type, :alternate_project_unit_id],
-    reference_ids_without_associations: [
-      {field: 'alternate_project_unit_id', klass: 'ProjectUnit'},
-    ]
-  })
 
   belongs_to :project_unit, optional: true
   belongs_to :receipt, optional: true
@@ -27,12 +13,15 @@ class UserRequest
   belongs_to :resolved_by, class_name: "User", optional: true
   belongs_to :created_by, class_name: "User"
   has_many :assets, as: :assetable
+  has_many :notes, as: :notable
 
   validates :user_id, :project_unit_id, presence: true
-  validates :comments, presence: true, if: Proc.new{|user_request| user_request.created_by.buyer? }
   validates :resolved_by, presence: true, if: Proc.new{|user_request| user_request.status == 'resolved' }
-  validates :status, inclusion: {in: Proc.new{ UserRequest.available_statuses.collect{|x| x[:id]} } }
-  validates :project_unit_id, uniqueness: {scope: [:user_id, :status], message: 'already has a cancellation request.'}
+
+  validates :status, inclusion: {in: Proc.new{ |record| record.class.available_statuses.collect{|x| x[:id]} } }
+  validates :project_unit_id, uniqueness: {scope: [:user_id, :status], message: 'already has a cancellation request.'}, if: Proc.new{|record| record.status == "pending"}
+
+  accepts_nested_attributes_for :notes
 
   default_scope -> {desc(:created_at)}
 
@@ -40,7 +29,7 @@ class UserRequest
     [
       {id: 'pending', text: 'Pending'},
       {id: 'resolved', text: 'Resolved'},
-      # {id: 'swapped', text: 'Swap resolved'} commented till implementation is complete
+      {id: 'rejected', text: 'Rejected'}
     ]
   end
 
@@ -57,10 +46,6 @@ class UserRequest
       end
     end
     self.where(selector)
-  end
-
-  def alternate_project_unit
-    ProjectUnit.where(id: self.alternate_project_unit_id).first
   end
 
 

@@ -8,7 +8,15 @@ class ProjectUnitSwapService
   def swap
     if(@alternate_project_unit.status == "available" || (@alternate_project_unit.status == "hold" && @alternate_project_unit.user_id == @project_unit.user_id))
       existing_receipts = @project_unit.receipts.in(status:["success","clearance_pending"]).asc(:created_at).to_a
-      existing_receipts.each{|x| x.project_unit_id=nil; x.comments ||=""; x.comments+= "Unit Swapped by user. Original Unit ID: #{@project_unit.id.to_s} So cancelling these receipts"; x.status="cancelled";x.save}
+      existing_receipts.each do |receipt|
+        receipt.project_unit_id=nil
+        receipt.comments ||= ""
+        receipt.comments += "Unit Swapped by user. Original Unit ID: #{@project_unit.id.to_s} So cancelling these receipts"
+        receipt.swap_request_initiated = true
+        receipt.event = "cancel"
+        receipt.save
+      end
+
       primary_user_kyc = @project_unit.primary_user_kyc
       booking_detail = @project_unit.booking_detail
       user_kycs = @project_unit.user_kycs
@@ -20,7 +28,7 @@ class ProjectUnitSwapService
 
       booking_detail.reload
       booking_detail[:swap_request_initiated] = true
-      booking_detail.status ="swapped"
+      booking_detail.status = "swapped"
       booking_detail.save
 
       @alternate_project_unit.primary_user_kyc_id = primary_user_kyc.id

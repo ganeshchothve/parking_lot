@@ -24,6 +24,8 @@ class Receipt
   field :comments, type: String
   field :gateway_response, type: Hash
 
+  attr_accessor :swap_request_initiated
+
   belongs_to :user
   belongs_to :booking_detail, optional: true
   belongs_to :project_unit, optional: true
