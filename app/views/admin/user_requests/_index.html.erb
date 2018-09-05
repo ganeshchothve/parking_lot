@@ -3,10 +3,8 @@
     <thead class="th-default">
       <% labels = t('mongoid.attributes.user_request').with_indifferent_access %>
       <tr>
-        <th><%= labels['user_id'] %></th>
-        <th><%= labels['_type'] %></th>
+        <th>Request details</th>
         <th><%= labels['status'] %></th>
-        <th><%= labels['project_unit_id'] %></th>
         <th class="text-right">Actions</th>
       </tr>
     </thead>
@@ -19,10 +17,24 @@
           <% else %>
             <%= user_request.user.name %>
           <% end %>
+          <div class="small text-muted">
+            <%= labels['_type'] %>: <%= user_request.class.model_name.element.titleize %>
+          </div>
+          <div class="small text-muted">
+            <%= labels['project_unit_id'] %>: <%= user_request.project_unit_id.present? ? user_request.project_unit.name : '-' %>
+          </div>
         </td>
-        <td><%= user_request.class.model_name.element.titleize %></td>
-        <td><%= UserRequest.available_statuses.find{|x| x[:id] == user_request.status}[:text] %></td>
-        <td><%= user_request.project_unit_id.present? ? user_request.project_unit.name : '-' %></td>
+        <td>
+          <%= UserRequest.available_statuses.find{|x| x[:id] == user_request.status}[:text] %>
+          <div class="text-muted small">
+            <%= labels[:created_at] %>: <%= l(user_request.created_at) %>
+          </div>
+          <% if user_request.resolved_at.present? %>
+            <div class="text-muted small">
+              <%= labels[:resolved_at] %>: <%= l(user_request.resolved_at) %>
+            </div>
+          <% end %>
+        </td>
         <td class="text-right">
           <div class="dropdown">
             <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>

@@ -116,6 +116,8 @@ en:
         status: 'Status'
         project_unit_id: 'Related Apartment'
         receipt_id: 'Related Payment'
+        created_at: 'Created at'
+        resolved_at: 'Processed on'
       note:
         note: 'Note'
       receipt:
