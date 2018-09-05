@@ -8,6 +8,11 @@ class ProjectUnitSwapService
   def swap
     if(@alternate_project_unit.status == "available" || (@alternate_project_unit.status == "hold" && @alternate_project_unit.user_id == @project_unit.user_id))
 
+      primary_user_kyc = @project_unit.primary_user_kyc
+      booking_detail = @project_unit.booking_detail
+      user_kycs = @project_unit.user_kycs
+      user = @project_unit.user
+
       @alternate_project_unit.primary_user_kyc_id = primary_user_kyc.id
       @alternate_project_unit.user_kycs = user_kycs
       @alternate_project_unit.status = "hold"
@@ -23,11 +28,6 @@ class ProjectUnitSwapService
         receipt.event = "cancel"
         receipt.save
       end
-
-      primary_user_kyc = @project_unit.primary_user_kyc
-      booking_detail = @project_unit.booking_detail
-      user_kycs = @project_unit.user_kycs
-      user = @project_unit.user
 
       @project_unit.processing_swap_request = true
       @project_unit.make_available
