@@ -9,7 +9,7 @@
   <%= link_to "Add Direct #{global_labels['receipt']}", direct_admin_user_receipts_path(user), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 <% if UserPolicy.new(current_user, user).confirm_via_otp? %>
-  <%= link_to "Confirm via OTP", confirm_via_otp_admin_user_path(user.id), class: "dropdown-item modal-remote-form-link" %>
+  <%= link_to "Confirm via #{I18n.t("global.otp")}", confirm_via_otp_admin_user_path(user.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 <% if UserPolicy.new(current_user, user).show? %>
   <%= link_to "View Details", admin_user_path(user.id), class: "dropdown-item" %>

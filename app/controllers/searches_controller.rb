@@ -1,13 +1,17 @@
 class SearchesController < ApplicationController
   include SearchConcern
   before_action :authenticate_user!
-  before_action :set_search, except: [:index, :export, :new, :create, :tower]
+  before_action :set_search, except: [:index, :export, :new, :create, :tower, :three_d]
   before_action :set_user, except: [:export]
   before_action :set_form_data, only: [:show, :edit]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: [:index, :export]
 
   layout :set_layout
+
+  def three_d
+
+  end
 
   def show
     if @search.project_unit.present? && @search.project_unit.status == 'hold'
@@ -38,8 +42,10 @@ class SearchesController < ApplicationController
     respond_to do |format|
       if @search.save
         format.html { redirect_to step_user_search_path(@search, step: @search.step) }
+        format.json { render json: {model: @search, location: step_user_search_path(@search, step: @search.step)} }
       else
         format.html { render :new }
+        format.json { render json: {errors: @search.errors.full_messages} }
       end
     end
   end
@@ -114,6 +120,21 @@ class SearchesController < ApplicationController
     elsif @project_unit.user_id.present? && @project_unit.user.receipts.where(project_unit_id: @project_unit.id, status: "pending", payment_mode: {"$ne": "online"}).present?
       flash[:notice] = "We already have collected a payment for this unit from the same customer."
       redirect_to admin_user_path(@project_unit.user_id) and return
+    end
+  end
+
+  def update_template
+    @project_unit = ProjectUnit.find(@search.project_unit_id)
+    authorize @project_unit
+    respond_to do |format|
+      if @project_unit.update_attributes(permitted_attributes(@project_unit))
+        format.html { redirect_to checkout_user_search_path(@search) }
+        format.json { render json: {project_unit: @project_unit}, status: 200 }
+      else
+        flash[:notice] = 'Could not update the project unit. Please retry'
+        format.html { redirect_to checkout_user_search_path(@search) }
+        format.json { render json: {errors: @project_unit.errors.full_messages.uniq}, status: 422 }
+      end
     end
   end
 
@@ -192,7 +213,7 @@ class SearchesController < ApplicationController
   def authorize_resource
     if params[:action] == "index" || params[:action] == 'export' || params[:action] == 'tower'
       authorize Search
-    elsif params[:action] == "new" || params[:action] == "create"
+    elsif params[:action] == "new" || params[:action] == "create" || params[:action] == 'three_d'
       authorize Search.new(user_id: @user.id)
     else
       authorize @search

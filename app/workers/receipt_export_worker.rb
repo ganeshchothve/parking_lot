@@ -62,7 +62,7 @@ class ReceiptExportWorker
       receipt.status_message,
       receipt.payment_gateway,
       receipt.user.name,
-      receipt.user_id,
+      receipt.user_id.to_s,
       receipt.user.manager_id.present? ? receipt.user.manager.name : "N/A",
       receipt.user.manager_id.present? ? User.available_roles(receipt.user.booking_portal_client).find{|x| x[:id] == receipt.user.manager.role}[:text] : "Direct",
       receipt.project_unit_id.present? ? receipt.project_unit.name : "N/A",

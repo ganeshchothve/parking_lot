@@ -15,15 +15,16 @@ class Email
   field :cc, type: Array
 
   validates :subject, presence: true, if: Proc.new{ |model| model.email_template_id.blank? }
+  validates :recipient_ids, :triggered_by_id, presence: true
   validate :body_or_text_only_body_present?
   validates_inclusion_of :status, in: Proc.new {  self.allowed_statuses.collect{ |hash| hash[:id] } }
 
   enable_audit reference_ids_without_associations: [{name_of_key: 'email_template_id', method: 'email_template', klass: 'Template::EmailTemplate'}]
 
   belongs_to :booking_portal_client, class_name: 'Client', inverse_of: :emails
-  has_and_belongs_to_many :recipients, class_name: "User", inverse_of: :received_emails
-  has_and_belongs_to_many :cc_recipients, class_name: "User", inverse_of: :cced_emails
-  belongs_to :triggered_by, polymorphic: true
+  has_and_belongs_to_many :recipients, class_name: "User", inverse_of: :received_emails, validate: false
+  has_and_belongs_to_many :cc_recipients, class_name: "User", inverse_of: :cced_emails, validate: false
+  belongs_to :triggered_by, polymorphic: true, optional: true
   has_many :attachments, as: :assetable, class_name: "Asset"
   accepts_nested_attributes_for :attachments
 

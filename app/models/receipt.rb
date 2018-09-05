@@ -47,7 +47,7 @@ class Receipt
   validate :processed_on_greater_than_issued_date
 
   increments :order_id, auto: false
-  default_scope -> {desc(:created_at)}
+  default_scope -> {desc(:order_id)}
 
   enable_audit({
     associated_with: ["user"],
@@ -113,6 +113,14 @@ class Receipt
       end
       if params[:fltrs][:payment_mode].present?
         selector[:payment_mode] = params[:fltrs][:payment_mode]
+      end
+      [:issued_date, :created_at, :processed_on].each do |key|
+        if params[:fltrs][key].present?
+          start_date, end_date = params[:fltrs][key].split("-")
+          selector[key] = {}
+          selector[key]["$gte"] = start_date if start_date.present?
+          selector[key]["$lte"] = end_date if end_date.present?
+        end
       end
     end
     selector1 = {}

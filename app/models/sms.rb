@@ -8,11 +8,12 @@ class Sms
   field :sent_on, type: DateTime
   field :status, type: String, default: "scheduled"
 
-  belongs_to :recipient, class_name: "User", inverse_of: :received_smses
-  belongs_to :triggered_by, polymorphic: true
+  belongs_to :recipient, class_name: "User", inverse_of: :received_smses, optional: true
+  belongs_to :triggered_by, polymorphic: true, optional: true
   belongs_to :booking_portal_client, class_name: "Client"
 
   validates :body, presence: true, if: Proc.new{ |model| model.sms_template_id.blank? }
+  validates :triggered_by_id, :recipient_id, presence: true
   validates_inclusion_of :status, in: Proc.new { |_model| self.allowed_statuses.collect{ |hash| hash[:id] } }
 
   enable_audit audit_fields: [:body, :sent_on], reference_ids_without_associations: [{field: "sms_template_id", klass: "Template::SmsTemplate"}]

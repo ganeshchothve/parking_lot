@@ -13,6 +13,7 @@ en:
     sign_in_h2: "Login to Book an Apartment online"
     register_h1: "Sign Up"
     register_h2: "Register Now and book an apartment by paying just Rs. Blocking Amount (just takes 3 minutes)"
+    custom: 'Special Features'
     note: "Note"
     notes: "Notes"
     template: 'Template'
@@ -47,6 +48,7 @@ en:
     channel_partners: 'Partner Registrations'
     search: "Filter"
     searches: "Filter"
+    otp: "OTP"
   mongoid:
     attributes:
       asset:
@@ -108,11 +110,14 @@ en:
         project_unit_id: "Apartment"
       user_request:
         request_type: 'Request type'
+        _type: 'Request type'
         user_id: 'Customer'
         comments: 'Complain / Request'
         status: 'Status'
         project_unit_id: 'Related Apartment'
         receipt_id: 'Related Payment'
+        created_at: 'Created at'
+        resolved_at: 'Processed on'
       note:
         note: 'Note'
       receipt:
@@ -127,6 +132,7 @@ en:
         payment_identifier: "Cheque Number / Transaction Identifier"
         total_amount: "Total Amount (Rs.)"
         status: "Payment Status"
+        user: "Customer"
         user_id: "Customer"
         project_unit_id: "Apartment"
         creator_id: "Created by"
@@ -226,6 +232,8 @@ en:
         location: 'Location'
         lead_id: 'Sell.Do Lead ID'
         time_zone: "User's Time Zone"
+        manager_role: "Sales Manager / Added by Role"
+        confirmed: "Confirmed"
         role: 'Role'
         manager_id: "Partner / Manager / Added by"
         manager_change_reason: "Reason for changing Partner"

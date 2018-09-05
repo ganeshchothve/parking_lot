@@ -41,7 +41,7 @@ Rails.application.routes.draw do
       get 'export', action: 'export', on: :collection, as: :export
       get :resend_success, on: :member, as: :resend_success
     end
-    resources :project_units, only: [:index, :edit, :update] do
+    resources :project_units, only: [:index, :show, :edit, :update] do
       get 'export', action: 'export', on: :collection, as: :export
       get 'mis_report', action: 'mis_report', on: :collection, as: :mis_report
     end
@@ -62,7 +62,9 @@ Rails.application.routes.draw do
         resources :receipts, only: [:update, :edit, :show, :index, :new, :create], controller: '/receipts'
       end
       resources :searches, except: [:destroy], controller: '/searches' do
+        get :"3d", on: :collection, action: "three_d", as: "three_d"
         post :hold, on: :member
+        post :update_template, on: :member
         get :checkout, on: :member
         post :make_available, on: :member
         get '/razorpay-payment/:receipt_id', to: 'searches#razorpay_payment', on: :member
@@ -70,7 +72,9 @@ Rails.application.routes.draw do
         get ":step", on: :member, to: "searches#show", as: :step
       end
 
-      resources :user_requests, except: [:destroy], controller: 'user_requests'
+      scope ":request_type" do
+        resources :user_requests, except: [:destroy], controller: 'user_requests'
+      end
 
       resources :booking_details, only: [:update], controller: 'booking_details'
     end
@@ -78,8 +82,10 @@ Rails.application.routes.draw do
       get :approve_via_email, on: :member, action: 'approve_via_email'
     end
     resources :user_kycs, only: [:index], controller: '/user_kycs'
-    resources :user_requests, except: [:destroy], controller: 'user_requests' do
-      get 'export', action: 'export', on: :collection, as: :export
+    scope ":request_type" do
+      resources :user_requests, except: [:destroy], controller: 'user_requests' do
+        get 'export', action: 'export', on: :collection, as: :export
+      end
     end
   end
 
@@ -87,6 +93,10 @@ Rails.application.routes.draw do
   match 'payment/:receipt_id/process_payment/:ignore', to: 'payment#process_payment', via: [:get, :post]
   get :register, to: 'home#register', as: :register
   post :check_and_register, to: 'home#check_and_register', as: :check_and_register
+
+  scope :custom do
+
+  end
 
   scope :dashboard do
     # read only pages
@@ -99,13 +109,17 @@ Rails.application.routes.draw do
     get 'terms-and-conditions', to: 'dashboard#terms_and_condition', as: :dashboard_terms_and_condition
     get "gamify-unit-selection", to: "dashboard#gamify_unit_selection"
     resource :user do
-      resources :user_requests, except: [:destroy], controller: 'admin/user_requests'
+      scope ":request_type" do
+        resources :user_requests, except: [:destroy], controller: 'admin/user_requests'
+      end
       match 'update_password', via: [:get, :patch], action: "update_password", as: :update_password, controller: 'admin/users'
       resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
       resources :searches, except: [:destroy], controller: 'searches' do
+        get :"3d", on: :collection, action: "three_d", as: "three_d"
         post :hold, on: :member
         get 'tower/details', on: :collection, action: :tower, as: :tower
         get :checkout, on: :member
+        post :update_template, on: :member
         post :make_available, on: :member
         get '/razorpay-payment/:receipt_id', to: 'searches#razorpay_payment', on: :member
         get :payment, on: :member

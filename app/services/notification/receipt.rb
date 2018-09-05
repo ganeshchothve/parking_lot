@@ -39,6 +39,8 @@ module Notification
         "receipt_clearance_pending"
       elsif new_status == "pending" && @receipt.payment_mode != 'online'
         "receipt_pending_offline"
+      elsif new_status == "refunded"
+        "receipt_refunded"
       end
       params
     end

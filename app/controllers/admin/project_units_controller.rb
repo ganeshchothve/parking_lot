@@ -19,15 +19,18 @@ class Admin::ProjectUnitsController < AdminController
     end
   end
 
+  def show
+    respond_to do |format|
+      format.json { render json: @project_unit }
+    end
+  end
+
   def edit
     render layout: false
   end
 
   def update
     parameters = permitted_attributes(@project_unit)
-    if ["available", "not_available", "employee", "management"].exclude?(@project_unit.status)
-      parameters.delete :status
-    end
     respond_to do |format|
       if @project_unit.update(parameters)
         format.html { redirect_to admin_project_units_path, notice: 'Unit successfully updated.' }
@@ -64,7 +67,13 @@ class Admin::ProjectUnitsController < AdminController
   end
 
   def authorize_resource
-    if params[:action] == "index"  || params[:action] == "export" || params[:action] == "mis_report"
+    if params[:action] == "index"
+      if params[:ds].to_s == "true"
+        authorize(ProjectUnit, :ds?)
+      else
+        authorize ProjectUnit
+      end
+    elsif params[:action] == "export" || params[:action] == "mis_report"
       authorize ProjectUnit
     elsif params[:action] == "new" || params[:action] == "create"
       authorize ProjectUnit.new
@@ -77,6 +86,8 @@ class Admin::ProjectUnitsController < AdminController
     custom_project_unit_scope = ProjectUnit.all.criteria
     if current_user.role == "channel_partner"
       custom_project_unit_scope = custom_project_unit_scope.or([{status: "available"}, {status: {"$in": ["blocked", "booked_tentative", "booked_confirmed"]}, user_id: {"$in": User.where(referenced_manager_ids: current_user.id).distinct(:id)}}])
+    elsif current_user.buyer?
+      custom_project_unit_scope = custom_project_unit_scope.or([{status: {"$in": ProjectUnit.user_based_available_statuses(current_user)}}, {status: {"$in": ["blocked", "booked_tentative", "booked_confirmed"]}, user_id: current_user.id }])
     end
     ProjectUnit.with_scope(policy_scope(custom_project_unit_scope)) do
       custom_scope = User.all.criteria

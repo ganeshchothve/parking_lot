@@ -82,31 +82,6 @@ class Template::AllotmentLetterTemplate < Template
           </div>
         </div>
       </div>
-      <div class="card-footer">
-        <% if defined?(with_actions) && with_actions == true %>
-          <nav class="nav">
-            <% if current_user.buyer? && self.user == current_user && ["blocked", "booked_tentative", "booked_confirmed"].include?(self.status) %>
-              <% if ProjectUnitPolicy.new(current_user, project_unit).edit? %>
-              <%= link_to "Update #{global_labels["user_kycs"]}", edit_admin_project_unit_path(project_unit), class: "modal-remote-form-link nav-link pl-0" %>
-              <% end %>
-              <% if ReceiptPolicy.new(current_user, self.user.receipts.new(project_unit_id: self.id)).new? %>
-                <a href="<%= new_user_receipt_path(project_unit_id: self.id) %>" class="nav-link modal-remote-form-link">
-                Pay Remaining Amount
-                </a>
-              <% end %>
-              <% if current_user.user_requests.where(project_unit_id: self.id).ne(status: "resolved").blank? %>
-                <a href="<%= new_admin_user_request_path(project_unit_id: self.id) %>" class="nav-link text-danger modal-remote-form-link">Cancel Booking</a>
-              <% else %>
-                <span class="nav-link unit-cancelled">Cancellation Requested</span>
-              <% end %>
-            <% elsif current_user.buyer? && self.user == current_user && ["hold"].include?(self.status) %>
-              <a href="<%= checkout_user_search_path(current_user.get_search(self.id)) %>" class="nav-link pl-0">
-                Book Now
-              </a>
-            <% end %>
-          </nav>
-        <% end %>
-      </div>
     </div>
     <div class="mt-3"></div>
     <div class="card">

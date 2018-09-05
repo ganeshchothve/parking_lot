@@ -1,7 +1,7 @@
 <div class="card h-100">
   <div class="card-body">
     <% if @user.blank? %>
-      <% url = admin_user_requests_path %>
+      <% url = admin_user_requests_path(request_type: @associated_class.model_name.element) %>
       <%= form_tag url, method: "get", id: "user_request_search_form" do %>
         <div class="form-group">
           <%= label_tag "", 'Filters', class: "control-label d-block d-lg-inline" %>
@@ -18,9 +18,16 @@
           %>
           <%= select_tag "fltrs[user_id]", options_for_select((params[:fltrs].present? && params[:fltrs][:user_id].present?) ? [[user.ds_name, user.id]] : []), {class: "selectize-remote", data: {params: {fltrs: {role: {"$in": User.buyer_roles(current_client)}}}, url: admin_users_path }} %>
         </div>
+        <% if @associated_class == UserRequest %>
+        <% [UserRequest::Cancellation, UserRequest::Swap] if Rails.env.development? %>
+          <div class="form-group">
+            <%= label_tag "fltrs", "type", class: "control-label" %>
+            <%= select_tag "fltrs[_type]", options_for_select(::UserRequest.descendants.collect{|x| [x.to_s.split("::").last.gsub("Template", "").titleize, x.to_s]}.sort, (params[:fltrs].present? ? params[:fltrs][:_type] : "")), {prompt: "Select", class: "selectize"} %>
+          </div>
+        <% end %>
         <div class="form-group">
           <%= label_tag "fltrs", "status", class: "control-label" %>
-          <%= select_tag "fltrs[status]", options_for_select(UserRequest.available_statuses.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize"} %>
+          <%= select_tag "fltrs[status]", options_for_select(@associated_class.available_statuses.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize"} %>
         </div>
       <% end %>
       <%= javascript_tag do %>

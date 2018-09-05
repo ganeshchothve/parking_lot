@@ -27,6 +27,10 @@ class UserObserver < Mongoid::Observer
       # end
       user.referenced_manager_ids = [user.manager_id]
     end
+    if user.manager_id_changed? && user.manager_id.present?
+      user.referenced_manager_ids << user.manager_id
+      user.referenced_manager_ids.uniq!
+    end
     unless user.authentication_token?
       user.reset_authentication_token!
     end
@@ -34,14 +38,15 @@ class UserObserver < Mongoid::Observer
 
   def after_update user
     if user.manager_id_changed? && user.manager_id.present?
-      user.referenced_manager_ids << user.manager_id
-      if user.buyer?
-        mailer = UserMailer.send_change_in_manager(user.id.to_s)
-        if Rails.env.development?
-          mailer.deliver
-        else
-          mailer.deliver_later
-        end
+      if user.buyer? && user.manager.role?("channel_partner")
+        Email.create!({
+          booking_portal_client_id: user.booking_portal_client_id,
+          email_template_id: Template::EmailTemplate.find_by(name: "user_manager_changed").id,
+          recipients: [user],
+          cc_recipients: [user.manager],
+          triggered_by_id: user,
+          triggered_by_type: user.class.to_s
+        })
       end
     end
   end

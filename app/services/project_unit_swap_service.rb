@@ -7,6 +7,7 @@ class ProjectUnitSwapService
 
   def swap
     if(@alternate_project_unit.status == "available" || (@alternate_project_unit.status == "hold" && @alternate_project_unit.user_id == @project_unit.user_id))
+
       existing_receipts = @project_unit.receipts.in(status:["success","clearance_pending"]).asc(:created_at).to_a
       existing_receipts.each do |receipt|
         receipt.project_unit_id=nil
@@ -45,8 +46,9 @@ class ProjectUnitSwapService
         new_receipt.save!
       end
       booking_detail.unset(:swap_request_initiated)
+      {status: "success"}
     else
-      puts "error. #{@alternate_project_unit.name} is #{@alternate_project_unit.status}"
+      {status: "error", error: "#{@alternate_project_unit.name} is #{@alternate_project_unit.status}"}
     end
   end
 

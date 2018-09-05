@@ -1,5 +1,10 @@
 # GENERICTODO: To be replaced with Email Template at a later stage
 class Template::PaymentScheduleTemplate < Template
+  field :name, type: String
+  field :default, type: Boolean, default: false
+
+  validates :name, presence: true
+
   def self.default_content
     '<h3 class="mb-3">Payment Schedule</h3>
     <table class="table">
