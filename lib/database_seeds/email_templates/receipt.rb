@@ -52,6 +52,17 @@ module DatabaseSeeds
           <div class="mt-3"></div>
           <%= current_client.templates.where(_type: "Template::ReceiptTemplate").first.parsed_content(self) %>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, name: "receipt_pending_offline").blank?
 
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "Receipt", name: "receipt_refunded", subject: "Your refund for payment <%= self.receipt_id %> has been processed", content: '<div class="card w-100">
+            <div class="card-body">
+              <p>Dear <%= self.user.name %>,</p>
+              <p>Your refund for payment <%= self.receipt_id %> has been processed.</p>
+              <p>Amount: <%= number_to_indian_currency(self.total_amount) %>.</p>
+            </div>
+          </div>
+          <div class="mt-3"></div>
+          <%= current_client.templates.where(_type: "Template::ReceiptTemplate").first.parsed_content(self) %>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, name: "receipt_refunded").blank?
+
+
       end
     end
   end
