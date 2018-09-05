@@ -113,4 +113,5 @@ end
 require 'database_seeds/email_templates/project_unit'
 require 'database_seeds/email_templates/receipt'
 require 'database_seeds/email_templates/user_request'
+require 'database_seeds/email_templates/user'
 require 'database_seeds/email_templates/discount'
