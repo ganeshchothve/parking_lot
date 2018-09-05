@@ -47,7 +47,7 @@ class Receipt
   validate :processed_on_greater_than_issued_date
 
   increments :order_id, auto: false
-  default_scope -> {desc(:order)}
+  default_scope -> {desc(:order_id)}
 
   enable_audit({
     associated_with: ["user"],
