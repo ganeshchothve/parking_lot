@@ -24,10 +24,10 @@ class Api::SellDo::LeadsController < Api::SellDoController
   end
 
   def set_user
-    if params[:data].present? && params[:data][:lead_id].present?
-      @user = User.where(lead_id: params[:data][:lead_id].to_s).first
+    if params[:lead_id].present?
+      @user = User.where(lead_id: params[:lead_id].to_s).first
       if @user.blank?
-        @user = User.new(booking_portal_client_id: current_client.id, email: params[:data][:lead][:email], phone: params[:data][:lead][:phone], first_name: params[:data][:lead][:first_name], last_name: params[:data][:lead][:last_name], lead_id: params[:data][:lead_id])
+        @user = User.new(booking_portal_client_id: current_client.id, email: params[:lead][:email], phone: params[:lead][:phone], first_name: params[:lead][:first_name], last_name: params[:lead][:last_name], lead_id: params[:lead_id])
         @user.first_name = "Customer" if @user.first_name.blank?
       end
     else

@@ -22,7 +22,7 @@ module DatabaseSeeds
           </div>
         </div>') if ::Template::EmailTemplate.where(name: "cancellation_request_resolved").blank?
 
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "UserRequest::Swap", name: "swap_request_created", subject: "Swap Requested for <%= I18n.t('globals.project_unit') %>: <%= self.project_unit.name %>", content: '<div class="card w-100">
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "UserRequest::Swap", name: "swap_request_created", subject: "Swap Requested for <%= I18n.t('global.project_unit') %>: <%= self.project_unit.name %>", content: '<div class="card w-100">
           <div class="card-body">
             <p>Dear <%= self.user.name %>,</p>
             <p>
@@ -31,11 +31,11 @@ module DatabaseSeeds
           </div>
         </div>') if ::Template::EmailTemplate.where(name: "swap_request_created").blank?
 
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "UserRequest::Swap", name: "swap_request_resolved", subject: "Swap Request for <%= I18n.t('globals.project_unit') %>: <%= self.project_unit.name %> Resolved", content: '<div class="card w-100">
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "UserRequest::Swap", name: "swap_request_resolved", subject: "Swap Request for <%= I18n.t('global.project_unit') %>: <%= self.project_unit.name %> Resolved", content: '<div class="card w-100">
           <div class="card-body">
             <p>Dear <%= self.user.name %>,</p>
             <p>
-              Your Swap request on booking of <%= project_unit.name %> at <%= project_unit.project_name %> has been processed. We have blocked your requested <%= I18n.t("globals.project_unit") %>: <%= alternate_project_unit.name %> <br/><br/>
+              Your Swap request on booking of <%= project_unit.name %> at <%= project_unit.project_name %> has been processed. We have blocked your requested <%= I18n.t("global.project_unit") %>: <%= alternate_project_unit.name %> <br/><br/>
               To view your dashboard click <a href="<%= user.dashboard_url %>">here</a>.
             </p>
           </div>
