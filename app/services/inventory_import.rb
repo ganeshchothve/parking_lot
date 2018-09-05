@@ -102,7 +102,7 @@ module InventoryImport
 
         project_tower = ProjectTower.where(name: project_tower_name).where(project_id: project.id).first
         unless project_tower.present?
-          project_tower = ProjectTower.create!(name: project_tower_name, project_id: project.id, client_id: client_id, total_floors: 14)
+          project_tower = ProjectTower.create!(name: project_tower_name, project_id: project.id, client_id: client_id, total_floors: 1)
         end
 
         unit_configuration = UnitConfiguration.where(name: unit_configuration_name).where(project_id: project.id).where(project_tower_id: project_tower.id).first
