@@ -29,12 +29,20 @@
         <%= select_tag "fltrs[receipt_id]", options_for_select((params[:fltrs].present? && params[:fltrs][:receipt_id].present?) ? [[receipt.receipt_id, receipt.receipt_id]] : []), {class: "selectize-remote", data: {url: admin_receipts_path }} %>
       </div>
       <div class="form-group">
-        <%= label_tag "fltrs", "Status", class: "control-label" %>
+        <%= label_tag "fltrs", labels[:status], class: "control-label" %>
         <%= select_tag "fltrs[status]", options_for_select(Receipt.aasm.states.collect(&:name).collect(&:to_s).collect{|x| [x, x]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize"} %>
       </div>
       <div class="form-group">
-        <%= label_tag "fltrs", "Payment Mode", class: "control-label" %>
+        <%= label_tag "fltrs", labels[:payment_mode], class: "control-label" %>
         <%= select_tag "fltrs[payment_mode]", options_for_select(Receipt.available_payment_modes.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:payment_mode] : "")), {prompt: "Select", class: "selectize"} %>
+      </div>
+      <div class="form-group">
+        <%= label_tag "fltrs", labels[:issued_date], class: "control-label" %>
+        <%= text_field_tag "fltrs[issued_date]", (params[:fltrs].present? ? params[:fltrs][:issued_date] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"} %>
+      </div>
+      <div class="form-group">
+        <%= label_tag "fltrs", labels[:processed_on], class: "control-label" %>
+        <%= text_field_tag "fltrs[processed_on]", (params[:fltrs].present? ? params[:fltrs][:processed_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"} %>
       </div>
     <% end %>
     <%= javascript_tag do %>

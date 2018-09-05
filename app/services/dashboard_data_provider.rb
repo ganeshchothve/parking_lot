@@ -89,11 +89,11 @@ module DashboardDataProvider
     out
   end
 
-  def self.cancellation_user_requests_dashboard(user)
+  def self.user_requests_dashboard(user)
     data = UserRequest.collection.aggregate([{
       "$group": {
         "_id":{
-          "request_type": "$request_type",
+          "_type": "$_type",
           "status": "$status"
         },
         count: {
@@ -103,7 +103,7 @@ module DashboardDataProvider
     }]).to_a
     out = []
     data.each do |d|
-      out << {request_type: d["_id"]["request_type"], status: d["_id"]["status"], count: d["count"]}.with_indifferent_access
+      out << {_type: d["_id"]["_type"], status: d["_id"]["status"], count: d["count"]}.with_indifferent_access
     end
     out
   end

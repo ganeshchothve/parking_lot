@@ -29,7 +29,7 @@ class Admin::UserRequestsController < ApplicationController
     @user_request.assign_attributes(permitted_user_request_attributes)
     respond_to do |format|
       if @user_request.save
-        format.html { redirect_to edit_user_user_request_path(@user_request), notice: 'Request registered successfully.' }
+        format.html { redirect_to (current_user.buyer? ? edit_user_user_request_path(@user_request, request_type: @user_request.class.model_name.element) : edit_admin_user_request_path(@user_request, request_type: @user_request.class.model_name.element)), notice: 'Request registered successfully.' }
         format.json { render json: @user_request, status: :created }
       else
         format.html { render :new }
@@ -45,7 +45,7 @@ class Admin::UserRequestsController < ApplicationController
       UserRequestExportWorker.perform_async(current_user.id.to_s)
     end
     flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
-    redirect_to admin_user_requests_path
+    redirect_to admin_user_requests_path(request_type: "all")
   end
 
   def edit
@@ -61,7 +61,7 @@ class Admin::UserRequestsController < ApplicationController
 
     respond_to do |format|
       if @user_request.save
-        format.html { redirect_to (current_user.buyer? ? user_user_requests_path(@user) : admin_user_requests_path), notice: 'User Request was successfully updated.' }
+        format.html { redirect_to (current_user.buyer? ? user_user_requests_path(@user, request_type: "all") : admin_user_requests_path(request_type: "all")), notice: 'User Request was successfully updated.' }
         format.json { render json: @user_request }
       else
         format.html { render :edit }
@@ -105,20 +105,16 @@ class Admin::UserRequestsController < ApplicationController
 
   def associated_class
     if params[:request_type] == "swap"
-      UserRequest::Swap
+      @associated_class = UserRequest::Swap
     elsif params[:request_type] == "cancellation"
-      UserRequest::Cancellation
+      @associated_class = UserRequest::Cancellation
     else
-      UserRequest
+      @associated_class = UserRequest
     end
   end
 
   def apply_policy_scope
     custom_scope = associated_class.where(associated_class.user_based_scope(current_user, params))
-    if params[:request_type].present?
-      type =
-      custom_scope = custom_scope.where(_type: type)
-    end
     associated_class.with_scope(policy_scope(custom_scope)) do
       yield
     end

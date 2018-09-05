@@ -3,6 +3,14 @@ class ProjectUnitPolicy < ApplicationPolicy
     current_client.enable_actual_inventory? && !user.buyer?
   end
 
+  def ds?
+    current_client.enable_actual_inventory?
+  end
+
+  def show?
+    current_client.enable_actual_inventory?
+  end
+
   def edit?
     valid = true
     valid = (record.status != "hold") if user.buyer?
@@ -26,7 +34,7 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def hold?
-    valid = record.user.kyc_ready? && current_client.enable_actual_inventory?
+    valid = record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?
     valid = valid && (record.user.project_units.where(status: "hold").blank? && record.user_based_status(record.user) == 'available')
     valid = valid && record.user.unattached_blocking_receipt.present? if user.role?('channel_partner')
     valid = (valid && record.user.allowed_bookings > record.user.booking_details.ne(status: "cancelled").count)
@@ -35,7 +43,7 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def block?
-    valid = ['hold'].include?(record.status) && record.user.kyc_ready? && current_client.enable_actual_inventory?
+    valid = ['hold'].include?(record.status) && record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?
     valid = (valid && record.user.allowed_bookings > record.user.booking_details.ne(status: "cancelled").count)
     _role_based_check(valid)
   end
@@ -45,38 +53,43 @@ class ProjectUnitPolicy < ApplicationPolicy
     _role_based_check(valid)
   end
 
+  def update_template?
+    make_available?
+  end
+
   def update_co_applicants?
     valid = (["blocked", "booked_confirmed", "booked_tentative"].include?(record.status) && current_client.enable_actual_inventory?)
     _role_based_check(valid)
   end
 
   def update_project_unit?
-    valid = record.user.kyc_ready? && current_client.enable_actual_inventory?
+    valid = record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?
     _role_based_check(valid)
   end
 
   def payment?
-    checkout? && record.user.kyc_ready? && current_client.enable_actual_inventory?
+    checkout? && record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?
   end
 
   def process_payment?
-    checkout? && record.user.kyc_ready? && current_client.enable_actual_inventory?
+    checkout? && record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?
   end
 
   def checkout?
-    valid = record.user_id.present? && (record.user_based_status(record.user) == "booked") && record.user.kyc_ready? && current_client.enable_actual_inventory?
+    valid = record.user_id.present? && (record.user_based_status(record.user) == "booked") && record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?
     _role_based_check(valid)
   end
 
   def permitted_attributes params={}
     attributes = ["crm", "admin", "superadmin"].include?(user.role) ? [:auto_release_on, :booking_price] : []
-    attributes += (["crm", "admin", "superadmin"].include?(user.role) || make_available?) ? [:status] : []
+    attributes += (make_available? ? [:status, :payment_schedule_template_id, :cost_sheet_template_id] : [])
     attributes += [:user_id] if record.user_id.blank? && record.user_based_status(user) == 'available'
-    attributes += [:primary_user_kyc_id, user_kyc_ids: []] if record.user_id.present?
 
-    if user.role?('superadmin') && ['hold', 'blocked', 'booked_tentative', 'booked_confirmed'].exclude?(record.status)
+    if ['superadmin', 'admin'].include?(user.role) && ['hold', 'blocked', 'booked_tentative', 'booked_confirmed'].exclude?(record.status)
       attributes += [:name, :agreement_price, :all_inclusive_price, :status, :available_for, :blocked_on, :auto_release_on, :held_on, :applied_discount_rate, :applied_discount_id, :base_rate, :client_id, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, :selldo_id, :erp_id, :floor_rise, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :sub_type, :type, :unit_facing_direction, costs_attributes: CostPolicy.new(user, Cost.new).permitted_attributes, data_attributes: DatumPolicy.new(user, Cost.new).permitted_attributes]
     end
+
+    attributes += [:primary_user_kyc_id, user_kyc_ids: []] if record.user_id.present?
 
     attributes.uniq
   end

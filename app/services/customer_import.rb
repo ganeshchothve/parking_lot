@@ -22,14 +22,14 @@ module CustomerImport
         else
           user = User.new({lead_id: lead_id, first_name: first_name, last_name: last_name, phone: phone, email: email, booking_portal_client: booking_portal_client})
           user.manager_id = manager.id if manager.present?
-          unless user.valid?
-            puts "#{user.errors.full_messages} #{user.lead_id} #{user.name} #{user.email} #{user.phone}"
-          end
-          # user.skip_confirmation_notification!
-          # if user.save
-          #   puts "#{user.lead_id} #{user.name} #{user.email} #{user.phone}"
-          #   user.confirm
+          # unless user.valid?
+          #   puts "#{user.errors.full_messages} #{user.lead_id} #{user.name} #{user.email} #{user.phone}"
           # end
+          user.skip_confirmation_notification!
+          if user.save
+            puts "#{user.lead_id} #{user.name} #{user.email} #{user.phone}"
+            user.confirm
+          end
         end
       end
       count += 1

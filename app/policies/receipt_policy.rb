@@ -13,9 +13,9 @@ class ReceiptPolicy < ApplicationPolicy
 
   def new?
     if user.buyer?
-      valid = user.kyc_ready? && user.confirmed? && (record.project_unit_id.blank? || after_hold_payment? || after_blocked_payment?)
+      valid = user.confirmed? && user.kyc_ready? && (record.project_unit_id.blank? || after_hold_payment? || after_blocked_payment?)
     else
-      valid = record.user_id.present? && record.user.kyc_ready? && record.user.confirmed?
+      valid = record.user_id.present? && record.user.confirmed? && record.user.kyc_ready?
       valid = valid && (record.project_unit_id.blank? || after_blocked_payment? || (after_hold_payment? && editable_field?('event')))
     end
     if record.project_unit_id.present?
@@ -34,7 +34,7 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def edit?
-    !user.buyer? && (((user.role?('superadmin') || user.role?('admin') || user.role?('crm') || user.role?('sales')) && ['pending', 'clearance_pending', 'available_for_refund'].include?(record.status)) || (user.role?('channel_partner') && record.status == 'pending'))
+    !user.buyer? && (((user.role?('superadmin') || user.role?('admin') || user.role?('crm') || user.role?('sales_admin') || user.role?('sales')) && ['pending', 'clearance_pending', 'available_for_refund'].include?(record.status)) || (user.role?('channel_partner') && record.status == 'pending'))
   end
 
   def resend_success?
@@ -70,7 +70,7 @@ class ReceiptPolicy < ApplicationPolicy
     if ['sales', 'sales_admin'].include?(user.role) && (record.status == "pending" || record.status == "clearance_pending")
       attributes += [:event]
     end
-    if ['admin', 'crm', 'superadmin'].include?(user.role)
+    if ['admin', 'crm', 'superadmin', 'sales_admin'].include?(user.role)
       attributes += [:event]
       if record.persisted? && record.status == 'clearance_pending'
         attributes += [:processed_on, :comments, :tracking_id]

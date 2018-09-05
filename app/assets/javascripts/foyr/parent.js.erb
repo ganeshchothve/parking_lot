@@ -1,0 +1,65 @@
+<% url = Rails.application.routes.url_helpers %>
+var Foyr = (function(user, url, div_id, datajson){
+  var proxy;
+  var init = function(){
+    proxy = new Porthole.WindowProxy(url, div_id);
+    proxy.addEventListener(onParentMessage);
+    proxy.post({'availabilitydata': datajson})
+  }
+
+  function onParentMessage(messageEvent) {
+    if (messageEvent.data["getapartmentstatus"]) {
+      var apartment_ID = messageEvent.data["getapartmentstatus"];
+      fetchApartmentStatus(apartment_ID);
+    }
+    else if (messageEvent.data["bookedapartment"]) {
+      var apartmentdata = messageEvent.data["bookedapartment"];
+      var unit = _.find(datajson.hotspots, function(x){ return x.apartment_ID == apartmentdata.apartment_ID });
+      if(unit){
+        $.ajax({
+          url: (user.buyer ? "<%= url.user_searches_path %>" : "/admin/users/" + user.id + "/searches"),
+          data: {
+            search: {
+              project_unit_id: unit.id,
+              step: "<%= Search.new.allowed_steps.last %>"
+            }
+          },
+          type: "post",
+          dataType: "json",
+          success: function(data){
+            window.location = data.location;
+          },
+          error: function(){
+            proxy.post({"apartmentstatus": "Booked"});
+          }
+        });
+      }else{
+        redirect_to = "<%= url.dashboard_path %>"
+      }
+    }
+  }
+
+  function fetchApartmentStatus(apartment_ID) {
+    var unit = _.find(datajson.hotspots, function(x){ return x.apartment_ID == apartment_ID });
+    if(unit){
+      $.ajax({
+        url: "<%= url.admin_project_units_path %>/" + unit.id,
+        type: "get",
+        dataType: "json",
+        success: function(data){
+          proxy.post({
+            "apartmentstatus": data.status
+          });
+        },
+        error: function(){
+          proxy.post({"apartmentstatus": "Booked"});
+        }
+      });
+    }else{
+      proxy.post({"apartmentstatus": "Booked"});
+    }
+  }
+  return {
+    init: init
+  };
+});

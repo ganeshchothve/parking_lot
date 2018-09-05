@@ -13,9 +13,9 @@
       <% end %>
       <% if user_request.present? %>
         <% if user.present? %>
-          <li class="breadcrumb-item"><a href="<%= admin_user_user_requests_path(user) %>"><%= global_labels['user_requests'] %></a></li>
+          <li class="breadcrumb-item"><a href="<%= user_user_requests_path(user, request_type: "all") %>"><%= global_labels['user_requests'] %></a></li>
         <% else %>
-          <li class="breadcrumb-item"><a href="<%= admin_user_requests_path() %>"><%= global_labels['user_requests'] %></a></li>
+          <li class="breadcrumb-item"><a href="<%= user_user_requests_path(request_type: "all") %>"><%= global_labels['user_requests'] %></a></li>
         <% end %>
         <li class="breadcrumb-item active" aria-current="page"><%= global_labels['user_request'] %></li>
       <% else %>

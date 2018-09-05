@@ -79,7 +79,7 @@ class ProjectUnit
   validate :pan_uniqueness
 
   def ds_name
-    "#{project_tower_name} | #{name} | #{bedrooms}BHK"
+    "#{project_tower_name} | #{name} | #{bedrooms} BHK"
   end
 
   def make_available

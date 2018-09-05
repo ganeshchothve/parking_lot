@@ -123,7 +123,7 @@
               <div class="col-md-6">
                 <div class="form-group position-relative">
                   <%= f.label :issued_date, class: 'label-required' %>
-                  <%= f.text_field :issued_date, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.issued_date.present? ? f.object.issued_date.strftime("%d/%m/%Y") : '', "data-max-date": Date.tomorrow.strftime("%d/%m/%Y"), disabled: (policy(@receipt).editable_field?("issued_date") ? false : true), value: f.object.issued_date.present? ? f.object.issued_date.strftime("%d/%m/%Y") : "" %>
+                  <%= f.text_field :issued_date, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.issued_date.present? ? f.object.issued_date.strftime("%d/%m/%Y") : '', disabled: (policy(@receipt).editable_field?("issued_date") ? false : true), value: f.object.issued_date.present? ? f.object.issued_date.strftime("%d/%m/%Y") : "" %>
                 </div>
               </div>
             </div>

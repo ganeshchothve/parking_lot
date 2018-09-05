@@ -43,6 +43,20 @@
         </div>
         <div class="col-md-4">
           <div class="form-group">
+            <label class="small text-muted"><%= labels[:confirmed] %></label>
+            <div><%= @user.confirmed? ? "Yes (at #{l(@user.confirmed_at)})" : "No" %></div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="small text-muted"><%= labels[:manager_role] %></label>
+            <div><%= @user.manager_id.present? ? User.available_roles(current_client).find{|x| x[:id] == @user.manager.role}[:text] : "Direct" %></div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
             <label class="small text-muted"><%= labels[:manager_id] %></label>
             <div><%= @user.manager_id.present? ? @user.manager.name : "" %></div>
           </div>

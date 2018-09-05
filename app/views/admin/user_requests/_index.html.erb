@@ -4,7 +4,7 @@
       <% labels = t('mongoid.attributes.user_request').with_indifferent_access %>
       <tr>
         <th><%= labels['user_id'] %></th>
-        <th><%= labels['request_type'] %></th>
+        <th><%= labels['_type'] %></th>
         <th><%= labels['status'] %></th>
         <th><%= labels['project_unit_id'] %></th>
         <th class="text-right">Actions</th>
@@ -31,7 +31,14 @@
                 <%= link_to 'Documents', assetables_path(assetable_type: user_request.class.model_name.i18n_key.to_s, assetable_id: user_request.id), class: 'dropdown-item modal-remote-form-link' %>
               <% end %>
               <% if UserRequestPolicy.new(current_user, user_request).edit? %>
-              <%= link_to 'Edit', edit_admin_user_user_request_path(user_request.user_id, user_request), class: 'modal-remote-form-link dropdown-item' %>
+              <%
+                if current_user.buyer?
+                  url = edit_user_user_request_path(user_request, request_type: user_request.class.model_name.element)
+                else
+                  url = edit_admin_user_request_path(user_request, request_type: user_request.class.model_name.element)
+                end
+              %>
+              <%= link_to 'Edit', url, class: 'modal-remote-form-link dropdown-item' %>
               <% end %>
             </div>
           </div>
