@@ -8,12 +8,6 @@ class ProjectUnitSwapService
   def swap
     if(@alternate_project_unit.status == "available" || (@alternate_project_unit.status == "hold" && @alternate_project_unit.user_id == @project_unit.user_id))
 
-      @alternate_project_unit.primary_user_kyc_id = primary_user_kyc.id
-      @alternate_project_unit.user_kycs = user_kycs
-      @alternate_project_unit.status = "hold"
-      @alternate_project_unit.user = user
-      @alternate_project_unit.save!
-
       existing_receipts = @project_unit.receipts.in(status:["success","clearance_pending"]).asc(:created_at).to_a
       existing_receipts.each do |receipt|
         receipt.project_unit_id=nil
@@ -37,6 +31,12 @@ class ProjectUnitSwapService
       booking_detail[:swap_request_initiated] = true
       booking_detail.status = "swapped"
       booking_detail.save
+
+      @alternate_project_unit.primary_user_kyc_id = primary_user_kyc.id
+      @alternate_project_unit.user_kycs = user_kycs
+      @alternate_project_unit.status = "hold"
+      @alternate_project_unit.user = user
+      @alternate_project_unit.save!
 
       existing_receipts.each do |old_receipt|
         new_receipt = old_receipt.clone
