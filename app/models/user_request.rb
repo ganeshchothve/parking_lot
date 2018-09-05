@@ -6,6 +6,7 @@ class UserRequest
 
   field :status, type: String, default: 'pending'
   field :resolved_at, type: DateTime
+  field :reason_for_failure, type: String
 
   belongs_to :project_unit, optional: true
   belongs_to :receipt, optional: true
@@ -20,6 +21,7 @@ class UserRequest
 
   validates :status, inclusion: {in: Proc.new{ |record| record.class.available_statuses.collect{|x| x[:id]} } }
   validates :project_unit_id, uniqueness: {scope: [:user_id, :status], message: 'already has a cancellation request.'}, if: Proc.new{|record| record.status == "pending"}
+  validates :reason_for_failure, presence: true, if: Proc.new{|record| record.status == "failed"}
 
   accepts_nested_attributes_for :notes
 
@@ -29,7 +31,8 @@ class UserRequest
     [
       {id: 'pending', text: 'Pending'},
       {id: 'resolved', text: 'Resolved'},
-      {id: 'rejected', text: 'Rejected'}
+      {id: 'rejected', text: 'Rejected'},
+      {id: 'failed', text: 'Failed'}
     ]
   end
 

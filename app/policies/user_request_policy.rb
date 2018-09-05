@@ -35,8 +35,8 @@ class UserRequestPolicy < ApplicationPolicy
       attributes += [:receipt_id, :user_id] if user.buyer?
       attributes += [:project_unit_id] if record.new_record?
       attributes += [:status] if record.persisted? && ['admin', 'crm', 'sales', 'superadmin', 'cp'].include?(user.role)
+      attributes += [notes_attributes: NotePolicy.new(user, Note.new()).permitted_attributes]
     end
-    attributes += [notes_attributes: NotePolicy.new(user, Note.new()).permitted_attributes]
     attributes
   end
 end

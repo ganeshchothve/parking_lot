@@ -45,14 +45,20 @@
         <% rescue ActionView::MissingTemplate %>
         <% end %>
 
+        <div class="form-group">
+          <%= f.label :status, class: 'label-required' %>
+          <% if policy(@user_request).editable_field?("status") %>
+            <%= f.select :status, UserRequest.available_statuses.reject{|x| x[:id] == "failed"}.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', required: "required" %>
+          <% else %>
+            <h6><%= f.object.class.available_statuses.find{|x| x[:id] == f.object.status}[:text] %></h6>
+          <% end %>
+        </div>
+        <% if @user_request.status == "failed" %>
           <div class="form-group">
-            <%= f.label :status, class: 'label-required' %>
-            <% if policy(@user_request).editable_field?("status") %>
-              <%= f.select :status, UserRequest.available_statuses.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', required: "required" %>
-            <% else %>
-              <h6><%= f.object.class.available_statuses.find{|x| x[:id] == f.object.status}[:text] %></h6>
-            <% end %>
+            <%= f.label :reason_for_failure, class: 'label-required' %>
+            <div><%= @user_request.reason_for_failure %></div>
           </div>
+        <% end %>
         <% if policy(@user_request).editable_field?("notes_attributes") %>
           <% f.object.notes.new(creator_id: current_user.id) %>
           <%= f.fields_for :notes do |note_field|%>

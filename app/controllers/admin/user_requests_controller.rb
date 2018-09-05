@@ -65,7 +65,7 @@ class Admin::UserRequestsController < ApplicationController
         format.json { render json: @user_request }
       else
         format.html { render :edit }
-        format.json { render json: @user_request.errors.full_messages, status: :unprocessable_entity }
+        format.json { render json: {errors: @user_request.errors.full_messages}, status: :unprocessable_entity }
       end
     end
   end
