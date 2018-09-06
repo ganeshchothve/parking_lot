@@ -2,6 +2,7 @@
   <button onclick="window.print();" class="btn btn-primary d-print-none">Print</button>
 </div>
 <% labels = t("mongoid.attributes.user").with_indifferent_access %>
+<% client_labels = t("mongoid.attributes.client").with_indifferent_access %>
 <div class="container bg-light">
   <div class="pt-3"></div>
   <div class="card">
@@ -89,6 +90,26 @@
       <% @user.notes.limit(3).each do |note| %>
         <%= render 'notes/show', note: note %>
       <% end %>
+    </div>
+  </div>
+  <div class="mt-3"></div>
+  <div class="card">
+    <div class="card-header">
+      <%= client_labels[:disclaimer] %>
+    </div>
+    <div class="card-body">
+      <%= current_client.disclaimer.html_safe %>
+      <hr/>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-5 mt-5"></div>
+          Customer Signature
+        </div>
+        <div class="col-md-6 text-right">
+          <div class="mb-5 mt-5"></div>
+          Authorized Signatory
+        </div>
+      </div>
     </div>
   </div>
   <div class="text-center text-muted small mt-3">This is an electronically generated customer form.</div>

@@ -18,6 +18,8 @@ class UserKyc
   field :designation, type: String
   field :customer_company_name, type: String
   field :configurations, type: Array, default: []
+  field :number_of_units, type: Integer
+  field :preferred_floors, type: Array, default: []
   field :min_budget, type: Integer
   field :max_budget, type: Integer
   field :comments, type: String
@@ -61,6 +63,7 @@ class UserKyc
   validates :pan_number, :aadhaar, uniqueness: {scope: :user_id}, allow_blank: true
   validates :phone, uniqueness: {scope: :user_id}, phone: true # TODO: we can remove phone validation, as the validation happens in
   validates :configurations, array: {inclusion: {allow_blank: true, in: Proc.new{ |kyc| UserKyc.available_configurations.collect{|x| x[:id]} } }}
+  validates :preferred_floors, array: {inclusion: {allow_blank: true, in: Proc.new{ |kyc| UserKyc.available_preferred_floors.collect{|x| x[:id]} } }}
   validate :min_max_budget
   validates :pan_number, format: {with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A'}, allow_blank: true
   validates :aadhaar, format: {with: /\A\d{12}\z/i, message: 'is not a valid aadhaar number'}, allow_blank: true
@@ -104,6 +107,10 @@ class UserKyc
       {text:'6 BHK', id:'6'},
       {text:'7 BHK', id:'7'}
     ]
+  end
+
+  def self.available_preferred_floors
+    (1..ProjectTower.max(:total_floors)).to_a.collect{|x| {id: x.to_s, text: x.to_s}}
   end
 
   def self.user_based_scope(user, params={})

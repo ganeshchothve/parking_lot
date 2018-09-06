@@ -96,6 +96,20 @@ end
             </div>
           </div>
         </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <%= f.label :preferred_floors %>
+              <%= f.select :preferred_floors, UserKyc.available_preferred_floors.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', multiple: true, disabled: (policy(@user_kyc).editable_field?("preferred_floors") ? false : true) %>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <%= f.label :number_of_units %>
+              <%= f.number_field :number_of_units, class: "form-control" %>
+            </div>
+          </div>
+        </div>
         <div class="card">
           <div class="card-header">
             Permanent Address
