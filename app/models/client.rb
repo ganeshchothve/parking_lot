@@ -39,7 +39,7 @@ class Client
   field :sms_mask, type: String, default: "SellDo"
   field :mailgun_private_api_key, type: String
   field :mailgun_email_domain, type: String
-  field :enable_actual_inventory, type: Boolean, default: false
+  field :enable_actual_inventory, type: Array, default: []
   field :enable_channel_partners, type: Boolean, default: false
   field :enable_discounts, type: Boolean, default: false
   field :enable_direct_payment, type: Boolean, default: false
@@ -130,6 +130,14 @@ class Client
   def email_enabled?
     self.enable_communication["email"]
   end
+
+  def enable_actual_inventory?(user)
+    if user.present?
+      enable_actual_inventory.include?(user.role)
+    else
+      false
+    end
+  end
 end
 
 =begin
@@ -164,7 +172,7 @@ c.area_unit = "psqft."
 c.preferred_login = "phone"
 c.sms_provider_username = "amuramarketing"
 c.sms_provider_password = "aJ_Z-1j4"
-c.enable_actual_inventory = false
+c.enable_actual_inventory = User.available_roles(c).collect{|x| x[:id]}
 c.enable_channel_partners = false
 c.enable_discounts = false
 c.enable_company_users = true

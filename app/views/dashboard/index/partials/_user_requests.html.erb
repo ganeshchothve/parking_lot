@@ -1,4 +1,4 @@
-<% if current_client.enable_actual_inventory? %>
+<% if current_client.enable_actual_inventory?(current_user) %>
   <% user_requests = DashboardDataProvider.user_requests_dashboard(current_user) %>
   <div class="card">
     <div class="card-header">

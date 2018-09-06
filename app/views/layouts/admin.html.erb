@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= current_project.name %> | <%= current_client.name %></title>
+    <title><%= current_project.present? ? "#{current_project.name} | " : "" %><%= current_client.name %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <%= csrf_meta_tags %>
     <%= stylesheet_link_tag 'dashboard', media: 'all' %>
@@ -12,7 +12,8 @@
       if(typeof App === "undefined"){
         App = {};
       }
-      App.client = <%= raw current_client.to_json(only: [:name, :_id, :preferred_login, :enable_actual_inventory]) %>;
+      App.client = <%= raw current_client.to_json(only: [:name, :_id, :preferred_login]) %>;
+      App.client.enable_actual_inventory = <%= current_client.enable_actual_inventory?(current_user) %>
       App.project = <%= raw current_project.to_json(only: [:name, :_id]) %>;
       <% if user_signed_in? %>
         App.current_user = <%= raw current_user.to_json %>;

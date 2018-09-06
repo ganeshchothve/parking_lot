@@ -117,10 +117,10 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-12">
                   <div class="form-group">
-                    <%= f.label :blocking_amount, class: 'label-required' %>
-                    <%= f.number_field :blocking_amount, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("blocking_amount") ? false : true), min: 0 %>
+                    <%= f.label :enable_actual_inventory %><br/>
+                    <%= f.select :enable_actual_inventory, User.available_roles(@client).collect{|x| [x[:text], x[:id]]}, {}, class: 'selectize', multiple: true, required: 'required', disabled: (policy(f.object).editable_field?("enable_actual_inventory") ? false : true) %>
                   </div>
                 </div>
               </div>
@@ -176,19 +176,10 @@
               </div>
               <div class="row">
                 <div class="col-md-6">
-                  <% if policy(@client).editable_field?("enable_actual_inventory") %>
                   <div class="form-group">
-                    <%= f.label :enable_actual_inventory %><br/>
-                    <div class="form-check form-check-inline">
-                      <%= f.radio_button :enable_actual_inventory, true, class: "form-check-input" %>
-                      <%= f.label :enable_actual_inventory, "Yes", class: "form-check-label" %>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <%= f.radio_button :enable_actual_inventory, false, class: "form-check-input" %>
-                      <%= f.label :enable_actual_inventory, "No", class: "form-check-label" %>
-                    </div>
+                    <%= f.label :blocking_amount, class: 'label-required' %>
+                    <%= f.number_field :blocking_amount, class: 'form-control', required: 'required', disabled: (policy(@client).editable_field?("blocking_amount") ? false : true), min: 0 %>
                   </div>
-                  <% end %>
                 </div>
                 <div class="col-md-6">
                   <% if policy(@client).editable_field?("enable_channel_partners") %>
@@ -437,7 +428,7 @@
                       <div class="col-md-6">
                         <div class="form-group">
                           <%= eivc_form.label :provider, class: 'label-required' %>
-                          <%= eivc_form.select :provider, ExternalInventoryViewConfig.available_providers.collect{|x| [x[:text], x[:id]]}, {}, class: 'selectize-tags', required: 'required', disabled: (policy(eivc_form.object).editable_field?("provider") ? false : true) %>
+                          <%= eivc_form.select :provider, ExternalInventoryViewConfig.available_providers.collect{|x| [x[:text], x[:id]]}, {}, class: 'selectize', required: 'required', disabled: (policy(eivc_form.object).editable_field?("provider") ? false : true) %>
                         </div>
                       </div>
                       <div class="col-md-6">
@@ -449,7 +440,7 @@
                     </div>
                     <div class="form-group">
                       <%= eivc_form.label :status, class: 'label-required' %>
-                      <%= eivc_form.select :status, ExternalInventoryViewConfig.available_statuses.collect{|x| [x[:text], x[:id]]}, {}, class: 'selectize-tags', required: 'required', disabled: (policy(eivc_form.object).editable_field?("status") ? false : true) %>
+                      <%= eivc_form.select :status, ExternalInventoryViewConfig.available_statuses.collect{|x| [x[:text], x[:id]]}, {}, class: 'selectize', required: 'required', disabled: (policy(eivc_form.object).editable_field?("status") ? false : true) %>
                     </div>
                   </div>
                 </div>

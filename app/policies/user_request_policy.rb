@@ -1,6 +1,6 @@
 class UserRequestPolicy < ApplicationPolicy
   def index?
-    current_client.enable_actual_inventory?
+    current_client.enable_actual_inventory?(user)
   end
 
   def edit?

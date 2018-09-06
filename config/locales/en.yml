@@ -94,7 +94,7 @@ en:
         sms_provider_username: 'SMS Provider Username'
         sms_provider_password: 'SMS Provider Password'
         sms_mask: 'SMS Mask'
-        enable_actual_inventory: 'Enable Inventory'
+        enable_actual_inventory: 'Enable Inventory for these user roles'
         enable_channel_partners: 'Enable Channel Partners'
         enable_discounts: 'Enable Discounts'
         blocking_amount: 'Min. Amount for Blocking an Unit'

@@ -22,7 +22,7 @@
         </a>
         <div class="clearfix"></div>
         <br/><br/><br/>
-        <div class="pageTitle purple text-center">Welcome to <%= current_project.name %> Booking Portal</div>
+        <div class="pageTitle purple text-center">Welcome to <%= current_project.present? ? current_project.name : "" %> Booking Portal by <%= current_client.name %></div>
         <div class="subTitle purple text-center" style="margin-bottom:25px;">Now you can book your home in 3 easy steps</div>
         <div style="width:60%; margin:0 auto">
           <ul class="text-left steps-li">

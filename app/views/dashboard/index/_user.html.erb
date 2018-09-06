@@ -4,9 +4,11 @@
       <% if current_user.project_units.size < 1 %>
       <div class="card">
         <div class="card-body">
+          <% if current_project.present? %>
           <h3 class="card-title text-center font-weight-bold text-uppercase">
-            Launching <%= current_project.name %>
+              Launching <%= current_project.name %>
           </h3>
+          <% end %>
           <h6 class="card-subtitle text-muted text-center">
             Apartments Starting from <%= number_to_indian_currency(0) %>
           </h6>
