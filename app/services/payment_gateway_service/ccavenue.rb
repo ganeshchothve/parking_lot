@@ -4,7 +4,7 @@ module PaymentGatewayService
       payload = ""
       payload += "merchant_id=#{payment_profile[:merchant_id]}&"
       payload += "amount=" + @receipt.total_amount.to_s + "&"
-      payload += "order_id=" + @receipt.order_id.to_s + "&"
+      payload += "order_id=" + @receipt.receipt_id.to_s + "&"
       payload += "currency=INR&"
       payload += "language=EN&"
       payload += "redirect_url=#{redirect_url(search_id)}&"
@@ -79,7 +79,7 @@ module PaymentGatewayService
 
     def ccavenue_url
       if Rails.env.production?
-        return "https://ccavenue.com/transaction/transaction.do?command=initiateTransaction"
+        return "https://secure.ccavenue.com/transaction/transaction.do?command=initiateTransaction"
       elsif Rails.env.development?
         return "https://test.ccavenue.com/transaction/transaction.do?command=initiateTransaction"
       else
