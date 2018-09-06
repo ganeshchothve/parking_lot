@@ -119,9 +119,13 @@ class ChannelPartner
   end
 
   def user_based_uniqueness
-    query = User.or([{phone: c.phone}, {email: c.email}, {rera_id: c.rera_id}])
-    query = query.ne(id: c.associated_user_id) if c.associated_user_id.present?
-    if query.present?
+    query = []
+    query << {phone: phone} if phone.present?
+    query << {email: email} if email.present?
+    query << {rera_id: rera_id} if rera_id.present?
+    criteria = User.or(query)
+    criteria = criteria.ne(id: c.associated_user_id) if c.associated_user_id.present?
+    if criteria.present?
       self.errors.add :base, 'We have a user with similar details already registered'
     end
   end
