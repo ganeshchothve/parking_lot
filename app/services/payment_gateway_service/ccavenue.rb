@@ -70,11 +70,11 @@ module PaymentGatewayService
     end
 
     def redirect_url(search_id)
-      "#{protocol}#{Rails.application.config.action_mailer.default_url_options[:host]}/payment/#{@receipt.receipt_id}/process_payment/success"
+      "#{protocol}://#{Rails.application.config.action_mailer.default_url_options[:host]}/payment/#{@receipt.receipt_id}/process_payment/success"
     end
 
     def cancel_url(search_id)
-      "#{protocol}#{Rails.application.config.action_mailer.default_url_options[:host]}/payment/#{@receipt.receipt_id}/process_payment/failure"
+      "#{protocol}://#{Rails.application.config.action_mailer.default_url_options[:host]}/payment/#{@receipt.receipt_id}/process_payment/failure"
     end
 
     def ccavenue_url
@@ -88,7 +88,7 @@ module PaymentGatewayService
     end
 
     def protocol
-      (Rails.application.config.action_mailer.default_url_options[:port].to_i == 443) ? "https://" : "http://"
+      Rails.application.config.action_mailer.default_url_options[:protocol]
     end
   end
 
