@@ -119,7 +119,8 @@ class Client
 
   def self.available_payment_gateways
     [
-      {id: "Razorpay", text: "Razorpay Payment Gateway"}
+      {id: "Razorpay", text: "Razorpay Payment Gateway"},
+      {id: "CCAvenue", text: "CCAvenue Payment Gateway"}
     ]
   end
 

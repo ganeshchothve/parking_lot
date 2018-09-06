@@ -57,7 +57,7 @@ class SearchPolicy < ApplicationPolicy
     new?
   end
 
-  def razorpay_payment?
+  def gateway_payment?
     new?
   end
 

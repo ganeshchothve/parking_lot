@@ -67,7 +67,7 @@ Rails.application.routes.draw do
         post :update_template, on: :member
         get :checkout, on: :member
         post :make_available, on: :member
-        get '/razorpay-payment/:receipt_id', to: 'searches#razorpay_payment', on: :member
+        get '/gateway-payment/:receipt_id', to: 'searches#gateway_payment', on: :member
         get :payment, on: :member
         get ":step", on: :member, to: "searches#show", as: :step
       end
@@ -121,7 +121,7 @@ Rails.application.routes.draw do
         get :checkout, on: :member
         post :update_template, on: :member
         post :make_available, on: :member
-        get '/razorpay-payment/:receipt_id', to: 'searches#razorpay_payment', on: :member
+        get '/gateway-payment/:receipt_id', to: 'searches#gateway_payment', on: :member
         get :payment, on: :member
         get ":step", on: :member, to: "searches#show", as: :step
       end
