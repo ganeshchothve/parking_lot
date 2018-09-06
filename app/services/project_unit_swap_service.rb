@@ -8,7 +8,8 @@ class ProjectUnitSwapService
   def swap
     if(@alternate_project_unit.status == "available" || (@alternate_project_unit.status == "hold" && @alternate_project_unit.user_id == @project_unit.user_id))
 
-      existing_receipts = @project_unit.receipts.in(status:["success","clearance_pending"]).asc(:created_at).to_a
+      existing_receipts = @project_unit.receipts.in(status:["success", "clearance_pending", "pending"]).asc(:total_amount)
+      existing_receipts_json = existing_receipts.as_json
       existing_receipts.each do |receipt|
         receipt.project_unit_id = nil
         receipt.comments ||= ""
@@ -38,11 +39,19 @@ class ProjectUnitSwapService
       @alternate_project_unit.user = user
       @alternate_project_unit.save!
 
-      existing_receipts.each do |old_receipt|
-        new_receipt = old_receipt.clone
-        new_receipt.comments = "Receipt generated for Swapped Unit. Original Receipt ID: #{old_receipt.id.to_s}"
-        new_receipt.status = "success"
+      existing_receipts_json.each do |old_receipt|
+        cloned_json = old_receipt.clone
+        cloned_json.delete "receipt_id"
+        cloned_json.delete "_id"
+        cloned_json.delete "order_id"
+        cloned_json.delete "booking_detail_id"
+        cloned_json.delete "created_at"
+        cloned_json.delete "updated_at"
+
+        new_receipt = Receipt.new(cloned_json)
+        new_receipt.comments = "Receipt generated for Swapped Unit. Original Receipt ID: #{old_receipt["id"].to_s}"
         new_receipt.project_unit = @alternate_project_unit
+        new_receipt.swap_request_initiated = true
         new_receipt.save!
       end
       booking_detail.unset(:swap_request_initiated)

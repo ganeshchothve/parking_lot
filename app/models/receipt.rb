@@ -43,11 +43,11 @@ class Receipt
   validates :payment_gateway, inclusion: {in: PaymentGatewayService::Default.allowed_payment_gateways }, allow_blank: true
   validates :tracking_id, presence: true, if: Proc.new{|receipt| receipt.status == 'success' && receipt.payment_mode != "online"}
   validates :comments, presence: true, if: Proc.new{|receipt| receipt.status == 'failed' && receipt.payment_mode != "online"}
-  validate :tracking_id_processed_on_only_on_success
+  validate :tracking_id_processed_on_only_on_success, if: Proc.new{|record| record.status != "cancelled" }
   validate :processed_on_greater_than_issued_date
 
   increments :order_id, auto: false
-  default_scope -> {desc(:order_id)}
+  default_scope -> {desc(:created_at)}
 
   enable_audit({
     associated_with: ["user"],
@@ -177,7 +177,7 @@ class Receipt
       self.errors.add :total_amount, "cannot be less than or equal to 0"
     end
 
-    if (self.project_unit_id.blank? || self.blocking_payment?) && self.total_amount < self.user.booking_portal_client.blocking_amount
+    if (self.project_unit_id.blank? || self.blocking_payment?) && self.total_amount < self.user.booking_portal_client.blocking_amount && self.new_record? && !self.swap_request_initiated
       self.errors.add :total_amount, "cannot be less than blocking amount #{self.user.booking_portal_client.blocking_amount}"
     end
   end

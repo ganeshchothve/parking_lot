@@ -147,11 +147,11 @@
                       <%= f.label :project_unit_id, class: 'control-label' %>
                       <div><%= f.object.project_unit.name %></div>
                       <%= f.hidden_field :project_unit_id %>
-                    <% elsif @receipt.payment_mode != 'online' && @receipt.persisted? %>
+                    <% elsif policy(@receipt).editable_field?("project_unit_id") %>
                       <%= f.label :project_unit_id, class: 'control-label' %>
                       <% user_units = @receipt.user.project_units.ne(status: 'hold') %>
                       <% if user_units.present? %>
-                      <%= f.select :project_unit_id, user_units.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', disabled: (policy(@receipt).editable_field?("project_unit_id") ? false : true) %>
+                      <%= f.select :project_unit_id, user_units.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize' %>
                       <% end %>
                     <% end %>
                   </div>
