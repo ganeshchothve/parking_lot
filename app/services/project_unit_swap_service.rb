@@ -10,7 +10,7 @@ class ProjectUnitSwapService
 
       existing_receipts = @project_unit.receipts.in(status:["success","clearance_pending"]).asc(:created_at).to_a
       existing_receipts.each do |receipt|
-        receipt.project_unit_id=nil
+        receipt.project_unit_id = nil
         receipt.comments ||= ""
         receipt.comments += "Unit Swapped by user. Original Unit ID: #{@project_unit.id.to_s} So cancelling these receipts"
         receipt.swap_request_initiated = true
@@ -41,7 +41,7 @@ class ProjectUnitSwapService
       existing_receipts.each do |old_receipt|
         new_receipt = old_receipt.clone
         new_receipt.comments = "Receipt generated for Swapped Unit. Original Receipt ID: #{old_receipt.id.to_s}"
-        new_receipt.status="success"
+        new_receipt.status = "success"
         new_receipt.project_unit = @alternate_project_unit
         new_receipt.save!
       end

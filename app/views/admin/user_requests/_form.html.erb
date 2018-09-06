@@ -80,7 +80,7 @@
                 <%= note_field.hidden_field :note_type %>
                 <div><%= note_field.object.note %></div>
                 <small class="text-muted">
-                  created by <%= note_field.object.creator.name %> on <%= l(note_field.object.created_at.present? ? note_field.object.created_at : Time.now) %>
+                  created by <%= note_field.object.creator.name %> on <%= l(note_field.object.created_at.present? ? note_field.object.created_at.in_time_zone(current_user.time_zone) : Time.now.in_time_zone(current_user.time_zone)) %>
                 </small>
               </div>
               <hr/>
