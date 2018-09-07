@@ -25,6 +25,10 @@ class Admin::ProjectUnitsController < AdminController
     end
   end
 
+  def print
+    @user = @project_unit.user
+  end
+
   def edit
     render layout: false
   end

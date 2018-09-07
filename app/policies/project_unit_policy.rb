@@ -11,6 +11,10 @@ class ProjectUnitPolicy < ApplicationPolicy
     current_client.enable_actual_inventory?(user)
   end
 
+  def print?
+    show?
+  end
+
   def edit?
     valid = true
     valid = (record.status != "hold") if user.buyer?
