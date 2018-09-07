@@ -100,13 +100,13 @@ class ProjectUnit
   def calculated_costs
     out = {}
     costs.each{|c| out[c.key] = c.value }
-    out
+    out.with_indifferent_access
   end
 
   def calculated_data
     out = {}
     data.each{|c| out[c.key] = c.value }
-    out
+    out.with_indifferent_access
   end
 
   def self.user_based_available_statuses(user)
