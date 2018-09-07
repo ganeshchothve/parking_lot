@@ -14,7 +14,9 @@ class UserObserver < Mongoid::Observer
   end
 
   def before_save user
-    user.phone.gsub(" ", "") if user.phone.present?
+    if user.phone.present?
+      user.phone = Phonelib.parse(user.phone).to_s
+    end
     if user.confirmed_at_changed?
       # manager_ids = user.referenced_manager_ids - [user.manager_id]
       # manager_ids.each do |manager_id|
