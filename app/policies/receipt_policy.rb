@@ -34,7 +34,15 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def edit?
-    !user.buyer? && (((user.role?('superadmin') || user.role?('admin') || user.role?('crm') || user.role?('sales_admin') || user.role?('sales')) && ['pending', 'clearance_pending', 'available_for_refund'].include?(record.status)) || (user.role?('channel_partner') && record.status == 'pending'))
+    if record.status == "success" && record.project_unit_id.present?
+      false
+    elsif !user.buyer?
+      valid = record.status == "success" && record.project_unit_id.blank?
+      valid ||= (['pending', 'clearance_pending', 'available_for_refund'].include?(record.status) && ['superadmin', 'admin', 'crm', 'sales_admin'].include?(user.role))
+      valid ||= (user.role?('channel_partner') && record.status == 'pending')
+    else
+      false
+    end
   end
 
   def resend_success?
@@ -60,7 +68,8 @@ class ReceiptPolicy < ApplicationPolicy
     if record.new_record? || record.status == 'pending'
       attributes += [:payment_mode]
     end
-    if user.buyer? || user.role?('channel_partner') || (record.user_id.present? && record.user.project_unit_ids.present?) && (record.status == 'pending' || record.status == 'available_for_refund')
+
+    if user.buyer? || user.role?('channel_partner') || (record.user_id.present? && record.user.project_unit_ids.present? && record.project_unit_id.blank?) && (['pending', 'clearance_pending', 'success', 'available_for_refund'].include?(record.status))
       attributes += [:project_unit_id]
     end
     attributes += [:total_amount] if record.new_record? || ['pending', 'clearance_pending'].include?(record.status)
