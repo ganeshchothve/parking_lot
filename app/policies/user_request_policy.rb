@@ -4,7 +4,7 @@ class UserRequestPolicy < ApplicationPolicy
   end
 
   def edit?
-    ((user.id == record.user_id && record.status == 'pending') || ['admin', 'crm', 'sales', 'cp', 'superadmin'].include?(user.role)) && current_client.enable_actual_inventory?
+    ((user.id == record.user_id && record.status == 'pending') || ['admin', 'crm', 'sales', 'cp', 'superadmin'].include?(user.role)) && current_client.enable_actual_inventory?(user)
   end
 
   def new?
@@ -18,7 +18,7 @@ class UserRequestPolicy < ApplicationPolicy
   end
 
   def export?
-    ['admin'].include?(user.role) && current_client.enable_actual_inventory?
+    ['admin'].include?(user.role) && current_client.enable_actual_inventory?(user)
   end
 
   def create?
