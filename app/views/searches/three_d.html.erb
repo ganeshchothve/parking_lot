@@ -13,7 +13,7 @@
       data = ProjectUnit.only(:erp_id, :status, :all_inclusive_price).collect do |x|
         {
           apartment_ID: x.erp_id,
-          status: (x.user_based_status(current_user) == "available" ? "open" : "booked"),
+          status: (x.user_based_status(@user) == "available" ? "open" : "booked"),
           price: x.all_inclusive_price,
           id: x.id.to_s
         }
