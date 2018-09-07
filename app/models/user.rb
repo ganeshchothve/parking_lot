@@ -103,7 +103,7 @@ class User
   validates :rera_id, presence: true, if: Proc.new{ |user| user.role?('channel_partner') }
   validates :rera_id, uniqueness: true, allow_blank: true
   validates :role, inclusion: {in: Proc.new{ |user| User.available_roles(user.booking_portal_client).collect{|x| x[:id]} } }
-  validates :lead_id, uniqueness: true, presence: true, if: Proc.new{ |user| user.buyer? }
+  validates :lead_id, uniqueness: true, presence: true, if: Proc.new{ |user| user.buyer? }, allow_blank: true
   validate :manager_change_reason_present?
 
   def unattached_blocking_receipt

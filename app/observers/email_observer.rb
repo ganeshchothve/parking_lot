@@ -31,24 +31,26 @@ class EmailObserver < Mongoid::Observer
   end
 
   def after_create email
-    if Rails.env.production? || Rails.env.staging?
-      if email.attachments.present?
-        Communication::Email::MailgunWorker.perform_in(2.minutes, email.id.to_s)
+    if email.to.present?
+      if Rails.env.production? || Rails.env.staging?
+        if email.attachments.present?
+          Communication::Email::MailgunWorker.perform_in(2.minutes, email.id.to_s)
+        else
+          Communication::Email::MailgunWorker.perform_async(email.id.to_s)
+        end
       else
-        Communication::Email::MailgunWorker.perform_async(email.id.to_s)
+        attachment_urls = {}
+        email.attachments.collect do |doc|
+          attachment_urls[doc.file_name] = doc.file.url
+        end
+        ApplicationMailer.test({
+          to: email.recipients.distinct(:email),
+          cc: email.cc,
+          body: email.body,
+          subject: email.subject,
+          attachment_urls: attachment_urls
+        }).deliver
       end
-    else
-      attachment_urls = {}
-      email.attachments.collect do |doc|
-        attachment_urls[doc.file_name] = doc.file.url
-      end
-      ApplicationMailer.test({
-        to: email.recipients.distinct(:email),
-        cc: email.cc,
-        body: email.body,
-        subject: email.subject,
-        attachment_urls: attachment_urls
-      }).deliver
     end
   end
 end

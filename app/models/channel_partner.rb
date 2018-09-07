@@ -32,10 +32,11 @@ class ChannelPartner
   has_one :bank_detail, as: :bankable, validate: false
   has_many :assets, as: :assetable
 
-  validates :first_name, :last_name, :email, :phone, :rera_id, :status, :aadhaar, presence: true
+  validates :first_name, :last_name, :rera_id, :status, :aadhaar, presence: true
   validates :aadhaar, format: {with: /\A\d{12}\z/i, message: 'is not a valid aadhaar number'}, allow_blank: true
-  validates :phone, uniqueness: true, phone: true
-  validates :email, :rera_id, uniqueness: true, allow_blank: true
+  validates :rera_id, uniqueness: true, allow_blank: true
+  validates :phone, uniqueness: true, phone: { possible: true, types: [:voip, :personal_number, :fixed_or_mobile]}, if: Proc.new{|user| user.email.blank? }
+  validates :email, uniqueness: true, if: Proc.new{|user| user.phone.blank? }
   validates :status, inclusion: {in: Proc.new{ ChannelPartner.available_statuses.collect{|x| x[:id]} } }
   validates :pan_number, :aadhaar, uniqueness: true, allow_blank: true
   validates :pan_number, format: {with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A'}, allow_blank: true
@@ -124,7 +125,7 @@ class ChannelPartner
     query << {email: email} if email.present?
     query << {rera_id: rera_id} if rera_id.present?
     criteria = User.or(query)
-    criteria = criteria.ne(id: c.associated_user_id) if c.associated_user_id.present?
+    criteria = criteria.ne(id: associated_user_id) if associated_user_id.present?
     if criteria.present?
       self.errors.add :base, 'We have a user with similar details already registered'
     end
