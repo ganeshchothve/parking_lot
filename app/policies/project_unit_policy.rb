@@ -37,7 +37,7 @@ class ProjectUnitPolicy < ApplicationPolicy
     valid = record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?(user)
     valid = valid && (record.user.project_units.where(status: "hold").blank? && record.user_based_status(record.user) == 'available')
     valid = valid && record.user.unattached_blocking_receipt.present? if user.role?('channel_partner')
-    valid = (valid && record.user.allowed_bookings > record.user.booking_details.ne(status: "cancelled").count)
+    valid = (valid && record.user.allowed_bookings > record.user.booking_details.nin(status: ["cancelled", "swapped"]).count)
     valid = (valid && record.user.unused_user_kyc_ids(record.id).present?)
     _role_based_check(valid)
   end

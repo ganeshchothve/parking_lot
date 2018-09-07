@@ -77,9 +77,11 @@ class Admin::UserRequestsController < ApplicationController
 
   def permitted_user_request_attributes
     attributes = permitted_attributes(@user_request)
-    attributes[:notes_attributes].each do |k, v|
-      if v["note"].blank?
-        attributes[:notes_attributes].delete(k)
+    if attributes[:notes_attributes].present?
+      attributes[:notes_attributes].each do |k, v|
+        if v["note"].blank?
+          attributes[:notes_attributes].delete(k)
+        end
       end
     end
     attributes

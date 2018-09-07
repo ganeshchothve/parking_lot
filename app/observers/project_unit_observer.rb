@@ -60,6 +60,11 @@ class ProjectUnitObserver < Mongoid::Observer
         receipt.save
       end
 
+      project_unit.receipts.in(status: ["pending", "clearance_pending"]).each do |receipt|
+        receipt.project_unit_id = nil;
+        receipt.save
+      end
+
       if project_unit.user_id_was.present?
         user_was = User.find(project_unit.user_id_was)
         if !project_unit.processing_user_request && !project_unit.processing_swap_request

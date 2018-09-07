@@ -27,11 +27,11 @@
         <td>
           <%= UserRequest.available_statuses.find{|x| x[:id] == user_request.status}[:text] %>
           <div class="text-muted small">
-            <%= labels[:created_at] %>: <%= l(user_request.created_at) %>
+            <%= labels[:created_at] %>: <%= l(user_request.created_at.in_time_zone(current_user.time_zone)) %>
           </div>
           <% if user_request.resolved_at.present? %>
             <div class="text-muted small">
-              <%= labels[:resolved_at] %>: <%= l(user_request.resolved_at) %>
+              <%= labels[:resolved_at] %>: <%= l(user_request.resolved_at.in_time_zone(current_user.time_zone)) %>
             </div>
           <% end %>
         </td>
