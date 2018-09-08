@@ -40,7 +40,6 @@ class ChannelPartner
   validates :status, inclusion: {in: Proc.new{ ChannelPartner.available_statuses.collect{|x| x[:id]} } }
   validates :pan_number, :aadhaar, uniqueness: true, allow_blank: true
   validates :pan_number, format: {with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A'}, allow_blank: true
-  validate :user_level_uniqueness
   validate :cannot_make_inactive
   validates :first_name, :last_name, format: { with: /\A[a-zA-Z]*\z/}
   validate :user_based_uniqueness
@@ -104,15 +103,6 @@ class ChannelPartner
   end
 
   private
-  def user_level_uniqueness
-    if self.new_record? || (self.status_changed? && self.status == 'active')
-      user = User.or([{email: self.email}, {phone: self.phone}]).first
-      if user.present? && user.id != self.associated_user_id
-        self.errors.add :base, "Email or Phone has already been taken"
-      end
-    end
-  end
-
   def cannot_make_inactive
     if self.status_changed? && self.status == 'inactive' && self.persisted?
       self.errors.add :status, 'cannot be reverted to "inactive" once activated'

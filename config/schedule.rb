@@ -21,7 +21,7 @@
 every 3.minutes do
   runner "Gamification::Job.new.execute"
 end
-every 1.day, at: "12:30 am" do
+every 1.day, at: "4:30 am" do
   runner "ProjectUnitRemindersAndAutoRelease::Job.daily_reminder_for_booking_payment"
   runner "ReceiptCleaner.perform"
   # runner "ProjectUnitRemindersAndAutoRelease::Job.release_project_unit"
