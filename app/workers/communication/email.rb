@@ -29,7 +29,7 @@ module Communication
           email.set({sent_on: Time.now})
         rescue StandardError => e
           if Rails.env.production? || Rails.env.staging?
-            Honeybadger.notify(e)
+            Honeybadger.notify(e, context: email.as_json)
           else
             puts "==============================="
             puts "Error sending email:#{e.class} : #{e.message}"

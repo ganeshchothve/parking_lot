@@ -2,6 +2,7 @@ class ReceiptObserver < Mongoid::Observer
   def before_validation receipt
     receipt.send(receipt.event) if receipt.event.present?
   end
+
   def after_save receipt
     user = receipt.user
     project_unit = receipt.project_unit
