@@ -36,6 +36,9 @@
               <% if ProjectUnitPolicy.new(current_user, project_unit).edit? %>
                 <%= link_to "Edit", edit_admin_project_unit_path(project_unit), class: 'dropdown-item modal-remote-form-link' %>
               <% end %>
+              <% if ProjectUnitPolicy.new(current_user, project_unit).print? %>
+                <%= link_to "Print Cost Sheet & Payment Schedule", print_admin_project_unit_path(project_unit), class: 'dropdown-item', target: "_blank" %>
+              <% end %>
               <% if ['blocked', 'booked_tentative', 'booked_confirmed'].include?(project_unit.status) %>
                 <% if ReceiptPolicy.new(current_user, Receipt).index? %>
                   <%= link_to "View #{global_labels[:receipts]}", admin_user_project_unit_receipts_path(project_unit.user, project_unit), class: 'dropdown-item' %>
@@ -64,6 +67,11 @@
         </td>
       </tr>
       <% end %>
+      <tr>
+        <td colspan="5">
+          <div class="mt-5 pt-5"></div>
+        </td>
+      </tr>
     </tbody>
   </table>
 </div>

@@ -61,17 +61,15 @@
           <%= form_for [:user, @receipt], local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['receipt'], "data-type": "json", id: "receipt_form"} do |f| %>
           <div class="form-group">
             <%= f.label :total_amount, class: 'label-required' %>
+            <% total_amount = @receipt.total_amount.present? ? @receipt.total_amount : current_client.blocking_amount %>
             <% if !policy(@receipt).editable_field?("total_amount") %>
-              <%
-                total_amount = @receipt.total_amount.present? ? @receipt.total_amount : current_client.blocking_amount
-              %>
               <h5><%= number_to_indian_currency(total_amount) %></h5>
               <%= f.hidden_field :total_amount, value: total_amount %>
             <% else %>
               <%= f.number_field :total_amount, min: (@project_unit.present? ? 0 : current_client.blocking_amount), class: "form-field form-control green", required: 'required' %>
             <% end %>
           </div>
-          <% if current_client.enable_actual_inventory? && @receipt.project_unit_id.present? %>
+          <% if current_client.enable_actual_inventory?(current_user) && @receipt.project_unit_id.present? %>
             <%= f.hidden_field :project_unit_id %>
           <% end %>
           <%= f.hidden_field :payment_mode %>
@@ -141,7 +139,7 @@
                 </div>
               </div>
               <div class="col-md-6">
-                <% if current_client.enable_actual_inventory %>
+                <% if current_client.enable_actual_inventory?(current_user) %>
                   <div class="form-group">
                     <% if @receipt.project_unit_id.present? %>
                       <%= f.label :project_unit_id, class: 'control-label' %>

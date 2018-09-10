@@ -1,5 +1,5 @@
 <nav id="top_navigation" class="navbar navbar-expand-lg fixed-top navbar navbar-light bg-white border-bottom">
-  <a class="navbar-brand" href="<%= home_path(current_user) %>" title="<%= current_project.name %> | <%= current_client.name %>">
+  <a class="navbar-brand" href="<%= home_path(current_user) %>" title="<%= current_client.name %>">
     <img src="<%= asset_path current_client.logo.url %>" class="img-responsive d-none d-lg-block">
     <img src="<%= asset_path current_client.mobile_logo.url %>" class="img-responsive d-lg-none">
   </a>
@@ -59,15 +59,22 @@
             <%= active_link_to global_labels['receipts'], user_receipts_path, active: :inclusive, class: "nav-link" %>
           </li>
         <% end %>
+        <% links = [] %>
         <% if CustomPolicy.custom_methods.present? %>
+          <% CustomPolicy.custom_methods.each do |method| %>
+            <% if policy(:custom).send("#{method}?") %>
+                <% links << {method: method.to_s.titleize, link: eval("custom_#{method}_path")} %>
+              </li>
+            <% end %>
+          <% end %>
+        <% end %>
+        <% if links.present? %>
           <li class="nav-item d-none d-lg-block">
             <div class="dropdown">
               <a href="javascript:;" class="nav-link dropdown-toggle" data-toggle="dropdown"><%= global_labels[:custom] %></a>
               <div class="dropdown-menu dropdown-menu-right">
-                <% CustomPolicy.custom_methods.each do |method| %>
-                  <% if policy(:custom).send("#{method}?") %>
-                    <%= link_to method.to_s.titleize, eval("custom_#{method}_path"), class: "dropdown-item" %>
-                  <% end %>
+                <% links.each do |link| %>
+                  <%= link_to link[:method], link[:link], class: "dropdown-item" %>
                 <% end %>
               </div>
             </div>
@@ -85,13 +92,11 @@
             </div>
           </div>
         </li>
-        <% if CustomPolicy.custom_methods.present? %>
-          <% CustomPolicy.custom_methods.each do |method| %>
-            <% if policy(:custom).send("#{method}?") %>
-              <li class="nav-item d-lg-none">
-                <%= link_to method.to_s.titleize, eval("custom_#{method}_path"), class: "nav-link" %>
-              </li>
-            <% end %>
+        <% if links.present? %>
+          <% links.each do |link| %>
+            <li class="nav-item d-lg-none">
+              <%= link_to link[:method], link[:link], class: "nav-link" %>
+            </li>
           <% end %>
         <% end %>
         <li class="nav-item d-lg-none">

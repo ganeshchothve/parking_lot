@@ -1,5 +1,5 @@
 module CustomerImport
-  def self.update(filepath, test)
+  def self.update(filepath)
     count = 0
     booking_portal_client = Client.first
     CSV.foreach(filepath) do |row|

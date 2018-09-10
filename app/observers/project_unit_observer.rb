@@ -25,7 +25,7 @@ class ProjectUnitObserver < Mongoid::Observer
     if project_unit.status == 'management'
       project_unit.available_for = 'management'
     end
-    if project_unit.status_changed?
+    if project_unit.status_changed? && project_unit.user_id.present?
       SelldoLeadUpdater.perform_async(project_unit.user_id.to_s)
     end
     if project_unit.status_changed? && project_unit.status == 'hold'

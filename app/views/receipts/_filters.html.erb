@@ -20,6 +20,15 @@
         <%= select_tag "fltrs[user_id]", options_for_select((params[:fltrs].present? && params[:fltrs][:user_id].present?) ? [[user.ds_name, user.id]] : []), {class: "selectize-remote", data: {params: {fltrs: {role: {"$in": User.buyer_roles(current_client)}}}, url: admin_users_path }} %>
       </div>
       <div class="form-group">
+        <%= label_tag "fltrs", global_labels[:project_unit], class: "control-label" %>
+        <%
+          if params[:fltrs].present? && params[:fltrs][:project_unit_id].present?
+            project_unit = ProjectUnit.find(params[:fltrs][:project_unit_id])
+          end
+        %>
+        <%= select_tag "fltrs[project_unit_id]", options_for_select((params[:fltrs].present? && params[:fltrs][:project_unit_id].present?) ? [[project_unit.ds_name, project_unit.id]] : []), {class: "selectize-remote", data: {url: admin_project_units_path }} %>
+      </div>
+      <div class="form-group">
         <%= label_tag "fltrs", labels[:receipt_id], class: "control-label" %>
         <%
           if params[:fltrs].present? && params[:fltrs][:receipt_id].present?
@@ -43,6 +52,14 @@
       <div class="form-group">
         <%= label_tag "fltrs", labels[:processed_on], class: "control-label" %>
         <%= text_field_tag "fltrs[processed_on]", (params[:fltrs].present? ? params[:fltrs][:processed_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"} %>
+      </div>
+      <div class="form-group">
+        <%= label_tag "fltrs", labels[:created_at], class: "control-label" %>
+        <%= text_field_tag "fltrs[created_at]", (params[:fltrs].present? ? params[:fltrs][:created_at] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"} %>
+      </div>
+      <div class="form-group">
+        <%= label_tag "fltrs", "Sort By", class: "control-label" %>
+        <%= select_tag "fltrs[sort]", options_for_select(Receipt.available_sort_options.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:sort] : Receipt.available_sort_options.first[:id])), {prompt: "Select", class: "selectize"} %>
       </div>
     <% end %>
     <%= javascript_tag do %>

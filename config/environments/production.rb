@@ -36,7 +36,7 @@ Rails.application.configure do
   config.action_controller.asset_host = "#{ENV_CONFIG[:asset_sync]['FOG_DIRECTORY']}.s3.amazonaws.com"
   config.action_mailer.asset_host = "#{ENV_CONFIG[:asset_sync]['FOG_DIRECTORY']}.s3.amazonaws.com"
 
-  config.action_mailer.default_url_options = {host: ''}
+  config.action_mailer.default_url_options = {host: '', protocol: "https"}
 
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
@@ -104,4 +104,3 @@ Rails.application.configure do
 end
 
 Rails.application.routes.default_url_options = { host: 'bookingportal.withamura.com' }
-

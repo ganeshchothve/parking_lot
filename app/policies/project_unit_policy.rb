@@ -1,14 +1,18 @@
 class ProjectUnitPolicy < ApplicationPolicy
   def index?
-    current_client.enable_actual_inventory? && !user.buyer?
+    current_client.enable_actual_inventory?(user) && !user.buyer?
   end
 
   def ds?
-    current_client.enable_actual_inventory?
+    current_client.enable_actual_inventory?(user)
   end
 
   def show?
-    current_client.enable_actual_inventory?
+    current_client.enable_actual_inventory?(user)
+  end
+
+  def print?
+    show?
   end
 
   def edit?
@@ -18,7 +22,7 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def export?
-    ['superadmin', 'admin', 'crm'].include?(user.role) && current_client.enable_actual_inventory?
+    ['superadmin', 'admin', 'crm'].include?(user.role) && current_client.enable_actual_inventory?(user)
   end
 
   def mis_report?
@@ -34,7 +38,7 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def hold?
-    valid = record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?
+    valid = record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?(user)
     valid = valid && (record.user.project_units.where(status: "hold").blank? && record.user_based_status(record.user) == 'available')
     valid = valid && record.user.unattached_blocking_receipt.present? if user.role?('channel_partner')
     valid = (valid && record.user.allowed_bookings > record.user.booking_details.nin(status: ["cancelled", "swapped"]).count)
@@ -43,13 +47,13 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def block?
-    valid = ['hold'].include?(record.status) && record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?
+    valid = ['hold'].include?(record.status) && record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?(user)
     valid = (valid && record.user.allowed_bookings > record.user.booking_details.ne(status: "cancelled").count)
     _role_based_check(valid)
   end
 
   def make_available?
-    valid = (record.status == 'hold' && current_client.enable_actual_inventory?)
+    valid = (record.status == 'hold' && current_client.enable_actual_inventory?(user))
     _role_based_check(valid)
   end
 
@@ -58,25 +62,25 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def update_co_applicants?
-    valid = (["blocked", "booked_confirmed", "booked_tentative"].include?(record.status) && current_client.enable_actual_inventory?)
+    valid = (["blocked", "booked_confirmed", "booked_tentative"].include?(record.status) && current_client.enable_actual_inventory?(user))
     _role_based_check(valid)
   end
 
   def update_project_unit?
-    valid = record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?
+    valid = record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?(user)
     _role_based_check(valid)
   end
 
   def payment?
-    checkout? && record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?
+    checkout? && record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?(user)
   end
 
   def process_payment?
-    checkout? && record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?
+    checkout? && record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?(user)
   end
 
   def checkout?
-    valid = record.user_id.present? && (record.user_based_status(record.user) == "booked") && record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?
+    valid = record.user_id.present? && (record.user_based_status(record.user) == "booked") && record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?(user)
     _role_based_check(valid)
   end
 

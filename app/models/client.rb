@@ -39,7 +39,7 @@ class Client
   field :sms_mask, type: String, default: "SellDo"
   field :mailgun_private_api_key, type: String
   field :mailgun_email_domain, type: String
-  field :enable_actual_inventory, type: Boolean, default: false
+  field :enable_actual_inventory, type: Array, default: []
   field :enable_channel_partners, type: Boolean, default: false
   field :enable_discounts, type: Boolean, default: false
   field :enable_direct_payment, type: Boolean, default: false
@@ -103,7 +103,7 @@ class Client
   has_one :external_inventory_view_config, inverse_of: :booking_portal_client
 
   validates :name, :allowed_bookings_per_user, :selldo_client_id, :selldo_form_id, :selldo_channel_partner_form_id, :selldo_gre_form_id, :helpdesk_email, :helpdesk_number, :notification_email, :notification_numbers, :sender_email, :email_domains, :booking_portal_domains, :registration_name, :website_link, :support_email, :support_number, :payment_gateway, :cin_number, :mailgun_private_api_key, :mailgun_email_domain, :sms_provider_username, :sms_provider_password, :sms_mask, presence: true
-
+  validates :enable_actual_inventory, array: {inclusion: {allow_blank: true, in: Proc.new{ |client| User.available_roles(client).collect{|x| x[:id]} } }}
   validates :preferred_login, inclusion: {in: Proc.new{ Client.available_preferred_logins.collect{|x| x[:id]} } }
   validates :payment_gateway, inclusion: {in: Proc.new{ Client.available_payment_gateways.collect{|x| x[:id]} } }, allow_blank: true
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
@@ -119,7 +119,8 @@ class Client
 
   def self.available_payment_gateways
     [
-      {id: "Razorpay", text: "Razorpay Payment Gateway"}
+      {id: "Razorpay", text: "Razorpay Payment Gateway"},
+      {id: "CCAvenue", text: "CCAvenue Payment Gateway"}
     ]
   end
 
@@ -129,6 +130,14 @@ class Client
 
   def email_enabled?
     self.enable_communication["email"]
+  end
+
+  def enable_actual_inventory?(user)
+    if user.present?
+      enable_actual_inventory.include?(user.role)
+    else
+      false
+    end
   end
 end
 
@@ -164,7 +173,7 @@ c.area_unit = "psqft."
 c.preferred_login = "phone"
 c.sms_provider_username = "amuramarketing"
 c.sms_provider_password = "aJ_Z-1j4"
-c.enable_actual_inventory = false
+c.enable_actual_inventory = User.available_roles(c).collect{|x| x[:id]}
 c.enable_channel_partners = false
 c.enable_discounts = false
 c.enable_company_users = true

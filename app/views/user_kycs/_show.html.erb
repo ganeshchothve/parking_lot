@@ -28,6 +28,20 @@
   </div>
   <div class="col-md-4">
     <div class="form-group">
+      <label class="small text-muted"><%= kyc_labels[:number_of_units] %></label>
+      <div><%= user_kyc.number_of_units.present? ? user_kyc.number_of_units : "" %></div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="form-group">
+      <label class="small text-muted"><%= kyc_labels[:preferred_floors] %></label>
+      <div><%= user_kyc.preferred_floors.collect{|x| UserKyc.available_preferred_floors.find{|t| t[:id] == x}[:text]}.to_sentence %></div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-4">
+    <div class="form-group">
       <label class="small text-muted"><%= kyc_labels[:configurations] %></label>
       <div><%= user_kyc.configurations.collect{|x| UserKyc.available_configurations.find{|t| t[:id] == x}[:text]}.to_sentence %></div>
     </div>

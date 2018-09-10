@@ -32,14 +32,14 @@ class ChannelPartner
   has_one :bank_detail, as: :bankable, validate: false
   has_many :assets, as: :assetable
 
-  validates :first_name, :last_name, :email, :phone, :rera_id, :status, :aadhaar, presence: true
+  validates :first_name, :last_name, :rera_id, :status, :aadhaar, presence: true
   validates :aadhaar, format: {with: /\A\d{12}\z/i, message: 'is not a valid aadhaar number'}, allow_blank: true
-  validates :phone, uniqueness: true, phone: true
-  validates :email, :rera_id, uniqueness: true, allow_blank: true
+  validates :rera_id, uniqueness: true, allow_blank: true
+  validates :phone, uniqueness: true, phone: { possible: true, types: [:voip, :personal_number, :fixed_or_mobile]}, if: Proc.new{|user| user.email.blank? }
+  validates :email, uniqueness: true, if: Proc.new{|user| user.phone.blank? }
   validates :status, inclusion: {in: Proc.new{ ChannelPartner.available_statuses.collect{|x| x[:id]} } }
   validates :pan_number, :aadhaar, uniqueness: true, allow_blank: true
   validates :pan_number, format: {with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A'}, allow_blank: true
-  validate :user_level_uniqueness
   validate :cannot_make_inactive
   validates :first_name, :last_name, format: { with: /\A[a-zA-Z]*\z/}
   validate :user_based_uniqueness
@@ -103,15 +103,6 @@ class ChannelPartner
   end
 
   private
-  def user_level_uniqueness
-    if self.new_record? || (self.status_changed? && self.status == 'active')
-      user = User.or([{email: self.email}, {phone: self.phone}]).first
-      if user.present? && user.id != self.associated_user_id
-        self.errors.add :base, "Email or Phone has already been taken"
-      end
-    end
-  end
-
   def cannot_make_inactive
     if self.status_changed? && self.status == 'inactive' && self.persisted?
       self.errors.add :status, 'cannot be reverted to "inactive" once activated'
@@ -119,9 +110,13 @@ class ChannelPartner
   end
 
   def user_based_uniqueness
-    query = User.or([{phone: c.phone}, {email: c.email}, {rera_id: c.rera_id}])
-    query = query.ne(id: c.associated_user_id) if c.associated_user_id.present?
-    if query.present?
+    query = []
+    query << {phone: phone} if phone.present?
+    query << {email: email} if email.present?
+    query << {rera_id: rera_id} if rera_id.present?
+    criteria = User.or(query)
+    criteria = criteria.ne(id: associated_user_id) if associated_user_id.present?
+    if criteria.present?
       self.errors.add :base, 'We have a user with similar details already registered'
     end
   end

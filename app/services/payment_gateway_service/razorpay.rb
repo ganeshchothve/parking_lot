@@ -1,7 +1,7 @@
 module PaymentGatewayService
   class Razorpay < Default
     def gateway_url(search_id)
-      return "/dashboard/user/searches/#{search_id}/razorpay-payment/#{@receipt.receipt_id}"
+      return "/dashboard/user/searches/#{search_id}/gateway-payment/#{@receipt.receipt_id}"
     end
 
     def response_handler! params

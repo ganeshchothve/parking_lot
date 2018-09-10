@@ -1,5 +1,5 @@
 module DashboardDataProvider
-  def self.channel_partners_dashboard(user)
+  def self.channel_partners_dashboard(user, options={})
     data = ChannelPartner.collection.aggregate([{
       "$group": {
         "_id": {
@@ -69,7 +69,7 @@ module DashboardDataProvider
     out
   end
 
-  def self.users_dashboard(user)
+  def self.users_dashboard(user, options={})
     data = User.collection.aggregate([{
         "$match": User.user_based_scope(user)
       },{
@@ -89,7 +89,7 @@ module DashboardDataProvider
     out
   end
 
-  def self.user_requests_dashboard(user)
+  def self.user_requests_dashboard(user, options={})
     data = UserRequest.collection.aggregate([{
       "$group": {
         "_id":{

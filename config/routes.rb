@@ -42,6 +42,7 @@ Rails.application.routes.draw do
       get :resend_success, on: :member, as: :resend_success
     end
     resources :project_units, only: [:index, :show, :edit, :update] do
+      get 'print', action: 'print', on: :member, as: :print
       get 'export', action: 'export', on: :collection, as: :export
       get 'mis_report', action: 'mis_report', on: :collection, as: :mis_report
     end
@@ -59,6 +60,7 @@ Rails.application.routes.draw do
       end
       resources :user_kycs, except: [:show, :destroy], controller: '/user_kycs'
       resources :project_units, only: [:index] do
+        get 'print', action: 'print', on: :member, as: :print
         resources :receipts, only: [:update, :edit, :show, :index, :new, :create], controller: '/receipts'
       end
       resources :searches, except: [:destroy], controller: '/searches' do
@@ -67,7 +69,7 @@ Rails.application.routes.draw do
         post :update_template, on: :member
         get :checkout, on: :member
         post :make_available, on: :member
-        get '/razorpay-payment/:receipt_id', to: 'searches#razorpay_payment', on: :member
+        get '/gateway-payment/:receipt_id', to: 'searches#gateway_payment', on: :member
         get :payment, on: :member
         get ":step", on: :member, to: "searches#show", as: :step
       end
@@ -121,7 +123,7 @@ Rails.application.routes.draw do
         get :checkout, on: :member
         post :update_template, on: :member
         post :make_available, on: :member
-        get '/razorpay-payment/:receipt_id', to: 'searches#razorpay_payment', on: :member
+        get '/gateway-payment/:receipt_id', to: 'searches#gateway_payment', on: :member
         get :payment, on: :member
         get ":step", on: :member, to: "searches#show", as: :step
       end

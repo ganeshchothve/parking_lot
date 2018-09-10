@@ -47,7 +47,6 @@ class Receipt
   validate :processed_on_greater_than_issued_date
 
   increments :order_id, auto: false
-  default_scope -> {desc(:created_at)}
 
   enable_audit({
     associated_with: ["user"],
@@ -62,6 +61,17 @@ class Receipt
       {id: 'rtgs', text: 'RTGS'},
       {id: 'imps', text: 'IMPS'},
       {id: 'neft', text: 'NEFT'}
+    ]
+  end
+
+  def self.available_sort_options
+    [
+      {id: "created_at.asc", text: "Created - Oldest First"},
+      {id: "created_at.desc", text: "Created - Newest First"},
+      {id: "issued_date.asc", text: "Issued Date - Oldest First"},
+      {id: "issued_date.desc", text: "Issued Date- Newest First"},
+      {id: "processed_on.asc", text: "Proccessed On - Oldest First"},
+      {id: "processed_on.desc", text: "Proccessed On - Newest First"}
     ]
   end
 
@@ -133,6 +143,11 @@ class Receipt
       or_selector = {"$or": [{receip_id: regex}, {tracking_id: regex}, {payment_identifier: regex}] }
     end
     selector = self.and([selector, selector1, or_selector])
+    if params[:sort].blank? || Receipt.available_sort_options.collect{|x| x[:id]}.exclude?(params[:sort])
+      params[:sort] = Receipt.available_sort_options.first[:id]
+    end
+    field, sort_order = params[:sort].split(".")
+    selector = selector.send(sort_order, field.to_sym)
     selector
   end
 

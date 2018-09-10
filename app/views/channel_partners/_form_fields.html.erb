@@ -21,14 +21,14 @@
 <div class="row">
   <div class="col-md-6">
     <div class="form-group">
-      <%= form.label :phone, class: 'label-required' %>
-      <%= form.text_field :phone, class: 'form-control phone', required: 'required', autofocus: true, disabled: (policy(@channel_partner).editable_field?("phone") ? false : true), placeholder:'Mobile Phone' %>
+      <%= form.label :phone %>
+      <%= form.text_field :phone, class: 'form-control phone', disabled: (policy(@channel_partner).editable_field?("phone") ? false : true), placeholder:'Phone' %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="form-group">
-      <%= form.label :email, class: 'label-required' %>
-      <%= form.email_field :email, class: 'form-control email', required: 'required', disabled: (policy(@channel_partner).editable_field?("email") ? false : true), placeholder:'Email'%>
+      <%= form.label :email %>
+      <%= form.email_field :email, class: 'form-control email', disabled: (policy(@channel_partner).editable_field?("email") ? false : true), placeholder:'Email'%>
     </div>
   </div>
 </div>
