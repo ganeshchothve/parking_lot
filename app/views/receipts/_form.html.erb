@@ -30,13 +30,13 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="small">Agreement Price</label>
-                  <div><%= number_to_indian_currency(@receipt.project_unit.agreement_price.round) %></div>
+                  <div><%= number_to_indian_currency(@receipt.project_unit.calculate_agreement_price.round) %></div>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="small">All Inclusive Price</label>
-                  <div><%= number_to_indian_currency(@receipt.project_unit.all_inclusive_price.round) %></div>
+                  <div><%= number_to_indian_currency(@receipt.project_unit.calculate_all_inclusive_price.round) %></div>
                 </div>
               </div>
             </div>

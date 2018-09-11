@@ -21,8 +21,8 @@
         <td><%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></td>
         <td><%= ProjectUnit.available_statuses.find{|x| x[:id] == project_unit.status}[:text] rescue "-" %></td>
         <td>
-          <%= number_to_indian_currency(project_unit.agreement_price) %>
-          <div class="small"><%= labels[:all_inclusive_price] %>: <%= number_to_indian_currency(project_unit.all_inclusive_price) %></div>
+          <%= number_to_indian_currency(project_unit.calculate_agreement_price.round) %>
+          <div class="small"><%= labels[:all_inclusive_price] %>: <%= number_to_indian_currency(project_unit.calculate_all_inclusive_price.round) %></div>
           <div class="small">Paid Amt.: <%= number_to_indian_currency(project_unit.total_amount_paid)  %></div>
           <div class="small">Booking Amt. Pending: <%= number_to_indian_currency(project_unit.pending_balance.to_i) %></div>
         </td>
