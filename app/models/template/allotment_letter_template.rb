@@ -4,7 +4,7 @@ class Template::AllotmentLetterTemplate < Template
       <div class="card-body">
         <p>Dear <%= self.user.name %>,</p>
         Congratulations!<br/><br/>
-        Welcome to the <%= self.project_name %>! You\'re now the proud owner of Unit - <%= self.name %>.<br/><br/>
+        Welcome to the <%= project_name %>! You\'re now the proud owner of Unit - <%= self.name %>.<br/><br/>
         Our executives will be in touch regarding agreement formalities.
       </div>
     </div>
@@ -68,8 +68,7 @@ class Template::AllotmentLetterTemplate < Template
             <div class="form-group">
               <label>Effective Rate</label>
               <div>
-                <% effective_rate = self.base_rate + self.floor_rise + self.scheme.get("base_rate") + self.scheme.get("floor_rise") %>
-                <%= number_to_indian_currency(effective_rate) %> <%= current_client.area_unit %>
+                <%= number_to_indian_currency(self.effective_rate) %> <%= current_client.area_unit %>
               </div>
             </div>
           </div>
