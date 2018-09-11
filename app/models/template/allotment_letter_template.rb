@@ -4,7 +4,7 @@ class Template::AllotmentLetterTemplate < Template
       <div class="card-body">
         <p>Dear <%= self.user.name %>,</p>
         Congratulations!<br/><br/>
-        Welcome to the <%= self.project_unit.project_name %>! You\'re now the proud owner of Unit - <%= self.project_unit.name %>.<br/><br/>
+        Welcome to the <%= self.project_name %>! You\'re now the proud owner of Unit - <%= self.name %>.<br/><br/>
         Our executives will be in touch regarding agreement formalities.
       </div>
     </div>
@@ -16,7 +16,7 @@ class Template::AllotmentLetterTemplate < Template
             <div class="form-group">
               <label>Name</label>
               <div>
-                <%= self.project_unit.name %>
+                <%= self.name %>
               </div>
             </div>
           </div>
@@ -24,7 +24,7 @@ class Template::AllotmentLetterTemplate < Template
             <div class="form-group">
               <label>Tower</label>
               <div>
-                <%= self.project_unit.project_tower_name %>
+                <%= self.project_tower_name %>
               </div>
             </div>
           </div>
@@ -32,7 +32,7 @@ class Template::AllotmentLetterTemplate < Template
             <div class="form-group">
               <label>Status</label>
               <div>
-                <%= ProjectUnit.available_statuses.find{|x| x[:id] == self.project_unit.status}[:text] %>
+                <%= ProjectUnit.available_statuses.find{|x| x[:id] == self.status}[:text] %>
               </div>
             </div>
           </div>
@@ -42,7 +42,7 @@ class Template::AllotmentLetterTemplate < Template
             <div class="form-group">
               <label>Beds / Baths</label>
               <div>
-                <%= self.project_unit.bedrooms %> / <%= self.project_unit.bathrooms %>
+                <%= self.bedrooms %> / <%= self.bathrooms %>
               </div>
             </div>
           </div>
@@ -68,7 +68,7 @@ class Template::AllotmentLetterTemplate < Template
             <div class="form-group">
               <label>Effective Rate</label>
               <div>
-                <% effective_rate = self.project_unit.base_rate + self.project_unit.floor_rise + self.scheme.get("base_rate") + self.scheme.get("floor_rise") %>
+                <% effective_rate = self.base_rate + self.floor_rise + self.scheme.get("base_rate") + self.scheme.get("floor_rise") %>
                 <%= number_to_indian_currency(effective_rate) %> <%= current_client.area_unit %>
               </div>
             </div>
@@ -77,7 +77,7 @@ class Template::AllotmentLetterTemplate < Template
             <div class="form-group">
               <label>Agreement Price</label>
               <div>
-                <%= number_to_indian_currency(self.project_unit.agreement_price) %>
+                <%= number_to_indian_currency(self.agreement_price) %>
               </div>
             </div>
           </div>
