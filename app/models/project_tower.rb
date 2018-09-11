@@ -28,6 +28,7 @@ class ProjectTower
 
   belongs_to :project
   has_many :project_units
+  has_many :schemes
 
   validates :name, :client_id, :project_id, :total_floors, presence: true
   validate :validate_floor_rise
@@ -35,6 +36,10 @@ class ProjectTower
 
   def unit_configurations
     UnitConfiguration.where(data_attributes: {"$elemMatch" => {"n" => "project_tower_id", "v" => self.selldo_id}})
+  end
+
+  def default_scheme
+    self.schemes.where(default: true).first
   end
 
   private

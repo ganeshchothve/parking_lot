@@ -13,32 +13,38 @@ class Template::CostSheetTemplate < Template
         </tr>
       </thead>
       <tbody>
-        <% if blocked_on.present? %>
+        <% if self.blocked_on.present? %>
         <tr>
-          <td>Date of Issue</td><td class='text-right'><%= blocked_on %></td>
+          <td>Date of Issue</td><td class='text-right'><%= self.blocked_on %></td>
         </tr>
         <% end %>
         <tr>
-          <td>Flat type</td><td class='text-right'><%= unit_configuration_name %></td>
+          <td>Flat type</td><td class='text-right'><%= self.unit_configuration_name %></td>
         </tr>
         <tr>
-          <td>Flat No.</td><td class='text-right'><%= name %></td>
+          <td>Flat No.</td><td class='text-right'><%= self.name %></td>
         </tr>
         <tr>
-          <td>RERA Carpet Area (sq. mtr.)</td><td class='text-right'><%= carpet.round(2) %></td>
+          <td>RERA Carpet Area (sq. mtr.)</td><td class='text-right'><%= self.carpet.round(2) %></td>
         </tr>
-        <% calculated_data.each do |key, value| %>
+        <% self.calculated_data.each do |key, value| %>
           <tr>
             <td><%= key %></td>
             <td class='text-right'><%= value.round(2) %></td>
           </tr>
         <% end %>
         <tr>
-          <td>Premium inclusive of proportionate price for common amenities & facilities.(i)</td><td class='text-right'><%= number_to_indian_currency(base_price.round(2)) %></td>
+          <td>Premium inclusive of proportionate price for common amenities & facilities.(i)</td><td class='text-right'><%= number_to_indian_currency(self.base_price.round(2)) %></td>
         </tr>
+        <% self.calculated_costs.each do |key, value| %>
+          <tr>
+            <td><%= key %></td>
+            <td class='text-right'><%= value.round(2) %></td>
+          </tr>
+        <% end %>
         <tr class='text-white bg-primary'>
           <td>Agreement Value (Rs.)</td>
-          <td class='text-right'><%= number_to_indian_currency(agreement_price) %></td>
+          <td class='text-right'><%= number_to_indian_currency(self.agreement_price) %></td>
         </tr>
         <tr class='text-white bg-primary'>
           <td>All inclusive Value (Rs.)</td>
@@ -46,7 +52,7 @@ class Template::CostSheetTemplate < Template
         </tr>
         <tr>
           <td>Less: 6% of the Agreement Value as Input Tax Credit  (ITC)  against Goods & Service Tax (GST)</td>
-          <td class='text-right'><%= number_to_indian_currency((agreement_price * 0.06).round(2)) %></td>
+          <td class='text-right'><%= number_to_indian_currency((self.agreement_price * 0.06).round(2)) %></td>
         </tr>
         <tr>
           <td colspan='2' class='small'>The above payment schedule is valid for <%= booking_portal_client.blocking_days %> days from the date of issue</td>

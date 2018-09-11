@@ -7,6 +7,8 @@ class ProjectUnitObserver < Mongoid::Observer
     if project_unit.pending_balance.present? && project_unit.pending_balance <= 0
       project_unit.status = "booked_confirmed"
     end
+
+    project_unit.scheme_id = project_unit.project_tower.default_scheme.id if project_unit.scheme_id.blank?
   end
 
   def before_save project_unit
@@ -30,9 +32,9 @@ class ProjectUnitObserver < Mongoid::Observer
     end
     if project_unit.status_changed? && project_unit.status == 'hold'
       project_unit.held_on = DateTime.now
-      project_unit.applied_discount_rate = project_unit.discount_rate(project_unit.user)
-      discount = project_unit.applicable_discount(project_unit.user)
-      project_unit.applied_discount_id = discount.id if discount.present?
+      # project_unit.applied_discount_rate = project_unit.discount_rate(project_unit.user)
+      # discount = project_unit.applicable_discount(project_unit.user)
+      # project_unit.applied_discount_id = discount.id if discount.present?
       ProjectUnitUnholdWorker.perform_in(project_unit.holding_minutes.minutes, project_unit.id.to_s)
     elsif project_unit.status_changed? && project_unit.status != 'hold'
       project_unit.held_on = nil
@@ -50,7 +52,7 @@ class ProjectUnitObserver < Mongoid::Observer
     BookingDetail.run_sync(project_unit.id, project_unit.changes)
     if project_unit.status_changed? && ["available", "employee", "management"].exclude?(project_unit.status_was) && ["available", "employee", "management"].include?(project_unit.status)
 
-      project_unit.set(applied_discount_rate: 0, applied_discount_id: 0, user_id: nil, blocked_on: nil, auto_release_on: nil, held_on: nil, primary_user_kyc_id: nil, user_kyc_ids: [], payment_schedule_template_id: Template::PaymentScheduleTemplate.where(booking_portal_client_id: project_unit.booking_portal_client_id, default: true).first.id, cost_sheet_template_id: Template::CostSheetTemplate.where(booking_portal_client_id: project_unit.booking_portal_client_id, default: true).first.id)
+      project_unit.set(user_id: nil, blocked_on: nil, auto_release_on: nil, held_on: nil, primary_user_kyc_id: nil, user_kyc_ids: [], scheme_id: nil)
 
       project_unit.receipts.where(status: "success").each do |receipt|
         receipt.project_unit_id = nil;
