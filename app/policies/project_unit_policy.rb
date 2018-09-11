@@ -8,11 +8,11 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def show?
-    current_client.enable_actual_inventory?(user)
+    index?
   end
 
   def print?
-    show?
+    index?
   end
 
   def edit?

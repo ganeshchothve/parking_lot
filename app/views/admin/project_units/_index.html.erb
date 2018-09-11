@@ -33,6 +33,9 @@
               <% if !current_user.buyer? && ReceiptPolicy.new(current_user, Receipt.new(user: @user, project_unit: project_unit)).new? %>
                 <%= link_to "Add #{global_labels['receipt']}", new_admin_user_receipt_path(@user, project_unit_id: project_unit), class: 'dropdown-item modal-remote-form-link' %>
               <% end %>
+              <% if ProjectUnitPolicy.new(current_user, project_unit).show? %>
+                <%= link_to "View Details", admin_project_unit_path(project_unit), class: 'dropdown-item' %>
+              <% end %>
               <% if ProjectUnitPolicy.new(current_user, project_unit).edit? %>
                 <%= link_to "Edit", edit_admin_project_unit_path(project_unit), class: 'dropdown-item modal-remote-form-link' %>
               <% end %>

@@ -308,12 +308,12 @@ class ProjectUnit
     scheme_id.present? ? Scheme.find(scheme_id) : project_tower.default_scheme
   end
 
-  def cost_sheet_template
-    self.scheme.cost_sheet_template
+  def cost_sheet_template(scheme_id=nil)
+    scheme_id.present? ? Scheme.find(scheme_id).cost_sheet_template : self.scheme.cost_sheet_template
   end
 
-  def payment_schedule_template
-    self.scheme.payment_schedule_template
+  def payment_schedule_template(scheme_id=nil)
+    scheme_id.present? ? Scheme.find(scheme_id).payment_schedule_template : self.scheme.payment_schedule_template
   end
 
   private
