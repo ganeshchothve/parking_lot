@@ -35,7 +35,7 @@ $(document).ready(function(){
     });
   }, 100);
 
-  $(".validate-form input[type='submit']").click(function(e){
+  $(".validate-form").submit(function(e){
     var $form = $(this).closest("form");
     var valid = $form.valid();
     if(valid){

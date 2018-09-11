@@ -108,7 +108,8 @@ class ProjectUnit
 
   def permitted_schemes user=nil
     user ||= self.user
-    self.project_tower.schemes.where(can_be_applied_by: user.role)
+    criteria = {can_be_applied_by: user.role}
+    self.project_tower.schemes.or(criteria, {default: true})
   end
 
   def self.user_based_available_statuses(user)
@@ -304,7 +305,7 @@ class ProjectUnit
   end
 
   def scheme
-    scheme_id.present? ? Scheme.find(scheme_id) : nil
+    scheme_id.present? ? Scheme.find(scheme_id) : project_tower.default_scheme
   end
 
   def cost_sheet_template

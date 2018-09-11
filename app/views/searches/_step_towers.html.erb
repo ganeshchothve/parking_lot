@@ -52,16 +52,12 @@
               %>
               <% if unit.present? %>
                 <% html_content = "<div class='row mb-3' style='width:350px;'>
-                  <div class='col-md-3'><label>Beds</label><div>#{unit.bedrooms}</div></div>
+                  <div class='col-md-4'><label>Beds</label><div>#{unit.bedrooms}</div></div>
                   <div class='col-md-4'><label>Carpet</label><div>#{unit.carpet} #{current_client.area_unit}</div></div>
-                  <div class='col-md-5'><label>Saleable</label><div>#{unit.saleable} #{current_client.area_unit}</div></div>
+                  <div class='col-md-4'><label>Facing</label><div>#{unit.unit_facing_direction}</div></div>
                 </div>
                 <div class='row mb-3'>
-                  <div class='col-md-3'><label>Facing</label><div>#{unit.unit_facing_direction}</div></div>
-                  <div class='col-md-4'><label>Effective Rate</label><div>#{number_to_indian_currency(unit.effective_rate)} #{current_client.area_unit}</div></div>
                   <div class='col-md-5'><label>Agreement Value</label><div>#{number_to_indian_currency(unit.agreement_price)}</div></div>
-                </div>
-                <div class='row mb-3'>
                   <div class='col-md-5'><label>All Inclusive Price</label><div>#{number_to_indian_currency(unit.all_inclusive_price)}</div></div>
                 </div>"
                 %>
@@ -119,13 +115,6 @@
       </div>
       <div class="row pl-3 pb-0 pb-md-3 pr-3 pt-0 pt-md-3">
         <div class="col-md-4">
-          <label>Saleable</label>
-          <h6 class="text-black font-weight">
-            <span data-placeholder='saleable'></span>
-            <span class="small"> <%= current_client.area_unit %></span>
-          </h6>
-        </div>
-        <div class="col-md-4">
           <label>Carpet</label>
           <h6 class="text-black font-weight">
             <span data-placeholder='carpet'></span>
@@ -133,25 +122,18 @@
           </h6>
         </div>
         <div class="col-md-4">
-          <label>Effective Rate</label>
-          <h6 class="text-black font-weight">
-            <span data-placeholder='effective_rate'></span>
-            <span class="small"> <%= current_client.area_unit %></span>
-          </h6>
+          <label>Facing</label>
+          <h6 class="text-black font-weight" data-placeholder='unit_facing_direction'></h6>
         </div>
-      </div>
-      <div class="row pl-3 pb-0 pb-md-3 pr-3 pt-0 pt-md-3">
         <div class="col-md-4">
           <label>Agreement Price</label>
           <h6 class="text-black font-weight" data-placeholder='agreement_price'></h6>
         </div>
+      </div>
+      <div class="row pl-3 pb-0 pb-md-3 pr-3 pt-0 pt-md-3">
         <div class="col-md-4">
           <label>All Inclusive Price</label>
           <h6 class="text-black font-weight" data-placeholder='all_inclusive_price'></h6>
-        </div>
-        <div class="col-md-4">
-          <label>Facing</label>
-          <h6 class="text-black font-weight" data-placeholder='unit_facing_direction'></h6>
         </div>
       </div>
       <div class="pl-3 pb-0 pb-md-3 pr-3 pt-0 pt-md-3">
@@ -201,7 +183,7 @@
   </div>
 </div>
 <%= javascript_tag do %>
-  var units = <%= raw @units.to_json(include: [:assets], methods: [:all_inclusive_price, :effective_rate, :calculated_costs, :calculated_data]) %>;
+  var units = <%= raw @units.to_json(include: [:assets], methods: [:all_inclusive_price, :calculated_costs, :calculated_data]) %>;
 
   $(document).on('click', '[data-jquery-selector="unit-card"]', function(){
     var unit_id = $(this).data("unit-id");

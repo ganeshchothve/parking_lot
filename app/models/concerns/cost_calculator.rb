@@ -1,6 +1,5 @@
 module CostCalculator
   def effective_rate
-    scheme = self.scheme || self.project.default_scheme
     effective_rate = self.base_rate + self.floor_rise
     scheme.payment_adjustments.where(field: "base_rate").each do |adj|
       effective_rate += adj.value
@@ -57,11 +56,11 @@ module CostCalculator
   end
 
   def calculate_agreement_price
-    base_price + total_agreement_costs
+    base_price + total_agreement_costs + scheme.payment_adjustments.where(field: "agreement_price").collect{|adj| adj.value}.sum
   end
 
   def calculate_all_inclusive_price
-    base_price + total_agreement_costs + total_outside_agreement_costs
+    calculate_agreement_price + total_outside_agreement_costs + scheme.payment_adjustments.where(field: "all_inclusive_price").collect{|adj| adj.value}.sum
   end
 
   def base_price
