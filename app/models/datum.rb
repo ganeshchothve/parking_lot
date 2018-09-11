@@ -14,7 +14,7 @@ class Datum
   embedded_in :data_attributable, polymorphic: true
 
   validates :name, :key, presence: true
-  validates :key, uniqueness: {scope: :costable_id}, format: {with: /\A[a-z_]+\z/, message: "Only small letters & underscore allowed"}
+  validates :key, uniqueness: {scope: :data_attributable_id}, format: {with: /\A[a-z_]+\z/, message: "Only small letters & underscore allowed"}
   validates :formula, presence: true, if: Proc.new{|data_attribute| data_attribute.absolute_value.blank? }
   validates :absolute_value, presence: true, numericality: { greater_than: 0 }, if: Proc.new{|data_attribute| data_attribute.formula.blank? }
 

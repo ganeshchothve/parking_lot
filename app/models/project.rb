@@ -75,6 +75,7 @@ class Project
   mount_uploader :mobile_logo, DocUploader
 
   has_many :project_units
+  has_many :schemes
   has_many :project_towers
   has_one :address, as: :addressable
   belongs_to :booking_portal_client, class_name: 'Client'
@@ -103,5 +104,9 @@ class Project
         self.area_price_data << hash
       end
     end
+  end
+
+  def default_scheme
+    Scheme.where(project_id: self.id, default: true).first
   end
 end

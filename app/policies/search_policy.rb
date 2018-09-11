@@ -65,7 +65,7 @@ class SearchPolicy < ApplicationPolicy
     record.project_unit_id.present? && ProjectUnitPolicy.new(user, record.project_unit).make_available?
   end
 
-  def update_template?(template_klass=nil)
+  def update_scheme?(template_klass=nil)
     valid = record.project_unit_id.present? && ProjectUnitPolicy.new(user, record.project_unit).make_available?
     if template_klass.present?
       valid = valid && template_klass.where(booking_portal_client_id: user.booking_portal_client_id).count > 1
