@@ -1,23 +1,28 @@
 <div class="container">
+  <div class="container form-group mt-3 text-right pr-0">
+    <button onclick="window.print();" class="btn btn-primary d-print-none">Print</button>
+  </div>
   <div class="row justify-content-center">
     <div class="col-md-12">
       <%= render 'dashboard/project_unit_overview', {project_unit: @project_unit} %>
       <div class="mt-3"></div>
-      <% if ["blocked", "booked_tentative", "booked_confirmed"].exclude?(@project_unit.status) %>
-        <%= form_tag admin_project_unit_path(@project_unit), method: "get", id: "project_unit_scheme_preview_form" do %>
-          <div class="form-group">
-            <%= label_tag :scheme_id, "Scheme", class: "control-label" %>
-            <%
-              schemes = @project_unit.permitted_schemes(current_user)
-              default_scheme_id = schemes.where(default: true).first.id
-            %>
-            <%= select_tag :scheme_id, options_for_select(schemes.collect{|scheme| [scheme.name, scheme.id]}, (params[:scheme_id].present? ? params[:scheme_id] : default_scheme_id)), {class: 'selectize', required: 'required', autofocus: true} %>
-          </div>
+      <div class="d-print-none">
+        <% if ["blocked", "booked_tentative", "booked_confirmed"].exclude?(@project_unit.status) %>
+          <%= form_tag admin_project_unit_path(@project_unit), method: "get", id: "project_unit_scheme_preview_form" do %>
+            <div class="form-group">
+              <%= label_tag :scheme_id, "Scheme", class: "control-label" %>
+              <%
+                schemes = @project_unit.permitted_schemes(current_user)
+                default_scheme_id = schemes.where(default: true).first.id
+              %>
+              <%= select_tag :scheme_id, options_for_select(schemes.collect{|scheme| [scheme.name, scheme.id]}, (params[:scheme_id].present? ? params[:scheme_id] : default_scheme_id)), {class: 'selectize', required: 'required', autofocus: true} %>
+            </div>
+          <% end %>
         <% end %>
-      <% end %>
+      </div>
       <div class="mt-3"></div>
       <div class="card card-body">
-        <nav>
+        <nav class="d-print-none">
           <div class="nav nav-tabs" role="tablist">
             <a class="nav-item nav-link active" data-toggle="tab" href="#nav-project-unit-cost-sheet" role="tab">Cost Sheet</a>
             <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-unit-payment-schedule" role="tab">Payment Schedule</a>
@@ -30,37 +35,40 @@
             <%= render 'dashboard/project_unit_cost_sheet', project_unit: @project_unit %>
           </div>
           <div class="tab-pane fade" id="nav-project-unit-payment-schedule" role="tabpanel">
+            <div class="page-break"></div>
             <%= render "dashboard/project_unit_payment_schedule", project_unit: @project_unit %>
           </div>
           <div class="tab-pane fade" id="nav-project-unit-images" role="tabpanel">
-            <% if @project_unit.assets.present? %>
-              <div id="project_unit_gallery_<%= @project_unit.id %>" class="carousel slide" data-ride="carousel">
-                <ol class="carousel-indicators">'
-                  <% @project_unit.assets.each_with_index do |asset, index| %>
-                    <li data-target="#project_unit_gallery_<%= @project_unit.id %>" data-slide-to="<%= index %>" class="<%= index.zero? ? "active" : "" %>"></li>
-                  <% end %>
-                </ol>
-                <div class="carousel-inner">
-                  <% @project_unit.assets.each_with_index do |asset, index| %>
-                    <div class="carousel-item <%= index.zero? ? "active" : "" %>">
-                      <img class="d-block w-100" src="<%= asset.file.url %>" />
-                    </div>
-                  <% end %>
+            <div class="d-print-none">
+              <% if @project_unit.assets.present? %>
+                <div id="project_unit_gallery_<%= @project_unit.id %>" class="carousel slide" data-ride="carousel">
+                  <ol class="carousel-indicators">'
+                    <% @project_unit.assets.each_with_index do |asset, index| %>
+                      <li data-target="#project_unit_gallery_<%= @project_unit.id %>" data-slide-to="<%= index %>" class="<%= index.zero? ? "active" : "" %>"></li>
+                    <% end %>
+                  </ol>
+                  <div class="carousel-inner">
+                    <% @project_unit.assets.each_with_index do |asset, index| %>
+                      <div class="carousel-item <%= index.zero? ? "active" : "" %>">
+                        <img class="d-block w-100" src="<%= asset.file.url %>" />
+                      </div>
+                    <% end %>
+                  </div>
+                  <a class="carousel-control-prev" href="#project_unit_gallery_<%= @project_unit.id %>" role="button" data-slide="prev">
+                    <span class="fas fa-chevron-left text-dark" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                  </a>
+                  <a class="carousel-control-next" href="#project_unit_gallery_<%= @project_unit.id %>" role="button" data-slide="next">
+                    <span class="fas fa-chevron-right text-dark" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                  </a>
                 </div>
-                <a class="carousel-control-prev" href="#project_unit_gallery_<%= @project_unit.id %>" role="button" data-slide="prev">
-                  <span class="fas fa-chevron-left text-dark" aria-hidden="true"></span>
-                  <span class="sr-only">Previous</span>
-                </a>
-                <a class="carousel-control-next" href="#project_unit_gallery_<%= @project_unit.id %>" role="button" data-slide="next">
-                  <span class="fas fa-chevron-right text-dark" aria-hidden="true"></span>
-                  <span class="sr-only">Next</span>
-                </a>
-              </div>
-            <% else %>
-              <div class="alert alert-primary">
-                No images available
-              </div>
-            <% end %>
+              <% else %>
+                <div class="alert alert-primary">
+                  No images available
+                </div>
+              <% end %>
+            </div>
           </div>
         </div>
       </div>
