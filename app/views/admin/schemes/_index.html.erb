@@ -5,7 +5,6 @@
       <tr>
         <th><%= labels['name'] %></th>
         <th><%= labels['status'] %></th>
-        <th class="text-right"><%= labels['value'] %></th>
         <th class="text-right">Actions</th>
       </tr>
     </thead>
@@ -24,7 +23,6 @@
           </div>
         </td>
         <td><%= Scheme.available_statuses.find{|x| x[:id] == scheme.status}[:text] %></td>
-        <td class="text-right"><%= scheme.value %></td>
         <td class="text-right">
           <div class="dropdown">
             <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>

@@ -63,6 +63,11 @@
             <% end %>
           <% end %>
         <% end %>
+        <% if SchemePolicy.new(current_user, Scheme).index? %>
+          <li class="nav-item">
+            <%= active_link_to global_labels['schemes'], admin_schemes_path, active: :inclusive, class: "nav-link" %>
+          </li>
+        <% end %>
         <% if links.present? %>
           <li class="nav-item d-none d-lg-block">
             <div class="dropdown">

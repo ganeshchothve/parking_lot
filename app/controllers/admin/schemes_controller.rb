@@ -84,7 +84,11 @@ class Admin::SchemesController < ApplicationController
   end
 
   def set_project
-    @project = Project.find params[:project_id]
+    @project = Project.find params[:project_id] if params[:project_id].present?
+  end
+
+  def set_project_tower
+    @project = ProjectTower.find params[:project_tower_id] if params[:project_tower_id].present?
   end
 
   def authorize_resource
@@ -98,7 +102,13 @@ class Admin::SchemesController < ApplicationController
   end
 
   def apply_policy_scope
-    custom_scope = @project.schemes.criteria
+    custom_scope = if @project_tower.present?
+      @project_tower.schemes
+    elsif @project.present?
+      @project.schemes
+    else
+      Scheme.all
+    end
     Scheme.with_scope(policy_scope(custom_scope)) do
       yield
     end

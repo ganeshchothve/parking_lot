@@ -26,9 +26,12 @@ class SchemePolicy < ApplicationPolicy
   def permitted_attributes params={}
     attributes = [:name]
     if record.new_record? || record.status == 'draft' || record.status_was == 'draft'
-      attributes += [:project_id, :project_unit_id, :project_tower_id, :user_id, :user_role, :value]
+      attributes += [:project_id, :project_unit_id, :project_tower_id, :user_id, :user_role]
     end
     attributes += [:status] if user.role?('admin') || user.role?('superadmin')
+    if record.status == "draft"
+      attributes += [payment_adjustments_attributes: [:name, :field, :absolute_value, :formula]]
+    end
     attributes
   end
 end

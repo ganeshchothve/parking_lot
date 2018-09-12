@@ -47,6 +47,10 @@ class Scheme
     ]
   end
 
+  def self.available_fields
+    ["agreement_price", "all_inclusive_price", "base_rate", "floor_rise"]
+  end
+
   def self.build_criteria params={}
     selector = {}
     if params[:fltrs].present?
