@@ -80,9 +80,6 @@ Rails.application.routes.draw do
 
       resources :booking_details, only: [:update], controller: 'booking_details'
     end
-    # resources :discounts, except: [:destroy], controller: 'discounts' do
-    #   get :approve_via_email, on: :member, action: 'approve_via_email'
-    # end
     resources :projects, except: [:destroy] do
       resources :schemes, except: [:destroy], controller: 'schemes'
     end

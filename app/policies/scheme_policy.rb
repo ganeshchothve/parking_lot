@@ -1,6 +1,6 @@
 class SchemePolicy < ApplicationPolicy
   def index?
-    current_client.enable_actual_inventory?(user) && current_client.enable_discounts? && (user.role?('superadmin') || user.role?('admin') || user.role?('sales') || user.role?('crm') || user.role?('cp'))
+    current_client.enable_actual_inventory?(user) && (user.role?('superadmin') || user.role?('admin') || user.role?('sales') || user.role?('crm') || user.role?('cp'))
   end
 
   def edit?
@@ -8,19 +8,19 @@ class SchemePolicy < ApplicationPolicy
   end
 
   def new?
-    current_client.enable_actual_inventory?(user) && current_client.enable_discounts? && index?
+    current_client.enable_actual_inventory?(user) && index?
   end
 
   def create?
-    current_client.enable_actual_inventory?(user) && current_client.enable_discounts? && ((index? && record.status == 'draft') || ['superadmin', 'admin'].include?(user.role))
+    current_client.enable_actual_inventory?(user) && ((index? && record.status == 'draft') || ['superadmin', 'admin'].include?(user.role))
   end
 
   def update?
-    current_client.enable_actual_inventory?(user) && current_client.enable_discounts? && edit?
+    current_client.enable_actual_inventory?(user) && edit?
   end
 
   def approve_via_email?
-    current_client.enable_actual_inventory?(user) && current_client.enable_discounts? && edit?
+    current_client.enable_actual_inventory?(user) && edit?
   end
 
   def permitted_attributes params={}

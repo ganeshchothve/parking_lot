@@ -94,7 +94,7 @@ class Scheme
   private
   def at_least_one_condition
     if self.project_id.blank? && self.project_tower_id.blank? && self.project_unit_id.blank? && self.user_id.blank? && self.user_role.blank?
-      self.errors.add :base, "At least one condition is required to create a discount"
+      self.errors.add :base, "At least one condition is required to create a scheme"
     end
   end
 

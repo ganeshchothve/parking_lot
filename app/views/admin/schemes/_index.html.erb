@@ -1,7 +1,7 @@
 <div class="table-responsive">
   <table class='table striped-table payment-breakup' width="100%" cellpadding="10" cellspacing="0">
     <thead class="th-default">
-      <% labels = t('mongoid.attributes.discount').with_indifferent_access %>
+      <% labels = t('mongoid.attributes.scheme').with_indifferent_access %>
       <tr>
         <th><%= labels['name'] %></th>
         <th><%= labels['status'] %></th>
@@ -10,27 +10,27 @@
       </tr>
     </thead>
     <tbody>
-      <% discounts.each do |discount| %>
+      <% schemes.each do |scheme| %>
       <tr>
         <td>
-          <%= discount.name %>
+          <%= scheme.name %>
           <div class="small">
             Created:
-            <%= discount.created_by.present? ? discount.created_by.name : '-' %>
+            <%= scheme.created_by.present? ? scheme.created_by.name : '-' %>
           </div>
           <div class="small">
             Approval:
-            <%= discount.approved_by.present? ? "#{discount.approved_by.name} at #{discount.approved_at.present? ? l(discount.approved_at.in_time_zone(current_user.time_zone)) : '-'}".html_safe : '-' %>
+            <%= scheme.approved_by.present? ? "#{scheme.approved_by.name} at #{scheme.approved_at.present? ? l(scheme.approved_at.in_time_zone(current_user.time_zone)) : '-'}".html_safe : '-' %>
           </div>
         </td>
-        <td><%= Discount.available_statuses.find{|x| x[:id] == discount.status}[:text] %></td>
-        <td class="text-right"><%= discount.value %></td>
+        <td><%= Scheme.available_statuses.find{|x| x[:id] == scheme.status}[:text] %></td>
+        <td class="text-right"><%= scheme.value %></td>
         <td class="text-right">
           <div class="dropdown">
             <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
             <div class="dropdown-menu dropdown-menu-right">
-              <% if DiscountPolicy.new(current_user, discount).edit? %>
-                <%= link_to 'Edit', edit_admin_discount_path(discount), class: 'dropdown-item modal-remote-form-link' %>
+              <% if SchemePolicy.new(current_user, scheme).edit? %>
+                <%= link_to 'Edit', edit_admin_scheme_path(scheme), class: 'dropdown-item modal-remote-form-link' %>
               <% end %>
             </div>
           </div>
@@ -45,4 +45,4 @@
     </tbody>
   </table>
 </div>
-<%= will_paginate discounts, list_classes: %w(pagination justify-content-center) %>
+<%= will_paginate schemes, list_classes: %w(pagination justify-content-center) %>

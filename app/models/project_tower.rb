@@ -12,7 +12,6 @@ class ProjectTower
   field :units_per_floor, type: Integer
   field :maintenance, type: Float
   field :rate, type: Float
-  field :max_discount, type: Float
   field :total_plot_area ,type: Float
   field :floor_rise_type , type: String
   field :floor_rise , type: Array,default: []

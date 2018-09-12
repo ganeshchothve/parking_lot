@@ -2,7 +2,7 @@ module DatabaseSeeds
   module EmailTemplates
     def self.seed client_id
 
-      DatabaseSeeds::EmailTemplates::Discount.seed client_id
+      DatabaseSeeds::EmailTemplates::Scheme.seed client_id
       DatabaseSeeds::EmailTemplates::ProjectUnit.seed client_id
       DatabaseSeeds::EmailTemplates::Receipt.seed client_id
       DatabaseSeeds::EmailTemplates::UserRequest.seed client_id
@@ -115,4 +115,4 @@ require 'database_seeds/email_templates/project_unit'
 require 'database_seeds/email_templates/receipt'
 require 'database_seeds/email_templates/user_request'
 require 'database_seeds/email_templates/user'
-require 'database_seeds/email_templates/discount'
+require 'database_seeds/email_templates/scheme'

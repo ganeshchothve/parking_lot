@@ -56,11 +56,11 @@ module CostCalculator
   end
 
   def calculate_agreement_price
-    base_price + total_agreement_costs + scheme.payment_adjustments.where(field: "agreement_price").collect{|adj| adj.value}.sum
+    (base_price + total_agreement_costs + scheme.payment_adjustments.where(field: "agreement_price").collect{|adj| adj.value}.sum).round
   end
 
   def calculate_all_inclusive_price
-    calculate_agreement_price + total_outside_agreement_costs + scheme.payment_adjustments.where(field: "all_inclusive_price").collect{|adj| adj.value}.sum
+    (calculate_agreement_price + total_outside_agreement_costs + scheme.payment_adjustments.where(field: "all_inclusive_price").collect{|adj| adj.value}.sum).round
   end
 
   def base_price
