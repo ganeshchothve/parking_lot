@@ -27,7 +27,7 @@
         </div>
         <div class="form-group">
           <%= f.label :can_be_applied_by, class: '' %>
-          <%= f.select :can_be_applied_by, User.available_roles(current_client).collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', multiple: "multiple" %>
+          <%= f.select :can_be_applied_by, User.available_roles(current_client).collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', multiple: "multiple", disabled: (policy(@scheme).editable_field?("can_be_applied_by") ? false : true) %>
         </div>
         <div class="payment-adjustments">
           <% editable_payment_adjustment = policy(@scheme).editable_field?("payment_adjustments_attributes")%>
@@ -35,6 +35,7 @@
             <%= f.link_to_add "Add", :payment_adjustments, :data => { :target => ".payment-adjustments" } %>
           <% end %>
           <%= f.fields_for :payment_adjustments do |adj|%>
+            <%= adj.link_to_remove icon("far", "times-circle") %>
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">

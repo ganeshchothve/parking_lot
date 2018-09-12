@@ -109,6 +109,11 @@ class Admin::SchemesController < ApplicationController
     else
       Scheme.all
     end
+
+    if params[:only_non_customizable_schemes]
+      custom_scope = custom_scope.where(_type: {"$ne" => "BookingDetailScheme"})
+    end
+
     Scheme.with_scope(policy_scope(custom_scope)) do
       yield
     end

@@ -48,6 +48,7 @@ en:
     searches: "Filter"
     otp: "OTP"
     schemes: "Schemes"
+    scheme: "Scheme"
   mongoid:
     attributes:
       asset:

@@ -19,7 +19,7 @@
                 schemes = @project_unit.permitted_schemes(current_user)
                 default_scheme_id = schemes.where(default: true).first.id
               %>
-              <%= select_tag :scheme_id, options_for_select(schemes.collect{|scheme| [scheme.name, scheme.id]}, (params[:scheme_id].present? ? params[:scheme_id] : default_scheme_id)), {class: 'selectize', required: 'required', autofocus: true} %>
+              <%= select_tag :selected_scheme_id, options_for_select(schemes.collect{|scheme| [scheme.name, scheme.id]}, (params[:scheme_id].present? ? params[:scheme_id] : default_scheme_id)), {class: 'selectize', required: 'required', autofocus: true} %>
             </div>
           <% end %>
         <% end %>
@@ -67,7 +67,7 @@
 </div>
 <%= javascript_tag do %>
   $(document).ready(function(){
-    $("#scheme_id").change(function(){
+    $("#selected_scheme_id").change(function(){
       $("#project_unit_scheme_preview_form").submit();
     });
     FormInitializer.init($("#project_unit_scheme_preview_form"))

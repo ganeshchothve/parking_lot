@@ -20,7 +20,7 @@ class Admin::ProjectUnitsController < AdminController
   end
 
   def show
-    @project_unit.scheme_id = params[:scheme_id] if params[:scheme_id].present?
+    @project_unit.selected_scheme_id = params[:scheme_id] if params[:scheme_id].present?
     respond_to do |format|
       format.json { render json: @project_unit }
       format.html {}
