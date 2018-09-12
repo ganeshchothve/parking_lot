@@ -48,10 +48,19 @@
             <%= f.label :role, class: 'label-required' %>
             <%= f.select :role, User.available_roles(current_client).reject{|r| User.buyer_roles(current_client).include?(r[:id])}.collect{|r| [r[:text], r[:id]] }, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(@user).editable_field?("role") ? false : true) %>
           </div>
-          <% elsif policy(@user).editable_field?("role") && User.buyer_roles(current_client).include?(@user.role) %>
+          <% elsif policy(@user).editable_field?("role") %>
           <div class="form-group">
             <%= f.label :role, class: 'label-required' %>
-            <%= f.select :role, User.available_roles(current_client).select{|r| User.buyer_roles(current_client).include?(r[:id])}.collect{|r| [r[:text], r[:id]] }, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(@user).editable_field?("role") ? false : true) %>
+            <%
+              roles = User.available_roles(current_client)
+              if @user.buyer?
+                roles = roles.select{|r| User.buyer_roles(current_client).include?(r[:id])}
+              else
+                roles = roles.select{|r| User.buyer_roles(current_client).exclude?(r[:id])}
+              end
+              roles = roles.collect{|r| [r[:text], r[:id]] }
+            %>
+            <%= f.select :role, roles, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(@user).editable_field?("role") ? false : true) %>
           </div>
           <% else %>
           <%= f.hidden_field :role %>

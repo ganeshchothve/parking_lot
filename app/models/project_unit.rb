@@ -100,6 +100,10 @@ class ProjectUnit
     out.with_indifferent_access
   end
 
+  def calculated_cost(name)
+    costs.where(name: name).first.value rescue 0
+  end
+
   def calculated_data
     out = {}
     data.each{|c| out[c.key] = c.value }
