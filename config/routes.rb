@@ -66,7 +66,7 @@ Rails.application.routes.draw do
       resources :searches, except: [:destroy], controller: '/searches' do
         get :"3d", on: :collection, action: "three_d", as: "three_d"
         post :hold, on: :member
-        post :update_template, on: :member
+        post :update_scheme, on: :member
         get :checkout, on: :member
         post :make_available, on: :member
         get '/gateway-payment/:receipt_id', to: 'searches#gateway_payment', on: :member
@@ -80,8 +80,8 @@ Rails.application.routes.draw do
 
       resources :booking_details, only: [:update], controller: 'booking_details'
     end
-    resources :discounts, except: [:destroy], controller: 'discounts' do
-      get :approve_via_email, on: :member, action: 'approve_via_email'
+    resources :projects, except: [:destroy] do
+      resources :schemes, except: [:destroy], controller: 'schemes'
     end
     resources :user_kycs, only: [:index], controller: '/user_kycs'
     scope ":request_type" do
@@ -121,7 +121,7 @@ Rails.application.routes.draw do
         post :hold, on: :member
         get 'tower/details', on: :collection, action: :tower, as: :tower
         get :checkout, on: :member
-        post :update_template, on: :member
+        post :update_scheme, on: :member
         post :make_available, on: :member
         get '/gateway-payment/:receipt_id', to: 'searches#gateway_payment', on: :member
         get :payment, on: :member

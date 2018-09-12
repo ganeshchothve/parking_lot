@@ -18,8 +18,6 @@ class ProjectUnit
   field :blocked_on, type: Date
   field :auto_release_on, type: Date
   field :held_on, type: DateTime
-  field :applied_discount_rate, type: Float, default: 0
-  field :applied_discount_id, type: String
   field :base_rate, type: Float
 
   # These fields majorly are pulled from sell.do and may be used on the UI
@@ -42,14 +40,13 @@ class ProjectUnit
   field :type, type: String
   field :unit_facing_direction, type: String
   field :primary_user_kyc_id, type: BSON::ObjectId
-  field :payment_schedule_template_id, type: BSON::ObjectId
-  field :cost_sheet_template_id, type: BSON::ObjectId
+  field :scheme_id, type: BSON::ObjectId
 
   attr_accessor :processing_user_request, :processing_swap_request
 
   enable_audit({
     indexed_fields: [:project_id, :project_tower_id, :unit_configuration_id, :client_id, :booking_portal_client_id, :selldo_id, :developer_id],
-    audit_fields: [:erp_id, :status, :available_for, :blocked_on, :auto_release_on, :held_on, :applied_discount_rate, :applied_discount_id, :primary_user_kyc_id, :base_rate]
+    audit_fields: [:erp_id, :status, :available_for, :blocked_on, :auto_release_on, :held_on, :primary_user_kyc_id, :base_rate, :scheme_id]
   })
 
   belongs_to :project
@@ -71,11 +68,11 @@ class ProjectUnit
 
   accepts_nested_attributes_for :data, :costs, allow_destroy: true
 
-  validates :client_id, :agreement_price, :all_inclusive_price, :booking_price, :project_id, :project_tower_id, :unit_configuration_id, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :type, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, :payment_schedule_template_id, :cost_sheet_template_id, presence: true
+  validates :client_id, :agreement_price, :all_inclusive_price, :booking_price, :project_id, :project_tower_id, :unit_configuration_id, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :type, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, presence: true
   validates :status, :name, :erp_id, presence: true
   validates :status, inclusion: {in: Proc.new{ ProjectUnit.available_statuses.collect{|x| x[:id]} } }
   validates :available_for, inclusion: {in: Proc.new{ ProjectUnit.available_available_fors.collect{|x| x[:id]} } }
-  validates :user_id, :primary_user_kyc_id, presence: true, if: Proc.new { |unit| ['available', 'not_available', 'management', 'employee'].exclude?(unit.status) }
+  validates :user_id, :primary_user_kyc_id, :scheme_id, presence: true, if: Proc.new { |unit| ['available', 'not_available', 'management', 'employee'].exclude?(unit.status) }
   validate :pan_uniqueness
 
   def ds_name
@@ -107,6 +104,12 @@ class ProjectUnit
     out = {}
     data.each{|c| out[c.key] = c.value }
     out.with_indifferent_access
+  end
+
+  def permitted_schemes user=nil
+    user ||= self.user
+    criteria = {can_be_applied_by: user.role}
+    self.project_tower.schemes.or(criteria, {default: true})
   end
 
   def self.user_based_available_statuses(user)
@@ -182,6 +185,10 @@ class ProjectUnit
       {id: "management", text: "Management"},
       {id: "employee", text: "Employee"}
     ]
+  end
+
+  def self.cost_adjustment_fields
+    [:base_rate, :floor_rise, :agreement_price]
   end
 
   def process_payment!(receipt)
@@ -297,12 +304,16 @@ class ProjectUnit
     primary_user_kyc_id.present? ? UserKyc.find(primary_user_kyc_id) : nil
   end
 
-  def payment_schedule_template
-    Template::PaymentScheduleTemplate.find self.payment_schedule_template_id
+  def scheme
+    scheme_id.present? ? Scheme.find(scheme_id) : project_tower.default_scheme
   end
 
-  def cost_sheet_template
-    Template::CostSheetTemplate.find self.cost_sheet_template_id
+  def cost_sheet_template(scheme_id=nil)
+    scheme_id.present? ? Scheme.find(scheme_id).cost_sheet_template : self.scheme.cost_sheet_template
+  end
+
+  def payment_schedule_template(scheme_id=nil)
+    scheme_id.present? ? Scheme.find(scheme_id).payment_schedule_template : self.scheme.payment_schedule_template
   end
 
   private

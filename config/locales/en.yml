@@ -29,8 +29,6 @@ en:
     user_requests: 'User Requests'
     user_request_cancellation: 'Cancellation Request'
     user_request_swap: 'Swap Request'
-    discount: 'Discount'
-    discounts: 'Discounts'
     receipt_with_status: '%{status} Payment'
     receipts_with_status: '%{status} Payments'
     user_kyc: 'KYC'
@@ -96,7 +94,6 @@ en:
         sms_mask: 'SMS Mask'
         enable_actual_inventory: 'Enable Inventory for these user roles'
         enable_channel_partners: 'Enable Channel Partners'
-        enable_discounts: 'Enable Discounts'
         blocking_amount: 'Min. Amount for Blocking an Unit'
         blocking_days: 'Unit to be blocked for (Days)'
         holding_minutes: 'Unit to be held for (Minutes)'
@@ -212,14 +209,14 @@ en:
         formula: "Formula"
         absolute_value: "Absolute Value"
         order: "Order"
-      discount:
+      scheme:
         name: 'Name'
         project_id: 'Project'
         project_tower_id: 'Project Tower'
         project_unit_id: 'Apartment'
         user_id: 'User'
         user_role: 'User Role'
-        value: 'Discount (Rs.)'
+        value: 'Adjustment (Rs.)'
         status: 'Status'
         approved_at: 'Approved At'
         approved_by: 'Approved By'

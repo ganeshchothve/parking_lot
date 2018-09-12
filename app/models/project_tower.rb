@@ -12,7 +12,6 @@ class ProjectTower
   field :units_per_floor, type: Integer
   field :maintenance, type: Float
   field :rate, type: Float
-  field :max_discount, type: Float
   field :total_plot_area ,type: Float
   field :floor_rise_type , type: String
   field :floor_rise , type: Array,default: []
@@ -28,6 +27,7 @@ class ProjectTower
 
   belongs_to :project
   has_many :project_units
+  has_many :schemes
 
   validates :name, :client_id, :project_id, :total_floors, presence: true
   validate :validate_floor_rise
@@ -35,6 +35,10 @@ class ProjectTower
 
   def unit_configurations
     UnitConfiguration.where(data_attributes: {"$elemMatch" => {"n" => "project_tower_id", "v" => self.selldo_id}})
+  end
+
+  def default_scheme
+    self.schemes.where(default: true).first
   end
 
   private

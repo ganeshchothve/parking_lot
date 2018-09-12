@@ -41,7 +41,6 @@ class Client
   field :mailgun_email_domain, type: String
   field :enable_actual_inventory, type: Array, default: []
   field :enable_channel_partners, type: Boolean, default: false
-  field :enable_discounts, type: Boolean, default: false
   field :enable_direct_payment, type: Boolean, default: false
   field :blocking_amount, type: Integer, default: 30000
   field :blocking_days, type: Integer, default: 10
@@ -98,7 +97,7 @@ class Client
   has_many :smses, class_name: 'Sms'
   has_many :assets, as: :assetable
   has_many :emails, class_name: 'Email', inverse_of: :booking_portal_client
-  has_many :discounts, class_name: "Discount"
+  has_many :schemes
   has_one :gallery
   has_one :external_inventory_view_config, inverse_of: :booking_portal_client
 
@@ -175,7 +174,6 @@ c.sms_provider_username = "amuramarketing"
 c.sms_provider_password = "aJ_Z-1j4"
 c.enable_actual_inventory = User.available_roles(c).collect{|x| x[:id]}
 c.enable_channel_partners = false
-c.enable_discounts = false
 c.enable_company_users = true
 c.remote_logo_url = "https://image4.owler.com/logo/amura_owler_20160227_194208_large.png"
 c.allowed_bookings_per_user = 5

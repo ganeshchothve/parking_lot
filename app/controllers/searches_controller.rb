@@ -123,7 +123,7 @@ class SearchesController < ApplicationController
     end
   end
 
-  def update_template
+  def update_scheme
     @project_unit = ProjectUnit.find(@search.project_unit_id)
     authorize @project_unit
     respond_to do |format|

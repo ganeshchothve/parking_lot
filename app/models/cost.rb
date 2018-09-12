@@ -37,7 +37,7 @@ class Cost
   private
   def calculate
     begin
-      return ERB.new("<%= #{self.formula} %>").result( binding ).to_f
+      return ERB.new("<%= #{self.formula} %>").result( costable.get_binding ).to_f
     rescue
       return 0
     end

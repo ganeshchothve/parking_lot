@@ -13,6 +13,13 @@
         </div>
       </div>
       <div class="mt-3"></div>
+      <%= form_for(@project_unit, url: update_scheme_user_search_path(@search), html: {method: "post", class: '', id: 'update_scheme_booking_detail_form'}) do |f| %>
+        <div class="form-group">
+          <%= f.label :scheme_id %>
+          <%= f.select :scheme_id, @project_unit.permitted_schemes(current_user).collect{|scheme| [scheme.name, scheme.id]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
+        </div>
+      <% end %>
+      <div class="mt-3"></div>
       <%= render 'dashboard/project_unit_cost_sheet', {project_unit: @project_unit, search: @search} %>
       <div class="mt-3"></div>
       <%= render "dashboard/project_unit_payment_schedule", {project_unit: @project_unit, search: @search} %>
@@ -60,5 +67,9 @@
     }).on('finish.countdown', function(){
       window.location = window.location;
     });
+    $("#project_unit_scheme_id").change(function(){
+      $("#update_scheme_booking_detail_form").submit();
+    })
+    FormInitializer.init($("#update_scheme_booking_detail_form"))
   });
 <% end %>

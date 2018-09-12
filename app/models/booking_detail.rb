@@ -7,6 +7,7 @@ class BookingDetail
   field :primary_user_kyc_id, type: BSON::ObjectId
   field :status, type: String
   field :manager_id, type: BSON::ObjectId
+  field :scheme_id, type: BSON::ObjectId
   mount_uploader :tds_doc, DocUploader
 
   enable_audit({
@@ -66,5 +67,9 @@ class BookingDetail
   def send_notification!
     message = "#{self.primary_user_kyc.name} just booked apartment #{self.project_unit.name} in #{self.project_unit.project_tower_name}"
     Gamification::PushNotification.new.push(message) if Rails.env.staging? || Rails.env.production?
+  end
+
+  def scheme
+    Scheme.find self.scheme_id
   end
 end

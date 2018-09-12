@@ -85,7 +85,6 @@ module InventoryImport
             project_unit.status = "error"
             project_unit.available_for = "user"
           end
-
           project_unit.agreement_price = agreement_price.to_i
           project_unit.all_inclusive_price = all_inclusive_price.to_i
           project_unit.base_rate = base_rate.to_f
@@ -100,9 +99,7 @@ module InventoryImport
           project_unit.type = "apartment"
           project_unit.selldo_id = erp_id
           project_unit.floor_rise = floor_rise.to_f
-          project_unit.payment_schedule_template_id = Template::PaymentScheduleTemplate.where(booking_portal_client_id: booking_portal_client_id).first.id
-          project_unit.cost_sheet_template_id = Template::CostSheetTemplate.where(booking_portal_client_id: booking_portal_client_id).first.id
-
+          
           costs.each do |index, arr|
             if row[index].to_i > 0
               project_unit.costs.build(category: arr[0], name: arr[1], absolute_value: row[index], key: arr[1].gsub(/[\W_]+/i, "_").downcase)

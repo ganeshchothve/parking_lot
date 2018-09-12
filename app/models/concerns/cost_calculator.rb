@@ -1,35 +1,10 @@
 module CostCalculator
   def effective_rate
-    self.base_rate + self.floor_rise - self.applied_discount_rate
-  end
-
-  def discount(user)
-    discount_rate(user) * saleable
-  end
-
-  def discount_rate(user)
-    user = self.user if self.user_id.present?
-    if applied_discount_id.present? && applied_discount_rate.present?
-      return applied_discount_rate
-    else
-      discount_obj = applicable_discount(user)
-      discount = (discount_obj.present? ? discount_obj.value : 0)
-      e_discount = 0
-      if user.role?("employee_user") || user.role?("management_user")
-        #e_discount = ((base_rate > 4100) ? (base_rate - 4100) : 0)
-        e_discount = base_rate*0.05
-      end
-      return (discount > e_discount ? discount : e_discount)
+    effective_rate = self.base_rate + self.floor_rise
+    scheme.payment_adjustments.where(field: "base_rate").each do |adj|
+      effective_rate += adj.value
     end
-    0
-  end
-
-  def applicable_discount(user)
-    selector = []
-    selector << {user_id: user.id} if user.present?
-    selector << {user_role: user.role} if user.present?
-    selector << {project_unit_id: self.id}
-    discount_obj = Discount.where(status: "approved").or(selector).desc(:value).first
+    effective_rate
   end
 
   def booking_price_percent_of_agreement_price
@@ -81,11 +56,11 @@ module CostCalculator
   end
 
   def calculate_agreement_price
-    base_price + self.costs.where(category: 'agreement').collect{|x| x.value}.sum
+    (base_price + total_agreement_costs + scheme.payment_adjustments.where(field: "agreement_price").collect{|adj| adj.value}.sum).round
   end
 
   def calculate_all_inclusive_price
-    agreement_price + total_outside_agreement_costs
+    (calculate_agreement_price + total_outside_agreement_costs + scheme.payment_adjustments.where(field: "all_inclusive_price").collect{|adj| adj.value}.sum).round
   end
 
   def base_price
@@ -93,10 +68,16 @@ module CostCalculator
   end
 
   def total_outside_agreement_costs
-    costs.where(category: 'outside_agreement').collect{|x| x.value}.sum
+    scheme = self.scheme || self.project.default_scheme
+    costs.where(category: 'outside_agreement').collect do |cost|
+      cost.value + scheme.payment_adjustments.where(field: cost.key).collect{ |adj| adj.value}.sum
+    end.sum
   end
 
   def total_agreement_costs
-    costs.where(category: 'agreement').collect{|x| x.value}.sum
+    scheme = self.scheme || self.project.default_scheme
+    costs.where(category: 'agreement').collect do |cost|
+      cost.value + scheme.payment_adjustments.where(field: cost.key).collect{|adj| adj.value}.sum
+    end.sum
   end
 end
