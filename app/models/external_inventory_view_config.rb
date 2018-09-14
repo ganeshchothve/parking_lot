@@ -12,7 +12,7 @@ class ExternalInventoryViewConfig
 
   validates :provider, inclusion: {in: Proc.new{ ExternalInventoryViewConfig.available_providers.collect{|x| x[:id]} } }, if: Proc.new{|e| e.enabled?}
   validates :status, inclusion: {in: Proc.new{ ExternalInventoryViewConfig.available_statuses.collect{|x| x[:id]} } }, if: Proc.new{|e| e.enabled?}
-  validates :url, presence: true, if: {Proc.new{|e| e.enabled? }}
+  validates :url, presence: true, if: {Proc.new{|e| e.enabled? }
 
   def self.available_providers
     [
