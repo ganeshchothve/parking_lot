@@ -31,7 +31,7 @@ class Cost
   end
 
   def value
-    (absolute_value.present? && absolute_value > 0 ? absolute_value : calculate) rescue 0
+    (absolute_value.present? ? absolute_value : calculate) rescue 0
   end
 
   private
