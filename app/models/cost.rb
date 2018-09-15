@@ -31,7 +31,11 @@ class Cost
   end
 
   def value
-    (absolute_value.present? ? absolute_value : calculate) rescue 0
+    out = (absolute_value.present? ? absolute_value : calculate) rescue 0
+    if costable.is_a?(ProjectUnit)
+      out += costable.scheme.payment_adjustments.where(field: self.key).collect{ |adj| adj.value}.sum
+    end
+    out
   end
 
   private
