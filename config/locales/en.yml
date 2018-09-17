@@ -14,6 +14,8 @@ en:
     register_h1: "Sign Up"
     register_h2: "Register Now and book an apartment by paying just Rs. Blocking Amount (just takes 3 minutes)"
     custom: 'Special Features'
+    scheme: 'Cost Sheet & Payment Schedule'
+    schemes: 'Cost Sheets & Payment Schedules'
     note: "Note"
     notes: "Notes"
     template: 'Template'

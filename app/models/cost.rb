@@ -17,7 +17,7 @@ class Cost
   validates :name, :key, :category, presence: true
   validates :key, uniqueness: {scope: :costable_id}, format: {with: /\A[a-z_]+\z/, message: "Only small letters & underscore allowed"}
   validates :formula, presence: true, if: Proc.new{|cost| cost.absolute_value.blank? }
-  validates :absolute_value, presence: true, numericality: { greater_than: 0 }, if: Proc.new{|cost| cost.formula.blank? }
+  validates :absolute_value, presence: true, if: Proc.new{|cost| cost.formula.blank? }
   validates :category, inclusion: {in: Proc.new{ Cost.available_categories.collect{|x| x[:id]} } }
 
   default_scope -> {asc(:order)}
@@ -31,7 +31,11 @@ class Cost
   end
 
   def value
-    (absolute_value.present? && absolute_value > 0 ? absolute_value : calculate) rescue 0
+    out = (absolute_value.present? ? absolute_value : calculate) rescue 0
+    if costable.is_a?(ProjectUnit)
+      out += costable.scheme.payment_adjustments.where(field: self.key).collect{ |adj| adj.value}.sum
+    end
+    out
   end
 
   private
