@@ -4,6 +4,6 @@ class BookingDetailSchemePolicy < SchemePolicy
   end
 
   def permitted_attributes params={}
-    [:name, payment_adjustments_attributes: PaymentAdjustmentPolicy.new(user, PaymentAdjustment.new).permitted_attributes]
+    [:name, :cost_sheet_template_id, :payment_schedule_template_id, payment_adjustments_attributes: PaymentAdjustmentPolicy.new(user, PaymentAdjustment.new).permitted_attributes]
   end
 end

@@ -26,7 +26,7 @@ class SchemePolicy < ApplicationPolicy
   def permitted_attributes params={}
     attributes = [:name, can_be_applied_by: []]
     if record.new_record? || record.status == 'draft' || record.status_was == 'draft'
-      attributes += [:project_id, :project_unit_id, :project_tower_id, :user_id, :user_role]
+      attributes += [:project_id, :project_unit_id, :project_tower_id, :user_id, :user_role, :cost_sheet_template_id, :payment_schedule_template_id]
     end
     attributes += [:status] if user.role?('admin') || user.role?('superadmin')
     if record.status == "draft"

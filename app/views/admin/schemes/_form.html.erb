@@ -29,13 +29,29 @@
           <%= f.label :can_be_applied_by, class: '' %>
           <%= f.select :can_be_applied_by, User.available_roles(current_client).collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', multiple: "multiple", disabled: (policy(@scheme).editable_field?("can_be_applied_by") ? false : true) %>
         </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <%= f.label :payment_schedule_template_id, class: 'label-required' %>
+              <%= f.select :payment_schedule_template_id, ::Template::PaymentScheduleTemplate.where(booking_portal_client_id: current_client.id).collect{|x| [x.name, x.id]}, {}, class: "selectize", disabled: (policy(@scheme).editable_field?("payment_schedule_template_id") ? false : true) %>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <%= f.label :cost_sheet_template_id, class: 'label-required' %>
+              <%= f.select :cost_sheet_template_id, ::Template::CostSheetTemplate.where(booking_portal_client_id: current_client.id).collect{|x| [x.name, x.id]}, {}, class: "selectize", disabled: (policy(@scheme).editable_field?("cost_sheet_template_id") ? false : true) %>
+            </div>
+          </div>
+        </div>
         <div class="payment-adjustments">
           <% editable_payment_adjustment = policy(@scheme).editable_field?("payment_adjustments_attributes")%>
           <% if editable_payment_adjustment %>
             <%= f.link_to_add "Add", :payment_adjustments, :data => { :target => ".payment-adjustments" } %>
           <% end %>
           <%= f.fields_for :payment_adjustments do |adj|%>
-            <%= adj.link_to_remove icon("far", "times-circle") %>
+            <% if editable_payment_adjustment %>
+              <%= adj.link_to_remove icon("far", "times-circle") %>
+            <% end %>
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
