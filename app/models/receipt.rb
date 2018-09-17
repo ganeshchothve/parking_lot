@@ -140,7 +140,7 @@ class Receipt
     or_selector = {}
     if params[:q].present?
       regex = ::Regexp.new(::Regexp.escape(params[:q]), 'i')
-      or_selector = {"$or": [{receip_id: regex}, {tracking_id: regex}, {payment_identifier: regex}] }
+      or_selector = {"$or": [{receipt_id: regex}, {tracking_id: regex}, {payment_identifier: regex}] }
     end
     selector = self.and([selector, selector1, or_selector])
     if params[:sort].blank? || Receipt.available_sort_options.collect{|x| x[:id]}.exclude?(params[:sort])
