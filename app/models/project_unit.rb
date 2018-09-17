@@ -40,13 +40,13 @@ class ProjectUnit
   field :type, type: String
   field :unit_facing_direction, type: String
   field :primary_user_kyc_id, type: BSON::ObjectId
-  field :scheme_id, type: BSON::ObjectId
+  field :selected_scheme_id, type: BSON::ObjectId
 
   attr_accessor :processing_user_request, :processing_swap_request
 
   enable_audit({
     indexed_fields: [:project_id, :project_tower_id, :unit_configuration_id, :client_id, :booking_portal_client_id, :selldo_id, :developer_id],
-    audit_fields: [:erp_id, :status, :available_for, :blocked_on, :auto_release_on, :held_on, :primary_user_kyc_id, :base_rate, :scheme_id]
+    audit_fields: [:erp_id, :status, :available_for, :blocked_on, :auto_release_on, :held_on, :primary_user_kyc_id, :base_rate, :selected_scheme_id]
   })
 
   belongs_to :project
@@ -72,7 +72,7 @@ class ProjectUnit
   validates :status, :name, :erp_id, presence: true
   validates :status, inclusion: {in: Proc.new{ ProjectUnit.available_statuses.collect{|x| x[:id]} } }
   validates :available_for, inclusion: {in: Proc.new{ ProjectUnit.available_available_fors.collect{|x| x[:id]} } }
-  validates :user_id, :primary_user_kyc_id, :scheme_id, presence: true, if: Proc.new { |unit| ['available', 'not_available', 'management', 'employee'].exclude?(unit.status) }
+  validates :user_id, :primary_user_kyc_id, :selected_scheme_id, presence: true, if: Proc.new { |unit| ['available', 'not_available', 'management', 'employee'].exclude?(unit.status) }
   validate :pan_uniqueness
 
   def ds_name
@@ -309,14 +309,20 @@ class ProjectUnit
   end
 
   def scheme
-    scheme_id.present? ? Scheme.find(scheme_id) : project_tower.default_scheme
+    if self.booking_detail.present?
+      self.booking_detail.booking_detail_scheme
+    elsif self.selected_scheme_id.present?
+      Scheme.find(self.selected_scheme_id)
+    else
+      project_tower.default_scheme
+    end
   end
 
-  def cost_sheet_template(scheme_id=nil)
+  def cost_sheet_template scheme_id=nil
     scheme_id.present? ? Scheme.find(scheme_id).cost_sheet_template : self.scheme.cost_sheet_template
   end
 
-  def payment_schedule_template(scheme_id=nil)
+  def payment_schedule_template scheme_id=nil
     scheme_id.present? ? Scheme.find(scheme_id).payment_schedule_template : self.scheme.payment_schedule_template
   end
 

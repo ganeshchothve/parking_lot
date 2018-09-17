@@ -28,14 +28,14 @@ class Scheme
   belongs_to :booking_portal_client, class_name: "Client"
   belongs_to :user, class_name: 'User', optional: true
 
-  validates :name, :status, presence: true
-  validates :name, uniqueness: {scope: :project_tower_id}
+  validates :name, :status, :cost_sheet_template_id, :payment_schedule_template_id, presence: true
+  validates :name, uniqueness: {scope: :project_tower_id}, if: Proc.new{|record| record._type != "BookingDetailScheme" }
   validates :approved_by, presence: true, if: Proc.new{|scheme| scheme.status == 'approved' && !scheme.default? }
   validate :at_least_one_condition
   validate :project_related
   validate :user_related
 
-  accepts_nested_attributes_for :payment_adjustments
+  accepts_nested_attributes_for :payment_adjustments, allow_destroy: true
 
   default_scope -> {desc(:created_at)}
 
@@ -45,6 +45,10 @@ class Scheme
       {id: "approved", text: "Approved"},
       {id: "disabled", text: "Disabled"}
     ]
+  end
+
+  def self.available_fields
+    ["agreement_price", "all_inclusive_price", "base_rate", "floor_rise"]
   end
 
   def self.build_criteria params={}

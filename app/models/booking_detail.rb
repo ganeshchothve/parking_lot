@@ -7,7 +7,6 @@ class BookingDetail
   field :primary_user_kyc_id, type: BSON::ObjectId
   field :status, type: String
   field :manager_id, type: BSON::ObjectId
-  field :scheme_id, type: BSON::ObjectId
   mount_uploader :tds_doc, DocUploader
 
   enable_audit({
@@ -24,7 +23,7 @@ class BookingDetail
   has_many :receipts
   has_and_belongs_to_many :user_kycs
   has_many :smses, as: :triggered_by, class_name: "Sms"
-  # has_one :cost_sheet
+  has_one :booking_detail_scheme, class_name: 'BookingDetailScheme', inverse_of: :booking_detail
 
   validates :status, :primary_user_kyc_id, presence: true
 
@@ -72,7 +71,4 @@ class BookingDetail
     Gamification::PushNotification.new.push(message) if Rails.env.staging? || Rails.env.production?
   end
 
-  def scheme
-    Scheme.find self.scheme_id
-  end
 end

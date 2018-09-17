@@ -21,7 +21,7 @@
           <%= form_for(@project_unit, url: update_scheme_user_search_path(@search), html: {method: "post", class: '', id: 'update_scheme_booking_detail_form'}) do |f| %>
             <div class="form-group">
               <%= f.label :scheme_id %>
-              <%= f.select :scheme_id, @project_unit.permitted_schemes(current_user).collect{|scheme| [scheme.name, scheme.id]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
+              <%= f.select :selected_scheme_id, @project_unit.permitted_schemes(current_user).collect{|scheme| [scheme.name, scheme.id]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
             </div>
             <div class="form-group">
               <%= submit_tag :Apply, class: "btn btn-primary" %>
