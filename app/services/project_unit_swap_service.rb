@@ -37,7 +37,7 @@ class ProjectUnitSwapService
       @alternate_project_unit.user_kycs = user_kycs
       @alternate_project_unit.status = "hold"
       @alternate_project_unit.user = user
-      @alternate_project_unit.scheme_id = @project_unit.scheme_id
+      @alternate_project_unit.selected_scheme_id = @project_unit.scheme.id
       @alternate_project_unit.save!
 
       existing_receipts_json.each do |old_receipt|

@@ -36,7 +36,7 @@ class BookingDetail
 
     if booking_detail.blank?
       if ["blocked", "booked_tentative", "booked_confirmed"].include?(project_unit.status)
-        BookingDetail.create(project_unit_id: project_unit.id, user_id: project_unit.user_id, receipt_ids: project_unit.receipt_ids, user_kyc_ids: project_unit.user_kyc_ids, primary_user_kyc_id: project_unit.primary_user_kyc_id, status: project_unit.status, manager_id: project_unit.user.manager_id, scheme_id: project_unit.scheme_id)
+        BookingDetail.create(project_unit_id: project_unit.id, user_id: project_unit.user_id, receipt_ids: project_unit.receipt_ids, user_kyc_ids: project_unit.user_kyc_ids, primary_user_kyc_id: project_unit.primary_user_kyc_id, status: project_unit.status, manager_id: project_unit.user.manager_id)
       end
     elsif booking_detail.status != "cancelled"
       if changes["status"].present? && ["blocked", "booked_tentative", "booked_confirmed", "error"].include?(changes["status"][0]) && ["blocked", "booked_tentative", "booked_confirmed", "error"].include?(project_unit.status)

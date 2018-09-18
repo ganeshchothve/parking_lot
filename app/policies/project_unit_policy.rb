@@ -101,7 +101,7 @@ class ProjectUnitPolicy < ApplicationPolicy
   private
   def _role_based_check(valid)
     valid = (valid && (record.user_id == user.id)) if user.buyer?
-    valid = (valid && (record.user.referenced_manager_ids.include?(user.id))) if user.role == "channel_partner"
+    valid = (valid && (record.user.referenced_manager_ids.include?(user.id))) if ['hold', "blocked", "booked_confirmed", "booked_tentative"].include?(record.status) && user.role == "channel_partner"
     valid = (valid && true) if ['cp', 'sales', 'sales_admin', 'cp_admin', 'admin'].include?(user.role)
     valid
   end

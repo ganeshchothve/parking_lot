@@ -29,7 +29,7 @@ class Scheme
   belongs_to :user, class_name: 'User', optional: true
 
   validates :name, :status, :cost_sheet_template_id, :payment_schedule_template_id, presence: true
-  validates :name, uniqueness: {scope: :project_tower_id}, if: Proc.new{|record| record._type != "BookingDetailScheme" }
+  validates :name, uniqueness: {scope: :project_tower_id}, if: Proc.new{|record| record.is_a?(BookingDetailScheme)}
   validates :approved_by, presence: true, if: Proc.new{|scheme| scheme.status == 'approved' && !scheme.default? }
   validate :at_least_one_condition
   validate :project_related
