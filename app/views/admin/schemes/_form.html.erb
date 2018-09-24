@@ -9,6 +9,12 @@
         </button>
       </div>
       <div class="modal-body">
+        <% if f.object.is_a?(BookingDetailScheme) %>
+          <div class="form-group">
+            <%= f.label :derived_from_scheme_id, class: 'control-label' %>
+            <%= f.select :derived_from_scheme_id, @scheme.booking_detail.project_unit.permitted_schemes(current_user).collect{|scheme| [scheme.name, scheme.id]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
+          </div>
+        <% end %>
         <div class="form-group">
           <%= f.label :name, class: 'label-required' %>
           <%= f.text_field :name, autofocus: true, class: "form-control", required: 'required', disabled: (policy(@scheme).editable_field?("name") ? false : true) %>
