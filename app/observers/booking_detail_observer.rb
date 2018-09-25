@@ -9,7 +9,7 @@ class BookingDetailObserver < Mongoid::Observer
     cloned_scheme = scheme.clone
     attributes = cloned_scheme.attributes.merge(booking_detail_id: booking_detail.id)
     attributes.delete "_type"
-    attributes.derived_from_scheme_id = scheme.id
+    attributes[:derived_from_scheme_id] = scheme.id
     BookingDetailScheme.create!(attributes)
   end
 
