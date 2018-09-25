@@ -1,8 +1,10 @@
 module CostCalculator
   def effective_rate
     effective_rate = self.base_rate + self.floor_rise
-    scheme.payment_adjustments.where(field: "base_rate").each do |adj|
-      effective_rate += adj.value
+    if scheme.payment_adjustments.present?
+      scheme.payment_adjustments.where(field: "base_rate").each do |adj|
+        effective_rate += adj.value
+      end
     end
     effective_rate
   end

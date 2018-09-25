@@ -14,6 +14,9 @@ class ProjectUnitObserver < Mongoid::Observer
   end
 
   def before_save project_unit
+
+    project_unit.blocking_amount = project_unit.booking_portal_client.blocking_amount if project_unit.blocking_amount.blank?
+
     if project_unit.primary_user_kyc_id.blank? && project_unit.user_kyc_ids.present?
       project_unit.primary_user_kyc_id = project_unit.user_kyc_ids.first
     end
@@ -97,6 +100,12 @@ class ProjectUnitObserver < Mongoid::Observer
   def after_update project_unit
     user = project_unit.user
     if project_unit.status_changed? && ['blocked', 'booked_tentative', 'booked_confirmed'].include?(project_unit.status)
+
+      receipt = project_unit.user.receipts.where(total_amount: project_unit.booking_portal_client.blocking_amount, status: 'success').first
+       if receipt.present?
+        receipt.project_unit_id = project_unit.id
+        receipt.save!
+      end
 
       project_unit.set(selected_scheme_id: nil)
 

@@ -48,9 +48,6 @@ class BookingDetail
       if changes["user_kyc_ids"].present?
         booking_detail.user_kyc_ids = project_unit.user_kyc_ids
       end
-      if changes["scheme_id"].present?
-        booking_detail.scheme_id = project_unit.scheme_id
-      end
       if changes["receipt_ids"].present?
         booking_detail.receipt_ids = project_unit.receipt_ids
       end

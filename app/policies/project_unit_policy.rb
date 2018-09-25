@@ -40,7 +40,7 @@ class ProjectUnitPolicy < ApplicationPolicy
   def hold?
     valid = record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?(user)
     valid = valid && (record.user.project_units.where(status: "hold").blank? && record.user_based_status(record.user) == 'available')
-    valid = valid && record.user.unattached_blocking_receipt.present? if user.role?('channel_partner')
+    valid = valid && record.user.unattached_blocking_receipt(record.blocking_amount).present? if user.role?('channel_partner')
     valid = (valid && record.user.allowed_bookings > record.user.booking_details.nin(status: ["cancelled", "swapped"]).count)
     valid = (valid && record.user.unused_user_kyc_ids(record.id).present?)
     _role_based_check(valid)
@@ -85,7 +85,7 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def permitted_attributes params={}
-    attributes = ["crm", "admin", "superadmin"].include?(user.role) ? [:auto_release_on, :booking_price] : []
+    attributes = ["crm", "admin", "superadmin"].include?(user.role) ? [:auto_release_on, :booking_price, :blocking_amount] : []
     attributes += (make_available? ? [:status] : [])
     attributes += [:user_id, :selected_scheme_id] if record.user_id.blank? && record.user_based_status(user) == 'available'
 

@@ -106,8 +106,9 @@ class User
   validates :lead_id, uniqueness: true, presence: true, if: Proc.new{ |user| user.buyer? }, allow_blank: true
   validate :manager_change_reason_present?
 
-  def unattached_blocking_receipt
-    return Receipt.where(user_id: self.id).in(status: ['success', 'clearance_pending']).where(project_unit_id: nil).where(total_amount: {"$gte": current_client.blocking_amount}).first
+  def unattached_blocking_receipt blocking_amount=nil
+    blocking_amount ||= current_client.blocking_amount
+    return Receipt.where(user_id: self.id).in(status: ['success', 'clearance_pending']).where(project_unit_id: nil).where(total_amount: {"$gte": blocking_amount}).first
   end
 
   def total_amount_paid

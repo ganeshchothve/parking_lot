@@ -41,6 +41,7 @@ class ProjectUnit
   field :unit_facing_direction, type: String
   field :primary_user_kyc_id, type: BSON::ObjectId
   field :selected_scheme_id, type: BSON::ObjectId
+  field :blocking_amount, type: Integer, default: 30000
 
   attr_accessor :processing_user_request, :processing_swap_request
 
@@ -199,11 +200,11 @@ class ProjectUnit
     if ['success', 'clearance_pending'].include?(receipt.status)
       if self.pending_balance({strict: true}) <= 0
         self.status = 'booked_confirmed'
-      elsif self.total_amount_paid > current_client.blocking_amount
+      elsif self.total_amount_paid > self.blocking_amount
       	if self.status != 'booked_tentative'
           self.status = 'booked_tentative'
       	end
-      elsif receipt.total_amount >= current_client.blocking_amount && (self.status == "hold" || self.user_based_status(self.user) == "available")
+      elsif receipt.total_amount >= self.blocking_amount && (self.status == "hold" || self.user_based_status(self.user) == "available")
         if (self.user == receipt.user && self.status == 'hold') || self.user_based_status(self.user) == "available"
           self.status = 'blocked'
         else

@@ -192,7 +192,11 @@ class Receipt
       self.errors.add :total_amount, "cannot be less than or equal to 0"
     end
 
-    if (self.project_unit_id.blank? || self.blocking_payment?) && self.total_amount < self.user.booking_portal_client.blocking_amount && self.new_record? && !self.swap_request_initiated
+    blocking_amount = self.user.booking_portal_client.blocking_amount
+    if self.project_unit_id.present?
+      blocking_amount = self.project_unit.blocking_amount
+    end
+    if (self.project_unit_id.blank? || self.blocking_payment?) && self.total_amount < blocking_amount && self.new_record? && !self.swap_request_initiated
       self.errors.add :total_amount, "cannot be less than blocking amount #{self.user.booking_portal_client.blocking_amount}"
     end
   end
