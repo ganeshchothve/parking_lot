@@ -107,8 +107,6 @@ class ProjectUnitObserver < Mongoid::Observer
         receipt.save!
       end
 
-      project_unit.set(selected_scheme_id: nil)
-
       if project_unit.booking_portal_client.email_enabled?
         attachments_attributes = []
         if project_unit.status == "booked_confirmed"

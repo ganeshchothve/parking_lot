@@ -11,6 +11,7 @@ class BookingDetailObserver < Mongoid::Observer
     attributes.delete "_type"
     attributes[:derived_from_scheme_id] = scheme.id
     BookingDetailScheme.create!(attributes)
+    booking_detail.project_unit.set(selected_scheme_id: nil)
   end
 
   def after_save booking_detail
