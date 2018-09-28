@@ -49,6 +49,9 @@
                 <% if UserPolicy.new(current_user, User).index? %>
                   <%= link_to "View Customer", admin_user_path(project_unit.user), class: 'dropdown-item' %>
                 <% end %>
+                <% if BookingDetailSchemePolicy.new(current_user, project_unit.scheme).edit? %>
+                  <%= link_to "View #{global_labels[:scheme]}", edit_admin_scheme_path(project_unit.scheme.id), class: 'dropdown-item modal-remote-form-link' %>
+                <% end %>
               <% end %>
               <% [UserRequest::Cancellation, UserRequest::Swap] if Rails.env.development? %>
               <% UserRequest.descendants.each do |klass| %>

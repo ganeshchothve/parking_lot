@@ -4,6 +4,12 @@
     <%= f.text_field :booking_price, class: 'form-control', autofocus: true, required: 'required', disabled: (policy(@project_unit).editable_field?("booking_price") ? false : true) %>
   </div>
 <% end %>
+<% if policy(@project_unit).editable_field?("blocking_amount") %>
+  <div class="form-group">
+    <%= f.label :blocking_amount %>
+    <%= f.text_field :blocking_amount, class: 'form-control', autofocus: true, required: 'required', disabled: (policy(@project_unit).editable_field?("blocking_amount") ? false : true) %>
+  </div>
+<% end %>
 <% if policy(@project_unit).editable_field?("primary_user_kyc_id") %>
 <div class="form-group">
   <%= f.label :primary_user_kyc_id %>

@@ -40,13 +40,14 @@ class ProjectUnit
   field :type, type: String
   field :unit_facing_direction, type: String
   field :primary_user_kyc_id, type: BSON::ObjectId
-  field :scheme_id, type: BSON::ObjectId
+  field :selected_scheme_id, type: BSON::ObjectId
+  field :blocking_amount, type: Integer, default: 30000
 
   attr_accessor :processing_user_request, :processing_swap_request
 
   enable_audit({
     indexed_fields: [:project_id, :project_tower_id, :unit_configuration_id, :client_id, :booking_portal_client_id, :selldo_id, :developer_id],
-    audit_fields: [:erp_id, :status, :available_for, :blocked_on, :auto_release_on, :held_on, :primary_user_kyc_id, :base_rate, :scheme_id]
+    audit_fields: [:erp_id, :status, :available_for, :blocked_on, :auto_release_on, :held_on, :primary_user_kyc_id, :base_rate, :selected_scheme_id]
   })
 
   belongs_to :project
@@ -72,7 +73,7 @@ class ProjectUnit
   validates :status, :name, :erp_id, presence: true
   validates :status, inclusion: {in: Proc.new{ ProjectUnit.available_statuses.collect{|x| x[:id]} } }
   validates :available_for, inclusion: {in: Proc.new{ ProjectUnit.available_available_fors.collect{|x| x[:id]} } }
-  validates :user_id, :primary_user_kyc_id, :scheme_id, presence: true, if: Proc.new { |unit| ['available', 'not_available', 'management', 'employee'].exclude?(unit.status) }
+  validates :user_id, :primary_user_kyc_id, :selected_scheme_id, presence: true, if: Proc.new { |unit| ['available', 'not_available', 'management', 'employee'].exclude?(unit.status) }
   validate :pan_uniqueness
 
   def ds_name
@@ -100,6 +101,10 @@ class ProjectUnit
     out.with_indifferent_access
   end
 
+  def calculated_cost(name)
+    costs.where(name: name).first.value rescue 0
+  end
+
   def calculated_data
     out = {}
     data.each{|c| out[c.key] = c.value }
@@ -109,7 +114,7 @@ class ProjectUnit
   def permitted_schemes user=nil
     user ||= self.user
     criteria = {can_be_applied_by: user.role}
-    self.project_tower.schemes.or(criteria, {default: true})
+    self.project_tower.schemes.where(_type: {"$ne" => "BookingDetailScheme"}).or(criteria, {default: true})
   end
 
   def self.user_based_available_statuses(user)
@@ -195,11 +200,11 @@ class ProjectUnit
     if ['success', 'clearance_pending'].include?(receipt.status)
       if self.pending_balance({strict: true}) <= 0
         self.status = 'booked_confirmed'
-      elsif self.total_amount_paid > current_client.blocking_amount
+      elsif self.total_amount_paid > self.blocking_amount
       	if self.status != 'booked_tentative'
           self.status = 'booked_tentative'
       	end
-      elsif receipt.total_amount >= current_client.blocking_amount && (self.status == "hold" || self.user_based_status(self.user) == "available")
+      elsif receipt.total_amount >= self.blocking_amount && (self.status == "hold" || self.user_based_status(self.user) == "available")
         if (self.user == receipt.user && self.status == 'hold') || self.user_based_status(self.user) == "available"
           self.status = 'blocked'
         else
@@ -289,7 +294,7 @@ class ProjectUnit
   end
 
   def booking_detail
-    BookingDetail.where(project_unit_id: self.id).ne(status: ["cancelled", "swapped"]).first
+    BookingDetail.where(project_unit_id: self.id).nin(status: ["cancelled", "swapped"]).first
   end
 
   def blocking_days
@@ -305,14 +310,20 @@ class ProjectUnit
   end
 
   def scheme
-    scheme_id.present? ? Scheme.find(scheme_id) : project_tower.default_scheme
+    if self.booking_detail.present?
+      self.booking_detail.booking_detail_scheme
+    elsif self.selected_scheme_id.present?
+      Scheme.find(self.selected_scheme_id)
+    else
+      project_tower.default_scheme
+    end
   end
 
-  def cost_sheet_template(scheme_id=nil)
+  def cost_sheet_template scheme_id=nil
     scheme_id.present? ? Scheme.find(scheme_id).cost_sheet_template : self.scheme.cost_sheet_template
   end
 
-  def payment_schedule_template(scheme_id=nil)
+  def payment_schedule_template scheme_id=nil
     scheme_id.present? ? Scheme.find(scheme_id).payment_schedule_template : self.scheme.payment_schedule_template
   end
 

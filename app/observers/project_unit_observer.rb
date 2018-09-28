@@ -10,10 +10,13 @@ class ProjectUnitObserver < Mongoid::Observer
       project_unit.status = "booked_confirmed"
     end
 
-    project_unit.scheme_id = project_unit.project_tower.default_scheme.id if project_unit.scheme_id.blank?
+    project_unit.selected_scheme_id = project_unit.project_tower.default_scheme.id if project_unit.selected_scheme_id.blank?
   end
 
   def before_save project_unit
+
+    project_unit.blocking_amount = project_unit.booking_portal_client.blocking_amount if project_unit.blocking_amount.blank?
+
     if project_unit.primary_user_kyc_id.blank? && project_unit.user_kyc_ids.present?
       project_unit.primary_user_kyc_id = project_unit.user_kyc_ids.first
     end
@@ -51,7 +54,7 @@ class ProjectUnitObserver < Mongoid::Observer
     BookingDetail.run_sync(project_unit.id, project_unit.changes)
     if project_unit.status_changed? && ["available", "employee", "management"].exclude?(project_unit.status_was) && ["available", "employee", "management"].include?(project_unit.status)
 
-      project_unit.set(user_id: nil, blocked_on: nil, auto_release_on: nil, held_on: nil, primary_user_kyc_id: nil, user_kyc_ids: [], scheme_id: nil)
+      project_unit.set(user_id: nil, blocked_on: nil, auto_release_on: nil, held_on: nil, primary_user_kyc_id: nil, user_kyc_ids: [], selected_scheme_id: nil)
 
       project_unit.receipts.where(status: "success").each do |receipt|
         receipt.project_unit_id = nil;
@@ -97,6 +100,12 @@ class ProjectUnitObserver < Mongoid::Observer
   def after_update project_unit
     user = project_unit.user
     if project_unit.status_changed? && ['blocked', 'booked_tentative', 'booked_confirmed'].include?(project_unit.status)
+
+      receipt = project_unit.user.receipts.where(total_amount: project_unit.booking_portal_client.blocking_amount, status: 'success').first
+       if receipt.present?
+        receipt.project_unit_id = project_unit.id
+        receipt.save!
+      end
 
       if project_unit.booking_portal_client.email_enabled?
         attachments_attributes = []

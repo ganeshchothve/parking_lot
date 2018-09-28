@@ -35,7 +35,7 @@ gem "font-awesome-sass"
 # gem 'capistrano-rails', group: :development
 
 # ORM for mongodb that supports rails 5
-gem 'mongoid', '~> 6.1.0'
+gem 'mongoid', '~> 7.0.2'
 # Auto-incrementing Primary key like behavior in Mongoid
 gem 'mongoid-autoinc'
 # Comprehensive solution for user authentication in rails

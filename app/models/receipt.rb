@@ -140,7 +140,7 @@ class Receipt
     or_selector = {}
     if params[:q].present?
       regex = ::Regexp.new(::Regexp.escape(params[:q]), 'i')
-      or_selector = {"$or": [{receip_id: regex}, {tracking_id: regex}, {payment_identifier: regex}] }
+      or_selector = {"$or": [{receipt_id: regex}, {tracking_id: regex}, {payment_identifier: regex}] }
     end
     selector = self.and([selector, selector1, or_selector])
     if params[:sort].blank? || Receipt.available_sort_options.collect{|x| x[:id]}.exclude?(params[:sort])
@@ -192,7 +192,11 @@ class Receipt
       self.errors.add :total_amount, "cannot be less than or equal to 0"
     end
 
-    if (self.project_unit_id.blank? || self.blocking_payment?) && self.total_amount < self.user.booking_portal_client.blocking_amount && self.new_record? && !self.swap_request_initiated
+    blocking_amount = self.user.booking_portal_client.blocking_amount
+    if self.project_unit_id.present?
+      blocking_amount = self.project_unit.blocking_amount
+    end
+    if (self.project_unit_id.blank? || self.blocking_payment?) && self.total_amount < blocking_amount && self.new_record? && !self.swap_request_initiated
       self.errors.add :total_amount, "cannot be less than blocking amount #{self.user.booking_portal_client.blocking_amount}"
     end
   end

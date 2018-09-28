@@ -89,6 +89,8 @@ Rails.application.routes.draw do
         get 'export', action: 'export', on: :collection, as: :export
       end
     end
+    resources :schemes, except: [:destroy], controller: 'schemes', only_non_customizable_schemes: true
+    resources :booking_detail_schemes, except: [:destroy], controller: 'schemes'
   end
 
   # home & globally accessible

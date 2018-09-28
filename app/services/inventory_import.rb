@@ -99,17 +99,13 @@ module InventoryImport
           project_unit.type = "apartment"
           project_unit.selldo_id = erp_id
           project_unit.floor_rise = floor_rise.to_f
-          
+
           costs.each do |index, arr|
-            if row[index].to_i > 0
-              project_unit.costs.build(category: arr[0], name: arr[1], absolute_value: row[index], key: arr[1].gsub(/[\W_]+/i, "_").downcase)
-            end
+            project_unit.costs.build(category: arr[0], name: arr[1], absolute_value: row[index], key: arr[1].gsub(/[\W_]+/i, "_").downcase)
           end
 
           data.each do |index, name|
-            if row[index].to_i > 0
-              project_unit.data.build(name: name, absolute_value: row[index], key: name.downcase.gsub(/[\W_]+/i, "_").downcase)
-            end
+            project_unit.data.build(name: name, absolute_value: row[index], key: name.downcase.gsub(/[\W_]+/i, "_").downcase)
           end
           if project_unit.save
             if floor_plan_urls.present?
