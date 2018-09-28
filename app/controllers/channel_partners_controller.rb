@@ -13,12 +13,12 @@ class ChannelPartnersController < ApplicationController
 
   def export
     if Rails.env.development?
-      ChannelPartnerExportWorker.new.perform(current_user.id.to_s)
+      ChannelPartnerExportWorker.new.perform(current_user.id.to_s, params[:fltrs])
     else
-      ChannelPartnerExportWorker.perform_async(current_user.id.to_s)
+      ChannelPartnerExportWorker.perform_async(current_user.id.to_s, params[:fltrs])
     end
     flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
-    redirect_to channel_partners_path
+    redirect_to channel_partners_path(fltrs: params[:fltrs].as_json)
   end
 
   def show

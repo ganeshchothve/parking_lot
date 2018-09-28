@@ -2,12 +2,12 @@ require 'spreadsheet'
 class ChannelPartnerExportWorker
   include Sidekiq::Worker
 
-  def perform user_id
+  def perform user_id, filters={}
     user = User.find(user_id)
     file = Spreadsheet::Workbook.new
     sheet = file.create_worksheet(name: "ChannelPartners")
     sheet.insert_row(0, ChannelPartnerExportWorker.get_column_names)
-    ChannelPartner.all.each_with_index do |channel_partner, index|
+    ChannelPartner.build_criteria({fltrs: filters}.with_indifferent_access).each_with_index do |channel_partner, index|
       sheet.insert_row(index+1, ChannelPartnerExportWorker.get_channel_partner_row(channel_partner))
     end
     file_name = "channel-partner-#{SecureRandom.hex}.xls"

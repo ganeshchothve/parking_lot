@@ -137,6 +137,7 @@ en:
         user_id: "Customer"
         project_unit_id: "Apartment"
         creator_id: "Created by"
+        created_at: "Created on"
       user_kyc:
         name: "Name"
         email: "Email"
