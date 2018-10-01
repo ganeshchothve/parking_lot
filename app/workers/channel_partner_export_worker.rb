@@ -2,7 +2,10 @@ require 'spreadsheet'
 class ChannelPartnerExportWorker
   include Sidekiq::Worker
 
-  def perform user_id, filters={}
+  def perform user_id, filters=nil
+    if filters.present? && filters.is_a?(String)
+      filters =  JSON.parse(filters)
+    end
     user = User.find(user_id)
     file = Spreadsheet::Workbook.new
     sheet = file.create_worksheet(name: "ChannelPartners")
