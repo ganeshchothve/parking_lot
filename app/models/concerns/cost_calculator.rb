@@ -70,14 +70,12 @@ module CostCalculator
   end
 
   def total_outside_agreement_costs
-    scheme = self.scheme || self.project.default_scheme
     costs.where(category: 'outside_agreement').collect do |cost|
       cost.value
     end.sum
   end
 
   def total_agreement_costs
-    scheme = self.scheme || self.project.default_scheme
     costs.where(category: 'agreement').collect do |cost|
       cost.value
     end.sum
