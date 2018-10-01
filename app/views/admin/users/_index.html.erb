@@ -1,0 +1,51 @@
+<div class="table-responsive">
+  <table class='table striped-table'>
+    <thead class="th-default">
+      <% labels = t('mongoid.attributes.user').with_indifferent_access %>
+      <tr>
+        <th>Name</th>
+        <th><%= labels[:lead_id] %></th>
+        <th><%= global_labels[:receipts] %></th>
+        <th>Role</th>
+        <th>Account Confirmed?</th>
+        <th class="text-right">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% users.each do |user| %>
+        <tr>
+          <td>
+            <%= user.name %>
+            <div class="small">
+              <%= user.email.present? ? user.email : "" %> <br/>
+              <%= user.phone.present? ? user.phone : "" %><br/>
+              <% if user.role?("user") && user.manager_id.present? && current_user.role != "channel_partner" %>
+                <%= labels[:manager_id] %>: <%= user.manager.name %><br/>
+              <% end %>
+            </div>
+          </td>
+          <td><%= user.lead_id %></td>
+          <td><%= user.receipts.where(status: "success").present? ? "Y" : "N" %></td>
+          <td><%= User.available_roles(current_client).find{|x| x[:id] == user.role}[:text] %></td>
+          <td>
+            <%= user.confirmed_at.present? ? "Confirmed" : "Not confirmed" %>
+          </td>
+          <td class="text-right">
+            <div class="dropdown">
+              <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+              <div class="dropdown-menu dropdown-menu-right">
+                <%= render "admin/users/links", user: user %>
+              </div>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+      <tr>
+        <td colspan="4">
+          <div class="mt-5 pt-5"></div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<%= will_paginate users, list_classes: %w(pagination justify-content-center) %>

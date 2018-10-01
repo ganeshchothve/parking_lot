@@ -1,0 +1,29 @@
+<%= f.hidden_field :user_id %>
+<div class="form-group">
+  <%= f.label :bedrooms %>
+  <%= f.select :bedrooms, data.collect{|x| ["#{x["_id"]["bedrooms"]} BHK starting at #{number_to_indian_currency(x["min_agreement_price"])}".html_safe, x["_id"]["bedrooms"]]}, {prompt: true}, class: 'selectize', disabled: (policy(@search).editable_field?("bedrooms") ? false : true) %>
+</div>
+<div class="form-group">
+  <%= f.label :agreement_price %>
+  <%
+    min = data.first["min_agreement_price"]
+    max = data.last["max_agreement_price"]
+    slab = (max - min)/4
+    agreement_price_slabs = [["#{number_to_indian_currency(min)} - #{number_to_indian_currency(min+slab)}".html_safe, "#{min}-#{min + slab}"]]
+    agreement_price_slabs << ["#{number_to_indian_currency(min+slab)} - #{number_to_indian_currency(min+2*slab)}".html_safe, "#{min+slab}-#{min + 2*slab}"]
+    agreement_price_slabs << ["#{number_to_indian_currency(min+2*slab)} - #{number_to_indian_currency(min+3*slab)}".html_safe, "#{min+2*slab}-#{max}"]
+  %>
+  <%= f.select :agreement_price, agreement_price_slabs, {prompt: true}, class: 'selectize', disabled: (policy(@search).editable_field?("bedrooms") ? false : true) %>
+</div>
+<div class="form-group">
+  <%= f.label :all_inclusive_price %>
+  <%
+    min = data.first["min_all_inclusive_price"]
+    max = data.last["max_all_inclusive_price"]
+    slab = (max - min)/4
+    all_inclusive_price_slabs = [["#{number_to_indian_currency(min)} - #{number_to_indian_currency(min+slab)}".html_safe, "#{min}-#{min + slab}"]]
+    all_inclusive_price_slabs << ["#{number_to_indian_currency(min+slab)} - #{number_to_indian_currency(min+2*slab)}".html_safe, "#{min+slab}-#{min + 2*slab}"]
+    all_inclusive_price_slabs << ["#{number_to_indian_currency(min+2*slab)} - #{number_to_indian_currency(min+3*slab)}".html_safe, "#{min+2*slab}-#{max}"]
+  %>
+  <%= f.select :all_inclusive_price, all_inclusive_price_slabs, {prompt: true}, class: 'selectize', disabled: (policy(@search).editable_field?("bedrooms") ? false : true) %>
+</div>

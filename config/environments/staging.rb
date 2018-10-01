@@ -33,7 +33,8 @@ Rails.application.configure do
   # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  config.action_controller.asset_host = "//embassysprings2.amura.in"
+  config.action_controller.asset_host = "#{ENV_CONFIG[:asset_sync]['FOG_DIRECTORY']}.s3.amazonaws.com"
+  config.action_mailer.asset_host = "#{ENV_CONFIG[:asset_sync]['FOG_DIRECTORY']}.s3.amazonaws.com"
 
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
@@ -76,11 +77,22 @@ Rails.application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
-  config.action_mailer.default_url_options = {host: 'embassysprings2.amura.in'}
+  # Use default mailer asset host
+  config.action_mailer.asset_host = "http://bookingportal.withamura.com"
+
+  config.action_mailer.default_url_options = {host: 'bookingportal.withamura.com'}
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
-  config.action_mailer.smtp_settings = ENV_CONFIG[:smtp]
+  config.action_mailer.smtp_settings = {
+    user_name: "amuratech",
+    password: "tech0liX",
+    domain: "amuratech.com",
+    address: "smtp.sendgrid.net",
+    port: 587,
+    authentication: :plain,
+    enable_starttls_auto: true
+  }
 
   # Use a different logger for distributed setups.
   # require 'syslog/logger'
@@ -92,3 +104,5 @@ Rails.application.configure do
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
   end
 end
+
+Rails.application.routes.default_url_options = { host: 'bookingportal.withamura.com' }

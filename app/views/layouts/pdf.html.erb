@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= current_project.present? ? "#{current_project.name} | " : "" %><%= current_client.name %></title>
+    <%= stylesheet_link_tag 'dashboard', media: 'all' %>
+  </head>
+  <body>
+    <%= yield %>
+  </body>
+</html>

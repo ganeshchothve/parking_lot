@@ -1,22 +1,34 @@
-<% url = admin_users_path %>
-<%= form_tag url, method: "get", id: "user_search_form" do %>
-  <div class="form-group">
-    <%= label_tag "", 'Filters', class: "control-label" %>
-    <%= submit_tag :Apply, class: "btn btn-primary btn-sm float-right" %>
+<div class="card h-100">
+  <div class="card-body">
+    <% url = admin_users_path %>
+    <%= form_tag url, method: "get", id: "user_search_form" do %>
+      <div class="form-group">
+        <%= label_tag "", 'Filters', class: "control-label d-block d-lg-inline" %>
+        <%= submit_tag :Apply, class: "btn btn-primary btn-sm float-lg-right" %>
+      </div>
+      <div class="clearfix"></div>
+      <hr/>
+      <div class="form-group">
+        <%= label_tag "fltrs", "Name / Email / Phone", class: "control-label" %>
+        <%= select_tag "fltrs[_id]", (params[:fltrs].present? ? params[:fltrs][:_id] : []), {class: "selectize-remote", data: {url: admin_users_path }} %>
+      </div>
+      <div class="form-group">
+        <%= label_tag "fltrs", "Sell.Do Lead ID", class: "control-label" %>
+        <%= number_field_tag "fltrs[lead_id]", (params[:fltrs].present? ? params[:fltrs][:lead_id] : ""), class: "form-control" %>
+      </div>
+      <div class="form-group">
+        <%= label_tag "fltrs", "role", class: "control-label" %>
+        <%= select_tag "fltrs[role]", options_for_select(User.available_roles(current_client).reject{|x| x[:id] == "superadmin"}.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:role] : "")), {prompt: "Select", class: "selectize"} %>
+      </div>
+      <div class="form-group">
+        <%= label_tag "fltrs", "confirmation", class: "control-label" %>
+        <%= select_tag "fltrs[confirmation]", options_for_select(User.available_confirmation_statuses.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:confirmation] : "")), {prompt: "Select", class: "selectize"} %>
+      </div>
+    <% end %>
   </div>
-  <div class="clearfix"></div>
-  <hr/>
-  <div class="form-group">
-    <%= label_tag "fltrs", "Name / Email / Phone", class: "control-label" %>
-    <%= select_tag "fltrs[_id]", (params[:fltrs].present? ? params[:fltrs][:_id] : []), {class: "selectize-remote", data: {url: admin_users_path }} %>
-  </div>
-  <div class="form-group">
-    <%= label_tag "fltrs", "role", class: "control-label" %>
-    <%= select_tag "fltrs[role]", options_for_select(User.available_roles.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:role] : "")), {prompt: "Select", class: "selectize"} %>
-  </div>
-<% end %>
+</div>
 <%= javascript_tag do %>
-  $(document).ready(function(){
-    FormInitializer.init($("#user_search_form"));
-  });
+$(document).ready(function(){
+  FormInitializer.init($("#user_search_form"));
+});
 <% end %>

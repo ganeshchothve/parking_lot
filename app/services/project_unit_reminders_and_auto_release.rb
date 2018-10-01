@@ -1,38 +1,39 @@
 module ProjectUnitRemindersAndAutoRelease
-  def daily_reminder_for_booking_payment
-    ProjectUnit.in(status: ["blocked", 'booked_tentative']).where(auto_release_on: {"$gte" => Date.today}).distinct(:user_id).each do |user_id|
-      mailer = UserReminderMailer.daily_reminder_for_booking_payment(user_id.to_s)
-      if Rails.env.development?
-        mailer.deliver
-      else
-        mailer.deliver_later
-      end
-      if Rails.env.development?
-        SMSWorker.new.perform("", "")
-      else
-        SMSWorker.perform_async("", "")
+  class Job
+    def self.daily_reminder_for_booking_payment
+      ProjectUnit.in(status: ["blocked", 'booked_tentative']).where(auto_release_on: {"$gte" => Date.today}).each do |project_unit|
+        days = 0
+        if project_unit.auto_release_on.present? && project_unit.auto_release_on > Date.today
+          days = (project_unit.auto_release_on - Date.today).to_i
+        end
+        if days > 0 && project_unit.booking_portal_client.email_enabled?
+          Email.create!({
+            booking_portal_client_id: project_unit.booking_portal_client_id,
+            email_template_id: Template::EmailTemplate.find_by(name: "daily_reminder_for_booking_payment").id,
+            recipients: [project_unit.user],
+            cc_recipients: (project_unit.user.manager_id.present? ? [project_unit.user.manager] : []),
+            triggered_by_id: project_unit.id,
+            triggered_by_type: project_unit.class.to_s
+          })
+        end
+        if days > 0 && project_unit.booking_portal_client.sms_enabled?
+          template = Template::SmsTemplate.where(name: "daily_reminder_for_booking_payment").first
+          Sms.create!(
+            booking_portal_client_id: project_unit.booking_portal_client_id,
+            recipient_id: project_unit.user_id,
+            sms_template_id: template.id,
+            triggered_by_id: project_unit.id,
+            triggered_by_type: project_unit.class.to_s
+          )
+        end
       end
     end
-  end
 
-  def release_project_unit
-    ProjectUnit.in(status: ["blocked", 'booked_tentative']).where(auto_release_on: Date.yesterday).each do |unit|
-      user_id = unit.user_id
-      unit.status = 'available'
-      if unit.save
-        mailer = ProjectUnitMailer.released(user_id.to_s, unit.id.to_s)
-        if Rails.env.development?
-          mailer.deliver
-        else
-          mailer.deliver_later
-        end
-        if Rails.env.development?
-          SMSWorker.new.perform("", "")
-        else
-          SMSWorker.perform_async("", "")
-        end
-      else
-        #TODO: Notify Team amura about an issue
+    def self.release_project_unit
+      ProjectUnit.in(status: ["blocked", 'booked_tentative']).where(auto_release_on: Date.yesterday).each do |unit|
+        user_id = unit.user_id
+        unit.make_available
+        unit.save!
       end
     end
   end

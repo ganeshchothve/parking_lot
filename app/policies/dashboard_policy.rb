@@ -3,23 +3,27 @@ class DashboardPolicy < Struct.new(:user, :dashboard)
     true
   end
 
-  def project_units?
+  def faqs?
     true
   end
 
-  def receipts?
-    user.role?('user')
+  def documents?
+    true
   end
 
-  def checkout?
-    user.role?('user')
+  def rera?
+    true
   end
 
-  def update_project_unit?
-    user.role?('user')
+  def tds_process?
+    true
   end
 
-  def hold_project_unit?
-    user.role?('user')
+  def terms_and_conditions?
+    true
+  end
+
+  def gamify_unit_selection?
+    true
   end
 end

@@ -1,13 +1,51 @@
-<% case @receipt.status %>
-<% when 'success' %>
-<h4><%= @receipt.status %></h4>
-<% when 'pending' %>
-<!-- TODO -->
-Let the customer know that the payment processing had an issue or that they must have not made a payment.
-Retry option or to contact support - if the payment has already gone through
-<% when 'failed' %>
-<h4><%= @receipt.status %></h4>
-<% if ProjectUnitPolicy.new(current_user, @receipt.project_unit).hold_project_unit? %>
-  <%= link_to 'Hold', 'javascript:;', class: 'bpjs-project-unit-hold', data: {'bpjs-id': @receipt.project_unit.id} %>
-<% end %>
-<% end %>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <% case @receipt.status %>
+      <% when 'success' %>
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-2 text-center">
+              <%= icon "fas", "certificate", class: "fa-7x text-warning" %>
+            </div>
+            <div class="col-md-10">
+              <h3 class="card-title font-weight-bold text-uppercase">Congratulations</h3>
+              <p>
+                Thank you for your payment of <%= number_to_indian_currency(@receipt.total_amount.round) %>.
+                <br/>
+                <strong>You will receive an email from us with detailed information on next steps.</strong>
+                <br/>
+              </p>
+              <% if @receipt.blocking_payment? %>
+              <p>
+                This unit will remain blocked for you for the next <%= @receipt.project_unit.blocking_days %> days. Please complete your payment of remaining amount within this duration to confirm your unit. To make additional payment please click <a href="/dashboard/receipts/new?project_unit_id=<%= @receipt.project_unit_id %>" class="modal-remote-form-link" data-event-category="section" data-event-action="click" data-event-name="make the remaining payment" target="_blank">here</a>
+              </p>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-3"></div>
+      <% if current_user.buyer? %>
+        <%= link_to 'Print', user_receipt_path(@receipt), target:"_blank", class: 'text-right d-block btn' %>
+      <% else %>
+        <%= link_to 'Print', admin_receipt_path(@receipt), target:"_blank", class: 'text-right d-block btn' %>
+      <% end %>
+      <%= render '/receipts/show', receipt: @receipt %>
+      <% when 'failed' %>
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Payment Failed</span>
+          </div>
+          <div class="card-body">
+            <p>
+              Your payment of was unsuccessful. Please check the credentials and try again.
+            </p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+<!-- GENERICTODO: GA -->

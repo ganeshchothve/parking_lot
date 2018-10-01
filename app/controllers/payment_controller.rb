@@ -6,11 +6,11 @@ class PaymentController < ApplicationController
 
   def process_payment
     @receipt = Receipt.where(receipt_id: params[:receipt_id]).first
-    if Rails.env.development? || request.post?
+    if @receipt.present? && @receipt.status == "pending" && @receipt.payment_gateway_service.present?
       @receipt.payment_gateway_service.response_handler!(params)
     else
-      redirect_to :dashboard_receipts_path
+      flash[:notice] = 'You are not allowed to access this page'
+      redirect_to home_path(current_user)
     end
   end
-
 end

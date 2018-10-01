@@ -20,19 +20,22 @@
 //= require jquery.ui.widget
 //= require jquery.validate
 //= require moment
+//= require jquery.crs
 //= require jquery.fileupload
+//= require jquery.blockUI.js
 //= require selectize
 //= require plugins/array_field
 //= require plugins/file_uploader
 //= require daterangepicker
 //= require fontawesome-all
 //= require bootstrap-datetimepicker.min
-
 //= require utils
 //= require file-icon
 //= require form-initializer
 //= require validator
 //= require registration
+//= require otp_based_login
+//= require amura
 
 $.ajaxSetup({
   headers: {

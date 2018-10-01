@@ -15,7 +15,7 @@ gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
-
+gem 'mixpanel-ruby'
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
@@ -26,16 +26,21 @@ gem 'jbuilder', '~> 2.5'
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-
+gem 'razorpay'
+gem 'nested_form'
+gem 'pusher'
+gem 'active_link_to'
+gem "font-awesome-sass"
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
 # ORM for mongodb that supports rails 5
-gem 'mongoid', '~> 6.1.0'
+gem 'mongoid', '~> 7.0.2'
 # Auto-incrementing Primary key like behavior in Mongoid
 gem 'mongoid-autoinc'
 # Comprehensive solution for user authentication in rails
 gem 'devise'
+gem 'active_model_otp'
 gem 'simple_token_authentication', '~> 1.0'
 # Simple solution for authorization of users
 gem 'pundit'
@@ -53,8 +58,9 @@ gem 'will_paginate_mongoid'
 gem 'mongoid-observers', '~> 0.3.0'
 gem 'rails-observers',  github: 'rails/rails-observers'
 # for file upload
-gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 gem 'fog-aws'
+gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
+
 # for simplified HTTP requests
 gem 'httparty', '>= 0.14.0'
 # for creating and modifying spreadsheets / excel / CSVs
@@ -64,12 +70,25 @@ gem 'whenever', :require => false
 
 gem 'sprockets-rails', '>= 2.3.2' # force this version for bootstrap 4 gem
 # Bootstrap lib gem for rails. #TODO: upgrade this when B4 is out of beta
-gem 'bootstrap', '~> 4.0.0.beta3'
+gem 'bootstrap'
 gem 'jquery-rails'
-gem 'rest-client', '~> 1.6', '>= 1.6.7'
+gem 'rest-client'
 
 # phone numbers on users -> model & validation
 gem 'phonelib'
+# generate pdf
+gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary'
+gem 'bootstrap-email'
+gem 'premailer'
+
+# TODO: run this command on server before deployment on a new server
+# TO GET TOKEN: curl -u 'username' -d '{"scopes":["repo"],"note": "Audit app by Sell.Do"}' https://api.github.com/authorizations
+# bundle config GITHUB__COM <YOUR TOKEN>:x-oauth-basic
+gem 'audit', git: 'https://github.com/amuratech/audit.git'
+
+gem 'aasm'
+gem 'mailgun-ruby'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -105,6 +124,8 @@ group :development do
   gem 'capistrano-rails'
   # Restart phusion passenger on deployment
   gem 'capistrano-passenger'
+  gem 'capistrano-sidekiq', github: 'seuros/capistrano-sidekiq'
+  gem 'capistrano-rvm'
   # code documentation
   gem 'yard'
 end
@@ -112,12 +133,11 @@ end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
-group :production do
-  gem 'honeybadger'
+group :production, :staging do
+  gem 'honeybadger', '~> 3.1'
   gem 'newrelic-redis'
   gem 'newrelic_rpm'
 end
-
-group :production, :staging do
-  gem 'asset_sync'
-end
+gem 'asset_sync', '>= 2.4.0'
+gem 'humanize', require: 'humanize'
+gem 'request_store'

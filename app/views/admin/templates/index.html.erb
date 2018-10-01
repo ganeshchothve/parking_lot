@@ -1,0 +1,57 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-9">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-md-7">
+            </div>
+            <div class="col-md-5 text-md-right">
+              <h6 class="mt-2">Total <%= global_labels[:templates] %>: <%= @templates.total_entries %></h6>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class='table striped-table payment-breakup' width="100%" cellpadding="10" cellspacing="0">
+              <thead class="th-default">
+                <% labels = t('mongoid.attributes.template').with_indifferent_access %>
+                <tr>
+                  <th><%= labels['name'] %></th>
+                  <th><%= labels['content'] %></th>
+                  <th class="text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @templates.each do |template| %>
+                <tr>
+                  <td><%= template.name.titleize rescue template._type.split("::").last %></td>
+                  <td><%= template.content %></td>
+                  <td class="text-right">
+                    <div class="dropdown">
+                      <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+                      <div class="dropdown-menu dropdown-menu-right">
+                        <% if TemplatePolicy.new(current_user, template).edit? %>
+                          <%= link_to 'Edit', edit_admin_client_template_path(template), class: 'dropdown-item modal-remote-form-link' %>
+                        <% end %>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <% end %>
+                <tr>
+                  <td colspan="3">
+                    <div class="mt-5 pt-5"></div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <%= will_paginate @templates, list_classes: %w(pagination justify-content-center) %>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="d-md-none mt-3"></div>
+      <%= render "filters" %>
+    </div>
+  </div>
+</div>

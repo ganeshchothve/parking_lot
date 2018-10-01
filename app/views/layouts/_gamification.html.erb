@@ -1,0 +1,20 @@
+<% if current_client.enable_actual_inventory?(current_user) %>
+<div id="gamification-container" class="card p-2 bg-secondary text-white d-print-none">
+  <div id="gamification-carousel" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+      <% Gamification::Base.new.dashboard_data(current_user).each_with_index do |text, index| %>
+        <div class="carousel-item <%= index.zero? ? 'active' : ''%>">
+          <span><%= text %></span>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    $('#gamification-carousel').carousel({
+      interval: 7000
+    });
+  });
+<% end %>
+<% end %>

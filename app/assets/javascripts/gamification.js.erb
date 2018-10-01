@@ -1,0 +1,66 @@
+var Gamification = (function(){
+  var pusher, gamification_channel;
+  var init = function(){
+    pusher = new Pusher("<%= ENV_CONFIG[:pusher]['pusher_api_key'] %>", {
+      cluster: "<%= ENV_CONFIG[:pusher]['pusher_api_cluster'] %>",
+      encrypted: true
+    });
+
+    gamification_channel = pusher.subscribe('<%= Gamification::DEFAULT_CHANNEL %>');
+    gamification_channel.bind('<%= Gamification::DEFAULT_EVENT %>', function(data) {
+      if(data.message){
+        show(data.message);
+      }
+    });
+  }
+  var gamification_selector = '#gamification-container';
+
+  var show = function(message, $container){
+    if(App.client.enable_actual_inventory){
+      if($container && $container.length > 0){
+        $($container).html(message);
+      }else{
+        $(gamification_selector).find('.carousel-inner').prepend('<div class="carousel-item"><span>' + message + "</span></div>").carousel(0);
+        $(gamification_selector).addClass("bg-primary");
+        setTimeout(function(){
+          $(gamification_selector).removeClass("bg-primary");
+        }, 4000);
+      }
+    }
+  }
+
+  var gamifyUnitSelection = function(unit, $container){
+    var rand = _.random(7);
+    if(rand == 0 || rand == 2){
+      $.ajax({
+        url: "/dashboard/gamify-unit-selection",
+        data: {
+          carpet: parseFloat(unit.carpet),
+          bedrooms: parseInt(unit.bedrooms)
+        },
+        success: function(data){
+          show(data.message, $container);
+        }
+      });
+    }else if(rand == 3 && unit.floor > 5){
+      show("This is one of our most popular floors with stunning views", $container);
+    }else if((rand == 4 || rand == 5) && parseInt(unit.bedrooms) > 1){
+      show("Popular choice of first-time home buyers", $container);
+    }else{
+      show((_.random(5) + 8) + " other people are viewing the apartments on this floor", $container);
+    }
+  }
+
+  var gamifyTowerSelection = function(tower, $container){
+    show((_.random(25) + 23) + " other people like you are looking for a home in this tower", $container);
+  }
+
+  return {
+    init: init,
+    gamifyUnitSelection: gamifyUnitSelection,
+    gamifyTowerSelection: gamifyTowerSelection,
+  };
+})();
+$(document).ready(function(){
+  Gamification.init();
+});

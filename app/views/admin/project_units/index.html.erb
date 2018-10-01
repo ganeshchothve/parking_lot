@@ -1,8 +1,29 @@
-<div class="row">
-  <div class="col-md-10 border border-left-0 border-top-0 border-bottom-0">
-    <%= render 'index', project_units: @project_units %>
-  </div>
-  <div class="col-md-2">
-    <%= render "filters" %>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="<%= @project_unit.blank? ? 'col-md-9' : 'col-md-12' %>">
+      <%= render 'breadcrumbs', {project_unit: @project_unit} %>
+      <div class="card">
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-md-7">
+              <% if ProjectUnitPolicy.new(current_user, ProjectUnit).export? %>
+                <%= link_to "Export all #{global_labels['units']}", export_admin_project_units_path, class: 'btn btn-primary float-left ml-md-2 mt-md-0 mt-2 margin-xs-left-0' %>
+              <% end %>
+              <% if ProjectUnitPolicy.new(current_user, ProjectUnit).mis_report? %>
+                <%= link_to "MIS report #{global_labels['units']}", mis_report_admin_project_units_path, class: 'btn btn-primary float-left ml-md-2 mt-md-0 mt-2 margin-xs-left-0' %>
+              <% end %>
+            </div>
+            <div class="col-md-5 text-md-right">
+              <h6 class="mt-2">Total <%= global_labels[:project_units] %>: <%= @project_units.total_entries %></h6>
+            </div>
+          </div>
+          <%= render '/admin/project_units/index', project_units: @project_units %>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="d-md-none mt-3"></div>
+      <%= render "filters" %>
+    </div>
   </div>
 </div>

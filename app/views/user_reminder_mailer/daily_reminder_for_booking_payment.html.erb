@@ -1,5 +1,8 @@
-<% @project_units.each do |project_unit| %>
-<%= project_unit.name %> will be released on <%= project_unit.auto_release_on.in_time_zone("Mumbai") %> & amount pending = Rs. <%= project_unit.pending_balance %><br/>
-<% end %>
-
-<!-- TODO: handle the timezone based on user -->
+<div class="card w-100">
+  <div class="card-body">
+    <p>Dear <%= @user.name %>,</p>
+    <p>
+      A gentle reminder to pay your balance amount of <%= number_to_indian_currency(@project_unit.pending_balance(strict: true)) %>
+    </p>
+  </div>
+</div>

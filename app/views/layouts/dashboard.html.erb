@@ -1,48 +1,55 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>BookingPortal</title>
+    <title><%= current_project.present? ? "#{current_project.name} | " : "" %><%= current_client.name %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <%= csrf_meta_tags %>
+    <%= stylesheet_link_tag 'dashboard', media: 'all' %>
+    <%= javascript_include_tag 'dashboard' %>
 
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
     <%= javascript_tag do %>
+      if(typeof App === "undefined"){
+        App = {};
+      }
+      App.client = <%= raw current_client.to_json(only: [:name, :_id, :preferred_login]) %>;
+      App.client.enable_actual_inventory = <%= current_client.enable_actual_inventory?(current_user) %>
+      App.project = <%= raw current_project.to_json(only: [:name, :_id]) %>;
       <% if user_signed_in? %>
-        if(typeof App === "undefined"){
-          App = {};
-        }
         App.current_user = <%= raw current_user.to_json %>;
+        App.current_user.name = App.current_user.first_name + " " + App.current_user.last_name;
+      <% end %>
+      <% if Rails.env.development? || Rails.env.staging? %>
+        Pusher.logToConsole = true;
       <% end %>
     <% end %>
+    <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= current_client.selldo_client_id %>.js'></script>
   </head>
   <body>
-    Welcome to Booking Portal<br/>
-    <h6>Total Paid (you might some payments pending clearance): <%= current_user.total_amount_paid %></h6>
-    <h6>Total Balance Pending (you might some payments pending clearance): <%= current_user.total_balance_pending %></h6>
-    <h6>Total Un-attached Balance (subject to clearance): <%= current_user.total_unattached_balance %></h6>
-    <% if user_signed_in? %>
-      <% if policy(:dashboard).index? %>
-        <%= link_to 'Dashboard', dashboard_path %>
-      <% end %>
-      <% if UserKycPolicy.new(current_user, UserKyc).index? %>
-        <%= link_to "#{global_labels['user_kycs']}", user_kycs_path %>
-      <% end %>
-      <% if UserRequestPolicy.new(current_user, UserRequest).index? %>
-        <%= link_to "#{global_labels['user_requests']}", user_user_requests_path %>
-      <% end %>
-      <% if policy(:dashboard).project_units? %>
-        <%= link_to "#{global_labels['project_units']}", dashboard_project_units_path %>
-      <% end %>
-      <% if policy(:dashboard).receipts? %>
-        <%= link_to "#{global_labels['receipts']}", receipts_path %>
-      <% end %>
-      <% if ReceiptPolicy.new(current_user, Receipt.new(user: current_user)).new? %>
-        <%= link_to 'Direct Blocking payment', dashboard_checkout_path %>
-      <% end %>
-      <%= link_to 'Logout', destroy_user_session_path, method: 'delete' %>
-    <% end %>
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
+    <%= render "layouts/navbar" %>
     <%= yield %>
+    <%= render "layouts/gamification" %>
+    <div class="container d-block d-md-none mt-3">
+      <div class="card card-body">
+        <%= current_project.name %> is registered via MahaRERA No.: <%= current_project.rera_registration_no %> & is available on <a href="https://maharera.mahaonline.gov.in" target="_blank">https://maharera.mahaonline.gov.in</a>.
+      </div>
+    </div>
+    <div class="pt-5 mt-4"></div>
+    <div class="pt-5 mt-4 d-none d-md-block"></div>
+    <% if current_client.ga_code.present? %>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      ga('create', '<%= current_client.ga_code %>', 'auto');
+      ga('require', 'ecommerce', 'ecommerce.js');
+      ga('require', 'displayfeatures');
+      ga('require', 'ec');
+    </script>
+    <% end %>
+    <% if current_client.gtm_tag.present? %>
+    <%= current_client.gtm_tag.html_safe %>
+    <% end %>
   </body>
 </html>

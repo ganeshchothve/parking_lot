@@ -14,27 +14,28 @@ class UserKycsController < ApplicationController
 
   def new
     if @user.user_kyc_ids.blank?
-      @user_kyc = UserKyc.new(creator: current_user, user: @user, name: @user.name, email: @user.email, phone: @user.phone)
+      @user_kyc = UserKyc.new(creator: current_user, user: @user, first_name: @user.first_name, last_name: @user.last_name, email: @user.email, phone: @user.phone)
     else
       @user_kyc = UserKyc.new(creator: current_user, user: @user)
     end
+    render layout: false
   end
 
   def edit
+    render layout: false
   end
 
   def create
     @user_kyc = UserKyc.new(permitted_attributes(UserKyc.new))
     @user_kyc.user = @user
     @user_kyc.creator = current_user
-
     respond_to do |format|
       if @user_kyc.save
-        format.html { redirect_to after_sign_in_path_for(current_user), notice: 'User kyc was successfully created.' }
-        format.json { render json: @user_kyc, status: :created, location: @user_kyc }
+        format.html { redirect_to home_path(current_user), notice: 'User kyc was successfully created.' }
+        format.json { render json: @user_kyc, status: :created }
       else
         format.html { render :new }
-        format.json { render json: @user_kyc.errors, status: :unprocessable_entity }
+        format.json { render json: {errors: @user_kyc.errors.full_messages.uniq}, status: :unprocessable_entity }
       end
     end
   end
@@ -42,11 +43,11 @@ class UserKycsController < ApplicationController
   def update
     respond_to do |format|
       if @user_kyc.update(permitted_attributes(@user_kyc))
-        format.html { redirect_to after_sign_in_path_for(current_user), notice: 'User kyc was successfully updated.' }
-        format.json { render json: @user_kyc, status: :ok, location: @user_kyc }
+        format.html { redirect_to home_path(current_user), notice: 'User kyc was successfully updated.' }
+        format.json { render json: @user_kyc }
       else
         format.html { render :edit }
-        format.json { render json: @user_kyc.errors, status: :unprocessable_entity }
+        format.json { render json: {errors: @user_kyc.errors.full_messages.uniq}, status: :unprocessable_entity }
       end
     end
   end
@@ -66,27 +67,14 @@ class UserKycsController < ApplicationController
     elsif params[:action] == "new"
       authorize UserKyc.new(user: @user)
     elsif params[:action] == "create"
-      authorize UserKyc.new(permitted_attributes(UserKyc.new))
+      authorize UserKyc.new(permitted_attributes(UserKyc.new(user: @user)))
     else
       authorize @user_kyc
     end
   end
 
   def apply_policy_scope
-    custom_scope = UserKyc.all.criteria
-    if current_user.role?('admin') || current_user.role?('crm')
-      if params[:user_id].present?
-        custom_scope = custom_scope.where(user_id: params[:user_id])
-      end
-    elsif current_user.role?('channel_partner')
-      if params[:user_id].present?
-        custom_scope = custom_scope.where(user_id: params[:user_id])
-      else
-        custom_scope = custom_scope.where(user_id: current_user.id)
-      end
-    else
-      custom_scope = custom_scope.where(user_id: current_user.id)
-    end
+    custom_scope = UserKyc.where(UserKyc.user_based_scope(current_user, params))
     UserKyc.with_scope(policy_scope(custom_scope)) do
       yield
     end

@@ -1,13 +1,12 @@
 require 'autoinc'
 class Receipt
-  def self.generate_receipt_id
-    SecureRandom.hex
-  end
-
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Autoinc
   include ArrayBlankRejectable
+  include InsertionStringMethods
+  include ApplicationHelper
+  include ReceiptStateMachine
 
   field :receipt_id, type: String
   field :order_id, type: String
@@ -18,77 +17,90 @@ class Receipt
   field :payment_identifier, type: String # cheque / DD number / online transaction reference from gateway
   field :tracking_id, type: String # online transaction reference from gateway or transaction id after the cheque is processed
   field :total_amount, type: Float, default: 0 # Total amount
-  field :status, type: String, default: 'pending' # pending, success, failed, clearance_pending
+  field :status, type: String, default: 'pending' # pending, success, failed, clearance_pending,cancelled
   field :status_message, type: String # pending, success, failed, clearance_pending
-  field :payment_type, type: String, default: 'blocking' # blocking, booking
-  field :reference_project_unit_id, type: BSON::ObjectId # the channel partner or admin or crm can choose this, but its not binding on the user to choose this reference unit
-  field :payment_gateway, type: BSON::ObjectId
+  field :payment_gateway, type: String
   field :processed_on, type: Date
   field :comments, type: String
+  field :gateway_response, type: Hash
 
-  increments :order_id
+  attr_accessor :swap_request_initiated
 
-  belongs_to :user, optional: true
+  belongs_to :user
+  belongs_to :booking_detail, optional: true
   belongs_to :project_unit, optional: true
   belongs_to :creator, class_name: 'User'
   has_many :assets, as: :assetable
+  has_many :smses, as: :triggered_by, class_name: "Sms"
 
-  validates :receipt_id, :total_amount, :status, :payment_mode, :payment_type, :user_id, presence: true
-  validates :payment_identifier, presence: true, if: Proc.new{|receipt| receipt.payment_type == 'online' && receipt.status != 'pending' }
-  validates :project_unit_id, presence: true, if: Proc.new{|receipt| receipt.payment_type != 'blocking'} # allow the user to make a blocking payment without any unit
-  validates :status, inclusion: {in: Proc.new{ Receipt.available_statuses.collect{|x| x[:id]} } }
-  validates :payment_type, inclusion: {in: Proc.new{ Receipt.available_payment_types.collect{|x| x[:id]} } }
+  validates :total_amount, :status, :payment_mode, :user_id, presence: true
+  validates :payment_identifier, presence: true, if: Proc.new{|receipt| receipt.payment_mode == 'online' && receipt.status != 'pending' }
+  validates :status, inclusion: {in: Proc.new{ Receipt.aasm.states.collect(&:name).collect(&:to_s) } }
   validates :payment_mode, inclusion: {in: Proc.new{ Receipt.available_payment_modes.collect{|x| x[:id]} } }
-  validates :reference_project_unit_id, presence: true, if: Proc.new{ |receipt| receipt.creator.role != 'user' }
   validate :validate_total_amount
   validates :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, presence: true, if: Proc.new{|receipt| receipt.payment_mode != 'online' }
   validates :payment_gateway, presence: true, if: Proc.new{|receipt| receipt.payment_mode == 'online' }
   validates :payment_gateway, inclusion: {in: PaymentGatewayService::Default.allowed_payment_gateways }, allow_blank: true
-  validate :status_changed
-  validates :processed_on, :tracking_id, presence: true, if: Proc.new{|receipt| receipt.status == 'success'}
-  validates :comments, presence: true, if: Proc.new{|receipt| receipt.status == 'failed'}
+  validates :tracking_id, presence: true, if: Proc.new{|receipt| receipt.status == 'success' && receipt.payment_mode != "online"}
+  validates :comments, presence: true, if: Proc.new{|receipt| receipt.status == 'failed' && receipt.payment_mode != "online"}
+  validate :tracking_id_processed_on_only_on_success, if: Proc.new{|record| record.status != "cancelled" }
+  validate :processed_on_greater_than_issued_date
 
-  default_scope -> {desc(:created_at)}
+  increments :order_id, auto: false
 
-  def reference_project_unit
-    if self.reference_project_unit_id.present?
-      ProjectUnit.find(self.reference_project_unit_id)
-    else
-      nil
-    end
-  end
-
-  def self.available_statuses
-    [
-      {id: 'pending', text: 'Pending'},
-      {id: 'success', text: 'Success'},
-      {id: 'clearance_pending', text: 'Pending Clearance'},
-      {id: 'failed', text: 'Failed'}
-    ]
-  end
+  enable_audit({
+    associated_with: ["user"],
+    indexed_fields: [:receipt_id, :order_id, :payment_mode, :tracking_id, :creator_id],
+    audit_fields: [:payment_mode, :tracking_id, :total_amount, :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, :status, :status_message, :project_unit_id, :booking_detail_id]
+  })
 
   def self.available_payment_modes
     [
       {id: 'online', text: 'Online'},
       {id: 'cheque', text: 'Cheque'},
       {id: 'rtgs', text: 'RTGS'},
+      {id: 'imps', text: 'IMPS'},
       {id: 'neft', text: 'NEFT'}
     ]
   end
 
-  def self.available_payment_types
+  def self.available_sort_options
     [
-      {id: 'blocking', text: 'Blocking'},
-      {id: 'booking', text: 'Booking'}
+      {id: "created_at.asc", text: "Created - Oldest First"},
+      {id: "created_at.desc", text: "Created - Newest First"},
+      {id: "issued_date.asc", text: "Issued Date - Oldest First"},
+      {id: "issued_date.desc", text: "Issued Date- Newest First"},
+      {id: "processed_on.asc", text: "Proccessed On - Oldest First"},
+      {id: "processed_on.desc", text: "Proccessed On - Newest First"}
     ]
   end
 
-  def payment_gateway_service
-    if self.payment_gateway.blank? || (self.project_unit.present? && ["hold", "blocked", "booking_tentative"].exclude?(self.project_unit.status)) || (self.project_unit.present? && self.project_unit.user_id != self.user_id)
-      return nil
+  def primary_user_kyc
+    if self.project_unit_id.present? && self.project_unit.user_id == self.user_id
+      return self.project_unit.primary_user_kyc
     else
-      return eval("PaymentGatewayService::#{self.payment_gateway}").new(self)
+      return UserKyc.where(user_id: self.user_id).asc(:created_at).first
     end
+  end
+
+  def payment_gateway_service
+    if self.payment_gateway.present?
+      if self.project_unit.present? && ["hold", "blocked", "booked_tentative", "booked_confirmed"].exclude?(self.project_unit.status)
+        return nil
+      else
+        if(self.project_unit.blank? || self.project_unit.user_id == self.user_id)
+          return eval("PaymentGatewayService::#{self.payment_gateway}").new(self)
+        else
+          return nil
+        end
+      end
+    else
+      return nil
+    end
+  end
+
+  def blocking_payment?
+    self.project_unit_id.present? && self.project_unit.receipts.in(status: ["success", "clearance_pending"]).count == 0
   end
 
   def self.build_criteria params={}
@@ -97,41 +109,108 @@ class Receipt
       if params[:fltrs][:status].present?
         selector[:status] = params[:fltrs][:status]
       end
+      if params[:fltrs][:receipt_id].present?
+        selector[:receipt_id] = params[:fltrs][:receipt_id]
+      end
       if params[:fltrs][:user_id].present?
         selector[:user_id] = params[:fltrs][:user_id]
+      end
+      if params[:fltrs][:project_unit_id].present?
+        selector[:project_unit_id] = params[:fltrs][:project_unit_id]
+      end
+      if params[:project_unit_id].present?
+        selector[:project_unit_id] = params[:project_unit_id]
       end
       if params[:fltrs][:payment_mode].present?
         selector[:payment_mode] = params[:fltrs][:payment_mode]
       end
-      if params[:fltrs][:payment_type].present?
-        selector[:payment_type] = params[:fltrs][:payment_type]
+      [:issued_date, :created_at, :processed_on].each do |key|
+        if params[:fltrs][key].present?
+          start_date, end_date = params[:fltrs][key].split("-")
+          selector[key] = {}
+          selector[key]["$gte"] = start_date if start_date.present?
+          selector[key]["$lte"] = end_date if end_date.present?
+        end
       end
     end
-    self.where(selector)
+    selector1 = {}
+    if params[:fltrs].blank? || params[:fltrs][:status].blank?
+      selector1 = {"$or": [{status: "pending", payment_mode: {"$ne" => "online"}}, {status: {"$ne" => "pending"}}]}
+    end
+    or_selector = {}
+    if params[:q].present?
+      regex = ::Regexp.new(::Regexp.escape(params[:q]), 'i')
+      or_selector = {"$or": [{receipt_id: regex}, {tracking_id: regex}, {payment_identifier: regex}] }
+    end
+    selector = self.and([selector, selector1, or_selector])
+    if params[:sort].blank? || Receipt.available_sort_options.collect{|x| x[:id]}.exclude?(params[:sort])
+      params[:sort] = Receipt.available_sort_options.first[:id]
+    end
+    field, sort_order = params[:sort].split(".")
+    selector = selector.send(sort_order, field.to_sym)
+    selector
+  end
+
+  def generate_receipt_id
+    if self.status == "success"
+      self.assign!(:order_id) if self.order_id.blank?
+      if self.project_unit_id.present?
+        "#{self.user.booking_portal_client.name[0..1].upcase}-#{self.project_unit.name[0..1].upcase}-#{self.order_id}"
+      else
+        "#{self.user.booking_portal_client.name[0..1].upcase}-#{self.order_id}"
+      end
+    elsif self.receipt_id.blank?
+      "#{self.user.booking_portal_client.name[0..1].upcase}-TMP-#{SecureRandom.hex(4)}"
+    else
+      self.receipt_id
+    end
+  end
+
+  def self.user_based_scope(user, params={})
+    custom_scope = {}
+    if params[:user_id].blank? && !user.buyer?
+      if user.role?('channel_partner')
+        custom_scope = {user_id: {"$in": User.where(referenced_manager_ids: user.id).distinct(:id)}}
+      elsif user.role?('cp_admin')
+        custom_scope = {user_id: {"$in": User.where(role: "user").nin(manager_id: [nil, ""]).distinct(:id)}}
+      elsif user.role?('cp')
+        channel_partner_ids = User.where(role: "channel_partner").where(manager_id: user.id).distinct(:id)
+        custom_scope = {user_id: {"$in": User.in(referenced_manager_ids: channel_partner_ids).distinct(:id)}}
+      end
+    end
+
+    custom_scope = {user_id: params[:user_id]} if params[:user_id].present?
+    custom_scope = {user_id: user.id} if user.buyer?
+
+    custom_scope[:project_unit_id] = params[:project_unit_id] if params[:project_unit_id].present?
+    custom_scope
   end
 
   private
   def validate_total_amount
-    if self.total_amount < ProjectUnit.blocking_amount && self.project_unit_id.blank? && self.new_record?
-      self.errors.add :total_amount, " cannot be less than #{ProjectUnit.blocking_amount}"
-    end
     if self.total_amount <= 0
-      self.errors.add :total_amount, " cannot be less than or equal to 0"
+      self.errors.add :total_amount, "cannot be less than or equal to 0"
     end
-    if self.project_unit_id.present? && (self.total_amount > self.project_unit.pending_balance) && self.new_record?
-      self.errors.add :total_amount, " cannot be greater than #{self.project_unit.pending_balance}"
+
+    blocking_amount = self.user.booking_portal_client.blocking_amount
+    if self.project_unit_id.present?
+      blocking_amount = self.project_unit.blocking_amount
     end
-    if self.reference_project_unit_id.present? && (self.total_amount > self.reference_project_unit.pending_balance({user_id: self.user_id})) && self.new_record?
-      self.errors.add :total_amount, " cannot be greater than #{self.reference_project_unit.pending_balance({user_id: self.user_id})}"
+    if (self.project_unit_id.blank? || self.blocking_payment?) && self.total_amount < blocking_amount && self.new_record? && !self.swap_request_initiated
+      self.errors.add :total_amount, "cannot be less than blocking amount #{self.user.booking_portal_client.blocking_amount}"
     end
   end
 
-  def status_changed
-    if self.status_changed? && ['success', 'failed'].include?(self.status_was)
-      self.errors.add :status, ' cannot be modified for a successful or failed payments'
+  def tracking_id_processed_on_only_on_success
+    if self.status_changed? && self.status != "success" && self.payment_mode != "online"
+      self.errors.add :tracking_id, 'cannot be set unless the status is marked as success' if self.tracking_id_changed? && self.tracking_id.present?
+      self.errors.add :processed_on, 'cannot be set unless the status is marked as success' if self.processed_on_changed? && self.processed_on.present?
     end
-    if self.status_changed? && ['clearance_pending'].include?(self.status_was) && self.status == 'pending'
-      self.errors.add :status, ' cannot be modified to "pending" from "Pending Clearance" status'
+  end
+
+  def processed_on_greater_than_issued_date
+    if self.processed_on.present? && self.issued_date.present? && self.processed_on < self.issued_date
+      self.errors.add :processed_on, 'cannot be older than the Issued Date'
     end
   end
 end

@@ -3,12 +3,13 @@
 en:
   devise:
     confirmations:
-      confirmed: "Your email address has been successfully confirmed."
-      send_instructions: "You will receive an email with instructions for how to confirm your email address in a few minutes."
+      confirmed: "Your account has been successfully confirmed."
+      send_instructions: "You will receive an email with instructions for how to confirm your email address in a few minutes. You can also confirm it using your phone & an OTP."
       send_paranoid_instructions: "If your email address exists in our database, you will receive an email with instructions for how to confirm your email address in a few minutes."
     failure:
       already_authenticated: "You are already signed in."
       inactive: "Your account is not activated yet."
+      is_active: "You account has been de-activated."
       invalid: "Invalid %{authentication_keys} or password."
       locked: "Your account is locked."
       last_attempt: "You have one more attempt before your account is locked."
@@ -18,15 +19,15 @@ en:
       unconfirmed: "You have to confirm your email address before continuing."
     mailer:
       confirmation_instructions:
-        subject: "Confirmation instructions"
+        subject: "Welcome to Amura IRIS - Validate your account"
       reset_password_instructions:
-        subject: "Reset password instructions"
+        subject: "Amura IRIS - Reset password instructions"
       unlock_instructions:
-        subject: "Unlock instructions"
+        subject: "Amura IRIS - Unlock instructions"
       email_changed:
-        subject: "Email Changed"
+        subject: "Amura IRIS - Email Changed"
       password_change:
-        subject: "Password Changed"
+        subject: "Amura IRIS - Password Changed"
     omniauth_callbacks:
       failure: "Could not authenticate you from %{kind} because \"%{reason}\"."
       success: "Successfully authenticated from %{kind} account."

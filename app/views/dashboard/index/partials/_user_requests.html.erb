@@ -1,0 +1,34 @@
+<% if current_client.enable_actual_inventory?(current_user) %>
+  <% user_requests = DashboardDataProvider.user_requests_dashboard(current_user, params[:user_request_fltrs]) %>
+  <div class="card">
+    <div class="card-header">
+      <%= global_labels[:user_requests] %>
+    </div>
+    <div class="card-body">
+      <% if user_requests.present? %>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Status</th>
+                <th class="text-right">Count</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% user_requests.each do |d| %>
+              <tr>
+                <td><%= d[:_type].split("::").last.titleize %></td>
+                <td><%= UserRequest.available_statuses.find{|x| x[:id] == d[:status]}[:text] %></td>
+                <td class="text-right"><%= d[:count] %></td>
+              </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        No <%= global_labels[:user_requests] %> yet.
+      <% end %>
+    </div>
+  </div>
+<% end %>

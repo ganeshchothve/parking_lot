@@ -39,7 +39,6 @@ class Project
   field :loading,type: Float
   field :lock_in_period,type: String
   field :micro_market, type: String
-  field :rera_project_id, type: String
   field :specifications,type: Hash ,default: {}
   field :approval,type: String
 
@@ -69,10 +68,19 @@ class Project
   field :video, type: String
   field :secondary_developer_ids, type: Array, default: []
   field :secondary_developer_names, type: Array, default: []
+  field :foyer_link, type: String
+  field :rera_registration_no, type: String
+
+  mount_uploader :logo, DocUploader
+  mount_uploader :mobile_logo, DocUploader
 
   has_many :project_units
+  has_many :schemes
   has_many :project_towers
   has_one :address, as: :addressable
+  belongs_to :booking_portal_client, class_name: 'Client'
+
+  validates :name, :rera_registration_no, presence: true
 
   accepts_nested_attributes_for :address, allow_destroy: true #, :brochure_templates, :price_quote_templates, :images
   index(client_id:1)
@@ -91,12 +99,14 @@ class Project
         hash = {"name" => k.to_s}
         hash["min_area"] = v.min_by{|obj| obj.saleable }.saleable.round
         hash["max_area"] = v.max_by{|obj| obj.saleable }.saleable.round
-        #hash["min_price"]= v.min_by{|obj| obj.base_price.to_i }.base_price.to_i
-        #hash["max_price"] = v.max_by{|obj| obj.base_price.to_i }.base_price.to_i
         hash["min_price"]= v.min_by{|obj| obj.display_price.values[0].to_i }.display_price.values[0].to_i
         hash["max_price"] = v.max_by{|obj| obj.display_price.values[0].to_i }.display_price.values[0].to_i
         self.area_price_data << hash
       end
     end
+  end
+
+  def default_scheme
+    Scheme.where(project_id: self.id, default: true).first
   end
 end

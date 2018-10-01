@@ -1,0 +1,43 @@
+<% random_id = "crs_#{11**11}" %>
+<div class="row">
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :address1 %>
+      <%= f.text_field :address1, class: 'form-control' %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :address2 %>
+      <%= f.text_field :address2, class: 'form-control' %>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :country %>
+      <%= f.select :country, [], {prompt: true}, class: 'form-control crs-country', "data-region-id": random_id, "data-default-value": f.object.present? ? f.object.country : "" %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :state %>
+      <%= f.select :state, [], {prompt: true}, class: 'form-control', id: random_id, "data-default-value": f.object.present? ? f.object.state : "" %>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :city %>
+      <%= f.text_field :city, class: 'form-control' %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :zip %>
+      <%= f.text_field :zip, class: 'form-control' %>
+    </div>
+  </div>
+</div>

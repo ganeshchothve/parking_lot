@@ -1,38 +1,72 @@
-<% if @user.blank? %>
-<% url = admin_receipts_path %>
-<%= form_tag url, method: "get", id: "receipt_search_form" do %>
-  <div class="form-group">
-    <%= label_tag "", 'Filters', class: "control-label" %>
-    <%= submit_tag :Apply, class: "btn btn-primary btn-sm float-right" %>
+<% labels = t('mongoid.attributes.receipt').with_indifferent_access %>
+<div class="card h-100">
+  <div class="card-body">
+    <% if @user.blank? %>
+    <% url = admin_receipts_path %>
+    <%= form_tag url, method: "get", id: "receipt_search_form" do %>
+      <div class="form-group">
+        <%= label_tag "", 'Filters', class: "control-label d-block d-lg-inline" %>
+        <%= submit_tag :Apply, class: "btn btn-primary btn-sm float-lg-right" %>
+      </div>
+      <div class="clearfix"></div>
+      <hr/>
+      <div class="form-group">
+        <%= label_tag "fltrs", "Customer Name / Email / Phone", class: "control-label" %>
+        <%
+          if params[:fltrs].present? && params[:fltrs][:user_id].present?
+            user = User.find(params[:fltrs][:user_id])
+          end
+        %>
+        <%= select_tag "fltrs[user_id]", options_for_select((params[:fltrs].present? && params[:fltrs][:user_id].present?) ? [[user.ds_name, user.id]] : []), {class: "selectize-remote", data: {params: {fltrs: {role: {"$in": User.buyer_roles(current_client)}}}, url: admin_users_path }} %>
+      </div>
+      <div class="form-group">
+        <%= label_tag "fltrs", global_labels[:project_unit], class: "control-label" %>
+        <%
+          if params[:fltrs].present? && params[:fltrs][:project_unit_id].present?
+            project_unit = ProjectUnit.find(params[:fltrs][:project_unit_id])
+          end
+        %>
+        <%= select_tag "fltrs[project_unit_id]", options_for_select((params[:fltrs].present? && params[:fltrs][:project_unit_id].present?) ? [[project_unit.ds_name, project_unit.id]] : []), {class: "selectize-remote", data: {url: admin_project_units_path }} %>
+      </div>
+      <div class="form-group">
+        <%= label_tag "fltrs", labels[:receipt_id], class: "control-label" %>
+        <%
+          if params[:fltrs].present? && params[:fltrs][:receipt_id].present?
+            receipt = Receipt.where(receipt_id: params[:fltrs][:receipt_id]).first
+          end
+        %>
+        <%= select_tag "fltrs[receipt_id]", options_for_select((params[:fltrs].present? && params[:fltrs][:receipt_id].present?) ? [[receipt.receipt_id, receipt.receipt_id]] : []), {class: "selectize-remote", data: {url: admin_receipts_path }} %>
+      </div>
+      <div class="form-group">
+        <%= label_tag "fltrs", labels[:status], class: "control-label" %>
+        <%= select_tag "fltrs[status]", options_for_select(Receipt.aasm.states.collect(&:name).collect(&:to_s).collect{|x| [x, x]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize"} %>
+      </div>
+      <div class="form-group">
+        <%= label_tag "fltrs", labels[:payment_mode], class: "control-label" %>
+        <%= select_tag "fltrs[payment_mode]", options_for_select(Receipt.available_payment_modes.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:payment_mode] : "")), {prompt: "Select", class: "selectize"} %>
+      </div>
+      <div class="form-group">
+        <%= label_tag "fltrs", labels[:issued_date], class: "control-label" %>
+        <%= text_field_tag "fltrs[issued_date]", (params[:fltrs].present? ? params[:fltrs][:issued_date] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"} %>
+      </div>
+      <div class="form-group">
+        <%= label_tag "fltrs", labels[:processed_on], class: "control-label" %>
+        <%= text_field_tag "fltrs[processed_on]", (params[:fltrs].present? ? params[:fltrs][:processed_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"} %>
+      </div>
+      <div class="form-group">
+        <%= label_tag "fltrs", labels[:created_at], class: "control-label" %>
+        <%= text_field_tag "fltrs[created_at]", (params[:fltrs].present? ? params[:fltrs][:created_at] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"} %>
+      </div>
+      <div class="form-group">
+        <%= label_tag "fltrs", "Sort By", class: "control-label" %>
+        <%= select_tag "fltrs[sort]", options_for_select(Receipt.available_sort_options.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:sort] : Receipt.available_sort_options.first[:id])), {prompt: "Select", class: "selectize"} %>
+      </div>
+    <% end %>
+    <%= javascript_tag do %>
+      $(document).ready(function(){
+        FormInitializer.init($("#receipt_search_form"));
+      });
+    <% end %>
+    <% end %>
   </div>
-  <div class="clearfix"></div>
-  <hr/>
-  <div class="form-group">
-    <%= label_tag "fltrs", "Customer Name / Email / Phone", class: "control-label" %>
-    <%
-      if params[:fltrs].present? && params[:fltrs][:user_id].present?
-        user = User.find(params[:fltrs][:user_id])
-      end
-    %>
-    <%= select_tag "fltrs[user_id]", options_for_select((params[:fltrs].present? && params[:fltrs][:user_id].present?) ? [[user.ds_name, user.id]] : []), {class: "selectize-remote", data: {params: {fltrs: {role: "user"}}, url: admin_users_path }} %>
-  </div>
-  <div class="form-group">
-    <%= label_tag "fltrs", "status", class: "control-label" %>
-    <%= select_tag "fltrs[status]", options_for_select(Receipt.available_statuses.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize"} %>
-  </div>
-  <div class="form-group">
-    <%= label_tag "fltrs", "payment_mode", class: "control-label" %>
-    <%= select_tag "fltrs[payment_mode]", options_for_select(Receipt.available_payment_modes.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:payment_mode] : "")), {prompt: "Select", class: "selectize"} %>
-  </div>
-  <div class="form-group">
-    <%= label_tag "fltrs", "payment_type", class: "control-label" %>
-    <%= select_tag "fltrs[payment_type]", options_for_select(Receipt.available_payment_types.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:payment_type] : "")), {prompt: "Select", class: "selectize"} %>
-  </div>
-<% end %>
-<%= javascript_tag do %>
-  $(document).ready(function(){
-    FormInitializer.init($("#receipt_search_form"));
-  });
-<% end %>
-
-<% end %>
+</div>

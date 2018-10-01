@@ -1,119 +1,226 @@
-<%= render 'breadcrumbs', {user: @user, project_unit: @receipt.project_unit} %>
-<div class="row">
-  <div class="col-md-8 border border-left-0 border-top-0 border-bottom-0">
-    <% if @receipt.new_record? %>
-      <div class="alert alert-warning">
-        <!-- TODO: check if you want to update this message -->
-        Payments need to be for individual units, clubbed payments are not allowed. Please collect a cheque for individual units only.
+<%
+  i_agree_required = current_client.disclaimer.present? && @receipt.new_record?
+%>
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><%= @receipt.new_record? ? "New" : "Edit" %> <%= "#{global_labels['receipt']}" %></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-    <% end %>
-    <% if @receipt.errors.present? %>
-    <div class="alert alert-danger">
-      <ul>
-        <% @receipt.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
+      <div class="modal-body">
+        <% if @receipt.new_record? %>
+          <% unless @receipt.project_unit_id.blank? %>
+          <div class="alert alert-primary">
+            <p>
+              Payments need to be for individual units, clubbed payments are not allowed.
+              <% unless current_user.buyer? %>
+                Please collect a cheque for individual units only.
+              <% end %>
+            </p>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="small">Unit</label>
+                  <div><%= @receipt.project_unit.name %></div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="small">Agreement Price</label>
+                  <div><%= number_to_indian_currency(@receipt.project_unit.calculate_agreement_price.round) %></div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="small">All Inclusive Price</label>
+                  <div><%= number_to_indian_currency(@receipt.project_unit.calculate_all_inclusive_price.round) %></div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="small">Amount Paid</label>
+                  <div><%= number_to_indian_currency(@receipt.project_unit.total_amount_paid.round) %></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="small">Amount Pending</label>
+                  <div><%= number_to_indian_currency(@receipt.project_unit.pending_balance.round) %></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% end %>
         <% end %>
-      </ul>
-    </div>
-    <% end %>
-    <% if current_user.role?('user') %>
-      <%= form_for @receipt, html: {class: 'validate-form'} do |f| %>
-        <div class="form-group">
-          <%= f.label :total_amount, class: 'control-label label-required' %>
-          <%= f.text_field :total_amount, min: 0, class: "form-control", required: 'required' %>
-        </div>
-        <%= f.hidden_field :project_unit_id %>
-        <%= f.hidden_field :payment_mode %>
-        <%= f.submit "Proceed", class: 'btn btn-primary' %>
-      <% end %>
-    <% else %>
-      <%= form_for [:admin, @user, @receipt], html: {id: 'receipt_form', class: 'validate-form'} do |f| %>
-        <div class="form-group">
-          <%= f.label :payment_mode, class: 'control-label label-required' %>
-          <%= f.select :payment_mode, Receipt.available_payment_modes.reject{|x| x[:id] == 'online'}.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true, disabled: (policy(@receipt).editable_field?("payment_mode") ? false : true) %>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              <%= f.label :issuing_bank, class: 'control-label label-required' %>
-              <%= f.text_field :issuing_bank, class: 'form-control', required: 'required', disabled: (policy(@receipt).editable_field?("issuing_bank") ? false : true) %>
-            </div>
+        <% if current_user.buyer? %>
+          <%= form_for [:user, @receipt], local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['receipt'], "data-type": "json", id: "receipt_form"} do |f| %>
+          <div class="form-group">
+            <%= f.label :total_amount, class: 'label-required' %>
+            <% total_amount = @receipt.total_amount.present? ? @receipt.total_amount : current_client.blocking_amount %>
+            <% if !policy(@receipt).editable_field?("total_amount") %>
+              <h5><%= number_to_indian_currency(total_amount) %></h5>
+              <%= f.hidden_field :total_amount, value: total_amount %>
+            <% else %>
+              <%= f.number_field :total_amount, min: (@project_unit.present? ? 0 : current_client.blocking_amount), class: "form-field form-control green", required: 'required' %>
+            <% end %>
           </div>
-          <div class="col-md-6">
+          <% if current_client.enable_actual_inventory?(current_user) && @receipt.project_unit_id.present? %>
+            <%= f.hidden_field :project_unit_id %>
+          <% end %>
+          <%= f.hidden_field :payment_mode %>
+          <% if i_agree_required %>
             <div class="form-group">
-              <%= f.label :issuing_bank_branch, class: 'control-label label-required' %>
-              <%= f.text_field :issuing_bank_branch, class: 'form-control', required: 'required', disabled: (policy(@receipt).editable_field?("issuing_bank_branch") ? false : true) %>
+              <div class="card p-1 small" style="height: 100px; overflow: auto;">
+                <div class="font-weight-bold mb-2">Disclaimer:</div>
+                <%= current_client.disclaimer %>
+              </div>
+              <div class="form-check mt-1">
+                <%= check_box_tag :agree, true, false, class: "form-check-input" %>
+                <%= label_tag :agree, (current_user == @receipt.user ? "I Agree" : "I Agree on behalf of #{@receipt.user.name}"), class: "form-check-label" %>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
+          <% end %>
+          <%= f.submit "Proceed", class: 'btn btn-primary nav-btn', disabled: (i_agree_required ? true : false) %>
+          <% end %>
+        <% else %>
+          <% labels = t('mongoid.attributes.receipt').with_indifferent_access %>
+          <%= form_for [:admin, @user, @receipt], local: true, remote: true, html: {id: 'receipt_form', class: 'modal-remote-form validate-form', "data-resource-type": global_labels['receipt'], "data-type": "json"} do |f| %>
+            <div class="alert alert-primary">
+              The <%= labels[:receipt_id] %> will be generated only after successful processing of payment.
+            </div>
             <div class="form-group">
-              <%= f.label :payment_identifier, class: 'control-label label-required' %>
-              <%= f.text_field :payment_identifier, class: 'form-control', required: 'required', disabled: (policy(@receipt).editable_field?("payment_identifier") ? false : true) %>
+              <%= f.label :payment_mode, class: 'label-required' %>
+              <%= f.select :payment_mode, Receipt.available_payment_modes.reject{|x| x[:id] == 'online'}.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true, disabled: (policy(@receipt).editable_field?("payment_mode") ? false : true) %>
             </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group position-relative">
-              <%= f.label :issued_date, class: 'control-label label-required' %>
-              <%= f.text_field :issued_date, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.issued_date.present? ? f.object.issued_date.strftime("%d/%m/%Y") : '', "data-max-date": Date.today.strftime("%d/%m/%Y"), disabled: (policy(@receipt).editable_field?("issued_date") ? false : true), value: f.object.issued_date.present? ? f.object.issued_date.strftime("%d/%m/%Y") : "" %>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :issuing_bank, class: 'label-required' %>
+                  <%= f.text_field :issuing_bank, class: 'form-control', required: 'required', disabled: (policy(@receipt).editable_field?("issuing_bank") ? false : true) %>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :issuing_bank_branch, class: 'label-required' %>
+                  <%= f.text_field :issuing_bank_branch, class: 'form-control', required: 'required', disabled: (policy(@receipt).editable_field?("issuing_bank_branch") ? false : true) %>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :payment_identifier, class: 'label-required' %>
+                  <%= f.text_field :payment_identifier, class: 'form-control', required: 'required', disabled: (policy(@receipt).editable_field?("payment_identifier") ? false : true) %>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group position-relative">
+                  <%= f.label :issued_date, class: 'label-required' %>
+                  <%= f.text_field :issued_date, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.issued_date.present? ? f.object.issued_date.strftime("%d/%m/%Y") : '', disabled: (policy(@receipt).editable_field?("issued_date") ? false : true), value: f.object.issued_date.present? ? f.object.issued_date.strftime("%d/%m/%Y") : "" %>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :status, class: 'control-label' %>
+                  <%
+                    statuses = @receipt.aasm.events(permitted: true).collect{|x| x.name.to_s}
+                    if statuses.include?("clearance_pending") && @receipt.new_record?
+                      statuses.reject!{|x| x == "pending"}
+                    end
+                  %>
+                  <%= f.select :event, options_for_select(statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, @receipt.status), {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(@receipt).editable_field?("event") ? false : true) %>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <% if current_client.enable_actual_inventory?(current_user) %>
+                  <div class="form-group">
+                    <% if @receipt.project_unit_id.present? %>
+                      <%= f.label :project_unit_id, class: 'control-label' %>
+                      <div><%= f.object.project_unit.name %></div>
+                      <%= f.hidden_field :project_unit_id %>
+                    <% elsif policy(@receipt).editable_field?("project_unit_id") %>
+                      <%= f.label :project_unit_id, class: 'control-label' %>
+                      <% user_units = @receipt.user.project_units.ne(status: 'hold') %>
+                      <% if user_units.present? %>
+                      <%= f.select :project_unit_id, user_units.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize' %>
+                      <% end %>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+            <% if policy(@receipt).editable_field?("tracking_id") && policy(@receipt).editable_field?("processed_on") %>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :tracking_id, class: 'control-label' %>
+                    <%= f.text_field :tracking_id, class: 'form-control' %>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <% tomorrow = Date.today+1%>
+                    <%= f.label :processed_on, class: 'control-label' %>
+                    <%= f.text_field :processed_on, class: 'form-control datepicker', "data-default-date": f.object.processed_on.present? ? f.object.processed_on.strftime("%d/%m/%Y") : '', "data-max-date": tomorrow.strftime("%d/%m/%Y"), value: f.object.processed_on.present? ? f.object.processed_on.strftime("%d/%m/%Y") : "" %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+            <% if policy(@receipt).editable_field?("comments") %>
+              <div class="form-group">
+                <%= f.label :comments, class: 'control-label' %>
+                <%= f.text_area :comments, class: 'form-control' %>
+              </div>
+            <% end %>
             <div class="form-group">
-              <% if f.object.project_unit_id.present? %>
-                <%= f.label :project_unit_id, class: 'control-label' %>
-                <div><%= f.object.project_unit.name %></div>
-                <%= f.hidden_field :project_unit_id %>
+              <%= f.label :total_amount, class: 'label-required' %>
+              <% if !policy(@receipt).editable_field?("total_amount") %>
+                <%
+                  total_amount = @receipt.total_amount.present? ? @receipt.total_amount : current_client.blocking_amount
+                %>
+                <h5><%= number_to_indian_currency(total_amount) %></h5>
+                <%= f.hidden_field :total_amount, value: total_amount %>
               <% else %>
-                <%= f.label :reference_project_unit_id, class: 'control-label label-required' %>
-                <%= f.select :reference_project_unit_id, f.object.reference_project_unit.present? ? [[f.object.reference_project_unit.name, f.object.reference_project_unit.id]] : [], {prompt: true}, class: 'selectize-remote', autofocus: true, disabled: (policy(@receipt).editable_field?("reference_project_unit_id") ? false : true), "data-url": admin_project_units_path, "data-params": {fltrs: {status: 'available'}}.to_json, 'data-ds': 'ds' %>
+                <%= f.number_field :total_amount, min: 0, class: "form-field form-control green", required: 'required' %>
               <% end %>
             </div>
-          </div>
-          <div class="col-md-6">
+            <% if i_agree_required %>
+              <div class="form-group">
+                <div class="card p-1 small" style="height: 100px; overflow: auto;">
+                  <div class="font-weight-bold mb-2">Disclaimer:</div>
+                  <%= current_client.disclaimer %>
+                </div>
+                <div class="form-check mt-1">
+                  <%= check_box_tag :agree, true, false, class: "form-check-input" %>
+                  <%= label_tag :agree, (current_user == @receipt.user ? "I Agree" : "I Agree on behalf of #{@receipt.user.name}"), class: "form-check-label" %>
+                </div>
+              </div>
+            <% end %>
             <div class="form-group">
-              <%= f.label :status, class: 'control-label label-required' %>
-              <%= f.select :status, Receipt.available_statuses.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(@receipt).editable_field?("status") ? false : true) %>
+              <%= f.submit "Save", class: 'btn btn-primary', disabled: (i_agree_required ? true : false) %>
             </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              <%= f.label :tracking_id, class: 'control-label' %>
-              <%= f.text_field :tracking_id, class: 'form-control', disabled: (policy(@receipt).editable_field?("tracking_id") ? false : true) %>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <%= f.label :processed_on, class: 'control-label' %>
-              <%= f.text_field :processed_on, class: 'form-control datepicker', "data-default-date": f.object.processed_on.present? ? f.object.processed_on.strftime("%d/%m/%Y") : '', "data-max-date": Date.today.strftime("%d/%m/%Y"), disabled: (policy(@receipt).editable_field?("processed_on") ? false : true), value: f.object.processed_on.present? ? f.object.processed_on.strftime("%d/%m/%Y") : "" %>
-            </div>
-          </div>
-        </div>
-        <div class="form-group">
-          <%= f.label :comments, class: 'control-label' %>
-          <%= f.text_area :comments, class: 'form-control', disabled: (policy(@receipt).editable_field?("comments") ? false : true) %>
-        </div>
-        <div class="form-group">
-          <%= f.label :total_amount, class: 'control-label label-required' %>
-          <%= f.number_field :total_amount, class: 'form-control', required: 'required', disabled: (policy(@receipt).editable_field?("total_amount") ? false : true) %>
-          <%= f.hidden_field :payment_type, class: 'form-control', required: 'required', disabled: (policy(@receipt).editable_field?("payment_type") ? false : true) %>
-        </div>
-        <%= f.submit "Save", class: 'btn btn-primary' %>
-      <% end %>
-      <%= javascript_tag do %>
-      $(document).ready(function(){
-        FormInitializer.init($('#receipt_form'));
-      });
-      <% end %>
-    <% end %>
-    <%= render "assets/index", assetable: @receipt %>
-    <br/><br/><br/>
-  </div>
-  <div class="col-md-4">
+          <% end %>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    $('#receipt_form [name="agree"]').change(function(){
+      if($(this).is(":checked")){
+        $('#receipt_form [type="submit"]').removeAttr("disabled");
+      }else{
+        $('#receipt_form [type="submit"]').attr("disabled", "disabled");
+      }
+    });
+    FormInitializer.init($('#receipt_form'));
+  });
+<% end %>

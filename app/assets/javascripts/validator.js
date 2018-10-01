@@ -8,7 +8,6 @@ $.validator.setDefaults({
   errorElement: 'span',
   errorClass: 'help-block',
   errorPlacement: function(error, element) {
-    debugger;
     if(element.parent('.input-group').length > 0) {
       error.insertAfter(element.parent());
     } else if(element.parent().hasClass("selectize-input")) {
@@ -21,13 +20,13 @@ $.validator.setDefaults({
       error.insertAfter(element);
     }
   },
-  ignore: ".selectize-input input"
+  ignore: ":hidden:not([class~=selectized]), :hidden > .selectized, .selectize-control .selectize-input input"
 });
 
 $(document).ready(function(){
   // to ensure that this is only called after all other default trigger change events are fired in our Javascripts
   setTimeout(function(){
-    $('.validate-form').find('input, textarea, select').change(function(){
+    $('.validate-form').find('input[type="text"], input[type="radio"], input[type="checkbox"], input[type="number"], textarea, select, input[type="email"]').change(function(){
       if(typeof window.onbeforeunload !== "function"){
         window.onbeforeunload = function(){
           return 'You have made changes to the form which will be lost if you refresh the page. Are you sure?'
@@ -36,7 +35,7 @@ $(document).ready(function(){
     });
   }, 100);
 
-  $(".validate-form input[type='submit']").click(function(e){
+  $(".validate-form").submit(function(e){
     var $form = $(this).closest("form");
     var valid = $form.valid();
     if(valid){
@@ -61,10 +60,12 @@ $(document).ready(function(){
     $(".form-group.has-error").closest(".panel-collapse").collapse('show');
     if(!valid){
       var $div = $form.find('.form-group.has-error:first')
-      $div.find('input,select,textarea').focus();
-      $('html, body').animate({
-          scrollTop: $div.offset().top - 100
-      }, 1000);
+      if($div.length > 0){
+        $div.find('input,select,textarea').focus();
+        $('html, body').animate({
+            scrollTop: $div.offset().top - 100
+        }, 1000);
+      }
       e.preventDefault();
     }
   });

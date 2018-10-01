@@ -33,7 +33,10 @@ Rails.application.configure do
   # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  config.action_controller.asset_host = "//#{ENV['FOG_DIRECTORY']}.s3.ap-south-1.amazonaws.com"
+  config.action_controller.asset_host = "#{ENV_CONFIG[:asset_sync]['FOG_DIRECTORY']}.s3.amazonaws.com"
+  config.action_mailer.asset_host = "#{ENV_CONFIG[:asset_sync]['FOG_DIRECTORY']}.s3.amazonaws.com"
+
+  config.action_mailer.default_url_options = {host: '', protocol: "https"}
 
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
@@ -49,10 +52,10 @@ Rails.application.configure do
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
-  config.log_level = :debug
+  config.log_level = :info
 
   # Prepend all log lines with the following tags.
-  config.log_tags = [ :request_id ]
+  config.log_tags = [ :request_id, :remote_ip]
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
@@ -81,8 +84,17 @@ Rails.application.configure do
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
   config.action_mailer.delivery_method = :smtp
+  config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
-  config.action_mailer.smtp_settings = ENV_CONFIG[:smtp]
+  config.action_mailer.smtp_settings = {
+    user_name: ENV_CONFIG[:smtp][:user_name],
+    password: ENV_CONFIG[:smtp][:password],
+    domain: ENV_CONFIG[:smtp][:domain],
+    address: ENV_CONFIG[:smtp][:address],
+    port: ENV_CONFIG[:smtp][:port],
+    authentication: ENV_CONFIG[:smtp][:authentication],
+    enable_starttls_auto: ENV_CONFIG[:smtp][:enable_starttls_auto]
+  }
 
   if ENV["RAILS_LOG_TO_STDOUT"].present?
     logger           = ActiveSupport::Logger.new(STDOUT)
@@ -90,3 +102,5 @@ Rails.application.configure do
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
   end
 end
+
+Rails.application.routes.default_url_options = { host: 'bookingportal.withamura.com' }

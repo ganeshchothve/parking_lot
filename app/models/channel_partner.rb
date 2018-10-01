@@ -3,20 +3,52 @@ class ChannelPartner
   include Mongoid::Timestamps
   include ArrayBlankRejectable
 
-  field :name, type: String
+  field :title, type: String
+  field :first_name, type: String
+  field :last_name, type: String
   field :email, type: String
   field :phone, type: String
   field :rera_id, type: String
-  field :location, type: String
   field :associated_user_id, type: BSON::ObjectId
-  field :status, type: String, default: 'inactive'
+  field :status, type: String, default: "inactive"
 
-  validates :name, :email, :phone, :rera_id, :location, :status, presence: true
-  validates :phone, uniqueness: true, phone: true # TODO: we can remove phone validation, as the validation happens in sell.do
-  validates :email, :rera_id, uniqueness: true, allow_blank: true
+  field :company_name, type: String
+  field :pan_number, type: String
+  field :gstin_number, type: String
+  field :aadhaar, type: String
+
+  field :manager_id, type: BSON::ObjectId
+
+  default_scope -> {desc(:created_at)}
+
+  enable_audit({
+    audit_fields: [:title, :rera_id, :status, :gstin_number, :aadhaar],
+    reference_ids_without_associations: [
+      {field: 'associated_user_id', klass: 'User'},
+    ]
+  })
+
+  has_one :address, as: :addressable, validate: false
+  has_one :bank_detail, as: :bankable, validate: false
+  has_many :assets, as: :assetable
+
+  validates :first_name, :last_name, :rera_id, :status, :aadhaar, presence: true
+  validates :aadhaar, format: {with: /\A\d{12}\z/i, message: 'is not a valid aadhaar number'}, allow_blank: true
+  validates :rera_id, uniqueness: true, allow_blank: true
+  validates :phone, uniqueness: true, phone: { possible: true, types: [:voip, :personal_number, :fixed_or_mobile]}, if: Proc.new{|user| user.email.blank? }
+  validates :email, uniqueness: true, if: Proc.new{|user| user.phone.blank? }
   validates :status, inclusion: {in: Proc.new{ ChannelPartner.available_statuses.collect{|x| x[:id]} } }
-  validate :user_level_uniqueness
+  validates :pan_number, :aadhaar, uniqueness: true, allow_blank: true
+  validates :pan_number, format: {with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A'}, allow_blank: true
   validate :cannot_make_inactive
+  validates :first_name, :last_name, format: { with: /\A[a-zA-Z]*\z/}
+  validate :user_based_uniqueness
+
+  accepts_nested_attributes_for :bank_detail, :address
+
+  def manager
+    manager_id.present? ? User.find(manager_id) : nil
+  end
 
   def self.available_statuses
     [
@@ -42,16 +74,28 @@ class ChannelPartner
       if params[:fltrs][:status].present?
         selector[:status] = params[:fltrs][:status]
       end
-      if params[:fltrs][:location].present?
-        selector[:location] = params[:fltrs][:location]
+      if params[:fltrs][:city].present?
+        selector[:city] = params[:fltrs][:city]
       end
     end
     or_selector = {}
     if params[:q].present?
       regex = ::Regexp.new(::Regexp.escape(params[:q]), 'i')
-      or_selector = {"$or": [{name: regex}, {email: regex}, {phone: regex}] }
+      or_selector = {"$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] }
     end
-    self.where(selector).where(or_selector)
+    if params[:fltrs].present? && params[:fltrs][:_id].present?
+      self.where(id: params[:fltrs][:_id])
+    else
+      self.and([selector, or_selector])
+    end
+  end
+
+  def name
+    str = "#{title} #{first_name} #{last_name}"
+    if company_name.present?
+      str += " (#{company_name})"
+    end
+    str
   end
 
   def ds_name
@@ -59,18 +103,21 @@ class ChannelPartner
   end
 
   private
-  def user_level_uniqueness
-    if self.new_record? || (self.status_changed? && self.status == 'active')
-      user = User.or([{email: self.email}, {phone: self.phone}]).first
-      if user.present? && user.id != self.associated_user_id
-        self.errors.add :base, "Email or Phone has already been taken"
-      end
+  def cannot_make_inactive
+    if self.status_changed? && self.status == 'inactive' && self.persisted?
+      self.errors.add :status, 'cannot be reverted to "inactive" once activated'
     end
   end
 
-  def cannot_make_inactive
-    if self.status_changed? && self.status == 'inactive' && self.persisted?
-      self.errors.add :status, ' cannot be reverted to "inactive" once activated'
+  def user_based_uniqueness
+    query = []
+    query << {phone: phone} if phone.present?
+    query << {email: email} if email.present?
+    query << {rera_id: rera_id} if rera_id.present?
+    criteria = User.or(query)
+    criteria = criteria.ne(id: associated_user_id) if associated_user_id.present?
+    if criteria.present?
+      self.errors.add :base, 'We have a user with similar details already registered'
     end
   end
 end

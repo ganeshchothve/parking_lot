@@ -8,21 +8,17 @@ class ChannelPartnersController < ApplicationController
 
   def index
     @channel_partners = ChannelPartner.build_criteria params
-    if params[:fltrs].present? && params[:fltrs][:_id].present?
-      redirect_to edit_channel_partner_path(params[:fltrs][:_id])
-    else
-      @channel_partners = @channel_partners.paginate(page: params[:page] || 1, per_page: 15)
-    end
+    @channel_partners = @channel_partners.paginate(page: params[:page], per_page: 15)
   end
 
   def export
     if Rails.env.development?
-      UserExportWorker.new.perform(current_user.email)
+      ChannelPartnerExportWorker.new.perform(current_user.id.to_s)
     else
-      UserExportWorker.perform_async(current_user.email)
+      ChannelPartnerExportWorker.perform_async(current_user.id.to_s)
     end
     flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
-    redirect_to admin_users_path
+    redirect_to channel_partners_path
   end
 
   def show
@@ -33,6 +29,7 @@ class ChannelPartnersController < ApplicationController
   end
 
   def edit
+    render layout: false
   end
 
   def create
@@ -40,9 +37,12 @@ class ChannelPartnersController < ApplicationController
 
     respond_to do |format|
       if @channel_partner.save
+        ChannelPartnerMailer.send_create(@channel_partner.id).deliver
         format.html { redirect_to (user_signed_in? ? channel_partners_path : root_path), notice: 'Channel partner was successfully created.' }
+        format.json { render json: @channel_partner, status: :created }
       else
         format.html { render :new }
+        format.json { render json: {errors: @channel_partner.errors.full_messages.uniq}, status: :unprocessable_entity }
       end
     end
   end
@@ -51,8 +51,10 @@ class ChannelPartnersController < ApplicationController
     respond_to do |format|
       if @channel_partner.update(permitted_attributes(@channel_partner))
         format.html { redirect_to channel_partners_path, notice: 'Channel partner was successfully updated.' }
+        format.json { render json: @channel_partner }
       else
         format.html { render :edit }
+        format.json { render json: {errors: @channel_partner.errors.full_messages.uniq}, status: :unprocessable_entity }
       end
     end
   end

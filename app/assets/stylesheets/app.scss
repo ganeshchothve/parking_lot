@@ -1,42 +1,51 @@
-@import "bootstrap";
-@import "intlTelInput";
-body{
-  color: #666;
-}
-label.label-required:after {
-  content: " *";
-  color: theme-color('danger');
-  font-weight: normal;
-}
-.intl-tel-input {width: 100%;}
+@import "custom_variables";
+@import "bootstrap/bootstrap";
+@import "font-awesome-sprockets";
+@import "font-awesome";
+@import "building";
+@import "custom"; // this is the css to be modified per client
 
-// Overriding sell.do form styling
-.selldof .title{
-  display: none;
-  padding: 0;
+html, body{
+	padding: 0;
+	margin: 0;
+	-webkit-font-smoothing: antialiased;
+	font-family: 'Nunito Sans', sans-serif;
+	background-color: $body-bg;
 }
-.selldof_row{
-  margin: 0 -15px;
+.logo-wrapper img{
+  max-height: 65px;
 }
-.selldof .btn[type='submit'], .sell_do_ctc_btn[type='submit'], .sell_do_verify_btn[type='submit']{
-  @extend .btn;
-  @extend .btn-primary;
+.intl-tel-input {
+  display: block;
+  width: 100%;
 }
-label.control-label{
-  font-size: 11px;
-  color: #999;
-  text-transform: uppercase;
-  margin-bottom: 0;
-  line-height: 11px;
+.continuous-row > [class*="col-"] {
+  margin-bottom: 15px;
+}
+.blockUI h1{
+  padding-top: 10px;
+  font-size: $font-size-base;
+  color: $gray-600;
+}
+.help-block {
+	display: block;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	color: #a6a6a6;
 }
 .form-group.has-error .form-control,
 .form-group.has-error .custom-select{
-  border-color: theme-color('danger') !important;
+  border-color: $form-feedback-invalid-color !important;
 }
 .form-group.has-error .help-block {
-  color: theme-color('danger') !important;
-  font-size: 12px;
+  color: $form-feedback-invalid-color !important;
 }
+label.label-required:after {
+  content: " *";
+  color: $form-feedback-invalid-color;
+  font-weight: normal;
+}
+
 [data-toggle="tab"].tab-error:after{
   content: "\f071";
   font: normal normal normal 14px/1 FontAwesome;
@@ -44,6 +53,103 @@ label.control-label{
   display: inline-block;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: theme-color('danger');
+  color: $form-feedback-invalid-color;
   margin: 0 6px;
+}
+.body-padding{
+  padding-top: 87px;
+}
+.navbar-brand img{
+  max-height: 45px;
+}
+#main-navbar a.nav-link{
+  font-size: $font-size-base * 1.1;
+}
+.dot {
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  display: inline-block;
+  line-height: 34px;
+}
+.border-thick{
+  border-width: 5px !important;
+}
+.fill-white{
+  fill: #fff;
+}
+figure.wave {
+  margin: 0 0 0;
+}
+.selldof .title{
+  display: none !important;
+}
+.selldof .btn, .sell_do_ctc_btn, .selldof .btn, .sell_do_verify_btn{
+  color: #fff !important;
+  background-color: $primary !important;
+  border-color: $primary !important;
+  font-size: 16px !important;
+}
+.selldof{
+  font-family: 'Nunito Sans', sans-serif !important;
+}
+.control-label, label{
+  font-size: $font-size-base * 0.70;
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}
+.navbar-light .navbar-toggler{
+  border: none;
+}
+@include media-breakpoint-down(md) {
+  .modal-lg{
+    width: 100%;
+  }
+  .navbar-collapse {
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+  }
+}
+.popover{
+  max-width: 450px;
+}
+.full-bg{
+  min-height: 100vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.jquery-countdown-container{
+  font-size: 56px;
+}
+@include media-breakpoint-up(md){
+  .h-md-100 {
+    height: 100% !important;
+  }
+}
+#gamification-container{
+  position: fixed;
+  width: 100%;
+  border-radius: 0;
+  z-index: 100;
+}
+@include media-breakpoint-up(md){
+  #gamification-container{
+    bottom: 52px;
+  }
+}
+@include media-breakpoint-down(md){
+  #gamification-container{
+    bottom: 0;
+  }
+}
+.page-break{
+  page-break-after: always;
+}
+@media print {
+  .tab-content > .tab-pane {
+      display: block !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+  }
 }

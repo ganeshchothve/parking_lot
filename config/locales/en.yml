@@ -1,33 +1,126 @@
 en:
+  date:
+    formats:
+      default: "%d/%m/%Y"
+  time:
+    formats:
+      default: "%d/%m/%Y %I:%M %p"
+  date_time:
+    formats:
+      default: "%d/%m/%Y %I:%M %p"
   global:
+    sign_in_h1: "Welcome back"
+    sign_in_h2: "Login to Book an Apartment online"
+    register_h1: "Sign Up"
+    register_h2: "Register Now and book an apartment by paying just Rs. Blocking Amount (just takes 3 minutes)"
+    custom: 'Special Features'
+    scheme: 'Cost Sheet & Payment Schedule'
+    schemes: 'Cost Sheets & Payment Schedules'
+    note: "Note"
+    notes: "Notes"
+    template: 'Template'
+    templates: 'Templates'
+    assets: 'Documents'
+    asset: 'Documents'
+    gallery: "Gallery"
+    client: 'Client'
+    clients: 'Clients'
     receipt: 'Payment'
     receipts: 'Payments'
-    asset: 'Reference Document'
-    assets: 'Reference Documents'
-    user_request: 'Cancellation Request'
-    user_requests: 'Cancellation Requests'
+    user_request: 'User Request'
+    user_requests: 'User Requests'
+    user_request_cancellation: 'Cancellation Request'
+    user_request_swap: 'Swap Request'
     receipt_with_status: '%{status} Payment'
     receipts_with_status: '%{status} Payments'
-    user_kyc: 'User KYC'
-    user_kycs: 'User KYCs'
+    user_kyc: 'KYC'
+    user_kycs: 'KYCs'
+    user_kyc_details: 'KYC Details'
     users: 'Users & Customers'
     user: 'User or Customer'
     customers: 'Customers'
     customer: 'Customer'
-    project_unit: 'Unit'
-    project_units: 'Units'
+    project_unit: 'Apartment'
+    project_units: 'Apartments'
     project_unit_with_status: '%{status} Unit'
     project_units_with_status: '%{status} Units'
     channel_partner: 'Partner Registration'
     channel_partners: 'Partner Registrations'
+    search: "Filter"
+    searches: "Filter"
+    otp: "OTP"
+    schemes: "Schemes"
+    scheme: "Scheme"
   mongoid:
     attributes:
+      asset:
+        file_size: 'Size'
+        file_name: 'Name'
+        asset_type: 'Type'
+      template:
+        name: 'Name'
+        content: 'Content'
+      client:
+        name: 'Client Name (Used across the app)'
+        allowed_bookings_per_user: 'Bookings allowed per user'
+        selldo_client_id: 'SellDo Client ID'
+        selldo_form_id: 'SellDo Form ID'
+        selldo_channel_partner_form_id: 'SellDo Form ID - For Channel Partners'
+        selldo_gre_form_id: 'SellDo Form ID - Used by Non Channel Partners'
+        selldo_api_key: 'SellDo API Key (Use generic Api Client)'
+        selldo_default_srd: 'SellDo Default SRD'
+        selldo_cp_srd: 'SellDo Channel Partner SRD'
+        notification_email: 'Notification Email (all emails are sent here)'
+        notification_numbers: 'Notification Numbers (Key SMS Reports are sent here)'
+        sender_email: 'Sender Email Address'
+        email_domains: 'Email Domains (to detect employee users)'
+        booking_portal_domains: 'Booking Portal Domains (where the portal is hosted)'
+        registration_name: 'Registration Name (Used in Payments)'
+        cin_number: 'CIN Number'
+        website_link: 'Website Link (Used in email communication)'
+        cp_disclaimer: 'Channel Partner Disclaimer (to be shown to Channel Partners during registration)'
+        disclaimer: 'Disclaimer'
+        support_number: 'Support Phone'
+        support_email: 'Support Email'
+        helpdesk_number: 'Helpdesk Phone (For after booking CRM Help)'
+        helpdesk_email: 'Helpdesk Email (For after booking CRM Help)'
+        ga_code: "Google Analytics Code (UA-XXXXXXXXX-Y)"
+        gtm_tag: "GTM Tag (Please add a the entire JS code)"
+        channel_partner_support_number: 'Support Number (For Channel Partners)'
+        channel_partner_support_email: 'Support Email (For Channel Partner)'
+        erp: 'ERP'
+        cancellation_amount: 'Cancellation Amount (displayed to Customers)'
+        area_unit: 'Unit of Area (used to display inventory)'
+        preferred_login: 'Preferred Login Method'
+        mixpanel_token: 'Mixpanel Token'
+        sms_provider_username: 'SMS Provider Username'
+        sms_provider_password: 'SMS Provider Password'
+        sms_mask: 'SMS Mask'
+        enable_actual_inventory: 'Enable Inventory for these user roles'
+        enable_channel_partners: 'Enable Channel Partners'
+        blocking_amount: 'Min. Amount for Blocking an Unit'
+        blocking_days: 'Unit to be blocked for (Days)'
+        holding_minutes: 'Unit to be held for (Minutes)'
+        enable_company_users: 'Allow Company Users & Benefits'
+      search:
+        bedrooms: "Beds"
+        agreement_price: "Agreement Value"
+        all_inclusive_price: 'All Inclusive Price'
+        carpet: "Carpet Area"
+        project_tower_id: "Tower"
+        project_unit_id: "Apartment"
       user_request:
+        request_type: 'Request type'
+        _type: 'Request type'
         user_id: 'Customer'
         comments: 'Complain / Request'
         status: 'Status'
-        project_unit_id: 'Related Unit'
+        project_unit_id: 'Related Apartment'
         receipt_id: 'Related Payment'
+        created_at: 'Created at'
+        resolved_at: 'Processed on'
+      note:
+        note: 'Note'
       receipt:
         tracking_id: 'Transaction ID (Processed Payment)'
         comments: 'Comments'
@@ -37,19 +130,19 @@ en:
         issued_date: "Date of issuance (e.g. Cheque Date)"
         issuing_bank: "Issuing Bank"
         issuing_bank_branch: "Issuing Bank Branch"
-        payment_identifier: "Transaction Identifier"
+        payment_identifier: "Cheque Number / Transaction Identifier"
         total_amount: "Total Amount (Rs.)"
         status: "Payment Status"
-        payment_type: "Payment Type (Towards Blocking or Booking)"
-        reference_project_unit_id: "Interested Unit (the customer may or may not block this)"
+        user: "Customer"
         user_id: "Customer"
-        project_unit_id: "Unit"
+        project_unit_id: "Apartment"
         creator_id: "Created by"
       user_kyc:
         name: "Name"
         email: "Email"
         phone: "Phone"
         dob: "Date of Birth"
+        dob_short: "DOB"
         pan_number: "PAN Number"
         aadhaar: "Aadhaar Number"
         gstn: "GSTN"
@@ -59,32 +152,125 @@ en:
         company_name: "Company Name"
         loan_required: "Are you looking at taking a loan?"
         existing_customer: "Are you an existing customer with us?"
-        comments: "Pleaes mention any specific notes for our team"
+        comments: "Please mention any specific notes for our team"
         user_id: "Customer"
         creator: "Created By"
-        project_units: "Units"
+        project_units: "Apartments"
+        son_daughter_of: 'Son / Daughter Of'
+        education_qualification: 'Educational Qualification'
+        designation: 'Designation'
+        company_name: 'Company Name'
+        poa_details_phone_no: 'Power of Attorney - Phone'
+        photo: 'Photo'
+        pancard_photo: 'PAN Card Photo'
+        adharcard_photo: 'Aadhaar Photo'
+        address_proof: 'Address Proof'
+        permanent_address: "Permanent Address"
+        correspondence_address: "Correspondence Address"
+        aadhaar: 'Aadhaar'
+        oci: 'OCI'
+        gstn: 'GSTN'
+        is_company: 'Are you a corporate buying an Apartment?'
+        anniversary: 'Anniversary'
+        poa_details: 'Power of Attorney Details'
+        loan_required: 'Do you require a Loan'
+        bank_name: 'Bank Name'
+        existing_customer_name: 'Customer Name'
+        existing_customer_project: 'Project you have already bought'
+        customer_company_name: 'Company Name'
+        configurations: 'Preferences'
+        number_of_units: 'Number of Units'
+        preferred_floors: 'Preferred Floors'
+        min_budget: 'Min. Budget (Rs.)'
+        max_budget: 'Max. Budget (Rs.)'
+        budget: 'Budget (Rs.)'
       project_unit:
+        costs: "Costs"
+        data: "Data"
+        bedrooms: "Beds"
+        bathrooms: "Baths"
+        status: "Status"
         user_id: "Customer"
-        receipt_ids: "Payments (associated with this Unit)"
-        user_request_ids: "User Requests (associated with this Unit)"
-        user_kyc_ids: "User KYCs (associated with this Unit)"
+        receipt_ids: "Payments (associated with this Apartment)"
+        user_request_ids: "User Requests (associated with this Apartment)"
+        user_kyc_ids: "Co-Applicants (KYCs associated with this Apartment)"
+        primary_user_kyc_id: "Primary User KYC"
+        name: 'Name'
+        project_tower_name: 'Project Tower'
+        project_name: 'Project'
+        blocked_on: 'Blocked On'
+        unit_facing_direction: 'Facing'
+        agreement_price: 'Agreement Value'
+        all_inclusive_price: 'All Inclusive Price'
+      cost:
+        name: "Name"
+        formula: "Formula"
+        absolute_value: "Absolute Value"
+        category: "Category"
+        order: "Order"
+      data_attribute:
+        name: "Name"
+        formula: "Formula"
+        absolute_value: "Absolute Value"
+        order: "Order"
+      scheme:
+        name: 'Name'
+        project_id: 'Project'
+        project_tower_id: 'Project Tower'
+        project_unit_id: 'Apartment'
+        user_id: 'User'
+        user_role: 'User Role'
+        value: 'Adjustment (Rs.)'
+        status: 'Status'
+        approved_at: 'Approved At'
+        approved_by: 'Approved By'
+        created_by: 'Created By'
       user:
+        created_at: "Registered At"
+        login_otp: 'Verification / Login OTP'
         name: 'Name'
         email: 'Email'
         phone: 'Phone'
         rera_id: 'RERA Registration Number'
         location: 'Location'
         lead_id: 'Sell.Do Lead ID'
+        time_zone: "User's Time Zone"
+        manager_role: "Sales Manager / Added by Role"
+        confirmed: "Confirmed"
         role: 'Role'
+        manager_id: "Partner / Manager / Added by"
+        manager_change_reason: "Reason for changing Partner"
         kyc_ready: 'Is the Customer KYC Ready?'
-        total_amount_paid: "Total Paid (you might some payments pending clearance)"
-        total_balance_pending: "Total Balance Pending (you might some payments pending clearance)"
+        total_amount_paid: "Total Paid (you might have some payments pending clearance)"
+        total_balance_pending: "Total Balance Pending (you might have some payments pending clearance)"
         total_unattached_balance: "Total Un-attached Balance (subject to clearance)"
+        is_active: 'Allow the user to login?'
       channel_partner:
         name: 'Name'
+        company_name: "Company Name"
+        address: "Address"
+        bank_detail: "Bank Details"
         email: 'Email'
         phone: 'Phone'
         rera_id: 'RERA Registration Number'
-        location: 'Location'
+        city: 'City'
         associated_user_id: 'Associated User'
         status: 'Status'
+        gstin_number: "GSTIN Number"
+        pan_number: "PAN Number"
+        aadhaar: "Aadhaar"
+      bank_detail:
+        name: "Bank Name"
+        account_holder_name: "Account Holder's Name"
+        branch: 'Branch'
+        account_type: 'Account Type'
+        ifsc_code: 'IFSC Code'
+        account_number: 'Account Number'
+        loan_required: 'Do you need a loan?'
+      address:
+        address1: 'Address'
+        address2: 'Street'
+        city: 'City'
+        state: 'State / Region'
+        country: 'Country'
+        zip: 'Zip / Pin Code'

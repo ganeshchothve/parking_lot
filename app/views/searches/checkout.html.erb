@@ -1,0 +1,82 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card card-body h-100 text-center bg-primary text-white">
+            To be fair to other user interested in this apartment, we have held this unit for some time. Please go through the costs & payment schedule before you make a payment of <%= number_to_indian_currency(current_client.blocking_amount) %>.<br/>
+            <div class="font-weight-bold jquery-countdown-container" id="held-until-countdown"></div>
+          </div>
+        </div>
+        <div class="col-md-8 mt-3 mt-md-0">
+          <%= render 'dashboard/project_unit_overview', {project_unit: @project_unit} %>
+        </div>
+      </div>
+      <div class="mt-3"></div>
+      <div class="card">
+        <div class="card-header">
+          Select a <%= global_labels[:scheme] %>
+        </div>
+        <div class="card-body">
+          <%= form_for(@project_unit, url: update_scheme_user_search_path(@search), html: {method: "post", class: '', id: 'update_scheme_booking_detail_form'}) do |f| %>
+            <div class="form-group">
+              <%= f.label :scheme_id %>
+              <%= f.select :selected_scheme_id, @project_unit.permitted_schemes(current_user).collect{|scheme| [scheme.name, scheme.id]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
+            </div>
+            <div class="form-group">
+              <%= submit_tag :Apply, class: "btn btn-primary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      <div class="mt-3"></div>
+      <%= render 'dashboard/project_unit_cost_sheet', {project_unit: @project_unit, search: @search} %>
+      <div class="mt-3"></div>
+      <%= render "dashboard/project_unit_payment_schedule", {project_unit: @project_unit, search: @search} %>
+      <div class="mt-3"></div>
+      <%
+        alert = (current_client.cancellation_amount.present? && current_client.cancellation_amount.to_f > 0) ? "#{number_to_indian_currency(current_client.cancellation_amount)} processing charges will be applied on cancellation of booking" : ""
+      %>
+      <% if current_client.disclaimer.present? %>
+        <div class="card card-body small" style="height: 100px; overflow: auto;">
+          <div class="font-weight-bold mb-2">Disclaimer:</div>
+          <%= current_client.disclaimer %>
+        </div>
+        <div class="mt-3"></div>
+      <% end %>
+      <% if @project_unit.status == "hold" %>
+        <%= form_for @project_unit, url: make_available_user_search_path(@search), method: 'post', html: {class: 'validate-form'} do |f| %>
+          <%= f.hidden_field :status, value: 'available' %>
+          <% if current_user.buyer? %>
+            <%= link_to "I Agree", payment_user_search_path(@search), class: 'btn btn-primary', style:'margin-top:0px', onclick: alert %>
+          <% elsif @user.unattached_blocking_receipt(@project_unit.blocking_amount).present? %>
+            <%= link_to "I Agree on behalf of #{@user.name}", payment_user_search_path(@search), class: 'btn btn-primary', style:'margin-top:0px', onclick: alert %>
+          <% elsif ReceiptPolicy.new(current_user, Receipt.new(user: @user, status: "clearance_pending", project_unit_id: @project_unit.id)).new? %>
+            <%= link_to "I Agree on behalf of #{@user.name}", new_admin_user_project_unit_receipt_path(@user.id, @project_unit.id), class: 'btn btn-primary modal-remote-form-link', style:'margin-top:0px', onclick: alert %>
+          <% else %>
+            <div class="alert alert-danger">
+              You do not have access to take a Clearance pending <%= global_labels[:receipt] %> on behalf of <%= @user.name %>.
+            </div>
+          <% end %>
+          <%= f.submit 'Cancel', class: 'btn btn-danger mt-1 mt-md-0' , data:{event_category: 'Section', event_action: 'Click', event_name: 'Cancel'} %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>
+<!-- GENERICTODO: Ecommerce conversion call ga -->
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    var countdown_time = "<%= (@project_unit.held_on + @project_unit.holding_minutes.minutes).in_time_zone(current_user.time_zone).strftime("%m/%d/%Y %H:%M:%S") %>";
+    $("#held-until-countdown").countdown(countdown_time, {
+      elapse: false
+    }).on('update.countdown', function(event) {
+      if (!event.elapsed) {
+        $(this).text(event.strftime('%M:%S'));
+      }
+    }).on('finish.countdown', function(){
+      window.location = window.location;
+    });
+    FormInitializer.init($("#update_scheme_booking_detail_form"))
+  });
+<% end %>

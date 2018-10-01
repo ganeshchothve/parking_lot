@@ -1,28 +1,32 @@
 class UserKycPolicy < ApplicationPolicy
   def index?(for_user=nil)
     if for_user.present?
-      for_user.role?('user')
+      for_user.buyer?
     else
       true
     end
   end
 
   def new?
-    record.user_id.present? && record.user.role?('user')
+    if record.user_id.present? && user.buyer?
+      record.user_id == user.id
+    elsif record.user_id.present?
+      record.user.buyer?
+    else
+      false
+    end
   end
 
   def edit?
-    if user.role?('user')
+    if user.buyer?
       record.user_id == user.id
-    elsif user.role?('channel_partner')
-      record.user.channel_partner_id == user.id
     else
-      true
+      record.user.buyer?
     end
   end
 
   def create?
-    true
+    new?
   end
 
   def update?
@@ -30,7 +34,7 @@ class UserKycPolicy < ApplicationPolicy
   end
 
   def permitted_attributes params={}
-    attributes = [:name, :email, :phone, :dob, :pan_number, :aadhaar, :gstn, :anniversary, :nri, :poa, :company_name, :loan_required, :existing_customer, :comments, :existing_customer_name, :existing_customer_project, :bank_name, :poa_details, :is_company]
+    attributes = [:salutation, :first_name, :last_name, :email, :phone, :dob, :pan_number, :aadhaar, :oci, :gstn, :anniversary, :nri, :poa, :customer_company_name, :existing_customer, :comments, :existing_customer_name, :existing_customer_project, :poa_details, :is_company, :education_qualification, :designation, :company_name, :poa_details_phone_no, :number_of_units, :min_budget, :max_budget, correspondence_address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes, permanent_address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes, bank_detail_attributes: BankDetailPolicy.new(user, BankDetail.new).permitted_attributes, configurations:[], preferred_floors: [], project_unit_ids: []]
     attributes
   end
 end

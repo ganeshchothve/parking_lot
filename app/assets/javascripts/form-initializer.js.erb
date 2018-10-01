@@ -15,12 +15,26 @@ FormInitializer = (function(){
     });
     $(selector).find('.phone, [type="tel"]').intlTelInput({
 			initialCountry: "in",
+      formatOnDisplay: false,
 			preferredCountries: ["in", "us", "gb"],
 			utilsScript: "<%= asset_path('intTelInputUtils.js') %>",
 			nationalMode: false
 		});
+    crs.init();
     $(selector).find('.selectize-tags').selectize({create: true});
     $(selector).find('.array-field').arrayField();
+    $(selector).find('.daterangefilter').daterangepicker({
+      showDropdowns: true,
+      autoUpdateInput: false
+    });
+    $(selector).find('.daterangefilter').on('apply.daterangepicker', function(ev, picker) {
+      $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+    });
+
+    $(selector).find('.daterangefilter').on('cancel.daterangepicker', function(ev, picker) {
+        $(this).val('');
+    });
+
     $(selector).find('.datepicker').each(function(){
       var datepickerOptions = _.clone(Utils.datepickerOptions);
       if($(this).data("minDate")){
@@ -49,32 +63,36 @@ FormInitializer = (function(){
     $(selector).find('.datetimepicker').datetimepicker(Utils.datetimepickerOptions);
     FileIcon.init($(".asset-delete"), $(".asset-icon"));
     _.each($(selector).find(".fileupload"), function(){
-      $(this).fileUploader();
+      $(this).fileUploader({
+        download_all: false
+      });
     })
-    // _.each($(selector).find(".summernote"), function(el){
-    //   if(!$(el).attr("disabled")){
-    //     $(selector).find(".summernote").summernote({
-    //       disableDragAndDrop: true,
-    //       toolbar: [
-    //         // [groupName, [list of button]]
-    //         ['style', ['bold', 'italic', 'underline', 'clear']],
-    //         ['font', ['strikethrough', 'superscript', 'subscript']],
-    //         ['fontsize', ['fontsize']],
-    //         ['color', ['color']],
-    //         ['para', ['ul', 'ol', 'paragraph']],
-    //         ['link', ['link']],
-    //         ['table', ['table']],
-    //         ['height', ['height']]
-    //       ]
-    //     });
-    //   }
-    // });
 
     _.each($(selector).find(".selectize-remote"), function(el){
       var url = $(el).data("url");
       var ds = $(el).data("ds");
       if(!_.isEmpty(url)){
         remote_selectize($(el), {ds: ds}, {url: url} );
+      }
+    });
+
+    _.each($(selector).find(".summernote"), function(el){
+      if(!$(el).attr("disabled")){
+        $(selector).find(".summernote").summernote({
+          disableDragAndDrop: true,
+          toolbar: [
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['font', ['strikethrough', 'superscript', 'subscript']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['link', ['link']],
+            ['table', ['table']],
+            ['height', ['height']]
+          ],
+          tabsize: 2,
+          height: 200
+        });
       }
     });
   };
@@ -136,3 +154,10 @@ FormInitializer = (function(){
   };
 
 })();
+$(document).on('nested:fieldAdded', function(event){
+  var $field = event.field;
+  FormInitializer.init($field);
+});
+$(document).on('nested:fieldRemoved', function (event) {
+  $('[required]', event.field).removeAttr('required');
+});

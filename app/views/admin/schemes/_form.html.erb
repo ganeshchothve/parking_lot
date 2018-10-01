@@ -1,0 +1,120 @@
+<%= nested_form_for([:admin, @scheme], local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['schemes'], "data-type": "json", id: 'scheme_form'}) do |f| %>
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><%= @scheme.new_record? ? "New" : "Edit" %> <%= "#{global_labels['scheme']}" %></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <% if f.object.is_a?(BookingDetailScheme) %>
+          <div class="form-group">
+            <%= f.label :derived_from_scheme_id, class: 'control-label' %>
+            <%= f.select :derived_from_scheme_id, @scheme.booking_detail.project_unit.permitted_schemes(current_user).collect{|scheme| [scheme.name, scheme.id]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
+          </div>
+        <% end %>
+        <div class="form-group">
+          <%= f.label :name, class: 'label-required' %>
+          <%= f.text_field :name, autofocus: true, class: "form-control", required: 'required', disabled: (policy(@scheme).editable_field?("name") ? false : true) %>
+        </div>
+        <%= f.hidden_field :project_id, value: (@scheme.project_id.present? ? @scheme.project_id : current_project.id) %>
+        <div class="form-group">
+          <%= f.label :project_tower_id, class: 'control-label' %>
+          <%= f.select :project_tower_id, f.object.project_tower_id.present? ? [[f.object.project_tower.name, f.object.project_tower.id]] : current_project.project_towers.collect{|t| [t.name, t.id]}, {prompt: true}, class: 'selectize', disabled: (policy(@scheme).editable_field?("project_tower_id") ? false : true) %>
+        </div>
+        <div class="form-group">
+          <%= f.label :project_unit_id, class: 'control-label' %>
+          <%= f.select :project_unit_id, f.object.project_unit_id.present? ? [[f.object.project_unit.name, f.object.project_unit.id]] : [], {prompt: true}, class: 'selectize-remote', disabled: (policy(@scheme).editable_field?("project_unit_id") ? false : true), "data-url": admin_project_units_path, "data-params": {fltrs: {status: {"$in": ['available', 'management', 'employee']}}}.to_json, 'data-ds': 'ds' %>
+        </div>
+        <div class="form-group">
+          <%= f.label :user_role, class: 'control-label' %>
+          <%= f.select :user_role, User.available_roles(current_client).select{|x| User.buyer_roles(current_client).include?(x[:id])}.collect{|x| [x[:text], x[:id]] }, {prompt: true}, class: 'selectize', disabled: (policy(@scheme).editable_field?("user_role") ? false : true) %>
+        </div>
+        <div class="form-group">
+          <%= f.label :user_id, class: 'control-label' %>
+          <%= f.select :user_id, f.object.user_id.present? ? [[f.object.user.name, f.object.user.id]] : [], {prompt: true}, class: 'selectize-remote', disabled: (policy(@scheme).editable_field?("user_id") ? false : true), "data-url": admin_users_path, "data-params": {fltrs: {role: {"$in": User.buyer_roles(current_client) }}}.to_json, 'data-ds': 'ds' %>
+        </div>
+        <div class="form-group">
+          <%= f.label :can_be_applied_by, class: '' %>
+          <%= f.select :can_be_applied_by, User.available_roles(current_client).collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', multiple: "multiple", disabled: (policy(@scheme).editable_field?("can_be_applied_by") ? false : true) %>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <%= f.label :payment_schedule_template_id, class: 'label-required' %>
+              <%= f.select :payment_schedule_template_id, ::Template::PaymentScheduleTemplate.where(booking_portal_client_id: current_client.id).collect{|x| [x.name, x.id]}, {}, class: "selectize", disabled: (policy(@scheme).editable_field?("payment_schedule_template_id") ? false : true) %>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <%= f.label :cost_sheet_template_id, class: 'label-required' %>
+              <%= f.select :cost_sheet_template_id, ::Template::CostSheetTemplate.where(booking_portal_client_id: current_client.id).collect{|x| [x.name, x.id]}, {}, class: "selectize", disabled: (policy(@scheme).editable_field?("cost_sheet_template_id") ? false : true) %>
+            </div>
+          </div>
+        </div>
+        <div class="payment-adjustments">
+          <% editable_payment_adjustment = policy(@scheme).editable_field?("payment_adjustments_attributes")%>
+          <% if editable_payment_adjustment %>
+            <%= f.link_to_add "Add", :payment_adjustments, :data => { :target => ".payment-adjustments" } %>
+          <% end %>
+          <%= f.fields_for :payment_adjustments do |adj|%>
+            <% if editable_payment_adjustment %>
+              <%= adj.link_to_remove icon("far", "times-circle") %>
+            <% end %>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= adj.label :name, class: 'label-required' %>
+                  <%= adj.text_field :name, class: "form-control", required: 'required', disabled: !editable_payment_adjustment %>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= adj.label :field, class: 'label-required' %>
+                  <%= adj.select :field, Scheme.available_fields.collect{|x| [x.titleize, x]}, {prompt: true}, class: 'selectize-tags', disabled: !editable_payment_adjustment %>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <%= adj.label :absolute_value, class: 'label-required' %>
+              <%= adj.number_field :absolute_value, class: "form-control", disabled: !editable_payment_adjustment %>
+              <p class="small text-muted">Total Adjustment will be calculated as Rs. (saleable) * (scheme mentioned here)</p>
+            </div>
+            <div class="form-group">
+              <%= adj.label :formula, class: 'label-required' %>
+              <%= adj.number_field :formula, class: "form-control", disabled: !editable_payment_adjustment %>
+              <p class="small text-muted">Total Adjustment will be calculated as Rs. (saleable) * (scheme mentioned here)</p>
+            </div>
+          <% end %>
+        </div>
+        <% if policy(@scheme).editable_field?("status") %>
+          <div class="form-group">
+            <%= f.label :status, class: 'label-required' %>
+            <%
+              if @scheme.new_record?
+                statuses = Scheme.available_statuses.select{|x| x[:id] == 'draft' }
+              elsif @scheme.status == 'approved' || @scheme.status == 'disabled'
+                statuses = Scheme.available_statuses.select{|x| ['disabled', 'approved'].include?(x[:id]) }
+              else
+                statuses = Scheme.available_statuses
+              end
+              statuses = statuses.collect{|x| [x[:text], x[:id]] }
+            %>
+            <%= f.select :status, statuses, {prompt: true}, class: 'selectize', required: "required" %>
+          </div>
+        <% end %>
+      </div>
+      <div class="modal-footer">
+        <%= f.submit "Save", class: "btn btn-primary" %>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>
+<%= javascript_tag do %>
+$(document).ready(function(){
+  FormInitializer.init($("#scheme_form"));
+});
+<% end %>

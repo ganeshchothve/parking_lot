@@ -1,0 +1,67 @@
+<% receipts = DashboardDataProvider.receipts_dashboard(current_user, params[:receipt_fltrs]) %>
+<div class="card">
+  <div class="card-header">
+    <%= global_labels[:receipts] %>
+  </div>
+  <div class="card-body">
+    <%= form_tag dashboard_path, method: "get", id: "dashboard-receipts-fltrs" do %>
+    <div class="row">
+      <div class="col-md-11">
+        <div class="form-group">
+          <%= select_tag "receipt_fltrs[group_by]", options_for_select(DashboardDataProvider.receipts_available_group_by.collect{|x| [x[:text], x[:id]]}, (params[:receipt_fltrs].present? && params[:receipt_fltrs][:group_by].present? ? params[:receipt_fltrs][:group_by] : [])), {class: "selectize", prompt: "Select", multiple: true} %>
+        </div>
+      </div>
+      <div class="col-md-1">
+        <div class="form-group">
+          <%= submit_tag :Apply, class: "btn btn-primary float-md-right" %>
+        </div>
+      </div>
+    </div>
+    <% end %>
+    <% if receipts.present? %>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <% if (params[:receipt_fltrs] && params[:receipt_fltrs][:group_by] && params[:receipt_fltrs][:group_by].include?("status")) || params[:receipt_fltrs].nil? %>
+              <th>Status</th>
+              <% end %>
+              <% if (params[:receipt_fltrs] && params[:receipt_fltrs][:group_by] && params[:receipt_fltrs][:group_by].include?("payment_mode")) || params[:receipt_fltrs].nil? %>
+              <th>Payment Mode</th>
+              <% end %>
+              <th class="text-right">Count</th>
+              <th class="text-right">Total Amount</th>
+              <th class="text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% receipts.each do |d| %>
+            <tr>
+              <% if (params[:receipt_fltrs] && params[:receipt_fltrs][:group_by] && params[:receipt_fltrs][:group_by].include?("status")) || params[:receipt_fltrs].nil? %>
+              <td><%= d[:status].titleize %></td>
+              <% end %>
+              <% if (params[:receipt_fltrs] && params[:receipt_fltrs][:group_by] && params[:receipt_fltrs][:group_by].include?("payment_mode")) || params[:receipt_fltrs].nil? %>
+              <td><%= Receipt.available_payment_modes.find{|x| x[:id] == d[:payment_mode]}[:text]  %></td>
+              <% end %>
+              <td class="text-right"><%= d[:count] %></td>
+              <td class="text-right"><%= number_to_indian_currency(d[:total_amount]) %></td>
+              <td class="text-right">
+                <% if policy(Receipt).index? %>
+                  <%= link_to "View", user_receipts_path(fltrs: {status: d[:status], payment_mode: d[:payment_mode]}), target: "_blank" %>
+                <% end %>
+              </td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      No <%= global_labels[:receipts] %> yet.
+    <% end %>
+  </div>
+</div>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($("#dashboard-receipts-fltrs"));
+  });
+<% end %>

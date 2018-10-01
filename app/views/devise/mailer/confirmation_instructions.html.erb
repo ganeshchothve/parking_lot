@@ -1,5 +1,24 @@
-<p>Welcome <%= @email %>!</p>
-
-<p>You can confirm your account email through the link below:</p>
-
-<p><%= link_to 'Confirm my account', confirmation_url(@resource, confirmation_token: @token) %></p>
+<div class="card w-100">
+  <div class="card-body">
+    <p>
+      Dear <%= @resource.name %>,
+    </p>
+    <div class="mb-3"></div>
+    <p>
+      <% if @resource.role?("channel_partner") %>
+        Thank you for registering as a Channel Partner at <%= current_project.name %>. Please confirm your account by clicking the link below. <br/>
+        You can start entering your leads as soon as your account is confirmed.
+      <% elsif @resource.buyer? %>
+        <% if @resource.manager_id.present? && @resource.manager.role?("channel_partner") %>
+          Your interest for <%= current_project.name %> has been registered by <%= @resource.manager.name %>. Please confirm your account by clicking the link below and book your Home in 4 easy steps!<br/>
+        <% else %>
+          Thank you for registering at <%= current_project.name %>. Please confirm your account by clicking the link below and book your Home in 4 easy steps!
+        <% end %>
+      <% else %>
+        Please confirm your account by clicking the link below.
+      <% end %>
+    </p>
+    <div class="mb-3"></div>
+    <%= link_to 'Confirm account', confirmation_url(@resource, confirmation_token: @token, manager_id: @resource.manager_id) %>
+  </div>
+</div>

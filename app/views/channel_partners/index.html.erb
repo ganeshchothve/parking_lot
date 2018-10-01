@@ -1,50 +1,30 @@
-<% render "breadcrumbs" %>
-<div class="row">
-  <div class="col-md-10 border border-left-0 border-top-0 border-bottom-0">
-    <table class="table">
-      <thead class="thead-default">
-        <% labels = t('mongoid.attributes.channel_partner').with_indifferent_access %>
-        <tr>
-          <th><%= labels[:name] %></th>
-          <th><%= labels[:email] %></th>
-          <th><%= labels[:phone] %></th>
-          <th><%= labels[:rera_id] %></th>
-          <th><%= labels[:location] %></th>
-          <th><%= labels[:status] %></th>
-          <th><%= labels[:associated_user_id] %></th>
-          <th class='text-right'>Actions</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <% @channel_partners.each do |channel_partner| %>
-          <tr>
-            <td><%= channel_partner.name %></td>
-            <td><%= channel_partner.email %></td>
-            <td><%= channel_partner.phone %></td>
-            <td><%= channel_partner.rera_id %></td>
-            <td><%= channel_partner.location %></td>
-            <td><%= ChannelPartner.available_statuses.find{|x| x[:id] == channel_partner.status}[:text] %></td>
-            <td><%= channel_partner.associated_user_id.present? ? link_to(channel_partner.associated_user.name, admin_user_path(channel_partner.associated_user_id)) : '-' %></td>
-            <td class="text-right">
-              <div class="dropdown">
-                <a class="btn btn-light dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-                <div class="dropdown-menu dropdown-menu-right">
-                  <% if ChannelPartnerPolicy.new(current_user, channel_partner).edit? %>
-                    <%= link_to 'Edit', edit_channel_partner_path(channel_partner), class: 'dropdown-item' %>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <div class="row justify-content-center">
+        <div class="<%= @channel_partner.blank? ? 'col-md-9' : 'col-md-12' %>">
+          <%= render 'breadcrumbs', {channel_partner: @channel_partner, user: @user} %>
+          <div class="card h-100">
+            <div class="card-body">
+              <div class="row mb-3">
+                <div class="col-md-7">
+                  <% if ChannelPartnerPolicy.new(current_user, ChannelPartner).export? %>
+                    <%= link_to "Export all #{global_labels['channel_partners']}", export_channel_partners_path, class: 'btn btn-primary' %>
                   <% end %>
                 </div>
+                <div class="col-md-5 text-md-right">
+                  <h6 class="mt-2">Total <%= global_labels[:channel_partners] %>: <%= @channel_partners.total_entries %></h6>
+                </div>
               </div>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-    <% if ChannelPartnerPolicy.new(current_user, ChannelPartner).export? %>
-      <%= link_to "Export all #{global_labels['channel_partners']}", export_channel_partners_path, class: 'btn btn-outline-primary float-left ml-2' %>
-    <% end %>
-  </div>
-  <div class="col-md-2">
-    <%= render "filters" %>
+              <%= render 'index', {channel_partners: @channel_partners} %>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="d-md-none mt-3"></div>
+          <%= render "filters" %>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

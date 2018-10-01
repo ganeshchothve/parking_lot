@@ -1,5 +1,9 @@
-<% if current_user.role?('user') %>
-  <%= render 'project_units', {project_units: current_user.project_units} %>
-<% elsif current_user.role?('crm') %>
-  <%= render 'crm' %>
+<% if current_user.buyer? %>
+  <%= render 'dashboard/index/user' %>
+<% elsif current_user.role?('channel_partner') %>
+  <%= render 'dashboard/index/channel_partner' %>
+<% elsif current_user.role?('cp') %>
+  <%= render 'dashboard/index/cp' %>
+<% elsif ['superadmin', 'admin', 'crm', 'cp_admin', 'sales_admin', 'sales', 'gre'].include?(current_user.role) %>
+  <%= render 'dashboard/index/crm' %>
 <% end %>

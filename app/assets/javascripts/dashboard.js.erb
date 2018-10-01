@@ -1,0 +1,65 @@
+// This is a manifest file that'll be compiled into application.js, which will include all the files
+// listed below.
+//
+// Any JavaScript/Coffee file within this directory, lib/assets/javascripts, or any plugin's
+// vendor/assets/javascripts directory can be referenced here using a relative path.
+//
+// It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
+// compiled file. JavaScript code in this file should be added after the last require_* statement.
+//
+// Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
+// about supported directives.
+//
+//= require rails-ujs
+//= require jquery3
+//= require popper
+//= require bootstrap-sprockets
+//= require noty
+//= require lodash
+//= require intlTelInput
+//= require jquery.ui.widget
+//= require jquery.validate
+//= require moment
+//= require amura
+//= require jquery_nested_form
+//= require jquery.fileupload
+//= require jquery.scrollTo
+//= require jquery.crs
+//= require jquery.blockUI.js
+//= require modal-remote-form
+//= require selectize
+//= require plugins/array_field
+//= require plugins/file_uploader
+//= require daterangepicker
+//= require jquery.countdown
+//= require fontawesome-all
+//= require bootstrap-datetimepicker.min
+//= require otp_based_login
+//= require summernote-bs4
+//= require_tree ./foyr
+//= require olark
+//= require utils
+//= require file-icon
+//= require form-initializer
+//= require validator
+//= require registration
+//= require gamification
+//= require search
+
+$.ajaxSetup({
+  headers: {
+    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+  }
+});
+
+$(document).ready(function(){
+  gamificationSlideCount = $(".gamification_container div").length;
+  sliderSelector = ".gamification_container";
+
+  $(".tower-name-box").on("click", function(){
+    $(".tower-name-box").removeClass("active");
+    $(this).addClass("active");
+    $('[data-stage="select-apartment"]').data("selected-towerid", $(this).data("towerid"));
+    Gamification.gamifyTowerSelection(selectedTower);
+  });
+});

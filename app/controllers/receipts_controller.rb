@@ -1,8 +1,8 @@
 class ReceiptsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user
+  before_action :set_receipt, except: [:index, :export, :new, :create, :direct]
   before_action :set_project_unit
-  before_action :set_receipt, except: [:index, :export, :new, :create]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: [:index, :export]
 
@@ -15,12 +15,27 @@ class ReceiptsController < ApplicationController
 
   def export
     if Rails.env.development?
-      ReceiptExportWorker.new.perform(current_user.email)
+      ReceiptExportWorker.new.perform(current_user.id.to_s)
     else
-      ReceiptExportWorker.perform_async(current_user.email)
+      ReceiptExportWorker.perform_async(current_user.id.to_s)
     end
     flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
-    redirect_to admin_users_path
+    redirect_to admin_receipts_path
+  end
+
+  def resend_success
+    user = @receipt.user
+    if user.booking_portal_client.email_enabled?
+      Email.create!({
+        booking_portal_client_id: user.booking_portal_client_id,
+        email_template_id:Template::EmailTemplate.find_by(name: "receipt_success").id,
+        recipients: [@receipt.user],
+        cc_recipients: (user.manager_id.present? ? [user.manager] : []),
+        triggered_by_id: @receipt.id,
+        triggered_by_type: @receipt.class.to_s
+      })
+    end
+    redirect_to (request.referrer.present? ? request.referrer : dashboard_path)
   end
 
   def show
@@ -29,60 +44,73 @@ class ReceiptsController < ApplicationController
   end
 
   def new
-    if params[:project_unit_id].blank? && current_user.role?('user')
+    if params[:project_unit_id].blank? && current_user.buyer?
+      flash[:notice] = "Please Select Apartment before making payment"
       redirect_to(receipts_path)
       return
     end
     if params[:project_unit_id].present?
       project_unit = ProjectUnit.find(params[:project_unit_id])
-      @receipt = Receipt.new(creator: current_user, project_unit_id: project_unit.id, user_id: @user, total_amount: project_unit.pending_balance, payment_type: 'booking')
+      @receipt = Receipt.new(creator: current_user, project_unit_id: project_unit.id, user_id: @user, total_amount: (project_unit.status == "hold" ? project_unit.blocking_amount : project_unit.pending_balance))
     else
-      @receipt = Receipt.new(creator: current_user, user_id: @user, payment_mode: 'cheque', payment_type: 'blocking')
+      @receipt = Receipt.new(creator: current_user, user_id: @user, payment_mode: 'cheque', total_amount: current_client.blocking_amount)
     end
     authorize @receipt
+    render layout: false
+  end
+
+  def direct
+    @receipt = Receipt.new(creator: current_user, user_id: @user, payment_mode: (current_user.buyer? ? 'online' : 'cheque'), total_amount: current_client.blocking_amount)
+    authorize @receipt
+    render layout: false
   end
 
   def create
-    base_params = {user: @user, reference_project_unit_id: params[:receipt][:reference_project_unit_id]}
+    base_params = {user: @user}
     if params[:receipt][:project_unit_id].present?
       project_unit = ProjectUnit.find(params[:receipt][:project_unit_id])
-      base_params.merge!({project_unit_id: project_unit.id, reference_project_unit_id: project_unit.id})
-    end
-    if project_unit.present?
-      if ['blocked', 'booked_tentative'].include?(project_unit.status)
-        base_params[:payment_type] = 'booking'
-      end
-    else
-      base_params[:payment_type] = 'blocking'
+      base_params.merge!({project_unit_id: project_unit.id})
     end
     @receipt = Receipt.new base_params
     @receipt.creator = current_user
     @receipt.assign_attributes(permitted_attributes(@receipt))
-    @receipt.receipt_id = Receipt.generate_receipt_id
-    @receipt.payment_gateway = 'CCAvenue'
+    if @receipt.payment_mode == "online"
+      @receipt.payment_gateway = current_client.payment_gateway
+    end
     authorize @receipt
     respond_to do |format|
       if @receipt.save
-        format.html {
-          if @receipt.payment_mode == 'online'
-            if @receipt.payment_gateway_service.present?
-              redirect_to @receipt.payment_gateway_service.gateway_url
-            else
-              flash[:notice] = "We couldn't redirect you to the payment gateway, please try again"
-              @receipt.set(status: "failed")
-              redirect_to dashboard_path
-            end
+        url = dashboard_path
+        if @receipt.payment_mode == 'online'
+          if @receipt.payment_gateway_service.present?
+            url = @receipt.payment_gateway_service.gateway_url(@receipt.user.get_search(@receipt.project_unit_id).id)
+            format.html{ redirect_to url }
+            format.json{ render json: {}, location: url }
           else
-            redirect_to current_user.role?('user') ? root_path : edit_admin_user_receipt_path(@user, @receipt)
+            flash[:notice] = "We couldn't redirect you to the payment gateway, please try again"
+            @receipt.update_attributes(status: "failed")
+            url = dashboard_path
           end
-        }
+        else
+          flash[:notice] = "Receipt was successfully updated. Please upload documents"
+          if current_user.buyer?
+            url = dashboard_path
+          else
+            url = admin_user_receipts_path(@user)
+            url += "?remote-state=#{assetables_path(assetable_type: @receipt.class.model_name.i18n_key.to_s, assetable_id: @receipt.id)}"
+          end
+        end
+        format.json{ render json: @receipt, location: url }
+        format.html{ redirect_to url }
       else
+        format.json { render json: {errors: @receipt.errors.full_messages}, status: :unprocessable_entity }
         format.html { render 'new' }
       end
     end
   end
 
   def edit
+    render layout: false
   end
 
   def update
@@ -91,7 +119,7 @@ class ReceiptsController < ApplicationController
         format.html { redirect_to admin_user_receipts_path(@user), notice: 'Receipt was successfully updated.' }
       else
         format.html { render :edit }
-        format.json { render json: @receipt.errors, status: :unprocessable_entity }
+        format.json { render json: {errors: @receipt.errors.full_messages}, status: :unprocessable_entity }
       end
     end
   end
@@ -102,7 +130,7 @@ class ReceiptsController < ApplicationController
   end
 
   def set_user
-    if current_user.role?("user")
+    if current_user.buyer?
       @user = current_user
     else
       @user = (params[:user_id].present? ? User.find(params[:user_id]) : nil)
@@ -110,13 +138,17 @@ class ReceiptsController < ApplicationController
   end
 
   def set_project_unit
-    @project_unit = (params[:project_unit_id].present? ? ProjectUnit.find(params[:project_unit_id]) : nil)
+    @project_unit = if params[:project_unit_id].present?
+      ProjectUnit.find(params[:project_unit_id])
+    elsif @receipt.present?
+      @receipt.project_unit
+    end
   end
 
   def authorize_resource
     if params[:action] == "index" || params[:action] == 'export'
       authorize Receipt
-    elsif params[:action] == "new" || params[:action] == "create"
+    elsif params[:action] == "new" || params[:action] == "create" || params[:action] == "direct"
       authorize Receipt.new(user_id: @user.id)
     else
       authorize @receipt
@@ -124,20 +156,7 @@ class ReceiptsController < ApplicationController
   end
 
   def apply_policy_scope
-    custom_scope = Receipt.all.criteria
-    if current_user.role?('admin') || current_user.role?('crm')
-      if params[:user_id].present?
-        custom_scope = custom_scope.where(user_id: params[:user_id])
-      end
-    elsif current_user.role?('channel_partner')
-      if params[:user_id].present?
-        custom_scope = custom_scope.where(user_id: params[:user_id])
-      else
-        custom_scope = custom_scope.where(user_id: current_user.id)
-      end
-    else
-      custom_scope = custom_scope.where(user_id: current_user.id)
-    end
+    custom_scope = Receipt.where(Receipt.user_based_scope(current_user, params))
     Receipt.with_scope(policy_scope(custom_scope)) do
       yield
     end

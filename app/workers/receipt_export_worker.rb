@@ -2,16 +2,17 @@ require 'spreadsheet'
 class ReceiptExportWorker
   include Sidekiq::Worker
 
-  def perform emails
+  def perform user_id
+    user = User.find(user_id)
     file = Spreadsheet::Workbook.new
     sheet = file.create_worksheet(name: "Receipts")
     sheet.insert_row(0, ReceiptExportWorker.get_column_names)
-    Receipt.all.each_with_index do |receipt, index|
+    Receipt.where(Receipt.user_based_scope(user)).each_with_index do |receipt, index|
       sheet.insert_row(index+1, ReceiptExportWorker.get_receipt_row(receipt))
     end
     file_name = "receipt-#{SecureRandom.hex}.xls"
     file.write("#{Rails.root}/#{file_name}")
-    ExportMailer.notify file_name, emails, "Payments"
+    ExportMailer.notify(file_name, user.email, "Payments").deliver
   end
 
   def self.get_column_names
@@ -22,17 +23,26 @@ class ReceiptExportWorker
       "Issued Date",
       "Issuing Bank",
       "Issuing Bank Branch",
-      "Payment IDentifier",
+      "Payment Identifier",
       "Tracking ID",
       "Total Amount",
       "Status",
       "Status Message",
-      "Payment Type",
       "Payment Gateway",
-      "Customer",
+      "Client Name",
       "User ID (Used for VLOOKUP)",
+      "Manager Name",
+      "Manager Role (Source)",
       "Project Unit",
-      "Created By"
+      "Base Rate",
+      "Land Rate",
+      "Floor Rise",
+      "PLC",
+      "Clubhouse Amenities Price",
+      "Created By",
+      "Receipt Date",
+      "Amount Received",
+      "Comments"
     ]
   end
 
@@ -47,14 +57,23 @@ class ReceiptExportWorker
       receipt.payment_identifier,
       receipt.tracking_id,
       receipt.total_amount,
-      Receipt.available_statuses.select{|x| x[:id] == receipt.status}.first[:text],
+      receipt.status.titleize,
       receipt.status_message,
-      Receipt.available_payment_types.select{|x| x[:id] == receipt.payment_type}.first[:text],
       receipt.payment_gateway,
       receipt.user.name,
-      receipt.user_id,
-      receipt.project_unit_id.present? ? receipt.project_unit.name : "",
-      receipt.creator.name
+      receipt.user_id.to_s,
+      receipt.user.manager_id.present? ? receipt.user.manager.name : "N/A",
+      receipt.user.manager_id.present? ? User.available_roles(receipt.user.booking_portal_client).find{|x| x[:id] == receipt.user.manager.role}[:text] : "Direct",
+      receipt.project_unit_id.present? ? receipt.project_unit.name : "N/A",
+      (receipt.project_unit.base_rate rescue "N/A"),
+      (receipt.project_unit.land_rate rescue "N/A"),
+      (receipt.project_unit.floor_rise rescue "N/A"),
+      (receipt.project_unit.premium_location_charges rescue "N/A"),
+      (receipt.project_unit.clubhouse_amenities_price rescue "N/A"),
+      receipt.creator.name,
+      receipt.created_at,
+      (receipt.project_unit.receipts.where(status:"success").sum(&:total_amount) rescue "0"),
+      receipt.comments
     ]
   end
 end
