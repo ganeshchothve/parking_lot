@@ -49,7 +49,7 @@ class Admin::UsersController < AdminController
     if Rails.env.development?
       UserExportWorker.new.perform(current_user.id.to_s, params[:fltrs])
     else
-      UserExportWorker.perform_async(current_user.id.to_s, params[:fltrs])
+      UserExportWorker.perform_async(current_user.id.to_s, params[:fltrs].as_json)
     end
     flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
     redirect_to admin_users_path(fltrs: params[:fltrs].as_json)
