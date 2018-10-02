@@ -55,7 +55,13 @@
               <% end %>
               <% end %>
               <% if UserPolicy.new(current_user, User).export? && @user.blank? %>
-                <%= link_to "Export all #{global_labels['receipts']}", export_admin_receipts_path, class: 'btn btn-primary' %>
+                <div class="dropdown">
+                  <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <%= link_to "All #{global_labels['receipts']}", export_admin_receipts_path, class: 'dropdown-item' %>
+                    <%= link_to "Active filter #{global_labels['receipts']}", export_admin_receipts_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
+                  </div>
+                </div>
               <% end %>
             </div>
             <div class="col-md-5 text-md-right">

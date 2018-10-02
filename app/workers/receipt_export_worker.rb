@@ -2,12 +2,17 @@ require 'spreadsheet'
 class ReceiptExportWorker
   include Sidekiq::Worker
 
-  def perform user_id
+  def perform user_id, filters=nil
+    if filters.present? && filters.is_a?(String)
+      filters =  JSON.parse(filters)
+    end
     user = User.find(user_id)
     file = Spreadsheet::Workbook.new
     sheet = file.create_worksheet(name: "Receipts")
     sheet.insert_row(0, ReceiptExportWorker.get_column_names)
-    Receipt.where(Receipt.user_based_scope(user)).each_with_index do |receipt, index|
+    receipts = Receipt.build_criteria({fltrs: filters}.with_indifferent_access)
+    receipts = receipts.where(Receipt.user_based_scope(user))
+    receipts.each_with_index do |receipt, index|
       sheet.insert_row(index+1, ReceiptExportWorker.get_receipt_row(receipt))
     end
     file_name = "receipt-#{SecureRandom.hex}.xls"

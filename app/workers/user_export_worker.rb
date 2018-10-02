@@ -3,12 +3,17 @@ class UserExportWorker
   include Sidekiq::Worker
   extend ApplicationHelper
 
-  def perform user_id
+  def perform user_id, filters=nil
+    if filters.present? && filters.is_a?(String)
+      filters =  JSON.parse(filters)
+    end
     current_user = User.find(user_id)
     file = Spreadsheet::Workbook.new
     sheet = file.create_worksheet(name: "Users")
     sheet.insert_row(0, UserExportWorker.get_column_names)
-    User.where(User.user_based_scope(current_user)).all.each_with_index do |user, index|
+    users = User.build_criteria({fltrs: filters}.with_indifferent_access)
+    users = users.where(User.user_based_scope(current_user))
+    users.each_with_index do |user, index|
       sheet.insert_row(index+1, UserExportWorker.get_user_row(user, current_user))
     end
     sheet = file.create_worksheet(name: "User KYCs")
