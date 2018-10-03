@@ -191,7 +191,7 @@
     $('[data-jquery-selector="unit-card"]').removeClass("active");
     $(this).addClass("active");
     var unit = _.find(units, function(u){ return u._id == unit_id });
-    var unit_assets = _.select(assets, function(a){return a.assetable_id == unit_id});
+    var unit_assets = _.filter(assets, function(a){return a.assetable_id == unit_id});
     showUnitData(unit, unit_assets);
   });
 <% end %>
