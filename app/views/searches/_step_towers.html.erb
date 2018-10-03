@@ -183,13 +183,15 @@
   </div>
 </div>
 <%= javascript_tag do %>
-  var units = <%= raw @units.to_json(include: [:assets], methods: [:all_inclusive_price, :calculated_costs, :calculated_data]) %>;
+  var units = <%= raw @units.to_json(methods: [:all_inclusive_price, :calculated_costs, :calculated_data, :calculated_costs]) %>;
+  var assets = <%= raw Asset.in(assetable_id: @units.pluck(:id)).to_json %>
 
   $(document).on('click', '[data-jquery-selector="unit-card"]', function(){
     var unit_id = $(this).data("unit-id");
     $('[data-jquery-selector="unit-card"]').removeClass("active");
     $(this).addClass("active");
     var unit = _.find(units, function(u){ return u._id == unit_id });
-    showUnitData(unit);
+    var unit_assets = _.filter(assets, function(a){return a.assetable_id == unit_id});
+    showUnitData(unit, unit_assets);
   });
 <% end %>

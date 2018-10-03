@@ -310,12 +310,13 @@ class ProjectUnit
   end
 
   def scheme
-    if self.booking_detail.present?
-      self.booking_detail.booking_detail_scheme
+    return @scheme if @scheme.present? && !self.selected_scheme_id_changed?
+    if ["blocked", "booked_tentative", "booked_confirmed"].include?(self.status) && self.booking_detail.present?
+      @scheme = self.booking_detail.booking_detail_scheme
     elsif self.selected_scheme_id.present?
-      Scheme.find(self.selected_scheme_id)
+      @scheme = Scheme.find(self.selected_scheme_id)
     else
-      project_tower.default_scheme
+      @scheme = project_tower.default_scheme
     end
   end
 
