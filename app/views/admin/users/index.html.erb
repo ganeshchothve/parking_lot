@@ -17,7 +17,7 @@
                 </div>
               </div>
               <% if UserPolicy.new(current_user, User).export? %>
-                <div class="dropdown">
+                <div class="dropdown float-left ml-2">
                   <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
                   <div class="dropdown-menu dropdown-menu-right">
                     <%= link_to "All #{global_labels['users']}", export_admin_users_path, class: 'dropdown-item' %>
