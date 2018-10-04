@@ -9,7 +9,7 @@ $(document).ready(function(){
   }
 });
 
-var showUnitData = function(unit){
+var showUnitData = function(unit, assets){
   var $form = $(".edit_search_form");
   $form.find('[name="search[project_unit_id]"]').val(unit._id);
   $form.find('input[type="submit"]').removeAttr("disabled");
@@ -34,21 +34,21 @@ var showUnitData = function(unit){
   $("#unit-description").find('[data-placeholder="agreement_price"]').html(Amura.formatMoney(unit.agreement_price));
   $("#unit-description").find('[data-placeholder="all_inclusive_price"]').html(Amura.formatMoney(unit.all_inclusive_price));
   Gamification.gamifyUnitSelection(unit, $('#unit-description [data-placeholder="gamification"]'));
-  if(unit.assets.length > 0){
+  if(assets.length > 0){
     $(".unit_image_container").show();
-    $('[data-placeholder="unit_image"]').attr("src", _.first(unit.assets).file.url);
+    $('[data-placeholder="unit_image"]').attr("src", _.first(assets).file.url);
     $('[data-placeholder="unit_image"]').show();
     var gallery_html = '<div id="unit_gallery" class="carousel slide" data-ride="carousel">'
     gallery_html += '<ol class="carousel-indicators">'
     var count = 0;
-    _.each(unit.assets, function(asset){
+    _.each(assets, function(asset){
       gallery_html += '<li data-target="#unit_gallery" data-slide-to="' + count + '" class="' + (count == 0 ? "active" : "") + '"></li>';
       count += 1;
     });
     gallery_html += '</ol>'
     gallery_html += '<div class="carousel-inner">'
     var count = 0;
-    _.each(unit.assets, function(asset){
+    _.each(assets, function(asset){
       gallery_html += '<div class="carousel-item ' + (count == 0 ? "active" : "") + '">\
         <img class="d-block w-100" src="' + asset.file.url + '">\
       </div>'
