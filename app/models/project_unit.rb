@@ -114,7 +114,7 @@ class ProjectUnit
   def permitted_schemes user=nil
     user ||= self.user
     criteria = {can_be_applied_by: user.role}
-    self.project_tower.schemes.where(_type: {"$ne" => "BookingDetailScheme"}).or(criteria, {default: true})
+    self.project_tower.schemes.where(_type: {"$ne" => "BookingDetailScheme"}, status: "approved").or(criteria, {default: true})
   end
 
   def self.user_based_available_statuses(user)
