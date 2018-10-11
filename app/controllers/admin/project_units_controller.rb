@@ -49,12 +49,12 @@ class Admin::ProjectUnitsController < AdminController
 
   def export
     if Rails.env.development?
-      ProjectUnitExportWorker.new.perform(current_user.id.to_s)
+      ProjectUnitExportWorker.new.perform(current_user.id.to_s, params[:fltrs].as_json)
     else
-      ProjectUnitExportWorker.perform_async(current_user.id.to_s)
+      ProjectUnitExportWorker.perform_async(current_user.id.to_s, params[:fltrs].as_json)
     end
     flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
-    redirect_to admin_project_units_path
+    redirect_to admin_project_units_path(fltrs: params[:fltrs].as_json)
   end
 
   def mis_report

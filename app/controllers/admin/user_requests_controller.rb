@@ -40,12 +40,12 @@ class Admin::UserRequestsController < ApplicationController
 
   def export
     if Rails.env.development?
-      UserRequestExportWorker.new.perform(current_user.id.to_s)
+      UserRequestExportWorker.new.perform(current_user.id.to_s, params[:fltrs].as_json)
     else
-      UserRequestExportWorker.perform_async(current_user.id.to_s)
+      UserRequestExportWorker.perform_async(current_user.id.to_s, params[:fltrs].as_json)
     end
     flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
-    redirect_to admin_user_requests_path(request_type: "all")
+    redirect_to admin_user_requests_path(request_type: "all", fltrs: params[:fltrs].as_json)
   end
 
   def edit

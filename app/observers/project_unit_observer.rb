@@ -6,7 +6,7 @@ class ProjectUnitObserver < Mongoid::Observer
       project_unit.booking_price = (project_unit.agreement_price * project_unit.booking_price_percent_of_agreement_price).round
     end
 
-    if project_unit.pending_balance.present? && project_unit.pending_balance <= 0
+    if project_unit.pending_balance.present? && project_unit.pending_balance({strict: true}) <= 0
       project_unit.status = "booked_confirmed"
     end
 

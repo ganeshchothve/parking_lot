@@ -6,11 +6,8 @@ class BookingDetailObserver < Mongoid::Observer
     else
       booking_detail.project_unit.project_tower.default_scheme
     end
-    cloned_scheme = scheme.clone
-    attributes = cloned_scheme.attributes.merge(booking_detail_id: booking_detail.id)
-    attributes.delete "_type"
-    attributes[:derived_from_scheme_id] = scheme.id
-    BookingDetailScheme.create!(attributes)
+
+    BookingDetailScheme.create!({derived_from_scheme_id: scheme.id, booking_detail_id: booking_detail.id})
     booking_detail.project_unit.set(selected_scheme_id: nil)
   end
 

@@ -3,6 +3,7 @@ class BookingDetailScheme < Scheme
   field :derived_from_scheme_id, type: BSON::ObjectId
 
   belongs_to :booking_detail, optional: true
+
   def derived_scheme_attributes
     scheme = Scheme.find self.derived_from_scheme_id
     cloned_scheme = scheme.clone
