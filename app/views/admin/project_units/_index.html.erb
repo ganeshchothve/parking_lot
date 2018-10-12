@@ -49,8 +49,15 @@
                 <% if UserPolicy.new(current_user, User).index? %>
                   <%= link_to "View Customer", admin_user_path(project_unit.user), class: 'dropdown-item' %>
                 <% end %>
-                <% if BookingDetailSchemePolicy.new(current_user, project_unit.scheme).edit? %>
-                  <%= link_to "View #{global_labels[:scheme]}", edit_admin_scheme_path(project_unit.scheme.id), class: 'dropdown-item modal-remote-form-link' %>
+                <% if ['blocked', 'booked_confirmed', 'booked_tentative'].include?(project_unit.status) %>
+                  <% if BookingDetailSchemePolicy.new(current_user, project_unit.scheme).edit? %>
+                    <%= link_to "View #{global_labels[:scheme]}", admin_user_booking_detail_booking_detail_scheme_path(project_unit.user_id, project_unit.booking_detail, project_unit.scheme.id), class: 'dropdown-item modal-remote-form-link' %>
+                  <% end %>
+                  <% if project_unit.pending_booking_detail_scheme.present? && BookingDetailSchemePolicy.new(current_user, project_unit.pending_booking_detail_scheme).edit? %>
+                    <%= link_to "Update scheme and discount", edit_admin_user_booking_detail_booking_detail_scheme_path(project_unit.user_id, project_unit.booking_detail, project_unit.pending_booking_detail_scheme.id), class: 'dropdown-item' %>
+                  <% else %>
+                    <%= link_to "Update scheme and discount", new_admin_user_booking_detail_booking_detail_scheme_path(project_unit.user_id, project_unit.booking_detail, scheme_id: project_unit.scheme.id, derived_from_scheme_id: project_unit.scheme.id), class: 'dropdown-item' %>
+                  <% end %>
                 <% end %>
               <% end %>
               <% [UserRequest::Cancellation, UserRequest::Swap] if Rails.env.development? %>

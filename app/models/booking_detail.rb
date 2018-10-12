@@ -23,7 +23,7 @@ class BookingDetail
   has_many :receipts
   has_and_belongs_to_many :user_kycs
   has_many :smses, as: :triggered_by, class_name: "Sms"
-  has_one :booking_detail_scheme, class_name: 'BookingDetailScheme', inverse_of: :booking_detail
+  has_many :booking_detail_schemes, class_name: 'BookingDetailScheme', inverse_of: :booking_detail
 
   validates :status, :primary_user_kyc_id, presence: true
 
@@ -66,6 +66,14 @@ class BookingDetail
   def send_notification!
     message = "#{self.primary_user_kyc.name} just booked apartment #{self.project_unit.name} in #{self.project_unit.project_tower_name}"
     Gamification::PushNotification.new.push(message) if Rails.env.staging? || Rails.env.production?
+  end
+
+  def booking_detail_scheme
+    self.booking_detail_schemes.where(status: "approved").first
+  end
+
+  def pending_booking_detail_scheme
+    self.booking_detail_schemes.where(status: "draft").first
   end
 
 end

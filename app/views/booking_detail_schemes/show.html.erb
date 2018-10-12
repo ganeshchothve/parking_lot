@@ -1,0 +1,22 @@
+<%= render 'breadcrumbs', {user: @user, project_unit: @scheme.project_unit} %>
+<% if current_user.buyer? %>
+  <section class="main-wrapper full-height grey">
+<% else %>
+  <section class="padding-side-22">
+<% end %>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="clearfix"></div>
+        <div>
+          Derived from scheme
+        </div>
+        <div>
+          <%= @scheme.derived_from_scheme.name %>
+        </div>
+        <% if @scheme.payment_adjustments.present? %>
+         <% end %>
+      </div>
+    </div>
+  </div>
+</section>

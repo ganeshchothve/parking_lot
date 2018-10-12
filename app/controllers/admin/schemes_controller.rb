@@ -34,6 +34,7 @@ class Admin::SchemesController < ApplicationController
 
   def create
     @scheme = Scheme.new(created_by: current_user, booking_portal_client_id: current_user.booking_portal_client_id)
+    modify_params
     @scheme.assign_attributes(permitted_attributes(@scheme))
 
     respond_to do |format|
@@ -66,8 +67,9 @@ class Admin::SchemesController < ApplicationController
   end
 
   def update
+    modify_params
     @scheme.assign_attributes(permitted_attributes(@scheme))
-    @scheme.approved_by = current_user if @scheme.status_changed? && @scheme.status == 'approved'
+    @scheme.approved_by = current_user if @scheme.event.present? && @scheme.event == 'approved' && @scheme.status != "approved"
     respond_to do |format|
       if @scheme.save
         format.html { redirect_to admin_schemes_path, notice: 'Scheme was successfully updated.' }
@@ -91,6 +93,16 @@ class Admin::SchemesController < ApplicationController
     @project = ProjectTower.find params[:project_tower_id] if params[:project_tower_id].present?
   end
 
+  def modify_params
+    if params[:scheme][:payment_adjustments_attributes].present?
+      params[:scheme][:payment_adjustments_attributes].each do |key, value|
+        if value[:name].blank? || (value[:formula].blank? && value[:absolute_value].blank?)
+          params[:scheme][:payment_adjustments_attributes].delete key
+        end
+      end
+    end
+  end
+
   def authorize_resource
     if params[:action] == "index" || params[:action] == 'export'
       authorize Scheme
@@ -108,10 +120,6 @@ class Admin::SchemesController < ApplicationController
       @project.schemes
     else
       Scheme.all
-    end
-
-    if params[:only_non_customizable_schemes]
-      custom_scope = custom_scope.where(_type: {"$ne" => "BookingDetailScheme"})
     end
 
     Scheme.with_scope(policy_scope(custom_scope)) do

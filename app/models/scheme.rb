@@ -2,6 +2,7 @@ class Scheme
   include Mongoid::Document
   include Mongoid::Timestamps
   include InsertionStringMethods
+  include SchemeStateMachine
 
   field :name, type: String
   field :description, type: String
@@ -20,7 +21,7 @@ class Scheme
     audit_fields: [:name, :project_unit_id, :user_id, :user_role, :value, :status, :approved_by_id, :created_by_id, :can_be_applied_by],
   })
 
-  embeds_many :payment_adjustments
+  embeds_many :payment_adjustments, as: :payable
   belongs_to :project
   belongs_to :project_tower
   belongs_to :approved_by, class_name: "User", optional: true
@@ -29,7 +30,7 @@ class Scheme
   belongs_to :user, class_name: 'User', optional: true
 
   validates :name, :status, :cost_sheet_template_id, :payment_schedule_template_id, presence: true
-  validates :name, uniqueness: {scope: :project_tower_id}, if: Proc.new{|record| !record.is_a?(BookingDetailScheme)}
+  validates :name, uniqueness: {scope: :project_tower_id}
   validates :approved_by, presence: true, if: Proc.new{|scheme| scheme.status == 'approved' && !scheme.default? }
   validate :at_least_one_condition
   validate :project_related
@@ -38,14 +39,6 @@ class Scheme
   accepts_nested_attributes_for :payment_adjustments, allow_destroy: true
 
   default_scope -> {desc(:created_at)}
-
-  def self.available_statuses
-    [
-      {id: "draft", text: "Draft"},
-      {id: "approved", text: "Approved"},
-      {id: "disabled", text: "Disabled"}
-    ]
-  end
 
   def self.available_fields
     ["agreement_price", "all_inclusive_price", "base_rate", "floor_rise"]

@@ -92,6 +92,10 @@ class ProjectUnit
     end
     # GENERICTODO: self.base_rate = upgraded rate based on timely upgrades
 
+    self.user_id = nil
+    self.primary_user_kyc_id = nil
+    self.user_kyc_ids = []
+
     SelldoLeadUpdater.perform_async(self.user_id.to_s, "hold_payment_dropoff")
   end
 
@@ -113,8 +117,11 @@ class ProjectUnit
 
   def permitted_schemes user=nil
     user ||= self.user
-    criteria = {can_be_applied_by: user.role}
-    self.project_tower.schemes.where(_type: {"$ne" => "BookingDetailScheme"}, status: "approved").or(criteria, {default: true})
+    or_criteria = [{project_unit_id: self.id}]
+    or_criteria << {project_unit_id: nil, project_tower_id: self.project_tower_id}
+    or_criteria << {user_id: self.user.id}
+    or_criteria << {user_id: nil, user_role: self.user.role}
+    Scheme.where(status: "approved").or("$or" => [{default: true, project_tower_id: self.project_tower_id}, {can_be_applied_by: user.role, "$or": or_criteria}])
   end
 
   def self.user_based_available_statuses(user)
@@ -309,15 +316,36 @@ class ProjectUnit
     primary_user_kyc_id.present? ? UserKyc.find(primary_user_kyc_id) : nil
   end
 
+def scheme
+    applied_scheme = nil
+    if self.booking_detail.present?
+      applied_scheme = self.booking_detail.booking_detail_scheme
+    end
+    if applied_scheme.blank? && self.selected_scheme_id.present?
+      applied_scheme = Scheme.find(self.selected_scheme_id)
+    end
+    if applied_scheme.blank?
+      applied_scheme = project_tower.default_scheme
+    end
+    applied_scheme
+  end
+
+
   def scheme
     return @scheme if @scheme.present? && !self.selected_scheme_id_changed?
+
     if ["blocked", "booked_tentative", "booked_confirmed"].include?(self.status) && self.booking_detail.present?
       @scheme = self.booking_detail.booking_detail_scheme
-    elsif self.selected_scheme_id.present?
+    end
+
+    if @scheme.blank? && self.selected_scheme_id.present?
       @scheme = Scheme.find(self.selected_scheme_id)
-    else
+    end
+
+    if @scheme.blank?
       @scheme = project_tower.default_scheme
     end
+    @scheme
   end
 
   def cost_sheet_template scheme_id=nil
@@ -326,6 +354,12 @@ class ProjectUnit
 
   def payment_schedule_template scheme_id=nil
     scheme_id.present? ? Scheme.find(scheme_id).payment_schedule_template : self.scheme.payment_schedule_template
+  end
+
+  def pending_booking_detail_scheme
+    if self.booking_detail.present?
+      self.booking_detail.booking_detail_schemes.where(status: "draft").first
+    end
   end
 
   private
