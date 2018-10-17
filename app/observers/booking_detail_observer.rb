@@ -6,7 +6,7 @@ class BookingDetailObserver < Mongoid::Observer
     else
       booking_detail.project_unit.project_tower.default_scheme
     end
-    booking_detail_scheme = BookingDetailScheme.create!(derived_from_scheme_id: scheme.id, booking_detail_id: booking_detail.id)
+    booking_detail_scheme = BookingDetailScheme.create!(derived_from_scheme_id: scheme.id, booking_detail_id: booking_detail.id, created_by_id: booking_detail.project_unit.user.id)
     booking_detail_scheme.event = "approved"
     booking_detail_scheme.approved_by_id = booking_detail.project_unit.user.id
     booking_detail_scheme.save!

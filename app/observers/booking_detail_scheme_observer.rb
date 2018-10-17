@@ -28,11 +28,36 @@ class BookingDetailSchemeObserver < Mongoid::Observer
     end
     if booking_detail_scheme.status_changed?
       if booking_detail_scheme.status == "draft" && booking_detail_scheme.created_by_user
+        Email.create!({
+          booking_portal_client_id: project_unit.booking_portal_client_id,
+          email_template_id: Template::EmailTemplate.find_by(name: "scheme_draft").id,
+          cc: [project_unit.booking_portal_client.notification_email],
+          recipients: [booking_detail_scheme.created_by],
+          cc_recipients: (booking_detail_scheme.created_by.manager_id.present? ? [booking_detail_scheme.created_by.manager] : []),
+          triggered_by_id: booking_detail_scheme.id,
+          triggered_by_type: booking_detail_scheme.class.to_s
+        })
         SchemeMailer.send_draft booking_detail_scheme.id, booking_detail_scheme.created_by.id
       elsif booking_detail_scheme.status == "approved"
-        SchemeMailer.send_approved booking_detail_scheme.id
+        Email.create!({
+          booking_portal_client_id: project_unit.booking_portal_client_id,
+          email_template_id: Template::EmailTemplate.find_by(name: "scheme_approved").id,
+          cc: [project_unit.booking_portal_client.notification_email],
+          recipients: [booking_detail_scheme.created_by, booking_detail_scheme.approved_by],
+          cc_recipients: (booking_detail_scheme.created_by.manager_id.present? ? [booking_detail_scheme.created_by.manager] : []),
+          triggered_by_id: booking_detail_scheme.id,
+          triggered_by_type: booking_detail_scheme.class.to_s
+        })
       elsif booking_detail_scheme.status == "disabled"
-        SchemeMailer.send_disabled booking_detail_scheme.id
+        Email.create!({
+          booking_portal_client_id: project_unit.booking_portal_client_id,
+          email_template_id: Template::EmailTemplate.find_by(name: "scheme_disabled").id,
+          cc: [project_unit.booking_portal_client.notification_email],
+          recipients: [booking_detail_scheme.created_by],
+          cc_recipients: (booking_detail_scheme.created_by.manager_id.present? ? [booking_detail_scheme.created_by.manager] : []),
+          triggered_by_id: booking_detail_scheme.id,
+          triggered_by_type: booking_detail_scheme.class.to_s
+        })
       end
     end
   end

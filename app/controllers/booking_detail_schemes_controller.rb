@@ -4,8 +4,9 @@ class BookingDetailSchemesController < ApplicationController
   before_action :set_scheme, except: [:index, :export, :new, :create]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: [:index]
-   layout :set_layout
-   def index
+  layout :set_layout
+
+  def index
     @schemes = BookingDetailScheme.build_criteria params
     @schemes = @schemes.paginate(page: params[:page] || 1, per_page: 15)
     respond_to do |format|
@@ -18,11 +19,13 @@ class BookingDetailSchemesController < ApplicationController
       end
     end
   end
-   def show
+
+  def show
     @scheme = BookingDetailScheme.find(params[:id])
     authorize @scheme
   end
-   def new
+
+  def new
     if params[:derived_from_scheme_id].present?
       attributes = BookingDetailScheme.derived_scheme_attributes(params[:derived_from_scheme_id])
       @scheme = BookingDetailScheme.new(attributes.merge(created_by: current_user, booking_detail_id: @booking_detail.id))
@@ -33,7 +36,8 @@ class BookingDetailSchemesController < ApplicationController
     end
     authorize @scheme
   end
-   def create
+
+  def create
     @scheme = BookingDetailScheme.new(created_by: current_user, booking_detail_id: @booking_detail.id)
     @scheme.created_by_user = true
     modify_params
@@ -48,9 +52,11 @@ class BookingDetailSchemesController < ApplicationController
       end
     end
   end
-   def edit
+
+  def edit
   end
-   def approve_via_email
+
+  def approve_via_email
     @scheme.status = 'approved'
     @scheme.approved_by = current_user
     respond_to do |format|
@@ -63,7 +69,8 @@ class BookingDetailSchemesController < ApplicationController
       end
     end
   end
-   def update
+
+  def update
     modify_params
     @scheme.assign_attributes(permitted_attributes(@scheme))
     @scheme.approved_by = current_user if @scheme.event.present? && @scheme.event == 'approved'
@@ -76,14 +83,18 @@ class BookingDetailSchemesController < ApplicationController
       end
     end
   end
-   private
-   def set_scheme
+
+  private
+
+  def set_scheme
     @scheme = @booking_detail.booking_detail_schemes.find(params[:id])
   end
-   def set_booking_detail
+
+  def set_booking_detail
     @booking_detail = BookingDetail.find(params[:booking_detail_id])
   end
-   def modify_params
+
+  def modify_params
     if params[:booking_detail_scheme][:payment_adjustments_attributes].present?
       params[:booking_detail_scheme][:payment_adjustments_attributes].each do |key, value|
         if value[:name].blank? || (value[:formula].blank? && value[:absolute_value].blank?)
@@ -92,7 +103,8 @@ class BookingDetailSchemesController < ApplicationController
       end
     end
   end
-   def authorize_resource
+
+  def authorize_resource
     if params[:action] == "index" || params[:action] == 'export'
       authorize BookingDetailScheme
     elsif params[:action] == "new" || params[:action] == "create"
@@ -101,7 +113,8 @@ class BookingDetailSchemesController < ApplicationController
       authorize @scheme
     end
   end
-   def apply_policy_scope
+
+  def apply_policy_scope
     BookingDetailScheme.with_scope(policy_scope(@booking_detail.booking_detail_schemes)) do
       yield
     end
