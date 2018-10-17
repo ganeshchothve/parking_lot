@@ -78,7 +78,9 @@ Rails.application.routes.draw do
         resources :user_requests, except: [:destroy], controller: 'user_requests'
       end
 
-      resources :booking_details, only: [:update], controller: 'booking_details'
+      resources :booking_details, only: [:update], controller: 'booking_details' do
+        resources :booking_detail_schemes, except: [:destroy], controller: '/booking_detail_schemes'
+      end
     end
     resources :projects, except: [:destroy] do
       resources :schemes, except: [:destroy], controller: 'schemes'
@@ -90,7 +92,7 @@ Rails.application.routes.draw do
       end
     end
     resources :schemes, except: [:destroy], controller: 'schemes', only_non_customizable_schemes: true
-    resources :booking_detail_schemes, except: [:destroy], controller: 'schemes'
+    resources :booking_detail_schemes, except: [:destroy], controller: '/booking_detail_schemes'
   end
 
   # home & globally accessible
