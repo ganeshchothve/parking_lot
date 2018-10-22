@@ -90,6 +90,9 @@ class ProjectUnit
     if self.available_for == "management"
       self.status = "management"
     end
+
+    self.selected_scheme_id = nil
+
     # GENERICTODO: self.base_rate = upgraded rate based on timely upgrades
 
     SelldoLeadUpdater.perform_async(self.user_id.to_s, "hold_payment_dropoff")
