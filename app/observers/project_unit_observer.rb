@@ -101,7 +101,7 @@ class ProjectUnitObserver < Mongoid::Observer
     user = project_unit.user
     if project_unit.status_changed? && ['blocked', 'booked_tentative', 'booked_confirmed'].include?(project_unit.status)
 
-      receipt = project_unit.user.receipts.where(total_amount: project_unit.booking_portal_client.blocking_amount, status: 'success').first
+      receipt = project_unit.receipts.where(total_amount: project_unit.booking_portal_client.blocking_amount, status: 'success').first
        if receipt.present?
         receipt.project_unit_id = project_unit.id
         receipt.save!
