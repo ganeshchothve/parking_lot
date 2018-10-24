@@ -90,6 +90,9 @@ class ProjectUnit
     if self.available_for == "management"
       self.status = "management"
     end
+
+    self.selected_scheme_id = nil
+
     # GENERICTODO: self.base_rate = upgraded rate based on timely upgrades
 
     self.user_id = nil
