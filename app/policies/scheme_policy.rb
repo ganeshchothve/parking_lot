@@ -28,7 +28,7 @@ class SchemePolicy < ApplicationPolicy
     if record.new_record? || record.status == 'draft' || record.status_was == 'draft'
       attributes += [:project_id, :project_unit_id, :project_tower_id, :user_id, :user_role, :cost_sheet_template_id, :payment_schedule_template_id]
     end
-    attributes += [:event] if user.role?('admin') || user.role?('superadmin')
+    attributes += [:event] if record.approver?(user)
     if record.status == "draft"
       attributes += [payment_adjustments_attributes: PaymentAdjustmentPolicy.new(user, PaymentAdjustment.new).permitted_attributes]
     end

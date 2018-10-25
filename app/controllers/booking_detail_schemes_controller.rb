@@ -22,23 +22,26 @@ class BookingDetailSchemesController < ApplicationController
 
   def show
     @scheme = BookingDetailScheme.find(params[:id])
-    authorize @scheme
+    render layout: false
   end
 
   def new
-    if params[:derived_from_scheme_id].present?
-      attributes = BookingDetailScheme.derived_scheme_attributes(params[:derived_from_scheme_id])
-      @scheme = BookingDetailScheme.new(attributes.merge(created_by: current_user, booking_detail_id: @booking_detail.id))
-      @scheme.created_by_user = true
-      @scheme
-    else
-      @scheme = BookingDetailScheme.new(created_by: current_user, booking_detail_id: @booking_detail.id)
-    end
-    authorize @scheme
+    scheme = @booking_detail.booking_detail_scheme
+    @scheme = BookingDetailScheme.new(
+      derived_from_scheme_id: scheme.derived_from_scheme_id,
+      booking_detail_id: @booking_detail.id,
+      booking_portal_client_id: current_user.booking_portal_client_id,
+      cost_sheet_template_id: scheme.cost_sheet_template_id,
+      payment_schedule_template_id: scheme.payment_schedule_template_id,
+      payment_adjustments: scheme.payment_adjustments.collect(&:clone),
+      created_by_id: current_user.id,
+      created_by_user: true
+    )
+    render layout: false
   end
 
   def create
-    @scheme = BookingDetailScheme.new(created_by: current_user, booking_detail_id: @booking_detail.id)
+    @scheme = BookingDetailScheme.new(created_by: current_user, booking_detail_id: @booking_detail.id, booking_portal_client_id: current_user.booking_portal_client_id)
     @scheme.created_by_user = true
     modify_params
     @scheme.assign_attributes(permitted_attributes(@scheme))
@@ -54,6 +57,7 @@ class BookingDetailSchemesController < ApplicationController
   end
 
   def edit
+    render layout: false
   end
 
   def approve_via_email
