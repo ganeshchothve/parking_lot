@@ -6,6 +6,7 @@ class PaymentAdjustment
   field :field, type: String
   field :formula, type: String
   field :absolute_value, type: Float
+  field :editable, type: Boolean
 
   embedded_in :payable, polymorphic: true
 

@@ -26,14 +26,12 @@ class BookingDetailSchemesController < ApplicationController
   end
 
   def new
-    scheme = @booking_detail.booking_detail_scheme
+    booking_detail_scheme = @booking_detail.booking_detail_scheme
     @scheme = BookingDetailScheme.new(
-      derived_from_scheme_id: scheme.derived_from_scheme_id,
+      derived_from_scheme_id: booking_detail_scheme.derived_from_scheme_id,
       booking_detail_id: @booking_detail.id,
       booking_portal_client_id: current_user.booking_portal_client_id,
-      cost_sheet_template_id: scheme.cost_sheet_template_id,
-      payment_schedule_template_id: scheme.payment_schedule_template_id,
-      payment_adjustments: scheme.payment_adjustments.collect(&:clone),
+      payment_adjustments: booking_detail_scheme.payment_adjustments.collect(&:clone),
       created_by_id: current_user.id,
       created_by_user: true
     )

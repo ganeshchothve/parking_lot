@@ -14,6 +14,7 @@
           <%= f.select :derived_from_scheme_id, @scheme.booking_detail.project_unit.permitted_schemes(current_user).collect{|scheme| [scheme.name, scheme.id]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
         </div>
         <%= f.hidden_field :booking_detail_id %>
+        <%= f.hidden_field :editable %>
         <div class="payment-adjustments">
           <% editable_payment_adjustment = policy(@scheme).editable_field?("payment_adjustments_attributes")%>
           <% if editable_payment_adjustment %>

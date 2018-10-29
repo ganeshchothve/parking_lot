@@ -181,6 +181,7 @@ class ProjectUnit
       {id: 'not_available', text: 'Not Available'},
       {id: 'error', text: 'Error'},
       {id: 'hold', text: 'Hold'},
+      {id: 'under_negotiation', text: 'Under negotiation'},
       {id: 'blocked', text: 'Blocked'},
       {id: 'booked_tentative', text: 'Tentative Booked'},
       {id: 'booked_confirmed', text: 'Confirmed Booked'}
