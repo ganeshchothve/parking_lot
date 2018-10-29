@@ -14,6 +14,7 @@ class BookingDetailObserver < Mongoid::Observer
       cost_sheet_template_id: scheme.cost_sheet_template_id,
       payment_schedule_template_id: scheme.payment_schedule_template_id,
       payment_adjustments: scheme.payment_adjustments.collect(&:clone).collect{|record| record.editable = false},
+      project_unit_id: booking_detail.project_unit_id
     )
     booking_detail_scheme.event = "approved"
     booking_detail_scheme.approved_by_id = booking_detail.project_unit.user.id

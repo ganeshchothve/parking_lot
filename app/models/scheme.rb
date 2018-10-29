@@ -73,6 +73,9 @@ class Scheme
     end
   end
 
+  def approver? user
+    user.role?('admin') || user.role?('superadmin')
+  end
 
   private
   def at_least_one_condition

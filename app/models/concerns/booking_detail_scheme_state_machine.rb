@@ -12,7 +12,7 @@ module BookingDetailSchemeStateMachine
       end
 
       event :under_negotiation do
-        transitions from: :draft, to: :under_negotiation
+        transitions from: :draft, to: :under_negotiation, unless: :booking_detail_present?
         transitions from: :under_negotiation, to: :under_negotiation
       end
 

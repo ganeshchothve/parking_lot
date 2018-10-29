@@ -91,7 +91,9 @@ Rails.application.routes.draw do
         get 'export', action: 'export', on: :collection, as: :export
       end
     end
-    resources :schemes, except: [:destroy], controller: 'schemes', only_non_customizable_schemes: true
+    resources :schemes, except: [:destroy], controller: 'schemes', only_non_customizable_schemes: true do
+      get :payment_adjustments_for_unit, on: :member
+    end
     resources :booking_detail_schemes, except: [:destroy], controller: '/booking_detail_schemes'
   end
 

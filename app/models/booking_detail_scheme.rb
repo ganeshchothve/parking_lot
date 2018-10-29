@@ -34,6 +34,14 @@ class BookingDetailScheme
     Template::CostSheetTemplate.find self.cost_sheet_template_id
   end
 
+  def editable_payment_adjustments
+    self.payment_adjustments.in(editable: [true, nil])
+  end
+
+  def non_editable_payment_adjustments
+    self.payment_adjustments.where(editable: false)
+  end
+
   def approver? user
     user.role?('admin') || user.role?('superadmin')
   end

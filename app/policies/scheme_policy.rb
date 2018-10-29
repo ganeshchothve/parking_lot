@@ -23,6 +23,10 @@ class SchemePolicy < ApplicationPolicy
     current_client.enable_actual_inventory?(user) && edit?
   end
 
+  def payment_adjustments_for_unit?
+    true
+  end
+
   def permitted_attributes params={}
     attributes = [:name, can_be_applied_by: []]
     if record.new_record? || record.status == 'draft' || record.status_was == 'draft'

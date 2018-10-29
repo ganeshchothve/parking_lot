@@ -22,7 +22,7 @@
             <%= scheme.approved_by.present? ? "#{scheme.approved_by.name} at #{scheme.approved_at.present? ? l(scheme.approved_at.in_time_zone(current_user.time_zone)) : '-'}".html_safe : '-' %>
           </div>
         </td>
-        <td><%= Scheme.available_statuses.find{|x| x[:id] == scheme.status}[:text] %></td>
+        <td><%= scheme.status %></td>
         <td class="text-right">
           <div class="dropdown">
             <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>

@@ -13,7 +13,7 @@
       </div>
       <div class="form-group">
         <%= label_tag "fltrs", "status", class: "control-label" %>
-        <%= select_tag "fltrs[status]", options_for_select(Scheme.available_statuses.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize"} %>
+        <%= select_tag "fltrs[status]", options_for_select(Scheme.aasm.states.collect(&:name).collect{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize"} %>
       </div>
     <% end %>
   </div>
