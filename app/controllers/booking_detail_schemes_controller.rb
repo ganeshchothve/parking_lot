@@ -1,6 +1,7 @@
 class BookingDetailSchemesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_booking_detail
+  before_action :set_project_unit
   before_action :set_scheme, except: [:index, :export, :new, :create]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: [:index]
@@ -39,13 +40,13 @@ class BookingDetailSchemesController < ApplicationController
   end
 
   def create
-    @scheme = BookingDetailScheme.new(created_by: current_user, booking_detail_id: @booking_detail.id, booking_portal_client_id: current_user.booking_portal_client_id)
+    @scheme = BookingDetailScheme.new(created_by: current_user, booking_portal_client_id: current_user.booking_portal_client_id)
     @scheme.created_by_user = true
     modify_params
     @scheme.assign_attributes(permitted_attributes(@scheme))
     respond_to do |format|
       if @scheme.save
-        format.html { redirect_to admin_user_path(@booking_detail.user.id), notice: 'Scheme registered successfully and sent for approval.' }
+        format.html { redirect_to request.referrer, notice: 'Scheme registered successfully and sent for approval.' }
         format.json { render json: @scheme, status: :created }
       else
         format.html { render :new }
@@ -78,7 +79,7 @@ class BookingDetailSchemesController < ApplicationController
     @scheme.approved_by = current_user if @scheme.event.present? && @scheme.event == 'approved'
     respond_to do |format|
       if @scheme.save
-        format.html { redirect_to admin_user_path(@booking_detail.user.id), notice: 'Scheme was successfully updated.' }
+        format.html { redirect_to request.referrer, notice: 'Scheme was successfully updated.' }
       else
         format.html { render :edit }
         format.json { render json: @scheme.errors, status: :unprocessable_entity }
@@ -89,11 +90,19 @@ class BookingDetailSchemesController < ApplicationController
   private
 
   def set_scheme
-    @scheme = @booking_detail.booking_detail_schemes.find(params[:id])
+    @scheme = if @booking_detail.present?
+      @booking_detail.booking_detail_schemes.find(params[:id])
+    else
+      BookingDetailScheme.where(project_unit_id: @project_unit.id).find(params[:id])
+    end
   end
 
   def set_booking_detail
-    @booking_detail = BookingDetail.find(params[:booking_detail_id])
+    @booking_detail = BookingDetail.find(params[:booking_detail_id]) if params[:booking_detail_id].present?
+  end
+
+  def set_project_unit
+    @project_unit = ProjectUnit.find(params[:project_unit_id]) if params[:project_unit_id].present?
   end
 
   def modify_params
@@ -110,7 +119,7 @@ class BookingDetailSchemesController < ApplicationController
     if params[:action] == "index" || params[:action] == 'export'
       authorize BookingDetailScheme
     elsif params[:action] == "new" || params[:action] == "create"
-      authorize BookingDetailScheme.new(created_by: current_user, booking_detail_id: @booking_detail.id)
+      authorize BookingDetailScheme.new(created_by: current_user)
     else
       authorize @scheme
     end

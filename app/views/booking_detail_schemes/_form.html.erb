@@ -1,91 +1,76 @@
-<%= nested_form_for([:admin, current_user, @booking_detail, @scheme], local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['schemes'], "data-type": "json", id: 'scheme_form'}) do |f| %>
-<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title"><%= @scheme.new_record? ? "New" : "Edit" %> <%= "#{global_labels['scheme']}" %></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <%= f.label :derived_from_scheme_id, class: 'control-label' %>
-          <%= f.select :derived_from_scheme_id, @scheme.booking_detail.project_unit.permitted_schemes(current_user).collect{|scheme| [scheme.name, scheme.id]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
-        </div>
-        <%= f.hidden_field :booking_detail_id %>
-        <div class="non-editable-payment-adjustments">
-          <% @scheme.non_editable_payment_adjustments.each do |payment_adjustment| %>
-          <div class="row">
-            <div class="col-md-4">
-              <p>Name</p>
-              <p><%= payment_adjustment.name %></p>
-            </div>
-            <div class="col-md-4">
-              <p>Field</p>
-              <p><%= payment_adjustment.field %></p>
-            </div>
-            <div class="col-md-4">
-              <p>Value</p>
-              <p><%= payment_adjustment.value(@scheme.booking_detail.project_unit) %></p>
-            </div>
-          </div>
-          <% end %>
-        </div>
-        <div class="payment-adjustments">
-          <% editable_payment_adjustment = policy(@scheme).editable_field?("payment_adjustments_attributes")%>
-          <% if editable_payment_adjustment %>
-            <%= f.link_to_add "Add", :payment_adjustments, :data => { :target => ".payment-adjustments" } %>
-          <% end %>
-          <%= f.fields_for :payment_adjustments, @scheme.editable_payment_adjustments do |adj|%>
-            <% if editable_payment_adjustment %>
-              <%= adj.link_to_remove icon("far", "times-circle") %>
-            <% end %>
-            <%= adj.hidden_field :editable, value: true %>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <%= adj.label :name, class: 'label-required' %>
-                  <%= adj.text_field :name, class: "form-control", required: 'required', disabled: !editable_payment_adjustment %>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <%= adj.label :field, class: 'label-required' %>
-                  <%= adj.select :field, Scheme.available_fields.collect{|x| [x.titleize, x]}, {prompt: true}, class: 'selectize-tags', disabled: !editable_payment_adjustment %>
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
-              <%= adj.label :absolute_value, class: 'label-required' %>
-              <%= adj.number_field :absolute_value, class: "form-control", disabled: !editable_payment_adjustment %>
-              <p class="small text-muted">Total Adjustment will be calculated as Rs. (saleable) * (scheme mentioned here)</p>
-            </div>
-            <div class="form-group">
-              <%= adj.label :formula, class: 'label-required' %>
-              <%= adj.number_field :formula, class: "form-control", disabled: !editable_payment_adjustment %>
-              <p class="small text-muted">Total Adjustment will be calculated as Rs. (saleable) * (scheme mentioned here)</p>
-            </div>
-          <% end %>
-        </div>
-        <% if policy(@scheme).editable_field?("event") %>
-          <div class="form-group">
-            <%= f.label :status, class: 'label-required' %>
-            <%
-              events = @scheme.aasm.events(permitted: true).collect{|x| x.name.to_s}
-              events = events.collect{|x| [x.to_s.titleize, x.to_s] }
-            %>
-            <%= f.select :event, options_for_select(events, @scheme.status), {prompt: true}, class: 'selectize', required: "required" %>
-          </div>
-        <% end %>
-      </div>
-      <div class="modal-footer">
-        <%= f.submit "Save", class: "btn btn-primary" %>
-      </div>
+
+<div class="form-group">
+  <%= f.label :derived_from_scheme_id, class: 'control-label' %>
+  <%= f.select :derived_from_scheme_id, project_unit.permitted_schemes(current_user).collect{|scheme| [scheme.name, scheme.id]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
+</div>
+<%= f.hidden_field :booking_detail_id %>
+<%= f.hidden_field :project_unit_id %>
+<%= f.hidden_field :user_id %>
+<div class="non-editable-payment-adjustments">
+  <% booking_detail_scheme.non_editable_payment_adjustments.each do |payment_adjustment| %>
+  <div class="row">
+    <div class="col-md-4">
+      <p>Name</p>
+      <p><%= payment_adjustment.name %></p>
+    </div>
+    <div class="col-md-4">
+      <p>Field</p>
+      <p><%= payment_adjustment.field %></p>
+    </div>
+    <div class="col-md-4">
+      <p>Value</p>
+      <p><%= payment_adjustment.value(project_unit) %></p>
     </div>
   </div>
+  <% end %>
 </div>
+<div class="payment-adjustments">
+  <% editable_payment_adjustment = policy(booking_detail_scheme).editable_field?("payment_adjustments_attributes")%>
+  <% if editable_payment_adjustment %>
+    <%= f.link_to_add "Add", :payment_adjustments, :data => { :target => ".payment-adjustments" } %>
+  <% end %>
+  <%= f.fields_for :payment_adjustments, booking_detail_scheme.editable_payment_adjustments do |adj|%>
+    <% if editable_payment_adjustment %>
+      <%= adj.link_to_remove icon("far", "times-circle") %>
+    <% end %>
+    <%= adj.hidden_field :editable, value: true %>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <%= adj.label :name, class: 'label-required' %>
+          <%= adj.text_field :name, class: "form-control", required: 'required', disabled: !editable_payment_adjustment %>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <%= adj.label :field, class: 'label-required' %>
+          <%= adj.select :field, Scheme.available_fields.collect{|x| [x.titleize, x]}, {prompt: true}, class: 'selectize-tags', disabled: !editable_payment_adjustment %>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= adj.label :absolute_value, class: 'label-required' %>
+      <%= adj.number_field :absolute_value, class: "form-control", disabled: !editable_payment_adjustment %>
+      <p class="small text-muted">Total Adjustment will be calculated as Rs. (saleable) * (scheme mentioned here)</p>
+    </div>
+    <div class="form-group">
+      <%= adj.label :formula, class: 'label-required' %>
+      <%= adj.number_field :formula, class: "form-control", disabled: !editable_payment_adjustment %>
+      <p class="small text-muted">Total Adjustment will be calculated as Rs. (saleable) * (scheme mentioned here)</p>
+    </div>
+  <% end %>
+</div>
+<% if policy(booking_detail_scheme).editable_field?("event") %>
+  <div class="form-group">
+    <%= f.label :status, class: 'label-required' %>
+    <%
+      events = booking_detail_scheme.aasm.events(permitted: true).collect{|x| x.name.to_s}
+      events = events.collect{|x| [x.to_s.titleize, x.to_s] }
+    %>
+    <%= f.select :event, options_for_select(events, booking_detail_scheme.status), {prompt: true}, class: 'selectize', required: "required" %>
+  </div>
 <% end %>
+
 <%= javascript_tag do %>
 $(document).ready(function(){
   FormInitializer.init($("#scheme_form"));
@@ -113,7 +98,7 @@ $(document).ready(function(){
       type: "GET",
       dataType: 'json',
       data: {
-        project_unit_id: "<%= @scheme.booking_detail.project_unit_id %>"
+        project_unit_id: "<%= project_unit.id %>"
       },
       success: function(data, xhr, status){
       debugger;

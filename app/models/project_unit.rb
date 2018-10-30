@@ -320,23 +320,12 @@ class ProjectUnit
     primary_user_kyc_id.present? ? UserKyc.find(primary_user_kyc_id) : nil
   end
 
-def scheme
-    applied_scheme = nil
-    if self.booking_detail.present?
-      applied_scheme = self.booking_detail.booking_detail_scheme
-    end
-    if applied_scheme.blank? && self.selected_scheme_id.present?
-      applied_scheme = Scheme.find(self.selected_scheme_id)
-    end
-    if applied_scheme.blank?
-      applied_scheme = project_tower.default_scheme
-    end
-    applied_scheme
-  end
-
-
   def scheme
     return @scheme if @scheme.present? && !self.selected_scheme_id_changed?
+
+    if self.status == "hold"
+      @scheme = BookingDetailScheme.where(user_id: self.user_id, project_unit_id: self.id).in(status: ["under_negotiation", "draft"]).first
+    end
 
     if ["blocked", "booked_tentative", "booked_confirmed"].include?(self.status) && self.booking_detail.present?
       @scheme = self.booking_detail.booking_detail_scheme

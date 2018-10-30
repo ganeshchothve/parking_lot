@@ -9,6 +9,7 @@ class BookingDetailScheme
   field :approved_at, type: DateTime
   field :payment_schedule_template_id, type: BSON::ObjectId
   field :cost_sheet_template_id, type: BSON::ObjectId
+  field :user_id, type: BSON::ObjectId
 
   attr_accessor :created_by_user
 
