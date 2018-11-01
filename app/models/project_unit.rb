@@ -40,14 +40,13 @@ class ProjectUnit
   field :type, type: String
   field :unit_facing_direction, type: String
   field :primary_user_kyc_id, type: BSON::ObjectId
-  field :selected_scheme_id, type: BSON::ObjectId
   field :blocking_amount, type: Integer, default: 30000
 
   attr_accessor :processing_user_request, :processing_swap_request
 
   enable_audit({
     indexed_fields: [:project_id, :project_tower_id, :unit_configuration_id, :client_id, :booking_portal_client_id, :selldo_id, :developer_id],
-    audit_fields: [:erp_id, :status, :available_for, :blocked_on, :auto_release_on, :held_on, :primary_user_kyc_id, :base_rate, :selected_scheme_id]
+    audit_fields: [:erp_id, :status, :available_for, :blocked_on, :auto_release_on, :held_on, :primary_user_kyc_id, :base_rate]
   })
 
   belongs_to :project
@@ -73,7 +72,7 @@ class ProjectUnit
   validates :status, :name, :erp_id, presence: true
   validates :status, inclusion: {in: Proc.new{ ProjectUnit.available_statuses.collect{|x| x[:id]} } }
   validates :available_for, inclusion: {in: Proc.new{ ProjectUnit.available_available_fors.collect{|x| x[:id]} } }
-  validates :user_id, :primary_user_kyc_id, :selected_scheme_id, presence: true, if: Proc.new { |unit| ['available', 'not_available', 'management', 'employee'].exclude?(unit.status) }
+  validates :user_id, :primary_user_kyc_id, presence: true, if: Proc.new { |unit| ['available', 'not_available', 'management', 'employee'].exclude?(unit.status) }
   validate :pan_uniqueness
 
   def ds_name
@@ -90,8 +89,6 @@ class ProjectUnit
     if self.available_for == "management"
       self.status = "management"
     end
-
-    self.selected_scheme_id = nil
 
     # GENERICTODO: self.base_rate = upgraded rate based on timely upgrades
 
@@ -178,10 +175,10 @@ class ProjectUnit
   def self.available_statuses
     out = [
       {id: 'available', text: 'Available'},
+      {id: 'under_negotiation', text: 'Under negotiation'},
       {id: 'not_available', text: 'Not Available'},
       {id: 'error', text: 'Error'},
       {id: 'hold', text: 'Hold'},
-      {id: 'under_negotiation', text: 'Under negotiation'},
       {id: 'blocked', text: 'Blocked'},
       {id: 'booked_tentative', text: 'Tentative Booked'},
       {id: 'booked_confirmed', text: 'Confirmed Booked'}
@@ -209,19 +206,25 @@ class ProjectUnit
 
   def process_payment!(receipt)
     if ['success', 'clearance_pending'].include?(receipt.status)
-      if self.pending_balance({strict: true}) <= 0
-        self.status = 'booked_confirmed'
-      elsif self.total_amount_paid > self.blocking_amount
-      	if self.status != 'booked_tentative'
-          self.status = 'booked_tentative'
-      	end
-      elsif receipt.total_amount >= self.blocking_amount && (self.status == "hold" || self.user_based_status(self.user) == "available")
-        if (self.user == receipt.user && self.status == 'hold') || self.user_based_status(self.user) == "available"
-          self.status = 'blocked'
+      if self.scheme.status == "approved"
+        if self.pending_balance({strict: true}) <= 0
+          self.status = 'booked_confirmed'
         else
-          receipt.project_unit_id = nil
-          receipt.save
+          if self.total_amount_paid > self.blocking_amount
+            if self.status != 'booked_tentative'
+              self.status = 'booked_tentative'
+            end
+          elsif receipt.total_amount >= self.blocking_amount && (self.status == "hold" || self.user_based_status(self.user) == "available")
+            if (self.user == receipt.user && self.status == 'hold') || self.user_based_status(self.user) == "available"
+              self.status = 'blocked'
+            else
+              receipt.project_unit_id = nil
+              receipt.save
+            end
+          end
         end
+      else
+        self.status = "under_negotiation"
       end
       # Send payments data to Sell.Do CRM
       # SelldoReceiptPusher.perform_async(receipt.id.to_s, Time.now.to_i)
@@ -320,19 +323,15 @@ class ProjectUnit
     primary_user_kyc_id.present? ? UserKyc.find(primary_user_kyc_id) : nil
   end
 
+  def booking_detail_scheme
+    BookingDetailScheme.where(user_id: self.user_id, project_unit_id: self.id).in(status: ["under_negotiation", "draft", "approved"]).desc(:created_at).first
+  end
+
   def scheme
-    return @scheme if @scheme.present? && !self.selected_scheme_id_changed?
+    return @scheme if @scheme.present?
 
-    if self.status == "hold"
-      @scheme = BookingDetailScheme.where(user_id: self.user_id, project_unit_id: self.id).in(status: ["under_negotiation", "draft"]).first
-    end
-
-    if ["blocked", "booked_tentative", "booked_confirmed"].include?(self.status) && self.booking_detail.present?
-      @scheme = self.booking_detail.booking_detail_scheme
-    end
-
-    if @scheme.blank? && self.selected_scheme_id.present?
-      @scheme = Scheme.find(self.selected_scheme_id)
+    if self.status == "hold" || (["blocked", "booked_tentative", "booked_confirmed"].include?(self.status) && self.booking_detail.present?)
+      @scheme = self.booking_detail_scheme
     end
 
     if @scheme.blank?

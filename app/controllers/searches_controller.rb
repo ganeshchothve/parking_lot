@@ -105,7 +105,7 @@ class SearchesController < ApplicationController
       return
     end
     @project_unit = ProjectUnit.find(@search.project_unit_id)
-    @booking_detail_scheme = BookingDetailScheme.where(user_id: @project_unit.user_id, project_unit_id: @project_unit.id).in(status: ["under_negotiation", "draft"]).first
+    @booking_detail_scheme = @project_unit.booking_detail_scheme
     @booking_detail_scheme = BookingDetailScheme.new(
       user_id: @project_unit.user_id,
       project_unit_id: @project_unit.id

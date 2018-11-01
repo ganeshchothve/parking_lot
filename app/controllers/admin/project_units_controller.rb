@@ -20,7 +20,6 @@ class Admin::ProjectUnitsController < AdminController
   end
 
   def show
-    @project_unit.selected_scheme_id = params[:scheme_id] if params[:scheme_id].present?
     respond_to do |format|
       format.json { render json: @project_unit }
       format.html {}
@@ -37,7 +36,6 @@ class Admin::ProjectUnitsController < AdminController
 
   def update
     parameters = permitted_attributes(@project_unit)
-    @project_unit.selected_scheme_id = params[:scheme_id] if params[:scheme_id].present?
     respond_to do |format|
       if @project_unit.update(parameters)
         format.html { redirect_to admin_project_units_path, notice: 'Unit successfully updated.' }

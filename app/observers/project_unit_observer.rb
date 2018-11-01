@@ -10,7 +10,6 @@ class ProjectUnitObserver < Mongoid::Observer
       project_unit.status = "booked_confirmed"
     end
 
-    project_unit.selected_scheme_id = project_unit.project_tower.default_scheme.id if project_unit.selected_scheme_id.blank?
   end
 
   def before_save project_unit
@@ -54,7 +53,7 @@ class ProjectUnitObserver < Mongoid::Observer
     BookingDetail.run_sync(project_unit.id, project_unit.changes)
     if project_unit.status_changed? && ["available", "employee", "management"].exclude?(project_unit.status_was) && ["available", "employee", "management"].include?(project_unit.status)
 
-      project_unit.set(user_id: nil, blocked_on: nil, auto_release_on: nil, held_on: nil, primary_user_kyc_id: nil, user_kyc_ids: [], selected_scheme_id: nil)
+      project_unit.set(user_id: nil, blocked_on: nil, auto_release_on: nil, held_on: nil, primary_user_kyc_id: nil, user_kyc_ids: [])
 
       project_unit.receipts.where(status: "success").each do |receipt|
         receipt.project_unit_id = nil;

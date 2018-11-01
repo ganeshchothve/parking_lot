@@ -1,4 +1,3 @@
-
 <div class="form-group">
   <%= f.label :derived_from_scheme_id, class: 'control-label' %>
   <%= f.select :derived_from_scheme_id, project_unit.permitted_schemes(current_user).collect{|scheme| [scheme.name, scheme.id]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
@@ -24,11 +23,11 @@
   </div>
   <% end %>
 </div>
+<% editable_payment_adjustment = policy(booking_detail_scheme).editable_field?("payment_adjustments_attributes")%>
+<% if editable_payment_adjustment %>
+  <%= f.link_to_add "Add", :payment_adjustments, :data => { :target => ".payment-adjustments" } %>
+<% end %>
 <div class="payment-adjustments">
-  <% editable_payment_adjustment = policy(booking_detail_scheme).editable_field?("payment_adjustments_attributes")%>
-  <% if editable_payment_adjustment %>
-    <%= f.link_to_add "Add", :payment_adjustments, :data => { :target => ".payment-adjustments" } %>
-  <% end %>
   <%= f.fields_for :payment_adjustments, booking_detail_scheme.editable_payment_adjustments do |adj|%>
     <% if editable_payment_adjustment %>
       <%= adj.link_to_remove icon("far", "times-circle") %>
