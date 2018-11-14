@@ -202,7 +202,7 @@ class ProjectUnit
   end
 
   def self.booking_stages
-    ["booked", "booked_tentative", "booked_confirmed"]
+    ["blocked", "booked_tentative", "booked_confirmed"]
   end
 
   def self.cost_adjustment_fields
@@ -345,9 +345,7 @@ class ProjectUnit
   def scheme
     return @scheme if @scheme.present?
 
-    if self.status == "hold" || ((self.status == "under_negotiation" || ProjectUnit.booking_stages.include?(self.status)) && self.booking_detail.present?)
-      @scheme = self.booking_detail_scheme
-    end
+    @scheme = self.booking_detail_scheme
 
     if @scheme.blank?
       @scheme = project_tower.default_scheme
@@ -364,8 +362,8 @@ class ProjectUnit
   end
 
   def pending_booking_detail_scheme
-    if self.booking_detail.present?
-      self.booking_detail.booking_detail_schemes.where(status: "draft").first
+    if ["hold", "under_negotiation"].include?(self.status) || self.class.booking_stages.include?(self.status)
+      self.booking_detail_scheme
     end
   end
 

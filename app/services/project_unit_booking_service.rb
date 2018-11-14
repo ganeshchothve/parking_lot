@@ -10,8 +10,8 @@ class ProjectUnitBookingService
     if project_unit.status == "hold"
       booking_detail = self.create_booking_detail
       self.create_or_update_booking_detail_scheme booking_detail
-      self.status = booking_detail.status
-      self.save(validate: false)
+      self.project_unit.status = booking_detail.status
+      self.project_unit.save(validate: false)
     end
   end
 
@@ -30,7 +30,7 @@ class ProjectUnitBookingService
         'booked_confirmed'
       elsif self.project_unit.total_amount_paid > self.project_unit.blocking_amount
         'booked_tentative'
-      elsif self.project_unit.total_amount_paid == self.project_unit.blocking_amount
+      elsif self.project_unit.total_tentative_amount_paid == self.project_unit.blocking_amount
         'blocked'
       else
         "under_negotiation"
@@ -58,7 +58,7 @@ class ProjectUnitBookingService
         cost_sheet_template_id: scheme.cost_sheet_template_id,
         payment_schedule_template_id: scheme.payment_schedule_template_id,
         payment_adjustments: scheme.payment_adjustments.collect(&:clone).collect{|record| record.editable = false},
-        project_unit_id: self.project_unit_id
+        project_unit_id: self.project_unit.id
       )
     end
 
