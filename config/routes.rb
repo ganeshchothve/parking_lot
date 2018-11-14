@@ -99,7 +99,7 @@ Rails.application.routes.draw do
   post :check_and_register, to: 'home#check_and_register', as: :check_and_register
 
   scope :custom do
-
+    match :inventory, to: 'custom#inventory', as: :custom_inventory, via: [:get]
   end
 
   scope :dashboard do

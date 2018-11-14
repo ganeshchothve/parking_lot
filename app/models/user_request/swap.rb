@@ -18,10 +18,12 @@ class UserRequest::Swap < UserRequest
   private
 
   def alternate_project_unit_availability
-    valid = self.alternate_project_unit.status == "available" || (self.alternate_project_unit.status == "hold" && self.alternate_project_unit.user_id == self.project_unit.user_id)
+    if ['rejected', 'failed'].exclude?(self.status)
+      valid = self.alternate_project_unit.status == "available" || (self.alternate_project_unit.status == "hold" && self.alternate_project_unit.user_id == self.project_unit.user_id)
 
-    if !valid
-      self.errors.add(:alternate_project_unit_id, "is not available for booking.")
+      if !valid
+        self.errors.add(:alternate_project_unit_id, "is not available for booking.")
+      end
     end
   end
 end
