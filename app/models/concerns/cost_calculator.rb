@@ -71,13 +71,13 @@ module CostCalculator
 
   def total_outside_agreement_costs
     costs.where(category: 'outside_agreement').collect do |cost|
-      cost.value self
+      cost.value
     end.sum
   end
 
   def total_agreement_costs
     costs.where(category: 'agreement').collect do |cost|
-      cost.value self
+      cost.value
     end.sum
   end
 end
