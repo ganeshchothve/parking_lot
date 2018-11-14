@@ -40,7 +40,7 @@ class ProjectUnitObserver < Mongoid::Observer
     elsif project_unit.status_changed? && project_unit.status != 'hold'
       project_unit.held_on = nil
     end
-    if project_unit.status_changed? && ['blocked', 'booked_tentative', 'booked_confirmed'].include?(project_unit.status) && ['available', 'hold'].include?(project_unit.status_was)
+    if project_unit.status_changed? && ProjectUnit.booking_stages.include?(project_unit.status) && ['available', 'hold'].include?(project_unit.status_was)
       project_unit.blocked_on = Date.today
       project_unit.auto_release_on = project_unit.blocked_on + project_unit.blocking_days.days
     end
@@ -98,7 +98,7 @@ class ProjectUnitObserver < Mongoid::Observer
 
   def after_update project_unit
     user = project_unit.user
-    if project_unit.status_changed? && ['blocked', 'booked_tentative', 'booked_confirmed'].include?(project_unit.status)
+    if project_unit.status_changed? && ProjectUnit.booking_stages.include?(project_unit.status)
 
       receipt = project_unit.receipts.where(total_amount: project_unit.booking_portal_client.blocking_amount, status: 'success').first
        if receipt.present?
@@ -120,7 +120,7 @@ class ProjectUnitObserver < Mongoid::Observer
 
         Email.create!({
           booking_portal_client_id: project_unit.booking_portal_client_id,
-          email_template_id:Template::EmailTemplate.find_by(name: "project_unit_#{project_unit.status}").id,
+          email_template_id: Template::EmailTemplate.find_by(name: "project_unit_#{project_unit.status}").id,
           cc: [project_unit.booking_portal_client.notification_email],
           recipients: [user],
           cc_recipients: (user.manager_id.present? ? [user.manager] : []),

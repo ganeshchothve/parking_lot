@@ -116,7 +116,7 @@ class User
   end
 
   def total_balance_pending
-    self.project_units.in(status: ['blocked', 'booked_tentative', 'booked_confirmed']).sum{|x| x.pending_balance}
+    self.project_units.in(status: ProjectUnit.booking_stages).sum{|x| x.pending_balance}
   end
 
   def total_unattached_balance

@@ -140,7 +140,7 @@ class ProjectUnit
   end
 
   def user_based_status(user)
-    if ["hold", "blocked", "booked_tentative", "booked_confirmed"].include?(self.status)
+    if ProjectUnit.booking_stages.include?(self.status) || self.status == "hold"
       return "booked"
     else
       if user.role?("user")
@@ -176,6 +176,7 @@ class ProjectUnit
     out = [
       {id: 'available', text: 'Available'},
       {id: 'under_negotiation', text: 'Under negotiation'},
+      {id: 'negotiation_failed', text: 'Negotiation failed'},
       {id: 'not_available', text: 'Not Available'},
       {id: 'error', text: 'Error'},
       {id: 'hold', text: 'Hold'},
@@ -200,31 +201,33 @@ class ProjectUnit
     ]
   end
 
+  def self.booking_stages
+    ["booked", "booked_tentative", "booked_confirmed"]
+  end
+
   def self.cost_adjustment_fields
     [:base_rate, :floor_rise, :agreement_price]
   end
 
+  def can_block? user
+    (self.status == "hold" && self.user_id == user.id) || self.user_based_status(user) == "available"
+  end
+
   def process_payment!(receipt)
     if ['success', 'clearance_pending'].include?(receipt.status)
-      if self.scheme.status == "approved"
-        if self.pending_balance({strict: true}) <= 0
-          self.status = 'booked_confirmed'
-        else
-          if self.total_amount_paid > self.blocking_amount
-            if self.status != 'booked_tentative'
+      if ProjectUnit.booking_stages.include?(self.status) || self.can_block?(receipt.user) || (self.status == "under_negotiation" && self.user_id == receipt.user_id)
+        if self.scheme.status == "approved"
+          if self.pending_balance({strict: true}) <= 0
+            self.status = 'booked_confirmed'
+          elsif self.total_amount_paid > self.blocking_amount
               self.status = 'booked_tentative'
-            end
-          elsif receipt.total_amount >= self.blocking_amount && (self.status == "hold" || self.user_based_status(self.user) == "available")
-            if (self.user == receipt.user && self.status == 'hold') || self.user_based_status(self.user) == "available"
-              self.status = 'blocked'
-            else
-              receipt.project_unit_id = nil
-              receipt.save
-            end
+          else
+            self.status = 'blocked'
           end
         end
       else
-        self.status = "under_negotiation"
+        receipt.project_unit_id = nil
+        receipt.save
       end
       # Send payments data to Sell.Do CRM
       # SelldoReceiptPusher.perform_async(receipt.id.to_s, Time.now.to_i)
@@ -234,7 +237,6 @@ class ProjectUnit
       if self.pending_balance == self.booking_price # not success or clearance_pending receipts tagged against this unit
         if self.status == 'hold'
           self.make_available
-          self.user_id = nil
         else
           # TODO: we should display a message on the UI before someone marks the receipt as 'failed'. Because the unit might just get released
           self.status = 'error'
@@ -242,6 +244,19 @@ class ProjectUnit
       end
     end
     self.save(validate: false)
+  end
+
+  def process_scheme!
+    if self.status == "under_negotiation" && self.scheme.status == "approved"
+      if self.pending_balance({strict: true}) <= 0
+        self.status = 'booked_confirmed'
+      elsif self.total_amount_paid > self.blocking_amount
+        self.status = 'booked_tentative'
+      elsif self.total_amount_paid == self.blocking_amount
+        self.status = 'blocked'
+      end
+      self.save(validate: false)
+    end
   end
 
   def self.build_criteria params={}
@@ -330,7 +345,7 @@ class ProjectUnit
   def scheme
     return @scheme if @scheme.present?
 
-    if self.status == "hold" || (["blocked", "booked_tentative", "booked_confirmed"].include?(self.status) && self.booking_detail.present?)
+    if self.status == "hold" || ((self.status == "under_negotiation" || ProjectUnit.booking_stages.include?(self.status)) && self.booking_detail.present?)
       @scheme = self.booking_detail_scheme
     end
 

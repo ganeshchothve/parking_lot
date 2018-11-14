@@ -13,10 +13,10 @@ class ReceiptPolicy < ApplicationPolicy
 
   def new?
     if user.buyer?
-      valid = user.confirmed? && user.kyc_ready? && (record.project_unit_id.blank? || after_hold_payment? || after_blocked_payment?)
+      valid = user.confirmed? && user.kyc_ready? && (record.project_unit_id.blank? || after_hold_payment? || after_blocked_payment? || after_under_negotiation_payment?)
     else
       valid = record.user_id.present? && record.user.confirmed? && record.user.kyc_ready?
-      valid = valid && (record.project_unit_id.blank? || after_blocked_payment? || (after_hold_payment? && editable_field?('event')))
+      valid = valid && (record.project_unit_id.blank? || after_blocked_payment? || ((after_hold_payment? || after_under_negotiation_payment?) && editable_field?('event')))
     end
     if record.project_unit_id.present?
       valid = valid && record.user.user_requests.where(project_unit_id: record.project_unit_id).where(status: "pending").blank?
@@ -61,6 +61,10 @@ class ReceiptPolicy < ApplicationPolicy
 
   def after_blocked_payment?
     record.project_unit.present? && record.project_unit.status != 'hold' && record.project_unit.user_based_status(record.user) == "booked"
+  end
+
+  def after_under_negotiation_payment?
+    record.project_unit.present? && record.project_unit.status == 'under_negotiation'
   end
 
   def permitted_attributes params={}
