@@ -7,9 +7,13 @@ module DatabaseSeeds
 
       Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "UserRequest::Cancellation", name: "cancellation_request_resolved", content: "We're sorry to see you go. Cancellation request on your booking of <%= project_unit.name %> at <%= project_unit.project_name %> has been processed and your amount will be refunded to you in a few days. To book another unit visit <%= user.dashboard_url %>") if Template::SmsTemplate.where(name: "cancellation_request_resolved").blank?
 
+      Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "UserRequest::Cancellation", name: "cancellation_request_rejected", content: "Cancellation request on your booking of <%= project_unit.name %> at <%= project_unit.project_name %> has been rejected") if Template::SmsTemplate.where(name: "cancellation_request_rejected").blank?
+
       Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "UserRequest::Swap", name: "swap_request_created", content: "A swap has been requested on your booking of <%= project_unit.name %> at <%= project_unit.project_name %>. Our CRM team is reviewing your request and will get in touch with you shortly.") if Template::SmsTemplate.where(name: "swap_request_created").blank?
 
       Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "UserRequest::Swap", name: "swap_request_resolved", content: "Swap request on your booking of <%= project_unit.name %> at <%= project_unit.project_name %> has been processed. We have now blocked <%= I18n.t('global.project_unit') %> <%= alternate_project_unit.name %> for you.") if Template::SmsTemplate.where(name: "swap_request_resolved").blank?
+
+      Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "UserRequest::Swap", name: "swap_request_rejected", content: "Swap request on your booking of <%= project_unit.name %> at <%= project_unit.project_name %> has been rejected.") if Template::SmsTemplate.where(name: "swap_request_rejected").blank?
 
       Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "Receipt", name: "receipt_success", content: "Dear <%= user.name %>, your payment of Rs. <%= total_amount %> was successful (<%= receipt_id %>). To view your receipt visit your Portal Dashboard <%= user.dashboard_url %>") if Template::SmsTemplate.where(name: "receipt_success").blank?
 

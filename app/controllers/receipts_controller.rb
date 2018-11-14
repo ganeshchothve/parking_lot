@@ -140,6 +140,8 @@ class ReceiptsController < ApplicationController
   def set_project_unit
     @project_unit = if params[:project_unit_id].present?
       ProjectUnit.find(params[:project_unit_id])
+    elsif params[:receipt].present? && params[:receipt][:project_unit_id].present?
+      ProjectUnit.find(params[:receipt][:project_unit_id])
     elsif @receipt.present?
       @receipt.project_unit
     end
@@ -149,7 +151,7 @@ class ReceiptsController < ApplicationController
     if params[:action] == "index" || params[:action] == 'export'
       authorize Receipt
     elsif params[:action] == "new" || params[:action] == "create" || params[:action] == "direct"
-      authorize Receipt.new(user_id: @user.id)
+      authorize Receipt.new(user_id: @user.id, project_unit_id: (@project_unit.present? ? @project_unit.id : nil))
     else
       authorize @receipt
     end

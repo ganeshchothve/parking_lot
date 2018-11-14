@@ -54,7 +54,7 @@
                 <%= link_to "Make Direct #{global_labels['receipt']}", url_for_new_receipt, class: 'btn btn-primary modal-remote-form-link' %>
               <% end %>
               <% end %>
-              <% if UserPolicy.new(current_user, User).export? && @user.blank? %>
+              <% if ReceiptPolicy.new(current_user, Receipt).export? && @receipt.blank? %>
                 <div class="dropdown">
                   <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
                   <div class="dropdown-menu dropdown-menu-right">
