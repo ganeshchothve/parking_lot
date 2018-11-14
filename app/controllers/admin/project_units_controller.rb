@@ -66,6 +66,13 @@ class Admin::ProjectUnitsController < AdminController
     redirect_to admin_project_units_path
   end
 
+  def send_under_negotiation
+    ProjectUnitBookingService.new(@project_unit.id).send_for_negotiation
+    respond_to do |format|
+      format.html { redirect_to admin_user_path(@project_unit.user.id)}
+    end
+  end
+
   private
   def set_project_unit
     @project_unit = ProjectUnit.find(params[:id])

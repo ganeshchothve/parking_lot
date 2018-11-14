@@ -6,9 +6,20 @@ class ProjectUnitBookingService
     @project_unit = ProjectUnit.find id
   end
 
+  def send_for_negotiation
+    booking_detail = create_booking_detail "under_negotiation"
+    booking_detail_scheme = self.project_unit.booking_detail_scheme
+    booking_detail_scheme.status = "under_negotiation"
+    booking_detail_scheme.booking_detail_id = booking_detail.id
+    booking_detail_scheme.save!
+
+    self.project_unit.status = "under_negotiation"
+    self.project_unit.save(validate: false)
+  end
+
   def book
     if project_unit.status == "hold"
-      booking_detail = self.create_booking_detail
+      booking_detail = self.create_booking_detail self.booking_detail_status
       self.create_or_update_booking_detail_scheme booking_detail
       self.project_unit.status = booking_detail.status
       self.project_unit.save(validate: false)
@@ -40,8 +51,8 @@ class ProjectUnitBookingService
     end
   end
 
-  def create_booking_detail
-    BookingDetail.create(project_unit_id: self.project_unit.id, user_id: self.project_unit.user_id, receipt_ids: self.project_unit.receipt_ids, user_kyc_ids: self.project_unit.user_kyc_ids, primary_user_kyc_id: self.project_unit.primary_user_kyc_id, status: self.booking_detail_status, manager_id: self.project_unit.user.manager_id)
+  def create_booking_detail status
+    BookingDetail.create(project_unit_id: self.project_unit.id, user_id: self.project_unit.user_id, receipt_ids: self.project_unit.receipt_ids, user_kyc_ids: self.project_unit.user_kyc_ids, primary_user_kyc_id: self.project_unit.primary_user_kyc_id, status: status, manager_id: self.project_unit.user.manager_id)
   end
 
   def create_or_update_booking_detail_scheme booking_detail

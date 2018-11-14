@@ -46,6 +46,7 @@ Rails.application.routes.draw do
       get 'export', action: 'export', on: :collection, as: :export
       get 'mis_report', action: 'mis_report', on: :collection, as: :mis_report
       resources :booking_detail_schemes, except: [:destroy], controller: '/booking_detail_schemes'
+      get 'send_under_negotiation', on: :member
     end
     resources :users do
       get :resend_confirmation_instructions, action: 'resend_confirmation_instructions', as: :resend_confirmation_instructions, on: :member

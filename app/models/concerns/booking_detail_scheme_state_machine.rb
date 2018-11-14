@@ -12,7 +12,7 @@ module BookingDetailSchemeStateMachine
       end
 
       event :under_negotiation do
-        transitions from: :draft, to: :under_negotiation, if: :editable_payment_adjustments_present?
+        transitions from: :draft, to: :under_negotiation, if: [:booking_detail_present?, :editable_payment_adjustments_present?]
         transitions from: :under_negotiation, to: :under_negotiation
       end
 
@@ -23,8 +23,8 @@ module BookingDetailSchemeStateMachine
 
       event :approved do
         transitions from: :approved, to: :approved
-        transitions from: :draft, to: :approved, if: unless: :editable_payment_adjustments_present?
-        transitions from: :under_negotiation, to: :approved
+        transitions from: :draft, to: :approved, if: :booking_detail_present?,  unless: :editable_payment_adjustments_present?
+        transitions from: :under_negotiation, to: :approved, if: :booking_detail_present?
       end
 
       event :disabled do
@@ -33,6 +33,10 @@ module BookingDetailSchemeStateMachine
         transitions from: :approved, to: :disabled, if: :other_approved_scheme_present?
       end
 
+    end
+
+    def booking_detail_present?
+      self.booking_detail.present?
     end
 
     def editable_payment_adjustments_present?

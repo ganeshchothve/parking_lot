@@ -98,6 +98,10 @@ class ProjectUnitPolicy < ApplicationPolicy
     attributes.uniq
   end
 
+  def send_under_negotiation?
+    checkout?
+  end
+
   private
   def _role_based_check(valid)
     valid = (valid && (record.user_id == user.id)) if user.buyer?
