@@ -1,4 +1,8 @@
 class BookingDetailSchemePolicy < SchemePolicy
+  def new?
+    (ProjectUnit.booking_stages.include?(record.project_unit.status) || record.project_unit.status == "negotiation_failed") && current_client.enable_actual_inventory?(user) && index?
+  end
+
   def edit?
     ["approved", "disabled"].exclude?(record.status) && (user.role?('superadmin') || user.role?('admin') || user.role?('sales') || user.role?('crm') || user.role?('cp'))
   end

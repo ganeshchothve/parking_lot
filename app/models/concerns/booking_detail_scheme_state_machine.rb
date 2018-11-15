@@ -17,7 +17,7 @@ module BookingDetailSchemeStateMachine
       end
 
       event :negotiation_failed do
-        transitions from: :under_negotiation, to: :negotiation_failed, after: :update_project_unit
+        transitions from: :under_negotiation, to: :negotiation_failed, after: :project_unit_negotiation_failed
         transitions from: :negotiation_failed, to: :negotiation_failed
       end
 
@@ -47,8 +47,9 @@ module BookingDetailSchemeStateMachine
       BookingDetailScheme.where(project_unit_id: self.project_unit_id, user_id: self.user_id, status: "approved").count > 1
     end
 
-    def update_project_unit
-      self.project_unit.set(status: self.status)
+    def project_unit_negotiation_failed
+      self.project_unit.status = "negotiation_failed"
+      self.project_unit.save!
     end
   end
 end

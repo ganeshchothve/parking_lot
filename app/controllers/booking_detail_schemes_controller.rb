@@ -27,7 +27,12 @@ class BookingDetailSchemesController < ApplicationController
   end
 
   def new
-    booking_detail_scheme = @booking_detail.booking_detail_scheme
+    booking_detail_scheme = if @booking_detail.status == "negotiation_failed"
+      @booking_detail.booking_detail_schemes.where(status: "negotiation_failed").desc(:created_at).first
+    else
+      @booking_detail.booking_detail_scheme
+    end
+
     @scheme = BookingDetailScheme.new(
       derived_from_scheme_id: booking_detail_scheme.derived_from_scheme_id,
       booking_detail_id: @booking_detail.id,
@@ -119,7 +124,9 @@ class BookingDetailSchemesController < ApplicationController
     if params[:action] == "index" || params[:action] == 'export'
       authorize BookingDetailScheme
     elsif params[:action] == "new" || params[:action] == "create"
-      authorize BookingDetailScheme.new(created_by: current_user)
+      project_unit_id = @project_unit.id if @project_unit.present?
+      project_unit_id = @booking_detail.project_unit.id if @booking_detail.present? && project_unit_id.blank?
+      authorize BookingDetailScheme.new(created_by: current_user, project_unit_id: project_unit_id)
     else
       authorize @scheme
     end

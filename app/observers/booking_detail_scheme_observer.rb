@@ -5,6 +5,14 @@ class BookingDetailSchemeObserver < Mongoid::Observer
     booking_detail_scheme.user_id = booking_detail_scheme.booking_detail.user_id if booking_detail_scheme.user_id.blank? && booking_detail_scheme.booking_detail.present?
   end
 
+  def after_create booking_detail_scheme
+    if booking_detail_scheme.project_unit.status == "negotiation_failed"
+      project_unit = booking_detail_scheme.project_unit
+      project_unit.status = "under_negotiation"
+      project_unit.save!
+    end
+  end
+
   def before_save booking_detail_scheme
     if booking_detail_scheme.derived_from_scheme_id_changed?
       booking_detail_scheme.payment_schedule_template_id = booking_detail_scheme.derived_from_scheme.payment_schedule_template.id

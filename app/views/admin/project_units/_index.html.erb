@@ -44,7 +44,7 @@
               <% end %>
               <% if project_unit.pending_booking_detail_scheme.present? && policy(project_unit.pending_booking_detail_scheme).edit? %>
                 <%= link_to "Update scheme and discount", edit_admin_user_booking_detail_booking_detail_scheme_path(project_unit.user_id, project_unit.booking_detail, project_unit.pending_booking_detail_scheme.id), class: 'dropdown-item modal-remote-form-link' %>
-              <% elsif ProjectUnit.booking_stages.include?(project_unit.status) && policy(project_unit.scheme).new? %>
+              <% elsif policy(BookingDetailScheme.new(project_unit_id: project_unit.id)).new? %>
                 <%= link_to "Update scheme and discount", new_admin_user_booking_detail_booking_detail_scheme_path(project_unit.user_id, project_unit.booking_detail), class: 'dropdown-item modal-remote-form-link' %>
               <% end %>
 
