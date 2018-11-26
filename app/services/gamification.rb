@@ -13,7 +13,7 @@ module Gamification
         data = ProjectUnit.collection.aggregate([{
           "$match": {
             status: {
-              "$in": ['blocked', 'booked_tentative', 'booked_confirmed']
+              "$in": ProjectUnit.booking_stages
             }
           }
         },{

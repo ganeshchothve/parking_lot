@@ -15,7 +15,7 @@
           Select a <%= global_labels[:scheme] %>
         </div>
         <div class="card-body">
-          <% if ["blocked", "booked_tentative", "booked_confirmed"].exclude?(@project_unit.status) %>
+          <% if ProjectUnit.booking_stages.exclude?(@project_unit.status) %>
             <%= form_tag admin_project_unit_path(@project_unit), method: "get", id: "project_unit_scheme_preview_form" do %>
               <div class="form-group">
                 <%= label_tag :scheme_id, "Scheme", class: "control-label" %>

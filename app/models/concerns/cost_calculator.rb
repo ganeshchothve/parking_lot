@@ -57,6 +57,10 @@ module CostCalculator
     receipts.where(user_id: self.user_id).where(status: 'success').sum(:total_amount)
   end
 
+  def total_tentative_amount_paid
+    receipts.where(user_id: self.user_id).in(status: ['success', 'clearance_pending']).sum(:total_amount)
+  end
+
   def calculate_agreement_price
     (base_price + total_agreement_costs + scheme.payment_adjustments.where(field: "agreement_price").collect{|adj| adj.value(self)}.sum).round
   end

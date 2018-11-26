@@ -2,11 +2,10 @@ class Scheme
   include Mongoid::Document
   include Mongoid::Timestamps
   include InsertionStringMethods
+  include SchemeStateMachine
 
   field :name, type: String
   field :description, type: String
-  field :project_unit_id, type: String
-  field :user_id, type: String
   field :user_role, type: String
   field :status, type: String, default: "draft"
   field :approved_at, type: DateTime
@@ -16,36 +15,26 @@ class Scheme
   field :can_be_applied_by, type: Array
 
   enable_audit({
-    indexed_fields: [:project_id, :project_tower_id, :project_unit_id, :user_id],
-    audit_fields: [:name, :project_unit_id, :user_id, :user_role, :value, :status, :approved_by_id, :created_by_id, :can_be_applied_by],
+    indexed_fields: [:project_id, :project_tower_id],
+    audit_fields: [:name, :user_role, :value, :status, :approved_by_id, :created_by_id, :can_be_applied_by],
   })
 
-  embeds_many :payment_adjustments
+  embeds_many :payment_adjustments, as: :payable
   belongs_to :project
   belongs_to :project_tower
   belongs_to :approved_by, class_name: "User", optional: true
   belongs_to :created_by, class_name: "User"
   belongs_to :booking_portal_client, class_name: "Client"
-  belongs_to :user, class_name: 'User', optional: true
 
   validates :name, :status, :cost_sheet_template_id, :payment_schedule_template_id, presence: true
-  validates :name, uniqueness: {scope: :project_tower_id}, if: Proc.new{|record| !record.is_a?(BookingDetailScheme)}
+  validates :name, uniqueness: {scope: :project_tower_id}
   validates :approved_by, presence: true, if: Proc.new{|scheme| scheme.status == 'approved' && !scheme.default? }
   validate :at_least_one_condition
   validate :project_related
-  validate :user_related
 
   accepts_nested_attributes_for :payment_adjustments, allow_destroy: true
 
   default_scope -> {desc(:created_at)}
-
-  def self.available_statuses
-    [
-      {id: "draft", text: "Draft"},
-      {id: "approved", text: "Approved"},
-      {id: "disabled", text: "Disabled"}
-    ]
-  end
 
   def self.available_fields
     ["agreement_price", "all_inclusive_price", "base_rate", "floor_rise"]
@@ -62,18 +51,8 @@ class Scheme
     self.where(selector)
   end
 
-  def project_unit
-    return ProjectUnit.find(self.project_unit_id) if self.project_unit_id.present?
-    return nil
-  end
-
   def project_tower
     return ProjectTower.find(self.project_tower_id) if self.project_tower_id.present?
-    return nil
-  end
-
-  def user
-    return User.find(self.user_id) if self.user_id.present?
     return nil
   end
 
@@ -94,19 +73,14 @@ class Scheme
     end
   end
 
+  def approver? user
+    user.role?('admin') || user.role?('superadmin')
+  end
 
   private
   def at_least_one_condition
-    if self.project_id.blank? && self.project_tower_id.blank? && self.project_unit_id.blank? && self.user_id.blank? && self.user_role.blank?
+    if self.project_id.blank? && self.project_tower_id.blank? && self.user_role.blank?
       self.errors.add :base, "At least one condition is required to create a scheme"
-    end
-  end
-
-  def user_related
-    if self.user_role.present? && self.user_id.present?
-      if self.user.role != self.user_role
-        self.errors.add :base, "The chosen user and the role do not match. Set either one"
-      end
     end
   end
 
@@ -114,11 +88,6 @@ class Scheme
     if self.project_id.present? && self.project_tower_id.present?
       if self.project_tower.project_id != self.project_id
         self.errors.add :base, "The chosen project and tower do not match. Set either one"
-      end
-    end
-    if self.project_tower_id.present? && self.project_unit_id.present?
-      if self.project_unit.project_tower_id != self.project_tower_id
-        self.errors.add :base, "The chosen tower and unit do not match. Set either one"
       end
     end
   end

@@ -6,8 +6,9 @@ class PaymentAdjustment
   field :field, type: String
   field :formula, type: String
   field :absolute_value, type: Float
+  field :editable, type: Boolean
 
-  embedded_in :scheme
+  embedded_in :payable, polymorphic: true
 
   validates :name, :field, presence: true
   validate :formula_or_absolute_value

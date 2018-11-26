@@ -62,7 +62,7 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def update_co_applicants?
-    valid = (["blocked", "booked_confirmed", "booked_tentative"].include?(record.status) && current_client.enable_actual_inventory?(user))
+    valid = (ProjectUnit.booking_stages.include?(record.status) && current_client.enable_actual_inventory?(user))
     _role_based_check(valid)
   end
 
@@ -89,7 +89,7 @@ class ProjectUnitPolicy < ApplicationPolicy
     attributes += (make_available? ? [:status] : [])
     attributes += [:user_id, :selected_scheme_id] if record.user_id.blank? && record.user_based_status(user) == 'available'
 
-    if ['superadmin', 'admin'].include?(user.role) && ['hold', 'blocked', 'booked_tentative', 'booked_confirmed'].exclude?(record.status)
+    if ['superadmin', 'admin'].include?(user.role) && ProjectUnit.booking_stages.exclude?(record.status) && record.status != 'hold'
       attributes += [:name, :agreement_price, :all_inclusive_price, :status, :available_for, :blocked_on, :auto_release_on, :held_on, :base_rate, :client_id, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, :selldo_id, :erp_id, :floor_rise, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :sub_type, :type, :unit_facing_direction, costs_attributes: CostPolicy.new(user, Cost.new).permitted_attributes, data_attributes: DatumPolicy.new(user, Cost.new).permitted_attributes]
     end
 
@@ -98,10 +98,14 @@ class ProjectUnitPolicy < ApplicationPolicy
     attributes.uniq
   end
 
+  def send_under_negotiation?
+    checkout?
+  end
+
   private
   def _role_based_check(valid)
     valid = (valid && (record.user_id == user.id)) if user.buyer?
-    valid = (valid && (record.user.referenced_manager_ids.include?(user.id))) if ['hold', "blocked", "booked_confirmed", "booked_tentative"].include?(record.status) && user.role == "channel_partner"
+    valid = (valid && (record.user.referenced_manager_ids.include?(user.id))) if (ProjectUnit.booking_stages.include?(record.status) || record.status == "hold") && user.role == "channel_partner"
     valid = (valid && true) if ['cp', 'sales', 'sales_admin', 'cp_admin', 'admin'].include?(user.role)
     valid
   end

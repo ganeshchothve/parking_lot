@@ -31,7 +31,7 @@
         <% if policy(@user_request).editable_field?("project_unit_id") %>
           <div class="form-group">
             <%= f.label :project_unit_id, class: 'label-required' %>
-            <%= f.select :project_unit_id, @user_request.user.project_units.in(status: ["blocked", "booked_tentative", "booked_confirmed"]).collect{|x| [x.name, x.id] }, {prompt: true}, class: 'selectize', disabled: (policy(@user_request).editable_field?("project_unit_id") ? false : true), required: "required" %>
+            <%= f.select :project_unit_id, @user_request.user.project_units.in(status: ProjectUnit.booking_stages).collect{|x| [x.name, x.id] }, {prompt: true}, class: 'selectize', disabled: (policy(@user_request).editable_field?("project_unit_id") ? false : true), required: "required" %>
           </div>
         <% else %>
           <div class="form-group">

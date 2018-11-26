@@ -22,7 +22,14 @@ class ReceiptObserver < Mongoid::Observer
 
       project_unit = receipt.project_unit
       if project_unit.present?
-        if project_unit.process_payment!(receipt)
+
+        status = if project_unit.status == "hold"
+          ProjectUnitBookingService.new(project_unit.id).book
+        else
+          project_unit.process_payment!(receipt)
+        end
+
+        if status == true
         elsif receipt.status != 'clearance_pending'
           # TODO: send us and client team an error message. Escalate this.
         end
