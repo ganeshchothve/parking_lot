@@ -1,22 +1,50 @@
-class BookingDetailScheme < Scheme
+class BookingDetailScheme
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  include InsertionStringMethods
+  include BookingDetailSchemeStateMachine
 
   field :derived_from_scheme_id, type: BSON::ObjectId
+  field :status, type: String, default: "draft"
+  field :approved_at, type: DateTime
+  field :payment_schedule_template_id, type: BSON::ObjectId
+  field :cost_sheet_template_id, type: BSON::ObjectId
+  field :user_id, type: BSON::ObjectId
 
-  belongs_to :booking_detail, optional: true
+  attr_accessor :created_by_user
 
-  def derived_scheme_attributes
-    scheme = Scheme.find self.derived_from_scheme_id
-    cloned_scheme = scheme.clone
-    attributes = cloned_scheme.attributes.merge(booking_detail_id: self.booking_detail_id)
-    attributes.delete "_type"
-    attributes.delete "_id"
-    if cloned_scheme.payment_adjustments.present?
-      attributes[:payment_adjustments_attributes] = scheme.payment_adjustments.collect do |payment_adjustment|
-        attrs = payment_adjustment.clone.attributes
-        attrs.delete "_id"
-        attrs
-      end
-    end
-    attributes
+  belongs_to :project_unit, class_name: 'ProjectUnit'
+  belongs_to :booking_detail, class_name: 'BookingDetail', optional: true
+  belongs_to :approved_by, class_name: "User", optional: true
+  belongs_to :created_by, class_name: "User"
+  belongs_to :booking_portal_client, class_name: "Client"
+  embeds_many :payment_adjustments, as: :payables
+  accepts_nested_attributes_for :payment_adjustments, allow_destroy: true
+
+  validates :booking_detail_id, presence: true, if: Proc.new{|record| record.status == "approved" }
+
+  def derived_from_scheme
+    Scheme.find self.derived_from_scheme_id
   end
+
+  def payment_schedule_template
+    Template::PaymentScheduleTemplate.find self.payment_schedule_template_id
+  end
+
+  def cost_sheet_template
+    Template::CostSheetTemplate.find self.cost_sheet_template_id
+  end
+
+  def editable_payment_adjustments
+    self.payment_adjustments.in(editable: [true, nil])
+  end
+
+  def non_editable_payment_adjustments
+    self.payment_adjustments.where(editable: false)
+  end
+
+  def approver? user
+    user.role?('admin') || user.role?('superadmin')
+  end
+
 end

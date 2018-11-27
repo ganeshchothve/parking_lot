@@ -25,7 +25,7 @@ class DashboardController < ApplicationController
   def gamify_unit_selection
     data = ProjectUnit.build_criteria({
       fltrs: {
-        status: ["blocked", "booked_tentative", "booked_confirmed"],
+        status: ProjectUnit.booking_stages,
         bedrooms: params[:bedrooms].to_i,
         carpet: "#{params[:carpet].to_f - 50}-#{params[:carpet].to_f + 50}"
       }

@@ -9,12 +9,6 @@
         </button>
       </div>
       <div class="modal-body">
-        <% if f.object.is_a?(BookingDetailScheme) %>
-          <div class="form-group">
-            <%= f.label :derived_from_scheme_id, class: 'control-label' %>
-            <%= f.select :derived_from_scheme_id, @scheme.booking_detail.project_unit.permitted_schemes(current_user).collect{|scheme| [scheme.name, scheme.id]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
-          </div>
-        <% end %>
         <div class="form-group">
           <%= f.label :name, class: 'label-required' %>
           <%= f.text_field :name, autofocus: true, class: "form-control", required: 'required', disabled: (policy(@scheme).editable_field?("name") ? false : true) %>
@@ -25,16 +19,8 @@
           <%= f.select :project_tower_id, f.object.project_tower_id.present? ? [[f.object.project_tower.name, f.object.project_tower.id]] : current_project.project_towers.collect{|t| [t.name, t.id]}, {prompt: true}, class: 'selectize', disabled: (policy(@scheme).editable_field?("project_tower_id") ? false : true) %>
         </div>
         <div class="form-group">
-          <%= f.label :project_unit_id, class: 'control-label' %>
-          <%= f.select :project_unit_id, f.object.project_unit_id.present? ? [[f.object.project_unit.name, f.object.project_unit.id]] : [], {prompt: true}, class: 'selectize-remote', disabled: (policy(@scheme).editable_field?("project_unit_id") ? false : true), "data-url": admin_project_units_path, "data-params": {fltrs: {status: {"$in": ['available', 'management', 'employee']}}}.to_json, 'data-ds': 'ds' %>
-        </div>
-        <div class="form-group">
           <%= f.label :user_role, class: 'control-label' %>
           <%= f.select :user_role, User.available_roles(current_client).select{|x| User.buyer_roles(current_client).include?(x[:id])}.collect{|x| [x[:text], x[:id]] }, {prompt: true}, class: 'selectize', disabled: (policy(@scheme).editable_field?("user_role") ? false : true) %>
-        </div>
-        <div class="form-group">
-          <%= f.label :user_id, class: 'control-label' %>
-          <%= f.select :user_id, f.object.user_id.present? ? [[f.object.user.name, f.object.user.id]] : [], {prompt: true}, class: 'selectize-remote', disabled: (policy(@scheme).editable_field?("user_id") ? false : true), "data-url": admin_users_path, "data-params": {fltrs: {role: {"$in": User.buyer_roles(current_client) }}}.to_json, 'data-ds': 'ds' %>
         </div>
         <div class="form-group">
           <%= f.label :can_be_applied_by, class: '' %>
@@ -89,20 +75,14 @@
             </div>
           <% end %>
         </div>
-        <% if policy(@scheme).editable_field?("status") %>
+        <% if policy(@scheme).editable_field?("event") %>
           <div class="form-group">
             <%= f.label :status, class: 'label-required' %>
             <%
-              if @scheme.new_record?
-                statuses = Scheme.available_statuses.select{|x| x[:id] == 'draft' }
-              elsif @scheme.status == 'approved' || @scheme.status == 'disabled'
-                statuses = Scheme.available_statuses.select{|x| ['disabled', 'approved'].include?(x[:id]) }
-              else
-                statuses = Scheme.available_statuses
-              end
-              statuses = statuses.collect{|x| [x[:text], x[:id]] }
+              events = @scheme.aasm.events(permitted: true).collect{|x| x.name.to_s}
+              events = events.collect{|x| [x.to_s.titleize, x.to_s] }
             %>
-            <%= f.select :status, statuses, {prompt: true}, class: 'selectize', required: "required" %>
+            <%= f.select :event, options_for_select(events, @scheme.status), {prompt: true}, class: 'selectize', required: "required" %>
           </div>
         <% end %>
       </div>

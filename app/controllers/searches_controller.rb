@@ -105,6 +105,11 @@ class SearchesController < ApplicationController
       return
     end
     @project_unit = ProjectUnit.find(@search.project_unit_id)
+    @booking_detail_scheme = @project_unit.booking_detail_scheme
+    @booking_detail_scheme = BookingDetailScheme.new(
+      user_id: @project_unit.user_id,
+      project_unit_id: @project_unit.id
+    ) if @booking_detail_scheme.blank?
     if @project_unit.held_on.present? && (@project_unit.held_on + @project_unit.holding_minutes.minutes) < Time.now
       flash[:notice] = "We've released the unit which was held for #{@project_unit.holding_minutes} minutes. Please re-select the unit and try booking again."
       ProjectUnitUnholdWorker.new.perform(@project_unit.id)
@@ -120,21 +125,6 @@ class SearchesController < ApplicationController
     elsif @project_unit.user_id.present? && @project_unit.user.receipts.where(project_unit_id: @project_unit.id, status: "pending", payment_mode: {"$ne": "online"}).present?
       flash[:notice] = "We already have collected a payment for this unit from the same customer."
       redirect_to admin_user_path(@project_unit.user_id) and return
-    end
-  end
-
-  def update_scheme
-    @project_unit = ProjectUnit.find(@search.project_unit_id)
-    authorize @project_unit
-    respond_to do |format|
-      if @project_unit.update_attributes(permitted_attributes(@project_unit))
-        format.html { redirect_to checkout_user_search_path(@search) }
-        format.json { render json: {project_unit: @project_unit}, status: 200 }
-      else
-        flash[:notice] = 'Could not update the project unit. Please retry'
-        format.html { redirect_to checkout_user_search_path(@search) }
-        format.json { render json: {errors: @project_unit.errors.full_messages.uniq}, status: 422 }
-      end
     end
   end
 
