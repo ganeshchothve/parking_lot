@@ -54,7 +54,7 @@
     </div>
     <div class="form-group">
       <%= adj.label :formula, class: 'label-required' %>
-      <%= adj.number_field :formula, class: "form-control", disabled: !editable_payment_adjustment %>
+      <%= adj.text_field :formula, class: "form-control", disabled: !editable_payment_adjustment %>
       <p class="small text-muted">Total Adjustment will be calculated as Rs. (saleable) * (scheme mentioned here)</p>
     </div>
   <% end %>
