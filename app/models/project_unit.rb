@@ -117,10 +117,9 @@ class ProjectUnit
 
   def permitted_schemes user=nil
     user ||= self.user
-    or_criteria = [{project_unit_id: self.id}]
-    or_criteria << {project_unit_id: nil, project_tower_id: self.project_tower_id}
-    or_criteria << {user_id: self.user.id}
-    or_criteria << {user_id: nil, user_role: self.user.role}
+    or_criteria = [{project_tower_id: self.project_tower_id}]
+    or_criteria << {user_id: user.id}
+    or_criteria << {user_id: nil, user_role: user.role}
     Scheme.where(status: "approved").or("$or" => [{default: true, project_tower_id: self.project_tower_id}, {can_be_applied_by: user.role, "$or": or_criteria}])
   end
 
