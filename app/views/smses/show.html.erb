@@ -1,0 +1,24 @@
+<p>
+  <strong>To:</strong>
+  <%= @sms.to.first %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @sms.status %>
+</p>
+
+<p>
+  <strong>Sent On:</strong>
+  <% if @sms.sent_on.blank? %>
+    <%= "--" %>
+  <% else %>
+    <%= @sms.sent_on.strftime("%d/%m/%Y") %>
+  <% end %>
+</p>
+
+<p>
+  <%= @sms.body %>
+</p>
+
+<%= link_to 'Back', smses_path %>

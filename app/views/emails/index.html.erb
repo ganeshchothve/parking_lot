@@ -1,0 +1,29 @@
+<h1>Emails</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Subject</th>
+      <th>Status</th>
+      <th>Sent On</th>
+      <th colspan="1"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @emails.each do |email| %>
+      <tr>
+        <td><%= email.subject %></td>
+        <td><%= email.status %></td>
+        <% if email.sent_on.blank? %>
+          <td><%= "--" %></td>
+        <% else %>
+          <td><%= email.sent_on.strftime("%d/%m/%Y") %></td>
+        <% end %>
+        <td><%= link_to 'Show', email %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>

@@ -1,0 +1,25 @@
+<h1>Smses</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Status</th>
+      <th>Sent On</th>
+      <th colspan="1"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @smses.each do |sms| %>
+      <tr>
+        <td><%= sms.status %></td>
+        <% if sms.sent_on.blank? %>
+          <td><%= "--" %></td>
+        <% else %>
+          <td><%= sms.sent_on.strftime("%d/%m/%Y") %></td>
+        <% end %>
+        <td><%= link_to 'Show', smse_path(sms) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
