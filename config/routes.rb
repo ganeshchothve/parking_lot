@@ -45,6 +45,8 @@ Rails.application.routes.draw do
       get 'print', action: 'print', on: :member, as: :print
       get 'export', action: 'export', on: :collection, as: :export
       get 'mis_report', action: 'mis_report', on: :collection, as: :mis_report
+      resources :booking_detail_schemes, except: [:destroy], controller: '/booking_detail_schemes'
+      get 'send_under_negotiation', on: :member
     end
     resources :users do
       get :resend_confirmation_instructions, action: 'resend_confirmation_instructions', as: :resend_confirmation_instructions, on: :member
@@ -78,7 +80,9 @@ Rails.application.routes.draw do
         resources :user_requests, except: [:destroy], controller: 'user_requests'
       end
 
-      resources :booking_details, only: [:update], controller: 'booking_details'
+      resources :booking_details, only: [:update], controller: 'booking_details' do
+        resources :booking_detail_schemes, except: [:destroy], controller: '/booking_detail_schemes'
+      end
     end
     resources :projects, except: [:destroy] do
       resources :schemes, except: [:destroy], controller: 'schemes'
@@ -89,8 +93,10 @@ Rails.application.routes.draw do
         get 'export', action: 'export', on: :collection, as: :export
       end
     end
-    resources :schemes, except: [:destroy], controller: 'schemes', only_non_customizable_schemes: true
-    resources :booking_detail_schemes, except: [:destroy], controller: 'schemes'
+    resources :schemes, except: [:destroy], controller: 'schemes', only_non_customizable_schemes: true do
+      get :payment_adjustments_for_unit, on: :member
+    end
+    resources :booking_detail_schemes, except: [:destroy], controller: '/booking_detail_schemes'
   end
 
   # home & globally accessible

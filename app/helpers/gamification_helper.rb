@@ -2,7 +2,7 @@ module GamificationHelper
   def booked_homes_count
     ProjectUnit.build_criteria({
       fltrs: {
-        status: ["blocked", "booked_tentative", "booked_confirmed"]
+        status: ProjectUnit.booking_stages
       }
     }).count + 116
   end
@@ -14,7 +14,7 @@ module GamificationHelper
   def bhk_booked(bedrooms)
     ProjectUnit.build_criteria({
       fltrs: {
-        status: ["blocked", "booked_tentative", "booked_confirmed"],
+        status: ProjectUnit.booking_stages,
         bedrooms: bedrooms
       }
     }).count + 30
@@ -24,7 +24,7 @@ module GamificationHelper
     counts = ProjectUnit.collection.aggregate([{
       "$match": {
         status: {
-          "$in": ["blocked", "booked_tentative", "booked_confirmed"]
+          "$in": ProjectUnit.booking_stages
         }
       }
     },{

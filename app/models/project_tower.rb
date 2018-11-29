@@ -38,7 +38,7 @@ class ProjectTower
   end
 
   def default_scheme
-    self.schemes.where(default: true).first
+    Scheme.where(project_tower_id: self.id, default: true).first
   end
 
   private

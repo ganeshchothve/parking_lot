@@ -1,0 +1,46 @@
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Scheme</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+          <div class="col-12">
+            <div class="clearfix"></div>
+            <div>
+              Derived from scheme: <b><%= @scheme.derived_from_scheme.name %></b>
+            </div>
+            <br/>
+            <h5>Payment adjustments</h5>
+            <% if @scheme.payment_adjustments.present? %>
+              <% @scheme.payment_adjustments.each do |adjustment| %>
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <p>Name</p>
+                        <p><%= adjustment.name %></p>
+                      </div>
+                      <div class="col-md-4">
+                        <p>Field</p>
+                        <p><%= adjustment.field.titleize %></p>
+                      </div>
+                      <div class="col-md-4">
+                        <p>Value</p>
+                        <p><%= adjustment.value(@booking_detail.project_unit) %></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
