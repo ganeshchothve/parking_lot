@@ -175,7 +175,7 @@
         <div class="form-group">
           <label>Agreement Price</label>
           <div>
-            <%= number_to_indian_currency(project_unit.agreement_price.round) %>
+            <%= number_to_indian_currency(project_unit.calculate_agreement_price.round) %>
           </div>
         </div>
       </div>
