@@ -10,7 +10,7 @@
       <hr />
       <div class="form-group">
         <%= label_tag "fltrs[status]", "Status", class: "control-label" %>
-        <%= select_tag "fltrs[status]", options_for_select(policy_scope([Sms]).pluck(:status).uniq.each {|x| x}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select Status", class: "selectize"} %>
+        <%= select_tag "fltrs[status]", options_for_select(Sms.allowed_statuses.pluck(:id).each {|x| x}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select Status", class: "selectize"} %>
       </div>
       <div class="form-group">
         <%= label_tag "fltrs", "Sent on", class: "control-label" %>
