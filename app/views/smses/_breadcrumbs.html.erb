@@ -1,0 +1,12 @@
+<%= content_for :breadcrumbs do %>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="<%= home_path(current_user) %>">Dashboard</a></li>
+      <% if sms.present? %>
+        <li class="breadcrumb-item"><a href="<%= smses_path %>">Sms</a></li>
+      <% else %>
+        <li class="breadcrumb-item active" aria-current="page">Smses</li>
+      <% end %>
+    </ol>
+  </nav>
+<% end %>
