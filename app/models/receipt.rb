@@ -85,7 +85,7 @@ class Receipt
 
   def payment_gateway_service
     if self.payment_gateway.present?
-      if self.project_unit.present? && ["hold", "blocked", "booked_tentative", "booked_confirmed"].exclude?(self.project_unit.status)
+      if self.project_unit.present? && (ProjectUnit.booking_stages.exclude?(self.project_unit.status) && self.project_unit.status != "hold")
         return nil
       else
         if(self.project_unit.blank? || self.project_unit.user_id == self.user_id)

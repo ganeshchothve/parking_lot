@@ -2,8 +2,8 @@ module CostCalculator
   def effective_rate
     effective_rate = self.base_rate + self.floor_rise
     if scheme.payment_adjustments.present?
-      scheme.payment_adjustments.where(field: "base_rate").each do |adj|
-        effective_rate += adj.value
+      scheme.payment_adjustments.in(field: ["base_rate", "floor_rise"]).each do |adj|
+        effective_rate += adj.value self
       end
     end
     effective_rate
@@ -57,12 +57,16 @@ module CostCalculator
     receipts.where(user_id: self.user_id).where(status: 'success').sum(:total_amount)
   end
 
+  def total_tentative_amount_paid
+    receipts.where(user_id: self.user_id).in(status: ['success', 'clearance_pending']).sum(:total_amount)
+  end
+
   def calculate_agreement_price
-    (base_price + total_agreement_costs + scheme.payment_adjustments.where(field: "agreement_price").collect{|adj| adj.value}.sum).round
+    (base_price + total_agreement_costs + scheme.payment_adjustments.where(field: "agreement_price").collect{|adj| adj.value(self)}.sum).round
   end
 
   def calculate_all_inclusive_price
-    (calculate_agreement_price + total_outside_agreement_costs + scheme.payment_adjustments.where(field: "all_inclusive_price").collect{|adj| adj.value}.sum).round
+    (calculate_agreement_price + total_outside_agreement_costs + scheme.payment_adjustments.where(field: "all_inclusive_price").collect{|adj| adj.value(self)}.sum).round
   end
 
   def base_price

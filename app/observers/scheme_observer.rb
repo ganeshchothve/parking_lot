@@ -1,11 +1,29 @@
+
 class SchemeObserver < Mongoid::Observer
+  def before_validation scheme
+    scheme.send(scheme.event) if scheme.event.present?
+    if scheme.payment_schedule_template_id.blank?
+      scheme.payment_schedule_template_id = Template::PaymentScheduleTemplate.where(default: true).first.id
+    end
+    if scheme.cost_sheet_template_id.blank?
+      scheme.cost_sheet_template_id = Template::CostSheetTemplate.where(default: true).first.id
+    end
+  end
   def before_save scheme
     if scheme.status_changed? && scheme.status == 'approved'
       scheme.approved_at = Time.now
     end
   end
-
   def after_save scheme
+    if scheme.status_changed?
+      if scheme.status == "draft"
+        SchemeMailer.send_draft(scheme.id, scheme.created_by.id).deliver
+      elsif scheme.status == "approved"
+        SchemeMailer.send_approved(scheme.id).deliver
+      elsif scheme.status == "disabled"
+        SchemeMailer.send_disabled(scheme.id).deliver
+      end
+    end
     if scheme.status_changed? && scheme.booking_portal_client.email_enabled?
       # case scheme.status
       # when 'draft'

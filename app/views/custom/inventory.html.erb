@@ -1,0 +1,108 @@
+<div class="">
+  <!-- <div class="card card-body mb-3">
+    <% url = custom_inventory_path %>
+    <%= form_tag url, method: "get", id: "custom_inventory_form" do %>
+    <div class="form-group">
+      <%= label_tag "project_tower_id", "Project Tower", class: "control-label" %>
+      <%= select_tag "project_tower_id", options_for_select(ProjectTower.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, @project_tower.id.to_s), {prompt: "Select", class: "selectize"} %>
+    </div>
+    <div class="form-group">
+      <%= submit_tag :Apply, class: "btn btn-primary" %>
+    </div>
+    <% end %>
+  </div>
+    -->
+  <div class="row justify-content-center mt-3 ml-3">
+    <% @project_towers.each do |project_tower|%>
+    <% @units = ProjectUnit.where(project_tower_id:project_tower.id).sort_by{|x| [x.floor, x.floor_order]}.to_a %>
+    <div class="col-md-4" id="unit-selection-<%= project_tower.id.to_s%>">
+      <div class="tower-container">
+        <div class="tower-wrapper" style="padding: 0px">
+          <div style="margin-bottom: 20px; text-align:center"> <%= project_tower.name %> </div>
+          <% max_floor = project_tower.total_floors %>
+          <% max_per_floor = ProjectUnit.where(project_tower_id:project_tower.id).max(:floor_order) %>
+          <% width = ((100.to_f - (4 * max_per_floor)) / max_per_floor).round(2) %>
+          <%
+            height = (280.to_f / max_floor).round(2)
+            height = 16 if height < 16
+          %>
+          <% @all_units.each do |floor_data| %>
+            <div class="floor">
+              <div class="floor-number"><%= floor_data[:_id] %></div>
+              <% max_per_floor.times do |index| %>
+                <%
+                  klass = 'bg-white'
+                  data_selector = ''
+                  unit = @units.find{|unit| unit.floor == floor_data[:_id] && unit.floor_order == (index + 1) }
+                  if unit
+                    if unit.status == 'available'
+                      klass = 'bg-success'
+                      data_selector = 'unit-card'
+                    elsif unit.status == 'hold'
+                      klass = 'bg-secondary'
+                    elsif ['blocked', 'booked_tentative', 'booked_confirmed','not_available'].include?(unit.status)
+                      klass = 'bg-warning'
+                    else
+                      klass = 'bg-danger'
+                    end
+                  end
+                %>
+                <% if unit.present? %>
+                  <% html_content = "<div class='row mb-3' style='width:350px;'>
+                    <div class='col-md-4'><label>Beds</label><div>#{unit.bedrooms}</div></div>
+                    <div class='col-md-4'><label>Carpet</label><div>#{unit.carpet} #{current_client.area_unit}</div></div>
+                    <div class='col-md-4'><label>Facing</label><div>#{unit.unit_facing_direction}</div></div>
+                  </div>
+                  <div class='row mb-3'>
+                    <div class='col-md-5'><label>Agreement Value</label><div>#{number_to_indian_currency(unit.agreement_price)}</div></div>
+                    <div class='col-md-5'><label>All Inclusive Price</label><div>#{number_to_indian_currency(unit.all_inclusive_price)}</div></div>
+                  </div>"
+                  %>
+                  <span data-jquery-selector="<%= data_selector %>" data-toggle="popover" data-content="<%= html_content %>" data-title="Details for <%= unit.name %>" data-unit-id="<%= unit.present? ? unit.id : '' %>" class="apartment <%= klass %>" style="width: <%= width %>%;height: <%= height %>px;"></span>
+                <% else %>
+                  <span data-jquery-selector="<%= data_selector %>" class="apartment <%= klass %>" style="width: <%= width %>%;height: <%= height %>px;text-align:center;font-size:10px">R</span>
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <% end %>
+  </div>
+  <div class="row justify-content-center mt-3 ml-3">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-1">
+      <span class="apartment bg-success" style="border:solid 1px;width: 20px;height: 20px; display:inline-block; vertical-align:middle;"></span>
+      <span>Available</span>
+    </div>
+    <div class="col-md-1">
+      <span class="apartment bg-secondary" style="width: 20px;height: 20px; display:inline-block; vertical-align:middle;"></span>
+      <span>Hold</span>
+    </div>
+    <div class="col-md-1">
+      <span class="apartment bg-warning" style="width: 20px;height: 20px; display:inline-block; vertical-align:middle;"></span>
+      <span>Sold</span>
+    </div>
+    <div class="col-md-1">
+      <span class="apartment bg-danger" style="width: 20px;height: 20px; display:inline-block; vertical-align:middle;"></span>
+      <span>Error</span>
+    </div>
+    <div class="col-md-2">
+      <span class="apartment bg-white" style="border:solid 1px;width: 20px;height: 20px; display:inline-block; vertical-align:middle;text-align:center;">R</span>
+      <span>Refuge Area</span>
+    </div>
+    <div class="col-md-2">
+    </div>
+  </div>
+</div>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    $("#bottom_navigation").remove();
+    $("#gamification-container").remove();
+    $("#top_navigation").remove();
+    setTimeout(function(){ location.reload(); }, 30000);
+  });
+<% end %>
+

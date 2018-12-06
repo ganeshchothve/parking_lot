@@ -10,7 +10,6 @@ class ProjectUnitObserver < Mongoid::Observer
       project_unit.status = "booked_confirmed"
     end
 
-    project_unit.selected_scheme_id = project_unit.project_tower.default_scheme.id if project_unit.selected_scheme_id.blank?
   end
 
   def before_save project_unit
@@ -41,7 +40,7 @@ class ProjectUnitObserver < Mongoid::Observer
     elsif project_unit.status_changed? && project_unit.status != 'hold'
       project_unit.held_on = nil
     end
-    if project_unit.status_changed? && ['blocked', 'booked_tentative', 'booked_confirmed'].include?(project_unit.status) && ['available', 'hold'].include?(project_unit.status_was)
+    if project_unit.status_changed? && ProjectUnit.booking_stages.include?(project_unit.status) && ['available', 'hold'].include?(project_unit.status_was)
       project_unit.blocked_on = Date.today
       project_unit.auto_release_on = project_unit.blocked_on + project_unit.blocking_days.days
     end
@@ -52,9 +51,9 @@ class ProjectUnitObserver < Mongoid::Observer
 
   def after_save project_unit
     BookingDetail.run_sync(project_unit.id, project_unit.changes)
-    if project_unit.status_changed? && ["available", "employee", "management"].exclude?(project_unit.status_was) && ["available", "employee", "management"].include?(project_unit.status)
+    if project_unit.status_changed? && ["available", "employee", "management"].exclude?(project_unit.status_was) && ["available", "not_available", "employee", "management"].include?(project_unit.status)
 
-      project_unit.set(user_id: nil, blocked_on: nil, auto_release_on: nil, held_on: nil, primary_user_kyc_id: nil, user_kyc_ids: [], selected_scheme_id: nil)
+      project_unit.set(user_id: nil, blocked_on: nil, auto_release_on: nil, held_on: nil, primary_user_kyc_id: nil, user_kyc_ids: [])
 
       project_unit.receipts.where(status: "success").each do |receipt|
         receipt.project_unit_id = nil;
@@ -99,10 +98,11 @@ class ProjectUnitObserver < Mongoid::Observer
 
   def after_update project_unit
     user = project_unit.user
-    if project_unit.status_changed? && ['blocked', 'booked_tentative', 'booked_confirmed'].include?(project_unit.status)
+    if project_unit.status_changed? && ProjectUnit.booking_stages.include?(project_unit.status)
 
-      receipt = project_unit.user.receipts.where(total_amount: project_unit.booking_portal_client.blocking_amount, status: 'success').first
-       if receipt.present?
+      receipt = project_unit.receipts.where(total_amount: project_unit.booking_portal_client.blocking_amount, status: 'success', project_unit_id: nil).first
+
+      if receipt.present?
         receipt.project_unit_id = project_unit.id
         receipt.save!
       end
@@ -121,7 +121,7 @@ class ProjectUnitObserver < Mongoid::Observer
 
         Email.create!({
           booking_portal_client_id: project_unit.booking_portal_client_id,
-          email_template_id:Template::EmailTemplate.find_by(name: "project_unit_#{project_unit.status}").id,
+          email_template_id: Template::EmailTemplate.find_by(name: "project_unit_#{project_unit.status}").id,
           cc: [project_unit.booking_portal_client.notification_email],
           recipients: [user],
           cc_recipients: (user.manager_id.present? ? [user.manager] : []),

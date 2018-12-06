@@ -51,7 +51,7 @@
             </div>
           <% end %>
         <% end %>
-        <% if current_user.kyc_ready? && current_user.project_units.in(status: ['blocked', 'booked_tentative', 'booked_confirmed']).count >= current_user.allowed_bookings %>
+        <% if current_user.kyc_ready? && current_user.project_units.in(status: ProjectUnit.booking_stages).count >= current_user.allowed_bookings %>
           <div class="card">
             <div class="card-body text-center">
               You cannot book any more apartments as you have reached the maximum bookings allowed per customer.

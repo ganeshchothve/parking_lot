@@ -6,23 +6,23 @@ class PaymentAdjustment
   field :field, type: String
   field :formula, type: String
   field :absolute_value, type: Float
+  field :editable, type: Boolean
 
-  embedded_in :scheme
+  embedded_in :payable, polymorphic: true
 
   validates :name, :field, presence: true
   validate :formula_or_absolute_value
 
-  def value
-    (absolute_value.present? ? absolute_value : calculate) rescue 0
+  def value object
+    (absolute_value.present? ? absolute_value : calculate(object)) rescue 0
   end
 
   private
 
-  def calculate
-    project_unit = self.scheme.project_unit
-    if project_unit.present?
+  def calculate object
+    if object.present?
       begin
-        return ERB.new("<%= #{self.formula} %>").result( project_unit.get_binding ).to_f
+        return ERB.new("<%= #{self.formula} %>").result( object.get_binding ).to_f
       rescue
         return 0
       end
