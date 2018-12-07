@@ -9,9 +9,7 @@ module Filter
       filters = all
       if params[:fltrs]
         params[:fltrs].each do |key, value|
-          if respond_to?("filter_by_#{key}") && value.present?
-            filters = filters.send("filter_by_#{key}", *value)
-          end
+          filters = filters.send("filter_by_#{key}", *value) if respond_to?("filter_by_#{key}") && value.present?
         end
       end
       filters

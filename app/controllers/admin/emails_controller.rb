@@ -1,6 +1,7 @@
 class Admin::EmailsController < ApplicationController
-  before_action :authenticate_user!, only: %i[index show]
-  before_action :set_email, only: :show
+  include EmailConcern
+  before_action :authenticate_user!
+  before_action :set_email, only: :show #set_email written in EmailConcern
   around_action :apply_policy_scope, only: :index
 
   def index
@@ -16,13 +17,10 @@ class Admin::EmailsController < ApplicationController
   private
 
 
-  def set_email
-    @email = Email.find(params[:id])
-  end
-
   def apply_policy_scope
     Email.with_scope(policy_scope([:admin, Email])) do
       yield
     end
   end
 end
+
