@@ -1,6 +1,7 @@
 class Admin::SmsesController < ApplicationController
+  include SmsConcern
   before_action :authenticate_user!
-  before_action :set_sms, only: :show
+  before_action :set_sms, only: :show #set_sms written in SmsConcern
   around_action :apply_policy_scope, only: :index
 
   def index
@@ -15,10 +16,6 @@ class Admin::SmsesController < ApplicationController
 
   private
 
-
-  def set_sms
-    @sms = Sms.find(params[:id])
-  end
 
   def apply_policy_scope
     Sms.with_scope(policy_scope([:admin, Sms])) do
