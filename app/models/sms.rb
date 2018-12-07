@@ -1,6 +1,7 @@
 class Sms
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Filter
 
   # Scopes
   scope :filter_by_to, ->(phone) { where(to: phone) }
@@ -42,19 +43,6 @@ class Sms
       {id: "sent", text: "Sent"},
       {id: "failed", text: "Failed"}
     ]
-  end
-
-  # to apply all filters, to add new filter only add scope in respective model and filter on frontend, new filter parameter must be inside fltrs hash
-  def self.build_criteria params={}
-    filters = self.all
-    if params[:fltrs]
-      params[:fltrs].each do |key, value|
-        if self.respond_to?("filter_by_#{key}") && value.present?
-          filters = filters.send("filter_by_#{key}", *value)
-        end
-      end
-    end
-    filters
   end
 
   # returns an instance of sms_template associated to to entity
