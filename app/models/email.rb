@@ -84,8 +84,6 @@ class Email
     Template::EmailTemplate.where(id: self.email_template_id).first
   end
 
-  # to apply all filters, to add new filter only add scope in respective model and filter on frontend, new filter parameter must be inside fltrs hash
-
   private
 
   # for email template we require body or text. Otherwise we won't have any content to send to the sender / reciever
