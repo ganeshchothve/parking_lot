@@ -44,7 +44,7 @@ class Receipt
   validates :tracking_id, presence: true, if: Proc.new{|receipt| receipt.status == 'success' && receipt.payment_mode != "online"}
   validates :comments, presence: true, if: Proc.new{|receipt| receipt.status == 'failed' && receipt.payment_mode != "online"}
   validate :tracking_id_processed_on_only_on_success, if: Proc.new{|record| record.status != "cancelled" }
-  validate :processed_on_greater_than_issued_date
+  validate :processed_on_greater_than_issued_date, :first_booking_amount_limit
 
   increments :order_id, auto: false
 
@@ -184,6 +184,18 @@ class Receipt
 
     custom_scope[:project_unit_id] = params[:project_unit_id] if params[:project_unit_id].present?
     custom_scope
+  end
+
+  #
+  # Initial Payment should be greater than blocking amount.
+  #
+  #
+  def first_booking_amount_limit
+    if self.project_unit.try(:status) == 'hold'
+      if self.total_amount < self.project_unit.blocking_amount
+        self.errors.add(:total_amount, "should be greater than blocking amount(#{self.project_unit.blocking_amount})")
+      end
+    end
   end
 
   private
