@@ -1,5 +1,4 @@
-class Admin::TemplatesController < ApplicationController
-  before_action :authenticate_user!
+class Admin::TemplatesController < AdminController
   before_action :set_template, except: [:index]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: [:index]

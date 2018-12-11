@@ -9,8 +9,7 @@ class ReceiptsController < ApplicationController
   layout :set_layout
 
   def index
-    @receipts = Receipt.build_criteria params
-    @receipts = @receipts.paginate(page: params[:page] || 1, per_page: 15)
+    @receipts = current_user.receipts.order_by([:created_at, :desc]).paginate(page: params[:page] || 1, per_page: params[:per_page] || 15)
   end
 
   def export
@@ -125,6 +124,7 @@ class ReceiptsController < ApplicationController
   end
 
   private
+
   def set_receipt
     @receipt = Receipt.find(params[:id])
   end

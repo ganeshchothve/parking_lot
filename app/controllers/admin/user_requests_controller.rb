@@ -1,5 +1,4 @@
-class Admin::UserRequestsController < ApplicationController
-  before_action :authenticate_user!
+class Admin::UserRequestsController < AdminController
   before_action :set_user
   before_action :set_user_request, except: [:index, :export, :new, :create]
   before_action :authorize_resource

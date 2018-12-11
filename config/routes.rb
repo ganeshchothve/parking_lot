@@ -37,10 +37,13 @@ Rails.application.routes.draw do
     resource :client, except: [:show, :new, :create] do
       resources :templates, only: [:edit, :update, :index]
     end
-    resources :receipts, only: [:index, :show], controller: '/receipts' do
+
+    resources :receipts, only: [:index]
+    resources :receipts, only: [:show], controller: '/receipts' do
       get 'export', action: 'export', on: :collection, as: :export
       get :resend_success, on: :member, as: :resend_success
     end
+
     resources :project_units, only: [:index, :show, :edit, :update] do
       get 'print', action: 'print', on: :member, as: :print
       get 'export', action: 'export', on: :collection, as: :export
@@ -48,6 +51,7 @@ Rails.application.routes.draw do
       resources :booking_detail_schemes, except: [:destroy], controller: '/booking_detail_schemes'
       get 'send_under_negotiation', on: :member
     end
+
     resources :users do
       get :resend_confirmation_instructions, action: 'resend_confirmation_instructions', as: :resend_confirmation_instructions, on: :member
       match 'update_password', on: :member, via: [:get, :patch], action: "update_password", as: :update_password
@@ -56,14 +60,15 @@ Rails.application.routes.draw do
       get '/new/:role', action: 'new', on: :collection, as: :new_by_role
       get 'export', action: 'export', on: :collection, as: :export
       get 'print', action: 'print', on: :member, as: :print
-      resources :receipts, only: [:update, :edit, :show, :index, :new, :create], controller: '/receipts' do
+
+      resources :receipts, only: [:index, :new, :create, :edit, :update ] do
         get :direct, on: :collection, as: :direct
         get :resend_success, on: :member, as: :resend_success
       end
       resources :user_kycs, except: [:show, :destroy], controller: '/user_kycs'
       resources :project_units, only: [:index] do
         get 'print', action: 'print', on: :member, as: :print
-        resources :receipts, only: [:update, :edit, :show, :index, :new, :create], controller: '/receipts'
+        resources :receipts, only: [:index, :new, :create], controller: 'project_units/receipts'
       end
       resources :searches, except: [:destroy], controller: '/searches' do
         get :"3d", on: :collection, action: "three_d", as: "three_d"
@@ -84,6 +89,7 @@ Rails.application.routes.draw do
         resources :booking_detail_schemes, except: [:destroy], controller: '/booking_detail_schemes'
       end
     end
+
     resources :projects, except: [:destroy] do
       resources :schemes, except: [:destroy], controller: 'schemes'
     end
@@ -135,12 +141,19 @@ Rails.application.routes.draw do
         get :payment, on: :member
         get ":step", on: :member, to: "searches#show", as: :step
       end
-      resources :receipts, only: [:update, :edit, :show, :index, :new, :create], controller: 'receipts' do
-        get :direct, on: :collection, as: :direct
-      end
     end
     resources :user_kycs, except: [:show, :destroy]
     resources :searches, except: [:destroy], controller: 'searches'
+  end
+
+  namespace :buyer do
+    resources :receipts, only: [:index, :new, :create, :show]
+
+    resources :project_units, only: [:index] do
+      resources :receipts, only: [:update, :edit, :show, :index, :new, :create] do
+        get :direct, on: :collection, as: :direct
+      end
+    end
   end
 
   match '/sell_do/lead_created', to: "api/sell_do/leads#lead_created", via: [:get, :post]

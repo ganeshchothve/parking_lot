@@ -1,5 +1,4 @@
 class Admin::ProjectUnitsController < AdminController
-  before_action :authenticate_user!
   before_action :set_project_unit, except: [:index, :export, :mis_report]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: :index
@@ -38,7 +37,7 @@ class Admin::ProjectUnitsController < AdminController
     parameters = permitted_attributes(@project_unit)
     respond_to do |format|
       if @project_unit.update(parameters)
-        format.html { redirect_to admin_project_units_path, notice: 'Unit successfully updated.' }
+        format.html { redirect_to (current_user.buyer? ? dashboard_path : admin_project_units_path), notice: 'Unit successfully updated.' }
       else
         format.html { render :edit }
         format.json { render json: {errors: @project_unit.errors.full_messages}, status: :unprocessable_entity }

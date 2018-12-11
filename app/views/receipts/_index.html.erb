@@ -53,7 +53,7 @@
             <div class="dropdown-menu dropdown-menu-right">
               <% if receipt.status == 'success' %>
                 <% if current_user.buyer? %>
-                  <%= link_to 'Print'.html_safe, user_receipt_path(receipt), target:"_blank", class: 'dropdown-item print-btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>
+                  <%= link_to 'Print'.html_safe, buyer_receipt_path(receipt), target:"_blank", class: 'dropdown-item print-btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>
                 <% else %>
                   <%= link_to 'Print'.html_safe, admin_receipt_path(receipt), target:"_blank", class: 'dropdown-item print-btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>
                 <% end %>

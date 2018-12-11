@@ -9,117 +9,12 @@
   <div class="collapse navbar-collapse" id="main-navbar">
     <ul class="navbar-nav ml-auto mt-2">
       <% if user_signed_in? %>
-        <% if policy(:dashboard).index? %>
-        <li class="nav-item">
-          <%= active_link_to "Dashboard", dashboard_path, active: :exclusive, class: "nav-link" %>
-        </li>
-        <% end %>
-        <% if policy(ProjectUnit).index? %>
-        <li class="nav-item">
-          <%= active_link_to "#{global_labels[:project_units]}", admin_project_units_path, active: :exclusive, class: "nav-link" %>
-        </li>
-        <% end %>
-        <% if current_user.buyer? && ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: current_user, status: "available")).hold? %>
-        <li class="nav-item">
-          <%= active_link_to "Apartment Selector", new_search_path, active: :inclusive, class: "nav-link" %>
-        </li>
-        <% end %>
-        <% if current_user.buyer? && policy(Receipt.new(user: current_user)).direct? %>
-        <li class="nav-item">
-          <%= active_link_to "Make #{global_labels['receipt']}", direct_user_receipts_path, active: :inclusive, class: 'nav-link modal-remote-form-link' %>
-        </li>
-        <% end %>
-        <% if UserPolicy.new(current_user, User).index? %>
-          <li class="nav-item">
-            <%= active_link_to global_labels['users'], admin_users_path, active: :inclusive, class: "nav-link" %>
-          </li>
-        <% end %>
-        <% if ChannelPartnerPolicy.new(current_user, ChannelPartner).index? %>
-          <li class="nav-item">
-            <%= active_link_to global_labels['channel_partners'], channel_partners_path, active: :inclusive, class: "nav-link" %>
-          </li>
-        <% end %>
-        <% if UserRequestPolicy.new(current_user, UserRequest).index? %>
-          <li class="nav-item">
-            <%= active_link_to global_labels['user_requests'], (current_user.buyer? ? user_user_requests_path(@user, request_type: "all") : admin_user_requests_path(request_type: "all")), active: :inclusive, class: "nav-link" %>
-          </li>
-        <% end %>
-        <% if UserKycPolicy.new(current_user, UserKyc).index? %>
-          <li class="nav-item">
-            <%= active_link_to global_labels['user_kycs'], user_user_kycs_path, active: :inclusive, class: "nav-link" %>
-          </li>
-        <% end %>
-        <% if ReceiptPolicy.new(current_user, Receipt).index? %>
-          <li class="nav-item">
-            <%= active_link_to global_labels['receipts'], user_receipts_path, active: :inclusive, class: "nav-link" %>
-          </li>
-        <% end %>
-        <% links = [] %>
-        <% if CustomPolicy.custom_methods.present? %>
-          <% CustomPolicy.custom_methods.each do |method| %>
-            <% if policy(:custom).send("#{method}?") %>
-                <% links << {method: method.to_s.titleize, link: eval("custom_#{method}_path")} %>
-              </li>
-            <% end %>
-          <% end %>
-        <% end %>
-        <% if SchemePolicy.new(current_user, Scheme).index? %>
-          <li class="nav-item">
-            <%= active_link_to global_labels['schemes'], admin_schemes_path, active: :inclusive, class: "nav-link" %>
-          </li>
-        <% end %>
-        <% if links.present? %>
-          <li class="nav-item d-none d-lg-block">
-            <div class="dropdown">
-              <a href="javascript:;" class="nav-link dropdown-toggle" data-toggle="dropdown"><%= global_labels[:custom] %></a>
-              <div class="dropdown-menu dropdown-menu-right">
-                <% links.each do |link| %>
-                  <%= link_to link[:method], link[:link], class: "dropdown-item" %>
-                <% end %>
-              </div>
-            </div>
-          </li>
-        <% end %>
-        <li class="nav-item d-none d-lg-block" style="margin-top:-5px;">
-          <div class="dropdown">
-            <a href="javascript:;" class="nav-link dropdown-toggle" data-toggle="dropdown">
-              <%= icon "far", "user-circle", class: "text-muted fa-2x" %>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right">
-              <%= link_to "Profile", edit_admin_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
-              <%= link_to "Change Password", update_password_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
-              <%= link_to "Sign out", destroy_session_path(current_user), class: "dropdown-item", method: :delete %>
-            </div>
-          </div>
-        </li>
-        <% if links.present? %>
-          <% links.each do |link| %>
-            <li class="nav-item d-lg-none">
-              <%= link_to link[:method], link[:link], class: "nav-link" %>
-            </li>
-          <% end %>
-        <% end %>
-        <li class="nav-item d-lg-none">
-          <%= link_to "Profile", edit_admin_user_path(current_user), class: "nav-link modal-remote-form-link" %>
-        </li>
-        <hr/>
-        <li class="nav-item d-lg-none">
-          <%= link_to "Change Password", update_password_user_path(current_user), class: "nav-link modal-remote-form-link" %>
-        </li>
-        <%= bottom_navigation('d-lg-none') %>
-        <li class="nav-item d-lg-none">
-          <%= link_to "Sign out", destroy_session_path(current_user), class: "nav-link", method: :delete %>
-        </li>
-        <hr/>
-        <li class='nav-item d-lg-none'>
-          <%= link_to 'Powered by Amura', 'https://www.amuratech.com', class: 'small nav-link', target: "_blank" %>
-          <div class="d-md-none mt-3"></div>
-        </li>
+        <%= render "layouts/navbar/#{current_user_role_group}" %>
       <% else %>
         <% if current_client.enable_channel_partners? %>
-        <li class="nav-item mt-3 mt-md-0">
-          <%= link_to "Register as Channel Partner", new_channel_partner_path, class: "mr-2 btn btn-secondary" %>
-        </li>
+          <li class="nav-item mt-3 mt-md-0">
+            <%= link_to "Register as Channel Partner", new_channel_partner_path, class: "mr-2 btn btn-secondary" %>
+          </li>
         <% end %>
         <li class="nav-item mt-1 mt-md-0">
           <%= link_to "Register Now", register_path, class: "btn btn-primary" %>
