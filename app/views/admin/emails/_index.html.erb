@@ -1,0 +1,47 @@
+<div class="table-responsive">
+  <table class='table striped-table payment-breakup' width="100%" cellpadding="10" cellspacing="0">
+    <thead class="th-default">
+      <tr>
+        <th>To</th>
+        <th>Subject</th>
+        <th>Status</th>
+        <th>Sent On</th>
+        <th class="text-right">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @emails.each do |email| %>
+      <tr>
+        <td>
+          <% email.to.each do |e| %>
+          <%= e %>
+          <% end %>
+        </td>
+        <td>
+          <%= email.subject %>
+        </td>
+        <td>
+          <%= email.status %>
+        </td>
+        <td>
+          <%= email.sent_on.present? ? email.sent_on.strftime("%d/%m/%Y") : '-' %>
+        </td>
+        <td class="text-right">
+          <div class="dropdown">
+            <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <%= link_to 'Show', admin_email_path(email), class: 'dropdown-item' %>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <% end %>
+      <tr>
+        <td colspan="4">
+          <div class="mt-5 pt-5"></div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<%= will_paginate @emails, list_classes: %w(pagination justify-content-center) %>
