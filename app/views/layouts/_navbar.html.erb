@@ -58,7 +58,7 @@
         <% if CustomPolicy.custom_methods.present? %>
           <% CustomPolicy.custom_methods.each do |method| %>
             <% if policy(:custom).send("#{method}?") %>
-                <% links << {method: method.to_s.titleize, link: eval("custom_#{method}_path")} %>
+                <% links << { method: method.to_s.titleize, link: eval("custom_#{method}_path")} %>
               </li>
             <% end %>
           <% end %>
@@ -66,21 +66,6 @@
         <% if SchemePolicy.new(current_user, Scheme).index? %>
           <li class="nav-item">
             <%= active_link_to global_labels['schemes'], admin_schemes_path, active: :inclusive, class: "nav-link" %>
-          </li>
-        <% end %>
-        <% if ['user', 'employee_user', 'management_user'].include?(current_user.role)%>
-          <li class="nav-item">
-            <%= link_to 'Email', emails_path, class: "nav-link"%>
-          </li>
-          <li class="nav-item">
-            <%= link_to 'Sms', smses_path, class: "nav-link"%>
-          </li>
-        <% else %>
-          <li class="nav-item">
-            <%= link_to 'Email', admin_emails_path, class: "nav-link"%>
-          </li>
-          <li class="nav-item">
-            <%= link_to 'Sms', admin_smses_path, class: "nav-link"%>
           </li>
         <% end %>
         <% if links.present? %>
