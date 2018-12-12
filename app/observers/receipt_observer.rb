@@ -5,8 +5,8 @@ class ReceiptObserver < Mongoid::Observer
   end
 
   def before_save receipt
-    if receipt.status_changed? && receipt.status == 'success' && receipt.processed_on.blank?
-      receipt.processed_on = Date.today
+    if receipt.status_changed? && receipt.status == 'success'
+      receipt.processed_on = Date.today if receipt.processed_on.blank?
       receipt.assign!(:order_id) if receipt.order_id.blank?
     end
     receipt.receipt_id = receipt.generate_receipt_id

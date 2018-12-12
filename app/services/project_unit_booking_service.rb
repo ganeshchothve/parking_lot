@@ -44,7 +44,7 @@ class ProjectUnitBookingService
       elsif self.project_unit.total_tentative_amount_paid >= self.project_unit.blocking_amount
         'blocked'
       else
-        'hold'
+        self.project_unit.status
       end
     else
       "under_negotiation"
