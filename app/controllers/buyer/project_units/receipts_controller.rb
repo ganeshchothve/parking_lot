@@ -1,4 +1,4 @@
-class ProjectUnits::ReceiptsController < AdminController
+class Buyer::ProjectUnits::ReceiptsController < AdminController
   before_action :set_project_unit
 
   #
