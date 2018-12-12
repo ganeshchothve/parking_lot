@@ -1,9 +1,10 @@
 class Admin::ReceiptsController < AdminController
-  before_action :set_user, except: [:index]
-  before_action :set_receipt, only: [:edit, :update]
+  before_action :set_user, except: [:index, :show]
+  before_action :set_receipt, only: [:edit, :update, :show]
 
   def index
-    @receipts = Receipt.all.order_by([:created_at, :desc]).paginate(page: params[:page] || 1, per_page: params[:per_page] || 15)
+    authorize([:admin, Receipt])
+    @receipts = Receipt.build_criteria(params[:fltrs]).order_by([:created_at, :desc]).paginate(page: params[:page] || 1, per_page: params[:per_page] || 15)
   end
 
   #
@@ -43,11 +44,18 @@ class Admin::ReceiptsController < AdminController
     end
   end
 
+  def show
+    authorize([:admin, @receipt])
+    render template: 'receipts/show'
+  end
+
   def edit
+    authorize([:admin, @receipt])
     render layout: false
   end
 
   def update
+    authorize([:admin, @receipt])
     respond_to do |format|
       if @receipt.update(permitted_attributes(@receipt))
         format.html { redirect_to admin_user_receipts_path(@user), notice: 'Receipt was successfully updated.' }

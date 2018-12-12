@@ -1,11 +1,15 @@
 class Buyer::ReceiptPolicy < ReceiptPolicy
 
   def index?
-    user.byuer?
+    user.buyer?
   end
 
   def export?
     false
+  end
+
+  def show?
+    record.user_id == user.id
   end
 
   def new?

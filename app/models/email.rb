@@ -1,6 +1,7 @@
 class Email
   include Mongoid::Document
   include Mongoid::Timestamps
+  extend FilterByCriteria
 
   # Scopes
   scope :filter_by_to, ->(email) { where(to: email) }
@@ -83,18 +84,6 @@ class Email
     Template::EmailTemplate.where(id: self.email_template_id).first
   end
 
-  # to apply all filters, to add new filter only add scope in respective model and filter on frontend, new filter parameter must be inside fltrs hash
-  def self.build_criteria params={}
-    filters = self.all
-    if params[:fltrs]
-      params[:fltrs].each do |key, value|
-        if self.respond_to?("filter_by_#{key}") && value.present?
-          filters = filters.send("filter_by_#{key}", *value)
-        end
-      end
-    end
-    filters
-  end
 
   private
 

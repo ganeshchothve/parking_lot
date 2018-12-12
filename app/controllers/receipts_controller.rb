@@ -33,11 +33,6 @@ class ReceiptsController < ApplicationController
     redirect_to (request.referrer.present? ? request.referrer : dashboard_path)
   end
 
-  def show
-    @receipt = Receipt.find(params[:id])
-    authorize @receipt
-  end
-
   private
 
   def set_receipt

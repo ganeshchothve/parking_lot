@@ -1,20 +1,19 @@
 class Buyer::ReceiptsController < BuyerController
-  before_action :set_receipt, except: [:index, :export, :new, :create, :direct]
-  # before_action :set_project_unit
-  # before_action :authorize_resource
-  # around_action :apply_policy_scope, only: [:index, :export]
+  before_action :set_receipt, except: [:index, :new, :create]
 
   layout :set_layout
 
+  # GET /buyer/receipts
   def index
-    @receipts = current_user.receipts.order_by([:created_at, :desc]).paginate(page: params[:page] || 1, per_page: params[:per_page] || 15)
+    authorize([:buyer, Receipt])
+
+    _params = params[:fltrs] || {}
+    _params.delete(:user_id)
+
+    @receipts = current_user.receipts.build_criteria(params[:fltrs]).order_by([:created_at, :desc]).paginate(page: params[:page] || 1, per_page: params[:per_page] || 15)
   end
 
-  def show
-    @receipt = Receipt.find(params[:id])
-    authorize @receipt
-  end
-
+  # GET /buyer/receipts/new
   def new
     @receipt = current_user.receipts.build({
       creator: current_user, payment_mode: 'online',
@@ -25,6 +24,7 @@ class Buyer::ReceiptsController < BuyerController
     render layout: false
   end
 
+  # POST /buyer/receipts
   def create
     @receipt = current_user.receipts.build({
       payment_mode: 'online', creator: current_user,
@@ -56,44 +56,16 @@ class Buyer::ReceiptsController < BuyerController
     end
   end
 
-  def edit
-    render layout: false
-  end
-
-  def update
-    respond_to do |format|
-      if @receipt.update(permitted_attributes(@receipt))
-        format.html { redirect_to admin_user_receipts_path(@user), notice: 'Receipt was successfully updated.' }
-      else
-        format.html { render :edit }
-        format.json { render json: {errors: @receipt.errors.full_messages}, status: :unprocessable_entity }
-      end
-    end
+  def show
+    authorize([:buyer, @receipt])
+    render template: 'receipts/show'
   end
 
   private
 
   def set_receipt
-    @receipt = Receipt.find(params[:id])
+    @receipt = current_user.receipts.where(_id: params[:id]).first
+    redirect_to dashboard_path, alert: 'No receipts found' if @receipt.blank?
   end
 
-  def set_project_unit
-    @project_unit = if params[:project_unit_id].present?
-      ProjectUnit.find(params[:project_unit_id])
-    elsif params[:receipt].present? && params[:receipt][:project_unit_id].present?
-      ProjectUnit.find(params[:receipt][:project_unit_id])
-    elsif @receipt.present?
-      @receipt.project_unit
-    end
-  end
-
-  def authorize_resource
-    if params[:action] == "index" || params[:action] == 'export'
-      authorize Receipt
-    elsif params[:action] == "new" || params[:action] == "create" || params[:action] == "direct"
-      authorize Receipt.new(user_id: @user.id, project_unit_id: (@project_unit.present? ? @project_unit.id : nil))
-    else
-      authorize @receipt
-    end
-  end
 end

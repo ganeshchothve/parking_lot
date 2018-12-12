@@ -1,7 +1,7 @@
 class Admin::ReceiptPolicy < ReceiptPolicy
 
   def index?
-    !user.byuer?
+    !user.buyer?
   end
 
   def export?

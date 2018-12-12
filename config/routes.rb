@@ -39,8 +39,7 @@ Rails.application.routes.draw do
       resources :templates, only: [:edit, :update, :index]
     end
 
-    resources :receipts, only: [:index]
-    resources :receipts, only: [:show], controller: '/receipts' do
+    resources :receipts, only: [:index, :show] do
       get 'export', action: 'export', on: :collection, as: :export
       get :resend_success, on: :member, as: :resend_success
     end
@@ -147,10 +146,10 @@ Rails.application.routes.draw do
   end
 
   namespace :buyer do
-    resources :receipts, only: [:index, :new, :create, :show]
+    resources :receipts, only: [:index, :new, :create, :show ]
 
     resources :project_units, only: [:index] do
-      resources :receipts, only: [:update, :edit, :show, :index, :new, :create]
+      resources :receipts, only: [ :index, :new, :create]
     end
   end
 

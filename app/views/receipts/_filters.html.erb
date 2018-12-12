@@ -10,15 +10,17 @@
       </div>
       <div class="clearfix"></div>
       <hr/>
-      <div class="form-group">
-        <%= label_tag "fltrs", "Customer Name / Email / Phone", class: "control-label" %>
-        <%
-          if params[:fltrs].present? && params[:fltrs][:user_id].present?
-            user = User.find(params[:fltrs][:user_id])
-          end
-        %>
-        <%= select_tag "fltrs[user_id]", options_for_select((params[:fltrs].present? && params[:fltrs][:user_id].present?) ? [[user.ds_name, user.id]] : []), {class: "selectize-remote", data: {params: {fltrs: {role: {"$in": User.buyer_roles(current_client)}}}, url: admin_users_path }} %>
-      </div>
+      <% if !current_user.buyer? %>
+        <div class="form-group">
+          <%= label_tag "fltrs", "Customer Name / Email / Phone", class: "control-label" %>
+          <%
+            if params[:fltrs].present? && params[:fltrs][:user_id].present?
+              user = User.find(params[:fltrs][:user_id])
+            end
+          %>
+          <%= select_tag "fltrs[user_id]", options_for_select((params[:fltrs].present? && params[:fltrs][:user_id].present?) ? [[user.ds_name, user.id]] : []), {class: "selectize-remote", data: {params: {fltrs: {role: {"$in": User.buyer_roles(current_client)}}}, url: admin_users_path }} %>
+        </div>
+      <% end %>
       <div class="form-group">
         <%= label_tag "fltrs", global_labels[:project_unit], class: "control-label" %>
         <%
