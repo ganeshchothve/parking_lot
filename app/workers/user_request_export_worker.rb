@@ -26,8 +26,9 @@ class UserRequestExportWorker
       "User name",
       "Request Date",
       "Type",
-      "Status",
       "Unit ID (Used for VLOOKUP)",
+      "Status",
+      "Processed On",
       "Resolved by",
     ]
   end
@@ -36,11 +37,12 @@ class UserRequestExportWorker
     [
       user_request.user.lead_id,
       user_request.user.name,
-      user_request.created_at,
-      user_request._type,
-      user_request.status,
+      user_request.created_at.strftime('%Y-%m-%d T %l:%M:%S'),
+      user_request._type.split('::')[1],
       user_request.project_unit.name,
-      user_request.resolved_by.name
+      user_request.status,
+      user_request.resolved_at.try(:strftime, '%Y-%m-%d T %l:%M:%S') || '-',
+      user_request.resolved_by.try(:name) || '-'
     ]
   end
 end
