@@ -1,5 +1,4 @@
-class Admin::SchemesController < ApplicationController
-  before_action :authenticate_user!
+class Admin::SchemesController < AdminController
   before_action :set_project
   before_action :set_scheme, except: [:index, :export, :new, :create]
   before_action :authorize_resource

@@ -251,7 +251,7 @@ class ProjectUnit
         self.status = 'booked_confirmed'
       elsif self.total_amount_paid > self.blocking_amount
         self.status = 'booked_tentative'
-      elsif self.total_tentative_amount_paid == self.blocking_amount
+      elsif self.total_tentative_amount_paid >= self.blocking_amount
         self.status = 'blocked'
       end
       self.save(validate: false)

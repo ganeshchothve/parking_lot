@@ -53,15 +53,15 @@
             <div class="dropdown-menu dropdown-menu-right">
               <% if receipt.status == 'success' %>
                 <% if current_user.buyer? %>
-                  <%= link_to 'Print'.html_safe, user_receipt_path(receipt), target:"_blank", class: 'dropdown-item print-btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>
+                  <%= link_to 'Print'.html_safe, buyer_receipt_path(receipt), target:"_blank", class: 'dropdown-item print-btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>
                 <% else %>
                   <%= link_to 'Print'.html_safe, admin_receipt_path(receipt), target:"_blank", class: 'dropdown-item print-btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>
                 <% end %>
-                <% if ReceiptPolicy.new(current_user, receipt).resend_success? %>
+                <% if policy([ current_user_role_group, receipt]).resend_success? %>
                   <%= link_to 'Resend Email'.html_safe, resend_success_admin_receipt_path(receipt), class: 'dropdown-item' %>
                 <% end %>
               <% end %>
-              <% if ReceiptPolicy.new(current_user, receipt).edit? %>
+              <% if policy([ current_user_role_group, receipt]).edit? %>
                 <%= link_to 'Edit', edit_admin_user_receipt_path(receipt.user_id, receipt), class: 'dropdown-item modal-remote-form-link' %>
               <% end %>
               <% if AssetPolicy.new(current_user, Asset.new(assetable: receipt)).index? %>

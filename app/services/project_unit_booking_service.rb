@@ -41,10 +41,10 @@ class ProjectUnitBookingService
         'booked_confirmed'
       elsif self.project_unit.total_amount_paid > self.project_unit.blocking_amount
         'booked_tentative'
-      elsif self.project_unit.total_tentative_amount_paid == self.project_unit.blocking_amount
+      elsif self.project_unit.total_tentative_amount_paid >= self.project_unit.blocking_amount
         'blocked'
       else
-        "under_negotiation"
+        self.project_unit.status
       end
     else
       "under_negotiation"
