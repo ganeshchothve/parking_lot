@@ -62,7 +62,6 @@ Rails.application.routes.draw do
       get 'print', action: 'print', on: :member, as: :print
 
       resources :receipts, only: [:index, :new, :create, :edit, :update ] do
-        get :direct, on: :collection, as: :direct
         get :resend_success, on: :member, as: :resend_success
       end
       resources :user_kycs, except: [:show, :destroy], controller: '/user_kycs'
@@ -150,9 +149,7 @@ Rails.application.routes.draw do
     resources :receipts, only: [:index, :new, :create, :show]
 
     resources :project_units, only: [:index] do
-      resources :receipts, only: [:update, :edit, :show, :index, :new, :create] do
-        get :direct, on: :collection, as: :direct
-      end
+      resources :receipts, only: [:update, :edit, :show, :index, :new, :create]
     end
   end
 

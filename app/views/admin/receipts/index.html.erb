@@ -1,6 +1,6 @@
 <div class="container">
   <div class="row justify-content-center">
-    <div class="col-md-12">
+    <div class="col-9">
       <%#= render 'breadcrumbs', { user: @user, project_unit: @project_unit } %>
       <% if current_client.cancellation_amount > 0 %>
         <div class="alert alert-danger">
@@ -29,6 +29,10 @@
           <%= render 'receipts/index', {receipts: @receipts} %>
         </div>
       </div>
+    </div>
+    <div class="col-3">
+      <div class="d-md-none mt-3"></div>
+      <%= render "receipts/filters" %>
     </div>
   </div>
 </div>
