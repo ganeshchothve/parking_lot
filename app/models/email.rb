@@ -2,6 +2,15 @@ class Email
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  # Scopes
+  scope :filter_by_to, ->(email) { where(to: email) }
+  scope :filter_by_cc, ->(email) { where(cc: email) }
+  scope :filter_by_sent_on, ->(date) { start_date, end_date = date.split(' - '); where(sent_on: start_date..end_date) }
+  scope :filter_by_subject, ->(subject) { where(subject: ::Regexp.new(::Regexp.escape(subject), 'i')) }
+  scope :filter_by_body, ->(body) { where(body: ::Regexp.new(::Regexp.escape(body), 'i')) }
+  scope :filter_by_status, ->(status) { where(status: status) }
+
+  # Fields
   field :to, type: Array
   field :cc, type: Array
   field :subject, type: String
@@ -12,8 +21,8 @@ class Email
   field :remote_id, type: String
   field :sent_on, type: DateTime
   field :email_thread_id, type: BSON::ObjectId #set only when there's an email conversation. maintains the id of previous email in the thread
-  field :cc, type: Array
 
+  # Validations
   validates :subject, presence: true, if: Proc.new{ |model| model.email_template_id.blank? }
   validates :recipient_ids, :triggered_by_id, presence: true
   validate :body_or_text_only_body_present?
@@ -21,6 +30,7 @@ class Email
 
   enable_audit reference_ids_without_associations: [{name_of_key: 'email_template_id', method: 'email_template', klass: 'Template::EmailTemplate'}]
 
+  # Associations
   belongs_to :booking_portal_client, class_name: 'Client', inverse_of: :emails
   has_and_belongs_to_many :recipients, class_name: "User", inverse_of: :received_emails, validate: false
   has_and_belongs_to_many :cc_recipients, class_name: "User", inverse_of: :cced_emails, validate: false
@@ -29,6 +39,8 @@ class Email
   accepts_nested_attributes_for :attachments
 
   default_scope -> {desc(:created_at)}
+
+  # Methods
 
   # returns array having statuses, which are allowed on models
   # allowed statuses are used in select2 for populating data on UI side. they also help in validations
@@ -71,8 +83,22 @@ class Email
     Template::EmailTemplate.where(id: self.email_template_id).first
   end
 
+  # to apply all filters, to add new filter only add scope in respective model and filter on frontend, new filter parameter must be inside fltrs hash
+  def self.build_criteria params={}
+    filters = self.all
+    if params[:fltrs]
+      params[:fltrs].each do |key, value|
+        if self.respond_to?("filter_by_#{key}") && value.present?
+          filters = filters.send("filter_by_#{key}", *value)
+        end
+      end
+    end
+    filters
+  end
+
   private
-  # for email template we require body or text. Otherwisse we won't have any content to send to the sender / reciever
+
+  # for email template we require body or text. Otherwise we won't have any content to send to the sender / reciever
   # throws error if the both are blank
   #
   def body_or_text_only_body_present?
@@ -82,5 +108,4 @@ class Email
       end
     end
   end
-
 end

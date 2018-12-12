@@ -34,6 +34,7 @@ Rails.application.routes.draw do
     get 'export', action: 'export', on: :collection, as: :export
   end
   namespace :admin do
+    resources :emails, :smses, only: %i[index show]
     resource :client, except: [:show, :new, :create] do
       resources :templates, only: [:edit, :update, :index]
     end
@@ -143,6 +144,7 @@ Rails.application.routes.draw do
     resources :searches, except: [:destroy], controller: 'searches'
   end
 
+  resources :emails, :smses, only: %i[index show]
   match '/sell_do/lead_created', to: "api/sell_do/leads#lead_created", via: [:get, :post]
   match '/sell_do/pushed_to_sales', to: "api/sell_do/leads#pushed_to_sales", via: [:get, :post]
 end
