@@ -23,6 +23,18 @@ class Buyer::ReceiptPolicy < ReceiptPolicy
     valid
   end
 
+  def create?
+    new?
+  end
+
+  def edit?
+    !(record.status == "success" && record.project_unit_id.present?)
+  end
+
+  def update?
+    edit?
+  end
+
   private
 
   def confirmed_and_ready_user?

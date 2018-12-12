@@ -1,4 +1,6 @@
 class Buyer::ReceiptsController < BuyerController
+  include ReceiptsConcern
+
   before_action :set_receipt, except: [:index, :new, :create]
 
   layout :set_layout
@@ -12,6 +14,12 @@ class Buyer::ReceiptsController < BuyerController
 
     @receipts = current_user.receipts.build_criteria(params[:fltrs]).order_by([:created_at, :desc]).paginate(page: params[:page] || 1, per_page: params[:per_page] || 15)
   end
+
+  # GET /buyer/receipts/export
+  # Defined in ReceiptsConcern
+
+  # GET /buyer/receipts/:receipt_id/resend_success
+  # Defined in ReceiptsConcern
 
   # GET /buyer/receipts/new
   def new

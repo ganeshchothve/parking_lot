@@ -16,6 +16,27 @@ class Admin::ReceiptPolicy < ReceiptPolicy
     valid
   end
 
+  def create?
+    new?
+  end
+
+  def edit?
+    return false if record.status == "success" && record.project_unit_id.present?
+
+    valid = record.status == "success" && record.project_unit_id.blank?
+    valid ||= (['pending', 'clearance_pending', 'available_for_refund'].include?(record.status) && ['superadmin', 'admin', 'crm', 'sales_admin'].include?(user.role))
+    valid ||= (user.role?('channel_partner') && record.status == 'pending')
+    valid
+  end
+
+  def update?
+    edit?
+  end
+
+  def resend_success?
+    show?
+  end
+
   private
 
   def confirmed_and_ready_user?

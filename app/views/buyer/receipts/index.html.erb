@@ -11,7 +11,7 @@
         <div class="card-body">
           <div class="row mb-3">
             <div class="col-md-7">
-              <% if ReceiptPolicy.new(current_user, Receipt.new(user: current_user)).new? %>
+              <% if policy([:buyer, Receipt.new(user: current_user)]).new? %>
                 <% units_for_payments = current_user.project_units.in(status: ["blocked", 'booked_tentative']).all %>
               <% end %>
             </div>

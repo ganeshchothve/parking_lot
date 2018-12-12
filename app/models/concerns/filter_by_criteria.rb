@@ -9,6 +9,8 @@ module FilterByCriteria
         filters = filters.send("filter_by_#{key}", *value)
       end
     end
+    field_name, sort_order = params[:sort].to_s.split(".")
+    filters = filters.order_by([ (field_name || :created_at), (sort_order || :desc) ])
     filters
   end
 end

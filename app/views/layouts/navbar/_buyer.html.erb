@@ -16,7 +16,7 @@
   </li>
 <% end %>
 
-<% if policy(Receipt.new(user: current_user)).direct? %>
+<% if policy([:buyer, Receipt.new(user: current_user)]).direct? %>
   <li class="nav-item">
     <%= active_link_to "Make #{t('global.receipt')}", new_buyer_receipt_path, active: :inclusive, class: 'nav-link modal-remote-form-link' %>
   </li>
@@ -34,7 +34,7 @@
   </li>
 <% end %>
 
-<% if ReceiptPolicy.new(current_user, Receipt).index? %>
+<% if policy([:buyer, Receipt]).index? %>
   <li class="nav-item">
     <%= active_link_to t('global.receipts'), buyer_receipts_path, active: :inclusive, class: "nav-link" %>
   </li>

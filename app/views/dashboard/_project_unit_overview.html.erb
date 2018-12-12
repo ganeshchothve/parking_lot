@@ -12,7 +12,7 @@
             <a href="<%= checkout_user_search_path(current_user.get_search(project_unit.id)) %>" class="dropdown-item">
               Book Now
             </a>
-          <% elsif ReceiptPolicy.new(current_user, project_unit.user.receipts.new(project_unit_id: project_unit.id)).new? %>
+          <% elsif policy([ current_user_role_group, project_unit.user.receipts.new(project_unit_id: project_unit.id)]).new? %>
             <% link_to 'Pay Remaining Amount', new_buyer_project_unit_receipt_path(project_unit),class: "dropdown-item modal-remote-form-link" %>
           <% end %>
           <% [UserRequest::Cancellation, UserRequest::Swap] if Rails.env.development? %>

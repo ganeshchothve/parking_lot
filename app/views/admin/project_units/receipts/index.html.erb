@@ -7,7 +7,7 @@
           Refund Payments will be subject to cancellation charges
         </div>
       <% end %>
-      <% unless ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? %>
+      <% unless policy([:admin, Receipt.new(user: @user)]).new? %>
         <div class="alert alert-primary mt-3">
           <% if @user.confirmed? %>
             You might need to complete the user's KYC before you can take payments.
@@ -23,7 +23,7 @@
         <div class="card-body">
           <div class="row mb-3">
             <div class="col-9">
-              <% if ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? %>
+              <% if policy([:admin, Receipt.new(user: @user)]).new? %>
                 <% units_for_payments = @user.project_units.in(status: ["blocked", 'booked_tentative']).all %>
                 <% if units_for_payments.present? %>
                   <div class="dropdown float-left mr-2">
@@ -37,11 +37,11 @@
                 <% end %>
               <% end %>
 
-              <% if ReceiptPolicy.new(current_user, Receipt.new(user: @user)).direct? %>
+              <% if policy([:admin, Receipt.new(user: @user)]).direct? %>
                 <%= link_to "Make Direct #{t('global.receipt')}", new_admin_user_receipt_path(@user), class: 'btn btn-primary modal-remote-form-link float-left mr-2' %>
               <% end %>
 
-              <% if ReceiptPolicy.new(current_user, Receipt).export? && @receipt.blank? %>
+              <% if policy([:admin, Receipt]).export? && @receipt.blank? %>
                 <div class="dropdown float-left mr-2">
                   <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
                   <div class="dropdown-menu dropdown-menu-right">

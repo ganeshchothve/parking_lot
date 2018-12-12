@@ -40,8 +40,8 @@ Rails.application.routes.draw do
     end
 
     resources :receipts, only: [:index, :show] do
-      get 'export', action: 'export', on: :collection, as: :export
-      get :resend_success, on: :member, as: :resend_success
+      get :export, on: :collection
+      get :resend_success, on: :member
     end
 
     resources :project_units, only: [:index, :show, :edit, :update] do
@@ -62,7 +62,7 @@ Rails.application.routes.draw do
       get 'print', action: 'print', on: :member, as: :print
 
       resources :receipts, only: [:index, :new, :create, :edit, :update ] do
-        get :resend_success, on: :member, as: :resend_success
+        get :resend_success, on: :member
       end
       resources :user_kycs, except: [:show, :destroy], controller: '/user_kycs'
       resources :project_units, only: [:index] do

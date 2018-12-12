@@ -34,7 +34,7 @@
   </li>
 <% end %>
 
-<% if ReceiptPolicy.new(current_user, Receipt).index? %>
+<% if policy([:admin, Receipt]).index? %>
   <li class="nav-item">
     <%= active_link_to t('global.receipts'), admin_receipts_path, active: :inclusive, class: "nav-link" %>
   </li>

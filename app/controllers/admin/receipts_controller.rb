@@ -1,11 +1,28 @@
 class Admin::ReceiptsController < AdminController
-  before_action :set_user, except: [:index, :show]
-  before_action :set_receipt, only: [:edit, :update, :show]
+  include ReceiptsConcern
 
+  before_action :set_user, except: [:index, :show, :export, :resend_success]
+  before_action :set_receipt, only: [:edit, :update, :show, :resend_success]
+
+  #
+  # This index action for Admin users where Admin can view all receipts.
+  #
+  #
+  # @return [{},{}] records with array of Hashes.
+  # GET /admin/receipts
   def index
     authorize([:admin, Receipt])
-    @receipts = Receipt.build_criteria(params[:fltrs]).order_by([:created_at, :desc]).paginate(page: params[:page] || 1, per_page: params[:per_page] || 15)
+    @receipts = Receipt.where(Receipt.user_based_scope(current_user, params))
+                       .build_criteria(params)
+                       .paginate(page: params[:page] || 1, per_page: params[:per_page] || 15)
   end
+
+
+  # GET /admin/receipts/export
+  # Defined in ReceiptsConcern
+
+  # GET /admin/receipts/:receipt_id/resend_success
+  # Defined in ReceiptsConcern
 
   #
   # This new action always create a new receipt form for user's project unit rerceipt form.
