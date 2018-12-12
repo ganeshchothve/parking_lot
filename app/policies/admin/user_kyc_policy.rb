@@ -1,6 +1,5 @@
 class Admin::UserKycPolicy < UserKycPolicy
-
-  def index?(for_user=nil)
+  def index?(for_user = nil)
     true if for_user.present? && for_user.buyer? || for_user.blank?
   end
 

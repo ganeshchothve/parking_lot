@@ -23,8 +23,8 @@
           <div class="form-group text-center">
             <% if current_user.buyer? && policy(Receipt.new(user: current_user)).direct? %>
               <%= link_to "Pay Now & Generate Token", direct_user_receipts_path, class: 'btn btn-primary modal-remote-form-link' %>
-            <% elsif !current_user.kyc_ready? && UserKycPolicy.new(current_user, UserKyc.new(user: current_user)).new? && current_user.buyer? %>
-              <%= link_to "Add #{global_labels['user_kyc']} & Make Payment", new_user_kyc_path, class: 'btn btn-primary modal-remote-form-link' %>
+            <% elsif !current_user.kyc_ready? && Buyer::UserKycPolicy.new(current_user, UserKyc.new(user: current_user)).new? && current_user.buyer? %>
+              <%= link_to "Add #{global_labels['user_kyc']} & Make Payment", new_buyer_user_kyc_path, class: 'btn btn-primary modal-remote-form-link' %>
             <% elsif current_user.buyer? && ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: current_user, status: "available")).hold? %>
               <%= active_link_to "Search & Book your Apartment Now", new_search_path, active: :inclusive, class: "btn btn-primary" %>
             <% end %>

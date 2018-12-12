@@ -44,9 +44,13 @@
             <%= active_link_to global_labels['user_requests'], (current_user.buyer? ? user_user_requests_path(@user, request_type: "all") : admin_user_requests_path(request_type: "all")), active: :inclusive, class: "nav-link" %>
           </li>
         <% end %>
-        <% if UserKycPolicy.new(current_user, UserKyc).index? %>
+        <% if current_user.buyer? && Buyer::UserKycPolicy.new(current_user, UserKyc).index? %>
           <li class="nav-item">
-            <%= active_link_to global_labels['user_kycs'], user_user_kycs_path, active: :inclusive, class: "nav-link" %>
+            <%= active_link_to global_labels['user_kycs'], buyer_user_kycs_path, active: :inclusive, class: "nav-link" %>
+          </li>
+        <% elsif Admin::UserKycPolicy.new(current_user, UserKyc).index? %>
+          <li class="nav-item">
+              <%= active_link_to global_labels['user_kycs'], admin_user_kycs_path, active: :inclusive, class: "nav-link" %>
           </li>
         <% end %>
         <% if ReceiptPolicy.new(current_user, Receipt).index? %>

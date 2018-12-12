@@ -13,7 +13,7 @@
             <div class="alert alert-primary mt-3">
               <% if @user.confirmed? %>
               You might need to complete the user's KYC before you can take payments.
-              <% if UserKycPolicy.new(current_user, UserKyc.new(user: @user)).new? %>
+              <% if Admin::UserKycPolicy.new(current_user, UserKyc.new(user: @user)).new? %>
                 <%= link_to "Add #{global_labels['user_kyc_details']}", new_admin_user_user_kyc_path(@user), class: "modal-remote-form-link" %>
               <% end %>
               <% else %>

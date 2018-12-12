@@ -1,5 +1,4 @@
 class Buyer::UserKycPolicy < UserKycPolicy
-
   def index?
     user.buyer?
   end
