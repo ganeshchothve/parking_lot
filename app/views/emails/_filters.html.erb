@@ -18,11 +18,11 @@
       </div>
       <div class="form-group">
         <%= label_tag "fltrs", "Subject", class: "control-label" %>
-        <%= text_field_tag "fltrs[subject]", (params[:fltrs].present? ? params[:fltrs][:subject] : ""), {prompt: "Enter Subject"} %>
+        <%= text_field_tag "fltrs[subject]", (params[:fltrs].present? ? params[:fltrs][:subject] : ""), {prompt: "Enter Subject", class: 'form-control'} %>
       </div>
       <div class="form-group">
         <%= label_tag "fltrs", "Body", class: "control-label" %>
-        <%= text_field_tag "fltrs[body]", (params[:fltrs].present? ? params[:fltrs][:body] : ""), {prompt: "Enter Content"} %>
+        <%= text_field_tag "fltrs[body]", (params[:fltrs].present? ? params[:fltrs][:body] : ""), {prompt: "Enter Content", class: 'form-control'} %>
       </div>
     <% end %>
     <script>

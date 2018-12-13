@@ -1,5 +1,4 @@
-class Admin::BookingDetailsController < ApplicationController
-  before_action :authenticate_user!
+class Admin::BookingDetailsController < AdminController
   before_action :set_booking_detail
   before_action :authorize_resource
 

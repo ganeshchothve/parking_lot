@@ -1,7 +1,7 @@
 class Sms
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Filter
+  extend FilterByCriteria
 
   # Scopes
   scope :filter_by_to, ->(phone) { where(to: phone) }

@@ -97,4 +97,8 @@ module ApplicationHelper
     end
     html.html_safe
   end
+
+  def current_user_role_group
+    current_user.buyer? ? :buyer : :admin
+  end
 end

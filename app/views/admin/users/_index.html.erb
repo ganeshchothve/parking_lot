@@ -15,10 +15,14 @@
       <% users.each do |user| %>
         <tr>
           <td>
-            <%= user.name %>
+            <% if user.buyer? %>
+              <%= link_to user.name, admin_user_path(user) %>
+            <% else %>
+              <%= user.name %>
+            <% end %>
             <div class="small">
-              <%= user.email.present? ? user.email : "" %> <br/>
-              <%= user.phone.present? ? user.phone : "" %><br/>
+              <%= user.email || "" %> <br/>
+              <%= user.phone || "" %><br/>
               <% if user.role?("user") && user.manager_id.present? && current_user.role != "channel_partner" %>
                 <%= labels[:manager_id] %>: <%= user.manager.name %><br/>
               <% end %>

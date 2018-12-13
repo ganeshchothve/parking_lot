@@ -1,6 +1,5 @@
-class Admin::SmsesController < ApplicationController
+class Admin::SmsesController < AdminController
   include SmsConcern
-  before_action :authenticate_user!
   before_action :set_sms, only: :show #set_sms written in SmsConcern
   around_action :apply_policy_scope, only: :index
 

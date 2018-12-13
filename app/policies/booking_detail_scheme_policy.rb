@@ -7,6 +7,14 @@ class BookingDetailSchemePolicy < SchemePolicy
     ["approved", "disabled"].exclude?(record.status) && (user.role?('superadmin') || user.role?('admin') || user.role?('sales') || user.role?('crm') || user.role?('cp'))
   end
 
+  def create?
+    user.buyer? ? true : super
+  end
+
+  def update?
+    user.buyer? ? true : super
+  end
+
   def permitted_attributes params={}
     attributes = [:derived_from_scheme_id, :user_id]
 

@@ -4,7 +4,7 @@ if params[:ds]
 else
   json.extract! receipt, :id, :receipt_id
   if current_user.buyer?
-    json.url user_receipt_path(receipt, format: :json)
+    json.url buyer_receipt_path(receipt, format: :json)
   else
     json.url admin_receipt_path(receipt, format: :json)
   end
