@@ -1,4 +1,4 @@
-class Admin::EmailsController < AdminController
+class Buyer::EmailsController < BuyerController
   include EmailConcern
   before_action :set_email, only: :show #set_email written in EmailConcern
   before_action :authorize_resource
@@ -10,16 +10,16 @@ class Admin::EmailsController < AdminController
 
 
   def apply_policy_scope
-    Email.with_scope(policy_scope([:admin, Email])) do
+    Email.with_scope(policy_scope([:buyer, Email])) do
       yield
     end
   end
 
   def authorize_resource
     if params[:action] == 'index'
-      authorize [:admin, Email]
+      authorize [:buyer, Email]
     else
-      authorize [:admin, @email]
+      authorize [:buyer, @email]
     end
   end
 end

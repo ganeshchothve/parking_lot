@@ -147,13 +147,13 @@ Rails.application.routes.draw do
 
   namespace :buyer do
     resources :receipts, only: [:index, :new, :create, :show ]
+    resources :emails, :smses, only: %i[index show]
 
     resources :project_units, only: [:index] do
       resources :receipts, only: [ :index, :new, :create]
     end
   end
 
-  resources :emails, :smses, only: %i[index show]
   match '/sell_do/lead_created', to: "api/sell_do/leads#lead_created", via: [:get, :post]
   match '/sell_do/pushed_to_sales', to: "api/sell_do/leads#pushed_to_sales", via: [:get, :post]
 end

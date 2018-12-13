@@ -1,4 +1,4 @@
-class Admin::SmsesController < AdminController
+class Buyer::SmsesController < BuyerController
   include SmsConcern
   before_action :set_sms, only: :show #set_sms written in SmsConcern
   before_action :authorize_resource
@@ -10,16 +10,16 @@ class Admin::SmsesController < AdminController
 
 
   def apply_policy_scope
-    Sms.with_scope(policy_scope([:admin, Sms])) do
+    Sms.with_scope(policy_scope([:buyer, Sms])) do
       yield
     end
   end
 
   def authorize_resource
     if params[:action] == 'index'
-      authorize [:admin, Sms]
+      authorize [:buyer, Sms]
     else
-      authorize [:admin, @sms]
+      authorize [:buyer, @sms]
     end
   end
 end
