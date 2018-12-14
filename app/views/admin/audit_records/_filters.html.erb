@@ -20,10 +20,10 @@
         <%= label_tag "fltrs", "Action type", class: "control-label" %>
         <%= select_tag "fltrs[change_type]", options_for_select(AuditRecord.distinct(:change_type), (params[:fltrs].present? ? params[:fltrs][:change_type] : "")), {prompt: "Select", class: "selectize"} %>
       </div>
-      <div class="form-group">
-        <%= label_tag "fltrs", "Time", class: "control-label" %>
-        <%= select_tag "fltrs[modified_at]", options_for_select(AuditRecord.distinct(:modified_at), (params[:fltrs].present? ? params[:fltrs][:modified_at] : "")), {prompt: "Select", class: "selectize"} %>
-      </div>
+      <!-- <div class="form-group">
+        <%#= label_tag "fltrs", "Time", class: "control-label" %>
+        <%#= select_tag "fltrs[modified_at]", options_for_select(AuditRecord.distinct(:modified_at), (params[:fltrs].present? ? params[:fltrs][:modified_at] : "")), {prompt: "Select", class: "selectize"} %>
+      </div> -->
     <% end %>
   </div>
 </div>

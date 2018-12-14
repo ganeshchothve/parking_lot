@@ -5,7 +5,7 @@
         <th>Subject Class</th>
         <th>Changed By</th>
         <th>Action Type</th>
-        <th>Executed Type</th>
+        <!-- <th>Executed Time</th> -->
         <th class="text-right">Actions</th>
       </tr>
     </thead>
@@ -21,9 +21,9 @@
         <td>
           <%= audit.change_type %>
         </td>
-        <td>
-          <%= audit.modified_at %>
-        </td>
+        <!-- <td>
+          <%#= audit.modified_at %>
+        </td> -->
 
         <td class="text-right">
           <%= link_to 'Show', admin_audit_record_path(audit),  {:remote => true, 'data-toggle' =>  "modal", 'data-target' => '#modal-window', class: 'btn btn-primary btn-sm'}  %>
