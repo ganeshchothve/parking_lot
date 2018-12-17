@@ -1,8 +1,5 @@
 class Admin::AuditRecordPolicy < ApplicationPolicy
-	def index?
-    ['superadmin', 'admin'].include?(user.role)
-  end
-  def show?
-  	index?
+  def index?
+    %w[superadmin admin].include?(user.role)
   end
 end

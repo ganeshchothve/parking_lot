@@ -1,38 +1,18 @@
 class AuditRecord
   include Mongoid::Document
-
+  extend FilterByCriteria
   store_in collection: 'audits'
 
-  field :subject_class, type: String, default: ""
+  field :subject_class, type: String, default: ''
   field :modified_at, type: String
-  field :user_name, type: String, default: ""
-  field :change_type, type: String, default: ""
+  field :user_name, type: String, default: ''
+  field :change_type, type: String, default: ''
 
+  has_many :audit_entries
 
-
-
-
-  def subject_classes 
-    AuditRecord.distinct(:subject_class)
-  end
-  def self.build_criteria params={}
-    selector = {}
-    if params[:fltrs].present?
-      if params[:fltrs][:change_type].present?
-        selector[:change_type] = params[:fltrs][:change_type]
-      end
-      if params[:fltrs][:subject_class].present?
-        selector[:subject_class] = params[:fltrs][:subject_class]
-      end
-      if params[:fltrs][:user_name].present?
-        selector[:user_name] = params[:fltrs][:user_name]
-      end
-      if params[:fltrs][:modified_at].present?
-        selector[:modified_at] = params[:fltrs][:modified_at]
-      end
-    end
-    selector[:name] = ::Regexp.new(::Regexp.escape(params[:q]), 'i') if params[:q].present?
-    self.where(selector)
-  end
+  scope :filter_by_change_type, ->(_change_type) { where(change_type: _change_type) }
+  scope :filter_by_subject_class, ->(_subject_class) { where(subject_class: _subject_class) }
+  scope :filter_by_user_name, ->(_user_name) { where(user_name: _user_name) }
+  scope :filter_by_modified_at, ->(_modified_at) { where(modified_at: _modified_at) }
 
 end
