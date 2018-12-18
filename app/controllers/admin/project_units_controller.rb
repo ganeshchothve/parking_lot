@@ -1,4 +1,4 @@
-class Admin::ProjectUnitsController < AdminController
+class Admin::ProjectUnitsController < ApplicationController
   before_action :set_project_unit, except: [:index, :export, :mis_report]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: :index
