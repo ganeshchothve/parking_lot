@@ -1,4 +1,4 @@
-class Admin::UserRequestsController < AdminController
+class Buyer::UserRequestsController < BuyerController
   include UserRequestsConcern
   before_action :set_user
   before_action :set_user_request, except: %i[index export new create]
@@ -15,7 +15,7 @@ class Admin::UserRequestsController < AdminController
     @user_request.assign_attributes(permitted_user_request_attributes)
     respond_to do |format|
       if @user_request.save
-        format.html { redirect_to edit_admin_user_request_path(@user_request, request_type: @user_request.class.model_name.element), notice: 'Request registered successfully.' }
+        format.html { redirect_to (edit_buyer_user_request_path(@user_request, request_type: @user_request.class.model_name.element)), notice: 'Request registered successfully.' }
         format.json { render json: @user_request, status: :created }
       else
         format.html { render :new }
@@ -24,26 +24,11 @@ class Admin::UserRequestsController < AdminController
     end
   end
 
-  def export
-    if Rails.env.development?
-      UserRequestExportWorker.new.perform(current_user.id.to_s, params[:fltrs].as_json)
-    else
-      UserRequestExportWorker.perform_async(current_user.id.to_s, params[:fltrs].as_json)
-    end
-    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
-    redirect_to admin_user_requests_path(request_type: 'all', fltrs: params[:fltrs].as_json)
-  end
-
   def update
     @user_request.assign_attributes(permitted_user_request_attributes)
-    if @user_request.status == 'resolved'
-      @user_request.resolved_by = current_user
-      @user_request.resolved_at = Time.now
-    end
-
     respond_to do |format|
       if @user_request.save
-        format.html { redirect_to admin_user_requests_path(request_type: 'all'), notice: 'User Request was successfully updated.' }
+        format.html { redirect_to user_buyer_requests_path(@user, request_type: 'all'), notice: 'User Request was successfully updated.' }
         format.json { render json: @user_request }
       else
         format.html { render :edit }
@@ -55,6 +40,6 @@ class Admin::UserRequestsController < AdminController
   private
 
   def set_user
-    @user = (params[:user_id].present? ? User.find(params[:user_id]) : nil)
+    @user = current_user
   end
 end

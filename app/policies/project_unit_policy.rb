@@ -1,6 +1,6 @@
 class ProjectUnitPolicy < ApplicationPolicy
   def index?
-    current_client.enable_actual_inventory?(user) && !user.buyer?
+    current_client.enable_actual_inventory?(user) #&& !user.buyer?
   end
 
   def ds?

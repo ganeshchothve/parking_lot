@@ -65,7 +65,7 @@
                 <% if policy(klass.new(user_id: project_unit.user_id, project_unit_id: project_unit.id)).new? %>
                   <%
                     if current_user.buyer?
-                      url = new_user_user_request_path(project_unit_id: project_unit.id, request_type: klass.model_name.element)
+                      url = new_buyer_user_request_path(project_unit_id: project_unit.id, request_type: klass.model_name.element)
                     else
                       url = new_admin_user_user_request_path(user_id: project_unit.user_id, project_unit_id: project_unit.id, request_type: klass.model_name.element)
                     end

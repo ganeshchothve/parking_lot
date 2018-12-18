@@ -6,7 +6,7 @@
 
 <% if policy(ProjectUnit).index? %>
   <li class="nav-item">
-    <%= active_link_to t('global.project_units'), project_units_path, active: :exclusive, class: "nav-link" %>
+    <%= active_link_to t('global.project_units'), admin_project_units_path, active: :exclusive, class: "nav-link" %>
   </li>
 <% end %>
 
@@ -22,9 +22,9 @@
   </li>
 <% end %>
 
-<% if UserRequestPolicy.new(current_user, UserRequest).index? %>
+<% if Buyer::UserRequestPolicy.new(current_user, UserRequest).index? %>
   <li class="nav-item">
-    <%= active_link_to t('global.user_requests'), user_user_requests_path(@user, request_type: "all"), active: :inclusive, class: "nav-link" %>
+    <%= active_link_to t('global.user_requests'), buyer_user_requests_path(@user, request_type: "all"), active: :inclusive, class: "nav-link" %>
   </li>
 <% end %>
 

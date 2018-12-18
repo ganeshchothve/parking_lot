@@ -22,7 +22,7 @@
   </li>
 <% end %>
 
-<% if UserRequestPolicy.new(current_user, UserRequest).index? %>
+<% if Admin::UserRequestPolicy.new(current_user, UserRequest).index? %>
   <li class="nav-item">
     <%= active_link_to t('global.user_requests'), admin_user_requests_path(request_type: "all"), active: :inclusive, class: "nav-link" %>
   </li>

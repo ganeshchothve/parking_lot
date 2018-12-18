@@ -124,9 +124,6 @@ Rails.application.routes.draw do
     get 'terms-and-conditions', to: 'dashboard#terms_and_condition', as: :dashboard_terms_and_condition
     get "gamify-unit-selection", to: "dashboard#gamify_unit_selection"
     resource :user do
-      scope ":request_type" do
-        resources :user_requests, except: [:destroy], controller: 'admin/user_requests'
-      end
       match 'update_password', via: [:get, :patch], action: "update_password", as: :update_password, controller: 'admin/users'
       resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
       resources :searches, except: [:destroy], controller: 'searches' do
@@ -148,6 +145,9 @@ Rails.application.routes.draw do
   namespace :buyer do
     resources :receipts, only: [:index, :new, :create, :show ]
     resources :emails, :smses, only: %i[index show]
+    scope ":request_type" do
+      resources :user_requests, except: [:destroy], controller: 'user_requests'
+    end
 
     resources :project_units, only: [:index] do
       resources :receipts, only: [ :index, :new, :create]
