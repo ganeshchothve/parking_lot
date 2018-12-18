@@ -56,7 +56,7 @@
     <%= active_link_to t('global.schemes'), admin_schemes_path, active: :inclusive, class: "nav-link" %>
   </li>
 <% end %>
-<% if policy([:admin, AuditRecord]).index? %>
+<% if policy([:admin, Audit::Record]).index? %>
   <li class="nav-item">
     <%= active_link_to t('global.audit'), admin_audit_records_path, active: :inclusive, class: "nav-link" %>
   </li>
