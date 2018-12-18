@@ -38,10 +38,10 @@ Rails.application.routes.draw do
     resources :emails, :smses, only: %i[index show]
     resource :client, except: [:show, :new, :create] do
     resources :templates, only: [:edit, :update, :index]
+    end
     namespace :audit do
       resources :records
       resources :entries
-    end
     end
 
     resources :receipts, only: [:index, :show] do

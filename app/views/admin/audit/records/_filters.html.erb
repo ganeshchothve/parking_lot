@@ -10,15 +10,15 @@
       <hr/>
       <div class="form-group">
         <%= label_tag "fltrs", "Subject Class", class: "control-label" %>
-        <%= select_tag "fltrs[subject_class]", options_for_select(AuditRecord.distinct(:subject_class), (params[:fltrs].present? ? params[:fltrs][:subject_class] : "")), {prompt: "Select", class: "selectize"} %>
+        <%= select_tag "fltrs[subject_class]", options_for_select(Audit::Record.distinct(:subject_class), (params[:fltrs].present? ? params[:fltrs][:subject_class] : "")), {prompt: "Select", class: "selectize"} %>
       </div>
       <div class="form-group">
         <%= label_tag "fltrs", "Changed By", class: "control-label" %>
-        <%= select_tag "fltrs[user_name]", options_for_select(AuditRecord.distinct(:user_name), (params[:fltrs].present? ? params[:fltrs][:user_name] : "")), {prompt: "Select", class: "selectize"} %>
+        <%= select_tag "fltrs[user_name]", options_for_select(Audit::Record.distinct(:user_name), (params[:fltrs].present? ? params[:fltrs][:user_name] : "")), {prompt: "Select", class: "selectize"} %>
       </div>
       <div class="form-group">
         <%= label_tag "fltrs", "Action type", class: "control-label" %>
-        <%= select_tag "fltrs[change_type]", options_for_select(AuditRecord.distinct(:change_type), (params[:fltrs].present? ? params[:fltrs][:change_type] : "")), {prompt: "Select", class: "selectize"} %>
+        <%= select_tag "fltrs[change_type]", options_for_select(Audit::Record.distinct(:change_type), (params[:fltrs].present? ? params[:fltrs][:change_type] : "")), {prompt: "Select", class: "selectize"} %>
       </div>
       <!-- <div class="form-group">
         <%#= label_tag "fltrs", "Time", class: "control-label" %>
