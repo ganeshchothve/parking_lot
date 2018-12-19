@@ -7,20 +7,8 @@ class Buyer::UserRequestPolicy < UserRequestPolicy
     valid &&= (user.buyer? && record.user_id == user.id)
   end
 
-  def create?
-    new?
-  end
-
   def edit?
     user.id == record.user_id && record.status == 'pending'
-  end
-
-  def update?
-    edit?
-  end
-
-  def export?
-    false
   end
 
   def permitted_attributes(_params = {})

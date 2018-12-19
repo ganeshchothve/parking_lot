@@ -4,12 +4,6 @@
   </li>
 <% end %>
 
-<% if policy(ProjectUnit).index? %>
-  <li class="nav-item">
-    <%= active_link_to t('global.project_units'), admin_project_units_path, active: :exclusive, class: "nav-link" %>
-  </li>
-<% end %>
-
 <% if ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: current_user, status: "available")).hold? %>
   <li class="nav-item">
     <%= active_link_to "Apartment Selector", new_search_path, active: :inclusive, class: "nav-link" %>

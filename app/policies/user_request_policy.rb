@@ -5,6 +5,14 @@ class UserRequestPolicy < ApplicationPolicy
     current_client.enable_actual_inventory?(user)
   end
 
+  def create?
+    new?
+  end
+
+  def update?
+    edit?
+  end
+
   def export?
     false
   end

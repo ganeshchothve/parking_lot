@@ -15,7 +15,7 @@ class Buyer::ProjectUnits::ReceiptsController < AdminController
   end
 
   #
-  # This create action always create a new receipt for user's project unit rerceipt form.
+  # This create action always create a new receipt for user's project unit receipt form.
   #
   # POST /admin/users/:user_id/project_units/:project_unit_id/receipts
   def create
