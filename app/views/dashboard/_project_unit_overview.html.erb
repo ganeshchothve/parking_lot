@@ -13,7 +13,7 @@
               Book Now
             </a>
           <% elsif policy([ current_user_role_group, project_unit.user.receipts.new(project_unit_id: project_unit.id)]).new? %>
-            <% link_to 'Pay Remaining Amount', new_buyer_project_unit_receipt_path(project_unit),class: "dropdown-item modal-remote-form-link" %>
+            <%= link_to 'Pay Remaining Amount', new_buyer_project_unit_receipt_path(project_unit),class: "dropdown-item modal-remote-form-link" %>
           <% end %>
           <% [UserRequest::Cancellation, UserRequest::Swap] if Rails.env.development? %>
           <% UserRequest.descendants.each do |klass| %>
