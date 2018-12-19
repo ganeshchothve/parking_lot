@@ -1,0 +1,34 @@
+<div class="card h-100">
+  <div class="card-body">
+    <% url = admin_audit_records_url %>
+    <%= form_tag url, method: "get", id: "audit_record_search_form" do %>
+      <div class="form-group">
+        <%= label_tag "", 'Filters', class: "control-label d-block d-lg-inline" %>
+        <%= submit_tag :Apply, class: "btn btn-primary btn-sm float-lg-right" %>
+      </div>
+      <div class="clearfix"></div>
+      <hr/>
+      <div class="form-group">
+        <%= label_tag "fltrs", "Subject Class", class: "control-label" %>
+        <%= select_tag "fltrs[subject_class]", options_for_select(Audit::Record.distinct(:subject_class), (params[:fltrs].present? ? params[:fltrs][:subject_class] : "")), {prompt: "Select", class: "selectize"} %>
+      </div>
+      <div class="form-group">
+        <%= label_tag "fltrs", "Changed By", class: "control-label" %>
+        <%= select_tag "fltrs[user_name]", options_for_select(Audit::Record.distinct(:user_name), (params[:fltrs].present? ? params[:fltrs][:user_name] : "")), {prompt: "Select", class: "selectize"} %>
+      </div>
+      <div class="form-group">
+        <%= label_tag "fltrs", "Action type", class: "control-label" %>
+        <%= select_tag "fltrs[change_type]", options_for_select(Audit::Record.distinct(:change_type), (params[:fltrs].present? ? params[:fltrs][:change_type] : "")), {prompt: "Select", class: "selectize"} %>
+      </div>
+      <!-- <div class="form-group">
+        <%#= label_tag "fltrs", "Time", class: "control-label" %>
+        <%#= select_tag "fltrs[modified_at]", options_for_select(AuditRecord.distinct(:modified_at), (params[:fltrs].present? ? params[:fltrs][:modified_at] : "")), {prompt: "Select", class: "selectize"} %>
+      </div> -->
+    <% end %>
+  </div>
+</div>
+<%= javascript_tag do %>
+$(document).ready(function(){
+  FormInitializer.init($("#audit_record_search_form"));
+});
+<% end %>
