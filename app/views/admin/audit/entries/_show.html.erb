@@ -15,19 +15,19 @@
     </thead>
     <tbody>
     <% if audit_entries.present? %>
-    	<% audit_entries.each do |entry|%>
-    		<tr>
-    		<td>
-    		<%= entry.field_name%>
-    		</td>
-    		<td>
-    		<%= entry.old_value%>
-    		</td>
-    		<td>
-    		<%= entry.new_value%>
-    		</td>
-    		</tr>
-    	<%end%>
+      <% audit_entries.each do |entry|%>
+        <tr>
+          <td>
+            <%= entry.field_name%>
+          </td>
+          <td>
+            <%= entry.old_value%>
+          </td>
+          <td>
+            <%= entry.new_value%>
+          </td>
+        </tr>
+      <% end %> 
     <% end %>
     </tbody>
   </table>
