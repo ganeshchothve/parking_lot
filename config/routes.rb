@@ -40,8 +40,8 @@ Rails.application.routes.draw do
     resources :templates, only: [:edit, :update, :index]
     end
     namespace :audit do
-      resources :records
-      resources :entries
+      resources :records, only: [:index]
+      resources :entries, only: [:show]
     end
 
     resources :receipts, only: [:index, :show] do

@@ -8,7 +8,7 @@ class Audit::Record
   field :user_name, type: String, default: ''
   field :change_type, type: String, default: ''
 
-  has_many :audit_entries
+  has_many :entries
 
   scope :filter_by_change_type, ->(_change_type) { where(change_type: _change_type) }
   scope :filter_by_subject_class, ->(_subject_class) { where(subject_class: _subject_class) }
