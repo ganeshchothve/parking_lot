@@ -1,5 +1,6 @@
 require "sidekiq/web"
 Rails.application.routes.draw do
+  
   # sidekiq
   Sidekiq::Web.use Rack::Auth::Basic do |username, password|
     username == ENV_CONFIG[:sidekiq][:username] && password == ENV_CONFIG[:sidekiq][:password]
@@ -36,7 +37,11 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :emails, :smses, only: %i[index show]
     resource :client, except: [:show, :new, :create] do
-      resources :templates, only: [:edit, :update, :index]
+    resources :templates, only: [:edit, :update, :index]
+    end
+    namespace :audit do
+      resources :records, only: [:index]
+      resources :entries, only: [:show]
     end
 
     resources :receipts, only: [:index, :show] do
