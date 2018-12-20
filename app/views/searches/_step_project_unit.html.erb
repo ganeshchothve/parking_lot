@@ -2,9 +2,9 @@
 <div class="mt-3"></div>
 <div class="card">
   <div class="card-body">
-    <%= render 'user_kycs/index', {user_kycs: @user_kycs} %>
+    <%= render 'admin/user_kycs/index', {user_kycs: @user_kycs} %>
     <% if current_user.buyer? %>
-      <%= link_to "Add #{global_labels['user_kyc']}", new_user_kyc_path, class: 'btn btn-primary modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
+      <%= link_to "Add #{global_labels['user_kyc']}", new_buyer_user_kyc_path, class: 'btn btn-primary modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
     <% else %>
       <%= link_to "Add #{global_labels['user_kyc']}", new_admin_user_user_kyc_path(@user), class: 'btn btn-primary modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
     <% end %>

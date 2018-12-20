@@ -69,7 +69,7 @@ Rails.application.routes.draw do
       resources :receipts, only: [:index, :new, :create, :edit, :update ] do
         get :resend_success, on: :member
       end
-      resources :user_kycs, except: [:show, :destroy], controller: '/user_kycs'
+      resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
       resources :project_units, only: [:index] do
         get 'print', action: 'print', on: :member, as: :print
         resources :receipts, only: [:index, :new, :create], controller: 'project_units/receipts'
@@ -97,7 +97,7 @@ Rails.application.routes.draw do
     resources :projects, except: [:destroy] do
       resources :schemes, except: [:destroy], controller: 'schemes'
     end
-    resources :user_kycs, only: [:index], controller: '/user_kycs'
+    resources :user_kycs, only: [:index], controller: 'user_kycs'
     scope ":request_type" do
       resources :user_requests, except: [:destroy], controller: 'user_requests' do
         get 'export', action: 'export', on: :collection, as: :export
@@ -130,7 +130,6 @@ Rails.application.routes.draw do
     get "gamify-unit-selection", to: "dashboard#gamify_unit_selection"
     resource :user do
       match 'update_password', via: [:get, :patch], action: "update_password", as: :update_password, controller: 'admin/users'
-      resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
       resources :searches, except: [:destroy], controller: 'searches' do
         get :"3d", on: :collection, action: "three_d", as: "three_d"
         post :hold, on: :member
@@ -143,7 +142,6 @@ Rails.application.routes.draw do
         get ":step", on: :member, to: "searches#show", as: :step
       end
     end
-    resources :user_kycs, except: [:show, :destroy]
     resources :searches, except: [:destroy], controller: 'searches'
   end
 
@@ -161,4 +159,8 @@ Rails.application.routes.draw do
 
   match '/sell_do/lead_created', to: "api/sell_do/leads#lead_created", via: [:get, :post]
   match '/sell_do/pushed_to_sales', to: "api/sell_do/leads#pushed_to_sales", via: [:get, :post]
+
+  namespace :buyer do
+    resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
+  end
 end
