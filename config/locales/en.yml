@@ -51,6 +51,7 @@ en:
     otp: "OTP"
     schemes: "Schemes"
     scheme: "Scheme"
+    audit: "Audit Logs"
   mongoid:
     attributes:
       asset:

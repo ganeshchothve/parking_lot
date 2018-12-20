@@ -1,4 +1,4 @@
-class Buyer::ProjectUnits::ReceiptsController < AdminController
+class Buyer::ProjectUnits::ReceiptsController < BuyerController
   before_action :set_project_unit
 
   #
@@ -19,17 +19,25 @@ class Buyer::ProjectUnits::ReceiptsController < AdminController
   #
   # POST /admin/users/:user_id/project_units/:project_unit_id/receipts
   def create
-    @receipt = Receipt.new(user: current_user, creator: current_user, project_unit_id: @project_unit.id)
+    @receipt = Receipt.new(user: current_user, creator: current_user, project_unit_id: @project_unit.id, payment_gateway: current_client.payment_gateway)
     @receipt.assign_attributes(permitted_attributes(@receipt))
 
     authorize([:buyer, @receipt])
 
     respond_to do |format|
       if @receipt.save
-        flash[:notice] = "Receipt was successfully updated. Please upload documents"
-        url = "#{admin_user_receipts_path(current_user)}?remote-state=#{assetables_path(assetable_type: @receipt.class.model_name.i18n_key.to_s, assetable_id: @receipt.id)}"
-        format.json{ render json: @receipt, location: url }
-        format.html{ redirect_to url }
+        url = dashboard_path
+        if @receipt.payment_gateway_service.present?
+          url = @receipt.payment_gateway_service.gateway_url(@receipt.user.get_search(@receipt.project_unit_id).id)
+          format.html{ redirect_to url }
+          format.json{ render json: {}, location: url }
+        else
+          flash[:notice] = "We couldn't redirect you to the payment gateway, please try again"
+          @receipt.update_attributes(status: "failed")
+          url = dashboard_path
+          format.json{ render json: @receipt, location: url }
+          format.html{ redirect_to url }
+        end
       else
         format.json { render json: { errors: @receipt.errors.full_messages }, status: :unprocessable_entity }
         format.html { render 'new' }

@@ -148,6 +148,7 @@ GEM
     crass (1.0.4)
     css_parser (1.6.0)
       addressable
+    database_cleaner (1.7.0)
     declarative (0.0.10)
     declarative-option (0.1.0)
     devise (4.5.0)
@@ -158,6 +159,7 @@ GEM
       warden (~> 1.2.3)
     diff-lcs (1.3)
     digest-crc (0.4.1)
+    docile (1.3.1)
     domain_name (0.5.20180417)
       unf (>= 0.0.5, < 1.0.0)
     erubi (1.7.1)
@@ -325,6 +327,7 @@ GEM
       rails-dom-testing (>= 1, < 3)
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
+    json (2.1.0)
     jwt (1.5.6)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
@@ -357,11 +360,19 @@ GEM
       mongo (>= 2.5.1, < 3.0.0)
     mongoid-autoinc (6.0.3)
       mongoid (>= 6.0, < 8.0)
+    mongoid-compatibility (0.5.1)
+      activesupport
+      mongoid (>= 2.0)
     mongoid-grid_fs (2.4.0)
       mime-types (>= 1.0, < 4.0)
       mongoid (>= 3.0, < 8.0)
     mongoid-observers (0.3.0)
       mongoid (>= 4.0.0)
+    mongoid-rspec (4.0.1)
+      activesupport (>= 3.0.0)
+      mongoid (>= 3.1)
+      mongoid-compatibility (>= 0.5.1)
+      rspec (~> 3.3)
     multi_json (1.13.1)
     multi_xml (0.6.0)
     multipart-post (2.0.0)
@@ -492,6 +503,17 @@ GEM
     rspec-mocks (3.8.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.8.0)
+    rspec-rails (3.8.1)
+      actionpack (>= 3.0)
+      activesupport (>= 3.0)
+      railties (>= 3.0)
+      rspec-core (~> 3.8.0)
+      rspec-expectations (~> 3.8.0)
+      rspec-mocks (~> 3.8.0)
+      rspec-support (~> 3.8.0)
+    rspec-sidekiq (3.0.3)
+      rspec-core (~> 3.0, >= 3.0.0)
+      sidekiq (>= 2.4.0)
     rspec-support (3.8.0)
     ruby-ole (1.2.12.1)
     ruby_dep (1.5.0)
@@ -513,6 +535,12 @@ GEM
     selenium-webdriver (3.14.0)
       childprocess (~> 0.5)
       rubyzip (~> 1.2)
+    shoulda (3.6.0)
+      shoulda-context (~> 1.0, >= 1.0.1)
+      shoulda-matchers (~> 3.0)
+    shoulda-context (1.2.2)
+    shoulda-matchers (3.1.2)
+      activesupport (>= 4.0.0)
     sidekiq (5.2.2)
       connection_pool (~> 2.2, >= 2.2.2)
       rack-protection (>= 1.5.0)
@@ -526,6 +554,11 @@ GEM
       actionmailer (>= 3.2.6, < 6)
       actionpack (>= 3.2.6, < 6)
       devise (>= 3.2, < 6)
+    simplecov (0.16.1)
+      docile (~> 1.1)
+      json (>= 1.8, < 3)
+      simplecov-html (~> 0.10.0)
+    simplecov-html (0.10.2)
     spreadsheet (1.1.8)
       ruby-ole (>= 1.0)
     spring (2.0.2)
@@ -600,6 +633,7 @@ DEPENDENCIES
   carrierwave-mongoid
   cocoon
   coffee-rails (~> 4.2)
+  database_cleaner
   devise
   factory_bot_rails
   faker
@@ -616,6 +650,7 @@ DEPENDENCIES
   mongoid (~> 7.0.2)
   mongoid-autoinc
   mongoid-observers (~> 0.3.0)
+  mongoid-rspec
   nested_form
   newrelic-redis
   newrelic_rpm
@@ -636,10 +671,15 @@ DEPENDENCIES
   request_store
   rest-client
   roo (~> 2.7.0)
+  rspec-rails
+  rspec-sidekiq
   sass-rails (~> 5.0)
   selenium-webdriver
+  shoulda (~> 3.5)
+  shoulda-matchers (= 3.1.2)
   sidekiq
   simple_token_authentication (~> 1.0)
+  simplecov
   spreadsheet (>= 1.1.4)
   spring
   spring-watcher-listen (~> 2.0.0)
@@ -654,4 +694,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   1.16.4
+   1.16.5

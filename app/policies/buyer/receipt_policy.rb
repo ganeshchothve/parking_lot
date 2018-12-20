@@ -4,6 +4,10 @@ class Buyer::ReceiptPolicy < ReceiptPolicy
     user.buyer?
   end
 
+  def edit?
+    false
+  end
+
   def export?
     false
   end
@@ -25,10 +29,6 @@ class Buyer::ReceiptPolicy < ReceiptPolicy
 
   def create?
     new?
-  end
-
-  def edit?
-    !(record.status == "success" && record.project_unit_id.present?)
   end
 
   def update?
