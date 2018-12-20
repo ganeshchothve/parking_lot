@@ -11,7 +11,7 @@
         </button>
       </div>
       <div class="modal-body">
-
+        <%= render 'admin/project_units/receipts/details', receipt: @receipt %>
         <%= form_for [:buyer, @project_unit, @receipt], local: true, remote: true, html: { class: 'modal-remote-form validate-form', data: { 'resource-type': t('global.receipt'), type: :json }, id: "receipt_form" } do |f| %>
           <div class="form-group">
             <%= f.label :total_amount, class: 'label-required' %>
