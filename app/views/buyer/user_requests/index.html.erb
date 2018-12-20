@@ -1,0 +1,24 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="<%= @user.blank? ? 'col-md-9' : 'col-md-12' %>">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-md-7">
+              <% UserRequest.descendants.each do |klass| %>
+                <% if @user.present? && policy([:buyer, klass.new(user: @user)]).new? %>
+                  <% url = new_buyer_user_request_path(request_type: klass.model_name.element) %>
+                  <%= link_to "Add #{global_labels['user_request_' + klass.model_name.element]}", url, class: 'btn btn-primary nav-btn modal-remote-form-link' %>
+                <% end %>
+              <% end %>
+            </div>
+            <div class="col-md-5 text-md-right">
+              <h6 class="mt-2">Total <%= global_labels[:user_requests] %>: <%= @user_requests.total_entries %></h6>
+            </div>
+          </div>
+          <%= render 'admin/user_requests/index', {user_requests: @user_requests} %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

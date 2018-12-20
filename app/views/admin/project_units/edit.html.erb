@@ -5,11 +5,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">
-              <% if current_user.buyer? %>
-                <%= @project_unit.new_record? ? "New" : "Edit" %> <%= "#{global_labels['project_unit']}" %>
-              <% else %>
                 Edit Booking
-              <% end %>
             </h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
@@ -19,10 +15,10 @@
             <nav>
               <div class="nav nav-tabs" role="tablist">
                 <a class="nav-item nav-link active" data-toggle="tab" href="#nav-project-unit-basic" role="tab">Basic Details</a>
-                <% if policy(@project_unit).editable_field?("data_attributes") %>
+                <% if policy([:admin, @project_unit]).editable_field?("data_attributes") %>
                   <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-unit-data" role="tab">Data</a>
                 <% end %>
-                <% if policy(@project_unit).editable_field?("costs_attributes") %>
+                <% if policy([:admin, @project_unit]).editable_field?("costs_attributes") %>
                   <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-unit-costs" role="tab">Costs</a>
                 <% end %>
               </div>
@@ -32,7 +28,7 @@
               <div class="tab-pane fade show active" id="nav-project-unit-basic" role="tabpanel">
                 <%= render "admin/project_units/form_fields", f: f %>
               </div>
-              <% if policy(@project_unit).editable_field?("data_attributes") %>
+              <% if policy([:admin, @project_unit]).editable_field?("data_attributes") %>
               <div class="tab-pane fade" id="nav-project-unit-data" role="tabpanel">
                 <div id="data_container">
                   <%= f.fields_for :data do |data_form| %>
@@ -42,7 +38,7 @@
                 <%= f.link_to_add "Add", :data, :data => { :target => "#data_container" } %>
               </div>
               <% end %>
-              <% if policy(@project_unit).editable_field?("costs_attributes") %>
+              <% if policy([:admin, @project_unit]).editable_field?("costs_attributes") %>
                 <div class="tab-pane fade" id="nav-project-unit-costs" role="tabpanel">
                   <div id="costs_container">
                     <%= f.fields_for :costs do |costs_form| %>

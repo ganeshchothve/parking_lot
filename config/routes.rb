@@ -37,7 +37,7 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :emails, :smses, only: %i[index show]
     resource :client, except: [:show, :new, :create] do
-    resources :templates, only: [:edit, :update, :index]
+      resources :templates, only: [:edit, :update, :index]
     end
     namespace :audit do
       resources :records, only: [:index]
@@ -129,9 +129,6 @@ Rails.application.routes.draw do
     get 'terms-and-conditions', to: 'dashboard#terms_and_condition', as: :dashboard_terms_and_condition
     get "gamify-unit-selection", to: "dashboard#gamify_unit_selection"
     resource :user do
-      scope ":request_type" do
-        resources :user_requests, except: [:destroy], controller: 'admin/user_requests'
-      end
       match 'update_password', via: [:get, :patch], action: "update_password", as: :update_password, controller: 'admin/users'
       resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
       resources :searches, except: [:destroy], controller: 'searches' do
@@ -152,13 +149,16 @@ Rails.application.routes.draw do
 
   namespace :buyer do
     resources :receipts, only: [:index, :new, :create, :show ]
+    resources :emails, :smses, only: %i[index show]
+    scope ":request_type" do
+      resources :user_requests, except: [:destroy], controller: 'user_requests'
+    end
 
-    resources :project_units, only: [:index] do
+    resources :project_units, only: [:edit, :update] do
       resources :receipts, only: [ :index, :new, :create], controller: 'project_units/receipts'
     end
   end
 
-  resources :emails, :smses, only: %i[index show]
   match '/sell_do/lead_created', to: "api/sell_do/leads#lead_created", via: [:get, :post]
   match '/sell_do/pushed_to_sales', to: "api/sell_do/leads#pushed_to_sales", via: [:get, :post]
 end

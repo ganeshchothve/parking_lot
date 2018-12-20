@@ -1,14 +1,12 @@
 <%= content_for :breadcrumbs do %>
-  <% unless current_user.buyer? %>
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<%= home_path(current_user) %>">Dashboard</a></li>
-        <% if sms.present? %>
-          <li class="breadcrumb-item"><a href="<%= admin_smses_path %>">Sms</a></li>
-        <% else %>
-          <li class="breadcrumb-item active" aria-current="page">Smses</li>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="<%= home_path(current_user) %>">Dashboard</a></li>
+      <% if sms.present? %>
+        <li class="breadcrumb-item"><a href="<%= admin_smses_path %>">Sms</a></li>
+      <% else %>
+        <li class="breadcrumb-item active" aria-current="page">Smses</li>
         <% end %>
-      </ol>
-    </nav>
-  <% end %>
+    </ol>    
+  </nav>
 <% end %>

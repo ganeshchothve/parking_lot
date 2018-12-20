@@ -6,20 +6,13 @@
         <div class="card-body">
           <div class="row mb-3">
             <div class="col-md-7">
-              <% [UserRequest::Cancellation, UserRequest::Swap] if Rails.env.development? %>
               <% UserRequest.descendants.each do |klass| %>
-                <% if @user.present? && policy(klass.new(user: @user)).new? %>
-                  <%
-                    if current_user.buyer?
-                      url = new_user_user_request_path(request_type: klass.model_name.element)
-                    else
-                      url = new_admin_user_user_request_path(user_id: @user, request_type: klass.model_name.element)
-                    end
-                  %>
+                <% if @user.present? && policy([:admin, klass.new(user: @user)]).new? %>
+                  <% url = new_admin_user_user_request_path(user_id: @user, request_type: klass.model_name.element) %>
                   <%= link_to "Add #{global_labels['user_request_' + klass.model_name.element]}", url, class: 'btn btn-primary nav-btn modal-remote-form-link' %>
                 <% end %>
               <% end %>
-              <% if UserRequestPolicy.new(current_user, UserRequest).export? %>
+              <% if Admin::UserRequestPolicy.new(current_user, UserRequest).export? %>
                 <div class="dropdown">
                   <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
                   <div class="dropdown-menu dropdown-menu-right">
