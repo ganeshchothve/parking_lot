@@ -1,18 +1,10 @@
-class Admin::EmailsController < ApplicationController
+class Admin::EmailsController < AdminController
   include EmailConcern
-  before_action :authenticate_user!
   before_action :set_email, only: :show #set_email written in EmailConcern
+  before_action :authorize_resource
   around_action :apply_policy_scope, only: :index
 
-  def index
-    @emails = Email.build_criteria params
-    authorize([:admin, @emails])
-    @emails = @emails.order(created_at: :desc).paginate(page: params[:page] || 1, per_page: 15)
-  end
-
-  def show
-    authorize([:admin, @email])
-  end
+  #index and show in EmailConcern
 
   private
 
@@ -22,5 +14,12 @@ class Admin::EmailsController < ApplicationController
       yield
     end
   end
-end
 
+  def authorize_resource
+    if params[:action] == 'index'
+      authorize [:admin, Email]
+    else
+      authorize [:admin, @email]
+    end
+  end
+end

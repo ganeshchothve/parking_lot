@@ -47,7 +47,7 @@
               <td class="text-right"><%= number_to_indian_currency(d[:total_amount]) %></td>
               <td class="text-right">
                 <% if policy(Receipt).index? %>
-                  <%= link_to "View", user_receipts_path(fltrs: {status: d[:status], payment_mode: d[:payment_mode]}), target: "_blank" %>
+                  <%= link_to "View", buyer_receipts_path(fltrs: {status: d[:status], payment_mode: d[:payment_mode]}), target: "_blank" %>
                 <% end %>
               </td>
             </tr>

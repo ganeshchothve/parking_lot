@@ -48,7 +48,7 @@
           <%= link_to "I Agree", payment_user_search_path(@search), class: 'btn btn-primary', style:'margin-top:0px', onclick: alert %>
         <% elsif @user.unattached_blocking_receipt(@project_unit.blocking_amount).present? %>
           <%= link_to "I Agree on behalf of #{@user.name}", payment_user_search_path(@search), class: 'btn btn-primary', style:'margin-top:0px', onclick: alert %>
-        <% elsif ReceiptPolicy.new(current_user, Receipt.new(user: @user, status: "clearance_pending", project_unit_id: @project_unit.id)).new? %>
+        <% elsif policy([ current_user_role_group, Receipt.new(user: @user, status: "clearance_pending", project_unit_id: @project_unit.id)]).new? %>
           <%= link_to "I Agree on behalf of #{@user.name} and proceed to add payment", new_admin_user_project_unit_receipt_path(@user.id, @project_unit.id), class: 'btn btn-primary modal-remote-form-link', style:'margin-top:0px', onclick: alert %>
           <% if @booking_detail_scheme.present? && @booking_detail_scheme.editable_payment_adjustments_present? %>
             <%= link_to "Proceed without payment", send_under_negotiation_admin_project_unit_path(@project_unit.id), class: 'btn btn-primary', style:'margin-top:0px', onclick: alert %>

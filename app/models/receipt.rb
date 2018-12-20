@@ -7,6 +7,7 @@ class Receipt
   include InsertionStringMethods
   include ApplicationHelper
   include ReceiptStateMachine
+  extend FilterByCriteria
 
   field :receipt_id, type: String
   field :order_id, type: String
@@ -33,6 +34,15 @@ class Receipt
   has_many :assets, as: :assetable
   has_many :smses, as: :triggered_by, class_name: "Sms"
 
+  scope :filter_by_status, ->(_status) { where(status: _status ) }
+  scope :filter_by_receipt_id, ->(_receipt_id) { where(receipt_id: _receipt_id)}
+  scope :filter_by_user_id, ->(_user_id){ where(user_id: _user_id) }
+  scope :filter_by_project_unit_id, ->(_project_unit_id){ where(project_unit_id: _project_unit_id) }
+  scope :filter_by_payment_mode, ->(_payment_mode){ where(payment_mode: _payment_mode)}
+  scope :filter_by_issued_date, ->(date) { start_date, end_date = date.split(' - '); where(issued_date: start_date..end_date) }
+  scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: start_date..end_date) }
+  scope :filter_by_processed_on, ->(date) { start_date, end_date = date.split(' - '); where(processed_on: start_date..end_date) }
+
   validates :total_amount, :status, :payment_mode, :user_id, presence: true
   validates :payment_identifier, presence: true, if: Proc.new{|receipt| receipt.payment_mode == 'online' && receipt.status != 'pending' }
   validates :status, inclusion: {in: Proc.new{ Receipt.aasm.states.collect(&:name).collect(&:to_s) } }
@@ -44,7 +54,7 @@ class Receipt
   validates :tracking_id, presence: true, if: Proc.new{|receipt| receipt.status == 'success' && receipt.payment_mode != "online"}
   validates :comments, presence: true, if: Proc.new{|receipt| receipt.status == 'failed' && receipt.payment_mode != "online"}
   validate :tracking_id_processed_on_only_on_success, if: Proc.new{|record| record.status != "cancelled" }
-  validate :processed_on_greater_than_issued_date
+  validate :processed_on_greater_than_issued_date, :first_booking_amount_limit
 
   increments :order_id, auto: false
 
@@ -103,54 +113,6 @@ class Receipt
     self.project_unit_id.present? && self.project_unit.receipts.in(status: ["success", "clearance_pending"]).count == 0
   end
 
-  def self.build_criteria params={}
-    selector = {}
-    if params[:fltrs].present?
-      if params[:fltrs][:status].present?
-        selector[:status] = params[:fltrs][:status]
-      end
-      if params[:fltrs][:receipt_id].present?
-        selector[:receipt_id] = params[:fltrs][:receipt_id]
-      end
-      if params[:fltrs][:user_id].present?
-        selector[:user_id] = params[:fltrs][:user_id]
-      end
-      if params[:fltrs][:project_unit_id].present?
-        selector[:project_unit_id] = params[:fltrs][:project_unit_id]
-      end
-      if params[:project_unit_id].present?
-        selector[:project_unit_id] = params[:project_unit_id]
-      end
-      if params[:fltrs][:payment_mode].present?
-        selector[:payment_mode] = params[:fltrs][:payment_mode]
-      end
-      [:issued_date, :created_at, :processed_on].each do |key|
-        if params[:fltrs][key].present?
-          start_date, end_date = params[:fltrs][key].split("-")
-          selector[key] = {}
-          selector[key]["$gte"] = start_date if start_date.present?
-          selector[key]["$lte"] = end_date if end_date.present?
-        end
-      end
-    end
-    selector1 = {}
-    if params[:fltrs].blank? || params[:fltrs][:status].blank?
-      selector1 = {"$or": [{status: "pending", payment_mode: {"$ne" => "online"}}, {status: {"$ne" => "pending"}}]}
-    end
-    or_selector = {}
-    if params[:q].present?
-      regex = ::Regexp.new(::Regexp.escape(params[:q]), 'i')
-      or_selector = {"$or": [{receipt_id: regex}, {tracking_id: regex}, {payment_identifier: regex}] }
-    end
-    selector = self.and([selector, selector1, or_selector])
-    if params[:sort].blank? || Receipt.available_sort_options.collect{|x| x[:id]}.exclude?(params[:sort])
-      params[:sort] = Receipt.available_sort_options.first[:id]
-    end
-    field, sort_order = params[:sort].split(".")
-    selector = selector.send(sort_order, field.to_sym)
-    selector
-  end
-
   def generate_receipt_id
     if self.status == "success"
       self.assign!(:order_id) if self.order_id.blank?
@@ -184,6 +146,18 @@ class Receipt
 
     custom_scope[:project_unit_id] = params[:project_unit_id] if params[:project_unit_id].present?
     custom_scope
+  end
+
+  #
+  # Initial Payment should be greater than blocking amount.
+  #
+  #
+  def first_booking_amount_limit
+    if self.project_unit.try(:status) == 'hold'
+      if self.total_amount < self.project_unit.blocking_amount
+        self.errors.add(:total_amount, "should be greater than blocking amount(#{self.project_unit.blocking_amount})")
+      end
+    end
   end
 
   private

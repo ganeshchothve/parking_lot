@@ -1,7 +1,7 @@
-<% if policy(@user_request).editable_field?("alternate_project_unit_id") %>
+<% if policy([current_user_role_group, (@user_request)]).editable_field?("alternate_project_unit_id") %>
   <div class="form-group">
     <%= f.label :alternate_project_unit_id, class: 'label-required' %>
-    <%= f.select :alternate_project_unit_id, @user_request.alternate_project_unit_id.present? ? [[@user_request.alternate_project_unit.name, @user_request.alternate_project_unit_id]] : [], {prompt: true}, class: 'selectize-remote', disabled: (policy(@user_request).editable_field?("alternate_project_unit_id") ? false : true), required: "required", data: {url: admin_project_units_path}, "data-params": {fltrs: {status: {"$in": ProjectUnit.user_based_available_statuses(current_user) }}}.to_json, 'data-ds': 'ds' %>
+    <%= f.select :alternate_project_unit_id, @user_request.alternate_project_unit_id.present? ? [[@user_request.alternate_project_unit.name, @user_request.alternate_project_unit_id]] : [], {prompt: true}, class: 'selectize-remote', disabled: (policy([current_user_role_group, (@user_request)]).editable_field?("alternate_project_unit_id") ? false : true), required: "required", data: {url: admin_project_units_path}, "data-params": {fltrs: {status: {"$in": ProjectUnit.user_based_available_statuses(current_user) }}}.to_json, 'data-ds': 'ds' %>
   </div>
 <% else %>
   <div class="form-group">

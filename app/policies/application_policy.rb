@@ -62,6 +62,10 @@ class ApplicationPolicy
     Pundit.policy_scope!(user, record.class)
   end
 
+  def current_user_role_group
+    user.buyer? ? :Buyer : :Admin
+  end
+
   class Scope
     attr_reader :user, :scope
 

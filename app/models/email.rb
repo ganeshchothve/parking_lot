@@ -1,7 +1,7 @@
 class Email
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Filter
+  extend FilterByCriteria
 
   # Scopes
   scope :filter_by_to, ->(email) { where(to: email) }
@@ -83,6 +83,7 @@ class Email
   def email_template
     Template::EmailTemplate.where(id: self.email_template_id).first
   end
+
 
   private
 

@@ -1,5 +1,4 @@
 class Admin::ClientsController < AdminController
-  before_action :authenticate_user!
   before_action :set_client
   before_action :authorize_resource
   layout :set_layout

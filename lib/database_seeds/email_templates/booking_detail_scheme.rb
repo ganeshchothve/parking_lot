@@ -1,3 +1,4 @@
+# DatabaseSeeds::EmailTemplates::BookingDetailScheme.seed(Client.last.id)
 module DatabaseSeeds
   module EmailTemplates
     module BookingDetailScheme

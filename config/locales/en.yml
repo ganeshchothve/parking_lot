@@ -51,6 +51,7 @@ en:
     otp: "OTP"
     schemes: "Schemes"
     scheme: "Scheme"
+    audit: "Audit Logs"
   mongoid:
     attributes:
       asset:
@@ -275,3 +276,6 @@ en:
         state: 'State / Region'
         country: 'Country'
         zip: 'Zip / Pin Code'
+  controller:
+    only_administrator_users: 'Only administrator users are allowed.'
+    only_buyer_users: 'Only Buyer users are allowed.'
