@@ -4,7 +4,7 @@
   </li>
 <% end %>
 
-<% if policy(ProjectUnit).index? %>
+<% if policy([:admin, ProjectUnit]).index? %>
   <li class="nav-item">
     <%= active_link_to t('global.project_units'), admin_project_units_path, active: :exclusive, class: "nav-link" %>
   </li>

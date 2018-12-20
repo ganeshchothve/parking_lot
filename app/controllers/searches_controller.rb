@@ -86,7 +86,7 @@ class SearchesController < ApplicationController
     @project_unit = ProjectUnit.find(@search.project_unit_id)
     @project_unit.assign_attributes(permitted_attributes(@project_unit))
     @project_unit.user = @user if @project_unit.user_id.blank?
-    authorize @project_unit # Has to be done after user is assigned and before status is updated
+    authorize [current_user_role_group, @project_unit] # Has to be done after user is assigned and before status is updated
     @project_unit.primary_user_kyc_id = @user.user_kyc_ids.first if @project_unit.primary_user_kyc_id.blank?
     @project_unit.status = "hold"
     respond_to do |format|
@@ -115,7 +115,7 @@ class SearchesController < ApplicationController
       ProjectUnitUnholdWorker.new.perform(@project_unit.id)
       redirect_to dashboard_path and return
     end
-    authorize @project_unit
+    authorize [current_user_role_group, @project_unit]
     if @project_unit.status != "hold"
       if current_user.buyer?
         redirect_to dashboard_path and return
@@ -130,7 +130,7 @@ class SearchesController < ApplicationController
 
   def make_available
     @project_unit = ProjectUnit.find(@search.project_unit_id)
-    authorize @project_unit
+    authorize [current_user_role_group, @project_unit]
     respond_to do |format|
       if @project_unit.update_attributes(permitted_attributes(@project_unit))
         format.html { redirect_to dashboard_path }
@@ -148,7 +148,7 @@ class SearchesController < ApplicationController
     if @search.project_unit_id.present?
       @project_unit = ProjectUnit.find(@search.project_unit_id)
       @receipt.total_amount = @project_unit.blocking_amount
-      authorize @project_unit
+      authorize [current_user_role_group, @project_unit]
       unattached_blocking_receipt = @search.user.unattached_blocking_receipt @search.project_unit.blocking_amount
       if unattached_blocking_receipt.present?
         @receipt = unattached_blocking_receipt

@@ -1,4 +1,4 @@
-module ProjectUnitConcern
+module ProjectUnitsConcern
   extend ActiveSupport::Concern
 
   def edit
@@ -7,9 +7,7 @@ module ProjectUnitConcern
 
   private
 
-
   def set_project_unit
     @project_unit = ProjectUnit.find(params[:id])
   end
-
 end

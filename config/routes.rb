@@ -148,13 +148,8 @@ Rails.application.routes.draw do
     scope ":request_type" do
       resources :user_requests, except: [:destroy], controller: 'user_requests'
     end
-    #resources :project_units, only: [:index, :show, :edit, :update] do
-     # resources :booking_detail_schemes, except: [:destroy], controller: '/booking_detail_schemes'
-      #get 'send_under_negotiation', on: :member
-    #end
 
-    resources :project_units do
-      get 'print', action: 'print', on: :member, as: :print
+    resources :project_units , only: [:edit, :update] do
       resources :receipts, only: [ :index, :new, :create]
     end
   end
