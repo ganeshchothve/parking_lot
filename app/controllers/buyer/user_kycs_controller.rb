@@ -1,7 +1,6 @@
 # TODO: replace all messages & flash messages
-class Buyer::UserKycsController < ApplicationController
+class Buyer::UserKycsController < BuyerController
   include UserKycsConcern
-  before_action :authenticate_user!
   before_action :set_user
   before_action :set_user_kyc, only: %i[show edit update destroy]
   around_action :apply_policy_scope
