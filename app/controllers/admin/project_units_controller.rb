@@ -6,8 +6,8 @@ class Admin::ProjectUnitsController < AdminController
   around_action :apply_policy_scope, only: :index
   layout :set_layout
 
-  # GET /admin/project_units/:id/edit
   # Defined in ProjectUnitsConcern
+  # GET /admin/project_units/:id/edit
 
   #
   # This index action for Admin users where Admin can view all project units.

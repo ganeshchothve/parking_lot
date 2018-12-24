@@ -8,7 +8,25 @@ class Buyer::UserKycsController < BuyerController
 
   layout :set_layout
 
-  # index new and the rest of the functions are defined in UserKycsConcern
+  # set_user, set_user_kyc and apply_policy_scope are defined in UserKycsConcern
+
+  # index defined in UserKycsConcern
+  # GET /buyer/user_kycs
+
+  # new defined in UserKycsConcern
+  # GET /buyer/user_kycs/new
+
+  # create defined in UserKycsConcern
+  # POST /buyer/user_kycs
+
+  # edit defined in UserKycsConcern
+  # GET /buyer/user_kycs/:id/edit
+
+  # update defined in UserKycsConcern
+  # PATCH /buyer/user_kycs/:id
+  
+  # This action is to set the user and creator as current_user for the user kyc record.
+  #
   def set_user_creator
     @user_kyc.user = @user_kyc.creator = current_user
   end

@@ -6,8 +6,8 @@ class Buyer::ProjectUnitsController < BuyerController
   around_action :apply_policy_scope, only: :index
   layout :set_layout
 
-  # GET /buyer/project_units/:id/edit
   # Defined in ProjectUnitsConcern
+  # GET /buyer/project_units/:id/edit
 
   # This index action for users used to collect and display available project units(for swap requests)
   #
