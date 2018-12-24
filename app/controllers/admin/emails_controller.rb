@@ -3,6 +3,9 @@ class Admin::EmailsController < ApplicationController
   before_action :set_email, only: :show
   around_action :apply_policy_scope, only: :index
 
+  layout :resolve_layout
+
+
   def index
     @emails = Email.build_criteria params
     authorize([:admin, @emails])
@@ -23,6 +26,14 @@ class Admin::EmailsController < ApplicationController
   def apply_policy_scope
     Email.with_scope(policy_scope([:admin, Email])) do
       yield
+    end
+  end
+  private
+
+  def resolve_layout
+    case action_name
+    when "show"
+      "mailer.html.erb"
     end
   end
 end
