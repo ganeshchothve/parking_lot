@@ -29,7 +29,7 @@ class Admin::ProjectUnitsController < AdminController
   end
 
   #
-  # This show action for Admin users where Admin can view a particular project unit.
+  # This show action for Admin users where Admin can view details of a particular project unit.
   #
   # @return [{}] record with array of Hashes.
   # GET /admin/project_units/:id 

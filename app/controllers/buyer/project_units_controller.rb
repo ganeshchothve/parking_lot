@@ -27,7 +27,7 @@ class Buyer::ProjectUnitsController < BuyerController
   end
 
   #
-  # This update action for Admin users is called after edit.
+  # This update action for users is called after edit.
   #
   # PATCH /buyer/project_units/:id"
   #
