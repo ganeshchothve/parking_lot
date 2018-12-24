@@ -1,11 +1,22 @@
 module EmailConcern
   extend ActiveSupport::Concern
 
+  #
+  # This index action for Admin, users where they can view all the emails sent.
+  # Admin can  view all the emails and user can view the emails sent to them.
+  #
+  # @return [{},{}] records with array of Hashes.
+  #
   def index
     @emails = Email.build_criteria params
     @emails = @emails.order(created_at: :desc).paginate(page: params[:page] || 1, per_page: 15)
   end
 
+  #
+  # This show action for Admin, users where they can view the details of a particular email.
+  #
+  # @return [{}] record with array of Hashes.
+  #
   def show
   end
 

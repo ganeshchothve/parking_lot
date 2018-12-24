@@ -4,7 +4,11 @@ class Buyer::SmsesController < BuyerController
   before_action :authorize_resource
   around_action :apply_policy_scope, only: :index
 
-  #index and show in SmsConcern
+  # index defined in SmsConcern
+  # GET /buyer/smses
+
+  # show defined in SmsConcern
+  # GET /buyer/smses/:id
 
   private
 
