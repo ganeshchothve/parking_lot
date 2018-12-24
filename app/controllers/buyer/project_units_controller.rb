@@ -6,8 +6,31 @@ class Buyer::ProjectUnitsController < BuyerController
   around_action :apply_policy_scope, only: :index
   layout :set_layout
 
-  # def set_project_unit from ProjectUnitsConcern
+  # GET /buyer/project_units/:id/edit
+  # Defined in ProjectUnitsConcern
 
+  # This index action for users used to collect and display available project units(for swap requests)
+  #
+  # @return [{},{}] records with array of Hashes.
+  # GET /buyer/project_units
+  #
+  def index
+    @project_units = ProjectUnit.build_criteria(params).paginate(page: params[:page] || 1, per_page: 15)
+    respond_to do |format|
+      if params[:ds].to_s == 'true'
+        format.json { render json: @project_units.collect { |pu| { id: pu.id, name: pu.ds_name } } }
+      else
+        format.json { render json: @project_units }
+      end
+      format.html { redirect_to dashboard_path, notice: 'Only admins can view this page.'}
+    end
+  end
+
+  #
+  # This update action for users is called after edit.
+  #
+  # PATCH /buyer/project_units/:id"
+  #
   def update
     parameters = permitted_attributes(@project_unit)
     respond_to do |format|
@@ -29,8 +52,16 @@ class Buyer::ProjectUnitsController < BuyerController
 
   private
 
+
+  # def set_project_unit
+  # Defined in ProjectUnitsConcern
+
   def authorize_resource
+    if params[:action] == "index"
+      authorize [:buyer, ProjectUnit]
+    else
     authorize [:buyer, @project_unit]
+    end
   end
 
   def apply_policy_scope
