@@ -152,7 +152,7 @@ Rails.application.routes.draw do
       resources :user_requests, except: [:destroy], controller: 'user_requests'
     end
 
-    resources :project_units, only: [:index, :edit, :update] do
+    resources :project_units, only: [:index, :show, :edit, :update] do
       resources :receipts, only: [ :index, :new, :create], controller: 'project_units/receipts'
     end
   end

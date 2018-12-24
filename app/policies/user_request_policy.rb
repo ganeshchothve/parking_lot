@@ -6,7 +6,7 @@ class UserRequestPolicy < ApplicationPolicy
   end
 
   def update?
-    edit?
+    false
   end
 
   def create?

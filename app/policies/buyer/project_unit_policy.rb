@@ -9,6 +9,10 @@ class Buyer::ProjectUnitPolicy < ProjectUnitPolicy
     (record.status != 'hold' && record.user_id == user.id) if user.buyer?
   end
 
+  def show?
+    index?
+  end
+
   def hold?
     valid = record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?(user)
     valid &&= (record.user.project_units.where(status: 'hold').blank? && record.user_based_status(record.user) == 'available')
