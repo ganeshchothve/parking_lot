@@ -22,7 +22,7 @@
           </td>
         <% end %>
         <td>
-          <%= email.subject %>
+          <%= link_to email.subject, admin_email_path(email), target: :_blank %>
         </td>
         <td>
           <%= email.status %>

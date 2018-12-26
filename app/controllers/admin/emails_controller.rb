@@ -8,7 +8,6 @@ class Admin::EmailsController < AdminController
 
   private
 
-
   def apply_policy_scope
     Email.with_scope(policy_scope([:admin, Email])) do
       yield

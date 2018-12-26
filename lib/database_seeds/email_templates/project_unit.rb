@@ -103,7 +103,8 @@ module DatabaseSeeds
               You have booked your spot among the privileged few in <%= name %> at <%= project_name %>. <br/>
               Kindly pay the remaining balance to complete the booking process. The due date is <%= I18n.l(auto_release_on) %>.
               <br/><br/>
-              Visit <%= user.dashboard_url %>.
+              Visit 
+              <a href=<%= user.dashboard_url %> target="_blank"><%= user.dashboard_url %></a>.
             </p>
           </div>
         </div>') if ::Template::EmailTemplate.where(name: "daily_reminder_for_booking_payment").blank?
