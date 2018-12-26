@@ -13,7 +13,7 @@
         <tr>
           <td>
             <% sms.to.each do |s| %>
-            <%= s %>
+            <%= link_to s, admin_smse_path(sms)  %>
             <% end %>
           </td>
           <td>
