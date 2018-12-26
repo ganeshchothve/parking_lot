@@ -2,6 +2,7 @@ class Admin::EmailsController < ApplicationController
   before_action :authenticate_user!, only: %i[index show]
   before_action :set_email, only: :show
   around_action :apply_policy_scope, only: :index
+  layout :set_layout
 
   def index
     @emails = Email.build_criteria params
@@ -10,7 +11,6 @@ class Admin::EmailsController < ApplicationController
   end
 
   def show
-    _layout 'mailer'
     authorize([:admin, @email])
   end
 
@@ -24,5 +24,9 @@ class Admin::EmailsController < ApplicationController
     Email.with_scope(policy_scope([:admin, Email])) do
       yield
     end
+  end
+  def set_layout
+    return 'mailer' if action_name == "show"
+    super
   end
 end
