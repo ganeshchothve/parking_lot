@@ -40,17 +40,13 @@
             <%= sms.status %>
           </td>
           <td>
-            <%= sms.sent_on.present? ? sms.sent_on.strftime("%d/%m/%Y") : '-' %>
+            <%= sms.sent_on.try(:strftime, '%b %e, %Y, %l:%M %p') || '-' %>
           </td>
           <td class="text-right">
             <div class="dropdown">
               <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
               <div class="dropdown-menu dropdown-menu-right">
-                  <% if current_user.buyer? %>
-                    <%= link_to 'Show', buyer_smse_path(sms), class: 'dropdown-item' %>
-                  <% else %>
-                    <%= link_to 'Show', admin_smse_path(sms), class: 'dropdown-item' %>
-                  <% end %>
+                <%= link_to 'Show', "javascript:;", data: {toggle: "modal", target: "#sms_show"}, class: 'dropdown-item' %>
               </div>
             </div>
           </td>

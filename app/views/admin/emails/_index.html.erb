@@ -17,28 +17,24 @@
         <% unless current_user.buyer? %>
           <td>
             <% email.to.each do |e| %>
-            <%= e %>
+            <%= mail_to e %>
             <% end %>
           </td>
         <% end %>
         <td>
-          <%= link_to email.subject, admin_email_path(email), target: :_blank %>
+          <%= link_to email.subject, [ current_user_role_group, email], target: :_blank %>
         </td>
         <td>
           <%= email.status %>
         </td>
         <td>
-          <%= email.sent_on.present? ? email.sent_on.strftime("%d/%m/%Y") : '-' %>
+          <%= email.sent_on.try(:strftime, '%b %e %Y, %l:%M %p') || '-' %>
         </td>
         <td class="text-right">
           <div class="dropdown">
             <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
             <div class="dropdown-menu dropdown-menu-right">
-              <% if current_user.buyer? %>
-                <%= link_to 'Show', buyer_email_path(email), class: 'dropdown-item', target: :_blank %>
-              <% else %>
-                <%= link_to 'Show', admin_email_path(email), class: 'dropdown-item', target: :_blank %>
-              <% end %>
+              <%= link_to 'Show', [ current_user_role_group, email], class: 'dropdown-item', target: :_blank %>
             </div>
           </div>
         </td>

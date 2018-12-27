@@ -47,7 +47,7 @@
       <div class="col-md-12">
         <div class="form-group">
           <div>
-            <%= @email.body.html_safe %>
+            <%= @email.body.gsub(URI.regexp, '<a href="\0">\0</a>').html_safe %>
           </div>
         </div>
       </div>
