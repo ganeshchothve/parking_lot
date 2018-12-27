@@ -20,7 +20,7 @@
         <div class="form-group">
           <label>Status</label>
           <div>
-            <%= @email.status.present? ? @email.status : '-' %>
+            <%= t("emails.status.#{email.status}") %>
           </div>
         </div>
       </div>
@@ -47,7 +47,7 @@
       <div class="col-md-12">
         <div class="form-group">
           <div>
-            <%= @email.body.gsub(URI.regexp, '<a href="\0">\0</a>').html_safe %>
+            <%= @email.body.html_safe %>
           </div>
         </div>
       </div>

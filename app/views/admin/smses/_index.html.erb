@@ -5,8 +5,9 @@
         <% unless current_user.buyer? %>
           <th>To</th>
         <% end %>
-        <th>Status</th>
-        <th>Sent On</th>
+        <td> Content </td>
+        <th> Status</th>
+        <th> Sent On</th>
         <th class="text-right">Actions</th>
       </tr>
     </thead>
@@ -36,8 +37,9 @@
               <% end %>
             </td>
           <% end %>
+          <td><%= truncate(sms.body, length: 30, separator: '') %></td>
           <td>
-            <%= sms.status %>
+            <%= t("smses.status.#{sms.status}") %>
           </td>
           <td>
             <%= sms.sent_on.try(:strftime, '%b %e, %Y, %l:%M %p') || '-' %>

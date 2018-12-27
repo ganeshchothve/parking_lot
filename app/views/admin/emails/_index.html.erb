@@ -22,10 +22,10 @@
           </td>
         <% end %>
         <td>
-          <%= link_to email.subject, [ current_user_role_group, email], target: :_blank %>
+          <%= link_to truncate(email.subject, length: 30, separator: ''), [ current_user_role_group, email], target: :_blank, title: email.subject %>
         </td>
         <td>
-          <%= email.status %>
+          <%= t("emails.status.#{email.status}") %>
         </td>
         <td>
           <%= email.sent_on.try(:strftime, '%b %e %Y, %l:%M %p') || '-' %>
