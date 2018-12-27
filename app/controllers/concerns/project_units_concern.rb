@@ -1,6 +1,9 @@
 module ProjectUnitsConcern
   extend ActiveSupport::Concern
 
+  #
+  # This edit action for Admin, users to edit the details of existing project unit record.
+  #
   def edit
     render layout: false
   end

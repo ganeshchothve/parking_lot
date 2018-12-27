@@ -6,8 +6,15 @@ class Admin::ProjectUnitsController < AdminController
   around_action :apply_policy_scope, only: :index
   layout :set_layout
 
-  # def edit from ProjectUnitsConcern
+  # GET /admin/project_units/:id/edit
+  # Defined in ProjectUnitsConcern
 
+  #
+  # This index action for Admin users where Admin can view all project units.
+  #
+  # @return [{},{}] records with array of Hashes.
+  # GET /admin/project_units
+  #
   def index
     @project_units = ProjectUnit.build_criteria(params).paginate(page: params[:page] || 1, per_page: 15)
     respond_to do |format|
@@ -21,6 +28,12 @@ class Admin::ProjectUnitsController < AdminController
     end
   end
 
+  #
+  # This show action for Admin users where Admin can view details of a particular project unit.
+  #
+  # @return [{}] record with array of Hashes.
+  # GET /admin/project_units/:id 
+  #
   def show
     respond_to do |format|
       format.json { render json: @project_unit }
@@ -28,10 +41,20 @@ class Admin::ProjectUnitsController < AdminController
     end
   end
 
+  #
+  # This print action for Admin users where Admin can print a particular project unit(cost sheet and payment schedule).
+  #
+  # GET /admin/project_units/:id/print
+  #
   def print
     @user = @project_unit.user
   end
 
+  #
+  # This update action for Admin users is called after edit.
+  #
+  # PATCH /admin/project_units/:id 
+  #
   def update
     parameters = permitted_attributes(@project_unit)
     respond_to do |format|
@@ -44,6 +67,11 @@ class Admin::ProjectUnitsController < AdminController
     end
   end
 
+  #
+  # This export action for Admin users where Admin will get reports.
+  #
+  # GET /admin/project_units/export
+  #
   def export
     if Rails.env.development?
       ProjectUnitExportWorker.new.perform(current_user.id.to_s, params[:fltrs].as_json)
@@ -54,6 +82,11 @@ class Admin::ProjectUnitsController < AdminController
     redirect_to admin_project_units_path(fltrs: params[:fltrs].as_json)
   end
 
+  #
+  # This mis_report action for Admin users where Admin will be mailed the report
+  #
+  # GET /admin/project_units/mis_report
+  #
   def mis_report
     if Rails.env.development?
       ProjectUnitMisReportWorker.new.perform(current_user.id.to_s)
@@ -64,6 +97,9 @@ class Admin::ProjectUnitsController < AdminController
     redirect_to admin_project_units_path
   end
 
+  #
+  # GET /admin/project_units/:id/send_under_negotiation
+  #
   def send_under_negotiation
     ProjectUnitBookingService.new(@project_unit.id).send_for_negotiation
     respond_to do |format|
@@ -73,6 +109,8 @@ class Admin::ProjectUnitsController < AdminController
 
   private
 
+  # def set_project_unit
+  # Defined in ProjectUnitsConcern
 
   def authorize_resource
     if params[:action] == 'index'

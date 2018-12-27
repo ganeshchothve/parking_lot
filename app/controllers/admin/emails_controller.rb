@@ -4,7 +4,11 @@ class Admin::EmailsController < AdminController
   before_action :authorize_resource
   around_action :apply_policy_scope, only: :index
 
-  #index and show in EmailConcern
+  # index defined in EmailConcern
+  # GET /admin/emails
+
+  # show defined in EmailConcern
+  # GET /admin/emails/:id
 
   private
 
