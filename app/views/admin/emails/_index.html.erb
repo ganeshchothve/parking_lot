@@ -2,7 +2,9 @@
   <table class='table striped-table payment-breakup' width="100%" cellpadding="10" cellspacing="0">
     <thead class="th-default">
       <tr>
-        <th>To</th>
+        <% unless current_user.buyer? %>
+          <th>To</th>
+        <% end %>
         <th>Subject</th>
         <th>Status</th>
         <th>Sent On</th>
@@ -12,25 +14,27 @@
     <tbody>
       <% @emails.each do |email| %>
       <tr>
+        <% unless current_user.buyer? %>
+          <td>
+            <% email.to.each do |e| %>
+            <%= mail_to e %>
+            <% end %>
+          </td>
+        <% end %>
         <td>
-          <% email.to.each do |e| %>
-          <%= e %>
-          <% end %>
+          <%= link_to truncate(email.subject, length: 30, separator: ''), [ current_user_role_group, email], target: :_blank, title: email.subject %>
         </td>
         <td>
-          <%= email.subject %>
+          <%= t("emails.status.#{email.status}") %>
         </td>
         <td>
-          <%= email.status %>
-        </td>
-        <td>
-          <%= email.sent_on.present? ? email.sent_on.strftime("%d/%m/%Y") : '-' %>
+          <%= email.sent_on.try(:strftime, '%b %e %Y, %l:%M %p') || '-' %>
         </td>
         <td class="text-right">
           <div class="dropdown">
             <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
             <div class="dropdown-menu dropdown-menu-right">
-                <%= link_to 'Show', admin_email_path(email), class: 'dropdown-item', target: :_blank %>
+              <%= link_to 'Show', [ current_user_role_group, email], class: 'dropdown-item', target: :_blank %>
             </div>
           </div>
         </td>

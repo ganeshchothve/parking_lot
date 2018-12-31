@@ -23,16 +23,16 @@
           <div class="form-group text-center">
             <% if current_user.buyer? && policy(Receipt.new(user: current_user)).direct? %>
               <%= link_to "Pay Now & Generate Token", new_buyer_receipt_path, class: 'btn btn-primary modal-remote-form-link' %>
-            <% elsif !current_user.kyc_ready? && UserKycPolicy.new(current_user, UserKyc.new(user: current_user)).new? && current_user.buyer? %>
+            <% elsif !current_user.kyc_ready? && policy([current_user_role_group, UserKyc.new(user: current_user)]).new? && current_user.buyer? %>
               <%= link_to "Add #{global_labels['user_kyc']} & Make Payment", new_buyer_user_kyc_path, class: 'btn btn-primary modal-remote-form-link' %>
-            <% elsif current_user.buyer? && ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: current_user, status: "available")).hold? %>
+            <% elsif policy([current_user_role_group, ProjectUnit.new(user: current_user, status: "available")]).hold? %>
               <%= active_link_to "Search & Book your Apartment Now", new_search_path, active: :inclusive, class: "btn btn-primary" %>
             <% end %>
           </div>
         </div>
       </div>
       <% else %>
-        <% if ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: current_user, status: "available")).hold? %>
+        <% if Buyer::ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: current_user, status: "available")).hold? %>
           <div class="card">
             <div class="card-body text-center">
             <a class="btn btn-primary" href="<%= new_search_path %>">Apartment Selector</a>
@@ -67,7 +67,7 @@
           <%= render 'dashboard/project_unit_overview', {project_unit: project_unit, with_actions: true} %>
           <div class="mt-3"></div>
         <% end %>
-        <% if ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: current_user, status: "available")).hold? %>
+        <% if Buyer::ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: current_user, status: "available")).hold? %>
           <a class="btn btn-primary" href="<%= new_search_path %>">Book Another Home</a>
         <% end %>
       <% end %>

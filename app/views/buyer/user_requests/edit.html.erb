@@ -1,0 +1,3 @@
+<% _hash = {"data-resource-type": global_labels['user_request'], "data-type": "json"} %>
+<% _url = buyer_user_request_path(request_type: @user_request.class.model_name.element, id: @user_request.id) %>
+<%= render 'admin/user_requests/form', hash: _hash, url: _url %>
