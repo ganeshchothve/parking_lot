@@ -1,8 +1,8 @@
-<% if current_client.enable_actual_inventory?(current_user) && ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: user, status: "available")).hold? %>
+<% if current_client.enable_actual_inventory?(current_user) && Buyer::ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: user, status: "available")).hold? %>
   <%= link_to "Choose #{global_labels[:project_unit]} & Add Booking", new_admin_user_search_path(user.id), class: "dropdown-item" %>
 <% end %>
 <% hold_unit = user.project_units.where(status: 'hold').first %>
-<% if hold_unit.present? && ProjectUnitPolicy.new(current_user, hold_unit).block? %>
+<% if hold_unit.present? && Buyer::ProjectUnitPolicy.new(current_user, hold_unit).block? %>
   <%= link_to "Checkout using unit already held", checkout_user_search_path(user.get_search(hold_unit.id)), class: "dropdown-item" %>
 <% end %>
 <% if !current_user.buyer? && policy([:admin, Receipt.new(user: user)]).direct? %>
@@ -20,10 +20,10 @@
 <% if UserPolicy.new(current_user, user).edit? %>
   <%= link_to "Edit", edit_admin_user_path(user.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
-<% if UserKycPolicy.new(current_user, UserKyc).index?(user) %>
+<% if Admin::UserKycPolicy.new(current_user, UserKyc).index?(user) %>
   <%= link_to "View #{global_labels['user_kycs']}", admin_user_user_kycs_path(user_id: user.id), class: "dropdown-item" %>
 <% end %>
-<% if UserKycPolicy.new(current_user, UserKyc.new(user: user)).new? %>
+<% if Admin::UserKycPolicy.new(current_user, UserKyc.new(user: user)).new? %>
   <%= link_to "Add #{global_labels['user_kyc_details']}", new_admin_user_user_kyc_path(user), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 <% if NotePolicy.new(current_user, Note.new(notable: user)).new? %>

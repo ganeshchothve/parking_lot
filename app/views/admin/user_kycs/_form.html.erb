@@ -1,0 +1,315 @@
+<%= form_for(@user_kyc, local: true, url: url, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['user_kycs'], "data-type": "json", id: 'user_kyc_form'}) do |f| %>
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><%= @user_kyc.new_record? ? "New" : "Edit" %> <%= "#{global_labels['user_kyc']}" %></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-2">
+            <div class="form-group">
+              <%= f.label :salutation, class: 'label-required' %>
+              <%= f.select :salutation, UserKyc.available_salutations.collect{|x| [x[:text], x[:id]]}, {prompt: "Select"}, class: 'selectize', required: 'required' %>
+            </div>
+          </div>
+          <div class="col-md-5">
+            <div class="form-group">
+              <%= f.label :first_name, class: 'label-required' %>
+              <%= f.text_field :first_name, class: 'form-control', required: 'required' %>
+            </div>
+          </div>
+          <div class="col-md-5">
+            <div class="form-group">
+              <%= f.label :last_name, class: 'label-required' %>
+              <%= f.text_field :last_name, class: 'form-control', required: 'required' %>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <%= f.label :phone, class: 'label-required' %>
+              <%= f.text_field :phone, class: 'form-control phone', required: 'required' %>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <%= f.label :email, class: 'label-required' %>
+              <%= f.email_field :email, class: 'form-control', required: 'required' %>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <%= f.label :pan_number, class: 'label-required' %>
+              <%= f.text_field :pan_number, class: 'form-control', required: 'required' %>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <%= f.label :aadhaar %>
+              <%= f.text_field :aadhaar, class: 'form-control' %>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <%= f.label :configurations %>
+              <%= f.select :configurations, UserKyc.available_configurations.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', multiple: true, disabled: (policy(@user_kyc).editable_field?("configurations") ? false : true) %>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :min_budget %>
+                  <%= f.number_field :min_budget, class: "form-control" %>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :max_budget %>
+                  <%= f.number_field :max_budget, class: "form-control" %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <%= f.label :preferred_floors %>
+              <%= f.select :preferred_floors, UserKyc.available_preferred_floors.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', multiple: true, disabled: (policy(@user_kyc).editable_field?("preferred_floors") ? false : true) %>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <%= f.label :number_of_units %>
+              <%= f.number_field :number_of_units, class: "form-control" %>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            Permanent Address
+          </div>
+          <div class="card-body">
+            <% f.object.build_permanent_address if f.object.permanent_address.blank? %>
+            <%= f.fields_for :permanent_address do |permanent_address_form| %>
+              <%= render "addresses/form_fields", f: permanent_address_form %>
+            <% end %>
+          </div>
+        </div>
+        <% if params[:project_unit_id].present? %>
+        <%
+        @user_kyc.project_unit_ids += [params[:project_unit_id]]
+        @user_kyc.project_unit_ids.uniq!
+        %>
+        <% end %>
+        <% if @user.project_unit_ids.present? && (@user_kyc.persisted? || !current_user.buyer?) %>
+        <div class="form-group position-relative">
+          <%= f.label :project_unit_ids %>
+          <%= f.select :project_unit_ids, @user.project_units.collect{|x| [x.name, x.id]}, {prompt: "Select"}, class: 'selectize', multiple: true %>
+        </div>
+        <% end %>
+        <% if !defined?(small) || small == false %>
+        <div class="card mt-3">
+          <div class="card-header">
+            Other Details
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group position-relative">
+                  <!-- TODO: check if you want to restrict the dob to 18 years age -->
+                  <%= f.label :dob %>
+                  <% date = (f.object.dob.present? ? f.object.dob.strftime("%d/%m/%Y") : "") %>
+                  <%= f.text_field :dob, class: 'form-control datepicker', type:'text', data: {"default-date": date}, value: date %>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :education_qualification %>
+                  <%= f.text_field :education_qualification, class: 'form-control' %>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :designation %>
+                  <%= f.text_field :designation, class: 'form-control' %>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :customer_company_name %>
+                  <%= f.text_field :customer_company_name, class: 'form-control' %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card mt-3">
+          <div class="card-header">
+            NRI Related Details
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <%= f.label :nri %><br />
+              <div class="form-check form-check-inline">
+                <%= f.radio_button :nri, true, class: "form-check-input" %>
+                <%= f.label :nri, "Yes", class: "form-check-label" %>
+              </div>
+              <div class="form-check form-check-inline">
+                <%= f.radio_button :nri, false, class: "form-check-input" %>
+                <%= f.label :nri, "No", class: "form-check-label" %>
+              </div>
+            </div>
+            <div class="form-group nri-fields">
+              <%= f.label :oci %>
+              <%= f.text_field :oci, class: 'form-control' %>
+            </div>
+            <div class="form-group nri-fields">
+              <%= f.label :poa %><br />
+              <div class="form-check form-check-inline">
+                <%= f.radio_button :poa, true, class: "form-check-input" %>
+                <%= f.label :poa, "Yes", class: "form-check-label" %>
+              </div>
+              <div class="form-check form-check-inline">
+                <%= f.radio_button :poa, false, class: "form-check-input" %>
+                <%= f.label :poa, "No", class: "form-check-label" %>
+              </div>
+            </div>
+            <div class="nri-fields">
+              <div class="form-group poa-fields">
+                <%= f.label :poa_details %>
+                <%= f.text_field :poa_details, class: 'form-control' %>
+              </div>
+              <div class="form-group poa-fields">
+                <%= f.label :poa_details_phone_no %>
+                <%= f.text_field :poa_details_phone_no, class: 'phone form-control' %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card mt-3">
+          <div class="card-header">
+            Corporate Details (If Any)
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <%= f.label :is_company %><br />
+              <div class="form-check form-check-inline">
+                <%= f.radio_button :is_company, true, class: "form-check-input" %>
+                <%= f.label :is_company, "Yes", class: "form-check-label" %>
+              </div>
+              <div class="form-check form-check-inline">
+                <%= f.radio_button :is_company, false, class: "form-check-input" %>
+                <%= f.label :is_company, "No", class: "form-check-label" %>
+              </div>
+            </div>
+            <div class="form-group company-fields">
+              <%= f.label :gstn %>
+              <%= f.text_field :gstn, class: 'form-control' %>
+            </div>
+            <div class="form-group company-fields">
+              <%= f.label :company_name %>
+              <%= f.text_field :company_name, class: 'form-control' %>
+            </div>
+          </div>
+        </div>
+        <div class="card mt-3">
+          <div class="card-header">
+            Bank Details
+          </div>
+          <div class="card-body">
+            <% f.object.build_bank_detail if f.object.bank_detail.blank? %>
+            <%= f.fields_for :bank_detail do |bank_detail_form| %>
+              <%= render "bank_details/form_fields", f: bank_detail_form %>
+            <% end %>
+          </div>
+        </div>
+        <div class="card mt-3">
+          <div class="card-header">
+            Existing Customer?
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <%= f.label :existing_customer %><br />
+              <div class="form-check form-check-inline">
+                <%= f.radio_button :existing_customer, true, class: "form-check-input" %>
+                <%= f.label :existing_customer, "Yes", class: "form-check-label" %>
+              </div>
+              <div class="form-check form-check-inline">
+                <%= f.radio_button :existing_customer, false, class: "form-check-input" %>
+                <%= f.label :existing_customer, "No", class: "form-check-label" %>
+              </div>
+            </div>
+            <div class="form-group customer-fields">
+              <%= f.label :existing_customer_name %>
+              <%= f.text_field :existing_customer_name, class: 'form-control' %>
+            </div>
+            <div class="form-group customer-fields">
+              <%= f.label :existing_customer_project %>
+              <%= f.text_field :existing_customer_project, class: 'form-control' %>
+            </div>
+          </div>
+        </div>
+        <div class="mt-3"></div>
+        <div class="form-group">
+          <%= f.label :comments, class: 'control-label', style: 'vertical-align:middle' %>
+          <%= f.text_area :comments, class: 'form-control', style: 'vertical-align:middle' %>
+        </div>
+        <% end %>
+      </div>
+      <div class="modal-footer">
+        <%= f.submit "Save", class: "btn btn-primary" %>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>
+<script>
+$(document).ready(function(){
+  FormInitializer.init($("#user_kyc_form"));
+  $('[name="user_kyc[nri]"]').change(function(){
+    if($(this).val() == "true"){
+      $(".nri-fields").show();
+    }else{
+      $(".nri-fields").hide();
+    }
+  });
+  $('[name="user_kyc[poa]"]').change(function(){
+    if($(this).val() == "true"){
+      $(".poa-fields").show();
+    }else{
+      $(".poa-fields").hide();
+    }
+  });
+  $('[name="user_kyc[is_company]"]').change(function(){
+    if($(this).val() == "true"){
+      $(".company-fields").show();
+    }else{
+      $(".company-fields").hide();
+    }
+  });
+  $('[name="user_kyc[existing_customer]"]').change(function(){
+    if($(this).val() == "true"){
+      $(".customer-fields").show();
+    }else{
+      $(".customer-fields").hide();
+    }
+  });
+  $('[name="user_kyc[is_company]"]').trigger("change");
+  $('[name="user_kyc[nri]"]').trigger("change");
+  $('[name="user_kyc[poa]"]').trigger("change");
+  $('[name="user_kyc[existing_customer]"]').trigger("change");
+});
+</script>

@@ -1,47 +1,27 @@
 <div class="container">
+  <div class='row'>
+    <div class="col-6">
+      <span> To: </span>
+      <spam><%= "#{sms.recipient.try(:name)}(#{sms.to.join(',')})" %></spam>
+    </div>
+    <div class="col-6">
+      <span> Triggered By : </span>
+      <span><%= sms.triggered_by.try(:name) %></span>
+    </div>
+    <div class="col-6">
+      <span> Status :</span>
+      <span><%= t("smses.status.#{sms.status}") %></span>
+    </div>
+    <div class="col-6">
+      <span> Sent On :</span>
+      <span><%= sms.sent_on.strftime('%b %e %Y, %l:%M %p') %></span>
+    </div>
+  </div>
+  <hr>
   <div class="row justify-content-center">
     <div class="col-md-12">
-      <%= render 'breadcrumbs', {sms: @sms} %>
-      <div class="card">
-        <div class="card-header">Sms</div>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>To</label>
-                <div>
-                  <% @sms.to %>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Status</label>
-                <div>
-                  <%= @sms.status.present? ? @sms.status : '-' %>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-              <label>Sent On</label>
-                <div>
-                  <%= @sms.sent_on.present? ? @sms.sent_on.strftime("%d/%m/%Y") : '-' %>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <div class="form-group">
-                <div>
-                  <%= @sms.body %>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <%#= render 'breadcrumbs', {sms: @sms} %>
+      <%= @sms.body.gsub(URI.regexp, '<a href="\0">\0</a>').html_safe %>
     </div>
   </div>
 </div>

@@ -1,0 +1,56 @@
+<div class="card">
+  <div class="card-header">Email</div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>To</label>
+          <div>
+            <% if current_user.buyer? %>
+              <%= current_user.email %>
+            <% else %>
+              <% @email.to.each do |e| %>
+                <%= e %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Status</label>
+          <div>
+            <%= t("emails.status.#{email.status}") %>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+        <label>Sent On</label>
+          <div>
+            <%= @email.sent_on.present? ? @email.sent_on.strftime("%d/%m/%Y") : '-' %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+        <label>Subject</label>
+          <div>
+            <%= @email.subject.present? ? @email.subject : '-' %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <div>
+            <%= @email.body.html_safe %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

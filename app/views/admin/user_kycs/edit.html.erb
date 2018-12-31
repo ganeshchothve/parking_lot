@@ -1,0 +1,6 @@
+<% if @user_kyc.persisted?
+    _url = admin_user_user_kyc_path(@user, @user_kyc)
+  else
+    _url = admin_user_user_kycs_path(@user)
+  end %>
+<%= render 'form', user_kyc: @user_kyc, url: _url %>
