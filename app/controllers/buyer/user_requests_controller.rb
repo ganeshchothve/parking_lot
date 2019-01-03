@@ -8,8 +8,25 @@ class Buyer::UserRequestsController < BuyerController
 
   layout :set_layout
 
-  # index, new, show, edit, permitted_user_request_attributes, set_user_request, apply_policy_scope, associated_class, authorize_resource and authorize_after_action from UserRequestsConcern
+  # permitted_user_request_attributes, set_user_request, apply_policy_scope, associated_class, authorize_resource and authorize_after_action from UserRequestsConcern
 
+  # index defined in UserRequestsConcern
+  # GET /buyer/:request_type/user_requests
+
+  # new defined in UserRequestsConcern
+  # GET /buyer/:request_type/user_requests/new
+
+  # show defined in UserRequestsConcern
+  # GET /buyer/:request_type/user_requests/:id
+
+  # edit defined in UserRequestsConcern
+  # GET /buyer/:request_type/user_requests/:id/edit
+
+  #
+  # This is the create action for users, called after new to create a new user request.
+  #
+  # POST /buyer/:request_type/user_requests
+  #
   def create
     @user_request = associated_class.new(user_id: @user.id, created_by: current_user)
     @user_request.assign_attributes(permitted_user_request_attributes)
@@ -24,6 +41,11 @@ class Buyer::UserRequestsController < BuyerController
     end
   end
 
+  #
+  # This is the update action for users which is called after edit the request made by the user.
+  #
+  # PATCH /buyer/:request_type/user_requests/:id
+  #
   def update
     @user_request.assign_attributes(permitted_user_request_attributes)
     respond_to do |format|

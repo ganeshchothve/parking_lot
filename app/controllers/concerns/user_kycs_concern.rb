@@ -1,10 +1,18 @@
 module UserKycsConcern
   extend ActiveSupport::Concern
 
+  #
+  # This is the index action for admin, users where they can view all the user kycs.
+  #
+  # @return [{},{}] records with array of Hashes.
+  #
   def index
     @user_kycs = UserKyc.paginate(page: params[:page] || 1, per_page: 15)
   end
 
+  #
+  # This is the new action for admin, users where they can fill the details for a user kyc record.
+  #
   def new
     if @user.user_kyc_ids.blank?
       @user_kyc = UserKyc.new(creator: current_user, user: @user, first_name: @user.first_name, last_name: @user.last_name, email: @user.email, phone: @user.phone)
@@ -14,6 +22,9 @@ module UserKycsConcern
     render layout: false
   end
 
+  #
+  # This is the create action for admin, users, called after new.
+  #
   def create
     @user_kyc = UserKyc.new(permitted_attributes(UserKyc.new))
     set_user_creator
@@ -28,10 +39,15 @@ module UserKycsConcern
     end
   end
 
+  # This is the edit action for admin, users to edit the details of existing user kyc record.
+  #
   def edit
     render layout: false
   end
 
+  #
+  # This is the update action for admin, users which is called after edit.
+  #
   def update
     respond_to do |format|
       if @user_kyc.update(permitted_attributes(@user_kyc))

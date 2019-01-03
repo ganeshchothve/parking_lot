@@ -1,21 +1,36 @@
 module UserRequestsConcern
   extend ActiveSupport::Concern
 
+  #
+  # This is the index action for admin, users where they can view all the user requests.
+  #
+  # @return [{},{}] records with array of Hashes.
+  #
   def index
     @user_requests = associated_class.build_criteria params
     @user_requests = @user_requests.paginate(page: params[:page] || 1, per_page: 15)
   end
 
+  #
+  # This is the new action for admin, users where they can fill the details for a new user request.
+  #
   def new
     @user_request = associated_class.new(user_id: @user.id)
     @user_request.project_unit_id = params[:project_unit_id] if params[:project_unit_id].present?
     render layout: false
   end
 
+  #
+  # This show action for admin, users where they can view details of a particular user request.
+  #
+  # @return [{}] record with array of Hashes.
+  #
   def show
     @user_request = associated_class.find(params[:id])
   end
 
+  # This is the edit action for admin, users to edit the details of existing user request.
+  #
   def edit
     render layout: false
   end

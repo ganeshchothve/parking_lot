@@ -11,6 +11,10 @@ class Buyer::UserRequestPolicy < UserRequestPolicy
     user.id == record.user_id && record.status == 'pending'
   end
 
+  def update?
+    edit?
+  end
+
   def permitted_attributes(_params = {})
     attributes = []
     if record.status == 'pending' && user.buyer?

@@ -24,7 +24,7 @@
             <% if current_user.buyer? && policy(Receipt.new(user: current_user)).direct? %>
               <%= link_to "Pay Now & Generate Token", new_buyer_receipt_path, class: 'btn btn-primary modal-remote-form-link' %>
             <% elsif !current_user.kyc_ready? && policy([current_user_role_group, UserKyc.new(user: current_user)]).new? && current_user.buyer? %>
-              <%= link_to "Add #{global_labels['user_kyc']} & Make Payment", new_user_kyc_path, class: 'btn btn-primary modal-remote-form-link' %>
+              <%= link_to "Add #{global_labels['user_kyc']} & Make Payment", new_buyer_user_kyc_path, class: 'btn btn-primary modal-remote-form-link' %>
             <% elsif policy([current_user_role_group, ProjectUnit.new(user: current_user, status: "available")]).hold? %>
               <%= active_link_to "Search & Book your Apartment Now", new_search_path, active: :inclusive, class: "btn btn-primary" %>
             <% end %>
