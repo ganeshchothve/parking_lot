@@ -14,7 +14,7 @@ class Admin::ReceiptsController < AdminController
     authorize([:admin, Receipt])
     @receipts = Receipt.where(Receipt.user_based_scope(current_user, params))
                        .build_criteria(params)
-                       .paginate(page: params[:page] || 1, per_page: params[:per_page] || 15)
+                       .paginate(page: params[:page] || 1, per_page: params[:per_page])
   end
 
 

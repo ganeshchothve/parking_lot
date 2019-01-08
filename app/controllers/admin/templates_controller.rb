@@ -7,15 +7,10 @@ class Admin::TemplatesController < AdminController
 
   def index
     @templates = Template.build_criteria params
-    @templates = @templates.paginate(page: params[:page] || 1, per_page: 15)
+    @templates = @templates.paginate(page: params[:page] || 1, per_page: params[:per_page])
     respond_to do |format|
-      if params[:ds].to_s == 'true'
-        format.json { render json: @templates.collect{|d| {id: d.id, name: d.name}} }
-        format.html {}
-      else
-        format.json { render json: @templates }
-        format.html {}
-      end
+      format.json { render json: @templates }
+      format.html {}
     end
   end
 
