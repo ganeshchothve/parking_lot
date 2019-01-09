@@ -30,7 +30,7 @@
           <div class="dropdown">
             <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
             <div class="dropdown-menu dropdown-menu-right">
-              <%= render "buyer/project_units/index/#{current_user_role_group}", {project_unit: project_unit} %>
+              <%= render "#{current_user_role_group}/project_units/links", {project_unit: project_unit} %>
             </div>
           </div>
         </td>
