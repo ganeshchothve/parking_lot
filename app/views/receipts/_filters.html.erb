@@ -2,7 +2,6 @@
 <div class="card h-100">
   <div class="card-body">
     <% if @user.blank? %>
-    <% url = admin_receipts_path %>
     <%= form_tag url, method: "get", id: "receipt_search_form" do %>
       <div class="form-group">
         <%= label_tag "", 'Filters', class: "control-label d-block d-lg-inline" %>
