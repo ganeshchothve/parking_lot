@@ -6,8 +6,8 @@ class Admin::ProjectUnitsController < AdminController
   around_action :apply_policy_scope, only: :index
   layout :set_layout
 
-  # GET /admin/project_units/:id/edit
   # Defined in ProjectUnitsConcern
+  # GET /admin/project_units/:id/edit
 
   #
   # This index action for Admin users where Admin can view all project units.
@@ -16,7 +16,7 @@ class Admin::ProjectUnitsController < AdminController
   # GET /admin/project_units
   #
   def index
-    @project_units = ProjectUnit.build_criteria(params).paginate(page: params[:page] || 1, per_page: 15)
+    @project_units = ProjectUnit.build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page])
     respond_to do |format|
       if params[:ds].to_s == 'true'
         format.json { render json: @project_units.collect { |pu| { id: pu.id, name: pu.ds_name } } }
@@ -32,7 +32,7 @@ class Admin::ProjectUnitsController < AdminController
   # This show action for Admin users where Admin can view details of a particular project unit.
   #
   # @return [{}] record with array of Hashes.
-  # GET /admin/project_units/:id 
+  # GET /admin/project_units/:id
   #
   def show
     respond_to do |format|
@@ -53,7 +53,7 @@ class Admin::ProjectUnitsController < AdminController
   #
   # This update action for Admin users is called after edit.
   #
-  # PATCH /admin/project_units/:id 
+  # PATCH /admin/project_units/:id
   #
   def update
     parameters = permitted_attributes(@project_unit)

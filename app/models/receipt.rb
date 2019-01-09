@@ -35,7 +35,7 @@ class Receipt
   has_many :smses, as: :triggered_by, class_name: "Sms"
 
   scope :filter_by_status, ->(_status) { where(status: _status ) }
-  scope :filter_by_receipt_id, ->(_receipt_id) { where(receipt_id: _receipt_id)}
+  scope :filter_by_receipt_id, ->(_receipt_id) { where(receipt_id: /#{_receipt_id}/i)}
   scope :filter_by_user_id, ->(_user_id){ where(user_id: _user_id) }
   scope :filter_by_project_unit_id, ->(_project_unit_id){ where(project_unit_id: _project_unit_id) }
   scope :filter_by_payment_mode, ->(_payment_mode){ where(payment_mode: _payment_mode)}

@@ -145,6 +145,7 @@ class SearchesController < ApplicationController
 
   def payment
     @receipt = Receipt.new(creator: @search.user, user: @search.user, payment_mode: 'online', total_amount: current_client.blocking_amount, payment_gateway: current_client.payment_gateway)
+
     if @search.project_unit_id.present?
       @project_unit = ProjectUnit.find(@search.project_unit_id)
       @receipt.total_amount = @project_unit.blocking_amount
@@ -155,7 +156,7 @@ class SearchesController < ApplicationController
       end
       @receipt.project_unit = @project_unit
     else
-      authorize(Receipt.new(user: @search.user), :new?)
+      authorize([ current_user_role_group, Receipt.new(user: @search.user)], :new?)
     end
 
     if @receipt.save

@@ -38,7 +38,7 @@
               <% end %>
               <% if project_unit.pending_booking_detail_scheme.present? && policy(project_unit.pending_booking_detail_scheme).edit? %>
                 <%= link_to "Update scheme and discount", edit_admin_user_booking_detail_booking_detail_scheme_path(project_unit.user_id, project_unit.booking_detail, project_unit.pending_booking_detail_scheme.id), class: 'dropdown-item modal-remote-form-link' %>
-              <% elsif policy(BookingDetailScheme.new(project_unit_id: project_unit.id)).new? %>
+              <% elsif project_unit.booking_detail && policy(BookingDetailScheme.new(project_unit_id: project_unit.id)).new? %>
                 <%= link_to "Update scheme and discount", new_admin_user_booking_detail_booking_detail_scheme_path(project_unit.user_id, project_unit.booking_detail), class: 'dropdown-item modal-remote-form-link' %>
               <% end %>
 
@@ -50,7 +50,7 @@
                   <%= link_to "View Customer", admin_user_path(project_unit.user), class: 'dropdown-item' %>
                 <% end %>
                 <% if ProjectUnit.booking_stages.include?(project_unit.status) %>
-                  <% if policy(project_unit.scheme).edit? %>
+                  <% if project_unit.booking_detail && policy(project_unit.scheme).edit? %>
                     <%= link_to "View #{global_labels[:scheme]}", admin_user_booking_detail_booking_detail_scheme_path(project_unit.user_id, project_unit.booking_detail, project_unit.scheme.id), class: 'dropdown-item modal-remote-form-link' %>
                   <% end %>
                 <% end %>

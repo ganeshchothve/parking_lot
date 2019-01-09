@@ -1,5 +1,7 @@
 require 'will_paginate/view_helpers/action_view'
 
+WillPaginate.per_page = 15
+
 module WillPaginate
   module ActionView
     def will_paginate(collection = nil, options = {})

@@ -2,7 +2,6 @@
 <div class="card h-100">
   <div class="card-body">
     <% if @user.blank? %>
-    <% url = admin_receipts_path %>
     <%= form_tag url, method: "get", id: "receipt_search_form" do %>
       <div class="form-group">
         <%= label_tag "", 'Filters', class: "control-label d-block d-lg-inline" %>
@@ -32,12 +31,7 @@
       </div>
       <div class="form-group">
         <%= label_tag "fltrs", labels[:receipt_id], class: "control-label" %>
-        <%
-          if params[:fltrs].present? && params[:fltrs][:receipt_id].present?
-            receipt = Receipt.where(receipt_id: params[:fltrs][:receipt_id]).first
-          end
-        %>
-        <%= select_tag "fltrs[receipt_id]", options_for_select((params[:fltrs].present? && params[:fltrs][:receipt_id].present?) ? [[receipt.receipt_id, receipt.receipt_id]] : []), {class: "selectize-remote", data: {url: admin_receipts_path }} %>
+        <%= text_field_tag "fltrs[receipt_id]", params.dig(:fltrs, :receipt_id), class: 'form-control' %>
       </div>
       <div class="form-group">
         <%= label_tag "fltrs", labels[:status], class: "control-label" %>

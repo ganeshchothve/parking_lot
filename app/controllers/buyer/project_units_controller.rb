@@ -6,8 +6,8 @@ class Buyer::ProjectUnitsController < BuyerController
   around_action :apply_policy_scope, only: :index
   layout :set_layout
 
-  # GET /buyer/project_units/:id/edit
   # Defined in ProjectUnitsConcern
+  # GET /buyer/project_units/:id/edit
 
   # This index action for users used to collect and display available project units(for swap requests)
   #
@@ -15,10 +15,10 @@ class Buyer::ProjectUnitsController < BuyerController
   # GET /buyer/project_units
   #
   def index
-    @project_units = ProjectUnit.build_criteria(params).paginate(page: params[:page] || 1, per_page: 15)
+    @project_units = ProjectUnit.where(status: "available").paginate(page: params[:page] || 1, per_page: params[:per_page] )
     respond_to do |format|
       if params[:ds].to_s == 'true'
-        format.json { render json: @project_units.collect { |pu| { id: pu.id, name: pu.ds_name } } }
+        format.json { render json: @project_units.as_json(only: [:_id], methods: [:ds_name]) }
       else
         format.json { render json: @project_units }
       end

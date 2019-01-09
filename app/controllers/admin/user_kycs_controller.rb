@@ -8,7 +8,26 @@ class Admin::UserKycsController < AdminController
 
   layout :set_layout
 
-  # index new and the rest of the functions are defined in UserKycsConcern
+  # set_user, set_user_kyc and apply_policy_scope are defined in UserKycsConcern
+
+  # index defined in UserKycsConcern
+  # GET /admin/users/:user_id/user_kycs
+  # GET /admin/user_kycs
+
+  # new defined in UserKycsConcern
+  # GET /admin/users/:user_id/user_kycs/new
+
+  # create defined in UserKycsConcern
+  # POST /admin/users/:user_id/user_kycs
+
+  # edit defined in UserKycsConcern
+  # GET /admin/users/:user_id/user_kycs/:id/edit
+
+  # update defined in UserKycsConcern
+  # PATCH /admin/users/:user_id/user_kycs/:id
+  
+  # This action is to set the creator as Admin for the user kyc record of the user.
+  #
   def set_user_creator
     @user_kyc.user = @user
     @user_kyc.creator = current_user
