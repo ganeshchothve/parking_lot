@@ -51,7 +51,7 @@
   <% end %>
 <% end %>
 
-<% if SchemePolicy.new(current_user, Scheme).index? %>
+<% if policy([:admin, Scheme]).index? %>
   <li class="nav-item">
     <%= active_link_to t('global.schemes'), admin_schemes_path, active: :inclusive, class: "nav-link" %>
   </li>

@@ -94,9 +94,6 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :projects, except: [:destroy] do
-      resources :schemes, except: [:destroy], controller: 'schemes'
-    end
     resources :user_kycs, only: [:index], controller: 'user_kycs'
     scope ":request_type" do
       resources :user_requests, except: [:destroy], controller: 'user_requests' do

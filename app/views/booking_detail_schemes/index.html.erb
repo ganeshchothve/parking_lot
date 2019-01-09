@@ -6,7 +6,7 @@
         <div class="card-body">
           <div class="row mb-3">
             <div class="col-md-7">
-              <% if SchemePolicy.new(current_user, Scheme.new).new? %>
+              <% if policy([:admin, Scheme]).new? %>
                 <%= link_to "Add #{global_labels['scheme']}", new_admin_scheme_path, class: 'btn btn-primary modal-remote-form-link' %>
               <% end %>
             </div>

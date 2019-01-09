@@ -15,15 +15,15 @@ class SchemeObserver < Mongoid::Observer
     end
   end
   def after_save scheme
-    if scheme.status_changed?
-      if scheme.status == "draft"
-        SchemeMailer.send_draft(scheme.id, scheme.created_by.id).deliver
-      elsif scheme.status == "approved"
-        SchemeMailer.send_approved(scheme.id).deliver
-      elsif scheme.status == "disabled"
-        SchemeMailer.send_disabled(scheme.id).deliver
-      end
-    end
+    #if scheme.status_changed?
+    #  if scheme.status == "draft"
+    #    SchemeMailer.send_draft(scheme.id, scheme.created_by.id).deliver
+    #  elsif scheme.status == "approved"
+    #    SchemeMailer.send_approved(scheme.id).deliver
+    #  elsif scheme.status == "disabled"
+    #    SchemeMailer.send_disabled(scheme.id).deliver
+    #  end
+    #end
     if scheme.status_changed? && scheme.booking_portal_client.email_enabled?
       # case scheme.status
       # when 'draft'
