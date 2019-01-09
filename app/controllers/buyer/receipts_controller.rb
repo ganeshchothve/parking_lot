@@ -39,7 +39,7 @@ class Buyer::ReceiptsController < BuyerController
       payment_gateway: current_client.payment_gateway
     })
 
-    @receipt.assign_attributes(permitted_attributes(@receipt))
+    @receipt.assign_attributes(permitted_attributes([:buyer, @receipt]))
 
     authorize([:buyer, @receipt])
 

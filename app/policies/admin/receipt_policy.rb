@@ -37,7 +37,26 @@ class Admin::ReceiptPolicy < ReceiptPolicy
     show?
   end
 
+  def permitted_attributes params={}
+    attributes = super
+    attributes += [:project_unit_id] if user.role?('channel_partner')
+    if !user.buyer? && (record.new_record? || ['pending', 'clearance_pending'].include?(record.status))
+      attributes += [:issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier]
+    end
+    if ['sales', 'sales_admin'].include?(user.role) && %w[pending clearance_pending ].include?(record.status)
+      attributes += [:event]
+    end
+    if ['admin', 'crm', 'superadmin', 'sales_admin'].include?(user.role)
+      attributes += [:event]
+      if record.persisted? && record.status == 'clearance_pending'
+        attributes += [:processed_on, :comments, :tracking_id]
+      end
+    end
+    attributes.uniq
+  end
+
   private
+
 
   def confirmed_and_ready_user?
     record.user_id.present? && record.user.confirmed? && record.user.kyc_ready?
