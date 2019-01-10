@@ -2,6 +2,13 @@ class Admin::ProjectUnits::ReceiptsController < AdminController
   before_action :set_user
   before_action :set_project_unit
 
+  def index
+    authorize([:admin, Receipt])
+    @receipts = Receipt.where(Receipt.user_based_scope(current_user, params))
+                       .build_criteria(params)
+                       .paginate(page: params[:page] || 1, per_page: params[:per_page])
+  end
+
   #
   # This new action always create a new receipt form for user's project unit rerceipt form.
   #
