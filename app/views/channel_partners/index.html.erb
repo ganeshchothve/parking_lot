@@ -8,7 +8,7 @@
             <div class="card-body">
               <div class="row mb-3">
                 <div class="col-md-7">
-                  <% if ChannelPartnerPolicy.new(current_user, ChannelPartner).export? %>
+                  <% if policy([:admin, ChannelPartner]).export? %>
                     <div class="dropdown">
                       <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
                       <div class="dropdown-menu dropdown-menu-right">

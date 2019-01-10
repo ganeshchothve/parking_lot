@@ -16,7 +16,7 @@
   </li>
 <% end %>
 
-<% if ChannelPartnerPolicy.new(current_user, ChannelPartner).index? %>
+<% if policy([:admin, ChannelPartner]).index? %>
   <li class="nav-item">
     <%= active_link_to t('global.channel_partners'), channel_partners_path, active: :inclusive, class: "nav-link" %>
   </li>

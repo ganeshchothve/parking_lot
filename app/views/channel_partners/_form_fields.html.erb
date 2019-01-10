@@ -8,13 +8,13 @@
   <div class="col-md-5">
     <div class="form-group">
       <%= form.label :first_name, class: 'label-required' %>
-      <%= form.text_field :first_name, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(@channel_partner).editable_field?("first_name") ? false : true), placeholder:'First Name' %>
+      <%= form.text_field :first_name, class: 'form-control', required: 'required', autofocus: true, disabled: (policy([:admin, @channel_partner]).editable_field?("first_name") ? false : true), placeholder:'First Name' %>
     </div>
   </div>
   <div class="col-md-5">
     <div class="form-group">
       <%= form.label :last_name, class: 'label-required' %>
-      <%= form.text_field :last_name, class: 'form-control', required: 'required', autofocus: true, disabled: (policy(@channel_partner).editable_field?("last_name") ? false : true), placeholder:'Last Name' %>
+      <%= form.text_field :last_name, class: 'form-control', required: 'required', autofocus: true, disabled: (policy([:admin, @channel_partner]).editable_field?("last_name") ? false : true), placeholder:'Last Name' %>
     </div>
   </div>
 </div>
@@ -22,13 +22,13 @@
   <div class="col-md-6">
     <div class="form-group">
       <%= form.label :phone %>
-      <%= form.text_field :phone, class: 'form-control phone', disabled: (policy(@channel_partner).editable_field?("phone") ? false : true), placeholder:'Phone' %>
+      <%= form.text_field :phone, class: 'form-control phone', disabled: (policy([:admin, @channel_partner]).editable_field?("phone") ? false : true), placeholder:'Phone' %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="form-group">
       <%= form.label :email %>
-      <%= form.email_field :email, class: 'form-control email', disabled: (policy(@channel_partner).editable_field?("email") ? false : true), placeholder:'Email'%>
+      <%= form.email_field :email, class: 'form-control email', disabled: (policy([:admin, @channel_partner]).editable_field?("email") ? false : true), placeholder:'Email'%>
     </div>
   </div>
 </div>
@@ -36,13 +36,13 @@
   <div class="col-md-6">
     <div class="form-group">
       <%= form.label :aadhaar, class: 'label-required' %>
-      <%= form.text_field :aadhaar, class: 'form-control', required: 'required', disabled: (policy(@channel_partner).editable_field?("aadhaar") ? false : true), placeholder:'Aadhaar Number' %>
+      <%= form.text_field :aadhaar, class: 'form-control', required: 'required', disabled: (policy([:admin, @channel_partner]).editable_field?("aadhaar") ? false : true), placeholder:'Aadhaar Number' %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="form-group">
       <%= form.label :pan_number, class: 'label-required' %>
-      <%= form.text_field :pan_number, class: 'form-control', required: 'required', disabled: (policy(@channel_partner).editable_field?("pan_number") ? false : true), placeholder:'PAN Number' %>
+      <%= form.text_field :pan_number, class: 'form-control', required: 'required', disabled: (policy([:admin, @channel_partner]).editable_field?("pan_number") ? false : true), placeholder:'PAN Number' %>
     </div>
   </div>
 </div>
@@ -50,13 +50,13 @@
   <div class="col-md-6">
     <div class="form-group">
       <%= form.label :rera_id, class: 'label-required' %>
-      <%= form.text_field :rera_id, class: 'form-control', required: 'required', disabled: (policy(@channel_partner).editable_field?("rera_id") ? false : true), placeholder:'RERA Registration Number' %>
+      <%= form.text_field :rera_id, class: 'form-control', required: 'required', disabled: (policy([:admin, @channel_partner]).editable_field?("rera_id") ? false : true), placeholder:'RERA Registration Number' %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="form-group">
       <%= form.label :company_name %>
-      <%= form.text_field :company_name, class: 'form-control', disabled: (policy(@channel_partner).editable_field?("company_name") ? false : true), placeholder:'Company Name' %>
+      <%= form.text_field :company_name, class: 'form-control', disabled: (policy([:admin, @channel_partner]).editable_field?("company_name") ? false : true), placeholder:'Company Name' %>
     </div>
   </div>
 </div>
@@ -64,29 +64,29 @@
   <div class="col-md-6">
     <div class="form-group">
       <%= form.label :manager_id %>
-      <%= form.select :manager_id, User.in(role: "cp").collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', disabled: (policy(@channel_partner).editable_field?("manager_id") ? false : true) %>
+      <%= form.select :manager_id, User.in(role: "cp").collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', disabled: (policy([:admin, @channel_partner]).editable_field?("manager_id") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="form-group">
       <%= form.label :gstin_number %>
-      <%= form.text_field :gstin_number, class: 'form-control', disabled: (policy(@channel_partner).editable_field?("gstin_number") ? false : true), placeholder:'GSTIN Number' %>
+      <%= form.text_field :gstin_number, class: 'form-control', disabled: (policy([:admin, @channel_partner]).editable_field?("gstin_number") ? false : true), placeholder:'GSTIN Number' %>
     </div>
   </div>
 </div>
 <div class="row">
   <div class="col-md-6">
     <div class="form-group">
-      <% if policy(@channel_partner).editable_field?("status") %>
+      <% if policy([:admin, @channel_partner]).editable_field?("status") %>
         <div class="form-group">
           <%= form.label :status, class: 'title label-required' %>
-          <%= form.select :status, ChannelPartner.available_statuses.collect{|x| [x[:text], x[:id]]}, {prompt: "Select"}, {required: "required", class: "selectize", disabled: (policy(@channel_partner).editable_field?("status") ? false : true)} %>
+          <%= form.select :status, ChannelPartner.available_statuses.collect{|x| [x[:text], x[:id]]}, {prompt: "Select"}, {required: "required", class: "selectize", disabled: (policy([:admin, @channel_partner]).editable_field?("status") ? false : true)} %>
         </div>
       <% end %>
     </div>
   </div>
 </div>
-<% if policy(@channel_partner).editable_field?("bank_detail_attributes") %>
+<% if policy([:admin, @channel_partner]).editable_field?("bank_detail_attributes") %>
 <div class="mt-3"></div>
 <div class="card">
   <div class="card-header">
@@ -102,7 +102,7 @@
 </div>
 <% end %>
 <% end %>
-<% if policy(@channel_partner).editable_field?("address_attributes") %>
+<% if policy([:admin, @channel_partner]).editable_field?("address_attributes") %>
 <div class="mt-3"></div>
 <div class="card">
   <div class="card-header">

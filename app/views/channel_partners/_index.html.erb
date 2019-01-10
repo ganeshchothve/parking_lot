@@ -23,7 +23,7 @@
             <div class="dropdown">
               <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
               <div class="dropdown-menu dropdown-menu-right">
-                <% if ChannelPartnerPolicy.new(current_user, channel_partner).edit? %>
+                <% if Admin::ChannelPartnerPolicy.new(current_user, channel_partner).edit? %>
                   <%= link_to 'Edit', edit_channel_partner_path(channel_partner), class: 'dropdown-item modal-remote-form-link' %>
                 <% end %>
                 <% if AssetPolicy.new(current_user, Asset.new(assetable: channel_partner)).index? %>
