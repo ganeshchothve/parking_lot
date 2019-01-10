@@ -15,10 +15,10 @@ class Buyer::ProjectUnitsController < BuyerController
   # GET /buyer/project_units
   #
   def index
-    @project_units = ProjectUnit.where(status: "available")
+    @project_units = ProjectUnit.where(status: "available").paginate(page: params[:page] || 1, per_page: params[:per_page] )
     respond_to do |format|
       if params[:ds].to_s == 'true'
-        format.json { render json: @project_units.collect { |pu| { id: pu.id, name: pu.ds_name } } }
+        format.json { render json: @project_units.as_json(only: [:_id], methods: [:ds_name]) }
       else
         format.json { render json: @project_units }
       end

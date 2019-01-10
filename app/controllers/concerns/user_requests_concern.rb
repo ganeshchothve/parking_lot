@@ -8,7 +8,7 @@ module UserRequestsConcern
   #
   def index
     @user_requests = associated_class.build_criteria params
-    @user_requests = @user_requests.paginate(page: params[:page] || 1, per_page: 15)
+    @user_requests = @user_requests.paginate(page: params[:page] || 1, per_page: params[:per_page])
   end
 
   #

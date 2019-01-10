@@ -8,7 +8,7 @@ class ChannelPartnersController < ApplicationController
 
   def index
     @channel_partners = ChannelPartner.build_criteria params
-    @channel_partners = @channel_partners.paginate(page: params[:page], per_page: 15)
+    @channel_partners = @channel_partners.paginate(page: params[:page], per_page: params[:per_page])
   end
 
   def export

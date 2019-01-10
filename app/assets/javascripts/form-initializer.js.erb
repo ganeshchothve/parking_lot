@@ -120,6 +120,7 @@ FormInitializer = (function(){
     options = _.extend({}, options);
     data = _.extend({}, data);
     $(selector).selectize({
+      plugins: ['infinite_scroll'],
       valueField: options.hasOwnProperty("valueField") ? options["valueField"] : "id",
       labelField: 'name',
       searchField: 'name',
@@ -130,21 +131,19 @@ FormInitializer = (function(){
           url: options["url"],
           type: 'GET',
           dataType: 'json',
-          data: _.merge(remote_delectize_data(this.$input), {
-            q: query
-          }),
+          data: _.merge(remote_delectize_data(this.$input), JSON.parse(query)),
           error: function(one, two, three){
             if(typeof callback == 'function'){
               callback();
             }
           },
-          success: function(one, two, three){
+          success: function(data, type, options){
             if(typeof callback == 'function'){
-              callback(one);
+              callback(_.map(data, function(a){ return { id: (a['id'] || a._id), name: (a['name'] || a['ds_name']) } }));
             }
           }
         });
-      }
+      },
     });
   };
 

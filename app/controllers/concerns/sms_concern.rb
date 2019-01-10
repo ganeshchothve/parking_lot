@@ -9,7 +9,7 @@ module SmsConcern
   #
   def index
     @smses = Sms.build_criteria params
-    @smses = @smses.order(created_at: :desc).paginate(page: params[:page] || 1, per_page: 15)
+    @smses = @smses.order(created_at: :desc).paginate(page: params[:page] || 1, per_page: params[:per_page])
   end
 
   #

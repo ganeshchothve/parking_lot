@@ -12,7 +12,7 @@ class Buyer::ReceiptsController < BuyerController
     _params = params[:fltrs] || {}
     _params.delete(:user_id)
 
-    @receipts = current_user.receipts.build_criteria(params[:fltrs]).order_by([:created_at, :desc]).paginate(page: params[:page] || 1, per_page: params[:per_page] || 15)
+    @receipts = current_user.receipts.build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page])
   end
 
   # GET /buyer/receipts/export
