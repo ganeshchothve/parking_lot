@@ -95,7 +95,7 @@ class Receipt
 
   def payment_gateway_service
     if self.payment_gateway.present?
-      if self.project_unit.present? && (ProjectUnit.booking_stages.exclude?(self.project_unit.status) && self.project_unit.status != "hold")
+      if (self.project_unit.present?)  && (self.project_unit.status != "hold") && allowed_stages
         return nil
       else
         if(self.project_unit.blank? || self.project_unit.user_id == self.user_id)
@@ -187,4 +187,8 @@ class Receipt
       self.errors.add :processed_on, 'cannot be older than the Issued Date'
     end
   end
+
+    def allowed_stages
+     (ProjectUnit.booking_stages.exclude?(self.project_unit.status))&&((self.project_unit.status=="under_negotiation")&&(["approved"].exclude?(self.project_unit.scheme.status)))
+    end
 end
