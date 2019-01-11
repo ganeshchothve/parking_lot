@@ -187,8 +187,8 @@ class Receipt
       self.errors.add :processed_on, 'cannot be older than the Issued Date'
     end
   end
-
-    def allowed_stages
-     (ProjectUnit.booking_stages.exclude?(self.project_unit.status))&&((self.project_unit.status=="under_negotiation")&&(["approved"].exclude?(self.project_unit.scheme.status)))
-    end
+  # Payment can be done only when the project unit is blocked,booked_tentative or booked_confirmed or it is under_negotiation with approved scheme.
+  def allowed_stages
+    (ProjectUnit.booking_stages.exclude?(self.project_unit.status)) && ((self.project_unit.status=="under_negotiation") && (["approved"].exclude?(self.project_unit.scheme.status)))
+  end
 end
