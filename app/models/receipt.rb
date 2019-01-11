@@ -95,7 +95,7 @@ class Receipt
 
   def payment_gateway_service
     if self.payment_gateway.present?
-      if self.project_unit.present? && (ProjectUnit.booking_stages.exclude?(self.project_unit.status) && self.project_unit.status != "hold")
+      if (self.project_unit.present?)  && (self.project_unit.status != "hold") && allowed_stages
         return nil
       else
         if(self.project_unit.blank? || self.project_unit.user_id == self.user_id)
@@ -186,5 +186,9 @@ class Receipt
     if self.processed_on.present? && self.issued_date.present? && self.processed_on < self.issued_date
       self.errors.add :processed_on, 'cannot be older than the Issued Date'
     end
+  end
+  # Payment can be done only when the project unit is blocked,booked_tentative or booked_confirmed or it is under_negotiation with approved scheme.
+  def allowed_stages
+    (ProjectUnit.booking_stages.exclude?(self.project_unit.status)) && ((self.project_unit.status=="under_negotiation") && (["approved"].exclude?(self.project_unit.scheme.status)))
   end
 end
