@@ -16,6 +16,7 @@ set :ssh_options, {
   keepalive: true,
   auth_methods: %w(publickey)
 }
+set :bundle_path, '/var/www/shared/bundle'
 
 # server "example.com", user: "deploy", roles: %w{app db web}, my_property: :my_value
 # server "example.com", user: "deploy", roles: %w{app web}, other_property: :other_value
