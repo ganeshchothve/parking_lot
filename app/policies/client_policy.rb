@@ -11,6 +11,10 @@ class ClientPolicy < ApplicationPolicy
     false
   end
 
+  def asset_create?
+    create?
+  end
+
   def update?
     edit?
   end

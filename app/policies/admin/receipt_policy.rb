@@ -20,6 +20,10 @@ class Admin::ReceiptPolicy < ReceiptPolicy
     new?
   end
 
+  def asset_create?
+    confirmed_and_ready_user?
+  end
+
   def edit?
     return false if record.status == "success" && record.project_unit_id.present?
 

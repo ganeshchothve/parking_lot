@@ -1,7 +1,8 @@
 class NotePolicy < ApplicationPolicy
-  def create?
-    (current_user_role_group.to_s + "::" + record.notable_type + "Policy").constantize.new(user, record.notable).update?
-  end
+
+  # Defined in child class
+  # def create?
+  # end
 
   def destroy?
     false
@@ -21,6 +22,10 @@ class NotePolicy < ApplicationPolicy
 
   def index?
     true
+  end
+
+  def asset_create?
+    create?
   end
 
   def permitted_attributes params={}
