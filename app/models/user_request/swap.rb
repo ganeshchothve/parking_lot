@@ -37,7 +37,6 @@ class UserRequest::Swap < UserRequest
     unless self.alternate_project_unit.blocking_amount <= self.project_unit.blocking_amount
       _total_tentative_amount_paid = self.project_unit.total_tentative_amount_paid
       if _total_tentative_amount_paid < self.alternate_project_unit.blocking_amount
-        Alternate project unit has blocking amount 50000 is higher than your tentative paid amount ( _total_tentative_amount_paid ).
         self.errors.add(:alternate_project_unit, "has blocking amount #{ self.alternate_project_unit.blocking_amount }, which is higher than your tentative paid amount ( #{_total_tentative_amount_paid} ).")
       end
     end
