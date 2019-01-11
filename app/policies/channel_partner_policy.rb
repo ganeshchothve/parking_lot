@@ -19,6 +19,10 @@ class ChannelPartnerPolicy < ApplicationPolicy
     current_client.enable_channel_partners? && !user.present?
   end
 
+  def asset_create?
+    create?
+  end
+
   def update?
     current_client.enable_channel_partners? && ['superadmin', 'admin', 'cp_admin', 'cp'].include?(user.role)
   end
