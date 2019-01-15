@@ -5,7 +5,7 @@
       <% if policy([current_user_role_group, User]).index? %>
         <li class="breadcrumb-item"><a href="<%= admin_users_path %>">Users</a></li>
       <% end %>
-      <% if policy([current_user_role_group, User]).show? %>
+      <% if policy([current_user_role_group, User.new]).show? %>
         <li class="breadcrumb-item"><a href="<%= admin_user_path(@user) %>"><%= @user.name %></a></li>
       <% end %>
       <li class="breadcrumb-item active" aria-current="page"><%= global_labels['user_kycs'] %></li>

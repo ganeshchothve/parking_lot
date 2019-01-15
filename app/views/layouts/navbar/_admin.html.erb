@@ -28,9 +28,9 @@
   </li>
 <% end %>
 
-<% if UserKycPolicy.new(current_user, UserKyc).index? %>
+<% if policy([current_user_role_group, UserKyc]).index? %>
   <li class="nav-item">
-    <%= active_link_to t('global.user_kycs'), user_user_kycs_path, active: :inclusive, class: "nav-link" %>
+    <%= active_link_to t('global.user_kycs'), admin_user_kycs_path, active: :inclusive, class: "nav-link" %>
   </li>
 <% end %>
 
