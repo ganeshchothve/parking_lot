@@ -39,7 +39,7 @@ class Buyer::UserKycsController < BuyerController
     elsif params[:action] == 'new'
       authorize [:buyer, UserKyc.new(user: @user)]
     elsif params[:action] == 'create'
-      authorize [:buyer, UserKyc.new(permitted_attributes(UserKyc.new(user: @user)))]
+      authorize [:buyer, UserKyc.new(permitted_attributes([:buyer, UserKyc.new(user: @user)]))]
     else
       authorize [:buyer, @user_kyc]
     end

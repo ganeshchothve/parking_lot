@@ -10,27 +10,27 @@
   </li>
 <% end %>
 
-<% if UserPolicy.new(current_user, User).index? %>
+<% if policy([:admin, User]).index? %>
   <li class="nav-item">
     <%= active_link_to t('global.users'), admin_users_path, active: :inclusive, class: "nav-link" %>
   </li>
 <% end %>
 
-<% if ChannelPartnerPolicy.new(current_user, ChannelPartner).index? %>
+<% if policy([:admin, ChannelPartner]).index? %>
   <li class="nav-item">
     <%= active_link_to t('global.channel_partners'), channel_partners_path, active: :inclusive, class: "nav-link" %>
   </li>
 <% end %>
 
-<% if Admin::UserRequestPolicy.new(current_user, UserRequest).index? %>
+<% if policy([:admin, UserRequest]).index? %>
   <li class="nav-item">
     <%= active_link_to t('global.user_requests'), admin_user_requests_path(request_type: "all"), active: :inclusive, class: "nav-link" %>
   </li>
 <% end %>
 
-<% if UserKycPolicy.new(current_user, UserKyc).index? %>
+<% if policy([:admin, UserKyc]).index? %>
   <li class="nav-item">
-    <%= active_link_to t('global.user_kycs'), user_user_kycs_path, active: :inclusive, class: "nav-link" %>
+    <%= active_link_to t('global.user_kycs'), admin_user_kycs_path, active: :inclusive, class: "nav-link" %>
   </li>
 <% end %>
 
@@ -51,7 +51,7 @@
   <% end %>
 <% end %>
 
-<% if SchemePolicy.new(current_user, Scheme).index? %>
+<% if policy([:admin, Scheme]).index? %>
   <li class="nav-item">
     <%= active_link_to t('global.schemes'), admin_schemes_path, active: :inclusive, class: "nav-link" %>
   </li>
@@ -76,8 +76,8 @@
       <%= icon "far", "user-circle", class: "text-muted fa-2x" %>
     </a>
     <div class="dropdown-menu dropdown-menu-right">
-      <%= link_to "Profile", edit_admin_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
-      <%= link_to "Change Password", update_password_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
+      <%= link_to "Profile", admin_edit_path(current_user), class: "dropdown-item modal-remote-form-link" %>
+      <%= link_to "Change Password", admin_update_password_path(current_user), class: "dropdown-item modal-remote-form-link" %>
       <%= link_to "Sign out", destroy_session_path(current_user), class: "dropdown-item", method: :delete %>
     </div>
   </div>
@@ -92,13 +92,13 @@
 <% end %>
 
 <li class="nav-item d-lg-none">
-  <%= link_to "Profile", edit_admin_user_path(current_user), class: "nav-link modal-remote-form-link" %>
+  <%= link_to "Profile", admin_edit_path(current_user), class: "nav-link modal-remote-form-link" %>
 </li>
 
 <hr/>
 
 <li class="nav-item d-lg-none">
-  <%= link_to "Change Password", update_password_user_path(current_user), class: "nav-link modal-remote-form-link" %>
+  <%= link_to "Change Password", admin_update_password_path(current_user), class: "nav-link modal-remote-form-link" %>
 </li>
 
 <%= bottom_navigation('d-lg-none') %>

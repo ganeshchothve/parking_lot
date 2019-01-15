@@ -24,7 +24,7 @@ class Admin::UserRequestPolicy < UserRequestPolicy
     if record.status == 'pending' && %w[admin crm sales superadmin cp].include?(user.role)
       attributes += [:project_unit_id] if record.new_record?
       attributes += [:status] if record.persisted?
-      attributes += [notes_attributes: NotePolicy.new(user, Note.new).permitted_attributes]
+      attributes += [notes_attributes: Admin::NotePolicy.new(user, Note.new).permitted_attributes]
     end
     attributes
   end

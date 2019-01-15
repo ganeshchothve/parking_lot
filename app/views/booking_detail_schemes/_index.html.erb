@@ -27,7 +27,7 @@
           <div class="dropdown">
             <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
             <div class="dropdown-menu dropdown-menu-right">
-              <% if SchemePolicy.new(current_user, scheme).edit? %>
+              <% if Admin::SchemePolicy.new(current_user, scheme).edit? %>
                 <%= link_to 'Edit', edit_admin_scheme_path(scheme), class: 'dropdown-item modal-remote-form-link' %>
               <% end %>
             </div>

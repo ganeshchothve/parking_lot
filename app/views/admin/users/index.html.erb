@@ -10,13 +10,13 @@
                 <a class="btn btn-primary dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add new</a>
                 <div class="dropdown-menu">
                   <% User.available_roles(current_client).each do |role| %>
-                    <% if UserPolicy.new(current_user, User.new(role: role[:id])).new? %>
+                    <% if Admin::UserPolicy.new(current_user, User.new(role: role[:id])).new? %>
                       <%= link_to "New #{role[:text]}", new_admin_user_path(role: role[:id]), class: 'modal-remote-form-link dropdown-item' %>
                       <% end %>
                   <% end %>
                 </div>
               </div>
-              <% if UserPolicy.new(current_user, User).export? %>
+              <% if Admin::UserPolicy.new(current_user, User).export? %>
                 <div class="dropdown float-left ml-2">
                   <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
                   <div class="dropdown-menu dropdown-menu-right">

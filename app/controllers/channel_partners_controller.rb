@@ -1,6 +1,6 @@
 class ChannelPartnersController < ApplicationController
-  before_action :authenticate_user!, except: [:new, :create]
-  before_action :set_channel_partner, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!, except: %i[new create]
+  before_action :set_channel_partner, only: %i[show edit update destroy]
   around_action :apply_policy_scope
   before_action :authorize_resource
 
@@ -21,9 +21,6 @@ class ChannelPartnersController < ApplicationController
     redirect_to channel_partners_path(fltrs: params[:fltrs].as_json)
   end
 
-  def show
-  end
-
   def new
     @channel_partner = ChannelPartner.new
   end
@@ -33,7 +30,7 @@ class ChannelPartnersController < ApplicationController
   end
 
   def create
-    @channel_partner = ChannelPartner.new(permitted_attributes(ChannelPartner.new))
+    @channel_partner = ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))
 
     respond_to do |format|
       if @channel_partner.save
@@ -42,37 +39,38 @@ class ChannelPartnersController < ApplicationController
         format.json { render json: @channel_partner, status: :created }
       else
         format.html { render :new }
-        format.json { render json: {errors: @channel_partner.errors.full_messages.uniq}, status: :unprocessable_entity }
+        format.json { render json: { errors: @channel_partner.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
     end
   end
 
   def update
     respond_to do |format|
-      if @channel_partner.update(permitted_attributes(@channel_partner))
+      if @channel_partner.update(permitted_attributes([:admin, @channel_partner]))
         format.html { redirect_to channel_partners_path, notice: 'Channel partner was successfully updated.' }
         format.json { render json: @channel_partner }
       else
         format.html { render :edit }
-        format.json { render json: {errors: @channel_partner.errors.full_messages.uniq}, status: :unprocessable_entity }
+        format.json { render json: { errors: @channel_partner.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
     end
   end
 
   private
+
   def set_channel_partner
     @channel_partner = ChannelPartner.find(params[:id])
   end
 
   def authorize_resource
-    if params[:action] == "index" || params[:action] == 'export'
-      authorize ChannelPartner
-    elsif params[:action] == "new"
-      authorize ChannelPartner.new
-    elsif params[:action] == "create"
-      authorize ChannelPartner.new(permitted_attributes(ChannelPartner.new))
+    if params[:action] == 'index' || params[:action] == 'export'
+      authorize [:admin, ChannelPartner]
+    elsif params[:action] == 'new'
+      authorize [:admin, ChannelPartner.new]
+    elsif params[:action] == 'create'
+      authorize [:admin, ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))]
     else
-      authorize @channel_partner
+      authorize [:admin, @channel_partner]
     end
   end
 

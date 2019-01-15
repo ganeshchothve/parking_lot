@@ -26,7 +26,7 @@ module UserKycsConcern
   # This is the create action for admin, users, called after new.
   #
   def create
-    @user_kyc = UserKyc.new(permitted_attributes(UserKyc.new))
+    @user_kyc = UserKyc.new(permitted_attributes([current_user_role_group, UserKyc.new]))
     set_user_creator
     respond_to do |format|
       if @user_kyc.save
@@ -50,7 +50,7 @@ module UserKycsConcern
   #
   def update
     respond_to do |format|
-      if @user_kyc.update(permitted_attributes(@user_kyc))
+      if @user_kyc.update(permitted_attributes([current_user_role_group, @user_kyc]))
         format.html { redirect_to home_path(current_user), notice: 'User kyc was successfully updated.' }
         format.json { render json: @user_kyc }
       else

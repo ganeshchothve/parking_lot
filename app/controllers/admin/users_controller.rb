@@ -1,8 +1,8 @@
 class Admin::UsersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_user, except: [:index, :export, :new, :create]
+  before_action :set_user, except: %i[index export new create]
   before_action :authorize_resource
-  around_action :apply_policy_scope, only: [:index, :export]
+  around_action :apply_policy_scope, only: %i[index export]
 
   layout :set_layout
 
@@ -23,7 +23,7 @@ class Admin::UsersController < ApplicationController
     @user = User.find(params[:id])
     respond_to do |format|
       if @user.resend_confirmation_instructions
-        flash[:notice] = "Confirmation instructions sent successfully."
+        flash[:notice] = 'Confirmation instructions sent successfully.'
         format.html { redirect_to admin_users_path }
       else
         flash[:error] = "Couldn't send confirmation instructions."
@@ -36,7 +36,7 @@ class Admin::UsersController < ApplicationController
     @user = User.find(params[:id])
     respond_to do |format|
       if @user.send_reset_password_instructions
-        flash[:notice] = "Reset password instructions sent successfully."
+        flash[:notice] = 'Reset password instructions sent successfully.'
         format.html { redirect_to admin_users_path }
       else
         flash[:error] = "Couldn't send Reset password instructions."
@@ -55,17 +55,16 @@ class Admin::UsersController < ApplicationController
     redirect_to admin_users_path(fltrs: params[:fltrs].as_json)
   end
 
-  def print
-  end
+  def print; end
 
   def show
     @project_units = @user.project_units.paginate(page: params[:page] || 1, per_page: 15)
-    @receipts = @user.receipts.where({"$or": [{status: "pending", payment_mode: {"$ne" => "online"}}, {status: {"$ne" => "pending"}}]}).paginate(page: params[:page] || 1, per_page: 15)
+    @receipts = @user.receipts.where("$or": [{ status: 'pending', payment_mode: { '$ne' => 'online' } }, { status: { '$ne' => 'pending' } }]).paginate(page: params[:page] || 1, per_page: 15)
   end
 
   def new
     @user = User.new(booking_portal_client_id: current_client.id)
-    @user.role = params[:role].blank? ? "user" : params[:role]
+    @user.role = params[:role].blank? ? 'user' : params[:role]
     render layout: false
   end
 
@@ -75,16 +74,14 @@ class Admin::UsersController < ApplicationController
 
   def confirm_via_otp
     @otp_sent_status = {}
-    unless request.patch?
+    if request.patch?
+      if params[:user].present? && params[:user][:login_otp].present? && @user.authenticate_otp(params[:user][:login_otp], drift: 60)
+        @user.confirm unless @user.confirmed?
+      end
+    else
       @otp_sent_status = @user.send_otp
       if Rails.env.development?
         Rails.logger.info "---------------- #{@user.otp_code} ----------------"
-      end
-    else
-      if params[:user].present? && params[:user][:login_otp].present? && @user.authenticate_otp(params[:user][:login_otp], drift: 60)
-        unless @user.confirmed?
-          @user.confirm
-        end
       end
     end
     respond_to do |format|
@@ -93,7 +90,7 @@ class Admin::UsersController < ApplicationController
         format.json { render json: @user }
       else
         format.html { render layout: false }
-        format.json { render json: {errors: @user.errors.full_messages}, status: 422 }
+        format.json { render json: { errors: @user.errors.full_messages }, status: 422 }
       end
     end
   end
@@ -101,7 +98,7 @@ class Admin::UsersController < ApplicationController
   def create
     # sending the role upfront to ensure the permitted_attributes in next step is updated
     @user = User.new(booking_portal_client_id: current_client.id, role: params[:user][:role])
-    @user.assign_attributes(permitted_attributes(@user))
+    @user.assign_attributes(permitted_attributes([current_user_role_group, @user]))
     @user.manager_id = current_user.id if @user.role?('channel_partner') && current_user.role?('cp')
 
     respond_to do |format|
@@ -110,47 +107,48 @@ class Admin::UsersController < ApplicationController
         format.json { render json: @user, status: :created }
       else
         format.html { render :new }
-        format.json { render json: {errors: @user.errors.full_messages.uniq}, status: :unprocessable_entity }
+        format.json { render json: { errors: @user.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
     end
   end
 
   def update
-    @user.assign_attributes(permitted_attributes(@user))
+    @user.assign_attributes(permitted_attributes([current_user_role_group, @user]))
     respond_to do |format|
       if @user.save
-        if current_user == @user && permitted_attributes(@user).keys.include?("password")
+        if current_user == @user && permitted_attributes([current_user_role_group, @user]).key?('password')
           bypass_sign_in(@user)
         end
         format.html { redirect_to edit_admin_user_path(@user), notice: 'User Profile updated successfully.' }
         format.json { render json: @user }
       else
         format.html { render :edit }
-        format.json { render json: {errors: @user.errors.full_messages.uniq}, status: :unprocessable_entity }
+        format.json { render json: { errors: @user.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
     end
   end
 
   private
+
   def set_user
-    if params[:id].blank?
-      @user = current_user
-    else
-      @user = User.find(params[:id])
-    end
+    @user = if params[:id].blank?
+              current_user
+            else
+              User.find(params[:id])
+            end
   end
 
   def authorize_resource
-    if ['index', 'export'].include?(params[:action])
-      authorize User
-    elsif params[:action] == "new" || params[:action] == "create"
+    if %w[index export].include?(params[:action])
+      authorize [current_user_role_group, User]
+    elsif params[:action] == 'new' || params[:action] == 'create'
       if params[:role].present?
-        authorize User.new(role: params[:role], booking_portal_client_id: current_client.id)
+        authorize [current_user_role_group, User.new(role: params[:role], booking_portal_client_id: current_client.id)]
       else
-        authorize User.new(booking_portal_client_id: current_client.id)
+        authorize [current_user_role_group, User.new(booking_portal_client_id: current_client.id)]
       end
     else
-      authorize @user
+      authorize [current_user_role_group, @user]
     end
   end
 
