@@ -26,7 +26,7 @@
 <% if Admin::UserKycPolicy.new(current_user, UserKyc.new(user: user)).new? %>
   <%= link_to "Add #{global_labels['user_kyc_details']}", new_admin_user_user_kyc_path(user), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
-<% if NotePolicy.new(current_user, Note.new(notable: user)).new? %>
+<% if policy([current_user_role_group, Note.new(notable: user)]).new? %>
   <%= link_to "Add #{global_labels[:note]}", new_notable_path(notable_type: user.class.model_name.i18n_key.to_s, notable_id: user.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 <% if !user.confirmed? && user.confirmation_token.present? %>
