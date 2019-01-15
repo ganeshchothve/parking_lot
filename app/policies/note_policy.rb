@@ -1,5 +1,4 @@
 class NotePolicy < ApplicationPolicy
-
   # Defined in child class
   # def create?
   # end
@@ -28,7 +27,7 @@ class NotePolicy < ApplicationPolicy
     create?
   end
 
-  def permitted_attributes params={}
-    [ :id, :note, :note_type, :creator_id ]
+  def permitted_attributes(_params = {})
+    %i[id note note_type creator_id]
   end
 end

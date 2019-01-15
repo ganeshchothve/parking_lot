@@ -10,7 +10,7 @@
   </li>
 <% end %>
 
-<% if policy([current_user_role_group, User]).index? %>
+<% if policy([:admin, User]).index? %>
   <li class="nav-item">
     <%= active_link_to t('global.users'), admin_users_path, active: :inclusive, class: "nav-link" %>
   </li>
@@ -22,13 +22,13 @@
   </li>
 <% end %>
 
-<% if Admin::UserRequestPolicy.new(current_user, UserRequest).index? %>
+<% if policy([:admin, UserRequest]).index? %>
   <li class="nav-item">
     <%= active_link_to t('global.user_requests'), admin_user_requests_path(request_type: "all"), active: :inclusive, class: "nav-link" %>
   </li>
 <% end %>
 
-<% if policy([current_user_role_group, UserKyc]).index? %>
+<% if policy([:admin, UserKyc]).index? %>
   <li class="nav-item">
     <%= active_link_to t('global.user_kycs'), admin_user_kycs_path, active: :inclusive, class: "nav-link" %>
   </li>
