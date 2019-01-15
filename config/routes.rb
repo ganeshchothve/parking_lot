@@ -34,7 +34,12 @@ Rails.application.routes.draw do
   resources :channel_partners, except: [:destroy] do
     get 'export', action: 'export', on: :collection, as: :export
   end
+
   namespace :admin do
+    get ":id/edit", to: "users#edit", as: :edit
+    patch ":id", to: "users#update", as: :update
+    match ":id/update_password", via: [:get, :patch], action: "update_password", as: :update_password, controller: 'users'
+
     resources :emails, :smses, only: %i[index show]
     resource :client, except: [:show, :new, :create] do
       resources :templates, only: [:edit, :update, :index]
@@ -126,7 +131,6 @@ Rails.application.routes.draw do
     get 'terms-and-conditions', to: 'dashboard#terms_and_condition', as: :dashboard_terms_and_condition
     get "gamify-unit-selection", to: "dashboard#gamify_unit_selection"
     resource :user do
-      match 'update_password', via: [:get, :patch], action: "update_password", as: :update_password, controller: 'admin/users'
       resources :searches, except: [:destroy], controller: 'searches' do
         get :"3d", on: :collection, action: "three_d", as: "three_d"
         post :hold, on: :member
@@ -142,9 +146,16 @@ Rails.application.routes.draw do
     resources :searches, except: [:destroy], controller: 'searches'
   end
 
+  scope :buyer do
+    get ":id/edit", to: "admin/users#edit", as: :edit_buyer
+    patch ":id", to: "admin/users#update", as: :update_buyer
+    match ":id/update_password", via: [:get, :patch], action: "update_password", as: :buyer_update_password, controller: 'admin/users'
+  end
+
   namespace :buyer do
     resources :receipts, only: [:index, :new, :create, :show ]
     resources :emails, :smses, only: %i[index show]
+    resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
     scope ":request_type" do
       resources :user_requests, except: [:destroy], controller: 'user_requests'
     end
@@ -156,8 +167,4 @@ Rails.application.routes.draw do
 
   match '/sell_do/lead_created', to: "api/sell_do/leads#lead_created", via: [:get, :post]
   match '/sell_do/pushed_to_sales', to: "api/sell_do/leads#pushed_to_sales", via: [:get, :post]
-
-  namespace :buyer do
-    resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
-  end
 end

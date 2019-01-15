@@ -25,7 +25,7 @@
       </div>
     <% else %>
       No <%= global_labels[:users] %> yet.
-      <% if UserPolicy.new(current_user, User.new(role: 'user')).new? %>
+      <% if policy([current_user_role_group, User.new(role: 'user')]).new? %>
         <%= link_to 'Add a Customer', new_admin_user_path, class: 'modal-remote-form-link' %>
       <% end %>
     <% end %>

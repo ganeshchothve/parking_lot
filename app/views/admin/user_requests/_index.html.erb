@@ -12,7 +12,7 @@
       <% user_requests.each do |user_request| %>
       <tr>
         <td>
-          <% if UserPolicy.new(current_user, user_request.user).show? %>
+          <% if Admin::UserPolicy.new(current_user, user_request.user).show? %>
             <%= link_to user_request.user.name, admin_user_path(user_request.user_id) %>
           <% else %>
             <%= user_request.user.name %>

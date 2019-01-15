@@ -19,13 +19,13 @@
             <div class="col-md-6">
               <div class="form-group">
                 <%= f.label :first_name, class: 'label-required' %>
-                <%= f.text_field :first_name, class: 'form-control', autofocus: true, required: 'required', disabled: (policy(@user).editable_field?("first_name") ? false : true) %>
+                <%= f.text_field :first_name, class: 'form-control', autofocus: true, required: 'required', disabled: (policy([current_user_role_group, @user]).editable_field?("first_name") ? false : true) %>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
                 <%= f.label :last_name, class: 'label-required' %>
-                <%= f.text_field :last_name, class: 'form-control', autofocus: true, required: 'required', disabled: (policy(@user).editable_field?("last_name") ? false : true) %>
+                <%= f.text_field :last_name, class: 'form-control', autofocus: true, required: 'required', disabled: (policy([current_user_role_group, @user]).editable_field?("last_name") ? false : true) %>
               </div>
             </div>
           </div>
@@ -33,22 +33,22 @@
             <div class="col-md-6">
               <div class="form-group">
                 <%= f.label :email %>
-                <%= f.email_field :email, class: 'form-control', disabled: (policy(@user).editable_field?("email") ? false : true) %>
+                <%= f.email_field :email, class: 'form-control', disabled: (policy([current_user_role_group, @user]).editable_field?("email") ? false : true) %>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
                 <%= f.label :phone %>
-                <%= f.text_field :phone, class: 'form-control phone', disabled: (policy(@user).editable_field?("phone") ? false : true) %>
+                <%= f.text_field :phone, class: 'form-control phone', disabled: (policy([current_user_role_group, @user]).editable_field?("phone") ? false : true) %>
               </div>
             </div>
           </div>
           <% if @user.role.blank? %>
           <div class="form-group">
             <%= f.label :role, class: 'label-required' %>
-            <%= f.select :role, User.available_roles(current_client).reject{|r| User.buyer_roles(current_client).include?(r[:id])}.collect{|r| [r[:text], r[:id]] }, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(@user).editable_field?("role") ? false : true) %>
+            <%= f.select :role, User.available_roles(current_client).reject{|r| User.buyer_roles(current_client).include?(r[:id])}.collect{|r| [r[:text], r[:id]] }, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, @user]).editable_field?("role") ? false : true) %>
           </div>
-          <% elsif policy(@user).editable_field?("role") %>
+          <% elsif policy([current_user_role_group, @user]).editable_field?("role") %>
           <div class="form-group">
             <%= f.label :role, class: 'label-required' %>
             <%
@@ -60,43 +60,43 @@
               end
               roles = roles.collect{|r| [r[:text], r[:id]] }
             %>
-            <%= f.select :role, roles, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy(@user).editable_field?("role") ? false : true) %>
+            <%= f.select :role, roles, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, @user]).editable_field?("role") ? false : true) %>
           </div>
           <% else %>
           <%= f.hidden_field :role %>
           <% end %>
-          <% if policy(@user).editable_field?("allowed_bookings") && @user.buyer? %>
+          <% if policy([current_user_role_group, @user]).editable_field?("allowed_bookings") && @user.buyer? %>
             <div class="form-group">
               <%= f.label :allowed_bookings, class: 'label-required' %>
               <%= f.select :allowed_bookings, [1,2,3,4,5,6,100], {prompt: true}, class: 'selectize', required: 'required' %>
             </div>
           <% end %>
-          <% if policy(@user).editable_field?("rera_id") %>
+          <% if policy([current_user_role_group, @user]).editable_field?("rera_id") %>
             <div class="form-group">
               <%= f.label :rera_id, class: "#{@user.role?('channel_partner') ? 'label-required' : ''}" %>
-              <%= f.text_field :rera_id, class: 'form-control', required: @user.role?('channel_partner') ? true : false, disabled: (policy(@user).editable_field?("rera_id") ? false : true) %>
+              <%= f.text_field :rera_id, class: 'form-control', required: @user.role?('channel_partner') ? true : false, disabled: (policy([current_user_role_group, @user]).editable_field?("rera_id") ? false : true) %>
             </div>
           <% end %>
-          <% if policy(@user).editable_field?("manager_id") %>
+          <% if policy([current_user_role_group, @user]).editable_field?("manager_id") %>
             <div class="form-group">
               <%= f.label :manager_id, class: "control-label" %>
-              <%= f.select :manager_id, f.object.manager_id.present? ? [[f.object.manager.name, f.object.manager.id]] : [], {prompt: true}, class: 'selectize-remote', autofocus: true, disabled: (policy(@user).editable_field?("manager_id") ? false : true), "data-url": admin_users_path, "data-params": {fltrs: {role: @user.buyer? ? 'channel_partner' : 'cp' }}.to_json, 'data-ds': 'ds' %>
+              <%= f.select :manager_id, f.object.manager_id.present? ? [[f.object.manager.name, f.object.manager.id]] : [], {prompt: true}, class: 'selectize-remote', autofocus: true, disabled: (policy([current_user_role_group, @user]).editable_field?("manager_id") ? false : true), "data-url": admin_users_path, "data-params": {fltrs: {role: @user.buyer? ? 'channel_partner' : 'cp' }}.to_json, 'data-ds': 'ds' %>
             </div>
           <% end %>
-          <% if policy(@user).editable_field?("manager_change_reason") %>
+          <% if policy([current_user_role_group, @user]).editable_field?("manager_change_reason") %>
             <div class="form-group">
               <%= f.label :manager_change_reason, class: "control-label" %>
-              <%= f.text_area :manager_change_reason, class: 'form-control', disabled: (policy(@user).editable_field?("manager_change_reason") ? false : true) %>
+              <%= f.text_area :manager_change_reason, class: 'form-control', disabled: (policy([current_user_role_group, @user]).editable_field?("manager_change_reason") ? false : true) %>
             </div>
           <% end %>
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
                 <%= f.label :time_zone, class: "control-label" %>
-                <%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.all.sort, {}, class: 'selectize', disabled: (policy(@user).editable_field?("time_zone") ? false : true) %>
+                <%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.all.sort, {}, class: 'selectize', disabled: (policy([current_user_role_group, @user]).editable_field?("time_zone") ? false : true) %>
               </div>
             </div>
-            <% if policy(@user).editable_field?("is_active") %>
+            <% if policy([current_user_role_group, @user]).editable_field?("is_active") %>
               <div class="col-md-6">
                 <div class="form-group">
                   <%= f.label :is_active %><br/>
