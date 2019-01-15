@@ -4,4 +4,8 @@ class ChannelPartnerPolicy < ApplicationPolicy
   def export?
     index?
   end
+
+  def asset_create?
+    create?
+  end
 end

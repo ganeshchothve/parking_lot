@@ -13,6 +13,10 @@ class UserRequestPolicy < ApplicationPolicy
     new?
   end
 
+  def asset_create?
+    create?
+  end
+
   def export?
     false
   end

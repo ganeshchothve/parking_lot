@@ -26,7 +26,7 @@
                 <% if Admin::ChannelPartnerPolicy.new(current_user, channel_partner).edit? %>
                   <%= link_to 'Edit', edit_channel_partner_path(channel_partner), class: 'dropdown-item modal-remote-form-link' %>
                 <% end %>
-                <% if AssetPolicy.new(current_user, Asset.new(assetable: channel_partner)).index? %>
+                <% if policy([ current_user_role_group, Asset.new(assetable: channel_partner)]).index? %>
                   <%= link_to 'Documents', assetables_path(assetable_type: channel_partner.class.model_name.i18n_key.to_s, assetable_id: channel_partner.id), class: 'dropdown-item modal-remote-form-link' %>
                 <% end %>
               </div>

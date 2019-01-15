@@ -55,3 +55,6 @@ config/booking-portal-env.yml
 
 # Bundler binstubs
 /bin/
+
+# Byebug
+.byebug_history
