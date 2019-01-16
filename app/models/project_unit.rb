@@ -63,10 +63,11 @@ class ProjectUnit
   has_many :emails, as: :triggered_by, class_name: "Email"
   embeds_many :costs, as: :costable
   embeds_many :data, as: :data_attributable
+  embeds_many :parameters, as: :parameterizable
 
   has_many :assets, as: :assetable
 
-  accepts_nested_attributes_for :data, :costs, allow_destroy: true
+  accepts_nested_attributes_for :data, :parameters, :costs, allow_destroy: true
 
   validates :client_id, :agreement_price, :all_inclusive_price, :booking_price, :project_id, :project_tower_id, :unit_configuration_id, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :type, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, presence: true
   validates :status, :name, :erp_id, presence: true
@@ -110,6 +111,12 @@ class ProjectUnit
   end
 
   def calculated_data
+    out = {}
+    data.each{|c| out[c.key] = c.value }
+    out.with_indifferent_access
+  end
+
+  def calculated_parameters
     out = {}
     data.each{|c| out[c.key] = c.value }
     out.with_indifferent_access

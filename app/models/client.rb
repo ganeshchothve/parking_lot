@@ -176,7 +176,10 @@ c.enable_actual_inventory = User.available_roles(c).collect{|x| x[:id]}
 c.enable_channel_partners = false
 c.enable_company_users = true
 c.remote_logo_url = "https://image4.owler.com/logo/amura_owler_20160227_194208_large.png"
+c.remote_mobile_logo_url = "https://image4.owler.com/logo/amura_owler_20160227_194208_large.png"
 c.allowed_bookings_per_user = 5
+c.cin_number = "CIN1234"
+c.mailgun_email_domain = "iris.sell.do"
 c.save
 
 p = Project.new

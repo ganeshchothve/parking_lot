@@ -10,10 +10,13 @@ module InventoryImport
     count = 0
     costs = {}
     data = {}
+    parameters = {}
     CSV.foreach(filepath) do |row|
       if count == 0
         row.each_with_index do |value, index|
-          if value.match(/^cost\|/i)
+          if value.match(/^parameters\|/i)
+            parameters[index] = value.split("|").last
+          elsif value.match(/^cost\|/i)
             costs[index] = value.split("|")[1..2]
           elsif value.match(/^data\|/i)
             data[index] = value.split("|").last
@@ -103,9 +106,11 @@ module InventoryImport
           costs.each do |index, arr|
             project_unit.costs.build(category: arr[0], name: arr[1], absolute_value: row[index], key: arr[1].gsub(/[\W_]+/i, "_").downcase)
           end
-
           data.each do |index, name|
             project_unit.data.build(name: name, absolute_value: row[index], key: name.downcase.gsub(/[\W_]+/i, "_").downcase)
+          end
+          parameters.each do |index, name|
+            project_unit.parameters.build(name: name, value: row[index], key: name.downcase.gsub(/[\W_]+/i, "_").downcase)
           end
           if project_unit.save
             if floor_plan_urls.present?
