@@ -8,15 +8,16 @@ class BookingDetailSchemePolicy < SchemePolicy
   end
 
   def create?
-    user.buyer? ? true : super
+    %w[crm admin superadmin sales cp].include?(user.role)
   end
 
   def update?
-    user.buyer? ? true : super
+    %w[crm admin superadmin sales cp].include?(user.role)
   end
 
-  def permitted_attributes(_params = {})
-    attributes = %i[derived_from_scheme_id user_id]
+
+  def permitted_attributes params={}
+    attributes = [:derived_from_scheme_id, :user_id,:status]
 
     unless user.buyer?
       attributes += [payment_adjustments_attributes: PaymentAdjustmentPolicy.new(user, PaymentAdjustment.new).permitted_attributes]
