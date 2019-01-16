@@ -16,8 +16,7 @@
           <div class="form-group">
             <%= f.label :total_amount, class: 'label-required' %>
             <% total_amount = @receipt.total_amount.present? ? @receipt.total_amount : current_client.blocking_amount %>
-
-            <% if !policy(@receipt).editable_field?("total_amount") %>
+            <% if !policy([:buyer, @receipt]).editable_field?("total_amount") %>
               <h5><%= number_to_indian_currency(total_amount) %></h5>
               <%= f.hidden_field :total_amount, value: total_amount %>
             <% else %>

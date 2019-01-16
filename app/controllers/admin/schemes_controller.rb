@@ -1,6 +1,6 @@
 class Admin::SchemesController < AdminController
   before_action :set_project
-  before_action :set_scheme, except: [:index, :export, :new, :create]
+  before_action :set_scheme, except: %i[index new create]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: [:index]
 
@@ -15,21 +15,16 @@ class Admin::SchemesController < AdminController
     end
   end
 
-  def show
-    @scheme = Scheme.find(params[:id])
-    authorize @scheme
-  end
-
   def new
     @scheme = Scheme.new(created_by: current_user, booking_portal_client_id: current_user.booking_portal_client_id)
-    authorize @scheme
+    authorize [:admin, @scheme]
     render layout: false
   end
 
   def create
     @scheme = Scheme.new(created_by: current_user, booking_portal_client_id: current_user.booking_portal_client_id)
     modify_params
-    @scheme.assign_attributes(permitted_attributes(@scheme))
+    @scheme.assign_attributes(permitted_attributes([:admin, @scheme]))
 
     respond_to do |format|
       if @scheme.save
@@ -37,7 +32,7 @@ class Admin::SchemesController < AdminController
         format.json { render json: @scheme, status: :created }
       else
         format.html { render :new }
-        format.json { render json: {errors: @scheme.errors.full_messages.uniq}, status: :unprocessable_entity }
+        format.json { render json: { errors: @scheme.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
     end
   end
@@ -55,15 +50,15 @@ class Admin::SchemesController < AdminController
         format.json { render json: @scheme }
       else
         format.html { render :edit }
-        format.json { render json: {errors: @scheme.errors.full_messages.uniq}, status: :unprocessable_entity }
+        format.json { render json: { errors: @scheme.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
     end
   end
 
   def update
     modify_params
-    @scheme.assign_attributes(permitted_attributes(@scheme))
-    @scheme.approved_by = current_user if @scheme.event.present? && @scheme.event == 'approved' && @scheme.status != "approved"
+    @scheme.assign_attributes(permitted_attributes([:admin, @scheme]))
+    @scheme.approved_by = current_user if @scheme.event.present? && @scheme.event == 'approved' && @scheme.status != 'approved'
     respond_to do |format|
       if @scheme.save
         format.html { redirect_to admin_schemes_path, notice: 'Scheme was successfully updated.' }
@@ -77,11 +72,13 @@ class Admin::SchemesController < AdminController
   def payment_adjustments_for_unit
     project_unit = ProjectUnit.find params[:project_unit_id]
     respond_to do |format|
-      format.json { render json: @scheme.payment_adjustments.collect{|payment_adjustment| payment_adjustment.as_json.merge({value: payment_adjustment.value(project_unit)})} }
+      format.json { render json: @scheme.payment_adjustments.collect { |payment_adjustment| payment_adjustment.as_json.merge(value: payment_adjustment.value(project_unit)) } }
     end
   end
 
   private
+
+
   def set_scheme
     @scheme = Scheme.find(params[:id])
   end
@@ -105,22 +102,22 @@ class Admin::SchemesController < AdminController
   end
 
   def authorize_resource
-    if params[:action] == "index" || params[:action] == 'export'
-      authorize Scheme
-    elsif params[:action] == "new" || params[:action] == "create"
-      authorize Scheme.new(created_by: current_user, booking_portal_client_id: current_user.booking_portal_client_id)
+    if params[:action] == 'index'
+      authorize [:admin, Scheme]
+    elsif params[:action] == 'new' || params[:action] == 'create'
+      authorize [:admin, Scheme.new(created_by: current_user, booking_portal_client_id: current_user.booking_portal_client_id)]
     else
-      authorize @scheme
+      authorize [:admin, @scheme]
     end
   end
 
   def apply_policy_scope
     custom_scope = if @project_tower.present?
-      @project_tower.schemes
-    elsif @project.present?
-      @project.schemes
-    else
-      Scheme.all
+                     @project_tower.schemes
+                   elsif @project.present?
+                     @project.schemes
+                   else
+                     Scheme.all
     end
 
     Scheme.with_scope(policy_scope(custom_scope)) do

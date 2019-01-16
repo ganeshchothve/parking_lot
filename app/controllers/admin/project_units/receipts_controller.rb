@@ -28,7 +28,7 @@ class Admin::ProjectUnits::ReceiptsController < AdminController
   # POST /admin/users/:user_id/project_units/:project_unit_id/receipts
   def create
     @receipt = Receipt.new(user: @user, creator: current_user, project_unit_id: @project_unit.id)
-    @receipt.assign_attributes(permitted_attributes(@receipt))
+    @receipt.assign_attributes(permitted_attributes([:admin, @receipt]))
 
     authorize([:admin, @receipt])
 

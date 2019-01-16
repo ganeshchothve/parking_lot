@@ -39,6 +39,12 @@ class Buyer::ReceiptPolicy < ReceiptPolicy
     edit?
   end
 
+  def permitted_attributes params={}
+    attributes = super
+    attributes += [:project_unit_id] if user.buyer?
+    attributes.uniq
+  end
+
   private
 
   def confirmed_and_ready_user?

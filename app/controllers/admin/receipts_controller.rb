@@ -44,7 +44,7 @@ class Admin::ReceiptsController < AdminController
   def create
 
     @receipt = Receipt.new(user: @user, creator: current_user, project_unit_id: params.dig(:rerceipt, :project_unit_id))
-    @receipt.assign_attributes(permitted_attributes(@receipt))
+    @receipt.assign_attributes(permitted_attributes([:admin, @receipt]))
 
     authorize([:admin, @receipt])
 
@@ -74,7 +74,7 @@ class Admin::ReceiptsController < AdminController
   def update
     authorize([:admin, @receipt])
     respond_to do |format|
-      if @receipt.update(permitted_attributes(@receipt))
+      if @receipt.update(permitted_attributes([:admin, @receipt]))
         format.html { redirect_to admin_user_receipts_path(@user), notice: 'Receipt was successfully updated.' }
       else
         format.html { render :edit }

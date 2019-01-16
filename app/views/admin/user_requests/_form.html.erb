@@ -42,7 +42,7 @@
         <% if policy([current_user_role_group, (@user_request)]).editable_field?("notes_attributes") %>
           <% f.object.notes.new(creator_id: current_user.id) %>
           <%= f.fields_for :notes do |note_field|%>
-            <% if (note_field.object.new_record? && policy(note_field.object).create?) || policy(note_field.object).edit? %>
+            <% if (note_field.object.new_record? && policy([current_user_role_group, note_field.object]).create?) || policy([current_user_role_group, note_field.object]).edit? %>
               <div class="form-group">
                 <%= note_field.label :comments %>
                 <%= note_field.text_area :note, autofocus: true, class: "form-control" %>

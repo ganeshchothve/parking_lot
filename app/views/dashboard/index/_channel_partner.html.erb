@@ -24,7 +24,7 @@
           </div>
           <div class="mt-5"></div>
           <div class="form-group text-center">
-            <% if UserPolicy.new(current_user, User.new(role: 'user')).new? %>
+            <% if Admin::UserPolicy.new(current_user, User.new(role: 'user')).new? %>
               <%= link_to "Add #{User.in(referenced_manager_ids: current_user.id).in(role: User.buyer_roles(current_client)).present? ? '' : " your First"} Customer", new_admin_user_path, class: 'modal-remote-form-link btn btn-primary' %>
             <% end %>
           </div>

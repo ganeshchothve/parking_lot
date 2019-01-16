@@ -4,7 +4,7 @@
   </li>
 <% end %>
 
-<% if Buyer::ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: current_user, status: "available")).hold? %>
+<% if policy([:buyer, ProjectUnit.new(user: current_user, status: "available")]).hold? %>
   <li class="nav-item">
     <%= active_link_to "Apartment Selector", new_search_path, active: :inclusive, class: "nav-link" %>
   </li>
@@ -16,15 +16,15 @@
   </li>
 <% end %>
 
-<% if Buyer::UserRequestPolicy.new(current_user, UserRequest).index? %>
+<% if policy([:buyer, UserRequest]).index? %>
   <li class="nav-item">
     <%= active_link_to t('global.user_requests'), buyer_user_requests_path(@user, request_type: "all"), active: :inclusive, class: "nav-link" %>
   </li>
 <% end %>
 
-<% if UserKycPolicy.new(current_user, UserKyc).index? %>
+<% if policy([:buyer, UserKyc]).index? %>
   <li class="nav-item">
-    <%= active_link_to t('global.user_kycs'), user_user_kycs_path, active: :inclusive, class: "nav-link" %>
+    <%= active_link_to t('global.user_kycs'), buyer_user_kycs_path, active: :inclusive, class: "nav-link" %>
   </li>
 <% end %>
 
@@ -64,8 +64,8 @@
       <%= icon "far", "user-circle", class: "text-muted fa-2x" %>
     </a>
     <div class="dropdown-menu dropdown-menu-right">
-      <%= link_to "Profile", edit_admin_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
-      <%= link_to "Change Password", update_password_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
+      <%= link_to "Profile", edit_buyer_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
+      <%= link_to "Change Password", update_password_buyer_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
       <%= link_to "Sign out", destroy_session_path(current_user), class: "dropdown-item", method: :delete %>
     </div>
   </div>
@@ -80,13 +80,13 @@
 <% end %>
 
 <li class="nav-item d-lg-none">
-  <%= link_to "Profile", edit_admin_user_path(current_user), class: "nav-link modal-remote-form-link" %>
+  <%= link_to "Profile", edit_buyer_user_path(current_user), class: "nav-link modal-remote-form-link" %>
 </li>
 
 <hr/>
 
 <li class="nav-item d-lg-none">
-  <%= link_to "Change Password", update_password_user_path(current_user), class: "nav-link modal-remote-form-link" %>
+  <%= link_to "Change Password", update_password_buyer_user_path(current_user), class: "nav-link modal-remote-form-link" %>
 </li>
 
 <%= bottom_navigation('d-lg-none') %>

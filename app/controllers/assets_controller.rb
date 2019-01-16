@@ -38,12 +38,12 @@ class AssetsController < ApplicationController
   end
 
   def authorize_resource
-    authorize @assetable, :show?
+    authorize [current_user_role_group, @assetable], :show?
     if params[:action] == "index"
     elsif params[:action] == "new" || params[:action] == "create"
-      authorize Asset.new(assetable: @assetable)
+      authorize [current_user_role_group, Asset.new(assetable: @assetable)]
     else
-      authorize @asset
+      authorize [current_user_role_group, @asset]
     end
   end
 

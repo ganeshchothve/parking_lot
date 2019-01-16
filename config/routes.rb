@@ -34,7 +34,9 @@ Rails.application.routes.draw do
   resources :channel_partners, except: [:destroy] do
     get 'export', action: 'export', on: :collection, as: :export
   end
+
   namespace :admin do
+
     resources :emails, :smses, only: %i[index show]
     resource :client, except: [:show, :new, :create] do
       resources :templates, only: [:edit, :update, :index]
@@ -58,13 +60,17 @@ Rails.application.routes.draw do
     end
 
     resources :users do
-      get :resend_confirmation_instructions, action: 'resend_confirmation_instructions', as: :resend_confirmation_instructions, on: :member
-      match 'update_password', on: :member, via: [:get, :patch], action: "update_password", as: :update_password
-      get :resend_password_instructions, action: 'resend_password_instructions', as: :resend_password_instructions, on: :member
+      member do
+        get :resend_confirmation_instructions
+        get :update_password
+        get :resend_password_instructions
+        get :print
+      end
+      collection do
+        get '/new/:role', action: 'new', as: :new_by_role
+        get :export
+      end
       match :confirm_via_otp, action: 'confirm_via_otp', as: :confirm_via_otp, on: :member, via: [:get, :patch]
-      get '/new/:role', action: 'new', on: :collection, as: :new_by_role
-      get 'export', action: 'export', on: :collection, as: :export
-      get 'print', action: 'print', on: :member, as: :print
 
       resources :receipts, only: [:index, :new, :create, :edit, :update ] do
         get :resend_success, on: :member
@@ -94,9 +100,6 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :projects, except: [:destroy] do
-      resources :schemes, except: [:destroy], controller: 'schemes'
-    end
     resources :user_kycs, only: [:index], controller: 'user_kycs'
     scope ":request_type" do
       resources :user_requests, except: [:destroy], controller: 'user_requests' do
@@ -129,7 +132,6 @@ Rails.application.routes.draw do
     get 'terms-and-conditions', to: 'dashboard#terms_and_condition', as: :dashboard_terms_and_condition
     get "gamify-unit-selection", to: "dashboard#gamify_unit_selection"
     resource :user do
-      match 'update_password', via: [:get, :patch], action: "update_password", as: :update_password, controller: 'admin/users'
       resources :searches, except: [:destroy], controller: 'searches' do
         get :"3d", on: :collection, action: "three_d", as: "three_d"
         post :hold, on: :member
@@ -146,8 +148,14 @@ Rails.application.routes.draw do
   end
 
   namespace :buyer do
+    resources :users, only: [:show, :update, :edit] do
+      member do
+        get :update_password
+      end
+    end
     resources :receipts, only: [:index, :new, :create, :show ]
     resources :emails, :smses, only: %i[index show]
+    resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
     scope ":request_type" do
       resources :user_requests, except: [:destroy], controller: 'user_requests'
     end
@@ -159,8 +167,4 @@ Rails.application.routes.draw do
 
   match '/sell_do/lead_created', to: "api/sell_do/leads#lead_created", via: [:get, :post]
   match '/sell_do/pushed_to_sales', to: "api/sell_do/leads#pushed_to_sales", via: [:get, :post]
-
-  namespace :buyer do
-    resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
-  end
 end

@@ -20,7 +20,7 @@ class Buyer::UserRequestPolicy < UserRequestPolicy
     if record.status == 'pending' && user.buyer?
       attributes += %i[receipt_id user_id]
       attributes += [:project_unit_id] if record.new_record?
-      attributes += [notes_attributes: NotePolicy.new(user, Note.new).permitted_attributes]
+      attributes += [notes_attributes: Buyer::NotePolicy.new(user, Note.new).permitted_attributes]
     end
     attributes
   end
