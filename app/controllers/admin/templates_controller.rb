@@ -19,7 +19,7 @@ class Admin::TemplatesController < AdminController
   end
 
   def update
-    @template.assign_attributes(permitted_attributes(@template))
+    @template.assign_attributes(permitted_attributes([:admin, @template]))
     respond_to do |format|
       if @template.save
         format.html { redirect_to admin_client_templates_path, notice: 'Template was successfully updated.' }

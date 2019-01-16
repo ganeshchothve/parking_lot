@@ -56,7 +56,7 @@ class Admin::ProjectUnitsController < AdminController
   # PATCH /admin/project_units/:id
   #
   def update
-    parameters = permitted_attributes(@project_unit)
+    parameters = permitted_attributes([:admin, @project_unit])
     respond_to do |format|
       if @project_unit.update(parameters)
         format.html { redirect_to admin_project_units_path, notice: 'Unit successfully updated.' }

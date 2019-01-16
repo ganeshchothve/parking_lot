@@ -8,11 +8,10 @@ class Admin::ClientsController < AdminController
   end
 
   def show
-
   end
 
   def update
-    @client.assign_attributes(permitted_attributes(@client))
+    @client.assign_attributes(permitted_attributes([:admin, @client]))
     respond_to do |format|
       if @client.save
         format.html { redirect_to admin_clients_path, notice: 'Client successfully updated.' }
@@ -25,11 +24,12 @@ class Admin::ClientsController < AdminController
   end
 
   private
+
   def set_client
     @client = current_client
   end
 
   def authorize_resource
-    authorize @client
+    authorize [:admin, @client]
   end
 end

@@ -302,3 +302,17 @@ en:
         complained: 'Complained'
         unsubscribed: 'Unsubscribed'
         untracked: 'Untracked'
+  users:
+    role:
+      superadmin: 'Superadmin'
+      admin: 'Administrator'
+      crm: 'CRM User'
+      sales_admin: 'Sales Head'
+      sales: 'Sales User'
+      user: 'Customer'
+      gre: 'GRE or Pre-sales'
+      cp_admin: 'Channel Partner Head'
+      cp: 'Channel Partner Manager'
+      channel_partner: 'Channel Partner'
+      management_user: 'Management User'
+      employee_user: 'Employee'

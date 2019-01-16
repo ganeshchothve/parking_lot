@@ -1,10 +1,24 @@
-class Admin::UsersController < ApplicationController
+class Admin::UsersController < AdminController
+  include UsersConcern
   before_action :authenticate_user!
   before_action :set_user, except: %i[index export new create]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: %i[index export]
 
   layout :set_layout
+
+  # Show
+  # show defined in UsersConcern
+  # GET /admin/users/:id
+
+  # Edit
+  # edit defined in UsersConcern
+  # GET /admin/users/:id/edit
+
+  # Update Password
+  # update password defined in UsersConcern
+  # GET /admin/users/:id/update_password
+
 
   def index
     @users = User.build_criteria params
@@ -13,10 +27,6 @@ class Admin::UsersController < ApplicationController
     else
       @users = @users.paginate(page: params[:page] || 1, per_page: 15)
     end
-  end
-
-  def update_password
-    render layout: false
   end
 
   def resend_confirmation_instructions
@@ -57,18 +67,9 @@ class Admin::UsersController < ApplicationController
 
   def print; end
 
-  def show
-    @project_units = @user.project_units.paginate(page: params[:page] || 1, per_page: 15)
-    @receipts = @user.receipts.where("$or": [{ status: 'pending', payment_mode: { '$ne' => 'online' } }, { status: { '$ne' => 'pending' } }]).paginate(page: params[:page] || 1, per_page: 15)
-  end
-
   def new
     @user = User.new(booking_portal_client_id: current_client.id)
     @user.role = params[:role].blank? ? 'user' : params[:role]
-    render layout: false
-  end
-
-  def edit
     render layout: false
   end
 

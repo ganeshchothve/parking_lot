@@ -15,8 +15,8 @@
       <% receipts.each do |receipt| %>
       <tr>
         <td>
-          <% if UserPolicy.new(current_user, receipt.user).show? %>
-            <%= link_to receipt.user.name, admin_user_path(receipt.user_id) %>
+          <% if policy([current_user_role_group, receipt.user]).show? %>
+            <%= link_to receipt.user.name, [current_user_role_group, receipt.user] %>
           <% else %>
             <%= receipt.user.name %>
           <% end %>
