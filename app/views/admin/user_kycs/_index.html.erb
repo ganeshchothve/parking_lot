@@ -16,7 +16,7 @@
       <tr>
         <td><%= user_kyc.name %></td>
         <td>
-          <% if UserPolicy.new(current_user, user_kyc.user).show? %>
+          <% if policy([:admin, User.new]).show? %>
             <%= link_to user_kyc.user.name, admin_user_path(user_kyc.user_id) %>
           <% else %>
             <%= user_kyc.user.name %>
