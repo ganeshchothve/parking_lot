@@ -146,13 +146,12 @@ Rails.application.routes.draw do
     resources :searches, except: [:destroy], controller: 'searches'
   end
 
-  scope :buyer do
-    get ":id/edit", to: "admin/users#edit", as: :edit_buyer
-    patch ":id", to: "admin/users#update", as: :update_buyer
-    match ":id/update_password", via: [:get, :patch], action: "update_password", as: :buyer_update_password, controller: 'admin/users'
-  end
-
   namespace :buyer do
+    resources :users, only: [:show, :update, :edit] do
+      member do
+        get :update_password
+      end
+    end
     resources :receipts, only: [:index, :new, :create, :show ]
     resources :emails, :smses, only: %i[index show]
     resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'

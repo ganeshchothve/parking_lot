@@ -20,7 +20,7 @@ class Buyer::ProjectUnits::ReceiptsController < BuyerController
   # POST /admin/users/:user_id/project_units/:project_unit_id/receipts
   def create
     @receipt = Receipt.new(user: current_user, creator: current_user, project_unit_id: @project_unit.id, payment_gateway: current_client.payment_gateway)
-    @receipt.assign_attributes(permitted_attributes(@receipt))
+    @receipt.assign_attributes(permitted_attributes([:buyer, @receipt]))
 
     authorize([:buyer, @receipt])
 

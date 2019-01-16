@@ -32,7 +32,7 @@ class Buyer::ProjectUnitsController < BuyerController
   # PATCH /buyer/project_units/:id"
   #
   def update
-    parameters = permitted_attributes(@project_unit)
+    parameters = permitted_attributes([:buyer, @project_unit])
     respond_to do |format|
       if @project_unit.update(parameters)
         format.html { redirect_to dashboard_path, notice: 'Unit successfully updated.' }
