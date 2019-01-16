@@ -65,7 +65,7 @@ class UserKyc
   validates :configurations, array: {inclusion: {allow_blank: true, in: Proc.new{ |kyc| UserKyc.available_configurations.collect{|x| x[:id]} } }}
   validates :preferred_floors, array: {inclusion: {allow_blank: true, in: Proc.new{ |kyc| UserKyc.available_preferred_floors.collect{|x| x[:id]} } }}
   validate :min_max_budget
-  validates :pan_number, format: {with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A'}, allow_blank: true
+  validates :pan_number, format: {with: /[A-Z]{3}[ABCGFHLJPTE][A-Z][0-9]{4}[A-Z]/i, message: 'is not in a format of AAAAA9999A'}
   validates :aadhaar, format: {with: /\A\d{12}\z/i, message: 'is not a valid aadhaar number'}, allow_blank: true
   validates :company_name, :gstn, presence: true, if: Proc.new{|kyc| kyc.is_company?}
   validates :poa_details, presence: true, if: Proc.new{|kyc| kyc.poa?}

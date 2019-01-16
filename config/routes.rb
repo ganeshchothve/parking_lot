@@ -36,9 +36,6 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
-    get ":id/edit", to: "users#edit", as: :edit
-    patch ":id", to: "users#update", as: :update
-    match ":id/update_password", via: [:get, :patch], action: "update_password", as: :update_password, controller: 'users'
 
     resources :emails, :smses, only: %i[index show]
     resource :client, except: [:show, :new, :create] do
@@ -63,13 +60,17 @@ Rails.application.routes.draw do
     end
 
     resources :users do
-      get :resend_confirmation_instructions, action: 'resend_confirmation_instructions', as: :resend_confirmation_instructions, on: :member
-      match 'update_password', on: :member, via: [:get, :patch], action: "update_password", as: :update_password
-      get :resend_password_instructions, action: 'resend_password_instructions', as: :resend_password_instructions, on: :member
+      member do
+        get :resend_confirmation_instructions
+        get :update_password
+        get :resend_password_instructions
+        get :print
+      end
+      collection do
+        get '/new/:role', action: 'new', as: :new_by_role
+        get :export
+      end
       match :confirm_via_otp, action: 'confirm_via_otp', as: :confirm_via_otp, on: :member, via: [:get, :patch]
-      get '/new/:role', action: 'new', on: :collection, as: :new_by_role
-      get 'export', action: 'export', on: :collection, as: :export
-      get 'print', action: 'print', on: :member, as: :print
 
       resources :receipts, only: [:index, :new, :create, :edit, :update ] do
         get :resend_success, on: :member
