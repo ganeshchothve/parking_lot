@@ -118,7 +118,7 @@ class ProjectUnit
 
   def calculated_parameters
     out = {}
-    data.each{|c| out[c.key] = c.value }
+    parameters.each{|c| out[c.key] = c.value }
     out.with_indifferent_access
   end
 
