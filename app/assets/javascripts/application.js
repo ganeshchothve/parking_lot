@@ -24,6 +24,7 @@
 //= require jquery.fileupload
 //= require jquery.blockUI.js
 //= require selectize
+//= require selectize_infinite_scroll
 //= require plugins/array_field
 //= require plugins/file_uploader
 //= require daterangepicker

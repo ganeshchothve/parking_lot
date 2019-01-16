@@ -160,7 +160,7 @@ class User
       {id: 'user', text: 'Customer'},
       {id: 'gre', text: 'GRE or Pre-sales'}
     ]
-    if current_client.enable_channel_partners?
+    if current_client.try(:enable_channel_partners?)
       roles += [
         {id: 'cp_admin', text: 'Channel Partner Head'},
         {id: 'cp', text: 'Channel Partner Manager'},

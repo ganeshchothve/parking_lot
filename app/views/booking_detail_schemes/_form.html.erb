@@ -5,6 +5,7 @@
 <%= f.hidden_field :booking_detail_id %>
 <%= f.hidden_field :project_unit_id %>
 <%= f.hidden_field :user_id %>
+
 <div class="non-editable-payment-adjustments">
   <% booking_detail_scheme.non_editable_payment_adjustments.each do |payment_adjustment| %>
   <div class="row">
@@ -23,12 +24,12 @@
   </div>
   <% end %>
 </div>
-<% editable_payment_adjustment = policy(booking_detail_scheme).editable_field?("payment_adjustments_attributes")%>
+<% editable_payment_adjustment = policy(booking_detail_scheme).editable_field?("payment_adjustments_attributes") %>
 <% if editable_payment_adjustment %>
   <%= f.link_to_add "Add", :payment_adjustments, :data => { :target => ".payment-adjustments" } %>
 <% end %>
 <div class="payment-adjustments">
-  <%= f.fields_for :payment_adjustments, booking_detail_scheme.editable_payment_adjustments do |adj|%>
+  <%= f.fields_for :payment_adjustments, booking_detail_scheme.editable_payment_adjustments do |adj| %>
     <% if editable_payment_adjustment %>
       <%= adj.link_to_remove icon("far", "times-circle") %>
     <% end %>
@@ -53,10 +54,10 @@
       <p class="small text-muted">Total Adjustment will be calculated as Rs. (saleable) * (scheme mentioned here)</p>
     </div>
     <div class="form-group">
-      <%= adj.label :formula, class: 'label-required' %>
-      <%= adj.text_field :formula, class: "form-control", disabled: !editable_payment_adjustment %>
-      <p class="small text-muted">Total Adjustment will be calculated as Rs. (saleable) * (scheme mentioned here)</p>
-    </div>
+      <%#= adj.label :formula, class: 'label-required' %>
+      <%#= adj.text_field :formula, class: "form-control", disabled: !editable_payment_adjustment %>
+      <!-- <p class="small text-muted">Total Adjustment will be calculated as Rs. (saleable) * (scheme mentioned here)</p>
+    --> </div>
   <% end %>
 </div>
 <% if policy(booking_detail_scheme).editable_field?("event") %>

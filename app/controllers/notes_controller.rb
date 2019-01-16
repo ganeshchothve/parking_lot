@@ -11,8 +11,8 @@ class NotesController < ApplicationController
 
   def create
     @note = Note.new(notable: @notable, creator: current_user)
-    @note.assign_attributes(permitted_attributes(Note.new))
-    authorize @note
+    @note.assign_attributes(permitted_attributes([current_user_role_group, Note.new]))
+    authorize [current_user_role_group, @note]
     respond_to do |format|
       if @note.save
         format.json { render json: @note, status: :created }
@@ -28,12 +28,12 @@ class NotesController < ApplicationController
   end
 
   def authorize_resource
-    authorize @notable, :show?
+    authorize [current_user_role_group, @notable], :show?
     if params[:action] == "index"
     elsif params[:action] == "new" || params[:action] == "create"
-      authorize Note.new(notable: @notable)
+      authorize [current_user_role_group, Note.new(notable: @notable)]
     else
-      authorize @note
+      authorize [current_user_role_group, @note]
     end
   end
 

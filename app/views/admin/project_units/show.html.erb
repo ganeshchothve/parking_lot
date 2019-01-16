@@ -19,11 +19,7 @@
             <%= form_tag admin_project_unit_path(@project_unit), method: "get", id: "project_unit_scheme_preview_form" do %>
               <div class="form-group">
                 <%= label_tag :scheme_id, "Scheme", class: "control-label" %>
-                <%
-                  schemes = @project_unit.permitted_schemes(current_user)
-                  default_scheme_id = schemes.where(default: true).first.id
-                %>
-                <%= select_tag :selected_scheme_id, options_for_select(schemes.collect{|scheme| [scheme.name, scheme.id]}, (params[:scheme_id].present? ? params[:scheme_id] : default_scheme_id)), {class: 'selectize', required: 'required', autofocus: true} %>
+                <%= select_tag :selected_scheme_id, options_for_select(@project_unit.permitted_schemes(current_user).collect{|scheme| [scheme.name, scheme.id]}, ( params[:scheme_id].present? ? params[:scheme_id] : @project_unit.scheme.try(:id) )), {class: 'selectize', required: 'required', autofocus: true} %>
               </div>
               <div class="form-group">
                 <%= submit_tag :Apply, class: "btn btn-primary" %>

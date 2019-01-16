@@ -51,6 +51,7 @@ en:
     otp: "OTP"
     schemes: "Schemes"
     scheme: "Scheme"
+    audit: "Audit Logs"
   mongoid:
     attributes:
       asset:
@@ -275,3 +276,43 @@ en:
         state: 'State / Region'
         country: 'Country'
         zip: 'Zip / Pin Code'
+  controller:
+    only_administrator_users: 'Only administrator users are allowed.'
+    only_buyer_users: 'Only Buyer users are allowed.'
+  smses:
+    status:
+      received: 'Received'
+      untracked: 'Untracked'
+      scheduled: 'Scheduled'
+      sent: 'Sent'
+      failed: 'Failed'
+    emails:
+      status:
+        draft: 'Draft'
+        scheduled: 'Scheduled'
+        queued: 'Queued'
+        sent: 'Sent'
+        delivered: 'Delivered'
+        read: 'Read'
+        unread: 'Unread'
+        clicked: 'Clicked'
+        bounced: 'Bounced'
+        dropped: 'Dropped'
+        spam: 'Spam'
+        complained: 'Complained'
+        unsubscribed: 'Unsubscribed'
+        untracked: 'Untracked'
+  users:
+    role:
+      superadmin: 'Superadmin'
+      admin: 'Administrator'
+      crm: 'CRM User'
+      sales_admin: 'Sales Head'
+      sales: 'Sales User'
+      user: 'Customer'
+      gre: 'GRE or Pre-sales'
+      cp_admin: 'Channel Partner Head'
+      cp: 'Channel Partner Manager'
+      channel_partner: 'Channel Partner'
+      management_user: 'Management User'
+      employee_user: 'Employee'

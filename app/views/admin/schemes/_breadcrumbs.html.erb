@@ -4,11 +4,8 @@
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="<%= home_path(current_user) %>">Dashboard</a></li>
       <% if scheme.present? %>
-        <% if SchemePolicy.new(current_user, Scheme).index? %>
+        <% if policy([:admin, Scheme]).index? %>
           <li class="breadcrumb-item"><a href="<%= admin_schemes_path %>">Schemes</a></li>
-        <% end %>
-        <% if SchemePolicy.new(current_user, scheme).show? %>
-          <li class="breadcrumb-item"><a href="<%= admin_scheme_path(scheme) %>"><%= scheme.name %></a></li>
         <% end %>
       <% end %>
     </ol>

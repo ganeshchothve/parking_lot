@@ -1,5 +1,4 @@
-class Admin::TemplatesController < ApplicationController
-  before_action :authenticate_user!
+class Admin::TemplatesController < AdminController
   before_action :set_template, except: [:index]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: [:index]
@@ -8,15 +7,10 @@ class Admin::TemplatesController < ApplicationController
 
   def index
     @templates = Template.build_criteria params
-    @templates = @templates.paginate(page: params[:page] || 1, per_page: 15)
+    @templates = @templates.paginate(page: params[:page] || 1, per_page: params[:per_page])
     respond_to do |format|
-      if params[:ds].to_s == 'true'
-        format.json { render json: @templates.collect{|d| {id: d.id, name: d.name}} }
-        format.html {}
-      else
-        format.json { render json: @templates }
-        format.html {}
-      end
+      format.json { render json: @templates }
+      format.html {}
     end
   end
 
@@ -25,7 +19,7 @@ class Admin::TemplatesController < ApplicationController
   end
 
   def update
-    @template.assign_attributes(permitted_attributes(@template))
+    @template.assign_attributes(permitted_attributes([:admin, @template]))
     respond_to do |format|
       if @template.save
         format.html { redirect_to admin_client_templates_path, notice: 'Template was successfully updated.' }

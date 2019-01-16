@@ -12,7 +12,7 @@
       <% user_requests.each do |user_request| %>
       <tr>
         <td>
-          <% if UserPolicy.new(current_user, user_request.user).show? %>
+          <% if Admin::UserPolicy.new(current_user, user_request.user).show? %>
             <%= link_to user_request.user.name, admin_user_path(user_request.user_id) %>
           <% else %>
             <%= user_request.user.name %>
@@ -39,18 +39,16 @@
           <div class="dropdown">
             <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
             <div class="dropdown-menu dropdown-menu-right">
-              <% if AssetPolicy.new(current_user, Asset.new(assetable: user_request)).index? %>
+              <% if policy([ current_user_role_group, Asset.new(assetable: user_request)]).index? %>
                 <%= link_to 'Documents', assetables_path(assetable_type: user_request.class.model_name.i18n_key.to_s, assetable_id: user_request.id), class: 'dropdown-item modal-remote-form-link' %>
               <% end %>
-              <% if UserRequestPolicy.new(current_user, user_request).edit? %>
-              <%
-                if current_user.buyer?
-                  url = edit_user_user_request_path(user_request, request_type: user_request.class.model_name.element)
-                else
-                  url = edit_admin_user_request_path(user_request, request_type: user_request.class.model_name.element)
-                end
-              %>
-              <%= link_to 'Edit', url, class: 'modal-remote-form-link dropdown-item' %>
+              <% unless (user_request.status == "resolved" || user_request.status == "rejected") %>
+                <% if Buyer::UserRequestPolicy.new(current_user, user_request).edit? && current_user.buyer? %>
+                  <% url = edit_buyer_user_request_path(user_request, request_type: user_request.class.model_name.element) %>
+                <% elsif Admin::UserRequestPolicy.new(current_user, user_request).edit? %>
+                  <% url = edit_admin_user_request_path(user_request, request_type: user_request.class.model_name.element) %>
+                <% end %>
+                <%= link_to 'Edit', url, class: 'modal-remote-form-link dropdown-item' %>
               <% end %>
             </div>
           </div>

@@ -1,0 +1,35 @@
+<div class="card h-100">
+  <div class="card-body">
+    <%= form_tag url, method: "get", id: "sms_search_form" do %>
+      <div class="form-group">
+        <%= label_tag "", 'Filters', class: "control-label d-block d-lg-inline" %>
+        <%= submit_tag :Apply, class: "btn btn-primary btn-sm float-lg-right" %>
+      </div>
+      <div class="clearfix"></div>
+      <hr />
+      <% unless current_user.buyer? %>
+        <div class="form-group">
+          <%= label_tag "fltrs[to]", "To", class: "control-label" %>
+          <%= select_tag "fltrs[to]", options_for_select(policy_scope([:admin, Sms]).pluck(:to).flatten.uniq.each {|x| x}, (params[:fltrs].present? ? params[:fltrs][:to] : "")), {prompt: "Select Contact Number", class: "selectize"} %>
+        </div>
+      <% end %>
+      <div class="form-group">
+        <%= label_tag "fltrs[status]", "Status", class: "control-label" %>
+        <%= select_tag "fltrs[status]", options_for_select(Sms.allowed_statuses.pluck(:id).each {|x| x}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select Status", class: "selectize"} %>
+      </div>
+      <div class="form-group">
+        <%= label_tag "fltrs", "Sent on", class: "control-label" %>
+        <%= text_field_tag "fltrs[sent_on]", (params[:fltrs].present? ? params[:fltrs][:sent_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"} %>
+      </div>
+      <div class="form-group">
+        <%= label_tag "fltrs", "Body", class: "control-label" %>
+        <%= text_field_tag "fltrs[body]", (params[:fltrs].present? ? params[:fltrs][:body] : ""), {prompt: "Enter Content", class: 'form-control' } %>
+      </div>
+    <% end %>
+    <script>
+      $(document).ready(function(){
+        FormInitializer.init($("#sms_search_form"));
+      });
+    </script>
+  </div>
+</div>

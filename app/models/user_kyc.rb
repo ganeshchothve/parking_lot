@@ -65,7 +65,7 @@ class UserKyc
   validates :configurations, array: {inclusion: {allow_blank: true, in: Proc.new{ |kyc| UserKyc.available_configurations.collect{|x| x[:id]} } }}
   validates :preferred_floors, array: {inclusion: {allow_blank: true, in: Proc.new{ |kyc| UserKyc.available_preferred_floors.collect{|x| x[:id]} } }}
   validate :min_max_budget
-  validates :pan_number, format: {with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A'}, allow_blank: true
+  validates :pan_number, format: {with: /[A-Z]{3}[ABCGFHLJPTE][A-Z][0-9]{4}[A-Z]/i, message: 'is not in a format of AAAAA9999A'}
   validates :aadhaar, format: {with: /\A\d{12}\z/i, message: 'is not a valid aadhaar number'}, allow_blank: true
   validates :company_name, :gstn, presence: true, if: Proc.new{|kyc| kyc.is_company?}
   validates :poa_details, presence: true, if: Proc.new{|kyc| kyc.poa?}
@@ -74,63 +74,8 @@ class UserKyc
 
   default_scope -> {desc(:created_at)}
 
-  def self.available_salutations
-    [
-      {id: "Mr.", text: 'Mr.'},
-      {id: "Mrs.", text: 'Mrs.'},
-      {id: "Ms.", text: 'Ms.'},
-      {id: "Brig.", text: 'Brig.'},
-      {id: "Captain", text: 'Captain'},
-      {id: "Col", text: 'Col'},
-      {id: "Dr.", text: 'Dr.'},
-      {id: "Maharaj", text: 'Maharaj'},
-      {id: "Prof.", text: 'Prof.'}
-    ]
-  end
-
   def name
     "#{UserKyc.available_salutations.find{|x| x[:id] == salutation}[:text] rescue '' } #{first_name} #{last_name}"
-  end
-
-  def self.available_configurations
-    [
-      {text:'1 BHK', id: '1'},
-      {text:'1.5 BHK', id: '1.5'},
-      {text: '2 BHK', id: '2'},
-      {text:'2.5 BHK', id: '2.5'},
-      {text:'3 BHK', id:'3'},
-      {text:'3.5 BHK', id: '3.5'},
-      {text:'4 BHK', id:'4'},
-      {text:'4.5 BHK', id: '4.5'},
-      {text:'5 BHK', id:'5'},
-      {text:'5.5 BHK', id: '5.5'},
-      {text:'6 BHK', id:'6'},
-      {text:'7 BHK', id:'7'}
-    ]
-  end
-
-  def self.available_preferred_floors
-    (1..ProjectTower.max(:total_floors)).to_a.collect{|x| {id: x.to_s, text: x.to_s}}
-  end
-
-  def self.user_based_scope(user, params={})
-    custom_scope = {}
-    if params[:user_id].blank? && !user.buyer?
-      if user.role?('channel_partner')
-        custom_scope = {user_id: {"$in": User.where(referenced_manager_ids: user.id).distinct(:id)}}
-      elsif user.role?('cp_admin')
-        custom_scope = {user_id: {"$in": User.where(role: "user").where(manager_id: {"$nin": [nil, ""]}).distinct(:id)}}
-      elsif user.role?('cp')
-        channel_partner_ids = User.where(role: "channel_partner").where(manager_id: user.id).distinct(:id)
-        custom_scope = {user_id: {"$in": User.in(referenced_manager_ids: channel_partner_ids).distinct(:id)}}
-      end
-    end
-
-    custom_scope = {user_id: params[:user_id]} if params[:user_id].present?
-    custom_scope = {user_id: user.id} if user.buyer?
-
-    custom_scope[:project_unit_id] = params[:project_unit_id] if params[:project_unit_id].present?
-    custom_scope
   end
 
   def api_json
@@ -163,6 +108,67 @@ class UserKyc
       gender: nil,
       coapplicant_type: coapplicant_type
     }
+  end
+
+  class << self
+    def available_salutations
+      [
+        {id: "Mr.", text: 'Mr.'},
+        {id: "Mrs.", text: 'Mrs.'},
+        {id: "Ms.", text: 'Ms.'},
+        {id: "Brig.", text: 'Brig.'},
+        {id: "Captain", text: 'Captain'},
+        {id: "Col", text: 'Col'},
+        {id: "Dr.", text: 'Dr.'},
+        {id: "Maharaj", text: 'Maharaj'},
+        {id: "Prof.", text: 'Prof.'}
+      ]
+    end
+
+    def available_configurations
+      [
+        {text:'1 BHK', id: '1'},
+        {text:'1.5 BHK', id: '1.5'},
+        {text: '2 BHK', id: '2'},
+        {text:'2.5 BHK', id: '2.5'},
+        {text:'3 BHK', id:'3'},
+        {text:'3.5 BHK', id: '3.5'},
+        {text:'4 BHK', id:'4'},
+        {text:'4.5 BHK', id: '4.5'},
+        {text:'5 BHK', id:'5'},
+        {text:'5.5 BHK', id: '5.5'},
+        {text:'6 BHK', id:'6'},
+        {text:'7 BHK', id:'7'}
+      ]
+    end
+
+    def available_preferred_floors
+      if ProjectTower.count > 0
+        (1..ProjectTower.max(:total_floors)).to_a.collect{|x| {id: x.to_s, text: x.to_s}}
+      else
+        (1..1).to_a.collect{|x| {id: x.to_s, text: x.to_s}}
+      end
+    end
+
+    def user_based_scope(user, params={})
+      custom_scope = {}
+      if params[:user_id].blank? && !user.buyer?
+        if user.role?('channel_partner')
+          custom_scope = {user_id: {"$in": User.where(referenced_manager_ids: user.id).distinct(:id)}}
+        elsif user.role?('cp_admin')
+          custom_scope = {user_id: {"$in": User.where(role: "user").where(manager_id: {"$nin": [nil, ""]}).distinct(:id)}}
+        elsif user.role?('cp')
+          channel_partner_ids = User.where(role: "channel_partner").where(manager_id: user.id).distinct(:id)
+          custom_scope = {user_id: {"$in": User.in(referenced_manager_ids: channel_partner_ids).distinct(:id)}}
+        end
+      end
+
+      custom_scope = {user_id: params[:user_id]} if params[:user_id].present?
+      custom_scope = {user_id: user.id} if user.buyer?
+
+      custom_scope[:project_unit_id] = params[:project_unit_id] if params[:project_unit_id].present?
+      custom_scope
+    end
   end
 
   private

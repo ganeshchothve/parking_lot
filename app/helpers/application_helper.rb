@@ -80,7 +80,7 @@ module ApplicationHelper
         #{link_to('Edit ' + global_labels['client'], edit_admin_client_path, class: 'small nav-link modal-remote-form-link')}
       </li>"
     end
-    if user_signed_in? && current_client.gallery.present? && AssetPolicy.new(current_user, Asset.new(assetable: current_client.gallery)).index? && current_user.role?("superadmin")
+    if user_signed_in? && current_client.gallery.present? && policy([current_user_role_group, Asset.new(assetable: current_client.gallery)]).index? && current_user.role?("superadmin")
       html += "<li class='nav-item #{classes}'>
         #{link_to('Edit ' + global_labels[:gallery], assetables_path(assetable_type: current_client.gallery.class.model_name.i18n_key.to_s, assetable_id: current_client.gallery.id), class: 'small nav-link modal-remote-form-link')}
       </li>"
@@ -90,11 +90,15 @@ module ApplicationHelper
         #{link_to('Manage ' + global_labels['templates'], admin_client_templates_path, class: 'small nav-link')}
       </li>"
     end
-    if user_signed_in? && AssetPolicy.new(current_user, Asset.new(assetable: current_client)).index? && current_user.role?("superadmin")
+    if user_signed_in? && policy([current_user_role_group, Asset.new(assetable: current_client)]).index? && current_user.role?("superadmin")
       html += "<li class='nav-item #{classes}'>
         #{link_to('Client ' + global_labels[:assets], assetables_path(assetable_type: current_client.class.model_name.i18n_key.to_s, assetable_id: current_client.id), class: 'small nav-link modal-remote-form-link')}
       </li>"
     end
     html.html_safe
+  end
+
+  def current_user_role_group
+    current_user.buyer? ? :buyer : :admin
   end
 end

@@ -1,0 +1,22 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="<%= @sms.blank? ? 'col-md-9' : 'col-md-12' %>">
+      <%= render 'breadcrumbs', {sms: @sms} %>
+      <div class="card">
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-md-7"></div>
+            <div class="col-md-5 text-md-right">
+              <h6 class="mt-2">Total Sms : <%= @smses.total_entries %></h6>
+            </div>
+          </div>
+          <%= render 'index', {smses: @smses} %>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="d-md-none mt-3"></div>
+      <%= render 'filters', url: admin_smses_path %>
+    </div>
+  </div>
+</div>

@@ -80,7 +80,6 @@ gem 'phonelib'
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
 gem 'bootstrap-email'
-gem 'premailer'
 
 # TODO: run this command on server before deployment on a new server
 # TO GET TOKEN: curl -u 'username' -d '{"scopes":["repo"],"note": "Audit app by Sell.Do"}' https://api.github.com/authorizations
@@ -103,11 +102,21 @@ group :development, :test do
   gem 'pry-doc'
   # parallelize your tests for faster testing
   gem 'parallel_tests'
-  # generate fake values using faker
-  gem 'faker'
-  # generate test objects using factory_bot
-  gem "factory_bot_rails"
+
   gem "premailer"
+end
+
+group :test do
+  gem 'faker'
+  gem 'rspec-rails'
+  gem 'mongoid-rspec'
+  gem 'shoulda', '~> 3.5'
+  gem 'shoulda-matchers', '3.1.2'
+  gem "factory_bot_rails"
+
+  gem 'rspec-sidekiq'
+  gem 'database_cleaner'
+  gem 'simplecov', require: false
 end
 
 group :development do

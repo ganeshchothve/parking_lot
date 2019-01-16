@@ -1,0 +1,31 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class='col-9'>
+      <%#= render 'breadcrumbs', {user: @user, project_unit: @project_unit} %>
+      <% if current_client.cancellation_amount > 0 %>
+        <div class="alert alert-danger">
+          Refund Payments will be subject to cancellation charges
+        </div>
+      <% end %>
+      <div class="card">
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-md-7">
+              <% if policy([:buyer, Receipt.new(user: current_user)]).new? %>
+                <% units_for_payments = current_user.project_units.in(status: ["blocked", 'booked_tentative']).all %>
+              <% end %>
+            </div>
+            <div class="col-md-5 text-md-right">
+              <h6 class="mt-2">Total <%= global_labels[:receipts] %>: <%= @receipts.total_entries %></h6>
+            </div>
+          </div>
+          <%= render 'receipts/index', {receipts: @receipts} %>
+        </div>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="d-md-none mt-3"></div>
+      <%= render "receipts/filters", url: buyer_receipts_path %>
+    </div>
+  </div>
+</div>

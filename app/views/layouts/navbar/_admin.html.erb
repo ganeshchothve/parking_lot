@@ -1,0 +1,115 @@
+<% if policy(:dashboard).index? %>
+  <li class="nav-item">
+    <%= active_link_to "Dashboard", dashboard_path, active: :exclusive, class: "nav-link" %>
+  </li>
+<% end %>
+
+<% if policy([:admin, ProjectUnit]).index? %>
+  <li class="nav-item">
+    <%= active_link_to t('global.project_units'), admin_project_units_path, active: :exclusive, class: "nav-link" %>
+  </li>
+<% end %>
+
+<% if policy([:admin, User]).index? %>
+  <li class="nav-item">
+    <%= active_link_to t('global.users'), admin_users_path, active: :inclusive, class: "nav-link" %>
+  </li>
+<% end %>
+
+<% if policy([:admin, ChannelPartner]).index? %>
+  <li class="nav-item">
+    <%= active_link_to t('global.channel_partners'), channel_partners_path, active: :inclusive, class: "nav-link" %>
+  </li>
+<% end %>
+
+<% if policy([:admin, UserRequest]).index? %>
+  <li class="nav-item">
+    <%= active_link_to t('global.user_requests'), admin_user_requests_path(request_type: "all"), active: :inclusive, class: "nav-link" %>
+  </li>
+<% end %>
+
+<% if policy([:admin, UserKyc]).index? %>
+  <li class="nav-item">
+    <%= active_link_to t('global.user_kycs'), admin_user_kycs_path, active: :inclusive, class: "nav-link" %>
+  </li>
+<% end %>
+
+<% if policy([:admin, Receipt]).index? %>
+  <li class="nav-item">
+    <%= active_link_to t('global.receipts'), admin_receipts_path, active: :inclusive, class: "nav-link" %>
+  </li>
+<% end %>
+
+<% links = [] %>
+
+<% if CustomPolicy.custom_methods.present? %>
+  <% CustomPolicy.custom_methods.each do |method| %>
+    <% if policy(:custom).send("#{method}?") %>
+        <% links << {method: method.to_s.titleize, link: eval("custom_#{method}_path")} %>
+      </li>
+    <% end %>
+  <% end %>
+<% end %>
+
+<% if policy([:admin, Scheme]).index? %>
+  <li class="nav-item">
+    <%= active_link_to t('global.schemes'), admin_schemes_path, active: :inclusive, class: "nav-link" %>
+  </li>
+<% end %>
+
+<% if links.present? %>
+  <li class="nav-item d-none d-lg-block">
+    <div class="dropdown">
+      <a href="javascript:;" class="nav-link dropdown-toggle" data-toggle="dropdown"><%= t('global.custom') %></a>
+      <div class="dropdown-menu dropdown-menu-right">
+        <% links.each do |link| %>
+          <%= link_to link[:method], link[:link], class: "dropdown-item" %>
+        <% end %>
+      </div>
+    </div>
+  </li>
+<% end %>
+
+<li class="nav-item d-none d-lg-block" style="margin-top:-5px;">
+  <div class="dropdown">
+    <a href="javascript:;" class="nav-link dropdown-toggle" data-toggle="dropdown">
+      <%= icon "far", "user-circle", class: "text-muted fa-2x" %>
+    </a>
+    <div class="dropdown-menu dropdown-menu-right">
+      <%= link_to "Profile", edit_admin_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
+      <%= link_to "Change Password", update_password_admin_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
+      <%= link_to "Sign out", destroy_session_path(current_user), class: "dropdown-item", method: :delete %>
+    </div>
+  </div>
+</li>
+
+<% if links.present? %>
+  <% links.each do |link| %>
+    <li class="nav-item d-lg-none">
+      <%= link_to link[:method], link[:link], class: "nav-link" %>
+    </li>
+  <% end %>
+<% end %>
+
+<li class="nav-item d-lg-none">
+  <%= link_to "Profile", edit_admin_user_path(current_user), class: "nav-link modal-remote-form-link" %>
+</li>
+
+<hr/>
+
+<li class="nav-item d-lg-none">
+  <%= link_to "Change Password", update_password_admin_user_path(current_user), class: "nav-link modal-remote-form-link" %>
+</li>
+
+<%= bottom_navigation('d-lg-none') %>
+
+<li class="nav-item d-lg-none">
+  <%= link_to "Sign out", destroy_session_path(current_user), class: "nav-link", method: :delete %>
+</li>
+
+<hr/>
+
+<li class='nav-item d-lg-none'>
+  <%= link_to 'Powered by Amura', 'https://www.amuratech.com', class: 'small nav-link', target: "_blank" %>
+  <div class="d-md-none mt-3"></div>
+</li>

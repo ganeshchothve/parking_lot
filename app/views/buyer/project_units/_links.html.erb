@@ -1,0 +1,26 @@
+<% if policy([:buyer, project_unit]).show? %>
+  <%= link_to "View Details", buyer_project_unit_path(project_unit), class: 'dropdown-item' %>
+<% end %>
+<% if policy([:buyer, project_unit]).edit? %>
+  <%= link_to "Edit", edit_buyer_project_unit_path(project_unit), class: 'dropdown-item modal-remote-form-link' %>
+<% end %>
+<!-- #TODO: add admin and buyer for policy and change paths user can have feature to view all receipts for a particular project unit and view scheme details -->
+<% if ProjectUnit.booking_stages.include?(project_unit.status) %>
+  <% if policy(Receipt).index? %>
+    <%= link_to "View #{global_labels[:receipts]}", admin_user_project_unit_receipts_path(project_unit.user, project_unit), class: 'dropdown-item' %>
+  <% end %>
+  <% if ProjectUnit.booking_stages.include?(project_unit.status) %>
+    <% if policy(project_unit.scheme).edit? %>
+      <%= link_to "View #{global_labels[:scheme]}", admin_user_booking_detail_booking_detail_scheme_path(project_unit.user_id, project_unit.booking_detail, project_unit.scheme.id), class: 'dropdown-item modal-remote-form-link' %>
+    <% end %>
+  <% end %>
+<% end %>
+<% UserRequest.descendants.each do |klass| %>
+  <% if policy([:buyer, klass.new(user_id: project_unit.user_id, project_unit_id: project_unit.id)]).new? && current_user.buyer? %>
+    <% url = new_buyer_user_request_path(project_unit_id: project_unit.id, request_type: klass.model_name.element)
+    %>
+    <a href="<%= url %>" class="dropdown-item modal-remote-form-link">
+      <%= global_labels["user_request_#{klass.model_name.element}"] %>
+    </a>
+  <% end %>
+<% end %>

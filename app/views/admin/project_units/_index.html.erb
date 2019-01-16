@@ -30,51 +30,7 @@
           <div class="dropdown">
             <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
             <div class="dropdown-menu dropdown-menu-right">
-              <% if !current_user.buyer? && policy(Receipt.new(user: @user, project_unit: project_unit)).new? %>
-                <%= link_to "Add #{global_labels['receipt']}", new_admin_user_receipt_path(@user, project_unit_id: project_unit), class: 'dropdown-item modal-remote-form-link' %>
-              <% end %>
-              <% if policy(project_unit).show? %>
-                <%= link_to "View Details", admin_project_unit_path(project_unit), class: 'dropdown-item' %>
-              <% end %>
-              <% if policy(project_unit).edit? %>
-                <%= link_to "Edit", edit_admin_project_unit_path(project_unit), class: 'dropdown-item modal-remote-form-link' %>
-              <% end %>
-              <% if policy(project_unit).print? %>
-                <%= link_to "Print Cost Sheet & Payment Schedule", print_admin_project_unit_path(project_unit), class: 'dropdown-item', target: "_blank" %>
-              <% end %>
-              <% if project_unit.pending_booking_detail_scheme.present? && policy(project_unit.pending_booking_detail_scheme).edit? %>
-                <%= link_to "Update scheme and discount", edit_admin_user_booking_detail_booking_detail_scheme_path(project_unit.user_id, project_unit.booking_detail, project_unit.pending_booking_detail_scheme.id), class: 'dropdown-item modal-remote-form-link' %>
-              <% elsif policy(BookingDetailScheme.new(project_unit_id: project_unit.id)).new? %>
-                <%= link_to "Update scheme and discount", new_admin_user_booking_detail_booking_detail_scheme_path(project_unit.user_id, project_unit.booking_detail), class: 'dropdown-item modal-remote-form-link' %>
-              <% end %>
-
-              <% if ProjectUnit.booking_stages.include?(project_unit.status) %>
-                <% if policy(Receipt).index? %>
-                  <%= link_to "View #{global_labels[:receipts]}", admin_user_project_unit_receipts_path(project_unit.user, project_unit), class: 'dropdown-item' %>
-                <% end %>
-                <% if policy(User).index? %>
-                  <%= link_to "View Customer", admin_user_path(project_unit.user), class: 'dropdown-item' %>
-                <% end %>
-                <% if ProjectUnit.booking_stages.include?(project_unit.status) %>
-                  <% if policy(project_unit.scheme).edit? %>
-                    <%= link_to "View #{global_labels[:scheme]}", admin_user_booking_detail_booking_detail_scheme_path(project_unit.user_id, project_unit.booking_detail, project_unit.scheme.id), class: 'dropdown-item modal-remote-form-link' %>
-                  <% end %>
-                <% end %>
-              <% end %>
-              <% UserRequest.descendants.each do |klass| %>
-                <% if policy(klass.new(user_id: project_unit.user_id, project_unit_id: project_unit.id)).new? %>
-                  <%
-                    if current_user.buyer?
-                      url = new_user_user_request_path(project_unit_id: project_unit.id, request_type: klass.model_name.element)
-                    else
-                      url = new_admin_user_user_request_path(user_id: project_unit.user_id, project_unit_id: project_unit.id, request_type: klass.model_name.element)
-                    end
-                  %>
-                  <a href="<%= url %>" class="dropdown-item modal-remote-form-link">
-                    <%= global_labels["user_request_#{klass.model_name.element}"] %>
-                  </a>
-                <% end %>
-              <% end %>
+              <%= render "#{current_user_role_group}/project_units/links", project_unit: project_unit %>
             </div>
           </div>
         </td>

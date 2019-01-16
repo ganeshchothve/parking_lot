@@ -8,12 +8,12 @@
       </div>
       <% end %>
       <% unless current_user.buyer? %>
-        <% unless ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? %>
+        <% unless policy([ current_user_role_group, Receipt.new(user: @user)]).new? %>
           <% if @user.present? %>
             <div class="alert alert-primary mt-3">
               <% if @user.confirmed? %>
               You might need to complete the user's KYC before you can take payments.
-              <% if UserKycPolicy.new(current_user, UserKyc.new(user: @user)).new? %>
+              <% if Admin::UserKycPolicy.new(current_user, UserKyc.new(user: @user)).new? %>
                 <%= link_to "Add #{global_labels['user_kyc_details']}", new_admin_user_user_kyc_path(@user), class: "modal-remote-form-link" %>
               <% end %>
               <% else %>
@@ -27,7 +27,7 @@
         <div class="card-body">
           <div class="row mb-3">
             <div class="col-md-7">
-              <% if ReceiptPolicy.new(current_user, Receipt.new(user: @user)).new? %>
+              <% if policy([ current_user_role_group, Receipt.new(user: @user) ]).new? %>
               <% units_for_payments = @user.project_units.in(status: ["blocked", 'booked_tentative']).all %>
               <% if units_for_payments.present? %>
               <% unless current_user.buyer? %>
@@ -50,11 +50,12 @@
                   new_admin_user_receipt_path(@user)
                 end
               %>
-              <% if !current_user.buyer? && ReceiptPolicy.new(current_user, Receipt.new(user: @user)).direct? %>
+              <% if policy( [ :admin, Receipt.new(user: @user) ]).direct? %>
                 <%= link_to "Make Direct #{global_labels['receipt']}", url_for_new_receipt, class: 'btn btn-primary modal-remote-form-link' %>
               <% end %>
               <% end %>
-              <% if ReceiptPolicy.new(current_user, Receipt).export? && @receipt.blank? %>
+
+              <% if policy( current_user_role_group, Receipt ]).export? && @receipt.blank? %>
                 <div class="dropdown">
                   <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
                   <div class="dropdown-menu dropdown-menu-right">

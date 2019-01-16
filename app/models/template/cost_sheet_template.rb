@@ -44,15 +44,15 @@ class Template::CostSheetTemplate < Template
         <% end %>
         <tr class='text-white bg-primary'>
           <td>Agreement Value (Rs.)</td>
-          <td class='text-right'><%= number_to_indian_currency(self.agreement_price) %></td>
+          <td class='text-right'><%= number_to_indian_currency(self.calculate_agreement_price) %></td>
         </tr>
         <tr class='text-white bg-primary'>
           <td>All inclusive Value (Rs.)</td>
-          <td class='text-right'><%= number_to_indian_currency(all_inclusive_price) %></td>
+          <td class='text-right'><%= number_to_indian_currency(self.calculate_all_inclusive_price) %></td>
         </tr>
         <tr>
           <td>Less: 6% of the Agreement Value as Input Tax Credit  (ITC)  against Goods & Service Tax (GST)</td>
-          <td class='text-right'><%= number_to_indian_currency((self.agreement_price * 0.06).round(2)) %></td>
+          <td class='text-right'><%= number_to_indian_currency((self.calculate_agreement_price * 0.06).round(2)) %></td>
         </tr>
         <tr>
           <td colspan='2' class='small'>The above payment schedule is valid for <%= booking_portal_client.blocking_days %> days from the date of issue</td>

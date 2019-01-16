@@ -1,0 +1,28 @@
+<div class="table-responsive" remote= "true">
+  <table class='table striped-table payment-breakup' width="100%" cellpadding="10" cellspacing="0">
+    <thead class="th-default">
+      <tr>
+        <th>Field name</th>
+        <th>Old value</th>
+        <th>New value</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% if audit_entries.present? %>
+      <% audit_entries.each do |entry|%>
+        <tr>
+          <td>
+            <%= entry.field_name%>
+          </td>
+          <td>
+            <%= entry.old_value%>
+          </td>
+          <td>
+            <%= entry.new_value%>
+          </td>
+        </tr>
+      <% end %> 
+    <% end %>
+    </tbody>
+  </table>
+</div>

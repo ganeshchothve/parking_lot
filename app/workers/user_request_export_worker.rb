@@ -22,31 +22,27 @@ class UserRequestExportWorker
 
   def self.get_column_names
     [
+      "Sell.do lead id",
+      "User name",
       "Request Date",
-      "Status",
+      "Type",
       "Unit ID (Used for VLOOKUP)",
-      "Unit Name",
-      "Amount Paid",
-      "User ID (Used for VLOOKUP)",
-      "Client Name",
-      "Client Phone",
-      "Client Email",
-      "Comments",
+      "Status",
+      "Processed On",
+      "Resolved by",
     ]
   end
 
   def self.get_user_request_row(user_request)
     [
-      user_request.created_at,
-      user_request.status,
-      user_request.project_unit_id,
-      user_request.project_unit.name,
-      user_request.project_unit.receipts.where(status:"success").sum(&:total_amount),
-      user_request.user_id,
+      user_request.user.lead_id,
       user_request.user.name,
-      user_request.user.phone,
-      user_request.user.email,
-      user_request.notes.collect{|note|  note.note + " - " + note.creator.name}.join("\n")
+      user_request.created_at.strftime('%Y-%m-%d T %l:%M:%S'),
+      user_request._type.split('::')[1],
+      user_request.project_unit.name,
+      user_request.status,
+      user_request.resolved_at.try(:strftime, '%Y-%m-%d T %l:%M:%S') || '-',
+      user_request.resolved_by.try(:name) || '-'
     ]
   end
 end

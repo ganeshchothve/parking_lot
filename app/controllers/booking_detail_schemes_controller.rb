@@ -9,15 +9,10 @@ class BookingDetailSchemesController < ApplicationController
 
   def index
     @schemes = BookingDetailScheme.build_criteria params
-    @schemes = @schemes.paginate(page: params[:page] || 1, per_page: 15)
+    @schemes = @schemes.paginate(page: params[:page] || 1, per_page: params[:per_page])
     respond_to do |format|
-      if params[:ds].to_s == 'true'
-        format.json { render json: @schemes.collect{|d| {id: d.id, name: d.name}} }
-        format.html {}
-      else
-        format.json { render json: @schemes }
-        format.html {}
-      end
+      format.json { render json: @schemes }
+      format.html {}
     end
   end
 

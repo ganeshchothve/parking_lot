@@ -1,0 +1,38 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-9">
+      <%#= render 'breadcrumbs', { user: @user, project_unit: @project_unit } %>
+      <% if current_client.cancellation_amount > 0 %>
+        <div class="alert alert-danger">
+          Refund Payments will be subject to cancellation charges
+        </div>
+      <% end %>
+      <div class="card">
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-9">
+              <% if policy([:admin, Receipt]).export? && @receipt.blank? %>
+                <div class="dropdown float-left mr-2">
+                  <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <%= link_to "All #{t('global.receipts')}", export_admin_receipts_path, class: 'dropdown-item' %>
+                    <%= link_to "Active filter #{t('global.receipts')}", export_admin_receipts_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+
+            <div class="col-3 text-md-right">
+              <h6 class="mt-2">Total <%= t('global.receipts') %>: <%= @receipts.total_entries %></h6>
+            </div>
+          </div>
+          <%= render 'receipts/index', {receipts: @receipts} %>
+        </div>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="d-md-none mt-3"></div>
+      <%= render "receipts/filters", url: admin_receipts_path %>
+    </div>
+  </div>
+</div>

@@ -24,7 +24,7 @@ module DatabaseSeeds
           <div class="card-body">
             This unit will remain blocked for you for the next <%= self.blocking_days %> days. Please complete your payment of remaining amount within this duration to confirm your unit. To make additional payment please click <a href=<%= Rails.application.routes.url_helpers.dashboard_url %> target="_blank">here</a>.
             <br/><br/>
-            Your KYC details are incomplete, to complete your registration you can update them <a href="<%= Rails.application.routes.url_helpers.user_user_kycs_url %>">here</a>.<br/><br/>
+            Your KYC details are incomplete, to complete your registration you can update them <a href="<%= Rails.application.routes.url_helpers.buyer_user_kycs_url %>">here</a>.<br/><br/>
             Welcome once again and do share with us your views and feedback.
           </div>
         </div>') if ::Template::EmailTemplate.where(name: "project_unit_blocked").blank?
@@ -50,7 +50,7 @@ module DatabaseSeeds
               This unit will remain blocked for you until <%= I18n.l(self.auto_release_on) %>. Please complete your payment of remaining amount within this duration to confirm your unit. To make additional payment please click <a href="<%= Rails.application.routes.url_helpers.dashboard_url %>">here</a>.
               <% end %>
               <br/><br/>
-              In case your KYC details are incomplete, you can update them <a href="<%= Rails.application.routes.url_helpers.user_user_kycs_url %>">here</a>.<br/><br/>
+              In case your KYC details are incomplete, you can update them <a href="<%= Rails.application.routes.url_helpers.buyer_user_kycs_url %>">here</a>.<br/><br/>
             </div>
           </div>') if ::Template::EmailTemplate.where(name: "project_unit_booked_tentative").blank?
 
@@ -103,7 +103,8 @@ module DatabaseSeeds
               You have booked your spot among the privileged few in <%= name %> at <%= project_name %>. <br/>
               Kindly pay the remaining balance to complete the booking process. The due date is <%= I18n.l(auto_release_on) %>.
               <br/><br/>
-              Visit <%= user.dashboard_url %>.
+              Visit 
+              <a href=<%= user.dashboard_url %> target="_blank"><%= user.dashboard_url %></a>.
             </p>
           </div>
         </div>') if ::Template::EmailTemplate.where(name: "daily_reminder_for_booking_payment").blank?
