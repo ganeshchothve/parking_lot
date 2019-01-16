@@ -2,8 +2,6 @@
   i_agree_required = current_client.disclaimer.present? && @receipt.new_record?
 %>
 
-
-
 <div class="alert alert-primary">
   The <%= t('mongoid.attributes.receipt.receipt_id') %> will be generated only after successful processing of payment.
 </div>
@@ -62,15 +60,16 @@
   <div class="col-md-6">
     <% if current_client.enable_actual_inventory?(current_user) %>
       <div class="form-group">
-        <% if @receipt.project_unit_id.present? %>
+        <% unless( (defined? direct_payment) && direct_payment ) %>
           <%= f.label :project_unit_id, class: 'control-label' %>
-          <div><%= f.object.project_unit.name %></div>
-          <%= f.hidden_field :project_unit_id %>
-        <% elsif policy([:admin, @receipt]).editable_field?("project_unit_id") %>
-          <%= f.label :project_unit_id, class: 'control-label' %>
-          <% user_units = @receipt.user.project_units.ne(status: 'hold') %>
+
+          <% if @receipt.project_unit_id.present? %>
+            <% user_units = [f.object.project_unit] %>
+          <% elsif policy([:admin, @receipt]).editable_field?("project_unit_id") %>
+            <% user_units = @receipt.user.project_units.ne(status: 'hold') %>
+          <% end %>
           <% if user_units.present? %>
-          <%= f.select :project_unit_id, user_units.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize' %>
+            <%= f.select :project_unit_id, user_units.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', required: true %>
           <% end %>
         <% end %>
       </div>
