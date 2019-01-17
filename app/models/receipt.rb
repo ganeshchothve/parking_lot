@@ -70,6 +70,7 @@ class Receipt
       {id: 'cheque', text: 'Cheque'},
       {id: 'rtgs', text: 'RTGS'},
       {id: 'imps', text: 'IMPS'},
+      {id: 'card_swipe', text: 'Card Swipe' },
       {id: 'neft', text: 'NEFT'}
     ]
   end
