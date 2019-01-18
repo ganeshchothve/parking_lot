@@ -9,6 +9,7 @@ capybara-*.html
 /public/assets/*
 /public/uploads/*
 /coverage/
+/config/deploy/*
 /spec/tmp
 **.orig
 rerun.txt

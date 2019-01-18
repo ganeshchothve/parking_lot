@@ -113,7 +113,7 @@ group :test do
   gem 'shoulda', '~> 3.5'
   gem 'shoulda-matchers', '3.1.2'
   gem "factory_bot_rails"
-
+  gem 'rails-controller-testing'
   gem 'rspec-sidekiq'
   gem 'database_cleaner'
   gem 'simplecov', require: false
