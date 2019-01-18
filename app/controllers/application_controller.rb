@@ -56,14 +56,6 @@ class ApplicationController < ActionController::Base
   def after_successful_token_authentication
   end
 
-  def user_not_authorized
-    flash[:alert] = "You are not authorized to perform this action."
-    respond_to do |format|
-      format.html { redirect_to user_signed_in? ? after_sign_in_path_for(current_user) : root_path }
-      format.json { render json: {error: "You are not authorized to access this page"}, status: 403 }
-    end
-  end
-
   def set_request_store
     if user_signed_in?
       hash = {
