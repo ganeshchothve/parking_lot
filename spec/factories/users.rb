@@ -2,6 +2,7 @@ FactoryBot.define  do
   factory :user do
     first_name { Faker::Name.first_name }
     phone { Faker::Number.number(10) }
+    confirmed_at DateTime.now
 
     after(:build) do |user|
       user.booking_portal_client = Client.first if user.booking_portal_client_id.blank?
