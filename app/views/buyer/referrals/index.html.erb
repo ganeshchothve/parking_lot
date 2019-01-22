@@ -1,0 +1,28 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-8">
+              <span class="ml-2 pull-left">
+                <%= t('referrals.code') %> : <%= get_referral_code %>
+              </span>
+              <% if policy([:buyer, :referral]).new? %>
+                <%= link_to t('referrals.new.link_name'), '#', class: 'btn btn-primary modal-remote-form-link pull-left ml-2 btn-sm', data:{ event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
+              <% end %>
+            </div>
+            <div class="col-4 text-right">
+              <span>
+                <%= "#{t('global.total')} #{t('referrals.name')}" %>: <%= @referrals.total_entries %>
+              </span>
+            </div>
+          </div>
+          <div class="row mt-2">
+            <%= render "buyer/users/index", users: @referrals %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
