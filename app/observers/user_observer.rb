@@ -7,7 +7,7 @@ class UserObserver < Mongoid::Observer
     if user.role?("user") && user.email.present?
       email = user.email
       client = user.booking_portal_client
-      if client.email_domains.include?(email.split("@")[1]) && current_client.enable_company_users?
+      if current_client.email_domains.include?(email.split("@")[1]) && current_client.enable_company_users?
         user.role = "employee_user"
       end
     end

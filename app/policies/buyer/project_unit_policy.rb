@@ -14,7 +14,7 @@ class Buyer::ProjectUnitPolicy < ProjectUnitPolicy
   end
 
   def hold?
-    valid = record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?(user)
+    valid = record.user.confirmed? && record.user.kyc_ready? #&& current_client.enable_actual_inventory?(user)
     if !valid
       @condition = "user_confirmation"
       return
