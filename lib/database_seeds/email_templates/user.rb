@@ -10,6 +10,21 @@ module DatabaseSeeds
             </p>
           </div>
         </div>') if ::Template::EmailTemplate.where(name: "user_manager_changed").blank?
+
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: "referral_invitation", subject: "Invitation", content: '<div class="card w-100">
+          <div class="card-body">
+            <p>Dear <%= name %>,</p>
+            <p>
+              I would like to invite you in <%= self.booking_portal_client.booking_portal_domains.join(", ") %>.
+              Please click on the below
+               <%= ActionController::Base.helpers.link_to "link", Rails.application.routes.url_helpers.register_path(custom_referral_code: self.referred_by.referral_code) %> to registror.
+            </p>
+            <p>
+              Thanks & Regards </br>
+              <%= self.referred_by.name %>
+            </p>
+          </div>
+        </div>') if ::Template::EmailTemplate.where(name: "referral_invitation").blank?
       end
     end
   end

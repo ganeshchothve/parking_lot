@@ -1,0 +1,5 @@
+<% if @user.valid? %>
+  $('.usere-referral-code').html('<%= get_referral_code.html_safe %>');
+<% else %>
+  Amura.global_error_handler( @user.errors.as_json )
+<% end %>

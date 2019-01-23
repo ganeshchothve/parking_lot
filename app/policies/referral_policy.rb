@@ -1,5 +1,6 @@
 # Referal record is User's object.
-class ReferralPolicy < Struct.new(:user, :referal)
+class ReferralPolicy < ApplicationPolicy
+
   def index?
     user.buyer?
   end
@@ -11,10 +12,12 @@ class ReferralPolicy < Struct.new(:user, :referal)
   def new?
     index?
   end
-end
 
-class Admin::ReferralPolicy < ReferralPolicy
-end
+  def generate_code?
+    index?
+  end
 
-class Buyer::ReferralPolicy < ReferralPolicy
+  def permitted_attributes(_params = {})
+    %i[first_name last_name email phone]
+  end
 end

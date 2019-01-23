@@ -262,6 +262,15 @@ class User
     "#{name} - #{email} - #{phone}"
   end
 
+  def generate_referral_code
+    if self.buyer? && self.referral_code.blank?
+      self.referral_code = "#{self.booking_portal_client.name[0..1].upcase}-#{SecureRandom.hex(4)}"
+    else
+      self.referral_code
+    end
+  end
+
+
   def dashboard_url
     url = Rails.application.routes.url_helpers
     host = Rails.application.config.action_mailer.default_url_options[:host]

@@ -1,21 +1,53 @@
 class Buyer::ReferralsController < BuyerController
-
-  before_action :authorize_resource
+  before_action :set_user
 
   def index
-    @referrals = current_user.referrals.paginate(page: params[:page], per_page: 15)
+    authorize [:buyer, Referral]
+    @referrals = @user.referrals.paginate(page: params[:page], per_page: 15)
   end
 
   def new
-
+    @referral = Referral.new(referred_by: current_user)
+    authorize [:buyer, @referral]
+    render layout: false
   end
 
   def create
+    referral_user = User.where(email: params.dig(:referral, :email))[0]
+    respond_to do |format|
+      if referral_user.blank?
+        @referral = Referral.new(referred_by: current_user, booking_portal_client: current_client)
+        authorize [:buyer, @referral]
+        @referral.assign_attributes(permitted_attributes([:buyer, @referral]))
+        if @referral.save
+          flash[:notice] = "Invitation sent successfully."
+        else
+          flash[:error] = "#{@referral.errors.full_messages.join(',')}"
+        end
+      else
+        flash[:error] = "#{referral_user.email} is already present."
+      end
+      format.html{ redirect_to buyer_referrals_path }
+    end
+  end
+
+  def generate_code
+    authorize [:buyer, Referral.new]
+    @user.generate_referral_code
+    respond_to do |format|
+      if @user.save
+        format.json { render json: @user, status: :created }
+        format.js
+      else
+        format.json { render json: {errors: @user.errors.full_messages.uniq}, status: :unprocessable_entity }
+        format.js
+      end
+    end
   end
 
   private
 
-  def authorize_resource
-    authorize [:buyer, :referral], "#{action_name}?"
+  def set_user
+    @user = current_user
   end
 end

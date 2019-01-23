@@ -1,0 +1,48 @@
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"> <%= t('referrals.new.link_name') %></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <%= form_for [:buyer, @referral], local: true, remote: true, html: { class: 'modal-remote-form validate-form', data: { 'resource-type': t('global.receipt'), type: :json }, id: "referral_form" } do |f| %>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <%= f.label :first_name, class: 'label-required' %>
+                <%= f.text_field :first_name, class: 'form-control', autofocus: true, required: true %>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <%= f.label :last_name, class: 'label-required' %>
+                <%= f.text_field :last_name, class: 'form-control', autofocus: true, required: true %>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :email, class: 'label-required' %>
+            <%= f.email_field :email, class: "form-field form-control", required: 'required' %>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :phone, class: 'label-required' %>
+            <%= f.text_field :phone, class: 'form-control phone', required: true %>
+          </div>
+
+          <%= f.submit t('referrals.new.link_name'), class: 'btn btn-primary nav-btn' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<%= javascript_tag do %>
+    FormInitializer.init($('#referral_form'));
+  });
+<% end %>
