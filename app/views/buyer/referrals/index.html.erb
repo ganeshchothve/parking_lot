@@ -5,17 +5,16 @@
         <div class="card-body">
           <div class="row">
             <div class="col-8">
-              <span class="ml-2">
-                <span class="float-left mr-2"> <%= t('referrals.code') %> : </span>
-                <span class="usere-referral-code col-3 p-0 float-left"><%= get_referral_code %></span>
-              </span>
               <span class="invite-friend-link"><%= invite_friend_link %></span>
             </div>
             <div class="col-4 text-right">
-              <span>
-                <%= "#{t('global.total')} #{t('referrals.name')}" %>: <%= @referrals.total_entries %>
-              </span>
+              <%= "#{t('global.total')} #{t('referrals.name')}" %>: <%= @referrals.total_entries %>
             </div>
+          </div>
+          <div class="mb-3 mt-3">
+            <label><%= t('referrals.code') %></label>
+            <br/>
+            <%= get_referral_code %>
           </div>
           <div class="row mt-2">
             <%= render "buyer/users/index", users: @referrals %>
