@@ -17,7 +17,7 @@ module DatabaseSeeds
             <p>
               I would like to invite you in <%= self.booking_portal_client.booking_portal_domains.join(", ") %>.
               Please click on the
-               <%= ActionController::Base.helpers.link_to "link", Rails.application.routes.url_helpers.register_path(custom_referral_code: self.referred_by.referral_code) %> to registror or use <span class="badge badge-info"> <%= self.referred_by.referral_code %> </span> code while sign up.
+               <%= ActionController::Base.helpers.link_to "link", Rails.application.routes.url_helpers.register_url(custom_referral_code: self.referred_by.referral_code) %> to registror or use <span class="badge badge-info"> <%= self.referred_by.referral_code %> </span> code while sign up.
             </p>
             </br>
             </br>

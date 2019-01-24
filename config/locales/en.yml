@@ -325,9 +325,9 @@ en:
       management_user: 'Management User'
       employee_user: 'Employee'
   referrals:
-    name: 'Referance'
+    name: 'Referrals'
     code: 'Referral Code'
-    link_name: 'Referance'
+    link_name: 'Referrals'
     new:
       link_name: 'Invite Friend'
     generate_code:
