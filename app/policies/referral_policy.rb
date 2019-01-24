@@ -2,7 +2,7 @@
 class ReferralPolicy < ApplicationPolicy
 
   def index?
-    user.buyer?
+    user.booking_portal_client.enable_referral_bonus && user.buyer?
   end
 
   def create?

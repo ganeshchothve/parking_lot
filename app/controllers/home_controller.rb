@@ -47,7 +47,9 @@ class HomeController < ApplicationController
           # splitted name into two firstname and lastname
           @user = User.new(booking_portal_client_id: current_client.id, email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], lead_id: params[:lead_id], mixpanel_id: params[:mixpanel_id])
 
-          @user.referred_by = User.where(referral_code: params[:referral_code])[0] if !params[:referral_code].blank?
+          if current_client.enable_referral_bonus &&  !params[:referral_code].blank?
+            @user.referred_by = User.where(referral_code: params[:referral_code])[0]
+          end
 
           if user_signed_in?
             @user.manager_id = current_user.id

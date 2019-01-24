@@ -27,7 +27,11 @@ document.addEventListener("sell_do_form_rendered", function(){
   setTimeout(function(){
     $('[name="sell_do[form][custom][portal_stage]"]').closest(".selldof_row").hide();
   }, 100);
-  $('[name="sell_do[form][custom][custom_referral_code]"]').val(params.custom_referral_code)
+  if(App.client.enable_referral_bonus){
+    $('[name="sell_do[form][custom][custom_referral_code]"]').val(params.custom_referral_code)
+  } else {
+    $('[name="sell_do[form][custom][custom_referral_code]"]').parents('.selldof_row').remove()
+  }
   if(params.first_name && params.last_name && params.phone && params.email && params.lead_id){
     $('[name="sell_do[form][lead][first_name]"]').val(params.first_name);
     $('[name="sell_do[form][lead][last_name]"]').val(params.last_name);
@@ -58,8 +62,10 @@ function register_user_with_portal(e){
     last_name: unescape(e['sell_do[form][lead][last_name]'] ? (e['sell_do[form][lead][last_name]'].replace("+", " ")) : ""),
     email: unescape(e['sell_do[form][lead][email]'] ? e['sell_do[form][lead][email]'] : ""),
     phone: unescape(e['sell_do[form][lead][phone]'] ? e['sell_do[form][lead][phone]'].replace(/\+/ig, "") : ""),
-    mixpanel_id: unescape(e['sell_do[campaign][mixpanel_id]'] ? e['sell_do[campaign][mixpanel_id]'] : ""),
-    referral_code: unescape(e['sell_do[form][custom][custom_referral_code]'] ? e['sell_do[form][custom][custom_referral_code]'] : '')
+    mixpanel_id: unescape(e['sell_do[campaign][mixpanel_id]'] ? e['sell_do[campaign][mixpanel_id]'] : "")
+  }
+  if(App.client.enable_referral_bonus){
+    data.referral_code = unescape(e['sell_do[form][custom][custom_referral_code]'] ? e['sell_do[form][custom][custom_referral_code]'] : '')
   }
   $.ajax({
     url: '<%= url.check_and_register_path %>',
