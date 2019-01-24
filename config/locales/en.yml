@@ -9,6 +9,8 @@ en:
     formats:
       default: "%d/%m/%Y %I:%M %p"
   global:
+    action: 'Action'
+    total: 'Total'
     sign_in_h1: "Welcome back"
     sign_in_h2: "Login to Book an Apartment online"
     register_h1: "Sign Up"
@@ -280,29 +282,35 @@ en:
     only_administrator_users: 'Only administrator users are allowed.'
     only_buyer_users: 'Only Buyer users are allowed.'
   smses:
+    link_name: "SMS"
     status:
       received: 'Received'
       untracked: 'Untracked'
       scheduled: 'Scheduled'
       sent: 'Sent'
       failed: 'Failed'
-    emails:
-      status:
-        draft: 'Draft'
-        scheduled: 'Scheduled'
-        queued: 'Queued'
-        sent: 'Sent'
-        delivered: 'Delivered'
-        read: 'Read'
-        unread: 'Unread'
-        clicked: 'Clicked'
-        bounced: 'Bounced'
-        dropped: 'Dropped'
-        spam: 'Spam'
-        complained: 'Complained'
-        unsubscribed: 'Unsubscribed'
-        untracked: 'Untracked'
+  emails:
+    link_name: 'Emails'
+    status:
+      draft: 'Draft'
+      scheduled: 'Scheduled'
+      queued: 'Queued'
+      sent: 'Sent'
+      delivered: 'Delivered'
+      read: 'Read'
+      unread: 'Unread'
+      clicked: 'Clicked'
+      bounced: 'Bounced'
+      dropped: 'Dropped'
+      spam: 'Spam'
+      complained: 'Complained'
+      unsubscribed: 'Unsubscribed'
+      untracked: 'Untracked'
   users:
+    account_confirmed: 'Account Confirmed'
+    confirmed:
+      :true: 'Confirmed'
+      :false: 'Not Confirmed'
     role:
       superadmin: 'Superadmin'
       admin: 'Administrator'
@@ -316,3 +324,15 @@ en:
       channel_partner: 'Channel Partner'
       management_user: 'Management User'
       employee_user: 'Employee'
+  referrals:
+    name: 'Referance'
+    code: 'Referral Code'
+    link_name: 'Referance'
+    new:
+      link_name: 'Invite Friend'
+    generate_code:
+      link_name: 'Generate Code'
+  inventory:
+    link_name: 'Inventory'
+  audits:
+    link_name: 'Histroy'
