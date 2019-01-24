@@ -9,9 +9,7 @@
                 <span class="float-left mr-2"> <%= t('referrals.code') %> : </span>
                 <span class="usere-referral-code col-3 p-0 float-left"><%= get_referral_code %></span>
               </span>
-              <% if policy([:buyer, :referral]).new? %>
-                <%= link_to t('referrals.new.link_name'), new_buyer_referral_path, class: 'btn btn-primary modal-remote-form-link pull-left ml-2 btn-sm', data:{ event_category: 'Section', event_action: 'Click', event_name: 'Invite Friend'} %>
-              <% end %>
+              <span class="invite-friend-link"><%= invite_friend_link %></span>
             </div>
             <div class="col-4 text-right">
               <span>
