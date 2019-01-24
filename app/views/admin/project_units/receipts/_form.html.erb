@@ -8,10 +8,10 @@
 
 <div class="form-group">
   <%= f.label :payment_mode, class: 'label-required' %>
-  <%= f.select :payment_mode, Receipt.available_payment_modes.reject{|x| x[:id] == 'online'}.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true, disabled: !policy([:admin, @receipt]).editable_field?("payment_mode") %>
+  <%= f.select :payment_mode, payment_mode_options, {prompt: true}, class: 'selectize', required: 'required', autofocus: true, disabled: !policy([:admin, @receipt]).editable_field?("payment_mode") %>
 </div>
 
-<div class="row">
+<div class="row offline">
   <div class="col-md-6">
     <div class="form-group">
       <%= f.label :issuing_bank, class: 'label-required' %>
@@ -27,7 +27,7 @@
   </div>
 </div>
 
-<div class="row">
+<div class="row offline">
   <div class="col-md-6">
     <div class="form-group">
       <%= f.label :payment_identifier, class: 'label-required' %>
@@ -36,14 +36,14 @@
   </div>
 
   <div class="col-md-6">
-    <div class="form-group position-relative">
+    <div class="form-group position-relative offline">
       <%= f.label :issued_date, class: 'label-required' %>
       <%= f.text_field :issued_date, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.issued_date.present? ? f.object.issued_date.strftime("%d/%m/%Y") : '', disabled: !policy([:admin, @receipt]).editable_field?("issued_date"), value: f.object.issued_date.present? ? f.object.issued_date.strftime("%d/%m/%Y") : "" %>
     </div>
   </div>
 </div>
 
-<div class="row">
+<div class="row offline">
   <div class="col-md-6">
     <div class="form-group">
       <%= f.label :status, class: 'control-label' %>
@@ -78,7 +78,7 @@
 </div>
 
 <% if policy([:admin, @receipt]).editable_field?("tracking_id") && policy([:admin, @receipt]).editable_field?("processed_on") %>
-  <div class="row">
+  <div class="row offline">
     <div class="col-md-6">
       <div class="form-group">
         <%= f.label :tracking_id, class: 'control-label' %>
@@ -86,7 +86,7 @@
       </div>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-6 offline">
       <div class="form-group">
         <% tomorrow = Date.today+1%>
         <%= f.label :processed_on, class: 'control-label' %>

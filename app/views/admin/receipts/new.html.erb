@@ -2,16 +2,17 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title"> Direct Payment <%= t('global.receipt') %></h5>
+        <h5 class="modal-title"> Direct <%= t('global.receipt') %></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <%#= render 'admin/project_units/receipts/details', receipt: @receipt %>
-        <%= form_for [:admin, @user, @receipt], local: true, remote: true, html: {id: 'receipt_form', class: 'modal-remote-form validate-form', data: { "resource-type": t('global.receipt'), type: :json} } do |f| %>
+        <div id="offline-form" class="offline-form">
+          <%= form_for [:admin, @user, @receipt], local: true, remote: true, html: {id: 'receipt_form', class: 'modal-remote-form validate-form', data: { "resource-type": t('global.receipt'), type: :json} } do |f| %>
           <%= render 'admin/project_units/receipts/form', f: f, direct_payment: true %>
-        <% end %>
+          <% end %>
+        </div>  
       </div>
     </div>
   </div>
@@ -26,5 +27,15 @@
       }
     });
     FormInitializer.init($('#receipt_form'));
+
+    $("#receipt_payment_mode").selectize().on("change", function() {
+      if($(this).val() == 'online'){
+        $('.offline').addClass('d-none');
+        $('.offline').find('input, select').attr('disabled', 'disabled')
+      } else {
+        $('.offline').removeClass('d-none');
+        $('.offline').find('input, select').removeAttr('disabled')
+      }
+    })
   });
 <% end %>
