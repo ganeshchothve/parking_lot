@@ -119,6 +119,7 @@ FormInitializer = (function(){
         $('.offline').find('input, select').removeAttr('disabled')
       }
     })
+    $("#receipt_payment_mode").trigger('change')
   }
   var remote_delectize_data = function(el){
     var params = $(el).data("params");

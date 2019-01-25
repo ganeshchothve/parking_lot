@@ -8,7 +8,7 @@
 
 <div class="form-group">
   <%= f.label :payment_mode, class: 'label-required' %>
-  <%= f.select :payment_mode, payment_mode_options, {prompt: true, selected: 'cheque'}, class: 'selectize', required: 'required', autofocus: true, disabled: !policy([:admin, @receipt]).editable_field?("payment_mode") %>
+  <%= f.select :payment_mode, payment_mode_options, {prompt: true, selected: @receipt.payment_mode}, class: 'selectize', required: 'required', autofocus: true, disabled: !policy([:admin, @receipt]).editable_field?("payment_mode") %>
 </div>
 
 <div class="row offline">
