@@ -27,15 +27,5 @@
       }
     });
     FormInitializer.init($('#receipt_form'));
-
-    $("#receipt_payment_mode").selectize().on("change", function() {
-      if($(this).val() == 'online'){
-        $('.offline').addClass('d-none');
-        $('.offline').find('input, select').attr('disabled', 'disabled')
-      } else {
-        $('.offline').removeClass('d-none');
-        $('.offline').find('input, select').removeAttr('disabled')
-      }
-    })
   });
 <% end %>

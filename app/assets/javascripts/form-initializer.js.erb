@@ -99,7 +99,6 @@ FormInitializer = (function(){
 
   var init = function(selector){
     initializeInputs($(selector));
-
     $('[data-toggle="popover"]').popover({
       trigger: 'hover'
     });
@@ -107,8 +106,20 @@ FormInitializer = (function(){
     $(selector).on('cocoon:after-insert',function(e, field){
       initializeInputs(field);
     });
-  };
 
+    add_payment_mode_event();
+  };
+  var add_payment_mode_event = function(){
+    $("#receipt_payment_mode").selectize().on("change", function() {
+      if($(this).val() == 'online'){
+        $('.offline').addClass('d-none');
+        $('.offline').find('input, select').attr('disabled', 'disabled')
+      } else {
+        $('.offline').removeClass('d-none');
+        $('.offline').find('input, select').removeAttr('disabled')
+      }
+    })
+  }
   var remote_delectize_data = function(el){
     var params = $(el).data("params");
     params = params || {};
