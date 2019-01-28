@@ -1,0 +1,53 @@
+<div class="table-responsive">
+  <table class='table striped-table payment-breakup' width="100%" cellpadding="10" cellspacing="0">
+    <thead class="th-default">
+      <tr>
+        <th>Class</th>
+        <th>Action</th>
+        <th>Request</th>
+        <th>Response</th>
+        <th>Status</th>
+        <th>Message</th>
+        <th class="text-right">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @sync_logs.each do |sync_log| %>
+      <tr>
+          <td>
+            <%= sync_log.resource.present? ? sync_log.resource_type : '-' %>
+          </td>
+          <td>
+            <%= sync_log.action.present? ? sync_log.action : '-' %>
+          </td>
+          <td>
+            <%= sync_log.request.present? ? sync_log.request : '-' %>
+          </td>
+          <td>
+            <%= sync_log.response.present? ? sync_log.response : '-' %>
+          </td>
+          <td>
+            <%= sync_log.status.present? ? sync_log.status : '-' %>
+          </td>
+          <td>
+            <%= sync_log.message.present? ? sync_log.message : '-' %>
+          </td>
+        <td class="text-right">
+          <div class="dropdown">
+            <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <%= link_to 'Resync', current_user.buyer? ? resync_buyer_sync_log_path(sync_log): resync_admin_sync_log_path(sync_log), class: 'dropdown-item' %>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <% end %>
+      <tr>
+        <td colspan="4">
+          <div class="mt-5 pt-5"></div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<%= will_paginate @sync_logs, list_classes: %w(pagination justify-content-center) %>

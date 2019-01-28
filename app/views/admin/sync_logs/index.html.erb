@@ -1,0 +1,19 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="<%= @sync_log.blank? ? 'col-md-9' : 'col-md-12' %>">
+      <%= render 'breadcrumbs', {sync_log: @sync_log} %>
+      <div class="card">
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-md-7">
+            </div>
+            <div class="col-md-5 text-md-right">
+              <h6 class="mt-2">Total SyncLogs : <%= @sync_logs.total_entries %></h6>
+            </div>
+          </div>
+          <%= render 'index', {sync_logs: @sync_logs} %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

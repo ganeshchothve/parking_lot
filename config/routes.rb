@@ -36,7 +36,9 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
-
+    resources :sync_logs, only: %i[index] do
+      get 'resync', on: :member
+    end
     resources :emails, :smses, only: %i[index show]
     resource :client, except: [:show, :new, :create] do
       resources :templates, only: [:edit, :update, :index]
@@ -148,6 +150,9 @@ Rails.application.routes.draw do
   end
 
   namespace :buyer do
+    resources :sync_logs, only: %i[index] do
+      get 'resync', on: :member
+    end
     resources :users, only: [:show, :update, :edit] do
       member do
         get :update_password
@@ -165,6 +170,14 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :api do
+    namespace :v1 do
+      resources :users, only: [:create, :update] do
+        put 'portal_stage', on: :member
+      end
+    end
+  end
   match '/sell_do/lead_created', to: "api/sell_do/leads#lead_created", via: [:get, :post]
   match '/sell_do/pushed_to_sales', to: "api/sell_do/leads#pushed_to_sales", via: [:get, :post]
+  
 end

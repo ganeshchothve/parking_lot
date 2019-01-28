@@ -18,4 +18,10 @@ class Admin::UserKycPolicy < UserKycPolicy
   def update?
     edit?
   end
+
+  def permitted_attributes(_params = {})
+    attributes = super
+    attributes += [:erp_id] if %w[admin sales_admin].include?(user.role)
+    attributes.uniq
+  end
 end

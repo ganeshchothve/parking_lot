@@ -19,7 +19,6 @@ class Admin::UsersController < AdminController
   # update password defined in UsersConcern
   # GET /admin/users/:id/update_password
 
-
   def index
     @users = User.build_criteria params
     if params[:fltrs].present? && params[:fltrs][:_id].present?

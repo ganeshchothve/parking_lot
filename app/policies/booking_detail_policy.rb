@@ -5,6 +5,7 @@ class BookingDetailPolicy < ApplicationPolicy
   end
 
   def permitted_attributes(_params = {})
-    [:tds_doc]
+    attributes = [:tds_doc]
+    attributes += [:erp_id] if %w[admin sales_admin].include?(user.role)
   end
 end
