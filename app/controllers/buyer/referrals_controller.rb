@@ -21,11 +21,14 @@ class Buyer::ReferralsController < BuyerController
         @referral.assign_attributes(permitted_attributes([:buyer, @referral]))
         if @referral.save
           flash[:notice] = "Invitation sent successfully."
+          format.json { render json: @referral }
         else
           flash[:error] = "#{@referral.errors.full_messages.join(',')}"
+          format.json { render json: { errors: @referral.errors.full_messages }, status: 422 }
         end
       else
         flash[:error] = "#{referral_user.email} is already present."
+        format.json { render json: { errors: ["#{referral_user.email} is already present."] }, status: 422 }
       end
       format.html{ redirect_to buyer_referrals_path }
     end

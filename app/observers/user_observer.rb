@@ -2,7 +2,6 @@ class UserObserver < Mongoid::Observer
   include ApplicationHelper
 
   def before_create user
-    user.generate_referral_code if user.buyer?
     user.allowed_bookings = current_client.allowed_bookings_per_user
     user.booking_portal_client_id = current_client.id
     if user.role?("user") && user.email.present?
@@ -15,6 +14,7 @@ class UserObserver < Mongoid::Observer
   end
 
   def before_save user
+    user.generate_referral_code
     if user.phone.present?
       user.phone = Phonelib.parse(user.phone).to_s
     end

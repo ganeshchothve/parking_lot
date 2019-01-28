@@ -54,6 +54,8 @@ en:
     schemes: "Schemes"
     scheme: "Scheme"
     audit: "Audit Logs"
+    referral: 'Referral'
+    referrals: 'Referrals'
   mongoid:
     attributes:
       asset:

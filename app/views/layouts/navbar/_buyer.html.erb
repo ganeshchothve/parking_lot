@@ -75,7 +75,7 @@
 <% if links.present? %>
   <% links.each do |link| %>
     <li class="nav-item d-lg-none">
-      <%= link_to link[:name], link[:method], class: "nav-link" %>
+      <%= link_to link[:name], link[:link], class: "nav-link" %>
     </li>
   <% end %>
 <% end %>
