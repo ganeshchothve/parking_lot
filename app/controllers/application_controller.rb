@@ -12,8 +12,6 @@ class ApplicationController < ActionController::Base
   helper_method :home_path
   protect_from_forgery with: :exception, prepend: true
   layout :set_layout
-  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
-
   def after_sign_in_path_for(current_user)
     ApplicationLog.user_log(current_user.id, 'sign_in', RequestStore.store[:logging])
     dashboard_path
