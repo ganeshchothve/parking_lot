@@ -5,13 +5,13 @@ class ApplicationController < ActionController::Base
 
   acts_as_token_authentication_handler_for User, if: :token_authentication_valid_params?
 
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
   include Pundit
   include ApplicationHelper
   helper_method :home_path
   protect_from_forgery with: :exception, prepend: true
   layout :set_layout
-  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
-
   def after_sign_in_path_for(current_user)
     ApplicationLog.user_log(current_user.id, 'sign_in', RequestStore.store[:logging])
     dashboard_path
@@ -52,14 +52,6 @@ class ApplicationController < ActionController::Base
 
   private
   def after_successful_token_authentication
-  end
-
-  def user_not_authorized
-    flash[:alert] = "You are not authorized to perform this action."
-    respond_to do |format|
-      format.html { redirect_to user_signed_in? ? after_sign_in_path_for(current_user) : root_path }
-      format.json { render json: {error: "You are not authorized to access this page"}, status: 403 }
-    end
   end
 
   def set_request_store
@@ -118,5 +110,20 @@ class ApplicationController < ActionController::Base
 
   def token_authentication_valid_params?
     params[:user_email].present? && params[:user_token].present?
+  end
+  
+  def user_not_authorized(exception)
+    policy_name = exception.policy.class.to_s.underscore.split("/").join('.')
+    policy_name << "."
+    policy_name << exception.query
+    if exception.policy.condition
+      policy_name << "."
+      policy_name << exception.policy.condition
+    end
+    flash[:error] = t "#{policy_name}", scope: "pundit", default: :default
+    respond_to do |format|
+      format.html { redirect_to user_signed_in? ? after_sign_in_path_for(current_user) : root_path ,notice: flash[:error]}
+      format.json { render json: {error: "You are not authorized to access this page"}, status: 403 }
+    end
   end
 end
