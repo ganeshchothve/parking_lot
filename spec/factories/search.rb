@@ -8,6 +8,9 @@ FactoryBot.define do
     project_unit_id ''
     project_tower_id ''
 
-    association :user, strategy: :build
+    # before(:build) do |search|
+    association :user, factory: :user
+    #     search.user = create(:user, )
+    # end
   end
 end

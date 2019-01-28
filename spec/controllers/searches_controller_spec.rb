@@ -33,7 +33,7 @@ RSpec.describe SearchesController, type: :controller do
       project_unit.status = 'hold'
       project_unit.save
       another_user = create(:user, booking_portal_client: client)
-      another_user.user_kycs << create(:user_kyc, creator_id: another_user.id, user: another_user, phone: '9753736524')
+      another_user.user_kycs << create(:user_kyc, creator_id: another_user.id, user: another_user)
       search.user = another_user
       post :hold, params: { id: search.id, project_unit: project_unit.as_json }
       expect(response.request.flash[:error]).to eq('This unit is already held by other user.')
@@ -42,7 +42,7 @@ RSpec.describe SearchesController, type: :controller do
       user.set(allowed_bookings: 0)
       project_unit.client_id = Client.first
       user.booking_portal_client ||= (Client.asc(:created_at).first || create(:client))
-      user.user_kycs << create(:user_kyc, creator_id: user.id, user: user, phone: '9753736524')
+      user.user_kycs << create(:user_kyc, creator_id: user.id, user: user)
       project_unit.user = user
       post :hold, params: { id: search.id, project_unit: project_unit.as_json }
       expect(response.request.flash[:error]).to eq('You have booked the permitted number of apartments.')
