@@ -158,8 +158,7 @@ class User
       {id: 'sales_admin', text: 'Sales Head'},
       {id: 'sales', text: 'Sales User'},
       {id: 'user', text: 'Customer'},
-      {id: 'gre', text: 'GRE or Pre-sales'},
-      {id: 'channel_partner', text: 'Channel Partner'}
+      {id: 'gre', text: 'GRE or Pre-sales'}
     ]
     if current_client.try(:enable_channel_partners?)
       roles += [

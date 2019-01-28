@@ -4,7 +4,7 @@ FactoryBot.define do
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
     email { Faker::Internet.email }
-    phone { Faker::Base.regexify(/^\d{10}$/) }
+    phone { Faker::PhoneNumber.cell_phone }
     dob { Faker::Date.birthday(18, 65) }
     pan_number { Faker::Base.regexify(/[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i) }
     aadhaar { Faker::Base.regexify(/\d{12}/i) }

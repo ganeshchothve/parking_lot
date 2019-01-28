@@ -3,12 +3,14 @@ require 'rails_helper'
 RSpec.describe SearchesController, type: :controller do
   let(:client) { create :client }
   let(:user) { create(:user, booking_portal_client: client) }
+  let(:admin) { create(:user, booking_portal_client: client) }
   let(:project) { create(:project, booking_portal_client: client) }
   let(:project_tower) { create(:project_tower, project: project) }
   let(:project_unit) { create(:project_unit, project: project, booking_portal_client: client, project_tower: project_tower) }
   let(:search) { create(:search, project_unit_id: project_unit.id.to_s, user: user) }
 
   before(:each) do
+    admin.set(role: "admin")
     sign_in_app(user)
   end
 
@@ -23,7 +25,7 @@ RSpec.describe SearchesController, type: :controller do
       client.allow_multiple_bookings_per_user_kyc = false
       client.save
       user.booking_portal_client = client
-      user.user_kycs << create(:user_kyc, creator_id: user.id, user: user, phone: '9753736524')
+      user.user_kycs << create(:user_kyc, creator_id: user.id, user: user)
       user.save
       project_unit.client_id = client.id
       project_unit.user = user

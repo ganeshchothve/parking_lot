@@ -61,7 +61,7 @@ class UserKyc
   validates :oci, presence: true, if: Proc.new{ |kyc| kyc.nri? }
   validates :email, uniqueness: {scope: :user_id}, allow_blank: true
   validates :pan_number, :aadhaar, uniqueness: {scope: :user_id}, allow_blank: true
-  # validates :phone, uniqueness: {scope: :user_id}, phone: true # TODO: we can remove phone validation, as the validation happens in
+  # validates :phone, uniqueness: {scope: :aadhar}, phone: true # TODO: we can remove phone validation, as the validation happens in
   validates :configurations, array: {inclusion: {allow_blank: true, in: Proc.new{ |kyc| UserKyc.available_configurations.collect{|x| x[:id]} } }}
   validates :preferred_floors, array: {inclusion: {allow_blank: true, in: Proc.new{ |kyc| UserKyc.available_preferred_floors.collect{|x| x[:id]} } }}
   validate :min_max_budget
