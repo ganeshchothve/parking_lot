@@ -100,7 +100,7 @@ class User
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :emails, as: :triggered_by, class_name: 'Email'
   has_many :sync_logs, as: :resource
-  has_many :sync_logs, inverse_of: 'log'
+  has_many :sync_logs, inverse_of: 'user_reference'
   embeds_many :portal_stages
   accepts_nested_attributes_for :portal_stages # , reject_if: :all_blank
 

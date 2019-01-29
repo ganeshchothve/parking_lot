@@ -13,7 +13,7 @@ class SyncLog
 
   # Associations
   belongs_to :resource, polymorphic: true, optional: true
-  belongs_to :log, class_name: 'User', foreign_key: 'user_id'
+  belongs_to :user_reference, class_name: 'User', foreign_key: 'user_id'
   belongs_to :reference, class_name: 'SyncLog', optional: true
   has_many :sync_logs, class_name: 'SyncLog', foreign_key: 'reference_id'
 
