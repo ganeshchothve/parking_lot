@@ -37,7 +37,7 @@ Sidekiq::Testing.fake!
 # directory. Alternatively, in the individual `*_spec.rb` files, manually
 # require only the support files necessary.
 #
-# Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }
+Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }
 
 RSpec.configure do |config|
   # RSpec Rails can automatically mix in different behaviours to your tests
@@ -62,10 +62,10 @@ RSpec.configure do |config|
 
   config.include FactoryBot::Syntax::Methods
   config.include Capybara::DSL
-  config.include Devise::TestHelpers, type: :controller
+  config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::TestHelpers, type: :view
-  #config.include Requests::JsonHelpers, type: :controller
-  #config.include Requests::AuthenticateUser, type: :controller
+  config.include Requests::JsonHelpers, type: :controller
+  config.include Requests::AuthenticateUser, type: :controller
   config.include Shoulda::Matchers::ActionController, type: :controller
   config.include Warden::Test::Helpers
   config.include Mongoid::Matchers, type: :model
