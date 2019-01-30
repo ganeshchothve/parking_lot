@@ -3,13 +3,12 @@ class ApisController < ActionController::API
 
   def authenticate_request
     flag = false
-    if request.headers['Api-key'] && request.domain
+    if request.headers['Api-key'] && request.headers['HTTP_HOST']
       api_key = request.headers['Api-key']
-      domain = request.domain
-      @app = External_Api.where(domain: domain).first
+      domain = request.headers['HTTP_HOST']
+      @app = ExternalApi.where(domain: domain).first
       if @app.present?
-        encrypted_key = ActiveSupport::MessageEncryptor.new(@app.private_key).encrypt_and_sign(api_key.to_s)
-        if encrypted_key == @app.encrypted_api_key
+        if api_key == @app.api_key
           flag = true
         else
           message = 'Incorrect key.'
@@ -20,9 +19,7 @@ class ApisController < ActionController::API
     else
       message = 'Required parameters missing.'
     end
-    # redirect_to dashboard_path, alert: t(message) if !flag
-    render json: { error: message } unless flag # TODO: TEST
-    # respond_with(render json: , location: root) if !flag
+    render json: { status: 'error', message: message } unless flag
     flag
   end
 end

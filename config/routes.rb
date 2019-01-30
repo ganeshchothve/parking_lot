@@ -173,7 +173,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :users, only: [:create, :update] do
-        put 'portal_stage', on: :member
+        #put 'portal_stage', on: :member
       end
     end
   end
