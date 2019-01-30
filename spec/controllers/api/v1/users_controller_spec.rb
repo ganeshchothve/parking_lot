@@ -72,6 +72,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
         expect(response).to have_http_status(201)
       end
     end
+
     context '.erp_id_present? ' do
       it 'when erp-id present' do
         request.headers['HTTP_HOST'] = @external_api.domain
@@ -83,6 +84,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
         expect { post :create, params: { user: @user_params } }.to change { User.count }.by(1)
         expect(response).to have_http_status(201)
       end
+
       it 'when erp-id absent' do
         request.headers['HTTP_HOST'] = @external_api.domain
         request.headers['Api-key'] = @key
@@ -129,6 +131,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
         patch :update, params: { id: user.id, user: @user_params }
         expect(response).to have_http_status(200)
       end
+
       it 'when user with erp-id not found' do
         request.headers['HTTP_HOST'] = @external_api.domain
         request.headers['Api-key'] = @key
@@ -141,6 +144,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
         expect(res['status']).to eq('error')
       end
     end
+
     it 'when update successful' do
       request.headers['HTTP_HOST'] = @external_api.domain
       request.headers['Api-key'] = @key
@@ -150,6 +154,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
       patch :update, params: { id: user.id, user: @user_params }
       expect(response).to have_http_status(200)
     end
+
     it 'when update fails' do
       request.headers['HTTP_HOST'] = @external_api.domain
       request.headers['Api-key'] = @key
@@ -160,6 +165,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
       expect(response).to have_http_status(422)
     end
   end
+end
 
   # describe "PUT(update) portal stage" do
   #   it "update successful" do
@@ -185,4 +191,3 @@ RSpec.describe Api::V1::UsersController, type: :controller do
   #     expect(response).to have_http_status(422)
   #   end
   # end
-end
