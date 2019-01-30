@@ -21,7 +21,7 @@
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
 var options = {
-  key: "<%= Rails.env.production? ? ENV_CONFIG['razorpay']['key'] : 'rzp_test_NTQGRS3ia0hiWY' %>",
+  key: "<%= selected_account(@project_unit).key %><%#= Rails.env.production? ? ENV_CONFIG['razorpay']['key'] : 'rzp_test_NTQGRS3ia0hiWY' %>",
   amount: <%= @receipt.total_amount.to_i * 100 %>, // 2000 paise = INR 20
   name: "<%= @project_unit.present? ? @project_unit.project_name : 'Direct Payment' %>",
   description: "<%= @project_unit.present? ? @project_unit.project_name : '' %>",
@@ -40,6 +40,7 @@ var options = {
 };
 var rzp1 = new Razorpay(options);
 document.getElementById('rzp-button').onclick = function(e){
+  <% set_up_account(@project_unit)%>
   rzp1.open();
   e.preventDefault();
 }

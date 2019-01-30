@@ -26,6 +26,7 @@ class ProjectTower
   field :project_tower_stage, type: String
 
   belongs_to :project
+  belongs_to :account, optional: true
   has_many :project_units
   has_many :schemes
 
