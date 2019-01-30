@@ -8,5 +8,5 @@ class Account
   validates_uniqueness_of :account_number
 
   has_many :receipts
-  has_many :project_towers
+
 end
