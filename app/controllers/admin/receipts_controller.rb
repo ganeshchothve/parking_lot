@@ -45,8 +45,7 @@ class Admin::ReceiptsController < AdminController
 
     @receipt = Receipt.new(user: @user, creator: current_user, project_unit_id: params.dig(:rerceipt, :project_unit_id))
     @receipt.assign_attributes(permitted_attributes([:admin, @receipt]))
-
-
+    @receipt.account = selected_account
     @receipt.payment_gateway = current_client.payment_gateway if @receipt.payment_mode == 'online'
     
     authorize([:admin, @receipt])

@@ -27,7 +27,6 @@ class Buyer::ReceiptsController < BuyerController
       creator: current_user, payment_mode: 'online',
       total_amount: current_client.blocking_amount
     })
-
     authorize([:buyer, @receipt])
     render layout: false
   end
@@ -38,11 +37,9 @@ class Buyer::ReceiptsController < BuyerController
       payment_mode: 'online', creator: current_user,
       payment_gateway: current_client.payment_gateway
     })
-
     @receipt.assign_attributes(permitted_attributes([:buyer, @receipt]))
-
+    @receipt.account = selected_account
     authorize([:buyer, @receipt])
-
     respond_to do |format|
       if @receipt.save
         url = dashboard_path

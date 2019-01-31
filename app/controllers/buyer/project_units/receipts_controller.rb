@@ -1,4 +1,5 @@
 class Buyer::ProjectUnits::ReceiptsController < BuyerController
+  include ReceiptsConcern
   before_action :set_project_unit
 
   #
@@ -21,7 +22,7 @@ class Buyer::ProjectUnits::ReceiptsController < BuyerController
   def create
     @receipt = Receipt.new(user: current_user, creator: current_user, project_unit_id: @project_unit.id, payment_gateway: current_client.payment_gateway)
     @receipt.assign_attributes(permitted_attributes([:buyer, @receipt]))
-
+    @receipt.account = selected_account(@receipt.project_unit)
     authorize([:buyer, @receipt])
 
     respond_to do |format|

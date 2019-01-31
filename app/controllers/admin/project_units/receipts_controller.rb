@@ -1,4 +1,5 @@
 class Admin::ProjectUnits::ReceiptsController < AdminController
+  include ReceiptsConcern
   before_action :set_user
   before_action :set_project_unit
 
@@ -30,6 +31,7 @@ class Admin::ProjectUnits::ReceiptsController < AdminController
     @receipt = Receipt.new(user: @user, creator: current_user, project_unit_id: @project_unit.id)
     @receipt.assign_attributes(permitted_attributes([:admin, @receipt]))
     @receipt.payment_gateway = current_client.payment_gateway if @receipt.payment_mode == 'online'
+    @receipt.account = selected_account(@receipt.project_unit)
     authorize([:admin, @receipt])
 
     respond_to do |format|
