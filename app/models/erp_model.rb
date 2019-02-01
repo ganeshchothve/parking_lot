@@ -24,8 +24,8 @@ class ErpModel
   validates :request_type, inclusion: { in: [:json] }
   validates :http_verb, inclusion: { in: %w[get put post patch] }
   validates :action_name, inclusion: { in: %w[create update] }
-  #validate :resource_class_present?
-  #validate :domain_present?
+  # validate :resource_class_present?
+  # validate :domain_present?
   validate :request_payload_format
 
   # def available_resource_classes
@@ -46,9 +46,9 @@ class ErpModel
 
   def request_payload_format
     if request_payload.present?
-      raise ArgumentError, 'Improper request payload format' unless SafeParser.new(request_payload).safe_load.is_a?(Hash) # ask about error
+      raise StandardError, 'Improper request payload format' unless SafeParser.new(request_payload).safe_load.is_a?(Hash)
     end
-  rescue ArgumentError => e
+  rescue StandardError => e
     errors.add :request_payload, e.message
   end
 
