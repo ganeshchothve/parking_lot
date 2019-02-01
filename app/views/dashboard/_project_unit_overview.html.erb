@@ -1,6 +1,15 @@
 <div class="card">
   <div class="card-header">
     <h5 class="float-left card-title mt-2 mb-0"><%= global_labels[:project_unit] %> <%= project_unit.name %></h5>
+    <div class="container form-group mt-3 text-right">
+      <div class="row">
+        <div class="col-12">
+          <% if policy([:admin, SyncLog.new]).resync? && project_unit.booking_detail.sync_logs.present? %>
+            <%= link_to "Resync", controller: "admin/sync_logs", action: "resync", id: project_unit.booking_detail.sync_logs.desc(:created_at)[0].id, class: "btn btn-primary d-print-none"%>
+          <% end %>
+        </div>
+      </div>
+    </div>
     <% if defined?(with_actions) && with_actions == true %>
       <div class="dropdown float-right">
         <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Update Booking</a>
@@ -182,6 +191,20 @@
           <label>All Inclusive Price</label>
           <div>
             <%= number_to_indian_currency(project_unit.calculate_all_inclusive_price.round) %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+        <label>Last Sync Log Status:</label>
+          <div>
+            <% if project_unit.booking_detail.sync_logs.present? %>
+              <%= project_unit.booking_detail.sync_logs.desc(:created_at)[0].status.present? ? project_unit.booking_detail.sync_logs.desc(:created_at)[0].status : "-" %>
+            <% else %>
+               <%= "Not synced" %>
+            <% end %>
           </div>
         </div>
       </div>

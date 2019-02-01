@@ -4,6 +4,10 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
     current_client.enable_channel_partners? && %w[superadmin admin cp_admin cp].include?(user.role)
   end
 
+  def show?
+    %w[superadmin admin sales_admin].include?(user.role)
+  end
+
   def create?
     current_client.enable_channel_partners? && !user.present?
   end

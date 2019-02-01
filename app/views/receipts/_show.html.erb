@@ -11,6 +11,19 @@
         <div class="col-md-6 text-right">
           <div class="mt-2 mb-1 small text-muted">Receipt ID</div>
           <h5><%= @receipt.receipt_id %></h5>
+          <% if policy([:admin, SyncLog.new]).resync? %>
+            <div class="mt-2 mb-1 small text-muted">Last Sync Log Status</div>
+            <% if receipt.sync_logs.present? %>
+              <h5><%= receipt.sync_logs.desc(:created_at)[0].status.present? ? receipt.sync_logs.desc(:created_at)[0].status : "-" %><h5>
+            <% else %>
+              <h5><%= "Not synced" %><h5>
+            <% end %>
+            <div>
+              <% if receipt.sync_logs.present? %>
+                <h6><%= link_to "Resync", controller: "admin/sync_logs", action: "resync", id:receipt.sync_logs.desc(:created_at)[0].id, class: "btn btn-primary d-print-none" %><h6>
+              <% end %>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>

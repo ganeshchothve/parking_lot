@@ -8,7 +8,9 @@
         <th>Response</th>
         <th>Status</th>
         <th>Message</th>
-        <th class="text-right">Actions</th>
+        <% if policy([:admin, SyncLog.new]).resync? %>
+          <th class="text-right">Actions</th>
+        <% end %>
       </tr>
     </thead>
     <tbody>
@@ -32,14 +34,30 @@
           <td>
             <%= sync_log.message.present? ? sync_log.message : '-' %>
           </td>
-        <td class="text-right">
-          <div class="dropdown">
-            <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-            <div class="dropdown-menu dropdown-menu-right">
-              <%= link_to 'Resync', current_user.buyer? ? resync_buyer_sync_log_path(sync_log): resync_admin_sync_log_path(sync_log), class: 'dropdown-item' %>
-            </div>
-          </div>
-        </td>
+          <% if policy([:admin, SyncLog.new]).resync? %>
+            <td class="text-right">
+              <div class="dropdown">
+                <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <% if sync_log.resource.present? %>
+                      <% if sync_log.resource_type == "UserKyc" %>
+                        <%= link_to 'Show', controller: "admin/user_kycs", action: "show", id: sync_log.resource, class: 'dropdown-item' %>
+                      <% elsif sync_log.resource_type == "Receipt" %>
+                        <%= link_to 'Show', controller: "admin/receipts", action: "show", id: sync_log.resource, class: 'dropdown-item' %>
+                      <% elsif sync_log.resource_type == "User" %>
+                        <%= link_to 'Show', controller: "admin/users", action: "show", id: sync_log.resource, class: 'dropdown-item' %>
+                      <% elsif sync_log.resource_type == "ChannelPartner" %>
+                        <%= link_to 'Show', controller: "/channel_partners", action: "show", id: sync_log.resource, class: 'dropdown-item' %>
+                      <% elsif sync_log.resource_type == "BookingDetail" %>
+                        <%= link_to 'Show', controller: "admin/project_units", action: "show", id: sync_log.resource.project_unit, class: 'dropdown-item' %>
+                      <% end %>
+                    <% else %>
+                      <%= link_to 'Show', resync_admin_sync_log_path(sync_log), class: 'dropdown-item' %>
+                    <% end %> 
+                  </div>
+              </div>
+            </td>
+          <% end %>
       </tr>
       <% end %>
       <tr>

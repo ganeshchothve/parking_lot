@@ -3,7 +3,7 @@ class Buyer::SyncLogsController < BuyerController
   before_action :authorize_resource
   around_action :apply_policy_scope, only: :index
   before_action :set_sync_reference, only: :resync
-  # def apply_policy_scope, def resync, def set_sync_reference from SyncLogsConcern
+  # def apply_policy_scope from SyncLogsConcern
 
   def index
     @sync_logs = SyncLog.where(user_id: current_user.id)

@@ -12,10 +12,11 @@ class SyncLog
   field :action, type: String, default: '' # Update/Create
 
   # Associations
-  belongs_to :resource, polymorphic: true, optional: true
+  belongs_to :resource, polymorphic: true#, optional: true
   belongs_to :user_reference, class_name: 'User', foreign_key: 'user_id'
   belongs_to :reference, class_name: 'SyncLog', optional: true
   has_many :sync_logs, class_name: 'SyncLog', foreign_key: 'reference_id'
+  belongs_to :erp_model, optional: true # ToDo remove optional true
 
   # validates :request, presence: true #ToDo SyncLog attributes
 end

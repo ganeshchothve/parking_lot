@@ -2,6 +2,3 @@
   <button onclick="window.print();" class="btn btn-primary d-print-none">Print</button>
 </div>
 <%= render '/receipts/show', receipt: @receipt %>
-<%= javascript_tag do %>
-  window.print();
-<% end %>

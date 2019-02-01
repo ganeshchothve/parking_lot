@@ -3,6 +3,10 @@ class Admin::UserKycPolicy < UserKycPolicy
     true if for_user.present? && for_user.buyer? || for_user.blank?
   end
 
+  def show?
+    %w[superadmin admin sales_admin].include?(user.role)
+  end
+
   def new?
     record.user.buyer?
   end
