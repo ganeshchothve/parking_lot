@@ -29,6 +29,7 @@ class ChannelPartner
     ]
   )
 
+  has_one :user, class_name: 'User'
   has_one :address, as: :addressable, validate: false
   has_one :bank_detail, as: :bankable, validate: false
   has_many :assets, as: :assetable
@@ -60,9 +61,9 @@ class ChannelPartner
     ]
   end
 
-  def associated_user
-    User.find(associated_user_id) if associated_user_id.present?
-  end
+  # def associated_user
+  #   User.find(associated_user_id) if associated_user_id.present?
+  # end
 
   def self.build_criteria(params = {})
     selector = {}
