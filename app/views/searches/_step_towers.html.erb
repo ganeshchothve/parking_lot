@@ -100,6 +100,9 @@
         </figure>
       </div>
       <div class="row pl-3 pb-0 pb-md-3 pr-3 pt-3">
+        <div class="col-md-12">
+          <%= link_to "View Cost Sheet & Payment Schedule", "javascript:;", class: 'modal-remote-form-link print_cs_ps', target: "_blank" %>
+        </div>
         <div class="col-md-4">
           <label>Floor</label>
           <h6 class="text-black font-weight" data-placeholder='floor'></h6>
@@ -193,5 +196,6 @@
     var unit = _.find(units, function(u){ return u._id == unit_id });
     var unit_assets = _.filter(assets, function(a){return a.assetable_id == unit_id});
     showUnitData(unit, unit_assets);
+    $(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/project_units/" + unit_id + "?layout=false");
   });
 <% end %>
