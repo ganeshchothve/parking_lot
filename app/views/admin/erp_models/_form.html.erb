@@ -1,0 +1,96 @@
+<%= form_for [:admin, @erp_model], remote: true, local: true, html: {id: "erp_model_form", class: "modal-remote-form validate-form", "data-resource-type": global_labels['erp_model'], "data-type": "json"} do |f| %>
+  <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+              Edit Erp Model
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <%= f.label :resource_class, class: 'label-required' %>
+                <%= f.text_field :resource_class, class: 'form-control', autofocus: true, required: 'required', disabled: (policy([:admin, @erp_model]).editable_field?("resource_class") ? false : true) %>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <%= f.label :domain, class: 'label-required' %>
+                <%= f.text_field :domain, class: 'form-control', autofocus: true, required: 'required', disabled: (policy([:admin, @erp_model]).editable_field?("domain") ? false : true) %>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <%= f.label :request_type %>
+                <%= f.text_field :request_type, class: 'form-control', disabled: (policy([:admin, @erp_model]).editable_field?("request_type") ? false : true) %>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <%= f.label :url %>
+                <%= f.text_field :url, class: 'form-control', disabled: (policy([:admin, @erp_model]).editable_field?("url") ? false : true) %>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <%= f.label :http_verb %>
+                <%= f.text_field :http_verb, class: 'form-control', disabled: (policy([:admin, @erp_model]).editable_field?("http_verb") ? false : true) %>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <%= f.label :reference_key_name %>
+                <%= f.text_field :reference_key_name, class: 'form-control', disabled: (policy([:admin, @erp_model]).editable_field?("reference_key_name") ? false : true) %>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <%= f.label :is_active %>
+                <%= f.text_field :is_active, class: 'form-control', disabled: (policy([:admin, @erp_model]).editable_field?("is_active") ? false : true) %>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <%= f.label :action_name %>
+                <%= f.text_field :action_name, class: 'form-control', disabled: (policy([:admin, @erp_model]).editable_field?("action_name") ? false : true) %>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <%= f.label :reference_key_location %>
+                <%= f.text_field :reference_key_location, class: 'form-control', disabled: (policy([:admin, @erp_model]).editable_field?("reference_key_location") ? false : true) %>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <%= f.label :request_payload %>
+                <%= f.text_field :request_payload, class: 'form-control', disabled: (policy([:admin, @erp_model]).editable_field?("request_payload") ? false : true) %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <%= f.submit "Save", class: 'btn btn-primary' %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($("#erp_model_form"));
+  });
+<% end %>

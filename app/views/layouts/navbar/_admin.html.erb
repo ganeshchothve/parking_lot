@@ -63,6 +63,12 @@
   </li>
 <% end %>
 
+<% if policy([:admin, ErpModel]).index? %>
+  <li class="nav-item">
+    <%= active_link_to t('global.erpmodels'), admin_erp_models_path, active: :inclusive, class: "nav-link" %>
+  </li>
+<% end %>
+
 <% if links.present? %>
   <li class="nav-item d-none d-lg-block">
     <div class="dropdown">
