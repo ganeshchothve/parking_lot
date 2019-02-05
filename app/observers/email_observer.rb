@@ -31,8 +31,18 @@ class EmailObserver < Mongoid::Observer
   end
 
   def after_create email
+    # Email sent when
+    # Template Present  |   Templat Is Active  |   ENV in list  |   SMS sent or not
+    #      T            |          T           |       T        |        yes
+    #      T            |          T           |       F        |         no
+    #      T            |          F           |       T        |         no
+    #      T            |          F           |       F        |         no
+    #      F            |          -           |       T        |        yes
+    #      F            |          -           |       F        |         no
+    #      F            |          -           |       T        |        yes
+    #      F            |          -           |       F        |         no
     if email.to.present?
-      if Rails.env.production? || Rails.env.staging?
+      if ( !email.email_template || email.email_template.try(:is_active?) ) && (Rails.env.production? || Rails.env.staging?)
         if email.attachments.present?
           Communication::Email::MailgunWorker.perform_in(2.minutes, email.id.to_s)
         else

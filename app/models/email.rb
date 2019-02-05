@@ -17,7 +17,6 @@ class Email
   field :subject, type: String
   field :body, type: String
   field :text_only_body, type: String
-  field :email_template_id, type: BSON::ObjectId
   field :status, type: String, default: "draft"
   field :remote_id, type: String
   field :sent_on, type: DateTime
@@ -32,6 +31,7 @@ class Email
   enable_audit reference_ids_without_associations: [{name_of_key: 'email_template_id', method: 'email_template', klass: 'Template::EmailTemplate'}]
 
   # Associations
+  belongs_to :email_template, class_name: 'Template::EmailTemplate', optional: true
   belongs_to :booking_portal_client, class_name: 'Client', inverse_of: :emails
   has_and_belongs_to_many :recipients, class_name: "User", inverse_of: :received_emails, validate: false
   has_and_belongs_to_many :cc_recipients, class_name: "User", inverse_of: :cced_emails, validate: false
@@ -78,10 +78,6 @@ class Email
   # @return [String]
   def name
     self.subject
-  end
-
-  def email_template
-    Template::EmailTemplate.where(id: self.email_template_id).first
   end
 
 

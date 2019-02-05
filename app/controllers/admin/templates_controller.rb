@@ -38,9 +38,9 @@ class Admin::TemplatesController < AdminController
 
   def authorize_resource
     if params[:action] == "index"
-      authorize Template
+      authorize [:admin, ::Template]
     else
-      authorize @template
+      authorize [:admin, @template]
     end
   end
 
