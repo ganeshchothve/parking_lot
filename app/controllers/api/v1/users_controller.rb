@@ -54,7 +54,6 @@ class Api::V1::UsersController < ApisController
     end
   end
 
-
   # Sets the user object
   def set_user
     @user = User.where(erp_id: params[:user][:erp_id]).first

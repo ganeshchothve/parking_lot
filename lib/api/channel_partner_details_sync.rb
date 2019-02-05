@@ -1,6 +1,6 @@
 module Api
   class ChannelPartnerDetailsSync < Api::Syncc
-    Api::Syncc::DATA_FIELDS = %w[receipt_id total_amount status order_id payment_mode issued_date issuing_bank issuing_bank_branch payment_identifier tracking_id status_message payment_gateway processed_on comments gateway_response].freeze
+    Api::Syncc::DATA_FIELDS = %w[receipt_id total_amount status order_id payment_mode issued_date issuing_bank issuing_bank_branch payment_identifier tracking_id status_message payment_gateway processed_on comments gateway_response]
     attr_accessor :url
 
     def initialize(client_api, record, _parent_sync_record = nil)
