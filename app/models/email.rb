@@ -17,7 +17,6 @@ class Email
   field :subject, type: String
   field :body, type: String
   field :text_only_body, type: String
-
   field :status, type: String, default: "draft"
   field :remote_id, type: String
   field :sent_on, type: DateTime
