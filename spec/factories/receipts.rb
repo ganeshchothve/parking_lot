@@ -2,7 +2,7 @@
   factory :receipt do
     order_id { Faker::String.random(5) }
     # receipt_id { Faker::String.random(5) }
-    payment_mode {['online','cheque','rtgs','imps','card_swipe','neft'].sample}
+    # payment_mode {['online','cheque','rtgs','imps','card_swipe','neft'].sample}
     receipt_id { Faker::String.random(5) }
     issued_date { Faker::Date.backward(3) } # Date when cheque / DD etc are issued
     issuing_bank { Faker::String.random(5) } # Bank which issued cheque / DD etc

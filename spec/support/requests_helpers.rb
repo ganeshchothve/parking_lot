@@ -6,12 +6,12 @@ module Requests
   end
 
   module AuthenticateUser
-    def sign_in_app(user=nil, project=nil, client=nil)
+    def sign_in_app(user)
       # project ||= Project.order('created_at DESC').first
-      client ||= Client.order('created_at DESC').first || create(:client)
+      # client ||= Client.order('created_at DESC').first || create(:client)
 
-      @user = user || FactoryGirl.create(:user)
-      sign_in @user
+      # @user = user || FactoryGirl.create(:user)
+      sign_in user
     end
   end
 
