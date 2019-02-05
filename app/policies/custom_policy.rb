@@ -16,8 +16,12 @@ class CustomPolicy < Struct.new(:user, :enable_users)
     "#{user.buyer? ? 'Buyer' : 'Admin'}::Audit::RecordPolicy".constantize.new(user, Audit::Record.new).index?
   end
 
+  def referrals?
+    "#{user.buyer? ? 'Buyer' : 'Admin'}::ReferralPolicy".constantize.new(user, User).index?
+  end
+
 
   def self.custom_methods
-    ["inventory", 'emails', 'smses', 'audits' ]
+    ['inventory', 'emails', 'smses', 'audits', 'referrals']
   end
 end

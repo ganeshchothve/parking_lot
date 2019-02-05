@@ -6,8 +6,8 @@ class EmailObserver < Mongoid::Observer
   def before_create email
     email.to ||= []
     email.cc ||= []
-    email.to = email.recipients.distinct(:email).compact.reject{|x| x.blank?}
-    email.cc = email.cc_recipients.distinct(:email).compact.reject{|x| x.blank?}
+    email.to = email.recipients.distinct(:email).compact.reject{|x| x.blank?} if email.to.blank?
+    email.cc = email.cc_recipients.distinct(:email).compact.reject{|x| x.blank?} if email.cc.blank?
   end
 
   def before_save email

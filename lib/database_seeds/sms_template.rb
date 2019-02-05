@@ -51,6 +51,8 @@ module DatabaseSeeds
 
       Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "Client", name: "daily_sms_report", content: 'Blocked: <%= ProjectUnit.where(status: "blocked").count %>. Tentative: <%= ProjectUnit.where(status: "booked_tentative").count %>. Confirmed: <%= ProjectUnit.where(status: "booked_confirmed").count %>. Blocked Today: <%= ProjectUnit.where(blocked_on: Date.today).count %>.     *subject to cancellations') if Template::SmsTemplate.where(name: "daily_sms_report").blank?
 
+      Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "Invitation", name: "referral_invitation", content: "Dear <%= self.name %>, You are invited in <%= self.booking_portal_client.booking_portal_domains.join(', ') %> Please click here. <%= Rails.application.routes.url_helpers.register_url(custom_referral_code: self.referred_by.referral_code) %> or user <%= self.referred_by.referral_code %> code for sign up.") if Template::SmsTemplate.where(name: "referral_invitation").blank?
+
       return Template::SmsTemplate.where(booking_portal_client_id: client_id).count
     end
   end
