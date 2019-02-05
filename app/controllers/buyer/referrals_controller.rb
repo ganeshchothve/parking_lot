@@ -1,17 +1,20 @@
 class Buyer::ReferralsController < BuyerController
   before_action :set_user
 
+  # GET /buyer/referrals
   def index
     authorize [:buyer, Referral]
     @referrals = @user.referrals.paginate(page: params[:page], per_page: 15)
   end
 
+  # GET /buyer/referrals/new
   def new
     @referral = Referral.new(referred_by: current_user)
     authorize [:buyer, @referral]
     render layout: false
   end
 
+  # POST /buyer/referrals
   def create
     referral_user = User.where(email: params.dig(:referral, :email))[0]
     respond_to do |format|
@@ -34,6 +37,8 @@ class Buyer::ReferralsController < BuyerController
     end
   end
 
+  # GET /buyer/referrals/generate_code
+  # This function create a referral code on demand of current user. If code is already created then this action ignore such request.
   def generate_code
     authorize [:buyer, Referral.new]
     @user.generate_referral_code

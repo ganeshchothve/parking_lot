@@ -23,7 +23,7 @@ FactoryBot.define  do
     website_link { 'abc.com' }
 
     cin_number { Faker::Number.number(12) }
-
+    enable_referral_bonus { true }
     mailgun_private_api_key { 'test' }
     mailgun_email_domain { 'test' }
     sms_provider_username { 'test' }
