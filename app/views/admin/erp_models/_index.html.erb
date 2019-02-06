@@ -4,6 +4,8 @@
       <tr>
         <th>Resource Class</th>
         <th>Domain</th>
+        <th>Action</th>
+        <th>State</th>
         <th class="text-right">Actions</th>
       </tr>
     </thead>
@@ -15,6 +17,12 @@
           </td>
           <td>
             <%= erp_model.domain.present? ? erp_model.domain : "-" %>
+          </td>
+          <td>
+            <%= erp_model.action_name.present? ? erp_model.action_name : "-" %>
+          </td>
+          <td>
+            <%= erp_model.is_active ? "active" : "inactive" %>
           </td>
           <td class="text-right">
             <div class="dropdown">
