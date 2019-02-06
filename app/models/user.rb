@@ -61,6 +61,7 @@ class User
 
   # field for active_model_otp
   field :otp_secret_key
+  field :referral_code, type: String
 
   def self.otp_length
     6
@@ -83,6 +84,7 @@ class User
   attr_accessor :login, :login_otp
 
   belongs_to :booking_portal_client, class_name: 'Client', inverse_of: :users
+  belongs_to :referred_by, class_name: 'User', optional: true
   has_many :receipts
   has_many :project_units
   has_many :booking_details
@@ -96,6 +98,7 @@ class User
   has_many :notes, as: :notable
   has_many :smses, as: :triggered_by, class_name: "Sms"
   has_many :emails, as: :triggered_by, class_name: "Email"
+  has_many :referrals, class_name: 'User', foreign_key: :referred_by_id
 
   validates :first_name, :role, presence: true
   validates :phone, uniqueness: true, phone: { possible: true, types: [:voip, :personal_number, :fixed_or_mobile]}, if: Proc.new{|user| user.email.blank? }
@@ -258,6 +261,15 @@ class User
   def ds_name
     "#{name} - #{email} - #{phone}"
   end
+
+  def generate_referral_code
+    if self.buyer? && self.referral_code.blank?
+      self.referral_code = "#{self.booking_portal_client.name[0..1].upcase}-#{SecureRandom.hex(4)}"
+    else
+      self.referral_code
+    end
+  end
+
 
   def dashboard_url
     url = Rails.application.routes.url_helpers

@@ -9,7 +9,7 @@ FactoryBot.define do
     manager_change_reason { Faker::Lorem.paragraph }
     lead_id { Faker::IDNumber.valid }
     rera_id { Faker::IDNumber.valid }
-    confirmed_at { Date.today }
+    confirmed_at { DateTime.now }
 
     association :booking_portal_client, factory: :client
 

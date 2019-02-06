@@ -16,7 +16,17 @@ class SmsObserver < Mongoid::Observer
   end
 
   def after_create sms
-    if Rails.env.production? || Rails.env.staging?
+    # SMS sent when
+    # Template Present  |   Templat Is Active  |   ENV in list  |   SMS sent or not
+    #      T            |          T           |       T        |        yes
+    #      T            |          T           |       F        |         no
+    #      T            |          F           |       T        |         no
+    #      T            |          F           |       F        |         no
+    #      F            |          -           |       T        |        yes
+    #      F            |          -           |       F        |         no
+    #      F            |          -           |       T        |        yes
+    #      F            |          -           |       F        |         no
+    if ( !sms.sms_template || sms.sms_template.try(:is_active?) ) && ( Rails.env.production? || Rails.env.staging? )
       Communication::Sms::SmsjustWorker.perform_async(sms.id.to_s)
     else
       sms.set(status: "sent")
