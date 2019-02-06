@@ -35,7 +35,7 @@ module ReceiptsConcern
       Account::RazorpayPayment.find_by(by_default: true)
     else
       if project_unit.receipts.count == 0
-        Account::RazorpayPayment.find_by(by_default: true)
+         Account::RazorpayPayment.find_by(by_default: true)
       else
         project_unit.phase.account
       end

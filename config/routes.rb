@@ -34,9 +34,8 @@ Rails.application.routes.draw do
   resources :channel_partners, except: [:destroy] do
     get 'export', action: 'export', on: :collection, as: :export
   end
-
   namespace :admin do
-
+    resources :accounts
     resources :emails, :smses, only: %i[index show]
     resource :client, except: [:show, :new, :create] do
       resources :templates, only: [:edit, :update, :index]
@@ -59,6 +58,9 @@ Rails.application.routes.draw do
       get 'send_under_negotiation', on: :member
     end
 
+    scope ":request_type" do
+        resources :accounts, controller: 'accounts'
+      end
     resources :users do
       member do
         get :resend_confirmation_instructions

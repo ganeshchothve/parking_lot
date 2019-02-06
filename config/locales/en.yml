@@ -56,6 +56,8 @@ en:
     audit: "Audit Logs"
     referral: 'Referral'
     referrals: 'Referrals'
+    accounts: "Accounts"
+    account: "Account"
   mongoid:
     attributes:
       asset:

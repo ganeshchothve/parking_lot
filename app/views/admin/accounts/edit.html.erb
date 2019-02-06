@@ -1,0 +1,3 @@
+<% _hash = {"data-resource-type": global_labels['account'], "data-type": "json"} %>
+<% _url = admin_accounts_path(request_type: 'razorpay_payment') %>
+<%= render 'form', hash: _hash, url: _url %>
