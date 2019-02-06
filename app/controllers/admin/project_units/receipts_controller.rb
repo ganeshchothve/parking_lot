@@ -33,7 +33,6 @@ class Admin::ProjectUnits::ReceiptsController < AdminController
     @receipt.payment_gateway = current_client.payment_gateway if @receipt.payment_mode == 'online'
     @receipt.account = selected_account(@receipt.project_unit)
     authorize([:admin, @receipt])
-
     respond_to do |format|
       if @receipt.save
         flash[:notice] = "Receipt was successfully updated. Please upload documents"

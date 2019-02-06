@@ -1,7 +1,5 @@
-
-FactoryBot.define  do
+FactoryBot.define do
   factory :client do
-
     name { Faker::Company.name }
     selldo_client_id { BSON::ObjectId.from_time(DateTime.now, unique: true).to_s }
     selldo_form_id { BSON::ObjectId.from_time(DateTime.now, unique: true).to_s }

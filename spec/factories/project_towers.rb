@@ -18,7 +18,7 @@ FactoryBot.define do
     project_tower_stage { 'completed' }
 
     after(:build) do |project_tower|
-        project_tower.project = Project.desc(:created_at).first || create(:project)
+      project_tower.project = Project.desc(:created_at).first || create(:project)
     end
   end
 end

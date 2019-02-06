@@ -26,11 +26,12 @@ FactoryBot.define do
 
     after(:build) do |project_unit|
       project_unit.booking_portal_client = Client.first
-      project_unit.developer = create(:developer) 
+      project_unit.developer = create(:developer)
       project_unit.project_tower = ProjectTower.first
-      if ProjectTower.first == nil
+      if ProjectTower.first.nil?
         project_unit.project_tower = create(:project_tower)
       end
+      project_unit.phase = Phase.first
       project_unit.project = Project.first
       project_unit.unit_configuration = create(:unit_configuration)
     end

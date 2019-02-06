@@ -1,4 +1,4 @@
-FactoryBot.define  do
+FactoryBot.define do
   factory :user do
     first_name { Faker::Name.first_name }
     phone { Faker::PhoneNumber.phone_number }
@@ -9,7 +9,7 @@ FactoryBot.define  do
     end
   end
 
-  %w(superadmin admin crm employee_user sales_admin sales gre cp cp_admin channel_partner management_user).each do |_role|
+  %w[superadmin admin crm employee_user sales_admin sales gre cp cp_admin channel_partner management_user].each do |_role|
     factory _role, parent: :user do
       role { _role }
     end

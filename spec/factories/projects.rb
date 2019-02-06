@@ -28,7 +28,7 @@ FactoryBot.define do
     approval { Faker::Lorem.paragraph }
     selldo_id { Faker::String.random(3..12) }
     # client_id { FactoryBot.create(:client).id }
-    # 
+    #
     project_pre_sale_ids { [Faker::IDNumber.valid, Faker::IDNumber.valid] }
     project_sale_ids { [Faker::IDNumber.valid, Faker::IDNumber.valid] }
     locality { Faker::Address.street_name }
@@ -39,11 +39,11 @@ FactoryBot.define do
     dedicated_project_phone {  Faker::Base.regexify(/^\d{10}$/) }
     city { Faker::Address.city }
     rera_registration_no { Faker::IDNumber.valid }
-    
+
     after(:build) do |project|
-        project.booking_portal_client ||= Client.desc(:created_at).first
-        project.client_id = Client.desc(:created_at).first.id
-        project.developer_id ||= Developer.first.id
+      project.booking_portal_client ||= Client.desc(:created_at).first
+      project.client_id = Client.desc(:created_at).first.id
+      project.developer_id ||= Developer.first.id
     end
   end
 end
