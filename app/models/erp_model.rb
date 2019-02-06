@@ -3,6 +3,12 @@ class ErpModel
   include Mongoid::Timestamps
   extend FilterByCriteria
 
+  # Constants
+  RESOURCE_CLASS = %w[User UserKyc Receipt BookingDetail ChannelPartner].freeze
+  REQUEST_TYPE = [:json].freeze
+  HTTP_VERB = %w[get post put patch].freeze
+  DOMAIN = %w[https://gerasb-gerasb.cs57.force.com].freeze
+
   # Fields
   field :resource_class, type: String
   field :domain, type: String
@@ -19,30 +25,17 @@ class ErpModel
   has_many :sync_logs
 
   # Validations
-  validates :resource_class, inclusion: { in: %w[User UserKyc Receipt BookingDetail ChannelPartner] }
+  validates :resource_class, inclusion: { in: RESOURCE_CLASS }
   validates :url, uniqueness: { scope: %i[domain resource_class] }
-  validates :request_type, inclusion: { in: [:json] }
-  validates :http_verb, inclusion: { in: %w[get put post patch] }
-  validates :action_name, inclusion: { in: %w[create update] }
-  # validate :resource_class_present?
-  # validate :domain_present?
+  validates :request_type, inclusion: { in: REQUEST_TYPE }
+  validates :http_verb, inclusion: { in: HTTP_VERB }
+  validates :domain, inclusion: { in: DOMAIN }
+  validates :action_name, inclusion: { in: proc { ErpModel.allowed_action_names.collect { |x| x } } }
   validate :request_payload_format
 
-  # def available_resource_classes
-  #   return an array from yml file
-  #   validates_inclusion in this array
-  # end
-
-  # def domain_present?
-  #   @external_api = ExternalApi.where(domain: domain).first
-  #   if @external_api.present?
-  #     @yaml_object = YAML.load_file("#{Rails.root}/config/#{@external_api.client_api}.api_sync.yml")
-  #     # raise exception if YML file is missing.
-  #     errors.add :resource_class, 'Not present in yml file' if @yaml_object['domain'].present?
-  #   else
-  #     errors.add :domain, 'Not registered with application'
-  #   end
-  # end
+  def self.allowed_action_names
+    %w[create update]
+  end
 
   def request_payload_format
     if request_payload.present?
@@ -51,15 +44,4 @@ class ErpModel
   rescue StandardError => e
     errors.add :request_payload, e.message
   end
-
-  # def resource_class_present?
-  #   @external_api = ExternalApi.where(domain: domain).first
-  #   if @external_api.present?
-  #     @yaml_object = YAML.load_file("#{Rails.root}/config/#{@external_api.client_api}.api_sync.yml")
-  #     # raise exception if YML file is missing.
-  #     errors.add :resource_class, 'Not present in yml file' if @yaml_object['url'][resource_class.to_s].present?
-  #   else
-  #     errors.add :domain, 'Not registered with application'
-  #   end
-  # end
 end
