@@ -34,7 +34,7 @@ module ReceiptsConcern
     if project_unit.nil?
       Account::RazorpayPayment.find_by(by_default: true)
     else
-      if project_unit.receipts.count == 0
+      if project_unit.phase.nil? || project_unit.phase.account.nil? || project_unit.receipts.count == 0 
          Account::RazorpayPayment.find_by(by_default: true)
       else
         project_unit.phase.account

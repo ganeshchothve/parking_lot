@@ -2,7 +2,6 @@ class Admin::AccountsController < ApplicationController
   include AccountConcern
   before_action :set_account, except: %i[index export new create]
   before_action :authorize_resource
-
   # set_account, associated_class, authorize_resource from AccountssConcern
   
   # index 
@@ -12,7 +11,7 @@ class Admin::AccountsController < ApplicationController
     @accounts = Account.all
     @accounts = @accounts.paginate(page: params[:page] || 1, per_page: params[:per_page])
     respond_to do |format|
-      format.json { render json: @schemes }
+      format.json { render json: @accounts }
       format.html {}
     end
   end
@@ -65,13 +64,10 @@ class Admin::AccountsController < ApplicationController
   #  DELETE admin/accounts/:id
   #
   def destroy
-    if @account.receipts.empty?
-      @account.destroy
-    else
-      redirect_to admin_accounts_path, notice: 'Account cannot be deleted.'
-    end
     respond_to do |format|
-      format.html { redirect_to admin_accounts_path, notice: 'Account deleted successfully.' }
+      if @account.destroy
+        format.html { redirect_to admin_accounts_path, notice: 'Account deleted successfully.' }
+      end
     end
   end
   #

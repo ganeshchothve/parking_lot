@@ -7,12 +7,15 @@ class Account
   validates_uniqueness_of :account_number
 
   has_many :receipts
-  belongs_to :phase, optional: true
+  has_many :phases
 
-  def self.available_defaults 
-    out = [
-      {id: 'true', text: 'True' },
-      {id: 'false', text: 'False'}
-    ]
+  before_destroy :check_for_receipts
+
+  private 
+  def check_for_receipts
+    if receipts.count > 0 
+      errors.add_to_base("cannot delete account while receipts exist")
+      return false
+    end
   end
 end
