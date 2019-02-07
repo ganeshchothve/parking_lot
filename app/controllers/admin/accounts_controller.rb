@@ -67,6 +67,8 @@ class Admin::AccountsController < ApplicationController
     respond_to do |format|
       if @account.destroy
         format.html { redirect_to admin_accounts_path, notice: 'Account deleted successfully.' }
+      else
+        format.html { redirect_to admin_accounts_path, notice: 'Account cannot be deleted' }
       end
     end
   end
