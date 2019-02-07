@@ -18,22 +18,22 @@
             <%= account.phase.present? ? account.phase.name : '-' %>
           </div>
         </td>
-        <td><% if account.by_default == 'true' %>
-              <%= 'Yes'%>
-            <% else %>
-              <%= 'No' %>
-            <% end %></td>
+        <td>
+          <% if account.by_default %>
+            <%= 'Yes'%>
+          <% else %>
+            <%= 'No' %>
+          <% end %>
+        </td>
         <td class="text-right">
           <div class="dropdown">
             <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
             <div class="dropdown-menu dropdown-menu-right">
-              
-                  <% url = edit_admin_account_path(account, request_type: 'razorpay_payment') %>
-                <%= link_to 'Edit', url, class: 'modal-remote-form-link dropdown-item' %>
-                <% url = admin_account_path(account, request_type: 'razorpay_payment') %>
-                <%= link_to 'Show', url, class: 'dropdown-item' %>
-                <% url = admin_account_path(account, request_type: 'razorpay_payment') %>
-                <%= link_to 'Delete', url, class: 'dropdown-item', method: :delete %>
+              <% url = edit_admin_account_path(account, request_type: 'razorpay_payment') %>
+              <%= link_to 'Edit', url, class: 'modal-remote-form-link dropdown-item' %>
+              <% url = admin_account_path(account, request_type: 'razorpay_payment') %>
+              <%= link_to 'Show', url, class: 'dropdown-item' %>
+              <%= link_to 'Delete', url, class: 'dropdown-item', method: :delete %>
             </div>
           </div>
         </td>

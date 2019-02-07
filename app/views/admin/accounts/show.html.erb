@@ -8,52 +8,44 @@
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-md-12">
-      <div class="card-header">
-          Account details
-        </div>
+      <div class="card-header"> Account details </div>
       <div class= "card-body">
-      <div class="row">
-      <div class="col-md-4">
-        <div class="form-group">
-          <label>Account Number</label>
-          <div>
-            <%= @account.account_number %>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Account Number</label>
+              <div> <%= @account.account_number %> </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label> Default Account </label>
+              <div>
+                <% if @account.by_default %>
+                  <%= 'Yes'%>
+                <% else %>
+                  <%= 'No' %>
+                <% end %>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label> Default Account </label>
-          <div>
-            <% if @account.by_default == 'true' %>
-              <%= 'Yes'%>
-            <% else %>
-              <%= 'No' %>
-            <% end %>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Key</label>
+              <div> <%= @account.key %> </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Secret</label>
+              <div> <%= @account.secret %> </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  <div class="row">
-      <div class="col-md-4">
-        <div class="form-group">
-          <label>Key</label>
-          <div>
-            <%= @account.key %>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label>Secret</label>
-          <div>
-            <%= @account.secret %>
-          </div>
-        </div>
-      </div>
-  </div>
-</div>
-  </div>
   </div>
 </div>
 <%= javascript_tag do %>

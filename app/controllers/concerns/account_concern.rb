@@ -14,7 +14,6 @@ module AccountConcern
     elsif params[:action] == 'new' || params[:action] == 'create'
       authorize [current_user_role_group, Account::RazorpayPayment.new()]
     else
-      @account = associated_class.find(params[:id])
       authorize [current_user_role_group, @account]
     end
   end

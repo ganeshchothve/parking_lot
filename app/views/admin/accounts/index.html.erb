@@ -1,14 +1,13 @@
 <div class="container">
   <div class="row justify-content-center">
-    <div class="<%= @scheme.blank? ? 'col-md-9' : 'col-md-12' %>">
-      <%# = render 'breadcrumbs', {account: @account} %>
+    <div class="<%= @accounts.blank? ? 'col-md-9' : 'col-md-12' %>">
       <div class="card">
         <div class="card-body">
           <div class="row mb-3">
             <div class="col-md-7">
-              <%#   if policy([:admin, Account]).new? %>
+              <%if policy([:admin, Account]).new? %>
                 <%= link_to "Add #{global_labels['accounts']}", new_admin_account_path, class: 'btn btn-primary modal-remote-form-link' %>
-              <%#   end %>
+              <% end %>
             </div>
             <div class="col-md-5 text-md-right">
               <h6 class="mt-2">Total <%= global_labels[:account] %>: <%= @accounts.total_entries %></h6>
@@ -20,7 +19,6 @@
     </div>
     <div class="col-md-3">
       <div class="d-md-none mt-3"></div>
-      <%# = render "filters" %>
     </div>
   </div>
 </div>
