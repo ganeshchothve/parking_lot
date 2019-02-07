@@ -1,10 +1,9 @@
 <div class="table-responsive">
   <table class='table striped-table payment-breakup' width="100%" cellpadding="10" cellspacing="0">
     <thead class="th-default">
-      <% labels = t('mongoid.attributes.scheme').with_indifferent_access %>
       <tr>
-        <th><%= 'Account Number' %></th>
-        <th><%= 'Default Account' %></th>
+        <th><%= t('mongoid.attributes.account.account_number') %></th>
+        <th><%= t('mongoid.attributes.account.default_account') %></th>
         <th class="text-right">Actions</th>
       </tr>
     </thead>
