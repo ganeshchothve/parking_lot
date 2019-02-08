@@ -3,6 +3,7 @@ class BookingDetail
   include Mongoid::Timestamps
   include ArrayBlankRejectable
   include InsertionStringMethods
+  include SyncDetails
 
   field :primary_user_kyc_id, type: BSON::ObjectId
   field :status, type: String

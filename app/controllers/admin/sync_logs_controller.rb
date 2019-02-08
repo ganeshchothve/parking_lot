@@ -11,24 +11,11 @@ class Admin::SyncLogsController < AdminController
 
   def resync
     record = @sync_log.resource
-    # @erp_model = ErpModel.where().first
-    # if record.erp_id present?
-    # erp_model.action_name == "update"
-    # else
-    # erp_model.action_name == "create"
-    # end
-    @erp_model = ErpModel.new
-    if @sync_log.resource_type == 'User'
-      details = UserDetailsSync.new(@erp_model, record, @sync_log)
-    elsif @sync_log.resource_type == 'BookingDetail'
-      details = BookingDetailsSync.new(@erp_model, record, @sync_log)
-    elsif @sync_log.resource_type == 'Receipt'
-      details = ReceiptDetailsSync.new(@erp_model, record, @sync_log)
-    elsif @sync_log.resource_type == 'UserKyc'
-      details = UserKycDetailsSync.new(@erp_model, record, @sync_log)
-    elsif @sync_log.resource_type == 'ChannelPartner'
-      details = ChannelPartnerDetailsSync.new(@erp_model, record, @sync_log)
+    @erp_models = ErpModel.where(resource_class: record.class, action_name: @sync_log.action, is_active: true)
+    @erp_models.each do |erp|
+      @sync_log.sync(erp, record)
     end
+    redirect_back(fallback_location: root_path)
   end
 
   private

@@ -7,6 +7,7 @@ class Receipt
   include InsertionStringMethods
   include ApplicationHelper
   include ReceiptStateMachine
+  include SyncDetails
   extend FilterByCriteria
 
   field :receipt_id, type: String

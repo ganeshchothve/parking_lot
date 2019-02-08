@@ -39,9 +39,11 @@ class ErpModel
 
   def request_payload_format
     if request_payload.present?
-      raise StandardError, 'Improper request payload format' unless SafeParser.new(request_payload).safe_load.is_a?(Hash)
+      begin
+        raise StandardError, 'Improper request payload format' unless SafeParser.new(request_payload).safe_load.is_a?(Hash)
+      rescue StandardError => e
+        errors.add :request_payload, e.message
+      end
     end
-  rescue StandardError => e
-    errors.add :request_payload, e.message
   end
 end

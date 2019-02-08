@@ -4,6 +4,7 @@ class UserKyc
   include ArrayBlankRejectable
   include InsertionStringMethods
   include ApplicationHelper
+  include SyncDetails
 
   field :salutation, type: String, default: 'Mr.'
   field :first_name, type: String

@@ -2,6 +2,7 @@ class ChannelPartner
   include Mongoid::Document
   include Mongoid::Timestamps
   include ArrayBlankRejectable
+  include SyncDetails
 
   field :title, type: String
   field :first_name, type: String

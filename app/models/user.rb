@@ -6,10 +6,11 @@ class User
   include ActiveModel::OneTimePassword
   include InsertionStringMethods
   include ApplicationHelper
+  include SyncDetails
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, authentication_keys: [:login] #:registerable Disbaling registration because we always create user after set up sell.do
+  devise :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, authentication_keys: [:login] #:registerable Disabling registration because we always create user after set up sell.do
 
   ## Database authenticatable
   field :first_name, type: String, default: ''

@@ -34,12 +34,6 @@
   </li>
 <% end %>
 
-<% if policy([:buyer, SyncLog]).index? %>
-  <li class="nav-item">
-    <%= active_link_to t('global.sync_logs'), buyer_sync_logs_path, active: :inclusive, class: "nav-link" %>
-  </li>
-<% end %>
-
 <% links = [] %>
 
 <% if CustomPolicy.custom_methods.present? %>
