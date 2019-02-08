@@ -27,7 +27,7 @@
           </div>
           <div class="form-group">
             <%= f.label :default, class: 'control-label' %>
-            <%= f.check_box :by_default, disabled: (!(policy([:admin, @account]).editable_field?("by_default")))||(Account.where(by_default: true).count > 0) %>
+            <%= f.check_box :by_default, disabled: (!(policy([:admin, @account]).editable_field?("by_default"))) %>
           </div>
         </div>
         <div class="modal-footer">
