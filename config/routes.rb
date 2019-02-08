@@ -36,6 +36,7 @@ Rails.application.routes.draw do
   end
   namespace :admin do
     resources :accounts
+    resources :phases
     resources :emails, :smses, only: %i[index show]
     resource :client, except: [:show, :new, :create] do
       resources :templates, only: [:edit, :update, :index]

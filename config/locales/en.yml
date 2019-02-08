@@ -58,6 +58,8 @@ en:
     referrals: 'Referrals'
     accounts: "Accounts"
     account: "Account"
+    phase: 'Phase'
+    phases: Phases
   mongoid:
     attributes:
       asset:

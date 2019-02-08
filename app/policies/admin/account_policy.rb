@@ -24,6 +24,6 @@ class Admin::AccountPolicy < AccountPolicy
   end
 
   def permitted_attributes
-    attributes = %i[account_number key secret by_default]
+    attributes = %i[account_number key secret by_default name]
   end
 end

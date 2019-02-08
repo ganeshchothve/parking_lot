@@ -6,7 +6,7 @@ class Account
   field :name, type: String
   field :by_default, type: Boolean, default: false
 
-  validates_uniqueness_of :account_number
+  validates_uniqueness_of :account_number, :name
 
   has_many :receipts, foreign_key: 'account_number'
   has_many :phases
@@ -14,6 +14,10 @@ class Account
   before_destroy :check_for_receipts, prepend: true
 
   validate :unique_default_account
+
+  def ds_name
+    "#{name} (#{account_number})"
+  end
 
   private
 

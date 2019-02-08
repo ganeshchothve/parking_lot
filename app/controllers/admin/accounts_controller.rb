@@ -1,10 +1,10 @@
-class Admin::AccountsController < ApplicationController
+class Admin::AccountsController < AdminController
   include AccountConcern
   before_action :set_account, except: %i[index export new create]
   before_action :authorize_resource
   # set_account, associated_class, authorize_resource from AccountssConcern
-  
-  # index 
+
+  # index
   # GET /admin/:request_type/accounts
 
   def index
@@ -15,8 +15,8 @@ class Admin::AccountsController < ApplicationController
       format.html {}
     end
   end
-  
-  # new 
+
+  # new
   # GET /admin/:request_type/accounts/new
 
   def new
@@ -73,7 +73,7 @@ class Admin::AccountsController < ApplicationController
     end
   end
   #
-  # This is the update action for Account. 
+  # This is the update action for Account.
   #
   # PATCH  admin/accounts/:id
   #
