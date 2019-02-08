@@ -208,8 +208,8 @@ class User
     end
     selector[:role] = {"$ne": "superadmin"} if selector[:role].blank?
     or_selector = {}
-    if params[:q].present?
-      regex = ::Regexp.new(::Regexp.escape(params[:q]), 'i')
+    if params[:search].present?
+      regex = ::Regexp.new(::Regexp.escape(params[:search]), 'i')
       or_selector = {"$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] }
     end
     self.and([selector, or_selector])

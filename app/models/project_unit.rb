@@ -316,7 +316,7 @@ class ProjectUnit
       selector[:id] = params[:fltrs][:_id]
     end
 
-    selector[:name] = ::Regexp.new(::Regexp.escape(params[:q]), 'i') if params[:q].present?
+    selector[:name] = ::Regexp.new(::Regexp.escape(params[:search]), 'i') if params[:search].present?
     self.where(selector)
   end
 
