@@ -151,8 +151,6 @@ Rails.application.routes.draw do
   end
 
   namespace :buyer do
-    resources :sync_logs, only: %i[index] do
-    end
     resources :users, only: [:show, :update, :edit] do
       member do
         get :update_password

@@ -5,10 +5,22 @@ class Admin::SyncLogsController < AdminController
   before_action :set_sync_reference, only: :resync
   # def apply_policy_scope from SyncLogsConcern
 
+  #
+  # This is the index action for Admin where he can view the sync_logs.
+  #
+  # @return [{},{}] records with array of Hashes.
+  # GET /admin/sync_logs
+  #
   def index
     @sync_logs = SyncLog.build_criteria(params).order(created_at: :desc).paginate(page: params[:page] || 1, per_page: params[:per_page])
   end
 
+  #
+  # This is the resync action for sync_logs.
+  #
+  # @return [{},{}] records with array of Hashes.
+  # GET /admin/sync_logs/:id/resync
+  #
   def resync
     record = @sync_log.resource
     @erp_models = ErpModel.where(resource_class: record.class, action_name: @sync_log.action, is_active: true)

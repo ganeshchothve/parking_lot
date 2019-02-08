@@ -3,14 +3,29 @@ class Admin::ErpModelsController < AdminController
   before_action :authorize_resource
   around_action :apply_policy_scope, only: :index
 
+  #
+  # This is the index action for Admin where he can view the erp_models configured.
+  #
+  # @return [{},{}] records with array of Hashes.
+  # GET /admin/erp_models
+  #
   def index
     @erp_models = ErpModel.build_criteria(params).order(created_at: :desc).paginate(page: params[:page] || 1, per_page: params[:per_page])
   end
 
+  #
+  # The edit action renders a form to edit the details of the erp_model.
+  #
+  # GET /admin/erp_models/:id/edit
   def edit
     render layout: false
   end
 
+  #
+  # The update action is called after edit to update the details.
+  #
+  # PATCH /admin/erp_models/:id
+  #
   def update
     respond_to do |format|
       if @erp_model.update(permitted_attributes([:admin, @erp_model]))
@@ -24,6 +39,7 @@ class Admin::ErpModelsController < AdminController
   end
 
   private
+
 
   def set_erp_model
     @erp_model = ErpModel.where(id: params[:id]).first
