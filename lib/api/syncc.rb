@@ -83,7 +83,7 @@ module Api
     end
 
     def update_erp_id
-      if record.update_attributes(erp_id: get_erp_id)
+      if record.set(erp_id: get_erp_id)
         update_successful
       else
         update_failed
