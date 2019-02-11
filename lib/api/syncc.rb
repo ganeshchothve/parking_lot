@@ -55,7 +55,6 @@ module Api
     end
 
     def set_response_payload(response)
-      byebug
       raise StandardError, 'JSON Parse Error' unless self.response_payload = JSON.parse(response)
       #response_payload = response[:body][erp_model.resource_class]
       response_payload.present? ? validate_erp_id : (raise StandardError, 'Response is blank')
