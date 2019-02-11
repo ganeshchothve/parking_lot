@@ -6,7 +6,7 @@
         <div class="col-12">
           <% if policy([:admin, SyncLog.new]).resync? && project_unit.booking_detail.present? %>
             <% if project_unit.booking_detail.sync_logs.present? %>
-              <%= link_to "Resync", controller: "admin/sync_logs", action: "resync", id: project_unit.booking_detail.sync_logs.desc(:created_at)[0].id, class: "btn btn-primary d-print-none"%>
+              <%= link_to "Resync", resync_admin_sync_log_path(project_unit.booking_detail.sync_logs.desc(:created_at)[0]), class: "btn btn-primary d-print-none"%>
             <% end %>
           <% end %>
         </div>
@@ -198,6 +198,20 @@
       </div>
     </div>
     <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+        <label>Last Synced At:</label>
+          <div>
+            <% if project_unit.booking_detail.present? %>
+              <% if project_unit.booking_detail.sync_logs.present? %>
+                <%= project_unit.booking_detail.sync_logs.desc(:created_at)[0].present? ? project_unit.booking_detail.sync_logs.desc(:created_at)[0].updated_at.strftime("%d/%m/%Y %l:%M %p") : "-" %>
+              <% end %>
+            <% else %>
+               <%= "Not synced" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
       <div class="col-md-4">
         <div class="form-group">
         <label>Last Sync Log Status:</label>
