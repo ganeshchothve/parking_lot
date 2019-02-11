@@ -17,7 +17,9 @@ module Api
     def execute
       self.request_payload = set_request_payload
       get_response
-      update_erp_id if erp_model.action_name == 'create' && response_payload['returnCode'].zero?
+      if response_payload['returnCode'].present?
+        response_payload['returnCode'] ? nil : update_erp_id if erp_model.action_name == 'create'
+      end
     end
 
     private
@@ -49,13 +51,14 @@ module Api
 
     def set_sync_log(request, response, response_code, status, message)
       response = JSON.parse(response) if response.is_a?(RestClient::Response)
-      synclog.update_attributes(request: request, response: response, response_code: response_code, status: status ? 'sucessful' : 'failed', message: message, action: erp_model.action_name, resource: record, user_reference: record_user, reference: parent_sync)
+      synclog.update_attributes(request: request, response: response, response_code: response_code, status: status ? 'successful' : 'failed', message: message, action: erp_model.action_name, resource: record, user_reference: record_user, reference: parent_sync)
     end
 
     def set_response_payload(response)
+      byebug
       raise StandardError, 'JSON Parse Error' unless self.response_payload = JSON.parse(response)
       #response_payload = response[:body][erp_model.resource_class]
-      validate_erp_id if response_payload.present? # raise error
+      response_payload.present? ? validate_erp_id : (raise StandardError, 'Response is blank')
     end
 
     def get_erp_id
@@ -71,12 +74,12 @@ module Api
       response = RestClient::Request.execute(method: erp_model.http_verb.to_sym, url: @url, payload: request_payload.to_json, headers: { 'Content-Type' => 'application/json' })
       case response.code
       when 400..511
-        raise Api::SyncError, "#{response.code}: #{response.message}"
+        raise Api::SyncError, "#{response.try(:code)}: #{response.message}"
       else
         set_sync_log(request_payload, response, response.code, response_payload['returnCode'].zero?, response_payload['message']) if set_response_payload(response)
         end
     rescue HTTParty::Error, StandardError, SyncError => e
-      set_sync_log(request_payload, response.as_json, response.code, false, e.message)
+      set_sync_log(request_payload, response.as_json, response.try(:code) ? response.code : '404', false, e.message)
       puts e.message
     end
 
