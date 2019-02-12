@@ -51,19 +51,24 @@ class Admin::ReceiptsController < AdminController
     authorize([:admin, @receipt])
 
     respond_to do |format|
-      if @receipt.save
-        flash[:notice] = "Receipt was successfully updated. Please upload documents"
-        if @receipt.payment_mode == 'online'
-          url = @receipt.payment_gateway_service.gateway_url(@receipt.user.get_search(@receipt.project_unit_id).id)
-        else
-          url = "#{admin_user_receipts_path(@user)}?remote-state=#{assetables_path(assetable_type: @receipt.class.model_name.i18n_key.to_s, assetable_id: @receipt.id)}"
-        end
-        format.json{ render json: @receipt, location: url }
-        format.html{ redirect_to url }
-      else
-        format.json { render json: { errors: @receipt.errors.full_messages }, status: :unprocessable_entity }
+      if @receipt.account.blank?
+        flash[:alert] = "We do not have any Account Details for Transaction. Please ask Administrator to add."
         format.html { render 'new' }
-      end
+      else
+        if @receipt.save
+          flash[:notice] = "Receipt was successfully updated. Please upload documents"
+          if @receipt.payment_mode == 'online'
+            url = @receipt.payment_gateway_service.gateway_url(@user.get_search(@receipt.project_unit_id).id)
+          else
+            url = "#{admin_user_receipts_path(@user)}?remote-state=#{assetables_path(assetable_type: @receipt.class.model_name.i18n_key.to_s, assetable_id: @receipt.id)}"
+          end
+          format.json{ render json: @receipt, location: url }
+          format.html{ redirect_to url }
+        else
+          format.json { render json: { errors: @receipt.errors.full_messages }, status: :unprocessable_entity }
+          format.html { render 'new' }
+        end
+      else
     end
   end
 
