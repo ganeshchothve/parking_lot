@@ -4,6 +4,7 @@ class Admin::BookingDetailsController < AdminController
 
   private
 
+
   def set_booking_detail
     @booking_detail = BookingDetail.where(_id: params[:id]).first
   end

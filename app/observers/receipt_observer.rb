@@ -20,6 +20,7 @@ class ReceiptObserver < Mongoid::Observer
     # update the user balance if receipt has no project unit
     if receipt.project_unit_id_changed? && receipt.project_unit_id_was.blank? && ['success', 'clearance_pending'].include?(receipt.status) && !receipt.status_changed?
       project_unit.process_payment!(receipt)
+      ProjectUnitBookingService.new(receipt.project_unit.id).book if %w[success clearance_pending].include?(receipt.status)
       unless user.save
         # TODO: notify us about this
       end
@@ -28,10 +29,8 @@ class ReceiptObserver < Mongoid::Observer
     # update project unit if receipt status has changed
     if receipt.status_changed?
       Notification::Receipt.new(receipt.id, receipt.changes).execute
-
       project_unit = receipt.project_unit
       if project_unit.present?
-
         status = if project_unit.status == "hold"
           ProjectUnitBookingService.new(project_unit.id).book
         else
