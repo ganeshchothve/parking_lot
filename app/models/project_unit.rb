@@ -78,6 +78,8 @@ class ProjectUnit
   validates :user_id, :primary_user_kyc_id, presence: true, if: proc { |unit| %w[available not_available management employee].exclude?(unit.status) }
   validate :pan_uniqueness
 
+  delegate :name, to: :phase, prefix: true, allow_nil: true
+
   def ds_name
     "#{project_tower_name} | #{name} | #{bedrooms} BHK"
   end

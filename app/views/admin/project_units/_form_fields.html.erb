@@ -46,7 +46,7 @@
   <% if policy([current_user_role_group, @project_unit]).editable_field?("phase_id") %>
     <div class="form-group">
       <%= f.label :phase, class: 'title' %>
-      <%= f.select :phase_id, Phase.all.collect{|phase| [ phase.name, phase.name ]}, { prompt: true}, {class: "selectize", disabled: !policy([current_user_role_group, @project_unit]).editable_field?("phase_id") } %>
+      <%= f.select :phase_id, Phase.all.collect{|phase| [ phase.name, phase.id ]}, { prompt: true}, {class: "selectize", disabled: !policy([current_user_role_group, @project_unit]).editable_field?("phase_id") } %>
     </div>
   <% end %>
 </div>

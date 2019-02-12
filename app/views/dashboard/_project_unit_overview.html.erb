@@ -185,6 +185,15 @@
           </div>
         </div>
       </div>
+      <% end %>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Phase</label>
+          <div>
+            <%= project_unit.phase_name %>
+          </div>
+        </div>
+      </div>
     </div>
     <% if (project_unit.status == "blocked" || project_unit.status == "booked_tentative") && project_unit.auto_release_on.present? && project_unit.auto_release_on > Date.today %>
       <div class="row">
