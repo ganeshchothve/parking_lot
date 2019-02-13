@@ -88,6 +88,7 @@ gem 'audit', git: 'https://github.com/amuratech/audit.git'
 
 gem 'aasm'
 gem 'mailgun-ruby'
+gem 'safe_parser'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -102,7 +103,6 @@ group :development, :test do
   gem 'pry-doc'
   # parallelize your tests for faster testing
   gem 'parallel_tests'
-
   gem "premailer"
   gem 'rspec-rails'
   gem 'mongoid-rspec'
@@ -112,8 +112,6 @@ end
 
 group :test do
   gem 'faker'
-  #gem 'rspec-rails'
-  #gem 'mongoid-rspec'
   gem 'shoulda', '~> 3.5'
   gem 'shoulda-matchers', '3.1.2'
   gem "factory_bot_rails"

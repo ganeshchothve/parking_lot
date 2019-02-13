@@ -57,12 +57,6 @@
   </li>
 <% end %>
 
-<% if policy([:admin, SyncLog]).index? %>
-  <li class="nav-item">
-    <%= active_link_to t('global.synclogs'), admin_sync_logs_path, active: :inclusive, class: "nav-link" %>
-  </li>
-<% end %>
-
 <% if links.present? %>
   <li class="nav-item d-none d-lg-block">
     <div class="dropdown">

@@ -1,9 +1,9 @@
 class PortalStage
   include Mongoid::Document
+  include Mongoid::Timestamps
 
   # Fields
   field :stage, type: String, default: '' # TODO: validation remaining
-  field :updated_at, type: DateTime # TODO: validation remaining
 
   # Associations
   embedded_in :user

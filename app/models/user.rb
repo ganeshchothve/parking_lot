@@ -6,10 +6,11 @@ class User
   include ActiveModel::OneTimePassword
   include InsertionStringMethods
   include ApplicationHelper
+  include SyncDetails
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, authentication_keys: [:login] #:registerable Disbaling registration because we always create user after set up sell.do
+  devise :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, authentication_keys: [:login] #:registerable Disabling registration because we always create user after set up sell.do
 
   ## Database authenticatable
   field :first_name, type: String, default: ''
@@ -104,7 +105,7 @@ class User
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :emails, as: :triggered_by, class_name: 'Email'
   has_many :sync_logs, as: :resource
-  has_many :sync_logs, inverse_of: 'user_reference'
+  has_many :logs, class_name: 'SyncLog', inverse_of: :user_reference
   embeds_many :portal_stages
   accepts_nested_attributes_for :portal_stages # , reject_if: :all_blank
 

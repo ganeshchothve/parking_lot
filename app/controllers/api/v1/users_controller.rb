@@ -47,17 +47,13 @@ class Api::V1::UsersController < ApisController
 
   # Checks if the erp-id is present. Erp-id is the external api identification id.
   def erp_id_present?
-    if params[:user][:erp_id]
-      true
-    else
-      render json: { status: 'error', message: 'Erp-id is required.' }
-    end
+    render json: { status: :bad_request, message: 'Erp-id is required.' } unless params[:user][:erp_id]
   end
 
   # Sets the user object
   def set_user
     @user = User.where(erp_id: params[:user][:erp_id]).first
-    render json: { status: 'error', message: 'User is not registered.' } if @user.blank?
+    render json: { status: :not_found, message: 'User is not registered.' } if @user.blank?
   end
 
   # Allows only certain parameters to be saved and updated.

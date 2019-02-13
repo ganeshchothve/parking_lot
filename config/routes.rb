@@ -36,6 +36,7 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
+    resources :erp_models, only: %i[index edit update]
     resources :sync_logs, only: %i[index] do
       get 'resync', on: :member
     end
@@ -102,7 +103,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :user_kycs, only: [:index], controller: 'user_kycs'
+    resources :user_kycs, only: %i[index show], controller: 'user_kycs'
     scope ":request_type" do
       resources :user_requests, except: [:destroy], controller: 'user_requests' do
         get 'export', action: 'export', on: :collection, as: :export
@@ -150,9 +151,6 @@ Rails.application.routes.draw do
   end
 
   namespace :buyer do
-    resources :sync_logs, only: %i[index] do
-      get 'resync', on: :member
-    end
     resources :users, only: [:show, :update, :edit] do
       member do
         get :update_password

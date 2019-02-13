@@ -8,7 +8,9 @@
         <th>Response</th>
         <th>Status</th>
         <th>Message</th>
-        <th class="text-right">Actions</th>
+        <% if policy([:admin, SyncLog.new]).resync? %>
+          <th class="text-right">Actions</th>
+        <% end %>
       </tr>
     </thead>
     <tbody>
@@ -32,14 +34,16 @@
           <td>
             <%= sync_log.message.present? ? sync_log.message : '-' %>
           </td>
-        <td class="text-right">
-          <div class="dropdown">
-            <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-            <div class="dropdown-menu dropdown-menu-right">
-              <%= link_to 'Resync', current_user.buyer? ? resync_buyer_sync_log_path(sync_log): resync_admin_sync_log_path(sync_log), class: 'dropdown-item' %>
-            </div>
-          </div>
-        </td>
+          <% if policy([:admin, SyncLog.new]).resync? %>
+            <td class="text-right">
+              <div class="dropdown">
+                <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+                <div class="dropdown-menu dropdown-menu-right">
+                  <%= link_to 'Show', redirect_link(sync_log), class: 'dropdown-item' %>
+                </div>
+              </div>
+            </td>
+          <% end %>
       </tr>
       <% end %>
       <tr>

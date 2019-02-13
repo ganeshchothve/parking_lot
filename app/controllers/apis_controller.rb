@@ -20,6 +20,5 @@ class ApisController < ActionController::API
       message = 'Required parameters missing.'
     end
     render json: { status: 'error', message: message } unless flag
-    flag
   end
 end
