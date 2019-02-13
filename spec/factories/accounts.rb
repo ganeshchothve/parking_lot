@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :account do
     account_number { Faker::Number.number(8) }
-    is_active { 'false' }
+    name { Faker::Name.name }
   end
   factory :razorpay_payment, parent: :account, class: 'Account::RazorpayPayment' do
     key 'rzp_test_NTQGRS3ia0hiWY'

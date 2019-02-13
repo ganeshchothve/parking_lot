@@ -1,10 +1,11 @@
 require 'rails_helper'
 RSpec.describe Buyer::ProjectUnits::ReceiptsController, type: :controller do
   describe 'creating receipt' do
-    it 'selects default account when this is first booking for the tower' do
+    it 'selects not default account when there is a account linked to the phase' do
       phase = create(:phase)
       default = create(:razorpay_payment, by_default: true)
-      not_default = create(:razorpay_payment, by_default: false, phase: phase)
+      not_default = create(:razorpay_payment, by_default: false)
+      not_default.phases << phase
       client = create(:client)
       admin = create(:admin)
       @user = create(:user)
@@ -17,12 +18,12 @@ RSpec.describe Buyer::ProjectUnits::ReceiptsController, type: :controller do
       @project_unit.save
       receipt_params = FactoryBot.attributes_for(:receipt)
       post :create, params: { receipt: receipt_params, user_id: @user.id, project_unit_id: @project_unit.id }
-      expect(Receipt.first.account.by_default).to eq(true)
+      expect(Receipt.first.account.by_default).to eq(false)
     end
-    it 'selects account linked to the tower when this not first booking for the tower' do
+    it 'selects default account when there is no account linked to the phase' do
       phase = create(:phase)
       default = create(:razorpay_payment, by_default: true)
-      not_default = create(:razorpay_payment, by_default: false, phase: phase)
+      not_default = create(:razorpay_payment, by_default: false)
       client = create(:client)
       admin = create(:admin)
       @user = create(:user)
@@ -36,7 +37,7 @@ RSpec.describe Buyer::ProjectUnits::ReceiptsController, type: :controller do
       receipt_params = FactoryBot.attributes_for(:receipt)
       post :create, params: { receipt: receipt_params, user_id: @user.id, project_unit_id: @project_unit.id }
       post :create, params: { receipt: receipt_params, user_id: @user.id, project_unit_id: @project_unit.id }
-      expect(Receipt.last.account.by_default).to eq(false)
+      expect(Receipt.last.account.by_default).to eq(true)
     end
   end
 end

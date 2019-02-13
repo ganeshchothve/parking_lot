@@ -1,10 +1,11 @@
 require 'rails_helper'
 RSpec.describe Admin::ProjectUnits::ReceiptsController, type: :controller do
   describe 'creating receipt' do
-    it 'selects account linked to the tower when this not first booking for the tower' do
+    it 'selects account linked to the phase if phase and account both are present' do
       phase = create(:phase)
       default = create(:razorpay_payment, by_default: true)
-      not_default = create(:razorpay_payment, by_default: false, phase: phase)
+      not_default = create(:razorpay_payment, by_default: false)
+      not_default.phases << phase
       client = create(:client)
       admin = create(:admin)
       sign_in_app(admin)
@@ -20,10 +21,10 @@ RSpec.describe Admin::ProjectUnits::ReceiptsController, type: :controller do
       post :create, params: { receipt: receipt_params, user_id: @user.id, project_unit_id: @project_unit.id }
       expect(Receipt.last.account.by_default).to eq(false)
     end
-    it 'selects default account when this is first booking for the tower' do
+    it 'selects default account when phase is missing or account is missing' do
       phase = create(:phase)
       default = create(:razorpay_payment, by_default: true)
-      not_default = create(:razorpay_payment, by_default: false, phase: phase)
+      not_default = create(:razorpay_payment, by_default: false)
       client = create(:client)
       admin = create(:admin)
       sign_in_app(admin)
