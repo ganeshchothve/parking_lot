@@ -33,16 +33,12 @@ class Api::V1::UsersController < ApisController
   private
 
   def erp_id_present?
-    if params[:user][:erp_id]
-      true
-    else
-      render json: { status: 'error', message: 'Erp-id is required.' }
-    end
+    render json: { status: :bad_request, message: 'Erp-id is required.' } unless params[:user][:erp_id]
   end
 
   def set_user
     @user = User.where(erp_id: params[:user][:erp_id]).first
-    render json: { status: 'error', message: 'User is not registered.' } if @user.blank?
+    render json: { status: :not_found, message: 'User is not registered.' } if @user.blank?
   end
 
   def user_params

@@ -22,17 +22,18 @@ class SyncLog
 
   def sync(erp_model, record)
     parent_sync = (self if self.action.present?)
-    if erp_model.resource_class == 'User'
+    case erp_model.resource_class
+    when 'User'
       details = Api::UserDetailsSync.new(erp_model, record, parent_sync)
-    elsif erp_model.resource_class == 'UserKyc'
+    when 'UserKyc'
       details = Api::UserKycDetailsSync.new(erp_model, record, parent_sync)
-    elsif erp_model.resource_class == 'BookingDetail'
+    when 'BookingDetail'
       details = Api::BookingDetailsSync.new(erp_model, record, parent_sync)
-    elsif erp_model.resource_class == 'Receipt'
+    when 'Receipt'
       details = Api::ReceiptDetailsSync.new(erp_model, record, parent_sync)
-    elsif erp_model.resource_class == 'ChannelPartner'
+    when 'ChannelPartner'
       details = Api::ChannelPartnerDetailsSync.new(erp_model, record, parent_sync)
     end
-    details.execute
+    details.execute    
   end
 end

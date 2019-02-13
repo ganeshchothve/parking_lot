@@ -94,7 +94,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
         expect { post :create, params: { user: @user_params } }.to change { User.count }.by(0)
         res = JSON.parse(response.body)
         expect(res['message']).to eq('Erp-id is required.')
-        expect(res['status']).to eq('error')
+        expect(res['status']).to eq('bad_request')
       end
     end
 
@@ -141,7 +141,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
         patch :update, params: { id: user.id, user: @user_params }
         res = JSON.parse(response.body)
         expect(res['message']).to eq('User is not registered.')
-        expect(res['status']).to eq('error')
+        expect(res['status']).to eq('not_found')
       end
     end
 

@@ -80,11 +80,12 @@ class UserKyc
   default_scope -> { desc(:created_at) }
 
   def name
-    "#{begin
-         UserKyc.available_salutations.find { |x| x[:id] == salutation }[:text]
-       rescue StandardError
-         ''
-       end} #{first_name} #{last_name}"
+    begin
+      _salutation = UserKyc.available_salutations.find { |x| x[:id] == salutation }[:text]
+    rescue StandardError
+      _salutation = ''
+    end
+    "#{_salutation} #{first_name} #{last_name}"
   end
 
   def api_json
@@ -102,16 +103,8 @@ class UserKyc
       country_code_primary_phone: country_code,
       phone: kyc_phone,
       pan_no: kyc.pan_number,
-      dob: (begin
-              kyc.dob.strftime('%Y-%m-%d')
-            rescue StandardError
-              nil
-            end),
-      anniversary: (begin
-                      kyc.anniversary.strftime('%Y-%m-%d')
-                    rescue StandardError
-                      nil
-                    end),
+      dob: (kyc.dob.strftime('%Y-%m-%d') rescue nil),
+      anniversary: (kyc.anniversary.strftime('%Y-%m-%d') rescue nil),
       nri: kyc.nri ? 'NRI' : 'Indian',
       aadhaar: kyc.aadhaar,
       house_number: kyc.house_number,

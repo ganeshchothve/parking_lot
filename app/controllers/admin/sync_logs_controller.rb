@@ -3,7 +3,6 @@ class Admin::SyncLogsController < AdminController
   before_action :authorize_resource
   around_action :apply_policy_scope, only: :index
   before_action :set_sync_reference, only: :resync
-  # def apply_policy_scope from SyncLogsConcern
 
   #
   # This is the index action for Admin where he can view the sync_logs.
@@ -22,12 +21,17 @@ class Admin::SyncLogsController < AdminController
   # GET /admin/sync_logs/:id/resync
   #
   def resync
-    record = @sync_log.resource
-    @erp_models = ErpModel.where(resource_class: record.class, action_name: @sync_log.action, is_active: true)
-    @erp_models.each do |erp|
-      @sync_log.sync(erp, record)
-    end
-    redirect_back(fallback_location: root_path)
+    if @sync_log.resource.present?
+      record = @sync_log.resource
+      @erp_models = ErpModel.where(resource_class: record.class, action_name: @sync_log.action, is_active: true)
+      @erp_models.each do |erp|
+        @sync_log.sync(erp, record)
+      end
+      notice = 'Synced'
+    else
+      notice = 'Sync log resource absent'
+    end 
+    redirect_back(fallback_location: root_path, notice: notice)
   end
 
   private
@@ -39,4 +43,9 @@ class Admin::SyncLogsController < AdminController
   def authorize_resource
     authorize [:admin, SyncLog]
   end
+
+  #
+  # def apply_policy_scope
+  #   defined in SyncLogsConcern
+  # end
 end
