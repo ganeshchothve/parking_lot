@@ -30,6 +30,7 @@ class ChannelPartner
     ]
   )
 
+  has_many :users
   has_one :address, as: :addressable, validate: false
   has_one :bank_detail, as: :bankable, validate: false
   has_many :assets, as: :assetable

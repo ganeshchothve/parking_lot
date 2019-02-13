@@ -87,6 +87,8 @@ class User
   attr_accessor :login, :login_otp
 
   belongs_to :booking_portal_client, class_name: 'Client', inverse_of: :users
+  belongs_to :manager, class_name: 'User', optional: true
+  belongs_to :channel_partner
   has_many :receipts
   has_many :project_units
   has_many :booking_details
@@ -219,10 +221,6 @@ class User
       or_selector = { "$or": [{ first_name: regex }, { last_name: regex }, { email: regex }, { phone: regex }] }
     end
     self.and([selector, or_selector])
-  end
-
-  def manager
-    User.find(manager_id) if manager_id.present?
   end
 
   # new function to set the password without knowing the current

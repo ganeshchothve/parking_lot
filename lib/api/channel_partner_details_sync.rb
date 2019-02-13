@@ -1,5 +1,6 @@
 module Api
   class ChannelPartnerDetailsSync < Api::Syncc
+
     def initialize(erp_model, record, parent_sync_record = nil)
       super(erp_model, record, parent_sync_record)
     end
