@@ -89,8 +89,6 @@ class User
   belongs_to :booking_portal_client, class_name: 'Client', inverse_of: :users
   belongs_to :manager, class_name: 'User', optional: true
   belongs_to :channel_partner
-  belongs_to :booking_detail, foreign_key: 'manager_id', optional: true
-  has_one :user
   has_many :receipts
   has_many :project_units
   has_many :booking_details
