@@ -68,7 +68,7 @@ class Admin::ReceiptsController < AdminController
           format.json { render json: { errors: @receipt.errors.full_messages }, status: :unprocessable_entity }
           format.html { render 'new' }
         end
-      else
+      end
     end
   end
 
