@@ -21,6 +21,7 @@ class BookingDetail
 
   belongs_to :project_unit
   belongs_to :user
+  has_one :manager, class_name: 'User'
   has_many :receipts
   has_and_belongs_to_many :user_kycs
   has_many :smses, as: :triggered_by, class_name: 'Sms'
@@ -61,10 +62,6 @@ class BookingDetail
 
   def primary_user_kyc
     UserKyc.find(primary_user_kyc_id) if primary_user_kyc_id.present?
-  end
-
-  def manager
-    User.where(id: manager_id).first if manager_id.present?
   end
 
   def send_notification!
