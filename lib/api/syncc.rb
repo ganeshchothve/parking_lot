@@ -77,7 +77,7 @@ module Api
       else
         set_sync_log(request_payload, response, response.code, response_payload['returnCode'].zero?, response_payload['message']) if set_response_payload(response)
         end
-    rescue HTTParty::Error, StandardError, SyncError => e
+    rescue StandardError, SyncError => e
       set_sync_log(request_payload, response.as_json, response.try(:code) ? response.code : '404', false, e.message)
       puts e.message
     end
