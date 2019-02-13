@@ -12,7 +12,6 @@ class ProjectUnitBookingService
     booking_detail_scheme.status = "under_negotiation"
     booking_detail_scheme.booking_detail_id = booking_detail.id
     booking_detail_scheme.save!
-
     self.project_unit.status = "under_negotiation"
     self.project_unit.save(validate: false)
   end
@@ -23,9 +22,6 @@ class ProjectUnitBookingService
       self.create_or_update_booking_detail_scheme booking_detail
       self.project_unit.status = booking_detail.status
       self.project_unit.save(validate: false)
-    elsif %w[booked_confirmed booked_tentative blocked].include?(project_unit.status)
-      booking_detail = self.create_booking_detail project_unit.status
-      self.create_or_update_booking_detail_scheme booking_detail
     end
   end
 
