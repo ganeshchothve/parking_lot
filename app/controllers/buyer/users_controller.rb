@@ -1,5 +1,4 @@
 class Buyer::UsersController < BuyerController
-
   include UsersConcern
 
   before_action :set_user, only: %i[show edit update update_password]
@@ -34,8 +33,8 @@ class Buyer::UsersController < BuyerController
 
   private
 
+
   def set_user
     @user = current_user
   end
-
 end

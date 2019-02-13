@@ -1,0 +1,42 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">Channel Partner</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Last Synced At:</label>
+                  <div>
+                    <% if @resource.sync_logs.present? %>
+                      <%= @resource.sync_logs.desc(:created_at)[0].present? ? @resource.sync_logs.desc(:created_at)[0].updated_at.strftime("%d/%m/%Y %l:%M %p") : "-" %>
+                    <% else %>
+                      <%= "Not synced" %>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Last Sync Log Status:</label>
+                  <div>
+                    <% if @resource.sync_logs.present? %>
+                      <%= @resource.sync_logs.desc(:created_at)[0].status.present? ? @resource.sync_logs.desc(:created_at)[0].status : "-" %>
+                    <% else %>
+                      <%= "Not synced" %>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <% if policy([:admin, SyncLog.new]).resync? && @resource.sync_logs.present? %>
+                <%= link_to "Resync", resync_admin_sync_log_path(@resource.sync_logs.desc(:created_at)[0]), class: 'btn btn-primary' %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
