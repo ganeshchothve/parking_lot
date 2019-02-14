@@ -348,6 +348,10 @@ class ProjectUnit
     BookingDetailScheme.where(user_id: self.user_id, project_unit_id: self.id).in(status: ["under_negotiation", "draft", "approved"]).desc(:created_at).first
   end
 
+  def scheme=(_scheme)
+    @scheme = _scheme if _scheme.kind_of?(Scheme) || _scheme.kind_of?(BookingDetailScheme)
+  end
+
   def scheme
     return @scheme if @scheme.present?
 
