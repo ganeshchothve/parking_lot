@@ -11,19 +11,17 @@ FactoryBot.define do
     rera_id { Faker::IDNumber.valid }
     confirmed_at { DateTime.now }
 
-    association :booking_portal_client, factory: :client
-
     after(:build) do |user|
       user.booking_portal_client ||= (Client.asc(:created_at).first || create(:client))
     end
 
     after(:create) do |user|
-      user.confirm
+      # user.confirm
       user.booking_portal_client ||= (Client.asc(:created_at).first || create(:client))
     end
 
     trait :channel_partner_user_kyc do
-      role 'channel_partner'
+      role { 'channel_partner' }
       after(:create) do |user|
         user.user_kycs << create(:user_kyc, creator_id: user.id.to_s, user: user)
       end

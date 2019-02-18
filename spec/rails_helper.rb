@@ -73,7 +73,7 @@ RSpec.configure do |config|
   config.before(:each) do
     DatabaseCleaner[:mongoid].start
     Sidekiq::Worker.clear_all
-    FactoryBot.create(:client)
+    Client.first || create(:client)
   end
 
   config.after(:each) do
