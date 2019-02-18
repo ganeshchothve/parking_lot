@@ -36,7 +36,7 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
-    resources :erp_models, only: %i[index edit update]
+    resources :erp_models, only: %i[index new create edit update]
     resources :sync_logs, only: %i[index] do
       get 'resync', on: :member
     end

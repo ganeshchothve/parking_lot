@@ -181,6 +181,10 @@ class UserKyc
     end
   end
 
+  def self.sync(erp_model, record, sync_log)
+    Api::UserKycDetailsSync.new(erp_model, record, sync_log).execute
+  end
+
   private
 
   def min_max_budget

@@ -1,6 +1,6 @@
 class Admin::SyncLogPolicy < SyncLogPolicy
   def index?
-    true
+    %w[superadmin admin sales_admin].include?(user.role)
   end
 
   def resync?

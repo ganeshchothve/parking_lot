@@ -1,6 +1,18 @@
 <div class="container bg-light">
   <div class="pt-3"></div>
   <div class="card">
+    <div class="card-header">
+      Receipt
+      <div class="dropdown float-right d-print-none">
+        <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</a>
+        <div class="dropdown-menu dropdown-menu-right">
+          <button onclick="window.print();" class="dropdown-item ">Print</button>
+          <% if policy([:admin, SyncLog.new]).resync? && receipt.sync_logs.present? %>
+            <%= link_to "Resync", resync_admin_sync_log_path(receipt.sync_logs.desc(:created_at)[0]), class: "dropdown-item" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
     <div class="card-body">
       <div class="row">
         <div class="col-md-6">
@@ -11,25 +23,22 @@
         <div class="col-md-6">
           <div class="mt-2 mb-1 small text-muted">Receipt ID</div>
           <h5><%= @receipt.receipt_id %></h5>
-          <% if policy([:admin, SyncLog.new]).resync? %>
-            <div class="mt-2 mb-1 small text-muted">Last Synced At</div>
-            <% if receipt.sync_logs.present? %>
-              <h5><%= receipt.sync_logs.desc(:created_at)[0].present? ? receipt.sync_logs.desc(:created_at)[0].updated_at.strftime("%d/%m/%Y %l:%M %p") : "-" %></h5>
-            <% else %>
-              <h5><%= "Not synced" %></h5>
-            <% end %>
-            <div class="mt-2 mb-1 small text-muted">Last Sync Log Status</div>
-            <% if receipt.sync_logs.present? %>
-              <h5><%= receipt.sync_logs.desc(:created_at)[0].status.present? ? receipt.sync_logs.desc(:created_at)[0].status : "-" %></h5>
-            <% else %>
-              <h5><%= "Not synced" %></h5>
-            <% end %>
-            <div>
+          <div class="d-print-none">
+            <% if policy([:admin, SyncLog.new]).resync? %>
+              <div class="mt-2 mb-1 small text-muted">Last Synced At</div>
               <% if receipt.sync_logs.present? %>
-                <h6><%= link_to "Resync", resync_admin_sync_log_path(receipt.sync_logs.desc(:created_at)[0]), class: "btn btn-primary d-print-none" %></h6>
+                <h5><%= receipt.sync_logs.desc(:created_at)[0].present? ? receipt.sync_logs.desc(:created_at)[0].updated_at.strftime("%d/%m/%Y %l:%M %p") : "-" %></h5>
+              <% else %>
+                <h5><%= "Not synced" %></h5>
               <% end %>
-            </div>
-          <% end %>
+              <div class="mt-2 mb-1 small text-muted">Last Sync Log Status</div>
+              <% if receipt.sync_logs.present? %>
+                <h5><%= receipt.sync_logs.desc(:created_at)[0].status.present? ? receipt.sync_logs.desc(:created_at)[0].status : "-" %></h5>
+              <% else %>
+                <h5><%= "Not synced" %></h5>
+              <% end %>
+            <% end %>
+          </div>
         </div>
       </div>
     </div>

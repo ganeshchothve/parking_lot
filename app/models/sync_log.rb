@@ -22,18 +22,10 @@ class SyncLog
 
   def sync(erp_model, record)
     parent_sync = (self if self.action.present?)
-    case erp_model.resource_class
-    when 'User'
-      details = Api::UserDetailsSync.new(erp_model, record, parent_sync)
-    when 'UserKyc'
-      details = Api::UserKycDetailsSync.new(erp_model, record, parent_sync)
-    when 'BookingDetail'
-      details = Api::BookingDetailsSync.new(erp_model, record, parent_sync)
-    when 'Receipt'
-      details = Api::ReceiptDetailsSync.new(erp_model, record, parent_sync)
-    when 'ChannelPartner'
-      details = Api::ChannelPartnerDetailsSync.new(erp_model, record, parent_sync)
+    if Rails.env.production? || Rails.env.staging?
+      Object.const_get(erp_model.resource_class).delay.sync(erp_model, record, parent_sync)
+    else
+      Object.const_get(erp_model.resource_class).sync(erp_model, record, parent_sync)
     end
-    details.execute    
   end
 end

@@ -13,6 +13,24 @@ class Admin::ErpModelsController < AdminController
     @erp_models = ErpModel.build_criteria(params).order(created_at: :desc).paginate(page: params[:page] || 1, per_page: params[:per_page])
   end
 
+  # GET /admin/erp_models/new
+  def new
+    @erp_model = ErpModel.new
+    render layout: false
+  end
+
+  def create
+    respond_to do |format|
+      if ErpModel.create(permitted_attributes([:admin, ErpModel.new]))
+        format.html { redirect_to admin_erp_models_path, notice: 'Erp Model was successfully created.' }
+        format.json { render json: @erp_model }
+      else
+        format.html { render :new, alert: @erp_model.errors.full_messages.uniq }
+        format.json { render json: { errors: @erp_model.errors.full_messages.uniq }, status: :unprocessable_entity }
+      end
+    end
+  end
+
   #
   # The edit action renders a form to edit the details of the erp_model.
   #
@@ -52,8 +70,11 @@ class Admin::ErpModelsController < AdminController
   end
 
   def authorize_resource
-    if params[:action] == 'index'
+    case params[:action]
+    when 'index'
       authorize [:admin, ErpModel]
+    when 'new', 'create'
+      authorize [:admin, ErpModel.new]
     else
       authorize [:admin, @erp_model]
     end

@@ -21,10 +21,10 @@ class CustomPolicy < Struct.new(:user, :enable_users)
   end
 
   def erp_models?
-    %w[superadmin admin].include?(user.role)
+    %w[superadmin].include?(user.role)
   end
 
   def self.custom_methods
-    %w[inventory emails smses audits sync_logs erp_models] 
+    %w[inventory emails smses audits sync_logs erp_models]
   end
 end

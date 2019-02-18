@@ -2,7 +2,17 @@
   <div class="row justify-content-center">
     <div class="col-md-12">
       <div class="card">
-        <div class="card-header">Channel Partner</div>
+        <div class="card-header">
+          Channel Partner
+          <% if policy([:admin, SyncLog.new]).resync? && @resource.sync_logs.present? %>
+            <div class="dropdown float-right">
+              <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</a>
+              <div class="dropdown-menu dropdown-menu-right">
+                <%= link_to "Resync", resync_admin_sync_log_path(@resource.sync_logs.desc(:created_at)[0]), class: 'dropdown-item' %>
+              </div>
+            </div>
+          <% end %>
+        </div>
           <div class="card-body">
             <div class="row">
               <div class="col-md-4">
@@ -29,11 +39,6 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="form-group">
-              <% if policy([:admin, SyncLog.new]).resync? && @resource.sync_logs.present? %>
-                <%= link_to "Resync", resync_admin_sync_log_path(@resource.sync_logs.desc(:created_at)[0]), class: 'btn btn-primary' %>
-              <% end %>
             </div>
           </div>
         </div>

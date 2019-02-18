@@ -72,4 +72,9 @@ class BookingDetail
   def booking_detail_scheme
     booking_detail_schemes.where(status: 'approved').first
   end
+
+  def self.sync(erp_model, record, sync_log)
+    Api::BookingDetailsSync.new(erp_model, record, sync_log).execute
+  end
+
 end

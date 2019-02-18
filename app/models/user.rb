@@ -88,7 +88,7 @@ class User
 
   belongs_to :booking_portal_client, class_name: 'Client', inverse_of: :users
   belongs_to :manager, class_name: 'User', optional: true
-  belongs_to :channel_partner
+  belongs_to :channel_partner, optional: true
   has_many :receipts
   has_many :project_units
   has_many :booking_details
@@ -368,6 +368,10 @@ class User
       end
     end
     user_kyc_ids
+  end
+
+  def self.sync(erp_model, record, sync_log)
+    Api::UserDetailsSync.new(erp_model, record, sync_log).execute
   end
 
   private
