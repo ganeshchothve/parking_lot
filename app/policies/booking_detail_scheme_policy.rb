@@ -4,7 +4,8 @@ class BookingDetailSchemePolicy < SchemePolicy
   end
 
   def edit?
-    %w[approved disabled].exclude?(record.status) && %w[superadmin admin sales crm cp].include?(user.role)
+
+    ((record.project_unit.status == 'under_negotiation') && %w[disabled].exclude?(record.status) && %w[superadmin admin sales crm cp].include?(user.role)) || (ProjectUnit.booking_stages.include?(record.project_unit.status) && %w[superadmin admin sales crm cp].include?(user.role))
   end
 
   def create?
