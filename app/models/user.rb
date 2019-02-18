@@ -8,9 +8,12 @@ class User
   include ApplicationHelper
   include SyncDetails
 
+  # Constants
+  ALLOWED_KEYS = [:campaign, :source, :sub_source, :content, :medium, :term]
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, authentication_keys: [:login] #:registerable Disabling registration because we always create user after set up sell.do
+  devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, authentication_keys: [:login]
 
   ## Database authenticatable
   field :first_name, type: String, default: ''
@@ -27,7 +30,7 @@ class User
   field :mixpanel_id, type: String
   field :time_zone, type: String, default: 'Mumbai'
   field :erp_id, type: String, default: ''
-  field :utm_params, type: Hash, default: {} # {"campaign": '' ,"source": '',"sub_source": '',"medium": '',"term": '',"content": ''}
+  field :utm_params, type: String, default: "" # {"campaign": '' ,"source": '',"sub_source": '',"medium": '',"term": '',"content": ''}
   field :enable_communication, type: Hash, default: { "email": true, "sms": true }
 
   field :encrypted_password, type: String, default: ''
@@ -88,7 +91,7 @@ class User
 
   belongs_to :booking_portal_client, class_name: 'Client', inverse_of: :users
   belongs_to :manager, class_name: 'User', optional: true
-  belongs_to :channel_partner
+  belongs_to :channel_partner, optional: true
   has_many :receipts
   has_many :project_units
   has_many :booking_details
@@ -120,6 +123,10 @@ class User
   def unattached_blocking_receipt(blocking_amount = nil)
     blocking_amount ||= current_client.blocking_amount
     Receipt.where(user_id: id).in(status: %w[success clearance_pending]).where(project_unit_id: nil).where(total_amount: { "$gte": blocking_amount }).first
+  end
+
+  def allowed_utm_param_keys(hash)
+    hash.slice(*ALLOWED_KEYS).to_s if hash.present?
   end
 
   def total_amount_paid

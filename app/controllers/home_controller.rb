@@ -4,6 +4,7 @@ class HomeController < ApplicationController
   end
 
   def register
+    @resource = User.new
     if user_signed_in?
       redirect_to home_path(current_user)
       flash[:notice] = "You have already been logged in"
@@ -48,8 +49,9 @@ class HomeController < ApplicationController
           @user = User.new(booking_portal_client_id: current_client.id, email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], lead_id: params[:lead_id], mixpanel_id: params[:mixpanel_id])
           if user_signed_in?
             @user.manager_id = current_user.id
-          elsif(cookies[:portal_cp_id].present?)
-            @user.manager_id = cookies[:portal_cp_id]
+          else
+            @user.manager_id = cookies[:portal_cp_id] if(cookies[:portal_cp_id].present?)
+            @user.utm_params = @user.allowed_utm_param_keys(cookies[:utm_params])
           end
           # RegistrationMailer.welcome(user, generated_password).deliver #TODO: enable this. We might not need this if we are to use otp based login
           respond_to do |format|

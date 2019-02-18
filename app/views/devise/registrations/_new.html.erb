@@ -1,0 +1,28 @@
+<%= form_for(resource, url: user_registration_path) do |f| %>
+  <div class="form-group">
+    <%= f.label :first_name, class: 'label-required' %>
+    <%= f.text_field :first_name, autofocus: true, required: 'required', placeholder: 'First Name', class: 'form-control' %>
+  </div>
+  <div class="form-group">
+    <%= f.label :last_name, class: 'label-required' %>
+    <%= f.text_field :last_name, autofocus: true, required: 'required', placeholder: 'Last Name', class: 'form-control' %>
+  </div>
+  <div class="form-group">
+    <%= f.label :email , class: 'label-required'%>
+    <%= f.email_field :email, autofocus: true, required: 'required', placeholder: 'Email', class: 'form-control' %>
+  </div>
+  <div class="form-group">
+    <%= f.label :phone, class: 'label-required' %>
+    <%= f.phone_field :phone, autofocus: true, placeholder: 'Phone', class: 'form-control phone' %>
+  </div>
+  <div class="form-group">
+    <%= f.label :password, class: 'label-required' %>
+    <% if @minimum_password_length %>
+      <em>(<%= @minimum_password_length %> characters minimum)</em>
+    <% end %><br />
+    <%= f.password_field :password, required: 'required', placeholder: 'Password', class: 'form-control' %>
+  </div>
+  <div class="actions">
+    <%= f.submit "Sign up", class: 'btn btn-primary' %>
+  </div>
+<% end %>
