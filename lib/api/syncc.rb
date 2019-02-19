@@ -16,21 +16,18 @@ module Api
 
     def execute
       self.request_payload = set_request_payload
-      get_response
-      update_erp_id if erp_model.action_name == 'create' && response_payload['returnCode'].present? && response_payload['returnCode'].zero?
+      erp_id = get_response
+      if erp_id.present?
+        if erp_model.action_name == 'create'
+          record.update_erp_id(erp_id)
+          puts "#{erp_model.resource_class} successfully created with erp_id: #{erp_id}"
+        else
+          puts "#{erp_model.resource_class} with erp_id: #{erp_id} updated successfully"
+        end
+      end
     end
 
     private
-
-    def update_successful
-      puts "#{erp_model.resource_class} #{erp_model.reference_key_name} updated successfully"
-    end
-
-    def update_failed
-      raise Api::SyncError, "Could not update #{erp_model.resource_class} #{erp_model.reference_key_name}"
-    rescue SyncError => e
-      puts e.message
-    end
 
     def validate_erp_id
       if get_erp_id.blank?
@@ -75,17 +72,10 @@ module Api
       else
         set_sync_log(request_payload, response, response.code, response_payload['returnCode'].zero?, response_payload['message']) if set_response_payload(response)
       end
+      get_erp_id
     rescue StandardError, SyncError => e
       set_sync_log(request_payload, response.as_json, response.try(:code) ? response.code : '404', false, e.message)
       puts e.message
-    end
-
-    def update_erp_id
-      if record.set(erp_id: get_erp_id)
-        update_successful
-      else
-        update_failed
-      end
     end
   end
 end

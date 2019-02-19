@@ -121,7 +121,7 @@ class UserKyc
   end
 
   def sync(erp_model, sync_log)
-    Api::UserKycDetailsSync.new(erp_model, self, sync_log).execute if user.erp_id.present?
+    Api::UserKycDetailsSync.new(erp_model, self, sync_log).execute if user.buyer? && user.erp_id.present?
   end
 
   class << self

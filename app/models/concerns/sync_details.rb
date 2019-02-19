@@ -26,5 +26,9 @@ module SyncDetails
         sync_log.sync(erp, self)
       end
     end
+
+    def update_erp_id(erp_id)
+      set(erp_id: erp_id)
+    end
   end
 end
