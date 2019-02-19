@@ -16,15 +16,9 @@ FactoryBot.define do
     selldo_id { Faker::String.random(3..12) }
     completed_floor { Faker::Number.number(2) }
     project_tower_stage { 'completed' }
-    # project {FactoryBot.create(:project)}
-
-    # association :booking_portal_client, factory: :client
-    association :project, factory: :project
 
     after(:build) do |project_tower|
-      # project = FactoryBot.create(:project)
-      # project.save!
-      # scheme.set(project_id: project)
+      project_tower.project = Project.desc(:created_at).first || create(:project)
     end
   end
 end

@@ -1,5 +1,6 @@
 class SearchesController < ApplicationController
   include SearchConcern
+  include ReceiptsConcern
   before_action :authenticate_user!
   before_action :set_search, except: [:index, :export, :new, :create, :tower, :three_d]
   before_action :set_user, except: [:export]
@@ -145,7 +146,7 @@ class SearchesController < ApplicationController
 
   def payment
     @receipt = Receipt.new(creator: @search.user, user: @search.user, payment_mode: 'online', total_amount: current_client.blocking_amount, payment_gateway: current_client.payment_gateway)
-
+    @receipt.account = selected_account(@search.project_unit) 
     if @search.project_unit_id.present?
       @project_unit = ProjectUnit.find(@search.project_unit_id)
       @receipt.total_amount = @project_unit.blocking_amount
