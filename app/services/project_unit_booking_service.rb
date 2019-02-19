@@ -12,7 +12,6 @@ class ProjectUnitBookingService
     booking_detail_scheme.status = "under_negotiation"
     booking_detail_scheme.booking_detail_id = booking_detail.id
     booking_detail_scheme.save!
-
     self.project_unit.status = "under_negotiation"
     self.project_unit.save(validate: false)
   end
@@ -52,7 +51,12 @@ class ProjectUnitBookingService
   end
 
   def create_booking_detail status
-    BookingDetail.create(project_unit_id: self.project_unit.id, user_id: self.project_unit.user_id, receipt_ids: self.project_unit.receipt_ids, user_kyc_ids: self.project_unit.user_kyc_ids, primary_user_kyc_id: self.project_unit.primary_user_kyc_id, status: status, manager_id: self.project_unit.user.manager_id)
+    if project_unit.booking_detail.blank?
+      BookingDetail.create(project_unit_id: self.project_unit.id, user_id: self.project_unit.user_id, receipt_ids: self.project_unit.receipt_ids, user_kyc_ids: self.project_unit.user_kyc_ids, primary_user_kyc_id: self.project_unit.primary_user_kyc_id, status: status, manager_id: self.project_unit.user.manager_id)
+    else
+      project_unit.booking_detail.update(user_id: self.project_unit.user_id, receipt_ids: self.project_unit.receipt_ids, user_kyc_ids: self.project_unit.user_kyc_ids, primary_user_kyc_id: self.project_unit.primary_user_kyc_id, status: status, manager_id: self.project_unit.user.manager_id)
+    end
+    project_unit.booking_detail
   end
 
   def create_or_update_booking_detail_scheme booking_detail

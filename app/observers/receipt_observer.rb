@@ -28,10 +28,8 @@ class ReceiptObserver < Mongoid::Observer
     # update project unit if receipt status has changed
     if receipt.status_changed?
       Notification::Receipt.new(receipt.id, receipt.changes).execute
-
       project_unit = receipt.project_unit
       if project_unit.present?
-
         status = if project_unit.status == "hold"
           ProjectUnitBookingService.new(project_unit.id).book
         else
