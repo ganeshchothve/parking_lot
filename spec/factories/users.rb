@@ -2,8 +2,8 @@ FactoryBot.define do
   factory :user do
     first_name { Faker::Name.first_name }
     phone { Faker::PhoneNumber.phone_number }
-    confirmed_at DateTime.now
-   last_name { Faker::Name.last_name }
+    confirmed_at { DateTime.now }
+    last_name { Faker::Name.last_name }
     email { Faker::Internet.email }
     # role { ["user","channel_partner"] }
     allowed_bookings { Faker::Number.number(2) }

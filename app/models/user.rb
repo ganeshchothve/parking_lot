@@ -128,8 +128,8 @@ class User
     Receipt.where(user_id: id).in(status: %w[success clearance_pending]).where(project_unit_id: nil).where(total_amount: { "$gte": blocking_amount }).first
   end
 
-  def allowed_utm_param_keys(hash)
-    hash.slice(*ALLOWED_KEYS).to_s if hash.present?
+  def allowed_utm_param_keys(cookies)
+    SafeParser.new(cookies[:utm_params]).safe_load.with_indifferent_access.slice(*ALLOWED_KEYS).to_s if cookies[:utm_params].present?
   end
 
   def total_amount_paid

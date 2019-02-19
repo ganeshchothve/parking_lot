@@ -46,6 +46,6 @@ class LocalDevise::RegistrationsController < Devise::RegistrationsController
   def set_params
     resource.booking_portal_client = Client.first
     resource.role = 'user'
-    resource.utm_params = resource.allowed_utm_param_keys(cookies[:utm_params])
+    resource.utm_params = cookies[:utm_params]
   end
 end

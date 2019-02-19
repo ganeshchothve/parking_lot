@@ -45,7 +45,7 @@ class HomeController < ApplicationController
             format.json { render json: {errors: message, already_exists: true}, status: :unprocessable_entity }
           end
         else
-          # splitted name into two firstname and lastname
+          # split name into first name and last name
           @user = User.new(booking_portal_client_id: current_client.id, email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], lead_id: params[:lead_id], mixpanel_id: params[:mixpanel_id])
 
           if current_client.enable_referral_bonus &&  !params[:referral_code].blank?
@@ -56,9 +56,9 @@ class HomeController < ApplicationController
             @user.manager_id = current_user.id
           else
             @user.manager_id = cookies[:portal_cp_id] if(cookies[:portal_cp_id].present?)
-            @user.utm_params = @user.allowed_utm_param_keys(cookies[:utm_params])
+            @user.utm_params = @user.allowed_utm_param_keys(cookies)
           end
-          # RegistrationMailer.welcome(user, generated_password).deliver #TODO: enable this. We might not need this if we are to use otp based login
+          # RegistrationMailer.welcome(user, generated_password).deliver #TODO: enable this. We might not need this if we use otp based login
           respond_to do |format|
             if @user.save
               format.json { render json: {user: @user, success: 'User registration completed'}, status: :created }
