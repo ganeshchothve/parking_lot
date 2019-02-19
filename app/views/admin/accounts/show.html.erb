@@ -1,0 +1,51 @@
+<div class="container form-group mt-3 text-right">
+  <div class="row">
+    <div class="col-12">
+      <button onclick="window.print();" class="btn btn-primary d-print-none">Print</button>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="card-header"> Account details : <%= @account.name %></div>
+    <div class= "card-body">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Account Number</label>
+            <div> <%= @account.account_number %> </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label> Default Account </label>
+            <div>
+              <%= @account.by_default ? 'Yes' : 'No' %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Key</label>
+            <div> <%= @account.key %> </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Secret</label>
+            <div> <%= @account.secret %> </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mt-2">
+    <div class="card-header"> Payments </div>
+    <div class="card-body">
+      <%= render 'receipts/index', {receipts: @account.receipts.paginate(page: params[:page] || 1, per_page: params[:per_page])} %>
+    </div>
+  </div>
+</div>

@@ -54,7 +54,7 @@ class EmailObserver < Mongoid::Observer
           attachment_urls[doc.file_name] = doc.file.url
         end
         ApplicationMailer.test({
-          to: email.recipients.distinct(:email),
+          to: email.recipients.pluck(:email).uniq,
           cc: email.cc,
           body: email.body,
           subject: email.subject,

@@ -27,7 +27,6 @@ class Buyer::ReceiptsController < BuyerController
       creator: current_user, payment_mode: 'online',
       total_amount: current_client.blocking_amount
     })
-
     authorize([:buyer, @receipt])
     render layout: false
   end
@@ -38,28 +37,31 @@ class Buyer::ReceiptsController < BuyerController
       payment_mode: 'online', creator: current_user,
       payment_gateway: current_client.payment_gateway
     })
-
     @receipt.assign_attributes(permitted_attributes([:buyer, @receipt]))
-
+    @receipt.account = selected_account
     authorize([:buyer, @receipt])
-
     respond_to do |format|
-      if @receipt.save
-        url = dashboard_path
-        if @receipt.payment_gateway_service.present?
-          url = @receipt.payment_gateway_service.gateway_url(@receipt.user.get_search(@receipt.project_unit_id).id)
-          format.html{ redirect_to url }
-          format.json{ render json: {}, location: url }
-        else
-          flash[:notice] = "We couldn't redirect you to the payment gateway, please try again"
-          @receipt.update_attributes(status: "failed")
-          url = dashboard_path
-          format.json{ render json: @receipt, location: url }
-          format.html{ redirect_to url }
-        end
-      else
-        format.json { render json: {errors: @receipt.errors.full_messages}, status: :unprocessable_entity }
+      if @receipt.account.blank?
+        flash[:alert] = "We do not have any Account Details for Transaction. Please ask Administrator to add."
         format.html { render 'new' }
+      else
+        if @receipt.save
+          url = dashboard_path
+          if @receipt.payment_gateway_service.present?
+            url = @receipt.payment_gateway_service.gateway_url(@receipt.user.get_search(@receipt.project_unit_id).id)
+            format.html{ redirect_to url }
+            format.json{ render json: {}, location: url }
+          else
+            flash[:notice] = "We couldn't redirect you to the payment gateway, please try again"
+            @receipt.update_attributes(status: "failed")
+            url = dashboard_path
+            format.json{ render json: @receipt, location: url }
+            format.html{ redirect_to url }
+          end
+        else
+          format.json { render json: {errors: @receipt.errors.full_messages}, status: :unprocessable_entity }
+          format.html { render 'new' }
+        end
       end
     end
   end

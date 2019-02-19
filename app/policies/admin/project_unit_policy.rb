@@ -62,6 +62,8 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
     attributes = %w[crm admin superadmin].include?(user.role) ? %i[auto_release_on booking_price blocking_amount] : []
     attributes += (make_available? ? [:status] : [])
     attributes += %i[user_id selected_scheme_id] if record.user_id.blank? && record.user_based_status(user) == 'available'
+    attributes += [:phase_id] if user.role?('superadmin')
+
     if %w[superadmin admin].include?(user.role) && ProjectUnit.booking_stages.exclude?(record.status) && record.status != 'hold'
       attributes += [:name, :agreement_price, :all_inclusive_price, :status, :available_for, :blocked_on, :auto_release_on, :held_on, :base_rate, :client_id, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, :selldo_id, :erp_id, :floor_rise, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :sub_type, :type, :unit_facing_direction, costs_attributes: CostPolicy.new(user, Cost.new).permitted_attributes, data_attributes: DatumPolicy.new(user, Cost.new).permitted_attributes]
     end

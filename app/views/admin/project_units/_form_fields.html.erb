@@ -43,4 +43,10 @@
       <%= f.select :status, ProjectUnit.available_statuses.select{|x| statuses.include?(x[:id]) || x[:id] == @project_unit.status }.collect{|x| [x[:text], x[:id]]}, {}, {prompt: "Select", class: "selectize", disabled: (policy([current_user_role_group, @project_unit]).editable_field?("status") ? false : true)} %>
     </div>
   <% end %>
+  <% if policy([current_user_role_group, @project_unit]).editable_field?("phase_id") %>
+    <div class="form-group">
+      <%= f.label :phase, class: 'title' %>
+      <%= f.select :phase_id, Phase.all.collect{|phase| [ phase.name, phase.id ]}, { prompt: true}, {class: "selectize", disabled: !policy([current_user_role_group, @project_unit]).editable_field?("phase_id") } %>
+    </div>
+  <% end %>
 </div>
