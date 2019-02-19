@@ -52,11 +52,17 @@ Rails.application.routes.draw do
     end
 
     resources :project_units, only: [:index, :show, :edit, :update] do
-      get 'print', action: 'print', on: :member, as: :print
-      get 'export', action: 'export', on: :collection, as: :export
-      get 'mis_report', action: 'mis_report', on: :collection, as: :mis_report
+      member do
+        get :print
+        get :send_under_negotiation
+      end
+
+      collection do
+        get :export
+        get :mis_report
+      end
+
       resources :booking_detail_schemes, except: [:destroy], controller: '/booking_detail_schemes'
-      get 'send_under_negotiation', on: :member
     end
 
     scope ":request_type" do

@@ -29,19 +29,6 @@ class Admin::ProjectUnitsController < AdminController
   end
 
   #
-  # This show action for Admin users where Admin can view details of a particular project unit.
-  #
-  # @return [{}] record with array of Hashes.
-  # GET /admin/project_units/:id
-  #
-  def show
-    respond_to do |format|
-      format.json { render json: @project_unit }
-      format.html {}
-    end
-  end
-
-  #
   # This print action for Admin users where Admin can print a particular project unit(cost sheet and payment schedule).
   #
   # GET /admin/project_units/:id/print

@@ -35,5 +35,6 @@ FactoryBot.define do
       project_unit.project = Project.first
       project_unit.unit_configuration = create(:unit_configuration)
     end
+
   end
 end

@@ -1,6 +1,5 @@
 class Admin::ProjectUnitPolicy < ProjectUnitPolicy
   # def new? def print? def create? def update? def block? def update_co_applicants? def update_project_unit? def payment? def process_payment? def checkout? def send_under_negotiation? from ProjectUnitPolicy
-
   def index?
     current_client.enable_actual_inventory?(user) && !user.buyer?
   end
@@ -27,10 +26,31 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
 
   def hold?
     valid = record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?(user)
+    if !valid
+      @condition = "user_confirmation"
+      return
+    end
     valid &&= (record.user.project_units.where(status: 'hold').blank? && record.user_based_status(record.user) == 'available')
+    if !valid
+      @condition = "already_held"
+      return
+    end
     valid &&= record.user.unattached_blocking_receipt(record.blocking_amount).present? if user.role?('channel_partner')
+    if !valid
+      @condition = "blocking_amount_receipt"
+      return
+    end
     valid = (valid && record.user.allowed_bookings > record.user.booking_details.nin(status: %w[cancelled swapped]).count)
+    if !valid
+      @condition = "allowed_bookings"
+      return
+    end
     valid = (valid && record.user.unused_user_kyc_ids(record.id).present?)
+    if !valid
+      @condition = "user_kyc_allowed_bookings"
+      return
+    end
+    
     _role_based_check(valid)
   end
 

@@ -39,7 +39,15 @@ class ProjectUnitPolicy < ApplicationPolicy
   
   def block?
     valid = ['hold'].include?(record.status) && record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?(user)
+    if !valid
+      @condition = "user_confirmation"
+      return
+    end
     valid = (valid && record.user.allowed_bookings > record.user.booking_details.ne(status: 'cancelled').count)
+    if !valid
+      @condition = "allowed_bookings"
+      return
+    end
     _role_based_check(valid)
   end
 

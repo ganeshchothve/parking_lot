@@ -27,8 +27,6 @@ FactoryBot.define do
     lock_in_period { Faker::Number.number.to_s }
     approval { Faker::Lorem.paragraph }
     selldo_id { Faker::String.random(3..12) }
-    # client_id { FactoryBot.create(:client).id }
-    #
     project_pre_sale_ids { [Faker::IDNumber.valid, Faker::IDNumber.valid] }
     project_sale_ids { [Faker::IDNumber.valid, Faker::IDNumber.valid] }
     locality { Faker::Address.street_name }
@@ -45,5 +43,6 @@ FactoryBot.define do
       project.client_id = Client.desc(:created_at).first.id
       project.developer_id ||= Developer.first.id
     end
+
   end
 end

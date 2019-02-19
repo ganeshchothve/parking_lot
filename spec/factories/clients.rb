@@ -7,6 +7,7 @@ FactoryBot.define do
     selldo_gre_form_id { BSON::ObjectId.from_time(DateTime.now, unique: true).to_s }
     helpdesk_email { Faker::Internet.email }
     helpdesk_number { Faker::Number.number(10) }
+    enable_company_users { Faker::Boolean.boolean }
 
     notification_email { Faker::Internet.email }
     notification_numbers { Faker::Number.number(10) }
