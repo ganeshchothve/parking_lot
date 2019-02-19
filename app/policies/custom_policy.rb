@@ -20,8 +20,15 @@ class CustomPolicy < Struct.new(:user, :enable_users)
     "#{user.buyer? ? 'Buyer' : 'Admin'}::ReferralPolicy".constantize.new(user, User).index?
   end
 
+  def sync_logs?
+    %w[superadmin admin sales_admin].include?(user.role)
+  end
+
+  def erp_models?
+    %w[superadmin].include?(user.role)
+  end
 
   def self.custom_methods
-    ['inventory', 'emails', 'smses', 'audits', 'referrals']
+    %w[inventory emails smses audits referrals sync_logs erp_models]
   end
 end

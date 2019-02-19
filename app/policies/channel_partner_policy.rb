@@ -5,6 +5,10 @@ class ChannelPartnerPolicy < ApplicationPolicy
     index?
   end
 
+  def show?
+    false
+  end
+
   def asset_create?
     create?
   end

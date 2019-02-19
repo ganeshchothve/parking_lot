@@ -126,26 +126,50 @@
           </div>
           <div class="row mt-3">
             <% if @user.buyer? && !current_user.role?("channel_partner") || @user.role?('channel_partner') %>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label><%= labels[:manager_id] %></label>
-                <div>
-                  <% manager_user = @user.manager_id.present? ? User.find(@user.manager_id) : nil %>
-                  <%= manager_user.present? ? link_to(manager_user.name, admin_user_path(manager_user)) : '-' %>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label><%= labels[:manager_id] %></label>
+                  <div>
+                    <% manager_user = @user.manager_id.present? ? User.find(@user.manager_id) : nil %>
+                    <%= manager_user.present? ? link_to(manager_user.name, admin_user_path(manager_user)) : '-' %>
+                  </div>
                 </div>
               </div>
-            </div>
             <% end %>
             <% if @user.role?('channel_partner') %>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label><%= labels[:rera_id] %></label>
+                  <div>
+                    <%= @user.rera_id.present? ? @user.rera_id : '-' %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
             <div class="col-md-4">
               <div class="form-group">
-                <label><%= labels[:rera_id] %></label>
+                <label>Last Sync At:</label>
                 <div>
-                  <%= @user.rera_id.present? ? @user.rera_id : '-' %>
+                  <% if @user.sync_logs.present? %>
+                    <%= @user.sync_logs.desc(:created_at)[0].present? ? @user.sync_logs.desc(:created_at)[0].updated_at.strftime("%d/%m/%Y %l:%M %p") : "-" %>
+                  <% else %>
+                     <%= "Not synced" %>
+                  <% end %>
                 </div>
               </div>
             </div>
-            <% end %>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Last Sync Log Status:</label>
+                <div>
+                  <% if @user.sync_logs.present? %>
+                    <%= @user.sync_logs.desc(:created_at)[0].status.present? ? @user.sync_logs.desc(:created_at)[0].status : "-" %>
+                  <% else %>
+                     <%= "Not synced" %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
             <% if @user.buyer? %>
               <div class="col-md-4">
                 <div class="form-group">
