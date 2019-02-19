@@ -54,7 +54,7 @@ class BookingDetailSchemeObserver < Mongoid::Observer
       project_unit.save
     end
     if booking_detail_scheme.status_changed?
-      if booking_detail_scheme.status == "draft" && booking_detail_scheme.created_by_user
+      if booking_detail_scheme.status == "draft" && booking_detail_scheme.created_by_user && project_unit.booking_portal_client.email_enabled?
         Email.create!({
           booking_portal_client_id: project_unit.booking_portal_client_id,
           email_template_id: Template::EmailTemplate.find_by(name: "booking_detail_scheme_draft").id,
@@ -64,7 +64,7 @@ class BookingDetailSchemeObserver < Mongoid::Observer
           triggered_by_id: booking_detail_scheme.id,
           triggered_by_type: booking_detail_scheme.class.to_s
         })
-      elsif booking_detail_scheme.status == "approved"
+      elsif booking_detail_scheme.status == "approved" && project_unit.booking_portal_client.email_enabled?
         Email.create!({
           booking_portal_client_id: project_unit.booking_portal_client_id,
           email_template_id: Template::EmailTemplate.find_by(name: "booking_detail_scheme_approved").id,

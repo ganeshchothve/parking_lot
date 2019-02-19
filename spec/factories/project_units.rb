@@ -24,16 +24,17 @@ FactoryBot.define do
     saleable { Faker::Number.number(4).to_f }
     type { Faker::Lorem.word }
 
-    after(:create) do |project_unit|
-      # project_unit.user_kycs ||= ( UserKyc.all.sample.id || create(:user_kyc) )
-      # project_unit.selected_scheme_id ||= create(:scheme)
+    after(:build) do |project_unit|
+      project_unit.booking_portal_client = Client.first
+      project_unit.developer = create(:developer)
+      project_unit.project_tower = ProjectTower.first
+      if ProjectTower.first.nil?
+        project_unit.project_tower = create(:project_tower)
+      end
+      project_unit.phase = Phase.first
+      project_unit.project = Project.first
+      project_unit.unit_configuration = create(:unit_configuration)
     end
 
-    association :project, factory: :project
-    association :developer, factory: :developer
-    association :project_tower, factory: :project_tower
-    association :unit_configuration, factory: :unit_configuration
-    association :booking_portal_client, factory: :client
-    # association :user, factory: :user
   end
 end

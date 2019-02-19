@@ -1,36 +1,32 @@
 <div class="container">
   <div class="row justify-content-center">
-    <div class="col-md-12">
-      <div class="row justify-content-center">
-        <div class="<%= @channel_partner.blank? ? 'col-md-9' : 'col-md-12' %>">
-          <%= render 'breadcrumbs', {channel_partner: @channel_partner, user: @user} %>
-          <div class="card h-100">
-            <div class="card-body">
-              <div class="row mb-3">
-                <div class="col-md-7">
-                  <% if policy([:admin, ChannelPartner]).export? %>
-                    <div class="dropdown">
-                      <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
-                      <div class="dropdown-menu dropdown-menu-right">
-                        <%= link_to "All #{global_labels['channel_partners']}", export_channel_partners_path, class: 'dropdown-item' %>
-                        <%= link_to "Active filter #{global_labels['channel_partners']}", export_channel_partners_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
-                      </div>
-                    </div>
-                  <% end %>
+    <div class="<%= @channel_partner.blank? ? 'col-md-9' : 'col-md-12' %>">
+      <%= render 'breadcrumbs', {channel_partner: @channel_partner, user: @user} %>
+      <div class="card">
+        <div class="card-body">
+          <div class="row mb-2">
+            <div class="col-md-7">
+              <% if policy([:admin, ChannelPartner]).export? %>
+                <div class="dropdown">
+                  <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <%= link_to "All #{global_labels['channel_partners']}", export_channel_partners_path, class: 'dropdown-item' %>
+                    <%= link_to "Active filter #{global_labels['channel_partners']}", export_channel_partners_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
+                  </div>
                 </div>
-                <div class="col-md-5 text-md-right">
-                  <h6 class="mt-2">Total <%= global_labels[:channel_partners] %>: <%= @channel_partners.total_entries %></h6>
-                </div>
-              </div>
-              <%= render 'index', {channel_partners: @channel_partners} %>
+              <% end %>
+            </div>
+            <div class="col-md-5 text-md-right">
+              <h6 class="mt-2">Total <%= global_labels[:channel_partners] %>: <%= @channel_partners.total_entries %></h6>
             </div>
           </div>
-        </div>
-        <div class="col-md-3">
-          <div class="d-md-none mt-3"></div>
-          <%= render "filters" %>
+          <%= render 'index', {channel_partners: @channel_partners} %>
         </div>
       </div>
+    </div>
+    <div class="col-md-3">
+      <div class="d-md-none mt-3"></div>
+      <%= render "filters" %>
     </div>
   </div>
 </div>

@@ -34,12 +34,13 @@ Rails.application.routes.draw do
   resources :channel_partners, except: [:destroy] do
     get 'export', action: 'export', on: :collection, as: :export
   end
-
   namespace :admin do
     resources :erp_models, only: %i[index new create edit update]
     resources :sync_logs, only: %i[index] do
       get 'resync', on: :member
     end
+    resources :accounts
+    resources :phases
     resources :emails, :smses, only: %i[index show]
     resource :client, except: [:show, :new, :create] do
       resources :templates, only: [:edit, :update, :index]
@@ -68,6 +69,9 @@ Rails.application.routes.draw do
       resources :booking_detail_schemes, except: [:destroy], controller: '/booking_detail_schemes'
     end
 
+    scope ":request_type" do
+        resources :accounts, controller: 'accounts'
+      end
     resources :users do
       member do
         get :resend_confirmation_instructions
