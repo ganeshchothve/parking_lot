@@ -32,7 +32,7 @@ FactoryBot.define do
         project_unit.project_tower = create(:project_tower)
       end
       project_unit.phase = Phase.first
-      project_unit.project = Project.first
+      project_unit.project = Project.first || create(:project)
       project_unit.unit_configuration = create(:unit_configuration)
     end
 
