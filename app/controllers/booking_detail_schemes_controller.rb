@@ -80,7 +80,7 @@ class BookingDetailSchemesController < ApplicationController
     @scheme.approved_by = current_user if @scheme.event.present? && @scheme.event == 'approved'
     respond_to do |format|
       if @scheme.save
-        format.html { redirect_to request.referrer, notice: 'Scheme was successfully updated.' }
+        format.html { redirect_to request.referrer || root_path , notice: 'Scheme was successfully updated.' }
       else
         format.html { render :edit }
         format.json { render json: @scheme.errors, status: :unprocessable_entity }
