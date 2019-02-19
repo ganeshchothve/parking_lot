@@ -1,0 +1,35 @@
+<div class="table-responsive">
+  <table class='table striped-table'>
+    <thead class="th-default">
+      <% labels = t('mongoid.attributes.user').with_indifferent_access %>
+      <tr>
+        <th><%= t('mongoid.attributes.user.name') %></th>
+        <th><%= t('mongoid.attributes.user.role') %></th>
+        <th><%= t('users.account_confirmed') %></th>
+        <th><%= t('mongoid.attributes.user.created_at') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% users.each do |user| %>
+        <tr>
+          <td>
+            <%= user.name %>
+            <div class="small">
+              <%= user.email || "" %> <br/>
+              <%= user.phone || "" %> <br/>
+            </div>
+          </td>
+          <td><%= t("users.role.#{user.role}") %></td>
+          <td><%= t("users.confirmed.#{user.confirmed_at.present?}") %> </td>
+          <td><%= user.created_at.strftime(t('date.formats.default'))%></td>
+        </tr>
+      <% end %>
+      <tr>
+        <td colspan="6">
+          <div class="mt-5 pt-5"></div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<%= will_paginate users, list_classes: %w(pagination justify-content-center) %>

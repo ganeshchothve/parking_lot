@@ -16,7 +16,7 @@ class SelldoLeadUpdater
       stage = 'user_kyc_done' if user.user_kycs.present?
       stage = 'hold' if project_units.select{|x| x.status == 'hold'}.present?
     end
-    score = 0
+    score = 10
     MixpanelPusherWorker.perform_async(user.mixpanel_id, stage, {}) if current_client.mixpanel_token.present?
     if user.buyer? && stage.present? && user.lead_id.present?
       params = {

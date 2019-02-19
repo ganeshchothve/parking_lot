@@ -161,6 +161,10 @@ class Receipt
     end
   end
 
+  def self.sync(erp_model, record, sync_log)
+    Api::ReceiptDetailsSync.new(erp_model, record, sync_log).execute
+  end
+
   private
 
   def validate_total_amount

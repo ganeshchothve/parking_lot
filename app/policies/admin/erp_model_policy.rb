@@ -1,11 +1,19 @@
 class Admin::ErpModelPolicy < ErpModelPolicy
   # def edit? from ErpModelPolicy
   def index?
-    %w[superadmin admin].include?(user.role)
+    %w[superadmin].include?(user.role)
+  end
+
+  def new?
+    create?
+  end
+
+  def create?
+    user.role.in? %w(superadmin)
   end
 
   def update?
-    user.role == 'superadmin'
+    user.role.in? %w(superadmin)
   end
 
   def permitted_attributes(_params = {})

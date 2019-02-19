@@ -78,9 +78,9 @@ class ChannelPartner
       selector[:city] = params[:fltrs][:city] if params[:fltrs][:city].present?
     end
     or_selector = {}
-    if params[:q].present?
-      regex = ::Regexp.new(::Regexp.escape(params[:q]), 'i')
-      or_selector = { "$or": [{ first_name: regex }, { last_name: regex }, { email: regex }, { phone: regex }] }
+    if params[:search].present?
+      regex = ::Regexp.new(::Regexp.escape(params[:search]), 'i')
+      or_selector = {"$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] }
     end
     if params[:fltrs].present? && params[:fltrs][:_id].present?
       where(id: params[:fltrs][:_id])
@@ -97,6 +97,12 @@ class ChannelPartner
 
   def ds_name
     "#{name} - #{email} - #{phone}"
+  end
+
+  def self.sync(erp_model, record, sync_log)
+    unless erp_model.action_name == 'update' && record.status != 'active'
+      Api::ChannelPartnerDetailsSync.new(erp_model, record, sync_log).execute
+    end
   end
 
   private

@@ -316,7 +316,7 @@ class ProjectUnit
       selector[:id] = params[:fltrs][:_id]
     end
 
-    selector[:name] = ::Regexp.new(::Regexp.escape(params[:q]), 'i') if params[:q].present?
+    selector[:name] = ::Regexp.new(::Regexp.escape(params[:search]), 'i') if params[:search].present?
     self.where(selector)
   end
 
@@ -346,6 +346,10 @@ class ProjectUnit
 
   def booking_detail_scheme
     BookingDetailScheme.where(user_id: self.user_id, project_unit_id: self.id).in(status: ["under_negotiation", "draft", "approved"]).desc(:created_at).first
+  end
+
+  def scheme=(_scheme)
+    @scheme = _scheme if _scheme.kind_of?(Scheme) || _scheme.kind_of?(BookingDetailScheme)
   end
 
   def scheme

@@ -17,9 +17,7 @@ module Api
     def execute
       self.request_payload = set_request_payload
       get_response
-      if response_payload['returnCode'].present?
-        response_payload['returnCode'] ? nil : update_erp_id if erp_model.action_name == 'create'
-      end
+      update_erp_id if erp_model.action_name == 'create' && response_payload['returnCode'].present? && response_payload['returnCode'].zero?
     end
 
     private
@@ -76,7 +74,7 @@ module Api
         raise Api::SyncError, "#{response.try(:code)}: #{response.message}"
       else
         set_sync_log(request_payload, response, response.code, response_payload['returnCode'].zero?, response_payload['message']) if set_response_payload(response)
-        end
+      end
     rescue StandardError, SyncError => e
       set_sync_log(request_payload, response.as_json, response.try(:code) ? response.code : '404', false, e.message)
       puts e.message

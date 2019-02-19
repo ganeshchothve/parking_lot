@@ -7,9 +7,6 @@
         <div class="card-header">
           Overview
           <div class="dropdown float-right">
-            <% if policy([:admin, SyncLog.new]).resync? && @user.sync_logs.present? %>
-              <%= link_to "Resync", resync_admin_sync_log_path(@user.sync_logs.desc(:created_at)[0]), class: 'btn btn-primary' %>
-            <% end %>
             <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</a>
             <div class="dropdown-menu dropdown-menu-right">
               <%= render "admin/users/links", user: @user %>
@@ -173,6 +170,26 @@
                 </div>
               </div>
             </div>
+            <% if @user.buyer? %>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label><%= t("mongoid.attributes.user.referral_code") %></label>
+                  <div>
+                    <%= @user.referral_code || '-' %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+            <% if @user.buyer? %>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label><%= t("mongoid.attributes.user.referred_by_id") %></label>
+                  <div>
+                    <%= @user.referred_by.try(:name) || '-' %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
           </div>
         </div>
       </div>
@@ -205,7 +222,17 @@
       <div class="mt-3"></div>
       <div class="card">
         <div class="card-body">
-          <%= render 'receipts/index', {receipts: @receipts} %>
+          <%= render 'receipts/index', {receipts: @receipts } %>
+        </div>
+      </div>
+
+      <div class="mt-3"></div>
+      <div class="card">
+        <div class="card-header">
+          <h5>My Referrals</h5>
+        </div>
+        <div class="card-body">
+          <%= render "admin/users/index", { users: @user.referrals.paginate(page: params[:page], per_page: 1000) } %>
         </div>
       </div>
     </div>

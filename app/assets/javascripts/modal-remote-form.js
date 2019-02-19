@@ -10,7 +10,12 @@ $(document).ready(function(){
 
 $(document).on("click", '.modal-remote-form-link', function(e){
   e.preventDefault();
-  modal_remote_form_link_click_handler($(this).attr("href"));
+  if ($(this).attr("href")){
+    var url = $(this).attr("href");
+  } else {
+    var url = $(this).parents('form').attr('action') + '?' + $(this).parents('form').serialize();
+  }
+  modal_remote_form_link_click_handler(url);
 });
 
 var handle_remote_pushstate = function(){
@@ -25,7 +30,9 @@ var modal_remote_form_link_click_handler = function(remote_href){
   $.blockUI();
   if(!_.isEmpty(remote_href) && remote_href != "javascript:;" && remote_href != "javascript:void(0);"){
     if(window.history && typeof window.history.pushState === "function"){
-      var href = Amura.removeParamFromURL(window.location.href, "remote-state");
+      var href = window.location.href.split('?')[0]
+      $('.modal-backdrop').remove()
+      var href = Amura.removeParamFromURL(href, "remote-state");
       if(href.indexOf("?") == -1){
         href += "?";
       }else{

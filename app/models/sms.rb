@@ -12,9 +12,10 @@ class Sms
   # Fields
   field :to, type: Array
   field :body, type: String
-  field :sms_template_id, type: BSON::ObjectId
   field :sent_on, type: DateTime
   field :status, type: String, default: "scheduled"
+
+  belongs_to :sms_template, class_name: 'Template::SmsTemplate', optional: true
 
   # Associations
   belongs_to :recipient, class_name: "User", inverse_of: :received_smses, optional: true
@@ -43,11 +44,5 @@ class Sms
       {id: "sent", text: "Sent"},
       {id: "failed", text: "Failed"}
     ]
-  end
-
-  # returns an instance of sms_template associated to to entity
-  #
-  def sms_template
-    Template::SmsTemplate.where(id: self.sms_template_id).first
   end
 end

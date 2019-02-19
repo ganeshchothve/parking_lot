@@ -47,7 +47,7 @@ class Scheme
         selector[:status] = params[:fltrs][:status]
       end
     end
-    selector[:name] = ::Regexp.new(::Regexp.escape(params[:q]), 'i') if params[:q].present?
+    selector[:name] = ::Regexp.new(::Regexp.escape(params[:search]), 'i') if params[:search].present?
     self.where(selector)
   end
 
