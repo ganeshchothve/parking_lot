@@ -10,7 +10,7 @@ RSpec.describe BookingDetailSchemesController, type: :controller do
     end
 
     it "success response" do
-      debugger
+      # debugger
     end
   end
 end
