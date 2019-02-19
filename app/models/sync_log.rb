@@ -22,10 +22,20 @@ class SyncLog
 
   def sync(erp_model, record)
     parent_sync = (self if self.action.present?)
-    if Rails.env.production? || Rails.env.staging?
-      Object.const_get(erp_model.resource_class).delay.sync(erp_model, record, parent_sync)
+    if Rails.env.production? || Rails.env.staging? || Rails.env.development?
+      self.class.delay._sync(erp_model.id.to_s, record.id.to_s, parent_sync.try(:id).to_s)
     else
       Object.const_get(erp_model.resource_class).sync(erp_model, record, parent_sync)
     end
+  end
+
+  private
+
+  def self._sync(erp_model_id, record_id, sync_log_id)
+    erp_model = ErpModel.where(id: erp_model_id).first
+    record = Object.const_get(erp_model.resource_class).where(id: record_id).first
+    parent_sync_log = self.where(id: sync_log_id).first if sync_log_id.present?
+
+    record.sync(erp_model, parent_sync_log)
   end
 end

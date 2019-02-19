@@ -161,8 +161,8 @@ class Receipt
     end
   end
 
-  def self.sync(erp_model, record, sync_log)
-    Api::ReceiptDetailsSync.new(erp_model, record, sync_log).execute
+  def sync(erp_model, sync_log)
+    Api::ReceiptDetailsSync.new(erp_model, self, sync_log).execute if user.erp_id.present?
   end
 
   private

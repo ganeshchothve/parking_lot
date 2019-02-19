@@ -370,8 +370,8 @@ class User
     user_kyc_ids
   end
 
-  def self.sync(erp_model, record, sync_log)
-    Api::UserDetailsSync.new(erp_model, record, sync_log).execute
+  def sync(erp_model, sync_log)
+    Api::UserDetailsSync.new(erp_model, self, sync_log).execute if self.buyer?
   end
 
   private

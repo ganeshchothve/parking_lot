@@ -120,6 +120,10 @@ class UserKyc
     }
   end
 
+  def sync(erp_model, sync_log)
+    Api::UserKycDetailsSync.new(erp_model, self, sync_log).execute if user.erp_id.present?
+  end
+
   class << self
     def available_salutations
       [
@@ -179,10 +183,6 @@ class UserKyc
       custom_scope[:project_unit_id] = params[:project_unit_id] if params[:project_unit_id].present?
       custom_scope
     end
-  end
-
-  def self.sync(erp_model, record, sync_log)
-    Api::UserKycDetailsSync.new(erp_model, record, sync_log).execute
   end
 
   private

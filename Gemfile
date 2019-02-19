@@ -106,8 +106,6 @@ group :development, :test do
   gem "premailer"
   gem 'rspec-rails'
   gem 'mongoid-rspec'
-  gem 'rspec-sidekiq'
-
 end
 
 group :test do

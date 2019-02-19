@@ -99,9 +99,9 @@ class ChannelPartner
     "#{name} - #{email} - #{phone}"
   end
 
-  def self.sync(erp_model, record, sync_log)
-    unless erp_model.action_name == 'update' && record.status != 'active'
-      Api::ChannelPartnerDetailsSync.new(erp_model, record, sync_log).execute
+  def sync(erp_model, sync_log)
+    unless erp_model.action_name == 'update' && status != 'active'
+      Api::ChannelPartnerDetailsSync.new(erp_model, self, sync_log).execute
     end
   end
 
