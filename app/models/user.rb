@@ -9,7 +9,7 @@ class User
   include SyncDetails
 
   # Constants
-  ALLOWED_KEYS = [:campaign, :source, :sub_source, :content, :medium, :term]
+  ALLOWED_UTM_KEYS = [:campaign, :source, :sub_source, :content, :medium, :term]
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -129,7 +129,7 @@ class User
   end
 
   def allowed_utm_param_keys(cookies)
-    SafeParser.new(cookies[:utm_params]).safe_load.with_indifferent_access.slice(*ALLOWED_KEYS).to_s if cookies[:utm_params].present?
+    SafeParser.new(cookies[:utm_params]).safe_load.with_indifferent_access.slice(*ALLOWED_UTM_KEYS).to_s if cookies[:utm_params].present?
   end
 
   def total_amount_paid
