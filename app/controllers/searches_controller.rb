@@ -147,7 +147,6 @@ class SearchesController < ApplicationController
   def payment
     @receipt = Receipt.new(creator: @search.user, user: @search.user, payment_mode: 'online', total_amount: current_client.blocking_amount, payment_gateway: current_client.payment_gateway)
     @receipt.account = selected_account(@search.project_unit)
-    authorize([current_user_role_group, @receipt], :new?)
     if @search.project_unit_id.present?
       @project_unit = ProjectUnit.find(@search.project_unit_id)
       @receipt.total_amount = @project_unit.blocking_amount
@@ -161,6 +160,7 @@ class SearchesController < ApplicationController
       authorize([ current_user_role_group, Receipt.new(user: @search.user)], :new?)
     end
 
+    authorize([current_user_role_group, @receipt], :create?)
     if @receipt.save
       if @receipt.status == "pending" # if we are just tagging an already successful receipt, we dont need to send the user to payment gateway
         if @receipt.payment_gateway_service.present?
