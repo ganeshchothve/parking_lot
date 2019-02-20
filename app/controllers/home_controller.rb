@@ -56,7 +56,7 @@ class HomeController < ApplicationController
             @user.manager_id = current_user.id
           else
             @user.manager_id = cookies[:portal_cp_id] if(cookies[:portal_cp_id].present?)
-            @user.utm_params = @user.set_utm_params(cookies)
+            @user.set_utm_params(cookies)
           end
           # RegistrationMailer.welcome(user, generated_password).deliver #TODO: enable this. We might not need this if we use otp based login
           respond_to do |format|
