@@ -184,9 +184,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :users, only: [:create, :update] do
-        #put 'portal_stage', on: :member
-      end
+      resources :users, only: [:create, :update]
     end
   end
   match '/sell_do/lead_created', to: "api/sell_do/leads#lead_created", via: [:get, :post]

@@ -31,19 +31,8 @@ class Api::V1::UsersController < ApisController
     end
   end
 
-  #
-  # This action will update the portal stage of an existing user using the erp_id for identification.
-  #
-  # def portal_stage
-  #   @portal_stage = PortalStage.new
-  #   if @user.update(user_params) #&& @user.update(portal_stage_attributes: { stage: params[:user][:portal_stage]['stage'], updated_at: params[:user][:portal_stage]['updated_at']})
-  #     render json: @user, status: :ok
-  #   else
-  #     render json: @user.errors.full_messages.uniq, status: :unprocessable_entity
-  #   end
-  # end
-
   private
+
 
   # Checks if the erp-id is present. Erp-id is the external api identification id.
   def erp_id_present?
@@ -58,7 +47,6 @@ class Api::V1::UsersController < ApisController
 
   # Allows only certain parameters to be saved and updated.
   def user_params
-    params.fetch(:user, {}).permit(:erp_id, :lead_id, :first_name, :last_name, :email, :phone, :confirmed_at, :role, :booking_portal_client_id, utm_params: %i[campaign source sub_source medium term content])
-    # portal_stage_attributes: [:stage, :updated_at]
+    params.fetch(:user, {}).permit(:erp_id, :lead_id, :first_name, :last_name, :email, :phone, :confirmed_at, :role, :booking_portal_client_id)
   end
 end
