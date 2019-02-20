@@ -32,4 +32,19 @@ class ReceiptPolicy < ApplicationPolicy
     attributes += [:account_number] if record.payment_mode == 'online'
     attributes
   end
+
+  private
+
+  def online_account_present?
+    if record.payment_mode == 'online'
+      if record.account.present?
+        true
+      else
+        @condition = 'online_account_not_present'
+        false
+      end
+    else
+      true
+    end
+  end
 end

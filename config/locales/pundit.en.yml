@@ -1,41 +1,55 @@
 en:
- pundit:
-   default: 'You cannot perform this action.'
-   project_unit_policy:
-     make_available?: "Project unit was not on hold."
-     update_project_unit?: "The user is not confirmed or kyc documents are not uploaded."
-     payment?: "The user is not confirmed or kyc documents are not uploaded."
-     process_payment?: "The user is not confirmed or kyc documents are not uploaded."
-     checkout?: "Something went wrong, please try again."
-     send_under_negotiation?: "Something went wrong, please try again."
-     hold?:
-       user_confirmation: "The user is not confirmed or kyc documents are not uploaded."
-       allowed_bookings: "You have booked the permitted number of apartments."
-   admin:
-     project_unit_policy: 
-       index?: "Only administrator has rights to view this page." 
-       show?: "Only administrator has rights to view this page." 
-       edit?: "Only administrator has rights to view this page." 
-       export?: "Only administrator has rights to view this page." 
-       mis_report?: "Only administrator has rights to view this page." 
-       update_scheme?: "Only administrator has rights to view this page." 
-       hold?:
-         user_confirmation: "The user is not confirmed or kyc documents are not uploaded."
-         already_held: "This unit is already held by other user."
-         user_kyc_allowed_bookings: "You can book only one unit on one KYC."
-         allowed_bookings: "You have booked the permitted number of apartments."
-         blocking_amount_receipt: "You have to make payment before blocking the apartment"
-   buyer:
+  pundit:
+    default: 'You cannot perform this action.'
     project_unit_policy:
-      index?: "Only buyer has rights to view this page." 
-      show?: "Only buyer has rights to view this page." 
-      edit?: "Only buyer has rights to view this page." 
+      make_available?: "Project unit was not on hold."
+      update_project_unit?: "The user is not confirmed or kyc documents are not uploaded."
+      payment?: "The user is not confirmed or kyc documents are not uploaded."
+      process_payment?: "The user is not confirmed or kyc documents are not uploaded."
+      checkout?: "Something went wrong, please try again."
+      send_under_negotiation?: "Something went wrong, please try again."
       hold?:
         user_confirmation: "The user is not confirmed or kyc documents are not uploaded."
-        already_held: "This unit is already held by other user."
-        user_kyc_allowed_bookings: "You can book only one unit on one KYC."
         allowed_bookings: "You have booked the permitted number of apartments."
 
+    admin:
+
+      project_unit_policy:
+        index?: "Only administrator has rights to view this page."
+        show?: "Only administrator has rights to view this page."
+        edit?: "Only administrator has rights to view this page."
+        export?: "Only administrator has rights to view this page."
+        mis_report?: "Only administrator has rights to view this page."
+        update_scheme?: "Only administrator has rights to view this page."
+        hold?:
+          user_confirmation: "The user is not confirmed or kyc documents are not uploaded."
+          already_held: "This unit is already held by other user."
+          user_kyc_allowed_bookings: "You can book only one unit on one KYC."
+          allowed_bookings: "You have booked the permitted number of apartments."
+          blocking_amount_receipt: "You have to make payment before blocking the apartment"
+
+      receipt_policy:
+        create?:
+          online_account_not_present: 'Any Account is not linked yet. Please contact to admin.'
+        new?:
+          online_account_not_present: 'Any Account is not linked yet. Please contact to admin.'
+
+    buyer:
+      project_unit_policy:
+        index?: "Only buyer has rights to view this page."
+        show?: "Only buyer has rights to view this page."
+        edit?: "Only buyer has rights to view this page."
+        hold?:
+          user_confirmation: "The user is not confirmed or kyc documents are not uploaded."
+          already_held: "This unit is already held by other user."
+          user_kyc_allowed_bookings: "You can book only one unit on one KYC."
+          allowed_bookings: "You have booked the permitted number of apartments."
+
+      receipt_policy:
+        new?:
+          online_account_not_present: 'Any Account is not linked yet. Please contact to admin.'
+        create?:
+          online_account_not_present: 'Any Account is not linked yet. Please contact to admin.'
 
 
 

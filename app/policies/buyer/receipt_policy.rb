@@ -24,7 +24,7 @@ class Buyer::ReceiptPolicy < ReceiptPolicy
     end
 
     valid = valid && current_client.payment_gateway.present? if record.payment_mode == "online"
-    valid
+    valid && online_account_present?
   end
 
   def create?
