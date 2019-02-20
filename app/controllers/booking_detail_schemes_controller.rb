@@ -76,7 +76,7 @@ class BookingDetailSchemesController < ApplicationController
   def update
     modify_params
     @scheme.assign_attributes(permitted_attributes(@scheme))
-    @scheme.status = 'under_negotiation' if @scheme.payment_adjustments.last.new_record?
+    @scheme.status = 'under_negotiation' if @scheme.payment_adjustments.present? && @scheme.payment_adjustments.last.new_record?
     @scheme.approved_by = current_user if @scheme.event.present? && @scheme.event == 'approved'
     respond_to do |format|
       if @scheme.save
