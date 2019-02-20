@@ -9,7 +9,7 @@ class User
   include SyncDetails
 
   # Constants
-  ALLOWED_UTM_KEYS = [:campaign, :source, :sub_source, :content, :medium, :term]
+  ALLOWED_UTM_KEYS = %i[campaign source sub_source content medium term]
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -30,7 +30,7 @@ class User
   field :mixpanel_id, type: String
   field :time_zone, type: String, default: 'Mumbai'
   field :erp_id, type: String, default: ''
-  field :utm_params, type: String, default: "" # {"campaign": '' ,"source": '',"sub_source": '',"medium": '',"term": '',"content": ''}
+  field :utm_params, type: Hash, default: {} # {"campaign": '' ,"source": '',"sub_source": '',"medium": '',"term": '',"content": ''}
   field :enable_communication, type: Hash, default: { "email": true, "sms": true }
 
   field :encrypted_password, type: String, default: ''
@@ -128,8 +128,11 @@ class User
     Receipt.where(user_id: id).in(status: %w[success clearance_pending]).where(project_unit_id: nil).where(total_amount: { "$gte": blocking_amount }).first
   end
 
-  def allowed_utm_param_keys(cookies)
-    SafeParser.new(cookies[:utm_params]).safe_load.with_indifferent_access.slice(*ALLOWED_UTM_KEYS).to_s if cookies[:utm_params].present?
+  def set_utm_params(cookies)
+    ALLOWED_UTM_KEYS.each do |key|
+      utm_params.store(key, cookies[key]) if cookies[key].present?
+    end
+    utm_params
   end
 
   def total_amount_paid

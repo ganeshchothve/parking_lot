@@ -8,7 +8,12 @@ RSpec.describe HomeController, type: :controller do
 
   describe 'POST /check_and_register' do
     it 'when extra utm_params are present' do
-      request.cookies['utm_params'] = { campaign: 'x', source: 'y', sub_source: 'z', medium: 'a', term: 'b', sample: 'er' }
+      request.cookies['campaign'] = 'x'
+      request.cookies['source'] = 'y'
+      request.cookies['sub_source'] = 'z'
+      request.cookies['medium'] = 'a'
+      request.cookies['term'] = 'b'
+      request.cookies['sample'] = 'er'
       expect { post :check_and_register, xhr: true, params: @user_params }.to change { User.count }.by(1)
     end
   end

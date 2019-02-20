@@ -5,6 +5,6 @@ class Admin::SyncLogPolicy < SyncLogPolicy
   end
 
   def resync?
-    %w[superadmin admin sales_admin].include?(user.role) && (current_client.selldo_form_id.present? && current_client.selldo_client_id.present?)
+    %w[superadmin admin sales_admin].include?(user.role) && (current_client.selldo_client_id.present? && current_client.selldo_form_id.present?)
   end
 end

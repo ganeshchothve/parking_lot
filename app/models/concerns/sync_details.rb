@@ -13,7 +13,7 @@ module SyncDetails
 
   module InstanceMethods
     def update_details
-      if current_client.selldo_form_id.present? && current_client.selldo_client_id.present?
+      if current_client.selldo_client_id.blank? && current_client.selldo_form_id.blank?
         sync_log = SyncLog.new
         @erp_models = ErpModel.where(resource_class: self.class, action_name: 'update', is_active: true)
         @erp_models.each do |erp|
@@ -23,7 +23,7 @@ module SyncDetails
     end
 
     def new_details
-      if current_client.selldo_form_id.present? && current_client.selldo_client_id.present?
+      if current_client.selldo_client_id.blank? && current_client.selldo_form_id.blank?
         sync_log = SyncLog.new
         @erp_models = ErpModel.where(resource_class: self.class, action_name: 'create', is_active: true)
         @erp_models.each do |erp|

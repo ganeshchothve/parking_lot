@@ -6,6 +6,11 @@ RSpec.describe LocalDevise::RegistrationsController, type: :controller do
     @user1 = create :user
     create(:admin)
     @user_params = FactoryBot.attributes_for(:user)
+    request.cookies['campaign'] = 'x'
+    request.cookies['source'] = 'y'
+    request.cookies['sub_source'] = 'z'
+    request.cookies['medium'] = 'a'
+    request.cookies['term'] = 'b'
   end
 
   describe 'POST /users' do
@@ -59,7 +64,7 @@ RSpec.describe LocalDevise::RegistrationsController, type: :controller do
         create(:project)
         create(:admin)
         @user_params = FactoryBot.attributes_for(:user)
-        request.cookies['utm_params'] = { campaign: 'x', source: 'y', sub_source: 'z', medium: 'a', term: 'b', sample: 'er' }
+        request.cookies['sample'] = 'er'
         expect { post :create, params: { user: @user_params } }.to change { User.count }.by(1)
       end
     end
@@ -68,7 +73,6 @@ RSpec.describe LocalDevise::RegistrationsController, type: :controller do
       create(:project)
       create(:admin)
       @user_params = FactoryBot.attributes_for(:user)
-      request.cookies['utm_params'] = { campaign: 'x', source: 'y', sub_source: 'z', medium: 'a', term: 'b' }
       expect { post :create, params: { user: @user_params } }.to change { User.count }.by(1)
     end
   end
