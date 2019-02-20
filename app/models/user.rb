@@ -121,7 +121,7 @@ class User
   end
 
   def portal_stage
-    user.portal_stages.desc(:updated_at)[0] if user.portal_stages.present?
+    user.portal_stages.desc(:created_at)[0] if user.portal_stages.present?
   end
 
   def total_balance_pending
