@@ -13,14 +13,14 @@ class BookingDetailSchemePolicy < SchemePolicy
   end
 
   def update?
-    %w[crm admin superadmin sales cp].include?(user.role)
+    (%w[admin sales crm cp].include?(user.role)) && (((record.project_unit.status == 'under_negotiation') && %w[disabled].exclude?(record.status)) || (ProjectUnit.booking_stages.include?(record.project_unit.status)))
   end
 
 
   def permitted_attributes params={}
     attributes = [:derived_from_scheme_id, :user_id,:status]
 
-    unless user.buyer?
+    unless user.buyer? || (ProjectUnit.booking_stages.include?(record.project_unit.status))
       attributes += [payment_adjustments_attributes: PaymentAdjustmentPolicy.new(user, PaymentAdjustment.new).permitted_attributes]
     end
 
