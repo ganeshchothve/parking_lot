@@ -1,0 +1,24 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-md-7">
+              <%if policy([:admin, Phase]).new? %>
+                <%= link_to "Add #{ t('global.phases') }", new_admin_phase_path, class: 'btn btn-primary modal-remote-form-link' %>
+              <% end %>
+            </div>
+            <div class="col-md-5 text-md-right">
+              <h6 class="mt-2">Total <%= t('global.phase') %>: <%= @phases.total_entries %></h6>
+            </div>
+          </div>
+          <%= render 'index', {phases: @phases} %>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="d-md-none mt-3"></div>
+    </div>
+  </div>
+</div>

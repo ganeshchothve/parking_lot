@@ -65,6 +65,7 @@ class User
 
   # field for active_model_otp
   field :otp_secret_key
+  field :referral_code, type: String
 
   def self.otp_length
     6
@@ -89,6 +90,7 @@ class User
   belongs_to :booking_portal_client, class_name: 'Client', inverse_of: :users
   belongs_to :manager, class_name: 'User', optional: true
   belongs_to :channel_partner, optional: true
+  belongs_to :referred_by, class_name: 'User', optional: true
   has_many :receipts
   has_many :project_units
   has_many :booking_details
@@ -102,6 +104,7 @@ class User
   has_many :notes, as: :notable
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :emails, as: :triggered_by, class_name: 'Email'
+  has_many :referrals, class_name: 'User', foreign_key: :referred_by_id
   has_many :sync_logs, as: :resource
   has_many :logs, class_name: 'SyncLog', inverse_of: :user_reference
   embeds_many :portal_stages
@@ -216,9 +219,9 @@ class User
     end
     selector[:role] = { "$ne": 'superadmin' } if selector[:role].blank?
     or_selector = {}
-    if params[:q].present?
-      regex = ::Regexp.new(::Regexp.escape(params[:q]), 'i')
-      or_selector = { "$or": [{ first_name: regex }, { last_name: regex }, { email: regex }, { phone: regex }] }
+    if params[:search].present?
+      regex = ::Regexp.new(::Regexp.escape(params[:search]), 'i')
+      or_selector = {"$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] }
     end
     self.and([selector, or_selector])
   end
@@ -261,6 +264,15 @@ class User
   def ds_name
     "#{name} - #{email} - #{phone}"
   end
+
+  def generate_referral_code
+    if self.buyer? && self.referral_code.blank?
+      self.referral_code = "#{self.booking_portal_client.name[0..1].upcase}-#{SecureRandom.hex(4)}"
+    else
+      self.referral_code
+    end
+  end
+
 
   def dashboard_url
     url = Rails.application.routes.url_helpers

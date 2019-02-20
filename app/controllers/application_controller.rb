@@ -111,19 +111,19 @@ class ApplicationController < ActionController::Base
   def token_authentication_valid_params?
     params[:user_email].present? && params[:user_token].present?
   end
-  
+
   def user_not_authorized(exception)
     policy_name = exception.policy.class.to_s.underscore.split("/").join('.')
-    policy_name << "."
-    policy_name << exception.query
+    policy_name += "."
+    policy_name += exception.query.to_s
     if exception.policy.condition
-      policy_name << "."
-      policy_name << exception.policy.condition
+      policy_name += "."
+      policy_name += exception.policy.condition.to_s
     end
-    flash[:error] = t "#{policy_name}", scope: "pundit", default: :default
+    flash[:alert] = t "#{policy_name}", scope: "pundit", default: :default
     respond_to do |format|
-      format.html { redirect_to user_signed_in? ? after_sign_in_path_for(current_user) : root_path ,notice: flash[:error]}
-      format.json { render json: {error: "You are not authorized to access this page"}, status: 403 }
+      format.html { redirect_to user_signed_in? ? after_sign_in_path_for(current_user) : root_path}
+      format.json { render json: { error: flash[:alert] }, status: 403 }
     end
   end
 end

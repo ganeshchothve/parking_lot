@@ -34,8 +34,9 @@ Rails.application.routes.draw do
   resources :channel_partners, except: [:destroy] do
     get 'export', action: 'export', on: :collection, as: :export
   end
-
   namespace :admin do
+    resources :accounts
+    resources :phases
     resources :erp_models, only: %i[index new create edit update]
     resources :sync_logs, only: %i[index] do
       get 'resync', on: :member
@@ -55,13 +56,22 @@ Rails.application.routes.draw do
     end
 
     resources :project_units, only: [:index, :show, :edit, :update] do
-      get 'print', action: 'print', on: :member, as: :print
-      get 'export', action: 'export', on: :collection, as: :export
-      get 'mis_report', action: 'mis_report', on: :collection, as: :mis_report
+      member do
+        get :print
+        get :send_under_negotiation
+      end
+
+      collection do
+        get :export
+        get :mis_report
+      end
+
       resources :booking_detail_schemes, except: [:destroy], controller: '/booking_detail_schemes'
-      get 'send_under_negotiation', on: :member
     end
 
+    scope ":request_type" do
+        resources :accounts, controller: 'accounts'
+      end
     resources :users do
       member do
         get :resend_confirmation_instructions
@@ -151,20 +161,24 @@ Rails.application.routes.draw do
   end
 
   namespace :buyer do
+    resources :emails, :smses, only: %i[index show]
+    resources :project_units, only: [:index, :show, :edit, :update] do
+      resources :receipts, only: [ :index, :new, :create], controller: 'project_units/receipts'
+    end
     resources :users, only: [:show, :update, :edit] do
       member do
         get :update_password
       end
     end
     resources :receipts, only: [:index, :new, :create, :show ]
-    resources :emails, :smses, only: %i[index show]
-    resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
-    scope ":request_type" do
-      resources :user_requests, except: [:destroy], controller: 'user_requests'
+    resources :referrals, only: [:index, :create, :new] do
+      post :generate_code, on: :collection
     end
 
-    resources :project_units, only: [:index, :show, :edit, :update] do
-      resources :receipts, only: [ :index, :new, :create], controller: 'project_units/receipts'
+    resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
+
+    scope ":request_type" do
+      resources :user_requests, except: [:destroy], controller: 'user_requests'
     end
   end
 

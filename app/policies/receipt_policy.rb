@@ -29,6 +29,22 @@ class ReceiptPolicy < ApplicationPolicy
       attributes += [:project_unit_id]
     end
     attributes += [:total_amount] if record.new_record? || ['pending', 'clearance_pending'].include?(record.status)
+    attributes += [:account_number] if record.payment_mode == 'online'
     attributes
+  end
+
+  private
+
+  def online_account_present?
+    if record.payment_mode == 'online'
+      if record.account.present?
+        true
+      else
+        @condition = 'online_account_not_present'
+        false
+      end
+    else
+      true
+    end
   end
 end

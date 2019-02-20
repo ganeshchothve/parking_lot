@@ -6,8 +6,8 @@ class EmailObserver < Mongoid::Observer
   def before_create email
     email.to ||= []
     email.cc ||= []
-    email.to = email.recipients.distinct(:email).compact.reject{|x| x.blank?}
-    email.cc = email.cc_recipients.distinct(:email).compact.reject{|x| x.blank?}
+    email.to = email.recipients.distinct(:email).compact.reject{|x| x.blank?} if email.to.blank?
+    email.cc = email.cc_recipients.distinct(:email).compact.reject{|x| x.blank?} if email.cc.blank?
   end
 
   def before_save email
@@ -31,8 +31,18 @@ class EmailObserver < Mongoid::Observer
   end
 
   def after_create email
+    # Email sent when
+    # Template Present  |   Templat Is Active  |   ENV in list  |   SMS sent or not
+    #      T            |          T           |       T        |        yes
+    #      T            |          T           |       F        |         no
+    #      T            |          F           |       T        |         no
+    #      T            |          F           |       F        |         no
+    #      F            |          -           |       T        |        yes
+    #      F            |          -           |       F        |         no
+    #      F            |          -           |       T        |        yes
+    #      F            |          -           |       F        |         no
     if email.to.present?
-      if Rails.env.production? || Rails.env.staging?
+      if ( !email.email_template || email.email_template.try(:is_active?) ) && (Rails.env.production? || Rails.env.staging?)
         if email.attachments.present?
           Communication::Email::MailgunWorker.perform_in(2.minutes, email.id.to_s)
         else
@@ -44,7 +54,7 @@ class EmailObserver < Mongoid::Observer
           attachment_urls[doc.file_name] = doc.file.url
         end
         ApplicationMailer.test({
-          to: email.recipients.distinct(:email),
+          to: email.recipients.pluck(:email).uniq,
           cc: email.cc,
           body: email.body,
           subject: email.subject,

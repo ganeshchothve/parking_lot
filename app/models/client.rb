@@ -55,6 +55,7 @@ class Client
   field :gtm_tag, type: String
   field :enable_communication, type: Hash, default: {"email": true, "sms": true}
   field :allow_multiple_bookings_per_user_kyc, type: Boolean, default: true
+  field :enable_referral_bonus, type: Boolean, default: false
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />

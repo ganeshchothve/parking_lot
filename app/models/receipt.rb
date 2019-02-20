@@ -33,6 +33,8 @@ class Receipt
   belongs_to :booking_detail, optional: true
   belongs_to :project_unit, optional: true
   belongs_to :creator, class_name: 'User'
+  belongs_to :account, foreign_key: 'account_number', optional: true 
+  # remove optional: true when implementing.
   has_many :assets, as: :assetable
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :sync_logs, as: :resource

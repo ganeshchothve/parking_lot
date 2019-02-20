@@ -15,7 +15,7 @@
       <% users.each do |user| %>
         <tr>
           <td>
-            <% if user.buyer? %>
+            <% if policy([ current_user_role_group, user]).show? %>
               <%= link_to user.name, [current_user_role_group, user ] %>
             <% else %>
               <%= user.name %>

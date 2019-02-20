@@ -19,6 +19,6 @@ FactoryBot.define do
     existing_customer_project { Faker::Lorem.word }
     existing_customer_name { Faker::Name.name }
 
-    association :user, statergy: :build
+    association :user, factory: :user
   end
 end

@@ -22,9 +22,7 @@ FactoryBot.define do
     association :project, factory: :project
 
     after(:build) do |project_tower|
-      # project = FactoryBot.create(:project)
-      # project.save!
-      # scheme.set(project_id: project)
+      project_tower.project ||= Project.desc(:created_at).first || create(:project)
     end
   end
 end

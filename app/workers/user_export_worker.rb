@@ -87,7 +87,10 @@ class UserExportWorker
       "RERA ID",
       "Last Sign In At",
       "Confirmed",
-      "Confirmed At"
+      "Confirmed At",
+      "Referral Code",
+      "Referred By",
+      "Referred By ID (Used for VLOOKUP)"
     ]
   end
 
@@ -103,7 +106,10 @@ class UserExportWorker
       user.role?("channel_partner") ? user.rera_id : "",
       user.last_sign_in_at.present? ? I18n.l(user.last_sign_in_at.in_time_zone(current_user.time_zone)) : "",
       user.confirmed? ? "Yes" : "No",
-      user.confirmed_at.present? ? I18n.l(user.confirmed_at.in_time_zone(current_user.time_zone)) : ""
+      user.confirmed_at.present? ? I18n.l(user.confirmed_at.in_time_zone(current_user.time_zone)) : "",
+      user.referral_code,
+      user.referred_by.try(:name),
+      user.referred_by_id.to_s
     ]
   end
 end
