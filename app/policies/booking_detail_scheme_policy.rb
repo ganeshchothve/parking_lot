@@ -10,9 +10,9 @@ class BookingDetailSchemePolicy < SchemePolicy
 
   def create?
     case user.role
-    case 'crm', 'admin', 'superadmin', 'sales', 'cp', 'sales_admin'
+    when 'crm', 'admin', 'superadmin', 'sales', 'cp', 'sales_admin'
       true
-    case 'user', 'management_user', 'employee_user'
+    when 'user', 'management_user', 'employee_user'
       record.project_unit.status == 'hold'
     else
       false
