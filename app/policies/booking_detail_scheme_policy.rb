@@ -9,7 +9,14 @@ class BookingDetailSchemePolicy < SchemePolicy
   end
 
   def create?
-    %w[crm admin superadmin sales cp].include?(user.role)
+    case user.role
+    case 'crm', 'admin', 'superadmin', 'sales', 'cp', 'sales_admin'
+      true
+    case 'user', 'management_user', 'employee_user'
+      record.project_unit.status == 'hold'
+    else
+      false
+    end
   end
 
   def update?
