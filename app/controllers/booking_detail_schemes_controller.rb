@@ -40,7 +40,7 @@ class BookingDetailSchemesController < ApplicationController
   end
 
   def create
-    @scheme = BookingDetailScheme.new(created_by: current_user, booking_portal_client_id: current_user.booking_portal_client_id)
+    @scheme = BookingDetailScheme.new(created_by: current_user, booking_portal_client_id: current_user.booking_portal_client_id, project_unit: @project_unit)
     @scheme.created_by_user = true
     modify_params
     @scheme.assign_attributes(permitted_attributes(@scheme))
