@@ -166,28 +166,3 @@ RSpec.describe Api::V1::UsersController, type: :controller do
     end
   end
 end
-
-  # describe "PUT(update) portal stage" do
-  #   it "update successful" do
-  #     request.headers["HTTP_HOST"] = @external_api.domain
-  #     request.headers["Api-key"] = @key
-  #     user = create(:user, booking_portal_client: @client, role: "user", confirmed_at: Time.now)
-  #     user.set(erp_id: "126")
-  #     #portal_stage_params = FactoryBot.attributes_for(:portal_stage)
-  #     portal_stage_params = {stage: "booked", updated_at: Time.now}
-  #     @user_params = {portal_stage: portal_stage_params, erp_id: "126"}
-  #     put :portal_stage, params: {id: user.id, user: @user_params}
-  #     expect(response).to have_http_status(200)
-  #   end
-  #   it "update failed" do
-  #     request.headers["HTTP_HOST"] = @external_api.domain
-  #     request.headers["Api-key"] = @key
-  #     user = create(:user, booking_portal_client: @client, role: "user", confirmed_at: Time.now)
-  #     user.set(erp_id: "127")
-  #     #portal_stage_params = FactoryBot.attributes_for(:portal_stage)
-  #     portal_stage_params = {stage: 123, updated_at: Time.now}
-  #     @user_params = {portal_stage: portal_stage_params, erp_id: "127"}
-  #     put :portal_stage, params: {id: user.id, user: @user_params}
-  #     expect(response).to have_http_status(422)
-  #   end
-  # end
