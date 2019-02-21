@@ -99,6 +99,7 @@ class User
   has_many :smses, as: :triggered_by, class_name: "Sms"
   has_many :emails, as: :triggered_by, class_name: "Email"
   has_many :referrals, class_name: 'User', foreign_key: :referred_by_id
+  has_and_belongs_to_many :schemes
 
   validates :first_name, :role, presence: true
   validates :phone, uniqueness: true, phone: { possible: true, types: [:voip, :personal_number, :fixed_or_mobile]}, if: Proc.new{|user| user.email.blank? }

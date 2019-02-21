@@ -122,14 +122,13 @@ class ProjectUnit
     out.with_indifferent_access
   end
 
-  def permitted_schemes(user = nil)
-    user ||= self.user
-    or_criteria = [{ project_tower_id: project_tower_id }]
-    or_criteria << { user_id: user.id }
-    or_criteria << { user_id: nil, user_role: user.role }
-    Scheme.where(status: 'approved').or('$or' => [{ default: true, project_tower_id: project_tower_id }, { can_be_applied_by: user.role, "$or": or_criteria }])
+  def permitted_schemes(_user = nil)
+    or1 = { user_ids: self.user.id, can_be_applied_by: _user.role }
+    or2 = { user_ids: nil, can_be_applied_by: _user.role }
+    or3 = { default: true }
+    Scheme.where(project_tower_id: project_tower_id, status: 'approved','$or' => [or1,or2,or3] )
   end
-
+  
   def self.user_based_available_statuses(user)
     statuses = if user.present?
                  if user.role?('management_user')

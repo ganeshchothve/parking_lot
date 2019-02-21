@@ -25,6 +25,7 @@ class Scheme
   belongs_to :approved_by, class_name: "User", optional: true
   belongs_to :created_by, class_name: "User" 
   belongs_to :booking_portal_client, class_name: "Client"
+  has_and_belongs_to_many :users
 
   validates :name, :status, :cost_sheet_template_id, :payment_schedule_template_id, presence: true
   validates :name, uniqueness: {scope: :project_tower_id}

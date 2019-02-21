@@ -22,6 +22,7 @@ class Admin::SchemePolicy < SchemePolicy
     if record.status == 'draft'
       attributes += [payment_adjustments_attributes: PaymentAdjustmentPolicy.new(user, PaymentAdjustment.new).permitted_attributes]
     end
+    attributes += [user_ids: []]
     attributes
   end
 end
