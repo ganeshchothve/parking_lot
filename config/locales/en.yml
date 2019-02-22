@@ -342,3 +342,22 @@ en:
     link_name: 'Inventory'
   audits:
     link_name: 'Histroy'
+  datetime:
+    distance_in_words:
+      about_x_years:
+        one: 'an year'
+        other: '%{count} Years'
+      almost_x_years:
+        one: 'almost year'
+        other: '%{count} Years'
+  project_units:
+    status:
+       available: 'Available'
+       not_available: 'Not Available'
+       error: 'Error'
+       hold: 'Hold'
+       blocked: 'Blocked'
+       booked_tentative: 'Tentative Booked'
+       booked_confirmed: 'Confirmed Booked'
+       management: 'Management Blocking'
+       employee: 'Employee Blocking'
