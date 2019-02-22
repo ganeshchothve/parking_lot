@@ -28,6 +28,9 @@ class Receipt
   field :comments, type: String
   field :gateway_response, type: Hash
   field :erp_id, type: String, default: ''
+  field :token_number, type: Integer
+
+  attr_accessor :swap_request_initiated
 
   belongs_to :user
   belongs_to :booking_detail, optional: true
@@ -37,11 +40,13 @@ class Receipt
   has_many :assets, as: :assetable
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :sync_logs, as: :resource
+  embeds_one :time_slot
+
+  accepts_nested_attributes_for :time_slot, reject_if: :all_blank
 
   scope :filter_by_status, ->(_status) { where(status: _status) }
   scope :filter_by_receipt_id, ->(_receipt_id) { where(receipt_id: /#{_receipt_id}/i) }
   scope :filter_by_user_id, ->(_user_id) { where(user_id: _user_id) }
-
   scope :filter_by_payment_mode, ->(_payment_mode) { where(payment_mode: _payment_mode) }
   scope :filter_by_issued_date, ->(date) { start_date, end_date = date.split(' - '); where(issued_date: start_date..end_date) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: start_date..end_date) }
@@ -66,6 +71,7 @@ class Receipt
   validate :issued_date_when_offline_payment, if: proc { |record| %w[online cheque].exclude?(record.payment_mode) && issued_date.present? }
 
   increments :order_id, auto: false
+  increments :token_number
 
   delegate :project_unit, to: :booking_detail, prefix: false, allow_nil: true
 
@@ -95,6 +101,10 @@ class Receipt
       { id: 'processed_on.asc', text: 'Proccessed On - Oldest First' },
       { id: 'processed_on.desc', text: 'Proccessed On - Newest First' }
     ]
+  end
+
+  def get_token
+    'WOJ' + token_number.to_s
   end
 
   def primary_user_kyc
