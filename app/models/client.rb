@@ -61,6 +61,12 @@ class Client
   # Enabled: If channel_partner tries to add a lead which is already present in the system & tagged to different channel_partner, then system will check if the lead is confirmed or not, if yes, it won't allow the current channel_partner to add it again & trigger an email to admin saying current channel_partner tried to add an existing lead.
   # Disabled: If channel_partner tries to add an already present lead under diff. channel_partner, then system will not allow current channel_partner to add that lead again regardless of its confirmation status & trigger a notification email to admin informing that current channel_partner tried to add existing lead.
   field :enable_lead_conflicts, type: Boolean, default: false
+  field :slot_start_date, type: Date
+  field :start_time, type: Time
+  field :end_time, type: Time
+  field :duration, type: Integer
+  field :capacity, type: Integer, default: 1
+  field :active, type: Boolean, default: false
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
@@ -112,8 +118,19 @@ class Client
   validates :preferred_login, inclusion: {in: Proc.new{ Client.available_preferred_logins.collect{|x| x[:id]} } }
   validates :payment_gateway, inclusion: {in: Proc.new{ Client.available_payment_gateways.collect{|x| x[:id]} } }, allow_blank: true
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
-
+  validates :slot_start_date, :start_time, :end_time, :duration, :capacity, presence: true, if: :active
+  validates :capacity, numericality: { greater_than: 0 }, if: :capacity?
+  validate :check_duration, if: :duration?
+  validate :check_end_time, if: :start_time? && :end_time?
   accepts_nested_attributes_for :address, :external_inventory_view_config
+
+  def check_duration
+    errors.add(:duration, 'Duration is too long to fit a slot in one day.') if end_time < start_time + duration.minutes
+  end
+
+  def check_end_time
+    errors.add(:end_time, 'End Time must be more than start time.') if start_time >= end_time
+  end
 
   def self.available_preferred_logins
     [
