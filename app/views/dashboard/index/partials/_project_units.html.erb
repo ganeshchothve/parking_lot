@@ -47,7 +47,7 @@
               <td><%= d[:bedrooms] %></td>
               <% end %>
               <% if (params[:unit_fltrs] && params[:unit_fltrs][:group_by] && params[:unit_fltrs][:group_by].include?("status")) || params[:unit_fltrs].nil? %>
-              <td><%= ProjectUnit.available_statuses.find{|x| x[:id] == d[:status]}[:text] %></td>
+              <td><%= t("project_units.status.#{d[:status]}") %></td>
               <% end %>
               <td class="text-right"><%= d[:count] %></td>
               <td class="text-right"><%= number_to_indian_currency(d[:total_agreement_price]) %></td>
