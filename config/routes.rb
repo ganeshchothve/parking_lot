@@ -83,6 +83,8 @@ Rails.application.routes.draw do
 
       resources :receipts, only: [:index, :new, :create, :edit, :update ] do
         get :resend_success, on: :member
+        get :lost_receipt, on: :collection
+
       end
       resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
       resources :project_units, only: [:index] do

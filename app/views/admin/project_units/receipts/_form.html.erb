@@ -42,39 +42,43 @@
   </div>
 </div>
 
-<div class="row offline">
-  <div class="col-md-6">
-    <div class="form-group">
-      <%= f.label :status, class: 'control-label' %>
-      <%
-        statuses = @receipt.aasm.events(permitted: true).collect{|x| x.name.to_s}
-        if statuses.include?("clearance_pending") && @receipt.new_record?
-          statuses.reject!{|x| x == "pending"}
-        end
-      %>
-      <%= f.select :event, options_for_select(statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, @receipt.status), {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([:admin, @receipt]).editable_field?("event") %>
-    </div>
+<div class="form-group offline">
+  <%= f.label :status, class: 'control-label' %>
+  <%
+    statuses = @receipt.aasm.events(permitted: true).collect{|x| x.name.to_s}
+    if statuses.include?("clearance_pending") && @receipt.new_record?
+      statuses.reject!{|x| x == "pending"}
+    end
+  %>
+  <%= f.select :event, options_for_select(statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, @receipt.status), {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([:admin, @receipt]).editable_field?("event") %>
+</div>
+<% if !@receipt.new_record? %>
+  <div class="form-group online">
+    <%= f.label :status, class: 'control-label' %>
+    <%
+      statuses = @receipt.aasm.events(permitted: true).collect{|x| x.name.to_s}
+      if statuses.include?("clearance_pending") && @receipt.new_record?
+        statuses.reject!{|x| x == "pending"}
+      end
+    %>
+    <%= f.select :event, options_for_select(statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, @receipt.status), {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([:admin, @receipt]).editable_field?("event") %>
   </div>
-
-  <div class="col-md-6">
-    <% if current_client.enable_actual_inventory?(current_user) %>
-      <div class="form-group">
-        <% unless( (defined? direct_payment) && direct_payment ) %>
-          <%= f.label :project_unit_id, class: 'control-label' %>
-
-          <% if @receipt.project_unit_id.present? %>
-            <% user_units = [f.object.project_unit] %>
-          <% elsif policy([:admin, @receipt]).editable_field?("project_unit_id") %>
-            <% user_units = @receipt.user.project_units.ne(status: 'hold') %>
-          <% end %>
-          <% if user_units.present? %>
-            <%= f.select :project_unit_id, user_units.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', required: true %>
-          <% end %>
+<% end %> 
+<% if current_client.enable_actual_inventory?(current_user) %>
+  <div class="form-group">
+    <% unless( (defined? direct_payment) && direct_payment ) %>
+      <%= f.label :project_unit_id, class: 'control-label' %>
+        <% if @receipt.project_unit_id.present? %>
+          <% user_units = [f.object.project_unit] %>
+        <% elsif policy([:admin, @receipt]).editable_field?("project_unit_id") %>
+          <% user_units = @receipt.user.project_units.ne(status: 'hold') %>
         <% end %>
-      </div>
+        <% if user_units.present? %>
+          <%= f.select :project_unit_id, user_units.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize' %>
+        <% end %>
     <% end %>
   </div>
-</div>
+<% end %>
 
 <% if policy([:admin, @receipt]).editable_field?("tracking_id") && policy([:admin, @receipt]).editable_field?("processed_on") %>
   <div class="row offline">

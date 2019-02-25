@@ -28,7 +28,8 @@ class Admin::ReceiptPolicy < ReceiptPolicy
     return false if record.status == "success" && record.project_unit_id.present?
 
     valid = record.status == "success" && record.project_unit_id.blank?
-    valid ||= (['pending', 'clearance_pending', 'available_for_refund'].include?(record.status) && ['superadmin', 'admin', 'crm', 'sales_admin'].include?(user.role))
+    valid ||= (['pending', 'clearance_pending', 'available_for_refund'].include?(record.status) && [ 'admin', 'crm', 'sales_admin'].include?(user.role))
+    valid ||= record.payment_mode != 'online' && ['pending', 'clearance_pending', 'available_for_refund'].include?(record.status) && user.role == 'superadmin'
     valid ||= (user.role?('channel_partner') && record.status == 'pending')
     valid
   end
@@ -41,12 +42,18 @@ class Admin::ReceiptPolicy < ReceiptPolicy
     show?
   end
 
+  def lost_receipt?
+    new? && user.role == 'superadmin'
+  end
+
   def permitted_attributes params={}
     attributes = super
     attributes += [:project_unit_id] if user.role?('channel_partner')
     if !user.buyer? && (record.new_record? || ['pending', 'clearance_pending'].include?(record.status))
       attributes += [:issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier]
     end
+    attributes += [':account_number'] if user.role == 'superadmin' && record.payment_mode == 'online'
+    attributes += [:payment_identifier] if user.role = 'admin'
     if ['sales', 'sales_admin'].include?(user.role) && %w[pending clearance_pending ].include?(record.status)
       attributes += [:event]
     end

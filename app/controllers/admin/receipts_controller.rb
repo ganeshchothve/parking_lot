@@ -36,16 +36,27 @@ class Admin::ReceiptsController < AdminController
     authorize([:admin, @receipt])
     render layout: false
   end
-
   #
-  # This create action always create a new receipt for user's project unit rerceipt form.
+  # This new action always create a new receipt form for user's project unit rerceipt form.
+  #
+  # GET "lost_receipt/admin/users/:user_id/receipts"
+  def lost_receipt
+    @receipt = Receipt.new({
+      creator: current_user, user_id: @user, payment_mode: 'cheque',
+      total_amount: current_client.blocking_amount
+    })
+    authorize([:admin, @receipt])
+    render layout: false
+  end
+  #
+  # This create action always create a new receipt for user's project unit receipt form.
   #
   # POST /admin/users/:user_id/receipts
   def create
 
-    @receipt = Receipt.new(user: @user, creator: current_user, project_unit_id: params.dig(:rerceipt, :project_unit_id))
+    @receipt = Receipt.new(user: @user, creator: current_user, project_unit_id: params.dig(:receipt, :project_unit_id))
     @receipt.assign_attributes(permitted_attributes([:admin, @receipt]))
-    @receipt.account = selected_account
+    @receipt.account = selected_account if @receipt.account == nil
     @receipt.payment_gateway = current_client.payment_gateway if @receipt.payment_mode == 'online'
     
     authorize([:admin, @receipt])
@@ -57,8 +68,10 @@ class Admin::ReceiptsController < AdminController
       else
         if @receipt.save
           flash[:notice] = "Receipt was successfully updated. Please upload documents"
-          if @receipt.payment_mode == 'online'
+          if @receipt.payment_mode == 'online' && @receipt.payment_identifier == nil
             url = @receipt.payment_gateway_service.gateway_url(@user.get_search(@receipt.project_unit_id).id)
+          elsif @receipt.payment_mode == 'online' && @receipt.payment_identifier != nil
+            url = admin_user_receipts_path(@user)
           else
             url = "#{admin_user_receipts_path(@user)}?remote-state=#{assetables_path(assetable_type: @receipt.class.model_name.i18n_key.to_s, assetable_id: @receipt.id)}"
           end
