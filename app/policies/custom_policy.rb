@@ -39,5 +39,4 @@ class CustomPolicy < Struct.new(:user, :enable_users)
   def phases?
     "#{user.buyer? ? 'Buyer' : 'Admin'}::PhasePolicy".constantize.new(user, Phase).index?
   end
-
 end

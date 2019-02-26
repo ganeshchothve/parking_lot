@@ -38,7 +38,10 @@
   <% if notice %>
     <p class="alert alert-success notice"><%= notice %></p>
   <% end %>
-  <% if alert %>
-    <p class="alert alert-danger"><%= alert %></p>
+  <% if alert.present? %>
+    <p class="alert alert-danger">
+    <% alert.each do |msg| %>
+      <%=msg %></br>
+    <% end %></p>
   <% end %>
 </div>
