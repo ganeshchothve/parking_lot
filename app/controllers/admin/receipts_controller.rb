@@ -1,5 +1,6 @@
 class Admin::ReceiptsController < AdminController
   include ReceiptsConcern
+  include ReceiptHelper
 
   before_action :set_user, except: [:index, :show, :export, :resend_success]
   before_action :set_receipt, only: [:edit, :update, :show, :resend_success]
@@ -42,7 +43,7 @@ class Admin::ReceiptsController < AdminController
   # GET "admin/users/:user_id/receipts/lost_receipt"
   def lost_receipt
     @receipt = Receipt.new({
-      creator: current_user, user_id: @user, payment_mode: 'cheque',
+      creator: current_user, user_id: @user, payment_mode: 'online',
       total_amount: current_client.blocking_amount
     })
     authorize([:admin, @receipt])
@@ -68,10 +69,12 @@ class Admin::ReceiptsController < AdminController
       else
         if @receipt.save
           flash[:notice] = "Receipt was successfully updated. Please upload documents"
-          if @receipt.payment_mode == 'online' && @receipt.payment_identifier == nil
+          if @receipt.payment_mode == 'online' 
+            if @receipt.payment_identifier == nil
             url = @receipt.payment_gateway_service.gateway_url(@user.get_search(@receipt.project_unit_id).id)
-          elsif @receipt.payment_mode == 'online' && @receipt.payment_identifier != nil
-            url = admin_user_receipts_path(@user)
+            else 
+              url = admin_user_receipts_path(@user)
+            end
           else
             url = "#{admin_user_receipts_path(@user)}?remote-state=#{assetables_path(assetable_type: @receipt.class.model_name.i18n_key.to_s, assetable_id: @receipt.id)}"
           end
