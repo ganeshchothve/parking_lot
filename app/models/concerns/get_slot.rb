@@ -18,7 +18,6 @@ module GetSlot
         date = current_client.slot_start_date + (slot_number / slots_per_day).days
         slot_start_time = current_client.start_time + ((slot_number % slots_per_day) * current_client.duration).minutes
         self.time_slot = TimeSlot.new(date: date, start_time: slot_start_time, end_time: slot_start_time + current_client.duration.minutes)
-        # puts "\n\n self.token_number: #{self.token_number} \n\n slot_number: #{slot_number} \n\n date: #{date} \n\n slot_start_time: #{slot_start_time} \n\n slot_end_time : #{slot_start_time+current_client.duration.minutes}\n\n"
       end
     end
   end
