@@ -17,7 +17,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
   end
 
   def create?
-    new? && ['admin','sales','sales_admin', 'channel_partner'].include?(user.role) && online_account_present?
+    new? && ['admin','sales','sales_admin', 'channel_partner', 'superadmin'].include?(user.role) && online_account_present?
   end
 
   def asset_create?
@@ -52,8 +52,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
     if !user.buyer? && (record.new_record? || ['pending', 'clearance_pending'].include?(record.status))
       attributes += [:issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier]
     end
-    attributes += [':account_number'] if user.role == 'superadmin' && record.payment_mode == 'online'
-    attributes += [:payment_identifier] if user.role = 'admin'
+    attributes += [:account_number,:payment_identifier] if user.role == 'superadmin' && record.payment_mode == 'online'
     if ['sales', 'sales_admin'].include?(user.role) && %w[pending clearance_pending ].include?(record.status)
       attributes += [:event]
     end
