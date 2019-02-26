@@ -80,6 +80,7 @@ gem 'phonelib'
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
 gem 'bootstrap-email'
+gem 'mongoid-sadstory', '~> 0.0.2'
 
 # TODO: run this command on server before deployment on a new server
 # TO GET TOKEN: curl -u 'username' -d '{"scopes":["repo"],"note": "Audit app by Sell.Do"}' https://api.github.com/authorizations

@@ -426,13 +426,13 @@
                     <div class="row">
                       <div class="col-md-6">
                         <div class="form-group">
-                          <%= eivc_form.label :provider, class: 'label-required' %>
-                          <%= eivc_form.select :provider, ExternalInventoryViewConfig.available_providers.collect{|x| [x[:text], x[:id]]}, {}, class: 'selectize', required: 'required', disabled: (policy(eivc_form.object).editable_field?("provider") ? false : true) %>
+                          <%= eivc_form.label :provider %>
+                          <%= eivc_form.select :provider, ExternalInventoryViewConfig.available_providers.collect{|x| [x[:text], x[:id]]}, {}, class: 'selectize', disabled: (policy(eivc_form.object).editable_field?("provider") ? false : true) %>
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="form-group">
-                          <%= eivc_form.label :url, class: 'label-required' %>
+                          <%= eivc_form.label :url %>
                           <%= eivc_form.url_field :url, class: 'form-control', disabled: (policy(eivc_form.object).editable_field?("url") ? false : true) %>
                         </div>
                       </div>
@@ -498,59 +498,54 @@
                 <hr/>
               </div>
             </div>
-
-
             <div class="tab-pane fade show active" id="nav-client-configuration" role="tabpanel">
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
                   <%= f.label :slot_start_date %>
                   <% date = (f.object.slot_start_date.present? ? f.object.slot_start_date.strftime("%d/%m/%Y") : "") %>
-                  <%= f.text_field :slot_start_date, class: 'form-control datepicker', type:'text', data: {"default-date": date}, value: date %>
+                  <%= f.text_field :slot_start_date, class: 'form-control datepicker', type:'text', data: {"default-date": date}, value: date, disabled: !policy([:admin, @client]).editable_field?("slot_start_date") %>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
                     <%= f.label :duration_in_minutes, class: 'label-required' %>
-                    <%= f.number_field :duration, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("duration") ? false : true), min: 1 %>
+                    <%= f.number_field :duration, class: 'form-control', disabled: !policy([:admin, @client]).editable_field?("duration"), min: 1 %>
                   </div>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-6">
                   <%= f.label :start_time %><br>
-                    <%= f.time_select :start_time, class: 'form-control' %>
+                    <%= f.time_select :start_time, class: 'form-control', disabled: !policy([:admin, @client]).editable_field?("start_time") %>
                 </div>
                 <div class="col-md-6">
                   <%= f.label :end_time %><br>
-                    <%= f.time_select :end_time, class: 'form-control' %>
+                    <%= f.time_select :end_time, class: 'form-control', disabled: !policy([:admin, @client]).editable_field?("end_time") %>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
                     <%= f.label :capacity, class: 'label-required' %>
-                    <%= f.number_field :capacity, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("capacity") ? false : true), min: 1 %>
+                    <%= f.number_field :capacity, class: 'form-control', disabled: !policy([:admin, @client]).editable_field?("capacity"), min: 1 %>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
                     <%= f.label :Enable %><br />
                     <div class="form-check form-check-inline">
-                      <%= f.radio_button :active, true, class: "form-check-input" %>
+                      <%= f.radio_button :active, true, class: "form-check-input", disabled: !policy([:admin, @client]).editable_field?("active") %>
                       <%= f.label :active, "Yes", class: "form-check-label" %>
                     </div>
                     <div class="form-check form-check-inline">
-                      <%= f.radio_button :active, false, class: "form-check-input" %>
+                      <%= f.radio_button :active, false, class: "form-check-input", disabled: !policy([:admin, @client]).editable_field?("active") %>
                       <%= f.label :active, "No", class: "form-check-label" %>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-
-
-
           </div>
         </div>
         <div class="modal-footer">

@@ -1,0 +1,33 @@
+<div class="table-responsive">
+  <table class="striped-table table">
+    <thead class="th-default">
+      <tr>
+        <th>Receipt ID</th>
+        <th>Token</th>
+        <th>Date</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% receipts.each do |receipt| %>
+        <% if receipt.time_slot.present? %>
+          <tr>
+            <td><%= receipt.receipt_id %></td>
+            <td><%= receipt.get_token_number %></td>
+            <td><%= receipt.time_slot.date.strftime("%d/%m/%Y") %></td>
+            <td><%= receipt.time_slot.start_time.strftime("%I:%M %p") %></td>
+            <td><%= receipt.time_slot.end_time.strftime("%I:%M %p") %></td>
+            <td class="text-right">
+              <div class="dropdown">
+                <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+                <div class="dropdown-menu dropdown-menu-right">
+                </div>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+</div>

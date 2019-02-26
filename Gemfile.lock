@@ -373,6 +373,8 @@ GEM
       mongoid (>= 3.1)
       mongoid-compatibility (>= 0.5.1)
       rspec (~> 3.3)
+    mongoid-sadstory (0.0.2)
+      mongoid
     multi_json (1.13.1)
     multi_xml (0.6.0)
     multipart-post (2.0.0)
@@ -660,6 +662,7 @@ DEPENDENCIES
   mongoid-autoinc
   mongoid-observers (~> 0.3.0)
   mongoid-rspec
+  mongoid-sadstory (~> 0.0.2)
   nested_form
   newrelic-redis
   newrelic_rpm

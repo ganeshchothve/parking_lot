@@ -8,8 +8,8 @@ class Receipt
   include ApplicationHelper
   include ReceiptStateMachine
   include SyncDetails
+  include GetSlot
   extend FilterByCriteria
-  extend GetSlot
 
   OFFLINE_PAYMENT_MODE = %w[cheque rtgs imps card_swipe neft]
 
@@ -72,7 +72,7 @@ class Receipt
   validate :issued_date_when_offline_payment, if: proc { |record| %w[online cheque].exclude?(record.payment_mode) && issued_date.present? }
 
   increments :order_id, auto: false
-  increments :token_number, seed: 451
+  increments :token_number, seed: 450
 
   delegate :project_unit, to: :booking_detail, prefix: false, allow_nil: true
 
@@ -104,7 +104,7 @@ class Receipt
     ]
   end
 
-  def get_token
+  def get_token_number
     'WOJ' + token_number.to_s
   end
 
