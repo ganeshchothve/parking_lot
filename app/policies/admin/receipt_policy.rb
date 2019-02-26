@@ -29,7 +29,6 @@ class Admin::ReceiptPolicy < ReceiptPolicy
 
     valid = record.status == "success" && record.project_unit_id.blank?
     valid ||= (['pending', 'clearance_pending', 'available_for_refund'].include?(record.status) && [ 'admin', 'crm', 'sales_admin'].include?(user.role))
-    valid ||= record.payment_mode != 'online' && ['pending', 'clearance_pending', 'available_for_refund'].include?(record.status) && user.role == 'superadmin'
     valid ||= (user.role?('channel_partner') && record.status == 'pending')
     valid
   end

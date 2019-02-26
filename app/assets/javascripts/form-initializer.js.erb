@@ -114,11 +114,7 @@ FormInitializer = (function(){
       if($(this).val() == 'online'){
         $('.offline').addClass('d-none');
         $('.offline').find('input, select').attr('disabled', 'disabled')
-        $('.online').removeClass('d-none');
-        $('.online').find('input, select').removeAttr('disabled')
       } else {
-        $('.online').addClass('d-none');
-        $('.online').find('input, select').attr('disabled', 'disabled')
         $('.offline').removeClass('d-none');
         $('.offline').find('input, select').removeAttr('disabled')
       }

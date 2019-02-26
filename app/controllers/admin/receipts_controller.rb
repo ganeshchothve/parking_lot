@@ -39,7 +39,7 @@ class Admin::ReceiptsController < AdminController
   #
   # This new action always create a new receipt form for user's project unit rerceipt form.
   #
-  # GET "lost_receipt/admin/users/:user_id/receipts"
+  # GET "admin/users/:user_id/receipts/lost_receipt"
   def lost_receipt
     @receipt = Receipt.new({
       creator: current_user, user_id: @user, payment_mode: 'cheque',
