@@ -40,7 +40,7 @@ FactoryBot.define do
 
     after(:build) do |project|
       project.booking_portal_client ||= Client.desc(:created_at).first
-      project.client_id = Client.desc(:created_at).first.id
+      project.client_id ||= Client.desc(:created_at).first.id
       project.developer_id ||= ( Developer.first || create(:developer) )
     end
 

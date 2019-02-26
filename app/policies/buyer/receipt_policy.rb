@@ -28,7 +28,7 @@ class Buyer::ReceiptPolicy < ReceiptPolicy
   end
 
   def create?
-    new?
+    new? && online_account_present?
   end
 
   def asset_create?

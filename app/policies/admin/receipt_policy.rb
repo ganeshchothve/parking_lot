@@ -16,7 +16,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
   end
 
   def create?
-    new? && ['admin','sales','sales_admin', 'channel_partner'].include?(user.role)
+    new? && ['admin','sales','sales_admin', 'channel_partner'].include?(user.role) && online_account_present?
   end
 
   def asset_create?

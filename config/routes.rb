@@ -35,12 +35,12 @@ Rails.application.routes.draw do
     get 'export', action: 'export', on: :collection, as: :export
   end
   namespace :admin do
+    resources :accounts
+    resources :phases
     resources :erp_models, only: %i[index new create edit update]
     resources :sync_logs, only: %i[index] do
       get 'resync', on: :member
     end
-    resources :accounts
-    resources :phases
     resources :emails, :smses, only: %i[index show]
     resource :client, except: [:show, :new, :create] do
       resources :templates, only: [:edit, :update, :index]

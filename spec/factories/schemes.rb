@@ -2,25 +2,19 @@ FactoryBot.define do
   factory :scheme do
     name { Faker::Name.name }
     description { Faker::Lorem.paragraph }
-    status { %w[approved draft disabled].sample }
+    status { 'draft' }
     approved_at { Faker::Date.between(2.days.ago, Date.today) }
-    # payment_schedule_template_id { FactoryBot.create(:payment_schedule_template).id }
-    # cost_sheet_template_id { FactoryBot.create(:cost_sheet_template).id }
     default { Faker::Boolean.boolean }
     can_be_applied_by { [] }
-    # project {FactoryBot.create(:project)}
     after(:build) do |scheme|
-      scheme.project = FactoryBot.create(:project)
-      project_tower = FactoryBot.create(:project_tower, project: project)
-      scheme.project_tower_id = project_tower.id
-      # user = FactoryBot.create(:user)
-      # scheme.set(user_id: user.id)
-      # scheme.set(user_role: user.role)
+      scheme.project_tower ||= ProjectTower.desc(:created_at).first
+      scheme.project ||= scheme.project_tower.project || create(:project)
+      scheme.created_by ||= User.where(role: 'admin').first || create(:admin)
+      scheme.booking_portal_client ||= (Client.asc(:created_at).first || create(:client))
     end
 
-    association :approved_by, factory: :user
-    association :created_by, factory: :user
-    association :booking_portal_client, factory: :client
-    # association :user, factory: :user
+    after(:create) do |scheme|
+      scheme.payment_adjustments << FactoryBot.build(:payment_adjustment)
+    end
   end
 end

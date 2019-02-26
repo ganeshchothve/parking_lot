@@ -27,10 +27,10 @@ class Admin::SyncLogsController < AdminController
       @erp_models.each do |erp|
         @sync_log.sync(erp, record)
       end
-      notice = 'Synced'
+      notice = "#{record.class} is queued to sync"
     else
       notice = 'Sync log resource absent'
-    end 
+    end
     redirect_back(fallback_location: root_path, notice: notice)
   end
 

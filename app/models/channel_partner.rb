@@ -10,7 +10,6 @@ class ChannelPartner
   field :email, type: String
   field :phone, type: String
   field :rera_id, type: String
-  field :associated_user_id, type: BSON::ObjectId
   field :status, type: String, default: 'inactive'
 
   field :company_name, type: String
@@ -18,7 +17,6 @@ class ChannelPartner
   field :gstin_number, type: String
   field :aadhaar, type: String
 
-  field :manager_id, type: BSON::ObjectId
   field :erp_id, type: String, default: ''
 
   default_scope -> { desc(:created_at) }
@@ -30,6 +28,8 @@ class ChannelPartner
     ]
   )
 
+  belongs_to :associated_user, class_name: 'User', optional: true
+  belongs_to :manager, class_name: 'User', optional: true
   has_many :users
   has_one :address, as: :addressable, validate: false
   has_one :bank_detail, as: :bankable, validate: false
@@ -51,19 +51,11 @@ class ChannelPartner
 
   accepts_nested_attributes_for :bank_detail, :address
 
-  def manager
-    manager_id.present? ? User.find(manager_id) : nil
-  end
-
   def self.available_statuses
     [
       { id: 'active', text: 'Active' },
       { id: 'inactive', text: 'Inactive' }
     ]
-  end
-
-  def associated_user
-    User.find(associated_user_id) if associated_user_id.present?
   end
 
   def self.build_criteria(params = {})
@@ -99,10 +91,35 @@ class ChannelPartner
     "#{name} - #{email} - #{phone}"
   end
 
-  def self.sync(erp_model, record, sync_log)
-    unless erp_model.action_name == 'update' && record.status != 'active'
-      Api::ChannelPartnerDetailsSync.new(erp_model, record, sync_log).execute
+  def sfdc_phone
+    self.phone.gsub(/\A\+91/, '')
+  end
+
+  # As we want to push channel partner once its activated, we are using erp_model with create event here.
+  def update_details
+    sync_log = SyncLog.new
+    @erp_models = ErpModel.where(resource_class: self.class, action_name: 'create', is_active: true)
+    @erp_models.each do |erp|
+      sync_log.sync(erp, self)
     end
+  end
+
+  def sync(erp_model, sync_log)
+    if status == 'active'
+      _erp_models = if erp_id.blank?
+        ErpModel.where(resource_class: self.class, action_name: 'create')
+      else
+        ErpModel.where(resource_class: self.class, action_name: 'update')
+      end
+      _erp_models.each do |erp|
+        Api::ChannelPartnerDetailsSync.new(erp, self, sync_log).execute
+      end
+    end
+  end
+
+  def update_erp_id(erp_id)
+    associated_user.try(:set, {erp_id: erp_id})
+    set(erp_id: erp_id)
   end
 
   private
