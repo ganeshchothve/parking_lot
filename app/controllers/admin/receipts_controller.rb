@@ -42,8 +42,7 @@ class Admin::ReceiptsController < AdminController
   # GET "admin/users/:user_id/receipts/lost_receipt"
   def lost_receipt
     @receipt = Receipt.new({
-      creator: current_user, user_id: @user, payment_mode: 'online',
-      total_amount: current_client.blocking_amount
+      creator: current_user, user_id: @user, payment_mode: 'online'
     })
     authorize([:admin, @receipt])
     render layout: false

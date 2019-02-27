@@ -8,6 +8,6 @@ module ReceiptHelper
         statuses.reject!{|x| x == "success"}  
       end
     end
-    statuses += [receipt.status]
+    statuses = statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}
   end
 end
