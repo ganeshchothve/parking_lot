@@ -535,12 +535,12 @@
                   <div class="form-group">
                     <%= f.label :Enable %><br />
                     <div class="form-check form-check-inline">
-                      <%= f.radio_button :active, true, class: "form-check-input", disabled: !policy([:admin, @client]).editable_field?("active") %>
-                      <%= f.label :active, "Yes", class: "form-check-label" %>
+                      <%= f.radio_button :enable_slot_generation, true, class: "form-check-input", disabled: !policy([:admin, @client]).editable_field?("enable_slot_generation") %>
+                      <%= f.label :enable_slot_generation, "Yes", class: "form-check-label" %>
                     </div>
                     <div class="form-check form-check-inline">
-                      <%= f.radio_button :active, false, class: "form-check-input", disabled: !policy([:admin, @client]).editable_field?("active") %>
-                      <%= f.label :active, "No", class: "form-check-label" %>
+                      <%= f.radio_button :enable_slot_generation, false, class: "form-check-input", disabled: !policy([:admin, @client]).editable_field?("enable_slot_generation") %>
+                      <%= f.label :enable_slot_generation, "No", class: "form-check-label" %>
                     </div>
                   </div>
                 </div>

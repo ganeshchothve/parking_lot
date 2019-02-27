@@ -64,9 +64,9 @@ class Client
   field :slot_start_date, type: Date
   field :start_time, type: Time
   field :end_time, type: Time
-  field :duration, type: Integer
+  field :duration, type: Integer # minutes
   field :capacity, type: Integer, default: 1
-  field :active, type: Boolean, default: false
+  field :enable_slot_generation, type: Boolean, default: false
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
@@ -118,7 +118,7 @@ class Client
   validates :preferred_login, inclusion: {in: Proc.new{ Client.available_preferred_logins.collect{|x| x[:id]} } }
   validates :payment_gateway, inclusion: {in: Proc.new{ Client.available_payment_gateways.collect{|x| x[:id]} } }, allow_blank: true
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
-  validates :slot_start_date, :start_time, :end_time, :duration, :capacity, presence: true, if: :active
+  validates :slot_start_date, :start_time, :end_time, :duration, :capacity, presence: true, if: :enable_slot_generation
   validates :capacity, numericality: { greater_than: 0 }, if: :capacity?
   validate :check_duration, if: :duration?
   validate :check_end_time, if: :start_time? && :end_time?
