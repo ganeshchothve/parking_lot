@@ -23,6 +23,6 @@ module SmsConcern
   private
 
   def set_sms
-    @sms = Sms.find(params[:id])
+    @sms = policy_scope(Sms).find(params[:id])
   end
 end
