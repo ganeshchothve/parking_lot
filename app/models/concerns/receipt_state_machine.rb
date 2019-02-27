@@ -56,7 +56,7 @@ module ReceiptStateMachine
     end
 
     def can_move_to_clearance?
-      self.persisted? || self.project_unit_id.present?
+      (self.persisted? || self.project_unit_id.present?) && (self.payment_mode != 'online')
     end
 
     def swap_request_initiated?
