@@ -1,10 +1,10 @@
 class Template::ReceiptTemplate < Template
   def self.default_content
     '<div class="card">
-      <div class="card-body">
-        <h5 class="text-center"><strong>Payment Details</strong></h5>
-        <% labels = I18n.t("mongoid.attributes.receipt").with_indifferent_access %>
-        <table class="table table-striped table-sm mt-3">
+       <div class="card-body">
+         <h5 class="text-center"><strong>Payment Details</strong></h5>
+         <% labels = I18n.t("mongoid.attributes.receipt").with_indifferent_access %>
+         <table class="table table-striped table-sm mt-3">
           <tbody>
             <tr>
               <td><%= labels["receipt_id"] %></td>
@@ -51,15 +51,42 @@ class Template::ReceiptTemplate < Template
               <td class="text-right"><%= number_to_indian_currency(self.total_amount) %></td>
             </tr>
           </tbody>
-        </table>
-        <div class="mt-3 text-muted small">Please note that cheque / RTGS / NEFT payments are subject to clearance</div>
-        <% if current_client.disclaimer.present? %>
+         </table>
+         <div class="mt-3 text-muted small">Please note that cheque / RTGS / NEFT payments are subject to clearance</div>
+         <% if current_client.disclaimer.present? %>
           <div class="mt-3 text-muted small">
             <strong>Disclaimer:</strong><br/>
             <%= current_client.disclaimer %>
           </div>
-        <% end %>
-      </div>
-    </div>'
+         <% end %>
+       </div>
+     </div>
+     <div class="card">
+       <div class="card-body">
+         <h5 class="text-center"><strong>Token Details</strong></h5>
+         <table class="table table-striped table-sm mt-3">
+           <tbody>
+             <tr>
+               <td>Token Number</td>
+               <td class="text-right"><%= self.try(:token_number) ? self.get_token_number : "--" %></td>
+             </tr>
+             <% if self.try(:time_slot) %>
+               <tr>
+                 <td>Time Slot Date</td>
+                 <td class="text-right"><%= self.time_slot.date.strftime("%d/%m/%Y") %></td>
+               </tr>
+               <tr>
+                 <td>Start Time</td>
+                 <td class="text-right"><%= self.time_slot.start_time.strftime("%I:%M %p") %></td>
+               </tr>
+               <tr>
+                 <td>End Time</td>
+                 <td class="text-right"><%= self.time_slot.end_time.strftime("%I:%M %p") %></td>
+               </tr>
+             <% end %>
+           </tbody>
+         </table>
+       </div>
+     </div>'
   end
 end

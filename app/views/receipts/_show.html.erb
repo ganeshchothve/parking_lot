@@ -45,31 +45,7 @@
   </div>
   <div class="mt-3"></div>
   <div class="row">
-    <div class="col-md-4">
-      <div class="card h-100">
-        <div class="card-body">
-          <div class="form-group">
-            <label class="small text-muted">Token Number</label>
-            <div><%= receipt.try(:token_number) ? receipt.get_token_number : '--' %></div>
-          </div>
-          <% if receipt.try(:time_slot) %>
-            <div class="form-group">
-              <label class="small text-muted">Time Slot Date</label>
-              <div><%= receipt.time_slot.date.strftime("%d/%m/%Y") %></div>
-            </div>
-            <div class="form-group">
-              <label class="small text-muted">Start Time</label>
-              <div><%= receipt.time_slot.start_time.strftime("%I:%M %p") %></div>
-            </div>
-            <div class="form-group">
-              <label class="small text-muted">End Time</label>
-              <div><%= receipt.time_slot.end_time.strftime("%I:%M %p") %></div>
-            </div>
-          <% end %>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
       <div class="card h-100">
         <div class="card-body">
           <div class="form-group">
@@ -91,7 +67,7 @@
         </div>
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
       <div class="card h-100">
         <div class="card-body">
           <div class="form-group">
