@@ -8,7 +8,7 @@ class Receipt
   include ApplicationHelper
   include ReceiptStateMachine
   include SyncDetails
-  include GetSlot
+  include TimeSlotGeneration
   extend FilterByCriteria
 
   OFFLINE_PAYMENT_MODE = %w[cheque rtgs imps card_swipe neft]
@@ -29,7 +29,6 @@ class Receipt
   field :comments, type: String
   field :gateway_response, type: Hash
   field :erp_id, type: String, default: ''
-  field :token_number, type: Integer
 
   attr_accessor :swap_request_initiated
 
@@ -41,9 +40,6 @@ class Receipt
   has_many :assets, as: :assetable
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :sync_logs, as: :resource
-  embeds_one :time_slot
-
-  accepts_nested_attributes_for :time_slot, reject_if: :all_blank
 
   scope :filter_by_status, ->(_status) { where(status: _status) }
   scope :filter_by_receipt_id, ->(_receipt_id) { where(receipt_id: /#{_receipt_id}/i) }
@@ -70,10 +66,8 @@ class Receipt
   validate :tracking_id_processed_on_only_on_success, if: proc { |record| record.status != 'cancelled' }
   validate :processed_on_greater_than_issued_date, :first_booking_amount_limit
   validate :issued_date_when_offline_payment, if: proc { |record| %w[online cheque].exclude?(record.payment_mode) && issued_date.present? }
-  # validate :token_number_available, on: :update
 
   increments :order_id, auto: false
-  increments :token_number, seed: 450
 
   delegate :project_unit, to: :booking_detail, prefix: false, allow_nil: true
 
@@ -94,16 +88,6 @@ class Receipt
     ]
   end
 
-  # def token_number_available
-  #   receipts = Receipt.where(token_number: self.token_number)
-  #   if receipts.any? && receipts.first.try(:time_slot)
-  #     self.errors.add(:token_number, 'Time Slot for this token number is not available.')
-  #   else
-  #     self.calculate_slot
-  #     self.errors.add(:token_number, 'Time Slot for this token number is not available.') if self.time_slot.start_time < Time.now
-  #   end
-  # end
-
   def self.available_sort_options
     [
       { id: 'created_at.asc', text: 'Created - Oldest First' },
@@ -113,10 +97,6 @@ class Receipt
       { id: 'processed_on.asc', text: 'Proccessed On - Oldest First' },
       { id: 'processed_on.desc', text: 'Proccessed On - Newest First' }
     ]
-  end
-
-  def get_token_number
-    token_number.present? ? 'WOJ' + token_number.to_s : '--'
   end
 
   def primary_user_kyc

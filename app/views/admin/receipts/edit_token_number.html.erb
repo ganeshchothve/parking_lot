@@ -10,10 +10,10 @@
         </div>
         <div class="modal-body">
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="form-group">
-                <%= f.label :token_number %>
-                <%= f.number_field :token_number, class: 'form-control', autofocus: true, disabled: !policy([current_user_role_group, @receipt]).editable_field?("token_number"), min: 1 %>
+                <%= f.label :token_number %></br>
+                WOJ<%= f.number_field :token_number, class: 'form-control', autofocus: true, disabled: !policy([current_user_role_group, @receipt]).editable_field?("token_number"), min: 1 %>
               </div>
             </div>
           </div>
