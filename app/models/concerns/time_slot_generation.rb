@@ -47,14 +47,16 @@ module TimeSlotGeneration
   end
 
   def finalise_time_slot
-    if time_slot.present?
-      if token_number.blank?
-        self.time_slot = nil
-      elsif token_number_changed?
-        update_time_slot
+    if %w[success clearance_pending].include?(status) # Allowed to edit token number only if receipt status is success or clearance pending
+      if time_slot.present?
+        if token_number.blank?
+          self.time_slot = nil
+        elsif token_number_changed?
+          update_time_slot
+        end
+      elsif token_number_changed? ? token_number_was.nil? : token_number.present?
+        self.time_slot = calculate_time_slot
       end
-    elsif status == 'success' && token_number.present?
-      self.time_slot = calculate_time_slot
     end
   end
 end

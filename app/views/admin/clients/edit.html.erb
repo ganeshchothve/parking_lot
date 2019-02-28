@@ -531,16 +531,13 @@
                     <%= f.number_field :capacity, class: 'form-control', disabled: !policy([:admin, @client]).editable_field?("capacity"), min: 1 %>
                   </div>
                 </div>
-                <div class="col-md-6">
+              </div>
+              <div class="row">
+                <div class="col-md-12">
                   <div class="form-group">
-                    <%= f.label :Enable %><br />
                     <div class="form-check form-check-inline">
-                      <%= f.radio_button :enable_slot_generation, true, class: "form-check-input", disabled: !policy([:admin, @client]).editable_field?("enable_slot_generation") %>
-                      <%= f.label :enable_slot_generation, "Yes", class: "form-check-label" %>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <%= f.radio_button :enable_slot_generation, false, class: "form-check-input", disabled: !policy([:admin, @client]).editable_field?("enable_slot_generation") %>
-                      <%= f.label :enable_slot_generation, "No", class: "form-check-label" %>
+                      <%= f.check_box :enable_slot_generation, {:class => "form-check-input", :disabled => !policy([:admin, @client]).editable_field?("enable_slot_generation") }, "Yes", "No" %><br>
+                      <%= f.label :enable_slot_generation %>
                     </div>
                   </div>
                 </div>
