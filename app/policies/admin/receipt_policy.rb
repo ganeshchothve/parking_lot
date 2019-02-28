@@ -1,4 +1,6 @@
 class Admin::ReceiptPolicy < ReceiptPolicy
+  # def edit_token_number? from ReceiptPolicy
+
   def index?
     !user.buyer?
   end
@@ -37,6 +39,10 @@ class Admin::ReceiptPolicy < ReceiptPolicy
     edit?
   end
 
+  def update_token_number?
+    %w[admin superadmin gre sales sales_admin].include?(user.role)
+  end
+
   def resend_success?
     show?
   end
@@ -62,6 +68,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
       end
     end
     attributes += [:erp_id] if %w[admin sales_admin].include?(user.role)
+    attributes += [:token_number] if %w[admin superadmin sales_admin sales gre].include?(user.role)
     attributes.uniq
   end
 

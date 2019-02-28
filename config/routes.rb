@@ -62,9 +62,13 @@ Rails.application.routes.draw do
       resources :entries, only: [:show]
     end
 
-    resources :receipts, only: [:index, :show] do
+    resources :receipts, only: %i[index show] do
       get :export, on: :collection
-      get :resend_success, on: :member
+      member do
+        get 'resend_success'
+        get 'edit_token_number'
+        patch 'update_token_number'
+      end
     end
 
     resources :project_units, only: [:index, :show, :edit, :update] do

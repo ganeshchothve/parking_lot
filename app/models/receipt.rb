@@ -70,6 +70,7 @@ class Receipt
   validate :tracking_id_processed_on_only_on_success, if: proc { |record| record.status != 'cancelled' }
   validate :processed_on_greater_than_issued_date, :first_booking_amount_limit
   validate :issued_date_when_offline_payment, if: proc { |record| %w[online cheque].exclude?(record.payment_mode) && issued_date.present? }
+  # validate :token_number_available, on: :update
 
   increments :order_id, auto: false
   increments :token_number, seed: 450
@@ -93,6 +94,16 @@ class Receipt
     ]
   end
 
+  # def token_number_available
+  #   receipts = Receipt.where(token_number: self.token_number)
+  #   if receipts.any? && receipts.first.try(:time_slot)
+  #     self.errors.add(:token_number, 'Time Slot for this token number is not available.')
+  #   else
+  #     self.calculate_slot
+  #     self.errors.add(:token_number, 'Time Slot for this token number is not available.') if self.time_slot.start_time < Time.now
+  #   end
+  # end
+
   def self.available_sort_options
     [
       { id: 'created_at.asc', text: 'Created - Oldest First' },
@@ -105,7 +116,7 @@ class Receipt
   end
 
   def get_token_number
-    'WOJ' + token_number.to_s
+    token_number.present? ? 'WOJ' + token_number.to_s : '--'
   end
 
   def primary_user_kyc

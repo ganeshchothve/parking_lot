@@ -1,6 +1,6 @@
 class Admin::ReceiptsController < AdminController
-  before_action :set_user, except: %i[index show export resend_success]
-  before_action :set_receipt, only: %i[edit update show resend_success]
+  before_action :set_user, except: %w[index show export resend_success edit_token_number update_token_number]
+  before_action :set_receipt, only: %w[edit update show resend_success edit_token_number update_token_number]
 
   #
   # This index action for Admin users where Admin can view all receipts.
@@ -53,6 +53,7 @@ class Admin::ReceiptsController < AdminController
     @receipt.assign_attributes(permitted_attributes([:admin, @receipt]))
     @receipt.account ||= selected_account
     @receipt.payment_gateway ||= current_client.payment_gateway if @receipt.payment_mode == 'online'
+
     authorize([:admin, @receipt])
     respond_to do |format|
       if @receipt.save
@@ -93,6 +94,23 @@ class Admin::ReceiptsController < AdminController
         format.html { redirect_to admin_user_receipts_path(@user), notice: 'Receipt was successfully updated.' }
       else
         format.html { render :edit }
+        format.json { render json: { errors: @receipt.errors.full_messages }, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def edit_token_number
+    authorize([:admin, @receipt])
+    render layout: false
+  end
+
+  def update_token_number
+    authorize([:admin, @receipt])
+    respond_to do |format|
+      if @receipt.update(permitted_attributes([:admin, @receipt]))
+        format.html { redirect_back fallback_location: root_path, notice: 'Receipt was successfully updated.' }
+      else
+        format.html { render :edit_token_number }
         format.json { render json: { errors: @receipt.errors.full_messages }, status: :unprocessable_entity }
       end
     end
