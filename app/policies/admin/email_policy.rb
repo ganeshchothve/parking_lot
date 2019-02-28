@@ -5,6 +5,12 @@ class Admin::EmailPolicy < EmailPolicy
   end
 
   def show?
-    !user.buyer?
+    if !user.buyer?
+      if %[admin superadmin].include?(user.role)
+        true
+      else 
+       record.recipient_ids.include?(user.id)
+      end
+    end
   end
 end
