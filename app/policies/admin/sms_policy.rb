@@ -1,7 +1,7 @@
 class Admin::SmsPolicy < SmsPolicy
 
   def index?
-    true
+    !user.buyer?
   end
 
   def show?
@@ -12,6 +12,6 @@ class Admin::SmsPolicy < SmsPolicy
     # else
     #   false
     # end
-    true
+    !user.buyer?
   end
 end

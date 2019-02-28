@@ -18,11 +18,12 @@ module SmsConcern
   # @return [{}] record with array of Hashes.
   #
   def show
+    render template: 'buyer/smses/show'
   end
 
   private
 
   def set_sms
-    @sms = policy_scope(Sms).find(params[:id])
+    @sms = Sms.find(params[:id])
   end
 end

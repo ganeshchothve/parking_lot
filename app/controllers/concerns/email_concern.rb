@@ -24,7 +24,7 @@ module EmailConcern
 
 
   def set_email
-    @email = policy_scope(Email).find(params[:id])
+    @email = Email.find(params[:id])
   end
 
   def set_layout

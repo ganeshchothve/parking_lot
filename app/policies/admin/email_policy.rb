@@ -1,10 +1,10 @@
 class Admin::EmailPolicy < EmailPolicy
 
   def index?
-    true
+    !user.buyer?
   end
 
   def show?
-    true
+    !user.buyer?
   end
 end
