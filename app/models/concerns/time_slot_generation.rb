@@ -36,7 +36,7 @@ module TimeSlotGeneration
       throw(:abort)
     else
       slot = calculate_time_slot
-      if slot.date < Time.now # if time slot date is in the past
+      if slot.start_time < Time.now.utc # if time slot date is in the past
         errors.add(:token_number, 'Time Slot for this token number is in the past.')
         false
         throw(:abort)
@@ -53,9 +53,13 @@ module TimeSlotGeneration
           self.time_slot = nil
         elsif token_number_changed?
           update_time_slot
+        end 
+      else
+        if token_number_changed? 
+          update_time_slot if token_number_was.nil?
+        else
+          self.time_slot = calculate_time_slot if token_number.present?
         end
-      elsif token_number_changed? ? token_number_was.nil? : token_number.present?
-        self.time_slot = calculate_time_slot
       end
     end
   end
