@@ -85,5 +85,6 @@ class ProjectUnitBookingService
     end
 
     booking_detail_scheme.save!
+    booking_detail_scheme
   end
 end

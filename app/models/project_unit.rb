@@ -230,6 +230,10 @@ class ProjectUnit
                         else
                           'blocked'
                         end
+        elsif scheme.status == 'under_negotiation'
+          self.status = 'under_negotiation'
+        else
+          # kept this unit status as hold.
         end
       else
         receipt.project_unit_id = nil
