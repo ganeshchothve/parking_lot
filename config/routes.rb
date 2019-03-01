@@ -37,6 +37,10 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :accounts
     resources :phases
+    resources :erp_models, only: %i[index new create edit update]
+    resources :sync_logs, only: %i[index] do
+      get 'resync', on: :member
+    end
     resources :emails, :smses, only: %i[index show]
     resource :client, except: [:show, :new, :create] do
       resources :templates, only: [:edit, :update, :index]
@@ -109,7 +113,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :user_kycs, only: [:index], controller: 'user_kycs'
+    resources :user_kycs, only: %i[index show], controller: 'user_kycs'
     scope ":request_type" do
       resources :user_requests, except: [:destroy], controller: 'user_requests' do
         get 'export', action: 'export', on: :collection, as: :export
@@ -178,6 +182,12 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :api do
+    namespace :v1 do
+      resources :users, only: [:create, :update]
+    end
+  end
   match '/sell_do/lead_created', to: "api/sell_do/leads#lead_created", via: [:get, :post]
   match '/sell_do/pushed_to_sales', to: "api/sell_do/leads#pushed_to_sales", via: [:get, :post]
+  
 end

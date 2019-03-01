@@ -11,6 +11,10 @@ class ChannelPartnersController < ApplicationController
     @channel_partners = @channel_partners.paginate(page: params[:page], per_page: params[:per_page])
   end
 
+  def show
+    @resource = @channel_partner
+  end
+
   def export
     if Rails.env.development?
       ChannelPartnerExportWorker.new.perform(current_user.id.to_s, params[:fltrs])
