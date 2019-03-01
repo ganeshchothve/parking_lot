@@ -13,8 +13,9 @@ module ConfigureTimeSlot
     # Validations
     validates :slot_start_date, :start_time, :end_time, :duration, :capacity, presence: true, if: :enable_slot_generation
     validates :capacity, numericality: { greater_than: 0 }, if: :capacity?
-    validate :check_duration, if: :duration? && :start_time? && :end_time?
-    validate :check_end_time, if: :start_time? && :end_time?
+    validates :duration, numericality: { greater_than: 0 }, if: :duration?
+    validate :check_duration, if: ->(record) { record.duration? && record.start_time? && record.end_time? }
+    validate :check_end_time, if: ->(record) { record.start_time? && record.end_time? }
   end
 
   # Methods
