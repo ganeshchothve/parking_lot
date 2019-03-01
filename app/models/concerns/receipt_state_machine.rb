@@ -18,7 +18,7 @@ module ReceiptStateMachine
       end
 
       event :success do
-        transitions from: :pending, to: :success
+        transitions from: :pending, to: :success, unless: :new_record?
         transitions from: :success, to: :success
         transitions from: :clearance_pending, to: :success, unless: :new_record?
         transitions from: :available_for_refund, to: :success
