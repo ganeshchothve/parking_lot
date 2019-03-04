@@ -37,3 +37,6 @@
 <% if policy([:admin, User.new]).update_password? %>
   <%= link_to "Update Password", update_password_admin_user_path(user), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
+<% if policy([:admin, SyncLog.new]).resync? && user.sync_logs.present? %>
+  <%= link_to "Resync", resync_admin_sync_log_path(user.sync_logs.desc(:created_at)[0]), class: 'dropdown-item' %>
+<% end %>

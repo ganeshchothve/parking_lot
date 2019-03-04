@@ -33,6 +33,10 @@ class Admin::UserKycsController < AdminController
     @user_kyc.creator = current_user
   end
 
+  def show
+    @resource = @user_kyc
+  end
+
   private
 
   def authorize_resource

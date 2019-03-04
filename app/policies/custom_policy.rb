@@ -28,7 +28,15 @@ class CustomPolicy < Struct.new(:user, :enable_users)
     "#{user.buyer? ? 'Buyer' : 'Admin'}::PhasePolicy".constantize.new(user, Phase).index?
   end
 
+  def sync_logs?
+    %w[superadmin admin sales_admin].include?(user.role)
+  end
+
+  def erp_models?
+    %w[superadmin].include?(user.role)
+  end
+
   def self.custom_methods
-    ['inventory', 'emails', 'smses', 'audits', 'referrals', 'accounts', 'phases']
+    %w[inventory emails smses audits referrals accounts phases sync_logs erp_models]
   end
 end

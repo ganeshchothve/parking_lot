@@ -6,3 +6,6 @@ end
 Sidekiq.configure_client do |config|
   config.redis = ENV_CONFIG[:redis]
 end
+
+# To enable delayed extensions.
+Sidekiq::Extensions.enable_delay!

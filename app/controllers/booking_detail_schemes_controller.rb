@@ -40,10 +40,18 @@ class BookingDetailSchemesController < ApplicationController
   end
 
   def create
-    @scheme = BookingDetailScheme.new(created_by: current_user, booking_portal_client_id: current_user.booking_portal_client_id)
+    pubs = ProjectUnitBookingService.new(@project_unit.id)
+    booking_detail = pubs.create_booking_detail pubs.booking_detail_status
+    @scheme = pubs.create_or_update_booking_detail_scheme booking_detail
+    @scheme.created_by = current_user
     @scheme.created_by_user = true
-    modify_params
     @scheme.assign_attributes(permitted_attributes(@scheme))
+    if @scheme.payment_adjustments.present? && @scheme.payment_adjustments.last.new_record?
+      @scheme.status = 'under_negotiation'
+    else
+      @scheme.status = 'approved' if @scheme.derived_from_scheme.status == 'approved'
+    end
+    modify_params
     respond_to do |format|
       if @scheme.save
         format.html { redirect_to request.referrer, notice: 'Scheme registered successfully and sent for approval.' }

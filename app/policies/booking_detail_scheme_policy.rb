@@ -9,7 +9,14 @@ class BookingDetailSchemePolicy < SchemePolicy
   end
 
   def create?
-    %w[crm admin superadmin sales cp].include?(user.role)
+    case user.role
+    when 'crm', 'admin', 'superadmin', 'sales', 'cp', 'sales_admin'
+      true
+    when 'user', 'management_user', 'employee_user'
+      record.project_unit.status == 'hold'
+    else
+      false
+    end
   end
 
   def update?
@@ -29,7 +36,7 @@ class BookingDetailSchemePolicy < SchemePolicy
     if record.draft? || record.under_negotiation?
       attributes += [:event] if record.approver?(user)
     end
-
+    attributes += [:erp_id] unless %w[user employee_user management_user channel_partner].include?(user.role)
     attributes
   end
 end
