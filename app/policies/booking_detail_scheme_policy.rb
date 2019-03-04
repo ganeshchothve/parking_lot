@@ -5,7 +5,7 @@ class BookingDetailSchemePolicy < SchemePolicy
 
   def edit?
 
-    (%w[admin sales crm cp].include?(user.role)) && (((record.project_unit.status == 'under_negotiation') && %w[disabled].exclude?(record.status)) || (ProjectUnit.booking_stages.include?(record.project_unit.status)))
+    (%w[superadmin admin sales crm cp].include?(user.role)) && (((%w[hold under_negotiation].include?record.project_unit.status) && %w[disabled].exclude?(record.status)) || (ProjectUnit.booking_stages.include?(record.project_unit.status)))
   end
 
   def create?
@@ -20,7 +20,7 @@ class BookingDetailSchemePolicy < SchemePolicy
   end
 
   def update?
-    (%w[admin sales crm cp].include?(user.role)) && (((record.project_unit.status == 'under_negotiation') && %w[disabled].exclude?(record.status)) || (ProjectUnit.booking_stages.include?(record.project_unit.status)))
+    (%w[superadmin admin sales crm cp].include?(user.role)) && (((%w[hold under_negotiation].include?record.project_unit.status) && %w[disabled].exclude?(record.status)) || (ProjectUnit.booking_stages.include?(record.project_unit.status)))
   end
 
 
