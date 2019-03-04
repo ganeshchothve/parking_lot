@@ -53,7 +53,9 @@ class ProjectUnitSwapService
         new_receipt.comments = "Receipt generated for Swapped Unit. Original Receipt ID: #{old_receipt["id"].to_s}"
         new_receipt.project_unit = @alternate_project_unit
         new_receipt.swap_request_initiated = true
-        new_receipt.save!
+        unless new_receipt.save
+          Rails.logger.info(" ProjectUnitSwapService Receipt Issue : #{new_receipt.errors.as_json}")
+        end
       end
       booking_detail.unset(:swap_request_initiated)
       {status: "success"}

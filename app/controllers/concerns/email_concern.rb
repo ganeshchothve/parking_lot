@@ -17,18 +17,16 @@ module EmailConcern
   #
   # @return [{}] record with array of Hashes.
   #
-  def show
-  end
+  def show; end
 
   private
-
 
   def set_email
     @email = Email.find(params[:id])
   end
 
   def set_layout
-    return 'mailer' if action_name == "show"
+    return 'mailer' if action_name == 'show'
     super
   end
 end

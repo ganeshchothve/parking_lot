@@ -18,6 +18,7 @@ module SmsConcern
   # @return [{}] record with array of Hashes.
   #
   def show
+    render template: 'buyer/smses/show'
   end
 
   private

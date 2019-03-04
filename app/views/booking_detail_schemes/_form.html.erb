@@ -24,7 +24,7 @@
   </div>
   <% end %>
 </div>
-<% editable_payment_adjustment = (policy(booking_detail_scheme).editable_field?("payment_adjustments_attributes") && (booking_detail_scheme.new_record? || project_unit.status == 'under_negotiation')) %>
+<% editable_payment_adjustment = (policy(booking_detail_scheme).editable_field?("payment_adjustments_attributes") && ((booking_detail_scheme.new_record? || project_unit.status == 'under_negotiation') || (project_unit.status == 'hold' && !current_user.buyer?) )) %>
 <% if editable_payment_adjustment %>
   <%= f.link_to_add "Add", :payment_adjustments, :data => { :target => ".payment-adjustments" } %>
 <% end %>
@@ -101,7 +101,6 @@ $(document).ready(function(){
         project_unit_id: "<%= project_unit.id %>"
       },
       success: function(data, xhr, status){
-      debugger;
         _.each(data, function(record){
           var html = payment_adjustment_html(record);
           $(".non-editable-payment-adjustments").append(html);
