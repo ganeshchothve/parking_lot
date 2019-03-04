@@ -76,7 +76,6 @@ RSpec.configure do |config|
   config.before(:each) do
     DatabaseCleaner[:mongoid].start
     Sidekiq::Worker.clear_all
-    Client.first || create(:client)
   end
 
   config.after(:each) do
