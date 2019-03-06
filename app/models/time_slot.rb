@@ -3,7 +3,7 @@ class TimeSlot
   include Mongoid::Timestamps
 
   # Fields
-  field :date, type: Date
+  field :date, type: DateTime
   field :start_time, type: Time
   field :end_time, type: Time
 

@@ -30,6 +30,7 @@
 //= require daterangepicker
 //= require fontawesome-all
 //= require bootstrap-datetimepicker.min
+//= require bootstrap-datetimepicker
 //= require utils
 //= require file-icon
 //= require form-initializer

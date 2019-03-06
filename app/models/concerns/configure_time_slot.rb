@@ -3,7 +3,7 @@ module ConfigureTimeSlot
   include ApplicationHelper
   included do
     # Fields
-    field :slot_start_date, type: Date
+    field :slot_start_date, type: DateTime
     field :start_time, type: Time
     field :end_time, type: Time
     field :duration, type: Integer # minutes

@@ -21,7 +21,7 @@
               <a class="nav-item nav-link" data-toggle="tab" href="#nav-client-configuration" role="tab">Time Slot Configuration</a>
             </div>
           </nav>
-          <div class="mt-3"></div>
+        <div class="mt-3"></div>
           <div class="tab-content">
             <div class="tab-pane fade show active" id="nav-client-basic" role="tabpanel">
               <div class="row">
@@ -503,7 +503,7 @@
                 <div class="col-md-6">
                   <div class="form-group">
                   <%= f.label :slot_start_date %>
-                  <% date = (f.object.slot_start_date.present? ? f.object.slot_start_date.strftime("%d/%m/%Y") : "") %>
+                  <% date = (f.object.slot_start_date.present? ? current_time(f.object.slot_start_date).strftime("%d/%m/%Y") : "") %>
                   <%= f.text_field :slot_start_date, class: 'form-control datepicker', type:'text', data: {"default-date": date}, value: date, disabled: !policy([:admin, @client]).editable_field?("slot_start_date") %>
                   </div>
                 </div>
@@ -517,11 +517,11 @@
               <div class="row">
                 <div class="col-md-6">
                   <%= f.label :start_time %><br>
-                    <%= f.time_select :start_time, class: 'form-control', disabled: !policy([:admin, @client]).editable_field?("start_time") %>
+                    <%= f.text_field :start_time, class: 'form-control datetimepicker', value: current_time(@client.start_time).strftime("%I:%M %p"), disabled: !policy([:admin, @client]).editable_field?("start_time") %>
                 </div>
                 <div class="col-md-6">
                   <%= f.label :end_time %><br>
-                    <%= f.time_select :end_time, class: 'form-control', disabled: !policy([:admin, @client]).editable_field?("end_time") %>
+                    <%= f.text_field :end_time, class: 'form-control datetimepicker', value: current_time(@client.end_time).strftime("%I:%M %p"), disabled: !policy([:admin, @client]).editable_field?("end_time") %>
                 </div>
               </div>
               <div class="row">
@@ -552,6 +552,27 @@
     </div>
   </div>
 <% end %>
+<script type="text/javascript">
+  $(function () {
+      $('.datetimepicker').datetimepicker({
+          format: 'LT',
+          icons: {
+                    up: "fa fa-chevron-circle-up",
+                    down: "fa fa-chevron-circle-down",
+                    next: 'fa fa-chevron-circle-right',
+                    previous: 'fa fa-chevron-circle-left'
+                  }
+      });
+  });
+  $("#client_form").submit(function(){
+    slot_start = moment($("#client_slot_start_date").val()+ ' '+$("#client_start_time").val(), 'DD/MM/YYYY h:mm:ss a')._d
+    st = moment($("#client_start_time").val(), 'h:mm:ss a')._d
+    et =moment($("#client_end_time").val(), 'h:mm:ss a')._d
+    $("#client_start_time").val(st);
+    $("#client_end_time").val(et);
+    $("#client_slot_start_date").val(slot_start);
+    });
+</script>
 <%= javascript_tag do %>
   $(document).ready(function(){
     FormInitializer.init($("#client_form"));
