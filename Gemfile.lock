@@ -97,8 +97,6 @@ GEM
       nokogiri (~> 1.6)
       premailer-rails (~> 1.9)
       rails (>= 3, < 6)
-    bootstrap3-datetimepicker-rails (4.17.47)
-      momentjs-rails (>= 2.8.1)
     bson (4.4.2)
     builder (3.2.3)
     byebug (11.0.0)
@@ -355,8 +353,6 @@ GEM
     mini_portile2 (2.4.0)
     minitest (5.11.3)
     mixpanel-ruby (2.2.1)
-    momentjs-rails (2.20.1)
-      railties (>= 3.1)
     mongo (2.7.1)
       bson (>= 4.4.2, < 5.0.0)
     mongoid (7.0.2)
@@ -415,7 +411,7 @@ GEM
     parallel (1.14.0)
     parallel_tests (2.28.0)
       parallel
-    phonelib (0.6.29)
+    phonelib (0.6.30)
     popper_js (1.14.5)
     premailer (1.11.1)
       addressable
@@ -646,7 +642,6 @@ DEPENDENCIES
   audit!
   bootstrap
   bootstrap-email
-  bootstrap3-datetimepicker-rails (~> 4.17.47)
   byebug
   capistrano
   capistrano-passenger
@@ -671,7 +666,6 @@ DEPENDENCIES
   listen (>= 3.0.5, < 3.2)
   mailgun-ruby
   mixpanel-ruby
-  momentjs-rails (>= 2.9.0)
   mongoid (~> 7.0.2)
   mongoid-autoinc
   mongoid-observers (~> 0.3.0)

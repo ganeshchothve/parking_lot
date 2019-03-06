@@ -553,17 +553,6 @@
   </div>
 <% end %>
 <script type="text/javascript">
-  $(function () {
-      $('.datetimepicker').datetimepicker({
-          format: 'LT',
-          icons: {
-                    up: "fa fa-chevron-circle-up",
-                    down: "fa fa-chevron-circle-down",
-                    next: 'fa fa-chevron-circle-right',
-                    previous: 'fa fa-chevron-circle-left'
-                  }
-      });
-  });
   $("#client_form").submit(function(){
     slot_start = moment($("#client_slot_start_date").val()+ ' '+$("#client_start_time").val(), 'DD/MM/YYYY h:mm:ss a')._d
     st = moment($("#client_start_time").val(), 'h:mm:ss a')._d

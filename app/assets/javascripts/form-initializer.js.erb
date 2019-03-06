@@ -5,7 +5,15 @@ FormInitializer = (function(){
         $(el).selectize("destroy");
       }
     });
-
+    $('.datetimepicker').datetimepicker({
+          format: 'LT',
+          icons: {
+                    up: "fa fa-chevron-circle-up",
+                    down: "fa fa-chevron-circle-down",
+                    next: 'fa fa-chevron-circle-right',
+                    previous: 'fa fa-chevron-circle-left'
+                  }
+    });
     _.each($(selector).find('.selectize'), function(e){
       if($(e).data("create")){
         $(e).selectize({create: true});
