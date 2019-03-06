@@ -1,6 +1,6 @@
 class ApplicationPolicy
   include ApplicationHelper
-  
+
   attr_reader :user, :record, :condition
 
   def initialize(user, record)
@@ -77,5 +77,13 @@ class ApplicationPolicy
     def resolve
       scope
     end
+  end
+
+  private
+
+  def only_for_admin!
+    return true if !user.buyer?
+    @condition = 'only_admin'
+    false
   end
 end
