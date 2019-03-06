@@ -39,6 +39,7 @@ module BookingDetailStateMachine
         transitions from: :hold, to: :blocked
         transitions from: :negotiation_approved, to: :blocked
         transitions from: :swap_rejected, to: :blocked
+        transitions from: :cancellation_rejected, to: :blocked
       end
 
       event :booked_tentative do
@@ -90,9 +91,9 @@ module BookingDetailStateMachine
 
       event :cancellation_requested do
         transitions from: :cancellation_requested, to: :cancellation_requested
-        transitions from: :blocked, to: :swap_requested
-        transitions from: :booked_tentative, to: :swap_requested
-        transitions from: :booked_confirmed, to: :swap_requested
+        transitions from: :blocked, to: :cancellation_requested
+        transitions from: :booked_tentative, to: :cancellation_requested
+        transitions from: :booked_confirmed, to: :cancellation_requested
       end
 
       event :cancelling do
