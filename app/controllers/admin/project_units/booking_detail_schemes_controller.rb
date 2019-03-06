@@ -44,7 +44,6 @@ class Admin::ProjectUnits::BookingDetailSchemesController < AdminController
     @scheme = pubs.create_or_update_booking_detail_scheme booking_detail
     @scheme.created_by = current_user
     @scheme.created_by_user = true
-    debugger
     @scheme.assign_attributes(permitted_attributes([ current_user_role_group, @scheme]))
     if @scheme.payment_adjustments.present? && @scheme.payment_adjustments.last.new_record?
       @scheme.status = 'under_negotiation'

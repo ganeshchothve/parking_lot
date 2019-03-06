@@ -12,7 +12,7 @@ module ReceiptStateMachine
         transitions from: :pending, to: :pending
       end
 
-      event :clearance_pending do
+      event :clearance_pending, after: :moved_to_success_if_online do
         transitions from: :pending, to: :clearance_pending, if: :can_move_to_clearance?
         transitions from: :clearance_pending, to: :clearance_pending
       end
@@ -56,7 +56,11 @@ module ReceiptStateMachine
     end
 
     def can_move_to_clearance?
-      (self.persisted? || self.project_unit_id.present?) && (self.payment_mode != 'online')
+      (self.persisted? || self.project_unit_id.present?)
+    end
+
+    def moved_to_success_if_online
+      self.success! if self.payment_mode == 'online'
     end
 
     def swap_request_initiated?
