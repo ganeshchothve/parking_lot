@@ -3,21 +3,14 @@ class Admin::BookingDetailSchemePolicy < BookingDetailSchemePolicy
   # BOOKING_ALLOWED_USERS = %w(admin sales sales_admin crm channel_partner)
 
   def new?
-    if only_for_admin!
-      if record.project_unit.project_tower_id == record.project_tower_id
-        if is_project_unit_hold?
-          case user.role
-          when 'admin', 'sales', 'sales_admin', 'crm'
-            true
-          when 'channel_partner'
-            is_this_user_added_by_channel_partner?
-          else
-            @condition = 'do_not_have_access'
-            false
-          end
-        end
+    if only_for_admin! && enable_actual_inventory? && is_cross_tower_scheme? && is_approved_scheme? && is_project_unit_hold?
+      case user.role
+      when 'admin', 'sales', 'sales_admin', 'crm'
+        true
+      when 'channel_partner'
+        is_this_user_added_by_channel_partner?
       else
-        @condition = 'cross_project_tower'
+        @condition = 'do_not_have_access'
         false
       end
     end
@@ -28,7 +21,19 @@ class Admin::BookingDetailSchemePolicy < BookingDetailSchemePolicy
   end
 
   def edit?
-    new?
+    if only_for_admin! && enable_actual_inventory? && is_cross_tower_scheme? && is_approved_scheme?
+      case user.role
+      when 'admin', 'sales', 'sales_admin', 'crm'
+        true
+      when 'channel_partner'
+        if is_this_user_added_by_channel_partner?
+          is_project_unit_hold?
+        end
+      else
+        @condition = 'do_not_have_access'
+        false
+      end
+    end
   end
 
   def update?
@@ -50,20 +55,6 @@ class Admin::BookingDetailSchemePolicy < BookingDetailSchemePolicy
     end
 
     attributes
-  end
-
-  private
-
-  def is_project_unit_hold?
-    return true if record.project_unit.status == 'hold'
-    @condition = 'only_under_hold'
-    false
-  end
-
-  def is_this_user_added_by_channel_partner?
-    return true if record.project_unit.user.manager_id == user.id
-    @condition = 'do_not_have_access'
-    false
   end
 
 end

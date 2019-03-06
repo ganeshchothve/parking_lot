@@ -1,27 +1,7 @@
 class Buyer::BookingDetailSchemePolicy < BookingDetailSchemePolicy
 
   def new?
-    if user.buyer?
-      if current_client.enable_actual_inventory?(user)
-        if %w[disabled].exclude?(record.status)
-          if record.project_unit.status == 'hold'
-            true
-          else
-            @condition = 'only_for_hold_project_unit'
-            false
-          end
-        else
-          @condition = 'disabled_scheme'
-          false
-        end
-      else
-        @condition = 'enable_actual_inventory'
-        false
-      end
-    else
-      @condition = 'only_buyer'
-      false
-    end
+    only_for_buyer! && enable_actual_inventory? && is_approved_scheme? && is_project_unit_hold?
   end
 
   def edit?

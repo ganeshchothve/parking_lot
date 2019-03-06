@@ -86,4 +86,17 @@ class ApplicationPolicy
     @condition = 'only_admin'
     false
   end
+
+  def only_for_buyer!
+    return true if user.buyer?
+    @condition = 'only_buyer'
+    false
+  end
+
+  def enable_actual_inventory?(_user=nil)
+    _user ||= user
+    return true if current_client.enable_actual_inventory?(_user)
+    @condition = 'enable_actual_inventory'
+    false
+  end
 end

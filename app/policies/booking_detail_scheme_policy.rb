@@ -64,4 +64,30 @@ class BookingDetailSchemePolicy < SchemePolicy
 
   #   attributes
   # end
+
+  private
+
+  def is_project_unit_hold?
+    return true if record.project_unit.status == 'hold'
+    @condition = 'only_under_hold'
+    false
+  end
+
+  def is_this_user_added_by_channel_partner?
+    return true if record.project_unit.user.manager_id == user.id
+    @condition = 'do_not_have_access'
+    false
+  end
+
+  def is_cross_tower_scheme?
+    return true if record.project_unit.project_tower_id == record.project_tower_id
+    @condition = 'cross_project_tower'
+    false
+  end
+
+  def is_approved_scheme?
+    return true if record.status == 'approved'
+    @condition = 'scheme_is_not_approved'
+    false
+  end
 end

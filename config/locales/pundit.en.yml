@@ -36,24 +36,32 @@ en:
       booking_detail_scheme_policy:
         new?:
           only_admin: 'Only administrator can create new schem for booking.'
+          scheme_is_not_approved: 'Selected Scheme is not approved.'
           only_under_hold: 'Respective unit is not under negoation or hold.'
+          do_not_have_access: 'You do not have access.'
           cross_project_tower: 'Project Tower is different.'
+          enable_actual_inventory: 'You can not select Inventory. Please contact to Administrator'
         create?:
           only_admin: 'Only administrator can create new schem for booking.'
-          only_under_negotiation_and_hold: 'Respective unit is not under negoation or hold.'
+          scheme_is_not_approved: 'Selected Scheme is not approved.'
+          only_under_hold: 'Respective unit is not under negoation or hold.'
+          do_not_have_access: 'You do not have access.'
           cross_project_tower: 'Project Tower is different.'
+          enable_actual_inventory: 'You can not select Inventory. Please contact to Administrator'
         edit?:
           only_admin: 'Only administrator can create new schem for booking.'
-          scheme_is_disabled: 'Selected Scheme is disabled'
-          project_unit_is_not_in_booking_stage: 'Project Unit is not available for booking'
+          scheme_is_not_approved: 'Selected Scheme is not approved.'
+          only_under_hold: 'Respective unit is not under negoation or hold.'
           do_not_have_access: 'You do not have access.'
           cross_project_tower: 'Project Tower is different.'
+          enable_actual_inventory: 'You can not select Inventory. Please contact to Administrator'
         update?:
           only_admin: 'Only administrator can create new schem for booking.'
-          scheme_is_disabled: 'Selected Scheme is disabled'
-          project_unit_is_not_in_booking_stage: 'Project Unit is not available for booking'
+          scheme_is_not_approved: 'Selected Scheme is not approved.'
+          only_under_hold: 'Respective unit is not under negoation or hold.'
           do_not_have_access: 'You do not have access.'
           cross_project_tower: 'Project Tower is different.'
+          enable_actual_inventory: 'You can not select Inventory. Please contact to Administrator'
 
 
     buyer:
@@ -76,24 +84,20 @@ en:
         new?:
           only_buyer: 'Only buyer can select Scheme'
           enable_actual_inventory: 'You can not select Inventory. Please contact to Administrator'
-          disabled_scheme: 'Scheme in disabled. Please select other active Scheme.'
-          only_for_hold_project_unit: 'available for in booking process. Please follow booking process.'
+          scheme_is_not_approved: 'Scheme in disabled. Please select other active Scheme.'
+          only_under_hold: 'available for in booking process. Please follow booking process.'
         edit:
           only_buyer: 'Only buyer can select Scheme'
           enable_actual_inventory: 'You can not select Inventory. Please contact to Administrator'
-          disabled_scheme: 'Scheme in disabled. Please select other active Scheme.'
-          only_for_hold_project_unit: 'available for in booking process. Please follow booking process.'
+          scheme_is_not_approved: 'Scheme in disabled. Please select other active Scheme.'
+          only_under_hold: 'available for in booking process. Please follow booking process.'
         create?:
           only_buyer: 'Only buyer can select Scheme'
           enable_actual_inventory: 'You can not select Inventory. Please contact to Administrator'
-          disabled_scheme: 'Scheme in disabled. Please select other active Scheme.'
-          only_for_hold_project_unit: 'available for in booking process. Please follow booking process.'
+          scheme_is_not_approved: 'Scheme in disabled. Please select other active Scheme.'
+          only_under_hold: 'available for in booking process. Please follow booking process.'
         update?:
           only_buyer: 'Only buyer can select Scheme'
           enable_actual_inventory: 'You can not select Inventory. Please contact to Administrator'
-          disabled_scheme: 'Scheme in disabled. Please select other active Scheme.'
-          only_for_hold_project_unit: 'available for in booking process. Please follow booking process.'
-
-
-
-
+          scheme_is_not_approved: 'Scheme in disabled. Please select other active Scheme.'
+          only_under_hold: 'available for in booking process. Please follow booking process.'
