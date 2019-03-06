@@ -517,11 +517,11 @@
               <div class="row">
                 <div class="col-md-6">
                   <%= f.label :start_time %><br>
-                    <%= f.text_field :start_time, class: 'form-control datetimepicker', value: current_time(@client.start_time).strftime("%I:%M %p"), disabled: !policy([:admin, @client]).editable_field?("start_time") %>
+                    <%= f.text_field :start_time, class: 'form-control timepicker', value: current_time(@client.start_time).strftime("%I:%M %p"), disabled: !policy([:admin, @client]).editable_field?("start_time") %>
                 </div>
                 <div class="col-md-6">
                   <%= f.label :end_time %><br>
-                    <%= f.text_field :end_time, class: 'form-control datetimepicker', value: current_time(@client.end_time).strftime("%I:%M %p"), disabled: !policy([:admin, @client]).editable_field?("end_time") %>
+                    <%= f.text_field :end_time, class: 'form-control timepicker', value: current_time(@client.end_time).strftime("%I:%M %p"), disabled: !policy([:admin, @client]).editable_field?("end_time") %>
                 </div>
               </div>
               <div class="row">

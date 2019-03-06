@@ -5,8 +5,8 @@ FormInitializer = (function(){
         $(el).selectize("destroy");
       }
     });
-    $('.datetimepicker').datetimepicker({
-          format: 'LT',
+    $(selector).find('.timepicker').datetimepicker({
+      format: 'LT',
           icons: {
                     up: "fa fa-chevron-circle-up",
                     down: "fa fa-chevron-circle-down",
