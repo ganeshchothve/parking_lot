@@ -22,6 +22,7 @@ class BookingDetail
   belongs_to :project_unit
   belongs_to :user
   belongs_to :manager, class_name: 'User', optional: true
+  belongs_to :search, optional: true
   has_many :receipts
   has_and_belongs_to_many :user_kycs
   has_many :smses, as: :triggered_by, class_name: 'Sms'

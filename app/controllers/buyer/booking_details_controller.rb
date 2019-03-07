@@ -1,6 +1,7 @@
-class Admin::BookingDetailsController < AdminController
+class Buyer::BookingDetailsController < BuyerController
+  include ReceiptsConcern
   before_action :set_booking_detail
-  before_action :authorize_resource
+  # Fbefore_action :authorize_resource
 
   def booking 
     @search = @booking_detail.search

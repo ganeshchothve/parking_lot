@@ -42,7 +42,7 @@ class Admin::ReceiptsController < AdminController
   #
   # POST /admin/users/:user_id/receipts
   def create
-
+   debugger
     @receipt = Receipt.new(user: @user, creator: current_user, project_unit_id: params.dig(:rerceipt, :project_unit_id))
     @receipt.assign_attributes(permitted_attributes([:admin, @receipt]))
     @receipt.account = selected_account

@@ -50,9 +50,9 @@ class ProjectUnitBookingService
     end
   end
 
-  def create_booking_detail status
+  def create_booking_detail (status, search = nil)
     if project_unit.booking_detail.blank?
-      BookingDetail.create(project_unit_id: self.project_unit.id, user_id: self.project_unit.user_id, receipt_ids: self.project_unit.receipt_ids, user_kyc_ids: self.project_unit.user_kyc_ids, primary_user_kyc_id: self.project_unit.primary_user_kyc_id, status: status, manager_id: self.project_unit.user.manager_id)
+      BookingDetail.create(project_unit_id: self.project_unit.id, user_id: self.project_unit.user_id, receipt_ids: self.project_unit.receipt_ids, user_kyc_ids: self.project_unit.user_kyc_ids, primary_user_kyc_id: self.project_unit.primary_user_kyc_id, status: status, manager_id: self.project_unit.user.manager_id, search_id: search.id)
     else
       project_unit.booking_detail.update(user_id: self.project_unit.user_id, receipt_ids: self.project_unit.receipt_ids, user_kyc_ids: self.project_unit.user_kyc_ids, primary_user_kyc_id: self.project_unit.primary_user_kyc_id, status: status, manager_id: self.project_unit.user.manager_id)
     end
