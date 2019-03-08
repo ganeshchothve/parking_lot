@@ -35,19 +35,19 @@ class ProjectUnitBookingService
   end
 
   def booking_detail_status
-    if self.booking_detail_scheme_status == "approved"
-      if self.project_unit.pending_balance({strict: true}) <= 0
-        'booked_confirmed'
-      elsif self.project_unit.total_amount_paid > self.project_unit.blocking_amount
-        'booked_tentative'
-      elsif self.project_unit.total_tentative_amount_paid >= self.project_unit.blocking_amount
-        'blocked'
-      else
-        self.project_unit.status
-      end
-    else
-      "under_negotiation"
-    end
+    # if self.booking_detail_scheme_status == "approved"
+    #   if self.project_unit.pending_balance({strict: true}) <= 0
+    #     'booked_confirmed'
+    #   elsif self.project_unit.total_amount_paid > self.project_unit.blocking_amount
+    #     'booked_tentative'
+    #   elsif self.project_unit.total_tentative_amount_paid >= self.project_unit.blocking_amount
+    #     'blocked'
+    #   else
+    #     self.project_unit.status
+    #   end
+    # else
+    #   "under_negotiation"
+    # end
   end
 
   def create_booking_detail (status, search = nil)
@@ -77,8 +77,8 @@ class ProjectUnitBookingService
       )
     end
 
-    booking_detail_scheme.event = self.booking_detail_scheme_status
-    booking_detail_scheme.booking_detail_id = booking_detail.id
+    # booking_detail_scheme.event = self.booking_detail_scheme_status
+    # booking_detail_scheme.booking_detail_id = booking_detail.id
 
     if booking_detail_scheme.event == "approved"
       booking_detail_scheme.approved_by_id = self.project_unit.user.id

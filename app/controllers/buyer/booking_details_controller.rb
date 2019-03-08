@@ -4,6 +4,7 @@ class Buyer::BookingDetailsController < BuyerController
   # Fbefore_action :authorize_resource
 
   def booking 
+    @booking_detail.under_negotiation!
     @search = @booking_detail.search
     @receipt = Receipt.new(creator: @search.user, user: @search.user, payment_mode: 'online', total_amount: current_client.blocking_amount, payment_gateway: current_client.payment_gateway)
     @receipt.account = selected_account(@search.project_unit)
