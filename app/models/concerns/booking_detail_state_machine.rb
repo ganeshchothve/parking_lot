@@ -5,10 +5,10 @@ module BookingDetailStateMachine
     attr_accessor :event
     aasm column: :status do
       state :filter, initial: true
-      state :tower, :project_unit, :user_kyc 
+      state :tower, :project_unit, :user_kyc
       state :hold, :blocked, :booked_tentative, :booked_confirmed, :under_negotiation, :negotiation_failed, :negotiation_approved
       state :swap_requested, :swapping, :swapped, :swap_rejected
-      state :cancellation_requested, :cancelling, :cancelled, :cancellation_rejected
+      state :cancellation_requested, :cancelling, :cancelled, :cancellation_rejected, :cancellation_failed
 
       event :filter do
         transitions from: :filter, to: :filter
@@ -40,11 +40,12 @@ module BookingDetailStateMachine
         transitions from: :negotiation_approved, to: :blocked
         transitions from: :swap_rejected, to: :blocked
         transitions from: :cancellation_rejected, to: :blocked
+        transitions from: :cancellation_failed, to: :blocked
       end
 
       event :booked_tentative do
         transitions from: :booked_tentative, to: :booked_tentative
-        transitions from: :blocked, to: :booked_tentative    
+        transitions from: :blocked, to: :booked_tentative
       end
 
       event :booked_confirmed do
@@ -104,6 +105,11 @@ module BookingDetailStateMachine
       event :cancelled do
         transitions from: :cancelled, to: :cancelled
         transitions from: :cancelling, to: :cancelled
+      end
+
+      event :cancellation_failed do
+        transitions from: :cancellation_failed, to: :cancellation_failed
+        transitions from: :cancelling, to: :cancellation_failed
       end
 
       event :cancellation_rejected do
