@@ -1,0 +1,31 @@
+<div class="row">
+  <div class="col-md-6">
+    <div class="form-group">
+      <% unless p.object.new_record? %>
+        <div class="pl-3 pb-0 pb-md-3 pr-3 pt-0 pt-md-3">
+          <%= image_tag p.object.file.url, class: 'img-fluid' %>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <%= p.label :asset_type, class: 'label-required' %>
+              <span><%= p.object.asset_type.titleize %></span>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <%= p.label :file_name, class: 'label-required', value: 'File Name' %>
+              <span><%= p.object.file_name %></span>
+            </div>
+          </div>
+        </div>
+        <%= p.hidden_field :_id %>
+        <%= p.hidden_field :assetable_id %>
+        <%= p.hidden_field :assetable_type %>
+      <% end %>
+      <%= p.hidden_field :asset_type %>
+      <%= p.label :asset_type, class: 'label-required', value: p.object.asset_type %>
+      <%= p.file_field :file, class: 'btn pl-0', accept: 'image/png,image/jpj,image/jpeg' %>
+    </div>
+  </div>
+</div>

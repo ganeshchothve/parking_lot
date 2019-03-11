@@ -1,5 +1,4 @@
-class BookingDetailSchemesController < ApplicationController
-  before_action :authenticate_user!
+class Admin::ProjectUnits::BookingDetailSchemesController < AdminController
   before_action :set_booking_detail
   before_action :set_project_unit
   before_action :set_scheme, except: [:index, :export, :new, :create]
@@ -40,10 +39,18 @@ class BookingDetailSchemesController < ApplicationController
   end
 
   def create
-    @scheme = BookingDetailScheme.new(created_by: current_user, booking_portal_client_id: current_user.booking_portal_client_id)
+    pubs = ProjectUnitBookingService.new(@project_unit.id)
+    booking_detail = pubs.create_booking_detail pubs.booking_detail_status
+    @scheme = pubs.create_or_update_booking_detail_scheme booking_detail
+    @scheme.created_by = current_user
     @scheme.created_by_user = true
+    @scheme.assign_attributes(permitted_attributes([ current_user_role_group, @scheme]))
+    if @scheme.payment_adjustments.present? && @scheme.payment_adjustments.last.new_record?
+      @scheme.status = 'under_negotiation'
+    else
+      @scheme.status = 'approved' if @scheme.derived_from_scheme.status == 'approved'
+    end
     modify_params
-    @scheme.assign_attributes(permitted_attributes(@scheme))
     respond_to do |format|
       if @scheme.save
         format.html { redirect_to request.referrer, notice: 'Scheme registered successfully and sent for approval.' }
@@ -75,7 +82,7 @@ class BookingDetailSchemesController < ApplicationController
 
   def update
     modify_params
-    @scheme.assign_attributes(permitted_attributes(@scheme))
+    @scheme.assign_attributes(permitted_attributes([:admin, @scheme]))
     @scheme.status = 'under_negotiation' if @scheme.payment_adjustments.present? && @scheme.payment_adjustments.last.new_record?
     @scheme.approved_by = current_user if @scheme.event.present? && @scheme.event == 'approved'
     respond_to do |format|
@@ -118,13 +125,14 @@ class BookingDetailSchemesController < ApplicationController
 
   def authorize_resource
     if params[:action] == "index" || params[:action] == 'export'
-      authorize BookingDetailScheme
+      authorize [ :admin, BookingDetailScheme]
     elsif params[:action] == "new" || params[:action] == "create"
       project_unit_id = @project_unit.id if @project_unit.present?
       project_unit_id = @booking_detail.project_unit.id if @booking_detail.present? && project_unit_id.blank?
-      authorize BookingDetailScheme.new(created_by: current_user, project_unit_id: project_unit_id)
+      scheme = Scheme.where(_id: params.dig(:booking_detail_scheme, :derived_from_scheme_id) ).last
+      authorize [ :admin, BookingDetailScheme.new(created_by: current_user, project_unit_id: project_unit_id, derived_from_scheme_id: params.dig(:booking_detail_scheme, :derived_from_scheme_id), status: scheme.try(:status) )]
     else
-      authorize @scheme
+      authorize [:admin, @scheme]
     end
   end
 

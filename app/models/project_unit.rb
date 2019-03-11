@@ -61,6 +61,7 @@ class ProjectUnit
   has_many :receipts
   has_many :user_requests
   has_and_belongs_to_many :user_kycs
+  has_and_belongs_to_many :users
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :emails, as: :triggered_by, class_name: 'Email'
   embeds_many :costs, as: :costable
@@ -69,7 +70,7 @@ class ProjectUnit
 
   has_many :assets, as: :assetable
 
-  accepts_nested_attributes_for :data, :parameters, :costs, allow_destroy: true
+  accepts_nested_attributes_for :data, :parameters, :assets, :costs, allow_destroy: true
 
   validates :client_id, :agreement_price, :all_inclusive_price, :booking_price, :project_id, :project_tower_id, :unit_configuration_id, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :type, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, presence: true
   validates :status, :name, :erp_id, presence: true
@@ -122,14 +123,16 @@ class ProjectUnit
     out.with_indifferent_access
   end
 
-  def permitted_schemes(user = nil)
-    user ||= self.user
-    or_criteria = [{ project_tower_id: project_tower_id }]
-    or_criteria << { user_id: user.id }
-    or_criteria << { user_id: nil, user_role: user.role }
-    Scheme.where(status: 'approved').or('$or' => [{ default: true, project_tower_id: project_tower_id }, { can_be_applied_by: user.role, "$or": or_criteria }])
+  def permitted_schemes(_user=nil)
+    or_criteria = []
+    _scheme = Scheme.where(project_tower_id: self.project_tower_id, status: 'approved')
+    unless self.user.blank?
+      _scheme = _scheme.or([ { :user_ids => { "$in" => [nil, [], self.user.id, ''] } },{ :user_role=>{ "$in"=>[ nil, [], self.user.role ] } } ])
+    end
+    _scheme = _scheme.or([{ can_be_applied_by: nil }, { can_be_applied_by: [] }, { can_be_applied_by: _user.role } ])
+    _scheme
   end
-
+  
   def self.user_based_available_statuses(user)
     statuses = if user.present?
                  if user.role?('management_user')
@@ -230,6 +233,10 @@ class ProjectUnit
                         else
                           'blocked'
                         end
+        elsif scheme.status == 'under_negotiation'
+          self.status = 'under_negotiation'
+        else
+          # kept this unit status as hold.
         end
       else
         receipt.project_unit_id = nil
