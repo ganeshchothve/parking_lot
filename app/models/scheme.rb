@@ -23,7 +23,7 @@ class Scheme
   belongs_to :project
   belongs_to :project_tower
   belongs_to :approved_by, class_name: "User", optional: true
-  belongs_to :created_by, class_name: "User" 
+  belongs_to :created_by, class_name: "User"
   belongs_to :booking_portal_client, class_name: "Client"
   has_and_belongs_to_many :users
 
