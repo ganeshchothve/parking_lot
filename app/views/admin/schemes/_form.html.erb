@@ -20,7 +20,11 @@
         </div>
         <div class="form-group">
           <%= f.label :user_role, class: 'control-label' %>
-          <%= f.select :user_role, User.available_roles(current_client).select{|x| User.buyer_roles(current_client).include?(x[:id])}.collect{|x| [x[:text], x[:id]] }, {prompt: true}, class: 'selectize', disabled: (policy([:admin, @scheme]).editable_field?("user_role") ? false : true) %>
+          <%= f.select :user_role, User.available_roles(current_client).select{|x| User.buyer_roles(current_client).include?(x[:id])}.collect{|x| [x[:text], x[:id]] }, {prompt: true}, class: 'selectize', disabled: (policy([:admin, @scheme]).editable_field?("user_role") ? false : true) , id: 'user'%>
+        </div>
+        <div class="form-group">
+          <%= f.label :user, class: 'control-label' %>
+          <%= f.select :user_ids, options_from_collection_for_select(User.where(role: 'user'), "id", "name", f.object.user_ids), {prompt: true}, multiple: "multiple", id: 'user_ids', class: "selectize-remote", data: { url: admin_users_path, params: {fltrs: {role: {"$eq": 'user' } } } } %>
         </div>
         <div class="form-group">
           <%= f.label :user, class: 'control-label' %>
