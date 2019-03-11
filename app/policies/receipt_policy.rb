@@ -29,7 +29,7 @@ class ReceiptPolicy < ApplicationPolicy
       attributes += [:project_unit_id]
     end
     attributes += [:total_amount] if record.new_record? || ['pending', 'clearance_pending'].include?(record.status)
-    attributes += [:account_number] if record.payment_mode == 'online'
+   #  attributes += [:account_number] if record.payment_mode == 'online'
     attributes
   end
 
