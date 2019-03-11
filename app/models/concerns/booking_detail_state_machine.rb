@@ -138,13 +138,13 @@ module BookingDetailStateMachine
       true if self.booking_detail_scheme.status != 'approved'
     end
     def can_blocked?
-      true if self.receipts.sum{|receipt| receipt.total_amount} >= self.project_unit.blocking_amount
+      true self.receipts.in(status: %w[success clearance_pending]).sum{|receipt| receipt.total_amount} >= self.project_unit.blocking_amount
     end
     def can_booked_tentative?
-      true if self.receipts.sum{|receipt| receipt.total_amount} > self.project_unit.blocking_amount
+      true if self.receipts.in(status: %w[success clearance_pending]).sum{|receipt| receipt.total_amount} > self.project_unit.blocking_amount
     end
     def can_booked_confirmed?
-      true if self.receipts.sum{|receipt| receipt.total_amount} >= self.project_unit.booking_price
+      true if self.receipts.in(status: %w[success clearance_pending]).sum{|receipt| receipt.total_amount} >= self.project_unit.booking_price
     end
   end
 end
