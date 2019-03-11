@@ -108,7 +108,7 @@ Rails.application.routes.draw do
         resources :user_requests, except: [:destroy], controller: 'user_requests'
       end
 
-      resources :booking_details, only: [:update], controller: 'booking_details' do
+      resources :booking_details do
         patch :booking, on: :member
         resources :booking_detail_schemes, except: [:destroy], controller: '/booking_detail_schemes'
       end

@@ -118,17 +118,17 @@ module BookingDetailStateMachine
     pubs = ProjectUnitBookingService.new(self.project_unit.id)
     booking_detail_scheme = pubs.create_or_update_booking_detail_scheme self if self.booking_detail_scheme.blank?
     booking_detail_scheme.approved! if booking_detail_scheme.present? &&booking_detail_scheme.status != 'approved'
-      self.scheme_approved if can_scheme_approved?
-      self.negotiation_failed  if self.aasm.current_state = 'under_negotiation' && can_negotiation_failed?
+      self.scheme_approved! if can_scheme_approved?
+      self.negotiation_failed!  if self.aasm.current_state = 'under_negotiation' && can_negotiation_failed?
     end
     def after_scheme_approved
-      self.blocked if can_blocked?
+      self.blocked! if can_blocked?
     end
     def after_blocked
-      self.booked_tentative if can_booked_tentative?
+      self.booked_tentative! if can_booked_tentative?
     end
     def after_booked_tentative
-      self.booked_confirmed if can_booked_confirmed?
+      self.booked_confirmed! if can_booked_confirmed?
     end
 
     def can_scheme_approved? 
@@ -138,13 +138,13 @@ module BookingDetailStateMachine
       true if self.booking_detail_scheme.status != 'approved'
     end
     def can_blocked?
-      true if self.receipts.sum{|receipt| receipt.total_amount} == self.project_unit.blocking_amount
+      true if self.receipts.sum{|receipt| receipt.total_amount} >= self.project_unit.blocking_amount
     end
     def can_booked_tentative?
       true if self.receipts.sum{|receipt| receipt.total_amount} > self.project_unit.blocking_amount
     end
     def can_booked_confirmed?
-      true if self.receipts.sum{|receipt| receipt.total_amount} > self.project_unit.booking_price
+      true if self.receipts.sum{|receipt| receipt.total_amount} >= self.project_unit.booking_price
     end
   end
 end

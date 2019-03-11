@@ -1,4 +1,5 @@
 class Admin::BookingDetailsController < AdminController
+  include ReceiptsConcern
   before_action :set_booking_detail
   before_action :authorize_resource
 
