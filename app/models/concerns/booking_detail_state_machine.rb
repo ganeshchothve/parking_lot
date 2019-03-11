@@ -8,7 +8,7 @@ module BookingDetailStateMachine
       state :tower, :project_unit, :user_kyc
       state :hold, :blocked, :booked_tentative, :booked_confirmed, :under_negotiation, :negotiation_failed, :negotiation_approved
       state :swap_requested, :swapping, :swapped, :swap_rejected
-      state :cancellation_requested, :cancelling, :cancelled, :cancellation_rejected, :cancellation_failed
+      state :cancellation_requested, :cancelling, :cancelled, :cancellation_rejected
 
       event :filter do
         transitions from: :filter, to: :filter
@@ -40,7 +40,6 @@ module BookingDetailStateMachine
         transitions from: :negotiation_approved, to: :blocked
         transitions from: :swap_rejected, to: :blocked
         transitions from: :cancellation_rejected, to: :blocked
-        transitions from: :cancellation_failed, to: :blocked
       end
 
       event :booked_tentative do
@@ -107,15 +106,15 @@ module BookingDetailStateMachine
         transitions from: :cancelling, to: :cancelled
       end
 
-      event :cancellation_failed do
-        transitions from: :cancellation_failed, to: :cancellation_failed
-        transitions from: :cancelling, to: :cancellation_failed
-      end
-
-      event :cancellation_rejected do
+      event :cancellation_rejected, after: :after_cancellation_rejected do
         transitions from: :cancellation_rejected, to: :cancellation_rejected
+        transitions from: :cancelling, to: :cancellation_rejected
         transitions from: :cancellation_requested, to: :cancellation_rejected
       end
+    end
+
+    def after_cancellation_rejected 
+      self.blocked!
     end
   end
 end

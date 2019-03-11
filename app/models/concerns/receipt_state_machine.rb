@@ -51,7 +51,7 @@ module ReceiptStateMachine
     end
 
     def can_available_for_refund?
-      self.booking_detail.blank? || self.booking_detail.status == "cancelled"
+      self.booking_detail.blank? || self.booking_detail.status == "cancelling"
     end
 
     def can_move_to_clearance?
