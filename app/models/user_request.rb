@@ -3,6 +3,7 @@ class UserRequest
   include Mongoid::Timestamps
   include ArrayBlankRejectable
   include InsertionStringMethods
+  include UserRequestStateMachine
 
   field :status, type: String, default: 'pending'
   field :resolved_at, type: DateTime
