@@ -113,7 +113,7 @@ module BookingDetailStateMachine
       end
     end
 
-    def after_cancellation_rejected 
+    def after_cancellation_rejected
       self.blocked!
     end
   end

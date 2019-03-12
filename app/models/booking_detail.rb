@@ -29,6 +29,7 @@ class BookingDetail
   has_many :booking_detail_schemes, class_name: 'BookingDetailScheme', inverse_of: :booking_detail
   has_many :sync_logs, as: :resource
   has_many :notes, as: :notable
+  has_many :user_requests
 
   validates :status, :primary_user_kyc_id, presence: true
   validates :erp_id, uniqueness: true, allow_blank: true

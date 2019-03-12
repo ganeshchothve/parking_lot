@@ -69,8 +69,8 @@ class Admin::UserRequestsController < AdminController
   #
   def update
     @user_request.assign_attributes(permitted_user_request_attributes)
-    @user_request.project_unit.booking_detail.cancelling! if params[:user_request_cancellation] && @user_request.status_changed? && %w[resolved rejected].include?(@user_request.status)
-    if @user_request.status == 'resolved'
+    if @user_request.processing? && @user_request.status_changed?
+      @user_request.booking_detail.cancelling! if params[:user_request_cancellation]
       @user_request.resolved_by = current_user
       @user_request.resolved_at = Time.now
     end

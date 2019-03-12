@@ -23,6 +23,7 @@ module UserRequestStateMachine
 
       event :rejected do
         transitions from: :rejected, to: :rejected
+        transitions from: :pending, to: :rejected
         transitions from: :processing, to: :rejected
       end
     end

@@ -15,6 +15,7 @@ module ReceiptStateMachine
       event :clearance_pending do
         transitions from: :pending, to: :clearance_pending, if: :can_move_to_clearance?
         transitions from: :clearance_pending, to: :clearance_pending
+        transitions from: :cancelled, to: :clearance_pending, if: :allowed?
       end
 
       event :success do
@@ -45,9 +46,13 @@ module ReceiptStateMachine
       event :cancel do
         transitions from: :pending, to: :cancelled, if: :swap_request_initiated?
         transitions from: :success, to: :cancelled, if: :swap_request_initiated?
-        transitions from: :clearance_pending, to: :cancelled, if: :swap_request_initiated?
+        transitions from: :clearance_pending, to: :cancelled, if: :user_request_initiated?
       end
 
+    end
+
+    def allowed?
+      self.booking_detail.cancelling?
     end
 
     def can_available_for_refund?
@@ -58,8 +63,8 @@ module ReceiptStateMachine
       self.persisted? || self.project_unit_id.present?
     end
 
-    def swap_request_initiated?
-      self.swap_request_initiated == true
+    def user_request_initiated?
+      self.swap_request_initiated == true || self.booking_detail.cancelling?
     end
   end
 end
