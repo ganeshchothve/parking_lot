@@ -63,7 +63,7 @@ class Admin::ProjectUnits::BookingDetailSchemesController < AdminController
   end
 
   def edit
-    render layout: false
+    render layout: false, template: 'booking_detail_schemes/edit'
   end
 
   def approve_via_email

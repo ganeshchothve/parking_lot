@@ -14,9 +14,9 @@
   <%= link_to "Print Cost Sheet & Payment Schedule", print_admin_project_unit_path(project_unit), class: 'dropdown-item', target: "_blank" %>
 <% end %>
 
-<% if project_unit.pending_booking_detail_scheme.present? && policy(project_unit.pending_booking_detail_scheme).edit? %>
-  <%= link_to "Update scheme and discount", edit_admin_user_booking_detail_booking_detail_scheme_path(project_unit.user_id, project_unit.booking_detail, project_unit.pending_booking_detail_scheme.id), class: 'dropdown-item modal-remote-form-link' %>
-<% elsif project_unit.booking_detail && policy(BookingDetailScheme.new(project_unit_id: project_unit.id)).new? %>
+<% if project_unit.pending_booking_detail_scheme.present? && policy([:admin, project_unit.pending_booking_detail_scheme]).edit? %>
+  <%= link_to "Update scheme and discount", edit_admin_user_project_unit_booking_detail_scheme_path(project_unit.user_id, project_unit, project_unit.pending_booking_detail_scheme.id), class: 'dropdown-item modal-remote-form-link' %>
+<% elsif project_unit.booking_detail && policy([ :admin, BookingDetailScheme.new(project_unit_id: project_unit.id)]).new? %>
   <%= link_to "Update scheme and discount", new_admin_user_booking_detail_booking_detail_scheme_path(project_unit.user_id, project_unit.booking_detail), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
 
