@@ -4,26 +4,27 @@ class UserRequest::CancellationObserver < Mongoid::Observer
   end
 
   def after_update(user_request)
-    if user_request.status_changed? && user_request.booking_detail.present?
+    booking_detail = user_request.try(:booking_detail)
+    if user_request.status_changed? && booking_detail.present?
       if user_request.processing?
         flag = 'true'
         arr = []
-        user_request.booking_detail.receipts.each do |r|
-          arr << r.id
-          case r.status
+        booking_detail.receipts.each do |receipt|
+          arr << receipt.id
+          case receipt.status
           when 'success'
-            r.available_for_refund! ? true : flag = r.error_messages.full_messages
+            receipt.available_for_refund! ? true : flag = receipt.error_messages.full_messages
           when 'clearance_pending'
             # move to state machine receipt
-            new_receipt = r.dup
-            r.cancel!
-            r.save ? true : flag = r.error_messages.full_messages
+            new_receipt = receipt.dup
+            receipt.cancel!
+            receipt.save ? true : flag = receipt.error_messages.full_messages
             new_receipt.project_unit = nil
             new_receipt.save ? true : flag = new_receipt.error_messages.full_messages
             arr << new_receipt.id
           when 'pending'
-            r.project_unit = nil
-            r.save ? true : flag = r.error_messages.full_messages
+            receipt.project_unit = nil
+            receipt.save ? true : flag = receipt.error_messages.full_messages
           end
         end
 
@@ -60,31 +61,31 @@ class UserRequest::CancellationObserver < Mongoid::Observer
           flag = 'Project Unit unavailable'
         end
         if flag == 'true'
-          user_request.booking_detail.cancelled!
+          booking_detail.cancelled!
           user_request.resolved!
           user_request.save
         else
           arr.each do |a|
-            r = Receipt.find(a)
-            case r.status
+            receipt = Receipt.find(a)
+            case receipt.status
             when 'available_for_refund'
-              r.success!
+              receipt.success!
             when 'cancelled'
-              r.clearance_pending!
+              receipt.set(status: 'clearance_pending')
             when 'clearance_pending'
-              r.destroy
+              receipt.destroy
             when 'pending'
-              r.project_unit = user_request.project_unit
+              receipt.project_unit = user_request.project_unit
             end
           end
-          user_request.booking_detail.cancellation_rejected
+          booking_detail.cancellation_rejected
           user_request.rejected
-          Note.create(note: flag, notable: user_request.booking_detail)
+          Note.create(note: flag, notable: booking_detail)
         end
       elsif user_request.rejected?
-        user_request.booking_detail.cancellation_rejected!
-        user_request.booking_detail.notes = user_request.notes
-        user_request.booking_detail.save
+        booking_detail.cancellation_rejected!
+        booking_detail.notes = user_request.notes
+        booking_detail.save
       end
     end
   end
