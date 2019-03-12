@@ -132,7 +132,7 @@ class ProjectUnit
     _scheme = _scheme.or([{ can_be_applied_by: nil }, { can_be_applied_by: [] }, { can_be_applied_by: _user.role } ])
     _scheme
   end
-
+  
   def self.user_based_available_statuses(user)
     statuses = if user.present?
                  if user.role?('management_user')
