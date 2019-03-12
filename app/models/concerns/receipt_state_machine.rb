@@ -69,7 +69,7 @@ module ReceiptStateMachine
         _project_unit.status = 'blocked'
         _project_unit.save
       end
-      _booking_detail = self.booking_detail || self.project_unit.booking_detail
+      _booking_detail = self.booking_detail
       if _booking_detail.present?  
         if _booking_detail.aasm.current_state == :scheme_approved
           _booking_detail.blocked! if _booking_detail.can_blocked?

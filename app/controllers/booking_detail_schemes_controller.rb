@@ -41,7 +41,7 @@ class BookingDetailSchemesController < ApplicationController
 
   def create
     pubs = ProjectUnitBookingService.new(@project_unit.id)
-    booking_detail = pubs.create_booking_detail pubs.booking_detail_status
+    booking_detail = pubs.create_booking_detail
     @scheme = pubs.create_or_update_booking_detail_scheme booking_detail
     @scheme.created_by = current_user
     @scheme.created_by_user = true

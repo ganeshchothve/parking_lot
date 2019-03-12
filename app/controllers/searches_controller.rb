@@ -114,7 +114,7 @@ class SearchesController < ApplicationController
     ) if @booking_detail_scheme.blank?
     if @project_unit.booking_detail.blank?
       pubs = ProjectUnitBookingService.new(@project_unit.id)
-      @booking_detail = pubs.create_booking_detail(pubs.booking_detail_status, @search)
+      @booking_detail = pubs.create_booking_detail @search.id
     else
       @booking_detail = @project_unit.booking_detail
       @booking_detail.search_id = @search.id
