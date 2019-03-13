@@ -7,7 +7,7 @@ class Note
 
   belongs_to :notable, polymorphic: true
   has_many :assets, as: :assetable
-  belongs_to :creator, class_name: 'User', optional: true
+  belongs_to :creator, class_name: 'User', optional: true # When system generates a note, creator is kept blank as it is not a user object
 
   default_scope -> { desc(:created_at) }
 

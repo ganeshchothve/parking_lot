@@ -5,7 +5,7 @@ class UserRequest
   include InsertionStringMethods
   include UserRequestStateMachine
 
-  field :status, type: String, default: 'pending'
+  field :status, type: String # default: 'pending'
   field :resolved_at, type: DateTime
   field :reason_for_failure, type: String
 
