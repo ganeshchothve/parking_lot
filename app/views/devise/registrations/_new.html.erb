@@ -15,13 +15,6 @@
     <%= f.label :phone, class: 'label-required' %>
     <%= f.phone_field :phone, required: 'required', autofocus: true, placeholder: 'Phone', class: 'form-control' %>
   </div>
-  <div class="form-group">
-    <%= f.label :password, class: 'label-required' %>
-    <% if @minimum_password_length %>
-      <em>(<%= @minimum_password_length %> characters minimum)</em>
-    <% end %><br />
-    <%= f.password_field :password, required: 'required', placeholder: 'Password', class: 'form-control' %>
-  </div>
   <div class="actions">
     <%= f.submit "Sign up", class: 'btn btn-primary' %>
   </div>
