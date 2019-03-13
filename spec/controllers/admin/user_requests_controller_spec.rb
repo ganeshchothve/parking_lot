@@ -66,6 +66,87 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
       end
     end
 
+    describe 'rejected when processing and processing fails' do
+      context 'receipt reverted' do
+        it 'when receipt success -> available_for_refund -> success' do
+          @receipt1 = create(:receipt, user_id: @user.id)
+          @project_unit3 = create(:project_unit, status: 'blocked', user_id: @user.id, primary_user_kyc_id: @kyc.id, receipt_ids: [@receipt1.id])
+          @booking_detail = BookingDetail.create(primary_user_kyc_id: @kyc.id, status: 'cancellation_requested', project_unit_id: @project_unit3.id, user_id: @user.id, receipt_ids: [@receipt1.id])
+          @user_request = UserRequest::Cancellation.create(status: 'pending', project_unit_id: @project_unit3.id, user_id: @user.id, created_by_id: @user.id, booking_detail_id: @booking_detail.id)
+          user_request_params = { status: 'processing', user_id: @user.id }
+          Receipt.any_instance.stub(:available_for_refund!).and_return false
+          Receipt.any_instance.stub(:errors).and_return(ActiveModel::Errors.new(Receipt.new).tap { |e| e.add(:payment_mode, 'cannot be nil') })
+          patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: @user_request.id }
+          @user_request.reload
+          @receipt1.reload
+          @booking_detail.reload
+          expect(@receipt1.status).to eq('success')
+          expect(@user_request.status).to eq('rejected')
+          expect(@booking_detail.status).to eq('blocked')
+        end
+
+        it 'when receipt clearance_pending -> cancelled -> clearance_pending' do
+          @receipt1 = create(:receipt, user_id: @user.id, status: 'clearance_pending')
+          @project_unit3 = create(:project_unit, status: 'blocked', user_id: @user.id, primary_user_kyc_id: @kyc.id)
+          @booking_detail = BookingDetail.create(primary_user_kyc_id: @kyc.id, status: 'cancellation_requested', project_unit_id: @project_unit3.id, user_id: @user.id, receipt_ids: [@receipt1.id])
+          @user_request = UserRequest::Cancellation.create(status: 'pending', project_unit_id: @project_unit3.id, user_id: @user.id, created_by_id: @user.id, booking_detail_id: @booking_detail.id)
+          user_request_params = { status: 'processing', user_id: @user.id }
+          @receipt1.set(project_unit_id: @project_unit3.id)
+          count = Receipt.count
+          Receipt.any_instance.stub(:cancel!).and_return false
+          Receipt.any_instance.stub(:errors).and_return(ActiveModel::Errors.new(Receipt.new).tap { |e| e.add(:payment_mode, 'cannot be nil') })
+          patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: @user_request.id }
+          @receipt1.reload
+          @booking_detail.reload
+          @user_request.reload
+          expect(@receipt1.status).to eq('clearance_pending')
+          expect(@user_request.status).to eq('rejected')
+          expect(@booking_detail.status).to eq('blocked')
+          expect(Receipt.count).to eq(count)
+        end
+
+        it 'when receipt clearance_pending, dup receipt fails' do
+          @receipt1 = create(:receipt, user_id: @user.id, status: 'clearance_pending')
+          @project_unit3 = create(:project_unit, status: 'blocked', user_id: @user.id, primary_user_kyc_id: @kyc.id)
+          @booking_detail = BookingDetail.create(primary_user_kyc_id: @kyc.id, status: 'cancellation_requested', project_unit_id: @project_unit3.id, user_id: @user.id, receipt_ids: [@receipt1.id])
+          @user_request = UserRequest::Cancellation.create(status: 'pending', project_unit_id: @project_unit3.id, user_id: @user.id, created_by_id: @user.id, booking_detail_id: @booking_detail.id)
+          user_request_params = { status: 'processing', user_id: @user.id }
+          @receipt1.set(project_unit_id: @project_unit3.id)
+          count = Receipt.count
+          Receipt.any_instance.stub(:cancel!).and_return true
+          Receipt.any_instance.stub(:save).and_return false
+          Receipt.any_instance.stub(:errors).and_return(ActiveModel::Errors.new(Receipt.new).tap { |e| e.add(:payment_mode, 'cannot be nil') })
+          patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: @user_request.id }
+          @receipt1.reload
+          @booking_detail.reload
+          @user_request.reload
+          expect(@receipt1.status).to eq('clearance_pending')
+          expect(@user_request.status).to eq('rejected')
+          expect(@booking_detail.status).to eq('blocked')
+          expect(Receipt.count).to eq(count)
+        end
+
+        it 'when receipt pending, project unit nil reverted' do
+          @receipt1 = create(:receipt, user_id: @user.id, status: 'pending')
+          @project_unit3 = create(:project_unit, status: 'blocked', user_id: @user.id, primary_user_kyc_id: @kyc.id, receipt_ids: [@receipt1.id])
+          @booking_detail = BookingDetail.create(primary_user_kyc_id: @kyc.id, status: 'cancellation_requested', project_unit_id: @project_unit3.id, user_id: @user.id, receipt_ids: [@receipt1.id])
+          @user_request = UserRequest::Cancellation.create(status: 'pending', project_unit_id: @project_unit3.id, user_id: @user.id, created_by_id: @user.id, booking_detail_id: @booking_detail.id)
+          user_request_params = { status: 'processing', user_id: @user.id }
+          Receipt.any_instance.stub(:save).and_return false
+          Receipt.any_instance.stub(:errors).and_return(ActiveModel::Errors.new(Receipt.new).tap { |e| e.add(:payment_mode, 'cannot be nil') })
+          patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: @user_request.id }
+          @receipt1.reload
+          @booking_detail.reload
+          @project_unit3.reload
+          @user_request.reload
+          expect(@receipt1.status).to eq('pending')
+          expect(@receipt1.project_unit.present?).to eq(true)
+          expect(@user_request.status).to eq('rejected')
+          expect(@booking_detail.status).to eq('blocked')
+        end
+      end
+    end
+
     it 'blocked when user_request rejected' do
       @project_unit1 = create(:project_unit, status: 'blocked', user_id: @user.id, primary_user_kyc_id: @kyc.id, receipt_ids: [@receipt.id])
       @booking_detail = BookingDetail.create(primary_user_kyc_id: @kyc.id, status: 'cancellation_requested', project_unit_id: @project_unit1.id, user_id: @user.id, receipt_ids: [@receipt.id])

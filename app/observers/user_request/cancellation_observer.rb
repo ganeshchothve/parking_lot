@@ -7,60 +7,72 @@ class UserRequest::CancellationObserver < Mongoid::Observer
     booking_detail = user_request.try(:booking_detail)
     if user_request.status_changed? && booking_detail.present?
       if user_request.processing?
-        flag = 'true'
+        error_messages = ''
         arr = []
         booking_detail.receipts.each do |receipt|
           arr << receipt.id
           case receipt.status
           when 'success'
-            receipt.available_for_refund! ? true : flag = receipt.error_messages.full_messages
+            unless receipt.available_for_refund!
+              error_messages = receipt.errors.full_messages
+              break
+            end
           when 'clearance_pending'
             # move to state machine receipt
             new_receipt = receipt.dup
-            receipt.cancel!
-            receipt.save ? true : flag = receipt.error_messages.full_messages
+            unless receipt.cancel!
+              error_messages = receipt.errors.full_messages
+              break
+            end
             new_receipt.project_unit = nil
-            new_receipt.save ? true : flag = new_receipt.error_messages.full_messages
+            unless new_receipt.save
+              error_messages = new_receipt.errors.full_messages
+              break
+            end
             arr << new_receipt.id
           when 'pending'
             receipt.project_unit = nil
-            receipt.save ? true : flag = receipt.error_messages.full_messages
+            unless receipt.save
+              error_messages = receipt.errors.full_messages
+              break
+            end
           end
         end
 
         make_project_unit_available = ProjectUnit.booking_stages.include?(user_request.project_unit.status)
         make_project_unit_available &&= user_request.user_id == user_request.project_unit.user_id
+        if error_messages.blank?
+          if make_project_unit_available
+            project_unit = user_request.project_unit
+            project_unit.processing_user_request = true
+            project_unit.make_available
+            project_unit.save(validate: false) ? true : error_messages = project_unit.errors.full_messages
+            if user_request.user.booking_portal_client.email_enabled?
+              Email.create!(
+                booking_portal_client_id: user_request.user.booking_portal_client_id,
+                email_template_id: Template::EmailTemplate.find_by(name: "#{user_request.class.model_name.element}_request_#{user_request.status}").id,
+                recipients: [user_request.user],
+                cc_recipients: (user_request.user.manager_id.present? ? [user_request.user.manager] : []),
+                triggered_by_id: user_request.id,
+                triggered_by_type: user_request.class.to_s
+              )
+            end
 
-        if make_project_unit_available && flag == 'true'
-          project_unit = user_request.project_unit
-          project_unit.processing_user_request = true
-          project_unit.make_available
-          project_unit.save(validate: false) ? true : flag = project_unit.error_messages.full_messages
-          if user_request.user.booking_portal_client.email_enabled?
-            Email.create!(
-              booking_portal_client_id: user_request.user.booking_portal_client_id,
-              email_template_id: Template::EmailTemplate.find_by(name: "#{user_request.class.model_name.element}_request_#{user_request.status}").id,
-              recipients: [user_request.user],
-              cc_recipients: (user_request.user.manager_id.present? ? [user_request.user.manager] : []),
-              triggered_by_id: user_request.id,
-              triggered_by_type: user_request.class.to_s
-            )
+            template = Template::SmsTemplate.where(name: "#{user_request.class.model_name.element}_request_resolved").first
+            if template.present? && user_request.user.booking_portal_client.sms_enabled?
+              Sms.create!(
+                booking_portal_client_id: user_request.user.booking_portal_client_id,
+                recipient_id: user_request.user_id,
+                sms_template_id: template.id,
+                triggered_by_id: user_request.id,
+                triggered_by_type: user_request.class.to_s
+              )
+            end
+          else error_messages.blank?
+               error_messages = ['Project Unit unavailable']
           end
-
-          template = Template::SmsTemplate.where(name: "#{user_request.class.model_name.element}_request_resolved").first
-          if template.present? && user_request.user.booking_portal_client.sms_enabled?
-            Sms.create!(
-              booking_portal_client_id: user_request.user.booking_portal_client_id,
-              recipient_id: user_request.user_id,
-              sms_template_id: template.id,
-              triggered_by_id: user_request.id,
-              triggered_by_type: user_request.class.to_s
-            )
-          end
-        else
-          flag = 'Project Unit unavailable'
         end
-        if flag == 'true'
+        if error_messages.blank?
           booking_detail.cancelled!
           user_request.resolved!
           user_request.save
@@ -73,14 +85,13 @@ class UserRequest::CancellationObserver < Mongoid::Observer
             when 'cancelled'
               receipt.set(status: 'clearance_pending')
             when 'clearance_pending'
-              receipt.destroy
+              receipt.destroy if receipt.project_unit.blank?
             when 'pending'
-              receipt.project_unit = user_request.project_unit
+              receipt.set(project_unit_id: user_request.project_unit.id)
             end
           end
-          booking_detail.cancellation_rejected
-          user_request.rejected
-          Note.create(note: flag, notable: booking_detail)
+          user_request.rejected!
+          Note.create(note: error_messages, notable: booking_detail)
         end
       elsif user_request.rejected?
         booking_detail.cancellation_rejected!
