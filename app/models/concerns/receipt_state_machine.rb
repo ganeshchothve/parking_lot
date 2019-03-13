@@ -20,6 +20,7 @@ module ReceiptStateMachine
       event :success , after: :after_success do
         transitions from: :success, to: :success
         transitions from: :pending, to: :success
+        # receipt moves from pending to success when online payment is made.
         transitions from: :clearance_pending, to: :success, unless: :new_record?
         transitions from: :available_for_refund, to: :success
       end

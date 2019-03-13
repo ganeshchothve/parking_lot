@@ -6,12 +6,12 @@ module BookingDetailStateMachine
     aasm column: :status do
       # state :filter, initial: true
       # state :tower, :project_unit, :user_kyc 
-      # state :hold, :blocked, :booked_tentative, :booked_confirmed, :under_negotiation, :negotiation_failed, :scheme_approved
+      # state :hold, :blocked, :booked_tentative, :booked_confirmed, :under_negotiation, :scheme_rejected, :scheme_approved
       # state :swap_requested, :swapping, :swapped, :swap_rejected
       # state :cancellation_requested, :cancelling, :cancelled, :cancellation_rejected
 
       state :hold, initial: true
-      state :blocked, :booked_tentative, :booked_confirmed, :under_negotiation, :negotiation_failed, :scheme_approved
+      state :blocked, :booked_tentative, :booked_confirmed, :under_negotiation, :scheme_rejected, :scheme_approved
 
       # event :filter do
       #   transitions from: :filter, to: :filter
@@ -47,9 +47,9 @@ module BookingDetailStateMachine
         transitions from: :under_negotiation, to: :scheme_approved, guard: :can_scheme_approved? 
       end
 
-      event :negotiation_failed do
-        transitions from: :negotiation_failed, to: :negotiation_failed
-        transitions from: :under_negotiation, to: :negotiation_failed, guard: :can_negotiation_failed?
+      event :scheme_rejected do
+        transitions from: :scheme_rejected, to: :scheme_rejected
+        transitions from: :under_negotiation, to: :scheme_rejected, guard: :can_scheme_rejected?
       end
 
       event :blocked, after: :after_blocked do
@@ -115,18 +115,21 @@ module BookingDetailStateMachine
     end
     
     def after_under_negotiation
-    pubs = ProjectUnitBookingService.new(self.project_unit.id)
-    booking_detail_scheme = pubs.create_or_update_booking_detail_scheme self if self.booking_detail_schemes.empty?
-    booking_detail_scheme.approved! if booking_detail_scheme.present? &&booking_detail_scheme.status != 'approved'
+      pubs = ProjectUnitBookingService.new(self.project_unit.id)
+      booking_detail_scheme = pubs.create_or_update_booking_detail_scheme self if self.booking_detail_schemes.empty?
+      booking_detail_scheme.approved! if booking_detail_scheme.present? &&booking_detail_scheme.status != 'approved'
       self.scheme_approved! if can_scheme_approved?
-      self.negotiation_failed!  if self.aasm.current_state == 'under_negotiation' && can_negotiation_failed?
+      self.scheme_rejected!  if self.aasm.current_state == 'under_negotiation' && can_scheme_rejected?
     end
+
     def after_scheme_approved
       self.blocked! if can_blocked?
     end
+
     def after_blocked
       self.booked_tentative! if can_booked_tentative?
     end
+
     def after_booked_tentative
       self.booked_confirmed! if can_booked_confirmed?
     end
@@ -134,15 +137,19 @@ module BookingDetailStateMachine
     def can_scheme_approved? 
       true if self.booking_detail_scheme.status == 'approved'
     end
-    def can_negotiation_failed?
+
+    def can_scheme_rejected?
       true if self.booking_detail_scheme.status != 'approved'
     end
+
     def can_blocked?
       true if self.receipts.in(status: %w[success clearance_pending]).sum{|receipt| receipt.total_amount} >= self.project_unit.blocking_amount
     end
+
     def can_booked_tentative?
       true if self.receipts.in(status: %w[success clearance_pending]).sum{|receipt| receipt.total_amount} > self.project_unit.blocking_amount
     end
+    
     def can_booked_confirmed?
       true if self.receipts.in(status: %w[success clearance_pending]).sum{|receipt| receipt.total_amount} >= self.project_unit.booking_price
     end

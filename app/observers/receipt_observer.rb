@@ -15,11 +15,6 @@ class ReceiptObserver < Mongoid::Observer
   def after_save receipt
     user = receipt.user
     project_unit = receipt.project_unit
-    if project_unit.present?
-      project_unit.booking_detail.update(receipt_ids: project_unit.receipt_ids)
-      project_unit.booking_detail.under_negotiation! if project_unit.booking_detail.aasm.current_state == :hold
-    end
-
     # update project unit if a successful receipt is getting attached to a project_unit
     # update the user balance if receipt has no project unit
     if receipt.project_unit_id_changed? && receipt.project_unit_id_was.blank? && ['success', 'clearance_pending'].include?(receipt.status) && !receipt.status_changed?
@@ -56,5 +51,11 @@ class ReceiptObserver < Mongoid::Observer
     end
   end
 
-
+  def after_create receipt
+    project_unit = receipt.project_unit
+    if project_unit.present?
+      project_unit.booking_detail.update(receipt_ids: project_unit.receipt_ids)
+      project_unit.booking_detail.under_negotiation! if project_unit.booking_detail.aasm.current_state == :hold
+    end
+  end
 end

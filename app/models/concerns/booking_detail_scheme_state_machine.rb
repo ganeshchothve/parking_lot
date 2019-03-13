@@ -5,20 +5,10 @@ module BookingDetailSchemeStateMachine
     attr_accessor :event
     aasm column: :status do
       state :draft, initial: true
-      state :approved, :under_negotiation, :rejected
+      state :approved, :rejected
 
       event :draft do
         transitions from: :draft, to: :draft
-      end
-
-      event :under_negotiation do
-        transitions from: :draft, to: :draft, if: [:booking_detail_present?, :editable_payment_adjustments_present?]
-        # transitions from: :under_negotiation, to: :under_negotiation
-      end
-
-      event :negotiation_failed do
-        transitions from: :draft, to: :rejected
-        # transitions from: :negotiation_failed, to: :negotiation_failed
       end
 
       event :approved, after: :after_approved do
