@@ -10,7 +10,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
   def new?
     valid = confirmed_and_ready_user?
 
-    valid &&= ( after_blocked_payment? || (( after_hold_payment? || after_under_negotiation_payment?) && ( user.role?('channel_partner') || editable_field?('event') ) ))
+    valid &&= ( record.project_unit_id.blank? || after_blocked_payment? || (( after_hold_payment? || after_under_negotiation_payment?) && ( user.role?('channel_partner') || editable_field?('event') ) ))
     valid &&= record.user.user_requests.where(project_unit_id: record.project_unit_id).where(status: 'pending').blank?
     valid &&= current_client.payment_gateway.present? if record.payment_mode == 'online'
     valid
