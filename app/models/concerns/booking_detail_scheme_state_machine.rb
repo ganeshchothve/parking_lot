@@ -16,7 +16,7 @@ module BookingDetailSchemeStateMachine
         transitions from: :draft, to: :approved, if: :booking_detail_present?
       end
 
-      event :disabled do
+      event :rejected do
         transitions from: :rejected, to: :rejected
         transitions from: :draft, to: :rejected, if: :other_approved_scheme_present?
         transitions from: :approved, to: :rejected, if: :other_approved_scheme_present?
