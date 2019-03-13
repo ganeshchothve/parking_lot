@@ -9,14 +9,20 @@ class Admin::ReceiptPolicy < ReceiptPolicy
 
   def new?
     valid = confirmed_and_ready_user?
-    valid &&= (record.project_unit_id.blank? || after_blocked_payment? || ((after_hold_payment? || after_under_negotiation_payment?) && editable_field?('event')))
+
+    valid &&= ( after_blocked_payment? || (( after_hold_payment? || after_under_negotiation_payment?) && ( user.role?('channel_partner') || editable_field?('event') ) ))
     valid &&= record.user.user_requests.where(project_unit_id: record.project_unit_id).where(status: 'pending').blank?
     valid &&= current_client.payment_gateway.present? if record.payment_mode == 'online'
     valid
   end
 
   def create?
-    new? && ['admin','sales','sales_admin', 'channel_partner', 'superadmin'].include?(user.role) && online_account_present?
+    valid = new? && online_account_present?
+    if valid && !['admin','sales','sales_admin', 'channel_partner', 'superadmin'].include?(user.role)
+      @condition = 'not_authorised'
+      valid = false
+    end
+    valid
   end
 
   def asset_create?
@@ -66,6 +72,6 @@ class Admin::ReceiptPolicy < ReceiptPolicy
   private
 
   def confirmed_and_ready_user?
-    record.user_id.present? && record.user.confirmed? && record.user.kyc_ready?
+    record_user_is_present? && record_user_confirmed? && record_user_kyc_ready?
   end
 end
