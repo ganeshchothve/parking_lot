@@ -24,12 +24,11 @@ class BookingDetailMisReportWorker
       "User Email",
       "User Phone",
       "Status",
-      "Primary UserKYC id",
-      "Erp id",
+      "Erp id"
     ]
   end
 
-  def self.get_project_unit_row(booking_detail)
+  def self.get_booking_detail_row(booking_detail)
     project_unit = booking_detail.project_unit
     user = booking_detail.user
     [
@@ -40,7 +39,6 @@ class BookingDetailMisReportWorker
       (user.email rescue "N/A"),
       (user.phone rescue "N/A"),
       booking_detail.status,
-      booking_detail.primary_user_kyc_id
       booking_detail.erp_id
     ]
   end

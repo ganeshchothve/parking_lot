@@ -55,6 +55,10 @@ Rails.application.routes.draw do
       get :resend_success, on: :member
     end
 
+    resources :booking_details, only: [:index, :show] do
+      resources :receipts, only: [:index]
+    end
+
     resources :project_units, only: [:index, :show, :edit, :update] do
       member do
         get :print
@@ -108,9 +112,10 @@ Rails.application.routes.draw do
         resources :user_requests, except: [:destroy], controller: 'user_requests'
       end
 
-      resources :booking_details, only: [:update] do
+      resources :booking_details, only: [:index, :show] do
         patch :booking, on: :member
         resources :booking_detail_schemes, except: [:destroy], controller: '/booking_detail_schemes'
+        resources :receipts, only: [:index]
       end
     end
 

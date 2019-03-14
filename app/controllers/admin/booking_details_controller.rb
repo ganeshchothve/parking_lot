@@ -1,7 +1,16 @@
 class Admin::BookingDetailsController < AdminController
   include ReceiptsConcern
-  before_action :set_booking_detail
-  before_action :authorize_resource
+  before_action :get_booking_details, only: [:index]
+  before_action :set_booking_detail, except: [:index]
+  before_action :authorize_resource, except: [:index]
+
+  def index
+    @booking_details = @booking_details.paginate(page: params[:page] || 1, per_page: params[:per_page])
+  end
+
+  def show 
+    @scheme = @booking_detail.booking_detail_scheme
+  end
 
   def booking 
     @booking_detail.under_negotiation!
@@ -48,5 +57,13 @@ class Admin::BookingDetailsController < AdminController
 
   def authorize_resource
     authorize [:admin, @booking_detail]
+  end
+
+  def get_booking_details 
+    if params[:user_id].present?
+      @booking_details = BookingDetail.where(user_id: params[:user_id])
+    else
+      @booking_details = BookingDetail.all
+    end
   end
 end
