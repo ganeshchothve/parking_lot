@@ -26,7 +26,7 @@ RSpec.describe Admin::BookingDetailSchemesController, type: :controller do
       booking_detail_scheme_params = FactoryBot.attributes_for(:booking_detail_scheme)
        payment_adjustment_params = FactoryBot.attributes_for(:payment_adjustment)
        put :update, params: {:id => @booking_detail_scheme.id, :booking_detail_scheme => { :payment_adjustments_attributes =>{"1" => payment_adjustment_params }}, :booking_detail_id => @booking_detail.id }
-      expect(BookingDetailScheme.first.status).to eq('under_negotiation')
+      expect(BookingDetailScheme.first.status).to eq('draft')
     end
     it "does not accept payment adjustment when the project unit is in booking stages" do
       @project_unit.status = 'blocked'

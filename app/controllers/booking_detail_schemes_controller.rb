@@ -22,7 +22,7 @@ class BookingDetailSchemesController < ApplicationController
   end
 
   def new
-    booking_detail_scheme = if @booking_detail.status == "negotiation_failed"
+    booking_detail_scheme = if @booking_detail.status == "scheme_rejected"
       @booking_detail.booking_detail_schemes.where(status: "negotiation_failed").desc(:created_at).first
     else
       @booking_detail.booking_detail_scheme
@@ -41,15 +41,15 @@ class BookingDetailSchemesController < ApplicationController
 
   def create
     pubs = ProjectUnitBookingService.new(@project_unit.id)
-    booking_detail = pubs.create_booking_detail pubs.booking_detail_status
+    booking_detail = pubs.create_booking_detail
     @scheme = pubs.create_or_update_booking_detail_scheme booking_detail
     @scheme.created_by = current_user
     @scheme.created_by_user = true
     @scheme.assign_attributes(permitted_attributes(@scheme))
     if @scheme.payment_adjustments.present? && @scheme.payment_adjustments.last.new_record?
-      @scheme.status = 'under_negotiation'
+      @scheme.status = 'draft'
     else
-      @scheme.status = 'approved' if @scheme.derived_from_scheme.status == 'approved'
+      @scheme.approved if @scheme.derived_from_scheme.status == 'approved'
     end
     modify_params
     respond_to do |format|
@@ -84,7 +84,7 @@ class BookingDetailSchemesController < ApplicationController
   def update
     modify_params
     @scheme.assign_attributes(permitted_attributes(@scheme))
-    @scheme.status = 'under_negotiation' if @scheme.payment_adjustments.present? && @scheme.payment_adjustments.last.new_record?
+    @scheme.status = 'draft' if @scheme.payment_adjustments.present? && @scheme.payment_adjustments.last.new_record?
     @scheme.approved_by = current_user if @scheme.event.present? && @scheme.event == 'approved'
     respond_to do |format|
       if @scheme.save

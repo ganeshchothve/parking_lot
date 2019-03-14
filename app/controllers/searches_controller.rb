@@ -114,7 +114,11 @@ class SearchesController < ApplicationController
     ) if @booking_detail_scheme.blank?
     if @project_unit.booking_detail.blank?
       pubs = ProjectUnitBookingService.new(@project_unit.id)
-      _booking_detail = pubs.create_booking_detail(pubs.booking_detail_status)
+      @booking_detail = pubs.create_booking_detail @search.id
+    else
+      @booking_detail = @project_unit.booking_detail
+      @booking_detail.search_id = @search.id
+      @booking_detail.save
     end
     if @project_unit.held_on.present? && (@project_unit.held_on + @project_unit.holding_minutes.minutes) < Time.now
       flash[:notice] = "We've released the unit which was held for #{@project_unit.holding_minutes} minutes. Please re-select the unit and try booking again."
