@@ -4,10 +4,10 @@ class ErpModel
   extend FilterByCriteria
 
   # Constants
-  RESOURCE_CLASS = %w[User UserKyc Receipt BookingDetail ChannelPartner].freeze
-  REQUEST_TYPE = [:json].freeze
-  HTTP_VERB = %w[get post put patch].freeze
-  DOMAIN = %w[https://gerasb-gerasb.cs57.force.com].freeze
+  RESOURCE_CLASS = %w[User UserKyc Receipt BookingDetail ChannelPartner]
+  REQUEST_TYPE = [:json]
+  HTTP_VERB = %w[get post put patch]
+  DOMAIN = %w[https://gerasb-gerasb.cs57.force.com]
 
   # Fields
   field :resource_class, type: String

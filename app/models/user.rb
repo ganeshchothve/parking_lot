@@ -8,9 +8,12 @@ class User
   include ApplicationHelper
   include SyncDetails
 
+  # Constants
+  ALLOWED_UTM_KEYS = %i[campaign source sub_source content medium term]
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, authentication_keys: [:login] #:registerable Disabling registration because we always create user after set up sell.do
+  devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, authentication_keys: [:login]
 
   ## Database authenticatable
   field :first_name, type: String, default: ''
@@ -88,9 +91,9 @@ class User
   attr_accessor :login, :login_otp
 
   belongs_to :booking_portal_client, class_name: 'Client', inverse_of: :users
+  belongs_to :referred_by, class_name: 'User', optional: true
   belongs_to :manager, class_name: 'User', optional: true
   belongs_to :channel_partner, optional: true
-  belongs_to :referred_by, class_name: 'User', optional: true
   has_many :receipts
   has_many :project_units
   has_many :booking_details
@@ -123,6 +126,13 @@ class User
   def unattached_blocking_receipt(blocking_amount = nil)
     blocking_amount ||= current_client.blocking_amount
     Receipt.where(user_id: id).in(status: %w[success clearance_pending]).where(project_unit_id: nil).where(total_amount: { "$gte": blocking_amount }).first
+  end
+
+  def set_utm_params(cookies)
+    ALLOWED_UTM_KEYS.each do |key|
+      utm_params.store(key, cookies[key]) if cookies[key].present?
+    end
+    utm_params
   end
 
   def total_amount_paid
