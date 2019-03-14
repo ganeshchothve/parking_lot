@@ -18,7 +18,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
         @project_unit3 = create(:project_unit, status: 'blocked', user_id: @user.id, primary_user_kyc_id: @kyc.id, receipt_ids: [@receipt.id])
         @booking_detail = BookingDetail.create(primary_user_kyc_id: @kyc.id, status: 'cancellation_requested', project_unit_id: @project_unit3.id, user_id: @user.id, receipt_ids: [@receipt.id])
         @user_request = UserRequest::Cancellation.create(status: 'pending', project_unit_id: @project_unit3.id, user_id: @user.id, created_by_id: @user.id, booking_detail_id: @booking_detail.id)
-        user_request_params = { status: 'processing', user_id: @user.id }
+        user_request_params = { event: 'processing', user_id: @user.id }
         patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: @user_request.id }
         @booking_detail.reload
         @project_unit3.reload
@@ -31,7 +31,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
         @project_unit3 = create(:project_unit, status: 'blocked', user_id: @user.id, primary_user_kyc_id: @kyc.id, receipt_ids: [@receipt1.id])
         @booking_detail = BookingDetail.create(primary_user_kyc_id: @kyc.id, status: 'cancellation_requested', project_unit_id: @project_unit3.id, user_id: @user.id, receipt_ids: [@receipt1.id])
         @user_request = UserRequest::Cancellation.create(status: 'pending', project_unit_id: @project_unit3.id, user_id: @user.id, created_by_id: @user.id, booking_detail_id: @booking_detail.id)
-        user_request_params = { status: 'processing', user_id: @user.id }
+        user_request_params = { event: 'processing', user_id: @user.id }
         patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: @user_request.id }
         @receipt1.reload
         @booking_detail.reload
@@ -44,7 +44,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
         @project_unit3 = create(:project_unit, status: 'blocked', user_id: @user.id, primary_user_kyc_id: @kyc.id, receipt_ids: [@receipt1.id])
         @booking_detail = BookingDetail.create(primary_user_kyc_id: @kyc.id, status: 'cancellation_requested', project_unit_id: @project_unit3.id, user_id: @user.id, receipt_ids: [@receipt1.id])
         @user_request = UserRequest::Cancellation.create(status: 'pending', project_unit_id: @project_unit3.id, user_id: @user.id, created_by_id: @user.id, booking_detail_id: @booking_detail.id)
-        user_request_params = { status: 'processing', user_id: @user.id }
+        user_request_params = { event: 'processing', user_id: @user.id }
         expect { patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: @user_request.id } }.to change { Receipt.count }.by(1)
         @receipt1.reload
         @booking_detail.reload
@@ -57,7 +57,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
         @project_unit3 = create(:project_unit, status: 'blocked', user_id: @user.id, primary_user_kyc_id: @kyc.id, receipt_ids: [@receipt1.id])
         @booking_detail = BookingDetail.create(primary_user_kyc_id: @kyc.id, status: 'cancellation_requested', project_unit_id: @project_unit3.id, user_id: @user.id, receipt_ids: [@receipt1.id])
         @user_request = UserRequest::Cancellation.create(status: 'pending', project_unit_id: @project_unit3.id, user_id: @user.id, created_by_id: @user.id, booking_detail_id: @booking_detail.id)
-        user_request_params = { status: 'processing', user_id: @user.id }
+        user_request_params = { event: 'processing', user_id: @user.id }
         patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: @user_request.id }
         @receipt1.reload
         @booking_detail.reload
@@ -73,7 +73,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
           @project_unit3 = create(:project_unit, status: 'blocked', user_id: @user.id, primary_user_kyc_id: @kyc.id, receipt_ids: [@receipt1.id])
           @booking_detail = BookingDetail.create(primary_user_kyc_id: @kyc.id, status: 'cancellation_requested', project_unit_id: @project_unit3.id, user_id: @user.id, receipt_ids: [@receipt1.id])
           @user_request = UserRequest::Cancellation.create(status: 'pending', project_unit_id: @project_unit3.id, user_id: @user.id, created_by_id: @user.id, booking_detail_id: @booking_detail.id)
-          user_request_params = { status: 'processing', user_id: @user.id }
+          user_request_params = { event: 'processing', user_id: @user.id }
           Receipt.any_instance.stub(:available_for_refund!).and_return false
           Receipt.any_instance.stub(:errors).and_return(ActiveModel::Errors.new(Receipt.new).tap { |e| e.add(:payment_mode, 'cannot be nil') })
           patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: @user_request.id }
@@ -90,7 +90,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
           @project_unit3 = create(:project_unit, status: 'blocked', user_id: @user.id, primary_user_kyc_id: @kyc.id)
           @booking_detail = BookingDetail.create(primary_user_kyc_id: @kyc.id, status: 'cancellation_requested', project_unit_id: @project_unit3.id, user_id: @user.id, receipt_ids: [@receipt1.id])
           @user_request = UserRequest::Cancellation.create(status: 'pending', project_unit_id: @project_unit3.id, user_id: @user.id, created_by_id: @user.id, booking_detail_id: @booking_detail.id)
-          user_request_params = { status: 'processing', user_id: @user.id }
+          user_request_params = { event: 'processing', user_id: @user.id }
           @receipt1.set(project_unit_id: @project_unit3.id)
           count = Receipt.count
           Receipt.any_instance.stub(:cancel!).and_return false
@@ -110,7 +110,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
           @project_unit3 = create(:project_unit, status: 'blocked', user_id: @user.id, primary_user_kyc_id: @kyc.id)
           @booking_detail = BookingDetail.create(primary_user_kyc_id: @kyc.id, status: 'cancellation_requested', project_unit_id: @project_unit3.id, user_id: @user.id, receipt_ids: [@receipt1.id])
           @user_request = UserRequest::Cancellation.create(status: 'pending', project_unit_id: @project_unit3.id, user_id: @user.id, created_by_id: @user.id, booking_detail_id: @booking_detail.id)
-          user_request_params = { status: 'processing', user_id: @user.id }
+          user_request_params = { event: 'processing', user_id: @user.id }
           @receipt1.set(project_unit_id: @project_unit3.id)
           count = Receipt.count
           Receipt.any_instance.stub(:cancel!).and_return true
@@ -131,7 +131,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
           @project_unit3 = create(:project_unit, status: 'blocked', user_id: @user.id, primary_user_kyc_id: @kyc.id, receipt_ids: [@receipt1.id])
           @booking_detail = BookingDetail.create(primary_user_kyc_id: @kyc.id, status: 'cancellation_requested', project_unit_id: @project_unit3.id, user_id: @user.id, receipt_ids: [@receipt1.id])
           @user_request = UserRequest::Cancellation.create(status: 'pending', project_unit_id: @project_unit3.id, user_id: @user.id, created_by_id: @user.id, booking_detail_id: @booking_detail.id)
-          user_request_params = { status: 'processing', user_id: @user.id }
+          user_request_params = { event: 'processing', user_id: @user.id }
           Receipt.any_instance.stub(:save).and_return false
           Receipt.any_instance.stub(:errors).and_return(ActiveModel::Errors.new(Receipt.new).tap { |e| e.add(:payment_mode, 'cannot be nil') })
           patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: @user_request.id }
@@ -151,7 +151,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
       @project_unit1 = create(:project_unit, status: 'blocked', user_id: @user.id, primary_user_kyc_id: @kyc.id, receipt_ids: [@receipt.id])
       @booking_detail = BookingDetail.create(primary_user_kyc_id: @kyc.id, status: 'cancellation_requested', project_unit_id: @project_unit1.id, user_id: @user.id, receipt_ids: [@receipt.id])
       @user_request = UserRequest::Cancellation.create(status: 'pending', project_unit_id: @project_unit1.id, user_id: @user.id, created_by_id: @user.id, booking_detail_id: @booking_detail.id)
-      user_request_params = { status: 'rejected', user_id: @user.id }
+      user_request_params = { event: 'rejected', user_id: @user.id }
       patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: @user_request.id }
       expect(@project_unit1.booking_detail.status).to eq('blocked')
     end
@@ -160,7 +160,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
       @project_unit1 = create(:project_unit, status: 'booked_tentative', user_id: @user.id, primary_user_kyc_id: @kyc.id, receipt_ids: [@receipt.id])
       @booking_detail = BookingDetail.create(primary_user_kyc_id: @kyc.id, status: 'cancellation_requested', project_unit_id: @project_unit1.id, user_id: @user.id, receipt_ids: [@receipt.id])
       @user_request = UserRequest::Cancellation.create(status: 'pending', project_unit_id: @project_unit1.id, user_id: @user.id, created_by_id: @user.id, booking_detail_id: @booking_detail.id)
-      user_request_params = { status: 'rejected', user_id: @user.id }
+      user_request_params = { event: 'rejected', user_id: @user.id }
       patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: @user_request.id }
       expect(@project_unit1.booking_detail.status).to eq('blocked')
     end
@@ -169,7 +169,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
       @project_unit1 = create(:project_unit, status: 'booked_confirmed', user_id: @user.id, primary_user_kyc_id: @kyc.id, receipt_ids: [@receipt.id])
       @booking_detail = BookingDetail.create(primary_user_kyc_id: @kyc.id, status: 'cancellation_requested', project_unit_id: @project_unit1.id, user_id: @user.id, receipt_ids: [@receipt.id])
       @user_request = UserRequest::Cancellation.create(status: 'pending', project_unit_id: @project_unit1.id, user_id: @user.id, created_by_id: @user.id, booking_detail_id: @booking_detail.id)
-      user_request_params = { status: 'rejected', user_id: @user.id }
+      user_request_params = { event: 'rejected', user_id: @user.id }
       patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: @user_request.id }
       expect(@project_unit1.booking_detail.status).to eq('blocked')
     end
