@@ -33,7 +33,7 @@ class BookingDetailSchemePolicy < SchemePolicy
 
     attributes += %i[booking_detail_id project_unit_id] if record.new_record?
 
-    if record.draft? || record.under_negotiation?
+    if record.draft?
       attributes += [:event] if record.approver?(user)
     end
     attributes += [:erp_id] unless %w[user employee_user management_user channel_partner].include?(user.role)

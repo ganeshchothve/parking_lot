@@ -1,10 +1,10 @@
-class Admin::BookingDetailsController < AdminController
+class Buyer::BookingDetailsController < BuyerController
   include ReceiptsConcern
   before_action :set_booking_detail
   before_action :authorize_resource
 
   def booking 
-    @booking_detail.under_negotiation!
+    @booking_detail.under_negotiation! if @booking_detail.aasm.current_state == :hold
     @search = @booking_detail.search
     @receipt = Receipt.new(creator: @search.user, user: @search.user, payment_mode: 'online', total_amount: current_client.blocking_amount, payment_gateway: current_client.payment_gateway)
     @receipt.account = selected_account(@search.project_unit)
