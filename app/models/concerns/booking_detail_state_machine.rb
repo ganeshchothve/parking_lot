@@ -3,7 +3,7 @@ module BookingDetailStateMachine
   included do
     include AASM
     attr_accessor :event
-    aasm column: :status do
+    aasm column: :status, whiny_transitions: false do
       # state :filter, initial: true
       # state :tower, :project_unit, :user_kyc 
       # state :hold, :blocked, :booked_tentative, :booked_confirmed, :under_negotiation, :scheme_rejected, :scheme_approved
@@ -43,7 +43,7 @@ module BookingDetailStateMachine
       end
 
       event :scheme_approved, after: :after_scheme_approved do
-        transitions from: :negotiation_approved, to: :negotiation_approved
+        transitions from: :scheme_approved, to: :scheme_approved
         transitions from: :under_negotiation, to: :scheme_approved, guard: :can_scheme_approved? 
       end
 
@@ -65,7 +65,7 @@ module BookingDetailStateMachine
       end
 
       event :booked_confirmed do
-        transitions from: :booked_confirmed, to: :booked_confirmed
+        # transitions from: :booked_confirmed, to: :booked_confirmed
         transitions from: :booked_tentative, to: :booked_confirmed, guard: :can_booked_confirmed?
       end
 
@@ -123,15 +123,15 @@ module BookingDetailStateMachine
     end
 
     def after_scheme_approved
-      self.blocked! if can_blocked?
+      self.blocked!
     end
 
     def after_blocked
-      self.booked_tentative! if can_booked_tentative?
+      self.booked_tentative!
     end
 
     def after_booked_tentative
-      self.booked_confirmed! if can_booked_confirmed?
+      self.booked_confirmed!
     end
 
     def can_scheme_approved? 
