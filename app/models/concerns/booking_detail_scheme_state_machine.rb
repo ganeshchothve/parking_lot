@@ -21,23 +21,22 @@ module BookingDetailSchemeStateMachine
         transitions from: :draft, to: :rejected, if: :other_approved_scheme_present?
         transitions from: :approved, to: :rejected, if: :other_approved_scheme_present?
       end
-
     end
 
     def booking_detail_present?
-      self.booking_detail.present?
+      booking_detail.present?
     end
 
     def editable_payment_adjustments_present?
-      self.editable_payment_adjustments.count > 0
+      editable_payment_adjustments.count > 0
     end
 
     def other_approved_scheme_present?
-      BookingDetailScheme.where(project_unit_id: self.project_unit_id, user_id: self.user_id, status: "approved").count > 1
+      BookingDetailScheme.where(project_unit_id: project_unit_id, user_id: user_id, status: 'approved').count > 1
     end
 
     def after_approved
-      self.booking_detail.after_under_negotiation
+      booking_detail.after_under_negotiation
     end
   end
 end

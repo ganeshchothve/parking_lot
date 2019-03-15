@@ -1,4 +1,9 @@
 class UserRequestObserver < Mongoid::Observer
+
+  # def after_save user_request
+  #   user_request.send(user_request.event) if user_request.event.present?
+  # end
+
   def before_save user_request
     if user_request.status_changed? && user_request.status == 'resolved'
       user_request.resolved_at = Time.now

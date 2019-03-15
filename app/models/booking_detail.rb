@@ -3,6 +3,7 @@ class BookingDetail
   include Mongoid::Timestamps
   include ArrayBlankRejectable
   include InsertionStringMethods
+  include BookingDetailStateMachine
   include SyncDetails
   include BookingDetailStateMachine
 
@@ -29,9 +30,13 @@ class BookingDetail
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :booking_detail_schemes, class_name: 'BookingDetailScheme', inverse_of: :booking_detail
   has_many :sync_logs, as: :resource
+  has_many :notes, as: :notable
+  has_many :user_requests
 
   validates :status, :primary_user_kyc_id, presence: true
   validates :erp_id, uniqueness: true, allow_blank: true
+
+  accepts_nested_attributes_for :notes
 
   default_scope -> { desc(:created_at) }
 

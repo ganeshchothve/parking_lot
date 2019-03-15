@@ -3,11 +3,13 @@ class UserRequest
   include Mongoid::Timestamps
   include ArrayBlankRejectable
   include InsertionStringMethods
+  include UserRequestStateMachine
 
-  field :status, type: String, default: 'pending'
+  field :status, type: String # default: 'pending'
   field :resolved_at, type: DateTime
   field :reason_for_failure, type: String
 
+  belongs_to :booking_detail
   belongs_to :project_unit, optional: true
   belongs_to :receipt, optional: true
   belongs_to :user
@@ -17,7 +19,7 @@ class UserRequest
   has_many :notes, as: :notable
 
   validates :user_id, :project_unit_id, presence: true
-  validates :resolved_by, presence: true, if: Proc.new{|user_request| user_request.status == 'resolved' }
+  #validates :resolved_by, presence: true, if: Proc.new{|user_request| user_request.status == 'resolved' }
 
   validates :status, inclusion: {in: Proc.new{ |record| record.class.available_statuses.collect{|x| x[:id]} } }
   validates :project_unit_id, uniqueness: {scope: [:user_id, :status], message: 'already has a cancellation request.'}, if: Proc.new{|record| record.status == "pending"}
@@ -32,7 +34,8 @@ class UserRequest
       {id: 'pending', text: 'Pending'},
       {id: 'resolved', text: 'Resolved'},
       {id: 'rejected', text: 'Rejected'},
-      {id: 'failed', text: 'Failed'}
+      {id: 'failed', text: 'Failed'},
+      {id: 'processing', text: 'Processing'}
     ]
   end
 
