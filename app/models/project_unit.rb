@@ -374,7 +374,7 @@ class ProjectUnit
   end
 
   def pending_booking_detail_scheme
-    if %w[hold under_negotiation].include?(status) || self.class.booking_stages.include?(status)
+    if %w[hold].include?(status) || self.class.booking_stages.include?(status)
       booking_detail_scheme
     end
   end

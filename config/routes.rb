@@ -62,7 +62,7 @@ Rails.application.routes.draw do
     resources :project_units, only: [:index, :show, :edit, :update] do
       member do
         get :print
-        get :send_under_negotiation
+        # get :send_under_negotiation
       end
 
       collection do
@@ -114,6 +114,7 @@ Rails.application.routes.draw do
 
       resources :booking_details, only: [:index, :show] do
         patch :booking, on: :member
+        patch :send_under_negotiation, on: :member
         resources :booking_detail_schemes, except: [:destroy], controller: '/booking_detail_schemes'
         resources :receipts, only: [:index]
       end
