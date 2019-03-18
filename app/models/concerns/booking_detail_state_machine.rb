@@ -135,7 +135,7 @@ module BookingDetailStateMachine
     end
 
     def can_scheme_approved? 
-      true if self.booking_detail_scheme.status == 'approved'
+      true if self.booking_detail_scheme.present?
     end
 
     def can_scheme_rejected?

@@ -90,6 +90,7 @@ class Admin::ProjectUnitsController < AdminController
   def send_under_negotiation
     # ProjectUnitBookingService.new(@project_unit.id).send_for_negotiation
     @project_unit.status = 'under_negotiation'
+    @project_unit.save
     @project_unit.booking_detail.under_negotiation!
     respond_to do |format|
       format.html { redirect_to admin_user_path(@project_unit.user.id) }
