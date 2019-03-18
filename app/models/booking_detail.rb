@@ -66,6 +66,27 @@ class BookingDetail
   def primary_user_kyc
     UserKyc.find(primary_user_kyc_id) if primary_user_kyc_id.present?
   end
+  
+  def self.available_statuses
+    [
+      { id: 'available', text: 'Available' },
+      { id: 'under_negotiation', text: 'Under negotiation' },
+      { id: 'scheme_rejected', text: 'Scheme Rejected' },
+      { id: 'scheme_approved', text: 'Scheme Approved' },
+      { id: 'hold', text: 'Hold' },
+      { id: 'blocked', text: 'Blocked' },
+      { id: 'booked_tentative', text: 'Tentative Booked' },
+      { id: 'booked_confirmed', text: 'Confirmed Booked' },
+      { id: 'swap_requested', text: 'Swap Requested' },
+      { id: 'swapping', text: 'Swapping' },
+      { id: 'swapped', text: 'Swapped' },
+      { id: 'swap_rejected', text: 'Swap Rejected' },
+      { id: 'cancellation_requested', text: 'Cancellation Requested' },
+      { id: 'cancelling', text: 'Cancelling' },
+      { id: 'cancelled', text: 'Cancelled' },
+      { id: 'cancellation_rejected', text: 'Cancellation Rejected' }
+    ]
+  end
 
   def send_notification!
     message = "#{primary_user_kyc.name} just booked apartment #{project_unit.name} in #{project_unit.project_tower_name}"
