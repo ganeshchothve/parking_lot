@@ -6,6 +6,7 @@ class BookingDetail
   include SyncDetails
   include BookingDetailStateMachine
 
+
   field :primary_user_kyc_id, type: BSON::ObjectId
   field :status, type: String
   field :erp_id, type: String, default: ''
@@ -27,7 +28,7 @@ class BookingDetail
   has_many :receipts
   has_and_belongs_to_many :user_kycs
   has_many :smses, as: :triggered_by, class_name: 'Sms'
-  has_many :booking_detail_schemes, class_name: 'BookingDetailScheme', inverse_of: :booking_detail
+  has_many :booking_detail_schemes, class_name: 'BookingDetailScheme', inverse_of: :booking_detail,:dependent => :delete_all
   has_many :sync_logs, as: :resource
 
   validates :status, :primary_user_kyc_id, presence: true
@@ -74,6 +75,7 @@ class BookingDetail
   def booking_detail_scheme
     booking_detail_schemes.where(status: 'approved').first
   end
+
 
   def sync(erp_model, sync_log)
     Api::BookingDetailsSync.new(erp_model, self, sync_log).execute
