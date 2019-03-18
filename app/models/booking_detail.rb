@@ -5,7 +5,6 @@ class BookingDetail
   include InsertionStringMethods
   include BookingDetailStateMachine
   include SyncDetails
-  include BookingDetailStateMachine
 
   field :primary_user_kyc_id, type: BSON::ObjectId
   field :status, type: String

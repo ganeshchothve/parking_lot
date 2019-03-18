@@ -72,8 +72,6 @@ class Admin::UserRequestsController < AdminController
     @user_request.assign_attributes(permitted_user_request_attributes)
     @user_request.resolved_by = current_user
     @user_request.resolved_at = Time.now
-    @user_request.processing! if @user_request.event == 'processing'
-    @user_request.rejected! if @user_request.event == 'rejected'
     respond_to do |format|
       if @user_request.save
         format.html { redirect_to admin_user_requests_path(request_type: 'all'), notice: 'User Request was successfully updated.' }

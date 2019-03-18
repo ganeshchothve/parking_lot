@@ -18,9 +18,19 @@ FactoryBot.define do
     comments { Faker::String.random(5) }
     gateway_response nil
 
-    after(:build) do |receipt|
-      receipt.user = User.where(role: 'user').first if receipt.user.blank?
-      receipt.creator = User.first if receipt.creator.blank?
-    end
+    association :creator, factory: :user
+    association :account, factory: :razorpay_payment
+
   end
+
+
+  factory :check_payment, parent: :receipt do
+    issued_date { Date.today }
+    issuing_bank { "HDFC" }
+    payment_gateway { nil }
+    payment_mode { "cheque" }
+    processed_on { Date.today }
+    tracking_id { "test" }
+  end
+
 end

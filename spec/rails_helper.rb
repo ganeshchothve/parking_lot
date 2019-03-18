@@ -65,6 +65,7 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::TestHelpers, type: :view
   config.include Requests::JsonHelpers, type: :controller
+  config.include Booking, type: :controller
   config.include Requests::AuthenticateUser, type: :controller
   config.include Shoulda::Matchers::ActionController, type: :controller
   config.include Warden::Test::Helpers

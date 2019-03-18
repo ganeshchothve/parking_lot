@@ -10,6 +10,10 @@ class UserRequestObserver < Mongoid::Observer
     end
   end
 
+  def after_save user_request
+    user_request.send(user_request.event) if user_request.event.present?
+  end
+
   def after_create user_request
     if user_request.status == 'pending'
       user = user_request.user

@@ -28,9 +28,9 @@
         <div class="form-group">
           <%= f.label :status, class: 'label-required' %>
           <% if policy([current_user_role_group, (@user_request)]).editable_field?("status") %>
-            <%= f.select :event, UserRequest.available_statuses.reject{|x| x[:id] == "failed"}.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', required: "required" %>
+            <%= f.select :event, UserRequest::STATUS.collect{|urs| [t("user_requests.status.#{urs}"), urs, { disabled: urs == 'failed' } ]}, {prompt: true}, class: 'selectize', required: "required" %>
           <% else %>
-            <h6><%= f.object.class.available_statuses.find{|x| x[:id] == f.object.status}[:text] %></h6>
+            <h6><%= t("user_requests.status.#{f.object.status}") %></h6>
           <% end %>
         </div>
         <% if @user_request.status == "failed" %>

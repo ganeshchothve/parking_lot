@@ -4,7 +4,7 @@ FactoryBot.define do
   status {"draft"}
 
    after(:build) do |booking_detail|
-      booking_detail.project_unit ||= ProjectUnit.desc(:created_at).first || create(:project_unit)
+      booking_detail.project_unit ||= ProjectUnit.where(status: 'available').desc(:created_at).first || create(:project_unit)
     end
   end
 end

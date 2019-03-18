@@ -17,7 +17,7 @@ class Buyer::UserRequestPolicy < UserRequestPolicy
 
   def permitted_attributes(_params = {})
     attributes = []
-    if record.status == 'pending' && user.buyer?
+    if record.status == 'pending'
       attributes += %i[receipt_id user_id]
       attributes += %i[project_unit_id booking_detail_id event] if record.new_record?
       attributes += [notes_attributes: Buyer::NotePolicy.new(user, Note.new).permitted_attributes]
