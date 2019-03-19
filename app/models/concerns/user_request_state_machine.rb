@@ -12,7 +12,7 @@ module UserRequestStateMachine
         transitions from: :pending, to: :pending
       end
 
-      event :processing, after: :moved_booking_detail_into_processing do
+      event :processing, after: :update_booking_detail_to_cancelling do
         transitions from: :pending, to: :processing
       end
 
@@ -23,31 +23,22 @@ module UserRequestStateMachine
 
       event :rejected do
         transitions from: :rejected, to: :rejected
-        transitions from: :pending, to: :rejected, after: :moved_booking_detail_into_rejected
+        transitions from: :pending, to: :rejected, after: :update_booking_detail_to_cancellation_rejected
         transitions from: :processing, to: :rejected
       end
     end
 
-    def moved_booking_detail_into_rejected
+    def update_booking_detail_to_cancellation_rejected
       booking_detail.cancellation_rejected!
-      # ProjectUnitCancelService.new(self).reject if pending?
-    end
-
-    def update_booking_detail_to_cancelled
-      booking_detail.cancelled! # if self.type == 'cancellation'
     end
 
     def update_booking_detail_to_cancellation_requested
       booking_detail.cancellation_requested! # if self.type == 'cancellation'
     end
 
-    def moved_booking_detail_into_processing
-      self.booking_detail.cancelling!
+    def update_booking_detail_to_cancelling
+      booking_detail.current_user_request = self
+      booking_detail.cancelling!
     end
-
-    # def update_booking_detail_to_cancelling
-    #   booking_detail.cancelling! unless booking_detail.cancelled?
-    #   ProjectUnitCancelService.new(self).resolve
-    # end
   end
 end
