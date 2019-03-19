@@ -5,7 +5,6 @@ module UserRequestStateMachine
     attr_accessor :event
     aasm column: :status do
       state :pending, initial: true
-
       state :processing, :resolved, :rejected
 
       event :pending, after: :update_booking_detail_to_cancellation_requested do
@@ -29,6 +28,7 @@ module UserRequestStateMachine
     end
 
     def update_booking_detail_to_cancellation_rejected
+      # SANKET
       booking_detail.cancellation_rejected!
     end
 

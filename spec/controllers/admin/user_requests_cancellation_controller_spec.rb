@@ -97,7 +97,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
           patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: user_request.id }
           # expect(ProjectUnitCancelWorker.jobs.size).to eq(1)
           expect(booking_detail.receipts.first.reload.status).to eq('success')
-          # expect(user_request.reload.status).to eq('rejected')
+          expect(user_request.reload.status).to eq('rejected')
           expect(booking_detail.reload.status).to eq('blocked')
         end
 
@@ -112,7 +112,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
           patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: user_request.id }
           # expect(ProjectUnitCancelWorker.jobs.size).to eq(1)
           expect(receipt.reload.status).to eq('clearance_pending')
-          # expect(user_request.reload.status).to eq('rejected')
+          expect(user_request.reload.status).to eq('rejected')
           expect(booking_detail.reload.status).to eq('blocked')
           expect(Receipt.count).to eq(count)
         end
@@ -128,7 +128,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
           Receipt.any_instance.stub(:errors).and_return(ActiveModel::Errors.new(Receipt.new).tap { |e| e.add(:payment_mode, 'cannot be nil') })
           patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: user_request.id }
           expect(receipt.reload.status).to eq('clearance_pending')
-          # expect(user_request.reload.status).to eq('rejected')
+          expect(user_request.reload.status).to eq('rejected')
           expect(booking_detail.reload.status).to eq('blocked')
           expect(Receipt.count).to eq(count)
         end
@@ -143,9 +143,22 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
           patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: user_request.id }
           expect(receipt.reload.status).to eq('pending')
           expect(receipt.project_unit.reload.present?).to eq(true)
-          # expect(user_request.reload.status).to eq('rejected')
+          expect(user_request.reload.status).to eq('rejected')
           expect(booking_detail.reload.status).to eq('blocked')
         end
+      end
+
+      it 'project unit make available failed' do
+        booking_detail = book_project_unit(@user)
+        user_request = create(:pending_user_request_cancellation, project_unit_id: booking_detail.project_unit_id, user_id: booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: booking_detail.id, event: 'pending')
+        user_request_params = { event: 'processing', user_id: @user.id }
+        ProjectUnit.any_instance.stub(:save).and_return false
+        ProjectUnit.any_instance.stub(:errors).and_return(ActiveModel::Errors.new(ProjectUnit.new).tap { |e| e.add(:name, 'invalid') })
+        patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: user_request.id }
+        # expect(ProjectUnitCancelWorker.jobs.size).to eq(1)
+        expect(booking_detail.reload.status).to eq('blocked')
+        expect(booking_detail.project_unit.status).to eq('blocked')
+        expect(user_request.reload.status).to eq('rejected')
       end
     end
   end

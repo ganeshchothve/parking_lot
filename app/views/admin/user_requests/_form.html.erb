@@ -26,9 +26,14 @@
         <% rescue ActionView::MissingTemplate %>
         <% end %>
         <div class="form-group">
-          <%= f.label :status, class: 'label-required' %>
-          <% if policy([current_user_role_group, (@user_request)]).editable_field?("status") %>
-            <%= f.select :event, UserRequest::STATUS.collect{|urs| [t("user_requests.status.#{urs}"), urs, { disabled: urs == 'failed' } ]}, {prompt: true}, class: 'selectize', required: "required" %>
+          <%= f.label :status, class: 'label-required' %><br/>
+          <% if policy([current_user_role_group, (@user_request)]).editable_field?("event") %>
+            <% if @user_request.new_record? %>
+             <%= t("user_requests.status.#{f.object.status}") %>
+             <% f.hidden_field :event, value: "pending" %>
+            <% else %>
+              <%= f.select :event, @user_request.aasm.events.map(&:name), {prompt: true}, class: 'selectize', required: "required" %>
+            <% end %>
           <% else %>
             <h6><%= t("user_requests.status.#{f.object.status}") %></h6>
           <% end %>

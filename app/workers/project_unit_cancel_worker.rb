@@ -98,23 +98,20 @@ class ProjectUnitCancelWorker
     end
   end
 
-  def revert_project_unit_state; end
-
   def resolve
     arr = []
     error_messages = ''
     error_messages = update_receipts(arr, error_messages)
-
     if error_messages.blank?
       can_update_project_unit_to_available? ? error_messages = update_project_unit_to_available(error_messages) : error_messages = ['Project Unit unavailable']
     end
+    #user_request.processing! # TO REMOVE , kept to see that rspecs work
     if error_messages.blank?
       booking_detail.cancel!
     else
       revert_updated_receipts(arr)
-      # revert_project_unit_state if can_update_project_unit_to_available?
+      user_request.reason_for_failure = error_messages
       booking_detail.cancellation_rejected!
-      Note.create(note: error_messages, notable: booking_detail)
     end
   end
 end

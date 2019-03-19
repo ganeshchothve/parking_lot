@@ -19,7 +19,7 @@
               <% user_requests.each do |d| %>
               <tr>
                 <td><%= d[:_type].split("::").last.titleize %></td>
-                <td><%= UserRequest.available_statuses.find{|x| x[:id] == d[:status]}[:text] %></td>
+                <td><%= UserRequest::STATUS.collect.find{|x| x == d[:status]}%></td>
                 <td class="text-right"><%= d[:count] %></td>
               </tr>
               <% end %>
