@@ -18,7 +18,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
 
   def create?
     valid = new? && online_account_present?
-    if valid && !['admin','sales','sales_admin', 'channel_partner', 'superadmin'].include?(user.role)
+    if valid && !['admin','sales','sales_admin', 'channel_partner', 'superadmin', 'crm'].include?(user.role)
       @condition = 'not_authorised'
       valid = false
     end
