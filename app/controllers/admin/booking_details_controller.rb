@@ -49,9 +49,6 @@ class Admin::BookingDetailsController < AdminController
   end
 
   def send_under_negotiation 
-    _project_unit = @booking_detail.project_unit
-    _project_unit.status = 'blocked'
-    _project_unit.save
     @booking_detail.under_negotiation!
     respond_to do |format|
       format.html { redirect_to admin_user_path(@booking_detail.user.id) }

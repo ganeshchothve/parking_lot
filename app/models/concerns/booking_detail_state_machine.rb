@@ -115,6 +115,9 @@ module BookingDetailStateMachine
     end
     
     def after_under_negotiation
+      _project_unit = self.project_unit
+      _project_unit.status = 'blocked'
+      _project_unit.save
       pubs = ProjectUnitBookingService.new(self.project_unit.id)
       booking_detail_scheme = pubs.create_or_update_booking_detail_scheme self if self.booking_detail_schemes.empty?
       booking_detail_scheme.approved! if booking_detail_scheme.present? &&booking_detail_scheme.status != 'approved'
