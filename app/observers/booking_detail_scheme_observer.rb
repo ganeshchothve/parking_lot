@@ -37,7 +37,7 @@ class BookingDetailSchemeObserver < Mongoid::Observer
     end
   end
   def after_update booking_detail_scheme
-    booking_detail_scheme.booking_detail.after_under_negotiation
+    booking_detail_scheme.booking_detail.aft_under_negotiation
   end
 
   def after_save booking_detail_scheme

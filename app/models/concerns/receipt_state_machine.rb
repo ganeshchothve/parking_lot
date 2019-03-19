@@ -70,15 +70,8 @@ module ReceiptStateMachine
         _project_unit.status = 'blocked'
         _project_unit.save
       end
-      _booking_detail = self.booking_detail        
-      if _booking_detail.present?          
-        if _booking_detail.aasm.current_state == :scheme_approved 
-          _booking_detail.blocked! if _booking_detail.can_blocked?  
-        elsif _booking_detail.aasm.current_state == :blocked  
-          _booking_detail.booked_tentative! if _booking_detail.can_booked_tentative?  
-        elsif _booking_detail.aasm.current_state == :booked_tentative 
-          _booking_detail.booked_confirmed! if _booking_detail.can_booked_confirmed?  
-        end
+      if self.booking_detail.present?
+        self.booking_detail.aft_under_negotiation
       end
     end
   end

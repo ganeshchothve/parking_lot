@@ -17,7 +17,7 @@
         <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Update Booking</a>
         <div class="dropdown-menu dropdown-menu-right">
           <% if Buyer::ProjectUnitPolicy.new(current_user, booking_detail.project_unit).edit? %>
-          <%= link_to "Update #{global_labels['user_kycs']}", edit_buyer_project_unit_path(booking_detail.project_unit), class: "modal-remote-form-link dropdown-item" %>
+            <%= link_to "Update #{global_labels['user_kycs']}", edit_buyer_project_unit_path(booking_detail.project_unit), class: "modal-remote-form-link dropdown-item" %>
           <% end %>
           <% if Buyer::ProjectUnitPolicy.new(current_user, booking_detail.project_unit).block? %>
             <a href="<%= checkout_user_search_path(current_user.get_search(project_unit.id)) %>" class="dropdown-item">
@@ -26,7 +26,6 @@
           <% elsif policy([ current_user_role_group, booking_detail.user.receipts.new(project_unit_id: booking_detail.project_unit.id)]).new? %>
             <%= link_to 'Pay Remaining Amount', new_buyer_project_unit_receipt_path(booking_detail.project_unit),class: "dropdown-item modal-remote-form-link" %>
           <% end %>
-          <% [UserRequest::Cancellation, UserRequest::Swap] if Rails.env.development? %>
           <% UserRequest.descendants.each do |klass| %>
             <% if policy([current_user_role_group, klass.new(user_id: booking_detail.user_id, project_unit_id: booking_detail.project_unit.id)]).new? %>
               <%
@@ -40,9 +39,8 @@
                 <%= global_labels["user_request_#{klass.model_name.element}"] %>
               </a>
             <% end %>
-          <% end %>
           <% if booking_detail.project_unit.assets.present? %>
-          <%= link_to "Images", "javascript:;", data: {toggle: "modal", target: "#floor_plan_modal_#{project_unit.id}"}, class: "dropdown-item" %>
+            <%= link_to "Images", "javascript:;", data: {toggle: "modal", target: "#floor_plan_modal_#{project_unit.id}"}, class: "dropdown-item" %>
           <% end %>
           <%= link_to "Cost Sheet", "javascript:;", data: {toggle: "modal", target: "#cost_sheet_modal_#{booking_detail.project_unit.id}"}, class: "dropdown-item" %>
           <%= link_to "Payment Schedule", "javascript:;", data: {toggle: "modal", target: "#payment_schedule_modal_#{booking_detail.project_unit.id}"}, class: "dropdown-item" %>
