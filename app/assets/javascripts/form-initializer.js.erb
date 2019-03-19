@@ -151,7 +151,7 @@ FormInitializer = (function(){
           },
           success: function(data, type, options){
             if(typeof callback == 'function'){
-              callback(_.map(data, function(a){ return { id: (a['id'] || a._id), name: (a['name'] || a['ds_name']) } }));
+              callback(_.map(data, function(a){ return { id: (a['id'] || a._id), name: (a['ds_name'] || a['name']) } }));
             }
           }
         });

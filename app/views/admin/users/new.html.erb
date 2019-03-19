@@ -1,5 +1,9 @@
 <% if @user.buyer? %>
-  <%= render 'selldo_form' %>
+  <% if current_client.selldo_client_id.present? && current_client.selldo_gre_form_id.present? && current_client.selldo_channel_partner_form_id.present? %>
+    <%= render 'selldo_form' %>
+  <% else %>
+    <%= render 'non_selldo_form' %>
+  <% end %>
 <% else %>
   <%= render 'form' %>
 <% end %>

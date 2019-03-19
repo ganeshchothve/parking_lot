@@ -37,6 +37,6 @@ class CustomPolicy < Struct.new(:user, :enable_users)
   end
 
   def self.custom_methods
-    %w[inventory emails smses audits referrals accounts phases sync_logs erp_models]
+    %w[inventory emails smses audits referrals accounts phases sync_logs erp_models].sort
   end
 end

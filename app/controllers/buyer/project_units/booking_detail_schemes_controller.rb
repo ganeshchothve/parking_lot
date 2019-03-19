@@ -1,6 +1,5 @@
-class BookingDetailSchemesController < ApplicationController
-  before_action :authenticate_user!
-  before_action :set_booking_detail
+class Buyer::ProjectUnits::BookingDetailSchemesController < BuyerController
+  # before_action :set_booking_detail
   before_action :set_project_unit
   before_action :set_scheme, except: [:index, :export, :new, :create]
   before_action :authorize_resource
@@ -45,7 +44,7 @@ class BookingDetailSchemesController < ApplicationController
     @scheme = pubs.create_or_update_booking_detail_scheme booking_detail
     @scheme.created_by = current_user
     @scheme.created_by_user = true
-    @scheme.assign_attributes(permitted_attributes(@scheme))
+    @scheme.assign_attributes(permitted_attributes([ current_user_role_group, @scheme]))
     if @scheme.payment_adjustments.present? && @scheme.payment_adjustments.last.new_record?
       @scheme.status = 'draft'
     else
@@ -106,10 +105,6 @@ class BookingDetailSchemesController < ApplicationController
     end
   end
 
-  def set_booking_detail
-    @booking_detail = BookingDetail.find(params[:booking_detail_id]) if params[:booking_detail_id].present?
-  end
-
   def set_project_unit
     @project_unit = ProjectUnit.find(params[:project_unit_id]) if params[:project_unit_id].present?
   end
@@ -126,13 +121,13 @@ class BookingDetailSchemesController < ApplicationController
 
   def authorize_resource
     if params[:action] == "index" || params[:action] == 'export'
-      authorize BookingDetailScheme
+      authorize [:buyer, BookingDetailScheme]
     elsif params[:action] == "new" || params[:action] == "create"
       project_unit_id = @project_unit.id if @project_unit.present?
       project_unit_id = @booking_detail.project_unit.id if @booking_detail.present? && project_unit_id.blank?
-      authorize BookingDetailScheme.new(created_by: current_user, project_unit_id: project_unit_id)
+      authorize [ :buyer, BookingDetailScheme.new(created_by: current_user, project_unit_id: project_unit_id) ]
     else
-      authorize @scheme
+      authorize [:buyer, @scheme]
     end
   end
 

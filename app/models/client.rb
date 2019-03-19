@@ -102,7 +102,7 @@ class Client
   has_one :gallery
   has_one :external_inventory_view_config, inverse_of: :booking_portal_client
 
-  validates :name, :allowed_bookings_per_user, :selldo_client_id, :selldo_form_id, :selldo_channel_partner_form_id, :selldo_gre_form_id, :helpdesk_email, :helpdesk_number, :notification_email, :notification_numbers, :sender_email, :email_domains, :booking_portal_domains, :registration_name, :website_link, :support_email, :support_number, :payment_gateway, :cin_number, :mailgun_private_api_key, :mailgun_email_domain, :sms_provider_username, :sms_provider_password, :sms_mask, presence: true
+  validates :name, :allowed_bookings_per_user, :helpdesk_email, :helpdesk_number, :notification_email, :notification_numbers, :sender_email, :email_domains, :booking_portal_domains, :registration_name, :website_link, :support_email, :support_number, :payment_gateway, :cin_number, :mailgun_private_api_key, :mailgun_email_domain, :sms_provider_username, :sms_provider_password, :sms_mask, presence: true
   validates :enable_actual_inventory, array: {inclusion: {allow_blank: true, in: Proc.new{ |client| User.available_roles(client).collect{|x| x[:id]} } }}
   validates :preferred_login, inclusion: {in: Proc.new{ Client.available_preferred_logins.collect{|x| x[:id]} } }
   validates :payment_gateway, inclusion: {in: Proc.new{ Client.available_payment_gateways.collect{|x| x[:id]} } }, allow_blank: true
@@ -140,58 +140,3 @@ class Client
     end
   end
 end
-
-=begin
-c = Client.new
-c.name = "Amura"
-c.selldo_client_id = "531de108a7a03997c3000002"
-c.selldo_form_id = "5abba073923d4a567f880952"
-c.selldo_gre_form_id = "5abba073923d4a567f880952"
-c.selldo_channel_partner_form_id = "5abba073923d4a567f880952"
-c.selldo_api_key = "bcdd92826cf283603527bd6d832d16c4"
-c.selldo_default_srd = "5a72c7a67c0dac7e854aca9e"
-c.selldo_cp_srd = "5a72c7a67c0dac7e854aca9e"
-c.helpdesk_number = "9922410908"
-c.helpdesk_email = "supriya@amuratech.com"
-c.ga_code = ""
-c.gtm_tag = ""
-c.notification_email = "supriya@amuratech.com"
-c.notification_numbers = "9552523663, 9011099941"
-c.email_domains = ["amuratech.com"]
-c.booking_portal_domains = ["bookingportal.withamura.com"]
-c.registration_name = "Amura Marketing Technologies Pvt. Ltd."
-c.website_link = "www.amuratech.com"
-c.cp_disclaimer = "CP Disclaimer"
-c.disclaimer = "End User Disclaimer"
-c.support_number = "9922410908"
-c.support_email = "supriya@amuratech.com"
-c.sender_email = "supriya@amuratech.com"
-c.channel_partner_support_number = "9922410908"
-c.channel_partner_support_email = "supriya@amuratech.com"
-c.cancellation_amount = 5000
-c.area_unit = "psqft."
-c.preferred_login = "phone"
-c.sms_provider_username = "amuramarketing"
-c.sms_provider_password = "aJ_Z-1j4"
-c.enable_actual_inventory = User.available_roles(c).collect{|x| x[:id]}
-c.enable_channel_partners = false
-c.enable_company_users = true
-c.remote_logo_url = "https://image4.owler.com/logo/amura_owler_20160227_194208_large.png"
-c.remote_mobile_logo_url = "https://image4.owler.com/logo/amura_owler_20160227_194208_large.png"
-c.allowed_bookings_per_user = 5
-c.cin_number = "CIN1234"
-c.mailgun_email_domain = "iris.sell.do"
-c.save
-
-p = Project.new
-p.name = "Amura Towers"
-p.remote_logo_url = "https://image4.owler.com/logo/amura_owler_20160227_194208_large.png"
-p.rera_registration_no = "RERA-AMURA-123"
-p.booking_portal_client = Client.first
-p.save
-
-u = User.new(first_name: "Ketan", last_name: "Sabnis", role: "admin", booking_portal_client: Client.first, email: "ketan@amuratech.com", phone: "+919552523663")
-u.confirm
-u.skip_confirmation_notification!
-u.save
-=end

@@ -11,12 +11,12 @@ FactoryBot.define do
     status 'pending'
     # tracking_id { Faker::String.random(5) } # online transaction reference from gateway or transaction id after the cheque is processed
     total_amount { Faker::Number.number(6) } # Total amount
-    # { ['success', 'clearance_pending', 'failed', 'available_for_refund', 'refunded', 'cancelled'].sample } # pending, success, failed, clearance_pending,cancelled
+    status { 'success' } # { ['success', 'clearance_pending', 'failed', 'available_for_refund', 'refunded', 'cancelled'].sample } # pending, success, failed, clearance_pending,cancelled
     status_message { Faker::String.random(5) } # pending, success, failed, clearance_pending
-    payment_gateway 'Razorpay'
+    payment_gateway { 'Razorpay' }
     # processed_on { Faker::Date.forward(23) }
     comments { Faker::String.random(5) }
-    gateway_response nil
+    # gateway_response nil
 
     after(:build) do |receipt|
       receipt.user = User.where(role: 'user').first if receipt.user.blank?

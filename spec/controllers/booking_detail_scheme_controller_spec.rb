@@ -11,7 +11,6 @@ RSpec.describe Admin::BookingDetailSchemesController, type: :controller do
       @project = create(:project, developer_id: @developer.id)
       @project_tower = create(:project_tower, project: @project)
       @project_unit = create(:project_unit, project_tower: @project_tower, project: @project )
-      @project_unit.status = 'draft'
       @project_unit.user = @user
       @project_unit.primary_user_kyc_id = kyc.id
       @project_unit.save
