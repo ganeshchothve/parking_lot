@@ -1,12 +1,26 @@
 # Create user erp model
-ErpModel.create(resource_class: 'User', domain: 'https://gerasb-gerasb.cs57.force.com', reference_key_name: 'sfdc_lead_id', url: 'EOIIRISCreateLead/services/apexrest/Integration/IRISLead/', request_type: :json, http_verb: 'post', reference_key_location: '', request_payload: '{api_key: "IRISzpfgh18qq1", last_name: "<%= record.last_name %>", first_name: "<%= record.first_name %>", api_source: "iris", iris_lead_id: "<%= record.id.to_s %>", primary_phone: "<%= record.phone %>", primary_email: "<%= record.email %>", lead_status: "open", medium_name: "web", first_enquiry_received_at: "<%= record.created_at.strftime(\'%Y-%m-%d\') %>", country_code_primary_phone: "+91",  Project_Interested: "demo project", LeadSource: "web", Sub_Source: "website", portal_stage: "Dashboard", portal_cp_id: "<%= record.manager.try(:erp_id) %>" }', is_active: true, action_name: 'create')
-# Update user erp model
-ErpModel.create(resource_class: 'User', domain: 'https://gerasb-gerasb.cs57.force.com', reference_key_name: 'sfdc_lead_id', url: 'EOIIRISLeadUpdate/services/apexrest/Integration/IRISUpdateLead/', request_type: :json, http_verb: 'post', reference_key_location: '', request_payload: '{ sfdc_lead_id: "<%= record.erp_id %>", iris_lead_id: "<%= record.id.to_s %>", api_key: "IRISzpfgh18qq1", portal_stage: "Dashboard", assign_manager: "<%= record.manager.try(:name) %>", sourcing_manager: "Surabh", attending_manager: "Vishal"}', is_active: true, action_name: 'update')
-# Create user kyc erp model
-# TODO: birthdate is mandatory in sfdc api - so need to handle it accordingly.
-ErpModel.create(resource_class: 'UserKyc', domain: 'https://gerasb-gerasb.cs57.force.com', reference_key_name: 'sfdc_lead_id', url: 'EOIIRISKYCDetails/services/apexrest/Integration/IRISKYCDetails', request_type: :json, http_verb: 'post', reference_key_location: '', request_payload: '{api_key: "IRISzpfgh18qq1", iris_lead_id: "<%= record.user.id.to_s %>", pan_card_number: "<%= record.pan_number %>", api_source: "iris", birthdate: "<%= record.dob %>", nationality: "Indian", house_number: "5", street: "MG Road", city: "Banglore", state: "Karnataka", country: "India", zip: "411048", aadhar_number: "<%= record.aadhaar %>", salutation: "<%= record.salutation %>", company_name: "<%= record.company_name %>", configuration_preference: "<%= record.configurations %>"}', is_active: true, action_name: 'create')
-# Create Channel Partner erp model
-# TODO: city, country, region & street are mandatory fields in sfdc api - handle it.
-ErpModel.create(resource_class: 'ChannelPartner', domain: 'https://gerasb-gerasb.cs57.force.com', reference_key_name: 'sfdc_lead_id', url: 'EOIIRISCP/services/apexrest/Integration/IRIS1CP', request_type: :json, http_verb: 'post', reference_key_location: '', request_payload: '{api_key: "IRISzpfgh18qq1", cp_id: "<%= record.id %>", first_name: "<%= record.first_name %>", last_name: "<%= record.last_name %>", mobile_phone: "<%= record.sfdc_phone %>", rera_id: "<%= record.rera_id %>", city: "<%= record.address.try(:city) %>", region: "<%= record.address.try(:state) %>", country: "<%= record.address.try(:country) %>", street: "<%= record.address.try(:address2) %>", title: "<%= record.title %>",street2: "",street3: "",house_number: "<%= record.address.try(:address1) %>", district: "Pune", postal_code: "<%= record.address.try(:zip) %>", email: "<%= record.email %>", company_name: "<%= record.company_name %>", pan_no: "<%= record.pan_number %>", gstin_no: "<%= record.gstin_number %>", bank_name: "<%= record.bank_detail.try(:name) %>", bank_beneficiary_account: "<%= record.bank_detail.try(:account_number) %>", bank_account_type: "<%= record.bank_detail.try(:account_type) %>", bank_address: "Baner Road", bank_city: "Pune", bank_postal_code: "423235", bank_region: "MAH", bank_country: "India", bank_ifsc_code: "<%= record.bank_detail.try(:ifsc_code) %>", bank_phone: ""}', is_active: true, action_name: 'create')
-# Create Receipt erp model
-ErpModel.create(resource_class: 'Receipt', domain: 'https://gerasb-gerasb.cs57.force.com', reference_key_name: 'sfdc_lead_id', url: 'IRISPaymentDetails/services/apexrest/Integration/IRISPaymentDetails', request_type: :json, http_verb: 'post', reference_key_location: '', request_payload: '{api_key: "IRISzpfgh18qq1", receipt_iris_id: "<%= record.id.to_s %>", payment_amount: "<%= record.total_amount %>", iris_lead_id: "<%= record.user.id.to_s %>", mode_of_transfer: "<%= record.payment_mode %>", primary_email: "<%= record.user.email %>", receipt_date: "<%= record.issued_date %>", instrument_no: "pay_A34Wnj2CQ29UUn", instrument_date: "2018-04-24", instrument_received_date: "2018-04-24", bank_name: "<%= record.issuing_bank %>", branch_name: "<%= record.issuing_bank_branch %>", payment_type: "Token", receipt_status: "<%= record.status %>"}', is_active: true, action_name: 'create')
+client = Client.new(name: "Amura", selldo_client_id: "531de108a7a03997c3000002", selldo_form_id: "5abba073923d4a567f880952", selldo_gre_form_id: "5abba073923d4a567f880952", selldo_channel_partner_form_id: "5abba073923d4a567f880952", selldo_api_key: "bcdd92826cf283603527bd6d832d16c4", selldo_default_srd: "5a72c7a67c0dac7e854aca9e", selldo_cp_srd: "5a72c7a67c0dac7e854aca9e", helpdesk_number: "9922410908", helpdesk_email: "sanket.r+sonigara@amuratech.com", ga_code: "", gtm_tag: "", notification_email: "sanket.r+sonigara@amuratech.com", notification_numbers: "9552523663, 9011099941", email_domains: ["amuratech.com"], booking_portal_domains: ["sonigara.bookingportal.withamura.com"], registration_name: "Sonigara", website_link: "www.amuratech.com", cp_disclaimer: "CP Disclaimer", disclaimer: "End User Disclaimer", support_number: "9922410908", support_email: "sanket.r+sonigara@amuratech.com", sender_email: "sanket.r+sonigara@amuratech.com", channel_partner_support_number: "9922410908", channel_partner_support_email: "sonigara.r+sonigara@amuratech.com", cancellation_amount: 5000, area_unit: "psqft.", preferred_login: "phone", sms_provider_username: "amuramarketing", sms_provider_password: "aJ_Z-1j4", enable_actual_inventory: ['admin'], enable_channel_partners: false, enable_company_users: true, remote_logo_url: "https://image4.owler.com/logo/amura_owler_20160227_194208_large.png", remote_mobile_logo_url: "https://image4.owler.com/logo/amura_owler_20160227_194208_large.png", allowed_bookings_per_user: 5, cin_number: "CIN1234", mailgun_email_domain: "iris.sell.do", mailgun_private_api_key: 'key-7dq3qw4xmctgtt0rtfyyg6mk3u-g2ke3')
+client.save
+
+project = Project.new(name: "Amura Towers", remote_logo_url: "https://image4.owler.com/logo/amura_owler_20160227_194208_large.png", rera_registration_no: "RERA-AMURA-123", booking_portal_client: client)
+project.save
+
+
+# number = 10000000000
+# i = 1
+# ['admin'].each do |email_name|
+#   %w(superadmin admin crm sales_admin sales user gre cp_admin cp management_user employee_user).each do |role|
+#     user = User.new(first_name: email_name, last_name: "Amuratech", role: role, booking_portal_client: Client.first, email: "#{email_name}+#{role}@amuratech.com", phone: (number + i), password: "amura123", confirmed_at: DateTime.now )
+#     user.skip_confirmation_notification!
+#     if user.save
+#       i += 1
+#       puts "Done - #{user.email}"
+#     else
+#       puts user.errors.as_json, role, email_name
+#     end
+#   end
+# end
+
+# DatabaseSeeds::ErpModelTemplate.seed
+# DatabaseSeeds::SmsTemplate.seed CLient.last.id
+# DatabaseSeeds::EmailTemplates.seed(Client.first.id)
