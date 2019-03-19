@@ -39,6 +39,7 @@
                 <%= global_labels["user_request_#{klass.model_name.element}"] %>
               </a>
             <% end %>
+          <% end %>
           <% if booking_detail.project_unit.assets.present? %>
             <%= link_to "Images", "javascript:;", data: {toggle: "modal", target: "#floor_plan_modal_#{project_unit.id}"}, class: "dropdown-item" %>
           <% end %>
