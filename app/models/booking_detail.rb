@@ -28,7 +28,7 @@ class BookingDetail
   has_many :receipts
   has_and_belongs_to_many :user_kycs
   has_many :smses, as: :triggered_by, class_name: 'Sms'
-  has_many :booking_detail_schemes, class_name: 'BookingDetailScheme', inverse_of: :booking_detail,:dependent => :destroy_all
+  has_many :booking_detail_schemes, class_name: 'BookingDetailScheme', inverse_of: :booking_detail,:dependent => :destroy
   has_many :sync_logs, as: :resource
 
   validates :status, :primary_user_kyc_id, presence: true
