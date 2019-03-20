@@ -407,7 +407,7 @@ class User
       generate_confirmation_token!
     end
     opts = {}
-    opts = if pending_reconfirmation?
+    if pending_reconfirmation?
       opts[:to] = unconfirmed_email
       opts[:manager_id] = self.manager_id if self.buyer?
     end
