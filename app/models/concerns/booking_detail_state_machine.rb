@@ -115,22 +115,21 @@ module BookingDetailStateMachine
     end
     
     def aft_under_negotiation
-      _project_unit = self.project_unit
-      _project_unit.status = 'blocked'
-      _project_unit.save
       pubs = ProjectUnitBookingService.new(self.project_unit.id)
       booking_detail_scheme = pubs.create_or_update_booking_detail_scheme self if self.booking_detail_schemes.empty?
       booking_detail_scheme.approved! if booking_detail_scheme.present? &&booking_detail_scheme.status != 'approved'
-      if self.aasm.current_state == 'under_negotiation'
+      if self.aasm.current_state == :under_negotiation
         self.scheme_approved!
-        self.scheme_rejected!  if self.aasm.current_state == 'under_negotiation'
+        _project_unit = self.project_unit
+        _project_unit.status = 'blocked'
+        _project_unit.save
       else
         self.aft_scheme_approved
       end
     end
 
     def aft_scheme_approved
-      if self.aasm.current_state == 'scheme_approved'
+      if self.aasm.current_state == :scheme_approved
         self.blocked!
       else
         self.aft_blocked
@@ -138,7 +137,7 @@ module BookingDetailStateMachine
     end
 
     def aft_blocked
-      if self.aasm.current_state == 'blocked'
+      if self.aasm.current_state == :blocked
         self.booked_tentative!
       else
         self.aft_booked_tentative
@@ -158,15 +157,15 @@ module BookingDetailStateMachine
     end
 
     def can_blocked?
-      true if self.receipts.in(status: %w[success clearance_pending]).sum{|receipt| receipt.total_amount} >= self.project_unit.blocking_amount
-    end
+      true if self.receipts.in(status: %w[success clearance_pending]).sum{|receipt| receipt.total_amount} >= self.project_unit.blocking_amount && self.booking_detail_scheme.present?
+    end 
 
     def can_booked_tentative?
-      true if self.receipts.in(status: %w[success clearance_pending]).sum{|receipt| receipt.total_amount} > self.project_unit.blocking_amount
+      true if self.receipts.in(status: %w[success clearance_pending]).sum{|receipt| receipt.total_amount} > self.project_unit.blocking_amount && self.booking_detail_scheme.present?
     end
     
     def can_booked_confirmed?
-      true if self.receipts.in(status: %w[success clearance_pending]).sum{|receipt| receipt.total_amount} >= self.project_unit.booking_price
+      true if self.receipts.in(status: %w[success clearance_pending]).sum{|receipt| receipt.total_amount} >= self.project_unit.booking_price && self.booking_detail_scheme.present?
     end
   end
 end

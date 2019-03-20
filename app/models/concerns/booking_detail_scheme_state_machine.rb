@@ -9,6 +9,7 @@ module BookingDetailSchemeStateMachine
 
       event :draft do
         transitions from: :draft, to: :draft
+        transitions from: :approved, to: :draft 
       end
 
       event :approved do

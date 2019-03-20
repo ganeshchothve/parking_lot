@@ -1,6 +1,5 @@
 class BookingDetailSchemeObserver < Mongoid::Observer
   def before_validation booking_detail_scheme
-    booking_detail_scheme.send(booking_detail_scheme.event) if booking_detail_scheme.event.present?
     booking_detail_scheme.project_unit_id = booking_detail_scheme.booking_detail.project_unit_id if booking_detail_scheme.project_unit_id.blank?
     booking_detail_scheme.user_id = booking_detail_scheme.booking_detail.user_id if booking_detail_scheme.user_id.blank? && booking_detail_scheme.booking_detail.present?
   end
@@ -37,17 +36,17 @@ class BookingDetailSchemeObserver < Mongoid::Observer
     end
   end
   def after_update booking_detail_scheme
-    booking_detail_scheme.booking_detail.aft_under_negotiation
+    booking_detail_scheme.booking_detail.under_negotiation!
   end
 
   def after_save booking_detail_scheme
     project_unit = booking_detail_scheme.project_unit
     if booking_detail_scheme.status_changed? && booking_detail_scheme.status == "approved" && booking_detail_scheme.booking_detail.present?
 
-      if booking_detail_scheme.status_was == "under_negotiation"
-        project_unit = booking_detail_scheme.project_unit
-        project_unit.process_scheme!
-      end
+      # if booking_detail_scheme.status_was == "under_negotiation"
+      #   project_unit = booking_detail_scheme.project_unit
+      #   project_unit.process_scheme!
+      # end
 
       booking_detail_scheme.booking_detail.booking_detail_schemes.where(status: "approved", id: {"$ne" => booking_detail_scheme.id}).each do |scheme|
         scheme.event = "disabled"
