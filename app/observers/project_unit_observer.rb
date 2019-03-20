@@ -102,9 +102,9 @@ class ProjectUnitObserver < Mongoid::Observer
 
       if Receipt.where(project_unit_id: project_unit.id).blank?
         receipt = user.unattached_blocking_receipt project_unit.booking_portal_client.blocking_amount
-
         if receipt.present?
           receipt.project_unit_id = project_unit.id
+          receipt.processed_on = Date.today
           receipt.save!
         end
       end

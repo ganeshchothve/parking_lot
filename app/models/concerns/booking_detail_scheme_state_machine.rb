@@ -9,16 +9,17 @@ module BookingDetailSchemeStateMachine
 
       event :draft do
         transitions from: :draft, to: :draft
+        transitions from: :approved, to: :draft 
       end
 
-      event :approved, after: :after_approved do
+      event :approved do
         transitions from: :approved, to: :approved
         transitions from: :draft, to: :approved, if: :booking_detail_present?
       end
 
       event :rejected do
         transitions from: :rejected, to: :rejected
-        transitions from: :draft, to: :rejected, if: :other_approved_scheme_present?
+        transitions from: :draft, to: :rejected
         transitions from: :approved, to: :rejected, if: :other_approved_scheme_present?
       end
 
@@ -34,10 +35,6 @@ module BookingDetailSchemeStateMachine
 
     def other_approved_scheme_present?
       BookingDetailScheme.where(project_unit_id: self.project_unit_id, user_id: self.user_id, status: "approved").count > 1
-    end
-
-    def after_approved
-      self.booking_detail.after_under_negotiation
     end
   end
 end

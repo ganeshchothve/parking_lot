@@ -222,55 +222,56 @@ class ProjectUnit
     (status == 'hold' && user_id == user.id) || user_based_status(user) == 'available'
   end
 
-  def process_payment!(receipt)
-    if %w[success clearance_pending].include?(receipt.status)
-      if ProjectUnit.booking_stages.include?(status) || can_block?(receipt.user) || (status == 'under_negotiation' && user_id == receipt.user_id)
-        if scheme.status == 'approved'
-          self.status = if pending_balance(strict: true) <= 0
-                          'booked_confirmed'
-                        elsif total_amount_paid > blocking_amount
-                          'booked_tentative'
-                        else
-                          'blocked'
-                        end
-        elsif scheme.status == 'under_negotiation'
-          self.status = 'under_negotiation'
-        else
-          # kept this unit status as hold.
-        end
-      else
-        receipt.project_unit_id = nil
-        receipt.save
-      end
-      # Send payments data to Sell.Do CRM
-      # SelldoReceiptPusher.perform_async(receipt.id.to_s, Time.now.to_i)
-    elsif receipt.status == 'failed'
-      # if the unit has any successful or clearance_pending payments other than this, we keep it still blocked
-      # else we just release the unit
-      if pending_balance == booking_price # not success or clearance_pending receipts tagged against this unit
-        if status == 'hold'
-          make_available
-        else
-          # TODO: we should display a message on the UI before someone marks the receipt as 'failed'. Because the unit might just get released
-          self.status = 'error'
-        end
-      end
-    end
-    save(validate: false)
-  end
+  # def process_payment!(receipt)
+  #   debugger
+  #   if %w[success clearance_pending].include?(receipt.status)
+  #     if ProjectUnit.booking_stages.include?(status) || can_block?(receipt.user) || (status == 'under_negotiation' && user_id == receipt.user_id)
+  #       if scheme.status == 'approved'
+  #         self.status = if pending_balance(strict: true) <= 0
+  #                         'booked_confirmed'
+  #                       elsif total_amount_paid > blocking_amount
+  #                         'booked_tentative'
+  #                       else
+  #                         'blocked'
+  #                       end
+  #       elsif scheme.status == 'under_negotiation'
+  #         self.status = 'under_negotiation'
+  #       else
+  #         # kept this unit status as hold.
+  #       end
+  #     else
+  #       receipt.project_unit_id = nil
+  #       receipt.save
+  #     end
+  #     # Send payments data to Sell.Do CRM
+  #     # SelldoReceiptPusher.perform_async(receipt.id.to_s, Time.now.to_i)
+  #   elsif receipt.status == 'failed'
+  #     # if the unit has any successful or clearance_pending payments other than this, we keep it still blocked
+  #     # else we just release the unit
+  #     if pending_balance == booking_price # not success or clearance_pending receipts tagged against this unit
+  #       if status == 'hold'
+  #         make_available
+  #       else
+  #         # TODO: we should display a message on the UI before someone marks the receipt as 'failed'. Because the unit might just get released
+  #         self.status = 'error'
+  #       end
+  #     end
+  #   end
+    #save(validate: false)
+  # end
 
-  def process_scheme!
-    if status == 'under_negotiation' && scheme.status == 'approved'
-      if pending_balance(strict: true) <= 0
-        self.status = 'booked_confirmed'
-      elsif total_amount_paid > blocking_amount
-        self.status = 'booked_tentative'
-      elsif total_tentative_amount_paid >= blocking_amount
-        self.status = 'blocked'
-      end
-      save(validate: false)
-    end
-  end
+  # def process_scheme!
+  #   if status == 'under_negotiation' && scheme.status == 'approved'
+  #     if pending_balance(strict: true) <= 0
+  #       self.status = 'booked_confirmed'
+  #     elsif total_amount_paid > blocking_amount
+  #       self.status = 'booked_tentative'
+  #     elsif total_tentative_amount_paid >= blocking_amount
+  #       self.status = 'blocked'
+  #     end
+  #     save(validate: false)
+  #   end
+  # end
 
   def self.build_criteria(params = {})
     selector = {}
@@ -377,7 +378,7 @@ class ProjectUnit
   end
 
   def pending_booking_detail_scheme
-    if %w[hold under_negotiation].include?(status) || self.class.booking_stages.include?(status)
+    if %w[hold].include?(status) || self.class.booking_stages.include?(status)
       booking_detail_scheme
     end
   end

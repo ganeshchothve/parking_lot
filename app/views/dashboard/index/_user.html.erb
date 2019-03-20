@@ -59,12 +59,12 @@
           </div>
         <% end %>
         <div class="mt-3"></div>
-        <% current_user.project_units.where(status: 'hold').each do |project_unit| %>
-          <%= render 'dashboard/project_unit_overview', {project_unit: project_unit, with_actions: true} %>
+        <% current_user.booking_details.where(status: 'hold').each do |booking_detail| %>
+          <%= render 'dashboard/booking_detail_overview', {booking_detail: booking_detail, with_actions: true} %>
           <div class="mt-3"></div>
         <% end %>
-        <% current_user.project_units.ne(status: 'hold').each do |project_unit| %>
-          <%= render 'dashboard/project_unit_overview', {project_unit: project_unit, with_actions: true} %>
+        <% current_user.booking_details.not_in(status: ['hold','cancelled','swapped']).each do |booking_detail| %>
+          <%= render 'dashboard/booking_detail_overview', {booking_detail: booking_detail, with_actions: true} %>
           <div class="mt-3"></div>
         <% end %>
         <% if Buyer::ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: current_user, status: "available")).hold? %>

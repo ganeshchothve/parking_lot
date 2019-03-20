@@ -45,15 +45,16 @@ class Buyer::ProjectUnits::BookingDetailSchemesController < BuyerController
     @scheme.created_by = current_user
     @scheme.created_by_user = true
     @scheme.assign_attributes(permitted_attributes([ current_user_role_group, @scheme]))
-    if @scheme.payment_adjustments.present? && @scheme.payment_adjustments.last.new_record?
-      @scheme.status = 'draft'
-    else
-      @scheme.approved if @scheme.derived_from_scheme.status == 'approved'
-    end
     modify_params
+    @scheme.send(@scheme.event) if @scheme.event.present?
+    if @scheme.payment_adjustments.present? && @scheme.payment_adjustments.last.new_record?
+      @scheme.draft!
+    else
+      @scheme.approved! if @scheme.derived_from_scheme.status == 'approved'
+    end
     respond_to do |format|
       if @scheme.save
-        format.html { redirect_to request.referrer, notice: 'Scheme registered successfully and sent for approval.' }
+        format.html { redirect_to request.referrer , notice: 'Scheme registered successfully and sent for approval.' }
         format.json { render json: @scheme, status: :created }
       else
         format.html { render :new }
@@ -83,6 +84,7 @@ class Buyer::ProjectUnits::BookingDetailSchemesController < BuyerController
   def update
     modify_params
     @scheme.assign_attributes(permitted_attributes(@scheme))
+    @scheme.send(@scheme.event) if @scheme.event.present? 
     @scheme.status = 'draft' if @scheme.payment_adjustments.present? && @scheme.payment_adjustments.last.new_record?
     @scheme.approved_by = current_user if @scheme.event.present? && @scheme.event == 'approved'
     respond_to do |format|
