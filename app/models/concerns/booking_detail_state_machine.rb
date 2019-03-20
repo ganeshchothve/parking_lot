@@ -37,19 +37,19 @@ module BookingDetailStateMachine
         # transitions from: :user_kyc, to: :hold
       end
 
-      event :under_negotiation, after: :aft_under_negotiation do
+      event :under_negotiation, after: :aft_under_negotiation, before: :bef_under_negotiation do
         transitions from: :under_negotiation, to: :under_negotiation
         transitions from: :hold, to: :under_negotiation
       end
 
       event :scheme_approved, after: :aft_scheme_approved do
         transitions from: :scheme_approved, to: :scheme_approved
-        transitions from: :under_negotiation, to: :scheme_approved, guard: :can_scheme_approved? 
+        transitions from: :under_negotiation, to: :scheme_approved 
       end
 
       event :scheme_rejected do
         transitions from: :scheme_rejected, to: :scheme_rejected
-        transitions from: :under_negotiation, to: :scheme_rejected, guard: :can_scheme_rejected?
+        transitions from: :under_negotiation, to: :scheme_rejected
       end
 
       event :blocked, after: :aft_blocked do
@@ -114,13 +114,19 @@ module BookingDetailStateMachine
       # end
     end
     
-    def aft_under_negotiation
+    def bef_under_negotiation
       pubs = ProjectUnitBookingService.new(self.project_unit.id)
       booking_detail_scheme = pubs.create_or_update_booking_detail_scheme self if self.booking_detail_schemes.empty?
       booking_detail_scheme.approved! if booking_detail_scheme.present? &&booking_detail_scheme.status != 'approved'
+    end
+    def aft_under_negotiation
+      
       if self.aasm.current_state == :under_negotiation
-        self.scheme_approved!
-        self.scheme_rejected! if self.aasm.current_state == :under_negotiation
+        if self.booking_detail_scheme.present?
+          self.scheme_approved!
+        elsif (!self.booking_detail_scheme.present?) && (self.booking_detail_schemes.distinct(:status).include? "rejected")
+          self.scheme_rejected! 
+        end
         _project_unit = self.project_unit
         _project_unit.status = 'blocked'
         _project_unit.save
@@ -147,14 +153,6 @@ module BookingDetailStateMachine
 
     def aft_booked_tentative
       self.booked_confirmed!
-    end
-
-    def can_scheme_approved? 
-      true if self.booking_detail_scheme.present?
-    end
-
-    def can_scheme_rejected?
-      true if (!self.booking_detail_scheme.present?) && (self.booking_detail_schemes.distinct(:status).include? "rejected")
     end
 
     def can_blocked?
