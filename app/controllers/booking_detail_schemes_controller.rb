@@ -55,7 +55,7 @@ class BookingDetailSchemesController < ApplicationController
     end
     respond_to do |format|
       if @scheme.save
-        format.html { redirect_to root_path, notice: 'Scheme registered successfully and sent for approval.' }
+        format.html { redirect_to request.referrer , notice: 'Scheme registered successfully and sent for approval.' }
         format.json { render json: @scheme, status: :created }
       else
         format.html { render :new }

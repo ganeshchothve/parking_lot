@@ -120,6 +120,7 @@ module BookingDetailStateMachine
       booking_detail_scheme.approved! if booking_detail_scheme.present? &&booking_detail_scheme.status != 'approved'
       if self.aasm.current_state == :under_negotiation
         self.scheme_approved!
+        self.scheme_rejected! if self.aasm.current_state == :under_negotiation
         _project_unit = self.project_unit
         _project_unit.status = 'blocked'
         _project_unit.save
@@ -153,7 +154,7 @@ module BookingDetailStateMachine
     end
 
     def can_scheme_rejected?
-      true if self.booking_detail_scheme.status != 'approved'
+      true if (!self.booking_detail_scheme.present?) && (self.booking_detail_schemes.distinct(:status).include? "rejected")
     end
 
     def can_blocked?
