@@ -8,9 +8,12 @@ class User
   include ApplicationHelper
   include SyncDetails
 
+  # Constants
+  ALLOWED_UTM_KEYS = %i[campaign source sub_source content medium term]
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, authentication_keys: [:login] #:registerable Disabling registration because we always create user after set up sell.do
+  devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, authentication_keys: [:login]
 
   ## Database authenticatable
   field :first_name, type: String, default: ''
@@ -88,9 +91,9 @@ class User
   attr_accessor :login, :login_otp
 
   belongs_to :booking_portal_client, class_name: 'Client', inverse_of: :users
+  belongs_to :referred_by, class_name: 'User', optional: true
   belongs_to :manager, class_name: 'User', optional: true
   belongs_to :channel_partner, optional: true
-  belongs_to :referred_by, class_name: 'User', optional: true
   has_many :receipts
   has_many :project_units
   has_many :booking_details
@@ -105,10 +108,10 @@ class User
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :emails, as: :triggered_by, class_name: 'Email'
   has_many :referrals, class_name: 'User', foreign_key: :referred_by_id
+  has_and_belongs_to_many :schemes
   has_many :sync_logs, as: :resource
   has_many :logs, class_name: 'SyncLog', inverse_of: :user_reference
   embeds_many :portal_stages
-  accepts_nested_attributes_for :portal_stages # , reject_if: :all_blank
 
   validates :first_name, :role, presence: true
   validates :phone, uniqueness: true, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile] }, if: proc { |user| user.email.blank? }
@@ -123,6 +126,13 @@ class User
   def unattached_blocking_receipt(blocking_amount = nil)
     blocking_amount ||= current_client.blocking_amount
     Receipt.where(user_id: id).in(status: %w[success clearance_pending]).where(project_unit_id: nil).where(total_amount: { "$gte": blocking_amount }).first
+  end
+
+  def set_utm_params(cookies)
+    ALLOWED_UTM_KEYS.each do |key|
+      utm_params.store(key, cookies[key]) if cookies[key].present?
+    end
+    utm_params
   end
 
   def total_amount_paid
@@ -384,6 +394,24 @@ class User
 
   def sync(erp_model, sync_log)
     Api::UserDetailsSync.new(erp_model, self, sync_log).execute if self.buyer?
+  end
+
+  # IRIS-75 Need to send manager_id in request.
+  def send_confirmation_instructions
+    UserConfirmationEmailWorker.perform_async(id.to_s)
+  end
+
+  # This is sub part of send_confirmation_instructions for delay this method is used
+  def _send_confirmation_instruction
+    unless @raw_confirmation_token
+      generate_confirmation_token!
+    end
+    opts = {}
+    opts = if pending_reconfirmation?
+      opts[:to] = unconfirmed_email
+      opts[:manager_id] = self.manager_id if self.buyer?
+    end
+    send_devise_notification(:confirmation_instructions, @raw_confirmation_token, opts)
   end
 
   private

@@ -24,6 +24,10 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
     export?
   end
 
+  def asset_create?
+    %w[superadmin admin].include?(user.role)
+  end
+
   def hold?
     valid = record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?(user)
     if !valid
@@ -50,7 +54,7 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
       @condition = "user_kyc_allowed_bookings"
       return
     end
-    
+
     _role_based_check(valid)
   end
 
@@ -67,6 +71,7 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
     if %w[superadmin admin].include?(user.role) && ProjectUnit.booking_stages.exclude?(record.status) && record.status != 'hold'
       attributes += [:name, :agreement_price, :all_inclusive_price, :status, :available_for, :blocked_on, :auto_release_on, :held_on, :base_rate, :client_id, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, :selldo_id, :erp_id, :floor_rise, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :sub_type, :type, :unit_facing_direction, costs_attributes: CostPolicy.new(user, Cost.new).permitted_attributes, data_attributes: DatumPolicy.new(user, Cost.new).permitted_attributes]
     end
+    attributes += [assets_attributes: AssetPolicy.new(user, (record.assets.last || Asset.new) ).permitted_attributes]
     attributes += [:primary_user_kyc_id, :selected_scheme_id, user_kyc_ids: []] if record.user_id.present?
     attributes.uniq
   end

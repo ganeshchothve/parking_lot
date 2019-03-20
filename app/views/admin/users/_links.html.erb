@@ -8,6 +8,9 @@
 <% if !current_user.buyer? && policy([:admin, Receipt.new(user: user)]).direct? %>
   <%= link_to "Add Direct #{t('global.receipt')}", new_admin_user_receipt_path(user), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
+<% if !current_user.buyer? && policy([:admin, Receipt.new(user: user)]).lost_receipt? %>
+  <%= link_to "Add Lost Receipt", lost_receipt_admin_user_receipts_path(user), class: "dropdown-item modal-remote-form-link" %>
+<% end %>
 <% if policy([:admin, User.new]).confirm_via_otp? %>
   <%= link_to "Confirm via #{I18n.t("global.otp")}", confirm_via_otp_admin_user_path(user.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>

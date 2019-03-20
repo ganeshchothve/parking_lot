@@ -1,3 +1,4 @@
+# DatabaseSeeds::SmsTemplate.seed CLient.last.id
 module DatabaseSeeds
   module SmsTemplate
     def self.seed client_id
