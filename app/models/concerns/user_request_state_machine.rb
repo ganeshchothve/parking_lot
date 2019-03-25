@@ -7,7 +7,7 @@ module UserRequestStateMachine
       state :pending, initial: true
       state :processing, :resolved, :rejected
 
-      event :pending, after: :update_booking_detail_to_cancellation_requested do
+      event :pending, after: :update_booking_detail_to_request_made do
         transitions from: :pending, to: :pending
       end
 
@@ -27,13 +27,14 @@ module UserRequestStateMachine
       end
     end
 
+    def update_booking_detail_to_request_made
+      booking_detail.cancellation_requested! if is_a?(UserRequest::Cancellation)
+      booking_detail.swap_requested! if is_a?(UserRequest::Swap)
+    end
+
     def update_booking_detail_to_cancellation_rejected
       # SANKET
       booking_detail.cancellation_rejected!
-    end
-
-    def update_booking_detail_to_cancellation_requested
-      booking_detail.cancellation_requested! # if self.type == 'cancellation'
     end
 
     def update_booking_detail_to_cancelling
