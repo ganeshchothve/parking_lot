@@ -19,7 +19,7 @@ class Buyer::BookingDetailSchemePolicy < BookingDetailSchemePolicy
   def permitted_attributes params={}
     attributes = [:derived_from_scheme_id, :status]
 
-    if record.draft? || record.under_negotiation?
+    if record.draft?
       attributes += [:event] if record.approver?(user)
     end
 

@@ -5,7 +5,7 @@ module BookingDetailStateMachine
     attr_accessor :event
     aasm column: :status, whiny_transitions: false do
       # state :filter, initial: true
-      # state :tower, :project_unit, :user_kyc 
+      # state :tower, :project_unit, :user_kyc
       # state :hold, :blocked, :booked_tentative, :booked_confirmed, :under_negotiation, :scheme_rejected, :scheme_approved
       # state :swap_requested, :swapping, :swapped, :swap_rejected
       # state :cancellation_requested, :cancelling, :cancelled, :cancellation_rejected
@@ -37,14 +37,14 @@ module BookingDetailStateMachine
         # transitions from: :user_kyc, to: :hold
       end
 
-      event :under_negotiation, after: :aft_under_negotiation, before: :bef_under_negotiation do
+      event :under_negotiation, after_commit: :push_to_scheme_approved, before: :bef_under_negotiation do
         transitions from: :under_negotiation, to: :under_negotiation
         transitions from: :hold, to: :under_negotiation
       end
 
       event :scheme_approved, after: :aft_scheme_approved do
         transitions from: :scheme_approved, to: :scheme_approved
-        transitions from: :under_negotiation, to: :scheme_approved 
+        transitions from: :under_negotiation, to: :scheme_approved
       end
 
       event :scheme_rejected do
@@ -61,7 +61,7 @@ module BookingDetailStateMachine
 
       event :booked_tentative, after: :aft_booked_tentative do
         transitions from: :booked_tentative, to: :booked_tentative
-        transitions from: :blocked, to: :booked_tentative, guard: :can_booked_tentative?  
+        transitions from: :blocked, to: :booked_tentative, guard: :can_booked_tentative?
       end
 
       event :booked_confirmed do
@@ -113,19 +113,24 @@ module BookingDetailStateMachine
       #   transitions from: :cancellation_requested, to: :cancellation_rejected
       # end
     end
-    
+
     def bef_under_negotiation
       pubs = ProjectUnitBookingService.new(self.project_unit.id)
       booking_detail_scheme = pubs.create_or_update_booking_detail_scheme self if self.booking_detail_schemes.empty?
       booking_detail_scheme.approved! if booking_detail_scheme.present? &&booking_detail_scheme.status != 'approved'
     end
-    def aft_under_negotiation
-      
+
+    # This method push booking portal to next state as scheme approved.
+    # For this booking detail should be in under_negotiation
+    # If booking detail scheme is approved the booking detail in scheme_approved
+    # If booking detail scheme is rejected then booking detail must be in scheme rejected
+    # If booking detail scheme is draft then booking detail stay in under_negotiation
+    def push_to_scheme_approved
       if self.aasm.current_state == :under_negotiation
         if self.booking_detail_scheme.present?
           self.scheme_approved!
         elsif (!self.booking_detail_scheme.present?) && (self.booking_detail_schemes.distinct(:status).include? "rejected")
-          self.scheme_rejected! 
+          self.scheme_rejected!
         end
         _project_unit = self.project_unit
         _project_unit.status = 'blocked'
@@ -157,12 +162,12 @@ module BookingDetailStateMachine
 
     def can_blocked?
       true if self.receipts.in(status: %w[success clearance_pending]).sum{|receipt| receipt.total_amount} >= self.project_unit.blocking_amount && self.booking_detail_scheme.present?
-    end 
+    end
 
     def can_booked_tentative?
       true if self.receipts.in(status: %w[success clearance_pending]).sum{|receipt| receipt.total_amount} > self.project_unit.blocking_amount && self.booking_detail_scheme.present?
     end
-    
+
     def can_booked_confirmed?
       true if self.receipts.in(status: %w[success clearance_pending]).sum{|receipt| receipt.total_amount} >= self.project_unit.booking_price && self.booking_detail_scheme.present?
     end

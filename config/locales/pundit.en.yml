@@ -14,6 +14,18 @@ en:
 
     admin:
 
+      booking_detail_policy:
+        hold?:
+          enable_actual_inventory: 'You can not select Inventory. Please contact to Administrator.'
+          only_for_kyc_added_users: 'Please add KYC before booking Unit.'
+          only_for_confirmed_user: 'You have to confirm your email address before continuing.'
+          already_held: 'This unit is already held by other user.'
+          not_available_for_user_group: 'This unit is not for current user group.'
+          blocking_amount_receipt: 'For Channal Partner. Need atleast one unattach booking amount receipt.'
+          booking_limit_exceed: 'You have booked the permitted number of apartments.'
+          user_kyc_allowed_bookings: 'Multiple KYC booking is not allowed.'
+          not_authorise_to_book_for_this_user: 'You do not have access to book for this buyer.'
+
       project_unit_policy:
         index?: "Only administrator has rights to view this page."
         show?: "Only administrator has rights to view this page."
@@ -77,6 +89,18 @@ en:
 
 
     buyer:
+
+      booking_detail_policy:
+        hold?:
+          enable_actual_inventory: 'You can not select Inventory. Please contact to Administrator.'
+          only_for_kyc_added_users: 'Please add KYC before booking Unit.'
+          only_for_confirmed_user: 'You have to confirm your email address before continuing.'
+          already_held: 'This unit is already held by other user.'
+          not_available_for_user_group: 'This unit is not for current user group.'
+          blocking_amount_receipt: 'For Channal Partner. Need atleast one unattach booking amount receipt.'
+          booking_limit_exceed: 'You have booked the permitted number of apartments.'
+          user_kyc_allowed_bookings: 'Multiple KYC booking is not allowed.'
+          not_authorise_to_book_for_this_user: 'You do not have access to book for this buyer.'
       project_unit_policy:
         index?: "Only buyer has rights to view this page."
         show?: "Only buyer has rights to view this page."

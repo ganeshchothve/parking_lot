@@ -13,10 +13,6 @@ FactoryBot.define do
     after(:build) do |user|
       user.booking_portal_client ||= (Client.asc(:created_at).first || create(:client))
     end
-
-    after(:create) do |user|
-      user.booking_portal_client ||= (Client.asc(:created_at).first || create(:client))
-    end
   end
 
   %w[superadmin admin crm employee_user sales_admin sales gre cp cp_admin channel_partner management_user].each do |_role|

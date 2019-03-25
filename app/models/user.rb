@@ -385,7 +385,7 @@ class User
       user_kyc_ids = user_kycs.collect(&:id)
     else
       user_kyc_ids = user_kycs.collect(&:id)
-      project_units.ne(id: project_unit_id).each do |x|
+      booking_details.ne(id: project_unit_id).each do |x|
         user_kyc_ids = user_kyc_ids - [x.primary_user_kyc_id] - x.user_kyc_ids
       end
     end

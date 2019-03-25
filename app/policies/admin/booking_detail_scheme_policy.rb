@@ -5,7 +5,7 @@ class Admin::BookingDetailSchemePolicy < BookingDetailSchemePolicy
   def new?
     if only_for_admin! && enable_actual_inventory? && is_cross_tower_scheme? && is_approved_scheme? && is_project_unit_hold?
       case user.role
-      when 'admin', 'sales', 'sales_admin', 'crm'
+      when 'admin', 'sales', 'sales_admin', 'crm', 'superadmin'
         true
       when 'channel_partner'
         is_this_user_added_by_channel_partner?

@@ -1,7 +1,6 @@
 FactoryBot.define do
   factory :project_tower do
     name { Faker::Name.name }
-    client_id { FactoryBot.create(:client).id }
     project_name { Faker::Name.name }
     total_floors { Faker::Number.number(2) }
     total_builtup_area { Faker::Number.number(6).to_f }
@@ -19,9 +18,10 @@ FactoryBot.define do
     # project {FactoryBot.create(:project)}
 
     # association :booking_portal_client, factory: :client
-    association :project, factory: :project
+    # association :project, factory: :project
 
     after(:build) do |project_tower|
+      project_tower.client_id ||= Client.desc(:created_at).first || create(:client)
       project_tower.project ||= Project.desc(:created_at).first || create(:project)
     end
   end
