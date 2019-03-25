@@ -21,7 +21,6 @@ class ProjectUnit
   field :base_rate, type: Float
 
   # These fields majorly are pulled from sell.do and may be used on the UI
-  field :client_id, type: String
   field :developer_name, type: String
   field :project_name, type: String
   field :project_tower_name, type: String
@@ -45,7 +44,7 @@ class ProjectUnit
   attr_accessor :processing_user_request, :processing_swap_request
 
   enable_audit(
-    indexed_fields: %i[project_id project_tower_id unit_configuration_id client_id booking_portal_client_id selldo_id developer_id],
+    indexed_fields: %i[project_id project_tower_id unit_configuration_id booking_portal_client_id selldo_id developer_id],
     audit_fields: %i[erp_id status available_for blocked_on auto_release_on held_on primary_user_kyc_id base_rate]
   )
 
@@ -64,6 +63,7 @@ class ProjectUnit
   has_and_belongs_to_many :users
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :emails, as: :triggered_by, class_name: 'Email'
+  has_many :booking_details
   embeds_many :costs, as: :costable
   embeds_many :data, as: :data_attributable
   embeds_many :parameters, as: :parameterizable
@@ -72,7 +72,7 @@ class ProjectUnit
 
   accepts_nested_attributes_for :data, :parameters, :assets, :costs, allow_destroy: true
 
-  validates :client_id, :agreement_price, :all_inclusive_price, :booking_price, :project_id, :project_tower_id, :unit_configuration_id, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :type, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, presence: true
+  validates :agreement_price, :all_inclusive_price, :booking_price, :project_id, :project_tower_id, :unit_configuration_id, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :type, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, presence: true
   validates :status, :name, :erp_id, presence: true
   validates :status, inclusion: { in: proc { ProjectUnit.available_statuses.collect { |x| x[:id] } } }
   validates :available_for, inclusion: { in: proc { ProjectUnit.available_available_fors.collect { |x| x[:id] } } }
@@ -132,7 +132,7 @@ class ProjectUnit
     _scheme = _scheme.or([{ can_be_applied_by: nil }, { can_be_applied_by: [] }, { can_be_applied_by: _user.role } ])
     _scheme
   end
-  
+
   def self.user_based_available_statuses(user)
     statuses = if user.present?
                  if user.role?('management_user')

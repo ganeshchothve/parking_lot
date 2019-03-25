@@ -6,9 +6,8 @@ class Developer
   field :name, type: String
 
   field :selldo_id, type: String
-  field :client_id, type: String
 
-  validates :name, :client_id,:presence => true
+  validates :name,:presence => true
   validates :name, uniqueness: {case_sensitive: false} #, scope: :client}
 
   has_many :project_units

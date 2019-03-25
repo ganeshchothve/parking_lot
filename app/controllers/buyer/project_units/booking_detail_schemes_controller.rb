@@ -39,8 +39,8 @@ class Buyer::ProjectUnits::BookingDetailSchemesController < BuyerController
   end
 
   def create
+    booking_detail = @project_unit.booking_detail
     pubs = ProjectUnitBookingService.new(@project_unit.id)
-    booking_detail = pubs.create_booking_detail
     @scheme = pubs.create_or_update_booking_detail_scheme booking_detail
     @scheme.created_by = current_user
     @scheme.created_by_user = true
@@ -127,7 +127,8 @@ class Buyer::ProjectUnits::BookingDetailSchemesController < BuyerController
     elsif params[:action] == "new" || params[:action] == "create"
       project_unit_id = @project_unit.id if @project_unit.present?
       project_unit_id = @booking_detail.project_unit.id if @booking_detail.present? && project_unit_id.blank?
-      authorize [ :buyer, BookingDetailScheme.new(created_by: current_user, project_unit_id: project_unit_id) ]
+      scheme = Scheme.where(_id: params.dig(:booking_detail_scheme, :derived_from_scheme_id) ).last
+      authorize [ :buyer, BookingDetailScheme.new(created_by: current_user, project_unit_id: project_unit_id, derived_from_scheme_id: scheme.try(:_id), status: scheme.try(:status)) ]
     else
       authorize [:buyer, @scheme]
     end

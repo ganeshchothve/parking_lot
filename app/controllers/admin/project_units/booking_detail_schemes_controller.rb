@@ -39,11 +39,11 @@ class Admin::ProjectUnits::BookingDetailSchemesController < AdminController
   end
 
   def create
+    booking_detail = @project_unit.booking_detail
     pubs = ProjectUnitBookingService.new(@project_unit.id)
-    booking_detail = pubs.create_booking_detail pubs.booking_detail_status
     @scheme = pubs.create_or_update_booking_detail_scheme booking_detail
-    @scheme.created_by = current_user
-    @scheme.created_by_user = true
+    @scheme.created_by ||= current_user
+    @scheme.created_by_user ||= true
     @scheme.assign_attributes(permitted_attributes([ current_user_role_group, @scheme]))
     if @scheme.payment_adjustments.present? && @scheme.payment_adjustments.last.new_record?
       @scheme.status = 'under_negotiation'

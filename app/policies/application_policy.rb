@@ -99,4 +99,24 @@ class ApplicationPolicy
     @condition = 'enable_actual_inventory'
     false
   end
+
+  def only_for_confirmed_user!
+    return true if record.user.confirmed?
+    @condition = 'only_for_confirmed_user'
+    false
+  end
+
+  def only_for_kyc_added_users!
+    return true if record.user.kyc_ready?
+    @condition = 'only_for_kyc_added_users'
+    false
+  end
+
+  def has_user_on_record?
+    return true if record.user_id.present?
+    @condition = 'user_missing'
+    false
+  end
+
+
 end

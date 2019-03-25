@@ -54,7 +54,7 @@ class ProjectUnitBookingService
     if project_unit.booking_detail.blank?
       BookingDetail.create(project_unit_id: self.project_unit.id, user_id: self.project_unit.user_id, receipt_ids: self.project_unit.receipt_ids, user_kyc_ids: self.project_unit.user_kyc_ids, primary_user_kyc_id: self.project_unit.primary_user_kyc_id, manager_id: self.project_unit.user.manager_id, search_id: search_id)
     else
-      project_unit.booking_detail.update(user_id: self.project_unit.user_id, receipt_ids: self.project_unit.receipt_ids, user_kyc_ids: self.project_unit.user_kyc_ids, primary_user_kyc_id: self.project_unit.primary_user_kyc_id, manager_id: self.project_unit.user.manager_id)
+      project_unit.booking_detail.update(user_kyc_ids: self.project_unit.user_kyc_ids, primary_user_kyc_id: self.project_unit.primary_user_kyc_id, manager_id: self.project_unit.user.manager_id)
     end
     project_unit.booking_detail
   end
@@ -67,7 +67,7 @@ class ProjectUnitBookingService
       booking_detail_scheme = BookingDetailScheme.create!(
         derived_from_scheme_id: scheme.id,
         booking_detail_id: booking_detail.id,
-        created_by_id: self.project_unit.user.id,
+        created_by_id: booking_detail.user.id,
         booking_portal_client_id: scheme.booking_portal_client_id,
         cost_sheet_template_id: scheme.cost_sheet_template_id,
         payment_schedule_template_id: scheme.payment_schedule_template_id,

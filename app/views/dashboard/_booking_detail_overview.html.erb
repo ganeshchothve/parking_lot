@@ -19,10 +19,8 @@
           <% if Buyer::ProjectUnitPolicy.new(current_user, booking_detail.project_unit).edit? %>
             <%= link_to "Update #{global_labels['user_kycs']}", edit_buyer_project_unit_path(booking_detail.project_unit), class: "modal-remote-form-link dropdown-item" %>
           <% end %>
-          <% if Buyer::ProjectUnitPolicy.new(current_user, booking_detail.project_unit).block? %>
-            <a href="<%= checkout_user_search_path(current_user.get_search(project_unit.id)) %>" class="dropdown-item">
-              Book Now
-            </a>
+          <% if policy([current_user_role_group, booking_detail]).block? %>
+            <%= link_to 'Book Now', checkout_user_search_path(current_user.get_search( booking_detail.project_unit_id)), class: 'dropdown-item' %>
           <% elsif policy([ current_user_role_group, booking_detail.user.receipts.new(project_unit_id: booking_detail.project_unit.id)]).new? %>
             <%= link_to 'Pay Remaining Amount', new_buyer_project_unit_receipt_path(booking_detail.project_unit),class: "dropdown-item modal-remote-form-link" %>
           <% end %>

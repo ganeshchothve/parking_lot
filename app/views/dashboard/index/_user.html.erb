@@ -1,41 +1,46 @@
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-md-12">
-      <% if current_user.project_units.size < 1 %>
-      <div class="card">
-        <div class="card-body">
-          <% if current_project.present? %>
-          <h3 class="card-title text-center font-weight-bold text-uppercase">
-              Launching <%= current_project.name %>
-          </h3>
-          <% end %>
-          <h6 class="card-subtitle text-muted text-center">
-            Apartments Starting from <%= number_to_indian_currency(0) %>
-          </h6>
-          <div class="mt-3"></div>
-          <hr/>
-          <div class="text-center">
-            Placeholder content
-            Skip the rush and get priority access by paying just <%= number_to_indian_currency(current_client.blocking_amount) %>.
-          </div>
-          <hr/>
-          <div class="mt-3"></div>
-          <div class="form-group text-center">
-            <% if current_user.buyer? && policy(Receipt.new(user: current_user)).direct? %>
-              <%= link_to "Pay Now & Generate Token", new_buyer_receipt_path, class: 'btn btn-primary modal-remote-form-link' %>
-            <% elsif !current_user.kyc_ready? && policy([current_user_role_group, UserKyc.new(user: current_user)]).new? && current_user.buyer? %>
-              <%= link_to "Add #{global_labels['user_kyc']} & Make Payment", new_buyer_user_kyc_path, class: 'btn btn-primary modal-remote-form-link' %>
-            <% elsif policy([current_user_role_group, ProjectUnit.new(user: current_user, status: "available")]).hold? %>
-              <%= active_link_to "Search & Book your Apartment Now", new_search_path, active: :inclusive, class: "btn btn-primary" %>
+      <% if current_user.booking_details.size < 1 %>
+        <div class="card">
+          <div class="card-body">
+            <% if current_project.present? %>
+            <h3 class="card-title text-center font-weight-bold text-uppercase">
+                Launching <%= current_project.name %>
+            </h3>
             <% end %>
+            <h6 class="card-subtitle text-muted text-center">
+              Apartments Starting from <%= number_to_indian_currency(0) %>
+            </h6>
+            <div class="mt-3"></div>
+            <hr/>
+            <div class="text-center">
+              Placeholder content
+              Skip the rush and get priority access by paying just <%= number_to_indian_currency(current_client.blocking_amount) %>.
+            </div>
+            <hr/>
+            <div class="mt-3"></div>
+            <div class="form-group text-center">
+              <% if current_user.buyer? && policy(Receipt.new(user: current_user)).direct? %>
+                <%= link_to "Pay Now & Generate Token", new_buyer_receipt_path, class: 'btn btn-primary modal-remote-form-link' %>
+              <% elsif !current_user.kyc_ready? && policy([current_user_role_group, UserKyc.new(user: current_user)]).new? && current_user.buyer? %>
+                <%= link_to "Add #{global_labels['user_kyc']} & Make Payment", new_buyer_user_kyc_path, class: 'btn btn-primary modal-remote-form-link' %>
+              <% elsif policy([current_user_role_group, ProjectUnit.new(user: current_user, status: "available")]).hold? %>
+                <%= active_link_to "Search & Book your Apartment Now", new_search_path, active: :inclusive, class: "btn btn-primary" %>
+              <% end %>
+            </div>
           </div>
         </div>
-      </div>
       <% else %>
-        <% if Buyer::ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: current_user, status: "available")).hold? %>
+        <% if policy([ current_user_role_group, ProjectUnit.new(user: current_user, status: "available")]).hold? %>
           <div class="card">
             <div class="card-body text-center">
-            <a class="btn btn-primary" href="<%= new_search_path %>">Apartment Selector</a>
+              <%- booking_detail = current_user.booking_details.hold.first %>
+              <% if booking_detail %>
+                <%= link_to 'Continue Booking', step_user_search_path(booking_detail.search, step: booking_detail.search.step), class: 'btn btn-primary' %>
+              <% else %>
+                <%= link_to 'Apartment Selector', new_search_path, class: 'btn btn-primary' %>
+              <% end %>
             </div>
           </div>
         <% end %>
@@ -67,6 +72,7 @@
           <%= render 'dashboard/booking_detail_overview', {booking_detail: booking_detail, with_actions: true} %>
           <div class="mt-3"></div>
         <% end %>
+
         <% if Buyer::ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: current_user, status: "available")).hold? %>
           <a class="btn btn-primary" href="<%= new_search_path %>">Book Another Home</a>
         <% end %>

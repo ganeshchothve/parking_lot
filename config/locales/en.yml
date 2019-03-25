@@ -287,6 +287,15 @@ en:
   controller:
     only_administrator_users: 'Only administrator users are allowed.'
     only_buyer_users: 'Only Buyer users are allowed.'
+    searches:
+      project_unit_missing: 'Project Unit Selection step is missing'
+      check_project_unit_hold_status: "We've released the unit which was held for %{ holding_minutes } minutes. Please re-select the unit and try booking again."
+      checkout:
+        non_hold_booking: 'Booking is not yet hold.'
+        pending_payments: "We already have collected a payment for this unit from the same customer."
+      hold:
+        booking_detail_error: 'We cannot process your request at this time. Please retry'
+        success: 'Your Booking is hold. Please select Scheme and go for Payment.'
   smses:
     link_name: "SMS"
     status:

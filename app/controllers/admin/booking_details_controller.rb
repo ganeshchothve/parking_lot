@@ -1,5 +1,5 @@
 class Admin::BookingDetailsController < AdminController
-  include ReceiptsConcern
+  # include ReceiptsConcern
   before_action :get_booking_details, only: [:index]
   before_action :set_booking_detail, except: [:index]
   before_action :authorize_resource, except: [:index]
@@ -8,11 +8,11 @@ class Admin::BookingDetailsController < AdminController
     @booking_details = @booking_details.paginate(page: params[:page] || 1, per_page: params[:per_page])
   end
 
-  def show 
+  def show
     @scheme = @booking_detail.booking_detail_scheme
   end
 
-  def booking 
+  def booking
     @booking_detail.under_negotiation!
     @search = @booking_detail.search
     @receipt = Receipt.new(creator: @search.user, user: @search.user, payment_mode: 'online', total_amount: current_client.blocking_amount, payment_gateway: current_client.payment_gateway)
@@ -48,14 +48,14 @@ class Admin::BookingDetailsController < AdminController
     end
   end
 
-  def send_under_negotiation 
+  def send_under_negotiation
     @booking_detail.under_negotiation!
     respond_to do |format|
       format.html { redirect_to admin_user_path(@booking_detail.user.id) }
     end
   end
-  private
 
+  private
 
   def set_booking_detail
     @booking_detail = BookingDetail.where(_id: params[:id]).first
@@ -65,7 +65,7 @@ class Admin::BookingDetailsController < AdminController
     authorize [:admin, @booking_detail]
   end
 
-  def get_booking_details 
+  def get_booking_details
     if params[:user_id].present?
       @booking_details = BookingDetail.where(user_id: params[:user_id])
     else
