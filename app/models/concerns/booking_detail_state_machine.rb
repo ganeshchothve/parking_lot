@@ -87,6 +87,7 @@ module BookingDetailStateMachine
       event :swap_rejected do
         transitions from: :swap_rejected, to: :swap_rejected
         transitions from: :swap_requested, to: :swap_rejected
+        transitions from: :swapping, to: :swap_rejected
       end
 
       event :cancellation_requested do
