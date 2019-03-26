@@ -11,7 +11,11 @@ module UserRequestStateMachine
         transitions from: :pending, to: :pending
       end
 
-      event :processing, after: :update_booking_detail_to_cancelling do
+      event :processing, after: :update_booking_detail do
+        after do
+          # note change
+        end
+        transitions from: :processing, to: :processing
         transitions from: :pending, to: :processing
       end
 
@@ -22,7 +26,7 @@ module UserRequestStateMachine
 
       event :rejected do
         transitions from: :rejected, to: :rejected
-        transitions from: :pending, to: :rejected, after: :update_booking_detail_to_cancellation_rejected
+        transitions from: :pending, to: :rejected, after: :update_booking_detail_to_request_rejected
         transitions from: :processing, to: :rejected
       end
     end
@@ -32,14 +36,20 @@ module UserRequestStateMachine
       booking_detail.swap_requested! if is_a?(UserRequest::Swap)
     end
 
-    def update_booking_detail_to_cancellation_rejected
+    def update_booking_detail_to_request_rejected
       # SANKET
-      booking_detail.cancellation_rejected!
+      booking_detail.cancellation_rejected! if is_a?(UserRequest::Cancellation)
+      booking_detail.swap_rejected! if is_a?(UserRequest::Swap)
+      self.reason_for_failure = 'admin rejected the request' if reason_for_failure.blank?
     end
 
-    def update_booking_detail_to_cancelling
+    def update_booking_detail
       booking_detail.current_user_request = self
-      booking_detail.cancelling!
+      booking_detail.cancelling! if is_a?(UserRequest::Cancellation)
+      if is_a?(UserRequest::Swap)
+        booking_detail.swapping!
+        ProjectUnitSwapService.new(self)
+      end
     end
   end
 end

@@ -17,7 +17,7 @@ module ReceiptStateMachine
         transitions from: :clearance_pending, to: :clearance_pending
       end
 
-      event :success , after: :after_success do
+      event :success, after: :after_success do
         transitions from: :success, to: :success
         transitions from: :pending, to: :success
         # receipt moves from pending to success when online payment is made.
@@ -51,6 +51,10 @@ module ReceiptStateMachine
       end
     end
 
+    def swap_request_initiated?
+      booking_detail.swapping?
+    end
+
     def can_available_for_refund?
       booking_detail.blank? || booking_detail.cancelling?
     end
@@ -60,17 +64,17 @@ module ReceiptStateMachine
     end
 
     def user_request_initiated?
-      swap_request_initiated == true || booking_detail.cancelling?
+      booking_detail.swapping? || booking_detail.cancelling?
     end
 
     def after_success
-      if self.project_unit.present? 
-        _project_unit= self.project_unit
+      if project_unit.present?
+        _project_unit = project_unit
         _project_unit.status = 'blocked'
         _project_unit.save
       end
-      _booking_detail = self.booking_detail
-      if _booking_detail.present?  
+      _booking_detail = booking_detail
+      if _booking_detail.present?
         if _booking_detail.aasm.current_state == :scheme_approved
           _booking_detail.blocked! if _booking_detail.can_blocked?
         elsif _booking_detail.aasm.current_state == :blocked

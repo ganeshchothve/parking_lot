@@ -1,15 +1,17 @@
 class UserRequestObserver < Mongoid::Observer
-  def before_save(user_request)
+  def before_save(user_request) # move to state machine and call in service
     if user_request.status_changed? && user_request.status == 'resolved'
       user_request.resolved_at = Time.now
     end
   end
 
   def after_save(user_request)
-    user_request.send(user_request.event) if user_request.event.present?
+    if user_request.event.present?
+      user_request.send(user_request.event) if %w[rejected processing].exclude?(user_request.event) # remove code
+    end
   end
 
-  def after_create(user_request)
+  def after_create(user_request) # move to state machine and call in service
     if user_request.status == 'pending'
       user = user_request.user
       project_unit = user_request.project_unit

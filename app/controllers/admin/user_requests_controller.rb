@@ -35,7 +35,6 @@ class Admin::UserRequestsController < AdminController
   def create
     @user_request = associated_class.new(user_id: @user.id, created_by: current_user)
     @user_request.assign_attributes(permitted_user_request_attributes)
-    #@user_request.pending! if @user_request.event == 'pending'
     respond_to do |format|
       if @user_request.save
         format.html { redirect_to edit_admin_user_request_path(@user_request, request_type: @user_request.class.model_name.element), notice: 'Request registered successfully.' }
@@ -72,6 +71,11 @@ class Admin::UserRequestsController < AdminController
     @user_request.assign_attributes(permitted_user_request_attributes)
     @user_request.resolved_by = current_user
     @user_request.resolved_at = Time.now
+    if @user_request.event == 'rejected' # remove code
+      @user_request.rejected!
+    elsif @user_request.event == 'processing'
+      @user_request.processing!
+    end
     respond_to do |format|
       if @user_request.save
         format.html { redirect_to admin_user_requests_path(request_type: 'all'), notice: 'User Request was successfully updated.' }

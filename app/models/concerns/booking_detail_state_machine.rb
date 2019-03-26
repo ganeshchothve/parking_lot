@@ -81,13 +81,13 @@ module BookingDetailStateMachine
 
       event :swapped do
         transitions from: :swapped, to: :swapped
-        transitions from: :swapping, to: :swapped
+        transitions from: :swapping, to: :swapped, after: :update_user_request_to_resolved
       end
 
-      event :swap_rejected do
+      event :swap_rejected, after: :update_booking_detail_to_blocked do
         transitions from: :swap_rejected, to: :swap_rejected
         transitions from: :swap_requested, to: :swap_rejected
-        transitions from: :swapping, to: :swap_rejected
+        transitions from: :swapping, to: :swap_rejected, after: :update_user_request_to_rejected
       end
 
       event :cancellation_requested do
@@ -119,6 +119,7 @@ module BookingDetailStateMachine
 
     def update_user_request_to_resolved
       current_user_request.resolved!
+      project_unit.set(status: 'available') if current_user_request.is_a?(UserRequest::Swap)
     end
 
     def process_booking_detail

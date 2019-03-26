@@ -8,4 +8,15 @@ module Booking
     receipt = receipt ? receipt.set(project_unit_id: project_unit.id, booking_detail_id: booking_detail.id) : create(:check_payment, user_id: user.id, total_amount: project_unit.blocking_amount, project_unit_id: project_unit.id, status: 'success', booking_detail_id: booking_detail.id)
     booking_detail
   end
+
+  def scheme
+    developer = create(:developer)
+    project = create(:project, developer_id: developer.id)
+    project_tower = create(:project_tower, project: project)
+    project_unit = create(:project_unit, project_tower: project_tower, project: project)
+    project_unit.status = 'draft'
+    project_unit.save
+    scheme = create(:scheme, project: project_unit.project, project_tower: project_unit.project_tower)
+    scheme
+  end
 end
