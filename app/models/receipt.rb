@@ -105,7 +105,7 @@ class Receipt
       if project_unit.present? && (project_unit.status != 'hold') && allowed_stages
         nil
       else
-        if project_unit.blank? || booking_detail.user_id == user_id
+        if project_unit.blank? || ( booking_detail.present? && booking_detail.user_id == user_id )
           eval("PaymentGatewayService::#{payment_gateway}").new(self)
         end
       end

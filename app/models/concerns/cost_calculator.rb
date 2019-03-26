@@ -15,7 +15,7 @@ module CostCalculator
 
   def pending_balance(options={})
     strict = options[:strict] || false 
-    user_id = options[:user_id] || self.booking_detail.user_id
+    user_id = options[:user_id] || self.user_id
     if user_id.present?
       receipts_total = Receipt.where(user_id: user_id, project_unit_id: self.id)
       if strict
