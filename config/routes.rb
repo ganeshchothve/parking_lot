@@ -56,10 +56,6 @@ Rails.application.routes.draw do
       get :resend_success, on: :member
     end
 
-    resources :booking_details, only: [:index, :show] do
-      resources :receipts, only: [:index]
-    end
-
     resources :project_units, only: [:index, :show, :edit, :update] do
       member do
         get :print
@@ -101,12 +97,7 @@ Rails.application.routes.draw do
       resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
 
       resources :project_units, only: [:index] do
-
         get :print, on: :member
-
-        resources :booking_detail_schemes, except: [:destroy], controller: 'project_units/booking_detail_schemes'
-
-        resources :receipts, only: [:index, :new, :create], controller: 'project_units/receipts'
       end
       resources :searches, except: [:destroy], controller: '/searches' do
         get :"3d", on: :collection, action: "three_d", as: "three_d"
@@ -126,8 +117,11 @@ Rails.application.routes.draw do
       resources :booking_details, only: [:index, :show] do
         patch :booking, on: :member
         patch :send_under_negotiation, on: :member
-        resources :booking_detail_schemes, except: [:destroy], controller: '/booking_detail_schemes'
-        resources :receipts, only: [:index]
+        resources :booking_detail_schemes, except: [:destroy], controller: 'booking_details/booking_detail_schemes'
+
+        resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts'
+        # resources :booking_detail_schemes, except: [:destroy]
+        # resources :receipts, only: [:index]
       end
 
     end
@@ -181,20 +175,16 @@ Rails.application.routes.draw do
   namespace :buyer do
 
     resources :emails, :smses, only: %i[index show]
-    resources :project_units, only: [:index, :show, :edit, :update] do
-
-      resources :booking_detail_schemes, except: [:destroy], controller: 'project_units/booking_detail_schemes'
-
-      resources :receipts, only: [ :index, :new, :create], controller: 'project_units/receipts'
-    end
-
+    resources :project_units, only: [:index, :show, :edit, :update] 
     resources :users, only: [:show, :update, :edit] do
       member do
         get :update_password
       end
 
-      resources :project_units, only: [:index] do
-        resources :booking_detail_schemes, except: [:destroy], controller: 'project_units/booking_detail_schemes'
+      resources :booking_details, only: [:index, :show] do
+        resources :booking_detail_schemes, except: [:destroy], controller: 'booking_details/booking_detail_schemes'
+
+        resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts'
       end
 
     end
@@ -206,7 +196,11 @@ Rails.application.routes.draw do
     resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
     resources :booking_details, only: [:update] do
       patch :booking, on: :member
+      resources :booking_detail_schemes, except: [:destroy]
+
+        resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts'
     end
+
 
     scope ":request_type" do
       resources :user_requests, except: [:destroy], controller: 'user_requests'

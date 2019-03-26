@@ -1,5 +1,5 @@
-class Buyer::ProjectUnits::BookingDetailSchemesController < BuyerController
-  # before_action :set_booking_detail
+class Buyer::BookingDetails::BookingDetailSchemesController < BuyerController
+  before_action :set_booking_detail
   before_action :set_project_unit
   before_action :set_scheme, except: [:index, :export, :new, :create]
   before_action :authorize_resource
@@ -108,8 +108,12 @@ class Buyer::ProjectUnits::BookingDetailSchemesController < BuyerController
   end
 
   def set_project_unit
-    @project_unit = ProjectUnit.find(params[:project_unit_id]) if params[:project_unit_id].present?
+    @project_unit = @booking_detail.project_unit
   end
+  def set_booking_detail
+    @booking_detail = BookingDetail.find(params[:booking_detail_id]) if params[:booking_detail_id].present?
+  end
+
 
   def modify_params
     if params[:booking_detail_scheme][:payment_adjustments_attributes].present?

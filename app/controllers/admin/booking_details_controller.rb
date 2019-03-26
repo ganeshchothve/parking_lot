@@ -1,5 +1,4 @@
 class Admin::BookingDetailsController < AdminController
-  # include ReceiptsConcern
   before_action :get_booking_details, only: [:index]
   before_action :set_booking_detail, except: [:index]
   before_action :authorize_resource, except: [:index]
@@ -15,11 +14,12 @@ class Admin::BookingDetailsController < AdminController
   def booking
     @booking_detail.under_negotiation!
     @search = @booking_detail.search
-    @receipt = Receipt.new(creator: @search.user, user: @search.user, payment_mode: 'online', total_amount: current_client.blocking_amount, payment_gateway: current_client.payment_gateway)
+    @receipt = Receipt.new(creator: @search.user, user: @search.user, payment_mode: 'online', total_amount: current_client.blocking_amount, payment_gateway: current_client.payment_gateway, booking_detail_id: @booking_detail.id)
     @receipt.account = selected_account(@search.project_unit)
     if @search.project_unit_id.present?
       @project_unit = ProjectUnit.find(@search.project_unit_id)
       @receipt.total_amount = @project_unit.blocking_amount
+      @receipt.project_unit_id = @project_unit.id
       # authorize [current_user_role_group, @project_unit]
       unattached_blocking_receipt = @search.user.unattached_blocking_receipt @search.project_unit.blocking_amount
       if unattached_blocking_receipt.present?

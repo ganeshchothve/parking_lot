@@ -22,7 +22,7 @@
           <% if policy([current_user_role_group, booking_detail]).block? %>
             <%= link_to 'Book Now', checkout_user_search_path(current_user.get_search( booking_detail.project_unit_id)), class: 'dropdown-item' %>
           <% elsif policy([ current_user_role_group, booking_detail.user.receipts.new(project_unit_id: booking_detail.project_unit.id)]).new? %>
-            <%= link_to 'Pay Remaining Amount', new_buyer_project_unit_receipt_path(booking_detail.project_unit),class: "dropdown-item modal-remote-form-link" %>
+            <%= link_to 'Pay Remaining Amount', new_buyer_booking_detail_receipt_path(booking_detail),class: "dropdown-item modal-remote-form-link" %>
           <% end %>
           <% UserRequest.descendants.each do |klass| %>
             <% if policy([current_user_role_group, klass.new(user_id: booking_detail.user_id, project_unit_id: booking_detail.project_unit.id)]).new? %>

@@ -50,7 +50,7 @@ class Admin::BookingDetailSchemePolicy < BookingDetailSchemePolicy
       attributes += [payment_adjustments_attributes: PaymentAdjustmentPolicy.new(user, PaymentAdjustment.new).permitted_attributes]
     end
 
-    if record.draft? || record.under_negotiation?
+    if record.draft? 
       attributes += [:event ] if record.approver?(user)
     end
 

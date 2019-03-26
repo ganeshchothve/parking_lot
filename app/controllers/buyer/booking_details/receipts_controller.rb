@@ -1,6 +1,6 @@
-class Buyer::ProjectUnits::ReceiptsController < BuyerController
-  include ReceiptsConcern
+class Buyer::BookingDetails::ReceiptsController < BuyerController
   before_action :set_project_unit
+  before_action :ser_booking_detail
 
   #
   # This new action always create a new receipt form for user's project unit rerceipt form.
@@ -61,6 +61,10 @@ class Buyer::ProjectUnits::ReceiptsController < BuyerController
   def set_project_unit
     @project_unit = ProjectUnit.where(_id: params[:project_unit_id]).first
     redirect_to admin_dashboard_path, alert: 'Project Unit Not found', status: 404 if @project_unit.blank?
+  end
+
+  def set_booking_detail
+    @booking_detail = BookingDetail.where(_id: params[:booking_detail_id]).first
   end
 
 end

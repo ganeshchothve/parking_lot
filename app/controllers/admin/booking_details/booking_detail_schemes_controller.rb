@@ -1,4 +1,4 @@
-class Admin::ProjectUnits::BookingDetailSchemesController < AdminController
+class Admin::BookingDetails::BookingDetailSchemesController < AdminController
   before_action :set_booking_detail
   before_action :set_project_unit
   before_action :set_scheme, except: [:index, :export, :new, :create]
@@ -29,7 +29,7 @@ class Admin::ProjectUnits::BookingDetailSchemesController < AdminController
 
     @scheme = BookingDetailScheme.new(
       derived_from_scheme_id: booking_detail_scheme.derived_from_scheme_id,
-      booking_detail_id: @booking_detail.id,
+      booking_detail_id: booking_detail_id,
       booking_portal_client_id: current_user.booking_portal_client_id,
       payment_adjustments: booking_detail_scheme.payment_adjustments.collect(&:clone),
       created_by_id: current_user.id,
@@ -39,16 +39,15 @@ class Admin::ProjectUnits::BookingDetailSchemesController < AdminController
   end
 
   def create
-    booking_detail = @project_unit.booking_detail
     pubs = ProjectUnitBookingService.new(@project_unit.id)
-    @scheme = pubs.create_or_update_booking_detail_scheme booking_detail
+    @scheme = pubs.create_or_update_booking_detail_scheme @booking_detail
     @scheme.created_by ||= current_user
     @scheme.created_by_user ||= true
     @scheme.assign_attributes(permitted_attributes([ current_user_role_group, @scheme]))
     if @scheme.payment_adjustments.present? && @scheme.payment_adjustments.last.new_record?
-      @scheme.status = 'under_negotiation'
+      @scheme.draft
     else
-      @scheme.status = 'approved' if @scheme.derived_from_scheme.status == 'approved'
+      @scheme.approved if @scheme.derived_from_scheme.status == 'approved'
     end
     modify_params
     respond_to do |format|
@@ -110,7 +109,7 @@ class Admin::ProjectUnits::BookingDetailSchemesController < AdminController
   end
 
   def set_project_unit
-    @project_unit = ProjectUnit.find(params[:project_unit_id]) if params[:project_unit_id].present?
+    @project_unit = @booking_detail.project_unit
   end
 
   def modify_params

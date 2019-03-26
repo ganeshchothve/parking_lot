@@ -4,7 +4,7 @@ module ReceiptStateMachine
     include AASM
     attr_accessor :event
 
-    aasm column: :status do
+    aasm column: :status, whiny_transitions: false do
       state :pending, initial: true
       state :success, :clearance_pending, :failed, :available_for_refund, :refunded, :cancelled
 
@@ -75,7 +75,7 @@ module ReceiptStateMachine
         _project_unit.save
       end
       if self.booking_detail.present?
-        self.booking_detail.aft_under_negotiation
+        self.booking_detail.push_to_scheme_approved
       end
     end
   end
