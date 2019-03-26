@@ -26,7 +26,6 @@ class Admin::BookingDetails::BookingDetailSchemesController < AdminController
     else
       @booking_detail.booking_detail_scheme
     end
-
     @scheme = BookingDetailScheme.new(
       derived_from_scheme_id: booking_detail_scheme.derived_from_scheme_id,
       booking_detail_id: booking_detail_id,
@@ -52,7 +51,7 @@ class Admin::BookingDetails::BookingDetailSchemesController < AdminController
     modify_params
     respond_to do |format|
       if @scheme.save
-        format.html { redirect_to request.referrer, notice: 'Scheme registered successfully and sent for approval.' }
+        format.html { redirect_to request.referrer || root_path, notice: 'Scheme registered successfully and sent for approval.' }
         format.json { render json: @scheme, status: :created }
       else
         format.html { render :new }
