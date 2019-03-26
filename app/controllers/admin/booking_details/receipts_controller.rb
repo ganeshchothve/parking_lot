@@ -28,7 +28,6 @@ class Admin::BookingDetails::ReceiptsController < AdminController
   #
   # POST /admin/users/:user_id/project_units/:project_unit_id/receipts
   def create
-    binding.pry
     @receipt = Receipt.new(user: @user, creator: current_user, project_unit_id: @project_unit.id, booking_detail_id: @booking_detail.id)
     @receipt.assign_attributes(permitted_attributes([:admin, @receipt]))
     @receipt.payment_gateway = current_client.payment_gateway if @receipt.payment_mode == 'online'
@@ -70,5 +69,6 @@ class Admin::BookingDetails::ReceiptsController < AdminController
 
   def set_booking_detail
     @booking_detail = BookingDetail.where(_id: params[:booking_detail_id]).first
+    redirect_to root_path, alert: 'Booking Detail Not found', status: 404 if @booking_detail.blank?
   end
 end

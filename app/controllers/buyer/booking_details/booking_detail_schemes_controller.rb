@@ -112,6 +112,7 @@ class Buyer::BookingDetails::BookingDetailSchemesController < BuyerController
   end
   def set_booking_detail
     @booking_detail = BookingDetail.find(params[:booking_detail_id]) if params[:booking_detail_id].present?
+    redirect_to root_path, alert: 'Booking Detail Not found', status: 404 if @booking_detail.blank?
   end
 
 

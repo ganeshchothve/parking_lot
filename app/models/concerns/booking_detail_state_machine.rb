@@ -37,7 +37,7 @@ module BookingDetailStateMachine
         # transitions from: :user_kyc, to: :hold
       end
 
-      event :under_negotiation, after_commit: :push_to_scheme_approved, before: :bef_under_negotiation do
+      event :under_negotiation, after: :push_to_scheme_approved, before: :bef_under_negotiation do
         transitions from: :under_negotiation, to: :under_negotiation
         transitions from: :hold, to: :under_negotiation
       end

@@ -16,7 +16,6 @@ RSpec.describe Admin::BookingDetails::ReceiptsController, type: :controller do
       @project_unit.user = @user
       @project_unit.primary_user_kyc_id = kyc.id
       @project_unit.save
-      debugger
       search = Search.create(created_at: Time.now, updated_at: Time.now, bedrooms: 2.0, carpet: nil, agreement_price: nil, all_inclusive_price: nil, project_tower_id: nil, floor: nil, project_unit_id: nil, step: "filter", results_count: nil, user_id: @user.id )
       pubs = ProjectUnitBookingService.new(@project_unit)
       pubs.create_booking_detail(search.id) 

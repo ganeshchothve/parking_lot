@@ -26,7 +26,7 @@ module CostCalculator
       receipts_total = receipts_total.sum(:total_amount)
       return (self.booking_price - receipts_total)
     else
-      return nil
+      return self.booking_price
     end
   end
 
