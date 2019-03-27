@@ -61,7 +61,6 @@ class ProjectUnitBookingService
 
   def create_or_update_booking_detail_scheme booking_detail
     booking_detail_scheme = self.project_unit.booking_detail_scheme
-
     if booking_detail_scheme.blank?
       scheme = self.project_unit.project_tower.default_scheme
       booking_detail_scheme = BookingDetailScheme.create!(
@@ -78,7 +77,7 @@ class ProjectUnitBookingService
     end
 
     # booking_detail_scheme.event = self.booking_detail_scheme_status
-    # booking_detail_scheme.booking_detail_id = booking_detail.id
+    booking_detail_scheme.booking_detail_id = booking_detail.id
 
     if booking_detail_scheme.event == "approved"
       booking_detail_scheme.approved_by_id = self.project_unit.user.id

@@ -129,7 +129,7 @@ class Admin::BookingDetails::BookingDetailSchemesController < AdminController
       project_unit_id = @project_unit.id if @project_unit.present?
       project_unit_id = @booking_detail.project_unit.id if @booking_detail.present? && project_unit_id.blank?
       scheme = Scheme.where(_id: params.dig(:booking_detail_scheme, :derived_from_scheme_id) ).last
-      authorize [ :admin, BookingDetailScheme.new(created_by: current_user, project_unit_id: project_unit_id, derived_from_scheme_id: params.dig(:booking_detail_scheme, :derived_from_scheme_id), status: scheme.try(:status) )]
+      authorize [ :admin, BookingDetailScheme.new(created_by: current_user, project_unit_id: project_unit_id, derived_from_scheme_id: params.dig(:booking_detail_scheme, :derived_from_scheme_id) )]
     else
       authorize [:admin, @scheme]
     end

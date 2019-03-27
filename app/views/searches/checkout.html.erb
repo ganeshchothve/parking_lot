@@ -45,7 +45,7 @@
       <% end %>
       <% if @project_unit.status == "hold" %>
         <% if current_user.buyer? %>
-          <%= link_to "I Agree", booking_buyer_booking_detail_path(@booking_detail),method: :patch, class: 'btn btn-primary', style:'margin-top:0px', onclick: alert %>
+          <%= link_to "I Agree", booking_buyer_booking_detail_path(@booking_detail), method: :patch, class: 'btn btn-primary', style:'margin-top:0px', onclick: alert %>
         <% elsif @user.unattached_blocking_receipt(@project_unit.blocking_amount).present? %>
           <%= link_to "I Agree on behalf of #{@user.name}", booking_admin_user_booking_detail_path(@user,@booking_detail), method: :patch, class: 'btn btn-primary', style:'margin-top:0px', onclick: alert %>
         <% elsif policy([ current_user_role_group, Receipt.new(user: @user, status: "clearance_pending", project_unit_id: @project_unit.id)]).new? %>

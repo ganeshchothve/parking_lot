@@ -11,7 +11,6 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
       creator: current_user, project_unit_id: @project_unit.id, user: current_user,
       total_amount: (@project_unit.status == "hold" ? @project_unit.blocking_amount : @project_unit.pending_balance)
     })
-    authorize([:buyer, @receipt])
     render layout: false
   end
 
@@ -20,11 +19,9 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
   #
   # POST /admin/users/:user_id/project_units/:project_unit_id/receipts
   def create
-    @receipt = Receipt.new(user: current_user, creator: current_user, project_unit_id: @project_unit.id, payment_gateway: current_client.payment_gateway)
+    @receipt = Receipt.new(user: current_user, creator: current_user, project_unit_id: @project_unit.id, payment_gateway: current_client.payment_gateway, booking_detail_id: @booking_detail.id)
     @receipt.assign_attributes(permitted_attributes([:buyer, @receipt]))
     @receipt.account = selected_account(@receipt.project_unit)
-    authorize([:buyer, @receipt])
-
     respond_to do |format|
       if @receipt.account.blank?
         flash[:alert] = "We do not have any Account Details for Transaction. Please ask Administrator to add."

@@ -12,12 +12,12 @@ module ReceiptStateMachine
         transitions from: :pending, to: :pending
       end
 
-      event :clearance_pending, after: :moved_to_success_if_online do
+      event :clearance_pending, after: [:moved_to_success_if_online, :change_booking_detail_status] do
         transitions from: :pending, to: :clearance_pending, if: :can_move_to_clearance?
         transitions from: :clearance_pending, to: :clearance_pending
       end
 
-      event :success , after: :after_success do
+      event :success , after: [:after_success, :change_booking_detail_status] do
         transitions from: :success, to: :success
         transitions from: :pending, to: :success
         # receipt moves from pending to success when online payment is made.
@@ -74,8 +74,11 @@ module ReceiptStateMachine
         _project_unit.status = 'blocked'
         _project_unit.save
       end
-      if self.booking_detail.present?
-        self.booking_detail.push_to_scheme_approved
+    end
+
+    def change_booking_detail_status
+      if self.booking_detail
+        self.booking_detail.send("after_#{self.booking_detail.status}_event")
       end
     end
   end

@@ -18,7 +18,8 @@ RSpec.describe Buyer::BookingDetails::BookingDetailSchemesController, type: :con
       pubs = ProjectUnitBookingService.new(@project_unit)
       pubs.create_booking_detail (search.id)
       booking_detail_scheme_params = FactoryBot.attributes_for(:booking_detail_scheme)
-      post :create, params: { booking_detail_scheme: booking_detail_scheme_params, user_id: @user.id, booking_detail_id: @project_unit.booking_detail.id, project_tower_id: @project_unit.project_tower_id }
+      booking_detail_scheme_params[:derived_from_scheme_id] = Scheme.first.id
+      post :create, params: { booking_detail_scheme: booking_detail_scheme_params, user_id: @user.id, booking_detail_id: @project_unit.booking_detail.id}
       expect(BookingDetailScheme.first.booking_detail.id).to eq(@project_unit.booking_detail.id)
     end
   end
