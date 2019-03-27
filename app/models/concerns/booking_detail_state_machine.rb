@@ -114,10 +114,12 @@ module BookingDetailStateMachine
     end
 
     def update_user_request_to_rejected
-      current_user_request.rejected!
+      user_requests.in(status: ['processing']).first.rejected!
+      # current_user_request.rejected! #has to be removed
     end
 
     def update_user_request_to_resolved
+      current_user_request = user_requests.in(status: ['processing']).first
       current_user_request.resolved!
       project_unit.set(status: 'available') if current_user_request.is_a?(UserRequest::Swap)
     end
