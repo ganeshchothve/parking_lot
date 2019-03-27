@@ -28,24 +28,23 @@ class HomeController < ApplicationController
         query << {phone: params['phone']} if params[:phone].present?
         query << {leaD_id: params['leaD_id']} if params[:leaD_id].present?
         @user = User.or(query).first #TODO: check if you want to find uniquess on lead id also
-        if @user.present?
+        if @user.present? && @user.role?('user')
           message = 'A user with these details has already registered.'
-          if !@user.confirmed? && @user.role?('user')
-            if current_user.present? && current_user.role?('channel_partner')
+          if !@user.confirmed?
+            if current_user.present? && current_user.role?('channel_partner') && @user.manager_id.present? && current_client.enable_lead_conflicts?
               @user.set(referenced_manager_ids: ([current_user.id] + @user.referenced_manager_ids).uniq, manager_id: current_user.id)
-            end
-            if @user.confirmed?
-              message = "A user with these details has already registered and has confirmed their account. We have linked his account to you channel partner login."
-            else
-              message = "A user with these details has already registered, but hasn't confirmed their account. We have resent the confirmation email to them, which has an account activation link."
+              NotifyAdminWorker.perform_async( @user.id, current_user.id )
+              message = "A user with these details has already registered, but hasn't confirmed their account. We have linked his account to your channel partner login. We have resent the confirmation email to them, which has an account activation link."
               @user.send_confirmation_instructions if @user.email.present?
             end
+          else
+            message = "A user with these details has already registered and has confirmed their account."
           end
           respond_to do |format|
             format.json { render json: {errors: message, already_exists: true}, status: :unprocessable_entity }
           end
-        else
-          # split name into first name and last name
+        elsif @user.blank?
+          # splitted name into two firstname and lastname
           @user = User.new(booking_portal_client_id: current_client.id, email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], lead_id: params[:lead_id], mixpanel_id: params[:mixpanel_id])
 
           if current_client.enable_referral_bonus &&  !params[:referral_code].blank?
