@@ -12,6 +12,7 @@ class BookingDetail
   field :primary_user_kyc_id, type: BSON::ObjectId
   field :status, type: String
   field :erp_id, type: String, default: ''
+  field :name, type: String
   mount_uploader :tds_doc, DocUploader
 
   enable_audit(
@@ -35,6 +36,8 @@ class BookingDetail
   has_many :notes, as: :notable
   has_many :user_requests
 
+  # TODO: uncomment
+  # validates :name, presence: true
   validates :status, :primary_user_kyc_id, presence: true
   validates :erp_id, uniqueness: true, allow_blank: true
 
@@ -85,5 +88,4 @@ class BookingDetail
   def sync(erp_model, sync_log)
     Api::BookingDetailsSync.new(erp_model, self, sync_log).execute
   end
-
 end

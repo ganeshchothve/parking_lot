@@ -68,7 +68,6 @@ class ProjectUnitSwapService
 
   # When processing fails the old project unit is restored to its previous state, booking detail is marked as swap rejected and then appropriate state, user request is rejected
   def reject_user_request(error_messages, alternate_project_unit_status, new_booking_detail = nil, new_booking_detail_scheme = nil)
-    current_booking_detail.unset(:swap_request_initiated)
     new_booking_detail_scheme.delete if new_booking_detail_scheme.present?
     new_booking_detail.delete if new_booking_detail.present?
     alternate_project_unit.set(status: alternate_project_unit_status) unless alternate_project_unit.status == alternate_project_unit_status
@@ -88,9 +87,6 @@ class ProjectUnitSwapService
     end
 
     if error_messages.blank?
-      # replace and remove
-      # current_booking_detail.project_unit.processing_swap_request = true
-      current_booking_detail[:swap_request_initiated] = true
       error_messages = update_receipts(error_messages, new_booking_detail)
     end
     if error_messages.blank?
@@ -104,8 +100,6 @@ class ProjectUnitSwapService
       send_email if user_request.user.booking_portal_client.email_enabled?
       send_sms
       current_booking_detail.swapped!
-      # remove from eveywhere else too
-      current_booking_detail.unset(:swap_request_initiated)
     else
       reject_user_request(error_messages, alternate_project_unit_status, new_booking_detail, new_booking_detail_scheme)
     end

@@ -22,7 +22,7 @@ class UserRequest
   has_many :notes, as: :notable
 
   validates :user_id, :project_unit_id, presence: true
-  # validates :resolved_by, presence: true, if: Proc.new{|user_request| user_request.status == 'resolved' }
+  validates :resolved_by, presence: true, if: proc { |user_request| user_request.status == 'resolved' }
 
   validates :status, inclusion: { in: STATUS }
   validates :project_unit_id, uniqueness: { scope: %i[user_id status], message: 'already has a cancellation request.' }, if: proc { |record| record.pending? }

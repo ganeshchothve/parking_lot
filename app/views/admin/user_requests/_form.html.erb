@@ -11,8 +11,8 @@
       <div class="modal-body">
         <% if policy([current_user_role_group, (@user_request)]).editable_field?("project_unit_id") %>
           <div class="form-group">
-            <%= f.label :project_unit_id, class: 'label-required' %>
-            <%= f.select :project_unit_id, @user_request.user.project_units.in(status: ProjectUnit.booking_stages).collect{|x| [x.name, x.id] }, {prompt: true}, class: 'selectize', disabled: (policy([current_user_role_group, (@user_request)]).editable_field?("project_unit_id") ? false : true), required: "required" %>
+            <%= f.label :project_unit, class: 'label-required' %>
+            <%= f.select :booking_detail_id, @user_request.user.booking_details.in(status: %w[blocked booked_tentative booked_confirmed]).collect{|x| [x.name, x.id] }, {prompt: true}, class: 'selectize', disabled: !policy([current_user_role_group, (@user_request)]).editable_field?("booking_detail_id"), required: "required" %>
           </div>
         <% else %>
           <div class="form-group">
