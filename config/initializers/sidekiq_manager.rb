@@ -64,13 +64,14 @@ module Amura
           puts "#{queue_name} = Max required queue_size #{ queue_size }"
           if queue_size.zero?
             processes.each_with_index do |x, index|
-              if !index.zero?
+              # quiet every things when nothing is in scheduled
+              # if !index.zero?
                 if x["busy"].zero?
                   x.quiet!
                 end # end If
-              end # end processes
+              # end # end processes
             end
-            self.start_processs( 1, queue_name, queue_meta_data_info[:conc] ) if processes.blank?
+            #self.start_processs( 1, queue_name, queue_meta_data_info[:conc] ) if processes.blank?
           elsif max_size > current_working_tags.size
             # added new workers.
             ((1..max_size).to_a - current_working_tags).each do |tag|
