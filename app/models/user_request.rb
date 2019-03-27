@@ -21,11 +21,11 @@ class UserRequest
   has_many :assets, as: :assetable
   has_many :notes, as: :notable
 
-  validates :user_id, :project_unit_id, presence: true
+  validates :user_id, :booking_detail_id, presence: true
   validates :resolved_by, presence: true, if: proc { |user_request| user_request.status == 'resolved' }
 
   validates :status, inclusion: { in: STATUS }
-  validates :project_unit_id, uniqueness: { scope: %i[user_id status], message: 'already has a cancellation request.' }, if: proc { |record| record.pending? }
+  validates :booking_detail_id, uniqueness: { scope: %i[user_id status], message: 'already has a cancellation request.' }, if: proc { |record| record.pending? }
   validates :reason_for_failure, presence: true, if: proc { |record| record.rejected? }
 
   accepts_nested_attributes_for :notes
@@ -51,7 +51,7 @@ class UserRequest
       custom_scope = { user_id: params[:user_id] } if params[:user_id].present?
       custom_scope = { user_id: user.id } if user.buyer?
 
-      custom_scope[:project_unit_id] = params[:project_unit_id] if params[:project_unit_id].present?
+      custom_scope[:booking_detail_id] = params[:booking_detail_id] if params[:booking_detail_id].present?
       custom_scope
     end
   end

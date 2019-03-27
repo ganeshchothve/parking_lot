@@ -4,8 +4,8 @@ class UserRequest::Swap < UserRequest
   validate :alternate_project_unit_availability, :alternate_project_unit_blocking_condition, unless: proc { |user_request| %w[processing resolved].include?(user_request.status) }
 
   enable_audit(
-    indexed_fields: %i[project_unit_id receipt_id],
-    audit_fields: %i[status alternate_project_unit_id project_unit_id],
+    indexed_fields: %i[booking_detail_id receipt_id],
+    audit_fields: %i[status alternate_project_unit_id booking_detail_id],
     reference_ids_without_associations: [
       { field: 'alternate_project_unit_id', klass: 'ProjectUnit' }
     ]
@@ -19,7 +19,7 @@ class UserRequest::Swap < UserRequest
 
   def alternate_project_unit_availability
     if %w[rejected failed].exclude?(status)
-      valid = alternate_project_unit.status == 'available' || (alternate_project_unit.status == 'hold' && alternate_project_unit.user_id == project_unit.user_id)
+      valid = alternate_project_unit.status == 'available' || (alternate_project_unit.status == 'hold' && alternate_project_unit.user_id == booking_detail.project_unit.user_id)
 
       unless valid
         errors.add(:alternate_project_unit_id, 'is not available for booking.')
@@ -34,8 +34,8 @@ class UserRequest::Swap < UserRequest
   #
   #
   def alternate_project_unit_blocking_condition
-    unless alternate_project_unit.blocking_amount <= project_unit.blocking_amount
-      _total_tentative_amount_paid = project_unit.total_tentative_amount_paid
+    unless alternate_project_unit.blocking_amount <= booking_detail.project_unit.blocking_amount
+      _total_tentative_amount_paid = booking_detail.project_unit.total_tentative_amount_paid
       if _total_tentative_amount_paid < alternate_project_unit.blocking_amount
         errors.add(:alternate_project_unit, "has blocking amount #{alternate_project_unit.blocking_amount}, which is higher than your tentative paid amount ( #{_total_tentative_amount_paid} ).")
       end

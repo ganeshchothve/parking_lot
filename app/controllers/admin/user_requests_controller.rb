@@ -70,7 +70,6 @@ class Admin::UserRequestsController < AdminController
   def update
     @user_request.assign_attributes(permitted_user_request_attributes)
     @user_request.resolved_by = current_user
-    @user_request.resolved_at = Time.now
     if @user_request.event == 'rejected' # remove code
       @user_request.rejected!
     elsif @user_request.event == 'processing'

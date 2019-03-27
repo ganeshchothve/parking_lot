@@ -93,8 +93,8 @@ class ProjectUnitSwapService
       # TODO: : booking detail object and alternate project unit will move to blocked or appropriate state on its own
       alternate_project_unit.set(status: 'blocked')
       new_booking_detail.set(status: 'blocked')
-      user_request.project_unit.make_available
-      error_messages = user_request.project_unit.errors.full_messages unless user_request.project_unit.save
+      current_booking_detail.project_unit.make_available
+      error_messages = current_booking_detail.project_unit.errors.full_messages unless current_booking_detail.project_unit.save
     end
     if error_messages.blank?
       send_email if user_request.user.booking_portal_client.email_enabled?

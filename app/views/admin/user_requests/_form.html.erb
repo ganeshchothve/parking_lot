@@ -17,7 +17,7 @@
         <% else %>
           <div class="form-group">
             <%= f.label :project_unit_id, class: 'label-required' %>
-            <div><%= @user_request.project_unit.name %></div>
+            <div><%= @user_request.booking_detail.name %></div>
           </div>
         <% end %>
         <% begin %>
@@ -30,7 +30,7 @@
           <% if policy([current_user_role_group, (@user_request)]).editable_field?("event") %>
             <% if @user_request.new_record? %>
              <%= t("user_requests.status.#{f.object.status}") %>
-             <% f.hidden_field :event, value: "pending" %>
+             <%= f.hidden_field :event, value: @user_request.status %>
             <% else %>
               <%= f.select :event, @user_request.aasm.events.map(&:name), {prompt: true}, class: 'selectize', required: "required" %>
             <% end %>
