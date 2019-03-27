@@ -1,7 +1,7 @@
 require 'rails_helper'
 RSpec.describe Buyer::BookingDetails::BookingDetailSchemesController, type: :controller do
   describe 'creating booking_detail_scheme' do
-    it 'selects account linked to the phase if phase and account both are present' do
+    it 'booking_detail_scheme is created for every booking' do
       client = Client.first || create(:client)
       admin = create(:admin)
       @user = create(:user)

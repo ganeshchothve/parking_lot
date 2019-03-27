@@ -84,8 +84,15 @@ class BookingDetailSchemePolicy < SchemePolicy
   end
 
   def is_derived_from_scheme_approved?
-    return true if record.derived_from_scheme.status == 'approved'
-    @condition = 'scheme_is_not_approved'
-    false
+    if record.new_record?
+      if record.derived_from_scheme.status == 'approved'
+        return true
+      else
+        @condition = 'scheme_is_not_approved'
+        return false
+      end
+    else
+      return true
+    end
   end
 end

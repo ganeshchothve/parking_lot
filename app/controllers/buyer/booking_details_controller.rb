@@ -29,12 +29,12 @@ class Buyer::BookingDetailsController < BuyerController
 
   def set_booking_detail
     @booking_detail = BookingDetail.where(_id: params[:id]).first
-    redirect_to dashboard_path, alert: t('controller.booking_details.set_booking_detail_missing') if @booking_detail.blank?
+    redirect_to dashboard_path, alert: t('controller.booking_detail.set_booking_detail_missing') if @booking_detail.blank?
   end
 
   def set_project_unit
     @project_unit = @booking_detail.project_unit
-    redirect_to dashboard_path, alert: t('controller.booking_details.set_project_unit_missing') if @project_unit.blank?
+    redirect_to dashboard_path, alert: t('controller.booking_detail.set_project_unit_missing') if @project_unit.blank?
   end
 
   def set_receipt 
@@ -43,12 +43,11 @@ class Buyer::BookingDetailsController < BuyerController
       @receipt = unattached_blocking_receipt
       @receipt.booking_detail_id = @booking_detail.id
       @receipt.project_unit_id = @project_unit.id
-      @receipt.project_unit = @project_unit
     else
       @receipt = Receipt.new(creator: @booking_detail.user, user: @booking_detail.user, payment_mode: 'online', total_amount: current_client.blocking_amount, payment_gateway: current_client.payment_gateway, booking_detail_id: @booking_detail.id, project_unit_id: @project_unit.id)
       @receipt.account = selected_account(@booking_detail.project_unit)
       @receipt.total_amount = @project_unit.blocking_amount
-      authorize([ current_user_role_group, Receipt.new(user: @booking_detail.user)], :new?)
+      authorize([ current_user_role_group, Receipt.new(user: @booking_detail.user)], :create?)
     end
   end
 

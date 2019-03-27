@@ -35,12 +35,12 @@ class Admin::BookingDetailsController < AdminController
 
   def set_booking_detail
     @booking_detail = BookingDetail.where(_id: params[:id]).first
-    redirect_to dashboard_path, alert: t('controller.booking_details.set_booking_detail_missing') if @booking_detail.blank?
+    redirect_to dashboard_path, alert: t('controller.booking_detail.set_booking_detail_missing') if @booking_detail.blank?
   end
 
   def set_project_unit
     @project_unit = @booking_detail.project_unit
-    redirect_to dashboard_path, alert: t('controller.booking_details.set_project_unit_missing') if @project_unit.blank?
+    redirect_to dashboard_path, alert: t('controller.booking_detail.set_project_unit_missing') if @project_unit.blank?
   end
 
   def authorize_resource

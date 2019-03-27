@@ -116,7 +116,6 @@ module BookingDetailStateMachine
 
     def bef_under_negotiation
       pubs = ProjectUnitBookingService.new(self.project_unit.id)
-      debugger
       booking_detail_scheme = pubs.create_or_update_booking_detail_scheme self if self.booking_detail_schemes.empty?
       booking_detail_scheme.approved! if booking_detail_scheme.present? &&booking_detail_scheme.status != 'approved'
     end
