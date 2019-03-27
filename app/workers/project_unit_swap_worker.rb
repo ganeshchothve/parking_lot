@@ -43,7 +43,7 @@ class ProjectUnitSwapWorker
       new_receipt.project_unit_id = alternate_project_unit.id
       new_receipt.comments = "Receipt generated for Swapped Unit. Original Receipt ID: #{old_receipt.id}"
       old_receipt.comments ||= ''
-      old_receipt.comments += "Unit Swapped by user. Original Unit ID: #{user_request.project_unit_id} So cancelling these receipts"
+      old_receipt.comments += "Unit Swapped by user. Original Unit ID: #{current_booking_detail.project_unit_id} So cancelling these receipts"
       unless new_receipt.save
         error_messages = new_receipt.errors.full_messages
         break

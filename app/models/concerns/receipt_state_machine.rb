@@ -45,7 +45,7 @@ module ReceiptStateMachine
       end
 
       event :cancel do
-        transitions from: :pending, to: :cancelled, if: :swap_request_initiated?
+        transitions from: :pending, to: :cancelled, if: :user_request_initiated?
         transitions from: :success, to: :cancelled, if: :swap_request_initiated?
         transitions from: :clearance_pending, to: :cancelled, if: :user_request_initiated?
       end

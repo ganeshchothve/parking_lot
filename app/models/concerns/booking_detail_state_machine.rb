@@ -104,7 +104,7 @@ module BookingDetailStateMachine
 
       event :cancelling do
         transitions from: :cancelling, to: :cancelling
-        transitions from: :cancellation_requested, to: :cancelling, success: :process_booking_detail
+        transitions from: :cancellation_requested, to: :cancelling
       end
 
       event :cancel do
@@ -115,18 +115,13 @@ module BookingDetailStateMachine
 
     def update_user_request_to_rejected
       user_requests.in(status: ['processing']).first.rejected!
-      # current_user_request.rejected! #has to be removed
+      # current_user_request.rejected! # has to be removed
     end
 
     def update_user_request_to_resolved
       current_user_request = user_requests.in(status: ['processing']).first
       current_user_request.resolved!
       project_unit.set(status: 'available') if current_user_request.is_a?(UserRequest::Swap)
-    end
-
-    def process_booking_detail
-      # SANKET
-      ProjectUnitCancelWorker.perform_in(30.seconds, current_user_request.id)
     end
 
     def after_under_negotiation

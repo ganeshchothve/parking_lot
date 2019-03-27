@@ -25,7 +25,6 @@ class UserRequest
   validates :resolved_by, presence: true, if: proc { |user_request| user_request.status == 'resolved' }
 
   validates :status, inclusion: { in: STATUS }
-  validates :booking_detail_id, uniqueness: { scope: %i[user_id status], message: 'already has a cancellation request.' }, if: proc { |record| record.pending? }
   validates :reason_for_failure, presence: true, if: proc { |record| record.rejected? }
 
   accepts_nested_attributes_for :notes

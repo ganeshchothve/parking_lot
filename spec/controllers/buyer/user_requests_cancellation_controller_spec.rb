@@ -1,16 +1,16 @@
 require 'rails_helper'
 RSpec.describe Buyer::UserRequestsController, type: :controller do
-  describe 'new user request created' do
+  describe 'New cancellation request is created' do
     before (:each) do
       create(:admin)
       @user = create(:user)
       sign_in_app(@user)
     end
 
-    context 'when buyer create a user request cancellation' do
+    context 'by buyer when ' do
       %w[blocked booked_tentative booked_confirmed].each do |status|
-        context "booking_detail in #{status.upcase} then " do
-          it 'Create new user request with pending state and booking_detail must be in cancellation_requested' do
+        context "booking_detail is #{status.upcase} " do
+          it 'user request status changes to pending and booking_detail status changes to cancellation_requested' do
             booking_detail = book_project_unit(@user)
             booking_detail.set(status: status)
             user_request_params = { project_unit_id: booking_detail.project_unit_id, user_id: @user.id, booking_detail_id: booking_detail.id, event: 'pending' }

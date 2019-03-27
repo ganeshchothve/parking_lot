@@ -21,7 +21,7 @@
             <%= labels['_type'] %>: <%= user_request.class.model_name.element.titleize %>
           </div>
           <div class="small text-muted">
-            <%= labels['project_unit_id'] %>: <%= user_request.booking_detail.try(:project_unit_id) ? user_request.booking_detail.name : '-' %>
+            <%= labels['project_unit_id'] %>: <%= user_request.booking_detail.try(:project_unit_id) ? user_request.booking_detail.project_unit.name : '-' %>
           </div>
         </td>
         <td>

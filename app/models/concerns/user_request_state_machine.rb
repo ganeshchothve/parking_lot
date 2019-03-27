@@ -13,7 +13,7 @@ module UserRequestStateMachine
 
       event :processing do
         after do
-          booking_detail.current_user_request = self
+          # booking_detail.current_user_request = self # remove
           update_booking_detail_to_cancelling if is_a?(UserRequest::Cancellation)
           update_booking_detail_to_swapping if is_a?(UserRequest::Swap)
         end
@@ -44,17 +44,19 @@ module UserRequestStateMachine
     end
 
     def update_booking_detail_to_request_rejected
-      # SANKET
       booking_detail.cancellation_rejected! if is_a?(UserRequest::Cancellation)
       booking_detail.swap_rejected! if is_a?(UserRequest::Swap)
       self.reason_for_failure = 'admin rejected the request' if reason_for_failure.blank?
     end
 
     def update_booking_detail_to_cancelling
+      # SANKET
       booking_detail.cancelling!
+      ProjectUnitCancelWorker.perform_in(30.seconds, id)
     end
 
     def update_booking_detail_to_swapping
+      # SANKET
       booking_detail.swapping!
       ProjectUnitSwapWorker.perform_in(30.seconds, id)
     end

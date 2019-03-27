@@ -6,9 +6,6 @@ class BookingDetail
   include BookingDetailStateMachine
   include SyncDetails
 
-  # Put so that we can access current_user_request from booking detail object since user_request gets updated only when all the callbacks are complete in the state machine.
-  attr_accessor :current_user_request
-
   field :primary_user_kyc_id, type: BSON::ObjectId
   field :status, type: String
   field :erp_id, type: String, default: ''
