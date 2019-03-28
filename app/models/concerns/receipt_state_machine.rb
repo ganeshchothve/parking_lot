@@ -12,7 +12,7 @@ module ReceiptStateMachine
         transitions from: :pending, to: :pending
       end
 
-      event :clearance_pending do
+      event :clearance_pending, after: :moved_to_success_if_online do
         transitions from: :pending, to: :clearance_pending, if: :can_move_to_clearance?
         transitions from: :clearance_pending, to: :clearance_pending
       end
@@ -63,6 +63,10 @@ module ReceiptStateMachine
       persisted? || project_unit_id.present?
     end
 
+    def moved_to_success_if_online
+      success! if payment_mode == 'online'
+    end
+
     def user_request_initiated?
       booking_detail.swapping? || booking_detail.cancelling?
     end
@@ -73,16 +77,7 @@ module ReceiptStateMachine
         _project_unit.status = 'blocked'
         _project_unit.save
       end
-      _booking_detail = booking_detail
-      if _booking_detail.present?
-        if _booking_detail.aasm.current_state == :scheme_approved
-          _booking_detail.blocked! if _booking_detail.can_blocked?
-        elsif _booking_detail.aasm.current_state == :blocked
-          _booking_detail.booked_tentative! if _booking_detail.can_booked_tentative?
-        elsif _booking_detail.aasm.current_state == :booked_tentative
-          _booking_detail.booked_confirmed! if _booking_detail.can_booked_confirmed?
-        end
-      end
+      booking_detail.aft_under_negotiation if booking_detail.present?
     end
   end
 end

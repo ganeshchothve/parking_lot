@@ -11,4 +11,6 @@ class Asset
   belongs_to :assetable, polymorphic: true
 
   validates :file_name, uniqueness: { scope: [:assetable_type, :assetable_id] }
+  validates :asset_type, uniqueness: { scope: [:assetable_type, :assetable_id] }, if: proc{|asset| asset.asset_type == 'floor_plan' }
+
 end

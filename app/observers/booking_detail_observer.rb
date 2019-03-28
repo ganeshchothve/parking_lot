@@ -12,4 +12,12 @@ class BookingDetailObserver < Mongoid::Observer
       SelldoLeadUpdater.perform_async(booking_detail.user_id.to_s)
     end
   end
+
+  # TODO:: Need to move in state machine callback
+  def after_create booking_detail
+    if booking_detail.hold?
+      booking_detail.project_unit.set(status: 'hold', held_on: DateTime.now)
+      ProjectUnitUnholdWorker.perform_in(booking_detail.project_unit.holding_minutes.minutes, booking_detail.project_unit_id.to_s)
+    end
+  end
 end

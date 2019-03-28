@@ -34,6 +34,7 @@ Rails.application.routes.draw do
   resources :channel_partners, except: [:destroy] do
     get 'export', action: 'export', on: :collection, as: :export
   end
+
   namespace :admin do
     resources :accounts
     resources :phases
@@ -55,42 +56,56 @@ Rails.application.routes.draw do
       get :resend_success, on: :member
     end
 
+    resources :booking_details, only: [:index, :show] do
+      resources :receipts, only: [:index]
+    end
+
     resources :project_units, only: [:index, :show, :edit, :update] do
       member do
         get :print
-        get :send_under_negotiation
+        # get :send_under_negotiation
       end
 
       collection do
         get :export
         get :mis_report
       end
-
-      resources :booking_detail_schemes, except: [:destroy], controller: '/booking_detail_schemes'
     end
 
     scope ":request_type" do
-        resources :accounts, controller: 'accounts'
-      end
+      resources :accounts, controller: 'accounts'
+    end
+
     resources :users do
+
       member do
         get :resend_confirmation_instructions
         get :update_password
         get :resend_password_instructions
         get :print
       end
+
       collection do
         get '/new/:role', action: 'new', as: :new_by_role
         get :export
       end
+
       match :confirm_via_otp, action: 'confirm_via_otp', as: :confirm_via_otp, on: :member, via: [:get, :patch]
 
       resources :receipts, only: [:index, :new, :create, :edit, :update ] do
         get :resend_success, on: :member
+        get :lost_receipt, on: :collection
+
       end
+
       resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
+
       resources :project_units, only: [:index] do
-        get 'print', action: 'print', on: :member, as: :print
+
+        get :print, on: :member
+
+        resources :booking_detail_schemes, except: [:destroy], controller: 'project_units/booking_detail_schemes'
+
         resources :receipts, only: [:index, :new, :create], controller: 'project_units/receipts'
       end
       resources :searches, except: [:destroy], controller: '/searches' do
@@ -108,10 +123,13 @@ Rails.application.routes.draw do
         resources :user_requests, except: [:destroy], controller: 'user_requests'
       end
 
-      resources :booking_details, only: [:update] do
+      resources :booking_details, only: [:index, :show] do
         patch :booking, on: :member
+        patch :send_under_negotiation, on: :member
         resources :booking_detail_schemes, except: [:destroy], controller: '/booking_detail_schemes'
+        resources :receipts, only: [:index]
       end
+
     end
 
     resources :user_kycs, only: %i[index show], controller: 'user_kycs'
@@ -123,7 +141,6 @@ Rails.application.routes.draw do
     resources :schemes, except: [:destroy], controller: 'schemes', only_non_customizable_schemes: true do
       get :payment_adjustments_for_unit, on: :member
     end
-    resources :booking_detail_schemes, except: [:destroy], controller: '/booking_detail_schemes'
   end
 
   # home & globally accessible
@@ -162,14 +179,24 @@ Rails.application.routes.draw do
   end
 
   namespace :buyer do
+
     resources :emails, :smses, only: %i[index show]
     resources :project_units, only: [:index, :show, :edit, :update] do
+
+      resources :booking_detail_schemes, except: [:destroy], controller: 'project_units/booking_detail_schemes'
+
       resources :receipts, only: [ :index, :new, :create], controller: 'project_units/receipts'
     end
+
     resources :users, only: [:show, :update, :edit] do
       member do
         get :update_password
       end
+
+      resources :project_units, only: [:index] do
+        resources :booking_detail_schemes, except: [:destroy], controller: 'project_units/booking_detail_schemes'
+      end
+
     end
     resources :receipts, only: [:index, :new, :create, :show ]
     resources :referrals, only: [:index, :create, :new] do
@@ -177,13 +204,14 @@ Rails.application.routes.draw do
     end
 
     resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
-    resources :booking_details, only: [:update] do 
+    resources :booking_details, only: [:update] do
       patch :booking, on: :member
     end
 
     scope ":request_type" do
       resources :user_requests, except: [:destroy], controller: 'user_requests'
     end
+
   end
 
   namespace :api do
@@ -193,5 +221,5 @@ Rails.application.routes.draw do
   end
   match '/sell_do/lead_created', to: "api/sell_do/leads#lead_created", via: [:get, :post]
   match '/sell_do/pushed_to_sales', to: "api/sell_do/leads#pushed_to_sales", via: [:get, :post]
-  
+
 end

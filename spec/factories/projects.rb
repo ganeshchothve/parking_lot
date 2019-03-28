@@ -39,8 +39,7 @@ FactoryBot.define do
     rera_registration_no { Faker::IDNumber.valid }
 
     after(:build) do |project|
-      project.booking_portal_client ||= Client.desc(:created_at).first
-      project.client_id ||= Client.desc(:created_at).first.id
+      project.booking_portal_client ||= (Client.desc(:created_at).first || create(:client))
       project.developer_id ||= ( Developer.first || create(:developer) )
     end
 

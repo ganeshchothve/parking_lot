@@ -21,7 +21,6 @@ class ProjectUnit
   field :base_rate, type: Float
 
   # These fields majorly are pulled from sell.do and may be used on the UI
-  field :client_id, type: String
   field :developer_name, type: String
   field :project_name, type: String
   field :project_tower_name, type: String
@@ -45,7 +44,7 @@ class ProjectUnit
   attr_accessor :processing_user_request, :processing_swap_request
 
   enable_audit(
-    indexed_fields: %i[project_id project_tower_id unit_configuration_id client_id booking_portal_client_id selldo_id developer_id],
+    indexed_fields: %i[project_id project_tower_id unit_configuration_id booking_portal_client_id selldo_id developer_id],
     audit_fields: %i[erp_id status available_for blocked_on auto_release_on held_on primary_user_kyc_id base_rate]
   )
 
@@ -61,17 +60,19 @@ class ProjectUnit
   has_many :receipts
   has_many :user_requests
   has_and_belongs_to_many :user_kycs
+  has_and_belongs_to_many :users
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :emails, as: :triggered_by, class_name: 'Email'
+  has_many :booking_details
   embeds_many :costs, as: :costable
   embeds_many :data, as: :data_attributable
   embeds_many :parameters, as: :parameterizable
 
   has_many :assets, as: :assetable
 
-  accepts_nested_attributes_for :data, :parameters, :costs, allow_destroy: true
+  accepts_nested_attributes_for :data, :parameters, :assets, :costs, allow_destroy: true
 
-  validates :client_id, :agreement_price, :all_inclusive_price, :booking_price, :project_id, :project_tower_id, :unit_configuration_id, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :type, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, presence: true
+  validates :agreement_price, :all_inclusive_price, :booking_price, :project_id, :project_tower_id, :unit_configuration_id, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :type, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, presence: true
   validates :status, :name, :erp_id, presence: true
   validates :status, inclusion: { in: proc { ProjectUnit.available_statuses.collect { |x| x[:id] } } }
   validates :available_for, inclusion: { in: proc { ProjectUnit.available_available_fors.collect { |x| x[:id] } } }
@@ -122,12 +123,14 @@ class ProjectUnit
     out.with_indifferent_access
   end
 
-  def permitted_schemes(user = nil)
-    user ||= self.user
-    or_criteria = [{ project_tower_id: project_tower_id }]
-    or_criteria << { user_id: user.id }
-    or_criteria << { user_id: nil, user_role: user.role }
-    Scheme.where(status: 'approved').or('$or' => [{ default: true, project_tower_id: project_tower_id }, { can_be_applied_by: user.role, "$or": or_criteria }])
+  def permitted_schemes(_user=nil)
+    or_criteria = []
+    _scheme = Scheme.where(project_tower_id: self.project_tower_id, status: 'approved')
+    unless self.user.blank?
+      _scheme = _scheme.or([ { :user_ids => { "$in" => [nil, [], self.user.id, ''] } },{ :user_role=>{ "$in"=>[ nil, [], self.user.role ] } } ])
+    end
+    _scheme = _scheme.or([{ can_be_applied_by: nil }, { can_be_applied_by: [] }, { can_be_applied_by: _user.role } ])
+    _scheme
   end
 
   def self.user_based_available_statuses(user)
@@ -219,55 +222,56 @@ class ProjectUnit
     (status == 'hold' && user_id == user.id) || user_based_status(user) == 'available'
   end
 
-  def process_payment!(receipt)
-    if %w[success clearance_pending].include?(receipt.status)
-      if ProjectUnit.booking_stages.include?(status) || can_block?(receipt.user) || (status == 'under_negotiation' && user_id == receipt.user_id)
-        if scheme.status == 'approved'
-          self.status = if pending_balance(strict: true) <= 0
-                          'booked_confirmed'
-                        elsif total_amount_paid > blocking_amount
-                          'booked_tentative'
-                        else
-                          'blocked'
-                        end
-        elsif scheme.status == 'under_negotiation'
-          self.status = 'under_negotiation'
-        else
-          # kept this unit status as hold.
-        end
-      else
-        receipt.project_unit_id = nil
-        receipt.save
-      end
-      # Send payments data to Sell.Do CRM
-      # SelldoReceiptPusher.perform_async(receipt.id.to_s, Time.now.to_i)
-    elsif receipt.status == 'failed'
-      # if the unit has any successful or clearance_pending payments other than this, we keep it still blocked
-      # else we just release the unit
-      if pending_balance == booking_price # not success or clearance_pending receipts tagged against this unit
-        if status == 'hold'
-          make_available
-        else
-          # TODO: we should display a message on the UI before someone marks the receipt as 'failed'. Because the unit might just get released
-          self.status = 'error'
-        end
-      end
-    end
-    save(validate: false)
-  end
+  # def process_payment!(receipt)
+  #   debugger
+  #   if %w[success clearance_pending].include?(receipt.status)
+  #     if ProjectUnit.booking_stages.include?(status) || can_block?(receipt.user) || (status == 'under_negotiation' && user_id == receipt.user_id)
+  #       if scheme.status == 'approved'
+  #         self.status = if pending_balance(strict: true) <= 0
+  #                         'booked_confirmed'
+  #                       elsif total_amount_paid > blocking_amount
+  #                         'booked_tentative'
+  #                       else
+  #                         'blocked'
+  #                       end
+  #       elsif scheme.status == 'under_negotiation'
+  #         self.status = 'under_negotiation'
+  #       else
+  #         # kept this unit status as hold.
+  #       end
+  #     else
+  #       receipt.project_unit_id = nil
+  #       receipt.save
+  #     end
+  #     # Send payments data to Sell.Do CRM
+  #     # SelldoReceiptPusher.perform_async(receipt.id.to_s, Time.now.to_i)
+  #   elsif receipt.status == 'failed'
+  #     # if the unit has any successful or clearance_pending payments other than this, we keep it still blocked
+  #     # else we just release the unit
+  #     if pending_balance == booking_price # not success or clearance_pending receipts tagged against this unit
+  #       if status == 'hold'
+  #         make_available
+  #       else
+  #         # TODO: we should display a message on the UI before someone marks the receipt as 'failed'. Because the unit might just get released
+  #         self.status = 'error'
+  #       end
+  #     end
+  #   end
+    #save(validate: false)
+  # end
 
-  def process_scheme!
-    if status == 'under_negotiation' && scheme.status == 'approved'
-      if pending_balance(strict: true) <= 0
-        self.status = 'booked_confirmed'
-      elsif total_amount_paid > blocking_amount
-        self.status = 'booked_tentative'
-      elsif total_tentative_amount_paid >= blocking_amount
-        self.status = 'blocked'
-      end
-      save(validate: false)
-    end
-  end
+  # def process_scheme!
+  #   if status == 'under_negotiation' && scheme.status == 'approved'
+  #     if pending_balance(strict: true) <= 0
+  #       self.status = 'booked_confirmed'
+  #     elsif total_amount_paid > blocking_amount
+  #       self.status = 'booked_tentative'
+  #     elsif total_tentative_amount_paid >= blocking_amount
+  #       self.status = 'blocked'
+  #     end
+  #     save(validate: false)
+  #   end
+  # end
 
   def self.build_criteria(params = {})
     selector = {}
@@ -374,7 +378,7 @@ class ProjectUnit
   end
 
   def pending_booking_detail_scheme
-    if %w[hold under_negotiation].include?(status) || self.class.booking_stages.include?(status)
+    if %w[hold].include?(status) || self.class.booking_stages.include?(status)
       booking_detail_scheme
     end
   end

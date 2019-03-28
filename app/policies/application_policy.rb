@@ -1,6 +1,6 @@
 class ApplicationPolicy
   include ApplicationHelper
-  
+
   attr_reader :user, :record, :condition
 
   def initialize(user, record)
@@ -78,4 +78,45 @@ class ApplicationPolicy
       scope
     end
   end
+
+  private
+
+  def only_for_admin!
+    return true if !user.buyer?
+    @condition = 'only_admin'
+    false
+  end
+
+  def only_for_buyer!
+    return true if user.buyer?
+    @condition = 'only_buyer'
+    false
+  end
+
+  def enable_actual_inventory?(_user=nil)
+    _user ||= user
+    return true if current_client.enable_actual_inventory?(_user)
+    @condition = 'enable_actual_inventory'
+    false
+  end
+
+  def only_for_confirmed_user!
+    return true if record.user.confirmed?
+    @condition = 'only_for_confirmed_user'
+    false
+  end
+
+  def only_for_kyc_added_users!
+    return true if record.user.kyc_ready?
+    @condition = 'only_for_kyc_added_users'
+    false
+  end
+
+  def has_user_on_record?
+    return true if record.user_id.present?
+    @condition = 'user_missing'
+    false
+  end
+
+
 end

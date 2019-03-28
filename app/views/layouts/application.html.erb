@@ -23,7 +23,9 @@
         Pusher.logToConsole = true;
       <% end %>
     <% end %>
-    <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= current_client.selldo_client_id %>.js'></script>
+    <% if current_client.selldo_client_id.present? %>
+      <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= current_client.selldo_client_id %>.js'></script>
+    <% end %>
   </head>
   <% if current_client.background_image.present? %>
   <body class="full-bg" style="background-image: url('<%= current_client.background_image.url %>');">

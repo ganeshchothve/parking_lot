@@ -4,36 +4,29 @@ class BookingDetailScheme
   include InsertionStringMethods
   include BookingDetailSchemeStateMachine
 
-  field :derived_from_scheme_id, type: BSON::ObjectId
+  # field :derived_from_scheme_id, type: BSON::ObjectId
   field :status, type: String, default: "draft"
   field :approved_at, type: DateTime
-  field :payment_schedule_template_id, type: BSON::ObjectId
-  field :cost_sheet_template_id, type: BSON::ObjectId
-  field :user_id, type: BSON::ObjectId
 
   attr_accessor :created_by_user
 
   belongs_to :project_unit, class_name: 'ProjectUnit'
   belongs_to :booking_detail, class_name: 'BookingDetail', optional: true
+  belongs_to :user, optional: true
   belongs_to :approved_by, class_name: "User", optional: true
   belongs_to :created_by, class_name: "User"
   belongs_to :booking_portal_client, class_name: "Client"
+  belongs_to :derived_from_scheme, class_name: 'Scheme'
+  belongs_to :payment_schedule_template, class_name: 'Template::PaymentScheduleTemplate'
+  belongs_to :cost_sheet_template, class_name: 'Template::CostSheetTemplate'
+
   embeds_many :payment_adjustments, as: :payables
+
   accepts_nested_attributes_for :payment_adjustments, allow_destroy: true
 
   validates :booking_detail_id, presence: true, if: Proc.new{|record| record.status == "approved" }
 
-  def derived_from_scheme
-    Scheme.find self.derived_from_scheme_id
-  end
-
-  def payment_schedule_template
-    Template::PaymentScheduleTemplate.find self.payment_schedule_template_id
-  end
-
-  def cost_sheet_template
-    Template::CostSheetTemplate.find self.cost_sheet_template_id
-  end
+  delegate :project_tower_id, to: :derived_from_scheme, prefix: false, allow_nil: true
 
   def editable_payment_adjustments
     self.payment_adjustments.in(editable: [true, nil])

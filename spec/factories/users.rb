@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :user do
     first_name { Faker::Name.first_name }
     phone { Faker::PhoneNumber.phone_number }
-    confirmed_at DateTime.now
+    confirmed_at { DateTime.now }
     last_name { Faker::Name.last_name }
     email { Faker::Internet.email }
     allowed_bookings { Faker::Number.number(2) }
@@ -12,10 +12,6 @@ FactoryBot.define do
     role { 'user' }
 
     after(:build) do |user|
-      user.booking_portal_client ||= (Client.asc(:created_at).first || create(:client))
-    end
-
-    after(:create) do |user|
       user.booking_portal_client ||= (Client.asc(:created_at).first || create(:client))
     end
   end
