@@ -72,7 +72,7 @@ class ProjectUnitSwapWorker
     new_booking_detail_scheme.delete if new_booking_detail_scheme.present?
     new_booking_detail.delete if new_booking_detail.present?
     alternate_project_unit.set(status: alternate_project_unit_status) unless alternate_project_unit.status == alternate_project_unit_status
-    user_request.reason_for_failure = error_messages
+    user_request.set(reason_for_failure: error_messages)
     current_booking_detail.swap_rejected!
   end
 
