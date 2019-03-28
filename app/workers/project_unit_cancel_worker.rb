@@ -8,9 +8,11 @@ class ProjectUnitCancelWorker
     resolve
   end
 
+  # This function updates the status of current receipts according to requirement
   def update_receipts(old_receipts_arr, new_receipts_arr, error_messages)
     booking_detail.receipts.each do |receipt|
       next unless %w[pending clearance_pending success].include?(receipt.status)
+
       old_receipts_arr << [receipt.id, receipt.status]
       case receipt.status
       when 'success'
@@ -42,6 +44,7 @@ class ProjectUnitCancelWorker
     error_messages
   end
 
+  # This function checks if the current project unit can be made available
   def can_update_project_unit_to_available?
     make_project_unit_available = ProjectUnit.booking_stages.include?(booking_detail.project_unit.status) && (user_request.user_id == booking_detail.project_unit.user_id)
   end
@@ -70,6 +73,7 @@ class ProjectUnitCancelWorker
     end
   end
 
+  # This function updates the current project unit to available
   def update_project_unit_to_available(error_messages)
     project_unit = booking_detail.project_unit
     project_unit.processing_user_request = true
@@ -83,6 +87,7 @@ class ProjectUnitCancelWorker
     error_messages
   end
 
+  # This function restores the status of the receipts if processing of the cancellation request fails
   def revert_updated_receipts(old_receipts_arr, new_receipts_arr)
     old_receipts_arr.each do |a|
       receipt = Receipt.find(a[0])
@@ -91,6 +96,7 @@ class ProjectUnitCancelWorker
     new_receipts_arr.each(&:destroy)
   end
 
+  # This function resolves the cancellation request raised by user
   def resolve
     old_receipts_arr = []
     new_receipts_arr = []
@@ -99,9 +105,9 @@ class ProjectUnitCancelWorker
     if error_messages.blank?
       can_update_project_unit_to_available? ? error_messages = update_project_unit_to_available(error_messages) : error_messages = ['Project Unit unavailable']
     end
-    if error_messages.blank?
+    if error_messages.blank? # If cancellation successful
       booking_detail.cancel!
-    else
+    else # If cancellation unsuccessful
       revert_updated_receipts(old_receipts_arr, new_receipts_arr)
       user_request.set(reason_for_failure: error_messages)
       booking_detail.cancellation_rejected!
