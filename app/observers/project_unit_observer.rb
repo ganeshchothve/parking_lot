@@ -146,6 +146,13 @@ class ProjectUnitObserver < Mongoid::Observer
             triggered_by_id: project_unit.id,
             triggered_by_type: project_unit.class.to_s
           )
+          Sms.create!(
+            booking_portal_client_id: project_unit.booking_portal_client_id,
+            recipient_id: user.manager_id,
+            sms_template_id: Template::SmsTemplate.find_by(name: "channel_partner_project_unit_blocked").id,
+            triggered_by_id: project_unit.id,
+            triggered_by_type: project_unit.class.to_s
+          ) if user.manager_id.present?
         elsif project_unit.status == "booked_confirmed"
           Sms.create!(
             booking_portal_client_id: user.booking_portal_client_id,
@@ -154,6 +161,13 @@ class ProjectUnitObserver < Mongoid::Observer
             triggered_by_id: project_unit.id,
             triggered_by_type: project_unit.class.to_s
           )
+          Sms.create!(
+            booking_portal_client_id: user.booking_portal_client_id,
+            recipient_id: user.manager_id,
+            sms_template_id: Template::SmsTemplate.find_by(name: "channel_partner_project_unit_booked_confirmed").id,
+            triggered_by_id: project_unit.id,
+            triggered_by_type: project_unit.class.to_s
+          ) if user.manager_id.present?
         end
       end
     end
