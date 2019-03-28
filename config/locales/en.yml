@@ -285,7 +285,7 @@ en:
         country: 'Country'
         zip: 'Zip / Pin Code'
   controller:
-    booking_detail:
+    booking_details:
       set_booking_detail_missing: "Booking detail not found"
       set_project_unit_missing: "Project unit not found"
     only_administrator_users: 'Only administrator users are allowed.'
@@ -362,7 +362,7 @@ en:
       almost_x_years:
         one: 'almost year'
         other: '%{count} Years'
-  project_units:
+  booking_details:
     status:
        available: 'Available'
        not_available: 'Not Available'
@@ -371,5 +371,8 @@ en:
        blocked: 'Blocked'
        booked_tentative: 'Tentative Booked'
        booked_confirmed: 'Confirmed Booked'
+       under_negotiation: 'Under Negotiation'
+       scheme_approved: 'Scheme Approved'
+       scheme_rejected: 'Scheme Rejected'
        management: 'Management Blocking'
        employee: 'Employee Blocking'

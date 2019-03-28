@@ -109,11 +109,11 @@ class Buyer::BookingDetails::BookingDetailSchemesController < BuyerController
 
   def set_project_unit
     @project_unit = @booking_detail.project_unit
-    redirect_to root_path, alert: t('controller.booking_detail.set_project_unit_missing'), status: 404 if @project_unit.blank?
+    redirect_to root_path, alert: t('controller.booking_details.set_project_unit_missing'), status: 404 if @project_unit.blank?
   end
   def set_booking_detail
     @booking_detail = BookingDetail.find(params[:booking_detail_id]) if params[:booking_detail_id].present?
-    redirect_to root_path, alert: t('controller.booking_detail.set_booking_detail_missing'), status: 404 if @booking_detail.blank?
+    redirect_to root_path, alert: t('controller.booking_details.set_booking_detail_missing'), status: 404 if @booking_detail.blank?
   end
 
 
