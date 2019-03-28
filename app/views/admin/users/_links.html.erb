@@ -2,7 +2,7 @@
   <%= link_to "Choose #{global_labels[:project_unit]} & Add Booking", new_admin_user_search_path(user.id), class: "dropdown-item" %>
 <% end %>
 <% hold_booking = user.booking_details.where(status: 'hold').first %>
-<% if hold_booking.present? && policy([current_user_role_group, hold_booking]).block? %>
+<% if hold_booking.present? && policy([current_user_role_group, hold_booking]).hold? %>
   <%= link_to "Checkout using unit already held", checkout_user_search_path(user.get_search(hold_booking.project_unit_id)), class: "dropdown-item" %>
 <% end %>
 <% if !current_user.buyer? && policy([:admin, Receipt.new(user: user)]).direct? %>

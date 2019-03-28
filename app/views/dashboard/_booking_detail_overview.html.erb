@@ -137,7 +137,7 @@
         <div class="form-group">
           <label>Status</label>
           <div>
-            <%= BookingDetail.available_statuses.find{|x| x[:id] == booking_detail.status}[:text] %>
+            <%= booking_detail.status %>
           </div>
         </div>
       </div>
