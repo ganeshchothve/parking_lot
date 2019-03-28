@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  include ApplicationConcern
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_cache_headers, :set_request_store, :set_cookies
   before_action :load_hold_unit

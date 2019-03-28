@@ -3,7 +3,7 @@ module BookingDetailSchemeStateMachine
   included do
     include AASM
     attr_accessor :event
-    aasm column: :status do
+    aasm column: :status, whiny_transitions: false do
       state :draft, initial: true
       state :approved, :rejected
 

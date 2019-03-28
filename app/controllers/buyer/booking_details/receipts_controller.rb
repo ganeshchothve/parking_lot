@@ -1,5 +1,5 @@
-class Buyer::ProjectUnits::ReceiptsController < BuyerController
-  include ReceiptsConcern
+class Buyer::BookingDetails::ReceiptsController < BuyerController
+  before_action :set_booking_detail
   before_action :set_project_unit
 
   #
@@ -11,7 +11,6 @@ class Buyer::ProjectUnits::ReceiptsController < BuyerController
       creator: current_user, project_unit_id: @project_unit.id, user: current_user,
       total_amount: (@project_unit.status == "hold" ? @project_unit.blocking_amount : @project_unit.pending_balance)
     })
-    authorize([:buyer, @receipt])
     render layout: false
   end
 
@@ -20,11 +19,9 @@ class Buyer::ProjectUnits::ReceiptsController < BuyerController
   #
   # POST /admin/users/:user_id/project_units/:project_unit_id/receipts
   def create
-    @receipt = Receipt.new(user: current_user, creator: current_user, project_unit_id: @project_unit.id, payment_gateway: current_client.payment_gateway)
+    @receipt = Receipt.new(user: current_user, creator: current_user, project_unit_id: @project_unit.id, payment_gateway: current_client.payment_gateway, booking_detail_id: @booking_detail.id)
     @receipt.assign_attributes(permitted_attributes([:buyer, @receipt]))
     @receipt.account = selected_account(@receipt.project_unit)
-    authorize([:buyer, @receipt])
-
     respond_to do |format|
       if @receipt.account.blank?
         flash[:alert] = "We do not have any Account Details for Transaction. Please ask Administrator to add."
@@ -53,14 +50,14 @@ class Buyer::ProjectUnits::ReceiptsController < BuyerController
 
   private
 
-  def set_user
-    current_user = User.where(_id: params[:user_id]).first
-    redirect_to admin_dashboard_path, alert: 'User Not found', status: 404 if current_user.blank?
+  def set_project_unit
+    @project_unit = @booking_detail.project_unit
+    redirect_to root_path, alert: t('controller.booking_details.set_project_unit_missing'), status: 404 if @project_unit.blank?
   end
 
-  def set_project_unit
-    @project_unit = ProjectUnit.where(_id: params[:project_unit_id]).first
-    redirect_to admin_dashboard_path, alert: 'Project Unit Not found', status: 404 if @project_unit.blank?
+  def set_booking_detail
+    @booking_detail = BookingDetail.where(_id: params[:booking_detail_id]).first
+    redirect_to root_path, alert: t('controller.booking_details.set_booking_detail_missing'), status: 404 if @booking_detail.blank?
   end
 
 end

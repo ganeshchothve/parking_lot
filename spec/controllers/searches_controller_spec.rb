@@ -63,7 +63,7 @@ RSpec.describe SearchesController, type: :controller do
               project_unit = create(:available_project_unit)
               booking_detail = create(:booking_detail, project_unit_id: project_unit.id, user_id: @user.id, status: 'hold', primary_user_kyc_id: @kyc.id)
               post :hold, params: { id: @search.id, booking_detail: { primary_user_kyc_id: @user.id } }
-              expect(response.request.flash[:alert]).to eq('This unit is already held by other user.')
+              expect(response.request.flash[:alert]).to eq('User already has a unit on hold.')
             end
           end
 
@@ -190,7 +190,7 @@ RSpec.describe SearchesController, type: :controller do
               project_unit = create(:available_project_unit)
               booking_detail = create(:booking_detail, project_unit_id: project_unit.id, user_id: @user.id, status: 'hold', primary_user_kyc_id: @kyc.id)
               post :hold, params: { id: @search.id, booking_detail: { primary_user_kyc_id: @user.id } }
-              expect(response.request.flash[:alert]).to eq('This unit is already held by other user.')
+              expect(response.request.flash[:alert]).to eq('User already has a unit on hold.')
             end
           end
 
