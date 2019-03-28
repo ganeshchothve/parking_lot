@@ -1,5 +1,7 @@
 class UserRequestObserver < Mongoid::Observer
   def after_save(user_request)
-    user_request.send(user_request.event) if user_request.event.present?
+    _event = user_request.event
+    user_request.event = nil
+    user_request.send("#{_event}!") if _event.present?
   end
 end
