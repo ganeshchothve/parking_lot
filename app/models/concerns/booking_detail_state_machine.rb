@@ -115,7 +115,6 @@ module BookingDetailStateMachine
 
     def update_user_request_to_rejected
       user_requests.in(status: ['processing']).first.rejected!
-      # current_user_request.rejected! # has to be removed
     end
 
     def update_user_request_to_resolved

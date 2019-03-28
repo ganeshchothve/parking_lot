@@ -9,30 +9,6 @@ class ProjectUnitSwapWorker
     resolve
   end
 
-  def send_email
-    Email.create!(
-      booking_portal_client_id: user_request.user.booking_portal_client_id,
-      email_template_id: Template::EmailTemplate.find_by(name: "#{user_request.class.model_name.element}_request_#{user_request.status}").id,
-      recipients: [user_request.user],
-      cc_recipients: (user_request.user.manager_id.present? ? [user_request.user.manager] : []),
-      triggered_by_id: user_request.id,
-      triggered_by_type: user_request.class.to_s
-    )
-  end
-
-  def send_sms
-    template = Template::SmsTemplate.where(name: "#{user_request.class.model_name.element}_request_resolved").first
-    if template.present? && user_request.user.booking_portal_client.sms_enabled?
-      Sms.create!(
-        booking_portal_client_id: user_request.user.booking_portal_client_id,
-        recipient_id: user_request.user_id,
-        sms_template_id: template.id,
-        triggered_by_id: user_request.id,
-        triggered_by_type: user_request.class.to_s
-      )
-    end
-  end
-
   def update_receipts(error_messages, new_booking_detail)
     current_booking_detail.receipts.desc(:total_amount).each do |old_receipt|
       next unless %w[pending clearance_pending success].include?(old_receipt.status)
@@ -97,12 +73,6 @@ class ProjectUnitSwapWorker
       current_booking_detail.project_unit.make_available
       error_messages = current_booking_detail.project_unit.errors.full_messages unless current_booking_detail.project_unit.save
     end
-    if error_messages.blank?
-      send_email if user_request.user.booking_portal_client.email_enabled?
-      send_sms
-      current_booking_detail.swapped!
-    else
-      reject_user_request(error_messages, alternate_project_unit_status, new_booking_detail, new_booking_detail_scheme)
-    end
+    error_messages.blank? ? current_booking_detail.swapped! : reject_user_request(error_messages, alternate_project_unit_status, new_booking_detail, new_booking_detail_scheme)
   end
 end

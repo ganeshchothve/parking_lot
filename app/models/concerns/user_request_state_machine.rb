@@ -13,7 +13,6 @@ module UserRequestStateMachine
 
       event :processing do
         after do
-          # booking_detail.current_user_request = self # remove
           update_booking_detail_to_cancelling if is_a?(UserRequest::Cancellation)
           update_booking_detail_to_swapping if is_a?(UserRequest::Swap)
         end
@@ -29,34 +28,63 @@ module UserRequestStateMachine
       event :rejected do
         transitions from: :rejected, to: :rejected
         transitions from: :pending, to: :rejected, after: :update_booking_detail_to_request_rejected
-        transitions from: :processing, to: :rejected
+        transitions from: :processing, to: :rejected, after: :send_notifications
       end
     end
 
     def update_request
       resolved_at = Time.now
+      send_notifications
+    end
+
+    def send_email
+      Email.create!(
+        booking_portal_client_id: user.booking_portal_client_id,
+        email_template_id: Template::EmailTemplate.find_by(name: "#{self.class.model_name.element}_request_#{status}").id,
+        recipients: [user],
+        cc_recipients: (user.manager_id.present? ? [user.manager] : []),
+        triggered_by_id: id,
+        triggered_by_type: self.class.to_s
+      )
+    end
+
+    def send_sms
+      template = Template::SmsTemplate.where(name: "#{self.class.model_name.element}_request_resolved").first
+      if template.present? && user.booking_portal_client.sms_enabled?
+        Sms.create!(
+          booking_portal_client_id: user.booking_portal_client_id,
+          recipient_id: user_id,
+          sms_template_id: template.id,
+          triggered_by_id: id,
+          triggered_by_type: self.class.to_s
+        )
+      end
     end
 
     def update_booking_detail_to_request_made
       booking_detail.cancellation_requested! if is_a?(UserRequest::Cancellation)
       booking_detail.swap_requested! if is_a?(UserRequest::Swap)
-      UserRequestService.new(self)
+      send_notifications
+    end
+
+    def send_notifications
+      send_email if user.booking_portal_client.email_enabled?
+      send_sms
     end
 
     def update_booking_detail_to_request_rejected
       booking_detail.cancellation_rejected! if is_a?(UserRequest::Cancellation)
       booking_detail.swap_rejected! if is_a?(UserRequest::Swap)
       self.reason_for_failure = 'admin rejected the request' if reason_for_failure.blank?
+      send_notifications
     end
 
     def update_booking_detail_to_cancelling
-      # SANKET
       booking_detail.cancelling!
       ProjectUnitCancelWorker.perform_in(10.seconds, id)
     end
 
     def update_booking_detail_to_swapping
-      # SANKET
       booking_detail.swapping!
       ProjectUnitSwapWorker.perform_in(10.seconds, id)
     end
