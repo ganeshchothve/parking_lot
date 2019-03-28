@@ -99,12 +99,11 @@ class ProjectUnitCancelWorker
     if error_messages.blank?
       can_update_project_unit_to_available? ? error_messages = update_project_unit_to_available(error_messages) : error_messages = ['Project Unit unavailable']
     end
-    # user_request.processing! # TO REMOVE , kept to see that rspecs work
     if error_messages.blank?
       booking_detail.cancel!
     else
       revert_updated_receipts(old_receipts_arr, new_receipts_arr)
-      user_request.reason_for_failure = error_messages
+      user_request.set(reason_for_failure: error_messages)
       booking_detail.cancellation_rejected!
     end
   end
