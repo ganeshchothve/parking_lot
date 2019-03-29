@@ -4,7 +4,7 @@ module ReceiptStateMachine
     include AASM
     attr_accessor :event
 
-    aasm column: :status do
+    aasm column: :status, whiny_transitions: false do
       state :pending, initial: true
       state :success, :clearance_pending, :failed, :available_for_refund, :refunded, :cancelled
 
@@ -12,12 +12,12 @@ module ReceiptStateMachine
         transitions from: :pending, to: :pending
       end
 
-      event :clearance_pending, after: :moved_to_success_if_online do
+      event :clearance_pending, after: %i[moved_to_success_if_online change_booking_detail_status] do
         transitions from: :pending, to: :clearance_pending, if: :can_move_to_clearance?
         transitions from: :clearance_pending, to: :clearance_pending
       end
 
-      event :success, after: :after_success do
+      event :success, after: %i[after_success change_booking_detail_status] do
         transitions from: :success, to: :success
         transitions from: :pending, to: :success
         # receipt moves from pending to success when online payment is made.
@@ -77,7 +77,12 @@ module ReceiptStateMachine
         _project_unit.status = 'blocked'
         _project_unit.save
       end
-      booking_detail.aft_under_negotiation if booking_detail.present?
+    end
+
+    def change_booking_detail_status
+      if booking_detail
+        booking_detail.send("after_#{booking_detail.status}_event")
+      end
     end
   end
 end

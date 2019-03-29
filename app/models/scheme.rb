@@ -20,7 +20,7 @@ class Scheme
   })
 
   embeds_many :payment_adjustments, as: :payable
-  belongs_to :project
+  belongs_to :project, optional: Rails.env.test?
   belongs_to :project_tower
   belongs_to :approved_by, class_name: "User", optional: true
   belongs_to :created_by, class_name: "User"

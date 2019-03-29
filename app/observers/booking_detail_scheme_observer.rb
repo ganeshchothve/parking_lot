@@ -37,7 +37,7 @@ class BookingDetailSchemeObserver < Mongoid::Observer
   end
 
   def after_update(booking_detail_scheme)
-    booking_detail_scheme.booking_detail.push_to_scheme_approved
+    booking_detail_scheme.booking_detail.send("after_#{booking_detail.status}_event")
   end
 
   def after_save(booking_detail_scheme)

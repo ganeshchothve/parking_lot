@@ -1,5 +1,4 @@
 class Admin::ReceiptsController < AdminController
-  include ReceiptsConcern
 
   before_action :set_user, except: [:index, :show, :export, :resend_success]
   before_action :set_receipt, only: [:edit, :update, :show, :resend_success]

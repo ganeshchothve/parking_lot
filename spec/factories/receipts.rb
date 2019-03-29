@@ -8,7 +8,7 @@ FactoryBot.define do
     issuing_bank { Faker::String.random(5) } # Bank which issued cheque / DD etc
     issuing_bank_branch { Faker::String.random(5) } # Branch of bank
     payment_identifier { Faker::String.random(5) } # cheque / DD number / online transaction reference from gateway
-    status 'pending'
+    # status 'pending'
     # tracking_id { Faker::String.random(5) } # online transaction reference from gateway or transaction id after the cheque is processed
     total_amount { Faker::Number.number(6) } # Total amount
     # status { 'success' } # { ['success', 'clearance_pending', 'failed', 'available_for_refund', 'refunded', 'cancelled'].sample } # pending, success, failed, clearance_pending,cancelled

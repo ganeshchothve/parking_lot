@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :booking_detail_scheme do
     # field :derived_from_scheme_id, type: BSON::ObjectId
-    status {"draft"}
+    # status {"draft"}
     approved_at { DateTime.now }
    # field :user_id, type: BSON::ObjectId
 

@@ -25,6 +25,7 @@ en:
           booking_limit_exceed: 'You have booked the permitted number of apartments.'
           user_kyc_allowed_bookings: 'Multiple KYC booking is not allowed.'
           not_authorise_to_book_for_this_user: 'You do not have access to book for this buyer.'
+          hold_single_unit: 'User already has a unit on hold.'
 
       project_unit_policy:
         index?: "Only administrator has rights to view this page."
@@ -101,6 +102,7 @@ en:
           booking_limit_exceed: 'You have booked the permitted number of apartments.'
           user_kyc_allowed_bookings: 'Multiple KYC booking is not allowed.'
           not_authorise_to_book_for_this_user: 'You do not have access to book for this buyer.'
+          hold_single_unit: 'User already has a unit on hold.'
       project_unit_policy:
         index?: "Only buyer has rights to view this page."
         show?: "Only buyer has rights to view this page."

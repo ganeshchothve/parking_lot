@@ -36,7 +36,7 @@
           <div class="card">
             <div class="card-body text-center">
               <%- booking_detail = current_user.booking_details.hold.first %>
-              <% if booking_detail %>
+              <% if booking_detail.search %>
                 <%= link_to 'Continue Booking', step_user_search_path(booking_detail.search, step: booking_detail.search.step), class: 'btn btn-primary' %>
               <% else %>
                 <%= link_to 'Apartment Selector', new_search_path, class: 'btn btn-primary' %>

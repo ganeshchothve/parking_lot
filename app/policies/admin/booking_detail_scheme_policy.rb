@@ -3,7 +3,7 @@ class Admin::BookingDetailSchemePolicy < BookingDetailSchemePolicy
   # BOOKING_ALLOWED_USERS = %w(admin sales sales_admin crm channel_partner)
 
   def new?
-    if only_for_admin! && enable_actual_inventory? && is_cross_tower_scheme? && is_approved_scheme? && is_project_unit_hold?
+    if only_for_admin! && enable_actual_inventory? && is_cross_tower_scheme? && is_derived_from_scheme_approved? && is_project_unit_hold?
       case user.role
       when 'admin', 'sales', 'sales_admin', 'crm', 'superadmin'
         true
@@ -50,7 +50,7 @@ class Admin::BookingDetailSchemePolicy < BookingDetailSchemePolicy
       attributes += [payment_adjustments_attributes: PaymentAdjustmentPolicy.new(user, PaymentAdjustment.new).permitted_attributes]
     end
 
-    if record.draft? || record.under_negotiation?
+    if record.draft? 
       attributes += [:event ] if record.approver?(user)
     end
 

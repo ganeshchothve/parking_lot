@@ -7,15 +7,17 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   def mis_report?
     true
   end
-
-  def send_under_negotiation?
-    true
-  end
-
+  
   def hold?
     _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && only_for_kyc_added_users! && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed? && buyer_kyc_booking_limit_exceed?
   end
 
+  def send_under_negotiation?
+      hold?
+  end
+  def block? 
+    hold?
+  end
   # def block?
   #   valid = enable_actual_inventory? && only_for_confirmed_user! && only_for_kyc_added_users! && ['hold'].include?(record.status)
   #   if !valid
