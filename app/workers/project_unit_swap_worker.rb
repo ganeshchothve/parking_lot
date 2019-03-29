@@ -1,11 +1,12 @@
 class ProjectUnitSwapWorker
   include Sidekiq::Worker
-  attr_accessor :user_request, :current_booking_detail, :alternate_project_unit
+  attr_accessor :user_request, :current_booking_detail, :alternate_project_unit, :current_project_unit
 
   def perform(user_request_id)
     @user_request = UserRequest.find(user_request_id)
     @current_booking_detail = @user_request.try(:booking_detail)
     @alternate_project_unit = @user_request.alternate_project_unit
+    @current_project_unit = @current_booking_detail.project_unit
     resolve
   end
 
@@ -19,7 +20,7 @@ class ProjectUnitSwapWorker
       new_receipt.project_unit_id = alternate_project_unit.id
       new_receipt.comments = "Receipt generated for Swapped Unit. Original Receipt ID: #{old_receipt.id}"
       old_receipt.comments ||= ''
-      old_receipt.comments += "Unit Swapped by user. Original Unit ID: #{current_booking_detail.project_unit_id} So cancelling these receipts"
+      old_receipt.comments += "Unit Swapped by user. Original Unit ID: #{current_project_unit.id} So cancelling these receipts"
       unless new_receipt.save
         error_messages = new_receipt.errors.full_messages
         break
@@ -70,8 +71,8 @@ class ProjectUnitSwapWorker
       # TODO: : booking detail object and alternate project unit will move to blocked or appropriate state on its own
       alternate_project_unit.set(status: 'blocked')
       new_booking_detail.set(status: 'blocked')
-      current_booking_detail.project_unit.make_available
-      error_messages = current_booking_detail.project_unit.errors.full_messages unless current_booking_detail.project_unit.save
+      current_project_unit.make_available
+      error_messages = current_project_unit.errors.full_messages unless current_project_unit.save
     end
     error_messages.blank? ? current_booking_detail.swapped! : reject_user_request(error_messages, alternate_project_unit_status, new_booking_detail, new_booking_detail_scheme)
   end

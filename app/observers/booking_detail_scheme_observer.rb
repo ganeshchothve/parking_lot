@@ -77,7 +77,7 @@ class BookingDetailSchemeObserver < Mongoid::Observer
             triggered_by_type: booking_detail_scheme.class.to_s
           )
         rescue StandardError
-          nil
+          'booking detail scheme approved by is nil'
         end
       end
     end
