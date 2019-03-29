@@ -37,7 +37,7 @@ module BookingDetailStateMachine
         # transitions from: :user_kyc, to: :hold
       end
 
-      event :under_negotiation, after: :after_under_negotiation_event, before: :bef_under_negotiation do
+      event :under_negotiation, after: :after_under_negotiation_event do
         transitions from: :under_negotiation, to: :under_negotiation
         transitions from: :hold, to: :under_negotiation
       end
@@ -114,19 +114,14 @@ module BookingDetailStateMachine
       # end
     end
 
-    def bef_under_negotiation
-      pubs = ProjectUnitBookingService.new(self.project_unit.id)
-      booking_detail_scheme_object = pubs.create_or_update_booking_detail_scheme self if self.booking_detail_schemes.empty?
-      booking_detail_scheme.approved! if booking_detail_scheme.present? &&booking_detail_scheme.status != 'approved'
-    end
-
     # This method push booking portal to next state as scheme approved.
     # For this booking detail should be in under_negotiation
     # If booking detail scheme is approved the booking detail in scheme_approved
     # If booking detail scheme is rejected then booking detail must be in scheme rejected
     # If booking detail scheme is draft then booking detail stay in under_negotiation
     def after_under_negotiation_event
-      if self.booking_detail_scheme.present?
+      self.create_default_scheme
+      if self.under_negotiation? && self.booking_detail_scheme.approved?
         self.scheme_approved!
       elsif (!self.booking_detail_scheme.present?) && (self.booking_detail_schemes.distinct(:status).include? "rejected")
         self.scheme_rejected!
@@ -137,27 +132,70 @@ module BookingDetailStateMachine
     end
 
     def after_scheme_approved_event
-      if self.receipts.in(status: %w[success clearance_pending]).sum{|receipt| receipt.total_amount} >= self.project_unit.blocking_amount && self.booking_detail_scheme.present?
+      if self.scheme_approved? && self.get_paid_amount >= self.project_unit.blocking_amount
         self.blocked!
       end
     end
 
     def after_blocked_event
-      if self.receipts.in(status: %w[success clearance_pending]).sum{|receipt| receipt.total_amount} > self.project_unit.blocking_amount && self.booking_detail_scheme.present?
+      if self.blocked? && self.get_paid_amount > self.project_unit.blocking_amount
         self.booked_tentative!
       end
     end
 
     def after_booked_tentative_event
-      if self.receipts.in(status: %w[success clearance_pending]).sum{|receipt| receipt.total_amount} >= self.project_unit.booking_price && self.booking_detail_scheme.present?
+      if self.booked_tentative? && (self.get_paid_amount >= self.project_unit.booking_price)
         self.booked_confirmed!
       end
     end
 
-    def after_booked_confirmed_event
+    #
+    # Dummy Methods This is last step of application.
+    #
+    #
+    def after_book_confirmed_event
     end
 
+    #
+    # This function call after hold event.
+    # In this, booking detail move to next stage when its current state is hold and paid ammount is greater than zero.
+    #
+    # @return [<type>] <description>
+    #
     def after_hold_event
+      if self.hold? && (self.get_paid_amount > 0 )
+        self.under_negotiation!
+      end
+    end
+
+    #
+    # This function return the total paid amount.
+    # In this we conside only success and clearance_pending receipts
+    #
+    # @return [Integer]
+    #
+    def get_paid_amount
+      self.receipts.in(status: %w[success clearance_pending]).sum(:total_amount)
+    end
+
+    #
+    # This function create booking details scheme when its empty.
+    # This create new booking details related scheme which copy of associated project unit's tower default scheme. with same status.
+    #
+    def create_default_scheme
+      if self.booking_detail_scheme.blank?
+        scheme = self.project_unit.project_tower.default_scheme
+        BookingDetailScheme.create(
+          derived_from_scheme_id: scheme.id,
+          booking_detail_id: self.id,
+          created_by_id: self.user_id,
+          booking_portal_client_id: scheme.booking_portal_client_id,
+          cost_sheet_template_id: scheme.cost_sheet_template_id,
+          payment_schedule_template_id: scheme.payment_schedule_template_id,
+          project_unit_id: self.project_unit_id,
+          status: scheme.status
+        )
+      end
     end
   end
 end

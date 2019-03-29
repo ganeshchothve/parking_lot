@@ -43,7 +43,7 @@ class BookingDetail
   end
 
   def booking_detail_scheme
-    booking_detail_schemes.where(status: 'approved').first || self.booking_detail_schemes.build(user_id: self.user_id, project_unit_id: self.project_unit_id)
+    booking_detail_schemes.where(status: 'approved').first
   end
 
   def sync(erp_model, sync_log)
