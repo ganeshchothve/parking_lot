@@ -69,8 +69,8 @@ class ProjectUnitSwapWorker
     end
     if error_messages.blank?
       # TODO: : booking detail object and alternate project unit will move to blocked or appropriate state on its own
-      alternate_project_unit.set(status: 'blocked')
-      new_booking_detail.set(status: 'blocked')
+      # alternate_project_unit.set(status: 'blocked')
+      # new_booking_detail.set(status: 'blocked')
       current_project_unit.make_available
       error_messages = current_project_unit.errors.full_messages unless current_project_unit.save
     end
