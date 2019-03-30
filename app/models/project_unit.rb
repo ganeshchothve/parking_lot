@@ -148,11 +148,11 @@ class ProjectUnit
       }]
     }
     if self.user.present?
-      selector['$and'] << { '$or' => [ {user_ids: nil }, {user_ids: []},
+      _selector['$and'] << { '$or' => [ {user_ids: nil }, {user_ids: []},
           { user_ids: self.user.id } ] }
-     selector['$and'] <<  { '$or' => [ {user_role: nil}, { user_role: []}, {user_role: self.user.role } ]}
+      _selector['$and'] <<  { '$or' => [ {user_role: nil}, { user_role: []}, {user_role: self.user.role } ]}
     end
-    Scheme.where(selector)
+    Scheme.where(_selector)
   end
 
   def self.user_based_available_statuses(user)
