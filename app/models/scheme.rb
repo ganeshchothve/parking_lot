@@ -44,11 +44,12 @@ class Scheme
   def self.build_criteria params={}
     selector = {}
     if params[:fltrs].present?
-      if params[:fltrs][:status].present?
-        selector[:status] = params[:fltrs][:status]
-      end
+      selector[:status] = params[:fltrs][:status] if params[:fltrs][:status].present?
+      selector[:can_be_applied_by] = params[:fltrs][:can_be_applied_by] if params[:fltrs][:can_be_applied_by].present?
+      selector[:user_role] = params[:fltrs][:user_role] if params[:fltrs][:user_role].present?
+      selector[:project_tower_id] = params[:fltrs][:project_tower] if params[:fltrs][:project_tower].present?
     end
-    selector[:name] = ::Regexp.new(::Regexp.escape(params[:search]), 'i') if params[:search].present?
+    selector[:name] = ::Regexp.new(::Regexp.escape(params[:fltrs][:name]), 'i') if params[:fltrs].present? && params[:fltrs][:name].present? 
     self.where(selector)
   end
 
