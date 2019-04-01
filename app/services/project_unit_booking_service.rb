@@ -60,17 +60,17 @@ class ProjectUnitBookingService
   end
 
   def create_or_update_booking_detail_scheme booking_detail
-    booking_detail_scheme = self.project_unit.booking_detail_scheme
+    booking_detail_scheme = booking_detail.booking_detail_scheme
     if booking_detail_scheme.blank?
       scheme = self.project_unit.project_tower.default_scheme
       booking_detail_scheme = BookingDetailScheme.create!(
         derived_from_scheme_id: scheme.id,
         booking_detail_id: booking_detail.id,
-        created_by_id: booking_detail.user.id,
+        created_by_id: booking_detail.user_id,
         booking_portal_client_id: scheme.booking_portal_client_id,
         cost_sheet_template_id: scheme.cost_sheet_template_id,
         payment_schedule_template_id: scheme.payment_schedule_template_id,
-        project_unit_id: self.project_unit.id
+        project_unit_id: booking_detail.project_unit_id
       )
       # booking_detail_scheme.payment_adjustments << scheme.payment_adjustments.collect(&:clone).collect{|record| record.editable = false}
       # booking_detail_scheme.save
