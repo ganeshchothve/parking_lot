@@ -43,7 +43,7 @@ class ProjectUnitExportWorker
   end
 
   def self.get_project_unit_row(project_unit)
-    status = if project_unit.booking_detail.present? project_unit.booking_detail.status : project_unit.status
+    status = project_unit.booking_detail.present? ? project_unit.booking_detail.status : project_unit.status
     [
       project_unit.name,
       project_unit.unit_configuration_name,
