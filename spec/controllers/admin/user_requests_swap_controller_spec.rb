@@ -49,7 +49,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
     context 'RESOLVED' do
       it 'successfully, current project unit is made available, current booking detail status changes to swapped, alternate project unit and booking detail status is blocked' do
         booking_detail = book_project_unit(@user)
-        booking_detail_scheme = create(:booking_detail_scheme, derived_from_scheme_id: @scheme.id, booking_detail: booking_detail, status: 'approved', project_unit_id: booking_detail.project_unit_id, user_id: booking_detail.user_id)
+        booking_detail_scheme = create(:booking_detail_scheme, derived_from_scheme_id: @scheme.id, booking_detail: booking_detail, status: 'approved', project_unit_id: booking_detail.project_unit_id, user_id: booking_detail.user_id, cost_sheet_template_id: @scheme.cost_sheet_template_id, payment_schedule_template_id: @scheme.payment_schedule_template_id)
         alternate_project_unit = create(:project_unit)
         user_request = create(:pending_user_request_swap, project_unit_id: booking_detail.project_unit_id, alternate_project_unit_id: alternate_project_unit.id, user_id: booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: booking_detail.id, event: 'pending')
         user_request_params = { event: 'processing', user_id: @user.id }
@@ -71,7 +71,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
           %w[clearance_pending pending].each do |status|
             booking_detail.receipts << create(:receipt, user_id: @user.id, total_amount: 30_000, status: status)
           end
-          booking_detail_scheme = create(:booking_detail_scheme, derived_from_scheme_id: @scheme.id, booking_detail: booking_detail, status: 'approved', project_unit_id: booking_detail.project_unit_id, user_id: booking_detail.user_id)
+          booking_detail_scheme = create(:booking_detail_scheme, derived_from_scheme_id: @scheme.id, booking_detail: booking_detail, status: 'approved', project_unit_id: booking_detail.project_unit_id, user_id: booking_detail.user_id, cost_sheet_template_id: @scheme.cost_sheet_template_id, payment_schedule_template_id: @scheme.payment_schedule_template_id)
           alternate_project_unit = create(:project_unit)
           user_request = create(:pending_user_request_swap, project_unit_id: booking_detail.project_unit_id, alternate_project_unit_id: alternate_project_unit.id, user_id: booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: booking_detail.id, event: 'pending')
           user_request_params = { event: 'processing', user_id: @user.id }
@@ -89,7 +89,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
           %w[failed available_for_refund refunded cancelled].each do |status|
             booking_detail.receipts << create(:receipt, user_id: @user.id, total_amount: 30_000, status: status)
           end
-          booking_detail_scheme = create(:booking_detail_scheme, derived_from_scheme_id: @scheme.id, booking_detail: booking_detail, status: 'approved', project_unit_id: booking_detail.project_unit_id, user_id: booking_detail.user_id)
+          booking_detail_scheme = create(:booking_detail_scheme, derived_from_scheme_id: @scheme.id, booking_detail: booking_detail, status: 'approved', project_unit_id: booking_detail.project_unit_id, user_id: booking_detail.user_id, cost_sheet_template_id: @scheme.cost_sheet_template_id, payment_schedule_template_id: @scheme.payment_schedule_template_id)
           alternate_project_unit = create(:project_unit)
           user_request = create(:pending_user_request_swap, project_unit_id: booking_detail.project_unit_id, alternate_project_unit_id: alternate_project_unit.id, user_id: booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: booking_detail.id, event: 'pending')
           user_request_params = { event: 'processing', user_id: @user.id }
@@ -107,7 +107,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
     context 'REJECTED due to internal error' do
       it 'creation of new booking detail scheme failed, user_request rejected, booking detail changes to blocked' do
         booking_detail = book_project_unit(@user)
-        booking_detail_scheme = create(:booking_detail_scheme, derived_from_scheme_id: @scheme.id, booking_detail: booking_detail, status: 'approved', project_unit_id: booking_detail.project_unit_id, user_id: booking_detail.user_id)
+        booking_detail_scheme = create(:booking_detail_scheme, derived_from_scheme_id: @scheme.id, booking_detail: booking_detail, status: 'approved', project_unit_id: booking_detail.project_unit_id, user_id: booking_detail.user_id, cost_sheet_template_id: @scheme.cost_sheet_template_id, payment_schedule_template_id: @scheme.payment_schedule_template_id)
         alternate_project_unit = create(:project_unit)
         user_request = create(:pending_user_request_swap, project_unit_id: booking_detail.project_unit_id, alternate_project_unit_id: alternate_project_unit.id, user_id: booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: booking_detail.id, event: 'pending')
         user_request_params = { event: 'processing', user_id: @user.id }
@@ -125,7 +125,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
 
       it 'making old project unit available failed, user_request rejected, booking detail changes to blocked' do
         booking_detail = book_project_unit(@user)
-        booking_detail_scheme = create(:booking_detail_scheme, derived_from_scheme_id: @scheme.id, booking_detail: booking_detail, status: 'approved', project_unit_id: booking_detail.project_unit_id, user_id: booking_detail.user_id)
+        booking_detail_scheme = create(:booking_detail_scheme, derived_from_scheme_id: @scheme.id, booking_detail: booking_detail, status: 'approved', project_unit_id: booking_detail.project_unit_id, user_id: booking_detail.user_id, cost_sheet_template_id: @scheme.cost_sheet_template_id, payment_schedule_template_id: @scheme.payment_schedule_template_id)
         alternate_project_unit = create(:project_unit)
         user_request = create(:pending_user_request_swap, project_unit_id: booking_detail.project_unit_id, alternate_project_unit_id: alternate_project_unit.id, user_id: booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: booking_detail.id, event: 'pending')
         user_request_params = { event: 'processing', user_id: @user.id }
