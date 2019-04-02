@@ -86,7 +86,7 @@ module UserRequestStateMachine
 
     def update_booking_detail_to_swapping
       booking_detail.swapping!
-      ProjectUnitSwapWorker.perform_in(10.seconds, id)
+      ProjectUnitSwapWorker.perform_in(1.minutes, id)
     end
   end
 end

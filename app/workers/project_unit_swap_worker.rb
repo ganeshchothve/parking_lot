@@ -16,15 +16,17 @@ class ProjectUnitSwapWorker
 
       # TODO: :Error Handling for receipts remaining #SANKET
       new_receipt = old_receipt.dup
-      new_receipt.booking_detail_id = new_booking_detail.id
+      new_receipt.booking_detail = new_booking_detail
       new_receipt.project_unit_id = alternate_project_unit.id
       new_receipt.comments = "Receipt generated for Swapped Unit. Original Receipt ID: #{old_receipt.id}"
       old_receipt.comments ||= ''
       old_receipt.comments += "Unit Swapped by user. Original Unit ID: #{current_project_unit.id} So cancelling these receipts"
+      # Call callback after receipt is set to success so that booking detail status and project unit status get set accordingly
       unless new_receipt.save
         error_messages = new_receipt.errors.full_messages
         break
       end
+      new_receipt.success! if new_receipt.status == 'success' && new_receipt.persisted?
       unless old_receipt.cancel!
         error_messages = new_receipt.errors.full_messages
         break
@@ -33,14 +35,14 @@ class ProjectUnitSwapWorker
     error_messages
   end
 
-  def create_booking_detail
+  def build_booking_detail
     BookingDetail.new(project_unit_id: alternate_project_unit.id, primary_user_kyc_id: current_booking_detail.primary_user_kyc_id, status: 'hold', user_id: current_booking_detail.user_id, manager: current_booking_detail.try(:manager_id), user_kyc_ids: current_booking_detail.user_kyc_ids, parent_booking_detail_id: current_booking_detail.id)
   end
 
-  def create_booking_detail_scheme(new_booking_detail)
+  def build_booking_detail_scheme(new_booking_detail)
     new_booking_detail_scheme = current_booking_detail.booking_detail_scheme.dup
-    new_booking_detail_scheme.project_unit_id = alternate_project_unit.id
-    new_booking_detail_scheme.booking_detail_id = new_booking_detail.id
+    new_booking_detail_scheme.project_unit = alternate_project_unit
+    new_booking_detail_scheme.booking_detail = new_booking_detail
     new_booking_detail_scheme
   end
 
@@ -57,23 +59,28 @@ class ProjectUnitSwapWorker
   def resolve
     error_messages = ''
     alternate_project_unit_status = alternate_project_unit.status
-    new_booking_detail = create_booking_detail
-    new_booking_detail_scheme = create_booking_detail_scheme(new_booking_detail)
-    error_messages = new_booking_detail_scheme.errors.full_messages unless new_booking_detail_scheme.save
-    if error_messages.blank?
-      error_messages = new_booking_detail.errors.full_messages unless new_booking_detail.save
+    new_booking_detail = build_booking_detail
+    if new_booking_detail.save
+      new_booking_detail_scheme = build_booking_detail_scheme(new_booking_detail)
+      if new_booking_detail_scheme.save
+        update_receipts(error_messages, new_booking_detail)
+        if error_messages.blank?
+          current_booking_detail.swapped!
+          current_project_unit.make_available
+        else
+          # Reject swap request because updation of receipts failed
+          reject_user_request(error_messages, alternate_project_unit_status, new_booking_detail, new_booking_detail_scheme)
+        end
+      else
+        # Reject Swap Request because saving new_booking_detail_scheme failed
+        # Delete new_booking_detail
+        error_messages = new_booking_detail_scheme.errors.full_messages
+        reject_user_request(error_messages, alternate_project_unit_status, new_booking_detail, new_booking_detail_scheme)
+      end
+    else
+      error_messages = new_booking_detail.errors.full_messages
+      # Reject swap Request because saving new_booking_detail failed
+      reject_user_request(error_messages, alternate_project_unit_status, new_booking_detail, new_booking_detail_scheme)
     end
-
-    if error_messages.blank?
-      error_messages = update_receipts(error_messages, new_booking_detail)
-    end
-    if error_messages.blank?
-      # TODO: : booking detail object and alternate project unit will move to blocked or appropriate state on its own
-      # alternate_project_unit.set(status: 'blocked')
-      # new_booking_detail.set(status: 'blocked')
-      current_project_unit.make_available
-      error_messages = current_project_unit.errors.full_messages unless current_project_unit.save
-    end
-    error_messages.blank? ? current_booking_detail.swapped! : reject_user_request(error_messages, alternate_project_unit_status, new_booking_detail, new_booking_detail_scheme)
   end
 end

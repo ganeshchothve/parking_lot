@@ -1,8 +1,5 @@
 require 'rails_helper'
 require 'sidekiq/testing'
-# Sidekiq::Testing.fake!
-# Sidekiq::Testing.inline!
-# Sidekiq::Testing.disable!
 
 RSpec.describe Admin::UserRequestsController, type: :controller do
   describe 'SWAP REQUEST' do
@@ -24,6 +21,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
           expect { post :create, params: { user_request_swap: user_request_params, request_type: 'swap', user_id: @user.id } }.to change { UserRequest::Swap.count }.by(1)
           expect(UserRequest.first.status).to eq('pending')
           expect(booking_detail.reload.status).to eq('swap_requested')
+          Sidekiq::Testing.fake!
         end
       end
     end
@@ -41,7 +39,8 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
           expect(booking_detail.reload.status).to eq('blocked')
           expect(booking_detail.reload.project_unit.status).to eq('blocked')
           expect(user_request.reload.status).to eq('rejected')
-          expect(alternate_project_unit.reload.status).to eq('available')
+          expect(%w[available hold].include?(alternate_project_unit.reload.status)).to eq(true)
+          Sidekiq::Testing.fake!
         end
       end
     end
@@ -54,15 +53,18 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
         user_request = create(:pending_user_request_swap, project_unit_id: booking_detail.project_unit_id, alternate_project_unit_id: alternate_project_unit.id, user_id: booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: booking_detail.id, event: 'pending')
         user_request_params = { event: 'processing', user_id: @user.id }
         count = BookingDetailScheme.count
-        expect { patch :update, params: { user_request_swap: user_request_params, request_type: 'swap', id: user_request.id } }.to change { BookingDetail.count }.by(1)
+        Sidekiq::Testing.fake! do
+          expect { patch :update, params: { user_request_swap: user_request_params, request_type: 'swap', id: user_request.id } }.to change(ProjectUnitSwapWorker.jobs, :size).by(1)
+        end
+        # TODO: Move into worker specs
+        # expect(user_request.reload.status).to eq('resolved')
+        # expect(booking_detail.reload.status).to eq('swapped')
+        # expect(booking_detail.reload.project_unit.status).to eq('available')
+        # expect(alternate_project_unit.reload.status).to eq('blocked')
+        # expect(BookingDetail.first.status).to eq('blocked')
+        # expect(BookingDetailScheme.count).to eq(count + 1)
+        # expect(BookingDetailScheme.last.booking_detail).to eq(BookingDetail.first)
         # expect(ProjectUnitCancelWorker.jobs.size).to eq(1)
-        expect(user_request.reload.status).to eq('resolved')
-        expect(booking_detail.reload.status).to eq('swapped')
-        expect(booking_detail.reload.project_unit.status).to eq('available')
-        expect(alternate_project_unit.reload.status).to eq('blocked')
-        expect(BookingDetail.first.status).to eq('blocked')
-        expect(BookingDetailScheme.count).to eq(count + 1)
-        expect(BookingDetailScheme.last.booking_detail).to eq(BookingDetail.first)
       end
 
       context 'successfully, receipt status is ' do
@@ -82,6 +84,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
           booking_detail.receipts.each do |receipt|
             expect(receipt.status).to eq('cancelled')
           end
+          Sidekiq::Testing.fake!
         end
 
         it 'the same(failed or available_for_refund or refunded or cancelled)' do
@@ -100,6 +103,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
           booking_detail.receipts.each do |receipt|
             expect(%w[failed available_for_refund refunded cancelled].include?(receipt.status)).to eq(true)
           end
+          Sidekiq::Testing.fake!
         end
       end
     end
@@ -119,26 +123,9 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
         expect(user_request.reload.status).to eq('rejected')
         expect(booking_detail.reload.status).to eq('blocked')
         expect(booking_detail.reload.project_unit.status).to eq('blocked')
-        expect(alternate_project_unit.reload.status).to eq('available')
+        expect(%w[available hold].include?(alternate_project_unit.reload.status)).to eq(true)
         expect(BookingDetailScheme.count).to eq(count)
-      end
-
-      it 'making old project unit available failed, user_request rejected, booking detail changes to blocked' do
-        booking_detail = book_project_unit(@user)
-        booking_detail_scheme = create(:booking_detail_scheme, derived_from_scheme_id: @scheme.id, booking_detail: booking_detail, status: 'approved', project_unit_id: booking_detail.project_unit_id, user_id: booking_detail.user_id, cost_sheet_template_id: @scheme.cost_sheet_template_id, payment_schedule_template_id: @scheme.payment_schedule_template_id)
-        alternate_project_unit = create(:project_unit)
-        user_request = create(:pending_user_request_swap, project_unit_id: booking_detail.project_unit_id, alternate_project_unit_id: alternate_project_unit.id, user_id: booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: booking_detail.id, event: 'pending')
-        user_request_params = { event: 'processing', user_id: @user.id }
-        ProjectUnit.any_instance.stub(:save).and_return false
-        ProjectUnit.any_instance.stub(:errors).and_return(ActiveModel::Errors.new(ProjectUnit.new).tap { |e| e.add(:status, 'cannot be blank') })
-        count = BookingDetailScheme.count
-        expect { patch :update, params: { user_request_swap: user_request_params, request_type: 'swap', id: user_request.id } }.to change { BookingDetail.count }.by(0)
-        # expect(ProjectUnitCancelWorker.jobs.size).to eq(1)
-        expect(user_request.reload.status).to eq('rejected')
-        expect(booking_detail.reload.status).to eq('blocked')
-        expect(booking_detail.reload.project_unit.status).to eq('blocked')
-        expect(alternate_project_unit.reload.status).to eq('available')
-        expect(BookingDetailScheme.count).to eq(count)
+        Sidekiq::Testing.fake!
       end
     end
   end

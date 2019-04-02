@@ -1,8 +1,5 @@
 require 'rails_helper'
 require 'sidekiq/testing'
-# Sidekiq::Testing.fake!
-# Sidekiq::Testing.inline!
-# Sidekiq::Testing.disable!
 
 RSpec.describe Admin::UserRequestsController, type: :controller do
   describe 'CANCELLATION REQUEST' do
@@ -23,6 +20,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
             expect { post :create, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', user_id: @user.id } }.to change { UserRequest::Cancellation.count }.by(1)
             expect(UserRequest.first.status).to eq('pending')
             expect(booking_detail.reload.status).to eq('cancellation_requested')
+            Sidekiq::Testing.fake!
           end
         end
       end
@@ -39,6 +37,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
           patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: user_request.id }
           expect(booking_detail.reload.status).to eq('blocked')
           # expect(user_request.reload.status).to eq('rejected')
+          Sidekiq::Testing.fake!
         end
       end
     end
@@ -54,6 +53,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
         expect(booking_detail.receipts.first.reload.status).to eq('available_for_refund')
         expect(%w[available management employee].include?(booking_detail.project_unit.status))
         expect(user_request.reload.status).to eq('resolved')
+        Sidekiq::Testing.fake!
       end
 
       it 'successfully, receipt status changes from clearance_pending to cancelled' do
@@ -68,6 +68,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
         expect(receipt.reload.status).to eq('cancelled')
         expect(Receipt.last.status).to eq('clearance_pending')
         expect(user_request.reload.status).to eq('resolved')
+        Sidekiq::Testing.fake!
       end
 
       it 'successfully, receipt status changed from pending to cancelled' do
@@ -81,6 +82,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
         expect(%w[available management employee].include?(booking_detail.project_unit.status))
         expect(receipt.reload.status).to eq('cancelled')
         expect(user_request.reload.status).to eq('resolved')
+        Sidekiq::Testing.fake!
       end
 
       it 'successfully, when receipt status is refunded or cancelled or available_for_refund, it stays the same' do
@@ -96,6 +98,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
         expect(%w[available management employee].include?(booking_detail.project_unit.status))
         expect(booking_detail.reload.receipts.first.status).to eq('available_for_refund')
         expect(user_request.reload.status).to eq('resolved')
+        Sidekiq::Testing.fake!
       end
     end
 
@@ -112,6 +115,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
           expect(booking_detail.receipts.first.reload.status).to eq('success')
           expect(user_request.reload.status).to eq('rejected')
           expect(booking_detail.reload.status).to eq('blocked')
+          Sidekiq::Testing.fake!
         end
 
         it 'when receipt clearance_pending -> cancelled -> clearance_pending' do
@@ -128,6 +132,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
           expect(user_request.reload.status).to eq('rejected')
           expect(booking_detail.reload.status).to eq('blocked')
           expect(Receipt.count).to eq(count)
+          Sidekiq::Testing.fake!
         end
 
         it 'when receipt clearance_pending, dup receipt fails' do
@@ -144,6 +149,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
           expect(user_request.reload.status).to eq('rejected')
           expect(booking_detail.reload.status).to eq('blocked')
           expect(Receipt.count).to eq(count)
+          Sidekiq::Testing.fake!
         end
 
         it 'when receipt pending -> cancelled -> pending' do
@@ -158,6 +164,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
           expect(receipt.project_unit.reload.present?).to eq(true)
           expect(user_request.reload.status).to eq('rejected')
           expect(booking_detail.reload.status).to eq('blocked')
+          Sidekiq::Testing.fake!
         end
       end
 
@@ -172,6 +179,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
         expect(booking_detail.reload.status).to eq('blocked')
         expect(booking_detail.project_unit.status).to eq('blocked')
         expect(user_request.reload.status).to eq('rejected')
+        Sidekiq::Testing.fake!
       end
     end
   end
