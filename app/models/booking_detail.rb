@@ -3,11 +3,12 @@ class BookingDetail
   include Mongoid::Timestamps
   include ArrayBlankRejectable
   include InsertionStringMethods
-  include SyncDetails
   include BookingDetailStateMachine
+  include SyncDetails
 
   field :status, type: String
   field :erp_id, type: String, default: ''
+  field :name, type: String
   mount_uploader :tds_doc, DocUploader
 
   enable_audit(
@@ -23,17 +24,23 @@ class BookingDetail
   belongs_to :user
   belongs_to :manager, class_name: 'User', optional: true
   belongs_to :search, optional: true
+  # When a new booking detail object is created from another object, this field will be set. This happens when the user creates a swap request.
+  belongs_to :parent_booking_detail, class_name: 'BookingDetail', optional: true
   belongs_to :primary_user_kyc, class_name: 'UserKyc'
-
   has_many :receipts
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :booking_detail_schemes, dependent: :destroy
   has_many :sync_logs, as: :resource
-
+  has_many :notes, as: :notable
+  has_many :user_requests
   has_and_belongs_to_many :user_kycs
 
+  # TODO: uncomment
+  # validates :name, presence: true
   validates :status, :primary_user_kyc_id, presence: true
   validates :erp_id, uniqueness: true, allow_blank: true
+
+  accepts_nested_attributes_for :notes
 
   default_scope -> { desc(:created_at) }
 
@@ -77,27 +84,5 @@ class BookingDetail
         booking_detail.save!
       end
     end
-
-    def available_statuses
-      [
-        { id: 'available', text: 'Available' },
-        { id: 'under_negotiation', text: 'Under negotiation' },
-        { id: 'scheme_rejected', text: 'Scheme Rejected' },
-        { id: 'scheme_approved', text: 'Scheme Approved' },
-        { id: 'hold', text: 'Hold' },
-        { id: 'blocked', text: 'Blocked' },
-        { id: 'booked_tentative', text: 'Tentative Booked' },
-        { id: 'booked_confirmed', text: 'Confirmed Booked' },
-        { id: 'swap_requested', text: 'Swap Requested' },
-        { id: 'swapping', text: 'Swapping' },
-        { id: 'swapped', text: 'Swapped' },
-        { id: 'swap_rejected', text: 'Swap Rejected' },
-        { id: 'cancellation_requested', text: 'Cancellation Requested' },
-        { id: 'cancelling', text: 'Cancelling' },
-        { id: 'cancelled', text: 'Cancelled' },
-        { id: 'cancellation_rejected', text: 'Cancellation Rejected' }
-      ]
-    end
   end
-
 end

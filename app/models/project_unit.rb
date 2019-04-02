@@ -123,13 +123,13 @@ class ProjectUnit
     out.with_indifferent_access
   end
 
-  def permitted_schemes(_user=nil)
+  def permitted_schemes(_user = nil)
     or_criteria = []
-    _scheme = Scheme.where(project_tower_id: self.project_tower_id, status: 'approved')
-    unless self.user.blank?
-      _scheme = _scheme.or([ { :user_ids => { "$in" => [nil, [], self.user.id, ''] } },{ :user_role=>{ "$in"=>[ nil, [], self.user.role ] } } ])
+    _scheme = Scheme.where(project_tower_id: project_tower_id, status: 'approved')
+    unless user.blank?
+      _scheme = _scheme.or([{ user_ids: { '$in' => [nil, [], user.id, ''] } }, { user_role: { '$in' => [nil, [], user.role] } }])
     end
-    _scheme = _scheme.or([{ can_be_applied_by: nil }, { can_be_applied_by: [] }, { can_be_applied_by: _user.role } ])
+    _scheme = _scheme.or([{ can_be_applied_by: nil }, { can_be_applied_by: [] }, { can_be_applied_by: _user.role }])
     _scheme
   end
 
@@ -223,7 +223,6 @@ class ProjectUnit
   end
 
   # def process_payment!(receipt)
-  #   debugger
   #   if %w[success clearance_pending].include?(receipt.status)
   #     if ProjectUnit.booking_stages.include?(status) || can_block?(receipt.user) || (status == 'under_negotiation' && user_id == receipt.user_id)
   #       if scheme.status == 'approved'
@@ -257,7 +256,7 @@ class ProjectUnit
   #       end
   #     end
   #   end
-    #save(validate: false)
+  # save(validate: false)
   # end
 
   # def process_scheme!
@@ -325,7 +324,7 @@ class ProjectUnit
     end
 
     selector[:name] = ::Regexp.new(::Regexp.escape(params[:search]), 'i') if params[:search].present?
-    self.where(selector)
+    where(selector)
   end
 
   def ui_json
@@ -357,7 +356,7 @@ class ProjectUnit
   end
 
   def scheme=(_scheme)
-    @scheme = _scheme if _scheme.kind_of?(Scheme) || _scheme.kind_of?(BookingDetailScheme)
+    @scheme = _scheme if _scheme.is_a?(Scheme) || _scheme.is_a?(BookingDetailScheme)
   end
 
   def scheme

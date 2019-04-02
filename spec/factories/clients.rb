@@ -8,7 +8,7 @@ FactoryBot.define do
     helpdesk_email { Faker::Internet.email }
     helpdesk_number { Faker::Number.number(10) }
     enable_company_users { Faker::Boolean.boolean }
-
+    enable_actual_inventory { %w[superadmin admin user] }
     notification_email { Faker::Internet.email }
     notification_numbers { Faker::Number.number(10) }
 

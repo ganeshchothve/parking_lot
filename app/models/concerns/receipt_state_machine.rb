@@ -12,12 +12,12 @@ module ReceiptStateMachine
         transitions from: :pending, to: :pending
       end
 
-      event :clearance_pending, after: [:moved_to_success_if_online, :change_booking_detail_status] do
+      event :clearance_pending, after: %i[moved_to_success_if_online change_booking_detail_status] do
         transitions from: :pending, to: :clearance_pending, if: :can_move_to_clearance?
         transitions from: :clearance_pending, to: :clearance_pending
       end
 
-      event :success , after: [:after_success, :change_booking_detail_status] do
+      event :success, after: %i[change_booking_detail_status] do
         transitions from: :success, to: :success
         transitions from: :pending, to: :success
         # receipt moves from pending to success when online payment is made.
@@ -45,40 +45,35 @@ module ReceiptStateMachine
       end
 
       event :cancel do
-        transitions from: :pending, to: :cancelled, if: :swap_request_initiated?
+        transitions from: :pending, to: :cancelled, if: :user_request_initiated?
         transitions from: :success, to: :cancelled, if: :swap_request_initiated?
-        transitions from: :clearance_pending, to: :cancelled, if: :swap_request_initiated?
+        transitions from: :clearance_pending, to: :cancelled, if: :user_request_initiated?
       end
-
-    end
-
-    def can_available_for_refund?
-      self.booking_detail.blank? || self.booking_detail.status == "cancelled"
-    end
-
-    def can_move_to_clearance?
-      (self.persisted? || self.project_unit_id.present?)
-    end
-
-    def moved_to_success_if_online
-      self.success! if self.payment_mode == 'online'
     end
 
     def swap_request_initiated?
-      self.swap_request_initiated == true
+      booking_detail.swapping?
     end
 
-    def after_success
-      if self.project_unit.present?
-        _project_unit= self.project_unit
-        _project_unit.status = 'blocked'
-        _project_unit.save
-      end
+    def can_available_for_refund?
+      booking_detail.blank? || booking_detail.cancelling?
+    end
+
+    def can_move_to_clearance?
+      persisted? || project_unit_id.present?
+    end
+
+    def moved_to_success_if_online
+      success! if payment_mode == 'online'
+    end
+
+    def user_request_initiated?
+      booking_detail.swapping? || booking_detail.cancelling?
     end
 
     def change_booking_detail_status
-      if self.booking_detail
-        self.booking_detail.send("after_#{self.booking_detail.status}_event")
+      if booking_detail
+        booking_detail.send("after_#{booking_detail.status}_event")
       end
     end
   end

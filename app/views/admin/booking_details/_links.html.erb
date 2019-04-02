@@ -20,6 +20,6 @@
 
 <% UserRequest.descendants.each do |klass| %>
   <% if policy([:admin, klass.new(user_id: project_unit.user_id, project_unit_id: project_unit.id)]).new? && !current_user.buyer? %>
-      <%= link_to t("global.user_request_#{klass.model_name.element}"), new_admin_user_user_request_path(user_id: project_unit.user_id, project_unit_id: project_unit.id, request_type: klass.model_name.element), class: "dropdown-item modal-remote-form-link" %>
+      <%= link_to t("global.user_request_#{klass.model_name.element}"), new_admin_user_user_request_path(user_id: booking_detail.user_id, project_unit_id: project_unit.id, request_type: klass.model_name.element), class: "dropdown-item modal-remote-form-link" %>
   <% end %>
 <% end %>
