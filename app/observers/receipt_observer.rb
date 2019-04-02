@@ -50,12 +50,4 @@ class ReceiptObserver < Mongoid::Observer
       end
     end
   end
-
-  def after_create receipt
-    project_unit = receipt.project_unit
-    if project_unit.present?
-      project_unit.booking_detail.update(receipt_ids: project_unit.receipt_ids)
-      project_unit.booking_detail.under_negotiation! if project_unit.booking_detail.aasm.current_state == :hold
-    end
-  end
 end
