@@ -19,7 +19,7 @@ class Scheme
   scope :filter_by_can_be_applied_by, ->(can_be_applied_by) { where(can_be_applied_by: can_be_applied_by) }
   scope :filter_by_user_role, ->(user_role) { where(user_role: user_role) }
   scope :filter_by_status, ->(status) { where(status: status) }  
-  scope :filter_by_project_tower, ->(project_tower) { where(project_tower_id: project_tower_id) }
+  scope :filter_by_project_tower, ->(project_tower_id) { where(project_tower_id: project_tower_id) }
 
 
 
@@ -31,7 +31,7 @@ class Scheme
   })
 
   embeds_many :payment_adjustments, as: :payable
-  belongs_to :project
+  belongs_to :project, optional: Rails.env.test?
   belongs_to :project_tower
   belongs_to :approved_by, class_name: "User", optional: true
   belongs_to :created_by, class_name: "User"
