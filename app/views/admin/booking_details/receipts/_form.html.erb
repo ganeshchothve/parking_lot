@@ -54,12 +54,12 @@
     <% unless( (defined? direct_payment) && direct_payment ) %>
       <%= f.label :project_unit_id, class: 'control-label' %>
         <% if @receipt.project_unit_id.present? %>
-          <% user_units = [f.object.project_unit] %>
-        <% elsif policy([:admin, @receipt]).editable_field?("project_unit_id") %>
-          <% user_units = @receipt.user.project_units.ne(status: 'hold') %>
+          <% user_units = [f.object.booking_detail] %>
+        <% elsif policy([:admin, @receipt]).editable_field?("booking_detail_id") %>
+          <% user_units = @receipt.user.booking_details.ne(status: 'hold') %>
         <% end %>
         <% if user_units.present? %>
-          <%= f.select :project_unit_id, user_units.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize' %>
+          <%= f.select :booking_detail_id, user_units.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize' %>
         <% end %>
     <% end %>
   </div>

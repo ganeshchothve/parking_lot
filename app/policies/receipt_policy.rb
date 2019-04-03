@@ -26,7 +26,7 @@ class ReceiptPolicy < ApplicationPolicy
     attributes = []
     attributes += [:payment_mode] if record.new_record? || record.status == 'pending'
     if (record.user_id.present? && record.user.project_unit_ids.present? && record.project_unit_id.blank?) && (['pending', 'clearance_pending', 'success', 'available_for_refund'].include?(record.status))
-      attributes += [:project_unit_id]
+      attributes += [:booking_detail_id]
     end
     attributes += [:total_amount] if record.new_record? || ['pending', 'clearance_pending'].include?(record.status)
    #  attributes += [:account_number] if record.payment_mode == 'online'
