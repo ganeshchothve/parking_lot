@@ -103,7 +103,7 @@ class SearchesController < ApplicationController
 
   def checkout
     authorize [current_user_role_group, @booking_detail]
-    @booking_detail_scheme = @booking_detail.booking_detail_scheme
+    @booking_detail_scheme = @booking_detail.booking_detail_scheme || @booking_detail.booking_detail_schemes.build
     if !@booking_detail.hold?
       if current_user.buyer?
         redirect_to dashboard_path, alert: t('controller.searches.checkout.non_hold_booking')

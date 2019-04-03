@@ -107,7 +107,7 @@ class User
   has_many :notes, as: :notable
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :emails, as: :triggered_by, class_name: 'Email'
-  has_many :referrals, class_name: 'User', foreign_key: :referred_by_id
+  has_many :referrals, class_name: 'User', foreign_key: :referred_by_id, inverse_of: :referred_by
   has_and_belongs_to_many :schemes
   has_many :sync_logs, as: :resource
   has_many :logs, class_name: 'SyncLog', inverse_of: :user_reference
