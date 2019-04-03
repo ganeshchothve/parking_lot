@@ -383,3 +383,10 @@ en:
        scheme_rejected: 'Scheme Rejected'
        management: 'Management Blocking'
        employee: 'Employee Blocking'
+  receipts:
+    status:
+      pending: 'Pending'
+      clearance_pending: 'Clearance Pending'
+      failed: 'Failed'
+      cancel: 'Cancel'
+

@@ -21,7 +21,7 @@ class Admin::BookingDetailSchemePolicy < BookingDetailSchemePolicy
   end
 
   def edit?
-    if only_for_admin! && enable_actual_inventory? && is_cross_tower_scheme? && is_approved_scheme?
+    if only_for_admin! && enable_actual_inventory? && is_cross_tower_scheme? && is_derived_from_scheme_approved?
       case user.role
       when 'admin', 'sales', 'sales_admin', 'crm'
         true
@@ -50,7 +50,7 @@ class Admin::BookingDetailSchemePolicy < BookingDetailSchemePolicy
       attributes += [payment_adjustments_attributes: PaymentAdjustmentPolicy.new(user, PaymentAdjustment.new).permitted_attributes]
     end
 
-    if record.draft? 
+    if record.draft?
       attributes += [:event ] if record.approver?(user)
     end
 

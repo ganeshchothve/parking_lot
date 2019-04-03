@@ -10,6 +10,7 @@ class User
 
   # Constants
   ALLOWED_UTM_KEYS = %i[campaign source sub_source content medium term]
+  BUYER_ROLES = %w[user employee_user management_user]
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -152,16 +153,12 @@ class User
   end
 
   def buyer?
-    if current_client.enable_company_users?
-      %w[user management_user employee_user].include?(role)
-    else
-      role == 'user'
-    end
+    User.buyer_roles.include?(role)
   end
 
   def self.buyer_roles(current_client = nil)
     if current_client.present? && current_client.enable_company_users?
-      %w[user management_user employee_user]
+      BUYER_ROLES
     else
       ['user']
     end

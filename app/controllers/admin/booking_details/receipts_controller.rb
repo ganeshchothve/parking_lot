@@ -16,7 +16,7 @@ class Admin::BookingDetails::ReceiptsController < AdminController
   # GET "/admin/users/:user_id/project_units/:project_unit_id/receipts/new"
   def new
     @receipt = Receipt.new({
-      creator: current_user, project_unit_id: @project_unit.id, user: @user, booking_detail_id: @booking_detail.id, 
+      creator: current_user, project_unit_id: @project_unit.id, user: @user, booking_detail_id: @booking_detail.id,
       total_amount: (@project_unit.status == "hold" ? @project_unit.blocking_amount : @project_unit.pending_balance)
     })
     authorize([:admin, @receipt])
@@ -44,6 +44,7 @@ class Admin::BookingDetails::ReceiptsController < AdminController
           if @receipt.payment_mode == 'online'
             url = @receipt.payment_gateway_service.gateway_url(@user.get_search(@project_unit.id).id)
           else
+            @receipt.moved_to_clearance_pending
             url = "#{admin_user_receipts_path(@user)}?remote-state=#{assetables_path(assetable_type: @receipt.class.model_name.i18n_key.to_s, assetable_id: @receipt.id)}"
           end
           format.json{ render json: @receipt, location: url }

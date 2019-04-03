@@ -19,7 +19,6 @@ module ReceiptStateMachine
 
       event :success, after: %i[change_booking_detail_status] do
         transitions from: :success, to: :success
-        transitions from: :pending, to: :success
         # receipt moves from pending to success when online payment is made.
         transitions from: :clearance_pending, to: :success, unless: :new_record?
         transitions from: :available_for_refund, to: :success
@@ -74,6 +73,15 @@ module ReceiptStateMachine
     def change_booking_detail_status
       if booking_detail
         booking_detail.send("after_#{booking_detail.status}_event")
+      end
+    end
+
+    #
+    # When Receipt is created by admin except channel partner then it's direcly moved in clearance pening.
+    #
+    def moved_to_clearance_pending
+      unless (%w( channel_partner ) + User::BUYER_ROLES).include?(self.creator.role)
+        self.clearance_pending!
       end
     end
   end
