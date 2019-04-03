@@ -63,7 +63,7 @@ module BookingDetailStateMachine
         transitions from: :blocked, to: :booked_tentative
       end
 
-      event :booked_confirmed, after: :after_book_confirmed_event do
+      event :booked_confirmed, after: :after_booked_confirmed_event do
         transitions from: :booked_confirmed, to: :booked_confirmed
         transitions from: :booked_tentative, to: :booked_confirmed
       end
@@ -168,7 +168,7 @@ module BookingDetailStateMachine
     # Dummy Methods This is last step of application.
     #
     #
-    def after_book_confirmed_event; end
+    def after_booked_confirmed_event; end
 
     #
     # This function call after hold event.

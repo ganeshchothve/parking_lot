@@ -153,7 +153,7 @@ class User
   end
 
   def buyer?
-    User.buyer_roles.include?(role)
+    BUYER_ROLES.include?(role)
   end
 
   def self.buyer_roles(current_client = nil)

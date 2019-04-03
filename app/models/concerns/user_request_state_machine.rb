@@ -81,12 +81,12 @@ module UserRequestStateMachine
 
     def update_booking_detail_to_cancelling
       booking_detail.cancelling!
-      ProjectUnitCancelWorker.perform_in(10.seconds, id)
+      ProjectUnitCancelWorker.perform_async(id)
     end
 
     def update_booking_detail_to_swapping
       booking_detail.swapping!
-      ProjectUnitSwapWorker.perform_in(1.minutes, id)
+      ProjectUnitSwapWorker.perform_async(id)
     end
   end
 end

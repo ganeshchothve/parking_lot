@@ -24,30 +24,30 @@ RSpec.describe Buyer::BookingDetailsController, type: :controller do
     it 'moves from under_negotiation to scheme approved when the booking detail scheme is approved' do
       @booking_detail.under_negotiation!
       receipt = create(:receipt, user: @user, project_unit: @project_unit, booking_detail: @booking_detail, total_amount: @client.blocking_amount)
-      receipt.success!
-      expect(@booking_detail.status).to eq('blocked')
+      receipt.clearance_pending!
+      expect(@booking_detail.reload.status).to eq('blocked')
     end
     it 'moves from under_negotiation to scheme approved when the booking detail scheme is approved' do
       @booking_detail.under_negotiation!
       receipt = create(:receipt, user: @user, project_unit: @project_unit, booking_detail: @booking_detail, total_amount: @client.blocking_amount)
       receipt.success!
       receipt1 = create(:receipt, user: @user, project_unit: @project_unit, booking_detail: @booking_detail, total_amount: 40_000)
-      receipt1.success!
+      receipt1.clearance_pending!
       expect(@booking_detail.status).to eq('booked_tentative')
     end
     it 'moves from under_negotiation to scheme approved when the booking detail scheme is approved' do
       @booking_detail.under_negotiation!
       receipt = create(:receipt, user: @user, project_unit: @project_unit, booking_detail: @booking_detail, total_amount: @client.blocking_amount)
-      receipt.success!
+      receipt.clearance_pending!
       receipt1 = create(:receipt, user: @user, project_unit: @project_unit, booking_detail: @booking_detail, total_amount: 40_000)
       expect(@booking_detail.status).to eq('blocked')
     end
     it 'moves from under_negotiation to scheme approved when the booking detail scheme is approved' do
       @booking_detail.under_negotiation!
       receipt = create(:receipt, user: @user, project_unit: @project_unit, booking_detail: @booking_detail, total_amount: @client.blocking_amount)
-      receipt.success!
+      receipt.clearance_pending!
       receipt1 = create(:receipt, user: @user, project_unit: @project_unit, booking_detail: @booking_detail, total_amount: @project_unit.booking_price)
-      receipt1.success!
+      receipt1.clearance_pending!
       expect(@booking_detail.status).to eq('booked_confirmed')
     end
   end
