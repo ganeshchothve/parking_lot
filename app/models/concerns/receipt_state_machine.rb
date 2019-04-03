@@ -51,11 +51,13 @@ module ReceiptStateMachine
     end
 
     def swap_request_initiated?
-      booking_detail.swapping?
+      return booking_detail.swapping? if booking_detail 
+      false
     end
 
     def can_available_for_refund?
-      booking_detail.blank? || booking_detail.cancelling?
+      return (booking_detail.blank? || booking_detail.cancelling?) if booking_detail
+      false
     end
 
     def can_move_to_clearance?
@@ -67,7 +69,8 @@ module ReceiptStateMachine
     end
 
     def user_request_initiated?
-      booking_detail.swapping? || booking_detail.cancelling?
+      return (booking_detail.swapping? || booking_detail.cancelling?) if booking_detail
+      false
     end
 
     def change_booking_detail_status
