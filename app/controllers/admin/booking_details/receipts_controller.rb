@@ -44,7 +44,6 @@ class Admin::BookingDetails::ReceiptsController < AdminController
           if @receipt.payment_mode == 'online'
             url = @receipt.payment_gateway_service.gateway_url(@user.get_search(@project_unit.id).id)
           else
-            @receipt.moved_to_clearance_pending
             url = "#{admin_user_receipts_path(@user)}?remote-state=#{assetables_path(assetable_type: @receipt.class.model_name.i18n_key.to_s, assetable_id: @receipt.id)}"
           end
           format.json{ render json: @receipt, location: url }

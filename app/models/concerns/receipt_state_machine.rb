@@ -8,7 +8,7 @@ module ReceiptStateMachine
       state :pending, initial: true
       state :success, :clearance_pending, :failed, :available_for_refund, :refunded, :cancelled
 
-      event :pending do
+      event :pending, after: %i[moved_to_clearance_pending] do
         transitions from: :pending, to: :pending
       end
 

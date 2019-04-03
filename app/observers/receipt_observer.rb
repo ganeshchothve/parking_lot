@@ -12,41 +12,14 @@ class ReceiptObserver < Mongoid::Observer
   end
 
   def after_save(receipt)
-    user = receipt.user
-    project_unit = receipt.project_unit
-    # update project unit if a successful receipt is getting attached to a project_unit
-    # update the user balance if receipt has no project unit
-    if receipt.project_unit_id_changed? && receipt.project_unit_id_was.blank? && %w[success clearance_pending].include?(receipt.status) && !receipt.status_changed?
-      # project_unit.process_payment!(receipt)
-      unless user.save
-        # TODO: notify us about this
-      end
-    end
 
-    # update project unit if receipt status has changed
     if receipt.status_changed?
       Notification::Receipt.new(receipt.id, receipt.changes).execute
-      project_unit = receipt.project_unit
-      # if project_unit.present?
-      #   status = if project_unit.status == "hold"
-      #     ProjectUnitBookingService.new(project_unit.id).book
-      #   else
-      #     project_unit.process_payment!(receipt)
-      #   end
-
-      #   if status == true
-      #   elsif receipt.status != 'clearance_pending'
-      #     # TODO: send us and client team an error message. Escalate this.
-      #   end
-      # end
-
-      # update user stats if receipt status is success
-      if receipt.status == 'success'
-        user = receipt.user
-        unless user.save
-          # TODO: notify us about this
-        end
-      end
     end
+
+    _event = receipt.event
+    receipt.event = nil
+    receipt.send("#{_event}!") if _event.present?
   end
+
 end
