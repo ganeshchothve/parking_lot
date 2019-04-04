@@ -51,7 +51,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
 
   def permitted_attributes params={}
     attributes = super
-    attributes += [:project_unit_id] if user.role?('channel_partner')
+    attributes += [:booking_detail_id] if user.role?('channel_partner')
     if !user.buyer? && (record.new_record? || %w[pending clearance_pending].include?(record.status))
       attributes += %i[issued_date issuing_bank issuing_bank_branch payment_identifier]
     end

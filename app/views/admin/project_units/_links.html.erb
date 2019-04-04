@@ -1,5 +1,5 @@
 <% if policy([:admin, Receipt.new(user: project_unit.user, project_unit: project_unit)]).new? %>
-  <%= link_to "Add #{t('global.receipt')}", new_admin_user_project_unit_receipt_path(project_unit.user, project_unit_id: project_unit), class: 'dropdown-item modal-remote-form-link' %>
+  <%= link_to "Add #{t('global.receipt')}", new_admin_user_booking_detail_receipt_path(project_unit.user, project_unit.booking_detail), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
 
 <% if policy([:admin, project_unit]).show? %>
@@ -15,14 +15,14 @@
 <% end %>
 
 <% if project_unit.pending_booking_detail_scheme.present? && policy([:admin, project_unit.pending_booking_detail_scheme]).edit? %>
-  <%= link_to "Update scheme and discount", edit_admin_user_project_unit_booking_detail_scheme_path(project_unit.user_id, project_unit, project_unit.pending_booking_detail_scheme.id), class: 'dropdown-item modal-remote-form-link' %>
+  <%= link_to "Update scheme and discount", edit_admin_user_booking_detail_booking_detail_scheme_path(project_unit.user_id, project_unit.booking_detail, project_unit.pending_booking_detail_scheme.id), class: 'dropdown-item modal-remote-form-link' %>
 <% elsif project_unit.booking_detail_scheme && policy([ :admin, BookingDetailScheme.new(project_unit_id: project_unit.id)]).new? %>
-  <%= link_to "Update scheme and discount", new_admin_user_project_unit_booking_detail_scheme_path(project_unit.user_id, project_unit), class: 'dropdown-item modal-remote-form-link' %>
+  <%= link_to "Update scheme and discount", new_admin_user_booking_detail_booking_detail_scheme_path(project_unit.user_id, project_unit.booking_detail), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
 
 <% if ProjectUnit.booking_stages.include?(project_unit.status) %>
   <% if policy([:admin, Receipt ]).index? %>
-    <%= link_to "View #{t('global.receipts')}", admin_user_project_unit_receipts_path(project_unit.user, project_unit), class: 'dropdown-item' %>
+    <%= link_to "View #{t('global.receipts')}", admin_user_booking_detail_receipts_path(project_unit.user, project_unit.booking_detail), class: 'dropdown-item' %>
   <% end %>
 
   <% if project_unit.booking_detail && ProjectUnit.booking_stages.include?(project_unit.status) %>
