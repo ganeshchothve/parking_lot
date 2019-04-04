@@ -36,7 +36,7 @@ class ReceiptPolicy < ApplicationPolicy
   private
 
   def online_account_present?
-    return true if record.payment_mode != 'online'
+    return true if record.payment_mode != 'online' || record.status == 'pending'
     return true if record.account.present?
     @condition = 'online_account_not_present'
     false
