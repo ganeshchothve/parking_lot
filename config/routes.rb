@@ -43,7 +43,7 @@ Rails.application.routes.draw do
         resources :booking_detail_schemes, except: [:destroy], controller: 'booking_details/booking_detail_schemes'
 
         resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts'
-        # resources :booking_detail_schemes, except: [:destroy]
+        resources :booking_detail_schemes, except: [:destroy]
         # resources :receipts, only: [:index]
       end
       
@@ -128,7 +128,7 @@ Rails.application.routes.draw do
       resources :booking_details, only: [:index, :show] do
         patch :booking, on: :member
         patch :send_under_negotiation, on: :member
-        resources :booking_detail_schemes, except: [:destroy], controller: 'booking_details/booking_detail_schemes'
+        resources :booking_detail_schemes, only: [:index], controller: 'booking_details/booking_detail_schemes'
 
         resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts'
         # resources :booking_detail_schemes, except: [:destroy]
