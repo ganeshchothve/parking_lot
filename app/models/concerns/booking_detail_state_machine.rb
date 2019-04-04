@@ -153,16 +153,18 @@ module BookingDetailStateMachine
     end
 
     def after_blocked_event
-      send_email_and_sms_as_booked
       if blocked? && get_paid_amount > project_unit.blocking_amount
         booked_tentative!
+      else
+        send_email_and_sms_as_booked
       end
     end
 
     def after_booked_tentative_event
-      send_email_and_sms_as_booked
       if booked_tentative? && (get_paid_amount >= project_unit.booking_price)
         booked_confirmed!
+      else
+        send_email_and_sms_as_booked
       end
     end
 
@@ -213,6 +215,8 @@ module BookingDetailStateMachine
         )
       end
     end
+    # This method is called after booked_confirmed event
+    # In this send email and sms to the user about confirmation of booking
     def send_email_and_sms_as_confirmed
       if self.project_unit.booking_portal_client.email_enabled?
         attachments_attributes = []
@@ -233,7 +237,7 @@ module BookingDetailStateMachine
             attachments_attributes: attachments_attributes
           })
       end
-      if booking_detail.project_unit.booking_portal_client.sms_enabled?
+      if self.project_unit.booking_portal_client.sms_enabled?
         Sms.create!(
               booking_portal_client_id: user.booking_portal_client_id,
               recipient_id: user.id,
@@ -244,6 +248,8 @@ module BookingDetailStateMachine
       end
     end
 
+    # This method is called after of blocked and booked_tentative event
+    # In this send email and sms to the user when the booking is in one of the booking stage
     def send_email_and_sms_as_booked 
       if self.project_unit.booking_portal_client.email_enabled?
         attachments_attributes = []
