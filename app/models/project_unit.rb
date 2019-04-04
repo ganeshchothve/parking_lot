@@ -76,7 +76,6 @@ class ProjectUnit
   validates :status, :name, :erp_id, presence: true
   validates :status, inclusion: { in: proc { ProjectUnit.available_statuses.collect { |x| x[:id] } } }
   validates :available_for, inclusion: { in: proc { ProjectUnit.available_available_fors.collect { |x| x[:id] } } }
-  validates :user_id, :primary_user_kyc_id, presence: true, if: proc { |unit| %w[available not_available management employee].exclude?(unit.status) }
   validate :pan_uniqueness
 
   delegate :name, to: :phase, prefix: true, allow_nil: true
