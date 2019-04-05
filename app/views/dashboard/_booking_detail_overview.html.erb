@@ -46,7 +46,7 @@
         </div>
       </div>
       <% if booking_detail.project_unit.assets.present? %>
-        <div class="modal fade right fixed-header-footer" role="dialog" id="floor_plan_modal_<%= project_unit.id %>">
+        <div class="modal fade right fixed-header-footer" role="dialog" id="floor_plan_modal_<%= booking_detail.project_unit.id %>">
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -233,7 +233,7 @@
         </div>
       </div>
     </div>
-    <% if (booking_detail.project_unit.status == "blocked" || booking_detail.project_unit.status == "booked_tentative") && booking_detail.project_unit.auto_release_on.present? && booking_detail.project_unit.auto_release_on > Date.today %>
+    <% if (booking_detail.status == "blocked" || booking_detail.status == "booked_tentative") && booking_detail.project_unit.auto_release_on.present? && booking_detail.project_unit.auto_release_on > Date.today %>
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
