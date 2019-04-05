@@ -138,8 +138,8 @@ module BookingDetailStateMachine
       create_default_scheme
       if under_negotiation? && booking_detail_scheme.approved?
         scheme_approved!
-      elsif !booking_detail_scheme.present? && (booking_detail_schemes.distinct(:status).include? 'rejected')
-        scheme_rejected!
+      # elsif !booking_detail_scheme.present? && (booking_detail_schemes.distinct(:status).include? 'rejected')
+      #   scheme_rejected!
       end
       _project_unit = project_unit
       _project_unit.status = 'blocked'
@@ -151,6 +151,8 @@ module BookingDetailStateMachine
         blocked!
       end
     end
+
+    def after_scheme_rejected_event; end
 
     def after_blocked_event
       if blocked? && get_paid_amount > project_unit.blocking_amount

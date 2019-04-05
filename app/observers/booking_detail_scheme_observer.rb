@@ -36,11 +36,14 @@ class BookingDetailSchemeObserver < Mongoid::Observer
     end
   end
 
-  def after_update(booking_detail_scheme)
-    booking_detail_scheme.booking_detail.send("after_#{booking_detail_scheme.booking_detail.status}_event")
-  end
+  # def after_update(booking_detail_scheme)
+  #   booking_detail_scheme.booking_detail.send("after_#{booking_detail_scheme.booking_detail.status}_event")
+  # end
 
   def after_save(booking_detail_scheme)
+     _event = booking_detail_scheme.event
+    booking_detail_scheme.event = nil
+    booking_detail_scheme.send("#{_event}!") if _event.present?
     project_unit = booking_detail_scheme.project_unit
     if booking_detail_scheme.status_changed? && booking_detail_scheme.status == 'approved' && booking_detail_scheme.booking_detail.present?
       # if booking_detail_scheme.status_was == "under_negotiation"

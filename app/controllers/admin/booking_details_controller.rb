@@ -20,7 +20,7 @@ class Admin::BookingDetailsController < AdminController
       @receipt.change_booking_detail_status
       redirect_to admin_user_path(@receipt.user), notice: t('controller.booking_details.booking_successful')
     else
-      redirect_to checkout_user_search_path(project_unit_id: @project_unit.id), alert: @receipt.errors.full_messages
+      redirect_to checkout_user_search_path(@booking_detail.search), alert: @receipt.errors.full_messages
     end
   end
 

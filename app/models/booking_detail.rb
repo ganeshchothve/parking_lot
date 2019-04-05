@@ -50,7 +50,7 @@ class BookingDetail
   end
 
   def booking_detail_scheme
-    booking_detail_schemes.where(status: 'approved').first
+    booking_detail_schemes.in(status: %w[approved draft]).first
   end
 
   def sync(erp_model, sync_log)
