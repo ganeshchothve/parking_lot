@@ -2,14 +2,14 @@ module DatabaseSeeds
   module EmailTemplates
     module UserRequest
       def self.seed client_id
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "UserRequest::Cancellation", name: "cancellation_request_created", subject: "Cancellation Requested for Unit: <%= self.project_unit.name %>", content: '<div class="card w-100">
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "UserRequest::Cancellation", name: "cancellation_request_pening", subject: "Cancellation Requested for Unit: <%= self.booking_detail.project_unit_name %>", content: '<div class="card w-100">
           <div class="card-body">
             <p>Dear <%= self.user.name %>,</p>
             <p>
               A cancellation has been requested on your booking of <%= project_unit.name %> at <%= project_unit.project_name %>. Our CRM team is reviewing the request and will get in touch with you shortly.
             </p>
           </div>
-        </div>') if ::Template::EmailTemplate.where(name: "cancellation_request_created").blank?
+        </div>') if ::Template::EmailTemplate.where(name: "cancellation_request_pending").blank?
 
         Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "UserRequest::Cancellation", name: "cancellation_request_resolved", subject: "Cancellation Request for Unit: <%= self.project_unit.name %> Resolved", content: '<div class="card w-100">
           <div class="card-body">

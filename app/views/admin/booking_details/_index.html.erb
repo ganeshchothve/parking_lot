@@ -11,31 +11,32 @@
       </tr>
     </thead>
     <tbody>
-      <% booking_details.each do |booking_detail| %>
-      <% project_unit = booking_detail.project_unit %>
-      <tr>
-        <td>
-          <%= project_unit.name %>
-          <div class="small">Project: <%= project_unit.project_name %></div>
-          <div class="small">Tower: <%= project_unit.project_tower_name %></div>
-        </td>
-        <td><%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></td>
-        <td><%= BookingDetail.available_statuses.find{|x| x[:id] == booking_detail.status}[:text] rescue "-" %></td>
-        <td>
-          <%= number_to_indian_currency(project_unit.calculate_agreement_price.round) %>
-          <div class="small"><%= labels[:all_inclusive_price] %>: <%= number_to_indian_currency(project_unit.calculate_all_inclusive_price.round) %></div>
-          <div class="small">Paid Amt.: <%= number_to_indian_currency(project_unit.total_amount_paid)  %></div>
-          <div class="small">Booking Amt. Pending: <%= number_to_indian_currency(project_unit.pending_balance.to_i) %></div>
-        </td>
-        <td class="text-right">
-          <div class="dropdown">
-            <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-            <div class="dropdown-menu dropdown-menu-right">
-              <%= render "#{current_user_role_group}/booking_details/links", booking_detail: booking_detail %>
+      <% _booking_details = booking_details.group_by(&:project_unit_id) %>
+      <% ProjectUnit.in(_id: booking_details.pluck(:project_unit_id)).each do |project_unit| %>
+        <% booking_detail = _booking_details[project_unit.id].first %>
+        <tr>
+          <td>
+            <%= project_unit.name %>
+            <div class="small">Project: <%= project_unit.project_name %></div>
+            <div class="small">Tower: <%= project_unit.project_tower_name %></div>
+          </td>
+          <td><%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></td>
+          <td><%= t("booking_details.status.#{booking_detail.status}") %></td>
+          <td>
+            <%= number_to_indian_currency(project_unit.calculate_agreement_price.round) %>
+            <div class="small"><%= labels[:all_inclusive_price] %>: <%= number_to_indian_currency(project_unit.calculate_all_inclusive_price.round) %></div>
+            <div class="small">Paid Amt.: <%= number_to_indian_currency(project_unit.total_amount_paid)  %></div>
+            <div class="small">Booking Amt. Pending: <%= number_to_indian_currency(project_unit.pending_balance.to_i) %></div>
+          </td>
+          <td class="text-right">
+            <div class="dropdown">
+              <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+              <div class="dropdown-menu dropdown-menu-right">
+                <%= render "#{current_user_role_group}/booking_details/links", booking_detail: booking_detail %>
+              </div>
             </div>
-          </div>
-        </td>
-      </tr>
+          </td>
+        </tr>
       <% end %>
       <tr>
         <td colspan="5">
@@ -45,4 +46,5 @@
     </tbody>
   </table>
 </div>
+
 <%= will_paginate booking_details, list_classes: %w(pagination justify-content-center) %>

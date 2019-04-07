@@ -53,6 +53,7 @@ en:
           not_kyc_present: "Associated User's KYC is missing."
           online_account_not_present: 'Any Account is not linked yet. Please contact to admin.'
           online_account_not_present: 'Any Account is not linked yet. Please contact to admin.'
+          wrong_user: 'You are not authorise to add payment for this user.'
         asset_create?:
           no_user_present: 'Receipt is not yet assign with any user.'
           user_not_confimred: 'Associated User is not yet confirmed.'

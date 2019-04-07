@@ -5,10 +5,6 @@ class Admin::UserRequest::SwapPolicy < Admin::UserRequestPolicy
     super && current_client.enable_actual_inventory?(user)
   end
 
-  def new?
-    super && current_client.enable_actual_inventory?(user)
-  end
-
   def create?
     new?
   end

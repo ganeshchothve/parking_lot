@@ -1,6 +1,6 @@
 class BookingDetailObserver < Mongoid::Observer
   def before_create(booking_detail)
-    booking_detail.name = "#{booking_detail.project_unit.name}  (#{booking_detail.project_unit.blocked_on})"
+    booking_detail.name = booking_detail.project_unit.name
   end
 
   def after_create(booking_detail)
