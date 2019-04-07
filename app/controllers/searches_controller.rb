@@ -176,7 +176,7 @@ class SearchesController < ApplicationController
           redirect_to dashboard_path
         end
       else
-        redirect_to [current_user, @receipt.user], notice: 'Unit is booked successfully.'
+        redirect_to [current_user_role_group, @receipt.user], notice: 'Unit is booked successfully.'
       end
     else
       redirect_to checkout_user_search_path(project_unit_id: @project_unit.id)
