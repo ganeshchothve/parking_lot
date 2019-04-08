@@ -3,7 +3,7 @@
     <div class="form-group">
       <% unless p.object.new_record? %>
         <div class="pl-3 pb-0 pb-md-3 pr-3 pt-0 pt-md-3">
-          <%= image_tag p.object.file.url, class: 'img-fluid' %>
+          <%= image_tag p.object.file.url || '', class: 'img-fluid' %>
         </div>
         <div class="row">
           <div class="col-md-6">

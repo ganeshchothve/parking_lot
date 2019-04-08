@@ -43,12 +43,17 @@
 </div>
 
 <div class="form-group">
-  <%= f.label :status, class: 'control-label' %>
-  <%
-    statuses = available_statuses(@receipt)
-  %>
-  <%= f.select :event, options_for_select(statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, @receipt.status), {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([:admin, @receipt]).editable_field?("event") %>
-</div>
+  <% if f.object.new_record? %>
+    <%= f.hidden_field :event, value: 'pending' %>
+  <% else %>
+    <%= f.label :status, class: 'control-label' %>
+    <%
+      statuses = available_statuses(@receipt)
+    %>
+    <%= f.select :event, options_for_select(statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, @receipt.status), {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([:admin, @receipt]).editable_field?("event") %>
+  </div>
+<% end %>
+
 <% if current_client.enable_actual_inventory?(current_user) %>
   <div class="form-group">
     <% unless( (defined? direct_payment) && direct_payment ) %>

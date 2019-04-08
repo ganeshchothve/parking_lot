@@ -122,14 +122,36 @@ class ProjectUnit
     out.with_indifferent_access
   end
 
-  def permitted_schemes(_user = nil)
-    or_criteria = []
-    _scheme = Scheme.where(project_tower_id: project_tower_id, status: 'approved')
-    unless user.blank?
-      _scheme = _scheme.or([{ user_ids: { '$in' => [nil, [], user.id, ''] } }, { user_role: { '$in' => [nil, [], user.role] } }])
+  #
+  # update project unit permitted scheme query
+  # - scheme should be available for same project_tower
+  # - scheme should be approved
+  # - scheme can be apply by only given user role or it empty( any one can apply)
+  # - Scheme can be apply for those user which attached with project.
+  # - Scheme can be apply for those user role which attached with project.
+  #
+  # @param [User] _user Which is going to book unit.
+  #
+  # @return [Scheme collection] permitted schemes for booking.
+  #
+  def permitted_schemes(_user=nil)
+    _selector = {
+      project_tower_id: self.project_tower_id,
+      status: "approved",
+      '$and' => [{
+        '$or' => [
+          { can_be_applied_by: nil },
+          { can_be_applied_by: [] },
+          { can_be_applied_by: _user.try(:role) || 'user' }
+        ]
+      }]
+    }
+    if self.user.present?
+      _selector['$and'] << { '$or' => [ {user_ids: nil }, {user_ids: []},
+          { user_ids: self.user.id } ] }
+      _selector['$and'] <<  { '$or' => [ {user_role: nil}, { user_role: []}, {user_role: self.user.role } ]}
     end
-    _scheme = _scheme.or([{ can_be_applied_by: nil }, { can_be_applied_by: [] }, { can_be_applied_by: _user.role }])
-    _scheme
+    Scheme.where(_selector)
   end
 
   def self.user_based_available_statuses(user)

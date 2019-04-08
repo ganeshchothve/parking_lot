@@ -68,8 +68,8 @@ module UserRequestStateMachine
     end
 
     def send_notifications
-      send_email if user.booking_portal_client.email_enabled?
-      send_sms
+      send_email if user.booking_portal_client.email_enabled? && !processing?
+      send_sms if user.booking_portal_client.sms_enabled? && !processing?
     end
 
     def update_booking_detail_to_request_rejected

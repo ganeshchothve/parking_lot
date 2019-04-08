@@ -6,6 +6,8 @@ class BookingDetail
   include BookingDetailStateMachine
   include SyncDetails
 
+  BOOKING_STAGES = %w[blocked booked_tentative booked_confirmed]
+
   field :status, type: String
   field :erp_id, type: String, default: ''
   field :name, type: String
@@ -39,6 +41,7 @@ class BookingDetail
   # validates :name, presence: true
   validates :status, :primary_user_kyc_id, presence: true
   validates :erp_id, uniqueness: true, allow_blank: true
+  delegate :name, to: :project_unit, prefix: true, allow_nil: true
 
   accepts_nested_attributes_for :notes
 
