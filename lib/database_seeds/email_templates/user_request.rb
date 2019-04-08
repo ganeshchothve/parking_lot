@@ -31,7 +31,7 @@ module DatabaseSeeds
           </div>
         </div>') if ::Template::EmailTemplate.where(name: "cancellation_request_rejected").blank?
 
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "UserRequest::Swap", name: "swap_request_created", subject: "Swap Requested for <%= I18n.t('global.project_unit') %>: <%= self.project_unit.name %>", content: '<div class="card w-100">
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "UserRequest::Swap", name: "swap_request_pending", subject: "Swap Requested for <%= I18n.t('global.project_unit') %>: <%= self.project_unit.name %>", content: '<div class="card w-100">
           <div class="card-body">
             <p>Dear <%= self.user.name %>,</p>
             <p>
