@@ -9,7 +9,6 @@ module SearchConcern
     @units = ProjectUnit.build_criteria({fltrs: parameters}).sort_by{|x| [x.floor, x.floor_order]}.to_a
     @all_units = ProjectUnit.collection.aggregate([{
       "$match": {
-        status: {"$in": ProjectUnit.user_based_available_statuses(@search.user)},
         project_tower_id: BSON::ObjectId(@search.project_tower_id)
       }
     },{

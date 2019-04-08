@@ -3,6 +3,7 @@ class Scheme
   include Mongoid::Timestamps
   include InsertionStringMethods
   include SchemeStateMachine
+  extend FilterByCriteria
 
   field :name, type: String
   field :description, type: String
@@ -13,6 +14,16 @@ class Scheme
   field :cost_sheet_template_id, type: BSON::ObjectId
   field :default, type: Boolean
   field :can_be_applied_by, type: Array
+
+  scope :filter_by_name, ->(name) { where(name: ::Regexp.new(::Regexp.escape(name), 'i')) }
+  scope :filter_by_can_be_applied_by, ->(can_be_applied_by) { where(can_be_applied_by: can_be_applied_by) }
+  scope :filter_by_user_role, ->(user_role) { where(user_role: user_role) }
+  scope :filter_by_status, ->(status) { where(status: status) }  
+  scope :filter_by_project_tower, ->(project_tower_id) { where(project_tower_id: project_tower_id) }
+
+
+
+
 
   enable_audit({
     indexed_fields: [:project_id, :project_tower_id],
@@ -39,17 +50,6 @@ class Scheme
 
   def self.available_fields
     ["agreement_price", "all_inclusive_price", "base_rate", "floor_rise"]
-  end
-
-  def self.build_criteria params={}
-    selector = {}
-    if params[:fltrs].present?
-      if params[:fltrs][:status].present?
-        selector[:status] = params[:fltrs][:status]
-      end
-    end
-    selector[:name] = ::Regexp.new(::Regexp.escape(params[:search]), 'i') if params[:search].present?
-    self.where(selector)
   end
 
   def project_tower
