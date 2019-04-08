@@ -64,11 +64,7 @@
           </div>
         <% end %>
         <div class="mt-3"></div>
-        <% current_user.booking_details.where(status: 'hold').each do |booking_detail| %>
-          <%= render 'dashboard/booking_detail_overview', {booking_detail: booking_detail, with_actions: true} %>
-          <div class="mt-3"></div>
-        <% end %>
-        <% current_user.booking_details.not_in(status: ['hold','cancelled','swapped']).each do |booking_detail| %>
+        <% current_user.booking_details.each do |booking_detail| %>
           <%= render 'dashboard/booking_detail_overview', {booking_detail: booking_detail, with_actions: true} %>
           <div class="mt-3"></div>
         <% end %>

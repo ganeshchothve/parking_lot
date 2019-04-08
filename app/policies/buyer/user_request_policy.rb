@@ -2,9 +2,11 @@ class Buyer::UserRequestPolicy < UserRequestPolicy
   # def index? from UserRequestPolicy
 
   def new?
-    valid = true
-    valid = (record.project_unit.user_based_status(user) == 'booked' && record.project_unit.status != 'hold') && UserRequest.where(project_unit_id: record.project_unit_id).where(status: 'pending').blank? if record.project_unit_id.present?
-    valid &&= (user.buyer? && record.user_id == user.id)
+    valid = current_client.enable_actual_inventory?(user)
+    if record.booking_detail.present?
+      valid &&= BookingDetail::BOOKING_STAGES.include?(record.booking_detail.status)
+    end
+    valid
   end
 
   def edit?
