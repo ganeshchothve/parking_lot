@@ -5,11 +5,11 @@ class BookingDetailSchemeObserver < Mongoid::Observer
   end
 
   def after_create(booking_detail_scheme)
-    if booking_detail_scheme.project_unit.status == 'negotiation_failed'
-      project_unit = booking_detail_scheme.project_unit
-      project_unit.status = 'under_negotiation'
-      project_unit.save!
-    end
+    # if booking_detail_scheme.project_unit.status == 'negotiation_failed'
+    #   project_unit = booking_detail_scheme.project_unit
+    #   project_unit.status = 'under_negotiation'
+    #   project_unit.save!
+    # end
   end
 
   def before_save(booking_detail_scheme)

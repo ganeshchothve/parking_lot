@@ -12,6 +12,11 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
     index?
   end
 
+  def release_unit?
+    true
+    #permit only superadmin and admin
+  end
+
   def edit?
     _role_based_check(true)
   end

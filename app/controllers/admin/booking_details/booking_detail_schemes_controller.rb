@@ -65,7 +65,7 @@ class Admin::BookingDetails::BookingDetailSchemesController < AdminController
   end
 
   def approve_via_email
-    @scheme.status = 'approved'
+    @scheme.event = 'approved'
     @scheme.approved_by = current_user
     respond_to do |format|
       if @scheme.save
@@ -81,7 +81,7 @@ class Admin::BookingDetails::BookingDetailSchemesController < AdminController
   def update
     modify_params
     @scheme.assign_attributes(permitted_attributes([:admin, @scheme]))
-    @scheme.status = 'under_negotiation' if @scheme.payment_adjustments.present? && @scheme.payment_adjustments.last.new_record?
+    @scheme.draft! if @scheme.payment_adjustments.present? && @scheme.payment_adjustments.last.new_record?
     @scheme.approved_by = current_user if @scheme.event.present? && @scheme.event == 'approved'
     respond_to do |format|
       if @scheme.save

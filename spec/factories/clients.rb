@@ -28,7 +28,7 @@ FactoryBot.define do
     sms_provider_username { 'test' }
     sms_provider_password { 'test' }
     enable_communication { {"email": false, "sms": false} } 
-    enable_actual_inventory {%w[admin]}
+    # enable_actual_inventory {%w[admin]}
 
   end
 end

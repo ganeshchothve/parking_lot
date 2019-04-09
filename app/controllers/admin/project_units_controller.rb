@@ -97,6 +97,11 @@ class Admin::ProjectUnitsController < AdminController
     end
   end
 
+  def release_unit 
+    # add code to make the unit available from blocked 
+    # make booking_detail associated with it to cancelled 
+  end
+
   private
 
   # def set_project_unit
