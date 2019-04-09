@@ -7,9 +7,6 @@ RSpec.describe Admin::BookingDetails::BookingDetailSchemesController, type: :con
     sign_in_app(@admin)
   end
   describe 'Admin side' do
-    # before(:each) do
-      
-    # end
     describe "normal scenario (when payment adjustment is not added )" do 
       before(:each) do 
         kyc = create(:user_kyc, creator_id: @user.id, user: @user)
@@ -62,13 +59,13 @@ RSpec.describe Admin::BookingDetails::BookingDetailSchemesController, type: :con
           expect(@booking_detail_scheme.reload.derived_from_scheme_id).to eq(@scheme.id)
         end
         it "scheme's payment_adjustments are attached to the booking_detail_scheme" do 
-          expect(@booking_detail_scheme.payment_adjustments).to contain_exactly(@scheme.payment_adjustments)
+          expect(@booking_detail_scheme.reload.payment_adjustments.pluck(:name)).to match_array(@scheme.payment_adjustments.pluck(:name))
         end
       end
       describe  "new payment_adjustment is added to approved booking_detail_scheme " do
         before(:each) do 
           payment_adjustments_params = FactoryBot.attributes_for(:payment_adjustment)
-          patch :update,params: {id: @booking_detail_scheme.id, booking_detail_id: @project_unit.booking_detail.id, booking_detail_scheme: {payment_adjustments_attributes: {"1233": payment_adjustments_params}}}
+          patch :update,params: {id: @booking_detail_scheme.id, booking_detail_id: @booking_detail.id, booking_detail_scheme: {payment_adjustments_attributes: {"1233": payment_adjustments_params}}}
         end
         it "booking_detail_scheme goes to draft from approved" do
           expect(@booking_detail_scheme.reload.status).to eq ('draft')
@@ -104,6 +101,11 @@ RSpec.describe Admin::BookingDetails::BookingDetailSchemesController, type: :con
       before(:each) do 
         @booking_detail = booking_under_negotiation(@user)
         @booking_detail_scheme = @booking_detail.booking_detail_scheme
+        receipt = create(:receipt, user: @user, project_unit: @project_unit, booking_detail: @booking_detail, total_amount: @client.blocking_amount)
+        receipt.clearance_pending!
+        receipt1 = create(:receipt, user: @user, project_unit: @project_unit, booking_detail: @booking_detail, total_amount: 40_000)
+        receipt1.clearance_pending!
+        receipt2 = create(:receipt, user: @user, project_unit: @project_unit, booking_detail: @booking_detail, total_amount: 40_000)
         patch :update,params: {id: @booking_detail_scheme.id, booking_detail_id: @booking_detail.id, booking_detail_scheme: {event: 'rejected'}}
       end
       it "booking_detail_scheme status changes to rejected" do
@@ -113,15 +115,11 @@ RSpec.describe Admin::BookingDetails::BookingDetailSchemesController, type: :con
         expect(@booking_detail.reload.status).to eq('scheme_rejected')
       end
       it "remove association of booking_detail and receipts " do
-      receipt = create(:receipt, user: @user, project_unit: @project_unit, booking_detail: @booking_detail, total_amount: @client.blocking_amount)
-        receipt.clearance_pending!
-        receipt1 = create(:receipt, user: @user, project_unit: @project_unit, booking_detail: @booking_detail, total_amount: 40_000)
-        receipt1.clearance_pending!
-        receipt2 = create(:receipt, user: @user, project_unit: @project_unit, booking_detail: @booking_detail, total_amount: 40_000) 
+         
         receipts = @booking_detail.receipts
         receipts.each do |receipt|
           if receipt.status != 'pending'
-            expect(receipt.booking_detail_id).to eq(nil) 
+            expect(receipt.reload.booking_detail_id).to eq(nil) 
           else
             expect(receipt.booking_detail_id).to eq(@booking_detail.id)
           end

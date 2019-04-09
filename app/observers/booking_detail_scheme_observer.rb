@@ -13,25 +13,18 @@ class BookingDetailSchemeObserver < Mongoid::Observer
   end
 
   def before_save(booking_detail_scheme)
+    if booking_detail_scheme.payment_adjustments.present? && booking_detail_scheme.payment_adjustments.last.new_record?
+      booking_detail_scheme.draft 
+    end
     if booking_detail_scheme.derived_from_scheme_id_changed?
+      booking_detail_scheme.draft
       booking_detail_scheme.payment_schedule_template_id = booking_detail_scheme.derived_from_scheme.payment_schedule_template.id
       booking_detail_scheme.cost_sheet_template_id = booking_detail_scheme.derived_from_scheme.cost_sheet_template.id
 
       attrs = []
-      booking_detail_scheme.payment_adjustments.each do |payment_adjustment|
-        attrs << { _id: payment_adjustment.id, _destroy: true } if payment_adjustment.persisted?
-      end
-
-      booking_detail_scheme.assign_attributes(payment_adjustments_attributes: attrs)
-
+      booking_detail_scheme.payment_adjustments.destroy
       booking_detail_scheme.derived_from_scheme.payment_adjustments.each do |adjustment|
-        booking_detail_scheme.payment_adjustments.new(
-          name: adjustment.name,
-          field: adjustment.field,
-          formula: adjustment.formula,
-          absolute_value: adjustment.absolute_value,
-          editable: false
-        )
+        booking_detail_scheme.payment_adjustments << adjustment.dup
       end
     end
   end

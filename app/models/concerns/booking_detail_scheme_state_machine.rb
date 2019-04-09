@@ -7,7 +7,7 @@ module BookingDetailSchemeStateMachine
       state :draft, initial: true
       state :approved, :rejected
 
-      event :draft do
+      event :draft, after: :after_draft_event do
         transitions from: :draft, to: :draft
         transitions from: :approved, to: :draft
       end
@@ -34,6 +34,9 @@ module BookingDetailSchemeStateMachine
 
     def other_approved_scheme_present?
       BookingDetailScheme.where(project_unit_id: project_unit_id, user_id: user_id, status: 'approved').count > 1
+    end
+
+    def after_draft_event 
     end
 
     # after booking_detail_scheme is rejected, move booking detail to scheme_rejected state 
