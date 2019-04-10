@@ -10,6 +10,31 @@ RSpec.describe UserRequests::CancellationProcess, type: :worker do
       @booking_detail.set(status: 'cancelling')
     end
 
+    describe 'UserRequest mark as Rejected' do
+      context 'UserRequest is not in processing state wrong Id pass' do
+        it 'ingore request, nothing will change' do
+          expect( UserRequests::CancellationProcess.new.perform('asddff') ).to eq(nil)
+        end
+      end
+      context 'UserRequest is in processing state but booking_detail is missing' do
+        it 'request put on Rejected state, with error message' do
+          allow_any_instance_of(UserRequest).to receive(:booking_detail).and_return(nil)
+          UserRequests::CancellationProcess.new.perform(@user_request.id)
+          expect(@user_request.reload.status).to eq('rejected')
+          expect(@user_request.reason_for_failure).to include('Booking Is not available for cancellation.')
+        end
+      end
+
+      context 'UserRequest is in processing state but booking_detail is not in cancelling state' do
+        it 'request put on Rejected state, with error message' do
+          allow_any_instance_of(BookingDetail).to receive(:status).and_return(:hold)
+          UserRequests::CancellationProcess.new.perform(@user_request.id)
+          expect(@user_request.reload.status).to eq('rejected')
+          expect(@user_request.reason_for_failure).to include('Booking Is not available for cancellation.')
+        end
+      end
+    end
+
     describe 'UserRequest mark as cancelled' do
       context 'all receipts in success' do
         it 'request marked as resolved and booking is cancelled with all receipts as available for refund' do
