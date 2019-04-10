@@ -19,7 +19,7 @@ class Buyer::BookingDetailsController < BuyerController
         redirect_to buyer_user_path(@booking_detail.user)
       end
     else
-      redirect_to checkout_user_search_path(project_unit_id: @project_unit.id)
+      redirect_to checkout_user_search_path(@booking_detail.search)
     end
   end
 

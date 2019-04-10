@@ -7,11 +7,13 @@
 <% if policy([:admin, project_unit]).show? %>
   <%= link_to "View Details", admin_booking_detail_path(booking_detail), class: 'dropdown-item' %>
 <% end %>
-<% if project_unit.pending_booking_detail_scheme.present? && policy(project_unit.pending_booking_detail_scheme).edit? %>
-  <%= link_to "Update scheme and discount", edit_admin_user_booking_detail_booking_detail_scheme_path(project_unit.user_id, project_unit.booking_detail, project_unit.pending_booking_detail_scheme.id), class: 'dropdown-item modal-remote-form-link' %>
-<% elsif project_unit.booking_detail && policy(BookingDetailScheme.new(project_unit_id: project_unit.id)).new? %>
-  <%= link_to "Update scheme and discount", new_admin_user_booking_detail_booking_detail_scheme_path(project_unit.user_id, project_unit.booking_detail), class: 'dropdown-item modal-remote-form-link' %>
-<% end %>
+<%# if project_unit.pending_booking_detail_scheme.present? && policy(project_unit.pending_booking_detail_scheme).edit? %>
+<% if booking_detail.booking_detail_scheme.present? && policy([:admin, booking_detail.booking_detail_scheme]).edit? %>
+  <%= link_to "Update scheme and discount", edit_admin_booking_detail_booking_detail_scheme_path( booking_detail, booking_detail.booking_detail_scheme.id), class: 'dropdown-item modal-remote-form-link' %>
+  <% end %>
+<%# elsif project_unit.booking_detail # && policy(BookingDetailScheme.new(project_unit_id: project_unit.id)).new? %>
+  <%#= link_to "Update scheme and discount", new_admin_booking_detail_booking_detail_scheme_path(booking_detail), class: 'dropdown-item modal-remote-form-link' %>
+<%# end %>
 
 <% if policy([:admin, Receipt ]).index? %>
   <%= link_to "View #{t('global.receipts')}", admin_user_booking_detail_receipts_path(booking_detail.user, booking_detail), class: 'dropdown-item' %>

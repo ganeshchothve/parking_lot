@@ -9,7 +9,7 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
   def new
     @receipt = Receipt.new({
       creator: current_user, project_unit_id: @project_unit.id, user: current_user,
-      total_amount: (@project_unit.status == "hold" ? @project_unit.blocking_amount : @project_unit.pending_balance)
+      total_amount: (@project_unit.status == "hold" ? @project_unit.blocking_amount : @booking_detail.pending_balance)
     })
     render layout: false
   end

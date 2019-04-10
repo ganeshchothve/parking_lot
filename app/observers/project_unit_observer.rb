@@ -50,21 +50,11 @@ class ProjectUnitObserver < Mongoid::Observer
 
   def after_update project_unit
     user = project_unit.user
-    if project_unit.status_changed? && ProjectUnit.booking_stages.include?(project_unit.status)
-
-      if Receipt.where(project_unit_id: project_unit.id).blank?
-        receipt = user.unattached_blocking_receipt project_unit.booking_portal_client.blocking_amount
-        if receipt.present?
-          receipt.project_unit_id = project_unit.id
-          receipt.processed_on = Date.today
-          receipt.save!
-        end
-      end
-
+    # if project_unit.status_changed? && ProjectUnit.booking_stages.include?(project_unit.status)
       # if !Rails.env.development?
       #   # SelldoInventoryPusher.perform_async(project_unit.status, project_unit.id.to_s, Time.now.to_i)
       # end
-    end
+    # end
 
     if project_unit.auto_release_on_changed? && project_unit.auto_release_on.present? && project_unit.auto_release_on_was.present?
       if project_unit.booking_portal_client.email_enabled?

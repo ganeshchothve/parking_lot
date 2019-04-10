@@ -13,6 +13,7 @@ FactoryBot.define do
       booking_detail_scheme.created_by ||= User.where(role: 'admin').first || create(:admin)
       booking_detail_scheme.approved_by ||= User.where(role: 'admin').first || create(:admin)
       booking_detail_scheme.booking_portal_client ||= Client.desc(:created_by).first || create(:client)
+      booking_detail_scheme.derived_from_scheme_id = Scheme.first.id || create(:scheme).id
       booking_detail_scheme.payment_schedule_template = booking_detail_scheme.derived_from_scheme.payment_schedule_template
       booking_detail_scheme.cost_sheet_template = booking_detail_scheme.derived_from_scheme.cost_sheet_template
       if booking_detail_scheme.payment_adjustments.blank?

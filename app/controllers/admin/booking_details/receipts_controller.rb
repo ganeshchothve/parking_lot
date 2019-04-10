@@ -17,7 +17,7 @@ class Admin::BookingDetails::ReceiptsController < AdminController
   def new
     @receipt = Receipt.new({
       creator: current_user, project_unit_id: @project_unit.id, user: @user, booking_detail_id: @booking_detail.id,
-      total_amount: (@project_unit.status == "hold" ? @project_unit.blocking_amount : @project_unit.pending_balance)
+      total_amount: (@project_unit.status == "hold" ? @project_unit.blocking_amount : @booking_detail.pending_balance)
     })
     authorize([:admin, @receipt])
     render layout: false

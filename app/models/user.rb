@@ -141,7 +141,7 @@ class User
   end
 
   def total_balance_pending
-    project_units.in(status: ProjectUnit.booking_stages).sum(&:pending_balance)
+    booking_details.in(status: ProjectUnit.booking_stages).sum(&:pending_balance)
   end
 
   def total_unattached_balance

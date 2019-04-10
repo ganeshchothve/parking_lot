@@ -402,8 +402,8 @@ class ProjectUnit
   end
 
   def pending_booking_detail_scheme
-    if %w[hold].include?(status) || self.class.booking_stages.include?(status)
-      booking_detail_scheme
+    if booking_detail.present? && (%w[hold].include?(status) || self.class.booking_stages.include?(status))
+      BookingDetailScheme.where(booking_detail_id: booking_detail.id).in(status: 'draft').desc(:created_at).first
     end
   end
 

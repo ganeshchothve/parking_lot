@@ -1,7 +1,9 @@
 <div class="form-group">
 
   <%= f.label :derived_from_scheme_id, class: 'control-label' %>
-  <%= f.select :derived_from_scheme_id, project_unit.permitted_schemes(current_user).collect{|scheme| [scheme.name, scheme.id]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
+  
+  <% p = {fltrs: { project_tower: booking_detail.project_unit.project_tower_id, can_be_applied_by: current_user.role, user_role: booking_detail.user.role, user_id: booking_detail.user_id } }%>
+  <%= f.select :derived_from_scheme_id,options_from_collection_for_select(Scheme.build_criteria(p), 'id', 'name'), {prompt: true}, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_schemes_path, params: p }%>
 </div>
 <%= f.hidden_field :booking_detail_id %>
 <%= f.hidden_field :project_unit_id %>
@@ -19,7 +21,7 @@
     </div>
     <div class="col-md-4">
       <p>Value</p>
-      <p><%= payment_adjustment.value(project_unit) %></p>
+      <p><%= payment_adjustment.value(booking_detail.project_unit) %></p>
     </div>
   </div>
   <% end %>
@@ -98,7 +100,7 @@ $(document).ready(function(){
       type: "GET",
       dataType: 'json',
       data: {
-        project_unit_id: "<%= project_unit.id %>"
+        project_unit_id: "<%= booking_detail.project_unit.id %>"
       },
       success: function(data, xhr, status){
         _.each(data, function(record){
