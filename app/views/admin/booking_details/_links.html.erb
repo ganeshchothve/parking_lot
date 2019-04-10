@@ -1,0 +1,23 @@
+<% project_unit = booking_detail.project_unit %>
+
+<% if policy([:admin, Receipt.new(user: booking_detail.user, project_unit: project_unit)]).new? %>
+  <%= link_to "Add #{t('global.receipt')}", new_admin_user_booking_detail_receipt_path(booking_detail.user, booking_detail_id: booking_detail.id), class: 'dropdown-item modal-remote-form-link' %>
+<% end %>
+
+<% if policy([:admin, project_unit]).show? %>
+  <%= link_to "View Details", admin_booking_detail_path(booking_detail), class: 'dropdown-item' %>
+<% end %>
+
+<% if policy([:admin, booking_detail.booking_detail_scheme]).edit? %>
+  <%= link_to "Update scheme and discount", edit_admin_booking_detail_booking_detail_scheme_path( booking_detail, booking_detail.booking_detail_scheme.id), class: 'dropdown-item modal-remote-form-link' %>
+  <% end %>
+
+<% if policy([:admin, Receipt ]).index? %>
+  <%= link_to "View #{t('global.receipts')}", admin_user_booking_detail_receipts_path(booking_detail.user, booking_detail), class: 'dropdown-item' %>
+<% end %>
+<% [UserRequest::Cancellation, UserRequest::Swap] if Rails.env.development? %>
+<% UserRequest.descendants.each do |klass| %>
+  <% if policy([:admin, klass.new(user_id: booking_detail.user_id, booking_detail: booking_detail)]).new? %>
+      <%= link_to t("global.user_request_#{klass.model_name.element}"), new_admin_user_user_request_path(user_id: booking_detail.user_id, booking_detail_id: booking_detail.id, request_type: klass.model_name.element), class: "dropdown-item modal-remote-form-link" %>
+  <% end %>
+<% end %>

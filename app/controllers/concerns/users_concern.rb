@@ -2,8 +2,9 @@ module UsersConcern
   extend ActiveSupport::Concern
 
   def show
-    @project_units = @user.project_units.order('created_at DESC').paginate(page: params[:page] || 1, per_page: 15)
-    @receipts = @user.receipts.where("$or": [{ status: 'pending', payment_mode: { '$ne' => 'online' } }, { status: { '$ne' => 'pending' } }]).order('created_at DESC').paginate(page: params[:page] || 1, per_page: 15)
+    @project_units = @user.project_units.order('created_at DESC').paginate(page: params[:page] || 1, per_page: params[:per_page] || 15)
+    @booking_details = @user.booking_details.paginate(page: params[:page] || 1, per_page: params[:per_page] || 15)
+    @receipts = @user.receipts.order('created_at DESC').paginate(page: params[:page] || 1, per_page: params[:per_page]|| 15)
     render template: 'admin/users/show'
   end
 

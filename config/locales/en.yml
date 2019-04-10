@@ -285,8 +285,23 @@ en:
         country: 'Country'
         zip: 'Zip / Pin Code'
   controller:
+    project_units: 
+      unit_released: "The unit has been successfully released."
+    booking_details:
+      set_booking_detail_missing: "Booking detail not found"
+      set_project_unit_missing: "Project unit not found"
+      booking_successful: "You have completed the booking successfully."
     only_administrator_users: 'Only administrator users are allowed.'
     only_buyer_users: 'Only Buyer users are allowed.'
+    searches:
+      project_unit_missing: 'Project Unit Selection step is missing'
+      check_project_unit_hold_status: "We've released the unit which was held for %{holding_minutes} minutes. Please re-select the unit and try booking again."
+      checkout:
+        non_hold_booking: 'Booking is not yet hold.'
+        pending_payments: "We already have collected a payment for this unit from the same customer."
+      hold:
+        booking_detail_error: 'We cannot process your request at this time. Please retry'
+        success: 'Your Booking is hold. Please select Scheme and go for Payment.'
   smses:
     link_name: "SMS"
     status:
@@ -330,6 +345,13 @@ en:
       channel_partner: 'Channel Partner'
       management_user: 'Management User'
       employee_user: 'Employee'
+  user_requests:
+    status:
+      pending: 'Pending'
+      processing: 'Processing'
+      resolved: 'Resolved'
+      rejected: 'Rejected'
+      failed: 'Failed'
   referrals:
     name: 'Referrals'
     code: 'Referral Code'
@@ -350,7 +372,7 @@ en:
       almost_x_years:
         one: 'almost year'
         other: '%{count} Years'
-  project_units:
+  booking_details:
     status:
        available: 'Available'
        not_available: 'Not Available'
@@ -359,5 +381,15 @@ en:
        blocked: 'Blocked'
        booked_tentative: 'Tentative Booked'
        booked_confirmed: 'Confirmed Booked'
+       under_negotiation: 'Under Negotiation'
+       scheme_approved: 'Scheme Approved'
+       scheme_rejected: 'Scheme Rejected'
        management: 'Management Blocking'
        employee: 'Employee Blocking'
+  receipts:
+    status:
+      pending: 'Pending'
+      clearance_pending: 'Clearance Pending'
+      failed: 'Failed'
+      cancel: 'Cancel'
+

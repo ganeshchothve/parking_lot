@@ -33,10 +33,10 @@ module PaymentGatewayService
           if key.from(0).to(key.index("=")-1) == 'order_status'
             status = key.from(key.index("=")+1).to(-1).downcase
             if(status.downcase == "success")
-              @receipt.status = "success"
+              @receipt.clearance_pending!
               @receipt.status_message = "success"
             else
-              @receipt.status = "failed"
+              @receipt.failed if %w[pending clearance_pending].include? @receipt.status
             end
           end
           if key.from(0).to(key.index("=")-1) == 'tracking_id'

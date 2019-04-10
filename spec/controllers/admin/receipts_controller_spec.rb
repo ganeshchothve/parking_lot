@@ -65,7 +65,9 @@ RSpec.describe Admin::ReceiptsController, type: :controller do
     it 'selects default account when any unit is not selected' do
       receipt_params = FactoryBot.attributes_for(:receipt)
       post :create, params: { receipt: receipt_params, user_id: @user.id }
-      expect(Receipt.first.account.by_default).to eq(true)
+      receipt = Receipt.first
+      receipt.success!
+      expect(receipt.account.by_default).to eq(true)
     end
   end
 end

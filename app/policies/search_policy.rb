@@ -6,7 +6,7 @@ class SearchPolicy < ApplicationPolicy
   def show?
     valid = true
     if record.project_unit.present? && record.project_unit.status == 'hold'
-      if record.user_id != record.project_unit.user_id
+      if record.user_id != record.project_unit.booking_details.hold.first.user_id
         valid = false
       end
     end

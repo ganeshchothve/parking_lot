@@ -4,6 +4,7 @@ class SelldoLeadUpdater
   include ApplicationHelper
 
   def perform(user_id, st=nil)
+    return false if Rails.env.test?
     user = User.find user_id
     project_units = user.project_units.all
     stage = nil

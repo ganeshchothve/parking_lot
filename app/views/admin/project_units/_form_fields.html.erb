@@ -33,7 +33,7 @@
     statuses = []
     if ["available", "not_available", "employee", "management", "error", "negotiation_failed"].include?(@project_unit.status)
       statuses = ["available", "not_available", "employee", "management"]
-    elsif ["blocked", "booked_tentative"].include?(@project_unit.status) && @project_unit.pending_balance <= 0
+    elsif ["blocked", "booked_tentative"].include?(@project_unit.status) && @project_unit.booking_detail.pending_balance <= 0
       statuses = ["booked_confirmed"]
     end
   %>

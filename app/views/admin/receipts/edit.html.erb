@@ -9,8 +9,8 @@
       </div>
       <div class="modal-body">
         <%#= render 'admin/project_units/receipts/details', receipt: @receipt %>
-        <%= form_for [:admin, @user, @receipt], local: true, remote: true, html: {id: 'receipt_form', class: 'modal-remote-form validate-form', data: { "resource-type": t('global.receipt'), type: :json} } do |f| %>
-          <%= render 'admin/project_units/receipts/form', f: f %>
+        <%= form_for [:admin, @receipt.user, @receipt], local: true, remote: true, html: {id: 'receipt_form', class: 'modal-remote-form validate-form', data: { "resource-type": t('global.receipt'), type: :json} } do |f| %>
+          <%= render 'admin/booking_details/receipts/form', f: f %>
         <% end %>
       </div>
     </div>

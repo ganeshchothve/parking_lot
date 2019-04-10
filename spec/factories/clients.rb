@@ -8,7 +8,7 @@ FactoryBot.define do
     helpdesk_email { Faker::Internet.email }
     helpdesk_number { Faker::Number.number(10) }
     enable_company_users { Faker::Boolean.boolean }
-
+    enable_actual_inventory { %w[superadmin admin user] }
     notification_email { Faker::Internet.email }
     notification_numbers { Faker::Number.number(10) }
 
@@ -27,8 +27,8 @@ FactoryBot.define do
     mailgun_email_domain { 'test' }
     sms_provider_username { 'test' }
     sms_provider_password { 'test' }
-    enable_communication { {"email": false, "sms": false} } 
-    enable_actual_inventory {%w[admin]}
+
+    enable_communication { {"email": false, "sms": false} }
 
   end
 end

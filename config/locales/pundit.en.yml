@@ -14,6 +14,19 @@ en:
 
     admin:
 
+      booking_detail_policy:
+        hold?:
+          enable_actual_inventory: 'You can not select Inventory. Please contact to Administrator.'
+          only_for_kyc_added_users: 'Please add KYC before booking Unit.'
+          only_for_confirmed_user: 'You have to confirm your email address before continuing.'
+          already_held: 'This unit is already held by other user.'
+          not_available_for_user_group: 'This unit is not for current user group.'
+          blocking_amount_receipt: 'For Channal Partner. Need atleast one unattach booking amount receipt.'
+          booking_limit_exceed: 'You have booked the permitted number of apartments.'
+          user_kyc_allowed_bookings: 'Multiple KYC booking is not allowed.'
+          not_authorise_to_book_for_this_user: 'You do not have access to book for this buyer.'
+          hold_single_unit: 'User already has a unit on hold.'
+
       project_unit_policy:
         index?: "Only administrator has rights to view this page."
         show?: "Only administrator has rights to view this page."
@@ -40,6 +53,7 @@ en:
           not_kyc_present: "Associated User's KYC is missing."
           online_account_not_present: 'Any Account is not linked yet. Please contact to admin.'
           online_account_not_present: 'Any Account is not linked yet. Please contact to admin.'
+          wrong_user: 'You are not authorise to add payment for this user.'
         asset_create?:
           no_user_present: 'Receipt is not yet assign with any user.'
           user_not_confimred: 'Associated User is not yet confirmed.'
@@ -77,6 +91,19 @@ en:
 
 
     buyer:
+
+      booking_detail_policy:
+        hold?:
+          enable_actual_inventory: 'You can not select Inventory. Please contact to Administrator.'
+          only_for_kyc_added_users: 'Please add KYC before booking Unit.'
+          only_for_confirmed_user: 'You have to confirm your email address before continuing.'
+          already_held: 'This unit is already held by other user.'
+          not_available_for_user_group: 'This unit is not for current user group.'
+          blocking_amount_receipt: 'For Channal Partner. Need atleast one unattach booking amount receipt.'
+          booking_limit_exceed: 'You have booked the permitted number of apartments.'
+          user_kyc_allowed_bookings: 'Multiple KYC booking is not allowed.'
+          not_authorise_to_book_for_this_user: 'You do not have access to book for this buyer.'
+          hold_single_unit: 'User already has a unit on hold.'
       project_unit_policy:
         index?: "Only buyer has rights to view this page."
         show?: "Only buyer has rights to view this page."

@@ -43,6 +43,7 @@ class ProjectUnitExportWorker
   end
 
   def self.get_project_unit_row(project_unit)
+    status = project_unit.booking_detail.present? ? project_unit.booking_detail.status : project_unit.status
     [
       project_unit.name,
       project_unit.unit_configuration_name,
@@ -51,14 +52,14 @@ class ProjectUnitExportWorker
       (project_unit.user.name rescue "N/A"),
       (project_unit.user.phone rescue "N/A"),
       (project_unit.user.email rescue "N/A"),
-      project_unit.status,
+      status,
       project_unit.saleable,
       project_unit.carpet,
       project_unit.base_rate,
       project_unit.floor_rise,
-      project_unit.pending_balance({strict: true}),
-      project_unit.total_amount_paid,
-      project_unit.pending_balance,
+      project_unit.booking_detail.pending_balance({strict: true}),
+      project_unit.booking_detail.total_amount_paid,
+      project_unit.booking_detail.pending_balance,
       project_unit.available_for,
       project_unit.blocked_on,
       project_unit.auto_release_on,

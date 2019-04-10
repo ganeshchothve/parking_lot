@@ -10,6 +10,7 @@ class User
 
   # Constants
   ALLOWED_UTM_KEYS = %i[campaign source sub_source content medium term]
+  BUYER_ROLES = %w[user employee_user management_user]
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -140,7 +141,7 @@ class User
   end
 
   def total_balance_pending
-    project_units.in(status: ProjectUnit.booking_stages).sum(&:pending_balance)
+    booking_details.in(status: ProjectUnit.booking_stages).sum(&:pending_balance)
   end
 
   def total_unattached_balance
@@ -152,16 +153,12 @@ class User
   end
 
   def buyer?
-    if current_client.enable_company_users?
-      %w[user management_user employee_user].include?(role)
-    else
-      role == 'user'
-    end
+    BUYER_ROLES.include?(role)
   end
 
   def self.buyer_roles(current_client = nil)
     if current_client.present? && current_client.enable_company_users?
-      %w[user management_user employee_user]
+      BUYER_ROLES
     else
       ['user']
     end
@@ -385,7 +382,7 @@ class User
       user_kyc_ids = user_kycs.collect(&:id)
     else
       user_kyc_ids = user_kycs.collect(&:id)
-      project_units.ne(id: project_unit_id).each do |x|
+      booking_details.ne(id: project_unit_id).each do |x|
         user_kyc_ids = user_kyc_ids - [x.primary_user_kyc_id] - x.user_kyc_ids
       end
     end
