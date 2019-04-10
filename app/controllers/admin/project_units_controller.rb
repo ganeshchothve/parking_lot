@@ -97,9 +97,14 @@ class Admin::ProjectUnitsController < AdminController
     end
   end
 
+
+  # after the booking_detail_scheme is rejected, project_unit can be released by calling this action. It makes the project unit available and marks booking_detail as cancelled.
   def release_unit 
-    # add code to make the unit available from blocked 
-    # make booking_detail associated with it to cancelled 
+    BookingDetail.where(project_unit_id: @project_unit.id).each do |bd|
+      bd.cancel!
+    end
+    @project_unit.status = 'available'
+    @project_unit.save
   end
 
   private

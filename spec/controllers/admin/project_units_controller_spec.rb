@@ -15,10 +15,10 @@ RSpec.describe Admin::ProjectUnitsController, type: :controller do
         patch :release_unit, params: { id: @booking_detail.project_unit.id, project_unit: @booking_detail.project_unit }
       end
       it "project_unit_status changes to available" do
-        expect(@booking_detail.project_unit.status).to eq('available') 
+        expect(@booking_detail.reload.project_unit.status).to eq('available') 
       end
       it "booking_detail status changes to cancelled" do
-        expect(@booking_detail.status).to eq('cancelled')
+        expect(@booking_detail.reload.status).to eq('cancelled')
       end
     end
   end

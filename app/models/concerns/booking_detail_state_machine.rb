@@ -114,6 +114,7 @@ module BookingDetailStateMachine
 
       event :cancel do
         transitions from: :cancelled, to: :cancelled
+        transitions from: :scheme_rejected, to: :cancelled
         transitions from: :cancelling, to: :cancelled, after: :update_user_request_to_resolved
       end
     end
