@@ -56,6 +56,10 @@ class BookingDetail
     booking_detail_schemes.where(status: 'approved').first
   end
 
+  def total_amount_paid
+    receipts.success.sum(:total_amount)
+  end
+
   def sync(erp_model, sync_log)
     Api::BookingDetailsSync.new(erp_model, self, sync_log).execute
   end

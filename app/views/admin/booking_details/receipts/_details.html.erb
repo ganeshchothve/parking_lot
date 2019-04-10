@@ -26,7 +26,7 @@
     <div class="col-md-6">
       <div class="form-group">
         <label class="small">Amount Paid</label>
-        <div><%= number_to_indian_currency(receipt.project_unit.total_amount_paid.round) %></div>
+        <div><%= number_to_indian_currency(receipt.booking_detail.total_amount_paid.round) %></div>
       </div>
     </div>
     <div class="col-md-6">

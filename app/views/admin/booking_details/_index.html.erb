@@ -25,7 +25,7 @@
           <td>
             <%= number_to_indian_currency(project_unit.calculate_agreement_price.round) %>
             <div class="small"><%= labels[:all_inclusive_price] %>: <%= number_to_indian_currency(project_unit.calculate_all_inclusive_price.round) %></div>
-            <div class="small">Paid Amt.: <%= number_to_indian_currency(project_unit.total_amount_paid)  %></div>
+            <div class="small">Paid Amt.: <%= number_to_indian_currency(booking_detail.total_amount_paid)  %></div>
             <div class="small">Booking Amt. Pending: <%= number_to_indian_currency(project_unit.pending_balance.to_i) %></div>
           </td>
           <td class="text-right">

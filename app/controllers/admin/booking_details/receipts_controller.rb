@@ -5,7 +5,7 @@ class Admin::BookingDetails::ReceiptsController < AdminController
 
   def index
     authorize([:admin, Receipt])
-    @receipts = Receipt.where(Receipt.user_based_scope(current_user, params))
+    @receipts = Receipt.where(booking_detail_id: @booking_detail.id).where(Receipt.user_based_scope(current_user, params))
                        .build_criteria(params)
                        .paginate(page: params[:page] || 1, per_page: params[:per_page])
   end
