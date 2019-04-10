@@ -132,6 +132,7 @@ RSpec.describe Admin::BookingDetails::BookingDetailSchemesController, type: :con
           end
         end
       end
+
     end
   end
 end

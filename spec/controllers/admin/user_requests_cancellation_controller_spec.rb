@@ -1,185 +1,82 @@
 require 'rails_helper'
-require 'sidekiq/testing'
 
 RSpec.describe Admin::UserRequestsController, type: :controller do
   describe 'CANCELLATION REQUEST' do
     before (:each) do
-      @admin = create(:admin)
+      create(:admin)
       @user = create(:user)
-      sign_in_app(@admin)
-      Sidekiq::Testing.inline!
     end
 
-    context 'created by admin' do
-      %w[blocked booked_tentative booked_confirmed].each do |status|
-        context "booking_detail is #{status.upcase} then " do
-          it 'user request status changes to pending and booking_detail status changed to cancellation_requested' do
-            booking_detail = book_project_unit(@user)
-            booking_detail.set(status: status)
-            user_request_params = { project_unit_id: booking_detail.project_unit_id, user_id: @user.id, booking_detail_id: booking_detail.id, event: 'pending' }
-            expect { post :create, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', user_id: @user.id } }.to change { UserRequest::Cancellation.count }.by(1)
-            expect(UserRequest.first.status).to eq('pending')
-            expect(booking_detail.reload.status).to eq('cancellation_requested')
-            Sidekiq::Testing.fake!
+    describe 'Conducted in Administration Level' do
+      %w[superadmin admin crm].each do |user_role|
+        context "Login By #{user_role} and " do
+          before(:each) do
+            @admin = create(user_role)
+            allow_any_instance_of(Client).to receive(:enable_actual_inventory).and_return([user_role])
+            sign_in_app(@admin)
+          end
+
+          %w[blocked booked_tentative booked_confirmed].each do |status|
+
+            context "booking_detail is #{status.upcase} then " do
+              before(:each) do
+                @booking_detail = book_project_unit(@user, nil, nil, status)
+              end
+
+              describe 'Create New User Request in pending state ' do
+                it 'and booking_detail status changed to cancellation requested' do
+                  expect { post :create, params: { user_request_cancellation: { user_id: @user.id, booking_detail_id: @booking_detail.id, event: 'pending' }, request_type: 'cancellation', user_id: @user.id } }.to change { UserRequest::Cancellation.count }.by(1)
+                  expect(UserRequest.first.status).to eq('pending')
+                  expect(@booking_detail.reload.status).to eq('cancellation_requested')
+                end
+
+                it 'Failed to create request' do
+                  allow_any_instance_of(UserRequest).to receive(:save).and_return(false)
+                  expect { post :create, params: { user_request_cancellation: { user_id: @user.id, booking_detail_id: @booking_detail.id, event: 'pending' }, request_type: 'cancellation', user_id: @user.id } }.to change { UserRequest::Cancellation.count }.by(0)
+                  expect(@booking_detail.reload.status).to eq(status)
+                end
+              end
+
+              context "REJECTED by #{user_role}" do
+                it "booking detail status changes to #{status}" do
+                  user_request = create(:pending_user_request_cancellation, user_id: @booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: @booking_detail.id, event: 'pending')
+                  user_request_params = { event: 'rejected', user_id: @user.id }
+                  patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: user_request.id }
+                  expect(@booking_detail.reload.status).to eq(status)
+                  expect(user_request.reload.status).to eq('rejected')
+                end
+
+                it 'failed to reject' do
+                  user_request = create(:pending_user_request_cancellation, user_id: @booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: @booking_detail.id, event: 'pending')
+                  user_request_params = { event: 'rejected', user_id: @user.id }
+                  allow_any_instance_of(UserRequest).to receive(:save).and_return(false)
+                  patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: user_request.id }
+                  expect(@booking_detail.reload.status).to eq('cancellation_requested')
+                  expect(user_request.reload.status).to eq('pending')
+                end
+              end
+
+              context "RESOLVED by #{user_role}" do
+                before(:each) do
+                  @user_request = create(:pending_user_request_cancellation, user_id: @booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: @booking_detail.id, event: 'pending')
+                end
+
+                it 'create one background process for cancellation' do
+                  expect{ patch :update, params: { user_request_cancellation: { event: 'processing', user_id: @user.id }, request_type: 'cancellation', id: @user_request.id } }.to change(UserRequests::CancellationProcess.jobs, :count).by(1)
+                  expect(@booking_detail.reload.status).to eq('cancelling')
+                  expect(@user_request.reload.status).to eq('processing')
+                end
+
+                it 'no change in any object' do
+                  allow_any_instance_of(UserRequest).to receive(:save).and_return(false)
+                  expect{ patch :update, params: { user_request_cancellation: { event: 'processing', user_id: @user.id }, request_type: 'cancellation', id: @user_request.id } }.to change(UserRequests::CancellationProcess.jobs, :count).by(0)
+                  expect(@booking_detail.reload.status).to eq('cancellation_requested')
+                  expect(@user_request.reload.status).to eq('pending')
+                end
+              end
+            end
           end
         end
-      end
-    end
-
-    context 'REJECTED by admin' do
-      %w[blocked booked_tentative booked_confirmed].each do |status|
-        it 'booking detail status changes to blocked' do
-          Sidekiq::Testing.disable!
-          booking_detail = book_project_unit(@user)
-          booking_detail.set(status: status)
-          user_request = create(:pending_user_request_cancellation, project_unit_id: booking_detail.project_unit_id, user_id: booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: booking_detail.id, event: 'pending')
-          user_request_params = { event: 'rejected', user_id: @user.id }
-          patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: user_request.id }
-          expect(booking_detail.reload.status).to eq('blocked')
-          # expect(user_request.reload.status).to eq('rejected')
-          Sidekiq::Testing.fake!
-        end
-      end
-    end
-
-    context 'RESOLVED' do
-      it 'successfully, receipt status changes from success to available_for_refund and project unit is made available' do
-        booking_detail = book_project_unit(@user)
-        user_request = create(:pending_user_request_cancellation, project_unit_id: booking_detail.project_unit_id, user_id: booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: booking_detail.id, event: 'pending')
-        user_request_params = { event: 'processing', user_id: @user.id }
-        patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: user_request.id }
-        # expect(ProjectUnitCancelWorker.jobs.size).to eq(1)
-        expect(booking_detail.reload.status).to eq('cancelled')
-        expect(booking_detail.receipts.first.reload.status).to eq('available_for_refund')
-        expect(%w[available management employee].include?(booking_detail.project_unit.status))
-        expect(user_request.reload.status).to eq('resolved')
-        Sidekiq::Testing.fake!
-      end
-
-      it 'successfully, receipt status changes from clearance_pending to cancelled' do
-        receipt = create(:receipt, user_id: @user.id, total_amount: 50_000, status: 'clearance_pending')
-        booking_detail = book_project_unit(@user, nil, receipt)
-        user_request = create(:pending_user_request_cancellation, project_unit_id: booking_detail.project_unit_id, user_id: booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: booking_detail.id, event: 'pending')
-        user_request_params = { event: 'processing', user_id: @user.id }
-        expect { patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: user_request.id } }.to change { Receipt.count }.by(1)
-        # expect(ProjectUnitCancelWorker.jobs.size).to eq(1)
-        expect(booking_detail.reload.status).to eq('cancelled')
-        expect(%w[available management employee].include?(booking_detail.project_unit.status))
-        expect(receipt.reload.status).to eq('cancelled')
-        expect(Receipt.last.status).to eq('clearance_pending')
-        expect(user_request.reload.status).to eq('resolved')
-        Sidekiq::Testing.fake!
-      end
-
-      it 'successfully, receipt status changed from pending to cancelled' do
-        receipt = create(:receipt, user_id: @user.id, total_amount: 50_000, status: 'pending')
-        booking_detail = book_project_unit(@user, nil, receipt)
-        user_request = create(:pending_user_request_cancellation, project_unit_id: booking_detail.project_unit_id, user_id: booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: booking_detail.id, event: 'pending')
-        user_request_params = { event: 'processing', user_id: @user.id }
-        patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: user_request.id }
-        # expect(ProjectUnitCancelWorker.jobs.size).to eq(1)
-        expect(booking_detail.reload.status).to eq('cancelled')
-        expect(%w[available management employee].include?(booking_detail.project_unit.status))
-        expect(receipt.reload.status).to eq('cancelled')
-        expect(user_request.reload.status).to eq('resolved')
-        Sidekiq::Testing.fake!
-      end
-
-      it 'successfully, when receipt status is refunded or cancelled or available_for_refund, it stays the same' do
-        booking_detail = book_project_unit(@user)
-        %w[refunded cancelled available_for_refund].each do |status|
-          booking_detail.receipts << create(:receipt, user_id: @user.id, total_amount: 50_000, status: status)
-        end
-        user_request = create(:pending_user_request_cancellation, project_unit_id: booking_detail.project_unit_id, user_id: booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: booking_detail.id, event: 'pending')
-        user_request_params = { event: 'processing', user_id: @user.id }
-        expect { patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: user_request.id } }.to change { Receipt.count }.by(0)
-        # expect(ProjectUnitCancelWorker.jobs.size).to eq(1)
-        expect(booking_detail.reload.status).to eq('cancelled')
-        expect(%w[available management employee].include?(booking_detail.project_unit.status))
-        expect(booking_detail.reload.receipts.first.status).to eq('available_for_refund')
-        expect(user_request.reload.status).to eq('resolved')
-        Sidekiq::Testing.fake!
-      end
-    end
-
-    describe 'rejected when processing and processing fails' do
-      context 'receipt reverted' do
-        it 'when receipt success -> available_for_refund -> success' do
-          booking_detail = book_project_unit(@user)
-          user_request = create(:pending_user_request_cancellation, project_unit_id: booking_detail.project_unit_id, user_id: booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: booking_detail.id, event: 'pending')
-          user_request_params = { event: 'processing', user_id: @user.id }
-          Receipt.any_instance.stub(:available_for_refund!).and_return false
-          Receipt.any_instance.stub(:errors).and_return(ActiveModel::Errors.new(Receipt.new).tap { |e| e.add(:payment_mode, 'cannot be nil') })
-          patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: user_request.id }
-          # expect(ProjectUnitCancelWorker.jobs.size).to eq(1)
-          expect(booking_detail.receipts.first.reload.status).to eq('success')
-          expect(user_request.reload.status).to eq('rejected')
-          expect(booking_detail.reload.status).to eq('blocked')
-          Sidekiq::Testing.fake!
-        end
-
-        it 'when receipt clearance_pending -> cancelled -> clearance_pending' do
-          receipt = create(:receipt, user_id: @user.id, total_amount: 30_000, status: 'clearance_pending')
-          booking_detail = book_project_unit(@user, nil, receipt)
-          user_request = create(:pending_user_request_cancellation, project_unit_id: booking_detail.project_unit_id, user_id: booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: booking_detail.id, event: 'pending')
-          user_request_params = { event: 'processing', user_id: @user.id }
-          count = Receipt.count
-          Receipt.any_instance.stub(:cancel!).and_return false
-          Receipt.any_instance.stub(:errors).and_return(ActiveModel::Errors.new(Receipt.new).tap { |e| e.add(:payment_mode, 'cannot be nil') })
-          patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: user_request.id }
-          # expect(ProjectUnitCancelWorker.jobs.size).to eq(1)
-          expect(receipt.reload.status).to eq('clearance_pending')
-          expect(user_request.reload.status).to eq('rejected')
-          expect(booking_detail.reload.status).to eq('blocked')
-          expect(Receipt.count).to eq(count)
-          Sidekiq::Testing.fake!
-        end
-
-        it 'when receipt clearance_pending, dup receipt fails' do
-          receipt = create(:receipt, user_id: @user.id, total_amount: 30_000, status: 'clearance_pending')
-          booking_detail = book_project_unit(@user, nil, receipt)
-          user_request = create(:pending_user_request_cancellation, project_unit_id: booking_detail.project_unit_id, user_id: booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: booking_detail.id, event: 'pending')
-          user_request_params = { event: 'processing', user_id: @user.id }
-          count = Receipt.count
-          Receipt.any_instance.stub(:cancel!).and_return true
-          Receipt.any_instance.stub(:save).and_return false
-          Receipt.any_instance.stub(:errors).and_return(ActiveModel::Errors.new(Receipt.new).tap { |e| e.add(:payment_mode, 'cannot be nil') })
-          patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: user_request.id }
-          expect(receipt.reload.status).to eq('clearance_pending')
-          expect(user_request.reload.status).to eq('rejected')
-          expect(booking_detail.reload.status).to eq('blocked')
-          expect(Receipt.count).to eq(count)
-          Sidekiq::Testing.fake!
-        end
-
-        it 'when receipt pending -> cancelled -> pending' do
-          receipt = create(:receipt, user_id: @user.id, total_amount: 50_000, status: 'pending')
-          booking_detail = book_project_unit(@user, nil, receipt)
-          user_request = create(:pending_user_request_cancellation, project_unit_id: booking_detail.project_unit_id, user_id: booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: booking_detail.id, event: 'pending')
-          user_request_params = { event: 'processing', user_id: @user.id }
-          Receipt.any_instance.stub(:save).and_return false
-          Receipt.any_instance.stub(:errors).and_return(ActiveModel::Errors.new(Receipt.new).tap { |e| e.add(:payment_mode, 'cannot be nil') })
-          patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: user_request.id }
-          expect(receipt.reload.status).to eq('pending')
-          expect(receipt.project_unit.reload.present?).to eq(true)
-          expect(user_request.reload.status).to eq('rejected')
-          expect(booking_detail.reload.status).to eq('blocked')
-          Sidekiq::Testing.fake!
-        end
-      end
-
-      it 'project unit make available failed' do
-        booking_detail = book_project_unit(@user)
-        user_request = create(:pending_user_request_cancellation, project_unit_id: booking_detail.project_unit_id, user_id: booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: booking_detail.id, event: 'pending')
-        user_request_params = { event: 'processing', user_id: @user.id }
-        ProjectUnit.any_instance.stub(:save).and_return false
-        ProjectUnit.any_instance.stub(:errors).and_return(ActiveModel::Errors.new(ProjectUnit.new).tap { |e| e.add(:name, 'invalid') })
-        patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: user_request.id }
-        # expect(ProjectUnitCancelWorker.jobs.size).to eq(1)
-        expect(booking_detail.reload.status).to eq('blocked')
-        expect(booking_detail.project_unit.status).to eq('blocked')
-        expect(user_request.reload.status).to eq('rejected')
-        Sidekiq::Testing.fake!
       end
     end
   end

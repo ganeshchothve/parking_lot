@@ -88,14 +88,18 @@ class ProjectUnit
     self.status = 'available' if available_for == 'user'
     self.status = 'employee' if available_for == 'employee'
     self.status = 'management' if available_for == 'management'
-
     # GENERICTODO: self.base_rate = upgraded rate based on timely upgrades
-
-    self.user_id = nil
-    self.primary_user_kyc_id = nil
-    self.user_kyc_ids = []
-
     SelldoLeadUpdater.perform_async(user_id.to_s, 'hold_payment_dropoff')
+  end
+
+  #
+  # This function return true or false when unit is ready for booking.
+  #
+  #
+  # @return [Boolean] True/False
+  #
+  def available?
+    %w[available employee management].include?(status)
   end
 
   def calculated_costs

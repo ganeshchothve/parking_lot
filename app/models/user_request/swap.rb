@@ -34,10 +34,12 @@ class UserRequest::Swap < UserRequest
   #
   #
   def alternate_project_unit_blocking_condition
-    unless alternate_project_unit.blocking_amount <= booking_detail.project_unit.blocking_amount
-      _total_tentative_amount_paid = booking_detail.project_unit.total_tentative_amount_paid
-      if _total_tentative_amount_paid < alternate_project_unit.blocking_amount
-        errors.add(:alternate_project_unit, "has blocking amount #{alternate_project_unit.blocking_amount}, which is higher than your tentative paid amount ( #{_total_tentative_amount_paid} ).")
+    if booking_detail
+      unless alternate_project_unit.blocking_amount <= booking_detail.project_unit.blocking_amount
+        _total_tentative_amount_paid = booking_detail.project_unit.total_tentative_amount_paid
+        if _total_tentative_amount_paid < alternate_project_unit.blocking_amount
+          errors.add(:alternate_project_unit, "has blocking amount #{alternate_project_unit.blocking_amount}, which is higher than your tentative paid amount ( #{_total_tentative_amount_paid} ).")
+        end
       end
     end
   end

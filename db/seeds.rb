@@ -22,5 +22,5 @@ project.save
 # end
 
 # DatabaseSeeds::ErpModelTemplate.seed
-# DatabaseSeeds::SmsTemplate.seed CLient.last.id
+# DatabaseSeeds::SmsTemplate.seed Client.last.id
 # DatabaseSeeds::EmailTemplates.seed(Client.first.id)

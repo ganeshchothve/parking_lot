@@ -112,7 +112,7 @@ module BookingDetailStateMachine
         transitions from: :cancellation_requested, to: :cancelling
       end
 
-      event :cancel do
+      event :cancel, after: :release_project_unit! do
         transitions from: :cancelled, to: :cancelled
         transitions from: :scheme_rejected, to: :cancelled
         transitions from: :cancelling, to: :cancelled, after: :update_user_request_to_resolved
@@ -120,7 +120,7 @@ module BookingDetailStateMachine
     end
 
     def update_user_request_to_rejected
-      user_requests.in(status: ['processing']).first.rejected!
+      user_requests.processing.first.try(:rejected!)
     end
 
     def update_user_request_to_resolved
@@ -138,7 +138,6 @@ module BookingDetailStateMachine
     # If booking detail scheme is approved the booking detail in scheme_approved
     # If booking detail scheme is rejected then booking detail must be in scheme rejected
     # If booking detail scheme is draft then booking detail stay in under_negotiation
-
     def after_under_negotiation_event
       create_default_scheme
       if under_negotiation? && booking_detail_scheme.approved?
@@ -262,7 +261,7 @@ module BookingDetailStateMachine
 
     # This method is called after of blocked and booked_tentative event
     # In this send email and sms to the user when the booking is in one of the booking stage
-    def send_email_and_sms_as_booked 
+    def send_email_and_sms_as_booked
       if self.project_unit.booking_portal_client.email_enabled?
         attachments_attributes = []
         Email.create!({
@@ -285,6 +284,14 @@ module BookingDetailStateMachine
             triggered_by_type: project_unit.class.to_s
           )
       end
+    end
+
+    #
+    # This method release the project Unit. Without any fields validation.
+    #
+    def release_project_unit!
+      project_unit.make_available
+      project_unit.save(validate: false)
     end
 
   end
