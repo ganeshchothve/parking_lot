@@ -5,8 +5,9 @@ module UserRequests
     attr_reader :user_request, :booking_detail
 
     def perform(user_request_id)
-      @user_request = UserRequest.where(_id: user_request_id).first
-      @booking_detail = user_request.try(:booking_detail)
+      @user_request = UserRequest.processing.where(_id: user_request_id).first
+      return nil if @user_request.blank?
+      @booking_detail = user_request.booking_detail
       if @booking_detail && @booking_detail.cancelling?
         resolve
       else
@@ -61,8 +62,14 @@ module UserRequests
 
     def reject_user_request(old_receipts_arr, new_receipts_arr, error_messages)
       revert_updated_receipts(old_receipts_arr, new_receipts_arr)
-      user_request.set(reason_for_failure: error_messages)
-      booking_detail.cancellation_rejected!
+      user_request.reason_for_failure = error_messages
+      unless user_request.rejected!
+        # As request in invalid so its force fully rejected.
+        user_request.reason_for_failure += ( ' ' + user_request.errors.full_messages.join(' ') )
+        user_request.status = 'rejected'
+        user_request.save(validate: false)
+      end
+      booking_detail.try(:cancellation_rejected!)
     end
 
     # This function resolves the cancellation request raised by user
