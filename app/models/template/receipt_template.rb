@@ -31,7 +31,7 @@ class Template::ReceiptTemplate < Template
               </tr>
               <tr>
                 <td><%= labels["issued_date"] %></td>
-                <td class="text-right"><%= self.issued_date %></td>
+                <td class="text-right"><%= self.issued_date.strftime("%d/%m/%Y") %></td>
               </tr>
             <% end %>
             <tr>

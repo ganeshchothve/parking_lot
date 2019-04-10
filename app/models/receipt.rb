@@ -46,6 +46,8 @@ class Receipt
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: start_date..end_date) }
   scope :filter_by_processed_on, ->(date) { start_date, end_date = date.split(' - '); where(processed_on: start_date..end_date) }
 
+  validates :issuing_bank, :issuing_bank_branch, format: { without: /[^a-z\s]/i, message: 'can contain only alphabets and spaces' }
+  validates :payment_identifier, format: { without: /[^a-z0-9\s]/i, message: 'can contain only alphabets, numbers and spaces' }
   validates :total_amount, :status, :payment_mode, :user_id, presence: true
   validates :payment_identifier, presence: true, if: proc { |receipt| receipt.payment_mode == 'online' && receipt.status != 'pending' }
   validates :status, inclusion: { in: proc { Receipt.aasm.states.collect(&:name).collect(&:to_s) } }
@@ -59,6 +61,7 @@ class Receipt
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :tracking_id_processed_on_only_on_success, if: proc { |record| record.status != 'cancelled' }
   validate :processed_on_greater_than_issued_date, :first_booking_amount_limit
+  validate :issued_date_when_offline_payment, if: proc { |record| %w[card_swipe].include?(record.payment_mode) }
 
   increments :order_id, auto: false
 
@@ -103,11 +106,15 @@ class Receipt
       if project_unit.present? && (project_unit.status != 'hold') && allowed_stages
         nil
       else
-        if project_unit.blank? || ( booking_detail.present? && booking_detail.user_id == user_id )
+        if project_unit.blank? || (booking_detail.present? && booking_detail.user_id == user_id)
           eval("PaymentGatewayService::#{payment_gateway}").new(self)
         end
       end
     end
+  end
+
+  def issued_date_when_offline_payment
+    errors.add(:issued_date, 'Issued Date should be less than or equal to the current date') unless issued_date <= Time.now
   end
 
   def blocking_payment?
