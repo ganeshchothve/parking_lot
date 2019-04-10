@@ -49,11 +49,12 @@ class Receipt
   validates :issuing_bank, :issuing_bank_branch, format: { without: /[^a-z\s]/i, message: 'can contain only alphabets and spaces' }
   validates :payment_identifier, format: { without: /[^a-z0-9\s]/i, message: 'can contain only alphabets, numbers and spaces' }
   validates :total_amount, :status, :payment_mode, :user_id, presence: true
-  validates :payment_identifier, presence: true, if: proc { |receipt| receipt.payment_mode == 'online' && receipt.status != 'pending' }
+  validates :payment_identifier, presence: true, if: proc { |receipt| receipt.payment_mode == 'online' ? receipt.status != 'pending' : true }
   validates :status, inclusion: { in: proc { Receipt.aasm.states.collect(&:name).collect(&:to_s) } }
   validates :payment_mode, inclusion: { in: proc { Receipt.available_payment_modes.collect { |x| x[:id] } } }
   validate :validate_total_amount
-  validates :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, presence: true, if: proc { |receipt| receipt.payment_mode != 'online' }
+  validates :issued_date, :issuing_bank, :issuing_bank_branch, presence: true, if: proc { |receipt| receipt.payment_mode != 'online' }
+  validates :processed_on, presence: true, if: proc { |receipt| %i[success failed].include?(receipt.status) }
   validates :payment_gateway, presence: true, if: proc { |receipt| receipt.payment_mode == 'online' }
   validates :payment_gateway, inclusion: { in: PaymentGatewayService::Default.allowed_payment_gateways }, allow_blank: true
   validates :tracking_id, presence: true, if: proc { |receipt| receipt.status == 'success' && receipt.payment_mode != 'online' }
@@ -61,7 +62,7 @@ class Receipt
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :tracking_id_processed_on_only_on_success, if: proc { |record| record.status != 'cancelled' }
   validate :processed_on_greater_than_issued_date, :first_booking_amount_limit
-  validate :issued_date_when_offline_payment, if: proc { |record| %w[card_swipe].include?(record.payment_mode) }
+  validate :issued_date_when_offline_payment, if: proc { |record| %w[online cheque].exclude?(record.payment_mode) && issued_date.present? }
 
   increments :order_id, auto: false
 
@@ -114,7 +115,7 @@ class Receipt
   end
 
   def issued_date_when_offline_payment
-    errors.add(:issued_date, 'Issued Date should be less than or equal to the current date') unless issued_date <= Time.now
+    errors.add(:issued_date, 'should be less than or equal to the current date') unless issued_date <= Time.now
   end
 
   def blocking_payment?
@@ -194,8 +195,12 @@ class Receipt
   end
 
   def processed_on_greater_than_issued_date
-    if processed_on.present? && issued_date.present? && processed_on < issued_date
-      errors.add :processed_on, 'cannot be older than the Issued Date'
+    if processed_on.present? && issued_date.present?
+      if processed_on < issued_date
+        errors.add :processed_on, 'cannot be older than the Issued Date'
+      elsif processed_on > Time.now.to_date
+        errors.add :processed_on, 'cannot be in the future'
+      end
     end
   end
 
