@@ -13,7 +13,7 @@ RSpec.describe Buyer::UserRequestsController, type: :controller do
           booking_detail = book_project_unit(@user)
           booking_detail.set(status: status)
           alternate_project_unit = create(:project_unit)
-          user_request_params = { project_unit_id: booking_detail.project_unit_id, alternate_project_unit_id: alternate_project_unit.id, booking_detail_id: booking_detail.id, event: 'pending' }
+          user_request_params = { alternate_project_unit_id: alternate_project_unit.id, booking_detail_id: booking_detail.id, event: 'pending' }
           expect { post :create, params: { user_request_swap: user_request_params, request_type: 'swap' } }.to change { UserRequest::Swap.count }.by(1)
           expect(UserRequest.first.status).to eq('pending')
           expect(booking_detail.reload.status).to eq('swap_requested')

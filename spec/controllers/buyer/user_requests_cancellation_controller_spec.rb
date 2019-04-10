@@ -13,7 +13,7 @@ RSpec.describe Buyer::UserRequestsController, type: :controller do
           it 'user request status changes to pending and booking_detail status changes to cancellation_requested' do
             booking_detail = book_project_unit(@user)
             booking_detail.set(status: status)
-            user_request_params = { project_unit_id: booking_detail.project_unit_id, user_id: @user.id, booking_detail_id: booking_detail.id, event: 'pending' }
+            user_request_params = { user_id: @user.id, booking_detail_id: booking_detail.id, event: 'pending' }
             expect { post :create, params: { user_request_cancellation: user_request_params, request_type: 'cancellation' } }.to change { UserRequest::Cancellation.count }.by(1)
             expect(UserRequest.first.status).to eq('pending')
             expect(booking_detail.reload.status).to eq('cancellation_requested')

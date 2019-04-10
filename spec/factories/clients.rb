@@ -27,8 +27,7 @@ FactoryBot.define do
     mailgun_email_domain { 'test' }
     sms_provider_username { 'test' }
     sms_provider_password { 'test' }
-    enable_communication { {"email": false, "sms": false} } 
-    enable_actual_inventory {%w[admin]}
+    enable_communication { {"email": false, "sms": false} }
 
   end
 end

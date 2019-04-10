@@ -81,7 +81,7 @@ module UserRequestStateMachine
 
     def update_booking_detail_to_cancelling
       booking_detail.cancelling!
-      ProjectUnitCancelWorker.perform_async(id)
+      UserRequests::CancellationProcess.perform_async(id)
     end
 
     def update_booking_detail_to_swapping
