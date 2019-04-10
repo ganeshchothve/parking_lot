@@ -46,15 +46,15 @@ class Receipt
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: start_date..end_date) }
   scope :filter_by_processed_on, ->(date) { start_date, end_date = date.split(' - '); where(processed_on: start_date..end_date) }
 
-  validates :issuing_bank, :issuing_bank_branch, format: { without: /[^a-z\s]/i, message: 'can contain only alphabets and spaces' }
-  validates :payment_identifier, format: { without: /[^a-z0-9\s]/i, message: 'can contain only alphabets, numbers and spaces' }
+  validates :issuing_bank, :issuing_bank_branch, format: { without: /[^a-z\s]/i, message: 'can contain only alphabets and spaces' }, unless: proc { |receipt| receipt.payment_mode == "online" }
+  validates :payment_identifier, format: { without: /[^a-z0-9\s]/i, message: 'can contain only alphabets, numbers and spaces' }, unless: proc { |receipt| receipt.payment_mode == "online" }
   validates :total_amount, :status, :payment_mode, :user_id, presence: true
   validates :payment_identifier, presence: true, if: proc { |receipt| receipt.payment_mode == 'online' ? receipt.status != 'pending' : true }
   validates :status, inclusion: { in: proc { Receipt.aasm.states.collect(&:name).collect(&:to_s) } }
   validates :payment_mode, inclusion: { in: proc { Receipt.available_payment_modes.collect { |x| x[:id] } } }
   validate :validate_total_amount
   validates :issued_date, :issuing_bank, :issuing_bank_branch, presence: true, if: proc { |receipt| receipt.payment_mode != 'online' }
-  validates :processed_on, presence: true, if: proc { |receipt| %i[success failed].include?(receipt.status) }
+  validates :processed_on, presence: true, if: proc { |receipt| %i[success clearance_pending available_for_refund].include?(receipt.status) }
   validates :payment_gateway, presence: true, if: proc { |receipt| receipt.payment_mode == 'online' }
   validates :payment_gateway, inclusion: { in: PaymentGatewayService::Default.allowed_payment_gateways }, allow_blank: true
   validates :tracking_id, presence: true, if: proc { |receipt| receipt.status == 'success' && receipt.payment_mode != 'online' }
