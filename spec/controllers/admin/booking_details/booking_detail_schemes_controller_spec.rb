@@ -64,18 +64,21 @@ RSpec.describe Admin::BookingDetails::BookingDetailSchemesController, type: :con
       end
       describe  "new payment_adjustment is added to approved booking_detail_scheme " do
         before(:each) do 
-          payment_adjustments_params = FactoryBot.attributes_for(:payment_adjustment)
-          patch :update,params: {id: @booking_detail_scheme.id, booking_detail_id: @booking_detail.id, booking_detail_scheme: {payment_adjustments_attributes: {"1233": payment_adjustments_params}}}
+          @payment_adjustments_params = FactoryBot.attributes_for(:payment_adjustment)
+          
         end
         it "booking_detail_scheme goes to draft from approved" do
+          patch :update,params: {id: @booking_detail_scheme.id, booking_detail_id: @booking_detail.id, booking_detail_scheme: {payment_adjustments_attributes: {"1233": @payment_adjustments_params}}}
           expect(@booking_detail_scheme.reload.status).to eq ('draft')
         end
         it "booking_detail goes from scheme_approved to under_negotiation" do 
+          patch :update,params: {id: @booking_detail_scheme.id, booking_detail_id: @booking_detail.id, booking_detail_scheme: {payment_adjustments_attributes: {"1233": @payment_adjustments_params}}}
           expect(@booking_detail.reload.status).to eq('under_negotiation')
         end
         it "booking_detail goes from blocked to under_negotiation" do
           receipt = create(:receipt, user: @user, project_unit: @project_unit, booking_detail: @booking_detail, total_amount: @client.blocking_amount)
           receipt.clearance_pending!
+          patch :update,params: {id: @booking_detail_scheme.id, booking_detail_id: @booking_detail.id, booking_detail_scheme: {payment_adjustments_attributes: {"1233": @payment_adjustments_params}}}
           expect(@booking_detail.reload.status).to eq('under_negotiation')
         end
         it "booking_detail goes from booked_tentative to under_negotiation" do 
@@ -83,6 +86,7 @@ RSpec.describe Admin::BookingDetails::BookingDetailSchemesController, type: :con
           receipt.clearance_pending!
           receipt1 = create(:receipt, user: @user, project_unit: @project_unit, booking_detail: @booking_detail, total_amount: 40_000)
           receipt1.clearance_pending!
+          patch :update,params: {id: @booking_detail_scheme.id, booking_detail_id: @booking_detail.id, booking_detail_scheme: {payment_adjustments_attributes: {"1233": @payment_adjustments_params}}}
           expect(@booking_detail.reload.status).to eq('under_negotiation')
         end
         it "booking_detail goes from booked_confirmed to under_negotiation" do 
@@ -92,6 +96,7 @@ RSpec.describe Admin::BookingDetails::BookingDetailSchemesController, type: :con
           receipt1.clearance_pending!
           receipt2 = create(:receipt, user: @user, project_unit: @project_unit, booking_detail: @booking_detail, total_amount: 40_000)
           receipt2.clearance_pending!
+          patch :update,params: {id: @booking_detail_scheme.id, booking_detail_id: @booking_detail.id, booking_detail_scheme: {payment_adjustments_attributes: {"1233": @payment_adjustments_params}}}
           expect(@booking_detail.reload.status).to eq('under_negotiation')
         end
       end

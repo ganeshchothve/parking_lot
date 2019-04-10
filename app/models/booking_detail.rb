@@ -53,7 +53,7 @@ class BookingDetail
   end
 
   def booking_detail_scheme
-    booking_detail_schemes.in(status: %w[approved draft]).first
+    booking_detail_schemes.where(status: {'$in': ['draft', 'approved']}).first
   end
 
   def pending_balance(options={})

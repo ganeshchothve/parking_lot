@@ -81,6 +81,7 @@ class Admin::BookingDetails::BookingDetailSchemesController < AdminController
   def update
     modify_params
     @scheme.assign_attributes(permitted_attributes([:admin, @scheme]))
+    @scheme.event = 'draft' if (@scheme.payment_adjustments.present? && @scheme.payment_adjustments.last.new_record?) || @scheme.derived_from_scheme_id_changed?
     @scheme.approved_by = current_user if @scheme.event.present? && @scheme.event == 'approved'
     respond_to do |format|
       if @scheme.save
