@@ -68,8 +68,8 @@ module UserRequestStateMachine
     end
 
     def send_notifications
-      send_email if user.booking_portal_client.email_enabled?
-      send_sms
+      send_email if user.booking_portal_client.email_enabled? && !processing?
+      send_sms if user.booking_portal_client.sms_enabled? && !processing?
     end
 
     def update_booking_detail_to_request_rejected
@@ -81,7 +81,7 @@ module UserRequestStateMachine
 
     def update_booking_detail_to_cancelling
       booking_detail.cancelling!
-      ProjectUnitCancelWorker.perform_async(id)
+      UserRequests::CancellationProcess.perform_async(id)
     end
 
     def update_booking_detail_to_swapping

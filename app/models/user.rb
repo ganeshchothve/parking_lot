@@ -360,7 +360,7 @@ class User
   def self.user_based_scope(user, _params = {})
     custom_scope = {}
     if user.role?('channel_partner')
-      custom_scope = { referenced_manager_ids: { "$in": [user.id] }, role: { "$in": User.buyer_roles(user.booking_portal_client) } }
+      custom_scope = {manager_id: user.id, role: {"$in": User.buyer_roles(user.booking_portal_client)} }
     elsif user.role?('crm')
       custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) } }
     elsif user.role?('sales_admin')
@@ -404,7 +404,7 @@ class User
       generate_confirmation_token!
     end
     opts = {}
-    opts = if pending_reconfirmation?
+    if pending_reconfirmation?
       opts[:to] = unconfirmed_email
       opts[:manager_id] = self.manager_id if self.buyer?
     end

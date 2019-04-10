@@ -23,7 +23,7 @@ every 2.minute, roles: [:app, :staging] do
   runner "Amura::SidekiqManager.run"
 end
 
-every 8.hour, roles: [:app, :staging] do
+every 4.hour, roles: [:app, :staging] do
   runner "Amura::SidekiqManager.restart"
 end
 
@@ -32,7 +32,7 @@ every 3.minutes do
 end
 
 every 1.day, at: "4:30 am" do
-  # runner "ProjectUnitRemindersAndAutoRelease::Job.daily_reminder_for_booking_payment"
+  runner "ProjectUnitRemindersAndAutoRelease::Job.daily_reminder_for_booking_payment"
   runner "ReceiptCleaner.perform_async"
   # runner "ProjectUnitRemindersAndAutoRelease::Job.release_project_unit"
 end
@@ -43,5 +43,5 @@ end
 
 every 1.day, at: "3:30 pm" do
   runner "DailySmsReportWorker.perform_async"
-  runner 'ClearPeningOnlineReceipt.perform_async'
+  runner 'ReceiptCleaner.perform_async'
 end

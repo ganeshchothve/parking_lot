@@ -1,0 +1,181 @@
+<div class="card">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-11"><h5>Overview</h5></div>
+      <div class="dropdown float-right col-1">
+        <a class="btn btn-light btn-sm dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</a>
+        <div class="dropdown-menu dropdown-menu-right">
+          <%= render "admin/users/links", user: user %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label><%= labels[:name] %></label>
+          <div><%= user.name || '-' %></div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label><%= labels[:email] %></label>
+          <div><%= user.email || '-' %></div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label><%= labels[:phone] %></label>
+          <div><%= user.phone || '-' %></div>
+        </div>
+      </div>
+    </div>
+    <% if user.buyer? %>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label><%= labels[:lead_id] %></label>
+            <div><%= user.lead_id || '-' %></div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label><%= labels[:time_zone] %></label>
+            <div><%= user.time_zone || '-' %></div>
+          </div>
+        </div>
+        <% if current_client.enable_channel_partners? %>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label><%= labels[:manager_change_reason] %></label>
+              <div><%= user.manager_change_reason || '-' %></div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if user.buyer? && current_client.enable_actual_inventory?(current_user) %>
+      <div class="row mt-3">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label><%= labels[:total_amount_paid] %></label>
+            <div>
+              <%= user.total_amount_paid.present? ? number_to_indian_currency(user.total_amount_paid.round) : '-' %>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label><%= labels[:total_balance_pending] %></label>
+            <div>
+              <%= user.total_balance_pending.present? ? number_to_indian_currency(user.total_balance_pending.round) : '-' %>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label><%= labels[:total_unattached_balance] %></label>
+            <div>
+              <%= user.total_unattached_balance.present? ? number_to_indian_currency(user.total_unattached_balance.round) : '-' %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Registered At</label>
+          <div>
+            <%= l(user.created_at.in_time_zone(current_user.time_zone)) %>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Account Confirmed?</label>
+          <div>
+            <%= user.confirmed? ? "At #{l(user.confirmed_at.in_time_zone(current_user.time_zone))}" : "No" %>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Last Signed In</label>
+          <div>
+            <%= user.sign_in_count > 0 ? "#{l(user.last_sign_in_at.in_time_zone(current_user.time_zone))} (Signed In #{user.sign_in_count} times)" : "Never Signed In" %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <% if user.buyer? && !current_user.role?("channel_partner") || user.role?('channel_partner') %>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label><%= labels[:manager_id] %></label>
+            <div>
+              <% manager_user = user.manager_id.present? ? User.find(user.manager_id) : nil %>
+              <%= manager_user.present? ? link_to(manager_user.name, admin_user_path(manager_user)) : '-' %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      <% if user.role?('channel_partner') %>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label><%= labels[:rera_id] %></label>
+            <div>
+              <%= user.rera_id || '-' %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Last Sync At:</label>
+          <div>
+            <% if user.sync_logs.present? %>
+              <%= user.sync_logs.desc(:created_at)[0].present? ? user.sync_logs.desc(:created_at)[0].updated_at.strftime("%d/%m/%Y %l:%M %p") : "-" %>
+            <% else %>
+               <%= "Not synced" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Last Sync Log Status:</label>
+          <div>
+            <% if user.sync_logs.present? %>
+              <%= user.sync_logs.desc(:created_at)[0].status.present? ? user.sync_logs.desc(:created_at)[0].status : "-" %>
+            <% else %>
+               <%= "Not synced" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <% if user.buyer? %>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label><%= t("mongoid.attributes.user.referral_code") %></label>
+            <div>
+              <%= user.referral_code || '-' %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      <% if user.buyer? %>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label><%= t("mongoid.attributes.user.referred_by_id") %></label>
+            <div>
+              <%= user.referred_by.try(:name) || '-' %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

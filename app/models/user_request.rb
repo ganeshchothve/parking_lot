@@ -13,7 +13,6 @@ class UserRequest
   field :reason_for_failure, type: String
 
   belongs_to :booking_detail
-  belongs_to :project_unit, optional: true
   belongs_to :receipt, optional: true
   belongs_to :user
   belongs_to :resolved_by, class_name: 'User', optional: true
@@ -30,6 +29,8 @@ class UserRequest
   accepts_nested_attributes_for :notes
 
   default_scope -> { desc(:created_at) }
+
+  delegate :project_unit, to: :booking_detail, prefix: false, allow_nil: true
 
   # TODO: on create send email to CRM team
 

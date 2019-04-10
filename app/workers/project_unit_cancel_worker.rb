@@ -5,7 +5,7 @@ class ProjectUnitCancelWorker
   def perform(user_request_id)
     @user_request = UserRequest.find(user_request_id)
     @booking_detail = user_request.try(:booking_detail)
-    resolve
+    @booking_detail.blank? ? reject_user_request([], [], 'Booking Is not available for cancellation.') : resolve
   end
 
   # This function updates the status of current receipts according to requirement
@@ -22,17 +22,18 @@ class ProjectUnitCancelWorker
         end
       when 'clearance_pending'
         # move to state machine receipt
-        new_receipt = receipt.dup
-        unless receipt.cancel!
+        if receipt.cancel!
+          new_receipt = receipt.dup
+          new_receipt.assign_attributes(booking_detail: nil, project_unit: nil, status: 'clearance_pending')
+          unless new_receipt.save
+            error_messages = new_receipt.errors.full_messages
+            break
+          end
+          new_receipts_arr << new_receipt
+        else
           error_messages = receipt.errors.full_messages
           break
         end
-        new_receipt.project_unit = nil
-        unless new_receipt.save
-          error_messages = new_receipt.errors.full_messages
-          break
-        end
-        new_receipts_arr << new_receipt
       when 'pending'
         receipt.cancel!
         unless receipt.save
@@ -42,19 +43,6 @@ class ProjectUnitCancelWorker
       end
     end
     error_messages
-  end
-
-  # This function checks if the current project unit can be made available
-  def can_update_project_unit_to_available?
-    make_project_unit_available = ProjectUnit.booking_stages.include?(booking_detail.project_unit.status) && (user_request.user_id == booking_detail.project_unit.user_id)
-  end
-
-  # This function updates the current project unit to available
-  def update_project_unit_to_available(_error_messages)
-    project_unit = booking_detail.project_unit
-    project_unit.processing_user_request = true
-    project_unit.make_available
-    error_messages = project_unit.errors.full_messages unless project_unit.save
   end
 
   # This function restores the status of the receipts if processing of the cancellation request fails
@@ -77,10 +65,12 @@ class ProjectUnitCancelWorker
     old_receipts_arr = []
     new_receipts_arr = []
     error_messages = ''
-    error_messages = update_receipts(old_receipts_arr, new_receipts_arr, error_messages)
+    update_receipts(old_receipts_arr, new_receipts_arr, error_messages)
+
     if error_messages.blank?
-      can_update_project_unit_to_available? ? error_messages = update_project_unit_to_available(error_messages) : error_messages = ['Project Unit unavailable']
+      booking_detail.cancel!
+    else
+      reject_user_request(old_receipts_arr, new_receipts_arr, error_messages)
     end
-    error_messages.blank? ? booking_detail.cancel! : reject_user_request(old_receipts_arr, new_receipts_arr, error_messages)
   end
 end
