@@ -5,11 +5,13 @@ RSpec.describe Admin::BookingDetails::BookingDetailSchemesController, type: :con
       client = Client.first || create(:client)
       admin = create(:admin)
       sign_in_app(admin)
+
       @user = create(:user)
       client.enable_actual_inventory << admin.role
       client.save
       kyc = create(:user_kyc, creator_id: @user.id, user: @user)
-      @project_unit = create(:project_unit)
+      project_tower = create(:project_tower)
+      @project_unit = create(:project_unit, project_tower: project_tower)
       @project_unit.status = 'hold'
       @project_unit.user = @user
       @project_unit.primary_user_kyc_id = kyc.id

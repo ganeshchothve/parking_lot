@@ -115,7 +115,7 @@ module BookingDetailStateMachine
     end
 
     def update_user_request_to_rejected
-      user_requests.in(status: ['processing']).first.rejected!
+      user_requests.processing.first.try(:rejected!)
     end
 
     def update_user_request_to_resolved
