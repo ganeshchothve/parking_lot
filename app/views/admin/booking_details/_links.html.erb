@@ -8,7 +8,7 @@
   <%= link_to "View Details", admin_booking_detail_path(booking_detail), class: 'dropdown-item' %>
 <% end %>
 <%# if project_unit.pending_booking_detail_scheme.present? && policy(project_unit.pending_booking_detail_scheme).edit? %>
-<% if booking_detail.booking_detail_scheme.present? %>
+<% if booking_detail.booking_detail_scheme.present? && policy([:admin, booking_detail.booking_detail_scheme]).edit? %>
   <%= link_to "Update scheme and discount", edit_admin_booking_detail_booking_detail_scheme_path( booking_detail, booking_detail.booking_detail_scheme.id), class: 'dropdown-item modal-remote-form-link' %>
   <% end %>
 <%# elsif project_unit.booking_detail # && policy(BookingDetailScheme.new(project_unit_id: project_unit.id)).new? %>

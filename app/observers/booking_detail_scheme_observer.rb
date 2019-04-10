@@ -20,7 +20,9 @@ class BookingDetailSchemeObserver < Mongoid::Observer
       attrs = []
       booking_detail_scheme.payment_adjustments.destroy_all
       booking_detail_scheme.derived_from_scheme.payment_adjustments.each do |adjustment|
-        booking_detail_scheme.payment_adjustments << adjustment.dup
+        new_adjustment  = adjustment.dup
+        new_adjustment.editable = false
+        booking_detail_scheme.payment_adjustments << new_adjustment
       end
     end
   end

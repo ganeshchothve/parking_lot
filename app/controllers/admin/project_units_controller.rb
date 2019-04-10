@@ -104,7 +104,15 @@ class Admin::ProjectUnitsController < AdminController
       bd.cancel!
     end
     @project_unit.status = 'available'
-    @project_unit.save
+    respond_to do |format| 
+      if @project_unit.save
+        flash[:notice] = t('controller.project_units.unit_released')
+        format.html { redirect_to admin_project_unit_path(@project_unit) }
+      else
+        format.html { redirect_to admin_project_units_path }
+      end
+
+    end
   end
 
   private

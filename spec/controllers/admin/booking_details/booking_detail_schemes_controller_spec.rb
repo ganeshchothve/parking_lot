@@ -60,6 +60,8 @@ RSpec.describe Admin::BookingDetails::BookingDetailSchemesController, type: :con
         end
         it "scheme's payment_adjustments are attached to the booking_detail_scheme" do 
           expect(@booking_detail_scheme.reload.payment_adjustments.pluck(:name)).to match_array(@scheme.payment_adjustments.pluck(:name))
+          expect(@booking_detail_scheme.reload.payment_adjustments.pluck(:editable)).to match_array ([false])
+
         end
       end
       describe  "new payment_adjustment is added to approved booking_detail_scheme " do

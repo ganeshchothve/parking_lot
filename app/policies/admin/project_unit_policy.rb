@@ -13,8 +13,7 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
   end
 
   def release_unit?
-    true
-    #permit only superadmin and admin
+    record.booking_detail && record.booking_detail.status == 'scheme_rejected' && %w[superadmin admin].include?(user.role)
   end
 
   def edit?
