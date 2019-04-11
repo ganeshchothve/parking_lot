@@ -5,7 +5,7 @@
 <% end %>
 
 <% if policy([:admin, Receipt.new(user: booking_detail.user, booking_detail: booking_detail)]).new? %>
-  <%= link_to "Add #{t('global.receipt')}", new_admin_user_booking_detail_receipt_path(booking_detail.user, booking_detail_id: booking_detail.id), class: 'dropdown-item modal-remote-form-link' %>
+  <%= link_to "Pay remaining amount", new_admin_user_booking_detail_receipt_path(booking_detail.user, booking_detail_id: booking_detail.id), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
 
 <% if policy([:admin, project_unit]).show? %>

@@ -6,6 +6,7 @@ class Admin::BookingDetailsController < AdminController
   before_action :set_receipt, only: :booking
 
   def index
+    authorize [:admin, @booking_details]
     @booking_details = @booking_details.paginate(page: params[:page] || 1, per_page: params[:per_page])
   end
 

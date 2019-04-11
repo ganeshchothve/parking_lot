@@ -1,5 +1,9 @@
 class Admin::BookingDetailPolicy < BookingDetailPolicy
 
+  def index?
+    %w[admin superadmin sales sales_admin cp_admin gre].include?(user.role)
+  end
+  
   def booking?
     true
   end
