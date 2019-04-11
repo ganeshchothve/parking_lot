@@ -1,6 +1,10 @@
 <% project_unit = booking_detail.project_unit %>
 
-<% if policy([:admin, Receipt.new(user: booking_detail.user, project_unit: project_unit)]).new? %>
+<% if booking_detail.hold? %>
+  <%= link_to "Checkout using unit already held", checkout_user_search_path(booking_detail.search), class: "dropdown-item" %>
+<% end %>
+
+<% if policy([:admin, Receipt.new(user: booking_detail.user, booking_detail: booking_detail)]).new? %>
   <%= link_to "Add #{t('global.receipt')}", new_admin_user_booking_detail_receipt_path(booking_detail.user, booking_detail_id: booking_detail.id), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
 
@@ -8,7 +12,7 @@
   <%= link_to "View Details", admin_booking_detail_path(booking_detail), class: 'dropdown-item' %>
 <% end %>
 
-<% if policy([:admin, booking_detail.booking_detail_scheme]).edit? %>
+<% if booking_detail.booking_detail_scheme && policy([:admin, booking_detail.booking_detail_scheme]).edit? %>
   <%= link_to "Update scheme and discount", edit_admin_booking_detail_booking_detail_scheme_path( booking_detail, booking_detail.booking_detail_scheme.id), class: 'dropdown-item modal-remote-form-link' %>
   <% end %>
 
