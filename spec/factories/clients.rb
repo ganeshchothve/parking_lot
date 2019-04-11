@@ -20,6 +20,7 @@ FactoryBot.define do
     booking_portal_domains { ['localhost'] }
     registration_name { Faker::Company.name }
     website_link { 'abc.com' }
+    enable_direct_payment { true }
 
     cin_number { Faker::Number.number(12) }
     enable_referral_bonus { true }
@@ -27,7 +28,6 @@ FactoryBot.define do
     mailgun_email_domain { 'test' }
     sms_provider_username { 'test' }
     sms_provider_password { 'test' }
-    enable_communication { {"email": false, "sms": false} }
-
+    enable_communication { { "email": false, "sms": false } }
   end
 end
