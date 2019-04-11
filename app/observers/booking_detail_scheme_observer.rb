@@ -12,7 +12,7 @@ class BookingDetailSchemeObserver < Mongoid::Observer
     # end
   end
   def before_save (booking_detail_scheme)
-    if booking_detail_scheme.derived_from_scheme_id_was == nil && booking_detail_scheme.derived_from_scheme_id_changed?
+    if booking_detail_scheme.derived_from_scheme_id_was != nil && booking_detail_scheme.derived_from_scheme_id_changed?
       booking_detail_scheme.payment_schedule_template_id = booking_detail_scheme.derived_from_scheme.payment_schedule_template.id
       booking_detail_scheme.cost_sheet_template_id = booking_detail_scheme.derived_from_scheme.cost_sheet_template.id
 
