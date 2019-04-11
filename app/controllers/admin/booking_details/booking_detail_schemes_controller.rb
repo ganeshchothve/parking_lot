@@ -21,11 +21,6 @@ class Admin::BookingDetails::BookingDetailSchemesController < AdminController
   end
 
   def new
-    @booking_detail_scheme = if @booking_detail.status == "negotiation_failed"
-      @booking_detail.booking_detail_schemes.where(status: "negotiation_failed").desc(:created_at).first
-    else
-      @booking_detail.booking_detail_scheme
-    end
     @scheme = @booking_detail.project_unit.project_tower.default_scheme
         @booking_detail_scheme = BookingDetailScheme.new(
           derived_from_scheme_id: @scheme.id,
@@ -56,9 +51,6 @@ class Admin::BookingDetails::BookingDetailSchemesController < AdminController
         @booking_detail_scheme.payment_adjustments << @scheme.payment_adjustments.collect(&:clone).collect{|record| record.editable = false}
       end
     end
-    @booking_detail_scheme.booking_detail_id = @booking_detail.id
-    @booking_detail_scheme.created_by ||= current_user
-    @booking_detail_scheme.created_by_user ||= true
     @booking_detail_scheme.assign_attributes(permitted_attributes([ current_user_role_group, @booking_detail_scheme]))
     if @booking_detail_scheme.payment_adjustments.present? && @booking_detail_scheme.payment_adjustments.last.new_record?
       @booking_detail_scheme.event = 'draft'

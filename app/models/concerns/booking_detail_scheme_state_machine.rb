@@ -37,7 +37,7 @@ module BookingDetailSchemeStateMachine
     end
 
     def after_draft_event 
-      booking_detail.under_negotiation! if (!(%w[hold under_negotiation].include?booking_detail.status) || booking_detail.status == 'scheme_rejected') 
+      booking_detail.under_negotiation! if !(%w[hold under_negotiation].include?booking_detail.status)
       send_email_as_draft
     end
 

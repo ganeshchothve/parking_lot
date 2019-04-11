@@ -5,7 +5,7 @@
 <% end %>
 
 <% if policy([:admin, Receipt.new(user: booking_detail.user, booking_detail: booking_detail)]).new? %>
-  <%= link_to "Pay remaining amount", new_admin_user_booking_detail_receipt_path(booking_detail.user, booking_detail_id: booking_detail.id), class: 'dropdown-item modal-remote-form-link' %>
+  <%= link_to "Add #{t('global.receipts')}", new_admin_user_booking_detail_receipt_path(booking_detail.user, booking_detail_id: booking_detail.id), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
 
 <% if policy([:admin, project_unit]).show? %>
@@ -14,14 +14,7 @@
 <% @scheme = booking_detail.project_unit.project_tower.default_scheme %>
 <% if booking_detail.booking_detail_scheme && policy([:admin, booking_detail.booking_detail_scheme]).edit? %>
   <%= link_to "Update scheme and discount", edit_admin_booking_detail_booking_detail_scheme_path( booking_detail, booking_detail.booking_detail_scheme.id), class: 'dropdown-item modal-remote-form-link' %>
- <% elsif policy([:admin, BookingDetailScheme.new(booking_detail_id: booking_detail.id,
- 	derived_from_scheme_id: @scheme.id,
-     created_by_id: booking_detail.user_id,
-     project_unit_id: booking_detail.project_unit_id,
-     booking_portal_client_id: @scheme.booking_portal_client_id,
-     cost_sheet_template_id: @scheme.cost_sheet_template_id,
-     payment_schedule_template_id: @scheme.payment_schedule_template_id,
-     project_unit_id: booking_detail.project_unit_id)]).new?%>
+ <% elsif policy([:admin, BookingDetailScheme.new(booking_detail_id: booking_detail.id, derived_from_scheme_id: @scheme.id, project_unit_id: booking_detail.project_unit_id)]).new?%>
      <%= link_to "Add new scheme", new_admin_booking_detail_booking_detail_scheme_path( booking_detail), class: 'dropdown-item modal-remote-form-link' %>
   <% end %>
 
