@@ -1,5 +1,4 @@
 class Admin::ReceiptsController < AdminController
-  include ReceiptsConcern
 
   before_action :set_user, except: [:index, :show, :export, :resend_success]
   before_action :set_receipt, only: [:edit, :update, :show, :resend_success]
@@ -52,12 +51,11 @@ class Admin::ReceiptsController < AdminController
   #
   # POST /admin/users/:user_id/receipts
   def create
-
     @receipt = Receipt.new(user: @user, creator: current_user, project_unit_id: params.dig(:receipt, :project_unit_id))
     @receipt.assign_attributes(permitted_attributes([:admin, @receipt]))
     @receipt.account = selected_account if @receipt.account == nil
     @receipt.payment_gateway = current_client.payment_gateway if @receipt.payment_mode == 'online'
-    
+
     authorize([:admin, @receipt])
 
     respond_to do |format|
@@ -67,10 +65,10 @@ class Admin::ReceiptsController < AdminController
       else
         if @receipt.save
           flash[:notice] = "Receipt was successfully updated. Please upload documents"
-          if @receipt.payment_mode == 'online' 
+          if @receipt.payment_mode == 'online'
             if @receipt.payment_identifier == nil
             url = @receipt.payment_gateway_service.gateway_url(@user.get_search(@receipt.project_unit_id).id)
-            else 
+            else
               url = admin_user_receipts_path(@user)
             end
           else

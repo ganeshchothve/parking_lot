@@ -1,0 +1,39 @@
+<div class="alert alert-primary">
+  <p>
+    Payments need to be for individual units, clubbed payments are not allowed. Please collect a cheque for individual units only.
+  </p>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="small">Unit</label>
+        <div><%= receipt.project_unit.name %></div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="small">Agreement Price</label>
+        <div><%= number_to_indian_currency(receipt.project_unit.calculate_agreement_price.round) %></div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="small">All Inclusive Price</label>
+        <div><%= number_to_indian_currency(receipt.project_unit.calculate_all_inclusive_price.round) %></div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="small">Amount Paid</label>
+        <div><%= number_to_indian_currency(receipt.booking_detail.total_amount_paid.round) %></div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="small">Amount Pending</label>
+        <div><%= number_to_indian_currency(receipt.booking_detail.pending_balance.round) %></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -27,13 +27,11 @@ class Receipt
   field :gateway_response, type: Hash
   field :erp_id, type: String, default: ''
 
-  attr_accessor :swap_request_initiated
-
   belongs_to :user
   belongs_to :booking_detail, optional: true
   belongs_to :project_unit, optional: true
   belongs_to :creator, class_name: 'User'
-  belongs_to :account, foreign_key: 'account_number', optional: true 
+  belongs_to :account, foreign_key: 'account_number', optional: true
   # remove optional: true when implementing.
   has_many :assets, as: :assetable
   has_many :smses, as: :triggered_by, class_name: 'Sms'
@@ -105,7 +103,7 @@ class Receipt
       if project_unit.present? && (project_unit.status != 'hold') && allowed_stages
         nil
       else
-        if project_unit.blank? || project_unit.user_id == user_id
+        if project_unit.blank? || ( booking_detail.present? && booking_detail.user_id == user_id )
           eval("PaymentGatewayService::#{payment_gateway}").new(self)
         end
       end
@@ -176,7 +174,7 @@ class Receipt
 
     blocking_amount = user.booking_portal_client.blocking_amount
     blocking_amount = project_unit.blocking_amount if project_unit_id.present?
-    if (project_unit_id.blank? || blocking_payment?) && total_amount < blocking_amount && new_record? && !swap_request_initiated
+    if (project_unit_id.blank? || blocking_payment?) && total_amount < blocking_amount && new_record? && !receipt.booking_detail.swapping?
       errors.add :total_amount, "cannot be less than blocking amount #{user.booking_portal_client.blocking_amount}"
     end
   end

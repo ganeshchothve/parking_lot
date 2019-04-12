@@ -12,7 +12,6 @@ class Admin::ReceiptPolicy < ReceiptPolicy
 
     valid &&= ( record.project_unit_id.blank? || after_blocked_payment? || (( after_hold_payment? || after_under_negotiation_payment?) && ( user.role?('channel_partner') || editable_field?('event') ) ))
     valid &&= record.user.user_requests.where(project_unit_id: record.project_unit_id).where(status: 'pending').blank?
-    valid &&= current_client.payment_gateway.present? if record.payment_mode == 'online'
     valid
   end
 
@@ -51,7 +50,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
 
   def permitted_attributes params={}
     attributes = super
-    attributes += [:project_unit_id] if user.role?('channel_partner')
+    attributes += [:booking_detail_id] if user.role?('channel_partner')
     if !user.buyer? && (record.new_record? || %w[pending clearance_pending].include?(record.status))
       attributes += %i[issued_date issuing_bank issuing_bank_branch payment_identifier]
     end

@@ -21,11 +21,11 @@
             <%= labels['_type'] %>: <%= user_request.class.model_name.element.titleize %>
           </div>
           <div class="small text-muted">
-            <%= labels['project_unit_id'] %>: <%= user_request.project_unit_id.present? ? user_request.project_unit.name : '-' %>
+            <%= labels['project_unit_id'] %>: <%= user_request.booking_detail.try(:project_unit_id) ? user_request.booking_detail.project_unit.name : '-' %>
           </div>
         </td>
         <td>
-          <%= UserRequest.available_statuses.find{|x| x[:id] == user_request.status}[:text] %>
+          <%= t("user_requests.status.#{user_request.status}") %>
           <div class="text-muted small">
             <%= labels[:created_at] %>: <%= l(user_request.created_at.in_time_zone(current_user.time_zone)) %>
           </div>
@@ -42,6 +42,11 @@
               <% if policy([ current_user_role_group, Asset.new(assetable: user_request)]).index? %>
                 <%= link_to 'Documents', assetables_path(assetable_type: user_request.class.model_name.i18n_key.to_s, assetable_id: user_request.id), class: 'dropdown-item modal-remote-form-link' %>
               <% end %>
+
+              <% if !current_user.buyer? && policy([:admin, user_request]).show? %>
+                <%= link_to 'Details', admin_user_request_path(request_type: user_request.class.model_name.element, id: user_request.id), class: 'dropdown-item' %>
+              <% end %>
+
               <% unless (user_request.status == "resolved" || user_request.status == "rejected") %>
                 <% if Buyer::UserRequestPolicy.new(current_user, user_request).edit? && current_user.buyer? %>
                   <% url = edit_buyer_user_request_path(user_request, request_type: user_request.class.model_name.element) %>

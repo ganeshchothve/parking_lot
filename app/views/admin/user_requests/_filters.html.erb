@@ -26,7 +26,7 @@
         <% end %>
         <div class="form-group">
           <%= label_tag "fltrs", "status", class: "control-label" %>
-          <%= select_tag "fltrs[status]", options_for_select(@associated_class.available_statuses.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize"} %>
+          <%= select_tag "fltrs[status]", options_for_select(@associated_class::STATUS.collect{|urs| [t("user_requests.status.#{urs}"), urs ]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize"} %>
         </div>
       <% end %>
       <%= javascript_tag do %>

@@ -1,0 +1,260 @@
+<div class="card">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-11">
+        <h5 class="float-left card-title mt-2 mb-0"><%= global_labels[:project_unit] %> <%= booking_detail.project_unit.name %></h5>
+      </div>
+      <div class="col-1">
+        <% if defined?(with_actions) && with_actions == true %>
+          <div class="dropdown float-right">
+            <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Update Booking</a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <% if Buyer::ProjectUnitPolicy.new(current_user, booking_detail.project_unit).edit? %>
+                <%= link_to "Update #{global_labels['user_kycs']}", edit_buyer_project_unit_path(booking_detail.project_unit), class: "modal-remote-form-link dropdown-item" %>
+              <% end %>
+              <% if policy([current_user_role_group, booking_detail]).block? %>
+                <%= link_to 'Book Now', checkout_user_search_path(current_user.get_search( booking_detail.project_unit_id)), class: 'dropdown-item' %>
+              <% elsif policy([ current_user_role_group, booking_detail.user.receipts.new(project_unit_id: booking_detail.project_unit.id)]).new? %>
+                <%= link_to 'Pay Remaining Amount', new_buyer_user_booking_detail_receipt_path(current_user,booking_detail),class: "dropdown-item modal-remote-form-link" %>
+              <% end %>
+              <% [UserRequest::Cancellation, UserRequest::Swap] if Rails.env.development? %>
+              <% UserRequest.descendants.each do |klass| %>
+                <% if policy([current_user_role_group, klass.new(user_id: booking_detail.user_id, booking_detail_id: booking_detail.id)]).new? %>
+                  <%= link_to global_labels["user_request_#{klass.model_name.element}"], get_new_user_request_url(klass, booking_detail),class: "dropdown-item modal-remote-form-link" %>
+                <% end %>
+              <% end %>
+              <% if booking_detail.project_unit.assets.present? %>
+                <%= link_to "Images", "javascript:;", data: {toggle: "modal", target: "#floor_plan_modal_#{booking_detail.project_unit.id}"}, class: "dropdown-item" %>
+              <% end %>
+              <%= link_to "Cost Sheet", "javascript:;", data: {toggle: "modal", target: "#cost_sheet_modal_#{booking_detail.project_unit.id}"}, class: "dropdown-item" %>
+              <%= link_to "Payment Schedule", "javascript:;", data: {toggle: "modal", target: "#payment_schedule_modal_#{booking_detail.project_unit.id}"}, class: "dropdown-item" %>
+              <% if policy([:admin, SyncLog.new]).resync? && booking_detail.present? %>
+                <% if booking_detail.sync_logs.present? %>
+                  <%= link_to "Resync", resync_admin_sync_log_path(booking_detail.sync_logs.desc(:created_at)[0]), class: "btn btn-primary d-print-none"%>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+          <% if booking_detail.project_unit.assets.present? %>
+            <div class="modal fade right fixed-header-footer" role="dialog" id="floor_plan_modal_<%= booking_detail.project_unit.id %>">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <div class="modal-title">Images</div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div id="project_unit_gallery_<%= booking_detail.project_unit.id %>" class="carousel slide" data-ride="carousel">
+                      <ol class="carousel-indicators">'
+                        <% booking_detail.project_unit.assets.each_with_index do |asset, index| %>
+                          <li data-target="#project_unit_gallery_<%= booking_detail.project_unit.id %>" data-slide-to="<%= index %>" class="<%= index.zero? ? "active" : "" %>"></li>
+                        <% end %>
+                      </ol>
+                      <div class="carousel-inner">
+                        <% booking_detail.project_unit.assets.each_with_index do |asset, index| %>
+                          <div class="carousel-item <%= index.zero? ? "active" : "" %>">
+                            <img class="d-block w-100" src="<%= asset.file.url %>" />
+                          </div>
+                        <% end %>
+                      </div>
+                      <a class="carousel-control-prev" href="#project_unit_gallery_<%= booking_detail.project_unit.id %>" role="button" data-slide="prev">
+                        <span class="fas fa-chevron-left text-dark" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                      </a>
+                      <a class="carousel-control-next" href="#project_unit_gallery_<%= booking_detail.project_unit.id %>" role="button" data-slide="next">
+                        <span class="fas fa-chevron-right text-dark" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+          <div class="modal fade right fixed-header-footer" role="dialog" id="cost_sheet_modal_<%= booking_detail.project_unit.id %>">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <div class="modal-title">Cost Sheet</div>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <%= render 'dashboard/project_unit_cost_sheet', {project_unit: booking_detail.project_unit} %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal fade right fixed-header-footer" role="dialog" id="payment_schedule_modal_<%= booking_detail.project_unit.id %>">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <div class="modal-title">Payment Schedule</div>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <%= render "dashboard/project_unit_payment_schedule", project_unit: booking_detail.project_unit %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Name</label>
+          <div>
+            <%= booking_detail.project_unit.name %>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Tower</label>
+          <div>
+            <%= booking_detail.project_unit.project_tower_name %>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Status</label>
+          <div>
+            <%= t("booking_details.status.#{booking_detail.status}") %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Beds / Baths</label>
+          <div>
+            <%= booking_detail.project_unit.bedrooms %> / <%= booking_detail.project_unit.bathrooms %>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Carpet</label>
+          <div>
+            <%= booking_detail.project_unit.carpet %> <%= current_client.area_unit %>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Saleable</label>
+          <div>
+            <%= booking_detail.project_unit.saleable %> <%= current_client.area_unit %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Effective Rate</label>
+          <div>
+            <%= number_to_indian_currency(booking_detail.project_unit.effective_rate) %> <%= current_client.area_unit %>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Agreement Price</label>
+          <div>
+            <%= number_to_indian_currency(booking_detail.project_unit.calculate_agreement_price.round) %>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>All Inclusive Price</label>
+          <div>
+            <%= number_to_indian_currency(booking_detail.project_unit.calculate_all_inclusive_price.round) %>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Phase</label>
+          <div>
+            <%= booking_detail.project_unit.phase_name %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+        <label>Last Synced At:</label>
+          <div>
+            <% if booking_detail.present? %>
+              <% if booking_detail.sync_logs.present? %>
+                <%= booking_detail.sync_logs.desc(:created_at)[0].present? ? booking_detail.sync_logs.desc(:created_at)[0].updated_at.strftime("%d/%m/%Y %l:%M %p") : "-" %>
+              <% end %>
+            <% else %>
+               <%= "Not synced" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+        <label>Last Sync Log Status:</label>
+          <div>
+            <% if booking_detail.present? %>
+              <% if booking_detail.sync_logs.present? %>
+                <%= booking_detail.sync_logs.desc(:created_at)[0].status.present? ? booking_detail.sync_logs.desc(:created_at)[0].status : "-" %>
+              <% end %>
+            <% else %>
+               <%= "Not synced" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% if (booking_detail.status == "blocked" || booking_detail.status == "booked_tentative") && booking_detail.project_unit.auto_release_on.present? && booking_detail.project_unit.auto_release_on > Date.today %>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Amount Paid</label>
+            <div>
+              <%= number_to_indian_currency(booking_detail.total_amount_paid) %>
+            </div>
+            <div class="small">* Considers processed <%= global_labels[:receipts] %> only</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Pending Balance</label>
+            <div>
+              <%= number_to_indian_currency(booking_detail.pending_balance({strict: true})) %>
+            </div>
+            <div class="small">* Considers processed <%= global_labels[:receipts] %> only</div>
+          </div>
+        </div>
+      </div>
+      <div class="alert alert-primary">
+        <ul>
+          <li>You need to pay <%= number_to_indian_currency(booking_detail.project_unit.booking_price) %> to confirm the booking</li>
+          <% unless current_client.cancellation_amount.zero? %>
+            <li>Cancellation charges are <%= number_to_indian_currency(current_client.cancellation_amount) %></li>
+          <% end %>
+          <li>You have <%= (booking_detail.project_unit.auto_release_on - Date.today).to_i %> days (before <%= I18n.l(booking_detail.project_unit.auto_release_on) %>) remaining to confirm this booking. Please make a remaining payment of <%= number_to_indian_currency(booking_detail.pending_balance.round) %></li>
+        </ul>
+      </div>
+    <% end %>
+  </div>
+</div>

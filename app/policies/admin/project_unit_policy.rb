@@ -12,6 +12,10 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
     index?
   end
 
+  def release_unit?
+    record.booking_detail && record.booking_detail.status == 'scheme_rejected' && %w[superadmin admin].include?(user.role)
+  end
+
   def edit?
     _role_based_check(true)
   end
@@ -26,36 +30,6 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
 
   def asset_create?
     %w[superadmin admin].include?(user.role)
-  end
-
-  def hold?
-    valid = record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?(user)
-    if !valid
-      @condition = "user_confirmation"
-      return
-    end
-    valid &&= (record.user.project_units.where(status: 'hold').blank? && record.user_based_status(record.user) == 'available')
-    if !valid
-      @condition = "already_held"
-      return
-    end
-    valid &&= record.user.unattached_blocking_receipt(record.blocking_amount).present? if user.role?('channel_partner')
-    if !valid
-      @condition = "blocking_amount_receipt"
-      return
-    end
-    valid = (valid && record.user.allowed_bookings > record.user.booking_details.nin(status: %w[cancelled swapped]).count)
-    if !valid
-      @condition = "allowed_bookings"
-      return
-    end
-    valid = (valid && record.user.unused_user_kyc_ids(record.id).present?)
-    if !valid
-      @condition = "user_kyc_allowed_bookings"
-      return
-    end
-
-    _role_based_check(valid)
   end
 
   def update_scheme?
