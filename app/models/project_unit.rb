@@ -92,6 +92,16 @@ class ProjectUnit
     SelldoLeadUpdater.perform_async(user_id.to_s, 'hold_payment_dropoff')
   end
 
+  #
+  # This function return true or false when unit is ready for booking.
+  #
+  #
+  # @return [Boolean] True/False
+  #
+  def available?
+    %w[available employee management].include?(status)
+  end
+
   def calculated_costs
     out = {}
     costs.each { |c| out[c.key] = c.value }

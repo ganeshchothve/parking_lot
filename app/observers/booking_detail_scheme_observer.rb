@@ -5,11 +5,11 @@ class BookingDetailSchemeObserver < Mongoid::Observer
   end
 
   def after_create(booking_detail_scheme)
-    if booking_detail_scheme.project_unit.status == 'negotiation_failed'
-      project_unit = booking_detail_scheme.project_unit
-      project_unit.status = 'under_negotiation'
-      project_unit.save!
-    end
+    # if booking_detail_scheme.project_unit.status == 'negotiation_failed'
+    #   project_unit = booking_detail_scheme.project_unit
+    #   project_unit.status = 'under_negotiation'
+    #   project_unit.save!
+    # end
   end
 
   def before_save(booking_detail_scheme)
@@ -18,20 +18,11 @@ class BookingDetailSchemeObserver < Mongoid::Observer
       booking_detail_scheme.cost_sheet_template_id = booking_detail_scheme.derived_from_scheme.cost_sheet_template.id
 
       attrs = []
-      booking_detail_scheme.payment_adjustments.each do |payment_adjustment|
-        attrs << { _id: payment_adjustment.id, _destroy: true } if payment_adjustment.persisted?
-      end
-
-      booking_detail_scheme.assign_attributes(payment_adjustments_attributes: attrs)
-
+      booking_detail_scheme.payment_adjustments.destroy_all
       booking_detail_scheme.derived_from_scheme.payment_adjustments.each do |adjustment|
-        booking_detail_scheme.payment_adjustments.new(
-          name: adjustment.name,
-          field: adjustment.field,
-          formula: adjustment.formula,
-          absolute_value: adjustment.absolute_value,
-          editable: false
-        )
+        new_adjustment  = adjustment.dup
+        new_adjustment.editable = false
+        booking_detail_scheme.payment_adjustments << new_adjustment
       end
     end
   end
@@ -41,48 +32,8 @@ class BookingDetailSchemeObserver < Mongoid::Observer
   # end
 
   def after_save(booking_detail_scheme)
-     _event = booking_detail_scheme.event
+    _event = booking_detail_scheme.event
     booking_detail_scheme.event = nil
     booking_detail_scheme.send("#{_event}!") if _event.present?
-    project_unit = booking_detail_scheme.project_unit
-    if booking_detail_scheme.status_changed? && booking_detail_scheme.status == 'approved' && booking_detail_scheme.booking_detail.present?
-      # if booking_detail_scheme.status_was == "under_negotiation"
-      #   project_unit = booking_detail_scheme.project_unit
-      #   project_unit.process_scheme!
-      # end
-      booking_detail_scheme.booking_detail.booking_detail_schemes.where(status: 'approved', id: { '$ne' => booking_detail_scheme.id }).each do |scheme|
-        scheme.event = 'disabled'
-        scheme.save
-      end
-      project_unit.calculate_agreement_price
-      project_unit.save
-    end
-    if booking_detail_scheme.status_changed?
-      if booking_detail_scheme.status == 'draft' && booking_detail_scheme.created_by_user && project_unit.booking_portal_client.email_enabled?
-        Email.create!(
-          booking_portal_client_id: project_unit.booking_portal_client_id,
-          email_template_id: Template::EmailTemplate.find_by(name: 'booking_detail_scheme_draft').id,
-          cc: [project_unit.booking_portal_client.notification_email],
-          recipients: [booking_detail_scheme.created_by],
-          cc_recipients: (booking_detail_scheme.created_by.manager_id.present? ? [booking_detail_scheme.created_by.manager] : []),
-          triggered_by_id: booking_detail_scheme.id,
-          triggered_by_type: booking_detail_scheme.class.to_s
-        )
-      elsif booking_detail_scheme.status == 'approved' && project_unit.booking_portal_client.email_enabled?
-        begin
-          Email.create!(
-            booking_portal_client_id: project_unit.booking_portal_client_id,
-            email_template_id: Template::EmailTemplate.find_by(name: 'booking_detail_scheme_approved').id,
-            cc: [project_unit.booking_portal_client.notification_email],
-            recipients: [booking_detail_scheme.created_by, booking_detail_scheme.approved_by],
-            cc_recipients: (booking_detail_scheme.created_by.manager_id.present? ? [booking_detail_scheme.created_by.manager] : []),
-            triggered_by_id: booking_detail_scheme.id,
-            triggered_by_type: booking_detail_scheme.class.to_s
-          )
-        rescue StandardError
-          'booking detail scheme approved by is nil'
-        end
-      end
-    end
   end
 end

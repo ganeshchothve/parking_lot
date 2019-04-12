@@ -38,7 +38,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
               end
 
               context "REJECTED by #{user_role}" do
-                it 'booking detail status changes to blocked' do
+                it "booking detail status changes to #{status}" do
                   user_request = create(:pending_user_request_cancellation, user_id: @booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: @booking_detail.id, event: 'pending')
                   user_request_params = { event: 'rejected', user_id: @user.id }
                   patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: user_request.id }
@@ -49,9 +49,10 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
                 it 'failed to reject' do
                   user_request = create(:pending_user_request_cancellation, user_id: @booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: @booking_detail.id, event: 'pending')
                   user_request_params = { event: 'rejected', user_id: @user.id }
+                  allow_any_instance_of(UserRequest).to receive(:save).and_return(false)
                   patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: user_request.id }
-                  expect(@booking_detail.reload.status).to eq(status)
-                  expect(user_request.reload.status).to eq('rejected')
+                  expect(@booking_detail.reload.status).to eq('cancellation_requested')
+                  expect(user_request.reload.status).to eq('pending')
                 end
               end
 
@@ -59,6 +60,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
                 before(:each) do
                   @user_request = create(:pending_user_request_cancellation, user_id: @booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: @booking_detail.id, event: 'pending')
                 end
+
                 it 'create one background process for cancellation' do
                   expect{ patch :update, params: { user_request_cancellation: { event: 'processing', user_id: @user.id }, request_type: 'cancellation', id: @user_request.id } }.to change(UserRequests::CancellationProcess.jobs, :count).by(1)
                   expect(@booking_detail.reload.status).to eq('cancelling')

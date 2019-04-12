@@ -12,6 +12,10 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
     index?
   end
 
+  def release_unit?
+    record.booking_detail && record.booking_detail.status == 'scheme_rejected' && %w[superadmin admin].include?(user.role)
+  end
+
   def edit?
     _role_based_check(true)
   end

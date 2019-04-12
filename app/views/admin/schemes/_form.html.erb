@@ -25,10 +25,10 @@
           <%= f.label :user, class: 'control-label' %>
           <%= f.select :user_ids, options_from_collection_for_select(User.where(role: 'user'), "id", "ds_name", f.object.user_ids), {prompt: true}, multiple: "multiple", class: "selectize-remote", data: { url: admin_users_path, params: {fltrs: {role: {"$eq": 'user' } } } } %>
         </div>
-        <div class="form-group">
-          <%= f.label :user, class: 'control-label' %>
-          <%= f.select :user_ids, options_from_collection_for_select(User.where(role: 'user'), "id", "ds_name", f.object.user_ids), {prompt: true}, multiple: "multiple", class: "selectize-remote", data: { url: admin_users_path, params: {fltrs: {role: {"$eq": 'user' } } } } %>
-        </div>
+        <!-- <div class="form-group">
+          <%# = f.label :user, class: 'control-label' %>
+          <%# = f.select :user_ids, options_from_collection_for_select(User.where(role: 'user'), "id", "ds_name", f.object.user_ids), {prompt: true}, multiple: "multiple", class: "selectize-remote", data: { url: admin_users_path, params: {fltrs: {role: {"$eq": 'user' } } } } %>
+        </div> -->
         <div class="form-group">
           <%= f.label :can_be_applied_by, class: '' %>
           <%= f.select :can_be_applied_by, User.available_roles(current_client).collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', multiple: "multiple", disabled: !policy([:admin, @scheme]).editable_field?("can_be_applied_by") %>

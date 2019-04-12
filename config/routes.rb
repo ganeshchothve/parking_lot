@@ -70,6 +70,7 @@ Rails.application.routes.draw do
     resources :project_units, only: [:index, :show, :edit, :update] do
       member do
         get :print
+        patch :release_unit
         # get :send_under_negotiation
       end
 

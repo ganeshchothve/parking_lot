@@ -22,9 +22,9 @@
         <td><%= ProjectUnit.available_statuses.find{|x| x[:id] == project_unit.status}[:text] rescue "-" %></td>
         <td>
           <%= number_to_indian_currency(project_unit.calculate_agreement_price.round) %>
-          <div class="small"><%= labels[:all_inclusive_price] %>: <%= number_to_indian_currency(project_unit.calculate_all_inclusive_price.round) %></div>
-          <div class="small">Paid Amt.: <%= number_to_indian_currency(project_unit.total_amount_paid)  %></div>
-          <div class="small">Booking Amt. Pending: <%= number_to_indian_currency(project_unit.pending_balance.to_i) %></div>
+          <div class="small"><%= labels[:all_inclusive_price] %>: <%=  number_to_indian_currency(project_unit.calculate_all_inclusive_price.round) %></div>
+          <div class="small">Paid Amt.: <%= project_unit.booking_detail.present? ? number_to_indian_currency(project_unit.booking_detail.total_amount_paid) : number_to_indian_currency(0) %></div>
+          <div class="small">Booking Amt. Pending: <%= project_unit.booking_detail.present? ? number_to_indian_currency(project_unit.booking_detail.pending_balance.to_i) : number_to_indian_currency(project_unit.booking_price) %></div>
         </td>
         <td class="text-right">
           <div class="dropdown">

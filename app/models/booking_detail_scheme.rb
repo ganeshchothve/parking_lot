@@ -17,8 +17,8 @@ class BookingDetailScheme
   belongs_to :created_by, class_name: "User"
   belongs_to :booking_portal_client, class_name: "Client"
   belongs_to :derived_from_scheme, class_name: 'Scheme'
-  belongs_to :payment_schedule_template, class_name: 'Template::PaymentScheduleTemplate'
-  belongs_to :cost_sheet_template, class_name: 'Template::CostSheetTemplate'
+  belongs_to :payment_schedule_template, class_name: 'Template::PaymentScheduleTemplate', optional: Rails.env.test?
+  belongs_to :cost_sheet_template, class_name: 'Template::CostSheetTemplate', optional: Rails.env.test?
 
   embeds_many :payment_adjustments, as: :payables
 

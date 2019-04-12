@@ -285,6 +285,8 @@ en:
         country: 'Country'
         zip: 'Zip / Pin Code'
   controller:
+    project_units: 
+      unit_released: "The unit has been successfully released."
     booking_details:
       set_booking_detail_missing: "Booking detail not found"
       set_project_unit_missing: "Project unit not found"

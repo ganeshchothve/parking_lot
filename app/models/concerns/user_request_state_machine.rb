@@ -86,7 +86,7 @@ module UserRequestStateMachine
 
     def update_booking_detail_to_swapping
       booking_detail.swapping!
-      ProjectUnitSwapWorker.perform_async(id)
+      UserRequests::SwapProcess.perform_async(id)
     end
   end
 end

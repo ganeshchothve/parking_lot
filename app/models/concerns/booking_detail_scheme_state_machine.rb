@@ -7,7 +7,7 @@ module BookingDetailSchemeStateMachine
       state :draft, initial: true
       state :approved, :rejected
 
-      event :draft do
+      event :draft, after: :after_draft_event do
         transitions from: :draft, to: :draft
         transitions from: :approved, to: :draft
       end
@@ -36,6 +36,12 @@ module BookingDetailSchemeStateMachine
       BookingDetailScheme.where(project_unit_id: project_unit_id, user_id: user_id, status: 'approved').count > 1
     end
 
+    def after_draft_event 
+      booking_detail.under_negotiation! if booking_detail.status != 'under_negotiation'
+      send_email_as_draft
+      
+    end
+
     # after booking_detail_scheme is rejected, move booking detail to scheme_rejected state 
     def after_rejected_event
       booking_detail.scheme_rejected!
@@ -43,6 +49,42 @@ module BookingDetailSchemeStateMachine
     # after booking_detail_scheme is approved, move booking detail to scheme_approved state 
     def after_approved_event
       booking_detail.scheme_approved!
+      send_email_as_approved
+    end
+
+    def send_email_as_approved
+      if booking_detail.project_unit.booking_portal_client.email_enabled?
+        begin
+          Email.create!(
+            booking_portal_client_id: booking_detail.project_unit.booking_portal_client_id,
+            email_template_id: Template::EmailTemplate.find_by(name: 'booking_detail_scheme_approved').id,
+            cc: [booking_detail.project_unit.booking_portal_client.notification_email],
+            recipients: [booking_detail_scheme.created_by, booking_detail_scheme.approved_by],
+            cc_recipients: (booking_detail_scheme.created_by.manager_id.present? ? [booking_detail_scheme.created_by.manager] : []),
+            triggered_by_id: booking_detail_scheme.id,
+            triggered_by_type: booking_detail_scheme.class.to_s
+          )
+        rescue StandardError
+          'booking detail scheme approved by is nil'
+        end
+      end
+    end
+    def send_email_as_draft
+      if self.created_by_user && booking_detail.project_unit.booking_portal_client.email_enabled?
+        begin
+          Email.create!(
+            booking_portal_client_id: booking_detail.project_unit.booking_portal_client_id,
+            email_template_id: Template::EmailTemplate.find_by(name: 'booking_detail_scheme_draft').id,
+            cc: [booking_detail.project_unit.booking_portal_client.notification_email],
+            recipients: [booking_detail_scheme.created_by],
+            cc_recipients: (booking_detail_scheme.created_by.manager_id.present? ? [booking_detail_scheme.created_by.manager] : []),
+            triggered_by_id: booking_detail_scheme.id,
+            triggered_by_type: booking_detail_scheme.class.to_s
+          )
+        rescue StandardError 
+          'booking_detail under_negotiation is nil'
+        end
+      end
     end
   end
 end

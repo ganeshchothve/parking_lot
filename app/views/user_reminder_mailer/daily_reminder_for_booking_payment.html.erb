@@ -2,7 +2,7 @@
   <div class="card-body">
     <p>Dear <%= @user.name %>,</p>
     <p>
-      A gentle reminder to pay your balance amount of <%= number_to_indian_currency(@project_unit.pending_balance(strict: true)) %>
+      A gentle reminder to pay your balance amount of <%= number_to_indian_currency(@project_unit.booking_detail.pending_balance(strict: true)) %>
     </p>
   </div>
 </div>

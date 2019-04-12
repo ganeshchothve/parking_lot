@@ -13,22 +13,22 @@ module CostCalculator
     agreement_price > 5000000 ? 0.099 : 0.1
   end
 
-  def pending_balance(options={})
-    strict = options[:strict] || false 
-    user_id = options[:user_id] || self.user_id
-    if user_id.present?
-      receipts_total = Receipt.where(user_id: user_id, project_unit_id: self.id)
-      if strict
-        receipts_total = receipts_total.where(status: "success")
-      else
-        receipts_total = receipts_total.in(status: ['clearance_pending', "success"])
-      end
-      receipts_total = receipts_total.sum(:total_amount)
-      return (self.booking_price - receipts_total)
-    else
-      return self.booking_price
-    end
-  end
+  # def pending_balance(options={})
+  #   strict = options[:strict] || false 
+  #   user_id = options[:user_id] || self.user_id
+  #   if user_id.present?
+  #     receipts_total = Receipt.where(user_id: user_id, project_unit_id: self.id)
+  #     if strict
+  #       receipts_total = receipts_total.where(status: "success")
+  #     else
+  #       receipts_total = receipts_total.in(status: ['clearance_pending', "success"])
+  #     end
+  #     receipts_total = receipts_total.sum(:total_amount)
+  #     return (self.booking_price - receipts_total)
+  #   else
+  #     return self.booking_price
+  #   end
+  # end
 
   def ageing
     if(["booked_confirmed"].include?(self.status))
@@ -53,13 +53,13 @@ module CostCalculator
     end
   end
 
-  def total_amount_paid
-    receipts.where(user_id: self.user_id).where(status: 'success').sum(:total_amount)
-  end
+  # def total_amount_paid
+  #   receipts.where(user_id: self.user_id).where(status: 'success').sum(:total_amount)
+  # end
 
-  def total_tentative_amount_paid
-    receipts.where(user_id: self.user_id).in(status: ['success', 'clearance_pending']).sum(:total_amount)
-  end
+  # def total_tentative_amount_paid
+  #   receipts.where(user_id: self.user_id).in(status: ['success', 'clearance_pending']).sum(:total_amount)
+  # end
 
   def calculate_agreement_price
     (base_price + total_agreement_costs + scheme.payment_adjustments.where(field: "agreement_price").collect{|adj| adj.value(self)}.sum).round
