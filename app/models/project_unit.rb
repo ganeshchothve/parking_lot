@@ -150,10 +150,10 @@ class ProjectUnit
         ]
       }]
     }
-    if self.user.present?
+    if self.booking_detail.user.present?
       _selector['$and'] << { '$or' => [ {user_ids: nil }, {user_ids: []},
-          { user_ids: self.user.id } ] }
-      _selector['$and'] <<  { '$or' => [ {user_role: nil}, { user_role: []}, {user_role: self.user.role } ]}
+          { user_ids: self.booking_detail.user.id } ] }
+      _selector['$and'] <<  { '$or' => [ {user_role: nil}, { user_role: []}, {user_role: self.booking_detail.user.role } ]}
     end
     Scheme.where(_selector)
   end

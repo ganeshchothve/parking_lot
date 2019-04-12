@@ -43,6 +43,7 @@ module BookingDetailStateMachine
         transitions from: :blocked, to: :under_negotiation
         transitions from: :booked_tentative, to: :under_negotiation
         transitions from: :booked_confirmed, to: :under_negotiation
+        transitions from: :scheme_rejected, to: :under_negotiation
       end
 
       event :scheme_approved, after: :after_scheme_approved_event do

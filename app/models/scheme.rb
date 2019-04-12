@@ -16,15 +16,14 @@ class Scheme
   field :can_be_applied_by, type: Array
 
   scope :filter_by_name, ->(name) { where(name: ::Regexp.new(::Regexp.escape(name), 'i')) }
-  scope :filter_by_can_be_applied_by, ->(user_roles) do 
-    puts user_roles
-    where({ '$and' => ['$or' => [{ can_be_applied_by: nil },{ can_be_applied_by: [] },{ can_be_applied_by: { '$in' => [user_roles] } } ] ] })
+  scope :filter_by_can_be_applied_by, ->(user_role) do 
+    where({ '$and' => ['$or' => [{ can_be_applied_by: nil },{ can_be_applied_by: [] },{ can_be_applied_by: user_role }, {can_be_applied_by: ['']} ] ] })
   end
-  scope :filter_by_user_role, ->(user_roles) do 
-    where({ '$and' => ['$or' => [{ user_role: nil },{ user_role: [] },{ user_role: { '$in' => [user_roles]} } ] ] })
+  scope :filter_by_user_role, ->(user_role) do 
+    where({ '$and' => ['$or' => [{ user_role: nil },{ user_role: [] },{ user_role: user_role },{user_role: '' } ] ] })
   end
-  scope :filter_by_user_id, ->(user_ids) do 
-    where({ '$and' => ['$or' => [{ user_ids: nil },{ user_ids: [] },{ user_ids: { '$in' => [user_ids] } } ] ] })
+  scope :filter_by_user_id, ->(user_id) do 
+    where({ '$and' => ['$or' => [{ user_ids: nil },{ user_ids: [] },{ user_ids: user_id }, {user_ids: [''] } ] ] })
   end
   # scope :filter_by_user_role, ->(user_role) { where(user_role: user_role) }
   scope :filter_by_status, ->(status) { where(status: status) }  

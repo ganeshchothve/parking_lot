@@ -26,11 +26,11 @@ RSpec.describe Admin::SchemesController, type: :controller do
     end
     it "index action with filter for can_be_applied_by" do
       get :index, params: {fltrs: {can_be_applied_by: @scheme1.can_be_applied_by}}
-      expect(assigns(:schemes).count).to eq(Scheme.where(can_be_applied_by: @scheme1.can_be_applied_by).count)
+      expect(assigns(:schemes).count).to eq(Scheme.where({ '$and' => ['$or' => [{ can_be_applied_by: nil },{ can_be_applied_by: [] },{ can_be_applied_by: { '$in' => [@scheme1.can_be_applied_by] } } ] ] }).count)
     end
     it "index action with filter for user_role" do
       get :index, params: {fltrs: {user_role: @scheme2.user_role}}
-      expect(assigns(:schemes).count).to eq(Scheme.where(user_role: @scheme2.user_role).count)
+      expect(assigns(:schemes).count).to eq(Scheme.where({ '$and' => ['$or' => [{ user_role: nil },{ user_role: [] },{ user_role: { '$in' => [@scheme2.user_role]} } ] ] }).count)
     end
     it "index action with filter for project_tower" do
       get :index, params: {fltrs: {project_tower: @scheme3.project_tower_id}}
