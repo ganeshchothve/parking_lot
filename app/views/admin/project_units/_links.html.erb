@@ -1,3 +1,7 @@
+<% if policy([:admin, project_unit]).release_unit? %>
+  <%= link_to "Release Unit", release_unit_admin_project_unit_path(project_unit), method: :patch, class: 'dropdown-item' %>
+<% end %>
+
 <% if policy([:admin, project_unit]).show? %>
   <%= link_to "View Details", admin_project_unit_path(project_unit), class: 'dropdown-item' %>
 <% end %>

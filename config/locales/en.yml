@@ -285,6 +285,8 @@ en:
         country: 'Country'
         zip: 'Zip / Pin Code'
   controller:
+    project_units: 
+      unit_released: "The unit has been successfully released."
     booking_details:
       set_booking_detail_missing: "Booking detail not found"
       set_project_unit_missing: "Project unit not found"
@@ -293,7 +295,7 @@ en:
     only_buyer_users: 'Only Buyer users are allowed.'
     searches:
       project_unit_missing: 'Project Unit Selection step is missing'
-      check_project_unit_hold_status: "We've released the unit which was held for %{ holding_minutes } minutes. Please re-select the unit and try booking again."
+      check_project_unit_hold_status: "We've released the unit which was held for %{holding_minutes} minutes. Please re-select the unit and try booking again."
       checkout:
         non_hold_booking: 'Booking is not yet hold.'
         pending_payments: "We already have collected a payment for this unit from the same customer."

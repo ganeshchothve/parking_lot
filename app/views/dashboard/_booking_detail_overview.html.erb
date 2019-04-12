@@ -231,7 +231,7 @@
           <div class="form-group">
             <label>Amount Paid</label>
             <div>
-              <%= number_to_indian_currency(booking_detail.project_unit.total_amount_paid) %>
+              <%= number_to_indian_currency(booking_detail.total_amount_paid) %>
             </div>
             <div class="small">* Considers processed <%= global_labels[:receipts] %> only</div>
           </div>
@@ -240,7 +240,7 @@
           <div class="form-group">
             <label>Pending Balance</label>
             <div>
-              <%= number_to_indian_currency(booking_detail.project_unit.pending_balance({strict: true})) %>
+              <%= number_to_indian_currency(booking_detail.pending_balance({strict: true})) %>
             </div>
             <div class="small">* Considers processed <%= global_labels[:receipts] %> only</div>
           </div>
@@ -252,7 +252,7 @@
           <% unless current_client.cancellation_amount.zero? %>
             <li>Cancellation charges are <%= number_to_indian_currency(current_client.cancellation_amount) %></li>
           <% end %>
-          <li>You have <%= (booking_detail.project_unit.auto_release_on - Date.today).to_i %> days (before <%= I18n.l(booking_detail.project_unit.auto_release_on) %>) remaining to confirm this booking. Please make a remaining payment of <%= number_to_indian_currency(booking_detail.project_unit.pending_balance.round) %></li>
+          <li>You have <%= (booking_detail.project_unit.auto_release_on - Date.today).to_i %> days (before <%= I18n.l(booking_detail.project_unit.auto_release_on) %>) remaining to confirm this booking. Please make a remaining payment of <%= number_to_indian_currency(booking_detail.pending_balance.round) %></li>
         </ul>
       </div>
     <% end %>

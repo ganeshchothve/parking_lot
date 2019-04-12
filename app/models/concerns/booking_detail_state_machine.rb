@@ -39,6 +39,11 @@ module BookingDetailStateMachine
       event :under_negotiation, after: :after_under_negotiation_event do
         transitions from: :under_negotiation, to: :under_negotiation
         transitions from: :hold, to: :under_negotiation
+        transitions from: :scheme_approved, to: :under_negotiation
+        transitions from: :blocked, to: :under_negotiation
+        transitions from: :booked_tentative, to: :under_negotiation
+        transitions from: :booked_confirmed, to: :under_negotiation
+        transitions from: :scheme_rejected, to: :under_negotiation
       end
 
       event :scheme_approved, after: :after_scheme_approved_event do
@@ -110,12 +115,13 @@ module BookingDetailStateMachine
 
       event :cancel, after: :release_project_unit! do
         transitions from: :cancelled, to: :cancelled
+        transitions from: :scheme_rejected, to: :cancelled
         transitions from: :cancelling, to: :cancelled, after: :update_user_request_to_resolved
       end
     end
 
     def update_user_request_to_rejected
-      user_requests.in(status: ['processing']).first.rejected!
+      user_requests.processing.first.try(:rejected!)
     end
 
     def update_user_request_to_resolved
@@ -137,8 +143,8 @@ module BookingDetailStateMachine
       create_default_scheme
       if under_negotiation? && booking_detail_scheme.approved?
         scheme_approved!
-      elsif !booking_detail_scheme.present? && (booking_detail_schemes.distinct(:status).include? 'rejected')
-        scheme_rejected!
+      # elsif !booking_detail_scheme.present? && (booking_detail_schemes.distinct(:status).include? 'rejected')
+      #   scheme_rejected!
       end
       _project_unit = project_unit
       _project_unit.status = 'blocked'
@@ -150,6 +156,13 @@ module BookingDetailStateMachine
         blocked!
       end
     end
+
+    def after_scheme_rejected_event
+      receipts.each do |receipt| 
+        receipt.booking_detail_id = nil
+        receipt.save
+      end
+     end
 
     def after_blocked_event
       if blocked? && get_paid_amount > project_unit.blocking_amount

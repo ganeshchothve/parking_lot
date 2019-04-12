@@ -92,6 +92,16 @@ class ProjectUnit
     SelldoLeadUpdater.perform_async(user_id.to_s, 'hold_payment_dropoff')
   end
 
+  #
+  # This function return true or false when unit is ready for booking.
+  #
+  #
+  # @return [Boolean] True/False
+  #
+  def available?
+    %w[available employee management].include?(status)
+  end
+
   def calculated_costs
     out = {}
     costs.each { |c| out[c.key] = c.value }
@@ -140,10 +150,10 @@ class ProjectUnit
         ]
       }]
     }
-    if self.user.present?
+    if self.booking_detail.user.present?
       _selector['$and'] << { '$or' => [ {user_ids: nil }, {user_ids: []},
-          { user_ids: self.user.id } ] }
-      _selector['$and'] <<  { '$or' => [ {user_role: nil}, { user_role: []}, {user_role: self.user.role } ]}
+          { user_ids: self.booking_detail.user.id } ] }
+      _selector['$and'] <<  { '$or' => [ {user_role: nil}, { user_role: []}, {user_role: self.booking_detail.user.role } ]}
     end
     Scheme.where(_selector)
   end
@@ -392,8 +402,8 @@ class ProjectUnit
   end
 
   def pending_booking_detail_scheme
-    if %w[hold].include?(status) || self.class.booking_stages.include?(status)
-      booking_detail_scheme
+    if booking_detail.present? && (%w[hold].include?(status) || self.class.booking_stages.include?(status))
+      BookingDetailScheme.where(booking_detail_id: booking_detail.id).in(status: 'draft').desc(:created_at).first
     end
   end
 

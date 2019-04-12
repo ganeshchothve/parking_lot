@@ -5,19 +5,18 @@ class Admin::BookingDetails::ReceiptsController < AdminController
 
   def index
     authorize([:admin, Receipt])
-    @receipts = Receipt.where(Receipt.user_based_scope(current_user, params))
+    @receipts = Receipt.where(booking_detail_id: @booking_detail.id).where(Receipt.user_based_scope(current_user, params))
                        .build_criteria(params)
                        .paginate(page: params[:page] || 1, per_page: params[:per_page])
   end
 
   #
-  # This new action always create a new receipt form for user's project unit rerceipt form.
+  # This new action always create a new receipt form for user's project unit receipt form.
   #
   # GET "/admin/users/:user_id/project_units/:project_unit_id/receipts/new"
   def new
     @receipt = Receipt.new(
-      creator: current_user, project_unit_id: @project_unit.id, user: @user, booking_detail_id: @booking_detail.id,
-      total_amount: (@project_unit.status == 'hold' ? @project_unit.blocking_amount : @project_unit.pending_balance)
+      creator: current_user, project_unit_id: @project_unit.id, user: @user, booking_detail_id: @booking_detail.id, total_amount: (@project_unit.status == 'hold' ? @project_unit.blocking_amount : @project_unit.pending_balance)
     )
     authorize([:admin, @receipt])
     render layout: false
