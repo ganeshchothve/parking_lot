@@ -124,7 +124,7 @@ RSpec.describe Admin::ReceiptsController, type: :controller do
       post :create, params: { receipt: receipt_params, user_id: @user.id }
       receipt = Receipt.first
       expect(response.request.flash[:notice]).to eq('Receipt was successfully updated. Please upload documents')
-      expect(response).to redirect_to(admin_user_receipts_path)
+      expect(response).to redirect_to(admin_user_receipts_path(@user))
     end
 
     it 'if saving receipt is unsuccessful, render new' do

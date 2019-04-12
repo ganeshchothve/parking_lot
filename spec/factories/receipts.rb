@@ -28,4 +28,12 @@ FactoryBot.define do
     processed_on { Date.today }
     tracking_id { 'test' }
   end
+
+  factory :offline_payment, parent: :receipt do
+    payment_mode { 'cheque' }
+    issuing_bank { 'HDFC' }
+    issuing_bank_branch { 'Kondhwa' }
+    payment_identifier { Faker::Number.number(6) }
+    issued_date { Date.today }
+  end
 end

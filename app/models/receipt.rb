@@ -179,7 +179,6 @@ class Receipt
     if total_amount <= 0
       errors.add :total_amount, 'cannot be less than or equal to 0'
     end
-
     blocking_amount = user.booking_portal_client.blocking_amount
     blocking_amount = project_unit.blocking_amount if project_unit_id.present?
     if (project_unit_id.blank? || blocking_payment?) && total_amount < blocking_amount && new_record? && !receipt.booking_detail.swapping?

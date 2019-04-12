@@ -15,10 +15,10 @@ class Admin::BookingDetails::ReceiptsController < AdminController
   #
   # GET "/admin/users/:user_id/project_units/:project_unit_id/receipts/new"
   def new
-    @receipt = Receipt.new({
+    @receipt = Receipt.new(
       creator: current_user, project_unit_id: @project_unit.id, user: @user, booking_detail_id: @booking_detail.id,
-      total_amount: (@project_unit.status == "hold" ? @project_unit.blocking_amount : @project_unit.pending_balance)
-    })
+      total_amount: (@project_unit.status == 'hold' ? @project_unit.blocking_amount : @project_unit.pending_balance)
+    )
     authorize([:admin, @receipt])
     render layout: false
   end
@@ -35,19 +35,18 @@ class Admin::BookingDetails::ReceiptsController < AdminController
     authorize([:admin, @receipt])
     respond_to do |format|
       if @receipt.account.blank?
-        flash[:alert] = "We do not have any Account Details for Transaction. Please ask Administrator to add."
+        flash[:alert] = 'We do not have any Account Details for Transaction. Please ask Administrator to add.'
         format.html { render 'new' }
       else
         if @receipt.save
-          flash[:notice] = "Receipt was successfully updated. Please upload documents"
-
+          flash[:notice] = 'Receipt was successfully updated. Please upload documents'
           if @receipt.payment_mode == 'online'
             url = @receipt.payment_gateway_service.gateway_url(@user.get_search(@project_unit.id).id)
           else
             url = "#{admin_user_receipts_path(@user)}?remote-state=#{assetables_path(assetable_type: @receipt.class.model_name.i18n_key.to_s, assetable_id: @receipt.id)}"
           end
-          format.json{ render json: @receipt, location: url }
-          format.html{ redirect_to url }
+          format.json { render json: @receipt, location: url }
+          format.html { redirect_to url }
         else
           format.json { render json: { errors: @receipt.errors.full_messages }, status: :unprocessable_entity }
           format.html { render 'new' }
