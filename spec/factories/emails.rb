@@ -5,7 +5,7 @@ FactoryBot.define do
     subject { Faker::String.random(3) }
     body { Faker::String.random(3) }
     text_only_body { Faker::String.random(3) }
-    status 'draft'
+    status { 'draft' }
     remote_id { Faker::String.random(3) }
     sent_on { Faker::Time.between(DateTime.now - 1, DateTime.now) }
     before(:create) do |email|
