@@ -3,9 +3,9 @@ class ApisController < ActionController::API
 
   def authenticate_request
     flag = false
-    if request.headers['Api-key'] && request.headers['HTTP_HOST']
+    if request.headers['Api-key'] && request.headers['Api-domain']
       api_key = request.headers['Api-key']
-      domain = request.headers['HTTP_HOST']
+      domain = request.headers['Api-domain']
       @app = ExternalApi.where(domain: domain).first
       if @app.present?
         if api_key == @app.api_key
