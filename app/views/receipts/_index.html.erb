@@ -38,7 +38,7 @@
               <div>Processed Date:<%= receipt.processed_on.present? ? l(receipt.processed_on) : "-" %></div>
             <% else %>
               <div>Bank: <%= receipt.issuing_bank %> / Branch: <%= receipt.issuing_bank_branch %></div>
-              <div>Issued Date: <%= receipt.issued_date.present? ? receipt.issued_date : "-" %></div>
+              <div>Issued Date: <%= receipt.issued_date.present? ? receipt.issued_date.strftime("%d/%m/%Y") : "-" %></div>
               <div>Processed Date: <%= receipt.processed_on.present? ? l(receipt.processed_on) : "-" %></div>
               <div>ID: <%= receipt.payment_identifier %></div>
             <% end %>
