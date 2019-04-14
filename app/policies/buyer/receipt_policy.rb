@@ -1,5 +1,4 @@
 class Buyer::ReceiptPolicy < ReceiptPolicy
-
   def index?
     user.buyer?
   end
@@ -17,14 +16,8 @@ class Buyer::ReceiptPolicy < ReceiptPolicy
   end
 
   def new?
-    valid = confirmed_and_ready_user? && (record.project_unit_id.blank? || after_hold_payment? || after_blocked_payment? || after_under_negotiation_payment?)
-
-    if record.project_unit_id.present?
-      valid = valid && record.user.user_requests.where(project_unit_id: record.project_unit_id).where(status: "pending").blank?
-    end
-
-    valid = valid && current_client.payment_gateway.present? if record.payment_mode == "online"
-    valid
+    valid = confirmed_and_ready_user?
+    valid &&= direct_payment? ? enable_direct_payment? : valid_booking_stages?
   end
 
   def create?
@@ -39,7 +32,7 @@ class Buyer::ReceiptPolicy < ReceiptPolicy
     edit?
   end
 
-  def permitted_attributes params={}
+  def permitted_attributes(params = {})
     attributes = super
     attributes += [:project_unit_id] if user.buyer?
     attributes.uniq

@@ -46,12 +46,15 @@ class Receipt
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: start_date..end_date) }
   scope :filter_by_processed_on, ->(date) { start_date, end_date = date.split(' - '); where(processed_on: start_date..end_date) }
 
+  validates :issuing_bank, :issuing_bank_branch, format: { without: /[^a-z\s]/i, message: 'can contain only alphabets and spaces' }, unless: proc { |receipt| receipt.payment_mode == 'online' }
+  validates :payment_identifier, format: { without: /[^a-z0-9\s]/i, message: 'can contain only alphabets, numbers and spaces' }, unless: proc { |receipt| receipt.payment_mode == 'online' }
   validates :total_amount, :status, :payment_mode, :user_id, presence: true
-  validates :payment_identifier, presence: true, if: proc { |receipt| receipt.payment_mode == 'online' && receipt.status != 'pending' }
+  validates :payment_identifier, presence: true, if: proc { |receipt| receipt.payment_mode == 'online' ? receipt.status == 'success' : true }
   validates :status, inclusion: { in: proc { Receipt.aasm.states.collect(&:name).collect(&:to_s) } }
   validates :payment_mode, inclusion: { in: proc { Receipt.available_payment_modes.collect { |x| x[:id] } } }
   validate :validate_total_amount
-  validates :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, presence: true, if: proc { |receipt| receipt.payment_mode != 'online' }
+  validates :issued_date, :issuing_bank, :issuing_bank_branch, presence: true, if: proc { |receipt| receipt.payment_mode != 'online' }
+  validates :processed_on, presence: true, if: proc { |receipt| %i[success clearance_pending available_for_refund].include?(receipt.status) }
   validates :payment_gateway, presence: true, if: proc { |receipt| receipt.payment_mode == 'online' }
   validates :payment_gateway, inclusion: { in: PaymentGatewayService::Default.allowed_payment_gateways }, allow_blank: true
   validates :tracking_id, presence: true, if: proc { |receipt| receipt.status == 'success' && receipt.payment_mode != 'online' }
@@ -59,6 +62,7 @@ class Receipt
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :tracking_id_processed_on_only_on_success, if: proc { |record| record.status != 'cancelled' }
   validate :processed_on_greater_than_issued_date, :first_booking_amount_limit
+  validate :issued_date_when_offline_payment, if: proc { |record| %w[online cheque].exclude?(record.payment_mode) && issued_date.present? }
 
   increments :order_id, auto: false
 
@@ -103,11 +107,15 @@ class Receipt
       if project_unit.present? && (project_unit.status != 'hold') && allowed_stages
         nil
       else
-        if project_unit.blank? || ( booking_detail.present? && booking_detail.user_id == user_id )
+        if project_unit.blank? || (booking_detail.present? && booking_detail.user_id == user_id)
           eval("PaymentGatewayService::#{payment_gateway}").new(self)
         end
       end
     end
+  end
+
+  def issued_date_when_offline_payment
+    errors.add(:issued_date, 'should be less than or equal to the current date') unless issued_date <= Time.now
   end
 
   def blocking_payment?
@@ -171,7 +179,6 @@ class Receipt
     if total_amount <= 0
       errors.add :total_amount, 'cannot be less than or equal to 0'
     end
-
     blocking_amount = user.booking_portal_client.blocking_amount
     blocking_amount = project_unit.blocking_amount if project_unit_id.present?
     if (project_unit_id.blank? || blocking_payment?) && total_amount < blocking_amount && new_record? && !receipt.booking_detail.swapping?
@@ -187,8 +194,12 @@ class Receipt
   end
 
   def processed_on_greater_than_issued_date
-    if processed_on.present? && issued_date.present? && processed_on < issued_date
-      errors.add :processed_on, 'cannot be older than the Issued Date'
+    if processed_on.present? && issued_date.present?
+      if processed_on < issued_date
+        errors.add :processed_on, 'cannot be older than the Issued Date'
+      elsif processed_on > Time.now.to_date
+        errors.add :processed_on, 'cannot be in the future'
+      end
     end
   end
 
