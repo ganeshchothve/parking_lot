@@ -72,7 +72,7 @@ class BookingDetailSchemePolicy < SchemePolicy
   end
 
   def is_this_user_added_by_channel_partner?
-    return true if record.project_unit.user.manager_id == user.id
+    return true if record.booking_detail.user.manager_id == user.id
     @condition = 'do_not_have_access'
     false
   end

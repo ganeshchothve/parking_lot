@@ -1,8 +1,21 @@
 class Buyer::BookingDetailsController < BuyerController
-  before_action :set_booking_detail
-  before_action :set_project_unit
-  before_action :set_receipt
-  before_action :authorize_resource
+  include BookingDetailConcern
+  around_action :apply_policy_scope, only: [:index]
+  before_action :set_booking_detail, except: [:index]
+  before_action :set_project_unit, except: [:index]
+  before_action :set_receipt, except: [:index]
+  before_action :authorize_resource, except: [:index]
+
+  def index
+    # authorize [:buyer, BookingDetail]
+    @booking_details = BookingDetail.all
+    @booking_details = @booking_details.paginate(page: params[:page] || 1, per_page: params[:per_page])
+  end
+
+  def show
+    @scheme = @booking_detail.booking_detail_scheme
+    render template: 'admin/booking_details/show' 
+  end
 
   def booking
     if @receipt.save

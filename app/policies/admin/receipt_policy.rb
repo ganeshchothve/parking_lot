@@ -38,7 +38,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
   end
 
   def lost_receipt?
-    new? && user.role == 'superadmin'
+    new? && user.role == 'admin'
   end
 
   def permitted_attributes(params = {})

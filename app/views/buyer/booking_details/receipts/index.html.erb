@@ -1,0 +1,64 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <%#= render 'breadcrumbs', { user: @user, project_unit: @project_unit } %>
+      <% if current_client.cancellation_amount > 0 %>
+        <div class="alert alert-danger">
+          Refund Payments will be subject to cancellation charges
+        </div>
+      <% end %>
+      <% unless policy([:buyer, Receipt.new(user: @user)]).new? %>
+        <div class="alert alert-primary mt-3">
+          <% if @user.confirmed? %>
+            You might need to complete the user's KYC before you can take payments.
+            <% if UserKycPolicy.new(current_user, UserKyc.new(user: @user)).new? %>
+              <%= link_to "Add #{t('global.user_kyc_details')}", new_admin_user_user_kyc_path(@user), class: "modal-remote-form-link" %>
+            <% end %>
+          <% else %>
+            The <%= t('global.customer') %> has not yet confirmed their account via email.
+          <% end %>
+        </div>
+      <% end %>
+      <div class="card">
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-9">
+              <% if policy([:buyer, Receipt.new(user: @user)]).new? %>
+                <% units_for_payments = @user.project_units.in(status: ["blocked", 'booked_tentative']).all %>
+                <% if units_for_payments.present? %>
+                  <div class="dropdown float-left mr-2">
+                    <a class="btn btn-primary dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add <%= t('global.receipt') %> to Blocked Units</a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                      <% units_for_payments.each do |project_unit| %>
+                        <%= link_to "#{project_unit.name}", new_admin_user_booking_detail_receipt_path(@user.id, @booking_detail.id), class: 'dropdown-item modal-remote-form-link' %>
+                      <% end %>
+                    </div>
+                  </div>
+                <% end %>
+              <% end %>
+
+              <% if policy([:admin, Receipt.new(user: @user)]).direct? %>
+                <%= link_to "Make Direct #{t('global.receipt')}", new_admin_user_receipt_path(@user), class: 'btn btn-primary modal-remote-form-link float-left mr-2' %>
+              <% end %>
+
+              <% if policy([:admin, Receipt]).export? && @receipt.blank? %>
+                <div class="dropdown float-left mr-2">
+                  <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <%= link_to "All #{t('global.receipts')}", export_admin_receipts_path, class: 'dropdown-item' %>
+                    <%= link_to "Active filter #{t('global.receipts')}", export_admin_receipts_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+
+            <div class="col-3 text-md-right">
+              <h6 class="mt-2">Total <%= t('global.receipts') %>: <%= @receipts.total_entries %></h6>
+            </div>
+          </div>
+          <%= render 'receipts/index', {receipts: @receipts} %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

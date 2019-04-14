@@ -225,7 +225,7 @@
         </div>
       </div>
     </div>
-    <% if (booking_detail.status == "blocked" || booking_detail.status == "booked_tentative") && booking_detail.project_unit.auto_release_on.present? && booking_detail.project_unit.auto_release_on > Date.today %>
+    <% if (booking_detail.status == "blocked" || booking_detail.status == "booked_tentative") %>
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">

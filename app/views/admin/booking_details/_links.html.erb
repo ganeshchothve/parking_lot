@@ -6,6 +6,9 @@
 <% if booking_detail.hold? %>
   <%= link_to "Checkout using unit already held", checkout_user_search_path(booking_detail.search), class: "dropdown-item" %>
 <% end %>
+<% if  policy([:admin, Receipt.new(user: booking_detail.user)]).lost_receipt? %>
+  <%= link_to "Add Lost Receipt", lost_receipt_admin_booking_detail_receipts_path(booking_detail), class: "dropdown-item modal-remote-form-link" %>
+<% end %>
 
 <% if policy([:admin, project_unit]).show? %>
   <%= link_to "View Details", admin_booking_detail_path(booking_detail), class: 'dropdown-item' %>

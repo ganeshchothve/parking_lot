@@ -5,6 +5,7 @@ class BookingDetail
   include InsertionStringMethods
   include BookingDetailStateMachine
   include SyncDetails
+  include FilterByCriteria
 
   BOOKING_STAGES = %w[blocked booked_tentative booked_confirmed]
 
@@ -42,6 +43,11 @@ class BookingDetail
   validates :status, :primary_user_kyc_id, presence: true
   validates :erp_id, uniqueness: true, allow_blank: true
   delegate :name, to: :project_unit, prefix: true, allow_nil: true
+
+  #scope :filter_by_user, ->(user) { where(user_id: user.id)  }
+  #scope :filter_by_manager, ->(manager) {where(manager_id: manager.id) }
+  default_scope -> {desc(:created_at)}
+  
 
   accepts_nested_attributes_for :notes
 
@@ -90,6 +96,25 @@ class BookingDetail
   end
 
   class << self
+
+    def user_based_scope(user, params = {})
+  
+      custom_scope = {}
+      if params[:user_id].blank? && !user.buyer?
+        if user.role?('channel_partner')
+          custom_scope = { manager_id: user.id }
+        elsif user.role?('cp_admin')
+          custom_scope = { user_id: { "$in": User.where(role: 'user').nin(manager_id: [nil, '']).distinct(:id) } }
+        elsif user.role?('cp')
+          channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
+          custom_scope = { user_id: { "$in": User.in(referenced_manager_ids: channel_partner_ids).distinct(:id) } }
+        end
+      end
+
+      custom_scope = { user_id: params[:user_id] } if params[:user_id].present?
+      custom_scope = { user_id: user.id } if user.buyer?
+      custom_scope
+    end
     def run_sync(project_unit_id, changes = {})
       project_unit = ProjectUnit.find(project_unit_id)
       changes = changes.with_indifferent_access
