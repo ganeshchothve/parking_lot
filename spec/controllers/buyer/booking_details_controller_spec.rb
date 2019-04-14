@@ -12,7 +12,6 @@ RSpec.describe Buyer::BookingDetailsController, type: :controller do
       @project_unit.user = @user
       @project_unit.primary_user_kyc_id = kyc.id
       @project_unit.save
-      # @booking_detail = create(:booking_detail, project_unit: @project_unit, user: @user, primary_user_kyc_id: kyc.id, search_id: @search.id)
       @search = Search.create(created_at: Time.now, updated_at: Time.now, bedrooms: 2.0, carpet: nil, agreement_price: nil, all_inclusive_price: nil, project_tower_id: nil, floor: nil, project_unit_id: nil, step: 'filter', results_count: nil, user_id: @user.id)
       @pubs = ProjectUnitBookingService.new(@project_unit)
       @booking_detail = @pubs.create_booking_detail @search.id
@@ -61,8 +60,7 @@ RSpec.describe Buyer::BookingDetailsController, type: :controller do
 
       it 'unattached blocking not present and save successful' do
         patch :booking, params: { id: @booking_detail.id }
-        receipt = Receipt.first
-        expect(response).to redirect_to("/dashboard/user/searches/#{@booking_detail.search.id}/gateway-payment/#{receipt.receipt_id}")
+        expect(response).to redirect_to("/dashboard/user/searches/#{@booking_detail.search.id}/gateway-payment/#{Receipt.first.receipt_id}")
       end
 
       it 'if save failed, redirect to checkout_user_search_path' do
@@ -75,8 +73,7 @@ RSpec.describe Buyer::BookingDetailsController, type: :controller do
       it 'if save successful, receipt status pending but payment_gateway service absent, set receipt status failed' do
         Receipt.any_instance.stub(:payment_gateway_service).and_return nil
         patch :booking, params: { id: @booking_detail.id }
-        receipt = Receipt.first
-        expect(receipt.status).to eq('failed')
+        expect(Receipt.first.status).to eq('failed')
         expect(response.request.flash[:notice]).to eq("We couldn't redirect you to the payment gateway, please try again")
         expect(response).to redirect_to(dashboard_path)
       end

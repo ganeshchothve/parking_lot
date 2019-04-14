@@ -52,9 +52,8 @@ RSpec.describe Buyer::ReceiptsController, type: :controller do
         receipt_params = FactoryBot.attributes_for(:receipt)
         Receipt.any_instance.stub(:payment_gateway_service).and_return nil
         post :create, params: { receipt: receipt_params }
-        receipt = Receipt.first
         expect(response.request.flash[:notice]).to eq("We couldn't redirect you to the payment gateway, please try again")
-        expect(receipt.status).to eq('failed')
+        expect(Receipt.first.status).to eq('failed')
         expect(response).to redirect_to(dashboard_path)
       end
 
