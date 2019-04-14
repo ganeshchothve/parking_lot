@@ -67,7 +67,7 @@ RSpec.describe Buyer::BookingDetailsController, type: :controller do
         Receipt.any_instance.stub(:save).and_return false
         Receipt.any_instance.stub(:errors).and_return(ActiveModel::Errors.new(Receipt.new).tap { |e| e.add(:payment_identifier, 'cannot be blank') })
         patch :booking, params: { id: @booking_detail.id }
-        expect(response).to redirect_to(checkout_user_search_path(project_unit_id: @booking_detail.project_unit.id))
+        expect(response).to redirect_to(checkout_user_search_path(@booking_detail.search))
       end
 
       it 'if save successful, receipt status pending but payment_gateway service absent, set receipt status failed' do

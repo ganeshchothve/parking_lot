@@ -164,7 +164,8 @@ RSpec.describe Admin::ReceiptsController, type: :controller do
 
         it "#{payment_mode} receipt update fails" do
           receipt = create(:offline_payment, payment_mode: payment_mode, user_id: @user.id, total_amount: 50_000, status: 'clearance_pending')
-          receipt_params = { event: 'success', tracking_id: '123211', processed_on: Time.now + 1.day }
+          receipt_params = { event: 'success', tracking_id: '123211', processed_on: Time.now - 1.day }
+          Receipt.any_instance.stub(:save).and_return false
           patch :update, params: { receipt: receipt_params, user_id: @user.id, id: receipt.id }
           expect(response).to render_template('edit')
         end
