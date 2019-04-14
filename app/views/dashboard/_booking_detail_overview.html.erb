@@ -196,36 +196,38 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-4">
-        <div class="form-group">
-        <label>Last Synced At:</label>
-          <div>
-            <% if booking_detail.present? %>
-              <% if booking_detail.sync_logs.present? %>
-                <%= booking_detail.sync_logs.desc(:created_at)[0].present? ? booking_detail.sync_logs.desc(:created_at)[0].updated_at.strftime("%d/%m/%Y %l:%M %p") : "-" %>
+      <% if booking_detail.sync_logs.present? %>
+        <div class="col-md-4">
+          <div class="form-group">
+          <label>Last Synced At:</label>
+            <div>
+              <% if booking_detail.present? %>
+                <% if booking_detail.sync_logs.present? %>
+                  <%= booking_detail.sync_logs.desc(:created_at)[0].present? ? booking_detail.sync_logs.desc(:created_at)[0].updated_at.strftime("%d/%m/%Y %l:%M %p") : "-" %>
+                <% end %>
+              <% else %>
+                 <%= "Not synced" %>
               <% end %>
-            <% else %>
-               <%= "Not synced" %>
-            <% end %>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-4">
-        <div class="form-group">
-        <label>Last Sync Log Status:</label>
-          <div>
-            <% if booking_detail.present? %>
-              <% if booking_detail.sync_logs.present? %>
-                <%= booking_detail.sync_logs.desc(:created_at)[0].status.present? ? booking_detail.sync_logs.desc(:created_at)[0].status : "-" %>
+        <div class="col-md-4">
+          <div class="form-group">
+          <label>Last Sync Log Status:</label>
+            <div>
+              <% if booking_detail.present? %>
+                <% if booking_detail.sync_logs.present? %>
+                  <%= booking_detail.sync_logs.desc(:created_at)[0].status.present? ? booking_detail.sync_logs.desc(:created_at)[0].status : "-" %>
+                <% end %>
+              <% else %>
+                 <%= "Not synced" %>
               <% end %>
-            <% else %>
-               <%= "Not synced" %>
-            <% end %>
+            </div>
           </div>
         </div>
-      </div>
+      <% end %>
     </div>
-    <% if (booking_detail.status == "blocked" || booking_detail.status == "booked_tentative") %>
+    <% if booking_detail.project_unit.status == "blocked"  %>
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
@@ -252,7 +254,7 @@
           <% unless current_client.cancellation_amount.zero? %>
             <li>Cancellation charges are <%= number_to_indian_currency(current_client.cancellation_amount) %></li>
           <% end %>
-          <li>You have <%= (booking_detail.project_unit.auto_release_on - Date.today).to_i %> days (before <%= I18n.l(booking_detail.project_unit.auto_release_on) %>) remaining to confirm this booking. Please make a remaining payment of <%= number_to_indian_currency(booking_detail.pending_balance.round) %></li>
+          <li>You have <%#= (booking_detail.project_unit.auto_release_on - Date.today).to_i %> days (before <%#= I18n.l(booking_detail.project_unit.auto_release_on) %>) remaining to confirm this booking. Please make a remaining payment of <%= number_to_indian_currency(booking_detail.pending_balance.round) %></li>
         </ul>
       </div>
     <% end %>

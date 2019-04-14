@@ -23,13 +23,13 @@ class Admin::BookingDetailSchemePolicy < BookingDetailSchemePolicy
   def edit?
     if only_for_admin! && enable_actual_inventory? && is_derived_from_scheme_approved?
       case user.role
-      when 'admin', 'sales', 'sales_admin', 'crm', 'superadmin'
+      when 'admin', 'sales', 'sales_admin', 'crm', 'superadmin' 
         true
       when 'channel_partner'
-        if is_this_user_added_by_channel_partner?
-          is_project_unit_hold?
-        end
-      else
+      #   if is_this_user_added_by_channel_partner?
+      #     is_project_unit_hold?
+      #   end
+      # else
         @condition = 'do_not_have_access'
         false
       end

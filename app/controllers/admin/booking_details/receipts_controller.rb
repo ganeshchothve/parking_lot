@@ -1,6 +1,6 @@
 class Admin::BookingDetails::ReceiptsController < AdminController
-  before_action :set_user
   before_action :set_booking_detail
+  before_action :set_user
   before_action :set_project_unit
 
   def index
@@ -16,7 +16,7 @@ class Admin::BookingDetails::ReceiptsController < AdminController
   # GET "/admin/users/:user_id/project_units/:project_unit_id/receipts/new"
   def new
     @receipt = Receipt.new(
-      creator: current_user, project_unit_id: @project_unit.id, user: @user, booking_detail_id: @booking_detail.id, total_amount: (@project_unit.status == 'hold' ? @project_unit.blocking_amount : @project_unit.pending_balance)
+      creator: current_user, project_unit_id: @project_unit.id, user: @user, booking_detail_id: @booking_detail.id, total_amount: (@project_unit.status == 'hold' ? @project_unit.blocking_amount : @booking_detail.pending_balance)
     )
     authorize([:admin, @receipt])
     render layout: false
@@ -70,7 +70,7 @@ class Admin::BookingDetails::ReceiptsController < AdminController
 
   def set_user
     @user = User.where(_id: params[:user_id]).first
-    @user = @booking_detail.user if @user.empty?
+    @user = @booking_detail.user if !(@user.present?)
     redirect_to dashboard_path, alert: 'User Not found', status: 404 if @user.blank?
   end
 

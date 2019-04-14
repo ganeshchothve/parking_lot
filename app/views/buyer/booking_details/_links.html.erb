@@ -1,1 +1,20 @@
+<% if policy([:buyer, Receipt.new(user: current_user, booking_detail: booking_detail)]).new? %>
+  <%= link_to "Add #{t('global.receipts')}", new_buyer_booking_detail_receipt_path(booking_detail_id: booking_detail.id), class: 'dropdown-item modal-remote-form-link' %>
+<% end %>
+<% if policy([:buyer, Receipt ]).index? %>
+  <%= link_to "View #{t('global.receipts')}", buyer_user_booking_detail_receipts_path(booking_detail.user, booking_detail), class: 'dropdown-item' %>
+<% end %>
+<% if policy([:buyer, BookingDetail ]).show? %>
+  <%= link_to "View details", buyer_booking_detail_path( booking_detail), class: 'dropdown-item' %>
+<% end %>
+<% [UserRequest::Cancellation, UserRequest::Swap] if Rails.env.development? %>
+<% UserRequest.descendants.each do |klass| %>
+  <% if policy([:buyer, klass.new(user_id: booking_detail.user_id)]).new? && current_user.buyer? %>
+    <% url = new_buyer_user_request_path(project_unit_id: booking_detail.project_unit.id, request_type: klass.model_name.element)
+    %>
+    <a href="<%= url %>" class="dropdown-item modal-remote-form-link">
+      <%= global_labels["user_request_#{klass.model_name.element}"] %>
+    </a>
+  <% end %>
+<% end %>
   

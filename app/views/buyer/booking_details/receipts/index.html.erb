@@ -24,7 +24,7 @@
           <div class="row mb-3">
             <div class="col-9">
               <% if policy([:buyer, Receipt.new(user: @user)]).new? %>
-                <% units_for_payments = @user.project_units.in(status: ["blocked", 'booked_tentative']).all %>
+                <% units_for_payments = @user.project_units.in(status: ["blocked"]).all %>
                 <% if units_for_payments.present? %>
                   <div class="dropdown float-left mr-2">
                     <a class="btn btn-primary dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add <%= t('global.receipt') %> to Blocked Units</a>

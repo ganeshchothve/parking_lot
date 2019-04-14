@@ -1,10 +1,10 @@
 class Buyer::BookingDetails::ReceiptsController < BuyerController
   before_action :set_booking_detail
+  before_action :set_user
   before_action :set_project_unit
 
    def index
-    authorize([:admin, Receipt])
-    binding.pry
+    authorize([:buyer, Receipt])
     @receipts = Receipt.where(booking_detail_id: @booking_detail.id).where(Receipt.user_based_scope(current_user, params))
                        .build_criteria(params)
                        .paginate(page: params[:page] || 1, per_page: params[:per_page])
@@ -57,6 +57,12 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
   end
 
   private
+
+  def set_user
+    @user = User.where(_id: params[:user_id]).first
+    @user = @booking_detail.user if !(@user.present?)
+    redirect_to dashboard_path, alert: 'User Not found', status: 404 if @user.blank?
+  end
 
   def set_project_unit
     @project_unit = @booking_detail.project_unit
