@@ -68,14 +68,9 @@ RSpec.describe Admin::ReceiptsController, type: :controller do
     end
   end
 
-  describe 'direct payment' do
-    # context '' do
-    #   %i[user employee_user management_user].each do |role|
+  describe 'payment mode ONLINE' do # TO DO ONLINE UPDATE
     before(:each) do
-      phase = create(:phase)
       default = create(:razorpay_payment, by_default: true)
-      not_default = create(:razorpay_payment, by_default: false)
-      not_default.phases << phase
       admin = create(:admin)
       sign_in_app(admin)
       @user = create(:user)
@@ -103,13 +98,6 @@ RSpec.describe Admin::ReceiptsController, type: :controller do
       expect(response.request.flash[:alert]).to eq('Direct payment is not available right now.')
     end
 
-    # it 'if client has set enable_direct_payment to false, flash will contain error message' do
-    #   receipt_params = FactoryBot.attributes_for(:receipt, payment_mode: 'online', payment_identifier: nil)
-    #   @user.set(role: 'channel_partner')
-    #   post :create, params: { receipt: receipt_params, user_id: @user.id }
-    #   expect(response.request.flash[:alert]).to eq("Direct payment is not available right now.")
-    # end
-
     it 'redirects to searches controller payment_gateway function on successful save when payment_identifier is nil' do
       receipt_params = FactoryBot.attributes_for(:receipt, payment_mode: 'online', payment_identifier: nil)
       post :create, params: { receipt: receipt_params, user_id: @user.id }
@@ -122,7 +110,6 @@ RSpec.describe Admin::ReceiptsController, type: :controller do
     it 'redirects to admin_user_receipts_path successful save when payment_identifier is present' do
       receipt_params = FactoryBot.attributes_for(:receipt, payment_mode: 'online')
       post :create, params: { receipt: receipt_params, user_id: @user.id }
-      receipt = Receipt.first
       expect(response.request.flash[:notice]).to eq('Receipt was successfully updated. Please upload documents')
       expect(response).to redirect_to(admin_user_receipts_path(@user))
     end
@@ -142,6 +129,46 @@ RSpec.describe Admin::ReceiptsController, type: :controller do
       expect(response.request.flash[:alert]).to eq('We do not have any Account Details for Transaction. Please ask Administrator to add.')
       expect(response).to render_template('new')
     end
-    # end
+  end
+
+  describe 'payment mode' do
+    before(:each) do
+      create(:razorpay_payment, by_default: true)
+    end
+
+    context do
+      %w[cheque rtgs neft imps card_swipe].each do |payment_mode|
+        before(:each) do
+          @client = create(:client)
+          @admin = create(:admin)
+          @user = create(:user)
+          sign_in_app(@admin)
+          kyc = create(:user_kyc, creator_id: @user.id, user: @user)
+        end
+
+        it "#{payment_mode} receipt created successfully" do
+          receipt_params = FactoryBot.attributes_for(:offline_payment, payment_mode: payment_mode.to_s)
+          post :create, params: { receipt: receipt_params, user_id: @user.id }
+          receipt = Receipt.first
+          expect(response.request.flash[:notice]).to eq('Receipt was successfully updated. Please upload documents')
+          expect(response).to redirect_to("#{admin_user_receipts_path(@user)}?remote-state=#{assetables_path(assetable_type: receipt.class.model_name.i18n_key.to_s, assetable_id: receipt.id)}")
+        end
+
+        it "#{payment_mode} receipt updated successfully" do
+          receipt = create(:offline_payment, payment_mode: payment_mode, user_id: @user.id, total_amount: 50_000, status: 'clearance_pending')
+          receipt_params = { event: 'success', tracking_id: '123211', processed_on: receipt.issued_date }
+          patch :update, params: { receipt: receipt_params, user_id: @user.id, id: receipt.id }
+          expect(response.request.flash[:notice]).to eq('Receipt was successfully updated.')
+          expect(response).to redirect_to(admin_user_receipts_path(@user))
+        end
+
+        it "#{payment_mode} receipt update fails" do
+          receipt = create(:offline_payment, payment_mode: payment_mode, user_id: @user.id, total_amount: 50_000, status: 'clearance_pending')
+          receipt_params = { event: 'success', tracking_id: '123211', processed_on: Time.now + 1.day }
+          patch :update, params: { receipt: receipt_params, user_id: @user.id, id: receipt.id }
+          expect(response).to render_template('edit')
+        end
+      end
+    end
   end
 end

@@ -96,7 +96,6 @@ RSpec.describe Buyer::BookingDetailsController, type: :controller do
       it 'fails if online account not present' do
         Buyer::ReceiptPolicy.any_instance.stub(:online_account_present?).and_return false
         patch :booking, params: { id: @booking_detail.id }
-        debugger
         expect(response.request.flash[:alert].present?).to eq(true)
       end
     end

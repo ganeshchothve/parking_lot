@@ -9,7 +9,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
 
   def new?
     valid = confirmed_and_ready_user?
-    valid &&= direct_payment? ? (enable_direct_payment? || user.role?('channel_partner')) : valid_booking_stages?
+    valid &&= direct_payment? ? (enable_direct_payment? || user.role?('channel_partner')) : '' # valid_booking_stages? # SANKET
   end
 
   def create?
