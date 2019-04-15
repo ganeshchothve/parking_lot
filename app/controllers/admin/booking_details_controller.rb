@@ -54,7 +54,6 @@ class Admin::BookingDetailsController < AdminController
     @receipt = @booking_detail.user.unattached_blocking_receipt @project_unit.blocking_amount
     if @receipt.present?
       @receipt.booking_detail_id = @booking_detail.id
-      @receipt.project_unit = @project_unit
     else
       redirect_to new_admin_booking_detail_receipt_path(@booking_detail.user, @booking_detail), notice: t('controller.booking_details.set_receipt_missing')
     end

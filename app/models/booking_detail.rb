@@ -42,7 +42,7 @@ class BookingDetail
   # validates :name, presence: true
   validates :status, :primary_user_kyc_id, presence: true
   validates :erp_id, uniqueness: true, allow_blank: true
-  delegate :name, to: :project_unit, prefix: true, allow_nil: true
+  delegate :name, :blocking_amount, to: :project_unit, prefix: true, allow_nil: true
 
   #scope :filter_by_user, ->(user) { where(user_id: user.id)  }
   #scope :filter_by_manager, ->(manager) {where(manager_id: manager.id) }
@@ -59,11 +59,11 @@ class BookingDetail
   end
 
   def booking_detail_scheme
-    booking_detail_schemes.where(status: {'$in': ['draft', 'approved']}).first
+    booking_detail_schemes.in(status: ['approved', 'draft']).first
   end
 
   def pending_balance(options={})
-    strict = options[:strict] || false 
+    strict = options[:strict] || false
     user_id = options[:user_id] || self.user_id
     if user_id.present?
       receipts_total = Receipt.where(user_id: user_id, booking_detail_id: self.id)
@@ -77,10 +77,6 @@ class BookingDetail
     else
       return self.project_unit.booking_price
     end
-  end
-
-  def total_amount_paid
-    receipts.where(user_id: self.user_id).where(status: 'success').sum(:total_amount)
   end
 
   def total_tentative_amount_paid
