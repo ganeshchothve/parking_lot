@@ -93,7 +93,7 @@ RSpec.describe Receipt, type: :model do
       end
 
       it 'is valid' do
-        receipt = build(:receipt, user: @user, issued_date: Time.now - 1.days, payment_mode: 'card_swipe')
+        receipt = build(:receipt, user: @user, issued_date: Time.now, payment_mode: 'card_swipe')
         expect(receipt).to be_valid
       end
 

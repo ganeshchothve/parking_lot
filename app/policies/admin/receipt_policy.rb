@@ -9,7 +9,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
 
   def new?
     valid = confirmed_and_ready_user?
-    valid &&= direct_payment? ? (enable_direct_payment? || user.role?('channel_partner')) : '' # valid_booking_stages? # SANKET
+    valid &&= direct_payment? ? (enable_direct_payment? || user.role?('channel_partner')) : valid_booking_stages?
   end
 
   def create?
@@ -29,7 +29,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
 
     valid = record.success? && record.booking_detail_id.blank?
     valid ||= (%w[pending clearance_pending available_for_refund].include?(record.status) && %w[admin crm sales_admin].include?(user.role))
-    valid ||= (user.role?('channel_partner') && record.pending? )
+    valid ||= (user.role?('channel_partner') && record.pending?)
     valid
   end
 

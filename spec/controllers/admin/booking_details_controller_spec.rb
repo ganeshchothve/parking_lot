@@ -15,7 +15,14 @@ RSpec.describe Admin::BookingDetailsController, type: :controller do
     it 'receipt is not present, redirect' do
       patch :booking, params: { id: @booking_detail.id, user_id: @user.id }
       expect(response).to redirect_to(new_admin_booking_detail_receipt_path(@booking_detail.user, @booking_detail))
-      # expect(response.request.flash[:notice]).to eq("We couldn't redirect you to the payment gateway, please try again")
+      expect(response.request.flash[:notice]).to eq('Make new payment')
+    end
+
+    it 'online receipt saves successfully' do
+      receipt = create(:receipt, payment_mode: 'online', user_id: @user.id, total_amount: 50_000, status: 'success')
+      patch :booking, params: { id: @booking_detail.id, user_id: @user.id }
+      expect(response).to redirect_to(admin_user_path(receipt.user))
+      expect(response.request.flash[:notice]).to eq('You have completed the booking successfully.')
     end
   end
 
