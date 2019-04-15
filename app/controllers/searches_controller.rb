@@ -167,7 +167,7 @@ class SearchesController < ApplicationController
   end
 
   def gateway_payment
-    @receipt = Receipt.pending.where(:receipt_id => params[:receipt_id]).first
+    @receipt = Receipt.where(:receipt_id => params[:receipt_id]).first
     if @receipt.present?
       render file: "searches/#{@receipt.payment_gateway.underscore}_payment"
     else

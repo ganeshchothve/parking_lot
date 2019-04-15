@@ -83,8 +83,10 @@ module ReceiptStateMachine
     # When Receipt is created by admin except channel partner then it's direcly moved in clearance pening.
     #
     def moved_to_clearance_pending
-      unless (%w( channel_partner ) + User::BUYER_ROLES).include?(self.creator.role) && payment_mode != 'online'
-        self.clearance_pending!
+      if payment_mode != 'online'
+        unless (%w( channel_partner ) + User::BUYER_ROLES).include?(self.creator.role)
+          self.clearance_pending!
+        end
       end
     end
   end
