@@ -27,6 +27,7 @@ FactoryBot.define do
   factory :check_payment, parent: :receipt do
     issued_date { Date.today }
     issuing_bank { "HDFC" }
+    issuing_bank_branch { 'Balewadi'}
     payment_gateway { nil }
     payment_mode { "cheque" }
     processed_on { Date.today }

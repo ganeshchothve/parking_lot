@@ -3,6 +3,6 @@ FactoryBot.define do
     name { Faker::Name.name }
     field { 'agreement_price' }
     absolute_value { Faker::Number.number(4) }
-    editable true
+    editable { true }
   end
 end
