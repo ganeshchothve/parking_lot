@@ -4,6 +4,10 @@ class Buyer::BookingDetailsController < BuyerController
   before_action :set_receipt
   before_action :authorize_resource
 
+  def show
+    @scheme = @booking_detail.booking_detail_scheme
+  end
+
   def booking
     if @receipt.save
       @booking_detail.under_negotiation!
@@ -40,16 +44,15 @@ class Buyer::BookingDetailsController < BuyerController
     if unattached_blocking_receipt.present?
       @receipt = unattached_blocking_receipt
       @receipt.booking_detail_id = @booking_detail.id
-      @receipt.project_unit_id = @project_unit.id
     else
-      @receipt = Receipt.new(creator: @booking_detail.user, user: @booking_detail.user, payment_mode: 'online', total_amount: current_client.blocking_amount, payment_gateway: current_client.payment_gateway, booking_detail_id: @booking_detail.id, project_unit_id: @project_unit.id)
-      @receipt.account = selected_account(@booking_detail.project_unit)
+      @receipt = Receipt.new(creator: @booking_detail.user, user: @booking_detail.user, payment_mode: 'online', total_amount: current_client.blocking_amount, payment_gateway: current_client.payment_gateway, booking_detail_id: @booking_detail.id)
+      @receipt.account ||= selected_account(@booking_detail.project_unit)
       @receipt.total_amount = @project_unit.blocking_amount
-      authorize([current_user_role_group, Receipt.new(user: @booking_detail.user)], :create?)
+      authorize([:buyer, @receipt], :create?)
     end
   end
 
   def authorize_resource
-    authorize [:admin, @booking_detail]
+    authorize [:buyer, @booking_detail]
   end
 end

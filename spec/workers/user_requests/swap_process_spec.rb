@@ -91,11 +91,11 @@ RSpec.describe UserRequests::SwapProcess, type: :worker do
         it 'request marked as resolved, booking in resolved with (pending to cancelled) ( clearance pending to cancelled with new clearance pending) and (success to cancelled ) and create new booking_detail with only success clearance_pending ' do
           _success = @booking_detail.receipts.first
 
-          _clearance_pending = create(:check_payment, user_id: @user.id, total_amount: 30000, project_unit_id: @booking_detail.project_unit_id, status: 'clearance_pending', booking_detail_id: @booking_detail.id, tracking_id: nil, processed_on: nil)
+          _clearance_pending = create(:check_payment, user_id: @user.id, total_amount: 30000, status: 'clearance_pending', booking_detail_id: @booking_detail.id, tracking_id: nil, processed_on: nil)
 
-          _available_for_refund = create(:check_payment, user_id: @user.id, total_amount: 30000, project_unit_id: @booking_detail.project_unit_id, status: 'available_for_refund', booking_detail_id: @booking_detail.id, tracking_id: nil, processed_on: nil)
+          _available_for_refund = create(:check_payment, user_id: @user.id, total_amount: 30000, status: 'available_for_refund', booking_detail_id: @booking_detail.id, tracking_id: nil, processed_on: nil)
 
-          _pending = create(:check_payment, user_id: @user.id, total_amount: 20000, project_unit_id: @booking_detail.project_unit_id, status: 'pending', booking_detail_id: @booking_detail.id, tracking_id: nil, processed_on: nil)
+          _pending = create(:check_payment, user_id: @user.id, total_amount: 20000, status: 'pending', booking_detail_id: @booking_detail.id, tracking_id: nil, processed_on: nil)
           _count = @booking_detail.receipts.clearance_pending.count
           expect(Receipt.count).to eq(4)
           UserRequests::SwapProcess.new.perform(@user_request.id)

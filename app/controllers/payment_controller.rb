@@ -5,12 +5,11 @@ class PaymentController < ApplicationController
   layout :set_layout
 
   def process_payment
-    @receipt = Receipt.where(receipt_id: params[:receipt_id]).first
-    if @receipt.present? && @receipt.status == "pending" && @receipt.payment_gateway_service.present?
+    @receipt = Receipt.pending.where(receipt_id: params[:receipt_id]).first
+    if @receipt.present? && @receipt.payment_gateway_service.present?
       @receipt.payment_gateway_service.response_handler!(params)
     else
-      flash[:notice] = 'You are not allowed to access this page'
-      redirect_to home_path(current_user)
+      redirect_to dashboard_path, notice: 'No pending receipt found.'
     end
   end
 end

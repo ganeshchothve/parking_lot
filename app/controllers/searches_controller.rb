@@ -167,12 +167,11 @@ class SearchesController < ApplicationController
   end
 
   def gateway_payment
-    @receipt = Receipt.where(:receipt_id => params[:receipt_id]).first
-    if @receipt.present? && @receipt.status == "pending"
-      @project_unit = ProjectUnit.find(@receipt.project_unit_id) if @receipt.project_unit_id.present?
+    @receipt = Receipt.pending.where(:receipt_id => params[:receipt_id]).first
+    if @receipt.present?
       render file: "searches/#{@receipt.payment_gateway.underscore}_payment"
     else
-      redirect_to home_path(@search.user)
+      redirect_to home_path(@search.user), notice: t('controller.searches.gateway_payment.receipt_missing')
     end
   end
 
