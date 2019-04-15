@@ -4,15 +4,13 @@ class ReceiptObserver < Mongoid::Observer
   end
 
   def before_save(receipt)
-    if receipt.status_changed? && receipt.status == 'success'
-      receipt.processed_on = Date.today if receipt.processed_on.blank?
+    receipt.receipt_id = receipt.generate_receipt_id
+    if receipt.status_changed? && receipt.status == "success"
       receipt.assign!(:order_id) if receipt.order_id.blank?
     end
-    receipt.receipt_id = receipt.generate_receipt_id
   end
 
   def after_save(receipt)
-
     if receipt.status_changed?
       Notification::Receipt.new(receipt.id, receipt.changes).execute
     end
@@ -21,5 +19,4 @@ class ReceiptObserver < Mongoid::Observer
     receipt.event = nil
     receipt.send("#{_event}!") if _event.present?
   end
-
 end

@@ -39,18 +39,14 @@ class Buyer::BookingDetails::BookingDetailSchemesController < BuyerController
   end
 
   def create
-    booking_detail = @project_unit.booking_detail
-    pubs = ProjectUnitBookingService.new(@project_unit.id)
-    @scheme = pubs.create_or_update_booking_detail_scheme booking_detail
-    @scheme.created_by = current_user
-    @scheme.created_by_user = true
-    @scheme.assign_attributes(permitted_attributes([ current_user_role_group, @scheme]))
+    @scheme ||= self.project_unit.project_tower.default_scheme
+    @booking_detail_scheme.assign_attributes(permitted_attributes([:buyer, @booking_detail_scheme]))
     modify_params
-    @scheme.send(@scheme.event) if @scheme.event.present?
-    if @scheme.payment_adjustments.present? && @scheme.payment_adjustments.last.new_record?
-      @scheme.draft!
+    @booking_detail_scheme.send(@booking_detail_scheme.event) if @booking_detail_scheme.event.present?
+    if @booking_detail_scheme.payment_adjustments.present? && @booking_detail_scheme.payment_adjustments.last.new_record?
+      @booking_detail_scheme.draft!
     else
-      @scheme.approved! if @scheme.derived_from_scheme.status == 'approved'
+      @booking_detail_scheme.approved! if @booking_detail_scheme.derived_from_scheme.status == 'approved'
     end
     respond_to do |format|
       if @scheme.save
@@ -84,7 +80,7 @@ class Buyer::BookingDetails::BookingDetailSchemesController < BuyerController
   def update
     modify_params
     @scheme.assign_attributes(permitted_attributes(@scheme))
-    @scheme.send(@scheme.event) if @scheme.event.present? 
+    @scheme.send(@scheme.event) if @scheme.event.present?
     @scheme.status = 'draft' if @scheme.payment_adjustments.present? && @scheme.payment_adjustments.last.new_record?
     @scheme.approved_by = current_user if @scheme.event.present? && @scheme.event == 'approved'
     respond_to do |format|
@@ -131,10 +127,9 @@ class Buyer::BookingDetails::BookingDetailSchemesController < BuyerController
     if params[:action] == "index" || params[:action] == 'export'
       authorize [:buyer, BookingDetailScheme]
     elsif params[:action] == "new" || params[:action] == "create"
-      project_unit_id = @project_unit.id if @project_unit.present?
-      project_unit_id = @booking_detail.project_unit.id if @booking_detail.present? && project_unit_id.blank?
-      scheme = Scheme.where(_id: params.dig(:booking_detail_scheme, :derived_from_scheme_id) ).last
-      authorize [ :buyer, BookingDetailScheme.new(created_by: current_user, project_unit_id: project_unit_id, derived_from_scheme_id: scheme.try(:_id), status: scheme.try(:status)) ]
+      @scheme = Scheme.where(_id: params.dig(:booking_detail_scheme, :derived_from_scheme_id) ).last
+      @booking_detail_scheme = BookingDetailScheme.new(created_by: current_user, project_unit_id: @booking_detail.project_unit_id, derived_from_scheme_id: @scheme.try(:_id), status: @scheme.try(:status))
+      authorize [:buyer, @booking_detail_scheme]
     else
       authorize [:buyer, @scheme]
     end

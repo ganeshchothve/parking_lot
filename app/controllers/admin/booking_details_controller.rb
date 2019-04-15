@@ -14,7 +14,7 @@ class Admin::BookingDetailsController < AdminController
   end
 
   def booking
-    # This will return @receipt object 
+    # This will return @receipt object
     # In before_action set booking_detail project_unit, receipt and redirect_to to dashboard_path when any one of this is missing.
     if @receipt.save
       @receipt.change_booking_detail_status
@@ -55,9 +55,8 @@ class Admin::BookingDetailsController < AdminController
     @receipt = @booking_detail.user.unattached_blocking_receipt @project_unit.blocking_amount
     if @receipt.present?
       @receipt.booking_detail_id = @booking_detail.id
-      @receipt.project_unit = @project_unit
     else
-      redirect_to new_admin_booking_detail_receipt_path(@booking_detail.user, @booking_detail), notice: t('controller.booking_details.set_receipt_missing') 
+      redirect_to new_admin_booking_detail_receipt_path(@booking_detail.user, @booking_detail), notice: t('controller.booking_details.set_receipt_missing')
     end
   end
 end

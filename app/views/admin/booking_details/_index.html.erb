@@ -11,9 +11,9 @@
       </tr>
     </thead>
     <tbody>
-      <% _booking_details = booking_details.group_by(&:project_unit_id) %>
-      <% ProjectUnit.in(_id: booking_details.pluck(:project_unit_id)).each do |project_unit| %>
-        <% booking_detail = _booking_details[project_unit.id].first %>
+      <% project_units = ProjectUnit.in(_id: booking_details.pluck(:project_unit_id)).group_by(&:_id) %>
+      <% booking_details.each do |booking_detail| %>
+        <% project_unit = project_units[booking_detail.project_unit_id].first %>
         <tr>
           <td>
             <%= project_unit.name %>
@@ -29,12 +29,7 @@
             <div class="small">Booking Amt. Pending: <%= number_to_indian_currency(booking_detail.pending_balance.to_i) %></div>
           </td>
           <td class="text-right">
-            <div class="dropdown">
-              <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-              <div class="dropdown-menu dropdown-menu-right">
-                <%= render "#{current_user_role_group}/booking_details/links", booking_detail: booking_detail %>
-              </div>
-            </div>
+            <%= render "#{current_user_role_group}/booking_details/links", booking_detail: booking_detail, link_name: '' %>
           </td>
         </tr>
       <% end %>
