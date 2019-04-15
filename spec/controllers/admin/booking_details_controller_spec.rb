@@ -7,10 +7,9 @@ RSpec.describe Admin::BookingDetailsController, type: :controller do
       @user = create(:user)
       sign_in_app(@admin)
       kyc = create(:user_kyc, creator_id: @user.id, user: @user)
-      @project_unit = create(:project_unit, status: 'hold', user: @user, primary_user_kyc_id: kyc.id)
-      @search = Search.create(created_at: Time.now, updated_at: Time.now, bedrooms: 2.0, carpet: nil, agreement_price: nil, all_inclusive_price: nil, project_tower_id: nil, floor: nil, project_unit_id: nil, step: 'filter', results_count: nil, user_id: @user.id)
-      @pubs = ProjectUnitBookingService.new(@project_unit)
-      @booking_detail = @pubs.create_booking_detail @search.id
+      @booking_detail = book_project_unit(@user)
+      @project_unit = @booking_detail.project_unit
+      @search = @booking_detail.search
     end
 
     it 'receipt is not present, redirect' do
@@ -32,10 +31,9 @@ RSpec.describe Admin::BookingDetailsController, type: :controller do
           @user = create(:user)
           sign_in_app(@admin)
           kyc = create(:user_kyc, creator_id: @user.id, user: @user)
-          @project_unit = create(:project_unit, status: 'hold', user: @user, primary_user_kyc_id: kyc.id)
-          @search = Search.create(created_at: Time.now, updated_at: Time.now, bedrooms: 2.0, carpet: nil, agreement_price: nil, all_inclusive_price: nil, project_tower_id: nil, floor: nil, project_unit_id: nil, step: 'filter', results_count: nil, user_id: @user.id)
-          @pubs = ProjectUnitBookingService.new(@project_unit)
-          @booking_detail = @pubs.create_booking_detail @search.id
+          @booking_detail = book_project_unit(@user, nil, nil, 'hold')
+          @search = @booking_detail.search
+          @project_unit = @booking_detail.project_unit
         end
 
         it "#{payment_mode} receipt is present and saves successfully" do

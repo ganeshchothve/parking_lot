@@ -14,9 +14,9 @@ RSpec.describe Admin::BookingDetails::ReceiptsController, type: :controller do
     end
 
     it 'receipt saved successful' do
-      receipt_params = FactoryBot.attributes_for('receipt')
+      receipt_params = FactoryBot.attributes_for(:receipt, payment_identifier: nil)
       post :create, params: { receipt: receipt_params, user_id: @user.id, booking_detail_id: @booking_detail.id }
-      receipt = Receipt.first
+      receipt = assigns(:receipt)
       expect(response.request.flash[:notice]).to eq('Receipt was successfully updated. Please upload documents')
       search_id = receipt.user.searches.desc(:created_at).first.id
       expect(response).to redirect_to("/dashboard/user/searches/#{search_id}/gateway-payment/#{receipt.receipt_id}")
@@ -24,7 +24,7 @@ RSpec.describe Admin::BookingDetails::ReceiptsController, type: :controller do
 
     it 'Receipt count will be increase by 1' do
       receipt_params = FactoryBot.attributes_for(:receipt, payment_identifier: nil)
-      expect{ post :create, params: { receipt: receipt_params, user_id: @user.id, booking_detail_id: @booking_detail.id } }.to change(Receipt, :count).by(1)
+      expect { post :create, params: { receipt: receipt_params, user_id: @user.id, booking_detail_id: @booking_detail.id } }.to change(Receipt, :count).by(1)
     end
 
     it 'selects default account when phase is missing or account is missing' do
@@ -53,7 +53,7 @@ RSpec.describe Admin::BookingDetails::ReceiptsController, type: :controller do
             receipt = assigns(:receipt)
             expect(response.request.flash[:notice]).to eq('Receipt was successfully updated. Please upload documents')
             search_id = receipt.user.searches.desc(:created_at).first.id
-            expect(response).to redirect_to(admin_user_receipts_url( @user, 'remote-state': assetables_path(assetable_type: receipt.class.model_name.i18n_key.to_s, assetable_id: receipt.id) ) )
+            expect(response).to redirect_to(admin_user_receipts_url(@user, 'remote-state': assetables_path(assetable_type: receipt.class.model_name.i18n_key.to_s, assetable_id: receipt.id)))
           end
 
           it "#{payment_mode} receipt save fails" do

@@ -7,18 +7,9 @@ RSpec.describe Buyer::BookingDetails::ReceiptsController, type: :controller do
       @user = create(:user)
       kyc = create(:user_kyc, creator_id: @user.id, user: @user)
       sign_in_app(@user)
-      @project_unit = create(:project_unit, status: 'hold', user: @user, primary_user_kyc_id: kyc.id)
-      @search = Search.create(created_at: Time.now, updated_at: Time.now, bedrooms: 2.0, carpet: nil, agreement_price: nil, all_inclusive_price: nil, project_tower_id: nil, floor: nil, project_unit_id: nil, step: 'filter', results_count: nil, user_id: @user.id)
-      pubs = ProjectUnitBookingService.new(@project_unit)
-      @booking_detail = pubs.create_booking_detail(@search.id)
-    end
-
-    it 'when receipt account is blank, render new' do
-      receipt_params = FactoryBot.attributes_for(:receipt)
-      Receipt.any_instance.stub(:account).and_return nil
-      post :create, params: { receipt: receipt_params, user_id: @user_id, booking_detail_id: @booking_detail.id }
-      expect(response.request.flash[:alert]).to eq('We do not have any Account Details for Transaction. Please ask Administrator to add.')
-      expect(response).to render_template('new')
+      @booking_detail = book_project_unit(@user, nil, nil, 'hold')
+      @search = @booking_detail.search
+      @project_unit = @booking_detail.project_unit
     end
 
     it 'when receipt successfully saves and payment gateway service is present, redirect' do

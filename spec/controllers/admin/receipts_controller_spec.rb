@@ -11,7 +11,6 @@ RSpec.describe Admin::ReceiptsController, type: :controller do
     end
 
     describe '#lost_receipt' do
-
       describe 'creating' do
         before(:each) do
           superadmin = create(:superadmin)
@@ -42,7 +41,7 @@ RSpec.describe Admin::ReceiptsController, type: :controller do
               receipt_params[:payment_identifier] = 'rz1201'
               receipt_params[:account_number] = @not_default.id
               receipt_params[:payment_mode] = 'online'
-              expect{post :create, params: { receipt: receipt_params, user_id: @user.id } }.to change(Receipt, :count).by(0)
+              expect { post :create, params: { receipt: receipt_params, user_id: @user.id } }.to change(Receipt, :count).by(0)
             end
           end
         end
@@ -73,15 +72,15 @@ RSpec.describe Admin::ReceiptsController, type: :controller do
           end
 
           it 'send alert message when receipts is invalid' do
-            receipt_params = FactoryBot.attributes_for(:receipt, payment_identifier: nil, total_amount: 0 )
+            receipt_params = FactoryBot.attributes_for(:receipt, payment_identifier: nil, total_amount: 0)
             post :create, params: { receipt: receipt_params, user_id: @user.id }
-            expect(response.request.flash[:alert]).to eq(["Total Amount (Rs.) cannot be less than or equal to 0"])
+            expect(response.request.flash[:alert]).to eq(['Total Amount (Rs.) cannot be less than or equal to 0'])
           end
 
           describe 'payment is offline' do
             Receipt::OFFLINE_PAYMENT_MODE.each do |payment_mode|
               before(:each) do
-                @receipt_params = FactoryBot.attributes_for(:receipt,payment_mode: payment_mode)
+                @receipt_params = FactoryBot.attributes_for(:receipt, payment_mode: payment_mode)
               end
 
               it "redirects to users receipts index page when receipt payment_mode #{payment_mode}" do
@@ -92,10 +91,10 @@ RSpec.describe Admin::ReceiptsController, type: :controller do
           end
 
           describe 'payment_mode is online' do
-            it "redirects to payment link when receipt has no payment_identifier " do
-              receipt_params = FactoryBot.attributes_for(:receipt,payment_mode: 'online', payment_identifier: nil)
+            it 'redirects to payment link when receipt has no payment_identifier ' do
+              receipt_params = FactoryBot.attributes_for(:receipt, payment_mode: 'online', payment_identifier: nil)
               post :create, params: { receipt: receipt_params, user_id: @user.id }
-              expect(response).to redirect_to("http://test.host/dashboard/user/searches/#{@user.get_search('').id}/gateway-payment/#{assigns(:receipt).receipt_id}" )
+              expect(response).to redirect_to("http://test.host/dashboard/user/searches/#{@user.get_search('').id}/gateway-payment/#{assigns(:receipt).receipt_id}")
             end
           end
         end
@@ -142,26 +141,11 @@ RSpec.describe Admin::ReceiptsController, type: :controller do
       expect(response).to redirect_to("/dashboard/user/searches/#{search_id}/gateway-payment/#{receipt.receipt_id}")
     end
 
-    it 'redirects to admin_user_receipts_path successful save when payment_identifier is present' do
-      receipt_params = FactoryBot.attributes_for(:receipt, payment_mode: 'online')
-      post :create, params: { receipt: receipt_params, user_id: @user.id }
-      expect(response.request.flash[:notice]).to eq('Receipt was successfully updated. Please upload documents')
-      expect(response).to redirect_to(admin_user_receipts_path(@user))
-    end
-
     it 'if saving receipt is unsuccessful, render new' do
-      receipt_params = FactoryBot.attributes_for(:receipt, payment_mode: 'online')
+      receipt_params = FactoryBot.attributes_for(:receipt, payment_mode: 'online', payment_identifier: nil)
       Receipt.any_instance.stub(:save).and_return false
       Receipt.any_instance.stub(:errors).and_return(ActiveModel::Errors.new(Receipt.new).tap { |e| e.add(:payment_identifier, 'cannot be blank') })
       post :create, params: { receipt: receipt_params, user_id: @user.id }
-      expect(response).to render_template('new')
-    end
-
-    it 'if receipt account blank, render new ' do
-      receipt_params = FactoryBot.attributes_for(:receipt, payment_mode: 'online')
-      Receipt.any_instance.stub(:account).and_return nil
-      post :create, params: { receipt: receipt_params, user_id: @user.id }
-      expect(response.request.flash[:alert]).to eq('We do not have any Account Details for Transaction. Please ask Administrator to add.')
       expect(response).to render_template('new')
     end
   end
@@ -184,9 +168,9 @@ RSpec.describe Admin::ReceiptsController, type: :controller do
         it "#{payment_mode} receipt created successfully" do
           receipt_params = FactoryBot.attributes_for(:offline_payment, payment_mode: payment_mode.to_s)
           post :create, params: { receipt: receipt_params, user_id: @user.id }
-          receipt = Receipt.first
+          receipt = assigns(:receipt)
           expect(response.request.flash[:notice]).to eq('Receipt was successfully updated. Please upload documents')
-          expect(response).to redirect_to("#{admin_user_receipts_path(@user)}?remote-state=#{assetables_path(assetable_type: receipt.class.model_name.i18n_key.to_s, assetable_id: receipt.id)}")
+          expect(response).to redirect_to(admin_user_receipts_url(@user, 'remote-state': assetables_path(assetable_type: receipt.class.model_name.i18n_key.to_s, assetable_id: receipt.id)))
         end
 
         it "#{payment_mode} receipt updated successfully" do

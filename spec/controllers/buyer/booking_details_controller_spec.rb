@@ -7,7 +7,6 @@ RSpec.describe Buyer::BookingDetailsController, type: :controller do
       @user = create(:user)
       create(:razorpay_payment, by_default: true)
       sign_in_app(@user)
-
       @booking_detail = book_project_unit(@user, nil, nil, 'hold')
       @search = @booking_detail.search
       @project_unit = @booking_detail.project_unit
