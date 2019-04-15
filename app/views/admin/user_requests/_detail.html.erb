@@ -1,8 +1,11 @@
+<style type="text/css">
+  .align-center{text-align: center !important;}
+</style>
 <div class="card">
   <div class="card-header">
     <div class="row">
       <div class="col-11">
-        <h5 class="float-left card-title mt-2 mb-0"><%= params[:request_type] %> <%= user_request.booking_detail.name %></h5>
+        <h5 class="float-left card-title mt-2 mb-0"><%= params[:request_type] %>  <%= user_request.booking_detail.name %></h5>
       </div>
       <div class="col-1">
       </div>
@@ -10,27 +13,16 @@
   </div>
   <div class="card-body">
     <div class="row">
-      <div class="col-md-4">
-        <div class="form-group">
+      <div class="col">
+        <div class="form-group align-center">
           <label>Booking</label>
           <div>
             <%= user_request.booking_detail.name %>
           </div>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label>Status</label>
-          <div>
-            <%= t("user_request.status.#{user_request.status}") %>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-4">
-        <div class="form-group">
+      <div class="col">
+        <div class="form-group align-center">
           <label> Created by </label>
           <div>
             <%= user_request.created_by.try(:name) %>
@@ -39,8 +31,16 @@
           </div>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="form-group">
+      <div class="col">
+        <div class="form-group align-center">
+          <label> Request For </label>
+          <div>
+            <%= user_request.user.try(:name) %>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group align-center">
           <label>Resolved by</label>
           <div>
             <%- if user_request.resolved_by.present? %>
@@ -51,25 +51,30 @@
           </div>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label> Request For </label>
+      <div class="col">
+        <div class="form-group align-center">
+          <label>Status</label>
           <div>
-            <%= user_request.user.try(:name) %>
+            <%= t("user_request.status.#{user_request.status}") %>
           </div>
         </div>
       </div>
     </div>
-
     <div class="row">
-      <div class="col-md-12">
-        <div class="form-group">
-          <label> Reason </label>
-          <div>
-            <%= user_request.reason_for_failure || '-' %>
+      <div class="">
+      </div>
+    </div>
+    <%- if user_request.reason_for_failure.present? %>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label> Reason </label>
+            <div>
+              <%= user_request.reason_for_failure || '-' %>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    <%end%>
   </div>
 </div>

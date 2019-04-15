@@ -4,7 +4,7 @@
       <div class="col-11">
         <h5 class="float-left card-title mt-2 mb-0"><%= global_labels[:project_unit] %> <%= booking_detail.name %></h5>
       </div>
-      <div class="col-1">
+      <div class="col-sm-1">
         <% if defined?(with_actions) && with_actions == true %>
           <%= render "#{current_user_role_group}/booking_details/links", booking_detail: booking_detail, link_name: 'Update Booking' %>
           </div>
