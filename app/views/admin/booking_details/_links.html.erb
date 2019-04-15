@@ -1,28 +1,64 @@
-<% project_unit = booking_detail.project_unit %>
-<% if policy([:admin, Receipt.new(user: booking_detail.user, booking_detail: booking_detail)]).new? %>
-  <%= link_to "Add #{t('global.receipt')}", new_admin_user_booking_detail_receipt_path(project_unit.user, booking_detail_id: booking_detail.id), class: 'dropdown-item modal-remote-form-link' %>
-<% end %>
+<div class="dropdown float-right">
+  <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= link_name %></a>
+  <div class="dropdown-menu dropdown-menu-right">
 
-<% if booking_detail.hold? %>
-  <%= link_to "Checkout using unit already held", checkout_user_search_path(booking_detail.search), class: "dropdown-item" %>
-<% end %>
-
-<% if policy([:admin, project_unit]).show? %>
-  <%= link_to "View Details", admin_booking_detail_path(booking_detail), class: 'dropdown-item' %>
-<% end %>
-<% @scheme = booking_detail.project_unit.project_tower.default_scheme %>
-<% if booking_detail.booking_detail_scheme && policy([:admin, booking_detail.booking_detail_scheme]).edit? %>
-  <%= link_to "Update scheme and discount", edit_admin_booking_detail_booking_detail_scheme_path( booking_detail, booking_detail.booking_detail_scheme.id), class: 'dropdown-item modal-remote-form-link' %>
- <% elsif policy([:admin, BookingDetailScheme.new(booking_detail_id: booking_detail.id, derived_from_scheme_id: @scheme.id, project_unit_id: booking_detail.project_unit_id)]).new?%>
-     <%= link_to "Add new scheme", new_admin_booking_detail_booking_detail_scheme_path( booking_detail), class: 'dropdown-item modal-remote-form-link' %>
+  <% if policy([ :admin, booking_detail.project_unit]).edit? %>
+    <%= link_to "Update #{global_labels['user_kycs']}", edit_admin_project_unit_path(booking_detail.project_unit), class: "modal-remote-form-link dropdown-item" %>
   <% end %>
 
-<% if policy([:admin, Receipt ]).index? %>
-  <%= link_to "View #{t('global.receipts')}", admin_user_booking_detail_receipts_path(booking_detail.user, booking_detail), class: 'dropdown-item' %>
-<% end %>
-<% [UserRequest::Cancellation, UserRequest::Swap] if Rails.env.development? %>
-<% UserRequest.descendants.each do |klass| %>
-  <% if policy([:admin, klass.new(user_id: booking_detail.user_id, booking_detail: booking_detail)]).new? %>
-      <%= link_to t("global.user_request_#{klass.model_name.element}"), new_admin_user_user_request_path(user_id: booking_detail.user_id, booking_detail_id: booking_detail.id, request_type: klass.model_name.element), class: "dropdown-item modal-remote-form-link" %>
+  <% if booking_detail.hold? && policy([:admin, booking_detail]).block? %>
+    <%= link_to 'Book Now', checkout_user_search_path(booking_detail.search), class: 'dropdown-item' %>
+  <% elsif policy([:admin, booking_detail.receipts.new(user_id: booking_detail.user_id)]).new? %>
+    <%= link_to 'Pay Remaining Amount', new_admin_user_booking_detail_receipt_path(booking_detail.user_id,booking_detail),class: "dropdown-item modal-remote-form-link" %>
   <% end %>
+
+  <% if booking_detail.project_unit.assets.present? %>
+    <%= link_to "Images", "javascript:;", data: {toggle: "modal", target: "#floor_plan_modal_#{booking_detail.project_unit.id}"}, class: "dropdown-item" %>
+  <% end %>
+
+  <%= link_to "Cost Sheet", "javascript:;", data: {toggle: "modal", target: "#cost_sheet_modal_#{booking_detail.project_unit.id}"}, class: "dropdown-item" %>
+
+  <%= link_to "Payment Schedule", "javascript:;", data: {toggle: "modal", target: "#payment_schedule_modal_#{booking_detail.project_unit.id}"}, class: "dropdown-item" %>
+
+  <% if booking_detail.hold? && booking_detail.search %>
+    <%= link_to "Checkout using unit already held", checkout_user_search_path(booking_detail.search), class: "dropdown-item" %>
+  <% end %>
+
+  <% if %w[hold blocked booked_tentative booked_confirmed scheme_approved].include?(booking_detail.status) && policy([:admin, Receipt.new(user: booking_detail.user, booking_detail: booking_detail)]).new? %>
+    <%= link_to "Add #{t('global.receipt')}", new_admin_user_booking_detail_receipt_path(booking_detail.user, booking_detail_id: booking_detail.id), class: 'dropdown-item modal-remote-form-link' %>
+  <% end %>
+
+  <% if policy([:admin, booking_detail]).show? %>
+    <%= link_to "View Details", admin_booking_detail_path(booking_detail), class: 'dropdown-item' %>
+  <% end %>
+
+  <% @scheme = booking_detail.project_unit.project_tower.default_scheme %>
+  <% if booking_detail.booking_detail_scheme && policy([:admin, booking_detail.booking_detail_scheme]).edit? %>
+    <%= link_to "Update scheme and discount", edit_admin_booking_detail_booking_detail_scheme_path( booking_detail, booking_detail.booking_detail_scheme.id), class: 'dropdown-item modal-remote-form-link' %>
+   <% elsif policy([:admin, BookingDetailScheme.new(booking_detail_id: booking_detail.id, derived_from_scheme_id: @scheme.id, project_unit_id: booking_detail.project_unit_id)]).new?%>
+       <%= link_to "Add new scheme", new_admin_booking_detail_booking_detail_scheme_path( booking_detail), class: 'dropdown-item modal-remote-form-link' %>
+    <% end %>
+
+  <% if policy([:admin, Receipt ]).index? %>
+    <%= link_to "View #{t('global.receipts')}", admin_user_booking_detail_receipts_path(booking_detail.user, booking_detail), class: 'dropdown-item' %>
+  <% end %>
+
+  <% [UserRequest::Cancellation, UserRequest::Swap] if Rails.env.development? %>
+  <% UserRequest.descendants.each do |klass| %>
+    <% if policy([:admin, klass.new(user_id: booking_detail.user_id, booking_detail: booking_detail)]).new? %>
+        <%= link_to t("global.user_request_#{klass.model_name.element}"), new_admin_user_user_request_path(user_id: booking_detail.user_id, booking_detail_id: booking_detail.id, request_type: klass.model_name.element), class: "dropdown-item modal-remote-form-link" %>
+    <% end %>
+  <% end %>
+
+  <% if policy([:admin, SyncLog.new]).resync? && booking_detail.sync_logs.present? %>
+    <%= link_to "Resync", resync_admin_sync_log_path(booking_detail.sync_logs.desc(:created_at)[0]), class: "btn btn-primary d-print-none"%>
+  <% end %>
+</div>
+
+<% if booking_detail.project_unit.assets.present? %>
+  <%= render 'project_units/assets_in_modal', project_unit: booking_detail.project_unit %>
 <% end %>
+
+<%= render 'project_units/cost_sheet_in_modal', project_unit: booking_detail.project_unit %>
+
+<%= render 'project_units/payment_schedule_in_modal', project_unit: booking_detail.project_unit %>

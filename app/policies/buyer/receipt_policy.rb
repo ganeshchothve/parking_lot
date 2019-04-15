@@ -16,7 +16,7 @@ class Buyer::ReceiptPolicy < ReceiptPolicy
   end
 
   def new?
-    valid = confirmed_and_ready_user?
+    valid = confirmed_and_ready_user? && only_online_payment!
     valid &&= direct_payment? ? enable_direct_payment? : valid_booking_stages?
   end
 
@@ -34,7 +34,7 @@ class Buyer::ReceiptPolicy < ReceiptPolicy
 
   def permitted_attributes(params = {})
     attributes = super
-    attributes += [:project_unit_id] if user.buyer?
+    attributes += [:booking_detail_id] if user.buyer?
     attributes.uniq
   end
 
@@ -42,5 +42,11 @@ class Buyer::ReceiptPolicy < ReceiptPolicy
 
   def confirmed_and_ready_user?
     user.confirmed? && user.kyc_ready?
+  end
+
+  def only_online_payment!
+    return true if record.payment_mode == 'online'
+    @condition = 'only_online_payment'
+    false
   end
 end

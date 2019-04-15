@@ -50,11 +50,11 @@ en:
           wrong_user: 'You are not authorized to add a payment for this user.'
           not_allowed: 'You are not allowed to add a payment in this booking stage.'
           enable_direct_payment: 'Direct payment is not available right now.'
+          only_superadmin: 'Receipt details are extra.'
         new?:
           no_user_present: 'Receipt is not yet assign with any user.'
           user_not_confimred: 'Associated User is not yet confirmed.'
           not_kyc_present: "Associated User's KYC is missing."
-          online_account_not_present: 'Any Account is not linked yet. Please contact to admin.'
           online_account_not_present: 'Any Account is not linked yet. Please contact to admin.'
           wrong_user: 'You are not authorized to add a payment for this user.'
           not_allowed: 'You are not allowed to add a payment in this booking stage.'
@@ -126,10 +126,11 @@ en:
           not_allowed: 'You are not allowed to add a payment in this booking stage.'
           enable_direct_payment: 'Direct payment is not available right now.'
         create?:
-          online_account_not_present: 'Any Account is not linked yet. Please contact admin.'
+          online_account_not_present: 'Any Account is not linked yet. Please contact to admin.'
           wrong_user: 'You are not authorized to add a payment for this user.'
           not_allowed: 'You are not allowed to add a payment in this booking stage.'
           enable_direct_payment: 'Direct payment is not available right now.'
+          only_online_payment: 'Only Online payment is permitted.'
       booking_detail_scheme_policy:
         new?:
           only_buyer: 'Only buyer can select Scheme'

@@ -1,70 +1,105 @@
 require 'rails_helper'
 RSpec.describe Admin::ReceiptsController, type: :controller do
-  describe 'creating lost receipt' do
+  describe '#create' do
     before(:each) do
       phase = create(:phase)
       default = create(:razorpay_payment, by_default: true)
       @not_default = create(:razorpay_payment, by_default: false)
       @not_default.phases << phase
-      superadmin = create(:superadmin)
-      sign_in_app(superadmin)
       @user = create(:user)
       kyc = create(:user_kyc, creator_id: @user.id, user: @user)
     end
-    it 'selects account which has been selected by the user(default false)' do
-      receipt_params = FactoryBot.attributes_for(:receipt)
-      receipt_params[:payment_identifier] = 'rz1201'
-      receipt_params[:account_number] = @not_default.id
-      receipt_params[:payment_mode] = 'online'
-      post :create, params: { receipt: receipt_params, user_id: @user.id }
-      expect(Receipt.first.account.account_number).to eq(@not_default.account_number)
+
+    describe '#lost_receipt' do
+
+      describe 'creating' do
+        before(:each) do
+          superadmin = create(:superadmin)
+          sign_in_app(superadmin)
+        end
+
+        it 'selects account which has been selected by the user(default false) and redirected to admin user index' do
+          receipt_params = FactoryBot.attributes_for(:receipt)
+          receipt_params[:payment_identifier] = 'rz1201'
+          receipt_params[:account_number] = @not_default.id
+          receipt_params[:payment_mode] = 'online'
+          post :create, params: { receipt: receipt_params, user_id: @user.id }
+          expect(Receipt.first.account.account_number).to eq(@not_default.account_number)
+          expect(response).to redirect_to(admin_user_receipts_path(@user))
+        end
+      end
+
+      describe 'rejecting' do
+        %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner].each do |user_role|
+          before(:each) do
+            allow_any_instance_of(Client).to receive(:enable_channel_partners?).and_return(true)
+            admin = create(user_role)
+            sign_in_app(admin)
+          end
+          describe "User ROLE #{user_role}" do
+            it 'does not permit account_number to be assigned to receipt' do
+              receipt_params = FactoryBot.attributes_for(:receipt)
+              receipt_params[:payment_identifier] = 'rz1201'
+              receipt_params[:account_number] = @not_default.id
+              receipt_params[:payment_mode] = 'online'
+              expect{post :create, params: { receipt: receipt_params, user_id: @user.id } }.to change(Receipt, :count).by(0)
+            end
+          end
+        end
+      end
     end
-    it 'after adding lost receipt, user is redirected to admin user index page' do
-      receipt_params = FactoryBot.attributes_for(:receipt)
-      receipt_params[:payment_identifier] = 'rz1201'
-      receipt_params[:account_number] = @not_default.id
-      receipt_params[:payment_mode] = 'online'
-      post :create, params: { receipt: receipt_params, user_id: @user.id }
-      expect(response).to redirect_to(admin_user_receipts_path(@user))
-    end
-  end
-  describe 'block in creating lost receipt' do
-    before(:each) do
-      phase = create(:phase)
-      default = create(:razorpay_payment, by_default: true)
-      @not_default = create(:razorpay_payment, by_default: false)
-      @not_default.phases << phase
-      admin = create(:admin)
-      sign_in_app(admin)
-      @user = create(:user)
-      kyc = create(:user_kyc, creator_id: @user.id, user: @user)
-    end
-    it 'does not permit account_number to be assigned to receipt' do
-      receipt_params = FactoryBot.attributes_for(:receipt)
-      receipt_params[:payment_identifier] = 'rz1201'
-      receipt_params[:account_number] = @not_default.id
-      receipt_params[:payment_mode] = 'online'
-      post :create, params: { receipt: receipt_params, user_id: @user.id }
-      expect(Receipt.first.account.account_number).to_not eq(@not_default.account_number)
-    end
-  end
-  describe 'creating receipt' do
-    before(:each) do
-      phase = create(:phase)
-      default = create(:razorpay_payment, by_default: true)
-      not_default = create(:razorpay_payment, by_default: false)
-      not_default.phases << phase
-      admin = create(:admin)
-      sign_in_app(admin)
-      @user = create(:user)
-      kyc = create(:user_kyc, creator_id: @user.id, user: @user)
-    end
-    it 'selects default account when any unit is not selected' do
-      receipt_params = FactoryBot.attributes_for(:receipt)
-      post :create, params: { receipt: receipt_params, user_id: @user.id }
-      receipt = Receipt.first
-      receipt.success!
-      expect(receipt.account.by_default).to eq(true)
+
+    describe 'creating receipt' do
+      %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner].each do |user_role|
+        describe "For #{user_role}" do
+          before(:each) do
+            allow_any_instance_of(Client).to receive(:enable_channel_partners?).and_return(true)
+            admin = create(user_role)
+            sign_in_app(admin)
+          end
+          it 'selects default account when any unit is not selected' do
+            receipt_params = FactoryBot.attributes_for(:receipt, payment_identifier: nil)
+            post :create, params: { receipt: receipt_params, user_id: @user.id }
+            receipt = Receipt.first
+            receipt.success!
+            expect(receipt.account.by_default).to eq(true)
+          end
+
+          it 'send alert message when account is missing' do
+            allow_any_instance_of(Receipt).to receive(:account).and_return(nil)
+            receipt_params = FactoryBot.attributes_for(:receipt, payment_identifier: nil)
+            post :create, params: { receipt: receipt_params, user_id: @user.id }
+            expect(response.request.flash[:alert]).to eq('Any Account is not linked yet. Please contact to admin.')
+          end
+
+          it 'send alert message when receipts is invalid' do
+            receipt_params = FactoryBot.attributes_for(:receipt, payment_identifier: nil, total_amount: 0 )
+            post :create, params: { receipt: receipt_params, user_id: @user.id }
+            expect(response.request.flash[:alert]).to eq(["Total Amount (Rs.) cannot be less than or equal to 0"])
+          end
+
+          describe 'payment is offline' do
+            Receipt::OFFLINE_PAYMENT_MODE.each do |payment_mode|
+              before(:each) do
+                @receipt_params = FactoryBot.attributes_for(:receipt,payment_mode: payment_mode)
+              end
+
+              it "redirects to users receipts index page when receipt payment_mode #{payment_mode}" do
+                post :create, params: { receipt: @receipt_params, user_id: @user.id }
+                expect(response).to redirect_to(admin_user_receipts_url(@user, 'remote-state': assetables_path(assetable_type: 'receipt', assetable_id: assigns(:receipt).id)))
+              end
+            end
+          end
+
+          describe 'payment_mode is online' do
+            it "redirects to payment link when receipt has no payment_identifier " do
+              receipt_params = FactoryBot.attributes_for(:receipt,payment_mode: 'online', payment_identifier: nil)
+              post :create, params: { receipt: receipt_params, user_id: @user.id }
+              expect(response).to redirect_to("http://test.host/dashboard/user/searches/#{@user.get_search('').id}/gateway-payment/#{assigns(:receipt).receipt_id}" )
+            end
+          end
+        end
+      end
     end
   end
 
