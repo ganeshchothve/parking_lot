@@ -46,7 +46,7 @@ Rails.application.routes.draw do
         resources :booking_detail_schemes, except: [:destroy]
         # resources :receipts, only: [:index]
       end
-      
+
     resources :accounts
     resources :phases
     resources :erp_models, only: %i[index new create edit update]
@@ -186,8 +186,9 @@ Rails.application.routes.draw do
 
   namespace :buyer do
 
+    resources :booking_details, only: %i[index show]
     resources :emails, :smses, only: %i[index show]
-    resources :project_units, only: [:index, :show, :edit, :update] 
+    resources :project_units, only: [:index, :show, :edit, :update]
     resources :users, only: [:show, :update, :edit] do
       member do
         get :update_password

@@ -8,6 +8,10 @@ class Buyer::UserKycPolicy < UserKycPolicy
     record.user_id == user.id if record.user_id.present? && user.buyer?
   end
 
+  def show?
+    index? && record.user_id == user.id
+  end
+
   def create?
     new?
   end

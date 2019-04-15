@@ -11,6 +11,7 @@ class User
   # Constants
   ALLOWED_UTM_KEYS = %i[campaign source sub_source content medium term]
   BUYER_ROLES = %w[user employee_user management_user]
+  ADMIN_ROLES = %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner]
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -126,7 +127,7 @@ class User
 
   def unattached_blocking_receipt(blocking_amount = nil)
     blocking_amount ||= current_client.blocking_amount
-    Receipt.where(user_id: id).in(status: %w[success clearance_pending]).where(project_unit_id: nil).where(total_amount: { "$gte": blocking_amount }).first
+    Receipt.where(user_id: id).in(status: %w[success clearance_pending]).where(booking_detail_id: nil).where(total_amount: { "$gte": blocking_amount }).first
   end
 
   def set_utm_params(cookies)
@@ -145,7 +146,7 @@ class User
   end
 
   def total_unattached_balance
-    receipts.in(status: %w[success clearance_pending]).where(project_unit_id: nil).sum(:total_amount)
+    receipts.in(status: %w[success clearance_pending]).where(booking_detail_id: nil).sum(:total_amount)
   end
 
   def kyc_ready?

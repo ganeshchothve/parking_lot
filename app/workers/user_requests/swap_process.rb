@@ -26,7 +26,6 @@ module UserRequests
         # TODO: :Error Handling for receipts remaining #SANKET
         new_receipt = old_receipt.dup
         new_receipt.booking_detail = new_booking_detail
-        new_receipt.project_unit_id = alternate_project_unit.id
         new_receipt.comments = "Receipt generated for Swapped Unit. Original Receipt ID: #{old_receipt.id}"
         old_receipt.comments ||= ''
         old_receipt.comments += "Unit Swapped by user. Original Unit ID: #{current_project_unit.id} So cancelling these receipts"

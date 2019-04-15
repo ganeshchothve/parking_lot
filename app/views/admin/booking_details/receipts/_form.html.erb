@@ -58,7 +58,7 @@
   <div class="form-group">
     <% unless( (defined? direct_payment) && direct_payment ) %>
       <%= f.label :project_unit_id, class: 'control-label' %>
-        <% if @receipt.project_unit_id.present? %>
+        <% if @receipt.booking_detail_id.present? %>
           <% user_booking_details = [f.object.booking_detail] %>
         <% elsif policy([:admin, @receipt]).editable_field?("booking_detail_id") %>
           <% user_booking_details = @receipt.user.booking_details.ne(status: 'hold') %>

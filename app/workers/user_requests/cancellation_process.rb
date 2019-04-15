@@ -29,7 +29,7 @@ module UserRequests
           # move to state machine receipt
           if receipt.cancel!
             new_receipt = receipt.dup
-            new_receipt.assign_attributes(booking_detail: nil, project_unit: nil, status: 'clearance_pending')
+            new_receipt.assign_attributes(booking_detail: nil, status: 'clearance_pending')
             unless new_receipt.save
               error_messages = new_receipt.errors.full_messages
               break
