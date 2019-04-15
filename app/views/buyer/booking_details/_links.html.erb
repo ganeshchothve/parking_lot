@@ -1,20 +1,18 @@
 <div class="dropdown float-right">
   <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= link_name %></a>
   <div class="dropdown-menu dropdown-menu-right">
+    <% if policy([:buyer, Receipt.new(user: current_user, booking_detail: booking_detail)]).new? %>
+    <% if policy([:buyer, BookingDetail ]).show? %>
+      <%= link_to "View details", buyer_booking_detail_path( booking_detail), class: 'dropdown-item' %>
+    <% end %>
 
-    <% if policy([:buyer, booking_detail]).show? %>
-      <%= link_to "View Details", buyer_booking_detail_path( booking_detail), class: 'dropdown-item' %>
+      <%= link_to "Add #{t('global.receipts')}", new_buyer_booking_detail_receipt_path(booking_detail_id: booking_detail.id), class: 'dropdown-item modal-remote-form-link' %>
     <% end %>
 
     <% if policy([:buyer, booking_detail.project_unit]).edit? %>
       <%= link_to "Update #{global_labels['user_kycs']}", edit_buyer_project_unit_path(booking_detail.project_unit), class: "modal-remote-form-link dropdown-item" %>
     <% end %>
-
-    <% if booking_detail.hold && policy([:buyer, booking_detail]).block? %>
-      <%= link_to 'Book Now', checkout_user_search_path(booking_detail.search_id), class: 'dropdown-item' %>
-    <% elsif policy([:buyer, booking_detail.receipts.new(user_id: booking_detail.user_id)]).new? %>
-      <%= link_to 'Pay Remaining Amount', new_buyer_booking_detail_receipt_path(booking_detail_id: booking_detail.id),class: "dropdown-item modal-remote-form-link" %>
-    <% end %>
+    
 
     <% if booking_detail.project_unit.assets.present? %>
       <%= link_to "Images", "javascript:;", data: {toggle: "modal", target: "#floor_plan_modal_#{booking_detail.project_unit_id}"}, class: "dropdown-item" %>
@@ -25,24 +23,25 @@
     <%= link_to "Payment Schedule", "javascript:;", data: {toggle: "modal", target: "#payment_schedule_modal_#{booking_detail.project_unit_id}"}, class: "dropdown-item" %>
 
     <% if policy([:buyer, Receipt]).index? %>
-      <%= link_to "View #{global_labels[:receipts]}", 
-      buyer_booking_detail_receipts_path(booking_detail), class: 'dropdown-item' %>
+      <%= link_to "View #{global_labels[:receipts]}", buyer_booking_detail_receipts_path(booking_detail), class: 'dropdown-item' %>
     <% end %>
 
     <% [UserRequest::Cancellation, UserRequest::Swap] if Rails.env.development? %>
     <% UserRequest.descendants.each do |klass| %>
-      <% if policy([:buyer, klass.new(user_id: booking_detail.user_id, booking_detail: booking_detail)]).new? %>
-          <%= link_to t("global.user_request_#{klass.model_name.element}"), new_buyer_user_request_path(user_id: booking_detail.user_id, booking_detail_id: booking_detail.id, request_type: klass.model_name.element), class: "dropdown-item modal-remote-form-link" %>
+      <% if policy([:buyer, klass.new(user_id: booking_detail.user_id)]).new? && current_user.buyer? %>
+        <% url = new_buyer_user_request_path(project_unit_id: booking_detail.project_unit.id, request_type: klass.model_name.element)
+        %>
+        <a href="<%= url %>" class="dropdown-item modal-remote-form-link">
+          <%= global_labels["user_request_#{klass.model_name.element}"] %>
+        </a>
       <% end %>
     <% end %>
   </div>
-
 </div>
-
 <% if booking_detail.project_unit.assets.present? %>
   <%= render 'project_units/assets_in_modal', project_unit: booking_detail.project_unit %>
 <% end %>
 
 <%= render 'project_units/cost_sheet_in_modal', project_unit: booking_detail.project_unit %>
 
-<%= render 'project_units/payment_schedule_in_modal', project_unit: booking_detail.project_unit %>
+<%= render 'project_units/payment_schedule_in_modal', project_unit: booking_detail.project_unit %>  

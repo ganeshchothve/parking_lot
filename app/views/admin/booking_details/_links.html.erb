@@ -36,7 +36,7 @@
     <% @scheme = booking_detail.project_unit.project_tower.default_scheme %>
     <% if booking_detail.booking_detail_scheme && policy([:admin, booking_detail.booking_detail_scheme]).edit? %>
       <%= link_to "Update scheme and discount", edit_admin_booking_detail_booking_detail_scheme_path( booking_detail, booking_detail.booking_detail_scheme.id), class: 'dropdown-item modal-remote-form-link' %>
-    <% elsif policy([:admin, BookingDetailScheme.new(booking_detail_id: booking_detail.id, derived_from_scheme_id: @scheme.id, project_unit_id: booking_detail.project_unit_id)]).new?%>
+    <% elsif policy([:admin, BookingDetailScheme.new(booking_detail: booking_detail, derived_from_scheme_id: @scheme.id, project_unit_id: booking_detail.project_unit_id)]).new?%>
         <%= link_to "Add new scheme", new_admin_booking_detail_booking_detail_scheme_path( booking_detail), class: 'dropdown-item modal-remote-form-link' %>
     <% end %>
 
@@ -55,7 +55,6 @@
       <%= link_to "Resync", resync_admin_sync_log_path(booking_detail.sync_logs.desc(:created_at)[0]), class: "btn btn-primary d-print-none"%>
     <% end %>
   </div>
-<
 
 <% if booking_detail.project_unit.assets.present? %>
   <%= render 'project_units/assets_in_modal', project_unit: booking_detail.project_unit %>
