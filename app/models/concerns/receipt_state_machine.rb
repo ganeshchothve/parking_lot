@@ -57,6 +57,7 @@ module ReceiptStateMachine
 
     def can_available_for_refund?
       return (booking_detail.blank? || booking_detail.cancelling?) if booking_detail
+
       false
     end
 
@@ -80,7 +81,7 @@ module ReceiptStateMachine
     end
 
     #
-    # When Receipt is created by admin except channel partner then it's direcly moved in clearance pening.
+    # When Receipt is created by admin except channel partner then it's direcly moved in clearance pending.
     #
     def moved_to_clearance_pending
       if payment_mode != 'online'

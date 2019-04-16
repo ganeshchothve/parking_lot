@@ -5,7 +5,7 @@ class BookingDetail
   include InsertionStringMethods
   include BookingDetailStateMachine
   include SyncDetails
-  include FilterByCriteria
+  extend FilterByCriteria
 
   BOOKING_STAGES = %w[blocked booked_tentative booked_confirmed]
 
@@ -44,8 +44,11 @@ class BookingDetail
   validates :erp_id, uniqueness: true, allow_blank: true
   delegate :name, :blocking_amount, to: :project_unit, prefix: true, allow_nil: true
 
-  #scope :filter_by_user, ->(user) { where(user_id: user.id)  }
-  #scope :filter_by_manager, ->(manager) {where(manager_id: manager.id) }
+  scope :filter_by_name, ->(name) { where(name: ::Regexp.new(::Regexp.escape(name), 'i')) }
+  scope :filter_by_status, ->(status) { where(status: status) }  
+  scope :filter_by_project_tower, ->(project_tower_id) { where(project_unit_id: { "$in": ProjectTower.find(project_tower_id).project_units.pluck(:id) })}
+  scope :filter_by_user, ->(user_id) { where(user_id: user_id)  }
+  scope :filter_by_manager, ->(manager_id) {where(manager_id: manager_id) }
   default_scope -> {desc(:created_at)}
   
 
