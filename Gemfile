@@ -107,7 +107,7 @@ group :development, :test do
 end
 
 group :test do
-  gem 'faker'
+  gem 'faker', github: 'stympy/faker'
   gem 'rspec-rails'
   gem 'mongoid-rspec'
   gem 'shoulda', '~> 3.5'

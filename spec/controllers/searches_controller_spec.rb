@@ -19,7 +19,7 @@ RSpec.describe SearchesController, type: :controller do
       project_unit.client_id = Client.first
       project_unit.user = user
       post :hold, params: { id: search.id, project_unit: project_unit.as_json }
-      expect(response.request.flash[:error]).to eq('The user is not confirmed or kyc documents are not uploaded.')
+      expect(response.request.flash[:alert]).to eq('The user is not confirmed or kyc documents are not uploaded.')
     end
     it 'throws error when the unit is already held' do
       client.allow_multiple_bookings_per_user_kyc = false
@@ -36,7 +36,7 @@ RSpec.describe SearchesController, type: :controller do
       another_user.user_kycs << create(:user_kyc, creator_id: another_user.id, user: another_user)
       search.user = another_user
       post :hold, params: { id: search.id, project_unit: project_unit.as_json }
-      expect(response.request.flash[:error]).to eq('This unit is already held by other user.')
+      expect(response.request.flash[:alert]).to eq('This unit is already held by other user.')
     end
     it 'throws error when user has reached max allowed bookings' do
       user.set(allowed_bookings: 0)
@@ -45,7 +45,7 @@ RSpec.describe SearchesController, type: :controller do
       user.user_kycs << create(:user_kyc, creator_id: user.id, user: user)
       project_unit.user = user
       post :hold, params: { id: search.id, project_unit: project_unit.as_json }
-      expect(response.request.flash[:error]).to eq('You have booked the permitted number of apartments.')
+      expect(response.request.flash[:alert]).to eq('You have booked the permitted number of apartments.')
     end
     it 'throws error when user does not have unused kyc id ' do
       client.allow_multiple_bookings_per_user_kyc = false
@@ -63,7 +63,7 @@ RSpec.describe SearchesController, type: :controller do
       search.project_unit_id = another_project_unit.id
       search.save
       post :hold, params: { id: search.id, project_unit: another_project_unit.as_json }
-      expect(response.request.flash[:error]).to eq('You can book only one unit on one KYC.')
+      expect(response.request.flash[:alert]).to eq('You can book only one unit on one KYC.')
     end
   end
 end
