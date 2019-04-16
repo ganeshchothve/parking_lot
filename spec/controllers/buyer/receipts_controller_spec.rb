@@ -127,7 +127,7 @@ RSpec.describe Buyer::ReceiptsController, type: :controller do
         post :create, params: { receipt: receipt_params }
         receipt = Receipt.first
         expect(response.request.flash[:notice]).to eq("We couldn't redirect you to the payment gateway, please try again")
-        expect(receipt.status).to eq('failed')
+        expect(Receipt.first.status).to eq('failed')
         expect(response).to redirect_to(dashboard_path)
       end
 
