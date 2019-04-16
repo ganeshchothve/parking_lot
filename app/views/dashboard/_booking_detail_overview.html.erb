@@ -132,7 +132,7 @@
         </div>
       <% end %>
     </div>
-    <% if booking_detail.project_unit.status == "blocked"  %>
+    <% if %w[ hold swapped canceled ].exclude?(booking_detail.status)  %>
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
@@ -159,7 +159,7 @@
           <% unless current_client.cancellation_amount.zero? %>
             <li>Cancellation charges are <%= number_to_indian_currency(current_client.cancellation_amount) %></li>
           <% end %>
-          <li>You have <%#= (booking_detail.project_unit.auto_release_on - Date.today).to_i %> days (before <%#= I18n.l(booking_detail.project_unit.auto_release_on) %>) remaining to confirm this booking. Please make a remaining payment of <%= number_to_indian_currency(booking_detail.pending_balance.round) %></li>
+          <li>You have <%= (booking_detail.project_unit.auto_release_on - Date.today).to_i %> days (before <%= I18n.l(booking_detail.project_unit.auto_release_on) %>) remaining to confirm this booking. Please make a remaining payment of <%= number_to_indian_currency(booking_detail.pending_balance.round) %></li>
         </ul>
       </div>
     <% end %>
