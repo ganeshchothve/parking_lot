@@ -8,8 +8,7 @@ class Admin::BookingDetailsController < AdminController
 
   def index
     authorize [:admin, BookingDetail]
-    @booking_details = BookingDetail.build_criteria params
-    @booking_details = @booking_details.paginate(page: params[:page] || 1, per_page: params[:per_page])
+    @booking_details = BookingDetail.includes(:project_unit, :user, :booking_detail_schemes).build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page])
   end
 
   def show

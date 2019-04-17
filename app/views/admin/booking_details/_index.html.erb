@@ -11,9 +11,10 @@
       </tr>
     </thead>
     <tbody>
-      <% project_units = ProjectUnit.in(_id: booking_details.pluck(:project_unit_id)).group_by(&:_id) %>
+      <%# project_units = ProjectUnit.in(_id: booking_details.pluck(:project_unit_id)).group_by(&:_id) %>
       <% booking_details.each do |booking_detail| %>
-        <% project_unit = project_units[booking_detail.project_unit_id].first %>
+        <%# project_unit = project_units[booking_detail.project_unit_id].first %>
+        <% project_unit = booking_detail.project_unit %>
         <tr>
           <td>
             <%= project_unit.name %>
