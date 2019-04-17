@@ -1,11 +1,14 @@
 class Admin::BookingDetailsController < AdminController
-  before_action :get_booking_details, only: [:index]
+  include BookingDetailConcern
+  around_action :apply_policy_scope, only: [:index]
   before_action :set_booking_detail, except: [:index]
   before_action :authorize_resource, except: [:index]
   before_action :set_project_unit, only: :booking
   before_action :set_receipt, only: :booking
 
   def index
+    authorize [:admin, BookingDetail]
+    @booking_details = BookingDetail.build_criteria params
     @booking_details = @booking_details.paginate(page: params[:page] || 1, per_page: params[:per_page])
   end
 
@@ -45,10 +48,6 @@ class Admin::BookingDetailsController < AdminController
 
   def authorize_resource
     authorize [:admin, @booking_detail]
-  end
-
-  def get_booking_details
-    @booking_details = BookingDetail.all
   end
 
   def set_receipt

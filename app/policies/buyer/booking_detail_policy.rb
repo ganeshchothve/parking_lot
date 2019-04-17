@@ -4,6 +4,10 @@ class Buyer::BookingDetailPolicy < BookingDetailPolicy
     true
   end
 
+  def show?
+    true
+  end
+
   def block?
     _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && only_for_kyc_added_users! && only_for_hold! && allowed_booking?
   end

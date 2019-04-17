@@ -35,6 +35,6 @@ FactoryBot.define do
     issuing_bank { 'HDFC' }
     issuing_bank_branch { 'Kondhwa' }
     payment_identifier { Faker::Number.number(6) }
-    issued_date { Date.today }
+    issued_date { Date.today - 2.days }
   end
 end
