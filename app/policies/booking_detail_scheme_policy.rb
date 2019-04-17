@@ -66,13 +66,19 @@ class BookingDetailSchemePolicy < SchemePolicy
   private
 
   def is_project_unit_hold?
-    return true if record.project_unit.status == 'hold'
+    return true if record.booking_detail.hold?
     @condition = 'only_under_hold'
     false
   end
 
+  def can_add_new_bd_scheme?
+    return true if %w[hold scheme_rejected].include?(record.booking_detail.status)
+    @condition = 'booking_detail_scheme_present'
+    false
+  end
+
   def is_this_user_added_by_channel_partner?
-    return true if record.project_unit.user.manager_id == user.id
+    return true if record.booking_detail.user.manager_id == user.id
     @condition = 'do_not_have_access'
     false
   end

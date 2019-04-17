@@ -1,6 +1,6 @@
 class Admin::BookingDetails::ReceiptsController < AdminController
-  before_action :set_user
   before_action :set_booking_detail
+  before_action :set_user
   before_action :set_project_unit
 
   def index
@@ -50,10 +50,23 @@ class Admin::BookingDetails::ReceiptsController < AdminController
     end
   end
 
+  #
+  # This new action always create a new receipt form for user's project unit rerceipt form.
+  #
+  # GET "admin/booking_details/:booking_detail_id/receipts/lost_receipt"
+  def lost_receipt
+    @receipt = Receipt.new({
+      creator: current_user, user_id: @user, payment_mode: 'online'
+    })
+    authorize([:admin, @receipt])
+    render layout: false
+  end
+
   private
 
   def set_user
     @user = User.where(_id: params[:user_id]).first
+    @user = @booking_detail.user if !(@user.present?)
     redirect_to dashboard_path, alert: 'User Not found', status: 404 if @user.blank?
   end
 

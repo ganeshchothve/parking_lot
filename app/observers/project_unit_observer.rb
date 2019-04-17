@@ -35,10 +35,6 @@ class ProjectUnitObserver < Mongoid::Observer
     elsif project_unit.status_changed? && project_unit.status != 'hold'
       project_unit.held_on = nil
     end
-    if project_unit.status_changed? && ProjectUnit.booking_stages.include?(project_unit.status) && ['available', 'hold'].include?(project_unit.status_was)
-      project_unit.blocked_on = Date.today
-      project_unit.auto_release_on = project_unit.blocked_on + project_unit.blocking_days.days
-    end
     if project_unit.status != 'blocked' && project_unit.status != 'booked_tentative'
       project_unit.auto_release_on = nil
     end
@@ -51,6 +47,7 @@ class ProjectUnitObserver < Mongoid::Observer
   def after_update project_unit
     user = project_unit.user
     # if project_unit.status_changed? && ProjectUnit.booking_stages.include?(project_unit.status)
+    
       # if !Rails.env.development?
       #   # SelldoInventoryPusher.perform_async(project_unit.status, project_unit.id.to_s, Time.now.to_i)
       # end

@@ -36,6 +36,7 @@ class UserRequest
 
   class << self
     def user_based_scope(user, params = {})
+  
       custom_scope = {}
       if params[:user_id].blank? && !user.buyer?
         if user.role?('channel_partner')

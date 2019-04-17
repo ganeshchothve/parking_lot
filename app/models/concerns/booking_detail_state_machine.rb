@@ -139,6 +139,7 @@ module BookingDetailStateMachine
     # If booking detail scheme is approved the booking detail in scheme_approved
     # If booking detail scheme is rejected then booking detail must be in scheme rejected
     # If booking detail scheme is draft then booking detail stay in under_negotiation
+    # Setting date on which the project_unit is blocked and on which date it should be released i.e. after blocking_days from the day project_unit is blocked
     def after_under_negotiation_event
       create_default_scheme
       if under_negotiation? && booking_detail_scheme.approved?
@@ -148,6 +149,8 @@ module BookingDetailStateMachine
       end
       _project_unit = project_unit
       _project_unit.status = 'blocked'
+      _project_unit.blocked_on = Date.today
+      _project_unit.auto_release_on = _project_unit.blocked_on + _project_unit.blocking_days.days
       _project_unit.save
     end
 
@@ -163,16 +166,24 @@ module BookingDetailStateMachine
         receipt.save
       end
      end
-
+    # Updating blocked date of project_unit to today and  auto_release_on will be changed to blocking_days more from current auto_release_on.
     def after_blocked_event
+      _project_unit = project_unit
+      _project_unit.blocked_on = Date.today
+      _project_unit.auto_release_on +=  _project_unit.blocking_days.days
+      _project_unit.save
       if blocked? && get_paid_amount > project_unit.blocking_amount
         booked_tentative!
       else
         send_email_and_sms_as_booked
       end
     end
-
+    # Updating blocked date of project_unit to today and  auto_release_on will be changed to blocking_days more from current auto_release_on.
     def after_booked_tentative_event
+      _project_unit = project_unit
+      _project_unit.blocked_on = Date.today
+      _project_unit.auto_release_on += _project_unit.blocking_days.days
+      _project_unit.save
       if booked_tentative? && (get_paid_amount >= project_unit.booking_price)
         booked_confirmed!
       else
@@ -184,7 +195,12 @@ module BookingDetailStateMachine
     # Dummy Methods This is last step of application.
     #
     #
+    # Updating blocked date of project_unit to today and  auto_release_on to nil as booking is confirmed.
     def after_booked_confirmed_event
+      _project_unit = project_unit
+      _project_unit.blocked_on = Date.today
+      _project_unit.auto_release_on = nil
+      _project_unit.save
       send_email_and_sms_as_confirmed
     end
 

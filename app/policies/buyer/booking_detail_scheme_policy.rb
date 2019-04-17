@@ -1,5 +1,9 @@
 class Buyer::BookingDetailSchemePolicy < BookingDetailSchemePolicy
 
+  def index?
+    true
+  end
+
   def new?
     only_for_buyer! && enable_actual_inventory? && is_derived_from_scheme_approved? && is_project_unit_hold?
   end
