@@ -5,9 +5,6 @@
         <div class="card-body">
           <div class="row mb-3">
             <div class="col-md-7">
-              <% if policy([:admin, BookingDetail.new]).mis_report? %>
-                <%= link_to "MIS report #{global_labels['units']}", mis_report_admin_project_units_path, class: 'btn btn-primary float-left ml-md-2 mt-md-0 mt-2 margin-xs-left-0' %>
-              <% end %>
               <%# if policy([:admin, ProjectUnit.new]).export? %>
                 <!-- <div class="dropdown float-left ml-2">
                   <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>

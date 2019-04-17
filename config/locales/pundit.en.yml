@@ -72,6 +72,7 @@ en:
           do_not_have_access: 'You do not have access.'
           cross_project_tower: 'Project Tower is different.'
           enable_actual_inventory: 'You can not select Inventory. Please contact to Administrator'
+          booking_detail_scheme_present: 'There can be only one active scheme for one booking'
         create?:
           only_admin: 'Only administrator can create new scheme for booking.'
           scheme_is_not_approved: 'Selected Scheme is not approved.'

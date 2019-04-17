@@ -1,5 +1,7 @@
 class Buyer::BookingDetails::ReceiptsController < BuyerController
   before_action :set_booking_detail
+  before_action :set_user
+  before_action :set_project_unit
 
 
   def index
@@ -48,13 +50,19 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
 
   private
 
+  def set_user
+    @user = User.where(_id: params[:user_id]).first
+    @user = @booking_detail.user if !(@user.present?)
+    redirect_to dashboard_path, alert: 'User Not found', status: 404 if @user.blank?
+  end
+
   def set_project_unit
     @project_unit = @booking_detail.project_unit
     redirect_to root_path, alert: t('controller.booking_details.set_project_unit_missing'), status: 404 if @project_unit.blank?
   end
 
   def set_booking_detail
-    @booking_detail = BookingDetail.where(_id: params[:booking_detail_id]).first
+    @booking_detail = BookingDetail.where(_id: params[:booking_detail_id], user_id: current_user.id).first
     redirect_to root_path, alert: t('controller.booking_details.set_booking_detail_missing'), status: 404 if @booking_detail.blank?
   end
 

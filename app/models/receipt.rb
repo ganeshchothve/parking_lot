@@ -106,14 +106,8 @@ class Receipt
   end
 
   def payment_gateway_service
-    if payment_gateway.present?
-      if booking_detail.present? && ( !booking_detail.hold? ) && allowed_stages
-        nil
-      else
-        if (booking_detail.present? && booking_detail.user_id == user_id)
-          eval("PaymentGatewayService::#{payment_gateway}").new(self)
-        end
-      end
+    if payment_mode == 'online'
+      eval("PaymentGatewayService::#{payment_gateway}").new(self)
     end
   end
 

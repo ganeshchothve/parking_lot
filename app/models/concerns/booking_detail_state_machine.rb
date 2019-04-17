@@ -36,7 +36,7 @@ module BookingDetailStateMachine
         # transitions from: :user_kyc, to: :hold
       end
 
-      event :under_negotiation, after: :after_under_negotiation_event do
+      event :under_negotiation, after: %i[after_under_negotiation_event update_selldo!] do
         transitions from: :under_negotiation, to: :under_negotiation
         transitions from: :hold, to: :under_negotiation
         transitions from: :scheme_approved, to: :under_negotiation
@@ -46,29 +46,29 @@ module BookingDetailStateMachine
         transitions from: :scheme_rejected, to: :under_negotiation
       end
 
-      event :scheme_approved, after: :after_scheme_approved_event do
+      event :scheme_approved, after: %i[after_scheme_approved_event  update_selldo!] do
         transitions from: :scheme_approved, to: :scheme_approved
         transitions from: :under_negotiation, to: :scheme_approved
       end
 
-      event :scheme_rejected, after: :after_scheme_rejected_event do
+      event :scheme_rejected, after: %i[after_scheme_rejected_event  update_selldo!] do
         transitions from: :scheme_rejected, to: :scheme_rejected
         transitions from: :under_negotiation, to: :scheme_rejected
       end
 
-      event :blocked, after: :after_blocked_event do
+      event :blocked, after: %i[after_blocked_event update_selldo!] do
         transitions from: :blocked, to: :blocked
         transitions from: :scheme_approved, to: :blocked
         transitions from: :swap_rejected, to: :blocked
         transitions from: :cancellation_rejected, to: :blocked
       end
 
-      event :booked_tentative, after: :after_booked_tentative_event do
+      event :booked_tentative, after: %i[after_booked_tentative_event update_selldo!] do
         transitions from: :booked_tentative, to: :booked_tentative
         transitions from: :blocked, to: :booked_tentative
       end
 
-      event :booked_confirmed, after: :after_booked_confirmed_event do
+      event :booked_confirmed, after: %i[after_booked_confirmed_event update_selldo!] do
         transitions from: :booked_confirmed, to: :booked_confirmed
         transitions from: :booked_tentative, to: :booked_confirmed
       end
@@ -139,6 +139,7 @@ module BookingDetailStateMachine
     # If booking detail scheme is approved the booking detail in scheme_approved
     # If booking detail scheme is rejected then booking detail must be in scheme rejected
     # If booking detail scheme is draft then booking detail stay in under_negotiation
+    # Setting date on which the project_unit is blocked and on which date it should be released i.e. after blocking_days from the day project_unit is blocked
     def after_under_negotiation_event
       create_default_scheme
       if under_negotiation? && booking_detail_scheme.approved?
@@ -147,8 +148,10 @@ module BookingDetailStateMachine
       #   scheme_rejected!
       end
       _project_unit = project_unit
-      _project_unit.status = 'blocked'
+
+      _project_unit.assign_attributes(status: 'blocked', held_on: nil, blocked_on: Date.today, auto_release_on: ( Date.today + _project_unit.blocking_days.days) )
       _project_unit.save
+      auto_released_extended_inform_buyer!
     end
 
     def after_scheme_approved_event
@@ -158,20 +161,26 @@ module BookingDetailStateMachine
     end
 
     def after_scheme_rejected_event
-      receipts.each do |receipt| 
+      receipts.each do |receipt|
         receipt.booking_detail_id = nil
         receipt.save
       end
      end
-
+    # Updating blocked date of project_unit to today and  auto_release_on will be changed to blocking_days more from current auto_release_on.
     def after_blocked_event
+      _project_unit = project_unit
+      _project_unit.blocked_on = Date.today
+      _project_unit.auto_release_on +=  _project_unit.blocking_days.days
+      _project_unit.save
+      auto_released_extended_inform_buyer!
+
       if blocked? && get_paid_amount > project_unit.blocking_amount
         booked_tentative!
       else
         send_email_and_sms_as_booked
       end
     end
-
+    # Updating blocked date of project_unit to today and  auto_release_on will be changed to blocking_days more from current auto_release_on.
     def after_booked_tentative_event
       if booked_tentative? && (get_paid_amount >= project_unit.booking_price)
         booked_confirmed!
@@ -184,7 +193,11 @@ module BookingDetailStateMachine
     # Dummy Methods This is last step of application.
     #
     #
+    # Updating blocked date of project_unit to today and  auto_release_on to nil as booking is confirmed.
     def after_booked_confirmed_event
+      _project_unit = project_unit
+      _project_unit.auto_release_on = nil
+      _project_unit.save
       send_email_and_sms_as_confirmed
     end
 
@@ -293,6 +306,12 @@ module BookingDetailStateMachine
     def release_project_unit!
       project_unit.make_available
       project_unit.save(validate: false)
+    end
+
+    def update_selldo!
+      if project_unit && project_unit.booking_portal_client.selldo_api_key.present?
+        SelldoLeadUpdater.perform_async(user_id)
+      end
     end
 
   end
