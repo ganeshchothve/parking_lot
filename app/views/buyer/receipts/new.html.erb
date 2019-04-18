@@ -24,8 +24,8 @@
             <% end %>
           </div>
 
-          <% if current_client.enable_actual_inventory?(current_user) && @receipt.project_unit_id.present? %>
-            <%= f.hidden_field :project_unit_id %>
+          <% if current_client.enable_actual_inventory?(current_user) && @receipt.booking_detail_id.present? %>
+            <%= f.hidden_field :booking_detail_id %>
           <% end %>
           <% if i_agree_required %>
             <div class="form-group">
