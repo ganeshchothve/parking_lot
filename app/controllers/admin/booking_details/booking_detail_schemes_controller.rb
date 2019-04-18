@@ -134,9 +134,9 @@ class Admin::BookingDetails::BookingDetailSchemesController < AdminController
       BookingDetailScheme.where(project_unit_id: @project_unit.id).find(params[:id])
     end
   end
-  
+
   def modify_params
-    if params[:booking_detail_scheme][:payment_adjustments_attributes].present?
+    if params.dig(:booking_detail_scheme, :payment_adjustments_attributes).present?
       params[:booking_detail_scheme][:payment_adjustments_attributes].each do |key, value|
         if value[:name].blank? || (value[:formula].blank? && value[:absolute_value].blank?)
           params[:booking_detail_scheme][:payment_adjustments_attributes].delete key

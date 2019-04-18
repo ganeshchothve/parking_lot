@@ -45,12 +45,12 @@ class BookingDetail
   delegate :name, :blocking_amount, to: :project_unit, prefix: true, allow_nil: true
 
   scope :filter_by_name, ->(name) { where(name: ::Regexp.new(::Regexp.escape(name), 'i')) }
-  scope :filter_by_status, ->(status) { where(status: status) }  
+  scope :filter_by_status, ->(status) { where(status: status) }
   scope :filter_by_project_tower, ->(project_tower_id) { where(project_unit_id: { "$in": ProjectUnit.where(project_tower_id: project_tower_id).pluck(:_id) })}
   scope :filter_by_user, ->(user_id) { where(user_id: user_id)  }
   scope :filter_by_manager, ->(manager_id) {where(manager_id: manager_id) }
   default_scope -> {desc(:created_at)}
-  
+
 
   accepts_nested_attributes_for :notes
 
@@ -94,10 +94,28 @@ class BookingDetail
     Api::BookingDetailsSync.new(erp_model, self, sync_log).execute
   end
 
+  #
+  # Unit Auto Release is set on when unit moved form hold stage. This Auto release set as Todays date plus client blocking allows date. That time inform client about auto relase date.
+  #
+  #
+  # @return [Email Object]
+  #
+  def auto_released_extended_inform_buyer!
+    Email.create!({
+      booking_portal_client_id: project_unit.booking_portal_client_id,
+      email_template_id: Template::EmailTemplate.find_by(name: "auto_release_on_extended").id,
+      cc: [ project_unit.booking_portal_client.notification_email ],
+      recipients: [ user ],
+      cc_recipients: ( user.manager_id.present? ? [user.manager] : [] ),
+      triggered_by_id: project_unit.id,
+      triggered_by_type: project_unit.class.to_s
+    })
+  end
+
   class << self
 
     def user_based_scope(user, params = {})
-  
+
       custom_scope = {}
       if params[:user_id].blank? && !user.buyer?
         if user.role?('channel_partner')
@@ -113,32 +131,6 @@ class BookingDetail
       custom_scope = { user_id: params[:user_id] } if params[:user_id].present?
       custom_scope = { user_id: user.id } if user.buyer?
       custom_scope
-    end
-    def run_sync(project_unit_id, changes = {})
-      project_unit = ProjectUnit.find(project_unit_id)
-      changes = changes.with_indifferent_access
-      booking_detail = project_unit.booking_detail
-
-      if booking_detail.present? && booking_detail.status != 'cancelled'
-        if changes['status'].present? && %w[blocked booked_tentative booked_confirmed error].include?(changes['status'][0]) && %w[blocked booked_tentative booked_confirmed error].include?(project_unit.status)
-          booking_detail.status = project_unit.status
-        end
-
-        if changes['status'].present? && changes['status'][0] == 'under_negotiation' && project_unit.status == 'negotiation_failed'
-          booking_detail.status = project_unit.status
-        end
-
-        if changes['status'].present? && %w[blocked booked_tentative booked_confirmed error].include?(changes['status'][0]) && ProjectUnit.user_based_available_statuses(booking_detail.user).include?(project_unit.status)
-          booking_detail.status = 'cancelled'
-        end
-        if changes['user_kyc_ids'].present?
-          booking_detail.user_kyc_ids = project_unit.user_kyc_ids
-        end
-        if changes['receipt_ids'].present?
-          booking_detail.receipt_ids = project_unit.receipt_ids
-        end
-        booking_detail.save!
-      end
     end
   end
 end

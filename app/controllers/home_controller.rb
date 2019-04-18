@@ -61,6 +61,8 @@ class HomeController < ApplicationController
             @user.set_utm_params(cookies)
           end
           # RegistrationMailer.welcome(user, generated_password).deliver #TODO: enable this. We might not need this if we use otp based login
+          # RegistrationMailer.welcome(user, generated_password).deliver #TODO: enable this. We might not need this if we are to use otp based login
+
           respond_to do |format|
             if @user.save
               format.json { render json: {user: @user, success: 'User registration completed'}, status: :created }
@@ -73,3 +75,4 @@ class HomeController < ApplicationController
     end
   end
 end
+

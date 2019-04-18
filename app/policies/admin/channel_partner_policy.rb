@@ -9,7 +9,7 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
   end
 
   def create?
-    current_client.enable_channel_partners? && !user.present?
+    current_client.enable_channel_partners? && %w[admin channel_partner].include?(user.role)
   end
 
   def update?
