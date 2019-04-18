@@ -1,22 +1,8 @@
 class ClientPolicy < ApplicationPolicy
-  def edit?
-    user.role == "superadmin"
-  end
-
-  def new?
-    false
-  end
-
-  def create?
-    false
-  end
-
-  def asset_create?
-    create?
-  end
+  # def new? def create? def edit? def update? from ApplicationPolicy
 
   def update?
-    edit?
+    %w[admin superadmin].include?(user.role)
   end
 
   def permitted_attributes params={}

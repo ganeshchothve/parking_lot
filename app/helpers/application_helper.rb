@@ -75,7 +75,7 @@ module ApplicationHelper
         #{active_link_to 'T & C', dashboard_terms_and_condition_path, active: :exclusive, class: 'small nav-link'}
       </li>"
     end
-    if user_signed_in? && ClientPolicy.new(current_user, current_client).edit?
+    if user_signed_in? && policy([current_user_role_group, current_client]).edit?
       html += "<li class='nav-item #{classes}'>
         #{link_to('Edit ' + global_labels['client'], edit_admin_client_path, class: 'small nav-link modal-remote-form-link')}
       </li>"

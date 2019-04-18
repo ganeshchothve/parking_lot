@@ -8,6 +8,7 @@ class Receipt
   include ApplicationHelper
   include ReceiptStateMachine
   include SyncDetails
+  include TimeSlotGeneration
   extend FilterByCriteria
 
   OFFLINE_PAYMENT_MODE = %w[cheque rtgs imps card_swipe neft]
@@ -29,6 +30,8 @@ class Receipt
   field :gateway_response, type: Hash
   field :erp_id, type: String, default: ''
 
+  attr_accessor :swap_request_initiated
+
   belongs_to :user
   belongs_to :booking_detail, optional: true
   belongs_to :creator, class_name: 'User'
@@ -41,7 +44,6 @@ class Receipt
   scope :filter_by_status, ->(_status) { where(status: _status) }
   scope :filter_by_receipt_id, ->(_receipt_id) { where(receipt_id: /#{_receipt_id}/i) }
   scope :filter_by_user_id, ->(_user_id) { where(user_id: _user_id) }
-
   scope :filter_by_payment_mode, ->(_payment_mode) { where(payment_mode: _payment_mode) }
   scope :filter_by_issued_date, ->(date) { start_date, end_date = date.split(' - '); where(issued_date: start_date..end_date) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: start_date..end_date) }

@@ -7,14 +7,11 @@ class Admin::ClientsController < AdminController
     render layout: false
   end
 
-  def show
-  end
-
   def update
     @client.assign_attributes(permitted_attributes([:admin, @client]))
     respond_to do |format|
       if @client.save
-        format.html { redirect_to admin_clients_path, notice: 'Client successfully updated.' }
+        format.html { redirect_back fallback_location: root_path, notice: 'Client successfully updated.' }
         format.json { render json: @client }
       else
         format.html { render :edit }

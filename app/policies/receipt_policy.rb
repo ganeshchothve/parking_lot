@@ -7,7 +7,15 @@ class ReceiptPolicy < ApplicationPolicy
     current_client.enable_direct_payment? && new?
   end
 
-  def permitted_attributes(_params = {})
+  def update_token_number?
+    false
+  end
+
+  def edit_token_number?
+    update_token_number?
+  end
+
+  def permitted_attributes params={}
     attributes = []
     attributes += [:payment_mode] if record.new_record? || record.status == 'pending'
     if (record.user_id.present? && record.booking_detail_id.blank?) && %w[pending clearance_pending success available_for_refund].include?(record.status)

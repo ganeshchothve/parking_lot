@@ -18,6 +18,11 @@ FactoryBot.define do
     # gateway_response nil
     association :creator, factory: :user
     association :account, factory: :razorpay_payment
+
+    after(:build) do |receipt|
+      receipt.user = User.where(role: 'user').first || create(:user) if receipt.user.blank?
+      receipt.creator = User.first || create(:user) if receipt.creator.blank?
+    end
   end
 
   factory :check_payment, parent: :receipt do

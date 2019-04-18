@@ -3,6 +3,7 @@ class Client
   include Mongoid::Timestamps
   include ArrayBlankRejectable
   include InsertionStringMethods
+  include ConfigureTimeSlot
 
   field :name, type: String
   field :selldo_client_id, type: String
@@ -112,7 +113,6 @@ class Client
   validates :preferred_login, inclusion: {in: Proc.new{ Client.available_preferred_logins.collect{|x| x[:id]} } }
   validates :payment_gateway, inclusion: {in: Proc.new{ Client.available_payment_gateways.collect{|x| x[:id]} } }, allow_blank: true
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
-
   accepts_nested_attributes_for :address, :external_inventory_view_config
 
   def self.available_preferred_logins

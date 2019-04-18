@@ -5,6 +5,14 @@
       <%#= render 'breadcrumbs', {user: @user} %>
       <%= render 'users/overview', user: @user, labels: labels %>
       <div class="mt-3"></div>
+      <% if policy([:admin, TimeSlot]).index? %>
+        <div class="card mb-3">
+          <div class="card-header">Time Slot</div>
+          <div class="card-body">
+            <%= render "receipts/time_slot", receipts: @user.receipts %>
+          </div>
+        </div>
+      <% end %>
       <!-- Note Summary -->
       <div class="card">
         <div class="card-header">
