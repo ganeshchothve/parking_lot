@@ -8,9 +8,8 @@ class Admin::ClientPolicy < ClientPolicy
   def permitted_attributes(params = {})
     attributes = super
     if %w[admin superadmin].include?(user.role)
-      if Receipt.count > 0
-        attributes += [:enable_slot_generation] if record.enable_slot_generation
-      else
+      attributes += [:enable_slot_generation]
+      unless record.slot_start_date.present?
         attributes += %w[slot_start_date start_time end_time capacity duration enable_slot_generation]
       end
     end

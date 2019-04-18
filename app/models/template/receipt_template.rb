@@ -10,10 +10,10 @@ class Template::ReceiptTemplate < Template
               <td><%= labels["receipt_id"] %></td>
               <td class="text-right"><%= self.receipt_id %></td>
             </tr>
-            <% if self.project_unit_id.present? %>
+            <% if self.booking_detail_id.present? %>
             <tr>
               <td>Towards <%= labels["project_unit_id"] %></td>
-              <td class="text-right"><%= self.project_unit.name %></td>
+              <td class="text-right"><%= self.booking_detail.name %></td>
             </tr>
             <% end %>
             <tr>
@@ -70,7 +70,7 @@ class Template::ReceiptTemplate < Template
                <td>Token Number</td>
                <td class="text-right"><%= self.try(:token_number) ? self.get_token_number : "--" %></td>
              </tr>
-             <% if self.try(:time_slot) %>
+             <% if self.try(:time_slot) && self.user.booking_portal_client.enable_slot_generation %>
                <tr>
                  <td>Time Slot Date</td>
                  <td class="text-right"><%= self.time_slot.date.in_time_zone(self.user.time_zone).strftime("%d/%m/%Y") %></td>

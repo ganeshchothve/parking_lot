@@ -2,21 +2,33 @@ module TimeSlotGeneration
   extend ActiveSupport::Concern
   include ApplicationHelper
   included do
+
+    TOKEN_PREFIX = 'PC'
+
     # Fields
     field :token_number, type: Integer
 
-    increments :token_number, seed: 450
+    increments :token_number, seed: 300, auto: false
 
     # Callbacks
-    before_update -> { finalise_time_slot if current_client.enable_slot_generation? }
+    before_save -> { assign!(:token_number) if token_number.blank? && is_eligible_for_token_number_assignment? }
+    before_update -> { finalise_time_slot if is_eligible_for_token_number_assignment? && current_client.enable_slot_generation? }
 
     # Associations
     embeds_one :time_slot
     accepts_nested_attributes_for :time_slot, reject_if: :all_blank
   end
 
+  def is_eligible_for_token_number_assignment?
+    direct_payment? && status.in?(%w(clearance_pending success))
+  end
+
   def get_token_number
-    token_number.present? ? 'WOJ' + token_number.to_s : '--'
+    token_number.present? ? TOKEN_PREFIX + token_number.to_s : '--'
+  end
+
+  def set_time_slot
+    self.set(time_slot: calculate_time_slot) if token_number
   end
 
   def calculate_time_slot
