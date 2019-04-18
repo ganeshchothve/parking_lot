@@ -9,6 +9,7 @@ en:
     formats:
       default: "%d/%m/%Y %I:%M %p"
   global:
+    booking_details: 'Bookings'
     action: 'Action'
     total: 'Total'
     sign_in_h1: "Welcome back"
@@ -310,6 +311,8 @@ en:
         success: 'Your Booking is hold. Please select Scheme and go for Payment.'
       gateway_payment:
         receipt_missing: 'Requested receipt not in pending.'
+  user_kycs:
+    link_name: 'KYCs'
   smses:
     link_name: "SMS"
     status:
