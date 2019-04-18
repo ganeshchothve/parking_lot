@@ -285,6 +285,9 @@ en:
         country: 'Country'
         zip: 'Zip / Pin Code'
   controller:
+    booking_detail_schemes: 
+      scheme_approved: 'Scheme applied successfully, please check cost sheet.'
+      scheme_under_negotiation: 'Scheme registered successfully and sent for approval.'
     project_units:
       unit_released: "The unit has been successfully released."
     booking_details:

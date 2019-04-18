@@ -45,7 +45,6 @@ class ProjectUnitObserver < Mongoid::Observer
   end
 
   def after_update project_unit
-    user = project_unit.user
     # if project_unit.status_changed? && ProjectUnit.booking_stages.include?(project_unit.status)
     
       # if !Rails.env.development?
@@ -55,6 +54,7 @@ class ProjectUnitObserver < Mongoid::Observer
 
     if project_unit.auto_release_on_changed? && project_unit.auto_release_on.present? && project_unit.auto_release_on_was.present?
       if project_unit.booking_portal_client.email_enabled?
+        user = project_unit.booking_detail.user
         Email.create!({
           booking_portal_client_id: user.booking_portal_client_id,
           email_template_id:Template::EmailTemplate.find_by(name: "auto_release_on_extended").id,
