@@ -3,7 +3,7 @@ module TimeSlotGeneration
   include ApplicationHelper
   included do
 
-    TOKEN_PREFIX = 'PC'
+    TOKEN_PREFIX = 'TKN'
 
     # Fields
     field :token_number, type: Integer
@@ -11,7 +11,7 @@ module TimeSlotGeneration
     increments :token_number, seed: 300, auto: false
 
     # Callbacks
-    before_save -> { assign!(:token_number) if token_number.blank? && is_eligible_for_token_number_assignment? }
+    before_save -> { assign!(:token_number) if current_client.enable_slot_generation? && token_number.blank? && is_eligible_for_token_number_assignment? }
     before_update -> { finalise_time_slot if is_eligible_for_token_number_assignment? && current_client.enable_slot_generation? }
 
     # Associations

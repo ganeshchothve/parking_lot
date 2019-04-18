@@ -40,7 +40,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
   end
 
   def update_token_number?
-    %w[admin superadmin gre sales sales_admin].include?(user.role)
+    current_client.enable_slot_generation? && %w[admin superadmin gre sales sales_admin].include?(user.role)
   end
 
   def resend_success?

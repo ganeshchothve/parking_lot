@@ -1,5 +1,5 @@
 class Buyer::TimeSlotPolicy < TimeSlotPolicy
   def index?
-    user.buyer?
+    super && user.buyer?
   end
 end

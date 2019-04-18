@@ -6,7 +6,9 @@
       <tr>
         <th><%= labels[:user_id] %></th>
         <th><%= labels[:receipt_id] %> & Details</th>
-        <th>Token Number</th>
+        <% if current_client.enable_slot_generation? %>
+          <th>Token Number</th>
+        <% end %>
         <th><%= labels['status'] %></th>
         <th class="text-right"><%= labels['total_amount'] %></th>
         <th class="text-right"></th>
@@ -46,7 +48,9 @@
             <div>Payment: <%= Receipt.available_payment_modes.find{|x| x[:id] == receipt.payment_mode}[:text] %></div>
           </div>
         </td>
-        <td><%= receipt.try(:token_number) ? receipt.get_token_number : '--' %></td>
+        <% if current_client.enable_slot_generation? %>
+          <td><%= receipt.try(:token_number) ? receipt.get_token_number : '--' %></td>
+        <% end %>
         <td><%= receipt.status.titleize %></td>
         <td class="text-right"><%= number_to_indian_currency(receipt.total_amount.round) %></td>
         <td class="text-right">
