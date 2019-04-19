@@ -25,7 +25,7 @@ class Admin::SchemesController < AdminController
     @scheme = Scheme.new(created_by: current_user, booking_portal_client_id: current_user.booking_portal_client_id)
     modify_params
     @scheme.assign_attributes(permitted_attributes([:admin, @scheme]))
-    
+
     respond_to do |format|
       if @scheme.save
         format.html { redirect_to admin_schemes_path, notice: 'Scheme registered successfully and sent for approval.' }

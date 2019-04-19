@@ -13,8 +13,12 @@ module CostCalculator
     agreement_price > 5000000 ? 0.099 : 0.1
   end
 
+  def pending_balance
+    booking_detail.try(:pending_balance).to_f
+  end
+
   # def pending_balance(options={})
-  #   strict = options[:strict] || false 
+  #   strict = options[:strict] || false
   #   user_id = options[:user_id] || self.user_id
   #   if user_id.present?
   #     receipts_total = Receipt.where(user_id: user_id, project_unit_id: self.id)

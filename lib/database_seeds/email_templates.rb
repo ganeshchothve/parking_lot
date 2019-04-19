@@ -39,7 +39,7 @@ module DatabaseSeeds
                   <div class="form-group">
                     <label>Status</label>
                     <div>
-                      <%= ProjectUnit.available_statuses.find{|x| x[:id] == self.status}[:text] %>
+                      <%= t("booking_details.status.#{self.status}") %>
                     </div>
                   </div>
                 </td>

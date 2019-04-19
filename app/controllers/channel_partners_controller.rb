@@ -2,7 +2,7 @@ class ChannelPartnersController < ApplicationController
   before_action :authenticate_user!, except: %i[new create]
   before_action :set_channel_partner, only: %i[show edit update destroy]
   around_action :apply_policy_scope
-  before_action :authorize_resource
+  before_action :authorize_resource, except: [:new, :create]
 
   layout :set_layout
 
