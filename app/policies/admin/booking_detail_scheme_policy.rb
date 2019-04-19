@@ -21,7 +21,7 @@ class Admin::BookingDetailSchemePolicy < BookingDetailSchemePolicy
   end
 
   def edit?
-    if only_for_admin! && enable_actual_inventory? && is_derived_from_scheme_approved? && check_booking_detail_state
+    if only_for_admin! && enable_actual_inventory? && is_derived_from_scheme_approved? && check_booking_detail_state?
       case user.role
       when 'admin', 'sales', 'sales_admin', 'crm', 'superadmin' 
         true
