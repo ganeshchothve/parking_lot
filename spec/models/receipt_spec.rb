@@ -420,6 +420,29 @@ RSpec.describe Receipt, type: :model do
           expect(receipt.time_slot).to be_nil
         end
       end
+
+      context 'Token number updated to value greater than auto incrementer then' do
+        before(:each) do
+          @client = Client.first
+          @client.start_time = Time.zone.parse('2019-03-05 10:00')
+          @client.end_time = Time.zone.parse('2019-03-05 11:00')
+          @client.capacity = 2
+          @client.duration = 45
+          @client.slot_start_date = Date.current
+          @client.enable_slot_generation = true
+          @client.save
+        end
+
+        it 'should skip token numbers if they are already present in the system' do
+          Receipt.class_eval do
+            increments :token_number, seed: 100, auto: false
+          end
+          receipt = create(:receipt, status: 'success')
+          receipt.update(token_number: 102)
+          receipt2 = create(:receipt, status: 'success')
+          expect(receipt2.token_number).to eq(103)
+        end
+      end
     end
   end
 end

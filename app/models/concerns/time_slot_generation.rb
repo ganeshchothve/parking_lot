@@ -29,6 +29,9 @@ module TimeSlotGeneration
       # Case when token number is made blank after its assigned, do not assign token again in this case as it is intentionally kept blank by admin.
       if !(token_number_changed? && token_number_was.present? && token_number.blank?) && (token_number.blank? && is_eligible_for_token_number_assignment? && current_client.enable_slot_generation?)
         assign!(:token_number)
+        while Receipt.where(token_number: token_number).any?
+          increment!(:token_number, Receipt.incrementing_fields[:token_number])
+        end
         self.time_slot = calculate_time_slot
         # for reference, if the token has been made blank by the admin.
         self[:_token_number] = token_number
