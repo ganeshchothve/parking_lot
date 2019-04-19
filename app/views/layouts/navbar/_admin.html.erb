@@ -28,9 +28,9 @@
   </li>
 <% end %>
 
-<% if policy([:admin, UserKyc]).index? %>
+<% if policy([:admin, BookingDetail]).index? %>
   <li class="nav-item">
-    <%= active_link_to t('global.user_kycs'), admin_user_kycs_path, active: :inclusive, class: "nav-link" %>
+    <%= active_link_to t('global.booking_details'), admin_booking_details_path, active: :inclusive, class: "nav-link" %>
   </li>
 <% end %>
 

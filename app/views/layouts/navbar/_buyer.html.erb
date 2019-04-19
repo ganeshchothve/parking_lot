@@ -22,9 +22,9 @@
   </li>
 <% end %>
 
-<% if policy([:buyer, UserKyc]).index? %>
+<% if policy([:buyer, BookingDetail]).index? %>
   <li class="nav-item">
-    <%= active_link_to t('global.user_kycs'), buyer_user_kycs_path, active: :inclusive, class: "nav-link" %>
+    <%= active_link_to t('global.booking_details'), buyer_booking_details_path, active: :inclusive, class: "nav-link" %>
   </li>
 <% end %>
 

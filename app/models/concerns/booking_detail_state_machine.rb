@@ -49,6 +49,7 @@ module BookingDetailStateMachine
       event :scheme_approved, after: %i[after_scheme_approved_event  update_selldo!] do
         transitions from: :scheme_approved, to: :scheme_approved
         transitions from: :under_negotiation, to: :scheme_approved
+        transitions from: :scheme_rejected, to: :scheme_approved
       end
 
       event :scheme_rejected, after: %i[after_scheme_rejected_event  update_selldo!] do
