@@ -2,10 +2,10 @@ module Booking
   def booking_under_negotiation (user,project_unit = nil, receipt = nil)
     project_unit ||= create(:project_unit)
     kyc = user.user_kycs.first || create(:user_kyc, creator_id: user.id, user: user)
-    project_unit.assign_attributes(user_id: user.id, primary_user_kyc_id: kyc.id, status: 'blocked')
+    project_unit.assign_attributes(user_id: user.id, status: 'blocked')
     project_unit.save
     search = create(:search, user_id: user.id, project_unit_id: project_unit.id)
-    booking_detail = create(:booking_detail, primary_user_kyc_id: project_unit.primary_user_kyc_id, project_unit_id: project_unit.id, user_id: user.id, search: search)
+    booking_detail = create(:booking_detail, primary_user_kyc_id: kyc.id, project_unit_id: project_unit.id, user_id: user.id, search: search)
     @booking_detail_scheme = create(:booking_detail_scheme)
     booking_detail.under_negotiation!
     booking_detail
@@ -23,10 +23,10 @@ module Booking
       receipt_amount = nil
     end
 
-    project_unit.assign_attributes(user_id: user.id, primary_user_kyc_id: kyc.id, status: status)
+    project_unit.assign_attributes(user_id: user.id, status: status)
     project_unit.save
     search = create(:search, user_id: user.id, project_unit_id: project_unit.id)
-    booking_detail = create(:booking_detail, primary_user_kyc_id: project_unit.primary_user_kyc_id, status: project_unit.status, project_unit_id: project_unit.id, user_id: user.id, search: search)
+    booking_detail = create(:booking_detail, primary_user_kyc_id: kyc.id, status: project_unit.status, project_unit_id: project_unit.id, user_id: user.id, search: search)
     booking_detail_scheme = create(:booking_detail_scheme, booking_detail: booking_detail, status: 'approved')
     if receipt_amount
       receipt = receipt ? receipt.set(booking_detail_id: booking_detail.id) : create(:check_payment, user_id: user.id, total_amount: receipt_amount, status: 'success', booking_detail_id: booking_detail.id)
