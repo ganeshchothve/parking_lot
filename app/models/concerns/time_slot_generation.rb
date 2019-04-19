@@ -11,12 +11,29 @@ module TimeSlotGeneration
     increments :token_number, seed: 300, auto: false
 
     # Callbacks
-    before_save -> { assign!(:token_number) if current_client.enable_slot_generation? && token_number.blank? && is_eligible_for_token_number_assignment? }
+    before_save :assign_token_number
     before_update -> { finalise_time_slot if is_eligible_for_token_number_assignment? && current_client.enable_slot_generation? }
 
     # Associations
     embeds_one :time_slot
     accepts_nested_attributes_for :time_slot, reject_if: :all_blank
+  end
+
+  def assign_token_number
+    # Checks to handle following case:
+    #   receipt is in clearance_pending & token number is assigned.
+    #   admin made it blank afterwards & saved it.
+    #   receipt goes in success from clearance_pending, then in this case do not assign token again as it was intentionally kept blank by admin. He can assign new token again if he wants.
+    #   :_token_number is an internal dynamic field kept for reference to know if the token number is being assigned for the first time or it was made blank after assigning on receipt.
+    if token_number_changed? || (status_changed? && status.in?(%w(clearance_pending success)) && !(self[:_token_number].present? && token_number.blank?))
+      # Case when token number is made blank after its assigned, do not assign token again in this case as it is intentionally kept blank by admin.
+      if !(token_number_changed? && token_number_was.present? && token_number.blank?) && (token_number.blank? && is_eligible_for_token_number_assignment? && current_client.enable_slot_generation?)
+        assign!(:token_number)
+        self.time_slot = calculate_time_slot
+        # for reference, if the token has been made blank by the admin.
+        self[:_token_number] = token_number
+      end
+    end
   end
 
   def is_eligible_for_token_number_assignment?
