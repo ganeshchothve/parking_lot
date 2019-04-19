@@ -286,7 +286,7 @@ en:
         country: 'Country'
         zip: 'Zip / Pin Code'
   controller:
-    booking_detail_schemes: 
+    booking_detail_schemes:
       scheme_approved: 'Scheme applied successfully, please check cost sheet.'
       scheme_under_negotiation: 'Scheme registered successfully and sent for approval.'
     project_units:
@@ -357,6 +357,8 @@ en:
       management_user: 'Management User'
       employee_user: 'Employee'
   user_requests:
+    swap: 'Swap'
+    cancellation: 'Cancellation'
     status:
       pending: 'Pending'
       processing: 'Processing'

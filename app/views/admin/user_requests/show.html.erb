@@ -3,43 +3,43 @@
     <div class="col-md-12">
       <%= render 'admin/user_requests/detail', user_request: @user_request %>
       <div class="mt-3"></div>
-      <div class="row">
-      	<div class="col">
-      		<%= render 'dashboard/booking_detail_overview', {booking_detail: @user_request.booking_detail, with_actions: true } %>
-      	</div>
-      	<% if @user_request._type == "UserRequest::Swap" && @user_request.resolved? %>
-      	  <% if @user_request.alternate_project_unit.booking_detail.present? %>
-		      	<div class="col">
-		      		<%= render 'dashboard/booking_detail_overview', {booking_detail: @user_request.alternate_project_unit.booking_detail, with_actions: true } %>
-		      	</div>
-		      <% end %>
-		    <% end %>
-      </div>
-      <div class="mt-3"></div>
-      <div class="row">
-      	<div class="col">
-      		<div class="card">
-            <div class="card-header">
-            	<h5> Payment Details</h5>
-            </div>
-	            <div class="card-body">
-	      		    <%= render 'receipts/index', {receipts: @user_request.booking_detail.receipts.paginate(page:1, per_page: 1000)} %>
-	      		  </div>
-      		  </div>
-      		</div>
-      	<% if @user_request._type == "UserRequest::Swap" && @user_request.resolved? %>
-	      	<div class="col">
-	      		<div class="card">
-              <div class="card-header">
-            	<h5> Payment Details</h5>
-              </div>
-		          <div class="card-body">
-		      		  <%= render 'receipts/index', {receipts: @user_request.alternate_project_unit.booking_detail.receipts.paginate(page: 1, per_page: 1000)} %>
-		      	  </div>
-		      	</div>
-		      </div>
-	      <% end %>
-      </div>
     </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <%= render 'dashboard/booking_detail_overview', {booking_detail: @user_request.booking_detail, with_actions: true } %>
+    </div>
+    <% if @user_request._type == "UserRequest::Swap" && @user_request.resolved? %>
+      <% if @user_request.alternate_project_unit.booking_detail.present? %>
+        <div class="col">
+          <%= render 'dashboard/booking_detail_overview', {booking_detail: @user_request.alternate_project_unit.booking_detail, with_actions: true } %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+  <div class="mt-3"></div>
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <h5> Payment Details</h5>
+        </div>
+          <div class="card-body">
+            <%= render 'receipts/index', {receipts: @user_request.booking_detail.receipts.paginate(page:1, per_page: 1000)} %>
+          </div>
+        </div>
+      </div>
+    <% if @user_request._type == "UserRequest::Swap" && @user_request.resolved? %>
+      <div class="col">
+        <div class="card">
+          <div class="card-header">
+          <h5> Payment Details</h5>
+          </div>
+          <div class="card-body">
+            <%= render 'receipts/index', {receipts: @user_request.alternate_project_unit.booking_detail.receipts.paginate(page: 1, per_page: 1000)} %>
+          </div>
+        </div>
+      </div>
+    <% end %>
   </div>
 </div>

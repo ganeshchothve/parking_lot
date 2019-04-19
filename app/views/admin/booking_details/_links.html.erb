@@ -55,6 +55,7 @@
       <%= link_to "Resync", resync_admin_sync_log_path(booking_detail.sync_logs.desc(:created_at)[0]), class: "btn btn-primary d-print-none"%>
     <% end %>
   </div>
+</div>
 
 <% if booking_detail.project_unit.assets.present? %>
   <%= render 'project_units/assets_in_modal', project_unit: booking_detail.project_unit %>
