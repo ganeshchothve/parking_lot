@@ -33,7 +33,7 @@ RSpec.describe UserRequests::SwapProcess, type: :worker do
           UserRequests::SwapProcess.new.perform(@user_request.id)
           expect(@user_request.reload.status).to eq('rejected')
           expect(@booking_detail.reload.status).to eq('blocked')
-          expect(@user_request.reason_for_failure).to include('Alter native unit is not available for swapping.')
+          expect(@user_request.reason_for_failure).to include('Alternative unit is not available for swapping.')
         end
       end
 
@@ -64,9 +64,9 @@ RSpec.describe UserRequests::SwapProcess, type: :worker do
           expect(@booking_detail.reload.status).to eq('swapped')
           expect(@booking_detail.receipts.pluck(:status)).to eq(["cancelled"])
 
+          expect(@alternate_project_unit.reload.booking_detail.status).to eq('blocked')
+          expect(@alternate_project_unit.reload.booking_detail.receipts.pluck(:status)).to eq(['success'])
           expect(@alternate_project_unit.reload.status).to eq('blocked')
-          expect(@alternate_project_unit.booking_detail.status).to eq('blocked')
-          expect(@alternate_project_unit.booking_detail.receipts.pluck(:status)).to eq(['success'])
         end
       end
 
