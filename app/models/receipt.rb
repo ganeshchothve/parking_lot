@@ -2,6 +2,7 @@ require 'autoinc'
 class Receipt
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Attributes::Dynamic
   include Mongoid::Autoinc
   include ArrayBlankRejectable
   include InsertionStringMethods

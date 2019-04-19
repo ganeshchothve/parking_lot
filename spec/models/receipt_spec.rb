@@ -130,18 +130,13 @@ RSpec.describe Receipt, type: :model do
 
     describe 'time slot generation' do
 
-      it 'should have token number starting from 451' do
-        @receipt = create(:receipt)
-        expect(@receipt.token_number).to be(451)
-      end
-
       it 'should generate time slot if enable time slot is true' do
         @client1 = Client.first
         @client1.start_time = Time.zone.parse('2019-03-01 10:00')
         @client1.end_time = Time.zone.parse('2019-03-01 11:00')
         @client1.capacity = 2
         @client1.duration = 30
-        @client1.slot_start_date = Time.zone.parse('2019-03-01')
+        @client1.slot_start_date = Date.current
         @client1.enable_slot_generation = true
         @client1.save
         @receipt = create(:receipt)
@@ -155,7 +150,7 @@ RSpec.describe Receipt, type: :model do
         @client2.end_time = Time.zone.parse('2019-03-01 11:00')
         @client2.capacity = 2
         @client2.duration = 30
-        @client2.slot_start_date = Time.zone.parse('2019-03-01')
+        @client2.slot_start_date = Date.current
         @client2.enable_slot_generation = false
         @client2.save
         @receipt2 = create(:receipt)
@@ -169,7 +164,7 @@ RSpec.describe Receipt, type: :model do
         @client1.end_time = Time.zone.parse('2019-03-01 11:00')
         @client1.capacity = 2
         @client1.duration = 30
-        @client1.slot_start_date = Time.zone.parse('2019-03-01')
+        @client1.slot_start_date = Date.current
         @client1.enable_slot_generation = true
         @client1.save
         @receipt4 = create(:receipt)
@@ -186,7 +181,7 @@ RSpec.describe Receipt, type: :model do
         @client1.end_time = Time.zone.parse('2019-03-01 11:00')
         @client1.capacity = 2
         @client1.duration = 30
-        @client1.slot_start_date = Time.zone.parse('2019-03-01')
+        @client1.slot_start_date = Date.current
         @client1.enable_slot_generation = true
         @client1.save
         @receipt6 = create(:receipt)
@@ -204,7 +199,7 @@ RSpec.describe Receipt, type: :model do
           @client3.end_time = Time.zone.parse('2019-03-05 11:00')
           @client3.capacity = 2
           @client3.duration = 30
-          @client3.slot_start_date = Time.zone.parse('2019-03-05')
+          @client3.slot_start_date = Date.current
           @client3.enable_slot_generation = true
           @client3.save
         end
@@ -218,10 +213,10 @@ RSpec.describe Receipt, type: :model do
           @receipt11.update(status: "success")
           @receipt10.time_slot.start_time.strftime("%I:%M %p").should eql("10:00 AM")
           @receipt10.time_slot.end_time.strftime("%I:%M %p").should eql("10:30 AM")
-          @receipt10.time_slot.date.strftime('%d/%m/%Y').should eql("05/03/2019")
+          @receipt10.time_slot.date.strftime('%d/%m/%Y').should eql(Date.current.strftime('%d/%m/%Y'))
           @receipt11.time_slot.start_time.strftime("%I:%M %p").should eql("10:00 AM")
           @receipt11.time_slot.end_time.strftime("%I:%M %p").should eql("10:30 AM")
-          @receipt11.time_slot.date.strftime('%d/%m/%Y').should eql("05/03/2019")
+          @receipt11.time_slot.date.strftime('%d/%m/%Y').should eql(Date.current.strftime('%d/%m/%Y'))
         end
 
         it 'token number 3, 4' do
@@ -233,10 +228,10 @@ RSpec.describe Receipt, type: :model do
           @receipt13.update(status: "success")
           @receipt12.time_slot.start_time.strftime("%I:%M %p").should eql("10:30 AM")
           @receipt12.time_slot.end_time.strftime("%I:%M %p").should eql("11:00 AM")
-          @receipt12.time_slot.date.strftime('%d/%m/%Y').should eql("05/03/2019")
+          @receipt12.time_slot.date.strftime('%d/%m/%Y').should eql(Date.current.strftime('%d/%m/%Y'))
           @receipt13.time_slot.start_time.strftime("%I:%M %p").should eql("10:30 AM")
           @receipt13.time_slot.end_time.strftime("%I:%M %p").should eql("11:00 AM")
-          @receipt13.time_slot.date.strftime('%d/%m/%Y').should eql("05/03/2019")
+          @receipt13.time_slot.date.strftime('%d/%m/%Y').should eql(Date.current.strftime('%d/%m/%Y'))
         end
 
         it 'token number 5' do
@@ -245,7 +240,7 @@ RSpec.describe Receipt, type: :model do
           @receipt14.update(status: "success")
           @receipt14.time_slot.start_time.strftime("%I:%M %p").should eql("10:00 AM")
           @receipt14.time_slot.end_time.strftime("%I:%M %p").should eql("10:30 AM")
-          @receipt14.time_slot.date.strftime('%d/%m/%Y').should eql("06/03/2019")
+          @receipt14.time_slot.date.strftime('%d/%m/%Y').should eql((Date.current+1.day).strftime('%d/%m/%Y'))
         end
       end
 
@@ -256,7 +251,7 @@ RSpec.describe Receipt, type: :model do
           @client4.end_time = Time.zone.parse('2019-03-05 11:00')
           @client4.capacity = 1
           @client4.duration = 45
-          @client4.slot_start_date = Time.zone.parse('2019-03-05')
+          @client4.slot_start_date = Date.current
           @client4.enable_slot_generation = true
           @client4.save
         end
@@ -270,10 +265,10 @@ RSpec.describe Receipt, type: :model do
           @receipt16.update(status: "success")
           @receipt15.time_slot.start_time.strftime("%I:%M %p").should eql("10:00 AM")
           @receipt15.time_slot.end_time.strftime("%I:%M %p").should eql("10:45 AM")
-          @receipt15.time_slot.date.strftime('%d/%m/%Y').should eql("10/03/2019")
+          @receipt15.time_slot.date.strftime('%d/%m/%Y').should eql((Date.current+5.days).strftime('%d/%m/%Y'))
           @receipt16.time_slot.start_time.strftime("%I:%M %p").should eql("10:00 AM")
           @receipt16.time_slot.end_time.strftime("%I:%M %p").should eql("10:45 AM")
-          @receipt16.time_slot.date.strftime('%d/%m/%Y').should eql("11/03/2019")
+          @receipt16.time_slot.date.strftime('%d/%m/%Y').should eql((Date.current+6.days).strftime('%d/%m/%Y'))
         end
       end
 
@@ -284,7 +279,7 @@ RSpec.describe Receipt, type: :model do
           @client5.end_time = Time.zone.parse('2019-03-05 11:00')
           @client5.capacity = 2
           @client5.duration = 45
-          @client5.slot_start_date = Time.zone.parse('2019-03-05')
+          @client5.slot_start_date = Date.current
           @client5.enable_slot_generation = true
           @client5.save
         end
@@ -298,10 +293,10 @@ RSpec.describe Receipt, type: :model do
           @receipt17.update(status: "success")
           @receipt16.time_slot.start_time.strftime("%I:%M %p").should eql("10:00 AM")
           @receipt16.time_slot.end_time.strftime("%I:%M %p").should eql("10:45 AM")
-          @receipt16.time_slot.date.strftime('%d/%m/%Y').should eql("08/03/2019")
+          @receipt16.time_slot.date.strftime('%d/%m/%Y').should eql((Date.current+3.days).strftime('%d/%m/%Y'))
           @receipt17.time_slot.start_time.strftime("%I:%M %p").should eql("10:00 AM")
           @receipt17.time_slot.end_time.strftime("%I:%M %p").should eql("10:45 AM")
-          @receipt17.time_slot.date.strftime('%d/%m/%Y').should eql("09/03/2019")
+          @receipt17.time_slot.date.strftime('%d/%m/%Y').should eql((Date.current+4.days).strftime('%d/%m/%Y'))
         end
       end
 
@@ -312,7 +307,7 @@ RSpec.describe Receipt, type: :model do
           @client6.end_time = Time.zone.parse('2019-03-01 11:00')
           @client6.capacity = 2
           @client6.duration = 45
-          @client6.slot_start_date = Time.zone.parse('2019-03-01')
+          @client6.slot_start_date = Date.current - 1.day
           @client6.enable_slot_generation = true
           @client6.save
         end
@@ -371,7 +366,7 @@ RSpec.describe Receipt, type: :model do
           @client7.end_time = Time.zone.parse('2019-03-05 11:00')
           @client7.capacity = 2
           @client7.duration = 45
-          @client7.slot_start_date = Time.zone.parse('2019-03-05')
+          @client7.slot_start_date = Date.current
           @client7.enable_slot_generation = true
           @client7.save
         end
@@ -390,12 +385,39 @@ RSpec.describe Receipt, type: :model do
         it 'token number nil and not changed' do
           @receipt50 = create(:receipt)
           @receipt50.update(status: "success")
-          @receipt50.save
           @receipt50.set(token_number: nil)
           @receipt50.set(time_slot: nil)
           @receipt50.update(comments: "hii")
           @receipt50.save
           expect(@receipt50.time_slot.present?).to be(false)
+        end
+      end
+
+      context 'Case: Token number made blank after assignment in clearance_pending state & moving receipt to success afterwards' do
+        before(:each) do
+          @client = Client.first
+          @client.start_time = Time.zone.parse('2019-03-05 10:00')
+          @client.end_time = Time.zone.parse('2019-03-05 11:00')
+          @client.capacity = 2
+          @client.duration = 45
+          @client.slot_start_date = Date.current
+          @client.enable_slot_generation = true
+          @client.save
+        end
+
+        it 'should not assign token number again' do
+          receipt = create(:receipt)
+          # token should get assigned here
+          receipt.update(status: 'clearance_pending')
+          expect(receipt.token_number).to be_present
+          expect(receipt.time_slot).to be_present
+          # token should get blank along with time slot.
+          receipt.update(token_number: nil)
+          expect(receipt.time_slot).to be_nil
+          # token should not get assigned again on success as it was made blank manually earlier.
+          receipt.update(status: 'success')
+          expect(receipt.token_number).to be_nil
+          expect(receipt.time_slot).to be_nil
         end
       end
     end
