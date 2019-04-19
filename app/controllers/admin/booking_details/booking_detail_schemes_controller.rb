@@ -66,7 +66,7 @@ class Admin::BookingDetails::BookingDetailSchemesController < AdminController
         _action = 'save'
       end
       if @booking_detail_scheme.send(_action)
-        format.html { redirect_to request.referrer || root_path, notice: @booking_detail_scheme.status == 'approved' ?t('controller.booking_detail_schemes.scheme_approved') : t('controller.booking_detail_schemes.scheme_under_negotiation') }
+        format.html { redirect_to request.referrer || root_path, notice: @booking_detail_scheme.approved? ? t('controller.booking_detail_schemes.scheme_approved') : t('controller.booking_detail_schemes.scheme_under_negotiation') }
         format.json { render json: @booking_detail_scheme, status: :created }
       else
         format.html { render :new }
@@ -106,7 +106,7 @@ class Admin::BookingDetails::BookingDetailSchemesController < AdminController
         _action = 'save'
       end
       if @booking_detail_scheme.send(_action)
-        format.html { redirect_to request.referrer || root_path , notice: @booking_detail_scheme.status == 'approved' ?t('controller.booking_detail_schemes.scheme_approved') : t('controller.booking_detail_schemes.scheme_under_negotiation') }
+        format.html { redirect_to request.referrer || root_path , notice: @booking_detail_scheme.approved? ? t('controller.booking_detail_schemes.scheme_approved') : t('controller.booking_detail_schemes.scheme_under_negotiation') }
       else
         format.html { render :edit }
         format.json { render json: @booking_detail_scheme.errors, status: :unprocessable_entity }
@@ -118,7 +118,7 @@ class Admin::BookingDetails::BookingDetailSchemesController < AdminController
 
 
   def set_booking_detail
-    @booking_detail = BookingDetail.find(params[:booking_detail_id]) if params[:booking_detail_id].present?
+    @booking_detail = BookingDetail.where( id: params[:booking_detail_id]).first if params[:booking_detail_id].present?
     redirect_to root_path, alert: t('controller.booking_details.set_booking_detail_missing'), status: 404 if @booking_detail.blank?
   end
 

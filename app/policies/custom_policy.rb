@@ -37,8 +37,7 @@ class CustomPolicy < Struct.new(:user, :enable_users)
   end
 
   def user_kycs?
-    return true
-    %w[admin ].include?(user.role)
+    "#{user.buyer? ? 'Buyer' : 'Admin'}::UserKycPolicy".constantize.new(user, UserKyc).index?
   end
 
   def self.custom_methods
