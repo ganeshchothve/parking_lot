@@ -1,4 +1,4 @@
-# UserRequests::Swapped
+# UserRequests::SwapProcess
 module UserRequests
   class SwapProcess
     include Sidekiq::Worker
@@ -14,9 +14,10 @@ module UserRequests
           @current_project_unit = @current_booking_detail.project_unit
           resolve!
         else
-          reject_user_request('Alter native unit is not available for swapping.')
+          reject_user_request('Alternative unit is not available for swapping.')
         end
       else
+
         reject_user_request('Booking Is not available for swapping.')
       end
     end
@@ -57,9 +58,11 @@ module UserRequests
 
     # When processing fails the old project unit is restored to its previous state, booking detail is marked as swap rejected and then appropriate state, user request is rejected
     def reject_user_request(error_messages, alternate_project_unit_status=nil, new_booking_detail=nil)
-      new_booking_detail.destroy if new_booking_detail.present?
+      new_booking_detail ||= current_booking_detail.related_booking_details.where(project_unit_id: alternate_project_unit.id).first
+      new_booking_detail.destroy
 
-      alternate_project_unit.set(status: alternate_project_unit_status) if alternate_project_unit_status
+      alternate_project_unit.make_available
+      alternate_project_unit.save
 
       user_request.reason_for_failure = error_messages
 

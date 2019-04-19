@@ -170,6 +170,7 @@ module BookingDetailStateMachine
     def after_blocked_event
       _project_unit = project_unit
       _project_unit.blocked_on = Date.today
+      _project_unit.auto_release_on ||= Date.today
       _project_unit.auto_release_on +=  _project_unit.blocking_days.days
       _project_unit.save
       auto_released_extended_inform_buyer!

@@ -80,13 +80,15 @@ module UserRequestStateMachine
     end
 
     def update_booking_detail_to_cancelling
-      booking_detail.cancelling!
-      UserRequests::CancellationProcess.perform_async(id)
+      if booking_detail.cancelling!
+        UserRequests::CancellationProcess.perform_async(id)
+      end
     end
 
     def update_booking_detail_to_swapping
-      booking_detail.swapping!
-      UserRequests::SwapProcess.perform_async(id)
+      if booking_detail.swapping!
+        UserRequests::SwapProcess.perform_async(id)
+      end
     end
   end
 end
