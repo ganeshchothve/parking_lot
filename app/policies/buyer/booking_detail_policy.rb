@@ -1,5 +1,9 @@
 class Buyer::BookingDetailPolicy < BookingDetailPolicy
 
+  def index?
+    true
+  end
+
   def booking?
     true
   end

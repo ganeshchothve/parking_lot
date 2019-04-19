@@ -1,8 +1,7 @@
 <div class="form-group">
-
   <%= f.label :derived_from_scheme_id, class: 'control-label' %>
-  <% p = {fltrs: { project_tower: booking_detail.project_unit.project_tower_id, can_be_applied_by: current_user.role, user_role: booking_detail.user.role, user_id: booking_detail.user_id, status: 'approved' } }%>
-  <%= f.select :derived_from_scheme_id,options_from_collection_for_select(Scheme.build_criteria(p), 'id', 'name'), {prompt: true}, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_schemes_path, params: p }%>
+  <% scheme_option_params = {fltrs: { project_tower: booking_detail.project_unit.project_tower_id, can_be_applied_by: current_user.role, user_role: booking_detail.user.role, user_id: booking_detail.user_id, status: 'approved' } }%>
+  <%= f.select :derived_from_scheme_id, options_from_collection_for_select(Scheme.build_criteria(p), 'id', 'name', f.object.derived_from_scheme_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_schemes_path, params: scheme_option_params }%>
 
 </div>
 <%= f.hidden_field :booking_detail_id %>
@@ -27,9 +26,6 @@
   <% end %>
 </div>
 <% editable_payment_adjustment = policy([ current_user_role_group, booking_detail_scheme]).editable_field?("payment_adjustments_attributes") %>
-<% if editable_payment_adjustment %>
-  <%= f.link_to_add "Add", :payment_adjustments, :data => { :target => ".payment-adjustments" } %>
-<% end %>
 <div class="payment-adjustments">
   <%= f.fields_for :payment_adjustments, booking_detail_scheme.editable_payment_adjustments do |adj| %>
     <% if editable_payment_adjustment %>
@@ -62,7 +58,11 @@
     --> </div>
   <% end %>
 </div>
-<% if policy([current_user_role_group, booking_detail_scheme]).editable_field?("event") %>
+<% if editable_payment_adjustment %>
+  <%= f.link_to_add "Add Adjustments", :payment_adjustments, :data => { :target => ".payment-adjustments" } %>
+<% end %>
+</br>
+<% if policy([current_user_role_group, booking_detail_scheme]).editable_field?("event") && action_name != 'checkout' %>
   <div class="form-group">
     <%= f.label :status, class: 'label-required' %>
     <%

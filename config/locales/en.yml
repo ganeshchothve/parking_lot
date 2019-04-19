@@ -9,6 +9,7 @@ en:
     formats:
       default: "%d/%m/%Y %I:%M %p"
   global:
+    booking_details: 'Bookings'
     action: 'Action'
     total: 'Total'
     sign_in_h1: "Welcome back"
@@ -285,6 +286,9 @@ en:
         country: 'Country'
         zip: 'Zip / Pin Code'
   controller:
+    booking_detail_schemes:
+      scheme_approved: 'Scheme applied successfully, please check cost sheet.'
+      scheme_under_negotiation: 'Scheme registered successfully and sent for approval.'
     project_units:
       unit_released: "The unit has been successfully released."
     booking_details:
@@ -307,6 +311,8 @@ en:
         success: 'Your Booking is hold. Please select Scheme and go for Payment.'
       gateway_payment:
         receipt_missing: 'Requested receipt not in pending.'
+  user_kycs:
+    link_name: 'KYCs'
   smses:
     link_name: "SMS"
     status:
@@ -351,6 +357,8 @@ en:
       management_user: 'Management User'
       employee_user: 'Employee'
   user_requests:
+    swap: 'Swap'
+    cancellation: 'Cancellation'
     status:
       pending: 'Pending'
       processing: 'Processing'

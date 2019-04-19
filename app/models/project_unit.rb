@@ -55,6 +55,8 @@ class ProjectUnit
   belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :user, optional: true
   belongs_to :phase, optional: true
+  belongs_to :primary_user_kyc, optional: true
+
   # remove optional true when all project units are assigned to some phase
 
   has_many :receipts
@@ -139,6 +141,7 @@ class ProjectUnit
   # @return [Scheme collection] permitted schemes for booking.
   #
   def permitted_schemes(_user=nil)
+    _user ||= self.booking_detail.try(:user)
     _selector = {
       project_tower_id: self.project_tower_id,
       status: "approved",
@@ -146,14 +149,14 @@ class ProjectUnit
         '$or' => [
           { can_be_applied_by: nil },
           { can_be_applied_by: [] },
-          { can_be_applied_by: _user.try(:role) || 'user' }
+          { can_be_applied_by: _user.try(:role) || [] }
         ]
       }]
     }
-    if self.booking_detail.user.present?
+    if _user
       _selector['$and'] << { '$or' => [ {user_ids: nil }, {user_ids: []},
-          { user_ids: self.booking_detail.user.id } ] }
-      _selector['$and'] <<  { '$or' => [ {user_role: nil}, { user_role: []}, {user_role: self.booking_detail.user.role } ]}
+          { user_ids: _user.id } ] }
+      _selector['$and'] <<  { '$or' => [ {user_role: nil}, { user_role: []}, {user_role: _user.role } ]}
     end
     Scheme.where(_selector)
   end
@@ -322,12 +325,8 @@ class ProjectUnit
     current_client.holding_minutes
   end
 
-  def primary_user_kyc
-    primary_user_kyc_id.present? ? UserKyc.find(primary_user_kyc_id) : nil
-  end
-
   def booking_detail_scheme
-    BookingDetailScheme.where(user_id: user_id, project_unit_id: id).in(status: %w[under_negotiation draft approved]).desc(:created_at).first
+    booking_detail.try(:booking_detail_scheme)
   end
 
   def scheme=(_scheme)

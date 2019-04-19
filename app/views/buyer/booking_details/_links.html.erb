@@ -12,7 +12,7 @@
     <% if policy([:buyer, booking_detail.project_unit]).edit? %>
       <%= link_to "Update #{global_labels['user_kycs']}", edit_buyer_project_unit_path(booking_detail.project_unit), class: "modal-remote-form-link dropdown-item" %>
     <% end %>
-    
+
 
     <% if booking_detail.project_unit.assets.present? %>
       <%= link_to "Images", "javascript:;", data: {toggle: "modal", target: "#floor_plan_modal_#{booking_detail.project_unit_id}"}, class: "dropdown-item" %>
@@ -28,12 +28,8 @@
 
     <% [UserRequest::Cancellation, UserRequest::Swap] if Rails.env.development? %>
     <% UserRequest.descendants.each do |klass| %>
-      <% if policy([:buyer, klass.new(user_id: booking_detail.user_id)]).new? && current_user.buyer? %>
-        <% url = new_buyer_user_request_path(project_unit_id: booking_detail.project_unit.id, request_type: klass.model_name.element)
-        %>
-        <a href="<%= url %>" class="dropdown-item modal-remote-form-link">
-          <%= global_labels["user_request_#{klass.model_name.element}"] %>
-        </a>
+      <% if policy([:buyer, klass.new(user_id: booking_detail.user_id, booking_detail_id: booking_detail.id)]).new? %>
+        <%= link_to global_labels["user_request_#{klass.model_name.element}"], new_buyer_user_request_path(booking_detail_id: booking_detail.id, request_type: klass.model_name.element), class: "dropdown-item modal-remote-form-link" %>
       <% end %>
     <% end %>
   </div>
@@ -44,4 +40,4 @@
 
 <%= render 'project_units/cost_sheet_in_modal', project_unit: booking_detail.project_unit %>
 
-<%= render 'project_units/payment_schedule_in_modal', project_unit: booking_detail.project_unit %>  
+<%= render 'project_units/payment_schedule_in_modal', project_unit: booking_detail.project_unit %>

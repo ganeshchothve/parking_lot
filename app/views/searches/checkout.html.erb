@@ -19,7 +19,7 @@
     <div class="col-md-4">
       <%= nested_form_for([ current_user_role_group, @booking_detail, @booking_detail_scheme], local: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['schemes'], "data-type": "json", id: 'scheme_form'}) do |f| %>
         <%= render 'booking_detail_schemes/form', booking_detail_scheme: @booking_detail_scheme, booking_detail: @booking_detail, f: f %>
-        <%= f.submit "Save", class: "btn btn-primary" %>
+        <%= f.submit "Apply", class: "btn btn-primary" %>
       <% end %>
     </div>
     <div class="col-md-8">

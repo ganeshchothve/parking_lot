@@ -194,6 +194,7 @@ Rails.application.routes.draw do
 
     resources :booking_details, only: [:index, :show] do
       resources :receipts, only: [:index]
+      resources :booking_detail_schemes, except: [:destroy], controller: 'booking_details/booking_detail_schemes'
     end
 
     resources :emails, :smses, only: %i[index show]
@@ -204,7 +205,7 @@ Rails.application.routes.draw do
       end
 
       resources :booking_details, only: [:index, :show] do
-        resources :booking_detail_schemes, except: [:destroy], controller: 'booking_details/booking_detail_schemes'
+        resources :booking_detail_schemes, except: [:destroy]
 
         resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts'
       end

@@ -49,6 +49,7 @@ module BookingDetailStateMachine
       event :scheme_approved, after: %i[after_scheme_approved_event  update_selldo!] do
         transitions from: :scheme_approved, to: :scheme_approved
         transitions from: :under_negotiation, to: :scheme_approved
+        transitions from: :scheme_rejected, to: :scheme_approved
       end
 
       event :scheme_rejected, after: %i[after_scheme_rejected_event  update_selldo!] do
@@ -142,16 +143,15 @@ module BookingDetailStateMachine
     # Setting date on which the project_unit is blocked and on which date it should be released i.e. after blocking_days from the day project_unit is blocked
     def after_under_negotiation_event
       create_default_scheme
+      _project_unit = project_unit
+      _project_unit.assign_attributes(status: 'blocked', held_on: nil, blocked_on: Date.today, auto_release_on: ( Date.today + _project_unit.blocking_days.days) )
+      _project_unit.save
+      auto_released_extended_inform_buyer!
       if under_negotiation? && booking_detail_scheme.approved?
         scheme_approved!
       # elsif !booking_detail_scheme.present? && (booking_detail_schemes.distinct(:status).include? 'rejected')
       #   scheme_rejected!
       end
-      _project_unit = project_unit
-
-      _project_unit.assign_attributes(status: 'blocked', held_on: nil, blocked_on: Date.today, auto_release_on: ( Date.today + _project_unit.blocking_days.days) )
-      _project_unit.save
-      auto_released_extended_inform_buyer!
     end
 
     def after_scheme_approved_event
@@ -170,6 +170,7 @@ module BookingDetailStateMachine
     def after_blocked_event
       _project_unit = project_unit
       _project_unit.blocked_on = Date.today
+      _project_unit.auto_release_on ||= Date.today
       _project_unit.auto_release_on +=  _project_unit.blocking_days.days
       _project_unit.save
       auto_released_extended_inform_buyer!

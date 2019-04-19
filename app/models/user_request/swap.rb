@@ -1,5 +1,6 @@
 class UserRequest::Swap < UserRequest
-  field :alternate_project_unit_id, type: BSON::ObjectId # in case of swap resolve
+
+  belongs_to :alternate_project_unit, class_name: 'ProjectUnit'
 
   validate :alternate_project_unit_availability, :alternate_project_unit_blocking_condition, unless: proc { |user_request| %w[processing resolved].include?(user_request.status) }
 
@@ -10,10 +11,6 @@ class UserRequest::Swap < UserRequest
       { field: 'alternate_project_unit_id', klass: 'ProjectUnit' }
     ]
   )
-
-  def alternate_project_unit
-    ProjectUnit.where(id: alternate_project_unit_id).first
-  end
 
   private
 

@@ -36,7 +36,11 @@ class CustomPolicy < Struct.new(:user, :enable_users)
     %w[superadmin].include?(user.role)
   end
 
+  def user_kycs?
+    "#{user.buyer? ? 'Buyer' : 'Admin'}::UserKycPolicy".constantize.new(user, UserKyc).index?
+  end
+
   def self.custom_methods
-    %w[inventory emails smses audits referrals accounts phases sync_logs erp_models].sort
+    %w[inventory emails smses audits referrals accounts phases sync_logs erp_models user_kycs].sort
   end
 end
