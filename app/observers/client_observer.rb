@@ -3,11 +3,11 @@ class ClientObserver < Mongoid::Observer
     client.enable_communication = {email: true, sms: true} if client.enable_communication.blank?
     client.enable_communication[:email] = (client.enable_communication[:email].to_s == "true") || (client.enable_communication[:email].to_s == "1")
     client.enable_communication[:sms] = (client.enable_communication[:sms].to_s == "true") || (client.enable_communication[:sms].to_s == "1")
-    #
-    # Generate time slots for successful direct payments when time_slot_generation is enabled.
-    if client.enable_slot_generation?
-      Receipt.where(booking_detail_id: nil, time_slot: nil).in(status: %w(clearance_pending success)).each(&:set_time_slot)
-    end
+  end
+
+  def after_save client
+    # Generate time slots for successful direct payments with token number when time_slot_generation is enabled.
+    Receipt.where(booking_detail_id: nil, time_slot: nil).ne(token_number: nil).in(status: %w(clearance_pending success)).each(&:set_time_slot) if client.enable_slot_generation?
   end
 
   def after_create client

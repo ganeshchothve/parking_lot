@@ -135,6 +135,31 @@ RSpec.describe Client, type: :model do
         @client4.enable_slot_generation = true
         expect(@client4.save).to be(true)
       end
+
+      it 'should generate time slots for direct payments with token number & without time slots upon enabling slot generation' do
+        client = create(:client)
+
+        receipt1 = create(:receipt, status: 'clearance_pending')
+        receipt2 = create(:receipt, status: 'success')
+
+        client.slot_start_date = Date.current
+        client.start_time = Time.zone.parse('2019-03-01 10:00')
+        client.end_time = Time.zone.parse('2019-03-03 11:00')
+        client.capacity = 2
+        client.duration = 30
+        client.enable_slot_generation = true
+        client.save
+
+        expect(receipt1.token_number).to be_nil
+        expect(receipt1.time_slot).to be_nil
+        expect(receipt2.token_number).to be_nil
+        expect(receipt1.time_slot).to be_nil
+
+        receipt3 = create(:receipt, status: 'success')
+
+        expect(receipt3.token_number).to be_present
+        expect(receipt3.time_slot).to be_present
+      end
     end
   end
 end
