@@ -7,12 +7,6 @@ class BookingDetailObserver < Mongoid::Observer
     booking_detail.send_notification!
   end
 
-  def after_save(booking_detail)
-    if booking_detail.status_changed?
-      SelldoLeadUpdater.perform_async(booking_detail.user_id.to_s)
-    end
-  end
-
   # TODO:: Need to move in state machine callback
   def after_create booking_detail
     if booking_detail.hold?

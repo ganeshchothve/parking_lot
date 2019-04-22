@@ -8,10 +8,10 @@
         <h5 class="modal-title"> New <%= t('global.receipt') %></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
-        </button>
+      </button>
       </div>
       <div class="modal-body">
-        <%= render 'admin/booking_details/receipts/details', receipt: @receipt %>
+        <%= render 'admin/booking_details/receipts/details', receipt: @receipt, booking_detail: @booking_detail %>
         <%= form_for [:buyer, @booking_detail, @receipt], local: true, remote: true, html: { class: 'modal-remote-form validate-form', data: { 'resource-type': t('global.receipt'), type: :json }, id: "receipt_form" } do |f| %>
           <div class="form-group">
             <%= f.label :total_amount, class: 'label-required' %>
@@ -21,13 +21,10 @@
               <h5><%= number_to_indian_currency(total_amount) %></h5>
               <%= f.hidden_field :total_amount, value: total_amount %>
             <% else %>
-              <%= f.number_field :total_amount, min: (@project_unit.present? ? 0 : current_client.blocking_amount), class: "form-field form-control green", required: 'required' %>
+              <%= f.number_field :total_amount, class: "form-field form-control green", required: 'required' %>
             <% end %>
           </div>
 
-          <% if current_client.enable_actual_inventory?(current_user) && @receipt.project_unit_id.present? %>
-            <%= f.hidden_field :project_unit_id %>
-          <% end %>
           <% if i_agree_required %>
             <div class="form-group">
               <div class="card p-1 small" style="height: 100px; overflow: auto;">

@@ -65,14 +65,27 @@ class BookingDetailSchemePolicy < SchemePolicy
 
   private
 
+  # booking detail scheme cannot have edit permissions in following states :- 
+  # swapped, cancelled, scheme_rejected, swap_requested, cancellation_requested
+  def check_booking_detail_state?
+    return false if record.booking_detail.status.in?(%w[swapped cancelled scheme_rejected swap_requested cancellation_requested])
+    true
+  end
+  
   def is_project_unit_hold?
-    return true if record.project_unit.status == 'hold'
+    return true if record.booking_detail.hold?
     @condition = 'only_under_hold'
     false
   end
 
+  def can_add_new_bd_scheme?
+    return true if %w[hold scheme_rejected].include?(record.booking_detail.status)
+    @condition = 'booking_detail_scheme_present'
+    false
+  end
+
   def is_this_user_added_by_channel_partner?
-    return true if record.project_unit.user.manager_id == user.id
+    return true if record.booking_detail.user.manager_id == user.id
     @condition = 'do_not_have_access'
     false
   end

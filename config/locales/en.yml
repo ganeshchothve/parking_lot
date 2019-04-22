@@ -9,6 +9,7 @@ en:
     formats:
       default: "%d/%m/%Y %I:%M %p"
   global:
+    booking_details: 'Bookings'
     action: 'Action'
     total: 'Total'
     sign_in_h1: "Welcome back"
@@ -285,14 +286,20 @@ en:
         country: 'Country'
         zip: 'Zip / Pin Code'
   controller:
-    project_units: 
+    booking_detail_schemes:
+      scheme_approved: 'Scheme applied successfully, please check cost sheet.'
+      scheme_under_negotiation: 'Scheme registered successfully and sent for approval.'
+    project_units:
       unit_released: "The unit has been successfully released."
     booking_details:
       set_booking_detail_missing: "Booking detail not found"
       set_project_unit_missing: "Project unit not found"
       booking_successful: "You have completed the booking successfully."
+      set_receipt_missing: 'Make new payment'
     only_administrator_users: 'Only administrator users are allowed.'
     only_buyer_users: 'Only Buyer users are allowed.'
+    receipts:
+      account_missing: 'We do not have any Account Details for Transaction. Please ask Administrator to add.'
     searches:
       project_unit_missing: 'Project Unit Selection step is missing'
       check_project_unit_hold_status: "We've released the unit which was held for %{holding_minutes} minutes. Please re-select the unit and try booking again."
@@ -302,6 +309,10 @@ en:
       hold:
         booking_detail_error: 'We cannot process your request at this time. Please retry'
         success: 'Your Booking is hold. Please select Scheme and go for Payment.'
+      gateway_payment:
+        receipt_missing: 'Requested receipt not in pending.'
+  user_kycs:
+    link_name: 'KYCs'
   smses:
     link_name: "SMS"
     status:
@@ -346,6 +357,8 @@ en:
       management_user: 'Management User'
       employee_user: 'Employee'
   user_requests:
+    swap: 'Swap'
+    cancellation: 'Cancellation'
     status:
       pending: 'Pending'
       processing: 'Processing'

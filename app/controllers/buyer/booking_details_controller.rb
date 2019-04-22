@@ -1,8 +1,25 @@
 class Buyer::BookingDetailsController < BuyerController
-  before_action :set_booking_detail
-  before_action :set_project_unit
-  before_action :set_receipt
-  before_action :authorize_resource
+  include BookingDetailConcern
+  around_action :apply_policy_scope, only: [:index]
+  before_action :set_booking_detail, except: [:index]
+  before_action :set_project_unit, except: [:index]
+  before_action :set_receipt, except: [:index]
+  before_action :authorize_resource, except: [:index]
+
+  def index
+    # authorize [:buyer, BookingDetail]
+    @booking_details = BookingDetail.build_criteria params 
+    @booking_details = @booking_details.paginate(page: params[:page] || 1, per_page: params[:per_page])
+  end
+
+  def show
+    @scheme = @booking_detail.booking_detail_scheme
+    render template: 'admin/booking_details/show' 
+  end
+
+  def show
+    @scheme = @booking_detail.booking_detail_scheme
+  end
 
   def booking
     if @receipt.save
@@ -40,16 +57,15 @@ class Buyer::BookingDetailsController < BuyerController
     if unattached_blocking_receipt.present?
       @receipt = unattached_blocking_receipt
       @receipt.booking_detail_id = @booking_detail.id
-      @receipt.project_unit_id = @project_unit.id
     else
-      @receipt = Receipt.new(creator: @booking_detail.user, user: @booking_detail.user, payment_mode: 'online', total_amount: current_client.blocking_amount, payment_gateway: current_client.payment_gateway, booking_detail_id: @booking_detail.id, project_unit_id: @project_unit.id)
-      @receipt.account = selected_account(@booking_detail.project_unit)
+      @receipt = Receipt.new(creator: @booking_detail.user, user: @booking_detail.user, payment_mode: 'online', total_amount: current_client.blocking_amount, payment_gateway: current_client.payment_gateway, booking_detail_id: @booking_detail.id)
+      @receipt.account ||= selected_account(@booking_detail.project_unit)
       @receipt.total_amount = @project_unit.blocking_amount
-      authorize([current_user_role_group, Receipt.new(user: @booking_detail.user)], :create?)
+      authorize([:buyer, @receipt], :create?)
     end
   end
 
   def authorize_resource
-    authorize [:admin, @booking_detail]
+    authorize [:buyer, @booking_detail]
   end
 end

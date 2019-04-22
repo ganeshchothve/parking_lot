@@ -88,9 +88,6 @@ class Admin::ProjectUnitsController < AdminController
   # GET /admin/project_units/:id/send_under_negotiation
   #
   def send_under_negotiation
-    # ProjectUnitBookingService.new(@project_unit.id).send_for_negotiation
-    @project_unit.status = 'under_negotiation'
-    @project_unit.save
     @project_unit.booking_detail.under_negotiation!
     respond_to do |format|
       format.html { redirect_to admin_user_path(@project_unit.user.id) }
@@ -99,12 +96,12 @@ class Admin::ProjectUnitsController < AdminController
 
 
   # after the booking_detail_scheme is rejected, project_unit can be released by calling this action. It makes the project unit available and marks booking_detail as cancelled.
-  def release_unit 
+  def release_unit
     BookingDetail.where(project_unit_id: @project_unit.id).each do |bd|
       bd.cancel!
     end
     @project_unit.status = 'available'
-    respond_to do |format| 
+    respond_to do |format|
       if @project_unit.save
         flash[:notice] = t('controller.project_units.unit_released')
         format.html { redirect_to admin_project_unit_path(@project_unit) }

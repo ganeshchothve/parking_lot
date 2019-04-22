@@ -6,7 +6,7 @@ FactoryBot.define do
     all_inclusive_price { Faker::Number.number(8) }
     booking_price { Faker::Number.number(5) }
     status { 'available' } # { ['available', 'hold', 'blocked', 'booked_confirmed', 'booked_tentative'].sample }
-    available_for { %w[user employee management].sample }
+    available_for { 'user' }
     auto_release_on { Faker::Date.between(2.days.ago, Date.today) }
     base_rate { Faker::Number.number(7).to_f }
     developer_name { Faker::Name.name }

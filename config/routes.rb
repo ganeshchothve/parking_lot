@@ -38,15 +38,17 @@ Rails.application.routes.draw do
   namespace :admin do
 
     resources :booking_details, only: [:index, :show] do
-        patch :booking, on: :member
-        patch :send_under_negotiation, on: :member
-        resources :booking_detail_schemes, except: [:destroy], controller: 'booking_details/booking_detail_schemes'
+      patch :booking, on: :member
+      patch :send_under_negotiation, on: :member
+      resources :booking_detail_schemes, except: [:destroy], controller: 'booking_details/booking_detail_schemes'
 
-        resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts'
-        resources :booking_detail_schemes, except: [:destroy]
-        # resources :receipts, only: [:index]
+      resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts' do
+        get :lost_receipt, on: :collection
       end
-      
+      resources :booking_detail_schemes, except: [:destroy]
+      # resources :receipts, only: [:index]
+    end
+
     resources :accounts
     resources :phases
     resources :erp_models, only: %i[index new create edit update]
@@ -186,15 +188,20 @@ Rails.application.routes.draw do
 
   namespace :buyer do
 
+    resources :booking_details, only: [:index, :show] do
+      resources :receipts, only: [:index]
+      resources :booking_detail_schemes, except: [:destroy], controller: 'booking_details/booking_detail_schemes'
+    end
+
     resources :emails, :smses, only: %i[index show]
-    resources :project_units, only: [:index, :show, :edit, :update] 
+    resources :project_units, only: [:index, :show, :edit, :update]
     resources :users, only: [:show, :update, :edit] do
       member do
         get :update_password
       end
 
       resources :booking_details, only: [:index, :show] do
-        resources :booking_detail_schemes, except: [:destroy], controller: 'booking_details/booking_detail_schemes'
+        resources :booking_detail_schemes, except: [:destroy]
 
         resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts'
       end

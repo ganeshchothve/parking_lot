@@ -11,7 +11,12 @@ class Template
   validates :content, presence: true
 
   def parsed_content object
-    return ERB.new(self.content).result( object.get_binding ).html_safe
+    begin
+      return ERB.new(self.content).result( object.get_binding ).html_safe
+    rescue Exception => e
+      "We are sorry! #{self.class.name} has some issue. Please Contact to Administrator."
+    end
+
   end
 
   def self.build_criteria params={}

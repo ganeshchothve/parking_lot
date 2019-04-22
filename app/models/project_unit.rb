@@ -55,6 +55,8 @@ class ProjectUnit
   belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :user, optional: true
   belongs_to :phase, optional: true
+  belongs_to :primary_user_kyc, optional: true
+
   # remove optional true when all project units are assigned to some phase
 
   has_many :receipts
@@ -139,6 +141,7 @@ class ProjectUnit
   # @return [Scheme collection] permitted schemes for booking.
   #
   def permitted_schemes(_user=nil)
+    _user ||= self.booking_detail.try(:user)
     _selector = {
       project_tower_id: self.project_tower_id,
       status: "approved",
@@ -146,14 +149,14 @@ class ProjectUnit
         '$or' => [
           { can_be_applied_by: nil },
           { can_be_applied_by: [] },
-          { can_be_applied_by: _user.try(:role) || 'user' }
+          { can_be_applied_by: _user.try(:role) || [] }
         ]
       }]
     }
-    if self.booking_detail.user.present?
+    if _user
       _selector['$and'] << { '$or' => [ {user_ids: nil }, {user_ids: []},
-          { user_ids: self.booking_detail.user.id } ] }
-      _selector['$and'] <<  { '$or' => [ {user_role: nil}, { user_role: []}, {user_role: self.booking_detail.user.role } ]}
+          { user_ids: _user.id } ] }
+      _selector['$and'] <<  { '$or' => [ {user_role: nil}, { user_role: []}, {user_role: _user.role } ]}
     end
     Scheme.where(_selector)
   end
@@ -247,56 +250,6 @@ class ProjectUnit
     (status == 'hold' && user_id == user.id) || user_based_status(user) == 'available'
   end
 
-  # def process_payment!(receipt)
-  #   if %w[success clearance_pending].include?(receipt.status)
-  #     if ProjectUnit.booking_stages.include?(status) || can_block?(receipt.user) || (status == 'under_negotiation' && user_id == receipt.user_id)
-  #       if scheme.status == 'approved'
-  #         self.status = if pending_balance(strict: true) <= 0
-  #                         'booked_confirmed'
-  #                       elsif total_amount_paid > blocking_amount
-  #                         'booked_tentative'
-  #                       else
-  #                         'blocked'
-  #                       end
-  #       elsif scheme.status == 'under_negotiation'
-  #         self.status = 'under_negotiation'
-  #       else
-  #         # kept this unit status as hold.
-  #       end
-  #     else
-  #       receipt.project_unit_id = nil
-  #       receipt.save
-  #     end
-  #     # Send payments data to Sell.Do CRM
-  #     # SelldoReceiptPusher.perform_async(receipt.id.to_s, Time.now.to_i)
-  #   elsif receipt.status == 'failed'
-  #     # if the unit has any successful or clearance_pending payments other than this, we keep it still blocked
-  #     # else we just release the unit
-  #     if pending_balance == booking_price # not success or clearance_pending receipts tagged against this unit
-  #       if status == 'hold'
-  #         make_available
-  #       else
-  #         # TODO: we should display a message on the UI before someone marks the receipt as 'failed'. Because the unit might just get released
-  #         self.status = 'error'
-  #       end
-  #     end
-  #   end
-  # save(validate: false)
-  # end
-
-  # def process_scheme!
-  #   if status == 'under_negotiation' && scheme.status == 'approved'
-  #     if pending_balance(strict: true) <= 0
-  #       self.status = 'booked_confirmed'
-  #     elsif total_amount_paid > blocking_amount
-  #       self.status = 'booked_tentative'
-  #     elsif total_tentative_amount_paid >= blocking_amount
-  #       self.status = 'blocked'
-  #     end
-  #     save(validate: false)
-  #   end
-  # end
-
   def self.build_criteria(params = {})
     selector = {}
     if params[:fltrs].present? && params[:fltrs][:_id].blank?
@@ -372,12 +325,8 @@ class ProjectUnit
     current_client.holding_minutes
   end
 
-  def primary_user_kyc
-    primary_user_kyc_id.present? ? UserKyc.find(primary_user_kyc_id) : nil
-  end
-
   def booking_detail_scheme
-    BookingDetailScheme.where(user_id: user_id, project_unit_id: id).in(status: %w[under_negotiation draft approved]).desc(:created_at).first
+    booking_detail.try(:booking_detail_scheme)
   end
 
   def scheme=(_scheme)

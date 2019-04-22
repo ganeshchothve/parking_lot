@@ -21,12 +21,6 @@ class Buyer::BookingDetails::BookingDetailSchemesController < BuyerController
   end
 
   def new
-    booking_detail_scheme = if @booking_detail.status == "scheme_rejected"
-      @booking_detail.booking_detail_schemes.where(status: "negotiation_failed").desc(:created_at).first
-    else
-      @booking_detail.booking_detail_scheme
-    end
-
     @scheme = BookingDetailScheme.new(
       derived_from_scheme_id: booking_detail_scheme.derived_from_scheme_id,
       booking_detail_id: @booking_detail.id,
@@ -39,22 +33,13 @@ class Buyer::BookingDetails::BookingDetailSchemesController < BuyerController
   end
 
   def create
-    booking_detail = @project_unit.booking_detail
-    pubs = ProjectUnitBookingService.new(@project_unit.id)
-    @scheme = pubs.create_or_update_booking_detail_scheme booking_detail
-    @scheme.created_by = current_user
-    @scheme.created_by_user = true
-    @scheme.assign_attributes(permitted_attributes([ current_user_role_group, @scheme]))
+    @scheme ||= self.project_unit.project_tower.default_scheme
+    @booking_detail_scheme.assign_attributes(permitted_attributes([:buyer, @booking_detail_scheme]))
     modify_params
-    @scheme.send(@scheme.event) if @scheme.event.present?
-    if @scheme.payment_adjustments.present? && @scheme.payment_adjustments.last.new_record?
-      @scheme.draft!
-    else
-      @scheme.approved! if @scheme.derived_from_scheme.status == 'approved'
-    end
+    @booking_detail_scheme.approved!
     respond_to do |format|
       if @scheme.save
-        format.html { redirect_to request.referrer || root_path, notice: 'Scheme registered successfully and sent for approval.' }
+        format.html { redirect_to request.referrer || root_path, notice: t('controller.booking_detail_schemes.scheme_approved') }
         format.json { render json: @scheme, status: :created }
       else
         format.html { render :new }
@@ -84,12 +69,9 @@ class Buyer::BookingDetails::BookingDetailSchemesController < BuyerController
   def update
     modify_params
     @scheme.assign_attributes(permitted_attributes(@scheme))
-    @scheme.send(@scheme.event) if @scheme.event.present? 
-    @scheme.status = 'draft' if @scheme.payment_adjustments.present? && @scheme.payment_adjustments.last.new_record?
-    @scheme.approved_by = current_user if @scheme.event.present? && @scheme.event == 'approved'
     respond_to do |format|
       if @scheme.save
-        format.html { redirect_to request.referrer || root_path , notice: 'Scheme was successfully updated.' }
+        format.html { redirect_to request.referrer || root_path , notice: t('controller.booking_detail_schemes.scheme_approved') }
       else
         format.html { render :edit }
         format.json { render json: @scheme.errors, status: :unprocessable_entity }
@@ -112,7 +94,7 @@ class Buyer::BookingDetails::BookingDetailSchemesController < BuyerController
     redirect_to root_path, alert: t('controller.booking_details.set_project_unit_missing'), status: 404 if @project_unit.blank?
   end
   def set_booking_detail
-    @booking_detail = BookingDetail.find(params[:booking_detail_id]) if params[:booking_detail_id].present?
+    @booking_detail = BookingDetail.where(id: params[:booking_detail_id]).first if params[:booking_detail_id].present?
     redirect_to root_path, alert: t('controller.booking_details.set_booking_detail_missing'), status: 404 if @booking_detail.blank?
   end
 
@@ -131,10 +113,9 @@ class Buyer::BookingDetails::BookingDetailSchemesController < BuyerController
     if params[:action] == "index" || params[:action] == 'export'
       authorize [:buyer, BookingDetailScheme]
     elsif params[:action] == "new" || params[:action] == "create"
-      project_unit_id = @project_unit.id if @project_unit.present?
-      project_unit_id = @booking_detail.project_unit.id if @booking_detail.present? && project_unit_id.blank?
-      scheme = Scheme.where(_id: params.dig(:booking_detail_scheme, :derived_from_scheme_id) ).last
-      authorize [ :buyer, BookingDetailScheme.new(created_by: current_user, project_unit_id: project_unit_id, derived_from_scheme_id: scheme.try(:_id), status: scheme.try(:status)) ]
+      @scheme = Scheme.where(_id: params.dig(:booking_detail_scheme, :derived_from_scheme_id) ).last
+      @booking_detail_scheme = BookingDetailScheme.new(created_by: current_user, booking_detail_id: @booking_detail, derived_from_scheme_id: @scheme.try(:_id), status: @scheme.try(:status))
+      authorize [:buyer, @booking_detail_scheme]
     else
       authorize [:buyer, @scheme]
     end

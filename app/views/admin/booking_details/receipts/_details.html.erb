@@ -6,19 +6,19 @@
     <div class="col-md-4">
       <div class="form-group">
         <label class="small">Unit</label>
-        <div><%= receipt.project_unit.name %></div>
+        <div><%= booking_detail.name %></div>
       </div>
     </div>
     <div class="col-md-4">
       <div class="form-group">
         <label class="small">Agreement Price</label>
-        <div><%= number_to_indian_currency(receipt.project_unit.calculate_agreement_price.round) %></div>
+        <div><%= number_to_indian_currency(booking_detail.project_unit.calculate_agreement_price.round) %></div>
       </div>
     </div>
     <div class="col-md-4">
       <div class="form-group">
         <label class="small">All Inclusive Price</label>
-        <div><%= number_to_indian_currency(receipt.project_unit.calculate_all_inclusive_price.round) %></div>
+        <div><%= number_to_indian_currency(booking_detail.project_unit.calculate_all_inclusive_price.round) %></div>
       </div>
     </div>
   </div>
@@ -26,13 +26,13 @@
     <div class="col-md-6">
       <div class="form-group">
         <label class="small">Amount Paid</label>
-        <div><%= number_to_indian_currency(receipt.booking_detail.total_amount_paid.round) %></div>
+        <div><%= number_to_indian_currency(booking_detail.total_amount_paid.round) %></div>
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-group">
         <label class="small">Amount Pending</label>
-        <div><%= number_to_indian_currency(receipt.booking_detail.pending_balance.round) %></div>
+        <div><%= number_to_indian_currency(booking_detail.pending_balance.round) %></div>
       </div>
     </div>
   </div>

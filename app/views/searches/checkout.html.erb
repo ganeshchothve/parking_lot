@@ -19,7 +19,7 @@
     <div class="col-md-4">
       <%= nested_form_for([ current_user_role_group, @booking_detail, @booking_detail_scheme], local: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['schemes'], "data-type": "json", id: 'scheme_form'}) do |f| %>
         <%= render 'booking_detail_schemes/form', booking_detail_scheme: @booking_detail_scheme, booking_detail: @booking_detail, f: f %>
-        <%= f.submit "Save", class: "btn btn-primary" %>
+        <%= f.submit "Apply", class: "btn btn-primary" %>
       <% end %>
     </div>
     <div class="col-md-8">
@@ -48,7 +48,7 @@
           <%= link_to "I Agree", booking_buyer_booking_detail_path(@booking_detail), method: :patch, class: 'btn btn-primary', style:'margin-top:0px', onclick: alert %>
         <% elsif @user.unattached_blocking_receipt(@project_unit.blocking_amount).present? %>
           <%= link_to "I Agree on behalf of #{@user.name}", booking_admin_user_booking_detail_path(@user,@booking_detail), method: :patch, class: 'btn btn-primary', style:'margin-top:0px', onclick: alert %>
-        <% elsif policy([ current_user_role_group, Receipt.new(user: @user, status: "clearance_pending", project_unit_id: @project_unit.id)]).new? %>
+        <% elsif policy([ current_user_role_group, Receipt.new(user: @user, status: "clearance_pending", booking_detail_id: @booking_detail.id)]).new? %>
           <%= link_to "I Agree on behalf of #{@user.name} and proceed to add
           payment",new_admin_user_booking_detail_receipt_path(@user.id, @booking_detail.id) , class: 'btn btn-primary modal-remote-form-link', style:'margin-top:0px', onclick: alert %>
           <% if @booking_detail_scheme.present? && @booking_detail_scheme.editable_payment_adjustments_present? %>

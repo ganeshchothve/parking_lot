@@ -12,11 +12,7 @@
         <%= render 'form', booking_detail_scheme: @scheme, project_unit: @booking_detail.project_unit, f: f %>
       </div>
       <div class="modal-footer">
-        <% if @booking_detail.status == "negotiation_failed" %>
-          <%= f.submit "Save and send booking under negotiation", class: "btn btn-primary" %>
-        <% else %>
-          <%= f.submit "Save", class: "btn btn-primary" %>
-        <% end %>
+        <%= f.submit "Save", class: "btn btn-primary" %>
       </div>
     </div>
   </div>

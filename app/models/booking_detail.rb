@@ -5,6 +5,7 @@ class BookingDetail
   include InsertionStringMethods
   include BookingDetailStateMachine
   include SyncDetails
+  extend FilterByCriteria
 
   BOOKING_STAGES = %w[blocked booked_tentative booked_confirmed]
 
@@ -35,13 +36,22 @@ class BookingDetail
   has_many :sync_logs, as: :resource
   has_many :notes, as: :notable
   has_many :user_requests
+  has_many :related_booking_details, foreign_key: :parent_booking_detail_id, primary_key: :_id, class_name: 'BookingDetail'
   has_and_belongs_to_many :user_kycs
 
   # TODO: uncomment
   # validates :name, presence: true
   validates :status, :primary_user_kyc_id, presence: true
   validates :erp_id, uniqueness: true, allow_blank: true
-  delegate :name, to: :project_unit, prefix: true, allow_nil: true
+  delegate :name, :blocking_amount, to: :project_unit, prefix: true, allow_nil: true
+
+  scope :filter_by_name, ->(name) { where(name: ::Regexp.new(::Regexp.escape(name), 'i')) }
+  scope :filter_by_status, ->(status) { where(status: status) }
+  scope :filter_by_project_tower, ->(project_tower_id) { where(project_unit_id: { "$in": ProjectUnit.where(project_tower_id: project_tower_id).pluck(:_id) })}
+  scope :filter_by_user, ->(user_id) { where(user_id: user_id)  }
+  scope :filter_by_manager, ->(manager_id) {where(manager_id: manager_id) }
+  default_scope -> {desc(:created_at)}
+
 
   accepts_nested_attributes_for :notes
 
@@ -53,11 +63,11 @@ class BookingDetail
   end
 
   def booking_detail_scheme
-    booking_detail_schemes.where(status: {'$in': ['draft', 'approved']}).first
+    booking_detail_schemes.in(status: ['approved', 'draft']).first
   end
 
   def pending_balance(options={})
-    strict = options[:strict] || false 
+    strict = options[:strict] || false
     user_id = options[:user_id] || self.user_id
     if user_id.present?
       receipts_total = Receipt.where(user_id: user_id, booking_detail_id: self.id)
@@ -73,10 +83,6 @@ class BookingDetail
     end
   end
 
-  def total_amount_paid
-    receipts.where(user_id: self.user_id).where(status: 'success').sum(:total_amount)
-  end
-
   def total_tentative_amount_paid
     receipts.where(user_id: self.user_id).in(status: ['success', 'clearance_pending']).sum(:total_amount)
   end
@@ -89,32 +95,43 @@ class BookingDetail
     Api::BookingDetailsSync.new(erp_model, self, sync_log).execute
   end
 
+  #
+  # Unit Auto Release is set on when unit moved form hold stage. This Auto release set as Todays date plus client blocking allows date. That time inform client about auto relase date.
+  #
+  #
+  # @return [Email Object]
+  #
+  def auto_released_extended_inform_buyer!
+    Email.create!({
+      booking_portal_client_id: project_unit.booking_portal_client_id,
+      email_template_id: Template::EmailTemplate.find_by(name: "auto_release_on_extended").id,
+      cc: [ project_unit.booking_portal_client.notification_email ],
+      recipients: [ user ],
+      cc_recipients: ( user.manager_id.present? ? [user.manager] : [] ),
+      triggered_by_id: project_unit.id,
+      triggered_by_type: project_unit.class.to_s
+    })
+  end
+
   class << self
-    def run_sync(project_unit_id, changes = {})
-      project_unit = ProjectUnit.find(project_unit_id)
-      changes = changes.with_indifferent_access
-      booking_detail = project_unit.booking_detail
 
-      if booking_detail.present? && booking_detail.status != 'cancelled'
-        if changes['status'].present? && %w[blocked booked_tentative booked_confirmed error].include?(changes['status'][0]) && %w[blocked booked_tentative booked_confirmed error].include?(project_unit.status)
-          booking_detail.status = project_unit.status
-        end
+    def user_based_scope(user, params = {})
 
-        if changes['status'].present? && changes['status'][0] == 'under_negotiation' && project_unit.status == 'negotiation_failed'
-          booking_detail.status = project_unit.status
+      custom_scope = {}
+      if params[:user_id].blank? && !user.buyer?
+        if user.role?('channel_partner')
+          custom_scope = { manager_id: user.id }
+        elsif user.role?('cp_admin')
+          custom_scope = { user_id: { "$in": User.where(role: 'user').nin(manager_id: [nil, '']).distinct(:id) } }
+        elsif user.role?('cp')
+          channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
+          custom_scope = { user_id: { "$in": User.in(referenced_manager_ids: channel_partner_ids).distinct(:id) } }
         end
-
-        if changes['status'].present? && %w[blocked booked_tentative booked_confirmed error].include?(changes['status'][0]) && ProjectUnit.user_based_available_statuses(booking_detail.user).include?(project_unit.status)
-          booking_detail.status = 'cancelled'
-        end
-        if changes['user_kyc_ids'].present?
-          booking_detail.user_kyc_ids = project_unit.user_kyc_ids
-        end
-        if changes['receipt_ids'].present?
-          booking_detail.receipt_ids = project_unit.receipt_ids
-        end
-        booking_detail.save!
       end
+
+      custom_scope = { user_id: params[:user_id] } if params[:user_id].present?
+      custom_scope = { user_id: user.id } if user.buyer?
+      custom_scope
     end
   end
 end

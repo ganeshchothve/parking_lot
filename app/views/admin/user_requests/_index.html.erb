@@ -13,7 +13,7 @@
       <tr>
         <td>
           <% if Admin::UserPolicy.new(current_user, user_request.user).show? %>
-            <%= link_to user_request.user.name, admin_user_path(user_request.user_id) %>
+            <%= link_to user_request.user.name, [current_user_role_group, user_request.user] %>
           <% else %>
             <%= user_request.user.name %>
           <% end %>

@@ -2,7 +2,7 @@
   <div class="card-header">
     <div class="row">
       <div class="col-11">
-        <h5 class="float-left card-title mt-2 mb-0"><%= params[:request_type] %> <%= user_request.booking_detail.name %></h5>
+        <h5 class="float-left card-title mt-2 mb-0"><%= t("user_requests.#{params[:request_type]}") %></h5>
       </div>
       <div class="col-1">
       </div>
@@ -10,63 +10,64 @@
   </div>
   <div class="card-body">
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-3">
         <div class="form-group">
-          <label>Booking</label>
+          <label> Rquested For (UNIT)</label>
           <div>
             <%= user_request.booking_detail.name %>
           </div>
         </div>
       </div>
-      <div class="col-md-4">
+      <%- if @user_request.kind_of?(UserRequest::Swap)%>
+        <div class="col-3">
+          <div class="form-group">
+            <label> Alternate Project Unit</label>
+            <div>
+              <%= @user_request.alternate_project_unit.name %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      <div class="col-6">
         <div class="form-group">
           <label>Status</label>
           <div>
-            <%= t("user_request.status.#{user_request.status}") %>
+            <label class="badge badge-<%= user_request_status_badge(user_request) %>" > <%= t("user_request.status.#{user_request.status}") %></label>
           </div>
+          <%- if user_request.reason_for_failure.present? %>
+            <span> Reason : <%= user_request.reason_for_failure || '-' %></span>
+          <% end %>
         </div>
       </div>
     </div>
-
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-3">
         <div class="form-group">
           <label> Created by </label>
           <div>
-            <%= user_request.created_by.try(:name) %>
+            <%= link_to user_request.created_by.name, [current_user_role_group, user_request.created_by] %>
             </br>
             ( <%= user_request.created_at.strftime('%A, %d %b %Y %l:%M %p') %>)
           </div>
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-3">
+        <div class="form-group">
+          <label> Requested For (User) </label>
+          <div>
+            <%= link_to user_request.user.name, [current_user_role_group, user_request.user ] %>
+          </div>
+        </div>
+      </div>
+      <div class="col-3">
         <div class="form-group">
           <label>Resolved by</label>
           <div>
             <%- if user_request.resolved_by.present? %>
-              <%= user_request.resolved_by.try(:name) %>
+              <%= link_to user_request.resolved_by.name, [current_user_role_group, user_request.created_by] %>
               </br>
               ( <%= user_request.updated_at.strftime('%A, %d %b %Y %l:%M %p')%>)
             <% end %>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label> Request For </label>
-          <div>
-            <%= user_request.user.try(:name) %>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-12">
-        <div class="form-group">
-          <label> Reason </label>
-          <div>
-            <%= user_request.reason_for_failure || '-' %>
           </div>
         </div>
       </div>

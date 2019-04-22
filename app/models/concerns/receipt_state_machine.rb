@@ -51,12 +51,13 @@ module ReceiptStateMachine
     end
 
     def swap_request_initiated?
-      return booking_detail.swapping? if booking_detail 
+      return booking_detail.swapping? if booking_detail
       false
     end
 
     def can_available_for_refund?
       return (booking_detail.blank? || booking_detail.cancelling?) if booking_detail
+
       false
     end
 
@@ -80,11 +81,13 @@ module ReceiptStateMachine
     end
 
     #
-    # When Receipt is created by admin except channel partner then it's direcly moved in clearance pening.
+    # When Receipt is created by admin except channel partner then it's direcly moved in clearance pending.
     #
     def moved_to_clearance_pending
-      unless (%w( channel_partner ) + User::BUYER_ROLES).include?(self.creator.role)
-        self.clearance_pending!
+      if payment_mode != 'online'
+        unless (%w( channel_partner ) + User::BUYER_ROLES).include?(self.creator.role)
+          self.clearance_pending!
+        end
       end
     end
   end

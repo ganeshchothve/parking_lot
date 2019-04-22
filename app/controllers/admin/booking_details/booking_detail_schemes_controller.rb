@@ -66,7 +66,7 @@ class Admin::BookingDetails::BookingDetailSchemesController < AdminController
         _action = 'save'
       end
       if @booking_detail_scheme.send(_action)
-        format.html { redirect_to request.referrer || root_path, notice: 'Scheme registered successfully and sent for approval.' }
+        format.html { redirect_to request.referrer || root_path, notice: @booking_detail_scheme.approved? ? t('controller.booking_detail_schemes.scheme_approved') : t('controller.booking_detail_schemes.scheme_under_negotiation') }
         format.json { render json: @booking_detail_scheme, status: :created }
       else
         format.html { render :new }
@@ -106,7 +106,7 @@ class Admin::BookingDetails::BookingDetailSchemesController < AdminController
         _action = 'save'
       end
       if @booking_detail_scheme.send(_action)
-        format.html { redirect_to request.referrer || root_path , notice: 'Scheme was successfully updated.' }
+        format.html { redirect_to request.referrer || root_path , notice: @booking_detail_scheme.approved? ? t('controller.booking_detail_schemes.scheme_approved') : t('controller.booking_detail_schemes.scheme_under_negotiation') }
       else
         format.html { render :edit }
         format.json { render json: @booking_detail_scheme.errors, status: :unprocessable_entity }
@@ -118,7 +118,7 @@ class Admin::BookingDetails::BookingDetailSchemesController < AdminController
 
 
   def set_booking_detail
-    @booking_detail = BookingDetail.find(params[:booking_detail_id]) if params[:booking_detail_id].present?
+    @booking_detail = BookingDetail.where( id: params[:booking_detail_id]).first if params[:booking_detail_id].present?
     redirect_to root_path, alert: t('controller.booking_details.set_booking_detail_missing'), status: 404 if @booking_detail.blank?
   end
 
@@ -134,9 +134,9 @@ class Admin::BookingDetails::BookingDetailSchemesController < AdminController
       BookingDetailScheme.where(project_unit_id: @project_unit.id).find(params[:id])
     end
   end
-  
+
   def modify_params
-    if params[:booking_detail_scheme][:payment_adjustments_attributes].present?
+    if params.dig(:booking_detail_scheme, :payment_adjustments_attributes).present?
       params[:booking_detail_scheme][:payment_adjustments_attributes].each do |key, value|
         if value[:name].blank? || (value[:formula].blank? && value[:absolute_value].blank?)
           params[:booking_detail_scheme][:payment_adjustments_attributes].delete key
@@ -151,10 +151,11 @@ class Admin::BookingDetails::BookingDetailSchemesController < AdminController
     elsif params[:action] == "new" || params[:action] == "create"
       project_unit_id = @project_unit.id if @project_unit.present?
       project_unit_id = @booking_detail.project_unit.id if @booking_detail.present? && project_unit_id.blank?
+      booking_detail_id = @booking_detail.id
       @scheme = Scheme.where(_id: params.dig(:booking_detail_scheme, :derived_from_scheme_id) ).last
       @scheme = @booking_detail.project_unit.project_tower.default_scheme if @scheme.blank?
 
-      authorize [ :admin, BookingDetailScheme.new(created_by: current_user, project_unit_id: project_unit_id, derived_from_scheme_id: @scheme.id )]
+      authorize [ :admin, BookingDetailScheme.new(created_by: current_user, project_unit_id: project_unit_id, booking_detail_id: booking_detail_id, derived_from_scheme_id: @scheme.id )]
     else
       authorize [:admin, @booking_detail_scheme]
     end

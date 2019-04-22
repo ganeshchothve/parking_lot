@@ -13,7 +13,11 @@ class Admin::ReceiptPolicy < ReceiptPolicy
   end
 
   def create?
-    new? && online_account_present?
+    if is_this_lost_receipt?
+      lost_receipt?
+    else
+      new? && online_account_present?
+    end
   end
 
   def asset_create?
@@ -21,11 +25,11 @@ class Admin::ReceiptPolicy < ReceiptPolicy
   end
 
   def edit?
-    return false if record.status == 'success' && record.project_unit_id.present?
+    return false if record.success? && record.booking_detail_id.present?
 
-    valid = record.status == 'success' && record.project_unit_id.blank?
+    valid = record.success? && record.booking_detail_id.blank?
     valid ||= (%w[pending clearance_pending available_for_refund].include?(record.status) && %w[admin crm sales_admin].include?(user.role))
-    valid ||= (user.role?('channel_partner') && record.status == 'pending')
+    valid ||= (user.role?('channel_partner') && record.pending?)
     valid
   end
 
@@ -38,7 +42,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
   end
 
   def lost_receipt?
-    new? && user.role == 'superadmin'
+    new? && only_superadmin?
   end
 
   def permitted_attributes(params = {})
@@ -53,7 +57,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
     end
     if %w[admin crm superadmin sales_admin].include?(user.role)
       attributes += [:event]
-      if record.persisted? && record.status == 'clearance_pending'
+      if record.persisted? && record.clearance_pending?
         attributes += %i[processed_on comments tracking_id]
       end
     end
@@ -65,5 +69,15 @@ class Admin::ReceiptPolicy < ReceiptPolicy
 
   def confirmed_and_ready_user?
     record_user_is_present? && record_user_confirmed? && record_user_kyc_ready?
+  end
+
+  def is_this_lost_receipt?
+    record.new_record? && record.payment_identifier? && record.payment_mode == 'online'
+  end
+
+  def only_superadmin?
+    return true if user.role?('superadmin')
+    @condition = 'only_superadmin'
+    false
   end
 end
