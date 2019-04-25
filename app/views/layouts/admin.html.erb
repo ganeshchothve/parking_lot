@@ -30,13 +30,15 @@
   <body>
     <%= render "layouts/navbar" %>
     <%= yield %>
-    <%= render "layouts/gamification" %>
-    <div class="container d-block d-md-none mt-3">
-      <div class="card card-body">
-        <%= current_project.name %> is registered via MahaRERA No.: <%= current_project.rera_registration_no %> & is available on <a href="https://maharera.mahaonline.gov.in" target="_blank">https://maharera.mahaonline.gov.in</a>.
+    <% unless params[:action] == 'inventory' %>
+      <%= render "layouts/gamification" %>
+      <div class="container d-block d-md-none mt-3">
+        <div class="card card-body">
+          <%= current_project.name %> is registered via MahaRERA No.: <%= current_project.rera_registration_no %> & is available on <a href="https://maharera.mahaonline.gov.in" target="_blank">https://maharera.mahaonline.gov.in</a>.
+        </div>
       </div>
-    </div>
-    <div class="pt-5 mt-4"></div>
+      <div class="pt-5 mt-4"></div>
+    <% end %>
     <div class="pt-5 mt-4 d-none d-md-block"></div>
     <% if current_client.ga_code.present? %>
     <script>
