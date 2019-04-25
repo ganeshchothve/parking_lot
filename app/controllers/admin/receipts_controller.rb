@@ -1,4 +1,5 @@
 class Admin::ReceiptsController < AdminController
+  include ReceiptsConcern
   before_action :set_user, except: %w[index show export resend_success edit_token_number update_token_number]
   before_action :set_receipt, only: %w[edit update show resend_success edit_token_number update_token_number]
 

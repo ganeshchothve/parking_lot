@@ -1,8 +1,8 @@
 class Admin::BookingDetailsController < AdminController
   include BookingDetailConcern
-  around_action :apply_policy_scope, only: [:index]
-  before_action :set_booking_detail, except: [:index]
-  before_action :authorize_resource, except: [:index]
+  around_action :apply_policy_scope, only: [:index, :mis_report]
+  before_action :set_booking_detail, except: [:index, :mis_report]
+  before_action :authorize_resource, except: [:index, :mis_report]
   before_action :set_project_unit, only: :booking
   before_action :set_receipt, only: :booking
 
@@ -31,6 +31,17 @@ class Admin::BookingDetailsController < AdminController
     respond_to do |format|
       format.html { redirect_to admin_user_path(@booking_detail.user.id) }
     end
+  end
+
+  #
+  # This mis_report action for Admin users where Admin will be mailed the report
+  #
+  # GET /admin/booking_details/mis_report
+  #
+  def mis_report
+    BookingDetailMisReportWorker.perform_async(current_user.id.to_s)
+    flash[:notice] = 'Your mis-report has been scheduled and will be emailed to you in some time'
+    redirect_to request.referer || dashboard_path
   end
 
   private

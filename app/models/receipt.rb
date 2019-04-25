@@ -71,6 +71,7 @@ class Receipt
   increments :order_id, auto: false
 
   delegate :project_unit, to: :booking_detail, prefix: false, allow_nil: true
+  delegate :name, to: :booking_detail, prefix: true, allow_nil: true
 
   enable_audit(
     associated_with: ['user'],

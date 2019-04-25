@@ -35,9 +35,9 @@ class BookingDetailMisReportWorker
       project_unit.name,
       project_unit.unit_configuration_name,
       project_unit.bedrooms,
-      (user.name rescue "N/A"),
-      (user.email rescue "N/A"),
-      (user.phone rescue "N/A"),
+      booking_detail.user_name || 'N/A',
+      booking_detail.user_email || "N/A",
+      booking_detail.user_phone || "N/A",
       booking_detail.status,
       booking_detail.erp_id
     ]

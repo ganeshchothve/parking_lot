@@ -4,11 +4,7 @@ module ReceiptsConcern
   # GET /buyer/receipts/export
   # GET /admin/receipts/export
   def export
-    if Rails.env.development?
-      ReceiptExportWorker.new.perform(current_user.id.to_s, params[:fltrs])
-    else
-      ReceiptExportWorker.perform_async(current_user.id.to_s, params[:fltrs].as_json)
-    end
+    ReceiptExportWorker.perform_async(current_user.id.to_s, params[:fltrs].as_json)
     flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
     redirect_to admin_receipts_path(fltrs: params[:fltrs].as_json)
   end

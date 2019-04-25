@@ -39,6 +39,7 @@ Rails.application.routes.draw do
 
     resources :booking_details, only: [:index, :show] do
       patch :booking, on: :member
+      get :mis_report, on: :collection
       patch :send_under_negotiation, on: :member
       resources :booking_detail_schemes, except: [:destroy], controller: 'booking_details/booking_detail_schemes'
 
@@ -82,7 +83,6 @@ Rails.application.routes.draw do
 
       collection do
         get :export
-        get :mis_report
       end
     end
 

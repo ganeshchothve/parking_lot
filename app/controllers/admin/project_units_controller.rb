@@ -1,7 +1,7 @@
 class Admin::ProjectUnitsController < AdminController
   include ApplicationHelper
   include ProjectUnitsConcern
-  before_action :set_project_unit, except: %i[index export mis_report]
+  before_action :set_project_unit, except: %i[index export]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: :index
   layout :set_layout
@@ -67,21 +67,6 @@ class Admin::ProjectUnitsController < AdminController
     end
     flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
     redirect_to admin_project_units_path(fltrs: params[:fltrs].as_json)
-  end
-
-  #
-  # This mis_report action for Admin users where Admin will be mailed the report
-  #
-  # GET /admin/project_units/mis_report
-  #
-  def mis_report
-    if Rails.env.development?
-      BookingDetailMisReportWorker.new.perform(current_user.id.to_s)
-    else
-      BookingDetailMisReportWorker.perform_async(current_user.id.to_s)
-    end
-    flash[:notice] = 'Your mis-report has been scheduled and will be emailed to you in some time'
-    redirect_to admin_project_units_path
   end
 
   #

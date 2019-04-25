@@ -44,6 +44,7 @@ class BookingDetail
   validates :status, :primary_user_kyc_id, presence: true
   validates :erp_id, uniqueness: true, allow_blank: true
   delegate :name, :blocking_amount, to: :project_unit, prefix: true, allow_nil: true
+  delegate :name, :email, :phone, to: :user, prefix: true, allow_nil: true
 
   scope :filter_by_name, ->(name) { where(name: ::Regexp.new(::Regexp.escape(name), 'i')) }
   scope :filter_by_status, ->(status) { where(status: status) }

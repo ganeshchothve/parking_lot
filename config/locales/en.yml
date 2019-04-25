@@ -405,4 +405,11 @@ en:
       clearance_pending: 'Clearance Pending'
       failed: 'Failed'
       cancel: 'Cancel'
+    payment_mode:
+      online: 'Online'
+      cheque: 'Cheque'
+      rtgs: 'RTGS'
+      imps: 'IMPS'
+      card_swipe: 'Card Swipe'
+      neft: 'NEFT'
 

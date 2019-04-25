@@ -72,6 +72,8 @@ class User
   field :otp_secret_key
   field :referral_code, type: String
 
+  delegate :name, to: :manager, prefix: true, allow_nil: true
+
   def self.otp_length
     6
   end
