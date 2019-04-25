@@ -64,6 +64,7 @@ en:
           user_not_confimred: 'Associated User is not yet confirmed.'
           not_kyc_present: "Associated User's KYC is missing."
           online_account_not_present: 'Any Account is not linked yet. Please contact to admin.'
+
       booking_detail_scheme_policy:
         new?:
           only_admin: 'Only administrator can create new scheme for booking.'
@@ -87,6 +88,7 @@ en:
           do_not_have_access: 'You do not have access.'
           cross_project_tower: 'Project Tower is different.'
           enable_actual_inventory: 'You can not select Inventory. Please contact to Administrator'
+          booking_detail_is_not_ready: 'Booking is not ready for scheme changes.'
         update?:
           only_admin: 'Only administrator can create new scheme for booking.'
           scheme_is_not_approved: 'Selected Scheme is not approved.'
@@ -94,6 +96,7 @@ en:
           do_not_have_access: 'You do not have access.'
           cross_project_tower: 'Project Tower is different.'
           enable_actual_inventory: 'You can not select Inventory. Please contact to Administrator'
+          booking_detail_is_not_ready: 'Booking is not ready for scheme changes.'
 
 
     buyer:
