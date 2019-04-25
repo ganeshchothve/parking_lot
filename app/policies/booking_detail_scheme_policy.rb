@@ -91,7 +91,7 @@ class BookingDetailSchemePolicy < SchemePolicy
   end
 
   def is_cross_tower_scheme?
-    return true if record.project_unit.project_tower_id == record.project_tower_id
+    return true if record.booking_detail.project_unit.project_tower_id == record.project_tower_id
     @condition = 'cross_project_tower'
     false
   end

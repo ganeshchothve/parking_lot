@@ -35,21 +35,6 @@ class Admin::BookingDetails::BookingDetailSchemesController < AdminController
   end
 
   def create
-    if @booking_detail_scheme == nil
-      @booking_detail_scheme = @booking_detail.booking_detail_scheme
-      if @booking_detail_scheme.blank?
-        @scheme = @booking_detail.project_unit.project_tower.default_scheme
-        @booking_detail_scheme = BookingDetailScheme.new(
-          derived_from_scheme_id: @scheme.id,
-          booking_detail_id: @booking_detail.id,
-          created_by_id: @booking_detail.user_id,
-          booking_portal_client_id: @scheme.booking_portal_client_id,
-          cost_sheet_template_id: @scheme.cost_sheet_template_id,
-          payment_schedule_template_id: @scheme.payment_schedule_template_id,
-          project_unit_id: @booking_detail.project_unit_id
-        )
-      end
-    end
     @booking_detail_scheme.assign_attributes(permitted_attributes([ current_user_role_group, @booking_detail_scheme]))
     @booking_detail_scheme.payment_adjustments << @booking_detail_scheme.derived_from_scheme.payment_adjustments
     @booking_detail_scheme.event = 'approved' if @booking_detail_scheme.derived_from_scheme.status == 'approved'
@@ -147,13 +132,9 @@ class Admin::BookingDetails::BookingDetailSchemesController < AdminController
     if params[:action] == "index" || params[:action] == 'export'
       authorize [ :admin, BookingDetailScheme]
     elsif params[:action] == "new" || params[:action] == "create"
-      project_unit_id = @project_unit.id if @project_unit.present?
-      project_unit_id = @booking_detail.project_unit.id if @booking_detail.present? && project_unit_id.blank?
-      booking_detail_id = @booking_detail.id
       @scheme = Scheme.where(_id: params.dig(:booking_detail_scheme, :derived_from_scheme_id) ).last
-      @scheme = @booking_detail.project_unit.project_tower.default_scheme if @scheme.blank?
-
-      authorize [ :admin, BookingDetailScheme.new(created_by: current_user, project_unit_id: project_unit_id, booking_detail_id: booking_detail_id, derived_from_scheme_id: @scheme.id )]
+      @booking_detail_scheme = BookingDetailScheme.new(booking_portal_client: current_client, created_by: current_user, booking_detail_id: @booking_detail, payment_schedule_template_id: @scheme.payment_schedule_template_id, cost_sheet_template_id: @scheme.cost_sheet_template_id, derived_from_scheme_id: @scheme.try(:_id), status: @scheme.try(:status))
+      authorize [:admin, @booking_detail_scheme]
     else
       authorize [:admin, @booking_detail_scheme]
     end
