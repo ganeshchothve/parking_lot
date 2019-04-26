@@ -62,7 +62,7 @@ class ReceiptExportWorker
       receipt.issuing_bank,
       receipt.issuing_bank_branch,
       receipt.payment_identifier,
-      (receipt.payment_type rescue "Not Present")
+      receipt.payment_type,
       receipt.tracking_id,
       receipt.total_amount,
       receipt.status.titleize,

@@ -35,9 +35,9 @@ class Buyer::ReceiptsController < BuyerController
   def create
     @receipt = current_user.receipts.build({
       payment_mode: 'online', creator: current_user,
-      payment_gateway: current_client.payment_gateway
+      payment_gateway: current_client.payment_gateway,
+      payment_type: 'agreement'
     })
-    @receipt.payment_type = 'agreement'
     @receipt.assign_attributes(permitted_attributes([:buyer, @receipt]))
     @receipt.account = selected_account
 
