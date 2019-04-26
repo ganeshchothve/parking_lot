@@ -29,7 +29,7 @@ class BookingDetail
   belongs_to :search, optional: true
   # When a new booking detail object is created from another object, this field will be set. This happens when the user creates a swap request.
   belongs_to :parent_booking_detail, class_name: 'BookingDetail', optional: true
-  belongs_to :primary_user_kyc, class_name: 'UserKyc'
+  belongs_to :primary_user_kyc, class_name: 'UserKyc', optional: true
   has_many :receipts, dependent: :nullify
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :booking_detail_schemes, dependent: :destroy
@@ -41,8 +41,9 @@ class BookingDetail
 
   # TODO: uncomment
   # validates :name, presence: true
-  validates :status, :primary_user_kyc_id, presence: true
+  validates :status, presence: true
   validates :erp_id, uniqueness: true, allow_blank: true
+  validate :kyc_mandate
   delegate :name, :blocking_amount, to: :project_unit, prefix: true, allow_nil: true
   delegate :name, :email, :phone, to: :user, prefix: true, allow_nil: true
 
@@ -66,6 +67,7 @@ class BookingDetail
   def booking_detail_scheme
     booking_detail_schemes.in(status: ['approved', 'draft']).first
   end
+
 
   def pending_balance(options={})
     strict = options[:strict] || false
@@ -112,6 +114,15 @@ class BookingDetail
       triggered_by_id: project_unit.id,
       triggered_by_type: project_unit.class.to_s
     })
+  end
+
+  def kyc_mandate
+    if project_unit.booking_portal_client.enable_booking_without_kyc == true
+      return true
+    elsif primary_user_kyc_id.present?
+      return true
+    end
+    false  
   end
 
   class << self

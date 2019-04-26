@@ -40,7 +40,7 @@ class Admin::BookingDetails::ReceiptsController < AdminController
         else
           url = admin_user_receipts_path(@user, 'remote-state': assetables_path(assetable_type: @receipt.class.model_name.i18n_key.to_s, assetable_id: @receipt.id))
         end
-        format.json { render json: @receipt, location: url }
+        format.json { render json: @receipt, location: URI.decode(url) }
         format.html { redirect_to url }
       else
         flash[:alert] = @receipt.errors.full_messages
