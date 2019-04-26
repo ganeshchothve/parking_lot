@@ -44,4 +44,10 @@ class BookingDetailPolicy < ApplicationPolicy
     @condition = "user_kyc_allowed_bookings"
     false
   end
+
+  def enable_booking_without_kyc?
+    return true if current_client.enable_booking_without_kyc == true
+    false
+  end
+  
 end

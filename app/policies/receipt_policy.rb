@@ -72,4 +72,10 @@ class ReceiptPolicy < ApplicationPolicy
     @condition = 'not_kyc_present'
     false
   end
+
+  def enable_payment_without_kyc?
+    return true if current_client.enable_payment_without_kyc == true
+    false
+  end
+
 end
