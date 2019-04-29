@@ -2,16 +2,18 @@ module SearchConcern
   extend ActiveSupport::Concern
 
   def search_for_project_unit
-    @tower = ProjectTower.find(id: @search.project_tower_id)
-    parameters = @search.params_json
-    parameters[:status] = ProjectUnit.user_based_available_statuses(@search.user)
-    parameters[:project_tower_id] = @search.project_tower_id if @search.project_tower_id.present?
-    @units = ProjectUnit.build_criteria({fltrs: parameters}).sort_by{|x| [x.floor, x.floor_order]}.to_a
-    @all_units = ProjectUnit.collection.aggregate([{
-      "$match": {
-        project_tower_id: BSON::ObjectId(@search.project_tower_id)
+    if @search
+      parameters = @search.params_json
+      parameters[:status] = ProjectUnit.user_based_available_statuses(@search.user)
+      parameters[:project_tower_id] = @search.project_tower_id if @search.project_tower_id.present?
+      @units = ProjectUnit.build_criteria({fltrs: parameters}).sort_by{|x| [x.floor, x.floor_order]}.to_a
+      match = {
+        "$match": {
+          project_tower_id: BSON::ObjectId(@search.project_tower_id)
+        }
       }
-    },{
+    end
+    @all_units = ProjectUnit.collection.aggregate([match, {
       "$group": {
         "_id": {
           floor: "$floor"
@@ -37,7 +39,7 @@ module SearchConcern
       "$sort": {
         "_id": -1
       }
-    }]).to_a
+    }].compact).to_a
     @all_units = @all_units.collect{|x| x.with_indifferent_access}
   end
 
