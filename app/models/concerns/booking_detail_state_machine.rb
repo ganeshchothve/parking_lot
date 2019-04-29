@@ -246,7 +246,7 @@ module BookingDetailStateMachine
     def send_email_and_sms_as_confirmed
       if self.project_unit.booking_portal_client.email_enabled?
         attachments_attributes = []
-        action_mailer_email = ApplicationMailer.test(body: project_unit.booking_portal_client.templates.where(_type: "Template::AllotmentLetterTemplate").first.parsed_content(project_unit))
+        action_mailer_email = ApplicationMailer.test(body: project_unit.booking_portal_client.templates.where(_type: "Template::AllotmentLetterTemplate").first.parsed_content(self))
         pdf = WickedPdf.new.pdf_from_string(action_mailer_email.html_part.body.to_s)
         File.open("#{Rails.root}/allotment_letter-#{project_unit.name}.pdf", "wb") do |file|
           file << pdf

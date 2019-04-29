@@ -5,6 +5,7 @@ class BookingDetail
   include InsertionStringMethods
   include BookingDetailStateMachine
   include SyncDetails
+  include ApplicationHelper
   extend FilterByCriteria
 
   BOOKING_STAGES = %w[blocked booked_tentative booked_confirmed]
