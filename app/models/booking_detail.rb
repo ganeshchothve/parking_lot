@@ -110,8 +110,8 @@ class BookingDetail
       cc: [ project_unit.booking_portal_client.notification_email ],
       recipients: [ user ],
       cc_recipients: ( user.manager_id.present? ? [user.manager] : [] ),
-      triggered_by_id: project_unit.id,
-      triggered_by_type: project_unit.class.to_s
+      triggered_by_id: self.id,
+      triggered_by_type: self.class.to_s
     })
   end
 
