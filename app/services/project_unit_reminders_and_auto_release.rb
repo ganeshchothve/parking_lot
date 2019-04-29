@@ -12,8 +12,8 @@ module ProjectUnitRemindersAndAutoRelease
             email_template_id: Template::EmailTemplate.find_by(name: "daily_reminder_for_booking_payment").id,
             recipients: [project_unit.user],
             cc_recipients: (project_unit.user.manager_id.present? ? [project_unit.user.manager] : []),
-            triggered_by_id: project_unit.id,
-            triggered_by_type: project_unit.class.to_s
+            triggered_by_id: project_unit.booking_detail.id,
+            triggered_by_type: "BookingDetail"
           })
         end
         if days > 0 && project_unit.booking_portal_client.sms_enabled?
@@ -22,8 +22,8 @@ module ProjectUnitRemindersAndAutoRelease
             booking_portal_client_id: project_unit.booking_portal_client_id,
             recipient_id: project_unit.user_id,
             sms_template_id: template.id,
-            triggered_by_id: project_unit.id,
-            triggered_by_type: project_unit.class.to_s
+            triggered_by_id: project_unit.booking_detail.id,
+            triggered_by_type: "BookingDetail"
           )
         end
       end
