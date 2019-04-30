@@ -28,9 +28,11 @@
     <% end %>
   </head>
   <body>
-    <%= render "layouts/navbar" %>
+    <% unless action_name == 'inventory' %>
+      <%= render "layouts/navbar" %>
+    <% end %>
     <%= yield %>
-    <% unless params[:action] == 'inventory' %>
+    <% unless action_name == 'inventory' %>
       <%= render "layouts/gamification" %>
       <div class="container d-block d-md-none mt-3">
         <div class="card card-body">
