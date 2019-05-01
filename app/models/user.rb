@@ -411,7 +411,8 @@ class User
       opts[:to] = unconfirmed_email
       opts[:manager_id] = self.manager_id if self.buyer?
     end
-    send_devise_notification(:confirmation_instructions, @raw_confirmation_token, opts)
+    # send_devise_notification(:confirmation_instructions, @raw_confirmation_token, opts)
+    UserConfirmationMailer.send_confirmation(id.to_s, @raw_confirmation_token)
   end
 
   private
