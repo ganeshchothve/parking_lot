@@ -67,14 +67,14 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def record_user_kyc_ready?
-    return true if (record.user.kyc_ready? ||  current_client.enable_payment_without_kyc == true)
+    return true if (record.user.kyc_ready? ||  current_client.enable_payment_without_kyc)
 
     @condition = 'not_kyc_present'
     false
   end
 
   def enable_payment_without_kyc?
-    return true if current_client.enable_payment_without_kyc == true
+    return true if current_client.enable_payment_without_kyc
     false
   end
 

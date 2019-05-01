@@ -116,8 +116,9 @@ class BookingDetail
     })
   end
 
+  # validates kyc presence if booking is not allowed without kyc
   def kyc_mandate
-    if project_unit.booking_portal_client.enable_booking_without_kyc == true
+    if project_unit.booking_portal_client.enable_booking_without_kyc
       return true
     elsif primary_user_kyc_id.present?
       return true

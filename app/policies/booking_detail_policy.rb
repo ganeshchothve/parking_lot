@@ -40,13 +40,13 @@ class BookingDetailPolicy < ApplicationPolicy
   end
 
   def buyer_kyc_booking_limit_exceed?
-    return true if (record.user.unused_user_kyc_ids(record.id).present? || current_client.enable_booking_without_kyc == true )
+    return true if (record.user.unused_user_kyc_ids(record.id).present? || current_client.enable_booking_without_kyc )
     @condition = "user_kyc_allowed_bookings"
     false
   end
 
   def enable_booking_without_kyc?
-    return true if current_client.enable_booking_without_kyc == true
+    return true if current_client.enable_booking_without_kyc 
     false
   end
   
