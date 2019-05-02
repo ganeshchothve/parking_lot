@@ -326,7 +326,7 @@ class ProjectUnit
   end
 
   def booking_detail_scheme
-    booking_detail.try(:booking_detail_scheme)
+    booking_detail.try(:booking_detail_scheme) unless self.available?
   end
 
   def scheme=(_scheme)
