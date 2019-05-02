@@ -1,6 +1,6 @@
 <%= f.hidden_field :user_id %>
 <div class="form-group">
-  <%= f.label :bedrooms %>
+  <%= f.label :BHK %>
   <%= f.select :bedrooms, data.collect{|x| ["#{x["_id"]["bedrooms"]} BHK starting at #{number_to_indian_currency(x["min_agreement_price"])}".html_safe, x["_id"]["bedrooms"]]}, {prompt: true}, class: 'selectize', disabled: (policy(@search).editable_field?("bedrooms") ? false : true) %>
 </div>
 <div class="form-group">

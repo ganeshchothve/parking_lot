@@ -230,6 +230,7 @@ class SearchesController < ApplicationController
 
   def set_form_data
     @data = ProjectUnit.collection.aggregate([{
+      '$match' => {'status' => 'available'} },{
       "$group": {
         "_id": {
           bedrooms: "$bedrooms"
