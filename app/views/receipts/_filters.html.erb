@@ -35,7 +35,7 @@
       </div>
       <div class="form-group">
         <%= label_tag "fltrs", labels[:status], class: "control-label" %>
-        <%= select_tag "fltrs[status]", options_for_select(Receipt.aasm.states.collect(&:name).collect(&:to_s).collect{|x| [x, x]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize"} %>
+        <%= select_tag "fltrs[status][]", options_for_select(Receipt.aasm.states.collect(&:name).collect(&:to_s).collect{|x| [x, x]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize", multiple: 'multiple'} %>
       </div>
       <div class="form-group">
         <%= label_tag "fltrs", labels[:payment_mode], class: "control-label" %>

@@ -4,7 +4,7 @@
     <%= form_tag url, method: "get", id: "custom_inventory_form" do %>
     <div class="form-group">
       <%= label_tag "project_tower_id", "Project Tower", class: "control-label" %>
-      <%= select_tag "project_tower_id", options_for_select(ProjectTower.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, @project_tower.id.to_s), {prompt: "Select", class: "selectize"} %>
+      <%= select_tag "project_tower_id", options_for_select(ProjectTower.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, @project_tower_id.to_s), {prompt: "Select", class: "selectize"} %>
     </div>
     <div class="form-group">
       <%= submit_tag :Apply, class: "btn btn-primary" %>
@@ -30,51 +30,53 @@
               <div class="tower-container">
                 <div class="tower-wrapper" style="padding: 0px">
                   <div style="margin-bottom: 20px; text-align:center"> <%= project_tower.name %> </div>
-                  <% max_floor = project_tower.total_floors %>
-                  <% max_per_floor = ProjectUnit.where(project_tower_id:project_tower.id).max(:floor_order) %>
-                  <% width = ((100.to_f - (4 * max_per_floor)) / max_per_floor).round(2) %>
-                  <%
-                    height = (280.to_f / max_floor).round(2)
-                    height = 16 if height < 16
-                  %>
-                  <% @all_units.each do |floor_data| %>
-                    <div class="floor" style="line-height: 1rem;">
-                      <div class="floor-number"><%= floor_data[:_id] %></div>
-                      <% max_per_floor.times do |index| %>
-                        <%
-                          klass = 'bg-white'
-                          data_selector = ''
-                          unit = @units.find{|unit| unit.floor == floor_data[:_id] && unit.floor_order == (index + 1) }
-                          if unit
-                            if unit.status == 'available'
-                              klass = 'bg-success'
-                              data_selector = 'unit-card'
-                            elsif unit.status == 'hold'
-                              klass = 'bg-secondary'
-                            elsif ['blocked', 'booked_tentative', 'booked_confirmed','not_available'].include?(unit.status)
-                              klass = 'bg-warning'
-                            else
-                              klass = 'bg-danger'
+                  <% if @units.present? %>
+                    <% max_floor = project_tower.total_floors %>
+                    <% max_per_floor = ProjectUnit.where(project_tower_id:project_tower.id).max(:floor_order) %>
+                    <% width = ((100.to_f - (4 * max_per_floor)) / max_per_floor).round(2) %>
+                    <%
+                      height = (280.to_f / max_floor).round(2)
+                      height = 16 if height < 16
+                    %>
+                    <% @all_units.each do |floor_data| %>
+                      <div class="floor" style="line-height: 1rem;">
+                        <div class="floor-number"><%= floor_data[:_id] %></div>
+                        <% max_per_floor.times do |index| %>
+                          <%
+                            klass = 'bg-white'
+                            data_selector = ''
+                            unit = @units.find{|unit| unit.floor == floor_data[:_id] && unit.floor_order == (index + 1) }
+                            if unit
+                              if unit.status == 'available'
+                                klass = 'bg-success'
+                                data_selector = 'unit-card'
+                              elsif unit.status == 'hold'
+                                klass = 'bg-secondary'
+                              elsif ['blocked', 'booked_tentative', 'booked_confirmed','not_available'].include?(unit.status)
+                                klass = 'bg-warning'
+                              else
+                                klass = 'bg-danger'
+                              end
                             end
-                          end
-                        %>
-                        <% if unit.present? %>
-                          <% html_content = "<div class='row mb-3' style='width:350px;'>
-                            <div class='col-md-4'><label>Beds</label><div>#{unit.bedrooms}</div></div>
-                            <div class='col-md-4'><label>Carpet</label><div>#{unit.carpet} #{current_client.area_unit}</div></div>
-                            <div class='col-md-4'><label>Facing</label><div>#{unit.unit_facing_direction}</div></div>
-                          </div>
-                          <div class='row mb-3'>
-                            <div class='col-md-5'><label>Agreement Value</label><div>#{number_to_indian_currency(unit.agreement_price)}</div></div>
-                            <div class='col-md-5'><label>All Inclusive Price</label><div>#{number_to_indian_currency(unit.all_inclusive_price)}</div></div>
-                          </div>"
                           %>
-                          <span data-jquery-selector="<%= data_selector %>" data-toggle="popover" data-content="<%= html_content %>" data-title="Details for <%= unit.name %>" data-unit-id="<%= unit.present? ? unit.id : '' %>" class="text-center apartment <%= klass %>" style="width: <%= width %>%;height: <%= height %>px;"><small><%= index + 1 %></small></span>
-                        <% else %>
-                          <span data-jquery-selector="<%= data_selector %>" class="apartment <%= klass %>" style="width: <%= width %>%;height: <%= height %>px;text-align:center;font-size:10px">R</span>
+                          <% if unit.present? %>
+                            <% html_content = "<div class='row mb-3' style='width:350px;'>
+                              <div class='col-md-4'><label>Beds</label><div>#{unit.bedrooms}</div></div>
+                              <div class='col-md-4'><label>Carpet</label><div>#{unit.carpet} #{current_client.area_unit}</div></div>
+                              <div class='col-md-4'><label>Facing</label><div>#{unit.unit_facing_direction}</div></div>
+                            </div>
+                            <div class='row mb-3'>
+                              <div class='col-md-5'><label>Agreement Value</label><div>#{number_to_indian_currency(unit.agreement_price)}</div></div>
+                              <div class='col-md-5'><label>All Inclusive Price</label><div>#{number_to_indian_currency(unit.all_inclusive_price)}</div></div>
+                            </div>"
+                            %>
+                            <span data-jquery-selector="<%= data_selector %>" data-toggle="popover" data-content="<%= html_content %>" data-title="Details for <%= unit.name %>" data-unit-id="<%= unit.present? ? unit.id : '' %>" class="text-center apartment <%= klass %>" style="width: <%= width %>%;height: <%= height %>px;"><small><%= index + 1 %></small></span>
+                          <% else %>
+                            <span data-jquery-selector="<%= data_selector %>" class="apartment <%= klass %>" style="width: <%= width %>%;height: <%= height %>px;text-align:center;font-size:10px">R</span>
+                          <% end %>
                         <% end %>
-                      <% end %>
-                    </div>
+                      </div>
+                    <% end %>
                   <% end %>
                 </div>
               </div>
