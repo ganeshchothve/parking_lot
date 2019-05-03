@@ -77,7 +77,7 @@ class Admin::BookingDetails::BookingDetailSchemesController < AdminController
   def update
     modify_params
     @booking_detail_scheme.assign_attributes(permitted_attributes([:admin, @booking_detail_scheme]))
-    @booking_detail_scheme.event = 'draft' if (@booking_detail_scheme.payment_adjustments.present? && @booking_detail_scheme.payment_adjustments.last.new_record?) || @booking_detail_scheme.derived_from_scheme_id_changed?
+    @booking_detail_scheme.event = 'draft' if (@booking_detail_scheme.payment_adjustments.present? && @booking_detail_scheme.payment_adjustments.last.new_record?) || (@booking_detail_scheme.derived_from_scheme_id_changed? && !@booking_detail_scheme.derived_from_scheme.approved?)
     @booking_detail_scheme.approved_by = current_user if @booking_detail_scheme.event.present? && @booking_detail_scheme.event == 'approved'
     respond_to do |format|
       if @booking_detail_scheme.event.present?
