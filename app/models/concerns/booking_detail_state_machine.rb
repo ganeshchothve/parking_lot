@@ -277,20 +277,21 @@ module BookingDetailStateMachine
     # This method is called after of blocked and booked_tentative event
     # In this send email and sms to the user when the booking is in one of the booking stage
     def send_email_and_sms_as_booked
-      if self.project_unit.booking_portal_client.email_enabled?
+      if project_unit.booking_portal_client.email_enabled?
         attachments_attributes = []
-        Email.create!({
+        _status = status.sub('booked_', '')
+        Email.create!(
           booking_portal_client_id: project_unit.booking_portal_client_id,
-          email_template_id: Template::EmailTemplate.find_by(name: "booking_#{status}").id,
+          email_template_id: Template::EmailTemplate.find_by(name: "booking_#{_status}").id,
           cc: [project_unit.booking_portal_client.notification_email],
           recipients: [user],
           cc_recipients: (user.manager_id.present? ? [user.manager] : []),
           triggered_by_id: self.id,
           triggered_by_type: self.class.to_s,
           attachments_attributes: attachments_attributes
-        })
+        )
       end
-      if self.project_unit.booking_portal_client.sms_enabled?
+      if project_unit.booking_portal_client.sms_enabled?
         Sms.create!(
             booking_portal_client_id: project_unit.booking_portal_client_id,
             recipient_id: user.id,
