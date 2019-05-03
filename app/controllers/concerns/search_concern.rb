@@ -14,23 +14,19 @@ module SearchConcern
     @all_units = ProjectUnit.collection.aggregate([match, {
       "$group": {
         "_id": {
-          floor: "$floor"
-        },
-        floor_order: {
-          "$addToSet": "$floor_order"
+          floor: "$floor",
+          floor_order: "$floor_order"
         }
       }
-    }, {"$unwind": "$floor_order"
     }, {
       "$sort": {
-        "_id.floor": -1,
-        "floor_order": 1
+        "_id.floor_order": 1
       }
     }, {
       "$group": {
         "_id": "$_id.floor",
         "floor_order": {
-          "$push": "$floor_order"
+          "$push": "$_id.floor_order"
         }
       }
     }, {
