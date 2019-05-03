@@ -5,7 +5,7 @@ module InventoryImport
 
     developer = Developer.where(name: booking_portal_client.name, booking_portal_client_id: booking_portal_client.id).first
     if developer.blank?
-      developer = Developer.create(name: booking_portal_client.name, client_id: client_id, booking_portal_client_id: booking_portal_client.id)
+      developer = Developer.create(name: booking_portal_client.name,booking_portal_client_id: booking_portal_client.id)
     end
     count = 0
     costs = {}
@@ -91,7 +91,6 @@ module InventoryImport
           project_unit.agreement_price = agreement_price.to_i
           project_unit.all_inclusive_price = all_inclusive_price.to_i
           project_unit.base_rate = base_rate.to_f
-          project_unit.client_id = client_id
           project_unit.bedrooms = bedrooms.to_f
           project_unit.bathrooms = bathrooms.to_f
           project_unit.carpet = carpet.to_f
