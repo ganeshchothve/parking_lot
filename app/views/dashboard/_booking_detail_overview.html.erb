@@ -65,14 +65,16 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-4">
-        <div class="form-group">
-          <label>Effective Rate</label>
-          <div>
-            <%= number_to_indian_currency(booking_detail.project_unit.effective_rate) %> <%= current_client.area_unit %>
+      <% if current_user.role?('superadmin') %>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Effective Rate</label>
+            <div>
+              <%= number_to_indian_currency(booking_detail.project_unit.effective_rate) %> <%= current_client.area_unit %>
+            </div>
           </div>
         </div>
-      </div>
+      <% end %>
       <div class="col-md-4">
         <div class="form-group">
           <label>Agreement Price</label>
@@ -99,38 +101,40 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <% if booking_detail.sync_logs.present? %>
-        <div class="col-md-4">
-          <div class="form-group">
-          <label>Last Synced At:</label>
-            <div>
-              <% if booking_detail.present? %>
-                <% if booking_detail.sync_logs.present? %>
-                  <%= booking_detail.sync_logs.desc(:created_at)[0].present? ? booking_detail.sync_logs.desc(:created_at)[0].updated_at.strftime("%d/%m/%Y %l:%M %p") : "-" %>
+    <% if current_client.external_api_integration? %>
+      <div class="row">
+        <% if booking_detail.sync_logs.present? %>
+          <div class="col-md-4">
+            <div class="form-group">
+            <label>Last Synced At:</label>
+              <div>
+                <% if booking_detail.present? %>
+                  <% if booking_detail.sync_logs.present? %>
+                    <%= booking_detail.sync_logs.desc(:created_at)[0].present? ? booking_detail.sync_logs.desc(:created_at)[0].updated_at.strftime("%d/%m/%Y %l:%M %p") : "-" %>
+                  <% end %>
+                <% else %>
+                   <%= "Not synced" %>
                 <% end %>
-              <% else %>
-                 <%= "Not synced" %>
-              <% end %>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-          <label>Last Sync Log Status:</label>
-            <div>
-              <% if booking_detail.present? %>
-                <% if booking_detail.sync_logs.present? %>
-                  <%= booking_detail.sync_logs.desc(:created_at)[0].status.present? ? booking_detail.sync_logs.desc(:created_at)[0].status : "-" %>
+          <div class="col-md-4">
+            <div class="form-group">
+            <label>Last Sync Log Status:</label>
+              <div>
+                <% if booking_detail.present? %>
+                  <% if booking_detail.sync_logs.present? %>
+                    <%= booking_detail.sync_logs.desc(:created_at)[0].status.present? ? booking_detail.sync_logs.desc(:created_at)[0].status : "-" %>
+                  <% end %>
+                <% else %>
+                   <%= "Not synced" %>
                 <% end %>
-              <% else %>
-                 <%= "Not synced" %>
-              <% end %>
+              </div>
             </div>
           </div>
-        </div>
-      <% end %>
-    </div>
+        <% end %>
+      </div>
+    <% end %>
     <% if %w[ hold swapped canceled ].exclude?(booking_detail.status)  %>
       <div class="row">
         <div class="col-md-4">
