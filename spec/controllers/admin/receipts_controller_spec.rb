@@ -68,7 +68,7 @@ RSpec.describe Admin::ReceiptsController, type: :controller do
             allow_any_instance_of(Receipt).to receive(:account).and_return(nil)
             receipt_params = FactoryBot.attributes_for(:receipt, payment_identifier: nil)
             post :create, params: { receipt: receipt_params, user_id: @user.id }
-            expect(response.request.flash[:alert]).to eq('Any Account is not linked yet. Please contact to admin.')
+            expect(response.request.flash[:alert]).to eq(I18n.t('admin.receipt_policy.create?.online_account_not_present', scope: "pundit"))
           end
 
           it 'send alert message when receipts is invalid' do

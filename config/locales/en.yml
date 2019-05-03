@@ -407,6 +407,13 @@ en:
        cancellation_rejected: 'Cancellation Rejected'
        management: 'Management Blocking'
        employee: 'Employee Blocking'
+  project_units:
+    status:
+      hold: 'Hold'
+      available: 'Available'
+      not_available: 'Not Available'
+      blocked: 'Blocked'
+      error: 'Error'
   receipts:
     status:
       pending: 'Pending'

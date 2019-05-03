@@ -140,7 +140,7 @@
         <div class="form-group">
           <label>Status</label>
           <div>
-            <%= ProjectUnit.available_statuses.find{|x| x[:id] == project_unit.status}[:text] %>
+            <%= t("project_units.status.#{project_unit.status}") %>
           </div>
         </div>
       </div>
@@ -148,7 +148,7 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label>Beds / Baths</label>
+          <label> Beds / Baths</label>
           <div>
             <%= project_unit.bedrooms %> / <%= project_unit.bathrooms %>
           </div>
@@ -162,14 +162,16 @@
           </div>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label>Saleable</label>
-          <div>
-            <%= project_unit.saleable %> <%= current_client.area_unit %>
+      <% if current_user.role?('superadmin') %>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Saleable</label>
+            <div>
+              <%= project_unit.saleable %> <%= current_client.area_unit %>
+            </div>
           </div>
         </div>
-      </div>
+      <% end %>
     </div>
     <div class="row">
       <div class="col-md-4">
@@ -196,7 +198,6 @@
           </div>
         </div>
       </div>
-
       <div class="col-md-4">
         <div class="form-group">
           <label>Phase</label>
@@ -206,36 +207,39 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-4">
-        <div class="form-group">
-        <label>Last Synced At:</label>
-          <div>
-            <% if project_unit.booking_detail.present? %>
-              <% if project_unit.booking_detail.sync_logs.present? %>
-                <%= project_unit.booking_detail.sync_logs.desc(:created_at)[0].present? ? project_unit.booking_detail.sync_logs.desc(:created_at)[0].updated_at.strftime("%d/%m/%Y %l:%M %p") : "-" %>
+    <% if current_client.external_api_integration? %>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Last Synced At:</label>
+            <div>
+              <% if project_unit.booking_detail.present? %>
+                <% if project_unit.booking_detail.sync_logs.present? %>
+                  <%= project_unit.booking_detail.sync_logs.desc(:created_at)[0].present? ? project_unit.booking_detail.sync_logs.desc(:created_at)[0].updated_at.strftime("%d/%m/%Y %l:%M %p") : "-" %>
+                <% end %>
+              <% else %>
+                 <%= "Not synced" %>
               <% end %>
-            <% else %>
-               <%= "Not synced" %>
-            <% end %>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Last Sync Log Status:</label>
+            <div>
+              <% if project_unit.booking_detail.present? %>
+                <% if project_unit.booking_detail.sync_logs.present? %>
+                  <%= project_unit.booking_detail.sync_logs.desc(:created_at)[0].status.present? ? project_unit.booking_detail.sync_logs.desc(:created_at)[0].status : "-" %>
+                <% end %>
+              <% else %>
+                 <%= "Not synced" %>
+              <% end %>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="form-group">
-        <label>Last Sync Log Status:</label>
-          <div>
-            <% if project_unit.booking_detail.present? %>
-              <% if project_unit.booking_detail.sync_logs.present? %>
-                <%= project_unit.booking_detail.sync_logs.desc(:created_at)[0].status.present? ? project_unit.booking_detail.sync_logs.desc(:created_at)[0].status : "-" %>
-              <% end %>
-            <% else %>
-               <%= "Not synced" %>
-            <% end %>
-          </div>
-        </div>
-      </div>
-    </div>
+    <% end %>
+
     <% if project_unit.booking_detail && (project_unit.booking_detail.status == "blocked" || project_unit.booking_detail.status == "booked_tentative") && project_unit.auto_release_on.present? && project_unit.auto_release_on > Date.today %>
       <div class="row">
         <div class="col-md-4">
