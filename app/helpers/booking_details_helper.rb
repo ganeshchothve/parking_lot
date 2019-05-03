@@ -1,7 +1,7 @@
 module BookingDetailsHelper
 
   def get_booking_detail_object(project_unit)
-    if project_unit.status == 'blocked'
+    if %w(blocked hold).include?(project_unit.status)
       project_unit.booking_detail
     else
       booking_detail = BookingDetail.new(project_unit: project_unit)
