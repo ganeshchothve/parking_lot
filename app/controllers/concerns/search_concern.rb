@@ -5,10 +5,10 @@ module SearchConcern
     #
     # Commented for now, can be used if buyer wants to initiate booking process from looking at the inventory.
     #
-    #parameters = @search.params_json
-    #parameters[:status] = ProjectUnit.user_based_available_statuses(@search.user)
-    #parameters[:project_tower_id] = @search.project_tower_id if @search.project_tower_id.present?
-    #@units = ProjectUnit.build_criteria({fltrs: parameters}).sort_by{|x| [x.floor, x.floor_order]}.to_a
+    parameters = @search.params_json
+    parameters[:status] = ProjectUnit.user_based_available_statuses(@search.user)
+    parameters[:project_tower_id] = @search.project_tower_id if @search.project_tower_id.present?
+    @units = ProjectUnit.build_criteria({fltrs: parameters}).sort_by{|x| [x.floor, x.floor_order]}.to_a
 
     match = { "$match": { project_tower_id: @project_tower_id } } if @project_tower_id
     @all_units = ProjectUnit.collection.aggregate([match, {
