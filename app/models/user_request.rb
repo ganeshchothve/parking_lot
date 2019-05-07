@@ -27,6 +27,9 @@ class UserRequest
   validates :reason_for_failure, presence: true, if: proc { |record| record.rejected? }
 
   accepts_nested_attributes_for :notes
+  scope :filter_by_user, ->(user_id){ where(user_id: user_id)}
+  scope :filter_by__type, ->(request_type){ where(_type: /#{request_type}/i)}
+  scope :filter_by_status, ->(_status){ where(status: _status) }
 
   default_scope -> { desc(:created_at) }
 
@@ -36,7 +39,7 @@ class UserRequest
 
   class << self
     def user_based_scope(user, params = {})
-  
+
       custom_scope = {}
       if params[:user_id].blank? && !user.buyer?
         if user.role?('channel_partner')

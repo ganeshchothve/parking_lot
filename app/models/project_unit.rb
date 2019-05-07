@@ -7,6 +7,8 @@ class ProjectUnit
   include InsertionStringMethods
   include CostCalculator
 
+  STATUS = %w(available not_available hold blocked error)
+
   # These fields are globally utlised on the server side
   field :name, type: String
   field :erp_id, type: String

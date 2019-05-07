@@ -9,11 +9,11 @@
       <hr/>
       <div class="form-group">
         <%= label_tag "fltrs", "Name", class: "control-label" %>
-        <%= select_tag "fltrs[name]", options_for_select(BookingDetail.all.collect(&:name).collect{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:name] : "")), {prompt: "Select", class: "selectize"} %>
+        <%= select_tag "fltrs[name]", options_for_select(BookingDetail.all.collect(&:name), (params.dig(:fltrs, :name) || "")), {prompt: "Select", class: "selectize"} %>
       </div>
       <div class="form-group">
         <%= label_tag "fltrs", "status", class: "control-label" %>
-        <%= select_tag "fltrs[status]", options_for_select(BookingDetail.aasm.states.collect(&:name).collect{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize"} %>
+        <%= select_tag "fltrs[status]", options_for_select(BookingDetail.aasm.states.collect(&:name).collect{|x| [ t("booking_details.status.#{x}"), x.to_s]}, (params.dig(:fltrs, :status) || "")), {prompt: "Select", class: "selectize"} %>
       </div>
       <div class="form-group">
         <%= label_tag "fltrs", "project tower", class: "control-label" %>
@@ -21,7 +21,7 @@
       </div>
       <div class="form-group">
         <%= label_tag "fltrs", "user", class: "control-label" %>
-        <%= select_tag "fltrs[user]", options_for_select(BookingDetail.all.map{|f| [f.user.name, f.user.id]}, (params[:fltrs].present? ? params[:fltrs][:user] : "")), {prompt: "Select", class: "selectize"} %>
+        <%= select_tag "fltrs[user]", options_for_select(BookingDetail.all.map{|f| [f.user.name, f.user.id] }, (params.dig(:fltrs, :user) || "")), {prompt: "Select", class: "selectize"} %>
       </div>
       <div class="form-group">
         <%= label_tag "fltrs", "manager", class: "control-label" %>

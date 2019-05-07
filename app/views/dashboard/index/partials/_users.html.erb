@@ -1,33 +1,37 @@
 <% users = DashboardDataProvider.users_dashboard(current_user, params[:user_fltrs]) %>
 <div class="card">
-  <div class="card-header">
-    <%= global_labels[:users] %>
-  </div>
-  <div class="card-body">
-    <% if users.present? %>
-      <div class="table-responsive">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Role</th>
-              <th class="text-right">Count</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% users.each do |d| %>
-            <tr>
-              <td><%= User.available_roles(current_client).find{|x| x[:id] == d[:role]}[:text] %></td>
-              <td class="text-right"><%= d[:count] %></td>
-            </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    <% else %>
-      No <%= global_labels[:users] %> yet.
-      <% if policy([current_user_role_group, User.new(role: 'user')]).new? %>
-        <%= link_to 'Add a Customer', new_admin_user_path, class: 'modal-remote-form-link' %>
+  <a data-toggle="collapse" href="#dashboard_users" role="button" aria-expanded="false" aria-controls="dashboard_users" class='font-weight-bold'>
+    <div class="card-header">
+      <%= global_labels[:users]%>
+    </div>
+  </a>
+  <div class="collapse" id="dashboard_users">
+    <div class="card-body">
+      <% if users.present? %>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Role</th>
+                <th class="text-right">Count</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% users.each do |d| %>
+              <tr>
+                <td><%= User.available_roles(current_client).find{|x| x[:id] == d[:role]}[:text] %></td>
+                <td class="text-right"><%= d[:count] %></td>
+              </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        No <%= global_labels[:users] %> yet.
+        <% if policy([current_user_role_group, User.new(role: 'user')]).new? %>
+          <%= link_to 'Add a Customer', new_admin_user_path, class: 'modal-remote-form-link' %>
+        <% end %>
       <% end %>
-    <% end %>
+    </div>
   </div>
 </div>
