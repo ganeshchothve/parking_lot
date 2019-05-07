@@ -16,7 +16,7 @@ class ReceiptExportWorker
       sheet.insert_row(index+1, ReceiptExportWorker.get_receipt_row(receipt))
     end
     file_name = "receipt-#{SecureRandom.hex}.xls"
-    file.write("#{Rails.root}/#{file_name}")
+    file.write("#{Rails.root}/exports/#{file_name}")
     ExportMailer.notify(file_name, user.email, "Payments").deliver
   end
 

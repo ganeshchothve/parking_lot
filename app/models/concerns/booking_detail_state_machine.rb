@@ -248,10 +248,10 @@ module BookingDetailStateMachine
         attachments_attributes = []
         action_mailer_email = ApplicationMailer.test(body: project_unit.booking_portal_client.templates.where(_type: "Template::AllotmentLetterTemplate").first.parsed_content(self))
         pdf = WickedPdf.new.pdf_from_string(action_mailer_email.html_part.body.to_s)
-        File.open("#{Rails.root}/allotment_letter-#{project_unit.name}.pdf", "wb") do |file|
+        File.open("#{Rails.root}/exports/allotment_letter-#{project_unit.name}.pdf", "wb") do |file|
           file << pdf
         end
-        attachments_attributes << {file: File.open("#{Rails.root}/allotment_letter-#{project_unit.name}.pdf")}
+        attachments_attributes << {file: File.open("#{Rails.root}/exports/allotment_letter-#{project_unit.name}.pdf")}
         Email.create!({
             booking_portal_client_id: project_unit.booking_portal_client_id,
             email_template_id: Template::EmailTemplate.find_by(name: "booking_confirmed").id,

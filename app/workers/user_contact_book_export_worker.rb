@@ -13,7 +13,7 @@ class UserContactBookExportWorker
       end
     end
     file_name = "Customer-Contact-Book-#{SecureRandom.hex}.xls"
-    file.write("#{Rails.root}/#{file_name}")
+    file.write("#{Rails.root}/exports/#{file_name}")
     ExportMailer.notify(file_name, emails, "Customer Contact Book Report").deliver
   end
 
@@ -32,7 +32,6 @@ class UserContactBookExportWorker
       "POA",
       "POA Details",
       "Company Name",
-      "Loan Required",
       "Bank Name",
       "Is an Existing Customer",
       "Existing Customer Name",
@@ -62,8 +61,7 @@ class UserContactBookExportWorker
       user_kyc.poa? ? "Yes" : "No",
       user_kyc.poa_details,
       user_kyc.company_name,
-      user_kyc.loan_required? ? "Yes" : "No",
-      user_kyc.bank_name,
+      user_kyc.bank_detail_name,
       user_kyc.existing_customer? ? "Yes" : "No",
       user_kyc.existing_customer_name,
       user_kyc.existing_customer_project,
