@@ -9,15 +9,22 @@
           </button>
         </div>
         <div class="modal-body">
-          <% if policy([current_user_role_group, (@user_request)]).editable_field?("project_unit_id") %>
-            <div class="form-group">
-              <%= f.label :project_unit, class: 'label-required' %>
-              <%= f.select :booking_detail_id, available_booking_for_request, {prompt: true}, class: 'selectize', disabled: !policy([current_user_role_group, (@user_request)]).editable_field?("booking_detail_id"), required: "required" %>
-            </div>
+          <% if policy([current_user_role_group, (@user_request)]).editable_field?("requestable_id") %>
+            <%= f.hidden_field :requestable_type, value: @user_request.requestable_type %>
+            <% if @user_request.requestable_type == 'BookingDetail' %>
+              <div class="form-group">
+                <%= f.label :project_unit, class: 'label-required' %>
+                <%= f.select :requestable_id, available_booking_for_request, {prompt: true}, class: 'selectize', disabled: !policy([current_user_role_group, (@user_request)]).editable_field?("requestable_id"), required: "required" %>
+              </div>
+            <% elsif @user_request.requestable_type == 'Receipt' %>
+                <%= f.label :receipt, class: 'label-required' %>
+                <%= f.select :requestable_id, options_from_collection_for_select(Receipt.all, 'id', 'receipt_id', f.object.requestable_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_receipts_path } %>
+                
+            <% end %>
           <% else %>
             <div class="form-group">
               <%= f.label :project_unit_id, class: 'label-required' %>
-              <div><%= @user_request.booking_detail.name %></div>
+              <div><%= @user_request.requestable.try(:name) %></div>
             </div>
           <% end %>
           <% begin %>

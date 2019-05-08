@@ -3,8 +3,8 @@ class Buyer::UserRequestPolicy < UserRequestPolicy
 
   def new?
     valid = current_client.enable_actual_inventory?(user)
-    if record.booking_detail.present?
-      valid &&= BookingDetail::BOOKING_STAGES.include?(record.booking_detail.status)
+    if record.requestable.present? && record.requestable_type == 'BookingDetail'
+      valid &&= BookingDetail::BOOKING_STAGES.include?(record.requestable.status)
     end
     valid
   end
@@ -21,7 +21,8 @@ class Buyer::UserRequestPolicy < UserRequestPolicy
     attributes = []
     if record.status == 'pending'
       attributes += %i[receipt_id user_id]
-      attributes += %i[project_unit_id booking_detail_id event] if record.new_record?
+      attributes += %i[project_unit_id requestable_id requestable_type event] if record.new_record?
+      attributes += %i[event] if record.requestable_type == 'Receipt'
       attributes += [notes_attributes: Buyer::NotePolicy.new(user, Note.new).permitted_attributes]
     end
     attributes

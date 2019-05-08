@@ -41,6 +41,7 @@ class Receipt
   has_many :assets, as: :assetable
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :sync_logs, as: :resource
+  has_many :user_requests, as: :requestable
 
   scope :filter_by_status, ->(*_status) { where(status: { '$in' => _status }) }
   scope :filter_by_receipt_id, ->(_receipt_id) { where(receipt_id: /#{_receipt_id}/i) }

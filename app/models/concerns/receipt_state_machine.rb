@@ -6,7 +6,7 @@ module ReceiptStateMachine
 
     aasm column: :status, whiny_transitions: false do
       state :pending, initial: true
-      state :success, :clearance_pending, :failed, :available_for_refund, :refunded, :cancelled
+      state :success, :clearance_pending, :failed, :available_for_refund, :refunded, :cancelled, :cancellation_requested
 
       event :pending, after: %i[moved_to_clearance_pending] do
         transitions from: :pending, to: :pending
@@ -24,9 +24,10 @@ module ReceiptStateMachine
         transitions from: :available_for_refund, to: :success
       end
 
-      event :available_for_refund do
+      event :available_for_refund, after: %i[send_booking_detail_to_under_negotiation] do
         transitions from: :available_for_refund, to: :available_for_refund
-        transitions from: :success, to: :available_for_refund, if: :can_available_for_refund?
+        transitions from: :success, to: :available_for_refund # , if: :can_available_for_refund?
+        transitions from: :cancellation_requested, to: :available_for_refund
       end
 
       event :refunded do
@@ -41,6 +42,10 @@ module ReceiptStateMachine
         transitions from: :pending, to: :failed, unless: :new_record?
         transitions from: :clearance_pending, to: :failed
         transitions from: :failed, to: :failed
+      end
+
+      event :cancellation_requested do
+        transitions from: :success, to: :cancellation_requested
       end
 
       event :cancel do
@@ -80,6 +85,9 @@ module ReceiptStateMachine
       end
     end
 
+    def send_booking_detail_to_under_negotiation
+      booking_detail.under_negotiation! if booking_detail
+    end
     #
     # When Receipt is created by admin except channel partner then it's direcly moved in clearance pending.
     #

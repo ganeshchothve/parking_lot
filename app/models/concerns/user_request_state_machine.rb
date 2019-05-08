@@ -7,7 +7,7 @@ module UserRequestStateMachine
       state :pending, initial: true
       state :processing, :resolved, :rejected
 
-      event :pending, after: :update_booking_detail_to_request_made do
+      event :pending, after: :update_requestable_to_request_made do
         transitions from: :pending, to: :pending
       end
 
@@ -61,10 +61,10 @@ module UserRequestStateMachine
       end
     end
 
-    def update_booking_detail_to_request_made
-      booking_detail.cancellation_requested! if is_a?(UserRequest::Cancellation)
-      booking_detail.swap_requested! if is_a?(UserRequest::Swap)
-      send_notifications
+    def update_requestable_to_request_made
+      requestable.cancellation_requested! if is_a?(UserRequest::Cancellation)
+      requestable.swap_requested! if is_a?(UserRequest::Swap)
+      # send_notifications
     end
 
     def send_notifications
@@ -73,15 +73,21 @@ module UserRequestStateMachine
     end
 
     def update_booking_detail_to_request_rejected
-      booking_detail.cancellation_rejected! if is_a?(UserRequest::Cancellation)
-      booking_detail.swap_rejected! if is_a?(UserRequest::Swap)
-      self.reason_for_failure = 'admin rejected the request' if reason_for_failure.blank?
-      send_notifications
+      if self.requestable_type = 'BookingDetail'
+        requestable.cancellation_rejected! if is_a?(UserRequest::Cancellation)
+        requestable.swap_rejected! if is_a?(UserRequest::Swap)
+        self.reason_for_failure = 'admin rejected the request' if reason_for_failure.blank?
+        send_notifications
+      end
     end
 
     def update_booking_detail_to_cancelling
-      if booking_detail.cancelling!
-        UserRequests::CancellationProcess.perform_async(id)
+      if requestable_type == 'BookingDetail'
+        if requestable.cancelling!
+          UserRequests::CancellationProcess.perform_async(id)
+        end
+      elsif requestable_type == 'Receipt'
+        requestable.available_for_refund!
       end
     end
 

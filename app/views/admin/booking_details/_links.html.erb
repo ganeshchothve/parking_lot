@@ -49,8 +49,8 @@
 
     <% [UserRequest::Cancellation, UserRequest::Swap] if Rails.env.development? %>
     <% UserRequest.descendants.each do |klass| %>
-      <% if policy([:admin, klass.new(user_id: booking_detail.user_id, booking_detail: booking_detail)]).new? %>
-          <%= link_to t("global.user_request_#{klass.model_name.element}"), new_admin_user_user_request_path(user_id: booking_detail.user_id, booking_detail_id: booking_detail.id, request_type: klass.model_name.element), class: "dropdown-item modal-remote-form-link" %>
+      <% if policy([:admin, klass.new(user_id: booking_detail.user_id, requestable_id: booking_detail.id, requestable_type: 'BookingDetail')]).new? %>
+          <%= link_to t("global.user_request_#{klass.model_name.element}"), new_admin_user_user_request_path(user_id: booking_detail.user_id, requestable_id: booking_detail.id, requestable_type: booking_detail.class.model_name.element, request_type: klass.model_name.element), class: "dropdown-item modal-remote-form-link" %>
       <% end %>
     <% end %>
 
