@@ -27,6 +27,32 @@ module DatabaseSeeds
             </p>
           </div>
         </div>') if ::Template::EmailTemplate.where(name: "referral_invitation").blank?
+
+        Template::EmailTemplate.create!(booking_portal_client_id: Client.first.id, subject_class: "User", name: "user_confirmation_instructions", subject: "Confirmation Instructions", content: '<div class="card w-100">
+            <div class="card-body">
+              <p>
+                Dear <%= self.name %>,
+              </p>
+              <div class="mb-3"></div>
+              <p>
+                <% if self.role?("channel_partner") %>
+                  Thank you for registering as a Channel Partner at <%= current_project.name %>. Please confirm your account by clicking the link below. <br/>
+                  You can start entering your leads as soon as your account is confirmed.
+                <% elsif self.buyer? %>
+                  <% if self.manager_id.present? && self.manager.role?("channel_partner") %>
+                    Your interest for <%= current_project.name %> has been registered by <%= self.manager.name %>. Please confirm your account by clicking the link below and book your Home in 4 easy steps!<br/>
+                  <% else %>
+                    Thank you for registering at <%= current_project.name %>. Please confirm your account by clicking the link below and book your Home in 4 easy steps!
+                  <% end %>
+                <% else %>
+                  Please confirm your account by clicking the link below.
+                <% end %>
+              </p>
+              <div class="mb-3"></div>
+              <a href=<%= self.confirmation_url %>>Confirm account</a> 
+            </div>
+          </div>
+') if ::Template::EmailTemplate.where(name: "user_confirmation_instructions").blank?
       end
     end
   end

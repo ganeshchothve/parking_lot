@@ -411,7 +411,16 @@ class User
       opts[:to] = unconfirmed_email
       opts[:manager_id] = self.manager_id if self.buyer?
     end
-    send_devise_notification(:confirmation_instructions, @raw_confirmation_token, opts)
+    # send_devise_notification(:confirmation_instructions, @raw_confirmation_token, opts)
+    Email.create!({
+      booking_portal_client_id: booking_portal_client_id,
+      email_template_id: Template::EmailTemplate.find_by(name: "user_confirmation_instructions").id,
+      cc: [ booking_portal_client.notification_email ],
+      recipients: [ self ],
+      cc_recipients: ( manager_id.present? ? [ manager] : [] ),
+      triggered_by_id: id,
+      triggered_by_type: self.class.to_s
+    })
   end
 
   private
