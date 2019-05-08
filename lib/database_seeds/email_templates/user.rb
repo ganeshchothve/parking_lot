@@ -49,10 +49,9 @@ module DatabaseSeeds
                 <% end %>
               </p>
               <div class="mb-3"></div>
-              <a href=<%= self.confirmation_url %>>Confirm account</a> 
+              <a href=<%= self.confirmation_url %>>Confirm account</a>
             </div>
-          </div>
-') if ::Template::EmailTemplate.where(name: "user_confirmation_instructions").blank?
+          </div>') if ::Template::EmailTemplate.where(name: "user_confirmation_instructions").blank?
       end
     end
   end

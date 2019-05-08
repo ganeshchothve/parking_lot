@@ -396,28 +396,15 @@ class User
     Api::UserDetailsSync.new(erp_model, self, sync_log).execute if self.buyer?
   end
 
-  # IRIS-75 Need to send manager_id in request.
-  def send_confirmation_instructions
-    UserConfirmationEmailWorker.perform_async(id.to_s)
-  end
-
   # This is sub part of send_confirmation_instructions for delay this method is used
-  def _send_confirmation_instruction
-    unless @raw_confirmation_token
-      generate_confirmation_token!
-    end
-    opts = {}
-    if pending_reconfirmation?
-      opts[:to] = unconfirmed_email
-      opts[:manager_id] = self.manager_id if self.buyer?
-    end
+  def send_confirmation_instructions
+    generate_confirmation_token! unless @raw_confirmation_token
     # send_devise_notification(:confirmation_instructions, @raw_confirmation_token, opts)
     Email.create!({
       booking_portal_client_id: booking_portal_client_id,
       email_template_id: Template::EmailTemplate.find_by(name: "user_confirmation_instructions").id,
       cc: [ booking_portal_client.notification_email ],
       recipients: [ self ],
-      cc_recipients: ( manager_id.present? ? [ manager] : [] ),
       triggered_by_id: id,
       triggered_by_type: self.class.to_s
     })
