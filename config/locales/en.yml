@@ -419,7 +419,10 @@ en:
       pending: 'Pending'
       clearance_pending: 'Clearance Pending'
       failed: 'Failed'
-      cancel: 'Cancel'
+      success: 'Success'
+      available_for_refund: 'Available For Refund'
+      refunded: 'Refund'
+      cancelled: 'Canceled'
     payment_mode:
       online: 'Online'
       cheque: 'Cheque'
