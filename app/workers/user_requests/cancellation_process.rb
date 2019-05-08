@@ -7,7 +7,7 @@ module UserRequests
     def perform(user_request_id)
       @user_request = UserRequest.processing.where(_id: user_request_id).first
       return nil if @user_request.blank?
-      @booking_detail = user_request.booking_detail
+      @booking_detail = user_request.requestable
       if @booking_detail && @booking_detail.cancelling?
         resolve
       else

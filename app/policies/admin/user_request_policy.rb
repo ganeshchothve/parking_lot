@@ -24,7 +24,7 @@ class Admin::UserRequestPolicy < UserRequestPolicy
   def permitted_attributes(_params = {})
     attributes = []
     if record.status == 'pending' && %w[admin crm sales superadmin cp].include?(user.role)
-      attributes += [:event]
+      attributes += [:event, :reason_for_failure]
       attributes += [:requestable_id, :requestable_type] if record.new_record?
       attributes += [notes_attributes: Admin::NotePolicy.new(user, Note.new).permitted_attributes]
     end

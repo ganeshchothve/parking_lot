@@ -22,6 +22,7 @@ module ReceiptStateMachine
         # receipt moves from pending to success when online payment is made.
         transitions from: :clearance_pending, to: :success, unless: :new_record?
         transitions from: :available_for_refund, to: :success
+        transitions from: :cancellation_requested, to: :success
       end
 
       event :available_for_refund, after: %i[send_booking_detail_to_under_negotiation] do

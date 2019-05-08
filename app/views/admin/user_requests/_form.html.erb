@@ -18,7 +18,11 @@
               </div>
             <% elsif @user_request.requestable_type == 'Receipt' %>
                 <%= f.label :receipt, class: 'label-required' %>
-                <%= f.select :requestable_id, options_from_collection_for_select(Receipt.all, 'id', 'receipt_id', f.object.requestable_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_receipts_path } %>
+                <% if current_user.buyer? %>
+                  <%= f.select :requestable_id, options_from_collection_for_select(current_user.receipts, 'id', 'receipt_id', f.object.requestable_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: buyer_receipts_path(user_id: current_user.id ) } %>
+                <% else %>
+                  <%= f.select :requestable_id, options_from_collection_for_select(Receipt.all, 'id', 'receipt_id', f.object.requestable_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_receipts_path } %>
+                <%end %>
                 
             <% end %>
           <% else %>

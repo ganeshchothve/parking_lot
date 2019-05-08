@@ -5,7 +5,7 @@ RSpec.describe UserRequests::CancellationProcess, type: :worker do
       @admin = create(:admin)
       @user = create(:user)
       @booking_detail = book_project_unit(@user, nil, nil)
-      @user_request = create(:pending_user_request_cancellation, user_id: @booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: @booking_detail.id, event: 'pending')
+      @user_request = create(:pending_user_request_cancellation, user_id: @booking_detail.user_id, created_by_id: @admin.id,requestable_id: @booking_detail.id, requestable_type: 'BookingDetail', event: 'pending')
       @user_request.set(status: 'processing', resolved_by_id: @admin.id)
       @booking_detail.set(status: 'cancelling')
     end
@@ -18,7 +18,7 @@ RSpec.describe UserRequests::CancellationProcess, type: :worker do
       end
       context 'UserRequest is in processing state but booking_detail is missing' do
         it 'request put on Rejected state, with error message' do
-          allow_any_instance_of(UserRequest).to receive(:booking_detail).and_return(nil)
+          allow_any_instance_of(UserRequest).to receive(:requestable).and_return(nil)
           UserRequests::CancellationProcess.new.perform(@user_request.id)
           expect(@user_request.reload.status).to eq('rejected')
           expect(@user_request.reason_for_failure).to include('Booking Is not available for cancellation.')

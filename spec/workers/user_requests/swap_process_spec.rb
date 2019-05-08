@@ -5,7 +5,7 @@ RSpec.describe UserRequests::SwapProcess, type: :worker do
       @admin = create(:admin)
       @user = create(:user)
       @user_request = swap_request(@user)
-      @booking_detail = @user_request.booking_detail
+      @booking_detail = @user_request.requestable
       @alternate_project_unit = @user_request.alternate_project_unit
       @user_request.set(status: 'processing', resolved_by_id: @admin.id)
       @booking_detail.set(status: 'swapping')
@@ -20,7 +20,7 @@ RSpec.describe UserRequests::SwapProcess, type: :worker do
 
       context 'UserRequest is in processing state but booking_detail is missing' do
         it 'request put on Rejected state, with error message' do
-          allow_any_instance_of(UserRequest).to receive(:booking_detail).and_return(nil)
+          allow_any_instance_of(UserRequest).to receive(:requestable).and_return(nil)
           UserRequests::SwapProcess.new.perform(@user_request.id)
           expect(@user_request.reload.status).to eq('rejected')
           expect(@user_request.reason_for_failure).to include('Booking Is not available for swapping.')
