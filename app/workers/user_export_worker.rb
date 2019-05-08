@@ -22,7 +22,7 @@ class UserExportWorker
       sheet.insert_row(index+1, UserExportWorker.get_user_kyc_row(user_kyc, current_user))
     end
     file_name = "user-#{SecureRandom.hex}.xls"
-    file.write("#{Rails.root}/#{file_name}")
+    file.write("#{Rails.root}/exports/#{file_name}")
 
     ExportMailer.notify(file_name, current_user.email, "Users & User KYCs").deliver
   end

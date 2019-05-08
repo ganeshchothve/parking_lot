@@ -34,29 +34,6 @@ module CostCalculator
   #   end
   # end
 
-  def ageing
-    if(["booked_confirmed"].include?(self.status))
-      last_booking_payment = self.receipts.in(status:["clearance_pending", "success"]).desc(:created_at).first.created_at.to_date
-      due_since = self.receipts.in(status:["clearance_pending", "success"]).asc(:created_at).first.created_at.to_date
-      age = (last_booking_payment - due_since).to_i
-    elsif(["blocked", "booked_tentative"].include?(self.status))
-      age = (Date.today - self.receipts.in(status:["clearance_pending", "success"]).asc(:created_at).first.created_at.to_date).to_i
-    else
-      return "NA"
-    end
-    if age < 15
-      return "< 15 days"
-    elsif age < 30
-      return "< 30 days"
-    elsif age < 45
-      return "< 45 days"
-    elsif age < 60
-      return "< 60 days"
-    else
-      return "> 60 days"
-    end
-  end
-
   # def total_amount_paid
   #   receipts.where(user_id: self.user_id).where(status: 'success').sum(:total_amount)
   # end

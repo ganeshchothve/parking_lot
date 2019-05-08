@@ -104,6 +104,10 @@ class ProjectUnit
     %w[available employee management].include?(status)
   end
 
+  def blocked?
+    status == 'blocked'
+  end
+
   def calculated_costs
     out = {}
     costs.each { |c| out[c.key] = c.value }

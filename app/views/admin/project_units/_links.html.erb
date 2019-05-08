@@ -4,7 +4,7 @@
 <%# end %>
 
 <% if policy([:admin, project_unit]).show? %>
-  <%= link_to "View Details", admin_project_unit_path(project_unit), class: 'dropdown-item' %>
+  <%= link_to "View Details", [:admin, (project_unit.blocked? ? project_unit.booking_detail : project_unit)], class: 'dropdown-item' %>
 <% end %>
 
 <% if policy([:admin, project_unit]).edit? %>

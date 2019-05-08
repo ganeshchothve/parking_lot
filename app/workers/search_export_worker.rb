@@ -11,7 +11,7 @@ class SearchExportWorker
       sheet.insert_row(index+1, SearchExportWorker.get_search_row(search))
     end
     file_name = "cancellation-#{SecureRandom.hex}.xls"
-    file.write("#{Rails.root}/#{file_name}")
+    file.write("#{Rails.root}/exports/#{file_name}")
     ExportMailer.notify(file_name, user.email, "Search Report").deliver
   end
 

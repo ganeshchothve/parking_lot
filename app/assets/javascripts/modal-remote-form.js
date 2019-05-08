@@ -42,7 +42,7 @@ var modal_remote_form_link_click_handler = function(remote_href){
       window.history.pushState(null, null, href);
     }
     $.ajax({
-      url: remote_href,
+      url: decodeURIComponent(remote_href),
       type: "GET",
       dataType: "html",
       success: function(one){
