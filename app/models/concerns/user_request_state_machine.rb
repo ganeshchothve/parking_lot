@@ -13,8 +13,8 @@ module UserRequestStateMachine
 
       event :processing do
         after do
-          update_booking_detail_to_cancelling if is_a?(UserRequest::Cancellation)
-          update_booking_detail_to_swapping if is_a?(UserRequest::Swap)
+          update_requestable_to_cancelling if is_a?(UserRequest::Cancellation)
+          update_requestable_to_swapping if is_a?(UserRequest::Swap)
         end
         transitions from: :processing, to: :processing
         transitions from: :pending, to: :processing
@@ -27,7 +27,7 @@ module UserRequestStateMachine
 
       event :rejected do
         transitions from: :rejected, to: :rejected
-        transitions from: :pending, to: :rejected, after: :update_booking_detail_to_request_rejected
+        transitions from: :pending, to: :rejected, after: :update_requestable_to_request_rejected
         transitions from: :processing, to: :rejected, after: :send_notifications
       end
     end
@@ -72,16 +72,19 @@ module UserRequestStateMachine
       send_sms if user.booking_portal_client.sms_enabled? && !processing?
     end
 
-    def update_booking_detail_to_request_rejected
-      if self.requestable_type = 'BookingDetail'
+    def update_requestable_to_request_rejected
+      if self.requestable_type == 'BookingDetail'
         requestable.cancellation_rejected! if is_a?(UserRequest::Cancellation)
         requestable.swap_rejected! if is_a?(UserRequest::Swap)
         self.reason_for_failure = 'admin rejected the request' if reason_for_failure.blank?
         send_notifications
       end
+      if self.requestable_type == 'Receipt'
+        requestable.success!
+      end
     end
 
-    def update_booking_detail_to_cancelling
+    def update_requestable_to_cancelling
       if requestable_type == 'BookingDetail'
         if requestable.cancelling!
           UserRequests::CancellationProcess.perform_async(id)
@@ -91,9 +94,11 @@ module UserRequestStateMachine
       end
     end
 
-    def update_booking_detail_to_swapping
-      if booking_detail.swapping!
-        UserRequests::SwapProcess.perform_async(id)
+    def update_requestable_to_swapping
+      if requestable_type == 'BookingDetail'
+        if requestable.swapping!
+          UserRequests::SwapProcess.perform_async(id)
+        end
       end
     end
   end

@@ -25,21 +25,21 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
 
               describe 'Create New User Request in pending state ' do
                 it 'and booking_detail status changed to cancellation requested' do
-                  expect { post :create, params: { user_request_cancellation: { user_id: @user.id, booking_detail_id: @booking_detail.id, event: 'pending' }, request_type: 'cancellation', user_id: @user.id } }.to change { UserRequest::Cancellation.count }.by(1)
+                  expect { post :create, params: { user_request_cancellation: { user_id: @user.id, requestable_id: @booking_detail.id, requestable_type: 'BookingDetail', event: 'pending' }, request_type: 'cancellation', user_id: @user.id } }.to change { UserRequest::Cancellation.count }.by(1)
                   expect(UserRequest.first.status).to eq('pending')
                   expect(@booking_detail.reload.status).to eq('cancellation_requested')
                 end
 
                 it 'Failed to create request' do
                   allow_any_instance_of(UserRequest).to receive(:save).and_return(false)
-                  expect { post :create, params: { user_request_cancellation: { user_id: @user.id, booking_detail_id: @booking_detail.id, event: 'pending' }, request_type: 'cancellation', user_id: @user.id } }.to change { UserRequest::Cancellation.count }.by(0)
+                  expect { post :create, params: { user_request_cancellation: { user_id: @user.id,requestable_id: @booking_detail.id, requestable_type: 'BookingDetail', event: 'pending' }, request_type: 'cancellation', user_id: @user.id } }.to change { UserRequest::Cancellation.count }.by(0)
                   expect(@booking_detail.reload.status).to eq(status)
                 end
               end
 
               context "REJECTED by #{user_role}" do
                 it "booking detail status changes to #{status}" do
-                  user_request = create(:pending_user_request_cancellation, user_id: @booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: @booking_detail.id, event: 'pending')
+                  user_request = create(:pending_user_request_cancellation, user_id: @booking_detail.user_id, created_by_id: @admin.id, requestable_id: @booking_detail.id, requestable_type: 'BookingDetail', event: 'pending')
                   user_request_params = { event: 'rejected', user_id: @user.id }
                   patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: user_request.id }
                   expect(@booking_detail.reload.status).to eq(status)
@@ -47,7 +47,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
                 end
 
                 it 'failed to reject' do
-                  user_request = create(:pending_user_request_cancellation, user_id: @booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: @booking_detail.id, event: 'pending')
+                  user_request = create(:pending_user_request_cancellation, user_id: @booking_detail.user_id, created_by_id: @admin.id, requestable_id: @booking_detail.id, requestable_type: 'BookingDetail', event: 'pending')
                   user_request_params = { event: 'rejected', user_id: @user.id }
                   allow_any_instance_of(UserRequest).to receive(:save).and_return(false)
                   patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: user_request.id }
@@ -58,7 +58,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
 
               context "RESOLVED by #{user_role}" do
                 before(:each) do
-                  @user_request = create(:pending_user_request_cancellation, user_id: @booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: @booking_detail.id, event: 'pending')
+                  @user_request = create(:pending_user_request_cancellation, user_id: @booking_detail.user_id, created_by_id: @admin.id, requestable_id: @booking_detail.id, requestable_type: 'BookingDetail', event: 'pending')
                 end
 
                 it 'create one background process for cancellation' do
