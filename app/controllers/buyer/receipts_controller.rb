@@ -1,5 +1,5 @@
 class Buyer::ReceiptsController < BuyerController
-
+  include ReceiptsConcern
   before_action :set_receipt, except: [:index, :new, :create]
 
   layout :set_layout

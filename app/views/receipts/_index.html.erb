@@ -58,26 +58,22 @@
             <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
             <div class="dropdown-menu dropdown-menu-right">
               <% if receipt.status == 'success' %>
-                <% if current_user.buyer? %>
-                  <%= link_to 'Print'.html_safe, buyer_receipt_path(receipt), target:"_blank", class: 'dropdown-item print-btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>
-                <% else %>
-                  <%= link_to 'Print'.html_safe, admin_receipt_path(receipt), target:"_blank", class: 'dropdown-item print-btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>
-                <% end %>
+                <%= link_to 'Print', [current_user_role_group, receipt], target:"_blank", class: 'dropdown-item print-btn', data: { event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>
                 <% if policy([current_user_role_group, receipt]).resend_success? %>
-                  <%= link_to 'Resend Email'.html_safe, resend_success_admin_receipt_path(receipt), class: 'dropdown-item' %>
+                  <%= link_to 'Resend Email', [:resend_success, current_user_role_group, receipt], class: 'dropdown-item' %>
                 <% end %>
               <% end %>
               <% if policy([ current_user_role_group, receipt]).edit? %>
-                <%= link_to 'Edit', edit_admin_user_receipt_path(receipt.user_id, receipt), class: 'dropdown-item modal-remote-form-link' %>
+                <%= link_to 'Edit', [:edit, current_user_role_group, receipt.user, receipt], class: 'dropdown-item modal-remote-form-link' %>
               <% end %>
               <% if policy([current_user_role_group, receipt]).edit_token_number? %>
-                <%= link_to 'Edit Token Number', edit_token_number_admin_receipt_path(receipt), class: 'modal-remote-form-link dropdown-item' %>
+                <%= link_to 'Edit Token Number', [:edit_token_number, current_user_role_group, receipt], class: 'modal-remote-form-link dropdown-item' %>
               <% end %>
-              <% if policy([ current_user_role_group, Asset.new(assetable: receipt) ]).index? %>
+              <% if policy([current_user_role_group, Asset.new(assetable: receipt) ]).update? %>
                 <%= link_to global_labels[:assets], assetables_path(assetable_type: receipt.class.model_name.i18n_key.to_s, assetable_id: receipt.id), class: 'dropdown-item modal-remote-form-link' %>
               <% end %>
-              <% if policy([:admin, SyncLog.new]).resync? && receipt.sync_logs.present? %>
-                <%= link_to "Resync", resync_admin_sync_log_path(receipt.sync_logs.desc(:created_at)[0]), class: 'dropdown-item' %>
+              <% if policy([current_user_role_group, SyncLog.new]).resync? && receipt.sync_logs.present? %>
+                <%= link_to "Resync", [:resync, current_user_role_group, receipt.sync_logs.desc(:created_at)[0] ], class: 'dropdown-item' %>
               <% end %>
             </div>
           </div>
