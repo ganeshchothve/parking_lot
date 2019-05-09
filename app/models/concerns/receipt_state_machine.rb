@@ -6,7 +6,9 @@ module ReceiptStateMachine
 
     aasm column: :status, whiny_transitions: false do
       state :pending, initial: true
-      state :success, :clearance_pending, :failed, :available_for_refund, :refunded, :cancelled, :cancellation_requested
+      state :success, :clearance_pending, :failed, :available_for_refund, :refunded
+      state :cancellation_requested, :cancelling, :cancelled, :cancellation_rejected
+
 
       event :pending, after: %i[moved_to_clearance_pending] do
         transitions from: :pending, to: :pending
@@ -22,13 +24,25 @@ module ReceiptStateMachine
         # receipt moves from pending to success when online payment is made.
         transitions from: :clearance_pending, to: :success, unless: :new_record?
         transitions from: :available_for_refund, to: :success
-        transitions from: :cancellation_requested, to: :success
+        transitions from: :cancellation_rejected, to: :success
       end
 
       event :available_for_refund, after: %i[send_booking_detail_to_under_negotiation] do
         transitions from: :available_for_refund, to: :available_for_refund
         transitions from: :success, to: :available_for_refund # , if: :can_available_for_refund?
-        transitions from: :cancellation_requested, to: :available_for_refund
+        transitions from: :cancelled, to: :available_for_refund
+      end
+
+      event :cancelling, after: %i[move_to_cancelled] do
+        transitions from: :cancellation_requested, to: :cancelling
+      end
+
+      event :cancelled, after: %i[move_to_available_for_refund] do
+        transitions from: :cancelling, to: :cancelled
+      end
+
+      event :cancellation_rejected, after: %i[move_to_success] do
+        transitions from: :cancellation_requested, to: :cancellation_rejected
       end
 
       event :refunded do
@@ -69,6 +83,18 @@ module ReceiptStateMachine
 
     def can_move_to_clearance?
       persisted? || project_unit_id.present?
+    end
+
+    def move_to_cancelled
+      cancelled!
+    end
+
+    def move_to_available_for_refund
+      available_for_refund!
+    end
+
+    def move_to_success
+      success!
     end
 
     def moved_to_success_if_online

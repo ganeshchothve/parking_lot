@@ -31,7 +31,7 @@ class UserRequest::Swap < UserRequest
   #
   #
   def alternate_project_unit_blocking_condition
-    if requestable
+    if requestable.kind_of?(BookingDetail)
       unless alternate_project_unit.blocking_amount <= requestable.project_unit.blocking_amount
         _total_tentative_amount_paid = requestable.total_tentative_amount_paid
         if _total_tentative_amount_paid < alternate_project_unit.blocking_amount

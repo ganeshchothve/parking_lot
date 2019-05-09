@@ -64,7 +64,7 @@ module UserRequestStateMachine
     def update_requestable_to_request_made
       requestable.cancellation_requested! if is_a?(UserRequest::Cancellation)
       requestable.swap_requested! if is_a?(UserRequest::Swap)
-      # send_notifications
+      send_notifications
     end
 
     def send_notifications
@@ -73,25 +73,14 @@ module UserRequestStateMachine
     end
 
     def update_requestable_to_request_rejected
-      if self.requestable_type == 'BookingDetail'
-        requestable.cancellation_rejected! if is_a?(UserRequest::Cancellation)
-        requestable.swap_rejected! if is_a?(UserRequest::Swap)
-        self.reason_for_failure = 'admin rejected the request' if reason_for_failure.blank?
-        send_notifications
-      end
-      if self.requestable_type == 'Receipt'
-        requestable.success!
-      end
+      requestable.cancellation_rejected! if is_a?(UserRequest::Cancellation)
+      requestable.swap_rejected! if is_a?(UserRequest::Swap)
+      self.reason_for_failure = 'admin rejected the request' if reason_for_failure.blank?
+      send_notifications
     end
 
     def update_requestable_to_cancelling
-      if requestable_type == 'BookingDetail'
-        if requestable.cancelling!
-          UserRequests::CancellationProcess.perform_async(id)
-        end
-      elsif requestable_type == 'Receipt'
-        requestable.available_for_refund!
-      end
+      UserRequests::CancellationProcess.perform_async(id) if requestable && requestable.cancelling!
     end
 
     def update_requestable_to_swapping
