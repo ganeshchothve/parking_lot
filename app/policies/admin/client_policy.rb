@@ -2,12 +2,12 @@ class Admin::ClientPolicy < ClientPolicy
   # def new? def create? def edit? def asset_create? from ClientPolicy
 
   def update?
-    %w[admin superadmin].include?(user.role)
+    %w[superadmin].include?(user.role)
   end
 
   def permitted_attributes(params = {})
     attributes = super
-    if %w[admin superadmin].include?(user.role)
+    if %w[superadmin].include?(user.role)
       attributes += [:enable_slot_generation]
       unless record.slot_start_date.present?
         attributes += %w[slot_start_date start_time end_time capacity duration enable_slot_generation]
