@@ -12,7 +12,7 @@
     <% if @user_request._type == "UserRequest::Swap" && @user_request.resolved? %>
       <% if @user_request.alternate_project_unit.booking_detail.present? %>
         <div class="col">
-          <%= render 'dashboard/booking_detail_overview', {booking_detail: @user_request.alternate_project_unit.booking_detail, with_actions: true } %>
+          <%= render 'dashboard/booking_detail_overview', {booking_detail: @user_request.alternative_booking_detail, with_actions: true } %>
         </div>
       <% end %>
     <% end %>
@@ -36,7 +36,7 @@
           <h5> Payment Details</h5>
           </div>
           <div class="card-body">
-            <%= render 'receipts/index', {receipts: @user_request.alternate_project_unit.booking_detail.receipts.paginate(page: 1, per_page: 1000)} %>
+            <%= render 'receipts/index', {receipts: Receipt.where(booking_detail_id: ur.requestable_id).paginate(page: 1, per_page: 1000)} %>
           </div>
         </div>
       </div>

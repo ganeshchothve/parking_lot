@@ -40,4 +40,8 @@ class UserRequest::Swap < UserRequest
       end
     end
   end
+
+  def alternative_booking_detail
+    BookingDetail.where(parent_booking_detail_id: self.requestable_id, project_unit_id: self.alternate_project_unit_id).first
+  end
 end
