@@ -7,7 +7,7 @@
   </div>
   <div class="row">
     <div class="col">
-      <%= render 'dashboard/booking_detail_overview', {booking_detail: @user_request.booking_detail, with_actions: true } %>
+      <%= render 'dashboard/booking_detail_overview', {booking_detail: @user_request.requestable, with_actions: true } if @user_request.requestable.kind_of?(BookingDetail) %>
     </div>
     <% if @user_request._type == "UserRequest::Swap" && @user_request.resolved? %>
       <% if @user_request.alternate_project_unit.booking_detail.present? %>
@@ -25,7 +25,7 @@
           <h5> Payment Details</h5>
         </div>
           <div class="card-body">
-            <%= render 'receipts/index', {receipts: @user_request.booking_detail.receipts.paginate(page:1, per_page: 1000)} %>
+            <%= render 'receipts/index', {receipts: @user_request.requestable.receipts.paginate(page:1, per_page: 1000)} if @user_request.requestable.kind_of?(BookingDetail) %>
           </div>
         </div>
       </div>

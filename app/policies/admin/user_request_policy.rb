@@ -3,8 +3,8 @@ class Admin::UserRequestPolicy < UserRequestPolicy
 
   def new?
     valid = permitted_user_role_for_new? && enable_actual_inventory?
-    if record.booking_detail.present?
-      valid &&= BookingDetail::BOOKING_STAGES.include?(record.booking_detail.status)
+    if record.requestable.kind_of?(BookingDetail)
+      valid &&= BookingDetail::BOOKING_STAGES.include?(record.requestable.status)
     end
     valid
   end
