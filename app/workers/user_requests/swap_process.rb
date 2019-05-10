@@ -7,7 +7,7 @@ module UserRequests
     def perform(user_request_id)
       @user_request = UserRequest.processing.where(_id: user_request_id).first
       return nil if @user_request.blank?
-      @current_booking_detail = user_request.booking_detail
+      @current_booking_detail = user_request.requestable
       if @current_booking_detail && @current_booking_detail.swapping?
         @alternate_project_unit = @user_request.alternate_project_unit
         if @alternate_project_unit.available?

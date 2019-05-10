@@ -59,8 +59,14 @@
             <div class="dropdown-menu dropdown-menu-right">
               <% if receipt.status == 'success' %>
                 <% if current_user.buyer? %>
+                  <% if policy([current_user_role_group, UserRequest::Cancellation.new(user_id: receipt.user_id, requestable_id: receipt.id, requestable_type: 'Receipt')]).new? %>
+                    <%= link_to t("Cancel Token"), new_buyer_user_request_path(user_id: receipt.user_id, requestable_id: receipt.id, requestable_type: 'Receipt', request_type: UserRequest::Cancellation.model_name.element), class: "dropdown-item modal-remote-form-link" %>
+                  <% end %>
                   <%= link_to 'Print'.html_safe, buyer_receipt_path(receipt), target:"_blank", class: 'dropdown-item print-btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>
                 <% else %>
+                  <% if policy([current_user_role_group, UserRequest::Cancellation.new(user_id: receipt.user_id, requestable_id: receipt.id, requestable_type: 'Receipt')]).new? %>
+                    <%= link_to t("Cancel Token"), new_admin_user_user_request_path(user_id: receipt.user_id, requestable_id: receipt.id, requestable_type: 'Receipt', request_type: UserRequest::Cancellation.model_name.element), class: "dropdown-item modal-remote-form-link" %>
+                  <% end %>
                   <%= link_to 'Print'.html_safe, admin_receipt_path(receipt), target:"_blank", class: 'dropdown-item print-btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>
                 <% end %>
                 <% if policy([current_user_role_group, receipt]).resend_success? %>

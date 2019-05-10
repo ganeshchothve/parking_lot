@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :user_request_swap, class: UserRequest::Swap do
     status { 'pending' }
-    association :booking_detail
+    # association :booking_detail
     association :user
   end
 

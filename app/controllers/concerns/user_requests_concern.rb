@@ -16,7 +16,8 @@ module UserRequestsConcern
   #
   def new
     @user_request = associated_class.new(user_id: @user.id)
-    @user_request.booking_detail_id = params[:booking_detail_id] if params[:booking_detail_id].present?
+    @user_request.requestable_id = params[:requestable_id] if params[:requestable_id].present?
+    @user_request.requestable_type = params[:requestable_type] if params[:requestable_type].present?
     render layout: false
   end
 

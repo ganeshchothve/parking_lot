@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :user_request_cancellation, class: UserRequest::Cancellation do
     status { 'pending' }
-    association :booking_detail
+    # association :booking_detail
     association :user
   end
 
