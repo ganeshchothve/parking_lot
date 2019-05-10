@@ -22,7 +22,9 @@
               <tr>
                 <td><%= d[:_type].split("::").last.titleize %></td>
                 <td><%= t("user_requests.status.#{d[:status]}") %></td>
-                <td class="text-right"><%= d[:count] %></td>
+                <td class="text-right">
+                  <%= link_to d[:count], [current_user_role_group, UserRequest, {request_type: 'user_request', fltrs: { status: d[:status], _type: d[:_type] } }], target: "_blank", title: "View #{d[:count]} #{ t("user_requests.status.#{d[:status]}") } #{d[:_type].split("::").last.titleize} requests." %>
+                </td>
               </tr>
               <% end %>
             </tbody>

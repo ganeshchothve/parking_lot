@@ -211,7 +211,9 @@ Rails.application.routes.draw do
       end
 
     end
-    resources :receipts, only: [:index, :new, :create, :show ]
+    resources :receipts, only: [:index, :new, :create, :show ] do
+      get :resend_success, on: :member
+    end
     resources :referrals, only: [:index, :create, :new] do
       post :generate_code, on: :collection
     end

@@ -4,15 +4,15 @@
     <title><%= current_project.present? ? "#{current_project.name} | " : "" %><%= current_client.name %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <%= csrf_meta_tags %>
-    <%= stylesheet_link_tag 'dashboard', media: 'all' %>
-    <%= javascript_include_tag 'dashboard' %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
 
     <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
     <%= javascript_tag do %>
       if(typeof App === "undefined"){
         App = {};
       }
-      App.client = <%= raw current_client.to_json(only: [:name, :_id, :preferred_login]) %>;
+      App.client = <%= raw current_client.to_json(only: [:name, :_id, :preferred_login, :enable_referral_bonus]) %>;
       App.client.enable_actual_inventory = <%= current_client.enable_actual_inventory?(current_user) %>
       App.project = <%= raw current_project.to_json(only: [:name, :_id]) %>;
       <% if user_signed_in? %>
@@ -27,15 +27,24 @@
       <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= current_client.selldo_client_id %>.js'></script>
     <% end %>
   </head>
-  <body>
-    <% if action_name == 'inventory' %>
-      <%= yield %>
-    <% else %>
-      <%= render "layouts/navbar"%>
-      <%= yield %>
-      <%= render "layouts/navbar_footer"%>
+  <body class="full-bg" style="background-image: url('<%= current_client.background_image.url || '' %>');">
+    <div class="container-fluid">
+      <%= render "layouts/navbar" %>
+      <div class="body-padding"></div>
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-9">
+            <div class="card">
+              <div class="card-body">
+                <%= yield %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <%= render "layouts/navbar_footer" %>
       <%= render "layouts/gamification" %>
-    <% end %>
+    </div>
     <%= render 'layouts/partials/google_code' %>
   </body>
 </html>

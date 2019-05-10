@@ -2,9 +2,9 @@ class Admin::UserRequestPolicy < UserRequestPolicy
   # def index? from UserRequestPolicy
 
   def new?
-    valid = %w[superadmin admin crm channel_partner].include?(user.role) && current_client.enable_actual_inventory?(user)
-    if record.requestable.present? && record.requestable_type == 'BookingDetail'
-      valid &&= BookingDetail::BOOKING_STAGES.include?(record.requestable.status)
+    valid = permitted_user_role_for_new? && enable_actual_inventory?
+    if record.booking_detail.present?
+      valid &&= BookingDetail::BOOKING_STAGES.include?(record.booking_detail.status)
     end
     valid
   end
@@ -21,6 +21,10 @@ class Admin::UserRequestPolicy < UserRequestPolicy
     %w[admin superadmin crm].include?(user.role) && current_client.enable_actual_inventory?(user)
   end
 
+  def asset_create?
+    permitted_user_role_for_new? && enable_actual_inventory?
+  end
+
   def permitted_attributes(_params = {})
     attributes = []
     if record.status == 'pending' && %w[admin crm sales superadmin cp].include?(user.role)
@@ -29,5 +33,17 @@ class Admin::UserRequestPolicy < UserRequestPolicy
       attributes += [notes_attributes: Admin::NotePolicy.new(user, Note.new).permitted_attributes]
     end
     attributes
+  end
+
+  private
+
+  def permitted_user_role_for_new?
+    return true if %w[superadmin admin crm channel_partner].include?(user.role)
+    @condition = 'do_not_have_access'
+    false
+  end
+
+  def enable_actual_inventory?
+    current_client.enable_actual_inventory?(user)
   end
 end

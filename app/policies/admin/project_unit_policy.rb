@@ -53,7 +53,13 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
   private
 
   def _role_based_check(valid)
-    valid = (valid && record.user.referenced_manager_ids.include?(user.id)) if (ProjectUnit.booking_stages.include?(record.status) || record.status == 'hold') && user.role == 'channel_partner'
+    if user.role?('channel_partner')
+      if ['blocked', 'hold'].include?(record.status)
+        valid = (valid && record.booking_detail.user.referenced_manager_ids.include?(user.id))
+      else
+        valid = false
+      end
+    end
     valid = (valid && true) if %w[cp sales sales_admin cp_admin admin].include?(user.role)
     valid
   end
