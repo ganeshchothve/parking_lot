@@ -179,6 +179,10 @@ class Receipt
     booking_detail_id.blank?
   end
 
+  def name
+    "Receipt #{receipt_id}"
+  end
+
   private
 
   def validate_total_amount
