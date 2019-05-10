@@ -36,7 +36,7 @@
           <h5> Payment Details</h5>
           </div>
           <div class="card-body">
-            <%= render 'receipts/index', {receipts: Receipt.where(booking_detail_id: ur.requestable_id).paginate(page: 1, per_page: 1000)} %>
+            <%= render 'receipts/index', {receipts: Receipt.where(booking_detail_id: @user_request.requestable_id).paginate(page: 1, per_page: 1000)} %>
           </div>
         </div>
       </div>
