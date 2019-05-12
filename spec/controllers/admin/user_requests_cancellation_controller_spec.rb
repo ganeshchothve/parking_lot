@@ -122,7 +122,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
               it "changes receipt status to available for refund and changes booking_detail state " do
                   patch :update, params: { user_request_cancellation: { event: 'processing', user_id: @user.id }, request_type: 'cancellation', id: @user_request.id }
                   expect(@receipt.reload.status).to eq('available_for_refund')
-                  expect(@user_request.reload.status).to eq('processing')
+                  expect(@user_request.reload.status).to eq('resolved')
               end
             end
           end
