@@ -33,6 +33,6 @@ class UserRequestService
 
   def send_notifications
     send_email if user.booking_portal_client.email_enabled?
-    send_sms if user_request.requestable.kind_of?(BookingDetail) && user_request.requestable.project_unit.present? && user.booking_portal_client.sms_enabled?
+    send_sms if user_request.requestable && user.booking_portal_client.sms_enabled?
   end
 end

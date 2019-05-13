@@ -1,5 +1,5 @@
 module UserRequests
-	module Receipts
+  module Receipts
     class CancellationProcess
       include Sidekiq::Worker
       def perform(user_request_id)

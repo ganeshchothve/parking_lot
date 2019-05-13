@@ -83,7 +83,7 @@ module UserRequestStateMachine
       if requestable
         requestable.cancelling!
         UserRequests::CancellationProcess.perform_async(id) if requestable.kind_of?(BookingDetail)
-        UserRequests::Receipts::CancellationProcess.new.perform(id) if requestable.kind_of?(Receipt)
+        UserRequests::Receipts::CancellationProcess.perform_async(id) if requestable.kind_of?(Receipt)
       end
     end
 
