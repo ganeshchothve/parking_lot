@@ -4,26 +4,28 @@ module DatabaseSeeds
     def self.seed client_id
       Template::SmsTemplate.create({booking_portal_client_id: client_id, subject_class: "User", name: "otp", content: "Your <%= I18n.t('global.otp') %> for logging into <%= booking_portal_client.name %> is <%= otp_code %>."})  if Template::SmsTemplate.where(name: "otp").blank?
 
-      Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "UserRequest::Cancellation", name: "cancellation_request_created", content: "
+      Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "UserRequest::Cancellation", name: "cancellation_request_pending", content: "
         <% if requestable.kind_of?(BookingDetail) %>
           A cancellation has been requested on your booking of <%= requestable.name %> at <%= project_unit.project_name %>. Our CRM team is reviewing your request and will get in touch with you shortly.
         <% elsif requestable.kind_of?(Receipt) %>
           A cancellation has been requested on your payment of <%= requestable.name %> . Our CRM team is reviewing your request and will get in touch with you shortly.
         <% end %>"
-        ) if Template::SmsTemplate.where(name: "cancellation_request_created").blank?
+        ) if Template::SmsTemplate.where(name: "cancellation_request_pending").blank?
 
       Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "UserRequest::Cancellation", name: "cancellation_request_resolved", content: "
         <% if requestable.kind_of?(BookingDetail) %>
           We're sorry to see you go. Cancellation request on your booking of <%= project_unit.name %> at <%= project_unit.project_name %> has been processed and your amount will be refunded to you in a few days. To book another unit visit <%= user.dashboard_url %>
-        <%%>
+        <% elsif requestable.kind_of?(Receipt) %>
+          We're sorry to see you go. Cancellation request on your payment <%= requestable.name %> has been processed and your amount will be refunded to you in a few days.
         <% end %>
           ") if Template::SmsTemplate.where(name: "cancellation_request_resolved").blank?
 
       Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "UserRequest::Cancellation", name: "cancellation_request_rejected", content: "
         <% if requestable.kind_of?(BookingDetail) %>
-        Cancellation request on your booking of <%= project_unit.name %> at <%= project_unit.project_name %> has been rejected
-        <%%>
-        <%%>
+        Cancellation request on your booking of <%= requestable.name %> at <%= project_unit.project_name %> has been rejected.
+        <% elsif requestable.kind_of?(Receipt) %>
+          Cancellation request on your payment <%= requestable.name %> has been rejected.
+        <% end %>
         ") if Template::SmsTemplate.where(name: "cancellation_request_rejected").blank?
 
       Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "UserRequest::Swap", name: "swap_request_created", content: "A swap has been requested on your booking of <%= project_unit.name %> at <%= project_unit.project_name %>. Our CRM team is reviewing your request and will get in touch with you shortly.") if Template::SmsTemplate.where(name: "swap_request_created").blank?
