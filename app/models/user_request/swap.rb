@@ -1,6 +1,7 @@
 class UserRequest::Swap < UserRequest
 
   belongs_to :alternate_project_unit, class_name: 'ProjectUnit'
+  has_many :booking_details, class_name: 'BookingDetail', foreign_key: :parent_booking_detail_id, primary_key: :requestable_id#, class_name: 'BookingDetail'
 
   validate :alternate_project_unit_availability, :alternate_project_unit_blocking_condition, unless: proc { |user_request| %w[processing resolved].include?(user_request.status) }
 
@@ -11,6 +12,10 @@ class UserRequest::Swap < UserRequest
       { field: 'alternate_project_unit_id', klass: 'ProjectUnit' }
     ]
   )
+
+  def alternative_booking_detail
+    booking_details.first
+  end
 
   private
 
