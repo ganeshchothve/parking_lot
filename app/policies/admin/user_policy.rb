@@ -27,6 +27,10 @@ class Admin::UserPolicy < UserPolicy
     super || new?
   end
 
+  def confirm_user?
+    %w[admin superadmin].include?(user.role) && !record.confirmed?
+  end
+
   def confirm_via_otp?
     !record.confirmed? && record.phone.present? && new? && !user.buyer?
   end

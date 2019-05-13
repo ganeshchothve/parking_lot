@@ -36,6 +36,7 @@ class User
   field :enable_communication, type: Hash, default: { "email": true, "sms": true }
 
   field :encrypted_password, type: String, default: ''
+  field :default_password, type: String
 
   ## Recoverable
   field :reset_password_token,   type: String
@@ -98,6 +99,7 @@ class User
   belongs_to :referred_by, class_name: 'User', optional: true
   belongs_to :manager, class_name: 'User', optional: true
   belongs_to :channel_partner, optional: true
+  belongs_to :confirmed_by, class_name: 'User', optional: true
   has_many :receipts
   has_many :project_units
   has_many :booking_details
@@ -301,6 +303,25 @@ class User
     host = (port == 443 ? 'https://' : 'http://') + host
     host += (port == 443 || port == 80 || port == 0 ? '' : ":#{port}")
     url.user_confirmation_url(confirmation_token: confirmation_token, manager_id: manager_id, host: host)
+  end
+
+  def confirm(args={})
+    super
+    self.set(confirmed_by_id: args[:confirmed_by])
+    if password.nil?
+      self.default_password = SecureRandom.hex(10)
+      self.password = default_password
+      self.password_confirmation = default_password
+      self.save
+      Email.create!({
+        booking_portal_client_id: booking_portal_client_id,
+        email_template_id: Template::EmailTemplate.find_by(name: "account_confirmation").id,
+        cc: [ booking_portal_client.notification_email ],
+        recipients: [ self ],
+        triggered_by_id: id,
+        triggered_by_type: self.class.to_s
+      })
+    end
   end
 
   def name

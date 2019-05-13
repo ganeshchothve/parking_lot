@@ -16,6 +16,14 @@ FactoryBot.define do
     end
   end
 
+  factory :unconfirmed_user, parent: :user do
+    after(:create) do |user| 
+      user.set(confirmed_at: nil)
+      user.set(password: nil)
+      user.set(password_confirmation: nil)
+    end
+  end
+
   %w[superadmin admin crm employee_user sales_admin sales gre cp cp_admin channel_partner management_user].each do |_role|
     factory _role, parent: :user do
       role { _role }

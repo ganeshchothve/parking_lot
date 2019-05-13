@@ -54,6 +54,15 @@ class Admin::UsersController < AdminController
     end
   end
 
+  def confirm_user
+    @user.confirm(confirmed_by: current_user.id )
+    respond_to do |format|
+      format.html do
+        redirect_to request.referrer || dashboard_url
+      end
+    end
+  end
+
   def export
     if Rails.env.development?
       UserExportWorker.new.perform(current_user.id.to_s, params[:fltrs])
