@@ -34,7 +34,7 @@ class UserRequest
 
   default_scope -> { desc(:created_at) }
 
-  delegate :project_unit, to: :booking_detail, prefix: false, allow_nil: true
+  delegate :project_unit, to: :requestable, prefix: false, allow_nil: true
 
   # TODO: on create send email to CRM team
 
