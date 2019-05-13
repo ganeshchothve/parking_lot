@@ -12,7 +12,7 @@ RSpec.describe UserRequests::CancellationProcess, type: :worker do
 
     describe 'UserRequest mark as Rejected' do
       context 'UserRequest is not in processing state wrong Id pass' do
-        it 'ingore request, nothing will change' do
+        it 'ignore request, nothing will change' do
           expect( UserRequests::CancellationProcess.new.perform('asddff') ).to eq(nil)
         end
       end
