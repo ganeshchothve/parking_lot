@@ -28,7 +28,6 @@ module UserRequestsConcern
   #
   def show
     @user_request = associated_class.find(params[:id])
-    @receipt = @user_request.requestable if @user_request.requestable.kind_of?(Receipt)
   end
 
   # This is the edit action for admin, users to edit the details of existing user request.
