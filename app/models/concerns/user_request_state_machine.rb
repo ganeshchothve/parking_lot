@@ -80,7 +80,11 @@ module UserRequestStateMachine
     end
 
     def update_requestable_to_cancelling
-      UserRequests::CancellationProcess.perform_async(id) if requestable && requestable.cancelling!
+      if requestable
+        requestable.cancelling!
+        UserRequests::CancellationProcess.perform_async(id) if requestable.kind_of?(BookingDetail)
+        UserRequests::Receipts::CancellationProcess.perform_async(id) if requestable.kind_of?(Receipt)
+      end
     end
 
     def update_requestable_to_swapping

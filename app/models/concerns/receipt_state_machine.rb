@@ -33,7 +33,7 @@ module ReceiptStateMachine
         transitions from: :cancelled, to: :available_for_refund
       end
 
-      event :cancelling, after: %i[move_to_cancelled] do
+      event :cancelling do
         transitions from: :cancellation_requested, to: :cancelling
       end
 
@@ -83,10 +83,6 @@ module ReceiptStateMachine
 
     def can_move_to_clearance?
       persisted? || project_unit_id.present?
-    end
-
-    def move_to_cancelled
-      cancelled!
     end
 
     def move_to_available_for_refund

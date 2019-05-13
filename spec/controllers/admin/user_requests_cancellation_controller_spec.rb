@@ -119,10 +119,8 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
               before(:each) do
                 @user_request = create(:pending_user_request_cancellation, user_id: @receipt.user_id, created_by_id: @admin.id, requestable_id: @receipt.id, requestable_type: 'Receipt', event: 'pending')
               end
-              it "changes receipt status to available for refund and changes booking_detail state " do
-                  patch :update, params: { user_request_cancellation: { event: 'processing', user_id: @user.id }, request_type: 'cancellation', id: @user_request.id }
-                  expect(@receipt.reload.status).to eq('available_for_refund')
-                  expect(@user_request.reload.status).to eq('processing')
+              it "adds a new job to the queue" do
+                  expect{ patch :update, params: { user_request_cancellation: { event: 'processing', user_id: @user.id }, request_type: 'cancellation', id: @user_request.id } }.to change(UserRequests::Receipts::CancellationProcess.jobs, :count).by(1)
               end
             end
           end
