@@ -28,7 +28,12 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def confirm_user?
-    %w[admin superadmin].include?(user.role) && !record.confirmed?
+    if %w[admin superadmin].include?(user.role) && !record.confirmed?
+      true
+    else
+      @condition = 'cannot_confirm_user'
+      false
+    end
   end
 
   def confirm_via_otp?
