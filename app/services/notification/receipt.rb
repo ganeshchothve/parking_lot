@@ -29,7 +29,7 @@ module Notification
         triggered_by_type: @receipt.class.to_s
       }
 
-      new_status = @changes[:status]
+      new_status = @changes[:status][1]
 
       params[:template_name] = "receipt_#{new_status}"
       # params[:template_name] = if new_status == "success"
@@ -54,7 +54,7 @@ module Notification
         triggered_by_type: @receipt.class.to_s
       }
 
-      new_status = @changes[:status]
+      new_status = @changes[:status][1]
 
       params[:template_name] = "receipt_#{new_status}"
       # params[:template_name] = if new_status == "success"

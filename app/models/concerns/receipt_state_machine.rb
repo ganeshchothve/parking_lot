@@ -97,19 +97,19 @@ module ReceiptStateMachine
       if payment_mode == 'online'
         success! 
       else
-        Notification::Receipt.new(self.id, status: self.status).execute
+        Notification::Receipt.new(self.id, status: [self.status_was, self.status]).execute
       end
     end
 
     def send_success_notification
       if status_was != 'cancellation_rejected'
-        Notification::Receipt.new(self.id, status: self.status).execute
+        Notification::Receipt.new(self.id, status: [self.status_was, self.status]).execute
       end
     end
 
     def send_pending_notification
       if payment_mode != 'online'
-        Notification::Receipt.new(self.id, status: self.status).execute
+        Notification::Receipt.new(self.id, status: [self.status_was, self.status]).execute
       end
     end
 
@@ -134,13 +134,13 @@ module ReceiptStateMachine
       if payment_mode != 'online'
         unless (%w( channel_partner ) + User::BUYER_ROLES).include?(self.creator.role)
           self.clearance_pending!
-          Notification::Receipt.new(self.id, status: self.status).execute
+          Notification::Receipt.new(self.id, status: [self.status_was, self.status]).execute
         end
       end
     end
 
     def send_notification
-        Notification::Receipt.new(self.id, status: self.status).execute
+        Notification::Receipt.new(self.id, status: [self.status_was, self.status]).execute
     end
   end
 end
