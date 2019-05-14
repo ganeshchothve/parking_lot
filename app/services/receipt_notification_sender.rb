@@ -59,7 +59,7 @@ module ReceiptNotificationSender
       if user.booking_portal_client.email_enabled?
         Email.create!({
           booking_portal_client_id: user.booking_portal_client_id,
-          email_template_id:Template::EmailTemplate.find_by(name: "receipt_pending_offline").id,
+          email_template_id:Template::EmailTemplate.find_by(name: "receipt_pending").id,
           recipients: [user],
           cc_recipients: (user.manager_id.present? ? [user.manager] : []),
           triggered_by_id: receipt.id,

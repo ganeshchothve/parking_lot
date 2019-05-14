@@ -10,7 +10,7 @@ module ReceiptStateMachine
       state :cancellation_requested, :cancelling, :cancelled, :cancellation_rejected
 
 
-      event :pending, after: %i[moved_to_clearance_pending] do
+      event :pending, after: %i[moved_to_clearance_pending send_pending_notification] do
         transitions from: :pending, to: :pending
       end
 
@@ -19,7 +19,7 @@ module ReceiptStateMachine
         transitions from: :clearance_pending, to: :clearance_pending
       end
 
-      event :success, after: %i[change_booking_detail_status] do
+      event :success, after: %i[change_booking_detail_status send_success_notification] do
         transitions from: :success, to: :success
         # receipt moves from pending to success when online payment is made.
         transitions from: :clearance_pending, to: :success, unless: :new_record?
@@ -27,9 +27,9 @@ module ReceiptStateMachine
         transitions from: :cancellation_rejected, to: :success
       end
 
-      event :available_for_refund, after: %i[send_booking_detail_to_under_negotiation] do
+      event :available_for_refund, after: %i[send_booking_detail_to_under_negotiation send_notification] do
         transitions from: :available_for_refund, to: :available_for_refund
-        transitions from: :success, to: :available_for_refund # , if: :can_available_for_refund?
+        transitions from: :success, to: :available_for_refund, if: :can_available_for_refund?
         transitions from: :cancelled, to: :available_for_refund
       end
 
@@ -45,7 +45,7 @@ module ReceiptStateMachine
         transitions from: :cancellation_requested, to: :cancellation_rejected
       end
 
-      event :refunded do
+      event :refunded, after: %i[send_notification] do
         transitions from: :refunded, to: :refunded
       end
 
@@ -53,7 +53,7 @@ module ReceiptStateMachine
         transitions from: :available_for_refund, to: :refunded
       end
 
-      event :failed do
+      event :failed, after: %i[send_notification] do
         transitions from: :pending, to: :failed, unless: :new_record?
         transitions from: :clearance_pending, to: :failed
         transitions from: :failed, to: :failed
@@ -94,7 +94,23 @@ module ReceiptStateMachine
     end
 
     def moved_to_success_if_online
-      success! if payment_mode == 'online'
+      if payment_mode == 'online'
+        success! 
+      else
+        Notification::Receipt.new(self.id, status: [self.status_was, self.status]).execute
+      end
+    end
+
+    def send_success_notification
+      if status_was != 'cancellation_rejected'
+        Notification::Receipt.new(self.id, status: [self.status_was, self.status]).execute
+      end
+    end
+
+    def send_pending_notification
+      if payment_mode != 'online'
+        Notification::Receipt.new(self.id, status: [self.status_was, self.status]).execute
+      end
     end
 
     def user_request_initiated?
@@ -118,8 +134,13 @@ module ReceiptStateMachine
       if payment_mode != 'online'
         unless (%w( channel_partner ) + User::BUYER_ROLES).include?(self.creator.role)
           self.clearance_pending!
+          Notification::Receipt.new(self.id, status: [self.status_was, self.status]).execute
         end
       end
+    end
+
+    def send_notification
+        Notification::Receipt.new(self.id, status: [self.status_was, self.status]).execute
     end
   end
 end

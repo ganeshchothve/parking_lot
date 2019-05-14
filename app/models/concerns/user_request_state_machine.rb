@@ -25,17 +25,17 @@ module UserRequestStateMachine
         transitions from: :processing, to: :resolved
       end
 
-      event :rejected do
+      event :rejected, after: :update_requestable_to_request_rejected do
         transitions from: :rejected, to: :rejected
         transitions from: :pending, to: :rejected, after: :update_requestable_to_request_rejected
-        transitions from: :processing, to: :rejected, after: :send_notifications
+        transitions from: :processing, to: :rejected
       end
     end
 
-    def update_request
-      resolved_at = Time.now
-      send_notifications
-    end
+    # def update_request
+    #   resolved_at = Time.now
+    #   send_notifications
+    # end
 
     def send_email
       Email.create!(
@@ -49,7 +49,7 @@ module UserRequestStateMachine
     end
 
     def send_sms
-      template = Template::SmsTemplate.where(name: "#{self.class.model_name.element}_request_resolved").first
+      template = Template::SmsTemplate.where(name: "#{self.class.model_name.element}_request_#{status}").first
       if template.present? && user.booking_portal_client.sms_enabled?
         Sms.create!(
           booking_portal_client_id: user.booking_portal_client_id,

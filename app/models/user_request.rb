@@ -26,6 +26,9 @@ class UserRequest
 
   validates :status, inclusion: { in: STATUS }
   validates :reason_for_failure, presence: true, if: proc { |record| record.rejected? }
+  validates :requestable_id, uniqueness: true, if: proc{ |record|
+     (['pending','processing','resolved'] & UserRequest.where(requestable_id: record.requestable_id).distinct(:status)).empty?
+   }
 
   accepts_nested_attributes_for :notes
   scope :filter_by_user, ->(user_id){ where(user_id: user_id)}
