@@ -17,7 +17,7 @@ module DailyReports
         ::Sms.create!(
           booking_portal_client_id: client.id,
           recipient: User.where(role: 'admin').first,
-          to: User.where(role: 'admin').distinct(:phone).compact,
+          to: client.notification_numbers.split(',').map(&:strip).uniq.compact,
           sms_template_id: Template::SmsTemplate.find_by(name: "daily_payments_report").id,
           triggered_by_id: Receipt.asc(:created_at).last.id,
           triggered_by_type: 'Receipt'
