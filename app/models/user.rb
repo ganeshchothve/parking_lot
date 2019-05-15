@@ -17,6 +17,8 @@ class User
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, authentication_keys: [:login]
 
+  attr_accessor :temporary_password
+
   ## Database authenticatable
   field :first_name, type: String, default: ''
   field :last_name, type: String, default: ''
@@ -303,25 +305,6 @@ class User
     host = (port == 443 ? 'https://' : 'http://') + host
     host += (port == 443 || port == 80 || port == 0 ? '' : ":#{port}")
     url.user_confirmation_url(confirmation_token: confirmation_token, manager_id: manager_id, host: host)
-  end
-
-  def confirm(args={})
-    super
-    self.set(confirmed_by_id: args[:confirmed_by])
-    if password.nil?
-      self.default_password = SecureRandom.hex(10)
-      self.password = default_password
-      self.password_confirmation = default_password
-      self.save
-      Email.create!({
-        booking_portal_client_id: booking_portal_client_id,
-        email_template_id: Template::EmailTemplate.find_by(name: "account_confirmation").id,
-        cc: [ booking_portal_client.notification_email ],
-        recipients: [ self ],
-        triggered_by_id: id,
-        triggered_by_type: self.class.to_s
-      })
-    end
   end
 
   def name

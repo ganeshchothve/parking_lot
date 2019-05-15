@@ -77,7 +77,7 @@ module DatabaseSeeds
                 <p>
                   Your credentials are as follows:
                     Email: <%= self.email %>
-                    Password: <%= self.default_password %>
+                    Password: <%= self.temporary_password %>
                 </p>
             </div>
           </div>') if ::Template::EmailTemplate.where(name: "account_confirmation").blank?
