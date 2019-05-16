@@ -340,6 +340,7 @@ en:
       untracked: 'Untracked'
   users:
     account_confirmed: 'Account Confirmed'
+    cannot_confirm_user: 'Cannot confirm user'
     confirmed:
       :true: 'Confirmed'
       :false: 'Not Confirmed'

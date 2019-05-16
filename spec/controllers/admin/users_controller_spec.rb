@@ -12,9 +12,10 @@ RSpec.describe Admin::UsersController, type: :controller do
     %w[admin superadmin].each do |user_role| 
       context "by #{user_role}" do
         it "then user gets confirmed." do
-          project = create(:project)
-          admin = create(user_role)
-          user = create(:unconfirmed_user)
+          @client = create(:client)
+          admin = create(user_role, booking_portal_client_id: @client)
+          project = create(:project, booking_portal_client: @client)
+          user = create(:unconfirmed_user, booking_portal_client_id: @client)
           sign_in_app(admin)
           patch :confirm_user, params: {id: user.id}
           expect(user.reload.confirmed_at).to_not eq(nil)

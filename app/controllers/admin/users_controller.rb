@@ -65,14 +65,13 @@ class Admin::UsersController < AdminController
             booking_portal_client_id: @user.booking_portal_client_id,
             body: ERB.new(@user.booking_portal_client.email_header).result( binding) + email_template.parsed_content(@user) + ERB.new(@user.booking_portal_client.email_footer).result( binding ),
             subject: email_template.parsed_subject(@user),
-            cc: [ @user.booking_portal_client.notification_email ],
             recipients: [ @user ],
-            triggered_by_id: current_user.id,
-            triggered_by_type: current_user.class.to_s
+            triggered_by_id: @user.id,
+            triggered_by_type: @user.class.to_s
           })
-          redirect_to request.referrer || dashboard_url
+          redirect_to request.referrer || dashboard_url, notice: t('controller.users.account_confirmed')
         else
-          redirect_to request.referrer || dashboard_url, notice: 'Error'
+          redirect_to request.referrer || dashboard_url, alert: t('controller.users.cannot_confirm_user')
         end
       end
     end
