@@ -39,7 +39,12 @@ module SearchConcern
 
   def search_for_towers
     parameters = @search.params_json
-    project_tower_ids = ProjectUnit.build_criteria({fltrs: parameters}).in(status: ProjectUnit.user_based_available_statuses(current_user)).distinct(:project_tower_id)
+    if @user.manager && @user.manager.role?('channel_partner')
+      project_tower_ids_for_channel_partner = Scheme.in(default_for_user_ids: @user.manager.id).distinct(:project_tower_id)
+    end
+    project_units = ProjectUnit.build_criteria({fltrs: parameters}).in(status: ProjectUnit.user_based_available_statuses(current_user))
+    project_units = project_units.in(project_tower_id: project_tower_ids_for_channel_partner) if project_tower_ids_for_channel_partner.present?
+    project_tower_ids = project_units.distinct(:project_tower_id)
     @towers = ProjectTower.in(id: project_tower_ids).collect do |x|
       hash = {project_tower_id: x.id, project_tower_name: x.name, assets: x.assets.as_json}
       # GENERIC_TODO: handle floor plan url here

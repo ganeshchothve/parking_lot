@@ -228,7 +228,12 @@ module BookingDetailStateMachine
     #
     def create_default_scheme
       if booking_detail_scheme.blank?
-        scheme = project_unit.project_tower.default_scheme
+        unless user.manager && user.manager.role?('channel_partner')
+          scheme = project_unit.project_tower.default_scheme
+        else
+          filters = {fltrs: { project_tower: project_unit.project_tower_id, can_be_applied_by: user.manager.role, user_role: user.role, user_id: user_id, status: 'approved', default_for_user_id: user.manager.id } }
+          scheme = Scheme.build_criteria(filters).first
+        end
         BookingDetailScheme.create(
           derived_from_scheme_id: scheme.id,
           booking_detail_id: id,
@@ -238,7 +243,7 @@ module BookingDetailStateMachine
           payment_schedule_template_id: scheme.payment_schedule_template_id,
           project_unit_id: project_unit_id,
           status: scheme.status
-        )
+        ) if scheme
       end
     end
     # This method is called after booked_confirmed event

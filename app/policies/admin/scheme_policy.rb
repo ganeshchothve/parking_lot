@@ -2,7 +2,7 @@ class Admin::SchemePolicy < SchemePolicy
   # def new? def edit? def update? def approve_via_email? from SchemePolicy
 
   def index?
-    current_client.enable_actual_inventory?(user) && %w[superadmin admin sales crm cp].include?(user.role)
+    current_client.enable_actual_inventory?(user) && %w[superadmin admin sales crm cp channel_partner].include?(user.role)
   end
 
   def create?

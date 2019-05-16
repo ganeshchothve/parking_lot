@@ -308,6 +308,7 @@ en:
         pending_payments: "We already have collected a payment for this unit from the same customer."
       hold:
         booking_detail_error: 'We cannot process your request at this time. Please retry'
+        scheme_for_channel_partner_not_found: 'No Scheme found for channel partner'
         success: 'Your Booking is hold. Please select Scheme and go for Payment.'
       gateway_payment:
         receipt_missing: 'Requested receipt not in pending.'
