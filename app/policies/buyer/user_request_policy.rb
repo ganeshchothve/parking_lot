@@ -2,11 +2,7 @@ class Buyer::UserRequestPolicy < UserRequestPolicy
   # def index? from UserRequestPolicy
 
   def new?
-    valid = current_client.enable_actual_inventory?(user)
-    if record.requestable.present? && record.requestable_type == 'BookingDetail'
-      valid &&= BookingDetail::BOOKING_STAGES.include?(record.requestable.status)
-    end
-    valid
+    current_client.enable_actual_inventory?(user) && new_permission_by_requestable_type
   end
 
   def edit?

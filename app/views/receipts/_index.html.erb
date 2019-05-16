@@ -58,17 +58,8 @@
             <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
             <div class="dropdown-menu dropdown-menu-right">
               <%= link_to 'Print', [current_user_role_group, receipt], target:"_blank", class: 'dropdown-item print-btn', data: { event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>
-
-              <% if receipt.status == 'success' %>
-                <% if current_user.buyer? %>
-                  <% if policy([current_user_role_group, UserRequest::Cancellation.new(user_id: receipt.user_id, requestable_id: receipt.id, requestable_type: 'Receipt')]).new? %>
-                    <%= link_to t("Cancel Token"), new_buyer_user_request_path(user_id: receipt.user_id, requestable_id: receipt.id, requestable_type: 'Receipt', request_type: UserRequest::Cancellation.model_name.element), class: "dropdown-item modal-remote-form-link" %>
-                  <% end %>
-                <% else %>
-                  <% if policy([current_user_role_group, UserRequest::Cancellation.new(user_id: receipt.user_id, requestable_id: receipt.id, requestable_type: 'Receipt')]).new? %>
-                    <%= link_to t("Cancel Token"), new_admin_user_user_request_path(user_id: receipt.user_id, requestable_id: receipt.id, requestable_type: 'Receipt', request_type: UserRequest::Cancellation.model_name.element), class: "dropdown-item modal-remote-form-link" %>
-                  <% end %>
-                <% end %>
+              <% if policy([current_user_role_group, UserRequest::Cancellation.new(user_id: receipt.user_id, requestable: receipt)]).new? %>
+                <%= link_to t('receipts.cancellation_link'), [:new, current_user_role_group, receipt.user, :user_request, { request_type: UserRequest::Cancellation.model_name.element, requestable_id: receipt.id, requestable_type: 'Receipt'}], class: "dropdown-item modal-remote-form-link" %>
               <% end %>
               <% if policy([current_user_role_group, receipt]).resend_success? %>
                 <%= link_to 'Resend Email', [:resend_success, current_user_role_group, receipt], class: 'dropdown-item' %>

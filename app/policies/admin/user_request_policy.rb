@@ -2,11 +2,7 @@ class Admin::UserRequestPolicy < UserRequestPolicy
   # def index? from UserRequestPolicy
 
   def new?
-    valid = permitted_user_role_for_new? && enable_actual_inventory?
-    if record.requestable.kind_of?(BookingDetail)
-      valid &&= BookingDetail::BOOKING_STAGES.include?(record.requestable.status)
-    end
-    valid
+    permitted_user_role_for_new? && enable_actual_inventory? && new_permission_by_requestable_type
   end
 
   def edit?
