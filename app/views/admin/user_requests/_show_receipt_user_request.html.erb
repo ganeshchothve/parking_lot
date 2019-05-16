@@ -1,55 +1,10 @@
-<div class="table-responsive card">
-      <table class="striped-table table">
-        <thead class="th-default">
-          <% labels = t('mongoid.attributes.receipt').with_indifferent_access %>
-          <% user_labels = t('mongoid.attributes.user').with_indifferent_access %>
-          <tr>
-            <th><%= labels[:user_id] %></th>
-            <th><%= labels[:receipt_id] %> & Details</th>
-            <% if current_client.enable_slot_generation? %>
-              <th>Token Number</th>
-            <% end %>
-            <th><%= labels['status'] %></th>
-            <th class="text-right"><%= labels['total_amount'] %></th>
-            <th class="text-right"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <% if policy([current_user_role_group, @user_request.requestable.user]).show? %>
-                <%= link_to @user_request.requestable.user.name, [current_user_role_group, @user_request.requestable.user] %>
-              <% else %>
-                <%= @user_request.requestable.user.name %>
-              <% end %>
-              <div class="small">
-                Created By: <%= @user_request.requestable.creator.name %><br/>
-                <% if @user_request.requestable.user.role?("user") && @user_request.requestable.user.manager_id.present? && current_user.role != "channel_partner" %>
-                  <%= user_labels[:manager_id] %>: <%= @user_request.requestable.user.manager.name %><br/>
-                <% end %>
-              </div>
-            </td>
-            <td>
-              <%= ["success", "available_for_refund", "refunded", "cancelled"].include?(@user_request.requestable.status) ? @user_request.requestable.receipt_id : "Not Generated" %>
-              <div class="small muted">
-                <div>
-                  <%= @user_request.requestable.booking_detail.present? ? "Unit: #{@user_request.requestable.booking_detail.name}" : 'Direct Payment' %>
-                </div>
-                <% if @user_request.requestable.payment_mode == 'online' %>
-                  <div>Trans ID: <%= @user_request.requestable.payment_identifier %></div>
-                  <div>Processed Date:<%= @user_request.requestable.processed_on.present? ? l(@user_request.requestable.processed_on) : "-" %></div>
-                <% else %>
-                  <div>Bank: <%= @user_request.requestable.issuing_bank %> / Branch: <%= @user_request.requestable.issuing_bank_branch %></div>
-                  <div>Issued Date: <%= @user_request.requestable.issued_date.present? ? @user_request.requestable.issued_date.strftime("%d/%m/%Y") : "-" %></div>
-                  <div>Processed Date: <%= @user_request.requestable.processed_on.present? ? l(@user_request.requestable.processed_on) : "-" %></div>
-                  <div>ID: <%= @user_request.requestable.payment_identifier %></div>
-                <% end %>
-                <div>Payment: <%= Receipt.available_payment_modes.find{|x| x[:id] == @user_request.requestable.payment_mode}[:text] %></div>
-              </div>
-            </td>
-            <td><%= @user_request.requestable.status.titleize %></td>
-            <td class="text-right"><%= number_to_indian_currency(@user_request.requestable.total_amount.round) %></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+<div class="card">
+  <div class="card-header">
+    Receipts
+  </div>
+  <div class="table-responsive">
+    <table class="striped-table table">
+      <%= render 'receipts/details', receipt: @user_request.requestable %>
+    </table>
+  </div>
+</div>

@@ -50,6 +50,10 @@ class Receipt
   scope :filter_by_issued_date, ->(date) { start_date, end_date = date.split(' - '); where(issued_date: start_date..end_date) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: start_date..end_date) }
   scope :filter_by_processed_on, ->(date) { start_date, end_date = date.split(' - '); where(processed_on: start_date..end_date) }
+  scope :filter_by_booking_detail_id, ->(_booking_detail_id) do
+    _booking_detail_id = _booking_detail_id == '' ? { '$in' => ['', nil] } : _booking_detail_id
+    where(booking_detail_id: _booking_detail_id)
+  end
 
   validates :issuing_bank, :issuing_bank_branch, format: { without: /[^a-z\s]/i, message: 'can contain only alphabets and spaces' }, unless: proc { |receipt| receipt.payment_mode == 'online' }
   validates :payment_identifier, format: { without: /[^a-z0-9\s]/i, message: 'can contain only alphabets, numbers and spaces' }, unless: proc { |receipt| receipt.payment_mode == 'online' }
@@ -180,7 +184,7 @@ class Receipt
   end
 
   def name
-    "Receipt #{receipt_id}"
+    receipt_id
   end
 
   def self.todays_payments_count
