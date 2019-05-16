@@ -8,8 +8,7 @@ module UserRequests
         return nil if @user_request.blank?
         @receipt = @user_request.requestable
         if @receipt && @receipt.cancelling?
-          @receipt.token_number = nil
-          if @receipt.cancelled!
+          if @receipt.cancel!
             @user_request.resolved!
           else
             reject_user_request('Receipt is not available for cancellation.')

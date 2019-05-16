@@ -19,9 +19,9 @@
             <% elsif @user_request.requestable_type == 'Receipt' %>
                 <%= f.label :receipt, class: 'label-required' %>
                 <% if current_user.buyer? %>
-                  <%= f.select :requestable_id, options_from_collection_for_select(current_user.receipts, 'id', 'receipt_id', f.object.requestable_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: buyer_receipts_path(user_id: current_user.id ) } %>
+                  <%= f.select :requestable_id, options_from_collection_for_select(current_user.receipts.where(status: 'success'), 'id', 'receipt_id', f.object.requestable_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: buyer_receipts_path(user_id: current_user.id), params: {fltrs: { status: 'approved' } } } %>
                 <% else %>
-                  <%= f.select :requestable_id, options_from_collection_for_select(Receipt.all, 'id', 'receipt_id', f.object.requestable_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_receipts_path } %>
+                  <%= f.select :requestable_id, options_from_collection_for_select(Receipt.where(status: 'success'), 'id', 'receipt_id', f.object.requestable_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_receipts_path, params: {fltrs: {status: 'success'}}} %>
                 <%end %>
                 
             <% end %>
