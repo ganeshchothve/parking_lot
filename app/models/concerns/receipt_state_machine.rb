@@ -27,10 +27,10 @@ module ReceiptStateMachine
         transitions from: :cancellation_rejected, to: :success
       end
 
-      event :available_for_refund, after: %i[send_booking_detail_to_under_negotiation send_notification] do
+      event :available_for_refund, after: %i[send_booking_detail_to_under_negotiation] do
         transitions from: :available_for_refund, to: :available_for_refund
         transitions from: :success, to: :available_for_refund, if: :can_available_for_refund?
-        transitions from: :cancelled, to: :available_for_refund
+        transitions from: :cancelled, to: :available_for_refund, success: %i[send_notification]
       end
 
       event :cancelling do

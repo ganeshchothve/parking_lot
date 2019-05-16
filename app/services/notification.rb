@@ -10,8 +10,7 @@ module Notification
       fail "#{keys} required to send notification" if keys.present?
 
       template_name = params.delete "template_name"
-
-      ::Sms.create!(params.merge(sms_template_id: Template::SmsTemplate.where(booking_portal_client_id: params[:booking_portal_client_id]).find_by(name: template_name).id))
+      ::Sms.create!(params.merge(sms_template_id: Template::SmsTemplate.find_by(name: template_name).id))
     end
   end
 
@@ -27,7 +26,7 @@ module Notification
 
       template_name = params.delete "template_name"
 
-      ::Email.create!(params.merge(email_template_id: Template::EmailTemplate.where(booking_portal_client_id: params[:booking_portal_client_id]).find_by(name: template_name).id))
+      ::Email.create!(params.merge(email_template_id: Template::EmailTemplate.find_by(name: template_name).id))
     end
   end
 end
