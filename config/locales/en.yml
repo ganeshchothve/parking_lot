@@ -236,6 +236,7 @@ en:
         approved_at: 'Approved At'
         approved_by: 'Approved By'
         created_by: 'Created By'
+        default_for_users: 'Default for Channel Partners'
       user:
         created_at: "Registered At"
         login_otp: 'Verification / Login OTP'

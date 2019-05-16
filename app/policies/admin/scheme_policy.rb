@@ -23,6 +23,7 @@ class Admin::SchemePolicy < SchemePolicy
       attributes += [payment_adjustments_attributes: PaymentAdjustmentPolicy.new(user, PaymentAdjustment.new).permitted_attributes]
     end
     attributes += [user_ids: []]
+    attributes += [default_for_user_ids: []] if user.role?('admin')
     attributes
   end
 end

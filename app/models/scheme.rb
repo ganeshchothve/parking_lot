@@ -1,6 +1,7 @@
 class Scheme
   include Mongoid::Document
   include Mongoid::Timestamps
+  include ArrayBlankRejectable
   include InsertionStringMethods
   include SchemeStateMachine
   extend FilterByCriteria
