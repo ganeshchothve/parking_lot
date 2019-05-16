@@ -14,7 +14,12 @@
             <% if @user_request.requestable_type == 'BookingDetail' %>
               <div class="form-group">
                 <%= f.label :project_unit, class: 'label-required' %>
-                <%= f.select :requestable_id, available_booking_for_request, {prompt: true}, class: 'selectize', disabled: !policy([current_user_role_group, (@user_request)]).editable_field?("requestable_id"), required: "required" %>
+
+                <% if current_user.buyer? %>
+                  <%= f.select :requestable_id, options_from_collection_for_select(current_user.booking_details.where(_id: f.object.requestable_id), :_id, :name), {prompt: true}, class: 'selectize', disabled: !policy([current_user_role_group, (@user_request)]).editable_field?("requestable_id"), required: :required, data: { url: buyer_booking_details_path, params: {fltrs: { status: BookingDetail::BOOKING_STAGES, user_id: current_user.id } } } %>
+                <% else %>
+                  <%= f.select :requestable_id, options_from_collection_for_select(BookingDetail.where(_id: f.object.requestable_id), :_id, :name), {prompt: true}, class: 'selectize', disabled: !policy([current_user_role_group, (@user_request)]).editable_field?("requestable_id"), required: :required, data: { url: admin_booking_details_path, params: {fltrs: { status: BookingDetail::BOOKING_STAGES, user_id: @user_request.user_id } } } %>
+                <% end %>
               </div>
             <% elsif @user_request.requestable_type == 'Receipt' %>
                 <%= f.label :receipt, class: 'label-required' %>
