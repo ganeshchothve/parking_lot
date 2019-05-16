@@ -12,6 +12,7 @@ RSpec.describe Admin::UsersController, type: :controller do
     %w[admin superadmin].each do |user_role| 
       context "by #{user_role}" do
         it "then user gets confirmed." do
+          project = create(:project)
           admin = create(user_role)
           user = create(:unconfirmed_user)
           sign_in_app(admin)
@@ -30,7 +31,7 @@ RSpec.describe Admin::UsersController, type: :controller do
         user = create(:unconfirmed_user)
         sign_in_app(non_admin)
         patch :confirm_user, params: {id: user.id}
-        expect(response.request.flash[:alert]).to eq("You are not allowed to confirm another user.")
+        expect(response.request.flash[:alert]).to eq("Only administrator users are allowed.")
       end
     end
   end

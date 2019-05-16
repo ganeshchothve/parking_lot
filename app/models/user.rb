@@ -38,7 +38,6 @@ class User
   field :enable_communication, type: Hash, default: { "email": true, "sms": true }
 
   field :encrypted_password, type: String, default: ''
-  field :default_password, type: String
 
   ## Recoverable
   field :reset_password_token,   type: String

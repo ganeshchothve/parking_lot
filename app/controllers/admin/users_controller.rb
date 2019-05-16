@@ -55,26 +55,25 @@ class Admin::UsersController < AdminController
   end
 
   def confirm_user
-    #@user.confirm(confirmed_by: current_user.id )
-    @user.confirmed_by = current_user.id
-    @user.confirmed_at = DateTime.now
     @user.temporary_password = SecureRandom.hex(10)
-    @user.password = temporary_password
-    @user.password_confirmation = temporary_password
-    @user.save
-    email_template = ::Template::EmailTemplate.find_by(name: "account_confirmation")
-    Email.create!({
-        booking_portal_client_id: @user.booking_portal_client_id,
-        body: ERB.new(@user.booking_portal_client.email_header).result( binding ) + ERB.new(email_template.content).result( @user.get_binding ).html_safe + ERB.new(@user.booking_portal_client.email_footer).result( binding ),
-        subject: email_template.parsed_subject(current_user),
-        cc: [ @user.booking_portal_client.notification_email ],
-        recipients: [ @user ],
-        triggered_by_id: current_user.id,
-        triggered_by_type: current_user.class.to_s
-      })
+    @user.assign_attributes(confirmed_by: current_user, confirmed_at: DateTime.now, password: @user.temporary_password, password_confirmation: @user.password_confirmation)
     respond_to do |format|
       format.html do
-        redirect_to request.referrer || dashboard_url
+        if @user.save 
+          email_template = ::Template::EmailTemplate.find_by(name: "account_confirmation")
+          Email.create!({
+            booking_portal_client_id: @user.booking_portal_client_id,
+            body: ERB.new(@user.booking_portal_client.email_header).result( binding) + email_template.parsed_content(@user) + ERB.new(@user.booking_portal_client.email_footer).result( binding ),
+            subject: email_template.parsed_subject(@user),
+            cc: [ @user.booking_portal_client.notification_email ],
+            recipients: [ @user ],
+            triggered_by_id: current_user.id,
+            triggered_by_type: current_user.class.to_s
+          })
+          redirect_to request.referrer || dashboard_url
+        else
+          redirect_to request.referrer || dashboard_url, notice: 'Error'
+        end
       end
     end
   end
