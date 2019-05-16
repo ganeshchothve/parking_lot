@@ -21,6 +21,7 @@ RSpec.describe UserRequests::Receipts::CancellationProcess, type: :worker do
           UserRequests::Receipts::CancellationProcess.new.perform(@user_request.id)
           expect( @user_request.reload.status).to eq('resolved')
           expect(@receipt.reload.status).to eq ("available_for_refund")
+          expect(@receipt.reload.token_number).to eq (nil)
         end
       end
 
