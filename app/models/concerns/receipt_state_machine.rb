@@ -19,10 +19,10 @@ module ReceiptStateMachine
         transitions from: :clearance_pending, to: :clearance_pending
       end
 
-      event :success, after: %i[change_booking_detail_status send_success_notification] do
+      event :success, after: %i[change_booking_detail_status] do
         transitions from: :success, to: :success
         # receipt moves from pending to success when online payment is made.
-        transitions from: :clearance_pending, to: :success, unless: :new_record?
+        transitions from: :clearance_pending, to: :success, unless: :new_record?, success: %i[send_success_notification]
         transitions from: :available_for_refund, to: :success
         transitions from: :cancellation_rejected, to: :success
       end
@@ -35,10 +35,6 @@ module ReceiptStateMachine
 
       event :cancelling do
         transitions from: :cancellation_requested, to: :cancelling
-      end
-
-      event :cancelled, after: %i[move_to_available_for_refund] do
-        transitions from: :cancelling, to: :cancelled
       end
 
       event :cancellation_rejected, after: %i[move_to_success] do
@@ -67,6 +63,7 @@ module ReceiptStateMachine
         transitions from: :pending, to: :cancelled, if: :user_request_initiated?
         transitions from: :success, to: :cancelled, if: :swap_request_initiated?
         transitions from: :clearance_pending, to: :cancelled, if: :user_request_initiated?
+        transitions from: :cancelling, to: :cancelled, success: %i[move_to_available_for_refund]
       end
     end
 

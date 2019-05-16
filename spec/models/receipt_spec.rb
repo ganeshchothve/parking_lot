@@ -548,7 +548,7 @@ RSpec.describe Receipt, type: :model do
               @receipt.success!
               @receipt.cancellation_requested!
               @receipt.cancelling!
-              @receipt.cancelled!
+              @receipt.cancel!
               expect(@receipt.status).to eq('available_for_refund')
               expect(Email.desc(:created_at).first.email_template.name).to eq("receipt_#{@receipt.status}")
               expect(Sms.desc(:created_at).first.sms_template.name).to eq("receipt_#{@receipt.status}")
@@ -565,7 +565,6 @@ RSpec.describe Receipt, type: :model do
 
           it "for transition from pending to pending, it is success" do
             @receipt.pending!
-            debugger
             expect(@receipt.status).to eq("pending")
             expect(Email.count).to eq(0)
             expect(Sms.count).to eq(0)
@@ -587,7 +586,6 @@ RSpec.describe Receipt, type: :model do
             @receipt.pending!
             @receipt.clearance_pending!
             @receipt.success!
-            debugger
             expect(@receipt.available_for_refund!).to eq(false)
             expect(Email.count).to eq(1)
             expect(Sms.count).to eq(1)
@@ -617,7 +615,7 @@ RSpec.describe Receipt, type: :model do
               @receipt.success!
               @receipt.cancellation_requested!
               @receipt.cancelling!
-              @receipt.cancelled!
+              @receipt.cancel!
               expect(@receipt.status).to eq('available_for_refund')
               expect(Email.desc(:created_at).first.email_template.name).to eq("receipt_#{@receipt.status}")
               expect(Sms.desc(:created_at).first.sms_template.name).to eq("receipt_#{@receipt.status}")

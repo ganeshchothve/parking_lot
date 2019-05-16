@@ -34,7 +34,7 @@ class Admin::UserRequestPolicy < UserRequestPolicy
   private
 
   def permitted_user_role_for_new?
-    return true if %w[superadmin admin crm channel_partner].include?(user.role)
+    return true if user.role != 'channel_partner'
     @condition = 'do_not_have_access'
     false
   end
