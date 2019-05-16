@@ -1,5 +1,6 @@
-# UserRequests::SwapProcess
+# UserRequests::BookingDetails::SwapProcess
 module UserRequests
+  module BookingDetails
   class SwapProcess
     include Sidekiq::Worker
     attr_accessor :user_request, :current_booking_detail, :alternate_project_unit, :current_project_unit
@@ -114,5 +115,6 @@ module UserRequests
         reject_user_request("Alternate Unit booking price is very high. No any receipt with minimum #{ alternate_project_unit.blocking_amount}.", alternate_project_unit_status, new_booking_detail)
       end
     end
+  end
   end
 end

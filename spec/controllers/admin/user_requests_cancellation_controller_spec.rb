@@ -63,14 +63,14 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
                 end
 
                 it 'create one background process for cancellation' do
-                  expect{ patch :update, params: { user_request_cancellation: { event: 'processing', user_id: @user.id }, request_type: 'cancellation', id: @user_request.id } }.to change(UserRequests::CancellationProcess.jobs, :count).by(1)
+                  expect{ patch :update, params: { user_request_cancellation: { event: 'processing', user_id: @user.id }, request_type: 'cancellation', id: @user_request.id } }.to change(UserRequests::BookingDetails::CancellationProcess.jobs, :count).by(1)
                   expect(@booking_detail.reload.status).to eq('cancelling')
                   expect(@user_request.reload.status).to eq('processing')
                 end
 
                 it 'no change in any object' do
                   allow_any_instance_of(UserRequest).to receive(:save).and_return(false)
-                  expect{ patch :update, params: { user_request_cancellation: { event: 'processing', user_id: @user.id }, request_type: 'cancellation', id: @user_request.id } }.to change(UserRequests::CancellationProcess.jobs, :count).by(0)
+                  expect{ patch :update, params: { user_request_cancellation: { event: 'processing', user_id: @user.id }, request_type: 'cancellation', id: @user_request.id } }.to change(UserRequests::BookingDetails::CancellationProcess.jobs, :count).by(0)
                   expect(@booking_detail.reload.status).to eq('cancellation_requested')
                   expect(@user_request.reload.status).to eq('pending')
                 end
@@ -96,7 +96,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
               end
             end
 
-            describe " REJECTED by #{user_role} " do 
+            describe " REJECTED by #{user_role} " do
               it " receipt status changes to success " do
                 user_request = create(:pending_user_request_cancellation, user_id: @receipt.user_id, created_by_id: @admin.id, requestable_id: @receipt.id, requestable_type: 'Receipt', event: 'pending')
                 user_request_params = { event: 'rejected', user_id: @user.id, reason_for_failure: 'as discussed' }

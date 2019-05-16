@@ -9,9 +9,9 @@ RSpec.describe UserRequests::Receipts::CancellationProcess, type: :worker do
       @user_request.set(status: 'processing', resolved_by_id: @admin.id)
     end
 
-    context " and wrong user_request_id is sent " do 
+    context " and wrong user_request_id is sent " do
       it "then ignore request" do
-        expect( UserRequests::CancellationProcess.new.perform('asddff') ).to eq(nil)
+        expect( UserRequests::BookingDetails::CancellationProcess.new.perform('asddff') ).to eq(nil)
       end
     end
     context "and receipt is present" do

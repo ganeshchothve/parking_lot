@@ -1,5 +1,6 @@
-# UserRequests::CancellationProcess
+# UserRequests::BookingDetails::CancellationProcess
 module UserRequests
+  module BookingDetails
   class CancellationProcess
     include Sidekiq::Worker
     attr_reader :user_request, :booking_detail
@@ -85,5 +86,6 @@ module UserRequests
         reject_user_request(old_receipts_arr, new_receipts_arr, error_messages)
       end
     end
+  end
   end
 end
