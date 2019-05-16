@@ -191,4 +191,8 @@ RSpec.describe Admin::ReceiptsController, type: :controller do
       end
     end
   end
+
+  describe "updating receipt" do
+    
+  end
 end
