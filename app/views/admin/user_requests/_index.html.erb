@@ -18,10 +18,10 @@
             <%= user_request.user.name %>
           <% end %>
           <div class="small text-muted">
-            <%= labels['_type'] %>: <%= user_request.class.model_name.element.titleize %>
+            <%= labels['_type'] %>:  <%= user_request.class.model_name.element.titleize %>
           </div>
           <div class="small text-muted">
-            <%= labels['project_unit_id'] %>: <%= user_request.requestable.try(:project_unit_id) ? user_request.requestable.project_unit.name : '-' %>
+            <%= t("user_requests.requestable_type.#{user_request.requestable_type}") %>: <%= user_request.requestable.try(:name) || '-' %>
           </div>
         </td>
         <td>

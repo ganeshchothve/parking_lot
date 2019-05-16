@@ -32,10 +32,10 @@ module UserRequestStateMachine
       end
     end
 
-    # def update_request
-    #   resolved_at = Time.now
-    #   send_notifications
-    # end
+    def update_request
+      resolved_at = Time.now
+      send_notifications
+    end
 
     def send_email
       Email.create!(
@@ -82,7 +82,7 @@ module UserRequestStateMachine
     def update_requestable_to_cancelling
       if requestable
         requestable.cancelling!
-        UserRequests::CancellationProcess.perform_async(id) if requestable.kind_of?(BookingDetail)
+        UserRequests::BookingDetails::CancellationProcess.perform_async(id) if requestable.kind_of?(BookingDetail)
         UserRequests::Receipts::CancellationProcess.perform_async(id) if requestable.kind_of?(Receipt)
       end
     end
@@ -90,7 +90,7 @@ module UserRequestStateMachine
     def update_requestable_to_swapping
       if requestable_type == 'BookingDetail'
         if requestable.swapping!
-          UserRequests::SwapProcess.perform_async(id)
+          UserRequests::BookingDetails::SwapProcess.perform_async(id)
         end
       end
     end

@@ -64,14 +64,14 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
                 end
 
                 it 'create one background process for swapping' do
-                  expect{ patch :update, params: { user_request_swap: { event: 'processing', user_id: @user.id }, request_type: 'swap', id: @user_request.id } }.to change(UserRequests::SwapProcess.jobs, :count).by(1)
+                  expect{ patch :update, params: { user_request_swap: { event: 'processing', user_id: @user.id }, request_type: 'swap', id: @user_request.id } }.to change(UserRequests::BookingDetails::SwapProcess.jobs, :count).by(1)
                   expect(@booking_detail.reload.status).to eq('swapping')
                   expect(@user_request.reload.status).to eq('processing')
                 end
 
                 it 'no change in any object' do
                   allow_any_instance_of(UserRequest).to receive(:save).and_return(false)
-                  expect{ patch :update, params: { user_request_swap: { event: 'processing', user_id: @user.id }, request_type: 'swap', id: @user_request.id } }.to change(UserRequests::SwapProcess.jobs, :count).by(0)
+                  expect{ patch :update, params: { user_request_swap: { event: 'processing', user_id: @user.id }, request_type: 'swap', id: @user_request.id } }.to change(UserRequests::BookingDetails::SwapProcess.jobs, :count).by(0)
                   expect(@booking_detail.reload.status).to eq('swap_requested')
                   expect(@user_request.reload.status).to eq('pending')
                 end
