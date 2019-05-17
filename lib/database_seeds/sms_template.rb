@@ -56,6 +56,8 @@ module DatabaseSeeds
 
       Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "Invitation", name: "referral_invitation", content: "Dear <%= self.name %>, You are invited in <%= self.booking_portal_client.booking_portal_domains.join(', ') %> Please click here. <%= Rails.application.routes.url_helpers.register_url(custom_referral_code: self.referred_by.referral_code) %> or user <%= self.referred_by.referral_code %> code for sign up.") if Template::SmsTemplate.where(name: "referral_invitation").blank?
 
+      Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "Receipt", name: "daily_payments_report", content: '[<%= Date.current.strftime("%v") %>] Today you received <%= self.class.todays_payments_count %> payments') if Template::SmsTemplate.where(name: "daily_payments_report").blank?
+
       return Template::SmsTemplate.where(booking_portal_client_id: client_id).count
     end
   end

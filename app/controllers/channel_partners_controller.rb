@@ -4,8 +4,6 @@ class ChannelPartnersController < ApplicationController
   around_action :apply_policy_scope
   before_action :authorize_resource, except: [:new, :create]
 
-  layout :set_layout
-
   def index
     @channel_partners = ChannelPartner.build_criteria params
     @channel_partners = @channel_partners.paginate(page: params[:page], per_page: params[:per_page])
@@ -27,6 +25,7 @@ class ChannelPartnersController < ApplicationController
 
   def new
     @channel_partner = ChannelPartner.new
+    render layout: 'devise'
   end
 
   def edit

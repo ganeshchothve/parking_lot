@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
   protected
 
   def set_layout
-    (devise_controller? || ['channel_partners', 'home'].include?(controller_name)) ? 'devise' : 'application'
+    devise_controller? ? 'devise' : 'application'
   end
 
   private

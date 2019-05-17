@@ -178,6 +178,14 @@ class Receipt
     booking_detail_id.blank?
   end
 
+  def self.todays_payments_count
+    filters = {
+      status: %w(clearance_pending success),
+      created_at: "#{DateTime.current.in_time_zone('Mumbai').beginning_of_day} - #{DateTime.current.in_time_zone('Mumbai')}"
+    }
+    Receipt.build_criteria({fltrs: filters}.with_indifferent_access).count
+  end
+
   private
 
   def validate_total_amount
