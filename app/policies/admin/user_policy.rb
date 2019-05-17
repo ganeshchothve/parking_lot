@@ -48,7 +48,8 @@ class Admin::UserPolicy < UserPolicy
       attributes += [:allowed_bookings] if current_client.allow_multiple_bookings_per_user_kyc?
     end
     attributes += [:login_otp] if confirm_via_otp?
-    attributes += [:rera_id, :premium] if record.role?('channel_partner')
+    attributes += [:rera_id] if record.role?('channel_partner')
+    attributes += [:premium] if record.role?('channel_partner') && user.role?('admin')
     attributes += [:role] if %w[superadmin admin].include?(user.role)
     attributes += [:erp_id] if %w[admin sales_admin].include?(user.role)
     attributes.uniq
