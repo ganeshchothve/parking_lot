@@ -119,6 +119,7 @@ class Admin::SchemesController < AdminController
                    else
                      Scheme.all
     end
+    custom_scope = custom_scope.filter_by_can_be_applied_by(current_user.role)
 
     Scheme.with_scope(policy_scope(custom_scope)) do
       yield
