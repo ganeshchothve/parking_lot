@@ -57,6 +57,7 @@ class Admin::ReceiptsController < AdminController
 
     authorize([:admin, @receipt])
     respond_to do |format|
+      @receipt.event ||= 'pending' if current_user.role?('channel_partner')
       if @receipt.save
         flash[:notice] = 'Receipt was successfully updated. Please upload documents'
         if @receipt.payment_mode == 'online'

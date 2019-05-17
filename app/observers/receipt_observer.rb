@@ -19,8 +19,4 @@ class ReceiptObserver < Mongoid::Observer
     receipt.event = nil
     receipt.send("#{_event}!") if _event.present?
   end
-
-  def after_create(receipt)
-    receipt.moved_to_clearance_pending
-  end
 end
