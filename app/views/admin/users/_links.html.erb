@@ -1,4 +1,4 @@
-<% if policy([:admin, BookingDetail.new(user: user, project_unit: ProjectUnit.new(status: 'available'))]).hold? %>
+<% if policy([:admin, BookingDetail.new(user: user, project_unit: ProjectUnit.new(status: 'available', blocking_amount: current_client.blocking_amount))]).hold? %>
   <%= link_to "Choose #{global_labels[:project_unit]} & Add Booking", new_admin_user_search_path(user.id), class: "dropdown-item" %>
 <% end %>
 <% if policy([:admin, user]).confirm_user? %>
