@@ -2,7 +2,7 @@ class Admin::SchemePolicy < SchemePolicy
   # def new? def edit? def update? def approve_via_email? from SchemePolicy
 
   def index?
-    current_client.enable_actual_inventory?(user) && %w[superadmin admin sales crm cp].include?(user.role)
+    current_client.enable_actual_inventory?(user) && %w[superadmin admin sales crm cp channel_partner].include?(user.role)
   end
 
   def create?
@@ -23,6 +23,7 @@ class Admin::SchemePolicy < SchemePolicy
       attributes += [payment_adjustments_attributes: PaymentAdjustmentPolicy.new(user, PaymentAdjustment.new).permitted_attributes]
     end
     attributes += [user_ids: []]
+    attributes += [default_for_user_ids: []] if user.role?('admin')
     attributes
   end
 end
