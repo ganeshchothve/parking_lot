@@ -20,6 +20,7 @@ class Scheme
   scope :filter_by_can_be_applied_by, ->(user_role) do
     where({ '$and' => ['$or' => [{ can_be_applied_by: nil },{ can_be_applied_by: [] },{ can_be_applied_by: user_role }, {can_be_applied_by: ['']} ] ] })
   end
+  scope :filter_by_can_be_applied_by_role, ->(role) { where({ '$and' => [{ can_be_applied_by: role }] }) }
   scope :filter_by_user_role, ->(user_role) do
     where({ '$and' => ['$or' => [{ user_role: nil },{ user_role: [] },{ user_role: user_role },{user_role: '' } ] ] })
   end
@@ -27,7 +28,7 @@ class Scheme
     where({ '$and' => ['$or' => [{ user_ids: nil },{ user_ids: [] },{ user_ids: user_id }, {user_ids: [''] } ] ] })
   end
   scope :filter_by_default_for_user_id, ->(user_id) do
-    where({ '$and' => [{ default_for_user_ids: user_id }] })
+    where({ '$and' => ['$or' => [{ default_for_user_ids: nil }, { default_for_user_ids: [] }, { default_for_user_ids: [''] }, { default_for_user_ids: user_id }]] })
   end
   scope :filter_by_status, ->(status) { where(status: status) }
   scope :filter_by_project_tower, ->(project_tower_id) { where(project_tower_id: project_tower_id) }
