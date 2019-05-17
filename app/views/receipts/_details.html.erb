@@ -13,7 +13,7 @@
     </div>
   </td>
   <td>
-    <%= ["pening", 'clearance_pening'].include?(receipt.status) ?  "Not Generated" : receipt.receipt_id %>
+    <%= ["pending", 'clearance_pending'].include?(receipt.status) ?  "Not Generated" : receipt.receipt_id %>
     <div class="small muted">
       <div>
         <%= receipt.booking_detail.present? ? "Unit: #{receipt.booking_detail.name}" : 'Direct Payment' %>
