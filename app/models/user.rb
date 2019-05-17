@@ -34,6 +34,7 @@ class User
   field :erp_id, type: String, default: ''
   field :utm_params, type: Hash, default: {} # {"campaign": '' ,"source": '',"sub_source": '',"medium": '',"term": '',"content": ''}
   field :enable_communication, type: Hash, default: { "email": true, "sms": true }
+  field :premium,type: Boolean, default: false
 
   field :encrypted_password, type: String, default: ''
 
