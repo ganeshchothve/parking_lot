@@ -27,6 +27,15 @@ class Admin::UserPolicy < UserPolicy
     super || new?
   end
 
+  def confirm_user?
+    if %w[admin superadmin].include?(user.role) && !record.confirmed?
+      true
+    else
+      @condition = 'cannot_confirm_user'
+      false
+    end
+  end
+
   def confirm_via_otp?
     !record.confirmed? && record.phone.present? && new? && !user.buyer?
   end

@@ -98,6 +98,9 @@ en:
           enable_actual_inventory: 'You can not select Inventory. Please contact to Administrator'
           booking_detail_is_not_ready: 'Booking is not ready for scheme changes.'
 
+      user_policy:
+        confirm_user?:
+          cannot_confirm_user: 'You are not allowed to confirm another user.'
 
     buyer:
 

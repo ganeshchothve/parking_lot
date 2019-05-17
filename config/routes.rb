@@ -97,6 +97,7 @@ Rails.application.routes.draw do
         get :update_password
         get :resend_password_instructions
         get :print
+        patch :confirm_user
       end
 
       collection do

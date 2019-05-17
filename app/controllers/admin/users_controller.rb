@@ -54,6 +54,29 @@ class Admin::UsersController < AdminController
     end
   end
 
+  def confirm_user
+    @user.temporary_password = SecureRandom.hex(10)
+    @user.assign_attributes(confirmed_by: current_user, confirmed_at: DateTime.now, password: @user.temporary_password, password_confirmation: @user.password_confirmation)
+    respond_to do |format|
+      format.html do
+        if @user.save 
+          email_template = ::Template::EmailTemplate.find_by(name: "account_confirmation")
+          Email.create!({
+            booking_portal_client_id: @user.booking_portal_client_id,
+            body: ERB.new(@user.booking_portal_client.email_header).result( binding) + email_template.parsed_content(@user) + ERB.new(@user.booking_portal_client.email_footer).result( binding ),
+            subject: email_template.parsed_subject(@user),
+            recipients: [ @user ],
+            triggered_by_id: @user.id,
+            triggered_by_type: @user.class.to_s
+          })
+          redirect_to request.referrer || dashboard_url, notice: t('controller.users.account_confirmed')
+        else
+          redirect_to request.referrer || dashboard_url, alert: t('controller.users.cannot_confirm_user')
+        end
+      end
+    end
+  end
+
   def export
     if Rails.env.development?
       UserExportWorker.new.perform(current_user.id.to_s, params[:fltrs])
