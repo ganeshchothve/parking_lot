@@ -1,11 +1,11 @@
 require 'rails_helper'
-RSpec.describe UserRequests::SwapProcess, type: :worker do
+RSpec.describe UserRequests::BookingDetails::SwapProcess, type: :worker do
   describe 'User Booking' do
     before(:each) do
       @admin = create(:admin)
       @user = create(:user)
       @user_request = swap_request(@user)
-      @booking_detail = @user_request.booking_detail
+      @booking_detail = @user_request.requestable
       @alternate_project_unit = @user_request.alternate_project_unit
       @user_request.set(status: 'processing', resolved_by_id: @admin.id)
       @booking_detail.set(status: 'swapping')
@@ -14,14 +14,14 @@ RSpec.describe UserRequests::SwapProcess, type: :worker do
     describe 'UserRequest mark as Rejected' do
       context 'UserRequest is not in processing state wrong Id pass' do
         it 'ingore request, nothing will change' do
-          expect( UserRequests::SwapProcess.new.perform('asddff') ).to eq(nil)
+          expect( UserRequests::BookingDetails::SwapProcess.new.perform('asddff') ).to eq(nil)
         end
       end
 
       context 'UserRequest is in processing state but booking_detail is missing' do
         it 'request put on Rejected state, with error message' do
-          allow_any_instance_of(UserRequest).to receive(:booking_detail).and_return(nil)
-          UserRequests::SwapProcess.new.perform(@user_request.id)
+          allow_any_instance_of(UserRequest).to receive(:requestable).and_return(nil)
+          UserRequests::BookingDetails::SwapProcess.new.perform(@user_request.id)
           expect(@user_request.reload.status).to eq('rejected')
           expect(@user_request.reason_for_failure).to include('Booking Is not available for swapping.')
         end
@@ -30,7 +30,7 @@ RSpec.describe UserRequests::SwapProcess, type: :worker do
       context 'UserRequest is in processing state but alternative project unit is not available for booking.' do
         it 'request put on Rejected state, with error message' do
           @alternate_project_unit.set(status: 'blocked')
-          UserRequests::SwapProcess.new.perform(@user_request.id)
+          UserRequests::BookingDetails::SwapProcess.new.perform(@user_request.id)
           expect(@user_request.reload.status).to eq('rejected')
           expect(@booking_detail.reload.status).to eq('blocked')
           expect(@user_request.reason_for_failure).to include('Alternative unit is not available for swapping.')
@@ -40,7 +40,7 @@ RSpec.describe UserRequests::SwapProcess, type: :worker do
       context 'UserRequest is in processing state but booking_detail is not in swapping state' do
         it 'request put on Rejected state, with error message' do
           allow_any_instance_of(BookingDetail).to receive(:status).and_return(:hold)
-          UserRequests::SwapProcess.new.perform(@user_request.id)
+          UserRequests::BookingDetails::SwapProcess.new.perform(@user_request.id)
           expect(@user_request.reload.status).to eq('rejected')
           expect(@user_request.reason_for_failure).to include('Booking Is not available for swapping.')
         end
@@ -49,7 +49,7 @@ RSpec.describe UserRequests::SwapProcess, type: :worker do
       context 'UserRequest is in processing state but alternate_project_unit has higher blocking amount' do
         it 'request put in rejected state with error message' do
           allow_any_instance_of(ProjectUnit).to receive(:blocking_amount).and_return(100000)
-          UserRequests::SwapProcess.new.perform(@user_request.id)
+          UserRequests::BookingDetails::SwapProcess.new.perform(@user_request.id)
           expect(@user_request.reload.status).to eq('rejected')
           expect(@user_request.reason_for_failure).to include("Alternate Unit booking price is very high. No any receipt with minimum 100000.")
         end
@@ -59,7 +59,7 @@ RSpec.describe UserRequests::SwapProcess, type: :worker do
     describe 'UserRequest mark as swapped' do
       context 'all receipts in success' do
         it 'request marked as resolved and booking is swapped with all receipts in cancelled and new new booking created with all receipts' do
-          expect{ UserRequests::SwapProcess.new.perform(@user_request.id) }.to change(BookingDetail, :count).by(1)
+          expect{ UserRequests::BookingDetails::SwapProcess.new.perform(@user_request.id) }.to change(BookingDetail, :count).by(1)
           expect(@user_request.reload.status).to eq('resolved')
           expect(@booking_detail.reload.status).to eq('swapped')
           expect(@booking_detail.receipts.pluck(:status)).to eq(["cancelled"])
@@ -75,7 +75,7 @@ RSpec.describe UserRequests::SwapProcess, type: :worker do
           @booking_detail.receipts.update_all(status: 'clearance_pending', tracking_id: nil, processed_on: nil)
           expect(Receipt.count).to eq(1)
           _count = @booking_detail.receipts.clearance_pending.count
-          UserRequests::SwapProcess.new.perform(@user_request.id)
+          UserRequests::BookingDetails::SwapProcess.new.perform(@user_request.id)
           expect(@user_request.reload.status).to eq('resolved')
           expect(@booking_detail.reload.status).to eq('swapped')
           expect(@booking_detail.receipts.pluck(:status)).to eq(["cancelled"])
@@ -98,7 +98,7 @@ RSpec.describe UserRequests::SwapProcess, type: :worker do
           _pending = create(:check_payment, user_id: @user.id, total_amount: 20000, status: 'pending', booking_detail_id: @booking_detail.id, tracking_id: nil, processed_on: nil)
           _count = @booking_detail.receipts.clearance_pending.count
           expect(Receipt.count).to eq(4)
-          UserRequests::SwapProcess.new.perform(@user_request.id)
+          UserRequests::BookingDetails::SwapProcess.new.perform(@user_request.id)
 
           expect(@user_request.reload.status).to eq('resolved')
           expect(@booking_detail.reload.status).to eq('swapped')

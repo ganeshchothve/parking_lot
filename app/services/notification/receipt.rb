@@ -31,17 +31,18 @@ module Notification
 
       new_status = @changes[:status][1]
 
-      params[:template_name] = if new_status == "success"
-        "receipt_success"
-      elsif new_status == "failed"
-        "receipt_failed"
-      elsif new_status == "clearance_pending"
-        "receipt_clearance_pending"
-      elsif new_status == "pending" && @receipt.payment_mode != 'online'
-        "receipt_pending_offline"
-      elsif new_status == "refunded"
-        "receipt_refunded"
-      end
+      params[:template_name] = "receipt_#{new_status}"
+      # params[:template_name] = if new_status == "success"
+      #   "receipt_success"
+      # elsif new_status == "failed"
+      #   "receipt_failed"
+      # elsif new_status == "clearance_pending"
+      #   "receipt_clearance_pending"
+      # elsif new_status == "pending" && @receipt.payment_mode != 'online'
+      #   "receipt_pending_offline"
+      # elsif new_status == "refunded"
+      #   "receipt_refunded"
+      # end
       params
     end
 
@@ -55,15 +56,16 @@ module Notification
 
       new_status = @changes[:status][1]
 
-      params[:template_name] = if new_status == "success"
-        "receipt_success"
-      elsif new_status == "failed"
-        "receipt_failed"
-      elsif new_status == "clearance_pending"
-        "receipt_clearance_pending"
-      elsif new_status == "pending" && @receipt.payment_mode != 'online'
-        "receipt_pending"
-      end
+      params[:template_name] = "receipt_#{new_status}"
+      # params[:template_name] = if new_status == "success"
+      #   "receipt_success"
+      # elsif new_status == "failed"
+      #   "receipt_failed"
+      # elsif new_status == "clearance_pending"
+      #   "receipt_clearance_pending"
+      # elsif new_status == "pending" && @receipt.payment_mode != 'online'
+      #   "receipt_pending"
+      # end
       params
     end
   end

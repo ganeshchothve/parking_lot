@@ -1,25 +1,25 @@
 require 'rails_helper'
-RSpec.describe UserRequests::CancellationProcess, type: :worker do
+RSpec.describe UserRequests::BookingDetails::CancellationProcess, type: :worker do
   describe 'User Booking' do
     before(:each) do
       @admin = create(:admin)
       @user = create(:user)
       @booking_detail = book_project_unit(@user, nil, nil)
-      @user_request = create(:pending_user_request_cancellation, user_id: @booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: @booking_detail.id, event: 'pending')
+      @user_request = create(:pending_user_request_cancellation, user_id: @booking_detail.user_id, created_by_id: @admin.id,requestable_id: @booking_detail.id, requestable_type: 'BookingDetail', event: 'pending')
       @user_request.set(status: 'processing', resolved_by_id: @admin.id)
       @booking_detail.set(status: 'cancelling')
     end
 
     describe 'UserRequest mark as Rejected' do
       context 'UserRequest is not in processing state wrong Id pass' do
-        it 'ingore request, nothing will change' do
-          expect( UserRequests::CancellationProcess.new.perform('asddff') ).to eq(nil)
+        it 'ignore request, nothing will change' do
+          expect( UserRequests::BookingDetails::CancellationProcess.new.perform('asddff') ).to eq(nil)
         end
       end
       context 'UserRequest is in processing state but booking_detail is missing' do
         it 'request put on Rejected state, with error message' do
-          allow_any_instance_of(UserRequest).to receive(:booking_detail).and_return(nil)
-          UserRequests::CancellationProcess.new.perform(@user_request.id)
+          allow_any_instance_of(UserRequest).to receive(:requestable).and_return(nil)
+          UserRequests::BookingDetails::CancellationProcess.new.perform(@user_request.id)
           expect(@user_request.reload.status).to eq('rejected')
           expect(@user_request.reason_for_failure).to include('Booking Is not available for cancellation.')
         end
@@ -28,7 +28,7 @@ RSpec.describe UserRequests::CancellationProcess, type: :worker do
       context 'UserRequest is in processing state but booking_detail is not in cancelling state' do
         it 'request put on Rejected state, with error message' do
           allow_any_instance_of(BookingDetail).to receive(:status).and_return(:hold)
-          UserRequests::CancellationProcess.new.perform(@user_request.id)
+          UserRequests::BookingDetails::CancellationProcess.new.perform(@user_request.id)
           expect(@user_request.reload.status).to eq('rejected')
           expect(@user_request.reason_for_failure).to include('Booking Is not available for cancellation.')
         end
@@ -39,7 +39,7 @@ RSpec.describe UserRequests::CancellationProcess, type: :worker do
       context 'all receipts in success' do
         it 'request marked as resolved and booking is cancelled with all receipts as available for refund' do
           # allow(@user_request).to receive(:booking_detail).and_return(nil)
-          UserRequests::CancellationProcess.new.perform(@user_request.id)
+          UserRequests::BookingDetails::CancellationProcess.new.perform(@user_request.id)
           expect(@user_request.reload.status).to eq('resolved')
           expect(@booking_detail.reload.status).to eq('cancelled')
           expect(@booking_detail.receipts.pluck(:status)).to eq(["available_for_refund"])
@@ -51,7 +51,7 @@ RSpec.describe UserRequests::CancellationProcess, type: :worker do
           @booking_detail.receipts.update_all(status: 'clearance_pending', tracking_id: nil, processed_on: nil)
           expect(Receipt.count).to eq(1)
           _count = @booking_detail.receipts.clearance_pending.count
-          UserRequests::CancellationProcess.new.perform(@user_request.id)
+          UserRequests::BookingDetails::CancellationProcess.new.perform(@user_request.id)
           expect(@user_request.reload.status).to eq('resolved')
           expect(@booking_detail.reload.status).to eq('cancelled')
           expect(@booking_detail.receipts.pluck(:status)).to eq(["cancelled"])
@@ -70,7 +70,7 @@ RSpec.describe UserRequests::CancellationProcess, type: :worker do
           _pending = create(:check_payment, user_id: @user.id, total_amount: 20000, status: 'pending', booking_detail_id: @booking_detail.id, tracking_id: nil, processed_on: nil)
           _count = @booking_detail.receipts.clearance_pending.count
           expect(Receipt.count).to eq(4)
-          UserRequests::CancellationProcess.new.perform(@user_request.id)
+          UserRequests::BookingDetails::CancellationProcess.new.perform(@user_request.id)
           expect(@user_request.reload.status).to eq('resolved')
           expect(@booking_detail.reload.status).to eq('cancelled')
           expect(_success.reload.status).to eq('available_for_refund')

@@ -366,6 +366,9 @@ en:
       resolved: 'Resolved'
       rejected: 'Rejected'
       failed: 'Failed'
+    requestable_type:
+      Receipt: 'Receipt'
+      BookingDetail: 'Booking'
   referrals:
     name: 'Referrals'
     code: 'Referral Code'
@@ -431,4 +434,6 @@ en:
       imps: 'IMPS'
       card_swipe: 'Card Swipe'
       neft: 'NEFT'
+    cancellation_link: 'Cancellation'
+
 
