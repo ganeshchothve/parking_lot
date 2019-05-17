@@ -58,7 +58,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
       attributes += %i[issued_date issuing_bank issuing_bank_branch payment_identifier]
     end
     attributes += %i[account_number payment_identifier] if user.role == 'superadmin' && record.payment_mode == 'online'
-    if %w[sales sales_admin channel_partner].include?(user.role) && %w[pending clearance_pending].include?(record.status)
+    if %w[sales sales_admin].include?(user.role) && %w[pending clearance_pending].include?(record.status)
       attributes += [:event]
     end
     if %w[admin crm superadmin sales_admin].include?(user.role)
