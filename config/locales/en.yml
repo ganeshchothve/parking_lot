@@ -311,6 +311,9 @@ en:
         success: 'Your Booking is hold. Please select Scheme and go for Payment.'
       gateway_payment:
         receipt_missing: 'Requested receipt not in pending.'
+    users:
+      account_confirmed: 'Account Confirmed'
+      cannot_confirm_user: 'Cannot confirm user'
   user_kycs:
     link_name: 'KYCs'
   smses:
@@ -340,7 +343,6 @@ en:
       untracked: 'Untracked'
   users:
     account_confirmed: 'Account Confirmed'
-    cannot_confirm_user: 'Cannot confirm user'
     confirmed:
       :true: 'Confirmed'
       :false: 'Not Confirmed'
