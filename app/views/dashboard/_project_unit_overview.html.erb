@@ -72,7 +72,7 @@
       <% end %>
     </div>
     <div class="row">
-      <% if defined?(scheme) && scheme.present? %>
+      <% if project_unit.blocked? || (defined?(scheme) && scheme.present?) %>
         <div class="col-md-4">
           <div class="form-group">
             <label>Effective Rate</label>
