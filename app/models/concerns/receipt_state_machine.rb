@@ -85,7 +85,7 @@ module ReceiptStateMachine
     #
     def moved_to_clearance_pending
       if payment_mode != 'online'
-        unless (%w( channel_partner ) + User::BUYER_ROLES).include?(self.creator.role)
+        unless ((User::BUYER_ROLES).include?(self.creator.role))||(self.creator.role == 'channel_partner' && !self.creator.premium?) 
           self.clearance_pending!
         end
       end

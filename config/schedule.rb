@@ -45,3 +45,7 @@ every 1.day, at: "3:30 pm" do
   runner "DailySmsReportWorker.perform_async"
   runner 'ReceiptCleaner.perform_async'
 end
+
+every 1.day, at: "3:00 pm" do
+  runner "DailyReports::PaymentsReportWorker.perform_async"
+end
