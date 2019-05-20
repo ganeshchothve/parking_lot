@@ -3,6 +3,7 @@ class Admin::ProjectUnitsController < AdminController
   include ProjectUnitsConcern
   before_action :set_project_unit, except: %i[index export]
   before_action :authorize_resource
+  before_action :set_project_unit_scheme, only: %i[show print]
   around_action :apply_policy_scope, only: :index
   layout :set_layout
 
@@ -101,6 +102,11 @@ class Admin::ProjectUnitsController < AdminController
 
   # def set_project_unit
   # Defined in ProjectUnitsConcern
+
+  def set_project_unit_scheme
+    @scheme = Scheme.where(_id: params[:selected_scheme_id]).first
+    @project_unit.scheme = @scheme if @scheme
+  end
 
   def authorize_resource
     if params[:action] == 'index'
