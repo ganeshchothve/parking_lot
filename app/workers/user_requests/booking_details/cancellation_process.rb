@@ -1,5 +1,6 @@
-# UserRequests::CancellationProcess
+# UserRequests::BookingDetails::CancellationProcess
 module UserRequests
+  module BookingDetails
   class CancellationProcess
     include Sidekiq::Worker
     attr_reader :user_request, :booking_detail
@@ -7,7 +8,7 @@ module UserRequests
     def perform(user_request_id)
       @user_request = UserRequest.processing.where(_id: user_request_id).first
       return nil if @user_request.blank?
-      @booking_detail = user_request.booking_detail
+      @booking_detail = user_request.requestable
       if @booking_detail && @booking_detail.cancelling?
         resolve
       else
@@ -85,5 +86,6 @@ module UserRequests
         reject_user_request(old_receipts_arr, new_receipts_arr, error_messages)
       end
     end
+  end
   end
 end

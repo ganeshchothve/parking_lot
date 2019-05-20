@@ -5,6 +5,9 @@
         <h5 class="float-left card-title mt-2 mb-0"><%= t("user_requests.#{params[:request_type]}") %></h5>
       </div>
       <div class="col-1">
+        <td class="text-right">
+          <%= render 'links', user_request: @user_request, links_name: 'Action' %>
+        </td>
       </div>
     </div>
   </div>
@@ -12,9 +15,9 @@
     <div class="row">
       <div class="col-3">
         <div class="form-group">
-          <label> Rquested For (UNIT)</label>
+          <label> Requested For ( <%= t("user_requests.requestable_type.#{user_request.requestable_type}") %> )</label>
           <div>
-            <%= user_request.booking_detail.name %>
+            <%= user_request.requestable.name %>
           </div>
         </div>
       </div>
@@ -43,6 +46,14 @@
     <div class="row">
       <div class="col-3">
         <div class="form-group">
+          <label> Requested For (User) </label>
+          <div>
+            <%= link_to user_request.user.name, [current_user_role_group, user_request.user ] %>
+          </div>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="form-group">
           <label> Created by </label>
           <div>
             <%= link_to user_request.created_by.name, [current_user_role_group, user_request.created_by] %>
@@ -51,14 +62,7 @@
           </div>
         </div>
       </div>
-      <div class="col-3">
-        <div class="form-group">
-          <label> Requested For (User) </label>
-          <div>
-            <%= link_to user_request.user.name, [current_user_role_group, user_request.user ] %>
-          </div>
-        </div>
-      </div>
+
       <div class="col-3">
         <div class="form-group">
           <label>Resolved by</label>

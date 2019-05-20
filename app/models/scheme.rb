@@ -1,6 +1,7 @@
 class Scheme
   include Mongoid::Document
   include Mongoid::Timestamps
+  include ArrayBlankRejectable
   include InsertionStringMethods
   include SchemeStateMachine
   extend FilterByCriteria
@@ -16,17 +17,20 @@ class Scheme
   field :can_be_applied_by, type: Array
 
   scope :filter_by_name, ->(name) { where(name: ::Regexp.new(::Regexp.escape(name), 'i')) }
-  scope :filter_by_can_be_applied_by, ->(user_role) do 
+  scope :filter_by_can_be_applied_by, ->(user_role) do
     where({ '$and' => ['$or' => [{ can_be_applied_by: nil },{ can_be_applied_by: [] },{ can_be_applied_by: user_role }, {can_be_applied_by: ['']} ] ] })
   end
-  scope :filter_by_user_role, ->(user_role) do 
+  scope :filter_by_can_be_applied_by_role, ->(role) { where({ '$and' => [{ can_be_applied_by: role }] }) }
+  scope :filter_by_user_role, ->(user_role) do
     where({ '$and' => ['$or' => [{ user_role: nil },{ user_role: [] },{ user_role: user_role },{user_role: '' } ] ] })
   end
-  scope :filter_by_user_id, ->(user_id) do 
+  scope :filter_by_user_id, ->(user_id) do
     where({ '$and' => ['$or' => [{ user_ids: nil },{ user_ids: [] },{ user_ids: user_id }, {user_ids: [''] } ] ] })
   end
-  # scope :filter_by_user_role, ->(user_role) { where(user_role: user_role) }
-  scope :filter_by_status, ->(status) { where(status: status) }  
+  scope :filter_by_default_for_user_id, ->(user_id) do
+    where({ '$and' => ['$or' => [{ default_for_user_ids: nil }, { default_for_user_ids: [] }, { default_for_user_ids: [''] }, { default_for_user_ids: user_id }]] })
+  end
+  scope :filter_by_status, ->(status) { where(status: status) }
   scope :filter_by_project_tower, ->(project_tower_id) { where(project_tower_id: project_tower_id) }
 
 
@@ -45,6 +49,7 @@ class Scheme
   belongs_to :created_by, class_name: "User"
   belongs_to :booking_portal_client, class_name: "Client"
   has_and_belongs_to_many :users
+  has_and_belongs_to_many :default_for_users, class_name: 'User'
 
   validates :name, :status, :cost_sheet_template_id, :payment_schedule_template_id, presence: true
   validates :name, uniqueness: {scope: :project_tower_id}

@@ -236,6 +236,7 @@ en:
         approved_at: 'Approved At'
         approved_by: 'Approved By'
         created_by: 'Created By'
+        default_for_users: 'Default for Channel Partners'
       user:
         created_at: "Registered At"
         login_otp: 'Verification / Login OTP'
@@ -308,6 +309,7 @@ en:
         pending_payments: "We already have collected a payment for this unit from the same customer."
       hold:
         booking_detail_error: 'We cannot process your request at this time. Please retry'
+        scheme_for_channel_partner_not_found: 'No Scheme found for channel partner'
         success: 'Your Booking is hold. Please select Scheme and go for Payment.'
       gateway_payment:
         receipt_missing: 'Requested receipt not in pending.'
@@ -366,6 +368,9 @@ en:
       resolved: 'Resolved'
       rejected: 'Rejected'
       failed: 'Failed'
+    requestable_type:
+      Receipt: 'Receipt'
+      BookingDetail: 'Booking'
   referrals:
     name: 'Referrals'
     code: 'Referral Code'
@@ -431,4 +436,6 @@ en:
       imps: 'IMPS'
       card_swipe: 'Card Swipe'
       neft: 'NEFT'
+    cancellation_link: 'Cancellation'
+
 

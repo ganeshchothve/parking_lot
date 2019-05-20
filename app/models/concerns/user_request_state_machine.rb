@@ -7,14 +7,14 @@ module UserRequestStateMachine
       state :pending, initial: true
       state :processing, :resolved, :rejected
 
-      event :pending, after: :update_booking_detail_to_request_made do
+      event :pending, after: :update_requestable_to_request_made do
         transitions from: :pending, to: :pending
       end
 
       event :processing do
         after do
-          update_booking_detail_to_cancelling if is_a?(UserRequest::Cancellation)
-          update_booking_detail_to_swapping if is_a?(UserRequest::Swap)
+          update_requestable_to_cancelling if is_a?(UserRequest::Cancellation)
+          update_requestable_to_swapping if is_a?(UserRequest::Swap)
         end
         transitions from: :processing, to: :processing
         transitions from: :pending, to: :processing
@@ -25,10 +25,10 @@ module UserRequestStateMachine
         transitions from: :processing, to: :resolved
       end
 
-      event :rejected do
+      event :rejected, after: :update_requestable_to_request_rejected do
         transitions from: :rejected, to: :rejected
-        transitions from: :pending, to: :rejected, after: :update_booking_detail_to_request_rejected
-        transitions from: :processing, to: :rejected, after: :send_notifications
+        transitions from: :pending, to: :rejected, after: :update_requestable_to_request_rejected
+        transitions from: :processing, to: :rejected
       end
     end
 
@@ -49,7 +49,7 @@ module UserRequestStateMachine
     end
 
     def send_sms
-      template = Template::SmsTemplate.where(name: "#{self.class.model_name.element}_request_resolved").first
+      template = Template::SmsTemplate.where(name: "#{self.class.model_name.element}_request_#{status}").first
       if template.present? && user.booking_portal_client.sms_enabled?
         Sms.create!(
           booking_portal_client_id: user.booking_portal_client_id,
@@ -61,9 +61,9 @@ module UserRequestStateMachine
       end
     end
 
-    def update_booking_detail_to_request_made
-      booking_detail.cancellation_requested! if is_a?(UserRequest::Cancellation)
-      booking_detail.swap_requested! if is_a?(UserRequest::Swap)
+    def update_requestable_to_request_made
+      requestable.cancellation_requested! if is_a?(UserRequest::Cancellation)
+      requestable.swap_requested! if is_a?(UserRequest::Swap)
       send_notifications
     end
 
@@ -72,22 +72,26 @@ module UserRequestStateMachine
       send_sms if user.booking_portal_client.sms_enabled? && !processing?
     end
 
-    def update_booking_detail_to_request_rejected
-      booking_detail.cancellation_rejected! if is_a?(UserRequest::Cancellation)
-      booking_detail.swap_rejected! if is_a?(UserRequest::Swap)
+    def update_requestable_to_request_rejected
+      requestable.cancellation_rejected! if is_a?(UserRequest::Cancellation)
+      requestable.swap_rejected! if is_a?(UserRequest::Swap)
       self.reason_for_failure = 'admin rejected the request' if reason_for_failure.blank?
       send_notifications
     end
 
-    def update_booking_detail_to_cancelling
-      if booking_detail.cancelling!
-        UserRequests::CancellationProcess.perform_async(id)
+    def update_requestable_to_cancelling
+      if requestable
+        requestable.cancelling!
+        UserRequests::BookingDetails::CancellationProcess.perform_async(id) if requestable.kind_of?(BookingDetail)
+        UserRequests::Receipts::CancellationProcess.perform_async(id) if requestable.kind_of?(Receipt)
       end
     end
 
-    def update_booking_detail_to_swapping
-      if booking_detail.swapping!
-        UserRequests::SwapProcess.perform_async(id)
+    def update_requestable_to_swapping
+      if requestable_type == 'BookingDetail'
+        if requestable.swapping!
+          UserRequests::BookingDetails::SwapProcess.perform_async(id)
+        end
       end
     end
   end
