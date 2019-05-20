@@ -37,7 +37,7 @@ module Booking
   def swap_request(user, project_unit=nil, receipt=nil, status='blocked', alternate_project_unit=nil)
     alternate_project_unit ||= create(:project_unit)
     booking_detail = book_project_unit(user, project_unit, receipt, status)
-    create(:pending_user_request_swap, alternate_project_unit_id: alternate_project_unit.id, user_id: user.id, created_by_id: (User.where(role: 'admin').first || create(:admin) ), booking_detail_id: booking_detail.id, event: 'pending')
+    create(:pending_user_request_swap, alternate_project_unit_id: alternate_project_unit.id, user_id: user.id, created_by_id: (User.where(role: 'admin').first || create(:admin) ), requestable_id: booking_detail.id, requestable_type: 'BookingDetail', event: 'pending')
   end
 
   def scheme

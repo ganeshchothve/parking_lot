@@ -2,7 +2,6 @@
 module DatabaseSeeds
   module EmailTemplates
     def self.seed client_id
-
       DatabaseSeeds::EmailTemplates::Scheme.seed client_id
       DatabaseSeeds::EmailTemplates::BookingDetail.seed client_id
       DatabaseSeeds::EmailTemplates::Receipt.seed client_id

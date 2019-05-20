@@ -36,7 +36,7 @@ class BookingDetail
   has_many :booking_detail_schemes, dependent: :destroy
   has_many :sync_logs, as: :resource
   has_many :notes, as: :notable
-  has_many :user_requests
+  has_many :user_requests, as: :requestable
   has_many :related_booking_details, foreign_key: :parent_booking_detail_id, primary_key: :_id, class_name: 'BookingDetail'
   has_and_belongs_to_many :user_kycs
 

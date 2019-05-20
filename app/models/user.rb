@@ -17,6 +17,8 @@ class User
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, authentication_keys: [:login]
 
+  attr_accessor :temporary_password
+
   ## Database authenticatable
   field :first_name, type: String, default: ''
   field :last_name, type: String, default: ''
@@ -34,6 +36,7 @@ class User
   field :erp_id, type: String, default: ''
   field :utm_params, type: Hash, default: {} # {"campaign": '' ,"source": '',"sub_source": '',"medium": '',"term": '',"content": ''}
   field :enable_communication, type: Hash, default: { "email": true, "sms": true }
+  field :premium,type: Boolean, default: false
 
   field :encrypted_password, type: String, default: ''
 
@@ -98,6 +101,7 @@ class User
   belongs_to :referred_by, class_name: 'User', optional: true
   belongs_to :manager, class_name: 'User', optional: true
   belongs_to :channel_partner, optional: true
+  belongs_to :confirmed_by, class_name: 'User', optional: true
   has_many :receipts
   has_many :project_units
   has_many :booking_details
