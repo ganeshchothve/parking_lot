@@ -137,18 +137,7 @@ class User
   scope :filter_by_confirmation, ->(confirmation) { confirmation.eql?('not_confirmed') ? where(confirmed_at: nil) : where(confirmed_at: { "$ne": nil }) }
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where({ '$and' => ["$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] ] }) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: start_date..end_date) }
-  scope :filter_by_role, ->(role) do
-    if role.present?
-      case(role)
-      when Array
-        where( role: { "$in": role } )
-      when ActionController::Parameters
-        where( role: role.to_unsafe_h )
-      else
-        where( role: role )
-      end
-    end
-  end
+  scope :filter_by_role, ->(*_role) { where( role: { "$in": _role } ) }
   scope :filter_by_receipts, ->(receipts) do
     user_ids = Receipt.in(status: %w(success clearance_pending)).distinct(:user_id)
     if user_ids.present?
