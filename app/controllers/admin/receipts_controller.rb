@@ -14,6 +14,10 @@ class Admin::ReceiptsController < AdminController
     @receipts = Receipt.where(Receipt.user_based_scope(current_user, params))
                        .build_criteria(params)
                        .paginate(page: params[:page] || 1, per_page: params[:per_page])
+    respond_to do |format|
+      format.json { render json: @receipts.as_json(methods: [:name]) }
+      format.html
+    end
   end
 
   # GET /admin/receipts/export
@@ -57,6 +61,7 @@ class Admin::ReceiptsController < AdminController
 
     authorize([:admin, @receipt])
     respond_to do |format|
+      @receipt.event ||= 'pending' if current_user.role?('channel_partner')
       if @receipt.save
         flash[:notice] = 'Receipt was successfully updated. Please upload documents'
         if @receipt.payment_mode == 'online'
@@ -68,7 +73,7 @@ class Admin::ReceiptsController < AdminController
         else
           url = admin_user_receipts_path(@user,'remote-state': assetables_path(assetable_type: @receipt.class.model_name.i18n_key.to_s, assetable_id: @receipt.id) )
         end
-        format.json { render json: @receipt, location: URI.decode(url) }
+        format.json { render json: @receipt, location: url }
         format.html { redirect_to url }
       else
         flash[:alert] = @receipt.errors.full_messages

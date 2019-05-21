@@ -1,6 +1,10 @@
 <div class="dropdown float-right">
   <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= link_name %></a>
   <div class="dropdown-menu dropdown-menu-right">
+    <% if booking_detail.hold? && policy([:buyer, booking_detail]).block? %>
+      <%= link_to "Checkout using unit already held", checkout_user_search_path(booking_detail.search), class: 'dropdown-item' %>
+    <% end %>
+
     <% if policy([:buyer, Receipt.new(user: current_user, booking_detail: booking_detail)]).new? %>
     <% if policy([:buyer, BookingDetail ]).show? %>
       <%= link_to "View details", buyer_booking_detail_path( booking_detail), class: 'dropdown-item' %>
@@ -28,8 +32,8 @@
 
     <% [UserRequest::Cancellation, UserRequest::Swap] if Rails.env.development? %>
     <% UserRequest.descendants.each do |klass| %>
-      <% if policy([:buyer, klass.new(user_id: booking_detail.user_id, booking_detail_id: booking_detail.id)]).new? %>
-        <%= link_to global_labels["user_request_#{klass.model_name.element}"], new_buyer_user_request_path(booking_detail_id: booking_detail.id, request_type: klass.model_name.element), class: "dropdown-item modal-remote-form-link" %>
+      <% if policy([:buyer, klass.new(user_id: booking_detail.user_id, requestable_id: booking_detail.id, requestable_type: 'BookingDetail')]).new? %>
+        <%= link_to global_labels["user_request_#{klass.model_name.element}"], new_buyer_user_request_path(requestable_id: booking_detail.id, request_type: klass.model_name.element, requestable_type: 'BookingDetail'), class: "dropdown-item modal-remote-form-link" %>
       <% end %>
     <% end %>
   </div>

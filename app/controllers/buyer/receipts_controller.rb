@@ -1,5 +1,5 @@
 class Buyer::ReceiptsController < BuyerController
-
+  include ReceiptsConcern
   before_action :set_receipt, except: [:index, :new, :create]
 
   layout :set_layout
@@ -8,10 +8,11 @@ class Buyer::ReceiptsController < BuyerController
   def index
     authorize([:buyer, Receipt])
 
-    _params = params[:fltrs] || {}
-    _params.delete(:user_id)
-
     @receipts = current_user.receipts.build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page])
+    respond_to do |format|
+      format.json { render json: @receipts.as_json(methods: [:name]) }
+      format.html
+    end
   end
 
   # GET /buyer/receipts/export

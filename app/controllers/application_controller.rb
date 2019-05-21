@@ -1,5 +1,8 @@
 class ApplicationController < ActionController::Base
   include ApplicationConcern
+  include Pundit
+  include ApplicationHelper
+
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_cache_headers, :set_request_store, :set_cookies
   before_action :load_hold_unit
@@ -8,11 +11,10 @@ class ApplicationController < ActionController::Base
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
-  include Pundit
-  include ApplicationHelper
   helper_method :home_path
   protect_from_forgery with: :exception, prepend: true
   layout :set_layout
+
   def after_sign_in_path_for(current_user)
     ApplicationLog.user_log(current_user.id, 'sign_in', RequestStore.store[:logging])
     dashboard_path
@@ -27,28 +29,9 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+
   def set_layout
-    if user_signed_in?
-      if current_user.buyer?
-        'dashboard'
-      else
-        'admin'
-      end
-    elsif is_a?(Devise::SessionsController)
-      "application"
-    elsif is_a?(Devise::PasswordsController)
-      "application"
-    elsif is_a?(Devise::UnlocksController)
-      "application"
-    elsif is_a?(Devise::RegistrationsController)
-      "application"
-    elsif is_a?(Devise::ConfirmationsController)
-      "application"
-    elsif is_a?(ChannelPartnersController)
-      "application"
-    else
-      "application"
-    end
+    devise_controller? ? 'devise' : 'application'
   end
 
   private

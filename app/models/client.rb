@@ -43,7 +43,7 @@ class Client
   field :enable_actual_inventory, type: Array, default: []
   field :enable_channel_partners, type: Boolean, default: false
   field :enable_direct_payment, type: Boolean, default: false
-  field :enable_payment_without_kyc, type: Boolean, default: false
+  field :enable_payment_without_kyc, type: Boolean, default: true
   field :enable_booking_without_kyc, type: Boolean, default: false
   field :blocking_amount, type: Integer, default: 30000
   field :blocking_days, type: Integer, default: 10
@@ -59,6 +59,8 @@ class Client
   field :enable_communication, type: Hash, default: {"email": true, "sms": true}
   field :allow_multiple_bookings_per_user_kyc, type: Boolean, default: true
   field :enable_referral_bonus, type: Boolean, default: false
+  field :external_api_integration, type: Boolean, default: false
+  field :enable_daily_reports, type: Hash, default: {"payments_report": false}
   #
   # This setting will decide how same lead can be added through different channel partners,
   # Enabled: If channel_partner tries to add a lead which is already present in the system & tagged to different channel_partner, then system will check if the lead is confirmed or not, if yes, it won't allow the current channel_partner to add it again & trigger an email to admin saying current channel_partner tried to add an existing lead.

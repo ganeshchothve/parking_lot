@@ -14,7 +14,7 @@ class ChannelPartnerExportWorker
       sheet.insert_row(index+1, ChannelPartnerExportWorker.get_channel_partner_row(channel_partner))
     end
     file_name = "channel-partner-#{SecureRandom.hex}.xls"
-    file.write("#{Rails.root}/#{file_name}")
+    file.write("#{Rails.root}/exports/#{file_name}")
     ExportMailer.notify(file_name, user.email, "Channel Partners").deliver
   end
 

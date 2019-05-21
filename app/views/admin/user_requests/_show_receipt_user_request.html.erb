@@ -1,0 +1,10 @@
+<div class="card">
+  <div class="card-header">
+    Receipts
+  </div>
+  <div class="table-responsive">
+    <table class="striped-table table">
+      <%= render 'receipts/details', receipt: @user_request.requestable %>
+    </table>
+  </div>
+</div>

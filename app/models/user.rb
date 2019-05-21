@@ -17,6 +17,8 @@ class User
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, authentication_keys: [:login]
 
+  attr_accessor :temporary_password
+
   ## Database authenticatable
   field :first_name, type: String, default: ''
   field :last_name, type: String, default: ''
@@ -34,6 +36,7 @@ class User
   field :erp_id, type: String, default: ''
   field :utm_params, type: Hash, default: {} # {"campaign": '' ,"source": '',"sub_source": '',"medium": '',"term": '',"content": ''}
   field :enable_communication, type: Hash, default: { "email": true, "sms": true }
+  field :premium,type: Boolean, default: false
 
   field :encrypted_password, type: String, default: ''
 
@@ -98,6 +101,7 @@ class User
   belongs_to :referred_by, class_name: 'User', optional: true
   belongs_to :manager, class_name: 'User', optional: true
   belongs_to :channel_partner, optional: true
+  belongs_to :confirmed_by, class_name: 'User', optional: true
   has_many :receipts
   has_many :project_units
   has_many :booking_details
@@ -145,6 +149,16 @@ class User
 
   def total_balance_pending
     booking_details.in(status: ProjectUnit.booking_stages).sum(&:pending_balance)
+  end
+
+  #
+  # This function check the booking limit, any buyer can book only limited booking which is defined on allowed_bookings.
+  #
+  #
+  # @return [Boolean]
+  #
+  def can_book_more_booking?
+    self.booking_details.in(status: BookingDetail::BOOKING_STAGES ).count > self.allowed_bookings
   end
 
   def total_unattached_balance
@@ -225,6 +239,18 @@ class User
                                   else
                                     { "$ne": nil }
                                   end
+      end
+      if params[:fltrs][:receipts].present?
+        user_ids = Receipt.in(status: %w(success clearance_pending)).distinct(:user_id)
+        if params[:fltrs][:receipts] == 'yes'
+          selector[:id] = { '$in': user_ids } if user_ids.present?
+        elsif params[:fltrs][:receipts] == 'no'
+          selector[:id] = { '$nin': user_ids } if user_ids.present?
+        end
+      end
+      if params[:fltrs][:created_at].present?
+        start_date, end_date = params[:fltrs][:created_at].split(' - ')
+        selector[:created_at] = start_date..end_date
       end
     end
     selector[:role] = { "$ne": 'superadmin' } if selector[:role].blank?
@@ -365,7 +391,7 @@ class User
     if user.role?('channel_partner')
       custom_scope = {manager_id: user.id, role: {"$in": User.buyer_roles(user.booking_portal_client)} }
     elsif user.role?('crm')
-      custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) } }
+      custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) + %w(channel_partner) } }
     elsif user.role?('sales_admin')
       custom_scope = { "$or": [{ role: { "$in": User.buyer_roles(user.booking_portal_client) } }, { role: 'sales' }, { role: 'channel_partner' }] }
     elsif user.role?('sales')
@@ -396,23 +422,18 @@ class User
     Api::UserDetailsSync.new(erp_model, self, sync_log).execute if self.buyer?
   end
 
-  # IRIS-75 Need to send manager_id in request.
-  def send_confirmation_instructions
-    UserConfirmationEmailWorker.perform_async(id.to_s)
-  end
-
   # This is sub part of send_confirmation_instructions for delay this method is used
-  def _send_confirmation_instruction
-    unless @raw_confirmation_token
-      generate_confirmation_token!
-    end
-    opts = {}
-    if pending_reconfirmation?
-      opts[:to] = unconfirmed_email
-      opts[:manager_id] = self.manager_id if self.buyer?
-    end
+  def send_confirmation_instructions
+    generate_confirmation_token! unless @raw_confirmation_token
     # send_devise_notification(:confirmation_instructions, @raw_confirmation_token, opts)
-    UserConfirmationMailer.send_confirmation(id.to_s, @raw_confirmation_token)
+    Email.create!({
+      booking_portal_client_id: booking_portal_client_id,
+      email_template_id: Template::EmailTemplate.find_by(name: "user_confirmation_instructions").id,
+      cc: [ booking_portal_client.notification_email ],
+      recipients: [ self ],
+      triggered_by_id: id,
+      triggered_by_type: self.class.to_s
+    })
   end
 
   private

@@ -7,6 +7,8 @@ class ProjectUnit
   include InsertionStringMethods
   include CostCalculator
 
+  STATUS = %w(available not_available hold blocked error)
+
   # These fields are globally utlised on the server side
   field :name, type: String
   field :erp_id, type: String
@@ -102,6 +104,10 @@ class ProjectUnit
   #
   def available?
     %w[available employee management].include?(status)
+  end
+
+  def blocked?
+    status == 'blocked'
   end
 
   def calculated_costs
@@ -326,7 +332,7 @@ class ProjectUnit
   end
 
   def booking_detail_scheme
-    booking_detail.try(:booking_detail_scheme)
+    booking_detail.try(:booking_detail_scheme) unless self.available?
   end
 
   def scheme=(_scheme)

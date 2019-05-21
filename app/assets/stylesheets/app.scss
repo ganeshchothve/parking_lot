@@ -146,6 +146,11 @@ figure.wave {
 .page-break{
   page-break-after: always;
 }
+
+.text-decoration-none, .text-decoration-none:hover {
+  text-decoration:none
+}
+
 @media print {
   .tab-content > .tab-pane {
       display: block !important;

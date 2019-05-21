@@ -5,7 +5,8 @@ class SelldoInventoryPusher
   def perform(project_unit_status, project_unit_id, timestamp)
     project_unit = ProjectUnit.find(project_unit_id)
     user = project_unit.user
-    user_kycs = [project_unit.primary_user_kyc] + project_unit.user_kycs
+    booking_detail = project_unit.booking_detail
+    user_kycs = booking_detail ? ([booking_detail.primary_user_kyc] + booking_detail.user_kycs) : []
     params = {
       api_key: project_unit.booking_portal_client.selldo_api_key,
       lead_id: user.lead_id,

@@ -1,6 +1,7 @@
 <nav id="top_navigation" class="navbar navbar-expand-lg fixed-top navbar navbar-light bg-white border-bottom">
   <a class="navbar-brand" href="<%= home_path(current_user) %>" title="<%= current_client.name %>">
-    
+    <%= image_tag current_client.logo.url, class: "img-responsive d-none d-lg-block" %>
+    <%= image_tag current_client.mobile_logo.url, class: "img-responsive d-lg-none" %>
   </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle main navigation">
     <span class="navbar-toggler-icon"></span>
@@ -31,7 +32,6 @@
     </ul>
   </div>
 </nav>
-<%= render "layouts/navbar_footer" unless params[:action] == 'inventory' %>
 <div class="body-padding"></div>
 <div class="container">
   <% if notice %>

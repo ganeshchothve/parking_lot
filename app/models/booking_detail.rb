@@ -5,9 +5,10 @@ class BookingDetail
   include InsertionStringMethods
   include BookingDetailStateMachine
   include SyncDetails
+  include ApplicationHelper
   extend FilterByCriteria
 
-  BOOKING_STAGES = %w[blocked booked_tentative booked_confirmed]
+  BOOKING_STAGES = %w[blocked booked_tentative booked_confirmed under_negotiation scheme_approved]
 
   field :status, type: String
   field :erp_id, type: String, default: ''
@@ -35,7 +36,7 @@ class BookingDetail
   has_many :booking_detail_schemes, dependent: :destroy
   has_many :sync_logs, as: :resource
   has_many :notes, as: :notable
-  has_many :user_requests
+  has_many :user_requests, as: :requestable
   has_many :related_booking_details, foreign_key: :parent_booking_detail_id, primary_key: :_id, class_name: 'BookingDetail'
   has_and_belongs_to_many :user_kycs
 
@@ -43,7 +44,7 @@ class BookingDetail
   # validates :name, presence: true
   validates :status, presence: true
   validates :erp_id, uniqueness: true, allow_blank: true
-  validate :kyc_mandate
+  validate :kyc_mandate, on: :create
   delegate :name, :blocking_amount, to: :project_unit, prefix: true, allow_nil: true
   delegate :name, :email, :phone, to: :user, prefix: true, allow_nil: true
 
@@ -111,8 +112,8 @@ class BookingDetail
       cc: [ project_unit.booking_portal_client.notification_email ],
       recipients: [ user ],
       cc_recipients: ( user.manager_id.present? ? [user.manager] : [] ),
-      triggered_by_id: project_unit.id,
-      triggered_by_type: project_unit.class.to_s
+      triggered_by_id: self.id,
+      triggered_by_type: self.class.to_s
     })
   end
 
@@ -123,7 +124,33 @@ class BookingDetail
     elsif primary_user_kyc_id.present?
       return true
     end
-    false  
+    false
+  end
+
+
+  def ageing
+    _receipts = self.receipts.in(status:["clearance_pending", "success"]).asc(:created_at)
+    if(["booked_confirmed"].include?(self.status))
+      due_since = _receipts.first.created_at.to_date rescue self.created_at.to_date
+      last_booking_payment = _receipts.last.created_at.to_date rescue Date.today
+      age = (last_booking_payment - due_since).to_i
+    elsif(["blocked", "booked_tentative"].include?(self.status))
+      due_since = _receipts.first.created_at.to_date rescue self.created_at.to_date
+      age = (Date.today - due_since).to_i
+    else
+      return "NA"
+    end
+    if age < 15
+      return "< 15 days"
+    elsif age < 30
+      return "< 30 days"
+    elsif age < 45
+      return "< 45 days"
+    elsif age < 60
+      return "< 60 days"
+    else
+      return "> 60 days"
+    end
   end
 
   class << self

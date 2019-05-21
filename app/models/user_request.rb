@@ -12,31 +12,37 @@ class UserRequest
   field :resolved_at, type: DateTime
   field :reason_for_failure, type: String
 
-  belongs_to :booking_detail
-  belongs_to :receipt, optional: true
+  # belongs_to :booking_detail
+  # belongs_to :receipt, optional: true
+  belongs_to :requestable, polymorphic: true
   belongs_to :user
   belongs_to :resolved_by, class_name: 'User', optional: true
   belongs_to :created_by, class_name: 'User'
   has_many :assets, as: :assetable
   has_many :notes, as: :notable
 
-  validates :user_id, :booking_detail_id, presence: true
+  validates :user_id, :requestable_id, :requestable_type, presence: true
   validates :resolved_by, presence: true, if: proc { |user_request| user_request.status == 'resolved' }
 
   validates :status, inclusion: { in: STATUS }
   validates :reason_for_failure, presence: true, if: proc { |record| record.rejected? }
 
+  validates_uniqueness_of :requestable_id, scope: [:requestable_type, :status], if: proc{|record| record.pending? }
+
   accepts_nested_attributes_for :notes
+  scope :filter_by_user, ->(user_id){ where(user_id: user_id)}
+  scope :filter_by__type, ->(request_type){ where(_type: /#{request_type}/i)}
+  scope :filter_by_status, ->(_status){ where(status: _status) }
 
   default_scope -> { desc(:created_at) }
 
-  delegate :project_unit, to: :booking_detail, prefix: false, allow_nil: true
+  delegate :project_unit, to: :requestable, prefix: false, allow_nil: true
 
   # TODO: on create send email to CRM team
 
   class << self
     def user_based_scope(user, params = {})
-  
+
       custom_scope = {}
       if params[:user_id].blank? && !user.buyer?
         if user.role?('channel_partner')

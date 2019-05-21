@@ -228,7 +228,12 @@ module BookingDetailStateMachine
     #
     def create_default_scheme
       if booking_detail_scheme.blank?
-        scheme = project_unit.project_tower.default_scheme
+        unless user.manager && user.manager.role?('channel_partner')
+          scheme = project_unit.project_tower.default_scheme
+        else
+          filters = {fltrs: { can_be_applied_by_role: user.manager.role, project_tower: project_unit.project_tower_id, user_role: user.role, user_id: user_id, status: 'approved', default_for_user_id: user.manager.id } }
+          scheme = Scheme.build_criteria(filters).first
+        end
         BookingDetailScheme.create(
           derived_from_scheme_id: scheme.id,
           booking_detail_id: id,
@@ -238,7 +243,7 @@ module BookingDetailStateMachine
           payment_schedule_template_id: scheme.payment_schedule_template_id,
           project_unit_id: project_unit_id,
           status: scheme.status
-        )
+        ) if scheme
       end
     end
     # This method is called after booked_confirmed event
@@ -246,20 +251,20 @@ module BookingDetailStateMachine
     def send_email_and_sms_as_confirmed
       if self.project_unit.booking_portal_client.email_enabled?
         attachments_attributes = []
-        action_mailer_email = ApplicationMailer.test(body: project_unit.booking_portal_client.templates.where(_type: "Template::AllotmentLetterTemplate").first.parsed_content(project_unit))
+        action_mailer_email = ApplicationMailer.test(body: project_unit.booking_portal_client.templates.where(_type: "Template::AllotmentLetterTemplate").first.parsed_content(self))
         pdf = WickedPdf.new.pdf_from_string(action_mailer_email.html_part.body.to_s)
-        File.open("#{Rails.root}/allotment_letter-#{project_unit.name}.pdf", "wb") do |file|
+        File.open("#{Rails.root}/exports/allotment_letter-#{project_unit.name}.pdf", "wb") do |file|
           file << pdf
         end
-        attachments_attributes << {file: File.open("#{Rails.root}/allotment_letter-#{project_unit.name}.pdf")}
+        attachments_attributes << {file: File.open("#{Rails.root}/exports/allotment_letter-#{project_unit.name}.pdf")}
         Email.create!({
             booking_portal_client_id: project_unit.booking_portal_client_id,
-            email_template_id: Template::EmailTemplate.find_by(name: "project_unit_booked_confirmed").id,
+            email_template_id: Template::EmailTemplate.find_by(name: "booking_confirmed").id,
             cc: [project_unit.booking_portal_client.notification_email],
             recipients: [user],
             cc_recipients: (user.manager_id.present? ? [user.manager] : []),
-            triggered_by_id: project_unit.id,
-            triggered_by_type: project_unit.class.to_s,
+            triggered_by_id: self.id,
+            triggered_by_type: self.class.to_s,
             attachments_attributes: attachments_attributes
           })
       end
@@ -267,9 +272,9 @@ module BookingDetailStateMachine
         Sms.create!(
               booking_portal_client_id: user.booking_portal_client_id,
               recipient_id: user.id,
-              sms_template_id: Template::SmsTemplate.find_by(name: "project_unit_booked_confirmed").id,
-              triggered_by_id: project_unit.id,
-              triggered_by_type: project_unit.class.to_s
+              sms_template_id: Template::SmsTemplate.find_by(name: "booking_confirmed").id,
+              triggered_by_id: self.id,
+              triggered_by_type: self.class.to_s
             )
       end
     end
@@ -277,26 +282,27 @@ module BookingDetailStateMachine
     # This method is called after of blocked and booked_tentative event
     # In this send email and sms to the user when the booking is in one of the booking stage
     def send_email_and_sms_as_booked
-      if self.project_unit.booking_portal_client.email_enabled?
+      if project_unit.booking_portal_client.email_enabled?
         attachments_attributes = []
-        Email.create!({
+        _status = status.sub('booked_', '')
+        Email.create!(
           booking_portal_client_id: project_unit.booking_portal_client_id,
-          email_template_id: Template::EmailTemplate.find_by(name: "project_unit_#{status}").id,
+          email_template_id: Template::EmailTemplate.find_by(name: "booking_#{_status}").id,
           cc: [project_unit.booking_portal_client.notification_email],
           recipients: [user],
           cc_recipients: (user.manager_id.present? ? [user.manager] : []),
-          triggered_by_id: project_unit.id,
-          triggered_by_type: project_unit.class.to_s,
+          triggered_by_id: self.id,
+          triggered_by_type: self.class.to_s,
           attachments_attributes: attachments_attributes
-        })
+        )
       end
-      if self.project_unit.booking_portal_client.sms_enabled?
+      if project_unit.booking_portal_client.sms_enabled?
         Sms.create!(
             booking_portal_client_id: project_unit.booking_portal_client_id,
             recipient_id: user.id,
-            sms_template_id: Template::SmsTemplate.find_by(name: "project_unit_blocked").id,
-            triggered_by_id: project_unit.id,
-            triggered_by_type: project_unit.class.to_s
+            sms_template_id: Template::SmsTemplate.find_by(name: "booking_blocked").id,
+            triggered_by_id: self.id,
+            triggered_by_type: self.class.to_s
           )
       end
     end

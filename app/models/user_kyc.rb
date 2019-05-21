@@ -57,6 +57,7 @@ class UserKyc
   has_and_belongs_to_many :booking_details
   has_many :sync_logs, as: :resource
 
+  delegate :name, to: :bank_detail, prefix: true, allow_nil: true
   accepts_nested_attributes_for :bank_detail, :permanent_address # , :correspondence_address
 
   validates :first_name, :last_name, :email, :phone, presence: true

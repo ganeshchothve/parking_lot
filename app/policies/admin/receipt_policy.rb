@@ -10,7 +10,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
   end
 
   def new?
-    valid = confirmed_and_ready_user?
+    valid = record.user.buyer? && confirmed_and_ready_user?
     valid &&= direct_payment? ? (enable_direct_payment? || user.role?('channel_partner')) : valid_booking_stages?
   end
 

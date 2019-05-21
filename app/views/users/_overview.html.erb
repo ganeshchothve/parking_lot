@@ -5,7 +5,7 @@
       <div class="dropdown float-right col-1">
         <a class="btn btn-light btn-sm dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</a>
         <div class="dropdown-menu dropdown-menu-right">
-          <%= render "admin/users/links", user: user %>
+          <%= render "#{current_user_role_group}/users/links", user: user %>
         </div>
       </div>
     </div>

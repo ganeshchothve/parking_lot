@@ -2,9 +2,8 @@
 module DatabaseSeeds
   module EmailTemplates
     def self.seed client_id
-
       DatabaseSeeds::EmailTemplates::Scheme.seed client_id
-      DatabaseSeeds::EmailTemplates::ProjectUnit.seed client_id
+      DatabaseSeeds::EmailTemplates::BookingDetail.seed client_id
       DatabaseSeeds::EmailTemplates::Receipt.seed client_id
       DatabaseSeeds::EmailTemplates::UserRequest.seed client_id
       DatabaseSeeds::EmailTemplates::User.seed client_id
@@ -31,7 +30,7 @@ module DatabaseSeeds
                   <div class="form-group">
                     <label>Tower</label>
                     <div>
-                      <%= self.project_tower_name %>
+                      <%= self.project_unit.project_tower_name %>
                     </div>
                   </div>
                 </td>
@@ -39,7 +38,7 @@ module DatabaseSeeds
                   <div class="form-group">
                     <label>Status</label>
                     <div>
-                      <%= t("booking_details.status.#{self.status}") %>
+                      <%= I18n.t("booking_details.status.#{self.status}") %>
                     </div>
                   </div>
                 </td>
@@ -49,7 +48,7 @@ module DatabaseSeeds
                   <div class="form-group">
                     <label>Beds / Baths</label>
                     <div>
-                      <%= self.bedrooms %> / <%= self.bathrooms %>
+                      <%= self.project_unit.bedrooms %> / <%= self.project_unit.bathrooms %>
                     </div>
                   </div>
                 </td>
@@ -57,7 +56,7 @@ module DatabaseSeeds
                   <div class="form-group">
                     <label>Carpet</label>
                     <div>
-                      <%= self.carpet %> <%= current_client.area_unit %>
+                      <%= self.project_unit.carpet %> <%= current_client.area_unit %>
                     </div>
                   </div>
                 </td>
@@ -65,7 +64,7 @@ module DatabaseSeeds
                   <div class="form-group">
                     <label>Saleable</label>
                     <div>
-                      <%= self.saleable %> <%= current_client.area_unit %>
+                      <%= self.project_unit.saleable %> <%= current_client.area_unit %>
                     </div>
                   </div>
                 </td>
@@ -75,7 +74,7 @@ module DatabaseSeeds
                   <div class="form-group">
                     <label>Effective Rate</label>
                     <div>
-                      <%= number_to_indian_currency(self.effective_rate) %> <%= current_client.area_unit %>
+                      <%= number_to_indian_currency(self.project_unit.effective_rate) %> <%= current_client.area_unit %>
                     </div>
                   </div>
                 </td>
@@ -83,7 +82,7 @@ module DatabaseSeeds
                   <div class="form-group">
                     <label>Agreement Price</label>
                     <div>
-                      <%= number_to_indian_currency(self.agreement_price) %>
+                      <%= number_to_indian_currency(self.project_unit.agreement_price) %>
                     </div>
                   </div>
                 </td>
@@ -98,14 +97,14 @@ module DatabaseSeeds
     def self.project_unit_cost_sheet
       '<div class="card">
         <div class="card-body">
-          <%= self.cost_sheet_template.parsed_content(self) %>
+          <%= self.project_unit.cost_sheet_template.parsed_content(self) %>
         </div>
       </div>'
     end
     def self.project_unit_payment_schedule
       '<div class="card">
         <div class="card-body">
-          <%= self.payment_schedule_template.parsed_content(self) %>
+          <%= self.project_unit.payment_schedule_template.parsed_content(self) %>
         </div>
       </div>'
     end
@@ -113,8 +112,9 @@ module DatabaseSeeds
 end
 
 
-require 'database_seeds/email_templates/project_unit'
+require 'database_seeds/email_templates/booking_detail'
 require 'database_seeds/email_templates/receipt'
 require 'database_seeds/email_templates/user_request'
 require 'database_seeds/email_templates/user'
 require 'database_seeds/email_templates/scheme'
+require 'database_seeds/email_templates/booking_detail_scheme'

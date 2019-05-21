@@ -14,7 +14,7 @@ class ProjectUnitExportWorker
       sheet.insert_row(index+1, ProjectUnitExportWorker.get_project_unit_row(project_unit))
     end
     file_name = "project_unit-#{SecureRandom.hex}.xls"
-    file.write("#{Rails.root}/#{file_name}")
+    file.write("#{Rails.root}/exports/#{file_name}")
     ExportMailer.notify(file_name, user.email, "Units").deliver
   end
 
@@ -32,13 +32,9 @@ class ProjectUnitExportWorker
       "Carpet",
       "Base Rate",
       "Floor Rise",
-      "Current Due",
-      "Total amount paid",
-      "Pending balance",
       "Available for",
       "Blocked on",
-      "Auto Release On",
-      "Ageing"
+      "Auto Release On"
     ]
   end
 
@@ -57,13 +53,9 @@ class ProjectUnitExportWorker
       project_unit.carpet,
       project_unit.base_rate,
       project_unit.floor_rise,
-      project_unit.booking_detail.pending_balance({strict: true}),
-      project_unit.booking_detail.total_amount_paid,
-      project_unit.booking_detail.pending_balance,
       project_unit.available_for,
       project_unit.blocked_on,
-      project_unit.auto_release_on,
-      project_unit.ageing
+      project_unit.auto_release_on
     ]
   end
 end

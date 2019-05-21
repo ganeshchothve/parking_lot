@@ -1,9 +1,11 @@
 <% if current_client.enable_actual_inventory?(current_user) %>
   <div class="card">
-    <div class="card-header">
-      Inventory
-    </div>
-    <div class="card-body">
+    <a data-toggle="collapse" href="#dashboard_project_units" role="button" aria-expanded="false" aria-controls="dashboard_project_units" class='font-weight-bold text-decoration-none'>
+      <div class="card-header">
+        Inventory
+      </div>
+    </a>
+    <div class="card-body collapse" id="dashboard_project_units">
       <%= form_tag dashboard_path, method: "get", id: "dashboard-project_units-fltrs" do %>
       <div class="row">
         <div class="col-md-11">

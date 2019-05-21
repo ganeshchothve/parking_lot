@@ -16,73 +16,7 @@
     </thead>
     <tbody>
       <% receipts.each do |receipt| %>
-      <tr>
-        <td>
-          <% if policy([current_user_role_group, receipt.user]).show? %>
-            <%= link_to receipt.user.name, [current_user_role_group, receipt.user] %>
-          <% else %>
-            <%= receipt.user.name %>
-          <% end %>
-          <div class="small">
-            Created By: <%= receipt.creator.name %><br/>
-            <% if receipt.user.role?("user") && receipt.user.manager_id.present? && current_user.role != "channel_partner" %>
-              <%= user_labels[:manager_id] %>: <%= receipt.user.manager.name %><br/>
-            <% end %>
-          </div>
-        </td>
-        <td>
-          <%= ["success", "available_for_refund", "refunded", "cancelled"].include?(receipt.status) ? receipt.receipt_id : "Not Generated" %>
-          <div class="small muted">
-            <div>
-              <%= receipt.booking_detail.present? ? "Unit: #{receipt.booking_detail.name}" : 'Direct Payment' %>
-            </div>
-            <% if receipt.payment_mode == 'online' %>
-              <div>Trans ID: <%= receipt.payment_identifier %></div>
-              <div>Processed Date:<%= receipt.processed_on.present? ? l(receipt.processed_on) : "-" %></div>
-            <% else %>
-              <div>Bank: <%= receipt.issuing_bank %> / Branch: <%= receipt.issuing_bank_branch %></div>
-              <div>Issued Date: <%= receipt.issued_date.present? ? receipt.issued_date.strftime("%d/%m/%Y") : "-" %></div>
-              <div>Processed Date: <%= receipt.processed_on.present? ? l(receipt.processed_on) : "-" %></div>
-              <div>ID: <%= receipt.payment_identifier %></div>
-            <% end %>
-            <div>Payment: <%= Receipt.available_payment_modes.find{|x| x[:id] == receipt.payment_mode}[:text] %></div>
-          </div>
-        </td>
-        <% if current_client.enable_slot_generation? %>
-          <td><%= receipt.try(:token_number) ? receipt.get_token_number : '--' %></td>
-        <% end %>
-        <td><%= receipt.status.titleize %></td>
-        <td class="text-right"><%= number_to_indian_currency(receipt.total_amount.round) %></td>
-        <td class="text-right">
-          <div class="dropdown">
-            <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-            <div class="dropdown-menu dropdown-menu-right">
-              <% if receipt.status == 'success' %>
-                <% if current_user.buyer? %>
-                  <%= link_to 'Print'.html_safe, buyer_receipt_path(receipt), target:"_blank", class: 'dropdown-item print-btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>
-                <% else %>
-                  <%= link_to 'Print'.html_safe, admin_receipt_path(receipt), target:"_blank", class: 'dropdown-item print-btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>
-                <% end %>
-                <% if policy([current_user_role_group, receipt]).resend_success? %>
-                  <%= link_to 'Resend Email'.html_safe, resend_success_admin_receipt_path(receipt), class: 'dropdown-item' %>
-                <% end %>
-              <% end %>
-              <% if policy([ current_user_role_group, receipt]).edit? %>
-                <%= link_to 'Edit', edit_admin_user_receipt_path(receipt.user_id, receipt), class: 'dropdown-item modal-remote-form-link' %>
-              <% end %>
-              <% if policy([current_user_role_group, receipt]).edit_token_number? %>
-                <%= link_to 'Edit Token Number', edit_token_number_admin_receipt_path(receipt), class: 'modal-remote-form-link dropdown-item' %>
-              <% end %>
-              <% if policy([ current_user_role_group, Asset.new(assetable: receipt) ]).index? %>
-                <%= link_to global_labels[:assets], assetables_path(assetable_type: receipt.class.model_name.i18n_key.to_s, assetable_id: receipt.id), class: 'dropdown-item modal-remote-form-link' %>
-              <% end %>
-              <% if policy([:admin, SyncLog.new]).resync? && receipt.sync_logs.present? %>
-                <%= link_to "Resync", resync_admin_sync_log_path(receipt.sync_logs.desc(:created_at)[0]), class: 'dropdown-item' %>
-              <% end %>
-            </div>
-          </div>
-        </td>
-      </tr>
+        <%= render 'receipts/details', receipt: receipt %>
       <% end %>
       <tr>
         <td colspan="5">

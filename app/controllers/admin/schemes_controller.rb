@@ -118,7 +118,14 @@ class Admin::SchemesController < AdminController
                      @project.schemes
                    else
                      Scheme.all
-    end
+                   end
+    custom_scope = custom_scope.filter_by_can_be_applied_by(current_user.role) unless current_user.role.in?(%w(admin superadmin))
+    _role = if current_user.role?('channel_partner')
+              current_user.role
+            elsif current_user.manager && current_user.manager.role?('channel_partner')
+              current_user.manager.role
+            end
+    custom_scope = custom_scope.filter_by_can_be_applied_by_role(_role).filter_by_default_for_user_id(current_user.id) if _role
 
     Scheme.with_scope(policy_scope(custom_scope)) do
       yield

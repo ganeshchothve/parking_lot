@@ -26,21 +26,21 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
 
               describe 'creates a request in pending state' do
                 it ' booking_detail status must be updated to swap_requested' do
-                  expect { post :create, params: { user_request_swap: { alternate_project_unit_id: @alternate_project_unit.id, booking_detail_id: @booking_detail.id, event: 'pending' }, request_type: 'swap', user_id: @user.id } }.to change { UserRequest::Swap.count }.by(1)
+                  expect { post :create, params: { user_request_swap: { alternate_project_unit_id: @alternate_project_unit.id, requestable_id: @booking_detail.id, requestable_type: 'BookingDetail', event: 'pending' }, request_type: 'swap', user_id: @user.id } }.to change { UserRequest::Swap.count }.by(1)
                   expect(UserRequest.first.status).to eq('pending')
                   expect(@booking_detail.reload.status).to eq('swap_requested')
                 end
 
                 it 'Failed to create request' do
                   allow_any_instance_of(UserRequest).to receive(:save).and_return(false)
-                  expect { post :create, params: { user_request_swap: { alternate_project_unit_id: @alternate_project_unit.id, booking_detail_id: @booking_detail.id, event: 'pending' }, request_type: 'swap', user_id: @user.id } }.to change { UserRequest::Swap.count }.by(0)
+                  expect { post :create, params: { user_request_swap: { alternate_project_unit_id: @alternate_project_unit.id, requestable_id: @booking_detail.id, requestable_type: 'BookingDetail', event: 'pending' }, request_type: 'swap', user_id: @user.id } }.to change { UserRequest::Swap.count }.by(0)
                   expect(@booking_detail.reload.status).to eq(status)
                 end
               end
 
               context "REJECTED by #{user_role}" do
                 it "booking detail status changes to #{status}" do
-                  user_request = create(:pending_user_request_swap, alternate_project_unit_id: @alternate_project_unit.id, user_id: @booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: @booking_detail.id, event: 'pending')
+                  user_request = create(:pending_user_request_swap, alternate_project_unit_id: @alternate_project_unit.id, user_id: @booking_detail.user_id, created_by_id: @admin.id, requestable_id: @booking_detail.id, requestable_type: 'BookingDetail', event: 'pending')
                   patch :update, params: { user_request_swap: { event: 'rejected', user_id: @user.id }, request_type: 'swap', id: user_request.id }
                   expect(@booking_detail.reload.status).to eq(status)
                   #expect(@booking_detail.project_unit.status).to eq('blocked')
@@ -49,7 +49,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
                 end
 
                 it 'failed to reject' do
-                  user_request = create(:pending_user_request_swap, alternate_project_unit_id: @alternate_project_unit.id, user_id: @booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: @booking_detail.id, event: 'pending')
+                  user_request = create(:pending_user_request_swap, alternate_project_unit_id: @alternate_project_unit.id, user_id: @booking_detail.user_id, created_by_id: @admin.id, requestable_id: @booking_detail.id, requestable_type: 'BookingDetail', event: 'pending')
                   allow_any_instance_of(UserRequest).to receive(:save).and_return(false)
                   patch :update, params: { user_request_swap: { event: 'rejected', user_id: @user.id }, request_type: 'swap', id: user_request.id }
                   expect(@booking_detail.reload.status).to eq('swap_requested')
@@ -60,18 +60,18 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
 
               context 'RESOLVED' do
                 before(:each) do
-                  @user_request = create(:pending_user_request_swap, alternate_project_unit_id: @alternate_project_unit.id, user_id: @booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: @booking_detail.id, event: 'pending')
+                  @user_request = create(:pending_user_request_swap, alternate_project_unit_id: @alternate_project_unit.id, user_id: @booking_detail.user_id, created_by_id: @admin.id, requestable_id: @booking_detail.id, requestable_type: 'BookingDetail', event: 'pending')
                 end
 
                 it 'create one background process for swapping' do
-                  expect{ patch :update, params: { user_request_swap: { event: 'processing', user_id: @user.id }, request_type: 'swap', id: @user_request.id } }.to change(UserRequests::SwapProcess.jobs, :count).by(1)
+                  expect{ patch :update, params: { user_request_swap: { event: 'processing', user_id: @user.id }, request_type: 'swap', id: @user_request.id } }.to change(UserRequests::BookingDetails::SwapProcess.jobs, :count).by(1)
                   expect(@booking_detail.reload.status).to eq('swapping')
                   expect(@user_request.reload.status).to eq('processing')
                 end
 
                 it 'no change in any object' do
                   allow_any_instance_of(UserRequest).to receive(:save).and_return(false)
-                  expect{ patch :update, params: { user_request_swap: { event: 'processing', user_id: @user.id }, request_type: 'swap', id: @user_request.id } }.to change(UserRequests::SwapProcess.jobs, :count).by(0)
+                  expect{ patch :update, params: { user_request_swap: { event: 'processing', user_id: @user.id }, request_type: 'swap', id: @user_request.id } }.to change(UserRequests::BookingDetails::SwapProcess.jobs, :count).by(0)
                   expect(@booking_detail.reload.status).to eq('swap_requested')
                   expect(@user_request.reload.status).to eq('pending')
                 end

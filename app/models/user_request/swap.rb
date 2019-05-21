@@ -1,6 +1,7 @@
 class UserRequest::Swap < UserRequest
 
   belongs_to :alternate_project_unit, class_name: 'ProjectUnit'
+  has_many :booking_details, class_name: 'BookingDetail', foreign_key: :parent_booking_detail_id, primary_key: :requestable_id#, class_name: 'BookingDetail'
 
   validate :alternate_project_unit_availability, :alternate_project_unit_blocking_condition, unless: proc { |user_request| %w[processing resolved].include?(user_request.status) }
 
@@ -11,6 +12,10 @@ class UserRequest::Swap < UserRequest
       { field: 'alternate_project_unit_id', klass: 'ProjectUnit' }
     ]
   )
+
+  def alternative_booking_detail
+    booking_details.first
+  end
 
   private
 
@@ -31,9 +36,9 @@ class UserRequest::Swap < UserRequest
   #
   #
   def alternate_project_unit_blocking_condition
-    if booking_detail
-      unless alternate_project_unit.blocking_amount <= booking_detail.project_unit.blocking_amount
-        _total_tentative_amount_paid = booking_detail.total_tentative_amount_paid
+    if requestable.kind_of?(BookingDetail)
+      unless alternate_project_unit.blocking_amount <= requestable.project_unit.blocking_amount
+        _total_tentative_amount_paid = requestable.total_tentative_amount_paid
         if _total_tentative_amount_paid < alternate_project_unit.blocking_amount
           errors.add(:alternate_project_unit, "has blocking amount #{alternate_project_unit.blocking_amount}, which is higher than your tentative paid amount ( #{_total_tentative_amount_paid} ).")
         end

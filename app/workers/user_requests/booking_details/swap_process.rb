@@ -1,5 +1,6 @@
-# UserRequests::SwapProcess
+# UserRequests::BookingDetails::SwapProcess
 module UserRequests
+  module BookingDetails
   class SwapProcess
     include Sidekiq::Worker
     attr_accessor :user_request, :current_booking_detail, :alternate_project_unit, :current_project_unit
@@ -7,7 +8,7 @@ module UserRequests
     def perform(user_request_id)
       @user_request = UserRequest.processing.where(_id: user_request_id).first
       return nil if @user_request.blank?
-      @current_booking_detail = user_request.booking_detail
+      @current_booking_detail = user_request.requestable
       if @current_booking_detail && @current_booking_detail.swapping?
         @alternate_project_unit = @user_request.alternate_project_unit
         if @alternate_project_unit.available?
@@ -114,5 +115,6 @@ module UserRequests
         reject_user_request("Alternate Unit booking price is very high. No any receipt with minimum #{ alternate_project_unit.blocking_amount}.", alternate_project_unit_status, new_booking_detail)
       end
     end
+  end
   end
 end

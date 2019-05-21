@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Receipt, type: :model do
   describe do
     before(:each) do
-      @client = create(:client)
+      @client = Client.first || create(:client)
       @admin = create(:admin)
       @user = create(:user)
     end
@@ -443,6 +443,189 @@ RSpec.describe Receipt, type: :model do
           expect(receipt2.token_number).to eq(103)
         end
       end
+    end
+
+    describe "check_state_machine" do
+      before(:each) do 
+        @client.set(enable_communication: {email: true, sms: true})
+      end
+      context "for direct payment" do 
+        context "for offline payment" do 
+          before(:each) do
+            @receipt = create(:offline_payment)
+          end
+
+          it "for transition from pending to pending, it is successful and notifications are sent" do
+            @receipt.pending!
+            expect(@receipt.reload.status).to eq("pending")
+            expect(Email.desc(:created_at).first.email_template.name).to eq("receipt_#{@receipt.status}")
+            expect(Sms.desc(:created_at).first.sms_template.name).to eq("receipt_#{@receipt.status}")
+            expect(Email.desc(:created_at).first.triggered_by_id).to eq(@receipt.id)
+            expect(Sms.desc(:created_at).first.triggered_by_id).to eq(@receipt.id)
+          end
+
+          it "for transition from pending to pending, it is unsuccessful and notifications are not sent" do
+            allow_any_instance_of(Receipt).to receive(:save).and_return(false)
+            expect(@receipt.pending!).to eq(false)
+            expect(Email.count).to eq(0)
+            expect(Sms.count).to eq(0)
+          end
+
+          it "for transition from pending to clearance_pending, it is successful and notifications are sent " do
+            @receipt.pending!
+            @receipt.clearance_pending!
+            expect(Email.desc(:created_at).first.email_template.name).to eq("receipt_#{@receipt.status}")
+            expect(Sms.desc(:created_at).first.sms_template.name).to eq("receipt_#{@receipt.status}")
+            expect(Email.desc(:created_at).first.triggered_by_id).to eq(@receipt.id)
+            expect(Sms.desc(:created_at).first.triggered_by_id).to eq(@receipt.id)
+          end
+
+          it "for transition from pending to pending, it is unsuccessful and notifications are not sent" do
+            @receipt.pending!
+            allow_any_instance_of(Receipt).to receive(:save).and_return(false)
+            expect(@receipt.clearance_pending!).to eq(false)
+            expect(Email.count).to eq(1)
+            expect(Sms.count).to eq(1)
+          end
+
+          it "for transition from clearance_pending to success, it is successful and notifications are sent " do
+            @receipt.pending!
+            @receipt.clearance_pending!
+            @receipt.success!
+            expect(Email.desc(:created_at).first.email_template.name).to eq("receipt_#{@receipt.status}")
+            expect(Sms.desc(:created_at).first.sms_template.name).to eq("receipt_#{@receipt.status}")
+            expect(Email.desc(:created_at).first.triggered_by_id).to eq(@receipt.id)
+            expect(Sms.desc(:created_at).first.triggered_by_id).to eq(@receipt.id)
+          end
+
+          it "for transition from pending to pending, it is unsuccessful and notifications are not sent" do
+            @receipt.pending!
+            @receipt.clearance_pending!
+            allow_any_instance_of(Receipt).to receive(:save).and_return(false)
+            expect(@receipt.success!).to eq(false)
+            expect(Email.count).to eq(2)
+            expect(Sms.count).to eq(2)
+          end
+
+          it "for transition from success to available_for_refund, it is unsuccessful and notifications are not sent" do 
+            @receipt.pending!
+            @receipt.clearance_pending!
+            @receipt.processed_on = Date.today
+            @receipt.tracking_id = 'test'
+            @receipt.success!
+            expect(@receipt.available_for_refund!).to eq(false)
+            expect(Email.count).to eq(3)
+            expect(Sms.count).to eq(3)
+          end
+
+          context ":cancellation_process" do
+            it "for transition from success to cancellation_requested, it is successful" do
+              @receipt.pending!
+              @receipt.clearance_pending!
+              @receipt.processed_on = Date.today
+              @receipt.tracking_id = 'test'
+              @receipt.success!
+              @receipt.cancellation_requested!
+              expect(@receipt.status).to eq('cancellation_requested')
+            end
+
+            it "for transition from cancellation_requested to cancelling, it is successful" do
+              @receipt.pending!
+              @receipt.clearance_pending!
+              @receipt.processed_on = Date.today
+              @receipt.tracking_id = 'test'
+              @receipt.success!
+              @receipt.cancellation_requested!
+              @receipt.cancelling!
+              expect(@receipt.status).to eq('cancelling')
+            end
+
+            it "for transition from cancelling to cancelled, it is successful and auto-transit to available_for_refund" do
+              @receipt.pending!
+              @receipt.clearance_pending!
+              @receipt.processed_on = Date.today
+              @receipt.tracking_id = 'test'
+              @receipt.success!
+              @receipt.cancellation_requested!
+              @receipt.cancelling!
+              @receipt.cancel!
+              expect(@receipt.status).to eq('available_for_refund')
+              expect(Email.desc(:created_at).first.email_template.name).to eq("receipt_#{@receipt.status}")
+              expect(Sms.desc(:created_at).first.sms_template.name).to eq("receipt_#{@receipt.status}")
+              expect(Email.desc(:created_at).first.triggered_by_id).to eq(@receipt.id)
+              expect(Sms.desc(:created_at).first.triggered_by_id).to eq(@receipt.id)
+            end
+          end
+
+        end
+        context "for online payment" do 
+          before(:each) do
+            @receipt = create(:receipt)
+          end
+
+          it "for transition from pending to pending, it is success" do
+            @receipt.pending!
+            expect(@receipt.status).to eq("pending")
+            expect(Email.count).to eq(0)
+            expect(Sms.count).to eq(0)
+          end
+
+          it "for transition from pending to clearance_pending, it is successful and it auto trasits to success and notifications are sent " do
+            @receipt.pending!
+            @receipt.clearance_pending!
+            expect(@receipt.status).to eq("success")
+            expect(Email.count).to eq(1)
+            expect(Sms.count).to eq(1)
+            expect(Email.desc(:created_at).first.email_template.name).to eq("receipt_#{@receipt.status}")
+            expect(Sms.desc(:created_at).first.sms_template.name).to eq("receipt_#{@receipt.status}")
+            expect(Email.desc(:created_at).first.triggered_by_id).to eq(@receipt.id)
+            expect(Sms.desc(:created_at).first.triggered_by_id).to eq(@receipt.id)
+          end
+
+          it "for transition from success to available_for_refund, it is unsuccessful and notifications are not sent" do
+            @receipt.pending!
+            @receipt.clearance_pending!
+            @receipt.success!
+            expect(@receipt.available_for_refund!).to eq(false)
+            expect(Email.count).to eq(1)
+            expect(Sms.count).to eq(1)
+          end
+
+          context ":cancellation_process" do
+            it "for transition from success to cancellation_requested, it is successful" do
+              @receipt.pending!
+              @receipt.clearance_pending!
+              @receipt.success!
+              @receipt.cancellation_requested!
+              expect(@receipt.status).to eq('cancellation_requested')
+            end
+
+            it "for transition from cancellation_requested to cancelling, it is successful" do
+              @receipt.pending!
+              @receipt.clearance_pending!
+              @receipt.success!
+              @receipt.cancellation_requested!
+              @receipt.cancelling!
+              expect(@receipt.status).to eq('cancelling')
+            end
+
+            it "for transition from cancelling to cancelled, it is successful and auto-transit to available_for_refund and notifications are sent" do
+              @receipt.pending!
+              @receipt.clearance_pending!
+              @receipt.success!
+              @receipt.cancellation_requested!
+              @receipt.cancelling!
+              @receipt.cancel!
+              expect(@receipt.status).to eq('available_for_refund')
+              expect(Email.desc(:created_at).first.email_template.name).to eq("receipt_#{@receipt.status}")
+              expect(Sms.desc(:created_at).first.sms_template.name).to eq("receipt_#{@receipt.status}")
+              expect(Email.desc(:created_at).first.triggered_by_id).to eq(@receipt.id)
+              expect(Sms.desc(:created_at).first.triggered_by_id).to eq(@receipt.id)
+            end
+          end
+
+        end
+      end 
     end
   end
 end
