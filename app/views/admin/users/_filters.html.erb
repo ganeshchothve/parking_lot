@@ -30,7 +30,7 @@
       </div>
       <div class="form-group">
         <%= label_tag "fltrs", 'registered at', class: "control-label" %>
-        <%= text_field_tag "fltrs[created_at]", (params[:fltrs].present? ? params[:fltrs][:created_at] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"} %>
+        <%= text_field_tag "fltrs[created_at]", (params.dig(:fltrs, :created_at).present? ? params[:fltrs][:created_at] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"} %>
       </div>
     <% end %>
   </div>

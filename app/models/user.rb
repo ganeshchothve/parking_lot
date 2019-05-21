@@ -7,6 +7,7 @@ class User
   include InsertionStringMethods
   include ApplicationHelper
   include SyncDetails
+  extend FilterByCriteria
 
   # Constants
   ALLOWED_UTM_KEYS = %i[campaign source sub_source content medium term]
@@ -131,6 +132,40 @@ class User
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :manager_change_reason_present?
 
+  # scopes needed by filter
+  scope :filter_by_lead_id, ->(lead_id) { where(lead_id: lead_id) }
+  scope :filter_by_confirmation, ->(confirmation) { confirmation.eql?('not_confirmed') ? where(confirmed_at: nil) : where(confirmed_at: { "$ne": nil }) }
+  scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where({ '$and' => ["$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] ] }) }
+  scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: start_date..end_date) }
+  scope :filter_by_role, ->(role) do
+    if role.present?
+      case(role)
+      when Array
+        where( role: { "$in": role } )
+      when ActionController::Parameters
+        where( role: role.to_unsafe_h )
+      else
+        where( role: role )
+      end
+    end
+  end
+  scope :filter_by_receipts, ->(receipts) do
+    user_ids = Receipt.in(status: %w(success clearance_pending)).distinct(:user_id)
+    if user_ids.present?
+      if receipts == 'yes'
+        where(id: { '$in': user_ids })
+      elsif receipts == 'no'
+        where(id: { '$nin': user_ids })
+      end
+    end
+  end
+
+  def self.build_criteria(params = {})
+    criteria = super(params)
+    criteria = criteria.where(role: { "$ne": 'superadmin' }) unless criteria.selector.has_key?('role')
+    criteria
+  end
+
   def unattached_blocking_receipt(blocking_amount = nil)
     blocking_amount ||= current_client.blocking_amount
     Receipt.where(user_id: id).in(status: %w[success clearance_pending]).where(booking_detail_id: nil).where(total_amount: { "$gte": blocking_amount }).first
@@ -206,50 +241,6 @@ class User
 
   def role?(role)
     (self.role.to_s == role.to_s)
-  end
-
-  def self.build_criteria(params = {})
-    selector = {}
-    if params[:fltrs].present?
-      if params[:fltrs][:role].present?
-        if params[:fltrs][:role].is_a?(Array)
-          selector = { role: { "$in": params[:fltrs][:role] } }
-        elsif params[:fltrs][:role].is_a?(ActionController::Parameters)
-          selector = { role: params[:fltrs][:role].to_unsafe_h }
-        else
-          selector = { role: params[:fltrs][:role] }
-        end
-      end
-      if params[:fltrs][:lead_id].present?
-        selector[:lead_id] = params[:fltrs][:lead_id]
-      end
-      if params[:fltrs][:confirmation].present?
-        selector[:confirmed_at] = if params[:fltrs][:confirmation].eql?('not_confirmed')
-                                    nil
-                                  else
-                                    { "$ne": nil }
-                                  end
-      end
-      if params[:fltrs][:receipts].present?
-        user_ids = Receipt.in(status: %w(success clearance_pending)).distinct(:user_id)
-        if params[:fltrs][:receipts] == 'yes'
-          selector[:id] = { '$in': user_ids } if user_ids.present?
-        elsif params[:fltrs][:receipts] == 'no'
-          selector[:id] = { '$nin': user_ids } if user_ids.present?
-        end
-      end
-      if params[:fltrs][:created_at].present?
-        start_date, end_date = params[:fltrs][:created_at].split(' - ')
-        selector[:created_at] = start_date..end_date
-      end
-    end
-    selector[:role] = { "$ne": 'superadmin' } if selector[:role].blank?
-    or_selector = {}
-    if params[:search].present?
-      regex = ::Regexp.new(::Regexp.escape(params[:search]), 'i')
-      or_selector = {"$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] }
-    end
-    self.and([selector, or_selector])
   end
 
   # new function to set the password without knowing the current
