@@ -1,7 +1,7 @@
 class CustomPolicy < Struct.new(:user, :enable_users)
 
   def inventory?
-    ['superadmin', 'admin', 'sales_admin', 'sales'].include?(user.role)
+    ['superadmin', 'admin', 'sales_admin', 'sales', 'channel_partner'].include?(user.role)
   end
 
   def emails?
