@@ -230,6 +230,18 @@ class User
                                     { "$ne": nil }
                                   end
       end
+      if params[:fltrs][:receipts].present?
+        user_ids = Receipt.in(status: %w(success clearance_pending)).distinct(:user_id)
+        if params[:fltrs][:receipts] == 'yes'
+          selector[:id] = { '$in': user_ids } if user_ids.present?
+        elsif params[:fltrs][:receipts] == 'no'
+          selector[:id] = { '$nin': user_ids } if user_ids.present?
+        end
+      end
+      if params[:fltrs][:created_at].present?
+        start_date, end_date = params[:fltrs][:created_at].split(' - ')
+        selector[:created_at] = start_date..end_date
+      end
     end
     selector[:role] = { "$ne": 'superadmin' } if selector[:role].blank?
     or_selector = {}
@@ -369,7 +381,7 @@ class User
     if user.role?('channel_partner')
       custom_scope = {manager_id: user.id, role: {"$in": User.buyer_roles(user.booking_portal_client)} }
     elsif user.role?('crm')
-      custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) } }
+      custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) + %w(channel_partner) } }
     elsif user.role?('sales_admin')
       custom_scope = { "$or": [{ role: { "$in": User.buyer_roles(user.booking_portal_client) } }, { role: 'sales' }, { role: 'channel_partner' }] }
     elsif user.role?('sales')
