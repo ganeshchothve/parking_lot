@@ -7,7 +7,6 @@ class ClientObserver < Mongoid::Observer
 
   def after_save client
     # Generate time slots for successful direct payments with token number when time_slot_generation is enabled.
-    client.set(enable_payment_without_kyc: false) if client.enable_direct_payment
     Receipt.where(booking_detail_id: nil, time_slot: nil).ne(token_number: nil).in(status: %w(clearance_pending success)).each(&:set_time_slot) if client.enable_slot_generation?
   end
 
