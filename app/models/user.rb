@@ -151,6 +151,16 @@ class User
     booking_details.in(status: ProjectUnit.booking_stages).sum(&:pending_balance)
   end
 
+  #
+  # This function check the booking limit, any buyer can book only limited booking which is defined on allowed_bookings.
+  #
+  #
+  # @return [Boolean]
+  #
+  def can_book_more_booking?
+    self.booking_details.in(status: BookingDetail::BOOKING_STAGES ).count > self.allowed_bookings
+  end
+
   def total_unattached_balance
     receipts.in(status: %w[success clearance_pending]).where(booking_detail_id: nil).sum(:total_amount)
   end

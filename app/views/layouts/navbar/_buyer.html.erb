@@ -4,7 +4,7 @@
   </li>
 <% end %>
 
-<% if policy([:buyer, ProjectUnit.new(user: current_user, status: "available")]).hold? %>
+<% if policy([:buyer, BookingDetail.new(user: current_user, project_unit: ProjectUnit.new(status: 'available', user: current_user))]).hold? %>
   <li class="nav-item">
     <%= active_link_to "Apartment Selector", new_search_path, active: :inclusive, class: "nav-link" %>
   </li>

@@ -8,7 +8,7 @@ class BookingDetail
   include ApplicationHelper
   extend FilterByCriteria
 
-  BOOKING_STAGES = %w[blocked booked_tentative booked_confirmed]
+  BOOKING_STAGES = %w[blocked booked_tentative booked_confirmed under_negotiation scheme_approved]
 
   field :status, type: String
   field :erp_id, type: String, default: ''
@@ -44,7 +44,7 @@ class BookingDetail
   # validates :name, presence: true
   validates :status, presence: true
   validates :erp_id, uniqueness: true, allow_blank: true
-  validate :kyc_mandate
+  validate :kyc_mandate, on: :create
   delegate :name, :blocking_amount, to: :project_unit, prefix: true, allow_nil: true
   delegate :name, :email, :phone, to: :user, prefix: true, allow_nil: true
 
