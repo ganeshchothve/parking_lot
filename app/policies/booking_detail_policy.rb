@@ -12,7 +12,7 @@ class BookingDetailPolicy < ApplicationPolicy
   end
 
   def checkout?
-    _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && only_for_kyc_added_users! && has_user_on_record? && available_for_user_group?
+    _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && (enable_booking_without_kyc? || only_for_kyc_added_users!) && has_user_on_record? && available_for_user_group?
   end
 
   private
@@ -40,8 +40,14 @@ class BookingDetailPolicy < ApplicationPolicy
   end
 
   def buyer_kyc_booking_limit_exceed?
-    return true if record.user.unused_user_kyc_ids(record.id).present?
+    return true if (record.user.unused_user_kyc_ids(record.id).present? || current_client.enable_booking_without_kyc )
     @condition = "user_kyc_allowed_bookings"
     false
   end
+
+  def enable_booking_without_kyc?
+    return true if current_client.enable_booking_without_kyc 
+    false
+  end
+  
 end

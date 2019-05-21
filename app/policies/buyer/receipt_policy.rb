@@ -41,7 +41,7 @@ class Buyer::ReceiptPolicy < ReceiptPolicy
   private
 
   def confirmed_and_ready_user?
-    user.confirmed? && user.kyc_ready?
+    user.confirmed? && record_user_kyc_ready?
   end
 
   def only_online_payment!
