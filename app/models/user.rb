@@ -136,7 +136,7 @@ class User
   scope :filter_by_lead_id, ->(lead_id) { where(lead_id: lead_id) }
   scope :filter_by_confirmation, ->(confirmation) { confirmation.eql?('not_confirmed') ? where(confirmed_at: nil) : where(confirmed_at: { "$ne": nil }) }
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where({ '$and' => ["$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] ] }) }
-  scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: start_date..end_date) }
+  scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_role, ->(*_role) { where( role: { "$in": _role } ) }
   scope :filter_by_receipts, ->(receipts) do
     user_ids = Receipt.in(status: %w(success clearance_pending)).distinct(:user_id)
