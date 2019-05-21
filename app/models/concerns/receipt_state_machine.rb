@@ -14,7 +14,7 @@ module ReceiptStateMachine
         transitions from: :pending, to: :pending
       end
 
-      event :clearance_pending, after: %i[moved_to_success_if_online change_booking_detail_status] do
+      event :clearance_pending, after: %i[moved_to_success_if_online ] do
         transitions from: :pending, to: :clearance_pending, if: :can_move_to_clearance?
         transitions from: :clearance_pending, to: :clearance_pending
       end
@@ -92,14 +92,15 @@ module ReceiptStateMachine
 
     def moved_to_success_if_online
       if payment_mode == 'online'
-        success! 
+        success!
       else
+        change_booking_detail_status
         Notification::Receipt.new(self.id, status: [self.status_was, self.status]).execute
       end
     end
 
     def send_success_notification
-      if %w[success cancellation_rejected].exclude?(status_was)
+      if %w[success cancellation_rejected].exclude?(self.aasm.from_state)
         Notification::Receipt.new(self.id, status: [self.status_was, self.status]).execute
       end
     end

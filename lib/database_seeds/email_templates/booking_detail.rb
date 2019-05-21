@@ -82,10 +82,10 @@ module DatabaseSeeds
           <div class="mt-3"></div>
           ' + DatabaseSeeds::EmailTemplates.project_unit_payment_schedule) if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, name: "project_unit_released").blank?
 
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "BookingDetail", name: "auto_release_on_extended", subject: "Unit <%= self.name %> has been released", content: '<div class="card w-100">
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "BookingDetail", name: "auto_release_on_extended", subject: "Auto release date for Unit <%= self.name %> has been extended", content: '<div class="card w-100">
             <div class="card-body">
               <p>Dear <%= self.user.name %>,</p>
-              Your Unit - <%= self.name %> has been released.<br/><br/>
+              Auto release date for Unit <%= self.name %> has been extended. Please deposit the next installment before the auto_release date i.e. <%= self.project_unit.auto_release_on %> <br/><br/>
               In case you need any assistance, please get in touch with our support team.
             </div>
           </div>
