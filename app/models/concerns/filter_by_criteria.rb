@@ -5,7 +5,7 @@ module FilterByCriteria
     params ||= {}
     filters = self.all
     (params[:fltrs] || {}).each do |key, value|
-      if self.respond_to?("filter_by_#{key}")
+      if value.present? && self.respond_to?("filter_by_#{key}")
         filters = filters.send("filter_by_#{key}", *value)
       end
     end
