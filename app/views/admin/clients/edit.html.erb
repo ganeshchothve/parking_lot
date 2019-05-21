@@ -64,6 +64,18 @@
       $("#client_end_time").val(et);
       $("#client_slot_start_date").val(slot_start);
     });
+    if($('#client_enable_direct_payment_false').is(':checked')){
+      $('.depend-direct-payment').find('input, radio_button').attr('disabled', 'disabled');
+    }
+    $('.direct-payment').find('input, radio_button').change(function() {
+      if($('#client_enable_direct_payment_true').is(':checked')){
+        $('.depend-direct-payment').find('input, radio_button').removeAttr('disabled')
+      }
+      else{
+        $('.depend-direct-payment').find('input, radio_button').attr('disabled', 'disabled');
+      }
+    });
+
     FormInitializer.init($("#client_form"));
   });
 <% end %>

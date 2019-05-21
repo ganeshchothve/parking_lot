@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row ">
 
   <div class="col-md-6">
     <div class="form-group">
@@ -18,7 +18,7 @@
 <div class="row">
   <div class="col-md-6">
     <% if policy([:admin, @client]).editable_field?("enable_direct_payment") %>
-    <div class="form-group">
+    <div class="form-group direct-payment">
       <%= f.label :enable_direct_payment %><br/>
       <div class="form-check form-check-inline">
         <%= f.radio_button :enable_direct_payment, true, class: "form-check-input" %>
@@ -81,7 +81,7 @@
 
 <div class="row">
   <div class="col-md-6">
-    <div class="form-group">
+    <div class="form-group depend-direct-payment">
       <%= f.label :enable_payment_without_kyc %><br/>
       <div class="form-check form-check-inline">
         <%= f.radio_button :enable_payment_without_kyc, true, class: "form-check-input" %>
