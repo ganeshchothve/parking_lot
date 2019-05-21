@@ -1,6 +1,10 @@
 <div class="dropdown float-right">
   <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= link_name %></a>
   <div class="dropdown-menu dropdown-menu-right">
+    <% if booking_detail.hold? && policy([:buyer, booking_detail]).block? %>
+      <%= link_to "Checkout using unit already held", checkout_user_search_path(booking_detail.search), class: 'dropdown-item' %>
+    <% end %>
+
     <% if policy([:buyer, Receipt.new(user: current_user, booking_detail: booking_detail)]).new? %>
     <% if policy([:buyer, BookingDetail ]).show? %>
       <%= link_to "View details", buyer_booking_detail_path( booking_detail), class: 'dropdown-item' %>
