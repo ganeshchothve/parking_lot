@@ -4,7 +4,7 @@ class Admin::UserKycPolicy < UserKycPolicy
   end
 
   def show?
-    %w[superadmin admin sales_admin].include?(user.role)
+    %w[superadmin admin sales_admin channel_partner].include?(user.role)
   end
 
   def new?

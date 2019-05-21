@@ -112,6 +112,16 @@
               </div>
             <% end %>
           </div>
+          <div class="row">
+            <% if policy([current_user_role_group, @user]).editable_field?("premium") %>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.check_box :premium, { class: "form-check-label", checked: f.object.premium? }, true %>
+                  <%= f.label :premium, :premium, class: "form-check-label ml-1" %>
+                </div>
+              </div>
+            <% end %>
+          </div>
         </div>
         <div class="modal-footer">
           <%= f.submit "Save", class: 'btn btn-primary' %>

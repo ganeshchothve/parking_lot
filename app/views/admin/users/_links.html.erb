@@ -1,5 +1,9 @@
-<% if policy([:admin, BookingDetail.new(user: user, project_unit: ProjectUnit.new(status: 'available'))]).hold? %>
+<% if policy([:admin, BookingDetail.new(user: user, project_unit: ProjectUnit.new(status: 'available', blocking_amount: current_client.blocking_amount))]).hold? %>
   <%= link_to "Choose #{global_labels[:project_unit]} & Add Booking", new_admin_user_search_path(user.id), class: "dropdown-item" %>
+<% end %>
+<% if policy([:admin, user]).confirm_user? %>
+  <%= link_to"Confirm User", confirm_user_admin_user_path(user), method: :patch, 
+  class: "dropdown-item" %>
 <% end %>
 <% hold_booking = user.booking_details.where(status: 'hold').first %>
 <% if hold_booking.present? #&& policy([current_user_role_group, hold_booking]).block? %>

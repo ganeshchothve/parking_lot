@@ -47,9 +47,12 @@ module ApplicationHelper
   end
 
   def bottom_navigation(classes='')
-    html = "<li class='nav-item #{classes}'>
+    html = ''
+    if current_user
+      html += "<li class='nav-item #{classes}'>
       #{active_link_to 'Docs', dashboard_documents_path, active: :exclusive, class: 'small nav-link'}
-    </li>"
+      </li>"
+    end
     if current_client.gallery.present? && current_client.gallery.assets.select{|x| x.persisted?}.present?
       html += "<li class='nav-item #{classes}'>
         #{active_link_to 'Gallery', dashboard_gallery_path, active: :exclusive, class: 'small nav-link'}
@@ -75,22 +78,22 @@ module ApplicationHelper
         #{active_link_to 'T & C', dashboard_terms_and_condition_path, active: :exclusive, class: 'small nav-link'}
       </li>"
     end
-    if user_signed_in? && policy([current_user_role_group, current_client]).edit?
+    if current_user && policy([current_user_role_group, current_client]).edit?
       html += "<li class='nav-item #{classes}'>
         #{link_to('Edit ' + global_labels['client'], edit_admin_client_path, class: 'small nav-link modal-remote-form-link')}
       </li>"
     end
-    if user_signed_in? && current_client.gallery.present? && policy([current_user_role_group, Asset.new(assetable: current_client.gallery)]).index? && current_user.role?("superadmin")
+    if current_user && current_client.gallery.present? && policy([current_user_role_group, Asset.new(assetable: current_client.gallery)]).index? && current_user.role?("superadmin")
       html += "<li class='nav-item #{classes}'>
         #{link_to('Edit ' + global_labels[:gallery], assetables_path(assetable_type: current_client.gallery.class.model_name.i18n_key.to_s, assetable_id: current_client.gallery.id), class: 'small nav-link modal-remote-form-link')}
       </li>"
     end
-    if user_signed_in? && TemplatePolicy.new(current_user, Template).index?
+    if current_user && TemplatePolicy.new(current_user, Template).index?
       html += "<li class='nav-item #{classes}'>
         #{link_to('Manage ' + global_labels['templates'], admin_client_templates_path, class: 'small nav-link')}
       </li>"
     end
-    if user_signed_in? && policy([current_user_role_group, Asset.new(assetable: current_client)]).index? && current_user.role?("superadmin")
+    if current_user && policy([current_user_role_group, Asset.new(assetable: current_client)]).index? && current_user.role?("superadmin")
       html += "<li class='nav-item #{classes}'>
         #{link_to('Client ' + global_labels[:assets], assetables_path(assetable_type: current_client.class.model_name.i18n_key.to_s, assetable_id: current_client.id), class: 'small nav-link modal-remote-form-link')}
       </li>"

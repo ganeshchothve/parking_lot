@@ -236,6 +236,7 @@ en:
         approved_at: 'Approved At'
         approved_by: 'Approved By'
         created_by: 'Created By'
+        default_for_users: 'Default for Channel Partners'
       user:
         created_at: "Registered At"
         login_otp: 'Verification / Login OTP'
@@ -308,9 +309,13 @@ en:
         pending_payments: "We already have collected a payment for this unit from the same customer."
       hold:
         booking_detail_error: 'We cannot process your request at this time. Please retry'
+        scheme_for_channel_partner_not_found: 'No Scheme found for channel partner'
         success: 'Your Booking is hold. Please select Scheme and go for Payment.'
       gateway_payment:
         receipt_missing: 'Requested receipt not in pending.'
+    users:
+      account_confirmed: 'Account Confirmed'
+      cannot_confirm_user: 'Cannot confirm user'
   user_kycs:
     link_name: 'KYCs'
   smses:
@@ -365,6 +370,9 @@ en:
       resolved: 'Resolved'
       rejected: 'Rejected'
       failed: 'Failed'
+    requestable_type:
+      Receipt: 'Receipt'
+      BookingDetail: 'Booking'
   referrals:
     name: 'Referrals'
     code: 'Referral Code'
@@ -407,12 +415,22 @@ en:
        cancellation_rejected: 'Cancellation Rejected'
        management: 'Management Blocking'
        employee: 'Employee Blocking'
+  project_units:
+    status:
+      hold: 'Hold'
+      available: 'Available'
+      not_available: 'Not Available'
+      blocked: 'Blocked'
+      error: 'Error'
   receipts:
     status:
       pending: 'Pending'
       clearance_pending: 'Clearance Pending'
       failed: 'Failed'
-      cancel: 'Cancel'
+      success: 'Success'
+      available_for_refund: 'Available For Refund'
+      refunded: 'Refund'
+      cancelled: 'Canceled'
     payment_mode:
       online: 'Online'
       cheque: 'Cheque'
@@ -420,4 +438,6 @@ en:
       imps: 'IMPS'
       card_swipe: 'Card Swipe'
       neft: 'NEFT'
+    cancellation_link: 'Cancellation'
+
 

@@ -9,7 +9,7 @@ class HomeController < ApplicationController
       redirect_to home_path(current_user)
       flash[:notice] = "You have already been logged in"
     else
-      render layout: "application"
+      render layout: "devise"
     end
   end
 

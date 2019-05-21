@@ -1,9 +1,11 @@
 <% users = DashboardDataProvider.users_dashboard(current_user, params[:user_fltrs]) %>
 <div class="card">
-  <div class="card-header">
-    <%= global_labels[:users] %>
-  </div>
-  <div class="card-body">
+  <a data-toggle="collapse" href="#dashboard_users" role="button" aria-expanded="false" aria-controls="dashboard_users" class='font-weight-bold text-decoration-none'>
+    <div class="card-header">
+      <%= global_labels[:users]%>
+    </div>
+  </a>
+  <div class="card-body collapse show" id="dashboard_users">
     <% if users.present? %>
       <div class="table-responsive">
         <table class="table">

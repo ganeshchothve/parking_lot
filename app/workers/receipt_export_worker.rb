@@ -2,22 +2,28 @@ require 'spreadsheet'
 class ReceiptExportWorker
   include Sidekiq::Worker
 
-  def perform user_id, filters=nil
+  def perform user_id, filters=nil, options={}
     if filters.present? && filters.is_a?(String)
       filters =  JSON.parse(filters)
     end
-    user = User.find(user_id)
+    user = User.find(user_id) if user_id
     file = Spreadsheet::Workbook.new
     sheet = file.create_worksheet(name: "Receipts")
     sheet.insert_row(0, ReceiptExportWorker.get_column_names)
     receipts = Receipt.build_criteria({fltrs: filters}.with_indifferent_access)
-    receipts = receipts.where(Receipt.user_based_scope(user))
+    receipts = receipts.where(Receipt.user_based_scope(user)) if user_id
     receipts.each_with_index do |receipt, index|
       sheet.insert_row(index+1, ReceiptExportWorker.get_receipt_row(receipt))
     end
-    file_name = "receipt-#{SecureRandom.hex}.xls"
-    file.write("#{Rails.root}/#{file_name}")
-    ExportMailer.notify(file_name, user.email, "Payments").deliver
+    if user_id
+      file_name = "receipt-#{SecureRandom.hex}.xls"
+      file.write("#{Rails.root}/exports/#{file_name}")
+      ExportMailer.notify(file_name, user.email, "Payments").deliver
+    else options[:daily_report]
+      file_name = "receipt-#{DateTime.current.in_time_zone('Mumbai').strftime('%F-%T')}.xls"
+      file.write("#{Rails.root}/exports/#{file_name}")
+      DailyReportMailer.payments_report(file_name, receipts.count).deliver
+    end
   end
 
   def self.get_column_names

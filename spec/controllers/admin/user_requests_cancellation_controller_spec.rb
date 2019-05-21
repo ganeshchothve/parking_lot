@@ -25,21 +25,22 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
 
               describe 'Create New User Request in pending state ' do
                 it 'and booking_detail status changed to cancellation requested' do
-                  expect { post :create, params: { user_request_cancellation: { user_id: @user.id, booking_detail_id: @booking_detail.id, event: 'pending' }, request_type: 'cancellation', user_id: @user.id } }.to change { UserRequest::Cancellation.count }.by(1)
+
+                  expect { post :create, params: { user_request_cancellation: { user_id: @user.id, requestable_id: @booking_detail.id, requestable_type: 'BookingDetail', event: 'pending' }, request_type: 'cancellation', user_id: @user.id } }.to change { UserRequest::Cancellation.count }.by(1)
                   expect(UserRequest.first.status).to eq('pending')
                   expect(@booking_detail.reload.status).to eq('cancellation_requested')
                 end
 
                 it 'Failed to create request' do
                   allow_any_instance_of(UserRequest).to receive(:save).and_return(false)
-                  expect { post :create, params: { user_request_cancellation: { user_id: @user.id, booking_detail_id: @booking_detail.id, event: 'pending' }, request_type: 'cancellation', user_id: @user.id } }.to change { UserRequest::Cancellation.count }.by(0)
+                  expect { post :create, params: { user_request_cancellation: { user_id: @user.id,requestable_id: @booking_detail.id, requestable_type: 'BookingDetail', event: 'pending' }, request_type: 'cancellation', user_id: @user.id } }.to change { UserRequest::Cancellation.count }.by(0)
                   expect(@booking_detail.reload.status).to eq(status)
                 end
               end
 
               context "REJECTED by #{user_role}" do
                 it "booking detail status changes to #{status}" do
-                  user_request = create(:pending_user_request_cancellation, user_id: @booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: @booking_detail.id, event: 'pending')
+                  user_request = create(:pending_user_request_cancellation, user_id: @booking_detail.user_id, created_by_id: @admin.id, requestable_id: @booking_detail.id, requestable_type: 'BookingDetail', event: 'pending')
                   user_request_params = { event: 'rejected', user_id: @user.id }
                   patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: user_request.id }
                   expect(@booking_detail.reload.status).to eq(status)
@@ -47,7 +48,7 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
                 end
 
                 it 'failed to reject' do
-                  user_request = create(:pending_user_request_cancellation, user_id: @booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: @booking_detail.id, event: 'pending')
+                  user_request = create(:pending_user_request_cancellation, user_id: @booking_detail.user_id, created_by_id: @admin.id, requestable_id: @booking_detail.id, requestable_type: 'BookingDetail', event: 'pending')
                   user_request_params = { event: 'rejected', user_id: @user.id }
                   allow_any_instance_of(UserRequest).to receive(:save).and_return(false)
                   patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: user_request.id }
@@ -58,21 +59,68 @@ RSpec.describe Admin::UserRequestsController, type: :controller do
 
               context "RESOLVED by #{user_role}" do
                 before(:each) do
-                  @user_request = create(:pending_user_request_cancellation, user_id: @booking_detail.user_id, created_by_id: @admin.id, booking_detail_id: @booking_detail.id, event: 'pending')
+                  @user_request = create(:pending_user_request_cancellation, user_id: @booking_detail.user_id, created_by_id: @admin.id, requestable_id: @booking_detail.id, requestable_type: 'BookingDetail', event: 'pending')
                 end
 
                 it 'create one background process for cancellation' do
-                  expect{ patch :update, params: { user_request_cancellation: { event: 'processing', user_id: @user.id }, request_type: 'cancellation', id: @user_request.id } }.to change(UserRequests::CancellationProcess.jobs, :count).by(1)
+                  expect{ patch :update, params: { user_request_cancellation: { event: 'processing', user_id: @user.id }, request_type: 'cancellation', id: @user_request.id } }.to change(UserRequests::BookingDetails::CancellationProcess.jobs, :count).by(1)
                   expect(@booking_detail.reload.status).to eq('cancelling')
                   expect(@user_request.reload.status).to eq('processing')
                 end
 
                 it 'no change in any object' do
                   allow_any_instance_of(UserRequest).to receive(:save).and_return(false)
-                  expect{ patch :update, params: { user_request_cancellation: { event: 'processing', user_id: @user.id }, request_type: 'cancellation', id: @user_request.id } }.to change(UserRequests::CancellationProcess.jobs, :count).by(0)
+                  expect{ patch :update, params: { user_request_cancellation: { event: 'processing', user_id: @user.id }, request_type: 'cancellation', id: @user_request.id } }.to change(UserRequests::BookingDetails::CancellationProcess.jobs, :count).by(0)
                   expect(@booking_detail.reload.status).to eq('cancellation_requested')
                   expect(@user_request.reload.status).to eq('pending')
                 end
+              end
+            end
+          end
+
+          context "receipt is success then " do
+            before(:each) do
+              @receipt = create(:receipt, payment_mode: 'online', user_id: @user.id, total_amount: 50_000, status: 'success')
+            end
+            describe "create user request in pending state " do
+              it "receipt status changes to cancellation_requested" do
+                expect { post :create, params: { user_request_cancellation: { user_id: @user.id, requestable_id: @receipt.id, requestable_type: 'Receipt', event: 'pending' }, request_type: 'cancellation', user_id: @user.id } }.to change { UserRequest::Cancellation.count }.by(1)
+                expect(UserRequest.first.status).to eq('pending')
+                expect(@receipt.reload.status).to eq('cancellation_requested')
+              end
+
+              it 'Failed to create request' do
+                allow_any_instance_of(UserRequest).to receive(:save).and_return(false)
+                expect { post :create, params: { user_request_cancellation: { user_id: @user.id,requestable_id: @receipt.id, requestable_type: 'Receipt', event: 'pending' }, request_type: 'cancellation', user_id: @user.id } }.to change { UserRequest::Cancellation.count }.by(0)
+                expect(@receipt.reload.status).to eq('success')
+              end
+            end
+
+            describe " REJECTED by #{user_role} " do
+              it " receipt status changes to success " do
+                user_request = create(:pending_user_request_cancellation, user_id: @receipt.user_id, created_by_id: @admin.id, requestable_id: @receipt.id, requestable_type: 'Receipt', event: 'pending')
+                user_request_params = { event: 'rejected', user_id: @user.id, reason_for_failure: 'as discussed' }
+                  patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: user_request.id }
+                expect(@receipt.reload.status).to eq('success')
+                expect(user_request.reload.status).to eq('rejected')
+              end
+
+              it 'failed to reject' do
+                  user_request = create(:pending_user_request_cancellation, user_id: @receipt.user_id, created_by_id: @admin.id, requestable_id: @receipt.id, requestable_type: 'Receipt', event: 'pending')
+                  user_request_params = { event: 'rejected', user_id: @user.id, reason_for_failure: 'as discussed' }
+                  allow_any_instance_of(UserRequest).to receive(:save).and_return(false)
+                  patch :update, params: { user_request_cancellation: user_request_params, request_type: 'cancellation', id: user_request.id }
+                  expect(@receipt.reload.status).to eq('cancellation_requested')
+                  expect(user_request.reload.status).to eq('pending')
+              end
+            end
+
+            describe "RESOLVED by #{user_role} " do
+              before(:each) do
+                @user_request = create(:pending_user_request_cancellation, user_id: @receipt.user_id, created_by_id: @admin.id, requestable_id: @receipt.id, requestable_type: 'Receipt', event: 'pending')
+              end
+              it "adds a new job to the queue" do
+                  expect{ patch :update, params: { user_request_cancellation: { event: 'processing', user_id: @user.id }, request_type: 'cancellation', id: @user_request.id } }.to change(UserRequests::Receipts::CancellationProcess.jobs, :count).by(1)
               end
             end
           end

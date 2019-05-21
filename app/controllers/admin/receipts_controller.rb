@@ -14,6 +14,10 @@ class Admin::ReceiptsController < AdminController
     @receipts = Receipt.where(Receipt.user_based_scope(current_user, params))
                        .build_criteria(params)
                        .paginate(page: params[:page] || 1, per_page: params[:per_page])
+    respond_to do |format|
+      format.json { render json: @receipts.as_json(methods: [:name]) }
+      format.html
+    end
   end
 
   # GET /admin/receipts/export
@@ -57,6 +61,7 @@ class Admin::ReceiptsController < AdminController
 
     authorize([:admin, @receipt])
     respond_to do |format|
+      @receipt.event ||= 'pending' if current_user.role?('channel_partner')
       if @receipt.save
         flash[:notice] = 'Receipt was successfully updated. Please upload documents'
         if @receipt.payment_mode == 'online'

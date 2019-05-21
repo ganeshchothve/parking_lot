@@ -20,8 +20,8 @@
         <%= select_tag "fltrs[can_be_applied_by]", options_for_select(Scheme.all.distinct(:can_be_applied_by).collect{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:can_be_applied_by] : "")), {prompt: "Select", class: "selectize"} %>
       </div>
       <div class="form-group">
-        <%= label_tag "fltrs", "user role", class: "control-label" %>
-        <%= select_tag "fltrs[user_role]", options_for_select(Scheme.all.distinct(:user_role).collect{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:user_role] : "")), {prompt: "Select", class: "selectize"} %>
+        <%= label_tag "fltrs", "Customer Role", class: "control-label" %>
+        <%= select_tag "fltrs[user_role]", options_for_select(Scheme.all.distinct(:user_role).flatten.collect{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:user_role] : "")), {prompt: "Select", class: "selectize"} %>
       </div>
       <div class="form-group">
         <%= label_tag "fltrs", "project tower", class: "control-label" %>

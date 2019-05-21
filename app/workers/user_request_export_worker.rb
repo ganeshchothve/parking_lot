@@ -14,7 +14,7 @@ class UserRequestExportWorker
       sheet.insert_row(index + 1, UserRequestExportWorker.get_user_request_row(user_request))
     end
     file_name = "cancellation-#{SecureRandom.hex}.xls"
-    file.write("#{Rails.root}/#{file_name}")
+    file.write("#{Rails.root}/exports/#{file_name}")
     ExportMailer.notify(file_name, user.email, 'Cancellation Report').deliver
   end
 
@@ -37,8 +37,8 @@ class UserRequestExportWorker
       user_request.user.name,
       user_request.created_at.strftime('%Y-%m-%d T %l:%M:%S'),
       user_request._type.split('::')[1],
-      user_request.booking_detail.project_unit.name,
-      user_request.status,
+      user_request.requestable.name,
+      I18n.t("user_requests.status.#{user_request.status}"),
       user_request.resolved_at.try(:strftime, '%Y-%m-%d T %l:%M:%S') || '-',
       user_request.resolved_by.try(:name) || '-'
     ]

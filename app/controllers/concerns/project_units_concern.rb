@@ -16,9 +16,6 @@ module ProjectUnitsConcern
   #
   def show
     @booking_details = BookingDetail.where(project_unit_id: @project_unit.id).paginate(page: params[:page] || 1, per_page: 15)
-    @scheme = Scheme.where(_id: params[:selected_scheme_id]).first
-    @project_unit.scheme=(@scheme) if @scheme
-
     respond_to do |format|
       format.json { render json: @project_unit }
       format.html do
