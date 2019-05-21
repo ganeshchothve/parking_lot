@@ -118,7 +118,7 @@ class Admin::SchemesController < AdminController
                      @project.schemes
                    else
                      Scheme.all
-    end
+                   end
     custom_scope = custom_scope.filter_by_can_be_applied_by(current_user.role) unless current_user.role.in?(%w(admin superadmin))
     _role = if current_user.role?('channel_partner')
               current_user.role

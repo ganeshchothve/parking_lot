@@ -55,11 +55,13 @@
                   <div class='col-md-4'><label>Beds</label><div>#{unit.bedrooms}</div></div>
                   <div class='col-md-4'><label>Carpet</label><div>#{unit.carpet} #{current_client.area_unit}</div></div>
                   <div class='col-md-4'><label>Facing</label><div>#{unit.unit_facing_direction}</div></div>
-                </div>
-                <div class='row mb-3'>
+                </div>"
+                unless @user.manager && @user.manager.role?('channel_partner')
+                  html_content += "<div class='row mb-3'>
                   <div class='col-md-5'><label>Agreement Value</label><div>#{number_to_indian_currency(unit.agreement_price)}</div></div>
                   <div class='col-md-5'><label>All Inclusive Price</label><div>#{number_to_indian_currency(unit.all_inclusive_price)}</div></div>
                 </div>"
+                end
                 %>
                 <span data-jquery-selector="<%= data_selector %>" data-toggle="popover" data-content="<%= html_content %>" data-title="Details for <%= unit.name %>" data-unit-id="<%= unit.present? ? unit.id : '' %>" class="apartment <%= klass %>" style="width: <%= width %>%;height: <%= height %>px;"></span>
               <% else %>
@@ -128,17 +130,21 @@
           <label>Facing</label>
           <h6 class="text-black font-weight" data-placeholder='unit_facing_direction'></h6>
         </div>
-        <div class="col-md-4">
-          <label>Agreement Price</label>
-          <h6 class="text-black font-weight" data-placeholder='agreement_price'></h6>
-        </div>
+        <% unless @user.manager && @user.manager.role?('channel_partner') %>
+          <div class="col-md-4">
+            <label>Agreement Price</label>
+            <h6 class="text-black font-weight" data-placeholder='agreement_price'></h6>
+          </div>
+        <% end %>
       </div>
-      <div class="row pl-3 pb-0 pb-md-3 pr-3 pt-0 pt-md-3">
-        <div class="col-md-4">
-          <label>All Inclusive Price</label>
-          <h6 class="text-black font-weight" data-placeholder='all_inclusive_price'></h6>
+      <% unless @user.manager && @user.manager.role?('channel_partner') %>
+        <div class="row pl-3 pb-0 pb-md-3 pr-3 pt-0 pt-md-3">
+          <div class="col-md-4">
+            <label>All Inclusive Price</label>
+            <h6 class="text-black font-weight" data-placeholder='all_inclusive_price'></h6>
+          </div>
         </div>
-      </div>
+      <% end %>
       <div class="pl-3 pb-0 pb-md-3 pr-3 pt-0 pt-md-3">
         <a data-toggle="modal" data-target="#floorPlanImage" href="javascript:;" class="unit_image_container" style="display:none;">
           <img class="img-fluid" style="width: 100%; display: block;" data-placeholder="unit_image" />
