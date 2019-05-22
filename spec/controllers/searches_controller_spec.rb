@@ -50,10 +50,16 @@ RSpec.describe SearchesController, type: :controller do
 
           # only_for_kyc_added_users!
           context 'When KYC is missing on buyer' do
-            it 'throws error to add kyc' do
+            it 'throws error to add kyc if enable_booking_without_kyc is false' do
               allow_any_instance_of(User).to receive(:user_kyc_ids).and_return([])
               post :hold, params: { id: @search.id, booking_detail: { primary_user_kyc_id: @user.id } }
               expect(response.request.flash[:alert]).to eq('Please add KYC before booking Unit.')
+            end
+            it 'dosent throws error to add kyc if enable_booking_without_kyc is true' do
+              @client = Client.first
+              @client.set(enable_booking_without_kyc: true)
+              allow_any_instance_of(User).to receive(:user_kyc_ids).and_return([])
+              expect{ post :hold, params: { id: @search.id, booking_detail: { primary_user_kyc_id: @kyc.id } } }.to change(BookingDetail, :count).by(1)
             end
           end
 
