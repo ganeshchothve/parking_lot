@@ -38,8 +38,7 @@ RSpec.describe Admin::BookingDetails::ReceiptsController, type: :controller do
 
       context "when kyc is not present" do
         it "when enable_booking_without_kyc is true" do
-          Client.first.set(enable_booking_without_kyc: true)
-          Client.first.set(enable_payment_without_kyc: false)
+          Client.first.set({enable_booking_without_kyc: true,enable_payment_without_kyc: false})
           receipt_params = FactoryBot.attributes_for(:receipt, payment_identifier: nil)
           @booking_detail = booking_without_kyc(@user)
           allow_any_instance_of(User).to receive(:user_kyc_ids).and_return([])
@@ -47,8 +46,7 @@ RSpec.describe Admin::BookingDetails::ReceiptsController, type: :controller do
         end
 
         it "when enable_booking_without_kyc is false" do
-          Client.first.set(enable_booking_without_kyc: false)
-          Client.first.set(enable_payment_without_kyc: true)
+          Client.first.set({enable_booking_without_kyc: false,enable_payment_without_kyc: true})
           receipt_params = FactoryBot.attributes_for(:receipt, payment_identifier: nil)
           @booking_detail = booking_without_kyc(@user)
           allow_any_instance_of(User).to receive(:user_kyc_ids).and_return([])
@@ -70,8 +68,7 @@ RSpec.describe Admin::BookingDetails::ReceiptsController, type: :controller do
 
         context "when kyc is not present" do
           it "when enable_booking_without_kyc is true" do
-            Client.first.set(enable_booking_without_kyc: true)
-            Client.first.set(enable_payment_without_kyc: false)
+            Client.first.set({enable_booking_without_kyc: true,enable_payment_without_kyc: false})
             receipt_params = FactoryBot.attributes_for(:offline_payment, payment_mode: payment_mode.to_s)
             @booking_detail = booking_without_kyc(@user)
             allow_any_instance_of(User).to receive(:user_kyc_ids).and_return([])
@@ -80,8 +77,7 @@ RSpec.describe Admin::BookingDetails::ReceiptsController, type: :controller do
           end
 
           it "when enable_booking_without_kyc is false" do 
-            Client.first.set(enable_booking_without_kyc: false)
-            Client.first.set(enable_payment_without_kyc: true)
+            Client.first.set({enable_booking_without_kyc: false,enable_payment_without_kyc: true})
             receipt_params = FactoryBot.attributes_for(:offline_payment, payment_mode: payment_mode.to_s)
             @booking_detail = booking_without_kyc(@user)
             allow_any_instance_of(User).to receive(:user_kyc_ids).and_return([])

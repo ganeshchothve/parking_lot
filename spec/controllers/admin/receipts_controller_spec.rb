@@ -84,16 +84,14 @@ RSpec.describe Admin::ReceiptsController, type: :controller do
               end
 
               it "does not create receipt if kyc is not present and enable_payment_without_kyc is false" do 
-                @client = Client.first
-                @client.set(enable_payment_without_kyc: false)
+                Client.first.set(enable_payment_without_kyc: false)
                 allow_any_instance_of(User).to receive(:user_kyc_ids).and_return([])
                 
                 expect{ post :create, params: { receipt: @receipt_params, user_id: @user.id } }.to change(Receipt, :count).by(0)
               end
 
               it "creates receipt if kyc is not present and enable_payment_without_kyc is true" do 
-                @client = Client.first
-                @client.set(enable_payment_without_kyc: true)
+                Client.first.set(enable_payment_without_kyc: true)
                 allow_any_instance_of(User).to receive(:user_kyc_ids).and_return([])
                 
                 expect{ post :create, params: { receipt: @receipt_params, user_id: @user.id } }.to change(Receipt, :count).by(1)
@@ -136,16 +134,14 @@ RSpec.describe Admin::ReceiptsController, type: :controller do
 
     it 'if user has not filled in kyc details, flash will contain error message' do
       receipt_params = FactoryBot.attributes_for(:receipt, payment_mode: 'online', payment_identifier: nil)
-      @client = Client.first
-      @client.set(enable_payment_without_kyc: false)
+      Client.first.set(enable_payment_without_kyc: false)
       User.any_instance.stub(:kyc_ready?).and_return false
       post :create, params: { receipt: receipt_params, user_id: @user.id }
       expect(response.request.flash[:alert]).to eq("Associated User's KYC is missing.")
     end
 
     it 'if user has not filled in kyc details, receipt will get created' do
-      @client = Client.first
-      @client.set(enable_payment_without_kyc: true)
+      Client.first.set(enable_payment_without_kyc: true)
       @receipt_params = FactoryBot.attributes_for(:receipt, payment_mode: 'online', payment_identifier: nil)
       User.any_instance.stub(:kyc_ready?).and_return false
       expect{ post :create, params: { receipt: @receipt_params, user_id: @user.id } }.to change(Receipt, :count).by(1)

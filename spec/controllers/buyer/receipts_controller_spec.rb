@@ -60,16 +60,14 @@ RSpec.describe Buyer::ReceiptsController, type: :controller do
             end
 
             it 'if user has not filled in kyc details, flash will contain error message (enable_payment_without_kyc: false)' do
-              @client = Client.first
-              @client.set(enable_payment_without_kyc: false)
+              Client.first.set(enable_payment_without_kyc: false)
               @receipt_params = FactoryBot.attributes_for(:receipt, payment_mode: 'online', payment_identifier: nil)
               allow_any_instance_of(User).to receive(:user_kyc_ids).and_return([])
               expect{ post :create, params: { receipt: @receipt_params, user_id: @user.id } }.to change(Receipt, :count).by(0)
             end
 
             it 'if user has not filled in kyc details, receipt will get created(enable_payment_without_kyc: true)' do
-              @client = Client.first
-              @client.set(enable_payment_without_kyc: true)
+              Client.first.set(enable_payment_without_kyc: true)
               @receipt_params = FactoryBot.attributes_for(:receipt, payment_mode: 'online', payment_identifier: nil)
               allow_any_instance_of(User).to receive(:user_kyc_ids).and_return([])
               expect{ post :create, params: { receipt: @receipt_params, user_id: @user.id } }.to change(Receipt, :count).by(1)
