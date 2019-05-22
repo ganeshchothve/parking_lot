@@ -59,7 +59,7 @@ RSpec.describe Buyer::ReceiptsController, type: :controller do
               expect(response).to redirect_to("http://test.host/dashboard/user/searches/#{@user.get_search('').id}/gateway-payment/#{assigns(:receipt).receipt_id}" )
             end
 
-            it 'if user has not filled in kyc details, flash will contain error message' do
+            it 'if user has not filled in kyc details, flash will contain error message (enable_payment_without_kyc: false)' do
               @client = Client.first
               @client.set(enable_payment_without_kyc: false)
               @receipt_params = FactoryBot.attributes_for(:receipt, payment_mode: 'online', payment_identifier: nil)
@@ -67,7 +67,7 @@ RSpec.describe Buyer::ReceiptsController, type: :controller do
               expect{ post :create, params: { receipt: @receipt_params, user_id: @user.id } }.to change(Receipt, :count).by(0)
             end
 
-            it 'if user has not filled in kyc details, receipt will get created' do
+            it 'if user has not filled in kyc details, receipt will get created(enable_payment_without_kyc: true)' do
               @client = Client.first
               @client.set(enable_payment_without_kyc: true)
               @receipt_params = FactoryBot.attributes_for(:receipt, payment_mode: 'online', payment_identifier: nil)
@@ -106,18 +106,20 @@ RSpec.describe Buyer::ReceiptsController, type: :controller do
         expect(response.request.flash[:alert]).to eq('You have to confirm your email address before continuing.')
       end
 
-      it 'if user has not filled in kyc details, flash will contain error message' do
-        receipt_params = FactoryBot.attributes_for(:receipt)
-        User.any_instance.stub(:kyc_ready?).and_return false
-        post :create, params: { receipt: receipt_params }
-        expect(response.request.flash[:alert].present?).to eq(true)
-      end
+      context "user does not have kyc details" do 
+        it 'if client has set enable_direct_payment to true, receipt will be created' do
+          receipt_params = FactoryBot.attributes_for(:receipt)
+          Client.first.set(enable_direct_payment: true)
+          User.any_instance.stub(:kyc_ready?).and_return false
+          expect(post :create, params: { receipt: receipt_params }).to change(Receipt, :count).by(1)
+        end
 
-      it 'if client has set enable_direct_payment to false, flash will contain error message' do
-        receipt_params = FactoryBot.attributes_for(:receipt)
-        Client.first.set(enable_direct_payment: false)
-        post :create, params: { receipt: receipt_params }
-        expect(response.request.flash[:alert]).to eq('Direct payment is not available right now.')
+        it 'if client has set enable_direct_payment to false, flash will contain error message' do
+          receipt_params = FactoryBot.attributes_for(:receipt)
+          Client.first.set(enable_direct_payment: false)
+          post :create, params: { receipt: receipt_params }
+          expect(response.request.flash[:alert]).to eq('Direct payment is not available right now.')
+        end
       end
 
       it 'if receipt payment gateway service absent, redirects to dashboard' do

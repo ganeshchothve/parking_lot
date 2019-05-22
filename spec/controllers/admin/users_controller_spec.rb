@@ -35,6 +35,7 @@ RSpec.describe Admin::UsersController, type: :controller do
         expect(response.request.flash[:alert]).to eq("Only administrator users are allowed.")
       end
     end
+  end
   describe "UPDATE action" do
     before(:each) do
       admin = create(:admin)

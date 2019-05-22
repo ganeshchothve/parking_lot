@@ -136,6 +136,8 @@ RSpec.describe Admin::ReceiptsController, type: :controller do
 
     it 'if user has not filled in kyc details, flash will contain error message' do
       receipt_params = FactoryBot.attributes_for(:receipt, payment_mode: 'online', payment_identifier: nil)
+      @client = Client.first
+      @client.set(enable_payment_without_kyc: false)
       User.any_instance.stub(:kyc_ready?).and_return false
       post :create, params: { receipt: receipt_params, user_id: @user.id }
       expect(response.request.flash[:alert]).to eq("Associated User's KYC is missing.")
