@@ -14,7 +14,7 @@ module SyncLogsHelper
     when 'ChannelPartner'
       channel_partner_path(sync_log.resource)
     when 'BookingDetail'
-      admin_project_unit_path(sync_log.resource)
+      admin_booking_detail_path(sync_log.resource)
     else
       resync_admin_sync_log_path(sync_log)
     end

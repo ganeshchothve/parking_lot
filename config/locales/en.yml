@@ -439,5 +439,22 @@ en:
       card_swipe: 'Card Swipe'
       neft: 'NEFT'
     cancellation_link: 'Cancellation'
+  erp_models:
+    resource_class:
+      User: 'User'
+      UserKyc: 'KYC'
+      Receipt: 'Payments'
+      BookingDetail: 'Booking'
+      ChannelPartner: 'Channel Partner'
+    request_type:
+      json: 'JSON'
+    http_verb:
+      get: 'GET'
+      post: 'POST'
+      put: 'PUT'
+      patch: 'PATCH'
+    action_name:
+      create: 'Create'
+      update: 'Update'
 
 

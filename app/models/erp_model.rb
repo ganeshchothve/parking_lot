@@ -7,7 +7,8 @@ class ErpModel
   RESOURCE_CLASS = %w[User UserKyc Receipt BookingDetail ChannelPartner]
   REQUEST_TYPE = [:json]
   HTTP_VERB = %w[get post put patch]
-  DOMAIN = %w[https://gerasb-gerasb.cs57.force.com]
+  # DOMAIN = %w[http://staging.sell.do]
+  ACTION_NAME = %w(create update)
 
   # Fields
   field :resource_class, type: String
@@ -29,13 +30,9 @@ class ErpModel
   validates :url, uniqueness: { scope: %i[domain resource_class] }
   validates :request_type, inclusion: { in: REQUEST_TYPE }
   validates :http_verb, inclusion: { in: HTTP_VERB }
-  validates :domain, inclusion: { in: DOMAIN }
-  validates :action_name, inclusion: { in: proc { ErpModel.allowed_action_names.collect { |x| x } } }
+  # validates :domain, inclusion: { in: DOMAIN }
+  validates :action_name, inclusion: { in: ACTION_NAME  }
   validate :request_payload_format
-
-  def self.allowed_action_names
-    %w[create update]
-  end
 
   def request_payload_format
     if request_payload.present?
