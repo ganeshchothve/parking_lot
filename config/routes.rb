@@ -193,8 +193,9 @@ Rails.application.routes.draw do
 
   namespace :buyer do
 
-    resources :booking_details, only: [:index, :show] do
-      resources :receipts, only: [:index]
+    resources :booking_details, only: [:index, :show, :update] do
+      patch :booking, on: :member
+      resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts'
       resources :booking_detail_schemes, except: [:destroy], controller: 'booking_details/booking_detail_schemes'
     end
 
@@ -212,21 +213,16 @@ Rails.application.routes.draw do
       end
 
     end
+
     resources :receipts, only: [:index, :new, :create, :show ] do
       get :resend_success, on: :member
     end
+
     resources :referrals, only: [:index, :create, :new] do
       post :generate_code, on: :collection
     end
 
     resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
-    resources :booking_details, only: [:update] do
-      patch :booking, on: :member
-      resources :booking_detail_schemes, except: [:destroy]
-
-        resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts'
-    end
-
 
     scope ":request_type" do
       resources :user_requests, except: [:destroy], controller: 'user_requests'
