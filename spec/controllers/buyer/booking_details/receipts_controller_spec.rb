@@ -12,6 +12,26 @@ RSpec.describe Buyer::BookingDetails::ReceiptsController, type: :controller do
       @project_unit = @booking_detail.project_unit
     end
 
+    context "when kyc is not present" do
+        it "when enable_booking_without_kyc is true" do
+          Client.first.set(enable_booking_without_kyc: true)
+          Client.first.set(enable_payment_without_kyc: false)
+          receipt_params = FactoryBot.attributes_for(:receipt, payment_identifier: nil)
+          @booking_detail = booking_without_kyc(@user)
+          allow_any_instance_of(User).to receive(:user_kyc_ids).and_return([])
+          expect{post :create, params: { receipt: receipt_params, user_id: @user.id, booking_detail_id: @booking_detail.id }}.to change(Receipt, :count).by(1)
+        end
+
+        it "when enable_booking_without_kyc is false" do
+          Client.first.set(enable_booking_without_kyc: false)
+          Client.first.set(enable_payment_without_kyc: true)
+          receipt_params = FactoryBot.attributes_for(:receipt, payment_identifier: nil)
+          @booking_detail = booking_without_kyc(@user)
+          allow_any_instance_of(User).to receive(:user_kyc_ids).and_return([])
+          expect{post :create, params: { receipt: receipt_params, user_id: @user.id, booking_detail_id: @booking_detail.id }}.to change(Receipt, :count).by(0)
+        end
+      end
+
     it 'when receipt successfully saves and payment gateway service is present, redirect' do
       receipt_params = FactoryBot.attributes_for(:receipt)
       post :create, params: { receipt: receipt_params, user_id: @user_id, booking_detail_id: @booking_detail.id }

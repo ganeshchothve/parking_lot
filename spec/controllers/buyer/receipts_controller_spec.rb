@@ -111,7 +111,7 @@ RSpec.describe Buyer::ReceiptsController, type: :controller do
           receipt_params = FactoryBot.attributes_for(:receipt)
           Client.first.set(enable_direct_payment: true)
           User.any_instance.stub(:kyc_ready?).and_return false
-          expect(post :create, params: { receipt: receipt_params }).to change(Receipt, :count).by(1)
+          expect{post :create, params: { receipt: receipt_params }}.to change(Receipt, :count).by(1)
         end
 
         it 'if client has set enable_direct_payment to false, flash will contain error message' do

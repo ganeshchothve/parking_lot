@@ -11,6 +11,17 @@ module Booking
     booking_detail
   end
 
+  def booking_without_kyc (user,project_unit = nil, receipt = nil)
+    project_unit ||= create(:project_unit)
+    # kyc = user.user_kycs.first || create(:user_kyc, creator_id: user.id, user: user)
+    project_unit.assign_attributes(user_id: user.id, status: 'blocked')
+    project_unit.save
+    search = create(:search, user_id: user.id, project_unit_id: project_unit.id)
+    booking_detail = create(:booking_detail, project_unit_id: project_unit.id, user_id: user.id, search: search)
+    @booking_detail_scheme = create(:booking_detail_scheme)
+    booking_detail
+  end
+
   def book_project_unit(user, project_unit = nil, receipt = nil, status='blocked')
     project_unit ||= create(:project_unit)
     kyc = user.user_kycs.first || create(:user_kyc, creator_id: user.id, user: user)
