@@ -9,6 +9,7 @@ module FilterByCriteria
         filters = filters.send("filter_by_#{key}", *value)
       end
     end
+    filters = filters.filter_by_search(params[:search]) if params[:search].present? && self.respond_to?('filter_by_search')
     field_name, sort_order = params.dig(:fltrs, :sort).to_s.split(".")
     filters = filters.order_by([ (field_name || :created_at), (sort_order || :desc) ])
     filters
