@@ -81,7 +81,7 @@
         <div class="form-group">
           <label>Agreement Price</label>
           <div>
-            <%= number_to_indian_currency(booking_detail.project_unit.calculate_agreement_price.round) %>
+            <%= number_to_indian_currency(booking_detail.calculate_agreement_price.round) %>
           </div>
         </div>
       </div>
@@ -89,7 +89,7 @@
         <div class="form-group">
           <label>All Inclusive Price</label>
           <div>
-            <%= number_to_indian_currency(booking_detail.project_unit.calculate_all_inclusive_price.round) %>
+            <%= number_to_indian_currency(booking_detail.calculate_all_inclusive_price.round) %>
           </div>
         </div>
       </div>

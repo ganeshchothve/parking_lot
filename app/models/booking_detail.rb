@@ -7,12 +7,18 @@ class BookingDetail
   include SyncDetails
   include ApplicationHelper
   extend FilterByCriteria
+  include PriceCalculator
 
   BOOKING_STAGES = %w[blocked booked_tentative booked_confirmed]
 
   field :status, type: String
   field :erp_id, type: String, default: ''
   field :name, type: String
+  field :agreement_price, type: Integer
+  field :all_inclusive_price, type: Integer
+  field :base_rate, type: Float
+  field :floor_rise, type: Float
+  field :saleable, type: Float
   mount_uploader :tds_doc, DocUploader
 
   enable_audit(
@@ -24,6 +30,8 @@ class BookingDetail
     ]
   )
 
+  embeds_many :costs, as: :costable
+  embeds_many :data, as: :data_attributable
   belongs_to :project_unit
   belongs_to :user
   belongs_to :manager, class_name: 'User', optional: true
@@ -64,33 +72,12 @@ class BookingDetail
     Gamification::PushNotification.new.push(message) if Rails.env.staging? || Rails.env.production?
   end
 
+  def booking_detail_scheme=(bds)
+    @booking_detail_scheme = bds
+  end
+
   def booking_detail_scheme
-    booking_detail_schemes.in(status: ['approved', 'draft']).first
-  end
-
-  def pending_balance(options={})
-    strict = options[:strict] || false
-    user_id = options[:user_id] || self.user_id
-    if user_id.present?
-      receipts_total = Receipt.where(user_id: user_id, booking_detail_id: self.id)
-      if strict
-        receipts_total = receipts_total.where(status: "success")
-      else
-        receipts_total = receipts_total.in(status: ['clearance_pending', "success"])
-      end
-      receipts_total = receipts_total.sum(:total_amount)
-      return (self.project_unit.booking_price - receipts_total)
-    else
-      return self.project_unit.booking_price
-    end
-  end
-
-  def total_tentative_amount_paid
-    receipts.where(user_id: self.user_id).in(status: ['success', 'clearance_pending']).sum(:total_amount)
-  end
-
-  def total_amount_paid
-    receipts.success.sum(:total_amount)
+    @booking_detail_scheme ||= booking_detail_schemes.in(status: ['approved', 'draft']).first
   end
 
   def sync(erp_model, sync_log)
@@ -138,6 +125,10 @@ class BookingDetail
     else
       return "> 60 days"
     end
+  end
+
+  def cost_sheet_template(scheme_id = nil)
+    Template::BookingDetailTemplate.first
   end
 
   class << self

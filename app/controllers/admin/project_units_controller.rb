@@ -98,6 +98,18 @@ class Admin::ProjectUnitsController < AdminController
     end
   end
 
+  def quotation
+    @booking_detail = BookingDetail.new(name: @project_unit.name, base_rate: @project_unit.base_rate, agreement_price: @project_unit.agreement_price, all_inclusive_price: @project_unit.all_inclusive_price, floor_rise: @project_unit.floor_rise, saleable: @project_unit.saleable, costs: @project_unit.costs, data: @project_unit.data, project_unit: @project_unit )
+    @booking_detail_scheme = BookingDetailScheme.new(booking_detail: @booking_detail, project_unit: @project_unit)
+    if params[:booking_detail_scheme]
+      @booking_detail_scheme.assign_attributes(permitted_attributes([ current_user_role_group, @booking_detail_scheme]))
+      @booking_detail_scheme.payment_adjustments << @booking_detail_scheme.derived_from_scheme.payment_adjustments
+    else
+      @booking_detail_scheme.payment_adjustments << @project_unit.scheme.payment_adjustments
+    end
+    @booking_detail.booking_detail_scheme = @booking_detail_scheme
+  end
+
   private
 
   # def set_project_unit

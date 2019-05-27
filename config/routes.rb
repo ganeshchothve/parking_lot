@@ -78,7 +78,7 @@ Rails.application.routes.draw do
       member do
         get :print
         patch :release_unit
-        # get :send_under_negotiation
+        get :quotation
       end
 
       collection do
