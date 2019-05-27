@@ -41,7 +41,7 @@ class UserObserver < Mongoid::Observer
   def after_update user
     if user.manager_id_changed? && user.manager_id.present?
       if user.buyer? && user.manager.role?("channel_partner")
-        Email.create!({
+        email = Email.create!({
           booking_portal_client_id: user.booking_portal_client_id,
           email_template_id: Template::EmailTemplate.find_by(name: "user_manager_changed").id,
           recipients: [user],
@@ -49,6 +49,7 @@ class UserObserver < Mongoid::Observer
           triggered_by_id: user,
           triggered_by_type: user.class.to_s
         })
+        email.sent!
       end
     end
   end

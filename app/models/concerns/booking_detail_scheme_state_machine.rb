@@ -36,16 +36,16 @@ module BookingDetailSchemeStateMachine
       BookingDetailScheme.where(project_unit_id: project_unit_id, user_id: user_id, status: 'approved').count > 1
     end
 
-    def after_draft_event 
+    def after_draft_event
       booking_detail.under_negotiation! if !(%w[hold under_negotiation].include?booking_detail.status)
       send_email_as_draft
     end
 
-    # after booking_detail_scheme is rejected, move booking detail to scheme_rejected state 
+    # after booking_detail_scheme is rejected, move booking detail to scheme_rejected state
     def after_rejected_event
       booking_detail.scheme_rejected!
     end
-    # after booking_detail_scheme is approved, move booking detail to scheme_approved state 
+    # after booking_detail_scheme is approved, move booking detail to scheme_approved state
     def after_approved_event
       booking_detail.scheme_approved!
       send_email_as_approved
@@ -54,7 +54,7 @@ module BookingDetailSchemeStateMachine
     def send_email_as_approved
       if booking_detail.project_unit.booking_portal_client.email_enabled?
         begin
-          Email.create!(
+          email = Email.create!(
             booking_portal_client_id: booking_detail.project_unit.booking_portal_client_id,
             email_template_id: Template::EmailTemplate.find_by(name: 'booking_detail_scheme_approved').id,
             cc: [booking_detail.project_unit.booking_portal_client.notification_email],
@@ -63,6 +63,7 @@ module BookingDetailSchemeStateMachine
             triggered_by_id: booking_detail_scheme.id,
             triggered_by_type: booking_detail_scheme.class.to_s
           )
+          email.sent!
         rescue StandardError
           'booking detail scheme approved by is nil'
         end
@@ -71,7 +72,7 @@ module BookingDetailSchemeStateMachine
     def send_email_as_draft
       if self.created_by_user && booking_detail.project_unit.booking_portal_client.email_enabled?
         begin
-          Email.create!(
+          email = Email.create!(
             booking_portal_client_id: booking_detail.project_unit.booking_portal_client_id,
             email_template_id: Template::EmailTemplate.find_by(name: 'booking_detail_scheme_draft').id,
             cc: [booking_detail.project_unit.booking_portal_client.notification_email],
@@ -80,7 +81,8 @@ module BookingDetailSchemeStateMachine
             triggered_by_id: booking_detail_scheme.id,
             triggered_by_type: booking_detail_scheme.class.to_s
           )
-        rescue StandardError 
+          email.sent!
+        rescue StandardError
           'booking_detail under_negotiation is nil'
         end
       end
