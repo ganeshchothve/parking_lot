@@ -257,7 +257,7 @@ module BookingDetailStateMachine
           file << pdf
         end
         attachments_attributes << {file: File.open("#{Rails.root}/exports/allotment_letter-#{project_unit.name}.pdf")}
-        Email.create!({
+        email = Email.create!({
             booking_portal_client_id: project_unit.booking_portal_client_id,
             email_template_id: Template::EmailTemplate.find_by(name: "booking_confirmed").id,
             cc: [project_unit.booking_portal_client.notification_email],
@@ -267,6 +267,7 @@ module BookingDetailStateMachine
             triggered_by_type: self.class.to_s,
             attachments_attributes: attachments_attributes
           })
+        email.sent!
       end
       if self.project_unit.booking_portal_client.sms_enabled?
         Sms.create!(
@@ -285,7 +286,7 @@ module BookingDetailStateMachine
       if project_unit.booking_portal_client.email_enabled?
         attachments_attributes = []
         _status = status.sub('booked_', '')
-        Email.create!(
+        email = Email.create!(
           booking_portal_client_id: project_unit.booking_portal_client_id,
           email_template_id: Template::EmailTemplate.find_by(name: "booking_#{_status}").id,
           cc: [project_unit.booking_portal_client.notification_email],
@@ -295,6 +296,7 @@ module BookingDetailStateMachine
           triggered_by_type: self.class.to_s,
           attachments_attributes: attachments_attributes
         )
+        email.sent!
       end
       if project_unit.booking_portal_client.sms_enabled?
         Sms.create!(
