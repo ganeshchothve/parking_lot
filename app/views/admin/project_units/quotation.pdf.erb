@@ -1,0 +1,50 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-8 mt-3 mt-md-0">
+          <%= render 'dashboard/booking_detail_overview', {booking_detail: @booking_detail} %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4"> 
+      <div class="card">
+        <div class="card-body">
+          <div class="table-responsive">
+            <%= @booking_detail.booking_detail_scheme.derived_from_scheme.name %>
+            <div class="editable-payment-adjustments">
+              <% @booking_detail.booking_detail_scheme.editable_payment_adjustments.each do |payment_adjustment| %>
+                <div class="row">
+                  <div class="col-md-4">
+                    <p>Name</p>
+                    <p><%= payment_adjustment.name %></p>
+                  </div>
+                  <div class="col-md-4">
+                    <p>Field</p>
+                    <p><%= payment_adjustment.field %></p>
+                  </div>
+                  <div class="col-md-4">
+                    <p>Value</p>
+                    <p><%= payment_adjustment.value(@booking_detail.project_unit) %></p>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="mt-3"></div>
+      <div class="card">
+        <div class="card-body">
+          <div class="table-responsive">
+            <%= @booking_detail.cost_sheet_template.parsed_content(@booking_detail) %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

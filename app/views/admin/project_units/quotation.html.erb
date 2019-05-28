@@ -1,4 +1,14 @@
+
 <div class="container">
+  <div class = "row justify-content-right">
+    <div class = "col-md-12">
+      <% if params[:booking_detail_scheme] %>
+        <%= link_to "PDF", quotation_admin_project_unit_path(@project_unit, booking_detail_scheme: params[:booking_detail_scheme].permit(:derived_from_scheme_id, payment_adjustments_attributes: {}), format: :pdf),class: "btn btn-primary float-right" %>
+      <% else %>
+        <%= link_to "PDF", quotation_admin_project_unit_path(@project_unit, format: :pdf),class: "btn btn-primary float-right" %>
+      <% end %>
+    </div>
+  </div>
   <div class="row justify-content-center">
     <div class="col-md-12">
       <div class="row">
