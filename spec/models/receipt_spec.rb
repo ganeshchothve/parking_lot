@@ -446,11 +446,11 @@ RSpec.describe Receipt, type: :model do
     end
 
     describe "check_state_machine" do
-      before(:each) do 
+      before(:each) do
         @client.set(enable_communication: {email: true, sms: true})
       end
-      context "for direct payment" do 
-        context "for offline payment" do 
+      context "for direct payment" do
+        context "for offline payment" do
           before(:each) do
             @receipt = create(:offline_payment)
           end
@@ -507,7 +507,7 @@ RSpec.describe Receipt, type: :model do
             expect(Sms.count).to eq(2)
           end
 
-          it "for transition from success to available_for_refund, it is unsuccessful and notifications are not sent" do 
+          it "for transition from success to available_for_refund, it is unsuccessful and notifications are not sent" do
             @receipt.pending!
             @receipt.clearance_pending!
             @receipt.processed_on = Date.today
@@ -558,7 +558,7 @@ RSpec.describe Receipt, type: :model do
           end
 
         end
-        context "for online payment" do 
+        context "for online payment" do
           before(:each) do
             @receipt = create(:receipt)
           end
@@ -584,11 +584,11 @@ RSpec.describe Receipt, type: :model do
 
           it "for transition from success to available_for_refund, it is unsuccessful and notifications are not sent" do
             @receipt.pending!
-            @receipt.clearance_pending!
-            @receipt.success!
+            expect{ @receipt.clearance_pending!}.to change{ Email.count }.by(1)
+            expect{ @receipt.success!}.to change{ Email.count }.by(1)
             expect(@receipt.available_for_refund!).to eq(false)
-            expect(Email.count).to eq(1)
-            expect(Sms.count).to eq(1)
+            # expect(Email.count).to eq(1)
+            expect(Sms.count).to eq(2)
           end
 
           context ":cancellation_process" do
@@ -625,7 +625,7 @@ RSpec.describe Receipt, type: :model do
           end
 
         end
-      end 
+      end
     end
   end
 end

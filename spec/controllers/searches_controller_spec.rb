@@ -27,6 +27,7 @@ RSpec.describe SearchesController, type: :controller do
             end
             @kyc = create(:user_kyc, user: @user, creator: @user)
             @project_unit = create(:available_project_unit)
+            @project_unit.project_tower.default_scheme.set(can_be_applied_by: ['channel_partner'])
             @search = create(:search, project_unit_id: @project_unit.id, user: @user)
           end
 

@@ -8,14 +8,15 @@ class UserRequestService
   end
 
   def send_email
-    Email.create!(
+    email = Email.create!(
       booking_portal_client_id: user.booking_portal_client_id,
       email_template_id: Template::EmailTemplate.find_by(name: "#{user_request.class.model_name.element}_request_pending").id,
       recipients: [user],
-      cc_recipients: (user.manager_id.present? ? [user.manager] : []),
+      cc_recipients: (user.manager.present? ? [user.manager] : []),
       triggered_by_id: user_request.id,
       triggered_by_type: user_request.class.to_s
     )
+    email.sent!
   end
 
   def send_sms

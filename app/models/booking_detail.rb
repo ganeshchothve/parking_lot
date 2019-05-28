@@ -91,7 +91,7 @@ class BookingDetail
   # @return [Email Object]
   #
   def auto_released_extended_inform_buyer!
-    Email.create!({
+    email = Email.create!({
       booking_portal_client_id: project_unit.booking_portal_client_id,
       email_template_id: Template::EmailTemplate.find_by(name: "auto_release_on_extended").id,
       cc: [ project_unit.booking_portal_client.notification_email ],
@@ -100,6 +100,7 @@ class BookingDetail
       triggered_by_id: self.id,
       triggered_by_type: self.class.to_s
     })
+    email.sent!
   end
 
   def ageing

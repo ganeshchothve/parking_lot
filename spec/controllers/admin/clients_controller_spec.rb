@@ -2,7 +2,7 @@ require 'rails_helper'
 RSpec.describe Admin::ClientsController, type: :controller do
   describe 'client configuration' do
     before(:each) do
-      admin = create(:admin)
+      admin = create(:superadmin)
       sign_in_app(admin)
       @user = create(:user)
     end

@@ -80,6 +80,59 @@ class Email
     self.subject
   end
 
+  def sent!
+    # Email sent when
+    # Template Present  |   Templat Is Active  |   ENV in list  |   SMS sent or not
+    #      T            |          T           |       T        |        yes
+    #      T            |          T           |       F        |         no
+    #      T            |          F           |       T        |         no
+    #      T            |          F           |       F        |         no
+    #      F            |          -           |       T        |        yes
+    #      F            |          -           |       F        |         no
+    #      F            |          -           |       T        |        yes
+    #      F            |          -           |       F        |         no
+    if self.to.present?
+      if ( !self.email_template || self.email_template.try(:is_active?) ) && (Rails.env.production? || Rails.env.staging?)
+        if self.attachments.present?
+          Communication::Email::MailgunWorker.perform_in(2.minutes, self.id.to_s)
+        else
+          Communication::Email::MailgunWorker.perform_async(self.id.to_s)
+        end
+      else
+        attachment_urls = {}
+        self.attachments.collect do |doc|
+          attachment_urls[doc.file_name] = doc.file.url
+        end
+        ApplicationMailer.test({
+          to: self.recipients.pluck(:email).uniq,
+          cc: self.cc || [],
+          body: self.body,
+          subject: self.subject,
+          attachment_urls: attachment_urls
+        }).deliver
+      end
+    end
+  end
+
+  def set_content
+    if self.body.blank?
+      email_template = Template::EmailTemplate.find self.email_template_id
+      current_client = self.booking_portal_client
+      current_project = current_client.projects.first
+      begin
+        self.body = ERB.new(self.booking_portal_client.email_header).result( binding ) + email_template.parsed_content(triggered_by) + ERB.new(self.booking_portal_client.email_footer).result( binding )
+      rescue => e
+        self.body = ""
+      end
+      self.text_only_body = TemplateParser.parse(email_template.text_only_body, triggered_by)
+      self.subject = email_template.parsed_subject(triggered_by)
+    else
+      self.body = TemplateParser.parse(self.body, triggered_by)
+      self.text_only_body = TemplateParser.parse(self.text_only_body, triggered_by)
+      self.subject = TemplateParser.parse(self.subject, triggered_by)
+    end
+  end
+
   private
 
   # for email template we require body or text. Otherwise we won't have any content to send to the sender / reciever

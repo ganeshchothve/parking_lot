@@ -84,6 +84,37 @@ class Receipt
     audit_fields: %i[payment_mode tracking_id total_amount issued_date issuing_bank issuing_bank_branch payment_identifier status status_message booking_detail_id]
   )
 
+  # This loop create one set of boolean method which help us to fine the payment easily.
+  # This set create following methods cheque?, rtgs?, imps?, card_swipe? and neft?
+  #
+  # @return [Boolean]
+  #
+  OFFLINE_PAYMENT_MODE.each do |_payment_mode|
+    define_method "#{_payment_mode}?" do
+      _payment_mode.to_s == self.payment_mode.to_s
+    end
+  end
+
+  #
+  # This function return true when payment has offline mode. All offline mode defined in OFFLINE_PAYMENT_MODE constant.
+  #
+  #
+  # @return [Boolean] True for offline and false for online
+  #
+  def offline?
+    self.class::OFFLINE_PAYMENT_MODE.include?(self.payment_mode.to_s)
+  end
+
+  #
+  # This will return true when payment done by online mode.
+  #
+  #
+  # @return [Boolean]
+  #
+  def online?
+    payment_mode.to_s == 'online'
+  end
+
   def self.available_payment_modes
     [
       { id: 'online', text: 'Online' },

@@ -396,7 +396,7 @@ class User
   def send_confirmation_instructions
     generate_confirmation_token! unless @raw_confirmation_token
     # send_devise_notification(:confirmation_instructions, @raw_confirmation_token, opts)
-    Email.create!({
+    email = Email.create!({
       booking_portal_client_id: booking_portal_client_id,
       email_template_id: Template::EmailTemplate.find_by(name: "user_confirmation_instructions").id,
       cc: [ booking_portal_client.notification_email ],
@@ -404,6 +404,7 @@ class User
       triggered_by_id: id,
       triggered_by_type: self.class.to_s
     })
+    email.sent!
   end
 
   private
