@@ -14,8 +14,6 @@ class BookingDetail
   field :status, type: String
   field :erp_id, type: String, default: ''
   field :name, type: String
-  field :agreement_price, type: Integer
-  field :all_inclusive_price, type: Integer
   field :base_rate, type: Float
   field :floor_rise, type: Float
   field :saleable, type: Float
