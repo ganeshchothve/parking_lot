@@ -118,7 +118,6 @@ class User
   has_many :emails, as: :triggered_by, class_name: 'Email'
   has_many :referrals, class_name: 'User', foreign_key: :referred_by_id, inverse_of: :referred_by
   has_and_belongs_to_many :schemes
-  has_many :sync_logs, as: :resource
   has_many :logs, class_name: 'SyncLog', inverse_of: :user_reference
   embeds_many :portal_stages
 
@@ -389,7 +388,7 @@ class User
   end
 
   def sync(erp_model, sync_log)
-    Api::UserDetailsSync.new(erp_model, self, sync_log).execute if self.buyer?
+    Api::UserDetailsSync.new(erp_model, self, sync_log).execute
   end
 
   # This is sub part of send_confirmation_instructions for delay this method is used

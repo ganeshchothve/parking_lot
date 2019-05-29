@@ -5,7 +5,7 @@ module Api
     def initialize(erp_model, record, parent_sync_record = nil)
       @erp_model = erp_model
       @parent_sync = parent_sync_record
-      @synclog = SyncLog.new
+      @synclog = SyncLog.new(erp_model: erp_model)
       @record = record
       @request_payload = {}
       @response_payload = {}
@@ -19,7 +19,7 @@ module Api
       erp_id = get_response
       if erp_id.present?
         if erp_model.action_name == 'create'
-          record.update_erp_id(erp_id)
+          record.update_erp_id(erp_id, erp_model.domain)
           puts "#{erp_model.resource_class} successfully created with erp_id: #{erp_id}"
         else
           puts "#{erp_model.resource_class} with erp_id: #{erp_id} updated successfully"

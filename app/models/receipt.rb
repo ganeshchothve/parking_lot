@@ -40,7 +40,6 @@ class Receipt
   # remove optional: true when implementing.
   has_many :assets, as: :assetable
   has_many :smses, as: :triggered_by, class_name: 'Sms'
-  has_many :sync_logs, as: :resource
   has_many :user_requests, as: :requestable
 
   scope :filter_by_status, ->(*_status) { where(status: { '$in' => _status }) }
@@ -207,7 +206,7 @@ class Receipt
   end
 
   def sync(erp_model, sync_log)
-    Api::ReceiptDetailsSync.new(erp_model, self, sync_log).execute if user.buyer? && user.erp_id.present?
+    Api::ReceiptDetailsSync.new(erp_model, self, sync_log).execute
   end
 
   def direct_payment?

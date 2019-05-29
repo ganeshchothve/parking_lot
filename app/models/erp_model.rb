@@ -34,6 +34,9 @@ class ErpModel
   validates :action_name, inclusion: { in: ACTION_NAME  }
   validate :request_payload_format
 
+  scope :active, ->{ where(is_active: true) }
+  scope :inactive, ->{ where(is_active: false)}
+
   def request_payload_format
     if request_payload.present?
       begin

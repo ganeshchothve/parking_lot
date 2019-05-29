@@ -57,6 +57,7 @@ class Client
   field :enable_communication, type: Hash, default: {"email": true, "sms": true}
   field :allow_multiple_bookings_per_user_kyc, type: Boolean, default: true
   field :enable_referral_bonus, type: Boolean, default: false
+
   field :external_api_integration, type: Boolean, default: false
   field :enable_daily_reports, type: Hash, default: {"payments_report": false}
   #

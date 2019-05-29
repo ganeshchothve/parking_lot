@@ -53,8 +53,8 @@ Rails.application.routes.draw do
     resources :accounts
     resources :phases
     resources :erp_models, only: %i[index new create edit update]
-    resources :sync_logs, only: %i[index] do
-      get 'resync', on: :member
+    resources :sync_logs, only: %i[index create] do
+      patch :resync, on: :member
     end
     resources :emails, :smses, only: %i[index show]
     resource :client, except: [:show, :new, :create] do

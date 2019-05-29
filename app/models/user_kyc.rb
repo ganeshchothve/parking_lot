@@ -55,7 +55,6 @@ class UserKyc
   belongs_to :creator, class_name: 'User'
   has_and_belongs_to_many :project_units
   has_and_belongs_to_many :booking_details
-  has_many :sync_logs, as: :resource
 
   delegate :name, to: :bank_detail, prefix: true, allow_nil: true
   accepts_nested_attributes_for :bank_detail, :permanent_address # , :correspondence_address
@@ -122,7 +121,7 @@ class UserKyc
   end
 
   def sync(erp_model, sync_log)
-    Api::UserKycDetailsSync.new(erp_model, self, sync_log).execute if user.buyer? && user.erp_id.present?
+    Api::UserKycDetailsSync.new(erp_model, self, sync_log).execute
   end
 
   class << self
