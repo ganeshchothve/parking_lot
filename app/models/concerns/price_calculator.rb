@@ -17,7 +17,7 @@ module PriceCalculator
     data.each { |c| out[c.key] = c.value }
     out.with_indifferent_access
   end
-  
+
   def effective_rate
     effective_rate = self.base_rate + self.floor_rise
     if booking_detail_scheme.payment_adjustments.present?

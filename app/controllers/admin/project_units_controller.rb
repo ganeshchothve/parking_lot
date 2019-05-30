@@ -4,7 +4,8 @@ class Admin::ProjectUnitsController < AdminController
   before_action :set_project_unit, except: %i[index export]
   before_action :authorize_resource
   before_action :set_project_unit_scheme, only: %i[show print]
-  before_action :build_objects, only: %i[quotation]
+  before_action :build_objects, only: %i[quotation show]
+  before_action :modify_params, only: %i[quotation show]
   around_action :apply_policy_scope, only: :index
   layout :set_layout
 
@@ -106,14 +107,6 @@ class Admin::ProjectUnitsController < AdminController
   #
 
   def quotation
-    if params[:booking_detail_scheme]
-      @booking_detail_scheme.assign_attributes(permitted_attributes([ current_user_role_group, @booking_detail_scheme]))
-      @booking_detail_scheme.payment_adjustments <<  @booking_detail_scheme.derived_from_scheme.payment_adjustments.clone.map{|ad| ad.set(editable: false)}
-    else
-      @booking_detail_scheme.payment_adjustments << @project_unit.scheme.payment_adjustments.clone.map{|ad| ad.set(editable: false)}
-      @booking_detail_scheme.derived_from_scheme = @project_unit.scheme
-    end
-    @booking_detail.booking_detail_scheme = @booking_detail_scheme
     respond_to do |format|
       format.pdf { render pdf: "quotation", layout: 'pdf' }
       format.html
@@ -128,6 +121,18 @@ class Admin::ProjectUnitsController < AdminController
   def build_objects
     @booking_detail = BookingDetail.new(name: @project_unit.name, base_rate: @project_unit.base_rate, floor_rise: @project_unit.floor_rise, saleable: @project_unit.saleable, costs: @project_unit.costs, data: @project_unit.data, project_unit: @project_unit )
     @booking_detail_scheme = BookingDetailScheme.new(booking_detail: @booking_detail, project_unit: @project_unit)
+  end
+
+  def modify_params
+    if params[:booking_detail_scheme]
+      @booking_detail_scheme.assign_attributes(permitted_attributes([ current_user_role_group, @booking_detail_scheme]))
+      @booking_detail_scheme.payment_adjustments <<  @booking_detail_scheme.derived_from_scheme.payment_adjustments.clone.map{|ad| ad.set(editable: false)}
+    else
+      @booking_detail_scheme.payment_adjustments << @project_unit.scheme.payment_adjustments.clone.map{|ad| ad.set(editable: false)}
+      @booking_detail_scheme.derived_from_scheme = @project_unit.scheme
+    end
+    @booking_detail_scheme.set(cost_sheet_template: @booking_detail_scheme.derived_from_scheme.cost_sheet_template)
+    @booking_detail.booking_detail_scheme = @booking_detail_scheme
   end
 
   def set_project_unit_scheme

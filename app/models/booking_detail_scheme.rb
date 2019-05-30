@@ -8,6 +8,7 @@ class BookingDetailScheme
   field :status, type: String, default: "draft"
   field :approved_at, type: DateTime
 
+
   attr_accessor :created_by_user
 
   belongs_to :project_unit, class_name: 'ProjectUnit'
@@ -38,6 +39,10 @@ class BookingDetailScheme
 
   def approver? user
     user.role?('admin') || user.role?('superadmin')
+  end
+
+  def cost_sheet_template
+    Template::CostSheetTemplate.find self.cost_sheet_template_id
   end
 
 end

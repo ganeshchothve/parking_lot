@@ -126,8 +126,8 @@ class BookingDetail
     end
   end
 
-  def cost_sheet_template(scheme_id = nil)
-    Template::BookingDetailTemplate.first
+  def cost_sheet_template(booking_detail_scheme_id = nil)
+    booking_detail_scheme_id.present? ? BookingDetailScheme.find(booking_detail_scheme_id).cost_sheet_template : booking_detail_scheme.cost_sheet_template
   end
 
   class << self

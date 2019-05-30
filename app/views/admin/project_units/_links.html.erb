@@ -12,5 +12,5 @@
 <% end %>
 
 <% if policy([:admin, project_unit]).quotation? %>
-  <%= link_to "Get Quotation", quotation_admin_project_unit_path(project_unit), class: 'dropdown-item', target: "_blank" %>
+  <%= link_to "Get Quotation", quotation_admin_project_unit_path(project_unit), class: 'dropdown-item' %>
 <% end %>
