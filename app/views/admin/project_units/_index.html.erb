@@ -19,7 +19,8 @@
           <div class="small">Tower: <%= project_unit.project_tower_name %></div>
         </td>
         <td><%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></td>
-        <td><%= ProjectUnit.available_statuses.find{|x| x[:id] == project_unit.status}[:text] rescue "-" %></td>
+        <td  value = '<%= project_unit.status %>' class = "status" data-content="<%= comment(project_unit) %>" ><%= ProjectUnit.available_statuses.find{|x| x[:id] == project_unit.status}[:text] rescue "-" %> <% if project_unit.status == 'not_available' && project_unit.comments.present? %>
+            <i class="fa fa-comments" aria-hidden="true"></i> <% end %></td>
         <td>
           <% if project_unit.blocked? %>
             <%= number_to_indian_currency(project_unit.calculate_agreement_price.round) %>

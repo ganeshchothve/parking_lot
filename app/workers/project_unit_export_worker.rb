@@ -34,7 +34,8 @@ class ProjectUnitExportWorker
       "Floor Rise",
       "Available for",
       "Blocked on",
-      "Auto Release On"
+      "Auto Release On",
+      "Comments"
     ]
   end
 
@@ -55,7 +56,8 @@ class ProjectUnitExportWorker
       project_unit.floor_rise,
       project_unit.available_for,
       project_unit.blocked_on,
-      project_unit.auto_release_on
+      project_unit.auto_release_on,
+      project_unit.comments
     ]
   end
 end

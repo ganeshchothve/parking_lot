@@ -42,6 +42,7 @@ class ProjectUnit
   field :unit_facing_direction, type: String
   field :primary_user_kyc_id, type: BSON::ObjectId
   field :blocking_amount, type: Integer, default: 30_000
+  field :comments,type: String
 
   attr_accessor :processing_user_request, :processing_swap_request
 

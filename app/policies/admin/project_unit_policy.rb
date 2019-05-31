@@ -43,7 +43,7 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
     attributes += [:phase_id] if user.role?('superadmin')
 
     if %w[superadmin admin].include?(user.role) && ProjectUnit.booking_stages.exclude?(record.status) && record.status != 'hold'
-      attributes += [:name, :agreement_price, :all_inclusive_price, :status, :available_for, :blocked_on, :auto_release_on, :held_on, :base_rate, :client_id, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, :selldo_id, :erp_id, :floor_rise, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :sub_type, :type, :unit_facing_direction, costs_attributes: CostPolicy.new(user, Cost.new).permitted_attributes, data_attributes: DatumPolicy.new(user, Cost.new).permitted_attributes]
+      attributes += [:name, :agreement_price, :all_inclusive_price, :status, :comments, :available_for, :blocked_on, :auto_release_on, :held_on, :base_rate, :client_id, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, :selldo_id, :erp_id, :floor_rise, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :sub_type, :type, :unit_facing_direction, costs_attributes: CostPolicy.new(user, Cost.new).permitted_attributes, data_attributes: DatumPolicy.new(user, Cost.new).permitted_attributes]
     end
     attributes += [assets_attributes: AssetPolicy.new(user, (record.assets.last || Asset.new) ).permitted_attributes]
     attributes += [:primary_user_kyc_id, :selected_scheme_id, user_kyc_ids: []] if record.user_id.present?
