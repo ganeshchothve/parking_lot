@@ -8,7 +8,6 @@ class BookingDetailScheme
   field :status, type: String, default: "draft"
   field :approved_at, type: DateTime
 
-
   attr_accessor :created_by_user
 
   belongs_to :project_unit, class_name: 'ProjectUnit'
