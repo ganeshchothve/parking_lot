@@ -106,6 +106,16 @@
           </div>
         </div>
       </div>
+      <% if project_unit.comments.present? %>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Comments</label>
+            <div>
+              <%= project_unit.comments %>
+            </div>
+          </div>
+        </div>
+      <% end %>
     </div>
     <% if current_client.external_api_integration? %>
       <div class="row">
