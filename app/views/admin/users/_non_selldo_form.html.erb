@@ -16,13 +16,13 @@
             <div class="col-md-12">
               <div class="form-group">
                 <%= f.label :first_name, class: 'label-required' %>
-                <%= f.text_field :first_name, class: 'form-control', autofocus: true, required: 'required', disabled: (policy([current_user_role_group, @user]).editable_field?("first_name") ? false : true) %>
+                <%= f.text_field :first_name, class: 'form-control', autofocus: true, required: 'required', disabled: !policy([current_user_role_group, @user]).editable_field?("first_name") %>
               </div>
             </div>
             <div class="col-md-12">
               <div class="form-group">
                 <%= f.label :last_name, class: 'label-required' %>
-                <%= f.text_field :last_name, class: 'form-control', autofocus: true, required: 'required', disabled: (policy([current_user_role_group, @user]).editable_field?("last_name") ? false : true) %>
+                <%= f.text_field :last_name, class: 'form-control', autofocus: true, required: 'required', disabled: !policy([current_user_role_group, @user]).editable_field?("last_name") %>
               </div>
             </div>
           </div>
@@ -30,13 +30,13 @@
             <div class="col-md-12">
               <div class="form-group">
                 <%= f.label :email, class: 'label-required'  %>
-                <%= f.email_field :email, class: 'form-control', disabled: (policy([current_user_role_group, @user]).editable_field?("email") ? false : true) %>
+                <%= f.email_field :email, class: 'form-control', disabled: !policy([current_user_role_group, @user]).editable_field?("email") %>
               </div>
             </div>
             <div class="col-md-12">
               <div class="form-group">
                 <%= f.label :phone, class: 'label-required' %>
-                <%= f.text_field :phone, class: 'form-control phone', disabled: (policy([current_user_role_group, @user]).editable_field?("phone") ? false : true) %>
+                <%= f.text_field :phone, class: 'form-control phone', disabled: !policy([current_user_role_group, @user]).editable_field?("phone") %>
               </div>
             </div>
           </div>
