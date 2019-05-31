@@ -5,7 +5,6 @@ class Template::CostSheetTemplate < Template
   validates :name, presence: true
 
   def self.default_content
-    def self.default_content
     "<h3 class='mb-3'>Cost Sheet</h3>
     <table class='table'>
       <thead>
@@ -75,6 +74,5 @@ class Template::CostSheetTemplate < Template
         </tr>
       </tbody>
     </table>"
-  end
   end
 end
