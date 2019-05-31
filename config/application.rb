@@ -12,7 +12,7 @@ require "action_cable/engine"
 require "sprockets/railtie"
 require "rails/test_unit/railtie"
 
-if Rails.env == "production" || Rails.env == "staging"
+if Rails.env == "production"
   ENV_CONFIG = (YAML.load(File.open( "/usr/local/generic-booking-portal-env.yml" ).read).symbolize_keys).with_indifferent_access
 else
   ENV_CONFIG = (YAML.load(File.open( "config/generic-booking-portal-env.yml" ).read).symbolize_keys).with_indifferent_access
