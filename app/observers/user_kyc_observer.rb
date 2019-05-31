@@ -1,4 +1,8 @@
 class UserKycObserver < Mongoid::Observer
+  def before_validation user_kyc
+    user_kyc.assign_attributes(email: user_kyc.user.email, phone: user_kyc.user.phone) if user_kyc.user.user_kyc_ids.blank?
+  end
+
   def after_create user_kyc
     SelldoLeadUpdater.perform_async(user_kyc.user_id.to_s)
     template = Template::EmailTemplate.where(name: "user_kyc_added").first

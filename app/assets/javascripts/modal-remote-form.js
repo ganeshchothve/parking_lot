@@ -62,6 +62,7 @@ var modal_remote_form_link_click_handler = function(remote_href){
         }
       },
       error: function(){
+        handle_remote_pushstate();
         Amura.global_error_handler("Error while fetching modal remote form");
       },
       complete: function(){

@@ -138,7 +138,7 @@ class User
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_role, ->(*_role) { where( role: { "$in": _role } ) }
   scope :filter_by_receipts, ->(receipts) do
-    user_ids = Receipt.in(status: %w(success clearance_pending)).distinct(:user_id)
+    user_ids = Receipt.where('$or' => [{ status: { '$in': %w(success clearance_pending) } }, { payment_mode: {'$ne': 'online'}, status: {'$in': %w(pending clearance_pending success)} }]).distinct(:user_id)
     if user_ids.present?
       if receipts == 'yes'
         where(id: { '$in': user_ids })
