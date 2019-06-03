@@ -14,7 +14,7 @@ class Template::PaymentScheduleTemplate < Template
         <th width="10%">Amount(Rs.)</th>
         <th width="5%">CGST-6%</th>
         <th width="5%">SGST-6%</th>
-        <% if self.project_unit.calculate_agreement_price > 5000000 %>
+        <% if self.calculate_agreement_price > 5000000 %>
           <th width="5%">Less - TDS</th>
         <% end %>
         <th width="10%">Total Payment</th>
@@ -45,7 +45,7 @@ class Template::PaymentScheduleTemplate < Template
         %>
         <% hash.each do |k, v| %>
           <%
-            current_value = (self.project_unit.calculate_agreement_price * v / 100).round()
+            current_value = (self.calculate_agreement_price * v / 100).round()
             cgst = (current_value * 0.06).round()
             sgst = (current_value * 0.06).round()
             tds = (current_value * 0.01).round()
@@ -56,7 +56,7 @@ class Template::PaymentScheduleTemplate < Template
             <td class="text-right"><%= number_to_indian_currency(current_value) %></td>
             <td class="text-right"><%= number_to_indian_currency(cgst) %></td>
             <td class="text-right"><%= number_to_indian_currency(sgst) %></td>
-            <% if self.project_unit.calculate_agreement_price > 5000000 %>
+            <% if self.calculate_agreement_price > 5000000 %>
               <td class="text-right"><%= number_to_indian_currency(tds) %></td>
             <% end %>
             <td><%= number_to_indian_currency(current_value + cgst + sgst - tds) %></td>

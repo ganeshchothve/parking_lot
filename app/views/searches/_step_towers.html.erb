@@ -191,6 +191,6 @@
     var unit = _.find(units, function(u){ return u._id == unit_id });
     var unit_assets = _.filter(assets, function(a){return a.assetable_id == unit_id});
     showUnitData(unit, unit_assets);
-    $(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/project_units/" + unit_id + "?layout=false");
+    $(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/project_units/" + unit_id + "/quotation?layout=false");
   });
 <% end %>

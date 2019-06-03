@@ -34,7 +34,7 @@ class Template::CostSheetTemplate < Template
           </tr>
         <% end %>
         <tr>
-          <td>Premium inclusive of proportionate price for common amenities & facilities.(i)</td><td class='text-right'><%= number_to_indian_currency(self.project_unit.base_price.round(2)) %></td>
+          <td>Premium inclusive of proportionate price for common amenities & facilities.(i)</td><td class='text-right'><%= number_to_indian_currency(self.base_price.round(2)) %></td>
         </tr>
         <% self.calculated_costs.each do |key, value| %>
           <tr>

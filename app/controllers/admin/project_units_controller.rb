@@ -108,8 +108,11 @@ class Admin::ProjectUnitsController < AdminController
 
   def quotation
     respond_to do |format|
+      format.js
       format.pdf { render pdf: "quotation", layout: 'pdf' }
-      format.html
+      format.html do
+        render layout: params[:layout].blank?, template: 'admin/project_units/quotation'
+      end
     end
   end
 
@@ -131,7 +134,7 @@ class Admin::ProjectUnitsController < AdminController
       @booking_detail_scheme.payment_adjustments << @project_unit.scheme.payment_adjustments.clone.map{|ad| ad.set(editable: false)}
       @booking_detail_scheme.derived_from_scheme = @project_unit.scheme
     end
-    @booking_detail_scheme.set(cost_sheet_template: @booking_detail_scheme.derived_from_scheme.cost_sheet_template)
+    @booking_detail_scheme.set(cost_sheet_template: @booking_detail_scheme.derived_from_scheme.cost_sheet_template, payment_schedule_template: @booking_detail_scheme.derived_from_scheme.payment_schedule_template)
     @booking_detail.booking_detail_scheme = @booking_detail_scheme
   end
 
