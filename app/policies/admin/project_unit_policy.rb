@@ -36,6 +36,10 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
     make_available?
   end
 
+  def quotation?
+    record.available? && %w[admin superadmin].include?(user.role)
+  end
+
   def permitted_attributes(_params = {})
     attributes = %w[crm admin superadmin].include?(user.role) ? %i[auto_release_on booking_price blocking_amount] : []
     attributes += (make_available? ? [:status] : [])

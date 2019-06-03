@@ -11,6 +11,6 @@
   <%= link_to "Edit", edit_admin_project_unit_path(project_unit), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
 
-<% if project_unit.blocked? && policy([:admin, project_unit]).print? %>
-  <%= link_to "Print Cost Sheet & Payment Schedule", print_admin_project_unit_path(project_unit), class: 'dropdown-item', target: "_blank" %>
+<% if policy([:admin, project_unit]).quotation? %>
+  <%= link_to "Get Quotation", quotation_admin_project_unit_path(project_unit), class: 'dropdown-item' %>
 <% end %>

@@ -40,4 +40,8 @@ class BookingDetailScheme
     user.role?('admin') || user.role?('superadmin')
   end
 
+  def cost_sheet_template
+    Template::CostSheetTemplate.find self.cost_sheet_template_id
+  end
+
 end
