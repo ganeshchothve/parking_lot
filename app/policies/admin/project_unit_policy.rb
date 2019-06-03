@@ -37,7 +37,7 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
   end
 
   def quotation?
-    record.available? && %w[admin superadmin].include?(user.role)
+    record.available? && %w[admin superadmin sales sales_admin crm].include?(user.role)
   end
 
   def permitted_attributes(_params = {})
