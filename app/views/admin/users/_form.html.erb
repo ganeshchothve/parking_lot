@@ -7,7 +7,7 @@
             <% if current_user == @user %>
               Edit Profile
             <% else %>
-              <%= @user.new_record? ? "New" : "Edit" %> <%= User.available_roles(current_client).find{|x| x[:id] == @user.role}[:text] %>
+              <%= @user.new_record? ? "New" : "Edit" %> <%= t("users.role.#{@user.role}") %>
             <% end %>
           </h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">

@@ -34,7 +34,7 @@
             <td><%= user.lead_id %></td>
           <% end %>
           <td><%= user.receipts.where('$or' => [{ status: { '$in': %w(success clearance_pending) } }, { payment_mode: {'$ne': 'online'}, status: {'$in': %w(pending clearance_pending success)} }]).present? ? "Y" : "N" %></td>
-          <td><%= User.available_roles(current_client).find{|x| x[:id] == user.role}[:text] %></td>
+          <td><%= t("users.role.#{user.role}") %></td>
           <td>
             <%= user.confirmed_at.present? ? "Confirmed" : "Not confirmed" %>
           </td>
