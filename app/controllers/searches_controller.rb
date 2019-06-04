@@ -278,9 +278,14 @@ class SearchesController < ApplicationController
   end
 
   def set_booking_detail
-    @booking_detail = BookingDetail.find_or_initialize_by(project_unit_id: @search.project_unit_id, user_id: @search.user_id, status: 'hold' ,base_rate: @search.project_unit.base_rate, floor_rise: @search.project_unit.floor_rise, saleable: @search.project_unit.saleable )
-    @booking_detail.costs = @search.project_unit.costs
-    @booking_detail.data = @search.project_unit.data
+    @booking_detail = BookingDetail.find_or_initialize_by(project_unit_id: @search.project_unit_id, user_id: @search.user_id, status: 'hold')
+    @booking_detail.assign_attributes(
+      base_rate: @search.project_unit.base_rate,
+      floor_rise: @search.project_unit.floor_rise,
+      saleable: @search.project_unit.saleable,
+      costs: @search.project_unit.costs,
+      data: @search.project_unit.data
+    )
     @booking_detail.save
     # ,  base_rate: @search.project_unit.base_rate, floor_rise: @search.project_unit.floor_rise, saleable: @search.project_unit.saleable, costs: @search.project_unit.costs, data: @search.project_unit.data
     @booking_detail.search = @search
