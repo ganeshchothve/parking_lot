@@ -78,7 +78,7 @@ Rails.application.routes.draw do
       member do
         get :print
         patch :release_unit
-        # get :send_under_negotiation
+        get :quotation
       end
 
       collection do
@@ -200,7 +200,9 @@ Rails.application.routes.draw do
     end
 
     resources :emails, :smses, only: %i[index show]
-    resources :project_units, only: [:index, :show, :edit, :update]
+    resources :project_units, only: [:index, :show, :edit, :update] do
+      get :quotation, on: :member
+    end
     resources :users, only: [:show, :update, :edit] do
       member do
         get :update_password
