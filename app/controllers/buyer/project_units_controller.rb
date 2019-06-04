@@ -1,7 +1,7 @@
 class Buyer::ProjectUnitsController < BuyerController
   include ApplicationHelper
-  include ProjectUnitsConcern
   before_action :set_project_unit, except: %i[index export mis_report]
+  include ProjectUnitsConcern
   before_action :authorize_resource
   around_action :apply_policy_scope, only: :index
   layout :set_layout
@@ -60,7 +60,7 @@ class Buyer::ProjectUnitsController < BuyerController
     if params[:action] == "index"
       authorize [:buyer, ProjectUnit]
     else
-    authorize [:buyer, @project_unit]
+      authorize [:buyer, @project_unit]
     end
   end
 
