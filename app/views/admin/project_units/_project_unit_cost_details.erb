@@ -1,8 +1,8 @@
 <div id="project-unit-cost-details">
-  <div class="mt-3">
+  <div class="mt-3 pb_after">
     <%= render 'dashboard/booking_detail_overview', {booking_detail: @booking_detail} %>
   </div>
-  <div class='card mt-3'>
+  <div class='card mt-3 pb_after'>
     <% unless request.format.pdf? %>
       <div class='card-header'>
         <%= link_to "Get PDF", method(:"quotation_#{current_user_role_group}_project_unit_path").call(@project_unit, booking_detail_scheme: params.dig(:booking_detail_scheme).try(:permit, :derived_from_scheme_id, payment_adjustments_attributes: {}), format: :pdf), class: "btn btn-sm btn-primary float-right", target: '_blank' %>

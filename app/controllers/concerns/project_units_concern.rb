@@ -43,6 +43,7 @@ module ProjectUnitsConcern
         layout: 'pdf',
         page_size: 'A4',
         zoom: 1,
+        dpi: 75,
         orientation: "Landscape",
         lowquality: true
       }
