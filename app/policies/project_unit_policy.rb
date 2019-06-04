@@ -67,4 +67,8 @@ class ProjectUnitPolicy < ApplicationPolicy
   def _role_based_check(valid)
     false
   end
+
+  def quotation?
+    record.available?
+  end
 end

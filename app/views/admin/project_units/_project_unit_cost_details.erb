@@ -5,7 +5,7 @@
   <div class='card mt-3'>
     <% unless request.format.pdf? %>
       <div class='card-header'>
-        <%= link_to "Get PDF", quotation_admin_project_unit_path(@project_unit, booking_detail_scheme: params.dig(:booking_detail_scheme).try(:permit, :derived_from_scheme_id, payment_adjustments_attributes: {}), format: :pdf), class: "btn btn-sm btn-primary float-right", target: '_blank' %>
+        <%= link_to "Get PDF", method(:"quotation_#{current_user_role_group}_project_unit_path").call(@project_unit, booking_detail_scheme: params.dig(:booking_detail_scheme).try(:permit, :derived_from_scheme_id, payment_adjustments_attributes: {}), format: :pdf), class: "btn btn-sm btn-primary float-right", target: '_blank' %>
       </div>
     <% end %>
     <div class='card-body'>
