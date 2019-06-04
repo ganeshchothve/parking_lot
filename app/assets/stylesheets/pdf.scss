@@ -3,3 +3,7 @@
 @import "bootstrap/bootstrap";
 @import "font-awesome-sprockets";
 @import "font-awesome";
+
+thead { display: table-row-group; }
+tfoot { display: table-row-group; }
+tr { page-break-inside: avoid; }

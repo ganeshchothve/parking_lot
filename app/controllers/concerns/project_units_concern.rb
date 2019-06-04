@@ -37,7 +37,15 @@ module ProjectUnitsConcern
   def quotation
     respond_to do |format|
       format.js
-      format.pdf { render pdf: "quotation", template: 'admin/project_units/quotation', layout: 'pdf' }
+      format.pdf {
+        render pdf: "quotation",
+        template: 'admin/project_units/quotation',
+        layout: 'pdf',
+        page_size: 'A4',
+        zoom: 1,
+        orientation: "Landscape",
+        lowquality: true
+      }
       format.html do
         render layout: params[:layout].blank?, template: 'admin/project_units/quotation'
       end
