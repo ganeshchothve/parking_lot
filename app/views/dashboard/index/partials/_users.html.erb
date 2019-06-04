@@ -18,7 +18,7 @@
           <tbody>
             <% users.each do |d| %>
             <tr>
-              <td><%= t("users.role.#{d[:role][:text]}") %></td>
+              <td><%= t("users.role.#{d[:role]}") %></td>
               <td class="text-right"><%= d[:count] %></td>
             </tr>
             <% end %>
