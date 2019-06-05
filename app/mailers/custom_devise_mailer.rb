@@ -23,7 +23,7 @@ module Devise::Mailers::Helpers
   def devise_sms record, action, opts = {}
     begin
       if action.to_s == "confirmation_instructions"
-        if record.buyer? && record.manager_id.present? && record.manager.role?("channel_partner")
+        if record.buyer? && record.manager_role?("channel_partner")
           template_id = Template::SmsTemplate.find_by(name: "user_registered_by_channel_partner").id
         elsif record.role?("channel_partner")
           template_id = Template::SmsTemplate.find_by(name: "channel_partner_user_registered").id

@@ -50,6 +50,8 @@ class ChannelPartner
 
   accepts_nested_attributes_for :bank_detail, :address
 
+  delegate :name, :role, :role?, :email, to: :manager, prefix: true, allow_nil: true
+
   def self.available_statuses
     [
       { id: 'active', text: 'Active' },

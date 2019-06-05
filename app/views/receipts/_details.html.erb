@@ -8,7 +8,7 @@
     <div class="small">
       Created By: <%= receipt.creator.name %><br/>
       <% if receipt.user.role?("user") && receipt.user.manager_id.present? && current_user.role != "channel_partner" %>
-        <%= t('mongoid.attributes.user.manager_id') %>: <%= receipt.user.manager.name %><br/>
+        <%= t('mongoid.attributes.user.manager_id') %>: <%= receipt.user.manager_name %><br/>
       <% end %>
     </div>
   </td>

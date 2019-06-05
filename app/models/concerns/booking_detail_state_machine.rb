@@ -228,10 +228,10 @@ module BookingDetailStateMachine
     #
     def create_default_scheme
       if booking_detail_scheme.blank?
-        unless user.manager && user.manager.role?('channel_partner')
+        unless user.manager_role?('channel_partner')
           scheme = project_unit.project_tower.default_scheme
         else
-          filters = {fltrs: { can_be_applied_by_role: user.manager.role, project_tower: project_unit.project_tower_id, user_role: user.role, user_id: user_id, status: 'approved', default_for_user_id: user.manager.id } }
+          filters = {fltrs: { can_be_applied_by_role: user.manager_role, project_tower: project_unit.project_tower_id, user_role: user.role, user_id: user_id, status: 'approved', default_for_user_id: user.manager_id } }
           scheme = Scheme.build_criteria(filters).first
         end
         BookingDetailScheme.create(
