@@ -78,7 +78,7 @@
         $(this).text(event.strftime('%M:%S'));
       }
     }).on('finish.countdown', function(){
-      window.location = window.location;
+      window.location.reload();
     });
     FormInitializer.init($("#update_scheme_booking_detail_form"))
   });

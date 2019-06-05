@@ -9,7 +9,11 @@
       </div>
     <% end %>
     <div class='card-body'>
-      <%= render 'admin/project_units/booking_detail_scheme_form', {booking_detail: @booking_detail, booking_detail_scheme: @booking_detail_scheme, url: quotation_admin_project_unit_path(@project_unit) } %>
+      <% unless request.format.pdf? %>
+        <%= render 'admin/project_units/booking_detail_scheme_form', {booking_detail: @booking_detail, booking_detail_scheme: @booking_detail_scheme, url: quotation_admin_project_unit_path(@project_unit) } %>
+      <% else %>
+        <%= render 'admin/project_units/booking_detail_scheme_pdf', { booking_detail: @booking_detail, booking_detail_scheme: @booking_detail_scheme } %>
+      <% end %>
     </div>
   </div>
 </div>

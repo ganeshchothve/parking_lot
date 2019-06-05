@@ -25,22 +25,22 @@ Array.prototype.to_sentence = function() {
 }
 Amura.global_success_handler = function(message){
   if(message){
-    new Noty({text:message, type:"success"});
+    new Noty({text:message, type:"success", timeout: 5000}).show();
   }
 };
 Amura.global_error_handler = function(errors){
   if(errors){
     if(typeof errors == "string"){
       if(errors != ""){
-        new Noty({text:"There was some issue with the system. Please contact " + App.client.name + " support", type:"error"});
+        new Noty({text:"There was some issue with the system. Please contact " + App.client.name + " support", type:"error"}).show();
       }else{
-        new Noty({text:errors, type:"error"});
+        new Noty({text:errors, type:"error"}).show();
       }
     }else if(typeof errors == "object"){
       var message = "<ul style='text-align:left;'>";
       _.each(errors, function(err){(message = message + "<li>" + err + "</li>")});
       message = message + "</ul>";
-      new Noty({text:message, type:"error"});
+      new Noty({text:message, type:"error"}).show();
     }
   }
 };
