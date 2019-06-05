@@ -2,8 +2,8 @@
 <html>
   <head>
     <title><%= current_project.present? ? "#{current_project.name} | " : "" %><%= current_client.name %></title>
-    <%= wicked_pdf_stylesheet_link_tag 'dashboard', media: 'all' %>
-	<%= wicked_pdf_stylesheet_link_tag "pdf" -%>
+    <%= wicked_pdf_stylesheet_link_tag 'dashboard' %>
+    <%= wicked_pdf_stylesheet_link_tag "pdf" -%>
   </head>
   <body>
     <%= yield %>

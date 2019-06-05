@@ -55,7 +55,7 @@ RSpec.describe BookingDetail, type: :model do
         @project_unit.costs << Cost.new(name: 'old_cost', key: 'old_cost',category: 'outside_agreement', absolute_value: 100000)
         @project_unit.costs << Cost.new(name: 'cost_a', key: 'cost_a', category: 'agreement', absolute_value: 20000)
         @project_unit.costs << Cost.new(name: 'cost_b', key: 'cost_b', category: 'agreement', absolute_value: 40000)
-        @booking_detail = BookingDetail.new(name: @project_unit.name, base_rate: @project_unit.base_rate, agreement_price: @project_unit.agreement_price, all_inclusive_price: @project_unit.all_inclusive_price, floor_rise: @project_unit.floor_rise, saleable: @project_unit.saleable, costs: @project_unit.costs, data: @project_unit.data, project_unit: @project_unit )
+        @booking_detail = BookingDetail.new(name: @project_unit.name, base_rate: @project_unit.base_rate, floor_rise: @project_unit.floor_rise, saleable: @project_unit.saleable, costs: @project_unit.costs, data: @project_unit.data, project_unit: @project_unit )
         @booking_detail_scheme = BookingDetailScheme.new(booking_detail: @booking_detail, project_unit: @project_unit)
         @booking_detail.booking_detail_scheme = @booking_detail_scheme
       end
@@ -64,8 +64,8 @@ RSpec.describe BookingDetail, type: :model do
         it "returns hash of key and value attribute" do
           expect( @booking_detail.calculated_costs[:new_cost]).to eq(50000.0)
           expect(@booking_detail.calculated_costs[:old_cost]).to eq(100000.0)
-        end 
-      end 
+        end
+      end
 
       context "for calculated cost of new_cost" do
         it "returns value of the cost" do
@@ -75,7 +75,7 @@ RSpec.describe BookingDetail, type: :model do
 
       context "for effective rate when payment adjustments are not present" do
         it "should return sum of base rate and floor rise" do
-          expect(@booking_detail.effective_rate).to eq(@project_unit.base_rate + @project_unit.floor_rise) 
+          expect(@booking_detail.effective_rate).to eq(@project_unit.base_rate + @project_unit.floor_rise)
         end
       end
 
@@ -90,17 +90,17 @@ RSpec.describe BookingDetail, type: :model do
         end
       end
 
-      
+
       context "for total agreement costs" do
         it "should return sum of all the costs in agreement category" do
           expect(@booking_detail.total_agreement_costs).to eq(60000.0)
-        end 
+        end
       end
 
       context "for total outside agreement costs" do
         it "should return sum of all the costs without agreement category" do
           expect(@booking_detail.total_outside_agreement_costs).to eq(150000.0)
-        end 
+        end
       end
 
       context "for base price" do
@@ -142,7 +142,7 @@ RSpec.describe BookingDetail, type: :model do
       admin = create(:admin)
       @user = create(:user)
       @project_unit = create(:project_unit)
-      @booking_detail = BookingDetail.create(name: @project_unit.name, base_rate: @project_unit.base_rate, agreement_price: @project_unit.agreement_price, all_inclusive_price: @project_unit.all_inclusive_price, floor_rise: @project_unit.floor_rise, saleable: @project_unit.saleable, costs: @project_unit.costs, data: @project_unit.data, project_unit: @project_unit, user_id: @user.id)
+      @booking_detail = BookingDetail.create(name: @project_unit.name, base_rate: @project_unit.base_rate, floor_rise: @project_unit.floor_rise, saleable: @project_unit.saleable, costs: @project_unit.costs, data: @project_unit.data, project_unit: @project_unit, user_id: @user.id)
       @booking_detail_scheme = BookingDetailScheme.create(booking_detail: @booking_detail, project_unit: @project_unit)
       @booking_detail.booking_detail_scheme = @booking_detail_scheme
     end

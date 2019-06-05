@@ -9,8 +9,8 @@
         Thank you for registering as a Channel Partner at <%= current_project.name %>. Please confirm your account by clicking the link below. <br/>
         You can start entering your leads as soon as your account is confirmed.
       <% elsif @resource.buyer? %>
-        <% if @resource.manager_id.present? && @resource.manager.role?("channel_partner") %>
-          Your interest for <%= current_project.name %> has been registered by <%= @resource.manager.name %>. Please confirm your account by clicking the link below and book your Home in 4 easy steps!<br/>
+        <% if @resource.manager_role?("channel_partner") %>
+          Your interest for <%= current_project.name %> has been registered by <%= @resource.manager_name %>. Please confirm your account by clicking the link below and book your Home in 4 easy steps!<br/>
         <% else %>
           Thank you for registering at <%= current_project.name %>. Please confirm your account by clicking the link below and book your Home in 4 easy steps!
         <% end %>

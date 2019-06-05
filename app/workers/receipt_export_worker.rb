@@ -69,7 +69,7 @@ class ReceiptExportWorker
       receipt.user.name,
       receipt.user.lead_id.to_s,
       receipt.user.manager_name || "N/A",
-      receipt.user.manager_id.present? ? I18n.t("users.role.#{receipt.user.manager.role}"): "Direct",
+      (I18n.t("users.role.#{receipt.user.manager_role}"): "Direct"),
       receipt.booking_detail_name || "N/A",
       receipt.creator.name,
       receipt.created_at,

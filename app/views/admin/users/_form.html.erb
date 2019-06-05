@@ -7,7 +7,7 @@
             <% if current_user == @user %>
               Edit Profile
             <% else %>
-              <%= @user.new_record? ? "New" : "Edit" %> <%= User.available_roles(current_client).find{|x| x[:id] == @user.role}[:text] %>
+              <%= @user.new_record? ? "New" : "Edit" %> <%= t("users.role.#{@user.role}") %>
             <% end %>
           </h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -80,7 +80,7 @@
           <% if policy([current_user_role_group, @user]).editable_field?("manager_id") %>
             <div class="form-group">
               <%= f.label :manager_id, class: "control-label" %>
-              <%= f.select :manager_id, f.object.manager_id.present? ? [[f.object.manager.name, f.object.manager.id]] : [], {prompt: true}, class: 'selectize-remote', autofocus: true, disabled: (policy([current_user_role_group, @user]).editable_field?("manager_id") ? false : true), "data-url": admin_users_path, "data-params": {fltrs: {role: @user.buyer? ? 'channel_partner' : 'cp' }}.to_json, 'data-ds': 'ds' %>
+              <%= f.select :manager_id, f.object.manager_id.present? ? [ [ f.object.manager_name, f.object.manager_id]] : [], {prompt: true}, class: 'selectize-remote', autofocus: true, disabled: (policy([current_user_role_group, @user]).editable_field?("manager_id") ? false : true), "data-url": admin_users_path, "data-params": {fltrs: {role: @user.buyer? ? 'channel_partner' : 'cp' }}.to_json, 'data-ds': 'ds' %>
             </div>
           <% end %>
           <% if policy([current_user_role_group, @user]).editable_field?("manager_change_reason") %>

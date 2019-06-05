@@ -1,7 +1,7 @@
 class ChannelPartnerMailer < ApplicationMailer
   def send_create channel_partner_id
     @channel_partner = ChannelPartner.find(channel_partner_id)
-    emails = @channel_partner.manager_id.present? ? @channel_partner.manager.email : User.where(role: "cp_admin").distinct(:email)
+    emails = @channel_partner.manager_email || User.where(role: "cp_admin").distinct(:email)
     make_bootstrap_mail(to: emails || current_client.notification_email, subject: "New channel partner registered on your website")
   end
 

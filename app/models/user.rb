@@ -28,7 +28,6 @@ class User
   field :lead_id, type: String
   field :role, type: String, default: 'user'
   field :allowed_bookings, type: Integer
-  field :manager_id, type: BSON::ObjectId
   field :manager_change_reason, type: String
   field :referenced_manager_ids, type: Array, default: []
   field :rera_id, type: String
@@ -76,7 +75,7 @@ class User
   field :otp_secret_key
   field :referral_code, type: String
 
-  delegate :name, to: :manager, prefix: true, allow_nil: true
+  delegate :name, :role, :role?, :email, to: :manager, prefix: true, allow_nil: true
 
   def self.otp_length
     6

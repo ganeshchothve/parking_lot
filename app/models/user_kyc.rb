@@ -51,7 +51,7 @@ class UserKyc
   has_one :bank_detail, as: :bankable, validate: false
   # has_one :correspondence_address, as: :addressable, class_name: "Address", validate: false
   has_one :permanent_address, as: :addressable, class_name: 'Address', validate: false
-  belongs_to :user
+  belongs_to :user, validate: false
   belongs_to :creator, class_name: 'User'
   has_and_belongs_to_many :project_units
   has_and_belongs_to_many :booking_details

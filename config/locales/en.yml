@@ -291,6 +291,8 @@ en:
       scheme_approved: 'Scheme applied successfully, please check cost sheet.'
       scheme_under_negotiation: 'Scheme registered successfully and sent for approval.'
     project_units:
+      quotation:
+        pdf_footer: 'This cost sheet generated should mention that this is a quotation so that it is not confused with the cost sheet that is generated after the booking'
       unit_released: "The unit has been successfully released."
     booking_details:
       set_booking_detail_missing: "Booking detail not found"
