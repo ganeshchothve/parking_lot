@@ -72,7 +72,7 @@ class Admin::SchemesController < AdminController
   def payment_adjustments_for_unit
     project_unit = ProjectUnit.find params[:project_unit_id]
     respond_to do |format|
-      format.json { render json: @scheme.payment_adjustments.collect { |payment_adjustment| payment_adjustment.as_json.merge(value: payment_adjustment.value(project_unit)) } }
+      format.json { render json: @scheme.payment_adjustments.collect { |payment_adjustment| payment_adjustment.as_json.merge(field: payment_adjustment.field.humanize, value: payment_adjustment.value(project_unit)) } }
     end
   end
 

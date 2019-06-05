@@ -15,7 +15,7 @@
           </div>
           <div class="col-md-4">
             <p>Field</p>
-            <p><%= payment_adjustment.field %></p>
+            <p><%= payment_adjustment.field.humanize %></p>
           </div>
           <div class="col-md-4">
             <p>Value</p>
@@ -27,7 +27,7 @@
   <% end %>
   <div class="payment-adjustments">
     <%= f.fields_for :payment_adjustments, booking_detail_scheme.editable_payment_adjustments do |adj| %>
-      <% if payment_adjustment && !request.format.pdf? %>
+      <% if payment_adjustment %>
         <%= adj.link_to_remove icon("far", "times-circle") %>
       <% end %>
       <%= adj.hidden_field :editable, value: true %>
@@ -52,11 +52,9 @@
       </div>
     <% end %>
   </div>
-  <% unless request.format.pdf? %>
-    <% if payment_adjustment %>
-      <%= f.link_to_add "Add Adjustments", :payment_adjustments, :data => { :target => ".payment-adjustments" } %>
-    <% end %>
-    </br>
-    <%= f.submit "Apply", class: "btn btn-primary" %>
+  <% if payment_adjustment %>
+    <%= f.link_to_add "Add Adjustments", :payment_adjustments, :data => { :target => ".payment-adjustments" } %>
   <% end %>
+  </br>
+  <%= f.submit "Apply", class: "btn btn-primary" %>
 <% end %>
