@@ -45,7 +45,12 @@ module ProjectUnitsConcern
         zoom: 1,
         dpi: 75,
         orientation: "Landscape",
-        footer: { content: t('controller.quotation.pdf_footer') },
+        margin: { top: 15, bottom: 15 },
+        footer: {
+          center: t('controller.project_units.quotation.pdf_footer'),
+          font_size: 10,
+          spacing: 10
+        },
         lowquality: true
       }
       format.html do

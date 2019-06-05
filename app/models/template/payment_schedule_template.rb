@@ -6,10 +6,10 @@ class Template::PaymentScheduleTemplate < Template
   validates :name, presence: true
 
   def self.default_content
-    '<h3 class="mb-3">Payment Schedule</h3>
+    '<h3 class="text-left mb-3">Payment Schedule</h3>
     <table class="table">
       <thead>
-        <th width="60%">Milestone</th>
+        <th class="text-left" width="60%">Milestone</th>
         <th width="5%">%</th>
         <th width="10%">Amount(Rs.)</th>
         <th width="5%">CGST-6%</th>
@@ -51,7 +51,7 @@ class Template::PaymentScheduleTemplate < Template
             tds = (current_value * 0.01).round()
           %>
           <tr class="<%= v == 100 ? "bg-primary text-white" : "" %>">
-            <td><%= k %></td>
+            <td class="text-left"><%= k %></td>
             <td class="text-right"><%= v %></td>
             <td class="text-right"><%= number_to_indian_currency(current_value) %></td>
             <td class="text-right"><%= number_to_indian_currency(cgst) %></td>
