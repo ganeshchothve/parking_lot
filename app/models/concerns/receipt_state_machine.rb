@@ -49,9 +49,9 @@ module ReceiptStateMachine
         transitions from: :available_for_refund, to: :refunded
       end
 
-      event :failed, after: %i[send_notification] do
-        transitions from: :pending, to: :failed, unless: :new_record?
-        transitions from: :clearance_pending, to: :failed
+      event :failed do
+        transitions from: :pending, to: :failed, unless: :new_record?, success: %i[send_notification]
+        transitions from: :clearance_pending, to: :failed, success: %i[send_notification]
         transitions from: :failed, to: :failed
       end
 
