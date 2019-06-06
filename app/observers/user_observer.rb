@@ -51,6 +51,7 @@ class UserObserver < Mongoid::Observer
         })
         email.sent!
       end
+
     end
   end
 end

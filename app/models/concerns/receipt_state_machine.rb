@@ -50,7 +50,7 @@ module ReceiptStateMachine
       end
 
       event :failed do
-        transitions from: :pending, to: :failed, unless: :new_record?, success: %i[send_notification]
+        transitions from: :pending, to: :failed, if: :can_mark_failed?, success: %i[send_notification]
         transitions from: :clearance_pending, to: :failed, success: %i[send_notification]
         transitions from: :failed, to: :failed
       end
@@ -136,8 +136,18 @@ module ReceiptStateMachine
       end
     end
 
+    #
+    # Only online pening payments can mark as failed.
+    #
+    #
+    # @return [Boolean]
+    #
+    def can_mark_failed?
+      !new_record? && payment_mode == 'online'
+    end
+
     def send_notification
-        Notification::Receipt.new(self.id, status: [self.status_was, self.status]).execute
+      Notification::Receipt.new(self.id, status: [self.status_was, self.status]).execute
     end
   end
 end
