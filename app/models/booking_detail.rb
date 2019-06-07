@@ -167,7 +167,7 @@ class BookingDetail
       custom_scope = {}
       if params[:user_id].blank? && !user.buyer?
         if user.role?('channel_partner')
-          custom_scope = { manager_id: user.id }
+          custom_scope = { user_id: { '$in': User.where(role: 'user', manager_id: user.id).distinct(:id) } }
         elsif user.role?('cp_admin')
           custom_scope = { user_id: { "$in": User.where(role: 'user').nin(manager_id: [nil, '']).distinct(:id) } }
         elsif user.role?('cp')
