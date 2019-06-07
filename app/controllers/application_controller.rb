@@ -106,7 +106,7 @@ class ApplicationController < ActionController::Base
     end
     alert = t policy_name, scope: "pundit", default: :default
     respond_to do |format|
-      unless request.referer.include?('remote-state')
+      unless request.referer && request.referer.include?('remote-state')
         format.html { redirect_to (user_signed_in? ? after_sign_in_path_for(current_user) : root_path), alert: alert }
         format.json { render json: { errors: alert }, status: 403 }
       else
