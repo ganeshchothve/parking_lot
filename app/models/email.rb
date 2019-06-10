@@ -104,7 +104,7 @@ class Email
           attachment_urls[doc.file_name] = doc.file.url
         end
         ApplicationMailer.test({
-          to: self.recipients.pluck(:email).uniq,
+          to: self.to || [],
           cc: self.cc || [],
           body: self.body,
           subject: self.subject,
