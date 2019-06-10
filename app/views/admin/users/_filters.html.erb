@@ -30,6 +30,12 @@
         <%= label_tag "fltrs", t('global.receipts'), class: "control-label" %>
         <%= select_tag "fltrs[receipts]", options_for_select([['Yes', 'yes'], ['No', 'no']], params.dig(:fltrs, :receipts)), {prompt: "Select", class: "selectize"} %>
       </div>
+      <% if current_user.role == 'admin' %>
+        <div class="form-group">
+          <%= label_tag "fltrs", "channel partner", class: "control-label" %>
+          <%= select_tag "fltrs[channel_partner]", options_for_select(User.where(role: 'channel_partner').collect{|u| [u.name, u.id]}, (params[:fltrs].present? ? params[:fltrs][:channel_partner] : "")), {prompt: "Select", class: "selectize"} %>
+        </div>
+      <% end %>
       <div class="form-group">
         <%= label_tag "fltrs", 'registered at', class: "control-label" %>
         <%= text_field_tag "fltrs[created_at]", (params.dig(:fltrs, :created_at).present? ? params[:fltrs][:created_at] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"} %>
