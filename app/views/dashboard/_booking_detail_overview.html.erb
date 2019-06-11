@@ -17,7 +17,7 @@
         <div class="form-group">
           <label> Customer </label>
           <div>
-            <%= link_to booking_detail.user_name, [current_user_role_group, booking_detail.user] %>
+            <%= link_to_if booking_detail.user, booking_detail.user_name, [current_user_role_group, booking_detail.user] %>
           </div>
         </div>
       </div>
