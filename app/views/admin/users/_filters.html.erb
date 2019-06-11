@@ -33,7 +33,7 @@
       <% if current_user.role == 'admin' %>
         <div class="form-group">
           <%= label_tag "fltrs", "channel partner", class: "control-label" %>
-          <%= select_tag "fltrs[channel_partner]", options_for_select(User.where(role: 'channel_partner').collect{|u| [u.name, u.id]}, (params[:fltrs].present? ? params[:fltrs][:channel_partner] : "")), {prompt: "Select", class: "selectize"} %>
+          <%= select_tag "fltrs[manager_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(_id: params[:fltrs][:manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {role: 'channel_partner'} }} %>
         </div>
       <% end %>
       <div class="form-group">
