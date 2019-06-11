@@ -284,7 +284,8 @@ class SearchesController < ApplicationController
       floor_rise: @search.project_unit.floor_rise,
       saleable: @search.project_unit.saleable,
       costs: @search.project_unit.costs,
-      data: @search.project_unit.data
+      data: @search.project_unit.data,
+      manager_id: @search.user_manager_id
     )
     @booking_detail.save
     # ,  base_rate: @search.project_unit.base_rate, floor_rise: @search.project_unit.floor_rise, saleable: @search.project_unit.saleable, costs: @search.project_unit.costs, data: @search.project_unit.data
