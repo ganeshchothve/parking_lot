@@ -77,10 +77,6 @@ class User
 
   delegate :name, :role, :role?, :email, to: :manager, prefix: true, allow_nil: true
 
-  def self.otp_length
-    6
-  end
-
   has_one_time_password length: User.otp_length
   default_scope -> { desc(:created_at) }
 
@@ -159,12 +155,6 @@ class User
     scope admin_roles, ->{ where(role: admin_roles )}
   end
 
-  def self.build_criteria(params = {})
-    criteria = super(params)
-    criteria = criteria.where(role: { "$ne": 'superadmin' }) unless criteria.selector.has_key?('role')
-    criteria
-  end
-
   def unattached_blocking_receipt(blocking_amount = nil)
     blocking_amount ||= current_client.blocking_amount
     Receipt.where(user_id: id).in(status: %w[success clearance_pending]).where(booking_detail_id: nil).where(total_amount: { "$gte": blocking_amount }).first
@@ -197,46 +187,7 @@ class User
     BUYER_ROLES.include?(role)
   end
 
-  def self.buyer_roles(current_client = nil)
-    if current_client.present? && current_client.enable_company_users?
-      BUYER_ROLES
-    else
-      ['user']
-    end
-  end
 
-  def self.available_confirmation_statuses
-    [
-      { id: 'confirmed', text: 'Confirmed' },
-      { id: 'not_confirmed', text: 'Not Confirmed' }
-    ]
-  end
-
-  def self.available_roles(current_client)
-    roles = [
-      { id: 'superadmin', text: 'Superadmin' },
-      { id: 'admin', text: 'Administrator' },
-      { id: 'crm', text: 'CRM User' },
-      { id: 'sales_admin', text: 'Sales Head' },
-      { id: 'sales', text: 'Sales User' },
-      { id: 'user', text: 'Customer' },
-      { id: 'gre', text: 'GRE or Pre-sales' }
-    ]
-    if current_client.try(:enable_channel_partners?)
-      roles += [
-        { id: 'cp_admin', text: 'Channel Partner Head' },
-        { id: 'cp', text: 'Channel Partner Manager' },
-        { id: 'channel_partner', text: 'Channel Partner' }
-      ]
-    end
-    if current_client.present? && current_client.enable_company_users?
-      roles += [
-        { id: 'management_user', text: 'Management User' },
-        { id: 'employee_user', text: 'Employee' }
-      ]
-    end
-    roles
-  end
 
   def role?(role)
     (self.role.to_s == role.to_s)
@@ -322,32 +273,12 @@ class User
     @login || phone || email
   end
 
-  def self.find_first_by_auth_conditions(warden_conditions)
-    conditions = warden_conditions.dup
-    login = conditions.delete(:login)
-    login = conditions.delete(:email) if login.blank? && conditions.key?(:email)
-    login = conditions.delete(:phone) if login.blank? && conditions.key?(:phone)
-    if login.blank? && warden_conditions[:confirmation_token].present?
-      confirmation_token = warden_conditions.delete(:confirmation_token)
-      where(confirmation_token: confirmation_token).first
-    elsif login.blank? && warden_conditions[:reset_password_token].present?
-      reset_password_token = warden_conditions.delete(:reset_password_token)
-      where(reset_password_token: reset_password_token).first
-    elsif login.present?
-      any_of({ phone: login }, email: login).first
-    end
-  end
-
   def active_for_authentication?
     super && is_active
   end
 
   def inactive_message
     is_active ? super : :is_active
-  end
-
-  def self.find_record(login)
-    where("function() {return this.phone == '#{login}' || this.email == '#{login}'}")
   end
 
   def email_required?
@@ -364,26 +295,6 @@ class User
     search = search.desc(:created_at).first
     search = Search.create(user: self) if search.blank?
     search
-  end
-
-  def self.user_based_scope(user, _params = {})
-    custom_scope = {}
-    if user.role?('channel_partner')
-      custom_scope = {manager_id: user.id, role: {"$in": User.buyer_roles(user.booking_portal_client)} }
-    elsif user.role?('crm')
-      custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) + %w(channel_partner) } }
-    elsif user.role?('sales_admin')
-      custom_scope = { "$or": [{ role: { "$in": User.buyer_roles(user.booking_portal_client) } }, { role: 'sales' }, { role: 'channel_partner' }] }
-    elsif user.role?('sales')
-      custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) } }
-    elsif user.role?('cp_admin')
-      custom_scope = { "$or": [{ role: { "$in": User.buyer_roles(user.booking_portal_client) } }, { role: 'cp' }, { role: 'channel_partner' }] }
-    elsif user.role?('cp')
-      custom_scope = { "$or": [{ role: 'user', referenced_manager_ids: { "$in": User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id) } }, { role: 'channel_partner', manager_id: user.id }] }
-    elsif user.role?('admin')
-      custom_scope = { role: { "$ne": 'superadmin' } }
-    end
-    custom_scope
   end
 
   def unused_user_kyc_ids(project_unit_id)
@@ -415,6 +326,101 @@ class User
       triggered_by_type: self.class.to_s
     })
     email.sent!
+  end
+
+  # Class Methods
+  class << self
+
+    def otp_length
+      6
+    end
+
+    def build_criteria(params = {})
+      criteria = super(params)
+      criteria = criteria.where(role: { "$ne": 'superadmin' }) unless criteria.selector.has_key?('role')
+      criteria
+    end
+
+    def buyer_roles(current_client = nil)
+      if current_client.present? && current_client.enable_company_users?
+        BUYER_ROLES
+      else
+        ['user']
+      end
+    end
+
+    def available_confirmation_statuses
+      [
+        { id: 'confirmed', text: 'Confirmed' },
+        { id: 'not_confirmed', text: 'Not Confirmed' }
+      ]
+    end
+
+    def available_roles(current_client)
+      roles = [
+        { id: 'superadmin', text: 'Superadmin' },
+        { id: 'admin', text: 'Administrator' },
+        { id: 'crm', text: 'CRM User' },
+        { id: 'sales_admin', text: 'Sales Head' },
+        { id: 'sales', text: 'Sales User' },
+        { id: 'user', text: 'Customer' },
+        { id: 'gre', text: 'GRE or Pre-sales' }
+      ]
+      if current_client.try(:enable_channel_partners?)
+        roles += [
+          { id: 'cp_admin', text: 'Channel Partner Head' },
+          { id: 'cp', text: 'Channel Partner Manager' },
+          { id: 'channel_partner', text: 'Channel Partner' }
+        ]
+      end
+      if current_client.present? && current_client.enable_company_users?
+        roles += [
+          { id: 'management_user', text: 'Management User' },
+          { id: 'employee_user', text: 'Employee' }
+        ]
+      end
+      roles
+    end
+
+    def find_first_by_auth_conditions(warden_conditions)
+      conditions = warden_conditions.dup
+      login = conditions.delete(:login)
+      login = conditions.delete(:email) if login.blank? && conditions.key?(:email)
+      login = conditions.delete(:phone) if login.blank? && conditions.key?(:phone)
+      if login.blank? && warden_conditions[:confirmation_token].present?
+        confirmation_token = warden_conditions.delete(:confirmation_token)
+        where(confirmation_token: confirmation_token).first
+      elsif login.blank? && warden_conditions[:reset_password_token].present?
+        reset_password_token = warden_conditions.delete(:reset_password_token)
+        where(reset_password_token: reset_password_token).first
+      elsif login.present?
+        any_of({ phone: login }, email: login).first
+      end
+    end
+
+    def find_record(login)
+      where("function() {return this.phone == '#{login}' || this.email == '#{login}'}")
+    end
+
+    def user_based_scope(user, _params = {})
+      custom_scope = {}
+      if user.role?('channel_partner')
+        custom_scope = {manager_id: user.id, role: {"$in": User.buyer_roles(user.booking_portal_client)} }
+      elsif user.role?('crm')
+        custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) + %w(channel_partner) } }
+      elsif user.role?('sales_admin')
+        custom_scope = { "$or": [{ role: { "$in": User.buyer_roles(user.booking_portal_client) } }, { role: 'sales' }, { role: 'channel_partner' }] }
+      elsif user.role?('sales')
+        custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) } }
+      elsif user.role?('cp_admin')
+        custom_scope = { "$or": [{ role: { "$in": User.buyer_roles(user.booking_portal_client) } }, { role: 'cp' }, { role: 'channel_partner' }] }
+      elsif user.role?('cp')
+        custom_scope = { "$or": [{ role: 'user', referenced_manager_ids: { "$in": User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id) } }, { role: 'channel_partner', manager_id: user.id }] }
+      elsif user.role?('admin')
+        custom_scope = { role: { "$ne": 'superadmin' } }
+      end
+      custom_scope
+    end
   end
 
   private
