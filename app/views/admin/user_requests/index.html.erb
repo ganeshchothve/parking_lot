@@ -1,17 +1,10 @@
 <div class="container">
   <div class="row justify-content-center">
-    <div class="<%= @user.blank? ? 'col-md-9' : 'col-md-12' %>">
-      <%= render 'breadcrumbs', {user_request: @user_request, user: @user} %>
-      <div class="card h-100">
+    <div class="col-md-9">
+      <div class="card">
         <div class="card-body">
           <div class="row mb-3">
             <div class="col-md-7">
-              <% UserRequest.descendants.each do |klass| %>
-                <% if @user.present? && policy([:admin, klass.new(user: @user)]).new? %>
-                  <% url = new_admin_user_user_request_path(user_id: @user, request_type: klass.model_name.element) %>
-                  <%= link_to "Add #{global_labels['user_request_' + klass.model_name.element]}", url, class: 'btn btn-primary nav-btn modal-remote-form-link' %>
-                <% end %>
-              <% end %>
               <% if Admin::UserRequestPolicy.new(current_user, UserRequest).export? %>
                 <div class="dropdown">
                   <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
@@ -30,11 +23,9 @@
         </div>
       </div>
     </div>
-    <% if @user.blank? %>
-      <div class="col-md-3">
-        <div class="d-md-none mt-3"></div>
-        <%= render "filters" %>
-      </div>
-    <% end %>
+    <div class="col-md-3">
+      <div class="d-md-none mt-3"></div>
+      <%= render "filters" %>
+    </div>
   </div>
 </div>

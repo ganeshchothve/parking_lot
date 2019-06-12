@@ -147,6 +147,18 @@ class User
     end
   end
 
+  # This some additional scope which help to fetch record easily.
+  # This following methods are
+  # buyer which will return all BUYER_ROLES users
+  # then each role has own name scope
+  scope :buyer, -> { where('role.in': self::BUYER_ROLES )}
+  BUYER_ROLES.each do |buyer_roles|
+    scope buyer_roles, ->{ where(role: buyer_roles )}
+  end
+  ADMIN_ROLES.each do |admin_roles|
+    scope admin_roles, ->{ where(role: admin_roles )}
+  end
+
   def self.build_criteria(params = {})
     criteria = super(params)
     criteria = criteria.where(role: { "$ne": 'superadmin' }) unless criteria.selector.has_key?('role')
