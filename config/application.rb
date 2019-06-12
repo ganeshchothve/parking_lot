@@ -12,7 +12,7 @@ require "action_cable/engine"
 require "sprockets/railtie"
 require "rails/test_unit/railtie"
 
-if Rails.env == "production" || Rails.env == "staging"
+if Rails.env == "production"
   ENV_CONFIG = (YAML.load(File.open( "/usr/local/generic-booking-portal-env.yml" ).read).symbolize_keys).with_indifferent_access
 else
   ENV_CONFIG = (YAML.load(File.open( "config/generic-booking-portal-env.yml" ).read).symbolize_keys).with_indifferent_access
@@ -31,6 +31,7 @@ module BookingPortal
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
     config.autoload_paths += ["#{config.root}/app/observers/**/*", "#{config.root}/app/policies/**/*", "#{config.root}/app/services/**/*", "#{config.root}/app/workers/**/*", "#{config.root}/app/uploaders/**/*"]
+    config.eager_load_paths << "#{Rails.root}/lib"
     config.mongoid.observers = Dir["#{Rails.root}/app/observers/**/*.rb"].collect{ |f| f.gsub!("#{Rails.root}/app/observers/", "").gsub!(".rb", "")}
     config.action_mailer.preview_path = "#{Rails.root}/spec/mailers/previews"
     config.active_job.queue_adapter = :sidekiq

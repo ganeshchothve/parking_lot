@@ -5,8 +5,11 @@ class SearchesController < ApplicationController
   before_action :set_search, except: [:index, :export, :new, :create, :tower, :three_d]
   before_action :set_user, except: [:export]
   before_action :set_form_data, only: [:show, :edit]
-  before_action :authorize_resource
+  before_action :authorize_resource, except: [:checkout, :hold]
   around_action :apply_policy_scope, only: [:index, :export]
+  before_action :set_project_unit, only: [:checkout ]
+  before_action :set_booking_detail, only: [:hold, :checkout]
+  before_action :check_project_unit_hold_status, only: :checkout
 
   layout :set_layout
 
@@ -84,48 +87,38 @@ class SearchesController < ApplicationController
   end
 
   def hold
-    @project_unit = ProjectUnit.find(@search.project_unit_id)
-    @project_unit.assign_attributes(permitted_attributes(@project_unit))
-    @project_unit.user = @user if @project_unit.user_id.blank?
-    authorize [current_user_role_group, @project_unit] # Has to be done after user is assigned and before status is updated
-    @project_unit.primary_user_kyc_id = @user.user_kyc_ids.first if @project_unit.primary_user_kyc_id.blank?
-    @project_unit.status = "hold"
+    @booking_detail.event = 'hold' if @booking_detail.new_record?
+    @booking_detail.assign_attributes( permitted_attributes([ current_user_role_group, @booking_detail]))
+
+    # Has to be done after user is assigned and before status is updated
+    authorize [current_user_role_group, @booking_detail]
     respond_to do |format|
-      if @project_unit.save
-        format.html { redirect_to checkout_user_search_path(@search) }
+      if @booking_detail.save
+        if @booking_detail.create_default_scheme
+          format.html { redirect_to checkout_user_search_path(@search), notice: t('controller.searches.hold.success') }
+        else
+          ProjectUnitUnholdWorker.new.perform(@search.project_unit_id)
+          format.html { redirect_to dashboard_path, alert: t('controller.searches.hold.scheme_for_channel_partner_not_found') }
+        end
       else
-        flash[:notice] = 'We cannot process your request at this time. Please retry'
-        format.html { redirect_to dashboard_path }
+        format.html { redirect_to dashboard_path, alert: t('controller.searches.hold.booking_detail_error') }
       end
     end
   end
 
   def checkout
-    if @search.project_unit_id.blank?
-      redirect_to step_user_search_path(@search, step: @search.step)
-      return
-    end
-    @project_unit = ProjectUnit.find(@search.project_unit_id)
-    @booking_detail_scheme = @project_unit.booking_detail_scheme
-    @booking_detail_scheme = BookingDetailScheme.new(
-      user_id: @project_unit.user_id,
-      project_unit_id: @project_unit.id
-    ) if @booking_detail_scheme.blank?
-    if @project_unit.held_on.present? && (@project_unit.held_on + @project_unit.holding_minutes.minutes) < Time.now
-      flash[:notice] = "We've released the unit which was held for #{@project_unit.holding_minutes} minutes. Please re-select the unit and try booking again."
-      ProjectUnitUnholdWorker.new.perform(@project_unit.id)
-      redirect_to dashboard_path and return
-    end
-    authorize [current_user_role_group, @project_unit]
-    if @project_unit.status != "hold"
+    authorize [current_user_role_group, @booking_detail]
+    @booking_detail_scheme = @booking_detail.booking_detail_schemes.desc(:created_at).last || @booking_detail.booking_detail_schemes.build
+    if !@booking_detail.hold?
       if current_user.buyer?
-        redirect_to dashboard_path and return
+        redirect_to dashboard_path, alert: t('controller.searches.checkout.non_hold_booking')
       else
-        redirect_to (@project_unit.user_id.present? ? admin_user_path(@project_unit.user_id) : dashboard_path) and return
+        redirect_to admin_user_path(@search.user_id), alert: t('controller.searches.checkout.non_hold_booking')
       end
-    elsif @project_unit.user_id.present? && @project_unit.user.receipts.where(project_unit_id: @project_unit.id, status: "pending", payment_mode: {"$ne": "online"}).present?
-      flash[:notice] = "We already have collected a payment for this unit from the same customer."
-      redirect_to admin_user_path(@project_unit.user_id) and return
+    elsif @search.user && @search.user.receipts.where(project_unit_id: @search.project_unit_id, status: "pending", payment_mode: {"$ne": "online"}).present?
+      redirect_to admin_user_path(@search.user_id), notice: t('controller.searches.checkout.pending_payments')
+    else
+      # Open checkout page for costsheet selection
     end
   end
 
@@ -171,26 +164,34 @@ class SearchesController < ApplicationController
           redirect_to dashboard_path
         end
       else
-        redirect_to admin_user_path(@receipt.user)
+        redirect_to [current_user_role_group, @receipt.user], notice: 'Unit is booked successfully.'
       end
     else
-      redirect_to checkout_user_search_path(project_unit_id: @project_unit.id)
+      redirect_to checkout_user_search_path(@booking_detail.search)
     end
   end
 
   def gateway_payment
     @receipt = Receipt.where(:receipt_id => params[:receipt_id]).first
-    if @receipt.present? && @receipt.status == "pending"
-      @project_unit = ProjectUnit.find(@receipt.project_unit_id) if @receipt.project_unit_id.present?
+    if @receipt.present?
       render file: "searches/#{@receipt.payment_gateway.underscore}_payment"
     else
-      redirect_to home_path(@search.user)
+      redirect_to home_path(@search.user), notice: t('controller.searches.gateway_payment.receipt_missing')
     end
   end
 
   private
+
   def set_search
     @search = Search.find(params[:id])
+  end
+
+  def set_project_unit
+    @project_unit = @search.project_unit
+    if @project_unit.blank?
+      @search.set(step: 'towers')
+      redirect_to step_user_search_path(@search, step: @search.step), alert: t('controller.searches.project_unit_missing')
+    end
   end
 
   def set_user
@@ -234,6 +235,7 @@ class SearchesController < ApplicationController
 
   def set_form_data
     @data = ProjectUnit.collection.aggregate([{
+      '$match' => {'status' => 'available'} },{
       "$group": {
         "_id": {
           bedrooms: "$bedrooms"
@@ -274,4 +276,27 @@ class SearchesController < ApplicationController
       @unit = ProjectUnit.find(@search.project_unit_id)
     end
   end
+
+  def set_booking_detail
+    @booking_detail = BookingDetail.find_or_initialize_by(project_unit_id: @search.project_unit_id, user_id: @search.user_id, status: 'hold')
+    @booking_detail.assign_attributes(
+      base_rate: @search.project_unit.base_rate,
+      floor_rise: @search.project_unit.floor_rise,
+      saleable: @search.project_unit.saleable,
+      costs: @search.project_unit.costs,
+      data: @search.project_unit.data,
+      manager_id: @search.user_manager_id
+    )
+    @booking_detail.save
+    # ,  base_rate: @search.project_unit.base_rate, floor_rise: @search.project_unit.floor_rise, saleable: @search.project_unit.saleable, costs: @search.project_unit.costs, data: @search.project_unit.data
+    @booking_detail.search = @search
+  end
+
+  def check_project_unit_hold_status
+    if @project_unit.held_on.present? && (@project_unit.held_on + @project_unit.holding_minutes.minutes) < Time.now
+      ProjectUnitUnholdWorker.new.perform(@project_unit.id)
+      redirect_to [:admin, @search.user], alert: t('controller.searches.check_project_unit_hold_status', holding_minutes: @project_unit.holding_minutes)
+    end
+  end
+
 end

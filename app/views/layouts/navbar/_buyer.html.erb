@@ -22,9 +22,9 @@
   </li>
 <% end %>
 
-<% if policy([:buyer, UserKyc]).index? %>
+<% if policy([:buyer, BookingDetail]).index? %>
   <li class="nav-item">
-    <%= active_link_to t('global.user_kycs'), buyer_user_kycs_path, active: :inclusive, class: "nav-link" %>
+    <%= active_link_to t('global.booking_details'), buyer_booking_details_path, active: :inclusive, class: "nav-link" %>
   </li>
 <% end %>
 
@@ -65,7 +65,7 @@
       <%= icon "far", "user-circle", class: "text-muted fa-2x" %>
     </a>
     <div class="dropdown-menu dropdown-menu-right">
-      <%= link_to "Profile", edit_buyer_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
+      <%= link_to ('Profile ( ' + t("users.role.#{current_user.role}") + ' )'), edit_buyer_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
       <%= link_to "Change Password", update_password_buyer_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
       <%= link_to "Sign out", destroy_session_path(current_user), class: "dropdown-item", method: :delete %>
     </div>

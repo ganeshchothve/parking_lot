@@ -5,7 +5,15 @@ FormInitializer = (function(){
         $(el).selectize("destroy");
       }
     });
-
+    $(selector).find('.timepicker').datetimepicker({
+      format: 'LT',
+          icons: {
+                    up: "fa fa-chevron-circle-up",
+                    down: "fa fa-chevron-circle-down",
+                    next: 'fa fa-chevron-circle-right',
+                    previous: 'fa fa-chevron-circle-left'
+                  }
+    });
     _.each($(selector).find('.selectize'), function(e){
       if($(e).data("create")){
         $(e).selectize({create: true});
@@ -121,7 +129,7 @@ FormInitializer = (function(){
     })
     $("#receipt_payment_mode").trigger('change')
   }
-  var remote_delectize_data = function(el){
+  var remote_selectize_data = function(el){
     var params = $(el).data("params");
     params = params || {};
     params = _.merge( params, {ds: true});
@@ -139,11 +147,12 @@ FormInitializer = (function(){
       create: false,
       preload: ( _.isNull($(selector).data("preload")) || _.isUndefined($(selector).data("preload")) ) ? 'focus' : $(selector).data("preload") ,
       load: function(query, callback){
+        var queryObj = JSON.parse(query);
         $.ajax({
           url: options["url"],
           type: 'GET',
           dataType: 'json',
-          data: _.merge(remote_delectize_data(this.$input), JSON.parse(query)),
+          data: _.merge(remote_selectize_data(this.$input), queryObj, {fltrs: {search: queryObj.search}}),
           error: function(one, two, three){
             if(typeof callback == 'function'){
               callback();
@@ -151,7 +160,7 @@ FormInitializer = (function(){
           },
           success: function(data, type, options){
             if(typeof callback == 'function'){
-              callback(_.map(data, function(a){ return { id: (a['id'] || a._id), name: (a['name'] || a['ds_name']) } }));
+              callback(_.map(data, function(a){ return { id: (a['id'] || a._id), name: (a['ds_name'] || a['name']) } }));
             }
           }
         });

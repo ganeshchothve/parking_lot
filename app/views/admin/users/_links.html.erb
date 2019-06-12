@@ -1,12 +1,19 @@
-<% if current_client.enable_actual_inventory?(current_user) && policy([:admin, ProjectUnit.new(user: user, status: "available")]).hold? %>
+<% if policy([:admin, BookingDetail.new(user: user, project_unit: ProjectUnit.new(status: 'available', blocking_amount: current_client.blocking_amount))]).hold? %>
   <%= link_to "Choose #{global_labels[:project_unit]} & Add Booking", new_admin_user_search_path(user.id), class: "dropdown-item" %>
 <% end %>
-<% hold_unit = user.project_units.where(status: 'hold').first %>
-<% if hold_unit.present? && policy([current_user_role_group, hold_unit]).block? %>
-  <%= link_to "Checkout using unit already held", checkout_user_search_path(user.get_search(hold_unit.id)), class: "dropdown-item" %>
+<% if policy([:admin, user]).confirm_user? %>
+  <%= link_to"Confirm User", confirm_user_admin_user_path(user), method: :patch,
+  class: "dropdown-item" %>
+<% end %>
+<% hold_booking = user.booking_details.where(status: 'hold').first %>
+<% if hold_booking.present? #&& policy([current_user_role_group, hold_booking]).block? %>
+  <%= link_to "Checkout using unit already held", checkout_user_search_path(user.get_search(hold_booking.project_unit_id)), class: "dropdown-item" %>
 <% end %>
 <% if !current_user.buyer? && policy([:admin, Receipt.new(user: user)]).direct? %>
   <%= link_to "Add Direct #{t('global.receipt')}", new_admin_user_receipt_path(user), class: "dropdown-item modal-remote-form-link" %>
+<% end %>
+<% if !current_user.buyer? && policy([:admin, Receipt.new(user: user)]).lost_receipt? %>
+  <%= link_to "Add Lost Receipt", lost_receipt_admin_user_receipts_path(user), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 <% if policy([:admin, User.new]).confirm_via_otp? %>
   <%= link_to "Confirm via #{I18n.t("global.otp")}", confirm_via_otp_admin_user_path(user.id), class: "dropdown-item modal-remote-form-link" %>

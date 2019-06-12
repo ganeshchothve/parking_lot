@@ -19,7 +19,6 @@ class Admin::UsersController < AdminController
   # update password defined in UsersConcern
   # GET /admin/users/:id/update_password
 
-
   def index
     @users = User.build_criteria params
     if params[:fltrs].present? && params[:fltrs][:_id].present?
@@ -51,6 +50,30 @@ class Admin::UsersController < AdminController
       else
         flash[:error] = "Couldn't send Reset password instructions."
         format.html { redirect_to admin_users_path }
+      end
+    end
+  end
+
+  def confirm_user
+    @user.temporary_password = SecureRandom.hex(10)
+    @user.assign_attributes(confirmed_by: current_user, confirmed_at: DateTime.now, password: @user.temporary_password, password_confirmation: @user.password_confirmation)
+    respond_to do |format|
+      format.html do
+        if @user.save
+          email_template = ::Template::EmailTemplate.find_by(name: "account_confirmation")
+          email = Email.create!({
+            booking_portal_client_id: @user.booking_portal_client_id,
+            body: ERB.new(@user.booking_portal_client.email_header).result( binding) + email_template.parsed_content(@user) + ERB.new(@user.booking_portal_client.email_footer).result( binding ),
+            subject: email_template.parsed_subject(@user),
+            recipients: [ @user ],
+            triggered_by_id: @user.id,
+            triggered_by_type: @user.class.to_s
+          })
+          email.sent!
+          redirect_to request.referrer || dashboard_url, notice: t('controller.users.account_confirmed')
+        else
+          redirect_to request.referrer || dashboard_url, alert: t('controller.users.cannot_confirm_user')
+        end
       end
     end
   end
@@ -101,6 +124,11 @@ class Admin::UsersController < AdminController
     @user = User.new(booking_portal_client_id: current_client.id, role: params[:user][:role])
     @user.assign_attributes(permitted_attributes([current_user_role_group, @user]))
     @user.manager_id = current_user.id if @user.role?('channel_partner') && current_user.role?('cp')
+    if @user.buyer? && current_user.role?('channel_partner')
+      @user.manager_id = current_user.id
+      @user.referenced_manager_ids ||= []
+      @user.referenced_manager_ids += [current_user.id]
+    end
 
     respond_to do |format|
       if @user.save

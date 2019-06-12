@@ -5,7 +5,9 @@ class ProjectUnit
   include ApplicationHelper
   extend ApplicationHelper
   include InsertionStringMethods
-  include CostCalculator
+  include PriceCalculator
+
+  STATUS = %w(available not_available hold blocked error)
 
   # These fields are globally utlised on the server side
   field :name, type: String
@@ -21,7 +23,6 @@ class ProjectUnit
   field :base_rate, type: Float
 
   # These fields majorly are pulled from sell.do and may be used on the UI
-  field :client_id, type: String
   field :developer_name, type: String
   field :project_name, type: String
   field :project_tower_name, type: String
@@ -45,7 +46,7 @@ class ProjectUnit
   attr_accessor :processing_user_request, :processing_swap_request
 
   enable_audit(
-    indexed_fields: %i[project_id project_tower_id unit_configuration_id client_id booking_portal_client_id selldo_id developer_id],
+    indexed_fields: %i[project_id project_tower_id unit_configuration_id booking_portal_client_id selldo_id developer_id],
     audit_fields: %i[erp_id status available_for blocked_on auto_release_on held_on primary_user_kyc_id base_rate]
   )
 
@@ -56,26 +57,29 @@ class ProjectUnit
   belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :user, optional: true
   belongs_to :phase, optional: true
+  belongs_to :primary_user_kyc, optional: true
+
   # remove optional true when all project units are assigned to some phase
 
   has_many :receipts
   has_many :user_requests
   has_and_belongs_to_many :user_kycs
+  has_and_belongs_to_many :users
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :emails, as: :triggered_by, class_name: 'Email'
+  has_many :booking_details
   embeds_many :costs, as: :costable
   embeds_many :data, as: :data_attributable
   embeds_many :parameters, as: :parameterizable
 
   has_many :assets, as: :assetable
 
-  accepts_nested_attributes_for :data, :parameters, :costs, allow_destroy: true
+  accepts_nested_attributes_for :data, :parameters, :assets, :costs, allow_destroy: true
 
-  validates :client_id, :agreement_price, :all_inclusive_price, :booking_price, :project_id, :project_tower_id, :unit_configuration_id, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :type, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, presence: true
+  validates :agreement_price, :all_inclusive_price, :booking_price, :project_id, :project_tower_id, :unit_configuration_id, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :type, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, presence: true
   validates :status, :name, :erp_id, presence: true
   validates :status, inclusion: { in: proc { ProjectUnit.available_statuses.collect { |x| x[:id] } } }
   validates :available_for, inclusion: { in: proc { ProjectUnit.available_available_fors.collect { |x| x[:id] } } }
-  validates :user_id, :primary_user_kyc_id, presence: true, if: proc { |unit| %w[available not_available management employee].exclude?(unit.status) }
   validate :pan_uniqueness
 
   delegate :name, to: :phase, prefix: true, allow_nil: true
@@ -88,32 +92,22 @@ class ProjectUnit
     self.status = 'available' if available_for == 'user'
     self.status = 'employee' if available_for == 'employee'
     self.status = 'management' if available_for == 'management'
-
     # GENERICTODO: self.base_rate = upgraded rate based on timely upgrades
-
-    self.user_id = nil
-    self.primary_user_kyc_id = nil
-    self.user_kyc_ids = []
-
     SelldoLeadUpdater.perform_async(user_id.to_s, 'hold_payment_dropoff')
   end
 
-  def calculated_costs
-    out = {}
-    costs.each { |c| out[c.key] = c.value }
-    out.with_indifferent_access
+  #
+  # This function return true or false when unit is ready for booking.
+  #
+  #
+  # @return [Boolean] True/False
+  #
+  def available?
+    %w[available employee management].include?(status)
   end
 
-  def calculated_cost(name)
-    costs.where(name: name).first.value
-  rescue StandardError
-    0
-  end
-
-  def calculated_data
-    out = {}
-    data.each { |c| out[c.key] = c.value }
-    out.with_indifferent_access
+  def blocked?
+    status == 'blocked'
   end
 
   def calculated_parameters
@@ -122,12 +116,37 @@ class ProjectUnit
     out.with_indifferent_access
   end
 
-  def permitted_schemes(user = nil)
-    user ||= self.user
-    or_criteria = [{ project_tower_id: project_tower_id }]
-    or_criteria << { user_id: user.id }
-    or_criteria << { user_id: nil, user_role: user.role }
-    Scheme.where(status: 'approved').or('$or' => [{ default: true, project_tower_id: project_tower_id }, { can_be_applied_by: user.role, "$or": or_criteria }])
+  #
+  # update project unit permitted scheme query
+  # - scheme should be available for same project_tower
+  # - scheme should be approved
+  # - scheme can be apply by only given user role or it empty( any one can apply)
+  # - Scheme can be apply for those user which attached with project.
+  # - Scheme can be apply for those user role which attached with project.
+  #
+  # @param [User] _user Which is going to book unit.
+  #
+  # @return [Scheme collection] permitted schemes for booking.
+  #
+  def permitted_schemes(_user=nil)
+    _user ||= self.booking_detail.try(:user)
+    _selector = {
+      project_tower_id: self.project_tower_id,
+      status: "approved",
+      '$and' => [{
+        '$or' => [
+          { can_be_applied_by: nil },
+          { can_be_applied_by: [] },
+          { can_be_applied_by: _user.try(:role) || [] }
+        ]
+      }]
+    }
+    if _user
+      _selector['$and'] << { '$or' => [ {user_ids: nil }, {user_ids: []},
+          { user_ids: _user.id } ] }
+      _selector['$and'] <<  { '$or' => [ {user_role: nil}, { user_role: []}, {user_role: _user.role } ]}
+    end
+    Scheme.where(_selector)
   end
 
   def self.user_based_available_statuses(user)
@@ -219,52 +238,6 @@ class ProjectUnit
     (status == 'hold' && user_id == user.id) || user_based_status(user) == 'available'
   end
 
-  def process_payment!(receipt)
-    if %w[success clearance_pending].include?(receipt.status)
-      if ProjectUnit.booking_stages.include?(status) || can_block?(receipt.user) || (status == 'under_negotiation' && user_id == receipt.user_id)
-        if scheme.status == 'approved'
-          self.status = if pending_balance(strict: true) <= 0
-                          'booked_confirmed'
-                        elsif total_amount_paid > blocking_amount
-                          'booked_tentative'
-                        else
-                          'blocked'
-                        end
-        end
-      else
-        receipt.project_unit_id = nil
-        receipt.save
-      end
-      # Send payments data to Sell.Do CRM
-      # SelldoReceiptPusher.perform_async(receipt.id.to_s, Time.now.to_i)
-    elsif receipt.status == 'failed'
-      # if the unit has any successful or clearance_pending payments other than this, we keep it still blocked
-      # else we just release the unit
-      if pending_balance == booking_price # not success or clearance_pending receipts tagged against this unit
-        if status == 'hold'
-          make_available
-        else
-          # TODO: we should display a message on the UI before someone marks the receipt as 'failed'. Because the unit might just get released
-          self.status = 'error'
-        end
-      end
-    end
-    save(validate: false)
-  end
-
-  def process_scheme!
-    if status == 'under_negotiation' && scheme.status == 'approved'
-      if pending_balance(strict: true) <= 0
-        self.status = 'booked_confirmed'
-      elsif total_amount_paid > blocking_amount
-        self.status = 'booked_tentative'
-      elsif total_tentative_amount_paid >= blocking_amount
-        self.status = 'blocked'
-      end
-      save(validate: false)
-    end
-  end
-
   def self.build_criteria(params = {})
     selector = {}
     if params[:fltrs].present? && params[:fltrs][:_id].blank?
@@ -317,7 +290,7 @@ class ProjectUnit
     end
 
     selector[:name] = ::Regexp.new(::Regexp.escape(params[:search]), 'i') if params[:search].present?
-    self.where(selector)
+    where(selector)
   end
 
   def ui_json
@@ -340,22 +313,14 @@ class ProjectUnit
     current_client.holding_minutes
   end
 
-  def primary_user_kyc
-    primary_user_kyc_id.present? ? UserKyc.find(primary_user_kyc_id) : nil
-  end
-
   def booking_detail_scheme
-    BookingDetailScheme.where(user_id: user_id, project_unit_id: id).in(status: %w[under_negotiation draft approved]).desc(:created_at).first
-  end
-
-  def scheme=(_scheme)
-    @scheme = _scheme if _scheme.kind_of?(Scheme) || _scheme.kind_of?(BookingDetailScheme)
+    scheme
   end
 
   def scheme
     return @scheme if @scheme.present?
 
-    @scheme = booking_detail_scheme
+    @scheme = booking_detail.try(:booking_detail_scheme) if self.available?
 
     @scheme = project_tower.default_scheme if @scheme.blank?
     @scheme
@@ -370,9 +335,13 @@ class ProjectUnit
   end
 
   def pending_booking_detail_scheme
-    if %w[hold under_negotiation].include?(status) || self.class.booking_stages.include?(status)
-      booking_detail_scheme
+    if booking_detail.present? && (%w[hold].include?(status) || self.class.booking_stages.include?(status))
+      BookingDetailScheme.where(booking_detail_id: booking_detail.id).in(status: 'draft').desc(:created_at).first
     end
+  end
+
+  def pending_balance
+    booking_detail.try(:pending_balance).to_f
   end
 
   private

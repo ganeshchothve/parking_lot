@@ -4,31 +4,44 @@ module ReceiptStateMachine
     include AASM
     attr_accessor :event
 
-    aasm column: :status do
+    aasm column: :status, whiny_transitions: false do
       state :pending, initial: true
-      state :success, :clearance_pending, :failed, :available_for_refund, :refunded, :cancelled
+      state :success, :clearance_pending, :failed, :available_for_refund, :refunded
+      state :cancellation_requested, :cancelling, :cancelled, :cancellation_rejected
 
-      event :pending do
+
+      event :pending, after: %i[moved_to_clearance_pending send_pending_notification] do
         transitions from: :pending, to: :pending
       end
 
-      event :clearance_pending do
+      event :clearance_pending, after: %i[moved_to_success_if_online ] do
         transitions from: :pending, to: :clearance_pending, if: :can_move_to_clearance?
         transitions from: :clearance_pending, to: :clearance_pending
       end
 
-      event :success do
+      event :success, after: %i[change_booking_detail_status send_success_notification] do
         transitions from: :success, to: :success
+        # receipt moves from pending to success when online payment is made.
         transitions from: :clearance_pending, to: :success, unless: :new_record?
         transitions from: :available_for_refund, to: :success
+        transitions from: :cancellation_rejected, to: :success
       end
 
-      event :available_for_refund do
+      event :available_for_refund, after: %i[send_booking_detail_to_under_negotiation] do
         transitions from: :available_for_refund, to: :available_for_refund
         transitions from: :success, to: :available_for_refund, if: :can_available_for_refund?
+        transitions from: :cancelled, to: :available_for_refund, success: %i[send_notification]
       end
 
-      event :refunded do
+      event :cancelling do
+        transitions from: :cancellation_requested, to: :cancelling
+      end
+
+      event :cancellation_rejected, after: %i[move_to_success] do
+        transitions from: :cancellation_requested, to: :cancellation_rejected
+      end
+
+      event :refunded, after: %i[send_notification] do
         transitions from: :refunded, to: :refunded
       end
 
@@ -37,29 +50,104 @@ module ReceiptStateMachine
       end
 
       event :failed do
-        transitions from: :pending, to: :failed, unless: :new_record?
-        transitions from: :clearance_pending, to: :failed
+        transitions from: :pending, to: :failed, if: :can_mark_failed?, success: %i[send_notification]
+        transitions from: :clearance_pending, to: :failed, success: %i[send_notification]
         transitions from: :failed, to: :failed
       end
 
-      event :cancel do
-        transitions from: :pending, to: :cancelled, if: :swap_request_initiated?
-        transitions from: :success, to: :cancelled, if: :swap_request_initiated?
-        transitions from: :clearance_pending, to: :cancelled, if: :swap_request_initiated?
+      event :cancellation_requested do
+        transitions from: :success, to: :cancellation_requested
       end
 
-    end
-
-    def can_available_for_refund?
-      self.booking_detail.blank? || self.booking_detail.status == "cancelled"
-    end
-
-    def can_move_to_clearance?
-      self.persisted? || self.project_unit_id.present?
+      event :cancel do
+        transitions from: :pending, to: :cancelled, if: :user_request_initiated?
+        transitions from: :success, to: :cancelled, if: :swap_request_initiated?
+        transitions from: :clearance_pending, to: :cancelled, if: :user_request_initiated?
+        transitions from: :cancelling, to: :cancelled, success: %i[move_to_available_for_refund]
+      end
     end
 
     def swap_request_initiated?
-      self.swap_request_initiated == true
+      return booking_detail.swapping? if booking_detail
+      false
+    end
+
+    def can_available_for_refund?
+      return (booking_detail.blank? || booking_detail.cancelling?) if booking_detail
+
+      false
+    end
+
+    def can_move_to_clearance?
+      persisted? || project_unit_id.present?
+    end
+
+    def move_to_available_for_refund
+      available_for_refund!
+    end
+
+    def move_to_success
+      success!
+    end
+
+    def moved_to_success_if_online
+      if payment_mode == 'online'
+        success!
+      else
+        change_booking_detail_status
+        Notification::Receipt.new(self.id, status: [self.status_was, self.status]).execute
+      end
+    end
+
+    def send_success_notification
+      if %w[success cancellation_rejected].exclude?(self.aasm.from_state)
+        Notification::Receipt.new(self.id, status: [self.status_was, self.status]).execute
+      end
+    end
+
+    def send_pending_notification
+      if payment_mode != 'online' && status == 'pending'
+        Notification::Receipt.new(self.id, status: [self.status_was, self.status]).execute
+      end
+    end
+
+    def user_request_initiated?
+      return (booking_detail.swapping? || booking_detail.cancelling?) if booking_detail
+      false
+    end
+
+    def change_booking_detail_status
+      if booking_detail
+        booking_detail.send("after_#{booking_detail.status}_event")
+      end
+    end
+
+    def send_booking_detail_to_under_negotiation
+      booking_detail.under_negotiation! if booking_detail
+    end
+    #
+    # When Receipt is created by admin except channel partner then it's direcly moved in clearance pending.
+    #
+    def moved_to_clearance_pending
+      if payment_mode != 'online'
+        unless ((User::BUYER_ROLES).include?(self.creator.role))||(self.creator.role == 'channel_partner' && !self.creator.premium?)
+          self.clearance_pending!
+        end
+      end
+    end
+
+    #
+    # Only online pening payments can mark as failed.
+    #
+    #
+    # @return [Boolean]
+    #
+    def can_mark_failed?
+      !new_record? && payment_mode == 'online'
+    end
+
+    def send_notification
+      Notification::Receipt.new(self.id, status: [self.status_was, self.status]).execute
     end
   end
 end

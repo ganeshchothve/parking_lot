@@ -334,6 +334,10 @@ GEM
       thor (>= 0.14, < 2.0)
     json (2.1.0)
     jwt (1.5.6)
+    launchy (2.4.3)
+      addressable (~> 2.3)
+    letter_opener (1.7.0)
+      launchy (~> 2.2)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -378,6 +382,8 @@ GEM
       mongoid (>= 3.1)
       mongoid-compatibility (>= 0.5.1)
       rspec (~> 3.3)
+    mongoid-sadstory (0.0.2)
+      mongoid
     multi_json (1.13.1)
     multi_xml (0.6.0)
     multipart-post (2.0.0)
@@ -526,7 +532,11 @@ GEM
     rspec-support (3.8.0)
     ruby-ole (1.2.12.1)
     ruby_dep (1.5.0)
+    ruby_parser (3.8.4)
+      sexp_processor (~> 4.1)
     rubyzip (1.2.2)
+    safe_parser (1.0.0)
+      ruby_parser (~> 3.8.4)
     sass (3.6.0)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
@@ -544,6 +554,7 @@ GEM
     selenium-webdriver (3.14.0)
       childprocess (~> 0.5)
       rubyzip (~> 1.2)
+    sexp_processor (4.11.0)
     shoulda (3.6.0)
       shoulda-context (~> 1.0, >= 1.0.1)
       shoulda-matchers (~> 3.0)
@@ -653,6 +664,7 @@ DEPENDENCIES
   humanize
   jbuilder (~> 2.5)
   jquery-rails
+  letter_opener
   listen (>= 3.0.5, < 3.2)
   mailgun-ruby
   mixpanel-ruby
@@ -660,6 +672,7 @@ DEPENDENCIES
   mongoid-autoinc
   mongoid-observers (~> 0.3.0)
   mongoid-rspec
+  mongoid-sadstory (~> 0.0.2)
   nested_form
   newrelic-redis
   newrelic_rpm
@@ -683,6 +696,7 @@ DEPENDENCIES
   roo (~> 2.7.0)
   rspec-rails
   rspec-sidekiq
+  safe_parser
   sass-rails (~> 5.0)
   selenium-webdriver
   shoulda (~> 3.5)

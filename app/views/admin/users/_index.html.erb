@@ -4,7 +4,9 @@
       <% labels = t('mongoid.attributes.user').with_indifferent_access %>
       <tr>
         <th>Name</th>
-        <th><%= labels[:lead_id] %></th>
+        <% if current_client.selldo_client_id.present? && current_client.selldo_gre_form_id.present? && current_client.selldo_channel_partner_form_id.present? %>
+          <th><%= labels[:lead_id] %></th>
+        <% end %>
         <th><%= global_labels[:receipts] %></th>
         <th>Role</th>
         <th>Account Confirmed?</th>
@@ -24,13 +26,15 @@
               <%= user.email || "" %> <br/>
               <%= user.phone || "" %><br/>
               <% if user.role?("user") && user.manager_id.present? && current_user.role != "channel_partner" %>
-                <%= labels[:manager_id] %>: <%= user.manager.name %><br/>
+                <%= labels[:manager_id] %>: <%= user.manager_name %><br/>
               <% end %>
             </div>
           </td>
-          <td><%= user.lead_id %></td>
-          <td><%= user.receipts.where(status: "success").present? ? "Y" : "N" %></td>
-          <td><%= User.available_roles(current_client).find{|x| x[:id] == user.role}[:text] %></td>
+          <% if current_client.selldo_client_id.present? && current_client.selldo_gre_form_id.present? && current_client.selldo_channel_partner_form_id.present? %>
+            <td><%= user.lead_id %></td>
+          <% end %>
+          <td><%= user.receipts.where('$or' => [{ status: { '$in': %w(success clearance_pending) } }, { payment_mode: {'$ne': 'online'}, status: {'$in': %w(pending clearance_pending success)} }]).present? ? "Y" : "N" %></td>
+          <td><%= t("users.role.#{user.role}") %></td>
           <td>
             <%= user.confirmed_at.present? ? "Confirmed" : "Not confirmed" %>
           </td>

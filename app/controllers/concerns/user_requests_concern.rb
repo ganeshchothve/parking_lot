@@ -16,7 +16,8 @@ module UserRequestsConcern
   #
   def new
     @user_request = associated_class.new(user_id: @user.id)
-    @user_request.project_unit_id = params[:project_unit_id] if params[:project_unit_id].present?
+    @user_request.requestable_id = params[:requestable_id] if params[:requestable_id].present?
+    @user_request.requestable_type = params[:requestable_type] if params[:requestable_type].present?
     render layout: false
   end
 
@@ -36,7 +37,6 @@ module UserRequestsConcern
   end
 
   private
-
 
   def set_user_request
     @user_request = associated_class.find(params[:id])

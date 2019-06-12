@@ -11,7 +11,7 @@ class ProjectUnitMisReportWorker
       sheet.insert_row(index+1, ProjectUnitMisReportWorker.get_project_unit_row(project_unit))
     end
     file_name = "project_unit_mis-#{SecureRandom.hex}.xls"
-    file.write("#{Rails.root}/#{file_name}")
+    file.write("#{Rails.root}/exports/#{file_name}")
     ExportMailer.notify(file_name, user.email, "Units").deliver
   end
 
@@ -30,13 +30,9 @@ class ProjectUnitMisReportWorker
       "Floor Rise",
       "Agreement price",
       "All Inclusive Price",
-      "Current Due",
-      "Total amount paid",
-      "Pending balance",
       "Available for",
       "Blocked on",
-      "Auto Release On",
-      "Ageing"
+      "Auto Release On"
     ]
   end
 
@@ -55,13 +51,10 @@ class ProjectUnitMisReportWorker
       project_unit.floor_rise,
       project_unit.agreement_price,
       project_unit.all_inclusive_price,
-      project_unit.pending_balance({strict: true}),
-      project_unit.total_amount_paid,
-      project_unit.pending_balance,
+
       project_unit.available_for,
       project_unit.blocked_on,
-      project_unit.auto_release_on,
-      project_unit.ageing
+      project_unit.auto_release_on
     ]
   end
 end

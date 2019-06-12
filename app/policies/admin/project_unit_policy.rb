@@ -12,6 +12,10 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
     index?
   end
 
+  def release_unit?
+    record.booking_detail && record.booking_detail.status == 'scheme_rejected' && %w[superadmin admin].include?(user.role)
+  end
+
   def edit?
     _role_based_check(true)
   end
@@ -24,34 +28,8 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
     export?
   end
 
-  def hold?
-    valid = record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?(user)
-    if !valid
-      @condition = "user_confirmation"
-      return
-    end
-    valid &&= (record.user.project_units.where(status: 'hold').blank? && record.user_based_status(record.user) == 'available')
-    if !valid
-      @condition = "already_held"
-      return
-    end
-    valid &&= record.user.unattached_blocking_receipt(record.blocking_amount).present? if user.role?('channel_partner')
-    if !valid
-      @condition = "blocking_amount_receipt"
-      return
-    end
-    valid = (valid && record.user.allowed_bookings > record.user.booking_details.nin(status: %w[cancelled swapped]).count)
-    if !valid
-      @condition = "allowed_bookings"
-      return
-    end
-    valid = (valid && record.user.unused_user_kyc_ids(record.id).present?)
-    if !valid
-      @condition = "user_kyc_allowed_bookings"
-      return
-    end
-    
-    _role_based_check(valid)
+  def asset_create?
+    %w[superadmin admin].include?(user.role)
   end
 
   def update_scheme?
@@ -64,9 +42,10 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
     attributes += %i[user_id selected_scheme_id] if record.user_id.blank? && record.user_based_status(user) == 'available'
     attributes += [:phase_id] if user.role?('superadmin')
 
-    if %w[superadmin admin].include?(user.role) && ProjectUnit.booking_stages.exclude?(record.status) && record.status != 'hold'
+    if %w[superadmin admin].include?(user.role) && record.available?
       attributes += [:name, :agreement_price, :all_inclusive_price, :status, :available_for, :blocked_on, :auto_release_on, :held_on, :base_rate, :client_id, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, :selldo_id, :erp_id, :floor_rise, :floor, :floor_order, :bedrooms, :bathrooms, :carpet, :saleable, :sub_type, :type, :unit_facing_direction, costs_attributes: CostPolicy.new(user, Cost.new).permitted_attributes, data_attributes: DatumPolicy.new(user, Cost.new).permitted_attributes]
     end
+    attributes += [assets_attributes: AssetPolicy.new(user, (record.assets.last || Asset.new) ).permitted_attributes]
     attributes += [:primary_user_kyc_id, :selected_scheme_id, user_kyc_ids: []] if record.user_id.present?
     attributes.uniq
   end
@@ -74,7 +53,13 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
   private
 
   def _role_based_check(valid)
-    valid = (valid && record.user.referenced_manager_ids.include?(user.id)) if (ProjectUnit.booking_stages.include?(record.status) || record.status == 'hold') && user.role == 'channel_partner'
+    if user.role?('channel_partner')
+      if ['blocked', 'hold'].include?(record.status)
+        valid = (valid && record.booking_detail.user.referenced_manager_ids.include?(user.id))
+      else
+        valid = false
+      end
+    end
     valid = (valid && true) if %w[cp sales sales_admin cp_admin admin].include?(user.role)
     valid
   end

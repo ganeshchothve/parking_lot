@@ -1,0 +1,49 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <%= render 'dashboard/booking_detail_overview', {booking_detail: @booking_detail, with_actions: true } %>
+      <div class="mt-3"></div>
+      <%= render 'sync_logs/sync', { record: @booking_detail } if current_client.external_api_integration? %>
+      <% if @scheme.present? %>
+        <div class="mt-3"></div>
+        <div class="card">
+          <div class = "card-header">Scheme</div>
+          <div class="card-body">
+            <div>
+              Derived from scheme: <b><%= @scheme.derived_from_scheme.name %></b>
+            </div>
+            <br/>
+            <h5>Payment adjustments</h5>
+            <% if @scheme.payment_adjustments.present? %>
+              <% @scheme.payment_adjustments.each do |adjustment| %>
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <p>Name</p>
+                        <p><%= adjustment.name %></p>
+                      </div>
+                      <div class="col-md-4">
+                        <p>Field</p>
+                        <p><%= adjustment.field.titleize %></p>
+                      </div>
+                      <div class="col-md-4">
+                        <p>Value</p>
+                        <p><%= adjustment.value(@booking_detail.project_unit) %></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+      <div class="mt-3"></div>
+      <%= render 'dashboard/booking_detail_cost_sheet', booking_detail: @booking_detail %>
+      <div class="page-break"></div>
+      <div class="mt-3"></div>
+      <%= render "dashboard/project_unit_payment_schedule", project_unit: @booking_detail.project_unit %>
+    </div>
+  </div>
+</div>

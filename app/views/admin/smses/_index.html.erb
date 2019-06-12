@@ -17,7 +17,7 @@
           <% unless current_user.buyer? %>
             <td>
               <% sms.to.each do |s| %>
-                <%= link_to s,"javascript:;", data: {toggle: "modal", target: "#sms_show"} %>
+                <%= link_to s,"javascript:;", data: {toggle: "modal", target: "#sms_show_#{sms.id.to_s}"} %>
               <% end %>
             </td>
           <% end %>
@@ -27,7 +27,7 @@
           </td>
           <td>
             <%= sms.sent_on.try(:strftime, '%b %e, %Y, %l:%M %p') || '-' %>
-            <div class="modal fade right fixed-header-footer" role="dialog" id="sms_show">
+            <div class="modal fade right fixed-header-footer" role="dialog" id="sms_show_<%=sms.id.to_s %>">
               <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -48,7 +48,7 @@
             <div class="dropdown">
               <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
               <div class="dropdown-menu dropdown-menu-right">
-                <%= link_to 'Show', "javascript:;", data: {toggle: "modal", target: "#sms_show"}, class: 'dropdown-item' %>
+                <%= link_to 'Show', "javascript:;", data: {toggle: "modal", target: "#sms_show_#{sms.id.to_s}"}, class: 'dropdown-item' %>
               </div>
             </div>
           </td>

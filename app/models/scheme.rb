@@ -1,8 +1,10 @@
 class Scheme
   include Mongoid::Document
   include Mongoid::Timestamps
+  include ArrayBlankRejectable
   include InsertionStringMethods
   include SchemeStateMachine
+  extend FilterByCriteria
 
   field :name, type: String
   field :description, type: String
@@ -14,17 +16,40 @@ class Scheme
   field :default, type: Boolean
   field :can_be_applied_by, type: Array
 
+  scope :filter_by_name, ->(name) { where(name: ::Regexp.new(::Regexp.escape(name), 'i')) }
+  scope :filter_by_can_be_applied_by, ->(user_role) do
+    where({ '$and' => ['$or' => [{ can_be_applied_by: nil },{ can_be_applied_by: [] },{ can_be_applied_by: user_role }, {can_be_applied_by: ['']} ] ] })
+  end
+  scope :filter_by_can_be_applied_by_role, ->(role) { where({ '$and' => [{ can_be_applied_by: role }] }) }
+  scope :filter_by_user_role, ->(user_role) do
+    where({ '$and' => ['$or' => [{ user_role: nil },{ user_role: [] },{ user_role: user_role },{user_role: '' } ] ] })
+  end
+  scope :filter_by_user_id, ->(user_id) do
+    where({ '$and' => ['$or' => [{ user_ids: nil },{ user_ids: [] },{ user_ids: user_id }, {user_ids: [''] } ] ] })
+  end
+  scope :filter_by_default_for_user_id, ->(user_id) do
+    where({ '$and' => ['$or' => [{ default_for_user_ids: nil }, { default_for_user_ids: [] }, { default_for_user_ids: [''] }, { default_for_user_ids: user_id }]] })
+  end
+  scope :filter_by_status, ->(status) { where(status: status) }
+  scope :filter_by_project_tower, ->(project_tower_id) { where(project_tower_id: project_tower_id) }
+
+
+
+
+
   enable_audit({
     indexed_fields: [:project_id, :project_tower_id],
     audit_fields: [:name, :user_role, :value, :status, :approved_by_id, :created_by_id, :can_be_applied_by],
   })
 
   embeds_many :payment_adjustments, as: :payable
-  belongs_to :project
+  belongs_to :project, optional: Rails.env.test?
   belongs_to :project_tower
   belongs_to :approved_by, class_name: "User", optional: true
-  belongs_to :created_by, class_name: "User" 
+  belongs_to :created_by, class_name: "User"
   belongs_to :booking_portal_client, class_name: "Client"
+  has_and_belongs_to_many :users
+  has_and_belongs_to_many :default_for_users, class_name: 'User'
 
   validates :name, :status, :cost_sheet_template_id, :payment_schedule_template_id, presence: true
   validates :name, uniqueness: {scope: :project_tower_id}
@@ -38,17 +63,6 @@ class Scheme
 
   def self.available_fields
     ["agreement_price", "all_inclusive_price", "base_rate", "floor_rise"]
-  end
-
-  def self.build_criteria params={}
-    selector = {}
-    if params[:fltrs].present?
-      if params[:fltrs][:status].present?
-        selector[:status] = params[:fltrs][:status]
-      end
-    end
-    selector[:name] = ::Regexp.new(::Regexp.escape(params[:search]), 'i') if params[:search].present?
-    self.where(selector)
   end
 
   def project_tower

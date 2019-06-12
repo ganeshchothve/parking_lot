@@ -38,7 +38,7 @@ class AssetsController < ApplicationController
   end
 
   def authorize_resource
-    authorize [current_user_role_group, @assetable], :show?
+    authorize [current_user_role_group, @assetable] unless params[:action] == 'destroy'
     if params[:action] == "index"
     elsif params[:action] == "new" || params[:action] == "create"
       authorize [current_user_role_group, Asset.new(assetable: @assetable)]

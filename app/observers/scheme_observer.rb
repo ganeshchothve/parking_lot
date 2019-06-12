@@ -1,6 +1,7 @@
 
 class SchemeObserver < Mongoid::Observer
   def before_validation scheme
+    scheme.project_id = scheme.project_tower.project_id
     scheme.send(scheme.event) if scheme.event.present?
     if scheme.payment_schedule_template_id.blank?
       scheme.payment_schedule_template_id = Template::PaymentScheduleTemplate.where(default: true).first.id

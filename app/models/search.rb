@@ -8,14 +8,16 @@ class Search
   field :carpet, type: String
   field :agreement_price, type: String
   field :all_inclusive_price, type: String
-  field :project_tower_id, type: String
   field :floor, type: Integer
-  field :project_unit_id, type: String
   field :step, type: String, default: "filter"
   field :results_count, type: Integer
   # field :result_ids, type: Array
 
   belongs_to :user
+  belongs_to :project_unit, optional: true
+  belongs_to :project_tower, optional: true
+
+  delegate :manager_id, to: :user, prefix: true, allow_nil: true
 
   def params_json
     params = {}
@@ -24,14 +26,6 @@ class Search
     params[:agreement_price] = agreement_price if agreement_price.present?
     params[:all_inclusive_price] = all_inclusive_price if all_inclusive_price.present?
     params
-  end
-
-  def project_tower
-    project_tower_id.present? ? ProjectTower.find(project_tower_id) : nil
-  end
-
-  def project_unit
-    project_unit_id.present? ? ProjectUnit.find(project_unit_id) : nil
   end
 
   def range_string price

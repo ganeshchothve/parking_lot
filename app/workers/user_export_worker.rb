@@ -22,7 +22,7 @@ class UserExportWorker
       sheet.insert_row(index+1, UserExportWorker.get_user_kyc_row(user_kyc, current_user))
     end
     file_name = "user-#{SecureRandom.hex}.xls"
-    file.write("#{Rails.root}/#{file_name}")
+    file.write("#{Rails.root}/exports/#{file_name}")
 
     ExportMailer.notify(file_name, current_user.email, "Users & User KYCs").deliver
   end
@@ -101,8 +101,8 @@ class UserExportWorker
       user.email,
       user.phone,
       user.buyer? ? user.lead_id : "",
-      User.available_roles(current_client).select{|x| x[:id] == user.role}.first[:text],
-      user.manager_id.present? ? User.find(user.manager_id).name : "",
+      I18n.t("users.role.#{user.role}"),
+      user.manager_name || "",
       user.role?("channel_partner") ? user.rera_id : "",
       user.last_sign_in_at.present? ? I18n.l(user.last_sign_in_at.in_time_zone(current_user.time_zone)) : "",
       user.confirmed? ? "Yes" : "No",

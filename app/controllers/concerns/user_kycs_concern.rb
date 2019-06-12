@@ -26,7 +26,7 @@ module UserKycsConcern
   # This is the create action for admin, users, called after new.
   #
   def create
-    @user_kyc = UserKyc.new(permitted_attributes([current_user_role_group, UserKyc.new]))
+    @user_kyc = UserKyc.new(permitted_attributes([current_user_role_group, UserKyc.new(user: @user) ]))
     set_user_creator
     respond_to do |format|
       if @user_kyc.save

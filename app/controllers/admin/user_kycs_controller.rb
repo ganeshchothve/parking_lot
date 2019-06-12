@@ -33,6 +33,10 @@ class Admin::UserKycsController < AdminController
     @user_kyc.creator = current_user
   end
 
+  def show
+    @resource = @user_kyc
+  end
+
   private
 
   def authorize_resource
@@ -41,7 +45,7 @@ class Admin::UserKycsController < AdminController
     elsif params[:action] == 'new'
       authorize [:admin, UserKyc.new(user: @user)]
     elsif params[:action] == 'create'
-      authorize [:admin, UserKyc.new(permitted_attributes([:admin, UserKyc.new(user: @user)]))]
+      authorize [:admin, UserKyc.new(permitted_attributes([:admin, UserKyc.new(user: @user)]).to_h.merge(user: @user))]
     else
       authorize [:admin, @user_kyc]
     end

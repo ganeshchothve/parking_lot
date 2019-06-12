@@ -5,10 +5,6 @@ class Admin::UserRequest::SwapPolicy < Admin::UserRequestPolicy
     super && current_client.enable_actual_inventory?(user)
   end
 
-  def new?
-    super && current_client.enable_actual_inventory?(user)
-  end
-
   def create?
     new?
   end
@@ -19,7 +15,7 @@ class Admin::UserRequest::SwapPolicy < Admin::UserRequestPolicy
 
   def permitted_attributes(params = {})
     attributes = super
-    attributes += [:alternate_project_unit_id] if %w[admin crm sales superadmin cp].include?(user.role) && record.status == 'pending'
+    attributes += [:alternate_project_unit_id] if %w[admin crm sales superadmin cp channel_partner].include?(user.role) && record.status == 'pending'
     attributes
   end
 end

@@ -1,7 +1,13 @@
 <div class="form-group">
+  <% _params = {fltrs: { project_tower: booking_detail.project_unit.project_tower_id, can_be_applied_by: current_user.role, user_role: booking_detail.user.role, user_id: booking_detail.user_id, status: 'approved' } } %>
+  <% if booking_detail.user && booking_detail.user.manager_role?('channel_partner') %>
+    <% _params[:fltrs].delete :can_be_applied_by %>
+    <% _params[:fltrs][:can_be_applied_by_role] = booking_detail.user.manager_role %>
+    <% _params[:fltrs][:default_for_user_id] = booking_detail.user.manager_id %>
+  <% end %>
 
   <%= f.label :derived_from_scheme_id, class: 'control-label' %>
-  <%= f.select :derived_from_scheme_id, project_unit.permitted_schemes(current_user).collect{|scheme| [scheme.name, scheme.id]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
+  <%= f.select :derived_from_scheme_id, options_from_collection_for_select(Scheme.where(_id: f.object.derived_from_scheme_id), 'id', 'name', f.object.derived_from_scheme_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_schemes_path, params: _params }%>
 </div>
 <%= f.hidden_field :booking_detail_id %>
 <%= f.hidden_field :project_unit_id %>
@@ -15,19 +21,16 @@
     </div>
     <div class="col-md-4">
       <p>Field</p>
-      <p><%= payment_adjustment.field %></p>
+      <p><%= payment_adjustment.field.humanize %></p>
     </div>
     <div class="col-md-4">
       <p>Value</p>
-      <p><%= payment_adjustment.value(project_unit) %></p>
+      <p><%= payment_adjustment.value(booking_detail.project_unit) %></p>
     </div>
   </div>
   <% end %>
 </div>
-<% editable_payment_adjustment = (policy(booking_detail_scheme).editable_field?("payment_adjustments_attributes") && (booking_detail_scheme.new_record? || project_unit.status == 'under_negotiation')) %>
-<% if editable_payment_adjustment %>
-  <%= f.link_to_add "Add", :payment_adjustments, :data => { :target => ".payment-adjustments" } %>
-<% end %>
+<% editable_payment_adjustment = policy([ current_user_role_group, booking_detail_scheme]).editable_field?("payment_adjustments_attributes") %>
 <div class="payment-adjustments">
   <%= f.fields_for :payment_adjustments, booking_detail_scheme.editable_payment_adjustments do |adj| %>
     <% if editable_payment_adjustment %>
@@ -60,7 +63,11 @@
     --> </div>
   <% end %>
 </div>
-<% if policy(booking_detail_scheme).editable_field?("event") %>
+<% if editable_payment_adjustment %>
+  <%= f.link_to_add "Add Adjustments", :payment_adjustments, :data => { :target => ".payment-adjustments" } %>
+<% end %>
+</br>
+<% if policy([current_user_role_group, booking_detail_scheme]).editable_field?("event") && action_name != 'checkout' %>
   <div class="form-group">
     <%= f.label :status, class: 'label-required' %>
     <%
@@ -98,10 +105,9 @@ $(document).ready(function(){
       type: "GET",
       dataType: 'json',
       data: {
-        project_unit_id: "<%= project_unit.id %>"
+        project_unit_id: "<%= booking_detail.project_unit.id %>"
       },
       success: function(data, xhr, status){
-      debugger;
         _.each(data, function(record){
           var html = payment_adjustment_html(record);
           $(".non-editable-payment-adjustments").append(html);

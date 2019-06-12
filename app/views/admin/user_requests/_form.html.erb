@@ -1,86 +1,107 @@
 <%= form_for @user_request, url: url, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['user_requests'], "data-type": "json"}, data: hash do |f| %>
-<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title"><%= @user_request.new_record? ? "New" : "Edit" %> <%= "#{global_labels['user_request']}" %></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <% if policy([current_user_role_group, (@user_request)]).editable_field?("project_unit_id") %>
-          <div class="form-group">
-            <%= f.label :project_unit_id, class: 'label-required' %>
-            <%= f.select :project_unit_id, @user_request.user.project_units.in(status: ProjectUnit.booking_stages).collect{|x| [x.name, x.id] }, {prompt: true}, class: 'selectize', disabled: (policy([current_user_role_group, (@user_request)]).editable_field?("project_unit_id") ? false : true), required: "required" %>
-          </div>
-        <% else %>
-          <div class="form-group">
-            <%= f.label :project_unit_id, class: 'label-required' %>
-            <div><%= @user_request.project_unit.name %></div>
-          </div>
-        <% end %>
-        <% begin %>
-          <%= render "admin/user_requests/#{@user_request.class.model_name.element}", f: f %>
-          <hr/>
-        <% rescue ActionView::MissingTemplate %>
-        <% end %>
-        <div class="form-group">
-          <%= f.label :status, class: 'label-required' %>
-          <% if policy([current_user_role_group, (@user_request)]).editable_field?("status") %>
-            <%= f.select :status, UserRequest.available_statuses.reject{|x| x[:id] == "failed"}.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', required: "required" %>
-          <% else %>
-            <h6><%= f.object.class.available_statuses.find{|x| x[:id] == f.object.status}[:text] %></h6>
-          <% end %>
+  <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><%= @user_request.new_record? ? "New" : "Edit" %> <%= "#{global_labels['user_request']}" %></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
-        <% if @user_request.status == "failed" %>
-          <div class="form-group">
-            <%= f.label :reason_for_failure, class: 'label-required' %>
-            <div><%= @user_request.reason_for_failure %></div>
-          </div>
-        <% end %>
-        <% if policy([current_user_role_group, (@user_request)]).editable_field?("notes_attributes") %>
-          <% f.object.notes.new(creator_id: current_user.id) %>
-          <%= f.fields_for :notes do |note_field|%>
-            <% if (note_field.object.new_record? && policy([current_user_role_group, note_field.object]).create?) || policy([current_user_role_group, note_field.object]).edit? %>
+        <div class="modal-body">
+          <% if policy([current_user_role_group, (@user_request)]).editable_field?("requestable_id") %>
+            <%= f.hidden_field :requestable_type, value: @user_request.requestable_type %>
+            <% if @user_request.requestable_type == 'BookingDetail' %>
               <div class="form-group">
-                <%= note_field.label :comments %>
-                <%= note_field.text_area :note, autofocus: true, class: "form-control" %>
-                <%= note_field.hidden_field :note_type, value: (note_field.object.note_type.present? ? note_field.object.note_type : "user") if note_field.object.creator.role == "user" %>
-                <%= note_field.hidden_field :creator_id %>
+                <%= f.label :project_unit, class: 'label-required' %>
+
+                <% if current_user.buyer? %>
+                  <%= f.select :requestable_id, options_from_collection_for_select(current_user.booking_details.where(_id: f.object.requestable_id), :_id, :name), {prompt: true}, class: 'selectize', disabled: !policy([current_user_role_group, (@user_request)]).editable_field?("requestable_id"), required: :required, data: { url: buyer_booking_details_path, params: {fltrs: { status: BookingDetail::BOOKING_STAGES, user_id: current_user.id } } } %>
+                <% else %>
+                  <%= f.select :requestable_id, options_from_collection_for_select(BookingDetail.where(_id: f.object.requestable_id), :_id, :name), {prompt: true}, class: 'selectize', disabled: !policy([current_user_role_group, (@user_request)]).editable_field?("requestable_id"), required: :required, data: { url: admin_booking_details_path, params: {fltrs: { status: BookingDetail::BOOKING_STAGES, user_id: @user_request.user_id } } } %>
+                <% end %>
               </div>
+            <% elsif @user_request.requestable_type == 'Receipt' %>
+                <%= f.label :receipt, class: 'label-required' %>
+                <% if current_user.buyer? %>
+                  <%= f.select :requestable_id, options_from_collection_for_select(current_user.receipts.where(_id: f.object.requestable_id), 'id', 'receipt_id', f.object.requestable_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: buyer_receipts_path, params: {fltrs: { status: 'success', user_id: current_user.id, booking_detail_id: nil } } } %>
+                <% else %>
+                  <%= f.select :requestable_id, options_from_collection_for_select(Receipt.where(_id: f.object.requestable_id), 'id', 'receipt_id', f.object.requestable_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_receipts_path, params: { fltrs: { status: 'success', user_id: @user_request.user_id, booking_detail_id: nil }}} %>
+                <%end %>
+
+            <% end %>
+          <% else %>
+            <div class="form-group">
+              <%= f.label :project_unit_id, class: 'label-required' %>
+              <div><%= @user_request.requestable.try(:name) %></div>
+            </div>
+          <% end %>
+          <% begin %>
+            <%= render "admin/user_requests/#{@user_request.class.model_name.element}", f: f %>
+            <hr/>
+          <% rescue ActionView::MissingTemplate %>
+          <% end %>
+          <div class="form-group">
+            <%= f.label :status %><br/>
+            <% if policy([current_user_role_group, (@user_request)]).editable_field?("event") %>
+              <% if @user_request.new_record? %>
+               <%= t("user_requests.status.#{f.object.status}") %>
+               <%= f.hidden_field :event, value: @user_request.status %>
+              <% else %>
+                <%= f.select :event, @user_request.aasm.events.reject { |event| event.name == :pending }.map(&:name), {prompt: true}, class: 'selectize', required: "required" %>
+              <% end %>
             <% else %>
-              <div>
-                <%= note_field.hidden_field :creator_id %>
-                <%= note_field.hidden_field :note %>
-                <%= note_field.hidden_field :note_type %>
-                <div><%= note_field.object.note %></div>
-                <small class="text-muted">
-                  created by <%= note_field.object.creator.name %> on <%= l(note_field.object.created_at.present? ? note_field.object.created_at.in_time_zone(current_user.time_zone) : Time.now.in_time_zone(current_user.time_zone)) %>
-                </small>
-              </div>
-              <hr/>
+              <h6><%= t("user_requests.status.#{f.object.status}") %></h6>
+            <% end %>
+          </div>
+          <% if @user_request.status == "failed" %>
+            <div class="form-group">
+              <%= f.label :reason_for_failure, class: 'label-required' %>
+              <div><%= @user_request.reason_for_failure %></div>
+            </div>
+          <% end %>
+          <% if policy([current_user_role_group, (@user_request)]).editable_field?("notes_attributes") %>
+            <% f.object.notes.new(creator_id: current_user.id) %>
+            <%= f.fields_for :notes do |note_field|%>
+              <% if (note_field.object.new_record? && policy([current_user_role_group, note_field.object]).create?) || policy([current_user_role_group, note_field.object]).edit? %>
+                <div class="form-group">
+                  <%= note_field.label :comments %>
+                  <%= note_field.text_area :note, autofocus: true, class: "form-control" %>
+                  <%= note_field.hidden_field :note_type, value: (note_field.object.note_type.present? ? note_field.object.note_type : "user") if note_field.object.creator.role == "user" %>
+                  <%= note_field.hidden_field :creator_id %>
+                </div>
+              <% else %>
+                <div>
+                  <%= note_field.hidden_field :creator_id %>
+                  <%= note_field.hidden_field :note %>
+                  <%= note_field.hidden_field :note_type %>
+                  <div><%= note_field.object.note %></div>
+                  <small class="text-muted">
+                    created by <%= note_field.object.creator.name %> on <%= l(note_field.object.created_at.present? ? note_field.object.created_at.in_time_zone(current_user.time_zone) : Time.now.in_time_zone(current_user.time_zone)) %>
+                  </small>
+                </div>
+                <hr/>
+              <% end %>
             <% end %>
           <% end %>
-        <% end %>
-        <% if @user_request.new_record? && @user_request.is_a?(UserRequest::Cancellation) %>
-          <div class="form-group">
-            <div class="alert alert-primary">
-              Your unit will be released once the cancellation request is processed. For booking the same unit again, you will have to go through the selection process again which will also be subject to availability.<br/>
-              <div class="form-check mt-3">
-                <input type="checkbox" id="accepted" class="form-check-input" />
-                <label class="form-check-label">I Agree <%= @user_request.user_id == current_user.id ? "" : " on behalf of #{@user_request.user.name}" %></label>
+          <% if @user_request.new_record? && @user_request.is_a?(UserRequest::Cancellation) %>
+            <div class="form-group">
+              <div class="alert alert-primary">
+                Your unit will be released once the cancellation request is processed. For booking the same unit again, you will have to go through the selection process again which will also be subject to availability.<br/>
+                <div class="form-check mt-3">
+                  <input type="checkbox" id="accepted" class="form-check-input" />
+                  <label class="form-check-label">I Agree <%= @user_request.user_id == current_user.id ? "" : " on behalf of #{@user_request.user.name}" %></label>
+                </div>
               </div>
             </div>
-          </div>
-        <% end %>
-      </div>
-      <div class="modal-footer">
-        <%= f.submit "Submit", class: 'btn btn-primary', disabled: ((@user_request.new_record? && @user_request.is_a?(UserRequest::Cancellation)) ? true : false), id: "submit_request", data:{event_category: 'Section', event_action: 'Click', event_name: 'cancel booking - submit'}  %>
+          <% end %>
+        </div>
+        <div class="modal-footer">
+          <%= f.submit "Submit", class: 'btn btn-primary', disabled: ((@user_request.new_record? && @user_request.is_a?(UserRequest::Cancellation)) ? true : false), id: "submit_request", data:{event_category: 'Section', event_action: 'Click', event_name: 'cancel booking - submit'}  %>
+        </div>
       </div>
     </div>
   </div>
-</div>
 <% end %>
 <%= javascript_tag do %>
 $(document).ready(function(){

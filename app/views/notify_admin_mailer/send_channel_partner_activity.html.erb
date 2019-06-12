@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+   <table>
+   	<tr>
+   		<td> Name: </td>
+   		<td> <%= @channel_partner.name %> </td>
+   	</tr>
+   	<tr>
+   		<td> Email: </td>
+   		<td> <%= @channel_partner.email %></td>
+   	</tr>
+   </table>
+
+   <p> Above channel partner tried to add already existing lead. Details of the lead are as follows: </p>
+   <table>
+   	<tr>
+   		<td> Name: </td>
+   		<td> <%= @user.name %> </td>
+   	</tr>
+   	<tr>
+   		<td> Email: </td>
+   		<td> <%= @user.email %></td>
+   	</tr>
+   	<tr>
+   		<td> Created on: </td>
+   		<td> <%= @user.created_at.utc.to_date.strftime("%_m/%d") %></td>
+   	</tr>
+   </table>
+  </body>
+</html>

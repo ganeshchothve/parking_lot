@@ -35,7 +35,7 @@
                 <a class="btn btn-primary dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add <%= global_labels['receipt'] %> to Blocked Units</a>
                 <div class="dropdown-menu dropdown-menu-right">
                   <% units_for_payments.each do |project_unit| %>
-                  <%= link_to "#{project_unit.name}", new_admin_user_project_unit_receipt_path(@user.id, project_unit.id), class: 'dropdown-item modal-remote-form-link' %>
+                  <%= link_to "#{project_unit.name}", new_admin_user_booking_detail_receipt_path(@user.id, project_unit.booking_detail.id), class: 'dropdown-item modal-remote-form-link' %>
                   <% end %>
                 </div>
               </div>
@@ -44,8 +44,8 @@
               <% end %>
               <%
                 if @user.present? && !current_user.buyer?
-                url_for_new_receipt = if @project_unit.present?
-                  new_admin_user_project_unit_receipt_path(@user, @project_unit)
+                url_for_new_receipt = if @project_unit.booking_detail.present?
+                  new_admin_user_booking_detail_receipt_path(@user, @project_unit.booking_detail)
                 else
                   new_admin_user_receipt_path(@user)
                 end

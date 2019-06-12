@@ -2,22 +2,28 @@ require 'spreadsheet'
 class ReceiptExportWorker
   include Sidekiq::Worker
 
-  def perform user_id, filters=nil
+  def perform user_id, filters=nil, options={}
     if filters.present? && filters.is_a?(String)
       filters =  JSON.parse(filters)
     end
-    user = User.find(user_id)
+    user = User.find(user_id) if user_id
     file = Spreadsheet::Workbook.new
     sheet = file.create_worksheet(name: "Receipts")
     sheet.insert_row(0, ReceiptExportWorker.get_column_names)
     receipts = Receipt.build_criteria({fltrs: filters}.with_indifferent_access)
-    receipts = receipts.where(Receipt.user_based_scope(user))
+    receipts = receipts.where(Receipt.user_based_scope(user)) if user_id
     receipts.each_with_index do |receipt, index|
       sheet.insert_row(index+1, ReceiptExportWorker.get_receipt_row(receipt))
     end
-    file_name = "receipt-#{SecureRandom.hex}.xls"
-    file.write("#{Rails.root}/#{file_name}")
-    ExportMailer.notify(file_name, user.email, "Payments").deliver
+    if user_id
+      file_name = "receipt-#{SecureRandom.hex}.xls"
+      file.write("#{Rails.root}/exports/#{file_name}")
+      ExportMailer.notify(file_name, user.email, "Payments").deliver
+    else options[:daily_report]
+      file_name = "receipt-#{DateTime.current.in_time_zone('Mumbai').strftime('%F-%T')}.xls"
+      file.write("#{Rails.root}/exports/#{file_name}")
+      DailyReportMailer.payments_report(file_name, receipts.count).deliver
+    end
   end
 
   def self.get_column_names
@@ -38,12 +44,7 @@ class ReceiptExportWorker
       "User ID (Used for VLOOKUP)",
       "Manager Name",
       "Manager Role (Source)",
-      "Project Unit",
-      "Base Rate",
-      "Land Rate",
-      "Floor Rise",
-      "PLC",
-      "Clubhouse Amenities Price",
+      "Booking",
       "Created By",
       "Receipt Date",
       "Amount Received",
@@ -55,7 +56,7 @@ class ReceiptExportWorker
     [
       receipt.receipt_id,
       receipt.order_id,
-      Receipt.available_payment_modes.select{|x| x[:id] == receipt.payment_mode}.first[:text],
+      I18n.t("receipts.payment_mode.#{receipt.payment_mode}"),
       receipt.issued_date,
       receipt.issuing_bank,
       receipt.issuing_bank_branch,
@@ -67,17 +68,12 @@ class ReceiptExportWorker
       receipt.payment_gateway,
       receipt.user.name,
       receipt.user.lead_id.to_s,
-      receipt.user.manager_id.present? ? receipt.user.manager.name : "N/A",
-      receipt.user.manager_id.present? ? User.available_roles(receipt.user.booking_portal_client).find{|x| x[:id] == receipt.user.manager.role}[:text] : "Direct",
-      receipt.project_unit_id.present? ? receipt.project_unit.name : "N/A",
-      (receipt.project_unit.base_rate rescue "N/A"),
-      (receipt.project_unit.land_rate rescue "N/A"),
-      (receipt.project_unit.floor_rise rescue "N/A"),
-      (receipt.project_unit.premium_location_charges rescue "N/A"),
-      (receipt.project_unit.clubhouse_amenities_price rescue "N/A"),
+      receipt.user.manager_name || "N/A",
+      (I18n.t("users.role.#{receipt.user.manager_role}") || "Direct"),
+      receipt.booking_detail_name || "N/A",
       receipt.creator.name,
       receipt.created_at,
-      (receipt.project_unit.receipts.where(status:"success").sum(&:total_amount) rescue "0"),
+      (receipt.booking_detail ? receipt.booking_detail.receipts.success.sum(&:total_amount) : "0"),
       receipt.comments
     ]
   end

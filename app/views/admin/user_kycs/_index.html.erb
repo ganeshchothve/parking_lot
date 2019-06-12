@@ -36,6 +36,9 @@
               <% elsif Admin::UserKycPolicy.new(current_user, user_kyc).edit? %>
                 <%= link_to 'Edit', edit_admin_user_user_kyc_path(@user, user_kyc), class: 'dropdown-item modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit User KYC'} %>
               <% end %>
+              <% if policy([:admin, UserKyc.new]).show? %>
+                <%= link_to 'Show', admin_user_kyc_path(user_kyc), class: 'dropdown-item' %>
+              <% end %>
               <% if policy([ current_user_role_group, Asset.new(assetable: user_kyc)]).index? %>
                 <%= link_to 'Documents', assetables_path(assetable_type: user_kyc.class.model_name.i18n_key.to_s, assetable_id: user_kyc.id), class: 'dropdown-item modal-remote-form-link' %>
               <% end %>

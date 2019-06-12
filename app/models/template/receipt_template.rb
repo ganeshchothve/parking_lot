@@ -1,19 +1,19 @@
 class Template::ReceiptTemplate < Template
   def self.default_content
     '<div class="card">
-      <div class="card-body">
-        <h5 class="text-center"><strong>Payment Details</strong></h5>
-        <% labels = I18n.t("mongoid.attributes.receipt").with_indifferent_access %>
-        <table class="table table-striped table-sm mt-3">
+       <div class="card-body">
+         <h5 class="text-center"><strong>Payment Details</strong></h5>
+         <% labels = I18n.t("mongoid.attributes.receipt").with_indifferent_access %>
+         <table class="table table-striped table-sm mt-3">
           <tbody>
             <tr>
               <td><%= labels["receipt_id"] %></td>
               <td class="text-right"><%= self.receipt_id %></td>
             </tr>
-            <% if self.project_unit_id.present? %>
+            <% if self.booking_detail_id.present? %>
             <tr>
               <td>Towards <%= labels["project_unit_id"] %></td>
-              <td class="text-right"><%= self.project_unit.name %></td>
+              <td class="text-right"><%= self.booking_detail.name %></td>
             </tr>
             <% end %>
             <tr>
@@ -31,7 +31,7 @@ class Template::ReceiptTemplate < Template
               </tr>
               <tr>
                 <td><%= labels["issued_date"] %></td>
-                <td class="text-right"><%= self.issued_date %></td>
+                <td class="text-right"><%= self.issued_date.strftime("%d/%m/%Y") %></td>
               </tr>
             <% end %>
             <tr>
@@ -51,15 +51,48 @@ class Template::ReceiptTemplate < Template
               <td class="text-right"><%= number_to_indian_currency(self.total_amount) %></td>
             </tr>
           </tbody>
-        </table>
-        <div class="mt-3 text-muted small">Please note that cheque / RTGS / NEFT payments are subject to clearance</div>
-        <% if current_client.disclaimer.present? %>
+         </table>
+         <div class="mt-3 text-muted small">Please note that cheque / RTGS / NEFT payments are subject to clearance</div>
+         <% if current_client.disclaimer.present? %>
           <div class="mt-3 text-muted small">
             <strong>Disclaimer:</strong><br/>
             <%= current_client.disclaimer %>
           </div>
-        <% end %>
-      </div>
-    </div>'
+         <% end %>
+       </div>
+     </div>
+     <% if current_client.enable_slot_generation? %>
+       <div class="card mt-3">
+         <div class="card-body">
+           <h5 class="text-center"><strong>Token Details</strong></h5>
+           <table class="table table-striped table-sm mt-3">
+             <tbody>
+               <tr>
+                 <td>Token Number</td>
+                 <td class="text-right"><%= self.try(:token_number) ? self.get_token_number : "--" %></td>
+               </tr>
+               <% if self.try(:time_slot) %>
+                 <tr>
+                   <td>Time Slot Date</td>
+                   <td class="text-right"><%= self.time_slot.date.in_time_zone(self.user.time_zone).strftime("%d/%m/%Y") %></td>
+                 </tr>
+                 <tr>
+                   <td>Start Time</td>
+                   <td class="text-right"><%= self.time_slot.start_time.in_time_zone(self.user.time_zone).strftime("%I:%M %p") %></td>
+                 </tr>
+                 <tr>
+                   <td>End Time</td>
+                   <td class="text-right"><%= self.time_slot.end_time.in_time_zone(self.user.time_zone).strftime("%I:%M %p") %></td>
+                 </tr>
+                 <tr>
+                   <td>Time Zone</td>
+                   <td class="text-right"><%= self.user.time_zone %></td>
+                 </tr>
+               <% end %>
+             </tbody>
+           </table>
+         </div>
+       <% end %>
+     </div>'
   end
 end

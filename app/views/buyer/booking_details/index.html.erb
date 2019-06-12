@@ -1,0 +1,31 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-9">
+      <div class="card">
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-md-7">
+              <%# if policy([:admin, ProjectUnit.new]).export? %>
+                <!-- <div class="dropdown float-left ml-2">
+                  <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <%#= link_to "All #{global_labels['units']}", export_admin_project_units_path, class: 'dropdown-item' %>
+                    <%#= link_to "Active filter #{global_labels['units']}", export_admin_project_units_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
+                  </div>
+                </div>
+              <%# end %> -->
+            </div>
+            <div class="col-md-5 text-md-right">
+              <h6 class="mt-2">Total  Bookings: <%= @booking_details.total_entries %></h6>
+            </div>
+          </div>
+          <%= render '/admin/booking_details/index', booking_details: @booking_details %>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="d-md-none mt-3"></div>
+      <%= render "filters" %>
+    </div>
+  </div>
+</div>

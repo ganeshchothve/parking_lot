@@ -80,6 +80,7 @@ gem 'phonelib'
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
 gem 'bootstrap-email'
+gem 'mongoid-sadstory', '~> 0.0.2'
 
 # TODO: run this command on server before deployment on a new server
 # TO GET TOKEN: curl -u 'username' -d '{"scopes":["repo"],"note": "Audit app by Sell.Do"}' https://api.github.com/authorizations
@@ -88,6 +89,7 @@ gem 'audit', git: 'https://github.com/amuratech/audit.git'
 
 gem 'aasm'
 gem 'mailgun-ruby'
+gem 'safe_parser'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -102,8 +104,10 @@ group :development, :test do
   gem 'pry-doc'
   # parallelize your tests for faster testing
   gem 'parallel_tests'
-
   gem "premailer"
+  gem 'rspec-rails'
+  gem 'mongoid-rspec'
+  gem 'letter_opener'
 end
 
 group :test do

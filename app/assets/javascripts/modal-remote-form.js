@@ -42,7 +42,7 @@ var modal_remote_form_link_click_handler = function(remote_href){
       window.history.pushState(null, null, href);
     }
     $.ajax({
-      url: remote_href,
+      url: decodeURIComponent(remote_href),
       type: "GET",
       dataType: "html",
       success: function(one){
@@ -62,6 +62,7 @@ var modal_remote_form_link_click_handler = function(remote_href){
         }
       },
       error: function(){
+        handle_remote_pushstate();
         Amura.global_error_handler("Error while fetching modal remote form");
       },
       complete: function(){
@@ -115,14 +116,18 @@ $(document).on("ajax:error", '.modal-remote-form', function(event){
   }
   if(data && data.errors){
     var html = '<div class="mb-3 alert alert-danger">';
-    html += '<strong>The form contains ' + data.errors.length + ' errors.</strong>';
-    html += '<ul class="mt-3 pl-3">';
-    _.each(data.errors, function(error){
-      html += '<li>' + error + '</li>';
-    });
-    html += '</ul>'
+    if(typeof data.errors == 'string'){
+      html += '<strong>' + data.errors + '</strong>';
+    } else {
+      html += '<strong>The form contains ' + data.errors.length + ' errors.</strong>';
+      html += '<ul class="mt-3 pl-3">';
+      _.each(data.errors, function(error){
+        html += '<li>' + error + '</li>';
+      });
+      html += '</ul>'
+    }
     html += '</div>';
-  }else{
+  } else{
     html = "We could not update the " + (resource ? resource : "record");
   }
   $("#modal-remote-form-container .modal-body .modal-remote-form-errors").html(html);

@@ -1,0 +1,182 @@
+<div class="card">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-11">
+        <h5 class="float-left card-title mt-2 mb-0 text-nowrap"><%= global_labels[:project_unit] %> <%= booking_detail.name %></h5>
+      </div>
+      <div class="col-sm-1">
+        <% if defined?(with_actions) && with_actions == true %>
+          <%= render "#{current_user_role_group}/booking_details/links", booking_detail: booking_detail, link_name: 'Update Booking' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label> Customer </label>
+          <div>
+            <%= link_to_if booking_detail.user, booking_detail.user_name, [current_user_role_group, booking_detail.user] %>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Tower</label>
+          <div>
+            <%= booking_detail.project_unit.project_tower_name %>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Status</label>
+          <div>
+            <%= t("booking_details.status.#{booking_detail.status}") %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Beds / Baths</label>
+          <div>
+            <%= booking_detail.project_unit.bedrooms %> / <%= booking_detail.project_unit.bathrooms %>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Carpet</label>
+          <div>
+            <%= booking_detail.project_unit.carpet %> <%= current_client.area_unit %>
+          </div>
+        </div>
+      </div>
+      <% if current_user.role?('superadmin') %>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Saleable</label>
+            <div>
+              <%= booking_detail.project_unit.saleable %> <%= current_client.area_unit %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <div class="row">
+      <% if current_user.role?('superadmin') %>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Effective Rate</label>
+            <div>
+              <%= number_to_indian_currency(booking_detail.project_unit.effective_rate) %> <%= current_client.area_unit %>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Base Rate / Floor Rise</label>
+            <div>
+              <%= number_to_indian_currency(booking_detail.base_rate) %> / <%= number_to_indian_currency(booking_detail.floor_rise) %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Agreement Price</label>
+          <div>
+            <%= number_to_indian_currency(booking_detail.calculate_agreement_price.round) %>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>All Inclusive Price</label>
+          <div>
+            <%= number_to_indian_currency(booking_detail.calculate_all_inclusive_price.round) %>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Phase</label>
+          <div>
+            <%= booking_detail.project_unit.phase_name %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% if current_client.external_api_integration? %>
+      <div class="row">
+        <% if booking_detail.sync_logs.present? %>
+          <div class="col-md-4">
+            <div class="form-group">
+            <label>Last Synced At:</label>
+              <div>
+                <% if booking_detail.present? %>
+                  <% if booking_detail.sync_logs.present? %>
+                    <%= booking_detail.sync_logs.desc(:created_at)[0].present? ? booking_detail.sync_logs.desc(:created_at)[0].updated_at.strftime("%d/%m/%Y %l:%M %p") : "-" %>
+                  <% end %>
+                <% else %>
+                   <%= "Not synced" %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+            <label>Last Sync Log Status:</label>
+              <div>
+                <% if booking_detail.present? %>
+                  <% if booking_detail.sync_logs.present? %>
+                    <%= booking_detail.sync_logs.desc(:created_at)[0].status.present? ? booking_detail.sync_logs.desc(:created_at)[0].status : "-" %>
+                  <% end %>
+                <% else %>
+                   <%= "Not synced" %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+    <% if %w[ hold swapped canceled ].exclude?(booking_detail.status)  %>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Amount Paid</label>
+            <div>
+              <%= number_to_indian_currency(booking_detail.total_amount_paid) %>
+            </div>
+            <div class="small">* Considers processed <%= global_labels[:receipts] %> only</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Pending Balance</label>
+            <div>
+              <%= number_to_indian_currency(booking_detail.pending_balance({strict: true})) %>
+            </div>
+            <div class="small">* Considers processed <%= global_labels[:receipts] %> only</div>
+          </div>
+        </div>
+      </div>
+      <div class="alert alert-primary">
+        <ul>
+          <li>You need to pay <%= number_to_indian_currency(booking_detail.project_unit.booking_price) %> to confirm the booking</li>
+          <% unless current_client.cancellation_amount.zero? %>
+            <li>Cancellation charges are <%= number_to_indian_currency(current_client.cancellation_amount) %></li>
+          <% end %>
+          <% if booking_detail.project_unit.auto_release_on %>
+            <li>You have <%= (booking_detail.project_unit.auto_release_on - Date.today).to_i %> days (before <%= I18n.l(booking_detail.project_unit.auto_release_on) %>) remaining to confirm this booking. Please make a remaining payment of <%= number_to_indian_currency(booking_detail.pending_balance.round) %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  </div>
+</div>

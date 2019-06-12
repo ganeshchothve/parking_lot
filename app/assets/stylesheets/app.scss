@@ -1,9 +1,9 @@
 @import "custom_variables";
+@import "custom"; // this is the css to be modified per client
 @import "bootstrap/bootstrap";
 @import "font-awesome-sprockets";
 @import "font-awesome";
 @import "building";
-@import "custom"; // this is the css to be modified per client
 
 html, body{
 	padding: 0;
@@ -146,6 +146,11 @@ figure.wave {
 .page-break{
   page-break-after: always;
 }
+
+.text-decoration-none, .text-decoration-none:hover {
+  text-decoration:none
+}
+
 @media print {
   .tab-content > .tab-pane {
       display: block !important;

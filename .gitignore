@@ -19,6 +19,7 @@ pickle-email-*.html
 ## Environment normalisation:
 /.bundle
 /vendor/bundle
+/exports/*
 
 # these should all be checked in to normalise the environment:
 # Gemfile.lock, .ruby-version, .ruby-gemset
@@ -40,6 +41,7 @@ bower.json
 /doc
 dump.rdb
 config/booking-portal-env.yml
+config/sidekiq_manager.yml
 
 # Mac OS X hidden files
 .DS_Store

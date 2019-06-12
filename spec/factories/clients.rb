@@ -8,7 +8,7 @@ FactoryBot.define do
     helpdesk_email { Faker::Internet.email }
     helpdesk_number { Faker::Number.number(10) }
     enable_company_users { Faker::Boolean.boolean }
-
+    enable_actual_inventory { %w[superadmin admin user] }
     notification_email { Faker::Internet.email }
     notification_numbers { Faker::Number.number(10) }
 
@@ -20,6 +20,7 @@ FactoryBot.define do
     booking_portal_domains { ['localhost'] }
     registration_name { Faker::Company.name }
     website_link { 'abc.com' }
+    enable_direct_payment { true }
 
     cin_number { Faker::Number.number(12) }
     enable_referral_bonus { true }
@@ -27,6 +28,6 @@ FactoryBot.define do
     mailgun_email_domain { 'test' }
     sms_provider_username { 'test' }
     sms_provider_password { 'test' }
-    enable_communication { {"email": false, "sms": false} } 
+    enable_communication { { "email": false, "sms": false } }
   end
 end

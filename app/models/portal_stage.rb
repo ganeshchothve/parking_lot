@@ -10,4 +10,5 @@ class PortalStage
 
   # Validations
   validates :stage, uniqueness: true, presence: true
+
 end

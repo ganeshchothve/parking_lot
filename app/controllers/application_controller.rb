@@ -1,4 +1,8 @@
 class ApplicationController < ActionController::Base
+  include ApplicationConcern
+  include Pundit
+  include ApplicationHelper
+
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_cache_headers, :set_request_store, :set_cookies
   before_action :load_hold_unit
@@ -7,11 +11,10 @@ class ApplicationController < ActionController::Base
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
-  include Pundit
-  include ApplicationHelper
   helper_method :home_path
   protect_from_forgery with: :exception, prepend: true
   layout :set_layout
+
   def after_sign_in_path_for(current_user)
     ApplicationLog.user_log(current_user.id, 'sign_in', RequestStore.store[:logging])
     dashboard_path
@@ -26,28 +29,9 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+
   def set_layout
-    if user_signed_in?
-      if current_user.buyer?
-        'dashboard'
-      else
-        'admin'
-      end
-    elsif is_a?(Devise::SessionsController)
-      "application"
-    elsif is_a?(Devise::PasswordsController)
-      "application"
-    elsif is_a?(Devise::UnlocksController)
-      "application"
-    elsif is_a?(Devise::RegistrationsController)
-      "application"
-    elsif is_a?(Devise::ConfirmationsController)
-      "application"
-    elsif is_a?(ChannelPartnersController)
-      "application"
-    else
-      "application"
-    end
+    devise_controller? ? 'devise' : 'application'
   end
 
   private
@@ -102,7 +86,7 @@ class ApplicationController < ActionController::Base
   end
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:phone, :email, :password, :password_confirmation, :manager_id])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :phone, :email, :password, :manager_id, :campaign, :source, :sub_source, :medium, :term])
     devise_parameter_sanitizer.permit(:sign_in, keys: [:login, :login_otp, :password, :password_confirmation, :manager_id])
     devise_parameter_sanitizer.permit(:otp, keys: [:login, :login_otp, :password, :password_confirmation, :manager_id])
     devise_parameter_sanitizer.permit(:account_update, keys: [:phone, :email, :password, :password_confirmation, :current_password, :manager_id])
@@ -120,10 +104,31 @@ class ApplicationController < ActionController::Base
       policy_name += "."
       policy_name += exception.policy.condition.to_s
     end
-    flash[:alert] = t "#{policy_name}", scope: "pundit", default: :default
+    alert = t policy_name, scope: "pundit", default: :default
     respond_to do |format|
-      format.html { redirect_to user_signed_in? ? after_sign_in_path_for(current_user) : root_path}
-      format.json { render json: { error: flash[:alert] }, status: 403 }
+      unless request.referer && request.referer.include?('remote-state')
+        format.html { redirect_to (user_signed_in? ? after_sign_in_path_for(current_user) : root_path), alert: alert }
+        format.json { render json: { errors: alert }, status: 403 }
+      else
+        # Handle response for remote-state url requests.
+        format.html do
+          render plain: '
+            <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">' + params[:controller].titleize + '</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">' + alert + '</div>
+                  <div class="modal-footer"></div>
+                </div>
+              </div>
+            </div>'
+        end
+      end
     end
   end
 end

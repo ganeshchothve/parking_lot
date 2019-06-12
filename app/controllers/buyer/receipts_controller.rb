@@ -1,6 +1,5 @@
 class Buyer::ReceiptsController < BuyerController
   include ReceiptsConcern
-
   before_action :set_receipt, except: [:index, :new, :create]
 
   layout :set_layout
@@ -9,10 +8,11 @@ class Buyer::ReceiptsController < BuyerController
   def index
     authorize([:buyer, Receipt])
 
-    _params = params[:fltrs] || {}
-    _params.delete(:user_id)
-
     @receipts = current_user.receipts.build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page])
+    respond_to do |format|
+      format.json { render json: @receipts.as_json(methods: [:name]) }
+      format.html
+    end
   end
 
   # GET /buyer/receipts/export
@@ -39,29 +39,26 @@ class Buyer::ReceiptsController < BuyerController
     })
     @receipt.assign_attributes(permitted_attributes([:buyer, @receipt]))
     @receipt.account = selected_account
+
     authorize([:buyer, @receipt])
     respond_to do |format|
-      if @receipt.account.blank?
-        flash[:alert] = "We do not have any Account Details for Transaction. Please ask Administrator to add."
-        format.html { render 'new' }
-      else
-        if @receipt.save
-          url = dashboard_path
-          if @receipt.payment_gateway_service.present?
-            url = @receipt.payment_gateway_service.gateway_url(@receipt.user.get_search(@receipt.project_unit_id).id)
-            format.html{ redirect_to url }
-            format.json{ render json: {}, location: url }
-          else
-            flash[:notice] = "We couldn't redirect you to the payment gateway, please try again"
-            @receipt.update_attributes(status: "failed")
-            url = dashboard_path
-            format.json{ render json: @receipt, location: url }
-            format.html{ redirect_to url }
-          end
+      if @receipt.save
+        url = dashboard_path
+        if @receipt.payment_gateway_service.present?
+          url = @receipt.payment_gateway_service.gateway_url(@receipt.user.get_search('').id)
+          format.html{ redirect_to url }
+          format.json{ render json: {}, location: url }
         else
-          format.json { render json: {errors: @receipt.errors.full_messages}, status: :unprocessable_entity }
-          format.html { render 'new' }
+          flash[:notice] = "We couldn't redirect you to the payment gateway, please try again"
+          @receipt.update_attributes(status: "failed")
+          url = dashboard_path
+          format.json{ render json: @receipt, location: url }
+          format.html{ redirect_to url }
         end
+      else
+        flash[:alert] = @receipt.errors.full_messages
+        format.json { render json: {errors: flash[:alert] }, status: :unprocessable_entity }
+        format.html { render 'new' }
       end
     end
   end
