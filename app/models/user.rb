@@ -77,6 +77,10 @@ class User
 
   delegate :name, :role, :role?, :email, to: :manager, prefix: true, allow_nil: true
 
+  def self.otp_length
+    6
+  end
+
   has_one_time_password length: User.otp_length
   default_scope -> { desc(:created_at) }
 
@@ -330,10 +334,6 @@ class User
 
   # Class Methods
   class << self
-
-    def otp_length
-      6
-    end
 
     def build_criteria(params = {})
       criteria = super(params)
