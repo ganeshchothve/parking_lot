@@ -6,6 +6,8 @@ class ProjectUnit
   extend ApplicationHelper
   include InsertionStringMethods
   include PriceCalculator
+  extend FilterByCriteria
+
 
   STATUS = %w(available not_available hold blocked error)
 
@@ -81,6 +83,9 @@ class ProjectUnit
   validates :status, inclusion: { in: proc { ProjectUnit.available_statuses.collect { |x| x[:id] } } }
   validates :available_for, inclusion: { in: proc { ProjectUnit.available_available_fors.collect { |x| x[:id] } } }
   validate :pan_uniqueness
+
+  scope :filter_by_project_tower_id, ->(project_tower_id) { where(project_tower_id: project_tower_id) }
+
 
   delegate :name, to: :phase, prefix: true, allow_nil: true
 

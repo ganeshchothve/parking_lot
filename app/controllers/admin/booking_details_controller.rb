@@ -1,14 +1,46 @@
 class Admin::BookingDetailsController < AdminController
   include BookingDetailConcern
   around_action :apply_policy_scope, only: [:index, :mis_report]
-  before_action :set_booking_detail, except: [:index, :mis_report]
-  before_action :authorize_resource, except: [:index, :mis_report]
+  before_action :set_booking_detail, except: [:index, :mis_report, :new, :create]
+  before_action :authorize_resource, except: [:index, :mis_report, :new, :create]
   before_action :set_project_unit, only: :booking
   before_action :set_receipt, only: :booking
 
   def index
     authorize [:admin, BookingDetail]
     @booking_details = BookingDetail.includes(:project_unit, :user, :booking_detail_schemes).build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page])
+  end
+
+  def new
+    @search = Search.new()
+    @booking_detail = BookingDetail.new(search: @search)
+    authorize [:admin, @booking_detail]
+    render layout: false
+  end
+
+  def create
+    _project_unit = ProjectUnit.find(params[:booking_detail][:project_unit_id])
+    _search = Search.create(user_id: params[:booking_detail][:user_id], project_tower_id: params[:project_tower_id] || _project_unit.project_tower.id, project_unit_id: params[:booking_detail][:project_unit_id])
+    @booking_detail = BookingDetail.new(search: _search)
+    @booking_detail.assign_attributes(permitted_attributes([:admin, @booking_detail]))
+    @booking_detail.assign_attributes(
+      base_rate: _project_unit.base_rate,
+      floor_rise: _project_unit.floor_rise,
+      saleable: _project_unit.saleable,
+      costs: _project_unit.costs,
+      data: _project_unit.data
+    )
+    @booking_detail.create_default_scheme
+    authorize [:admin, @booking_detail]
+    respond_to do |format|
+      if @booking_detail.save
+        response.set_header('location', checkout_user_search_path(_search.id, user_id: _search.user_id) )
+        format.json { render json: {message: "booking_successful"}, status: :ok }
+        format.html { redirect_to checkout_user_search_path(_search.id, user_id: _search.user_id) }
+      else
+        format.html { redirect_to dashboard_path, alert: t('controller.booking_details.booking_unsuccessful') }
+      end
+    end
   end
 
   def show
