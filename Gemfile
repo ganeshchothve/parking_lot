@@ -112,8 +112,6 @@ end
 
 group :test do
   gem 'faker', github: 'stympy/faker'
-  gem 'rspec-rails'
-  gem 'mongoid-rspec'
   gem 'shoulda', '~> 3.5'
   gem 'shoulda-matchers', '3.1.2'
   gem "factory_bot_rails"
