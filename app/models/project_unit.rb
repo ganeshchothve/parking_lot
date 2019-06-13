@@ -8,7 +8,6 @@ class ProjectUnit
   include PriceCalculator
   extend FilterByCriteria
 
-
   STATUS = %w(available not_available hold blocked error)
 
   # These fields are globally utlised on the server side
@@ -85,7 +84,6 @@ class ProjectUnit
   validate :pan_uniqueness
 
   scope :filter_by_project_tower_id, ->(project_tower_id) { where(project_tower_id: project_tower_id) }
-
 
   delegate :name, to: :phase, prefix: true, allow_nil: true
 

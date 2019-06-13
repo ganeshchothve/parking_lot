@@ -33,7 +33,7 @@ class Admin::BookingDetailsController < AdminController
     @booking_detail.create_default_scheme
     authorize [:admin, @booking_detail]
     respond_to do |format|
-      if @booking_detail.save
+      if @booking_detail.booking_detail_scheme.present? && @booking_detail.save
         response.set_header('location', checkout_user_search_path(_search.id, user_id: _search.user_id) )
         format.json { render json: {message: "booking_successful"}, status: :ok }
         format.html { redirect_to checkout_user_search_path(_search.id, user_id: _search.user_id) }

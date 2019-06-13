@@ -46,8 +46,8 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   # end
 
   def permitted_attributes
-    super
-    attributes = [:primary_user_kyc_id, :user_kyc_ids, :project_unit_id, :user_id ]
+    attributes = super
+    attributes += [:primary_user_kyc_id, :user_kyc_ids, :project_unit_id, :user_id ]
     attributes
   end
 
