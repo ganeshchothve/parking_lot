@@ -254,9 +254,9 @@ class ProjectUnit
           selector = { status: params[:fltrs][:status] }
         end
       end
-      if params[:fltrs][:project_tower_id].present?
+      # if params[:fltrs][:project_tower_id].present?
         selector[:project_tower_id] = params[:fltrs][:project_tower_id]
-      end
+      # end
       if params[:fltrs][:unit_facing_direction].present?
         selector[:unit_facing_direction] = params[:fltrs][:unit_facing_direction]
       end
