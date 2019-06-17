@@ -1,5 +1,8 @@
 <div class="container">
   <div class="row justify-content-center">
+    <% if policy([:admin, Client]).upload? %>
+      <%= link_to"Upload ", dashboard_documents_path(@user,'remote-state': assetables_path(assetable_type: @assetable.class.model_name.i18n_key.to_s, assetable_id: @assetable.id) ), class: "btn btn-primary " %>
+    <% end %>
     <div class="col-md-12">
       <div class="card">
         <div class="card-body">

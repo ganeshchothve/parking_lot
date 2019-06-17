@@ -7,6 +7,14 @@ class Admin::ClientsController < AdminController
     render layout: false
   end
 
+  def download_brochure
+    send_file(@client.brochure.path,
+          :filename => @client.brochure.url,
+          :type => @client.brochure.content_type,
+          :disposition => 'attachment',
+          :url_based_filename => true)
+  end
+
   def update
     @client.assign_attributes(permitted_attributes([:admin, @client]))
     respond_to do |format|

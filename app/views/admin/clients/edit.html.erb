@@ -17,7 +17,7 @@
               <a class="nav-item nav-link" data-toggle="tab" href="#nav-client-contacts" role="tab">Contacts & Notifications</a>
               <a class="nav-item nav-link" data-toggle="tab" href="#nav-client-integrations" role="tab">Integrations</a>
               <a class="nav-item nav-link" data-toggle="tab" href="#nav-client-pages" role="tab">Content Pages</a>
-              <a class="nav-item nav-link" data-toggle="tab" href="#nav-client-logos" role="tab">Logo & Background</a>
+              <a class="nav-item nav-link" data-toggle="tab" href="#nav-client-logos" role="tab">Logo, Background & Brochure</a>
               <a class="nav-item nav-link" data-toggle="tab" href="#nav-client-configuration" role="tab">Time Slot Configuration</a>
             </div>
           </nav>
@@ -471,6 +471,17 @@
                 <% if @client.logo.present? %>
                   <div style="width:100px;height:100px;overflow:hidden;" class="ml-3">
                     <img src="<%= @client.logo.url %>" style="max-height: 100%; max-width:100%;" />
+                  </div>
+                <% end %>
+                <hr/>
+              </div>
+              <div class="form-group">
+                <%= f.label :brochure, class: 'label-required' %><br/>
+                <%= f.file_field :brochure, class: 'btn pl-0', disabled: (!policy([:admin, @client]).editable_field?("brochure")) %>
+                <br/>
+                <% if @client.brochure.present? %>
+                  <div style="width:100px;height:100px;overflow:hidden;" class="ml-3">
+                    <img src="<%= @client.brochure.url %>" style="max-height: 100%; max-width:100%;" />
                   </div>
                 <% end %>
                 <hr/>

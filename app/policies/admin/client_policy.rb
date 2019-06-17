@@ -5,6 +5,26 @@ class Admin::ClientPolicy < ClientPolicy
     %w[superadmin].include?(user.role)
   end
 
+  def asset_create?
+    update?
+  end
+
+  def upload?
+    update?
+  end
+
+  def index?
+    update?
+  end
+
+  def create?
+    update?
+  end
+
+  def download_brochure?
+    true
+  end
+
   def permitted_attributes(params = {})
     attributes = super
     if %w[superadmin].include?(user.role)
