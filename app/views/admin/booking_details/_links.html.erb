@@ -54,10 +54,6 @@
           <%= link_to t("global.user_request_#{klass.model_name.element}"), new_admin_user_user_request_path(user_id: booking_detail.user_id, requestable_id: booking_detail.id, requestable_type: 'BookingDetail', request_type: klass.model_name.element), class: "dropdown-item modal-remote-form-link" %>
       <% end %>
     <% end %>
-
-    <% if policy([:admin, SyncLog.new]).resync? && booking_detail.sync_logs.present? %>
-      <%= link_to "Resync", resync_admin_sync_log_path(booking_detail.sync_logs.desc(:created_at)[0]), class: 'd-print-none dropdown-item' %>
-    <% end %>
   </div>
 </div>
 

@@ -4,12 +4,12 @@
     <div class="row">
       <div class="col-md-12">
         <div class="row">
-          <% record.erp_models.active.where(action_name: 'create').each do |erp_model| %>
+          <% record.erp_models.active.each do |erp_model| %>
             <div class="col-md-4">
               <div class="form-group">
                 <label>Last Sync On:</label>
                 <div>
-                  <%= erp_model.try(:domain) %>
+                  <%= erp_model.try(:domain) %> (<%= erp_model.action_name %>)
                 </div>
               </div>
             </div>
@@ -22,7 +22,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="form-group">
                 <label>Last Sync Log Status:</label>
                 <div>
@@ -31,6 +31,12 @@
                     <%= link_to "Sync", admin_sync_logs_path(sync: { erp_model_id: erp_model.id, resource_id: record, resource_type: record.class.to_s}), method: :post %>
                   <% end %>
                 </div>
+              </div>
+            </div>
+            <div class="col-md-1">
+              <label></label>
+              <div>
+                <%= link_to "Logs", admin_sync_logs_path(fltrs: { resource_id: record.id, erp_model_id: erp_model.id }), target: :_blank %>
               </div>
             </div>
           <% end %>

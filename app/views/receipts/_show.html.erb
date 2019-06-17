@@ -7,9 +7,6 @@
         <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</a>
         <div class="dropdown-menu dropdown-menu-right">
           <button onclick="window.print();" class="dropdown-item ">Print</button>
-          <% if policy([:admin, SyncLog.new]).resync? && receipt.sync_logs.present? %>
-            <%= link_to "Resync", resync_admin_sync_log_path(receipt.sync_logs.desc(:created_at)[0]), class: "dropdown-item" %>
-          <% end %>
         </div>
       </div>
     </div>

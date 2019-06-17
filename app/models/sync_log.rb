@@ -18,6 +18,9 @@ class SyncLog
   has_many :sync_logs, class_name: 'SyncLog', foreign_key: 'reference_id'
   belongs_to :erp_model # TODO: remove optional true
 
+  scope :filter_by_resource_id, ->(_resource_id) {where(resource_id: _resource_id) }
+  scope :filter_by_erp_model_id, ->(_erp_model_id) {where(erp_model_id: _erp_model_id) }
+
   # validates :request, presence: true #ToDo SyncLog attributes
 
   def sync(erp_model, record)

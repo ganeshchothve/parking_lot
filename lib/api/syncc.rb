@@ -40,8 +40,7 @@ module Api
     end
 
     def set_request_payload
-      erb = ERB.new(erp_model.request_payload)
-      SafeParser.new(erb.result(binding)).safe_load
+      erp_model.set_request_payload(record)
     end
 
     def set_sync_log(request, response, response_code, status, message)
