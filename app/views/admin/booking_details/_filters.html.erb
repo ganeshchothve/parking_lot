@@ -25,7 +25,7 @@
       </div>
       <div class="form-group">
         <%= label_tag "fltrs", "manager", class: "control-label" %>
-        <%= select_tag "fltrs[manager]", options_for_select(BookingDetail.where(:manager_id.nin => ["", nil]).collect{|bd| [bd.manager.name, bd.manager.id]}, (params[:fltrs].present? ? params[:fltrs][:manager] : "")), {prompt: "Select", class: "selectize"} %>
+        <%= select_tag "fltrs[manager]", options_for_select(BookingDetail.where(:manager_id.nin => ["", nil]).collect{|bd| [bd.manager_name, bd.manager_id]}, (params[:fltrs].present? ? params[:fltrs][:manager] : "")), {prompt: "Select", class: "selectize"} %>
       </div>
     <% end %>
   </div>

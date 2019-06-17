@@ -9,7 +9,7 @@ class Admin::ClientPolicy < ClientPolicy
     attributes = super
     if %w[superadmin].include?(user.role)
       attributes += [:enable_slot_generation]
-      unless record.slot_start_date.present?
+      unless record.slot_start_date.present? && Rails.env.production?
         attributes += %w[slot_start_date start_time end_time capacity duration enable_slot_generation]
       end
     end

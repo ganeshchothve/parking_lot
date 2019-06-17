@@ -23,10 +23,8 @@ class Admin::SyncLogsController < AdminController
   def resync
     if @sync_log.resource.present?
       record = @sync_log.resource
-      @erp_models = ErpModel.where(resource_class: record.class, action_name: @sync_log.action, is_active: true)
-      @erp_models.each do |erp|
-        @sync_log.sync(erp, record)
-      end
+      erp_model = @sync_log.erp_model
+      @sync_log.sync(erp_model, record)
       notice = "#{record.class} is queued to sync"
     else
       notice = 'Sync log resource absent'
@@ -46,7 +44,7 @@ class Admin::SyncLogsController < AdminController
       else
         flash[:alert] = 'Sync details are missing.'
       end
-      format.html
+      format.html { redirect_to request.referer || root_path }
     end
   end
 

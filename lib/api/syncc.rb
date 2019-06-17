@@ -45,7 +45,11 @@ module Api
     end
 
     def set_sync_log(request, response, response_code, status, message)
-      response = JSON.parse(response) if response.is_a?(RestClient::Response)
+      if response == ''
+        response = { error: 'Response is empty'}
+      else
+        response = JSON.parse(response) if response.is_a?(RestClient::Response)
+      end
       synclog.update_attributes(request: request, response: response, response_code: response_code, status: status ? 'successful' : 'failed', message: message, action: erp_model.action_name, resource: record, user_reference: record_user, reference: parent_sync)
     end
 

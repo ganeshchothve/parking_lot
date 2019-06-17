@@ -62,7 +62,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
       attributes += [:event]
     end
     if %w[admin crm superadmin sales_admin].include?(user.role)
-      attributes += [:event]
+      attributes += [:event] unless record.status.in?(%w(success))
       if record.persisted? && record.clearance_pending?
         attributes += %i[processed_on comments tracking_id]
       end

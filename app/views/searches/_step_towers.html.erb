@@ -120,14 +120,14 @@
           <label>Facing</label>
           <h6 class="text-black font-weight" data-placeholder='unit_facing_direction'></h6>
         </div>
-        <% unless @user.manager && @user.manager.role?('channel_partner') %>
+        <% unless @user.manager_role?('channel_partner') %>
           <div class="col-md-4">
             <label>Agreement Price</label>
             <h6 class="text-black font-weight" data-placeholder='agreement_price'></h6>
           </div>
         <% end %>
       </div>
-      <% unless @user.manager && @user.manager.role?('channel_partner') %>
+      <% unless @user.manager_role?('channel_partner') %>
         <div class="row pl-3 pb-0 pb-md-3 pr-3 pt-0 pt-md-3">
           <div class="col-md-4">
             <label>All Inclusive Price</label>
@@ -192,6 +192,6 @@
     var unit = _.find(units, function(u){ return u._id == unit_id });
     var unit_assets = _.filter(assets, function(a){return a.assetable_id == unit_id});
     showUnitData(unit, unit_assets);
-    $(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/project_units/" + unit_id + "?layout=false");
+    $(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/project_units/" + unit_id + "/quotation?layout=false");
   });
 <% end %>

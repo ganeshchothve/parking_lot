@@ -40,8 +40,8 @@ module SearchConcern
   def search_for_towers
     parameters = @search.params_json
     project_units = ProjectUnit.build_criteria({fltrs: parameters}).in(status: ProjectUnit.user_based_available_statuses(current_user))
-    if @user.manager && @user.manager.role?('channel_partner')
-      filters = {fltrs: { can_be_applied_by_role: @user.manager.role, user_role: @user.role, user_id: @user.id, status: 'approved', default_for_user_id: @user.manager.id } }
+    if @user.manager_role?('channel_partner')
+      filters = {fltrs: { can_be_applied_by_role: @user.manager_role, user_role: @user.role, user_id: @user.id, status: 'approved', default_for_user_id: @user.manager_id } }
       project_tower_ids_for_channel_partner = Scheme.build_criteria(filters).distinct(:project_tower_id)
       project_units = project_units.in(project_tower_id: project_tower_ids_for_channel_partner)
     end

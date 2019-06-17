@@ -5,7 +5,6 @@
       <tr>
         <th><%= labels[:name] %></th>
         <th>Details</th>
-        <th><%= labels[:rera_id] %></th>
         <th><%= labels[:status] %></th>
         <th><%= labels[:associated_user_id] %></th>
         <th class='text-right'>Actions</th>
@@ -16,7 +15,6 @@
         <tr>
           <td><%= channel_partner.name %></td>
           <td><i class="far fa-envelope"></i> <%= channel_partner.email %><br/><i class="fas fa-mobile-alt"></i> <%= channel_partner.phone %></td>
-          <td><%= channel_partner.rera_id %></td>
           <td><%= ChannelPartner.available_statuses.find{|x| x[:id] == channel_partner.status}[:text] %></td>
           <td><%= channel_partner.associated_user_id.present? ? link_to(channel_partner.associated_user.name, admin_user_path(channel_partner.associated_user_id)) : '-' %></td>
           <td class="text-right">

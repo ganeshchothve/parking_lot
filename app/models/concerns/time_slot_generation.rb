@@ -10,9 +10,12 @@ module TimeSlotGeneration
 
     increments :token_number, seed: 300, auto: false
 
+    # Validations
+    validates :token_number, uniqueness: true, allow_nil: true
+
     # Callbacks
     before_save :assign_token_number
-    before_update -> { finalise_time_slot if is_eligible_for_token_number_assignment? && current_client.enable_slot_generation? }
+    before_update :finalise_time_slot
 
     # Associations
     embeds_one :time_slot
@@ -61,38 +64,29 @@ module TimeSlotGeneration
   end
 
   def update_time_slot
-    receipts = Receipt.where(token_number: token_number)
-    if receipts.any? && receipts.first.try(:time_slot) # if token number and time slot are already assigned to another receipt
-      errors.add(:token_number, 'Time Slot for this token number is not available.')
-      false
+    slot = calculate_time_slot
+    if slot.start_time < Time.zone.now # if time slot date is in the past
+      errors.add(:token_number, 'Time Slot for this token number is in the past.')
       throw(:abort)
     else
-      slot = calculate_time_slot
-      if slot.start_time < Time.zone.now # if time slot date is in the past
-        errors.add(:token_number, 'Time Slot for this token number is in the past.')
-        false
-        throw(:abort)
-      else
-        self.time_slot = slot
-      end
+      self.time_slot = slot
     end
   end
 
   def finalise_time_slot
-    if %w[success clearance_pending].include?(status) # Allowed to edit token number only if receipt status is success or clearance pending
-      if time_slot.present?
-        if token_number.blank?
-          self.time_slot = nil
-        elsif token_number_changed?
-          update_time_slot
-        end
-      else
+    self.time_slot = nil if token_number_changed? && token_number.blank?
+
+    if is_eligible_for_token_number_assignment?
+      if current_client.enable_slot_generation?
         if token_number_changed?
-          update_time_slot if token_number_was.nil?
+          update_time_slot if token_number.present? && !(status_changed? && status_was == 'pending' && status == 'clearance_pending') # Don't run for the first time when token is assigned by the system.
         else
-          self.time_slot = calculate_time_slot if token_number.present?
+          self.time_slot = calculate_time_slot if time_slot.blank? && token_number.present?
         end
       end
+    elsif token_number_changed? && token_number.present?
+      errors.add(:base, "Receipt not eligible for applying token number")
+      throw(:abort)
     end
   end
 end

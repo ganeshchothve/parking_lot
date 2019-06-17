@@ -5,7 +5,7 @@ class ProjectUnit
   include ApplicationHelper
   extend ApplicationHelper
   include InsertionStringMethods
-  include CostCalculator
+  include PriceCalculator
 
   STATUS = %w(available not_available hold blocked error)
 
@@ -109,24 +109,6 @@ class ProjectUnit
 
   def blocked?
     status == 'blocked'
-  end
-
-  def calculated_costs
-    out = {}
-    costs.each { |c| out[c.key] = c.value }
-    out.with_indifferent_access
-  end
-
-  def calculated_cost(name)
-    costs.where(name: name).first.value
-  rescue StandardError
-    0
-  end
-
-  def calculated_data
-    out = {}
-    data.each { |c| out[c.key] = c.value }
-    out.with_indifferent_access
   end
 
   def calculated_parameters
@@ -333,17 +315,13 @@ class ProjectUnit
   end
 
   def booking_detail_scheme
-    booking_detail.try(:booking_detail_scheme) unless self.available?
-  end
-
-  def scheme=(_scheme)
-    @scheme = _scheme if _scheme.is_a?(Scheme) || _scheme.is_a?(BookingDetailScheme)
+    scheme
   end
 
   def scheme
     return @scheme if @scheme.present?
 
-    @scheme = booking_detail_scheme
+    @scheme = booking_detail.try(:booking_detail_scheme) if self.available?
 
     @scheme = project_tower.default_scheme if @scheme.blank?
     @scheme
@@ -361,6 +339,10 @@ class ProjectUnit
     if booking_detail.present? && (%w[hold].include?(status) || self.class.booking_stages.include?(status))
       BookingDetailScheme.where(booking_detail_id: booking_detail.id).in(status: 'draft').desc(:created_at).first
     end
+  end
+
+  def pending_balance
+    booking_detail.try(:pending_balance).to_f
   end
 
   private

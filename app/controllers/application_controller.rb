@@ -104,10 +104,31 @@ class ApplicationController < ActionController::Base
       policy_name += "."
       policy_name += exception.policy.condition.to_s
     end
-    flash[:alert] = t "#{policy_name}", scope: "pundit", default: :default
+    alert = t policy_name, scope: "pundit", default: :default
     respond_to do |format|
-      format.html { redirect_to (user_signed_in? ? after_sign_in_path_for(current_user) : root_path) }
-      format.json { render json: { errors: flash[:alert] }, status: 403 }
+      unless request.referer && request.referer.include?('remote-state')
+        format.html { redirect_to (user_signed_in? ? after_sign_in_path_for(current_user) : root_path), alert: alert }
+        format.json { render json: { errors: alert }, status: 403 }
+      else
+        # Handle response for remote-state url requests.
+        format.html do
+          render plain: '
+            <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">' + params[:controller].titleize + '</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">' + alert + '</div>
+                  <div class="modal-footer"></div>
+                </div>
+              </div>
+            </div>'
+        end
+      end
     end
   end
 end

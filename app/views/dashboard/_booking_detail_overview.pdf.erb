@@ -1,8 +1,9 @@
+<%# = wicked_pdf_stylesheet_link_tag "dashboard" -%>
 <div class="card">
   <div class="card-header">
     <div class="row">
       <div class="col-11">
-        <h5 class="float-left card-title mt-2 mb-0 text-nowrap"><%= global_labels[:project_unit] %> <%= booking_detail.name %></h5>
+        <h5 class="card-title mt-2 mb-0 text-nowrap"><%= global_labels[:project_unit] %> <%= booking_detail.name %></h5>
       </div>
       <div class="col-sm-1">
         <% if defined?(with_actions) && with_actions == true %>
@@ -15,9 +16,9 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label> Customer </label>
+          <label>Name</label>
           <div>
-            <%= link_to_if booking_detail.user, booking_detail.user_name, [current_user_role_group, booking_detail.user] %>
+            <%= booking_detail.name %>
           </div>
         </div>
       </div>
@@ -73,14 +74,6 @@
             <label>Effective Rate</label>
             <div>
               <%= number_to_indian_currency(booking_detail.project_unit.effective_rate) %> <%= current_client.area_unit %>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label>Base Rate / Floor Rise</label>
-            <div>
-              <%= number_to_indian_currency(booking_detail.base_rate) %> / <%= number_to_indian_currency(booking_detail.floor_rise) %>
             </div>
           </div>
         </div>

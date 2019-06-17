@@ -7,12 +7,16 @@ class BookingDetail
   include SyncDetails
   include ApplicationHelper
   extend FilterByCriteria
+  include PriceCalculator
 
   BOOKING_STAGES = %w[blocked booked_tentative booked_confirmed]
 
   field :status, type: String
   field :erp_id, type: String, default: ''
   field :name, type: String
+  field :base_rate, type: Float
+  field :floor_rise, type: Float
+  field :saleable, type: Float
   mount_uploader :tds_doc, DocUploader
 
   enable_audit(
@@ -24,6 +28,8 @@ class BookingDetail
     ]
   )
 
+  embeds_many :costs, as: :costable
+  embeds_many :data, as: :data_attributable
   belongs_to :project_unit
   belongs_to :user
   belongs_to :manager, class_name: 'User', optional: true
@@ -45,6 +51,8 @@ class BookingDetail
   validates :erp_id, uniqueness: true, allow_blank: true
   delegate :name, :blocking_amount, to: :project_unit, prefix: true, allow_nil: true
   delegate :name, :email, :phone, to: :user, prefix: true, allow_nil: true
+  delegate :name, :email, :phone, :role, :role?, to: :manager, prefix: true, allow_nil: true
+
 
   scope :filter_by_name, ->(name) { where(name: ::Regexp.new(::Regexp.escape(name), 'i')) }
   scope :filter_by_status, ->(status) { where(status: status) }
@@ -63,33 +71,12 @@ class BookingDetail
     Gamification::PushNotification.new.push(message) if Rails.env.staging? || Rails.env.production?
   end
 
+  def booking_detail_scheme=(bds)
+    @booking_detail_scheme = bds
+  end
+
   def booking_detail_scheme
-    booking_detail_schemes.in(status: ['approved', 'draft']).first
-  end
-
-  def pending_balance(options={})
-    strict = options[:strict] || false
-    user_id = options[:user_id] || self.user_id
-    if user_id.present?
-      receipts_total = Receipt.where(user_id: user_id, booking_detail_id: self.id)
-      if strict
-        receipts_total = receipts_total.where(status: "success")
-      else
-        receipts_total = receipts_total.in(status: ['clearance_pending', "success"])
-      end
-      receipts_total = receipts_total.sum(:total_amount)
-      return (self.project_unit.booking_price - receipts_total)
-    else
-      return self.project_unit.booking_price
-    end
-  end
-
-  def total_tentative_amount_paid
-    receipts.where(user_id: self.user_id).in(status: ['success', 'clearance_pending']).sum(:total_amount)
-  end
-
-  def total_amount_paid
-    receipts.success.sum(:total_amount)
+    @booking_detail_scheme ||= booking_detail_schemes.in(status: ['approved', 'draft']).first
   end
 
   def sync(erp_model, sync_log)
@@ -140,6 +127,39 @@ class BookingDetail
     end
   end
 
+  def cost_sheet_template(booking_detail_scheme_id = nil)
+    booking_detail_scheme_id.present? ? BookingDetailScheme.find(booking_detail_scheme_id).cost_sheet_template : booking_detail_scheme.cost_sheet_template
+  end
+
+  def payment_schedule_template(booking_detail_scheme_id = nil)
+    booking_detail_scheme_id.present? ? BookingDetailScheme.find(booking_detail_scheme_id).payment_schedule_template : booking_detail_scheme.payment_schedule_template
+  end
+
+  def pending_balance(options={})
+    strict = options[:strict] || false
+    user_id = options[:user_id] || self.user_id
+    if user_id.present?
+      receipts_total = Receipt.where(user_id: user_id, booking_detail_id: self.id)
+      if strict
+        receipts_total = receipts_total.where(status: "success")
+      else
+        receipts_total = receipts_total.in(status: ['clearance_pending', "success"])
+      end
+      receipts_total = receipts_total.sum(:total_amount)
+      return (self.project_unit.booking_price - receipts_total)
+    else
+      return self.project_unit.booking_price
+    end
+  end
+
+  def total_tentative_amount_paid
+    receipts.where(user_id: self.user_id).in(status: ['success', 'clearance_pending']).sum(:total_amount)
+  end
+
+  def total_amount_paid
+    receipts.success.sum(:total_amount)
+  end
+
   class << self
 
     def user_based_scope(user, params = {})
@@ -147,7 +167,7 @@ class BookingDetail
       custom_scope = {}
       if params[:user_id].blank? && !user.buyer?
         if user.role?('channel_partner')
-          custom_scope = { manager_id: user.id }
+          custom_scope = { user_id: { '$in': User.where(role: 'user', manager_id: user.id).distinct(:id) } }
         elsif user.role?('cp_admin')
           custom_scope = { user_id: { "$in": User.where(role: 'user').nin(manager_id: [nil, '']).distinct(:id) } }
         elsif user.role?('cp')

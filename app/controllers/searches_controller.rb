@@ -7,7 +7,7 @@ class SearchesController < ApplicationController
   before_action :set_form_data, only: [:show, :edit]
   before_action :authorize_resource, except: [:checkout, :hold]
   around_action :apply_policy_scope, only: [:index, :export]
-  before_action :set_project_unit, only: [:checkout]
+  before_action :set_project_unit, only: [:checkout ]
   before_action :set_booking_detail, only: [:hold, :checkout]
   before_action :check_project_unit_hold_status, only: :checkout
 
@@ -279,6 +279,16 @@ class SearchesController < ApplicationController
 
   def set_booking_detail
     @booking_detail = BookingDetail.find_or_initialize_by(project_unit_id: @search.project_unit_id, user_id: @search.user_id, status: 'hold')
+    @booking_detail.assign_attributes(
+      base_rate: @search.project_unit.base_rate,
+      floor_rise: @search.project_unit.floor_rise,
+      saleable: @search.project_unit.saleable,
+      costs: @search.project_unit.costs,
+      data: @search.project_unit.data,
+      manager_id: @search.user_manager_id
+    )
+    @booking_detail.save
+    # ,  base_rate: @search.project_unit.base_rate, floor_rise: @search.project_unit.floor_rise, saleable: @search.project_unit.saleable, costs: @search.project_unit.costs, data: @search.project_unit.data
     @booking_detail.search = @search
   end
 
