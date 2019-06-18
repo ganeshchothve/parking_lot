@@ -23,7 +23,7 @@
         </div>
         <div class="form-group unit">
           <%= f.label :project_unit_id, class: 'control-label' %>
-          <%= f.select :project_unit_id, options_from_collection_for_select(ProjectUnit.where(_id: f.object.project_unit_id), 'id', 'first_name', f.object.project_unit_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_project_units_path, params: { status: 'available', fltrs: { project_tower_id: nil } } }%>
+          <%= f.select :project_unit_id, options_from_collection_for_select(ProjectUnit.where(_id: f.object.project_unit_id), 'id', 'first_name', f.object.project_unit_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_project_units_path, params: { status: 'available', fltrs: { project_tower_id: '-' } } }%>
         </div>
       </div>
       <div class="modal-footer">
