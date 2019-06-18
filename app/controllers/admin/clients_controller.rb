@@ -7,6 +7,12 @@ class Admin::ClientsController < AdminController
     render layout: false
   end
 
+
+  #
+  # This download_brochure action for Admin users where brochure download will start.
+  #
+  # GET /admin/clients/download_brochure
+  #
   def download_brochure
     send_file(@client.brochure.path,
           :filename => @client.brochure.url,

@@ -9,10 +9,6 @@ class Admin::ClientPolicy < ClientPolicy
     update?
   end
 
-  def upload?
-    update?
-  end
-
   def index?
     update?
   end
