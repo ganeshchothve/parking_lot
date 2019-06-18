@@ -115,12 +115,6 @@ class Receipt
   def online?
     payment_mode.to_s == 'online'
   end
-  def self.available_payment_types
-    [
-      {id: 'agreement', text: 'Agreement'},
-      {id: 'stamp_duty', text: 'Stamp Duty'}
-    ]
-  end
 
   def self.available_payment_modes
     [
