@@ -29,6 +29,8 @@ class BookingDetailMisReportWorker
       "Current Due",
       "Total amount paid",
       "Pending balance",
+      "Payment against agreement",
+      "Payment against stamp_duty"
     ]
   end
 
@@ -48,6 +50,8 @@ class BookingDetailMisReportWorker
       booking_detail.pending_balance({strict: true}),
       booking_detail.total_amount_paid,
       booking_detail.pending_balance,
+      booking_detail.payment_against_agreement,
+      booking_detail.payment_against_stamp_duty
     ]
   end
 end
