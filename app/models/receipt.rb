@@ -30,6 +30,7 @@ class Receipt
   field :comments, type: String
   field :gateway_response, type: Hash
   field :erp_id, type: String, default: ''
+  field :payment_type, type: String # possible values are :agreement and :stamp_duty
 
   attr_accessor :swap_request_initiated
 
@@ -112,6 +113,12 @@ class Receipt
   #
   def online?
     payment_mode.to_s == 'online'
+  end
+  def self.available_payment_types
+    [
+      {id: 'agreement', text: 'Agreement'},
+      {id: 'stamp_duty', text: 'Stamp Duty'}
+    ]
   end
 
   def self.available_payment_modes

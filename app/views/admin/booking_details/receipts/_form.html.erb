@@ -69,6 +69,16 @@
     <% end %>
   </div>
 <% end %>
+ <% if policy([:admin, @receipt]).editable_field?("payment_type") %>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :payment_type, class: 'label-required' %>
+                    <%= f.select :payment_type, Receipt.available_payment_types.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
 
 <% if policy([:admin, @receipt]).editable_field?("tracking_id") && policy([:admin, @receipt]).editable_field?("processed_on") %>
   <div class="row offline">

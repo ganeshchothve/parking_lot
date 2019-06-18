@@ -37,6 +37,7 @@ class Buyer::ReceiptsController < BuyerController
       payment_mode: 'online', creator: current_user,
       payment_gateway: current_client.payment_gateway
     })
+    @receipt.payment_type = 'agreement'
     @receipt.assign_attributes(permitted_attributes([:buyer, @receipt]))
     @receipt.account = selected_account
 
