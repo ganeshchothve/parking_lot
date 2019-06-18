@@ -3,7 +3,17 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   def index?
     %w[admin superadmin sales sales_admin cp_admin gre channel_partner].include?(user.role)
   end
-  
+
+  def new?
+    %w[admin superadmin sales sales_admin cp_admin gre channel_partner].include?(user.role)
+  end
+
+  def create?
+    return true if  record.user.booking_details.count < record.user.allowed_bookings
+    @condition = 'allowed_bookings'
+    false
+  end
+
   def booking?
     true
   end
@@ -11,7 +21,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   def mis_report?
     true
   end
-  
+
   def hold?
     _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && only_for_kyc_added_users! && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed? && buyer_kyc_booking_limit_exceed?
   end
@@ -19,7 +29,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   def send_under_negotiation?
       hold?
   end
-  def block? 
+  def block?
     hold?
   end
   # def block?
@@ -34,6 +44,12 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   #   end
   #   _role_based_check
   # end
+
+  def permitted_attributes
+    attributes = super
+    attributes += [:primary_user_kyc_id, :user_kyc_ids, :project_unit_id, :user_id ]
+    attributes
+  end
 
   private
 

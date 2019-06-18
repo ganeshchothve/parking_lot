@@ -7,7 +7,8 @@ module UserKycsConcern
   # @return [{},{}] records with array of Hashes.
   #
   def index
-    @user_kycs = UserKyc.paginate(page: params[:page] || 1, per_page: params[:per_page])
+    @user_kycs = UserKyc.build_criteria params
+    @user_kycs = @user_kycs.paginate(page: params[:page] || 1, per_page: params[:per_page])
   end
 
   #

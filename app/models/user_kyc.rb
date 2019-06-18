@@ -5,6 +5,8 @@ class UserKyc
   include InsertionStringMethods
   include ApplicationHelper
   include SyncDetails
+  extend FilterByCriteria
+
 
   field :salutation, type: String, default: 'Mr.'
   field :first_name, type: String
@@ -76,6 +78,9 @@ class UserKyc
   validates :existing_customer_name, :existing_customer_project, presence: true, if: proc { |kyc| kyc.existing_customer? }
   validates :salutation, inclusion: { in: proc { UserKyc.available_salutations.collect { |x| x[:id] } } }
   validates :erp_id, uniqueness: true, allow_blank: true
+
+  scope :filter_by_user_id, ->(user_id) { where(user_id: user_id) }
+
 
   default_scope -> { desc(:created_at) }
 
