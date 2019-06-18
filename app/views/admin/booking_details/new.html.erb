@@ -49,6 +49,12 @@ $(document).ready(function(){
       url: "/admin/booking_details/searching_for_towers.json",
       dataType: 'json',
       data: {user_id: $(this).val()},
+      beforeSend: function() {
+        $.blockUI();
+      },
+      complete: function() {
+        $.unblockUI();
+      },
       success: function(data, status, xhr){
         selectize.setValue('');
         selectize.clearOptions();
@@ -57,7 +63,7 @@ $(document).ready(function(){
         selectize.refreshOptions(false);
         },
       error: function(xhr, status, err) {
-        debugger
+        alert("Project towers not found for this user.");
       }
     });
   });
