@@ -19,7 +19,6 @@
 <%= javascript_tag do %>
     $('#modal-remote-form-inner').on('hidden.bs.modal', function (e) {
       var href = Amura.removeParamFromURL(window.location.href, "remote-state");
-      window.history.pushState(null, null, href);
-      window.location.reload();
+      window.location.href = href
     })
 <% end %>
