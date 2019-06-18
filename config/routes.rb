@@ -40,6 +40,7 @@ Rails.application.routes.draw do
     resources :booking_details, only: [:index, :show, :new, :create] do
       patch :booking, on: :member
       get :mis_report, on: :collection
+      get :searching_for_towers, on: :collection
       patch :send_under_negotiation, on: :member
       resources :booking_detail_schemes, except: [:destroy], controller: 'booking_details/booking_detail_schemes'
 

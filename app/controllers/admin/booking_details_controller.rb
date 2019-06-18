@@ -1,8 +1,9 @@
 class Admin::BookingDetailsController < AdminController
   include BookingDetailConcern
+  include SearchConcern
   around_action :apply_policy_scope, only: [:index, :mis_report]
-  before_action :set_booking_detail, except: [:index, :mis_report, :new, :create]
-  before_action :authorize_resource, except: [:index, :mis_report, :new, :create]
+  before_action :set_booking_detail, except: [:index, :mis_report, :new, :create, :searching_for_towers]
+  before_action :authorize_resource, except: [:index, :mis_report, :new, :create, :searching_for_towers]
   before_action :set_project_unit, only: :booking
   before_action :set_receipt, only: :booking
 
@@ -14,6 +15,8 @@ class Admin::BookingDetailsController < AdminController
   def new
     @search = Search.new()
     @booking_detail = BookingDetail.new(search: @search)
+    @project_towers = search_for_towers
+    @project_towers.map!{|f| [f[:project_tower_name], f[:project_tower_id]]}
     authorize [:admin, @booking_detail]
     render layout: false
   end
@@ -74,6 +77,25 @@ class Admin::BookingDetailsController < AdminController
     BookingDetailMisReportWorker.perform_async(current_user.id.to_s)
     flash[:notice] = 'Your mis-report has been scheduled and will be emailed to you in some time'
     redirect_to request.referer || dashboard_path
+  end
+
+  #
+  # This searching_for_towers for Admin users which is used to search for towers in one step booking
+  #
+  # GET /admin/booking_details/searching_for_towers
+  #
+
+  def searching_for_towers
+    towers = search_for_towers(params[:user_id])
+    towers.map!{|f| [f[:project_tower_name], f[:project_tower_id]]} if towers.present?
+    # GENERIC TODO: If no results found we should display alternate towers
+    respond_to do |format|
+      if towers.present?
+        format.json { render json: towers, status: :ok }
+      else
+        format.json { render json: {errors: 'Towers not present for this user'}, status: :not_found }
+      end
+    end
   end
 
   private

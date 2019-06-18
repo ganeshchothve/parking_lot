@@ -11,7 +11,7 @@
       <div class="modal-body">
         <div class="form-group">
           <%= f.label :user_id, class: 'control-label' %>
-          <%= f.select :user_id, options_from_collection_for_select(User.where(_id: f.object.user_id), 'id', 'name', f.object.user_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_users_path, params: {role: 'customer'} }%>
+          <%= f.select :user_id, options_from_collection_for_select(User.where(_id: f.object.user_id), 'id', 'name'), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_users_path, params: {role: 'customer'} }%>
         </div>
         <div class="form-group">
           <%= f.label :primary_user_kyc_id, class: 'control-label' %>
@@ -19,7 +19,7 @@
         </div>
         <div class="form-group">
           <%= f.label :project_tower_id, class: 'control-label' %>
-          <%= select_tag "project_tower_id", options_for_select(ProjectTower.all.map{|f| [f.name, f.id]}), {prompt: "Select", class: "selectize", required: 'required'} %>
+          <%= select_tag "project_tower_id", options_for_select(@project_towers), {prompt: "Select", class: "selectize", required: 'required'} %>
         </div>
         <div class="form-group unit">
           <%= f.label :project_unit_id, class: 'control-label' %>
@@ -27,7 +27,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <%= f.submit "Save", class: "btn btn-primary" %>
+        <%= f.submit "Submit", class: "btn btn-primary" %>
       </div>
     </div>
   </div>
@@ -43,6 +43,23 @@ $(document).ready(function(){
     var filter = $("#booking_detail_primary_user_kyc_id").data('params')
     filter.fltrs.user_id = $(this).val()
     $("#booking_detail_primary_user_kyc_id").data('params', filter)
+    var $select = $("#project_tower_id").selectize();
+    var selectize = $select[0].selectize;
+    $.ajax({
+      url: "/admin/booking_details/searching_for_towers.json",
+      dataType: 'json',
+      data: {user_id: $(this).val()},
+      success: function(data, status, xhr){
+        selectize.setValue('');
+        selectize.clearOptions();
+        var options = _.map(data, function(arr) { return {value: arr[1], text: arr[0]}});
+        selectize.addOption(options)
+        selectize.refreshOptions(false);
+        },
+      error: function(xhr, status, err) {
+        debugger
+      }
+    });
   });
   $('#project_tower_id').change(function(){
     var $select = $("#booking_detail_project_unit_id").selectize();
