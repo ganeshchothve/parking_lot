@@ -63,7 +63,7 @@ $(document).ready(function(){
         selectize.refreshOptions(false);
         },
       error: function(xhr, status, err) {
-        alert("Project towers not found for this user.");
+        Amura.global_error_handler( "Project towers not found for this user. ")
       }
     });
   });
