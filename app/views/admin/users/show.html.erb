@@ -5,7 +5,7 @@
       <%#= render 'breadcrumbs', {user: @user} %>
       <%= render 'users/overview', user: @user, labels: labels %>
       <div class="mt-3"></div>
-      <%= render 'sync_logs/sync', { record: @user } if current_client.external_api_integration? %>
+      <%= render 'sync_logs/sync', { record: @user } if current_client.external_api_integration? && policy([current_user_role_group, SyncLog.new]).index? %>
       <div class="mt-3"></div>
       <% if policy([:admin, TimeSlot]).index? %>
         <div class="card mb-3">
