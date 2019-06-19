@@ -29,6 +29,7 @@ module UserKycsConcern
   def create
     @user_kyc = UserKyc.new(permitted_attributes([current_user_role_group, UserKyc.new(user: @user) ]))
     set_user_creator
+    authorize [current_user_role_group, @user_kyc]
     respond_to do |format|
       if @user_kyc.save
         format.html { redirect_to home_path(current_user), notice: 'User kyc was successfully created.' }
