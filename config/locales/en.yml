@@ -363,6 +363,8 @@ en:
       channel_partner: 'Channel Partner'
       management_user: 'Management User'
       employee_user: 'Employee'
+    portal_stages:
+      project_info: 'Project Info'
   user_requests:
     swap: 'Swap'
     cancellation: 'Cancellation'
