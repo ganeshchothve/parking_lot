@@ -54,8 +54,8 @@ class Receipt
     where(booking_detail_id: _booking_detail_id)
   end
 
-  validates :issuing_bank, :issuing_bank_branch, format: { without: /[^a-z\s]/i, message: 'can contain only alphabets and spaces' }, unless: proc { |receipt| receipt.payment_mode == 'online' }
-  validates :payment_identifier, format: { without: /[^a-z0-9\s]/i, message: 'can contain only alphabets, numbers and spaces' }, unless: proc { |receipt| receipt.payment_mode == 'online' }
+  validates :issuing_bank, :issuing_bank_branch, name: true, unless: proc { |receipt| receipt.payment_mode == 'online' }
+  validates :payment_identifier, length: { in: 5..15 }, name: true, unless: proc { |receipt| receipt.payment_mode == 'online' }
   validates :total_amount, :status, :payment_mode, :user_id, presence: true
   validates :payment_identifier, presence: true, if: proc { |receipt| receipt.payment_mode == 'online' ? receipt.status == 'success' : true }
   validates :status, inclusion: { in: proc { Receipt.aasm.states.collect(&:name).collect(&:to_s) } }
@@ -65,7 +65,7 @@ class Receipt
   validates :processed_on, presence: true, if: proc { |receipt| %i[success clearance_pending available_for_refund].include?(receipt.status) }
   validates :payment_gateway, presence: true, if: proc { |receipt| receipt.payment_mode == 'online' }
   validates :payment_gateway, inclusion: { in: PaymentGatewayService::Default.allowed_payment_gateways }, allow_blank: true
-  validates :tracking_id, presence: true, if: proc { |receipt| receipt.status == 'success' && receipt.payment_mode != 'online' }
+  validates :tracking_id, length: { in: 5..15 }, presence: true, if: proc { |receipt| receipt.status == 'success' && receipt.payment_mode != 'online' }
   validates :comments, presence: true, if: proc { |receipt| receipt.status == 'failed' && receipt.payment_mode != 'online' }
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :tracking_id_processed_on_only_on_success, if: proc { |record| record.status != 'cancelled' }

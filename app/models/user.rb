@@ -16,7 +16,7 @@ class User
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, authentication_keys: [:login]
+  devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, :lockable, :timeoutable, authentication_keys: [:login]
 
   attr_accessor :temporary_password
 
@@ -67,9 +67,9 @@ class User
   field :is_active, type: Boolean, default: true
 
   ## Lockable
-  # field :failed_attempts, type: Integer, default: 0 # Only if lock strategy is :failed_attempts
-  # field :unlock_token,    type: String # Only if unlock strategy is :email or :both
-  # field :locked_at,       type: Time
+  field :failed_attempts, type: Integer, default: 0 # Only if lock strategy is :failed_attempts
+  field :unlock_token,    type: String # Only if unlock strategy is :email or :both
+  field :locked_at,       type: Time
 
   # field for active_model_otp
   field :otp_secret_key
@@ -121,6 +121,8 @@ class User
   embeds_many :portal_stages
 
   validates :first_name, :role, presence: true
+  validates :first_name, :last_name, name: true
+
   validates :phone, uniqueness: true, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile] }, if: proc { |user| user.email.blank? }
   validates :email, uniqueness: true, if: proc { |user| user.phone.blank? }
   validates :rera_id, presence: true, if: proc { |user| user.role?('channel_partner') }
@@ -129,6 +131,7 @@ class User
   validates :lead_id, uniqueness: true, presence: true, if: proc { |user| user.buyer? }, allow_blank: true
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :manager_change_reason_present?
+  validate :password_complexity
 
   # scopes needed by filter
   scope :filter_by_lead_id, ->(lead_id) { where(lead_id: lead_id) }
@@ -158,6 +161,13 @@ class User
   end
   ADMIN_ROLES.each do |admin_roles|
     scope admin_roles, ->{ where(role: admin_roles )}
+  end
+
+  def password_complexity
+    # Regexp extracted from https://stackoverflow.com/questions/19605150/regex-for-password-must-contain-at-least-eight-characters-at-least-one-number-a
+    return if password.blank? || password =~ /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,10}$/
+
+    errors.add :password, 'Length should be 8-70 characters and include: 1 uppercase, 1 lowercase, 1 digit and 1 special character'
   end
 
   def unattached_blocking_receipt(blocking_amount = nil)
