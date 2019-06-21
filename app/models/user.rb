@@ -16,7 +16,7 @@ class User
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, :lockable, :timeoutable, authentication_keys: [:login]
+  devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, :lockable, :timeoutable, :password_expirable, :password_archivable, :session_limitable, :expirable, authentication_keys: [:login]
 
   attr_accessor :temporary_password
 
@@ -74,6 +74,29 @@ class User
   # field for active_model_otp
   field :otp_secret_key
   field :referral_code, type: String
+
+  ## Password expirable
+  field :password_changed_at, type: DateTime
+
+  ## Password archivable
+  field :password_archivable_type, type: String
+  field :password_archivable_id, type: String
+  field :password_salt, type: String # Optional. bcrypt stores the salt in the encrypted password field so this column may not be necessary.
+
+  ## Session limitable
+  field :unique_session_id, type: String
+
+  ## Expirable
+  field :last_activity_at, type: DateTime
+  field :expired_at, type: DateTime
+
+  ## Paranoid verifiable
+  field :paranoid_verification_code, type: String
+  field :paranoid_verification_attempt, type: Integer, default: 0
+  field :paranoid_verified_at, type: DateTime
+
+  ## Security questionable
+
 
   delegate :name, :role, :role?, :email, to: :manager, prefix: true, allow_nil: true
 

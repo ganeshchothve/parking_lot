@@ -5,12 +5,12 @@
 <% if current_client.preferred_login == "phone" %>
   <div class="form-group">
     <%= f.label :phone %><br />
-    <%= f.phone_field :login, autofocus: true, autocomplete: "phone", class: 'form-control', placeholder: 'Phone' %>
+    <%= f.phone_field :login, autofocus: true, autocomplete: false, class: 'form-control', placeholder: 'Phone' %>
   </div>
 <% else %>
   <div class="form-group">
     <%= f.label :email %><br />
-    <%= f.email_field :login, autofocus: true, autocomplete: "email", class: 'form-control', placeholder: 'Email' %>
+    <%= f.email_field :login, autofocus: true, autocomplete: false, class: 'form-control', placeholder: 'Email' %>
   </div>
 <% end %>
 <div class="form-group">

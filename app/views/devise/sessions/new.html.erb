@@ -11,7 +11,7 @@ end %>
   <%= form_for(resource, as: resource_name, url: users_otp_path, authenticity_token: true, remote: true, html: {:'data-type' => 'json', class: 'validate-form ' + otp_signin_class, id: "otp_user_form"}) do |f| %>
     <div class="form-group">
       <%= f.label :phone %><br/>
-      <%= f.phone_field :login, autofocus: true, autocomplete: "phone", class: 'form-control', placeholder: 'Phone' %>
+      <%= f.phone_field :login, autofocus: true, autocomplete: false, class: 'form-control', placeholder: 'Phone' %>
     </div>
     <div class="form-group" hidden>
       <%= f.label :login_otp %><br/>
@@ -28,17 +28,17 @@ end %>
 <% if current_client.preferred_login == "phone" %>
   <div class="form-group">
     <%= f.label :phone %>
-    <%= f.phone_field :login, autofocus: true, autocomplete: "phone", class: 'form-control', placeholder: 'Phone' %>
+    <%= f.phone_field :login, autofocus: true, autocomplete: false, class: 'form-control', placeholder: 'Phone' %>
   </div>
   <% else %>
   <div class="form-group">
     <%= f.label :email %>
-    <%= f.email_field :login, autofocus: true, autocomplete: "email", class: 'form-control', placeholder: 'Email' %>
+    <%= f.email_field :login, autofocus: true, autocomplete: false, class: 'form-control', placeholder: 'Email' %>
   </div>
   <% end %>
   <div class="form-group">
     <%= f.label :password %>
-    <%= f.password_field :password, autocomplete: "off", class: 'form-control', placeholder: 'Password' %>
+    <%= f.password_field :password, autocomplete: false, class: 'form-control', placeholder: 'Password' %>
   </div>
   <% if devise_mapping.rememberable? -%>
   <div class="form-group">
