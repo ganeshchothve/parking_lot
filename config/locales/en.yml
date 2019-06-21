@@ -149,6 +149,8 @@ en:
         project_unit_id: "Apartment"
         creator_id: "Created by"
         created_at: "Created on"
+        payment_type_agreement: 'Agreement'
+        payment_type_stamp_duty: 'Stamp Duty and Registration'
       user_kyc:
         name: "Name"
         email: "Email"

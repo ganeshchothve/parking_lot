@@ -13,6 +13,7 @@ class Receipt
   extend FilterByCriteria
 
   OFFLINE_PAYMENT_MODE = %w[cheque rtgs imps card_swipe neft]
+  PAYMENT_TYPES = %w[agreement stamp_duty]
 
   field :receipt_id, type: String
   field :order_id, type: String
@@ -30,6 +31,7 @@ class Receipt
   field :comments, type: String
   field :gateway_response, type: Hash
   field :erp_id, type: String, default: ''
+  field :payment_type, type: String # possible values are :agreement and :stamp_duty
 
   attr_accessor :swap_request_initiated
 
