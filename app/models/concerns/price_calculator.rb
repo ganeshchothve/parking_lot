@@ -56,4 +56,19 @@ module PriceCalculator
     end.sum
   end
 
+  def payment_against_agreement
+    receipts.where({'$and' => [ { payment_type: 'agreement'}, { '$or' => [{ '$and' => [{payment_mode: 'online'}, {status: 'success'} ] }, { '$and' => [{payment_mode: {'$nin': ['online'] } }, {status: { '$in': [ 'pending', 'clearance_pending', 'success' ] } } ] } ] } ] } ).sum(:total_amount)
+  end
+
+  def payment_against_stamp_duty
+    receipts.where({'$and' => [ { payment_type: 'stamp_duty'}, { '$or' => [{ '$and' => [{payment_mode: 'online'}, {status: 'success'} ] }, { '$and' => [{payment_mode: {'$nin': ['online'] } }, {status: { '$in': [ 'pending', 'clearance_pending', 'success' ] } } ] } ] } ] } ).sum(:total_amount)
+  end
+
+  def calculate_agreement_type_cost
+    return (0.1 * calculate_agreement_price)
+  end
+
+  def calculate_stamp_duty_type_cost
+    return (30000 + (0.06 * calculate_agreement_price))
+  end
 end
