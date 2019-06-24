@@ -19,7 +19,7 @@ class Admin::ClientsController < AdminController
           :type => @client.brochure.content_type,
           :disposition => 'attachment',
           :url_based_filename => true)
-    current_user.portal_stage << PortalStage.new(stage: 'project_info') if current_user.buyer?
+    current_user.portal_stage << PortalStage.new(stage: 'project_info') if current_user.buyer? && current_user.receipts.count == 0
   end
 
   def update
