@@ -320,7 +320,7 @@ RSpec.describe Receipt, type: :model do
           @receipt17.update(status: "success")
           @receipt17.token_number = 11
           expect(@receipt17.save).to be(false)
-          expect(@receipt17.errors[:token_number]).to eq(['Time Slot for this token number is not available.'])
+          expect(@receipt17.errors[:token_number]).to eq(['is already taken'])
         end
 
         it 'time slot in the past' do
