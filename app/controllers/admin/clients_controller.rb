@@ -14,7 +14,7 @@ class Admin::ClientsController < AdminController
   # GET /admin/clients/download_brochure
   #
   def download_brochure
-    send_file(open(@client.brochure.url),
+    send_data(open(@client.brochure.url),
           :filename => "Brochure.#{@client.brochure.url.file.extenstion}",
           :type => @client.brochure.content_type,
           :disposition => 'attachment',
