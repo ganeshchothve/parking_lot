@@ -112,7 +112,7 @@ group :development, :test do
 end
 
 group :test do
-  gem 'faker'
+  gem 'faker', github: 'stympy/faker'
   gem 'shoulda', '~> 3.5'
   gem 'shoulda-matchers', '3.1.2'
   gem "factory_bot_rails"

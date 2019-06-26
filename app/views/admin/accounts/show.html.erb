@@ -25,20 +25,44 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-4">
-          <div class="form-group">
-            <label>Key</label>
-            <div> <%= @account.key %> </div>
+      <% case @account.account_type %>
+      <% when 'razorpay_payment' %>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Key</label>
+              <div> <%= @account.key %> </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Secret</label>
+              <div> <%= @account.secret %> </div>
+            </div>
           </div>
         </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label>Secret</label>
-            <div> <%= @account.secret %> </div>
+      <% when 'cc_avenue_payment' %>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Merchant Id</label>
+              <div> <%= @account.merchant_id %> </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Access Code</label>
+              <div> <%= @account.access_code %> </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Working Key</label>
+              <div> <%= @account.working_key %> </div>
+            </div>
           </div>
         </div>
-      </div>
+      <% end %>
     </div>
   </div>
 

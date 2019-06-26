@@ -11,6 +11,7 @@ class DashboardController < ApplicationController
   end
 
   def documents
+    @assetable = current_client
   end
 
   def rera

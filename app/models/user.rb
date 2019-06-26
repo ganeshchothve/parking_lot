@@ -136,12 +136,14 @@ class User
   has_and_belongs_to_many :cced_emails, class_name: 'Email', inverse_of: :cc_recipients
 
   has_many :notes, as: :notable
+
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :emails, as: :triggered_by, class_name: 'Email'
   has_many :referrals, class_name: 'User', foreign_key: :referred_by_id, inverse_of: :referred_by
   has_and_belongs_to_many :schemes
   has_many :logs, class_name: 'SyncLog', inverse_of: :user_reference
   embeds_many :portal_stages
+  accepts_nested_attributes_for :portal_stages, reject_if: :all_blank
 
   validates :first_name, :role, presence: true
   validates :first_name, :last_name, name: true
@@ -207,6 +209,10 @@ class User
 
   def total_amount_paid
     receipts.where(status: 'success').sum(:total_amount)
+  end
+
+  def portal_stage
+    user.portal_stages.desc(:created_at).first
   end
 
   def total_balance_pending

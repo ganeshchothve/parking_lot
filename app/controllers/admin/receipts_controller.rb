@@ -56,9 +56,8 @@ class Admin::ReceiptsController < AdminController
   def create
     @receipt = Receipt.new(user: @user, creator: current_user)
     @receipt.assign_attributes(permitted_attributes([:admin, @receipt]))
-    @receipt.account ||= selected_account
-    @receipt.payment_gateway ||= current_client.payment_gateway if @receipt.payment_mode == 'online'
-
+    @receipt.payment_gateway = current_client.payment_gateway if @receipt.payment_mode == 'online'
+    @receipt.account ||= selected_account(current_client.payment_gateway.underscore)
     authorize([:admin, @receipt])
     respond_to do |format|
       @receipt.event ||= 'pending' if current_user.role?('channel_partner')

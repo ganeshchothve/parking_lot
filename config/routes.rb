@@ -59,6 +59,7 @@ Rails.application.routes.draw do
     end
     resources :emails, :smses, only: %i[index show]
     resource :client, except: [:show, :new, :create] do
+      get :download_brochure, on: :member
       resources :templates, only: [:edit, :update, :index]
     end
     namespace :audit do
