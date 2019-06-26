@@ -64,7 +64,7 @@ module Api
         # can be ", " according to format
         _erp_id = response[key] if _erp_id[key].present?
       end
-      _erp_id
+      _erp_id[erp_model.reference_key_name]
     end
 
     def get_response
