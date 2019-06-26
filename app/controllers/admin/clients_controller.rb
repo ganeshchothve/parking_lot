@@ -7,6 +7,21 @@ class Admin::ClientsController < AdminController
     render layout: false
   end
 
+
+  #
+  # This download_brochure action for Admin users where brochure download will start.
+  #
+  # GET /admin/clients/download_brochure
+  #
+  def download_brochure
+    send_file(@client.brochure.path,
+          :filename => @client.brochure.url,
+          :type => @client.brochure.content_type,
+          :disposition => 'attachment',
+          :url_based_filename => true)
+    current_user.portal_stage << PortalStage.new(stage: 'project_info') if current_user.buyer? && current_user.receipts.count == 0
+  end
+
   def update
     @client.assign_attributes(permitted_attributes([:admin, @client]))
     respond_to do |format|

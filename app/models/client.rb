@@ -94,6 +94,8 @@ class Client
   mount_uploader :logo, DocUploader
   mount_uploader :mobile_logo, DocUploader
   mount_uploader :background_image, DocUploader
+  mount_uploader :brochure, DocUploader
+
 
   enable_audit track: ["update"]
 
