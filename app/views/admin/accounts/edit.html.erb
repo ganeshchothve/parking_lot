@@ -1,1 +1,1 @@
-<%= render 'form', url: admin_account_path(request_type: 'razorpay_payment', id: @account.id ) %>
+<%= render 'form', url: admin_account_path(account_type: @account.account_type, id: @account.id ) %>

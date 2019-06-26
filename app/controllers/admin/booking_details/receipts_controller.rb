@@ -31,7 +31,7 @@ class Admin::BookingDetails::ReceiptsController < AdminController
     @receipt = Receipt.new(user: @user, creator: current_user, booking_detail: @booking_detail)
     @receipt.assign_attributes(permitted_attributes([:admin, @receipt]))
     @receipt.payment_gateway ||= current_client.payment_gateway if @receipt.payment_mode == 'online'
-    @receipt.account ||= selected_account(@booking_detail.project_unit)
+    @receipt.account ||= selected_account(current_client.payment_gateway.underscore, @booking_detail.project_unit)
     authorize([:admin, @receipt])
     respond_to do |format|
       if @receipt.save

@@ -39,7 +39,7 @@ class Buyer::ReceiptsController < BuyerController
       payment_type: 'agreement'
     })
     @receipt.assign_attributes(permitted_attributes([:buyer, @receipt]))
-    @receipt.account = selected_account
+    @receipt.account = selected_account(current_client.payment_gateway.underscore)
 
     authorize([:buyer, @receipt])
     respond_to do |format|
