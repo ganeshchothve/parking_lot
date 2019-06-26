@@ -8,7 +8,7 @@
           <div class="table-responsive">
             <table class="table">
               <% if policy([:admin, Client]).asset_create? %>
-                <%= link_to"Upload ", dashboard_documents_path(@user,'remote-state': assetables_path(assetable_type: @assetable.class.model_name.i18n_key.to_s, assetable_id: @assetable.id) ), class: "btn btn-primary " %>
+                <%= link_to "Upload ", dashboard_documents_path(@user,'remote-state': assetables_path(assetable_type: @assetable.class.model_name.i18n_key.to_s, assetable_id: @assetable.id) ), class: "btn btn-primary " %>
               <% end %>
               <thead>
                 <tr>
