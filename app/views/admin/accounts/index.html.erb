@@ -6,7 +6,16 @@
           <div class="row mb-3">
             <div class="col-md-7">
               <%if policy([:admin, Account]).new? %>
-                <%= link_to "Add #{ t('global.accounts') }", new_admin_account_path, class: 'btn btn-primary modal-remote-form-link' %>
+                <div class="dropdown">
+                  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    Add <%= t('global.accounts') %>
+                  </button>
+                  <div class="dropdown-menu">
+                    <% Client.available_payment_gateways.collect {|x| x[:id]}.each do |acct_type| %>
+                      <%= link_to acct_type, new_admin_account_path(account_type: "#{acct_type}Payment".underscore), class: 'dropdown-item modal-remote-form-link' %>
+                    <% end %>
+                  </div>
+                </div>
               <% end %>
             </div>
             <div class="col-md-5 text-md-right">
