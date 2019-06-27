@@ -151,6 +151,7 @@ en:
         created_at: "Created on"
         payment_type_agreement: 'Agreement'
         payment_type_stamp_duty: 'Stamp Duty and Registration'
+        token_number: 'Token Number'
       user_kyc:
         name: "Name"
         email: "Email"
