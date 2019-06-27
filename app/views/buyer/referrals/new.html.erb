@@ -33,7 +33,7 @@
 
           <div class="form-group">
             <%= f.label :phone, class: 'label-required' %>
-            <%= f.phone_field :phone, class: 'form-control phone', required: true, autocomplete: :phone, placeholder: 'Phone' %>
+            <%= f.phone_field :phone, class: 'form-control phone', required: true, autocomplete: :false, placeholder: 'Phone' %>
           </div>
 
           <%= f.submit t('referrals.new.link_name'), class: 'btn btn-primary nav-btn' %>

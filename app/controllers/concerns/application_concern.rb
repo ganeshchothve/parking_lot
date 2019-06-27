@@ -1,16 +1,7 @@
 module ApplicationConcern
-  
   extend ActiveSupport::Concern
-  
-  def selected_account(project_unit = nil)
-    if project_unit.nil?
-      Account::RazorpayPayment.where(by_default: true).first
-    else
-      if project_unit.phase.nil? || project_unit.phase.account.nil?
-         Account::RazorpayPayment.where(by_default: true).first
-      else
-        project_unit.phase.account
-      end
-    end
+
+  def selected_account(klass, project_unit = nil)
+    project_unit.try(:phase).try(:account) || Object.const_get("Account::#{klass.classify}Payment").where(by_default: true).first
   end
 end

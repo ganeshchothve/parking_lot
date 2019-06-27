@@ -59,7 +59,7 @@ class Buyer::BookingDetailsController < BuyerController
       @receipt.booking_detail_id = @booking_detail.id
     else
       @receipt = Receipt.new(creator: @booking_detail.user, user: @booking_detail.user, payment_mode: 'online', total_amount: current_client.blocking_amount, payment_gateway: current_client.payment_gateway, booking_detail_id: @booking_detail.id)
-      @receipt.account ||= selected_account(@booking_detail.project_unit)
+      @receipt.account ||= selected_account(current_client.payment_gateway.underscore, @booking_detail.project_unit)
       @receipt.total_amount = @project_unit.blocking_amount
       authorize([:buyer, @receipt], :create?)
     end

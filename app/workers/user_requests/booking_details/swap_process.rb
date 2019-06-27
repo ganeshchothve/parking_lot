@@ -31,13 +31,19 @@ module UserRequests
         old_receipt.comments ||= ''
         old_receipt.comments += "Unit Swapped by user. Original Unit ID: #{current_project_unit.id} So cancelling these receipts"
         # Call callback after receipt is set to success so that booking detail status and project unit status get set accordingly
-        unless new_receipt.save
-          error_messages = new_receipt.errors.full_messages
-          break
-        end
-        new_receipt.send("#{new_receipt.status}!") if %w[clearance_pending success].include?(new_receipt.status) && new_receipt.persisted?
+        if new_receipt.save
+          if new_receipt.clearance_pending?
+            new_receipt.clearance_pending!
+          elsif new_receipt.success?
+            new_receipt.success!
+          end
 
-        unless old_receipt.cancel!
+          unless old_receipt.cancel!
+            error_messages = new_receipt.errors.full_messages
+            break
+          end
+
+        else
           error_messages = new_receipt.errors.full_messages
           break
         end
@@ -46,7 +52,8 @@ module UserRequests
     end
 
     def build_booking_detail
-      BookingDetail.new(project_unit_id: alternate_project_unit.id, primary_user_kyc_id: current_booking_detail.primary_user_kyc_id, status: 'hold', user_id: current_booking_detail.user_id, manager: current_booking_detail.try(:manager_id), user_kyc_ids: current_booking_detail.user_kyc_ids, parent_booking_detail_id: current_booking_detail.id)
+      search = Search.find_or_create_by(user_id: current_booking_detail.user_id, project_unit_id: alternate_project_unit.id)
+      BookingDetail.new(project_unit_id: alternate_project_unit.id, primary_user_kyc_id: current_booking_detail.primary_user_kyc_id, status: 'hold', user_id: current_booking_detail.user_id, manager: current_booking_detail.try(:manager_id), user_kyc_ids: current_booking_detail.user_kyc_ids, parent_booking_detail_id: current_booking_detail.id, search: search)
     end
 
     def build_booking_detail_scheme(new_booking_detail)

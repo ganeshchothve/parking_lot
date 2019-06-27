@@ -26,6 +26,13 @@ GIT
       capistrano (>= 3.9.0)
       sidekiq (>= 3.4)
 
+GIT
+  remote: https://github.com/stympy/faker.git
+  revision: e2081e7989344c7f11990d974266ea728531f42c
+  specs:
+    faker (1.9.3)
+      i18n (>= 0.7)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -157,6 +164,9 @@ GEM
       railties (>= 4.1.0, < 6.0)
       responders
       warden (~> 1.2.3)
+    devise-security (0.14.3)
+      devise (>= 4.3.0, < 5.0)
+      rails (>= 4.2.0, < 7.0)
     diff-lcs (1.3)
     digest-crc (0.4.1)
     docile (1.3.1)
@@ -170,8 +180,6 @@ GEM
     factory_bot_rails (4.11.1)
       factory_bot (~> 4.11.1)
       railties (>= 3.0.0)
-    faker (1.9.1)
-      i18n (>= 0.7)
     faraday (0.12.2)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.25)
@@ -650,8 +658,9 @@ DEPENDENCIES
   coffee-rails (~> 4.2)
   database_cleaner
   devise
+  devise-security
   factory_bot_rails
-  faker
+  faker!
   fog-aws
   font-awesome-sass
   honeybadger (~> 3.1)

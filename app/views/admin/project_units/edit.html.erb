@@ -76,5 +76,14 @@
 <%= javascript_tag do %>
 $(document).ready(function(){
   FormInitializer.init($('#project_unit_form'));
+    $('#project_unit_comments').attr('disabled', 'disabled')
+    $("#project_unit_status").selectize().on("change", function() {
+      if($(this).val() == 'not_available'){
+        $('#project_unit_comments').removeAttr('disabled')
+      } else {
+        $('#project_unit_comments').attr('disabled', 'disabled')
+      }
+    })
+    $("#project_unit_status").trigger('change')
 });
 <% end %>

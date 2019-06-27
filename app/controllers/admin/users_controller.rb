@@ -55,7 +55,7 @@ class Admin::UsersController < AdminController
   end
 
   def confirm_user
-    @user.temporary_password = SecureRandom.hex(10)
+    @user.temporary_password = SecureRandom.base64(10)
     @user.assign_attributes(confirmed_by: current_user, confirmed_at: DateTime.now, password: @user.temporary_password, password_confirmation: @user.password_confirmation)
     respond_to do |format|
       format.html do

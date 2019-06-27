@@ -3,8 +3,12 @@ class PortalStage
   include Mongoid::Timestamps
 
   # Fields
-  field :stage, type: String, default: '' # TODO: validation remaining
+  field :stage, type: String, default: ''
 
   # Associations
   embedded_in :user
+
+  # Validations
+  validates :stage, uniqueness: true, presence: true
+
 end

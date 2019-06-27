@@ -32,9 +32,9 @@ Amura.global_error_handler = function(errors){
   if(errors){
     if(typeof errors == "string"){
       if(errors != ""){
-        new Noty({text:"There was some issue with the system. Please contact " + App.client.name + " support", type:"error"}).show();
-      }else{
         new Noty({text:errors, type:"error"}).show();
+      }else{
+        new Noty({text:"There was some issue with the system. Please contact " + App.client.name + " support", type:"error"}).show();
       }
     }else if(typeof errors == "object"){
       var message = "<ul style='text-align:left;'>";

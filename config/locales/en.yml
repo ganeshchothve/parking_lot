@@ -10,6 +10,7 @@ en:
       default: "%d/%m/%Y %I:%M %p"
   global:
     booking_details: 'Bookings'
+    booking_detail: 'Booking'
     action: 'Action'
     total: 'Total'
     sign_in_h1: "Welcome back"
@@ -148,6 +149,8 @@ en:
         project_unit_id: "Apartment"
         creator_id: "Created by"
         created_at: "Created on"
+        payment_type_agreement: 'Agreement'
+        payment_type_stamp_duty: 'Stamp Duty and Registration'
       user_kyc:
         name: "Name"
         email: "Email"
@@ -298,6 +301,7 @@ en:
       set_booking_detail_missing: "Booking detail not found"
       set_project_unit_missing: "Project unit not found"
       booking_successful: "You have completed the booking successfully."
+      booking_unsuccessful: "Your booking was unsuccessful. Please contant administrator to book."
       set_receipt_missing: 'Make new payment'
     only_administrator_users: 'Only administrator users are allowed.'
     only_buyer_users: 'Only Buyer users are allowed.'
