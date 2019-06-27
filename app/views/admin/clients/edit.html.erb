@@ -481,7 +481,11 @@
                 <br/>
                 <% if @client.brochure.present? %>
                   <div class="ml-3 image_small_class">
-                    <img src="<%= @client.brochure.url %>" class ="image_small_object" />
+                    <% if @client.brochure.url.split('.')[-1] == 'pdf' %>
+                      <embed src="<%= @client.brochure.url %>" class = 'image_small_object'  type="application/pdf">
+                    <% else %>
+                      <img src="<%= @client.brochure.url %>" class = 'image_small_object' />
+                    <% end %>
                   </div>
                 <% end %>
                 <hr/>
