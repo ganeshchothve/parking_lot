@@ -51,7 +51,7 @@ module ReceiptStateMachine
 
       event :failed do
         transitions from: :pending, to: :failed, if: :can_mark_failed?, success: %i[send_notification]
-        transitions from: :clearance_pending, to: :failed, success: %i[send_notification]
+        transitions from: :clearance_pending, to: :failed, success: %i[send_notification send_booking_detail_to_under_negotiation]
         transitions from: :failed, to: :failed
       end
 

@@ -36,7 +36,7 @@ module BookingDetailStateMachine
         # transitions from: :user_kyc, to: :hold
       end
 
-      event :under_negotiation, after: %i[after_under_negotiation_event update_selldo!] do
+      event :under_negotiation, after: %i[after_under_negotiation_event] do
         transitions from: :under_negotiation, to: :under_negotiation
         transitions from: :hold, to: :under_negotiation
         transitions from: :scheme_approved, to: :under_negotiation
