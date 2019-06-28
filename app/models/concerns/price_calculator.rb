@@ -20,7 +20,7 @@ module PriceCalculator
 
   def effective_rate
     effective_rate = self.base_rate + self.floor_rise
-    if booking_detail_scheme.payment_adjustments.present?
+    if booking_detail_scheme
       booking_detail_scheme.payment_adjustments.in(field: ["base_rate", "floor_rise"]).each do |adj|
         effective_rate += adj.value self
       end
