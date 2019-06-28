@@ -144,6 +144,16 @@
           </div>
         </div>
       <% end %>
+      <% if user.buyer? && current_user.role?('superadmin') %>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label><%= t("mongoid.attributes.user.portal_stage") %></label>
+            <div>
+              <%= user.portal_stage.try(:stage) || '-' %>
+            </div>
+          </div>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>
