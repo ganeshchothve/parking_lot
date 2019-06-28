@@ -35,4 +35,18 @@ class DashboardController < ApplicationController
       format.json {render json: {message: "#{data + 6} other such #{params[:bedrooms]} BHK apartments sold"}}
     end
   end
+
+  #
+  # This download_brochure action for Admin users where brochure download will start.
+  #
+  # GET /dashboard/download_brochure
+  #
+  def download_brochure
+    send_file(open(current_client.brochure.url),
+          :filename => "Brochure.#{current_client.brochure.file.extension}",
+          :type => current_client.brochure.content_type,
+          :disposition => 'attachment',
+          :url_based_filename => true)
+    current_user.portal_stage << PortalStage.new(stage: 'project_info') if current_user.buyer? && current_user.receipts.count == 0
+  end
 end

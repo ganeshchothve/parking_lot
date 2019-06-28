@@ -3,6 +3,10 @@ class DashboardPolicy < Struct.new(:user, :dashboard)
     true
   end
 
+  def download_brochure?
+    true
+  end
+
   def faqs?
     true
   end

@@ -50,7 +50,7 @@ module ApplicationHelper
     html = ''
     if current_user && current_client.brochure.present?
       html += "<li class='nav-item #{classes}'>
-      #{active_link_to 'Brochure', download_brochure_admin_client_path, target: "_blank", active: :exclusive, class: 'small nav-link' }
+      #{active_link_to 'Brochure', download_brochure_path, target: "_blank", active: :exclusive, class: 'small nav-link' }
       </li>"
     end
     if current_user
