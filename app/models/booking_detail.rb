@@ -133,11 +133,13 @@ class BookingDetail
   end
 
   def cost_sheet_template(booking_detail_scheme_id = nil)
-    booking_detail_scheme_id.present? ? BookingDetailScheme.find(booking_detail_scheme_id).cost_sheet_template : booking_detail_scheme.cost_sheet_template
+    bds = booking_detail_scheme_id.present? ? booking_detail_schemes.where(id: booking_detail_scheme_id).first : booking_detail_scheme
+    bds.try(:cost_sheet_template)
   end
 
   def payment_schedule_template(booking_detail_scheme_id = nil)
-    booking_detail_scheme_id.present? ? BookingDetailScheme.find(booking_detail_scheme_id).payment_schedule_template : booking_detail_scheme.payment_schedule_template
+    bds = booking_detail_scheme_id.present? ? booking_detail_schemes.where(id: booking_detail_scheme_id).first : booking_detail_scheme
+    bds.try(:payment_schedule_template)
   end
 
   def pending_balance(options={})
