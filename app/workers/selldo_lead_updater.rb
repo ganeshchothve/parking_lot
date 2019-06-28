@@ -6,16 +6,16 @@ class SelldoLeadUpdater
   def perform(user_id, st=nil)
     return false if Rails.env.test?
     user = User.find user_id
-    project_units = user.project_units.all
+    booking_details = user.booking_details.all
     stage = nil
-    stage = 'blocked' if project_units.select{|x| x.status == 'blocked'}.present?
-    stage = 'booked_tentative' if project_units.select{|x| x.status == 'booked_tentative'}.present?
-    stage = 'booked_confirmed' if project_units.select{|x| x.status == 'booked_confirmed'}.present?
+    stage = 'blocked' if booking_details.blocked.present?
+    stage = 'booked_tentative' if booking_details.booked_tentative.present?
+    stage = 'booked_confirmed' if booking_details.booked_confirmed.present?
     if st.present? && stage.blank?
       stage = st
     elsif stage.blank?
       stage = 'user_kyc_done' if user.user_kycs.present?
-      stage = 'hold' if project_units.select{|x| x.status == 'hold'}.present?
+      stage = 'hold' if booking_details.hold.present?
     end
     ps = user.portal_stages.where(stage: stage).first
     ps ? ps.update(updated_at: Time.now) : user.portal_stages << PortalStage.new(stage: stage)
