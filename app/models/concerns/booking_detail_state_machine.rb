@@ -149,9 +149,9 @@ module BookingDetailStateMachine
       if under_negotiation? && booking_detail_scheme.approved?
         scheme_approved!
       else
-        auto_released_extended_inform_buyer!
-      # elsif !booking_detail_scheme.present? && (booking_detail_schemes.distinct(:status).include? 'rejected')
-      #   scheme_rejected!
+        # auto_released_extended_inform_buyer!
+        # elsif !booking_detail_scheme.present? && (booking_detail_schemes.distinct(:status).include? 'rejected')
+        #   scheme_rejected!
       end
     end
 
