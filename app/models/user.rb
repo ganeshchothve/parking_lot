@@ -212,7 +212,7 @@ class User
   end
 
   def portal_stage
-    user.portal_stages.desc(:created_at).first
+    portal_stages.desc(:updated_at).first
   end
 
   def total_balance_pending

@@ -6,14 +6,13 @@ class SelldoLeadUpdater
   def perform(user_id, st=nil)
     return false if Rails.env.test?
     user = User.find user_id
-    booking_details = user.booking_details.all
-    stage = nil
-    stage = 'blocked' if booking_details.blocked.present?
-    stage = 'booked_tentative' if booking_details.booked_tentative.present?
-    stage = 'booked_confirmed' if booking_details.booked_confirmed.present?
-    if st.present? && stage.blank?
+    if st.present?
       stage = st
-    elsif stage.blank?
+    else
+      booking_details = user.booking_details.all
+      stage = 'blocked' if booking_details.blocked.present?
+      stage = 'booked_tentative' if booking_details.booked_tentative.present?
+      stage = 'booked_confirmed' if booking_details.booked_confirmed.present?
       stage = 'user_kyc_done' if user.user_kycs.present?
       stage = 'hold' if booking_details.hold.present?
     end

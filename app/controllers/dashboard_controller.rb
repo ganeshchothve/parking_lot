@@ -47,9 +47,6 @@ class DashboardController < ApplicationController
           :type => current_client.brochure.content_type,
           :disposition => 'attachment',
           :url_based_filename => true)
-    if current_user.buyer? && current_user.receipts.count == 0
-      current_user.portal_stage << PortalStage.new(stage: 'project_info')
-      SelldoLeadUpdater.perform_async(current_user.id.to_s, 'project_info')
-    end
+    SelldoLeadUpdater.perform_async(current_user.id.to_s, 'project_info') if current_user.buyer? && current_user.receipts.count == 0
   end
 end

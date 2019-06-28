@@ -60,8 +60,11 @@ class LocalDevise::ConfirmationsController < Devise::ConfirmationsController
 
   def do_confirm
     @confirmable.confirm
-    if params[:user].present? && params[:user][:manager_id].present?
-      @confirmable.set(manager_id: params[:user][:manager_id], referenced_manager_ids: [ BSON::ObjectId(params[:user][:manager_id]) ])
+    if params[:manager_id].present?
+      @confirmable.manager_id = params[:manager_id]
+      @confirmable.referenced_manager_ids = ([params[:manager_id]] + @confirmable.referenced_manager_ids).uniq
+      @confirmable.manager_change_reason = "Customer confirmed with link sent by #{@confirmable.manager.name}"
+      @confirmable.save
     end
     set_flash_message :notice, :confirmed
     sign_in_and_redirect(resource_name, @confirmable)
