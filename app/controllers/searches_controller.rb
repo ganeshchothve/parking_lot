@@ -284,7 +284,7 @@ class SearchesController < ApplicationController
       project_name: @search.project_unit.project_name,
       project_tower_name: @search.project_unit.project_tower_name,
       bedrooms: @search.project_unit.bedrooms,
-      bathrooms: @search.project_unit.bathrooms
+      bathrooms: @search.project_unit.bathrooms,
       floor_rise: @search.project_unit.floor_rise,
       saleable: @search.project_unit.saleable,
       costs: @search.project_unit.costs,
