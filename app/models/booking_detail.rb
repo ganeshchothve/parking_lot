@@ -17,6 +17,11 @@ class BookingDetail
   field :base_rate, type: Float
   field :floor_rise, type: Float
   field :saleable, type: Float
+  field :project_name, type: String
+  field :project_tower_name, type: String
+  field :bedrooms, type: String
+  field :bathrooms, type: String
+
   mount_uploader :tds_doc, DocUploader
 
   enable_audit(
