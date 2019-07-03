@@ -65,6 +65,7 @@ class HomeController < ApplicationController
 
           respond_to do |format|
             if @user.save
+              SelldoLeadUpdater.perform_async(@user.id, 'registered')
               format.json { render json: {user: @user, success: 'User registration completed'}, status: :created }
             else
               format.json { render json: {errors: @user.errors.full_messages.uniq}, status: :unprocessable_entity }

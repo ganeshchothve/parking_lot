@@ -41,7 +41,10 @@ class CustomPolicy < Struct.new(:user, :enable_users)
     "#{user.buyer? ? 'Buyer' : 'Admin'}::UserKycPolicy".constantize.new(user, UserKyc).index?
   end
 
+  def portal_stage_priorities?
+    "#{user.buyer? ? '' : 'Admin::'}PortalStagePriorityPolicy".constantize.new(user, PortalStagePriority).index?
+  end
   def self.custom_methods
-    %w[inventory emails smses audits referrals accounts phases sync_logs erp_models user_kycs].sort
+    %w[inventory emails smses audits referrals accounts phases sync_logs erp_models user_kycs portal_stage_priorities].sort
   end
 end

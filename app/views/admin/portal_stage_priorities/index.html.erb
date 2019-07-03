@@ -1,0 +1,21 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class='col-md-9'>
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-md-7">
+            </div>
+            <div class="col-md-5 text-md-right">
+              <h6 class="mt-2">Total <%= global_labels[:portal_stage_priority] %>: <%= @portal_stage_priorities.count %></h6>
+            </div>
+          </div>
+          <%= render "admin/portal_stage_priorities/index", portal_stage_priorities: @portal_stage_priorities %>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="d-md-none mt-3"></div>
+    </div>
+  </div>
+</div>

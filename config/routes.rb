@@ -37,6 +37,9 @@ Rails.application.routes.draw do
 
   namespace :admin do
 
+    resources :portal_stage_priorities, only: [:index] do
+      patch :reorder, on: :collection
+    end
     resources :booking_details, only: [:index, :show, :new, :create] do
       patch :booking, on: :member
       get :mis_report, on: :collection
