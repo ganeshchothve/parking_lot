@@ -190,14 +190,20 @@ class User
 
   def password_complexity
     # Regexp extracted from https://stackoverflow.com/questions/19605150/regex-for-password-must-contain-at-least-eight-characters-at-least-one-number-a
-    return if password.blank? || password =~ /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-\=]).{8,16}$/
-
-    errors.add :password, 'Length should be 8-16 characters and include: 1 uppercase, 1 lowercase, 1 digit and 1 special character'
+    if password.blank? || password =~ /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,16}$/
+      if password !~ /#{first_name}|#{last_name}/i
+        true
+      else
+        errors.add :password, 'should not contain name.'
+      end
+    else
+      errors.add :password, 'Length should be 8-16 characters and include: 1 uppercase, 1 lowercase, 1 digit and 1 special character.'
+    end
   end
 
   def unattached_blocking_receipt(blocking_amount = nil)
     blocking_amount ||= current_client.blocking_amount
-    Receipt.where(user_id: id).in(status: %w[success clearance_pending]).where(booking_detail_id: nil).where(total_amount: { "$gte": blocking_amount }).first
+    Receipt.where(user_id: id).in(status: %w[success clearance_pending]).where(booking_detail_id: nil).where(total_amount: { "$gte": blocking_amount }).asc(:token_number).first
   end
 
   def set_utm_params(cookies)
