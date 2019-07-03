@@ -292,6 +292,8 @@ en:
         country: 'Country'
         zip: 'Zip / Pin Code'
   controller:
+    application:
+      set_current_client: 'The site is under maintenance. Please contact your  administrator.'
     booking_detail_schemes:
       scheme_approved: 'Scheme applied successfully, please check cost sheet.'
       scheme_under_negotiation: 'Scheme registered successfully and sent for approval.'

@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_cache_headers, :set_request_store, :set_cookies
   before_action :load_hold_unit
+  before_action :set_current_client
 
   acts_as_token_authentication_handler_for User, if: :token_authentication_valid_params?
 
@@ -29,6 +30,12 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+
+  def set_current_client
+    unless current_client
+      redirect_to welcome_path, alert: t('controller.application.set_current_client')
+    end
+  end
 
   def set_layout
     devise_controller? ? 'devise' : 'application'

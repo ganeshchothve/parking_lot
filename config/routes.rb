@@ -161,7 +161,7 @@ Rails.application.routes.draw do
   match 'payment/:receipt_id/process_payment/:ignore', to: 'payment#process_payment', via: [:get, :post]
   get :register, to: 'home#register', as: :register
   post :check_and_register, to: 'home#check_and_register', as: :check_and_register
-
+  get :welcome, as: :welcome, to: 'home#welcome'
   scope :custom do
     match :inventory, to: 'custom#inventory', as: :custom_inventory, via: [:get]
   end

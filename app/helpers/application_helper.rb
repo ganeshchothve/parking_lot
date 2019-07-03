@@ -38,6 +38,7 @@ module ApplicationHelper
     else
       @current_client = Client.asc(:created_at).first # GENERICTODO: handle this
     end
+    @current_client
   end
 
   def current_project
@@ -108,5 +109,14 @@ module ApplicationHelper
 
   def current_user_role_group
     current_user.buyer? ? :buyer : :admin
+  end
+
+  def flash_class(level)
+    case level
+      when 'notice' then "alert alert-info"
+      when 'success' then "alert alert-success"
+      when 'error' then "alert alert-danger"
+      when 'alert' then "alert alert-warning"
+    end
   end
 end

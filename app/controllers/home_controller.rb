@@ -1,6 +1,13 @@
 # TODO: replace all messages & flash messages
 class HomeController < ApplicationController
+
+  skip_before_action :set_current_client, only: :welcome
+
   def index
+  end
+
+  def welcome
+    render layout: 'welcome'
   end
 
   def register
