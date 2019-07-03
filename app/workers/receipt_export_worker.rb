@@ -30,6 +30,7 @@ class ReceiptExportWorker
     [
       "Receipt ID",
       "Order ID",
+      "Token Number",
       "Payment Mode",
       "Issued Date",
       "Issuing Bank",
@@ -57,6 +58,7 @@ class ReceiptExportWorker
     [
       receipt.receipt_id,
       receipt.order_id,
+      receipt.get_token_number,
       I18n.t("receipts.payment_mode.#{receipt.payment_mode}"),
       receipt.issued_date,
       receipt.issuing_bank,
