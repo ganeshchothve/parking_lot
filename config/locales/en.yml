@@ -261,6 +261,7 @@ en:
         total_balance_pending: "Total Balance Pending (you might have some payments pending clearance)"
         total_unattached_balance: "Total Un-attached Balance (subject to clearance)"
         is_active: 'Allow the user to login?'
+        utm_params: 'UTM Tracking'
       channel_partner:
         name: 'Name'
         company_name: "Company Name"
@@ -355,6 +356,7 @@ en:
     confirmed:
       :true: 'Confirmed'
       :false: 'Not Confirmed'
+
     role:
       superadmin: 'Superadmin'
       admin: 'Administrator'
