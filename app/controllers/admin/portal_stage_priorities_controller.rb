@@ -25,7 +25,6 @@ class Admin::PortalStagePrioritiesController < AdminController
     PortalStagePriority.each_with_index do |psp, i|
       psp.set(stage: stage_order[i])
     end
-
     respond_to do |format|
       format.html{ redirect_to admin_portal_stage_priorities_path }
     end

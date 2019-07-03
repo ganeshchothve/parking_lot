@@ -19,18 +19,6 @@ class SelldoLeadUpdater
     else
       user.portal_stage
     end
-    # if st.present?
-    #   stage = st
-    # else
-    #   booking_details = user.booking_details.all
-    #   stage = 'user_kyc_done' if user.user_kycs.present?
-    #   stage = 'hold' if booking_details.hold.present?
-    #   stage = 'blocked' if booking_details.blocked.present?
-    #   stage = 'booked_tentative' if booking_details.booked_tentative.present?
-    #   stage = 'booked_confirmed' if booking_details.booked_confirmed.present?
-    # end
-    # ps = user.portal_stages.where(stage: stage).first
-    # ps ? ps.update(updated_at: Time.now) : user.portal_stages << PortalStage.new(stage: stage)
   end
 
   def sell_do (user, stage)

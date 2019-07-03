@@ -13,8 +13,7 @@
       <% end %>
       <%= form_tag reorder_admin_portal_stage_priorities_path, method: "patch", id: 'change_priority_form' do %>
         <%= hidden_field_tag "order", id: 'order' %>
-        <%= submit_tag :apply, class: "btn btn-primary btn-sm float-lg-right" %>
-        <div class="d-md-none mt-3"></div>
+        <%= submit_tag :apply, class: "btn btn-primary float-lg-right" %>
       <% end %>
     </tbody>
   </table>
