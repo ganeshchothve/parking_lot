@@ -53,7 +53,24 @@ module UserRequests
 
     def build_booking_detail
       search = Search.find_or_create_by(user_id: current_booking_detail.user_id, project_unit_id: alternate_project_unit.id)
-      BookingDetail.new(project_unit_id: alternate_project_unit.id, primary_user_kyc_id: current_booking_detail.primary_user_kyc_id, status: 'hold', user_id: current_booking_detail.user_id, manager: current_booking_detail.try(:manager_id), user_kyc_ids: current_booking_detail.user_kyc_ids, parent_booking_detail_id: current_booking_detail.id, search: search)
+
+      BookingDetail.new(
+        base_rate: alternate_project_unit.base_rate,
+        project_name: alternate_project_unit.project_name,
+        project_tower_name: alternate_project_unit.project_tower_name,
+        bedrooms: alternate_project_unit.bedrooms,
+        bathrooms: alternate_project_unit.bathrooms,
+        floor_rise: alternate_project_unit.floor_rise,
+        saleable: alternate_project_unit.saleable,
+        project_unit_id: alternate_project_unit.id,
+        costs: alternate_project_unit.costs, data: alternate_project_unit.data,
+        primary_user_kyc_id: current_booking_detail.primary_user_kyc_id,
+        status: 'hold', user_id: current_booking_detail.user_id,
+        manager: current_booking_detail.try(:manager_id),
+        user_kyc_ids: current_booking_detail.user_kyc_ids,
+        parent_booking_detail_id: current_booking_detail.id,
+        search: search
+      )
     end
 
     def build_booking_detail_scheme(new_booking_detail)
