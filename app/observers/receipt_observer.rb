@@ -11,10 +11,6 @@ class ReceiptObserver < Mongoid::Observer
   end
 
   def after_save(receipt)
-    # if receipt.status_changed?
-    #   Notification::Receipt.new(receipt.id, receipt.changes).execute
-    # end
-
     _event = receipt.event
     receipt.event = nil
     receipt.send("#{_event}!") if _event.present?

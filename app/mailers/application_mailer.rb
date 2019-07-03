@@ -13,8 +13,9 @@ class ApplicationMailer < ActionMailer::Base
   def test params
     body = params.delete :body
     if params[:attachment_urls].present?
-      params[:attachment_urls].each do |name, url|
-        attachments[name] = File.read("#{Rails.root}/public/#{url}")
+      params[:attachment_urls].each do |attach|
+        attach = (attach.is_a?(File) ? attach : File.read("#{Rails.root}/public/#{attach}"))
+        attachments[File.basename(attach.path)] = attach.read
       end
     end
     bootstrap = BootstrapEmail::Compiler.new(

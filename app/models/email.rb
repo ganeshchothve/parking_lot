@@ -91,25 +91,12 @@ class Email
     #      F            |          -           |       F        |         no
     #      F            |          -           |       T        |        yes
     #      F            |          -           |       F        |         no
+    # and alwas send email when email template is missing.
     if self.to.present?
-      if ( !self.email_template || self.email_template.try(:is_active?) ) && (Rails.env.production? || Rails.env.staging?)
-        if self.attachments.present?
-          Communication::Email::MailgunWorker.perform_in(2.minutes, self.id.to_s)
-        else
-          Communication::Email::MailgunWorker.perform_async(self.id.to_s)
-        end
+      if self.email_template
+        Communication::Email::MailgunWorker.perform_async(self.id.to_s) if self.email_template.try(:is_active?)
       else
-        attachment_urls = {}
-        self.attachments.collect do |doc|
-          attachment_urls[doc.file_name] = doc.file.url
-        end
-        ApplicationMailer.test({
-          to: self.recipients.pluck(:email).uniq,
-          cc: self.cc || [],
-          body: self.body,
-          subject: self.subject,
-          attachment_urls: attachment_urls
-        }).deliver
+        Communication::Email::MailgunWorker.perform_async(self.id.to_s)
       end
     end
   end

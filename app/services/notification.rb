@@ -26,11 +26,13 @@ module Notification
       fail "#{keys} required to send notification" if keys.present?
 
       template_name = params.delete "template_name"
-      receipt = ::Receipt.find params[:triggered_by_id]
+      params.delete("triggered_by_id") if params['triggered_by']
+      receipt = params[:triggered_by] || ::Receipt.where(id: params[:triggered_by_id]).first
+
       email = ::Email.new(params.merge(email_template_id: Template::EmailTemplate.find_by(name: template_name).id))
       email.set_content
 
-      if !Rails.env.test? && (%w[clearance_pending success].include?(receipt.status) && ( receipt.online? && !receipt.clearance_pending? ) )
+      if !Rails.env.test? && (%w[clearance_pending success].include?(receipt.status) || ( receipt.online? && !receipt.clearance_pending? ) )
         client = receipt.user.booking_portal_client
         _html = email.body
         pdf_html = ApplicationController.new.render_to_string(inline: _html, layout: 'pdf')
