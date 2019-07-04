@@ -10,9 +10,9 @@ class ReceiptObserver < Mongoid::Observer
     end
   end
 
-  def after_save(receipt)
-    _event = receipt.event
-    receipt.event = nil
-    receipt.send("#{_event}!") if _event.present?
-  end
+  # def after_save(receipt)
+  #   # _event = receipt.event
+  #   # receipt.event = nil
+  #   # receipt.send("#{_event}!") if _event.present?
+  # end
 end

@@ -30,7 +30,7 @@ module ReceiptStateMachine
       event :available_for_refund, after: %i[send_booking_detail_to_under_negotiation] do
         transitions from: :available_for_refund, to: :available_for_refund
         transitions from: :success, to: :available_for_refund, if: :can_available_for_refund?
-        transitions from: :cancelled, to: :available_for_refund, success: %i[send_notification]
+        transitions from: :cancelled, to: :available_for_refund
       end
 
       event :cancelling do
@@ -49,9 +49,9 @@ module ReceiptStateMachine
         transitions from: :available_for_refund, to: :refunded
       end
 
-      event :failed do
-        transitions from: :pending, to: :failed, if: :can_mark_failed?, success: %i[send_notification]
-        transitions from: :clearance_pending, to: :failed, success: %i[send_notification send_booking_detail_to_under_negotiation]
+      event :failed, after: :send_booking_detail_to_under_negotiation do
+        transitions from: :pending, to: :failed, if: :can_mark_failed?
+        transitions from: :clearance_pending, to: :failed
         transitions from: :failed, to: :failed
       end
 
@@ -124,6 +124,7 @@ module ReceiptStateMachine
 
     def send_booking_detail_to_under_negotiation
       booking_detail.under_negotiation! if booking_detail
+      send_notification if %i[pending clearance_pending cancelled].include?(self.aasm.from_state)
     end
     #
     # When Receipt is created by admin except channel partner then it's direcly moved in clearance pending.
@@ -147,7 +148,7 @@ module ReceiptStateMachine
     end
 
     def send_notification
-      Notification::Receipt.new(self.id, { status: [self.status_was, self.status] }, { record: self } ).execute
+      Notification::Receipt.new(self.id, { status: [self.status_was, self.status] }, { record: self } ).execute if self.status_changed?
     end
   end
 end
