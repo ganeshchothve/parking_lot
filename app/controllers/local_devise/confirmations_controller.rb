@@ -11,7 +11,6 @@ class LocalDevise::ConfirmationsController < Devise::ConfirmationsController
       if @confirmable.has_no_password?
         @confirmable.attempt_set_password(params[:user])
         if @confirmable.valid? and @confirmable.password_match?
-          SelldoLeadUpdater.perform_async(@confirmable.id, 'confirmed')
           do_confirm
         else
           do_show
@@ -67,6 +66,7 @@ class LocalDevise::ConfirmationsController < Devise::ConfirmationsController
       @confirmable.manager_change_reason = "Customer confirmed with link sent by #{@confirmable.manager.name}"
       @confirmable.save
     end
+    SelldoLeadUpdater.perform_async(@confirmable.id, 'confirmed')
     set_flash_message :notice, :confirmed
     sign_in_and_redirect(resource_name, @confirmable)
   end
