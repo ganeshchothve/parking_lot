@@ -111,7 +111,7 @@ class ChannelPartner
 
   def update_erp_id(erp_id, domain)
     super
-    associated_user.update_erp_id(erp_id, domain)
+    associated_user.update_erp_id(erp_id, domain) if associated_user
   end
 
   private
