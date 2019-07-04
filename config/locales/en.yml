@@ -64,6 +64,9 @@ en:
     phases: Phases
   mongoid:
     attributes:
+      portal_stage_priority:
+        stage_name: 'Stage'
+        priority_name: 'Priority'
       asset:
         file_size: 'Size'
         file_name: 'Name'

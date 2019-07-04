@@ -15,4 +15,11 @@ class ReceiptObserver < Mongoid::Observer
     receipt.event = nil
     receipt.send("#{_event}!") if _event.present?
   end
+
+  def after_create receipt
+    SelldoLeadUpdater.perform_async(receipt.user_id.to_s, 'payment_done') if (receipt.payment_mode == 'offline' || (receipt.payment_mode == 'online' && receipt.success? ))
+  end
+  def after_update receipt
+    SelldoLeadUpdater.perform_async(receipt.user_id.to_s, 'payment_done') if (receipt.payment_mode == 'offline' || (receipt.payment_mode == 'online' && receipt.success? ))
+  end
 end

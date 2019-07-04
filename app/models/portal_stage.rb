@@ -4,11 +4,9 @@ class PortalStage
 
   # Fields
   field :stage, type: String, default: ''
+  field :priority, type: Integer
 
   # Associations
   embedded_in :user
-
-  # Validations
-  validates :stage, uniqueness: true, presence: true
 
 end

@@ -7,18 +7,21 @@ class SelldoLeadUpdater
     return false if Rails.env.test?
     user = User.where(id: user_id).first
     return false unless user
-    if st.present?
-      stage = st
+    priority = PortalStagePriority.all.collect{|x| [x.stage, x.priority]}.to_h
+    if st.present? && priority[st].present?
+      if user.portal_stages.empty?
+        user.portal_stages << PortalStage.new(stage: st, priority: priority[st])
+        sell_do(user, st)
+      elsif user.portal_stage.priority <= priority[st]
+        user.portal_stages.where(stage:  st).present? ? user.portal_stages.where(stage:  st).first.set(updated_at: Time.now, priority: priority[st]) : user.portal_stages << PortalStage.new(stage: st, priority: priority[st])
+        sell_do(user, st)
+      end
     else
-      booking_details = user.booking_details.all
-      stage = 'user_kyc_done' if user.user_kycs.present?
-      stage = 'hold' if booking_details.hold.present?
-      stage = 'blocked' if booking_details.blocked.present?
-      stage = 'booked_tentative' if booking_details.booked_tentative.present?
-      stage = 'booked_confirmed' if booking_details.booked_confirmed.present?
+      user.portal_stage
     end
-    ps = user.portal_stages.where(stage: stage).first
-    ps ? ps.update(updated_at: Time.now) : user.portal_stages << PortalStage.new(stage: stage)
+  end
+
+  def sell_do (user, stage)
     score = 10
     MixpanelPusherWorker.perform_async(user.mixpanel_id, stage, {}) if current_client.mixpanel_token.present?
     if current_client.selldo_api_key.present?
