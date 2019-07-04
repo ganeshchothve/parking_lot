@@ -66,6 +66,7 @@ class LocalDevise::ConfirmationsController < Devise::ConfirmationsController
       @confirmable.manager_change_reason = "Customer confirmed with link sent by #{@confirmable.manager.name}"
       @confirmable.save
     end
+    SelldoLeadUpdater.perform_async(@confirmable.id, 'confirmed')
     set_flash_message :notice, :confirmed
     sign_in_and_redirect(resource_name, @confirmable)
   end

@@ -73,6 +73,7 @@ gem 'sprockets-rails', '>= 2.3.2' # force this version for bootstrap 4 gem
 # Bootstrap lib gem for rails. #TODO: upgrade this when B4 is out of beta
 gem 'bootstrap'
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
 gem 'rest-client'
 
 # phone numbers on users -> model & validation
