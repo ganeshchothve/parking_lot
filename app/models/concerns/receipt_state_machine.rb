@@ -148,7 +148,7 @@ module ReceiptStateMachine
     end
 
     def send_notification
-      Notification::Receipt.new(self.id, { status: [self.status_was, self.status] }, { record: self } ).execute if self.status_changed?
+      Notification::Receipt.new(self.id, { status: [self.status_was, self.status] }, { record: self } ).execute
     end
   end
 end
