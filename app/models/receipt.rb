@@ -243,9 +243,9 @@ class Receipt
   end
 
   def tracking_id_processed_on_only_on_success
-    if status_changed? && status != 'success' && payment_mode != 'online'
-      errors.add :tracking_id, 'cannot be set unless the status is marked as success' if tracking_id_changed? && tracking_id.present?
-      errors.add :processed_on, 'cannot be set unless the status is marked as success' if processed_on_changed? && processed_on.present?
+    if self.success? && self.offline?
+      errors.add :tracking_id, 'cannot be set unless the status is marked as success' if tracking_id_changed? && tracking_id.blank?
+      errors.add :processed_on, 'cannot be set unless the status is marked as success' if processed_on_changed? && processed_on.blank?
     end
   end
 
