@@ -18,5 +18,6 @@ class ClientObserver < Mongoid::Observer
     Template::ReceiptTemplate.create(content: Template::ReceiptTemplate.default_content, booking_portal_client_id: client.id)
     Template::AllotmentLetterTemplate.create(content: Template::AllotmentLetterTemplate.default_content, booking_portal_client_id: client.id)
     ExternalInventoryViewConfig.create(booking_portal_client_id: client.id)
+    DatabaseSeeds::PortalStagePriorities.seed
   end
 end
