@@ -111,9 +111,8 @@ class Admin::ReceiptsController < AdminController
 
   def update_token_number
     authorize([:admin, @receipt])
-    @receipt = @receipt.assign_attributes(permitted_attributes([:admin, @receipt]))
     respond_to do |format|
-      if (params.dig(:receipt, :event).present? ? @receipt.send("#{params.dig(:receipt, :event)}!") : @receipt.save)
+      if @receipt.update(permitted_attributes([:admin, @receipt]))
         format.html { redirect_back fallback_location: root_path, notice: 'Receipt was successfully updated.' }
       else
         format.html { render :edit_token_number }
