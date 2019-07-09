@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   include Pundit
   include ApplicationHelper
 
+  before_action :set_locale
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_cache_headers, :set_request_store, :set_cookies
   before_action :load_hold_unit
@@ -15,6 +16,11 @@ class ApplicationController < ActionController::Base
   helper_method :home_path
   protect_from_forgery with: :exception, prepend: true
   layout :set_layout
+
+
+  def set_locale
+    I18n.locale = params[:locale] || I18n.default_locale
+  end
 
   def after_sign_in_path_for(current_user)
     ApplicationLog.user_log(current_user.id, 'sign_in', RequestStore.store[:logging])
@@ -137,5 +143,11 @@ class ApplicationController < ActionController::Base
         end
       end
     end
+  end
+
+  # For VAPT we want to protect Site with ony permited origins
+  def valid_request_origin? # :doc:
+    _valid = super
+    _valid && (request.origin == Rails.application.routes.default_url_options[:host] || Rails.env.development? || Rails.env.test? )
   end
 end
