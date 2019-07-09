@@ -1,15 +1,10 @@
+<div class="collapse navbar-collapse float-right" id="iris_menu">
+<ul class="navbar-nav ml-auto">
 <% if policy(:dashboard).index? %>
   <li class="nav-item">
-    <%= active_link_to "Dashboard", dashboard_path, active: :exclusive, class: "nav-link" %>
+    <%= active_link_to "Dashboard", dashboard_path, active: :exclusive, class: "nav-link active" %>
   </li>
 <% end %>
-
-<% if policy([:admin, ProjectUnit]).index? %>
-  <li class="nav-item">
-    <%= active_link_to t('global.project_units'), admin_project_units_path, active: :exclusive, class: "nav-link" %>
-  </li>
-<% end %>
-
 <% if policy([:admin, User]).index? %>
   <li class="nav-item">
     <%= active_link_to t('global.users'), admin_users_path, active: :inclusive, class: "nav-link" %>
@@ -39,9 +34,12 @@
     <%= active_link_to t('global.receipts'), admin_receipts_path, active: :inclusive, class: "nav-link" %>
   </li>
 <% end %>
-
+<% if policy([:admin, Scheme]).index? %>
+  <li class="nav-item">
+    <%= active_link_to t('global.schemes'), admin_schemes_path, active: :inclusive, class: "nav-link" %>
+  </li>
+<% end %>
 <% links = [] %>
-
 <% if CustomPolicy.custom_methods.present? %>
   <% CustomPolicy.custom_methods.each do |method| %>
     <% if policy(:custom).send("#{method}?") %>
@@ -50,66 +48,33 @@
     <% end %>
   <% end %>
 <% end %>
-
-<% if policy([:admin, Scheme]).index? %>
-  <li class="nav-item">
-    <%= active_link_to t('global.schemes'), admin_schemes_path, active: :inclusive, class: "nav-link" %>
-  </li>
-<% end %>
-
 <% if links.present? %>
-  <li class="nav-item d-none d-lg-block">
-    <div class="dropdown">
-      <a href="javascript:;" class="nav-link dropdown-toggle" data-toggle="dropdown"><%= t('global.custom') %></a>
-      <div class="dropdown-menu dropdown-menu-right">
-        <% links.each do |link| %>
-          <%= link_to link[:method], link[:link], class: "dropdown-item" %>
-        <% end %>
-      </div>
-    </div>
-  </li>
-<% end %>
-
-<li class="nav-item d-none d-lg-block" style="margin-top:-5px;">
-  <div class="dropdown">
-    <a href="javascript:;" class="nav-link dropdown-toggle" data-toggle="dropdown">
-      <%= icon "far", "user-circle", class: "text-muted fa-2x" %>
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Special Features
     </a>
-    <div class="dropdown-menu dropdown-menu-right">
-      <%= link_to ('Profile ( ' + t("users.role.#{current_user.role}") + ' )'), edit_admin_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
-      <%= link_to "Change Password", update_password_admin_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
-      <%= link_to "Sign out", destroy_session_path(current_user), class: "dropdown-item", method: :delete %>
+    <div class="dropdown-menu menu-top" aria-labelledby="navbarDropdown">
+      <% links.each do |link| %>
+        <%= link_to link[:method], link[:link], class: "dropdown-item" %>
+      <% end %>
     </div>
-  </div>
-</li>
-
-<% if links.present? %>
-  <% links.each do |link| %>
-    <li class="nav-item d-lg-none">
-      <%= link_to link[:method], link[:link], class: "nav-link" %>
-    </li>
-  <% end %>
+  </li>
 <% end %>
-
-<li class="nav-item d-lg-none">
-  <%= link_to "Profile", edit_admin_user_path(current_user), class: "nav-link modal-remote-form-link" %>
+<li class="nav-item dropdown">
+<div class="user-info float-right show-xs">
+<!-- <a href="javascript:;" class="message-info"><img src="<%#= asset_path 'envelope-black.svg' %>" alt="message"><span>2</span></a> -->
+<div class="user-dropdown display-inline dropdown">
+<img src="<%= asset_path 'user-alt-black.svg' %>" alt="User Info">
+<a class="nav-link dropdown-toggle" href="javascript:;" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Welcome <%= current_user.name %>
+  </a>
+  <div class="dropdown-menu user-menu-top" aria-labelledby="navbarDropdown">
+    <%= link_to "Profile", edit_admin_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
+    <%= link_to "Change Password", update_password_admin_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
+    <%= link_to "Sign out", destroy_session_path(current_user), class: "dropdown-item", method: :delete %>
+  </div>
+</div>
+</div>
 </li>
-
-<hr/>
-
-<li class="nav-item d-lg-none">
-  <%= link_to "Change Password", update_password_admin_user_path(current_user), class: "nav-link modal-remote-form-link" %>
-</li>
-
-<%= bottom_navigation('d-lg-none') %>
-
-<li class="nav-item d-lg-none">
-  <%= link_to "Sign out", destroy_session_path(current_user), class: "nav-link", method: :delete %>
-</li>
-
-<hr/>
-
-<li class='nav-item d-lg-none'>
-  <%= link_to 'Powered by Amura', 'https://www.amuratech.com', class: 'small nav-link', target: "_blank" %>
-  <div class="d-md-none mt-3"></div>
-</li>
+</ul>
+</div>

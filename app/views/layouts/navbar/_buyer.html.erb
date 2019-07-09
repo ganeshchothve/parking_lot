@@ -1,3 +1,5 @@
+<div class="collapse navbar-collapse float-right" id="iris_menu">
+<ul class="navbar-nav ml-auto">
 <% if policy(:dashboard).index? %>
   <li class="nav-item">
     <%= active_link_to "Dashboard", dashboard_path, active: :exclusive, class: "nav-link" %>
@@ -47,14 +49,14 @@
 
 
 <% if links.present? %>
-  <li class="nav-item d-none d-lg-block">
-    <div class="dropdown">
-      <%= link_to t('global.custom'), "javascript:;", class: "nav-link dropdown-toggle", data: { toggle: "dropdown" } %>
-      <div class="dropdown-menu dropdown-menu-right">
-        <% links.each do |link| %>
-          <%= link_to link[:name], link[:link] , class: "dropdown-item" %>
-        <% end %>
-      </div>
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Special Features
+    </a>
+    <div class="dropdown-menu menu-top" aria-labelledby="navbarDropdown">
+      <% links.each do |link| %>
+        <%= link_to link[:name], link[:link], class: "dropdown-item" %>
+      <% end %>
     </div>
   </li>
 <% end %>
@@ -71,34 +73,5 @@
     </div>
   </div>
 </li>
-
-<% if links.present? %>
-  <% links.each do |link| %>
-    <li class="nav-item d-lg-none">
-      <%= link_to link[:name], link[:link], class: "nav-link" %>
-    </li>
-  <% end %>
-<% end %>
-
-<li class="nav-item d-lg-none">
-  <%= link_to "Profile", edit_buyer_user_path(current_user), class: "nav-link modal-remote-form-link" %>
-</li>
-
-<hr/>
-
-<li class="nav-item d-lg-none">
-  <%= link_to "Change Password", update_password_buyer_user_path(current_user), class: "nav-link modal-remote-form-link" %>
-</li>
-
-<%= bottom_navigation('d-lg-none') %>
-
-<li class="nav-item d-lg-none">
-  <%= link_to "Sign out", destroy_session_path(current_user), class: "nav-link", method: :delete %>
-</li>
-
-<hr/>
-
-<li class='nav-item d-lg-none'>
-  <%= link_to 'Powered by Amura', 'https://www.amuratech.com', class: 'small nav-link', target: "_blank" %>
-  <div class="d-md-none mt-3"></div>
-</li>
+</ul>
+</div>

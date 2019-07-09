@@ -37,6 +37,7 @@
 //= require registration
 //= require otp_based_login
 //= require amura
+//= require site
 
 $.ajaxSetup({
   headers: {

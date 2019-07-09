@@ -1,22 +1,21 @@
-<div class="pt-5 mt-4"></div>
-<div class="pt-5 mt-4 d-none d-md-block"></div>
-
-<nav id="bottom_navigation" class="navbar navbar-expand-lg navbar-light bg-white fixed-bottom border-top d-none d-lg-flex">
-  <div class="collapse navbar-collapse">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <span class="small">
-          <%= current_project.name %> is registered via MahaRERA No.: <%= current_project.rera_registration_no %> & is available on <a href="https://maharera.mahaonline.gov.in" target="_blank">https://maharera.mahaonline.gov.in</a>.
-        </span>
-      </li>
-    </ul>
-    <ul class="navbar-nav pull-right">
-      <%= bottom_navigation('d-none d-lg-block') %>
-      <% if !user_signed_in? || !current_user.role?('superadmin') %>
-        <li class='nav-item d-none d-lg-block'>
-          <%= link_to 'Powered by Amura', 'https://www.amuratech.com', class: 'small nav-link', target: "_blank" %>
-        </li>
-      <% end %>
-    </ul>
+<footer class="bg-white footer fixed-bottom p-0 pt-2 pb-2">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 no-pd">
+        <div class="footer-top">
+          <p class="m-0 pb-2"><%= current_project.name %> is registered via MahaRERA No.: <%= current_project.rera_registration_no %> & is available on <a href="https://maharera.mahaonline.gov.in" target="_blank">https://maharera.mahaonline.gov.in</a>.</p>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-8 col-xs-12 col-sm-12 no-pd">
+        <ul class="footer-menu float-left mb-1">
+          <%= bottom_navigation %>
+        </ul>
+      </div>
+      <div class="col-lg-6 col-md-4 col-xs-12 col-sm-12 no-pd">
+        <ul class="footer-menu float-right mb-1">
+          <li><%= link_to 'Powered by Amura', 'https://www.amuratech.com', class: 'footer-link', target: "_blank" %></li>
+        </ul>
+      </div>
+    </div>
   </div>
-</nav>
+</footer>
