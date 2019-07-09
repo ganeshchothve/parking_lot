@@ -148,6 +148,7 @@ class ApplicationController < ActionController::Base
   # For VAPT we want to protect Site with ony permited origins
   def valid_request_origin? # :doc:
     _valid = super
-    _valid && (request.origin == Rails.application.routes.default_url_options[:host] || Rails.env.development? || Rails.env.test? )
+
+    _valid && ( URI.parse( request.origin.to_s ).host == Rails.application.routes.default_url_options[:host] || Rails.env.development? || Rails.env.test? )
   end
 end
