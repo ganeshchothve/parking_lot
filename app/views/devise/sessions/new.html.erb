@@ -28,17 +28,17 @@ end %>
 <% if current_client.preferred_login == "phone" %>
   <div class="form-group">
     <%= f.label :phone %>
-    <%= f.phone_field :login, autofocus: true, autocomplete: false, class: 'form-control', placeholder: 'Phone' %>
+    <%= f.phone_field :login, autofocus: true, autocomplete: false, class: 'form-control', placeholder: t('mongoid.attributes.user.phone') %>
   </div>
   <% else %>
   <div class="form-group">
     <%= f.label :email %>
-    <%= f.email_field :login, autofocus: true, autocomplete: false, class: 'form-control', placeholder: 'Email' %>
+    <%= f.email_field :login, autofocus: true, autocomplete: false, class: 'form-control', placeholder: t('mongoid.attributes.user.email') %>
   </div>
   <% end %>
   <div class="form-group">
     <%= f.label :password %>
-    <%= f.password_field :password, autocomplete: false, class: 'form-control', placeholder: 'Password' %>
+    <%= f.password_field :password, autocomplete: false, class: 'form-control', placeholder: t('mongoid.attributes.user.password') %>
   </div>
   <% if devise_mapping.rememberable? -%>
   <div class="form-group">

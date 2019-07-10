@@ -11,6 +11,7 @@ en:
   global:
     booking_details: 'Bookings'
     booking_detail: 'Booking'
+    dashboard: Dashboard
     action: 'Action'
     total: 'Total'
     sign_in_h1: "Welcome back"
@@ -250,6 +251,8 @@ en:
         name: 'Name'
         email: 'Email'
         phone: 'Phone'
+        password: 'Password'
+        password_confirmation: 'Password Confirmation'
         rera_id: 'RERA Registration Number'
         location: 'Location'
         lead_id: 'Sell.Do Lead ID'
@@ -297,6 +300,7 @@ en:
   controller:
     application:
       set_current_client: 'The site is under maintenance. Please contact your  administrator.'
+      invalid: 'Invalid'
     booking_detail_schemes:
       scheme_approved: 'Scheme applied successfully, please check cost sheet.'
       scheme_under_negotiation: 'Scheme registered successfully and sent for approval.'
@@ -357,6 +361,8 @@ en:
       unsubscribed: 'Unsubscribed'
       untracked: 'Untracked'
   users:
+    profile: '%{role} Profile'
+    change_password: 'Change Password'
     account_confirmed: 'Account Confirmed'
     confirmed:
       :true: 'Confirmed'
@@ -472,5 +478,6 @@ en:
     action_name:
       create: 'Create'
       update: 'Update'
-
+  sync_logs:
+    link_name: 'Sync Log'
 

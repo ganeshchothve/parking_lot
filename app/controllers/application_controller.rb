@@ -17,10 +17,8 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception, prepend: true
   layout :set_layout
 
+  rescue_from ActionController::InvalidAuthenticityToken, with: :invalid_authenticity_token
 
-  def set_locale
-    I18n.locale = params[:locale] || I18n.default_locale
-  end
 
   def after_sign_in_path_for(current_user)
     ApplicationLog.user_log(current_user.id, 'sign_in', RequestStore.store[:logging])
@@ -145,10 +143,26 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def invalid_authenticity_token
+    alert = t('controller.application.invalid')
+    respond_to do |format|
+      format.html { render json: alert }
+      format.json { render json: { errors: alert }, status: 403 }
+    end
+  end
+
   # For VAPT we want to protect Site with ony permited origins
   def valid_request_origin? # :doc:
     _valid = super
 
     _valid && ( URI.parse( request.origin.to_s ).host == Rails.application.routes.default_url_options[:host] || Rails.env.development? || Rails.env.test? )
+  end
+
+  def set_locale
+    I18n.locale = params[:locale] || I18n.default_locale
+  end
+
+  def default_url_options
+    { locale: I18n.locale }
   end
 end
