@@ -1,6 +1,6 @@
 # Additional translations at https://github.com/plataformatec/devise/wiki/I18n
 
-marathi:
+mr:
   devise:
     sign_out: 'बाहेर'
     confirmations:
