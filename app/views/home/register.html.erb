@@ -1,33 +1,14 @@
-<div class="col-md-12 mx-auto">
-  <h2 class="font-weight-bold text-success"><%= global_labels[:register_h1] %></h2>
-  <% if global_labels[:register_h2] %><p class="text-muted"><%= global_labels[:register_h2] %></p><% end %>
-  <div class="sign-up" style="margin-left:-15px;">
-    <% if current_client.selldo_client_id.present? && current_client.selldo_form_id.present? %>
-      <script src='//trkr.scdn1.secure.raxcdn.com/t/forms/<%= current_client.selldo_client_id %>/<%= current_client.selldo_form_id %>.js' data-form-id='<%= current_client.selldo_form_id %>'></script>
-    <% else %>
-      <%=render "devise/registrations/new", resource: @resource %>
-    <% end %>
+<section class="auth login-page pb-5">
+  <div class="container no-pd">
+    <div class="col-lg-5 col-xs-12 col-md-12 col-sm-12 no-pd">
+      <div class="login-form-wrapper pt-5">
+        <h1>2, 3 BHK Apartments starting from Rs. 36 Lakhs at Hinjewadi Pune</h1>
+        <p class="p-style">Don’t miss out on the biggest real estate opportunity in Pune.</p>
+        <h1 class="mt-0 fn-20">Hurry up! <strong>200</strong> apartments already sold.</h1>
+        <p> <strong>Register Now</strong> to Book Online</p>
+        <%=render "devise/registrations/new", resource: @resource %>
+        <%=render "devise/shared/links" %>
+      </div>
+    </div>
   </div>
-  <%=render "devise/shared/links" %>
-</div>
-<%
-  default_system_srd = ""
-  if user_signed_in?
-    if current_user.role?('channel_partner')
-      default_system_srd = current_client.selldo_cp_srd
-    else
-      default_system_srd = current_client.selldo_default_srd
-    end
-  end
-%>
-<script type="text/javascript" data-tag="selldo">
-window.sell_do_form_rendered = function(){
-  var default_srd = Amura.readCookie("sell_do[campaign][srd]") ? Amura.readCookie("sell_do[campaign][srd]") : "<%= default_system_srd %>";
-  if(default_srd){
-    $('<input type="hidden" name="sell_do[campaign][srd]" value="' + default_srd + '"/>').appendTo(".sell_do_form_actual_container");
-  }
-
-  $('[name="sell_do[form][lead][first_name]"]').attr('pattern', '[A-Za-z ]{2,20}').attr('title', 'contain only alphabet and space').attr('maxlength', 20)
-  $('[name="sell_do[form][lead][last_name]"]').attr('pattern', '[A-Za-z ]{2, 20}').attr('title', 'contain only alphabet and space').attr('maxlength', 20)
-};
-</script>
+</section>
