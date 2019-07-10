@@ -11,6 +11,18 @@
       </li>
     </ul>
     <ul class="navbar-nav pull-right">
+      <li class='nav-item d-none d-lg-block'>
+        <div class="btn-group dropup" style="padding: 0.29em;">
+          <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <%= t("language.#{params[:locale]}")%>
+          </a>
+          <div class="dropdown-menu">
+            <% ['en', 'mr'].each do |language| %>
+              <%= link_to t("language.#{language}"), url_for(params.permit!.merge(locale: language) ), class: 'dropdown-item' %>
+            <% end %>
+          </div>
+        </div>
+      </li>
       <%= bottom_navigation('d-none d-lg-block') %>
       <% if !user_signed_in? || !current_user.role?('superadmin') %>
         <li class='nav-item d-none d-lg-block'>

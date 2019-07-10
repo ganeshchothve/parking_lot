@@ -63,6 +63,9 @@ en:
     account: "Account"
     phase: 'Phase'
     phases: Phases
+  language:
+    en: 'English'
+    mr: 'Marathi'
   mongoid:
     attributes:
       portal_stage_priority:

@@ -63,6 +63,9 @@ mr:
     account: "खाती"
     phase: 'टप्पा'
     phases: 'टप्पा'
+  language:
+    en: 'इंग्रजी'
+    mr: 'मराठी'
   mongoid:
     attributes:
       portal_stage_priority:
