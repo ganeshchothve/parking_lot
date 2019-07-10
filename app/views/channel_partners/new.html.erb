@@ -1,24 +1,32 @@
-<h2 class="font-weight-bold text-success"><%= global_labels[:channel_partner] %></h2>
-<p class="pb-3 text-muted">Your login will be created & sent to you once the <%= global_labels[:channel_partner] %> Team confirms your registration.</p>
-<%= form_with(model: @channel_partner, local: true, html: {id: 'channel_partner_form', class: 'validate-form', multipart: true}) do |form| %>
-  <% if @channel_partner.errors.full_messages.present? %>
-  <div class="mb-3 alert alert-danger">
-    <strong>The form contains <%= @channel_partner.errors.full_messages.length %> errors.</strong>
-    <ul class="mt-3 pl-3">
-    <% @channel_partner.errors.full_messages.each do |x| %>
-      <li><%= x %></li>
-    <% end %>
-    </ul>
+<section class="auth login-page pb-5">
+  <div class="container no-pd">
+    <div class="col-lg-5 col-xs-12 col-md-12 col-sm-12 no-pd">
+      <div class="login-form-wrapper pt-5">
+        <p> <strong>Partner Registration</strong></p>
+        <%= form_with(model: @channel_partner, local: true, html: {id: 'channel_partner_form', class: 'validate-form', multipart: true}) do |form| %>
+         <% if @channel_partner.errors.full_messages.present? %>
+          <div class="mb-3 alert alert-danger">
+            <strong>The form contains <%= @channel_partner.errors.full_messages.length %> errors.</strong>
+            <ul class="mt-3 pl-3">
+            <% @channel_partner.errors.full_messages.each do |x| %>
+              <li><%= x %></li>
+            <% end %>
+            </ul>
+          </div>
+          <% end %>
+          <%= render "form_fields", {form: form} %>
+          <div class="signin-btn col-lg-12 pl-0 pr-0 pt-4 pb-5">
+            <%= form.submit "Register", class: "sign-in-btn" %>
+          </div>
+          <%= render "devise/shared/links" %>
+        <% end %>
+      </div>
+    </div>
   </div>
-  <% end %>
-  <%= render "form_fields", {form: form} %>
-  <div class="form-group">
-    <%= form.submit "Register", class: "btn btn-primary" %>
-  </div>
-  <%= render "devise/shared/links" %>
-<% end %>
+</section>
 <%= javascript_tag do %>
   $(document).ready(function(){
     FormInitializer.init($("#channel_partner_form"));
   });
 <% end %>
+
