@@ -1,59 +1,63 @@
-<div class="table-responsive">
-  <table class='table striped-table'>
-    <thead class="th-default">
-      <% labels = t('mongoid.attributes.user').with_indifferent_access %>
-      <tr>
-        <th>Name</th>
+<table class='table my-customer-table responsive-tbl'>
+  <thead class="th-default">
+    <% labels = t('mongoid.attributes.user').with_indifferent_access %>
+      <thead>
+        <tr class="bg-gradient-cd white">
+            <th>Name</th>
+        <th>Phone & Email</th>
         <% if current_client.selldo_client_id.present? && current_client.selldo_gre_form_id.present? && current_client.selldo_channel_partner_form_id.present? %>
           <th><%= labels[:lead_id] %></th>
         <% end %>
         <th><%= global_labels[:receipts] %></th>
         <th>Role</th>
-        <th>Account Confirmed?</th>
-        <th class="text-right">Actions</th>
+        <th>Status</th>
+        <th>Actions</th>
       </tr>
     </thead>
-    <tbody>
-      <% users.each do |user| %>
-        <tr>
-          <td>
+  </thead>
+  <tbody>
+    <% users.each do |user| %>
+      <tr>
+        <td data-title="Name">
+          <span>
             <% if policy([ current_user_role_group, user]).show? %>
               <%= link_to user.name, [current_user_role_group, user ] %>
             <% else %>
               <%= user.name %>
             <% end %>
-            <div class="small">
-              <%= user.email || "" %> <br/>
-              <%= user.phone || "" %><br/>
-              <% if user.role?("user") && user.manager_id.present? && current_user.role != "channel_partner" %>
-                <%= labels[:manager_id] %>: <%= user.manager_name %><br/>
-              <% end %>
-            </div>
-          </td>
-          <% if current_client.selldo_client_id.present? && current_client.selldo_gre_form_id.present? && current_client.selldo_channel_partner_form_id.present? %>
-            <td><%= user.lead_id %></td>
-          <% end %>
-          <td><%= user.receipts.where('$or' => [{ status: { '$in': %w(success clearance_pending) } }, { payment_mode: {'$ne': 'online'}, status: {'$in': %w(pending clearance_pending success)} }]).present? ? "Y" : "N" %></td>
-          <td><%= t("users.role.#{user.role}") %></td>
-          <td>
-            <%= user.confirmed_at.present? ? "Confirmed" : "Not confirmed" %>
-          </td>
-          <td class="text-right">
-            <div class="dropdown">
-              <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-              <div class="dropdown-menu dropdown-menu-right">
-                <%= render "admin/users/links", user: user %>
-              </div>
-            </div>
-          </td>
-        </tr>
-      <% end %>
-      <tr>
-        <td colspan="6">
-          <div class="mt-5 pt-5"></div>
+          </span>
+        </td>
+        <td data-title="Phone & Email">
+          <span class="email-icon">
+            <%= user.email || "" %>
+          </span>
+          <span class="phone-icon">
+            <%= user.phone || "" %>
+          </span>
+        </td>
+        <% if current_client.selldo_client_id.present? && current_client.selldo_gre_form_id.present? && current_client.selldo_channel_partner_form_id.present? %>
+          <td data-title="Sell.Do Lead Id"><span><%= user.lead_id %></span></td>
+        <% end %>
+        <td data-title="Payments"><span><%= user.receipts.where('$or' => [{ status: { '$in': %w(success clearance_pending) } }, { payment_mode: {'$ne': 'online'}, status: {'$in': %w(pending clearance_pending success)} }]).present? ? "Yes" : "No" %></span></td>
+        <td data-title="Role"><span><%= t("users.role.#{user.role}") %></span></td>
+        <td data-title="Status"><span><%= user.confirmed_at.present? ? "Confirmed" : "Not confirmed" %></span></td>
+        <td>
+          <div class="dropdown show text-center">
+          <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+              <%= render "admin/users/links", user: user %>
+           </div>
+        </div>
         </td>
       </tr>
-    </tbody>
-  </table>
+    <% end %>
+    <tr>
+      <td colspan="6">
+        <div class="mt-5 pt-5"></div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pt-4 pb-4">
+  <%= will_paginate users, list_classes: %w(pagination justify-content-center) %>
 </div>
-<%= will_paginate users, list_classes: %w(pagination justify-content-center) %>
