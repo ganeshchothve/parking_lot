@@ -11,6 +11,7 @@ en:
   global:
     booking_details: 'Bookings'
     booking_detail: 'Booking'
+    dashboard: Dashboard
     action: 'Action'
     total: 'Total'
     sign_in_h1: "Welcome back"
@@ -62,6 +63,9 @@ en:
     account: "Account"
     phase: 'Phase'
     phases: Phases
+  language:
+    en: 'English'
+    mr: 'मराठी'
   mongoid:
     attributes:
       portal_stage_priority:
@@ -250,6 +254,8 @@ en:
         name: 'Name'
         email: 'Email'
         phone: 'Phone'
+        password: 'Password'
+        password_confirmation: 'Password Confirmation'
         rera_id: 'RERA Registration Number'
         location: 'Location'
         lead_id: 'Sell.Do Lead ID'
@@ -297,6 +303,7 @@ en:
   controller:
     application:
       set_current_client: 'The site is under maintenance. Please contact your  administrator.'
+      invalid: 'Invalid'
     booking_detail_schemes:
       scheme_approved: 'Scheme applied successfully, please check cost sheet.'
       scheme_under_negotiation: 'Scheme registered successfully and sent for approval.'
@@ -329,86 +336,13 @@ en:
     users:
       account_confirmed: 'Account Confirmed'
       cannot_confirm_user: 'Cannot confirm user'
-  user_kycs:
-    link_name: 'KYCs'
-  smses:
-    link_name: "SMS"
-    status:
-      received: 'Received'
-      untracked: 'Untracked'
-      scheduled: 'Scheduled'
-      sent: 'Sent'
-      failed: 'Failed'
-  emails:
-    link_name: 'Emails'
-    status:
-      draft: 'Draft'
-      scheduled: 'Scheduled'
-      queued: 'Queued'
-      sent: 'Sent'
-      delivered: 'Delivered'
-      read: 'Read'
-      unread: 'Unread'
-      clicked: 'Clicked'
-      bounced: 'Bounced'
-      dropped: 'Dropped'
-      spam: 'Spam'
-      complained: 'Complained'
-      unsubscribed: 'Unsubscribed'
-      untracked: 'Untracked'
-  users:
-    account_confirmed: 'Account Confirmed'
-    confirmed:
-      :true: 'Confirmed'
-      :false: 'Not Confirmed'
 
-    role:
-      superadmin: 'Superadmin'
-      admin: 'Administrator'
-      crm: 'CRM User'
-      sales_admin: 'Sales Head'
-      sales: 'Sales User'
-      user: 'Customer'
-      gre: 'GRE or Pre-sales'
-      cp_admin: 'Channel Partner Head'
-      cp: 'Channel Partner Manager'
-      channel_partner: 'Channel Partner'
-      management_user: 'Management User'
-      employee_user: 'Employee'
-    portal_stages:
-      project_info: 'Project Info'
-  user_requests:
-    swap: 'Swap'
-    cancellation: 'Cancellation'
-    status:
-      pending: 'Pending'
-      processing: 'Processing'
-      resolved: 'Resolved'
-      rejected: 'Rejected'
-      failed: 'Failed'
-    requestable_type:
-      Receipt: 'Receipt'
-      BookingDetail: 'Booking'
-  referrals:
-    name: 'Referrals'
-    code: 'Referral Code'
-    link_name: 'Referrals'
-    new:
-      link_name: 'Invite Friend'
-    generate_code:
-      link_name: 'Generate Code'
-  inventory:
-    link_name: 'Inventory'
+  accounts:
+    link_name: 'Account'
+
   audits:
     link_name: 'Histroy'
-  datetime:
-    distance_in_words:
-      about_x_years:
-        one: 'an year'
-        other: '%{count} Years'
-      almost_x_years:
-        one: 'almost year'
-        other: '%{count} Years'
+
   booking_details:
     status:
        available: 'Available'
@@ -431,31 +365,36 @@ en:
        cancellation_rejected: 'Cancellation Rejected'
        management: 'Management Blocking'
        employee: 'Employee Blocking'
-  project_units:
+
+  datetime:
+    distance_in_words:
+      about_x_years:
+        one: 'an year'
+        other: '%{count} Years'
+      almost_x_years:
+        one: 'almost year'
+        other: '%{count} Years'
+
+  emails:
+    link_name: 'Emails'
     status:
-      hold: 'Hold'
-      available: 'Available'
-      not_available: 'Not Available'
-      blocked: 'Blocked'
-      error: 'Error'
-  receipts:
-    status:
-      pending: 'Pending'
-      clearance_pending: 'Clearance Pending'
-      failed: 'Failed'
-      success: 'Success'
-      available_for_refund: 'Available For Refund'
-      refunded: 'Refund'
-      cancelled: 'Canceled'
-    payment_mode:
-      online: 'Online'
-      cheque: 'Cheque'
-      rtgs: 'RTGS'
-      imps: 'IMPS'
-      card_swipe: 'Card Swipe'
-      neft: 'NEFT'
-    cancellation_link: 'Cancellation'
+      draft: 'Draft'
+      scheduled: 'Scheduled'
+      queued: 'Queued'
+      sent: 'Sent'
+      delivered: 'Delivered'
+      read: 'Read'
+      unread: 'Unread'
+      clicked: 'Clicked'
+      bounced: 'Bounced'
+      dropped: 'Dropped'
+      spam: 'Spam'
+      complained: 'Complained'
+      unsubscribed: 'Unsubscribed'
+      untracked: 'Untracked'
+
   erp_models:
+    link_name: 'Third Party Integration'
     resource_class:
       User: 'User'
       UserKyc: 'KYC'
@@ -473,4 +412,98 @@ en:
       create: 'Create'
       update: 'Update'
 
+  inventory:
+    link_name: 'Inventory'
 
+  phases:
+    link_name: 'Phases'
+
+  portal_stage_priorities:
+    link_name: 'Portal Stages List'
+
+  project_units:
+    status:
+      hold: 'Hold'
+      available: 'Available'
+      not_available: 'Not Available'
+      blocked: 'Blocked'
+      error: 'Error'
+
+  receipts:
+    status:
+      pending: 'Pending'
+      clearance_pending: 'Clearance Pending'
+      failed: 'Failed'
+      success: 'Success'
+      available_for_refund: 'Available For Refund'
+      refunded: 'Refund'
+      cancelled: 'Canceled'
+    payment_mode:
+      online: 'Online'
+      cheque: 'Cheque'
+      rtgs: 'RTGS'
+      imps: 'IMPS'
+      card_swipe: 'Card Swipe'
+      neft: 'NEFT'
+    cancellation_link: 'Cancellation'
+
+  referrals:
+    name: 'Referrals'
+    code: 'Referral Code'
+    link_name: 'Referrals'
+    new:
+      link_name: 'Invite Friend'
+    generate_code:
+      link_name: 'Generate Code'
+
+  smses:
+    link_name: "SMS"
+    status:
+      received: 'Received'
+      untracked: 'Untracked'
+      scheduled: 'Scheduled'
+      sent: 'Sent'
+      failed: 'Failed'
+
+  sync_logs:
+    link_name: 'Sync Log'
+
+  users:
+    profile: '%{role} Profile'
+    change_password: 'Change Password'
+    account_confirmed: 'Account Confirmed'
+    confirmed:
+      :true: 'Confirmed'
+      :false: 'Not Confirmed'
+
+    role:
+      superadmin: 'Superadmin'
+      admin: 'Administrator'
+      crm: 'CRM User'
+      sales_admin: 'Sales Head'
+      sales: 'Sales User'
+      user: 'Customer'
+      gre: 'GRE or Pre-sales'
+      cp_admin: 'Channel Partner Head'
+      cp: 'Channel Partner Manager'
+      channel_partner: 'Channel Partner'
+      management_user: 'Management User'
+      employee_user: 'Employee'
+    portal_stages:
+      project_info: 'Project Info'
+
+  user_kycs:
+    link_name: 'KYCs'
+
+  user_requests:
+    swap: 'Swap'
+    cancellation: 'Cancellation'
+    status:
+      pending: 'Pending'
+      processing: 'Processing'
+      resolved: 'Resolved'
+      rejected: 'Rejected'
+      failed: 'Failed'
+    requestable_type:
+      Receipt: 'Receipt'
+      BookingDetail: 'Booking'

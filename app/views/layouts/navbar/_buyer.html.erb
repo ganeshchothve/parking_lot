@@ -36,30 +36,7 @@
   </li>
 <% end %>
 
-<% links = [] %>
-
-<% if CustomPolicy.custom_methods.present? %>
-  <% CustomPolicy.custom_methods.each do |method| %>
-    <% if policy(:custom).send("#{method}?") %>
-        <% links << { method: method.to_s.titleize, link: eval("custom_#{method}_path"), name: t("#{method}.link_name")} %>
-      </li>
-    <% end %>
-  <% end %>
-<% end %>
-
-
-<% if links.present? %>
-  <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      Special Features
-    </a>
-    <div class="dropdown-menu menu-top" aria-labelledby="navbarDropdown">
-      <% links.each do |link| %>
-        <%= link_to link[:name], link[:link], class: "dropdown-item" %>
-      <% end %>
-    </div>
-  </li>
-<% end %>
+<%= render 'layouts/navbar/custom_links' %>
 
 <li class="nav-item d-none d-lg-block" style="margin-top:-5px;">
   <div class="dropdown">

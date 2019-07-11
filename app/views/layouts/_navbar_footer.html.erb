@@ -13,6 +13,18 @@
       </div>
       <div class="col-lg-6 col-md-4 col-xs-12 col-sm-12 no-pd">
         <ul class="footer-menu float-right mb-1">
+          <li class='nav-item d-none d-lg-block'>
+            <div class="btn-group dropup" style="padding: 0.29em;">
+              <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <%= t("language.#{params[:locale] || I18n.default_locale }", default: "language.en")%>
+              </a>
+              <div class="dropdown-menu">
+                <% ['en', 'mr'].each do |language| %>
+                  <%= link_to t("language.#{language}"), url_for(params.permit!.merge(locale: language) ), class: 'dropdown-item' %>
+                <% end %>
+              </div>
+            </div>
+          </li>
           <li><%= link_to 'Powered by Amura', 'https://www.amuratech.com', class: 'footer-link', target: "_blank" %></li>
         </ul>
       </div>

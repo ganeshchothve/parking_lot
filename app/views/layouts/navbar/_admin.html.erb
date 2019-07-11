@@ -2,7 +2,7 @@
 <ul class="navbar-nav ml-auto">
 <% if policy(:dashboard).index? %>
   <li class="nav-item">
-    <%= active_link_to "Dashboard", dashboard_path, active: :exclusive, class: "nav-link active" %>
+    <%= active_link_to t('global.dashboard'), dashboard_path, active: :exclusive, class: "nav-link" %>
   </li>
 <% end %>
 <% if policy([:admin, User]).index? %>
@@ -39,27 +39,7 @@
     <%= active_link_to t('global.schemes'), admin_schemes_path, active: :inclusive, class: "nav-link" %>
   </li>
 <% end %>
-<% links = [] %>
-<% if CustomPolicy.custom_methods.present? %>
-  <% CustomPolicy.custom_methods.each do |method| %>
-    <% if policy(:custom).send("#{method}?") %>
-        <% links << {method: method.to_s.titleize, link: eval("custom_#{method}_path")} %>
-      </li>
-    <% end %>
-  <% end %>
-<% end %>
-<% if links.present? %>
-  <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      Special Features
-    </a>
-    <div class="dropdown-menu menu-top" aria-labelledby="navbarDropdown">
-      <% links.each do |link| %>
-        <%= link_to link[:method], link[:link], class: "dropdown-item" %>
-      <% end %>
-    </div>
-  </li>
-<% end %>
+<%= render 'layouts/navbar/custom_links' %>
 <li class="nav-item dropdown">
 <div class="user-info float-right show-xs">
 <!-- <a href="javascript:;" class="message-info"><img src="<%#= asset_path 'envelope-black.svg' %>" alt="message"><span>2</span></a> -->
@@ -69,9 +49,9 @@
     Welcome <%= current_user.name %>
   </a>
   <div class="dropdown-menu user-menu-top" aria-labelledby="navbarDropdown">
-    <%= link_to "Profile", edit_admin_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
-    <%= link_to "Change Password", update_password_admin_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
-    <%= link_to "Sign out", destroy_session_path(current_user), class: "dropdown-item", method: :delete %>
+    <%= link_to t('users.profile', role: t("users.role.#{current_user.role}")), edit_admin_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
+    <%= link_to t('users.change_password'), update_password_admin_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
+    <%= link_to t('sign_out', scope: "devise"), destroy_session_path(current_user), class: "dropdown-item", method: :delete %>
   </div>
 </div>
 </div>

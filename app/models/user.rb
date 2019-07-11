@@ -85,6 +85,7 @@ class User
 
   ## Session limitable
   field :unique_session_id, type: String
+  field :uniq_user_agent, type: String
 
   ## Expirable
   field :last_activity_at, type: DateTime

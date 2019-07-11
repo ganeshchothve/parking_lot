@@ -38,6 +38,7 @@
 //= require otp_based_login
 //= require amura
 //= require site
+//= require plugins/jsencrypt
 
 $.ajaxSetup({
   headers: {

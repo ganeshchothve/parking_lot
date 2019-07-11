@@ -14,37 +14,37 @@ end %>
         <h1 class="mt-0 fn-20">Hurry up! <strong>200</strong> apartments already sold.</h1>
         <p class="p-style">Login to Book an Apartment online</p>
         <% if current_client.preferred_login == "phone" %>
-          <%= form_for(resource, as: resource_name, url: users_otp_path, authenticity_token: true, remote: true, html: {:'data-type' => 'json', class: 'validate-form ' + otp_signin_class, id: "otp_user_form"}) do |f| %>
+          <%= form_for(resource, as: resource_name, url: users_otp_path, authenticity_token: true, remote: true, html: {:'data-type' => 'json', class: 'validate-form ' + otp_signin_class, id: "otp_user_form", autocomplete: 'off'}) do |f| %>
             <div class="form-group">
               <%= f.label :phone %><br/>
-              <%= f.phone_field :login, autofocus: true, autocomplete: false, class: 'form-control', placeholder: 'Phone' %>
+              <%= f.phone_field :login, autofocus: true, autocomplete: false, class: 'form-control', placeholder: t('mongoid.attributes.user.phone') %>
             </div>
             <div class="form-group" hidden>
               <%= f.label :login_otp %><br/>
-              <%= f.number_field :login_otp, class: 'form-control', placeholder: 'OTP', maxlength: resource_class.otp_length, minlength: resource_class.otp_length %>
+              <%= f.number_field :login_otp, class: 'form-control', placeholder: t('mongoid.attributes.user.otp'), maxlength: resource_class.otp_length, minlength: resource_class.otp_length, autocomplete: 'off' %>
             </div>
             <div class="signin-btn col-lg-12 pl-0 pr-0 pt-5 pb-5">
-              <%= f.submit "Get OTP", class: 'sign-in-btn',  data:{event_category: 'Section', event_action: 'Click', event_name: 'Get OTP'} %>
-              <a href="javascript:;" class="a-style opacity-5 resend-otp d-none small pt-3" data-resend-time="<%= User.otp_resend_wait_time %>", data-max-limit="<%= User.otp_resend_max_limit %>" data-counter=0>Resend OTP</a>
+              <%= f.submit t('sessions.new.otp_submit'), class: 'sign-in-btn',  data:{event_category: 'Section', event_action: 'Click', event_name: t('sessions.new.otp_submit') } %>
+              <a href="javascript:;" class="a-style opacity-5 resend-otp d-none small pt-3" data-resend-time="<%= User.otp_resend_wait_time %>", data-max-limit="<%= User.otp_resend_max_limit %>" data-counter=0> t('sessions.new.otp_resend')</a>
             </div>
-          <a href="javascript:;" class="a-style opacity-5 toggle_signin_form d-block d-md-inline float-md-left pr-0" data-target="#standard_login_form">Login with password instead</a>
+          <a href="javascript:;" class="a-style opacity-5 toggle_signin_form d-block d-md-inline float-md-left pr-0" data-target="#standard_login_form"> t('sessions.new.login_with_password_link')</a>
           <% end %>
         <% end %>
-        <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: {class: 'validate-form ' + username_signin_class, id: "standard_login_form"}) do |f| %>
+        <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: {class: 'validate-form ' + username_signin_class, id: "standard_login_form", autocomplete: 'off' }) do |f| %>
           <% if current_client.preferred_login == "phone" %>
             <div class="form-group">
               <%= f.label :phone %>
-              <%= f.phone_field :login, autofocus: true, autocomplete: false, class: 'form-control', placeholder: 'Phone' %>
+              <%= f.phone_field :login, autofocus: true, class: 'form-control', placeholder: t('mongoid.attributes.user.phone'), id: 'user_login_phone', autocomplete: 'off' %>
             </div>
             <% else %>
             <div class="form-group">
               <%= f.label :email %>
-              <%= f.email_field :login, autofocus: true, autocomplete: false, class: 'form-control', placeholder: 'Email' %>
+              <%= f.email_field :login, autofocus: true, class: 'form-control', placeholder: t('mongoid.attributes.user.email'), autocomplete: 'off'  %>
             </div>
             <% end %>
-            <div class="form-group">
+            <div class="form-group" id='public_key' data-value="<%= @public_key %>" >
               <%= f.label :password %>
-              <%= f.password_field :password, autocomplete: false, class: 'form-control', placeholder: 'Password' %>
+              <%= f.password_field :password, autocomplete: false, class: 'form-control', placeholder: t('mongoid.attributes.user.password'), data: { encrypt: true } %>
             </div>
             <% if devise_mapping.rememberable? -%>
             <div class="form-group">
@@ -69,11 +69,25 @@ end %>
     </div>
   </div>
 </section>
+
+
+<%= render "devise/shared/links" %>
 <%= javascript_tag do %>
 $(document).ready(function(){
   <% if params[:login].present? && current_client.preferred_login == "phone" && params[:force].to_s == "true" %>
   $("#otp_user_form").submit();
   <% end %>
   OtpBasedLogin.init();
+  $('form').submit(function( event ) {
+    var encrypt = new JSEncrypt();
+    $('[data-encrypt]').each(function(){
+      var unencrypted = $(this);
+      encrypt.setKey($('#public_key').attr('data-value'));
+      var encrypted = encrypt.encrypt(unencrypted.val());
+      if(encrypted) {
+        unencrypted.val(encrypted);
+      }
+    })
+  });
 });
 <% end %>
