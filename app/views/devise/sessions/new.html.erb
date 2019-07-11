@@ -28,17 +28,17 @@ end %>
 <% if current_client.preferred_login == "phone" %>
   <div class="form-group">
     <%= f.label :phone %>
-    <%= f.phone_field :login, autofocus: true, autocomplete: false, class: 'form-control', placeholder: t('mongoid.attributes.user.phone') %>
+    <%= f.phone_field :login, autofocus: true, autocomplete: false, class: 'form-control', placeholder: t('mongoid.attributes.user.phone'), id: 'user_login_phone' %>
   </div>
   <% else %>
   <div class="form-group">
     <%= f.label :email %>
-    <%= f.email_field :login, autofocus: true, autocomplete: false, class: 'form-control', placeholder: t('mongoid.attributes.user.email') %>
+    <%= f.email_field :login, autofocus: true, autocomplete: false, class: 'form-control', placeholder: t('mongoid.attributes.user.email'), id: 'user_login_email' %>
   </div>
   <% end %>
-  <div class="form-group">
+  <div class="form-group" id='public_key' data-value="<%= @public_key %>" >
     <%= f.label :password %>
-    <%= f.password_field :password, autocomplete: false, class: 'form-control', placeholder: t('mongoid.attributes.user.password') %>
+    <%= f.password_field :password, autocomplete: false, class: 'form-control', placeholder: t('mongoid.attributes.user.password'), data: { encrypt: true } %>
   </div>
   <% if devise_mapping.rememberable? -%>
   <div class="form-group">
@@ -62,5 +62,16 @@ $(document).ready(function(){
   $("#otp_user_form").submit();
   <% end %>
   OtpBasedLogin.init();
+  $('form').submit(function( event ) {
+    var encrypt = new JSEncrypt();
+    $('[data-encrypt]').each(function(){
+      var unencrypted = $(this);
+      encrypt.setKey($('#public_key').attr('data-value'));
+      var encrypted = encrypt.encrypt(unencrypted.val());
+      if(encrypted) {
+        unencrypted.val(encrypted);
+      }
+    })
+  });
 });
 <% end %>
