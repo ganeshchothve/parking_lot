@@ -1,29 +1,31 @@
-<div class="table-responsive">
-  <table class="striped-table table">
-    <thead class="th-default">
-      <% labels = t('mongoid.attributes.receipt').with_indifferent_access %>
-      <% user_labels = t('mongoid.attributes.user').with_indifferent_access %>
-      <tr>
-        <th><%= labels[:user_id] %></th>
-        <th><%= labels[:receipt_id] %> & Details</th>
-        <% if current_client.enable_slot_generation? %>
-          <th>Token Number</th>
-        <% end %>
-        <th><%= labels['status'] %></th>
-        <th class="text-right"><%= labels['total_amount'] %></th>
-        <th class="text-right"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% receipts.each do |receipt| %>
+<table class='table my-customer-table responsive-tbl'>
+  <thead class="th-default">
+    <% labels = t('mongoid.attributes.receipt').with_indifferent_access %>
+    <% user_labels = t('mongoid.attributes.user').with_indifferent_access %>
+      <thead>
+        <tr class="bg-gradient-cd white">
+          <th><%= labels[:user_id] %></th>
+          <th><%= labels[:receipt_id] %> & Details</th>
+          <% if current_client.enable_slot_generation? %>
+            <th>Token Number</th>
+          <% end %>
+          <th><%= labels['status'] %></th>
+          <th class="text-right"><%= labels['total_amount'] %></th>
+          <th class="text-right"></th>
+        </tr>
+      </thead>
+  </thead>
+  <tbody>
+    <% receipts.each do |receipt| %>
         <%= render 'receipts/details', receipt: receipt %>
       <% end %>
       <tr>
-        <td colspan="5">
-          <div class="mt-5 pt-5"></div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+      <td colspan="6">
+        <div class="mt-5 pt-5"></div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pt-4 pb-5">
+  <%= will_paginate receipts, list_classes: %w(pagination justify-content-center) %>
 </div>
-<%= will_paginate receipts, list_classes: %w(pagination justify-content-center) %>
