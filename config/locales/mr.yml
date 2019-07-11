@@ -64,7 +64,7 @@ mr:
     phase: 'टप्पा'
     phases: 'टप्पा'
   language:
-    en: 'इंग्रजी'
+    en: 'English'
     mr: 'मराठी'
   mongoid:
     attributes:
@@ -336,16 +336,45 @@ mr:
     users:
       account_confirmed: 'खाते पुष्टी केली'
       cannot_confirm_user: 'वापरकर्त्याची पुष्टी करू शकत नाही'
-  user_kycs:
-    link_name: 'केवायसी'
-  smses:
-    link_name: "एसएमएस"
+
+  accounts:
+    link_name: 'खाते'
+
+  audits:
+    link_name: 'मागील माहिती'
+
+  booking_details:
     status:
-      received: 'मिळालेले'
-      untracked: 'ट्रॅक नाही'
-      scheduled: 'अनुसूचित'
-      sent: 'पाठविले'
-      failed: 'अयशस्वी'
+       available: 'उपलब्ध'
+       not_available: 'उपलब्ध नाही'
+       error: 'एरर आलेले'
+       hold: 'धरून ठेवलेले'
+       blocked: 'ब्लॉक केलेले'
+       booked_tentative: 'टेंटेटिव्ह बुक केलेले'
+       booked_confirmed: 'कन्फर्म बुक केलेले'
+       under_negotiation: 'नेगोशिएशन मध्ये असलेले'
+       scheme_approved: 'योजना मंजूर केलेले'
+       scheme_rejected: 'योजना मंजूर न केलेले'
+       swap_requested: 'स्वॅप विनंती केलेले'
+       swapping: 'स्वॅपिंग मध्ये असलेले'
+       swapped: 'स्वॅप झालेले'
+       swap_rejected: 'स्वॅप नाकारला'
+       cancellation_requested: 'रद्दीकरण विनंती केली'
+       cancelling: 'रद्द करीत आहे'
+       cancelled: 'रद्द केले'
+       cancellation_rejected: 'रद्द करणे नाकारले'
+       management: व्यवस्थापन ब्लॉक केलेले अपार्टमेंट'
+       employee: 'एम्प्लॉईने ब्लॉक केलेले'
+
+  datetime:
+    distance_in_words:
+      about_x_years:
+        one: 'एक वर्ष'
+        other: '%{count} वर्ष'
+      almost_x_years:
+        one: 'जवळजवळ वर्ष'
+        other: '%{count} वर्ष'
+
   emails:
     link_name: 'ईमेल'
     status:
@@ -363,6 +392,82 @@ mr:
       complained: 'तक्रार केलेले'
       unsubscribed: 'सदस्यता रद्द केलेले'
       untracked: 'ट्रॅक नाही'
+
+  erp_models:
+    link_name: 'त्रयस्थ एकत्रीकरण'
+    resource_class:
+      User: 'वापरकर्ता'
+      UserKyc: 'केवायसी'
+      Receipt: 'देयक'
+      BookingDetail: 'बुकिंग'
+      ChannelPartner: 'चॅनेल पार्टनर'
+    request_type:
+      json: 'JSON'
+    http_verb:
+      get: 'GET'
+      post: 'POST'
+      put: 'PUT'
+      patch: 'PATCH'
+    action_name:
+      create: 'क्रीएट'
+      update: 'अपडेट'
+
+  inventory:
+    link_name: 'इन्व्हेन्टरी'
+
+  phases:
+    link_name: 'टप्पा'
+
+  portal_stage_priorities:
+    link_name: 'विनियोग टप्पा सूची'
+
+  project_units:
+    status:
+      hold: 'होल्ड'
+      available: 'उपलब्ध'
+      not_available: 'उपलब्ध नाही'
+      blocked: 'ब्लॉक केलेले'
+      error: 'एरर आलेले'
+
+  receipts:
+    status:
+      pending: 'प्रलंबित'
+      clearance_pending: 'क्लीअरान्स प्रलंबित'
+      failed: 'अयशस्वी'
+      success: 'यशस्वी'
+      available_for_refund: 'परताव्यासाठी उपलब्ध'
+      refunded: 'परतावा'
+      cancelled: 'रद्द केले'
+    payment_mode:
+      online: 'ऑनलाइन'
+      cheque: 'चेक'
+      rtgs: 'आरटीजीएस'
+      imps: 'आयएमपीएस'
+      card_swipe: 'कार्ड स्वाइप'
+      neft: 'नेफ्ट'
+    cancellation_link: 'रद्द करणे लिंक'
+
+  referrals:
+    name: 'रेफरल्स'
+    code: 'रेफरल कोड'
+    link_name: 'रेफरल्स'
+    new:
+      link_name: 'मित्रांना निमंत्रण द्या'
+    generate_code:
+      link_name: 'कोड तयार करा'
+
+  smses:
+    link_name: "एसएमएस"
+    status:
+      received: 'मिळालेले'
+      untracked: 'ट्रॅक नाही'
+      scheduled: 'अनुसूचित'
+      sent: 'पाठविले'
+      failed: 'अयशस्वी'
+
+  sync_logs:
+    link_name: 'त्रयस्थ एकत्रीकरण इतिहास'
+
   users:
     profile: '%{role} रेखाचित्र'
     change_password: 'संकेतशब्द बदला'
@@ -386,6 +491,9 @@ mr:
       employee_user: 'कर्मचारी'
     portal_stages:
       project_info: 'प्रकल्प माहिती'
+
+  user_kycs:
+    link_name: 'केवायसी'
   user_requests:
     swap: 'स्वॅप'
     cancellation: 'रद्द करणे'
@@ -398,89 +506,6 @@ mr:
     requestable_type:
       Receipt: 'पावती'
       BookingDetail: 'बुकिंग'
-  referrals:
-    name: 'रेफरल्स'
-    code: 'रेफरल कोड'
-    link_name: 'रेफरल्स'
-    new:
-      link_name: 'मित्रांना निमंत्रण द्या'
-    generate_code:
-      link_name: 'कोड तयार करा'
-  inventory:
-    link_name: 'इन्व्हेन्टरी'
-  audits:
-    link_name: 'मागील माहिती'
-  datetime:
-    distance_in_words:
-      about_x_years:
-        one: 'एक वर्ष'
-        other: '%{count} वर्ष'
-      almost_x_years:
-        one: 'जवळजवळ वर्ष'
-        other: '%{count} वर्ष'
-  booking_details:
-    status:
-       available: 'उपलब्ध'
-       not_available: 'उपलब्ध नाही'
-       error: 'एरर आलेले'
-       hold: 'धरून ठेवलेले'
-       blocked: 'ब्लॉक केलेले'
-       booked_tentative: 'टेंटेटिव्ह बुक केलेले'
-       booked_confirmed: 'कन्फर्म बुक केलेले'
-       under_negotiation: 'नेगोशिएशन मध्ये असलेले'
-       scheme_approved: 'योजना मंजूर केलेले'
-       scheme_rejected: 'योजना मंजूर न केलेले'
-       swap_requested: 'स्वॅप विनंती केलेले'
-       swapping: 'स्वॅपिंग मध्ये असलेले'
-       swapped: 'स्वॅप झालेले'
-       swap_rejected: 'स्वॅप नाकारला'
-       cancellation_requested: 'रद्दीकरण विनंती केली'
-       cancelling: 'रद्द करीत आहे'
-       cancelled: 'रद्द केले'
-       cancellation_rejected: 'रद्द करणे नाकारले'
-       management: व्यवस्थापन ब्लॉक केलेले अपार्टमेंट'
-       employee: 'एम्प्लॉईने ब्लॉक केलेले'
-  project_units:
-    status:
-      hold: 'होल्ड'
-      available: 'उपलब्ध'
-      not_available: 'उपलब्ध नाही'
-      blocked: 'ब्लॉक केलेले'
-      error: 'एरर आलेले'
-  receipts:
-    status:
-      pending: 'प्रलंबित'
-      clearance_pending: 'क्लीअरान्स प्रलंबित'
-      failed: 'अयशस्वी'
-      success: 'यशस्वी'
-      available_for_refund: 'परताव्यासाठी उपलब्ध'
-      refunded: 'परतावा'
-      cancelled: 'रद्द केले'
-    payment_mode:
-      online: 'ऑनलाइन'
-      cheque: 'चेक'
-      rtgs: 'आरटीजीएस'
-      imps: 'आयएमपीएस'
-      card_swipe: 'कार्ड स्वाइप'
-      neft: 'नेफ्ट'
-    cancellation_link: 'रद्द करणे लिंक'
-  erp_models:
-    resource_class:
-      User: 'वापरकर्ता'
-      UserKyc: 'केवायसी'
-      Receipt: 'देयक'
-      BookingDetail: 'बुकिंग'
-      ChannelPartner: 'चॅनेल पार्टनर'
-    request_type:
-      json: 'JSON'
-    http_verb:
-      get: 'GET'
-      post: 'POST'
-      put: 'PUT'
-      patch: 'PATCH'
-    action_name:
-      create: 'क्रीएट'
-      update: 'अपडेट'
-  sync_logs:
-    link_name: 'समक्रमण इतिहास'
+
+
 

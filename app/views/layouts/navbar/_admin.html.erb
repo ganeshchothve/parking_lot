@@ -40,34 +40,13 @@
   </li>
 <% end %>
 
-<% links = [] %>
-
-<% if CustomPolicy.custom_methods.present? %>
-  <% CustomPolicy.custom_methods.each do |method| %>
-    <% if policy(:custom).send("#{method}?") %>
-        <% links << {method: t("#{method}.link_name"), link: eval("custom_#{method}_path")} %>
-      </li>
-    <% end %>
-  <% end %>
-<% end %>
 <% if policy([:admin, Scheme]).index? %>
   <li class="nav-item">
     <%= active_link_to t('global.schemes'), admin_schemes_path, active: :inclusive, class: "nav-link" %>
   </li>
 <% end %>
 
-<% if links.present? %>
-  <li class="nav-item d-none d-lg-block">
-    <div class="dropdown">
-      <a href="javascript:;" class="nav-link dropdown-toggle" data-toggle="dropdown"><%= t('global.custom') %></a>
-      <div class="dropdown-menu dropdown-menu-right">
-        <% links.each do |link| %>
-          <%= link_to link[:method], link[:link], class: "dropdown-item" %>
-        <% end %>
-      </div>
-    </div>
-  </li>
-<% end %>
+<%= render 'layouts/navbar/custom_links' %>
 
 <li class="nav-item d-none d-lg-block" style="margin-top:-5px;">
   <div class="dropdown">
@@ -81,14 +60,6 @@
     </div>
   </div>
 </li>
-
-<% if links.present? %>
-  <% links.each do |link| %>
-    <li class="nav-item d-lg-none">
-      <%= link_to link[:method], link[:link], class: "nav-link" %>
-    </li>
-  <% end %>
-<% end %>
 
 <li class="nav-item d-lg-none">
   <%= link_to "Profile", edit_admin_user_path(current_user), class: "nav-link modal-remote-form-link" %>

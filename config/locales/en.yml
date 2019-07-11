@@ -65,7 +65,7 @@ en:
     phases: Phases
   language:
     en: 'English'
-    mr: 'Marathi'
+    mr: 'मराठी'
   mongoid:
     attributes:
       portal_stage_priority:
@@ -336,16 +336,45 @@ en:
     users:
       account_confirmed: 'Account Confirmed'
       cannot_confirm_user: 'Cannot confirm user'
-  user_kycs:
-    link_name: 'KYCs'
-  smses:
-    link_name: "SMS"
+
+  accounts:
+    link_name: 'Account'
+
+  audits:
+    link_name: 'Histroy'
+
+  booking_details:
     status:
-      received: 'Received'
-      untracked: 'Untracked'
-      scheduled: 'Scheduled'
-      sent: 'Sent'
-      failed: 'Failed'
+       available: 'Available'
+       not_available: 'Not Available'
+       error: 'Error'
+       hold: 'Hold'
+       blocked: 'Blocked'
+       booked_tentative: 'Tentative Booked'
+       booked_confirmed: 'Confirmed Booked'
+       under_negotiation: 'Under Negotiation'
+       scheme_approved: 'Scheme Approved'
+       scheme_rejected: 'Scheme Rejected'
+       swap_requested: 'Swap Requested'
+       swapping: 'Swapping'
+       swapped: 'Swapped'
+       swap_rejected: 'Swap Rejected'
+       cancellation_requested: 'Cancellation Requested'
+       cancelling: 'Cancelling'
+       cancelled: 'Cancelled'
+       cancellation_rejected: 'Cancellation Rejected'
+       management: 'Management Blocking'
+       employee: 'Employee Blocking'
+
+  datetime:
+    distance_in_words:
+      about_x_years:
+        one: 'an year'
+        other: '%{count} Years'
+      almost_x_years:
+        one: 'almost year'
+        other: '%{count} Years'
+
   emails:
     link_name: 'Emails'
     status:
@@ -363,6 +392,82 @@ en:
       complained: 'Complained'
       unsubscribed: 'Unsubscribed'
       untracked: 'Untracked'
+
+  erp_models:
+    link_name: 'Third Party Integration'
+    resource_class:
+      User: 'User'
+      UserKyc: 'KYC'
+      Receipt: 'Payments'
+      BookingDetail: 'Booking'
+      ChannelPartner: 'Channel Partner'
+    request_type:
+      json: 'JSON'
+    http_verb:
+      get: 'GET'
+      post: 'POST'
+      put: 'PUT'
+      patch: 'PATCH'
+    action_name:
+      create: 'Create'
+      update: 'Update'
+
+  inventory:
+    link_name: 'Inventory'
+
+  phases:
+    link_name: 'Phases'
+
+  portal_stage_priorities:
+    link_name: 'Portal Stages List'
+
+  project_units:
+    status:
+      hold: 'Hold'
+      available: 'Available'
+      not_available: 'Not Available'
+      blocked: 'Blocked'
+      error: 'Error'
+
+  receipts:
+    status:
+      pending: 'Pending'
+      clearance_pending: 'Clearance Pending'
+      failed: 'Failed'
+      success: 'Success'
+      available_for_refund: 'Available For Refund'
+      refunded: 'Refund'
+      cancelled: 'Canceled'
+    payment_mode:
+      online: 'Online'
+      cheque: 'Cheque'
+      rtgs: 'RTGS'
+      imps: 'IMPS'
+      card_swipe: 'Card Swipe'
+      neft: 'NEFT'
+    cancellation_link: 'Cancellation'
+
+  referrals:
+    name: 'Referrals'
+    code: 'Referral Code'
+    link_name: 'Referrals'
+    new:
+      link_name: 'Invite Friend'
+    generate_code:
+      link_name: 'Generate Code'
+
+  smses:
+    link_name: "SMS"
+    status:
+      received: 'Received'
+      untracked: 'Untracked'
+      scheduled: 'Scheduled'
+      sent: 'Sent'
+      failed: 'Failed'
+
+  sync_logs:
+    link_name: 'Sync Log'
+
   users:
     profile: '%{role} Profile'
     change_password: 'Change Password'
@@ -386,6 +491,10 @@ en:
       employee_user: 'Employee'
     portal_stages:
       project_info: 'Project Info'
+
+  user_kycs:
+    link_name: 'KYCs'
+
   user_requests:
     swap: 'Swap'
     cancellation: 'Cancellation'
@@ -398,89 +507,3 @@ en:
     requestable_type:
       Receipt: 'Receipt'
       BookingDetail: 'Booking'
-  referrals:
-    name: 'Referrals'
-    code: 'Referral Code'
-    link_name: 'Referrals'
-    new:
-      link_name: 'Invite Friend'
-    generate_code:
-      link_name: 'Generate Code'
-  inventory:
-    link_name: 'Inventory'
-  audits:
-    link_name: 'Histroy'
-  datetime:
-    distance_in_words:
-      about_x_years:
-        one: 'an year'
-        other: '%{count} Years'
-      almost_x_years:
-        one: 'almost year'
-        other: '%{count} Years'
-  booking_details:
-    status:
-       available: 'Available'
-       not_available: 'Not Available'
-       error: 'Error'
-       hold: 'Hold'
-       blocked: 'Blocked'
-       booked_tentative: 'Tentative Booked'
-       booked_confirmed: 'Confirmed Booked'
-       under_negotiation: 'Under Negotiation'
-       scheme_approved: 'Scheme Approved'
-       scheme_rejected: 'Scheme Rejected'
-       swap_requested: 'Swap Requested'
-       swapping: 'Swapping'
-       swapped: 'Swapped'
-       swap_rejected: 'Swap Rejected'
-       cancellation_requested: 'Cancellation Requested'
-       cancelling: 'Cancelling'
-       cancelled: 'Cancelled'
-       cancellation_rejected: 'Cancellation Rejected'
-       management: 'Management Blocking'
-       employee: 'Employee Blocking'
-  project_units:
-    status:
-      hold: 'Hold'
-      available: 'Available'
-      not_available: 'Not Available'
-      blocked: 'Blocked'
-      error: 'Error'
-  receipts:
-    status:
-      pending: 'Pending'
-      clearance_pending: 'Clearance Pending'
-      failed: 'Failed'
-      success: 'Success'
-      available_for_refund: 'Available For Refund'
-      refunded: 'Refund'
-      cancelled: 'Canceled'
-    payment_mode:
-      online: 'Online'
-      cheque: 'Cheque'
-      rtgs: 'RTGS'
-      imps: 'IMPS'
-      card_swipe: 'Card Swipe'
-      neft: 'NEFT'
-    cancellation_link: 'Cancellation'
-  erp_models:
-    resource_class:
-      User: 'User'
-      UserKyc: 'KYC'
-      Receipt: 'Payments'
-      BookingDetail: 'Booking'
-      ChannelPartner: 'Channel Partner'
-    request_type:
-      json: 'JSON'
-    http_verb:
-      get: 'GET'
-      post: 'POST'
-      put: 'PUT'
-      patch: 'PATCH'
-    action_name:
-      create: 'Create'
-      update: 'Update'
-  sync_logs:
-    link_name: 'Sync Log'
-
