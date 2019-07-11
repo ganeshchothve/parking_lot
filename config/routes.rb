@@ -18,7 +18,7 @@ Rails.application.routes.draw do
 
   devise_scope :user do
     post 'users/otp', :to => 'local_devise/sessions#otp', :as => :users_otp
-    root to: "devise/sessions#new"
+    root to: "local_devise/sessions#new"
   end
 
   as :user do
