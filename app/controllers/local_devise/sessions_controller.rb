@@ -50,7 +50,7 @@ class LocalDevise::SessionsController < Devise::SessionsController
   def reset_unique_session
     user = instance_variable_get(:"@current_#{resource_name}")
     yield
-    user.set(unique_session_id: nil) if instance_variable_get(:"@current_#{resource_name}").blank?
+    user.set(unique_session_id: nil, uniq_user_agent: nil) if instance_variable_get(:"@current_#{resource_name}").blank?
   end
 
   # GENERICTODO: check if this can be handled better. phone with + in param replaced as a space. So need to decode it back
