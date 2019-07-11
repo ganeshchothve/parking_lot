@@ -44,7 +44,7 @@ module WillPaginate
         link_options = @options[:link_options] || {}
 
         if page == current_page
-          tag :li, tag(:span, page, class: 'page-link'), class: 'page-item active'
+          tag :li, tag(:a, page, class: 'page-link'), class: 'page-item active'
         else
           link_options.merge! class: 'page-link', rel: rel_value(page)
           tag :li, link(page, page, link_options), class: 'page-item'
@@ -58,8 +58,8 @@ module WillPaginate
           link_wrapper = link(text, page, link_options.merge(class: 'page-link'))
           tag :li, link_wrapper, class: 'page-item'
         else
-          span_wrapper = tag(:span, text, class: 'page-link')
-          tag :li, span_wrapper, class: 'page-item disabled'
+          a_wrapper = tag(:a, text, class: 'page-link')
+          tag :li, a_wrapper, class: 'page-item disabled'
         end
       end
 
