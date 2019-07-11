@@ -1,16 +1,18 @@
-<div class="table-responsive">
-  <table class='table striped-table payment-breakup' width="100%" cellpadding="10" cellspacing="0">
-    <thead class="th-default">
-      <tr>
-        <th>Subject Class</th>
+<table class='table my-customer-table responsive-tbl'>
+  <thead class="th-default">
+    <% labels = t('mongoid.attributes.scheme').with_indifferent_access %>
+      <thead>
+        <tr class="bg-gradient-cd white">
+          <th>Subject Class</th>
         <th>Changed By</th>
         <th>Action Type</th>
         <!-- <th>Executed Time</th> -->
-        <th class="text-right">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @audits.each do |audit| %>
+        <th>Actions</th>
+        </tr>
+      </thead>
+  </thead>
+  <tbody>
+    <% @audits.each do |audit| %>
       <tr>
         <td>
           <%= audit.subject_class %>
@@ -25,29 +27,34 @@
           <%#= audit.modified_at %>
         </td> -->
 
-        <td class="text-right">
-          <%= link_to "Show","javascript:;", data: {toggle: "modal", target: "#audit_entry_modal"}, class: "btn btn-primary btn-sm" %>
-            <div class="modal fade right fixed-header-footer" role="dialog" id="audit_entry_modal">
-        <div class="modal-dialog modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <div class="modal-title">Audit Entries</div>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+        <td>
+          <%= link_to "Show","javascript:;", data: {toggle: "modal", target: "#audit_entry_modal"}, class: "db-small-btn light-blue bg-white fn-400 modal-remote-form-link" %>
+          <div class="modal fade right fixed-header-footer" role="dialog" id="audit_entry_modal">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <div class="modal-title">Audit Entries</div>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <% @audit_entries =  Audit::Entry.where(audit_id: audit.id )%>
+                  <%=render "admin/audit/entries/show",{audit_entries: @audit_entries} %>
+                </div>
+              </div>
             </div>
-            <div class="modal-body">
-              <% @audit_entries =  Audit::Entry.where(audit_id: audit.id )%>
-              <%=render "admin/audit/entries/show",{audit_entries: @audit_entries} %>
-            </div>
-          </div>
-        </div>
-      </div>
           </div>
         </td>
       </tr>
       <% end %>
-    </tbody>
-  </table>
+      <tr>
+      <td colspan="6">
+        <div class="mt-5 pt-5"></div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pt-4 pb-5">
+  <%= will_paginate @audits, list_classes: %w(pagination justify-content-center) %>
 </div>
-<%= will_paginate @audits, list_classes: %w(pagination justify-content-center) %>
