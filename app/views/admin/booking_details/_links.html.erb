@@ -1,6 +1,3 @@
-<div class="dropdown float-right">
-  <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= link_name %></a>
-  <div class="dropdown-menu dropdown-menu-right">
     <% if policy([ :admin, booking_detail.project_unit]).edit? %>
       <%= link_to "Update #{global_labels['user_kycs']}", edit_admin_project_unit_path(booking_detail.project_unit), class: "modal-remote-form-link dropdown-item" %>
     <% end %>
@@ -54,8 +51,6 @@
           <%= link_to t("global.user_request_#{klass.model_name.element}"), new_admin_user_user_request_path(user_id: booking_detail.user_id, requestable_id: booking_detail.id, requestable_type: 'BookingDetail', request_type: klass.model_name.element), class: "dropdown-item modal-remote-form-link" %>
       <% end %>
     <% end %>
-  </div>
-</div>
 
 <% if booking_detail.project_unit.assets.present? %>
   <%= render 'project_units/assets_in_modal', project_unit: booking_detail.project_unit %>
