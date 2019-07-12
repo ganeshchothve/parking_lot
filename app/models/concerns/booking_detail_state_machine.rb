@@ -244,6 +244,8 @@ module BookingDetailStateMachine
           project_unit_id: project_unit_id,
           status: scheme.status
         ) if scheme
+      else
+        true
       end
     end
     # This method is called after booked_confirmed event
