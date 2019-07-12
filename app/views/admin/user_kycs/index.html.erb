@@ -9,7 +9,7 @@
     <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
       <div class="table-btn-set float-right pt-4 pb-4">
         <% if Admin::UserKycPolicy.new(current_user, UserKyc.new(user: @user)).new? %>
-          <%= link_to "Add #{global_labels['user_kyc']}", new_admin_user_user_kyc_path(@user), class: 'btn btn-primary modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
+          <%= link_to "Add #{global_labels['user_kyc']}", new_admin_user_user_kyc_path(@user), class: 'db-small-btn white bg-light-blue fn-500 modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
         <% end %>
       </div>
     </div>
