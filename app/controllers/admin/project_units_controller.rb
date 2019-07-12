@@ -1,5 +1,4 @@
 class Admin::ProjectUnitsController < AdminController
-  include ApplicationHelper
   before_action :set_project_unit, except: %i[index export]
   include ProjectUnitsConcern
   before_action :authorize_resource
