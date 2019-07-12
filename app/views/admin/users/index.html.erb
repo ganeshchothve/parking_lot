@@ -8,19 +8,25 @@
     </div>
     <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
       <div class="table-btn-set float-right pt-4 pb-4">
-      <a class="db-small-btn light-blue bg-white fn-400 dropdown-toggle" href="javascript:;" role="button" aria-haspopup="true" aria-expanded="false" id='dropdown_1' >Export</a>
-      <div class="dropdown-menu dropdown-menu-right" id='menu_1'>
-        <%= link_to "All #{global_labels['users']}", export_admin_users_path, class: 'dropdown-item' %>
-        <%= link_to "Active filter #{global_labels['users']}", export_admin_users_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
-      </div>
-      <a class="db-small-btn white bg-light-blue fn-500 dropdown-toggle" href="javascript:;" role="button" aria-haspopup="true" aria-expanded="false" id='dropdown_2'>Add new</a>
-      <div class="dropdown-menu" id="menu_2">
-        <% User.available_roles(current_client).each do |role| %>
-          <% if policy([:admin, User.new(role: role[:id])]).new? %>
-            <%= link_to "New #{role[:text]}", new_admin_user_path(role: role[:id]), class: 'modal-remote-form-link dropdown-item' %>
+        <div class="new-menu display-initial" >
+          <button class="db-small-btn white bg-light-blue fn-500 dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add new</button>
+          <div class="dropdown-menu">
+            <% User.available_roles(current_client).each do |role| %>
+              <% if policy([:admin, User.new(role: role[:id])]).new? %>
+                <%= link_to "New #{role[:text]}", new_admin_user_path(role: role[:id]), class: 'modal-remote-form-link dropdown-item' %>
+                <% end %>
             <% end %>
+          </div>
+        </div>
+        <% if policy([:admin, User.new]).export? %>
+          <div class="export-menu display-initial">
+            <button class="db-small-btn light-blue bg-white fn-400 dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</button>
+            <div class="dropdown-menu dropdown-menu-right">
+              <%= link_to "All #{global_labels['users']}", export_admin_users_path, class: 'dropdown-item' %>
+              <%= link_to "Active filter #{global_labels['users']}", export_admin_users_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
+            </div>
+          </div>
         <% end %>
-      </div>
       <button class="db-filter-btn white fn-500" type="button"><img src="<%= asset_path 'filter-light-blue.svg' %>" alt="filter icon"></button>
       </div>
     </div>
@@ -35,13 +41,3 @@
     </div>
   </div>
 </section>
-<%= javascript_tag do %>
-  $(document).ready(function(){
-    $('#dropdown_1').click(function(e){
-      $('#menu_1').slideToggle('slow');
-    });
-    $('#dropdown_2').click(function(e){
-      $('#menu_2').slideToggle('slow');
-    });
-  });
-<% end %>
