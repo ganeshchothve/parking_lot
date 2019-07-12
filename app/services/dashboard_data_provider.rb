@@ -1,4 +1,6 @@
 module DashboardDataProvider
+  # TODO remove not used methods from old methods
+  # old methods
   def self.channel_partners_dashboard(user, options={})
     data = ChannelPartner.collection.aggregate([{
       "$group": {
@@ -172,23 +174,24 @@ module DashboardDataProvider
   end
 
   def self.configurations
-    ProjectUnit.distinct(:unit_configuration_name).sample(3).to_sentence
+    ProjectUnit.distinct(:unit_configuration_name).sample(3)
   end
 
-  def self.total_buyers
-    User.where(role: { "$in": User::BUYER_ROLES}).count
+  def self.total_buyers(current_user)
+    User.where(role: { "$in": User::BUYER_ROLES}, manager_id: current_user.id).count
   end
 
-  def self.user_group_by
-    not_confirmed = total_buyers - User.where(role: { "$in": User::BUYER_ROLES}, confirmed_at: nil).count
-    confirmed = total_buyers
+  def self.user_group_by(current_user)
+    not_confirmed = total_buyers(current_user) - User.where(role: { "$in": User::BUYER_ROLES}, confirmed_at: nil, manager_id: current_user.id).count
+    confirmed = total_buyers(current_user)
     {'confirmed_users': confirmed, 'not_confirmed_users': not_confirmed}
   end
 
-  def self.booking_detail_group_by
+  def self.booking_detail_group_by(current_user)
     out = {'blocked': 0, 'booked_tentative': 0,'booked_confirmed': 0}
-    data = BookingDetail.collection.aggregate([{
-      "$group": {
+    data = BookingDetail.collection.aggregate([
+      {"$match": {'id': current_user.id} },
+      { "$group": {
         "_id":{
           "status": "$status"
         },
@@ -198,15 +201,16 @@ module DashboardDataProvider
       }
     }]).to_a
     data.each do |d|
-      out[d['_id']['status']] = d['count'] if out.keys.include?(d['_id']['status'])
+      out[(d['_id']['status']).to_sym] = d['count'] if out.keys.include?((d['_id']['status']).to_sym)
     end
     out
   end
 
-  def self.receipts_group_by
+  def self.receipts_group_by(current_user)
     out = {'pending': 0, 'clearance_pending': 0, 'success': 0, 'refunded': 0}
-    data = BookingDetail.collection.aggregate([{
-      "$group": {
+    data = Receipt.collection.aggregate([
+      {"$match": {'id': current_user.id} },
+      { "$group": {
         "_id":{
           "status": "$status"
         },
@@ -216,7 +220,7 @@ module DashboardDataProvider
       }
     }]).to_a
     data.each do |d|
-      out[d['_id']['status']] = d['count'] if out.keys.include?(d['_id']['status'])
+      out[(d['_id']['status']).to_sym] = d['count'] if out.keys.include?((d['_id']['status']).to_sym)
     end
     out
   end
