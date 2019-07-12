@@ -21,7 +21,7 @@ class UserRequest::Swap < UserRequest
 
   def alternate_project_unit_availability
     if %w[rejected failed].exclude?(status)
-      valid = alternate_project_unit.status == 'available' || (alternate_project_unit.status == 'hold' && alternate_project_unit.user_id == booking_detail.project_unit.user_id)
+      valid = alternate_project_unit.status == 'available' || (alternate_project_unit.status == 'hold' && alternate_project_unit.user_id == requestable.project_unit.user_id)
 
       unless valid
         errors.add(:alternate_project_unit_id, 'is not available for booking.')
