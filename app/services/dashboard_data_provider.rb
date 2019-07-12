@@ -162,6 +162,65 @@ module DashboardDataProvider
     out
   end
 
+  # new (according to new ui)
+  def self.available_inventory
+    ProjectUnit.where(status: 'available').count
+  end
+
+  def self.minimum_agreement_price
+    ProjectUnit.pluck(:agreement_price).min
+  end
+
+  def self.configurations
+    ProjectUnit.distinct(:unit_configuration_name).sample(3).to_sentence
+  end
+
+  def self.total_buyers
+    User.where(role: { "$in": User::BUYER_ROLES}).count
+  end
+
+  def self.user_group_by
+    not_confirmed = total_buyers - User.where(role: { "$in": User::BUYER_ROLES}, confirmed_at: nil).count
+    confirmed = total_buyers
+    {'confirmed_users': confirmed, 'not_confirmed_users': not_confirmed}
+  end
+
+  def self.booking_detail_group_by
+    out = {'blocked': 0, 'booked_tentative': 0,'booked_confirmed': 0}
+    data = BookingDetail.collection.aggregate([{
+      "$group": {
+        "_id":{
+          "status": "$status"
+        },
+        count: {
+          "$sum": 1
+        }
+      }
+    }]).to_a
+    data.each do |d|
+      out[d['_id']['status']] = d['count'] if out.keys.include?(d['_id']['status'])
+    end
+    out
+  end
+
+  def self.receipts_group_by
+    out = {'pending': 0, 'clearance_pending': 0, 'success': 0, 'refunded': 0}
+    data = BookingDetail.collection.aggregate([{
+      "$group": {
+        "_id":{
+          "status": "$status"
+        },
+        count: {
+          "$sum": 1
+        }
+      }
+    }]).to_a
+    data.each do |d|
+      out[d['_id']['status']] = d['count'] if out.keys.include?(d['_id']['status'])
+    end
+    out
+  end
+
   protected
   def get_matcher
     # GENERICTODO
