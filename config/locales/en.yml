@@ -507,3 +507,10 @@ en:
     requestable_type:
       Receipt: 'Receipt'
       BookingDetail: 'Booking'
+
+  sessions:
+    new:
+      otp_submit: 'Get OTP'
+      otp_resend: 'Resend OTP'
+      login_with_password_link: 'Login with password instead'
+      login_with_otp_link: 'Login with OTP instead'

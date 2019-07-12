@@ -27,7 +27,7 @@ end %>
               <%= f.submit t('sessions.new.otp_submit'), class: 'sign-in-btn',  data:{event_category: 'Section', event_action: 'Click', event_name: t('sessions.new.otp_submit') } %>
               <a href="javascript:;" class="a-style opacity-5 resend-otp d-none small pt-3" data-resend-time="<%= User.otp_resend_wait_time %>", data-max-limit="<%= User.otp_resend_max_limit %>" data-counter=0> t('sessions.new.otp_resend')</a>
             </div>
-          <a href="javascript:;" class="a-style opacity-5 toggle_signin_form d-block d-md-inline float-md-left pr-0" data-target="#standard_login_form"> t('sessions.new.login_with_password_link')</a>
+          <a href="javascript:;" class="a-style opacity-5 toggle_signin_form d-block d-md-inline float-md-left pr-0" data-target="#standard_login_form"><%= t('sessions.new.login_with_password_link') %></a>
           <% end %>
         <% end %>
         <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: {class: 'validate-form ' + username_signin_class, id: "standard_login_form", autocomplete: 'off' }) do |f| %>
@@ -57,7 +57,7 @@ end %>
               <%= f.submit "Log in", class: 'sign-in-btn',  data:{event_category: 'Section', event_action: 'Click', event_name: 'Log In'} %>
             </div>
               <% if current_client.sms_enabled? %>
-                <a href="javascript:;" class="a-style opacity-5 toggle_signin_form d-block d-md-inline float-md-left pr-0" data-target="#otp_user_form">Login with OTP instead</a>
+                <a href="javascript:;" class="a-style opacity-5 toggle_signin_form d-block d-md-inline float-md-left pr-0" data-target="#otp_user_form"><%= t('sessions.new.login_with_otp_link') %></a>
               <% end %>
           <% end -%>
         <% end %>
