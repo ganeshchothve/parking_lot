@@ -182,15 +182,29 @@ module DashboardDataProvider
   end
 
   def self.user_group_by(current_user)
-    not_confirmed = total_buyers(current_user) - User.where(role: { "$in": User::BUYER_ROLES}, confirmed_at: nil, manager_id: current_user.id).count
-    confirmed = total_buyers(current_user)
-    {'confirmed_users': confirmed, 'not_confirmed_users': not_confirmed}
+    out = {'confirmed_users': 0, 'not_confirmed_users': 0}
+    data = User.collection.aggregate([
+      {"$match": {'manager_id': current_user.id } },
+      { "$group": {
+        "_id":{
+          "$cond": {if: '$confirmed_at', then: 'confirmed_users', else: 'not_confirmed_users'}
+        },
+        count: {
+          "$sum": 1
+        }
+      }
+    }]).to_a
+    data.each do |d|
+      out[(d['_id']).to_sym] = d['count']
+    end
+    out
   end
 
   def self.booking_detail_group_by(current_user)
     out = {'blocked': 0, 'booked_tentative': 0,'booked_confirmed': 0}
+    user_ids = User.where(manager_id: current_user.id).pluck(:id)
     data = BookingDetail.collection.aggregate([
-      {"$match": {'id': current_user.id} },
+      {"$match": {'user_id': {'$in': user_ids }, 'status': {'$in': %w(blocked booked_confirmed booked_tentative)}} },
       { "$group": {
         "_id":{
           "status": "$status"
@@ -201,15 +215,16 @@ module DashboardDataProvider
       }
     }]).to_a
     data.each do |d|
-      out[(d['_id']['status']).to_sym] = d['count'] if out.keys.include?((d['_id']['status']).to_sym)
+      out[(d['_id']['status']).to_sym] = d['count']
     end
     out
   end
 
   def self.receipts_group_by(current_user)
     out = {'pending': 0, 'clearance_pending': 0, 'success': 0, 'refunded': 0}
+    user_ids = User.where(manager_id: current_user.id).pluck(:id)
     data = Receipt.collection.aggregate([
-      {"$match": {'id': current_user.id} },
+      {"$match": {'user_id': {'$in': user_ids }, 'status': {'$in': %w(pending clearance_pending success refunded)}} },
       { "$group": {
         "_id":{
           "status": "$status"
@@ -220,7 +235,7 @@ module DashboardDataProvider
       }
     }]).to_a
     data.each do |d|
-      out[(d['_id']['status']).to_sym] = d['count'] if out.keys.include?((d['_id']['status']).to_sym)
+      out[(d['_id']['status']).to_sym] = d['count']
     end
     out
   end
