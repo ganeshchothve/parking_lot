@@ -155,7 +155,7 @@ class ApplicationController < ActionController::Base
   def valid_request_origin? # :doc:
     _valid = super
 
-    _valid && ( current_client.try(:booking_portal_domains) || []).include?( URI.parse( request.origin.to_s ).host )  || Rails.env.development? || Rails.env.test? )
+    _valid && ( (current_client.try(:booking_portal_domains) || []).include?( URI.parse( request.origin.to_s ).host ) || Rails.env.development? || Rails.env.test? )
   end
 
   def set_locale
