@@ -12,7 +12,7 @@ class SelldoLeadUpdater
       if user.portal_stages.empty?
         user.portal_stages << PortalStage.new(stage: st, priority: priority[st])
         sell_do(user, st)
-      elsif user.portal_stage.priority <= priority[st]
+      elsif user.portal_stage.priority.to_i <= priority[st].to_i
         user.portal_stages.where(stage:  st).present? ? user.portal_stages.where(stage:  st).first.set(updated_at: Time.now, priority: priority[st]) : user.portal_stages << PortalStage.new(stage: st, priority: priority[st])
         sell_do(user, st)
       end
