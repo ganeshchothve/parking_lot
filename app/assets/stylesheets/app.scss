@@ -171,3 +171,9 @@ figure.wave {
 .display-initial{
   display: initial;
 }
+.nowrap {
+  white-space: nowrap;
+}
+.page-item.disabled .page-link {
+  padding: 0.8rem 0.75rem;
+}

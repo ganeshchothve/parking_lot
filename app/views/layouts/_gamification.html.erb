@@ -1,7 +1,7 @@
 <% if current_client.enable_actual_inventory?(current_user) %>
-<div id="gamification-container" class="card pt-2 pb-4 bg-secondary text-white d-print-none">
+<div id="gamification-container" class="card py-2 mb-3 bg-secondary text-white d-print-none">
   <div id="gamification-carousel" class="carousel slide" data-ride="carousel">
-    <div class="carousel-inner">
+    <div class="carousel-inner pl-2">
       <% Gamification::Base.new.dashboard_data(current_user).each_with_index do |text, index| %>
         <div class="carousel-item <%= index.zero? ? 'active' : ''%>">
           <span><%= text %></span>

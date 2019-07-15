@@ -60,9 +60,9 @@ end %>
           </div>
           <% if current_client.sms_enabled? %>
             <a href="javascript:;" class="a-style opacity-5 toggle_signin_form d-block d-md-inline float-md-left pr-0" data-target="#otp_user_form"><%= t('sessions.new.login_with_otp_link') %></a>
+            <br>
           <% end %>
         <% end %>
-        <br>
         <%=render "devise/shared/links" %>
         <div class="signup-btn-set">
           <%- if devise_mapping.registerable? && controller_name != 'registrations' %>

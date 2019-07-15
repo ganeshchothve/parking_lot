@@ -25,3 +25,12 @@
  *= require site
  *= require_self
 */
+
+.navbar-nav{
+  .nav-item{
+    a.active{
+      font-weight: 700;
+      color: #33475b !important;
+    }
+  }
+}

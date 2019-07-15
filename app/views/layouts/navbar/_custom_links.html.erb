@@ -12,8 +12,8 @@
 <% if links.present? %>
   <li class="nav-item d-none d-lg-block">
     <div class="dropdown">
-      <a href="javascript:;" class="nav-link dropdown-toggle" data-toggle="dropdown"><%= t('global.custom') %></a>
-      <div class="dropdown-menu dropdown-menu-right">
+      <%= active_link_to t('global.custom'), "javascript:;", active: [CustomPolicy.custom_methods.map{|x| 'admin/'+x}, ['index']], class: "nav-link dropdown-toggle", data: {toggle: 'dropdown'} %>
+      <div class="dropdown-menu dropdown-menu-right menu-top">
         <% links.each do |link| %>
           <%= link_to link[:name], link[:link], class: "dropdown-item" %>
         <% end %>

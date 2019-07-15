@@ -33,9 +33,11 @@
       <%= yield %>
     <% else %>
       <%= render "layouts/navbar"%>
-      <%= yield %>
-      <%= render "layouts/navbar_footer"%>
+      <div class="mt-4" style="margin-bottom: 4rem; padding-bottom: 4rem;">
+        <%= yield %>
+      </div>
       <%= render "layouts/gamification" %>
+      <%= render "layouts/navbar_footer"%>
     <% end %>
     <%= render 'layouts/partials/google_code' %>
   </body>
