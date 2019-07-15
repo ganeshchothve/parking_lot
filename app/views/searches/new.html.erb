@@ -1,57 +1,69 @@
-<%
-  if current_user.buyer?
-    if @search.persisted?
-      url = user_search_path(@search)
-    else
-      url = user_searches_path
-    end
-  else
-    if @search.persisted?
-      url = admin_user_search_path(@user, @search)
-    else
-      url = admin_user_searches_path(@user)
-    end
-  end
-%>
-<div class="container">
+<section class="my-customer my-4 mb-5 pb-5">
   <% unless current_user.buyer? %>
     <div class="alert alert-danger">
       You are taking a booking for <%= @user.name %>
     </div>
     <div class="mt-md-5"></div>
   <% end %>
-  <div class="row justify-content-center">
-    <div class="col-md-7">
-      <div class="card h-100">
-        <div class="card-body">
-          <%= form_for @search, url: url, html: {class: 'validate-form', id: "search_form"} do |f| %>
-            <%= render "form_fields", {f: f, data: @data} %>
-            <div class="form-group">
-              <%= f.submit "Search", class: "btn btn-primary" %>
-            </div>
-          <% end %>
-        </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 no-pd">
+        <h1 class="page-title">Search Home</h1>
+        <div class="separate-line"></div>
       </div>
-    </div>
-    <% if SearchPolicy.new(current_user, Search.new(user_id: @user.id)).three_d? %>
-      <div class="col-md-5">
-        <div class="card h-100">
-          <div class="card-body text-center">
-            <h5 class="mb-3">Book in 3D View</h5>
-            <%
-              if current_user.buyer?
-                url = three_d_user_searches_path
+      <div class="mt-5 mb-5 col-lg-12 col-xs-12 col-sm-12 col-md-12">
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12 no-pd">
+            <% if SearchPolicy.new(current_user, Search.new(user_id: @user.id)).three_d? %>
+                <div class="card h-100">
+                  <div class="card-body text-center">
+                    <h5 class="mb-3">Book in 3D View</h5>
+                    <%
+                      if current_user.buyer?
+                        url = three_d_user_searches_path
+                      else
+                        url = three_d_admin_user_searches_path(@user)
+                      end
+                    %>
+                    <%= link_to (image_tag("3d-building.jpg", class: "img-fluid")).html_safe, url %>
+                  </div>
+                </div>
+            <% else %>
+              <img src="<%= asset_path 'search-home-img.png' %>" class="img-fluid">
+            <% end %>
+          </div>
+          <%
+            if current_user.buyer?
+              if @search.persisted?
+                url = user_search_path(@search)
               else
-                url = three_d_admin_user_searches_path(@user)
+                url = user_searches_path
               end
-            %>
-            <%= link_to (image_tag("3d-building.jpg", class: "img-fluid")).html_safe, url %>
+            else
+              if @search.persisted?
+                url = admin_user_search_path(@user, @search)
+              else
+                url = admin_user_searches_path(@user)
+              end
+            end
+          %>
+          <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12 no-pd mb-5">
+            <div class="search-home-form">
+              <h2 class="fn-400 mb-4">Find your dream home</h2>
+              <p class="p-style mb-5">2, 3 BHK Apartments starting from Rs. 36 Lakhs at Hinjewadi Pune. Don’t miss out on the biggest real estate opportunity in Pune. Hurry up! 200 apartments already sold.</p>
+              <%= form_for @search, url: url, html: {class: 'validate-form', id: "search_form"} do |f| %>
+                <%= render "form_fields", {f: f, data: @data} %>
+                <div class="form-group">
+                  <%= f.submit "Search", class: "btn btn-primary" %>
+                </div>
+              <% end %>
+            </div>
           </div>
         </div>
       </div>
-    <% end %>
+    </div>
   </div>
-</div>
+</section>
 <%= javascript_tag do %>
 $(document).ready(function(){
   FormInitializer.init($("#search_form"));

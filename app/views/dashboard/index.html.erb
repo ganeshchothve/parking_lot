@@ -1,3 +1,4 @@
+<section class="my-customer my-4 mb-5 pb-5">
 <% if current_user.buyer? %>
   <%= render 'dashboard/index/user' %>
 <% elsif current_user.role?('channel_partner') %>
@@ -7,3 +8,4 @@
 <% elsif ['superadmin', 'admin', 'crm', 'cp_admin', 'sales_admin', 'sales', 'gre'].include?(current_user.role) %>
   <%= render 'dashboard/index/crm' %>
 <% end %>
+</section>

@@ -1,142 +1,37 @@
-<div class="card">
-  <div class="card-header">
-    <h5 class="float-left card-title mt-2 mb-0"><%= global_labels[:project_unit] %> <%= project_unit.name %></h5>
-    <% if defined?(with_actions) && with_actions == true %>
-      <%= render "#{current_user_role_group}/project_units/links", project_unit: project_unit, link_name: '' %>
-    <% end %>
+<section class="bookings my-4 mb-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+          <div class="box-card">
+            <div class="box-header bg-gradient br-rd-tr-4">
+              <h2><img src="<%= asset_path 'home-white.svg' %>" alt="Selected Apartment" class="wd-18">Selected Apartment</h2>
+              <!-- <a href="javascript:;" class="view-all-btn">View All > </a> -->
+            </div>
+            <div class="box-content br-rd-bl-4 bg-white">
+              <div class="row pd-box">
+                <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12">
+                  <h4 class="booking-title"><%= project_unit.name %></h4>
+                </div>
+                <div class="col-md-9 col-lg-9 col-xs-12 col-sm-12">
+                  <ul class="booking-apart-info">
+                    <li><span>Tower</span><p><%= project_unit.project_tower_name %></p></li>
+                    <li><span>Floor</span><p><%= project_unit.floor %></p></li>
+                    <li><span>BHK</span><p><%= project_unit.bedrooms %> BHK</p></li>
+                    <li><span>Carpet</span><p><%= project_unit.carpet %> sq. ft.</p></li>
+                    <li><span>Status</span><p><%= t("project_units.status.#{project_unit.status}") %></p></li>
+                    <li><span>Facing</span><p><%= project_unit.unit_facing_direction %></p></li>
+                    <li><span>Agreement Price</span><p>₹<%= project_unit.agreement_price %></p></li>
+                    <li><span>All Inclusive Price</span><p>₹<%= project_unit.all_inclusive_price %></p></li>
+                  </ul>
+                </div>
+                <div class="col-md-3 col-lg-3 col-xs-12 col-sm-12">
+                  <!-- <a href="javascript:;" class="large-btn blue-bg display-block fn-500 my-3 text-uppercase mt-4 float-right">Make Payment</a>
+                  <a href="javascript:;" class="large-btn blue-bg display-block fn-500 text-uppercase float-right">View Details</a> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
   </div>
-  <div class="card-body">
-    <div class="row">
-      <div class="col-md-4">
-        <div class="form-group">
-          <label>Name</label>
-          <div>
-            <%= project_unit.name %>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label>Tower</label>
-          <div>
-            <%= project_unit.project_tower_name %>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label>Status</label>
-          <div>
-            <%= t("project_units.status.#{project_unit.status}") %>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4">
-        <div class="form-group">
-          <label> Beds / Baths</label>
-          <div>
-            <%= project_unit.bedrooms %> / <%= project_unit.bathrooms %>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label>Carpet</label>
-          <div>
-            <%= project_unit.carpet %> <%= current_client.area_unit %>
-          </div>
-        </div>
-      </div>
-      <% if current_user.role?('superadmin') %>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label>Saleable</label>
-            <div>
-              <%= project_unit.saleable %> <%= current_client.area_unit %>
-            </div>
-          </div>
-        </div>
-      <% end %>
-    </div>
-    <div class="row">
-      <% if project_unit.blocked? || (defined?(scheme) && scheme.present?) %>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label>Effective Rate</label>
-            <div>
-              <%= number_to_indian_currency(project_unit.effective_rate) %> <%= current_client.area_unit %>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label>Agreement Price</label>
-            <div>
-              <%= number_to_indian_currency(project_unit.calculate_agreement_price.round) %>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label>All Inclusive Price</label>
-            <div>
-              <%= number_to_indian_currency(project_unit.calculate_all_inclusive_price.round) %>
-            </div>
-          </div>
-        </div>
-      <% end %>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label>Phase</label>
-          <div>
-            <%= project_unit.phase_name %>
-          </div>
-        </div>
-      </div>
-      <% if project_unit.comments.present? %>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label>Comments</label>
-            <div>
-              <%= project_unit.comments %>
-            </div>
-          </div>
-        </div>
-      <% end %>
-    </div>
-    <% if current_client.external_api_integration? %>
-      <div class="row">
-        <div class="col-md-4">
-          <div class="form-group">
-            <label>Last Synced At:</label>
-            <div>
-              <% if project_unit.booking_detail.present? %>
-                <% if project_unit.booking_detail.sync_logs.present? %>
-                  <%= project_unit.booking_detail.sync_logs.desc(:created_at)[0].present? ? project_unit.booking_detail.sync_logs.desc(:created_at)[0].updated_at.strftime("%d/%m/%Y %l:%M %p") : "-" %>
-                <% end %>
-              <% else %>
-                 <%= "Not synced" %>
-              <% end %>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label>Last Sync Log Status:</label>
-            <div>
-              <% if project_unit.booking_detail.present? %>
-                <% if project_unit.booking_detail.sync_logs.present? %>
-                  <%= project_unit.booking_detail.sync_logs.desc(:created_at)[0].status.present? ? project_unit.booking_detail.sync_logs.desc(:created_at)[0].status : "-" %>
-                <% end %>
-              <% else %>
-                 <%= "Not synced" %>
-              <% end %>
-            </div>
-          </div>
-        </div>
-      </div>
-    <% end %>
-  </div>
-</div>
+</section>

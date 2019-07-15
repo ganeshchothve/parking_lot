@@ -1,193 +1,134 @@
-<div class="text-right">
-  <% if @search.next_step.present? %>
-    <%= form_for [:user, @search], html: {class: "validate-form edit_search_form"} do |f| %>
-      <div class="form-group">
-        <%= f.hidden_field :step, value: @search.next_step %>
-        <%= f.hidden_field :project_unit_id %>
-      </div>
-      <div class="form-group">
-        <%= f.submit "Next", class: "btn btn-primary float-right ml-2", disabled: 'disabled' %>
-      </div>
-    <% end %>
-  <% end %>
-  <% if @search.previous_step.present? %>
-    <%= form_for [:user, @search], html: {class: 'validate-form'} do |f| %>
-      <div class="form-group">
-        <%= f.hidden_field :step, value: @search.previous_step %>
-      </div>
-      <div class="form-group">
-        <%= f.submit "Previous", class: "btn btn-secondary float-right" %>
-      </div>
-    <% end %>
-  <% end %>
-</div>
-<div class="clearfix"></div>
-<div class="row justify-content-center mt-3">
-  <div class="col-md-5" id="unit-selection">
-    <div class="tower-container">
-      <div class="tower-wrapper">
-        <% max_floor = @all_units.collect{|x| x[:_id]}.max %>
-        <% max_per_floor = @all_units.collect{|x| x[:floor_order].max}.max %>
-        <% width = ((100.to_f - (4 * max_per_floor)) / max_per_floor).round(2) %>
-        <%
-          height = (280.to_f / max_floor).round(2)
-          height = 16 if height < 16
-        %>
-        <% @all_units.each do |floor_data| %>
-          <div class="floor">
-            <div class="floor-number"><%= floor_data[:_id] %></div>
-            <% max_per_floor.times do |index| %>
+<section class="choose-apartment-sec">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 bg-white br-rd-4 br-1 mb-5">
+        <div class="row">
+          <div class="col-lg-6 col-xs-12 col-sm-12 col-md-12 pt-3 pb-3">
+            <div class="left-info pl-5 pr-5 pt-0 pb-0 book-apartment">
+              <% max_floor = @all_units.collect{|x| x[:_id]}.max %>
+              <% max_per_floor = @all_units.collect{|x| x[:floor_order].max}.max %>
+              <% width = ((100.to_f - (4 * max_per_floor)) / max_per_floor).round(2) %>
               <%
-                klass = 'bg-secondary'
-                data_selector = ''
-                unit = @units.find{|unit| unit.floor == floor_data[:_id] && unit.floor_order == (index + 1) }
-                if unit
-                  if unit.user_based_status(@user) == 'available'
-                    klass = 'bg-white'
-                    data_selector = 'unit-card'
-                  else
-                    klass = 'bg-danger'
-                  end
-                end
+                height = (280.to_f / max_floor).round(2)
+                height = 16 if height < 16
               %>
-              <% if unit.present? %>
-
-                <span data-jquery-selector="<%= data_selector %>" data-toggle="popover" data-content="<%= unit_tooltip(unit, @user) %>" data-title="Details for <%= unit.name %>" data-unit-id="<%= unit.present? ? unit.id : '' %>" class="apartment <%= klass %>" style="width: <%= width %>%;height: <%= height %>px;"></span>
-              <% else %>
-                <span data-jquery-selector="<%= data_selector %>" class="apartment <%= klass %>" style="width: <%= width %>%;height: <%= height %>px;"></span>
-              <% end %>
-            <% end %>
-          </div>
-        <% end %>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-7 d-none mt-3 mt-md-0" id="unit-description">
-    <div class="card h-md-100">
-      <div class="bg-primary text-white">
-        <%= icon "fas", "home", class: "fa-2x position-absolute", style: "right:10px; top:10px;" %>
-        <div class="p-3">
-          <h4 class="font-weight-bold mb-3" data-placeholder='name'></h4>
-          <div class="row">
-            <div class="col-1">
-              <i class="fas fa-bell" style="font-size:32px;"></i>
+              <div class="form-sec-title text-center">Choose Apartment</div>
+              <ul class="book-box-info">
+                <li><span class="book-box available-aprt"></span><span>Available</span></li>
+                <li><span class="book-box booked-aprt"></span><span>Booked</span></li>
+                <li><span class="book-box soldout-aprt"></span><span>Sold Out</span></li>
+                <li><span class="book-box selected-aprt"></span><span>Selected</span></li>
+              </ul>
+               <div class="booking-list">
+                <div class="apartments-no">
+                  <ul class="aprt-no-list">
+                    <li><span class="book-box">1</span></li>
+                    <li><span class="book-box">2</span></li>
+                    <li><span class="book-box">3</span></li>
+                    <li><span class="book-box">4</span></li>
+                    <li><span class="book-box">5</span></li>
+                    <li><span class="book-box">6</span></li>
+                    <li><span class="book-box">7</span></li>
+                    <li><span class="book-box">8</span></li>
+                    <li><span class="book-box">9</span></li>
+                    <li><span class="book-box">10</span></li>
+                    <li><span class="book-box">11</span></li>
+                    <li><span class="book-box">12</span></li>
+                  </ul>
+                  <div class="separate-box"></div>
+                  <div class="floor-listing">
+                    <div class="floor-inner">
+                      <% @all_units.each do |floor_data| %>
+                      <div class="floor">
+                        <div class="floor-number"><%= floor_data[:_id] %></div>
+                        <% max_per_floor.times do |index| %>
+                          <%
+                            klass = 'soldout-aprt'
+                            data_selector = ''
+                            unit = @units.find{|unit| unit.floor == floor_data[:_id] && unit.floor_order == (index + 1) }
+                            if unit
+                              if unit.user_based_status(@user) == 'available'
+                                klass = 'available-aprt'
+                                data_selector = 'unit-card'
+                              elsif unit.user_based_status(@user) == 'booked'
+                                klass = 'booked-aprt'
+                              else
+                                klass = 'soldout-aprt'
+                              end
+                            end
+                          %>
+                          <% if unit.present? %>
+                            <span data-jquery-selector="<%= data_selector %>" data-toggle="popover" data-content="<%= unit_tooltip(unit, @user) %>" data-title="Details for <%= unit.name %>" data-unit-id="<%= unit.present? ? unit.id : '' %>" class="book-box <%= klass %>" ></span>
+                          <% else %>
+                            <span data-jquery-selector="<%= data_selector %>" class="book-box <%= klass %>"></span>
+                          <% end %>
+                        <% end %>
+                      </div>
+                      <% end %>
+                    </div>
+                  </div>
+                  <div class="separate-box"></div>
+                  <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 mt-5">
+                    <% if @search.previous_step.present? %>
+                      <%= form_for [:user, @search] do |f| %>
+                          <%= f.hidden_field :step, value: @search.previous_step %>
+                          <%= f.submit "Previous", class: "previous-btn fn-12 fn-300" %>
+                      <% end %>
+                    <% end %>
+                    <% if @search.next_step.present? %>
+                      <%= form_for [:user, @search] do |f| %>
+                          <%= f.hidden_field :step, value: @search.next_step %>
+                          <%= f.hidden_field :project_unit_id, id: 'project_unit_id' %>
+                          <%= f.submit "Next", class: "next-btn fn-12 fn-300", disabled: 'disabled' %>
+                      <% end %>
+                    <% end %>
+                  </div>
+                </div>
+               </div>
             </div>
-            <div class="col-11">
-              <h6 data-placeholder="gamification"></h6>
+          </div>
+          <div class="col-lg-6 col-xs-12 col-sm-12 col-md-12 br-l-1 no-pd after-show">
+            <div class="right-info pl-5 pr-5 pt-4 pb-4">
+              <div class="title float-left">T042</div>
+              <div class="alert-box float-right">
+                <!-- whenever give animation on bell only add class (bell-anime) -->
+                <div class="info bell-anime">12 other such <br>1 BHK apartments sold</div>
+              </div>
+              <ul class="apartments-info-list">
+                <li class="wd-25"><span class="icon"><img src="<%= asset_path 'building-black.svg' %>" alt="floor"></span><span class="title">41</span><span class="desc">Floor</span></li>
+                <li class="wd-25"><span class="icon"><img src="<%= asset_path 'door-black.svg' %>" alt="Apartment"></span><span class="title">101</span><span class="desc">Apartment</span></li>
+                <li class="wd-25"><span class="icon"><img src="<%= asset_path 'loveseat-black.svg' %>" alt="Carpet Area"></span><span class="title">2586</span><span class="desc">Carpet Area Sq.Ft</span></li>
+                <li class="wd-25 no-rt-br"><span class="icon"><img src="<%= asset_path 'compass-black.svg' %>" alt="floor"></span><span class="title">North</span><span class="desc">Facing</span></li>
+                <li class="wd-50 no-bm-br"><span class="icon"><img src="<%= asset_path 'file-contract-black.svg' %>" alt="floor"></span><span class="title">39,90,500</span><span class="desc">Agreement Value</span></li>
+                <li class="wd-50 no-bm-br"><span class="icon"><img src="<%= asset_path 'rupee-black.svg' %>" alt="floor"></span><span class="title">51,37,500</span><span class="desc">All Inclusive Price</span></li>
+              </ul>
+              </div>
+              <div class="right-info pl-5 pr-5 pt-4 pb-4">
+                <div class="float-left">
+                  <img src="<%= asset_path 'apartment-plan.png' %>" class="img-fluid" alt="apartments plan">
+                </div>
+              </div>
+              <div class="right-info pl-5 pr-5 pt-4 pb-4">
+                <div class=" float-left">
+                  <a href="javascript:;">View Cost Sheet & Payment Schedule </a>
+                </div>
+              </div>
             </div>
-          </div>
         </div>
-        <figure class="w-100 wave">
-          <svg preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="20 -20 300 100" style="margin-bottom: -38px;margin-top: -54px;" xml:space="preserve">
-            <path class="fill-white" opacity=".4" d="M30.913,43.944c0,0,42.911-34.464,87.51-14.191c77.31,35.14,113.304-1.952,146.638-4.729
-            c48.654-4.056,69.94,16.218,69.94,16.218v54.396H30.913V43.944z"></path>
-            <path class="fill-white" opacity=".4" d="M-35.667,44.628c0,0,42.91-34.463,87.51-14.191c77.31,35.141,113.304-1.952,146.639-4.729
-            c48.653-4.055,69.939,16.218,69.939,16.218v54.396H-35.667V44.628z"></path>
-            <path class="fill-white" opacity="0" d="M43.415,98.342c0,0,48.283-68.927,109.133-68.927c65.886,0,97.983,67.914,97.983,67.914v3.716
-            H42.401L43.415,98.342z"></path>
-            <path class="fill-white" d="M-34.667,62.998c0,0,56-45.667,120.316-27.839C167.484,57.842,197,41.332,232.286,30.428
-            c53.07-16.399,104.047,36.903,104.047,36.903l1.333,36.667l-372-2.954L-34.667,62.998z"></path>
-          </svg>
-        </figure>
-      </div>
-      <div class="row pl-3 pb-0 pb-md-3 pr-3 pt-3">
-        <div class="col-md-12">
-          <%= link_to "View Cost Sheet & Payment Schedule", "javascript:;", class: 'modal-remote-form-link print_cs_ps', target: "_blank" %>
-        </div>
-        <div class="col-md-4">
-          <label>Floor</label>
-          <h6 class="text-black font-weight" data-placeholder='floor'></h6>
-        </div>
-        <div class="col-md-4">
-          <label>Beds</label>
-          <h6 class="text-black font-weight" data-placeholder='bedrooms'></h6>
-        </div>
-        <div class="col-md-4">
-          <label>Baths</label>
-          <h6 class="text-black font-weight" data-placeholder='bathrooms'></h6>
-        </div>
-      </div>
-      <div class="row pl-3 pb-0 pb-md-3 pr-3 pt-0 pt-md-3">
-        <div class="col-md-4">
-          <label>Carpet</label>
-          <h6 class="text-black font-weight">
-            <span data-placeholder='carpet'></span>
-            <span class="small"> <%= current_client.area_unit %></span>
-          </h6>
-        </div>
-        <div class="col-md-4">
-          <label>Facing</label>
-          <h6 class="text-black font-weight" data-placeholder='unit_facing_direction'></h6>
-        </div>
-        <% unless @user.manager_role?('channel_partner') %>
-          <div class="col-md-4">
-            <label>Agreement Price</label>
-            <h6 class="text-black font-weight" data-placeholder='agreement_price'></h6>
-          </div>
-        <% end %>
-      </div>
-      <% unless @user.manager_role?('channel_partner') %>
-        <div class="row pl-3 pb-0 pb-md-3 pr-3 pt-0 pt-md-3">
-          <div class="col-md-4">
-            <label>All Inclusive Price</label>
-            <h6 class="text-black font-weight" data-placeholder='all_inclusive_price'></h6>
-          </div>
-        </div>
-      <% end %>
-      <div class="pl-3 pb-0 pb-md-3 pr-3 pt-0 pt-md-3">
-        <a data-toggle="modal" data-target="#floorPlanImage" href="javascript:;" class="unit_image_container" style="display:none;">
-          <img class="img-fluid" style="width: 100%; display: block;" data-placeholder="unit_image" />
-          <br/>
-          Click to view details
-        </a>
       </div>
     </div>
   </div>
-</div>
-<div class="clearfix"></div>
-<% if @search.next_step.present? %>
-  <%= form_for [:user, @search], html: {class: "validate-form edit_search_form"} do |f| %>
-    <div class="form-group">
-      <%= f.hidden_field :step, value: @search.next_step %>
-      <%= f.hidden_field :project_unit_id %>
-    </div>
-    <div class="form-group">
-      <%= f.submit "Next", class: "btn btn-primary float-right ml-2", disabled: 'disabled' %>
-    </div>
-  <% end %>
-<% end %>
-<% if @search.previous_step.present? %>
-  <%= form_for [:user, @search], html: {class: 'validate-form'} do |f| %>
-    <div class="form-group">
-      <%= f.hidden_field :step, value: @search.previous_step %>
-    </div>
-    <div class="form-group">
-      <%= f.submit "Previous", class: "btn btn-secondary float-right" %>
-    </div>
-  <% end %>
-<% end %>
-<div class="clearfix"></div>
-<div class="modal fade" role="dialog" id="floorPlanImage">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body" data-placeholder="gallery_unit_images">
-      </div>
-    </div>
-  </div>
-</div>
+</section>
 <%= javascript_tag do %>
   var units = <%= raw @units.to_json(methods: [:all_inclusive_price, :calculated_costs, :calculated_data, :calculated_costs]) %>;
   var assets = <%= raw Asset.in(assetable_id: @units.pluck(:id)).to_json %>
 
   $(document).on('click', '[data-jquery-selector="unit-card"]', function(){
     var unit_id = $(this).data("unit-id");
-    $('[data-jquery-selector="unit-card"]').removeClass("active");
-    $(this).addClass("active");
+    $('[data-jquery-selector="unit-card"]').removeClass("selected-aprt");
+    $(this).addClass("selected-aprt");
+    $("#project_unit_id").val(unit_id);
+    $('.next-btn').removeAttr('disabled')
     var unit = _.find(units, function(u){ return u._id == unit_id });
     var unit_assets = _.filter(assets, function(a){return a.assetable_id == unit_id});
     showUnitData(unit, unit_assets);
