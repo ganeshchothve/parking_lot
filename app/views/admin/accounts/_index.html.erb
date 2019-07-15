@@ -1,14 +1,17 @@
-<div class="table-responsive">
-  <table class='table striped-table payment-breakup' width="100%" cellpadding="10" cellspacing="0">
-    <thead class="th-default">
-      <tr>
-        <th><%= t('mongoid.attributes.account.names') %></th>
-        <th><%= t('mongoid.attributes.account.account_number') %></th>
-        <th class="text-right">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% accounts.each do |account| %>
+<table class='table my-customer-table responsive-tbl'>
+  <thead class="th-default">
+    <% labels = t('mongoid.attributes.receipt').with_indifferent_access %>
+    <% user_labels = t('mongoid.attributes.user').with_indifferent_access %>
+      <thead>
+        <tr class="bg-gradient-cd white">
+          <th><%= t('mongoid.attributes.account.names') %></th>
+          <th><%= t('mongoid.attributes.account.account_number') %></th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+  </thead>
+  <tbody>
+    <% accounts.each do |account| %>
       <tr>
         <td>
           <%= link_to account.name, admin_account_path(account, account_type: account.account_type) %>
@@ -19,23 +22,24 @@
         <td>
           <%= account.account_number %>
         </td>
-        <td class="text-right">
-          <div class="dropdown">
-            <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-            <div class="dropdown-menu dropdown-menu-right">
+        <td>
+          <div class="dropdown show text-center">
+            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
               <%= link_to 'Edit', edit_admin_account_path(account, account_type: account.account_type), class: 'modal-remote-form-link dropdown-item' %>
               <%= link_to 'Delete', admin_account_path(account, account_type: account.account_type), class: 'dropdown-item', method: :delete %>
-            </div>
-          </div>
+           </div>
+        </div>
         </td>
       </tr>
       <% end %>
       <tr>
-        <td colspan="4">
-          <div class="mt-5 pt-5"></div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+      <td colspan="6">
+        <div class="mt-5 pt-5"></div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pt-4 pb-5">
+  <%= will_paginate accounts, list_classes: %w(pagination justify-content-center) %>
 </div>
-<%= will_paginate accounts, list_classes: %w(pagination justify-content-center) %>

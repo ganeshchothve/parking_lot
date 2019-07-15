@@ -1,3 +1,5 @@
+<div class="collapse navbar-collapse float-right" id="iris_menu">
+<ul class="navbar-nav ml-auto">
 <% if policy(:dashboard).index? %>
   <li class="nav-item">
     <%= active_link_to "Dashboard", dashboard_path, active: :exclusive, class: "nav-link" %>
@@ -48,26 +50,5 @@
     </div>
   </div>
 </li>
-
-<li class="nav-item d-lg-none">
-  <%= link_to "Profile", edit_buyer_user_path(current_user), class: "nav-link modal-remote-form-link" %>
-</li>
-
-<hr/>
-
-<li class="nav-item d-lg-none">
-  <%= link_to "Change Password", update_password_buyer_user_path(current_user), class: "nav-link modal-remote-form-link" %>
-</li>
-
-<%= bottom_navigation('d-lg-none') %>
-
-<li class="nav-item d-lg-none">
-  <%= link_to "Sign out", destroy_session_path(current_user), class: "nav-link", method: :delete %>
-</li>
-
-<hr/>
-
-<li class='nav-item d-lg-none'>
-  <%= link_to 'Powered by Amura', 'https://www.amuratech.com', class: 'small nav-link', target: "_blank" %>
-  <div class="d-md-none mt-3"></div>
-</li>
+</ul>
+</div>

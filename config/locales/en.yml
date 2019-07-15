@@ -507,3 +507,47 @@ en:
     requestable_type:
       Receipt: 'Receipt'
       BookingDetail: 'Booking'
+
+  sessions:
+    new:
+      otp_submit: 'Get OTP'
+      otp_resend: 'Resend OTP'
+      login_with_password_link: 'Login with password instead'
+      login_with_otp_link: 'Login with OTP instead'
+
+  dashboard:
+    confirmed_users: ' Confirmed Users'
+    not_confirmed_users: ' Not Confirmed Users'
+    booking_detail:
+      blocked: 'Blocked'
+      booked_tentative: 'Tentative Booked'
+      booked_confirmed: 'Confirm Booked'
+    receipt:
+      pending: 'Pending'
+      clearance_pending: 'Clearance Pending'
+      success : 'Success'
+      refunded: 'Refunded'
+    welcome:
+      heading: 'Welcome '
+      sub_heading: 'Thank You for being a part of Amura Family. We are delighted to have you onboard. Here is the list of things that you can do on this Portal.'
+    projects:
+      heading: 'Platinum Towers'
+      sub_heading: '2, 3 BHK Apartments starting from Rs. 36 Lakhs at Hinjewadi Pune. Don’t miss out on the biggest real estate opportunity in Pune. Hurry up! 200 apartments already sold.'
+    titles:
+      add_customer: 'Add Customer'
+      make_payment: 'Make Payment'
+      booking: 'Booking'
+      projects: 'Projects'
+      available_inventory: 'Available Inventory'
+      starting_price: 'Starting Price'
+      configurations: 'configurations'
+      download_brochure: 'Download Brochure'
+      visit_website: 'Visit Website >'
+      leads: 'Leads'
+      total_leads: 'Total Leads'
+      received:  'Received'
+      lead_details: 'Lead Details'
+      booking_details: 'Booking Details'
+      payments: 'Payments'
+    payments:
+      data: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna'

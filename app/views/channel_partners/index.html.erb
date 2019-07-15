@@ -1,32 +1,29 @@
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="<%= @channel_partner.blank? ? 'col-md-9' : 'col-md-12' %>">
-      <%= render 'breadcrumbs', {channel_partner: @channel_partner, user: @user} %>
-      <div class="card">
-        <div class="card-body">
-          <div class="row mb-2">
-            <div class="col-md-7">
-              <% if policy([:admin, ChannelPartner]).export? %>
-                <div class="dropdown">
-                  <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
-                  <div class="dropdown-menu dropdown-menu-right">
-                    <%= link_to "All #{global_labels['channel_partners']}", export_channel_partners_path, class: 'dropdown-item' %>
-                    <%= link_to "Active filter #{global_labels['channel_partners']}", export_channel_partners_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
-                  </div>
-                </div>
-              <% end %>
-            </div>
-            <div class="col-md-5 text-md-right">
-              <h6 class="mt-2">Total <%= global_labels[:channel_partners] %>: <%= @channel_partners.total_entries %></h6>
-            </div>
-          </div>
+<section class="my-customer my-4 mb-5 pb-5">
+  <div class="container">
+    <div class="row">
+    <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
+      <div class="table-title pt-4 pb-5">
+      <img src="<%= asset_path 'user-black.svg' %>" alt="user icon"> <h1 class="title">Channel Partners</h1>
+      </div>
+    </div>
+    <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
+      <div class="table-btn-set float-right pt-4 pb-4">
+      <a class="db-small-btn light-blue bg-white fn-400 dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
+      <div class="dropdown-menu dropdown-menu-right">
+        <%= link_to "All #{global_labels['channel_partners']}", export_channel_partners_path, class: 'dropdown-item' %>
+        <%= link_to "Active filter #{global_labels['channel_partners']}", export_channel_partners_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
+      </div>
+      <button class="db-filter-btn white fn-500" type="button"><img src="<%= asset_path 'filter-light-blue.svg' %>" alt="filter icon"></button>
+      </div>
+    </div>
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+        <div class="box-card relative">
           <%= render 'index', {channel_partners: @channel_partners} %>
+          <div class="filter-box">
+            <%= render "filters" %>
+          </div>
         </div>
       </div>
     </div>
-    <div class="col-md-3">
-      <div class="d-md-none mt-3"></div>
-      <%= render "filters" %>
-    </div>
   </div>
-</div>
+</section>

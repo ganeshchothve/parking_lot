@@ -5,6 +5,9 @@ class DashboardController < ApplicationController
   def index
     authorize :dashboard, :index?
     @project_units = current_user.project_units
+    @lead_details_labels = get_lead_detail_labels
+    @booking_detail_labels = get_booking_detail_labels
+
   end
 
   def faqs
@@ -48,5 +51,23 @@ class DashboardController < ApplicationController
           :disposition => 'attachment',
           :url_based_filename => true)
     SelldoLeadUpdater.perform_async(current_user.id.to_s, 'project_info') if current_user.buyer? && current_user.receipts.count == 0
+  end
+
+  private
+
+  def get_lead_detail_labels
+    labels = Array.new
+    DashboardDataProvider.user_group_by(current_user).each do |key, value|
+      labels << value.to_s + t("dashboard.#{key}")
+    end
+    labels
+  end
+
+  def get_booking_detail_labels
+    labels = Array.new
+    DashboardDataProvider.booking_detail_group_by(current_user).keys.each do |key|
+      labels << t("dashboard.booking_detail.#{key}")
+    end
+    labels
   end
 end
