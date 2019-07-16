@@ -15,13 +15,45 @@
                 <div class="col-md-9 col-lg-9 col-xs-12 col-sm-12">
                   <ul class="booking-apart-info">
                     <li><span>Tower</span><p><%= project_unit.project_tower_name %></p></li>
-                    <li><span>Floor</span><p><%= project_unit.floor %></p></li>
-                    <li><span>BHK</span><p><%= project_unit.bedrooms %> BHK</p></li>
-                    <li><span>Carpet</span><p><%= project_unit.carpet %> sq. ft.</p></li>
                     <li><span>Status</span><p><%= t("project_units.status.#{project_unit.status}") %></p></li>
-                    <li><span>Facing</span><p><%= project_unit.unit_facing_direction %></p></li>
-                    <li><span>Agreement Price</span><p>₹<%= project_unit.agreement_price %></p></li>
-                    <li><span>All Inclusive Price</span><p>₹<%= project_unit.all_inclusive_price %></p></li>
+                    <li><span>Beds/Baths</span><p><%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></p></li>
+                    <li><span>Carpet</span><p><%= project_unit.carpet %> sq. ft.</p></li>
+                    <li><span>Floor</span><p><%= project_unit.floor %></p></li>
+                    <% if current_user.role?('superadmin') %>
+                      <li><span>Saleable</span><p><%= project_unit.saleable %></p></li>
+                      <li><span>Effective Rate</span><p><%= number_to_indian_currency(project_unit.effective_rate) %></p></li>
+                      <li><span>Base Rate/ Floor Rise</span><p><%= number_to_indian_currency(project_unit.base_rate) %> / <%= project_unit.floor_rise %></p></li>
+                      <li><span>Agreement Price</span><p><%= number_to_indian_currency(project_unit.agreement_price) %></p></li>
+                      <li><span>All Inclusive Price</span><p><%= number_to_indian_currency(project_unit.all_inclusive_price) %></p></li>
+                    <% end %>
+                    <li><span>Phase</span><p><%= project_unit.try(:phase) %></p></li>
+                    <li><span>Comments</span><p><%= project_unit.try(:comments) %></p></li>
+                    <% if current_client.external_api_integration? %>
+                      <li>
+                        <span>Last Synced at:</span>
+                        <p>
+                          <% if project_unit.booking_detail.present? %>
+                            <% if project_unit.booking_detail.sync_logs.present? %>
+                              <%= project_unit.booking_detail.sync_logs.desc(:created_at)[0].present? ? project_unit.booking_detail.sync_logs.desc(:created_at)[0].updated_at.strftime("%d/%m/%Y %l:%M %p") : "-" %>
+                            <% end %>
+                          <% else %>
+                             <%= "Not synced" %>
+                          <% end %>
+                        </p>
+                      </li>
+                      <li>
+                      <span>Last Sync Log status:</span>
+                      <p>
+                        <% if project_unit.booking_detail.present? %>
+                          <% if project_unit.booking_detail.sync_logs.present? %>
+                            <%= project_unit.booking_detail.sync_logs.desc(:created_at)[0].status.present? ? project_unit.booking_detail.sync_logs.desc(:created_at)[0].status : "-" %>
+                          <% end %>
+                        <% else %>
+                           <%= "Not synced" %>
+                        <% end %>
+                      </p>
+                    </li>
+                    <% end %>
                   </ul>
                 </div>
 

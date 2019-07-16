@@ -22,18 +22,9 @@
                <div class="booking-list">
                 <div class="apartments-no">
                   <ul class="aprt-no-list">
-                    <li><span class="book-box">1</span></li>
-                    <li><span class="book-box">2</span></li>
-                    <li><span class="book-box">3</span></li>
-                    <li><span class="book-box">4</span></li>
-                    <li><span class="book-box">5</span></li>
-                    <li><span class="book-box">6</span></li>
-                    <li><span class="book-box">7</span></li>
-                    <li><span class="book-box">8</span></li>
-                    <li><span class="book-box">9</span></li>
-                    <li><span class="book-box">10</span></li>
-                    <li><span class="book-box">11</span></li>
-                    <li><span class="book-box">12</span></li>
+                    <% max_per_floor.times do |index| %>
+                      <li><span class="book-box"><%= index + 1 %></span></li>
+                    <% end %>
                   </ul>
                   <div class="separate-box"></div>
                   <div class="floor-listing">
@@ -87,25 +78,29 @@
                </div>
             </div>
           </div>
-          <div class="col-lg-6 col-xs-12 col-sm-12 col-md-12 br-l-1 no-pd after-show">
+          <div class="col-lg-6 col-xs-12 col-sm-12 col-md-12 br-l-1 no-pd after-show d-none" id="unit-description" >
             <div class="right-info pl-5 pr-5 pt-4 pb-4">
-              <div class="title float-left">T042</div>
+              <div class="title float-left" data-placeholder="name" ></div>
               <div class="alert-box float-right">
                 <!-- whenever give animation on bell only add class (bell-anime) -->
-                <div class="info bell-anime">12 other such <br>1 BHK apartments sold</div>
+                <div class="info bell-anime" data-placeholder="gamification"></div>
               </div>
               <ul class="apartments-info-list">
-                <li class="wd-25"><span class="icon"><img src="<%= asset_path 'building-black.svg' %>" alt="floor"></span><span class="title">41</span><span class="desc">Floor</span></li>
-                <li class="wd-25"><span class="icon"><img src="<%= asset_path 'door-black.svg' %>" alt="Apartment"></span><span class="title">101</span><span class="desc">Apartment</span></li>
-                <li class="wd-25"><span class="icon"><img src="<%= asset_path 'loveseat-black.svg' %>" alt="Carpet Area"></span><span class="title">2586</span><span class="desc">Carpet Area Sq.Ft</span></li>
-                <li class="wd-25 no-rt-br"><span class="icon"><img src="<%= asset_path 'compass-black.svg' %>" alt="floor"></span><span class="title">North</span><span class="desc">Facing</span></li>
-                <li class="wd-50 no-bm-br"><span class="icon"><img src="<%= asset_path 'file-contract-black.svg' %>" alt="floor"></span><span class="title">39,90,500</span><span class="desc">Agreement Value</span></li>
-                <li class="wd-50 no-bm-br"><span class="icon"><img src="<%= asset_path 'rupee-black.svg' %>" alt="floor"></span><span class="title">51,37,500</span><span class="desc">All Inclusive Price</span></li>
+                <li class="wd-25"><span class="icon"><img src="<%= asset_path 'building-black.svg' %>" alt="floor"></span><span class="title" data-placeholder="floor"></span><span class="desc">Floor</span></li>
+                <li class="wd-25"><span class="icon"><img src="<%= asset_path 'door-black.svg' %>" alt="Apartment"></span><span class="title" data-placeholder="floor_order"></span><span class="desc">Apartment</span></li>
+                <li class="wd-25"><span class="icon"><img src="<%= asset_path 'loveseat-black.svg' %>" alt="Carpet Area"></span><span class="title" data-placeholder="carpet"></span><span class="desc">Carpet Area Sq.Ft</span></li>
+                <li class="wd-25 no-rt-br"><span class="icon"><img src="<%= asset_path 'compass-black.svg' %>" alt="floor"></span><span class="title" data-placeholder="facing"></span><span class="desc">Facing</span></li>
+                <li class="wd-50 no-bm-br"><span class="icon"><img src="<%= asset_path 'file-contract-black.svg' %>" alt="floor"></span><span class="title" data-placeholder="agreement_price"></span><span class="desc">Agreement Value</span></li>
+                <li class="wd-50 no-bm-br"><span class="icon"><img src="<%= asset_path 'rupee-black.svg' %>" alt="floor"></span><span class="title" data-placeholder="all_inclusive_price"></span><span class="desc">All Inclusive Price</span></li>
               </ul>
               </div>
               <div class="right-info pl-5 pr-5 pt-4 pb-4">
                 <div class="float-left">
-                  <img src="<%= asset_path 'apartment-plan.png' %>" class="img-fluid" alt="apartments plan">
+                  <a data-toggle="modal" data-target="#floorPlanImage" href="javascript:;" class="unit_image_container" style="display:none;">
+                    <img class="img-fluid" style="width: 100%; display: block;" data-placeholder="unit_image" />
+                    <br/>
+                    Click to view details
+                  </a>
                 </div>
               </div>
               <div class="right-info pl-5 pr-5 pt-4 pb-4">

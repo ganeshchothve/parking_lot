@@ -8,7 +8,7 @@
           <div class="result-list" id=<%= tower[:project_tower_id] %>>
             <div class="title"><%= tower[:project_tower_name] %></div>
             <ul>
-              <li><span class="no">33</span><span>Floors</span></li>
+              <li><span class="no"><%= tower[:floors] %></span><span>Floors</span></li>
               <li><span class="no"><%= tower[:total_units] %></span><span>Total  Apartments</span></li>
               <li><span class="no"><%= tower[:total_units_available] %></span><span>Available  Apartments</span></li>
             </ul>
@@ -16,8 +16,8 @@
           </div>
         <% end %>
       </div>
-      <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
-        <img src="<%= asset_path 'search-apartment.png' %>" class="img-fluid">
+      <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12 d-none" id="tower-description" data-jquery-selector="tower-card">
+        <img data-placeholder="tower_image" class="img-fluid">
       </div>
       <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12">
         <% if @search.next_step.present? %>
@@ -43,6 +43,7 @@
 <% end %>
 <%= javascript_tag do %>
   $(document).ready(function(){
+    var towers = <%= raw @towers.to_json(include: [:assets]) %>;
     $('.result-list').click(function(e) {
       if ($(this).hasClass('active')){
         $(this).removeClass('active')
@@ -51,7 +52,18 @@
         $('.result-list').removeClass('active')
         $(this).addClass('active')
         $("#project_tower_id").val($(this).attr('id'));
+        var $form = $(".edit_search_form");
+        var tower_id = $(this).attr('id')
+        $('[data-jquery-selector="tower-card"] svg').addClass('d-none');
+        $(this).find('svg').removeClass('d-none');
+        $form.find('[name="search[project_tower_id]"]').val(tower_id);
+        $form.find('input[type="submit"]').removeAttr("disabled");
+
+        var tower = _.find(towers, function(u){ return u.project_tower_id == tower_id });
+        showTowerData(tower);
       }
     });
+  });
+  $(document).on('click', '[data-jquery-selector="tower-card"]', function(){
   });
 <% end %>

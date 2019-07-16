@@ -21,21 +21,18 @@
                 <li><a href="javascript:;"><span><%= @search.try(:agreement_price) || 'all' %></span><img src="<%= asset_path 'file-contract-black-gray.svg' %>" class="file-icon"></a></li>
                 <li><a href="javascript:;"  class="br-rt-rd-4"><span><%= @search.try(:all_inclusive_price) || 'all' %></span><img src="<%= asset_path 'rupee-black-gray.svg' %>" class="rupee-icon"></a></li>
               </ul>
-              <a href="javascript:;" class="small-btn black-bg fn-400 fn-12 btn-ht-38 display-inline">Edit Search</a>
             </div>
           </div>
         </div>
         <div class="separate-line"></div>
       </div>
-      <!-- <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 no-pd mt-4 mb-3"> -->
-        <div class="row">
-          <% labels = t('mongoid.attributes.search').with_indifferent_access %>
-            <%= render "searches/tabs/new", {search: @search, labels: labels} %>
-            <%= render "searches/tabs/filter", {search: @search, labels: labels} %>
-            <%= render "searches/tabs/towers", {search: @search, labels: labels} %>
-            <%= render "searches/tabs/project_unit", {search: @search, labels: labels} %>
-        </div>
-      <!-- </div> -->
+      <div class="row">
+        <% labels = t('mongoid.attributes.search').with_indifferent_access %>
+          <%= render "searches/tabs/new", {search: @search, labels: labels} %>
+          <%= render "searches/tabs/filter", {search: @search, labels: labels} %>
+          <%= render "searches/tabs/towers", {search: @search, labels: labels} %>
+          <%= render "searches/tabs/project_unit", {search: @search, labels: labels} %>
+      </div>
       <div class="card p-2 d-block d-md-none">
         <% if @search.step == "filter" %>
           Step 2: <span class="font-weight-bold">Choose <%= labels[:project_tower_id] %></span>
@@ -49,4 +46,3 @@
     </div>
   </div>
 </section>
-

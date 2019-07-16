@@ -16,6 +16,9 @@ class Template::PaymentScheduleTemplate < Template
             <th>Amount (Rs.)</th>
             <th>CGST-6%</th>
             <th>SGST-6%</th>
+            <% if self.calculate_agreement_price > 5000000 %>
+              <th width="5%">Less - TDS</th>
+            <% end %>
             <th>Total Payment</th>
         </tr>
       </thead>
@@ -56,6 +59,9 @@ class Template::PaymentScheduleTemplate < Template
             <td class="text-right"><%= number_to_indian_currency(current_value) %></td>
             <td class="text-right"><%= number_to_indian_currency(cgst) %></td>
             <td class="text-right"><%= number_to_indian_currency(sgst) %></td>
+            <% if self.calculate_agreement_price > 5000000 %>
+              <td class="text-right"><%= number_to_indian_currency(tds) %></td>
+            <% end %>
             <td><%= number_to_indian_currency(current_value + cgst + sgst - tds) %></td>
           </tr>
         <% end %>
