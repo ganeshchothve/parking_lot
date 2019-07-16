@@ -1,73 +1,93 @@
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-12">
-      <div class="row">
-        <div class="col-md-4">
-          <div class="card card-body h-100 text-center bg-primary text-white">
-            To be fair to other user interested in this apartment, we have held this unit for some time. Please go through the costs & payment schedule before you make a payment of <%= number_to_indian_currency(current_client.blocking_amount) %>.<br/>
-            <div class="font-weight-bold jquery-countdown-container" id="held-until-countdown"></div>
-          </div>
-        </div>
-        <div class="col-md-8 mt-3 mt-md-0">
-          <%= render 'dashboard/booking_detail_overview', {booking_detail: @booking_detail} %>
+<section>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 no-pd">
+        <div class="reminder-block sucess-block">
+          Your booking is on hold. Please select scheme and go for payment.
         </div>
       </div>
     </div>
   </div>
-
-  <div class="row">
-    <div class="col-md-4">
-      <%= nested_form_for([ current_user_role_group, @booking_detail, @booking_detail_scheme], local: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['schemes'], "data-type": "json", id: 'scheme_form'}) do |f| %>
-        <%= render 'booking_detail_schemes/form', booking_detail_scheme: @booking_detail_scheme, booking_detail: @booking_detail, f: f %>
-        <%= f.submit "Apply", class: "btn btn-primary" %>
-      <% end %>
-    </div>
-    <div class="col-md-8">
-      <div class="mt-3"></div>
-      <%= render 'dashboard/booking_detail_cost_sheet', booking_detail: @booking_detail  %>
-      <div class="mt-3"></div>
-      <%= render "dashboard/project_unit_payment_schedule", booking_detail: @booking_detail, search: @search %>
-      <div class="mt-3"></div>
-      <%
-        alert = (current_client.cancellation_amount.present? && current_client.cancellation_amount.to_f > 0) ? "#{number_to_indian_currency(current_client.cancellation_amount)} processing charges will be applied on cancellation of booking" : ""
-      %>
-      <% if current_client.disclaimer.present? %>
-        <div class="card card-body small" style="height: 100px; overflow: auto;">
-          <div class="font-weight-bold mb-2">Disclaimer:</div>
-          <%= current_client.disclaimer %>
-        </div>
-        <div class="mt-3"></div>
-      <% end %>
-      <% if @booking_detail_scheme.present? && @booking_detail_scheme.editable_payment_adjustments_present? %>
-        <div class="alert alert-danger">
-          As the payment is adjusted, this scheme will go for approval first.
-        </div>
-      <% end %>
-      <% if @project_unit.status == "hold" %>
-        <% if current_user.buyer? %>
-          <%= link_to "I Agree", booking_buyer_booking_detail_path(@booking_detail), method: :patch, class: 'btn btn-primary', style:'margin-top:0px', onclick: alert %>
-        <% elsif @user.unattached_blocking_receipt(@project_unit.blocking_amount).present? %>
-          <%= link_to "I Agree on behalf of #{@user.name}", booking_admin_user_booking_detail_path(@user,@booking_detail), method: :patch, class: 'btn btn-primary', style:'margin-top:0px', onclick: alert %>
-        <% elsif policy([ current_user_role_group, Receipt.new(user: @user, status: "clearance_pending", booking_detail_id: @booking_detail.id)]).new? %>
-          <%= link_to "I Agree on behalf of #{@user.name} and proceed to add
-          payment",new_admin_user_booking_detail_receipt_path(@user.id, @booking_detail.id) , class: 'btn btn-primary modal-remote-form-link', style:'margin-top:0px', onclick: alert %>
-          <% if @booking_detail_scheme.present? && @booking_detail_scheme.editable_payment_adjustments_present? %>
-            <%= link_to "Proceed without payment", send_under_negotiation_admin_user_booking_detail_path(@user.id, @booking_detail.id), class: 'btn btn-primary', style:'margin-top:0px', onclick: alert, method: :patch %>
-          <% end %>
-        <% else %>
-          <div class="alert alert-danger">
-            You do not have access to take a Clearance pending <%= global_labels[:receipt] %> on behalf of <%= @user.name %>.
+</section>
+<section class=" my-4 mb-5 pb-5 pb-5">
+  <div class="container pb-5">
+    <div class="row pb-5">
+      <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 bg-white br-rd-4 br-1 mb-5">
+        <div class="row pb-5">
+          <div class="col-lg-4 col-xs-12 col-sm-12 col-md-12 pt-3 pb-3">
+            <div class="left-info bg-gradient br-rd-4">
+              <p class="p-style white"> To be fair to other user interested in this apartments, we have held this unit for some time. Please go through the costs and payments schedule before you make a payment of Rs 30,000</p>
+              <div class="payment-timer jquery-countdown-container white" id="held-until-countdown"></div>
+            </div>
+            <div class="form-sec-title pl-0">Scheme</div>
+            <%= nested_form_for([ current_user_role_group, @booking_detail, @booking_detail_scheme], local: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['schemes'], "data-type": "json", id: 'scheme_form'}) do |f| %>
+                <%= render 'booking_detail_schemes/form', booking_detail_scheme: @booking_detail_scheme, booking_detail: @booking_detail, f: f %>
+                <%= f.submit "Apply", class: "save-kyc-btn fn-12 fn-300" %>
+              <% end %>
           </div>
-        <% end %>
-        <%= form_for @project_unit, url: make_available_user_search_path(@search), method: 'post', html: {class: 'validate-form'} do |f| %>
-          <%= f.hidden_field :status, value: 'available' %>
-          <%= f.submit 'Cancel', class: 'btn btn-danger mt-1 mt-md-0' , data:{event_category: 'Section', event_action: 'Click', event_name: 'Cancel'} %>
-        <% end %>
-      <% end %>
+          <div class="col-lg-8 col-xs-12 col-sm-12 col-md-12 br-l-1 no-pd">
+            <div class="right-info">
+              <div class="checkout-menu-list">
+                <a rel="apartment" class="scroll-sec active">Apartment</a>
+                <a rel="cost-sheet" class="scroll-sec">Cost Sheet</a>
+                <a rel="payment-schedule" class="scroll-sec">Payment Schedule</a>
+              </div>
+              <div class="bookings mt-4 mb-4 pl-4 pr-4">
+                <div class="container">
+                  <div class="row pb-5">
+
+                    <%= render 'dashboard/booking_detail_overview', {booking_detail: @booking_detail} %>
+                    <div class='col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd mt-4' id='cost-sheet'>
+                      <%= render 'dashboard/booking_detail_cost_sheet', booking_detail: @booking_detail  %>
+                    </div>
+                    <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd mt-4" id="payment-schedule">
+                      <%= render "dashboard/project_unit_payment_schedule", booking_detail: @booking_detail, search: @search %>
+                    </div>
+                    <% if @project_unit.status == "hold" %>
+                      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd mt-4 agree-check">
+                        <% if current_user.buyer? %>
+                          <%= link_to "I Agree", booking_buyer_booking_detail_path(@booking_detail), method: :patch, class: 'btn btn-primary', style:'margin-top:0px', onclick: alert %>
+                        <% elsif @user.unattached_blocking_receipt(@project_unit.blocking_amount).present? %>
+                          <%= link_to "I Agree on behalf of #{@user.name}", booking_admin_user_booking_detail_path(@user,@booking_detail), method: :patch, class: 'btn btn-primary', style:'margin-top:0px', onclick: alert %>
+                        <% elsif policy([ current_user_role_group, Receipt.new(user: @user, status: "clearance_pending", booking_detail_id: @booking_detail.id)]).new? %>
+                          <%= link_to "I Agree on behalf of #{@user.name} and proceed to add
+                          payment",new_admin_user_booking_detail_receipt_path(@user.id, @booking_detail.id) , class: 'btn btn-primary modal-remote-form-link', style:'margin-top:0px', onclick: alert %>
+                          <% if @booking_detail_scheme.present? && @booking_detail_scheme.editable_payment_adjustments_present? %>
+                            <%= link_to "Proceed without payment", send_under_negotiation_admin_user_booking_detail_path(@user.id, @booking_detail.id), class: 'btn btn-primary', style:'margin-top:0px', onclick: alert, method: :patch %>
+                          <% end %>
+                        <% else %>
+                          <div class="alert alert-danger">
+                            You do not have access to take a Clearance pending <%= global_labels[:receipt] %> on behalf of <%= @user.name %>.
+                          </div>
+                        <% end %>
+                      </div>
+                      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd mt-5 agree-check mb-4">
+                        <%= form_for @project_unit, url: make_available_user_search_path(@search), method: 'post', html: {class: 'validate-form'} do |f| %>
+                          <%= f.hidden_field :status, value: 'available' %>
+                          <%= f.submit 'Cancel', class: 'btn btn-danger mt-1 mt-md-0' , data:{event_category: 'Section', event_action: 'Click', event_name: 'Cancel'} %>
+                        <% end %>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-<!-- GENERICTODO: Ecommerce conversion call ga -->
+</section>
+
+<script type="text/javascript">
+  $(window).scroll(function () {
+  header_sub_menu = $('.checkbox-sec').offset().top -70;
+  if ($(document).scrollTop() > header_sub_menu) {
+        $('.checkbox-sec').addClass('scroll-fixed');
+        $('.checkbox-sec .bookings').addClass('scroll-fixed-height');
+    }
+});
+</script>
 <%= javascript_tag do %>
   $(document).ready(function(){
     var countdown_time = "<%= (@project_unit.held_on + @project_unit.holding_minutes.minutes).in_time_zone(current_user.time_zone).strftime("%m/%d/%Y %H:%M:%S") %>";
