@@ -469,6 +469,9 @@ en:
   sync_logs:
     link_name: 'Sync Log'
 
+  schemes:
+    link_name: 'Schemes'
+
   users:
     profile: '%{role} Profile'
     change_password: 'Change Password'

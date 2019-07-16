@@ -2,50 +2,53 @@
   <ul class="navbar-nav ml-auto nowrap">
     <% if policy(:dashboard).index? %>
       <li class="nav-item">
-        <%= active_link_to t('global.dashboard'), dashboard_path, active: :exclusive, class: "nav-link" %>
+        <%= active_link_to t('global.dashboard'), dashboard_path, active: :exclusive, class: "nav-link pl-0 pr-0" %>
       </li>
     <% end %>
+
+    <% if policy([:admin, ProjectUnit]).index? %>
+      <li class="nav-item">
+        <%= active_link_to t('global.project_units'), admin_project_units_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+      </li>
+    <% end %>
+
     <% if policy([:admin, User]).index? %>
       <li class="nav-item">
-        <%= active_link_to t('global.users'), admin_users_path, active: :inclusive, class: "nav-link" %>
+        <%= active_link_to t('global.users'), admin_users_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
       </li>
     <% end %>
 
     <% if policy([:admin, ChannelPartner]).index? %>
       <li class="nav-item">
-        <%= active_link_to t('global.channel_partners'), channel_partners_path, active: :inclusive, class: "nav-link" %>
+        <%= active_link_to t('global.channel_partners'), channel_partners_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
       </li>
     <% end %>
 
     <% if policy([:admin, UserRequest]).index? %>
       <li class="nav-item">
-        <%= active_link_to t('global.user_requests'), admin_user_requests_path(request_type: "all"), active: :inclusive, class: "nav-link" %>
+        <%= active_link_to t('global.user_requests'), admin_user_requests_path(request_type: "all"), active: :inclusive, class: "nav-link pl-0 pr-0" %>
       </li>
     <% end %>
 
     <% if policy([:admin, BookingDetail]).index? %>
       <li class="nav-item">
-        <%= active_link_to t('global.booking_details'), admin_booking_details_path, active: :inclusive, class: "nav-link" %>
+        <%= active_link_to t('global.booking_details'), admin_booking_details_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
       </li>
     <% end %>
 
     <% if policy([:admin, Receipt]).index? %>
       <li class="nav-item">
-        <%= active_link_to t('global.receipts'), admin_receipts_path, active: :inclusive, class: "nav-link" %>
+        <%= active_link_to t('global.receipts'), admin_receipts_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
       </li>
     <% end %>
-    <% if policy([:admin, Scheme]).index? %>
-      <li class="nav-item">
-        <%= active_link_to t('global.schemes'), admin_schemes_path, active: :inclusive, class: "nav-link" %>
-      </li>
-    <% end %>
+
     <%= render 'layouts/navbar/custom_links' %>
   </ul>
 </div>
 <div class="user-info float-right show-xs nowrap ml-0">
   <div class="user-dropdown display-inline dropdown">
     <img src="<%= asset_path 'user-alt-black.svg' %>" alt="User Info">
-    <a class="nav-link dropdown-toggle" href="javascript:;" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <a class="nav-link pl-0 pr-0 dropdown-toggle" href="javascript:;" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       Welcome <%= current_user.first_name %>
     </a>
     <div class="dropdown-menu user-menu-top" aria-labelledby="navbarDropdown">

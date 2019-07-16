@@ -1,35 +1,41 @@
 <% users = DashboardDataProvider.users_dashboard(current_user, params[:user_fltrs]) %>
-<div class="card">
+<div class="card box-card mb-3">
   <a data-toggle="collapse" href="#dashboard_users" role="button" aria-expanded="false" aria-controls="dashboard_users" class='font-weight-bold text-decoration-none'>
-    <div class="card-header">
-      <%= global_labels[:users]%>
+    <div class="card-header box-header bg-gradient br-rd-tr-4">
+      <h2>
+        <%= image_tag "users-white.svg", alt: 'Users', class: 'wd-20' %>
+        <%= global_labels[:users]%>
+      </h2>
+      <%= link_to 'View All', admin_users_path, class: 'view-all-btn' %>
     </div>
   </a>
-  <div class="card-body collapse show" id="dashboard_users">
-    <% if users.present? %>
-      <div class="table-responsive">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Role</th>
-              <th class="text-right">Count</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% users.each do |d| %>
-            <tr>
-              <td><%= t("users.role.#{d[:role]}") %></td>
-              <td class="text-right"><%= d[:count] %></td>
-            </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    <% else %>
-      No <%= global_labels[:users] %> yet.
-      <% if policy([current_user_role_group, User.new(role: 'user')]).new? %>
-        <%= link_to 'Add a Customer', new_admin_user_path, class: 'modal-remote-form-link' %>
+  <div class="card-body collapse show box-content br-rd-bl-4 bg-white" id="dashboard_users">
+    <div class="row pd-box">
+      <% if users.present? %>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Role</th>
+                <th class="text-right">Count</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% users.each do |d| %>
+              <tr>
+                <td><%= t("users.role.#{d[:role]}") %></td>
+                <td class="text-right"><%= d[:count] %></td>
+              </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        No <%= global_labels[:users] %> yet.
+        <% if policy([current_user_role_group, User.new(role: 'user')]).new? %>
+          <%= link_to 'Add a Customer', new_admin_user_path, class: 'modal-remote-form-link' %>
+        <% end %>
       <% end %>
-    <% end %>
+    </div>
   </div>
 </div>
