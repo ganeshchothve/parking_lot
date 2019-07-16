@@ -4,7 +4,6 @@
       <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 bg-white br-rd-4 br-1 mb-5">
         <div class="row">
           <div class="col-lg-6 col-xs-12 col-sm-12 col-md-12 pt-3 pb-3">
-            <div class="left-info pl-5 pr-5 pt-0 pb-0 book-apartment">
               <% max_floor = @all_units.collect{|x| x[:_id]}.max %>
               <% max_per_floor = @all_units.collect{|x| x[:floor_order].max}.max %>
               <% width = ((100.to_f - (4 * max_per_floor)) / max_per_floor).round(2) %>
@@ -12,70 +11,81 @@
                 height = (280.to_f / max_floor).round(2)
                 height = 16 if height < 16
               %>
-              <div class="form-sec-title text-center">Choose Apartment</div>
-              <ul class="book-box-info">
-                <li><span class="book-box available-aprt"></span><span>Available</span></li>
-                <li><span class="book-box booked-aprt"></span><span>Booked</span></li>
-                <li><span class="book-box soldout-aprt"></span><span>Sold Out</span></li>
-                <li><span class="book-box selected-aprt"></span><span>Selected</span></li>
-              </ul>
-               <div class="booking-list">
-                <div class="apartments-no">
-                  <ul class="aprt-no-list">
-                    <% max_per_floor.times do |index| %>
-                      <li><span class="book-box"><%= index + 1 %></span></li>
-                    <% end %>
-                  </ul>
-                  <div class="separate-box"></div>
-                  <div class="floor-listing">
-                    <div class="floor-inner">
-                      <% @all_units.each do |floor_data| %>
-                      <div class="floor">
-                        <div class="floor-number"><%= floor_data[:_id] %></div>
-                        <% max_per_floor.times do |index| %>
-                          <%
-                            klass = 'soldout-aprt'
-                            data_selector = ''
-                            unit = @units.find{|unit| unit.floor == floor_data[:_id] && unit.floor_order == (index + 1) }
-                            if unit
-                              if unit.user_based_status(@user) == 'available'
-                                klass = 'available-aprt'
-                                data_selector = 'unit-card'
-                              elsif unit.user_based_status(@user) == 'booked'
-                                klass = 'booked-aprt'
-                              else
-                                klass = 'soldout-aprt'
+              <div class="left-info pl-5 pr-5 pt-0 pb-0 book-apartment">
+                <div class="form-sec-title text-center">Choose Apartment</div>
+                <ul class="book-box-info">
+                  <li><span class="book-box available-aprt"></span><span>Available</span></li>
+                  <li><span class="book-box booked-aprt"></span><span>Booked</span></li>
+                  <li><span class="book-box soldout-aprt"></span><span>Sold Out</span></li>
+                  <li><span class="book-box selected-aprt"></span><span>Selected</span></li>
+                </ul>
+                 <div class="booking-list">
+                  <div class="apartments-no">
+                    <ul class="aprt-no-list">
+                      <% max_floor = @all_units.collect{|x| x[:_id]}.max %>
+                            <% max_per_floor = @all_units.collect{|x| x[:floor_order].max}.max %>
+                            <% width = ((100.to_f - (4 * max_per_floor)) / max_per_floor).round(2) %>
+                            <%
+                              height = (280.to_f / max_floor).round(2)
+                              height = 16 if height < 16
+                            %>
+                      <% max_per_floor.times do |index| %>
+                        <li><span class="book-box"><%= index + 1 %></span></li>
+                      <% end %>
+                    </ul>
+                    <div class="separate-box"></div>
+                    <div class="floor-listing">
+                      <div class="floor-inner">
+                        <% @all_units.each do |floor_data| %>
+                        <div class="floor">
+                          <div class="floor-number"><%= floor_data[:_id] %></div>
+                          <% max_per_floor.times do |index| %>
+                            <%
+                              klass = 'soldout-aprt'
+                              data_selector = ''
+                              unit = @units.find{|unit| unit.floor == floor_data[:_id] && unit.floor_order == (index + 1) }
+                              if unit
+                                if unit.user_based_status(@user) == 'available'
+                                  klass = 'available-aprt'
+                                  data_selector = 'unit-card'
+                                elsif unit.user_based_status(@user) == 'booked'
+                                  klass = 'booked-aprt'
+                                elsif unit.user_based_status(@user) == 'hold'
+                                  klass = 'bg-secondary'
+                                else
+                                  klass = 'soldout-aprt'
+                                end
                               end
-                            end
-                          %>
-                          <% if unit.present? %>
-                            <span data-jquery-selector="<%= data_selector %>" data-toggle="popover" data-content="<%= unit_tooltip(unit, @user) %>" data-title="Details for <%= unit.name %>" data-unit-id="<%= unit.present? ? unit.id : '' %>" class="book-box <%= klass %>" ></span>
-                          <% else %>
-                            <span data-jquery-selector="<%= data_selector %>" class="book-box <%= klass %>"></span>
+                            %>
+                            <% if unit.present? %>
+                              <span data-jquery-selector="<%= data_selector %>" data-toggle="popover" data-content="<%= unit_tooltip(unit, @user) %>" data-title="Details for <%= unit.name %>" data-unit-id="<%= unit.present? ? unit.id : '' %>" class="book-box <%= klass %>" ></span>
+                            <% else %>
+                              <span data-jquery-selector="<%= data_selector %>" class="book-box <%= klass %>"></span>
+                            <% end %>
                           <% end %>
+                        </div>
                         <% end %>
                       </div>
-                      <% end %>
                     </div>
+                    <div class="separate-box"></div>
                   </div>
-                  <div class="separate-box"></div>
-                  <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 mt-5">
-                    <% if @search.previous_step.present? %>
-                      <%= form_for [:user, @search] do |f| %>
-                          <%= f.hidden_field :step, value: @search.previous_step %>
-                          <%= f.submit "Previous", class: "previous-btn fn-12 fn-300" %>
-                      <% end %>
-                    <% end %>
-                    <% if @search.next_step.present? %>
-                      <%= form_for [:user, @search] do |f| %>
-                          <%= f.hidden_field :step, value: @search.next_step %>
-                          <%= f.hidden_field :project_unit_id, id: 'project_unit_id' %>
-                          <%= f.submit "Next", class: "next-btn fn-12 fn-300", disabled: 'disabled' %>
-                      <% end %>
-                    <% end %>
-                  </div>
-                </div>
-               </div>
+                 </div>
+              </div>
+
+            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 mt-5">
+              <% if @search.previous_step.present? %>
+                <%= form_for [:user, @search] do |f| %>
+                    <%= f.hidden_field :step, value: @search.previous_step %>
+                    <%= f.submit "Previous", class: "previous-btn fn-12 fn-300" %>
+                <% end %>
+              <% end %>
+              <% if @search.next_step.present? %>
+                <%= form_for [:user, @search] do |f| %>
+                    <%= f.hidden_field :step, value: @search.next_step %>
+                    <%= f.hidden_field :project_unit_id, id: 'project_unit_id' %>
+                    <%= f.submit "Next", class: "next-btn fn-12 fn-300", disabled: 'disabled' %>
+                <% end %>
+              <% end %>
             </div>
           </div>
           <div class="col-lg-6 col-xs-12 col-sm-12 col-md-12 br-l-1 no-pd after-show d-none" id="unit-description" >
