@@ -30,14 +30,16 @@
           </div>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label>Status</label>
-          <div>
-            <%= t("booking_details.status.#{booking_detail.status}") %>
+      <% unless params[:action] == 'quotation' %>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Status</label>
+            <div>
+              <%= t("booking_details.status.#{booking_detail.status}") %>
+            </div>
           </div>
         </div>
-      </div>
+      <% end %>
     </div>
     <div class="row">
       <div class="col-md-4">
