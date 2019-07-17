@@ -69,6 +69,7 @@ en:
     portal_stage_priorities: 'Portal Stage Priorities'
     sms: 'Sms'
     smses: 'Smses'
+    sync_logs: 'Sync Logs'
   language:
     en: 'English'
     mr: 'मराठी'

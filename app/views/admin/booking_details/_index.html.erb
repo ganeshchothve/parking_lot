@@ -1,43 +1,49 @@
 <table class='table my-customer-table responsive-tbl'>
   <thead class="th-default">
     <% labels = t('mongoid.attributes.project_unit').with_indifferent_access %>
-      <thead>
-        <tr class="bg-gradient-cd white">
-          <th><%= labels[:name] %></th>
-        <th><%= labels[:bedrooms] %> / <%= labels[:bathrooms] %></th>
-        <th><%= labels[:status] %></th>
-        <th><%= labels[:agreement_price] %></th>
-        <th>Actions</th>
-        </tr>
-      </thead>
+    <tr class="bg-gradient-cd white">
+      <th><%= labels[:name] %></th>
+      <th><%= labels[:bedrooms] %> / <%= labels[:bathrooms] %></th>
+      <th><%= labels[:status] %></th>
+      <th><%= labels[:agreement_price] %></th>
+      <th>Actions</th>
+    </tr>
   </thead>
   <tbody>
     <% booking_details.each do |booking_detail| %>
-        <tr>
-          <td>
-            <%= booking_detail.name %>
-            <div class="small">Project: <%= booking_detail.project_name %></div>
-            <div class="small">Tower: <%= booking_detail.project_tower_name %></div>
-          </td>
-          <td><%= booking_detail.bedrooms %> / <%= booking_detail.bathrooms %></td>
-          <td><%= t("booking_details.status.#{booking_detail.status}") %></td>
-          <td>
-            <%= number_to_indian_currency(booking_detail.calculate_agreement_price.round) %>
-            <div class="small"><%= labels[:all_inclusive_price] %>: <%= number_to_indian_currency(booking_detail.calculate_all_inclusive_price.round) %></div>
-            <div class="small">Paid Amt.: <%= number_to_indian_currency(booking_detail.total_amount_paid)  %></div>
-            <div class="small">Booking Amt. Pending: <%= number_to_indian_currency(booking_detail.pending_balance.to_i) %></div>
-          </td>
-          <td>
+      <tr>
+        <td>
+          <%= booking_detail.name %>
+          <div class="small">Project: <%= booking_detail.project_name %></div>
+          <div class="small">Tower: <%= booking_detail.project_tower_name %></div>
+        </td>
+        <td><%= booking_detail.bedrooms %> / <%= booking_detail.bathrooms %></td>
+        <td><%= t("booking_details.status.#{booking_detail.status}") %></td>
+        <td>
+          <%= number_to_indian_currency(booking_detail.calculate_agreement_price.round) %>
+          <div class="small"><%= labels[:all_inclusive_price] %>: <%= number_to_indian_currency(booking_detail.calculate_all_inclusive_price.round) %></div>
+          <div class="small">Paid Amt.: <%= number_to_indian_currency(booking_detail.total_amount_paid)  %></div>
+          <div class="small">Booking Amt. Pending: <%= number_to_indian_currency(booking_detail.pending_balance.to_i) %></div>
+        </td>
+        <td>
           <div class="dropdown show text-center">
-          <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
               <%= render "#{current_user_role_group}/booking_details/links", booking_detail: booking_detail, link_name: '' %>
-           </div>
-        </div>
+            </div>
+
+            <% if booking_detail.project_unit.assets.present? %>
+              <%= render 'project_units/assets_in_modal', project_unit: booking_detail.project_unit %>
+            <% end %>
+
+            <%= render 'project_units/cost_sheet_in_modal', booking_detail: booking_detail %>
+
+            <%= render 'project_units/payment_schedule_in_modal', project_unit: booking_detail.project_unit %>
+          </div>
         </td>
       </tr>
-      <% end %>
-      <tr>
+    <% end %>
+    <tr>
       <td colspan="6">
         <div class="mt-5 pt-5"></div>
       </td>

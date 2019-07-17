@@ -188,3 +188,20 @@ figure.wave {
     vertical-align: inherit;
   }
 }
+.template {
+  th, td {
+    &:last-child {
+      text-align: right;
+    }
+    &:first-child {
+      text-align: left;
+    }
+  }
+  tfoot tr {
+    td { line-height: inherit !important; }
+    &.highlight td {
+      color: white !important;
+      background-color: $primary !important;
+    }
+  }
+}
