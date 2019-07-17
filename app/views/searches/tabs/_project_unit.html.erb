@@ -1,19 +1,17 @@
-<div class="row border-top border-thick <%= search.crossed_step('project_unit') ? 'border-primary' : (search.step == 'project_unit' ? 'border-secondary' : 'border-light') %> py-2 mr-0">
-  <div class="col-md-2">
-    <% if search.crossed_step('project_unit') %>
-      <h4 class="mt-3">
-        <%= icon "far", "check-circle", class: "text-primary" %>
-      </h4>
-    <% else %>
-      <h1 class="text-muted mt-2"><%= search.allowed_steps.index("project_unit") + 2 %></h1>
-    <% end %>
-  </div>
-  <div class="col-md-10">
-    <h6 class="d-inline">
-      Set up your <%= global_labels[:user_kyc] %>
-    </h6>
-    <div class="text-muted small">
-      Set up your <%= global_labels[:user_kyc] %> & hold your <%= global_labels[:project_unit] %>
+<% if search.crossed_step('towers') %>
+  <div class="col-lg-3 col-xs-12 col-sm-12 col-md-6">
+    <div class="active step-result">
+      <i class="icon icon-4"></i>
+      <span>Set up your KYC</span>
+      <p>Set up your KYC & hold your  apartments</p>
     </div>
   </div>
-</div>
+<% else %>
+  <div class="col-lg-3 col-xs-12 col-sm-12 col-md-6">
+    <div class="step-result">
+      <i class="icon icon-4"></i>
+      <span>Set up your KYC</span>
+      <p>Set up your KYC & hold your  apartments</p>
+    </div>
+  </div>
+<% end %>

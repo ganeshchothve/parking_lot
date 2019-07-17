@@ -36,50 +36,70 @@
             </div>
             <% @units = ProjectUnit.where(project_tower_id:project_tower.id).sort_by{|x| [x.floor, x.floor_order]}.to_a %>
             <div class="col-md-6" id="unit-selection-<%= project_tower.id.to_s%>" style="margin: auto;">
-              <div class="tower-container">
-                <div class="tower-wrapper" style="padding: 0px">
-                  <div style="margin-bottom: 20px; text-align:center"> <%= project_tower.name %> </div>
+                <div class="left-info pl-5 pr-5 pt-0 pb-0 book-apartment">
                   <% if @units.present? %>
-                    <% max_floor = project_tower.total_floors %>
-                    <% max_per_floor = ProjectUnit.where(project_tower_id:project_tower.id).max(:floor_order) %>
-                    <% width = ((100.to_f - (4 * max_per_floor)) / max_per_floor).round(2) %>
-                    <%
-                      height = (280.to_f / max_floor).round(2)
-                      height = 16 if height < 16
-                    %>
-                    <% @all_units.each do |floor_data| %>
-                      <div class="floor" style="line-height: 1rem;">
-                        <div class="floor-number"><%= floor_data[:_id] %></div>
+                  <% max_floor = project_tower.total_floors %>
+                  <% max_per_floor = ProjectUnit.where(project_tower_id:project_tower.id).max(:floor_order) %>
+                  <% width = ((100.to_f - (4 * max_per_floor)) / max_per_floor).round(2) %>
+                  <%
+                  height = (280.to_f / max_floor).round(2)
+                  height = 16 if height < 16
+                  %>
+                  <div class="form-sec-title text-center"><%= project_tower.name %></div>
+                  <ul class="book-box-info">
+                  <li><span class="book-box available-aprt"></span><span>Available</span></li>
+                  <li><span class="book-box booked-aprt"></span><span>Hold</span></li>
+                  <li><span class="book-box soldout-aprt"></span><span>Sold Out</span></li>
+                  <li><span class="book-box bg-danger"></span><span>Not Available</span></li>
+                  <li><span>R</span><span>Refugee Area</span></li>
+                  </ul>
+                  <div class="booking-list">
+                    <div class="apartments-no">
+                      <ul class="aprt-no-list">
                         <% max_per_floor.times do |index| %>
-                          <%
-                            klass = 'bg-white'
-                            data_selector = ''
-                            unit = @units.find{|unit| unit.floor == floor_data[:_id] && unit.floor_order == (index + 1) }
-                            if unit
-                              if unit.status == 'available'
-                                klass = 'bg-success'
-                                data_selector = 'unit-card'
-                              elsif unit.status == 'hold'
-                                klass = 'bg-secondary'
-                              elsif ['blocked', 'booked_tentative', 'booked_confirmed','not_available'].include?(unit.status)
-                                klass = 'bg-warning'
-                              else
-                                klass = 'bg-danger'
-                              end
-                            end
-                          %>
-                          <% if unit.present? %>
-                            <span data-jquery-selector="<%= data_selector %>" data-toggle="popover" data-content="<%= unit_tooltip(unit, current_user) %>" data-title="Details for <%= unit.name %>" data-unit-id="<%= unit.present? ? unit.id : '' %>" class="text-center apartment <%= klass %>" style="width: <%= width %>%;height: <%= height %>px;"><small><%= index + 1 %></small></span>
-                          <% else %>
-                            <span data-jquery-selector="<%= data_selector %>" class="apartment <%= klass %>" style="width: <%= width %>%;height: <%= height %>px;text-align:center;font-size:10px">R</span>
-                          <% end %>
+                          <li><span class="book-box"><%= index + 1 %></span></li>
                         <% end %>
+                      </ul>
+                      <div class="separate-box"></div>
+                      <div class="floor-listing">
+                        <div class="floor-inner">
+                          <% @all_units.each do |floor_data| %>
+                            <div class="floor">
+                              <div class="floor-number"><%= floor_data[:_id] %></div>
+                              <% max_per_floor.times do |index| %>
+                                <%
+                                  klass = 'bg-white'
+                                  data_selector = ''
+                                  unit = @units.find{|unit| unit.floor == floor_data[:_id] && unit.floor_order == (index + 1) }
+                                  if unit
+                                    if unit.status == 'available'
+                                      klass = 'available-aprt'
+                                      data_selector = 'unit-card'
+                                    elsif unit.status == 'hold'
+                                      klass = 'booked-aprt'
+                                    elsif ['blocked', 'booked_tentative', 'booked_confirmed','not_available'].include?(unit.status)
+                                      klass = 'soldout-aprt'
+                                    else
+                                      klass = 'bg-danger'
+                                    end
+                                  end
+                                %>
+                                <% if unit.present? %>
+                                  <span data-jquery-selector="<%= data_selector %>" data-toggle="popover" data-content="<%= unit_tooltip(unit, current_user) %>" data-title="Details for <%= unit.name %>" data-unit-id="<%= unit.present? ? unit.id : '' %>" class="book-box <%= klass %>" ></span>
+                                <% else %>
+                                  <span data-jquery-selector="<%= data_selector %>" class="book-box <%= klass %>">R</span>
+                                <% end %>
+                              <% end %>
+                            </div>
+                          <% end %>
+                        </div>
                       </div>
-                    <% end %>
-                  <% end %>
+                      <div class="separate-box"></div>
+                    </div>
+                  </div>
                 </div>
+              <% end %>
               </div>
-            </div>
           </div>
         <% end %>
       </div>
@@ -91,32 +111,6 @@
         <span aria-hidden="true"><i class="fa fa-chevron-right fa-3x"></i></span>
         <span class="sr-only">Next</span>
       </a>
-    </div>
-  </div>
-  <div class="row justify-content-center mt-3 ml-3">
-    <div class="col-md-3">
-    </div>
-    <div class="col-md-1 p-0">
-      <span class="apartment bg-success" style="border:solid 1px;width: 20px;height: 20px; display:inline-block; vertical-align:middle;"></span>
-      <span>Available</span>
-    </div>
-    <div class="col-md-1">
-      <span class="apartment bg-secondary" style="width: 20px;height: 20px; display:inline-block; vertical-align:middle;"></span>
-      <span>Hold</span>
-    </div>
-    <div class="col-md-1">
-      <span class="apartment bg-warning" style="width: 20px;height: 20px; display:inline-block; vertical-align:middle;"></span>
-      <span>Sold</span>
-    </div>
-    <div class="col-md-1">
-      <span class="apartment bg-danger" style="width: 20px;height: 20px; display:inline-block; vertical-align:middle;"></span>
-      <span>Error</span>
-    </div>
-    <div class="col-md-2">
-      <span class="apartment bg-white" style="border:solid 1px;width: 20px;height: 20px; display:inline-block; vertical-align:middle;text-align:center;">R</span>
-      <span>Refuge Area</span>
-    </div>
-    <div class="col-md-2">
     </div>
   </div>
 </div>
