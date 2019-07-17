@@ -1,87 +1,121 @@
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-12">
-      <% if current_user.project_units.size < 1 %>
-        <div class="card">
-          <div class="card-body">
-            <% if current_project.present? %>
-              <h3 class="card-title text-center font-weight-bold text-uppercase">
-                  Launching <%= current_project.name %>
-              </h3>
-            <% end %>
-            <h6 class="card-subtitle text-muted text-center">
-              Apartments Starting from <%= number_to_indian_currency(0) %>
-            </h6>
-            <div class="mt-3"></div>
-            <hr/>
-            <div class="text-center">
-              Placeholder content
-              Skip the rush and get priority access by paying just <%= number_to_indian_currency(current_client.blocking_amount) %>.
-            </div>
-            <hr/>
-            <div class="mt-3"></div>
-            <div class="form-group text-center">
-              <% if current_user.buyer? && policy(Receipt.new(user: current_user)).direct? %>
-                <%= link_to "Pay Now & Generate Token", new_buyer_receipt_path, class: 'btn btn-primary modal-remote-form-link' %>
-              <% elsif !current_user.kyc_ready? && policy([current_user_role_group, UserKyc.new(user: current_user)]).new? && current_user.buyer? %>
-                <%= link_to "Add #{global_labels['user_kyc']} & Make Payment", new_buyer_user_kyc_path, class: 'btn btn-primary modal-remote-form-link' %>
-              <% elsif policy([current_user_role_group, ProjectUnit.new(user: current_user, status: "available")]).hold? %>
-                <%= active_link_to "Search & Book your Apartment Now", new_search_path, active: :inclusive, class: "btn btn-primary" %>
-              <% end %>
-            </div>
-          </div>
-        </div>
-        <% if policy([:buyer, TimeSlot]).index? %>
-          <div class="card">
-            <%= render 'receipts/time_slot', {receipts: current_user.receipts} %>
-          </div>
-        <% end %>
-      <% else %>
-        <% if policy([ current_user_role_group, ProjectUnit.new(user: current_user, status: "available")]).hold? %>
-          <div class="card">
-            <div class="card-body text-center">
+<section class="first-sec welcome-box">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-xs-12 bg-gradient br-rd-8 col-md-12 col-sm-12">
+      <div class="row">
+        <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12 offset-lg-2">
+          <div class="box-content">
+            <h1 class="wc-title white text-center"><%= t('controller.admin.dashboard.welcome_heading') + current_user.name %></h1>
+            <p class="white text-center fn-300 fn-18"><%= t('controller.admin.dashboard.welcome_sub_heading') %></p>
+            <ul class="step-booking">
+              <li><span><img src="<%= asset_path 'file-invoice.svg' %>"></span><%= t('controller.buyer.dashboard.fill_kyc_form') %></li>
+              <li><span><img src="<%= asset_path 'rupee-blue.svg' %>"></span><%= t('controller.admin.dashboard.make_payment') %></li>
+              <li><span><img src="<%= asset_path 'building-blue.svg' %>"></span><%= t('controller.buyer.dashboard.choose_apartment') %></li>
+            </ul>
+            <% if current_user.kyc_ready? && current_user.booking_details.in(status: BookingDetail::BOOKING_STAGES).count >= current_user.allowed_bookings %>
+                <p class="white text-center fn-14 fn-500">You cannot book any more apartments as you have reached the maximum bookings allowed per customer.</p>
+            <% elsif current_user.unattached_blocking_receipt.present? %>
               <%- booking_detail = current_user.booking_details.hold.first %>
               <% if booking_detail %>
-                <%= link_to 'Continue Booking', step_user_search_path(booking_detail.search, step: booking_detail.search.step), class: 'btn btn-primary' %>
+                <p class="white text-center fn-14 fn-500">You already have a unit on hold.</p>
+                <%= link_to t('controller.buyer.dashboard.conitnue_booking'), step_user_search_path(booking_detail.search, step: booking_detail.search.step), class: 'large-btn black-bg display-block fn-500 center-block show-kyc' %>
               <% else %>
-                <%= link_to 'Apartment Selector', new_search_path, class: 'btn btn-primary' %>
+                <% if Buyer::ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: current_user, status: "available")).hold? %>
+                  <p class="white text-center fn-14 fn-500">Choose apartment and add booking</p>
+                  <%= link_to t('controller.buyer.dashboard.book_apartment'), new_search_path, class: 'large-btn black-bg display-block fn-500 center-block show-kyc' %>
+                <% end %>
               <% end %>
-            </div>
+            <% elsif current_user.kyc_ready? %>
+              <p class="white text-center fn-14 fn-500">Make Payment to proceed further</p>
+              <%= link_to t('controller.buyer.dashboard.add_payment'), new_buyer_receipt_path, class: 'large-btn black-bg display-block fn-500 center-block show-kyc modal-remote-form-link' %>
+            <% else %>
+              <p class="white text-center fn-14 fn-500">Fill your KYC form for proceed further</p>
+              <%= link_to t('controller.buyer.dashboard.fill_kyc_form'), new_buyer_user_kyc_path, class: 'large-btn black-bg display-block fn-500 center-block show-kyc modal-remote-form-link' %>
+            <% end%>
           </div>
-        <% end %>
-        <% if current_user.kyc_ready? && current_user.buyer? %>
-          <% hold_unit = current_user.project_units.where(status: 'hold').first %>
-          <% if hold_unit.present? %>
-            <div class="card">
-              <div class="card-body text-center">
-                We have kept a unit on hold for you; to proceed with booking it, click <a href="<%= checkout_user_search_path(current_user.get_search(hold_unit.id)) %>">
-                  here
-                </a>
-              </div>
-            </div>
-          <% end %>
-        <% end %>
-        <% if current_user.kyc_ready? && current_user.project_units.in(status: ProjectUnit.booking_stages).count >= current_user.allowed_bookings %>
-          <div class="card">
-            <div class="card-body text-center">
-              You cannot book any more apartments as you have reached the maximum bookings allowed per customer.
-            </div>
-          </div>
-        <% end %>
-        <div class="mt-3"></div>
-        <% current_user.booking_details.not_in(status: %w[swapped cancelled]).each do |booking_detail| %>
-          <%= render 'dashboard/booking_detail_overview', {booking_detail: booking_detail, with_actions: true} %>
-          <div class="mt-3"></div>
-        <% end %>
-        <% if policy([:buyer, TimeSlot]).index? %>
-          <div class="card">
-            <%= render 'receipts/time_slot', {receipts: current_user.receipts} %>
-          </div>
-        <% end %>
-        <% if Buyer::ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: current_user, status: "available")).hold? %>
-          <a class="btn btn-primary" href="<%= new_search_path %>">Book Another Home</a>
-        <% end %>
-      <% end %>
+        </div>
+      </div>
+      </div>
     </div>
   </div>
-</div>
+</section>
+<section class="projects-list device-pd">
+  <div class="container">
+    <div class="row">
+      <div class="separate-line"></div>
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 my-4 no-pd">
+          <div class="box-card">
+            <div class="box-header bg-gradient-cd br-rd-tr-4">
+              <h2><img src="<%= asset_path 'building-white.svg' %>" alt="Projects"><%= t('dashboard.titles.projects') %></h2>
+            </div>
+            <div class="project-slider1">
+              <div>
+                <div class="box-content br-rd-bl-4 bg-white text-center">
+                  <h3 class="title"><%= t('dashboard.projects.heading') %></h3>
+                  <p class="sort-desc col-lg-6 col-xs-12 col-md-6 col-sm-12 offset-md-3 offset-lg-3"><%= t('dashboard.projects.sub_heading') %></p>
+                  <ul class="prjt-info br-rd-4">
+                    <li><span><%= t('dasboard.titles.available_inventory') %></span><p><%= DashboardDataProvider.available_inventory %></p></li>
+                    <li><span><%= t('dashboard.titles.starting_price') %></span><p><%= DashboardDataProvider.minimum_agreement_price %></p></li>
+                    <li><span><%= t('dashboard.titles.configurations') %></span><p><%= DashboardDataProvider.configurations.to_sentence %></p></li>
+                  </ul>
+                  <ul class="prjt-link">
+                    <li><%= link_to t('dashboard.titles.download_brochure'), download_brochure_path, target: "_blank", class: 'text-uppercase' %></li>
+                  </ul>
+                  <%= link_to 'Visit Website >', current_client.website_link, target: "_blank", class: 'large-btn bg-light-blue display-block fn-500 center-block text-uppercase' %>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="projects-list device-pd">
+  <div class="container">
+    <div class="row">
+      <div class="separate-line"></div>
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 my-4 no-pd">
+          <div class="box-card">
+            <div class="box-header bg-gradient-cd br-rd-tr-4">
+              <h2><img src="<%= asset_path 'home-white.svg' %>" alt="Projects"><%= t('controller.buyer.dashboard.my_bookings') %></h2>
+            </div>
+            <% current_user.booking_details.each do |booking| %>
+              <%= render "dashboard/booking_detail_overview", booking_detail: booking %>
+            <% end %>
+          </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="projects-list device-pd">
+  <div class="container">
+    <div class="row">
+      <div class="separate-line"></div>
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 my-4 no-pd">
+          <div class="box-card">
+            <div class="box-header bg-gradient-cd br-rd-tr-4">
+              <h2><img src="<%= asset_path 'home-white.svg' %>" alt="Projects"><%= t('controller.buyer.dashboard.payments') %></h2>
+            </div>
+            <%= render "receipts/index", receipts: @receipts %>
+          </div>
+      </div>
+    </div>
+  </div>
+</section>
+<% if policy([:buyer, TimeSlot]).index? %>
+  <section class="projects-list device-pd">
+    <div class="container">
+      <div class="row">
+        <div class="separate-line"></div>
+        <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 my-4 no-pd">
+            <div class="box-card">
+              <div class="box-header bg-gradient-cd br-rd-tr-4">
+                <h2><img src="<%= asset_path 'home-white.svg' %>" alt="Projects"><%= t('controller.buyer.dashboard.timeslots') %></h2>
+              </div>
+              <%= render 'receipts/time_slot', {receipts: current_user.receipts} %>
+            </div>
+        </div>
+      </div>
+    </div>
+  </section>
+<% end %>
