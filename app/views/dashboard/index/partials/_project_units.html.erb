@@ -1,68 +1,74 @@
 <% if current_client.enable_actual_inventory?(current_user) %>
-  <div class="card">
+  <div class="card box-card mb-3">
     <a data-toggle="collapse" href="#dashboard_project_units" role="button" aria-expanded="false" aria-controls="dashboard_project_units" class='font-weight-bold text-decoration-none'>
-      <div class="card-header">
-        <%= t('inventory.link_name') %>
+      <div class="card-header box-header bg-gradient br-rd-tr-4card-header">
+        <h2>
+          <%= image_tag "building-white.svg", alt: "Units" %>
+          <%= t('inventory.link_name') %>
+        </h2>
+        <%= link_to 'View All', admin_project_units_path, class: 'view-all-btn' %>
       </div>
     </a>
-    <div class="card-body collapse" id="dashboard_project_units">
-      <%= form_tag dashboard_path, method: "get", id: "dashboard-project_units-fltrs" do %>
-      <div class="row">
-        <div class="col-md-11">
-          <div class="form-group">
-            <%= select_tag "unit_fltrs[group_by]", options_for_select(DashboardDataProvider.project_units_available_group_by.collect{|x| [x[:text], x[:id]]}, (params[:unit_fltrs].present? && params[:unit_fltrs][:group_by].present? ? params[:unit_fltrs][:group_by] : [])), {class: "selectize", prompt: "Select", multiple: true} %>
+    <div class="card-body collapse box-content br-rd-bl-4 bg-white" id="dashboard_project_units">
+      <div class="pd-box">
+        <%= form_tag dashboard_path, method: "get", id: "dashboard-project_units-fltrs" do %>
+          <div class="row">
+            <div class="col-md-11">
+              <div class="form-group">
+                <%= select_tag "unit_fltrs[group_by]", options_for_select(DashboardDataProvider.project_units_available_group_by.collect{|x| [x[:text], x[:id]]}, (params[:unit_fltrs].present? && params[:unit_fltrs][:group_by].present? ? params[:unit_fltrs][:group_by] : [])), {class: "selectize", prompt: "Select", multiple: true} %>
+              </div>
+            </div>
+            <div class="col-md-1">
+              <div class="form-group">
+                <%= submit_tag :Apply, class: "btn btn-primary float-md-right" %>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="col-md-1">
-          <div class="form-group">
-            <%= submit_tag :Apply, class: "btn btn-primary float-md-right" %>
-          </div>
-        </div>
-      </div>
-      <% end %>
-      <div class="table-responsive">
-        <table class="table">
-          <thead>
-            <tr>
-              <% if (params[:unit_fltrs] && params[:unit_fltrs][:group_by] && params[:unit_fltrs][:group_by].include?("project_tower_id")) || params[:unit_fltrs].nil? %>
-              <th>Tower</th>
-              <% end %>
-              <% if (params[:unit_fltrs] && params[:unit_fltrs][:group_by] && params[:unit_fltrs][:group_by].include?("bedrooms")) || params[:unit_fltrs].nil? %>
-              <th>Bedrooms</th>
-              <% end %>
-              <% if (params[:unit_fltrs] && params[:unit_fltrs][:group_by] && params[:unit_fltrs][:group_by].include?("status")) || params[:unit_fltrs].nil? %>
-              <th>Status</th>
-              <% end %>
-              <th class="text-right">Count</th>
-              <th class="text-right">Total Agreement Price</th>
-              <th class="text-right">Total All Inclusive Price</th>
-              <th class="text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% DashboardDataProvider.project_units_dashboard(current_user, params[:unit_fltrs]).sort{|x, y | [x[:project_tower_name], x[:bedrooms], x[:status]] <=> [y[:project_tower_name], y[:bedrooms], y[:status]]}.each do |d| %>
-            <tr>
-              <% if (params[:unit_fltrs] && params[:unit_fltrs][:group_by] && params[:unit_fltrs][:group_by].include?("project_tower_id")) || params[:unit_fltrs].nil? %>
-              <td><%= d[:project_tower_name] %></td>
-              <% end %>
-              <% if (params[:unit_fltrs] && params[:unit_fltrs][:group_by] && params[:unit_fltrs][:group_by].include?("bedrooms")) || params[:unit_fltrs].nil? %>
-              <td><%= d[:bedrooms] %></td>
-              <% end %>
-              <% if (params[:unit_fltrs] && params[:unit_fltrs][:group_by] && params[:unit_fltrs][:group_by].include?("status")) || params[:unit_fltrs].nil? %>
-              <td><%= t("project_units.status.#{d[:status]}") %></td>
-              <% end %>
-              <td class="text-right"><%= d[:count] %></td>
-              <td class="text-right"><%= number_to_indian_currency(d[:total_agreement_price]) %></td>
-              <td class="text-right"><%= number_to_indian_currency(d[:total_all_inclusive_price]) %></td>
-              <td class="text-right">
-                <% if policy([:admin, ProjectUnit]).index? %>
-                  <%= link_to "View", admin_project_units_path(fltrs: {status: d[:status], project_tower_id: d[:project_tower_id], bedrooms: d[:bedrooms]}), target: "_blank" %>
+        <% end %>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <% if (params[:unit_fltrs] && params[:unit_fltrs][:group_by] && params[:unit_fltrs][:group_by].include?("project_tower_id")) || params[:unit_fltrs].nil? %>
+                <th>Tower</th>
                 <% end %>
-              </td>
-            </tr>
-            <% end %>
-          </tbody>
-        </table>
+                <% if (params[:unit_fltrs] && params[:unit_fltrs][:group_by] && params[:unit_fltrs][:group_by].include?("bedrooms")) || params[:unit_fltrs].nil? %>
+                <th>Bedrooms</th>
+                <% end %>
+                <% if (params[:unit_fltrs] && params[:unit_fltrs][:group_by] && params[:unit_fltrs][:group_by].include?("status")) || params[:unit_fltrs].nil? %>
+                <th>Status</th>
+                <% end %>
+                <th class="text-right">Count</th>
+                <th class="text-right">Total Agreement Price</th>
+                <th class="text-right">Total All Inclusive Price</th>
+                <th class="text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% DashboardDataProvider.project_units_dashboard(current_user, params[:unit_fltrs]).sort{|x, y | [x[:project_tower_name], x[:bedrooms], x[:status]] <=> [y[:project_tower_name], y[:bedrooms], y[:status]]}.each do |d| %>
+              <tr>
+                <% if (params[:unit_fltrs] && params[:unit_fltrs][:group_by] && params[:unit_fltrs][:group_by].include?("project_tower_id")) || params[:unit_fltrs].nil? %>
+                <td><%= d[:project_tower_name] %></td>
+                <% end %>
+                <% if (params[:unit_fltrs] && params[:unit_fltrs][:group_by] && params[:unit_fltrs][:group_by].include?("bedrooms")) || params[:unit_fltrs].nil? %>
+                <td><%= d[:bedrooms] %></td>
+                <% end %>
+                <% if (params[:unit_fltrs] && params[:unit_fltrs][:group_by] && params[:unit_fltrs][:group_by].include?("status")) || params[:unit_fltrs].nil? %>
+                <td><%= t("project_units.status.#{d[:status]}") %></td>
+                <% end %>
+                <td class="text-right"><%= d[:count] %></td>
+                <td class="text-right"><%= number_to_indian_currency(d[:total_agreement_price]) %></td>
+                <td class="text-right"><%= number_to_indian_currency(d[:total_all_inclusive_price]) %></td>
+                <td class="text-right">
+                  <% if policy([:admin, ProjectUnit]).index? %>
+                    <%= link_to "View", admin_project_units_path(fltrs: {status: d[:status], project_tower_id: d[:project_tower_id], bedrooms: d[:bedrooms]}), target: "_blank" %>
+                  <% end %>
+                </td>
+              </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>

@@ -18,8 +18,13 @@ Rails.application.routes.draw do
 
   devise_scope :user do
     post 'users/otp', :to => 'local_devise/sessions#otp', :as => :users_otp
-    root to: "local_devise/sessions#new"
   end
+
+  authenticated :user do
+    root 'dashboard#index', as: :authenticated_root
+  end
+
+  root to: redirect('users/sign_in')
 
   as :user do
     put '/user/confirmation', to: 'local_devise/confirmations#update', :as => :update_user_confirmation

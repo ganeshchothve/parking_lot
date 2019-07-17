@@ -63,6 +63,12 @@ en:
     account: "Account"
     phase: 'Phase'
     phases: Phases
+    emails: 'Emails'
+    email: 'Email'
+    erp_models: 'Third Party Integration'
+    portal_stage_priorities: 'Portal Stage Priorities'
+    sms: 'Sms'
+    smses: 'Smses'
   language:
     en: 'English'
     mr: 'मराठी'
@@ -271,6 +277,7 @@ en:
         total_unattached_balance: "Total Un-attached Balance (subject to clearance)"
         is_active: 'Allow the user to login?'
         utm_params: 'UTM Tracking'
+        remember_me: "<span>Keep me logged in</span>"
       channel_partner:
         name: 'Name'
         company_name: "Company Name"
@@ -341,7 +348,7 @@ en:
     link_name: 'Account'
 
   audits:
-    link_name: 'Histroy'
+    link_name: 'History'
 
   booking_details:
     status:
@@ -468,6 +475,9 @@ en:
   sync_logs:
     link_name: 'Sync Log'
 
+  schemes:
+    link_name: 'Schemes'
+
   users:
     profile: '%{role} Profile'
     change_password: 'Change Password'
@@ -514,6 +524,11 @@ en:
       otp_resend: 'Resend OTP'
       login_with_password_link: 'Login with password instead'
       login_with_otp_link: 'Login with OTP instead'
+      sign_in: 'Sign In'
+  registrations:
+    pre_text: 'Don’t have account ?'
+    new:
+      sign_up: 'Sign Up'
 
   dashboard:
     confirmed_users: ' Confirmed Users'

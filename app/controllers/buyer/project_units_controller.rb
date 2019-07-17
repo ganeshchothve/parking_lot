@@ -1,5 +1,4 @@
 class Buyer::ProjectUnitsController < BuyerController
-  include ApplicationHelper
   before_action :set_project_unit, except: %i[index export mis_report]
   include ProjectUnitsConcern
   before_action :authorize_resource

@@ -95,7 +95,7 @@ figure.wave {
 }
 .control-label, label{
   font-size: $font-size-base * 0.70;
-  text-transform: uppercase;
+  //text-transform: uppercase;
   margin-bottom: 0.2rem;
 }
 .navbar-light .navbar-toggler{
@@ -170,4 +170,21 @@ figure.wave {
 }
 .display-initial{
   display: initial;
+}
+.nowrap {
+  white-space: nowrap;
+}
+.page-item.disabled .page-link {
+  padding: 0.8rem 0.75rem;
+}
+.box-card {
+  float: inherit !important;
+}
+.table-title{
+  img, [role='img']{
+    margin-right: 10px;
+    width: 14px;
+    display: inline-block;
+    vertical-align: inherit;
+  }
 }

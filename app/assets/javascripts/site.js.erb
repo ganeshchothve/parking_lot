@@ -4,102 +4,53 @@
 var aArray = [];
 $(document).ready(function(){
 
-	var wn_width = $(window).width();
-	var wn_height = $(window).height();
-	var wind_height = $('.header').outerHeight();
+  var wn_width = $(window).width();
+  var wn_height = $(window).height();
+  var wind_height = $('.header').outerHeight();
 
-	$(".project-slider").bxSlider({
-	        mode: 'fade',
-	        infiniteLoop: true,
-	        auto: true,
-	        pager: false,
-	        controls: true,
-	        pause: 14000,
-	        speed: 800,
-	        infiniteLoop: true,
-	        responsive: true,
-	        touchEnabled: true,
-	        nextText: '>',
-	        prevText: '<'
-	 });
-	$('.show-kyc').click(function(){
-		$('.kyc-popup').addClass('open-form');
-		$('.form-inner').css('right', '0');
-		$('body, html').css('overflow','hidden');
-	});
-	$('.cancel-btn').click(function(){
-		$('.kyc-popup').removeClass('open-form');
-		$('.form-inner').css('right', '-100%');
-		$('body, html').css('overflow','auto');
-	});
+  $(".project-slider").bxSlider({
+    mode: 'fade',
+    infiniteLoop: true,
+    auto: true,
+    pager: false,
+    controls: true,
+    pause: 14000,
+    speed: 800,
+    infiniteLoop: true,
+    responsive: true,
+    touchEnabled: true,
+    nextText: '>',
+    prevText: '<'
+  });
 
-	// var aChildren = $(".checkout-menu-list a"); // find the a children of the list items
-	//  //Navigation height
-	//  // create the empty aArray
-	// for (var i=0; i < aChildren.length; i++) {
-	// 	var aChild = aChildren[i];
-	// 	if (!$(aChild).hasClass('extLink')) {
-	// 		if ($(aChild).attr('rel')) {
-	// 			var ahref = $(aChild).attr('rel');
-	// 			aArray.push(ahref);
-	// 		}
-	// 	}
-	// }
-	$('.db-filter-btn').click(function(){
-		$('.filter-box').slideToggle('slow');
-	});
-	$('.f-cancel-btn, .close-filter-btn').click(function(){
-		$('.filter-box').slideToggle('slow');
-	});
-	$(".scroll-sec").click(function () {
-		$(".scroll-sec").removeClass('active');
-		var curnt_id = $(this).attr('rel');
-		 $(this).addClass('active');
-		if(wn_width > 767){
-			scroll_cost = 330;
-			scroll_payment = 1150;
-		}
-		else{
-			scroll_cost = 500;
-			scroll_payment = 1270;
-		}
-		if(curnt_id == 'apartment'){
-			 $('.scroll-fixed-height').animate({ scrollTop: 0 },2000);
-		}
-		if(curnt_id == 'cost-sheet'){
-			 $('.scroll-fixed-height').animate({ scrollTop: scroll_cost },2000);
-		}
-		if(curnt_id == 'payment-schedule'){
-			 $('.scroll-fixed-height').animate({ scrollTop: scroll_payment },2000);
-		}
+  $('.db-filter-btn').click(function(){
+    $('.filter-box').slideToggle('slow');
+  });
+  $('.f-cancel-btn, .close-filter-btn').click(function(){
+    $('.filter-box').slideToggle('slow');
+  });
+  $(".scroll-sec").click(function () {
+    $(".scroll-sec").removeClass('active');
+    var curnt_id = $(this).attr('rel');
+    $(this).addClass('active');
+    if(wn_width > 767){
+      scroll_cost = 330;
+      scroll_payment = 1150;
+    }
+    else{
+      scroll_cost = 500;
+      scroll_payment = 1270;
+    }
+    if(curnt_id == 'apartment'){
+      $('.scroll-fixed-height').animate({ scrollTop: 0 },2000);
+    }
+    if(curnt_id == 'cost-sheet'){
+      $('.scroll-fixed-height').animate({ scrollTop: scroll_cost },2000);
+    }
+    if(curnt_id == 'payment-schedule'){
+      $('.scroll-fixed-height').animate({ scrollTop: scroll_payment },2000);
+    }
 
-    });
+  });
 
 });
-
-// function scrolled(){
-// 	var windowPos = $('.bookings').scrollTop(); // get the offset of the window from the top of page
-// 	var windowHeight = $('.bookings').height(); // get the height of the window
-// 	var windowWidth = $('.bookings').width();
-// 	var docHeight = $(document).height();
-// 	for(i=0;i<aArray.length;i++){
-// 		var theID = aArray[i];
-// 		var divPos = $("#"+theID).offset().top; // get the offset of the div from the top of page
-// 		var divHeight = $("#"+theID).outerHeight(); // get the height of the div in question
-// 		if (windowPos >= (divPos + 100) && windowPos < ((divPos + 100) + divHeight)) {
-// 			$("a[rel='" + theID + "']").addClass("active");
-// 		} else {
-// 			$("a[rel='" + theID + "']").removeClass("active");
-// 		}
-// 	}
-
-// 	//If document has scrolled to the end. Add active class to the last navigation menu
-// 	if(windowPos + windowHeight == docHeight) {
-// 		if (!$(".checkout-menu-list a:last-child").hasClass("active")) {
-// 			var navActiveCurrent = $(".active").attr("rel");
-// 			$("a[rel='" + navActiveCurrent + "']").removeClass("active");
-// 			$(".checkout-menu-list a:last-child").addClass("active");
-// 		}
-// 	}
-
-// }

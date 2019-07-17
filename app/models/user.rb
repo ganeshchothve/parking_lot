@@ -10,7 +10,7 @@ class User
   extend FilterByCriteria
 
   # Constants
-  ALLOWED_UTM_KEYS = %i[campaign source sub_source content medium term]
+  ALLOWED_UTM_KEYS = %i[utm_campaign utm_source utm_sub_source utm_content utm_medium utm_term]
   BUYER_ROLES = %w[user employee_user management_user]
   ADMIN_ROLES = %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner]
 
@@ -209,7 +209,7 @@ class User
 
   def set_utm_params(cookies)
     ALLOWED_UTM_KEYS.each do |key|
-      utm_params.store(key, cookies[key]) if cookies[key].present?
+      utm_params[key] = cookies[key] if cookies[key].present?
     end
     utm_params
   end

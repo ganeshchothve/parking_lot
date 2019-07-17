@@ -16,7 +16,9 @@ class HomeController < ApplicationController
       redirect_to home_path(current_user)
       flash[:notice] = "You have already been logged in"
     else
+      store_cookies_for_registration
       render layout: "devise"
+
     end
   end
 
@@ -80,6 +82,14 @@ class HomeController < ApplicationController
           end
         end
       end
+    end
+  end
+
+  private
+
+  def store_cookies_for_registration
+    User::ALLOWED_UTM_KEYS.each do |key|
+      cookies[key] = params[key] if params[key].present?
     end
   end
 end

@@ -1,4 +1,3 @@
-  <%= link_to "Add #{ t('global.booking_detail') }", new_admin_booking_detail_path, class: 'btn btn-primary modal-remote-form-link' %>
 <section class="first-sec welcome-box">
   <div class="container">
     <div class="row">
@@ -44,8 +43,9 @@
                   </ul>
                   <ul class="prjt-link">
                     <li><%= link_to t('dashboard.titles.download_brochure'), download_brochure_path, target: "_blank", class: 'text-uppercase' %></li>
+                    <li><%= link_to 'Visit Website', current_client.website_link, target: "_blank", class: 'text-uppercase' %></li>
                   </ul>
-                  <%= link_to 'Visit Website >', current_client.website_link, target: "_blank", class: 'large-btn bg-light-blue display-block fn-500 center-block text-uppercase' %>
+                  <%= link_to "Add #{ t('global.booking_detail') }", new_admin_booking_detail_path, class: 'large-btn bg-light-blue display-block fn-500 center-block text-uppercase modal-remote-form-link' %>
                 </div>
               </div>
             </div>
@@ -179,7 +179,7 @@
                   <ul class="leaderboard-list">
                     <li class="mt-4">
                       <div class="display-inline user-icon">
-                        <img src="<%= asset_path 'user.jpeg' %>" alt="user img">
+                        <img src="<%= asset_path 'user.jpg' %>" alt="user img">
                       </div>
                       <div class="display-inline user-info">
                         <span class="rank-type display-block fn-300 fn-12">Rank: 01</span>
@@ -188,7 +188,7 @@
                     </li>
                     <li class="mt-4">
                       <div class="display-inline user-icon">
-                        <img src="<%= asset_path 'user.jpeg' %>" alt="user img">
+                        <img src="<%= asset_path 'user.jpg' %>" alt="user img">
                       </div>
                       <div class="display-inline user-info">
                         <span class="rank-type display-block fn-300 fn-12">Rank: 02</span>

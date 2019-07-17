@@ -1,38 +1,44 @@
 <% if current_client.enable_actual_inventory?(current_user) %>
   <% user_requests = DashboardDataProvider.user_requests_dashboard(current_user, params[:user_request_fltrs]) %>
-  <div class="card">
+  <div class="card box-card mb-3">
     <a data-toggle="collapse" href="#dashboard_user_requests" role="button" aria-expanded="false" aria-controls="dashboard_user_requests" class='font-weight-bold text-decoration-none'>
-      <div class="card-header">
-        <%= global_labels[:user_requests] %>
+      <div class="card-header box-header bg-gradient br-rd-tr-4card-header">
+        <h2>
+          <%= image_tag "file-spreadsheet-white.svg", alt: 'User requests' %>
+          <%= global_labels[:user_requests] %>
+        </h2>
+        <%= link_to 'View All', admin_user_requests_path(:all), class: 'view-all-btn' %>
       </div>
     </a>
-    <div class="card-body collapse" id='dashboard_user_requests'>
-      <% if user_requests.present? %>
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Type</th>
-                <th>Status</th>
-                <th class="text-right">Count</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% user_requests.each do |d| %>
-              <tr>
-                <td><%= d[:_type].split("::").last.titleize %></td>
-                <td><%= t("user_requests.status.#{d[:status]}") %></td>
-                <td class="text-right">
-                  <%= link_to d[:count], [current_user_role_group, UserRequest, {request_type: 'user_request', fltrs: { status: d[:status], _type: d[:_type] } }], target: "_blank", title: "View #{d[:count]} #{ t("user_requests.status.#{d[:status]}") } #{d[:_type].split("::").last.titleize} requests." %>
-                </td>
-              </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      <% else %>
-        No <%= global_labels[:user_requests] %> yet.
-      <% end %>
+    <div class="card-body collapse box-content br-rd-bl-4 bg-white" id='dashboard_user_requests'>
+      <div class="pd-box">
+        <% if user_requests.present? %>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Status</th>
+                  <th class="text-right">Count</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% user_requests.each do |d| %>
+                <tr>
+                  <td><%= d[:_type].split("::").last.titleize %></td>
+                  <td><%= t("user_requests.status.#{d[:status]}") %></td>
+                  <td class="text-right">
+                    <%= link_to d[:count], [current_user_role_group, UserRequest, {request_type: 'user_request', fltrs: { status: d[:status], _type: d[:_type] } }], target: "_blank", title: "View #{d[:count]} #{ t("user_requests.status.#{d[:status]}") } #{d[:_type].split("::").last.titleize} requests." %>
+                  </td>
+                </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          No <%= global_labels[:user_requests] %> yet.
+        <% end %>
+      </div>
     </div>
   </div>
 <% end %>
