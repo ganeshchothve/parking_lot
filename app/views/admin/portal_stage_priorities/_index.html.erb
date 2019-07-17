@@ -1,4 +1,4 @@
-<table class='table my-customer-table responsive-tbl pt-3'>
+<table class='table my-customer-table responsive-tbl pt-2'>
   <thead class="th-default">
     <% labels = t('mongoid.attributes.scheme').with_indifferent_access %>
       <thead>
@@ -9,18 +9,18 @@
   </thead>
   <tbody>
     <% portal_stage_priorities.each_with_index do |portal_stage_priority, i| %>
-        <tr id = <%= portal_stage_priority.priority %>>
-          <td > <%= portal_stage_priority.stage %></td>
-        </tr>
-      <% end %>
-      <%= form_tag reorder_admin_portal_stage_priorities_path, method: "patch", id: 'change_priority_form' do %>
-        <%= hidden_field_tag "order", id: 'order' %>
-        <%= submit_tag :apply, class: "db-small-btn light-blue bg-white fn-400 float-right" %>
-      <% end %>
-      <tr>
+      <tr id = <%= portal_stage_priority.priority %>>
+        <td > <%= portal_stage_priority.stage %></td>
+      </tr>
+    <% end %>
+    <tr>
       <td colspan="6">
         <div class="mt-5 pt-5"></div>
       </td>
     </tr>
   </tbody>
 </table>
+<%= form_tag reorder_admin_portal_stage_priorities_path, method: "patch", id: 'change_priority_form' do %>
+  <%= hidden_field_tag "order", id: 'order' %>
+  <%= submit_tag 'Submit', class: "db-small-btn light-blue bg-white fn-400 float-right" %>
+<% end %>

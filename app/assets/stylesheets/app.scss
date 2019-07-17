@@ -180,3 +180,11 @@ figure.wave {
 .box-card {
   float: inherit !important;
 }
+.table-title{
+  img, [role='img']{
+    margin-right: 10px;
+    width: 14px;
+    display: inline-block;
+    vertical-align: inherit;
+  }
+}
