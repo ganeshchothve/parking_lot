@@ -30,7 +30,7 @@ end %>
               <a href="javascript:;" class="a-style opacity-5 resend-otp small pt-3" data-resend-time="<%= User.otp_resend_wait_time %>", data-max-limit="<%= User.otp_resend_max_limit %>" data-counter=0><%= t('sessions.new.otp_resend') %></a>
               <br>
             </div>
-            <a href="javascript:;" class="a-style opacity-5 toggle_signin_form d-block d-md-inline float-md-left pr-0" data-target="#standard_login_form"><%= t('sessions.new.login_with_password_link') %></a>
+            <a href="javascript:;" class="a-style opacity-5 toggle_signin_form d-block d-md-inline float-md-left pr-0" data-target="#standard_login_form"><%= t('sessions.new.login_with_password_link') %></a><br/>
           <% end %>
         <% end %>
         <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: {class: 'validate-form ' + username_signin_class, id: "standard_login_form", autocomplete: 'off' }) do |f| %>

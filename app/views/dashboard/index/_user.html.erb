@@ -80,7 +80,7 @@
               <h2><img src="<%= asset_path 'home-white.svg' %>" alt="Projects"><%= t('controller.buyer.dashboard.my_bookings') %></h2>
             </div>
             <% current_user.booking_details.each do |booking| %>
-              <%= render "dashboard/booking_detail_overview", booking_detail: booking %>
+              <%= render "dashboard/booking_detail_overview", booking_detail: booking, with_actions: true %>
             <% end %>
           </div>
       </div>

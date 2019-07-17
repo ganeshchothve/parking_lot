@@ -1,6 +1,7 @@
-<div>
+<body class = 'pt-0 pb-4'>
+<div >
   <% unless params[:remove_header] %>
-    <div class="card card-body">
+    <div class="card card-body bg-gradient-cd white">
       <%= form_tag custom_inventory_path, method: "get", id: "custom_inventory_form", class: "form-inline" do %>
         <div class='row w-100'>
           <div class="form-group">
@@ -11,7 +12,7 @@
           </div>
           <div class="form-group col-9 p-0">
             <div class="col-6">
-              <%= submit_tag :Apply, class: "btn btn-primary" %>
+              <%= submit_tag :Apply, class: "db-small-btn light-blue bg-white fn-400" %>
             </div>
             <div class="col-6">
               <%= link_to content_tag(:i, "", class: 'fa fa-times'), custom_inventory_path(params.permit(:project_tower_id, :utf8).to_hash.merge(remove_header: true)), class: 'float-right', style: 'color: black;' %>
@@ -114,6 +115,7 @@
     </div>
   </div>
 </div>
+</body>
 <%= javascript_tag do %>
   $(document).ready(function(){
     setTimeout(function(){ location.reload(); }, 60000);
