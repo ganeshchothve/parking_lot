@@ -19,15 +19,18 @@
             <li><span>Name</span><p><%= booking_detail.name %></p></li>
             <li><span>Customer</span><p><%= link_to_if booking_detail.user, booking_detail.user_name, [current_user_role_group, booking_detail.user] %></p></li>
             <li><span>Tower</span><p><%= project_unit.project_tower.name %></p></li>
-            <li><span>Beds/Bath</span><p><%= project_unit.unit_configuration.bedrooms %> / <%= project_unit.unit_configuration.bathrooms %></p></li>
-            <li><span>Carpet</span><p><%= project_unit.carpet %> sq. ft.</p></li>
-            <% if current_user.role?('superadmin') %>
-              <li><span>Effective Rate</span><p><%= number_to_indian_currency(booking_detail.effective_rate) %>. ft.</p></li>
-              <li><span>Saleable</span><p>₹<%= project_unit.saleable %>. ft.</p></li>
-              <li><span>Base Rate/ Floor Rise</span><p><%= number_to_indian_currency(project_unit.base_rate)%> / <%= project_unit.floor_rise %></p></li>
+            <% unless params[:action] == 'quotation' %>
+              <li><span>Tower</span><p><%= t("booking_details.status.#{booking_detail.status}") %></p></li>
             <% end %>
-            <li><span>Agreement Price</span><p><%= number_to_indian_currency(project_unit.agreement_price) %></p></li>
-            <li><span>All Inclusive Price</span><p><%= number_to_indian_currency(project_unit.all_inclusive_price) %></p></li>
+            <li><span>Beds/Bath</span><p><%= project_unit.unit_configuration.bedrooms %> / <%= project_unit.unit_configuration.bathrooms %></p></li>
+            <li><span>Carpet</span><p><%= project_unit.carpet %> <%= current_client.area_unit %></p></li>
+            <% if current_user.role?('superadmin') %>
+              <li><span>Effective Rate</span><p><%= number_to_indian_currency(booking_detail.effective_rate) %></p></li>
+              <li><span>Saleable</span><p><%= booking_detail.saleable %> <%= current_client.area_unit %></p></li>
+              <li><span>Base Rate/ Floor Rise</span><p><%= number_to_indian_currency(booking_detail.base_rate)%> / <%= number_to_indian_currency(booking_detail.floor_rise) %></p></li>
+            <% end %>
+            <li><span>Agreement Price</span><p><%= number_to_indian_currency(booking_detail.calculate_agreement_price.round) %></p></li>
+            <li><span>All Inclusive Price</span><p><%= number_to_indian_currency(booking_detail.calculate_all_inclusive_price.round) %></p></li>
             <li><span>Phase</span><p><%= project_unit.phase.try(:name) %></p></li>
           </ul>
         </div>
