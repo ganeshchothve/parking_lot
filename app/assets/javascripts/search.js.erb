@@ -16,10 +16,12 @@ var showUnitData = function(unit, assets){
 
   $("#unit-description").find('[data-placeholder="name"]').html('Unit No.: ' + unit.name);
   $("#unit-description").find('[data-placeholder="floor"]').html(unit.floor);
+  $("#unit-description").find('[data-placeholder="floor_order"]').html(unit.floor_order);
   $("#unit-description").find('[data-placeholder="bedrooms"]').html(unit.bedrooms + " BHK");
   $("#unit-description").find('[data-placeholder="bathrooms"]').html(unit.bathrooms);
   $("#unit-description").find('[data-placeholder="saleable"]').html(unit.saleable);
   $("#unit-description").find('[data-placeholder="carpet"]').html(unit.carpet);
+  $("#unit-description").find('[data-placeholder="facing"]').html(unit.unit_facing_direction);
   if(unit.calculated_data){
     _.each(unit.calculated_data, function(v, k){
       $("#unit-description").find('[data-placeholder="data:' + k + '"]').html(v);
