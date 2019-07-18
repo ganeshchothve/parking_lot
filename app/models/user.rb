@@ -184,6 +184,7 @@ class User
       end
     end
   end
+  scope :buyers, -> { where(role: {'$in' => BUYER_ROLES } )}
 
   # This some additional scope which help to fetch record easily.
   # This following methods are
