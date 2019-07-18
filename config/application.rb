@@ -37,6 +37,7 @@ module BookingPortal
     config.mongoid.observers = Dir["#{Rails.root}/app/observers/**/*.rb"].collect{ |f| f.gsub!("#{Rails.root}/app/observers/", "").gsub!(".rb", "")}
     config.action_mailer.preview_path = "#{Rails.root}/spec/mailers/previews"
     config.active_job.queue_adapter = :sidekiq
+    config.middleware.use(Mongoid::QueryCache::Middleware)
     config.to_prepare do
       Devise::Mailer.layout "mailer"
     end
