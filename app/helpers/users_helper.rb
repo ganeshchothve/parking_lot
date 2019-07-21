@@ -15,4 +15,16 @@ module UsersHelper
       ''
     end
   end
+
+  def filter_user_role_options
+    User.available_roles(current_client).collect{|role| [ t("users.role.#{role}"), role ]}
+  end
+
+  def user_edit_role_options(_user)
+    if _user.id == current_user.id || _user.buyer?
+      [ t("users.role.#{current_user.role}"), current_user.role]
+    else
+      filter_user_role_options
+    end
+  end
 end

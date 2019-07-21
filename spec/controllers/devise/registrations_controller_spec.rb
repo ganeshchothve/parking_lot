@@ -56,7 +56,7 @@ RSpec.describe LocalDevise::RegistrationsController, type: :controller do
     it 'when password is invalid' do
       @user_params[:password] = 'a2'
       expect { post :create, params: { user: @user_params } }.to change { User.count }.by(0)
-      expect(response.request.flash[:alert][0]).to eq('Password is too short (minimum is 6 characters)')
+      expect(response.request.flash[:alert][0]).to eq('Password is too short (minimum is 8 characters)')
     end
 
     context '.set params' do

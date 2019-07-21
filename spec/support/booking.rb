@@ -29,7 +29,7 @@ module Booking
     booking_detail = create(:booking_detail, primary_user_kyc_id: kyc.id, status: project_unit.status, project_unit_id: project_unit.id, user_id: user.id, search: search)
     booking_detail_scheme = create(:booking_detail_scheme, booking_detail: booking_detail, status: 'approved')
     if receipt_amount
-      receipt = receipt ? receipt.set(booking_detail_id: booking_detail.id) : create(:check_payment, user_id: user.id, total_amount: receipt_amount, status: 'success', booking_detail_id: booking_detail.id)
+      receipt = receipt ? receipt.set(booking_detail_id: booking_detail.id) : create(:check_payment, user_id: user.id, total_amount: receipt_amount, status: 'success', booking_detail_id: booking_detail.id, tracking_id: '12345')
     end
     booking_detail
   end

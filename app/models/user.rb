@@ -13,6 +13,9 @@ class User
   ALLOWED_UTM_KEYS = %i[utm_campaign utm_source utm_sub_source utm_content utm_medium utm_term]
   BUYER_ROLES = %w[user employee_user management_user]
   ADMIN_ROLES = %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner]
+  CHANNEL_PARTNER_USERS = %w[cp cp_admin channel_partner]
+  SALES_USER = %w[sales sales_admin]
+  COMPANY_USERS = %w[employee_user management_user]
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -153,7 +156,7 @@ class User
   validates :email, uniqueness: true, if: proc { |user| user.phone.blank? }
   validates :rera_id, presence: true, if: proc { |user| user.role?('channel_partner') }
   validates :rera_id, uniqueness: true, allow_blank: true
-  validates :role, inclusion: { in: proc { |user| User.available_roles(user.booking_portal_client).collect { |x| x[:id] } } }
+  validates :role, inclusion: { in: proc { |user| User.available_roles(user.booking_portal_client) } }
   validates :lead_id, uniqueness: true, presence: true, if: proc { |user| user.buyer? }, allow_blank: true
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :manager_change_reason_present?
@@ -413,28 +416,9 @@ class User
     end
 
     def available_roles(current_client)
-      roles = [
-        { id: 'superadmin', text: 'Superadmin' },
-        { id: 'admin', text: 'Administrator' },
-        { id: 'crm', text: 'CRM User' },
-        { id: 'sales_admin', text: 'Sales Head' },
-        { id: 'sales', text: 'Sales User' },
-        { id: 'user', text: 'Customer' },
-        { id: 'gre', text: 'GRE or Pre-sales' }
-      ]
-      if current_client.try(:enable_channel_partners?)
-        roles += [
-          { id: 'cp_admin', text: 'Channel Partner Head' },
-          { id: 'cp', text: 'Channel Partner Manager' },
-          { id: 'channel_partner', text: 'Channel Partner' }
-        ]
-      end
-      if current_client.present? && current_client.enable_company_users?
-        roles += [
-          { id: 'management_user', text: 'Management User' },
-          { id: 'employee_user', text: 'Employee' }
-        ]
-      end
+      roles = ADMIN_ROLES + BUYER_ROLES
+      roles -= CHANNEL_PARTNER_USERS unless current_client.try(:enable_channel_partners?)
+      roles -= COMPANY_USERS unless current_client.try(:enable_company_users?)
       roles
     end
 
