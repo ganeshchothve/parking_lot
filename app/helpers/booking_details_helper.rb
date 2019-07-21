@@ -25,4 +25,36 @@ module BookingDetailsHelper
       booking_detail
     end
   end
+
+  def filter_booking_detail_options
+    if params.dig(:fltrs, :id).present?
+      BookingDetail.where(_id: params.dig(:fltrs, :id)).map{|bd| [bd.name, bd.id]}
+    else
+      []
+    end
+  end
+
+  def filter_project_tower_options
+    if params.dig(:fltrs, :project_tower_id).present?
+      ProjectTower.where(_id: params.dig(:fltrs, :project_tower_id)).map{|pt| [pt.name, pt.id]}
+    else
+      []
+    end
+  end
+
+  def filter_user_options
+    if params.dig(:fltrs, :user_id).present?
+      User.in(role: User::BUYER_ROLES).where(_id: params.dig(:fltrs, :user_id)).map{|user| [user.ds_name, user.id]}
+    else
+      []
+    end
+  end
+
+  def filter_manager_options
+    if params.dig(:fltrs, :manager_id).present?
+      User.nin(role: User::BUYER_ROLES).where(_id: params.dig(:fltrs, :manager_id)).map{|user| [user.ds_name, user.id]}
+    else
+      []
+    end
+  end
 end

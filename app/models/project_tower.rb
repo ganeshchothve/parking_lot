@@ -2,6 +2,7 @@ class ProjectTower
   include Mongoid::Document
   include Mongoid::Timestamps
   include ArrayBlankRejectable
+  extend FilterByCriteria
 
   field :name, type: String
   field :client_id, type: String
