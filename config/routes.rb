@@ -78,6 +78,7 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :project_towers, only: [:index]
     resources :project_units, only: [:index, :show, :edit, :update] do
       member do
         get :print
