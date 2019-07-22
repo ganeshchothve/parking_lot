@@ -5,8 +5,8 @@
   </div>
   <% url = admin_user_requests_path(request_type: @associated_class.model_name.element) %>
   <%= form_tag url, method: "get", id: "user_request_search_form" do %>
-    <div class="filter-content">
-      <div class="form-group">
+    <div class="filter-content row">
+      <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
         <%= label_tag "fltrs", "Customer Name / Email / Phone", class: "control-label" %>
         <%
           if params[:fltrs].present? && params[:fltrs][:user].present?
@@ -16,12 +16,12 @@
         <%= select_tag "fltrs[user]", options_for_select((params[:fltrs].present? && params[:fltrs][:user].present?) ? [[user.ds_name, user.id]] : []), {class: "selectize-remote", data: {params: {fltrs: {role: User.buyer_roles(current_client)}}, url: admin_users_path }} %>
       </div>
       <% if @associated_class == UserRequest %>
-        <div class="form-group">
+        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", "type", class: "control-label" %>
           <%= select_tag "fltrs[_type]", options_for_select(::UserRequest.descendants.collect{|x| [x.to_s.split("::").last.gsub("Template", "").titleize, x.to_s]}.sort, (params.dig(:fltrs, :_type) || "")), {prompt: "Select", class: "selectize"} %>
         </div>
       <% end %>
-      <div class="form-group">
+      <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
         <%= label_tag "fltrs", "status", class: "control-label" %>
         <%= select_tag "fltrs[status]", options_for_select(UserRequest::STATUS.collect{|urs| [t("user_requests.status.#{urs}"), urs ]}, (params.dig(:fltrs, :status) || "")), {prompt: "Select", class: "selectize"} %>
       </div>

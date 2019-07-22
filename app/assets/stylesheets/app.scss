@@ -129,13 +129,18 @@ figure.wave {
 }
 #gamification-container{
   position: fixed;
-  width: 100%;
+  width: auto;
   border-radius: 0;
   z-index: 100;
+  right: 0;
+  padding: 0 12px 0px;
+  border: 0;
+  transition: all .6s ease-in-out;
+  margin: 1rem;
 }
 @include media-breakpoint-up(md){
   #gamification-container{
-    bottom: 52px;
+    bottom: 5rem;
   }
 }
 @include media-breakpoint-down(md){
@@ -202,6 +207,23 @@ figure.wave {
     &.highlight td {
       color: white !important;
       background-color: $primary !important;
+    }
+  }
+}
+
+#inventory {
+  .booking-list{
+    width: 350px;
+    .separate-box{
+      width: 320px;
+    }
+    .floor-listing{
+      width: 300px;
+      .book-box{
+        width: 15px;
+        height: 15px;
+        margin: 0 2px;
+      }
     }
   }
 }

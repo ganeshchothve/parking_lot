@@ -5,16 +5,16 @@
   </div>
   <% url = channel_partners_path %>
   <%= form_tag url, method: "get", id: "channel_partner_search_form" do %>
-    <div class="filter-content">
-      <div class="form-group">
+    <div class="filter-content row">
+      <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
         <%= label_tag "fltrs", "Name / Email / Phone", class: "control-label" %>
         <%= select_tag "fltrs[_id]", (params[:fltrs].present? ? params[:fltrs][:_id] : []), {class: "selectize-remote", data: {url: channel_partners_path }} %>
       </div>
-      <div class="form-group">
+      <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
         <%= label_tag "fltrs", "RERA ID", class: "control-label" %>
         <%= text_field_tag "fltrs[rera_id]", params[:fltrs].present? ? params[:fltrs][:rera_id] : "", class: "form-control" %>
       </div>
-      <div class="form-group">
+      <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
         <%= label_tag "fltrs", "Status", class: "control-label" %>
         <%= select_tag "fltrs[status]", options_for_select(ChannelPartner.available_statuses.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize"} %>
       </div>

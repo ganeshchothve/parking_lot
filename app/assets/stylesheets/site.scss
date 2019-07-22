@@ -1938,14 +1938,14 @@ a:hover{
 /******************************** Footer ***************************/
 .footer{
 	padding: 25px 0px 20px;
+	box-shadow: 1px 1px 15px #d8d8d8;
 	.footer-top{
 		font-size: 13px;
 		line-height: 1.54;
 		color: #67758d;
-		border-bottom: 1px solid #dee5ef;
 	}
 	.footer-menu{
-		padding: 5px 0 0 0;
+		padding: 5px 0;
 		@media screen and (max-width: 700px){
 			text-align: center;
 			float: none!important;
@@ -1999,13 +1999,13 @@ a:hover{
 	position: absolute;
 	top: 0;
 	right: 0;
-	width: 310px;
+	width: 60%;
   	border-radius: 4px;
   	box-shadow: -5px 0 5px 0 rgba(0, 0, 0, 0.23);
   	border: solid 1px #e0e4f8;
   	background-color: #ffffff;
   	display: none;
-  	z-index: 999;
+  	z-index: 1050;
   	@media screen and (max-width: 700px){
   		position: fixed;
   		width: 100%;
@@ -2309,7 +2309,16 @@ a:hover{
 	height: 10px;
 	margin-right: 10px;
 }
-
+.table{
+  .dropdown-menu {
+    &.show{
+      display:block;
+      transform: translate3d(0px, 0px, 0px) !important;
+      right: 0px;
+      left: unset!important;
+    }
+  }
+}
 
 
 

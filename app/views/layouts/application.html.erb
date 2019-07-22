@@ -30,7 +30,9 @@
   </head>
   <body class="<%= params[:controller] == 'custom' && action_name == 'inventory' ? 'pt-0' : '' %>">
     <% if action_name == 'inventory' %>
-      <%= yield %>
+      <div id='inventory'>
+        <%= yield %>
+      </div>
     <% else %>
       <%= render "layouts/navbar"%>
       <div class="mt-4" style="margin-bottom: 4rem; padding-bottom: 4rem;">

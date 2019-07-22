@@ -1,5 +1,5 @@
 <% unless params[:remove_header] %>
-  <div class="card card-body bg-gradient-cd white">
+  <div class="card card-body bg-gradient-cd white py-2 rounded-0">
     <%= form_tag custom_inventory_path, method: "get", id: "custom_inventory_form", class: "form-inline" do %>
       <div class='row w-100'>
         <div class="form-group">
@@ -20,19 +20,16 @@
     <% end %>
   </div>
 <% end %>
-<div class="row justify-content-center mt-3 ml-3">
+<div class="justify-content-center mt-1">
   <div id="project-tower-carousel" class="carousel slide w-100" data-ride="carousel">
     <ol class="carousel-indicators">
       <% @project_towers.each_with_index do |project_tower, index| %>
         <li data-target="#project-tower-carousel" data-slide-to="<%= index %>" class="<%= index==0 ? 'active': '' %>"></li>
       <% end %>
     </ol>
-    <div class="carousel-inner mb-5">
+    <div class="carousel-inner pb-5 mb-3">
       <% @project_towers.each_with_index do |project_tower, index| %>
         <div class="carousel-item <%= index == 0 ? 'active' : '' %>">
-          <div class="text-center mb-3">
-            <h3><%= project_tower.project.name %></h3>
-          </div>
           <% @units = ProjectUnit.where(project_tower_id:project_tower.id).sort_by{|x| [x.floor, x.floor_order]}.to_a %>
           <div class="col-md-6" id="unit-selection-<%= project_tower.id.to_s%>" style="margin: auto;">
               <div class="left-info pl-5 pr-5 pt-0 pb-4 book-apartment">
@@ -44,8 +41,8 @@
                 height = (280.to_f / max_floor).round(2)
                 height = 16 if height < 16
                 %>
-                <div class="form-sec-title text-center"><%= project_tower.name %></div>
-                <ul class="book-box-info">
+              <div class="form-sec-title p-1 text-center"><%= "#{project_tower.project.name} - #{project_tower.name}" %></div>
+                <ul class="book-box-info mb-2">
                 <li><span class="book-box available-aprt"></span><span>Available</span></li>
                 <li><span class="book-box booked-aprt"></span><span>Hold</span></li>
                 <li><span class="book-box soldout-aprt"></span><span>Sold Out</span></li>
