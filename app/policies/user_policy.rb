@@ -43,7 +43,7 @@ class UserPolicy < ApplicationPolicy
 
   def permitted_attributes(_params = {})
     attributes = %i[first_name last_name phone lead_id password password_confirmation time_zone]
-    # Only allow admin to change password.
+    # Only allow admin to change email.
     attributes += %i[email] if record.new_record? || user.role?('admin')
     attributes
   end
