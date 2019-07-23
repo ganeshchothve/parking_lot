@@ -1,5 +1,10 @@
 class LocalDevise::SessionsController < Devise::SessionsController
+  include SessionHelper
   prepend_before_action :require_no_authentication, only: [:otp]
+  before_action :generate_rsa_key, only: :new
+  prepend_before_action -> {authenticate_encryptor([:password])}, only: :create
+
+  around_action :reset_unique_session, only: :destroy
 
   def create
     if params[self.resource_name][:login_otp].present?
@@ -43,6 +48,14 @@ class LocalDevise::SessionsController < Devise::SessionsController
   end
 
   protected
+
+  # Reset The uniq_session id after sign out.
+  def reset_unique_session
+    user = instance_variable_get(:"@current_#{resource_name}")
+    yield
+    user.set(unique_session_id: nil, uniq_user_agent: nil) if instance_variable_get(:"@current_#{resource_name}").blank?
+  end
+
   # GENERICTODO: check if this can be handled better. phone with + in param replaced as a space. So need to decode it back
   def sign_in_params
     out = devise_parameter_sanitizer.sanitize(:sign_in)

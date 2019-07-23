@@ -17,6 +17,11 @@ class BookingDetail
   field :base_rate, type: Float
   field :floor_rise, type: Float
   field :saleable, type: Float
+  field :project_name, type: String
+  field :project_tower_name, type: String
+  field :bedrooms, type: String
+  field :bathrooms, type: String
+
   mount_uploader :tds_doc, DocUploader
 
   enable_audit(
@@ -54,11 +59,12 @@ class BookingDetail
   delegate :name, :email, :phone, :role, :role?, to: :manager, prefix: true, allow_nil: true
 
 
+  scope :filter_by_id, ->(_id) { where(_id: _id) }
   scope :filter_by_name, ->(name) { where(name: ::Regexp.new(::Regexp.escape(name), 'i')) }
   scope :filter_by_status, ->(status) { where(status: status) }
-  scope :filter_by_project_tower, ->(project_tower_id) { where(project_unit_id: { "$in": ProjectUnit.where(project_tower_id: project_tower_id).pluck(:_id) })}
-  scope :filter_by_user, ->(user_id) { where(user_id: user_id)  }
-  scope :filter_by_manager, ->(manager_id) {where(manager_id: manager_id) }
+  scope :filter_by_project_tower_id, ->(project_tower_id) { where(project_unit_id: { "$in": ProjectUnit.where(project_tower_id: project_tower_id).pluck(:_id) })}
+  scope :filter_by_user_id, ->(user_id) { where(user_id: user_id)  }
+  scope :filter_by_manager_id, ->(manager_id){ where(user_id: { '$in' => User.buyers.where(manager_id: manager_id).distinct(:_id) } ) }
   default_scope -> {desc(:created_at)}
 
 
@@ -128,11 +134,13 @@ class BookingDetail
   end
 
   def cost_sheet_template(booking_detail_scheme_id = nil)
-    booking_detail_scheme_id.present? ? BookingDetailScheme.find(booking_detail_scheme_id).cost_sheet_template : booking_detail_scheme.cost_sheet_template
+    bds = booking_detail_scheme_id.present? ? booking_detail_schemes.where(id: booking_detail_scheme_id).first : booking_detail_scheme
+    bds.try(:cost_sheet_template)
   end
 
   def payment_schedule_template(booking_detail_scheme_id = nil)
-    booking_detail_scheme_id.present? ? BookingDetailScheme.find(booking_detail_scheme_id).payment_schedule_template : booking_detail_scheme.payment_schedule_template
+    bds = booking_detail_scheme_id.present? ? booking_detail_schemes.where(id: booking_detail_scheme_id).first : booking_detail_scheme
+    bds.try(:payment_schedule_template)
   end
 
   def pending_balance(options={})

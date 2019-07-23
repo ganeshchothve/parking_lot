@@ -7,7 +7,8 @@ module UserKycsConcern
   # @return [{},{}] records with array of Hashes.
   #
   def index
-    @user_kycs = UserKyc.paginate(page: params[:page] || 1, per_page: params[:per_page])
+    @user_kycs = UserKyc.build_criteria params
+    @user_kycs = @user_kycs.paginate(page: params[:page] || 1, per_page: params[:per_page])
   end
 
   #
@@ -28,6 +29,7 @@ module UserKycsConcern
   def create
     @user_kyc = UserKyc.new(permitted_attributes([current_user_role_group, UserKyc.new(user: @user) ]))
     set_user_creator
+    authorize [current_user_role_group, @user_kyc]
     respond_to do |format|
       if @user_kyc.save
         format.html { redirect_to home_path(current_user), notice: 'User kyc was successfully created.' }

@@ -1,0 +1,31 @@
+<% links = [] %>
+
+<% if CustomPolicy.custom_methods.present? %>
+  <% CustomPolicy.custom_methods.each do |method| %>
+    <% if policy(:custom).send("#{method}?") %>
+        <% links << { method: method.to_s.titleize, link: eval("custom_#{method}_path"), name: t("#{method}.link_name")} %>
+      </li>
+    <% end %>
+  <% end %>
+<% end %>
+
+<% if links.present? %>
+  <li class="nav-item d-none d-lg-block">
+    <div class="dropdown">
+      <a href="javascript:;" class="nav-link dropdown-toggle" data-toggle="dropdown"><%= t('global.custom') %></a>
+      <div class="dropdown-menu dropdown-menu-right">
+        <% links.each do |link| %>
+          <%= link_to link[:name], link[:link], class: "dropdown-item" %>
+        <% end %>
+      </div>
+    </div>
+  </li>
+<% end %>
+
+<% if links.present? %>
+  <% links.each do |link| %>
+    <li class="nav-item d-lg-none">
+      <%= link_to link[:name], link[:link], class: "nav-link" %>
+    </li>
+  <% end %>
+<% end %>

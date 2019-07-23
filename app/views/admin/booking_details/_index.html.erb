@@ -11,21 +11,18 @@
       </tr>
     </thead>
     <tbody>
-      <%# project_units = ProjectUnit.in(_id: booking_details.pluck(:project_unit_id)).group_by(&:_id) %>
       <% booking_details.each do |booking_detail| %>
-        <%# project_unit = project_units[booking_detail.project_unit_id].first %>
-        <% project_unit = booking_detail.project_unit %>
         <tr>
           <td>
-            <%= project_unit.name %>
-            <div class="small">Project: <%= project_unit.project_name %></div>
-            <div class="small">Tower: <%= project_unit.project_tower_name %></div>
+            <%= booking_detail.name %>
+            <div class="small">Project: <%= booking_detail.project_name %></div>
+            <div class="small">Tower: <%= booking_detail.project_tower_name %></div>
           </td>
-          <td><%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></td>
+          <td><%= booking_detail.bedrooms %> / <%= booking_detail.bathrooms %></td>
           <td><%= t("booking_details.status.#{booking_detail.status}") %></td>
           <td>
-            <%= number_to_indian_currency(project_unit.calculate_agreement_price.round) %>
-            <div class="small"><%= labels[:all_inclusive_price] %>: <%= number_to_indian_currency(project_unit.calculate_all_inclusive_price.round) %></div>
+            <%= number_to_indian_currency(booking_detail.calculate_agreement_price.round) %>
+            <div class="small"><%= labels[:all_inclusive_price] %>: <%= number_to_indian_currency(booking_detail.calculate_all_inclusive_price.round) %></div>
             <div class="small">Paid Amt.: <%= number_to_indian_currency(booking_detail.total_amount_paid)  %></div>
             <div class="small">Booking Amt. Pending: <%= number_to_indian_currency(booking_detail.pending_balance.to_i) %></div>
           </td>

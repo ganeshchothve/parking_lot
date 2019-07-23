@@ -18,6 +18,8 @@ else
   ENV_CONFIG = (YAML.load(File.open( "config/generic-booking-portal-env.yml" ).read).symbolize_keys).with_indifferent_access
 end
 
+DEVISE_ORM = :mongoid
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
@@ -35,6 +37,7 @@ module BookingPortal
     config.mongoid.observers = Dir["#{Rails.root}/app/observers/**/*.rb"].collect{ |f| f.gsub!("#{Rails.root}/app/observers/", "").gsub!(".rb", "")}
     config.action_mailer.preview_path = "#{Rails.root}/spec/mailers/previews"
     config.active_job.queue_adapter = :sidekiq
+    config.middleware.use(Mongoid::QueryCache::Middleware)
     config.to_prepare do
       Devise::Mailer.layout "mailer"
     end

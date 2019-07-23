@@ -11,7 +11,7 @@
       <% accounts.each do |account| %>
       <tr>
         <td>
-          <%= link_to account.name, admin_account_path(account, request_type: 'razorpay_payment') %>
+          <%= link_to account.name, admin_account_path(account, account_type: account.account_type) %>
           <% if account.by_default %>
             <span class="badge badge-primary" title="Default Account" data-toggle="popover" data-trigger="focus" data-content="System need only one default account, which contains first payment of each unit.">Default</span>
           <% end %>
@@ -23,8 +23,8 @@
           <div class="dropdown">
             <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
             <div class="dropdown-menu dropdown-menu-right">
-              <%= link_to 'Edit', edit_admin_account_path(account, request_type: 'razorpay_payment'), class: 'modal-remote-form-link dropdown-item' %>
-              <%= link_to 'Delete', admin_account_path(account, request_type: 'razorpay_payment'), class: 'dropdown-item', method: :delete %>
+              <%= link_to 'Edit', edit_admin_account_path(account, account_type: account.account_type), class: 'modal-remote-form-link dropdown-item' %>
+              <%= link_to 'Delete', admin_account_path(account, account_type: account.account_type), class: 'dropdown-item', method: :delete %>
             </div>
           </div>
         </td>

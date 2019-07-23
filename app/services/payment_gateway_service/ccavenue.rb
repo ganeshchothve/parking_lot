@@ -59,14 +59,7 @@ module PaymentGatewayService
     end
 
     def payment_profile
-      merchant_id = (Rails.env.development? ? "189462" : ENV_CONFIG['ccavenue']['merchant_id'])
-      working_key = (Rails.env.development? ? "B666339315E4F58445C11591EB7993DE" : ENV_CONFIG['ccavenue']['working_key'])
-      access_code = (Rails.env.development? ? "AVVT80FI20AH22TVHA" : ENV_CONFIG['ccavenue']['access_code'])
-      return {
-        merchant_id: merchant_id,
-        working_key: working_key,
-        access_code: access_code
-      }.with_indifferent_access
+      @receipt.account.as_json(only: %w(merchant_id working_key access_code)).with_indifferent_access
     end
 
     def redirect_url(search_id)

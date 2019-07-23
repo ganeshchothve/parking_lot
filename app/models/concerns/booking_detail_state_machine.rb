@@ -36,7 +36,7 @@ module BookingDetailStateMachine
         # transitions from: :user_kyc, to: :hold
       end
 
-      event :under_negotiation, after: %i[after_under_negotiation_event update_selldo!] do
+      event :under_negotiation, after: %i[after_under_negotiation_event] do
         transitions from: :under_negotiation, to: :under_negotiation
         transitions from: :hold, to: :under_negotiation
         transitions from: :scheme_approved, to: :under_negotiation
@@ -149,9 +149,9 @@ module BookingDetailStateMachine
       if under_negotiation? && booking_detail_scheme.approved?
         scheme_approved!
       else
-        auto_released_extended_inform_buyer!
-      # elsif !booking_detail_scheme.present? && (booking_detail_schemes.distinct(:status).include? 'rejected')
-      #   scheme_rejected!
+        # auto_released_extended_inform_buyer!
+        # elsif !booking_detail_scheme.present? && (booking_detail_schemes.distinct(:status).include? 'rejected')
+        #   scheme_rejected!
       end
     end
 
@@ -244,6 +244,8 @@ module BookingDetailStateMachine
           project_unit_id: project_unit_id,
           status: scheme.status
         ) if scheme
+      else
+        true
       end
     end
     # This method is called after booked_confirmed event
@@ -315,11 +317,13 @@ module BookingDetailStateMachine
     def release_project_unit!
       project_unit.make_available
       project_unit.save(validate: false)
+      SelldoLeadUpdater.perform_async(user_id, 'cancelled')
+
     end
 
     def update_selldo!
       if project_unit && project_unit.booking_portal_client.selldo_api_key.present?
-        SelldoLeadUpdater.perform_async(user_id)
+        SelldoLeadUpdater.perform_async(user_id, status)
       end
     end
 

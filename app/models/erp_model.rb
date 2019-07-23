@@ -40,10 +40,15 @@ class ErpModel
   def request_payload_format
     if request_payload.present?
       begin
-        raise StandardError, 'Improper request payload format' unless SafeParser.new(request_payload).safe_load.is_a?(Hash)
+        raise StandardError, 'Improper request payload format' unless SafeParser.new(request_payload.gsub("\n\s", '')).safe_load.is_a?(Hash)
       rescue StandardError => e
         errors.add :request_payload, e.message
       end
     end
+  end
+
+  def set_request_payload(record)
+    erb = ERB.new(self.request_payload.gsub("\n\s", ''))
+    SafeParser.new(erb.result(binding)).safe_load
   end
 end

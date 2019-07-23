@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <%= render 'dashboard/booking_detail_overview', {booking_detail: @booking_detail, with_actions: true } %>
       <div class="mt-3"></div>
-      <%= render 'sync_logs/sync', { record: @booking_detail } if current_client.external_api_integration? %>
+      <%= render 'sync_logs/sync', { record: @booking_detail } if current_client.external_api_integration? && policy([current_user_role_group, SyncLog.new]).index? %>
       <% if @scheme.present? %>
         <div class="mt-3"></div>
         <div class="card">
@@ -43,7 +43,7 @@
       <%= render 'dashboard/booking_detail_cost_sheet', booking_detail: @booking_detail %>
       <div class="page-break"></div>
       <div class="mt-3"></div>
-      <%= render "dashboard/project_unit_payment_schedule", project_unit: @booking_detail.project_unit %>
+      <%= render "dashboard/project_unit_payment_schedule", booking_detail: @booking_detail %>
     </div>
   </div>
 </div>

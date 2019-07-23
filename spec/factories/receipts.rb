@@ -6,7 +6,7 @@ FactoryBot.define do
     issued_date { Faker::Date.backward(3) } # Date when cheque / DD etc are issued
     issuing_bank { Faker::Name.first_name } # Bank which issued cheque / DD etc
     issuing_bank_branch { Faker::Address.street_name } # Branch of bank
-    payment_identifier { Faker::Bank.iban } # cheque / DD number / online transaction reference from gateway
+    payment_identifier { Faker::Number.number(6) } # cheque / DD number / online transaction reference from gateway
     # status 'pending'
     # tracking_id { Faker::String.random(5) } # online transaction reference from gateway or transaction id after the cheque is processed
     total_amount { Faker::Number.number(6) } # Total amount

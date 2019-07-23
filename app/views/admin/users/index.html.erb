@@ -10,8 +10,8 @@
                 <a class="btn btn-primary dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add new</a>
                 <div class="dropdown-menu">
                   <% User.available_roles(current_client).each do |role| %>
-                    <% if policy([:admin, User.new(role: role[:id])]).new? %>
-                      <%= link_to "New #{role[:text]}", new_admin_user_path(role: role[:id]), class: 'modal-remote-form-link dropdown-item' %>
+                    <% if policy([:admin, User.new(role: role)]).new? %>
+                      <%= link_to ("New " + t("users.role.#{role}")), new_admin_user_path(role: role), class: 'modal-remote-form-link dropdown-item' %>
                       <% end %>
                   <% end %>
                 </div>

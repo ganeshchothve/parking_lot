@@ -40,8 +40,7 @@ module Api
     end
 
     def set_request_payload
-      erb = ERB.new(erp_model.request_payload)
-      SafeParser.new(erb.result(binding)).safe_load
+      erp_model.set_request_payload(record)
     end
 
     def set_sync_log(request, response, response_code, status, message)
@@ -60,12 +59,12 @@ module Api
     end
 
     def get_erp_id
-      response = response_payload
+      _erp_id = response_payload
       erp_model.reference_key_location.split(',').each do |key|
         # can be ", " according to format
-        response = response[key] if response[key].present?
+        _erp_id = response[key] if _erp_id[key].present?
       end
-      erp_id = response['RrecordId']
+      _erp_id[erp_model.reference_key_name]
     end
 
     def get_response
@@ -74,7 +73,7 @@ module Api
       when 400..511
         raise Api::SyncError, "#{response.try(:code)}: #{response.message}"
       else
-        set_sync_log(request_payload, response, response.code, response_payload['returnCode'].zero?, response_payload['message']) if set_response_payload(response)
+        set_sync_log(request_payload, response, response.code, response_payload['returnCode'].try(:zero?) || true, response_payload['message']) if set_response_payload(response)
       end
       get_erp_id
     rescue StandardError, SyncError => e

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>IRIS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <%= csrf_meta_tags %>
+    <%= stylesheet_link_tag 'dashboard', media: 'all' %>
+    <%= javascript_include_tag 'dashboard' %>
+
+    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
+    <%= javascript_tag do %>
+      if(typeof App === "undefined"){
+        App = {};
+      }
+      <% if Rails.env.development? || Rails.env.staging? %>
+        Pusher.logToConsole = true;
+      <% end %>
+    <% end %>
+  </head>
+  <body>
+    <% flash.each do |key, value| %>
+      <div class="<%= flash_class(key) %>">
+            <%= value %>
+      </div>
+    <% end %>
+    <% if current_user.blank? %>
+      <%= yield %>
+    <% else %>
+      <%= render "layouts/navbar"%>
+      <%= yield %>
+      <%= render "layouts/navbar_footer"%>
+      <%= render "layouts/gamification" %>
+      <%= render 'layouts/partials/google_code' %>
+    <% end %>
+  </body>
+</html>

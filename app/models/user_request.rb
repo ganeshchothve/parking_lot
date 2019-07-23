@@ -10,7 +10,7 @@ class UserRequest
 
   field :status, type: String # default: 'pending'
   field :resolved_at, type: DateTime
-  field :reason_for_failure, type: String
+  field :reason_for_failure, type: String, default: ''
 
   # belongs_to :booking_detail
   # belongs_to :receipt, optional: true

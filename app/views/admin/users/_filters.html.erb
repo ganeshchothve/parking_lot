@@ -20,7 +20,7 @@
       <% end %>
       <div class="form-group">
         <%= label_tag "fltrs", "role", class: "control-label" %>
-        <%= select_tag "fltrs[role][]", options_for_select(User.available_roles(current_client).reject{|x| x[:id] == "superadmin"}.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:role] : [])), {prompt: "Select", class: "selectize", multiple: 'multiple'} %>
+        <%= select_tag "fltrs[role][]", options_for_select( user_edit_role_options(User.new(role: 'admin') ), params.dig(:fltrs, :role)), {prompt: "Select", class: "selectize", multiple: 'multiple'} %>
       </div>
       <div class="form-group">
         <%= label_tag "fltrs", "confirmation", class: "control-label" %>
@@ -30,6 +30,12 @@
         <%= label_tag "fltrs", t('global.receipts'), class: "control-label" %>
         <%= select_tag "fltrs[receipts]", options_for_select([['Yes', 'yes'], ['No', 'no']], params.dig(:fltrs, :receipts)), {prompt: "Select", class: "selectize"} %>
       </div>
+      <% if current_user.role == 'admin' %>
+        <div class="form-group">
+          <%= label_tag "fltrs", "channel partner", class: "control-label" %>
+          <%= select_tag "fltrs[manager_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(_id: params[:fltrs][:manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {role: 'channel_partner'} }} %>
+        </div>
+      <% end %>
       <div class="form-group">
         <%= label_tag "fltrs", 'registered at', class: "control-label" %>
         <%= text_field_tag "fltrs[created_at]", (params.dig(:fltrs, :created_at).present? ? params[:fltrs][:created_at] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"} %>

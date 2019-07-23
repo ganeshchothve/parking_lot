@@ -17,7 +17,7 @@
               <a class="nav-item nav-link" data-toggle="tab" href="#nav-client-contacts" role="tab">Contacts & Notifications</a>
               <a class="nav-item nav-link" data-toggle="tab" href="#nav-client-integrations" role="tab">Integrations</a>
               <a class="nav-item nav-link" data-toggle="tab" href="#nav-client-pages" role="tab">Content Pages</a>
-              <a class="nav-item nav-link" data-toggle="tab" href="#nav-client-logos" role="tab">Logo & Background</a>
+              <a class="nav-item nav-link" data-toggle="tab" href="#nav-client-logos" role="tab">Images & Documents</a>
               <a class="nav-item nav-link" data-toggle="tab" href="#nav-client-configuration" role="tab">Time Slot Configuration</a>
             </div>
           </nav>
@@ -121,7 +121,7 @@
                 <div class="col-md-12">
                   <div class="form-group">
                     <%= f.label :enable_actual_inventory %><br/>
-                    <%= f.select :enable_actual_inventory, User.available_roles(@client).collect{|x| [x[:text], x[:id]]}, {}, class: 'selectize', multiple: true, required: 'required', disabled: (policy(f.object).editable_field?("enable_actual_inventory") ? false : true) %>
+                    <%= f.select :enable_actual_inventory, filter_user_role_options, {}, class: 'selectize', multiple: true, required: 'required', disabled: (policy(f.object).editable_field?("enable_actual_inventory") ? false : true) %>
                   </div>
                 </div>
               </div>
@@ -469,8 +469,23 @@
                 <%= f.file_field :logo, class: 'btn pl-0', disabled: (policy([:admin, @client]).editable_field?("logo") ? false : true) %>
                 <br/>
                 <% if @client.logo.present? %>
-                  <div style="width:100px;height:100px;overflow:hidden;" class="ml-3">
-                    <img src="<%= @client.logo.url %>" style="max-height: 100%; max-width:100%;" />
+                  <div class="ml-3 image_small_class">
+                    <img src="<%= @client.logo.url %>", class = "image_small_object"/>
+                  </div>
+                <% end %>
+                <hr/>
+              </div>
+              <div class="form-group">
+                <%= f.label :brochure, class: 'label-required' %><br/>
+                <%= f.file_field :brochure, class: 'btn pl-0', disabled: (!policy([:admin, @client]).editable_field?("brochure")) %>
+                <br/>
+                <% if @client.brochure.present? %>
+                  <div class="ml-3 image_small_class">
+                    <% if @client.brochure.url.split('.')[-1] == 'pdf' %>
+                      <embed src="<%= @client.brochure.url %>" class = 'image_small_object'  type="application/pdf">
+                    <% else %>
+                      <img src="<%= @client.brochure.url %>" class = 'image_small_object' />
+                    <% end %>
                   </div>
                 <% end %>
                 <hr/>
@@ -480,8 +495,8 @@
                 <%= f.file_field :mobile_logo, class: 'btn pl-0', disabled: (policy([:admin, @client]).editable_field?("mobile_logo") ? false : true) %>
                 <br/>
                 <% if @client.mobile_logo.present? %>
-                  <div style="width:100px;height:100px;overflow:hidden;" class="ml-3">
-                    <img src="<%= @client.mobile_logo.url %>" style="max-height: 100%; max-width:100%;" />
+                  <div class="ml-3 image_small_class">
+                    <img src="<%= @client.mobile_logo.url %>" class = "image_small_object" />
                   </div>
                 <% end %>
                 <hr/>
@@ -491,8 +506,8 @@
                 <%= f.file_field :background_image, class: 'btn pl-0', disabled: (policy([:admin, @client]).editable_field?("background_image") ? false : true) %>
                 <br/>
                 <% if @client.background_image.present? %>
-                  <div style="width:100px;height:100px;overflow:hidden;" class="ml-3">
-                    <img src="<%= @client.background_image.url %>" style="max-height: 100%; max-width:100%;" />
+                  <div class="ml-3 image_small_class">
+                    <img src="<%= @client.background_image.url %>" class = 'image_small_object' />
                   </div>
                 <% end %>
                 <hr/>

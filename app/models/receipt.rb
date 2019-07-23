@@ -13,6 +13,7 @@ class Receipt
   extend FilterByCriteria
 
   OFFLINE_PAYMENT_MODE = %w[cheque rtgs imps card_swipe neft]
+  PAYMENT_TYPES = %w[agreement stamp_duty]
 
   field :receipt_id, type: String
   field :order_id, type: String
@@ -30,6 +31,7 @@ class Receipt
   field :comments, type: String
   field :gateway_response, type: Hash
   field :erp_id, type: String, default: ''
+  field :payment_type, type: String # possible values are :agreement and :stamp_duty
 
   attr_accessor :swap_request_initiated
 
@@ -44,6 +46,7 @@ class Receipt
 
   scope :filter_by_status, ->(*_status) { where(status: { '$in' => _status }) }
   scope :filter_by_receipt_id, ->(_receipt_id) { where(receipt_id: /#{_receipt_id}/i) }
+  scope :filter_by_token_number, ->(_token_number) { where(token_number: _token_number) }
   scope :filter_by_user_id, ->(_user_id) { where(user_id: _user_id) }
   scope :filter_by_payment_mode, ->(_payment_mode) { where(payment_mode: _payment_mode) }
   scope :filter_by_issued_date, ->(date) { start_date, end_date = date.split(' - '); where(issued_date: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
@@ -54,8 +57,8 @@ class Receipt
     where(booking_detail_id: _booking_detail_id)
   end
 
-  validates :issuing_bank, :issuing_bank_branch, format: { without: /[^a-z\s]/i, message: 'can contain only alphabets and spaces' }, unless: proc { |receipt| receipt.payment_mode == 'online' }
-  validates :payment_identifier, format: { without: /[^a-z0-9\s]/i, message: 'can contain only alphabets, numbers and spaces' }, unless: proc { |receipt| receipt.payment_mode == 'online' }
+  validates :issuing_bank, :issuing_bank_branch, name: true, unless: proc { |receipt| receipt.online? }
+  validates :payment_identifier, length: { in: 3..25 }, format: { without: /[^A-Za-z0-9_-]/, message: "can contain only alpha-numaric with '_' and '-' "}, if: proc { |receipt| receipt.offline? }
   validates :total_amount, :status, :payment_mode, :user_id, presence: true
   validates :payment_identifier, presence: true, if: proc { |receipt| receipt.payment_mode == 'online' ? receipt.status == 'success' : true }
   validates :status, inclusion: { in: proc { Receipt.aasm.states.collect(&:name).collect(&:to_s) } }
@@ -65,7 +68,7 @@ class Receipt
   validates :processed_on, presence: true, if: proc { |receipt| %i[success clearance_pending available_for_refund].include?(receipt.status) }
   validates :payment_gateway, presence: true, if: proc { |receipt| receipt.payment_mode == 'online' }
   validates :payment_gateway, inclusion: { in: PaymentGatewayService::Default.allowed_payment_gateways }, allow_blank: true
-  validates :tracking_id, presence: true, if: proc { |receipt| receipt.status == 'success' && receipt.payment_mode != 'online' }
+  validates :tracking_id, length: { in: 5..15 }, presence: true, if: proc { |receipt| receipt.status == 'success' && receipt.payment_mode != 'online' }
   validates :comments, presence: true, if: proc { |receipt| receipt.status == 'failed' && receipt.payment_mode != 'online' }
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :tracking_id_processed_on_only_on_success, if: proc { |record| record.status != 'cancelled' }
@@ -240,9 +243,9 @@ class Receipt
   end
 
   def tracking_id_processed_on_only_on_success
-    if status_changed? && status != 'success' && payment_mode != 'online'
-      errors.add :tracking_id, 'cannot be set unless the status is marked as success' if tracking_id_changed? && tracking_id.present?
-      errors.add :processed_on, 'cannot be set unless the status is marked as success' if processed_on_changed? && processed_on.present?
+    if self.success? && self.offline?
+      errors.add :tracking_id, 'cannot be set unless the status is marked as success' if tracking_id_changed? && tracking_id.blank?
+      errors.add :processed_on, 'cannot be set unless the status is marked as success' if processed_on_changed? && processed_on.blank?
     end
   end
 

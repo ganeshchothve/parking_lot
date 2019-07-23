@@ -4,7 +4,7 @@ class Buyer::UserKycsController < BuyerController
   before_action :set_user
   before_action :set_user_kyc, only: %i[show edit update destroy]
   around_action :apply_policy_scope
-  before_action :authorize_resource
+  before_action :authorize_resource, except: %i[create]
 
   layout :set_layout
 
@@ -24,7 +24,7 @@ class Buyer::UserKycsController < BuyerController
 
   # update defined in UserKycsConcern
   # PATCH /buyer/user_kycs/:id
-  
+
   # This action is to set the user and creator as current_user for the user kyc record.
   #
   def set_user_creator
@@ -38,8 +38,6 @@ class Buyer::UserKycsController < BuyerController
       authorize [:buyer, UserKyc]
     elsif params[:action] == 'new'
       authorize [:buyer, UserKyc.new(user: @user)]
-    elsif params[:action] == 'create'
-      authorize [:buyer, UserKyc.new(permitted_attributes([:buyer, UserKyc.new(user: @user)]))]
     else
       authorize [:buyer, @user_kyc]
     end

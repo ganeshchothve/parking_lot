@@ -1,0 +1,14 @@
+<div class="container">
+  <div class="justify-content-center">
+    <div class="notice"> Select any other domain as below</div>
+    <div class="card h-100">
+      <% Client.all.each do |client| %>
+        <% client.booking_portal_domains.each do |domain| %>
+          <div class="card-header">
+            <%= link_to domain, "http://#{domain}", target: :_blank %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</section>

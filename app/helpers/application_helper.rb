@@ -38,6 +38,7 @@ module ApplicationHelper
     else
       @current_client = Client.asc(:created_at).first # GENERICTODO: handle this
     end
+    @current_client
   end
 
   def current_project
@@ -48,6 +49,11 @@ module ApplicationHelper
 
   def bottom_navigation(classes='')
     html = ''
+    if current_user && current_client.brochure.present?
+      html += "<li class='nav-item #{classes}'>
+      #{active_link_to 'Brochure', download_brochure_path, target: "_blank", active: :exclusive, class: 'small nav-link' }
+      </li>"
+    end
     if current_user
       html += "<li class='nav-item #{classes}'>
       #{active_link_to 'Docs', dashboard_documents_path, active: :exclusive, class: 'small nav-link'}
@@ -103,5 +109,14 @@ module ApplicationHelper
 
   def current_user_role_group
     current_user.buyer? ? :buyer : :admin
+  end
+
+  def flash_class(level)
+    case level
+      when 'notice' then "alert alert-info"
+      when 'success' then "alert alert-success"
+      when 'error' then "alert alert-danger"
+      when 'alert' then "alert alert-warning"
+    end
   end
 end

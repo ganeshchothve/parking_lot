@@ -1,7 +1,7 @@
 module Notification
   class Receipt
-    def initialize id, changes={}
-      @receipt = ::Receipt.find id
+    def initialize id, changes={}, extra={}
+      @receipt = extra[:record] || ::Receipt.where(id: params[:triggered_by_id]).first
       @user = @receipt.user
       @client = @user.booking_portal_client
       @changes = changes
@@ -26,6 +26,7 @@ module Notification
         recipient_ids: [@user.id],
         cc_recipient_ids: (@user.manager_id.present? ? [@user.manager_id] : []),
         triggered_by_id: @receipt.id,
+        triggered_by: @receipt,
         triggered_by_type: @receipt.class.to_s
       }
 

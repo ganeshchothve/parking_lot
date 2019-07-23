@@ -139,7 +139,7 @@ class SearchesController < ApplicationController
 
   def payment
     @receipt = Receipt.new(creator: @search.user, user: @search.user, payment_mode: 'online', total_amount: current_client.blocking_amount, payment_gateway: current_client.payment_gateway)
-    @receipt.account = selected_account(@search.project_unit)
+    @receipt.account = selected_account(current_client.payment_gateway.underscore ,@search.project_unit)
     if @search.project_unit_id.present?
       @project_unit = ProjectUnit.find(@search.project_unit_id)
       @receipt.total_amount = @project_unit.blocking_amount
@@ -281,6 +281,10 @@ class SearchesController < ApplicationController
     @booking_detail = BookingDetail.find_or_initialize_by(project_unit_id: @search.project_unit_id, user_id: @search.user_id, status: 'hold')
     @booking_detail.assign_attributes(
       base_rate: @search.project_unit.base_rate,
+      project_name: @search.project_unit.project_name,
+      project_tower_name: @search.project_unit.project_tower_name,
+      bedrooms: @search.project_unit.bedrooms,
+      bathrooms: @search.project_unit.bathrooms,
       floor_rise: @search.project_unit.floor_rise,
       saleable: @search.project_unit.saleable,
       costs: @search.project_unit.costs,

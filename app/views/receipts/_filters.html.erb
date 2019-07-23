@@ -12,27 +12,25 @@
       <% if !current_user.buyer? %>
         <div class="form-group">
           <%= label_tag "fltrs", "Customer Name / Email / Phone", class: "control-label" %>
-          <%
-            if params[:fltrs].present? && params[:fltrs][:user_id].present?
-              user = User.find(params[:fltrs][:user_id])
-            end
-          %>
-          <%= select_tag "fltrs[user_id]", options_for_select((params[:fltrs].present? && params[:fltrs][:user_id].present?) ? [[user.ds_name, user.id]] : []), {class: "selectize-remote", data: {params: {fltrs: {role: User.buyer_roles(current_client)}}, url: admin_users_path }} %>
+          <% user = params.dig(:fltrs, :user_id).present? ? User.where(_id: params.dig(:fltrs, :user_id)).first : nil %>
+          <%= select_tag "fltrs[user_id]", options_for_select( user ? [[ user.ds_name, user.id ]] : []), {class: "selectize-remote", data: {params: {fltrs: {role: User.buyer_roles(current_client)} }, url: admin_users_path }} %>
         </div>
       <% end %>
       <div class="form-group">
         <%= label_tag "fltrs", global_labels[:project_unit], class: "control-label" %>
-        <%
-          if params[:fltrs].present? && params[:fltrs][:project_unit_id].present?
-            project_unit = ProjectUnit.find(params[:fltrs][:project_unit_id])
-          end
-        %>
-        <%= select_tag "fltrs[project_unit_id]", options_for_select((params[:fltrs].present? && params[:fltrs][:project_unit_id].present?) ? [[project_unit.ds_name, project_unit.id]] : []), {class: "selectize-remote", data: {url: admin_project_units_path }} %>
+        <% booking_detail = params.dig(:fltrs, :booking_detail_id).present? ? BookingDetail.where(_id: params.dig(:fltrs, :booking_detail_id) ).first : nil %>
+        <%= select_tag "fltrs[booking_detail_id]", options_for_select( booking_detail ? [[booking_detail.name, booking_detail.id]] : []), {class: "selectize-remote", data: {url: admin_booking_details_path }} %>
       </div>
       <div class="form-group">
         <%= label_tag "fltrs", labels[:receipt_id], class: "control-label" %>
         <%= text_field_tag "fltrs[receipt_id]", params.dig(:fltrs, :receipt_id), class: 'form-control' %>
       </div>
+
+      <div class="form-group">
+        <%= label_tag "fltrs", labels[:token_number], class: "control-label" %>
+        <%= text_field_tag "fltrs[token_number]", params.dig(:fltrs, :token_number), class: 'form-control' %>
+      </div>
+
       <div class="form-group">
         <%= label_tag "fltrs", labels[:status], class: "control-label" %>
         <%= select_tag "fltrs[status][]", options_for_select(Receipt.aasm.states.collect(&:name).collect(&:to_s).collect{|x| [x, x]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize", multiple: 'multiple'} %>
