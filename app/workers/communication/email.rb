@@ -29,7 +29,7 @@ module Communication
             mailgun.send_message(email.booking_portal_client.mailgun_email_domain, message)
           else
             ApplicationMailer.test({
-              to: email.recipients.pluck(:email).uniq,
+              to: email.to || [],
               cc: email.cc || [],
               body: email.body,
               subject: email.subject,
