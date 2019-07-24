@@ -20,6 +20,10 @@ module UsersHelper
     User.available_roles(current_client).collect{|role| [ t("users.role.#{role}"), role ]}
   end
 
+  def filter_admin_role_options
+    User::ADMIN_ROLES.collect{|role| [ t("users.role.#{role}"), role ]}
+  end
+
   def filter_buyer_role_options
     User.buyer_roles(current_client).collect{|role| [ t("users.role.#{role}"), role ]}
   end

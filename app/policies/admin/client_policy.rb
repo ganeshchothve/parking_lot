@@ -24,6 +24,7 @@ class Admin::ClientPolicy < ClientPolicy
       unless record.slot_start_date.present? && Rails.env.production?
         attributes += %w[slot_start_date start_time end_time capacity duration enable_slot_generation]
       end
+      attributes += [roles_taking_registrations: []]
     end
     attributes.uniq
   end
