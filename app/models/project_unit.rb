@@ -86,7 +86,7 @@ class ProjectUnit
   validate :pan_uniqueness
 
   scope :filter_by_project_tower_id, ->(project_tower_id) { where(project_tower_id: project_tower_id) }
-  scope :filter_by_status, ->(status) { where(status: status)}
+  scope :filter_by_status, ->(status) { status.is_a?(Array) ? where(status: {"$in" => status}) : where(status: status)}
   scope :filter_by_unit_facing_direction, ->(unit_facing_direction) { where(unit_facing_direction: unit_facing_direction)}
   scope :filter_by_floor, ->(floor) { where(floor: floor)}
   scope :filter_by_floor_order, ->(floor_order) { where(floor_order: floor_order)}
