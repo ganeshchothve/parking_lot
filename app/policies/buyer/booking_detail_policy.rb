@@ -13,11 +13,11 @@ class Buyer::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def block?
-    _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && (enable_booking_without_kyc? || only_for_kyc_added_users!) && only_for_hold! && allowed_booking?
+    _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && eligible_user? && only_for_hold! && allowed_booking?
   end
 
   def hold?
-    _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && (enable_booking_without_kyc? || only_for_kyc_added_users!) && only_single_unit_can_hold! && available_for_user_group? && is_buyer_booking_limit_exceed? && buyer_kyc_booking_limit_exceed?
+    _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && eligible_user? && only_single_unit_can_hold! && available_for_user_group? && is_buyer_booking_limit_exceed? && buyer_kyc_booking_limit_exceed?
   end
 
   private

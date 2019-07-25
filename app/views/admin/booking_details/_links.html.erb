@@ -1,8 +1,8 @@
 <div class="dropdown float-right">
   <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= link_name %></a>
   <div class="dropdown-menu dropdown-menu-right">
-    <% if policy([ :admin, booking_detail.project_unit]).edit? %>
-      <%= link_to "Update #{global_labels['user_kycs']}", edit_admin_project_unit_path(booking_detail.project_unit), class: "modal-remote-form-link dropdown-item" %>
+    <% if policy([ :admin, booking_detail]).edit? %>
+      <%= link_to "Update #{global_labels['user_kycs']}", edit_admin_booking_detail_path(booking_detail), class: "modal-remote-form-link dropdown-item" %>
     <% end %>
     <% if booking_detail.scheme_rejected? && policy([:admin, booking_detail.project_unit]).release_unit? %>
       <%= link_to "Release Unit", release_unit_admin_project_unit_path(booking_detail.project_unit), method: :patch, class: 'dropdown-item' %>
@@ -28,7 +28,7 @@
       <%= link_to "Add Lost Receipt", lost_receipt_admin_booking_detail_receipts_path(booking_detail), class: "dropdown-item modal-remote-form-link" %>
     <% end %>
 
-    <% if %w[hold blocked booked_tentative booked_confirmed scheme_approved].include?(booking_detail.status) && policy([:admin, Receipt.new(user: booking_detail.user, booking_detail: booking_detail)]).new? %>
+    <% if policy([:admin, Receipt.new(user: booking_detail.user, booking_detail: booking_detail)]).new? %>
       <%= link_to "Pay Remaining Amount", new_admin_user_booking_detail_receipt_path(booking_detail.user, booking_detail_id: booking_detail.id), class: 'dropdown-item modal-remote-form-link' %>
     <% end %>
 

@@ -37,7 +37,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
 
-    resources :booking_details, only: [:index, :show] do
+    resources :booking_details, only: [:index, :show, :edit, :update] do
       patch :booking, on: :member
       get :mis_report, on: :collection
       patch :send_under_negotiation, on: :member

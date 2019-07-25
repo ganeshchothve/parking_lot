@@ -3,10 +3,6 @@ class ReceiptPolicy < ApplicationPolicy
     show?
   end
 
-  def direct?
-    current_client.enable_direct_payment? && new?
-  end
-
   def update_token_number?
     false
   end
@@ -29,6 +25,10 @@ class ReceiptPolicy < ApplicationPolicy
 
   def direct_payment?
     record.booking_detail_id.blank?
+  end
+
+  def eligible_user?
+    direct_payment? ? ((enable_payment_with_kyc? ? record_user_kyc_ready? : true)&& (enable_direct_payment? || user.role?('channel_partner'))) : ((enable_booking_with_kyc? ? record_user_kyc_ready? : true) && valid_booking_stages?)
   end
 
   def valid_booking_stages?
@@ -67,16 +67,19 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def record_user_kyc_ready?
-    valid = record.booking_detail ? current_client.enable_booking_without_kyc? : current_client.enable_payment_without_kyc?
-    return true if (record.user.kyc_ready? || valid)
+    return true if (record.user.kyc_ready?)
 
     @condition = 'not_kyc_present'
     false
   end
 
-  def enable_payment_without_kyc?
-    return true if current_client.enable_payment_without_kyc
+  def enable_payment_with_kyc?
+    return true if current_client.enable_payment_with_kyc
     false
   end
 
+  def enable_booking_with_kyc?
+    return true if current_client.enable_booking_with_kyc
+    false
+  end
 end
