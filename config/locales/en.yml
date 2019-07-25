@@ -120,6 +120,7 @@ en:
         blocking_days: 'Unit to be blocked for (Days)'
         holding_minutes: 'Unit to be held for (Minutes)'
         enable_company_users: 'Allow Company Users & Benefits'
+        roles_taking_registrations: 'Allowed roles for taking new registrations'
       search:
         bedrooms: "Beds"
         agreement_price: "Agreement Value"

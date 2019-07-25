@@ -6,18 +6,20 @@
         <div class="card-body">
           <div class="row mb-3">
             <div class="col-md-7">
-              <div class="dropdown float-left">
-                <a class="btn btn-primary dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add new</a>
-                <div class="dropdown-menu">
-                  <% User.available_roles(current_client).each do |role| %>
-                    <% if policy([:admin, User.new(role: role)]).new? %>
-                      <%= link_to ("New " + t("users.role.#{role}")), new_admin_user_path(role: role), class: 'modal-remote-form-link dropdown-item' %>
-                      <% end %>
-                  <% end %>
+              <% if policy([:admin, User.new(role: 'user')]).new? %>
+                <div class="dropdown float-left mr-2">
+                  <a class="btn btn-primary dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add new</a>
+                  <div class="dropdown-menu">
+                    <% User.available_roles(current_client).each do |role| %>
+                      <% if policy([:admin, User.new(role: role)]).new? %>
+                        <%= link_to ("New " + t("users.role.#{role}")), new_admin_user_path(role: role), class: 'modal-remote-form-link dropdown-item' %>
+                        <% end %>
+                    <% end %>
+                  </div>
                 </div>
-              </div>
+              <% end %>
               <% if policy([:admin, User.new]).export? %>
-                <div class="dropdown float-left ml-2">
+                <div class="dropdown float-left">
                   <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
                   <div class="dropdown-menu dropdown-menu-right">
                     <%= link_to "All #{global_labels['users']}", export_admin_users_path, class: 'dropdown-item' %>
