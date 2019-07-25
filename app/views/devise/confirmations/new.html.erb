@@ -1,32 +1,33 @@
-<section class="auth login-page">
+<section class="auth login-page pb-5">
   <div class="container no-pd">
     <div class="col-lg-5 col-xs-12 col-md-12 col-sm-12 no-pd">
       <div class="login-form-wrapper pt-5">
-        <p> <strong>Reset Password</strong></p>
+        <p class="p-style">Reset Password</p>
         <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { id: "confirmation_form", method: :post, class: "validate-form pb-5" }) do |f| %>
-<%= devise_error_messages! %>
-<% if current_client.preferred_login == "phone" %>
-  <div class="form-group">
-    <%= f.label :phone %><br />
-    <%= f.phone_field :login, autofocus: true, autocomplete: false, class: 'form-control', placeholder: 'Phone' %>
-  </div>
-<% else %>
-  <div class="form-group">
-    <%= f.label :email %><br />
-    <%= f.email_field :login, autofocus: true, autocomplete: false, class: 'form-control', placeholder: 'Email' %>
-  </div>
-<% end %>
-<div class="signin-btn col-lg-12 pl-0 pr-0 pt-5 pb-5">
-  <%= f.submit "Resend confirmation instructions", class: 'sign-in-btn' %>
-</div>
-<% end %>
+          <%= devise_error_messages! %>
+          <% if current_client.preferred_login == "phone" %>
+            <div class="form-group">
+              <%= f.label :phone %><br />
+              <%= f.phone_field :login, autofocus: true, autocomplete: false, class: 'form-control', placeholder: 'Phone' %>
+            </div>
+          <% else %>
+            <div class="form-group">
+              <%= f.label :email %><br />
+              <%= f.email_field :login, autofocus: true, autocomplete: false, class: 'form-control', placeholder: 'Email' %>
+            </div>
+          <% end %>
+          <div class="signin-btn col-lg-12 pl-0 pr-0 pt-5 pb-5">
+            <%= f.submit "Resend confirmation instructions", class: 'sign-in-btn' %>
+          </div>
+        <% end %>
         <%= render "devise/shared/links" %>
       </div>
     </div>
   </div>
 </section>
+
 <%= javascript_tag do %>
-$(document).ready(function(){
-  FormInitializer.init($("#confirmation_form"));
-});
+  $(document).ready(function(){
+    FormInitializer.init($("#confirmation_form"));
+  });
 <% end %>
