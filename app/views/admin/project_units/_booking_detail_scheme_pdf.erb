@@ -1,0 +1,10 @@
+<label class='control-label'>Scheme</label>
+<p><strong><%= booking_detail_scheme.derived_from_scheme.name %></strong></p>
+<% payment_adjustment = policy([ current_user_role_group, booking_detail_scheme]).editable_field?("payment_adjustments_attributes") %>
+<% if payment_adjustment %>
+  <% booking_detail_scheme.editable_payment_adjustments.each do |adj| %>
+    <label class='control-label'>Payment Adjustments</label>
+    <p><%= adj.field.humanize %> <%= adj.value(booking_detail.project_unit) %></p>
+    <p class="small text-muted">*Total Adjustment will be calculated as Rs. (saleable) * (scheme mentioned here)</p>
+  <% end %>
+<% end %>

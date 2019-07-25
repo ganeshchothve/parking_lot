@@ -131,7 +131,7 @@ class Admin::BookingDetails::BookingDetailSchemesController < AdminController
     if params[:action] == "index" || params[:action] == 'export'
       authorize [ :admin, BookingDetailScheme]
     elsif params[:action] == "new" || params[:action] == "create"
-      @scheme = Scheme.where(_id: params.dig(:booking_detail_scheme, :derived_from_scheme_id) ).last
+      @scheme = Scheme.where(_id: params.dig(:booking_detail_scheme, :derived_from_scheme_id) ).last || @booking_detail.project_unit.scheme
       @booking_detail_scheme = BookingDetailScheme.new(booking_portal_client: current_client, created_by: current_user, booking_detail_id: @booking_detail, payment_schedule_template_id: @scheme.payment_schedule_template_id, cost_sheet_template_id: @scheme.cost_sheet_template_id, derived_from_scheme_id: @scheme.try(:_id), status: @scheme.try(:status))
       authorize [:admin, @booking_detail_scheme]
     else

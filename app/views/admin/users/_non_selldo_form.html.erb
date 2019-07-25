@@ -1,10 +1,10 @@
-<%= form_for [:admin, @user], remote: true, local: true, html: {id: "user_form", class: "modal-remote-form validate-form", "data-resource-type": global_labels['user'], "data-type": "json"} do |f| %>
+<%= form_tag check_and_register_path, remote: true, local: true, id: "user_form", class: "modal-remote-form validate-form", "data-resource-type": global_labels['user'], "data-type": "json" do |f| %>
   <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">
-            New <%= User.available_roles(current_client).find{|x| x[:id] == @user.role}[:text] %>
+            New <%= t("users.role.#{@user.role}") %>
           </h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -12,37 +12,37 @@
         </div>
         <div class="modal-body">
           <div class="row">
-            <%= f.hidden_field :role %>
+            <%= hidden_field_tag :role %>
             <div class="col-md-12">
               <div class="form-group">
-                <%= f.label :first_name, class: 'label-required' %>
-                <%= f.text_field :first_name, class: 'form-control', autofocus: true, required: 'required', disabled: (policy([current_user_role_group, @user]).editable_field?("first_name") ? false : true) %>
+                <%= label_tag :first_name, nil, class: 'label-required' %>
+                <%= text_field_tag :first_name, nil, class: 'form-control', autofocus: true, required: 'required', disabled: !policy([current_user_role_group, @user]).editable_field?("first_name") %>
               </div>
             </div>
             <div class="col-md-12">
               <div class="form-group">
-                <%= f.label :last_name, class: 'label-required' %>
-                <%= f.text_field :last_name, class: 'form-control', autofocus: true, required: 'required', disabled: (policy([current_user_role_group, @user]).editable_field?("last_name") ? false : true) %>
+                <%= label_tag :last_name, nil, class: 'label-required' %>
+                <%= text_field_tag :last_name, nil, class: 'form-control', autofocus: true, required: 'required', disabled: !policy([current_user_role_group, @user]).editable_field?("last_name") %>
               </div>
             </div>
           </div>
           <div class="row">
             <div class="col-md-12">
               <div class="form-group">
-                <%= f.label :email, class: 'label-required'  %>
-                <%= f.email_field :email, class: 'form-control', disabled: (policy([current_user_role_group, @user]).editable_field?("email") ? false : true) %>
+                <%= label_tag :email, nil, class: 'label-required'  %>
+                <%= email_field_tag :email, nil, class: 'form-control', required: 'required', disabled: !policy([current_user_role_group, @user]).editable_field?("email") %>
               </div>
             </div>
             <div class="col-md-12">
               <div class="form-group">
-                <%= f.label :phone, class: 'label-required' %>
-                <%= f.text_field :phone, class: 'form-control phone', disabled: (policy([current_user_role_group, @user]).editable_field?("phone") ? false : true) %>
+                <%= label_tag :phone, nil, class: 'label-required' %>
+                <%= text_field_tag :phone, nil, class: 'form-control phone', required: 'required', disabled: !policy([current_user_role_group, @user]).editable_field?("phone") %>
               </div>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <%= f.submit "Save", class: 'btn btn-primary' %>
+          <%= submit_tag "Save", class: 'btn btn-primary' %>
         </div>
       </div>
     </div>

@@ -34,7 +34,7 @@ class Email
   belongs_to :booking_portal_client, class_name: 'Client', inverse_of: :emails
   belongs_to :email_template, class_name: 'Template::EmailTemplate', optional: true
   has_and_belongs_to_many :recipients, class_name: "User", inverse_of: :received_emails, validate: false
-  has_and_belongs_to_many :cc_recipients, class_name: "User", inverse_of: :cced_emails, validate: false
+  has_and_belongs_to_many :cc_recipients, class_name: "User", validate: false, inverse_of: :cced_emails
   belongs_to :triggered_by, polymorphic: true, optional: true
   has_many :attachments, as: :assetable, class_name: "Asset"
   accepts_nested_attributes_for :attachments
@@ -78,6 +78,46 @@ class Email
   # @return [String]
   def name
     self.subject
+  end
+
+  def sent!
+    # Email sent when
+    # Template Present  |   Templat Is Active  |   ENV in list  |   SMS sent or not
+    #      T            |          T           |       T        |        yes
+    #      T            |          T           |       F        |         no
+    #      T            |          F           |       T        |         no
+    #      T            |          F           |       F        |         no
+    #      F            |          -           |       T        |        yes
+    #      F            |          -           |       F        |         no
+    #      F            |          -           |       T        |        yes
+    #      F            |          -           |       F        |         no
+    # and alwas send email when email template is missing.
+    if self.to.present?
+      if self.email_template
+        Communication::Email::MailgunWorker.perform_async(self.id.to_s) if self.email_template.try(:is_active?)
+      else
+        Communication::Email::MailgunWorker.perform_async(self.id.to_s)
+      end
+    end
+  end
+
+  def set_content
+    if self.body.blank?
+      email_template = Template::EmailTemplate.find self.email_template_id
+      current_client = self.booking_portal_client
+      current_project = current_client.projects.first
+      begin
+        self.body = ERB.new(self.booking_portal_client.email_header).result( binding ) + email_template.parsed_content(triggered_by) + ERB.new(self.booking_portal_client.email_footer).result( binding )
+      rescue => e
+        self.body = ""
+      end
+      self.text_only_body = TemplateParser.parse(email_template.text_only_body, triggered_by)
+      self.subject = email_template.parsed_subject(triggered_by)
+    else
+      self.body = TemplateParser.parse(self.body, triggered_by)
+      self.text_only_body = TemplateParser.parse(self.text_only_body, triggered_by)
+      self.subject = TemplateParser.parse(self.subject, triggered_by)
+    end
   end
 
   private

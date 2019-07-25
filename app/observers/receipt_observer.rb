@@ -10,13 +10,17 @@ class ReceiptObserver < Mongoid::Observer
     end
   end
 
-  def after_save(receipt)
-    # if receipt.status_changed?
-    #   Notification::Receipt.new(receipt.id, receipt.changes).execute
-    # end
+  # def after_save(receipt)
+  #   _event = receipt.event
+  #   receipt.event = nil
+  #   receipt.send("#{_event}!") if _event.present?
+  # end
 
-    _event = receipt.event
-    receipt.event = nil
-    receipt.send("#{_event}!") if _event.present?
+  def after_create receipt
+    receipt.moved_to_clearance_pending
+    SelldoLeadUpdater.perform_async(receipt.user_id.to_s, 'payment_done') if (receipt.payment_mode == 'offline' || (receipt.payment_mode == 'online' && receipt.success? ))
+  end
+  def after_update receipt
+    SelldoLeadUpdater.perform_async(receipt.user_id.to_s, 'payment_done') if (receipt.payment_mode == 'offline' || (receipt.payment_mode == 'online' && receipt.success? ))
   end
 end

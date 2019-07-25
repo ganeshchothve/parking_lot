@@ -15,6 +15,7 @@ class Admin::BookingDetails::ReceiptsController < AdminController
   #
   # GET "/admin/users/:user_id/booking_details/:booking_detail_id/receipts/new"
   def new
+    @amount_hash = {agreement: @booking_detail.calculate_agreement_type_cost, stamp_duty: @booking_detail.calculate_stamp_duty_type_cost} if @booking_detail.receipts.empty?
     @receipt = Receipt.new(
       creator: current_user, user: @user, booking_detail: @booking_detail, total_amount: (@booking_detail.hold? ? @project_unit.blocking_amount : @booking_detail.pending_balance)
     )
@@ -30,7 +31,7 @@ class Admin::BookingDetails::ReceiptsController < AdminController
     @receipt = Receipt.new(user: @user, creator: current_user, booking_detail: @booking_detail)
     @receipt.assign_attributes(permitted_attributes([:admin, @receipt]))
     @receipt.payment_gateway ||= current_client.payment_gateway if @receipt.payment_mode == 'online'
-    @receipt.account ||= selected_account(@booking_detail.project_unit)
+    @receipt.account ||= selected_account(current_client.payment_gateway.underscore, @booking_detail.project_unit)
     authorize([:admin, @receipt])
     respond_to do |format|
       if @receipt.save

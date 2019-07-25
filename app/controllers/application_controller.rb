@@ -3,9 +3,11 @@ class ApplicationController < ActionController::Base
   include Pundit
   include ApplicationHelper
 
+  before_action :set_locale
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_cache_headers, :set_request_store, :set_cookies
   before_action :load_hold_unit
+  before_action :set_current_client
 
   acts_as_token_authentication_handler_for User, if: :token_authentication_valid_params?
 
@@ -14,6 +16,9 @@ class ApplicationController < ActionController::Base
   helper_method :home_path
   protect_from_forgery with: :exception, prepend: true
   layout :set_layout
+
+  rescue_from ActionController::InvalidAuthenticityToken, with: :invalid_authenticity_token
+
 
   def after_sign_in_path_for(current_user)
     ApplicationLog.user_log(current_user.id, 'sign_in', RequestStore.store[:logging])
@@ -29,6 +34,12 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+
+  def set_current_client
+    unless current_client
+      redirect_to welcome_path, alert: t('controller.application.set_current_client')
+    end
+  end
 
   def set_layout
     devise_controller? ? 'devise' : 'application'
@@ -104,10 +115,54 @@ class ApplicationController < ActionController::Base
       policy_name += "."
       policy_name += exception.policy.condition.to_s
     end
-    flash[:alert] = t "#{policy_name}", scope: "pundit", default: :default
+    alert = t policy_name, scope: "pundit", default: :default
     respond_to do |format|
-      format.html { redirect_to (user_signed_in? ? after_sign_in_path_for(current_user) : root_path) }
-      format.json { render json: { errors: flash[:alert] }, status: 403 }
+      unless request.referer && request.referer.include?('remote-state')
+        format.html { redirect_to (user_signed_in? ? after_sign_in_path_for(current_user) : root_path), alert: alert }
+        format.json { render json: { errors: alert }, status: 403 }
+      else
+        # Handle response for remote-state url requests.
+        format.html do
+          render plain: '
+            <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">' + params[:controller].titleize + '</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">' + alert + '</div>
+                  <div class="modal-footer"></div>
+                </div>
+              </div>
+            </div>'
+        end
+      end
     end
+  end
+
+  def invalid_authenticity_token
+    alert = t('controller.application.invalid')
+    respond_to do |format|
+      format.html { render json: alert }
+      format.json { render json: { errors: alert }, status: 403 }
+    end
+  end
+
+  # For VAPT we want to protect Site with ony permited origins
+  def valid_request_origin? # :doc:
+    _valid = super
+
+    _valid && ( (current_client.try(:booking_portal_domains) || []).include?( URI.parse( request.origin.to_s ).host ) || Rails.env.development? || Rails.env.test? )
+  end
+
+  def set_locale
+    I18n.locale = params[:locale] || I18n.default_locale
+  end
+
+  def default_url_options
+    { locale: I18n.locale }
   end
 end

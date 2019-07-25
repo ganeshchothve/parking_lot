@@ -5,7 +5,7 @@ class Buyer::UserKycPolicy < UserKycPolicy
   end
 
   def new?
-    record.user_id == user.id if record.user_id.present? && user.buyer?
+    record.user_id == user.id && user.buyer?
   end
 
   def show?
@@ -17,7 +17,7 @@ class Buyer::UserKycPolicy < UserKycPolicy
   end
 
   def edit?
-    record.user_id == user.id if user.buyer?
+    record.user_id == user.id && user.buyer?
   end
 
   def update?

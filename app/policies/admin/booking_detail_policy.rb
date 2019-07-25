@@ -4,6 +4,16 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     %w[admin superadmin sales sales_admin cp_admin gre channel_partner].include?(user.role)
   end
 
+  def new?
+    %w[admin superadmin sales sales_admin cp_admin gre channel_partner].include?(user.role) && eligible_user?
+  end
+
+  def create?
+    return true if  (record.user.booking_details.count < record.user.allowed_bookings) && eligible_user?
+    @condition = 'allowed_bookings'
+    false
+  end
+
   def booking?
     true
   end
@@ -42,6 +52,12 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   #   end
   #   _role_based_check
   # end
+
+  def permitted_attributes
+    attributes = super
+    attributes += [:primary_user_kyc_id, :user_kyc_ids, :project_unit_id, :user_id ]
+    attributes
+  end
 
   private
 

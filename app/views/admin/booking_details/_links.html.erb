@@ -4,6 +4,9 @@
     <% if policy([ :admin, booking_detail]).edit? %>
       <%= link_to "Update #{global_labels['user_kycs']}", edit_admin_booking_detail_path(booking_detail), class: "modal-remote-form-link dropdown-item" %>
     <% end %>
+    <% if !params[:controller].include?('users') && policy([:admin, booking_detail.user]).show? %>
+      <%= link_to "View #{global_labels['customer']}", admin_user_path(booking_detail.user), class: "dropdown-item" %>
+    <% end %>
     <% if booking_detail.scheme_rejected? && policy([:admin, booking_detail.project_unit]).release_unit? %>
       <%= link_to "Release Unit", release_unit_admin_project_unit_path(booking_detail.project_unit), method: :patch, class: 'dropdown-item' %>
     <% end %>
@@ -16,7 +19,7 @@
       <%= link_to "Images", "javascript:;", data: {toggle: "modal", target: "#floor_plan_modal_#{booking_detail.project_unit.id}"}, class: "dropdown-item" %>
     <% end %>
 
-    <%= link_to "Cost Sheet", "javascript:;", data: {toggle: "modal", target: "#cost_sheet_modal_#{booking_detail.project_unit.id}"}, class: "dropdown-item" %>
+    <%= link_to "Cost Sheet", "javascript:;", data: {toggle: "modal", target: "#cost_sheet_modal_#{booking_detail.id}"}, class: "dropdown-item" %>
 
     <%= link_to "Payment Schedule", "javascript:;", data: {toggle: "modal", target: "#payment_schedule_modal_#{booking_detail.project_unit.id}"}, class: "dropdown-item" %>
 
@@ -36,10 +39,11 @@
       <%= link_to "View Details", admin_booking_detail_path(booking_detail), class: 'dropdown-item' %>
     <% end %>
 
-    <% @scheme = booking_detail.project_unit.project_tower.default_scheme %>
+    <% scheme = booking_detail.project_unit.project_tower.default_scheme %>
+
     <% if booking_detail.booking_detail_scheme && policy([:admin, booking_detail.booking_detail_scheme]).edit? %>
       <%= link_to "Update scheme and discount", edit_admin_booking_detail_booking_detail_scheme_path( booking_detail, booking_detail.booking_detail_scheme.id), class: 'dropdown-item modal-remote-form-link' %>
-    <% elsif policy([:admin, BookingDetailScheme.new(booking_detail: booking_detail, derived_from_scheme_id: @scheme.id, project_unit_id: booking_detail.project_unit_id)]).new?%>
+    <% elsif policy([:admin, BookingDetailScheme.new(booking_detail: booking_detail, derived_from_scheme_id: scheme.id, project_unit_id: booking_detail.project_unit_id)]).new?%>
         <%= link_to "Add new scheme", new_admin_booking_detail_booking_detail_scheme_path( booking_detail), class: 'dropdown-item modal-remote-form-link' %>
     <% end %>
 
@@ -53,10 +57,6 @@
           <%= link_to t("global.user_request_#{klass.model_name.element}"), new_admin_user_user_request_path(user_id: booking_detail.user_id, requestable_id: booking_detail.id, requestable_type: 'BookingDetail', request_type: klass.model_name.element), class: "dropdown-item modal-remote-form-link" %>
       <% end %>
     <% end %>
-
-    <% if policy([:admin, SyncLog.new]).resync? && booking_detail.sync_logs.present? %>
-      <%= link_to "Resync", resync_admin_sync_log_path(booking_detail.sync_logs.desc(:created_at)[0]), class: "btn btn-primary d-print-none"%>
-    <% end %>
   </div>
 </div>
 
@@ -64,6 +64,6 @@
   <%= render 'project_units/assets_in_modal', project_unit: booking_detail.project_unit %>
 <% end %>
 
-<%= render 'project_units/cost_sheet_in_modal', project_unit: booking_detail.project_unit %>
+<%= render 'project_units/cost_sheet_in_modal', booking_detail: booking_detail %>
 
 <%= render 'project_units/payment_schedule_in_modal', project_unit: booking_detail.project_unit %>

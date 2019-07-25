@@ -19,6 +19,10 @@ class Account
     "#{name} (#{account_number})"
   end
 
+  def account_type
+    _type.underscore.split('/')[1]
+  end
+
   private
 
   def check_for_receipts
@@ -30,7 +34,7 @@ class Account
   end
 
   def unique_default_account
-    if self.by_default && !::Account.where(by_default: true).nin(_id: self.id).count.zero?
+    if self.by_default && !::Account.where(by_default: true, _type: self._type).nin(_id: self.id).count.zero?
       self.errors.add(:by_default, 'Only one can set as default.')
     end
   end

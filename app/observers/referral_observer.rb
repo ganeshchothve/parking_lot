@@ -1,7 +1,7 @@
 class ReferralObserver < Mongoid::Observer
 
   def after_create(referral)
-    Email.create!({
+    email = Email.create!({
       booking_portal_client_id: referral.booking_portal_client,
       email_template_id: Template::EmailTemplate.find_by(name: "referral_invitation").id,
       to: [referral.email],
@@ -10,6 +10,7 @@ class ReferralObserver < Mongoid::Observer
       triggered_by_id: referral.id,
       triggered_by_type: referral.class.to_s
     })
+    email.sent!
 
     Sms.create!({
       booking_portal_client_id: referral.booking_portal_client,

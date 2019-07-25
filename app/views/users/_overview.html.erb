@@ -97,15 +97,12 @@
         <div class="form-group">
           <label>Account Confirmed?</label>
           <div>
-            <%= user.confirmed? ? "At #{l(user.confirmed_at.in_time_zone(current_user.time_zone))}" : "No" %>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label>Last Signed In</label>
-          <div>
-            <%= user.sign_in_count > 0 ? "#{l(user.last_sign_in_at.in_time_zone(current_user.time_zone))} (Signed In #{user.sign_in_count} times)" : "Never Signed In" %>
+            <% if user.confirmed? %>
+              Confirmed by <%= user.confirmed_by_self? ? 'Self' : link_to(user.confirmed_by_name, [current_user_role_group, user.confirmed_by]) %></br>
+              At <%= l(user.confirmed_at.in_time_zone(current_user.time_zone)) %>
+            <% else %>
+              No
+            <% end %>
           </div>
         </div>
       </div>
@@ -132,30 +129,6 @@
           </div>
         </div>
       <% end %>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label>Last Sync At:</label>
-          <div>
-            <% if user.sync_logs.present? %>
-              <%= user.sync_logs.desc(:created_at)[0].present? ? user.sync_logs.desc(:created_at)[0].updated_at.strftime("%d/%m/%Y %l:%M %p") : "-" %>
-            <% else %>
-               <%= "Not synced" %>
-            <% end %>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label>Last Sync Log Status:</label>
-          <div>
-            <% if user.sync_logs.present? %>
-              <%= user.sync_logs.desc(:created_at)[0].status.present? ? user.sync_logs.desc(:created_at)[0].status : "-" %>
-            <% else %>
-               <%= "Not synced" %>
-            <% end %>
-          </div>
-        </div>
-      </div>
       <% if user.buyer? %>
         <div class="col-md-4">
           <div class="form-group">
@@ -172,6 +145,16 @@
             <label><%= t("mongoid.attributes.user.referred_by_id") %></label>
             <div>
               <%= user.referred_by.try(:name) || '-' %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      <% if user.buyer? && current_user.role?('superadmin') %>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label><%= t("mongoid.attributes.user.portal_stage") %></label>
+            <div>
+              <%= user.portal_stage.try(:stage) || '-' %>
             </div>
           </div>
         </div>

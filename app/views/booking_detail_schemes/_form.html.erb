@@ -1,9 +1,9 @@
 <div class="form-group">
   <% _params = {fltrs: { project_tower: booking_detail.project_unit.project_tower_id, can_be_applied_by: current_user.role, user_role: booking_detail.user.role, user_id: booking_detail.user_id, status: 'approved' } } %>
-  <% if booking_detail.user.manager && booking_detail.user.manager.role?('channel_partner') %>
+  <% if booking_detail.user && booking_detail.user.manager_role?('channel_partner') %>
     <% _params[:fltrs].delete :can_be_applied_by %>
-    <% _params[:fltrs][:can_be_applied_by_role] = booking_detail.user.manager.role %>
-    <% _params[:fltrs][:default_for_user_id] = booking_detail.user.manager.id %>
+    <% _params[:fltrs][:can_be_applied_by_role] = booking_detail.user.manager_role %>
+    <% _params[:fltrs][:default_for_user_id] = booking_detail.user.manager_id %>
   <% end %>
 
   <%= f.label :derived_from_scheme_id, class: 'control-label' %>
@@ -21,7 +21,7 @@
     </div>
     <div class="col-md-4">
       <p>Field</p>
-      <p><%= payment_adjustment.field %></p>
+      <p><%= payment_adjustment.field.humanize %></p>
     </div>
     <div class="col-md-4">
       <p>Value</p>

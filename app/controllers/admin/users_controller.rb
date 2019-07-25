@@ -55,13 +55,13 @@ class Admin::UsersController < AdminController
   end
 
   def confirm_user
-    @user.temporary_password = SecureRandom.hex(10)
+    @user.temporary_password = generate_password * 2
     @user.assign_attributes(confirmed_by: current_user, confirmed_at: DateTime.now, password: @user.temporary_password, password_confirmation: @user.password_confirmation)
     respond_to do |format|
       format.html do
-        if @user.save 
+        if @user.save
           email_template = ::Template::EmailTemplate.find_by(name: "account_confirmation")
-          Email.create!({
+          email = Email.create!({
             booking_portal_client_id: @user.booking_portal_client_id,
             body: ERB.new(@user.booking_portal_client.email_header).result( binding) + email_template.parsed_content(@user) + ERB.new(@user.booking_portal_client.email_footer).result( binding ),
             subject: email_template.parsed_subject(@user),
@@ -69,6 +69,7 @@ class Admin::UsersController < AdminController
             triggered_by_id: @user.id,
             triggered_by_type: @user.class.to_s
           })
+          email.sent!
           redirect_to request.referrer || dashboard_url, notice: t('controller.users.account_confirmed')
         else
           redirect_to request.referrer || dashboard_url, alert: t('controller.users.cannot_confirm_user')
@@ -123,6 +124,11 @@ class Admin::UsersController < AdminController
     @user = User.new(booking_portal_client_id: current_client.id, role: params[:user][:role])
     @user.assign_attributes(permitted_attributes([current_user_role_group, @user]))
     @user.manager_id = current_user.id if @user.role?('channel_partner') && current_user.role?('cp')
+    if @user.buyer? && current_user.role?('channel_partner')
+      @user.manager_id = current_user.id
+      @user.referenced_manager_ids ||= []
+      @user.referenced_manager_ids += [current_user.id]
+    end
 
     respond_to do |format|
       if @user.save
@@ -180,5 +186,9 @@ class Admin::UsersController < AdminController
     User.with_scope(policy_scope(custom_scope)) do
       yield
     end
+  end
+
+  def generate_password
+    ( ('AaF'..'ZzK').to_a.sample + (0..999).to_a.sample.to_s + '@')
   end
 end

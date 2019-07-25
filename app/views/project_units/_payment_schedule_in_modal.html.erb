@@ -8,7 +8,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <%= render "dashboard/project_unit_payment_schedule", project_unit: project_unit %>
+        <%= render "dashboard/project_unit_payment_schedule", booking_detail: get_booking_detail_object(project_unit) %>
       </div>
     </div>
   </div>

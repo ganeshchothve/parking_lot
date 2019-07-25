@@ -1,15 +1,15 @@
 # config valid for current version and patch releases of Capistrano
 lock "~> 3.11.0"
 
-set :application, "booking_portal"
-set :repo_url, "git@github.com:amuratech/booking_portal.git"
+# set :application, "booking_portal"
+# set :repo_url, "git@github.com:amuratech/booking_portal.git"
 
 # Default branch is :master
-set :branch, "generic"
+# set :branch, "generic"
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, "/var/www/generic"
-set :ssh_options, {forward_agent: true, keepalive: true}
+# set :deploy_to, "/var/www/generic"
+# set :ssh_options, {forward_agent: true, keepalive: true}
 
 # Default value for :format is :airbrussh.
 # set :format, :airbrussh
@@ -27,7 +27,7 @@ append :linked_files, 'config/lead_conflicts_executers.yml', 'config/sidekiq_man
 
 # Default value for linked_dirs is []
 # append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system"
-set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/uploads}
+set :linked_dirs, %w{log tmp vendor/bundle public/uploads exports}
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }

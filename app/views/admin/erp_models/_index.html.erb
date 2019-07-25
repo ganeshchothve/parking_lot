@@ -13,7 +13,7 @@
       <% @erp_models.each do |erp_model| %>
         <tr>
           <td>
-            <%= erp_model.resource_class.present? ? erp_model.resource_class : "-" %>
+            <%= t("erp_models.resource_class.#{erp_model.resource_class}") %>
           </td>
           <td>
             <%= erp_model.domain.present? ? erp_model.domain : "-" %>

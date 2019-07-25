@@ -2,6 +2,7 @@
 
 en:
   devise:
+    sign_out: 'Sign Out'
     confirmations:
       confirmed: "Your account has been successfully confirmed."
       send_instructions: "You will receive an email with instructions for how to confirm your email address in a few minutes. You can also confirm it using your phone & an OTP."

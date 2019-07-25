@@ -17,6 +17,8 @@ class Search
   belongs_to :project_unit, optional: true
   belongs_to :project_tower, optional: true
 
+  delegate :manager_id, to: :user, prefix: true, allow_nil: true
+
   def params_json
     params = {}
     params[:bedrooms] = bedrooms if bedrooms.present?

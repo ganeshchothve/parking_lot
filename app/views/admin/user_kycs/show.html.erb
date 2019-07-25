@@ -4,44 +4,13 @@
       <div class="card">
         <div class="card-header">
           User Kyc
-          <% if policy([:admin, SyncLog.new]).resync? && @resource.sync_logs.present? %>
-            <div class="dropdown float-right">
-              <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</a>
-              <div class="dropdown-menu dropdown-menu-right">
-                <%= link_to "Resync", resync_admin_sync_log_path(@resource.sync_logs.desc(:created_at)[0]), class: 'dropdown-item' %>
-              </div>
-            </div>
-          <% end %>
         </div>
         <div class="card-body">
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Last Synced At:</label>
-                <div>
-                  <% if @resource.sync_logs.present? %>
-                    <%= @resource.sync_logs.desc(:created_at)[0].present? ? @resource.sync_logs.desc(:created_at)[0].updated_at.strftime("%d/%m/%Y %l:%M %p") : "-" %>
-                  <% else %>
-                    <%= "Not synced" %>
-                  <% end %>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Last Sync Log Status:</label>
-                <div>
-                  <% if @resource.sync_logs.present? %>
-                    <%= @resource.sync_logs.desc(:created_at)[0].status.present? ? @resource.sync_logs.desc(:created_at)[0].status : "-" %>
-                  <% else %>
-                    <%= "Not synced" %>
-                  <% end %>
-                </div>
-              </div>
-            </div>
-          </div>
+          <%= render 'admin/user_kycs/show', user_kyc: @user_kyc %>
         </div>
       </div>
+      <div class="mt-3"></div>
+      <%= render 'sync_logs/sync', { record: @resource } if current_client.external_api_integration? && policy([current_user_role_group, SyncLog.new]).index?  %>
     </div>
   </div>
 </div>

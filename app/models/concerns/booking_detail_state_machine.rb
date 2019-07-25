@@ -36,7 +36,7 @@ module BookingDetailStateMachine
         # transitions from: :user_kyc, to: :hold
       end
 
-      event :under_negotiation, after: %i[after_under_negotiation_event update_selldo!] do
+      event :under_negotiation, after: %i[after_under_negotiation_event] do
         transitions from: :under_negotiation, to: :under_negotiation
         transitions from: :hold, to: :under_negotiation
         transitions from: :scheme_approved, to: :under_negotiation
@@ -146,11 +146,12 @@ module BookingDetailStateMachine
       _project_unit = project_unit
       _project_unit.assign_attributes(status: 'blocked', held_on: nil, blocked_on: Date.today, auto_release_on: ( Date.today + _project_unit.blocking_days.days) )
       _project_unit.save
-      auto_released_extended_inform_buyer!
       if under_negotiation? && booking_detail_scheme.approved?
         scheme_approved!
-      # elsif !booking_detail_scheme.present? && (booking_detail_schemes.distinct(:status).include? 'rejected')
-      #   scheme_rejected!
+      else
+        # auto_released_extended_inform_buyer!
+        # elsif !booking_detail_scheme.present? && (booking_detail_schemes.distinct(:status).include? 'rejected')
+        #   scheme_rejected!
       end
     end
 
@@ -173,11 +174,10 @@ module BookingDetailStateMachine
       _project_unit.auto_release_on ||= Date.today
       _project_unit.auto_release_on +=  _project_unit.blocking_days.days
       _project_unit.save
-      auto_released_extended_inform_buyer!
-
       if blocked? && get_paid_amount > project_unit.blocking_amount
         booked_tentative!
       else
+        auto_released_extended_inform_buyer!
         send_email_and_sms_as_booked
       end
     end
@@ -228,10 +228,10 @@ module BookingDetailStateMachine
     #
     def create_default_scheme
       if booking_detail_scheme.blank?
-        unless user.manager && user.manager.role?('channel_partner')
+        unless user.manager_role?('channel_partner')
           scheme = project_unit.project_tower.default_scheme
         else
-          filters = {fltrs: { can_be_applied_by_role: user.manager.role, project_tower: project_unit.project_tower_id, user_role: user.role, user_id: user_id, status: 'approved', default_for_user_id: user.manager.id } }
+          filters = {fltrs: { can_be_applied_by_role: user.manager_role, project_tower: project_unit.project_tower_id, user_role: user.role, user_id: user_id, status: 'approved', default_for_user_id: user.manager_id } }
           scheme = Scheme.build_criteria(filters).first
         end
         BookingDetailScheme.create(
@@ -244,6 +244,8 @@ module BookingDetailStateMachine
           project_unit_id: project_unit_id,
           status: scheme.status
         ) if scheme
+      else
+        true
       end
     end
     # This method is called after booked_confirmed event
@@ -257,7 +259,7 @@ module BookingDetailStateMachine
           file << pdf
         end
         attachments_attributes << {file: File.open("#{Rails.root}/exports/allotment_letter-#{project_unit.name}.pdf")}
-        Email.create!({
+        email = Email.create!({
             booking_portal_client_id: project_unit.booking_portal_client_id,
             email_template_id: Template::EmailTemplate.find_by(name: "booking_confirmed").id,
             cc: [project_unit.booking_portal_client.notification_email],
@@ -267,6 +269,7 @@ module BookingDetailStateMachine
             triggered_by_type: self.class.to_s,
             attachments_attributes: attachments_attributes
           })
+        email.sent!
       end
       if self.project_unit.booking_portal_client.sms_enabled?
         Sms.create!(
@@ -285,7 +288,7 @@ module BookingDetailStateMachine
       if project_unit.booking_portal_client.email_enabled?
         attachments_attributes = []
         _status = status.sub('booked_', '')
-        Email.create!(
+        email = Email.create!(
           booking_portal_client_id: project_unit.booking_portal_client_id,
           email_template_id: Template::EmailTemplate.find_by(name: "booking_#{_status}").id,
           cc: [project_unit.booking_portal_client.notification_email],
@@ -295,6 +298,7 @@ module BookingDetailStateMachine
           triggered_by_type: self.class.to_s,
           attachments_attributes: attachments_attributes
         )
+        email.sent!
       end
       if project_unit.booking_portal_client.sms_enabled?
         Sms.create!(
@@ -313,11 +317,13 @@ module BookingDetailStateMachine
     def release_project_unit!
       project_unit.make_available
       project_unit.save(validate: false)
+      SelldoLeadUpdater.perform_async(user_id, 'cancelled')
+
     end
 
     def update_selldo!
       if project_unit && project_unit.booking_portal_client.selldo_api_key.present?
-        SelldoLeadUpdater.perform_async(user_id)
+        SelldoLeadUpdater.perform_async(user_id, status)
       end
     end
 

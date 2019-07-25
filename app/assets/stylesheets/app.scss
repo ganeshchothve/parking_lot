@@ -158,3 +158,13 @@ figure.wave {
       visibility: visible !important;
   }
 }
+
+.image_small_class{
+  width:100px;
+  height:100px;
+  overflow:hidden;
+}
+.image_small_object{
+  max-height: 100%;
+  max-width:100%;
+}

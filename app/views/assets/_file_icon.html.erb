@@ -13,7 +13,7 @@
     <a tabindex="-1" href="<%= record[:url] %>" target="_blank" title="Download" class="asset-download" download=""><i class="fa fa-download"></i></a>
     <% links.each do |k, v|
       if k == :destroy %>
-        <a tabindex="-1" href="<%= v %>" title="Destroy" class="asset-delete"><i class="mdi mdi-delete mdi-24px"></i></a>
+        <a tabindex="-1" href="<%= v %>" title="Destroy" class="asset-delete"><i class="fa fa-times"></i></a>
       <% else %>
         <a tabindex="-1" href="<%= v %>" target="_blank" title="<%= k %>"><%= k %></a>
       <% end

@@ -3,7 +3,6 @@
     <thead class="th-default">
       <tr>
         <th>Class</th>
-        <th>Action</th>
         <th>Request</th>
         <th>Response</th>
         <th>Status</th>
@@ -17,22 +16,20 @@
       <% @sync_logs.each do |sync_log| %>
       <tr>
           <td>
-            <%= sync_log.resource.present? ? sync_log.resource_type : '-' %>
+            <%= sync_log.resource_type || '-' %></br>
+            (<%= sync_log.action || '-' %>)
           </td>
           <td>
-            <%= sync_log.action.present? ? sync_log.action : '-' %>
+            <%= sync_log.request || '-' %>
           </td>
           <td>
-            <%= sync_log.request.present? ? sync_log.request : '-' %>
+            <%= sync_log.response || '-' %>
           </td>
           <td>
-            <%= sync_log.response.present? ? sync_log.response : '-' %>
+            <%= sync_log.status || '-' %>
           </td>
           <td>
-            <%= sync_log.status.present? ? sync_log.status : '-' %>
-          </td>
-          <td>
-            <%= sync_log.message.present? ? sync_log.message : '-' %>
+            <%= sync_log.message || '-' %>
           </td>
           <% if policy([:admin, SyncLog.new]).resync? %>
             <td class="text-right">

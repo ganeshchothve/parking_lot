@@ -4,7 +4,7 @@ module ReceiptNotificationSender
 
   def send_success_notification
     if self.user.booking_portal_client.email_enabled?
-      Email.create!({
+      email = Email.create!({
         booking_portal_client_id: user.booking_portal_client_id,
         email_template_id:Template::EmailTemplate.find_by(name: "receipt_success").id,
         recipients: [user],
@@ -12,12 +12,13 @@ module ReceiptNotificationSender
         triggered_by_id: receipt.id,
         triggered_by_type: receipt.class.to_s
       })
+      email.sent!
     end
   end
 
   def send_failure_notification
     if self.user.booking_portal_client.email_enabled?
-      Email.create!({
+      email = Email.create!({
         booking_portal_client_id: project_unit.booking_portal_client_id,
         email_template_id:Template::EmailTemplate.find_by(name: "receipt_failed").id,
         recipients: [user],
@@ -25,12 +26,13 @@ module ReceiptNotificationSender
         triggered_by_id: receipt.id,
         triggered_by_type: receipt.class.to_s
       })
+      email.sent!
     end
   end
 
   def send_clearance_pending_notification
     if self.user.booking_portal_client.email_enabled?
-      Email.create!({
+      email = Email.create!({
         booking_portal_client_id: project_unit.booking_portal_client_id,
         email_template_id:Template::EmailTemplate.find_by(name: "receipt_clearance_pending").id,
         recipients: [user],
@@ -38,6 +40,7 @@ module ReceiptNotificationSender
         triggered_by_id: receipt.id,
         triggered_by_type: receipt.class.to_s
       })
+      email.sent!
     end
   end
 
@@ -57,7 +60,7 @@ module ReceiptNotificationSender
     # Send email to crm team if cheque non-online & pending
     if self.status == 'pending' && self.payment_mode != 'online'
       if user.booking_portal_client.email_enabled?
-        Email.create!({
+        email = Email.create!({
           booking_portal_client_id: user.booking_portal_client_id,
           email_template_id:Template::EmailTemplate.find_by(name: "receipt_pending").id,
           recipients: [user],
@@ -65,6 +68,7 @@ module ReceiptNotificationSender
           triggered_by_id: receipt.id,
           triggered_by_type: receipt.class.to_s
         })
+        email.sent!
       end
       if self.user.booking_portal_client.sms_enabled?
         Sms.create!(

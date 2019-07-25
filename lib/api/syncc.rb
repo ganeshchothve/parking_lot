@@ -5,7 +5,7 @@ module Api
     def initialize(erp_model, record, parent_sync_record = nil)
       @erp_model = erp_model
       @parent_sync = parent_sync_record
-      @synclog = SyncLog.new
+      @synclog = SyncLog.new(erp_model: erp_model)
       @record = record
       @request_payload = {}
       @response_payload = {}
@@ -19,7 +19,7 @@ module Api
       erp_id = get_response
       if erp_id.present?
         if erp_model.action_name == 'create'
-          record.update_erp_id(erp_id)
+          record.update_erp_id(erp_id, erp_model.domain)
           puts "#{erp_model.resource_class} successfully created with erp_id: #{erp_id}"
         else
           puts "#{erp_model.resource_class} with erp_id: #{erp_id} updated successfully"
@@ -40,12 +40,15 @@ module Api
     end
 
     def set_request_payload
-      erb = ERB.new(erp_model.request_payload)
-      SafeParser.new(erb.result(binding)).safe_load
+      erp_model.set_request_payload(record)
     end
 
     def set_sync_log(request, response, response_code, status, message)
-      response = JSON.parse(response) if response.is_a?(RestClient::Response)
+      if response == ''
+        response = { error: 'Response is empty'}
+      else
+        response = JSON.parse(response) if response.is_a?(RestClient::Response)
+      end
       synclog.update_attributes(request: request, response: response, response_code: response_code, status: status ? 'successful' : 'failed', message: message, action: erp_model.action_name, resource: record, user_reference: record_user, reference: parent_sync)
     end
 
@@ -56,12 +59,12 @@ module Api
     end
 
     def get_erp_id
-      response = response_payload
+      _erp_id = response_payload
       erp_model.reference_key_location.split(',').each do |key|
         # can be ", " according to format
-        response = response[key] if response[key].present?
+        _erp_id = response[key] if _erp_id[key].present?
       end
-      erp_id = response['RrecordId']
+      _erp_id[erp_model.reference_key_name]
     end
 
     def get_response
@@ -70,7 +73,7 @@ module Api
       when 400..511
         raise Api::SyncError, "#{response.try(:code)}: #{response.message}"
       else
-        set_sync_log(request_payload, response, response.code, response_payload['returnCode'].zero?, response_payload['message']) if set_response_payload(response)
+        set_sync_log(request_payload, response, response.code, response_payload['returnCode'].try(:zero?) || true, response_payload['message']) if set_response_payload(response)
       end
       get_erp_id
     rescue StandardError, SyncError => e

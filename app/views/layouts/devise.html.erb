@@ -27,7 +27,11 @@
       <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= current_client.selldo_client_id %>.js'></script>
     <% end %>
   </head>
-  <body class="full-bg" style="background-image: url('<%= current_client.background_image.url || '' %>');">
+  <% if current_client.background_image.present? %>
+    <body class="full-bg" style="background-image: url('<%= current_client.background_image.url %>');">
+  <% else %>
+    <body class="full-bg">
+  <% end  %>
     <div class="container-fluid">
       <%= render "layouts/navbar" %>
       <div class="body-padding"></div>

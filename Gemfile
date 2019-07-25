@@ -40,6 +40,7 @@ gem 'mongoid', '~> 7.0.2'
 gem 'mongoid-autoinc'
 # Comprehensive solution for user authentication in rails
 gem 'devise'
+gem 'devise-security'
 gem 'active_model_otp'
 gem 'simple_token_authentication', '~> 1.0'
 # Simple solution for authorization of users
@@ -72,6 +73,7 @@ gem 'sprockets-rails', '>= 2.3.2' # force this version for bootstrap 4 gem
 # Bootstrap lib gem for rails. #TODO: upgrade this when B4 is out of beta
 gem 'bootstrap'
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
 gem 'rest-client'
 
 # phone numbers on users -> model & validation
@@ -111,7 +113,7 @@ group :development, :test do
 end
 
 group :test do
-  gem 'faker'
+  gem 'faker', github: 'stympy/faker'
   gem 'shoulda', '~> 3.5'
   gem 'shoulda-matchers', '3.1.2'
   gem "factory_bot_rails"
