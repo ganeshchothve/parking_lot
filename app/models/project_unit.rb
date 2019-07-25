@@ -94,8 +94,8 @@ class ProjectUnit
   scope :filter_by_saleable, ->(saleable) {saleable_price = saleable.split('-'); where(saleable: { '$gte' => saleable_price.first.to_i, '$lte' => saleable_price.last.to_i })}
   scope :filter_by_agreement_price, ->(agreement_price) { agreement_cost = agreement_price.split('-'); where(agreement_price: { '$gte' => agreement_cost.first.to_i, '$lte' => agreement_cost.last.to_i })}
   scope :filter_by_all_inclusive_price, ->(all_inclusive_price) {all_inclusive_cost = all_inclusive_price.split('-'); where(all_inclusive_price: { '$gte' => all_inclusive_cost.first.to_i, '$lte' => all_inclusive_cost.last.to_i })}
-  scope :filter_by_bedrooms, ->(bedrooms) { where(bedrooms: bedrooms)}
-  scope :filter_by_bathrooms, ->(bathrooms) { where(bathrooms: bathrooms)}
+  scope :filter_by_bedrooms, ->(bedrooms) { where(bedrooms: bedrooms.to_f)}
+  scope :filter_by_bathrooms, ->(bathrooms) { where(bathrooms: bathrooms.to_f)}
   scope :filter_by__id, ->(_id) { where(_id: _id)}
   scope :filter_by_search, ->(search) { where(name: ::Regexp.new(::Regexp.escape(search), 'i') )}
 
