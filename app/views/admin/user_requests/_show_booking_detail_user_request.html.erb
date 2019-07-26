@@ -1,6 +1,6 @@
 <div class="row">
       <div class="col">
-        <%= render 'dashboard/booking_detail_overview', {booking_detail: user_request.requestable, with_actions: true }  %>
+        <%= render 'dashboard/booking_detail_overview', {booking_detail: user_request.requestable, with_actions: false }  %>
       </div>
       <% if user_request._type == "UserRequest::Swap" && user_request.resolved? %>
         <% if user_request.alternate_project_unit.booking_detail.present? %>

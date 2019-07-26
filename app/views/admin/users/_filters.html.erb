@@ -17,11 +17,11 @@
         </div>
       <% end %>
       <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-        <%= label_tag "fltrs", "role" %>
+        <%= label_tag "fltrs", "Role" %>
         <%= select_tag "fltrs[role][]", options_for_select( user_edit_role_options(User.new(role: 'admin') ), params.dig(:fltrs, :role)), {prompt: "Select", class: "selectize", multiple: 'multiple'} %>
       </div>
       <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-        <%= label_tag "fltrs", "confirmation" %>
+        <%= label_tag "fltrs", "Confirmation" %>
         <%= select_tag "fltrs[confirmation]", options_for_select(User.available_confirmation_statuses.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:confirmation] : "")), {prompt: "Select", class: "selectize"} %>
       </div>
       <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
@@ -30,12 +30,12 @@
       </div>
       <% if current_user.role == 'admin' %>
       <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-        <%= label_tag "fltrs", "channel partner" %>
+        <%= label_tag "fltrs", "Channel partner" %>
         <%= select_tag "fltrs[manager_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(_id: params[:fltrs][:manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {role: 'channel_partner'} }} %>
       </div>
       <% end %>
       <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-        <%= label_tag "fltrs", 'registered at' %>
+        <%= label_tag "fltrs", 'Registered at' %>
         <%= text_field_tag "fltrs[created_at]", (params.dig(:fltrs, :created_at).present? ? params[:fltrs][:created_at] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"} %>
       </div>
     </div>

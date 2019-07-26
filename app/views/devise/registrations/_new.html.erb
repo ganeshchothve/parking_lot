@@ -13,7 +13,7 @@
   </div>
   <div class="form-group">
     <%= f.label :phone, class: 'label-required' %>
-    <%= f.phone_field :phone, required: 'required', autofocus: true, placeholder: 'Phone', class: 'form-control' %>
+    <%= f.phone_field :login, autofocus: true, autocomplete: false, class: 'form-control', placeholder: t('mongoid.attributes.user.phone') %>
   </div>
   <div class="signin-btn col-lg-12 pl-0 pr-0 pt-4 pb-3">
     <%= f.submit "Sign up", class: 'sign-in-btn' %>

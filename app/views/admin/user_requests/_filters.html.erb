@@ -17,12 +17,12 @@
       </div>
       <% if @associated_class == UserRequest %>
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-          <%= label_tag "fltrs", "type", class: "control-label" %>
+          <%= label_tag "fltrs", "Type", class: "control-label" %>
           <%= select_tag "fltrs[_type]", options_for_select(::UserRequest.descendants.collect{|x| [x.to_s.split("::").last.gsub("Template", "").titleize, x.to_s]}.sort, (params.dig(:fltrs, :_type) || "")), {prompt: "Select", class: "selectize"} %>
         </div>
       <% end %>
       <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-        <%= label_tag "fltrs", "status", class: "control-label" %>
+        <%= label_tag "fltrs", "Status", class: "control-label" %>
         <%= select_tag "fltrs[status]", options_for_select(UserRequest::STATUS.collect{|urs| [t("user_requests.status.#{urs}"), urs ]}, (params.dig(:fltrs, :status) || "")), {prompt: "Select", class: "selectize"} %>
       </div>
     </div>

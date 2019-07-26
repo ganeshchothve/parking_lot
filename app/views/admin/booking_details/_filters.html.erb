@@ -10,19 +10,19 @@
         <%= select_tag "fltrs[id]", options_for_select(filter_booking_detail_options), {class: "selectize-remote", data: {url: admin_booking_details_path }} %>
       </div>
       <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-        <%= label_tag "fltrs", "status", class: "control-label" %>
+        <%= label_tag "fltrs", "Status", class: "control-label" %>
         <%= select_tag "fltrs[status]", options_for_select(BookingDetail.aasm.states.collect(&:name).collect{|x| [ t("booking_details.status.#{x}"), x.to_s]}, (params.dig(:fltrs, :status) || "")), {prompt: "Select", class: "selectize"} %>
       </div>
       <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-        <%= label_tag "fltrs", "project tower", class: "control-label" %>
+        <%= label_tag "fltrs", "Project Tower", class: "control-label" %>
         <%= select_tag "fltrs[project_tower_id]", options_for_select(filter_project_tower_options), { class: "selectize-remote", data: { url: admin_project_towers_path }} %>
       </div>
       <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-        <%= label_tag "fltrs", "user", class: "control-label" %>
+        <%= label_tag "fltrs", "User", class: "control-label" %>
         <%= select_tag "fltrs[user_id]", options_for_select(filter_user_options), { class: "selectize-remote", data: { url: admin_users_path, params: { fltrs: { role: ::User::BUYER_ROLES }} }} %>
       </div>
       <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-        <%= label_tag "fltrs", "manager", class: "control-label" %>
+        <%= label_tag "fltrs", "Manager", class: "control-label" %>
         <%= select_tag "fltrs[manager_id]", options_for_select(filter_manager_options), { class: "selectize-remote", data: { url: admin_users_path, params: { fltrs: { role_nin: ::User::BUYER_ROLES }} }} %>
       </div>
     </div>

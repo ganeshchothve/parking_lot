@@ -12,7 +12,9 @@
               <%= f.hidden_field :step, value: "towers" %>
             </div>
             <div class="form-group">
-              <%= f.submit "Change", class: "small position-absolute step-change-btn" %>
+              <% if !@search.user.booking_details(status: 'hold').present? %>
+                <%= f.submit "Change", class: "small position-absolute step-change-btn" %>
+              <% end %>
             </div>
           <% end %>
         <% end %>

@@ -1,6 +1,3 @@
-<% if policy([ :admin, booking_detail.project_unit]).edit? %>
-  <%= link_to "Update #{global_labels['user_kycs']}", edit_admin_project_unit_path(booking_detail.project_unit), class: "modal-remote-form-link dropdown-item" %>
-<% end %>
 <% if booking_detail.scheme_rejected? && policy([:admin, booking_detail.project_unit]).release_unit? %>
   <%= link_to "Release Unit", release_unit_admin_project_unit_path(booking_detail.project_unit), method: :patch, class: 'dropdown-item' %>
 <% end %>

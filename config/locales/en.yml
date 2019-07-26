@@ -264,6 +264,11 @@ en:
         password: 'Password'
         password_confirmation: 'Password Confirmation'
         rera_id: 'RERA Registration Number'
+        aadhaar: 'Aadhaar'
+        pan_number: 'PAN Number'
+        company_name: 'Company Name'
+        status: 'Status'
+        manager_name: 'Manager Name'
         location: 'Location'
         lead_id: 'Sell.Do Lead ID'
         time_zone: "User's Time Zone"
