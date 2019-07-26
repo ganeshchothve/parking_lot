@@ -173,7 +173,7 @@ $selected-aprt: #f4667e;
   	border-radius: 4px;
   	border: solid 1px #c6d0f0;
   	background-color: $white-color;
-  	margin-left: 15px;	  
+  	margin-left: 15px;
 	text-align: center;
 	outline: none;
 	text-decoration: unset;
@@ -187,10 +187,10 @@ $selected-aprt: #f4667e;
 }
 .small-btn{
 	width: 96px;
-  	
+
 }
 .large-btn{
-	width: 150px;  
+	width: 150px;
 }
 .btn-ht-38{
 	height: 38px!important;
@@ -216,7 +216,7 @@ html, body{
 	background-color: #f4f6fc;
 }
 body{
-	padding-top: 4.5rem;	
+	padding-top: 4.5rem;
 }
 .p-style{
 	font-size: 14px;
@@ -245,21 +245,21 @@ a:hover{
 	    z-index: 1030;
 	}
 	.navbar-nav{
-		.nav-item{					
+		.nav-item{
 			a{
-				font-size: 14px;			
-  				line-height: 1.43;			
+				font-size: 14px;
+  				line-height: 1.43;
 				font-weight: 400;
 				margin: 0 7px;
 				color: #33475b;
 			}
-			&.active{	
-				a{			
+			&.active{
+				a{
 	  				font-weight: 700;
 	  				color: #33475b;
   				}
 			}
-		}	 
+		}
 	}
 	.user-info{
 		margin-left: 20px;
@@ -345,11 +345,11 @@ a:hover{
 			height: 20px;
 			display: inline-block;
 			vertical-align: text-bottom;
-		}	
+		}
 		&:hover{
 			text-decoration: unset;
 			color: $content-color;
-		}	
+		}
 	}
 	.register-btn{
 		width: 110px;
@@ -402,7 +402,7 @@ a:hover{
 		}
 		p{
 	  		line-height: 1.56;
-		}		
+		}
 		.step-booking{
 			list-style: none;
 			margin: 30px 0px 30px;
@@ -460,7 +460,7 @@ a:hover{
 					left: -37px;
 					@media screen and (max-width:700px){
 						top: -20px;
-						left: unset; 
+						left: unset;
 					}
 				}
 			}
@@ -543,9 +543,9 @@ a:hover{
 				span{
 				  font-size: 12px;
 				  font-weight: 500;
-				  line-height: 1.67;	
-				  margin: 4px 0 0 0;	
-				  display: block;		  
+				  line-height: 1.67;
+				  margin: 4px 0 0 0;
+				  display: block;
 				}
 				p{
 					font-size: 24px;
@@ -565,7 +565,7 @@ a:hover{
 						transform: translateY(-50%);
 					}
 					&:after{
-						left: 0px;						
+						left: 0px;
 					}
 					&:before{
 						right: 0px;
@@ -635,7 +635,7 @@ a:hover{
 			}
 		}
 		.payment-info{
-			
+
 			span{
 				  	font-size: 12px;
 				  	font-weight: 500;
@@ -765,7 +765,7 @@ a:hover{
 	}
 }
 /********************** KYC form ***********************************/
-.kyc-popup{	
+.kyc-popup{
     width: 100%;
     height: 100%;
     /*display: none;*/
@@ -851,7 +851,7 @@ a:hover{
 		  	background-color: $white-color;
 		  	color: $blue-color;
    		}
-    }	
+    }
 }
 
 /******************************* Form style ************************/
@@ -894,7 +894,7 @@ a:hover{
 .save-kyc-btn, .next-btn, .submit-payemnt-btn{
 	background-color: $blue-color;
 	color:$white-color;
-	
+
 }
 .cancel-btn,.previous-btn{
 	background-color: $white-color;
@@ -954,7 +954,7 @@ a:hover{
     	&:checked + label:after {
       opacity: 1;
     	}
-  	}    
+  	}
 }
 .page-title{
 	font-size: 24px;
@@ -981,12 +981,25 @@ a:hover{
   	text-align: center;
   	padding: 20px;
     margin-bottom: 14px;
+    position:relative;
   	span{
 	  color: #b0bac9;
 	  font-weight: 500;
 	  line-height: 1.67;
 	  text-transform: uppercase;
 	  font-size: 12px;
+	}
+	.step-change-btn{
+		right: 2px;
+    background-color: #0575d2;
+    border: 1px solid #0575d2;
+    top: 2px;
+    color: #fff;
+    box-shadow: 1px 1px 15px grey;
+    text-transform: uppercase;
+    padding: 2px 7px 1px;
+    border-radius: 25px;
+    line-height: 18px;
 	}
 	p{
 		font-size: 12px;
@@ -1015,13 +1028,13 @@ a:hover{
 		}
 	}
   	&.active{
-  		border: solid 2px #0575d2;  	
+  		border: solid 2px #0575d2;
   		span{
 		  	color: #3e82f7;
 		}
 		p{
 			color: #3e82f7;
-		}	
+		}
 		.icon{
 			&.icon-1{
 				background-image: asset-url('search-blue.svg');
@@ -1050,7 +1063,7 @@ a:hover{
 	}
 	li{
 		display: inline-block;
-		margin-left: -4px;  		
+		margin-left: -4px;
 		a{
 			color: #b0bac9;
   			padding: 9px 12px;
@@ -1062,7 +1075,7 @@ a:hover{
     			padding: 9px 10px;
 		    }
 		    img{
-		    	height: 20px;		    	
+		    	height: 20px;
     			margin-left: 7px;
 		    }
 		    .building-icon{
@@ -1127,7 +1140,7 @@ a:hover{
 		li{
 			display: inline-block;
 			width: 33.33%;
-			float: left;			
+			float: left;
 			.no{
 				font-size: 28px;
 				line-height: 0.71;
@@ -1217,7 +1230,7 @@ a:hover{
 				font-size: 12px;
 				letter-spacing: 0.9px;
 				height: 50px;
-    			vertical-align: middle;    			
+    			vertical-align: middle;
 			}
 		}
 		tbody{
@@ -1252,7 +1265,7 @@ a:hover{
 						background-repeat: no-repeat;
 						background-size: contain;
 						position: absolute;
-						left: 0px;	
+						left: 0px;
 						height: 20px;
 						content: '';
 					}
@@ -1375,7 +1388,7 @@ a:hover{
 					    width: 90%;
 					    height: 25px;
 					    font-weight: 500;
-					    font-size: 12px;					
+					    font-size: 12px;
 					}
 					&:first-of-type{
 						padding-right: 40px;
@@ -1429,7 +1442,7 @@ a:hover{
 	margin-top: -4px;
 	&:after{
 		display:none;
-	}	
+	}
 	span{
 		display: block;
 	    width: 3px;
@@ -1460,7 +1473,7 @@ a:hover{
 					width: 13.7px;
 					height: 11.8px;
 					display: inline-block;
-				}				
+				}
 				font-size: 12px;
 				font-weight: 300;
 				color: #2e384d;
@@ -1485,7 +1498,7 @@ a:hover{
 					width: 13.7px;
 					height: 11.8px;
 					display: inline-block;
-				}				
+				}
 				font-size: 10px;
 				font-weight: 300;
 				color: #2e384d;
@@ -1533,7 +1546,7 @@ a:hover{
 		font-weight: 500;
 		line-height: 0.77;
 		color: #33475b;
-		margin: 10px 0 30px;	
+		margin: 10px 0 30px;
 	}
 	.alert-box{
 		.info{
@@ -1553,7 +1566,7 @@ a:hover{
 		  		background-size: contain;
 		  	}
 		}
-	}	
+	}
 	.apartments-info-list{
 	 	border-radius: 4px;
 		border: solid 1px #eff0f5;
@@ -1597,11 +1610,11 @@ a:hover{
 				margin-bottom: 0px;
 			}
 			.desc{
-		  		opacity: 0.5;	
+		  		opacity: 0.5;
 				font-size: 12px;
 				line-height: 1.67;
 				letter-spacing: 1.5px;
-				color: #33475b;	
+				color: #33475b;
 			}
 		}
 	}
@@ -1662,6 +1675,12 @@ a:hover{
 	  	color: #1fbed1;
 	}
 }
+.form-scheme-box{
+	    min-height: 260px;
+    overflow-y: auto;
+    height: 260px;
+    overflow-x: hidden;
+}
 .payment-timer{
   font-size: 56px;
   font-weight: 500;
@@ -1681,7 +1700,7 @@ a:hover{
 	@media screen and (max-width: 700px){
 		padding-left: 0px;
 		text-align: center;
-	}		
+	}
 	a{
 		display: inline-block;
 		font-size: 15px;
@@ -1727,11 +1746,11 @@ a:hover{
 .scroll-fixed-height::-webkit-scrollbar , .scroll-bar::-webkit-scrollbar{
     width: 5px;
 }
- 
+
 .scroll-fixed-height::-webkit-scrollbar-track, .scroll-bar::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
 }
- 
+
 .scroll-fixed-height::-webkit-scrollbar-thumb, .scroll-bar::-webkit-scrollbar-thumb {
   background-color: darkgrey;
   outline: 1px solid slategrey;
@@ -1838,7 +1857,7 @@ a:hover{
 /******************************** Login ****************************/
 .auth{
 	background-image: asset-url('login.png');
-	background-repeat: no-repeat;	
+	background-repeat: no-repeat;
 	background-position: right;
 	background-color: $white-color;
 	background-size: contain;
@@ -1851,7 +1870,7 @@ a:hover{
 		}
 	}
 	.login-form-wrapper{
-		
+
 		h1{
 			font-size: 26px;
 		  	font-weight: 500;
@@ -1897,7 +1916,7 @@ a:hover{
 			margin-top: 130px;
 			padding-bottom: 90px;
 			div{
-				display: inline-block;				
+				display: inline-block;
 			}
 			a{
 				opacity: 0.75;
@@ -2182,20 +2201,20 @@ a:hover{
 		&:nth-child(1), &:nth-child(4){
 			&:after, &:before{
 				content:'';
-				position:absolute;	
+				position:absolute;
 				background-color: #eaeaea;
 				@media screen and (max-width: 340px){
 					display:none;
 				}
-			}			
+			}
 		}
 		&:nth-child(1){
 			&:after, &:before{
 				right: 0px;
-				bottom: 0px;				
+				bottom: 0px;
 			}
-			&:after{				
-				height: 174px;				
+			&:after{
+				height: 174px;
 				width: 2px;
 			}
 			&:before{
@@ -2209,7 +2228,7 @@ a:hover{
 		&:nth-child(4){
 			&:after, &:before{
 				top: -2px;
-				left: -2px;				
+				left: -2px;
 			}
 			&:after{
 				height: 2px;
@@ -2313,9 +2332,10 @@ a:hover{
   .dropdown-menu {
     &.show{
       display:block;
-      transform: translate3d(0px, 0px, 0px) !important;
+      /*transform: translate3d(0px, 0px, 0px) !important;*/
       right: 0px;
       left: unset!important;
+      bottom:unset;
     }
   }
 }
