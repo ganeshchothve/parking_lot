@@ -49,8 +49,6 @@
           %>
           <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12 no-pd mb-5">
             <div class="search-home-form">
-              <h2 class="fn-400 mb-4">t('controller.searches.new.heading')</h2>
-              <p class="p-style mb-5">t('controller.searches.new.sub_heading')</p>
               <%= form_for @search, url: url, html: {class: 'validate-form', id: "search_form"} do |f| %>
                 <%= render "form_fields", {f: f, data: @data} %>
                 <div class="form-group">
