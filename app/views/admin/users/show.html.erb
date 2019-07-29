@@ -20,7 +20,7 @@
         <div class="box-card mb-3">
           <div class="box-header bg-gradient br-rd-tr-4"><h2>Time Slot</h2></div>
           <div class="box-content br-rd-bl-4 bg-white">
-            <%= render "receipts/time_slot", receipts: @user.receipts %>
+            <%= render "receipts/time_slot", receipts: @user.receipts, with_actions: true %>
           </div>
         </div>
       <% end %>

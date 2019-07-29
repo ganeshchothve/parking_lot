@@ -105,13 +105,12 @@
   <section class="projects-list device-pd">
     <div class="container">
       <div class="row">
-        <div class="separate-line"></div>
-        <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 my-4 no-pd">
+        <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
             <div class="box-card">
               <div class="box-header bg-gradient-cd br-rd-tr-4">
                 <h2><img src="<%= asset_path 'home-white.svg' %>" alt="Projects"><%= t('controller.buyer.dashboard.timeslots') %></h2>
               </div>
-              <%= render 'receipts/time_slot', {receipts: current_user.receipts} %>
+              <%= render 'receipts/time_slot', {receipts: current_user.receipts, with_actions: false} %>
             </div>
         </div>
       </div>
