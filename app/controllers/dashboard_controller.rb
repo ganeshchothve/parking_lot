@@ -46,7 +46,7 @@ class DashboardController < ApplicationController
   # GET /dashboard/download_brochure
   #
   def download_brochure
-    send_file(open(current_client.brochure.url),
+    send_file(open(current_client.brochure.file.url),
           :filename => "Brochure.#{current_client.brochure.file.extension}",
           :type => current_client.brochure.content_type,
           :disposition => 'attachment',

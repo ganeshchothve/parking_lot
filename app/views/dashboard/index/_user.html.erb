@@ -13,7 +13,7 @@
             </ul>
             <% if current_user.kyc_ready? && current_user.booking_details.in(status: BookingDetail::BOOKING_STAGES).count >= current_user.allowed_bookings %>
                 <p class="white text-center fn-14 fn-500">You cannot book any more apartments as you have reached the maximum bookings allowed per customer.</p>
-            <% elsif current_user.unattached_blocking_receipt.present? %>
+            <% elsif current_user.kyc_ready? && current_client.enable_actual_inventory?(current_user) %>
               <%- booking_detail = current_user.booking_details.hold.first %>
               <% if booking_detail %>
                 <p class="white text-center fn-14 fn-500">You already have a unit on hold.</p>

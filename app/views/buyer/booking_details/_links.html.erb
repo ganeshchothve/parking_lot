@@ -1,8 +1,12 @@
-<% if policy([:buyer, Receipt.new(user: current_user, booking_detail: booking_detail)]).new? %>
+<% if booking_detail.hold? && policy([:buyer, booking_detail]).block? && booking_detail.search %>
+  <%= link_to "Checkout using unit already held", checkout_user_search_path(booking_detail.search), class: 'dropdown-item' %>
+<% end %>
+
 <% if policy([:buyer, BookingDetail ]).show? %>
   <%= link_to "View details", buyer_booking_detail_path( booking_detail), class: 'dropdown-item' %>
 <% end %>
 
+<% if policy([:buyer, Receipt.new(user: current_user, booking_detail: booking_detail)]).new? %>
   <%= link_to "Add #{t('global.receipts')}", new_buyer_booking_detail_receipt_path(booking_detail_id: booking_detail.id), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
 
