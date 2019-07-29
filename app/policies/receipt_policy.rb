@@ -78,7 +78,7 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def enable_payment_with_kyc?
-    if current_client.enable_payment_with_kyc
+    current_client.enable_payment_with_kyc
   end
 
   def enable_booking_with_kyc?
