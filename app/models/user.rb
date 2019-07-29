@@ -103,6 +103,7 @@ class User
 
 
   delegate :name, :role, :role?, :email, to: :manager, prefix: true, allow_nil: true
+  delegate :name, :role, :email, to: :confirmed_by, prefix: true, allow_nil: true
 
   def self.otp_length
     6
@@ -250,10 +251,12 @@ class User
     BUYER_ROLES.include?(role)
   end
 
-
-
   def role?(role)
     (self.role.to_s == role.to_s)
+  end
+
+  def confirmed_by_self?
+    self.confirmed_by_id.blank? || self.confirmed_by_id == self.id
   end
 
   # new function to set the password without knowing the current
@@ -380,14 +383,16 @@ class User
   def send_confirmation_instructions
     generate_confirmation_token! unless @raw_confirmation_token
     # send_devise_notification(:confirmation_instructions, @raw_confirmation_token, opts)
-    email = Email.create!({
+    attrs = {
       booking_portal_client_id: booking_portal_client_id,
       email_template_id: Template::EmailTemplate.find_by(name: "user_confirmation_instructions").id,
       cc: [ booking_portal_client.notification_email ],
       recipients: [ self ],
       triggered_by_id: id,
       triggered_by_type: self.class.to_s
-    })
+    }
+    attrs[:to] = [ unconfirmed_email ] if pending_reconfirmation?
+    email = Email.create!(attrs)
     email.sent!
   end
 
@@ -435,6 +440,8 @@ class User
         where(reset_password_token: reset_password_token).first
       elsif login.present?
         any_of({ phone: login }, email: login).first
+      else
+        super
       end
     end
 

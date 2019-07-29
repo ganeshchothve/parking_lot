@@ -29,7 +29,7 @@ class SyncLog
 
   private
 
-  def self._sync(erp_model_id, record_id, sync_log_id)
+  def self._sync(erp_model_id, record_id, sync_log_id=nil)
     erp_model = ErpModel.where(_id: erp_model_id).first
     record = Object.const_get(erp_model.resource_class).where(id: record_id).first
     parent_sync_log = self.where(id: sync_log_id).first if sync_log_id.present?

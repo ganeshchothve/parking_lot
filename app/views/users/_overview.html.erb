@@ -97,7 +97,12 @@
         <div class="form-group">
           <label>Account Confirmed?</label>
           <div>
-            <%= user.confirmed? ? "At #{l(user.confirmed_at.in_time_zone(current_user.time_zone))}" : "No" %>
+            <% if user.confirmed? %>
+              Confirmed by <%= user.confirmed_by_self? ? 'Self' : link_to(user.confirmed_by_name, [current_user_role_group, user.confirmed_by]) %></br>
+              At <%= l(user.confirmed_at.in_time_zone(current_user.time_zone)) %>
+            <% else %>
+              No
+            <% end %>
           </div>
         </div>
       </div>
