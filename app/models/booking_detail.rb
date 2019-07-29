@@ -116,7 +116,6 @@ class BookingDetail
     else
       return true
     end
-    false
   end
 
 

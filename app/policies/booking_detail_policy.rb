@@ -46,8 +46,7 @@ class BookingDetailPolicy < ApplicationPolicy
   end
 
   def enable_booking_with_kyc?
-    return true if current_client.enable_booking_with_kyc
-    false
+    current_client.enable_booking_with_kyc
   end
 
   def eligible_user?

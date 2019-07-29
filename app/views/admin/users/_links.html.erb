@@ -7,7 +7,7 @@
 <% end %>
 <% hold_booking = user.booking_details.where(status: 'hold').first %>
 <% if hold_booking.present? && policy([:admin, hold_booking]).checkout? #&& policy([current_user_role_group, hold_booking]).block? %>
-  <%#= link_to "Checkout using unit already held", checkout_user_search_path(user.get_search(hold_booking.project_unit_id)), class: "dropdown-item" %>
+  <%= link_to "Checkout using unit already held", checkout_user_search_path(user.get_search(hold_booking.project_unit_id)), class: "dropdown-item" %>
 <% end %>
 <% if !current_user.buyer? && policy([:admin, Receipt.new(user: user)]).new? %>
   <%= link_to "Add Direct #{t('global.receipt')}", new_admin_user_receipt_path(user), class: "dropdown-item modal-remote-form-link" %>

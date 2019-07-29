@@ -28,7 +28,7 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def eligible_user?
-    direct_payment? ? ((enable_payment_with_kyc? ? record_user_kyc_ready? : true)&& (enable_direct_payment? || user.role?('channel_partner'))) : ((enable_booking_with_kyc? ? record_user_kyc_ready? : true) && valid_booking_stages?)
+    direct_payment? ? enable_direct_payment? : enable_attached_payment?
   end
 
   def valid_booking_stages?
@@ -39,10 +39,14 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def enable_direct_payment?
-    return true if current_client.enable_direct_payment? && current_client.payment_gateway.present?
+    return true if (current_client.enable_direct_payment?|| user.role?('channel_partner') ) && current_client.payment_gateway.present? && (enable_payment_with_kyc? ? record_user_kyc_ready? : true)
 
     @condition = 'enable_direct_payment'
     false
+  end
+
+  def enable_attached_payment?
+    ((enable_booking_with_kyc? ? record_user_kyc_ready? : true) && valid_booking_stages?)
   end
 
   def online_account_present?
@@ -74,12 +78,10 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def enable_payment_with_kyc?
-    return true if current_client.enable_payment_with_kyc
-    false
+    if current_client.enable_payment_with_kyc
   end
 
   def enable_booking_with_kyc?
-    return true if current_client.enable_booking_with_kyc
-    false
+    current_client.enable_booking_with_kyc
   end
 end
