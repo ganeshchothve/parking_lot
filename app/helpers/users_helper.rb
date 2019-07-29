@@ -21,8 +21,10 @@ module UsersHelper
   end
 
   def user_edit_role_options(_user)
-    if _user.id == current_user.id || _user.buyer?
+    if _user.id == current_user.id
       [[ t("users.role.#{current_user.role}"), current_user.role]]
+    elsif _user.buyer?
+      User::BUYER_ROLES.collect{|role| [ t("users.role.#{role}"), role ]}
     else
       filter_user_role_options
     end

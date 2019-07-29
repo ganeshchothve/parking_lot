@@ -1,4 +1,4 @@
-<% labels = t('mongoid.attributes.receipt').with_indifferent_access %>
+<% labels = t('mongoid.attributes.scheme').with_indifferent_access %>
 <div class="filter-inner">
   <div class="filter-header">
   <span class="title">Filter</span>
@@ -8,23 +8,23 @@
     <%= form_tag admin_schemes_path, method: "get", id: "scheme_search_form" do %>
     <div class="filter-content row">
       <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-        <%= label_tag "fltrs", "Name", class: "control-label" %>
+        <%= label_tag "fltrs", labels[:name], class: "control-label" %>
         <%= select_tag "fltrs[name]", options_for_select(Scheme.all.collect(&:name).collect{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:name] : "")), {prompt: "Select", class: "selectize"} %>
       </div>
       <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-        <%= label_tag "fltrs", "status", class: "control-label" %>
+        <%= label_tag "fltrs", labels[:status], class: "control-label" %>
         <%= select_tag "fltrs[status]", options_for_select(Scheme.aasm.states.collect(&:name).collect{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize"} %>
       </div>
       <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-        <%= label_tag "fltrs", "can be applied by", class: "control-label" %>
+        <%= label_tag "fltrs", labels[:can_be_applied_by], class: "control-label" %>
         <%= select_tag "fltrs[can_be_applied_by]", options_for_select(Scheme.all.distinct(:can_be_applied_by).collect{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:can_be_applied_by] : "")), {prompt: "Select", class: "selectize"} %>
       </div>
       <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-        <%= label_tag "fltrs", "Customer Role", class: "control-label" %>
+        <%= label_tag "fltrs", labels[:customer_role], class: "control-label" %>
         <%= select_tag "fltrs[user_role]", options_for_select(Scheme.all.distinct(:user_role).flatten.collect{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:user_role] : "")), {prompt: "Select", class: "selectize"} %>
       </div>
       <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-        <%= label_tag "fltrs", "project tower", class: "control-label" %>
+        <%= label_tag "fltrs", labels[:project_tower_id], class: "control-label" %>
         <%= select_tag "fltrs[project_tower]", options_for_select(ProjectTower.all.map{|f| [f.name, f.id]}, (params[:fltrs].present? ? params[:fltrs][:project_tower] : "")), {prompt: "Select", class: "selectize"} %>
       </div>
     </div>

@@ -6,6 +6,77 @@
           Channel Partner
         </div>
         <div class="card-body">
+          <% labels = t('mongoid.attributes.user').with_indifferent_access %>
+          <div class="row">
+            <div class="col-3">
+              <div class="form-group">
+                <label><%= labels[:name] %></label>
+                <div>
+                  <%= @channel_partner.name %>
+                </div>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <label><%= labels[:email] %></label>
+                <div>
+                  <%= @channel_partner.email %>
+                </div>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <label><%= labels[:rera_id] %></label>
+                <div>
+                  <%= @channel_partner.rera_id %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-3">
+              <div class="form-group">
+                <label><%= labels[:status] %></label>
+                <div>
+                  <%= @channel_partner.status %>
+                </div>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <label><%= labels[:company_name] %></label>
+                <div>
+                  <%= @channel_partner.company_name %>
+                </div>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <label><%= labels[:pan_number] %></label>
+                <div>
+                  <%= @channel_partner.pan_number %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class = 'row'>
+            <div class="col-3">
+              <div class="form-group">
+                <label><%= labels[:aadhaar] %></label>
+                <div>
+                  <%= @channel_partner.aadhaar %>
+                </div>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <label><%= labels[:manager_name] %></label>
+                <div>
+                  <%= @channel_partner.manager_name %>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="mt-3"></div>

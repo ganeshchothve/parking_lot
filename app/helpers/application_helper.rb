@@ -49,7 +49,7 @@ module ApplicationHelper
 
   def bottom_navigation(classes='')
     html = ''
-    if current_user && current_client.brochure.present?
+    if current_user && current_client.brochure.present? && File.exist?(current_client.brochure.file.file)
       html += "<li >
       #{active_link_to 'Brochure', download_brochure_path, target: "_blank", active: :exclusive, class: 'footer-link' }
       </li>"

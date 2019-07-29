@@ -3,10 +3,11 @@
   <span class="title">Filter</span>
   <a href="javascript:;" class="close-filter-btn">&times;</a>
   </div>
+  <% labels = t('mongoid.attributes.project_unit').with_indifferent_access %>
   <%= form_tag admin_project_units_path, method: "get", id: "project_unit_search_form" do %>
     <div class="filter-content row">
       <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-        <%= label_tag "fltrs", "Name", class: "control-label" %>
+        <%= label_tag "fltrs", labels[:name], class: "control-label" %>
         <%
           options = []
           selected_option = ''
@@ -19,27 +20,27 @@
         <%= select_tag "fltrs[_id]", options_for_select(options, selected_option), {class: "selectize-remote", data: {url: admin_project_units_path }} %>
       </div>
       <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-        <%= label_tag "fltrs", "status", class: "control-label" %>
+        <%= label_tag "fltrs", labels[:status], class: "control-label" %>
         <%= select_tag "fltrs[status]", options_for_select(ProjectUnit::STATUS.collect{|ps| [ t("project_units.status.#{ps}"), ps ] }, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize"} %>
       </div>
       <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-        <%= label_tag "fltrs[project_tower_id]", "Project Tower", class: "control-label" %>
+        <%= label_tag "fltrs[project_tower_id]", labels[:project_tower], class: "control-label" %>
         <%= select_tag "fltrs[project_tower_id]", options_for_select(ProjectTower.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:project_tower_id] : "")), {prompt: "Select", class: "selectize"} %>
       </div>
       <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-        <%= label_tag "fltrs", "bedrooms", class: "control-label" %>
+        <%= label_tag "fltrs", labels[:bedrooms], class: "control-label" %>
         <%= select_tag "fltrs[bedrooms]", options_for_select(ProjectUnit.distinct(:bedrooms).sort.collect{|x| [x, x]}, (params[:fltrs].present? ? params[:fltrs][:bedrooms] : "")), {prompt: "Select", class: "selectize"} %>
       </div>
       <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-        <%= label_tag "fltrs", "floor", class: "control-label" %>
+        <%= label_tag "fltrs", labels[:floor], class: "control-label" %>
         <%= select_tag "fltrs[floor]", options_for_select(ProjectUnit.distinct(:floor).sort.collect{|x| [x, x]}, (params[:fltrs].present? ? params[:fltrs][:floor] : "")), {prompt: "Select", class: "selectize"} %>
       </div>
       <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-        <%= label_tag "fltrs", "Floor Order", class: "control-label" %>
+        <%= label_tag "fltrs", labels[:floor_order], class: "control-label" %>
         <%= select_tag "fltrs[floor_order]", options_for_select(ProjectUnit.distinct(:floor_order).sort, params[:fltrs].present? ? params[:fltrs][:floor_order] : ""), {prompt: "Select", class: "selectize"} %>
       </div>
       <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-        <%= label_tag "fltrs", "facing", class: "control-label" %>
+        <%= label_tag "fltrs", labels[:facing], class: "control-label" %>
         <%= select_tag "fltrs[unit_facing_direction]", options_for_select(ProjectUnit.distinct(:unit_facing_direction).sort.collect{|x| [x, x]}, (params[:fltrs].present? ? params[:fltrs][:unit_facing_direction] : "")), {prompt: "Select", class: "selectize"} %>
       </div>
     </div>

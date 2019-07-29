@@ -41,15 +41,6 @@
           <%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.all.sort, {}, class: 'selectize', disabled: !policy([:buyer, user]).editable_field?("time_zone") %>
         </div>
       </div>
-
-      <div class="col-md-6">
-        <div class="form-group">
-          <%= f.label :is_active %><br/>
-          <div class="form-check form-check-inline">
-            <%= f.object.is_active ? 'Yes' : 'No' %>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
   <div class="modal-footer">

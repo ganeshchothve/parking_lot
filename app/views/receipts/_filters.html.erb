@@ -9,7 +9,7 @@
     <div class="filter-content row">
       <% if !current_user.buyer? %>
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-          <%= label_tag "fltrs", "Customer Name / Email / Phone", class: "control-label" %>
+          <%= label_tag "fltrs", labels[:name_email_phone], class: "control-label" %>
           <% user = params.dig(:fltrs, :user_id).present? ? User.where(_id: params.dig(:fltrs, :user_id)).first : nil %>
           <%= select_tag "fltrs[user_id]", options_for_select( user ? [[ user.ds_name, user.id ]] : []), {class: "selectize-remote", data: {params: {fltrs: {role: User.buyer_roles(current_client)} }, url: admin_users_path }} %>
         </div>
