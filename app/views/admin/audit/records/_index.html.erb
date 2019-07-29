@@ -28,8 +28,8 @@
         </td> -->
 
         <td>
-          <%= link_to "Show","javascript:;", data: {toggle: "modal", target: "#audit_entry_modal"}, class: "db-small-btn light-blue bg-white fn-400 modal-remote-form-link" %>
-          <div class="modal fade right fixed-header-footer" role="dialog" id="audit_entry_modal">
+          <%= link_to "Show","javascript:;", data: {toggle: "modal", target: "#audit_entry_modal_#{audit.id}"}, class: "db-small-btn light-blue bg-white fn-400" %>
+          <div class="modal fade right fixed-header-footer" role="dialog" id="audit_entry_modal_<%= audit.id %>">
             <div class="modal-dialog modal-lg" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -39,7 +39,7 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                  <% @audit_entries =  Audit::Entry.where(audit_id: audit.id )%>
+                  <% @audit_entries =  Audit::Entry.where(audit_id: audit.id)%>
                   <%=render "admin/audit/entries/show",{audit_entries: @audit_entries} %>
                 </div>
               </div>

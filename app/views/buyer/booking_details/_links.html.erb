@@ -11,7 +11,7 @@
 <% end %>
 
 <% if policy([:buyer, booking_detail.project_unit]).edit? %>
-  <%= link_to "Update #{global_labels['user_kycs']}", edit_buyer_project_unit_path(booking_detail.project_unit), class: "modal-remote-form-link dropdown-item" %>
+  <%= link_to "Update #{global_labels['booking_detail']}", edit_buyer_project_unit_path(booking_detail.project_unit), class: "modal-remote-form-link dropdown-item" %>
 <% end %>
 
 
