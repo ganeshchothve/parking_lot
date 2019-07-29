@@ -412,7 +412,6 @@ en:
        cancellation_rejected: 'Cancellation Rejected'
        management: 'Management Blocking'
        employee: 'Employee Blocking'
-
   datetime:
     distance_in_words:
       about_x_years:
@@ -439,6 +438,14 @@ en:
       complained: 'Complained'
       unsubscribed: 'Unsubscribed'
       untracked: 'Untracked'
+
+    smses:
+      status:
+        received: 'Received'
+        untracked: 'Untracked'
+        scheduled: 'Scheduled'
+        sent: 'Sent'
+        failed: 'Failed'
 
   erp_models:
     link_name: 'Third Party Integration'
@@ -484,7 +491,10 @@ en:
       success: 'Success'
       available_for_refund: 'Available For Refund'
       refunded: 'Refund'
-      cancelled: 'Canceled'
+      cancelled: 'Cancelled'
+      cancellation_requested: 'Cancellation Requested'
+      cancelling: 'Cancelling'
+      cancellation_rejected: 'Cancellation Rejected'
     payment_mode:
       online: 'Online'
       cheque: 'Cheque'
