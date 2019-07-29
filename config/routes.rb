@@ -18,7 +18,7 @@ Rails.application.routes.draw do
 
   devise_scope :user do
     post 'users/otp', :to => 'local_devise/sessions#otp', :as => :users_otp
-    root to: "devise/sessions#new"
+    root to: "local_devise/sessions#new"
   end
 
   as :user do
@@ -37,9 +37,13 @@ Rails.application.routes.draw do
 
   namespace :admin do
 
-    resources :booking_details, only: [:index, :show] do
+    resources :portal_stage_priorities, only: [:index] do
+      patch :reorder, on: :collection
+    end
+    resources :booking_details, only: [:index, :show, :new, :create] do
       patch :booking, on: :member
       get :mis_report, on: :collection
+      get :searching_for_towers, on: :collection
       patch :send_under_negotiation, on: :member
       resources :booking_detail_schemes, except: [:destroy], controller: 'booking_details/booking_detail_schemes'
 
@@ -53,8 +57,8 @@ Rails.application.routes.draw do
     resources :accounts
     resources :phases
     resources :erp_models, only: %i[index new create edit update]
-    resources :sync_logs, only: %i[index] do
-      get 'resync', on: :member
+    resources :sync_logs, only: %i[index create] do
+      patch :resync, on: :member
     end
     resources :emails, :smses, only: %i[index show]
     resource :client, except: [:show, :new, :create] do
@@ -74,11 +78,12 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :project_towers, only: [:index]
     resources :project_units, only: [:index, :show, :edit, :update] do
       member do
         get :print
         patch :release_unit
-        # get :send_under_negotiation
+        get :quotation
       end
 
       collection do
@@ -160,7 +165,7 @@ Rails.application.routes.draw do
   match 'payment/:receipt_id/process_payment/:ignore', to: 'payment#process_payment', via: [:get, :post]
   get :register, to: 'home#register', as: :register
   post :check_and_register, to: 'home#check_and_register', as: :check_and_register
-
+  get :welcome, as: :welcome, to: 'home#welcome'
   scope :custom do
     match :inventory, to: 'custom#inventory', as: :custom_inventory, via: [:get]
   end
@@ -175,6 +180,7 @@ Rails.application.routes.draw do
     get 'tds-process', to: 'dashboard#tds_process', as: :dashboard_tds_process
     get 'terms-and-conditions', to: 'dashboard#terms_and_condition', as: :dashboard_terms_and_condition
     get "gamify-unit-selection", to: "dashboard#gamify_unit_selection"
+    get :download_brochure, to: 'dashboard#download_brochure'
     resource :user do
       resources :searches, except: [:destroy], controller: 'searches' do
         get :"3d", on: :collection, action: "three_d", as: "three_d"
@@ -193,13 +199,16 @@ Rails.application.routes.draw do
 
   namespace :buyer do
 
-    resources :booking_details, only: [:index, :show] do
-      resources :receipts, only: [:index]
+    resources :booking_details, only: [:index, :show, :update] do
+      patch :booking, on: :member
+      resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts'
       resources :booking_detail_schemes, except: [:destroy], controller: 'booking_details/booking_detail_schemes'
     end
 
     resources :emails, :smses, only: %i[index show]
-    resources :project_units, only: [:index, :show, :edit, :update]
+    resources :project_units, only: [:index, :show, :edit, :update] do
+      get :quotation, on: :member
+    end
     resources :users, only: [:show, :update, :edit] do
       member do
         get :update_password
@@ -212,21 +221,16 @@ Rails.application.routes.draw do
       end
 
     end
+
     resources :receipts, only: [:index, :new, :create, :show ] do
       get :resend_success, on: :member
     end
+
     resources :referrals, only: [:index, :create, :new] do
       post :generate_code, on: :collection
     end
 
     resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
-    resources :booking_details, only: [:update] do
-      patch :booking, on: :member
-      resources :booking_detail_schemes, except: [:destroy]
-
-        resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts'
-    end
-
 
     scope ":request_type" do
       resources :user_requests, except: [:destroy], controller: 'user_requests'

@@ -1,5 +1,6 @@
 class Admin::ReceiptsController < AdminController
   include ReceiptsConcern
+
   before_action :set_user, except: %w[index show export resend_success edit_token_number update_token_number]
   before_action :set_receipt, only: %w[edit update show resend_success edit_token_number update_token_number]
 
@@ -54,14 +55,12 @@ class Admin::ReceiptsController < AdminController
   #
   # POST /admin/users/:user_id/receipts
   def create
-    @receipt = Receipt.new(user: @user, creator: current_user)
+    @receipt = Receipt.new(user: @user, creator: current_user, project_unit_id: params.dig(:receipt, :project_unit_id))
     @receipt.assign_attributes(permitted_attributes([:admin, @receipt]))
-    @receipt.account ||= selected_account
-    @receipt.payment_gateway ||= current_client.payment_gateway if @receipt.payment_mode == 'online'
-
+    @receipt.payment_gateway = current_client.payment_gateway if @receipt.payment_mode == 'online'
+    @receipt.account ||= selected_account(current_client.payment_gateway.underscore)
     authorize([:admin, @receipt])
     respond_to do |format|
-      @receipt.event ||= 'pending' if current_user.role?('channel_partner')
       if @receipt.save
         flash[:notice] = 'Receipt was successfully updated. Please upload documents'
         if @receipt.payment_mode == 'online'
@@ -95,8 +94,9 @@ class Admin::ReceiptsController < AdminController
 
   def update
     authorize([:admin, @receipt])
+    @receipt.assign_attributes(permitted_attributes([:admin, @receipt]))
     respond_to do |format|
-      if @receipt.update(permitted_attributes([:admin, @receipt]))
+      if (params.dig(:receipt, :event).present? ? @receipt.send("#{params.dig(:receipt, :event)}!") : @receipt.save)
         format.html { redirect_to admin_user_receipts_path(@user), notice: 'Receipt was successfully updated.' }
       else
         format.html { render :edit }

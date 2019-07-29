@@ -23,16 +23,31 @@ class Admin::SyncLogsController < AdminController
   def resync
     if @sync_log.resource.present?
       record = @sync_log.resource
-      @erp_models = ErpModel.where(resource_class: record.class, action_name: @sync_log.action, is_active: true)
-      @erp_models.each do |erp|
-        @sync_log.sync(erp, record)
-      end
+      erp_model = @sync_log.erp_model
+      @sync_log.sync(erp_model, record)
       notice = "#{record.class} is queued to sync"
     else
       notice = 'Sync log resource absent'
     end
     redirect_back(fallback_location: root_path, notice: notice)
   end
+
+  def create
+    @sync_log = SyncLog.new(set_params)
+    @sync_log.action = 'create'
+    record = @sync_log.resource
+    erp_model = @sync_log.erp_model
+    respond_to do |format|
+      if erp_model.is_active?
+        @sync_log.sync(erp_model, record)
+        flash[:notice] = 'Sync process has been started.'
+      else
+        flash[:alert] = 'Sync details are missing.'
+      end
+      format.html { redirect_to request.referer || root_path }
+    end
+  end
+
 
   private
 
@@ -42,6 +57,10 @@ class Admin::SyncLogsController < AdminController
 
   def authorize_resource
     authorize [:admin, SyncLog]
+  end
+
+  def set_params
+    params.require(:sync).permit(:erp_model_id, :erp_model_id, :resource_type, :resource_id)
   end
 
   #

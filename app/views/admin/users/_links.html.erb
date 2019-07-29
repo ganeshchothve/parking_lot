@@ -2,7 +2,7 @@
   <%= link_to "Choose #{global_labels[:project_unit]} & Add Booking", new_admin_user_search_path(user.id), class: "dropdown-item" %>
 <% end %>
 <% if policy([:admin, user]).confirm_user? %>
-  <%= link_to"Confirm User", confirm_user_admin_user_path(user), method: :patch, 
+  <%= link_to"Confirm User", confirm_user_admin_user_path(user), method: :patch,
   class: "dropdown-item" %>
 <% end %>
 <% hold_booking = user.booking_details.where(status: 'hold').first %>
@@ -43,7 +43,4 @@
 <% end %>
 <% if policy([:admin, User.new]).update_password? %>
   <%= link_to "Update Password", update_password_admin_user_path(user), class: "dropdown-item modal-remote-form-link" %>
-<% end %>
-<% if policy([:admin, SyncLog.new]).resync? && user.sync_logs.present? %>
-  <%= link_to "Resync", resync_admin_sync_log_path(user.sync_logs.desc(:created_at)[0]), class: 'dropdown-item' %>
 <% end %>

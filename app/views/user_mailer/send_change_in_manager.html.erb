@@ -2,7 +2,7 @@
   <div class="card-body">
     <p>Dear Team,</p>
     <p>
-      Channel Partner has been changed on customer <strong><%= @user.name %></strong>. New assigned channel partner is <strong><%= @user.manager.name %></strong>
+      Channel Partner has been changed on customer <strong><%= @user.name %></strong>. New assigned channel partner is <strong><%= @user.manager_name %></strong>
     </p>
     <% if @user.manager_change_reason.present? %>
       <br/>

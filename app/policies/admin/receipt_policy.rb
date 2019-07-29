@@ -53,6 +53,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
 
   def permitted_attributes(params = {})
     attributes = super
+    attributes += [:payment_type]
     attributes += [:booking_detail_id] if user.role?('channel_partner')
     if !user.buyer? && (record.new_record? || %w[pending clearance_pending].include?(record.status))
       attributes += %i[issued_date issuing_bank issuing_bank_branch payment_identifier]
@@ -62,7 +63,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
       attributes += [:event]
     end
     if %w[admin crm superadmin sales_admin].include?(user.role)
-      attributes += [:event]
+      attributes += [:event] unless record.status.in?(%w(success))
       if record.persisted? && record.clearance_pending?
         attributes += %i[processed_on comments tracking_id]
       end

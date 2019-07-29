@@ -59,6 +59,8 @@ class Client
   field :enable_communication, type: Hash, default: {"email": true, "sms": true}
   field :allow_multiple_bookings_per_user_kyc, type: Boolean, default: true
   field :enable_referral_bonus, type: Boolean, default: false
+  field :roles_taking_registrations, type: Array, default: %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner]
+
   field :external_api_integration, type: Boolean, default: false
   field :enable_daily_reports, type: Hash, default: {"payments_report": false}
   #
@@ -95,6 +97,8 @@ class Client
   mount_uploader :logo, DocUploader
   mount_uploader :mobile_logo, DocUploader
   mount_uploader :background_image, DocUploader
+  mount_uploader :brochure, DocUploader
+
 
   enable_audit track: ["update"]
 
@@ -113,7 +117,7 @@ class Client
   has_one :external_inventory_view_config, inverse_of: :booking_portal_client
 
   validates :name, :allowed_bookings_per_user, :helpdesk_email, :helpdesk_number, :notification_email, :notification_numbers, :sender_email, :email_domains, :booking_portal_domains, :registration_name, :website_link, :support_email, :support_number, :payment_gateway, :cin_number, :mailgun_private_api_key, :mailgun_email_domain, :sms_provider_username, :sms_provider_password, :sms_mask, presence: true
-  validates :enable_actual_inventory, array: {inclusion: {allow_blank: true, in: Proc.new{ |client| User.available_roles(client).collect{|x| x[:id]} } }}
+  validates :enable_actual_inventory, array: { inclusion: {allow_blank: true, in: (User::ADMIN_ROLES + User::BUYER_ROLES) } }
   validates :preferred_login, inclusion: {in: Proc.new{ Client.available_preferred_logins.collect{|x| x[:id]} } }
   validates :payment_gateway, inclusion: {in: Proc.new{ Client.available_payment_gateways.collect{|x| x[:id]} } }, allow_blank: true
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true

@@ -34,7 +34,6 @@ class ChannelPartner
   has_one :address, as: :addressable, validate: false
   has_one :bank_detail, as: :bankable, validate: false
   has_many :assets, as: :assetable
-  has_many :sync_logs, as: :resource
 
   validates :first_name, :last_name, :rera_id, :status, :aadhaar, presence: true
   validates :aadhaar, format: { with: /\A\d{12}\z/i, message: 'is not a valid aadhaar number' }, allow_blank: true
@@ -50,6 +49,8 @@ class ChannelPartner
   validate :user_based_uniqueness
 
   accepts_nested_attributes_for :bank_detail, :address
+
+  delegate :name, :role, :role?, :email, to: :manager, prefix: true, allow_nil: true
 
   def self.available_statuses
     [
@@ -105,21 +106,12 @@ class ChannelPartner
   end
 
   def sync(erp_model, sync_log)
-    if status == 'active'
-      _erp_models = if erp_id.blank?
-        ErpModel.where(resource_class: self.class, action_name: 'create')
-      else
-        ErpModel.where(resource_class: self.class, action_name: 'update')
-      end
-      _erp_models.each do |erp|
-        Api::ChannelPartnerDetailsSync.new(erp, self, sync_log).execute
-      end
-    end
+    Api::ChannelPartnerDetailsSync.new(erp_model, self, sync_log).execute
   end
 
-  def update_erp_id(erp_id)
-    associated_user.try(:set, {erp_id: erp_id})
-    set(erp_id: erp_id)
+  def update_erp_id(erp_id, domain)
+    super
+    associated_user.update_erp_id(erp_id, domain) if associated_user
   end
 
   private

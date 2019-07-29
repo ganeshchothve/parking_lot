@@ -1,6 +1,13 @@
 # TODO: replace all messages & flash messages
 class HomeController < ApplicationController
+
+  skip_before_action :set_current_client, only: :welcome
+
   def index
+  end
+
+  def welcome
+    render layout: 'welcome'
   end
 
   def register
@@ -9,7 +16,9 @@ class HomeController < ApplicationController
       redirect_to home_path(current_user)
       flash[:notice] = "You have already been logged in"
     else
+      store_cookies_for_registration
       render layout: "devise"
+
     end
   end
 
@@ -65,6 +74,7 @@ class HomeController < ApplicationController
 
           respond_to do |format|
             if @user.save
+              SelldoLeadUpdater.perform_async(@user.id, 'registered')
               format.json { render json: {user: @user, success: 'User registration completed'}, status: :created }
             else
               format.json { render json: {errors: @user.errors.full_messages.uniq}, status: :unprocessable_entity }
@@ -72,6 +82,14 @@ class HomeController < ApplicationController
           end
         end
       end
+    end
+  end
+
+  private
+
+  def store_cookies_for_registration
+    User::ALLOWED_UTM_KEYS.each do |key|
+      cookies[key] = params[key] if params[key].present?
     end
   end
 end

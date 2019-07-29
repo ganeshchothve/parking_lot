@@ -7,12 +7,21 @@ class BookingDetail
   include SyncDetails
   include ApplicationHelper
   extend FilterByCriteria
+  include PriceCalculator
 
   BOOKING_STAGES = %w[blocked booked_tentative booked_confirmed under_negotiation scheme_approved]
 
   field :status, type: String
   field :erp_id, type: String, default: ''
   field :name, type: String
+  field :base_rate, type: Float
+  field :floor_rise, type: Float
+  field :saleable, type: Float
+  field :project_name, type: String
+  field :project_tower_name, type: String
+  field :bedrooms, type: String
+  field :bathrooms, type: String
+
   mount_uploader :tds_doc, DocUploader
 
   enable_audit(
@@ -24,6 +33,8 @@ class BookingDetail
     ]
   )
 
+  embeds_many :costs, as: :costable
+  embeds_many :data, as: :data_attributable
   belongs_to :project_unit
   belongs_to :user
   belongs_to :manager, class_name: 'User', optional: true
@@ -34,7 +45,6 @@ class BookingDetail
   has_many :receipts, dependent: :nullify
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :booking_detail_schemes, dependent: :destroy
-  has_many :sync_logs, as: :resource
   has_many :notes, as: :notable
   has_many :user_requests, as: :requestable
   has_many :related_booking_details, foreign_key: :parent_booking_detail_id, primary_key: :_id, class_name: 'BookingDetail'
@@ -47,12 +57,15 @@ class BookingDetail
   validate :kyc_mandate, on: :create
   delegate :name, :blocking_amount, to: :project_unit, prefix: true, allow_nil: true
   delegate :name, :email, :phone, to: :user, prefix: true, allow_nil: true
+  delegate :name, :email, :phone, :role, :role?, to: :manager, prefix: true, allow_nil: true
 
+
+  scope :filter_by_id, ->(_id) { where(_id: _id) }
   scope :filter_by_name, ->(name) { where(name: ::Regexp.new(::Regexp.escape(name), 'i')) }
   scope :filter_by_status, ->(status) { where(status: status) }
-  scope :filter_by_project_tower, ->(project_tower_id) { where(project_unit_id: { "$in": ProjectUnit.where(project_tower_id: project_tower_id).pluck(:_id) })}
-  scope :filter_by_user, ->(user_id) { where(user_id: user_id)  }
-  scope :filter_by_manager, ->(manager_id) {where(manager_id: manager_id) }
+  scope :filter_by_project_tower_id, ->(project_tower_id) { where(project_unit_id: { "$in": ProjectUnit.where(project_tower_id: project_tower_id).pluck(:_id) })}
+  scope :filter_by_user_id, ->(user_id) { where(user_id: user_id)  }
+  scope :filter_by_manager_id, ->(manager_id){ where(user_id: { '$in' => User.buyers.where(manager_id: manager_id).distinct(:_id) } ) }
   default_scope -> {desc(:created_at)}
 
 
@@ -65,10 +78,13 @@ class BookingDetail
     Gamification::PushNotification.new.push(message) if Rails.env.staging? || Rails.env.production?
   end
 
-  def booking_detail_scheme
-    booking_detail_schemes.in(status: ['approved', 'draft']).first
+  def booking_detail_scheme=(bds)
+    @booking_detail_scheme = bds
   end
 
+  def booking_detail_scheme
+    @booking_detail_scheme ||= booking_detail_schemes.in(status: ['approved', 'draft']).first
+  end
 
   def pending_balance(options={})
     strict = options[:strict] || false
@@ -91,10 +107,6 @@ class BookingDetail
     receipts.where(user_id: self.user_id).in(status: ['success', 'clearance_pending']).sum(:total_amount)
   end
 
-  def total_amount_paid
-    receipts.success.sum(:total_amount)
-  end
-
   def sync(erp_model, sync_log)
     Api::BookingDetailsSync.new(erp_model, self, sync_log).execute
   end
@@ -106,7 +118,7 @@ class BookingDetail
   # @return [Email Object]
   #
   def auto_released_extended_inform_buyer!
-    Email.create!({
+    email = Email.create!({
       booking_portal_client_id: project_unit.booking_portal_client_id,
       email_template_id: Template::EmailTemplate.find_by(name: "auto_release_on_extended").id,
       cc: [ project_unit.booking_portal_client.notification_email ],
@@ -115,6 +127,7 @@ class BookingDetail
       triggered_by_id: self.id,
       triggered_by_type: self.class.to_s
     })
+    email.sent!
   end
 
   # validates kyc presence if booking is not allowed without kyc
@@ -153,6 +166,20 @@ class BookingDetail
     end
   end
 
+  def cost_sheet_template(booking_detail_scheme_id = nil)
+    bds = booking_detail_scheme_id.present? ? booking_detail_schemes.where(id: booking_detail_scheme_id).first : booking_detail_scheme
+    bds.try(:cost_sheet_template)
+  end
+
+  def payment_schedule_template(booking_detail_scheme_id = nil)
+    bds = booking_detail_scheme_id.present? ? booking_detail_schemes.where(id: booking_detail_scheme_id).first : booking_detail_scheme
+    bds.try(:payment_schedule_template)
+  end
+
+  def total_amount_paid
+    receipts.success.sum(:total_amount)
+  end
+
   class << self
 
     def user_based_scope(user, params = {})
@@ -160,7 +187,7 @@ class BookingDetail
       custom_scope = {}
       if params[:user_id].blank? && !user.buyer?
         if user.role?('channel_partner')
-          custom_scope = { manager_id: user.id }
+          custom_scope = { user_id: { '$in': User.where(role: 'user', manager_id: user.id).distinct(:id) } }
         elsif user.role?('cp_admin')
           custom_scope = { user_id: { "$in": User.where(role: 'user').nin(manager_id: [nil, '']).distinct(:id) } }
         elsif user.role?('cp')

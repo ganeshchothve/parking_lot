@@ -23,9 +23,19 @@ module Communication
         # setting[:domain] = ::Email.default_email_domain
 
         begin
-          message = get_message_object(email_json, email.booking_portal_client.sender_email)
-          mailgun = ::Mailgun::Client.new email.booking_portal_client.mailgun_private_api_key
-          mailgun.send_message(email.booking_portal_client.mailgun_email_domain, message)
+          if Rails.env.production? || Rails.env.staging?
+            message = get_message_object(email_json, email.booking_portal_client.sender_email)
+            mailgun = ::Mailgun::Client.new email.booking_portal_client.mailgun_private_api_key
+            mailgun.send_message(email.booking_portal_client.mailgun_email_domain, message)
+          else
+            ApplicationMailer.test({
+              to: email.to || [],
+              cc: email.cc || [],
+              body: email.body,
+              subject: email.subject,
+              attachment_urls: email_json[:attachments]
+            }).deliver
+          end
           email.set({sent_on: Time.now})
         rescue StandardError => e
           if Rails.env.production? || Rails.env.staging?

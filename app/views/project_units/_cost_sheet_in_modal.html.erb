@@ -1,4 +1,4 @@
-<div class="modal fade right fixed-header-footer" role="dialog" id="cost_sheet_modal_<%= project_unit.id %>">
+<div class="modal fade right fixed-header-footer" role="dialog" id="cost_sheet_modal_<%= booking_detail.id %>">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -8,7 +8,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <%= render 'dashboard/project_unit_cost_sheet', {project_unit: project_unit } %>
+        <%= render 'dashboard/booking_detail_cost_sheet', {booking_detail: booking_detail } %>
       </div>
     </div>
   </div>

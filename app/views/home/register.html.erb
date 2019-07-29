@@ -26,5 +26,8 @@ window.sell_do_form_rendered = function(){
   if(default_srd){
     $('<input type="hidden" name="sell_do[campaign][srd]" value="' + default_srd + '"/>').appendTo(".sell_do_form_actual_container");
   }
+
+  $('[name="sell_do[form][lead][first_name]"]').attr('pattern', '[A-Za-z ]{2,20}').attr('title', 'contain only alphabet and space').attr('maxlength', 20)
+  $('[name="sell_do[form][lead][last_name]"]').attr('pattern', '[A-Za-z ]{2, 20}').attr('title', 'contain only alphabet and space').attr('maxlength', 20)
 };
 </script>

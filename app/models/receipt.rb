@@ -13,6 +13,7 @@ class Receipt
   extend FilterByCriteria
 
   OFFLINE_PAYMENT_MODE = %w[cheque rtgs imps card_swipe neft]
+  PAYMENT_TYPES = %w[agreement stamp_duty]
 
   field :receipt_id, type: String
   field :order_id, type: String
@@ -30,6 +31,7 @@ class Receipt
   field :comments, type: String
   field :gateway_response, type: Hash
   field :erp_id, type: String, default: ''
+  field :payment_type, type: String # possible values are :agreement and :stamp_duty
 
   attr_accessor :swap_request_initiated
 
@@ -40,23 +42,23 @@ class Receipt
   # remove optional: true when implementing.
   has_many :assets, as: :assetable
   has_many :smses, as: :triggered_by, class_name: 'Sms'
-  has_many :sync_logs, as: :resource
   has_many :user_requests, as: :requestable
 
   scope :filter_by_status, ->(*_status) { where(status: { '$in' => _status }) }
   scope :filter_by_receipt_id, ->(_receipt_id) { where(receipt_id: /#{_receipt_id}/i) }
+  scope :filter_by_token_number, ->(_token_number) { where(token_number: _token_number) }
   scope :filter_by_user_id, ->(_user_id) { where(user_id: _user_id) }
   scope :filter_by_payment_mode, ->(_payment_mode) { where(payment_mode: _payment_mode) }
-  scope :filter_by_issued_date, ->(date) { start_date, end_date = date.split(' - '); where(issued_date: start_date..end_date) }
-  scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: start_date..end_date) }
-  scope :filter_by_processed_on, ->(date) { start_date, end_date = date.split(' - '); where(processed_on: start_date..end_date) }
+  scope :filter_by_issued_date, ->(date) { start_date, end_date = date.split(' - '); where(issued_date: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
+  scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
+  scope :filter_by_processed_on, ->(date) { start_date, end_date = date.split(' - '); where(processed_on: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_booking_detail_id, ->(_booking_detail_id) do
     _booking_detail_id = _booking_detail_id == '' ? { '$in' => ['', nil] } : _booking_detail_id
     where(booking_detail_id: _booking_detail_id)
   end
 
-  validates :issuing_bank, :issuing_bank_branch, format: { without: /[^a-z\s]/i, message: 'can contain only alphabets and spaces' }, unless: proc { |receipt| receipt.payment_mode == 'online' }
-  validates :payment_identifier, format: { without: /[^a-z0-9\s]/i, message: 'can contain only alphabets, numbers and spaces' }, unless: proc { |receipt| receipt.payment_mode == 'online' }
+  validates :issuing_bank, :issuing_bank_branch, name: true, unless: proc { |receipt| receipt.online? }
+  validates :payment_identifier, length: { in: 3..25 }, format: { without: /[^A-Za-z0-9_-]/, message: "can contain only alpha-numaric with '_' and '-' "}, if: proc { |receipt| receipt.offline? }
   validates :total_amount, :status, :payment_mode, :user_id, presence: true
   validates :payment_identifier, presence: true, if: proc { |receipt| receipt.payment_mode == 'online' ? receipt.status == 'success' : true }
   validates :status, inclusion: { in: proc { Receipt.aasm.states.collect(&:name).collect(&:to_s) } }
@@ -66,7 +68,7 @@ class Receipt
   validates :processed_on, presence: true, if: proc { |receipt| %i[success clearance_pending available_for_refund].include?(receipt.status) }
   validates :payment_gateway, presence: true, if: proc { |receipt| receipt.payment_mode == 'online' }
   validates :payment_gateway, inclusion: { in: PaymentGatewayService::Default.allowed_payment_gateways }, allow_blank: true
-  validates :tracking_id, presence: true, if: proc { |receipt| receipt.status == 'success' && receipt.payment_mode != 'online' }
+  validates :tracking_id, length: { in: 5..15 }, presence: true, if: proc { |receipt| receipt.status == 'success' && receipt.payment_mode != 'online' }
   validates :comments, presence: true, if: proc { |receipt| receipt.status == 'failed' && receipt.payment_mode != 'online' }
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :tracking_id_processed_on_only_on_success, if: proc { |record| record.status != 'cancelled' }
@@ -83,6 +85,37 @@ class Receipt
     indexed_fields: %i[receipt_id order_id payment_mode tracking_id creator_id],
     audit_fields: %i[payment_mode tracking_id total_amount issued_date issuing_bank issuing_bank_branch payment_identifier status status_message booking_detail_id]
   )
+
+  # This loop create one set of boolean method which help us to fine the payment easily.
+  # This set create following methods cheque?, rtgs?, imps?, card_swipe? and neft?
+  #
+  # @return [Boolean]
+  #
+  OFFLINE_PAYMENT_MODE.each do |_payment_mode|
+    define_method "#{_payment_mode}?" do
+      _payment_mode.to_s == self.payment_mode.to_s
+    end
+  end
+
+  #
+  # This function return true when payment has offline mode. All offline mode defined in OFFLINE_PAYMENT_MODE constant.
+  #
+  #
+  # @return [Boolean] True for offline and false for online
+  #
+  def offline?
+    self.class::OFFLINE_PAYMENT_MODE.include?(self.payment_mode.to_s)
+  end
+
+  #
+  # This will return true when payment done by online mode.
+  #
+  #
+  # @return [Boolean]
+  #
+  def online?
+    payment_mode.to_s == 'online'
+  end
 
   def self.available_payment_modes
     [
@@ -176,7 +209,7 @@ class Receipt
   end
 
   def sync(erp_model, sync_log)
-    Api::ReceiptDetailsSync.new(erp_model, self, sync_log).execute if user.buyer? && user.erp_id.present?
+    Api::ReceiptDetailsSync.new(erp_model, self, sync_log).execute
   end
 
   def direct_payment?
@@ -210,9 +243,9 @@ class Receipt
   end
 
   def tracking_id_processed_on_only_on_success
-    if status_changed? && status != 'success' && payment_mode != 'online'
-      errors.add :tracking_id, 'cannot be set unless the status is marked as success' if tracking_id_changed? && tracking_id.present?
-      errors.add :processed_on, 'cannot be set unless the status is marked as success' if processed_on_changed? && processed_on.present?
+    if self.success? && self.offline?
+      errors.add :tracking_id, 'cannot be set unless the status is marked as success' if tracking_id_changed? && tracking_id.blank?
+      errors.add :processed_on, 'cannot be set unless the status is marked as success' if processed_on_changed? && processed_on.blank?
     end
   end
 

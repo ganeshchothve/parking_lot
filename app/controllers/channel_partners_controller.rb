@@ -41,7 +41,7 @@ class ChannelPartnersController < ApplicationController
         format.html { redirect_to (user_signed_in? ? channel_partners_path : root_path), notice: 'Channel partner was successfully created.' }
         format.json { render json: @channel_partner, status: :created }
       else
-        format.html { render :new }
+        format.html { render :new, layout: 'devise' }
         format.json { render json: { errors: @channel_partner.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
     end

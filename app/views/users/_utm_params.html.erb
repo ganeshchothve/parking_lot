@@ -1,0 +1,21 @@
+<div class="card d-print-none">
+  <div class = "card-header"> <%= t('mongoid.attributes.user.utm_params') %> </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row">
+          <% user.utm_params.each do |key, value| %>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label> <%= key %> : </label>
+                <div>
+                  <%= value %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -14,15 +14,15 @@ module ReceiptStateMachine
         transitions from: :pending, to: :pending
       end
 
-      event :clearance_pending, after: %i[moved_to_success_if_online change_booking_detail_status] do
+      event :clearance_pending, after: %i[moved_to_success_if_online ] do
         transitions from: :pending, to: :clearance_pending, if: :can_move_to_clearance?
         transitions from: :clearance_pending, to: :clearance_pending
       end
 
-      event :success, after: %i[change_booking_detail_status] do
+      event :success, after: %i[change_booking_detail_status send_success_notification] do
         transitions from: :success, to: :success
         # receipt moves from pending to success when online payment is made.
-        transitions from: :clearance_pending, to: :success, unless: :new_record?, success: %i[send_success_notification]
+        transitions from: :clearance_pending, to: :success
         transitions from: :available_for_refund, to: :success
         transitions from: :cancellation_rejected, to: :success
       end
@@ -30,7 +30,7 @@ module ReceiptStateMachine
       event :available_for_refund, after: %i[send_booking_detail_to_under_negotiation] do
         transitions from: :available_for_refund, to: :available_for_refund
         transitions from: :success, to: :available_for_refund, if: :can_available_for_refund?
-        transitions from: :cancelled, to: :available_for_refund, success: %i[send_notification]
+        transitions from: :cancelled, to: :available_for_refund
       end
 
       event :cancelling do
@@ -49,8 +49,8 @@ module ReceiptStateMachine
         transitions from: :available_for_refund, to: :refunded
       end
 
-      event :failed, after: %i[send_notification] do
-        transitions from: :pending, to: :failed, unless: :new_record?
+      event :failed, after: :send_booking_detail_to_under_negotiation do
+        transitions from: :pending, to: :failed, if: :can_mark_failed?
         transitions from: :clearance_pending, to: :failed
         transitions from: :failed, to: :failed
       end
@@ -92,21 +92,22 @@ module ReceiptStateMachine
 
     def moved_to_success_if_online
       if payment_mode == 'online'
-        success! 
+        success!
       else
-        Notification::Receipt.new(self.id, status: [self.status_was, self.status]).execute
+        change_booking_detail_status
+        send_notification
       end
     end
 
     def send_success_notification
-      if status_was != 'cancellation_rejected'
-        Notification::Receipt.new(self.id, status: [self.status_was, self.status]).execute
+      if %i[success cancellation_rejected].exclude?(self.aasm.from_state)
+        send_notification
       end
     end
 
     def send_pending_notification
-      if payment_mode != 'online'
-        Notification::Receipt.new(self.id, status: [self.status_was, self.status]).execute
+      if payment_mode != 'online' && status == 'pending'
+        send_notification
       end
     end
 
@@ -123,6 +124,7 @@ module ReceiptStateMachine
 
     def send_booking_detail_to_under_negotiation
       booking_detail.under_negotiation! if booking_detail
+      send_notification if %i[pending clearance_pending cancelled].include?(self.aasm.from_state)
     end
     #
     # When Receipt is created by admin except channel partner then it's direcly moved in clearance pending.
@@ -131,13 +133,22 @@ module ReceiptStateMachine
       if payment_mode != 'online'
         unless ((User::BUYER_ROLES).include?(self.creator.role))||(self.creator.role == 'channel_partner' && !self.creator.premium?)
           self.clearance_pending!
-          Notification::Receipt.new(self.id, status: [self.status_was, self.status]).execute
         end
       end
     end
 
+    #
+    # Only online pening payments can mark as failed.
+    #
+    #
+    # @return [Boolean]
+    #
+    def can_mark_failed?
+      !new_record? && payment_mode == 'online'
+    end
+
     def send_notification
-        Notification::Receipt.new(self.id, status: [self.status_was, self.status]).execute
+      Notification::Receipt.new(self.id, { status: [self.status_was, self.status] }, { record: self } ).execute
     end
   end
 end

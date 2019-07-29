@@ -16,7 +16,7 @@
               user = User.find(params[:fltrs][:user])
             end
           %>
-          <%= select_tag "fltrs[user]", options_for_select((params[:fltrs].present? && params[:fltrs][:user].present?) ? [[user.ds_name, user.id]] : []), {class: "selectize-remote", data: {params: {fltrs: {role: {"$in": User.buyer_roles(current_client)}}}, url: admin_users_path }} %>
+          <%= select_tag "fltrs[user]", options_for_select((params[:fltrs].present? && params[:fltrs][:user].present?) ? [[user.ds_name, user.id]] : []), {class: "selectize-remote", data: {params: {fltrs: {role: User.buyer_roles(current_client)}}, url: admin_users_path }} %>
         </div>
         <% if @associated_class == UserRequest %>
           <div class="form-group">

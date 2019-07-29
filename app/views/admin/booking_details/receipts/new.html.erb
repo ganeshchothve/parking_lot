@@ -18,6 +18,14 @@
 </div>
 <%= javascript_tag do %>
   $(document).ready(function(){
+    var amount_hash = <%= raw @amount_hash.to_json %>;
+    $('#receipt_payment_type').change(function(){
+      if($(this).val() == 'agreement'){
+        $('#receipt_total_amount').val(amount_hash['agreement'])
+      }else{
+        $('#receipt_total_amount').val(amount_hash['stamp_duty'])
+      }
+    });
     $('#receipt_form [name="agree"]').change(function(){
       if($(this).is(":checked")){
         $('#receipt_form [type="submit"]').removeAttr("disabled");

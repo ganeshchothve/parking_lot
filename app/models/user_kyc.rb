@@ -5,6 +5,8 @@ class UserKyc
   include InsertionStringMethods
   include ApplicationHelper
   include SyncDetails
+  extend FilterByCriteria
+
 
   field :salutation, type: String, default: 'Mr.'
   field :first_name, type: String
@@ -51,11 +53,10 @@ class UserKyc
   has_one :bank_detail, as: :bankable, validate: false
   # has_one :correspondence_address, as: :addressable, class_name: "Address", validate: false
   has_one :permanent_address, as: :addressable, class_name: 'Address', validate: false
-  belongs_to :user
+  belongs_to :user, validate: false
   belongs_to :creator, class_name: 'User'
   has_and_belongs_to_many :project_units
   has_and_belongs_to_many :booking_details
-  has_many :sync_logs, as: :resource
 
   delegate :name, to: :bank_detail, prefix: true, allow_nil: true
   accepts_nested_attributes_for :bank_detail, :permanent_address # , :correspondence_address
@@ -77,6 +78,9 @@ class UserKyc
   validates :existing_customer_name, :existing_customer_project, presence: true, if: proc { |kyc| kyc.existing_customer? }
   validates :salutation, inclusion: { in: proc { UserKyc.available_salutations.collect { |x| x[:id] } } }
   validates :erp_id, uniqueness: true, allow_blank: true
+
+  scope :filter_by_user_id, ->(user_id) { where(user_id: user_id) }
+
 
   default_scope -> { desc(:created_at) }
 
@@ -122,7 +126,7 @@ class UserKyc
   end
 
   def sync(erp_model, sync_log)
-    Api::UserKycDetailsSync.new(erp_model, self, sync_log).execute if user.buyer? && user.erp_id.present?
+    Api::UserKycDetailsSync.new(erp_model, self, sync_log).execute
   end
 
   class << self
