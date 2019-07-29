@@ -43,7 +43,8 @@
   <div class="col-md-12">
     <div class="form-group">
       <%= f.label :enable_actual_inventory %><br/>
-      <%= f.select :enable_actual_inventory, User.available_roles(@client).collect{|x| [x[:text], x[:id]]}, {}, class: 'selectize', multiple: true, required: 'required', disabled: (policy(f.object).editable_field?("enable_actual_inventory") ? false : true) %>
+      <%#= f.select :enable_actual_inventory, User.available_roles(@client).collect{|x| [x[:text], x[:id]]}, {}, class: 'selectize', multiple: true, required: 'required', disabled: (policy(f.object).editable_field?("enable_actual_inventory") ? false : true) %>
+      <!-- TODO: throwing error on resolving conflict  -->
     </div>
   </div>
 </div>
@@ -82,27 +83,27 @@
 <div class="row">
   <div class="col-md-6">
     <div class="form-group depend-direct-payment">
-      <%= f.label :enable_payment_without_kyc %><br/>
+      <%= f.label :enable_payment_with_kyc %><br/>
       <div class="form-check form-check-inline">
-        <%= f.radio_button :enable_payment_without_kyc, true, class: "form-check-input" %>
-        <%= f.label :enable_payment_without_kyc, "Yes", class: "form-check-label" %>
+        <%= f.radio_button :enable_payment_with_kyc, true, class: "form-check-input" %>
+        <%= f.label :enable_payment_with_kyc, "Yes", class: "form-check-label" %>
       </div>
       <div class="form-check form-check-inline">
-        <%= f.radio_button :enable_payment_without_kyc, false, class: "form-check-input" %>
-        <%= f.label :enable_payment_without_kyc, "No", class: "form-check-label" %>
+        <%= f.radio_button :enable_payment_with_kyc, false, class: "form-check-input" %>
+        <%= f.label :enable_payment_with_kyc, "No", class: "form-check-label" %>
       </div>
     </div>
   </div>
   <div class="col-md-6">
     <div class="form-group">
-      <%= f.label :enable_booking_without_kyc %><br/>
+      <%= f.label :enable_booking_with_kyc %><br/>
       <div class="form-check form-check-inline">
-        <%= f.radio_button :enable_booking_without_kyc, true, class: "form-check-input" %>
-        <%= f.label :enable_booking_without_kyc, "Yes", class: "form-check-label" %>
+        <%= f.radio_button :enable_booking_with_kyc, true, class: "form-check-input" %>
+        <%= f.label :enable_booking_with_kyc, "Yes", class: "form-check-label" %>
       </div>
       <div class="form-check form-check-inline">
-        <%= f.radio_button :enable_booking_without_kyc, false, class: "form-check-input" %>
-        <%= f.label :enable_booking_without_kyc, "No", class: "form-check-label" %>
+        <%= f.radio_button :enable_booking_with_kyc, false, class: "form-check-input" %>
+        <%= f.label :enable_booking_with_kyc, "No", class: "form-check-label" %>
       </div>
     </div>
   </div>

@@ -40,7 +40,7 @@ Rails.application.routes.draw do
     resources :portal_stage_priorities, only: [:index] do
       patch :reorder, on: :collection
     end
-    resources :booking_details, only: [:index, :show, :new, :create] do
+    resources :booking_details, only: [:index, :show, :new, :create, :edit, :update] do
       patch :booking, on: :member
       get :mis_report, on: :collection
       get :searching_for_towers, on: :collection

@@ -66,5 +66,4 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
     @booking_detail = BookingDetail.where(_id: params[:booking_detail_id], user_id: current_user.id).first
     redirect_to root_path, alert: t('controller.booking_details.set_booking_detail_missing'), status: 404 if @booking_detail.blank?
   end
-
 end
