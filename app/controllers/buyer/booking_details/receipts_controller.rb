@@ -28,10 +28,8 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
   def create
     @receipt = Receipt.new(user: current_user, creator: current_user,payment_gateway: current_client.payment_gateway, booking_detail_id: @booking_detail.id, payment_type: 'agreement')
     @receipt.assign_attributes(permitted_attributes([:buyer, @receipt]))
-    @receipt.account = selected_account(@booking_detail.project_unit)
-    # authorize([:buyer, @receipt])
-    #TODO: found this removed in conflict, find reason and add authorization
     @receipt.account = selected_account(current_client.payment_gateway.underscore, @booking_detail.project_unit)
+    authorize([:buyer, @receipt])
     respond_to do |format|
       if @receipt.save
         if @receipt.payment_gateway_service.present?
