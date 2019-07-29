@@ -13,6 +13,8 @@ module UserRequestsHelper
       'danger'
     when 'pending'
       'primary'
+    when 'resolved'
+      'success'
     end
   end
 end

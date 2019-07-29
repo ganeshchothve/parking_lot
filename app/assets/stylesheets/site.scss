@@ -2328,15 +2328,14 @@ a:hover{
 	height: 10px;
 	margin-right: 10px;
 }
-.table{
-  .dropdown-menu {
-    &.show{
-      display:block;
-      /*transform: translate3d(0px, 0px, 0px) !important;*/
-      right: 0px;
-      left: unset!important;
-      bottom:unset;
-    }
+.dropdown-menu {
+  &.show{
+    display:block;
+    transform: translate3d(0px, 0px, 0px) !important;
+    right: 0px;
+    left: unset!important;
+    bottom:unset;
+    z-index: 1060;
   }
 }
 

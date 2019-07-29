@@ -1,18 +1,21 @@
-<div class="card">
-  <div class="card-header">
-    <div class="row">
+<div class="box-card">
+  <div class="box-header bg-gradient br-rd-tr-4">
+    <div class="row pd-box">
       <div class="col-11">
-        <h5 class="float-left card-title mt-2 mb-0"><%= t("user_requests.#{params[:request_type]}") %></h5>
+        <h2 class="text-left"><%= t("user_requests.#{params[:request_type]}") %></h2>
       </div>
       <div class="col-1">
-        <td class="text-right">
-          <%= render 'links', user_request: @user_request, links_name: 'Action' %>
-        </td>
+        <div class="dropdown show text-center float-right">
+          <a class="btn dropdown-toggle table-dropdown-btn" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+              <%= render 'links', user_request: @user_request, links_name: 'Action' %>
+            </div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="card-body">
-    <div class="row">
+  <div class="box-content br-rd-bl-4 bg-white br-1 py-0">
+    <div class="row pd-box">
       <div class="col-3">
         <div class="form-group">
           <label> Requested For ( <%= t("user_requests.requestable_type.#{user_request.requestable_type}") %> )</label>
@@ -35,7 +38,7 @@
         <div class="form-group">
           <label>Status</label>
           <div>
-            <label class="badge badge-<%= user_request_status_badge(user_request) %>" > <%= t("user_request.status.#{user_request.status}") %></label>
+            <label class="badge badge-<%= user_request_status_badge(user_request) %> white" > <%= t("user_request.status.#{user_request.status}") %></label>
           </div>
           <%- if user_request.reason_for_failure.present? %>
             <span> Reason : <%= user_request.reason_for_failure || '-' %></span>
@@ -43,7 +46,7 @@
         </div>
       </div>
     </div>
-    <div class="row">
+    <div class="row pd-box">
       <div class="col-3">
         <div class="form-group">
           <label> Requested For (User) </label>

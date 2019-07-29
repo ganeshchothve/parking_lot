@@ -36,7 +36,7 @@
   <td><%= receipt.status.titleize %></td>
   <td><%= number_to_indian_currency(receipt.total_amount.round) %></td>
   <td>
-    <div class="dropdown show text-center">
+    <div class="dropdown show text-right">
     <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
         <%= link_to 'Print', [current_user_role_group, receipt], target:"_blank", class: 'dropdown-item print-btn', data: { event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>

@@ -9,7 +9,7 @@
           <th>Status</th>
           <th>Message</th>
           <% if policy([:admin, SyncLog.new]).resync? %>
-            <th>Actions</th>
+            <th class="text-right">Actions</th>
           <% end %>
         </tr>
       </thead>
@@ -34,7 +34,7 @@
           <%= sync_log.message || '-' %>
         </td>
         <td>
-          <div class="dropdown show text-center">
+          <div class="dropdown show text-right">
           <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
               <% if policy([:admin, SyncLog.new]).resync? %>

@@ -41,7 +41,8 @@
         $('.scroll-footer').hide(600);
         $('#gamification-container').css('bottom','2.5rem');
       }
-      if ($(window).scrollTop() == $(document).height() - $(window).height() || $(window).scrollTop() == 0) {
+      // Only show disclamer bar when scroll in top position
+      if ( $(window).scrollTop() == 0 ) { //|| $(window).scrollTop() == $(document).height() - $(window).height()) {
         $('.scroll-footer').show(600);
         $('#gamification-container').css('bottom','5rem');
       }

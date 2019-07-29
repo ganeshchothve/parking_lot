@@ -6,7 +6,7 @@
       <th><%= labels[:bedrooms] %> / <%= labels[:bathrooms] %></th>
       <th><%= labels[:status] %></th>
       <th><%= labels[:agreement_price] %></th>
-      <th>Actions</th>
+      <th class="text-right">Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -26,7 +26,7 @@
           <div class="small">Booking Amt. Pending: <%= number_to_indian_currency(booking_detail.pending_balance.to_i) %></div>
         </td>
         <td>
-          <div class="dropdown show text-center">
+          <div class="dropdown show text-right">
             <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
               <%= render "#{current_user_role_group}/booking_details/links", booking_detail: booking_detail, link_name: '' %>

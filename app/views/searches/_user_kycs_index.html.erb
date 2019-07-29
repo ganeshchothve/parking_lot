@@ -1,14 +1,14 @@
-<table class='table my-customer-table responsive-tbl'>
-  <thead class="th-default">
+<table class='table kyc-add-table responsive-tbl'>
+  <thead>
     <% labels = t('mongoid.attributes.user_kyc').with_indifferent_access %>
       <thead>
-        <tr class="bg-gradient-cd white">
+        <tr class="bg-gradient white">
           <th><%= labels['name'] %></th>
         <th><%= labels['user_id'] %></th>
         <th><%= "#{labels['phone']} & #{labels['email']}" %></th>
         <th><%= labels['dob_short'] %></th>
         <th><%= labels['pan_number'] %></th>
-        <th class="text-right">Actions</th>
+        <th>Actions</th>
         </tr>
       </thead>
   </thead>
@@ -48,13 +48,16 @@
         </td>
       </tr>
       <% end %>
-      <tr>
-      <td colspan="6">
-        <div class="mt-5 pt-5"></div>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan='6'>
+        <% if current_user.buyer? %>
+          <%= link_to "Add #{global_labels['user_kyc']}", new_buyer_user_kyc_path, class: 'btn next-btn fn-12 fn-300 modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
+        <% else %>
+          <%= link_to "Add #{global_labels['user_kyc']}", new_admin_user_user_kyc_path(@user), class: 'btn next-btn fn-12 fn-300', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
+        <% end %>
       </td>
     </tr>
-  </tbody>
+  </tfoot>
 </table>
-<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pt-2">
-  <%= will_paginate user_kycs, list_classes: %w(pagination justify-content-center) %>
-</div>

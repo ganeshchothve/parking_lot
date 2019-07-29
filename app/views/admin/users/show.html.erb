@@ -17,9 +17,9 @@
 
       <% if policy([:admin, TimeSlot]).index? %>
         <div class="mt-3"></div>
-        <div class="card mb-3">
-          <div class="card-header">Time Slot</div>
-          <div class="card-body">
+        <div class="box-card mb-3">
+          <div class="box-header bg-gradient br-rd-tr-4"><h2>Time Slot</h2></div>
+          <div class="box-content br-rd-bl-4 bg-white">
             <%= render "receipts/time_slot", receipts: @user.receipts %>
           </div>
         </div>
@@ -27,52 +27,62 @@
 
       <!-- Note Summary -->
       <div class="mt-3"></div>
-      <div class="card">
-        <div class="card-header">
-          <%= global_labels[:notes] %>
+      <div class="box-card">
+        <div class="box-header bg-gradient br-rd-tr-4">
+          <h2><%= global_labels[:notes] %></h2>
         </div>
-        <div class="card-body">
-          <%= render "notes/index", notable: @user %>
+        <div class="box-content br-rd-bl-4 bg-white">
+          <div class="pd-box">
+            <%= render "notes/index", notable: @user %>
+          </div>
         </div>
       </div>
 
       <% if @user.role?("channel_partner") || @user.role?("cp") %>
         <!-- User List -->
         <div class="mt-3"></div>
-        <div class="card">
-          <div class="card-header"><%= global_labels[:users] %> registered under <%= @user.name %></div>
-          <div class="card-body">
-            <%= render "admin/users/index", users: User.where(manager_id: @user.id).paginate(page: 1, per_page: 15) %>
+        <div class="box-card">
+          <div class="box-header bg-gradient br-rd-tr-4"><h2><%= global_labels[:users] %> registered under <%= @user.name %></h2></div>
+          <div class="box-content br-rd-bl-4 bg-white">
+            <div class="pd-box">
+              <%= render "admin/users/index", users: User.where(manager_id: @user.id).paginate(page: 1, per_page: 15) %>
+            </div>
           </div>
         </div>
       <% end %>
 
       <% if @user.buyer? && current_client.enable_actual_inventory?(current_user) %>
         <div class="mt-3"></div>
-        <div class="card">
-          <div class="card-header"> Bookings </div>
-          <div class="card-body">
-            <%= render 'admin/booking_details/index', { booking_details: @booking_details } %>
+        <div class="box-card">
+          <div class="box-header bg-gradient br-rd-tr-4"><h2> Bookings </h2></div>
+          <div class="box-content br-rd-bl-4 bg-white">
+            <div class="pd-box">
+              <%= render 'admin/booking_details/index', { booking_details: @booking_details } %>
+            </div>
           </div>
         </div>
       <% end %>
       <!-- receipts -->
       <div class="mt-3"></div>
-      <div class="card">
-        <div class="card-header">Payments</div>
-        <div class="card-body">
-          <%= render 'receipts/index', {receipts: @receipts } %>
+      <div class="box-card">
+        <div class="box-header bg-gradient br-rd-tr-4"><h2>Payments</h2></div>
+        <div class="box-content br-rd-bl-4 bg-white">
+          <div class="pd-box">
+            <%= render 'receipts/index', {receipts: @receipts } %>
+          </div>
         </div>
       </div>
 
       <!-- My Referrals -->
       <div class="mt-3"></div>
-      <div class="card">
-        <div class="card-header">
-          <h5>My Referrals</h5>
+      <div class="box-card">
+        <div class="box-header bg-gradient br-rd-tr-4">
+          <h2>My Referrals</h2>
         </div>
-        <div class="card-body">
-          <%= render "admin/users/index", { users: @user.referrals.paginate(page: params[:page], per_page: 1000) } %>
+        <div class="box-content br-rd-bl-4 bg-white">
+          <div class="pd-box">
+            <%= render "admin/users/index", { users: @user.referrals.paginate(page: params[:page], per_page: 1000) } %>
+          </div>
         </div>
       </div>
     </div>

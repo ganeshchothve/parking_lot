@@ -1,12 +1,7 @@
 <%= render 'dashboard/project_unit_overview', {project_unit: @unit} %>
 <div class="mt-3"></div>
-<div class="card pb-3">
-    <%= render 'admin/user_kycs/index', {user_kycs: @user_kycs} %>
-    <% if current_user.buyer? %>
-      <%= link_to "Add #{global_labels['user_kyc']}", new_buyer_user_kyc_path, class: 'btn btn-primary modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
-    <% else %>
-      <%= link_to "Add #{global_labels['user_kyc']}", new_admin_user_user_kyc_path(@user), class: 'db-small-btn light-blue bg-white fn-400', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
-    <% end %>
+<div class="box-card table-responsive-md">
+    <%= render 'user_kycs_index', {user_kycs: @user_kycs} %>
 </div>
 <div class="mt-3"></div>
 <section class="kyc-information my-4 mb-5">
@@ -18,38 +13,36 @@
             <h2><img src="<%= asset_path 'file-spreadsheet-white.svg' %>" alt="KYC Information">KYC Information</h2>
             <!-- <a href="javascript:;" class="view-all-btn">View All > </a> -->
           </div>
-          <div class="box-content br-rd-bl-4 bg-white pb-3">
-            <div class="row pd-box">
-              <%= form_for(:booking_detail, url: hold_user_search_path(@search), html: {method: "post", class: 'validate-form', id: 'hold_booking_detail_form'}) do |f| %>
+          <%= form_for(:booking_detail, url: hold_user_search_path(@search), html: {method: "post", class: 'validate-form', id: 'hold_booking_detail_form'}) do |f| %>
+            <div class="box-content br-rd-bl-4 bg-white pb-3">
+              <div class="row pd-box">
+                <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
                   <div class="form-group">
-                    <%= f.hidden_field :user_id, value: @user.id %><br/>
+                    <%= f.hidden_field :user_id, value: @user.id %>
                     <%= f.label :primary_applicants %>
                     <%= f.select :primary_user_kyc_id, @user.user_kycs.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
                   </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
                   <div class="form-group">
                     <%= f.label :secondary_applicants %>
                     <%= f.select :user_kyc_ids, @user.user_kycs.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', multiple: true %>
                   </div>
-                <div class="form-group">
-                  <%= f.submit "Next", class: "btn btn-primary float-left" %>
                 </div>
-              <% end %>
+              </div>
             </div>
-          </div>
-          <div class="box-footer">
-            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
-              <% if @search.previous_step.present? %>
-                <%= form_for [:user, @search], html: {class: 'validate-form'} do |f| %>
-                  <div class="form-group">
-                    <%= f.hidden_field :step, value: @search.previous_step %>
-                  </div>
-                  <div class="form-group">
-                    <%= f.submit "Previous", class: "previous-btn fn-12 fn-300" %>
-                  </div>
-                <% end %>
-              <% end %>
+            <div class="box-footer">
+              <div class="offset-lg-1 offset-md-1 col-lg-11 col-md-11 col-xs-12 col-sm-12 text-left">
+                <%= f.submit "Next", class: "btn next-btn fn-12 fn-300" %>
+              </div>
             </div>
-          </div>
+          <% end %>
+          <% if @search.previous_step.present? %>
+            <%= form_for [:user, @search], html: {class: 'validate-form previous-form'} do |ff| %>
+              <%= ff.hidden_field :step, value: @search.previous_step %>
+              <%= ff.submit "Previous", class: "previous-btn fn-12 fn-300 btn" %>
+            <% end %>
+          <% end %>
         </div>
       </div>
     </div>

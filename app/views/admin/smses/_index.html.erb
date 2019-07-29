@@ -9,7 +9,7 @@
         <td> Content </td>
         <th> Status</th>
         <th> Sent On</th>
-        <th>Actions</th>
+        <th class="text-right">Actions</th>
         </tr>
       </thead>
   </thead>
@@ -47,7 +47,7 @@
             </div>
           </td>
           <td>
-          <div class="dropdown show text-center">
+          <div class="dropdown show text-right">
           <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
               <%= link_to 'Show', "javascript:;", data: {toggle: "modal", target: "#sms_show_#{sms.id.to_s}"}, class: 'dropdown-item' %>

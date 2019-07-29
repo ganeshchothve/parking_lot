@@ -9,7 +9,7 @@
         <th>Subject</th>
         <th>Status</th>
         <th>Sent On</th>
-        <th>Actions</th>
+        <th class="text-right">Actions</th>
         </tr>
       </thead>
   </thead>
@@ -33,7 +33,7 @@
           <%= email.sent_on.try(:strftime, '%b %e %Y, %l:%M %p') || '-' %>
         </td>
         <td>
-          <div class="dropdown show text-center">
+          <div class="dropdown show text-right">
           <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
               <%= link_to 'Show', [ current_user_role_group, email], class: 'dropdown-item', target: :_blank %>

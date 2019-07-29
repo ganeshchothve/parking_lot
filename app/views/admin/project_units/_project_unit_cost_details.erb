@@ -4,8 +4,8 @@
   </div>
   <div class='card mt-3 pb_after'>
     <% unless request.format.pdf? %>
-      <div class='card-header'>
-        <%= link_to "Get PDF", method(:"quotation_#{current_user_role_group}_project_unit_path").call(@project_unit, booking_detail_scheme: params.dig(:booking_detail_scheme).try(:permit, :derived_from_scheme_id, payment_adjustments_attributes: {}), format: :pdf), class: "btn btn-sm btn-primary float-right", target: '_blank' %>
+      <div class='box-header bg-gradient br-rd-tr-4 p-3'>
+        <%= link_to "<u>Get PDF</u>".html_safe, method(:"quotation_#{current_user_role_group}_project_unit_path").call(@project_unit, booking_detail_scheme: params.dig(:booking_detail_scheme).try(:permit, :derived_from_scheme_id, payment_adjustments_attributes: {}), format: :pdf), class: "fn-500 float-right white", target: '_blank' %>
       </div>
     <% end %>
     <div class='card-body'>

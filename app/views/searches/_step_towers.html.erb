@@ -96,25 +96,24 @@
           </div>
           <div class="col-lg-6 col-xs-12 col-sm-12 col-md-12 br-l-1 no-pd after-show d-none" id="unit-description" >
             <div class="right-info pl-5 pr-5 pt-4 pb-4">
-              <div class="title float-left" data-placeholder="name" ></div>
-              <div class="alert-box float-right">
+              <div class="title text-center" data-placeholder="name" ></div>
+              <div class="alert-box float-right pb-4 mt-3">
                 <!-- whenever give animation on bell only add class (bell-anime) -->
                 <div class="info bell-anime" data-placeholder="gamification"></div>
               </div>
-              <ul class="apartments-info-list">
-                <li class="wd-25"><span class="icon"><img src="<%= asset_path 'building-black.svg' %>" alt="floor"></span><span class="title" data-placeholder="floor"></span><span class="desc">Floor</span></li>
-                <li class="wd-25"><span class="icon"><img src="<%= asset_path 'door-black.svg' %>" alt="Apartment"></span><span class="title" data-placeholder="floor_order"></span><span class="desc">Apartment</span></li>
-                <li class="wd-25"><span class="icon"><img src="<%= asset_path 'loveseat-black.svg' %>" alt="Carpet Area"></span><span class="title" data-placeholder="carpet"></span><span class="desc">Carpet Area Sq.Ft</span></li>
-                <li class="wd-25 no-rt-br"><span class="icon"><img src="<%= asset_path 'compass-black.svg' %>" alt="floor"></span><span class="title" data-placeholder="facing"></span><span class="desc">Facing</span></li>
-                <li class="wd-50 no-bm-br"><span class="icon"><img src="<%= asset_path 'file-contract-black.svg' %>" alt="floor"></span><span class="title" data-placeholder="agreement_price"></span><span class="desc">Agreement Value</span></li>
-                <li class="wd-50 no-bm-br"><span class="icon"><img src="<%= asset_path 'rupee-black.svg' %>" alt="floor"></span><span class="title" data-placeholder="all_inclusive_price"></span><span class="desc">All Inclusive Price</span></li>
-              </ul>
+                <ul class="apartments-info-list">
+                  <li class="wd-25"><span class="icon"><img src="<%= asset_path 'building-black.svg' %>" alt="floor"></span><span class="title" data-placeholder="floor"></span><span class="desc">Floor</span></li>
+                  <li class="wd-25"><span class="icon"><img src="<%= asset_path 'door-black.svg' %>" alt="Apartment"></span><span class="title" data-placeholder="floor_order"></span><span class="desc">Apartment</span></li>
+                  <li class="wd-25"><span class="icon"><img src="<%= asset_path 'loveseat-black.svg' %>" alt="Carpet Area"></span><span class="title" data-placeholder="carpet"></span><span class="desc">Carpet Area Sq.Ft</span></li>
+                  <li class="wd-25 no-rt-br"><span class="icon"><img src="<%= asset_path 'compass-black.svg' %>" alt="floor"></span><span class="title" data-placeholder="facing"></span><span class="desc">Facing</span></li>
+                  <li class="wd-50 no-bm-br"><span class="icon"><img src="<%= asset_path 'file-contract-black.svg' %>" alt="floor"></span><span class="title" data-placeholder="agreement_price"></span><span class="desc">Agreement Value</span></li>
+                  <li class="wd-50 no-bm-br"><span class="icon"><img src="<%= asset_path 'rupee-black.svg' %>" alt="floor"></span><span class="title" data-placeholder="all_inclusive_price"></span><span class="desc">All Inclusive Price</span></li>
+                </ul>
               </div>
               <div class="right-info pl-5 pr-5 pt-4 pb-4">
+                <img class="img-fluid" style="width: 100%; display: block;" data-placeholder="unit_image" />
                 <div class="float-left">
                   <a data-toggle="modal" data-target="#floorPlanImage" href="javascript:;" class="unit_image_container" style="display:none;">
-                    <img class="img-fluid" style="width: 100%; display: block;" data-placeholder="unit_image" />
-                    <br/>
                     Click to view details
                   </a>
                 </div>
@@ -130,6 +129,19 @@
     </div>
   </div>
 </section>
+<div class="modal fade" role="dialog" id="floorPlanImage">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" data-placeholder="gallery_unit_images">
+      </div>
+    </div>
+  </div>
+</div>
 <%= javascript_tag do %>
   var units = <%= raw @units.to_json(methods: [:all_inclusive_price, :calculated_costs, :calculated_data, :calculated_costs]) %>;
   var assets = <%= raw Asset.in(assetable_id: @units.pluck(:id)).to_json %>

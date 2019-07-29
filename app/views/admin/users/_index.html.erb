@@ -11,7 +11,7 @@
         <th><%= global_labels[:receipts] %></th>
         <th>Role</th>
         <th>Status</th>
-        <th>Actions</th>
+        <th class="text-right">Actions</th>
       </tr>
     </thead>
   </thead>
@@ -42,7 +42,7 @@
         <td data-title="Role"><span><%= t("users.role.#{user.role}") %></span></td>
         <td data-title="Status"><span><%= user.confirmed_at.present? ? "Confirmed" : "Not confirmed" %></span></td>
         <td>
-          <div class="dropdown show text-center">
+          <div class="dropdown show text-right">
           <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
               <%= render "admin/users/links", user: user %>

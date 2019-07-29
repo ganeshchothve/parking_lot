@@ -11,7 +11,7 @@
         </div>
       <% end %>
     </div>
-    <div class="box-content br-rd-bl-4 bg-white br-1 pt-0">
+    <div class="box-content br-rd-bl-4 bg-white br-1 py-0">
       <div class="row pd-box">
         <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12 no-pd">
           <ul class="booking-apart-info">
@@ -68,7 +68,7 @@
         </div>
       </div>
 
-      <div class="alert alert-primary">
+      <div class="alert alert-primary mb-0 mt-3">
         <ul>
           <li>You need to pay <%= number_to_indian_currency(booking_detail.project_unit.booking_price) %> to confirm the booking</li>
           <% unless current_client.cancellation_amount.zero? %>

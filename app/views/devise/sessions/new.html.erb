@@ -9,9 +9,6 @@ end %>
   <div class="container no-pd">
     <div class="col-lg-5 col-xs-12 col-md-12 col-sm-12 no-pd">
       <div class="login-form-wrapper pt-5">
-        <h1>2, 3 BHK Apartments starting from Rs. 36 Lakhs at Hinjewadi Pune</h1>
-        <p class="p-style">Don’t miss out on the biggest real estate opportunity in Pune.</p>
-        <h1 class="mt-0 fn-20">Hurry up! <strong>200</strong> apartments already sold.</h1>
         <p class="p-style">Login to Book an Apartment online</p>
         <% if current_client.preferred_login == "phone" %>
           <%= form_for(resource, as: resource_name, url: users_otp_path, authenticity_token: true, remote: true, html: {:'data-type' => 'json', class: 'validate-form ' + otp_signin_class, id: "otp_user_form", autocomplete: 'off'}) do |f| %>

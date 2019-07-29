@@ -33,22 +33,17 @@ $(document).ready(function(){
     $(".scroll-sec").removeClass('active');
     var curnt_id = $(this).attr('rel');
     $(this).addClass('active');
-    if(wn_width > 767){
-      scroll_cost = 330;
-      scroll_payment = 1150;
-    }
-    else{
-      scroll_cost = 500;
-      scroll_payment = 1270;
-    }
+    scroll_cost = $('#apartment').height() + 40;
+    scroll_payment = $('#apartment').height() + $('#cost-sheet').height() + 60;
+
     if(curnt_id == 'apartment'){
-      $('.scroll-fixed-height').animate({ scrollTop: 0 },2000);
+      $('.scroll-fixed-height').animate({ scrollTop: 0 },1000);
     }
     if(curnt_id == 'cost-sheet'){
-      $('.scroll-fixed-height').animate({ scrollTop: scroll_cost },2000);
+      $('.scroll-fixed-height').animate({ scrollTop: scroll_cost },1000);
     }
     if(curnt_id == 'payment-schedule'){
-      $('.scroll-fixed-height').animate({ scrollTop: scroll_payment },2000);
+      $('.scroll-fixed-height').animate({ scrollTop: scroll_payment },1000);
     }
 
   });
