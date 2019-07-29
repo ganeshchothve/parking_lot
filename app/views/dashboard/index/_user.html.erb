@@ -5,8 +5,7 @@
       <div class="row">
         <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12 offset-lg-2">
           <div class="box-content">
-            <h1 class="wc-title white text-center"><%= t('controller.admin.dashboard.welcome_heading') + current_user.name %></h1>
-            <p class="white text-center fn-300 fn-18"><%= t('controller.admin.dashboard.welcome_sub_heading') %></p>
+            <h1 class="wc-title white text-center"><%= 'Welcome ' + current_user.name %></h1>
             <ul class="step-booking">
               <li><span><img src="<%= asset_path 'file-invoice.svg' %>"></span><%= t('controller.buyer.dashboard.fill_kyc_form') %></li>
               <li><span><img src="<%= asset_path 'rupee-blue.svg' %>"></span><%= t('controller.admin.dashboard.make_payment') %></li>
@@ -18,7 +17,7 @@
               <%- booking_detail = current_user.booking_details.hold.first %>
               <% if booking_detail %>
                 <p class="white text-center fn-14 fn-500">You already have a unit on hold.</p>
-                <%= link_to t('controller.buyer.dashboard.conitnue_booking'), step_user_search_path(booking_detail.search, step: booking_detail.search.step), class: 'large-btn black-bg display-block fn-500 center-block show-kyc' %>
+                <%= link_to t('controller.buyer.dashboard.conitnue_booking'), checkout_user_search_path(booking_detail.search), class: 'large-btn black-bg display-block fn-500 center-block show-kyc' %>
               <% else %>
                 <% if Buyer::ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: current_user, status: "available")).hold? %>
                   <p class="white text-center fn-14 fn-500">Choose apartment and add booking</p>

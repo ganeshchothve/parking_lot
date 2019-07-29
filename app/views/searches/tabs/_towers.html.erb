@@ -5,7 +5,7 @@
       <span>Choose Apartment</span>
       <br/>
       <% if search.crossed_step('towers') %>
-        <%= search.project_unit.name %><br/>
+        <p><%= search.project_unit.name %></p><br/>
         <br/>
         <% if @search.previous_step.present? %>
           <%= form_for [:user, @search], html: {class: 'validate-form'} do |f| %>
@@ -13,14 +13,12 @@
               <%= f.hidden_field :step, value: "towers" %>
             </div>
             <div class="form-group">
-              <% if !@search.user.booking_details(status: 'hold').present? %>
-                <%= f.submit "Change", class: "small position-absolute step-change-btn" %>
-              <% end %>
+              <%= f.submit "Change", class: "small position-absolute step-change-btn" %>
             </div>
           <% end %>
         <% end %>
       <% else %>
-        Choose towers that suit your requirements
+        <p>Choose apartment that suit your requirements</p>
       <% end %>
     </div>
   </div>
@@ -29,6 +27,7 @@
     <div class="step-result">
       <i class="icon icon-3"></i>
       <span>Choose Apartment</span>
+      <br/>
       <p>Choose apartment that suit your  requirements</p>
     </div>
   </div>

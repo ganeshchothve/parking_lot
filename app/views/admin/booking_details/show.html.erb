@@ -39,11 +39,17 @@
           </div>
         </div>
       <% end %>
-      <div class="mt-3"></div>
-      <%= render 'dashboard/booking_detail_cost_sheet', booking_detail: @booking_detail %>
-      <div class="page-break"></div>
-      <div class="mt-3"></div>
-      <%= render "dashboard/project_unit_payment_schedule", booking_detail: @booking_detail %>
+      <div class="mt-2"></div>
+      <div class="box-card">
+        <div class="box-content p-0">
+          <%= render 'dashboard/booking_detail_cost_sheet', booking_detail: @booking_detail %>
+        </div>
+      </div>
+      <div class="box-card">
+        <div class="box-content p-0">
+          <%= render "dashboard/project_unit_payment_schedule", booking_detail: @booking_detail %>
+        </div>
+      </div>
     </div>
   </div>
 </div>

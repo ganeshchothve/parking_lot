@@ -33,8 +33,8 @@ $(document).ready(function(){
     $(".scroll-sec").removeClass('active');
     var curnt_id = $(this).attr('rel');
     $(this).addClass('active');
-    scroll_cost = $('#apartment').height() + 40;
-    scroll_payment = $('#apartment').height() + $('#cost-sheet').height() + 60;
+    scroll_cost = $('#apartment').outerHeight(true) + 20;
+    scroll_payment = $('#apartment').outerHeight(true) + $('#cost-sheet').height() + 40;
 
     if(curnt_id == 'apartment'){
       $('.scroll-fixed-height').animate({ scrollTop: 0 },1000);
