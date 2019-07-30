@@ -43,7 +43,7 @@
   <div class="col-md-12">
     <div class="form-group">
       <%= f.label :enable_actual_inventory %><br/>
-      <%#= f.select :enable_actual_inventory, User.available_roles(@client).collect{|x| [x[:text], x[:id]]}, {}, class: 'selectize', multiple: true, required: 'required', disabled: (policy(f.object).editable_field?("enable_actual_inventory") ? false : true) %>
+      <%= f.select :enable_actual_inventory, User.available_roles(@client).collect{|x| [I18n.t("users.role.#{x}"), x]}, {}, class: 'selectize', multiple: true, required: 'required', disabled: (policy(f.object).editable_field?("enable_actual_inventory") ? false : true) %>
       <!-- TODO: throwing error on resolving conflict  -->
     </div>
   </div>
