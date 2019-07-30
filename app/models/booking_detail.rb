@@ -158,6 +158,23 @@ class BookingDetail
     receipts.success.sum(:total_amount)
   end
 
+  def pending_balance(options={})
+    strict = options[:strict] || false
+    user_id = options[:user_id] || self.user_id
+    if user_id.present?
+      receipts_total = Receipt.where(user_id: user_id, booking_detail_id: self.id)
+      if strict
+        receipts_total = receipts_total.where(status: "success")
+      else
+        receipts_total = receipts_total.in(status: ['clearance_pending', "success"])
+      end
+      receipts_total = receipts_total.sum(:total_amount)
+      return (self.project_unit.booking_price - receipts_total)
+    else
+      return self.project_unit.booking_price
+    end
+  end
+
   class << self
 
     def user_based_scope(user, params = {})
