@@ -1,13 +1,13 @@
-<div class="container form-group mt-3 text-right pr-0">
-  <button onclick="window.print();" class="btn btn-primary d-print-none">Print</button>
+<div class="container text-right">
+  <button onclick="window.print();" class="db-small-btn light-blue bg-white fn-400 btn d-print-none">Print</button>
 </div>
 <% labels = t("mongoid.attributes.user").with_indifferent_access %>
 <% client_labels = t("mongoid.attributes.client").with_indifferent_access %>
-<div class="container bg-light">
+<div class="container">
   <div class="pt-3"></div>
-  <div class="card">
-    <div class="card-body">
-      <div class="row">
+  <div class="box-card">
+    <div class="box-content br-rd-bl-4 bg-white">
+      <div class="row pd-box">
         <div class="col-md-6">
           <div class="logo-wrapper">
             <%= image_tag current_client.logo.url || '' %>
@@ -21,15 +21,15 @@
     </div>
   </div>
   <div class="mt-3"></div>
-  <div class="card">
-    <div class="card-header">
-      Customer Details
+  <div class="box-card">
+    <div class="box-header bg-gradient br-rd-tr-4">
+      <h2>Customer Details</h2>
     </div>
-    <div class="card-body">
-      <div class="form-group">
+    <div class="box-content br-rd-bl-4 bg-white">
+      <div class="form-group pd-box">
         <h5><%= @user.name %></h5>
       </div>
-      <div class="row">
+      <div class="row pd-box">
         <div class="col-md-4">
           <div class="form-group">
             <label class="small text-muted"><%= labels[:email] %></label>
@@ -49,7 +49,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="row pd-box">
         <div class="col-md-4">
           <div class="form-group">
             <label class="small text-muted"><%= labels[:manager_role] %></label>
@@ -68,39 +68,45 @@
   <div class="mt-3"></div>
   <% user_kycs = @user.user_kycs.all %>
   <% if user_kycs.present? %>
-    <div class="card h-100">
-      <div class="card-header">
-        <%= global_labels[:user_kyc] %>
+    <div class="box-card h-100">
+      <div class="box-header bg-gradient br-rd-tr-4">
+        <h2><%= global_labels[:user_kyc] %></h2>
       </div>
-      <div class="card-body">
-        <% user_kycs.each do |user_kyc| %>
-        <%= render 'admin/user_kycs/show', user_kyc: user_kyc %>
-        <hr/>
-        <% end %>
+      <div class="box-content br-rd-bl-4 bg-white">
+        <div class="pd-box">
+          <% user_kycs.each do |user_kyc| %>
+            <%= render 'admin/user_kycs/show', user_kyc: user_kyc %>
+          <hr/>
+          <% end %>
+        </div>
       </div>
     </div>
     <div class="mt-3"></div>
   <% end %>
   <div class="mt-3"></div>
-  <div class="card">
-    <div class="card-header">
-      <%= global_labels[:notes] %>
+  <div class="box-card">
+    <div class="box-header bg-gradient br-rd-tr-4">
+      <h2><%= global_labels[:notes] %></h2>
     </div>
-    <div class="card-body">
-      <% @user.notes.limit(3).each do |note| %>
-        <%= render 'notes/show', note: note %>
-      <% end %>
+    <div class="box-content br-rd-bl-4 bg-white">
+      <div class="pd-box">
+        <% @user.notes.limit(3).each do |note| %>
+          <%= render 'notes/show', note: note %>
+        <% end %>
+      </div>
     </div>
   </div>
   <div class="mt-3"></div>
-  <div class="card">
-    <div class="card-header">
-      <%= client_labels[:disclaimer] %>
+  <div class="box-card">
+    <div class="box-header bg-gradient br-rd-tr-4">
+      <h2><%= client_labels[:disclaimer] %></h2>
     </div>
-    <div class="card-body">
-      <%= current_client.disclaimer.html_safe %>
-      <hr/>
-      <div class="row">
+    <div class="box-content br-rd-bl-4 bg-white">
+      <div class="pd-box">
+        <%= current_client.disclaimer.html_safe %>
+        <hr/>
+      </div>
+      <div class="row pd-box">
         <div class="col-md-6">
           <div class="mb-5 mt-5"></div>
           Customer Signature

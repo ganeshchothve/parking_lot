@@ -159,8 +159,6 @@ $selected-aprt: #f4667e;
   	border:1px solid $light-blue;
   	font-size: 15px;
   	letter-spacing: 0.3px;
-  	line-height: 17px;
-  	padding: 9px;
     line-height: 19px;
     text-align: center;
     outline: none;
@@ -2328,14 +2326,17 @@ a:hover{
 	height: 10px;
 	margin-right: 10px;
 }
-.dropdown-menu {
-  &.show{
-    display:block;
-    transform: translate3d(0px, 0px, 0px) !important;
-    right: 0px;
-    left: unset!important;
-    bottom:unset;
-    z-index: 1060;
+
+table {
+  .dropdown-menu {
+    &.show{
+      display:block;
+      transform: translate3d(0px, 0px, 0px) !important;
+      right: 0px;
+      left: unset!important;
+      bottom:unset;
+      z-index: 1060;
+    }
   }
 }
 
