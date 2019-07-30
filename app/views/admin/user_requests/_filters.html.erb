@@ -70,7 +70,7 @@
                     dataType: 'json',
                     data: _.merge( queryObj, {fltrs: {search: queryObj.search}}),
                     success : function(res) {
-                      callback(_.map(res, function(a){ return { value: (a['id'] || a._id), text: (a['ds_name'] || a['name']) } }));
+                      callback(_.map(res, function(a){ return { value: (a['id'] || a._id), text: (a['name'] + '-' + a['status']) } }));
                     }
                   });
                 }
