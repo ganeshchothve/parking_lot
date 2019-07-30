@@ -7,7 +7,7 @@
           <th>Domain</th>
           <th>Action</th>
           <th>State</th>
-          <th>Actions</th>
+          <th class="text-right">Actions</th>
         </tr>
       </thead>
   </thead>
@@ -27,7 +27,7 @@
             <%= erp_model.is_active ? "active" : "inactive" %>
           </td>
           <td>
-            <div class="dropdown show text-center">
+            <div class="dropdown show text-right">
               <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <% if policy([:admin, ErpModel.new]).edit? %>
