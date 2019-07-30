@@ -10,36 +10,34 @@ end %>
     <div class="col-lg-5 col-xs-12 col-md-12 col-sm-12 no-pd">
       <div class="login-form-wrapper pt-5">
         <p class="p-style">Login to Book an Apartment online</p>
-        <% if current_client.preferred_login == "phone" %>
-          <%= form_for(resource, as: resource_name, url: users_otp_path, authenticity_token: true, remote: true, html: {:'data-type' => 'json', class: 'validate-form ' + otp_signin_class, id: "otp_user_form", autocomplete: 'off'}) do |f| %>
-            <div class="form-group">
-              <%= f.label :phone %>
-              <%= f.phone_field :login, autofocus: true, autocomplete: false, class: 'form-control', placeholder: t('mongoid.attributes.user.phone') %>
-            </div>
-            <div class="form-group" hidden>
-              <%= f.label :login_otp %>
-              <%= f.number_field :login_otp, class: 'form-control', maxlength: resource_class.otp_length, minlength: resource_class.otp_length, autocomplete: 'off' %>
-            </div>
-            <div class="signin-btn col-lg-12 pl-0 pr-0 pt-5 pb-3">
-              <%= f.submit t('sessions.new.otp_submit'), class: 'sign-in-btn',  data:{event_category: 'Section', event_action: 'Click', event_name: t('sessions.new.otp_submit') } %>
-            </div>
-            <div class="d-none">
-              <a href="javascript:;" class="a-style opacity-5 resend-otp small pt-3" data-resend-time="<%= User.otp_resend_wait_time %>", data-max-limit="<%= User.otp_resend_max_limit %>" data-counter=0><%= t('sessions.new.otp_resend') %></a>
-              <br>
-            </div>
-            <a href="javascript:;" class="a-style opacity-5 toggle_signin_form d-block d-md-inline float-md-left pr-0" data-target="#standard_login_form"><%= t('sessions.new.login_with_password_link') %></a><br/>
-          <% end %>
+        <%= form_for(resource, as: resource_name, url: users_otp_path, authenticity_token: true, remote: true, html: {:'data-type' => 'json', class: 'validate-form ' + otp_signin_class, id: "otp_user_form", autocomplete: 'off'}) do |f| %>
+          <div class="form-group">
+            <%= f.label :phone %>
+            <%= f.phone_field :login, autofocus: true, autocomplete: false, class: 'form-control', placeholder: t('mongoid.attributes.user.phone') %>
+          </div>
+          <div class="form-group" hidden>
+            <%= f.label :login_otp %>
+            <%= f.number_field :login_otp, class: 'form-control', maxlength: resource_class.otp_length, minlength: resource_class.otp_length, autocomplete: false %>
+          </div>
+          <div class="signin-btn col-lg-12 pl-0 pr-0 pt-5 pb-3">
+            <%= f.submit t('sessions.new.otp_submit'), class: 'sign-in-btn',  data:{event_category: 'Section', event_action: 'Click', event_name: t('sessions.new.otp_submit') } %>
+          </div>
+          <div class="d-none">
+            <a href="javascript:;" class="a-style opacity-5 resend-otp small pt-3" data-resend-time="<%= User.otp_resend_wait_time %>", data-max-limit="<%= User.otp_resend_max_limit %>" data-counter=0><%= t('sessions.new.otp_resend') %></a>
+            <br>
+          </div>
+          <a href="javascript:;" class="a-style opacity-5 toggle_signin_form d-block d-md-inline float-md-left pr-0" data-target="#standard_login_form"><%= t('sessions.new.login_with_password_link') %></a><br/>
         <% end %>
         <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: {class: 'validate-form ' + username_signin_class, id: "standard_login_form", autocomplete: 'off' }) do |f| %>
           <% if current_client.preferred_login == "phone" %>
             <div class="form-group">
               <%= f.label :phone %>
-              <%= f.phone_field :login, autofocus: true, class: 'form-control', placeholder: t('mongoid.attributes.user.phone'), id: 'user_login_phone', autocomplete: 'off' %>
+              <%= f.phone_field :login, autofocus: true, class: 'form-control', placeholder: t('mongoid.attributes.user.phone'), id: 'user_login_phone', autocomplete: false %>
             </div>
           <% else %>
             <div class="form-group">
               <%= f.label :email %>
-              <%= f.email_field :login, autofocus: true, class: 'form-control', placeholder: t('mongoid.attributes.user.email'), autocomplete: 'off'  %>
+              <%= f.email_field :login, autofocus: true, class: 'form-control', placeholder: t('mongoid.attributes.user.email'), autocomplete: false %>
             </div>
           <% end %>
           <div class="form-group" id='public_key' data-value="<%= @public_key %>" >
