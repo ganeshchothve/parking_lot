@@ -15,13 +15,13 @@
       <div class="col-md-4">
         <div class="form-group">
           <label><%= labels[:name] %></label>
-          <div><%= user.name || '-' %></div>
+          <div class="break-word"><%= user.name || '-' %></div>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label><%= labels[:email] %></label>
-          <div><%= user.email || '-' %></div>
+          <div class="break-word"><%= user.email || '-' %></div>
         </div>
       </div>
       <div class="col-md-4">
@@ -49,7 +49,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label><%= labels[:manager_change_reason] %></label>
-              <div><%= user.manager_change_reason || '-' %></div>
+              <div class="break-word"><%= user.manager_change_reason || '-' %></div>
             </div>
           </div>
         <% end %>

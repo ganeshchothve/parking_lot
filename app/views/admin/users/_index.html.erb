@@ -28,12 +28,16 @@
           </span>
         </td>
         <td data-title="Phone & Email">
-          <span class="email-icon">
-            <%= user.email || "" %>
-          </span>
-          <span class="phone-icon">
-            <%= user.phone || "" %>
-          </span>
+          <% if user.email.present? %>
+            <span class="email-icon">
+              <%= user.email || "" %>
+            </span>
+          <% end %>
+          <% if user.phone.present? %>
+            <span class="phone-icon">
+              <%= user.phone || "" %>
+            </span>
+          <% end %>
         </td>
         <% if current_client.selldo_client_id.present? && current_client.selldo_gre_form_id.present? && current_client.selldo_channel_partner_form_id.present? %>
           <td data-title="Sell.Do Lead Id"><span><%= user.lead_id %></span></td>

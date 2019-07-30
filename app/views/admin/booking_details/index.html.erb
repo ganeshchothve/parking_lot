@@ -9,7 +9,7 @@
     <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
       <div class="table-btn-set float-right pb-3">
         <% if policy([:admin, BookingDetail.new]).mis_report? %>
-          <%= link_to "MIS report #{global_labels['units']}", mis_report_admin_booking_details_path, class: 'db-small-btn light-blue bg-white fn-400' %>
+          <%= link_to "MIS report #{global_labels['units']}", mis_report_admin_booking_details_path, class: 'db-small-btn light-blue bg-white fn-400 btn' %>
         <% end %>
         <button class="db-filter-btn white fn-500" type="button"><img src="<%= asset_path 'filter-light-blue.svg' %>" alt="filter icon"></button>
       </div>
