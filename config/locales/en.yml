@@ -100,6 +100,7 @@ en:
       template:
         name: 'Name'
         content: 'Content'
+        type: 'Type'
       client:
         name: 'Client Name (Used across the app)'
         allowed_bookings_per_user: 'Bookings allowed per user'

@@ -4,13 +4,13 @@
   <a href="javascript:;" class="close-filter-btn">&times;</a>
   </div>
   <% url = admin_client_templates_path %>
-  <% labels = t('mongoid.attributes.user_request').with_indifferent_access %>
+  <% labels = t('mongoid.attributes.template').with_indifferent_access %>
   <%= form_tag url, method: "get", id: "user_search_form" do %>
     <div class="filter-content">
       <div class="row">
         <% [::Template::EmailTemplate, ::Template::SmsTemplate, ::Template::CostSheetTemplate, ::Template::CostSheetTemplate, ::Template::AllotmentLetterTemplate, ::Template::PaymentScheduleTemplate, ::Template::ReceiptTemplate] if Rails.env.development? %>
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-          <%= label_tag "fltrs", "type", class: "control-label" %>
+          <%= label_tag "fltrs", labels[:type], class: "control-label" %>
           <%= select_tag "fltrs[_type]", options_for_select(::Template.descendants.collect{|x| [x.to_s.split("::").last.gsub("Template", "").titleize, x.to_s]}.sort, (params[:fltrs].present? ? params[:fltrs][:_type] : "")), {prompt: "Select", class: "selectize"} %>
         </div>
       </div>
