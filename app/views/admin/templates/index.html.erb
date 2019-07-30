@@ -27,13 +27,15 @@
                 <tr>
                   <td><%= template.name.titleize rescue template._type.split("::").last %></td>
                   <td><%= template.content %></td>
-                  <td class="dropdown show text-right">
-                    <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+                  <td class="show text-right">
+                    <div class = 'dropdown'>
+                      <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                         <% if TemplatePolicy.new(current_user, template).edit? %>
                           <%= link_to 'Edit', edit_admin_client_template_path(template), class: 'dropdown-item modal-remote-form-link' %>
                         <% end %>
                       </div>
+                    </div>
                    </td>
                 </tr>
               <% end %>
