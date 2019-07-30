@@ -160,7 +160,7 @@ class User
   validates :role, inclusion: { in: proc { |user| User.available_roles(user.booking_portal_client) } }
   validates :lead_id, uniqueness: true, presence: true, if: proc { |user| user.buyer? }, allow_blank: true
   validates :erp_id, uniqueness: true, allow_blank: true
-  validates_format_of :first_name, :last_name, :with => /^[a-z]+$/i, :multiline => true
+  validates_format_of :first_name, :last_name, :with => /A[a-z]+\z/i
   validate :manager_change_reason_present?
   validate :password_complexity
 
