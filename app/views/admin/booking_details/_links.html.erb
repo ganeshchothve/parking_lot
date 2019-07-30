@@ -1,6 +1,9 @@
 <div class="dropdown float-right">
   <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= link_name %></a>
   <div class="dropdown-menu dropdown-menu-right">
+    <% if !params[:controller].include?('users') && policy([:admin, booking_detail.user]).show? %>
+      <%= link_to "View #{global_labels['customer']}", admin_user_path(booking_detail.user), class: "dropdown-item" %>
+    <% end %>
     <% if policy([ :admin, booking_detail.project_unit]).edit? %>
       <%= link_to "Update #{global_labels['user_kycs']}", edit_admin_project_unit_path(booking_detail.project_unit), class: "modal-remote-form-link dropdown-item" %>
     <% end %>
