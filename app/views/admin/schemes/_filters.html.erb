@@ -6,37 +6,39 @@
   </div>
   <% if @user.blank? %>
     <%= form_tag admin_schemes_path, method: "get", id: "scheme_search_form" do %>
-    <div class="filter-content row">
-      <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-        <%= label_tag "fltrs", labels[:name], class: "control-label" %>
-        <%= select_tag "fltrs[name]", options_for_select(Scheme.all.collect(&:name).collect{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:name] : "")), {prompt: "Select", class: "selectize"} %>
+      <div class="filter-content">
+        <div class="row">
+          <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+            <%= label_tag "fltrs", labels[:name], class: "control-label" %>
+            <%= select_tag "fltrs[name]", options_for_select(Scheme.all.collect(&:name).collect{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:name] : "")), {prompt: "Select", class: "selectize"} %>
+          </div>
+          <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+            <%= label_tag "fltrs", labels[:status], class: "control-label" %>
+            <%= select_tag "fltrs[status]", options_for_select(Scheme.aasm.states.collect(&:name).collect{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize"} %>
+          </div>
+          <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+            <%= label_tag "fltrs", labels[:can_be_applied_by], class: "control-label" %>
+            <%= select_tag "fltrs[can_be_applied_by]", options_for_select(Scheme.all.distinct(:can_be_applied_by).collect{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:can_be_applied_by] : "")), {prompt: "Select", class: "selectize"} %>
+          </div>
+          <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+            <%= label_tag "fltrs", labels[:customer_role], class: "control-label" %>
+            <%= select_tag "fltrs[user_role]", options_for_select(Scheme.all.distinct(:user_role).flatten.collect{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:user_role] : "")), {prompt: "Select", class: "selectize"} %>
+          </div>
+          <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+            <%= label_tag "fltrs", labels[:project_tower_id], class: "control-label" %>
+            <%= select_tag "fltrs[project_tower]", options_for_select(ProjectTower.all.map{|f| [f.name, f.id]}, (params[:fltrs].present? ? params[:fltrs][:project_tower] : "")), {prompt: "Select", class: "selectize"} %>
+          </div>
+        </div>
       </div>
-      <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-        <%= label_tag "fltrs", labels[:status], class: "control-label" %>
-        <%= select_tag "fltrs[status]", options_for_select(Scheme.aasm.states.collect(&:name).collect{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize"} %>
+      <div class="filter-footer">
+        <%= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right" %>
+        <button type="button" class="f-cancel-btn db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
       </div>
-      <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-        <%= label_tag "fltrs", labels[:can_be_applied_by], class: "control-label" %>
-        <%= select_tag "fltrs[can_be_applied_by]", options_for_select(Scheme.all.distinct(:can_be_applied_by).collect{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:can_be_applied_by] : "")), {prompt: "Select", class: "selectize"} %>
-      </div>
-      <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-        <%= label_tag "fltrs", labels[:customer_role], class: "control-label" %>
-        <%= select_tag "fltrs[user_role]", options_for_select(Scheme.all.distinct(:user_role).flatten.collect{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:user_role] : "")), {prompt: "Select", class: "selectize"} %>
-      </div>
-      <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-        <%= label_tag "fltrs", labels[:project_tower_id], class: "control-label" %>
-        <%= select_tag "fltrs[project_tower]", options_for_select(ProjectTower.all.map{|f| [f.name, f.id]}, (params[:fltrs].present? ? params[:fltrs][:project_tower] : "")), {prompt: "Select", class: "selectize"} %>
-      </div>
-    </div>
-    <div class="filter-footer">
-      <%= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right" %>
-      <button type="button" class="f-cancel-btn db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
-    </div>
+    <% end %>
   <% end %>
 </div>
 <%= javascript_tag do %>
   $(document).ready(function(){
     FormInitializer.init($("#scheme_search_form"));
   });
-<% end %>
 <% end %>
