@@ -17,7 +17,7 @@
       <div class="form-group">
         <%= f.hidden_field :user_id, value: @user.id %><br/>
         <%= f.label :primary_user_kyc_id %>
-        <%= f.select :primary_user_kyc_id, @user.user_kycs.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', required: policy([current_user_role_group, BookingDetail.new(user: @user, search: @search)]).enable_booking_with_kyc? ? 'required' : nil,  autofocus: true %>
+        <%= f.select :primary_user_kyc_id, @user.user_kycs.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', required: current_client.enable_booking_with_kyc? ? 'required' : nil,  autofocus: true %>
       </div>
       <div class="form-group">
         <%= f.label :user_kyc_ids %>
