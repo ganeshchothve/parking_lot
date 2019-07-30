@@ -15,10 +15,6 @@ class BookingDetailPolicy < ApplicationPolicy
     _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && eligible_user? && has_user_on_record? && available_for_user_group?
   end
 
-  def enable_booking_with_kyc?
-    current_client.enable_booking_with_kyc
-  end
-
   private
 
   def only_single_unit_can_hold!
@@ -47,6 +43,10 @@ class BookingDetailPolicy < ApplicationPolicy
     return true if (record.user.unused_user_kyc_ids(record.id).present? || !(current_client.enable_booking_with_kyc) )
     @condition = "user_kyc_allowed_bookings"
     false
+  end
+
+  def enable_booking_with_kyc?
+    current_client.enable_booking_with_kyc
   end
 
   def eligible_user?
