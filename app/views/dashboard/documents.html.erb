@@ -32,7 +32,7 @@
                 <td><%= asset.file_name %></td>
                 <td class="text-right"><%= (asset.file_size.to_f / 1024 / 1024).round(2) %> MB</td>
                 <td class="text-right">
-                  <%= link_to "Download", asset.file.url, target: "_blank" %>
+                  <%= link_to "Download", asset.file.url, target: "_blank", class: 'db-small-btn bg-light-blue white fn-500 btn' %>
                 </td>
               </tr>
               <% end %>
