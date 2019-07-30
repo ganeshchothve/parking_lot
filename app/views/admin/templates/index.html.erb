@@ -3,7 +3,7 @@
     <div class="row">
     <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
       <div class="table-title pt-1">
-        <img src="<%= asset_path 'user-alt-black.svg' %>" alt="user icon"> <h1 class="title"><%= global_labels['templates'] %></h1>
+        <img src="<%= asset_path 'file-contract-black.svg' %>" alt="user icon"> <h1 class="title"><%= global_labels['templates'] %></h1>
       </div>
     </div>
     <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
@@ -24,20 +24,18 @@
             </thead>
             <tbody>
               <% @templates.each do |template| %>
-              <tr>
-                <td><%= template.name.titleize rescue template._type.split("::").last %></td>
-                <td><%= template.content %></td>
-                <td class="text-right">
-                  <div class="dropdown">
-                    <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-                    <div class="dropdown-menu dropdown-menu-right">
-                      <% if TemplatePolicy.new(current_user, template).edit? %>
-                        <%= link_to 'Edit', edit_admin_client_template_path(template), class: 'dropdown-item modal-remote-form-link' %>
-                      <% end %>
-                    </div>
-                  </div>
-                </td>
-              </tr>
+                <tr>
+                  <td><%= template.name.titleize rescue template._type.split("::").last %></td>
+                  <td><%= template.content %></td>
+                  <td class="dropdown show text-right">
+                    <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <% if TemplatePolicy.new(current_user, template).edit? %>
+                          <%= link_to 'Edit', edit_admin_client_template_path(template), class: 'dropdown-item modal-remote-form-link' %>
+                        <% end %>
+                      </div>
+                   </td>
+                </tr>
               <% end %>
               <tr>
                 <td colspan="3">
