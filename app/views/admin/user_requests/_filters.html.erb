@@ -32,8 +32,8 @@
           <%= label_tag "fltrs", "requestable_type", class: "control-label" %>
           <%= select_tag "fltrs[requestable_type]", options_for_select(UserRequest.distinct(:requestable_type)), {prompt: "Select", class: "selectize"} %>
         </div>
-        <div class="form-group">
-          <%= label_tag "fltrs", "requestable", class: "control-label" %>
+        <div class="form-group d-none" id: 'requestable'>
+          <%= label_tag "fltrs","ABC", class: "control-label", id: 'requestable_label' %>
           <%= select_tag "fltrs[requestable]", options_for_select([]), {prompt: "Select", class: "selectize-remote"} %>
         </div>
       <% end %>
@@ -42,6 +42,8 @@
           $('#fltrs_requestable').selectize()
           $('#fltrs_requestable_type').change(function(){
           if($(this).val() == 'Receipt'){
+            $('#requestable_label').html("Receipt");
+            $('.form-group').removeClass('d-none');
             $('#fltrs_requestable').selectize()[0].selectize.destroy();
             $('#fltrs_requestable').selectize({
                 plugins: ['infinite_scroll'],
@@ -53,12 +55,15 @@
                     dataType: 'json',
                     data: _.merge( queryObj, {fltrs: {search: queryObj.search}}),
                     success : function(res) {
-                      callback(_.map(res, function(a){ return { value: (a['id'] || a._id), text: (a['ds_name'] || a['name']) } }));
+                      debugger
+                      callback(_.map(res, function(a){ return { value: (a['id'] || a._id), text: ( a['name']) } }));
                     }
                   });
                 }
            });
           } else if($(this).val() == 'BookingDetail'){
+            $('#requestable_label').html("Booking Detail");
+            $('.form-group').removeClass('d-none');
             $('#fltrs_requestable').selectize()[0].selectize.destroy();
             $('#fltrs_requestable').selectize({
                 plugins: ['infinite_scroll'],
@@ -70,7 +75,7 @@
                     dataType: 'json',
                     data: _.merge( queryObj, {fltrs: {search: queryObj.search}}),
                     success : function(res) {
-                      callback(_.map(res, function(a){ return { value: (a['id'] || a._id), text: (a['name'] + '-' + a['status']) } }));
+                      callback(_.map(res, function(a){ return { value: (a['id'] || a._id), text: (a['ds_name'] ) } }));
                     }
                   });
                 }
