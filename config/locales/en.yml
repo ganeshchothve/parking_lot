@@ -368,6 +368,7 @@ en:
     only_administrator_users: 'Only administrator users are allowed.'
     only_buyer_users: 'Only Buyer users are allowed.'
     receipts:
+      resend_email: 'Email has been sent again.'
       account_missing: 'We do not have any Account Details for Transaction. Please ask Administrator to add.'
     searches:
       project_unit_missing: 'Project Unit Selection step is missing'
