@@ -11,7 +11,6 @@ class Admin::ReceiptPolicy < ReceiptPolicy
 
   def new?
     valid = record.user.buyer? && confirmed_and_ready_user?
-    valid &&= direct_payment? ? (enable_direct_payment? || user.role?('channel_partner')) : valid_booking_stages?
   end
 
   def create?
@@ -76,7 +75,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
   private
 
   def confirmed_and_ready_user?
-    record_user_is_present? && record_user_confirmed? && record_user_kyc_ready?
+    record_user_is_present? && record_user_confirmed? && eligible_user?
   end
 
   def is_this_lost_receipt?
