@@ -29,6 +29,7 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
     @receipt = Receipt.new(user: current_user, creator: current_user,payment_gateway: current_client.payment_gateway, booking_detail_id: @booking_detail.id, payment_type: 'agreement')
     @receipt.assign_attributes(permitted_attributes([:buyer, @receipt]))
     @receipt.account = selected_account(current_client.payment_gateway.underscore, @booking_detail.project_unit)
+    authorize([:buyer, @receipt])
     respond_to do |format|
       if @receipt.save
         if @receipt.payment_gateway_service.present?
@@ -65,5 +66,4 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
     @booking_detail = BookingDetail.where(_id: params[:booking_detail_id], user_id: current_user.id).first
     redirect_to root_path, alert: t('controller.booking_details.set_booking_detail_missing'), status: 404 if @booking_detail.blank?
   end
-
 end
