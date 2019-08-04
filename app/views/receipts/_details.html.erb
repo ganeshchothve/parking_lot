@@ -6,54 +6,53 @@
       <%= receipt.user.name %>
     <% end %>
     <div class="small">
-      Created By: <%= receipt.creator.name %><br/>
+      <%= t('mongoid.attributes.receipt.created_by')%>: <%= receipt.creator.name %><br/>
       <% if receipt.user.role?("user") && receipt.user.manager_id.present? && current_user.role != "channel_partner" %>
         <%= t('mongoid.attributes.user.manager_id') %>: <%= receipt.user.manager_name %><br/>
       <% end %>
     </div>
   </td>
   <td>
-    <%= ["pending", 'clearance_pending'].include?(receipt.status) ?  "Not Generated" : receipt.receipt_id %>
+    <%= ["pending", 'clearance_pending'].include?(receipt.status) ?  t('global.not_generated') : receipt.receipt_id %>
     <div class="small muted">
       <div>
-        <%= receipt.booking_detail.present? ? "Unit: #{receipt.booking_detail.name}" : 'Direct Payment' %>
+        <%= receipt.booking_detail.present? ? "#{BookingDetail.model_name.human}: #{receipt.booking_detail.name}" : 'Direct Payment' %>
       </div>
-      <% if receipt.payment_mode == 'online' %>
-        <div>Trans ID: <%= receipt.payment_identifier %></div>
-        <div>Processed Date:<%= receipt.processed_on.present? ? l(receipt.processed_on) : "-" %></div>
+      <% if receipt.online? %>
+        <div> <%= t('mongoid.attributes.receipt.payment_identifier')%> : <%= receipt.payment_identifier %></div>
+        <div> <%= t('mongoid.attributes.receipt.processed_on')%>:<%= receipt.processed_on.present? ? l(receipt.processed_on) : "-" %></div>
       <% else %>
-        <div>Bank: <%= receipt.issuing_bank %> / Branch: <%= receipt.issuing_bank_branch %></div>
-        <div>Issued Date: <%= receipt.issued_date.present? ? receipt.issued_date.strftime("%d/%m/%Y") : "-" %></div>
-        <div>Processed Date: <%= receipt.processed_on.present? ? l(receipt.processed_on) : "-" %></div>
-        <div>ID: <%= receipt.payment_identifier %></div>
+        <div> <%= t('mongoid.attributes.receipt.issuing_bank')%>: <%= receipt.issuing_bank %> </br> <%= t('mongoid.attributes.receipt.issuing_bank_branch')%>: <%= receipt.issuing_bank_branch %></div>
+        <div><%= t('mongoid.attributes.receipt.issued_date')%>: <%= receipt.issued_date.present? ? receipt.issued_date.strftime("%d/%m/%Y") : "-" %></div>
+        <div> <%= t('mongoid.attributes.receipt.processed_on')%>: <%= receipt.processed_on.present? ? l(receipt.processed_on) : "-" %></div>
       <% end %>
-      <div>Payment: <%= Receipt.available_payment_modes.find{|x| x[:id] == receipt.payment_mode}[:text] %></div>
+      <div> <%= t('mongoid.attributes.receipt.payment_mode')%> : <%= t("receipt.payment_mode.#{receipt.payment_mode}")%></div>
     </div>
   </td>
   <% if current_client.enable_slot_generation? %>
     <td><%= receipt.try(:token_number) ? receipt.get_token_number : '--' %></td>
   <% end %>
-  <td><%= receipt.status.titleize %></td>
+  <td><%= t("receipt.status.#{receipt.status}") %></td>
   <td><%= number_to_indian_currency(receipt.total_amount.round) %></td>
   <td>
     <div class="dropdown show text-right">
     <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-        <%= link_to 'Print', [current_user_role_group, receipt], target:"_blank", class: 'dropdown-item print-btn', data: { event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>
+        <%= link_to t('controller.receipts.print.link_name'), [current_user_role_group, receipt], target:"_blank", class: 'dropdown-item print-btn', data: { event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>
         <% if policy([current_user_role_group, UserRequest::Cancellation.new(user_id: receipt.user_id, requestable: receipt)]).new? %>
-          <%= link_to t('receipts.cancellation_link'), cancellation_link(receipt), class: "dropdown-item modal-remote-form-link" %>
+          <%= link_to t('controller.user_requests.cancellation.new.link_name'), cancellation_link(receipt), class: "dropdown-item modal-remote-form-link" %>
         <% end %>
         <% if policy([current_user_role_group, receipt]).resend_success? %>
-          <%= link_to 'Resend Email', [:resend_success, current_user_role_group, receipt], class: 'dropdown-item' %>
+          <%= link_to t('controller.receipts.resend_email.link_name'), [:resend_success, current_user_role_group, receipt], class: 'dropdown-item' %>
         <% end %>
         <% if policy([ current_user_role_group, receipt]).edit? %>
-          <%= link_to 'Edit', [:edit, current_user_role_group, receipt.user, receipt], class: 'dropdown-item modal-remote-form-link' %>
+          <%= link_to t('controller.receipts.edit.link_name'), [:edit, current_user_role_group, receipt.user, receipt], class: 'dropdown-item modal-remote-form-link' %>
         <% end %>
         <% if policy([current_user_role_group, receipt]).edit_token_number? %>
-          <%= link_to 'Edit Token Number', [:edit_token_number, current_user_role_group, receipt], class: 'modal-remote-form-link dropdown-item' %>
+          <%= link_to t('controller.receipts.edit_token_number.link_name'), [:edit_token_number, current_user_role_group, receipt], class: 'modal-remote-form-link dropdown-item' %>
         <% end %>
         <% if policy([current_user_role_group, Asset.new(assetable: receipt) ]).update? %>
-          <%= link_to global_labels[:assets], assetables_path(assetable_type: receipt.class.model_name.i18n_key.to_s, assetable_id: receipt.id), class: 'dropdown-item modal-remote-form-link' %>
+          <%= link_to t('controller.assets.index.link_name'), assetables_path(assetable_type: receipt.class.model_name.i18n_key.to_s, assetable_id: receipt.id), class: 'dropdown-item modal-remote-form-link' %>
         <% end %>
      </div>
   </div>

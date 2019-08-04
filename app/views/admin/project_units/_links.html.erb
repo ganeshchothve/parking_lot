@@ -1,16 +1,12 @@
 
-<%# if policy([:admin, project_unit]).release_unit? %>
-  <%# = link_to "Release Unit", release_unit_admin_project_unit_path(project_unit), method: :patch, class: 'dropdown-item' %>
-<%# end %>
-
 <% if policy([:admin, project_unit]).show? %>
-  <%= link_to "View Details", project_unit.booking_detail.present? ? admin_booking_detail_path(project_unit.booking_detail) : admin_project_unit_path(project_unit) , class: 'dropdown-item' %>
+  <%= link_to t('controller.project_units.show.link_name'), project_unit.booking_detail.present? ? admin_booking_detail_path(project_unit.booking_detail) : admin_project_unit_path(project_unit) , class: 'dropdown-item' %>
 <% end %>
 
 <% if policy([:admin, project_unit]).edit? %>
-  <%= link_to "Edit", edit_admin_project_unit_path(project_unit), class: 'dropdown-item modal-remote-form-link' %>
+  <%= link_to t('controller.project_units.edit.link_name'), edit_admin_project_unit_path(project_unit), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
 
 <% if policy([:admin, project_unit]).quotation? %>
-  <%= link_to "Get Quotation", quotation_admin_project_unit_path(project_unit), class: 'dropdown-item' %>
+  <%= link_to t('controller.project_units.quotation.link_name'), quotation_admin_project_unit_path(project_unit), class: 'dropdown-item' %>
 <% end %>

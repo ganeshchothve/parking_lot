@@ -6,12 +6,11 @@
           <h2>Channel Partner</h2>
         </div>
         <div class="box-content br-rd-bl-4 bg-white p-0 pt-1">
-          <% labels = t('mongoid.attributes.user').with_indifferent_access %>
           <div class = 'pd-box'>
             <div class="row">
               <div class="col-3">
                 <div class="form-group">
-                  <label><%= labels[:name] %></label>
+                  <label><%= t('mongoid.attributes.channel_partner.name') %></label>
                   <div>
                     <%= @channel_partner.name %>
                   </div>
@@ -19,7 +18,7 @@
               </div>
               <div class="col-3">
                 <div class="form-group">
-                  <label><%= labels[:email] %></label>
+                  <label><%= t('mongoid.attributes.channel_partner.email') %></label>
                   <div>
                     <%= @channel_partner.email %>
                   </div>
@@ -27,7 +26,7 @@
               </div>
               <div class="col-3">
                 <div class="form-group">
-                  <label><%= labels[:rera_id] %></label>
+                  <label><%= t('mongoid.attributes.channel_partner.rera_id') %></label>
                   <div>
                     <%= @channel_partner.rera_id %>
                   </div>
@@ -37,7 +36,7 @@
             <div class="row">
               <div class="col-3">
                 <div class="form-group">
-                  <label><%= labels[:status] %></label>
+                  <label><%= t('mongoid.attributes.channel_partner.status') %></label>
                   <div>
                     <%= @channel_partner.status %>
                   </div>
@@ -45,7 +44,7 @@
               </div>
               <div class="col-3">
                 <div class="form-group">
-                  <label><%= labels[:company_name] %></label>
+                  <label><%= t('mongoid.attributes.channel_partner.company_name') %></label>
                   <div>
                     <%= @channel_partner.company_name %>
                   </div>
@@ -53,7 +52,7 @@
               </div>
               <div class="col-3">
                 <div class="form-group">
-                  <label><%= labels[:pan_number] %></label>
+                  <label><%= t('mongoid.attributes.channel_partner.pan_number') %></label>
                   <div>
                     <%= @channel_partner.pan_number %>
                   </div>
@@ -63,7 +62,7 @@
             <div class = 'row'>
               <div class="col-3">
                 <div class="form-group">
-                  <label><%= labels[:aadhaar] %></label>
+                  <label><%= t('mongoid.attributes.channel_partner.aadhaar') %></label>
                   <div>
                     <%= @channel_partner.aadhaar %>
                   </div>
@@ -71,7 +70,7 @@
               </div>
               <div class="col-3">
                 <div class="form-group">
-                  <label><%= labels[:manager_name] %></label>
+                  <label><%= t('mongoid.attributes.channel_partner.manager_name') %></label>
                   <div>
                     <%= @channel_partner.manager_name %>
                   </div>

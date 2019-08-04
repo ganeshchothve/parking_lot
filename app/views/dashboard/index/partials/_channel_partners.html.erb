@@ -14,7 +14,7 @@
         <tbody>
           <% DashboardDataProvider.channel_partners_dashboard(current_user, params[:channel_partner_fltrs]).each do |d| %>
           <tr>
-            <td><%= ChannelPartner.available_statuses.find{|x| x[:id] == d[:status]}[:text] %></td>
+            <td><%= t("mongoid.attributes.channel_partner/status.#{d[:status]}") %></td>
             <td class="text-right"><%= d[:count] %></td>
           </tr>
           <% end %>

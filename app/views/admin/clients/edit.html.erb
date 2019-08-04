@@ -113,7 +113,7 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <%= f.label :payment_gateway, class: 'label-required' %>
-                    <%= f.select :payment_gateway, Client.available_payment_gateways.collect{|x| [x[:text], x[:id]]}, {}, class: 'selectize', required: 'required', disabled: (policy([:admin, @client]).editable_field?("payment_gateway") ? false : true) %>
+                    <%= f.select :payment_gateway, Client::PAYMENT_GATEWAYS.collect{|x| [ t("client.payment_gateways.#{x}"), x]}, {}, class: 'selectize', required: 'required', disabled: (policy([:admin, @client]).editable_field?("payment_gateway") ? false : true) %>
                   </div>
                 </div>
               </div>

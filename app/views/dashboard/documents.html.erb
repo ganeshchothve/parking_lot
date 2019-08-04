@@ -3,10 +3,10 @@
     <div class="row">
     <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
       <div class="table-title pt-1 pb-3">
-        <img src="<%= asset_path 'file-kycs-black.svg' %>" alt="user icon"> <h1 class="title"><%= global_labels['documents'] %></h1>
+        <img src="<%= asset_path 'file-kycs-black.svg' %>" alt="user icon"> <h1 class="title"><%= Assets.model_name.human %></h1>
       </div>
     </div>
-    <% labels = t('mongoid.attributes.asset').with_indifferent_access %>
+    <% labels = .with_indifferent_access %>
     <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
       <div class="table-btn-set float-right pb-3">
         <div class="display-initial" >
@@ -21,9 +21,9 @@
           <table class='table my-customer-table responsive-tbl'>
             <thead>
               <tr class="bg-gradient-cd white">
-                <th><%= labels[:file_name] %></th>
-                <th class="text-right"><%= labels[:file_size] %></th>
-                <th class="text-right">Download</th>
+                <th><%= t('mongoid.attributes.asset.file_name') %></th>
+                <th class="text-right"><%= t('mongoid.attributes.asset.file_size') %></th>
+                <th class="text-right"><%= t('global.download')%></th>
               </tr>
             </thead>
             <tbody>
@@ -32,7 +32,7 @@
                 <td><%= asset.file_name %></td>
                 <td class="text-right"><%= (asset.file_size.to_f / 1024 / 1024).round(2) %> MB</td>
                 <td class="text-right">
-                  <%= link_to "Download", asset.file.url, target: "_blank", class: 'db-small-btn bg-light-blue white fn-500 btn' %>
+                  <%= link_to t('global.download'), asset.file.url, target: "_blank", class: 'db-small-btn bg-light-blue white fn-500 btn' %>
                 </td>
               </tr>
               <% end %>

@@ -49,7 +49,15 @@ class CustomPolicy < Struct.new(:user, :enable_users)
     "#{user.buyer? ? '' : 'Admin::'}PortalStagePriorityPolicy".constantize.new(user, PortalStagePriority).index?
   end
 
+  def user_requests?
+    "#{user.buyer? ? '' : 'Admin::'}UserRequestPolicy".constantize.new(user, UserRequest).index?
+  end
+
+  def channel_partners?
+    "#{user.buyer? ? '' : 'Admin::'}ChannelPartnerPolicy".constantize.new(user, ChannelPartner).index?
+  end
+
   def self.custom_methods
-    %w[inventory emails smses audits referrals accounts phases sync_logs erp_models user_kycs portal_stage_priorities schemes].sort
+    %w[inventory schemes user_requests channel_partners user_kycs emails smses sync_logs referrals accounts phases erp_models portal_stage_priorities audits]
   end
 end

@@ -26,7 +26,7 @@
           </div>
         </td>
         <td>
-          <%= t("user_requests.status.#{user_request.status}") %>
+          <%= t("mongoid.attributes.user_request/status.#{user_request.status}") %>
           <div class="text-muted small">
             <%= labels[:created_at] %>: <%= l(user_request.created_at.in_time_zone(current_user.time_zone)) %>
           </div>

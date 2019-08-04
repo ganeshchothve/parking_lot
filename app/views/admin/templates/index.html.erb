@@ -15,10 +15,9 @@
         <div class="box-card relative">
           <table class='table my-customer-table responsive-tbl'>
             <thead class="th-default">
-              <% labels = t('mongoid.attributes.template').with_indifferent_access %>
               <tr class="bg-gradient-cd white">
-                <th><%= labels['name'] %></th>
-                <th><%= labels['content'] %></th>
+                <th><%= t('mongoid.attributes.template.name') %></th>
+                <th><%= t('mongoid.attributes.template.content') %></th>
                 <th class="text-right">Actions</th>
               </tr>
             </thead>
@@ -32,7 +31,7 @@
                       <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                         <% if TemplatePolicy.new(current_user, template).edit? %>
-                          <%= link_to 'Edit', edit_admin_client_template_path(template), class: 'dropdown-item modal-remote-form-link' %>
+                          <%= link_to t('controller.templates.edit.link_name'), edit_admin_client_template_path(template), class: 'dropdown-item modal-remote-form-link' %>
                         <% end %>
                       </div>
                     </div>

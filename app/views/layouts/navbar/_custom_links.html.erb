@@ -3,7 +3,7 @@
 <% if CustomPolicy.custom_methods.present? %>
   <% CustomPolicy.custom_methods.each do |method| %>
     <% if policy(:custom).send("#{method}?") %>
-        <% links << { method: method.to_s.titleize, link: eval("custom_#{method}_path"), name: t("#{method}.link_name")} %>
+        <% links << { method: method.to_s.titleize, link: eval("custom_#{method}_path"), name: t("controller.#{method}.index.link_name")} %>
       </li>
     <% end %>
   <% end %>

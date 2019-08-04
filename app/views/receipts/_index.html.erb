@@ -1,19 +1,17 @@
 <table class='table my-customer-table responsive-tbl'>
   <thead class="th-default">
-    <% labels = t('mongoid.attributes.receipt').with_indifferent_access %>
-    <% user_labels = t('mongoid.attributes.user').with_indifferent_access %>
-      <thead>
-        <tr class="bg-gradient-cd white">
-          <th><%= labels[:user_id] %></th>
-          <th><%= labels[:receipt_id] %> & Details</th>
-          <% if current_client.enable_slot_generation? %>
-            <th>Token Number</th>
-          <% end %>
-          <th><%= labels['status'] %></th>
-          <th><%= labels['total_amount'] %></th>
-          <th class="text-right">Actions</th>
-        </tr>
-      </thead>
+    <thead>
+      <tr class="bg-gradient-cd white">
+        <th><%= User.model_name.human %></th>
+        <th><%= t('mongoid.attributes.receipt.receipt_id') %></th>
+        <% if current_client.enable_slot_generation? %>
+          <th><%= t('mongoid.attributes.receipt.token_number')%></th>
+        <% end %>
+        <th><%= t('mongoid.attributes.receipt.status') %></th>
+        <th><%= t('mongoid.attributes.receipt.total_amount') %></th>
+        <th class="text-right"><%= t('global.actions', count: 3)%></th>
+      </tr>
+    </thead>
   </thead>
   <tbody>
     <% receipts.each do |receipt| %>

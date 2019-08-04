@@ -21,6 +21,7 @@ class BookingDetail
   field :project_tower_name, type: String
   field :bedrooms, type: String
   field :bathrooms, type: String
+  field :carpet, type: Float
 
   mount_uploader :tds_doc, DocUploader
 

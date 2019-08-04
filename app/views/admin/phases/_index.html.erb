@@ -1,28 +1,25 @@
 <table class='table my-customer-table responsive-tbl'>
   <thead class="th-default">
-    <% labels = t('mongoid.attributes.scheme').with_indifferent_access %>
-      <thead>
-        <tr class="bg-gradient-cd white">
-          <th><%= t('mongoid.attributes.phase.phase_name') %></th>
-          <th><%= t('mongoid.attributes.phase.account_name') %></th>
-          <th class="text-right">Actions</th>
-        </tr>
-      </thead>
+    <thead>
+      <tr class="bg-gradient-cd white">
+        <th><%= t('mongoid.attributes.phase.phase_name') %></th>
+        <th><%= t('mongoid.attributes.phase.account_name') %></th>
+        <th class="text-right"><%= t('global.action', count: 3)%></th>
+      </tr>
+    </thead>
   </thead>
   <tbody>
     <% phases.each do |phase| %>
       <tr>
+        <td><%= phase.name %></td>
         <td>
-          <%= phase.name %>
-        </td>
-        <td>
-          <%= phase.account.try('name') || 'Default Account will be considered' %>
+          <%= phase.account.try('name') || t('global.default_account_name') %>
         </td>
         <td>
           <div class="dropdown show text-right">
           <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-              <%= link_to 'Edit', edit_admin_phase_path(phase), class: 'modal-remote-form-link dropdown-item' %>
+              <%= link_to t('controller.phases.edit.link_name'), edit_admin_phase_path(phase), class: 'modal-remote-form-link dropdown-item' %>
            </div>
         </div>
         </td>

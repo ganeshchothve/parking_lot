@@ -4,6 +4,8 @@ class ChannelPartner
   include ArrayBlankRejectable
   include SyncDetails
 
+  STATUS = %w(active inactive)
+
   field :title, type: String
   field :first_name, type: String
   field :last_name, type: String
@@ -40,7 +42,7 @@ class ChannelPartner
   validates :rera_id, uniqueness: true, allow_blank: true
   validates :phone, uniqueness: true, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile] }, if: proc { |user| user.email.blank? }
   validates :email, uniqueness: true, if: proc { |user| user.phone.blank? }
-  validates :status, inclusion: { in: proc { ChannelPartner.available_statuses.collect { |x| x[:id] } } }
+  validates :status, inclusion: { in: proc { ChannelPartner::STATUS } }
   validates :pan_number, :aadhaar, uniqueness: true, allow_blank: true
   validates :pan_number, format: { with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A' }, allow_blank: true
   validate :cannot_make_inactive
@@ -51,13 +53,6 @@ class ChannelPartner
   accepts_nested_attributes_for :bank_detail, :address
 
   delegate :name, :role, :role?, :email, to: :manager, prefix: true, allow_nil: true
-
-  def self.available_statuses
-    [
-      { id: 'active', text: 'Active' },
-      { id: 'inactive', text: 'Inactive' }
-    ]
-  end
 
   def self.build_criteria(params = {})
     selector = {}

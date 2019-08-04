@@ -1,5 +1,5 @@
 <div class="box-card d-print-none">
-  <div class="box-header bg-gradient br-rd-tr-4"><h2> Sync </h2></div>
+  <div class="box-header bg-gradient br-rd-tr-4"><h2> <%= SyncLog.model_name.human %> </h2></div>
   <div class="box-content br-rd-bl-4 bg-white">
     <div class="row pd-box">
       <div class="col-md-12">
@@ -7,16 +7,16 @@
           <% record.erp_models.active.each do |erp_model| %>
             <div class="col-md-4">
               <div class="form-group">
-                <label>Last Sync On:</label>
+                <label><%= t('mongoid.attributes.sync_log.last_sync_on')%></label>
                 <div>
                   <%= erp_model.try(:domain) %> (<%= erp_model.action_name %>)
                 </div>
               </div>
             </div>
             <% sync_log = record.sync_logs.where(erp_model_id: erp_model.id).desc(:created_at)[0] %>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="form-group">
-                <label>Last Sync At:</label>
+                <label> <%= t('mongoid.attributes.sync_log.last_sync_at')%></label>
                 <div>
                   <%= sync_log.try(:created_at).try(:strftime, "%d/%m/%Y %l:%M %p") %>
                 </div>
@@ -24,19 +24,19 @@
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label>Last Sync Log Status:</label>
+                <label> <%= t('mongoid.attributes.sync_log.last_sync_status')%></label>
                 <div>
                   <%= sync_log.try(:status) %>
                   <% if (sync_log.try(:status) || 'failed') == 'failed' && policy([:admin, SyncLog.new]).create? && !record.third_party_references.where(domain: erp_model.domain).present? %>
-                    <%= link_to "Sync", admin_sync_logs_path(sync: { erp_model_id: erp_model.id, resource_id: record, resource_type: record.class.to_s}), method: :post %>
+                    <%= link_to t('controller.sync_logs.new.link_name'), admin_sync_logs_path(sync: { erp_model_id: erp_model.id, resource_id: record, resource_type: record.class.to_s}), method: :post %>
                   <% end %>
                 </div>
               </div>
             </div>
-            <div class="col-md-1">
+            <div class="col-md-2">
               <label></label>
               <div>
-                <%= link_to "Logs", admin_sync_logs_path(fltrs: { resource_id: record.id, erp_model_id: erp_model.id }), target: :_blank %>
+                <%= link_to t('controller.sync_logs.index.link_name'), admin_sync_logs_path(fltrs: { resource_id: record.id, erp_model_id: erp_model.id }), target: :_blank %>
               </div>
             </div>
           <% end %>

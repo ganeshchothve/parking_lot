@@ -16,8 +16,14 @@
       <%= render 'dashboard/project_unit_overview', { project_unit: @project_unit } %>
       <% if %w[superadmin admin].include?(current_user.role) && @booking_details.present? %>
         <div class="mt-3"></div>
-        <div class="card">
-          <div class = "card-header">Bookings</div>
+        <div class="box-card">
+          <div class="box-header bg-gradient br-rd-tr-4">
+            <h2>
+              <%= image_tag 'lock-black', alt: 'Lock', class: 'wd-18' %>
+              <%= @booking_details.total_entries %>
+              <%= BookingDetail.model_name.human(count: @booking_details.total_entries )%>
+            </h2>
+          </div>
           <div class="card-body">
             <%= render 'admin/booking_details/index', { booking_details: @booking_details } %>
           </div>
@@ -42,17 +48,17 @@
             </div>
             <a class="carousel-control-prev" href="#project_unit_gallery_<%= @project_unit.id %>" role="button" data-slide="prev">
               <span class="fas fa-chevron-left text-dark" aria-hidden="true"></span>
-              <span class="sr-only">Previous</span>
+              <span class="sr-only"><%= t('global.previous')%></span>
             </a>
             <a class="carousel-control-next" href="#project_unit_gallery_<%= @project_unit.id %>" role="button" data-slide="next">
               <span class="fas fa-chevron-right text-dark" aria-hidden="true"></span>
-              <span class="sr-only">Next</span>
+              <span class="sr-only"><%= t('global.next') %></span>
             </a>
           </div>
           </div>
         <% else %>
           <div class="alert alert-primary">
-            No images available
+            <%= t('assets.image.not_found') %>
           </div>
         <% end %>
       </div>

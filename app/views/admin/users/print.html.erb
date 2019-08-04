@@ -1,8 +1,8 @@
 <div class="container text-right">
-  <button onclick="window.print();" class="db-small-btn light-blue bg-white fn-400 btn d-print-none">Print</button>
+  <button onclick="window.print();" class="db-small-btn light-blue bg-white fn-400 btn d-print-none">
+    <%= t('controller.users.print.link_name')%>
+  </button>
 </div>
-<% labels = t("mongoid.attributes.user").with_indifferent_access %>
-<% client_labels = t("mongoid.attributes.client").with_indifferent_access %>
 <div class="container">
   <div class="pt-3"></div>
   <div class="box-card">
@@ -10,11 +10,13 @@
       <div class="row pd-box">
         <div class="col-md-6">
           <div class="logo-wrapper">
-            <%= image_tag current_client.logo.url || '' %>
+            <%= image_tag current_client.logo.url if current_client.logo.present? %>
           </div>
         </div>
         <div class="col-md-6 text-right">
-          <div class="mt-2 mb-1 small text-muted"><%= labels[:lead_id] %></div>
+          <div class="mt-2 mb-1 small text-muted">
+            <%= t("mongoid.attributes.user.lead_id") %>
+          </div>
           <h5><%= @user.lead_id %></h5>
         </div>
       </div>
@@ -23,7 +25,7 @@
   <div class="mt-3"></div>
   <div class="box-card">
     <div class="box-header bg-gradient br-rd-tr-4">
-      <h2>Customer Details</h2>
+      <h2><%= t('controller.users.show.link_name') %></h2>
     </div>
     <div class="box-content br-rd-bl-4 bg-white">
       <div class="form-group pd-box">
@@ -32,19 +34,19 @@
       <div class="row pd-box">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="small text-muted"><%= labels[:email] %></label>
+            <label class="small text-muted"><%= t("mongoid.attributes.user.email") %></label>
             <div><%= @user.email %></div>
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label class="small text-muted"><%= labels[:phone] %></label>
+            <label class="small text-muted"><%= t("mongoid.attributes.user.phone") %></label>
             <div><%= @user.phone %></div>
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label class="small text-muted"><%= labels[:confirmed] %></label>
+            <label class="small text-muted"><%= t("mongoid.attributes.user.confirmed_at") %></label>
             <div><%= @user.confirmed? ? "Yes (at #{l(@user.confirmed_at)})" : "No" %></div>
           </div>
         </div>
@@ -52,13 +54,13 @@
       <div class="row pd-box">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="small text-muted"><%= labels[:manager_role] %></label>
+            <label class="small text-muted"><%= t("mongoid.attributes.user.manager_role") %></label>
             <div><%= @user.manager_id.present? ? t("users.role.#{@user.manager_role}") : "Direct" %></div>
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label class="small text-muted"><%= labels[:manager_id] %></label>
+            <label class="small text-muted"><%= t("mongoid.attributes.user.manager_id") %></label>
             <div><%= @user.manager_name || '' %></div>
           </div>
         </div>
@@ -70,7 +72,7 @@
   <% if user_kycs.present? %>
     <div class="box-card h-100">
       <div class="box-header bg-gradient br-rd-tr-4">
-        <h2><%= global_labels[:user_kyc] %></h2>
+        <h2><%= t("mongoid.attributes.user_kyc", count: user_kycs.count ) %></h2>
       </div>
       <div class="box-content br-rd-bl-4 bg-white">
         <div class="pd-box">
@@ -86,7 +88,7 @@
   <div class="mt-3"></div>
   <div class="box-card">
     <div class="box-header bg-gradient br-rd-tr-4">
-      <h2><%= global_labels[:notes] %></h2>
+      <h2><%= t("mongoid.attributes.notes", count: @user.notes.count) %></h2>
     </div>
     <div class="box-content br-rd-bl-4 bg-white">
       <div class="pd-box">
@@ -99,7 +101,7 @@
   <div class="mt-3"></div>
   <div class="box-card">
     <div class="box-header bg-gradient br-rd-tr-4">
-      <h2><%= client_labels[:disclaimer] %></h2>
+      <h2><%= t("mongoid.attributes.client.disclaimer") %></h2>
     </div>
     <div class="box-content br-rd-bl-4 bg-white">
       <div class="pd-box">

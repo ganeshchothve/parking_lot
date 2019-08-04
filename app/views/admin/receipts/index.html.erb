@@ -3,15 +3,15 @@
     <div class="row">
     <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
       <div class="table-title pt-1">
-        <img src="<%= asset_path 'rupee-black.svg' %>" alt="user icon"> <h1 class="title"><%= global_labels['receipts'] %></h1>
+        <img src="<%= asset_path 'rupee-black.svg' %>" alt="user icon"> <h1 class="title"><%= @receipts.total_entries %><%= t('mongoid.models.receipt', count: @receipts.total_entries) %></h1>
       </div>
     </div>
     <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
       <div class="table-btn-set float-right pb-3">
-      <a class="db-small-btn light-blue bg-white fn-400 dropdown-toggle btn" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
+      <a class="db-small-btn light-blue bg-white fn-400 dropdown-toggle btn" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= t('controller.receipts.exports.link_name', name: nil)%></a>
       <div class="dropdown-menu dropdown-menu-right">
-        <%= link_to "All #{t('global.receipts')}", export_admin_receipts_path, class: 'dropdown-item' %>
-        <%= link_to "Active filter #{t('global.receipts')}", export_admin_receipts_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
+        <%= link_to t('controller.receipts.exports.link_name', name: t('global.all')), export_admin_receipts_path, class: 'dropdown-item' %>
+        <%= link_to t('controller.receipts.exports.link_name', name: t('global.active_filter')), export_admin_receipts_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
       </div>
       <button class="db-filter-btn white fn-500" type="button"><img src="<%= asset_path 'filter-light-blue.svg' %>" alt="filter icon"></button>
       </div>

@@ -1,5 +1,7 @@
 <% if booking_detail.booking_detail_scheme %>
   <%= booking_detail.cost_sheet_template.parsed_content(booking_detail) %>
 <% else %>
-  <p class='text-left'> Scheme for this booking is rejected. Please contact administrator. </p>
+  <p class='text-left'>
+    <%= t('booking_detail_schemes.rejected_scheme') %>
+  </p>
 <% end %>

@@ -1,16 +1,16 @@
 <% if current_client.enable_actual_inventory?(current_user) %>
-  <div class="card box-card mb-3">
+  <div class="card box-card mb-3 border-0">
     <a data-toggle="collapse" href="#dashboard_project_units" role="button" aria-expanded="false" aria-controls="dashboard_project_units" class='font-weight-bold text-decoration-none'>
-      <div class="card-header box-header bg-gradient br-rd-tr-4card-header">
-        <h2>
-          <%= image_tag "building-white.svg", alt: "Units" %>
-          <%= t('inventory.link_name') %>
+      <div class="card-header box-header border-0">
+        <h2 class="text-dark">
+          <%= image_tag "building-black.svg", alt: "Units" %>
+          <%= ProjectUnit.model_name.human(count: 3) %>
         </h2>
         <%= link_to 'View All', admin_project_units_path, class: 'view-all-btn' %>
       </div>
     </a>
-    <div class="card-body collapse box-content br-rd-bl-4 bg-white" id="dashboard_project_units">
-      <div class="pd-box">
+    <div class="card-body collapse box-content br-rd-bl-4 bg-white p-0" id="dashboard_project_units">
+      <div class="mt-2">
         <%= form_tag dashboard_path, method: "get", id: "dashboard-project_units-fltrs" do %>
           <div class="row">
             <div class="col-md-11">
@@ -54,7 +54,7 @@
                 <td><%= d[:bedrooms] %></td>
                 <% end %>
                 <% if (params[:unit_fltrs] && params[:unit_fltrs][:group_by] && params[:unit_fltrs][:group_by].include?("status")) || params[:unit_fltrs].nil? %>
-                <td><%= t("project_units.status.#{d[:status]}") %></td>
+                <td><%= t("mongoid.attributes.project_unit/status.#{d[:status]}") %></td>
                 <% end %>
                 <td class="text-right"><%= d[:count] %></td>
                 <td class="text-right"><%= number_to_indian_currency(d[:total_agreement_price]) %></td>

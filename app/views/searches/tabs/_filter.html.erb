@@ -1,18 +1,18 @@
 <div class="col-lg-3 col-xs-12 col-sm-12 col-md-6">
   <div class="active step-result">
     <i class="icon icon-2"></i>
-    <span>Choose Tower</span>
+    <span><%= t('controller.searches.filter.header')%></span>
     <br/>
-    <p>Choose towers that suit your requirements</p>
+    <p><%= t('controller.searches.filter.hint')%></p>
     <% if @search.previous_step.present? %>
-        <%= form_for [:user, @search], html: {class: 'validate-form'} do |f| %>
-          <div class="form-group">
-            <%= f.hidden_field :step, value: "filter" %>
-          </div>
-          <div class="form-group">
-            <%= f.submit "Change", class: "small position-absolute step-change-btn" %>
-          </div>
-        <% end %>
+      <%= form_for [:user, @search], html: {class: 'validate-form'} do |f| %>
+        <div class="form-group">
+          <%= f.hidden_field :step, value: "filter" %>
+        </div>
+        <div class="form-group">
+          <%= f.submit "Change", class: "small position-absolute step-change-btn" %>
+        </div>
+      <% end %>
     <% end %>
   </div>
 </div>

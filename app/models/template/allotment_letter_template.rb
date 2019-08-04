@@ -32,7 +32,7 @@ class Template::AllotmentLetterTemplate < Template
             <div class="form-group">
               <label>Status</label>
               <div>
-                <%= I18n.t("booking_details.status.#{self.status}") %>
+                <%= BookingDetail.human_attribute_name("status.#{self.status}") %>
               </div>
             </div>
           </div>

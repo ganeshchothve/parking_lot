@@ -3,6 +3,8 @@ class Email
   include Mongoid::Timestamps
   extend FilterByCriteria
 
+  STATUS = %w(draft scheduled queued sent delivered read unread clicked bounced dropped spam complained unsubscribed untracked)
+
   # Scopes
   scope :filter_by_to, ->(email) { where(to: email) }
   scope :filter_by_cc, ->(email) { where(cc: email) }
@@ -26,7 +28,7 @@ class Email
   validates :subject, presence: true, if: Proc.new{ |model| model.email_template_id.blank? }
   validates :recipient_ids, :triggered_by_id, presence: true
   validate :body_or_text_only_body_present?
-  validates_inclusion_of :status, in: Proc.new {  self.allowed_statuses.collect{ |hash| hash[:id] } }
+  validates_inclusion_of :status, in: STATUS
 
   enable_audit reference_ids_without_associations: [{name_of_key: 'email_template_id', method: 'email_template', klass: 'Template::EmailTemplate'}]
 
@@ -42,29 +44,6 @@ class Email
   default_scope -> {desc(:created_at)}
 
   # Methods
-
-  # returns array having statuses, which are allowed on models
-  # allowed statuses are used in select2 for populating data on UI side. they also help in validations
-  #
-  # @return [Array] of hashes
-  def self.allowed_statuses
-    [
-      {id: "draft",text: "Draft", default: true},
-      {id: "scheduled", text: "Scheduled"},
-      {id: "queued", text: "Queued"},
-      {id: "sent", text: "Sent"},
-      {id: "delivered", text: "Delivered"},
-      {id: "read", text: "Read"},
-      {id: "unread", text: "Unread"},
-      {id: "clicked", text: "Clicked"},
-      {id: "bounced", text: "Bounced"},
-      {id: "dropped", text: "Dropped"},
-      {id: "spam", text: "Spam"},
-      {id: "complained", text: "Complained"},
-      {id: "unsubscribed",text: "Unsubscribed"},
-      {id: "untracked",text: "Untracked"}
-    ]
-  end
 
   # returns the boolean status of email entity, whether it is in draft / untracked stage
   #

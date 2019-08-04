@@ -3,7 +3,7 @@
 %>
 
 <div class="alert alert-primary">
-  The <%= t('mongoid.attributes.receipt.receipt_id') %> will be generated only after successful processing of payment.
+  <%= t('controller.booking_details.receipts.form.disclaimer', field: t('mongoid.attributes.receipt.receipt_id') )%>
 </div>
 <div class="form-group">
   <%= f.label :payment_mode, class: 'label-required' %>
@@ -69,16 +69,17 @@
     <% end %>
   </div>
 <% end %>
- <% if policy([:admin, @receipt]).editable_field?("payment_type") %>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <%= f.label :payment_type, class: 'label-required' %>
-                    <%= f.select :payment_type, Receipt::PAYMENT_TYPES.collect{|x| [t('mongoid.attributes.receipt.payment_type_' + x), x]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
-                  </div>
-                </div>
-              </div>
-            <% end %>
+
+<% if policy([:admin, @receipt]).editable_field?("payment_type") %>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <%= f.label :payment_type, class: 'label-required' %>
+        <%= f.select :payment_type, Receipt::PAYMENT_TYPES.collect{ |x| [t("receipts.payment_types.#{x}"), x]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
+      </div>
+    </div>
+  </div>
+<% end %>
 
 <% if policy([:admin, @receipt]).editable_field?("tracking_id") && policy([:admin, @receipt]).editable_field?("processed_on") %>
   <div class="row offline">
@@ -119,16 +120,16 @@
 <% if i_agree_required %>
   <div class="form-group">
     <div class="card p-1 small" style="height: 100px; overflow: auto;">
-      <div class="font-weight-bold mb-2">Disclaimer:</div>
+      <div class="font-weight-bold mb-2"> <%= t('global.disclaimer')%>:</div>
       <%= current_client.disclaimer %>
     </div>
     <div class="form-check mt-1">
       <%= check_box_tag :agree, true, false, class: "form-check-input" %>
-      <%= label_tag :agree, (current_user == @receipt.user ? "I Agree" : "I Agree on behalf of #{@receipt.user.name}"), class: "form-check-label" %>
+      <%= label_tag :agree, i_agree_label, class: "form-check-label" %>
     </div>
   </div>
 <% end %>
 
 <div class="form-group">
-  <%= f.submit "Save", class: 'btn btn-primary', disabled: i_agree_required %>
+  <%= f.submit class: 'btn btn-primary', disabled: i_agree_required %>
 </div>

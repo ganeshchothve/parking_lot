@@ -9,12 +9,12 @@
             <h1 class="wc-title white text-center"><%= t('dashboard.welcome.heading') + current_user.name %></h1>
             <p class="white text-center fn-300 fn-18"><%= t('dashboard.welcome.sub_heading') %></p>
             <ul class="step-booking">
-              <li class="light-blue"><span><%= image_tag(asset_path 'file-invoice-lightblue.svg', alt: "Add customer") %></span><%= t('dashboard.titles.add_customer') %></li>
-              <li class="light-blue"><span><img src="<%= asset_path 'rupee-lightblue.svg' %>"></span><%= t('dashboard.titles.make_payment') %></li>
-              <li class="light-blue"><span><img src="<%= asset_path 'building-lightblue.svg' %>"></span><%= t('dashboard.titles.booking') %></li>
+              <li class="light-blue"><span><%= image_tag(asset_path 'file-invoice-lightblue.svg', alt: "Add customer") %></span><%= t('controller.users.new.link_name', name: User.model_name.human) %></li>
+              <li class="light-blue"><span><img src="<%= asset_path 'rupee-lightblue.svg' %>"></span><%= t('controller.receipts.new.link_name') %></li>
+              <li class="light-blue"><span><img src="<%= asset_path 'building-lightblue.svg' %>"></span><%= BookingDetail.model_name.human %></li>
             </ul>
             <!-- <p class="white text-center fn-14 fn-500">Fill your KYC form for proceed further</p> -->
-            <%= link_to t('dashboard.titles.add_customer'), new_admin_user_path(role: 'user'), class: 'large-btn black-bg display-block fn-500 center-block show-kyc modal-remote-form-link' %>
+            <%= link_to t('controller.users.new.link_name', name: t('mongoid.models.user/role.user')), new_admin_user_path(role: 'user'), class: 'large-btn black-bg display-block fn-500 center-block show-kyc modal-remote-form-link' %>
           </div>
         </div>
       </div>
@@ -29,7 +29,7 @@
       <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 my-4 no-pd">
           <div class="box-card">
             <div class="box-header bg-gradient-cd br-rd-tr-4">
-              <h2><img src="<%= asset_path 'building-white.svg' %>" alt="Projects"><%= t('dashboard.titles.projects') %></h2>
+              <h2><img src="<%= asset_path 'building-white.svg' %>" alt="Projects"><%= Project.model_name.human %></h2>
             </div>
             <div class="project-slider1">
               <div>
@@ -38,8 +38,8 @@
                   <p class="sort-desc col-lg-6 col-xs-12 col-md-6 col-sm-12 offset-md-3 offset-lg-3"><%= t('dashboard.projects.sub_heading') %></p>
                   <ul class="prjt-info br-rd-4">
                     <li><span><%= t('dasboard.titles.available_inventory') %></span><p><%= DashboardDataProvider.available_inventory %></p></li>
-                    <li><span><%= t('dashboard.titles.starting_price') %></span><p><%= DashboardDataProvider.minimum_agreement_price %></p></li>
-                    <li><span><%= t('dashboard.titles.configurations') %></span><p><%= DashboardDataProvider.configurations.to_sentence %></p></li>
+                    <li><span><%= t('mongoid.attributes.search.starting_price') %></span><p><%= DashboardDataProvider.minimum_agreement_price %></p></li>
+                    <li><span><%= t('mongoid.attributes.project_unit.configuration') %></span><p><%= DashboardDataProvider.configurations.to_sentence %></p></li>
                   </ul>
                   <ul class="prjt-link">
                     <li><%= link_to t('dashboard.titles.download_brochure'), download_brochure_path, target: "_blank", class: 'text-uppercase' %></li>

@@ -1,9 +1,11 @@
-<%= form_for @account, url: url, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['accounts'], "data-type": "json"} do |f| %>
+<%= form_for @account, url: url, remote: true, html: { class: 'modal-remote-form validate-form', data: { 'resource-type': Account.model_name.human(count: 1), type: :json } } do |f| %>
   <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title"><%= @account.new_record? ? "New" : "Edit" %> <%= "#{global_labels['account']}" %></h5>
+          <h5 class="modal-title">
+            <%= t("controller.accounts.#{action_name}.header") %>
+          </h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
           </button>
@@ -42,12 +44,12 @@
             </div>
           <% end %>
           <div class="form-group">
-            <%= f.label :default, class: 'control-label' %>
+            <%= f.label :by_default, class: 'control-label' %>
             <%= f.check_box :by_default, disabled: (!(policy([:admin, @account]).editable_field?("by_default"))) %>
           </div>
         </div>
         <div class="modal-footer">
-          <%= f.submit "Save", class: "btn btn-primary" %>
+          <%= f.submit class: "btn btn-primary" %>
         </div>
       </div>
     </div>

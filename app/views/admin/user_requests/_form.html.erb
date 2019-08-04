@@ -45,13 +45,13 @@
             <%= f.label :status %><br/>
             <% if policy([current_user_role_group, (@user_request)]).editable_field?("event") %>
               <% if @user_request.new_record? %>
-               <%= t("user_requests.status.#{f.object.status}") %>
+               <%= t("mongoid.attributes.user_request/status.#{f.object.status}") %>
                <%= f.hidden_field :event, value: @user_request.status %>
               <% else %>
                 <%= f.select :event, @user_request.aasm.events.reject { |event| event.name == :pending }.map(&:name), {prompt: true}, class: 'selectize', required: "required" %>
               <% end %>
             <% else %>
-              <h6><%= t("user_requests.status.#{f.object.status}") %></h6>
+              <h6><%= t("mongoid.attributes.user_request/status.#{f.object.status}") %></h6>
             <% end %>
           </div>
           <% if @user_request.status == "failed" %>

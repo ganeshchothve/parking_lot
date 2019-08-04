@@ -35,7 +35,7 @@
           <div class="form-group">
             <label>Status</label>
             <div>
-              <%= t("booking_details.status.#{booking_detail.status}") %>
+              <%= BookingDetail.human_attribute_name("status.#{booking_detail.status}") %>
             </div>
           </div>
         </div>

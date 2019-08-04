@@ -1,15 +1,14 @@
 <table class='table my-customer-table responsive-tbl'>
   <thead class="th-default">
-    <% labels = t('mongoid.attributes.scheme').with_indifferent_access %>
-      <thead>
-        <tr class="bg-gradient-cd white">
-          <th>Subject Class</th>
+    <thead>
+      <tr class="bg-gradient-cd white">
+        <th>Subject Class</th>
         <th>Changed By</th>
         <th>Action Type</th>
         <!-- <th>Executed Time</th> -->
         <th>Actions</th>
-        </tr>
-      </thead>
+      </tr>
+    </thead>
   </thead>
   <tbody>
     <% @audits.each do |audit| %>

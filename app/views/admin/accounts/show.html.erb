@@ -1,26 +1,26 @@
 <div class="container form-group mt-3 text-right">
   <div class="row">
     <div class="col-12">
-      <button onclick="window.print();" class="btn btn-primary d-print-none">Print</button>
+      <button onclick="window.print();" class="btn btn-primary d-print-none"><%= t('controller.accounts.print.link_name')%></button>
     </div>
   </div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="card-header"> Account details : <%= @account.name %></div>
+    <div class="card-header"> <%= t('mongoid.attributes.accounts', count: 1 ) %> : <%= @account.name %></div>
     <div class= "card-body">
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label>Account Number</label>
+            <label> <%= t('mongoid.attributes.account.account_number') %></label>
             <div> <%= @account.account_number %> </div>
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label> Default Account </label>
+            <label> <%= t('mongoid.attributes.account.by_default') %> </label>
             <div>
-              <%= @account.by_default ? 'Yes' : 'No' %>
+              <%= t("mongoid.attributes.account/by_default.#{@account.by_default || false }") %>
             </div>
           </div>
         </div>
@@ -30,13 +30,13 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label>Key</label>
+              <label><%= t('mongoid.attributes.account.key') %></label>
               <div> <%= @account.key %> </div>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label>Secret</label>
+              <label><%= t('mongoid.attributes.account.secret') %></label>
               <div> <%= @account.secret %> </div>
             </div>
           </div>
@@ -45,19 +45,19 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label>Merchant Id</label>
+              <label><%= t('mongoid.attributes.account.merchant_id') %></label>
               <div> <%= @account.merchant_id %> </div>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label>Access Code</label>
+              <label><%= t('mongoid.attributes.account.access_code') %></label>
               <div> <%= @account.access_code %> </div>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label>Working Key</label>
+              <label><%= t('mongoid.attributes.account.working_key') %></label>
               <div> <%= @account.working_key %> </div>
             </div>
           </div>
@@ -67,9 +67,10 @@
   </div>
 
   <div class="card mt-2">
-    <div class="card-header"> Payments </div>
+    <% receipts = @account.receipts.paginate(page: params[:page] || 1, per_page: params[:per_page])%>
+    <div class="card-header"> <%= t('mongoid.attributes.receipts', count: receipts.total_entries) %> </div>
     <div class="card-body">
-      <%= render 'receipts/index', {receipts: @account.receipts.paginate(page: params[:page] || 1, per_page: params[:per_page])} %>
+      <%= render 'receipts/index', { receipts: receipts } %>
     </div>
   </div>
 </div>

@@ -1,15 +1,14 @@
 <table class='table my-customer-table responsive-tbl'>
   <thead class="th-default">
-    <% labels = t('mongoid.attributes.scheme').with_indifferent_access %>
       <thead>
         <tr class="bg-gradient-cd white">
-        <% unless current_user.buyer? %>
-          <th>To</th>
-        <% end %>
-        <td> Content </td>
-        <th> Status</th>
-        <th> Sent On</th>
-        <th class="text-right">Actions</th>
+          <% unless current_user.buyer? %>
+            <th><%= t('mongoid.attributes.smses.to') %></th>
+          <% end %>
+          <td> <%= t('mongoid.attributes.smses.content') %> </td>
+          <th> <%= t('mongoid.attributes.smses.status') %></th>
+          <th> <%= t('mongoid.attributes.smses.sent_on') %></th>
+          <th class="text-right"><%= t('global.action', count: 3) %></th>
         </tr>
       </thead>
   </thead>
@@ -25,7 +24,7 @@
           <% end %>
           <td><%= truncate(sms.body, length: 30, separator: '') %></td>
           <td>
-            <%= t("smses.status.#{sms.status}") %>
+            <%= t("mongoid.attributes.sms/status.#{sms.status}") %>
           </td>
           <td>
             <%= sms.sent_on.try(:strftime, '%b %e, %Y, %l:%M %p') || '-' %>

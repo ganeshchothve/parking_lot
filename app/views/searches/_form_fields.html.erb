@@ -1,6 +1,6 @@
 <%= f.hidden_field :user_id %>
 <div class="form-group">
-  <%= f.label :BHK %>
+  <%= f.label :bedrooms %>
   <%= f.select :bedrooms, searches_bedrooms_names(data), {prompt: true}, class: 'selectize', disabled: !policy(@search).editable_field?("bedrooms") %>
 </div>
 <div class="form-group">

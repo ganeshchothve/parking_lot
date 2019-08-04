@@ -1,12 +1,11 @@
 <table class='table my-customer-table responsive-tbl'>
   <thead class="th-default">
-    <% labels = t('mongoid.attributes.project_unit').with_indifferent_access %>
     <tr class="bg-gradient-cd white">
-      <th><%= labels[:name] %></th>
-      <th><%= labels[:bedrooms] %> / <%= labels[:bathrooms] %></th>
-      <th><%= labels[:status] %></th>
-      <th><%= labels[:agreement_price] %></th>
-      <th class="text-right">Actions</th>
+      <th><%= t('mongoid.attributes.booking_detail.name') %></th>
+      <th><%= t('mongoid.attributes.booking_detail.bedrooms') %> / <%= t('mongoid.attributes.booking_detail.bathrooms') %></th>
+      <th><%= t('mongoid.attributes.booking_detail.status') %></th>
+      <th><%= t('mongoid.attributes.booking_detail.aggrement_price') %></th>
+      <th class="text-right"> <%= t('global.action', count: 3) %></th>
     </tr>
   </thead>
   <tbody>
@@ -14,17 +13,39 @@
       <tr>
         <td>
           <%= booking_detail.name %>
-          <div class="small">Project: <%= booking_detail.project_name %></div>
-          <div class="small">Tower: <%= booking_detail.project_tower_name %></div>
+          <div class="small">
+            <%= Project.model_name.human %> :
+            <%= booking_detail.project_name %>
+          </div>
+          <div class="small">
+            <%= ProjectTower.model_name.human %> :
+            <%= booking_detail.project_tower_name %>
+          </div>
         </td>
+
         <td><%= booking_detail.bedrooms %> / <%= booking_detail.bathrooms %></td>
-        <td><%= t("booking_details.status.#{booking_detail.status}") %></td>
+
+        <td><%= BookingDetail.human_attribute_name("status.#{booking_detail.status}") %></td>
+
         <td>
           <%= number_to_indian_currency(booking_detail.calculate_agreement_price.round) %>
-          <div class="small"><%= labels[:all_inclusive_price] %>: <%= number_to_indian_currency(booking_detail.calculate_all_inclusive_price.round) %></div>
-          <div class="small">Paid Amt.: <%= number_to_indian_currency(booking_detail.total_amount_paid)  %></div>
-          <div class="small">Booking Amt. Pending: <%= number_to_indian_currency(booking_detail.pending_balance.to_i) %></div>
+          <div class="small">
+            <%= t('mongoid.attributes.booking_detail.all_inclusive_price') %> :
+            <%= number_to_indian_currency(booking_detail.calculate_all_inclusive_price.round) %>
+          </div>
+
+          <div class="small">
+            <%= t('mongoid.attributes.booking_detail.paid_amount') %> :
+            <%= number_to_indian_currency(booking_detail.total_amount_paid) %>
+          </div>
+
+          <div class="small">
+            <%= t('mongoid.attributes.booking_detail.booking_pending_amount') %> :
+            <%= number_to_indian_currency(booking_detail.pending_balance.to_i) %>
+          </div>
+
         </td>
+
         <td>
           <div class="dropdown show text-right">
             <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>

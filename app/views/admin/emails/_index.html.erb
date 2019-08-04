@@ -1,17 +1,16 @@
 <table class='table my-customer-table responsive-tbl'>
   <thead class="th-default">
-    <% labels = t('mongoid.attributes.scheme').with_indifferent_access %>
-      <thead>
-        <tr class="bg-gradient-cd white">
-          <% unless current_user.buyer? %>
-          <th>To</th>
+    <thead>
+      <tr class="bg-gradient-cd white">
+        <% unless current_user.buyer? %>
+          <th><%= t('mongoid.attributes.email.to') %></th>
         <% end %>
-        <th>Subject</th>
-        <th>Status</th>
-        <th>Sent On</th>
-        <th class="text-right">Actions</th>
-        </tr>
-      </thead>
+        <th><%= t('mongoid.attributes.email.subject') %></th>
+        <th><%= t('mongoid.attributes.email.status') %></th>
+        <th><%= t('mongoid.attributes.email.sent_on') %></th>
+        <th class="text-right"><%= t('global.action', count: 3) %></th>
+      </tr>
+    </thead>
   </thead>
   <tbody>
     <% @emails.each do |email| %>
@@ -36,8 +35,7 @@
           <div class="dropdown show text-right">
           <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-              <%= link_to 'Show', [ current_user_role_group, email], class: 'dropdown-item', target: :_blank %>
-
+              <%= link_to t('controller.email.show.link_name'), [ current_user_role_group, email], class: 'dropdown-item', target: :_blank %>
            </div>
         </div>
         </td>

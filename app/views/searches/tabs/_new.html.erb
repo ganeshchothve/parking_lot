@@ -1,8 +1,8 @@
 <div class="col-lg-3 col-xs-12 col-sm-12 col-md-6">
   <div class="active step-result">
     <i class="icon icon-1"></i>
-    <span>Search Result</span>
-    <p>Property you are looking for</p>
-    <%= link_to "Change", edit_search_path, class: "modal-remote-form-link small position-absolute step-change-btn" %>
+    <span><%= t('controller.searches.new.header')%></span>
+    <p><%= t('controller.searches.new.hint')%></p>
+    <%= link_to t('global.change'), edit_search_path, class: "modal-remote-form-link small position-absolute step-change-btn" %>
   </div>
 </div>

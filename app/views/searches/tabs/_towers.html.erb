@@ -1,34 +1,22 @@
-<% if search.crossed_step('filter') %>
-  <div class="col-lg-3 col-xs-12 col-sm-12 col-md-6">
-    <div class="active step-result">
-      <i class="icon icon-3"></i>
-      <span>Choose Apartment</span>
+<div class="col-lg-3 col-xs-12 col-sm-12 col-md-6">
+  <div class="step-result <%= search.crossed_step('filter') ? 'active' : '' %>">
+    <i class="icon icon-3"></i>
+    <span><%= t('controller.searches.towers.header') %></span>
+    <br/>
+    <% if search.crossed_step('filter') %>
+      <p><%= search.project_unit.try(:name) %></p><br/>
       <br/>
-      <% if search.crossed_step('towers') %>
-        <p><%= search.project_unit.name %></p><br/>
-        <br/>
-        <% if @search.previous_step.present? %>
-          <%= form_for [:user, @search], html: {class: 'validate-form'} do |f| %>
-            <div class="form-group">
-              <%= f.hidden_field :step, value: "towers" %>
-            </div>
-            <div class="form-group">
-              <%= f.submit "Change", class: "small position-absolute step-change-btn" %>
-            </div>
-          <% end %>
+      <% if @search.previous_step.present? %>
+        <%= form_for [:user, @search], html: {class: 'validate-form'} do |f| %>
+          <div class="form-group">
+            <%= f.hidden_field :step, value: "towers" %>
+          </div>
+          <div class="form-group">
+            <%= f.submit "Change", class: "small position-absolute step-change-btn" %>
+          </div>
         <% end %>
-      <% else %>
-        <p>Choose apartment that suit your requirements</p>
       <% end %>
-    </div>
+    <% end %>
+    <p><%= t('controller.searches.towers.hint')%></p>
   </div>
-<% else %>
-  <div class="col-lg-3 col-xs-12 col-sm-12 col-md-6">
-    <div class="step-result">
-      <i class="icon icon-3"></i>
-      <span>Choose Apartment</span>
-      <br/>
-      <p>Choose apartment that suit your  requirements</p>
-    </div>
-  </div>
-<% end %>
+</div>

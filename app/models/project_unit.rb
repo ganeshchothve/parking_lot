@@ -100,6 +100,9 @@ class ProjectUnit
     SelldoLeadUpdater.perform_async(user_id.to_s, 'hold_payment_dropoff')
   end
 
+  STATUS.each do |_status|
+    define_method("#{_status}?"){ _status == self.status }
+  end
   #
   # This function return true or false when unit is ready for booking.
   #
@@ -204,14 +207,10 @@ class ProjectUnit
   def self.available_statuses
     out = [
       { id: 'available', text: 'Available' },
-      { id: 'under_negotiation', text: 'Under negotiation' },
-      { id: 'negotiation_failed', text: 'Negotiation failed' },
       { id: 'not_available', text: 'Not Available' },
       { id: 'error', text: 'Error' },
       { id: 'hold', text: 'Hold' },
-      { id: 'blocked', text: 'Blocked' },
-      { id: 'booked_tentative', text: 'Tentative Booked' },
-      { id: 'booked_confirmed', text: 'Confirmed Booked' }
+      { id: 'blocked', text: 'Blocked' }
     ]
     if current_client.enable_company_users?
       out += [

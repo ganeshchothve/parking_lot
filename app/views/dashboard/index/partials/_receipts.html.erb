@@ -1,67 +1,67 @@
 <% receipts = DashboardDataProvider.receipts_dashboard(current_user, params[:receipt_fltrs]) %>
-<div class="card box-card mb-3">
+<div class="card box-card mb-3 border-0">
   <a data-toggle="collapse" href="#dashboard_receipts" role="button" aria-expanded="false" aria-controls="dashboard_receipts" class='font-weight-bold text-decoration-none'>
-    <div class="card-header box-header bg-gradient br-rd-tr-4card-header">
-      <h2>
-        <%= image_tag "rupee-white.svg", alt: 'Receipts' %>
-        <%= global_labels[:receipts] %>
+    <div class="card-header box-header border-0">
+      <h2 class="text-dark">
+        <%= image_tag "rupee-black.svg", alt: 'Receipts' %>
+        <%= Receipt.model_name.human(count: 3) %>
       </h2>
       <%= link_to 'View All', admin_receipts_path, class: 'view-all-btn' %>
     </div>
   </a>
-  <div class="card-body collapse box-content br-rd-bl-4 bg-white" id="dashboard_receipts">
-    <div class="pd-box">
+  <div class="card-body collapse box-content br-rd-bl-4 bg-white p-0" id="dashboard_receipts">
+    <div class="mt-2">
       <%= form_tag dashboard_path, method: "get", id: "dashboard-receipts-fltrs" do %>
-        <div class="row">
-          <div class="col-md-11">
-            <div class="form-group">
-              <%= select_tag "receipt_fltrs[group_by]", options_for_select(DashboardDataProvider.receipts_available_group_by.collect{|x| [x[:text], x[:id]]}, (params[:receipt_fltrs].present? && params[:receipt_fltrs][:group_by].present? ? params[:receipt_fltrs][:group_by] : [])), {class: "selectize", prompt: "Select", multiple: true} %>
-            </div>
-          </div>
-          <div class="col-md-1">
-            <div class="form-group">
-              <%= submit_tag :Apply, class: "btn btn-primary float-md-right" %>
-            </div>
+      <div class="row">
+        <div class="col-md-11">
+          <div class="form-group">
+            <%= select_tag "receipt_fltrs[group_by]", options_for_select(DashboardDataProvider.receipts_available_group_by.collect{|x| [x[:text], x[:id]]}, (params[:receipt_fltrs].present? && params[:receipt_fltrs][:group_by].present? ? params[:receipt_fltrs][:group_by] : [])), {class: "selectize", prompt: "Select", multiple: true} %>
           </div>
         </div>
-      <% end %>
-      <% if receipts.present? %>
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr class="bg-gradient-cd white">
-                <% if (params[:receipt_fltrs] && params[:receipt_fltrs][:group_by] && params[:receipt_fltrs][:group_by].include?("status")) || params[:receipt_fltrs].nil? %>
-                <th>Status</th>
-                <% end %>
-                <% if (params[:receipt_fltrs] && params[:receipt_fltrs][:group_by] && params[:receipt_fltrs][:group_by].include?("payment_mode")) || params[:receipt_fltrs].nil? %>
-                <th>Payment Mode</th>
-                <% end %>
-                <th class="text-right">Count</th>
-                <th class="text-right">Total Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% receipts.each do |d| %>
-              <tr>
-                <% if (params.dig(:receipt_fltrs, :group_by) && params.dig(:receipt_fltrs, :group_by).include?("status")) || params[:receipt_fltrs].nil? %>
-                  <td><%= t("receipts.status.#{d[:status]}") %></td>
-                <% end %>
-                <% if (params[:receipt_fltrs] && params[:receipt_fltrs][:group_by] && params[:receipt_fltrs][:group_by].include?("payment_mode")) || params[:receipt_fltrs].nil? %>
-                <td><%= t("receipts.payment_mode.#{d[:payment_mode]}") %></td>
-                <% end %>
-                <td class="text-right">
-                  <%= link_to d[:count], [current_user_role_group, Receipt, { fltrs: { status: d[:status], payment_mode: d[:payment_mode] } }], target: "_blank", title: "View #{d[:count]} #{ t("receipts.status.#{d[:status]}") } #{t("receipts.payment_mode.#{d[:payment_mode]}")} receipts." %>
-                </td>
-                <td class="text-right"><%= number_to_indian_currency(d[:total_amount]) %></td>
-              </tr>
-              <% end %>
-            </tbody>
-          </table>
+        <div class="col-md-1">
+          <div class="form-group">
+            <%= submit_tag :Apply, class: "btn btn-primary float-md-right" %>
+          </div>
         </div>
-      <% else %>
-        No <%= global_labels[:receipts] %> yet.
+      </div>
       <% end %>
     </div>
+    <% if receipts.present? %>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr class="bg-gradient-cd white">
+              <% if (params[:receipt_fltrs] && params[:receipt_fltrs][:group_by] && params[:receipt_fltrs][:group_by].include?("status")) || params[:receipt_fltrs].nil? %>
+              <th>Status</th>
+              <% end %>
+              <% if (params[:receipt_fltrs] && params[:receipt_fltrs][:group_by] && params[:receipt_fltrs][:group_by].include?("payment_mode")) || params[:receipt_fltrs].nil? %>
+              <th>Payment Mode</th>
+              <% end %>
+              <th class="text-right">Count</th>
+              <th class="text-right">Total Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% receipts.each do |d| %>
+            <tr>
+              <% if (params.dig(:receipt_fltrs, :group_by) && params.dig(:receipt_fltrs, :group_by).include?("status")) || params[:receipt_fltrs].nil? %>
+                <td><%= t("mongoid.attributes.receipt/status.#{d[:status]}") %></td>
+              <% end %>
+              <% if (params[:receipt_fltrs] && params[:receipt_fltrs][:group_by] && params[:receipt_fltrs][:group_by].include?("payment_mode")) || params[:receipt_fltrs].nil? %>
+              <td><%= t("mongoid.attributes.receipt/payment_mode.#{d[:payment_mode]}") %></td>
+              <% end %>
+              <td class="text-right">
+                <%= link_to d[:count], [current_user_role_group, Receipt, { fltrs: { status: d[:status], payment_mode: d[:payment_mode] } }], target: "_blank", title: "View #{d[:count]} #{ t("mongoid.attributes.receipt/status.#{d[:status]}") } #{t("receipts.payment_mode.#{d[:payment_mode]}")} receipts." %>
+              </td>
+              <td class="text-right"><%= number_to_indian_currency(d[:total_amount]) %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      No <%= global_labels[:receipts] %> yet.
+    <% end %>
   </div>
 </div>
 <%= javascript_tag do %>

@@ -9,7 +9,7 @@
     <div class="filter-content">
       <div class="row">
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-          <%= label_tag "fltrs", labels[:name_email_phone], class: "control-label" %>
+          <%= label_tag "fltrs", t('mongoid.attributes.user_request.name_email_phone'), class: "control-label" %>
           <%
             if params[:fltrs].present? && params[:fltrs][:user].present?
               user = User.find(params[:fltrs][:user])
@@ -19,13 +19,13 @@
         </div>
         <% if @associated_class == UserRequest %>
           <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-            <%= label_tag "fltrs", labels[:_type], class: "control-label" %>
+            <%= label_tag "fltrs", t('mongoid.attributes.user_request._type'), class: "control-label" %>
             <%= select_tag "fltrs[_type]", options_for_select(::UserRequest.descendants.collect{|x| [x.to_s.split("::").last.gsub("Template", "").titleize, x.to_s]}.sort, (params.dig(:fltrs, :_type) || "")), {prompt: "Select", class: "selectize"} %>
           </div>
         <% end %>
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-          <%= label_tag "fltrs", labels[:status], class: "control-label" %>
-          <%= select_tag "fltrs[status]", options_for_select(UserRequest::STATUS.collect{|urs| [t("user_requests.status.#{urs}"), urs ]}, (params.dig(:fltrs, :status) || "")), {prompt: "Select", class: "selectize"} %>
+          <%= label_tag "fltrs", t('mongoid.attributes.user_request.status'), class: "control-label" %>
+          <%= select_tag "fltrs[status]", options_for_select(UserRequest::STATUS.collect{|urs| [t("mongoid.attributes.user_request/status.#{urs}"), urs ]}, (params.dig(:fltrs, :status) || "")), {prompt: "Select", class: "selectize"} %>
         </div>
       </div>
     </div>

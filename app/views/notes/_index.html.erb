@@ -6,6 +6,6 @@
   </div>
   <div class="mt-3"></div>
   <% if policy([current_user_role_group, Note.new(notable: notable)]).new? %>
-    <%= link_to "Add #{global_labels[:note]}", new_notable_path(notable_type: notable.class.model_name.i18n_key.to_s, notable_id: notable.id), class: 'btn btn-primary modal-remote-form-link' %>
+    <%= link_to t('controller.notes.new.link_name'), new_notable_path(notable_type: notable.class.model_name.i18n_key.to_s, notable_id: notable.id), class: 'btn btn-primary modal-remote-form-link' %>
   <% end %>
 <% end %>

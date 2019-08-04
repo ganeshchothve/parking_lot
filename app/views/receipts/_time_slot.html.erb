@@ -2,16 +2,15 @@
   <div class="col-lg-12 col-sm-12 col-xs-12">
     <table class='table my-customer-table responsive-tbl'>
       <thead class="th-default">
-        <% labels = t('mongoid.attributes.scheme').with_indifferent_access %>
           <thead>
             <tr class="bg-gradient-cd white">
-              <th>Receipt ID</th>
-              <th>Token</th>
-              <th>Date</th>
-              <th>Start Time</th>
-              <th>End Time</th>
+              <th> <%= t('mongoid.attributes.receipt.receipt_id') %></th>
+              <th><%= t('mongoid.attributes.receipt.token') %></th>
+              <th><%= t('mongoid.attributes.receipt.date') %></th>
+              <th><%= t('mongoid.attributes.receipt.start_time') %></th>
+              <th><%= t('mongoid.attributes.receipt.end_time') %></th>
               <% if defined?(with_actions) && with_actions %>
-                <th class="text-right">Actions</th>
+                <th class="text-right"><%= t('global.action', count: 3) %></th>
               <% end %>
             </tr>
           </thead>
@@ -31,7 +30,7 @@
                     <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                       <% if policy([current_user_role_group, receipt]).edit_token_number? %>
-                        <%= link_to 'Edit', edit_token_number_admin_receipt_path(receipt), class: 'modal-remote-form-link dropdown-item' %>
+                        <%= link_to t('controller.receipts.edit_token_number'), edit_token_number_admin_receipt_path(receipt), class: 'modal-remote-form-link dropdown-item' %>
                       <% end %>
                     </div>
                   </div>

@@ -1,17 +1,7 @@
-<% if search.crossed_step('towers') %>
-  <div class="col-lg-3 col-xs-12 col-sm-12 col-md-6">
-    <div class="active step-result">
-      <i class="icon icon-4"></i>
-      <span>Set up your KYC</span>
-      <p>Set up your KYC & hold your  apartments</p>
-    </div>
+<div class="col-lg-3 col-xs-12 col-sm-12 col-md-6">
+  <div class="<%= search.crossed_step('towers') ? 'active' : '' %> step-result">
+    <i class="icon icon-4"></i>
+    <span> <%= t('controller.searches.project_unit.header')%></span>
+    <p><%= t('controller.searches.project_unit.hint')%></p>
   </div>
-<% else %>
-  <div class="col-lg-3 col-xs-12 col-sm-12 col-md-6">
-    <div class="step-result">
-      <i class="icon icon-4"></i>
-      <span>Set up your KYC</span>
-      <p>Set up your KYC & hold your  apartments</p>
-    </div>
-  </div>
-<% end %>
+</div>

@@ -1,11 +1,10 @@
 <table class='table my-customer-table responsive-tbl pt-2'>
   <thead class="th-default">
-    <% labels = t('mongoid.attributes.scheme').with_indifferent_access %>
-      <thead>
-        <tr class="bg-gradient-cd white">
-          <th><%= t('mongoid.attributes.portal_stage_priority.stage_name') %></th>
-        </tr>
-      </thead>
+    <thead>
+      <tr class="bg-gradient-cd white">
+        <th><%= t('mongoid.attributes.portal_stage_priority.stage_name') %></th>
+      </tr>
+    </thead>
   </thead>
   <tbody>
     <% portal_stage_priorities.each_with_index do |portal_stage_priority, i| %>

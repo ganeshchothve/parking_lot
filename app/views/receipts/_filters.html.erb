@@ -1,4 +1,3 @@
-<% labels = t('mongoid.attributes.receipt').with_indifferent_access %>
 <div class="filter-inner">
   <div class="filter-header">
   <span class="title">Filter</span>
@@ -10,48 +9,48 @@
         <div class="row">
           <% if !current_user.buyer? %>
             <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-              <%= label_tag "fltrs", labels[:name_email_phone], class: "control-label" %>
+              <%= label_tag "fltrs", t('mongoid.attributes.receipt.name_email_phone'), class: "control-label" %>
               <% user = params.dig(:fltrs, :user_id).present? ? User.where(_id: params.dig(:fltrs, :user_id)).first : nil %>
               <%= select_tag "fltrs[user_id]", options_for_select( user ? [[ user.ds_name, user.id ]] : []), {class: "selectize-remote", data: {params: {fltrs: {role: User.buyer_roles(current_client)} }, url: admin_users_path }} %>
             </div>
           <% end %>
           <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-            <%= label_tag "fltrs", global_labels[:project_unit], class: "control-label" %>
+            <%= label_tag "fltrs", t('mongoid.attributes.receipt.booking_detail_id'), class: "control-label" %>
             <% booking_detail = params.dig(:fltrs, :booking_detail_id).present? ? BookingDetail.where(_id: params.dig(:fltrs, :booking_detail_id) ).first : nil %>
             <%= select_tag "fltrs[booking_detail_id]", options_for_select( booking_detail ? [[booking_detail.name, booking_detail.id]] : []), {class: "selectize-remote", data: {url: admin_booking_details_path }} %>
           </div>
           <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-            <%= label_tag "fltrs", labels[:receipt_id], class: "control-label" %>
+            <%= label_tag "fltrs", t('mongoid.attributes.receipt.receipt_id'), class: "control-label" %>
             <%= text_field_tag "fltrs[receipt_id]", params.dig(:fltrs, :receipt_id), class: 'form-control' %>
           </div>
 
           <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-            <%= label_tag "fltrs", labels[:token_number], class: "control-label" %>
+            <%= label_tag "fltrs", t('mongoid.attributes.receipt.token_number'), class: "control-label" %>
             <%= text_field_tag "fltrs[token_number]", params.dig(:fltrs, :token_number), class: 'form-control' %>
           </div>
 
           <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-            <%= label_tag "fltrs", labels[:status], class: "control-label" %>
+            <%= label_tag "fltrs", t('mongoid.attributes.receipt.status'), class: "control-label" %>
             <%= select_tag "fltrs[status][]", options_for_select(Receipt.aasm.states.collect(&:name).collect(&:to_s).collect{|x| [I18n.t('receipts.status.'+ x), x]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize", multiple: 'multiple'} %>
           </div>
           <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-            <%= label_tag "fltrs", labels[:payment_mode], class: "control-label" %>
+            <%= label_tag "fltrs", t('mongoid.attributes.receipt.payment_mode'), class: "control-label" %>
             <%= select_tag "fltrs[payment_mode]", options_for_select(Receipt.available_payment_modes.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:payment_mode] : "")), {prompt: "Select", class: "selectize"} %>
           </div>
           <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-            <%= label_tag "fltrs", labels[:issued_date], class: "control-label" %>
+            <%= label_tag "fltrs", t('mongoid.attributes.receipt.issued_date'), class: "control-label" %>
             <%= text_field_tag "fltrs[issued_date]", (params[:fltrs].present? ? params[:fltrs][:issued_date] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"} %>
           </div>
           <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-            <%= label_tag "fltrs", labels[:processed_on], class: "control-label" %>
+            <%= label_tag "fltrs", t('mongoid.attributes.receipt.processed_on'), class: "control-label" %>
             <%= text_field_tag "fltrs[processed_on]", (params[:fltrs].present? ? params[:fltrs][:processed_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"} %>
           </div>
           <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-            <%= label_tag "fltrs", labels[:created_at], class: "control-label" %>
+            <%= label_tag "fltrs", t('mongoid.attributes.receipt.created_at'), class: "control-label" %>
             <%= text_field_tag "fltrs[created_at]", (params[:fltrs].present? ? params[:fltrs][:created_at] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"} %>
           </div>
           <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-            <%= label_tag "fltrs", "Sort By", class: "control-label" %>
+            <%= label_tag "fltrs", t('mongoid.attributes.receipt.sort_by'), class: "control-label" %>
             <%= select_tag "fltrs[sort]", options_for_select(Receipt.available_sort_options.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:sort] : Receipt.available_sort_options.first[:id])), {prompt: "Select", class: "selectize"} %>
           </div>
         </div>

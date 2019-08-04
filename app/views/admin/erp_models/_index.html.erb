@@ -3,11 +3,11 @@
     <% labels = t('mongoid.attributes.scheme').with_indifferent_access %>
       <thead>
         <tr class="bg-gradient-cd white">
-          <th>Resource Class</th>
-          <th>Domain</th>
-          <th>Action</th>
-          <th>State</th>
-          <th class="text-right">Actions</th>
+          <th><%= t('mongoid.attributes.erp_model.resource_class') %></th>
+          <th><%= t('mongoid.attributes.erp_model.domain') %></th>
+          <th><%= <%= t('mongoid.attributes.erp_model.action_name') %> %></th>
+          <th><%= t('mongoid.attributes.erp_model.is_active') %></th>
+          <th class="text-right"><%= t('global.action', count: 3) %></th>
         </tr>
       </thead>
   </thead>
@@ -18,20 +18,20 @@
             <%= t("erp_models.resource_class.#{erp_model.resource_class}") %>
           </td>
           <td>
-            <%= erp_model.domain.present? ? erp_model.domain : "-" %>
+            <%= erp_model.domain || '-' %>
           </td>
           <td>
-            <%= erp_model.action_name.present? ? erp_model.action_name : "-" %>
+            <%= erp_model.action_name || '-' %>
           </td>
           <td>
-            <%= erp_model.is_active ? "active" : "inactive" %>
+            <%= t("mongoid.attributes.erp_model/is_active.#{erp_model.is_active || false}") %>
           </td>
           <td>
             <div class="dropdown show text-right">
               <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <% if policy([:admin, ErpModel.new]).edit? %>
-                  <%= link_to 'Edit', edit_admin_erp_model_path(erp_model), class: 'modal-remote-form-link dropdown-item' %>
+                  <%= link_to t('controller.erp_models.edit.link_name'), edit_admin_erp_model_path(erp_model), class: 'modal-remote-form-link dropdown-item' %>
                 <% end %>
               </div>
             </div>

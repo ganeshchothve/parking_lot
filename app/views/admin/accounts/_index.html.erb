@@ -1,14 +1,12 @@
 <table class='table my-customer-table responsive-tbl'>
   <thead class="th-default">
-    <% labels = t('mongoid.attributes.receipt').with_indifferent_access %>
-    <% user_labels = t('mongoid.attributes.user').with_indifferent_access %>
-      <thead>
-        <tr class="bg-gradient-cd white">
-          <th><%= t('mongoid.attributes.account.names') %></th>
-          <th><%= t('mongoid.attributes.account.account_number') %></th>
-          <th>Actions</th>
-        </tr>
-      </thead>
+    <thead>
+      <tr class="bg-gradient-cd white">
+        <th><%= t('mongoid.attributes.account.names') %></th>
+        <th><%= t('mongoid.attributes.account.account_number') %></th>
+        <th>Actions</th>
+      </tr>
+    </thead>
   </thead>
   <tbody>
     <% accounts.each do |account| %>
@@ -16,7 +14,7 @@
         <td>
           <%= link_to account.name, admin_account_path(account, account_type: account.account_type) %>
           <% if account.by_default %>
-            <span class="badge badge-primary" title="Default Account" data-toggle="popover" data-trigger="focus" data-content="System need only one default account, which contains first payment of each unit.">Default</span>
+            <span class="badge badge-primary" title="Default Account" data-toggle="popover" data-trigger="focus" data-content="<%= t('controller.accounts.by_default.hint')%>"> <%= t('mongoid.attributes.account.by_default') %></span>
           <% end %>
         </td>
         <td>
@@ -26,8 +24,8 @@
           <div class="dropdown show text-center">
             <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-              <%= link_to 'Edit', edit_admin_account_path(account, account_type: account.account_type), class: 'modal-remote-form-link dropdown-item' %>
-              <%= link_to 'Delete', admin_account_path(account, account_type: account.account_type), class: 'dropdown-item', method: :delete %>
+              <%= link_to t('controller.accounts.edit.link_name'), edit_admin_account_path(account, account_type: account.account_type), class: 'modal-remote-form-link dropdown-item' %>
+              <%= link_to t('controller.accounts.destroy.link_name'), admin_account_path(account, account_type: account.account_type), class: 'dropdown-item', method: :delete %>
            </div>
         </div>
         </td>

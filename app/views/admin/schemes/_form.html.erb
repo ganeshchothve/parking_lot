@@ -19,7 +19,7 @@
         </div>
         <div class="form-group">
           <%= f.label :user_role, class: 'control-label' %>
-          <%= f.select :user_role, User.available_roles(current_client).select{|role| User.buyer_roles(current_client).include?(role)}.collect{|x| [ t("users.role.#{x}"), x] }, {prompt: true}, class: 'selectize', disabled: !policy([:admin, @scheme]).editable_field?("user_role") %>
+          <%= f.select :user_role, User.available_roles(current_client).select{|role| User.buyer_roles(current_client).include?(role)}.collect{|x| [ t("mongois.attributes.user/role.#{x}"), x] }, {prompt: true}, class: 'selectize', disabled: !policy([:admin, @scheme]).editable_field?("user_role") %>
         </div>
         <div class="form-group">
           <%= f.label :user, class: 'control-label' %>

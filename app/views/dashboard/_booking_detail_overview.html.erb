@@ -20,7 +20,7 @@
             <li><span>Customer</span><p><%= link_to_if booking_detail.user, booking_detail.user_name, [current_user_role_group, booking_detail.user] %></p></li>
             <li><span>Tower</span><p><%= project_unit.project_tower.name %></p></li>
             <% unless params[:action] == 'quotation' %>
-              <li><span>Tower</span><p><%= t("booking_details.status.#{booking_detail.status}") %></p></li>
+              <li><span>Tower</span><p><%= BookingDetail.human_attribute_name("status.#{booking_detail.status}") %></p></li>
             <% end %>
             <li><span>Beds/Bath</span><p><%= project_unit.unit_configuration.bedrooms %> / <%= project_unit.unit_configuration.bathrooms %></p></li>
             <li><span>Carpet</span><p><%= project_unit.carpet %> <%= current_client.area_unit %></p></li>

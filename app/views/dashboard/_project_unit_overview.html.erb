@@ -4,61 +4,121 @@
       <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
           <div class="box-card">
             <div class="box-header bg-gradient br-rd-tr-4">
-              <h2><img src="<%= asset_path 'home-white.svg' %>" alt="Selected Apartment" class="wd-18">Selected Apartment</h2>
-              <!-- <a href="javascript:;" class="view-all-btn">View All > </a> -->
+              <h2>
+                <%= image_tag 'home-white', alt: 'Unit', class: 'wd-18' %>
+                <%= ProjectUnit.model_name.human %>
+              </h2>
             </div>
             <div class="box-content br-rd-bl-4 bg-white">
               <div class="row pd-box">
                 <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12">
                   <h4 class="booking-title"><%= project_unit.name %></h4>
                 </div>
-                <div class="col-md-9 col-lg-9 col-xs-12 col-sm-12">
+                <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12">
                   <ul class="booking-apart-info">
-                    <li><span>Tower</span><p><%= project_unit.project_tower_name %></p></li>
-                    <li><span>Status</span><p><%= t("project_units.status.#{project_unit.status}") %></p></li>
-                    <li><span>Beds/Baths</span><p><%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></p></li>
-                    <li><span>Carpet</span><p><%= project_unit.carpet %> <%= current_client.area_unit %></p></li>
-                    <li><span>Floor</span><p><%= project_unit.floor %></p></li>
+                    <li>
+                      <span><%= ProjectTower.model_name.human %></span>
+                      <p><%= project_unit.project_tower_name %></p>
+                    </li>
+
+                    <li>
+                      <span> <%= t('mongoid.attributes.project_unit.status') %></span>
+                      <p><%= t("mongoid.attributes.project_unit/status.#{project_unit.status}") %></p>
+                    </li>
+
+                    <li>
+                      <span>
+                        <%= t('mongoid.attributes.project_unit.bedrooms') %>/
+                        <%= t('mongoid.attributes.project_unit.bathrooms') %>
+                      </span>
+                      <p><%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></p>
+                    </li>
+
+                    <li>
+                      <span><%= t('mongoid.attributes.project_unit.carpet') %></span>
+                      <p><%= project_unit.carpet %> <%= current_client.area_unit %></p>
+                    </li>
+
+                    <li>
+                      <span><%= t('mongoid.attributes.project_unit.floor') %></span>
+                      <p><%= project_unit.floor %></p>
+                    </li>
+
                     <% if current_user.role?('superadmin') %>
-                      <li><span>Saleable</span><p><%= project_unit.saleable %></p></li>
+                      <li>
+                        <span><%= t('mongoid.attributes.project_unit.saleable') %></span>
+                        <p><%= project_unit.saleable %></p>
+                      </li>
                     <% end %>
+
                     <% if project_unit.blocked? || (defined?(scheme) && scheme.present?) %>
-                      <li><span>Effective Rate</span><p><%= number_to_indian_currency(project_unit.effective_rate) %></p></li>
-                      <li><span>Base Rate/ Floor Rise</span><p><%= number_to_indian_currency(project_unit.base_rate) %> / <%= project_unit.floor_rise %></p></li>
-                      <li><span>Agreement Price</span><p><%= number_to_indian_currency(project_unit.agreement_price) %></p></li>
-                      <li><span>All Inclusive Price</span><p><%= number_to_indian_currency(project_unit.all_inclusive_price) %></p></li>
+                      <% if current_user.role?('superadmin') %>
+                        <li>
+                          <span><%= t('mongoid.attributes.project_unit.effective_rate') %></span>
+                          <p><%= number_to_indian_currency(project_unit.effective_rate) %></p>
+                        </li>
+
+                        <li>
+                          <span>
+                            <%= t('mongoid.attributes.project_unit.base_rate') %>/
+                            <%= t('mongoid.attributes.project_unit.floor_rise') %>
+                          </span>
+                          <p><%= number_to_indian_currency(project_unit.base_rate) %> / <%= project_unit.floor_rise %></p>
+                        </li>
+                      <% end %>
+
+                      <li>
+                        <span><%= t('mongoid.attributes.project_unit.agreement_price') %></span>
+                        <p><%= number_to_indian_currency(project_unit.agreement_price) %></p>
+                      </li>
+
+                      <li>
+                        <span><%= t('mongoid.attributes.project_unit.all_inclusive_price') %></span>
+                        <p><%= number_to_indian_currency(project_unit.all_inclusive_price) %></p>
+                      </li>
                     <% end %>
-                    <li><span>Phase</span><p><%= project_unit.try(:phase) %></p></li>
-                    <li><span>Comments</span><p><%= project_unit.try(:comments) %></p></li>
+
+                    <li>
+                      <span><%= Phase.model_name.human %></span>
+                      <p><%= project_unit.phase || '-' %></p>
+                    </li>
+
+                    <li>
+                      <span><%= t('mongoid.attributes.project_unit.comments') %></span>
+                      <p><%= project_unit.comments || '-' %></p>
+                    </li>
+
                     <% if current_client.external_api_integration? %>
                       <li>
-                        <span>Last Synced at:</span>
+                        <span><%= t('mongoid.attributes.project_unit.last_sync_at') %></span>
                         <p>
                           <% if project_unit.booking_detail.present? %>
                             <% if project_unit.booking_detail.sync_logs.present? %>
                               <%= project_unit.booking_detail.sync_logs.desc(:created_at)[0].present? ? project_unit.booking_detail.sync_logs.desc(:created_at)[0].updated_at.strftime("%d/%m/%Y %l:%M %p") : "-" %>
                             <% end %>
                           <% else %>
-                             <%= "Not synced" %>
+                             <%= t('global.not_sync_yet') %>
                           <% end %>
                         </p>
                       </li>
-                      <li>
-                      <span>Last Sync Log status:</span>
-                      <p>
-                        <% if project_unit.booking_detail.present? %>
-                          <% if project_unit.booking_detail.sync_logs.present? %>
-                            <%= project_unit.booking_detail.sync_logs.desc(:created_at)[0].status.present? ? project_unit.booking_detail.sync_logs.desc(:created_at)[0].status : "-" %>
-                          <% end %>
-                        <% else %>
-                           <%= "Not synced" %>
-                        <% end %>
-                      </p>
-                    </li>
-                    <% end %>
-                  </ul>
-                </div>
 
+                      <li>
+                        <span> <%= t('mongoid.attributes.project_unit.last_sync_status') %> </span>
+                        <p>
+                          <% if project_unit.booking_detail.present? %>
+                            <% if project_unit.booking_detail.sync_logs.present? %>
+                              <%= project_unit.booking_detail.sync_logs.desc(:created_at)[0].status.present? ? project_unit.booking_detail.sync_logs.desc(:created_at)[0].status : "-" %>
+                            <% end %>
+                          <% else %>
+                             <%= t('global.not_sync_yet') %>
+                          <% end %>
+                        </p>
+                      </li>
+                    <% end %>
+
+                  </ul>
+
+                </div>
               </div>
             </div>
           </div>

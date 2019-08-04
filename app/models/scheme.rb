@@ -61,6 +61,9 @@ class Scheme
 
   default_scope -> {desc(:created_at)}
 
+  delegate :name, to: :created_by, prefix: true, allow_nil: true
+  delegate :name, to: :approved_by, prefix: true, allow_nil: true
+
   def self.available_fields
     ["agreement_price", "all_inclusive_price", "base_rate", "floor_rise"]
   end
