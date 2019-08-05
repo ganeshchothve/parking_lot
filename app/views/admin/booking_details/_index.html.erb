@@ -12,7 +12,7 @@
     <% booking_details.each do |booking_detail| %>
       <tr>
         <td>
-          <%= booking_detail.name %>
+          <%= link_to booking_detail.name, [current_user_role_group, booking_detail] %>
           <div class="small">
             <%= Project.model_name.human %> :
             <%= booking_detail.project_name %>

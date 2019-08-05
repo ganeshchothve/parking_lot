@@ -67,6 +67,9 @@ en:
       booking_detail:
         one: Booking
         other: Bookings
+      booking_detail_scheme:
+        one: Booking Scheme
+        other: Booking Schemes
       client:
         one: Client
         other: Clients
@@ -679,6 +682,10 @@ en:
     channel_partners:
       index:
         link_name: 'Channel Partners'
+      edit:
+        link_name: 'Edit'
+      show:
+        link_name: Show
 
     dashboard:
       index:
@@ -687,9 +694,13 @@ en:
     emails:
       index:
         link_name: 'Email'
+      show:
+        link_name: Detail
     erp_models:
       index:
         link_name: 'Third Party Integration'
+      edit:
+        link_name: Edit
 
     inventory:
       index:
@@ -720,6 +731,8 @@ en:
         link_name: 'Phases'
       new:
         link_name: Add Phase
+      edit:
+        link_name: Edit
     portal_stage_priorities:
       index:
         link_name: 'Portal Stages'
@@ -834,9 +847,17 @@ en:
         link_name: 'KYCs'
       new:
         link_name: 'Add KYC'
+      edit:
+        link_name: Edit
+      show:
+        link_name: Detail
     user_requests:
       index:
         link_name: 'User Requests'
+      edit:
+        link_name: Edit
+      show:
+        link_name: Detail
       swap:
         index:
           link_name: 'Swap Requests'

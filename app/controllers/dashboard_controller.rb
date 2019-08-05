@@ -16,6 +16,7 @@ class DashboardController < ApplicationController
 
   def documents
     @assetable = current_client
+    @assets = current_client.assets.paginate(page: params[:page], per_page: params[:per_page])
   end
 
   def rera

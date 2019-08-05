@@ -1,83 +1,72 @@
-<div class="box-card">
-  <div class="box-header bg-gradient br-rd-tr-4">
-    <div class="row pd-box">
-      <div class="col-11">
-        <h2 class="text-left"><%= t("user_requests.#{params[:request_type]}") %></h2>
-      </div>
-      <div class="col-1">
-        <div class="dropdown show text-center float-right">
-          <a class="btn dropdown-toggle table-dropdown-btn" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-              <%= render 'links', user_request: @user_request, links_name: 'Action' %>
-            </div>
+<section class="bookings my-4 mb-4">
+  <div class="container">
+    <div class="box-card">
+      <div class="box-header bg-gradient br-rd-tr-4 row">
+        <div class="col-11">
+          <h2><%= t("mongoid.models.user_request/#{params[:request_type]}", count: 1) %></h2>
         </div>
-      </div>
-    </div>
-  </div>
-  <div class="box-content br-rd-bl-4 bg-white br-1 py-0">
-    <div class="row pd-box">
-      <div class="col-3">
-        <div class="form-group">
-          <label> Requested For ( <%= t("user_requests.requestable_type.#{user_request.requestable_type}") %> )</label>
-          <div>
-            <%= user_request.requestable.name %>
+        <div class="col-1">
+          <div class="dropdown show text-center float-right">
+            <a class="btn dropdown-toggle table-dropdown-btn" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <%= render 'links', user_request: @user_request, links_name: 'Action' %>
+              </div>
           </div>
         </div>
       </div>
-      <%- if @user_request.kind_of?(UserRequest::Swap)%>
-        <div class="col-3">
-          <div class="form-group">
-            <label> Alternate Project Unit</label>
-            <div>
-              <%= @user_request.alternate_project_unit.name %>
-            </div>
-          </div>
-        </div>
-      <% end %>
-      <div class="col-3">
-        <div class="form-group">
-          <label>Status</label>
-          <div>
-            <label class="badge badge-<%= user_request_status_badge(user_request) %> white" > <%= t("user_request.status.#{user_request.status}") %></label>
-          </div>
-          <%- if user_request.reason_for_failure.present? %>
-            <span> Reason : <%= user_request.reason_for_failure || '-' %></span>
-          <% end %>
-        </div>
-      </div>
-    </div>
-    <div class="row pd-box">
-      <div class="col-3">
-        <div class="form-group">
-          <label> Requested For (User) </label>
-          <div>
-            <%= link_to user_request.user.name, [current_user_role_group, user_request.user ] %>
-          </div>
-        </div>
-      </div>
-      <div class="col-3">
-        <div class="form-group">
-          <label> Created by </label>
-          <div>
-            <%= link_to user_request.created_by.name, [current_user_role_group, user_request.created_by] %>
-            </br>
-            ( <%= user_request.created_at.strftime('%A, %d %b %Y %l:%M %p') %>)
-          </div>
-        </div>
-      </div>
+      <div class="box-content br-rd-bl-4 bg-white row">
+        <div class="col-md-12 col-lg-12 col-sm-12">
+          <ul class="booking-apart-info clear">
+            <li>
+              <span> Requested For ( <%= t("mongoid.attributes.user_request/requestable_type.#{@user_request.requestable_type}") %> )</span>
+              <p><%= @user_request.requestable.name %></p>
+            </li>
 
-      <div class="col-3">
-        <div class="form-group">
-          <label>Resolved by</label>
-          <div>
-            <%- if user_request.resolved_by.present? %>
-              <%= link_to user_request.resolved_by.name, [current_user_role_group, user_request.created_by] %>
-              </br>
-              ( <%= user_request.updated_at.strftime('%A, %d %b %Y %l:%M %p')%>)
+            <%- if @user_request.kind_of?(UserRequest::Swap)%>
+              <li>
+                <span> Alternate Project Unit</span>
+                <p><%= @user_request.alternate_project_unit.name %></p>
+              </li>
             <% end %>
-          </div>
+
+            <li>
+              <span>Status</span>
+              <p>
+                <label class="badge badge-<%= user_request_status_badge(user_request) %> white" > <%= t("mongoid.attributes.user_request/status.#{user_request.status}") %></label>
+                <%- if user_request.reason_for_failure.present? %>
+                  <span> Reason : <%= user_request.reason_for_failure || '-' %></span>
+                <% end %>
+              </p>
+            </li>
+
+            <li>
+              <span> Requested For (User) </span>
+              <p><%= link_to user_request.user.name, [current_user_role_group, user_request.user ] %></p>
+            </li>
+          </ul>
+          <ul class="booking-apart-info clear">
+            <li>
+              <span> Created by </span>
+              <p>
+                <%= link_to user_request.created_by.name, [current_user_role_group, user_request.created_by] %>
+                </br>
+                ( <%= user_request.created_at.strftime('%A, %d %b %Y %l:%M %p') %>)
+              </p>
+            </li>
+
+            <li>
+              <span>Resolved by</span>
+              <p>
+                <%- if user_request.resolved_by.present? %>
+                  <%= link_to user_request.resolved_by.name, [current_user_role_group, user_request.created_by] %>
+                  </br>
+                  ( <%= user_request.updated_at.strftime('%A, %d %b %Y %l:%M %p')%>)
+                <% end %>
+              </p>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
   </div>
-</div>
+</section>

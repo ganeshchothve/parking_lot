@@ -1,12 +1,11 @@
-<section class="my-customer">
+<section class="mb-5">
   <div class="container">
     <div class="row">
     <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
       <div class="table-title pt-1 pb-3">
-        <img src="<%= asset_path 'file-kycs-black.svg' %>" alt="user icon"> <h1 class="title"><%= Assets.model_name.human %></h1>
+        <img src="<%= asset_path 'file-kycs-black.svg' %>" alt="user icon"> <h1 class="title"><%= ::Asset.model_name.human(count: @assets.total_entries) %></h1>
       </div>
     </div>
-    <% labels = .with_indifferent_access %>
     <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
       <div class="table-btn-set float-right pb-3">
         <div class="display-initial" >
@@ -27,7 +26,7 @@
               </tr>
             </thead>
             <tbody>
-              <% current_client.assets.each do |asset| %>
+              <% @assets.each do |asset| %>
               <tr>
                 <td><%= asset.file_name %></td>
                 <td class="text-right"><%= (asset.file_size.to_f / 1024 / 1024).round(2) %> MB</td>
@@ -38,6 +37,7 @@
               <% end %>
             </tbody>
           </table>
+          <%= will_paginate @assets, list_classes: %w(pagination justify-content-center) %>
         </div>
       </div>
     </div>
