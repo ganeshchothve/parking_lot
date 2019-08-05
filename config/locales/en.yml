@@ -53,8 +53,8 @@ en:
   mongoid:
     models:
       asset:
-        one: Asset
-        other: Assets
+        one: Document
+        other: Documents
       address:
         one: Address
         other: Addresses
@@ -619,6 +619,9 @@ en:
         button: 'Save'
         header: 'New Account'
         link_name: 'New Account'
+
+      print:
+        link_name: Print
     audits:
       index:
         link_name: 'History'
@@ -715,6 +718,8 @@ en:
     phases:
       index:
         link_name: 'Phases'
+      new:
+        link_name: Add Phase
     portal_stage_priorities:
       index:
         link_name: 'Portal Stages'
@@ -755,6 +760,7 @@ en:
         error: "We couldn't find any towers for your selection, would you like to change your search?"
         again: Search Again
       towers:
+        link_name: Choose Apartment
         header: Choose Apartment
         hint: Choose apartment that suit your requirements
       project_unit:

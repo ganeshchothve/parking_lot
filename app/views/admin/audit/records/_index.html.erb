@@ -5,7 +5,6 @@
         <th>Subject Class</th>
         <th>Changed By</th>
         <th>Action Type</th>
-        <!-- <th>Executed Time</th> -->
         <th>Actions</th>
       </tr>
     </thead>
@@ -22,10 +21,6 @@
         <td>
           <%= audit.change_type %>
         </td>
-        <!-- <td>
-          <%#= audit.modified_at %>
-        </td> -->
-
         <td>
           <%= link_to "Show","javascript:;", data: {toggle: "modal", target: "#audit_entry_modal_#{audit.id}"}, class: "db-small-btn light-blue bg-white fn-400 btn" %>
           <div class="modal fade right fixed-header-footer" role="dialog" id="audit_entry_modal_<%= audit.id %>">
@@ -46,12 +41,7 @@
           </div>
         </td>
       </tr>
-      <% end %>
-      <tr>
-      <td colspan="6">
-        <div class="mt-5 pt-5"></div>
-      </td>
-    </tr>
+    <% end %>
   </tbody>
 </table>
 <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pt-2">

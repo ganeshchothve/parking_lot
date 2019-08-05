@@ -1,16 +1,15 @@
 <table class='table my-customer-table responsive-tbl'>
   <thead class="th-default">
-    <% labels = t('mongoid.attributes.user_kyc').with_indifferent_access %>
-      <thead>
-        <tr class="bg-gradient-cd white">
-          <th><%= t('mongoid.attributes.user_kyc.name') %></th>
-        <th><%= t('mongoid.attributes.user_kyc.user_id') %></th>
-        <th><%= "#{ t('mongoid.attributes.user_kyc.phone') } & #{ t('mongoid.attributes.user_kyc.email')}" %></th>
-        <th><%= t('mongoid.attributes.user_kyc.dob') %></th>
-        <th><%= t('mongoid.attributes.user_kyc.pan_number') %></th>
-        <th class="text-right"><%= t('global.action', count: 3) %></th>
-        </tr>
-      </thead>
+    <thead>
+      <tr class="bg-gradient-cd white">
+        <th><%= t('mongoid.attributes.user_kyc.name') %></th>
+      <th><%= t('mongoid.attributes.user_kyc.user_id') %></th>
+      <th><%= "#{ t('mongoid.attributes.user_kyc.phone') } & #{ t('mongoid.attributes.user_kyc.email')}" %></th>
+      <th><%= t('mongoid.attributes.user_kyc.dob') %></th>
+      <th><%= t('mongoid.attributes.user_kyc.pan_number') %></th>
+      <th class="text-right"><%= t('global.action', count: 3) %></th>
+      </tr>
+    </thead>
   </thead>
   <tbody>
     <% user_kycs.each do |user_kyc| %>
@@ -47,12 +46,7 @@
         </div>
         </td>
       </tr>
-      <% end %>
-      <tr>
-      <td colspan="6">
-        <div class="mt-5 pt-5"></div>
-      </td>
-    </tr>
+    <% end %>
   </tbody>
 </table>
 <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pt-2">

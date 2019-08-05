@@ -1,16 +1,16 @@
-<section class="my-customer">
+<section class="mb-5">
   <div class="container">
     <div class="row">
       <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
         <div class="table-title pt-1 pb-3">
-          <img src="<%= asset_path 'building-black.svg' %>" alt="user icon"> <h1 class="title"><%= global_labels['phases'] %></h1>
+          <img src="<%= asset_path 'building-black.svg' %>" alt="user icon"> <h1 class="title"><%= Phase.model_name.human %></h1>
         </div>
       </div>
     <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
       <div class="table-btn-set float-right pb-3">
         <div class="display-initial" >
           <%if policy([:admin, Phase]).new? %>
-            <%= link_to "Add #{ t('global.phases') }", new_admin_phase_path, class: 'nowrap btn db-small-btn light-blue bg-white fn-400 modal-remote-form-link' %>
+            <%= link_to t('controller.phases.new.link_name'), new_admin_phase_path, class: 'nowrap btn db-small-btn light-blue bg-white fn-400 modal-remote-form-link' %>
           <% end %>
         </div>
       </div>

@@ -86,6 +86,9 @@ mr:
       email:
         one: 'ईमेल'
         other: 'ईमेल'
+      erp_model:
+        one: 'एकत्रीकरण'
+        other: 'एकत्रीकरण'
       note:
         one: 'टीप'
         other: 'टीप'
@@ -280,6 +283,7 @@ mr:
         gstin_number: "जीएसटीआयएन नंबर"
         pan_number: "पॅन क्रमांक"
         aadhaar: "आधार क्रमांक"
+        name_email_phone: 'नाव / ईमेल / फोन'
       channel_partner/status:
         active: 'सक्रिय'
         inactive: 'निष्क्रिय'
@@ -678,6 +682,8 @@ mr:
     phases:
       index:
         link_name: 'टप्पा'
+      new:
+        link_name: 'नवीन टप्पा'
     portal_stage_priorities:
       index:
         link_name: 'पोर्टल टप्पे'

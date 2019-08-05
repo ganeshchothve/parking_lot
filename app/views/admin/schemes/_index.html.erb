@@ -1,13 +1,12 @@
 <table class='table my-customer-table responsive-tbl'>
   <thead class="th-default">
-    <% labels = t('mongoid.attributes.scheme').with_indifferent_access %>
-      <thead>
-        <tr class="bg-gradient-cd white">
-          <th><%= t('mongoid.attributes.scheme.name') %></th>
-          <th><%= t('mongoid.attributes.scheme.status') %></th>
-          <th><%= t('global.action', count: 3) %></th>
-        </tr>
-      </thead>
+    <thead>
+      <tr class="bg-gradient-cd white">
+        <th><%= t('mongoid.attributes.scheme.name') %></th>
+        <th><%= t('mongoid.attributes.scheme.status') %></th>
+        <th><%= t('global.action', count: 3) %></th>
+      </tr>
+    </thead>
   </thead>
   <tbody>
     <% schemes.each do |scheme| %>
@@ -35,12 +34,7 @@
         </div>
         </td>
       </tr>
-      <% end %>
-      <tr>
-      <td colspan="6">
-        <div class="mt-5 pt-5"></div>
-      </td>
-    </tr>
+    <% end %>
   </tbody>
 </table>
 <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pt-2">

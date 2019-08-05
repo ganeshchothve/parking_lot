@@ -14,7 +14,7 @@
     <% project_units.each do |project_unit| %>
       <tr>
         <td>
-          <%= project_unit.name %>
+          <%= link_to project_unit.name, [current_user_role_group, project_unit] %>
           <div class="small">
             <%= Project.model_name.human %> : <%= project_unit.project_name %>
           </div>
@@ -50,19 +50,14 @@
         </td>
         <td>
           <div class="dropdown show text-right">
-          <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
               <%= render "#{current_user_role_group}/project_units/links", project_unit: project_unit %>
-           </div>
-        </div>
+            </div>
+          </div>
         </td>
       </tr>
     <% end %>
-    <tr>
-      <td colspan="6">
-        <div class="mt-5 pt-5"></div>
-      </td>
-    </tr>
   </tbody>
 </table>
 <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pb-2">

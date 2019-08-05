@@ -12,7 +12,7 @@
 <% end %>
 
 <% if booking_detail.hold? && policy([:admin, booking_detail]).block? && booking_detail.search %>
-  <%= link_to t('controller.booking_details.continue_booking'), checkout_user_search_path(booking_detail.search), class: 'dropdown-item' %>
+  <%= link_to t('controller.booking_details.continue_booking.link_name'), checkout_user_search_path(booking_detail.search), class: 'dropdown-item' %>
 <% end %>
 
 <% unless params[:controller] == 'admin/booking_details' && params[:action] == 'show' %>

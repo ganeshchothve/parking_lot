@@ -10,36 +10,31 @@
     </thead>
     <tbody>
       <% schemes.each do |scheme| %>
-      <tr>
-        <td>
-          <%= scheme.name %>
-          <div class="small">
-            Created:
-            <%= scheme.created_by.present? ? scheme.created_by.name : '-' %>
-          </div>
-          <div class="small">
-            Approval:
-            <%= scheme.approved_by.present? ? "#{scheme.approved_by.name} at #{scheme.approved_at.present? ? l(scheme.approved_at.in_time_zone(current_user.time_zone)) : '-'}".html_safe : '-' %>
-          </div>
-        </td>
-        <td><%= scheme.status %></td>
-        <td class="text-right">
-          <div class="dropdown">
-            <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-            <div class="dropdown-menu dropdown-menu-right">
-              <% if Admin::SchemePolicy.new(current_user, scheme).edit? %>
-                <%= link_to 'Edit', edit_admin_scheme_path(scheme), class: 'dropdown-item modal-remote-form-link' %>
-              <% end %>
+        <tr>
+          <td>
+            <%= scheme.name %>
+            <div class="small">
+              Created:
+              <%= scheme.created_by.present? ? scheme.created_by.name : '-' %>
             </div>
-          </div>
-        </td>
-      </tr>
+            <div class="small">
+              Approval:
+              <%= scheme.approved_by.present? ? "#{scheme.approved_by.name} at #{scheme.approved_at.present? ? l(scheme.approved_at.in_time_zone(current_user.time_zone)) : '-'}".html_safe : '-' %>
+            </div>
+          </td>
+          <td><%= scheme.status %></td>
+          <td class="text-right">
+            <div class="dropdown">
+              <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+              <div class="dropdown-menu dropdown-menu-right">
+                <% if Admin::SchemePolicy.new(current_user, scheme).edit? %>
+                  <%= link_to 'Edit', edit_admin_scheme_path(scheme), class: 'dropdown-item modal-remote-form-link' %>
+                <% end %>
+              </div>
+            </div>
+          </td>
+        </tr>
       <% end %>
-      <tr>
-        <td colspan="4">
-          <div class="mt-5 pt-5"></div>
-        </td>
-      </tr>
     </tbody>
   </table>
 </div>

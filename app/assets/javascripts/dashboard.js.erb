@@ -69,4 +69,8 @@ $(document).ready(function(){
     $('[data-stage="select-apartment"]').data("selected-towerid", $(this).data("towerid"));
     Gamification.gamifyTowerSelection(selectedTower);
   });
+
+  $('.print').on('click', function(){
+    window.print();
+  })
 });
