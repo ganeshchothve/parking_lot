@@ -109,6 +109,10 @@ class BookingDetail
     email.sent!
   end
 
+  def ds_name
+    "#{name} - #{status}"
+  end
+
   def ageing
     _receipts = self.receipts.in(status:["clearance_pending", "success"]).asc(:created_at)
     if(["booked_confirmed"].include?(self.status))

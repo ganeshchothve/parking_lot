@@ -131,7 +131,7 @@ class Admin::BookingDetailsController < AdminController
   end
 
   def booking_detail_for_json
-    @booking_details = BookingDetail.build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page])
+    @booking_details = BookingDetail.build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page]).as_json(methods: [:ds_name])
   end
 
 end
