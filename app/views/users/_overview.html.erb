@@ -2,7 +2,7 @@
   <div class="container">
     <div class="box-card">
       <div class="box-header bg-gradient br-rd-tr-4 row">
-        <div class="col-11"><h2><%= t('global.overview') %></h2></div>
+        <div class="col-11 p-0"><h2 class="icon-set icon-users-white"><%= t('controller.users.show.header') %></h2></div>
         <div class="dropdown text-right col-1">
           <a class="btn dropdown-toggle table-dropdown-btn white-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
           <div class="dropdown-menu dropdown-menu-right">
@@ -26,19 +26,29 @@
               <p><%= user.phone || '-' %></p>
             </li>
 
+            <li>
+              <span><%= t('mongoid.attributes.user.time_zone') %></span>
+              <p><%= user.time_zone || '-' %></p>
+            </li>
+
           </ul>
 
-          <ul class="booking-apart-info clear">
-
-            <% if user.buyer? %>
+          <% if user.buyer? %>
+            <ul class="booking-apart-info clear">
               <li>
                 <span><%= t('mongoid.attributes.user.lead_id') %></span>
                   <p><%= user.lead_id || '-' %></p>
               </li>
-              <li>
-                <span><%= t('mongoid.attributes.user.time_zone') %></span>
-                <p><%= user.time_zone || '-' %></p>
-              </li>
+
+              <% if !current_user.role?("channel_partner") || user.role?('channel_partner') %>
+                <li>
+                  <span><%= t('mongoid.attributes.user.manager_id') %></span>
+                  <p>
+                    <% manager_user = user.manager_id.present? ? User.find(user.manager_id) : nil %>
+                    <%= manager_user.present? ? link_to(manager_user.name, admin_user_path(manager_user)) : '-' %>
+                  </p>
+                </li>
+              <% end %>
 
               <% if current_client.enable_channel_partners? %>
                 <li>
@@ -46,8 +56,8 @@
                   <p class="break-word"><%= user.manager_change_reason || '-' %></p>
                 </li>
               <% end %>
-            <% end %>
-          </ul>
+            </ul>
+          <% end %>
 
           <ul class="booking-apart-info clear">
             <% if user.buyer? && current_client.enable_actual_inventory?(current_user) %>
@@ -80,25 +90,19 @@
               <span><%= t('mongoid.attributes.user.confirmed_at') %></span>
               <p>
                 <% if user.confirmed? %>
-                  <%= t('mongoid.attributes.user.confirmed_by') %> <%= user.confirmed_by_self? ? 'Self' : link_to(user.confirmed_by_name, [current_user_role_group, user.confirmed_by]) %></br>
-                  <%= t('global.at') %> <%= l(user.confirmed_at.in_time_zone(current_user.time_zone)) %>
+                  <%= t('mongoid.attributes.user.confirmed_by') %>
+                  <%= user.confirmed_by_self? ? 'Self' : link_to(user.confirmed_by_name, [current_user_role_group, user.confirmed_by]) %>
+                  </br>
+                  <%= t('global.at') %>
+                  <%= l(user.confirmed_at.in_time_zone(current_user.time_zone)) %>
                 <% else %>
-                  <%= t('global.no')%>
+                  <%= t("mongoid.attributes.user/confirmed.#{user.confirmed_at.present?}") %>
                 <% end %>
               </p>
             </li>
           </ul>
 
           <ul class="booking-apart-info clear">
-            <% if user.buyer? && !current_user.role?("channel_partner") || user.role?('channel_partner') %>
-              <li>
-                <span><%= t('mongoid.attributes.user.manager_id') %></span>
-                <p>
-                  <% manager_user = user.manager_id.present? ? User.find(user.manager_id) : nil %>
-                  <%= manager_user.present? ? link_to(manager_user.name, admin_user_path(manager_user)) : '-' %>
-                </p>
-              </li>
-            <% end %>
 
             <% if user.role?('channel_partner') %>
               <li>
@@ -112,20 +116,18 @@
                 <span><%= t("mongoid.attributes.user.referral_code") %></span>
                 <p><%= user.referral_code || '-' %></p>
               </li>
-            <% end %>
 
-            <% if user.buyer? %>
               <li>
                 <span><%= t("mongoid.attributes.user.referred_by_id") %></span>
                 <p><%= user.referred_by.try(:name) || '-' %></p>
               </li>
-            <% end %>
 
-            <% if user.buyer? && current_user.role?('superadmin') %>
-              <li>
-                <span><%= t("mongoid.attributes.user.portal_stage") %></span>
-                <p><%= user.portal_stage.try(:stage) || '-' %></p>
-              </li>
+              <% if current_user.role?('superadmin') %>
+                <li>
+                  <span><%= t("mongoid.attributes.user.portal_stage") %></span>
+                  <p><%= user.portal_stage.try(:stage) || '-' %></p>
+                </li>
+              <% end %>
             <% end %>
           </ul>
         </div>

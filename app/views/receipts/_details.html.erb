@@ -32,7 +32,7 @@
   <% if current_client.enable_slot_generation? %>
     <td><%= receipt.try(:token_number) ? receipt.get_token_number : '--' %></td>
   <% end %>
-  <td><%= t("receipt.status.#{receipt.status}") %></td>
+  <td><%= t("mongoid.attributes.receipt/status.#{receipt.status}") %></td>
   <td><%= number_to_indian_currency(receipt.total_amount.round) %></td>
   <td>
     <div class="dropdown show text-right">

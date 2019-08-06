@@ -24,7 +24,7 @@ class Admin::UsersController < AdminController
     if params[:fltrs].present? && params[:fltrs][:_id].present?
       redirect_to admin_user_path(params[:fltrs][:_id])
     else
-      @users = @users.paginate(page: params[:page] || 1, per_page: 15)
+      @users = @users.paginate(page: params[:page] || 1, per_page: params[:per_page])
     end
   end
 

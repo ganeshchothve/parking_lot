@@ -11,6 +11,7 @@ en:
   welcome: Welcome %{name}
   global:
     all: All
+    at: 'At'
     action:
       one: Action
       other: Actions
@@ -26,6 +27,7 @@ en:
     i_agree_be_half_of: I Agree on behalf of %{name}
     previous: Previous
     next: Next
+    _no: 'No'
     not_sync_yet: 'Not Synced'
     not_generated: 'Not Generated'
     otp: "OTP"
@@ -37,6 +39,8 @@ en:
     total: 'Total'
 
   helpers:
+    show:
+      link_name: '%{model} Details'
     select:
       prompt: Please select
     submit:
@@ -188,6 +192,7 @@ en:
         carpet: Carpet Area
         agreement_price: 'Agreement Price'
         all_inclusive_price: 'All Inclusive Price'
+        manager_id: Manager
       booking_detail/status:
         available: 'Available'
         not_available: 'Not Available'
@@ -643,6 +648,7 @@ en:
         link_name: 'Bookings'
       new:
         link_name: 'Add Booking'
+        header: "New Booking"
       edit:
         link_name: 'Update Booking'
       show:
@@ -656,11 +662,11 @@ en:
       cost_sheet:
         link_name: Cost Sheet
       payment_schedule:
-        link_name: Payment Scheduled
+        link_name: Payment Schedule
       set_booking_detail_missing: "Booking detail not found"
       set_project_unit_missing: "Project unit not found"
       booking_successful: "You have completed the booking successfully."
-      booking_unsuccessful: "Your booking was unsuccessful. Please contant administrator to book."
+      booking_unsuccessful: "Your booking was unsuccessful. Please contact administrator to book."
       set_receipt_missing: 'Make new payment'
 
       receipts:
@@ -711,7 +717,9 @@ en:
 
     notes:
       new:
+        header: 'Add Note'
         link_name: 'Add Note'
+
 
     project_units:
       index:
@@ -719,7 +727,8 @@ en:
       show:
         link_name: 'Details'
       edit:
-        link_name: 'Edit'
+        header: Edit Apartment
+        link_name: Edit
       exports:
         link_name: "%{type} Exports"
       quotation:
@@ -752,7 +761,8 @@ en:
         header: Add Lost Payment
         link_name: Lost Payment
       new:
-        link_name: 'Pay Amount'
+        link_name: 'Direct Payment'
+        header: 'New Direct Payment'
       print:
         link_name: 'Print'
       resend_success:
@@ -828,10 +838,12 @@ en:
         link_name: '%{name} Exports'
       edit:
         link_name: "Edit Details"
+        header: 'Edit %{role}'
       index:
         link_name: 'Users & Customers'
       new:
-        link_name: 'Add %{role} '
+        link_name: 'Add %{role}'
+        header: 'Add %{role}'
       profile:
         link_name: "%{role} Profile"
       print:
@@ -841,7 +853,8 @@ en:
       resend_password_instructions:
         link_name: Resend Password Instruction
       show:
-        link_name: 'View User'
+        link_name: 'Details'
+        header: 'Overview'
     user_kycs:
       index:
         link_name: 'KYCs'
@@ -863,15 +876,19 @@ en:
           link_name: 'Swap Requests'
         new:
           link_name: 'Swap'
+          header: 'New Swap'
         edit:
           link_name: 'Update Swap'
+          header: 'Update Swap'
       cancellation:
         index:
           link_name: 'Cancellation Requests'
         new:
           link_name: 'Cancellation'
+          header: 'New Cancellation'
         edit:
           link_name: 'Update Cancellation'
+          header: 'Update Cancellation'
 
   asset:
     image:

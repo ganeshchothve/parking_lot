@@ -37,6 +37,8 @@ mr:
     total: "एकूण"
 
   helpers:
+    show:
+      link_name: '%{model}'
     select:
       prompt: 'कृपया निवडा'
     submit:
@@ -111,8 +113,8 @@ mr:
         one: 'शोधा'
         other: 'शोध'
       scheme:
-        one: 'योजना'
-        other: 'योजना'
+        one: 'योजना आणि सवलत'
+        other: 'योजना आणि सवलती'
       sms:
         one: SMS
         other: SMSs
@@ -755,6 +757,8 @@ mr:
         link_name: 'योजना'
       edit:
         link_name: 'संपादित करा'
+      new:
+        link_name: 'योजना आणि सवलत'
     sync_logs:
       index:
         link_name: 'लॉग समक्रमित करा'

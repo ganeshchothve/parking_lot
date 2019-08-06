@@ -39,7 +39,7 @@
         <div class="container">
           <div class="d-print-none box-card">
             <div class="box-header br-rd-tr-4">
-              <h2 class="text-dark"> <%= @project_unit.assets.count %> <%= Asset.model_name.human %> </h2>
+              <h2 class="text-dark"> <%= @project_unit.assets.count %> <%= Asset.model_name.human(count: @project_unit.assets.count) %> </h2>
             </div>
           </div>
           <div class="box-content br-rd-bl-4 bg-white">

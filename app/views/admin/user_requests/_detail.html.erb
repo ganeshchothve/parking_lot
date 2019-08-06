@@ -6,12 +6,16 @@
           <h2><%= t("mongoid.models.user_request/#{params[:request_type]}", count: 1) %></h2>
         </div>
         <div class="col-1">
-          <div class="dropdown show text-center float-right">
-            <a class="btn dropdown-toggle table-dropdown-btn" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <%= render 'links', user_request: @user_request, links_name: 'Action' %>
+          <table class="float-right">
+            <tr><td>
+              <div class="dropdown show text-center float-right">
+                <a class="btn dropdown-toggle table-dropdown-btn" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <%= render 'links', user_request: @user_request, links_name: 'Action' %>
+                  </div>
               </div>
-          </div>
+            </td></tr>
+          </table>
         </div>
       </div>
       <div class="box-content br-rd-bl-4 bg-white row">

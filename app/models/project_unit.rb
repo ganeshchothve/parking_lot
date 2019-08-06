@@ -305,7 +305,7 @@ class ProjectUnit
   end
 
   def booking_detail
-    BookingDetail.where(project_unit_id: id).nin(status: %w[cancelled swapped]).first
+    self.available? ? nil : BookingDetail.where(project_unit_id: id).nin(status: %w[cancelled swapped]).first
   end
 
   def blocking_days

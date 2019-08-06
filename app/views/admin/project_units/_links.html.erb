@@ -1,5 +1,5 @@
 
-<% if policy([:admin, project_unit]).show? %>
+<% if policy([:admin, project_unit]).show? && action_name != 'show' %>
   <%= link_to t('controller.project_units.show.link_name'), project_unit.booking_detail.present? ? admin_booking_detail_path(project_unit.booking_detail) : admin_project_unit_path(project_unit) , class: 'dropdown-item' %>
 <% end %>
 

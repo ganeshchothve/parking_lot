@@ -307,3 +307,32 @@ h6{
 .icon-users-white:before{
   background-image: asset-url('users-white.svg');
 }
+
+.icon-users-black:before{
+  background-image: asset-url('users-black.svg');
+}
+.icon-lock-black:before{
+  background-image: asset-url('lock-black.svg');
+}
+.icon-tag-black:before{
+  background-image: asset-url('tag-black.svg');
+}
+.icon-scheme-black:before{
+  background-size: 15px;
+  background-image: asset-url('scheme-black.svg');
+}
+.icon-sync-black:before{
+  left: -5px;
+  top: 1px;
+  width: 20px;
+  background-size: 20px;
+  background-image: asset-url('sync-black.svg');
+}
+
+.icon-time-black:before{
+  left: -5px;
+  top: 1px;
+  width: 20px;
+  background-size: 20px;
+  background-image: asset-url('time-black.svg');
+}

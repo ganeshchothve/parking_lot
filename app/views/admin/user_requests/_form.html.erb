@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title"><%= @user_request.new_record? ? "New" : "Edit" %> <%= "#{global_labels['user_request']}" %></h5>
+          <h3 class="modal-title"><%= t("controller.user_requests.#{@user_request.class.model_name.element}.#{action_name}.header") %></h3>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>

@@ -25,14 +25,11 @@
   <%= link_to t('controller.users.confirm_via_otp.link_name'), confirm_via_otp_admin_user_path(user.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 
-<% if policy([:admin, User.new]).show? %>
-  <%= link_to t('controller.users.show.link_name'), admin_user_path(user.id), class: "dropdown-item" %>
-<% end %>
 <% if policy([:admin, User.new]).print? %>
   <%= link_to t('controller.users.print.link_name'), print_admin_user_path(user.id), class: "dropdown-item", target: "_blank" %>
 <% end %>
 
-<% if policy([:admin, user]).show? %>
+<% if policy([:admin, user]).show? && action_name != 'show' %>
   <%= link_to t('controller.users.show.link_name'), admin_user_path(user), class: "dropdown-item", target: "_blank" %>
 <% end %>
 

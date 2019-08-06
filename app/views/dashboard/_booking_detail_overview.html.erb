@@ -31,7 +31,7 @@
             <% end %>
             <li><span>Agreement Price</span><p><%= number_to_indian_currency(booking_detail.calculate_agreement_price.round) %></p></li>
             <li><span>All Inclusive Price</span><p><%= number_to_indian_currency(booking_detail.calculate_all_inclusive_price.round) %></p></li>
-            <li><span>Phase</span><p><%= project_unit.phase.try(:name) %></p></li>
+            <li><span>Phase</span><p><%= project_unit.phase.try(:name) || '-' %></p></li>
           </ul>
         </div>
       </div>

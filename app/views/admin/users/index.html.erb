@@ -3,8 +3,7 @@
     <div class="row">
     <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
       <div class="table-title pt-1">
-        <img src="<%= asset_path 'user-alt-black.svg' %>" alt="user icon">
-        <h1 class="title"><%= User.model_name.human %></h1>
+        <h1 class="title icon-set icon-users-black"><%= @users.total_entries%> <%= User.model_name.human(count: @users.total_entries) %></h1>
       </div>
     </div>
     <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
