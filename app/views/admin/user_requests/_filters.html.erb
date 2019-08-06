@@ -30,58 +30,27 @@
         </div>
         <div class="form-group">
           <%= label_tag "fltrs", "requestable_type", class: "control-label" %>
-          <%= select_tag "fltrs[requestable_type]", options_for_select(UserRequest.distinct(:requestable_type)), {prompt: "Select", class: "selectize"} %>
+          <%= select_tag "fltrs[requestable_type]", options_for_select(UserRequest.distinct(:requestable_type), params.dig(:fltrs, :requestable_type)), {prompt: "Select", class: "selectize"} %>
         </div>
-        <div class="form-group d-none" id: 'requestable'>
-          <%= label_tag "fltrs","ABC", class: "control-label", id: 'requestable_label' %>
-          <%= select_tag "fltrs[requestable]", options_for_select([]), {prompt: "Select", class: "selectize-remote"} %>
+        <div class="form-group requestable BookingDetail d-none">
+          <%= label_tag "fltrs","Booking", class: "control-label", id: 'requestable_label' %>
+          <%= select_tag "fltrs[booking_detail_id]", options_for_select(filter_booking_detail_options( params.dig(:fltrs, :booking_detail_id)), params.dig(:fltrs, :booking_detail_id) ), {prompt: "Select", class: "selectize-remote", data: { url: admin_booking_details_path }} %>
+        </div>
+
+        <div class="form-group requestable Receipt d-none">
+          <%= label_tag "fltrs","Receipt", class: "control-label", id: 'requestable_label' %>
+          <%= select_tag "fltrs[receipt_id]", options_for_select(filter_receipts_options(params.dig(:fltrs, :receipt_id) ), params.dig(:fltrs, :receipt_id)), {prompt: "Select", class: "selectize-remote", data: { url: admin_receipts_path }} %>
         </div>
       <% end %>
       <%= javascript_tag do %>
         $(document).ready(function(){
-          $('#fltrs_requestable').selectize()
           $('#fltrs_requestable_type').change(function(){
-          if($(this).val() == 'Receipt'){
-            $('#requestable_label').html("Receipt");
-            $('.form-group').removeClass('d-none');
-            $('#fltrs_requestable').selectize()[0].selectize.destroy();
-            $('#fltrs_requestable').selectize({
-                plugins: ['infinite_scroll'],
-                load : function (query, callback) {
-                  var queryObj = JSON.parse(query);
-                  $.ajax({
-                    url: "<%= admin_receipts_path %>",
-                    type: "get",
-                    dataType: 'json',
-                    data: _.merge( queryObj, {fltrs: {search: queryObj.search}}),
-                    success : function(res) {
-                      debugger
-                      callback(_.map(res, function(a){ return { value: (a['id'] || a._id), text: ( a['name']) } }));
-                    }
-                  });
-                }
-           });
-          } else if($(this).val() == 'BookingDetail'){
-            $('#requestable_label').html("Booking Detail");
-            $('.form-group').removeClass('d-none');
-            $('#fltrs_requestable').selectize()[0].selectize.destroy();
-            $('#fltrs_requestable').selectize({
-                plugins: ['infinite_scroll'],
-                load : function (query, callback) {
-                  var queryObj = JSON.parse(query);
-                  $.ajax({
-                    url: "<%= admin_booking_details_path %>",
-                    type: "get",
-                    dataType: 'json',
-                    data: _.merge( queryObj, {fltrs: {search: queryObj.search}}),
-                    success : function(res) {
-                      callback(_.map(res, function(a){ return { value: (a['id'] || a._id), text: (a['ds_name'] ) } }));
-                    }
-                  });
-                }
-              });
+            $('.requestable').addClass('d-none').find('select')
+            if($(this).val() != ''){
+              $('.' + $(this).val()).removeClass('d-none').find('select')
             }
           });
+          $('#fltrs_requestable_type').trigger('change');
           FormInitializer.init($("#user_request_search_form"));
         });
       <% end %>

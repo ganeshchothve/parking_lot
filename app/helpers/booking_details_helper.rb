@@ -26,9 +26,9 @@ module BookingDetailsHelper
     end
   end
 
-  def filter_booking_detail_options
-    if params.dig(:fltrs, :id).present?
-      BookingDetail.where(_id: params.dig(:fltrs, :id)).map{|bd| [bd.name, bd.id]}
+  def filter_booking_detail_options(booking_detail_id)
+    if booking_detail_id.present?
+      BookingDetail.where(_id: booking_detail_id).map{|bd| [bd.name, bd.id]}
     else
       []
     end

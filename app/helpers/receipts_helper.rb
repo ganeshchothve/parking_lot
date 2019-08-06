@@ -10,5 +10,13 @@ module ReceiptsHelper
       [:new, :admin, receipt.user, :user_request, { request_type: UserRequest::Cancellation.model_name.element, requestable_id: receipt.id, requestable_type: 'Receipt'}]
     end
   end
+
+  def filter_receipts_options(receipt_id)
+    if receipt_id.present?
+      Receipt.where(_id: receipt_id).map{|bd| [bd.name, bd.id]}
+    else
+      []
+    end
+  end
 end
 
