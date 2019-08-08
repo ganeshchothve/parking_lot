@@ -125,7 +125,7 @@
     </div>
     <div class="form-check mt-1">
       <%= check_box_tag :agree, true, false, class: "form-check-input" %>
-      <%= label_tag :agree, i_agree_label, class: "form-check-label" %>
+      <%= label_tag :agree, t("mongoid.models.booking_detail.i_agree_label.#{current_user_role_group}", name: f.object.user.name), class: "form-check-label" %>
     </div>
   </div>
 <% end %>

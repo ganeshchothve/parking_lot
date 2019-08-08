@@ -32,6 +32,10 @@ class Buyer::ReceiptPolicy < ReceiptPolicy
     edit?
   end
 
+  def direct?
+    super && record.user_id == user.id
+  end
+
   def permitted_attributes(params = {})
     attributes = super
     attributes += [:booking_detail_id] if user.buyer?

@@ -1,4 +1,4 @@
-<section class="my-customer">
+<section class="mb-5">
 <% if current_user.buyer? %>
   <%= render 'dashboard/index/user' %>
 <% elsif current_user.role?('channel_partner') %>

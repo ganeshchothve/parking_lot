@@ -297,6 +297,7 @@ h6{
 }
 
 .icon-rupee-black:before{
+  top: 2px;
   background-image: asset-url('rupee-black.svg');
 }
 
@@ -309,10 +310,17 @@ h6{
 }
 
 .icon-users-black:before{
+  background-size: 15px;
+  top: 2px;
   background-image: asset-url('users-black.svg');
 }
 .icon-lock-black:before{
+  top: 2px;
   background-image: asset-url('lock-black.svg');
+}
+.icon-lock-white:before{
+  top: -1px;
+  background-image: asset-url('lock-white.svg');
 }
 .icon-tag-black:before{
   background-image: asset-url('tag-black.svg');
@@ -323,7 +331,7 @@ h6{
 }
 .icon-sync-black:before{
   left: -5px;
-  top: 1px;
+  top: -2px;
   width: 20px;
   background-size: 20px;
   background-image: asset-url('sync-black.svg');

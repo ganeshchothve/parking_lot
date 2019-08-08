@@ -2,12 +2,6 @@
   <%= link_to "Choose #{global_labels[:project_unit]} & Add Booking", new_user_search_path(user.id), class: "dropdown-item" %>
 <% end %>
 
-<% hold_booking = user.booking_details.where(status: 'hold').first %>
-
-<% if hold_booking.present? #&& policy([current_user_role_group, hold_booking]).block? %>
-  <%= link_to "Checkout using unit already held", checkout_user_search_path(user.get_search(hold_booking.project_unit_id)), class: "dropdown-item" %>
-<% end %>
-
 <% if policy([:buyer, Receipt.new(user: user)]).direct? %>
   <%= link_to "Add Direct #{t('global.receipt')}", new_buyer_receipt_path(user), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
@@ -16,7 +10,7 @@
   <%= link_to "View Details", buyer_user_path(user.id), class: "dropdown-item" %>
 <% end %>
 
-<% if policy([:buyer, UserKyc.new]).index? %>
+<% if policy([:buyer, UserKyc.new]).index? && current_user.id == user.id %>
   <%= link_to "View #{global_labels['user_kycs']}", buyer_user_kycs_path(user_id: user.id), class: "dropdown-item" %>
 <% end %>
 

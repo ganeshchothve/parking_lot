@@ -3,7 +3,8 @@
     <div class="row">
       <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
         <div class="table-title pt-1 pb-3">
-          <i class="fa fa-sync" aria-hidden="true"></i><h1 class="title"><%= SyncLog.model_name.human %></h1>
+          <h1 class="title icon-set icon-sync-black"><%= @sync_logs.total_entries %>
+          <%= SyncLog.model_name.human(count: @sync_logs.total_entries) %></h1>
         </div>
       </div>
       <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">

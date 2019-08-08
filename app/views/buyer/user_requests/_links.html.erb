@@ -1,0 +1,7 @@
+<% if policy([:buyer, Asset.new(assetable: user_request)]).index? %>
+  <%= link_to Asset.model_name.human, assetables_path(assetable_type: user_request.class.model_name.i18n_key.to_s, assetable_id: user_request.id), class: 'dropdown-item modal-remote-form-link' %>
+<% end %>
+
+<% if Buyer::UserRequestPolicy.new(current_user, user_request).edit? && current_user.buyer? %>
+  <%= link_to 'Edit', edit_buyer_user_request_path(user_request, request_type: user_request.class.model_name.element), class: 'modal-remote-form-link dropdown-item' %>
+<% end %>

@@ -62,7 +62,7 @@
           <div class="dropdown show text-right">
             <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-              <%= render "admin/users/links", user: user %>
+              <%= render "#{current_user_role_group}/users/links", user: user %>
             </div>
           </div>
         </td>

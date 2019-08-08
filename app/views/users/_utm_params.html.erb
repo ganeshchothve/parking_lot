@@ -9,11 +9,15 @@
       <div class="box-content br-rd-bl-4 bg-white row">
         <div class="col-md-12 col-lg-12 col-sm-12">
           <ul class="booking-apart-info clear">
-            <% user.utm_params.each do |key, value| %>
-              <li>
-                <span> <%= key %> </span>
-                <p><%= value %></p>
-              </li>
+            <% if user.utm_params.blank? %>
+              No Tracking Found
+            <% else %>
+              <% user.utm_params.each do |key, value| %>
+                <li>
+                  <span> <%= key %> </span>
+                  <p><%= value %></p>
+                </li>
+              <% end %>
             <% end %>
           </ul>
         </div>

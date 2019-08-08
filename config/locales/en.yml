@@ -44,7 +44,7 @@ en:
     select:
       prompt: Please select
     submit:
-      create: Create %{model}
+      create: Add %{model}
       update: Update %{model}
       submit: Save %{model}"
       post:
@@ -71,6 +71,10 @@ en:
       booking_detail:
         one: Booking
         other: Bookings
+        i_agree_label:
+          buyer: 'I Agree'
+          admin: 'I Agree in behalf of %{name}'
+
       booking_detail_scheme:
         one: Booking Scheme
         other: Booking Schemes
@@ -392,6 +396,7 @@ en:
         processed_on: 'Date of Clearance'
         receipt_id: "Receipt ID"
         payment_mode: "Mode of Payment"
+        payment_type: 'Payment Type'
         issued_date: "Date of issuance (e.g. Cheque Date)"
         issuing_bank: "Issuing Bank"
         issuing_bank_branch: "Issuing Bank Branch"
@@ -699,7 +704,7 @@ en:
 
     emails:
       index:
-        link_name: 'Email'
+        link_name: 'Emails'
       show:
         link_name: Detail
     erp_models:
@@ -818,6 +823,11 @@ en:
         link_name: 'Sync Logs'
       new:
         link_name: 'Sync'
+    referrals:
+      index:
+        link_name: 'Referrals'
+      new:
+        link_name: 'Add Referrals'
 
     templates:
       index:
@@ -871,6 +881,8 @@ en:
         link_name: Edit
       show:
         link_name: Detail
+      new:
+        link_name: Add KYC
       swap:
         index:
           link_name: 'Swap Requests'
