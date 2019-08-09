@@ -8,7 +8,7 @@ class ProjectUnit
   include PriceCalculator
   extend FilterByCriteria
 
-  STATUS = %w(available not_available hold blocked error)
+  STATUS = %w(available employee management not_available hold blocked error)
 
   # These fields are globally utlised on the server side
   field :name, type: String
@@ -41,7 +41,6 @@ class ProjectUnit
   field :sub_type, type: String
   field :type, type: String
   field :unit_facing_direction, type: String
-  field :primary_user_kyc_id, type: BSON::ObjectId
   field :blocking_amount, type: Integer, default: 30_000
   field :comments,type: String
 
@@ -49,7 +48,7 @@ class ProjectUnit
 
   enable_audit(
     indexed_fields: %i[project_id project_tower_id unit_configuration_id booking_portal_client_id selldo_id developer_id],
-    audit_fields: %i[erp_id status available_for blocked_on auto_release_on held_on primary_user_kyc_id base_rate]
+    audit_fields: %i[erp_id status available_for blocked_on auto_release_on held_on base_rate]
   )
 
   belongs_to :project
@@ -59,14 +58,11 @@ class ProjectUnit
   belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :user, optional: true
   belongs_to :phase, optional: true
-  belongs_to :primary_user_kyc, optional: true
 
   # remove optional true when all project units are assigned to some phase
 
   has_many :receipts
   has_many :user_requests
-  has_and_belongs_to_many :user_kycs
-  has_and_belongs_to_many :users
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :emails, as: :triggered_by, class_name: 'Email'
   has_many :booking_details
@@ -82,7 +78,6 @@ class ProjectUnit
   validates :status, :name, :erp_id, presence: true
   validates :status, inclusion: { in: proc { ProjectUnit.available_statuses.collect { |x| x[:id] } } }
   validates :available_for, inclusion: { in: proc { ProjectUnit.available_available_fors.collect { |x| x[:id] } } }
-  validate :pan_uniqueness
 
   scope :filter_by_project_tower_id, ->(project_tower_id) { where(project_tower_id: project_tower_id) }
 
@@ -347,11 +342,4 @@ class ProjectUnit
     booking_detail.try(:pending_balance).to_f
   end
 
-  private
-
-  def pan_uniqueness
-    if user_id.present? && user.unused_user_kyc_ids(id).blank?
-      errors.add :primary_user_kyc_id, 'already has a booking'
-    end
-  end
 end
