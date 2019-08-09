@@ -3,8 +3,10 @@
     <div class="row">
       <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
         <div class="table-title pt-1">
-          <img src="<%= asset_path 'envelope-black.svg' %>" alt="user icon">
-          <h1 class="title"><%= @emails.total_entries %> <%= Email.model_name.human(count: @emails.total_entries) %></h1>
+          <h1 class="title icon-set icon-envelope-black">
+            <%= Email.model_name.human(count: @emails.total_entries) %>
+            <span class="badge bg-gradient-cd white"><%= @emails.total_entries %></span>
+          </h1>
         </div>
       </div>
       <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">

@@ -264,17 +264,21 @@ h6{
   line-height: 22px;
 }
 
+.cursor-pointer{
+  cursor: pointer;
+}
+
 .icon-set{
   position: relative;
-  padding-left: 20px;
+  padding-left: 30px;
 
   &:before {
     position:absolute;
     content: '';
     left: 0px;
     top: 0px;
-    width: 15px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     background-repeat: no-repeat;
     background-size: contain;
   }
@@ -282,6 +286,10 @@ h6{
 
 .icon-building-white:before{
   background-image: asset-url('building-white.svg');
+}
+
+.icon-building-black:before{
+  background-image: asset-url('building-black.svg');
 }
 
 .icon-home-white:before{
@@ -297,50 +305,68 @@ h6{
 }
 
 .icon-rupee-black:before{
-  top: 2px;
   background-image: asset-url('rupee-black.svg');
+}
+
+.icon-time-black:before{
+  background-image: asset-url('time-black.svg')
 }
 
 .icon-file-spreadsheet-white:before{
   background-image: asset-url('file-spreadsheet-white.svg');
 }
 
+.icon-file-contract-black:before{
+  background-image: asset-url('file-contract-black.svg');
+}
+
 .icon-users-white:before{
   background-image: asset-url('users-white.svg');
 }
 
+.icon-user-friends-black:before{
+  background-image: asset-url('user-friends.svg');
+}
+
 .icon-users-black:before{
-  background-size: 15px;
-  top: 2px;
   background-image: asset-url('users-black.svg');
 }
 .icon-lock-black:before{
-  top: 2px;
   background-image: asset-url('lock-black.svg');
 }
 .icon-lock-white:before{
-  top: -1px;
   background-image: asset-url('lock-white.svg');
 }
 .icon-tag-black:before{
   background-image: asset-url('tag-black.svg');
 }
 .icon-scheme-black:before{
-  background-size: 15px;
   background-image: asset-url('scheme-black.svg');
 }
+.icon-scheme-white:before{
+  background-image: asset-url('scheme-white.svg');
+}
 .icon-sync-black:before{
-  left: -5px;
-  top: -2px;
-  width: 20px;
-  background-size: 20px;
   background-image: asset-url('sync-black.svg');
+}
+.icon-home-black:before{
+  background-image: asset-url('home-black.svg');
+}
+.icon-file-kycs-black:before{
+  background-image: asset-url('file-kycs-black.svg');
+}
+.icon-envelope-black:before{
+  background-image: asset-url('envelope-black.svg');
+}
+
+.icon-sms-black:before{
+  background-image: asset-url('sms-black.svg');
+}
+
+.icon-refferal-black:before{
+  background-image: asset-url('refferal-black.svg');
 }
 
 .icon-time-black:before{
-  left: -5px;
-  top: 1px;
-  width: 20px;
-  background-size: 20px;
   background-image: asset-url('time-black.svg');
 }

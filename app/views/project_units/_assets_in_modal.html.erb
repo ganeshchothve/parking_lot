@@ -17,7 +17,7 @@
           <div class="carousel-inner">
             <% project_unit.assets.each_with_index do |asset, index| %>
               <div class="carousel-item <%= index.zero? ? "active" : "" %>">
-                <%= image_tag (asset.file.url || '' ), class: 'd-block w-100' %>
+                <%= image_tag asset.file.url || '', class: 'd-block w-100' %>
               </div>
             <% end %>
           </div>

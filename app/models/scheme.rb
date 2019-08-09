@@ -6,6 +6,8 @@ class Scheme
   include SchemeStateMachine
   extend FilterByCriteria
 
+  FIELDS = %w[agreement_price all_inclusive_price base_rate floor_rise]
+
   field :name, type: String
   field :description, type: String
   field :user_role, type: String
@@ -33,10 +35,6 @@ class Scheme
   scope :filter_by_status, ->(status) { where(status: status) }
   scope :filter_by_project_tower, ->(project_tower_id) { where(project_tower_id: project_tower_id) }
 
-
-
-
-
   enable_audit({
     indexed_fields: [:project_id, :project_tower_id],
     audit_fields: [:name, :user_role, :value, :status, :approved_by_id, :created_by_id, :can_be_applied_by],
@@ -48,6 +46,7 @@ class Scheme
   belongs_to :approved_by, class_name: "User", optional: true
   belongs_to :created_by, class_name: "User"
   belongs_to :booking_portal_client, class_name: "Client"
+  has_many :booking_detail_schemes, foreign_key: :derived_from_scheme_id
   has_and_belongs_to_many :users
   has_and_belongs_to_many :default_for_users, class_name: 'User'
 
@@ -63,10 +62,6 @@ class Scheme
 
   delegate :name, to: :created_by, prefix: true, allow_nil: true
   delegate :name, to: :approved_by, prefix: true, allow_nil: true
-
-  def self.available_fields
-    ["agreement_price", "all_inclusive_price", "base_rate", "floor_rise"]
-  end
 
   def project_tower
     return ProjectTower.find(self.project_tower_id) if self.project_tower_id.present?
@@ -92,6 +87,10 @@ class Scheme
 
   def approver? user
     user.role?('admin') || user.role?('superadmin')
+  end
+
+  def booking_details
+    BookingDetail.in(_id: self.booking_detail_schemes.distinct(:booking_detail_id))
   end
 
   private

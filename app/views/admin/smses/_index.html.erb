@@ -3,11 +3,11 @@
       <thead>
         <tr class="bg-gradient-cd white">
           <% unless current_user.buyer? %>
-            <th><%= t('mongoid.attributes.smses.to') %></th>
+            <th><%= t('mongoid.attributes.smsto') %></th>
           <% end %>
-          <td> <%= t('mongoid.attributes.smses.content') %> </td>
-          <th> <%= t('mongoid.attributes.smses.status') %></th>
-          <th> <%= t('mongoid.attributes.smses.sent_on') %></th>
+          <td> <%= t('mongoid.attributes.sms.content') %> </td>
+          <th> <%= t('mongoid.attributes.sms.status') %></th>
+          <th> <%= t('mongoid.attributes.sms.sent_on') %></th>
           <th class="text-right"><%= t('global.action', count: 3) %></th>
         </tr>
       </thead>

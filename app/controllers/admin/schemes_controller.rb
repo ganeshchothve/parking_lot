@@ -76,6 +76,10 @@ class Admin::SchemesController < AdminController
     end
   end
 
+  def show
+    @booking_details = @scheme.booking_details.paginate(page: params[:page] || 1, per_page: params[:per_page])
+  end
+
   private
 
 

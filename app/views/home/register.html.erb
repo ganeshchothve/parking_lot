@@ -1,4 +1,4 @@
-<section class="auth login-page pb-5">
+<section class="auth login-page mb-5">
   <div class="container no-pd">
     <div class="col-lg-5 col-xs-12 col-md-12 col-sm-12 no-pd">
       <div class="login-form-wrapper pt-5">
@@ -9,3 +9,9 @@
     </div>
   </div>
 </section>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+
+    $('section.login-page').css('height', $( window ).height() - $('section.login-page').offset().top );
+  )};
+<% end %>

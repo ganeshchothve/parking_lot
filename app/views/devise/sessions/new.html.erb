@@ -70,21 +70,24 @@ end %>
 </section>
 
 <%= javascript_tag do %>
-$(document).ready(function(){
-  <% if params[:login].present? && current_client.preferred_login == "phone" && params[:force].to_s == "true" %>
-  $("#otp_user_form").submit();
-  <% end %>
-  OtpBasedLogin.init();
-  $('form').submit(function( event ) {
-    var encrypt = new JSEncrypt();
-    $('[data-encrypt]').each(function(){
-      var unencrypted = $(this);
-      encrypt.setKey($('#public_key').attr('data-value'));
-      var encrypted = encrypt.encrypt(unencrypted.val());
-      if(encrypted) {
-        unencrypted.val(encrypted);
-      }
-    })
+  $(document).ready(function(){
+
+    $('section.login-page').css('height', $( window ).height() - $('section.login-page').offset().top );
+
+    <% if params[:login].present? && current_client.preferred_login == "phone" && params[:force].to_s == "true" %>
+    $("#otp_user_form").submit();
+    <% end %>
+    OtpBasedLogin.init();
+    $('form').submit(function( event ) {
+      var encrypt = new JSEncrypt();
+      $('[data-encrypt]').each(function(){
+        var unencrypted = $(this);
+        encrypt.setKey($('#public_key').attr('data-value'));
+        var encrypted = encrypt.encrypt(unencrypted.val());
+        if(encrypted) {
+          unencrypted.val(encrypted);
+        }
+      })
+    });
   });
-});
 <% end %>

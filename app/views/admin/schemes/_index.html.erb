@@ -12,7 +12,7 @@
     <% schemes.each do |scheme| %>
       <tr>
         <td>
-          <%= scheme.name %>
+          <%= link_to scheme.name, [current_user_role_group, scheme] %>
           <div class="small">
             <%= t('mongoid.attributes.scheme.created_by')%> :
             <%= scheme.created_by_name || '-' %>
@@ -24,14 +24,7 @@
         </td>
         <td><%= t("mongoid.attributes.scheme/status.#{scheme.status}") %></td>
         <td>
-          <div class="dropdown show text-right">
-          <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-              <% if Admin::SchemePolicy.new(current_user, scheme).edit? %>
-                <%= link_to t('controller.schemes.edit.link_name'), edit_admin_scheme_path(scheme), class: 'dropdown-item modal-remote-form-link' %>
-              <% end %>
-           </div>
-        </div>
+          <%= render "#{current_user_role_group}/schemes/links", scheme: scheme, color: 'black' %>
         </td>
       </tr>
     <% end %>

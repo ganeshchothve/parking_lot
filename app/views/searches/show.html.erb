@@ -15,19 +15,19 @@
                 <li>
                   <%= link_to edit_search_path, class: 'br-lf-rd-4 modal-remote-form-link' , title: t('mongoid.attributes.search.bedrooms') do %>
                     <span><%= @search.try(:bedrooms) || t('global.all') %></span>
-                    <%= image_tag 'bed-gray', class: 'bed-icon'%>
+                    <%= image_tag 'bed-gray.svg', class: 'bed-icon'%>
                   <% end %>
                 </li>
                 <li>
                   <%= link_to edit_search_path, class: 'br-lf-rd-4 modal-remote-form-link' , title: t('mongoid.attributes.search.agreement_price') do %>
                     <span><%= @search.try(:agreement_price).present? ? @search.try(:agreement_price_to_s) : t('global.all') %></span>
-                    <%= image_tag 'file-contract-black-gray', class: 'file-icon'%>
+                    <%= image_tag 'file-contract-black-gray.svg', class: 'file-icon'%>
                   <% end %>
                 </li>
                 <li>
                   <%= link_to edit_search_path, class: 'br-lf-rd-4 modal-remote-form-link' , title: t('mongoid.attributes.search.all_inclusive_price') do %>
                     <span><%= @search.try(:all_inclusive_price).present? ? @search.try(:all_inclusive_price_to_s) : t('global.all') %></span>
-                    <%= image_tag 'rupee-black-gray', class: 'rupee-icon'%>
+                    <%= image_tag 'rupee-black-gray.svg', class: 'rupee-icon'%>
                   <% end %>
                 </li>
               </ul>

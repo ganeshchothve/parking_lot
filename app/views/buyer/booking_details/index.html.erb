@@ -3,10 +3,9 @@
     <div class="row">
     <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
       <div class="table-title pt-1">
-        <h1 class="title">
-          <%= image_tag 'lock-black'%>
-          <%= @booking_details.total_entries %>
+        <h1 class="title icon-set icon-lock-black">
           <%= BookingDetail.model_name.human(count: @booking_details.total_entries) %>
+          <span class="badge bg-gradient-cd white"><%= @booking_details.total_entries %></span>
         </h1>
       </div>
     </div>

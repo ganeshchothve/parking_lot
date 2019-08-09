@@ -20,10 +20,10 @@
         <section class="bookings my-4 mb-4">
           <div class="container">
             <div class="box-card">
-              <div class="box-header br-rd-tr-4">
+              <div class="box-header br-rd-tr-4 row">
                 <h2 class="text-dark icon-set icon-lock-black">
-                  <%= @booking_details.total_entries %>
                   <%= BookingDetail.model_name.human(count: @booking_details.total_entries )%>
+                  <span class="badge bg-gradient-cd white"><%= @booking_details.total_entries %></span>
                 </h2>
               </div>
             </div>
@@ -38,8 +38,11 @@
       <section class="bookings my-4 mb-4">
         <div class="container">
           <div class="d-print-none box-card">
-            <div class="box-header br-rd-tr-4">
-              <h2 class="text-dark"> <%= @project_unit.assets.count %> <%= Asset.model_name.human(count: @project_unit.assets.count) %> </h2>
+            <div class="box-header br-rd-tr-4 row">
+              <h2 class="text-dark icon-set icon-file-contract-black">
+                <%= Asset.model_name.human(count: @project_unit.assets.count) %>
+                <span class="badge bg-gradient-cd white"><%= @project_unit.assets.count %> </span>
+              </h2>
             </div>
           </div>
           <div class="box-content br-rd-bl-4 bg-white">

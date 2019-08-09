@@ -1,0 +1,36 @@
+<section class="first-sec welcome-box">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 bg-gradient">
+        <div class="box-content">
+          <h1 class="wc-title white text-center"><%= 'Welcome ' + current_user.name %></h1>
+          <ul class="step-booking">
+            <li><span><img src="<%= asset_path 'file-invoice.svg' %>"></span><%= t('controller.buyer.dashboard.fill_kyc_form') %></li>
+            <li><span><img src="<%= asset_path 'rupee-blue.svg' %>"></span><%= t('controller.admin.dashboard.make_payment') %></li>
+            <li><span><img src="<%= asset_path 'building-blue.svg' %>"></span><%= t('controller.buyer.dashboard.choose_apartment') %></li>
+          </ul>
+          <% if current_user.kyc_ready? && current_user.booking_details.in(status: BookingDetail::BOOKING_STAGES).count >= current_user.allowed_bookings %>
+              <p class="white text-center fn-14 fn-500">You cannot book any more apartments as you have reached the maximum bookings allowed per customer.</p>
+          <% elsif current_user.kyc_ready? && current_client.enable_actual_inventory?(current_user) %>
+            <%- booking_detail = current_user.booking_details.hold.first %>
+            <% if booking_detail %>
+              <p class="white text-center fn-14 fn-500">You already have a unit on hold.</p>
+              <%= link_to t('controller.buyer.dashboard.conitnue_booking'), checkout_user_search_path(booking_detail.search), class: 'large-btn black-bg display-block fn-500 center-block show-kyc' %>
+            <% else %>
+              <% if Buyer::ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: current_user, status: "available")).hold? %>
+                <p class="white text-center fn-14 fn-500">Choose apartment and add booking</p>
+                <%= link_to t('controller.buyer.dashboard.book_apartment'), new_search_path, class: 'large-btn black-bg display-block fn-500 center-block show-kyc' %>
+              <% end %>
+            <% end %>
+          <% elsif current_user.kyc_ready? %>
+            <p class="white text-center fn-14 fn-500">Make Payment to proceed further</p>
+            <%= link_to t('controller.buyer.dashboard.add_payment'), new_buyer_receipt_path, class: 'large-btn black-bg display-block fn-500 center-block show-kyc modal-remote-form-link' %>
+          <% else %>
+            <p class="white text-center fn-14 fn-500">Fill your KYC form for proceed further</p>
+            <%= link_to t('controller.buyer.dashboard.fill_kyc_form'), new_buyer_user_kyc_path, class: 'large-btn black-bg display-block fn-500 center-block show-kyc modal-remote-form-link' %>
+          <% end%>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

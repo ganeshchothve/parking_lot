@@ -2,11 +2,10 @@
   <div class="container">
     <div class="row">
     <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
-      <div class="table-title pt-1">
-        <h1 class="title">
-          <%= image_tag 'file-contract-black'%>
-          <%= @user_requests.total_entries %>
+      <div class="table-title pt-1 pb-3">
+        <h1 class="title icon-set icon-file-contract-black">
           <%= UserRequest.model_name.human(count: @user_requests.total_entries ) %>
+          <span class="badge bg-gradient-cd white"><%= @user_requests.total_entries %></span>
         </h1>
       </div>
     </div>

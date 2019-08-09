@@ -2,7 +2,7 @@
   <%= link_to t('controller.booking_details.continue_booking.link_name'), checkout_user_search_path(booking_detail.search), class: 'dropdown-item' %>
 <% end %>
 
-<% if policy([:buyer, BookingDetail ]).show? %>
+<% if policy([:buyer, BookingDetail ]).show? && !current_page?(request.url) %>
   <%= link_to t('helpers.show.link_name', model: BookingDetail.model_name.human ), buyer_booking_detail_path( booking_detail), class: 'dropdown-item' %>
 <% end %>
 

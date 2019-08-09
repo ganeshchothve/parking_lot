@@ -235,6 +235,10 @@ class User
     portal_stages.desc(:updated_at).first
   end
 
+  def active_bookings
+    booking_details.in(status: BookingDetail::BOOKING_STAGES)
+  end
+
   def total_balance_pending
     booking_details.in(status: ProjectUnit.booking_stages).sum(&:pending_balance)
   end

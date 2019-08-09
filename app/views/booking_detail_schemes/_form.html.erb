@@ -47,7 +47,7 @@
       <div class="col-md-6">
         <div class="form-group">
           <%= adj.label :field, class: 'label-required' %>
-          <%= adj.select :field, Scheme.available_fields.collect{|x| [x.titleize, x]}, {prompt: true}, class: 'selectize-tags', disabled: !editable_payment_adjustment %>
+          <%= adj.select :field, Scheme::FIELDS.collect{|sf| [t("mongoid.attributes.payment_adjustment/field.#{sf}"), sf]}, {prompt: true}, class: 'selectize-tags', disabled: !editable_payment_adjustment %>
         </div>
       </div>
     </div>

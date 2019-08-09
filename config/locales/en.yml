@@ -109,6 +109,10 @@ en:
       project:
         one: Project
         count: Projects
+      payment_adjustment:
+        zero: Payment Adjustment
+        one: Payment Adjustment
+        other: Payment Adjustments
       receipt:
         one: Payment
         other: Payments
@@ -344,6 +348,17 @@ en:
       note:
         note: 'Note'
 
+      payment_adjustment:
+        name: Name
+        field: Field
+        formula: Formula
+        absolute_value: 'Absolute Value'
+        editable: Editable
+      payment_adjustment/field:
+        agreement_price: Agreement Value
+        all_inclusive_price: All Inclusive Value
+        base_rate: Base Rate
+        floor_rise: Floor Rise
       portal_stage_priority:
         stage_name: 'Stage'
         priority_name: 'Priority'
@@ -468,6 +483,7 @@ en:
         subject: 'Subject'
         body: 'Body'
         status: 'Status'
+        content: Content
       sms/status:
         received: Received
         untracked: Untracked
@@ -725,7 +741,6 @@ en:
         header: 'Add Note'
         link_name: 'Add Note'
 
-
     project_units:
       index:
         link_name: 'Apartments'
@@ -818,6 +833,8 @@ en:
         link_name: Schemes
       edit:
         link_name: Edit
+      show:
+        header: 'Scheme Detail'
     sync_logs:
       index:
         link_name: 'Sync Logs'
