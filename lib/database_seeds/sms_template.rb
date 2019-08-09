@@ -111,6 +111,9 @@ module DatabaseSeeds
       Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: 'no_booking_day_7',
         content: "Benefits with Multiplier Rebate Plan number <MRP 01201> keeps increasing. Earn additional discount of Rs.20,000 by referring your 3 friends at Happinest Kalyan and making them your neighbours on <a href = 'book.mahindrahappinest.com'> book.mahindrahappinest.com</a>")  if ::Template::SmsTemplate.where(name: "no_booking_day_7").blank?
 
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: 'payment_link', content: ' <% if self.manager.present? && self.manager_role?("channel_partner") %>
+            Thank you for your interest in <%= self.booking_portal_client.name %>. <%= self.manager_name %> has registered you. To make your first payment, please click here: <%= short_url(self.payment_link) %> <% end %>')  if ::Template::SmsTemplate.where(name: "payment_link").blank?
+
       return Template::SmsTemplate.where(booking_portal_client_id: client_id).count
     end
   end
