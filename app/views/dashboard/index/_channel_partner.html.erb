@@ -59,7 +59,7 @@
                     <li><%= link_to t('dashboard.titles.download_brochure'), download_brochure_path, target: "_blank", class: 'text-uppercase' %></li>
                     <li><%= link_to 'Visit Website', current_client.website_link, target: "_blank", class: 'text-uppercase' %></li>
                   </ul>
-                  <%= link_to "Add #{ t('mongoid.models.booking_detail.one') }", new_admin_booking_detail_path, class: 'large-btn bg-light-blue display-block fn-500 center-block text-uppercase modal-remote-form-link' %>
+                  <%= link_to "Add #{  t('controller.booking_details.new.link_name') }", new_admin_booking_detail_path, class: 'large-btn bg-light-blue display-block fn-500 center-block text-uppercase modal-remote-form-link' %>
                 </div>
               </div>
             </div>
