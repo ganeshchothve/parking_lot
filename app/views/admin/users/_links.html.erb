@@ -40,10 +40,10 @@
   <%= link_to t('controller.user_kycs.index.link_name'), admin_user_user_kycs_path(user_id: user.id), class: "dropdown-item" %>
 <% end %>
 <% if policy([:admin, UserKyc.new(user: user)]).new? %>
-  <%= link_to t('controller.user_kycs.new.link_name'), new_admin_user_user_kyc_path(user), class: "dropdown-item modal-remote-form-link" %>
+  <%= link_to t('helpers.new.link_name', model: UserKyc.model_name.human), new_admin_user_user_kyc_path(user), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 <% if policy([:admin, Note.new(notable: user)]).new? %>
-  <%= link_to t('controller.notes.new.link_name'), new_notable_path(notable_type: user.class.model_name.i18n_key.to_s, notable_id: user.id), class: "dropdown-item modal-remote-form-link" %>
+  <%= link_to t('helpers.new.link_name', model: Note.model_name.human), new_notable_path(notable_type: user.class.model_name.i18n_key.to_s, notable_id: user.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 <% if !user.confirmed? && user.confirmation_token.present? %>
   <%= link_to t('controller.users.resend_confirmation_instructions.link_name'), resend_confirmation_instructions_admin_user_path(user), class: "dropdown-item" %>

@@ -24,7 +24,7 @@
             <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <% if Admin::ChannelPartnerPolicy.new(current_user, channel_partner).edit? %>
-                  <%= link_to t('controller.channel_partners.edit.link_name'), edit_channel_partner_path(channel_partner), class: 'dropdown-item modal-remote-form-link' %>
+                  <%= link_to t('helpers.edit.link_name', model: ChannelPartner.model_name.human), edit_channel_partner_path(channel_partner), class: 'dropdown-item modal-remote-form-link' %>
                 <% end %>
 
                 <%= link_to t('controller.channel_partners.show.link_name'), channel_partner, class: 'dropdown-item' %>

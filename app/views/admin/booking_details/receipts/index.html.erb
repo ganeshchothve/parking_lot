@@ -17,6 +17,7 @@
         </div>
 
         <div class="col-3 pr-0">
+          <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @receipts.total_entries %></button>
           <% if policy([:admin, Receipt.new(user: @user, booking_detail: @booking_detail)]).new? %>
             <%= link_to t('controller.booking_details.receipts.new.link_name'), new_admin_user_booking_detail_receipt_path(@user, @booking_detail), class: 'btn btn-primary modal-remote-form-link float-right' %>
           <% end %>

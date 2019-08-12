@@ -41,6 +41,12 @@ en:
   helpers:
     show:
       link_name: '%{model} Details'
+    edit:
+      link_name: 'Change %{model}'
+    new:
+      link_name: 'Add %{model}'
+    destroy:
+      link_name: 'Destroy %{model}'
     select:
       prompt: Please select
     submit:
@@ -837,7 +843,11 @@ en:
       edit:
         link_name: Edit
       show:
-        header: 'Scheme Detail'
+        link_name: Scheme Detail
+        header: Scheme Detail
+      new:
+        link_name: Add Scheme
+        header: Add Scheme
     sync_logs:
       index:
         link_name: 'Sync Logs'
@@ -947,7 +957,6 @@ en:
       hint: '(you might have some payments pending clearance)'
     total_unattached_balance:
       hint: '(subject to clearance)'
-
 
   sessions:
     new:

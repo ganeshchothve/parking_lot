@@ -5,16 +5,20 @@
         <div class="table-title pt-1 mb-3">
           <h1 class="title icon-file-kycs-black icon-set">
             <%= UserKyc.model_name.human(count: @user_kycs.total_entries) %>
-            <span class="badge bg-gradient-cd white"><%= @user_kycs.total_entries %></span>
           </h1>
         </div>
       </div>
-      <div class="col-lg-4 col-xs-12 col-md-6 col-sm-12 no-pd">
-      </div>
-      <div class="col-lg-2 col-xs-12 col-md-6 col-sm-12 no-pd">
-        <% if Buyer::UserKycPolicy.new(current_user, UserKyc.new(user: @user)).new? %>
-          <%= link_to t('controller.user_requests.new.link_name'), new_buyer_user_kyc_path, class: 'btn btn-primary modal-remote-form-link float-right', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
-        <% end %>
+      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
+        <div class="table-btn-set float-right pb-3">
+          <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @user_kycs.total_entries %></button>
+          <% if Buyer::UserKycPolicy.new(current_user, UserKyc.new(user: @user)).new? %>
+            <%= link_to t('controller.user_requests.new.link_name'), new_buyer_user_kyc_path, class: 'btn modal-remote-form-link db-small-btn light-blue bg-white fn-400', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
+          <% end %>
+          <button class="db-filter-btn white fn-500" type="button">
+            <i class="icon-set icon-filter-light-blue"></i>
+          </button>
+        </div>
+
       </div>
 
       <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">

@@ -4,7 +4,7 @@
 <% end %>
 
 <% if policy([:admin, project_unit]).edit? %>
-  <%= link_to t('controller.project_units.edit.link_name'), edit_admin_project_unit_path(project_unit), class: 'dropdown-item modal-remote-form-link' %>
+  <%= link_to t('helpers.edit.link_name', model: ProjectUnit.model_name.human), edit_admin_project_unit_path(project_unit), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
 
 <% if policy([:admin, project_unit]).quotation? %>

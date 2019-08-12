@@ -8,9 +8,10 @@
     </div>
     <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
       <div class="table-btn-set float-right pb-3">
+        <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @erp_models.total_entries %></button>
         <div class="new-menu display-initial" >
           <% if policy([:admin, ErpModel.new]).new? %>
-            <%= link_to 'New', new_admin_erp_model_path, class: 'btn btn-xs modal-remote-form-link db-small-btn light-blue bg-white fn-400' %>
+            <%= link_to t('helpers.new.link_name', model: ErpModel.model_name.human ), new_admin_erp_model_path, class: 'btn btn-xs modal-remote-form-link light-blue bg-white fn-400' %>
           <% end %>
         </div>
       </div>
