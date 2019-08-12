@@ -96,7 +96,7 @@ module ApplicationHelper
     end
     if current_user && TemplatePolicy.new(current_user, Template).index?
       html += "<li >
-        #{link_to(t('controller.templates.show.link_name'), admin_client_templates_path, class: 'footer-link')}
+        #{link_to(t('helpers.show.link_name', model: ::Template.model_name.human), admin_client_templates_path, class: 'footer-link')}
       </li>"
     end
     if current_user && policy([current_user_role_group, Asset.new(assetable: current_client)]).index? && current_user.role?("superadmin")

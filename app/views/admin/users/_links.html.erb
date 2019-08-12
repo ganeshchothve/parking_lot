@@ -30,7 +30,7 @@
 <% end %>
 
 <% if policy([:admin, user]).show? && action_name != 'show' %>
-  <%= link_to t('controller.users.show.link_name'), admin_user_path(user), class: "dropdown-item", target: "_blank" %>
+  <%= link_to t('helpers.show.link_name', model: User.human_attribute_name(user.role)), admin_user_path(user), class: "dropdown-item", target: "_blank" %>
 <% end %>
 
 <% if policy([:admin, User.new]).edit? %>

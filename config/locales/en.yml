@@ -42,7 +42,7 @@ en:
     show:
       link_name: '%{model} Details'
     edit:
-      link_name: 'Change %{model}'
+      link_name: 'Edit %{model}'
     new:
       link_name: 'Add %{model}'
     destroy:

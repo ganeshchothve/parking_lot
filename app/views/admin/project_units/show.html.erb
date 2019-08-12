@@ -2,9 +2,9 @@
   <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header bg-gradient-cd white">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+            <span aria-hidden="true" class="white">&times;</span>
           </button>
         </div>
         <div class="modal-body">
@@ -17,65 +17,60 @@
 
       <% if %w[superadmin admin].include?(current_user.role) && @booking_details.present? %>
         <div class="mt-3"></div>
-        <section class="bookings my-4 mb-4">
-          <div class="container">
-            <div class="box-card">
-              <div class="box-header br-rd-tr-4 row">
-                <h2 class="text-dark icon-set icon-lock-black">
-                  <%= BookingDetail.model_name.human(count: @booking_details.total_entries )%>
-                  <span class="badge bg-gradient-cd white"><%= @booking_details.total_entries %></span>
-                </h2>
-              </div>
-            </div>
-            <div class="box-content br-rd-bl-4 bg-white">
-              <%= render 'admin/booking_details/index', { booking_details: @booking_details } %>
-            </div>
-          </div>
-        </section>
+        <%= render 'booking_details/section', booking_details: @booking_details %>
       <% end %>
 
       <div class="mt-3"></div>
-      <section class="bookings my-4 mb-4">
+      <section class="documents my-4 mb-4">
         <div class="container">
-          <div class="d-print-none box-card">
-            <div class="box-header br-rd-tr-4 row">
-              <h2 class="text-dark icon-set icon-file-contract-black">
-                <%= Asset.model_name.human(count: @project_unit.assets.count) %>
-                <span class="badge bg-gradient-cd white"><%= @project_unit.assets.count %> </span>
-              </h2>
+          <div class="row">
+            <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
+              <div class="table-title pt-1">
+                <h2 class="title text-dark icon-set icon-file-contract-black">
+                  <%= Asset.model_name.human(count: @project_unit.assets.count) %>
+                </h2>
+              </div>
             </div>
-          </div>
-          <div class="box-content br-rd-bl-4 bg-white">
-            <% if @project_unit.assets.present? %>
-              <div class="card card-body">
-                <div id="project_unit_gallery_<%= @project_unit.id %>" class="carousel slide" data-ride="carousel">
-                <ol class="carousel-indicators">'
-                  <% @project_unit.assets.each_with_index do |asset, index| %>
-                    <li data-target="#project_unit_gallery_<%= @project_unit.id %>" data-slide-to="<%= index %>" class="<%= index.zero? ? "active" : "" %>"></li>
-                  <% end %>
-                </ol>
-                <div class="carousel-inner">
-                  <% @project_unit.assets.each_with_index do |asset, index| %>
-                    <div class="carousel-item <%= index.zero? ? "active" : "" %>">
-                      <img class="d-block w-100" src="<%= asset.file.url %>" />
+            <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
+              <div class="table-btn-set float-right pb-3">
+                <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @project_unit.assets.count %></button>
+              </div>
+            </div>
+            <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd bg-white">
+              <% if @project_unit.assets.present? %>
+                <div class="card card-body">
+                  <div id="project_unit_gallery_<%= @project_unit.id %>" class="carousel slide" data-ride="carousel">
+                    <ol class="carousel-indicators">'
+                      <% @project_unit.assets.each_with_index do |asset, index| %>
+                        <li data-target="#project_unit_gallery_<%= @project_unit.id %>" data-slide-to="<%= index %>" class="<%= index.zero? ? "active" : "" %>"></li>
+                      <% end %>
+                    </ol>
+
+                    <div class="carousel-inner">
+                      <% @project_unit.assets.each_with_index do |asset, index| %>
+                        <div class="carousel-item <%= index.zero? ? "active" : "" %>">
+                          <img class="d-block w-100" src="<%= asset.file.url %>" />
+                        </div>
+                      <% end %>
                     </div>
-                  <% end %>
+
+                    <a class="carousel-control-prev" href="#project_unit_gallery_<%= @project_unit.id %>" role="button" data-slide="prev">
+                      <span class="fas fa-chevron-left text-dark" aria-hidden="true"></span>
+                      <span class="sr-only"><%= t('global.previous')%></span>
+                    </a>
+
+                    <a class="carousel-control-next" href="#project_unit_gallery_<%= @project_unit.id %>" role="button" data-slide="next">
+                      <span class="fas fa-chevron-right text-dark" aria-hidden="true"></span>
+                      <span class="sr-only"><%= t('global.next') %></span>
+                    </a>
+                  </div>
                 </div>
-                <a class="carousel-control-prev" href="#project_unit_gallery_<%= @project_unit.id %>" role="button" data-slide="prev">
-                  <span class="fas fa-chevron-left text-dark" aria-hidden="true"></span>
-                  <span class="sr-only"><%= t('global.previous')%></span>
-                </a>
-                <a class="carousel-control-next" href="#project_unit_gallery_<%= @project_unit.id %>" role="button" data-slide="next">
-                  <span class="fas fa-chevron-right text-dark" aria-hidden="true"></span>
-                  <span class="sr-only"><%= t('global.next') %></span>
-                </a>
-              </div>
-              </div>
-            <% else %>
-              <div class="alert alert-primary">
-                <%= t('assets.image.not_found') %>
-              </div>
-            <% end %>
+              <% else %>
+                <div class="alert alert-primary">
+                  <%= t('assets.image.not_found') %>
+                </div>
+              <% end %>
+            </div>
           </div>
         </div>
       </section>

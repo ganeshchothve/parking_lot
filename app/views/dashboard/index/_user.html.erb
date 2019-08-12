@@ -4,7 +4,7 @@
 <!-- My Projects -->
 <%= render 'users/my_projects' %>
 <!-- Receipts -->
-<%= render 'receipts/section' %>
+<%= render 'receipts/section', receipts: @receipts %>
 
 <% if policy([:buyer, TimeSlot]).index? %>
   <%= render 'users/time_slots' %>

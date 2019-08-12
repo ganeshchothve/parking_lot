@@ -3,155 +3,48 @@
     <div class="col-md-12">
       <%= render 'users/overview', user: @user%>
 
+      <% if @user.role?("channel_partner") || @user.role?("cp") %>
+        <!-- User List -->
+        <div class="mt-3"></div>
+        <%= render 'users/section', users: User.where(manager_id: @user.id).paginate(page: 1) %>
+      <% end %>
+
+      <!-- booking_details -->
+      <% if @user.buyer? && current_client.enable_actual_inventory?(current_user) %>
+        <div class="mt-3"></div>
+        <%= render 'booking_details/section', booking_details: @booking_details %>
+      <% end %>
+
+      <!-- receipts -->
+      <div class="mt-3"></div>
+      <%= render 'receipts/section', receipts: @receipts %>
+
       <% if current_user.role?('admin') %>
         <div class="col-md-12 mt-3 p-0">
           <%= render 'users/utm_params', user: @user %>
         </div>
       <% end %>
 
+
+      <!-- Note Summary -->
+      <div class="mt-3"></div>
+      <%= render 'notes/section', notable: @user %>
+
+      <!-- My Referrals -->
+      <div class="mt-3"></div>
+      <%= render 'users/section', users: @referrals %>
+
+      <% if policy([:admin, TimeSlot]).index? %>
+        <div class="mt-3"></div>
+        <%= render 'receipts/time_slot_section', user: @user %>
+      <% end %>
+
       <% if current_client.external_api_integration? && policy([current_user_role_group, SyncLog.new]).index? %>
-        <div class="col-md-12 mt-3 p-0">
+        <div class="col-md-12 my-3 p-0">
           <%= render 'sync_logs/sync', { record: @user } %>
         </div>
       <% end %>
 
-      <% if policy([:admin, TimeSlot]).index? %>
-        <div class="col-md-12 mt-3 p-0">
-          <section class="d-print-none">
-            <div class="container">
-              <div class="box-card">
-                <div class="box-header br-rd-tr-4 row px-1">
-                  <h2 class="text-dark icon-set icon-time-black">
-                    <%= t('mongoid.attributes.receipt.time_slot') %>
-                  </h2>
-                </div>
-                <div class="box-content br-rd-bl-4 bg-white row p-0">
-                  <div class="col-md-12 col-lg-12 col-sm-12 p-0">
-                    <%= render "receipts/time_slot", receipts: @user.receipts, with_actions: true %>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-        </div>
-      <% end %>
-
-      <!-- Note Summary -->
-      <div class="col-md-12 mt-3 p-0">
-        <section class="my-4 mb-4 d-print-none">
-          <div class="container">
-            <div class="box-card">
-              <div class="box-header br-rd-tr-4 row px-1">
-                <div class="col-12 p-0">
-                  <h2 class="text-dark icon-set icon-file-contract-black">
-                    <%= Note.model_name.human(count: @user.notes.count ) %>
-                    <span class="badge bg-gradient-cd white"><%= @user.notes.count %></span>
-                  </h2>
-                </div>
-              </div>
-              <div class="box-content br-rd-bl-4 bg-white row">
-                <div class="col-12">
-                  <%= render "notes/index", notable: @user %>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-
-      <% if @user.role?("channel_partner") || @user.role?("cp") %>
-        <!-- User List -->
-        <div class="col-md-12 mt-3 p-0">
-          <section class="my-4 mb-4 d-print-none">
-            <div class="container">
-              <div class="box-card">
-                <div class="box-header br-rd-tr-4 row">
-                  <div class="col-12 p-0 row p-0">
-                    <h2 class="text-dark icon-set icon-file-contract-black col-12">
-                      <%= User.model_name.human %>
-                      <span class="badge bg-gradient-cd white"><%= @user.notes.count %> </span>
-                    </h2>
-                  </div>
-                </div>
-                <div class="box-content br-rd-bl-4 bg-white row p-0">
-                  <div class="col-12 p-0">
-                    <%= render "admin/users/index", users: User.where(manager_id: @user.id).paginate(page: 1, per_page: 5) %>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-        </div>
-      <% end %>
-
-      <% if @user.buyer? && current_client.enable_actual_inventory?(current_user) %>
-        <div class="col-md-12 mt-3 p-0">
-          <section class=" my-4 mb-4 d-print-none">
-            <div class="container">
-              <div class="box-card">
-                <div class="box-header br-rd-tr-4 row px-1">
-                  <div class="col-12 p-0">
-                    <h2 class="text-dark icon-set icon-lock-black">
-                      <%= BookingDetail.model_name.human(count: @booking_details.count)%>
-                      <span class="badge bg-gradient-cd white"><%= @booking_details.total_entries %> </span>
-                    </h2>
-                  </div>
-                </div>
-                <div class="box-content br-rd-bl-4 bg-white row p-0">
-                  <div class="col-12 p-0">
-                    <%= render 'admin/booking_details/index', { booking_details: @booking_details } %>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-        </div>
-      <% end %>
-      <!-- receipts -->
-      <div class="col-md-12 mt-3 p-0">
-        <section class=" my-4 mb-4 d-print-none">
-          <div class="container">
-            <div class="box-card">
-              <div class="box-header br-rd-tr-4 row px-1">
-                <div class="col-12 row">
-                  <h2 class="text-dark icon-set icon-rupee-black">
-                    <%= t('mongoid.models.receipt', count: @receipts.total_entries )%>
-                    <span class="badge bg-gradient-cd white"><%= @receipts.total_entries %> </span>
-                  </h2>
-                </div>
-              </div>
-              <div class="box-content br-rd-bl-4 bg-white row p-0">
-                <div class="col-12 p-0">
-                  <%= render 'receipts/index', {receipts: @receipts } %>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-
-      <!-- My Referrals -->
-      <div class="col-md-12 mt-3 p-0">
-        <section class=" my-4 mb-5 d-print-none">
-          <div class="container">
-            <div class="box-card">
-              <div class="box-header br-rd-tr-4 row px-1">
-                <div class="col-12 p-0">
-                  <h2 class="text-dark icon-set icon-refferal-black">
-                    <%= t('mongoid.models.referral', count: @referrals.total_entries ) %>
-                    <span class="badge bg-gradient-cd white"><%= @referrals.total_entries %> </span>
-                  </h2>
-                </div>
-              </div>
-              <div class="box-content br-rd-bl-4 bg-white row p-0">
-                <div class="col-12 p-0">
-                  <%= render "admin/users/index", { users: @referrals } %>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
     </div>
   </div>
 </div>

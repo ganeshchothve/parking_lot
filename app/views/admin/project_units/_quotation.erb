@@ -1,5 +1,11 @@
-<div class="container">
-  <%= render 'admin/project_units/project_unit_cost_details', locals: { booking_detail: @booking_detail } %>
+<div class="container mb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <%= render 'admin/project_units/project_unit_cost_details', locals: { booking_detail: @booking_detail } %>
+    </div>
+  </div>
+
+
   <div class="card mt-3 pb_after">
     <div class="card-body">
       <div class="table-responsive">
@@ -7,6 +13,7 @@
       </div>
     </div>
   </div>
+
   <div class="card mt-3 pb_after">
     <div class="card-body">
       <div class="table-responsive">

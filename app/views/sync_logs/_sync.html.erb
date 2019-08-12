@@ -1,12 +1,12 @@
-<section class="bookings d-print-none">
+<section class="bookings d-print-none mb-5">
   <div class="container">
     <div class="box-card">
-      <div class="box-header br-rd-tr-4 row px-1">
-        <div class="col-12 p-0">
+      <div class="box-header br-rd-tr-4 row p-0">
+        <div class="col-12 p-0" data-toggle="collapse" href="#collapseSyncLogs" role="button" aria-expanded="false" aria-controls="collapseSyncLogs">
           <h2 class="text-dark icon-set icon-sync-black"> <%= SyncLog.model_name.human %> </h2>
         </div>
       </div>
-      <div class="box-content br-rd-bl-4 bg-white row">
+      <div class="box-content br-rd-bl-4 bg-white row collapse" id='collapseSyncLogs'>
         <div class="col-md-12 col-lg-12 col-sm-12">
           <% record.erp_models.active.each do |erp_model| %>
             <ul class="booking-apart-info clear">

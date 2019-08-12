@@ -80,7 +80,7 @@
       <% if policy([:admin, @channel_partner]).editable_field?("status") %>
         <div class="form-group">
           <%= form.label :status, class: 'title label-required' %>
-          <%= form.select :status, ChannelPartner::STATUS.collect{|x| [ t("mongoid.attributes.channel_partner/status.#{x}"), x[:id]]}, {prompt: "Select"}, {required: "required", class: "selectize", disabled: (policy([:admin, @channel_partner]).editable_field?("status") ? false : true)} %>
+          <%= form.select :status, ChannelPartner::STATUS.collect{|x| [ t("mongoid.attributes.channel_partner/status.#{x}"), x ] }, {prompt: "Select"}, {required: "required", class: "selectize", disabled: (policy([:admin, @channel_partner]).editable_field?("status") ? false : true)} %>
         </div>
       <% end %>
     </div>

@@ -57,6 +57,8 @@ class Receipt
     where(booking_detail_id: _booking_detail_id)
   end
 
+  scope :direct_payments, ->{ where(booking_detail_id: nil )}
+
   validates :issuing_bank, :issuing_bank_branch, name: true, unless: proc { |receipt| receipt.online? }
   validates :payment_identifier, length: { in: 3..25 }, format: { without: /[^A-Za-z0-9_-]/, message: "can contain only alpha-numaric with '_' and '-' "}, if: proc { |receipt| receipt.offline? }
   validates :total_amount, :status, :payment_mode, :user_id, presence: true

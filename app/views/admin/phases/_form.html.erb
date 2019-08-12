@@ -2,10 +2,10 @@
   <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
-        <div class="modal-header">
-          <h3 class="modal-title"><%= @phase.new_record? ? "New" : "Edit" %> <%= t('global.phase') %></h3>
+        <div class="modal-header bg-gradient-cd white">
+          <h3 class="title"><%= t("helpers.#{action_name}.link_name", model: Phase.model_name.human) %></h3>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+          <span aria-hidden="true" white='white'>&times;</span>
           </button>
         </div>
         <div class="modal-body">
