@@ -94,6 +94,9 @@ en:
       email:
         one: Email
         other: Emails
+      erp_model:
+        one: ERP Model
+        other: ERP Models
       note:
         one: Note
         other: Notes

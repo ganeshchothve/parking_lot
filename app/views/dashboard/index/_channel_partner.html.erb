@@ -13,7 +13,7 @@
                 <span>
                   <%= image_tag 'file-invoice-lightblue.svg', alt: "Add customer" %>
                 </span>
-                <%= t('controller.users.new.link_name', name: User.model_name.human) %>
+                <%= t('controller.users.new.link_name', role: User.model_name.human) %>
               </li>
               <li class="light-blue">
                 <span><%= image_tag 'rupee-lightblue.svg' %></span>
@@ -24,7 +24,7 @@
               </li>
             </ul>
             <!-- <p class="white text-center fn-14 fn-500">Fill your KYC form for proceed further</p> -->
-            <%= link_to t('controller.users.new.link_name', name: t('mongoid.models.user/role.user')), new_admin_user_path(role: 'user'), class: 'large-btn black-bg display-block fn-500 center-block show-kyc modal-remote-form-link' %>
+            <%= link_to t('controller.users.new.link_name', role: t("mongoid.attributes.user/role.user")), new_admin_user_path(role: 'user'), class: 'large-btn black-bg display-block fn-500 center-block show-kyc modal-remote-form-link' %>
           </div>
         </div>
       </div>
@@ -58,7 +58,7 @@
                     <li><%= link_to t('dashboard.titles.download_brochure'), download_brochure_path, target: "_blank", class: 'text-uppercase' %></li>
                     <li><%= link_to 'Visit Website', current_client.website_link, target: "_blank", class: 'text-uppercase' %></li>
                   </ul>
-                  <%= link_to "Add #{ t('global.booking_detail') }", new_admin_booking_detail_path, class: 'large-btn bg-light-blue display-block fn-500 center-block text-uppercase modal-remote-form-link' %>
+                  <%= link_to t('controller.booking_details.new.link_name'), new_admin_booking_detail_path, class: 'large-btn bg-light-blue display-block fn-500 center-block text-uppercase modal-remote-form-link' %>
                 </div>
               </div>
             </div>

@@ -71,10 +71,10 @@
             <%= form_for [:user, @search], html: {class: "validate-form edit_search_form"} do |f| %>
               <div class="form-group">
                 <%= f.hidden_field :step, value: @search.next_step %>
-                <%= f.hidden_field :project_tower_id, id: 'project_tower_id' %>
+                <%= f.hidden_field :project_tower_id, id: 'project_tower_id', require: true %>
               </div>
               <div class="form-group">
-                <%= f.submit "Next", class: "small-btn blue-bg display-block fn-400 float-right" %>
+                <%= f.submit "Next", disabled: true, class: "small-btn blue-bg display-block fn-400 float-right" %>
               </div>
             <% end %>
           <% end %>
@@ -84,9 +84,9 @@
   </div>
 <% else %>
   <div class="alert alert-primary">
-    <%= t('controller.searches.choose_tower.error') %>
+    <%= t('controller.searches.filter.error') %>
     <br/>
-    <%= link_to t('controller.searches.choose_tower.again'), edit_search_path, class: "modal-remote-form-link" %>
+    <%= link_to t('controller.searches.filter.again'), edit_search_path, class: "modal-remote-form-link icon-set icon-sad-tear" %>
   </div>
 <% end %>
 <%= javascript_tag do %>

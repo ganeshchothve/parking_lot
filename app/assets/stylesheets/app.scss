@@ -312,6 +312,10 @@ h6{
   background-image: asset-url('time-black.svg')
 }
 
+.icon-key-black:before{
+  background-image: asset-url('key-black.svg');
+}
+
 .icon-file-spreadsheet-white:before{
   background-image: asset-url('file-spreadsheet-white.svg');
 }
@@ -369,4 +373,12 @@ h6{
 
 .icon-time-black:before{
   background-image: asset-url('time-black.svg');
+}
+
+.icon-download-black:before{
+  background-image: asset-url('download.svg');
+}
+
+.icon-sad-tear:before{
+  background-image: asset-url('sad-tear.svg');
 }

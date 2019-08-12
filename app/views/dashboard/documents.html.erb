@@ -21,17 +21,17 @@
             <thead>
               <tr class="bg-gradient-cd white">
                 <th><%= t('mongoid.attributes.asset.file_name') %></th>
-                <th class="text-right"><%= t('mongoid.attributes.asset.file_size') %></th>
-                <th class="text-right"><%= t('global.download')%></th>
+                <th><%= t('mongoid.attributes.asset.file_size') %></th>
+                <th class="text-right"><%= t('global.action', count: 2)%></th>
               </tr>
             </thead>
             <tbody>
               <% @assets.each do |asset| %>
               <tr>
                 <td><%= asset.file_name %></td>
-                <td class="text-right"><%= (asset.file_size.to_f / 1024 / 1024).round(2) %> MB</td>
+                <td><%= (asset.file_size.to_f / 1024 / 1024).round(2) %> MB</td>
                 <td class="text-right">
-                  <%= link_to t('global.download'), asset.file.url, target: "_blank", class: 'db-small-btn bg-light-blue white fn-500 btn' %>
+                  <%= link_to '', asset.file.url, target: "_blank", class: 'white fn-500 icon-set icon-download-black' %>
                 </td>
               </tr>
               <% end %>

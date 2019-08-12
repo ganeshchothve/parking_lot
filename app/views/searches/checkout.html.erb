@@ -24,8 +24,9 @@
               <div class="bookings mt-4 pl-4 pr-4 scroll-fixed-height">
                 <div class="container">
                   <div class="row">
-
-                    <%= render 'dashboard/booking_detail_overview', {booking_detail: @booking_detail} %>
+                    <div class='col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd mt-4' id='apartment'>
+                      <%= render 'dashboard/booking_detail_overview', {booking_detail: @booking_detail} %>
+                    </div>
                     <div class='col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd mt-4' id='cost-sheet'>
                       <%= render 'dashboard/booking_detail_cost_sheet', booking_detail: @booking_detail  %>
                     </div>
