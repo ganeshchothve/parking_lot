@@ -16,3 +16,11 @@
   </div>
 <% end %>
 <%= render "devise/shared/links" %>
+
+
+<%= javascript_tag do %>
+  $(document).ready(function(){
+
+    $('section.login-page').css('height', $( window ).height() - $('section.login-page').offset().top );
+  });
+<% end %>
