@@ -21,59 +21,7 @@
       <% end %>
 
       <div class="mt-3"></div>
-      <section class="documents my-4 mb-4">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
-              <div class="table-title pt-1">
-                <h2 class="title text-dark icon-set icon-file-contract-black">
-                  <%= Asset.model_name.human(count: @project_unit.assets.count) %>
-                </h2>
-              </div>
-            </div>
-            <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
-              <div class="table-btn-set float-right pb-3">
-                <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @project_unit.assets.count %></button>
-              </div>
-            </div>
-            <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd bg-white">
-              <% if @project_unit.assets.present? %>
-                <div class="card card-body">
-                  <div id="project_unit_gallery_<%= @project_unit.id %>" class="carousel slide" data-ride="carousel">
-                    <ol class="carousel-indicators">'
-                      <% @project_unit.assets.each_with_index do |asset, index| %>
-                        <li data-target="#project_unit_gallery_<%= @project_unit.id %>" data-slide-to="<%= index %>" class="<%= index.zero? ? "active" : "" %>"></li>
-                      <% end %>
-                    </ol>
-
-                    <div class="carousel-inner">
-                      <% @project_unit.assets.each_with_index do |asset, index| %>
-                        <div class="carousel-item <%= index.zero? ? "active" : "" %>">
-                          <img class="d-block w-100" src="<%= asset.file.url %>" />
-                        </div>
-                      <% end %>
-                    </div>
-
-                    <a class="carousel-control-prev" href="#project_unit_gallery_<%= @project_unit.id %>" role="button" data-slide="prev">
-                      <span class="fas fa-chevron-left text-dark" aria-hidden="true"></span>
-                      <span class="sr-only"><%= t('global.previous')%></span>
-                    </a>
-
-                    <a class="carousel-control-next" href="#project_unit_gallery_<%= @project_unit.id %>" role="button" data-slide="next">
-                      <span class="fas fa-chevron-right text-dark" aria-hidden="true"></span>
-                      <span class="sr-only"><%= t('global.next') %></span>
-                    </a>
-                  </div>
-                </div>
-              <% else %>
-                <div class="alert alert-primary">
-                  <%= t('assets.image.not_found') %>
-                </div>
-              <% end %>
-            </div>
-          </div>
-        </div>
-      </section>
+      <%= render 'assets/section', record: @project_unit, assets: @project_unit.assets %>
     </div>
   </div>
 </div>
