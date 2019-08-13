@@ -12,7 +12,7 @@
         <div class="table-btn-set float-right pb-3">
           <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @accounts.total_entries %></button>
           <div class="new-menu display-initial" >
-            <button class="db-small-btn white light-blue bg-white fn-400 dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= t('controller.accounts.new.link_name', model: Account.model_name.human) %></button>
+            <button class="db-small-btn white light-blue bg-white fn-400 dropdown-toggle width-130" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= t('controller.accounts.new.link_name', model: Account.model_name.human) %></button>
             <div class="dropdown-menu">
               <% Client::PAYMENT_GATEWAYS.each do |acct_type| %>
                 <%= link_to t("client.payment_gatways.#{acct_type}"), new_admin_account_path(account_type: "#{acct_type}Payment".underscore), class: 'dropdown-item modal-remote-form-link' %>

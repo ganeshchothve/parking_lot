@@ -91,22 +91,6 @@
       </div>
     </div>
   </div>
-  <div class="container mb-5 pt-4">
-    <div class="row">
-      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd mb-2">
-        <div class="table-title pt-1">
-          <h1 class="title icon-set icon-lock-black">
-            <%= BookingDetail.model_name.human(count: @booking_details.total_entries) %>
-            <span class="badge bg-gradient-cd white"><%= @booking_details.total_entries %></span>
-          </h1>
-        </div>
-      </div>
-      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd"></div>
-      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
-        <div class="box-card relative">
-          <%= render '/admin/booking_details/index', booking_details: @booking_details %>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div class="mt-3"></div>
+  <%= render 'booking_details/section', booking_details: @booking_details %>
 </section>
