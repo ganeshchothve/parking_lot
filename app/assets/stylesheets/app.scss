@@ -275,6 +275,10 @@ h6{
 .width-200{
   width: 200px !important;
 }
+
+.width-300{
+  width: 300px !important;
+}
 .width-130{
   width: 130px !important;
 }
@@ -293,6 +297,10 @@ h6{
     background-repeat: no-repeat;
     background-size: contain;
   }
+}
+
+.icon-search-black:before{
+  background-image: asset-url('search.svg');
 }
 
 .icon-filter-light-blue:before{

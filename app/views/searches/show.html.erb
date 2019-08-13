@@ -1,41 +1,48 @@
 <section class="my-customer">
   <div class="container">
     <div class="row">
-      <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 p-0 m-0">
-        <div class="row">
-          <div class="col-lg-3 col-xs-12 col-sm-12 col-md-6">
-            <h1 class="page-title mt-0 mb-1"> <%= t("controller.searches.#{@search.step}.header")%></h1>
-            <% unless current_user.buyer? %>
-              <small class="help-text text-warning"> <%= t('controller.searches.new.booking_hint', name: @user.name) %> </small>
-            <% end %>
-          </div>
-          <div class="col-lg-9 col-xs-12 col-sm-12 col-md-6">
-            <div class="float-right float-unset-xs">
-              <ul class="filter-home m-0">
-                <li>
-                  <%= link_to edit_search_path, class: 'br-lf-rd-4 modal-remote-form-link' , title: t('mongoid.attributes.search.bedrooms') do %>
-                    <span><%= @search.try(:bedrooms) || t('global.all') %></span>
-                    <%= image_tag 'bed-gray.svg', class: 'bed-icon'%>
-                  <% end %>
-                </li>
-                <li>
-                  <%= link_to edit_search_path, class: 'br-lf-rd-4 modal-remote-form-link' , title: t('mongoid.attributes.search.agreement_price') do %>
-                    <span><%= @search.try(:agreement_price).present? ? @search.try(:agreement_price_to_s) : t('global.all') %></span>
-                    <%= image_tag 'file-contract-black-gray.svg', class: 'file-icon'%>
-                  <% end %>
-                </li>
-                <li>
-                  <%= link_to edit_search_path, class: 'br-lf-rd-4 modal-remote-form-link' , title: t('mongoid.attributes.search.all_inclusive_price') do %>
-                    <span><%= @search.try(:all_inclusive_price).present? ? @search.try(:all_inclusive_price_to_s) : t('global.all') %></span>
-                    <%= image_tag 'rupee-black-gray.svg', class: 'rupee-icon'%>
-                  <% end %>
-                </li>
-              </ul>
-            </div>
+
+      <div class="col-lg-3 col-xs-12 col-md-6 col-sm-12 no-pd">
+        <div class="table-title">
+          <h1 class="title icon-set icon-search-black icon-bs-15">
+            <%= t("controller.searches.#{@search.step}.header")%>
+          </h1>
+        </div>
+      </div>
+
+      <div class="col-lg-9 col-xs-12 col-md-6 col-sm-12 no-pd">
+        <div class="table-btn-set float-right pb-3">
+          <% unless current_user.buyer? %>
+            <small class="help-text fn-14 pr-1"> <%= t('controller.searches.new.booking_hint', name: @user.name) %> </small>
+          <% end %>
+
+          <div class="float-right float-unset-xs pl-2">
+            <ul class="filter-home m-0">
+              <li>
+                <%= link_to edit_search_path, class: 'br-lf-rd-4 modal-remote-form-link' , title: t('mongoid.attributes.search.bedrooms') do %>
+                  <span><%= @search.try(:bedrooms) || t('global.all') %></span>
+                  <%= image_tag 'bed-gray.svg', class: 'bed-icon'%>
+                <% end %>
+              </li>
+              <li>
+                <%= link_to edit_search_path, class: 'br-lf-rd-4 modal-remote-form-link' , title: t('mongoid.attributes.search.agreement_price') do %>
+                  <span><%= @search.try(:agreement_price).present? ? @search.try(:agreement_price_to_s) : t('global.all') %></span>
+                  <%= image_tag 'file-contract-black-gray.svg', class: 'file-icon'%>
+                <% end %>
+              </li>
+              <li>
+                <%= link_to edit_search_path, class: 'br-lf-rd-4 modal-remote-form-link' , title: t('mongoid.attributes.search.all_inclusive_price') do %>
+                  <span><%= @search.try(:all_inclusive_price).present? ? @search.try(:all_inclusive_price_to_s) : t('global.all') %></span>
+                  <%= image_tag 'rupee-black-gray.svg', class: 'rupee-icon'%>
+                <% end %>
+              </li>
+            </ul>
           </div>
         </div>
-        <div class="separate-line mb-3"></div>
       </div>
+
+      <div class="separate-line"></div>
+
       <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 no-pd mt-4 mb-3">
         <div class="row">
           <%= render "searches/tabs/new", search: @search %>
