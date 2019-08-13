@@ -10,11 +10,11 @@
       </div>
       <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
         <div class="table-btn-set float-right pb-3">
-          <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= notable.notes.count %></button>
 
           <% if policy([current_user_role_group, Note.new(notable: notable)]).new? %>
             <%= link_to t('helpers.new.link_name', model: Note.model_name.human), new_notable_path(notable_type: notable.class.model_name.i18n_key.to_s, notable_id: notable.id), class: 'btn modal-remote-form-link db-small-btn light-blue bg-white fn-400' %>
           <% end %>
+          <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= notable.notes.count %></button>
 
         </div>
       </div>

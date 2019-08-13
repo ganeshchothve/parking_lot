@@ -46,16 +46,20 @@ Rails.application.routes.draw do
       patch :reorder, on: :collection
     end
     resources :booking_details, only: [:index, :show, :new, :create] do
-      patch :booking, on: :member
+      member do
+        patch :booking
+        patch :send_under_negotiation
+        get :cost_sheet
+        get :doc, path: 'doc/:type'
+      end
       get :mis_report, on: :collection
       get :searching_for_towers, on: :collection
-      patch :send_under_negotiation, on: :member
+
       resources :booking_detail_schemes, except: [:destroy], controller: 'booking_details/booking_detail_schemes'
 
       resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts' do
         get :lost_receipt, on: :collection
       end
-      resources :booking_detail_schemes, except: [:destroy]
       # resources :receipts, only: [:index]
     end
 
@@ -205,7 +209,10 @@ Rails.application.routes.draw do
   namespace :buyer do
 
     resources :booking_details, only: [:index, :show, :update] do
-      patch :booking, on: :member
+      member do
+        patch :booking
+        get :doc, path: 'doc/:type'
+      end
       resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts'
       resources :booking_detail_schemes, except: [:destroy], controller: 'booking_details/booking_detail_schemes'
     end

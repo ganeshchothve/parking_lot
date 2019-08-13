@@ -26,17 +26,17 @@
               <div class="carousel-inner">
                 <% assets.each_with_index do |asset, index| %>
                   <div class="carousel-item <%= index.zero? ? "active" : "" %>">
-                    <%= image_tag asset.file.url, class: 'd-block img-fluid m-auto'%>
+                    <%= image_tag asset.file.url, class: 'd-block img-fluid m-auto', alt: record.name %>
                   </div>
                 <% end %>
               </div>
 
-              <a class="carousel-control-prev" href="#record_gallery_<%= record.id %>" role="button" data-slide="prev">
+              <a class="carousel-control-prev bg-white" href="#record_gallery_<%= record.id %>" role="button" data-slide="prev">
                 <span class="fas fa-chevron-left text-dark" aria-hidden="true"></span>
                 <span class="sr-only"><%= t('global.previous')%></span>
               </a>
 
-              <a class="carousel-control-next" href="#record_gallery_<%= record.id %>" role="button" data-slide="next">
+              <a class="carousel-control-next bg-white" href="#record_gallery_<%= record.id %>" role="button" data-slide="next">
                 <span class="fas fa-chevron-right text-dark" aria-hidden="true"></span>
                 <span class="sr-only"><%= t('global.next') %></span>
               </a>

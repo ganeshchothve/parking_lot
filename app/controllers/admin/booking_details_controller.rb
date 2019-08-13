@@ -101,6 +101,10 @@ class Admin::BookingDetailsController < AdminController
     end
   end
 
+  def doc
+    render layout: false
+  end
+
   private
 
   def set_booking_detail

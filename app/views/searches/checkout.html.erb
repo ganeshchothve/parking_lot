@@ -28,10 +28,10 @@
                       <%= render 'dashboard/booking_detail_overview', {booking_detail: @booking_detail} %>
                     </div>
                     <div class='col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd mt-4' id='cost-sheet'>
-                      <%= render 'dashboard/booking_detail_cost_sheet', booking_detail: @booking_detail  %>
+                      <%= render 'booking_details/cost_sheet', booking_detail: @booking_detail  %>
                     </div>
                     <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd mt-4" id="payment-schedule">
-                      <%= render "dashboard/project_unit_payment_schedule", booking_detail: @booking_detail, search: @search %>
+                      <%= render "booking_details/payment_schedule", booking_detail: @booking_detail, search: @search %>
                     </div>
                     <%
                       alert = (current_client.cancellation_amount.present? && current_client.cancellation_amount.to_f > 0) ? "#{number_to_indian_currency(current_client.cancellation_amount)} processing charges will be applied on cancellation of booking" : ""

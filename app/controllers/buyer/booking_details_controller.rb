@@ -8,13 +8,13 @@ class Buyer::BookingDetailsController < BuyerController
 
   def index
     # authorize [:buyer, BookingDetail]
-    @booking_details = BookingDetail.build_criteria params 
+    @booking_details = BookingDetail.build_criteria params
     @booking_details = @booking_details.paginate(page: params[:page] || 1, per_page: params[:per_page])
   end
 
   def show
     @scheme = @booking_detail.booking_detail_scheme
-    render template: 'admin/booking_details/show' 
+    render template: 'admin/booking_details/show'
   end
 
   def show
@@ -38,6 +38,10 @@ class Buyer::BookingDetailsController < BuyerController
     else
       redirect_to checkout_user_search_path(@booking_detail.search)
     end
+  end
+
+  def doc
+    render layout: false
   end
 
   private

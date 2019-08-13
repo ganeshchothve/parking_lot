@@ -1,0 +1,6 @@
+<%= render 'assets/section', record: @booking_detail.project_unit, assets: @booking_detail.project_unit.assets %>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    $('[href="#collapseDocuments"]').trigger('click')
+  })
+<% end %>

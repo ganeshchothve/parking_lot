@@ -10,13 +10,11 @@
   <%= link_to t('controller.booking_details.receipts.new.link_name'), new_buyer_booking_detail_receipt_path(booking_detail_id: booking_detail.id), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
 
-<% if booking_detail.project_unit.assets.present? %>
-  <%= link_to "Images", "javascript:;", data: {toggle: "modal", target: "#floor_plan_modal_#{booking_detail.project_unit_id}"}, class: "dropdown-item" %>
-<% end %>
+<%= link_to t('controller.assets.index.link_name'), doc_buyer_booking_detail_path(id: booking_detail.id, type: 'documents'), class: "dropdown-item modal-remote-form-link" %>
 
-<%= link_to "Cost Sheet", "javascript:;", data: {toggle: "modal", target: "#cost_sheet_modal_#{booking_detail.id}"}, class: "dropdown-item" %>
+  <%= link_to t('controller.booking_details.cost_sheet.link_name'), doc_buyer_booking_detail_path(id: booking_detail.id, type: 'cost_sheet'), class: "dropdown-item modal-remote-form-link" %>
 
-<%= link_to "Payment Schedule", "javascript:;", data: {toggle: "modal", target: "#payment_schedule_modal_#{booking_detail.project_unit_id}"}, class: "dropdown-item" %>
+  <%= link_to t('controller.booking_details.payment_schedule.link_name'), doc_buyer_booking_detail_path(id: booking_detail.id, type: 'payment_schedule'), class: "dropdown-item modal-remote-form-link" %>
 
 <% if policy([:buyer, Receipt]).index? %>
   <%= link_to t('controller.receipts.index.link_name'), buyer_booking_detail_receipts_path(booking_detail), class: 'dropdown-item' %>

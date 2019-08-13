@@ -97,6 +97,10 @@ class Admin::ProjectUnitsController < AdminController
     end
   end
 
+  def doc
+    render layout: false
+  end
+
   private
 
   # def set_project_unit
