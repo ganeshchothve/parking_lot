@@ -48,6 +48,10 @@ class Admin::UserPolicy < UserPolicy
     record.buyer?
   end
 
+  def user_dashboard_barchart?
+    true
+  end
+
   def permitted_attributes(params = {})
     attributes = super
     attributes += [:is_active] if record.persisted? && record.id != user.id

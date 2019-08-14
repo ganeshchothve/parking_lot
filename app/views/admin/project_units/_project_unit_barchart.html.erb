@@ -1,0 +1,41 @@
+<canvas id="barChart2" height="300" class="pl-3 pr-3"></canvas>
+<%= javascript_tag do %>
+  var canvas = document.getElementById("barChart2");
+  var ctx = canvas.getContext('2d');
+
+  // Global Options:
+   Chart.defaults.global.defaultFontColor = 'dodgerblue';
+   Chart.defaults.global.defaultFontSize = 10;
+
+  // Data with datasets options
+  var data = {
+      labels: <%= ProjectTower.distinct(:name).to_json.html_safe %>,
+      datasets: <%= @dataset.to_json.html_safe %>
+  };
+
+  var options = {
+          title: {
+            display: true,
+            text: 'Units'
+          },
+          tooltips: {
+            mode: 'index',
+            intersect: true
+          },
+          responsive: true,
+          scales: {
+            xAxes: [{
+              stacked: true,
+            }],
+            yAxes: [{
+              stacked: true
+            }]
+          }
+        };
+  // Chart declaration:
+  var myBarChart = new Chart(ctx, {
+      type: 'bar',
+      data: data,
+      options: options
+  });
+<% end %>

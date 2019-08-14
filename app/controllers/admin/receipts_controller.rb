@@ -1,7 +1,7 @@
 class Admin::ReceiptsController < AdminController
   include ReceiptsConcern
 
-  before_action :set_user, except: %w[index show export resend_success edit_token_number update_token_number]
+  before_action :set_user, except: %w[index show export resend_success edit_token_number update_token_number dashboard_data_barchart dashboard_data_linechart dashboard_data_piechart]
   before_action :set_receipt, only: %w[edit update show resend_success edit_token_number update_token_number]
 
   #
@@ -122,6 +122,20 @@ class Admin::ReceiptsController < AdminController
     end
   end
 
+  def dashboard_data_barchart
+    @data = DashboardData::AdminDataProvider.receipt_block(params[:payments])
+    @dataset = get_dataset(@data)
+  end
+
+  def dashboard_data_linechart
+    @data = DashboardData::AdminDataProvider.receipt_frequency
+    @dataset = get_dataset_linechart(@data)
+  end
+
+  def dashboard_data_piechart
+    @data = DashboardData::AdminDataProvider.receipt_piechart
+  end
+
   private
 
   def set_user
@@ -132,5 +146,49 @@ class Admin::ReceiptsController < AdminController
   def set_receipt
     @receipt = Receipt.where(_id: params[:id]).first
     redirect_to dashboard_path, alert: 'Receipt Not found', status: 404 if @receipt.blank?
+  end
+
+  def get_dataset(out)
+    statuses = Receipt::STATUSES
+    labels = Receipt::PAYMENT_MODES
+    dataset = Array.new
+    statuses.each_with_index do |status, index|
+      d = Array.new
+      labels.each do |l|
+        if out[l.to_sym].present? && out[l.to_sym][status.to_sym].present?
+          d << (out[l.to_sym][status.to_sym])
+        else
+          d << 0
+        end
+      end
+      dataset << { label: status,
+                    borderColor: '#ffffff',
+                    borderWidth: 1,
+                    data: d
+                  }
+    end
+    dataset
+  end
+
+  def get_dataset_linechart(out)
+    payment_modes = %w[online offline]
+    labels = out.keys
+    dataset = Array.new
+    payment_modes.each do |payment_mode|
+      d = Array.new
+      labels.each do |l|
+        if out[l].present? && out[l][payment_mode.to_sym].present?
+          d << (out[l][payment_mode.to_sym])
+        else
+          d << 0
+        end
+      end
+      dataset << { label: payment_mode,
+                    borderColor: '#ffffff',
+                    borderWidth: 1,
+                    data: d
+                  }
+    end
+    dataset
   end
 end

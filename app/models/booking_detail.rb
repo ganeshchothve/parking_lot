@@ -10,6 +10,7 @@ class BookingDetail
   include PriceCalculator
 
   BOOKING_STAGES = %w[blocked booked_tentative booked_confirmed]
+  STATUSES = %w[hold blocked booked_tentative booked_confirmed under_negotiation scheme_rejected scheme_approved swap_requested swapping swapped swap_rejected cancellation_requested cancelling cancelled cancellation_rejected]
 
   field :status, type: String
   field :erp_id, type: String, default: ''

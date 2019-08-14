@@ -1,0 +1,20 @@
+<div class="filter-inner">
+  <div class="filter-header">
+  <span class="title">Filter</span>
+  <a href="javascript:;" class="close-filter-btn">&times;</a>
+  </div>
+  <%= form_tag dashboard_data_barchart_admin_receipts_path, method: "get", remote: true, id: "filter" do %>
+    <div class="filter-content">
+        <div class="row">
+          <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+            <%= label_tag "fltrs", :payments, class: "control-label" %>
+            <%= select_tag "payments", raw("<option>All</option><option>Attached Payments</option><option>Token Payments</option>"), {class: "selectize"} %>
+          </div>
+      </div>
+    </div>
+    <div class="filter-footer">
+      <%= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right" %>
+      <button type="button" class="f-cancel-btn db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
+    </div>
+<% end %>
+</div>

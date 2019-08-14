@@ -1,5 +1,5 @@
 class Admin::ProjectUnitsController < AdminController
-  before_action :set_project_unit, except: %i[index export]
+  before_action :set_project_unit, except: %i[index export project_unit_barchart]
   include ProjectUnitsConcern
   before_action :authorize_resource
   before_action :set_project_unit_scheme, only: %i[show print]
@@ -100,6 +100,10 @@ class Admin::ProjectUnitsController < AdminController
   def doc
     render layout: false
   end
+  def project_unit_barchart
+    @data = DashboardData::AdminDataProvider.project_unit_block
+    @dataset = get_dataset(@data)
+  end
 
   private
 
@@ -112,7 +116,7 @@ class Admin::ProjectUnitsController < AdminController
   end
 
   def authorize_resource
-    if params[:action] == 'index'
+    if %w[project_unit_barchart index].include?(params[:action])
       if params[:ds].to_s == 'true'
         authorize([:admin, ProjectUnit], :ds?)
       else
@@ -136,5 +140,27 @@ class Admin::ProjectUnitsController < AdminController
         yield
       end
     end
+  end
+
+  def get_dataset(out)
+    labels= ProjectTower.distinct(:name)
+    configurations = ProjectUnit.distinct(:unit_configuration_name)
+    dataset = Array.new
+    configurations.each do |configuration|
+      d = Array.new
+      labels.each do |l|
+        if out[l.to_sym].present? && out[l.to_sym][configuration.to_sym].present?
+          d << (out[l.to_sym][configuration.to_sym])
+        else
+          d << 0
+        end
+      end
+      dataset << { label: configuration,
+                    borderColor: '#ffffff',
+                    borderWidth: 1,
+                    data: d
+                  }
+    end
+    dataset
   end
 end
