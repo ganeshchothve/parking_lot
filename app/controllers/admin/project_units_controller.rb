@@ -100,6 +100,11 @@ class Admin::ProjectUnitsController < AdminController
   def doc
     render layout: false
   end
+  #
+  # GET /admin/project_units/project_unit_barchart
+  #
+  # This method is used in admin dashboard
+  #
   def project_unit_barchart
     @data = DashboardData::AdminDataProvider.project_unit_block
     @dataset = get_dataset(@data)

@@ -79,10 +79,12 @@ Rails.application.routes.draw do
     end
 
     resources :receipts, only: %i[index show] do
-      get :export, on: :collection
-      get :dashboard_data_barchart, on: :collection
-      get :dashboard_data_linechart, on: :collection
-      get :dashboard_data_piechart, on: :collection
+      collection do
+        get :export
+        get :receipt_barchart
+        get :receipt_linechart
+        get :receipt_piechart
+      end
       member do
         get 'resend_success'
         get 'edit_token_number'

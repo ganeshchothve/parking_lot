@@ -71,8 +71,7 @@
           <h4 class="white pre text-center">Payments</h4>
         </div>
         <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
-          <div id = "dashboard_data_barchart">
-            <
+          <div id = "receipt_barchart">
             <p> Loading .. </p>
           </div>
         </div>
@@ -84,7 +83,7 @@
           <h4 class="white pre text-center">Payment Frequency</h4>
         </div>
         <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
-          <div id = "dashboard_data_linechart">
+          <div id = "receipt_linechart">
             <p> Loading .. </p>
           </div>
         </div>
@@ -124,7 +123,7 @@
           <h4 class="white pre text-center">Payments</h4>
         </div>
         <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
-          <div id = "dashboard_data_piechart">
+          <div id = "receipt_piechart">
             <p> Loading .. </p>
           </div>
         </div>
@@ -148,15 +147,15 @@
 <%= javascript_tag do %>
   $(document).ready(function(){
     $.ajax({
-      url: "<%= dashboard_data_barchart_admin_receipts_path %>",
+      url: "<%= receipt_barchart_admin_receipts_path %>",
       type: "get",
     });
     $.ajax({
-      url: "<%= dashboard_data_piechart_admin_receipts_path %>",
+      url: "<%= receipt_piechart_admin_receipts_path %>",
       type: "get",
     });
     $.ajax({
-      url: "<%= dashboard_data_linechart_admin_receipts_path %>",
+      url: "<%= receipt_linechart_admin_receipts_path %>",
       type: "get",
     });
     $.ajax({

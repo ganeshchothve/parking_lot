@@ -1,7 +1,7 @@
 class Admin::ReceiptsController < AdminController
   include ReceiptsConcern
 
-  before_action :set_user, except: %w[index show export resend_success edit_token_number update_token_number dashboard_data_barchart dashboard_data_linechart dashboard_data_piechart]
+  before_action :set_user, except: %w[index show export resend_success edit_token_number update_token_number receipt_barchart receipt_linechart receipt_piechart]
   before_action :set_receipt, only: %w[edit update show resend_success edit_token_number update_token_number]
 
   #
@@ -121,18 +121,30 @@ class Admin::ReceiptsController < AdminController
       end
     end
   end
-
-  def dashboard_data_barchart
+  #
+  # GET /admin/receipts/receipt_barchart
+  #
+  # This method is used in admin dashboard
+  #
+  def receipt_barchart
     @data = DashboardData::AdminDataProvider.receipt_block(params[:payments])
     @dataset = get_dataset(@data)
   end
-
-  def dashboard_data_linechart
+  #
+  # GET /admin/receipts/receipt_linechart
+  #
+  # This method is used in admin dashboard
+  #
+  def receipt_linechart
     @data = DashboardData::AdminDataProvider.receipt_frequency
     @dataset = get_dataset_linechart(@data)
   end
-
-  def dashboard_data_piechart
+  #
+  # GET /admin/receipts/receipt_piechart
+  #
+  # This method is used in admin dashboard
+  #
+  def receipt_piechart
     @data = DashboardData::AdminDataProvider.receipt_piechart
   end
 

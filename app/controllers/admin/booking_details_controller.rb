@@ -104,7 +104,11 @@ class Admin::BookingDetailsController < AdminController
   def doc
     render layout: false
   end
-
+  #
+  # GET /admin/booking_details/booking_detail_barchart
+  #
+  # This method is used in admin dashboard
+  #
   def booking_detail_barchart
     authorize [:admin, BookingDetail]
     @data = DashboardData::AdminDataProvider.booking_detail_block

@@ -157,6 +157,11 @@ class Admin::UsersController < AdminController
     end
   end
 
+  #
+  # GET /admin/users/users_barchart
+  #
+  # This method is used in admin dashboard
+  #
   def user_dashboard_barchart
     @data = DashboardData::AdminDataProvider.user_block
   end

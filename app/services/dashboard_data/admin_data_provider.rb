@@ -76,9 +76,6 @@ module DashboardData
         out
       end
 
-      def receipt_frequency
-      end
-
       def project_unit_block
         group_project_unit_with_tower_and_configuration = {
           project_tower_name: "$project_tower_name",
@@ -89,9 +86,11 @@ module DashboardData
 
         data = ProjectUnit.collection.aggregate([{"$match": matcher_for_booked_units},
           {
-            "$group": {
+            "$group": 
+            {
               "_id": group_project_unit_with_tower_and_configuration,
-              count: {
+              count: 
+              {
                 "$sum": 1
               }
             }
@@ -123,7 +122,7 @@ module DashboardData
           status: "$status"
          }
 
-         data = BookingDetail.collection.aggregate([{"$match": {}},
+        data = BookingDetail.collection.aggregate([{"$match": {}},
           {
             "$group": {
               "_id": group_booking_detail_with_tower_and_status,
@@ -138,17 +137,17 @@ module DashboardData
               count: "$count"
             }
           }
-         ]).to_a
-         out = Hash.new
-          data.each do |d|
-            if out[(d["_id"]["project_tower_name"]).to_sym].present?
-              out[(d["_id"]["project_tower_name"]).to_sym].merge!(((d["_id"]["status"]).to_sym) => d["count"])
-            else
-             out[(d["_id"]["project_tower_name"]).to_sym] = Hash.new
-             out[(d["_id"]["project_tower_name"]).to_sym][(d["_id"]["status"]).to_sym]= d['count']
-            end
+        ]).to_a
+        out = Hash.new
+        data.each do |d|
+          if out[(d["_id"]["project_tower_name"]).to_sym].present?
+            out[(d["_id"]["project_tower_name"]).to_sym].merge!(((d["_id"]["status"]).to_sym) => d["count"])
+          else
+            out[(d["_id"]["project_tower_name"]).to_sym] = Hash.new
+            out[(d["_id"]["project_tower_name"]).to_sym][(d["_id"]["status"]).to_sym]= d['count']
           end
-          out
+        end
+        out
       end
 
       def receipt_piechart
@@ -157,21 +156,25 @@ module DashboardData
         }
 
         data = Receipt.collection.aggregate([{ "$match": {} },
-        {
-          "$group": {
-            "_id": grouping,
-            total_amount: {"$sum": "$total_amount"},
-            count: {
-              "$sum": 1
+          {
+            "$group": 
+            {
+              "_id": grouping,
+              total_amount: {"$sum": "$total_amount"},
+              count: 
+              {
+                "$sum": 1
+              }
+            }
+          }, 
+          {
+            "$project": {
+              total_amount: "$total_amount",
+              status: "$status",
+              count: "$count"
             }
           }
-        }, {
-          "$project": {
-            total_amount: "$total_amount",
-            status: "$status",
-            count: "$count"
-          }
-        }]).to_a
+        ]).to_a
         out = Hash.new
         data.each do |d|
           out[d["_id"]["status"]] = d["count"]
@@ -184,13 +187,17 @@ module DashboardData
           {
             "$sort": { 'portal_stages.created_at': 1 } 
           },
-            { "$group": {
-                "_id": "$_id",
-                portal_name: { "$last": "$portal_stages.stage" }
-              }
-            },
-          {"$project": {
-            stage: "$portal_name"
+          { 
+            "$group": 
+            {
+              "_id": "$_id",
+              portal_name: { "$last": "$portal_stages.stage" }
+            }
+          },
+          {
+            "$project": 
+            {
+              stage: "$portal_name"
             }
           },
           {
@@ -201,12 +208,12 @@ module DashboardData
               }
             }
           }
-          ]).to_a
-          out = Hash.new
-          data.each do |d|
-            out[d["_id"]] = d["count"]
-          end
-          out
+        ]).to_a
+        out = Hash.new
+        data.each do |d|
+          out[d["_id"]] = d["count"]
+        end
+        out
       end
 
       def receipt_frequency
@@ -221,28 +228,30 @@ module DashboardData
         matcher_last_7_months = {created_at: {"$gt": DateTime.now - 7.months}}
 
         data = Receipt.collection.aggregate([{ "$match": matcher_last_7_months },
-            {"$project":
-              {
+            {
+              "$project":{
                 payment_mode: 
                 {
-                  "$cond": {
-                     if: { "$eq": [ "online", "$payment_mode" ] },
-                     then: "online",
-                     else: "offline"
+                  "$cond": 
+                  {
+                    if: { "$eq": [ "online", "$payment_mode" ] },
+                    then: "online",
+                    else: "offline"
                   }
                 },
                 created_at: "$created_at"
               }
             },
             {
-              "$group": {
+              "$group":{
                 "_id": grouping_by_months,
                 total_amount: {"$sum": "$total_amount"},
                 count: {
                   "$sum": 1
                 }
               }
-            }, {
+            }, 
+            {
               "$project": {
                 total_amount: "$total_amount",
                 payment_mode: "$payment_mode",
