@@ -5,7 +5,8 @@
 
       <% if @user.role?("channel_partner") || @user.role?("cp") %>
         <!-- User List -->
-        <%= render 'users/section', users: User.where(manager_id: @user.id).paginate(page: 1) %>
+        <% users = User.where(manager_id: @user.id).paginate(page: 1) %>
+        <%= render 'users/section', users: users, name: User.model_name.human(count: user.total_entries ) %>
       <% end %>
 
       <!-- booking_details -->
@@ -21,13 +22,13 @@
       <%= render 'notes/section', notable: @user %>
 
       <!-- My Referrals -->
-      <%= render 'users/section', users: @referrals %>
+      <%= render 'users/section', users: @referrals, name: Referral.model_name.human(count: @referrals.count) %>
 
-      <% if policy([:admin, TimeSlot]).index? %>
+      <% if true #policy([:admin, TimeSlot]).index? %>
         <%= render 'receipts/time_slot_section', user: @user %>
       <% end %>
 
-      <% if true #current_user.role?('admin') %>
+      <% if current_user.role?('admin') %>
         <%= render 'users/utm_params', user: @user %>
       <% end %>
 

@@ -2,10 +2,9 @@
   <div class="step-result <%= search.crossed_step('filter') ? 'active' : '' %>">
     <i class="icon icon-3"></i>
     <span><%= t('controller.searches.towers.header') %></span>
-    <br/>
     <% if search.crossed_step('filter') %>
-      <p><%= search.project_unit.try(:name) %></p><br/>
-      <br/>
+      <p class="p-0 m-0"><%= search.project_unit.try(:name) %></p>
+      <p class="p-0 m-0"><%= t('controller.searches.towers.hint')%></p>
       <% if @search.previous_step.present? %>
         <%= form_for [:user, @search], html: {class: 'validate-form'} do |f| %>
           <div class="form-group">
@@ -16,7 +15,8 @@
           </div>
         <% end %>
       <% end %>
+    <% else %>
+      <p><%= t('controller.searches.towers.hint')%></p>
     <% end %>
-    <p><%= t('controller.searches.towers.hint')%></p>
   </div>
 </div>

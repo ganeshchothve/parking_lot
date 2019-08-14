@@ -7,14 +7,15 @@
           <h1 class="title icon-set icon-search-black icon-bs-15">
             <%= t("controller.searches.#{@search.step}.header")%>
           </h1>
+          <% unless current_user.buyer? %>
+            <br><small class="help-text fn-14 pr-1 fn-500"> <%= t('controller.searches.new.booking_hint', name: @user.name) %> </small>
+          <% end %>
         </div>
       </div>
 
       <div class="col-lg-9 col-xs-12 col-md-6 col-sm-12 no-pd">
         <div class="table-btn-set float-right pb-3">
-          <% unless current_user.buyer? %>
-            <small class="help-text fn-14 pr-1"> <%= t('controller.searches.new.booking_hint', name: @user.name) %> </small>
-          <% end %>
+
 
           <div class="float-right float-unset-xs pl-2">
             <ul class="filter-home m-0">

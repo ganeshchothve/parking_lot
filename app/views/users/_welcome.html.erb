@@ -3,22 +3,41 @@
     <div class="row">
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 bg-gradient">
         <div class="box-content">
-          <h1 class="wc-title white text-center"><%= 'Welcome ' + current_user.name %></h1>
+          <h1 class="wc-title white text-center">
+            <%= t("welcome", name: current_user.name) %>
+          </h1>
           <ul class="step-booking">
-            <li><span><img src="<%= asset_path 'file-invoice.svg' %>"></span><%= t('controller.buyer.dashboard.fill_kyc_form') %></li>
-            <li><span><img src="<%= asset_path 'rupee-blue.svg' %>"></span><%= t('controller.admin.dashboard.make_payment') %></li>
-            <li><span><img src="<%= asset_path 'building-blue.svg' %>"></span><%= t('controller.buyer.dashboard.choose_apartment') %></li>
+            <li>
+              <%= link_to [:new, current_user_role_group, :user_kyc], class: 'modal-remote-form-link' do %>
+                <span><%= image_tag 'file-invoice.svg', alt: 'Invoice' %></span>
+                <%= link_to t('controller.user_kycs.new.link_name') %>
+              <% end %>
+
+            </li>
+            <li>
+              <%= link_to_if !current_user.user_kyc_ids.blank?, [:new, current_user_role_group, :receipt ], { class: 'modal-remote-form-link'}, {} do %>
+                <span><%= image_tag 'rupee-blue.svg', alt: 'Rupee' %></span>
+                <%= t('controller.receipts.new.link_name') %>
+              <% end %>
+            </li>
+            <li>
+              <%= link_to_if policy([current_user_role_group, ProjectUnit.new(user: current_user, status: "available")]).hold?, new_search_path do %>
+                <span><%= image_tag 'building-blue.svg', alt: 'Building' %></span>
+                <%= t('controller.searches.towers.header') %>
+              <% end %>
+            </li>
           </ul>
+
           <% if current_user.kyc_ready? && current_user.booking_details.in(status: BookingDetail::BOOKING_STAGES).count >= current_user.allowed_bookings %>
               <p class="white text-center fn-14 fn-500">You cannot book any more apartments as you have reached the maximum bookings allowed per customer.</p>
           <% elsif current_user.kyc_ready? && current_client.enable_actual_inventory?(current_user) %>
             <%- booking_detail = current_user.booking_details.hold.first %>
             <% if booking_detail %>
               <p class="white text-center fn-14 fn-500">You already have a unit on hold.</p>
-              <%= link_to t('controller.buyer.dashboard.conitnue_booking'), checkout_user_search_path(booking_detail.search), class: 'large-btn black-bg display-block fn-500 center-block show-kyc' %>
+              <%= link_to t('controller.booking_details.continue_booking.link_name'), checkout_user_search_path(Search.last), class: 'large-btn black-bg display-block fn-500 center-block show-kyc width-250' %>
             <% else %>
-              <% if Buyer::ProjectUnitPolicy.new(current_user, ProjectUnit.new(user: current_user, status: "available")).hold? %>
-                <p class="white text-center fn-14 fn-500">Choose apartment and add booking</p>
+              <% if policy([current_user_role_group, ProjectUnit.new(user: current_user, status: "available")]).hold? %>
+                <p class="white text-center fn-14 fn-500"><%= t('controller.searches.towers.header') %></p>
                 <%= link_to t('controller.buyer.dashboard.book_apartment'), new_search_path, class: 'large-btn black-bg display-block fn-500 center-block show-kyc' %>
               <% end %>
             <% end %>

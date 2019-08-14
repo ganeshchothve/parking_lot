@@ -415,26 +415,28 @@ en:
       projects:
         name: Name
       receipt:
-        tracking_id: 'Transaction ID (Processed Payment)'
         comments: 'Comments'
-        processed_on: 'Date of Clearance'
-        receipt_id: "Receipt ID"
-        payment_mode: "Mode of Payment"
-        payment_type: 'Payment Type'
-        issued_date: "Date of issuance (e.g. Cheque Date)"
-        issuing_bank: "Issuing Bank"
-        issuing_bank_branch: "Issuing Bank Branch"
-        payment_identifier: "Cheque Number / Transaction Identifier"
-        total_amount: "Total Amount (Rs.)"
-        status: "Payment Status"
-        user: "Customer"
-        user_id: "Customer"
-        project_unit_id: "Apartment"
         creator_id: "Created by"
         created_at: "Created on"
         created_by: 'Created By'
-        token_number: 'Token Number'
+        issued_date: "Date of issuance (e.g. Cheque Date)"
+        issuing_bank: "Issuing Bank"
+        issuing_bank_branch: "Issuing Bank Branch"
         name_email_phone: 'Name/Email/Phone'
+        project_unit_id: "Apartment"
+        processed_on: 'Date of Clearance'
+        payment_mode: "Mode of Payment"
+        payment_type: 'Payment Type'
+        payment_identifier: "Cheque Number / Transaction Identifier"
+        receipt_id: "Receipt ID"
+        status: "Payment Status"
+        user: "Customer"
+        user_id: "Customer"
+        total_amount: "Total Amount (Rs.)"
+        token_number: 'Token Number'
+        time_slot: Time Slot
+        tracking_id: 'Transaction ID (Processed Payment)'
+
       receipt/status:
         pending: 'Pending'
         clearance_pending: 'Clearance Pending'
@@ -792,18 +794,19 @@ en:
       new:
         link_name: 'Direct Payment'
         header: 'New Direct Payment'
+        make_payment: 'Make Payment'
       print:
         link_name: 'Print'
-      resend_success:
-        link_name: Resend Receipt
       resend_email:
-        link_name: Resent Email
+        link_name: Resend Email
         success: 'Email has been sent again.'
       show:
         link_name: Payment Details
     referrals:
       index:
         link_name: 'Referrals'
+      new:
+        link_name: 'Add Referrals'
 
     searches:
       filter:
@@ -853,11 +856,6 @@ en:
         link_name: 'Sync Logs'
       new:
         link_name: 'Sync'
-    referrals:
-      index:
-        link_name: 'Referrals'
-      new:
-        link_name: 'Add Referrals'
 
     templates:
       index:
@@ -899,7 +897,7 @@ en:
       index:
         link_name: 'KYCs'
       new:
-        link_name: 'Add KYC'
+        link_name: 'Fill KYC Form'
       edit:
         link_name: Edit
       show:
@@ -970,40 +968,3 @@ en:
     pre_text: 'Don’t have account ?'
     new:
       sign_up: 'Sign Up'
-
-  dashboard:
-    confirmed_users: ' Confirmed Users'
-    not_confirmed_users: ' Not Confirmed Users'
-    booking_detail:
-      blocked: 'Blocked'
-      booked_tentative: 'Tentative Booked'
-      booked_confirmed: 'Confirm Booked'
-    receipt:
-      pending: 'Pending'
-      clearance_pending: 'Clearance Pending'
-      success : 'Success'
-      refunded: 'Refunded'
-    welcome:
-      heading: 'Welcome '
-      sub_heading: 'Thank You for being a part of Amura Family. We are delighted to have you onboard. Here is the list of things that you can do on this Portal.'
-    projects:
-      heading: 'Platinum Towers'
-      sub_heading: '2, 3 BHK Apartments starting from Rs. 36 Lakhs at Hinjewadi Pune. Don’t miss out on the biggest real estate opportunity in Pune. Hurry up! 200 apartments already sold.'
-    titles:
-      add_customer: 'Add Customer'
-      make_payment: 'Make Payment'
-      booking: 'Booking'
-      projects: 'Projects'
-      available_inventory: 'Available Inventory'
-      starting_price: 'Starting Price'
-      configurations: 'configurations'
-      download_brochure: 'Download Brochure'
-      visit_website: 'Visit Website >'
-      leads: 'Leads'
-      total_leads: 'Total Leads'
-      received:  'Received'
-      lead_details: 'Lead Details'
-      booking_details: 'Booking Details'
-      payments: 'Payments'
-    payments:
-      data: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna'

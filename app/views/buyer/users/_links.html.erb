@@ -1,23 +1,23 @@
 <% if policy([:buyer, BookingDetail.new(user: user, project_unit: ProjectUnit.new(status: 'available'))]).hold? %>
-  <%= link_to "Choose #{global_labels[:project_unit]} & Add Booking", new_user_search_path(user.id), class: "dropdown-item" %>
+  <%= link_to t('controller.booking_details.continue_booking.link_name'), new_user_search_path(user.id), class: "dropdown-item" %>
 <% end %>
 
 <% if policy([:buyer, Receipt.new(user: user)]).direct? %>
-  <%= link_to "Add Direct #{t('global.receipt')}", new_buyer_receipt_path(user), class: "dropdown-item modal-remote-form-link" %>
+  <%= link_to t('controller.receipts.new.link_name'), new_buyer_receipt_path(user), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 
 <% if policy([:buyer, User.new]).show? %>
-  <%= link_to "View Details", buyer_user_path(user.id), class: "dropdown-item" %>
+  <%= link_to t('helpers.show.link_name', model: User.human_attribute_name("role.#{user.role}")), buyer_user_path(user.id), class: "dropdown-item" %>
 <% end %>
 
 <% if policy([:buyer, UserKyc.new]).index? && current_user.id == user.id %>
-  <%= link_to "View #{global_labels['user_kycs']}", buyer_user_kycs_path(user_id: user.id), class: "dropdown-item" %>
+  <%= link_to t('controller.user_kycs.index.link_name'), buyer_user_kycs_path(user_id: user.id), class: "dropdown-item" %>
 <% end %>
 
 <% if policy([:buyer, UserKyc.new(user: user)]).new? %>
-  <%= link_to "Add #{global_labels['user_kyc_details']}", new_buyer_user_kyc_path(user), class: "dropdown-item modal-remote-form-link" %>
+  <%= link_to t('helpers.new.link_name', model: UserKyc.model_name.human), new_buyer_user_kyc_path(user), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 
 <% if policy([:buyer, User.new]).update_password? %>
-  <%= link_to "Update Password", update_password_buyer_user_path(user), class: "dropdown-item modal-remote-form-link" %>
+  <%= link_to t('controller.users.change_password.link_name'), update_password_buyer_user_path(user), class: "dropdown-item modal-remote-form-link" %>
 <% end %>

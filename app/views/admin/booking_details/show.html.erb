@@ -1,7 +1,7 @@
 <div class="container mb-5">
   <div class="row justify-content-center">
     <div class="col-md-12">
-      <%= render 'dashboard/booking_detail_overview', {booking_detail: @booking_detail, with_actions: true } %>
+      <%= render 'booking_details/details', booking_detail: @booking_detail, with_actions: true %>
     </div>
 
     <% if @scheme.present? %>

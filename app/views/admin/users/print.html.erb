@@ -72,7 +72,7 @@
   <% if user_kycs.present? %>
     <div class="box-card h-100">
       <div class="box-header bg-gradient br-rd-tr-4">
-        <h2><%= t("mongoid.attributes.user_kyc", count: user_kycs.count ) %></h2>
+        <h2><%= UserKyc.model_name.human(count: user_kycs.count ) %></h2>
       </div>
       <div class="box-content br-rd-bl-4 bg-white">
         <div class="pd-box">
@@ -88,7 +88,7 @@
   <div class="mt-3"></div>
   <div class="box-card">
     <div class="box-header bg-gradient br-rd-tr-4">
-      <h2><%= t("mongoid.attributes.notes", count: @user.notes.count) %></h2>
+      <h2><%= Note.model_name.human(count: @user.notes.count) %></h2>
     </div>
     <div class="box-content br-rd-bl-4 bg-white">
       <div class="pd-box">
