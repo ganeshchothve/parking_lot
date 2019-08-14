@@ -1,4 +1,4 @@
-<canvas id="myChart" height="300" class="pl-3 pr-3"></canvas>
+<canvas id="myChart" height="493" class="pl-3 pr-3"></canvas>
 <%= javascript_tag do %>
   var ctx1 = document.getElementById("myChart");
   var myChart = new Chart(ctx1, {
@@ -11,10 +11,6 @@
       }]
     },
     options: {
-      title: {
-            display: true,
-            text: 'Payments'
-      },
       plugins: {
         colorschemes: {
           scheme: 'brewer.SetOne9'

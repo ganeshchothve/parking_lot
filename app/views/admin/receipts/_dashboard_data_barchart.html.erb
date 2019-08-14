@@ -1,25 +1,4 @@
-<div class="container mb-5">
-  <div class="row justify-content-center">
-    <div class="col-md-12">
-      <%#= render 'breadcrumbs', {user_kyc: @user_kyc, user: @user} %>
-      <div class="card">
-        <div class="card-body">
-          <div class="row mb-3">
-            <div class="col-md-5 text-md-right">
-              <button class="db-filter-btn white fn-500 float-right" type="button">
-                <i class="icon-set icon-filter-light-blue"></i>
-              </button>
-            </div>
-          </div>
-          <div class="filter-box">
-            <%= render "chart_filter" %>
-          </div>
-          <canvas id="barChart1" height="300" class="pl-3 pr-3"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<canvas id="barChart1" height="300" class="pl-3 pr-3"></canvas>
 <%= javascript_tag do %>
   var canvas = document.getElementById("barChart1");
   var ctx = canvas.getContext('2d');
@@ -35,10 +14,6 @@
   };
 
   var options = {
-          title: {
-            display: true,
-            text: 'Payments'
-          },
           tooltips: {
             mode: 'index',
             intersect: true
