@@ -37,6 +37,21 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     true
   end
 
+  def booking_detail_barchart?
+    true
+  end
+  # def block?
+  #   valid = enable_actual_inventory? && only_for_confirmed_user! && only_for_kyc_added_users! && ['hold'].include?(record.status)
+  #   if !valid
+  #     return
+  #   end
+  #   valid = (valid && record.user.allowed_bookings > record.user.booking_details.ne(status: 'cancelled').count)
+  #   if !valid
+  #     @condition = "allowed_bookings"
+  #     return
+  #   end
+  #   _role_based_check
+  # end
 
   def permitted_attributes
     attributes = super

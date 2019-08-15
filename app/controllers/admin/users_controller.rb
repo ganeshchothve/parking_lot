@@ -1,7 +1,7 @@
 class Admin::UsersController < AdminController
   include UsersConcern
   before_action :authenticate_user!
-  before_action :set_user, except: %i[index export new create]
+  before_action :set_user, except: %i[index export new create user_dashboard_barchart]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: %i[index export]
 
@@ -157,6 +157,15 @@ class Admin::UsersController < AdminController
     end
   end
 
+  #
+  # GET /admin/users/users_barchart
+  #
+  # This method is used in admin dashboard
+  #
+  def user_dashboard_barchart
+    @data = DashboardData::AdminDataProvider.user_block
+  end
+
   private
 
   def set_user
@@ -168,7 +177,7 @@ class Admin::UsersController < AdminController
   end
 
   def authorize_resource
-    if %w[index export].include?(params[:action])
+    if %w[index export user_dashboard_barchart].include?(params[:action])
       authorize [current_user_role_group, User]
     elsif params[:action] == 'new' || params[:action] == 'create'
       if params[:role].present?

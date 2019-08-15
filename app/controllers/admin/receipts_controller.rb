@@ -1,7 +1,7 @@
 class Admin::ReceiptsController < AdminController
   include ReceiptsConcern
 
-  before_action :set_user, except: %w[index show export resend_success edit_token_number update_token_number]
+  before_action :set_user, except: %w[index show export resend_success edit_token_number update_token_number receipt_barchart receipt_linechart receipt_piechart]
   before_action :set_receipt, only: %w[edit update show resend_success edit_token_number update_token_number]
 
   #
@@ -121,6 +121,32 @@ class Admin::ReceiptsController < AdminController
       end
     end
   end
+  #
+  # GET /admin/receipts/receipt_barchart
+  #
+  # This method is used in admin dashboard
+  #
+  def receipt_barchart
+    @data = DashboardData::AdminDataProvider.receipt_block(params[:payments])
+    @dataset = get_dataset(@data)
+  end
+  #
+  # GET /admin/receipts/receipt_linechart
+  #
+  # This method is used in admin dashboard
+  #
+  def receipt_linechart
+    @data = DashboardData::AdminDataProvider.receipt_frequency
+    @dataset = get_dataset_linechart(@data)
+  end
+  #
+  # GET /admin/receipts/receipt_piechart
+  #
+  # This method is used in admin dashboard
+  #
+  def receipt_piechart
+    @data = DashboardData::AdminDataProvider.receipt_piechart
+  end
 
   private
 
@@ -132,5 +158,49 @@ class Admin::ReceiptsController < AdminController
   def set_receipt
     @receipt = Receipt.where(_id: params[:id]).first
     redirect_to dashboard_path, alert: 'Receipt Not found', status: 404 if @receipt.blank?
+  end
+
+  def get_dataset(out)
+    statuses = Receipt::STATUSES
+    labels = Receipt::PAYMENT_MODES
+    dataset = Array.new
+    statuses.each_with_index do |status, index|
+      d = Array.new
+      labels.each do |l|
+        if out[l.to_sym].present? && out[l.to_sym][status.to_sym].present?
+          d << (out[l.to_sym][status.to_sym])
+        else
+          d << 0
+        end
+      end
+      dataset << { label: status,
+                    borderColor: '#ffffff',
+                    borderWidth: 1,
+                    data: d
+                  }
+    end
+    dataset
+  end
+
+  def get_dataset_linechart(out)
+    payment_modes = %w[online offline]
+    labels = out.keys
+    dataset = Array.new
+    payment_modes.each do |payment_mode|
+      d = Array.new
+      labels.each do |l|
+        if out[l].present? && out[l][payment_mode.to_sym].present?
+          d << (out[l][payment_mode.to_sym])
+        else
+          d << 0
+        end
+      end
+      dataset << { label: payment_mode,
+                    borderColor: '#ffffff',
+                    borderWidth: 1,
+                    data: d
+                  }
+    end
+    dataset
   end
 end

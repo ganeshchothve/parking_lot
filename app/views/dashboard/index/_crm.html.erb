@@ -1,10 +1,174 @@
-<div class="container">
-  <%= render "dashboard/index/partials/users" %>
-  <div class="mt-3"></div>
-  <%= render "dashboard/index/partials/receipts" %>
-  <div class="mt-3"></div>
-  <%= render "dashboard/index/partials/project_units" %>
-  <div class="mt-3"></div>
-  <%= render "dashboard/index/partials/user_requests" %>
-  <div class="pb-5"></div>
+<div class="container mb-5">
+  <div class="row">
+    <div class="col-2">
+      <div class="box-card">
+        <div class="box-header bg-gradient br-rd-tr-4">
+          <h4 class="white pre text-center">Customers</h4>
+        </div>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
+          <%= DashboardData::AdminDataProvider.customer_count %>
+        </div>
+      </div>
+    </div>
+    <div class="col-2">
+      <div class="box-card">
+        <div class="box-header bg-gradient br-rd-tr-4">
+          <h4 class="white pre text-center">Channel Partner</h4>
+        </div>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
+          <%= DashboardData::AdminDataProvider.channel_partner_count %>
+        </div>
+      </div>
+    </div>
+    <div class="col-2">
+      <div class="box-card">
+        <div class="box-header bg-gradient br-rd-tr-4">
+          <h4 class="white pre text-center">Units</h4>
+        </div>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
+          <%= DashboardData::AdminDataProvider.sold_project_units_count %> sold /<%= DashboardData::AdminDataProvider.all_project_units_count %>
+        </div>
+      </div>
+    </div>
+    <div class="col-2">
+      <div class="box-card">
+        <div class="box-header bg-gradient br-rd-tr-4">
+          <h4 class="white pre text-center">User Requests</h4>
+        </div>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
+          <%= DashboardData::AdminDataProvider.open_user_requests %>
+        </div>
+      </div>
+    </div>
+    <div class="col-2">
+      <div class="box-card">
+        <div class="box-header bg-gradient br-rd-tr-4">
+          <h4 class="white pre text-center">Payments</h4>
+        </div>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
+          <%= DashboardData::AdminDataProvider.online_receipts %> online/<%= DashboardData::AdminDataProvider.offline_receipts %> offline
+        </div>
+      </div>
+    </div>
+    <div class="col-2">
+      <div class="box-card">
+        <div class="box-header bg-gradient br-rd-tr-4">
+          <h4 class="white pre text-center">-</h4>
+        </div>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
+          Empty for now
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<div class="container mb-5 pb-5">
+  <div class="row mb-3">
+    <div class="col-6">
+      <div class="box-card">
+        <div class="box-header bg-gradient br-rd-tr-4">
+          <h4 class="white pre text-center">Payments</h4>
+        </div>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
+          <div id = "receipt_barchart">
+            <p> Loading .. </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="box-card">
+        <div class="box-header bg-gradient br-rd-tr-4">
+          <h4 class="white pre text-center">Payment Frequency</h4>
+        </div>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
+          <div id = "receipt_linechart">
+            <p> Loading .. </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-6">
+      <div class="box-card">
+        <div class="box-header bg-gradient br-rd-tr-4">
+          <h4 class="white pre text-center">Units</h4>
+        </div>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
+          <div id="project_unit_barchart" >
+            <p> Loading .. </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="box-card">
+        <div class="box-header bg-gradient br-rd-tr-4">
+          <h4 class="white pre text-center">Bookings</h4>
+        </div>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
+          <div id="booking_detail_barchart">
+            <p> Loading .. </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-6">
+      <div class="box-card">
+        <div class="box-header bg-gradient br-rd-tr-4">
+          <h4 class="white pre text-center">Payments</h4>
+        </div>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
+          <div id = "receipt_piechart">
+            <p> Loading .. </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="box-card">
+        <div class="box-header bg-gradient br-rd-tr-4">
+          <h4 class="white pre text-center">Users</h4>
+        </div>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
+          <div id = "user_dashboard_barchart">
+            <p> Loading .. </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    $.ajax({
+      url: "<%= receipt_barchart_admin_receipts_path %>",
+      type: "get",
+    });
+    $.ajax({
+      url: "<%= receipt_piechart_admin_receipts_path %>",
+      type: "get",
+    });
+    $.ajax({
+      url: "<%= receipt_linechart_admin_receipts_path %>",
+      type: "get",
+    });
+    $.ajax({
+      url: "<%= project_unit_barchart_admin_project_units_path %>",
+      type: "get",
+    });
+    $.ajax({
+      url: "<%= booking_detail_barchart_admin_booking_details_path %>",
+      type: "get",
+    });
+    $.ajax({
+      url: "<%= user_dashboard_barchart_admin_users_path %>",
+      type: "get",
+    });
+  });
+<% end %>
