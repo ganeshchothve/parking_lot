@@ -22,29 +22,29 @@
         datasets: <%= @dataset.to_json.html_safe %>
     };
 
-    var options = {
-            tooltips: {
-              mode: 'index',
-              intersect: true
-            },
-            responsive: true,
-            scales: {
-              xAxes: [{
-                stacked: true,
-                scaleLabel: {
-                display: true,
-                  labelString: 'Project Towers'
-                }
-              }],
-              yAxes: [{
-                stacked: true,
-                scaleLabel: {
-                  display: true,
-                  labelString: 'Count'
-                }
-              }]
-            }
-          };
+    var options = 
+    { tooltips: {
+        mode: 'index',
+        intersect: true
+      },
+      responsive: true,
+      scales: {
+        xAxes: [{
+          stacked: true,
+          scaleLabel: {
+          display: true,
+            labelString: 'Project Towers'
+          }
+        }],
+        yAxes: [{
+          stacked: true,
+          scaleLabel: {
+            display: true,
+            labelString: 'Count'
+          }
+        }]
+      }
+    };
     // Chart declaration:
     var myBarChart = new Chart(ctx, {
         type: 'bar',

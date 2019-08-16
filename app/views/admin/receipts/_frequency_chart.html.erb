@@ -22,33 +22,33 @@
         labels: <%= @data.keys.to_json.html_safe %>,
         datasets: <%= @dataset.to_json.html_safe %>
     };
-    var options =  {
-          responsive: true,
-          tooltips: {
-            mode: 'index',
-            intersect: false,
-          },
-          hover: {
-            mode: 'nearest',
-            intersect: true
-          },
-          scales: {
-            xAxes: [{
+    var options =  
+    { responsive: true,
+        tooltips: {
+          mode: 'index',
+          intersect: false,
+        },
+        hover: {
+          mode: 'nearest',
+          intersect: true
+        },
+        scales: {
+          xAxes: [{
+            display: true,
+            scaleLabel: {
               display: true,
-              scaleLabel: {
-                display: true,
-                labelString: freq
-              }
-            }],
-            yAxes: [{
+              labelString: freq
+            }
+          }],
+          yAxes: [{
+            display: true,
+            scaleLabel: {
               display: true,
-              scaleLabel: {
-                display: true,
-                labelString: 'Count'
-              }
-            }]
-          }
-        };
+              labelString: 'Count'
+            }
+          }]
+        }
+      };
         var myBarChart = new Chart(ctx, {
           type: 'line',
           data: data,
