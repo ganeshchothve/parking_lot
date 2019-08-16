@@ -48,7 +48,7 @@ class Admin::UserPolicy < UserPolicy
     record.buyer?
   end
 
-  def user_dashboard_barchart?
+  def portal_stage_chart?
     true
   end
 

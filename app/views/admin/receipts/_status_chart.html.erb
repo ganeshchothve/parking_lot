@@ -1,0 +1,39 @@
+<div class = "row">
+  <div class = "col-12">
+    <canvas id="myChart" height="493" class="pl-3 pr-3"></canvas>
+  </div>
+</div>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    var ctx1 = document.getElementById("myChart");
+    var myChart = new Chart(ctx1, {
+      type: 'doughnut',
+      data: {
+        labels: <%= @data.keys.to_json.html_safe %>,
+        datasets: [{
+          label: '# of Tomatoes',
+          data: <%= @data.values.to_json.html_safe %>
+        }]
+      },
+      options: {
+        plugins: {
+          colorschemes: {
+            scheme: 'brewer.SetOne9'
+          }
+        },
+        cutoutPercentage: 60,
+        responsive: false,
+        legend: {
+            fullWidth: true,
+            position: 'top',
+                display: true,
+                labels: {
+                    fontColor: '#333d51',
+                    padding: 30,
+                    boxWidth: 12,
+                }
+            }
+      }
+    });
+  });
+<% end %>

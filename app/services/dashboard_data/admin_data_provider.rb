@@ -29,13 +29,16 @@ module DashboardData
         Receipt.not_in(payment_mode: 'online').count
       end
 
-      def receipt_block(payments)
-        if payments == 'Token Payments'
-          matcher = { "booking_detail_id": nil }
-        elsif payments == 'Attached Payments'
-          matcher = { "booking_detail_id": {"$not": {"$eq": nil} } }
-        else
-          matcher = {}
+      def receipt_block(params)
+        matcher = {}
+        if params[:payments].present?
+          if params[:payments] == 'attached_payments'
+            matcher ["booking_detail_id"] = Hash.new
+            matcher ["booking_detail_id"]["$not"] = Hash.new
+            matcher ["booking_detail_id"]["$not"]["$eq"] = nil
+          elsif params[:payments] == 'direct_payments'
+            matcher["booking_detail_id"] = nil
+          end
         end
         grouping = {
           payment_mode: "$payment_mode",
@@ -216,18 +219,58 @@ module DashboardData
         out
       end
 
-      def receipt_frequency
-        grouping_by_days = {
-          created_at: { "$dayOfMonth": "$created_at" }
-        }
-        grouping_by_months = {
-          created_at: { "$month": "$created_at" },
+      def receipt_frequency(params)
+        matcher = {created_at: {"$gt": Date.today - 7.days}}
+        grouping = {
+          year: { "$year": "$created_at"},
+          month: {"$month": "$created_at"},
+          week: {"$week": "$created_at"},
+          created_at: { "$dayOfMonth": "$created_at" },
           payment_mode: "$payment_mode"
         }
-        matcher_last_7_days = {created_at: {"$gt": DateTime.now - 7}}
-        matcher_last_7_months = {created_at: {"$gt": DateTime.now - 7.months}}
-
-        data = Receipt.collection.aggregate([{ "$match": matcher_last_7_months },
+        sort = {
+          "_id.year": 1,
+          "_id.month": 1,
+          "_id.week": 1,
+          "_id.created": 1
+        }
+        if params[:frequency].present?
+          if params[:frequency] == 'last_7_months'
+            matcher = {created_at: {"$gt": DateTime.now - 7.months}}
+            grouping = {
+              year: { "$year": "$created_at"},
+              created_at: {"$month": "$created_at"},
+              payment_mode: "$payment_mode"
+            }
+            sort = {
+              "_id.year": 1,
+              "_id.created_at": 1
+            }
+          elsif  params[:frequency] == 'last_7_weeks'
+            matcher = {created_at: {"$gt": DateTime.now - 7.weeks}}
+            grouping = {
+              year: { "$year": "$created_at"},
+              month: {"$month": "$created_at"},
+              created_at: {"$week": "$created_at"},
+              payment_mode: "$payment_mode"
+            }
+            sort = {
+              "_id.year": 1,
+              "_id.month": 1,
+              "_id.created_at": 1
+            }
+          end
+        end
+        if params[:payments].present?
+          if params[:payments] == 'attached_payments'
+            matcher ["booking_detail_id"] = Hash.new
+            matcher ["booking_detail_id"]["$not"] = Hash.new
+            matcher ["booking_detail_id"]["$not"]["$eq"] = nil
+          elsif params[:payments] == 'direct_payments'
+            matcher["booking_detail_id"] = nil
+          end
+        end
+        data = Receipt.collection.aggregate([{ "$match": matcher},
             {
               "$project":{
                 payment_mode: 
@@ -244,19 +287,22 @@ module DashboardData
             },
             {
               "$group":{
-                "_id": grouping_by_months,
+                "_id": grouping,  
                 total_amount: {"$sum": "$total_amount"},
                 count: {
                   "$sum": 1
                 }
               }
-            }, 
+            },
+            {
+              "$sort": sort
+            },
             {
               "$project": {
-                total_amount: "$total_amount",
                 payment_mode: "$payment_mode",
                 status: "$status",
-                count: "$count"
+                count: "$count",
+                created_at: "$created_at"
               }
             }]).to_a
           out = Hash.new

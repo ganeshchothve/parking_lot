@@ -728,7 +728,15 @@ en:
     dashboard:
       index:
         link_name: 'Dashboard'
-
+        filters:
+          payments:
+            all: 'All'
+            attached_payments: 'Attached Payments'
+            direct_payments: 'Direct Payments'
+          frequency:
+            last_7_days: 'Last 7 days'
+            last_7_weeks: 'Last 7 weeks'
+            last_7_months: 'Last 7 months'
     emails:
       index:
         link_name: 'Emails'

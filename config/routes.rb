@@ -54,7 +54,7 @@ Rails.application.routes.draw do
       end
       get :mis_report, on: :collection
       get :searching_for_towers, on: :collection
-      get :booking_detail_barchart, on: :collection
+      get :status_chart, on: :collection
       resources :booking_detail_schemes, except: [:destroy], controller: 'booking_details/booking_detail_schemes'
 
       resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts' do
@@ -81,9 +81,9 @@ Rails.application.routes.draw do
     resources :receipts, only: %i[index show] do
       collection do
         get :export
-        get :receipt_barchart
-        get :receipt_linechart
-        get :receipt_piechart
+        get :payment_mode_chart
+        get :frequency_chart
+        get :status_chart
       end
       member do
         get 'resend_success'
@@ -101,7 +101,7 @@ Rails.application.routes.draw do
       end
 
       collection do
-        get :project_unit_barchart
+        get :unit_configuration_chart
         get :export
       end
     end
@@ -123,7 +123,7 @@ Rails.application.routes.draw do
       collection do
         get '/new/:role', action: 'new', as: :new_by_role
         get :export
-        get :user_dashboard_barchart
+        get :portal_stage_chart
       end
 
       match :confirm_via_otp, action: 'confirm_via_otp', as: :confirm_via_otp, on: :member, via: [:get, :patch]

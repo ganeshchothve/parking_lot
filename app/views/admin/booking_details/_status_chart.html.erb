@@ -1,0 +1,53 @@
+<div class = "row">
+  <div class = 'col-12'>
+    <div class="box-card relative">
+      <div class="filter-box status_chart_filter_box">
+        <%= render "chart_filter" %>
+      </div>
+    </div>
+  </div>
+</div>
+<div class = "row">
+  <div class = "col-12">
+    <canvas id="barChart3" height="300" class="pl-3 pr-3"></canvas>
+  </div>
+</div>
+
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    var canvas = document.getElementById("barChart3");
+    var ctx = canvas.getContext('2d');
+
+    // Global Options:
+     Chart.defaults.global.defaultFontColor = 'dodgerblue';
+     Chart.defaults.global.defaultFontSize = 10;
+
+    // Data with datasets options
+    var data = {
+        labels: <%= ProjectTower.distinct(:name).to_json.html_safe %>,
+        datasets: <%= @dataset.to_json.html_safe %>
+    };
+
+    var options = {
+            tooltips: {
+              mode: 'index',
+              intersect: true
+            },
+            responsive: true,
+            scales: {
+              xAxes: [{
+                stacked: true,
+              }],
+              yAxes: [{
+                stacked: true
+              }]
+            }
+          };
+    // Chart declaration:
+    var myBarChart = new Chart(ctx, {
+        type: 'bar',
+        data: data,
+        options: options
+    });
+  });
+<% end %>

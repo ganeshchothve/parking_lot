@@ -1,0 +1,24 @@
+<div class="filter-inner">
+  <div class="filter-header">
+  <span class="title">Filter</span>
+  <a href="javascript:;" class="close-filter-btn status_chart_filter_close">&times;</a>
+  </div>
+  <%= form_tag status_chart_admin_booking_details_path, method: "get", remote: true, id: "booking_detail_barchart_filter" do %>
+    <div class="filter-content">
+      <div class="row">
+        <div class="form-group col-12">
+          <%= select_tag "status", options_for_select(BookingDetail::STATUSES.map{|status| [t("mongoid.attributes.booking_detail/status.#{status}"), status]}, @statuses ), class: "selectize", multiple: true %>
+        </div>
+      </div>
+    </div>
+    <div class="filter-footer">
+      <%= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right" %>
+      <button type="button" class="f-cancel-btn status_chart_filter_cancel db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
+    </div>
+<% end %>
+</div>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($("#booking_detail_barchart_filter"));
+  });
+<% end %>

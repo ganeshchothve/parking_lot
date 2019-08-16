@@ -23,11 +23,24 @@ $(document).ready(function(){
     prevText: '<'
   });
 
+
   $('.db-filter-btn').click(function(){
-    $('.filter-box').slideToggle('slow');
+    if($(this).parents('.box-card').length){
+      $(this).parents('.box-card').find('.filter-box').slideToggle('slow')
+    }
+    else{
+      // for index pages
+      $('.filter-box').slideToggle('slow');
+    }
   });
-  $('.f-cancel-btn, .close-filter-btn').click(function(){
-    $('.filter-box').slideToggle('slow');
+  $('body').on('click', '.f-cancel-btn, .close-filter-btn', function(){
+    if($(this).parents('.box-card').length){
+      $(this).parents('.box-card').find('.filter-box').slideToggle('slow')
+    }
+    else{
+      // for index pages
+      $('.filter-box').slideToggle('slow');
+    }
   });
   $(".scroll-sec").click(function () {
     $(".scroll-sec").removeClass('active');
