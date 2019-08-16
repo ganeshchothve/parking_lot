@@ -412,3 +412,8 @@ h6{
 .icon-sad-tear:before{
   background-image: asset-url('sad-tear.svg');
 }
+
+.modal-header {
+  border-top-left-radius: unset;
+  border-top-right-radius: unset;
+}

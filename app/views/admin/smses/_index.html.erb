@@ -49,7 +49,7 @@
           <div class="dropdown show text-right">
           <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-              <%= link_to 'Show', "javascript:;", data: {toggle: "modal", target: "#sms_show_#{sms.id.to_s}"}, class: 'dropdown-item' %>
+              <%= link_to t("controller.smses.show.link_name"), "javascript:;", data: {toggle: "modal", target: "#sms_show_#{sms.id.to_s}"}, class: 'dropdown-item' %>
            </div>
         </div>
         </td>
