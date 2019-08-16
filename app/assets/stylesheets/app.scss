@@ -354,16 +354,25 @@ h6{
   background-image: asset-url('file-contract-black.svg');
 }
 
-.icon-users-white:before{
-  background-image: asset-url('users-white.svg');
+.icon-users-white {
+  line-height: 1rem !important;
+  &:before{
+    background-image: asset-url('users-white.svg');
+  }
 }
 
-.icon-user-friends-black:before{
-  background-image: asset-url('user-friends.svg');
+.icon-user-friends-black {
+  line-height: 1rem !important;
+  &:before{
+    background-image: asset-url('user-friends.svg');
+  }
 }
 
-.icon-users-black:before{
-  background-image: asset-url('users-black.svg');
+.icon-users-black {
+  line-height: 1rem !important;
+  &:before {
+    background-image: asset-url('users-black.svg');
+  }
 }
 .icon-lock-black:before{
   background-image: asset-url('lock-black.svg');
@@ -388,6 +397,9 @@ h6{
 }
 .icon-file-kycs-black:before{
   background-image: asset-url('file-kycs-black.svg');
+}
+.icon-file-kycs-white:before{
+  background-image: asset-url('file-kycs-white.svg');
 }
 .icon-envelope-black:before{
   background-image: asset-url('envelope-black.svg');
@@ -425,4 +437,12 @@ h6{
 }
 .lh-2{
   line-height: 2em;
+}
+.modal-header {
+  border-top-left-radius: unset;
+  border-top-right-radius: unset;
+}
+.next-btn-chose-apt {
+  position: absolute;
+  bottom: 0;
 }
