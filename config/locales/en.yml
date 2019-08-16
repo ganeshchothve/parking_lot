@@ -372,7 +372,18 @@ en:
         stage_name: 'Stage'
         priority_name: 'Priority'
       portal_stage_priority/portal_stages:
+        registered: 'Registered'
+        confirmed: 'Confirmed'
         project_info: 'Project Info'
+        kyc_done: 'KYC Done'
+        unit_browsing: 'Unit Browsing'
+        unit_selected: 'Unit Selected'
+        hold_payment_dropoff: 'Hold Payment Dropoff'
+        payment_done: 'Payment Done'
+        blocked: 'Blocked'
+        booked_tentative: 'Booked Tentative'
+        booked_confirmed: 'Booked Confirmed'
+        cancelled: 'Cancelled'
 
       project_tower:
         name: Name
@@ -436,6 +447,7 @@ en:
         token_number: 'Token Number'
         time_slot: Time Slot
         tracking_id: 'Transaction ID (Processed Payment)'
+        frequency: 'Frequency'
 
       receipt/status:
         pending: 'Pending'
@@ -455,6 +467,7 @@ en:
         imps: 'IMPS'
         card_swipe: 'Card Swipe'
         neft: 'NEFT'
+        offline: 'Offline'
       receipt/payment_types:
         agreement: Agreement
         stamp_duty:  Stamp Duty
@@ -635,6 +648,15 @@ en:
         channel_partner: 'Channel Partner'
         management_user: 'Management User'
         employee_user: 'Employee'
+      dashboard/filters:
+        payments:
+          all: 'All'
+          attached_payments: 'Attached Payments'
+          direct_payments: 'Direct Payments'
+        frequency:
+          last_7_days: 'Last 7 days'
+          last_7_weeks: 'Last 7 weeks'
+          last_7_months: 'Last 7 months'
 
   controller:
     assets:
@@ -730,7 +752,7 @@ en:
     dashboard:
       index:
         link_name: 'Dashboard'
-
+      receipt_frequency: 'Payment Frequency'
     emails:
       index:
         link_name: 'Emails'

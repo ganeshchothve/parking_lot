@@ -37,7 +37,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     true
   end
 
-  def booking_detail_barchart?
+  def status_chart?
     true
   end
   # def block?

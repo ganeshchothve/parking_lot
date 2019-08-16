@@ -1,5 +1,5 @@
 class Admin::ProjectUnitsController < AdminController
-  before_action :set_project_unit, except: %i[index export project_unit_barchart]
+  before_action :set_project_unit, except: %i[index export unit_configuration_chart]
   include ProjectUnitsConcern
   before_action :authorize_resource
   before_action :set_project_unit_scheme, only: %i[show print]
@@ -101,11 +101,11 @@ class Admin::ProjectUnitsController < AdminController
     render layout: false
   end
   #
-  # GET /admin/project_units/project_unit_barchart
+  # GET /admin/project_units/unit_configuration_chart
   #
   # This method is used in admin dashboard
   #
-  def project_unit_barchart
+  def unit_configuration_chart
     @data = DashboardData::AdminDataProvider.project_unit_block
     @dataset = get_dataset(@data)
   end
@@ -121,7 +121,7 @@ class Admin::ProjectUnitsController < AdminController
   end
 
   def authorize_resource
-    if %w[project_unit_barchart index].include?(params[:action])
+    if %w[unit_configuration_chart index].include?(params[:action])
       if params[:ds].to_s == 'true'
         authorize([:admin, ProjectUnit], :ds?)
       else

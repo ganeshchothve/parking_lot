@@ -36,7 +36,7 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
     make_available?
   end
 
-  def project_unit_barchart?
+  def unit_configuration_chart?
     true
   end
 

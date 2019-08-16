@@ -1,0 +1,58 @@
+<div class="filter-box frequency_chart_filter_box">
+  <%= render "linechart_filter" %>
+</div>
+</div>
+<div class = "row">
+  <div class = "col-12">
+    <canvas id="lineChart" height="300" class="pl-3 pr-3"></canvas>
+  </div>
+</div>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    var freq = $('#frequency').val().replace(/_/g, " ")
+    var canvas = document.getElementById("lineChart");
+    var ctx = canvas.getContext('2d');
+
+    // Global Options:
+     Chart.defaults.global.defaultFontColor = 'dodgerblue';
+     Chart.defaults.global.defaultFontSize = 10;
+
+    // Data with datasets options
+    var data = {
+        labels: <%= @data.keys.to_json.html_safe %>,
+        datasets: <%= @dataset.to_json.html_safe %>
+    };
+    var options =  
+    { responsive: true,
+        tooltips: {
+          mode: 'index',
+          intersect: false,
+        },
+        hover: {
+          mode: 'nearest',
+          intersect: true
+        },
+        scales: {
+          xAxes: [{
+            display: true,
+            scaleLabel: {
+              display: true,
+              labelString: freq
+            }
+          }],
+          yAxes: [{
+            display: true,
+            scaleLabel: {
+              display: true,
+              labelString: 'Count'
+            }
+          }]
+        }
+      };
+        var myBarChart = new Chart(ctx, {
+          type: 'line',
+          data: data,
+          options: options
+        });
+  });
+<% end %>

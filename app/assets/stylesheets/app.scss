@@ -425,6 +425,19 @@ h6{
   background-image: asset-url('sad-tear.svg');
 }
 
+.dashboard {
+  .box-header {
+    padding: 10px 20px !important;
+    .db-filter-btn{
+      height: 30px;
+      width: 35px;
+      padding-bottom: 0.25rem;
+    }
+  }
+}
+.lh-2{
+  line-height: 2em;
+}
 .modal-header {
   border-top-left-radius: unset;
   border-top-right-radius: unset;

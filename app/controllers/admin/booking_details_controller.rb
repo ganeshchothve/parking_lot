@@ -2,8 +2,8 @@ class Admin::BookingDetailsController < AdminController
   include BookingDetailConcern
   include SearchConcern
   around_action :apply_policy_scope, only: [:index, :mis_report]
-  before_action :set_booking_detail, except: [:index, :mis_report, :new, :create, :searching_for_towers, :booking_detail_barchart]
-  before_action :authorize_resource, except: [:index, :mis_report, :new, :create, :searching_for_towers, :booking_detail_barchart]
+  before_action :set_booking_detail, except: [:index, :mis_report, :new, :create, :searching_for_towers, :status_chart]
+  before_action :authorize_resource, except: [:index, :mis_report, :new, :create, :searching_for_towers, :status_chart]
   before_action :set_project_unit, only: :booking
   before_action :set_receipt, only: :booking
 
@@ -105,14 +105,15 @@ class Admin::BookingDetailsController < AdminController
     render layout: false
   end
   #
-  # GET /admin/booking_details/booking_detail_barchart
+  # GET /admin/booking_details/status_chart
   #
   # This method is used in admin dashboard
   #
-  def booking_detail_barchart
+  def status_chart
     authorize [:admin, BookingDetail]
     @data = DashboardData::AdminDataProvider.booking_detail_block
-    @dataset = get_dataset(@data)
+    @statuses = params[:status] || %w[under_negotiation blocked booked_tentative booked_confirmed]
+    @dataset = get_dataset(@data, @statuses)
   end
 
   private
@@ -148,9 +149,8 @@ class Admin::BookingDetailsController < AdminController
     @booking_details = BookingDetail.build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page])
   end
 
-  def get_dataset(out)
+  def get_dataset(out, statuses)
     labels= ProjectTower.distinct(:name)
-    statuses = BookingDetail::STATUSES
     dataset = Array.new
     statuses.each do |status|
       d = Array.new
@@ -161,7 +161,7 @@ class Admin::BookingDetailsController < AdminController
           d << 0
         end
       end
-      dataset << { label: status,
+      dataset << { label: t("mongoid.attributes.booking_detail/status.#{status}"),
                     borderColor: '#ffffff',
                     borderWidth: 1,
                     data: d
