@@ -791,7 +791,7 @@ en:
       index:
         link_name: 'Payments'
       lost_receipt:
-        header: Add Lost Payment
+        header: Lost Payment
         link_name: Lost Payment
       new:
         link_name: 'Direct Payment'
