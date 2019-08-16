@@ -6,7 +6,7 @@
       <% if @user.role?("channel_partner") || @user.role?("cp") %>
         <!-- User List -->
         <% users = User.where(manager_id: @user.id).paginate(page: 1) %>
-        <%= render 'users/section', users: users, name: User.model_name.human(count: user.total_entries ) %>
+        <%= render 'users/section', users: users, name: User.model_name.human(count: users.total_entries ) %>
       <% end %>
 
       <!-- booking_details -->

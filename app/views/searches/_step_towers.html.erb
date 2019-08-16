@@ -1,6 +1,6 @@
 <section class="choose-apartment-sec">
   <div class="container">
-    <div class="row">
+    <div class="row mb-5">
       <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 bg-white br-rd-4 br-1 mb-5">
         <div class="row">
           <div class="col-lg-6 col-xs-12 col-sm-12 col-md-12 pt-3 pb-3">
@@ -74,20 +74,11 @@
 
             <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 mt-5">
               <div class="row">
-                <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="col-lg-12 col-md-12 col-sm-12">
                   <% if @search.previous_step.present? %>
                     <%= form_for [:user, @search] do |f| %>
                       <%= f.hidden_field :step, value: @search.previous_step %>
                       <%= f.submit "Previous", class: "previous-btn fn-12 fn-300" %>
-                    <% end %>
-                  <% end %>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-6">
-                  <% if @search.next_step.present? %>
-                    <%= form_for [:user, @search] do |f| %>
-                      <%= f.hidden_field :step, value: @search.next_step %>
-                      <%= f.hidden_field :project_unit_id, id: 'project_unit_id' %>
-                      <%= f.submit "Next", class: "next-btn fn-12 fn-300 float-right", disabled: 'disabled' %>
                     <% end %>
                   <% end %>
                 </div>
@@ -121,6 +112,17 @@
               <div class="right-info pl-5 pr-5 pt-4 pb-4">
                 <div class=" float-left">
                   <%= link_to "View Cost Sheet & Payment Schedule", "javascript:;", class: 'modal-remote-form-link print_cs_ps', target: "_blank" %>
+                </div>
+              </div>
+              <div class="row next-btn-chose-apt w-100 m-0 pr-3">
+                <div class="col-lg-12 col-md-12 col-sm-12 float-right pb-3">
+                  <% if @search.next_step.present? %>
+                    <%= form_for [:user, @search] do |f| %>
+                      <%= f.hidden_field :step, value: @search.next_step %>
+                      <%= f.hidden_field :project_unit_id, id: 'project_unit_id' %>
+                      <%= f.submit "Next", class: "next-btn fn-12 fn-300 float-right", disabled: 'disabled' %>
+                    <% end %>
+                  <% end %>
                 </div>
               </div>
             </div>

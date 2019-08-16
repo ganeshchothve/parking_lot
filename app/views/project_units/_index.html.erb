@@ -23,10 +23,10 @@
           </div>
         </td>
         <td><%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></td>
-        <td  value='<%= project_unit.status %>' class="status" data-content="<%= comment(project_unit) %>" >
+        <td  value='<%= project_unit.status %>'>
           <%= t("mongoid.attributes.project_unit/status.#{project_unit.status}") %>
           <% if project_unit.not_available? && project_unit.comments.present? %>
-            <i class="fa fa-comments" aria-hidden="true"></i>
+            <span class="status" data-content="<%= comment(project_unit) %>"><i class="fa fa-comments" aria-hidden="true"></i></span>
           <% end %>
         </td>
         <td>

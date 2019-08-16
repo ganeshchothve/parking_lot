@@ -680,7 +680,7 @@ en:
         link_name: 'Bookings'
       new:
         link_name: 'Add Booking'
-        header: "New Booking"
+        header: "Add Booking"
       edit:
         link_name: 'Update Booking'
       show:
@@ -700,6 +700,8 @@ en:
       booking_successful: "You have completed the booking successfully."
       booking_unsuccessful: "Your booking was unsuccessful. Please contact administrator to book."
       set_receipt_missing: 'Make new payment'
+      documents:
+        link_name: 'Documents'
 
       receipts:
         form:
@@ -721,9 +723,9 @@ en:
       index:
         link_name: 'Channel Partners'
       edit:
-        link_name: 'Edit'
+        link_name: 'Edit Channel Partner'
       show:
-        link_name: Show
+        link_name: Details
 
     dashboard:
       index:
@@ -733,7 +735,7 @@ en:
       index:
         link_name: 'Emails'
       show:
-        link_name: Detail
+        link_name: Details
     erp_models:
       index:
         link_name: 'Third Party Integration'
@@ -780,7 +782,7 @@ en:
     receipts:
       account_missing: 'We do not have any Account Details for Transaction. Please ask Administrator to add.'
       edit:
-        link_name: 'Update Payment'
+        link_name: 'Edit Payment'
       edit_token_number:
         link_name: 'Change Token'
       exports:
@@ -789,11 +791,11 @@ en:
       index:
         link_name: 'Payments'
       lost_receipt:
-        header: Add Lost Payment
+        header: Lost Payment
         link_name: Lost Payment
       new:
         link_name: 'Direct Payment'
-        header: 'New Direct Payment'
+        header: 'Direct Payment'
         make_payment: 'Make Payment'
       print:
         link_name: 'Print'
@@ -840,11 +842,13 @@ en:
     smses:
       index:
         link_name: SMSs
+      show:
+        link_name: Details
     schemes:
       index:
         link_name: Schemes
       edit:
-        link_name: Edit
+        link_name: Edit Scheme
       show:
         link_name: Scheme Detail
         header: Scheme Detail
@@ -856,6 +860,8 @@ en:
         link_name: 'Sync Logs'
       new:
         link_name: 'Sync'
+      show:
+        link_name: Details
 
     templates:
       index:
@@ -875,7 +881,7 @@ en:
       exports:
         link_name: '%{name} Exports'
       edit:
-        link_name: "Edit Details"
+        link_name: "Edit %{role}"
         header: 'Edit %{role}'
       index:
         link_name: 'Users & Customers'
@@ -891,7 +897,7 @@ en:
       resend_password_instructions:
         link_name: Resend Password Instruction
       show:
-        link_name: 'Details'
+        link_name: '%{role} Details'
         header: 'Overview'
     user_kycs:
       index:
@@ -906,7 +912,7 @@ en:
       index:
         link_name: 'User Requests'
       edit:
-        link_name: Edit
+        link_name: 'Edit %{type}'
       show:
         link_name: Detail
       new:
@@ -916,19 +922,19 @@ en:
           link_name: 'Swap Requests'
         new:
           link_name: 'Swap'
-          header: 'New Swap'
+          header: 'Swap'
         edit:
-          link_name: 'Update Swap'
-          header: 'Update Swap'
+          link_name: 'Edit Swap'
+          header: 'Edit Swap'
       cancellation:
         index:
           link_name: 'Cancellation Requests'
         new:
-          link_name: 'Cancellation'
-          header: 'New Cancellation'
+          link_name: 'Cancel'
+          header: 'Cancel'
         edit:
-          link_name: 'Update Cancellation'
-          header: 'Update Cancellation'
+          link_name: 'Edit Cancellation'
+          header: 'Edit Cancellation'
 
   asset:
     image:

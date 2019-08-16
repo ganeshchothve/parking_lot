@@ -4,7 +4,7 @@
     <span><%= t('controller.searches.filter.header')%></span>
     <br/>
     <p><%= t('controller.searches.filter.hint')%></p>
-    <% if @search.previous_step.present? %>
+    <% if @search.previous_step.present? && @search.crossed_step('filter') %>
       <%= form_for [:user, @search], html: {class: 'validate-form'} do |f| %>
         <div class="form-group">
           <%= f.hidden_field :step, value: "filter" %>

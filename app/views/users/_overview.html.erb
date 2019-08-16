@@ -36,6 +36,10 @@
           <% if user.buyer? %>
             <ul class="booking-apart-info clear">
               <li>
+                <span><%= t('mongoid.attributes.user.role') %></span>
+                <p><%= t("mongoid.attributes.user/role.#{user.role}") %></p>
+              </li>
+              <li>
                 <span><%= t('mongoid.attributes.user.lead_id') %></span>
                   <p><%= user.lead_id || '-' %></p>
               </li>
