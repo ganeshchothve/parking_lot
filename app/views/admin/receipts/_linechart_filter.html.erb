@@ -1,18 +1,16 @@
 <div class="filter-inner">
-  <div class="filter-header">
-  <span class="title">Filter</span>
-  <a href="javascript:;" class="close-filter-btn frequency_chart_filter_close">&times;</a>
-  </div>
   <%= form_tag frequency_chart_admin_receipts_path, method: "get", remote: true, id: "receipt_linechart_filter" do %>
     <div class="filter-content">
         <div class="row">
           <div class="form-group col-12">
-            <%= select_tag "payments", options_for_select(["all", "attached_payments", "direct_payments"].map{|payments| [t("controller.dashboard.filters.payments.#{payments}"), payments]}, params[:payments]), class: "selectize"%>
+            <%= label_tag "payments", Receipt.model_name.human(count: 3), class: "control-label float-left" %>
+            <%= select_tag "payments", options_for_select(["all", "attached_payments", "direct_payments"].map{|payments| [t("mongoid.attributes.dashboard/filters.payments.#{payments}"), payments]}, params[:payments]), class: "selectize"%>
           </div>
       </div>
       <div class = "row">
         <div class = "form-group col-12">
-          <%= select_tag "frequency", options_for_select(['last_7_days', 'last_7_weeks', 'last_7_months'].map{|frequency| [t("controller.dashboard.filters.frequency.#{frequency}"), frequency]}, params[:frequency]), {class: "selectize"} %>
+          <%= label_tag "frequency", Receipt.human_attribute_name('frequency'), class: "control-label float-left" %>
+          <%= select_tag "frequency", options_for_select(['last_7_days', 'last_7_weeks', 'last_7_months'].map{|frequency| [t("mongoid.attributes.dashboard/filters.frequency.#{frequency}"), frequency]}, params[:frequency]), {class: "selectize"} %>
         </div>
       </div>
     </div>

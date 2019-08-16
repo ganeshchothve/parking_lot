@@ -29,16 +29,16 @@ module DashboardData
         Receipt.not_in(payment_mode: 'online').count
       end
 
+      def active_schemes
+        Scheme.approved.count
+      end
+
       def receipt_block(params)
         matcher = {}
-        if params[:payments].present?
-          if params[:payments] == 'attached_payments'
-            matcher ["booking_detail_id"] = Hash.new
-            matcher ["booking_detail_id"]["$not"] = Hash.new
-            matcher ["booking_detail_id"]["$not"]["$eq"] = nil
-          elsif params[:payments] == 'direct_payments'
-            matcher["booking_detail_id"] = nil
-          end
+        if params[:payments] == 'attached_payments'
+          matcher = {"booking_detail_id" => {"$not" => {"$eq" => nil}}}
+        elsif params[:payments] == 'direct_payments'
+          matcher = {"booking_detail_id": nil}
         end
         grouping = {
           payment_mode: "$payment_mode",
@@ -234,41 +234,37 @@ module DashboardData
           "_id.week": 1,
           "_id.created": 1
         }
-        if params[:frequency].present?
-          if params[:frequency] == 'last_7_months'
-            matcher = {created_at: {"$gt": DateTime.now - 7.months}}
-            grouping = {
-              year: { "$year": "$created_at"},
-              created_at: {"$month": "$created_at"},
-              payment_mode: "$payment_mode"
-            }
-            sort = {
-              "_id.year": 1,
-              "_id.created_at": 1
-            }
-          elsif  params[:frequency] == 'last_7_weeks'
-            matcher = {created_at: {"$gt": DateTime.now - 7.weeks}}
-            grouping = {
-              year: { "$year": "$created_at"},
-              month: {"$month": "$created_at"},
-              created_at: {"$week": "$created_at"},
-              payment_mode: "$payment_mode"
-            }
-            sort = {
-              "_id.year": 1,
-              "_id.month": 1,
-              "_id.created_at": 1
-            }
-          end
+        if params[:frequency] == 'last_7_months'
+          matcher = {created_at: {"$gt": DateTime.now - 7.months}}
+          grouping = {
+            year: { "$year": "$created_at"},
+            created_at: {"$month": "$created_at"},
+            payment_mode: "$payment_mode"
+          }
+          sort = {
+            "_id.year": 1,
+            "_id.created_at": 1
+          }
+        elsif  params[:frequency] == 'last_7_weeks'
+          matcher = {created_at: {"$gt": DateTime.now - 7.weeks}}
+          grouping = {
+            year: { "$year": "$created_at"},
+            month: {"$month": "$created_at"},
+            created_at: {"$week": "$created_at"},
+            payment_mode: "$payment_mode"
+          }
+          sort = {
+            "_id.year": 1,
+            "_id.month": 1,
+            "_id.created_at": 1
+          }
         end
-        if params[:payments].present?
-          if params[:payments] == 'attached_payments'
-            matcher ["booking_detail_id"] = Hash.new
-            matcher ["booking_detail_id"]["$not"] = Hash.new
-            matcher ["booking_detail_id"]["$not"]["$eq"] = nil
-          elsif params[:payments] == 'direct_payments'
-            matcher["booking_detail_id"] = nil
-          end
+        if params[:payments] == 'attached_payments'
+          matcher ["booking_detail_id"] = Hash.new
+          matcher ["booking_detail_id"]["$not"] = Hash.new
+          matcher ["booking_detail_id"]["$not"]["$eq"] = nil
+        elsif params[:payments] == 'direct_payments'
+          matcher["booking_detail_id"] = nil
         end
         data = Receipt.collection.aggregate([{ "$match": matcher},
             {

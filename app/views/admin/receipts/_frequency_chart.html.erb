@@ -1,11 +1,6 @@
-<div class = "row">
-  <div class = 'col-12'>
-    <div class="box-card relative">
-      <div class="filter-box frequency_chart_filter_box">
-        <%= render "linechart_filter" %>
-      </div>
-    </div>
-  </div>
+<div class="filter-box frequency_chart_filter_box">
+  <%= render "linechart_filter" %>
+</div>
 </div>
 <div class = "row">
   <div class = "col-12">
@@ -14,6 +9,7 @@
 </div>
 <%= javascript_tag do %>
   $(document).ready(function(){
+    var freq = $('#frequency').val().replace(/_/g, " ")
     var canvas = document.getElementById("lineChart");
     var ctx = canvas.getContext('2d');
 
@@ -41,14 +37,14 @@
               display: true,
               scaleLabel: {
                 display: true,
-                labelString: 'asc'
+                labelString: freq
               }
             }],
             yAxes: [{
               display: true,
               scaleLabel: {
                 display: true,
-                labelString: 'Value'
+                labelString: 'Count'
               }
             }]
           }

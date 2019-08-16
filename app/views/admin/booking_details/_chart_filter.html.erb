@@ -1,12 +1,9 @@
 <div class="filter-inner">
-  <div class="filter-header">
-  <span class="title">Filter</span>
-  <a href="javascript:;" class="close-filter-btn status_chart_filter_close">&times;</a>
-  </div>
   <%= form_tag status_chart_admin_booking_details_path, method: "get", remote: true, id: "booking_detail_barchart_filter" do %>
     <div class="filter-content">
       <div class="row">
         <div class="form-group col-12">
+          <%= label_tag "status", BookingDetail.human_attribute_name('status'), class: "control-label float-left" %>
           <%= select_tag "status", options_for_select(BookingDetail::STATUSES.map{|status| [t("mongoid.attributes.booking_detail/status.#{status}"), status]}, @statuses ), class: "selectize", multiple: true %>
         </div>
       </div>

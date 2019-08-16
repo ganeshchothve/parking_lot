@@ -9,7 +9,7 @@
     var myChart = new Chart(ctx1, {
       type: 'doughnut',
       data: {
-        labels: <%= @data.keys.to_json.html_safe %>,
+        labels: <%= @data.keys.map{|status| t("mongoid.attributes.receipt/status.#{status}")}.to_json.html_safe %>,
         datasets: [{
           label: '# of Tomatoes',
           data: <%= @data.values.to_json.html_safe %>

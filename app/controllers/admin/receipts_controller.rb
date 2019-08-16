@@ -173,7 +173,7 @@ class Admin::ReceiptsController < AdminController
           d << 0
         end
       end
-      dataset << { label: status,
+      dataset << { label: t("mongoid.attributes.receipt/status.#{status}"),
                     borderColor: '#ffffff',
                     borderWidth: 1,
                     data: d
@@ -195,7 +195,7 @@ class Admin::ReceiptsController < AdminController
           d << 0
         end
       end
-      dataset << { label: payment_mode,
+      dataset << { label: t("mongoid.attributes.receipt/payment_mode.#{payment_mode}"),
                     borderColor: '#ffffff',
                     borderWidth: 1,
                     data: d

@@ -161,7 +161,7 @@ class Admin::BookingDetailsController < AdminController
           d << 0
         end
       end
-      dataset << { label: status,
+      dataset << { label: t("mongoid.attributes.booking_detail/status.#{status}"),
                     borderColor: '#ffffff',
                     borderWidth: 1,
                     data: d
