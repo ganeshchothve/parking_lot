@@ -10,7 +10,13 @@
       <div class = "row">
         <div class = "form-group col-12">
           <%= label_tag "frequency", Receipt.human_attribute_name('frequency'), class: "control-label float-left" %>
-          <%= select_tag "frequency", options_for_select(['last_7_days', 'last_7_weeks', 'last_7_months'].map{|frequency| [t("mongoid.attributes.dashboard/filters.frequency.#{frequency}"), frequency]}, params[:frequency]), {class: "selectize"} %>
+          <%= select_tag "frequency", options_for_select(['last_7_days', 'last_7_weeks', 'last_7_months', 'custom_dates'].map{|frequency| [t("mongoid.attributes.dashboard/filters.frequency.#{frequency}"), frequency]}, params[:frequency]), {class: "selectize", id: 'frequency'} %>
+        </div>
+      </div>
+      <div class = "row">
+        <div class = "col-12">
+          <%= label_tag "dates", Receipt.human_attribute_name('dates'), class: "control-label float-left" %>
+          <%= text_field_tag :dates, "dates", class: 'form-control daterangefilter', required: 'required', id: 'dates' %>
         </div>
       </div>
     </div>
@@ -22,6 +28,14 @@
 </div>
 <%= javascript_tag do %>
   $(document).ready(function(){
+    if($('#frequency').val() != 'custom_dates'){
+      $('#dates').attr('disabled', 'disabled');
+    }
+    $('#frequency').on('change', function(){
+      if($(this).val() == 'custom_dates'){
+        $('#dates').removeAttr('disabled');
+      }    
+    });
     FormInitializer.init($("#receipt_linechart_filter"));
   });
 <% end %>

@@ -31,9 +31,17 @@ FormInitializer = (function(){
     crs.init();
     $(selector).find('.selectize-tags').selectize({create: true});
     $(selector).find('.array-field').arrayField();
-    $(selector).find('.daterangefilter').daterangepicker({
-      showDropdowns: true,
-      autoUpdateInput: false
+    $(selector).find('.daterangefilter').each(function(){
+      $(this).daterangepicker({
+        opens: 'left',
+          ranges: {
+             'Today': [moment(), moment()],
+             'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+             'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+             'Last 1 Month': [moment().subtract(29, 'days'), moment()],
+             'Last 7 Months': [moment().subtract(7, 'month'), moment().subtract(1, 'month')]
+          }
+      });
     });
     $(selector).find('.daterangefilter').on('apply.daterangepicker', function(ev, picker) {
       $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));

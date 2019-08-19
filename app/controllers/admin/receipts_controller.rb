@@ -146,7 +146,7 @@ class Admin::ReceiptsController < AdminController
   # This method is used in admin dashboard
   #
   def status_chart
-    @data = DashboardData::AdminDataProvider.receipt_piechart
+    @data = DashboardData::AdminDataProvider.receipt_piechart(params)
   end
 
   private

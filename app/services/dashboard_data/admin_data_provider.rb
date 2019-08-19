@@ -35,6 +35,12 @@ module DashboardData
 
       def receipt_block(params)
         matcher = {}
+        if params && params[:dates]
+          dates = params[:dates].split(" - ")
+          start_date = Date.strptime(dates[0], '%d/%m/%Y')
+          end_date = Date.strptime(dates[1], '%d/%m/%Y')
+          matcher = {"created_at": {"$gte": start_date, "$lt": end_date}}
+        end
         if params[:payments] == 'attached_payments'
           matcher = {"booking_detail_id" => {"$not" => {"$eq" => nil}}}
         elsif params[:payments] == 'direct_payments'
@@ -119,13 +125,21 @@ module DashboardData
         out
       end
 
-      def booking_detail_block
+      def booking_detail_block(params)
+        matcher = {}
+        if params && params[:dates]
+          dates = params[:dates].split(" - ")
+          start_date = Date.strptime(dates[0], '%d/%m/%Y')
+          end_date = Date.strptime(dates[1], '%d/%m/%Y')
+          matcher = {"created_at": {"$gte": start_date, "$lt": end_date}}
+        end
         group_booking_detail_with_tower_and_status = {
           project_tower_name: "$project_tower_name",
           status: "$status"
          }
 
-        data = BookingDetail.collection.aggregate([{"$match": {}},
+        data = BookingDetail.collection.aggregate([
+          {"$match": matcher},
           {
             "$group": {
               "_id": group_booking_detail_with_tower_and_status,
@@ -153,12 +167,19 @@ module DashboardData
         out
       end
 
-      def receipt_piechart
+      def receipt_piechart params
+        matcher = {}
+        if params && params[:dates]
+          dates = params[:dates].split(" - ")
+          start_date = Date.strptime(dates[0], '%d/%m/%Y')
+          end_date = Date.strptime(dates[1], '%d/%m/%Y')
+          matcher = {"created_at": {"$gte": start_date, "$lt": end_date}}
+        end
         grouping = {
           status: "$status"
         }
 
-        data = Receipt.collection.aggregate([{ "$match": {} },
+        data = Receipt.collection.aggregate([{ "$match": matcher },
           {
             "$group": 
             {
@@ -232,7 +253,7 @@ module DashboardData
           "_id.year": 1,
           "_id.month": 1,
           "_id.week": 1,
-          "_id.created": 1
+          "_id.created_at": 1
         }
         if params[:frequency] == 'last_7_months'
           matcher = {created_at: {"$gt": DateTime.now - 7.months}}
@@ -258,6 +279,13 @@ module DashboardData
             "_id.month": 1,
             "_id.created_at": 1
           }
+        elsif params[:frequency] == 'custom_dates'
+          if params[:dates]
+            dates = params[:dates].split(" - ")
+            start_date = Date.strptime(dates[0], '%d/%m/%Y')
+            end_date = Date.strptime(dates[1], '%d/%m/%Y')
+            matcher = {"created_at": {"$gte": start_date, "$lt": end_date}}
+          end
         end
         if params[:payments] == 'attached_payments'
           matcher ["booking_detail_id"] = Hash.new
@@ -266,7 +294,7 @@ module DashboardData
         elsif params[:payments] == 'direct_payments'
           matcher["booking_detail_id"] = nil
         end
-        data = Receipt.collection.aggregate([{ "$match": matcher},
+        data = Receipt.collection.aggregate([{ "$match": matcher },
             {
               "$project":{
                 payment_mode: 
