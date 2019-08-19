@@ -211,17 +211,10 @@ module DashboardData
           {
             "$sort": { 'portal_stages.created_at': 1 } 
           },
-          { 
-            "$group": 
-            {
-              "_id": "$_id",
-              portal_name: { "$last": "$portal_stages.stage" }
-            }
-          },
           {
             "$project": 
             {
-              stage: "$portal_name"
+              stage: "$portal_stages.stage"
             }
           },
           {
