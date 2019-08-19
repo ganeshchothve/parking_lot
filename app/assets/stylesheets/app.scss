@@ -255,6 +255,26 @@ figure.wave {
   white-space: pre;
 }
 
+.online-label{
+  position: relative;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: #8BC34A;
+  border-radius: 100%;
+  margin: 0 5px;
+}
+
+.offline-label{
+  position: relative;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: #a15cea;
+  border-radius: 100%;
+  margin: 0 5px;
+}
+
 h3{
   font-size: 18px;
   line-height: 26px;

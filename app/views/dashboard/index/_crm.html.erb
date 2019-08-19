@@ -46,7 +46,18 @@
           <h4 class="white pre text-center"><%= Receipt.model_name.human(count: 3) %></h4>
         </div>
         <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
-          online: <span class = 'fn-18'><%= DashboardData::AdminDataProvider.online_receipts %></span>/ offline: <span class = 'fn-18'><%= DashboardData::AdminDataProvider.offline_receipts %></span>
+          <span title="<%= Receipt.human_attribute_name("payment_mode.online") %>">
+            <i class="online-label"></i>
+            <span class="fn-18">
+              <%= DashboardData::AdminDataProvider.online_receipts %>
+            </span>
+          </span>
+          <span title="<%= Receipt.human_attribute_name("payment_mode.offline") %>">
+            <i class="offline-label"></i>
+            <span class="fn-18">
+              <%= DashboardData::AdminDataProvider.offline_receipts %>
+            </span>
+          </span>
         </div>
       </div>
     </div>
