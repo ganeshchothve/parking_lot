@@ -169,8 +169,10 @@ class User
   scope :filter_by_manager_id, ->(manager_id) {where(manager_id: manager_id) }
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where({ '$and' => ["$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] ] }) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
-  scope :filter_by_role, ->(*_role) { where( role: { "$in": _role } ) }
-  scope :filter_by_role_nin, ->(*_role) { where( role: { "$nin": _role } ) }
+  scope :filter_by_role, ->(_role) { _role.is_a?(Array) ? where( role: { "$in": _role }) : where(role: _role.as_json) }
+
+  scope :filter_by_role_nin, ->(_role) { _role.is_a?(Array) ? where( role: { "$nin": _role } ) : where(role: _role.as_json) }
+
   scope :filter_by_created_by, ->(_created_by) do
     if _created_by == 'direct'
       where('$or' => [{'$expr' => {'$eq' => ['$created_by_id', "$_id"] } }, { created_by_id: nil } ])
