@@ -31,24 +31,33 @@ FormInitializer = (function(){
     crs.init();
     $(selector).find('.selectize-tags').selectize({create: true});
     $(selector).find('.array-field').arrayField();
+    var startDate = moment($(selector).find('.daterangefilter').data("startDate"), "DD/MM/YYYY");
+    var endDate = moment($(selector).find('.daterangefilter').data("endDate"), "DD/MM/YYYY");
+    var opens = $(selector).find('.daterangefilter').data("opens")
+    function cb(start, end) {
+      $(selector).find('.daterangefilter').html(start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD'));
+    }
     $(selector).find('.daterangefilter').each(function(){
       $(this).daterangepicker({
-        opens: 'left',
-          ranges: {
-             'Today': [moment(), moment()],
-             'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-             'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-             'Last 1 Month': [moment().subtract(29, 'days'), moment()],
-             'Last 7 Months': [moment().subtract(7, 'month'), moment().subtract(1, 'month')]
-          }
-      });
+        startDate: startDate,
+        endDate: endDate,
+        opens: opens,
+        ranges: {
+           'Today': [moment(), moment()],
+           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+           'Last 1 Month': [moment().subtract(29, 'days'), moment()],
+           'Last 7 Months': [moment().subtract(7, 'month'), moment().subtract(1, 'month')]
+        }
+      }, cb);
+      cb(startDate, endDate);
     });
     $(selector).find('.daterangefilter').on('apply.daterangepicker', function(ev, picker) {
       $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
     });
 
     $(selector).find('.daterangefilter').on('cancel.daterangepicker', function(ev, picker) {
-        $(this).val('');
+        // $(this).val('');
     });
 
     $(selector).find('.datepicker').each(function(){
