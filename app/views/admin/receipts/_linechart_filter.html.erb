@@ -37,8 +37,7 @@
       else{
         $('#date').attr('disabled', 'disabled');
       }
-    });
-    $("#frequency").trigger('change')
+    }).trigger('change');
     FormInitializer.init($("#receipt_linechart_filter"));
   });
 <% end %>

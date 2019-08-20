@@ -33,7 +33,7 @@ FormInitializer = (function(){
     $(selector).find('.array-field').arrayField();
     var startDate = moment(($(selector).find('.daterangefilter').data("startDate") || moment()), "MM/DD/YYYY");
     var endDate = moment(($(selector).find('.daterangefilter').data("endDate") || moment()), "MM/DD/YYYY");
-    var opens = $(selector).find('.daterangefilter').data("opens")
+    var opens = $(selector).find('.daterangefilter').data("opens") || 'left'
     $(selector).find('.daterangefilter').each(function(){
       $(this).daterangepicker({
         startDate: startDate,
@@ -50,10 +50,6 @@ FormInitializer = (function(){
     });
     $(selector).find('.daterangefilter').on('apply.daterangepicker', function(ev, picker) {
       $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-    });
-
-    $(selector).find('.daterangefilter').on('cancel.daterangepicker', function(ev, picker) {
-        // $(this).val('');
     });
 
     $(selector).find('.datepicker').each(function(){
