@@ -1,4 +1,4 @@
-<% channel_partner = ChannelPartner.find_by(associated_user_id: current_user.id) %>
+<% channel_partner = ChannelPartner.where(associated_user_id: current_user.id).first %>
 <section class="first-sec welcome-box">
   <div class="container">
     <div class="row">
@@ -168,6 +168,7 @@
               </div>
             </div>
           </div>
+          <% if channel_partner %>
           <div class="box-card col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-5">
             <div class="box-header bg-gradient-cd br-rd-tr-4">
               <h2><img src="<%= asset_path 'folder-white.svg' %>" alt="My Documents" class="wd-18">Collaterals</h2>
@@ -182,6 +183,7 @@
               </div>
             </div>
           </div>
+          <% end %>
           <div class="box-card col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-5">
             <div class="box-header bg-gradient-cd br-rd-tr-4">
               <h2><img src="<%= asset_path 'leaderboard-white.svg' %>" alt="Documents" class="wd-16">Leaderboard</h2>
