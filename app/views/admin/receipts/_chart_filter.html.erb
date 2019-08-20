@@ -16,9 +16,9 @@
       <div class = "row">
         <div class = "col-12">
           <%= label_tag "dates", Receipt.human_attribute_name('dates'), class: "control-label float-left" %>
-          <% dates = params[:dates] || "#{Date.today.strftime('%d/%m/%Y')} - #{Date.today.strftime('%d/%m/%Y')}" %>
-          <% dates = dates.split(' - ') %>
-          <%= text_field_tag :dates, "dates", class: 'form-control daterangefilter', required: 'required',"data-start-date": dates[0], "data-end-date": dates[1], "data-opens": 'right' %>
+          <% dates = Array.new %>
+          <% dates = params[:dates].split(' - ') if params[:dates].present? %>
+          <%= text_field_tag :dates, "dates", class: 'form-control daterangefilter', required: 'required',"data-start-date": dates[0] || '', "data-end-date": dates[1] || '', "data-opens": 'right' %>
         </div>
       </div>
     </div>
