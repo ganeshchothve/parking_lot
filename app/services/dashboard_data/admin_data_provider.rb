@@ -37,8 +37,8 @@ module DashboardData
         matcher = {}
         if params && params[:dates]
           dates = params[:dates].split(" - ")
-          start_date = Date.strptime(dates[0], '%d/%m/%Y')
-          end_date = Date.strptime(dates[1], '%d/%m/%Y')
+          start_date = Date.strptime(dates[0], '%m/%d/%Y')
+          end_date = Date.strptime(dates[1], '%m/%d/%Y')
           matcher = {"created_at": {"$gte": start_date, "$lt": end_date}}
         end
         if params[:payments] == 'attached_payments'
@@ -129,8 +129,8 @@ module DashboardData
         matcher = {}
         if params && params[:dates]
           dates = params[:dates].split(" - ")
-          start_date = Date.strptime(dates[0], '%d/%m/%Y')
-          end_date = Date.strptime(dates[1], '%d/%m/%Y')
+          start_date = Date.strptime(dates[0], '%m/%d/%Y')
+          end_date = Date.strptime(dates[1], '%m/%d/%Y')
           matcher = {"created_at": {"$gte": start_date, "$lt": end_date}}
         end
         group_booking_detail_with_tower_and_status = {
@@ -171,8 +171,8 @@ module DashboardData
         matcher = {}
         if params && params[:dates]
           dates = params[:dates].split(" - ")
-          start_date = Date.strptime(dates[0], '%d/%m/%Y')
-          end_date = Date.strptime(dates[1], '%d/%m/%Y')
+          start_date = Date.strptime(dates[0], '%m/%d/%Y')
+          end_date = Date.strptime(dates[1], '%m/%d/%Y')
           matcher = {"created_at": {"$gte": start_date, "$lt": end_date}}
         end
         grouping = {
@@ -275,8 +275,8 @@ module DashboardData
         elsif params[:frequency] == 'custom_dates'
           if params[:dates]
             dates = params[:dates].split(" - ")
-            start_date = Date.strptime(dates[0], '%d/%m/%Y')
-            end_date = Date.strptime(dates[1], '%d/%m/%Y')
+            start_date = Date.strptime(dates[0], '%m/%d/%Y')
+            end_date = Date.strptime(dates[1], '%m/%d/%Y')
             matcher = {"created_at": {"$gte": start_date, "$lt": end_date}}
           end
         end
