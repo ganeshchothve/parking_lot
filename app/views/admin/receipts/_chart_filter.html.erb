@@ -13,6 +13,14 @@
           <%= select_tag "status", options_for_select(Receipt::STATUSES.map{|status| [t("mongoid.attributes.receipt/status.#{status}"), status]}, @statuses ), class: "selectize", multiple: true %>
         </div>
       </div>
+      <div class = "row">
+        <div class = "col-12">
+          <%= label_tag "dates", Receipt.human_attribute_name('dates'), class: "control-label float-left" %>
+          <% dates = Array.new %>
+          <% dates = params[:dates].split(' - ') if params[:dates].present? %>
+          <%= text_field_tag :dates, "dates", class: 'form-control daterangefilter', required: 'required',"data-start-date": dates[0] || '', "data-end-date": dates[1] || '', "data-opens": 'right' %>
+        </div>
+      </div>
     </div>
     <div class="filter-footer">
       <%= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right" %>
