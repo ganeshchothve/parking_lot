@@ -11,7 +11,7 @@
       <div class="modal-body">
         <div class="form-group">
           <%= f.label :user_id, class: 'control-label' %>
-          <%= f.select :user_id, options_from_collection_for_select(User.where(_id: f.object.user_id), 'id', 'name'), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_users_path, params: {role: 'customer'} }%>
+          <%= f.select :user_id, options_from_collection_for_select(User.where(_id: f.object.user_id), 'id', 'name'), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_users_path, params: { fltrs: { role: { '$in' => User::BUYER_ROLES }} } }%>
         </div>
         <div class="form-group">
           <%= f.label :primary_user_kyc_id, class: 'control-label' %>

@@ -107,7 +107,7 @@ class ApplicationPolicy
   end
 
   def only_for_kyc_added_users!
-    return true if record.user.kyc_ready?
+    return true if record.user.try(:kyc_ready?)
     @condition = 'only_for_kyc_added_users'
     false
   end

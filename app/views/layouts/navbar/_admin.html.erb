@@ -24,7 +24,7 @@
       </li>
     <% end %>
 
-    <% if policy([:admin, BookingDetail]).new? %>
+    <% if current_client.enable_actual_inventory?(current_user) %>
       <li class="nav-item">
         <%= link_to t('helpers.new.link_name', model: BookingDetail.model_name.human), new_admin_booking_detail_path, class: 'nav-link pl-0 pr-0 modal-remote-form-link' %>
       </li>

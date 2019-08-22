@@ -20,7 +20,7 @@ class Admin::BookingDetailsController < AdminController
     @booking_detail = BookingDetail.new(search: @search)
     @project_towers = search_for_towers
     @project_towers.map!{|f| [f[:project_tower_name], f[:project_tower_id]]}
-    authorize [:admin, @booking_detail]
+    # authorize [:admin, @booking_detail]
     render layout: false
   end
 

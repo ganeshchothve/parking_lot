@@ -13,7 +13,7 @@
   <%= link_to t('controller.booking_details.continue_booking.link_name'), checkout_user_search_path(user.get_search(hold_booking.project_unit_id)), class: "dropdown-item" %>
 <% end %>
 
-<% if !current_user.buyer? && policy([:admin, Receipt.new(user: user)]).direct? %>
+<% if policy([:admin, Receipt.new(user: user)]).new? %>
   <%= link_to t('controller.receipts.new.link_name'), new_admin_user_receipt_path(user), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 
