@@ -8,7 +8,7 @@
   <%= link_to "Checkout using unit already held", checkout_user_search_path(user.get_search(hold_booking.project_unit_id)), class: "dropdown-item" %>
 <% end %>
 
-<% if policy([:buyer, Receipt.new(user: user)]).direct? %>
+<% if policy([:buyer, Receipt.new(user: user)]).new? %>
   <%= link_to "Add Direct #{t('global.receipt')}", new_buyer_receipt_path(user), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 

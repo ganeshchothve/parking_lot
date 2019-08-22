@@ -1,15 +1,15 @@
 class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def index?
-    %w[admin superadmin sales sales_admin cp_admin gre channel_partner].include?(user.role)
+    %w[admin superadmin sales sales_admin cp_admin gre channel_partner].include?(user.role) && enable_actual_inventory?(user)
   end
 
   def new?
-    %w[admin superadmin sales sales_admin cp_admin gre channel_partner].include?(user.role) && eligible_user?
+    %w[admin superadmin sales sales_admin cp_admin gre channel_partner].include?(user.role) && eligible_user? && enable_actual_inventory?(user)
   end
 
   def create?
-    return true if  (record.user.booking_details.count < record.user.allowed_bookings) && eligible_user?
+    return true if  (record.user.booking_details.count < record.user.allowed_bookings) && eligible_user? && enable_actual_inventory?(user)
     @condition = 'allowed_bookings'
     false
   end
@@ -19,7 +19,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def edit?
-    record.user.user_kycs.present?
+    record.user.user_kycs.present? && enable_actual_inventory?(user)
   end
 
   def update?
