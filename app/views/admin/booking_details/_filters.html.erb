@@ -10,7 +10,7 @@
 
       <div class="form-group">
         <%= label_tag "fltrs", "Name", class: "control-label" %>
-        <%= select_tag "fltrs[id]", options_for_select(filter_booking_detail_options), {class: "selectize-remote", data: {url: admin_booking_details_path }} %>
+        <%= select_tag "fltrs[id]", options_for_select(filter_booking_detail_options(params.dig(:fltrs, :id)) ), {class: "selectize-remote", data: {url: admin_booking_details_path }} %>
       </div>
 
       <div class="form-group">

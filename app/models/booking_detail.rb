@@ -66,6 +66,7 @@ class BookingDetail
   scope :filter_by_project_tower_id, ->(project_tower_id) { where(project_unit_id: { "$in": ProjectUnit.where(project_tower_id: project_tower_id).pluck(:_id) })}
   scope :filter_by_user_id, ->(user_id) { where(user_id: user_id)  }
   scope :filter_by_manager_id, ->(manager_id){ where(user_id: { '$in' => User.buyers.where(manager_id: manager_id).distinct(:_id) } ) }
+  scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(name: regex ) }
   default_scope -> {desc(:created_at)}
 
 
@@ -107,6 +108,10 @@ class BookingDetail
       triggered_by_type: self.class.to_s
     })
     email.sent!
+  end
+
+  def ds_name
+    "#{name} - #{status}"
   end
 
   # validates kyc presence if booking is not allowed without kyc

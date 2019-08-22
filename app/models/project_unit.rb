@@ -33,6 +33,7 @@ class ProjectUnit
 
   field :floor_rise, type: Float
   field :floor, type: Integer
+
   field :floor_order, type: Integer
   field :bedrooms, type: Float
   field :bathrooms, type: Float
@@ -85,6 +86,19 @@ class ProjectUnit
   validate :pan_uniqueness
 
   scope :filter_by_project_tower_id, ->(project_tower_id) { where(project_tower_id: project_tower_id) }
+  scope :filter_by_status, ->(status) { status.is_a?(Array) ? where(status: {"$in" => status}) : where(status: status.as_json)}
+  scope :filter_by_unit_facing_direction, ->(unit_facing_direction) { where(unit_facing_direction: unit_facing_direction)}
+  scope :filter_by_floor, ->(floor) { where(floor: floor)}
+  scope :filter_by_floor_order, ->(floor_order) { where(floor_order: floor_order)}
+  scope :filter_by_carpet, ->(carpet) { where(carpet: carpet)}
+  scope :filter_by_saleable, ->(saleable) {saleable_price = saleable.split('-'); where(saleable: { '$gte' => saleable_price.first.to_i, '$lte' => saleable_price.last.to_i })}
+  scope :filter_by_agreement_price, ->(agreement_price) { agreement_cost = agreement_price.split('-'); where(agreement_price: { '$gte' => agreement_cost.first.to_i, '$lte' => agreement_cost.last.to_i })}
+  scope :filter_by_all_inclusive_price, ->(all_inclusive_price) {all_inclusive_cost = all_inclusive_price.split('-'); where(all_inclusive_price: { '$gte' => all_inclusive_cost.first.to_i, '$lte' => all_inclusive_cost.last.to_i })}
+  scope :filter_by_bedrooms, ->(bedrooms) { where(bedrooms: bedrooms.to_f)}
+  scope :filter_by_bathrooms, ->(bathrooms) { where(bathrooms: bathrooms.to_f)}
+  scope :filter_by__id, ->(_id) { where(_id: _id)}
+  scope :filter_by_search, ->(search) { where(name: ::Regexp.new(::Regexp.escape(search), 'i') )}
+
 
   delegate :name, to: :phase, prefix: true, allow_nil: true
 
@@ -242,60 +256,6 @@ class ProjectUnit
     (status == 'hold' && user_id == user.id) || user_based_status(user) == 'available'
   end
 
-  def self.build_criteria(params = {})
-    selector = {}
-    if params[:fltrs].present? && params[:fltrs][:_id].blank?
-      # TODO: handle search here
-      if params[:fltrs][:status].present?
-        if params[:fltrs][:status].is_a?(Array)
-          selector = { status: { "$in": params[:fltrs][:status] } }
-        elsif params[:fltrs][:status].is_a?(ActionController::Parameters)
-          selector = { status: params[:fltrs][:status].to_unsafe_h }
-        else
-          selector = { status: params[:fltrs][:status] }
-        end
-      end
-      if params[:fltrs][:project_tower_id].present?
-        selector[:project_tower_id] = params[:fltrs][:project_tower_id]
-      end
-      if params[:fltrs][:unit_facing_direction].present?
-        selector[:unit_facing_direction] = params[:fltrs][:unit_facing_direction]
-      end
-      if params[:fltrs][:floor].present?
-        selector[:floor] = params[:fltrs][:floor]
-      end
-      if params[:fltrs][:floor_order].present?
-        selector[:floor_order] = params[:fltrs][:floor_order]
-      end
-      if params[:fltrs][:carpet].present?
-        carpet = params[:fltrs][:carpet].split('-')
-        selector[:carpet] = { '$gte' => carpet.first.to_i, '$lte' => carpet.last.to_i }
-      end
-      if params[:fltrs][:saleable].present?
-        saleable = params[:fltrs][:saleable].split('-')
-        selector[:saleable] = { '$gte' => saleable.first.to_i, '$lte' => saleable.last.to_i }
-      end
-      if params[:fltrs][:agreement_price].present?
-        budget = params[:fltrs][:agreement_price].split('-')
-        selector[:agreement_price] = { '$gte' => budget.first.to_i, '$lte' => budget.last.to_i }
-      end
-      if params[:fltrs][:all_inclusive_price].present?
-        budget = params[:fltrs][:all_inclusive_price].split('-')
-        selector[:all_inclusive_price] = { '$gte' => budget.first.to_i, '$lte' => budget.last.to_i }
-      end
-      if params[:fltrs][:bedrooms].present?
-        selector[:bedrooms] = params[:fltrs][:bedrooms].to_f
-      end
-      if params[:fltrs][:bathrooms].present?
-        selector[:bathrooms] = params[:fltrs][:bathrooms].to_f
-      end
-    elsif params[:fltrs].present? && params[:fltrs][:_id].present?
-      selector[:id] = params[:fltrs][:_id]
-    end
-
-    selector[:name] = ::Regexp.new(::Regexp.escape(params[:search]), 'i') if params[:search].present?
-    where(selector)
-  end
 
   def ui_json
     hash = as_json

@@ -34,6 +34,8 @@ class ProjectTower
   validate :validate_floor_rise
   has_many :assets, as: :assetable
 
+  scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(name: regex ) }
+
   def unit_configurations
     UnitConfiguration.where(data_attributes: { '$elemMatch' => { 'n' => 'project_tower_id', 'v' => selldo_id } })
   end
