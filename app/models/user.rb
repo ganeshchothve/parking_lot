@@ -12,7 +12,7 @@ class User
   # Constants
   ALLOWED_UTM_KEYS = %i[utm_campaign utm_source utm_sub_source utm_content utm_medium utm_term]
   BUYER_ROLES = %w[user employee_user management_user]
-  ADMIN_ROLES = %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner]
+  ADMIN_ROLES = %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner gre]
   CHANNEL_PARTNER_USERS = %w[cp cp_admin channel_partner]
   SALES_USER = %w[sales sales_admin]
   COMPANY_USERS = %w[employee_user management_user]
@@ -239,6 +239,16 @@ class User
 
   def total_balance_pending
     booking_details.in(status: ProjectUnit.booking_stages).sum(&:pending_balance)
+  end
+
+  #
+  # This function check the booking limit, any buyer can book only limited booking which is defined on allowed_bookings.
+  #
+  #
+  # @return [Boolean]
+  #
+  def can_book_more_booking?
+    self.booking_details.in(status: BookingDetail::BOOKING_STAGES ).count > self.allowed_bookings
   end
 
   def total_unattached_balance

@@ -35,6 +35,24 @@ RSpec.describe Admin::BookingDetails::ReceiptsController, type: :controller do
     end
 
     describe 'payment mode ONLINE' do
+
+      context "when kyc is not present" do
+        it "when enable_booking_without_kyc is true" do
+          Client.first.set({enable_booking_without_kyc: true,enable_payment_without_kyc: false})
+          receipt_params = FactoryBot.attributes_for(:receipt, payment_identifier: nil)
+          @booking_detail = booking_without_kyc(@user)
+          allow_any_instance_of(User).to receive(:user_kyc_ids).and_return([])
+          expect{post :create, params: { receipt: receipt_params, user_id: @user.id, booking_detail_id: @booking_detail.id }}.to change(Receipt, :count).by(1)
+        end
+
+        it "when enable_booking_without_kyc is false" do
+          Client.first.set({enable_booking_without_kyc: false,enable_payment_without_kyc: true})
+          receipt_params = FactoryBot.attributes_for(:receipt, payment_identifier: nil)
+          @booking_detail = booking_without_kyc(@user)
+          allow_any_instance_of(User).to receive(:user_kyc_ids).and_return([])
+          expect{post :create, params: { receipt: receipt_params, user_id: @user.id, booking_detail_id: @booking_detail.id }}.to change(Receipt, :count).by(0)
+        end
+      end
       it 'receipt saved successful' do
         receipt_params = FactoryBot.attributes_for(:receipt, payment_identifier: nil)
         post :create, params: { receipt: receipt_params, user_id: @user.id, booking_detail_id: @booking_detail.id }
@@ -47,6 +65,26 @@ RSpec.describe Admin::BookingDetails::ReceiptsController, type: :controller do
     describe 'payment mode' do
       context do
         %w[cheque rtgs neft imps card_swipe].each do |payment_mode|
+
+        context "when kyc is not present" do
+          it "when enable_booking_without_kyc is true" do
+            Client.first.set({enable_booking_without_kyc: true,enable_payment_without_kyc: false})
+            receipt_params = FactoryBot.attributes_for(:offline_payment, payment_mode: payment_mode.to_s)
+            @booking_detail = booking_without_kyc(@user)
+            allow_any_instance_of(User).to receive(:user_kyc_ids).and_return([])
+            expect{post :create, params: { receipt: receipt_params, user_id: @user.id, booking_detail_id: @booking_detail.id }}.to change(Receipt, :count).by(1)
+            
+          end
+
+          it "when enable_booking_without_kyc is false" do 
+            Client.first.set({enable_booking_without_kyc: false,enable_payment_without_kyc: true})
+            receipt_params = FactoryBot.attributes_for(:offline_payment, payment_mode: payment_mode.to_s)
+            @booking_detail = booking_without_kyc(@user)
+            allow_any_instance_of(User).to receive(:user_kyc_ids).and_return([])
+            expect{post :create, params: { receipt: receipt_params, user_id: @user.id, booking_detail_id: @booking_detail.id }}.to change(Receipt, :count).by(0)
+          end
+        end
+
           it "#{payment_mode} receipt saved successful" do
             receipt_params = FactoryBot.attributes_for(:offline_payment, payment_mode: payment_mode.to_s)
             post :create, params: { receipt: receipt_params, user_id: @user.id, booking_detail_id: @booking_detail.id }

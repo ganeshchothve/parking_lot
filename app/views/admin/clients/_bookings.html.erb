@@ -1,0 +1,158 @@
+<div class="row ">
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :area_unit, class: 'label-required' %>
+      <%= f.text_field :area_unit, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("area_unit") ? false : true) %>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :cancellation_amount, class: 'label-required' %>
+      <%= f.text_field :cancellation_amount, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("cancellation_amount") ? false : true) %>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <% if policy([:admin, @client]).editable_field?("enable_direct_payment") %>
+    <div class="form-group direct-payment">
+      <%= f.label :enable_direct_payment %><br/>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :enable_direct_payment, true, class: "form-check-input" %>
+        <%= f.label :enable_direct_payment, "Yes", class: "form-check-label" %>
+      </div>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :enable_direct_payment, false, class: "form-check-input" %>
+        <%= f.label :enable_direct_payment, "No", class: "form-check-label" %>
+      </div>
+    </div>
+    <% end %>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :payment_gateway, class: 'label-required' %>
+      <%= f.select :payment_gateway, Client.available_payment_gateways.collect{|x| [x[:text], x[:id]]}, {}, class: 'selectize', required: 'required', disabled: (policy([:admin, @client]).editable_field?("payment_gateway") ? false : true) %>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="form-group">
+      <%= f.label :enable_actual_inventory %><br/>
+      <%= f.select :enable_actual_inventory, User.available_roles(@client).collect{|x| [I18n.t("users.role.#{x}"), x]}, {}, class: 'selectize', multiple: true, required: 'required', disabled: (policy(f.object).editable_field?("enable_actual_inventory") ? false : true) %>
+      <!-- TODO: throwing error on resolving conflict  -->
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :blocking_days, class: 'label-required' %>
+      <%= f.number_field :blocking_days, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("blocking_days") ? false : true), min: 0, max: 30 %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :holding_minutes, class: 'label-required' %>
+      <%= f.text_field :holding_minutes, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("holding_minutes") ? false : true), min: 0, max: 30 %>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :enable_company_users %><br/>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :enable_company_users, true, class: "form-check-input" %>
+        <%= f.label :enable_company_users, "Yes", class: "form-check-label" %>
+      </div>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :enable_company_users, false, class: "form-check-input" %>
+        <%= f.label :enable_company_users, "No", class: "form-check-label" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="form-group depend-direct-payment">
+      <%= f.label :enable_payment_with_kyc %><br/>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :enable_payment_with_kyc, true, class: "form-check-input" %>
+        <%= f.label :enable_payment_with_kyc, "Yes", class: "form-check-label" %>
+      </div>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :enable_payment_with_kyc, false, class: "form-check-input" %>
+        <%= f.label :enable_payment_with_kyc, "No", class: "form-check-label" %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :enable_booking_with_kyc %><br/>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :enable_booking_with_kyc, true, class: "form-check-input" %>
+        <%= f.label :enable_booking_with_kyc, "Yes", class: "form-check-label" %>
+      </div>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :enable_booking_with_kyc, false, class: "form-check-input" %>
+        <%= f.label :enable_booking_with_kyc, "No", class: "form-check-label" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :allowed_bookings_per_user, class: 'label-required' %>
+      <%= f.number_field :allowed_bookings_per_user, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("allowed_bookings_per_user") ? false : true), min: 0 %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :allow_multiple_bookings_per_user_kyc, class: 'label-required' %><br/>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :allow_multiple_bookings_per_user_kyc, true, class: "form-check-input" %>
+        <%= f.label :allow_multiple_bookings_per_user_kyc, "Yes", class: "form-check-label" %>
+      </div>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :allow_multiple_bookings_per_user_kyc, false, class: "form-check-input" %>
+        <%= f.label :allow_multiple_bookings_per_user_kyc, "No", class: "form-check-label" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :blocking_amount, class: 'label-required' %>
+      <%= f.number_field :blocking_amount, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("blocking_amount") ? false : true), min: 0 %>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <% if policy([:admin, @client]).editable_field?("enable_channel_partners") %>
+    <div class="form-group">
+      <%= f.label :enable_channel_partners %><br/>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :enable_channel_partners, true, class: "form-check-input" %>
+        <%= f.label :enable_channel_partners, "Yes", class: "form-check-label" %>
+      </div>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :enable_channel_partners, false, class: "form-check-input" %>
+        <%= f.label :enable_channel_partners, "No", class: "form-check-label" %>
+      </div>
+    </div>
+    <% end %>
+  </div>
+</div>

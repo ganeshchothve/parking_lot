@@ -134,12 +134,14 @@ en:
           wrong_user: 'You are not authorized to add a payment for this user.'
           not_allowed: 'You are not allowed to add a payment in this booking stage.'
           enable_direct_payment: 'Direct payment is not available right now.'
+          user_not_confimred: 'You are not yet confirmed.'
         create?:
           online_account_not_present: 'Online payments are currently disabled.'
           wrong_user: 'You are not authorized to add a payment for this user.'
           not_allowed: 'You are not allowed to add a payment in this booking stage.'
           enable_direct_payment: 'Direct payment is not available right now.'
           only_online_payment: 'Only Online payment is permitted.'
+          user_not_confimred: 'You are not yet confirmed.'
       booking_detail_scheme_policy:
         new?:
           only_buyer: 'Only buyer can select Scheme'

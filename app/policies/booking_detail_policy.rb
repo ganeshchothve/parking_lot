@@ -7,12 +7,12 @@ class BookingDetailPolicy < ApplicationPolicy
   def permitted_attributes(_params = {})
     attributes = [:tds_doc]
     attributes += [:erp_id] if %w[admin sales_admin].include?(user.role)
-    attributes += [:primary_user_kyc_id, :user_kyc_ids ] if record.hold?
+    attributes += [:primary_user_kyc_id, :user_kyc_ids ]
     attributes
   end
 
   def checkout?
-    _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && only_for_kyc_added_users! && has_user_on_record? && available_for_user_group?
+    _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && eligible_user? && has_user_on_record? && available_for_user_group?
   end
 
   private
@@ -40,8 +40,17 @@ class BookingDetailPolicy < ApplicationPolicy
   end
 
   def buyer_kyc_booking_limit_exceed?
-    return true if record.user.unused_user_kyc_ids(record.id).present?
+    return true if (record.user.unused_user_kyc_ids(record.id).present? || !(current_client.enable_booking_with_kyc) )
     @condition = "user_kyc_allowed_bookings"
     false
   end
+
+  def enable_booking_with_kyc?
+    current_client.enable_booking_with_kyc
+  end
+
+  def eligible_user?
+    enable_booking_with_kyc? ? only_for_kyc_added_users! : true
+  end
+
 end
