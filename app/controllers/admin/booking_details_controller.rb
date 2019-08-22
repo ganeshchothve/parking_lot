@@ -53,6 +53,21 @@ class Admin::BookingDetailsController < AdminController
     @scheme = @booking_detail.booking_detail_scheme
   end
 
+  def edit
+    render layout: false
+  end
+
+  def update
+    respond_to do |format|
+      if @booking_detail.update(permitted_attributes([:admin, @booking_detail]))
+        format.html { redirect_to admin_booking_details_path, notice: 'User Kycs were successfully updated.' }
+      else
+        format.html { render :edit }
+        format.json { render json: { errors: @booking_detail.errors.full_messages }, status: :unprocessable_entity }
+      end
+    end
+  end
+
   def booking
     # This will return @receipt object
     # In before_action set booking_detail project_unit, receipt and redirect_to to dashboard_path when any one of this is missing.
@@ -146,7 +161,7 @@ class Admin::BookingDetailsController < AdminController
   end
 
   def booking_detail_for_json
-    @booking_details = BookingDetail.build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page])
+    @booking_details = BookingDetail.build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page]).as_json(methods: [:ds_name])
   end
 
   def get_dataset(out, statuses)

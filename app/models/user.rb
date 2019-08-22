@@ -12,7 +12,7 @@ class User
   # Constants
   ALLOWED_UTM_KEYS = %i[utm_campaign utm_source utm_sub_source utm_content utm_medium utm_term]
   BUYER_ROLES = %w[user employee_user management_user]
-  ADMIN_ROLES = %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner]
+  ADMIN_ROLES = %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner gre]
   CHANNEL_PARTNER_USERS = %w[cp cp_admin channel_partner]
   SALES_USER = %w[sales sales_admin]
   COMPANY_USERS = %w[employee_user management_user]
@@ -169,8 +169,10 @@ class User
   scope :filter_by_manager_id, ->(manager_id) {where(manager_id: manager_id) }
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where({ '$and' => ["$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] ] }) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
-  scope :filter_by_role, ->(*_role) { where( role: { "$in": _role } ) }
-  scope :filter_by_role_nin, ->(*_role) { where( role: { "$nin": _role } ) }
+  scope :filter_by_role, ->(_role) { _role.is_a?(Array) ? where( role: { "$in": _role }) : where(role: _role.as_json) }
+
+  scope :filter_by_role_nin, ->(_role) { _role.is_a?(Array) ? where( role: { "$nin": _role } ) : where(role: _role.as_json) }
+
   scope :filter_by_created_by, ->(_created_by) do
     if _created_by == 'direct'
       where('$or' => [{'$expr' => {'$eq' => ['$created_by_id', "$_id"] } }, { created_by_id: nil } ])
@@ -241,6 +243,16 @@ class User
 
   def total_balance_pending
     booking_details.in(status: ProjectUnit.booking_stages).sum(&:pending_balance)
+  end
+
+  #
+  # This function check the booking limit, any buyer can book only limited booking which is defined on allowed_bookings.
+  #
+  #
+  # @return [Boolean]
+  #
+  def can_book_more_booking?
+    self.booking_details.in(status: BookingDetail::BOOKING_STAGES ).count > self.allowed_bookings
   end
 
   def total_unattached_balance

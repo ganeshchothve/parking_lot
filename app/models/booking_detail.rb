@@ -9,8 +9,8 @@ class BookingDetail
   extend FilterByCriteria
   include PriceCalculator
 
-  BOOKING_STAGES = %w[blocked booked_tentative booked_confirmed]
   STATUSES = %w[hold blocked booked_tentative booked_confirmed under_negotiation scheme_rejected scheme_approved swap_requested swapping swapped swap_rejected cancellation_requested cancelling cancelled cancellation_rejected]
+  BOOKING_STAGES = %w[blocked booked_tentative booked_confirmed under_negotiation scheme_approved]
 
   field :status, type: String
   field :erp_id, type: String, default: ''
@@ -43,7 +43,7 @@ class BookingDetail
   belongs_to :search, optional: true
   # When a new booking detail object is created from another object, this field will be set. This happens when the user creates a swap request.
   belongs_to :parent_booking_detail, class_name: 'BookingDetail', optional: true
-  belongs_to :primary_user_kyc, class_name: 'UserKyc'
+  belongs_to :primary_user_kyc, class_name: 'UserKyc', optional: true
   has_many :receipts, dependent: :nullify
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :booking_detail_schemes, dependent: :destroy
@@ -54,8 +54,9 @@ class BookingDetail
 
   # TODO: uncomment
   # validates :name, presence: true
-  validates :status, :primary_user_kyc_id, presence: true
+  validates :status, presence: true
   validates :erp_id, uniqueness: true, allow_blank: true
+  validate :kyc_mandate, on: :create
   delegate :name, :blocking_amount, to: :project_unit, prefix: true, allow_nil: true
   delegate :name, :email, :phone, to: :user, prefix: true, allow_nil: true
   delegate :name, :email, :phone, :role, :role?, to: :manager, prefix: true, allow_nil: true
@@ -67,6 +68,7 @@ class BookingDetail
   scope :filter_by_project_tower_id, ->(project_tower_id) { where(project_unit_id: { "$in": ProjectUnit.where(project_tower_id: project_tower_id).pluck(:_id) })}
   scope :filter_by_user_id, ->(user_id) { where(user_id: user_id)  }
   scope :filter_by_manager_id, ->(manager_id){ where(user_id: { '$in' => User.buyers.where(manager_id: manager_id).distinct(:_id) } ) }
+  scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(name: regex ) }
   default_scope -> {desc(:created_at)}
 
 
@@ -110,6 +112,20 @@ class BookingDetail
     email.sent!
   end
 
+  def ds_name
+    "#{name} - #{status}"
+  end
+
+  # validates kyc presence if booking is not allowed without kyc
+  def kyc_mandate
+    if project_unit.booking_portal_client.enable_booking_with_kyc
+      primary_user_kyc_id.present?
+    else
+      return true
+    end
+  end
+
+
   def ageing
     _receipts = self.receipts.in(status:["clearance_pending", "success"]).asc(:created_at)
     if(["booked_confirmed"].include?(self.status))
@@ -145,6 +161,10 @@ class BookingDetail
     bds.try(:payment_schedule_template)
   end
 
+  def total_amount_paid
+    receipts.success.sum(:total_amount)
+  end
+
   def pending_balance(options={})
     strict = options[:strict] || false
     user_id = options[:user_id] || self.user_id
@@ -160,14 +180,6 @@ class BookingDetail
     else
       return self.project_unit.booking_price
     end
-  end
-
-  def total_tentative_amount_paid
-    receipts.where(user_id: self.user_id).in(status: ['success', 'clearance_pending']).sum(:total_amount)
-  end
-
-  def total_amount_paid
-    receipts.success.sum(:total_amount)
   end
 
   class << self

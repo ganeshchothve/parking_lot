@@ -3,6 +3,7 @@ class ChannelPartner
   include Mongoid::Timestamps
   include ArrayBlankRejectable
   include SyncDetails
+  extend FilterByCriteria
 
   STATUS = %w(active inactive)
 
@@ -20,6 +21,12 @@ class ChannelPartner
   field :aadhaar, type: String
 
   field :erp_id, type: String, default: ''
+
+  scope :filter_by_rera_id, ->(rera_id) { where(rera_id: rera_id) }
+  scope :filter_by_status, ->(status) { where(status: status) }
+  scope :filter_by_city, ->(city) { where(city: city) }
+  scope :filter_by__id, ->(_id) { where(_id: _id) }
+  scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where({ '$and' => ["$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] ] }) }
 
   default_scope -> { desc(:created_at) }
 
@@ -54,27 +61,11 @@ class ChannelPartner
 
   delegate :name, :role, :role?, :email, to: :manager, prefix: true, allow_nil: true
 
-  def self.build_criteria(params = {})
-    selector = {}
-    if params[:fltrs].present?
-      if params[:fltrs][:rera_id].present?
-        selector[:rera_id] = params[:fltrs][:rera_id]
-      end
-      if params[:fltrs][:status].present?
-        selector[:status] = params[:fltrs][:status]
-      end
-      selector[:city] = params[:fltrs][:city] if params[:fltrs][:city].present?
-    end
-    or_selector = {}
-    if params[:search].present?
-      regex = ::Regexp.new(::Regexp.escape(params[:search]), 'i')
-      or_selector = {"$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] }
-    end
-    if params[:fltrs].present? && params[:fltrs][:_id].present?
-      where(id: params[:fltrs][:_id])
-    else
-      self.and([selector, or_selector])
-    end
+  def self.available_statuses
+    [
+      { id: 'active', text: 'Active' },
+      { id: 'inactive', text: 'Inactive' }
+    ]
   end
 
   def name

@@ -33,7 +33,10 @@ class UserRequest
   scope :filter_by_user, ->(user_id){ where(user_id: user_id)}
   scope :filter_by__type, ->(request_type){ where(_type: /#{request_type}/i)}
   scope :filter_by_status, ->(_status){ where(status: _status) }
-
+  scope :filter_by_requestable_type, ->(requestable_type){ where(requestable_type: requestable_type) }
+  scope :filter_by_requestable, ->(requestable_id){ where(requestable_id: requestable_id) }
+  scope :filter_by_booking_detail_id, ->(requestable_id){ where(requestable_id: requestable_id) }
+  scope :filter_by_receipt_id, ->(requestable_id){ where(requestable_id: requestable_id) }
   default_scope -> { desc(:created_at) }
 
   delegate :project_unit, to: :requestable, prefix: false, allow_nil: true

@@ -26,5 +26,13 @@ module ReceiptsHelper
       t('global.i_gree_be_half_of', name: @receipt.user.name)
     end
   end
+
+  def filter_receipts_options(receipt_id)
+    if receipt_id.present?
+      Receipt.where(_id: receipt_id).map{|bd| [bd.name, bd.id]}
+    else
+      []
+    end
+  end
 end
 

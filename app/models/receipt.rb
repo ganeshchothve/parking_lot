@@ -58,6 +58,7 @@ class Receipt
     _booking_detail_id = _booking_detail_id == '' ? { '$in' => ['', nil] } : _booking_detail_id
     where(booking_detail_id: _booking_detail_id)
   end
+  scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(receipt_id: regex ) }
 
   scope :direct_payments, ->{ where(booking_detail_id: nil )}
 

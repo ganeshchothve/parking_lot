@@ -5,11 +5,11 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def new?
-    %w[admin superadmin sales sales_admin cp_admin gre channel_partner].include?(user.role)
+    %w[admin superadmin sales sales_admin cp_admin gre channel_partner].include?(user.role) && eligible_user?
   end
 
   def create?
-    return true if  record.user.booking_details.count < record.user.allowed_bookings
+    return true if  (record.user.booking_details.count < record.user.allowed_bookings) && eligible_user?
     @condition = 'allowed_bookings'
     false
   end
@@ -18,12 +18,20 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     true
   end
 
+  def edit?
+    record.user.user_kycs.present?
+  end
+
+  def update?
+    edit?
+  end
+
   def mis_report?
     true
   end
 
   def hold?
-    _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && only_for_kyc_added_users! && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed? && buyer_kyc_booking_limit_exceed?
+    _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && eligible_user? && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed? && buyer_kyc_booking_limit_exceed?
   end
 
   def send_under_negotiation?

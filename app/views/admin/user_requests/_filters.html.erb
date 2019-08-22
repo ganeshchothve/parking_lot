@@ -27,6 +27,20 @@
           <%= label_tag "fltrs", t('mongoid.attributes.user_request.status'), class: "control-label" %>
           <%= select_tag "fltrs[status]", options_for_select(UserRequest::STATUS.collect{|urs| [t("mongoid.attributes.user_request/status.#{urs}"), urs ]}, (params.dig(:fltrs, :status) || "")), {prompt: "Select", class: "selectize"} %>
         </div>
+
+        <div class="form-group">
+          <%= label_tag "fltrs", "requestable_type", class: "control-label" %>
+          <%= select_tag "fltrs[requestable_type]", options_for_select(UserRequest.distinct(:requestable_type), params.dig(:fltrs, :requestable_type)), {prompt: "Select", class: "selectize"} %>
+        </div>
+        <div class="form-group requestable BookingDetail d-none">
+          <%= label_tag "fltrs","Booking", class: "control-label", id: 'requestable_label' %>
+          <%= select_tag "fltrs[booking_detail_id]", options_for_select(filter_booking_detail_options( params.dig(:fltrs, :booking_detail_id)), params.dig(:fltrs, :booking_detail_id) ), {prompt: "Select", class: "selectize-remote", data: { url: admin_booking_details_path }} %>
+        </div>
+
+        <div class="form-group requestable Receipt d-none">
+          <%= label_tag "fltrs","Receipt", class: "control-label", id: 'requestable_label' %>
+          <%= select_tag "fltrs[receipt_id]", options_for_select(filter_receipts_options(params.dig(:fltrs, :receipt_id) ), params.dig(:fltrs, :receipt_id)), {prompt: "Select", class: "selectize-remote", data: { url: admin_receipts_path }} %>
+        </div>
       </div>
     </div>
     <div class="filter-footer">
@@ -37,6 +51,16 @@
 </div>
 <%= javascript_tag do %>
   $(document).ready(function(){
+    $(document).ready(function(){
+      $('#fltrs_requestable_type').change(function(){
+        $('.requestable').addClass('d-none').find('select')
+        if($(this).val() != ''){
+          $('.' + $(this).val()).removeClass('d-none').find('select')
+        }
+      });
+      $('#fltrs_requestable_type').trigger('change');
+      FormInitializer.init($("#user_request_search_form"));
+    });
     FormInitializer.init($("#user_request_search_form"));
   });
 <% end %>
