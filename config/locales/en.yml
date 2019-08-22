@@ -210,6 +210,7 @@ en:
         agreement_price: 'Agreement Price'
         all_inclusive_price: 'All Inclusive Price'
         manager_id: Manager
+        dates: 'Dates'
       booking_detail/status:
         available: 'Available'
         not_available: 'Not Available'
@@ -448,6 +449,7 @@ en:
         time_slot: Time Slot
         tracking_id: 'Transaction ID (Processed Payment)'
         frequency: 'Frequency'
+        dates: 'Dates'
 
       receipt/status:
         pending: 'Pending'
@@ -657,6 +659,7 @@ en:
           last_7_days: 'Last 7 days'
           last_7_weeks: 'Last 7 weeks'
           last_7_months: 'Last 7 months'
+          custom_dates: 'Custom Dates'
 
   controller:
     assets:

@@ -31,16 +31,25 @@ FormInitializer = (function(){
     crs.init();
     $(selector).find('.selectize-tags').selectize({create: true});
     $(selector).find('.array-field').arrayField();
-    $(selector).find('.daterangefilter').daterangepicker({
-      showDropdowns: true,
-      autoUpdateInput: false
+    var startDate = moment(($(selector).find('.daterangefilter').data("startDate") || moment()), "MM/DD/YYYY");
+    var endDate = moment(($(selector).find('.daterangefilter').data("endDate") || moment()), "MM/DD/YYYY");
+    var opens = $(selector).find('.daterangefilter').data("opens") || 'left'
+    $(selector).find('.daterangefilter').each(function(){
+      $(this).daterangepicker({
+        startDate: startDate,
+        endDate: endDate,
+        opens: opens,
+        ranges: {
+           'Today': [moment(), moment()],
+           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+           'Last 1 Month': [moment().subtract(29, 'days'), moment()],
+           'Last 7 Months': [moment().subtract(7, 'month'), moment().subtract(1, 'month')]
+        }
+      });
     });
     $(selector).find('.daterangefilter').on('apply.daterangepicker', function(ev, picker) {
-      $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
-    });
-
-    $(selector).find('.daterangefilter').on('cancel.daterangepicker', function(ev, picker) {
-        $(this).val('');
+      $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
     });
 
     $(selector).find('.datepicker').each(function(){
