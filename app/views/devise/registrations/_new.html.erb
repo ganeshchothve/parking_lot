@@ -1,24 +1,18 @@
-<%= form_for(resource, url: user_registration_path) do |f| %>
-  <div class="form-group">
-    <%= f.label :first_name, class: 'label-required' %>
-    <%= f.text_field :first_name, autofocus: true, required: 'required', placeholder: 'First Name', class: 'form-control' %>
-  </div>
-  <div class="form-group">
-    <%= f.label :last_name, class: 'label-required' %>
-    <%= f.text_field :last_name, autofocus: true, required: 'required', placeholder: 'Last Name', class: 'form-control' %>
-  </div>
-  <div class="form-group">
-    <%= f.label :email , class: 'label-required'%>
-    <%= f.email_field :email, autofocus: true, required: 'required', placeholder: 'Email', class: 'form-control' %>
-  </div>
-  <div class="form-group ">
-    <%= f.label :phone, class: 'label-required' %>
-    <%= f.phone_field :login, autofocus: true, class: 'form-control', placeholder: t('mongoid.attributes.user.phone'), id: 'user_login_phone', autocomplete: 'off' %>
-  </div>
+<%= simple_form_for(resource, url: user_registration_path, html: { class: 'validate-form' }) do |f| %>
+
+  <%= f.input :first_name, autofocus: true, required: true %>
+
+  <%= f.input :last_name, autofocus: true, required: true %>
+
+  <%= f.input :email, autofocus: true, required: true, as: :email %>
+
+  <%= f.input :login, autofocus: true, label: User.human_attribute_name('phone'), placeholder: User.human_attribute_name('phone'), id: 'user_login_phone', autocomplete: 'off' %>
+
   <div class="signin-btn col-lg-12 pl-0 pr-0 pt-4 pb-3">
     <%= f.submit "Sign up", class: 'sign-in-btn' %>
   </div>
 <% end %>
+
 <%= javascript_tag do %>
   $(document).ready(function(){
     $("#user_login_phone").intlTelInput({initialCountry: 'IN'});

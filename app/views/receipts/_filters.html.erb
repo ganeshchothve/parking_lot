@@ -31,7 +31,7 @@
 
           <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.receipt.status'), class: "control-label" %>
-            <%= select_tag "fltrs[status][]", options_for_select(Receipt.aasm.states.collect(&:name).collect(&:to_s).collect{|x| [I18n.t('receipts.status.'+ x), x]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize", multiple: 'multiple'} %>
+            <%= select_tag "fltrs[status][]", options_for_select(Receipt.aasm.states.collect(&:name).collect(&:to_s).collect{|x| [Receipt.human_attribute_name("status.#{x}"), x]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize", multiple: 'multiple'} %>
           </div>
           <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.receipt.payment_mode'), class: "control-label" %>

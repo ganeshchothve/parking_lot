@@ -3,19 +3,12 @@
     <div class="col-lg-5 col-xs-12 col-md-12 col-sm-12 no-pd">
       <div class="login-form-wrapper pt-5">
         <p class="p-style">Reset Password</p>
-        <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { id: "confirmation_form", method: :post, class: "validate-form pb-5" }) do |f| %>
-          <%= devise_error_messages! %>
-          <% if current_client.preferred_login == "phone" %>
-            <div class="form-group">
-              <%= f.label :phone %>
-              <%= f.phone_field :login, autofocus: true, autocomplete: false, class: 'form-control', placeholder: 'Phone' %>
-            </div>
-          <% else %>
-            <div class="form-group">
-              <%= f.label :email %>
-              <%= f.email_field :login, autofocus: true, autocomplete: false, class: 'form-control', placeholder: 'Email' %>
-            </div>
-          <% end %>
+
+        <%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), method: :post, html: { class: 'validate-form pb-5', id: 'confirmation_form' }) do |f| %>
+
+
+          <%= f.input :login, autofocus: true, autocomplete: false, class: 'form-control' %>
+
           <div class="signin-btn col-lg-12 pl-0 pr-0 pt-5 pb-5">
             <%= f.submit "Resend confirmation instructions", class: 'sign-in-btn' %>
           </div>

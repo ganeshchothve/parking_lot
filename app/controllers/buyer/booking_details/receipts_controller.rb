@@ -7,6 +7,9 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
   def index
     authorize([:buyer, Receipt])
     @receipts = @booking_detail.receipts.build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page])
+    respond_to do |format|
+      format.html { render template: 'booking_details/receipts/index' }
+    end
   end
 
   #
