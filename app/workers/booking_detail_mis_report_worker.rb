@@ -45,7 +45,7 @@ class BookingDetailMisReportWorker
       booking_detail.user_name || 'N/A',
       booking_detail.user_email || "N/A",
       booking_detail.user_phone || "N/A",
-      booking_detail.status,
+      BookingDetail.human_attribute_name("status.#{booking_detail.status}"),
       booking_detail.ageing,
       booking_detail.pending_balance({strict: true}),
       booking_detail.total_amount_paid,

@@ -650,6 +650,7 @@ en:
         channel_partner: 'Channel Partner'
         management_user: 'Management User'
         employee_user: 'Employee'
+        direct: Direct
       dashboard/filters:
         payments:
           all: 'All'
