@@ -1,4 +1,6 @@
 en:
+  currency: 
+    indian: '₹'
   date:
     formats:
       default: "%d/%m/%Y"

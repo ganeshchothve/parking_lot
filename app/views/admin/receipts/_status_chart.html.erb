@@ -15,8 +15,9 @@
         labels: <%= @data.keys.map{|status| t("mongoid.attributes.receipt/status.#{status}")}.to_json.html_safe %>,
         datasets: [{
           label: '# of Tomatoes',
-          data: <%= @data.values.to_json.html_safe %>
-        }]
+          data: <%= @data.values.collect{|d| d[:count]}.to_json.html_safe %>
+        }],
+        totalAmounts: <%= @data.values.collect{|d| I18n.t('currency.indian') + d[:total_amount].to_s }.to_json.html_safe %>
       },
       options: {
         plugins: {
@@ -24,6 +25,19 @@
             scheme: 'brewer.SetOne9'
           }
         },
+        tooltips: {
+            mode: 'point',
+            intersect: true,
+            callbacks: {
+              footer: function(tooltipItems, data) {
+                var sum = 0;
+                tooltipItems.forEach(function(tooltipItem) {
+                  sum = data.totalAmounts[tooltipItem.index];
+                });
+                return "Total Amount:" + sum;
+              }
+            }
+          },
         cutoutPercentage: 60,
         responsive: false,
         legend: {
