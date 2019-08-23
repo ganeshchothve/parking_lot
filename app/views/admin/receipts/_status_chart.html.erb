@@ -17,7 +17,7 @@
           label: '# of Tomatoes',
           data: <%= @data.values.collect{|d| d[:count]}.to_json.html_safe %>
         }],
-        totalAmounts: <%= @data.values.collect{|d| I18n.t('currency.indian') + d[:total_amount].to_s }.to_json.html_safe %>
+        totalAmounts: <%= @data.values.collect{|d| number_to_indian_currency(d[:total_amount], 'indian') }.to_json.html_safe %>
       },
       options: {
         plugins: {
