@@ -646,7 +646,10 @@ en:
         crm: 'CRM User'
         sales_admin: 'Sales Head'
         sales: 'Sales User'
-        user: 'Customer'
+        user: 
+          zero: 'Customer'
+          one: 'Customer'
+          other: 'Customers'
         gre: 'GRE or Pre-sales'
         cp_admin: 'Channel Partner Head'
         cp: 'Channel Partner Manager'
