@@ -38,7 +38,7 @@ class ChannelPartnerExportWorker
       channel_partner.rera_id,
       channel_partner.associated_user_id.present? ? channel_partner.associated_user.name : "",
       channel_partner.associated_user_id.to_s,
-      ChannelPartner.available_statuses.select{|x| x[:id] == channel_partner.status}.first[:text],
+      ChannelPartner.human_attribute_name("status.#{channel_partner.status}")
     ]
   end
 end

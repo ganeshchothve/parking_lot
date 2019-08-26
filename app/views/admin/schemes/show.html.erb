@@ -1,0 +1,96 @@
+<section class="bookings my-4 mb-4 mb-5">
+  <div class="container">
+    <div class="box-card">
+      <div class="box-header bg-gradient br-rd-tr-4 row">
+        <div class="col-11 p-0">
+          <h2 class="icon-set icon-scheme-white"><%= t('controller.schemes.show.header') %></h2>
+        </div>
+        <div class="col-1">
+          <table class="float-right">
+            <td><td>
+              <%= render "#{current_user_role_group}/schemes/links", scheme: @scheme, color: 'white' %>
+            </td></td>
+          </table>
+        </div>
+      </div>
+      <div class="box-content br-rd-bl-4 bg-white row">
+        <div class="col-md-12 col-lg-12 col-sm-12">
+          <ul class="booking-apart-info clear">
+            <li>
+              <span><%= t('mongoid.attributes.user.name') %></span>
+              <p class="break-word"><%= @scheme.name || '-' %></p>
+            </li>
+            <li>
+              <span><%= t('mongoid.attributes.scheme.status') %></span>
+              <p class="break-word"><%= t("mongoid.attributes.scheme/status.#{@scheme.status}")%></p>
+            </li>
+            <li>
+              <span><%= Project.model_name.human %></span>
+              <p class="break-word"><%= @scheme.project.name || '-' %></p>
+            </li>
+
+            <li>
+              <span><%= ProjectTower.model_name.human %></span>
+              <p class="break-word"><%= @scheme.project_tower.name || '-' %></p>
+            </li>
+
+            <li>
+              <span><%= t('mongoid.attributes.scheme.user_role') %></span>
+              <p class="break-word"><%= @scheme.user_role || '-' %></p>
+            </li>
+
+            <li>
+              <span><%= User.model_name.human(count: 2) %></span>
+              <p class="break-word"><%= @scheme.user_ids.blank? ? '-' : @scheme.pluck(:name) %></p>
+            </li>
+
+            <li>
+              <span><%= t('mongoid.attributes.scheme.can_be_applied_by') %></span>
+              <p class="break-word"><%= @scheme.can_be_applied_by || '-' %></p>
+            </li>
+
+            <li>
+              <span><%= t('mongoid.attributes.scheme.default_for_users') %></span>
+              <p class="break-word"><%= @scheme.default_for_user_ids.blank? ? '-' : @scheme.default_for_users.pluck(:name) %></p>
+            </li>
+
+            <li>
+              <span><%= t('mongoid.attributes.scheme.payment_schedule_template_id') %></span>
+              <p class="break-word"><%= @scheme.payment_schedule_template.name %></p>
+            </li>
+
+            <li>
+              <span><%= t('mongoid.attributes.scheme.cost_sheet_template_id') %></span>
+              <p class="break-word"><%= @scheme.cost_sheet_template.name %></p>
+            </li>
+          </ul>
+          <ul class="booking-apart-info clear pt-2">
+            <li>
+              <h2><span><%= PaymentAdjustment.model_name.human(count: @scheme.payment_adjustments.count ) %></span></h2>
+            </li>
+          </ul>
+          <%- @scheme.payment_adjustments.each do |pa| %>
+            <ul class="booking-apart-info clear">
+              <li>
+                <span><%= t('mongoid.attributes.payment_adjustment.name') %></span>
+                <p> <%= pa.name %></p>
+              </li>
+
+              <li>
+                <span><%= t('mongoid.attributes.payment_adjustment.field') %></span>
+                <p> <%= t("mongoid.attributes.payment_adjustment/field.#{pa.field}") %></p>
+              </li>
+
+              <li>
+                <span><%= t('mongoid.attributes.payment_adjustment.value') %></span>
+                <p> <%= pa.absolute_value.presence || pa.formula %></p>
+              </li>
+            </ul>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mt-3"></div>
+  <%= render 'booking_details/section', booking_details: @booking_details %>
+</section>

@@ -6,7 +6,7 @@ class Buyer::UserRequestPolicy < UserRequestPolicy
   end
 
   def edit?
-    user.id == record.user_id && record.status == 'pending'
+    user.id == record.user_id && record.pending?
   end
 
   def update?

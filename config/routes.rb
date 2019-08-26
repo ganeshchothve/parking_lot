@@ -18,8 +18,13 @@ Rails.application.routes.draw do
 
   devise_scope :user do
     post 'users/otp', :to => 'local_devise/sessions#otp', :as => :users_otp
-    root to: "local_devise/sessions#new"
   end
+
+  authenticated :user do
+    root 'dashboard#index', as: :authenticated_root
+  end
+
+  root to: redirect('users/sign_in')
 
   as :user do
     put '/user/confirmation', to: 'local_devise/confirmations#update', :as => :update_user_confirmation
@@ -41,16 +46,20 @@ Rails.application.routes.draw do
       patch :reorder, on: :collection
     end
     resources :booking_details, only: [:index, :show, :new, :create, :edit, :update] do
-      patch :booking, on: :member
+      member do
+        patch :booking
+        patch :send_under_negotiation
+        get :cost_sheet
+        get :doc, path: 'doc/:type'
+      end
       get :mis_report, on: :collection
       get :searching_for_towers, on: :collection
-      patch :send_under_negotiation, on: :member
+      get :status_chart, on: :collection
       resources :booking_detail_schemes, except: [:destroy], controller: 'booking_details/booking_detail_schemes'
 
       resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts' do
         get :lost_receipt, on: :collection
       end
-      resources :booking_detail_schemes, except: [:destroy]
       # resources :receipts, only: [:index]
     end
 
@@ -70,7 +79,12 @@ Rails.application.routes.draw do
     end
 
     resources :receipts, only: %i[index show] do
-      get :export, on: :collection
+      collection do
+        get :export
+        get :payment_mode_chart
+        get :frequency_chart
+        get :status_chart
+      end
       member do
         get 'resend_success'
         get 'edit_token_number'
@@ -87,6 +101,7 @@ Rails.application.routes.draw do
       end
 
       collection do
+        get :unit_configuration_chart
         get :export
       end
     end
@@ -108,6 +123,7 @@ Rails.application.routes.draw do
       collection do
         get '/new/:role', action: 'new', as: :new_by_role
         get :export
+        get :portal_stage_chart
       end
 
       match :confirm_via_otp, action: 'confirm_via_otp', as: :confirm_via_otp, on: :member, via: [:get, :patch]
@@ -200,7 +216,10 @@ Rails.application.routes.draw do
   namespace :buyer do
 
     resources :booking_details, only: [:index, :show, :update] do
-      patch :booking, on: :member
+      member do
+        patch :booking
+        get :doc, path: 'doc/:type'
+      end
       resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts'
       resources :booking_detail_schemes, except: [:destroy], controller: 'booking_details/booking_detail_schemes'
     end

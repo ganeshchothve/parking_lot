@@ -11,6 +11,22 @@ module ReceiptsHelper
     end
   end
 
+  def available_statuses receipt
+    if receipt.new_record?
+      [ 'pending' ]
+    else
+      statuses = receipt.aasm.events(permitted: true).collect{|x| x.name.to_s}
+    end
+  end
+
+  def i_gree_label
+    if current_user.id == @receipt.user_id
+      t('global.i_agree')
+    else
+      t('global.i_gree_be_half_of', name: @receipt.user.name)
+    end
+  end
+
   def filter_receipts_options(receipt_id)
     if receipt_id.present?
       Receipt.where(_id: receipt_id).map{|bd| [bd.name, bd.id]}

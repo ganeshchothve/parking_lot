@@ -3,6 +3,10 @@ class Admin::BookingDetailSchemePolicy < BookingDetailSchemePolicy
   # BOOKING_ALLOWED_USERS = %w(admin sales sales_admin crm channel_partner)
 
   def new?
+    only_for_admin! && enable_actual_inventory?
+  end
+
+  def create?
     if only_for_admin! && enable_actual_inventory? && is_cross_tower_scheme?  &&  is_derived_from_scheme_approved? && can_add_new_bd_scheme?
       case user.role
       when 'admin', 'sales', 'sales_admin', 'crm', 'superadmin'
@@ -14,10 +18,6 @@ class Admin::BookingDetailSchemePolicy < BookingDetailSchemePolicy
         false
       end
     end
-  end
-
-  def create?
-    new?
   end
 
   def edit?

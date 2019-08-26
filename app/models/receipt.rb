@@ -14,6 +14,8 @@ class Receipt
 
   OFFLINE_PAYMENT_MODE = %w[cheque rtgs imps card_swipe neft]
   PAYMENT_TYPES = %w[agreement stamp_duty]
+  PAYMENT_MODES = %w[cheque rtgs imps card_swipe neft online]
+  STATUSES = %w[pending clearance_pending success cancellation_requested cancelling cancelled cancellation_rejected failed available_for_refund refunded]
 
   field :receipt_id, type: String
   field :order_id, type: String
@@ -57,6 +59,8 @@ class Receipt
     where(booking_detail_id: _booking_detail_id)
   end
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(receipt_id: regex ) }
+
+  scope :direct_payments, ->{ where(booking_detail_id: nil )}
 
   validates :issuing_bank, :issuing_bank_branch, name: true, unless: proc { |receipt| receipt.online? }
   validates :payment_identifier, length: { in: 3..25 }, format: { without: /[^A-Za-z0-9_-]/, message: "can contain only alpha-numaric with '_' and '-' "}, if: proc { |receipt| receipt.offline? }

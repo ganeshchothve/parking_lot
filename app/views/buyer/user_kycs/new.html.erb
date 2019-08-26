@@ -1,6 +1,1 @@
-<% if @user_kyc.persisted?
-    _url = buyer_user_kyc_path(@user_kyc)
-  else
-    _url = buyer_user_kycs_path
-  end %>
-<%= render 'admin/user_kycs/form', user_kyc: @user_kyc, small: (params[:small] || (current_user.user_kycs.count == 0)), url: _url %>
+<%= render 'admin/user_kycs/form', user_kyc: @user_kyc, small: (params[:small] || (current_user.user_kycs.count == 0)), url: [:buyer, @user_kyc] %>

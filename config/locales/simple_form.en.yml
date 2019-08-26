@@ -1,0 +1,67 @@
+en:
+  simple_form:
+    "yes": 'Yes'
+    "no": 'No'
+    required:
+      text: 'required'
+      mark: '*'
+      # You can uncomment the line below if you need to overwrite the whole required html.
+      # When using html, text and mark won't be used.
+      # html: '<abbr title="required">*</abbr>'
+    error_notification:
+      default_message: "Please review the problems below:"
+    # Examples
+    # labels:
+    #   defaults:
+    #     password: 'Password'
+    #   user:
+    #     new:
+    #       email: 'E-mail to sign in.'
+    #     edit:
+    #       email: 'E-mail.'
+    # hints:
+    #   defaults:
+    #     username: 'User name to sign in.'
+    #     password: 'No special characters, please.'
+    # include_blanks:
+    #   defaults:
+    #     age: 'Rather not say'
+    # prompts:
+    #   defaults:
+    #     age: 'Select your age'
+    labels:
+      user:
+        login: 'Email / Phone'
+    hints:
+      user:
+        password: 'Password Length should be 8-16 characters and include: 1 uppercase, 1 lowercase, 1 digit and 1 special character.'
+    placeholders:
+      defaults:
+        first_name: First Name
+        last_name: Last Name
+        email: 'eg. abc@iris.com'
+        pan_number: 'eg. AAAPR1111A'
+        rera_id: 'RERA'
+        name: Name
+        zip: 'eg. 4110045'
+        city: 'eg. Pune'
+
+      user:
+        login: 'Email / Phone'
+        password: 'New Password'
+        password_confirmation: 'Confirm new password'
+      channel_partner:
+        aadhaar: Aadhaar
+        company_name: 'Company Name'
+        gstin_number: 'GSTIN Number'
+      bank_detail:
+        name: 'Bank Name'
+        account_number: 'eg. 00000000'
+        ifsc_code: 'eg. ICIC00000'
+
+
+    prompts:
+      defaults:
+        manager_id: 'Select Manager'
+        title: 'Title'
+

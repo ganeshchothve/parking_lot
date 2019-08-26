@@ -10,18 +10,7 @@
     <%= f.text_field :blocking_amount, class: 'form-control', autofocus: true, required: 'required', disabled: (policy([current_user_role_group, @project_unit]).editable_field?("blocking_amount") ? false : true) %>
   </div>
 <% end %>
-<% if policy([current_user_role_group, @project_unit]).editable_field?("primary_user_kyc_id") %>
-<div class="form-group">
-  <%= f.label :primary_user_kyc_id %>
-  <%= f.select :primary_user_kyc_id, @project_unit.user.user_kycs.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', required: 'required' %>
-</div>
-<% end %>
-<% if policy([current_user_role_group, @project_unit]).editable_field?("user_kyc_ids") %>
-<div class="form-group">
-  <%= f.label :user_kyc_ids %>
-  <%= f.select :user_kyc_ids, (@project_unit.user.present? && @project_unit.user.user_kycs.present?) ? @project_unit.user.user_kycs.collect{|x| [x.name, x.id]} : [], {prompt: true}, class: 'selectize', multiple: true %>
-</div>
-<% end %>
+
 <div class="form-group">
   <% if policy([current_user_role_group, @project_unit]).editable_field?("auto_release_on") && @project_unit.auto_release_on.present? %>
   <div class="form-group">
@@ -29,18 +18,11 @@
     <%= f.text_field :auto_release_on, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.auto_release_on.present? ? f.object.auto_release_on.strftime("%d/%m/%Y") : '', "data-min-date": Date.tomorrow.strftime("%d/%m/%Y"), disabled: (policy([current_user_role_group, @project_unit]).editable_field?("auto_release_on") ? false : true), value: f.object.auto_release_on.present? ? f.object.auto_release_on.strftime("%d/%m/%Y") : "" %>
   </div>
   <% end %>
-  <%
-    statuses = []
-    if ["available", "not_available", "employee", "management", "error", "negotiation_failed"].include?(@project_unit.status)
-      statuses = ["available", "not_available", "employee", "management"]
-    elsif ["blocked", "booked_tentative"].include?(@project_unit.status) && @project_unit.booking_detail.pending_balance <= 0
-      statuses = ["booked_confirmed"]
-    end
-  %>
-  <% if policy([current_user_role_group, @project_unit]).editable_field?("status") && statuses.present? %>
+
+  <% if policy([current_user_role_group, @project_unit]).editable_field?("status") %>
     <div class="form-group">
       <%= f.label :status, class: 'title' %>
-      <%= f.select :status, ProjectUnit.available_statuses.select{|x| statuses.include?(x[:id]) || x[:id] == @project_unit.status }.collect{|x| [x[:text], x[:id]]}, {}, {prompt: "Select", class: "selectize", disabled: (policy([current_user_role_group, @project_unit]).editable_field?("status") ? false : true)} %>
+      <%= f.select :status, (ProjectUnit::STATUS - ['blocked', 'hold']).collect{|x| [ t("mongoid.attributes.project_unit/status.#{x}"), x] }, {}, {prompt: "Select", class: "selectize", disabled: (policy([current_user_role_group, @project_unit]).editable_field?("status") ? false : true)} %>
     </div>
   <% end %>
   <% if policy([current_user_role_group, @project_unit]).editable_field?("phase_id") %>

@@ -1,7 +1,7 @@
 class Admin::ReceiptsController < AdminController
   include ReceiptsConcern
 
-  before_action :set_user, except: %w[index show export resend_success edit_token_number update_token_number]
+  before_action :set_user, except: %w[index show export resend_success edit_token_number update_token_number payment_mode_chart frequency_chart status_chart]
   before_action :set_receipt, only: %w[edit update show resend_success edit_token_number update_token_number]
 
   #
@@ -121,6 +121,33 @@ class Admin::ReceiptsController < AdminController
       end
     end
   end
+  #
+  # GET /admin/receipts/payment_mode_chart
+  #
+  # This method is used in admin dashboard
+  #
+  def payment_mode_chart
+    @data = DashboardData::AdminDataProvider.receipt_block(params)
+    @statuses = params[:status] || %w[pending clearance_pending success available_for_refund]
+    @dataset = get_dataset(@data, @statuses) 
+  end
+  #
+  # GET /admin/receipts/frequency_chart
+  #
+  # This method is used in admin dashboard
+  #
+  def frequency_chart
+    @data = DashboardData::AdminDataProvider.receipt_frequency(params)
+    @dataset = get_dataset_linechart(@data)
+  end
+  #
+  # GET /admin/receipts/status_chart
+  #
+  # This method is used in admin dashboard
+  #
+  def status_chart
+    @data = DashboardData::AdminDataProvider.receipt_piechart(params)
+  end
 
   private
 
@@ -132,5 +159,48 @@ class Admin::ReceiptsController < AdminController
   def set_receipt
     @receipt = Receipt.where(_id: params[:id]).first
     redirect_to dashboard_path, alert: 'Receipt Not found', status: 404 if @receipt.blank?
+  end
+
+  def get_dataset(out, statuses)
+    labels = Receipt::PAYMENT_MODES
+    dataset = Array.new
+    statuses.each_with_index do |status, index|
+      d = Array.new
+      labels.each do |l|
+        if out[l.to_sym].present? && out[l.to_sym][status.to_sym].present?
+          d << (out[l.to_sym][status.to_sym])
+        else
+          d << 0
+        end
+      end
+      dataset << { label: t("mongoid.attributes.receipt/status.#{status}"),
+                    borderColor: '#ffffff',
+                    borderWidth: 1,
+                    data: d
+                  }
+    end
+    dataset
+  end
+
+  def get_dataset_linechart(out)
+    payment_modes = %w[online offline]
+    labels = out.keys
+    dataset = Array.new
+    payment_modes.each do |payment_mode|
+      d = Array.new
+      labels.each do |l|
+        if out[l].present? && out[l][payment_mode.to_sym].present?
+          d << (out[l][payment_mode.to_sym])
+        else
+          d << 0
+        end
+      end
+      dataset << { label: t("mongoid.attributes.receipt/payment_mode.#{payment_mode}"),
+                    borderColor: '#ffffff',
+                    borderWidth: 1,
+                    data: d
+                  }
+    end
+    dataset
   end
 end

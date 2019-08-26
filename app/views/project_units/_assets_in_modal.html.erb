@@ -1,10 +1,10 @@
 <div class="modal fade right fixed-header-footer" role="dialog" id="floor_plan_modal_<%= project_unit.id %>">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <div class="modal-title">Images</div>
+      <div class="modal-header bg-gradient-cd white">
+        <div class="title ">Images</div>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+          <span aria-hidden="true" class="white">&times;</span>
         </button>
       </div>
       <div class="modal-body">
@@ -17,7 +17,7 @@
           <div class="carousel-inner">
             <% project_unit.assets.each_with_index do |asset, index| %>
               <div class="carousel-item <%= index.zero? ? "active" : "" %>">
-                <%= image_tag (asset.file.url || '' ), class: 'd-block w-100' %>
+                <%= image_tag asset.file.url || '', class: 'd-block w-100' %>
               </div>
             <% end %>
           </div>

@@ -10,7 +10,7 @@ module ApplicationHelper
   def number_to_indian_currency(number)
     if number
       string = number.to_s.split('.')
-      number = string[0].gsub(/(\d+)(\d{3})$/){ p = $2;"#{$1.reverse.gsub(/(\d{2})/,'\1,').reverse},#{p}"}
+      number = string[0].to_s.gsub(/(\d+)(\d{3})$/){ p = $2;"#{$1.reverse.gsub(/(\d{2})/,'\1,').reverse},#{p}"}
       number = number.gsub(/^,/, '')
       number = number + '.' + string[1] if string[1].to_f > 0
     end
@@ -49,59 +49,59 @@ module ApplicationHelper
 
   def bottom_navigation(classes='')
     html = ''
-    if current_user && current_client.brochure.present?
-      html += "<li class='nav-item #{classes}'>
-      #{active_link_to 'Brochure', download_brochure_path, target: "_blank", active: :exclusive, class: 'small nav-link' }
+    if current_user && current_client.brochure.present? && current_client.brochure.file.try(:url)
+      html += "<li >
+      #{active_link_to 'Brochure', download_brochure_path, target: "_blank", active: :exclusive, class: 'footer-link' }
       </li>"
     end
     if current_user
-      html += "<li class='nav-item #{classes}'>
-      #{active_link_to 'Docs', dashboard_documents_path, active: :exclusive, class: 'small nav-link'}
+      html += "<li >
+      #{active_link_to 'Docs', dashboard_documents_path, active: :exclusive, class: 'footer-link'}
       </li>"
     end
     if current_client.gallery.present? && current_client.gallery.assets.select{|x| x.persisted?}.present?
-      html += "<li class='nav-item #{classes}'>
-        #{active_link_to 'Gallery', dashboard_gallery_path, active: :exclusive, class: 'small nav-link'}
+      html += "<li >
+        #{active_link_to 'Gallery', dashboard_gallery_path, active: :exclusive, class: 'footer-link'}
       </li>"
     end
     if current_client.faqs.present?
-      html += "<li class='nav-item #{classes}'>
-        #{active_link_to 'FAQs', dashboard_faqs_path, active: :exclusive, class: 'small nav-link'}
+      html += "<li >
+        #{active_link_to 'FAQs', dashboard_faqs_path, active: :exclusive, class: 'footer-link'}
       </li>"
     end
     if current_client.rera.present?
-      html += "<li class='nav-item #{classes}'>
-        #{active_link_to 'RERA', dashboard_rera_path, active: :exclusive, class: 'small nav-link'}
+      html += "<li >
+        #{active_link_to 'RERA', dashboard_rera_path, active: :exclusive, class: 'footer-link'}
       </li>"
     end
     if current_client.tds_process.present?
-      html += "<li class='nav-item #{classes}'>
-        #{active_link_to 'TDS', dashboard_tds_process_path, active: :exclusive, class: 'small nav-link'}
+      html += "<li >
+        #{active_link_to 'TDS', dashboard_tds_process_path, active: :exclusive, class: 'footer-link'}
       </li>"
     end
     if current_client.terms_and_conditions.present?
-      html += "<li class='nav-item #{classes}'>
-        #{active_link_to 'T & C', dashboard_terms_and_condition_path, active: :exclusive, class: 'small nav-link'}
+      html += "<li >
+        #{active_link_to 'T & C', dashboard_terms_and_condition_path, active: :exclusive, class: 'footer-link'}
       </li>"
     end
     if current_user && policy([current_user_role_group, current_client]).edit?
-      html += "<li class='nav-item #{classes}'>
-        #{link_to('Edit ' + global_labels['client'], edit_admin_client_path, class: 'small nav-link modal-remote-form-link')}
+      html += "<li >
+        #{link_to( t('controller.clients.edit.link_name'), edit_admin_client_path, class: 'footer-link modal-remote-form-link')}
       </li>"
     end
     if current_user && current_client.gallery.present? && policy([current_user_role_group, Asset.new(assetable: current_client.gallery)]).index? && current_user.role?("superadmin")
-      html += "<li class='nav-item #{classes}'>
-        #{link_to('Edit ' + global_labels[:gallery], assetables_path(assetable_type: current_client.gallery.class.model_name.i18n_key.to_s, assetable_id: current_client.gallery.id), class: 'small nav-link modal-remote-form-link')}
+      html += "<li >
+        #{link_to( t('controller.assets.new.link_name'), assetables_path(assetable_type: current_client.gallery.class.model_name.i18n_key.to_s, assetable_id: current_client.gallery.id), class: 'footer-link modal-remote-form-link')}
       </li>"
     end
     if current_user && TemplatePolicy.new(current_user, Template).index?
-      html += "<li class='nav-item #{classes}'>
-        #{link_to('Manage ' + global_labels['templates'], admin_client_templates_path, class: 'small nav-link')}
+      html += "<li >
+        #{link_to(t('helpers.show.link_name', model: ::Template.model_name.human), admin_client_templates_path, class: 'footer-link')}
       </li>"
     end
     if current_user && policy([current_user_role_group, Asset.new(assetable: current_client)]).index? && current_user.role?("superadmin")
-      html += "<li class='nav-item #{classes}'>
-        #{link_to('Client ' + global_labels[:assets], assetables_path(assetable_type: current_client.class.model_name.i18n_key.to_s, assetable_id: current_client.id), class: 'small nav-link modal-remote-form-link')}
+      html += "<li >
+        #{link_to( t('controller.assets.index.link_name'), assetables_path(assetable_type: current_client.class.model_name.i18n_key.to_s, assetable_id: current_client.id), class: 'footer-link modal-remote-form-link')}
       </li>"
     end
     html.html_safe
@@ -117,6 +117,18 @@ module ApplicationHelper
       when 'success' then "alert alert-success"
       when 'error' then "alert alert-danger"
       when 'alert' then "alert alert-warning"
+    end
+  end
+
+  def link_to_if(condition, name, options = {}, html_options = {}, &block)
+    if condition
+      link_to(name, options, html_options, &block)
+    else
+      if block_given?
+        block.arity <= 1 ? capture(name, &block) : capture(name, options, html_options, &block)
+      else
+        ERB::Util.html_escape(name)
+      end
     end
   end
 end

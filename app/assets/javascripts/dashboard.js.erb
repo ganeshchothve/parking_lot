@@ -49,6 +49,9 @@
 //= require jquery_ujs
 //= require jquery-ui/widgets/sortable
 //= require rails_sortable
+//= require site
+//= require chart.min
+//= require chartjs-plugin-colorschemes
 
 
 $.ajaxSetup({
@@ -67,4 +70,8 @@ $(document).ready(function(){
     $('[data-stage="select-apartment"]').data("selected-towerid", $(this).data("towerid"));
     Gamification.gamifyTowerSelection(selectedTower);
   });
+
+  $('.print').on('click', function(){
+    window.print();
+  })
 });

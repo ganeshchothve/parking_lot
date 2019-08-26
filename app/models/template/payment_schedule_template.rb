@@ -6,18 +6,21 @@ class Template::PaymentScheduleTemplate < Template
   validates :name, presence: true
 
   def self.default_content
-    '<h3 class="text-left mb-3">Payment Schedule</h3>
+    '<div class="form-sec-title pl-0">Payment Schedule</div>
+    <div class="box-card table-responsive-md template">
     <table class="table">
       <thead>
-        <th class="text-left" width="60%">Milestone</th>
-        <th width="5%">%</th>
-        <th width="10%">Amount(Rs.)</th>
-        <th width="5%">CGST-6%</th>
-        <th width="5%">SGST-6%</th>
-        <% if self.calculate_agreement_price > 5000000 %>
-          <th width="5%">Less - TDS</th>
-        <% end %>
-        <th width="10%">Total Payment</th>
+        <tr class="bg-gradient white">
+            <th>Milestone</th>
+            <th>%</th>
+            <th>Amount (Rs.)</th>
+            <th>CGST-6%</th>
+            <th>SGST-6%</th>
+            <% if self.calculate_agreement_price > 5000000 %>
+              <th width="5%">Less - TDS</th>
+            <% end %>
+            <th>Total Payment</th>
+        </tr>
       </thead>
       <tbody>
         <%
@@ -50,19 +53,26 @@ class Template::PaymentScheduleTemplate < Template
             sgst = (current_value * 0.06).round()
             tds = (current_value * 0.01).round()
           %>
-          <tr class="<%= v == 100 ? "bg-primary text-white" : "" %>">
-            <td class="text-left"><%= k %></td>
-            <td class="text-right"><%= v %></td>
-            <td class="text-right"><%= number_to_indian_currency(current_value) %></td>
-            <td class="text-right"><%= number_to_indian_currency(cgst) %></td>
-            <td class="text-right"><%= number_to_indian_currency(sgst) %></td>
+          <% if k.to_s == "Total" %>
+            <tfoot>
+          <% end %>
+          <tr class="<%= v == 100 ? "highlight" : "" %>">
+            <td><%= k %></td>
+            <td><%= v %></td>
+            <td><%= number_to_indian_currency(current_value) %></td>
+            <td><%= number_to_indian_currency(cgst) %></td>
+            <td><%= number_to_indian_currency(sgst) %></td>
             <% if self.calculate_agreement_price > 5000000 %>
-              <td class="text-right"><%= number_to_indian_currency(tds) %></td>
+              <td><%= number_to_indian_currency(tds) %></td>
             <% end %>
             <td><%= number_to_indian_currency(current_value + cgst + sgst - tds) %></td>
           </tr>
+          <% if k.to_s == "Total" %>
+            </tfoot>
+          <% end %>
         <% end %>
       </tbody>
-    </table>'
+    </table>
+    </div>'
   end
 end

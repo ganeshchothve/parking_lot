@@ -1,42 +1,368 @@
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-12">
-      <div class="card">
-        <div class="card-body">
-          <h3 class="card-title text-center font-weight-bold text-uppercase">
-            Win more customers
-          </h3>
-          <h6 class="card-subtitle text-muted text-center">
-            Follow these quick steps and get your customers to be one of the privileged few to own a home at <%= current_project.name %>
-          </h6>
-          <div class="mt-3"></div>
-          <div class="row justify-content-center text-center">
-            <% ["Register your Customer",  "Get them to Confirm Account", "Add Primary & Secondary KYCs", "Get Payment (Preferrably Online)"].each_with_index do |usp, index| %>
-              <div class="col-md-2">
-                <svg viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="30" cy="30" r="20" fill="#56b654"/>
-                  <text x="25" y="36" font-size="18" fill="white"><%= index + 1 %></text>
-                </svg>
-                <div><%= usp %></div>
-                <div class="d-md-none mt-3"></div>
-              </div>
-            <% end %>
-          </div>
-          <div class="mt-5"></div>
-          <div class="form-group text-center">
-            <% if Admin::UserPolicy.new(current_user, User.new(role: 'user')).new? %>
-              <%= link_to "Add #{User.in(referenced_manager_ids: current_user.id).in(role: User.buyer_roles(current_client)).present? ? '' : " your First"} Customer", new_admin_user_path, class: 'modal-remote-form-link btn btn-primary' %>
-            <% end %>
+<% channel_partner = ChannelPartner.where(associated_user_id: current_user.id).first %>
+<section class="first-sec welcome-box">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-xs-12 bg-gradient-cd br-rd-8 col-md-12 col-sm-12">
+        <img src="<%= asset_path 'quality-tag.png' %>" alt="user icon" class="quality-tag">
+      <div class="row">
+        <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12 offset-lg-2">
+          <div class="box-content">
+            <h1 class="wc-title white text-center"><%= t('dashboard.welcome.heading') + current_user.name %></h1>
+            <p class="white text-center fn-300 fn-18"><%= t('dashboard.welcome.sub_heading') %></p>
+            <ul class="step-booking">
+              <li class="light-blue">
+                <span>
+                  <%= image_tag 'file-invoice-lightblue.svg', alt: "Add customer" %>
+                </span>
+                <%= t('controller.users.new.link_name', role: User.model_name.human) %>
+              </li>
+              <li class="light-blue">
+                <span><%= image_tag 'rupee-lightblue.svg' %></span>
+                <%= t('controller.receipts.new.link_name') %>
+              </li>
+              <li class="light-blue">
+                <span><%= image_tag 'building-lightblue.svg' %></span><%= BookingDetail.model_name.human %>
+              </li>
+            </ul>
+            <!-- <p class="white text-center fn-14 fn-500">Fill your KYC form for proceed further</p> -->
+            <%= link_to t('controller.users.new.link_name', role: t("mongoid.attributes.user/role.user")), new_admin_user_path(role: 'user'), class: 'large-btn black-bg display-block fn-500 center-block show-kyc modal-remote-form-link' %>
           </div>
         </div>
       </div>
-      <div class="mt-3"></div>
+      </div>
     </div>
   </div>
-</div>
-<div class="container">
-  <%= render "dashboard/index/partials/users" %>
-  <div class="mt-3"></div>
-  <%= render "dashboard/index/partials/receipts" %>
-  <div class="mt-3"></div>
-</div>
+</section>
+<section class="projects-list device-pd">
+  <div class="container">
+    <div class="row">
+      <div class="separate-line"></div>
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 my-4 no-pd">
+          <div class="box-card">
+            <div class="box-header bg-gradient-cd br-rd-tr-4">
+              <h2>
+                <%= image_tag 'building-white.svg' %>
+                <%= Project.model_name.human %>
+              </h2>
+            </div>
+            <div class="project-slider1">
+              <div>
+                <div class="box-content br-rd-bl-4 bg-white text-center">
+                  <h3 class="title"><%= t('dashboard.projects.heading') %></h3>
+                  <p class="sort-desc col-lg-6 col-xs-12 col-md-6 col-sm-12 offset-md-3 offset-lg-3"><%= t('dashboard.projects.sub_heading') %></p>
+                  <ul class="prjt-info br-rd-4">
+                    <li><span><%= t('dasboard.titles.available_inventory') %></span><p><%= DashboardDataProvider.available_inventory %></p></li>
+                    <li><span><%= t('mongoid.attributes.search.starting_price') %></span><p><%= DashboardDataProvider.minimum_agreement_price %></p></li>
+                    <li><span><%= t('mongoid.attributes.project_unit.configuration') %></span><p><%= DashboardDataProvider.configurations.to_sentence %></p></li>
+                  </ul>
+                  <ul class="prjt-link">
+                    <li><%= link_to t('dashboard.titles.download_brochure'), download_brochure_path, target: "_blank", class: 'text-uppercase' %></li>
+                    <li><%= link_to 'Visit Website', current_client.website_link, target: "_blank", class: 'text-uppercase' %></li>
+                  </ul>
+                  <%= link_to t('helpers.new.link_name', model: BookingDetail.model_name.human), new_admin_booking_detail_path, class: 'large-btn bg-light-blue display-block fn-500 center-block text-uppercase modal-remote-form-link' %>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="user-db-sec-4 device-pd">
+  <div class="container">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
+          <div class="table-title pt-4">
+            <img src="<%= asset_path 'chart-line.svg' %>" alt="user icon"> <h1 class="title"><%= t('dasboard.titles.leads') %></h1>
+          </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
+          <div class="row no-mg">
+            <div class="box-card col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-4 no-sm-pd">
+              <div class="leads-box">
+                <div class="leads-box-inner">
+                  <img src="<%= asset_path 'leader-1.png' %>" alt="leads icon">
+                  <span class="numbers"><%= DashboardDataProvider.total_buyers(current_user) %></span>
+                  <p class="title"><%= t('dasboard.titles.total_leads') %><br><%= t('dasboard.titles.received') %></p>
+                  <!-- <p class="desc">Lorem Ipsum is simply dummy text of the printing and typesetting</p> -->
+                </div>
+              </div>
+            </div>
+            <div class="box-card col-lg-8 col-md-12 col-sm-12 col-xs-12 mt-4 br-rd-4 bg-white">
+              <div class="row">
+                <div class="col-lg-6 col-md-12 col-xs-12 col-sm-12">
+                  <h2 class="chart-title pt-4 mt-2 mb-5 pb-5 pl-4"><%= t('dasboard.titles.lead_details') %></h2>
+                  <canvas id="myChart" height="300" width="320"></canvas>
+                </div>
+                <div class="col-lg-6 col-md-12 col-xs-12 col-sm-12 relative br-lft">
+                  <h2 class="chart-title pt-4 mt-2 pb-5"><%= t('dasboard.titles.booking_details') %></h2>
+                  <canvas id="barChart" height="300" class="pl-3 pr-3"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="user-db-sec-4 device-pd">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
+        <div class="row">
+          <div class="box-card col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-5">
+            <div class="box-header bg-gradient-cd br-rd-tr-4">
+            <h2><img src="<%= asset_path 'question-square-white.svg' %>" alt="Documents" class="wd-16"><%= t('dashboard.titles.payments') %></h2>
+            </div>
+            <div class="box-content br-rd-bl-4 bg-white fix-ht-420">
+              <div class="row pd-box">
+              <p class="text-center"><%= t('dashboard.payments.data') %></p>
+                <ul class="db-user-no-list pt-5 mt-2">
+                  <% DashboardDataProvider.receipts_group_by(current_user).each do |key, value| %>
+                    <li><span class="number"><%= value %></span><p class="title"><%= t("dashboard.receipt.#{key}")%></p>
+                    <!-- <span class="prjt-no">Total Projects: 05</span><span class="update-info">last updated a week ago</span> -->
+                    </li>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="box-card col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-5">
+            <div class="box-header bg-gradient-cd br-rd-tr-4">
+            <h2><img src="<%= asset_path 'rupee-white.svg' %>" alt="Documents" class="wd-10">My Incentives</h2>
+            </div>
+            <div class="box-content br-rd-bl-4 bg-white fix-ht-420">
+              <div class="row pd-box">
+              <p class="text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna</p>
+                <ul class="db-user-no-list pt-3 mt-3">
+                  <li><span class="number">2 lac</span><p class="title">Booking in<br>confirm stage</p></li>
+                  <li><span class="number">5 lac</span><p class="title">Incentive<br>paid</p></li>
+                  <li><span class="number">2 lac</span><p class="title">Incentive <br>generated</p></li>
+                  <li><span class="number">05</span><p class="title">No of bookings<br> with pending incentive</p></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="user-db-sec-5 device-pd">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
+        <div class="row">
+          <div class="box-card col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-5">
+            <div class="box-header bg-gradient-cd br-rd-tr-4">
+            <h2><img src="<%= asset_path 'users-white.svg' %>"  alt="Refer a Friend" class="wd-20">Refer a Channel Partner</h2>
+            </div>
+            <div class="box-content br-rd-bl-4 bg-white fix-ht">
+              <div class="row pd-box">
+                <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12">
+                  <p class="fn-14 content-clr">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis</p>
+                  <a href="javascript:;" class="large-btn bg-light-blue display-block fn-500 text-uppercase">Refer Now&nbsp;&nbsp;></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% if channel_partner %>
+          <div class="box-card col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-5">
+            <div class="box-header bg-gradient-cd br-rd-tr-4">
+              <h2><img src="<%= asset_path 'folder-white.svg' %>" alt="My Documents" class="wd-18">Collaterals</h2>
+              <%= link_to( "View All", assetables_path(assetable_type: channel_partner.class.model_name.i18n_key.to_s, assetable_id: channel_partner.id), class: 'view-all-btn modal-remote-form-link') %>
+            </div>
+            <div class="box-content br-rd-bl-4 bg-white fix-ht">
+              <div class="row pd-box">
+                <ul class="collaterals-list">
+                  <li><a href="javascript:;">1. Videos (0)</a></li>
+                  <li><%= link_to( "2. Documents (#{channel_partner.assets.count})", assetables_path(assetable_type: channel_partner.class.model_name.i18n_key.to_s, assetable_id: channel_partner.id), class: 'modal-remote-form-link') %></li>
+                  <li><a href="javascript:;">3. Certificates (0)</a></li>
+              </div>
+            </div>
+          </div>
+          <% end %>
+          <div class="box-card col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-5">
+            <div class="box-header bg-gradient-cd br-rd-tr-4">
+              <h2><img src="<%= asset_path 'leaderboard-white.svg' %>" alt="Documents" class="wd-16">Leaderboard</h2>
+              <a href="javascript:;" class="view-all-btn">View All > </a>
+            </div>
+            <div class="box-content br-rd-bl-4 bg-white fix-ht pt-0">
+              <div class="row pd-box">
+                <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+                  <ul class="leaderboard-list">
+                    <li class="mt-4">
+                      <div class="display-inline user-icon">
+                        <img src="<%= asset_path 'user.jpg' %>" alt="user img">
+                      </div>
+                      <div class="display-inline user-info">
+                        <span class="rank-type display-block fn-300 fn-12">Rank: 01</span>
+                        <span class="name-point display-block fn-500 fn-14">Prathyush Shetty<br>Points: 1002</span>
+                      </div>
+                    </li>
+                    <li class="mt-4">
+                      <div class="display-inline user-icon">
+                        <img src="<%= asset_path 'user.jpg' %>" alt="user img">
+                      </div>
+                      <div class="display-inline user-info">
+                        <span class="rank-type display-block fn-300 fn-12">Rank: 02</span>
+                        <span class="name-point display-block fn-500 fn-14">Akshay Patil<br>Points: 970</span>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="user-db-sec-6 mt-5 device-pd">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
+        <div class="row">
+          <div class="box-card col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-5">
+            <div class="box-header bg-gradient-cd br-rd-tr-4">
+            <h2><img src="<%= asset_path 'rupee-white.svg' %>" alt="Documents" class="wd-10">Incentive Plan</h2>
+            </div>
+            <div class="box-content br-rd-bl-4 bg-white">
+              <div class="row pd-box">
+              <div class="col-lg-6 col-xs-12 col-md-12 col-sm-12">
+                <p class="p-style">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.<br>It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of.</p>
+              </div>
+              <div class="col-lg-6 col-xs-12 col-md-12 col-sm-12">
+                <textarea placeholder="Need help? Post your query here..." class="form-control"></textarea>
+                <button class="small-btn bg-light-blue display-block fn-500 mt-3" type="button">Submit</button>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script type="text/javascript">
+var ctx1 = document.getElementById("myChart");
+var myChart = new Chart(ctx1, {
+  type: 'doughnut',
+  data: {
+    labels: <%= @lead_details_labels.to_json.html_safe %>,
+    datasets: [{
+      label: '# of Tomatoes',
+      data: <%= DashboardDataProvider.user_group_by(current_user).values.to_json.html_safe %>,
+      backgroundColor: ['#1f3bb3','#fed1c8']
+    }]
+  },
+  options: {
+    cutoutPercentage: 60,
+    responsive: false,
+    legend: {
+        fullWidth: true,
+        position: 'bottom',
+            display: true,
+            labels: {
+                fontColor: '#333d51',
+                padding: 30,
+                boxWidth: 12,
+            }
+        }
+  }
+});
+
+
+
+var canvas = document.getElementById("barChart");
+var ctx = canvas.getContext('2d');
+
+// Global Options:
+ Chart.defaults.global.defaultFontColor = 'dodgerblue';
+ Chart.defaults.global.defaultFontSize = 10;
+
+// Data with datasets options
+var data = {
+    labels: <%= @booking_detail_labels.to_json.html_safe %>,
+      datasets: [
+        {
+            fill: true,
+            backgroundColor: ['#8ddf8b','#1f3bb3','#5f79ea'],
+            data: <%= DashboardDataProvider.booking_detail_group_by(current_user).values.to_json.html_safe %>
+        }
+    ]
+};
+
+var options = {
+  tooltips: {
+        callbacks: {
+            label: function(tooltipItem) {
+                return Number(tooltipItem.yLabel);
+            }
+        }
+    },
+    legend:{
+      display: false,
+    },
+    title: {
+              display: false,
+          },
+    scales: {
+        yAxes: [{
+            ticks: {
+              fontColor: "#1f3bb3",
+                beginAtZero:true,
+                stacked: false
+            }
+        }],
+        xAxes: [{
+
+          stacked: true,
+            barPercentage: 1,
+            barThickness: 65,
+            maxBarThickness: 80,
+            minBarLength: 20,
+            gridLines: {
+              offsetGridLines: true,
+                color: "#ffffff"
+            },
+            ticks: {
+              fontColor: "#1f3bb3"
+            }
+        }]
+    },
+     hover: {
+        animationDuration: 1
+    },
+    animation: {
+        duration: 1,
+        onComplete: function () {
+            var chartInstance = this.chart,
+            ctx = chartInstance.ctx;
+            ctx.textAlign = 'center';
+            ctx.fillStyle = "#1f3bb3";
+            ctx.textBaseline = 'bottom';
+
+            this.data.datasets.forEach(function (dataset, i) {
+                var meta = chartInstance.controller.getDatasetMeta(i);
+                meta.data.forEach(function (bar, index) {
+                    var data = dataset.data[index];
+                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+
+                });
+            });
+        }
+    }
+};
+
+// Chart declaration:
+var myBarChart = new Chart(ctx, {
+    type: 'bar',
+    data: data,
+    options: options
+});
+
+</script>

@@ -2,60 +2,26 @@
   <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header bg-gradient-cd white">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+            <span aria-hidden="true" class="white">&times;</span>
           </button>
         </div>
         <div class="modal-body">
 <%- end %>
 
-<div class="container">
+<div class="container mb-5">
   <div class="row justify-content-center">
     <div class="col-md-12">
       <%= render 'dashboard/project_unit_overview', { project_unit: @project_unit } %>
+
       <% if %w[superadmin admin].include?(current_user.role) && @booking_details.present? %>
         <div class="mt-3"></div>
-        <div class="card">
-          <div class = "card-header">Bookings</div>
-          <div class="card-body">
-            <%= render 'admin/booking_details/index', { booking_details: @booking_details } %>
-          </div>
-        </div>
+        <%= render 'booking_details/section', booking_details: @booking_details %>
       <% end %>
-      <div class="mt-4"></div>
-      <div class="d-print-none">
-        <% if @project_unit.assets.present? %>
-          <div class="card card-body">
-            <div id="project_unit_gallery_<%= @project_unit.id %>" class="carousel slide" data-ride="carousel">
-            <ol class="carousel-indicators">'
-              <% @project_unit.assets.each_with_index do |asset, index| %>
-                <li data-target="#project_unit_gallery_<%= @project_unit.id %>" data-slide-to="<%= index %>" class="<%= index.zero? ? "active" : "" %>"></li>
-              <% end %>
-            </ol>
-            <div class="carousel-inner">
-              <% @project_unit.assets.each_with_index do |asset, index| %>
-                <div class="carousel-item <%= index.zero? ? "active" : "" %>">
-                  <img class="d-block w-100" src="<%= asset.file.url %>" />
-                </div>
-              <% end %>
-            </div>
-            <a class="carousel-control-prev" href="#project_unit_gallery_<%= @project_unit.id %>" role="button" data-slide="prev">
-              <span class="fas fa-chevron-left text-dark" aria-hidden="true"></span>
-              <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#project_unit_gallery_<%= @project_unit.id %>" role="button" data-slide="next">
-              <span class="fas fa-chevron-right text-dark" aria-hidden="true"></span>
-              <span class="sr-only">Next</span>
-            </a>
-          </div>
-          </div>
-        <% else %>
-          <div class="alert alert-primary">
-            No images available
-          </div>
-        <% end %>
-      </div>
+
+      <div class="mt-3"></div>
+      <%= render 'assets/section', record: @project_unit, assets: @project_unit.assets %>
     </div>
   </div>
 </div>

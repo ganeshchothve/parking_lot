@@ -1,15 +1,17 @@
-<div class="col-md-12 mx-auto">
-  <h2 class="font-weight-bold text-success"><%= global_labels[:register_h1] %></h2>
-  <% if global_labels[:register_h2] %><p class="text-muted"><%= global_labels[:register_h2] %></p><% end %>
-  <div class="sign-up" style="margin-left:-15px;">
-    <% if current_client.selldo_client_id.present? && current_client.selldo_form_id.present? %>
-      <script src='//trkr.scdn1.secure.raxcdn.com/t/forms/<%= current_client.selldo_client_id %>/<%= current_client.selldo_form_id %>.js' data-form-id='<%= current_client.selldo_form_id %>'></script>
-    <% else %>
-      <%=render "devise/registrations/new", resource: @resource %>
-    <% end %>
+<section class="auth login-page">
+  <div class="container no-pd">
+    <div class="col-lg-5 col-xs-12 col-md-12 col-sm-12 no-pd">
+      <div class="login-form-wrapper pt-5">
+        <% if current_client.selldo_client_id.present? && current_client.selldo_form_id.present? %>
+          <script src='//trkr.scdn1.secure.raxcdn.com/t/forms/<%= current_client.selldo_client_id %>/<%= current_client.selldo_form_id %>.js' data-form-id='<%= current_client.selldo_form_id %>'></script>
+        <% else %>
+          <%=render "devise/registrations/new", resource: @resource %>
+        <% end %>
+        <%=render "devise/shared/links" %>
+      </div>
+    </div>
   </div>
-  <%=render "devise/shared/links" %>
-</div>
+</section>
 <%
   default_system_srd = ""
   if user_signed_in?
@@ -21,13 +23,16 @@
   end
 %>
 <script type="text/javascript" data-tag="selldo">
-window.sell_do_form_rendered = function(){
-  var default_srd = Amura.readCookie("sell_do[campaign][srd]") ? Amura.readCookie("sell_do[campaign][srd]") : "<%= default_system_srd %>";
-  if(default_srd){
-    $('<input type="hidden" name="sell_do[campaign][srd]" value="' + default_srd + '"/>').appendTo(".sell_do_form_actual_container");
-  }
+  window.sell_do_form_rendered = function(){
+    var default_srd = Amura.readCookie("sell_do[campaign][srd]") ? Amura.readCookie("sell_do[campaign][srd]") : "<%= default_system_srd %>";
+    if(default_srd){
+      $('<input type="hidden" name="sell_do[campaign][srd]" value="' + default_srd + '"/>').appendTo(".sell_do_form_actual_container");
+    }
 
-  $('[name="sell_do[form][lead][first_name]"]').attr('pattern', '[A-Za-z ]{2,20}').attr('title', 'contain only alphabet and space').attr('maxlength', 20)
-  $('[name="sell_do[form][lead][last_name]"]').attr('pattern', '[A-Za-z ]{2, 20}').attr('title', 'contain only alphabet and space').attr('maxlength', 20)
-};
+    $('[name="sell_do[form][lead][first_name]"]').attr('pattern', '[A-Za-z ]{2,20}').attr('title', 'contain only alphabet and space').attr('maxlength', 20)
+    $('[name="sell_do[form][lead][last_name]"]').attr('pattern', '[A-Za-z ]{2, 20}').attr('title', 'contain only alphabet and space').attr('maxlength', 20)
+  };
+  $(document).ready(function(){
+    $('section.login-page').css('height', ($( window ).height() - $('section.login-page').offset().top - 42) );
+  });
 </script>

@@ -38,6 +38,7 @@ class AssetsController < ApplicationController
   end
 
   def authorize_resource
+    return if @assetable.class == ChannelPartner
     authorize [current_user_role_group, @assetable] unless params[:action] == 'destroy'
     if params[:action] == "index"
     elsif params[:action] == "new" || params[:action] == "create"

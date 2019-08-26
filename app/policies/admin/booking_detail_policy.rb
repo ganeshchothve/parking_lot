@@ -40,6 +40,14 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   def block?
     hold?
   end
+
+  def doc?
+    true
+  end
+
+  def status_chart?
+    true
+  end
   # def block?
   #   valid = enable_actual_inventory? && only_for_confirmed_user! && only_for_kyc_added_users! && ['hold'].include?(record.status)
   #   if !valid

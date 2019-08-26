@@ -47,6 +47,7 @@ gem 'simple_token_authentication', '~> 1.0'
 gem 'pundit'
 # Background processing
 gem 'sidekiq'
+gem 'simple_form'
 # namespacing of various redis-environments in case you are using multiple apps in same redis space
 gem 'redis-namespace'
 gem "omniauth-google-oauth2"

@@ -1,13 +1,240 @@
-<div class="container">
-	<%= link_to "Add #{ t('global.booking_detail') }", new_admin_booking_detail_path, class: 'btn btn-primary modal-remote-form-link' %>
-	</br>
-	</br>
-  <%= render "dashboard/index/partials/users" %>
-  <div class="mt-3"></div>
-  <%= render "dashboard/index/partials/receipts" %>
-  <div class="mt-3"></div>
-  <%= render "dashboard/index/partials/project_units" %>
-  <div class="mt-3"></div>
-  <%= render "dashboard/index/partials/user_requests" %>
-  <div class="mt-3"></div>
+<div class="container mb-5">
+  <div class="row">
+    <div class="col-2">
+      <div class="box-card">
+        <div class="box-header bg-gradient-cd br-rd-tr-4">
+          <h4 class="white pre text-center"><%= User.human_attribute_name("role.user") %></h4>
+        </div>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
+          <span class = 'fn-18'><%= DashboardData::AdminDataProvider.customer_count %></span>
+        </div>
+      </div>
+    </div>
+    <div class="col-2">
+      <div class="box-card">
+        <div class="box-header bg-gradient-cd br-rd-tr-4">
+          <h4 class="white pre text-center"><%= ChannelPartner.model_name.human(count: 3) %></h4>
+        </div>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
+          <span class = 'fn-18'><%= DashboardData::AdminDataProvider.channel_partner_count %></span>
+        </div>
+      </div>
+    </div>
+    <div class="col-2">
+      <div class="box-card">
+        <div class="box-header bg-gradient-cd br-rd-tr-4">
+          <h4 class="white pre text-center"><%= ProjectUnit.model_name.human(count: 3) %></h4>
+        </div>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
+          <span class = 'fn-18'><%= DashboardData::AdminDataProvider.sold_project_units_count %> / <%= DashboardData::AdminDataProvider.all_project_units_count %></span>
+        </div>
+      </div>
+    </div>
+    <div class="col-2">
+      <div class="box-card">
+        <div class="box-header bg-gradient-cd br-rd-tr-4">
+          <h4 class="white pre text-center"><%= UserRequest.model_name.human(count: 3) %></h4>
+        </div>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
+          <span class = 'fn-18'><%= DashboardData::AdminDataProvider.open_user_requests %></span>
+        </div>
+      </div>
+    </div>
+    <div class="col-2">
+      <div class="box-card">
+        <div class="box-header bg-gradient-cd br-rd-tr-4">
+          <h4 class="white pre text-center"><%= Receipt.model_name.human(count: 3) %></h4>
+        </div>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
+          <span title="<%= Receipt.human_attribute_name("payment_mode.online") %>">
+            <i class="online-label"></i>
+            <span class="fn-18">
+              <%= DashboardData::AdminDataProvider.online_receipts %>
+            </span>
+          </span>
+          <span title="<%= Receipt.human_attribute_name("payment_mode.offline") %>">
+            <i class="offline-label"></i>
+            <span class="fn-18">
+              <%= DashboardData::AdminDataProvider.offline_receipts %>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="col-2">
+      <div class="box-card">
+        <div class="box-header bg-gradient-cd br-rd-tr-4">
+          <h4 class="white pre text-center"><%= Scheme.model_name.human(count: 3) %></h4>
+        </div>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
+          <span class = 'fn-18'><%= DashboardData::AdminDataProvider.active_schemes %></span>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<div class="container mb-5 pb-5">
+  <div class="row mb-3">
+    <div class="col-6">
+      <div class="box-card">
+        <div class="box-header bg-gradient-cd br-rd-tr-4">
+          <div class = "row">
+            <div class = "col-6">
+              <h4 class="white pre text-center float-left m-0 lh-2"><%= Receipt.model_name.human(count: 3) %></h4>
+            </div>
+            <div class = "col-lg-6 col-xs-12 col-md-6 col-sm-12">
+              <div class="table-btn-set float-right">
+                <button class="db-filter-btn white fn-500 float-right payment_mode_chart_filter" type="button">
+                  <i class="icon-set icon-filter-light-blue"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center relative">
+          <div id = "receipt_barchart" class = "charts">
+            <p> Loading .. </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="box-card">
+        <div class="box-header bg-gradient-cd br-rd-tr-4">
+          <div class = "row">
+            <div class = "col-6">
+              <h4 class="white pre text-center float-left lh-2"><%= t('controller.dashboard.receipt_frequency') %></h4>
+            </div>
+            <div class = "col-lg-6 col-xs-12 col-md-6 col-sm-12 pb-3">
+              <div class="table-btn-set float-right pb-3">
+                <button class="db-filter-btn white fn-500 float-right frequency_chart_filter" type="button">
+                  <i class="icon-set icon-filter-light-blue"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center relative">
+          <div id = "receipt_linechart" class = "charts">
+            <p> Loading .. </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-6">
+      <div class="box-card">
+        <div class="box-header bg-gradient-cd br-rd-tr-4">
+          <div class = "row">
+            <div class = "col-6">
+              <h4 class="white pre text-center float-left lh-2"><%= ProjectUnit.model_name.human(count: 3) %></h4>
+            </div>
+          </div>
+        </div>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
+          <div id="project_unit_barchart" >
+            <p> Loading .. </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="box-card">
+        <div class="box-header bg-gradient-cd br-rd-tr-4">
+          <div class = "row">
+            <div class = "col-6">
+              <h4 class="white pre text-center float-left lh-2"><%= BookingDetail.model_name.human(count: 3) %></h4>
+            </div>
+            <div class = "col-lg-6 col-xs-12 col-md-6 col-sm-12">
+              <div class="table-btn-set float-right">
+                <button class="db-filter-btn white fn-500 float-right status_chart_filter" type="button">
+                  <i class="icon-set icon-filter-light-blue"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center relative">
+          <div id="booking_detail_barchart" class = "charts">
+            <p> Loading .. </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-6">
+      <div class="box-card">
+        <div class="box-header bg-gradient-cd br-rd-tr-4">
+          <div class = "row">
+            <div class = "col-6">
+              <h4 class="white pre text-center float-left lh-2"><%= Receipt.model_name.human(count: 3) %></h4>
+            </div>
+            <div class = "col-lg-6 col-xs-12 col-md-6 col-sm-12">
+              <div class="table-btn-set float-right">
+                <button class="db-filter-btn white fn-500 float-right" type="button">
+                  <i class="icon-set icon-filter-light-blue"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center relative">
+          <div id = "receipt_piechart">
+            <p> Loading .. </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="box-card">
+        <div class="box-header bg-gradient-cd br-rd-tr-4">
+          <div class = "row">
+            <div class = "col-6">
+              <h4 class="white pre text-center float-left lh-2"><%= User.human_attribute_name("role.user") %></h4>
+            </div>
+          </div>
+        </div>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
+          <div id = "user_dashboard_barchart">
+            <p> Loading .. </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    $.ajax({
+      url: "<%= payment_mode_chart_admin_receipts_path %>",
+      type: "get",
+    });
+    $.ajax({
+      url: "<%= status_chart_admin_receipts_path %>",
+      type: "get",
+    });
+    $.ajax({
+      url: "<%= frequency_chart_admin_receipts_path %>",
+      type: "get",
+    });
+    $.ajax({
+      url: "<%= unit_configuration_chart_admin_project_units_path %>",
+      type: "get",
+    });
+    $.ajax({
+      url: "<%= status_chart_admin_booking_details_path %>",
+      type: "get",
+    });
+    $.ajax({
+      url: "<%= portal_stage_chart_admin_users_path %>",
+      type: "get",
+    });
+    $('.db-filter-btn').click(function(e){
+      e.preventDefault();
+    });
+  });
+<% end %>

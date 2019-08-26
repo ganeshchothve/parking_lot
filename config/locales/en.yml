@@ -8,76 +8,231 @@ en:
   date_time:
     formats:
       default: "%d/%m/%Y %I:%M %p"
+  welcome: Welcome %{name}
   global:
-    booking_details: 'Bookings'
-    booking_detail: 'Booking'
+    all: All
+    at: 'At'
+    action:
+      one: Action
+      other: Actions
+    active_filter: Active Filter
+    added_by: Added By
+    custom: 'More'
+    change: 'Change'
     dashboard: Dashboard
-    action: 'Action'
-    total: 'Total'
-    sign_in_h1: "Welcome back"
-    sign_in_h2: "Login to Book an Apartment online"
+    disclaimer: Disclaimer
+    default_account_name: Default Account will be considered
+    gallery: "Gallery"
+    i_agree: I Agree
+    i_agree_be_half_of: I Agree on behalf of %{name}
+    previous: Previous
+    next: Next
+    _no: 'No'
+    not_sync_yet: 'Not Synced'
+    not_generated: 'Not Generated'
+    otp: "OTP"
+    overview: 'Overview'
     register_h1: "Sign Up"
     register_h2: "Register Now and book an apartment by paying just Rs. Blocking Amount (just takes 3 minutes)"
-    custom: 'Special Features'
-    scheme: 'Cost Sheet & Payment Schedule'
-    schemes: 'Cost Sheets & Payment Schedules'
-    note: "Note"
-    notes: "Notes"
-    template: 'Template'
-    templates: 'Templates'
-    assets: 'Documents'
-    asset: 'Documents'
-    gallery: "Gallery"
-    client: 'Client'
-    clients: 'Clients'
-    receipt: 'Payment'
-    receipts: 'Payments'
-    user_request: 'User Request'
-    user_requests: 'User Requests'
-    user_request_cancellation: 'Cancellation Request'
-    user_request_swap: 'Swap Request'
-    receipt_with_status: '%{status} Payment'
-    receipts_with_status: '%{status} Payments'
-    user_kyc: 'KYC'
-    user_kycs: 'KYCs'
-    user_kyc_details: 'KYC Details'
-    users: 'Users & Customers'
-    user: 'User or Customer'
-    customers: 'Customers'
-    customer: 'Customer'
-    project_unit: 'Apartment'
-    project_units: 'Apartments'
-    project_unit_with_status: '%{status} Unit'
-    project_units_with_status: '%{status} Units'
-    channel_partner: 'Partner Registration'
-    channel_partners: 'Partner Registrations'
-    search: "Filter"
-    searches: "Filter"
-    otp: "OTP"
-    schemes: "Schemes"
-    scheme: "Scheme"
-    audit: "Audit Logs"
-    referral: 'Referral'
-    referrals: 'Referrals'
-    accounts: "Accounts"
-    account: "Account"
-    phase: 'Phase'
-    phases: Phases
+    sign_in_h1: "Welcome back"
+    sign_in_h2: "Login to Book an Apartment online"
+    total: 'Total'
+
+  helpers:
+    show:
+      link_name: '%{model} Details'
+    edit:
+      link_name: 'Edit %{model}'
+    new:
+      link_name: 'Add %{model}'
+    destroy:
+      link_name: 'Destroy %{model}'
+    select:
+      prompt: Please select
+    submit:
+      create: Add %{model}
+      update: Update %{model}
+      submit: Save %{model}"
+      post:
+        create: Upload %{model}
+
   language:
     en: 'English'
     mr: 'मराठी'
+
   mongoid:
-    attributes:
-      portal_stage_priority:
-        stage_name: 'Stage'
-        priority_name: 'Priority'
+    models:
       asset:
+        one: Document
+        other: Documents
+      address:
+        one: Address
+        other: Addresses
+      account:
+        one: Account
+        other: Accounts
+      bank_detail:
+        one: Bank
+        other: Banks
+      booking_detail:
+        one: Booking
+        other: Bookings
+        i_agree_label:
+          buyer: 'I Agree'
+          admin: 'I Agree in behalf of %{name}'
+
+      booking_detail_scheme:
+        one: Booking Scheme
+        other: Booking Schemes
+      client:
+        one: Client
+        other: Clients
+      cost:
+        one: Cost
+        other: Costs
+      channel_partner:
+        one: Channel Partner
+        other: Channel Partners
+
+      data_attribute:
+        one: Date
+        other: Data
+      email:
+        one: Email
+        other: Emails
+      erp_model:
+        one: ERP Model
+        other: ERP Models
+      note:
+        one: Note
+        other: Notes
+      portal_stage_priority:
+        one: Portal Stage
+        other: Portal Stages
+      project_tower:
+        one: Tower
+        other: Towers
+      project_unit:
+        one: Apartment
+        other: Apartments
+      project:
+        one: Project
+        count: Projects
+      payment_adjustment:
+        zero: Payment Adjustment
+        one: Payment Adjustment
+        other: Payment Adjustments
+      receipt:
+        one: Payment
+        other: Payments
+      search:
+        one: Search
+        other: Searches
+      scheme:
+        one: Scheme
+        other: Schemes
+      sms:
+        one: SMS
+        other: SMSs
+      sync_log:
+        one: Sync Log
+        other: Sync Logs
+      template:
+        one: Template
+        other: Templates
+      user_request:
+        one: User Request
+        other: User Requests
+      user_request/cancellation:
+        one: Cancellation
+        other: Cancellations
+      user_request/swap:
+        one: Swap
+        other: Swaps
+      user_kyc:
+        one: KYC
+        other: KYCs
+      user:
+        one: User & Customer
+        other: Users & Customers
+
+    attributes:
+      asset:
+        assetable_id: Assetable ID
+        assetable_type: Assetable Type
+        file: File
         file_size: 'Size'
         file_name: 'Name'
         asset_type: 'Type'
-      template:
+      address:
+        address1: 'Address'
+        address2: 'Street'
+        city: 'City'
+        country: 'Country'
+        state: 'State / Region'
+        zip: 'Zip / Pin Code'
+
+      account:
+        account_number: 'Account Number'
+        access_code: Access Code
+        by_default: Default
+        key: 'Key'
+        merchant_id: Merchant Id
+        name: Name
+        secret: Secret
+        working_key: Working Key
+      account/by_default:
+        :true: 'Yes'
+        :false: 'No'
+
+      bank_detail:
+        name: "Bank Name"
+        account_holder_name: "Account Holder's Name"
+        branch: 'Branch'
+        account_type: 'Account Type'
+        ifsc_code: 'IFSC Code'
+        account_number: 'Account Number'
+        loan_required: 'Do you need a loan?'
+
+      booking_detail:
         name: 'Name'
-        content: 'Content'
+        status: 'Status'
+        project_tower: 'Project Tower'
+        user: 'User'
+        bathrooms: 'Bathrooms'
+        bedrooms: 'Bedrooms'
+        manager: 'Manager'
+        paid_amount: 'Paid Amt.'
+        booking_pending_amount: 'Booking Amt. Pending'
+        last_sync_status: Last Sync Status
+        comments: 'Comments'
+        carpet: Carpet Area
+        agreement_price: 'Agreement Price'
+        all_inclusive_price: 'All Inclusive Price'
+        manager_id: Manager
+        dates: 'Dates'
+      booking_detail/status:
+        available: 'Available'
+        not_available: 'Not Available'
+        error: 'Error'
+        hold: 'Hold'
+        blocked: 'Blocked'
+        booked_tentative: 'Tentative Booked'
+        booked_confirmed: 'Confirmed Booked'
+        under_negotiation: 'Under Negotiation'
+        scheme_approved: 'Scheme Approved'
+        scheme_rejected: 'Scheme Rejected'
+        swap_requested: 'Swap Requested'
+        swapping: 'Swapping'
+        swapped: 'Swapped'
+        swap_rejected: 'Swap Rejected'
+        cancellation_requested: 'Cancellation Requested'
+        cancelling: 'Cancelling'
+        cancelled: 'Cancelled'
+        cancellation_rejected: 'Cancellation Rejected'
+        management: 'Management Blocking'
+        employee: 'Employee Blocking'
+
       client:
         name: 'Client Name (Used across the app)'
         allowed_bookings_per_user: 'Bookings allowed per user'
@@ -121,6 +276,204 @@ en:
         holding_minutes: 'Unit to be held for (Minutes)'
         enable_company_users: 'Allow Company Users & Benefits'
         roles_taking_registrations: 'Allowed roles for taking new registrations'
+      client/payment_gateways:
+        Razorpay: Razorpay Payment Gateway
+        CCAvenue: CCAvenue Payment Gateway
+
+      cost:
+        name: "Name"
+        formula: "Formula"
+        absolute_value: "Absolute Value"
+        category: "Category"
+        order: "Order"
+
+      channel_partner:
+        name: 'Name'
+        company_name: "Company Name"
+        address: "Address"
+        bank_detail: "Bank Details"
+        email: 'Email'
+        phone: 'Phone'
+        rera_id: 'RERA Registration Number'
+        city: 'City'
+        associated_user_id: 'Associated User'
+        status: 'Status'
+        gstin_number: "GSTIN Number"
+        pan_number: "PAN Number"
+        aadhaar: "Aadhaar"
+        name_email_phone: 'Name/Email/Phone'
+      channel_partner/status:
+        active: Active
+        inactive: Inactive
+
+      data_attribute:
+        name: "Name"
+        formula: "Formula"
+        absolute_value: "Absolute Value"
+        order: "Order"
+
+      email:
+        to: 'To'
+        cc: 'Cc'
+        sent_on: 'Sent On'
+        subject: 'Subject'
+        body: 'Body'
+        status: 'Status'
+      email/status:
+        draft: Draft
+        scheduled: Scheduled
+        queued: Queued
+        sent: Sent
+        delivered: Delivered
+        read: Read
+        unread: Unread
+        clicked: Clicked
+        bounced: Bounced
+        dropped: Dropped
+        spam: Spam
+        complained: Complained
+        unsubscribed: Unsubscribed
+        untracked: Untracked
+
+      erp_model/status:
+        active: Active
+        inactive: Inactive
+      erp_models/resource_class:
+        User: 'User'
+        UserKyc: 'KYC'
+        Receipt: 'Payments'
+        BookingDetail: 'Booking'
+        ChannelPartner: 'Channel Partner'
+      erp_model/request_type:
+        json: 'JSON'
+      erp_model/http_verb:
+        get: 'GET'
+        post: 'POST'
+        put: 'PUT'
+        patch: 'PATCH'
+      erp_model/action_name:
+        create: 'Create'
+        update: 'Update'
+
+      note:
+        note: 'Note'
+
+      payment_adjustment:
+        name: Name
+        field: Field
+        formula: Formula
+        absolute_value: 'Absolute Value'
+        editable: Editable
+      payment_adjustment/field:
+        agreement_price: Agreement Value
+        all_inclusive_price: All Inclusive Value
+        base_rate: Base Rate
+        floor_rise: Floor Rise
+      portal_stage_priority:
+        stage_name: 'Stage'
+        priority_name: 'Priority'
+      portal_stage_priority/portal_stages:
+        registered: 'Registered'
+        confirmed: 'Confirmed'
+        project_info: 'Project Info'
+        kyc_done: 'KYC Done'
+        unit_browsing: 'Unit Browsing'
+        unit_selected: 'Unit Selected'
+        hold_payment_dropoff: 'Hold Payment Dropoff'
+        payment_done: 'Payment Done'
+        blocked: 'Blocked'
+        booked_tentative: 'Booked Tentative'
+        booked_confirmed: 'Booked Confirmed'
+        cancelled: 'Cancelled'
+
+      project_tower:
+        name: Name
+
+      project_unit:
+        costs: "Costs"
+        data: "Data"
+        bedrooms: "Beds"
+        bathrooms: "Baths"
+        status: "Status"
+        user_id: "Customer"
+        receipt_ids: "Payments (associated with this Apartment)"
+        user_request_ids: "User Requests (associated with this Apartment)"
+        user_kyc_ids: "Co-Applicants (KYCs associated with this Apartment)"
+        primary_user_kyc_id: "Primary User KYC"
+        name: 'Name'
+        project_tower_name: 'Project Tower'
+        project_name: 'Project'
+        blocked_on: 'Blocked On'
+        unit_facing_direction: 'Facing'
+        agreement_price: 'Agreement Value'
+        all_inclusive_price: 'All Inclusive Price'
+        project_tower: 'Project Tower'
+        floor: 'Floor'
+        floor_order: 'Floor Order'
+        facing: 'Facing'
+        paid_amount: 'Paid Amt.'
+        booking_pending_amount: 'Booking Amt. Pending'
+        last_sync_at: 'Last Sync'
+        last_sync_status: Last Sync Status
+        comments: 'Comments'
+        carpet: Carpet Area
+      project_unit/status:
+        hold: 'Hold'
+        available: 'Available'
+        not_available: 'Not Available'
+        blocked: 'Blocked'
+        error: 'Error'
+
+      projects:
+        name: Name
+      receipt:
+        comments: 'Comments'
+        creator_id: "Created by"
+        created_at: "Created on"
+        created_by: 'Created By'
+        issued_date: "Date of issuance (e.g. Cheque Date)"
+        issuing_bank: "Issuing Bank"
+        issuing_bank_branch: "Issuing Bank Branch"
+        name_email_phone: 'Name/Email/Phone'
+        project_unit_id: "Apartment"
+        processed_on: 'Date of Clearance'
+        payment_mode: "Mode of Payment"
+        payment_type: 'Payment Type'
+        payment_identifier: "Cheque Number / Transaction Identifier"
+        receipt_id: "Receipt ID"
+        status: "Payment Status"
+        user: "Customer"
+        user_id: "Customer"
+        total_amount: "Total Amount (Rs.)"
+        token_number: 'Token Number'
+        time_slot: Time Slot
+        tracking_id: 'Transaction ID (Processed Payment)'
+        frequency: 'Frequency'
+        dates: 'Dates'
+
+      receipt/status:
+        pending: 'Pending'
+        clearance_pending: 'Clearance Pending'
+        failed: 'Failed'
+        success: 'Success'
+        available_for_refund: 'Available For Refund'
+        refunded: 'Refund'
+        cancelled: 'Cancelled'
+        cancellation_requested: 'Cancellation Requested'
+        cancelling: 'Cancelling'
+        cancellation_rejected: 'Cancellation Rejected'
+      receipt/payment_mode:
+        online: 'Online'
+        cheque: 'Cheque'
+        rtgs: 'RTGS'
+        imps: 'IMPS'
+        card_swipe: 'Card Swipe'
+        neft: 'NEFT'
+        offline: 'Offline'
+      receipt/payment_types:
+        agreement: Agreement
+        stamp_duty:  Stamp Duty
+
       search:
         bedrooms: "Beds"
         agreement_price: "Agreement Value"
@@ -128,6 +481,51 @@ en:
         carpet: "Carpet Area"
         project_tower_id: "Tower"
         project_unit_id: "Apartment"
+
+      scheme:
+        name: 'Name'
+        project_id: 'Project'
+        project_tower_id: 'Project Tower'
+        project_unit_id: 'Apartment'
+        user_id: 'User'
+        user_role: 'User Role'
+        value: 'Adjustment (Rs.)'
+        status: 'Status'
+        approved_at: 'Approved At'
+        approved_by: 'Approved By'
+        created_by: 'Created By'
+        default_for_users: 'Default for Channel Partners'
+        can_be-applied_by: 'Can be applied by'
+        customer_role: 'Customer Role'
+      scheme/status:
+        draft: Draft
+        approved: Approved
+        disabled: Disabled
+
+      sms:
+        to: 'To'
+        cc: 'Cc'
+        sent_on: 'Sent On'
+        subject: 'Subject'
+        body: 'Body'
+        status: 'Status'
+        content: Content
+      sms/status:
+        received: Received
+        untracked: Untracked
+        scheduled: Scheduled
+        sent: Sent
+        failed: Failed
+
+      sync_log:
+        last_sync_at: 'Last Synced'
+        last_sync_on: 'Last Synced On'
+        last_sync_status: 'Last Synced Status'
+      template:
+        name: 'Name'
+        content: 'Content'
+        type: 'Type'
+
       user_request:
         request_type: 'Request type'
         _type: 'Request type'
@@ -138,28 +536,17 @@ en:
         receipt_id: 'Related Payment'
         created_at: 'Created at'
         resolved_at: 'Processed on'
-      note:
-        note: 'Note'
-      receipt:
-        tracking_id: 'Transaction ID (Processed Payment)'
-        comments: 'Comments'
-        processed_on: 'Date of Clearance'
-        receipt_id: "Receipt ID"
-        payment_mode: "Mode of Payment"
-        issued_date: "Date of issuance (e.g. Cheque Date)"
-        issuing_bank: "Issuing Bank"
-        issuing_bank_branch: "Issuing Bank Branch"
-        payment_identifier: "Cheque Number / Transaction Identifier"
-        total_amount: "Total Amount (Rs.)"
-        status: "Payment Status"
-        user: "Customer"
-        user_id: "Customer"
-        project_unit_id: "Apartment"
-        creator_id: "Created by"
-        created_at: "Created on"
-        payment_type_agreement: 'Agreement'
-        payment_type_stamp_duty: 'Stamp Duty and Registration'
-        token_number: 'Token Number'
+        name_email_phone: 'Name/Email/Phone'
+      user_request/status:
+        pending: Pending
+        processing: Processing
+        resolved: Resolved
+        rejected: Rejected
+        failed: Failed
+      user_request/requestable_type:
+        Receipt: 'Receipt'
+        BookingDetail: 'Booking'
+
       user_kyc:
         name: "Name"
         email: "Email"
@@ -207,122 +594,266 @@ en:
         min_budget: 'Min. Budget (Rs.)'
         max_budget: 'Max. Budget (Rs.)'
         budget: 'Budget (Rs.)'
-      project_unit:
-        costs: "Costs"
-        data: "Data"
-        bedrooms: "Beds"
-        bathrooms: "Baths"
-        status: "Status"
-        user_id: "Customer"
-        receipt_ids: "Payments (associated with this Apartment)"
-        user_request_ids: "User Requests (associated with this Apartment)"
-        user_kyc_ids: "Co-Applicants (KYCs associated with this Apartment)"
-        primary_user_kyc_id: "Primary User KYC"
-        name: 'Name'
-        project_tower_name: 'Project Tower'
-        project_name: 'Project'
-        blocked_on: 'Blocked On'
-        unit_facing_direction: 'Facing'
-        agreement_price: 'Agreement Value'
-        all_inclusive_price: 'All Inclusive Price'
-      cost:
-        name: "Name"
-        formula: "Formula"
-        absolute_value: "Absolute Value"
-        category: "Category"
-        order: "Order"
-      data_attribute:
-        name: "Name"
-        formula: "Formula"
-        absolute_value: "Absolute Value"
-        order: "Order"
-      scheme:
-        name: 'Name'
-        project_id: 'Project'
-        project_tower_id: 'Project Tower'
-        project_unit_id: 'Apartment'
-        user_id: 'User'
-        user_role: 'User Role'
-        value: 'Adjustment (Rs.)'
-        status: 'Status'
-        approved_at: 'Approved At'
-        approved_by: 'Approved By'
-        created_by: 'Created By'
-        default_for_users: 'Default for Channel Partners'
+
       user:
+        aadhaar: 'Aadhaar'
+        confirmation: 'Confirmation'
+        channel_partner: 'Channel Partner'
         created_at: "Registered At"
-        login_otp: 'Verification / Login OTP'
-        name: 'Name'
+        confirmed_at: 'Confirmed'
+        confirmed_by: 'Confirmed By'
+        confirmed: "Confirmed"
+        company_name: 'Company Name'
         email: 'Email'
-        phone: 'Phone'
-        password: 'Password'
-        password_confirmation: 'Password Confirmation'
-        rera_id: 'RERA Registration Number'
+        is_active: 'Allow the user to login?'
+        kyc_ready: 'Is the Customer KYC Ready?'
+        login_otp: 'Verification / Login OTP'
         location: 'Location'
         lead_id: 'Sell.Do Lead ID'
-        time_zone: "User's Time Zone"
+        manager_name: 'Manager Name'
         manager_role: "Sales Manager / Added by Role"
-        confirmed: "Confirmed"
-        role: 'Role'
         manager_id: "Partner / Manager / Added by"
         manager_change_reason: "Reason for changing Partner"
-        kyc_ready: 'Is the Customer KYC Ready?'
-        total_amount_paid: "Total Paid (you might have some payments pending clearance)"
-        total_balance_pending: "Total Balance Pending (you might have some payments pending clearance)"
-        total_unattached_balance: "Total Un-attached Balance (subject to clearance)"
-        is_active: 'Allow the user to login?'
-        utm_params: 'UTM Tracking'
-      channel_partner:
         name: 'Name'
-        company_name: "Company Name"
-        address: "Address"
-        bank_detail: "Bank Details"
-        email: 'Email'
+        name_email_phone: 'Name/Email/Phone'
+        pan_number: 'PAN Number'
         phone: 'Phone'
+        password: 'Password'
+        portal_stage: 'Portal Stage'
+        password_confirmation: 'Password Confirmation'
         rera_id: 'RERA Registration Number'
-        city: 'City'
-        associated_user_id: 'Associated User'
+        role: 'Role'
+        remember_me: "<span>Keep me logged in</span>"
+        registered_at: 'Registered at'
+        referred_by_id: 'Referred by'
+        referral_code: 'Referral Code'
         status: 'Status'
-        gstin_number: "GSTIN Number"
-        pan_number: "PAN Number"
-        aadhaar: "Aadhaar"
-      bank_detail:
-        name: "Bank Name"
-        account_holder_name: "Account Holder's Name"
-        branch: 'Branch'
-        account_type: 'Account Type'
-        ifsc_code: 'IFSC Code'
-        account_number: 'Account Number'
-        loan_required: 'Do you need a loan?'
-      address:
-        address1: 'Address'
-        address2: 'Street'
-        city: 'City'
-        state: 'State / Region'
-        country: 'Country'
-        zip: 'Zip / Pin Code'
+        selldo_lead_id: 'Sell Do Lead ID'
+        total_amount_paid: "Total Paid"
+        total_balance_pending: "Total Balance Pending"
+        total_unattached_balance: "Total Un-attached Balance"
+        time_zone: "User's Time Zone"
+        utm_params: 'UTM Tracking'
+      user/confirmed:
+        :true: 'Confirmed'
+        :false: 'Not Confirmed'
+      user/role:
+        superadmin: 'Superadmin'
+        admin: 'Administrator'
+        crm: 'CRM User'
+        sales_admin: 'Sales Head'
+        sales: 'Sales User'
+        user: 'Customer'
+        gre: 'GRE or Pre-sales'
+        cp_admin: 'Channel Partner Head'
+        cp: 'Channel Partner Manager'
+        channel_partner: 'Channel Partner'
+        management_user: 'Management User'
+        employee_user: 'Employee'
+        direct: Direct
+      dashboard/filters:
+        payments:
+          all: 'All'
+          attached_payments: 'Attached Payments'
+          direct_payments: 'Direct Payments'
+        frequency:
+          last_7_days: 'Last 7 days'
+          last_7_weeks: 'Last 7 weeks'
+          last_7_months: 'Last 7 months'
+          custom_dates: 'Custom Dates'
+
   controller:
+    assets:
+      index:
+        link_name: 'Documents'
     application:
       set_current_client: 'The site is under maintenance. Please contact your  administrator.'
       invalid: 'Invalid'
+    accounts:
+      by_default:
+        hint: System need only one default account, which contains first payment of each unit.
+      destroy:
+        link_name: 'Remove'
+      edit:
+        button: 'Update'
+        header: 'Edit Account'
+        link_name: 'Edit Account'
+      index:
+        link_name: 'Accounts'
+
+      new:
+        button: 'Save'
+        header: 'New Account'
+        link_name: 'New Account'
+
+      print:
+        link_name: Print
+    audits:
+      index:
+        link_name: 'History'
+
     booking_detail_schemes:
+      index:
+        link_name: 'Booking Schemes'
+      new:
+        link_name: 'Add Scheme & Discount'
+      edit:
+        link_name: 'Update Scheme & Discount'
       scheme_approved: 'Scheme applied successfully, please check cost sheet.'
       scheme_under_negotiation: 'Scheme registered successfully and sent for approval.'
-    project_units:
-      quotation:
-        pdf_footer: 'This cost sheet generated should mention that this is a quotation so that it is not confused with the cost sheet that is generated after the booking'
-      unit_released: "The unit has been successfully released."
     booking_details:
+      index:
+        link_name: 'Bookings'
+      new:
+        link_name: 'Add Booking'
+        header: "Add Booking"
+      edit:
+        link_name: 'Update Booking'
+      show:
+        link_name: 'View Details'
+      exports:
+        link_name: '%{name} Exports'
+      release_unit:
+        link_name: 'Release Unit'
+      continue_booking:
+        link_name: 'Checkout using unit already held'
+      cost_sheet:
+        link_name: Cost Sheet
+      payment_schedule:
+        link_name: Payment Schedule
       set_booking_detail_missing: "Booking detail not found"
       set_project_unit_missing: "Project unit not found"
       booking_successful: "You have completed the booking successfully."
-      booking_unsuccessful: "Your booking was unsuccessful. Please contant administrator to book."
+      booking_unsuccessful: "Your booking was unsuccessful. Please contact administrator to book."
       set_receipt_missing: 'Make new payment'
+      documents:
+        link_name: 'Documents'
+
+      receipts:
+        form:
+          disclaimer: The %{field} will be generated only after successful processing of payment.
+          refund_disclaimer: Refund Payments will be subject to cancellation charges
+        new:
+          link_name: Pay Remaining Amount
+        show:
+          disclaimer: Payments need to be for individual units, clubbed payments are not allowed. Please collect a cheque for individual units only.
+
+    clients:
+      new:
+        link_name: 'Add Client'
+      edit:
+        link_name: 'Edit Client'
+      show:
+        link_name: 'Client Detail'
+    channel_partners:
+      index:
+        link_name: 'Channel Partners'
+      edit:
+        link_name: 'Edit Channel Partner'
+      show:
+        link_name: Details
+
+    dashboard:
+      index:
+        link_name: 'Dashboard'
+      receipt_frequency: 'Payment Frequency'
+    emails:
+      index:
+        link_name: 'Emails'
+      show:
+        link_name: Details
+    erp_models:
+      index:
+        link_name: 'Third Party Integration'
+      edit:
+        link_name: Edit
+
+    inventory:
+      index:
+        link_name: 'Inventory'
+
     only_administrator_users: 'Only administrator users are allowed.'
     only_buyer_users: 'Only Buyer users are allowed.'
+
+    notes:
+      new:
+        header: 'Add Note'
+        link_name: 'Add Note'
+
+    project_units:
+      index:
+        link_name: 'Apartments'
+      show:
+        link_name: 'Details'
+      edit:
+        header: Edit Apartment
+        link_name: Edit
+      exports:
+        link_name: "%{type} Exports"
+      quotation:
+        link_name: 'Get Quotation'
+        pdf_footer: 'This cost sheet generated should mention that this is a quotation so that it is not confused with the cost sheet that is generated after the booking'
+      unit_released: "The unit has been successfully released."
+    phases:
+      index:
+        link_name: 'Phases'
+      new:
+        link_name: Add Phase
+      edit:
+        link_name: Edit
+    portal_stage_priorities:
+      index:
+        link_name: 'Portal Stages'
+
     receipts:
       account_missing: 'We do not have any Account Details for Transaction. Please ask Administrator to add.'
+      edit:
+        link_name: 'Edit Payment'
+      edit_token_number:
+        link_name: 'Change Token'
+      exports:
+        link_name: '%{name} Exports'
+
+      index:
+        link_name: 'Payments'
+      lost_receipt:
+        header: Lost Payment
+        link_name: Lost Payment
+      new:
+        link_name: 'Direct Payment'
+        header: 'Direct Payment'
+        make_payment: 'Make Payment'
+      print:
+        link_name: 'Print'
+      resend_email:
+        link_name: Resend Email
+        success: 'Email has been sent again.'
+      show:
+        link_name: Payment Details
+    referrals:
+      index:
+        link_name: 'Referrals'
+      new:
+        link_name: 'Add Referrals'
+
     searches:
+      filter:
+        header: Select Tower
+        hint: Choose towers that suit your requirements
+        error: "We couldn't find any towers for your selection, would you like to change your search?"
+        again: Search Again
+      towers:
+        link_name: Choose Apartment
+        header: Choose Apartment
+        hint: Choose apartment that suit your requirements
+      project_unit:
+        header: Set up your KYC
+        hint: 'Set up your KYC & hold your  apartments'
+      new:
+        header: 'Search Home'
+        link_name: Choose Apartment & Add Booking
+        booking_hint: You are taking a booking for %{name}
+        hint: Property you are looking for
       project_unit_missing: 'Project Unit Selection step is missing'
       check_project_unit_hold_status: "We've released the unit which was held for %{holding_minutes} minutes. Please re-select the unit and try booking again."
       checkout:
@@ -334,38 +865,110 @@ en:
         success: 'Your Booking is hold. Please select Scheme and go for Payment.'
       gateway_payment:
         receipt_missing: 'Requested receipt not in pending.'
+    smses:
+      index:
+        link_name: SMSs
+      show:
+        link_name: Details
+    schemes:
+      index:
+        link_name: Schemes
+      edit:
+        link_name: Edit Scheme
+      show:
+        link_name: Scheme Detail
+        header: Scheme Detail
+      new:
+        link_name: Add Scheme
+        header: Add Scheme
+    sync_logs:
+      index:
+        link_name: 'Sync Logs'
+      new:
+        link_name: 'Sync'
+      show:
+        link_name: Details
+
+    templates:
+      index:
+        link_name: 'Templates'
+      show:
+        link_name: Template Detail
+
     users:
       account_confirmed: 'Account Confirmed'
+      change_password:
+        link_name: 'Change Password'
       cannot_confirm_user: 'Cannot confirm user'
+      confirm_user:
+        link_name: 'Confirm User'
+      confirm_via_otp:
+        link_name: 'Confirm Via OTP'
+      exports:
+        link_name: '%{name} Exports'
+      edit:
+        link_name: "Edit %{role}"
+        header: 'Edit %{role}'
+      index:
+        link_name: 'Users & Customers'
+      new:
+        link_name: 'Add %{role}'
+        header: 'Add %{role}'
+      profile:
+        link_name: "%{role} Profile"
+      print:
+        link_name: Print
+      resend_confirmation_instructions:
+        link_name: Resend Confirmation
+      resend_password_instructions:
+        link_name: Resend Password Instruction
+      show:
+        link_name: '%{role} Details'
+        header: 'Overview'
+    user_kycs:
+      index:
+        link_name: 'KYCs'
+      new:
+        link_name: 'Fill KYC Form'
+      edit:
+        link_name: Edit
+      show:
+        link_name: Detail
+    user_requests:
+      index:
+        link_name: 'User Requests'
+      edit:
+        link_name: 'Edit %{type}'
+      show:
+        link_name: Detail
+      new:
+        link_name: Add KYC
+      swap:
+        index:
+          link_name: 'Swap Requests'
+        new:
+          link_name: 'Swap'
+          header: 'Swap'
+        edit:
+          link_name: 'Edit Swap'
+          header: 'Edit Swap'
+      cancellation:
+        index:
+          link_name: 'Cancellation Requests'
+        new:
+          link_name: 'Cancel'
+          header: 'Cancel'
+        edit:
+          link_name: 'Edit Cancellation'
+          header: 'Edit Cancellation'
 
-  accounts:
-    link_name: 'Account'
+  asset:
+    image:
+      not_found: 'No Image Found'
 
-  audits:
-    link_name: 'Histroy'
+  booking_detail_schemes:
+    rejected_scheme: Scheme for this booking is rejected. Please contact administrator.
 
-  booking_details:
-    status:
-       available: 'Available'
-       not_available: 'Not Available'
-       error: 'Error'
-       hold: 'Hold'
-       blocked: 'Blocked'
-       booked_tentative: 'Tentative Booked'
-       booked_confirmed: 'Confirmed Booked'
-       under_negotiation: 'Under Negotiation'
-       scheme_approved: 'Scheme Approved'
-       scheme_rejected: 'Scheme Rejected'
-       swap_requested: 'Swap Requested'
-       swapping: 'Swapping'
-       swapped: 'Swapped'
-       swap_rejected: 'Swap Rejected'
-       cancellation_requested: 'Cancellation Requested'
-       cancelling: 'Cancelling'
-       cancelled: 'Cancelled'
-       cancellation_rejected: 'Cancellation Rejected'
-       management: 'Management Blocking'
-       employee: 'Employee Blocking'
 
   datetime:
     distance_in_words:
@@ -376,135 +979,24 @@ en:
         one: 'almost year'
         other: '%{count} Years'
 
-  emails:
-    link_name: 'Emails'
-    status:
-      draft: 'Draft'
-      scheduled: 'Scheduled'
-      queued: 'Queued'
-      sent: 'Sent'
-      delivered: 'Delivered'
-      read: 'Read'
-      unread: 'Unread'
-      clicked: 'Clicked'
-      bounced: 'Bounced'
-      dropped: 'Dropped'
-      spam: 'Spam'
-      complained: 'Complained'
-      unsubscribed: 'Unsubscribed'
-      untracked: 'Untracked'
-
-  erp_models:
-    link_name: 'Third Party Integration'
-    resource_class:
-      User: 'User'
-      UserKyc: 'KYC'
-      Receipt: 'Payments'
-      BookingDetail: 'Booking'
-      ChannelPartner: 'Channel Partner'
-    request_type:
-      json: 'JSON'
-    http_verb:
-      get: 'GET'
-      post: 'POST'
-      put: 'PUT'
-      patch: 'PATCH'
-    action_name:
-      create: 'Create'
-      update: 'Update'
-
-  inventory:
-    link_name: 'Inventory'
-
-  phases:
-    link_name: 'Phases'
-
-  portal_stage_priorities:
-    link_name: 'Portal Stages List'
-
-  project_units:
-    status:
-      hold: 'Hold'
-      available: 'Available'
-      not_available: 'Not Available'
-      blocked: 'Blocked'
-      error: 'Error'
-
-  receipts:
-    status:
-      pending: 'Pending'
-      clearance_pending: 'Clearance Pending'
-      failed: 'Failed'
-      success: 'Success'
-      available_for_refund: 'Available For Refund'
-      refunded: 'Refund'
-      cancelled: 'Canceled'
-    payment_mode:
-      online: 'Online'
-      cheque: 'Cheque'
-      rtgs: 'RTGS'
-      imps: 'IMPS'
-      card_swipe: 'Card Swipe'
-      neft: 'NEFT'
-    cancellation_link: 'Cancellation'
-
-  referrals:
-    name: 'Referrals'
-    code: 'Referral Code'
-    link_name: 'Referrals'
-    new:
-      link_name: 'Invite Friend'
-    generate_code:
-      link_name: 'Generate Code'
-
-  smses:
-    link_name: "SMS"
-    status:
-      received: 'Received'
-      untracked: 'Untracked'
-      scheduled: 'Scheduled'
-      sent: 'Sent'
-      failed: 'Failed'
-
-  sync_logs:
-    link_name: 'Sync Log'
-
   users:
-    profile: '%{role} Profile'
-    change_password: 'Change Password'
     account_confirmed: 'Account Confirmed'
-    confirmed:
-      :true: 'Confirmed'
-      :false: 'Not Confirmed'
+    total_amount_paid:
+      hint: '(you might have some payments pending clearance)'
+    total_balance_pending:
+      hint: '(you might have some payments pending clearance)'
+    total_unattached_balance:
+      hint: '(subject to clearance)'
 
-    role:
-      superadmin: 'Superadmin'
-      admin: 'Administrator'
-      crm: 'CRM User'
-      sales_admin: 'Sales Head'
-      sales: 'Sales User'
-      user: 'Customer'
-      gre: 'GRE or Pre-sales'
-      cp_admin: 'Channel Partner Head'
-      cp: 'Channel Partner Manager'
-      channel_partner: 'Channel Partner'
-      management_user: 'Management User'
-      employee_user: 'Employee'
-    portal_stages:
-      project_info: 'Project Info'
+  sessions:
+    new:
+      otp_submit: 'Get OTP'
+      otp_resend: 'Resend OTP'
+      login_with_password_link: 'Login with password instead'
+      login_with_otp_link: 'Login with OTP instead'
+      sign_in: 'Sign In'
 
-  user_kycs:
-    link_name: 'KYCs'
-
-  user_requests:
-    swap: 'Swap'
-    cancellation: 'Cancellation'
-    status:
-      pending: 'Pending'
-      processing: 'Processing'
-      resolved: 'Resolved'
-      rejected: 'Rejected'
-      failed: 'Failed'
-    requestable_type:
-      Receipt: 'Receipt'
-      BookingDetail: 'Booking'
+  registrations:
+    pre_text: 'Don’t have account ?'
+    new:
+      sign_up: 'Sign Up'

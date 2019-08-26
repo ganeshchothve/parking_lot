@@ -1,45 +1,31 @@
 <div class="row">
   <div class="col-md-6">
-    <div class="form-group">
-      <%= f.label :name %>
-      <%= f.text_field :name, class: 'form-control' %>
-    </div>
+    <%= f.input :name %>
   </div>
   <div class="col-md-6">
-    <div class="form-group">
-      <%= f.label :branch %>
-      <%= f.text_field :branch, class: 'form-control' %>
-    </div>
+    <%= f.input :branch %>
   </div>
 </div>
+
 <div class="row">
   <div class="col-md-6">
-    <div class="form-group">
-      <%= f.label :account_type %>
-      <%= f.select :account_type, BankDetail.available_account_types.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize' %>
-    </div>
+    <%= f.input :account_type, collection: BankDetail.available_account_types.collect{|x| [x[:text], x[:id]]}, prompt: :translate, as: :select %>
   </div>
+
   <div class="col-md-6">
-    <div class="form-group">
-      <%= f.label :ifsc_code %>
-      <%= f.text_field :ifsc_code, class: 'form-control' %>
-    </div>
+    <%= f.input :ifsc_code %>
   </div>
 </div>
+
 <div class="row">
   <div class="col-md-6">
-    <div class="form-group">
-      <%= f.label :account_holder_name %>
-      <%= f.text_field :account_holder_name, class: 'form-control' %>
-    </div>
+    <%= f.input :account_holder_name %>
   </div>
   <div class="col-md-6">
-    <div class="form-group">
-      <%= f.label :account_number %>
-      <%= f.text_field :account_number, class: 'form-control' %>
-    </div>
+    <%= f.input :account_number %>
   </div>
 </div>
+
 <div class="row">
   <div class="col-md-6">
     <% if f.object.bankable_type == "UserKyc" %>

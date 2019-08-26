@@ -6,7 +6,7 @@
       <div class="mt-3"></div>
       <div class="card">
         <div class="card-body payment-gateway-message">
-          <div class="title">You'll be redirected to <%= Client.available_payment_gateways.find{|x| x[:id] == current_client.payment_gateway}[:text] %>, where you can pay using Net Banking, UPI, Credit/Debit Card or Wallet</div>
+          <div class="title">You'll be redirected to <%= t("client.payment_gateways.#{current_client.payment_gateway}") %>, where you can pay using Net Banking, UPI, Credit/Debit Card or Wallet</div>
           <div class="mt-3"></div>
           <a href="javascript:;" id="rzp-button" class="float-left btn btn-primary">Pay Online</a>
           <% if @project_unit.present? && @project_unit.status == "hold" %>

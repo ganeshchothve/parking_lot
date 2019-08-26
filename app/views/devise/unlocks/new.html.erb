@@ -1,16 +1,25 @@
-<h2>Resend unlock instructions</h2>
+<section class="auth login-page">
+  <div class="container no-pd">
+    <div class="col-lg-5 col-xs-12 col-md-12 col-sm-12 no-pd">
+      <div class="login-form-wrapper pt-5">
+        <p class="p-style">Resend unlock instructions</p>
 
-<%= form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post, class: 'validate-form' }) do |f| %>
-  <%= devise_error_messages! %>
+          <%= simple_form_for(resource, as: resource_name, url: unlock_path(resource_name), method: :post, html: { class: 'validate-form' }) do |f| %>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: false %>
+            <%= f.input :email, autofocus: true, autocomplete: false, as: :email %>
+
+            <div class="signin-btn col-lg-12 pl-0 pr-0 pt-5 pb-5">
+              <%= f.submit "Resend unlock instructions", class: 'sign-in-btn' %>
+            </div>
+          <% end %>
+        <%= render "devise/shared/links" %>
+      </div>
+    </div>
   </div>
-
-  <div class="actions">
-    <%= f.submit "Resend unlock instructions" %>
-  </div>
+</section>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    $('section.login-page').css('height', $( window ).height() - $('section.login-page').offset().top );
+    FormInitializer.init($("#confirmation_form"));
+  });
 <% end %>
-
-<%= render "devise/shared/links" %>

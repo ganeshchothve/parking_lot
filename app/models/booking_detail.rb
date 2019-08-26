@@ -9,6 +9,7 @@ class BookingDetail
   extend FilterByCriteria
   include PriceCalculator
 
+  STATUSES = %w[hold blocked booked_tentative booked_confirmed under_negotiation scheme_rejected scheme_approved swap_requested swapping swapped swap_rejected cancellation_requested cancelling cancelled cancellation_rejected]
   BOOKING_STAGES = %w[blocked booked_tentative booked_confirmed under_negotiation scheme_approved]
 
   field :status, type: String
@@ -21,6 +22,7 @@ class BookingDetail
   field :project_tower_name, type: String
   field :bedrooms, type: String
   field :bathrooms, type: String
+  field :carpet, type: Float
 
   mount_uploader :tds_doc, DocUploader
 

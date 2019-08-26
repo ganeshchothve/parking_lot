@@ -1,24 +1,8 @@
-<div class="row border-top border-thick border-primary py-2 ml-0">
-  <div class="col-md-2">
-    <h4 class="mt-3">
-      <%= icon "far", "check-circle", class: "text-primary" %>
-    </h4>
-  </div>
-  <div class="col-md-10">
-    <h6 class="d-inline">
-      You are looking for
-    </h6>
-    <div class="text-muted small">
-      <% if search.bedrooms.present? %>
-        <%= "#{search.bedrooms} #{labels[:bedrooms]}" %>
-      <% end %>
-      <% if search.agreement_price.present? %>
-        <%= search.agreement_price_to_s %>
-      <% end %>
-      <% if search.all_inclusive_price.present? %>
-        <%= search.all_inclusive_price_to_s %>
-      <% end %>
-      <%= link_to "Change", edit_search_path, class: "modal-remote-form-link small position-absolute", style: "right:10px; top:0;" %>
-    </div>
+<div class="col-lg-3 col-xs-12 col-sm-12 col-md-6">
+  <div class="active step-result">
+    <i class="icon icon-1"></i>
+    <span><%= t('controller.searches.new.header')%></span>
+    <p><%= t('controller.searches.new.hint')%></p>
+    <%= link_to t('global.change'), edit_search_path, class: "modal-remote-form-link small position-absolute step-change-btn" %>
   </div>
 </div>

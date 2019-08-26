@@ -1,7 +1,6 @@
 <div class="table-responsive">
   <table class='table striped-table'>
     <thead class="th-default">
-      <% labels = t('mongoid.attributes.user').with_indifferent_access %>
       <tr>
         <th><%= t('mongoid.attributes.user.name') %></th>
         <th><%= t('mongoid.attributes.user.role') %></th>
@@ -24,11 +23,6 @@
           <td><%= user.created_at.strftime(t('date.formats.default'))%></td>
         </tr>
       <% end %>
-      <tr>
-        <td colspan="6">
-          <div class="mt-5 pt-5"></div>
-        </td>
-      </tr>
     </tbody>
   </table>
 </div>
