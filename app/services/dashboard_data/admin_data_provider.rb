@@ -201,7 +201,7 @@ module DashboardData
         ]).to_a
         out = Hash.new
         data.each do |d|
-          out[d["_id"]["status"]] = d["count"]
+          out[d["_id"]["status"]] = { total_amount: d['total_amount'], count: d["count"]}
         end
         out
       end
