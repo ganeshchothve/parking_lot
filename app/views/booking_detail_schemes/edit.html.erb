@@ -2,10 +2,10 @@
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title"><%= @booking_detail_scheme.new_record? ? "New" : "Edit" %> <%= "#{global_labels['scheme']}" %></h5>
+      <div class="modal-header bg-gradient-cd white">
+        <h3 class="title"><%= t('helpers.edit.link_name', model: BookingDetailScheme.model_name.human)%></h3>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+          <span aria-hidden="true" class="white">&times;</span>
         </button>
       </div>
       <div class="modal-body">

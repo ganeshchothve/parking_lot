@@ -1,18 +1,19 @@
-<div class="table-responsive">
-  <table class='table striped-table payment-breakup' width="100%" cellpadding="10" cellspacing="0">
-    <thead class="th-default">
-      <tr>
-        <% unless current_user.buyer? %>
-          <th>To</th>
-        <% end %>
-        <td> Content </td>
-        <th> Status</th>
-        <th> Sent On</th>
-        <th class="text-right">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @smses.each do |sms| %>
+<table class='table my-customer-table responsive-tbl'>
+  <thead class="th-default">
+      <thead>
+        <tr class="bg-gradient-cd white">
+          <% unless current_user.buyer? %>
+            <th><%= t('mongoid.attributes.smsto') %></th>
+          <% end %>
+          <td> <%= t('mongoid.attributes.sms.content') %> </td>
+          <th> <%= t('mongoid.attributes.sms.status') %></th>
+          <th> <%= t('mongoid.attributes.sms.sent_on') %></th>
+          <th class="text-right"><%= t('global.action', count: 3) %></th>
+        </tr>
+      </thead>
+  </thead>
+  <tbody>
+    <% @smses.each do |sms| %>
         <tr>
           <% unless current_user.buyer? %>
             <td>
@@ -23,17 +24,17 @@
           <% end %>
           <td><%= truncate(sms.body, length: 30, separator: '') %></td>
           <td>
-            <%= t("smses.status.#{sms.status}") %>
+            <%= t("mongoid.attributes.sms/status.#{sms.status}") %>
           </td>
           <td>
             <%= sms.sent_on.try(:strftime, '%b %e, %Y, %l:%M %p') || '-' %>
             <div class="modal fade right fixed-header-footer" role="dialog" id="sms_show_<%=sms.id.to_s %>">
               <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
-                  <div class="modal-header">
-                    <div class="modal-title">SMS</div>
+                  <div class="modal-header bg-gradient-cd white">
+                    <div class="title">SMS</div>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
+                      <span aria-hidden="true" class="white">&times;</span>
                     </button>
                   </div>
                   <div class="modal-body">
@@ -44,23 +45,18 @@
               </div>
             </div>
           </td>
-          <td class="text-right">
-            <div class="dropdown">
-              <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-              <div class="dropdown-menu dropdown-menu-right">
-                <%= link_to 'Show', "javascript:;", data: {toggle: "modal", target: "#sms_show_#{sms.id.to_s}"}, class: 'dropdown-item' %>
-              </div>
-            </div>
-          </td>
+          <td>
+          <div class="dropdown show text-right">
+          <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+              <%= link_to t("controller.smses.show.link_name"), "javascript:;", data: {toggle: "modal", target: "#sms_show_#{sms.id.to_s}"}, class: 'dropdown-item' %>
+           </div>
+        </div>
+        </td>
         </tr>
       <% end %>
-      <tr>
-        <td colspan="4">
-          <div class="mt-5 pt-5"></div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  </tbody>
+</table>
+<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pt-2">
+  <%= will_paginate @smses, list_classes: %w(pagination justify-content-center) %>
 </div>
-<%= will_paginate @smses, list_classes: %w(pagination justify-content-center) %>
-

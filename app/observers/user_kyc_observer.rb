@@ -1,6 +1,9 @@
 class UserKycObserver < Mongoid::Observer
   def before_validation user_kyc
-    user_kyc.assign_attributes(email: user_kyc.user.email, phone: user_kyc.user.phone) if user_kyc.user.user_kyc_ids.blank?
+    if user_kyc.user.user_kyc_ids.blank?
+      user_kyc.email ||= user_kyc.user.email
+      user_kyc.phone ||= user_kyc.user.phone
+    end
   end
 
   def after_create user_kyc

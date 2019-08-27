@@ -5,6 +5,8 @@ class ChannelPartner
   include SyncDetails
   extend FilterByCriteria
 
+  STATUS = %w(active inactive)
+
   field :title, type: String
   field :first_name, type: String
   field :last_name, type: String
@@ -47,7 +49,7 @@ class ChannelPartner
   validates :rera_id, uniqueness: true, allow_blank: true
   validates :phone, uniqueness: true, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile] }, if: proc { |user| user.email.blank? }
   validates :email, uniqueness: true, if: proc { |user| user.phone.blank? }
-  validates :status, inclusion: { in: proc { ChannelPartner.available_statuses.collect { |x| x[:id] } } }
+  validates :status, inclusion: { in: proc { ChannelPartner::STATUS } }
   validates :pan_number, :aadhaar, uniqueness: true, allow_blank: true
   validates :pan_number, format: { with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A' }, allow_blank: true
   validate :cannot_make_inactive

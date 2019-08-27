@@ -3,6 +3,8 @@ class Sms
   include Mongoid::Timestamps
   extend FilterByCriteria
 
+  STATUS = %w(received untracked scheduled sent failed)
+
   # Scopes
   scope :filter_by_to, ->(phone) { where(to: phone) }
   scope :filter_by_body, ->(body) { where(body: ::Regexp.new(::Regexp.escape(body), 'i')) }
@@ -24,25 +26,10 @@ class Sms
 
   validates :body, presence: true, if: Proc.new{ |model| model.sms_template_id.blank? }
   validates :triggered_by_id, :recipient_id, presence: true
-  validates_inclusion_of :status, in: Proc.new { |_model| self.allowed_statuses.collect{ |hash| hash[:id] } }
+  validates_inclusion_of :status, in: STATUS
 
   enable_audit audit_fields: [:body, :sent_on], reference_ids_without_associations: [{field: "sms_template_id", klass: "Template::SmsTemplate"}]
 
   default_scope -> {desc(:created_at)}
 
-  # Methods
-
-  # returns array having statuses, which are allowed on models
-  # allowed statuses are used in select2 for populating data on UI side. they also help in validations
-  #
-  # @return [Array] of hashes
-  def self.allowed_statuses
-    [
-      {id: "received", text: "Received"},
-      {id: "untracked", text: "Untracked"},
-      {id: "scheduled", text: "Scheduled"},
-      {id: "sent", text: "Sent"},
-      {id: "failed", text: "Failed"}
-    ]
-  end
 end

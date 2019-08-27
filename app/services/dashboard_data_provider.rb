@@ -1,4 +1,6 @@
 module DashboardDataProvider
+  # TODO remove not used methods from old methods
+  # old methods
   def self.channel_partners_dashboard(user, options={})
     data = ChannelPartner.collection.aggregate([{
       "$group": {
@@ -158,6 +160,82 @@ module DashboardDataProvider
     out = []
     data.each do |d|
       out << {bedrooms: d["_id"]["bedrooms"], project_tower_id: d["_id"]["project_tower_id"], project_tower_name: d["project_tower_name"], status: d["_id"]["status"], count: d["count"], total_all_inclusive_price: d["total_all_inclusive_price"], total_agreement_price: d["total_agreement_price"]}.with_indifferent_access
+    end
+    out
+  end
+
+  # new (according to new ui)
+  def self.available_inventory
+    ProjectUnit.where(status: 'available').count
+  end
+
+  def self.minimum_agreement_price
+    ProjectUnit.pluck(:agreement_price).min
+  end
+
+  def self.configurations
+    ProjectUnit.distinct(:unit_configuration_name).sample(3)
+  end
+
+  def self.total_buyers(current_user)
+    User.where(role: { "$in": User::BUYER_ROLES}, manager_id: current_user.id).count
+  end
+
+  def self.user_group_by(current_user)
+    out = {'confirmed_users': 0, 'not_confirmed_users': 0}
+    data = User.collection.aggregate([
+      {"$match": {'manager_id': current_user.id } },
+      { "$group": {
+        "_id":{
+          "$cond": {if: '$confirmed_at', then: 'confirmed_users', else: 'not_confirmed_users'}
+        },
+        count: {
+          "$sum": 1
+        }
+      }
+    }]).to_a
+    data.each do |d|
+      out[(d['_id']).to_sym] = d['count']
+    end
+    out
+  end
+
+  def self.booking_detail_group_by(current_user)
+    out = {'blocked': 0, 'booked_tentative': 0,'booked_confirmed': 0}
+    user_ids = User.where(manager_id: current_user.id).pluck(:id)
+    data = BookingDetail.collection.aggregate([
+      {"$match": {'user_id': {'$in': user_ids }, 'status': {'$in': %w(blocked booked_confirmed booked_tentative)}} },
+      { "$group": {
+        "_id":{
+          "status": "$status"
+        },
+        count: {
+          "$sum": 1
+        }
+      }
+    }]).to_a
+    data.each do |d|
+      out[(d['_id']['status']).to_sym] = d['count']
+    end
+    out
+  end
+
+  def self.receipts_group_by(current_user)
+    out = {'pending': 0, 'clearance_pending': 0, 'success': 0, 'refunded': 0}
+    user_ids = User.where(manager_id: current_user.id).pluck(:id)
+    data = Receipt.collection.aggregate([
+      {"$match": {'user_id': {'$in': user_ids }, 'status': {'$in': %w(pending clearance_pending success refunded)}} },
+      { "$group": {
+        "_id":{
+          "status": "$status"
+        },
+        count: {
+          "$sum": 1
+        }
+      }
+    }]).to_a
+    data.each do |d|
+      out[(d['_id']['status']).to_sym] = d['count']
     end
     out
   end

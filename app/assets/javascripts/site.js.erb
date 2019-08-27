@@ -1,0 +1,64 @@
+//= require jquery.bxslider.min
+//= require_self
+
+var aArray = [];
+$(document).ready(function(){
+
+  var wn_width = $(window).width();
+  var wn_height = $(window).height();
+  var wind_height = $('.header').outerHeight();
+
+  $(".project-slider").bxSlider({
+    mode: 'fade',
+    infiniteLoop: true,
+    auto: true,
+    pager: false,
+    controls: true,
+    pause: 14000,
+    speed: 800,
+    infiniteLoop: true,
+    responsive: true,
+    touchEnabled: true,
+    nextText: '>',
+    prevText: '<'
+  });
+
+
+  $('.db-filter-btn').click(function(){
+    if($(this).parents('.box-card').length){
+      $(this).parents('.box-card').find('.filter-box').slideToggle('slow')
+    }
+    else{
+      // for index pages
+      $('.filter-box').slideToggle('slow');
+    }
+  });
+  $('body').on('click', '.f-cancel-btn, .close-filter-btn', function(){
+    if($(this).parents('.box-card').length){
+      $(this).parents('.box-card').find('.filter-box').slideToggle('slow')
+    }
+    else{
+      // for index pages
+      $('.filter-box').slideToggle('slow');
+    }
+  });
+  $(".scroll-sec").click(function () {
+    $(".scroll-sec").removeClass('active');
+    var curnt_id = $(this).attr('rel');
+    $(this).addClass('active');
+    scroll_cost = $('#apartment').outerHeight(true) + 20;
+    scroll_payment = $('#apartment').outerHeight(true) + $('#cost-sheet').height() + 40;
+
+    if(curnt_id == 'apartment'){
+      $('.scroll-fixed-height').animate({ scrollTop: 0 },1000);
+    }
+    if(curnt_id == 'cost-sheet'){
+      $('.scroll-fixed-height').animate({ scrollTop: scroll_cost },1000);
+    }
+    if(curnt_id == 'payment-schedule'){
+      $('.scroll-fixed-height').animate({ scrollTop: scroll_payment },1000);
+    }
+
+  });
+
+});

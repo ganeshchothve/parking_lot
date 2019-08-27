@@ -1,38 +1,45 @@
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-12">
-      <div class="card">
-        <div class="card-body">
-          <h4>Important Marketing & Other Documents</h4><br/>
-          <% labels = t('mongoid.attributes.asset').with_indifferent_access %>
-          <div class="table-responsive">
-            <table class="table">
-              <% if policy([:admin, Client]).asset_create? %>
-                <%= link_to "Upload ", dashboard_documents_path(@user,'remote-state': assetables_path(assetable_type: @assetable.class.model_name.i18n_key.to_s, assetable_id: @assetable.id) ), class: "btn btn-primary " %>
+<section class="mb-5">
+  <div class="container">
+    <div class="row">
+    <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
+      <div class="table-title pt-1 pb-3">
+        <img src="<%= asset_path 'file-kycs-black.svg' %>" alt="user icon"> <h1 class="title"><%= ::Asset.model_name.human(count: @assets.total_entries) %></h1>
+      </div>
+    </div>
+    <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
+      <div class="table-btn-set float-right pb-3">
+        <div class="display-initial" >
+          <% if policy([:admin, Client]).asset_create? %>
+            <%= link_to "Upload ", dashboard_documents_path(@user,'remote-state': assetables_path(assetable_type: @assetable.class.model_name.i18n_key.to_s, assetable_id: @assetable.id) ), class: "nowrap btn db-small-btn light-blue bg-white fn-400 modal-remote-form-link" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+        <div class="box-card relative">
+          <table class='table my-customer-table responsive-tbl'>
+            <thead>
+              <tr class="bg-gradient-cd white">
+                <th><%= t('mongoid.attributes.asset.file_name') %></th>
+                <th><%= t('mongoid.attributes.asset.file_size') %></th>
+                <th class="text-right"><%= t('global.action', count: 2)%></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @assets.each do |asset| %>
+              <tr>
+                <td><%= asset.file_name %></td>
+                <td><%= (asset.file_size.to_f / 1024 / 1024).round(2) %> MB</td>
+                <td class="text-right">
+                  <%= link_to '', asset.file.url, target: "_blank", class: 'white fn-500 icon-set icon-download-black' %>
+                </td>
+              </tr>
               <% end %>
-              <thead>
-                <tr>
-                  <th><%= labels[:file_name] %></th>
-                  <th class="text-right"><%= labels[:file_size] %></th>
-                  <th class="text-right">Download</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% current_client.assets.each do |asset| %>
-                <tr>
-                  <td><%= asset.file_name %></td>
-                  <td class="text-right"><%= (asset.file_size.to_f / 1024 / 1024).round(2) %> MB</td>
-                  <td class="text-right">
-                    <%= link_to "Download", asset.file.url, target: "_blank" %>
-                  </td>
-                </tr>
-                <% end %>
-              </tbody>
-            </table>
-          </div>
+            </tbody>
+          </table>
+          <%= will_paginate @assets, list_classes: %w(pagination justify-content-center) %>
         </div>
       </div>
     </div>
   </div>
-</div>
-
+</section>

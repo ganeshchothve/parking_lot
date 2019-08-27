@@ -2,8 +2,8 @@ class Admin::BookingDetailsController < AdminController
   include BookingDetailConcern
   include SearchConcern
   around_action :apply_policy_scope, only: [:index, :mis_report]
-  before_action :set_booking_detail, except: [:index, :mis_report, :new, :create, :searching_for_towers]
-  before_action :authorize_resource, except: [:index, :mis_report, :new, :create, :searching_for_towers]
+  before_action :set_booking_detail, except: [:index, :mis_report, :new, :create, :searching_for_towers, :status_chart]
+  before_action :authorize_resource, except: [:index, :mis_report, :new, :create, :searching_for_towers, :status_chart]
   before_action :set_project_unit, only: :booking
   before_action :set_receipt, only: :booking
 
@@ -20,7 +20,7 @@ class Admin::BookingDetailsController < AdminController
     @booking_detail = BookingDetail.new(search: @search)
     @project_towers = search_for_towers
     @project_towers.map!{|f| [f[:project_tower_name], f[:project_tower_id]]}
-    authorize [:admin, @booking_detail]
+    # authorize [:admin, @booking_detail]
     render layout: false
   end
 
@@ -116,6 +116,21 @@ class Admin::BookingDetailsController < AdminController
     end
   end
 
+  def doc
+    render layout: false
+  end
+  #
+  # GET /admin/booking_details/status_chart
+  #
+  # This method is used in admin dashboard
+  #
+  def status_chart
+    authorize [:admin, BookingDetail]
+    @data = DashboardData::AdminDataProvider.booking_detail_block(params)
+    @statuses = params[:status] || %w[under_negotiation blocked booked_tentative booked_confirmed]
+    @dataset = get_dataset(@data, @statuses)
+  end
+
   private
 
   def set_booking_detail
@@ -147,6 +162,27 @@ class Admin::BookingDetailsController < AdminController
 
   def booking_detail_for_json
     @booking_details = BookingDetail.build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page]).as_json(methods: [:ds_name])
+  end
+
+  def get_dataset(out, statuses)
+    labels= ProjectTower.distinct(:name)
+    dataset = Array.new
+    statuses.each do |status|
+      d = Array.new
+      labels.each do |l|
+        if out[l.to_sym].present? && out[l.to_sym][status.to_sym].present?
+          d << (out[l.to_sym][status.to_sym])
+        else
+          d << 0
+        end
+      end
+      dataset << { label: t("mongoid.attributes.booking_detail/status.#{status}"),
+                    borderColor: '#ffffff',
+                    borderWidth: 1,
+                    data: d
+                  }
+    end
+    dataset
   end
 
 end

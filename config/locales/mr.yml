@@ -8,76 +8,216 @@ mr:
   date_time:
     formats:
       default: "%d/%m/%Y %I:%M %p"
+  welcome: "%{name} स्वागत आहे"
   global:
-    booking_details: 'बुकिंग'
-    booking_detail: 'बुकिंग'
-    dashboard: 'सारांश'
-    action: 'क्रिया'
-    total: 'एकूण'
-    sign_in_h1: "स्वागत आहे"
-    sign_in_h2: "ऑनलाइन अपार्टमेंट बुक करण्यासाठी लॉग इन करा"
-    register_h1: "नोंदणी करा"
-    register_h2: "आता नोंदणी करा आणि फक्त रु. देऊन एक अपार्टमेंट बुक करा. (केवळ 3 मिनिटे लागतात)"
-    custom: 'स्पेशियल फीचर्स'
-    scheme: 'किंमत पत्रक आणि पेमेंट वेळापत्रक'
-    schemes: 'किंमत पत्रके आणि पेमेंट वेळापत्रक'
-    note: "टीप"
-    notes: "नोट्स"
-    template: 'टेम्पलेट'
-    templates: 'टेम्पलेट्स'
-    assets: 'कागदपत्रे'
-    asset: 'कागदपत्रे'
+    all: "सर्व"
+    action:
+      one: "क्रिया"
+      other: "क्रिया"
+    active_filter: "सक्रिय फिल्टर"
+    added_by: "जोडले"
+    custom: "अधिक"
+    change: "बदल"
+    dashboard: "सारांश"
+    disclaimer: "अस्वीकरण"
+    default_account_name: "डीफॉल्ट खात्याचा विचार केला जाईल"
     gallery: "गॅलरी"
-    client: 'ग्राहक'
-    clients: 'ग्राहक'
-    receipt: 'पेमेंट'
-    receipts: 'पेमेंट'
-    user_request: 'वापरकर्ता विनंती'
-    user_requests: 'वापरकर्ता विनंती'
-    user_request_cancellation: 'रद्दीकरण विनंती'
-    user_request_swap: 'स्वॅप विनंती'
-    receipt_with_status: '%{status} भरणा'
-    receipts_with_status: '%{status} भरणा'
-    user_kyc: 'केवायसी'
-    user_kycs: 'केवायसी'
-    user_kyc_details: 'केवायसी तपशील'
-    users: 'वापरकर्ते आणि ग्राहक'
-    user: 'वापरकर्ता किंवा ग्राहक'
-    customers: 'ग्राहक'
-    customer: 'ग्राहक'
-    project_unit: 'अपार्टमेंट'
-    project_units: 'अपार्टमेंट'
-    project_unit_with_status: '%{status} अपार्टमेंट'
-    project_units_with_status: '%{status} अपार्टमेंट'
-    channel_partner: 'चॅनेल पार्टनर नोंदणी'
-    channel_partners: 'चॅनेल पार्टनर'
-    search: "फिल्टर"
-    searches: "फिल्टर"
+    i_agree: "मी सहमत आहे"
+    i_agree_be_half_of: "मी %{name} च्या वतीने सहमत आहे"
+    previous: "मागील"
+    next: "पुढे"
+    not_sync_yet: "संकालित केलेले नाही"
+    not_generated: "व्युत्पन्न नाही"
     otp: "OTP"
-    schemes: "योजना"
-    scheme: "योजना"
-    audit: "ऑडिट लॉग"
-    referral: 'रेफरल'
-    referrals: 'रेफरल'
-    accounts: "खाती"
-    account: "खाती"
-    phase: 'टप्पा'
-    phases: 'टप्पा'
+    overview: "आढावा"
+    register_h1: "नोंदणी करा"
+    register_h2: "आता नोंदणी करा आणि फक्त रु. देऊन एक सदनिका  बुक करा. (केवळ 3 मिनिटे लागतात)"
+    sign_in_h1: "स्वागत आहे"
+    sign_in_h2: "ऑनलाइन सदनिका बुक करण्यासाठी लॉग इन करा"
+    total: "एकूण"
+
+  helpers:
+    show:
+      link_name: '%{model}'
+    select:
+      prompt: 'कृपया निवडा'
+    submit:
+      create: '%{model} तयार करा'
+      update: '%{model} अद्यतनित करा'
+      submit: "%{model} जतन करा"
+      post:
+        create: Upload %{model}
+
   language:
     en: 'English'
     mr: 'मराठी'
+
   mongoid:
-    attributes:
-      portal_stage_priority:
-        stage_name: 'स्टेज'
-        priority_name: 'प्राधान्य'
+    models:
       asset:
+        zero: 'कागदपत्रे'
+        one: 'कागदपत्रे'
+        other: 'कागदपत्रे'
+      address:
+        zero: 'पत्ता'
+        one: 'पत्ता'
+        other: 'पत्ते'
+      account:
+        zero: 'खाते'
+        one: 'खाते'
+        other: 'खाती'
+      bank_detail:
+        zero: 'बँक'
+        one: 'बँक'
+        other: 'बँक'
+      booking_detail:
+        one: 'बुकिंग'
+        other: 'बुकिंग'
+      client:
+        one: 'ग्राहक'
+        other: 'ग्राहक'
+      cost:
+        one: 'किंमत'
+        other: 'किंमत'
+      channel_partner:
+        one: "चॅनेल पार्टनर"
+        other: "चॅनेल पार्टनर"
+      data_attribute:
+        one: 'डेटा'
+        other: 'डेटा'
+      email:
+        one: 'ईमेल'
+        other: 'ईमेल'
+      erp_model:
+        one: 'एकत्रीकरण'
+        other: 'एकत्रीकरण'
+      note:
+        one: 'टीप'
+        other: 'टीप'
+      portal_stage_priority:
+        one: 'पोर्टल स्टेज'
+        other: 'पोर्टल स्टेज'
+      project_tower:
+        one: 'टॉवर'
+        other: 'टॉवर्स'
+      project_unit:
+        one: 'सदनिका '
+        other: 'सदनिका'
+      project:
+        one: 'प्रकल्प'
+        count: 'प्रकल्प'
+      receipt:
+        one: 'पेमेंट'
+        other: 'पेमेंट'
+      search:
+        one: 'शोधा'
+        other: 'शोध'
+      scheme:
+        one: 'योजना आणि सवलत'
+        other: 'योजना आणि सवलती'
+      sms:
+        one: SMS
+        other: SMSs
+      sync_log:
+        one: 'समक्रमित'
+        other: 'समक्रमित'
+      template:
+        one: 'टेम्पलेट'
+        other: 'टेम्पलेट्स'
+      user_request:
+        one: 'ग्राहक विनंती'
+        other: 'ग्राहक विनंत्या'
+      user_request/cancellation:
+        one: 'रद्द करणे'
+        other: 'रद्दबातल'
+      user_request/swap:
+        one: 'अदला बदल'
+        other: 'अदला बदल'
+      user_kyc:
+        one: KYC
+        other: KYCs
+      user:
+        one: 'वापरकर्ता आणि ग्राहक'
+        other: 'वापरकर्ते आणि ग्राहक'
+
+    attributes:
+      asset:
+        assetable_id: 'मालमत्ता आयडी'
+        assetable_type: 'प्रकार'
+        file: 'फाईल'
         file_size: 'आकार'
         file_name: 'नाव'
         asset_type: 'टाइप'
-      template:
+      address:
+        address1: 'पत्ता'
+        address2: 'रस्ता'
+        city: 'शहर'
+        country: 'देश'
+        state: 'राज्य / प्रदेश'
+        zip: 'झिप / पिन कोड'
+
+      account:
+        account_number: 'खाते क्रमांक'
+        access_code: 'प्रवेश कोड'
+        by_default: 'डीफॉल्ट'
+        key: 'की'
+        merchant_id: 'व्यापारी आयडी'
         name: 'नाव'
-        content: 'कन्टेन्ट'
+        secret: 'गुप्त'
+        working_key: 'वर्किंग की'
+      account/by_default:
+        :true: 'होय'
+        :false: 'नाही'
+
+      portal_stage_priority:
+        stage_name: 'स्टेज'
+        priority_name: 'प्राधान्य'
+
+      bank_detail:
+        name: "बँकेचे नाव"
+        account_holder_name: "खातेधारकाचे नाव"
+        branch: 'शाखा'
+        account_type: 'खाते प्रकार'
+        ifsc_code: 'आयएफएससी कोड'
+        account_number: 'खाते क्रमांक'
+        loan_required: 'कर्ज पाहिजे आहे का?'
+      booking_detail:
+        name: 'नाव'
+        status: 'स्थिती'
+        project_tower: 'टॉवर'
+        user: 'ग्राहक'
+        bathrooms: 'स्नानगृह'
+        bedrooms: 'शयनगृहे '
+        manager: 'व्यवस्थापक'
+        paid_amount: 'देय रक्कम'
+        booking_pending_amount: 'बुकिंगची  प्रलंबित रक्कम'
+        last_sync_status: 'अंतिम समक्रमण स्थिती'
+        comments: 'टिप्पण्या'
+        carpet: 'चटई क्षेत्र'
+        agreement_price: 'कराराची किंमत'
+        all_inclusive_price: 'सर्व समावेशक किंमत'
+      booking_detail/status:
+        available: 'उपलब्ध'
+        not_available: 'उपलब्ध नाही'
+        error: 'एरर आलेले'
+        hold: 'धरून ठेवलेले'
+        blocked: 'ब्लॉक केलेले'
+        booked_tentative: 'टेंटेटिव्ह बुक केलेले'
+        booked_confirmed: 'कन्फर्म बुक केलेले'
+        under_negotiation: 'नेगोशिएशन मध्ये असलेले'
+        scheme_approved: 'योजना मंजूर केलेले'
+        scheme_rejected: 'योजना मंजूर न केलेले'
+        swap_requested: 'स्वॅप विनंती केलेले'
+        swapping: 'स्वॅपिंग मध्ये असलेले'
+        swapped: 'स्वॅप झालेले'
+        swap_rejected: 'स्वॅप नाकारला'
+        cancellation_requested: 'रद्दीकरण विनंती केली'
+        cancelling: 'रद्द करीत आहे'
+        cancelled: 'रद्द केले'
+        cancellation_rejected: 'रद्द करणे नाकारले'
+        management: व्यवस्थापन ब्लॉक केलेले सदनिका '
+        employee: 'एम्प्लॉईने ब्लॉक केलेले'
+
       client:
         name: 'ग्राहक नाव (अनुप्रयोगामध्ये वापरलेले)'
         allowed_bookings_per_user: 'बुकिंग प्रति वापरकर्ता परवानगी'
@@ -116,29 +256,128 @@ mr:
         sms_mask: 'एसएमएस मास्क'
         enable_actual_inventory: 'या वापरकर्त्यांच्या भूमिकांसाठी Inventory सक्षम करा'
         enable_channel_partners: 'चॅनेल पार्टनर सक्षम करा'
-        blocking_amount: 'किमान एक अपार्टमेंट बुकिंगसाठी रक्कम'
-        blocking_days: '(दिवस) साठी अपार्टमेंट अवरोधित करणे'
-        holding_minutes: 'अपार्टमेंट (मिनिटे) साठी आयोजित करणे'
+        blocking_amount: 'किमान एक सदनिका  बुकिंगसाठी रक्कम'
+        blocking_days: '(दिवस) साठी सदनिका  अवरोधित करणे'
+        holding_minutes: 'सदनिका  (मिनिटे) साठी आयोजित करणे'
         enable_company_users: 'कंपनी वापरकर्त्यांना आणि फायद्यांना परवानगी द्या'
-      search:
-        bedrooms: "बेडरूम"
-        agreement_price: "करार मूल्य"
-        all_inclusive_price: 'सर्व समावेशी किंमत'
-        carpet: "कार्पेट क्षेत्र"
-        project_tower_id: "टॉवर"
-        project_unit_id: "अपार्टमेंट"
-      user_request:
-        request_type: 'विनंती प्रकार'
-        _type: 'विनंती प्रकार'
-        user_id: 'ग्राहक'
-        comments: 'तक्रार / विनंती'
+      client/payment_gateways:
+        Razorpay: "Razorpay प्रदानाची द्वारमार्गिका"
+        CCAvenue: "CCAvenue प्रदानाची द्वारमार्गिका"
+
+      cost:
+        name: "नाव"
+        formula: "फॉर्मुला"
+        absolute_value: "संपूर्ण मूल्य"
+        category: "कॅटेगरी"
+        order: "ऑर्डर"
+
+      channel_partner:
+        name: 'नाव'
+        company_name: "कंपनीचे नाव"
+        address: "पत्ता"
+        bank_detail: "बँक तपशील"
+        email: 'ईमेल'
+        phone: 'फोन'
+        rera_id: 'रेरा नोंदणी क्रमांक'
+        city: 'शहर'
+        associated_user_id: 'संबंधित वापरकर्ता'
         status: 'स्थिती'
-        project_unit_id: 'संबंधित अपार्टमेंट'
-        receipt_id: 'संबंधित पेमेंट'
-        created_at: 'तयार केलेली वेळ'
-        resolved_at: 'प्रक्रिया केलेले वेळ'
+        gstin_number: "जीएसटीआयएन नंबर"
+        pan_number: "पॅन क्रमांक"
+        aadhaar: "आधार क्रमांक"
+        name_email_phone: 'नाव / ईमेल / फोन'
+      channel_partner/status:
+        active: 'सक्रिय'
+        inactive: 'निष्क्रिय'
+
+      data_attribute:
+        name: "नाव"
+        formula: "फॉर्मुला"
+        absolute_value: "संपूर्ण मूल्य"
+        order: "ऑर्डर"
+
+      email:
+        to: 'टू'
+        cc: 'सीसी'
+        sent_on: 'पाठविले'
+        subject: 'विषय'
+        body: 'मायना '
+        status: 'स्थिती'
+      email/status:
+        draft: 'ड्रॅफ्ट'
+        scheduled: 'अनुसूचित'
+        queued: 'रांगेत'
+        sent: 'पाठविले'
+        delivered: 'वितरित'
+        read: 'वाचलेले '
+        unread: 'न वाचलेले'
+        clicked: 'क्लिक केलेले'
+        bounced: 'बाऊंस झालेले'
+        dropped: 'ड्रॉप झालेले'
+        spam: 'स्पॅम मध्ये गेलेले'
+        complained: 'तक्रार केलेले'
+        unsubscribed: 'सदस्यता रद्द केलेले'
+        untracked: 'ट्रॅक नाही'
+
+      erp_model/status:
+        active: 'सक्रिय'
+        inactive: 'निष्क्रिय'
+      erp_models/resource_class:
+        User: 'वापरकर्ते आणि ग्राहक'
+        UserKyc: 'KYC'
+        Receipt: 'देयके'
+        BookingDetail: 'बुकिंग'
+        ChannelPartner: 'चॅनेल भागीदार'
+      erp_model/request_type:
+        json: 'JSON'
+      erp_model/http_verb:
+        get: 'GET'
+        post: 'POST'
+        put: 'PUT'
+        patch: 'PATCH'
+      erp_model/action_name:
+        create: 'तयार'
+        update: 'अद्यतनित'
+
       note:
         note: 'टीप'
+
+      portal_stage_priority:
+        stage_name: 'स्टेज'
+        priority_name: 'प्राधान्य'
+      portal_stage_priority/portal_stages:
+        project_info: 'प्रकल्प माहिती'
+
+      project_tower:
+        name: 'नाव'
+      project_unit:
+        costs: "खर्च"
+        data: "डेटा"
+        bedrooms: "बेडरूम"
+        bathrooms: "बाथरुम"
+        status: "स्थिती"
+        user_id: "ग्राहक"
+        receipt_ids: "देयक (या सदनिकाशी संबंधित)"
+        user_request_ids: "वापरकर्ता विनंत्या (या सदनिकाशी संबंधित)"
+        user_kyc_ids: "सह-अर्जदार (या सदनिकाशी संबंधित केवायसी)"
+        primary_user_kyc_id: "प्राथमिक वापरकर्ता केवायसी"
+        name: 'नाव'
+        project_tower_name: 'प्रकल्प टॉवर'
+        project_name: 'प्रकल्प'
+        blocked_on: 'अवरोधित तारीख'
+        unit_facing_direction: 'दिशानिर्देश'
+        agreement_price: 'करार मूल्य'
+        all_inclusive_price: 'सर्व समावेशी किंमत'
+      project_unit/status:
+        hold: 'होल्ड'
+        available: 'उपलब्ध'
+        not_available: 'उपलब्ध नाही'
+        blocked: 'ब्लॉक केलेले'
+        error: 'एरर आलेले'
+
+      projects:
+        name: 'नाव'
+
       receipt:
         tracking_id: 'व्यवहार आयडी (प्रक्रिया केलेले पेमेंट)'
         comments: 'टिप्पण्या'
@@ -153,12 +392,100 @@ mr:
         status: "पैसे भरल्याची स्थिती"
         user: "ग्राहक"
         user_id: "ग्राहक"
-        project_unit_id: "अपार्टमेंट"
+        project_unit_id: "सदनिका "
         creator_id: "ने निर्मित"
         created_at: "रोजी तयार केले"
-        payment_type_agreement: 'करार'
-        payment_type_stamp_duty: 'मुद्रांक शुल्क आणि नोंदणी'
         token_number: 'टोकन क्रमांक'
+      receipt/status:
+        pending: 'प्रलंबित'
+        clearance_pending: 'क्लीअरान्स प्रलंबित'
+        failed: 'अयशस्वी'
+        success: 'यशस्वी'
+        available_for_refund: 'परताव्यासाठी उपलब्ध'
+        refunded: 'परतावा'
+        cancelled: 'रद्द केले'
+      receipt/payment_mode:
+        online: 'ऑनलाइन'
+        cheque: 'चेक'
+        rtgs: 'आरटीजीएस'
+        imps: 'आयएमपीएस'
+        card_swipe: 'कार्ड स्वाइप'
+        neft: 'नेफ्ट'
+      receipt/payment_types:
+        agreement: 'करार'
+        stamp_duty:  'मुद्रांक शुल्क आणि नोंदणी'
+
+      search:
+        bedrooms: "बेडरूम"
+        agreement_price: "करार मूल्य"
+        all_inclusive_price: 'सर्व समावेशी किंमत'
+        carpet: "कार्पेट क्षेत्र"
+        project_tower_id: "टॉवर"
+        project_unit_id: "सदनिका"
+
+      scheme:
+        name: 'नाव'
+        project_id: 'प्रकल्प'
+        project_tower_id: 'प्रकल्प टॉवर'
+        project_unit_id: 'सदनिका'
+        user_id: 'वापरकर्ता'
+        user_role: 'वापरकर्ता भूमिका'
+        value: 'समायोजन (रु.)'
+        status: 'स्थिती'
+        approved_at: 'मंजूर तारीख'
+        approved_by: 'च्याकडून मंजूर'
+        created_by: 'ने निर्मित'
+        default_for_users: 'डिफॉल्ट फॉर चॅनेल पार्टनर्स'
+      scheme/status:
+        draft: 'मसुदा'
+        approved: 'मंजूर'
+        disabled: 'कालबाह्य'
+
+      sms:
+        to: 'टू'
+        cc: 'सीसी'
+        sent_on: 'पाठविले'
+        subject: 'विषय'
+        body: 'मायना '
+        status: 'स्थिती'
+      sms/status:
+        status:
+        received: 'मिळालेले'
+        untracked: 'ट्रॅक नाही'
+        scheduled: 'अनुसूचित'
+        sent: 'पाठविले'
+        failed: 'अयशस्वी'
+
+      sync_log:
+        last_sync_at: 'अंतिम संकालित'
+        last_sync_on: 'अंतिम संकालित केलेले'
+        last_sync_status: 'अंतिम संकालित स्थिती'
+      template:
+        name: 'नाव'
+        content: 'कन्टेन्ट'
+        type: प्रकार
+
+      user_request:
+        request_type: 'विनंती प्रकार'
+        _type: 'विनंती प्रकार'
+        user_id: 'ग्राहक'
+        comments: 'तक्रार / विनंती'
+        status: 'स्थिती'
+        project_unit_id: 'संबंधित सदनिका'
+        receipt_id: 'संबंधित पेमेंट'
+        created_at: 'तयार केलेली वेळ'
+        resolved_at: 'प्रक्रिया केलेले वेळ'
+        name_email_phone: 'नाव / ईमेल / फोन'
+      user_request/status:
+        pending: 'प्रलंबित'
+        processing: 'प्रक्रिया'
+        resolved: 'निराकरण'
+        rejected: 'नाकारले'
+        failed: 'अयशस्वी'
+      user_request/requestable_type:
+        Receipt: 'पावती'
+        BookingDetail: 'बुकिंग'
+
       user_kyc:
         name: "नाव"
         email: "ईमेल"
@@ -177,7 +504,7 @@ mr:
         comments: "कृपया आमच्या कार्यसंघासाठी कोणत्याही विशिष्ट नोट्सचा उल्लेख करा"
         user_id: "ग्राहक"
         creator: "ने निर्मित"
-        project_units: "अपार्टमेंट"
+        project_units: "सदनिका"
         son_daughter_of: 'मुलगा / मुलगी'
         education_qualification: 'शैक्षणिक पात्रता'
         designation: 'पदनाम'
@@ -192,7 +519,7 @@ mr:
         aadhaar: 'आधार क्रमांक'
         oci: 'ओ.सी.आय.'
         gstn: 'जीएसटीएन'
-        is_company: 'आपण एक अपार्टमेंट खरेदी करणारा कॉर्पोरेट आहात?'
+        is_company: 'आपण एक सदनिका खरेदी करणारा कॉर्पोरेट आहात?'
         anniversary: 'अनिव्हर्सरी'
         poa_details: 'पॉवर ऑफ ऍटर्नी तपशील'
         loan_required: 'तुला कर्जाची गरज आहे का?'
@@ -206,48 +533,7 @@ mr:
         min_budget: 'किमान बजेट (रु.)'
         max_budget: 'कमाल बजेट (रु.)'
         budget: 'बजेट (रु.)'
-      project_unit:
-        costs: "खर्च"
-        data: "डेटा"
-        bedrooms: "बेडरूम"
-        bathrooms: "बाथरुम"
-        status: "स्थिती"
-        user_id: "ग्राहक"
-        receipt_ids: "देयक (या अपार्टमेंटशी संबंधित)"
-        user_request_ids: "वापरकर्ता विनंत्या (या अपार्टमेंटशी संबंधित)"
-        user_kyc_ids: "सह-अर्जदार (या अपार्टमेंटशी संबंधित केवायसी)"
-        primary_user_kyc_id: "प्राथमिक वापरकर्ता केवायसी"
-        name: 'नाव'
-        project_tower_name: 'प्रकल्प टॉवर'
-        project_name: 'प्रकल्प'
-        blocked_on: 'अवरोधित तारीख'
-        unit_facing_direction: 'दिशानिर्देश'
-        agreement_price: 'करार मूल्य'
-        all_inclusive_price: 'सर्व समावेशी किंमत'
-      cost:
-        name: "नाव"
-        formula: "फॉर्मुला"
-        absolute_value: "संपूर्ण मूल्य"
-        category: "कॅटेगरी"
-        order: "ऑर्डर"
-      data_attribute:
-        name: "नाव"
-        formula: "फॉर्मुला"
-        absolute_value: "संपूर्ण मूल्य"
-        order: "ऑर्डर"
-      scheme:
-        name: 'नाव'
-        project_id: 'प्रकल्प'
-        project_tower_id: 'प्रकल्प टॉवर'
-        project_unit_id: 'अपार्टमेंट'
-        user_id: 'वापरकर्ता'
-        user_role: 'वापरकर्ता भूमिका'
-        value: 'समायोजन (रु.)'
-        status: 'स्थिती'
-        approved_at: 'मंजूर तारीख'
-        approved_by: 'च्याकडून मंजूर'
-        created_by: 'ने निर्मित'
-        default_for_users: 'डिफॉल्ट फॉर चॅनेल पार्टनर्स'
+
       user:
         created_at: "नोंदणीकृत तारीख"
         login_otp: 'पडताळणी / लॉगिन ओटीपी'
@@ -271,100 +557,276 @@ mr:
         total_unattached_balance: "एकूण संलग्न न केलेले (क्लिअरन्स अधीन)"
         is_active: 'वापरकर्त्यास लॉगिन करण्याची परवानगी द्यायची?'
         utm_params: 'यूटीएम ट्रॅकिंग'
-      channel_partner:
-        name: 'नाव'
-        company_name: "कंपनीचे नाव"
-        address: "पत्ता"
-        bank_detail: "बँक तपशील"
-        email: 'ईमेल'
-        phone: 'फोन'
-        rera_id: 'रेरा नोंदणी क्रमांक'
-        city: 'शहर'
-        associated_user_id: 'संबंधित वापरकर्ता'
-        status: 'स्थिती'
-        gstin_number: "जीएसटीआयएन नंबर"
-        pan_number: "पॅन क्रमांक"
-        aadhaar: "आधार क्रमांक"
-      bank_detail:
-        name: "बँकेचे नाव"
-        account_holder_name: "खातेधारकाचे नाव"
-        branch: 'शाखा'
-        account_type: 'खाते प्रकार'
-        ifsc_code: 'आयएफएससी कोड'
-        account_number: 'खाते क्रमांक'
-        loan_required: 'कर्ज पाहिजे आहे का?'
-      address:
-        address1: 'पत्ता'
-        address2: 'रस्ता'
-        city: 'शहर'
-        state: 'राज्य / प्रदेश'
-        country: 'देश'
-        zip: 'झिप / पिन कोड'
+      user/confirmed:
+        :true: 'पुष्टी केली'
+        :false: 'पुष्टी नाही'
+      user/role:
+        superadmin: 'सुपर ऍडमिन'
+        admin: 'प्रशासक'
+        crm: 'सीआरएम वापरकर्ता'
+        sales_admin: 'विक्री प्रमुख'
+        sales: 'विक्री वापरकर्ता'
+        user: 'ग्राहक'
+        gre: 'जीआरई किंवा प्री-सेल्स'
+        cp_admin: 'चॅनल पार्टनर हेड'
+        cp: 'चॅनेल पार्टनर व्यवस्थापक'
+        channel_partner: 'चॅनेल पार्टनर'
+        management_user: 'व्यवस्थापन वापरकर्ता'
+        employee_user: 'कर्मचारी'
+
+
   controller:
+    assets:
+      index:
+        link_name: 'कागदपत्रे'
     application:
       set_current_client: 'साइट देखरेखीखाली आहे. कृपया आपल्या प्रशासकाशी संपर्क साधा.'
       invalid: 'अवैध'
+    accounts:
+      by_default:
+        hint: 'सिस्टमला फक्त एकच डीफॉल्ट खाते आवश्यक आहे, ज्यात प्रत्येक युनिटचे प्रथम देय आहे.'
+      destroy:
+        link_name: 'काढा'
+      edit:
+        button: 'अद्यतनित करा'
+        header: 'खाते संपादित करा'
+        link_name: 'खाते संपादित करा'
+      index:
+        link_name: 'खाती'
+
+      new:
+        button: 'Save'
+        header: 'New Account'
+        link_name: 'New Account'
+    audits:
+      index:
+        link_name: 'इतिहास'
+
     booking_detail_schemes:
+      index:
+        link_name: 'बुकिंग योजना'
+      new:
+        link_name: 'योजना आणि सवलती'
+      edit:
+        link_name: 'अद्यतन योजना आणि सवलती '
       scheme_approved: 'योजना यशस्वीरित्या लागू झाली, कृपया किंमत पत्रक तपासा.'
       scheme_under_negotiation: 'योजना यशस्वीरित्या नोंदणीकृत आणि मंजूरीसाठी पाठविली.'
-    project_units:
-      quotation:
-        pdf_footer: 'किंमत पत्रकात उल्लेख असावा की हा एक उद्धरण आहे जेणेकरून विक्रीनंतर बनविलेल्या किंमती पत्रकात त्याची गोंधळ होणार नाही'
-      unit_released: "अपार्टमेंट यशस्वीरित्या सोडले गेले आहे."
     booking_details:
+      index:
+        link_name: 'बुकिंग'
+      new:
+        link_name: 'बुकिंग करा '
+      edit:
+        link_name: 'बुकिंग अद्यतनित करा'
+      show:
+        link_name: 'तपशील पहा'
+      exports:
+        link_name: '%{name} निर्यात'
+      release_unit:
+        link_name: 'रीलिझ युनिट'
+      continue_booking:
+        link_name: 'आधीच धारण केलेले युनिट वापरुन चेकआउट'
+      cost_sheet:
+        link_name: 'किंमत पत्रक'
+      payment_schedule:
+        link_name: 'देय वेळापत्रक'
       set_booking_detail_missing: "बुकिंग तपशील सापडला नाही"
-      set_project_unit_missing: "अपार्टमेंट सापडला नाही"
+      set_project_unit_missing: "सदनिका सापडला नाही"
       booking_successful: "आपण यशस्वीरित्या बुकिंग पूर्ण केली."
       booking_unsuccessful: "आपले बुकिंग अयशस्वी झाले. कृपया बुक करण्यासाठी प्रशासकाशी संपर्क साधा."
       set_receipt_missing: 'नवीन पेमेंट करा'
+
+    clients:
+      new:
+        link_name: 'ग्राहक जोडा'
+      edit:
+        link_name: 'ग्राहक संपादित करा'
+      show:
+        link_name: 'ग्राहक तपशील'
+    channel_partners:
+      index:
+        link_name: 'चॅनेल भागीदार'
+
+    dashboard:
+      index:
+        link_name: 'डॅशबोर्ड'
+
+    emails:
+      index:
+        link_name: 'ईमेल'
+    erp_models:
+      index:
+        link_name: 'एकत्रीकरण'
+
+    inventory:
+      index:
+        link_name: 'इन्व्हेंटोरी '
+
     only_administrator_users: 'फक्त प्रशासकीय वापरकर्त्यांना परवानगी आहे.'
     only_buyer_users: 'फक्त खरेदीदार वापरकर्त्यांना परवानगी आहे.'
+
+    notes:
+      new:
+        link_name: 'नोंदी जोडा'
+
+    project_units:
+      index:
+        link_name: 'सदनिका'
+      show:
+        link_name: 'तपशील'
+      edit:
+        link_name: 'संपादित करा'
+      exports:
+        link_name: "%{type} निर्यात"
+      quotation:
+        pdf_footer: 'किंमत पत्रकात उल्लेख असावा की हा एक उद्धरण आहे जेणेकरून विक्रीनंतर बनविलेल्या किंमती पत्रकात त्याची गोंधळ होणार नाही'
+      unit_released: "सदनिका यशस्वीरित्या सोडले गेले आहे."
+    phases:
+      index:
+        link_name: 'टप्पा'
+      new:
+        link_name: 'नवीन टप्पा'
+    portal_stage_priorities:
+      index:
+        link_name: 'पोर्टल टप्पे'
+
     receipts:
       account_missing: 'आमच्याकडे व्यवहारासाठी कोणतेही खाते तपशील नाही. प्रशासकांना जोडण्यासाठी विचारा.'
+      edit:
+        link_name: 'देय अद्यतनित करा'
+      edit_token_number:
+        link_name: 'टोकन बदला'
+      exports:
+        link_name: '%{name} निर्यात'
+
+      index:
+        link_name: 'देयके'
+      lost_receipt:
+        header: 'गमावलेली भरणा जोडा'
+        link_name: देय गमावले
+      new:
+        link_name: 'देय रक्कम'
+      print:
+        link_name: 'प्रिंट'
+      resend_success:
+        link_name: 'पावती पुन्हा पाठवा'
+      resend_email:
+        link_name: 'ईमेल पाठवा'
+        success: 'ईमेल पुन्हा पाठविला गेला आहे.'
+      show:
+        link_name: 'देय तपशील'
+
+    referrals:
+      index:
+        link_name: 'संदर्भ'
+
     searches:
-      project_unit_missing: 'अपार्टमेंट निवड सापडली नाही'
-      check_project_unit_hold_status: "आम्ही %{holding minutes} मिनिटांसाठी ठेवलेला अपार्टमेंट सोडला आहे. कृपया अपार्टमेंट पुन्हा निवडा आणि पुन्हा बुकिंग करण्याचा प्रयत्न करा."
+      filter:
+        header: 'टॉवर निवडा'
+        hint: 'आपल्या गरजेनुसार टॉवर्स निवडा'
+        error: "आम्हाला आपल्या निवडीसाठी टॉवर्स सापडले नाहीत, आपण आपला शोध बदलू इच्छिता?"
+        again: 'पुन्हा शोधा'
+      towers:
+        header: 'सदनिका  निवडा'
+        hint: 'आपल्या गरजेनुसार सदनिका निवडा'
+      project_unit:
+        header: 'आपले केवायसी सेट अप करा'
+        hint: 'आपले केवायसी सेट अप करा आणि आपले सदनिका धरा'
+      new:
+        header: 'निवड '
+        link_name: 'सदनिका निवडा आणि बुकिंग जोडा'
+        booking_hint: 'आपण %{name}साठी बुकिंग घेत आहात'
+        hint: "आपण शोधत असलेली मालमत्ता"
+
+      project_unit_missing: 'सदनिका निवड सापडली नाही'
+      check_project_unit_hold_status: "आम्ही %{holding minutes} मिनिटांसाठी ठेवलेला सदनिका सोडला आहे. कृपया सदनिका पुन्हा निवडा आणि पुन्हा बुकिंग करण्याचा प्रयत्न करा."
       checkout:
         non_hold_booking: 'बुकिंग अद्याप निवडलेले नाही.'
-        pending_payments: "आम्ही या अपार्टमेंटसाठी एका ग्राहकाकडून आधीपासूनच पैसे जमा केले आहे."
+        pending_payments: "आम्ही या सदनिकााठी एका ग्राहकाकडून आधीपासूनच पैसे जमा केले आहे."
       hold:
         booking_detail_error: 'आम्ही यावेळी आपल्या विनंतीवर प्रक्रिया करू शकत नाही. कृपया पुन्हा प्रयत्न करा'
         scheme_for_channel_partner_not_found: 'चॅनेल पार्टनरसाठी कोणतीही योजना सापडली नाही'
         success: 'आपले बुकिंग होल्ड आहे. कृपया योजना निवडा आणि देय द्या.'
       gateway_payment:
         receipt_missing: 'प्रलंबित स्थितीत विनंती पावती सापडली नाही'
+    smses:
+      index:
+        link_name: SMSs
+    schemes:
+      index:
+        link_name: 'योजना'
+      edit:
+        link_name: 'संपादित करा'
+      new:
+        link_name: 'योजना आणि सवलत'
+    sync_logs:
+      index:
+        link_name: 'लॉग समक्रमित करा'
+      new:
+        link_name: 'समक्रमित करा'
+
+    templates:
+      index:
+        link_name: 'टेम्पलेट्स'
+      show:
+        link_name: 'टेम्पलेट तपशील'
+
     users:
       account_confirmed: 'खाते पुष्टी केली'
       cannot_confirm_user: 'वापरकर्त्याची पुष्टी करू शकत नाही'
+      confirm_user:
+        link_name: 'वापरकर्त्याची पुष्टी करा'
+      change_password:
+        link_name: 'संकेतशब्द बदला'
+      confirm_via_otp:
+        link_name: 'OTPद्वारे पुष्टी करा'
+      exports:
+        link_name: '%{name} निर्यात'
+      edit:
+        link_name: "तपशील संपादित करा"
+      index:
+        link_name: 'वापरकर्ते आणि ग्राहक'
+      new:
+        link_name: '%{role} जोडा'
+      profile:
+        link_name: "%{role} प्रोफाइल"
+      print:
+        link_name: 'प्रिंट'
+      resend_confirmation_instructions:
+        link_name: 'पुष्टी पुन्हा पाठवा'
+      resend_password_instructions:
+        link_name: "संकेतशब्द सूचना पुन्हा पाठवा"
+      show:
+        link_name: 'तपशील पहा'
+    user_kycs:
+      index:
+        link_name: 'KYCs'
+      new:
+        link_name: 'KYC जोडा'
+    user_requests:
+      index:
+        link_name: 'ग्राहक विनंत्या'
+      swap:
+        index:
+          link_name: 'अदला बदल विनंत्या'
+        new:
+          link_name: 'अदला बदल'
+        edit:
+          link_name: 'अदला बदल अद्यतनित'
+      cancellation:
+        index:
+          link_name: 'रद्दबातल विनंत्या'
+        new:
+          link_name: 'रद्द करणे'
+        edit:
+          link_name: 'अद्यतन रद्द करा'
 
-  accounts:
-    link_name: 'खाते'
+  asset:
+    image:
+      not_found: 'कोणतीही प्रतिमा आढळली नाही'
 
-  audits:
-    link_name: 'मागील माहिती'
-
-  booking_details:
-    status:
-       available: 'उपलब्ध'
-       not_available: 'उपलब्ध नाही'
-       error: 'एरर आलेले'
-       hold: 'धरून ठेवलेले'
-       blocked: 'ब्लॉक केलेले'
-       booked_tentative: 'टेंटेटिव्ह बुक केलेले'
-       booked_confirmed: 'कन्फर्म बुक केलेले'
-       under_negotiation: 'नेगोशिएशन मध्ये असलेले'
-       scheme_approved: 'योजना मंजूर केलेले'
-       scheme_rejected: 'योजना मंजूर न केलेले'
-       swap_requested: 'स्वॅप विनंती केलेले'
-       swapping: 'स्वॅपिंग मध्ये असलेले'
-       swapped: 'स्वॅप झालेले'
-       swap_rejected: 'स्वॅप नाकारला'
-       cancellation_requested: 'रद्दीकरण विनंती केली'
-       cancelling: 'रद्द करीत आहे'
-       cancelled: 'रद्द केले'
-       cancellation_rejected: 'रद्द करणे नाकारले'
-       management: व्यवस्थापन ब्लॉक केलेले अपार्टमेंट'
-       employee: 'एम्प्लॉईने ब्लॉक केलेले'
+  booking_detail_schemes:
+    rejected_scheme: 'या बुकिंगची योजना नाकारली आहे. कृपया प्रशासकाशी संपर्क साधा.'
 
   datetime:
     distance_in_words:
@@ -375,137 +837,28 @@ mr:
         one: 'जवळजवळ वर्ष'
         other: '%{count} वर्ष'
 
-  emails:
-    link_name: 'ईमेल'
-    status:
-      draft: 'ड्रॅफ्ट'
-      scheduled: 'अनुसूचित'
-      queued: 'रांगेत'
-      sent: 'पाठविले'
-      delivered: 'वितरित'
-      read: 'वाचलेले '
-      unread: 'न वाचलेले'
-      clicked: 'क्लिक केलेले'
-      bounced: 'बाऊंस झालेले'
-      dropped: 'ड्रॉप झालेले'
-      spam: 'स्पॅम मध्ये गेलेले'
-      complained: 'तक्रार केलेले'
-      unsubscribed: 'सदस्यता रद्द केलेले'
-      untracked: 'ट्रॅक नाही'
-
-  erp_models:
-    link_name: 'त्रयस्थ एकत्रीकरण'
-    resource_class:
-      User: 'वापरकर्ता'
-      UserKyc: 'केवायसी'
-      Receipt: 'देयक'
-      BookingDetail: 'बुकिंग'
-      ChannelPartner: 'चॅनेल पार्टनर'
-    request_type:
-      json: 'JSON'
-    http_verb:
-      get: 'GET'
-      post: 'POST'
-      put: 'PUT'
-      patch: 'PATCH'
-    action_name:
-      create: 'क्रीएट'
-      update: 'अपडेट'
-
-  inventory:
-    link_name: 'इन्व्हेन्टरी'
-
-  phases:
-    link_name: 'टप्पा'
-
-  portal_stage_priorities:
-    link_name: 'विनियोग टप्पा सूची'
-
-  project_units:
-    status:
-      hold: 'होल्ड'
-      available: 'उपलब्ध'
-      not_available: 'उपलब्ध नाही'
-      blocked: 'ब्लॉक केलेले'
-      error: 'एरर आलेले'
-
-  receipts:
-    status:
-      pending: 'प्रलंबित'
-      clearance_pending: 'क्लीअरान्स प्रलंबित'
-      failed: 'अयशस्वी'
-      success: 'यशस्वी'
-      available_for_refund: 'परताव्यासाठी उपलब्ध'
-      refunded: 'परतावा'
-      cancelled: 'रद्द केले'
-    payment_mode:
-      online: 'ऑनलाइन'
-      cheque: 'चेक'
-      rtgs: 'आरटीजीएस'
-      imps: 'आयएमपीएस'
-      card_swipe: 'कार्ड स्वाइप'
-      neft: 'नेफ्ट'
-    cancellation_link: 'रद्द करणे लिंक'
-
-  referrals:
-    name: 'रेफरल्स'
-    code: 'रेफरल कोड'
-    link_name: 'रेफरल्स'
-    new:
-      link_name: 'मित्रांना निमंत्रण द्या'
-    generate_code:
-      link_name: 'कोड तयार करा'
-
-  smses:
-    link_name: "एसएमएस"
-    status:
-      received: 'मिळालेले'
-      untracked: 'ट्रॅक नाही'
-      scheduled: 'अनुसूचित'
-      sent: 'पाठविले'
-      failed: 'अयशस्वी'
-
-  sync_logs:
-    link_name: 'त्रयस्थ एकत्रीकरण इतिहास'
-
   users:
-    profile: '%{role} रेखाचित्र'
-    change_password: 'संकेतशब्द बदला'
+    account_confirmed: 'खात्याची पुष्टी झाली'
+    total_amount_paid:
+      hint: '(आपल्याकडे काही पेमेंट क्लीयरन्स प्रलंबित असू शकतात)'
+    total_balance_pending:
+      hint: '(आपल्याकडे काही पेमेंट क्लीयरन्स प्रलंबित असू शकतात)'
+    total_unattached_balance:
+      hint: '(मंजुरीच्या अधीन)'
+
     account_confirmed: 'खाते पुष्टी केली'
-    confirmed:
-      :true: 'पुष्टी केली'
-      :false: 'पुष्टी नाही'
 
-    role:
-      superadmin: 'सुपर ऍडमिन'
-      admin: 'प्रशासक'
-      crm: 'सीआरएम वापरकर्ता'
-      sales_admin: 'विक्री प्रमुख'
-      sales: 'विक्री वापरकर्ता'
-      user: 'ग्राहक'
-      gre: 'जीआरई किंवा प्री-सेल्स'
-      cp_admin: 'चॅनल पार्टनर हेड'
-      cp: 'चॅनेल पार्टनर व्यवस्थापक'
-      channel_partner: 'चॅनेल पार्टनर'
-      management_user: 'व्यवस्थापन वापरकर्ता'
-      employee_user: 'कर्मचारी'
-    portal_stages:
-      project_info: 'प्रकल्प माहिती'
+  sessions:
+    new:
+      otp_submit: 'OTP मिळवा'
+      otp_resend: 'OTP पुन्हा पाठवा'
+      login_with_password_link: 'त्याऐवजी संकेतशब्दाने लॉगिन करा'
+      login_with_otp_link: 'त्याऐवजी ओटीपीसह लॉग इन करा'
+      sign_in: 'साइन इन करा'
 
-  user_kycs:
-    link_name: 'केवायसी'
-  user_requests:
-    swap: 'स्वॅप'
-    cancellation: 'रद्द करणे'
-    status:
-      pending: 'प्रलंबित'
-      processing: 'प्रक्रिया'
-      resolved: 'निराकरण'
-      rejected: 'नाकारले'
-      failed: 'अयशस्वी'
-    requestable_type:
-      Receipt: 'पावती'
-      BookingDetail: 'बुकिंग'
-
+  registrations:
+    pre_text: 'खाते नाही?'
+    new:
+      sign_up: 'साइन अप करा'
 
 

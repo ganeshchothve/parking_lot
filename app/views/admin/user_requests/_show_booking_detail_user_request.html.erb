@@ -1,37 +1,57 @@
 <div class="row">
+  <div class="col">
+    <%= render 'booking_details/details', booking_detail: user_request.requestable, with_actions: false %>
+  </div>
+  <% if user_request._type == "UserRequest::Swap" && user_request.resolved? %>
+    <% if user_request.alternate_project_unit.booking_detail.present? %>
       <div class="col">
-        <%= render 'dashboard/booking_detail_overview', {booking_detail: user_request.requestable, with_actions: true }  %>
+        <%= render 'booking_details/details', booking_detail: user_request.alternate_project_unit.booking_detail, with_actions: true %>
       </div>
-      <% if user_request._type == "UserRequest::Swap" && user_request.resolved? %>
-        <% if user_request.alternate_project_unit.booking_detail.present? %>
-          <div class="col">
-            <%= render 'dashboard/booking_detail_overview', {booking_detail: user_request.alternate_project_unit.booking_detail, with_actions: true } %>
+    <% end %>
+  <% end %>
+</div>
+
+<div class="mt-3"></div>
+<div class="row mb-5">
+  <div class="col">
+    <section class="bookings my-4 mb-4 d-print-none">
+      <div class="container">
+        <div class="box-card">
+          <div class="box-header br-rd-tr-4 row">
+            <div class="col-12 p-0">
+              <h2 class="text-dark"><%= Receipt.model_name.human %></h2>
+            </div>
           </div>
-        <% end %>
-      <% end %>
-    </div>
-    <div class="mt-3"></div>
-    <div class="row">
-      <div class="col">
-        <div class="card">
-          <div class="card-header">
-            <h5> Payment Details</h5>
-          </div>
-            <div class="card-body">
+          <div class="box-content br-rd-bl-4 bg-white row p-0">
+            <div class="col-12 p-0">
               <%= render 'receipts/index', {receipts: user_request.requestable.receipts.paginate(page:1, per_page: 1000)} if user_request.requestable.kind_of?(BookingDetail) %>
             </div>
           </div>
         </div>
-      <% if user_request._type == "UserRequest::Swap" && user_request.resolved? %>
-        <div class="col">
-          <div class="card">
-            <div class="card-header">
-            <h5> Payment Details</h5>
+      </div>
+    </section>
+  </div>
+
+  <% if user_request._type == "UserRequest::Swap" && user_request.resolved? %>
+    <div class="col">
+      <section class="bookings my-4 mb-4 d-print-none">
+        <div class="container">
+          <div class="box-card">
+            <div class="box-header br-rd-tr-4 row">
+              <div class="col-12 p-0">
+                <h2 class="text-dark">
+                  <%= Receipt.model_name.human %>
+                </h2>
+              </div>
             </div>
-            <div class="card-body">
-              <%= render 'receipts/index', {receipts: user_request.alternate_project_unit.booking_detail.receipts.paginate(page: 1, per_page: 1000)} %>
+            <div class="box-content br-rd-bl-4 bg-white row p-0">
+              <div class="col-12 p-0">
+                <%= render 'receipts/index', {receipts: user_request.alternate_project_unit.booking_detail.receipts.paginate(page: 1, per_page: 1000)} %>
+              </div>
             </div>
           </div>
         </div>
-      <% end %>
+      </section>
     </div>
+  <% end %>
+</div>

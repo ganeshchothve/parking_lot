@@ -22,5 +22,31 @@
  *= require sidebar-modal
  *= require jquery.fileupload
  *= require files-list
+ *= require site
  *= require_self
 */
+
+.navbar-nav{
+  .nav-item{
+    a.active{
+      font-weight: 700;
+      color: #33475b !important;
+    }
+  }
+}
+
+.clear{
+  clear:both;
+}
+
+.searches{
+  .container.project-unit-overview{
+    padding: 0 !important;
+  }
+}
+
+.disclaimer{
+  font-size: 10px !important;
+  line-height: 10px !important;
+  color: #ff9871 !important;
+}

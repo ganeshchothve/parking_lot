@@ -37,6 +37,10 @@ class CustomPolicy < Struct.new(:user, :enable_users)
     %w[superadmin].include?(user.role)
   end
 
+  def schemes?
+    current_client.enable_actual_inventory?(user) && %w[superadmin admin sales crm cp channel_partner].include?(user.role)
+  end
+
   def user_kycs?
     "#{user.buyer? ? 'Buyer' : 'Admin'}::UserKycPolicy".constantize.new(user, UserKyc).index?
   end
@@ -44,7 +48,17 @@ class CustomPolicy < Struct.new(:user, :enable_users)
   def portal_stage_priorities?
     "#{user.buyer? ? '' : 'Admin::'}PortalStagePriorityPolicy".constantize.new(user, PortalStagePriority).index?
   end
+
+  def user_requests?
+    "#{user.buyer? ? '' : 'Admin::'}UserRequestPolicy".constantize.new(user, UserRequest).index?
+  end
+
+  def channel_partners?
+    "#{user.buyer? ? '' : 'Admin::'}ChannelPartnerPolicy".constantize.new(user, ChannelPartner).index?
+  end
+
   def self.custom_methods
-    %w[inventory emails smses audits referrals accounts phases sync_logs erp_models user_kycs portal_stage_priorities].sort
+    %w[inventory schemes user_requests channel_partners user_kycs emails smses sync_logs referrals accounts phases erp_models portal_stage_priorities]
+    # audits
   end
 end

@@ -24,6 +24,7 @@ module ReceiptsConcern
       )
       email.sent!
     end
+    flash[:notice] = t('controller.receipts.resend_email.success')
     redirect_to (request.referrer.present? ? request.referrer : dashboard_path)
   end
 end

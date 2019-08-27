@@ -1,164 +1,141 @@
-<div class="card">
-  <div class="card-header">
-    <div class="row">
-      <div class="col-11"><h5>Overview</h5></div>
-      <div class="dropdown float-right col-1">
-        <a class="btn btn-light btn-sm dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</a>
-        <div class="dropdown-menu dropdown-menu-right">
-          <%= render "#{current_user_role_group}/users/links", user: user %>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="card-body">
-    <div class="row">
-      <div class="col-md-4">
-        <div class="form-group">
-          <label><%= labels[:name] %></label>
-          <div><%= user.name || '-' %></div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label><%= labels[:email] %></label>
-          <div><%= user.email || '-' %></div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label><%= labels[:phone] %></label>
-          <div><%= user.phone || '-' %></div>
-        </div>
-      </div>
-    </div>
-    <% if user.buyer? %>
-      <div class="row">
-        <div class="col-md-4">
-          <div class="form-group">
-            <label><%= labels[:lead_id] %></label>
-            <div><%= user.lead_id || '-' %></div>
+<section class="bookings my-4 mb-4">
+  <div class="container">
+    <div class="box-card">
+      <div class="box-header bg-gradient br-rd-tr-4 row">
+        <div class="col-11 p-0"><h2 class="icon-set icon-users-white"><%= t('controller.users.show.header') %></h2></div>
+        <div class="dropdown text-right col-1">
+          <a class="btn dropdown-toggle table-dropdown-btn white-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+          <div class="dropdown-menu dropdown-menu-right">
+            <%= render "#{current_user_role_group}/users/links", user: user %>
           </div>
         </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label><%= labels[:time_zone] %></label>
-            <div><%= user.time_zone || '-' %></div>
-          </div>
-        </div>
-        <% if current_client.enable_channel_partners? %>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label><%= labels[:manager_change_reason] %></label>
-              <div><%= user.manager_change_reason || '-' %></div>
-            </div>
-          </div>
-        <% end %>
       </div>
-    <% end %>
+      <div class="box-content br-rd-bl-4 bg-white row">
+        <div class="col-md-12 col-lg-12 col-sm-12">
+          <ul class="booking-apart-info clear">
+            <li>
+              <span><%= t('mongoid.attributes.user.name') %></span>
+              <p class="break-word"><%= user.name || '-' %></p>
+            </li>
+            <li>
+              <span><%= t('mongoid.attributes.user.email') %></span>
+              <p class="break-word mr-3"><%= user.email || '-' %></p>
+            </li>
+            <li>
+              <span><%= t('mongoid.attributes.user.phone') %></span>
+              <p><%= user.phone || '-' %></p>
+            </li>
 
-    <% if user.buyer? && current_client.enable_actual_inventory?(current_user) %>
-      <div class="row mt-3">
-        <div class="col-md-4">
-          <div class="form-group">
-            <label><%= labels[:total_amount_paid] %></label>
-            <div>
-              <%= user.total_amount_paid.present? ? number_to_indian_currency(user.total_amount_paid.round) : '-' %>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label><%= labels[:total_balance_pending] %></label>
-            <div>
-              <%= user.total_balance_pending.present? ? number_to_indian_currency(user.total_balance_pending.round) : '-' %>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label><%= labels[:total_unattached_balance] %></label>
-            <div>
-              <%= user.total_unattached_balance.present? ? number_to_indian_currency(user.total_unattached_balance.round) : '-' %>
-            </div>
-          </div>
-        </div>
-      </div>
-    <% end %>
-    <div class="row">
-      <div class="col-md-4">
-        <div class="form-group">
-          <label>Registered At</label>
-          <div>
-            <%= l(user.created_at.in_time_zone(current_user.time_zone)) %>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label>Account Confirmed?</label>
-          <div>
-            <% if user.confirmed? %>
-              Confirmed by <%= user.confirmed_by_self? ? 'Self' : link_to(user.confirmed_by_name, [current_user_role_group, user.confirmed_by]) %></br>
-              At <%= l(user.confirmed_at.in_time_zone(current_user.time_zone)) %>
-            <% else %>
-              No
+            <li>
+              <span><%= t('mongoid.attributes.user.time_zone') %></span>
+              <p><%= user.time_zone || '-' %></p>
+            </li>
+
+          </ul>
+
+          <% if user.buyer? %>
+            <ul class="booking-apart-info clear">
+              <li>
+                <span><%= t('mongoid.attributes.user.role') %></span>
+                <p><%= t("mongoid.attributes.user/role.#{user.role}") %></p>
+              </li>
+              <li>
+                <span><%= t('mongoid.attributes.user.lead_id') %></span>
+                  <p><%= user.lead_id || '-' %></p>
+              </li>
+
+              <% if !current_user.role?("channel_partner") || user.role?('channel_partner') %>
+                <li>
+                  <span><%= t('mongoid.attributes.user.manager_id') %></span>
+                  <p>
+                    <% manager_user = user.manager_id.present? ? User.find(user.manager_id) : nil %>
+                    <%= manager_user.present? ? link_to(manager_user.name, admin_user_path(manager_user)) : '-' %>
+                  </p>
+                </li>
+              <% end %>
+
+              <% if current_client.enable_channel_partners? %>
+                <li>
+                  <span><%= t('mongoid.attributes.user.manager_change_reason') %></span>
+                  <p class="break-word"><%= user.manager_change_reason || '-' %></p>
+                </li>
+              <% end %>
+            </ul>
+          <% end %>
+
+          <ul class="booking-apart-info clear">
+            <% if user.buyer? && current_client.enable_actual_inventory?(current_user) %>
+              <li>
+                <span><%= t('mongoid.attributes.user.total_amount_paid') %></span>
+                <small class="text-muted"><%= t('users.total_amount_paid.hint')%></small>
+                <p>
+                  <%= user.total_amount_paid.present? ? number_to_indian_currency(user.total_amount_paid.round) : '-' %>
+                </p>
+              </li>
+              <li>
+                <span><%= t('mongoid.attributes.user.total_balance_pending') %></span>
+                <small class="text-muted"><%= t('users.total_balance_pending.hint')%></small>
+                <p><%= user.total_balance_pending.present? ? number_to_indian_currency(user.total_balance_pending.round) : '-' %></p>
+              </li>
+              <li>
+                <span><%= t('mongoid.attributes.user.total_unattached_balance') %></span>
+                <small class="text-muted"><%= t('users.total_unattached_balance.hint')%></small>
+                <p><%= user.total_unattached_balance.present? ? number_to_indian_currency(user.total_unattached_balance.round) : '-' %></p>
+              </li>
             <% end %>
-          </div>
+          </ul>
+
+          <ul class="booking-apart-info clear">
+            <li>
+              <span> <%= t('mongoid.attributes.user.created_at') %></span>
+              <p><%= l(user.created_at.in_time_zone(current_user.time_zone)) %></p>
+            </li>
+            <li>
+              <span><%= t('mongoid.attributes.user.confirmed_at') %></span>
+              <p>
+                <% if user.confirmed? %>
+                  <%= t('mongoid.attributes.user.confirmed_by') %>
+                  <%= user.confirmed_by_self? ? 'Self' : link_to(user.confirmed_by_name, [current_user_role_group, user.confirmed_by]) %>
+                  </br>
+                  <%= t('global.at') %>
+                  <%= l(user.confirmed_at.in_time_zone(current_user.time_zone)) %>
+                <% else %>
+                  <%= t("mongoid.attributes.user/confirmed.#{user.confirmed_at.present?}") %>
+                <% end %>
+              </p>
+            </li>
+          </ul>
+
+          <ul class="booking-apart-info clear">
+
+            <% if user.role?('channel_partner') %>
+              <li>
+                <span><%= t('mongoid.attributes.user.rera_id') %></span>
+                <p><%= user.rera_id || '-' %></p>
+              </li>
+            <% end %>
+
+            <% if user.buyer? %>
+              <li>
+                <span><%= t("mongoid.attributes.user.referral_code") %></span>
+                <p><%= user.referral_code || '-' %></p>
+              </li>
+
+              <li>
+                <span><%= t("mongoid.attributes.user.referred_by_id") %></span>
+                <p><%= user.referred_by.try(:name) || '-' %></p>
+              </li>
+
+              <% if current_user.role?('superadmin') %>
+                <li>
+                  <span><%= t("mongoid.attributes.user.portal_stage") %></span>
+                  <p><%= user.portal_stage.try(:stage) || '-' %></p>
+                </li>
+              <% end %>
+            <% end %>
+          </ul>
         </div>
       </div>
-    </div>
-    <div class="row mt-3">
-      <% if user.buyer? && !current_user.role?("channel_partner") || user.role?('channel_partner') %>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label><%= labels[:manager_id] %></label>
-            <div>
-              <% manager_user = user.manager_id.present? ? User.find(user.manager_id) : nil %>
-              <%= manager_user.present? ? link_to(manager_user.name, admin_user_path(manager_user)) : '-' %>
-            </div>
-          </div>
-        </div>
-      <% end %>
-      <% if user.role?('channel_partner') %>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label><%= labels[:rera_id] %></label>
-            <div>
-              <%= user.rera_id || '-' %>
-            </div>
-          </div>
-        </div>
-      <% end %>
-      <% if user.buyer? %>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label><%= t("mongoid.attributes.user.referral_code") %></label>
-            <div>
-              <%= user.referral_code || '-' %>
-            </div>
-          </div>
-        </div>
-      <% end %>
-      <% if user.buyer? %>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label><%= t("mongoid.attributes.user.referred_by_id") %></label>
-            <div>
-              <%= user.referred_by.try(:name) || '-' %>
-            </div>
-          </div>
-        </div>
-      <% end %>
-      <% if user.buyer? && current_user.role?('superadmin') %>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label><%= t("mongoid.attributes.user.portal_stage") %></label>
-            <div>
-              <%= user.portal_stage.try(:stage) || '-' %>
-            </div>
-          </div>
-        </div>
-      <% end %>
     </div>
   </div>
-</div>
+</section>

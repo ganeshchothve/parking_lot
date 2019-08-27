@@ -1,12 +1,12 @@
 <div class="card">
   <div class="card-header">
-    <%= global_labels[:channel_partners] %>
+    <%= ChannelPartner.model_name.human %>
   </div>
   <div class="card-body">
     <div class="table-responsive">
       <table class="table">
         <thead>
-          <tr>
+          <tr class="bg-gradient-cd white">
             <th>Status</th>
             <th class="text-right">Count</th>
           </tr>
@@ -14,7 +14,7 @@
         <tbody>
           <% DashboardDataProvider.channel_partners_dashboard(current_user, params[:channel_partner_fltrs]).each do |d| %>
           <tr>
-            <td><%= ChannelPartner.available_statuses.find{|x| x[:id] == d[:status]}[:text] %></td>
+            <td><%= t("mongoid.attributes.channel_partner/status.#{d[:status]}") %></td>
             <td class="text-right"><%= d[:count] %></td>
           </tr>
           <% end %>

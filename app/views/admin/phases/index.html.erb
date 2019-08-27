@@ -1,24 +1,26 @@
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-12">
-      <div class="card">
-        <div class="card-body">
-          <div class="row mb-3">
-            <div class="col-md-7">
-              <%if policy([:admin, Phase]).new? %>
-                <%= link_to "Add #{ t('global.phases') }", new_admin_phase_path, class: 'btn btn-primary modal-remote-form-link' %>
-              <% end %>
-            </div>
-            <div class="col-md-5 text-md-right">
-              <h6 class="mt-2">Total <%= t('global.phase') %>: <%= @phases.total_entries %></h6>
-            </div>
-          </div>
+<section class="mb-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
+        <div class="table-title pt-1 pb-3">
+          <h1 class="title icon-set icon-building-black"><%= Phase.model_name.human %></h1>
+        </div>
+      </div>
+    <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
+      <div class="table-btn-set float-right pb-3">
+        <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @phases.total_entries %></button>
+        <div class="display-initial" >
+          <%if policy([:admin, Phase]).new? %>
+            <%= link_to t('helpers.new.link_name', model: Phase.model_name.human), new_admin_phase_path, class: 'nowrap btn db-small-btn light-blue bg-white fn-400 modal-remote-form-link' %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+        <div class="box-card relative">
           <%= render 'index', {phases: @phases} %>
         </div>
       </div>
     </div>
-    <div class="col-md-3">
-      <div class="d-md-none mt-3"></div>
-    </div>
   </div>
-</div>
+</section>

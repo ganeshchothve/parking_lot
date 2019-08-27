@@ -101,7 +101,7 @@ class UserExportWorker
       user.email,
       user.phone,
       user.buyer? ? user.lead_id : "",
-      I18n.t("users.role.#{user.role}"),
+      User.human_attribute_name("role.#{user.role}"),
       user.manager_name || "",
       user.role?("channel_partner") ? user.rera_id : "",
       user.last_sign_in_at.present? ? I18n.l(user.last_sign_in_at.in_time_zone(current_user.time_zone)) : "",

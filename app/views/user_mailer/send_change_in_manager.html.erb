@@ -7,8 +7,7 @@
     <% if @user.manager_change_reason.present? %>
       <br/>
       <p>
-        <% labels = t('mongoid.attributes.user').with_indifferent_access %>
-        <div class="small"><%= labels[:manager_change_reason] %></div>
+        <div class="small"><%= t('mongoid.attributes.user.manager_change_reason') %></div>
         <%= @user.manager_change_reason %>
       </p>
     <% end %>

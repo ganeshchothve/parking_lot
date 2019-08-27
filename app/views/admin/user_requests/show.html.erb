@@ -1,13 +1,15 @@
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-12">
-      <%= render 'admin/user_requests/detail', user_request: @user_request %>
-      <div class="mt-3"></div>
+<div class='mb-5'>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-12">
+        <%= render 'admin/user_requests/detail', user_request: @user_request %>
+        <div class="mt-3"></div>
+      </div>
     </div>
+    <% if @user_request.requestable.kind_of?(BookingDetail) %>
+      <%= render 'admin/user_requests/show_booking_detail_user_request', user_request: @user_request %>
+    <% elsif @user_request.requestable.kind_of?(Receipt) %>
+      <%= render 'admin/user_requests/show_receipt_user_request', user_request: @user_request%>
+    <% end %>
   </div>
-  <% if @user_request.requestable.kind_of?(BookingDetail) %>
-    <%= render 'admin/user_requests/show_booking_detail_user_request', user_request: @user_request %>
-  <% elsif @user_request.requestable.kind_of?(Receipt) %>
-    <%= render 'admin/user_requests/show_receipt_user_request', user_request: @user_request%>
-  <% end %>
 </div>

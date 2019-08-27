@@ -1,7 +1,7 @@
 class Admin::UsersController < AdminController
   include UsersConcern
   before_action :authenticate_user!
-  before_action :set_user, except: %i[index export new create]
+  before_action :set_user, except: %i[index export new create portal_stage_chart]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: %i[index export]
 
@@ -24,7 +24,7 @@ class Admin::UsersController < AdminController
     if params[:fltrs].present? && params[:fltrs][:_id].present?
       redirect_to admin_user_path(params[:fltrs][:_id])
     else
-      @users = @users.paginate(page: params[:page] || 1, per_page: 15)
+      @users = @users.paginate(page: params[:page] || 1, per_page: params[:per_page])
     end
   end
 
@@ -157,6 +157,15 @@ class Admin::UsersController < AdminController
     end
   end
 
+  #
+  # GET /admin/users/portal_stage_chart
+  #
+  # This method is used in admin dashboard
+  #
+  def portal_stage_chart
+    @data = DashboardData::AdminDataProvider.user_block
+  end
+
   private
 
   def set_user
@@ -168,7 +177,7 @@ class Admin::UsersController < AdminController
   end
 
   def authorize_resource
-    if %w[index export].include?(params[:action])
+    if %w[index export portal_stage_chart].include?(params[:action])
       authorize [current_user_role_group, User]
     elsif params[:action] == 'new' || params[:action] == 'create'
       if params[:role].present?

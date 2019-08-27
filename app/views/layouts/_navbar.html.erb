@@ -1,43 +1,51 @@
-<nav id="top_navigation" class="navbar navbar-expand-lg fixed-top navbar navbar-light bg-white border-bottom">
-  <a class="navbar-brand" href="<%= home_path(current_user) %>" title="<%= current_client.name %>">
-    <%= image_tag current_client.logo.url, class: "img-responsive d-none d-lg-block" %>
-    <%= image_tag current_client.mobile_logo.url, class: "img-responsive d-lg-none" %>
-  </a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle main navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="main-navbar">
-    <ul class="navbar-nav ml-auto mt-2">
+<header>
+  <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top fixed-top">
+    <div class="container no-pd">
+      <%= link_to "IRIS", dashboard_path, class: 'navbar-brand'%>
       <% if user_signed_in? %>
         <%= render "layouts/navbar/#{current_user_role_group}" %>
       <% else %>
-        <% if current_client.enable_channel_partners? %>
-          <li class="nav-item mt-3 mt-md-0">
-            <%= link_to "Register as Channel Partner", new_channel_partner_path, class: "mr-2 btn btn-secondary" %>
-          </li>
-        <% end %>
-        <li class="nav-item mt-1 mt-md-0">
-          <%= link_to "Register Now", register_path, class: "btn btn-primary" %>
-        </li>
-        <%= bottom_navigation('d-lg-none') %>
-        <li class='nav-item ml-md-3'>
-          <%= link_to "Log in", new_session_path("user"), class: "nav-link" %>
-        </li>
-        <hr/>
-        <li class='nav-item d-lg-none'>
-          <%= link_to 'Powered by Amura', 'https://www.amuratech.com', class: 'small nav-link', target: "_blank" %>
-          <div class="d-md-none mt-3"></div>
-        </li>
+        <div class="text-right">
+          <div class="user-info login-btn float-right hide-xs">
+            <div class="display-inline">
+              <img src="<%= asset_path 'lock-black.svg' %>" alt="User Info">
+              <%= link_to "Log in", new_session_path("user"), class: "p-style" %>
+            </div>
+          </div>
+          <div class="dropdown hide-xs float-right register-dropdown">
+            <div class="display-inline">
+                <a class="dropdown-toggle p-style" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Register</a>
+                <div class="dropdown-menu menu-top" aria-labelledby="navbarDropdown">
+                    <%= link_to "Register as Channel Partner", new_channel_partner_path, class: "dropdown-item" %>
+                    <%= link_to "Register Now", register_path, class: "btn btn-primary" %><img src="<%= asset_path 'user-alt-black.svg' %>" alt="User Info">
+                </div>
+              </div>
+            </div>
+          <div class="display-inline">
+            <%= link_to new_channel_partner_path, class: "reg-chnl-prtnr-btn show-xs p-style" do %>
+              <%= image_tag 'user-alt-black.svg', alt: "User Info" %>
+              Register as Channel Partner
+            <% end %>
+
+          </div>
+          <div class="display-inline ml-2">
+            <%= link_to "Register Now", register_path, class: "register-btn show-xs" %>
+          </div>
+
+         <div class="user-info login-btn float-right show-xs mt-2">
+          <div class="display-inline">
+            <img src="<%= asset_path 'lock-black.svg' %>" alt="User Info">
+            <%= link_to "Log in", new_session_path("user"), class: "p-style" %>
+          </div>
+        </div>
+        </div>
       <% end %>
-    </ul>
-  </div>
-</nav>
-<div class="body-padding"></div>
-<div class="container">
+    </div>
+  </nav>
   <% if notice %>
-    <p class="alert alert-success notice"><%= notice %></p>
+    <p class="alert alert-success notice m-0"><%= notice %></p>
   <% end %>
   <% if alert %>
-    <p class="alert alert-danger"><%= alert %></p>
+    <p class="alert alert-danger m-0"><%= alert %></p>
   <% end %>
-</div>
+</header>

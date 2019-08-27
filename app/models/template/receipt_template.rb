@@ -1,10 +1,12 @@
 class Template::ReceiptTemplate < Template
   def self.default_content
-    '<div class="card">
-       <div class="card-body">
-         <h5 class="text-center"><strong>Payment Details</strong></h5>
+    '<div class="box-card">
+       <div class="box-header bg-gradient br-rd-tr-4 text-center">
+         <h2><strong>Payment Details</strong></h2>
          <% labels = I18n.t("mongoid.attributes.receipt").with_indifferent_access %>
-         <table class="table table-striped table-sm mt-3">
+       </div>
+       <div class="box-content br-rd-bl-4 bg-white p-0">
+         <table class="table my-customer-table responsive-tbl">
           <tbody>
             <tr>
               <td><%= labels["receipt_id"] %></td>
@@ -52,9 +54,9 @@ class Template::ReceiptTemplate < Template
             </tr>
           </tbody>
          </table>
-         <div class="mt-3 text-muted small">Please note that cheque / RTGS / NEFT payments are subject to clearance</div>
+         <div class="text-muted small px-3 pb-3">Please note that cheque / RTGS / NEFT payments are subject to clearance</div>
          <% if current_client.disclaimer.present? %>
-          <div class="mt-3 text-muted small">
+          <div class="text-muted small px-3 pb-3">
             <strong>Disclaimer:</strong><br/>
             <%= current_client.disclaimer %>
           </div>
@@ -62,10 +64,12 @@ class Template::ReceiptTemplate < Template
        </div>
      </div>
      <% if current_client.enable_slot_generation? %>
-       <div class="card mt-3">
-         <div class="card-body">
-           <h5 class="text-center"><strong>Token Details</strong></h5>
-           <table class="table table-striped table-sm mt-3">
+       <div class="box-card mt-3">
+         <div class="box-header bg-gradient br-rd-tr-4 text-center">
+           <h2><strong>Token Details</strong></h2>
+         </div>
+         <div class="box-content br-rd-bl-4 bg-white p-0">
+           <table class="table my-customer-table responsive-tbl">
              <tbody>
                <tr>
                  <td>Token Number</td>
@@ -92,7 +96,7 @@ class Template::ReceiptTemplate < Template
              </tbody>
            </table>
          </div>
-       <% end %>
-     </div>'
+       </div>
+     <% end %>'
   end
 end

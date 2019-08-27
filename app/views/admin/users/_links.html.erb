@@ -1,46 +1,59 @@
 <% if policy([:admin, BookingDetail.new(user: user, project_unit: ProjectUnit.new(status: 'available', blocking_amount: current_client.blocking_amount))]).hold? %>
-  <%= link_to "Choose #{global_labels[:project_unit]} & Add Booking", new_admin_user_search_path(user.id), class: "dropdown-item" %>
+  <%= link_to t('controller.searches.new.link_name'), new_admin_user_search_path(user.id), class: "dropdown-item" %>
 <% end %>
+
 <% if policy([:admin, user]).confirm_user? %>
-  <%= link_to"Confirm User", confirm_user_admin_user_path(user), method: :patch,
+  <%= link_to t('controller.users.confirm_user.link_name'), confirm_user_admin_user_path(user), method: :patch,
   class: "dropdown-item" %>
 <% end %>
+
 <% hold_booking = user.booking_details.where(status: 'hold').first %>
-<% if hold_booking.present? && policy([:admin, hold_booking]).checkout? #&& policy([current_user_role_group, hold_booking]).block? %>
-  <%= link_to "Checkout using unit already held", checkout_user_search_path(user.get_search(hold_booking.project_unit_id)), class: "dropdown-item" %>
+
+<% if hold_booking.present? #&& policy([current_user_role_group, hold_booking]).block? %>
+  <%= link_to t('controller.booking_details.continue_booking.link_name'), checkout_user_search_path(user.get_search(hold_booking.project_unit_id)), class: "dropdown-item" %>
 <% end %>
-<% if !current_user.buyer? && policy([:admin, Receipt.new(user: user)]).new? %>
-  <%= link_to "Add Direct #{t('global.receipt')}", new_admin_user_receipt_path(user), class: "dropdown-item modal-remote-form-link" %>
+
+<% if policy([:admin, Receipt.new(user: user)]).new? %>
+  <%= link_to t('controller.receipts.new.link_name'), new_admin_user_receipt_path(user), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
+
 <% if !current_user.buyer? && policy([:admin, Receipt.new(user: user)]).lost_receipt? %>
-  <%= link_to "Add Lost Receipt", lost_receipt_admin_user_receipts_path(user), class: "dropdown-item modal-remote-form-link" %>
+  <%= link_to t('controller.receipts.lost_receipt.link_name'), lost_receipt_admin_user_receipts_path(user), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
+
 <% if policy([:admin, User.new]).confirm_via_otp? %>
-  <%= link_to "Confirm via #{I18n.t("global.otp")}", confirm_via_otp_admin_user_path(user.id), class: "dropdown-item modal-remote-form-link" %>
+  <%= link_to t('controller.users.confirm_via_otp.link_name'), confirm_via_otp_admin_user_path(user.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
-<% if policy([:admin, User.new]).show? %>
-  <%= link_to "View Details", admin_user_path(user.id), class: "dropdown-item" %>
-<% end %>
+
 <% if policy([:admin, User.new]).print? %>
-  <%= link_to "Print", print_admin_user_path(user.id), class: "dropdown-item", target: "_blank" %>
+  <%= link_to t('controller.users.print.link_name'), print_admin_user_path(user.id), class: "dropdown-item", target: "_blank" %>
 <% end %>
+
+<% if policy([:admin, user]).show? && action_name != 'show' %>
+  <%= link_to t('controller.users.show.link_name', role: t("mongoid.attributes.user/role.#{user.role}")), admin_user_path(user), class: "dropdown-item" %>
+<% end %>
+
 <% if policy([:admin, User.new]).edit? %>
-  <%= link_to "Edit", edit_admin_user_path(user.id), class: "dropdown-item modal-remote-form-link" %>
+  <%= link_to t('controller.users.edit.link_name', role: t("mongoid.attributes.user/role.#{user.role}")), edit_admin_user_path(user.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
-<% if policy([:admin, UserKyc.new]).index?(user) && user.user_kycs.present? %>
-  <%= link_to "View #{global_labels['user_kycs']}", admin_user_user_kycs_path(user_id: user.id), class: "dropdown-item" %>
+
+<% if policy([:admin, UserKyc.new]).index?(user) %>
+  <%= link_to t('controller.user_kycs.index.link_name'), admin_user_user_kycs_path(user_id: user.id), class: "dropdown-item" %>
 <% end %>
+
 <% if policy([:admin, UserKyc.new(user: user)]).new? %>
-  <%= link_to "Add #{global_labels['user_kyc_details']}", new_admin_user_user_kyc_path(user), class: "dropdown-item modal-remote-form-link" %>
+  <%= link_to t('helpers.new.link_name', model: UserKyc.model_name.human), new_admin_user_user_kyc_path(user), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 <% if policy([:admin, Note.new(notable: user)]).new? %>
-  <%= link_to "Add #{global_labels[:note]}", new_notable_path(notable_type: user.class.model_name.i18n_key.to_s, notable_id: user.id), class: "dropdown-item modal-remote-form-link" %>
+  <%= link_to t('helpers.new.link_name', model: Note.model_name.human), new_notable_path(notable_type: user.class.model_name.i18n_key.to_s, notable_id: user.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
+
 <% if !user.confirmed? && user.confirmation_token.present? %>
-  <%= link_to 'Resend Confirmation Instructions', resend_confirmation_instructions_admin_user_path(user), class: "dropdown-item" %>
+  <%= link_to t('controller.users.resend_confirmation_instructions.link_name'), resend_confirmation_instructions_admin_user_path(user), class: "dropdown-item" %>
 <% else %>
-  <%= link_to 'Send Password Reset Instructions', resend_password_instructions_admin_user_path(user), class: "dropdown-item" %>
+  <%= link_to t('controller.users.resend_password_instructions.link_name'), resend_password_instructions_admin_user_path(user), class: "dropdown-item" %>
 <% end %>
+
 <% if policy([:admin, User.new]).update_password? %>
-  <%= link_to "Update Password", update_password_admin_user_path(user), class: "dropdown-item modal-remote-form-link" %>
+  <%= link_to t('controller.users.change_password.link_name'), update_password_admin_user_path(user), class: "dropdown-item modal-remote-form-link" %>
 <% end %>

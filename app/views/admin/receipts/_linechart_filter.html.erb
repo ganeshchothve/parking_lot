@@ -1,0 +1,43 @@
+<div class="filter-inner">
+  <%= form_tag frequency_chart_admin_receipts_path, method: "get", remote: true, id: "receipt_linechart_filter" do %>
+    <div class="filter-content">
+        <div class="row">
+          <div class="form-group col-12">
+            <%= label_tag "payments", Receipt.model_name.human(count: 3), class: "control-label float-left" %>
+            <%= select_tag "payments", options_for_select(["all", "attached_payments", "direct_payments"].map{|payments| [t("mongoid.attributes.dashboard/filters.payments.#{payments}"), payments]}, params[:payments]), class: "selectize"%>
+          </div>
+      </div>
+      <div class = "row">
+        <div class = "form-group col-12">
+          <%= label_tag "frequency", Receipt.human_attribute_name('frequency'), class: "control-label float-left" %>
+          <%= select_tag "frequency", options_for_select(['last_7_days', 'last_7_weeks', 'last_7_months', 'custom_dates'].map{|frequency| [t("mongoid.attributes.dashboard/filters.frequency.#{frequency}"), frequency]}, params[:frequency]), {class: "selectize", id: 'frequency'} %>
+        </div>
+      </div>
+      <div class = "row">
+        <div class = "col-12">
+          <%= label_tag "dates", Receipt.human_attribute_name('dates'), class: "control-label float-left" %>
+          <% dates = Array.new %>
+          <% dates = params[:dates].split(' - ') if params[:dates].present? %>
+          <%= text_field_tag :dates, "dates", class: 'form-control daterangefilter', required: 'required', id: 'date',"data-start-date": dates[0] || '', "data-end-date": dates[1] || '', "data-opens": 'left' %>
+        </div>
+      </div>
+    </div>
+    <div class="filter-footer">
+      <%= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right" %>
+      <button type="button" class="f-cancel-btn frequency_chart_filter_cancel db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
+    </div>
+<% end %>
+</div>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    $('#frequency').on('change', function(){
+      if($(this).val() == 'custom_dates'){
+        $('#date').removeAttr('disabled');
+      }    
+      else{
+        $('#date').attr('disabled', 'disabled');
+      }
+    }).trigger('change');
+    FormInitializer.init($("#receipt_linechart_filter"));
+  });
+<% end %>

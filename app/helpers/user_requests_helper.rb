@@ -1,4 +1,9 @@
 module UserRequestsHelper
+
+  def custom_user_requests_path
+    [current_user_role_group, UserRequest, request_type: :all]
+  end
+
   def available_booking_for_request
     BookingDetail.where(user_id: @user_request.user_id, status: { '$in' => BookingDetail::BOOKING_STAGES }).collect{ |bd| [bd.name, bd.id]}
   end
@@ -13,6 +18,8 @@ module UserRequestsHelper
       'danger'
     when 'pending'
       'primary'
+    when 'resolved'
+      'success'
     end
   end
 end

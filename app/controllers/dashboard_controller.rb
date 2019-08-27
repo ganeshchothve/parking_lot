@@ -5,6 +5,10 @@ class DashboardController < ApplicationController
   def index
     authorize :dashboard, :index?
     @project_units = current_user.project_units
+    @receipts = current_user.receipts.paginate(page: params[:page] || 1, per_page: params[:per_page])
+    @lead_details_labels = get_lead_detail_labels
+    @booking_detail_labels = get_booking_detail_labels
+
   end
 
   def faqs
@@ -12,6 +16,7 @@ class DashboardController < ApplicationController
 
   def documents
     @assetable = current_client
+    @assets = current_client.assets.paginate(page: params[:page], per_page: params[:per_page])
   end
 
   def rera
@@ -42,11 +47,29 @@ class DashboardController < ApplicationController
   # GET /dashboard/download_brochure
   #
   def download_brochure
-    send_file(open(current_client.brochure.url),
+    send_file(open(current_client.brochure.file.url),
           :filename => "Brochure.#{current_client.brochure.file.extension}",
           :type => current_client.brochure.content_type,
           :disposition => 'attachment',
           :url_based_filename => true)
     SelldoLeadUpdater.perform_async(current_user.id.to_s, 'project_info') if current_user.buyer? && current_user.receipts.count == 0
+  end
+
+  private
+
+  def get_lead_detail_labels
+    labels = Array.new
+    DashboardDataProvider.user_group_by(current_user).each do |key, value|
+      labels << value.to_s + t("dashboard.#{key}")
+    end
+    labels
+  end
+
+  def get_booking_detail_labels
+    labels = Array.new
+    DashboardDataProvider.booking_detail_group_by(current_user).keys.each do |key|
+      labels << t("dashboard.booking_detail.#{key}")
+    end
+    labels
   end
 end

@@ -15,12 +15,3 @@
     <% end %>
   <% end %>
 <% end %>
-<% UserRequest.descendants.each do |klass| %>
-  <% if policy([:buyer, klass.new(user_id: project_unit.user_id, project_unit_id: project_unit.id)]).new? && current_user.buyer? %>
-    <% url = new_buyer_user_request_path(project_unit_id: project_unit.id, request_type: klass.model_name.element)
-    %>
-    <a href="<%= url %>" class="dropdown-item modal-remote-form-link">
-      <%= global_labels["user_request_#{klass.model_name.element}"] %>
-    </a>
-  <% end %>
-<% end %>

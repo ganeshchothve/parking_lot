@@ -1,22 +1,25 @@
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="<%= @erp_model.blank? ? 'col-md-9' : 'col-md-12' %>">
-      <%= render 'breadcrumbs', {erp_model: @erp_model} %>
-      <div class="card">
-        <div class="card-body">
-          <div class="row mb-3">
-            <div class="col-md-7 text-md-left">
-              <% if policy([:admin, ErpModel.new]).new? %>
-                <%= link_to 'New', new_admin_erp_model_path, class: 'modal-remote-form-link btn btn-primary' %>
-              <% end %>
-            </div>
-            <div class="col-md-5 text-md-right">
-              <h6 class="mt-2">Total Erp Models : <%= @erp_models.total_entries %></h6>
-            </div>
-          </div>
-          <%= render 'index', {erp_models: @erp_models} %>
+<section class="mb-5">
+  <div class="container">
+    <div class="row">
+    <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
+      <div class="table-title pt-1">
+        <i class='fa fa-cog'></i><h1 class="title"><%= ErpModel.model_name.human %></h1>
+      </div>
+    </div>
+    <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
+      <div class="table-btn-set float-right pb-3">
+        <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @erp_models.total_entries %></button>
+        <div class="new-menu display-initial" >
+          <% if policy([:admin, ErpModel.new]).new? %>
+            <%= link_to t('helpers.new.link_name', model: ErpModel.model_name.human ), new_admin_erp_model_path, class: 'btn btn-xs modal-remote-form-link light-blue bg-white fn-400' %>
+          <% end %>
         </div>
       </div>
     </div>
+    <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+      <div class="box-card relative">
+        <%= render 'index', {erp_models: @erp_models} %>
+      </div>
+    </div>
   </div>
-</div>
+</section>
