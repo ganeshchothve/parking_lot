@@ -15,8 +15,15 @@
 
   var options = {
           tooltips: {
-            mode: 'index',
-            intersect: true
+            mode: 'point',
+            intersect: true,
+            callbacks: {
+                label: function(tooltipItem, data) {
+                    var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                    var item = Math.abs(tooltipItem.value)
+                    return label + " : " + item;
+                }
+            }
           },
           responsive: true,
           scales: {
@@ -32,6 +39,11 @@
               scaleLabel: {
                 display: true,
                 labelString: 'Count' 
+              },
+              afterTickToLabelConversion : function(q){
+                for(var tick in q.ticks){
+                    q.ticks[tick] = Math.abs(q.ticks[tick]);
+                }
               }
             }]
           }
