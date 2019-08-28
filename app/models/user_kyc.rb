@@ -62,16 +62,16 @@ class UserKyc
   accepts_nested_attributes_for :bank_detail, :permanent_address # , :correspondence_address
 
   validates :first_name, :last_name, :email, :phone, presence: true
-  validates :pan_number, presence: true, unless: Proc.new{ |kyc| kyc.nri? }
+  validates :pan_number, presence: true, unless: Proc.new{ |kyc| kyc.nri? }, reduce: true
   validates :oci, presence: true, if: Proc.new{ |kyc| kyc.nri? }
   validates :email, uniqueness: {scope: :user_id}, allow_blank: true
-  validates :pan_number, :aadhaar, uniqueness: {scope: :user_id}, allow_blank: true
+  validates :pan_number, :aadhaar, uniqueness: {scope: :user_id}, allow_blank: true, reduce: true
   validates :phone, uniqueness: {scope: [:aadhar, :user_id] }
   # validates :phone, uniqueness: {scope: :aadhar}, phone: true # TODO: we can remove phone validation, as the validation happens in
   validates :configurations, array: {inclusion: {allow_blank: true, in: Proc.new{ |kyc| UserKyc.available_configurations.collect{|x| x[:id]} } }}
   validates :preferred_floors, array: {inclusion: {allow_blank: true, in: Proc.new{ |kyc| UserKyc.available_preferred_floors.collect{|x| x[:id]} } }}
   validate :min_max_budget
-  validates :pan_number, format: { with: /[A-Z]{3}[ABCGFHLJPTE][A-Z][0-9]{4}[A-Z]/i, message: 'is not in a format of AAAAA9999A' }
+  validates :pan_number, format: { with: /[A-Z]{3}[ABCGFHLJPTE][A-Z][0-9]{4}[A-Z]/i, message: 'is not in a format of AAAAA9999A' }, reduce: true
   validates :aadhaar, format: { with: /\A\d{12}\z/i, message: 'is not a valid aadhaar number' }, allow_blank: true
   validates :company_name, :gstn, presence: true, if: proc { |kyc| kyc.is_company? }
   validates :poa_details, presence: true, if: proc { |kyc| kyc.poa? }

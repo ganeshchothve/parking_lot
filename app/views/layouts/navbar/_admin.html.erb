@@ -46,7 +46,7 @@
       <%= t('welcome', name: current_user.first_name ) %>
     </a>
     <div class="dropdown-menu user-menu-top" aria-labelledby="navbarDropdown">
-      <%= link_to t('controller.users.profile.link_name', role: t("mongoid.attributes.user/role.#{current_user.role}")), edit_admin_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
+      <%= link_to t('controller.users.profile.link_name', role: User.human_attribute_name("role.#{current_user.role}")), edit_admin_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
       <%= link_to t('controller.users.change_password.link_name'), update_password_admin_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
       <%= link_to t('sign_out', scope: "devise"), destroy_session_path(current_user), class: "dropdown-item", method: :delete %>
     </div>

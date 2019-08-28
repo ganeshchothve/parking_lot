@@ -1,5 +1,5 @@
 en:
-  currency: 
+  currency:
     indian: '₹'
     default: '&#8377;'
   date:
@@ -40,6 +40,9 @@ en:
     sign_in_h1: "Welcome back"
     sign_in_h2: "Login to Book an Apartment online"
     total: 'Total'
+    boolean:
+      :true: 'Yes'
+      :false: 'No'
 
   helpers:
     show:
@@ -646,7 +649,7 @@ en:
         crm: 'CRM User'
         sales_admin: 'Sales Head'
         sales: 'Sales User'
-        user: 
+        user:
           zero: 'Customer'
           one: 'Customer'
           other: 'Customers'

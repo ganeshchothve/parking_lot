@@ -412,6 +412,10 @@ class User
     email.sent!
   end
 
+  def is_payment_done?
+    receipts.where('$or' => [{ status: { '$in': %w(success clearance_pending) } }, { payment_mode: {'$ne': 'online'}, status: {'$in': %w(pending clearance_pending success)} }]).present?
+  end
+
   # Class Methods
   class << self
 
