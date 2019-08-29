@@ -15,7 +15,7 @@
         </div>
         <div class="col-md-6 text-right">
           <div class="mt-2 mb-1 small text-muted">
-            <%= t("mongoid.attributes.user.lead_id") %>
+            <%= User.human_attribute_name('lead_id') %>
           </div>
           <h5><%= @user.lead_id %></h5>
         </div>
@@ -34,13 +34,13 @@
       <div class="row pd-box">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="small text-muted"><%= t("mongoid.attributes.user.email") %></label>
+            <label class="small text-muted"><%= User.human_attribute_name('eamil') %></label>
             <div><%= @user.email %></div>
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label class="small text-muted"><%= t("mongoid.attributes.user.phone") %></label>
+            <label class="small text-muted"><%= User.human_attribute_name('phone') %></label>
             <div><%= @user.phone %></div>
           </div>
         </div>
@@ -55,12 +55,12 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="small text-muted"><%= t("mongoid.attributes.user.manager_role") %></label>
-            <div><%= @user.manager_id.present? ? t("users.role.#{@user.manager_role}") : "Direct" %></div>
+            <div><%= User.human_attribute_name("role.#{@user.manager_role || 'direct'}") %></div>
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label class="small text-muted"><%= t("mongoid.attributes.user.manager_id") %></label>
+            <label class="small text-muted"><%= User.human_attribute_name('manager_id') %></label>
             <div><%= @user.manager_name || '' %></div>
           </div>
         </div>

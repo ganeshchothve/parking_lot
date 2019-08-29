@@ -4,7 +4,7 @@
       <div class="modal-content">
         <div class="modal-header bg-gradient-cd white" >
           <h3 class="title">
-            New <%= t("users.role.#{@user.role}") %>
+            <%= t("helpers.#{action_name}.link_name", User.human_attribute_name("role.#{@user.role}") ) %>
           </h3>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true" class="white">&times;</span>

@@ -31,7 +31,7 @@
 
     <div class="form-group">
       <%= f.label :role, class: 'label-required' %>
-      <div class='form-control role'><%= t("users.role.#{user.role}") %></div>
+      <div class='form-control role'><%= User.human_attribute_name("role.#{user.role}") %></div>
     </div>
 
     <div class="row">
