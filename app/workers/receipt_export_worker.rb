@@ -73,7 +73,7 @@ class ReceiptExportWorker
       receipt.user.name,
       receipt.user.lead_id.to_s,
       receipt.user.manager_name || "N/A",
-      User.human_attribute_name("role.#{receipt.user.manager_role || 'direct'}",
+      User.human_attribute_name("role.#{receipt.user.manager_role || 'direct'}"),
       receipt.booking_detail_name || "N/A",
       receipt.creator.name,
       receipt.created_at,
