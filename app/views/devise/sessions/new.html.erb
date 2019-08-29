@@ -12,7 +12,7 @@ end %>
         <p class="p-style">Login to Book an Apartment online</p>
 
 
-        <%= simple_form_for(resource, as: resource_name, url: users_otp_path, method: :post, authenticity_token: true, remote: true, html: { class: "validate-form #{otp_signin_class}", id: 'otp_user_form', data: { type: :json }, autocomplete: 'off' }) do |f| %>
+        <%= simple_form_for(resource, as: resource_name, url: users_otp_path, method: :post, authenticity_token: true, remote: true, html: { novalidate: false, class: "validate-form #{otp_signin_class}", id: 'otp_user_form', data: { type: :json }, autocomplete: 'off' }) do |f| %>
 
           <%= f.input :login, autofocus: true, autocomplete: false, class: 'form-control', label: User.human_attribute_name('phone') %>
 

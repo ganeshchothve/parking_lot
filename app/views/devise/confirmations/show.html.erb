@@ -5,7 +5,7 @@
         <h2 class="font-weight-bold text-success">Create Password</h2>
         <p class="p-style">Please choose a password of your choice and confirm your account</p>
 
-        <%= simple_form_for(resource, as: resource_name, url: update_user_confirmation_path, method: :put, html: { class: 'validate-form pb-5', id: 'activation-form', role: :form }) do |f| %>
+        <%= simple_form_for(resource, as: resource_name, url: update_user_confirmation_path, method: :put, html: { novalidate: false, class: 'validate-form pb-5', id: 'activation-form', role: :form }) do |f| %>
 
 
         <%= hidden_field_tag :confirmation_token, params[:confirmation_token] %>
