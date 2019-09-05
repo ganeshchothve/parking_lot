@@ -207,7 +207,11 @@ class User
   def password_complexity
     # Regexp extracted from https://stackoverflow.com/questions/19605150/regex-for-password-must-contain-at-least-eight-characters-at-least-one-number-a
     if password.blank? || password =~ /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,16}$/
-      if password !~ /#{first_name}|#{last_name}/i
+      arr = []
+      arr << ::Regexp.new(first_name, true) if first_name.present?
+      arr << ::Regexp.new(last_name, true) if last_name.present?
+      re = ::Regexp.union(arr)
+      if password !~ re
         true
       else
         errors.add :password, 'should not contain name.'

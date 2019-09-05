@@ -10,11 +10,11 @@
             <ul class="booking-apart-info">
               <li>
                 <span><%= t('mongoid.attributes.channel_partner.name') %></span>
-                <p><%= @channel_partner.name %></p>
+                <p class="break-word"><%= @channel_partner.name %></p>
               </li>
               <li>
                 <span><%= t('mongoid.attributes.channel_partner.email') %></span>
-                <p><%= @channel_partner.email %></p>
+                <p class="break-word"><%= @channel_partner.email %></p>
               </li>
               <li>
                 <span><%= t('mongoid.attributes.channel_partner.rera_id') %></span>
@@ -28,7 +28,7 @@
             <ul class="booking-apart-info clear">
               <li>
                 <span><%= t('mongoid.attributes.channel_partner.company_name') %></span>
-                <p><%= @channel_partner.company_name.presence || '-' %></p>
+                <p class="break-word"><%= @channel_partner.company_name.presence || '-' %></p>
               </li>
 
               <li>
@@ -44,7 +44,7 @@
 
               <li>
                 <span><%= t('mongoid.attributes.channel_partner.manager_name') %></span>
-                <p><%= @channel_partner.manager_name || '-' %></p>
+                <p class="break-word"><%= @channel_partner.manager_name || '-' %></p>
               </li>
             </ul>
           </div>
