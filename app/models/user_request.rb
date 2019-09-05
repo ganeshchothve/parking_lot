@@ -7,6 +7,8 @@ class UserRequest
   extend FilterByCriteria
 
   STATUS = %w[pending processing resolved rejected failed]
+  # Add different types of documents which are uploaded on user_request
+  DOCUMENT_TYPES = []
 
   field :status, type: String # default: 'pending'
   field :resolved_at, type: DateTime

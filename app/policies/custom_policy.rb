@@ -65,8 +65,12 @@ class CustomPolicy < Struct.new(:user, :enable_users)
     "#{user.buyer? ? '' : 'Admin::'}BulkUploadReportPolicy".constantize.new(user, BulkUploadReport).index?
   end
 
+  def assets?
+    "#{user.buyer? ? 'Buyer' : 'Admin'}::AssetPolicy".constantize.new(user, Asset).index?
+  end
+
   def self.custom_methods
-    %w[inventory schemes user_requests channel_partners user_kycs emails smses sync_logs referrals accounts phases erp_models portal_stage_priorities checklists bulk_upload_reports]
+    %w[inventory schemes user_requests channel_partners user_kycs emails smses sync_logs referrals accounts phases erp_models portal_stage_priorities checklists bulk_upload_reports assets]
     # audits
   end
 end

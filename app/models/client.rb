@@ -6,6 +6,8 @@ class Client
   include ConfigureTimeSlot
 
   PAYMENT_GATEWAYS = %w(Razorpay CCAvenue)
+  # Add different types of documents which are uploaded on client
+  DOCUMENT_TYPES = ['document', 'video', 'certificate']
 
   field :name, type: String
   field :selldo_client_id, type: String

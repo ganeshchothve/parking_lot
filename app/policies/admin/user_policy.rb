@@ -52,6 +52,10 @@ class Admin::UserPolicy < UserPolicy
     true
   end
 
+  def asset_create?
+    %w[admin sales sales_admin crm].include?(user.role)
+  end
+
   def permitted_attributes(params = {})
     attributes = super
     attributes += [:is_active] if record.persisted? && record.id != user.id

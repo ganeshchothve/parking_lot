@@ -21,7 +21,7 @@
               </div>\
             <div class="upload-completed-message hidden">Upload completed</div>\
             <div class="asset-actions ">\
-              <a href="' + record.url + '" target="_blank" title="Download" class="asset-download" download=""><i class="mdi mdi-download mdi-24px"></i></a>\
+              <a href="' + record.url + '" target="_blank" title="Download" class="asset-download" download=""><i class="fa fa-download"></i></a>\
             </div>\
             <div class="asset-name" title="' + file_name + '">' + file_name + '</div>\
           '+ (options.progress_bar ? progress_bar : '')+ '</div>'
@@ -33,6 +33,7 @@
       url: this.data("url"),
       dataType: 'json',
       add: function (e, data) {
+        $.blockUI();
         var errors = [];
         var self = this;
         var extensions = $(this).data("extensions");
@@ -78,6 +79,7 @@
             $container.find('.upload-completed-message').addClass('hidden');
             $container.find(".asset-inner").removeClass("asset-blur");
           }, 1500);
+          $.unblockUI();
         }
       },
       progress: function (e, data) {
@@ -87,6 +89,12 @@
             'width',
             progress + '%'
         );
+      },
+      error: function(e, textStatus, errorThrown){
+        if( typeof e.responseJSON == 'object'){
+          alert(e.responseJSON.errors)
+        }
+        $.unblockUI();
       }
     });
     var self= this;

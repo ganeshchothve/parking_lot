@@ -41,6 +41,10 @@ class UserPolicy < ApplicationPolicy
     false
   end
 
+  def asset_create?
+    false
+  end
+
   def permitted_attributes(_params = {})
     attributes = %i[first_name last_name phone lead_id password password_confirmation time_zone]
     # Only allow admin to change email.

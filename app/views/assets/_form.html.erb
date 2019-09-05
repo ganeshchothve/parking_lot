@@ -1,0 +1,45 @@
+<div class = "new_asset">
+  <div class="row mb-4">
+    <div class="col-10">
+      <% options = assetable_document_types(assetable) %>
+      <%= select_tag "document_type", options_for_select(options, options.first[1]), {prompt: "Select", class: "selectize", required: 'required'} %>
+      <div class = "text-muted small pb-2">Upload documents in following formats - jpg, jpeg, png, pdf </div>
+      <div class = "text-muted small"><div class="help_text"></div></div>
+    </div>
+    <div class="col-2">
+      <div class="form-group">
+        <div class="btn btn-primary fileinput-button pull-right">
+          <input type="file" name="files[]" class="btn btn-primary fileupload" data-extensions="<%= allowed_file_extensions('AssetUploader') %>" data-url="<%= assetables_path(assetable_type: assetable.class.model_name.i18n_key.to_s, assetable_id: assetable.id) %>" multiple=true <%= policy([ current_user_role_group, Asset.new(assetable: assetable)]).update? ? "" : "disabled=disabled" %> data-klass = 'Asset' data-field_name = 'file' data-form-data = '{"document_type": "<%= assetable.class::DOCUMENT_TYPES[0] %>"}' />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    var types = <%= raw t("mongoid.attributes.#{assetable.model_name.element}/file_types").to_json %>
+    var helpText = <%= raw t("mongoid.attributes.#{assetable.model_name.element}/help_text").to_json %>
+    if(!$(".selectize").last().hasClass("selectize-dropdown")){
+      $(".selectize").last().selectize();
+      $(".fileupload").last().fileUploader({
+        download_all: false
+      });
+    }
+    var currentType = $('select.selectize').val();
+    $('select.selectize').on("change", function(){
+      var formData = {"document_type": $(this).val()}
+      $(this).closest('.new_asset').find(".fileupload").data('form-data', formData)
+      currentType = $(this).val();
+      $('.help_text').html("Valid documents for <b>" + types[currentType] + "</b> - </br>" + helpText[currentType + "_html"])
+    }).trigger('change');
+    $('.fileupload').on("click", function(){
+      if($('.' + currentType).length == 0){
+        var html_content = "<div class = 'card m-2'><div class = 'card-header'>" + types[currentType] +"</div><div class = 'car-body'><div class = 'files-container p-3 "+ currentType + "'></div></div></div>"
+        $(".assets").prepend(html_content)
+      }
+      var target = $('.' + currentType)
+      $('.fileupload').last().data('target', target)
+    })
+    FileIcon.init($(".asset-delete"), $(".asset-icon"));
+  });
+<% end %>

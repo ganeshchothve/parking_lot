@@ -9,6 +9,8 @@ class ProjectUnit
   extend FilterByCriteria
 
   STATUS = %w(available employee management not_available hold blocked error)
+  # Add different types of documents which are uploaded on project_unit
+  DOCUMENT_TYPES = []
 
   # These fields are globally utlised on the server side
   field :name, type: String

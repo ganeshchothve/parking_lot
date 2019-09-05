@@ -4,6 +4,9 @@ class ProjectTower
   include ArrayBlankRejectable
   extend FilterByCriteria
 
+  # Add different types of documents which are uploaded on project_tower
+  DOCUMENT_TYPES = []
+
   field :name, type: String
   field :client_id, type: String
   field :project_name, type: String
