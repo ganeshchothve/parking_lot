@@ -857,7 +857,7 @@ en:
         hint: Choose apartment that suit your requirements
       project_unit:
         header: Set up your KYC
-        hint: 'Set up your KYC & hold your  apartments'
+        hint: 'Set up your KYC & hold your apartments'
       new:
         header: 'Search Home'
         link_name: Choose Apartment & Add Booking
@@ -1009,3 +1009,17 @@ en:
     pre_text: 'Don’t have account ?'
     new:
       sign_up: 'Sign Up'
+
+
+  dashboard:
+    titles:
+      lead_details: 'Lead Details'
+      booking_details: 'Booking Details'
+      total_leads: 'Total Leads'
+      received: 'Received'
+    confirmed_users: 'Confirmed Leads'
+    not_confirmed_users: 'Not Confirmed Leads'
+    booking_detail:
+      blocked: Blocked Bookings
+      booked_tentative: Tentative Bookings
+      booked_confirmed: Confirmed Bookings
