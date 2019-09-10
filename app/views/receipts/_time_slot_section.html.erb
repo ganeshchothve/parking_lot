@@ -13,9 +13,17 @@
           <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= user.receipts.direct_payments.count %></button>
         </div>
       </div>
-      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd bg-white collapse" id="collapseTimeSlots">
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd bg-white" id="collapseTimeSlots">
         <%= render "receipts/time_slot", receipts: user.receipts.direct_payments, with_actions: true %>
       </div>
     </div>
   </div>
 </section>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    var count = <%= raw user.receipts.direct_payments.count %>
+    if(count == 0){
+      $('#collapseTimeSlots').addClass('collapse')
+    }
+  });
+<% end %>

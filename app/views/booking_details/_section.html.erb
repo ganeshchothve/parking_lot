@@ -13,9 +13,17 @@
           <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= booking_details.total_entries %></button>
         </div>
       </div>
-      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd bg-white collapse" id="collapseBookings">
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd bg-white" id="collapseBookings">
         <%= render 'admin/booking_details/index', { booking_details: booking_details } %>
       </div>
     </div>
   </div>
 </section>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+      var count = <%= raw booking_details.total_entries %>
+    if(count == 0){
+      $('#collapseBookings').addClass('collapse')
+    }
+  });
+<% end %>

@@ -6,7 +6,7 @@
           <h2 class="text-dark icon-set icon-tag-black"><%= t('mongoid.attributes.user.utm_params') %></h2>
         </div>
       </div>
-      <div class="box-content br-rd-bl-4 bg-white row collapse" id="collapseUtmParams">
+      <div class="box-content br-rd-bl-4 bg-white row" id="collapseUtmParams">
         <div class="col-md-12 col-lg-12 col-sm-12">
           <ul class="booking-apart-info clear">
             <% if user.utm_params.blank? %>
@@ -25,3 +25,11 @@
     </div>
   </div>
 </section>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    var count = <%= raw user.utm_params.count %>
+    if(count == 0){
+      $('#collapseUtmParams').addClass('collapse')
+    }
+  });
+<% end %>
