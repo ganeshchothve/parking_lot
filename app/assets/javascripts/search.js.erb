@@ -89,7 +89,6 @@ var showTowerData = function(tower){
     $("#tower-description").removeClass('d-none');
   }
   $.scrollTo($("#tower-description").offset().top, 800);
-  Gamification.gamifyTowerSelection(tower, $('#tower-description [data-placeholder="gamification"]'));
   if(tower.assets.length > 0){
     $(".tower_image_container").show();
     $('[data-placeholder="tower_image"]').attr("src", _.first(tower.assets).file.url);

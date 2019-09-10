@@ -423,6 +423,7 @@ en:
         last_sync_status: Last Sync Status
         comments: 'Comments'
         carpet: Carpet Area
+        configuration: 'Configuration'
       project_unit/status:
         hold: 'Hold'
         available: 'Available'
@@ -487,6 +488,7 @@ en:
         carpet: "Carpet Area"
         project_tower_id: "Tower"
         project_unit_id: "Apartment"
+        starting_price: 'Starting Price'
 
       scheme:
         name: 'Name'
@@ -857,7 +859,7 @@ en:
         hint: Choose apartment that suit your requirements
       project_unit:
         header: Set up your KYC
-        hint: 'Set up your KYC & hold your  apartments'
+        hint: 'Set up your KYC & hold your apartments'
       new:
         header: 'Search Home'
         link_name: Choose Apartment & Add Booking
@@ -1009,3 +1011,25 @@ en:
     pre_text: 'Don’t have account ?'
     new:
       sign_up: 'Sign Up'
+
+
+  dashboard:
+    welcome:
+      heading: 'Welcome %{name}'
+      sub_heading: 'Follow these quick steps and get your customers to be one of the privileged few to own a home at %{project_name}'
+    projects:
+      sub_heading: 'Best homes to meet your expectations'
+    titles:
+      lead_details: 'Lead Details'
+      booking_details: 'Booking Details'
+      total_leads: 'Total Leads'
+      received: 'Received'
+      available_inventory: 'Available Inventory'
+      download_brochure: 'Download Brochure'
+      visit_website: 'Visit Website'
+    confirmed_users: 'Confirmed Leads'
+    not_confirmed_users: 'Not Confirmed Leads'
+    booking_detail:
+      blocked: Blocked Bookings
+      booked_tentative: Tentative Bookings
+      booked_confirmed: Confirmed Bookings
