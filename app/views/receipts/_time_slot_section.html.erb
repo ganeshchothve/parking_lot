@@ -22,7 +22,7 @@
 <%= javascript_tag do %>
   $(document).ready(function(){
     var count = <%= raw user.receipts.direct_payments.count %>
-    if(count == 0){
+    if(count != 0){
       $('#collapseTimeSlots').collapse('show')
     }
   });
