@@ -21,7 +21,7 @@
 </section>
 <%= javascript_tag do %>
   $(document).ready(function(){
-      var count = <%= raw booking_details.total_entries %>
+    var count = <%= raw booking_details.total_entries %>
     if(count == 0){
       $('#collapseBookings').addClass('collapse')
     }
