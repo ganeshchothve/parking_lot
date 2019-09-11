@@ -71,22 +71,15 @@
       Gamification.gamifyTowerSelection(tower, $('#' + tower.project_tower_id + ' [data-placeholder="gamification"]'));
     });
     $('.result-list').click(function(e) {
-      if ($(this).hasClass('active')){
-        $(this).removeClass('active')
-      }
-      else{
-        $('.result-list').removeClass('active')
-        $(this).addClass('active')
-        $("#project_tower_id").val($(this).attr('id'));
-        var $form = $(".edit_search_form");
-        var tower_id = $(this).attr('id')
-        $form.find('[name="search[project_tower_id]"]').val(tower_id);
-        $form.find('input[type="submit"]').removeAttr("disabled");
-
-        var tower = _.find(towers, function(u){ return u.project_tower_id == tower_id });
-        console.log(tower)
-        showTowerData(tower);
-      }
+      $('.result-list').removeClass('active')
+      $(this).addClass('active')
+      $("#project_tower_id").val($(this).attr('id'));
+      var $form = $(".edit_search_form");
+      var tower_id = $(this).attr('id')
+      $form.find('[name="search[project_tower_id]"]').val(tower_id);
+      $form.find('input[type="submit"]').removeAttr("disabled");
+      var tower = _.find(towers, function(u){ return u.project_tower_id == tower_id });
+      showTowerData(tower);
     });
     $('.extra-pad').css('padding-top', $('.result-list').outerHeight()/2);
     $('.result-list').eq(0).click();
