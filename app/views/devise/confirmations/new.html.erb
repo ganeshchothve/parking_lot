@@ -4,7 +4,7 @@
       <div class="login-form-wrapper pt-5">
         <p class="p-style">Reset Password</p>
 
-        <%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), method: :post, html: { class: 'validate-form pb-5', id: 'confirmation_form' }) do |f| %>
+        <%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), method: :post, html: { novalidate: false, class: 'validate-form pb-5', id: 'confirmation_form' }) do |f| %>
 
 
           <%= f.input :login, autofocus: true, autocomplete: false, class: 'form-control' %>

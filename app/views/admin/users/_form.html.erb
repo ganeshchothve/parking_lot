@@ -4,7 +4,7 @@
       <div class="modal-content">
         <div class="modal-header bg-gradient-cd white">
           <h3 class="title">
-            <%= t("controller.users.#{action_name}.header", role: t("mongoid.attributes.user/role.#{@user.role}") ) %>
+            <%= t("controller.users.#{action_name}.header", role: User.human_attribute_name("role.#{@user.role}") ) %>
           </h3>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true" class="white">&times;</span>
@@ -42,7 +42,7 @@
           <% if @user.role.blank? %>
           <div class="form-group">
             <%= f.label :role, class: 'label-required' %>
-            <%= f.select :role, User.available_roles(current_client).reject{|role| User.buyer_roles(current_client).include?(role)}.collect{ |r| [t("mongoid.attributes.user/role.#{r}"), r] }, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, @user]).editable_field?("role") ? false : true) %>
+            <%= f.select :role, User.available_roles(current_client).reject{|role| User.buyer_roles(current_client).include?(role)}.collect{ |r| [User.human_attribute_name("role.#{r}"), r] }, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, @user]).editable_field?("role") ? false : true) %>
           </div>
           <% elsif policy([current_user_role_group, @user]).editable_field?("role") %>
           <div class="form-group">

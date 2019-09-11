@@ -37,7 +37,7 @@
             <ul class="booking-apart-info clear">
               <li>
                 <span><%= t('mongoid.attributes.user.role') %></span>
-                <p><%= t("mongoid.attributes.user/role.#{user.role}") %></p>
+                <p><%= User.human_attribute_name("role.#{user.role}") %></p>
               </li>
               <li>
                 <span><%= t('mongoid.attributes.user.lead_id') %></span>

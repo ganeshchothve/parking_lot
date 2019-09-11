@@ -16,7 +16,7 @@
             <div class="dropdown-menu">
               <% User.available_roles(current_client).each do |role| %>
                 <% if policy([:admin, User.new(role: role)]).new? %>
-                  <%= link_to t('controller.users.new.link_name', role: t("mongoid.attributes.user/role.#{role}") ), new_admin_user_path(role: role), class: 'modal-remote-form-link dropdown-item' %>
+                  <%= link_to t('controller.users.new.link_name', role: User.human_attribute_name("role.#{role}")), new_admin_user_path(role: role), class: 'modal-remote-form-link dropdown-item' %>
                 <% end %>
               <% end %>
             </div>

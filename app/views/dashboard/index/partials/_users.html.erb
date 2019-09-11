@@ -22,7 +22,7 @@
           <tbody>
             <% users.each do |d| %>
             <tr>
-              <td><%= t("mongoid.attributes.user/role.#{d[:role]}") %></td>
+              <td><%= User.human_attribute_name("role.#{d[:role]}") %></td>
               <td class="text-right"><%= d[:count] %></td>
             </tr>
             <% end %>

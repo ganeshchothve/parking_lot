@@ -1,4 +1,4 @@
-<%= simple_form_for(resource, url: user_registration_path, html: { class: 'validate-form' }) do |f| %>
+<%= simple_form_for(resource, url: user_registration_path, html: { novalidate: false, class: 'validate-form' }) do |f| %>
 
   <%= f.input :first_name, autofocus: true, required: true %>
 

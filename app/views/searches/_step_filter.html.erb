@@ -5,64 +5,38 @@
       <div class="row mb-5">
         <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12 scroll-bar">
           <% @towers.sort{|a,b| a[:project_tower_name] <=> b[:project_tower_name]}.each do |tower| %>
-            <div class="result-list cursor-pointer" id=<%= tower[:project_tower_id] %>>
+            <div class="result-list cursor-pointer tower-description" id=<%= tower[:project_tower_id] %>>
               <div class="title"><%= tower[:project_tower_name] %></div>
               <ul>
                 <li><span class="no"><%= tower[:floors] %></span><span>Floors</span></li>
-                <li><span class="no"><%= tower[:total_units] %></span><span>Total  Apartments</span></li>
-                <li><span class="no"><%= tower[:total_units_available] %></span><span>Available  Apartments</span></li>
+                <li><span class="no"><%= tower[:total_units] %></span><span>Total Apartments</span></li>
+                <li><span class="no"><%= tower[:total_units_available] %></span><span>Available Apartments</span></li>
               </ul>
-              <div class="info">33 other people like you are looking  for a home in this tower</div>
+              <div class="info" data-placeholder='gamification'></div>
             </div>
           <% end %>
         </div>
         <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12 d-none" id="tower-description" data-jquery-selector="tower-card">
           <div class="card h-md-100">
-            <div class="bg-primary text-white">
-              <%= icon "fas", "building", class: "fa-2x position-absolute", style: "right:10px; top:10px;" %>
-              <div class="p-3">
-                <h4 class="font-weight-bold mb-3" data-placeholder="name"></h4>
-                <div class="row">
-                  <div class="col-1 info">
-                  </div>
-                  <div class="col-11">
-                    <h6 data-placeholder="gamification"></h6>
-                  </div>
-                </div>
-              </div>
-              <figure class="w-100 wave">
-                <svg preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="20 -20 300 100" style="margin-bottom: -38px;margin-top: -54px;" xml:space="preserve">
-                  <path class="fill-white" opacity=".4" d="M30.913,43.944c0,0,42.911-34.464,87.51-14.191c77.31,35.14,113.304-1.952,146.638-4.729
-                  c48.654-4.056,69.94,16.218,69.94,16.218v54.396H30.913V43.944z"></path>
-                  <path class="fill-white" opacity=".4" d="M-35.667,44.628c0,0,42.91-34.463,87.51-14.191c77.31,35.141,113.304-1.952,146.639-4.729
-                  c48.653-4.055,69.939,16.218,69.939,16.218v54.396H-35.667V44.628z"></path>
-                  <path class="fill-white" opacity="0" d="M43.415,98.342c0,0,48.283-68.927,109.133-68.927c65.886,0,97.983,67.914,97.983,67.914v3.716
-                  H42.401L43.415,98.342z"></path>
-                  <path class="fill-white" d="M-34.667,62.998c0,0,56-45.667,120.316-27.839C167.484,57.842,197,41.332,232.286,30.428
-                  c53.07-16.399,104.047,36.903,104.047,36.903l1.333,36.667l-372-2.954L-34.667,62.998z"></path>
-                </svg>
-              </figure>
-            </div>
-            <div class="row p-3">
-              <div class="col-md-4">
-                <label> <%= t('mongoid.attributes.project_tower.floor')%></label>
-                <h6 class="text-black font-weight" data-placeholder="floors"></h6>
-              </div>
-              <div class="col-md-4">
-                <label><%= t('mongoid.attributes.project_tower.total_apprtment')%></label>
-                <h6 class="text-black font-weight" data-placeholder="total-apartments"></h6>
-              </div>
-              <div class="col-md-4">
-                <label><%= t('mongoid.models.project_unit/status.available')%></label>
-                <h6 class="text-black font-weight" data-placeholder="available-apartments"></h6>
-              </div>
-            </div>
             <div class="p-3">
               <a data-toggle="modal" data-target="#towerImage" href="javascript:;" class="tower_image_container" style="display:none;">
                 <img class="img-fluid" style="width: 100%; display: block;" data-placeholder="tower_image" />
                 <br/>
                 Click to view details
               </a>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" role="dialog" id="towerImage">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body" data-placeholder="gallery_tower_images">
+              </div>
             </div>
           </div>
         </div>
@@ -92,6 +66,9 @@
 <%= javascript_tag do %>
   $(document).ready(function(){
     var towers = <%= raw @towers.to_json(include: [:assets]) %>;
+    _.each(towers, function(tower) {
+      Gamification.gamifyTowerSelection(tower, $('#' + tower.project_tower_id + ' [data-placeholder="gamification"]'));
+    });
     $('.result-list').click(function(e) {
       if ($(this).hasClass('active')){
         $(this).removeClass('active')
@@ -102,8 +79,6 @@
         $("#project_tower_id").val($(this).attr('id'));
         var $form = $(".edit_search_form");
         var tower_id = $(this).attr('id')
-        $('[data-jquery-selector="tower-card"] svg').addClass('d-none');
-        $(this).find('svg').removeClass('d-none');
         $form.find('[name="search[project_tower_id]"]').val(tower_id);
         $form.find('input[type="submit"]').removeAttr("disabled");
 
@@ -112,5 +87,6 @@
         showTowerData(tower);
       }
     });
+    $('.result-list').eq(0).click();
   });
 <% end %>

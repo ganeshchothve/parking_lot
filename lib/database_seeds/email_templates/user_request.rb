@@ -2,7 +2,7 @@ module DatabaseSeeds
   module EmailTemplates
     module UserRequest
       def self.seed client_id
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "UserRequest::Cancellation", name: "cancellation_request_pending", subject: "Cancellation Requested for Unit: <%= self.requestable.name %>", content: '<div class="card w-100">
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "UserRequest::Cancellation", name: "cancellation_request_pending", subject: "Cancellation Requested for Unit: <%= self.project_unit.name %>", content: '<div class="card w-100">
           <div class="card-body">
             <p>Dear <%= self.user.name %>,</p>
             <% if requestable.kind_of?(BookingDetail) %>
@@ -11,7 +11,7 @@ module DatabaseSeeds
               </p>
             <% elsif requestable.kind_of?(Receipt) %>
               <p>
-                A cancellation has been requested on your booking of <%= requestable.name %>. Our CRM team is reviewing the request and will get in touch with you shortly.
+                A cancellation has been requested on your booking of <%= requestable.booking_detail_name %>. Our CRM team is reviewing the request and will get in touch with you shortly.
               </p>
             <% end %>
           </div>
@@ -28,7 +28,7 @@ module DatabaseSeeds
               </p>
             <% elsif requestable.kind_of?(Receipt) %>
               <p>
-                Cancellation request on your payment of <%= requestable.name%>  has been processed and your amount will be refunded to you in a few days.<br/>
+                Cancellation request on your payment of <%= requestable.booking_detail_name %>  has been processed and your amount will be refunded to you in a few days.<br/>
               </p>
             <% end %>
           </div>
@@ -43,7 +43,7 @@ module DatabaseSeeds
               </p>
             <% elsif requestable.kind_of?(Receipt) %>
               <p>
-                Cancellation request on your booking of <%= requestable.name%> has been rejected
+                Cancellation request on your booking of <%= requestable.booking_detail_name %> has been rejected
               </p>
             <% end %>
           </div>

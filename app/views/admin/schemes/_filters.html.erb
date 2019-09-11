@@ -17,11 +17,11 @@
           </div>
           <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.scheme.can_be_applied_by'), class: "control-label" %>
-            <%= select_tag "fltrs[can_be_applied_by]", options_for_select( User.available_roles(current_client).map{|role| [t("mongoid.attributes.user/role.#{role}"), role] }, params.dig(:fltrs, :can_be_applied_by)), {prompt: "Select", class: "selectize"} %>
+            <%= select_tag "fltrs[can_be_applied_by]", options_for_select( User.available_roles(current_client).map{|role| [User.human_attribute_name("role.#{role}"), role] }, params.dig(:fltrs, :can_be_applied_by)), {prompt: "Select", class: "selectize"} %>
           </div>
           <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.user.role'), class: "control-label" %>
-            <%= select_tag "fltrs[user_role]", options_for_select( User.available_roles(current_client).map{|role| [t("mongoid.attributes.user/role.#{role}"), role] }, params.dig(:fltrs, :user_role)), {prompt: "Select", class: "selectize"} %>
+            <%= select_tag "fltrs[user_role]", options_for_select( User.available_roles(current_client).map{|role| [User.human_attribute_name("role.#{role}"), role] }, params.dig(:fltrs, :user_role)), {prompt: "Select", class: "selectize"} %>
           </div>
           <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
             <%= label_tag "fltrs", ProjectTower.model_name.human, class: "control-label" %>

@@ -13,9 +13,17 @@
           <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= receipts.total_entries %></button>
         </div>
       </div>
-      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd bg-white collapse" id="collapseReceipts">
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd bg-white" id="collapseReceipts">
         <%= render '/receipts/index', receipts: receipts %>
       </div>
     </div>
   </div>
 </section>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    var count = <%= receipts.total_entries %>
+    if(count == 0){
+      $('#collapseReceipts').addClass('collapse')
+    }
+  });
+<% end %>

@@ -2,14 +2,13 @@
   <thead class="th-default">
     <thead>
       <tr class="bg-gradient-cd white">
-        <th><%= t('mongoid.attributes.user.name') %></th>
-        <th> <%= t('mongoid.attributes.user.phone') %> / <%= t('mongoid.attributes.user.email') %></th>
+        <th><%= User.human_attribute_name('name_email_phone') %></th>
         <% if current_client.selldo_client_id.present? && current_client.selldo_gre_form_id.present? && current_client.selldo_channel_partner_form_id.present? %>
-          <th><%= t('mongoid.attributes.user.lead_id') %></th>
+          <th><%= User.human_attribute_name('lead_id') %></th>
         <% end %>
         <th><%= Receipt.model_name.human %></th>
-        <th><%= t('mongoid.attributes.user.role') %></th>
-        <th><%= t('mongoid.attributes.user.status') %></th>
+        <th><%= User.human_attribute_name('role') %></th>
+        <th><%= User.human_attribute_name('status') %></th>
         <th class="text-right"><%= t('global.action', count: 3) %></th>
       </tr>
     </thead>
@@ -25,9 +24,6 @@
               <%= user.name %>
             <% end %>
           </span>
-        </td>
-
-        <td data-title="Phone & Email">
           <% if user.email.present? %>
             <span class="email-icon">
               <%= user.email || "" %>
@@ -44,14 +40,12 @@
           <td data-title="Sell.Do Lead Id"><span><%= user.lead_id %></span></td>
         <% end %>
 
-        <td data-title="Payments">
-          <span>
-            <%= user.receipts.where('$or' => [{ status: { '$in': %w(success clearance_pending) } }, { payment_mode: {'$ne': 'online'}, status: {'$in': %w(pending clearance_pending success)} }]).present? ? "Yes" : "No" %>
-          </span>
+        <td data-title="payments">
+          <span><%= t("global.boolean.#{user.is_payment_done? }") %></span>
         </td>
 
         <td data-title="Role">
-          <span><%= t("mongoid.attributes.user/role.#{user.role}") %></span>
+          <span><%= User.human_attribute_name("role.#{user.role}") %></span>
         </td>
 
         <td data-title="Status">

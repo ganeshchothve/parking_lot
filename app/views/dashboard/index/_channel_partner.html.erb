@@ -7,8 +7,8 @@
       <div class="row">
         <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12 offset-lg-2">
           <div class="box-content">
-            <h1 class="wc-title white text-center"><%= t('dashboard.welcome.heading') + current_user.name %></h1>
-            <p class="white text-center fn-300 fn-18"><%= t('dashboard.welcome.sub_heading') %></p>
+            <h1 class="wc-title white text-center"><%= t('dashboard.welcome.heading', name: current_user.name) %></h1>
+            <p class="white text-center fn-300 fn-18"><%= t('dashboard.welcome.sub_heading', project_name: current_project.name) %></p>
             <ul class="step-booking">
               <li class="light-blue">
                 <span>
@@ -25,7 +25,7 @@
               </li>
             </ul>
             <!-- <p class="white text-center fn-14 fn-500">Fill your KYC form for proceed further</p> -->
-            <%= link_to t('controller.users.new.link_name', role: t("mongoid.attributes.user/role.user")), new_admin_user_path(role: 'user'), class: 'large-btn black-bg display-block fn-500 center-block show-kyc modal-remote-form-link' %>
+            <%= link_to t('controller.users.new.link_name', role: User.human_attribute_name("role.user")), new_admin_user_path(role: 'user'), class: 'large-btn black-bg display-block fn-500 center-block show-kyc modal-remote-form-link' %>
           </div>
         </div>
       </div>
@@ -48,16 +48,16 @@
             <div class="project-slider1">
               <div>
                 <div class="box-content br-rd-bl-4 bg-white text-center">
-                  <h3 class="title"><%= t('dashboard.projects.heading') %></h3>
+                  <h3 class="title"><%= current_project.name %></h3>
                   <p class="sort-desc col-lg-6 col-xs-12 col-md-6 col-sm-12 offset-md-3 offset-lg-3"><%= t('dashboard.projects.sub_heading') %></p>
                   <ul class="prjt-info br-rd-4">
-                    <li><span><%= t('dasboard.titles.available_inventory') %></span><p><%= DashboardDataProvider.available_inventory %></p></li>
+                    <li><span><%= t('dashboard.titles.available_inventory') %></span><p><%= DashboardDataProvider.available_inventory %></p></li>
                     <li><span><%= t('mongoid.attributes.search.starting_price') %></span><p><%= DashboardDataProvider.minimum_agreement_price %></p></li>
                     <li><span><%= t('mongoid.attributes.project_unit.configuration') %></span><p><%= DashboardDataProvider.configurations.to_sentence %></p></li>
                   </ul>
                   <ul class="prjt-link">
                     <li><%= link_to t('dashboard.titles.download_brochure'), download_brochure_path, target: "_blank", class: 'text-uppercase' %></li>
-                    <li><%= link_to 'Visit Website', current_client.website_link, target: "_blank", class: 'text-uppercase' %></li>
+                    <li><%= link_to t('dashboard.titles.visit_website'), current_client.website_link, target: "_blank", class: 'text-uppercase' %></li>
                   </ul>
                   <%= link_to t('helpers.new.link_name', model: BookingDetail.model_name.human), new_admin_booking_detail_path, class: 'large-btn bg-light-blue display-block fn-500 center-block text-uppercase modal-remote-form-link' %>
                 </div>
@@ -114,14 +114,13 @@
         <div class="row">
           <div class="box-card col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-5">
             <div class="box-header bg-gradient-cd br-rd-tr-4">
-            <h2><img src="<%= asset_path 'question-square-white.svg' %>" alt="Documents" class="wd-16"><%= t('dashboard.titles.payments') %></h2>
+            <h2><img src="<%= asset_path 'rupee-white.svg' %>" alt="<%= Receipt.model_name.human(count: @receipts.total_entries) %>" class="wd-10"><%= Receipt.model_name.human(count: @receipts.total_entries) %></h2>
             </div>
             <div class="box-content br-rd-bl-4 bg-white fix-ht-420">
               <div class="row pd-box">
-              <p class="text-center"><%= t('dashboard.payments.data') %></p>
                 <ul class="db-user-no-list pt-5 mt-2">
                   <% DashboardDataProvider.receipts_group_by(current_user).each do |key, value| %>
-                    <li><span class="number"><%= value %></span><p class="title"><%= t("dashboard.receipt.#{key}")%></p>
+                    <li><span class="number"><%= value %></span><p class="title"><%= t("mongoid.attributes.receipt/status.#{key}")%></p>
                     <!-- <span class="prjt-no">Total Projects: 05</span><span class="update-info">last updated a week ago</span> -->
                     </li>
                   <% end %>
@@ -131,16 +130,15 @@
           </div>
           <div class="box-card col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-5">
             <div class="box-header bg-gradient-cd br-rd-tr-4">
-            <h2><img src="<%= asset_path 'rupee-white.svg' %>" alt="Documents" class="wd-10">My Incentives</h2>
+            <h2><img src="<%= asset_path 'rupee-white.svg' %>" alt="Incentives" class="wd-10">My Incentives</h2>
             </div>
             <div class="box-content br-rd-bl-4 bg-white fix-ht-420">
               <div class="row pd-box">
-              <p class="text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna</p>
                 <ul class="db-user-no-list pt-3 mt-3">
                   <li><span class="number">2 lac</span><p class="title">Booking in<br>confirm stage</p></li>
                   <li><span class="number">5 lac</span><p class="title">Incentive<br>paid</p></li>
-                  <li><span class="number">2 lac</span><p class="title">Incentive <br>generated</p></li>
-                  <li><span class="number">05</span><p class="title">No of bookings<br> with pending incentive</p></li>
+                  <li><span class="number">2 lac</span><p class="title">Incentive<br>generated</p></li>
+                  <li><span class="number">05</span><p class="title">No of bookings<br>with pending incentive</p></li>
                 </ul>
               </div>
             </div>

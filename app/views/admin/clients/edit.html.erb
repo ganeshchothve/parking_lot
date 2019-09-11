@@ -1,4 +1,4 @@
-<%= simple_form_for @client, url: admin_client_path, remote: true, local: true, html: {id: "client_form", class: "modal-remote-form validate-form", "data-resource-type": global_labels['client'], "data-type": "json"} do |f| %>
+<%= simple_form_for @client, url: admin_client_path, remote: true, local: true, html: { novalidate: false, id: "client_form", class: "modal-remote-form validate-form", data: { 'resource-type': Client.model_name.human, type: :json } } do |f| %>
   <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">

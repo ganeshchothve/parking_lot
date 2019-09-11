@@ -4,7 +4,7 @@
       <div class="login-form-wrapper pt-5">
         <p class="p-style">Resend unlock instructions</p>
 
-          <%= simple_form_for(resource, as: resource_name, url: unlock_path(resource_name), method: :post, html: { class: 'validate-form' }) do |f| %>
+          <%= simple_form_for(resource, as: resource_name, url: unlock_path(resource_name), method: :post, html: { novalidate: false, class: 'validate-form' }) do |f| %>
 
             <%= f.input :email, autofocus: true, autocomplete: false, as: :email %>
 

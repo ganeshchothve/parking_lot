@@ -7,7 +7,7 @@
 <% end %>
 
 <% if policy([:admin, booking_detail.user]).show? %>
-  <%= link_to t('helpers.show.link_name', model: t('mongoid.attributes.user/role.user') ), admin_user_path(booking_detail.user), class: "dropdown-item" %>
+  <%= link_to t('helpers.show.link_name', model: User.human_attribute_name('role.user') ), admin_user_path(booking_detail.user), class: "dropdown-item" %>
 <% end %>
 
 <% if booking_detail.scheme_rejected? && policy([:admin, booking_detail.project_unit]).release_unit? %>

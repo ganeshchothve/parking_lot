@@ -15,9 +15,9 @@ class BookingDetail
   field :status, type: String
   field :erp_id, type: String, default: ''
   field :name, type: String
-  field :base_rate, type: Float
-  field :floor_rise, type: Float
-  field :saleable, type: Float
+  field :base_rate, type: Float, default: 0
+  field :floor_rise, type: Float, default: 0
+  field :saleable, type: Float, default: 0
   field :project_name, type: String
   field :project_tower_name, type: String
   field :bedrooms, type: String

@@ -2,10 +2,10 @@
   <table class='table striped-table'>
     <thead class="th-default">
       <tr>
-        <th><%= t('mongoid.attributes.user.name') %></th>
-        <th><%= t('mongoid.attributes.user.role') %></th>
-        <th><%= t('users.account_confirmed') %></th>
-        <th><%= t('mongoid.attributes.user.created_at') %></th>
+        <th><%= User.human_attribute_name('name') %></th>
+        <th><%= User.human_attribute_name('role') %></th>
+        <th><%= User.human_attribute_name('confirmed_at') %></th>
+        <th><%= User.human_attribute_name('created_at') %></th>
       </tr>
     </thead>
     <tbody>
@@ -18,8 +18,8 @@
               <%= user.phone || "" %> <br/>
             </div>
           </td>
-          <td><%= t("users.role.#{user.role}") %></td>
-          <td><%= t("users.confirmed.#{user.confirmed_at.present?}") %> </td>
+          <td><%= User.human_attribute_namet("role.#{user.role}") %></td>
+          <td><%= User.human_attribute_name("confirmed.#{user.confirmed_at.present?}") %> </td>
           <td><%= user.created_at.strftime(t('date.formats.default'))%></td>
         </tr>
       <% end %>
