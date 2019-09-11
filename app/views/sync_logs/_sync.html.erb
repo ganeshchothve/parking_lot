@@ -6,7 +6,7 @@
           <h2 class="text-dark icon-set icon-sync-black"> <%= SyncLog.model_name.human %> </h2>
         </div>
       </div>
-      <div class="box-content br-rd-bl-4 bg-white row collapse" id='collapseSyncLogs'>
+      <div class="box-content br-rd-bl-4 bg-white row collapse show" id='collapseSyncLogs'>
         <div class="col-md-12 col-lg-12 col-sm-12">
           <% record.erp_models.active.each do |erp_model| %>
             <ul class="booking-apart-info clear">

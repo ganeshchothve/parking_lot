@@ -3,7 +3,7 @@
     <div class="bg-white search-result br-rd-4">
       <h2 class="title"> <%= t('controller.searches.towers.header') %></h2>
       <div class="row mb-5">
-        <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12 scroll-bar">
+        <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12 scroll-bar min-ht-3tower">
           <% @towers.sort{|a,b| a[:project_tower_name] <=> b[:project_tower_name]}.each do |tower| %>
             <div class="result-list cursor-pointer tower-description" id=<%= tower[:project_tower_id] %>>
               <div class="title"><%= tower[:project_tower_name] %></div>
@@ -15,6 +15,7 @@
               <div class="info" data-placeholder='gamification'></div>
             </div>
           <% end %>
+          <div class="extra-pad"></div>
         </div>
         <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12 d-none" id="tower-description" data-jquery-selector="tower-card">
           <div class="card h-md-100">
@@ -87,6 +88,7 @@
         showTowerData(tower);
       }
     });
+    $('.extra-pad').css('padding-top', $('.result-list').outerHeight()/2);
     $('.result-list').eq(0).click();
   });
 <% end %>

@@ -6,7 +6,7 @@ module FilterByCriteria
     filters = self.all
     (params[:fltrs] || {}).each do |key, value|
       if value.present? && self.respond_to?("filter_by_#{key}")
-        filters = filters.send("filter_by_#{key}", *value)
+        filters = filters.send("filter_by_#{key}", value)
       end
     end
     filters = filters.filter_by_search(params[:search]) if params[:search].present? && self.respond_to?('filter_by_search')

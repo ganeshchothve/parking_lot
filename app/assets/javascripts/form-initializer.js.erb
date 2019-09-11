@@ -31,8 +31,8 @@ FormInitializer = (function(){
     crs.init();
     $(selector).find('.selectize-tags').selectize({create: true});
     $(selector).find('.array-field').arrayField();
-    var startDate = moment(($(selector).find('.daterangefilter').data("startDate") || moment()), "MM/DD/YYYY");
-    var endDate = moment(($(selector).find('.daterangefilter').data("endDate") || moment()), "MM/DD/YYYY");
+    var startDate = moment(($(selector).find('.daterangefilter').data("startDate") || moment()), "DD/MM/YYYY");
+    var endDate = moment(($(selector).find('.daterangefilter').data("endDate") || moment()), "DD/MM/YYYY");
     var opens = $(selector).find('.daterangefilter').data("opens") || 'left'
     $(selector).find('.daterangefilter').each(function(){
       $(this).daterangepicker({
@@ -49,7 +49,7 @@ FormInitializer = (function(){
       });
     });
     $(selector).find('.daterangefilter').on('apply.daterangepicker', function(ev, picker) {
-      $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+      $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
     });
 
     $(selector).find('.datepicker').each(function(){

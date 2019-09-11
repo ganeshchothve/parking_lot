@@ -10,7 +10,7 @@
       </div>
       <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
         <div class="table-btn-set float-right pb-3">
-          <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= user.receipts.direct_payments.count %></button>
+          <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= user.receipts.direct_payments.where(:"time_slot".exists => true).count %></button>
         </div>
       </div>
       <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd bg-white collapse" id="collapseTimeSlots">
@@ -21,7 +21,7 @@
 </section>
 <%= javascript_tag do %>
   $(document).ready(function(){
-    var count = <%= raw user.receipts.direct_payments.count %>
+  var count = <%= raw user.receipts.direct_payments.where(:"time_slot".exists => true).count %>
     if(count != 0){
       $('#collapseTimeSlots').collapse('show')
     }
