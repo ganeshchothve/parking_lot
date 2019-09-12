@@ -1006,11 +1006,24 @@ en:
       login_with_password_link: 'Login with password instead'
       login_with_otp_link: 'Login with OTP instead'
       sign_in: 'Sign In'
+      link:
+        pre_text: 'Already have an account?'
+        name: 'Login here'
+    titles:
+      heading1_html: 'Welcome to %{project_name}'
+      heading2_html: 'Now is the best time to turn your dream into reality.'
+    form:
+      heading_html: '<strong>Login</strong> to Book an Apartment online'
 
   registrations:
     pre_text: 'Don’t have account ?'
     new:
       sign_up: 'Sign Up'
+    titles:
+      heading1_html: 'Biggest real estate opportunity in pune.<br> Introducing exclusive %{unit_configs} Bed residences starting from %{start_price} lakhs'
+      heading2_html: Home buying can’t get better than this.
+    form:
+      heading_html: '<strong>Register Now</strong> to Book Online'
 
 
   dashboard:
@@ -1033,3 +1046,6 @@ en:
       blocked: Blocked Bookings
       booked_tentative: Tentative Bookings
       booked_confirmed: Confirmed Bookings
+
+  registration:
+  session:

@@ -1,4 +1,4 @@
-<section class="auth login-page pb-5 mb-5">
+<section class="auth login-page">
   <div class="container">
     <div class="col-lg-6 col-xs-12 col-md-12 col-sm-12 p-0">
       <div class="login-form-wrapper pt-2">
@@ -11,7 +11,7 @@
             <%= simple_form_for(@channel_partner, local: true, html: { id: 'channel_partner_form', class: 'validate-form', multipart: true, novalidate: false }) do |form| %>
 
               <%= render "form_fields", {form: form} %>
-              <div class="signin-btn col-lg-12 pl-0 pr-0 pt-4 pb-5">
+              <div class="signin-btn col-lg-12 pl-0 pr-0 pb-4">
                 <%= form.submit "Register", class: "sign-in-btn", data: { disable_with: "Please wait..." } %>
               </div>
               <%= render "devise/shared/links" %>
