@@ -60,7 +60,7 @@ class DashboardController < ApplicationController
   def get_lead_detail_labels
     labels = Array.new
     DashboardDataProvider.user_group_by(current_user).each do |key, value|
-      labels << value.to_s + ' ' + t("dashboard.#{key}")
+      labels << value.to_s + ' ' + t("dashboard.channel_partner.#{key}")
     end
     labels
   end
@@ -68,7 +68,7 @@ class DashboardController < ApplicationController
   def get_booking_detail_labels
     labels = Array.new
     DashboardDataProvider.booking_detail_group_by(current_user).keys.each do |key|
-      labels << t("dashboard.booking_detail.#{key}")
+      labels << t("dashboard.channel_partner.booking_detail.#{key}")
     end
     labels
   end
