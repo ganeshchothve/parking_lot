@@ -35,10 +35,6 @@ en:
     not_generated: 'Not Generated'
     otp: "OTP"
     overview: 'Overview'
-    register_h1: "Sign Up"
-    register_h2: "Register Now and book an apartment by paying just Rs. Blocking Amount (just takes 3 minutes)"
-    sign_in_h1: "Welcome back"
-    sign_in_h2: "Login to Book an Apartment online"
     total: 'Total'
     boolean:
       :true: 'Yes'
@@ -123,7 +119,7 @@ en:
         other: Apartments
       project:
         one: Project
-        count: Projects
+        other: Projects
       payment_adjustment:
         zero: Payment Adjustment
         one: Payment Adjustment
@@ -1011,7 +1007,7 @@ en:
         name: 'Login here'
     titles:
       heading1_html: 'Welcome to %{project_name}'
-      heading2_html: 'Now is the best time to turn your dream into reality.'
+      heading2_html: 'Now is the best time to turn your dream into reality'
     form:
       heading_html: '<strong>Login</strong> to Book an Apartment online'
 
@@ -1020,14 +1016,14 @@ en:
     new:
       sign_up: 'Sign Up'
     titles:
-      heading1_html: 'Biggest real estate opportunity in pune.<br> Introducing exclusive %{unit_configs} Bed residences starting from %{start_price} lakhs'
-      heading2_html: Home buying can’t get better than this.
+      heading1_html: 'Biggest real estate opportunity in Pune<br> Introducing exclusive %{unit_configs} Bed residences starting from %{start_price} lakhs'
+      heading2_html: Home buying can’t get better than this
     form:
       heading_html: '<strong>Register Now</strong> to Book Online'
 
   channel_partner_registration:
     titles:
-      heading1_html: 'We are a big family of 400+ esteemed partners and we are happy to onboard you.'
+      heading1_html: 'We are a big family of 400+ esteemed partners and we are happy to onboard you'
       heading2_html: '<strong>Register now</strong> & join our network to explore new opportunities'
 
   dashboard:
@@ -1056,6 +1052,12 @@ en:
     user:
       welcome:
         heading: 'Welcome %{name}'
-        sub_heading_html: "Now get privileged access to %{project_size} spread township and book your dream home by just paying %{blocking_amount}<br>400+ customers have already paid a token amount and now it's your chance to roll the dice by following below steps."
+        sub_heading_html: "Now get privileged access to %{project_size} spread township and book your dream home by just paying %{blocking_amount}<br>400+ customers have already paid a token amount and now it's your chance to roll the dice by following below steps"
+      projects:
+        sub_heading: 'Best homes to meet your expectations'
+      titles:
+        available_inventory: 'Available Inventory'
+        download_brochure: 'Download Brochure'
+        visit_website: 'Visit Website'
       towers:
         header: 'Get Priority Token'

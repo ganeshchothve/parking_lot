@@ -53,7 +53,7 @@
                   <ul class="prjt-info br-rd-4">
                     <li><span><%= t('dashboard.channel_partner.titles.available_inventory') %></span><p><%= DashboardDataProvider.available_inventory %></p></li>
                     <li><span><%= t('mongoid.attributes.search.starting_price') %></span><p><%= number_to_indian_currency(DashboardDataProvider.minimum_agreement_price) %></p></li>
-                    <li><span><%= t('mongoid.attributes.project_unit.configuration') %></span><p><%= DashboardDataProvider.configurations.to_sentence %></p></li>
+                    <li><span><%= t('mongoid.attributes.project_unit.configuration') %></span><p><%= DashboardDataProvider.configurations.to_sentence(last_word_connector: ' & ') %></p></li>
                   </ul>
                   <ul class="prjt-link">
                     <li><%= link_to t('dashboard.channel_partner.titles.download_brochure'), download_brochure_path, target: "_blank", class: 'text-uppercase' %></li>

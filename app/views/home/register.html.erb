@@ -2,9 +2,12 @@
   <div class="container p-0">
     <div class="col-lg-5 col-xs-12 col-md-12 col-sm-12 p-0">
       <div class="login-form-wrapper pt-5">
-        <h1 class="mt-0 fn-20"><%= t('registrations.titles.heading1_html', unit_configs: ProjectUnit.distinct(:unit_configuration_name).map {|x| x.match(/\d*.*\d/).to_s}.uniq.sort.first(3).to_sentence(last_word_connector: ' & '), start_price: DashboardDataProvider.minimum_agreement_price.to_s.match(/(\d+)\d{5}/).captures.first) %></h1>
+
+        <h1 class="mt-0 fn-20"><%= t('registrations.titles.heading1_html', unit_configs: ProjectUnit.distinct(:unit_configuration_name).map {|x| x.match(/\d*.*\d/).to_s}.uniq.sort.first(3).to_sentence(last_word_connector: ' & '), start_price: number_to_indian_currency(DashboardDataProvider.minimum_agreement_price.to_s.match(/(\d+)\d{5}/).captures.first)) %></h1>
+
         <p class="p-style"><%= t('registrations.titles.heading2_html') %></p>
         <p><%= t('registrations.form.heading_html') %></p>
+
         <% if current_client.selldo_client_id.present? && current_client.selldo_form_id.present? %>
           <script src='//trkr.scdn1.secure.raxcdn.com/t/forms/<%= current_client.selldo_client_id %>/<%= current_client.selldo_form_id %>.js' data-form-id='<%= current_client.selldo_form_id %>'></script>
         <% else %>
