@@ -38,7 +38,11 @@ FormInitializer = (function(){
       $(this).daterangepicker({
         startDate: startDate,
         endDate: endDate,
+        autoUpdateInput: false,
         opens: opens,
+        locale: {
+          format: 'DD/MM/YYYY'
+        },
         ranges: {
            'Today': [moment(), moment()],
            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
@@ -49,7 +53,10 @@ FormInitializer = (function(){
       });
     });
     $(selector).find('.daterangefilter').on('apply.daterangepicker', function(ev, picker) {
-      $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+      $(this).val(picker.startDate.format(picker.locale.format) + ' - ' + picker.endDate.format(picker.locale.format));
+    });
+    $(selector).find('.daterangefilter').on('cancel.daterangepicker', function(ev, picker) {
+      $(this).val('');
     });
 
     $(selector).find('.datepicker').each(function(){
