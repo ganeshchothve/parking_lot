@@ -77,7 +77,7 @@ var showUnitData = function(unit, assets){
   if($("#unit-description").hasClass('d-none')){
     $("#unit-description").removeClass('d-none');
   }
-  $.scrollTo($("#unit-description").offset().top, 800);
+  $.scrollTo($("#unit-description").offset().top - $('.navbar').outerHeight(), 800);
 }
 
 var showTowerData = function(tower){

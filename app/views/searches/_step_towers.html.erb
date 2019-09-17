@@ -87,10 +87,11 @@
           </div>
           <div class="col-lg-6 col-xs-12 col-sm-12 col-md-12 br-l-1 no-pd after-show d-none" id="unit-description" >
             <div class="right-info pl-5 pr-5 pt-4 pb-4">
-              <div class="title text-center" data-placeholder="name" ></div>
-              <div class="alert-box float-right pb-4 mt-3">
-                <!-- whenever give animation on bell only add class (bell-anime) -->
-                <div class="info bell-anime" data-placeholder="gamification"></div>
+              <div class="title text-center mb-3"><div data-placeholder="name" ></div>
+                <div class="alert-box pb-3 mt-2">
+                  <!-- whenever give animation on bell only add class (bell-anime) -->
+                  <span class="info bell-anime" data-placeholder="gamification"></span>
+                </div>
               </div>
                 <ul class="apartments-info-list">
                   <li class="wd-25"><span class="icon"><img src="<%= asset_path 'building-black.svg' %>" alt="floor"></span><span class="title" data-placeholder="floor"></span><span class="desc">Floor</span></li>
@@ -103,14 +104,14 @@
               </div>
               <div class="right-info pl-5 pr-5 pt-4 pb-4">
                 <img class="img-fluid" style="width: 100%; display: block;" data-placeholder="unit_image" />
-                <div class="float-left">
+                <div class="float-right">
                   <a data-toggle="modal" data-target="#floorPlanImage" href="javascript:;" class="unit_image_container" style="display:none;">
                     Click to view details
                   </a>
                 </div>
               </div>
               <div class="right-info pl-5 pr-5 pt-4 pb-4">
-                <div class=" float-left">
+                <div class=" float-right">
                   <%= link_to "View Cost Sheet & Payment Schedule", "javascript:;", class: 'modal-remote-form-link print_cs_ps', target: "_blank" %>
                 </div>
               </div>
