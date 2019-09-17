@@ -5,6 +5,7 @@ class BookingDetail
   include InsertionStringMethods
   include BookingDetailStateMachine
   include SyncDetails
+  include Tasks
   include ApplicationHelper
   extend FilterByCriteria
   include PriceCalculator
@@ -37,6 +38,7 @@ class BookingDetail
 
   embeds_many :costs, as: :costable
   embeds_many :data, as: :data_attributable
+  embeds_many :tasks, cascade_callbacks: true
   belongs_to :project_unit
   belongs_to :user
   belongs_to :manager, class_name: 'User', optional: true
@@ -51,6 +53,7 @@ class BookingDetail
   has_many :user_requests, as: :requestable
   has_many :related_booking_details, foreign_key: :parent_booking_detail_id, primary_key: :_id, class_name: 'BookingDetail'
   has_and_belongs_to_many :user_kycs
+
 
   # TODO: uncomment
   # validates :name, presence: true
@@ -72,7 +75,7 @@ class BookingDetail
   default_scope -> {desc(:created_at)}
 
 
-  accepts_nested_attributes_for :notes
+  accepts_nested_attributes_for :notes, :tasks
 
   default_scope -> { desc(:created_at) }
 

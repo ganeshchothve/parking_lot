@@ -19,11 +19,15 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def edit?
-    record.user.user_kycs.present?
+    !current_client.enable_booking_with_kyc? || record.user.user_kycs.present?
   end
 
   def update?
     edit?
+  end
+
+  def tasks?
+    eligible_users_for_tasks? && %w[cancelled swapped].exclude?(record.status)
   end
 
   def mis_report?
@@ -64,10 +68,17 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   def permitted_attributes
     attributes = super
     attributes += [:primary_user_kyc_id, :user_kyc_ids, :project_unit_id, :user_id ]
+    if eligible_users_for_tasks?
+      attributes += [tasks_attributes: TaskPolicy.new(user, Task.new).permitted_attributes]
+    end
     attributes
   end
 
   private
+
+  def eligible_users_for_tasks?
+    return true if %w[admin channel_partner sales_admin sales].include?(user.role)
+  end
 
   def need_unattached_booking_receipts_for_channel_partner
     if user.role?('channel_partner')
