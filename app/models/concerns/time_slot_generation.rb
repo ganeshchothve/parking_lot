@@ -30,7 +30,7 @@ module TimeSlotGeneration
     #   :_token_number is an internal dynamic field kept for reference to know if the token number is being assigned for the first time or it was made blank after assigning on receipt.
     if token_number_changed? || (status_changed? && status.in?(%w(clearance_pending success)) && !(self[:_token_number].present? && token_number.blank?))
       # Case when token number is made blank after its assigned, do not assign token again in this case as it is intentionally kept blank by admin.
-      if !(token_number_changed? && token_number_was.present? && token_number.blank?) && (token_number.blank? && is_eligible_for_token_number_assignment? && current_client.enable_slot_generation?)
+      if !(token_number_changed? && token_number_was.present? && token_number.blank?) && (token_number.blank? && is_eligible_for_token_number_assignment?)
         assign!(:token_number)
         while Receipt.where(token_number: token_number).any?
           increment!(:token_number, Receipt.incrementing_fields[:token_number])

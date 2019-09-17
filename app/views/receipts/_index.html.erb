@@ -4,9 +4,7 @@
       <tr class="bg-gradient-cd white">
         <th><%= User.model_name.human %></th>
         <th><%= t('mongoid.attributes.receipt.receipt_id') %></th>
-        <% if current_client.enable_slot_generation? %>
-          <th><%= t('mongoid.attributes.receipt.token_number')%></th>
-        <% end %>
+        <th><%= t('mongoid.attributes.receipt.token_number')%></th>
         <th><%= t('mongoid.attributes.receipt.status') %></th>
         <th><%= t('mongoid.attributes.receipt.total_amount') %></th>
         <th class="text-right"><%= t('global.actions', count: 3)%></th>
