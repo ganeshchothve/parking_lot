@@ -127,14 +127,14 @@ class SearchesController < ApplicationController
     authorize [current_user_role_group, @project_unit]
     booking_detail = @project_unit.booking_detail
     respond_to do |format|
-      if @project_unit.update_attributes(permitted_attributes(@project_unit)) && booking_detail.destroy
-        format.html { redirect_to dashboard_path, notice: 'Booking Cancelled'}
+      result = ProjectUnitUnholdWorker.new.perform(@project_unit.id)
+      if !(result.is_a?(Hash) && result.has_key?(:errors))
+        format.html { redirect_to dashboard_path, notice: ‘Booking cancelled’ }
         format.json { render json: {project_unit: @project_unit}, status: 200 }
       else
-        flash[:notice] = 'Could not update the project unit. Please retry'
-        format.html { redirect_to request.referer.present? ? request.referer : dashboard_path }
-        format.json { render json: {errors: @project_unit.errors.full_messages.uniq}, status: 422 }
-      end
+        format.html { redirect_to (request.referer.present? ? request.referer : dashboard_path), alert: result[:errors] }
+        format.json { render json: { errors: result[:errors] }, status: 422 }
+      end 
     end
   end
 
