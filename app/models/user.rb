@@ -155,7 +155,7 @@ class User
 
   validates :phone, uniqueness: true, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile] }, if: proc { |user| user.email.blank? }
   validates :email, uniqueness: true, if: proc { |user| user.phone.blank? }
-  validates :allowed_bookings, presence: true
+  validates :allowed_bookings, presence: true, if: proc { |user| user.buyer? }
   validates :rera_id, presence: true, if: proc { |user| user.role?('channel_partner') }
   validates :rera_id, uniqueness: true, allow_blank: true
   validates :role, inclusion: { in: proc { |user| User.available_roles(user.booking_portal_client) } }
