@@ -35,7 +35,7 @@ module TimeSlotGeneration
         while Receipt.where(token_number: token_number).any?
           increment!(:token_number, Receipt.incrementing_fields[:token_number])
         end
-        self.time_slot = calculate_time_slot
+        self.time_slot = calculate_time_slot if current_client.enable_slot_generation?
         # for reference, if the token has been made blank by the admin.
         self[:_token_number] = token_number
       end

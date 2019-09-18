@@ -29,9 +29,7 @@
       <div> <%= t('mongoid.attributes.receipt.payment_mode')%> : <%= t("receipt.payment_mode.#{receipt.payment_mode}")%></div>
     </div>
   </td>
-  <% if current_client.enable_slot_generation? %>
-    <td><%= receipt.try(:token_number) ? receipt.get_token_number : '--' %></td>
-  <% end %>
+  <td><%= receipt.try(:token_number) ? receipt.get_token_number : '--' %></td>
   <td><%= t("mongoid.attributes.receipt/status.#{receipt.status}") %></td>
   <td><%= number_to_indian_currency(receipt.total_amount.round) %></td>
   <td>
