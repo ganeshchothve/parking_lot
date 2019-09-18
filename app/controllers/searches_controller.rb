@@ -128,7 +128,7 @@ class SearchesController < ApplicationController
     respond_to do |format|
       result = ProjectUnitUnholdWorker.new.perform(@project_unit.id)
       if !(result.is_a?(Hash) && result.has_key?(:errors))
-        format.html { redirect_to dashboard_path, notice: ‘Booking cancelled’ }
+        format.html { redirect_to dashboard_path, notice: 'Booking cancelled' }
         format.json { render json: {project_unit: @project_unit}, status: 200 }
       else
         format.html { redirect_to (request.referer.present? ? request.referer : dashboard_path), alert: result[:errors] }
