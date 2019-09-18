@@ -30,7 +30,11 @@
           </div>
 
           <div class="row">
-            <%= f.input :configurations, collection: UserKyc.available_configurations.collect{|x| [x[:text], x[:id]] }, prompt: :translate, wrapper_html: { class: 'col-md-6' }, inner_html: { multiple: true }, disabled: !policy(@user_kyc).editable_field?("configurations") %>
+            <div class="col-md-6">
+              <%= f.label :configurations, class: 'control-label' %>
+              <%= f.select :configurations, UserKyc.available_configurations.collect{|x| [x[:text], x[:id]] }, {prompt: "Select"}, class: 'selectize', multiple: true, disabled: !policy(@user_kyc).editable_field?("configurations") %>
+
+            </div>
             <div class="col-md-6">
               <div class="row">
                 <%= f.input :min_budget, wrapper_html: { class: "col-md-6" } %>
@@ -40,8 +44,13 @@
           </div>
 
           <div class="row">
-            <%= f.input :preferred_floors, collection: UserKyc.available_preferred_floors.collect{|x| [x[:text], x[:id]]}, prompt: :translate, wrapper_html: { class: 'col-md-6' }, inner_html: { multiple: true }, disabled: !policy(@user_kyc).editable_field?("preferred_floors") %>
-            <%= f.input :number_of_units %>
+            <div class="col-md-6">
+              <%= f.label :preferred_floors, class: 'control-label' %>
+              <%= f.select :preferred_floors, UserKyc.available_preferred_floors.collect{|x| [x[:text], x[:id]]}, {prompt: "Select"}, class: 'selectize', multiple: true, disabled: !policy(@user_kyc).editable_field?("preferred_floors") %>
+            </div>
+            <div class="col-md-6">
+              <%= f.input :number_of_units %>
+            </div>
           </div>
 
           <div class="card">
