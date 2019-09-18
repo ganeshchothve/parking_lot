@@ -8,7 +8,7 @@ class ProjectUnit
   include PriceCalculator
   extend FilterByCriteria
 
-  STATUS = %w(available not_available hold blocked error)
+  STATUS = %w(available employee management not_available hold blocked error)
 
   # These fields are globally utlised on the server side
   field :name, type: String

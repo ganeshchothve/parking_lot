@@ -429,6 +429,8 @@ en:
         not_available: 'Not Available'
         blocked: 'Blocked'
         error: 'Error'
+        employee: 'Employee Reserve'
+        management: 'Management Reserve'
 
       projects:
         name: Name

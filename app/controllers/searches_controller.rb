@@ -125,7 +125,6 @@ class SearchesController < ApplicationController
   def make_available
     @project_unit = ProjectUnit.find(@search.project_unit_id)
     authorize [current_user_role_group, @project_unit]
-    booking_detail = @project_unit.booking_detail
     respond_to do |format|
       result = ProjectUnitUnholdWorker.new.perform(@project_unit.id)
       if !(result.is_a?(Hash) && result.has_key?(:errors))
