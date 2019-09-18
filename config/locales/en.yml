@@ -404,6 +404,7 @@ en:
         primary_user_kyc_id: "Primary User KYC"
         name: 'Name'
         project_tower_name: 'Project Tower'
+        project_tower_id: 'Project Tower'
         project_name: 'Project'
         blocked_on: 'Blocked On'
         unit_facing_direction: 'Facing'
@@ -420,6 +421,8 @@ en:
         comments: 'Comments'
         carpet: Carpet Area
         configuration: 'Configuration'
+        payment_schedule: 'Payment Schedule'
+        cost_sheet: 'Cost Sheet'
       project_unit/status:
         hold: 'Hold'
         available: 'Available'

@@ -125,9 +125,10 @@ class SearchesController < ApplicationController
   def make_available
     @project_unit = ProjectUnit.find(@search.project_unit_id)
     authorize [current_user_role_group, @project_unit]
+    booking_detail = @project_unit.booking_detail
     respond_to do |format|
-      if @project_unit.update_attributes(permitted_attributes(@project_unit))
-        format.html { redirect_to dashboard_path }
+      if @project_unit.update_attributes(permitted_attributes(@project_unit)) && booking_detail.destroy
+        format.html { redirect_to dashboard_path, notice: 'Booking Cancelled'}
         format.json { render json: {project_unit: @project_unit}, status: 200 }
       else
         flash[:notice] = 'Could not update the project unit. Please retry'
