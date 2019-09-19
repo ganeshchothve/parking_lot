@@ -21,11 +21,11 @@
   <%= link_to t('controller.receipts.lost_receipt.link_name'), lost_receipt_admin_user_receipts_path(user), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 
-<% if policy([:admin, User.new]).confirm_via_otp? %>
+<% if policy([:admin, user]).confirm_via_otp? %>
   <%= link_to t('controller.users.confirm_via_otp.link_name'), confirm_via_otp_admin_user_path(user.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 
-<% if policy([:admin, User.new]).print? %>
+<% if policy([:admin, user]).print? %>
   <%= link_to t('controller.users.print.link_name'), print_admin_user_path(user.id), class: "dropdown-item", target: "_blank" %>
 <% end %>
 
@@ -33,7 +33,7 @@
   <%= link_to t('controller.users.show.link_name', role: User.human_attribute_name("role.#{user.role}")), admin_user_path(user), class: "dropdown-item" %>
 <% end %>
 
-<% if policy([:admin, User.new]).edit? %>
+<% if policy([:admin, user]).edit? %>
   <%= link_to t('controller.users.edit.link_name', role: User.human_attribute_name("role.#{user.role}")), edit_admin_user_path(user.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 
@@ -54,6 +54,6 @@
   <%= link_to t('controller.users.resend_password_instructions.link_name'), resend_password_instructions_admin_user_path(user), class: "dropdown-item" %>
 <% end %>
 
-<% if policy([:admin, User.new]).update_password? %>
+<% if policy([:admin, user]).update_password? %>
   <%= link_to t('controller.users.change_password.link_name'), update_password_admin_user_path(user), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
