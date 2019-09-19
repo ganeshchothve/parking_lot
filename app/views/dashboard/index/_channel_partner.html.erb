@@ -56,10 +56,14 @@
                     <li><span><%= t('mongoid.attributes.project_unit.configuration') %></span><p><%= DashboardDataProvider.configurations.to_sentence(last_word_connector: ' & ') %></p></li>
                   </ul>
                   <ul class="prjt-link">
-                    <li><%= link_to t('dashboard.channel_partner.titles.download_brochure'), download_brochure_path, target: "_blank", class: 'text-uppercase' %></li>
+                    <% if current_client.brochure.present? %>
+                      <li><%= link_to t('dashboard.channel_partner.titles.download_brochure'), download_brochure_path, class: 'text-uppercase' %></li>
+                    <% end %>
                     <li><%= link_to t('dashboard.channel_partner.titles.visit_website'), current_client.website_link, target: "_blank", class: 'text-uppercase' %></li>
                   </ul>
-                  <%= link_to t('helpers.new.link_name', model: BookingDetail.model_name.human), new_admin_booking_detail_path, class: 'large-btn bg-light-blue display-block fn-500 center-block text-uppercase modal-remote-form-link' %>
+                  <% if current_client.enable_actual_inventory?(current_user) %>
+                    <%= link_to t('helpers.new.link_name', model: BookingDetail.model_name.human), new_admin_booking_detail_path, class: 'large-btn bg-light-blue display-block fn-500 center-block text-uppercase modal-remote-form-link' %>
+                  <% end %>
                 </div>
               </div>
             </div>

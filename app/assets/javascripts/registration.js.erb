@@ -43,7 +43,7 @@ document.addEventListener("sell_do_form_rendered", function(){
 
 function sell_do_form_successfully_submitted(e){
   if(typeof App !== "undefined" && App.current_user){
-    $(".sell_do_form_container").html('<div class="alert alert-success">Please wait, we have registered the user; generating login details & sending confirmation email / SMS to the user.</div>');
+    $(".sell_do_form_container").html('<div class="alert alert-success">We have registered the user. Please wait while we generate login details & send confirmation email / SMS to the user.</div>');
   }else{
     var message = 'Thank you for registering with us. Please wait while we generate login details & send you confirmation email / SMS.'
     $(".sell_do_form_container").html('<div class="alert alert-success">' + message + '</div>');
