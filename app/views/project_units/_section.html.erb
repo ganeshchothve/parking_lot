@@ -19,9 +19,11 @@
                   <li><span><%= t('mongoid.attributes.search.starting_price') %></span><p><%= number_to_indian_currency(DashboardDataProvider.minimum_agreement_price) %></p></li>
                   <li><span><%= t('mongoid.attributes.project_unit.configuration') %></span><p><%= DashboardDataProvider.configurations.to_sentence(last_word_connector: ' & ') %></p></li>
                 </ul>
-                <ul class="prjt-link">
-                  <li><%= link_to t('dashboard.user.titles.download_brochure'), download_brochure_path, target: "_blank", class: 'text-uppercase' %></li>
-                </ul>
+                <% if current_client.brochure.present? %>
+                  <ul class="prjt-link">
+                    <li><%= link_to t('dashboard.user.titles.download_brochure'), download_brochure_path, class: 'text-uppercase' %></li>
+                  </ul>
+                <% end %>
                 <%= link_to 'Visit Website >', current_client.website_link, target: "_blank", class: 'large-btn bg-light-blue display-block fn-500 center-block text-uppercase' %>
               </div>
             </div>

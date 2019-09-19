@@ -57,7 +57,7 @@
                   </ul>
                   <ul class="prjt-link">
                     <% if current_client.brochure.present? %>
-                      <li><%= link_to t('dashboard.channel_partner.titles.download_brochure'), download_brochure_path, target: "_blank", class: 'text-uppercase' %></li>
+                      <li><%= link_to t('dashboard.channel_partner.titles.download_brochure'), download_brochure_path, class: 'text-uppercase' %></li>
                     <% end %>
                     <li><%= link_to t('dashboard.channel_partner.titles.visit_website'), current_client.website_link, target: "_blank", class: 'text-uppercase' %></li>
                   </ul>
