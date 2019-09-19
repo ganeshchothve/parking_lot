@@ -47,13 +47,13 @@
 </div>
 <%= javascript_tag do %>
   $(document).ready(function(){
-      $('#fltrs_requestable_type').change(function(){
-        $('.requestable').addClass('d-none').find('select')
-        if($(this).val() != ''){
-          $('.' + $(this).val()).removeClass('d-none').find('select')
-        }
-      });
-      $('#fltrs_requestable_type').trigger('change');
-      FormInitializer.init($("#user_request_search_form"));
+    $('#fltrs_requestable_type').change(function(){
+      $('.requestable').addClass('d-none').find('select')
+      if($(this).val() != ''){
+        $('.' + $(this).val()).removeClass('d-none').find('select')
+      }
     });
+    $('#fltrs_requestable_type').trigger('change');
+    FormInitializer.init($("#user_request_search_form"));
+  });
 <% end %>
