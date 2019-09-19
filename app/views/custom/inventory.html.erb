@@ -60,7 +60,7 @@
                     <div class="separate-box"></div>
                     <div class="floor-listing">
                       <div class="floor-inner">
-                        <% (0..max_floor).to_a.reverse.each do |floor_data| %>
+                        <% (1..max_floor).to_a.reverse.each do |floor_data| %>
                           <div class="floor">
                             <div class="floor-number"><%= floor_data %></div>
                             <% max_per_floor.times do |index| %>

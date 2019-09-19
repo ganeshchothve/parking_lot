@@ -63,40 +63,38 @@ class Template::ReceiptTemplate < Template
          <% end %>
        </div>
      </div>
-     <% if current_client.enable_slot_generation? %>
-       <div class="box-card mt-3">
-         <div class="box-header bg-gradient br-rd-tr-4 text-center">
-           <h2><strong>Token Details</strong></h2>
-         </div>
-         <div class="box-content br-rd-bl-4 bg-white p-0">
-           <table class="table my-customer-table responsive-tbl">
-             <tbody>
-               <tr>
-                 <td>Token Number</td>
-                 <td class="text-right"><%= self.try(:token_number) ? self.get_token_number : "--" %></td>
-               </tr>
-               <% if self.try(:time_slot) %>
-                 <tr>
-                   <td>Time Slot Date</td>
-                   <td class="text-right"><%= self.time_slot.date.in_time_zone(self.user.time_zone).strftime("%d/%m/%Y") %></td>
-                 </tr>
-                 <tr>
-                   <td>Start Time</td>
-                   <td class="text-right"><%= self.time_slot.start_time.in_time_zone(self.user.time_zone).strftime("%I:%M %p") %></td>
-                 </tr>
-                 <tr>
-                   <td>End Time</td>
-                   <td class="text-right"><%= self.time_slot.end_time.in_time_zone(self.user.time_zone).strftime("%I:%M %p") %></td>
-                 </tr>
-                 <tr>
-                   <td>Time Zone</td>
-                   <td class="text-right"><%= self.user.time_zone %></td>
-                 </tr>
-               <% end %>
-             </tbody>
-           </table>
-         </div>
+     <div class="box-card mt-3">
+       <div class="box-header bg-gradient br-rd-tr-4 text-center">
+         <h2><strong>Token Details</strong></h2>
        </div>
-     <% end %>'
+       <div class="box-content br-rd-bl-4 bg-white p-0">
+         <table class="table my-customer-table responsive-tbl">
+           <tbody>
+             <tr>
+               <td>Token Number</td>
+               <td class="text-right"><%= self.try(:token_number) ? self.get_token_number : "--" %></td>
+             </tr>
+             <% if current_client.enable_slot_generation? && self.try(:time_slot) %>
+               <tr>
+                 <td>Time Slot Date</td>
+                 <td class="text-right"><%= self.time_slot.date.in_time_zone(self.user.time_zone).strftime("%d/%m/%Y") %></td>
+               </tr>
+               <tr>
+                 <td>Start Time</td>
+                 <td class="text-right"><%= self.time_slot.start_time.in_time_zone(self.user.time_zone).strftime("%I:%M %p") %></td>
+               </tr>
+               <tr>
+                 <td>End Time</td>
+                 <td class="text-right"><%= self.time_slot.end_time.in_time_zone(self.user.time_zone).strftime("%I:%M %p") %></td>
+               </tr>
+               <tr>
+                 <td>Time Zone</td>
+                 <td class="text-right"><%= self.user.time_zone %></td>
+               </tr>
+             <% end %>
+           </tbody>
+         </table>
+       </div>
+     </div>'
   end
 end
