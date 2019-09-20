@@ -16,7 +16,7 @@ end %>
 
         <%= simple_form_for(resource, as: resource_name, url: users_otp_path, method: :post, authenticity_token: true, remote: true, html: { novalidate: false, class: "validate-form #{otp_signin_class}", id: 'otp_user_form', data: { type: :json }, autocomplete: 'off' }) do |f| %>
 
-          <%= f.input :login, autofocus: true, autocomplete: false, class: 'form-control', label: User.human_attribute_name('phone') %>
+          <%= f.phone_field :login, autofocus: true, class: 'form-control', placeholder: t('mongoid.attributes.user.phone'), id: 'user_login_phone', autocomplete: false %>
 
           <div class="form-group" hidden>
             <%= f.label :login_otp %>
