@@ -13,7 +13,7 @@
             <div class="col-md-3">
               <div class="form-group">
                 <%= f.label :token_number %></br>
-                <%= Receipt::TOKEN_PREFIX %><%= f.number_field :token_number, class: 'form-control', autofocus: true, disabled: !policy([current_user_role_group, @receipt]).editable_field?("token_number"), min: 1 %>
+                <%= f.object.token_prefix %><%= f.number_field :token_number, class: 'form-control', autofocus: true, disabled: !policy([current_user_role_group, @receipt]).editable_field?("token_number"), min: 1 %>
               </div>
             </div>
           </div>

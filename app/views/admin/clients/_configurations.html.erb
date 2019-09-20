@@ -25,6 +25,16 @@
 </div>
 <div class="row">
   <div class="col-md-6">
+    <%= f.label :token_number_prefix %><br>
+    <%= f.text_field :token_number_prefix, class: 'form-control', disabled: !policy([:admin, @client]).editable_field?("token_number_prefix") %>
+  </div>
+  <div class="col-md-6">
+    <%= f.label :token_number_seed %><br>
+    <%= f.number_field :token_number_seed, class: 'form-control', disabled: !policy([:admin, @client]).editable_field?("token_number_seed") %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
     <div class="form-group">
       <%= f.label :capacity, class: 'label-required' %>
       <%= f.number_field :capacity, class: 'form-control', disabled: !policy([:admin, @client]).editable_field?("capacity"), min: 1 %>
