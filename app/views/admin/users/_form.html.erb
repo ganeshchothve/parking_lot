@@ -55,7 +55,7 @@
           <% if policy([current_user_role_group, @user]).editable_field?("allowed_bookings") && @user.buyer? %>
             <div class="form-group">
               <%= f.label :allowed_bookings, class: 'label-required' %>
-              <%= f.select :allowed_bookings, [1,2,3,4,5,6,100], {prompt: true}, class: 'selectize', required: 'required' %>
+              <%= f.select :allowed_bookings, [1,2,3,4,5,6,100], {prompt: true}, class: 'select', required: 'required' %>
             </div>
           <% end %>
           <% if policy([current_user_role_group, @user]).editable_field?("rera_id") %>
@@ -119,6 +119,11 @@
 <% end %>
 <%= javascript_tag do %>
   $(document).ready(function(){
+    var $select = $('.select').selectize({
+      maxItems: 1,
+      persist: false,
+      create: false
+    });
     FormInitializer.init($("#user_form"));
   });
 <% end %>

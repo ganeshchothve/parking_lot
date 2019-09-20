@@ -19,7 +19,7 @@ class BankDetail
   })
 
   # has_one :cheque, as: :assetable
-  validates :account_type, inclusion: {in: Proc.new{ BankDetail.available_account_types.collect{|x| x[:id]} } }
+  validates :account_type, inclusion: {in: Proc.new{ BankDetail.available_account_types.collect{|x| x[:id]} } }, allow_blank: true
 
   def self.available_account_types
     [
