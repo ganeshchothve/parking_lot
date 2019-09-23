@@ -57,8 +57,12 @@ class CustomPolicy < Struct.new(:user, :enable_users)
     "#{user.buyer? ? '' : 'Admin::'}ChannelPartnerPolicy".constantize.new(user, ChannelPartner).index?
   end
 
+  def checklists?
+    "#{user.buyer? ? '' : 'Admin::'}ChecklistPolicy".constantize.new(user, Checklist).index?
+  end
+
   def self.custom_methods
-    %w[inventory schemes user_requests channel_partners user_kycs emails smses sync_logs referrals accounts phases erp_models portal_stage_priorities]
+    %w[inventory schemes user_requests channel_partners user_kycs emails smses sync_logs referrals accounts phases erp_models portal_stage_priorities checklists]
     # audits
   end
 end

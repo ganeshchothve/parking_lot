@@ -60,7 +60,7 @@ class Admin::BookingDetailsController < AdminController
   def update
     respond_to do |format|
       if @booking_detail.update(permitted_attributes([:admin, @booking_detail]))
-        format.html { redirect_to admin_booking_details_path, notice: 'User Kycs were successfully updated.' }
+        format.html { redirect_to admin_booking_details_path }
       else
         format.html { render :edit }
         format.json { render json: { errors: @booking_detail.errors.full_messages }, status: :unprocessable_entity }
@@ -77,6 +77,11 @@ class Admin::BookingDetailsController < AdminController
     else
       redirect_to checkout_user_search_path(@booking_detail.search), alert: @receipt.errors.full_messages
     end
+  end
+
+  def tasks
+    @booking_detail.map_tasks
+    render layout: false
   end
 
   def send_under_negotiation

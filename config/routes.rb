@@ -45,10 +45,12 @@ Rails.application.routes.draw do
     resources :portal_stage_priorities, only: [:index] do
       patch :reorder, on: :collection
     end
+    resources :checklists
     resources :booking_details, only: [:index, :show, :new, :create, :edit, :update] do
       member do
         patch :booking
         patch :send_under_negotiation
+        get :tasks
         get :cost_sheet
         get :doc, path: 'doc/:type'
       end
