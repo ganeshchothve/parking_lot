@@ -13,7 +13,7 @@ module ReceiptsConcern
   # GET /buyer/receipts/:receipt_id/resend_success
   # GET /admin/receipts/:receipt_id/resend_success
   def resend_success
-    authorize([current_user_role_group, Receipt])
+    authorize([current_user_role_group, @receipt])
     user = @receipt.user
     if user.booking_portal_client.email_enabled?
       email = Email.create!(

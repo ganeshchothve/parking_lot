@@ -9,7 +9,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def create?
-    return true if  (record.user.booking_details.count < record.user.allowed_bookings) && eligible_user?
+    return true if  is_buyer_booking_limit_exceed? && eligible_user?
     @condition = 'allowed_bookings'
     false
   end
