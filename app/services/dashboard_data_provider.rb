@@ -170,7 +170,7 @@ module DashboardDataProvider
   end
 
   def self.minimum_agreement_price
-    ProjectUnit.gt(agreement_price: 0).distinct(:agreement_price).min
+    ProjectUnit.gt(all_inclusive_price: 0).distinct(:all_inclusive_price).min
   end
 
   def self.configurations
