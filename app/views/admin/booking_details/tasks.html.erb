@@ -9,15 +9,15 @@
         </button>
       </div>
       <div class="modal-body">
-        <%= f.fields_for :tasks, @booking_detail.tasks do |task| %>
-          <%= task.hidden_field :completed_by_id , id: "#{task.object.key}_by"%>
-          <div class="form-group">
-            <div class="form-check mt-3">
-              <%= task.check_box :completed, autofocus: true, class: "form-check-input", id: "#{task.object.key}" %>
-              <%= task.label task.object.name, class: 'form-check-label' %>
-            </div>
-          </div>
-        <% end %>
+        <div class="row">
+          <%= f.fields_for :tasks, @booking_detail.tasks do |task| %>
+            <%= task.hidden_field :completed_by_id , id: "#{task.object.key}_by"%>
+              <div class="radioStyle col-lg-12 mx-4 my-2">
+                <%= task.check_box :completed, autofocus: true, id: "#{task.object.key}" %>
+                <%= task.label :completed, "<span class='pre'>#{task.object.name}</span>".html_safe, for: "#{task.object.key}" %>
+              </div>
+          <% end %>
+        </div>
       </div>
       <div class="modal-footer">
         <%= f.submit "Submit", class: "btn btn-primary" %>
