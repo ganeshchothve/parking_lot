@@ -3,10 +3,10 @@ module TimeSlotGeneration
   include ApplicationHelper
   included do
 
-    TOKEN_PREFIX = 'TKN'
 
     # Fields
     field :token_number, type: Integer
+    field :token_prefix, type: String
 
     increments :token_number, seed: 300, auto: false
 
@@ -30,12 +30,12 @@ module TimeSlotGeneration
     #   :_token_number is an internal dynamic field kept for reference to know if the token number is being assigned for the first time or it was made blank after assigning on receipt.
     if token_number_changed? || (status_changed? && status.in?(%w(clearance_pending success)) && !(self[:_token_number].present? && token_number.blank?))
       # Case when token number is made blank after its assigned, do not assign token again in this case as it is intentionally kept blank by admin.
-      if !(token_number_changed? && token_number_was.present? && token_number.blank?) && (token_number.blank? && is_eligible_for_token_number_assignment? && current_client.enable_slot_generation?)
-        assign!(:token_number)
-        while Receipt.where(token_number: token_number).any?
-          increment!(:token_number, Receipt.incrementing_fields[:token_number])
-        end
-        self.time_slot = calculate_time_slot
+      if !(token_number_changed? && token_number_was.present? && token_number.blank?) && (token_number.blank? && is_eligible_for_token_number_assignment?)
+        begin
+          increment!(:token_number, { seed: (current_client.token_number_seed || Receipt.incrementing_fields.dig(:token_number, :seed)) })
+          self.token_prefix = current_client.token_number_prefix
+        end while Receipt.where(token_number: token_number).any?
+        self.time_slot = calculate_time_slot if current_client.enable_slot_generation?
         # for reference, if the token has been made blank by the admin.
         self[:_token_number] = token_number
       end
@@ -47,7 +47,7 @@ module TimeSlotGeneration
   end
 
   def get_token_number
-    token_number.present? ? TOKEN_PREFIX + token_number.to_s : '--'
+    token_number.present? ? self.token_prefix.to_s + token_number.to_s : '--'
   end
 
   def set_time_slot

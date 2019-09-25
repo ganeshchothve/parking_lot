@@ -6,22 +6,24 @@
         <div class="box-card">
           <div class="box-header bg-gradient-cd br-rd-tr-4">
             <h2 class="title icon-set icon-building-white">
-              <%= t('dashboard.titles.projects') %>
+              <%= Project.model_name.human %>
             </h2>
           </div>
           <div class="project-slider1">
             <div>
               <div class="box-content br-rd-bl-4 bg-white text-center">
-                <h3 class="title"><%= t('dashboard.projects.heading') %></h3>
-                <p class="sort-desc col-lg-6 col-xs-12 col-md-6 col-sm-12 offset-md-3 offset-lg-3"><%= t('dashboard.projects.sub_heading') %></p>
+                <h3 class="title"><%= current_project.name %></h3>
+                <p class="sort-desc col-lg-6 col-xs-12 col-md-6 col-sm-12 offset-md-3 offset-lg-3"><%= t('dashboard.user.projects.sub_heading') %></p>
                 <ul class="prjt-info br-rd-4">
-                  <li><span><%= t('dasboard.titles.available_inventory') %></span><p><%= DashboardDataProvider.available_inventory %></p></li>
-                  <li><span><%= t('dashboard.titles.starting_price') %></span><p><%= DashboardDataProvider.minimum_agreement_price %></p></li>
-                  <li><span><%= t('dashboard.titles.configurations') %></span><p><%= DashboardDataProvider.configurations.to_sentence %></p></li>
+                  <li><span><%= t('dashboard.user.titles.available_inventory') %></span><p><%= DashboardDataProvider.available_inventory %></p></li>
+                  <li><span><%= t('mongoid.attributes.search.starting_price') %></span><p><%= number_to_indian_currency(DashboardDataProvider.minimum_agreement_price) %></p></li>
+                  <li><span><%= t('mongoid.attributes.project_unit.configuration') %></span><p><%= DashboardDataProvider.configurations.to_sentence(last_word_connector: ' & ') %></p></li>
                 </ul>
-                <ul class="prjt-link">
-                  <li><%= link_to t('dashboard.titles.download_brochure'), download_brochure_path, target: "_blank", class: 'text-uppercase' %></li>
-                </ul>
+                <% if current_client.brochure.present? %>
+                  <ul class="prjt-link">
+                    <li><%= link_to t('dashboard.user.titles.download_brochure'), download_brochure_path, class: 'text-uppercase' %></li>
+                  </ul>
+                <% end %>
                 <%= link_to 'Visit Website >', current_client.website_link, target: "_blank", class: 'large-btn bg-light-blue display-block fn-500 center-block text-uppercase' %>
               </div>
             </div>

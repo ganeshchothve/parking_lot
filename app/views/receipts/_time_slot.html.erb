@@ -28,7 +28,7 @@
                 <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                   <% if policy([current_user_role_group, receipt]).edit_token_number? %>
-                    <%= link_to t('controller.receipts.edit_token_number'), edit_token_number_admin_receipt_path(receipt), class: 'modal-remote-form-link dropdown-item' %>
+                    <%= link_to t('controller.receipts.edit_token_number.link_name'), edit_token_number_admin_receipt_path(receipt), class: 'modal-remote-form-link dropdown-item' %>
                   <% end %>
                 </div>
               </div>

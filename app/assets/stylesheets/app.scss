@@ -33,6 +33,7 @@ html, body{
 	margin-bottom: 10px;
 	color: #a6a6a6;
 }
+.last-drop-down::after { vertical-align: text-top; margin-left: 0px; margin-top: 0px; }
 .form-group.has-error .form-control,
 .form-group.has-error .custom-select{
   border-color: $form-feedback-invalid-color !important;
@@ -455,6 +456,11 @@ h6{
     }
   }
 }
+.admin-dashboard{
+  .box-header {
+    padding: 10px 10px !important;
+  }
+}
 .lh-2{
   line-height: 2em;
 }
@@ -469,4 +475,7 @@ h6{
 .auth {
   background-size: 50% 80%;
   background-attachment: fixed;
+}
+.selldof_field-container {
+  padding-left: 0 !important;
 }

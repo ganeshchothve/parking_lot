@@ -32,7 +32,7 @@ class Buyer::ReceiptPolicy < ReceiptPolicy
     edit?
   end
 
-  def direct?
+  def direct_payment?
     super && record.user_id == user.id
   end
 

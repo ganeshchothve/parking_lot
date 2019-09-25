@@ -18,7 +18,7 @@
 
         </div>
       </div>
-      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd bg-white" id="collapseNotes">
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd bg-white collapse" id="collapseNotes">
         <%= render '/notes/index', notable: notable %>
       </div>
     </div>
@@ -27,8 +27,8 @@
 <%= javascript_tag do %>
   $(document).ready(function(){
     var count = <%= raw notable.notes.count %>
-    if(count == 0){
-      $('#collapseNotes').addClass('collapse')
+    if(count != 0){
+      $('#collapseNotes').collapse('show')
     }
   });
 <% end %>

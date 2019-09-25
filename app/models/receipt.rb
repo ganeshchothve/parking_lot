@@ -46,7 +46,7 @@ class Receipt
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :user_requests, as: :requestable
 
-  scope :filter_by_status, ->(*_status) { where(status: { '$in' => _status }) }
+  scope :filter_by_status, ->(_status) { where(status: { '$in' => _status }) }
   scope :filter_by_receipt_id, ->(_receipt_id) { where(receipt_id: /#{_receipt_id}/i) }
   scope :filter_by_token_number, ->(_token_number) { where(token_number: _token_number) }
   scope :filter_by_user_id, ->(_user_id) { where(user_id: _user_id) }
@@ -77,7 +77,7 @@ class Receipt
   validates :comments, presence: true, if: proc { |receipt| receipt.status == 'failed' && receipt.payment_mode != 'online' }
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :tracking_id_processed_on_only_on_success, if: proc { |record| record.status != 'cancelled' }
-  validate :processed_on_greater_than_issued_date, :first_booking_amount_limit
+  validate :processed_on_greater_than_issued_date
   validate :issued_date_when_offline_payment, if: proc { |record| %w[online cheque].exclude?(record.payment_mode) && issued_date.present? }
 
   increments :order_id, auto: false
@@ -242,7 +242,7 @@ class Receipt
       blocking_amount = user.booking_portal_client.blocking_amount
       blocking_amount = project_unit.blocking_amount if booking_detail_id.present?
       if (direct_payment? || blocking_payment?) && total_amount < blocking_amount && new_record? && !booking_detail.swapping?
-        errors.add :total_amount, "cannot be less than blocking amount #{user.booking_portal_client.blocking_amount}"
+        errors.add :total_amount, "cannot be less than blocking amount #{blocking_amount}"
       end
     end
   end

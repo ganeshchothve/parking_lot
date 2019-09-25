@@ -35,10 +35,10 @@ module DashboardData
 
       def receipt_block(params)
         matcher = {}
-        if params && params[:dates]
+        if params && params[:dates].present?
           dates = params[:dates].split(" - ")
-          start_date = Date.strptime(dates[0], '%m/%d/%Y')
-          end_date = Date.strptime(dates[1], '%m/%d/%Y')
+          start_date = Date.strptime(dates[0], '%d/%m/%Y')
+          end_date = Date.strptime(dates[1], '%d/%m/%Y')
           matcher = {"created_at": {"$gte": start_date, "$lt": end_date}}
         end
         if params[:payments] == 'attached_payments'
@@ -127,10 +127,10 @@ module DashboardData
 
       def booking_detail_block(params)
         matcher = {}
-        if params && params[:dates]
+        if params && params[:dates].present?
           dates = params[:dates].split(" - ")
-          start_date = Date.strptime(dates[0], '%m/%d/%Y')
-          end_date = Date.strptime(dates[1], '%m/%d/%Y')
+          start_date = Date.strptime(dates[0], '%d/%m/%Y')
+          end_date = Date.strptime(dates[1], '%d/%m/%Y')
           matcher = {"created_at": {"$gte": start_date, "$lt": end_date}}
         end
         group_booking_detail_with_tower_and_status = {
@@ -171,10 +171,10 @@ module DashboardData
 
       def receipt_piechart params
         matcher = {}
-        if params && params[:dates]
+        if params && params[:dates].present?
           dates = params[:dates].split(" - ")
-          start_date = Date.strptime(dates[0], '%m/%d/%Y')
-          end_date = Date.strptime(dates[1], '%m/%d/%Y')
+          start_date = Date.strptime(dates[0], '%d/%m/%Y')
+          end_date = Date.strptime(dates[1], '%d/%m/%Y')
           matcher = {"created_at": {"$gte": start_date, "$lt": end_date}}
         end
         grouping = {
@@ -275,10 +275,10 @@ module DashboardData
             "_id.created_at": 1
           }
         elsif params[:frequency] == 'custom_dates'
-          if params[:dates]
+          if params[:dates].present?
             dates = params[:dates].split(" - ")
-            start_date = Date.strptime(dates[0], '%m/%d/%Y')
-            end_date = Date.strptime(dates[1], '%m/%d/%Y')
+            start_date = Date.strptime(dates[0], '%d/%m/%Y')
+            end_date = Date.strptime(dates[1], '%d/%m/%Y')
             matcher = {"created_at": {"$gte": start_date, "$lt": end_date}}
           end
         end

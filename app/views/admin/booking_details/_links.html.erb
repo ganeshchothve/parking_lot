@@ -36,7 +36,7 @@
 <% if booking_detail.booking_detail_scheme && policy([:admin, booking_detail.booking_detail_scheme]).edit? %>
   <%= link_to t('helpers.edit.link_name', model: BookingDetailScheme.model_name.human), edit_admin_booking_detail_booking_detail_scheme_path( booking_detail, booking_detail.booking_detail_scheme.id), class: 'dropdown-item modal-remote-form-link' %>
 <% elsif policy([:admin, BookingDetailScheme.new(booking_detail: booking_detail, derived_from_scheme_id: scheme.id, project_unit_id: booking_detail.project_unit_id)]).new?%>
-  <%= link_to t('helpers.new.link_name', model: BookingDetailScheme.model_name.name ), new_admin_booking_detail_booking_detail_scheme_path( booking_detail), class: 'dropdown-item modal-remote-form-link' %>
+  <%= link_to t('helpers.new.link_name', model: BookingDetailScheme.model_name.human ), new_admin_booking_detail_booking_detail_scheme_path( booking_detail), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
 
 <% if policy([:admin, Receipt ]).index? %>

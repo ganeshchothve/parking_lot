@@ -17,6 +17,10 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
   end
 
   def edit?
+    %w[admin superadmin].include?(user.role)
+  end
+
+  def update?
     _role_based_check(true)
   end
 

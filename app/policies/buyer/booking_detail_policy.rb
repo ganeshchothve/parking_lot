@@ -13,7 +13,7 @@ class Buyer::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def block?
-    _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && eligible_user? && only_for_hold! && allowed_booking?
+    _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && eligible_user? && only_for_hold! && is_buyer_booking_limit_exceed?
   end
 
   def hold?
@@ -29,12 +29,6 @@ class Buyer::BookingDetailPolicy < BookingDetailPolicy
   def only_for_hold!
     return true if ['hold'].include?(record.status)
     @condition = 'only_for_hold'
-    false
-  end
-
-  def allowed_booking?
-    return true if record.user.allowed_bookings > record.user.booking_details.ne(status: 'cancelled').count
-    @condition = 'allowed_bookings'
     false
   end
 

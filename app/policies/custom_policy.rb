@@ -30,7 +30,7 @@ class CustomPolicy < Struct.new(:user, :enable_users)
   end
 
   def sync_logs?
-    %w[superadmin admin sales_admin].include?(user.role)
+    "#{user.buyer? ? 'Buyer' : 'Admin'}::SyncLogPolicy".constantize.new(user, SyncLog).index?
   end
 
   def erp_models?

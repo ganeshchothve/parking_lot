@@ -4,7 +4,7 @@
       <div class="btn btn-primary fileinput-button pull-right">
         <input type="file" name="files[]" class="btn btn-primary fileupload" data-extensions="<%= allowed_file_extensions('AssetUploader') %>" data-url="<%= assetables_path(assetable_type: assetable.class.model_name.i18n_key.to_s, assetable_id: assetable.id) %>" multiple=true data-target='.files-container' <%= policy([ current_user_role_group, Asset.new(assetable: assetable)]).update? ? "" : "disabled=disabled" %> data-klass = 'Asset' data-field_name = 'file' />
         </div>
-      <div class="small text-muted"><%= 'Please upload a jpeg, png, pdf or zip' %></div>
+      <div class="small text-muted" style="margin-top: 12px;"><%= 'Please upload a jpeg, png, pdf or zip' %></div>
     </div>
     <div class="clearfix"></div>
     <hr/>

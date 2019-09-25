@@ -77,7 +77,7 @@ var showUnitData = function(unit, assets){
   if($("#unit-description").hasClass('d-none')){
     $("#unit-description").removeClass('d-none');
   }
-  $.scrollTo($("#unit-description").offset().top, 800);
+  $.scrollTo($("#unit-description").offset().top - $('.navbar').outerHeight(), 800);
 }
 
 var showTowerData = function(tower){
@@ -88,7 +88,8 @@ var showTowerData = function(tower){
   if($("#tower-description").hasClass('d-none')){
     $("#tower-description").removeClass('d-none');
   }
-  $.scrollTo($("#tower-description").offset().top, 800);
+  $.scrollTo($("#tower-description").offset().top - $('.navbar').outerHeight(), 800);
+  $('.scroll-bar').animate({scrollTop: $("#"+tower.project_tower_id).offset().top - $('.scroll-bar').offset().top + $('.scroll-bar').scrollTop()});
   if(tower.assets.length > 0){
     $(".tower_image_container").show();
     $('[data-placeholder="tower_image"]').attr("src", _.first(tower.assets).file.url);

@@ -35,10 +35,6 @@ en:
     not_generated: 'Not Generated'
     otp: "OTP"
     overview: 'Overview'
-    register_h1: "Sign Up"
-    register_h2: "Register Now and book an apartment by paying just Rs. Blocking Amount (just takes 3 minutes)"
-    sign_in_h1: "Welcome back"
-    sign_in_h2: "Login to Book an Apartment online"
     total: 'Total'
     boolean:
       :true: 'Yes'
@@ -123,7 +119,7 @@ en:
         other: Apartments
       project:
         one: Project
-        count: Projects
+        other: Projects
       payment_adjustment:
         zero: Payment Adjustment
         one: Payment Adjustment
@@ -408,6 +404,7 @@ en:
         primary_user_kyc_id: "Primary User KYC"
         name: 'Name'
         project_tower_name: 'Project Tower'
+        project_tower_id: 'Project Tower'
         project_name: 'Project'
         blocked_on: 'Blocked On'
         unit_facing_direction: 'Facing'
@@ -424,12 +421,16 @@ en:
         comments: 'Comments'
         carpet: Carpet Area
         configuration: 'Configuration'
+        payment_schedule: 'Payment Schedule'
+        cost_sheet: 'Cost Sheet'
       project_unit/status:
         hold: 'Hold'
         available: 'Available'
         not_available: 'Not Available'
         blocked: 'Blocked'
         error: 'Error'
+        employee: 'Employee Reserved'
+        management: 'Management Reserved'
 
       projects:
         name: Name
@@ -545,6 +546,7 @@ en:
         created_at: 'Created at'
         resolved_at: 'Processed on'
         name_email_phone: 'Name/Email/Phone'
+        requestable_type: 'Requestable Type'
       user_request/status:
         pending: Pending
         processing: Processing
@@ -831,8 +833,8 @@ en:
         header: Lost Payment
         link_name: Lost Payment
       new:
-        link_name: 'Direct Payment'
-        header: 'Direct Payment'
+        link_name: 'Make Payment'
+        header: 'Make Payment'
         make_payment: 'Make Payment'
       print:
         link_name: 'Print'
@@ -1006,30 +1008,62 @@ en:
       login_with_password_link: 'Login with password instead'
       login_with_otp_link: 'Login with OTP instead'
       sign_in: 'Sign In'
+      link:
+        pre_text: 'Already have an account?'
+        name: 'Login here'
+    titles:
+      heading1_html: 'Welcome to %{project_name}'
+      heading2_html: 'Now is the best time to turn your dream into reality'
+    form:
+      heading_html: '<strong>Login</strong> to Book an Apartment online'
 
   registrations:
     pre_text: 'Don’t have account ?'
     new:
       sign_up: 'Sign Up'
+    titles:
+      heading1_html: 'Biggest real estate opportunity in Pune<br> Introducing exclusive %{unit_configs} Bed residences starting from %{start_price} lakhs'
+      heading2_html: Home buying can’t get better than this
+    form:
+      heading_html: '<strong>Register Now</strong> to Book Online'
 
+  channel_partner_registration:
+    titles:
+      heading1_html: 'We are a big family of 400+ esteemed partners and we are happy to onboard you'
+      heading2_html: '<strong>Register now</strong> & join our network to explore new opportunities'
 
   dashboard:
-    welcome:
-      heading: 'Welcome %{name}'
-      sub_heading: 'Follow these quick steps and get your customers to be one of the privileged few to own a home at %{project_name}'
-    projects:
-      sub_heading: 'Best homes to meet your expectations'
-    titles:
-      lead_details: 'Lead Details'
-      booking_details: 'Booking Details'
-      total_leads: 'Total Leads'
-      received: 'Received'
-      available_inventory: 'Available Inventory'
-      download_brochure: 'Download Brochure'
-      visit_website: 'Visit Website'
-    confirmed_users: 'Confirmed Leads'
-    not_confirmed_users: 'Not Confirmed Leads'
-    booking_detail:
-      blocked: Blocked Bookings
-      booked_tentative: Tentative Bookings
-      booked_confirmed: Confirmed Bookings
+    channel_partner:
+      welcome:
+        heading: 'Welcome %{name}'
+        sub_heading: 'Follow these quick steps and get your customers to be one of the privileged few to own a home at %{project_name}'
+      projects:
+        sub_heading: 'Best homes to meet your expectations'
+      titles:
+        lead_details: 'Lead Details'
+        booking_details: 'Booking Details'
+        total_leads: 'Total Leads'
+        received: 'Received'
+        available_inventory: 'Available Inventory'
+        download_brochure: 'Download Brochure'
+        visit_website: 'Visit Website'
+      confirmed_users: 'Confirmed Leads'
+      not_confirmed_users: 'Not Confirmed Leads'
+      booking_detail:
+        blocked: 'Blocked Bookings'
+        booked_tentative: 'Tentative Bookings'
+        booked_confirmed: 'Confirmed Bookings'
+      new_user:
+        header: 'Add Customers'
+    user:
+      welcome:
+        heading: 'Welcome %{name}'
+        sub_heading_html: "Now get privileged access to %{project_size} spread township and book your dream home by just paying %{blocking_amount}<br>400+ customers have already paid a token amount and now it's your chance to roll the dice by following below steps"
+      projects:
+        sub_heading: 'Best homes to meet your expectations'
+      titles:
+        available_inventory: 'Available Inventory'
+        download_brochure: 'Download Brochure'
+        visit_website: 'Visit Website'
+      towers:
+        header: 'Get Priority Token'

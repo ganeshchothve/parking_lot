@@ -1,8 +1,9 @@
-<section class="auth login-page pb-5 mb-5">
+<section class="auth login-page">
   <div class="container">
     <div class="col-lg-6 col-xs-12 col-md-12 col-sm-12 p-0">
-      <div class="login-form-wrapper pt-2">
-        <p> <strong>Partner Registration</strong></p>
+      <div class="login-form-wrapper pt-5">
+        <h1 class="mt-0 fn-20"><%= t('channel_partner_registration.titles.heading1_html') %></h1>
+        <p><%= t('channel_partner_registration.titles.heading2_html') %></p>
         <div class="box-card">
           <div class="box-header bg-gradient br-rd-tr-4">
             <h2><strong>Basic details</strong></h2>
@@ -11,7 +12,7 @@
             <%= simple_form_for(@channel_partner, local: true, html: { id: 'channel_partner_form', class: 'validate-form', multipart: true, novalidate: false }) do |form| %>
 
               <%= render "form_fields", {form: form} %>
-              <div class="signin-btn col-lg-12 pl-0 pr-0 pt-4 pb-5">
+              <div class="signin-btn col-lg-12 pl-0 pr-0 pb-4">
                 <%= form.submit "Register", class: "sign-in-btn", data: { disable_with: "Please wait..." } %>
               </div>
               <%= render "devise/shared/links" %>

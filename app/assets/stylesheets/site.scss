@@ -159,11 +159,14 @@ $selected-aprt: #f4667e;
   	border:1px solid $light-blue;
   	font-size: 15px;
   	letter-spacing: 0.3px;
-    line-height: 19px;
+    line-height: 22px;
     text-align: center;
     outline: none;
     text-decoration: unset;
     margin-left: 10px;
+}
+.db-btn-200, .db-btn-200:hover, .db-btn-200:focus{
+	width: 120px;
 }
 .db-filter-btn,.db-filter-btn:active, .db-filter-btn:focus, .db-filter-btn:hover{
   	width: 36px;
@@ -261,6 +264,7 @@ a:hover{
 	}
 	.user-info{
 		margin-left: 20px;
+		margin-top: -2px;
 		.message-info{
 			position: relative;
 			img{
@@ -286,6 +290,8 @@ a:hover{
 			img{
 				width: 15px;
 				display: inline-block;
+			    margin-top: -5px;
+    			margin-right: 4px;
 			}
 			.dropdown-toggle{
 				display: inline-block;
@@ -1556,7 +1562,7 @@ a:hover{
 		  		content: '';
 		  		position: absolute;
 		  		left: -35px;
-		  		top: 0px;
+		  		top: -5px;
 		  		width: 50px;
 		  		height: 30px;
 		  		background-image: asset-url('bell-yellow.svg');
@@ -1874,7 +1880,7 @@ a:hover{
 		  	font-weight: 500;
 		  	line-height: 30px;
 		  	color: #0575d2;
-		  	margin-top: 70px;
+				//margin-top: 70px;
 		  	letter-spacing: 1px;
 		  	@media screen and (max-width: 992px){
 		  		margin-top: 0px;
@@ -2332,11 +2338,11 @@ table {
   .dropdown-menu {
     &.show{
       display:block;
-      transform: translate3d(0px, 0px, 0px) !important;
-      right: 0px;
+      /*transform: translate3d(0px, 0px, 0px) !important;*/
+      right: 16px;
       left: unset!important;
       bottom:unset;
-      z-index: 1060;
+      z-index: 1030;
     }
   }
 }

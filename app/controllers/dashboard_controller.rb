@@ -47,12 +47,16 @@ class DashboardController < ApplicationController
   # GET /dashboard/download_brochure
   #
   def download_brochure
-    send_file(open(current_client.brochure.file.url),
-          :filename => "Brochure.#{current_client.brochure.file.extension}",
-          :type => current_client.brochure.content_type,
-          :disposition => 'attachment',
-          :url_based_filename => true)
-    SelldoLeadUpdater.perform_async(current_user.id.to_s, 'project_info') if current_user.buyer? && current_user.receipts.count == 0
+    if current_client.brochure.present?
+      send_file(open(current_client.brochure.url),
+            :filename => "Brochure.#{current_client.brochure.file.extension}",
+            :type => current_client.brochure.content_type,
+            :disposition => 'attachment',
+            :url_based_filename => true)
+      SelldoLeadUpdater.perform_async(current_user.id.to_s, 'project_info') if current_user.buyer? && current_user.receipts.count == 0
+    else
+      redirect_to dashboard_path, alert: 'Brochure is not available'
+    end
   end
 
   private
@@ -60,7 +64,7 @@ class DashboardController < ApplicationController
   def get_lead_detail_labels
     labels = Array.new
     DashboardDataProvider.user_group_by(current_user).each do |key, value|
-      labels << value.to_s + ' ' + t("dashboard.#{key}")
+      labels << value.to_s + ' ' + t("dashboard.channel_partner.#{key}")
     end
     labels
   end
@@ -68,7 +72,7 @@ class DashboardController < ApplicationController
   def get_booking_detail_labels
     labels = Array.new
     DashboardDataProvider.booking_detail_group_by(current_user).keys.each do |key|
-      labels << t("dashboard.booking_detail.#{key}")
+      labels << t("dashboard.channel_partner.booking_detail.#{key}")
     end
     labels
   end

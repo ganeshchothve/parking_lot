@@ -7,14 +7,14 @@
       <div class="row">
         <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12 offset-lg-2">
           <div class="box-content">
-            <h1 class="wc-title white text-center"><%= t('dashboard.welcome.heading', name: current_user.name) %></h1>
-            <p class="white text-center fn-300 fn-18"><%= t('dashboard.welcome.sub_heading', project_name: current_project.name) %></p>
+            <h1 class="wc-title white text-center"><%= t('dashboard.channel_partner.welcome.heading', name: current_user.name) %></h1>
+            <p class="white text-center fn-300 fn-18"><%= t('dashboard.channel_partner.welcome.sub_heading', project_name: current_project.name) %></p>
             <ul class="step-booking">
               <li class="light-blue">
                 <span>
                   <%= image_tag 'file-invoice-lightblue.svg', alt: "Add customer" %>
                 </span>
-                <%= t('controller.users.new.link_name', role: User.model_name.human) %>
+                <%= t('dashboard.channel_partner.new_user.header', role: User.model_name.human) %>
               </li>
               <li class="light-blue">
                 <span><%= image_tag 'rupee-lightblue.svg' %></span>
@@ -49,17 +49,21 @@
               <div>
                 <div class="box-content br-rd-bl-4 bg-white text-center">
                   <h3 class="title"><%= current_project.name %></h3>
-                  <p class="sort-desc col-lg-6 col-xs-12 col-md-6 col-sm-12 offset-md-3 offset-lg-3"><%= t('dashboard.projects.sub_heading') %></p>
+                  <p class="sort-desc col-lg-6 col-xs-12 col-md-6 col-sm-12 offset-md-3 offset-lg-3"><%= t('dashboard.channel_partner.projects.sub_heading') %></p>
                   <ul class="prjt-info br-rd-4">
-                    <li><span><%= t('dashboard.titles.available_inventory') %></span><p><%= DashboardDataProvider.available_inventory %></p></li>
-                    <li><span><%= t('mongoid.attributes.search.starting_price') %></span><p><%= DashboardDataProvider.minimum_agreement_price %></p></li>
-                    <li><span><%= t('mongoid.attributes.project_unit.configuration') %></span><p><%= DashboardDataProvider.configurations.to_sentence %></p></li>
+                    <li><span><%= t('dashboard.channel_partner.titles.available_inventory') %></span><p><%= DashboardDataProvider.available_inventory %></p></li>
+                    <li><span><%= t('mongoid.attributes.search.starting_price') %></span><p><%= number_to_indian_currency(DashboardDataProvider.minimum_agreement_price) %></p></li>
+                    <li><span><%= t('mongoid.attributes.project_unit.configuration') %></span><p><%= DashboardDataProvider.configurations.to_sentence(last_word_connector: ' & ') %></p></li>
                   </ul>
                   <ul class="prjt-link">
-                    <li><%= link_to t('dashboard.titles.download_brochure'), download_brochure_path, target: "_blank", class: 'text-uppercase' %></li>
-                    <li><%= link_to t('dashboard.titles.visit_website'), current_client.website_link, target: "_blank", class: 'text-uppercase' %></li>
+                    <% if current_client.brochure.present? %>
+                      <li><%= link_to t('dashboard.channel_partner.titles.download_brochure'), download_brochure_path, class: 'text-uppercase' %></li>
+                    <% end %>
+                    <li><%= link_to t('dashboard.channel_partner.titles.visit_website'), current_client.website_link, target: "_blank", class: 'text-uppercase' %></li>
                   </ul>
-                  <%= link_to t('helpers.new.link_name', model: BookingDetail.model_name.human), new_admin_booking_detail_path, class: 'large-btn bg-light-blue display-block fn-500 center-block text-uppercase modal-remote-form-link' %>
+                  <% if current_client.enable_actual_inventory?(current_user) %>
+                    <%= link_to t('helpers.new.link_name', model: BookingDetail.model_name.human), new_admin_booking_detail_path, class: 'large-btn bg-light-blue display-block fn-500 center-block text-uppercase modal-remote-form-link' %>
+                  <% end %>
                 </div>
               </div>
             </div>
@@ -73,7 +77,7 @@
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
           <div class="table-title pt-4">
-            <img src="<%= asset_path 'chart-line.svg' %>" alt="user icon"> <h1 class="title"><%= t('dasboard.titles.leads') %></h1>
+            <img src="<%= asset_path 'chart-line.svg' %>" alt="user icon"> <h1 class="title"><%= t('dashboard.channel_partner.titles.leads') %></h1>
           </div>
         </div>
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
@@ -83,7 +87,7 @@
                 <div class="leads-box-inner">
                   <img src="<%= asset_path 'leader-1.png' %>" alt="leads icon">
                   <span class="numbers"><%= DashboardDataProvider.total_buyers(current_user) %></span>
-                  <p class="title"><%= t('dasboard.titles.total_leads') %><br><%= t('dasboard.titles.received') %></p>
+                  <p class="title"><%= t('dashboard.channel_partner.titles.total_leads') %><br><%= t('dashboard.channel_partner.titles.received') %></p>
                   <!-- <p class="desc">Lorem Ipsum is simply dummy text of the printing and typesetting</p> -->
                 </div>
               </div>
@@ -91,11 +95,11 @@
             <div class="box-card col-lg-8 col-md-12 col-sm-12 col-xs-12 mt-4 br-rd-4 bg-white">
               <div class="row">
                 <div class="col-lg-6 col-md-12 col-xs-12 col-sm-12">
-                  <h2 class="chart-title pt-4 mt-2 mb-5 pb-5 pl-4"><%= t('dasboard.titles.lead_details') %></h2>
+                  <h2 class="chart-title pt-4 mt-2 mb-5 pb-5 pl-4"><%= t('dashboard.channel_partner.titles.lead_details') %></h2>
                   <canvas id="myChart" height="300" width="320"></canvas>
                 </div>
                 <div class="col-lg-6 col-md-12 col-xs-12 col-sm-12 relative br-lft">
-                  <h2 class="chart-title pt-4 mt-2 pb-5"><%= t('dasboard.titles.booking_details') %></h2>
+                  <h2 class="chart-title pt-4 mt-2 pb-5"><%= t('dashboard.channel_partner.titles.booking_details') %></h2>
                   <canvas id="barChart" height="300" class="pl-3 pr-3"></canvas>
                 </div>
               </div>
@@ -135,10 +139,10 @@
             <div class="box-content br-rd-bl-4 bg-white fix-ht-420">
               <div class="row pd-box">
                 <ul class="db-user-no-list pt-3 mt-3">
-                  <li><span class="number">2 lac</span><p class="title">Booking in<br>confirm stage</p></li>
+                  <li><span class="number">3</span><p class="title">No of bookings<br>in confirm stage</p></li>
                   <li><span class="number">5 lac</span><p class="title">Incentive<br>paid</p></li>
                   <li><span class="number">2 lac</span><p class="title">Incentive<br>generated</p></li>
-                  <li><span class="number">05</span><p class="title">No of bookings<br>with pending incentive</p></li>
+                  <li><span class="number">5</span><p class="title">No of bookings<br>with pending incentive</p></li>
                 </ul>
               </div>
             </div>

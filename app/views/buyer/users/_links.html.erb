@@ -2,7 +2,7 @@
   <%= link_to t('controller.booking_details.continue_booking.link_name'), new_user_search_path(user.id), class: "dropdown-item" %>
 <% end %>
 
-<% if policy([:buyer, Receipt.new(user: user)]).new? %>
+<% if policy([:buyer, Receipt.new(user: user)]).direct_payment? %>
   <%= link_to t('controller.receipts.new.link_name'), new_buyer_receipt_path(user), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 

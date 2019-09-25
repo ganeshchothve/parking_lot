@@ -35,7 +35,7 @@ class HomeController < ApplicationController
         query = []
         query << {email: params['email']} if params[:email].present?
         query << {phone: params['phone']} if params[:phone].present?
-        query << {leaD_id: params['leaD_id']} if params[:leaD_id].present?
+        query << {lead_id: params['lead_id']} if params[:lead_id].present?
         @user = User.or(query).first #TODO: check if you want to find uniquess on lead id also
         if @user.present?
           message = 'A user with these details has already registered.'

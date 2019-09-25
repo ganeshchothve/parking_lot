@@ -4,12 +4,12 @@
       <div class="login-form-wrapper pt-5">
         <p class="p-style">Reset Password</p>
 
-        <%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), method: :post, html: { novalidate: false, class: 'validate-form pb-5', id: 'confirmation_form' }) do |f| %>
+        <%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), method: :post, html: { novalidate: false, class: 'validate-form', id: 'confirmation_form' }) do |f| %>
 
 
           <%= f.input :login, autofocus: true, autocomplete: false, class: 'form-control' %>
 
-          <div class="signin-btn col-lg-12 pl-0 pr-0 pt-5 pb-5">
+          <div class="signin-btn col-lg-12 pl-0 pr-0 pt-3 pb-3">
             <%= f.submit "Resend confirmation instructions", class: 'sign-in-btn' %>
           </div>
         <% end %>
