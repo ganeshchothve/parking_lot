@@ -15,7 +15,7 @@ class SelldoLeadUpdater
         user.portal_stages.where(stage:  st).present? ? user.portal_stages.where(stage:  st).first.set(updated_at: Time.now, priority: priority[st]) : user.portal_stages << PortalStage.new(stage: st, priority: priority[st])
       end
       if st == 'payment_done' && options["token_number"].present?
-        token_numbers = user.receipts.where('$or' => [{ status: { '$in': %w(success clearance_pending) } }, { payment_mode: {'$ne': 'online'}, status: {'$in': %w(pending clearance_pending success)} }]).distinct(:token_number)
+        token_numbers = user.receipts.in(status: %w(success clearance_pending)).distinct(:token_number)
       end
       sell_do(user, st, token_numbers)
     else
