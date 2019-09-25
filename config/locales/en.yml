@@ -998,6 +998,10 @@ en:
           link_name: 'Edit Cancellation'
           header: 'Edit Cancellation'
 
+  checklists:
+    form:
+      key_helptext: 'Only small letters, numbers & underscore allowed'
+
   asset:
     image:
       not_found: 'No Image Found'
