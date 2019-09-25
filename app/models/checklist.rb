@@ -13,7 +13,6 @@ class Checklist
   validates :name, :key, :tracked_by, presence: true
   validates :key, :name, uniqueness: true
   validates :tracked_by, inclusion: { in: proc { TRACKED_BY } }
-  validates_format_of :key, :with => /\A[1-9a-z_]+\z/
-
+  validates_format_of :key, :with => /\A[a-z0-9_]+\z/
 
 end
