@@ -7,7 +7,9 @@ class Task
   field :tracked_by, type: String
   field :completed_at, type: DateTime
   field :completed, type: Boolean
+  field :order, type: Integer
 
+  validates :name, :key, :tracked_by, :order, presence: true
   embedded_in :booking_detail
   belongs_to :completed_by, class_name: 'User', optional: true
 end

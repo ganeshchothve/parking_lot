@@ -167,6 +167,7 @@ en:
         key: 'Key'
         description: 'Description'
         tracked_by: 'Tracked By'
+        order: 'Order'
       asset:
         assetable_id: Assetable ID
         assetable_type: Assetable Type

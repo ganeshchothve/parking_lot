@@ -6,6 +6,7 @@
           <th><%= labels['name'] %></th>
           <th><%= labels['key'] %></th>
           <th><%= labels['tracked_by'] %></th>
+          <th><%= labels['order'] %></th>
           <th class="text-right">Actions</th>
         </tr>
       </thead>
@@ -21,6 +22,9 @@
         </td>
         <td>
           <%= checklist.tracked_by %>
+        </td>
+        <td>
+          <%= checklist.order %>
         </td>
         <td>
           <div class="dropdown show text-right">
