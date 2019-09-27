@@ -27,6 +27,12 @@
           <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.manager_id'), class: "control-label" %>
           <%= select_tag "fltrs[manager_id]", options_for_select(filter_manager_options), { class: "selectize-remote", data: { url: admin_users_path, params: { fltrs: { role_nin: ::User::BUYER_ROLES }} }} %>
         </div>
+        <% if policy([:admin, BookingDetail]).editable_field?("tasks_attributes") %>
+          <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+            <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.tasks'), class: "control-label" %>
+            <%= select_tag "fltrs[tasks]", options_for_select(current_client.checklists.collect{|x| [x.name, x.key]} ), class: "selectize", multiple: true %>
+          </div>
+        <% end %>
       </div>
     </div>
     <div class="filter-footer">

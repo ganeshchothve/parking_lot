@@ -222,6 +222,7 @@ en:
         all_inclusive_price: 'All Inclusive Price'
         manager_id: Manager
         dates: 'Dates'
+        tasks: 'Tasks'
       booking_detail/status:
         available: 'Available'
         not_available: 'Not Available'
