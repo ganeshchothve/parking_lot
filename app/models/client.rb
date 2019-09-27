@@ -117,7 +117,7 @@ class Client
   has_many :schemes
   has_one :gallery
   has_one :external_inventory_view_config, inverse_of: :booking_portal_client
-  embeds_many :checklists
+  embeds_many :checklists, cascade_callbacks: true
 
 
   validates :name, :allowed_bookings_per_user, :helpdesk_email, :helpdesk_number, :notification_email, :notification_numbers, :sender_email, :email_domains, :booking_portal_domains, :registration_name, :website_link, :support_email, :support_number, :payment_gateway, :cin_number, :mailgun_private_api_key, :mailgun_email_domain, :sms_provider_username, :sms_provider_password, :sms_mask, presence: true

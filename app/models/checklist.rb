@@ -14,6 +14,7 @@ class Checklist
   validates :name, :key, :tracked_by, :order, presence: true
   validates :key, :name, :order, uniqueness: true
   validates :tracked_by, inclusion: { in: proc { TRACKED_BY } }
-  validates_format_of :key, :with => /\A[a-z0-9_]+\z/
+  validates :key, format: {with: /\A[a-z0-9_]+\z/, message: "can take small letters, numbers & underscores only"}
+
 
 end
