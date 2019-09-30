@@ -29,8 +29,12 @@
         </div>
         <% if policy([:admin, BookingDetail]).editable_field?("tasks_attributes") %>
           <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-            <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.tasks'), class: "control-label" %>
-            <%= select_tag "fltrs[tasks]", options_for_select(current_client.checklists.collect{|x| [x.name, x.key]} ), class: "selectize", multiple: true %>
+            <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.tasks_completed'), class: "control-label" %>
+            <%= select_tag "fltrs[tasks_completed]", options_for_select(current_client.checklists.collect{|x| [x.name, x.key]}, params.dig(:fltrs, :tasks_completed)), prompt: '', class: "selectize" %>
+          </div>
+          <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+            <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.tasks_pending'), class: "control-label" %>
+            <%= select_tag "fltrs[tasks_pending]", options_for_select(current_client.checklists.collect{|x| [x.name, x.key]}, params.dig(:fltrs, :tasks_pending)), prompt: '', class: "selectize" %>
           </div>
         <% end %>
       </div>
