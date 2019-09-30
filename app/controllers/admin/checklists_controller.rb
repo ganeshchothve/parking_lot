@@ -6,7 +6,7 @@ class Admin::ChecklistsController < AdminController
   # GET /admin/checklists
 
   def index
-    @checklists = current_client.checklists
+    @checklists = current_client.checklists.order('order ASC')
     @checklists = @checklists.paginate(page: params[:page] || 1, per_page: params[:per_page])
   end
 

@@ -71,6 +71,8 @@ class BookingDetail
   scope :filter_by_project_tower_id, ->(project_tower_id) { where(project_unit_id: { "$in": ProjectUnit.where(project_tower_id: project_tower_id).pluck(:_id) })}
   scope :filter_by_user_id, ->(user_id) { where(user_id: user_id)  }
   scope :filter_by_manager_id, ->(manager_id){ where(user_id: { '$in' => User.buyers.where(manager_id: manager_id).distinct(:_id) } ) }
+  scope :filter_by_tasks_completed, ->(tasks) { where("$and": [{ _id: {"$in": find_completed_tasks(tasks)}}])}
+  scope :filter_by_tasks_pending, ->(tasks) { where("$and": [{ _id: {"$in": find_pending_tasks(tasks)}}])}
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(name: regex ) }
   default_scope -> {desc(:created_at)}
 
@@ -186,6 +188,22 @@ class BookingDetail
   end
 
   class << self
+
+    def find_completed_tasks tasks
+      BookingDetail.collection.aggregate([ {"$unwind": "$tasks"},
+                                           {"$match": {"tasks.key": tasks, "tasks.completed": true}},
+                                           {"$project": {id: "$id"}}
+                                          ]).to_a.uniq.collect{|x| x['_id']}
+    end
+
+    def find_pending_tasks tasks
+      booking_detail_ids = BookingDetail.collection.aggregate([ {"$unwind": "$tasks"},
+                                           {"$match": {"tasks.key": tasks, "tasks.completed": false}},
+                                           {"$project": {id: "$id"}}
+                                          ]).to_a.uniq.collect{|x| x['_id']}
+      booking_detail_ids << BookingDetail.where(tasks: nil).pluck(:id)
+      booking_detail_ids.flatten
+    end
 
     def user_based_scope(user, params = {})
 
