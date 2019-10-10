@@ -18,3 +18,12 @@
     </div>
   </div>
 </section>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    var count = <%= current_user.receipts.pluck(:time_slot).count %>
+    <!-- Show the list if time slots (one or more) are present. -->
+    if(count != 0){
+      $('#dashboard-time-slot').collapse('show')
+    }
+  });
+<% end %>

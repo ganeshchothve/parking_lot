@@ -4,7 +4,11 @@
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 bg-gradient">
         <div class="box-content">
           <h1 class="wc-title white text-center"> <%= t("dashboard.user.welcome.heading", name: current_user.name) %> </h1>
-          <p class="white text-center fn-300 fn-18"><%= t('dashboard.user.welcome.sub_heading_html', project_size: current_project.project_size, blocking_amount: number_to_indian_currency(current_client.blocking_amount)) %></p>
+          <% if current_user.receipts.present? && !current_client.enable_actual_inventory?(current_user) %>
+            <p class="white text-center fn-300 fn-18"><%= t('dashboard.user.welcome.sub_heading_1') %></p>
+          <% else %>
+            <p class="white text-center fn-300 fn-18"><%= t('dashboard.user.welcome.sub_heading_html', project_size: current_project.project_size, blocking_amount: number_to_indian_currency(current_client.blocking_amount)) %></p>
+          <% end %>
           <ul class="step-booking">
             <li>
               <%= link_to [:new, current_user_role_group, :user_kyc], class: 'modal-remote-form-link' do %>

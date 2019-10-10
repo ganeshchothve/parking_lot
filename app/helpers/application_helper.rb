@@ -105,6 +105,16 @@ module ApplicationHelper
         #{link_to( t('controller.assets.index.link_name'), assetables_path(assetable_type: current_client.class.model_name.i18n_key.to_s, assetable_id: current_client.id), class: 'footer-link modal-remote-form-link')}
       </li>"
     end
+    if current_user.buyer? && current_client.support_number.present?
+      html += "<li class = 'footer-object'>
+        Need Help? Contact Us - #{current_client.support_number}
+      </li>"
+    end
+    if current_user.channel_partner? && current_client.channel_partner_support_number.present?
+      html += "<li >
+        Need Help? Contact Us - #{current_client.channel_partner_support_number}
+      </li>"
+    end
     html.html_safe
   end
 

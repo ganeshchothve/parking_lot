@@ -7,7 +7,7 @@
     <div class="filter-content">
       <div class="row">
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-          <%= label_tag "fltrs", t('mongoid.attributes.user.name') %>
+          <%= label_tag "fltrs", t('mongoid.attributes.user.name_email_phone') %>
           <%= select_tag "fltrs[_id]", (params[:fltrs].present? ? params[:fltrs][:_id] : []), {class: "selectize-remote", data: {url: admin_users_path }} %>
         </div>
         <% if current_client.selldo_client_id.present? && current_client.selldo_gre_form_id.present? && current_client.selldo_channel_partner_form_id.present? %>

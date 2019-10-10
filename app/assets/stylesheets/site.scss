@@ -1967,6 +1967,11 @@ a:hover{
 		line-height: 1.54;
 		color: #67758d;
 	}
+	.footer-object{
+			font-size: 13px;
+			line-height: 1.54;
+			color: #67758d;
+		}
 	.footer-menu{
 		padding: 5px 0;
 		@media screen and (max-width: 700px){
@@ -2002,6 +2007,7 @@ a:hover{
 		}
 	}
 }
+
 /*********************************** User Dashboard ******************************/
 .table-title{
 	img{
