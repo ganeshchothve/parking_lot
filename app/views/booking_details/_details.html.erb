@@ -21,7 +21,7 @@
               <p><%= booking_detail.name %></p>
             </li>
             <li>
-              <span><%= User.human_attribute_name('role.user') %></span>
+              <span><%= User.human_attribute_name("role.user", count: 1) %></span>
               <p><%= link_to_if booking_detail.user, booking_detail.user_name, [current_user_role_group, booking_detail.user] %></p>
             </li>
             <li>

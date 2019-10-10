@@ -157,11 +157,13 @@ module DashboardData
         ]).to_a
         out = Hash.new
         data.each do |d|
-          if out[(d["_id"]["project_tower_name"]).to_sym].present?
-            out[(d["_id"]["project_tower_name"]).to_sym].merge!(((d["_id"]["status"]).to_sym) => d["count"])
-          else
-            out[(d["_id"]["project_tower_name"]).to_sym] = Hash.new
-            out[(d["_id"]["project_tower_name"]).to_sym][(d["_id"]["status"]).to_sym]= d['count']
+          if d["_id"]["project_tower_name"].present?
+            if out[(d["_id"]["project_tower_name"]).to_sym].present?
+              out[(d["_id"]["project_tower_name"]).to_sym].merge!(((d["_id"]["status"]).to_sym) => d["count"])
+            else
+              out[(d["_id"]["project_tower_name"]).to_sym] = Hash.new
+              out[(d["_id"]["project_tower_name"]).to_sym][(d["_id"]["status"]).to_sym]= d['count']
+            end
           end
         end
         out
