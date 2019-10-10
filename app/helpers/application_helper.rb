@@ -111,7 +111,7 @@ module ApplicationHelper
       </li>"
     end
     if current_user.channel_partner? && current_client.channel_partner_support_number.present?
-      html += "<li >
+      html += "<li  class = 'footer-object'>
         Need Help? Contact Us - #{current_client.channel_partner_support_number}
       </li>"
     end
