@@ -159,33 +159,18 @@
         <div class="row">
           <div class="box-card col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-5">
             <div class="box-header bg-gradient-cd br-rd-tr-4">
-            <h2><img src="<%= asset_path 'users-white.svg' %>"  alt="Refer a Friend" class="wd-20">Refer a Channel Partner</h2>
+            <h2><img src="<%= asset_path 'users-white.svg' %>"  alt="Refer a Friend" class="wd-20"><%= t('dashboard.channel_partner.refer_a_channel_partner.heading') %></h2>
             </div>
             <div class="box-content br-rd-bl-4 bg-white fix-ht">
               <div class="row pd-box">
                 <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12">
-                  <p class="fn-14 content-clr">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis</p>
+                  <p class="fn-14 content-clr"><%= t('dashboard.channel_partner.refer_a_channel_partner.sub_heading', project_name: current_project.name) %></p>
                   <a href="javascript:;" class="large-btn bg-light-blue display-block fn-500 text-uppercase">Refer Now&nbsp;&nbsp;></a>
                 </div>
               </div>
             </div>
           </div>
-          <% if channel_partner %>
-          <div class="box-card col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-5">
-            <div class="box-header bg-gradient-cd br-rd-tr-4">
-              <h2><img src="<%= asset_path 'folder-white.svg' %>" alt="My Documents" class="wd-18">Collaterals</h2>
-              <%= link_to( "View All", assetables_path(assetable_type: channel_partner.class.model_name.i18n_key.to_s, assetable_id: channel_partner.id), class: 'view-all-btn modal-remote-form-link') %>
-            </div>
-            <div class="box-content br-rd-bl-4 bg-white fix-ht">
-              <div class="row pd-box">
-                <ul class="collaterals-list">
-                  <li><a href="javascript:;">1. Videos (0)</a></li>
-                  <li><%= link_to( "2. Documents (#{channel_partner.assets.count})", assetables_path(assetable_type: channel_partner.class.model_name.i18n_key.to_s, assetable_id: channel_partner.id), class: 'modal-remote-form-link') %></li>
-                  <li><a href="javascript:;">3. Certificates (0)</a></li>
-              </div>
-            </div>
-          </div>
-          <% end %>
+          <%= render 'dashboard/index/partials/collaterals' %>
           <div class="box-card col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-5">
             <div class="box-header bg-gradient-cd br-rd-tr-4">
               <h2><img src="<%= asset_path 'leaderboard-white.svg' %>" alt="Documents" class="wd-16">Leaderboard</h2>
@@ -230,12 +215,12 @@
         <div class="row">
           <div class="box-card col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-5">
             <div class="box-header bg-gradient-cd br-rd-tr-4">
-            <h2><img src="<%= asset_path 'rupee-white.svg' %>" alt="Documents" class="wd-10">Incentive Plan</h2>
+            <h2><img src="<%= asset_path 'rupee-white.svg' %>" alt="Documents" class="wd-10"><%= t('dashboard.channel_partner.incentive_plan.heading') %></h2>
             </div>
             <div class="box-content br-rd-bl-4 bg-white">
               <div class="row pd-box">
               <div class="col-lg-6 col-xs-12 col-md-12 col-sm-12">
-                <p class="p-style">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.<br>It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of.</p>
+                <p class="p-style"><%= t('dashboard.channel_partner.incentive_plan.sub_heading_html') %></p>
               </div>
               <div class="col-lg-6 col-xs-12 col-md-12 col-sm-12">
                 <textarea placeholder="Need help? Post your query here..." class="form-control"></textarea>
