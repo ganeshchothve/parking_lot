@@ -1,0 +1,54 @@
+<%= form_for([:admin, @booking_detail], local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": Checklist.model_name.human(count: 2), "data-type": "json", id: 'booking_detail_tasks_form'}) do |f| %>
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-gradient-cd white">
+        <h3 class="title"><%= t('controller.booking_details.tasks.header') %></h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" class="white">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <%= f.fields_for :tasks, @booking_detail.tasks.order('order ASC') do |task| %>
+            <%= task.hidden_field :completed_by_id , id: "#{task.object.key}_by"%>
+              <div class="radioStyle col-lg-12 mx-4 my-2">
+                <%= task.check_box :completed, autofocus: true, id: "#{task.object.key}", class: 'check-input' %>
+                <%= task.label :completed, "<span class='pre'>#{task.object.name}</span>".html_safe, for: "#{task.object.key}" %>
+                <div id = <%= "#{task.object.key}_div" %> >
+                  <% if task.object.completed %>
+                    <small class = 'description' >
+                      <%= task.object.completed_by.try(:name) %> completed at <%= I18n.l(task.object.completed_at.localtime, format: :long) %>
+                    </small>
+                  <% end %>
+                </div>
+              </div>
+          <% end %>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <%= f.submit "Submit", class: "btn btn-primary" %>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>
+<%= javascript_tag do %>
+$(document).ready(function(){
+  $('#booking_detail_tasks_form .check-input').on("change", function(){
+    if($(this).prop('checked') == true){
+      var current_user_id = <%= raw current_user.id.to_json %>
+      var current_user_name = <%= raw current_user.name.to_json %>
+      var current_date = <%= raw I18n.l(DateTime.now, format: :long).to_json %>
+      $("#" + $(this).attr('id') + "_by").val(current_user_id)
+      var description = "<small class = 'description'>"+current_user_name+" completed at "+ current_date +"</small>"
+      $("#" + $(this).attr('id') + "_div").append(description)
+    }
+    else{
+      $("#" + $(this).attr('id') + "_div").find('.description').remove();
+      $("#" + $(this).attr('id') + "_by").val('')
+    }
+  });
+  FormInitializer.init($("#booking_detail_tasks_form"));
+});
+<% end %>

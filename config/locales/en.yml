@@ -82,6 +82,9 @@ en:
         i_agree_label:
           buyer: 'I Agree'
           admin: 'I Agree in behalf of %{name}'
+      checklist:
+        one: 'Task'
+        other: 'Tasks'
 
       booking_detail_scheme:
         one: Booking Scheme
@@ -159,6 +162,12 @@ en:
         other: Users & Customers
 
     attributes:
+      checklist:
+        name: 'Name'
+        key: 'Key'
+        description: 'Description'
+        tracked_by: 'Tracked By'
+        order: 'Order'
       asset:
         assetable_id: Assetable ID
         assetable_type: Assetable Type
@@ -213,6 +222,8 @@ en:
         all_inclusive_price: 'All Inclusive Price'
         manager_id: Manager
         dates: 'Dates'
+        tasks_completed: 'Tasks Completed'
+        tasks_pending: 'Tasks Pending'
       booking_detail/status:
         available: 'Available'
         not_available: 'Not Available'
@@ -676,6 +687,18 @@ en:
           custom_dates: 'Custom Dates'
 
   controller:
+    checklists:
+      index:
+        link_name: 'Tasks'
+      new:
+        link_name: 'New Task'
+      edit:
+        link_name: 'Edit Task'
+      delete:
+        success: 'Task deleted successfully'
+        failure: 'Task cannot be deleted'
+      set_checklist:
+        not_found: 'Task not found'
     assets:
       index:
         link_name: 'Documents'
@@ -734,6 +757,9 @@ en:
         link_name: Cost Sheet
       payment_schedule:
         link_name: Payment Schedule
+      tasks:
+        link_name: 'Tasks'
+        header: 'Tasks'
       set_booking_detail_missing: "Booking detail not found"
       set_project_unit_missing: "Project unit not found"
       booking_successful: "You have completed the booking successfully."
@@ -974,6 +1000,10 @@ en:
         edit:
           link_name: 'Edit Cancellation'
           header: 'Edit Cancellation'
+
+  checklists:
+    form:
+      key_helptext: 'Only small letters, numbers & underscore allowed'
 
   asset:
     image:

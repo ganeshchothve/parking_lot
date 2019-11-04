@@ -10,6 +10,10 @@
   <%= link_to t('helpers.show.link_name', model: User.human_attribute_name('role.user') ), admin_user_path(booking_detail.user), class: "dropdown-item" %>
 <% end %>
 
+<% if policy([:admin, booking_detail]).tasks? %>
+  <%= link_to t('controller.booking_details.tasks.link_name'), tasks_admin_booking_detail_path(booking_detail), class: "dropdown-item modal-remote-form-link" %>
+<% end %>
+
 <% if booking_detail.scheme_rejected? && policy([:admin, booking_detail.project_unit]).release_unit? %>
   <%= link_to t('controller.booking_details.release_unit.link_name'), release_unit_admin_project_unit_path(booking_detail.project_unit), method: :patch, class: 'dropdown-item' %>
 <% end %>

@@ -15,7 +15,7 @@ class Admin::ClientsController < AdminController
         format.json { render json: @client }
       else
         format.html { render :edit }
-        format.json { render json: {errors: @client.errors.full_messages}, status: :unprocessable_entity }
+        format.json { render json: {errors: @client.errors.full_messages.flatten}, status: :unprocessable_entity }
       end
     end
   end

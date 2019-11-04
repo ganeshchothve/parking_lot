@@ -61,9 +61,13 @@ var modal_remote_form_link_click_handler = function(remote_href){
           $("#modal-remote-form-inner").on("hide.bs.modal", handle_remote_pushstate);
         }
       },
-      error: function(){
+      error: function(one, two, three){
         handle_remote_pushstate();
-        Amura.global_error_handler("Error while fetching modal remote form");
+        var errors;
+        if(one.responseText != undefined) {
+          errors = $.parseJSON(one.responseText).errors
+        }
+        Amura.global_error_handler(errors || "Error while fetching modal remote form");
       },
       complete: function(){
         $.unblockUI();
