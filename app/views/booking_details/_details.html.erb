@@ -21,7 +21,7 @@
               <p><%= booking_detail.name %></p>
             </li>
             <li>
-              <span><%= User.human_attribute_name('role.user') %></span>
+              <span><%= User.human_attribute_name("role.user", count: 1) %></span>
               <p><%= link_to_if booking_detail.user, booking_detail.user_name, [current_user_role_group, booking_detail.user] %></p>
             </li>
             <li>
@@ -36,7 +36,7 @@
             <% end %>
             <li>
               <span><%= BookingDetail.human_attribute_name('bedrooms')%>/<%= BookingDetail.human_attribute_name('bathrooms')%></span>
-              <p><%= project_unit.unit_configuration.bedrooms %> / <%= project_unit.unit_configuration.bathrooms %></p>
+              <p><%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></p>
             </li>
             <li>
               <span><%= BookingDetail.human_attribute_name('carpet')%></span>

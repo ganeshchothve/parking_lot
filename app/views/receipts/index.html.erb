@@ -50,7 +50,7 @@
                   new_admin_user_receipt_path(@user)
                 end
               %>
-              <% if policy( [ :admin, Receipt.new(user: @user) ]).direct? %>
+              <% if policy( [ :admin, Receipt.new(user: @user) ]).new? %>
                 <%= link_to "Make Direct #{global_labels['receipt']}", url_for_new_receipt, class: 'btn btn-primary modal-remote-form-link' %>
               <% end %>
               <% end %>

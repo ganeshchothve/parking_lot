@@ -1,9 +1,4 @@
 class ClientObserver < Mongoid::Observer
-
-  def after_validation client
-    client.errors.delete(:checklists)
-  end
-
   def before_save client
     client.enable_communication = {email: true, sms: true} if client.enable_communication.blank?
     client.enable_communication[:email] = (client.enable_communication[:email].to_s == "true") || (client.enable_communication[:email].to_s == "1")

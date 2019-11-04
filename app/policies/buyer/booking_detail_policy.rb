@@ -1,7 +1,7 @@
 class Buyer::BookingDetailPolicy < BookingDetailPolicy
 
   def index?
-    true
+    enable_actual_inventory?(user)
   end
 
   def booking?
