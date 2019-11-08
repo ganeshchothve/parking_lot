@@ -1,3 +1,6 @@
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#iris_menu" aria-controls="iris_menu" aria-expanded="false" aria-label="MENU">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 <div class="collapse navbar-collapse float-right" id="iris_menu">
   <ul class="navbar-nav ml-auto nowrap">
     <% if policy(:dashboard).index? %>
@@ -39,7 +42,7 @@
     <%= render 'layouts/navbar/custom_links' %>
   </ul>
 </div>
-<div class="user-info float-right show-xs nowrap ml-0">
+<div class="user-info float-right nowrap ml-0">
   <div class="user-dropdown display-inline dropdown">
     <img src="<%= asset_path 'user-alt-black.svg' %>" alt="User Info">
     <a class="nav-link pl-0 pr-0 dropdown-toggle" href="javascript:;" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

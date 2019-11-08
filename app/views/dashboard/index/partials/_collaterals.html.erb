@@ -1,4 +1,4 @@
-<div class="box-card col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-5">
+<div class="box-card col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-5">
   <div class="box-header bg-gradient-cd br-rd-tr-4">
     <h2><img src="<%= asset_path 'folder-white.svg' %>" alt="My Documents" class="wd-18">Collaterals</h2>
     <%= link_to( "View All", assetables_path(assetable_type: current_client.class.model_name.i18n_key.to_s, assetable_id: current_client.id), class: 'view-all-btn modal-remote-form-link') %>
@@ -9,6 +9,19 @@
         <li><a href="javascript:;">1. Videos (0)</a></li>
         <li><%= link_to( "2. Documents (#{current_client.assets.count})", assetables_path(assetable_type: current_client.class.model_name.i18n_key.to_s, assetable_id: current_client.id), class: 'modal-remote-form-link') %></li>
         <li><a href="javascript:;">3. Certificates (0)</a></li>
+      </div>
     </div>
   </div>
-</div>
+  <div class="box-card col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-5">
+    <div class="box-header bg-gradient-cd br-rd-tr-4">
+      <h2><img src="<%= asset_path 'users-white.svg' %>"  alt="Refer a Friend" class="wd-20"><%= t('dashboard.channel_partner.refer_a_channel_partner.heading') %></h2>
+    </div>
+    <div class="box-content br-rd-bl-4 bg-white fix-ht">
+      <div class="row pd-box">
+        <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <p class="fn-14 content-clr"><%= t('dashboard.channel_partner.refer_a_channel_partner.sub_heading', project_name: current_project.name) %></p>
+          <a href="javascript:;" class="large-btn bg-light-blue display-block fn-500 text-uppercase">Refer Now&nbsp;&nbsp;></a>
+        </div>
+      </div>
+    </div>
+  </div>

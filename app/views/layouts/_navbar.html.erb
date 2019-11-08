@@ -15,9 +15,9 @@
           <div class="dropdown hide-xs float-right register-dropdown">
             <div class="display-inline">
                 <a class="dropdown-toggle p-style" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Register</a>
-                <div class="dropdown-menu menu-top" aria-labelledby="navbarDropdown">
-                    <%= link_to "Register as Channel Partner", new_channel_partner_path, class: "dropdown-item" %>
-                    <%= link_to "Register Now", register_path, class: "btn btn-primary" %><img src="<%= asset_path 'user-alt-black.svg' %>" alt="User Info">
+                <div class="dropdown-menu menu-top mobile-home-menu" aria-labelledby="navbarDropdown">
+                   <%= link_to "Register as Channel Partner", new_channel_partner_path, class: "dropdown-item btn-as-channel-partner text-left" %>
+                    <%= link_to "Register as Customer", register_path, class: "btn btn-primary btn-as-customer-partner text-left" %>
                 </div>
               </div>
             </div>
