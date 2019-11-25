@@ -101,6 +101,14 @@ figure.wave {
 }
 .navbar-light .navbar-toggler{
   border: none;
+  float: right;
+  display: block;
+  position: absolute;
+  right: 6px;
+  top: 15px;
+  @media screen and (min-width: 992px){
+    display: none;
+  }
 }
 @include media-breakpoint-down(md) {
   .modal-lg{
@@ -109,6 +117,13 @@ figure.wave {
   .navbar-collapse {
     max-height: calc(100vh - 60px);
     overflow-y: auto;
+    position: absolute;
+    top: 62px;
+    background-color: #fff;
+    width: 100%;
+    left: 0px;
+    padding-left: 30px;
+    padding-bottom: 20px;
   }
 }
 .popover{
@@ -159,12 +174,25 @@ figure.wave {
 
 @media print {
   .tab-content > .tab-pane {
-      display: block !important;
-      opacity: 1 !important;
-      visibility: visible !important;
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
   }
 }
-
+.mobile-home-menu{
+  a.btn-as-channel-partner{
+    padding: 12px!important;
+    border-bottom: 1px solid #d6d6d6;
+  }
+  a.btn-as-customer-partner{
+    display: block;
+    margin: 0 auto;
+    background-color: #fff;
+    color: #000;
+    border: none;
+    padding: 12px 12px 7px;
+  }
+}
 .image_small_class{
   width:100px;
   height:100px;
