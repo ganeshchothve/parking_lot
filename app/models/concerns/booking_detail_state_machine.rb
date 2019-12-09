@@ -128,7 +128,7 @@ module BookingDetailStateMachine
     def update_user_request_to_resolved
       current_user_request = user_requests.in(status: ['processing']).first
       current_user_request.resolved!
-      project_unit.set(status: 'available') if current_user_request.is_a?(UserRequest::Swap)
+      release_project_unit! if current_user_request.is_a?(UserRequest::Swap)
     end
 
     def update_booking_detail_to_blocked

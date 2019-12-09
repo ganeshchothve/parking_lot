@@ -119,7 +119,6 @@ module UserRequests
               update_receipts(error_messages, new_booking_detail)
               if error_messages.blank?
                 current_booking_detail.swapped!
-                current_project_unit.make_available
               else
                 # Reject swap request because updation of receipts failed
                 reject_user_request(error_messages, alternate_project_unit_status, new_booking_detail)
