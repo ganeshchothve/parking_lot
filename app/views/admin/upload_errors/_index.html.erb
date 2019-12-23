@@ -1,0 +1,40 @@
+<% labels = I18n.t("mongoid.attributes.upload_error").with_indifferent_access %>
+<div class="table-responsive">
+  <table class='table striped-table payment-breakup' width="100%" cellpadding="10" cellspacing="0">
+    <thead class="th-default">
+      <tr>
+        <th><%= labels["row"] %></th>
+        <th><%= labels["errors"] %></th>
+        <th class="text-right">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% upload_errors.each do |upload_error| %>
+      <tr>
+        <td>
+          <%= upload_error.row %>
+        </td>
+        <td>
+          <%= upload_error.upload_errors.count %>
+        </td>
+        <td class="text-right">
+          <div class="dropdown">
+            <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <% if policy([:admin, @bulk_upload_report]).show_errors? %>
+                <%= link_to 'Show Errors', show_errors_admin_bulk_upload_report_path(@bulk_upload_report, upload_error_id: upload_error.id), class: 'dropdown-item' %>
+              <% end %>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <% end %>
+      <tr>
+        <td colspan="4">
+          <div class="mt-5 pt-5"></div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<%= will_paginate upload_errors, list_classes: %w(pagination justify-content-center) %>

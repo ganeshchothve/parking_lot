@@ -1,0 +1,22 @@
+<div class="container">
+  <div class="card">
+    <div class="card-header"> Inventory Uploaded By : <%= @bulk_upload_report.uploaded_by.name %></div>
+    <div class= "card-body">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Inventory Uploaded By</label>
+            <div> <%= @bulk_upload_report.uploaded_by.name %> </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mt-2">
+    <div class="card-header">Upload Errors</div>
+    <div class="card-body">
+      <%= render 'admin/upload_errors/index', {upload_errors: @bulk_upload_report.upload_errors.paginate(page: params[:page] || 1, per_page: params[:per_page])} %>
+    </div>
+  </div>
+</div>

@@ -2,8 +2,8 @@ class UploadError
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  field :row, type: Array
-  field :errors, type: Array
+  field :row, type: String
+  field :upload_errors, type: Array
 
-  belongs_to :bulk_upload_report
+  embedded_in :bulk_upload_report
 end

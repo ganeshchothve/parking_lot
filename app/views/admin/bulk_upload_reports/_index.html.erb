@@ -1,0 +1,50 @@
+<% labels = I18n.t("mongoid.attributes.bulk_upload_report").with_indifferent_access %>
+<div class="table-responsive">
+  <table class='table striped-table payment-breakup' width="100%" cellpadding="10" cellspacing="0">
+    <thead class="th-default">
+      <tr>
+        <th><%= labels["uploaded_by_id"] %></th>
+        <th><%= labels["total_rows"] %></th>
+        <th><%= labels["success_count"] %></th>
+        <th><%= labels["failure_count"] %></th>
+        <th class="text-right">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% bulk_upload_reports.each do |bulk_upload_report| %>
+      <tr>
+        <td>
+          <%= bulk_upload_report.uploaded_by.name %>
+          <div class="small"><%= "On: #{bulk_upload_report.created_at.strftime('%d/%m/%y')}"%></div>
+          <!-- Add time and date of upload in small -->
+        </td>
+        <td>
+          <%= bulk_upload_report.total_rows %>
+        </td>
+        <td>
+          <%= bulk_upload_report.success_count %>
+        </td>
+        <td>
+          <%= bulk_upload_report.failure_count %>
+        </td>
+        <td class="text-right">
+          <div class="dropdown">
+            <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <% if policy([:admin, bulk_upload_report]).show? %>
+                <%= link_to 'Show', admin_bulk_upload_report_path(bulk_upload_report), class: 'dropdown-item' %>
+              <% end %>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <% end %>
+      <tr>
+        <td colspan="4">
+          <div class="mt-5 pt-5"></div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<%= will_paginate bulk_upload_reports, list_classes: %w(pagination justify-content-center) %>

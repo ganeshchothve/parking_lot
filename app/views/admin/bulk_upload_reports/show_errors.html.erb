@@ -1,0 +1,17 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-md-5 ">
+              <h6 class="mt-2">Total Errors: <%= @upload_error.upload_errors.count %></h6>
+            </div>
+            <%= render 'admin/upload_errors/show', {errors: @upload_error.upload_errors } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

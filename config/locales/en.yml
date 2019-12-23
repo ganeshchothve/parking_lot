@@ -162,6 +162,14 @@ en:
         other: Users & Customers
 
     attributes:
+      bulk_upload_report:
+        uploaded_by_id: 'Uploaded By'
+        total_rows: 'Total rows'
+        success_count: 'Successfull Uploads'
+        failure_count: 'Failed Uploads'
+      upload_error:
+        row: 'Row'
+        errors: 'Errors'
       checklist:
         name: 'Name'
         key: 'Key'
