@@ -168,8 +168,8 @@ en:
       bulk_upload_report:
         uploaded_by_id: 'Uploaded By'
         total_rows: 'Total rows'
-        success_count: 'Successfull Uploads'
-        failure_count: 'Failed Uploads'
+        success_count: 'Successfully Uploaded'
+        failure_count: 'Failed to Upload'
       upload_error:
         row: 'Row'
         errors: 'Errors'

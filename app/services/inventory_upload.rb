@@ -1,8 +1,9 @@
-module InventoryUpload
+module BulkUpload
   class Inventory
     def self.upload(filepath, booking_portal_client_id, bulk_upload_report_id)
       bulk_upload_report = BulkUploadReport.find bulk_upload_report_id
-      bulk_upload_report.update(total_rows: CSV.read(filepath).count, success_count: 0, failure_count: 0)
+      csv_file = CSV.read(filepath)
+      bulk_upload_report.update(total_rows: (csv_file.count - 1), success_count: 0, failure_count: 0)
       booking_portal_client = Client.find booking_portal_client_id
       client_id = booking_portal_client.selldo_client_id
 
@@ -14,15 +15,15 @@ module InventoryUpload
       costs = {}
       data = {}
       parameters = {}
-      CSV.foreach(filepath) do |row|
+      csv_file.each do |row|
         if count == 0
           row.each_with_index do |value, index|
             if value.match(/^parameters\|/i)
-              parameters[index] = value.split("|").last
+              parameters[index] = value.split("|").last.strip
             elsif value.match(/^cost\|/i)
-              costs[index] = value.split("|")[1..2]
+              costs[index] = value.split("|")[1..2].map(&:strip)
             elsif value.match(/^data\|/i)
-              data[index] = value.split("|").last
+              data[index] = value.split("|").last.strip
             end
           end
         else
@@ -124,7 +125,7 @@ module InventoryUpload
               # puts "Saved #{project_unit.name}"
             else
               bulk_upload_report.failure_count = bulk_upload_report.failure_count + 1
-              bulk_upload_report.upload_errors << UploadError.new(row: row, upload_errors: project_unit.errors.full_messages)
+              bulk_upload_report.upload_errors << UploadError.new(row: row, messages: project_unit.errors.full_messages)
               # puts "Error in saving #{project_unit.name} : #{project_unit.errors.full_messages}"
             end
             bulk_upload_report.save

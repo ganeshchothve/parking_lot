@@ -15,7 +15,7 @@
           <%= upload_error.row %>
         </td>
         <td>
-          <%= upload_error.upload_errors.count %>
+          <%= upload_error.messages.try(:count) || 0 %>
         </td>
         <td class="text-right">
           <div class="dropdown">

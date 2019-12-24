@@ -46,6 +46,12 @@ Rails.application.routes.draw do
       patch :reorder, on: :collection
     end
     resources :checklists
+
+    resources :bulk_upload_reports, only: [:index, :new, :create, :show] do
+      get :show_errors, on: :member
+    end
+
+    get "inventory_uploads/bulk_upload", to: "inventory_uploads#bulk_upload"
     resources :booking_details, only: [:index, :show, :new, :create, :edit, :update] do
       member do
         patch :booking
@@ -54,19 +60,6 @@ Rails.application.routes.draw do
         get :cost_sheet
         get :doc, path: 'doc/:type'
       end
-    end
-    resources :bulk_upload_reports, only: [:index, :new, :create, :show] do
-      get :show_errors, on: :member
-    end
-    resources :inventory_uploads, only: [] do
-      collection do
-        post :upload
-        get :test_csv
-        get :bulk_upload
-      end
-    end
-    resources :booking_details, only: [:index, :show, :edit, :update] do
-      patch :booking, on: :member
       get :mis_report, on: :collection
       get :searching_for_towers, on: :collection
       get :status_chart, on: :collection
