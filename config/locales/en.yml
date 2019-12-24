@@ -64,6 +64,9 @@ en:
 
   mongoid:
     models:
+      bulk_upload_report:
+        one: Bulk Upload Report
+        other: Bulk Upload Reports
       asset:
         one: Document
         other: Documents

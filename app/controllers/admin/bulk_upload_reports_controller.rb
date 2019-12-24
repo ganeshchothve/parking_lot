@@ -1,6 +1,6 @@
 class Admin::BulkUploadReportsController < AdminController
-  before_action :authenticate_user!
   before_action :set_bulk_upload_report, only: [:show, :show_errors]
+  before_action :authenticate_user!
 
   def index
     @bulk_upload_reports = BulkUploadReport.all
@@ -15,8 +15,7 @@ class Admin::BulkUploadReportsController < AdminController
   end
 
   def show_errors
-    @bulk_upload_report = BulkUploadReport.find(params[:id])
-    @upload_error = @bulk_upload_report.upload_errors.find('5dff7a0b32b73541a6dc59a5')
+    @upload_error = @bulk_upload_report.upload_errors.find(params[:upload_error_id])
   end
 
   def new
@@ -28,9 +27,11 @@ class Admin::BulkUploadReportsController < AdminController
     @bulk_upload_report = BulkUploadReport.new
     @bulk_upload_report.assign_attributes(permitted_attributes([:admin, @bulk_upload_report]))
     if @bulk_upload_report.save
-      filepath = "#{Rails.root}/public/uploads/asset/file/#{@bulk_upload_report.assets.first.id}/#{@bulk_upload_report.assets.first.file_name}"
-      InventoryImport::Inventory.upload(filepath, current_client.id, @bulk_upload_report.id)
+      filepath = @bulk_upload_report.asset.file.file.file
+      InventoryUpload::Inventory.upload(filepath, current_client.id, @bulk_upload_report.id)
     else
+      format.html { render :new }
+      format.json { render json: { errors: @bulk_upload_report.errors.full_messages.uniq }, status: :unprocessable_entity }
     end
   end
 
@@ -43,7 +44,7 @@ class Admin::BulkUploadReportsController < AdminController
     elsif params[:action] == 'create'
       authorize [:admin, BulkUploadReport.new(permitted_attributes([:admin, BulkUploadReport.new]))]
     else
-      authorize [:admin, @channel_partner]
+      authorize [:admin, @bulk_upload_report]
     end
   end
 

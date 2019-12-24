@@ -1,4 +1,4 @@
-class BulkUploadReporttPolicy < ApplicationPolicy
+class BulkUploadReportPolicy < ApplicationPolicy
   
   def index?
     user.role?('superadmin')

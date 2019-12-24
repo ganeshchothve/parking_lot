@@ -10,7 +10,7 @@
               <% end %>
             </div>
             <div class="col-md-5 text-md-right">
-              <h6 class="mt-2">Total <%= t('global.account') %>: <%= @bulk_upload_reports.total_entries %></h6>
+              <h6 class="mt-2">Total <%= BulkUploadReport.model_name.human(count: 2) %>: <%= @bulk_upload_reports.total_entries %></h6>
             </div>
           </div>
           <%= render 'index', {bulk_upload_reports: @bulk_upload_reports} %>

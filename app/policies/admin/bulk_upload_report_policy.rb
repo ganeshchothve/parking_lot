@@ -1,4 +1,5 @@
-class Admin::BulkUploadReportPolicy < AccountPolicy
+class Admin::BulkUploadReportPolicy < BulkUploadReportPolicy
+
   def index?
     %w[superadmin admin].include?(user.role)
   end
@@ -21,6 +22,6 @@ class Admin::BulkUploadReportPolicy < AccountPolicy
   
   def permitted_attributes
     attributes = %i[uploaded_by_id total_rows success_count failure_count]
-    attributes += [assets_attributes: AssetPolicy.new(user, (record.assets.last || Asset.new) ).permitted_attributes]
+    attributes += [asset_attributes: AssetPolicy.new(user, (record.asset || Asset.new) ).permitted_attributes]
   end
 end

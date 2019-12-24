@@ -8,7 +8,7 @@ class BulkUploadReport
 
   belongs_to :uploaded_by, class_name: 'User'
   embeds_many :upload_errors
-  has_many :assets, as: :assetable
+  has_one :asset, as: :assetable
 
-  accepts_nested_attributes_for :assets
+  accepts_nested_attributes_for :asset
 end
