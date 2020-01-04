@@ -5,12 +5,30 @@
         <div class="card-body">
           <div class="row mb-3">
             <div class="col-md-2">
-            <div class="col-md-2">
-              <%= link_to "Upload Inventory", new_admin_bulk_upload_report_path, class: 'btn btn-primary modal-remote-form-link' %>
+              <%= form_for [:admin, @bulk_upload_report] do |f| %>
+                <%= f.hidden_field :uploaded_by_id, value: current_user.id %>
+                <div class = 'form-group'>
+                  <%= f.fields_for :asset, Asset.new do |p| %>
+                    <%= p.hidden_field :asset_type %>
+                    <%= p.file_field :file, class: 'btn pl-0 d-none', id: 'file-input' %>
+                    <label for = "file-input" class = "btn btn-primary">Upload Inventory</label>
+                  <% end %>
+                </div>
+                <%= f.submit "Save", class: "d-none", id: "save" %>
+              <% end %>
             </div>
           </div>
         </div>
+        <div id = "messages"></div>
       </div>
     </div>
   </div>
 </div>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($("#bulk_upload_report_form"));
+    $("#file-input").change(function(){
+      $("#save").click();
+    })
+  });
+<% end %>
