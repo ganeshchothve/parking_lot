@@ -190,7 +190,8 @@ $selected-aprt: #f4667e;
 	width: 96px;
 
 }
-.large-btn{
+.large-btn, .large-btn:hover{
+	padding: 4px 0 4px 0;
 	width: 150px;
 }
 .btn-ht-38{

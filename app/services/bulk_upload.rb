@@ -122,18 +122,20 @@ module BulkUpload
                 end
               end
               bulk_upload_report.success_count = bulk_upload_report.success_count + 1 
-              ActionCable.server.broadcast "web_notifications_channel", message: "<p>"+ project_unit.name.titleize + " successfully uploaded</p>"
+              ActionCable.server.broadcast "web_notifications_channel", message: "<p class = 'text-success'>"+ project_unit.name.titleize + " successfully uploaded</p>"
               # puts "Saved #{project_unit.name}"
             else
               bulk_upload_report.failure_count = bulk_upload_report.failure_count + 1
               bulk_upload_report.upload_errors << UploadError.new(row: row, messages: project_unit.errors.full_messages)
-              ActionCable.server.broadcast "web_notifications_channel", message: "<p>"+ project_unit.errors.full_messages.to_sentence + "</p>"
+              ActionCable.server.broadcast "web_notifications_channel", message: "<p class = 'text-danger'>"+ project_unit.name.titleize + " - "+ project_unit.errors.full_messages.to_sentence + "</p>"
               # puts "Error in saving #{project_unit.name} : #{project_unit.errors.full_messages}"
             end
             bulk_upload_report.save
           end
         end
         count += 1
+        progress = (((count - 1).to_f/bulk_upload_report.total_rows.to_f)*100).ceil
+        ActionCable.server.broadcast "progress_bar_channel", progress: progress.to_s
       end
 
       results = ProjectUnit.collection.aggregate([{"$group" => {"_id" => "$project_tower_id", max: {"$max" => "$floor"}}}]).to_a
