@@ -7,4 +7,6 @@ App.progress_bar = App.cable.subscriptions.create "ProgressBarChannel",
     $('#progress').css('width', data['progress']+'%').attr('aria-valuenow', data['progress']).html(data['progress'] + "%");
     if data['progress'] == "100"
       $(".done").removeClass("d-none")
-      $(".progress-div-text").html("<h2>Finished!</h2>")
+      $(".progress-div-text").html("<h2>Finished!</h2><h3>"+ data['success'] + " uploaded out of " + data['total'] + "</h3>")
+      App.progress_bar.unsubscribe();
+      App.room.unsubscribe();

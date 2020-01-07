@@ -47,11 +47,12 @@ Rails.application.routes.draw do
     end
     resources :checklists
 
-    resources :bulk_upload_reports, only: [:index, :new, :create, :show] do
+    resources :bulk_upload_reports, only: [:index, :show] do
       get :show_errors, on: :member
     end
 
-    get "inventory_uploads/bulk_upload", to: "inventory_uploads#bulk_upload"
+    resources :inventory_uploads, only: [:new, :create]
+
     resources :booking_details, only: [:index, :show, :new, :create, :edit, :update] do
       member do
         patch :booking
