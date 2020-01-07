@@ -2,9 +2,9 @@ class BulkUploadReport
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  field :total_rows, type: Integer
-  field :success_count, type: Integer
-  field :failure_count, type: Integer
+  field :total_rows, type: Integer, default: 0
+  field :success_count, type: Integer, default: 0
+  field :failure_count, type: Integer, default: 0
 
   belongs_to :uploaded_by, class_name: 'User'
   embeds_many :upload_errors
