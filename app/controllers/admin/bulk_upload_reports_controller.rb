@@ -1,6 +1,6 @@
 class Admin::BulkUploadReportsController < AdminController
   before_action :set_bulk_upload_report, only: [:show, :show_errors]
-  before_action :authenticate_user!
+  before_action :authorize_resource
 
   def index
     @bulk_upload_reports = BulkUploadReport.all

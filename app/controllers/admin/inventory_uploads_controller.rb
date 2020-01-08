@@ -1,5 +1,5 @@
 class Admin::InventoryUploadsController < AdminController
-	before_action :authenticate_user!
+	before_action :authorize_resource
   def new
     @bulk_upload_report = BulkUploadReport.new
   end
