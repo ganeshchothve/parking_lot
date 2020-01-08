@@ -1,8 +1,14 @@
 module BulkUpload
   class Inventory
-    def self.upload(filepath, booking_portal_client_id, bulk_upload_report_id)
+    def self.upload(booking_portal_client_id, bulk_upload_report_id)
       bulk_upload_report = BulkUploadReport.find bulk_upload_report_id
-      csv_file = CSV.read(filepath)
+      csv = Array.new
+      if Rails.env.development?
+        csv = CSV.new(open(bulk_upload_report.asset.file.file.file))
+      else
+        csv = CSV.new(open(bulk_upload_report.asset.file.url))
+      end
+      csv_file = csv.read
       return 0 if csv_file.count <= 0
       bulk_upload_report.update(total_rows: (csv_file.count - 1), success_count: 0, failure_count: 0)
       booking_portal_client = Client.find booking_portal_client_id
