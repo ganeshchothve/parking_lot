@@ -10,5 +10,12 @@ class BulkUploadReport
   embeds_many :upload_errors
   has_one :asset, as: :assetable
 
+  validate :asset_presence
+
   accepts_nested_attributes_for :asset
+
+  private
+  def asset_presence
+    self.errors.add :base, 'File cannot be blank' if !self.asset.file.present?
+  end
 end

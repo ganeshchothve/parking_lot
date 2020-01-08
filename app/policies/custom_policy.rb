@@ -61,8 +61,12 @@ class CustomPolicy < Struct.new(:user, :enable_users)
     "#{user.buyer? ? '' : 'Admin::'}ChecklistPolicy".constantize.new(user, Checklist).index?
   end
 
+  def bulk_upload_reports?
+    "#{user.buyer? ? '' : 'Admin::'}BulkUploadReportPolicy".constantize.new(user, BulkUploadReport).index?
+  end
+
   def self.custom_methods
-    %w[inventory schemes user_requests channel_partners user_kycs emails smses sync_logs referrals accounts phases erp_models portal_stage_priorities checklists]
+    %w[inventory schemes user_requests channel_partners user_kycs emails smses sync_logs referrals accounts phases erp_models portal_stage_priorities checklists bulk_upload_reports]
     # audits
   end
 end

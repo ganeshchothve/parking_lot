@@ -698,6 +698,9 @@ en:
           custom_dates: 'Custom Dates'
 
   controller:
+    bulk_upload_reports:
+      index:
+        link_name: 'Bulk Uploads'
     checklists:
       index:
         link_name: 'Tasks'
