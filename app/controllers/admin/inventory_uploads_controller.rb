@@ -9,8 +9,8 @@ class Admin::InventoryUploadsController < AdminController
     @bulk_upload_report.assign_attributes(permitted_attributes([:admin, @bulk_upload_report]))
     respond_to do |format|
       if @bulk_upload_report.save
-        BulkUpload::Inventory.upload(current_client.id, @bulk_upload_report.id)
-        format.html {}
+        InventoryUploadWorker.perform_async(current_client.id, @bulk_upload_report.id)
+        format.html { redirect_to admin_bulk_upload_reports_path, notice: 'Inventory Upload has been scheduled. Will complete shortly.'}
         format.json {}
       else
         format.html { redirect_to new_admin_inventory_upload_path, alert: @bulk_upload_report.errors.full_messages.uniq }
