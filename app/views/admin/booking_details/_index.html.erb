@@ -21,6 +21,12 @@
             <%= ProjectTower.model_name.human %> :
             <%= booking_detail.project_tower_name %>
           </div>
+          <% if %w[ hold swapped cancelled ].exclude?(booking_detail.status)  %>
+            <div class="small">
+              <%= ProjectUnit.human_attribute_name('blocked_on') %> :
+              <%= booking_detail.project_unit.blocked_on.try(:strftime, '%d/%m/%Y') %>
+            </div>
+          <% end %>
         </td>
 
         <td><%= booking_detail.bedrooms %> / <%= booking_detail.bathrooms %></td>
