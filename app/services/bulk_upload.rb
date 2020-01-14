@@ -56,17 +56,26 @@ module BulkUpload
 
           project = Project.where(name: project_name).first
           unless project.present?
-            project = Project.create!(rera_registration_no: rera_registration_no, name: project_name, client_id: client_id, booking_portal_client_id: booking_portal_client.id)
+            project = Project.new(rera_registration_no: rera_registration_no, name: project_name, client_id: client_id, booking_portal_client_id: booking_portal_client.id)
+            unless project.save
+              (bulk_upload_report.upload_errors.find_or_initialize_by(row: row).messages << project.errors.full_messages.map{|er| "Project: " + er }).flatten!
+            end
           end
 
           project_tower = ProjectTower.where(name: project_tower_name).where(project_id: project.id).first
           unless project_tower.present?
-            project_tower = ProjectTower.create!(name: project_tower_name, project_id: project.id, client_id: client_id, total_floors: 1)
+            project_tower = ProjectTower.new(name: project_tower_name, project_id: project.id, client_id: client_id, total_floors: 1)
+            unless project_tower.save
+              (bulk_upload_report.upload_errors.find_or_initialize_by(row: row).messages << project_tower.errors.full_messages.map{|er| "ProjectTower: " + er }).flatten!
+            end
           end
 
           unit_configuration = UnitConfiguration.where(name: unit_configuration_name).where(project_id: project.id).where(project_tower_id: project_tower.id).first
           unless unit_configuration.present?
-            unit_configuration = UnitConfiguration.create!(name: unit_configuration_name, project_id: project.id, project_tower_id: project_tower.id, client_id: client_id, saleable: saleable.to_f, carpet: carpet.to_f, base_rate: base_rate.to_f)
+            unit_configuration = UnitConfiguration.new(name: unit_configuration_name, project_id: project.id, project_tower_id: project_tower.id, client_id: client_id, saleable: saleable.to_f, carpet: carpet.to_f, base_rate: base_rate.to_f)
+            unless unit_configuration.save
+              (bulk_upload_report.upload_errors.find_or_initialize_by(row: row).messages  << unit_configuration.errors.full_messages.map{ |er| "Unit Configuration: " + er }).flatten!
+            end
           end
           if(ProjectUnit.where(erp_id: erp_id).blank?)
             project_unit = ProjectUnit.new
@@ -128,15 +137,14 @@ module BulkUpload
                   Asset.create(remote_file_url: url, assetable: project_unit, asset_type: "floor_plan")
                 end
               end
-              bulk_upload_report.success_count = bulk_upload_report.success_count + 1 
               ActionCable.server.broadcast "web_notifications_channel", message: "<p class = 'text-success'>"+ project_unit.name.titleize + " successfully uploaded</p>"
               # puts "Saved #{project_unit.name}"
             else
-              bulk_upload_report.failure_count = bulk_upload_report.failure_count + 1
-              bulk_upload_report.upload_errors << UploadError.new(row: row, messages: project_unit.errors.full_messages)
+              (bulk_upload_report.upload_errors.find_or_initialize_by(row: row).messages << project_unit.errors.full_messages.map{|er| "Project Unit: " + er }).flatten!
               ActionCable.server.broadcast "web_notifications_channel", message: "<p class = 'text-danger'>"+ project_unit.name.titleize + " - "+ project_unit.errors.full_messages.to_sentence + "</p>"
               # puts "Error in saving #{project_unit.name} : #{project_unit.errors.full_messages}"
             end
+            bulk_upload_report.failure_count += 1 if bulk_upload_report.upload_errors.present?
             bulk_upload_report.save
           end
         end

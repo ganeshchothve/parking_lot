@@ -3,7 +3,7 @@ class Admin::BulkUploadReportsController < AdminController
   before_action :authorize_resource
 
   def index
-    @bulk_upload_reports = BulkUploadReport.all
+    @bulk_upload_reports = BulkUploadReport.all.order('created_at DESC')
     @bulk_upload_reports = @bulk_upload_reports.paginate(page: params[:page] || 1, per_page: params[:per_page])
     respond_to do |format|
       format.json { render json: @bulk_upload_reports }
