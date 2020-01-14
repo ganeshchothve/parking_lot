@@ -403,11 +403,12 @@ class User
   # This is sub part of send_confirmation_instructions for delay this method is used
 
   def send_devise_notification(notification, *args)
-    if booking_portal_client.enable_communication["email"]
-      if new_record? || changed?
-        pending_devise_notifications << [notification, args]
+    message = devise_mailer.send(notification, self, *args)
+    if booking_portal_client.email_enabled?
+      if message.respond_to?(:deliver_now)
+        message.deliver_now
       else
-        render_and_send_devise_message(notification, *args)
+        message.deliver
       end
     end
   end
