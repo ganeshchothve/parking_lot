@@ -26,10 +26,12 @@ class SmsObserver < Mongoid::Observer
     #      F            |          -           |       F        |         no
     #      F            |          -           |       T        |        yes
     #      F            |          -           |       F        |         no
-    if ( !sms.sms_template || sms.sms_template.try(:is_active?) ) && ( Rails.env.production? || Rails.env.staging? )
-      Communication::Sms::SmsjustWorker.perform_async(sms.id.to_s)
-    else
-      sms.set(status: "sent")
+    if sms.booking_portal_client.enable_communication["sms"]
+      if ( !sms.sms_template || sms.sms_template.try(:is_active?) ) && ( Rails.env.production? || Rails.env.staging? )
+        Communication::Sms::SmsjustWorker.perform_async(sms.id.to_s)
+      else
+        sms.set(status: "sent")
+      end
     end
   end
 

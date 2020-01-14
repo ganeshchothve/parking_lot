@@ -401,6 +401,17 @@ class User
   end
 
   # This is sub part of send_confirmation_instructions for delay this method is used
+
+  def send_devise_notification(notification, *args)
+    if booking_portal_client.enable_communication["email"]
+      if new_record? || changed?
+        pending_devise_notifications << [notification, args]
+      else
+        render_and_send_devise_message(notification, *args)
+      end
+    end
+  end
+
   def send_confirmation_instructions
     generate_confirmation_token! unless @raw_confirmation_token
     # send_devise_notification(:confirmation_instructions, @raw_confirmation_token, opts)
