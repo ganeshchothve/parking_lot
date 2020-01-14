@@ -401,6 +401,18 @@ class User
   end
 
   # This is sub part of send_confirmation_instructions for delay this method is used
+
+  def send_devise_notification(notification, *args)
+    message = devise_mailer.send(notification, self, *args)
+    if booking_portal_client.email_enabled?
+      if message.respond_to?(:deliver_now)
+        message.deliver_now
+      else
+        message.deliver
+      end
+    end
+  end
+
   def send_confirmation_instructions
     generate_confirmation_token! unless @raw_confirmation_token
     # send_devise_notification(:confirmation_instructions, @raw_confirmation_token, opts)
