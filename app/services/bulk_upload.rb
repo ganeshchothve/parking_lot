@@ -149,7 +149,7 @@ module BulkUpload
             end
           end
         rescue => e
-          (bulk_upload_report.upload_errors.find_or_initialize_by(row: row).messages  << "Exception :" + e).flatten!
+          (((bulk_upload_report.upload_errors.find_or_initialize_by(row: row).messages  << e.messages.map{|er| "Exception : " + er }).flatten!) << e.backtrace.map{|er| "Exception backtrace: " + er }).flatten!
         end
         count += 1
         progress = (((count - 1).to_f/bulk_upload_report.total_rows.to_f)*100).ceil

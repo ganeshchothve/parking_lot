@@ -26,9 +26,9 @@ class Admin::BulkUploadReportsController < AdminController
           :disposition => 'attachment',
           :url_based_filename => true)
     else
-      send_file(open(@bulk_upload_report.asset.url),
-          :filename => "Brochure.#{@bulk_upload_report.asset.file.extension}",
-          :type => @bulk_upload_report.asset.content_type,
+      send_file(open(@bulk_upload_report.asset.file.url),
+          :filename => "Brochure.#{@bulk_upload_report.asset.file.file.filename}",
+          :type => @bulk_upload_report.asset.file.content_type,
           :disposition => 'attachment',
           :url_based_filename => true)
     end
