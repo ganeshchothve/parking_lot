@@ -1,5 +1,5 @@
 class Admin::BulkUploadReportsController < AdminController
-  before_action :set_bulk_upload_report, only: [:show, :show_errors, :download_file]
+  before_action :set_bulk_upload_report, only: [:show, :show_errors]
   before_action :authorize_resource
 
   def index
@@ -16,22 +16,6 @@ class Admin::BulkUploadReportsController < AdminController
 
   def show_errors
     @upload_error = @bulk_upload_report.upload_errors.find(params[:upload_error_id])
-  end
-
-  def download_file
-    if Rails.env.development?
-      send_file(open(@bulk_upload_report.asset.file.file.file),
-          :filename => "inventory_#{@bulk_upload_report.asset.file.file.original_filename}",
-          :type => @bulk_upload_report.asset.file.content_type,
-          :disposition => 'attachment',
-          :url_based_filename => true)
-    else
-      send_file(open(@bulk_upload_report.asset.file.url),
-          :filename => "Brochure.#{@bulk_upload_report.asset.file.file.filename}",
-          :type => @bulk_upload_report.asset.file.content_type,
-          :disposition => 'attachment',
-          :url_based_filename => true)
-    end
   end
 
   private
