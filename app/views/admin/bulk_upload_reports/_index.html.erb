@@ -34,6 +34,9 @@
               <% if policy([:admin, bulk_upload_report]).show? %>
                 <%= link_to 'Show', admin_bulk_upload_report_path(bulk_upload_report), class: 'dropdown-item' %>
               <% end %>
+              <% if policy([:admin, bulk_upload_report]).download_file? %>
+                <%= link_to 'Download file', download_file_admin_bulk_upload_report_path(bulk_upload_report), class: 'dropdown-item' %>
+              <% end %>
             </div>
           </div>
         </td>

@@ -48,7 +48,10 @@ Rails.application.routes.draw do
     resources :checklists
 
     resources :bulk_upload_reports, only: [:index, :show] do
-      get :show_errors, on: :member
+      member do
+        get :show_errors
+        get :download_file
+      end
     end
 
     resources :inventory_uploads, only: [:new, :create]

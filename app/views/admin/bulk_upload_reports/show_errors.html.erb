@@ -1,17 +1,16 @@
-<div class="container">
+<div class="container mb-5 pb-5">
   <div class="row justify-content-center">
     <div class="col-md-12">
       <div class="card">
         <div class="card-body">
           <div class="row mb-3">
-            <div class="col-md-5 ">
+            <div class="col-md-5">
               <h6 class="mt-2">Total Errors: <%= @upload_error.messages.count %></h6>
             </div>
-            <%= render 'admin/upload_errors/show', {errors: @upload_error.messages } %>
           </div>
+          <%= render 'admin/upload_errors/show', {errors: @upload_error.messages } %>
         </div>
       </div>
     </div>
   </div>
 </div>
-
