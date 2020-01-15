@@ -37,7 +37,7 @@
   <div class="col-md-6">
     <div class="form-group position-relative offline">
       <%= f.label :issued_date, class: 'label-required' %>
-      <%= f.text_field :issued_date, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.issued_date.present? ? f.object.issued_date.strftime("%d/%m/%Y") : '', disabled: !policy([:admin, @receipt]).editable_field?("issued_date"), value: f.object.issued_date.present? ? f.object.issued_date.strftime("%d/%m/%Y") : "" %>
+      <%= f.text_field :issued_date, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.issued_date.present? ? f.object.issued_date.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y"), disabled: !policy([:admin, @receipt]).editable_field?("issued_date"), value: f.object.issued_date.present? ? f.object.issued_date.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y") %>
     </div>
   </div>
 </div>
