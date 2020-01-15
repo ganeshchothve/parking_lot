@@ -23,7 +23,11 @@ class Admin::BulkUploadReportPolicy < BulkUploadReportPolicy
   def download_file?
     index?
   end
-  
+
+  def inventory_upload?
+    index?
+  end
+
   def permitted_attributes
     attributes = %i[uploaded_by_id total_rows success_count failure_count]
     attributes += [asset_attributes: AssetPolicy.new(user, (record.asset || Asset.new) ).permitted_attributes]
