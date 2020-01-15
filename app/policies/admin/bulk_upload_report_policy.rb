@@ -19,6 +19,10 @@ class Admin::BulkUploadReportPolicy < BulkUploadReportPolicy
   def create?
     index?
   end
+
+  def download_file?
+    index?
+  end
   
   def permitted_attributes
     attributes = %i[uploaded_by_id total_rows success_count failure_count]
