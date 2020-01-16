@@ -153,6 +153,9 @@ figure.wave {
   border: 0;
   transition: all .6s ease-in-out;
   margin: 1rem;
+  @media screen and (max-width: 992px){
+    display: none;
+  }
 }
 @include media-breakpoint-up(md){
   #gamification-container{
@@ -209,7 +212,9 @@ figure.wave {
   white-space: nowrap;
 }
 .page-item.disabled .page-link {
-  padding: 0.8rem 0.75rem;
+  @media screen and (min-width: 992px) {
+    padding: 0.8rem 0.75rem;
+  }
 }
 .box-card {
   float: inherit !important;
@@ -506,4 +511,47 @@ h6{
 }
 .selldof_field-container {
   padding-left: 0 !important;
+}
+
+// Mobile pagination element styles
+.pagination {
+  @media screen and (max-width: 992px) {
+    .page-item:first-child .page-link {
+      border-top-left-radius: 0.2rem;
+      border-bottom-left-radius: 0.2rem;
+    }
+    .page-link {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+  }
+}
+
+.table-title {
+  @media screen and (max-width: 992px) {
+    margin-bottom: 10px;
+  }
+}
+
+.table-btn-set {
+  @media screen and (max-width: 992px) {
+    float: left !important;
+    width: 100%;
+    .db-small-btn {
+      margin-left: 0;
+      margin-right: 10px;
+    }
+    button[disabled='disabled'] {
+      display: none;
+    }
+    .db-filter-btn {
+      float: right;
+    }
+    .db-filter-btn:first-child, .db-filter-btn:nth-child(2) {
+      position: absolute;
+      top: -40px;
+      right: 15px;
+    }
+  }
 }

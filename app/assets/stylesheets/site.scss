@@ -2000,6 +2000,10 @@ word-break: break-word;
 .footer{
 	padding: 25px 0px 20px;
 	box-shadow: 1px 1px 15px #d8d8d8;
+
+  @media screen and (max-width: 992px){
+    display: none;
+  }
 	.footer-top{
 		font-size: 13px;
 		line-height: 1.54;
