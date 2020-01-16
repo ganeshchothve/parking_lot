@@ -555,3 +555,40 @@ h6{
     }
   }
 }
+.w-60, .w-40, .w-80, .w-20{
+  float: left;
+}
+.w-60{
+  width: 60%;
+  select{
+    width: 100%!important;
+  }
+}
+.w-40{
+  width: 40%;
+}
+.w-80{
+  width: 80%;
+}
+.w-20{
+  width: 20%;
+}
+@media screen and (max-width: 700px){
+  .book-apartment{
+    padding: 0 0 0 1.2rem!important;
+  }
+  #project-tower-carousel {
+    .carousel-control-prev{
+      left: -14px;
+      svg{
+        font-size: 1.5rem
+      }
+    }
+    .carousel-control-next{
+      right: -14px;
+      svg{
+        font-size: 1.5rem
+      }
+    }
+  }
+}
