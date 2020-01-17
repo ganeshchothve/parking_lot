@@ -2,23 +2,13 @@
   <div class="container project-unit-overview p-0">
     <div class="box-card">
       <div class="box-header bg-gradient br-rd-tr-4">
-        <div class="row">
-          <div class="col-11">
-            <h2 class="icon-set icon-home-white">
-              <%= ProjectUnit.model_name.human %>
-            </h2>
-          </div>
-          <div class="col-1">
-            <table class="float-right">
-              <tr><td>
-                <div class="dropdown show text-right">
-                  <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <%= render "#{current_user_role_group}/project_units/links", project_unit: project_unit %>
-                  </div>
-                </div>
-              </td></tr>
-            </table>
+        <h2 class="icon-set icon-home-white">
+          <%= ProjectUnit.model_name.human %>
+        </h2>
+        <div class="dropdown show text-center float-right">
+          <a class="btn dropdown-toggle table-dropdown-btn" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+            <%= render "#{current_user_role_group}/project_units/links", project_unit: project_unit %>
           </div>
         </div>
       </div>

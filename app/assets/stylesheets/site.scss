@@ -307,7 +307,6 @@ a:hover{
 		.user-dropdown{
 			.dropdown-menu{
 				top: 41px;
-				left: -94px;
 			}
 		}
 	}
@@ -387,10 +386,7 @@ a:hover{
 	}
 }
 table .dropdown-menu.show{
-	width: 240px;
 	.dropdown-item{
-word-break: break-word;
-    white-space: normal;
     border-bottom: 1px solid #f1f1f1;
 	}
 }
@@ -2386,11 +2382,6 @@ table {
 	.dropdown-menu {
 		&.show{
 			display:block;
-			/*transform: translate3d(0px, 0px, 0px) !important;*/
-			right: -34px;
-			top: -4px!important;
-			left: unset!important;
-			bottom:unset;
 			z-index: 1030;
 		}
 	}
@@ -2491,10 +2482,5 @@ table {
 		.dropdown{
 			position: relative;
 		}
-		.dropdown-menu{
-			left: unset!important;
-			right: -95px!important;
-		}
-
 	}
 }
