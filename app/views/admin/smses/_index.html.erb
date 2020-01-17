@@ -3,7 +3,7 @@
       <thead>
         <tr class="bg-gradient-cd white">
           <% unless current_user.buyer? %>
-            <th><%= t('mongoid.attributes.smsto') %></th>
+            <th><%= t('mongoid.attributes.sms.to') %></th>
           <% end %>
           <td> <%= t('mongoid.attributes.sms.content') %> </td>
           <th> <%= t('mongoid.attributes.sms.status') %></th>
@@ -16,17 +16,17 @@
     <% @smses.each do |sms| %>
         <tr>
           <% unless current_user.buyer? %>
-            <td>
+            <td  data-title=<%= t('mongoid.attributes.sms.to') %> >
               <% sms.to.each do |s| %>
                 <%= link_to s,"javascript:;", data: {toggle: "modal", target: "#sms_show_#{sms.id.to_s}"} %>
               <% end %>
             </td>
           <% end %>
-          <td><%= truncate(sms.body, length: 30, separator: '') %></td>
-          <td>
+          <td data-title=<%= t('mongoid.attributes.sms.content') %> ><%= truncate(sms.body, length: 30, separator: '') %></td>
+          <td data-title=<%= t('mongoid.attributes.sms.status') %> >
             <%= t("mongoid.attributes.sms/status.#{sms.status}") %>
           </td>
-          <td>
+          <td data-title=<%= t('mongoid.attributes.sms.sent_on') %> >
             <%= sms.sent_on.try(:strftime, '%b %e, %Y, %l:%M %p') || '-' %>
             <div class="modal fade right fixed-header-footer" role="dialog" id="sms_show_<%=sms.id.to_s %>">
               <div class="modal-dialog modal-lg" role="document">

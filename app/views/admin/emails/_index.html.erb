@@ -16,19 +16,19 @@
     <% @emails.each do |email| %>
       <tr>
         <% unless current_user.buyer? %>
-          <td>
+          <td data-title=<%= t('mongoid.attributes.email.to') %> >
             <% email.to.each do |e| %>
             <%= mail_to e %>
             <% end %>
           </td>
         <% end %>
-        <td>
+        <td data-title=<%= t('mongoid.attributes.email.subject') %> >
           <%= link_to truncate(email.subject, length: 30, separator: ''), [ current_user_role_group, email], target: :_blank, title: email.subject %>
         </td>
-        <td>
+        <td data-title=<%= t('mongoid.attributes.email.status') %> >
           <%= t("emails.status.#{email.status}") %>
         </td>
-        <td>
+        <td  data-title=<%= t('mongoid.attributes.email.sent_on') %> >
           <%= email.sent_on.try(:strftime, '%b %e %Y, %l:%M %p') || '-' %>
         </td>
         <td>
