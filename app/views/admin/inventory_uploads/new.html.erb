@@ -9,7 +9,15 @@
                 <%= f.hidden_field :uploaded_by_id, value: current_user.id %>
                 <div class = 'form-group' id = "upload-file">
                   <%= f.fields_for :asset, Asset.new do |p| %>
-                    <%= render "admin/assets/form_fields", p: p %>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <%= p.hidden_field :asset_type, value: "inventory_upload_file" %>
+                          <%#= p.label :asset_type, class: 'label-required', value: p.object.asset_type || "" %>
+                          <%= p.file_field :file, class: 'btn pl-0', id: 'file-field', accept: '.csv' %>
+                        </div>
+                      </div>
+                    </div>
                   <% end %>
                 </div>
                 <%= f.submit "Upload Inventory", id: "save", class: "btn btn-primary" %>

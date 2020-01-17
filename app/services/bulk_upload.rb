@@ -22,10 +22,17 @@ module BulkUpload
       costs = {}
       data = {}
       parameters = {}
+      correct_header = %w[rera_registration_no project_name project_tower_name unit_configuration_name unit_name floor floor_order carpet saleable base_rate floor_rise status bedrooms bathrooms unit_facing_direction erp_id floor_plan_urls agreement_price all_inclusive_price]
       csv_file.each do |row|
         begin
           if count == 0
             row.each_with_index do |value, index|
+              if index < 19 && value.strip != correct_header[index]
+                (bulk_upload_report.upload_errors.find_or_initialize_by(row: row).messages << "Incorrect header of the file. Please refer sample file.").flatten!
+                bulk_upload_report.failure_count = bulk_upload_report.total_rows
+                bulk_upload_report.save
+                break
+              end
               if value.match(/^parameters\|/i)
                 parameters[index] = value.split("|").last.strip
               elsif value.match(/^cost\|/i)
@@ -34,6 +41,7 @@ module BulkUpload
                 data[index] = value.split("|").last.strip
               end
             end
+            break if bulk_upload_report.upload_errors.where(row: row).present?
           else
             rera_registration_no = row[0].strip rescue ""
             project_name = row[1].strip rescue ""
@@ -60,6 +68,9 @@ module BulkUpload
               project = Project.new(rera_registration_no: rera_registration_no, name: project_name, client_id: client_id, booking_portal_client_id: booking_portal_client.id)
               unless project.save
                 (bulk_upload_report.upload_errors.find_or_initialize_by(row: row).messages << project.errors.full_messages.map{|er| "Project: " + er }).flatten!
+                bulk_upload_report.failure_count += 1 if bulk_upload_report.upload_errors.where(row: row).present?
+                bulk_upload_report.save
+                next
               end
             end
 
@@ -68,6 +79,9 @@ module BulkUpload
               project_tower = ProjectTower.new(name: project_tower_name, project_id: project.id, client_id: client_id, total_floors: 1)
               unless project_tower.save
                 (bulk_upload_report.upload_errors.find_or_initialize_by(row: row).messages << project_tower.errors.full_messages.map{|er| "ProjectTower: " + er }).flatten!
+                bulk_upload_report.failure_count += 1 if bulk_upload_report.upload_errors.where(row: row).present?
+                bulk_upload_report.save
+                next
               end
             end
 
@@ -76,6 +90,9 @@ module BulkUpload
               unit_configuration = UnitConfiguration.new(name: unit_configuration_name, project_id: project.id, project_tower_id: project_tower.id, client_id: client_id, saleable: saleable.to_f, carpet: carpet.to_f, base_rate: base_rate.to_f)
               unless unit_configuration.save
                 (bulk_upload_report.upload_errors.find_or_initialize_by(row: row).messages  << unit_configuration.errors.full_messages.map{ |er| "Unit Configuration: " + er }).flatten!
+                bulk_upload_report.failure_count += 1 if bulk_upload_report.upload_errors.where(row: row).present?
+                bulk_upload_report.save
+                next
               end
             end
             if(ProjectUnit.where(erp_id: erp_id).blank?)
@@ -142,14 +159,20 @@ module BulkUpload
                 ActionCable.server.broadcast "web_notifications_channel", message: "<p class = 'text-success'>"+ project_unit.name.titleize + " successfully uploaded</p>"
               else
                 (bulk_upload_report.upload_errors.find_or_initialize_by(row: row).messages << project_unit.errors.full_messages.map{|er| "Project Unit: " + er }).flatten!
+                bulk_upload_report.failure_count += 1 if bulk_upload_report.upload_errors.where(row: row).present?
                 ActionCable.server.broadcast "web_notifications_channel", message: "<p class = 'text-danger'>"+ project_unit.name.titleize + " - "+ project_unit.errors.full_messages.to_sentence + "</p>"
               end
-              bulk_upload_report.failure_count += 1 if bulk_upload_report.upload_errors.present?
-              bulk_upload_report.save
+              bulk_upload_report.save 
+            else
+              (bulk_upload_report.upload_errors.find_or_initialize_by(row: row).messages << "Project Unit with ERP id: #{erp_id} is already present.").flatten!
+              bulk_upload_report.failure_count += 1 if bulk_upload_report.upload_errors.where(row: row).present?
+              bulk_upload_report.save 
             end
           end
         rescue => e
-          (bulk_upload_report.upload_errors.find_or_initialize_by(row: row).messages << (["Exception: #{e.message}"] + e.backtrace)).flatten!
+          (bulk_upload_report.upload_errors.find_or_initialize_by(row: row).messages << "Exception occured! Please contact developer.").flatten! if !bulk_upload_report.upload_errors.where(row: row).present?
+          bulk_upload_report.failure_count += 1 if bulk_upload_report.upload_errors.where(row: row).present?
+          bulk_upload_report.save
         end
         count += 1
         progress = (((count - 1).to_f/bulk_upload_report.total_rows.to_f)*100).ceil
