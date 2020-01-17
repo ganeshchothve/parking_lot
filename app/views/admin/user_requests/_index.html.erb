@@ -3,7 +3,7 @@
     <% labels = t('mongoid.attributes.user_request').with_indifferent_access %>
       <thead>
         <tr class="bg-gradient-cd white">
-          <th>Request details</th>
+          <th><%= labels["request_details"] %></th>
           <th><%= labels['status'] %></th>
           <th class="text-right">Actions</th>
         </tr>
@@ -12,7 +12,7 @@
   <tbody>
     <% user_requests.each do |user_request| %>
       <tr>
-        <td data-title= "Request details" >
+        <td data-title= <%= t('mongoid.attributes.user_request.request_details') %> >
           <% if Admin::UserPolicy.new(current_user, user_request.user).show? %>
             <%= link_to user_request.user.name, [current_user_role_group, user_request.user] %>
           <% else %>

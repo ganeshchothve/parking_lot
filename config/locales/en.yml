@@ -560,6 +560,7 @@ en:
         resolved_at: 'Processed on'
         name_email_phone: 'Name/Email/Phone'
         requestable_type: 'Requestable Type'
+        request_details: 'Request Details'
       user_request/status:
         pending: Pending
         processing: Processing
