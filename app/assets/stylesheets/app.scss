@@ -538,7 +538,7 @@ h6{
   @media screen and (max-width: 992px) {
     float: left !important;
     width: 100%;
-    .db-small-btn {
+    .db-small-btn, .db-small-btn:hover {
       margin-left: 0;
       margin-right: 10px;
     }
