@@ -301,6 +301,7 @@ a:hover{
 		}
 		@media screen and (max-width:992px){
 			margin-right: 30px;
+			margin-top: 0px;
 		}
 	}
 	@media screen and (max-width:480px){
@@ -408,6 +409,9 @@ table .dropdown-menu.show{
 	.box-content{
 		padding: 40px 0px;
 		position: relative;
+		@media screen and (max-width: 480px){
+			padding: 60px 0 40px;
+		}
 		.wc-title {
 			font-size: 24px;
 			font-weight: 400;
@@ -1122,6 +1126,10 @@ table .dropdown-menu.show{
 		height: 645px;
 		overflow-y: auto;
 		overflow-x: hidden;
+		@media screen and (max-width: 700px){
+			height: auto;
+			overflow: hidden;
+		}
 	}
 }
 .result-list{
@@ -2173,7 +2181,12 @@ table .dropdown-menu.show{
 .user-db-sec-5{
 	.box-content.fix-ht{
 		height: 200px!important;
+		@media screen and (max-width: 700px){
+			height: auto!important;
+			padding: 20px 0 !important
+		}
 	}
+
 }
 .user-db-sec-6{
 	.box-content{
@@ -2208,7 +2221,7 @@ table .dropdown-menu.show{
 		padding: 20px 15px 40px 15px;
 		position: relative;
 		@media screen and (max-width: 700px){
-			height: 136px;
+			height: 170px;
 		}
 		@media screen and (max-width: 340px){
 			width:100%;
@@ -2467,6 +2480,34 @@ table {
 			padding: 0 15px!important;
 		}
 		.no-sm-pd{
+			padding: 0px!important;
+		}
+	}
+	#project-unit-cost-details, .bookings{
+		.pb_after > .col-lg-12.no-pd, #apartment.no-pd{
+			padding: 0px!important;
+		}		
+	}
+	.kyc-information{
+		.no-pd{
+			padding: 0px!important;
+		}		
+	}
+	.right-info .alert-box .info{
+	    width: 211px;
+    	display: block;
+    	margin: 0 auto;
+    	&:before{
+	    	top:4px;
+    	}
+	}
+	.agree-check{
+		form{
+			margin-top: 10px;
+		}
+	}
+	.search-result{
+		.extra-pad{
 			padding: 0px!important;
 		}
 	}
