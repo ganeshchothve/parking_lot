@@ -2483,24 +2483,19 @@ table {
 			padding: 0px!important;
 		}
 	}
-	#project-unit-cost-details, .bookings{
-		.pb_after > .col-lg-12.no-pd, #apartment.no-pd{
-			padding: 0px!important;
-		}		
-	}
 	.kyc-information{
 		.no-pd{
 			padding: 0px!important;
-		}		
+		}
 	}
-	.right-info .alert-box .info{
-	    width: 211px;
-    	display: block;
-    	margin: 0 auto;
-    	&:before{
-	    	top:4px;
-    	}
-	}
+  .right-info .alert-box .info{
+    width: 211px;
+    display: block;
+    margin: 0 auto;
+    &:before{
+      top:4px;
+    }
+  }
 	.agree-check{
 		form{
 			margin-top: 10px;

@@ -502,8 +502,10 @@ h6{
   border-top-right-radius: unset;
 }
 .next-btn-chose-apt {
-  position: absolute;
-  bottom: 0;
+  border-left: solid 1px #e0e4f8;
+  @media screen and (max-width: 992px) {
+    border: none;
+  }
 }
 .auth {
   background-size: 50% 80%;
@@ -590,5 +592,11 @@ h6{
         font-size: 1.5rem
       }
     }
+  }
+  .right-info {
+    margin-top: 20px;
+  }
+  .receipt-certificate {
+    font-size: 3em !important;
   }
 }

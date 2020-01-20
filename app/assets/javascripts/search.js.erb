@@ -76,6 +76,7 @@ var showUnitData = function(unit, assets){
   $("#unit-description").find('[data-placeholder="unit_facing_direction"]').html(unit.unit_facing_direction);
   if($("#unit-description").hasClass('d-none')){
     $("#unit-description").removeClass('d-none');
+    $('.next-btn-chose-apt').removeClass('d-none');
   }
   $.scrollTo($("#unit-description").offset().top - $('.navbar').outerHeight(), 800);
 }
