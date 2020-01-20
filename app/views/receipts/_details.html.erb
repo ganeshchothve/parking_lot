@@ -1,5 +1,5 @@
 <tr>
-  <td>
+  <td data-title=<%= User.model_name.human %> >
     <% if policy([current_user_role_group, receipt.user]).show? %>
       <%= link_to receipt.user.name, [current_user_role_group, receipt.user] %>
     <% else %>
@@ -12,7 +12,7 @@
       <% end %>
     </div>
   </td>
-  <td>
+  <td data-title=<%= t('mongoid.attributes.receipt.receipt_id') %> >
     <%= ["pending", 'clearance_pending'].include?(receipt.status) ?  t('global.not_generated') : receipt.receipt_id %>
     <div class="small muted">
       <div>
@@ -29,9 +29,9 @@
       <div> <%= t('mongoid.attributes.receipt.payment_mode')%> : <%= t("receipt.payment_mode.#{receipt.payment_mode}")%></div>
     </div>
   </td>
-  <td><%= receipt.try(:token_number) ? receipt.get_token_number : '--' %></td>
-  <td><%= t("mongoid.attributes.receipt/status.#{receipt.status}") %></td>
-  <td><%= number_to_indian_currency(receipt.total_amount.round) %></td>
+  <td data-title=<%= t('mongoid.attributes.receipt.token_number') %> ><%= receipt.try(:token_number) ? receipt.get_token_number : '--' %></td>
+  <td data-title=<%= t('mongoid.attributes.receipt.status') %> ><%= t("mongoid.attributes.receipt/status.#{receipt.status}") %></td>
+  <td data-title=<%= t('mongoid.attributes.receipt.total_amount') %> ><%= number_to_indian_currency(receipt.total_amount.round) %></td>
   <td>
     <div class="dropdown show text-right">
     <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
