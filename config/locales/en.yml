@@ -170,6 +170,7 @@ en:
         total_rows: 'Total rows'
         success_count: 'Successfully Uploaded'
         failure_count: 'Failed to Upload'
+        file_uploaded: 'File Uploaded'
       upload_error:
         row: 'Row'
         errors: 'Errors'

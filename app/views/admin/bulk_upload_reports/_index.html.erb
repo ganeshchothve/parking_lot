@@ -7,6 +7,7 @@
         <th><%= labels["total_rows"] %></th>
         <th><%= labels["success_count"] %></th>
         <th><%= labels["failure_count"] %></th>
+        <th><%= labels["file_uploaded"] %></th>
         <th class="text-right">Actions</th>
       </tr>
     </thead>
@@ -15,8 +16,7 @@
       <tr>
         <td>
           <%= bulk_upload_report.uploaded_by.name %>
-          <div class="small"><%= "On: #{bulk_upload_report.created_at.strftime('%d/%m/%y')}"%></div>
-          <!-- Add time and date of upload in small -->
+          <div class="small"><%= "On: #{bulk_upload_report.created_at.in_time_zone("Mumbai").strftime("%d/%m/%y %I:%M %p")}"%></div>
         </td>
         <td>
           <%= bulk_upload_report.total_rows %>
@@ -26,6 +26,9 @@
         </td>
         <td>
           <%= bulk_upload_report.failure_count %>
+        </td>
+        <td>
+          <%= bulk_upload_report.asset.file_name %>
         </td>
         <td class="text-right">
           <div class="dropdown">
