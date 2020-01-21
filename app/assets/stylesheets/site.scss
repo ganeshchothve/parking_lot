@@ -606,6 +606,9 @@ table .dropdown-menu.show{
 			padding: 0px;
 			li{
 				display: inline-block;
+        @media screen and (max-width:700px){
+          display: inherit;
+        }
 				a{
 					font-size: 12px;
 					font-weight: 500;
@@ -616,6 +619,7 @@ table .dropdown-menu.show{
 					display: block;
           @media screen and (max-width:700px){
             margin: 0;
+            line-height: 3em;
           }
 				}
 			}
