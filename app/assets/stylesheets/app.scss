@@ -575,6 +575,11 @@ h6{
 .w-20{
   width: 20%;
 }
+
+.collaterals .pd-box, .referrals .pd-box {
+  margin: 0 -15px;
+}
+
 @media screen and (max-width: 700px){
   .book-apartment{
     padding: 0 0 0 1.2rem!important;
@@ -598,5 +603,13 @@ h6{
   }
   .receipt-certificate {
     font-size: 3em !important;
+  }
+
+  .no-mar {
+    margin: 0 !important;
+  }
+
+  .collaterals .pd-box, .referrals .pd-box {
+    margin: 0;
   }
 }
