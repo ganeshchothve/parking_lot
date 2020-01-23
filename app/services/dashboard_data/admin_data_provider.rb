@@ -229,8 +229,9 @@ module DashboardData
           }
         ]).to_a
         out = Hash.new
-        data.each do |d|
-          out[d["_id"]] = d["count"]
+        stages = PortalStagePriority.order(priority: :asc).pluck(:stage)
+        stages.each do |stage|
+          out[stage] = data.select{|d| d["_id"] == stage}.first["count"] rescue 0
         end
         out
       end

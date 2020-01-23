@@ -25,9 +25,11 @@
 
               <div class="carousel-inner">
                 <% assets.each_with_index do |asset, index| %>
-                  <div class="carousel-item <%= index.zero? ? "active" : "" %>">
-                    <%= image_tag asset.file.url, class: 'd-block img-fluid m-auto', alt: record.name %>
-                  </div>
+                  <% if asset.try(:file).present? && asset.try(:file).try(:url).present? %>
+                    <div class="carousel-item <%= index.zero? ? "active" : "" %>">
+                      <%= image_tag asset.file.url, class: 'd-block img-fluid m-auto', alt: record.name %>
+                    </div>
+                  <% end %>
                 <% end %>
               </div>
 
