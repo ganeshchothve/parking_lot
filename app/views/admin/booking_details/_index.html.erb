@@ -33,7 +33,7 @@
 
         <td data-title=<%= t('mongoid.attributes.booking_detail.status') %> ><%= BookingDetail.human_attribute_name("status.#{booking_detail.status}") %></td>
 
-        <td data-title= t('mongoid.attributes.booking_detail.agreement_price') >
+        <td data-title="<%= t('mongoid.attributes.booking_detail.agreement_price') %>" >
           <%= number_to_indian_currency(booking_detail.calculate_agreement_price.round) %>
           <div class="small">
             <%= t('mongoid.attributes.booking_detail.all_inclusive_price') %> :

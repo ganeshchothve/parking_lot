@@ -580,6 +580,27 @@ h6{
   margin: 0 -15px;
 }
 
+// For showing row separator in mobile views.
+#collapseBookings, #collpaseReceipts, #collapseTimeSlots, .collapseUsers {
+  @media screen and (max-width: 700px){
+    background-color: inherit !important;
+  }
+  tbody tr {
+    background-color: white !important;
+  }
+}
+
+.body-content {
+  @media screen and (max-width: 700px){
+    margin: 0 !important;
+  }
+}
+.welcome-box {
+  @media screen and (max-width: 700px){
+    margin: 0 0 30px !important;
+  }
+}
+
 @media screen and (max-width: 700px){
   .book-apartment{
     padding: 0 0 0 1.2rem!important;
@@ -611,5 +632,22 @@ h6{
 
   .collaterals .pd-box, .referrals .pd-box {
     margin: 0;
+  }
+
+  .admin-dashboard-charts, .checkout-sec {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .right-info .apartments-info-list li .title {
+    font-size: 18px !important;
+  }
+
+  .navbar .user-info {
+    margin-right: 0 !important;
+  }
+
+  .signup-btn-set {
+    padding-bottom: 15px !important;
   }
 }

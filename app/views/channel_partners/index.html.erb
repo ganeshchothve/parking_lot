@@ -12,7 +12,7 @@
       <div class="table-btn-set float-right pb-3">
         <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @channel_partners.total_entries %></button>
         <a class="db-small-btn light-blue bg-white fn-400 dropdown-toggle btn" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
-        <div class="dropdown-menu dropdown-menu-right">
+        <div class="dropdown-menu">
           <%= link_to "All #{global_labels['channel_partners']}", export_channel_partners_path, class: 'dropdown-item' %>
           <%= link_to "Active filter #{global_labels['channel_partners']}", export_channel_partners_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
         </div>

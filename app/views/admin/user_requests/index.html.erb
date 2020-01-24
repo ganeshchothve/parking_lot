@@ -13,7 +13,7 @@
         <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @user_requests.total_entries %></button>
 
         <a class="db-small-btn light-blue bg-white fn-400 dropdown-toggle btn" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
-        <div class="dropdown-menu dropdown-menu-right">
+        <div class="dropdown-menu">
           <%= link_to "All #{global_labels['user_requests']}", export_admin_user_requests_path, class: 'dropdown-item' %>
           <%= link_to "Active filter #{global_labels['user_requests']}", export_admin_user_requests_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
         </div>

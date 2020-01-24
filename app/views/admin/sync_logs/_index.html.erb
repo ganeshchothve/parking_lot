@@ -17,20 +17,20 @@
   <tbody>
     <% @sync_logs.each do |sync_log| %>
       <tr>
-        <td>
+        <td data-title="Class">
           <%= sync_log.resource_type || '-' %></br>
           (<%= sync_log.action || '-' %>)
         </td>
-        <td>
+        <td data-title="Request">
           <%= sync_log.request || '-' %>
         </td>
-        <td>
+        <td data-title="Response">
           <%= sync_log.response || '-' %>
         </td>
-        <td>
+        <td data-title="Status">
           <%= sync_log.status || '-' %>
         </td>
-        <td>
+        <td data-title="Message">
           <%= sync_log.message || '-' %>
         </td>
         <td>

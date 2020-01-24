@@ -6,7 +6,7 @@
           <%= label_tag "dates", Receipt.human_attribute_name('dates'), class: "control-label float-left" %>
           <% dates = Array.new %>
           <% dates = params[:dates].split(' - ') if params[:dates].present? %>
-          <%= text_field_tag :dates, "", class: 'form-control daterangefilter', "data-start-date": dates[0] || '', "data-end-date": dates[1] || '', "data-opens": 'right' %>
+          <%= text_field_tag :dates, "", class: 'form-control daterangefilter', "data-start-date": dates[0] || '', "data-end-date": dates[1] || '', "data-opens": 'right', placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
         </div>
       </div>
     </div>

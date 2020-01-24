@@ -572,6 +572,9 @@ table .dropdown-menu.show{
 					line-height: 1.67;
 					margin: 4px 0 0 0;
 					display: block;
+          @media screen and (max-width: 700px) {
+            margin: 8px 0 0 0;
+          }
 				}
 				p{
 					font-size: 24px;
@@ -579,6 +582,9 @@ table .dropdown-menu.show{
 					line-height: 28px;
 					margin: 8px 0 0 0;
 					display: block;
+          @media screen and (max-width: 700px) {
+            margin: 0;
+          }
 				}
         @media screen and (min-width:701px){
           &:nth-child(2){
@@ -2415,7 +2421,7 @@ table {
 	.dropdown-menu {
 		&.show{
 			display:block;
-			z-index: 1030;
+			z-index: 1029;
 		}
 	}
 }

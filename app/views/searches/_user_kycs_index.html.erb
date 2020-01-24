@@ -15,19 +15,19 @@
   <tbody>
     <% user_kycs.each do |user_kyc| %>
       <tr>
-        <td><%= user_kyc.name %></td>
-        <td>
+        <td data-title="<%= labels['name'] %>"><%= user_kyc.name %></td>
+        <td data-title="<%= labels['user_id'] %>">
           <% if policy([:admin, User.new]).show? %>
             <%= link_to user_kyc.user.name, admin_user_path(user_kyc.user_id) %>
           <% else %>
             <%= user_kyc.user.name %>
           <% end %>
         </td>
-        <td>
+        <td data-title="<%= "#{labels['phone']} & #{labels['email']}" %>">
           <i class="far fa-envelope"></i> <%= user_kyc.email %><br /> <i class="fas fa-mobile-alt"></i> <%= user_kyc.phone %>
         </td>
-        <td><%= user_kyc.dob.strftime("%d %b %Y") rescue "" %></td>
-        <td><%= user_kyc.pan_number %></td>
+        <td data-title="<%= labels['dob_short'] %>"><%= user_kyc.dob.strftime("%d %b %Y") rescue "" %></td>
+        <td data-title="<%= labels['pan_number'] %>"><%= user_kyc.pan_number %></td>
         <td>
           <div class="dropdown show text-right">
           <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
