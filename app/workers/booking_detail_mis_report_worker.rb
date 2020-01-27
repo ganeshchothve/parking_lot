@@ -11,7 +11,7 @@ class BookingDetailMisReportWorker
     BookingDetail.each_with_index do |booking_detail, index|
       sheet.insert_row(row, BookingDetailMisReportWorker.get_booking_detail_row(booking_detail))
       row = row + 1
-      if (booking_detail.try(:booking_detail_scheme).try(:payment_adjustments).try(:count) rescue 0) > 1
+      if (booking_detail.try(:booking_detail_scheme).try(:payment_adjustments).try(:count) || 0) > 1
         payment_adjustments = booking_detail.booking_detail_scheme.payment_adjustments
         payment_adjustments = payment_adjustments.drop(1)
         payment_adjustments.each do |pa|
