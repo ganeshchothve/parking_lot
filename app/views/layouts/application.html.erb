@@ -35,7 +35,7 @@
       </div>
     <% else %>
       <%= render "layouts/navbar"%>
-      <div class="mt-4">
+      <div class="mt-4 <%= current_user.buyer? ? 'body-content' : '' %>">
         <%= yield %>
       </div>
       <%= render "layouts/gamification" %>

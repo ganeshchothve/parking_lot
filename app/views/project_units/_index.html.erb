@@ -5,7 +5,7 @@
         <th><%= t('mongoid.attributes.project_unit.name') %></th>
         <th><%= t('mongoid.attributes.project_unit.bedrooms') %> / <%= t('mongoid.attributes.project_unit.bathrooms') %></th>
         <th><%= t('mongoid.attributes.project_unit.status') %></th>
-        <th><%= t('mongoid.attributes.project_unit.aggrement_price') %></th>
+        <th><%= t('mongoid.attributes.project_unit.agreement_price') %></th>
         <th class="text-right"> <%= t('global.action', count: 2) %></th>
       </tr>
     </thead>
@@ -13,7 +13,7 @@
   <tbody>
     <% project_units.each do |project_unit| %>
       <tr>
-        <td>
+        <td data-title=<%= t('mongoid.attributes.project_unit.name') %> >
           <%= link_to project_unit.name, [current_user_role_group, project_unit] %>
           <div class="small">
             <%= Project.model_name.human %> : <%= project_unit.project_name %>
@@ -22,14 +22,14 @@
             <%= ProjectTower.model_name.human %> : <%= project_unit.project_tower_name %>
           </div>
         </td>
-        <td><%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></td>
-        <td  value='<%= project_unit.status %>'>
+        <td data-title=<%= "#{t('mongoid.attributes.project_unit.bedrooms')}/#{t('mongoid.attributes.project_unit.bathrooms')}" %> ><%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></td>
+        <td  value='<%= project_unit.status %>' data-title=<%= t('mongoid.attributes.project_unit.status') %> >
           <%= t("mongoid.attributes.project_unit/status.#{project_unit.status}") %>
           <% if project_unit.not_available? && project_unit.comments.present? %>
             <span class="status" data-content="<%= comment(project_unit) %>"><i class="fa fa-comments" aria-hidden="true"></i></span>
           <% end %>
         </td>
-        <td>
+        <td data-title=<%= t('mongoid.attributes.project_unit.agreement_price') %> >
           <% if project_unit.blocked? %>
             <%= number_to_indian_currency(project_unit.calculate_agreement_price.round) %>
             <div class="small">
@@ -51,7 +51,7 @@
         <td>
           <div class="dropdown show text-right">
             <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
               <%= render "#{current_user_role_group}/project_units/links", project_unit: project_unit %>
             </div>
           </div>

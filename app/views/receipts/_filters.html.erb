@@ -39,15 +39,15 @@
           </div>
           <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.receipt.issued_date'), class: "control-label" %>
-            <%= text_field_tag "fltrs[issued_date]", (params[:fltrs].present? ? params[:fltrs][:issued_date] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"} %>
+            <%= text_field_tag "fltrs[issued_date]", (params[:fltrs].present? ? params[:fltrs][:issued_date] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
           </div>
           <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.receipt.processed_on'), class: "control-label" %>
-            <%= text_field_tag "fltrs[processed_on]", (params[:fltrs].present? ? params[:fltrs][:processed_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"} %>
+            <%= text_field_tag "fltrs[processed_on]", (params[:fltrs].present? ? params[:fltrs][:processed_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
           </div>
           <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.receipt.created_at'), class: "control-label" %>
-            <%= text_field_tag "fltrs[created_at]", (params[:fltrs].present? ? params[:fltrs][:created_at] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"} %>
+            <%= text_field_tag "fltrs[created_at]", (params[:fltrs].present? ? params[:fltrs][:created_at] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
           </div>
           <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.receipt.sort_by'), class: "control-label" %>

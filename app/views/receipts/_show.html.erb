@@ -1,90 +1,88 @@
-<div class="container">
-  <div class="pt-3"></div>
-  <div class="box-card">
-    <div class="card-header box-header bg-gradient br-rd-tr-4">
-      <h2> <%= Receipt.model_name.human %></h2>
-      <div class="dropdown float-right d-print-none">
-        <a class="btn dropdown-toggle table-dropdown-btn white-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
-        <div class="dropdown-menu dropdown-menu-right">
-          <button onclick="window.print();" class="dropdown-item ">Print</button>
-        </div>
-      </div>
-    </div>
-    <div class="box-content br-rd-bl-4 bg-white">
-      <div class="row pd-box">
-        <div class="col-md-6">
-          <div class="logo-wrapper">
-            <%= image_tag current_client.logo.url if current_client.logo.file %>
-          </div>
-        </div>
+<div class="pt-3"></div>
+<div class="box-card">
+  <div class="card-header box-header bg-gradient br-rd-tr-4">
+    <h2> <%= Receipt.model_name.human %></h2>
+    <div class="dropdown float-right d-print-none">
+      <a class="btn dropdown-toggle table-dropdown-btn white-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+      <div class="dropdown-menu dropdown-menu-right">
+        <button onclick="window.print();" class="dropdown-item ">Print</button>
       </div>
     </div>
   </div>
-  <div class="mt-3"></div>
-  <%= render 'sync_logs/sync', { record: @receipt } if current_client.external_api_integration? && policy([current_user_role_group, SyncLog.new]).index? %>
-  <div class="mt-3"></div>
-  <div class="row">
-    <% if @receipt.primary_user_kyc %>
+  <div class="box-content br-rd-bl-4 bg-white">
+    <div class="row pd-box">
       <div class="col-md-6">
-        <div class="card h-100">
-          <div class="card-body">
-            <div class="form-group">
-              <label class="small text-muted">Paid By:</label>
-              <div><%= @receipt.primary_user_kyc.name %></div>
-            </div>
-            <div class="form-group">
-              <label class="small text-muted">Email:</label>
-              <div><%= @receipt.primary_user_kyc.email %></div>
-            </div>
-            <div class="form-group">
-              <label class="small text-muted">Phone:</label>
-              <div><%= @receipt.primary_user_kyc.phone %></div>
-            </div>
-            <div class="form-group">
-              <label class="small text-muted">PAN Number:</label>
-              <div><%= @receipt.primary_user_kyc.pan_number %></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    <% end %>
-    <div class="col-md-6">
-      <div class="box-card h-100">
-        <div class="box-content br-rd-bl-4 bg-white h-100">
-          <div class="pd-box">
-            <div class="form-group">
-              <label>Paid To:</label>
-              <div><%= current_client.registration_name %></div>
-            </div>
-            <% if current_client.cin_number.present? %>
-              <div class="form-group">
-                <label>CIN Number:</label>
-                <div><%= current_client.cin_number %></div>
-              </div>
-            <% end %>
-            <% if current_client.address.present? %>
-              <div class="form-group">
-                <label>Address: </label>
-                <div><%= current_client.address.to_sentence %></div>
-              </div>
-            <% end %>
-          </div>
+        <div class="logo-wrapper">
+          <%= image_tag current_client.logo.url if current_client.logo.file %>
         </div>
       </div>
     </div>
   </div>
-    <div class="mt-3"></div>
-    <%= current_client.templates.where(_type: "Template::ReceiptTemplate").first.parsed_content(@receipt) %>
-    <div class="mt-3"></div>
-  <div class="card">
-    <div class="card-body">
-      <div class="float-right text-right">
-        <strong>For <%= current_client.registration_name %></strong>
-        <br/><br/><br/>
-        Authorized Signatory
-      </div>
-    </div>
-  </div>
-  <div class="text-center text-muted small mt-3">This is an electronically generated receipt; hence no signature is required.</div>
-  <div class="pt-3"></div>
 </div>
+<div class="mt-3"></div>
+<%= render 'sync_logs/sync', { record: @receipt } if current_client.external_api_integration? && policy([current_user_role_group, SyncLog.new]).index? %>
+<div class="mt-3"></div>
+<div class="row">
+  <% if @receipt.primary_user_kyc %>
+    <div class="col-md-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="form-group">
+            <label class="small text-muted">Paid By:</label>
+            <div><%= @receipt.primary_user_kyc.name %></div>
+          </div>
+          <div class="form-group">
+            <label class="small text-muted">Email:</label>
+            <div><%= @receipt.primary_user_kyc.email %></div>
+          </div>
+          <div class="form-group">
+            <label class="small text-muted">Phone:</label>
+            <div><%= @receipt.primary_user_kyc.phone %></div>
+          </div>
+          <div class="form-group">
+            <label class="small text-muted">PAN Number:</label>
+            <div><%= @receipt.primary_user_kyc.pan_number %></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+  <div class="col-md-6">
+    <div class="box-card h-100">
+      <div class="box-content br-rd-bl-4 bg-white h-100">
+        <div class="pd-box">
+          <div class="form-group">
+            <label>Paid To:</label>
+            <div><%= current_client.registration_name %></div>
+          </div>
+          <% if current_client.cin_number.present? %>
+            <div class="form-group">
+              <label>CIN Number:</label>
+              <div><%= current_client.cin_number %></div>
+            </div>
+          <% end %>
+          <% if current_client.address.present? %>
+            <div class="form-group">
+              <label>Address: </label>
+              <div><%= current_client.address.to_sentence %></div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <div class="mt-3"></div>
+  <%= current_client.templates.where(_type: "Template::ReceiptTemplate").first.parsed_content(@receipt) %>
+  <div class="mt-3"></div>
+<div class="card">
+  <div class="card-body">
+    <div class="float-right text-right">
+      <strong>For <%= current_client.registration_name %></strong>
+      <br/><br/><br/>
+      Authorized Signatory
+    </div>
+  </div>
+</div>
+<div class="text-center text-muted small mt-3">This is an electronically generated receipt; hence no signature is required.</div>
+<div class="pt-3"></div>

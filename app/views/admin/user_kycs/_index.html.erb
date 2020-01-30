@@ -14,23 +14,23 @@
   <tbody>
     <% user_kycs.each do |user_kyc| %>
       <tr>
-        <td><%= user_kyc.name %></td>
-        <td>
+        <td data-title=<%= t('mongoid.attributes.user_kyc.name') %> ><%= user_kyc.name %></td>
+        <td data-title=<%= t('mongoid.attributes.user_kyc.user_id') %> >
           <% if policy([:admin, User.new]).show? %>
             <%= link_to user_kyc.user.name, admin_user_path(user_kyc.user_id) %>
           <% else %>
             <%= user_kyc.user.name %>
           <% end %>
         </td>
-        <td>
+        <td  data-title= <%= "#{t('mongoid.attributes.user_kyc.phone')}/#{t('mongoid.attributes.user_kyc.email')}" %> >
           <i class="far fa-envelope"></i> <%= user_kyc.email %><br /> <i class="fas fa-mobile-alt"></i> <%= user_kyc.phone %>
         </td>
-        <td><%= user_kyc.dob.strftime("%d %b %Y") rescue "" %></td>
-        <td><%= user_kyc.pan_number %></td>
+        <td data-title=<%= t('mongoid.attributes.user_kyc.dob') %> ><%= user_kyc.dob.strftime("%d %b %Y") rescue "" %></td>
+        <td data-title=<%= t('mongoid.attributes.user_kyc.pan_number') %> ><%= user_kyc.pan_number %></td>
         <td>
           <div class="dropdown show text-right">
           <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
               <% if current_user.buyer? && Buyer::UserKycPolicy.new(current_user, user_kyc).edit? %>
                 <%= link_to t('helpers.edit.link_name', model: UserKyc.model_name.human), edit_buyer_user_kyc_path(user_kyc), class: 'dropdown-item modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit User KYC'} %>
               <% elsif Admin::UserKycPolicy.new(current_user, user_kyc).edit? %>

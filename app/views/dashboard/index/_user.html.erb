@@ -2,17 +2,18 @@
 <!-- Projects -->
 <%= render 'project_units/section' %>
 <!-- My Projects -->
-<div class="separate-line container"></div>
-<%= render 'users/my_projects' %>
-<!-- Receipts -->
-<div class="separate-line container"></div>
-<div class="pl-2">
+<div class='no-pd'>
+  <div class="separate-line container"></div>
+  <%= render 'users/my_projects' %>
+  <!-- Receipts -->
+  <div class="separate-line container"></div>
   <%= render 'receipts/section', receipts: @receipts %>
+  <!-- Time slots -->
+  <div class="separate-line container"></div>
+  <% if true #policy([:buyer, TimeSlot]).index? %>
+    <%= render 'users/time_slots' %>
+  <% end %>
 </div>
-<div class="separate-line container"></div>
-<% if true #policy([:buyer, TimeSlot]).index? %>
-  <%= render 'users/time_slots' %>
-<% end %>
 <div class="separate-line container"></div>
 <section class="user-db-sec-5 device-pd pb-4">
   <div class="container">

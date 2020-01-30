@@ -224,6 +224,7 @@ en:
         dates: 'Dates'
         tasks_completed: 'Tasks Completed'
         tasks_pending: 'Tasks Pending'
+        agreement_price: 'Agreement Price'
       booking_detail/status:
         available: 'Available'
         not_available: 'Not Available'
@@ -315,6 +316,7 @@ en:
         pan_number: "PAN Number"
         aadhaar: "Aadhaar"
         name_email_phone: 'Name/Email/Phone'
+        details: 'Details'
       channel_partner/status:
         active: Active
         inactive: Inactive
@@ -469,6 +471,10 @@ en:
         tracking_id: 'Transaction ID (Processed Payment)'
         frequency: 'Frequency'
         dates: 'Dates'
+        token: 'Token Number'
+        date: 'Slot Date'
+        start_time: 'Slot Start'
+        end_time: 'Slot End'
 
       receipt/status:
         pending: 'Pending'
@@ -558,6 +564,7 @@ en:
         resolved_at: 'Processed on'
         name_email_phone: 'Name/Email/Phone'
         requestable_type: 'Requestable Type'
+        request_details: 'Request Details'
       user_request/status:
         pending: Pending
         processing: Processing

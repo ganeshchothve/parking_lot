@@ -1,4 +1,4 @@
-<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 p-0">
   <div class="box-card">
     <div class="box-header bg-gradient br-rd-tr-4">
       <h2 class="icon-set icon-home-white"><%= booking_detail.name %></h2>
@@ -35,7 +35,7 @@
               </li>
             <% end %>
             <li>
-              <span><%= BookingDetail.human_attribute_name('bedrooms')%>/<%= BookingDetail.human_attribute_name('bathrooms')%></span>
+              <span class='text-wrap'><%= BookingDetail.human_attribute_name('bedrooms')%>/ <%= BookingDetail.human_attribute_name('bathrooms')%></span>
               <p><%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></p>
             </li>
             <li>

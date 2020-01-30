@@ -17,26 +17,26 @@
   <tbody>
     <% @sync_logs.each do |sync_log| %>
       <tr>
-        <td>
+        <td data-title="Class">
           <%= sync_log.resource_type || '-' %></br>
           (<%= sync_log.action || '-' %>)
         </td>
-        <td>
+        <td data-title="Request">
           <%= sync_log.request || '-' %>
         </td>
-        <td>
+        <td data-title="Response">
           <%= sync_log.response || '-' %>
         </td>
-        <td>
+        <td data-title="Status">
           <%= sync_log.status || '-' %>
         </td>
-        <td>
+        <td data-title="Message">
           <%= sync_log.message || '-' %>
         </td>
         <td>
           <div class="dropdown show text-right">
           <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
               <% if policy([:admin, SyncLog.new]).resync? %>
                 <%= link_to t("controller.sync_logs.show.link_name"), redirect_link(sync_log), class: 'dropdown-item' %>
               <% end %>
