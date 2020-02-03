@@ -25,7 +25,7 @@ class AssetUploader < CarrierWave::Uploader::Base
   end
 
   def extension_white_list
-    %w(JPEG JFIF Exif TIFF BMP GIF PNG PPM PGM PBM PNM WebP HEIF BAT BPG CD5 DEEP ECW FITS FLIF ICO ILBM IMG IMG JPEG Nrrd PAM PCX PGF PLBM SGI SID TGA VICAR XISF CPT PSD PSP XCF CGM SVG AI CDR DrawingML HPGL HVIF MathML NAPLPS ODG PSTricks PGF TikZ ReGIS VML WMF Xar XPS EPS PDF PostScript PICT SWF XAML jpeg jfif exif tiff bmp gif png ppm pgm pbm pnm webp heif bat bpg cd5 deep ecw fits flif ico ilbm img img jpeg nrrd pam pcx pgf plbm sgi sid tga vicar xisf cpt psd psp xcf cgm svg ai cdr drawingml hpgl hvif mathml naplps odg pstricks pgf tikz regis vml wmf xar xps eps pdf postscript pict swf xaml ZIP zip TAR tar PDF pdf jpg JPG odp ODP)
+    %w(JPEG JFIF Exif TIFF BMP GIF PNG PPM PGM PBM PNM WebP HEIF BAT BPG CD5 DEEP ECW FITS FLIF ICO ILBM IMG IMG JPEG Nrrd PAM PCX PGF PLBM SGI SID TGA VICAR XISF CPT PSD PSP XCF CGM SVG AI CDR DrawingML HPGL HVIF MathML NAPLPS ODG PSTricks PGF TikZ ReGIS VML WMF Xar XPS EPS PDF PostScript PICT SWF XAML jpeg jfif exif tiff bmp gif png ppm pgm pbm pnm webp heif bat bpg cd5 deep ecw fits flif ico ilbm img img jpeg nrrd pam pcx pgf plbm sgi sid tga vicar xisf cpt psd psp xcf cgm svg ai cdr drawingml hpgl hvif mathml naplps odg pstricks pgf tikz regis vml wmf xar xps eps pdf postscript pict swf xaml ZIP zip TAR tar PDF pdf jpg JPG odp ODP csv)
   end
 
   # Provide a default URL as a default if there hasn't been a file uploaded:

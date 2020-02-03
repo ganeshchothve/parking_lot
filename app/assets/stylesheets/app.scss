@@ -651,3 +651,12 @@ h6{
     padding-bottom: 15px !important;
   }
 }
+
+// styles for Bulk inventory upload feature
+.upload-messages
+{
+  height: 250px;
+  width:100%;
+  overflow:auto;
+  background:#fff;
+}

@@ -64,6 +64,9 @@ en:
 
   mongoid:
     models:
+      bulk_upload_report:
+        one: Bulk Upload Report
+        other: Bulk Upload Reports
       asset:
         one: Document
         other: Documents
@@ -162,6 +165,15 @@ en:
         other: Users & Customers
 
     attributes:
+      bulk_upload_report:
+        uploaded_by_id: 'Uploaded By'
+        total_rows: 'Total rows'
+        success_count: 'Successfully Uploaded'
+        failure_count: 'Failed to Upload'
+        file_uploaded: 'File Uploaded'
+      upload_error:
+        row: 'Row'
+        errors: 'Errors'
       checklist:
         name: 'Name'
         key: 'Key'
@@ -694,6 +706,9 @@ en:
           custom_dates: 'Custom Dates'
 
   controller:
+    bulk_upload_reports:
+      index:
+        link_name: 'Bulk Uploads'
     checklists:
       index:
         link_name: 'Tasks'

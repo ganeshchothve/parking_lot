@@ -3,7 +3,7 @@ FactoryBot.define do
     first_name { Faker::Name.first_name }
     phone { Faker::PhoneNumber.phone_number }
     confirmed_at { DateTime.now }
-    last_name { Faker::Name.last_name }
+    last_name { Faker::Name.last_name.gsub(/[^0-9a-z ]/i, '') }
     email { Faker::Internet.email }
     allowed_bookings { Faker::Number.number(2) }
     manager_change_reason { Faker::Lorem.paragraph }

@@ -1,0 +1,28 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-xs-2 pl-4">
+              <% if (Admin::BulkUploadReportPolicy.new(current_user, BulkUploadReport.new)).inventory_upload? %>
+                <%= link_to "Upload Inventory", new_admin_inventory_upload_path, class: 'btn btn-primary' %>
+              <% end %>
+            </div>
+            <div class="col-md-4 text-md-left">
+              <%= link_to "Show Sample File", current_client.assets.where(asset_type: "sample_correct_inventory_file").first.file.url, target: '_blank', class: 'btn btn-primary' %>
+
+            </div>
+            <div class="col-md-6 text-md-right">
+              <h6 class="mt-2">Total <%= BulkUploadReport.model_name.human(count: 2) %>: <%= @bulk_upload_reports.total_entries %></h6>
+            </div>
+          </div>
+          <%= render 'index', {bulk_upload_reports: @bulk_upload_reports} %>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="d-md-none mt-3"></div>
+    </div>
+  </div>
+</div>

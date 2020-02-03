@@ -24,8 +24,8 @@
         <%= p.hidden_field :assetable_type %>
       <% end %>
       <%= p.hidden_field :asset_type %>
-      <%= p.label :asset_type, class: 'label-required', value: p.object.asset_type %>
-      <%= p.file_field :file, class: 'btn pl-0', accept: 'image/png,image/jpj,image/jpeg' %>
+      <%#= p.label :asset_type, class: 'label-required', value: p.object.asset_type || "" %>
+      <%= p.file_field :file, class: 'btn pl-0', id: 'file-field', accept: 'image/png,image/jpg,image/jpeg, .csv' %>
     </div>
   </div>
 </div>
