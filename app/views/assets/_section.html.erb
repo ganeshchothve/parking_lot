@@ -1,19 +1,19 @@
 <section class="documents my-4 mb-4">
   <div class="container">
     <div class="row">
-      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd cursor-pointer" data-toggle="collapse" href="#collapseDocuments" role="button" aria-expanded="false" aria-controls="collapseDocuments">
+      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 p-0 cursor-pointer" data-toggle="collapse" href="#collapseDocuments" role="button" aria-expanded="false" aria-controls="collapseDocuments">
         <div class="table-title pt-1">
           <h2 class="title text-dark icon-set icon-file-contract-black">
             <%= Asset.model_name.human(count: assets.count) %>
           </h2>
         </div>
       </div>
-      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
+      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 p-0">
         <div class="table-btn-set float-right pb-3">
           <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= assets.count %></button>
         </div>
       </div>
-      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd bg-white collapse" id="collapseDocuments">
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 p-0 bg-white collapse" id="collapseDocuments">
         <% if assets.present? %>
           <div class="card card-body">
             <div id="record_gallery_<%= record.id %>" class="carousel slide" data-ride="carousel">
@@ -25,9 +25,11 @@
 
               <div class="carousel-inner">
                 <% assets.each_with_index do |asset, index| %>
-                  <div class="carousel-item <%= index.zero? ? "active" : "" %>">
-                    <%= image_tag asset.file.url, class: 'd-block img-fluid m-auto', alt: record.name %>
-                  </div>
+                  <% if asset.try(:file).present? && asset.try(:file).try(:url).present? %>
+                    <div class="carousel-item <%= index.zero? ? "active" : "" %>">
+                      <%= image_tag asset.file.url, class: 'd-block img-fluid m-auto', alt: record.name %>
+                    </div>
+                  <% end %>
                 <% end %>
               </div>
 

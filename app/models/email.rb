@@ -71,7 +71,7 @@ class Email
     #      F            |          -           |       T        |        yes
     #      F            |          -           |       F        |         no
     # and alwas send email when email template is missing.
-    if self.to.present?
+    if self.booking_portal_client.email_enabled? && self.to.present?
       if self.email_template
         Communication::Email::MailgunWorker.perform_async(self.id.to_s) if self.email_template.try(:is_active?)
       else

@@ -16,25 +16,25 @@
     <% @emails.each do |email| %>
       <tr>
         <% unless current_user.buyer? %>
-          <td>
+          <td data-title=<%= t('mongoid.attributes.email.to') %> >
             <% email.to.each do |e| %>
             <%= mail_to e %>
             <% end %>
           </td>
         <% end %>
-        <td>
+        <td data-title=<%= t('mongoid.attributes.email.subject') %> >
           <%= link_to truncate(email.subject, length: 30, separator: ''), [ current_user_role_group, email], target: :_blank, title: email.subject %>
         </td>
-        <td>
+        <td data-title=<%= t('mongoid.attributes.email.status') %> >
           <%= t("emails.status.#{email.status}") %>
         </td>
-        <td>
+        <td  data-title=<%= t('mongoid.attributes.email.sent_on') %> >
           <%= email.sent_on.try(:strftime, '%b %e %Y, %l:%M %p') || '-' %>
         </td>
         <td>
           <div class="dropdown show text-right">
           <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
               <%= link_to t("controller.emails.show.link_name", model: Email.model_name.human), [ current_user_role_group, email], class: 'dropdown-item', target: :_blank %>
            </div>
         </div>

@@ -19,7 +19,7 @@
         </div>
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", labels[:sent_on], class: "control-label" %>
-          <%= text_field_tag "fltrs[sent_on]", (params[:fltrs].present? ? params[:fltrs][:sent_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"} %>
+          <%= text_field_tag "fltrs[sent_on]", (params[:fltrs].present? ? params[:fltrs][:sent_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
         </div>
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", labels[:body], class: "control-label" %>

@@ -1,4 +1,4 @@
-<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 p-0">
   <div class="box-card">
     <div class="box-header bg-gradient br-rd-tr-4">
       <h2 class="icon-set icon-home-white"><%= booking_detail.name %></h2>
@@ -35,7 +35,7 @@
               </li>
             <% end %>
             <li>
-              <span><%= BookingDetail.human_attribute_name('bedrooms')%>/<%= BookingDetail.human_attribute_name('bathrooms')%></span>
+              <span class='text-wrap'><%= BookingDetail.human_attribute_name('bedrooms')%>/ <%= BookingDetail.human_attribute_name('bathrooms')%></span>
               <p><%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></p>
             </li>
             <li>
@@ -71,9 +71,13 @@
             </li>
           </ul>
         </div>
-        <% if %w[ hold swapped canceled ].exclude?(booking_detail.status)  %>
+        <% if %w[ hold swapped cancelled ].exclude?(booking_detail.status)  %>
           <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12 no-pd">
             <ul class="booking-apart-info clear">
+              <li>
+                <span><%= ProjectUnit.human_attribute_name('blocked_on') %></span>
+                <p><%= project_unit.blocked_on.try(:strftime, '%d/%m/%Y') %></p>
+              </li>
               <li>
                 <span><%= BookingDetail.human_attribute_name('total_amount_paid')%></span>
                 <p><%= number_to_indian_currency(booking_detail.total_amount_paid) %></p><div class="small">* Considers processed <%= Receipt.model_name.human %> only</div>

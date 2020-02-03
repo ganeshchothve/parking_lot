@@ -1,5 +1,5 @@
 <section class="auth login-page">
-  <div class="container">
+  <div class="container no-pd">
     <div class="col-lg-6 col-xs-12 col-md-12 col-sm-12 p-0">
       <div class="login-form-wrapper pt-5">
         <h1 class="mt-0 fn-20"><%= t('channel_partner_registration.titles.heading1_html') %></h1>
@@ -8,7 +8,7 @@
           <div class="box-header bg-gradient br-rd-tr-4">
             <h2><strong>Basic details</strong></h2>
           </div>
-          <div class="box-content br-rd-bl-4 bg-white p-0 pt-1">
+          <div class="box-content br-rd-bl-4 bg-white px-3 pt-3">
             <%= simple_form_for(@channel_partner, local: true, html: { id: 'channel_partner_form', class: 'validate-form', multipart: true, novalidate: false }) do |form| %>
 
               <%= render "form_fields", {form: form} %>

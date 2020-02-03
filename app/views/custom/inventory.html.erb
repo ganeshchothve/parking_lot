@@ -5,14 +5,14 @@
         <div class="form-group">
           <%= label_tag "project_tower_id", "Project Tower", class: "control-label sr-only" %>
         </div>
-        <div class="form-group col-3">
+        <div class="form-group w-60 pl-2 m-0">
           <%= select_tag "project_tower_id", options_for_select(ProjectTower.all.collect{|x| ["#{x.project.name} - #{x.name}", x.id]}.sort{|x, y| x[0] <=> y[0]}, params[:project_tower_id]), {prompt: "Select Tower", class: "selectize form-control"} %>
         </div>
-        <div class="form-group col-9 p-0">
-          <div class="col-6">
+        <div class="form-group w-40 p-0 m-0">
+          <div class="w-80 p-0">
             <%= submit_tag :Apply, class: "db-small-btn light-blue bg-white fn-400" %>
           </div>
-          <div class="col-6">
+          <div class="w-20 pt-2">
             <%= link_to content_tag(:i, "", class: 'fa fa-times'), custom_inventory_path(params.permit(:project_tower_id, :utf8).to_hash.merge(remove_header: true)), class: 'float-right white' %>
           </div>
         </div>

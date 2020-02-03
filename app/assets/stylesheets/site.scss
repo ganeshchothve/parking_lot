@@ -302,13 +302,13 @@ a:hover{
 		}
 		@media screen and (max-width:992px){
 			margin-right: 30px;
+			margin-top: 0px;
 		}
 	}
 	@media screen and (max-width:480px){
 		.user-dropdown{
 			.dropdown-menu{
 				top: 41px;
-				left: -94px;
 			}
 		}
 	}
@@ -388,10 +388,7 @@ a:hover{
 	}
 }
 table .dropdown-menu.show{
-	width: 240px;
 	.dropdown-item{
-word-break: break-word;
-    white-space: normal;
     border-bottom: 1px solid #f1f1f1;
 	}
 }
@@ -413,6 +410,9 @@ word-break: break-word;
 	.box-content{
 		padding: 40px 0px;
 		position: relative;
+		@media screen and (max-width: 480px){
+			padding: 60px 0 40px;
+		}
 		.wc-title {
 			font-size: 24px;
 			font-weight: 400;
@@ -523,6 +523,7 @@ word-break: break-word;
 			font-size: 13px;
 			color: $white-color;
 			float: right;
+      line-height: 2.5em;
 		}
 		@media screen and (max-width: 992px){
 			&.hide-xs{
@@ -538,6 +539,9 @@ word-break: break-word;
 			line-height: 2.09;
 			color: #33475b;
 			margin: 0px;
+      @media screen and (max-width: 700px) {
+        line-height: 1.2;
+      }
 		}
 		.sort-desc{
 			font-size: 14px;
@@ -551,18 +555,27 @@ word-break: break-word;
 			padding: 10px;
 			display: inline-block;
 			margin: 0 auto 10px;
+      @media screen and (max-width: 700px) {
+        display: inherit;
+      }
 			li{
 				display: inline-block;
 				color: $content-color;
 				position: relative;
 				padding: 0 20px;
 				text-transform: uppercase;
+        @media screen and (max-width: 700px) {
+          display: inherit;
+        }
 				span{
 					font-size: 12px;
 					font-weight: 500;
 					line-height: 1.67;
 					margin: 4px 0 0 0;
 					display: block;
+          @media screen and (max-width: 700px) {
+            margin: 8px 0 0 0;
+          }
 				}
 				p{
 					font-size: 24px;
@@ -570,24 +583,29 @@ word-break: break-word;
 					line-height: 28px;
 					margin: 8px 0 0 0;
 					display: block;
+          @media screen and (max-width: 700px) {
+            margin: 0;
+          }
 				}
-				&:nth-child(2){
-					&:after, &:before{
-						position:absolute;
-						content: '';
-						height: 42px;
-						width: 1px;
-						border: solid 1px #848484;
-						top: 56%;
-						transform: translateY(-50%);
-					}
-					&:after{
-						left: 0px;
-					}
-					&:before{
-						right: 0px;
-					}
-				}
+        @media screen and (min-width:701px){
+          &:nth-child(2){
+            &:after, &:before{
+              position:absolute;
+              content: '';
+              height: 42px;
+              width: 1px;
+              border: solid 1px #848484;
+              top: 56%;
+              transform: translateY(-50%);
+            }
+            &:after{
+              left: 0px;
+            }
+            &:before{
+              right: 0px;
+            }
+          }
+        }
 			}
 		}
 		.prjt-link{
@@ -595,6 +613,9 @@ word-break: break-word;
 			padding: 0px;
 			li{
 				display: inline-block;
+        @media screen and (max-width:700px){
+          display: inherit;
+        }
 				a{
 					font-size: 12px;
 					font-weight: 500;
@@ -603,6 +624,10 @@ word-break: break-word;
 					margin: 30px 20px;
 					text-decoration: underline;
 					display: block;
+          @media screen and (max-width:700px){
+            margin: 0;
+            line-height: 3em;
+          }
 				}
 			}
 		}
@@ -1127,6 +1152,10 @@ word-break: break-word;
 		height: 645px;
 		overflow-y: auto;
 		overflow-x: hidden;
+		@media screen and (max-width: 700px){
+			height: auto;
+			overflow: hidden;
+		}
 	}
 }
 .result-list{
@@ -1387,6 +1416,7 @@ word-break: break-word;
 				width: 100%;
 				height: 100%;
 				display: block;
+        background-color: #fff;
 				&:first-of-type{
 					td{
 						margin-top:0px!important;
@@ -1411,7 +1441,7 @@ word-break: break-word;
 						padding-right: 40px;
 						margin-top: 20px;
 					}
-					&:last-of-type{
+					&:not(.non-action-td):last-of-type{
 						position: absolute;
 						top: 0px;
 						right: 0px;
@@ -2001,6 +2031,10 @@ word-break: break-word;
 .footer{
 	padding: 25px 0px 20px;
 	box-shadow: 1px 1px 15px #d8d8d8;
+
+  @media screen and (max-width: 992px){
+    display: none;
+  }
 	.footer-top{
 		font-size: 13px;
 		line-height: 1.54;
@@ -2174,7 +2208,12 @@ word-break: break-word;
 .user-db-sec-5{
 	.box-content.fix-ht{
 		height: 200px!important;
+		@media screen and (max-width: 700px){
+			height: auto!important;
+			padding: 20px 0 !important
+		}
 	}
+
 }
 .user-db-sec-6{
 	.box-content{
@@ -2209,7 +2248,7 @@ word-break: break-word;
 		padding: 20px 15px 40px 15px;
 		position: relative;
 		@media screen and (max-width: 700px){
-			height: 136px;
+			height: 170px;
 		}
 		@media screen and (max-width: 340px){
 			width:100%;
@@ -2383,12 +2422,7 @@ table {
 	.dropdown-menu {
 		&.show{
 			display:block;
-			/*transform: translate3d(0px, 0px, 0px) !important;*/
-			right: -34px;
-			top: -4px!important;
-			left: unset!important;
-			bottom:unset;
-			z-index: 1030;
+			z-index: 1029;
 		}
 	}
 }
@@ -2476,6 +2510,29 @@ table {
 			padding: 0px!important;
 		}
 	}
+	.kyc-information{
+		.no-pd{
+			padding: 0px!important;
+		}
+	}
+  .right-info .alert-box .info{
+    width: 211px;
+    display: block;
+    margin: 0 auto;
+    &:before{
+      top:4px;
+    }
+  }
+	.agree-check{
+		form{
+			margin-top: 10px;
+		}
+	}
+	.search-result{
+		.extra-pad{
+			padding: 0px!important;
+		}
+	}
 }
 
 @media (max-width: 576px){
@@ -2488,10 +2545,5 @@ table {
 		.dropdown{
 			position: relative;
 		}
-		.dropdown-menu{
-			left: unset!important;
-			right: -95px!important;
-		}
-
 	}
 }

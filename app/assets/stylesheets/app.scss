@@ -153,6 +153,9 @@ figure.wave {
   border: 0;
   transition: all .6s ease-in-out;
   margin: 1rem;
+  @media screen and (max-width: 992px){
+    display: none;
+  }
 }
 @include media-breakpoint-up(md){
   #gamification-container{
@@ -209,7 +212,9 @@ figure.wave {
   white-space: nowrap;
 }
 .page-item.disabled .page-link {
-  padding: 0.8rem 0.75rem;
+  @media screen and (min-width: 992px) {
+    padding: 0.8rem 0.75rem;
+  }
 }
 .box-card {
   float: inherit !important;
@@ -497,8 +502,10 @@ h6{
   border-top-right-radius: unset;
 }
 .next-btn-chose-apt {
-  position: absolute;
-  bottom: 0;
+  border-left: solid 1px #e0e4f8;
+  @media screen and (max-width: 992px) {
+    border: none;
+  }
 }
 .auth {
   background-size: 50% 80%;
@@ -507,6 +514,145 @@ h6{
 .selldof_field-container {
   padding-left: 0 !important;
 }
+
+// Mobile pagination element styles
+.pagination {
+  @media screen and (max-width: 992px) {
+    .page-item:first-child .page-link {
+      border-top-left-radius: 0.2rem;
+      border-bottom-left-radius: 0.2rem;
+    }
+    .page-link {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+  }
+}
+
+.table-title {
+  @media screen and (max-width: 992px) {
+    margin-bottom: 10px;
+  }
+}
+
+.table-btn-set {
+  @media screen and (max-width: 992px) {
+    float: left !important;
+    width: 100%;
+    .db-small-btn, .db-small-btn:hover {
+      margin-left: 0;
+      margin-right: 10px;
+    }
+    button[disabled='disabled'] {
+      display: none;
+    }
+    .db-filter-btn {
+      float: right;
+    }
+    .db-filter-btn:first-child, .db-filter-btn:nth-child(2) {
+      position: absolute;
+      top: -40px;
+      right: 15px;
+    }
+  }
+}
+.w-60, .w-40, .w-80, .w-20{
+  float: left;
+}
+.w-60{
+  width: 60%;
+  select{
+    width: 100%!important;
+  }
+}
+.w-40{
+  width: 40%;
+}
+.w-80{
+  width: 80%;
+}
+.w-20{
+  width: 20%;
+}
+
+.collaterals .pd-box, .referrals .pd-box {
+  margin: 0 -15px;
+}
+
+// For showing row separator in mobile views.
+#collapseBookings, #collpaseReceipts, #collapseTimeSlots, .collapseUsers {
+  @media screen and (max-width: 700px){
+    background-color: inherit !important;
+  }
+  tbody tr {
+    background-color: white !important;
+  }
+}
+
+.body-content {
+  @media screen and (max-width: 700px){
+    margin: 0 !important;
+  }
+}
+.welcome-box {
+  @media screen and (max-width: 700px){
+    margin: 0 0 30px !important;
+  }
+}
+
+@media screen and (max-width: 700px){
+  .book-apartment{
+    padding: 0 0 0 1.2rem!important;
+  }
+  #project-tower-carousel {
+    .carousel-control-prev{
+      left: -14px;
+      svg{
+        font-size: 1.5rem
+      }
+    }
+    .carousel-control-next{
+      right: -14px;
+      svg{
+        font-size: 1.5rem
+      }
+    }
+  }
+  .right-info {
+    margin-top: 20px;
+  }
+  .receipt-certificate {
+    font-size: 3em !important;
+  }
+
+  .no-mar {
+    margin: 0 !important;
+  }
+
+  .collaterals .pd-box, .referrals .pd-box {
+    margin: 0;
+  }
+
+  .admin-dashboard-charts, .checkout-sec {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .right-info .apartments-info-list li .title {
+    font-size: 18px !important;
+  }
+
+  .navbar .user-info {
+    margin-right: 0 !important;
+  }
+
+  .signup-btn-set {
+    padding-bottom: 15px !important;
+  }
+}
+
+// styles for Bulk inventory upload feature
 .upload-messages
 {
   height: 250px;

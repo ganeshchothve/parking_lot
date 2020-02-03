@@ -72,18 +72,6 @@
                  </div>
               </div>
 
-            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 mt-5">
-              <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12">
-                  <% if @search.previous_step.present? %>
-                    <%= form_for [:user, @search] do |f| %>
-                      <%= f.hidden_field :step, value: @search.previous_step %>
-                      <%= f.submit "Previous", class: "previous-btn fn-12 fn-300" %>
-                    <% end %>
-                  <% end %>
-                </div>
-              </div>
-            </div>
           </div>
           <div class="col-lg-6 col-xs-12 col-sm-12 col-md-12 br-l-1 no-pd after-show d-none" id="unit-description" >
             <div class="right-info pl-5 pr-5 pt-4 pb-4">
@@ -115,8 +103,18 @@
                 <%= link_to "View Cost Sheet & Payment Schedule", "javascript:;", class: 'modal-remote-form-link print_cs_ps', target: "_blank" %>
               </div>
             </div>
-            <div class="row next-btn-chose-apt w-100 m-0 pr-3">
-              <div class="col-lg-12 col-md-12 col-sm-12 float-right pb-3">
+          </div>
+          <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+            <div class="row">
+              <div class="col col-lg-6 col-md-6 col-sm-6 py-3">
+                <% if @search.previous_step.present? %>
+                  <%= form_for [:user, @search] do |f| %>
+                    <%= f.hidden_field :step, value: @search.previous_step %>
+                    <%= f.submit "Previous", class: "previous-btn fn-12 fn-300" %>
+                  <% end %>
+                <% end %>
+              </div>
+              <div class="col col-lg-6 col-md-6 col-sm-6 next-btn-chose-apt py-3 d-none">
                 <% if @search.next_step.present? %>
                   <%= form_for [:user, @search] do |f| %>
                     <%= f.hidden_field :step, value: @search.next_step %>
