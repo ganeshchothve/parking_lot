@@ -8,9 +8,14 @@ class Crm::Api
   field :request_payload, type: String
   field :request_type, type: String
 
-  belongs_to :base, foreign_key: :crm_id
+  belongs_to :base
 
-  def execute
-    process_request
+  def execute record
+    response = ::Api::Sync.new(self, record).execute
+  end
+
+  def set_request_payload(record)
+    erb = ERB.new(self.request_payload.gsub("\n\s", ''))
+    SafeParser.new(erb.result(binding)).safe_load
   end
 end

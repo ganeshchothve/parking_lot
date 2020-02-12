@@ -9,7 +9,7 @@ class Crm::ApiPolicy < ApplicationPolicy
   end
 
   def permitted_attributes
-    attributes = %w[resource_class path request_payload crm_id request_type]
+    attributes = %w[resource_class path request_payload base_id request_type]
     attributes
   end
 end

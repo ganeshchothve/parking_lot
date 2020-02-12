@@ -89,7 +89,10 @@ Rails.application.routes.draw do
 
     namespace :crm do
       resources :base do
-        resources :api, except: :index
+        get :choose_crm
+        resources :api, except: :index do
+          get :show_response
+        end
       end
     end
 
