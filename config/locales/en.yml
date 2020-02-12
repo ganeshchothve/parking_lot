@@ -64,6 +64,12 @@ en:
 
   mongoid:
     models:
+      crm/base:
+        one: 'Crm'
+        other: 'Crms'
+      crm/api:
+        one: 'Api'
+        other: 'Apis'
       bulk_upload_report:
         one: Bulk Upload Report
         other: Bulk Upload Reports
@@ -165,6 +171,10 @@ en:
         other: Users & Customers
 
     attributes:
+      crm:
+        base:
+          name: Name
+          domain: Domain
       bulk_upload_report:
         uploaded_by_id: 'Uploaded By'
         total_rows: 'Total rows'
@@ -706,6 +716,17 @@ en:
           custom_dates: 'Custom Dates'
 
   controller:
+    crms:
+      index:
+        link_name: 'CRM Integration'
+    crm/base:
+      create:
+        success: 'CRM details added successfully.'
+      update:
+        success: 'CRM details updated successfully.'
+      destroy:
+        success: 'CRM details removed successfully.'
+        failure: 'CRM details cannot be removed.'
     bulk_upload_reports:
       index:
         link_name: 'Bulk Uploads'

@@ -87,6 +87,12 @@ Rails.application.routes.draw do
       resources :entries, only: [:show]
     end
 
+    namespace :crm do
+      resources :base do
+        resources :api, except: :index
+      end
+    end
+
     resources :receipts, only: %i[index show] do
       collection do
         get :export

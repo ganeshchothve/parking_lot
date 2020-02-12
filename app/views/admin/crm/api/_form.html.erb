@@ -1,0 +1,51 @@
+<%= form_for([:admin, @crm, @api], url: url, local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": Crm::Base.model_name.human(count: 2), "data-type": "json", id: 'api_form'}) do |f| %>
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-gradient-cd white">
+        <h3 class="title"><%= t('helpers.edit.link_name', model: Crm::Api.model_name.human) %></h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" class="white">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class = 'row'>
+          <div class = 'col-6'>
+            <div class="form-group">
+              <%= f.label :resource_class, class: 'label-required' %>
+              <%= f.text_field :resource_class, autofocus: true, class: "form-control", required: 'required', disabled: !policy([:admin, @api]).editable_field?("resource_class") %>
+            </div>
+          </div>
+          <div class = 'col-6'>
+            <div class="form-group">
+              <%= f.label :request_type, class: 'label-required' %>
+              <%= f.select :request_type, Crm::Api::REQUEST_TYPES.collect{|x| [x, x]}, {prompt: true, selected: f.object.request_type}, class: 'selectize' %>
+            </div>
+          </div>
+          <div class = 'col-12'>
+            <div class="form-group">
+              <%= f.label :path, class: 'label-required' %>
+              <%= f.text_field :path, autofocus: true, class: "form-control", required: 'required', disabled: !policy([:admin, @api]).editable_field?("path") %>
+            </div>
+          </div>
+          <div class = 'col-12'>
+            <div class="form-group">
+              <%= f.label :request_payload, class: 'label-required' %>
+              <%= f.text_field :request_payload, autofocus: true, class: "form-control", required: 'required', disabled: !policy([:admin, @api]).editable_field?("request_payload") %>
+            </div>
+          </div>
+        </div>
+        <%#= f.hidden_field :crm_id, value: params[:crm_id] %>
+      </div>
+      <div class="modal-footer">
+        <%= f.submit "Save", class: "btn btn-primary" %>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>
+<%= javascript_tag do %>
+$(document).ready(function(){
+  FormInitializer.init($("#api_form"));
+});
+<% end %>
