@@ -1,0 +1,22 @@
+<div class="container mb-5">
+  <div class="row">
+    <% @crms.each do |crm| %>
+      <div class = 'col-md-6'>
+        <div class="box-card">
+          <div class="box-header bg-gradient br-rd-tr-4">
+            <h2 class="icon-set icon-users-white"><%= crm.name %></h2>
+          </div>
+          <div class="box-content br-rd-bl-4 bg-white">
+            <% @apis.where(base_id: crm.id).each do |api| %>
+              <div class="row pd-box">
+                <div class = 'col-md-6'>
+                  <%= link_to api.request_type.titleize, admin_crm_base_api_show_response_path(api.base, api, record_id: @record_id), class: 'db-small-btn light-blue bg-white fn-400 btn unset-width' %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

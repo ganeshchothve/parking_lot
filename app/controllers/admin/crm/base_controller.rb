@@ -1,13 +1,14 @@
 class Admin::Crm::BaseController < ApplicationController
   before_action :set_crm, only: %w[edit update show destroy]
+  before_action :authorize_resource
 
   def index
     @crms = ::Crm::Base.all.paginate(page: params[:page] || 1, per_page: params[:per_page])
   end
 
   def new
-  	@crm = ::Crm::Base.new
-  	render layout: false
+    @crm = ::Crm::Base.new
+    render layout: false
   end
 
   def create
@@ -55,7 +56,25 @@ class Admin::Crm::BaseController < ApplicationController
     end
   end
 
+  def choose_crm
+    @record_id = params[:record_id]
+    @apis = Crm::Api.where(resource_class: params[:record_class].to_s)
+    @crms = Crm::Base.all
+  end
+
+  private
+
   def set_crm
     @crm = ::Crm::Base.find params[:id]
+  end
+
+  def authorize_resource
+    if params[:action] == 'index' || params[:action] == 'choose_crm'
+      authorize [current_user_role_group, Crm::Base]
+    elsif params[:action] == 'new' || params[:action] == 'create'
+      authorize [current_user_role_group, Crm::Base.new()]
+    else
+      authorize [current_user_role_group, @crm]
+    end
   end
 end

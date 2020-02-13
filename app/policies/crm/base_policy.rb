@@ -12,6 +12,18 @@ class Crm::BasePolicy < ApplicationPolicy
     index?
   end
 
+  def edit?
+    index?
+  end
+
+  def update?
+    index?
+  end
+
+  def choose_crm?
+    index?
+  end
+
   def permitted_attributes
     attributes = %w[name domain]
     attributes

@@ -2,8 +2,8 @@ module Presenters
   module JsonPresenter
 # Assuming that data received is consistent in following ways
 #   - Class of all elements in the array is same
-    def self.json_to_html json, header
-      obj = parse_json(json)
+    def self.json_to_html obj, header
+      return "" if obj.blank?
       base_card = "<div class='col-md-12'><div class = 'card'><div class = 'card-header'>#{header.to_s.titleize}</div><div class = 'card-body'><div class = 'row'>"
       base_card_end_tag = "</div></div></div></div>"
       html = ""
@@ -33,12 +33,6 @@ module Presenters
         end
       end
       base_card + base_card_end_tag + html 
-    end
-
-    def self.parse_json json
-      json_response = JSON.parse(json)
-      obj = JWT.decode(json_response["data"], "56d620cfbd959a2b75e0116b234369d8")[0]
-      obj.compact
     end
 
     def self.create_table header, arr

@@ -29,6 +29,7 @@ class User
   field :email, type: String, default: ''
   field :phone, type: String, default: ''
   field :lead_id, type: String
+  field :crm_id, type: String
   field :role, type: String, default: 'user'
   field :allowed_bookings, type: Integer
   field :manager_change_reason, type: String
