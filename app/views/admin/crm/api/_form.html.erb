@@ -13,13 +13,13 @@
           <div class = 'col-6'>
             <div class="form-group">
               <%= f.label :resource_class, class: 'label-required' %>
-              <%= f.text_field :resource_class, autofocus: true, class: "form-control", required: 'required', disabled: !policy([:admin, @api]).editable_field?("resource_class") %>
+              <%= f.select :resource_class, Crm::Api::RESOURCE_CLASS.collect{|x| [x, x]}, {prompt: true, selected: f.object.request_type}, class: 'selectize' %>
             </div>
           </div>
           <div class = 'col-6'>
             <div class="form-group">
               <%= f.label :request_type, class: 'label-required' %>
-              <%= f.select :request_type, Crm::Api::REQUEST_TYPES.collect{|x| [x, x]}, {prompt: true, selected: f.object.request_type}, class: 'selectize' %>
+              <%= f.select :request_type, Crm::Api::REQUEST_TYPES.collect{|x| [x.titleize, x]}, {prompt: true, selected: f.object.request_type}, class: 'selectize' %>
             </div>
           </div>
           <div class = 'col-6'>

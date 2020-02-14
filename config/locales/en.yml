@@ -175,6 +175,10 @@ en:
         base:
           name: Name
           domain: Domain
+        api:
+          request_type:
+            get: Pull
+            post: Push
       bulk_upload_report:
         uploaded_by_id: 'Uploaded By'
         total_rows: 'Total rows'
@@ -719,6 +723,8 @@ en:
     crms:
       index:
         link_name: 'CRM Integration'
+      choose_crm:
+        link_name: "%{model} Sync"
     crm/base:
       create:
         success: 'CRM details added successfully.'

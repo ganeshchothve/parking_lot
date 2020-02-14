@@ -24,6 +24,7 @@ class BookingDetail
   field :bedrooms, type: String
   field :bathrooms, type: String
   field :carpet, type: Float
+  field :crm_id, type: String
 
   mount_uploader :tds_doc, DocUploader
 

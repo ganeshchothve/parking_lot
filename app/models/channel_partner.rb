@@ -2,6 +2,7 @@ class ChannelPartner
   include Mongoid::Document
   include Mongoid::Timestamps
   include ArrayBlankRejectable
+  include InsertionStringMethods
   include SyncDetails
   extend FilterByCriteria
 
@@ -14,6 +15,7 @@ class ChannelPartner
   field :phone, type: String
   field :rera_id, type: String
   field :status, type: String, default: 'inactive'
+  field :crm_id, type: String
 
   field :company_name, type: String
   field :pan_number, type: String

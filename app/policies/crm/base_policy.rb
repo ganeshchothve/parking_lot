@@ -20,6 +20,10 @@ class Crm::BasePolicy < ApplicationPolicy
     index?
   end
 
+  def destroy?
+    index?
+  end
+
   def choose_crm?
     index?
   end
