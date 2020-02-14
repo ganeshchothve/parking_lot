@@ -4,27 +4,17 @@ module Presenters
 #   - Class of all elements in the array is same
     def self.json_to_html obj, header
       return "" if obj.blank?
-      base_card = "<div class='col-md-12'><div class = 'card'><div class = 'card-header'>#{header.to_s.titleize}</div><div class = 'card-body'><div class = 'row'>"
+      base_card = get_card(header) + "<div class = 'row'>"
       base_card_end_tag = "</div></div></div></div>"
       html = ""
       obj.each do |key, value|
         case value
         when String
-          base_card += "<div class='col-3'>
-                          <div class='form-group'>
-                            <label>#{key.titleize}</label>
-                            <div>#{value}</div>
-                          </div>
-                        </div>"
+          base_card += get_column(key, value)
         when Array
           case value.first
           when String
-            base_card += "<div class='col-3'>
-                            <div class='form-group'>
-                              <label>#{key.titleize}</label>
-                              <div>#{value.to_sentence}</div>
-                            </div>
-                          </div>"
+            base_card += get_column(key, value)
           when Hash
             html += create_table(key, value.compact) if value.compact.present?
           end
@@ -36,7 +26,7 @@ module Presenters
     end
 
     def self.create_table header, arr
-      card = "<div class='col-md-12'><div class = 'card'><div class = 'card-header'>#{header.titleize}</div><div class = 'card-body'><table class='table my-customer-table responsive-tbl'><thead class='th-default'>"
+      card = get_card(header) + "<table class='table my-customer-table responsive-tbl'><thead class='th-default'>"
       card_end_tag = "</table></div></div></div>"
       card += "<tr>"
       index = 0
@@ -62,19 +52,27 @@ module Presenters
     end
 
     def self.process_hash header, obj
-      card = "<div class='col-md-12'><div class = 'card'><div class = 'card-header'>#{header.titleize}</div><div class = 'card-body'><div class = 'row'>"
+      card = get_card(header) + "<div class = 'row'>"
       card_end_tag = "</div></div></div></div>"
       obj.each do |key, value|
         if key.class == String
-          card += "<div class='col-3'>
-                    <div class='form-group'>
-                      <label>#{key.titleize}</label>
-                      <div>#{value}</div>
-                    </div>
-                  </div>"
+          card += get_column(key, value)
         end
       end
       card + card_end_tag
+    end
+
+    def self.get_column key, value
+      "<div class='col-3'>
+        <div class='form-group'>
+          <label>#{key.titleize}</label>
+          <div>#{value}</div>
+        </div>
+      </div>"
+    end
+
+    def self.get_card header
+      "<div class='col-md-12'><div class = 'card pt-3'><div class = 'card-header'>#{header.to_s.titleize}</div><div class = 'card-body'>"
     end
   end
 end
