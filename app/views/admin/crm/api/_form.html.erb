@@ -13,7 +13,7 @@
           <div class = 'col-6'>
             <div class="form-group">
               <%= f.label :resource_class, class: 'label-required' %>
-              <%= f.select :resource_class, Crm::Api::RESOURCE_CLASS.collect{|x| [x, x]}, {prompt: true, selected: f.object.request_type}, class: 'selectize' %>
+              <%= f.select :resource_class, Crm::Api::RESOURCE_CLASS.collect{|x| [x, x]}, {prompt: true, selected: @api.resource_class}, class: 'selectize' %>
             </div>
           </div>
           <div class = 'col-6'>

@@ -25,11 +25,11 @@
             </li>
             <li>
               <span class="font-weight-bold"><%= t("mongoid.attributes.crm.base.request_header")%> </span>
-              <p><%= @crm.request_headers %></p>
+              <p><%= @crm.request_headers || "-" %></p>
             </li>
             <li>
               <span class="font-weight-bold"><%= t("mongoid.attributes.crm.base.request_payload")%> </span>
-              <p><%= @crm.request_payload %></p>
+              <p><%= @crm.request_payload || "-" %></p>
             </li>
           </ul>
 
