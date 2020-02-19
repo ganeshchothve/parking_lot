@@ -1,6 +1,7 @@
 class Admin::Crm::ApiController < ApplicationController
   before_action :set_api, only: %w[edit update destroy]
   before_action :set_crm
+  before_action :authorize_resource
   
   def new
     @api = ::Crm::Api.new(base_id: @crm.id)
@@ -50,8 +51,8 @@ class Admin::Crm::ApiController < ApplicationController
 
   def show_response
     api = Crm::Api.find params[:api_id]
-    record = api.resource_class.constantize.find params[:record_id]
-    @response = api.execute(record)
+    resource = api.resource_class.constantize.find params[:resource_id]
+    @response = api.execute(resource)
     if @response.blank? || !@response.respond_to?(:html_safe)
       redirect_to request.referrer || dashboard_path, notice: 'There was some error. Please contact administrator'
     end
@@ -83,7 +84,7 @@ class Admin::Crm::ApiController < ApplicationController
   def authorize_resource
     if params[:action] == 'index'
       authorize [current_user_role_group, Crm::Api]
-    elsif params[:action] == 'new' || params[:action] == 'create'
+    elsif %w[new create show_response].include?(params[:action])
       authorize [current_user_role_group, Crm::Api.new()]
     else
       authorize [current_user_role_group, @api]

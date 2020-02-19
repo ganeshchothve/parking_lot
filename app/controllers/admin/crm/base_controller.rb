@@ -57,8 +57,8 @@ class Admin::Crm::BaseController < ApplicationController
   end
 
   def choose_crm
-    @record_id = params[:record_id]
-    @apis = Crm::Api.where(resource_class: params[:record_class].to_s)
+    @record_id = params[:resource_id]
+    @apis = Crm::Api.where(resource_class: params[:resource_class].to_s)
     @crms = Crm::Base.all
   end
 

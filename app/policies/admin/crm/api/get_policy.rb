@@ -1,3 +1,3 @@
-class Admin::Crm::Api::GetPolicy < Crm::Api::GetPolicy
+class Admin::Crm::Api::GetPolicy < Admin::Crm::ApiPolicy
 
 end

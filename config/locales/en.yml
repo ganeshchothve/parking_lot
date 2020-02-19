@@ -65,11 +65,11 @@ en:
   mongoid:
     models:
       crm/base:
-        one: 'Crm'
-        other: 'Crms'
+        one: 'CRM'
+        other: 'CRMs'
       crm/api:
-        one: 'Api'
-        other: 'Apis'
+        one: 'API'
+        other: 'APIs'
       bulk_upload_report:
         one: Bulk Upload Report
         other: Bulk Upload Reports

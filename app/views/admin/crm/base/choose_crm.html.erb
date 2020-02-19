@@ -10,7 +10,7 @@
             <div class="row pd-box">
             <% @apis.where(base_id: crm.id).each do |api| %>
                 <div class = 'col-md-6 text-center'>
-                  <%= link_to t("mongoid.attributes.crm.api.request_type.#{api.request_type}"), admin_crm_base_api_show_response_path(api.base, api, record_id: @record_id), class: 'db-small-btn light-blue bg-white fn-400 btn unset-width' %>
+                  <%= link_to t("mongoid.attributes.crm.api.request_type.#{api.request_type}"), admin_crm_base_api_show_response_path(api.base, api, resource_id: @record_id), class: 'db-small-btn light-blue bg-white fn-400 btn unset-width' %>
                 </div>
               <% end %>
             </div>

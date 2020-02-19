@@ -3,7 +3,7 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header bg-gradient-cd white">
-        <h3 class="title"><%= t('helpers.edit.link_name', model: Crm::Api.model_name.human) %></h3>
+        <h3 class="title"><%= t("helpers.#{action_name}.link_name", model: Crm::Api.model_name.human) %></h3>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true" class="white">&times;</span>
         </button>
@@ -13,25 +13,25 @@
           <div class = 'col-6'>
             <div class="form-group">
               <%= f.label :resource_class, class: 'label-required' %>
-              <%= f.select :resource_class, Crm::Api::RESOURCE_CLASS.collect{|x| [x, x]}, {prompt: true, selected: @api.resource_class}, class: 'selectize' %>
+              <%= f.select :resource_class, Crm::Api::RESOURCE_CLASS.collect{|x| [x, x]}, {prompt: true, selected: @api.resource_class}, class: 'selectize', required: 'required' %>
             </div>
           </div>
           <div class = 'col-6'>
             <div class="form-group">
               <%= f.label :request_type, class: 'label-required' %>
-              <%= f.select :request_type, Crm::Api::REQUEST_TYPES.collect{|x| [x.titleize, x]}, {prompt: true, selected: f.object.request_type}, class: 'selectize' %>
+              <%= f.select :request_type, Crm::Api::REQUEST_TYPES.collect{|x| [x.titleize, x]}, {prompt: true, selected: f.object.request_type}, class: 'selectize', required: 'required' %>
             </div>
           </div>
           <div class = 'col-6'>
             <div class="form-group">
-              <%= f.label :response_decryption_key, class: 'label-required' %>
-              <%= f.text_field :response_decryption_key, autofocus: true, class: "form-control", required: 'required', disabled: !policy([:admin, @api]).editable_field?("response_decryption_key") %>
+              <%= f.label :response_decryption_key %>
+              <%= f.text_field :response_decryption_key, autofocus: true, class: "form-control", disabled: !policy([:admin, @api]).editable_field?("response_decryption_key") %>
             </div>
           </div>
           <div class = 'col-6'>
             <div class="form-group">
-              <%= f.label :response_data_location, class: 'label-required' %>
-              <%= f.text_field :response_data_location, autofocus: true, class: "form-control", required: 'required', disabled: !policy([:admin, @api]).editable_field?("response_data_location") %>
+              <%= f.label :response_data_location %>
+              <%= f.text_field :response_data_location, autofocus: true, class: "form-control", disabled: !policy([:admin, @api]).editable_field?("response_data_location") %>
             </div>
           </div>
           <div class = 'col-12'>
@@ -42,8 +42,8 @@
           </div>
           <div class = 'col-12'>
             <div class="form-group">
-              <%= f.label :request_payload, class: 'label-required' %>
-              <%= f.text_field :request_payload, autofocus: true, class: "form-control", required: 'required', disabled: !policy([:admin, @api]).editable_field?("request_payload") %>
+              <%= f.label :request_payload %>
+              <%= f.text_field :request_payload, autofocus: true, class: "form-control", disabled: !policy([:admin, @api]).editable_field?("request_payload") %>
             </div>
           </div>
         </div>
@@ -56,7 +56,7 @@
 </div>
 <% end %>
 <%= javascript_tag do %>
-$(document).ready(function(){
-  FormInitializer.init($("#crm_api_form"));
-});
+  $(document).ready(function(){
+    FormInitializer.init($("#crm_api_form"));
+  });
 <% end %>
