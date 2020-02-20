@@ -16,10 +16,10 @@ module Presenters
           when String
             base_card += get_column(key, value)
           when Hash
-            html += create_table(key, value.compact) if value.compact.present?
+            html += create_table(key, value.compact) if value.present?
           end
         when Hash
-          html += process_hash(key, value.compact) if value.compact.present?
+          html += process_hash(key, value) if value.present?
         end
       end
       base_card + base_card_end_tag + html 
@@ -38,12 +38,14 @@ module Presenters
       arr.each do |hash|
         card += "<tr>"
         keys.each do |key|
-          if hash[key].is_a? String
-            card += "<td>#{ hash[key] }</td>"
-          elsif hash[key].is_a? Array
+          if hash[key].is_a? Array
             if hash[key].first.is_a? String
               card += "<td>#{ hash[key].to_sentence }</td>"
             end
+          elsif hash[key].is_a?(String)
+            card += "<td>#{ hash[key].titleize }</td>"
+          else
+            card += "<td>#{ hash[key] }</td>"
           end
         end
         card += "</tr>"
@@ -66,7 +68,7 @@ module Presenters
       "<div class='col-3'>
         <div class='form-group'>
           <label>#{key.titleize}</label>
-          <div>#{value.is_a?(Array) ? value.to_sentence : value}</div>
+          <div>#{value.is_a?(Array) ? value.to_sentence : (value.is_a?(String) ? value.titleize : value)}</div>
         </div>
       </div>"
     end

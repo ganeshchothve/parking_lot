@@ -19,7 +19,7 @@
           <div class = 'col-6'>
             <div class="form-group">
               <%= f.label :request_type, class: 'label-required' %>
-              <%= f.select :request_type, Crm::Api::REQUEST_TYPES.collect{|x| [x.titleize, x]}, {prompt: true, selected: f.object.request_type}, class: 'selectize', required: 'required' %>
+              <%= f.select :request_type, Crm::Api::REQUEST_TYPES.collect{|x| [x.titleize, x]}, {prompt: true, selected: f.object.request_type}, class: 'selectize', required: 'required', id: 'request_type' %>
             </div>
           </div>
           <div class = 'col-6'>
@@ -46,6 +46,12 @@
               <%= f.text_field :request_payload, autofocus: true, class: "form-control", disabled: !policy([:admin, @api]).editable_field?("request_payload") %>
             </div>
           </div>
+          <div class = 'col-12 d-none' id = 'filter_hash'>
+            <div class="form-group">
+              <%= f.label :filter_hash %>
+              <%= f.text_field :filter_hash, autofocus: true, class: "form-control", disabled: !policy([:admin, @api]).editable_field?("filter_hash") %>
+            </div>
+          </div>
         </div>
       </div>
       <div class="modal-footer">
@@ -58,5 +64,16 @@
 <%= javascript_tag do %>
   $(document).ready(function(){
     FormInitializer.init($("#crm_api_form"));
+    $("#request_type").selectize().on("change", function() {
+      if($(this).val() == 'get'){
+        $('#filter_hash').removeClass('d-none')
+      }
+      else{
+        $('#filter_hash').addClass('d-none')
+      }
+    });
+    if($("#request_type").val() != undefined){
+      $("#request_type").trigger('change')
+    }
   });
 <% end %>

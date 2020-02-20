@@ -12,6 +12,7 @@ class Crm::Api
   field :request_type, type: String
   field :response_decryption_key, type: String
   field :response_data_location, type: String
+  field :filter_hash, type: String
 
   validate :validate_url
   validates :resource_class, inclusion: { in: RESOURCE_CLASS }
@@ -30,7 +31,7 @@ class Crm::Api
   end
 
   def validate_url
-    uri = URI.parse(base.domain + "/" + path)
+    uri = URI.parse(URI.join(base.domain, path))
     self.errors.add(:path, 'has invalid url.') if !uri.is_a?(URI::HTTP) || uri.host.nil?
   rescue URI::InvalidURIError
     self.errors.add(:path, 'has invalid url.')

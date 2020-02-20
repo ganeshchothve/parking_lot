@@ -2,7 +2,7 @@ class Crm::Api::Get < Crm::Api
 
   def execute resource
     _request_payload = set_request_payload(resource)
-    _url = base.domain + '/' + path
+    _url = URI.join(base.domain, path)
     _base_header_erb = ERB.new(base.request_header.gsub("\n\s", '')) rescue ERB.new("{}")
     _base_request_header = SafeParser.new(_base_request_erb.result(resource.get_binding)).safe_load rescue {}
     _request_header = DEFAULT_REQUEST_HEADER.merge(_base_request_header)
@@ -26,10 +26,19 @@ class Crm::Api::Get < Crm::Api
 
   def parse_json json
     json_response = JSON.parse(json)
+    obj = json_response
     response_data_location.split('.').each do |location|
       json_response = json_response[location]
     end if response_data_location.present?
     obj = JWT.decode(json_response, response_decryption_key)[0] if response_decryption_key.present?
-    obj.compact
+    if filter_hash.present?
+      _filter_hash = process_filter_hash
+      obj = JsonUtil.filter(_filter_hash, obj)
+    end
+    obj
+  end
+
+  def process_filter_hash
+    SafeParser.new(filter_hash).safe_load rescue {}
   end
 end

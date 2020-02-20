@@ -9,6 +9,7 @@ class Crm::Base
 
   validate :validate_url
   validates :name, :domain, uniqueness: true, presence:true
+  validates_format_of :domain, :with => /\A(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?\z/
 
   has_many :apis, dependent: :destroy
 
