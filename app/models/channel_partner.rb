@@ -76,6 +76,8 @@ class ChannelPartner
     str
   end
 
+  alias :resource_name :name
+
   def ds_name
     "#{name} - #{email} - #{phone}"
   end

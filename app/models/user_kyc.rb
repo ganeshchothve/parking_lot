@@ -94,6 +94,8 @@ class UserKyc
     "#{_salutation} #{first_name} #{last_name}"
   end
 
+  alias :resource_name :name
+
   def api_json
     # extract phone and country code from phone field
     phone = Phonelib.parse(kyc.phone)

@@ -122,6 +122,8 @@ class BookingDetail
     "#{name} - #{status}"
   end
 
+  alias :resource_name :ds_name
+
   # validates kyc presence if booking is not allowed without kyc
   def kyc_mandate
     if project_unit.booking_portal_client.enable_booking_with_kyc

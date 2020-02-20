@@ -6,7 +6,6 @@ module CrmIntegration
   end
 
   def resource_name
-    "Resource Name"
   end
 
 end

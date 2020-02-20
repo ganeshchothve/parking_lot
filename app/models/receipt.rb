@@ -226,6 +226,8 @@ class Receipt
     receipt_id
   end
 
+  alias :resource_name :name
+
   def self.todays_payments_count
     filters = {
       status: %w(clearance_pending success),

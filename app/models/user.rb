@@ -357,6 +357,8 @@ class User
     str
   end
 
+  alias :resource_name :name
+
   def login
     @login || phone || email
   end
