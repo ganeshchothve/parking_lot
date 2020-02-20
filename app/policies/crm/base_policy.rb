@@ -29,7 +29,7 @@ class Crm::BasePolicy < ApplicationPolicy
   end
 
   def permitted_attributes
-    attributes = %w[name domain]
+    attributes = %w[name domain request_payload request_headers]
     attributes
   end
 end
