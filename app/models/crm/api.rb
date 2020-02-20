@@ -31,7 +31,7 @@ class Crm::Api
   end
 
   def validate_url
-    uri = URI.parse(URI.join(base.domain, path))
+    uri = URI.join(base.domain, path)
     self.errors.add(:path, 'has invalid url.') if !uri.is_a?(URI::HTTP) || uri.host.nil?
   rescue URI::InvalidURIError
     self.errors.add(:path, 'has invalid url.')
