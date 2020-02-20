@@ -3,6 +3,7 @@
     <thead>
       <tr class="bg-gradient-cd white">
         <th><%= t('mongoid.attributes.crm.api.resource_class') %></th>
+        <th><%= t('mongoid.attributes.crm.api.request_type') %></th>
         <th><%= t('mongoid.attributes.crm.api.path') %></th>
         <th><%= t('mongoid.attributes.crm.api.request_payload') %></th>        
         <th class="text-right">Actions</th>
@@ -13,6 +14,7 @@
     <% apis.each do |api| %>
       <tr>
         <td><%= api.resource_class %></td>
+        <td><%= api.request_type.titleize %></td>
         <td><%= api.path %></td>
         <td><%= api.request_payload %></td>
         <td>

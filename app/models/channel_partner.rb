@@ -4,6 +4,7 @@ class ChannelPartner
   include ArrayBlankRejectable
   include InsertionStringMethods
   include SyncDetails
+  include CrmIntegration
   extend FilterByCriteria
 
   STATUS = %w(active inactive)
@@ -15,7 +16,6 @@ class ChannelPartner
   field :phone, type: String
   field :rera_id, type: String
   field :status, type: String, default: 'inactive'
-  field :crm_id, type: String
 
   field :company_name, type: String
   field :pan_number, type: String

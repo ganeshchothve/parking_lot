@@ -176,8 +176,9 @@ en:
           name: Name
           domain: Domain
         api:
-          request_type:
-            get: Pull
+          request_type: 'Request Type'
+          request_types:
+            get: View
             post: Push
       bulk_upload_report:
         uploaded_by_id: 'Uploaded By'

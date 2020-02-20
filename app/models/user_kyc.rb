@@ -5,6 +5,7 @@ class UserKyc
   include InsertionStringMethods
   include ApplicationHelper
   include SyncDetails
+  include CrmIntegration
   extend FilterByCriteria
 
 
@@ -26,7 +27,6 @@ class UserKyc
   field :min_budget, type: Integer
   field :max_budget, type: Integer
   field :comments, type: String
-  field :crm_id, type: String
 
   field :nri, type: Boolean, default: false
   field :oci, type: String

@@ -10,6 +10,7 @@ class Receipt
   include ReceiptStateMachine
   include SyncDetails
   include TimeSlotGeneration
+  include CrmIntegration
   extend FilterByCriteria
 
   OFFLINE_PAYMENT_MODE = %w[cheque rtgs imps card_swipe neft]
@@ -34,7 +35,6 @@ class Receipt
   field :gateway_response, type: Hash
   field :erp_id, type: String, default: ''
   field :payment_type, type: String # possible values are :agreement and :stamp_duty
-  field :crm_id, type: String
 
   attr_accessor :swap_request_initiated
 

@@ -18,7 +18,7 @@
 <% end %>
 
 <% if policy([:admin, Crm::Base.new()]).choose_crm? && user.crm_id.present? && Crm::Api.where(resource_class: 'User').present? %>
-  <%= link_to t('controller.crms.choose_crm.link_name', model: user.class.model_name.human(count: 1)), choose_crm_admin_crm_base_index_path(resource_id: user.id, resource_class: user.class), class: "dropdown-item " %>
+  <%= link_to t('controller.crms.choose_crm.link_name', model: 'Customer'), choose_crm_admin_crm_base_index_path(resource_id: user.id, resource_class: user.class), class: "dropdown-item " %>
 <% end %>
 
 <% if !current_user.buyer? && policy([:admin, Receipt.new(user: user)]).lost_receipt? %>

@@ -9,6 +9,7 @@ class BookingDetail
   include ApplicationHelper
   extend FilterByCriteria
   include PriceCalculator
+  include CrmIntegration
 
   STATUSES = %w[hold blocked booked_tentative booked_confirmed under_negotiation scheme_rejected scheme_approved swap_requested swapping swapped swap_rejected cancellation_requested cancelling cancelled cancellation_rejected]
   BOOKING_STAGES = %w[blocked booked_tentative booked_confirmed under_negotiation scheme_approved]
@@ -24,7 +25,6 @@ class BookingDetail
   field :bedrooms, type: String
   field :bathrooms, type: String
   field :carpet, type: Float
-  field :crm_id, type: String
 
   mount_uploader :tds_doc, DocUploader
 

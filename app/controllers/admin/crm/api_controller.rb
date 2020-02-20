@@ -51,8 +51,8 @@ class Admin::Crm::ApiController < ApplicationController
 
   def show_response
     api = Crm::Api.find params[:api_id]
-    resource = api.resource_class.constantize.find params[:resource_id]
-    @response = api.execute(resource)
+    @resource = api.resource_class.constantize.find params[:resource_id]
+    @response = api.execute(@resource)
     if @response.blank? || !@response.respond_to?(:html_safe)
       redirect_to request.referrer || dashboard_path, notice: 'There was some error. Please contact administrator'
     end
