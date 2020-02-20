@@ -3,7 +3,9 @@ class Crm::Api::Get < Crm::Api
   def execute resource
     _request_payload = set_request_payload(resource)
     _url = base.domain + '/' + path
-    _request_header = DEFAULT_REQUEST_HEADER.merge(base.request_headers || {})
+    _base_header_erb = ERB.new(base.request_header.gsub("\n\s", '')) rescue ERB.new("{}")
+    _base_request_header = SafeParser.new(_base_request_erb.result(resource.get_binding)).safe_load rescue {}
+    _request_header = DEFAULT_REQUEST_HEADER.merge(_base_request_header)
     uri = URI(_url)
     uri.query = URI.encode_www_form(_request_payload.merge({headers: _request_header}))
     response = Net::HTTP.get_response(uri)

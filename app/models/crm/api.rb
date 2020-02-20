@@ -22,8 +22,11 @@ class Crm::Api
   belongs_to :base
 
   def set_request_payload record
-    erb = ERB.new(request_payload.gsub("\n\s", ''))
-    SafeParser.new(erb.result(record.get_binding)).safe_load.merge(base.request_payload || {})
+    _request_erb = ERB.new(request_payload.gsub("\n\s", '')) rescue ERB.new("Hash.new")
+    _base_payload_erb = ERB.new(base.request_payload.gsub("\n\s", '')) rescue ERB.new("{}")
+    _request_payload = SafeParser.new((_request_erb.result(record.get_binding))).safe_load rescue {}
+    _base_request_payload = SafeParser.new((_base_payload_erb.result(record.get_binding))).safe_load rescue {}
+    _request_payload.merge(_base_request_payload)
   end
 
   def validate_url
