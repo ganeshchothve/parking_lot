@@ -59,7 +59,7 @@ class Admin::Crm::BaseController < ApplicationController
   def choose_crm
     @resource = params[:resource_class].constantize.find params[:resource_id]
     @apis = Crm::Api.where(resource_class: params[:resource_class].to_s)
-    @crms = Crm::Base.all
+    @crms = Crm::Base.where(id: {"$in": @apis.pluck(:base_id)})
   end
 
   private

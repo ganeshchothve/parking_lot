@@ -180,6 +180,13 @@ en:
           request_types:
             get: View
             post: Push
+          resource_classes:
+            User: Customer
+            ChannelPartner: 'Channel Partner'
+            Receipt: Payment
+            UserKyc: 'User KYC'
+            BookingDetail: 'Booking Detail'
+
       bulk_upload_report:
         uploaded_by_id: 'Uploaded By'
         total_rows: 'Total rows'
@@ -725,7 +732,7 @@ en:
       index:
         link_name: 'CRM Integration'
       choose_crm:
-        link_name: "%{model} Sync"
+        link_name: "Fetch data from CRM"
     crm/base:
       create:
         success: 'CRM details added successfully.'

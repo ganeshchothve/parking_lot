@@ -14,7 +14,7 @@
     <% apis.each do |api| %>
       <tr>
         <td><%= api.resource_class %></td>
-        <td><%= api.request_type.titleize %></td>
+        <td><%= api._type.demodulize %></td>
         <td><%= api.path %></td>
         <td><%= api.request_payload %></td>
         <td>

@@ -37,7 +37,7 @@
                 <%= link_to t('helpers.edit.link_name', model: UserKyc.model_name.human), edit_admin_user_user_kyc_path(@user, user_kyc), class: 'dropdown-item modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit User KYC'} %>
               <% end %>
               <% if policy([:admin, Crm::Base.new()]).choose_crm? && user_kyc.crm_id.present? && Crm::Api.where(resource_class: 'UserKyc').present? %>
-                <%= link_to t('controller.crms.choose_crm.link_name', model: user_kyc.class.model_name.human(count: 1)), choose_crm_admin_crm_base_index_path(resource_id: user_kyc.id, resource_class: user_kyc.class), class: "dropdown-item " %>
+                <%= link_to t('controller.crms.choose_crm.link_name'), choose_crm_admin_crm_base_index_path(resource_id: user_kyc.id, resource_class: user_kyc.class), class: "dropdown-item " %>
               <% end %>
               <% if policy([:admin, UserKyc.new]).show? %>
                 <%= link_to t('helpers.show.link_name', model: UserKyc.model_name.human), admin_user_kyc_path(user_kyc), class: 'dropdown-item' %>

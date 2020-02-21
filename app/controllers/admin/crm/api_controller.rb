@@ -9,7 +9,7 @@ class Admin::Crm::ApiController < ApplicationController
   end
 
   def create
-    @api = associated_class.new(base_id: @crm.id)
+    @api = params[:crm_api][:_type].constantize.new(base_id: @crm.id)
     @api.assign_attributes(api_params)
     respond_to do |format|
       if @api.save
@@ -50,9 +50,9 @@ class Admin::Crm::ApiController < ApplicationController
   end
 
   def show_response
-    api = Crm::Api.find params[:api_id]
-    @resource = api.resource_class.constantize.find params[:resource_id]
-    @response = api.execute(@resource)
+    @api = Crm::Api.find params[:api_id]
+    @resource = @api.resource_class.constantize.find params[:resource_id]
+    @response = @api.execute(@resource)
     if @response.blank? || !@response.respond_to?(:html_safe)
       redirect_to request.referrer || dashboard_path, notice: 'There was some error. Please contact administrator'
     end
@@ -62,15 +62,6 @@ class Admin::Crm::ApiController < ApplicationController
 
   def api_params
     params.require(:crm_api).permit(policy(@api).permitted_attributes)
-  end
-  def associated_class
-    @associated_class = if params[:crm_api][:request_type] == 'get'
-                          ::Crm::Api::Get
-                        elsif params[:crm_api][:request_type] == 'post'
-                          ::Crm::Api::Post
-                        else
-                          ::Crm::Api
-                        end
   end
 
   def set_api

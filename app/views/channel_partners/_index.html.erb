@@ -27,7 +27,7 @@
                   <%= link_to t('helpers.edit.link_name', model: ChannelPartner.model_name.human), edit_channel_partner_path(channel_partner), class: 'dropdown-item modal-remote-form-link' %>
                 <% end %>
                 <% if policy([:admin, Crm::Base.new()]).choose_crm? && channel_partner.crm_id.present? && Crm::Api.where(resource_class: 'ChannelPartner').present? %>
-                  <%= link_to t('controller.crms.choose_crm.link_name', model: channel_partner.class.model_name.human(count: 1)), choose_crm_admin_crm_base_index_path(resource_id: channel_partner.id, resource_class: channel_partner.class), class: "dropdown-item " %>
+                  <%= link_to t('controller.crms.choose_crm.link_name'), choose_crm_admin_crm_base_index_path(resource_id: channel_partner.id, resource_class: channel_partner.class), class: "dropdown-item " %>
                 <% end %>
 
                 <%= link_to t('helpers.show.link_name', model: ChannelPartner.model_name.human), channel_partner, class: 'dropdown-item' %>

@@ -2,14 +2,12 @@ class Crm::Api
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  REQUEST_TYPES = %w[get post]
   DEFAULT_REQUEST_HEADER = { 'Content-Type' => 'application/json' }
   RESOURCE_CLASS = %w[User UserKyc Receipt BookingDetail ChannelPartner]
 
   field :resource_class, type: String
   field :path, type: String
   field :request_payload, type: String
-  field :request_type, type: String
   field :response_decryption_key, type: String
   field :response_data_location, type: String
   field :filter_hash, type: String
@@ -17,8 +15,8 @@ class Crm::Api
   validate :validate_url
   validates :resource_class, inclusion: { in: RESOURCE_CLASS }
   validates :response_data_location, format: {with: /\A[a-zA-Z0-9_..]*\z/}, allow_blank: true
-  validates :request_type, uniqueness: {scope: [:resource_class, :base_id]}
-  validates :path, :request_type, presence: true
+  validates :_type, uniqueness: {scope: [:resource_class, :base_id]}
+  validates :path, :_type, presence: true
 
   belongs_to :base
 

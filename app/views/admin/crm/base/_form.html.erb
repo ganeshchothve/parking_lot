@@ -22,16 +22,16 @@
               <%= f.text_field :domain, autofocus: true, class: "form-control", required: 'required', disabled: !policy([:admin, @crm]).editable_field?("domain") %>
             </div>
           </div>
-          <div class = 'col-6'>
+          <div class = 'col-12'>
             <div class="form-group">
               <%= f.label :request_headers %>
               <%= f.text_field :request_headers, autofocus: true, class: "form-control", disabled: !policy([:admin, @crm]).editable_field?("request_headers") %>
             </div>
           </div>
-          <div class = 'col-6'>
+          <div class = 'col-12'>
             <div class="form-group">
               <%= f.label :request_payload %>
-              <%= f.text_field :request_payload, autofocus: true, class: "form-control", disabled: !policy([:admin, @crm]).editable_field?("request_payload") %>
+              <%= f.text_area :request_payload, autofocus: true, class: "form-control", disabled: !policy([:admin, @crm]).editable_field?("request_payload") %>
             </div>
           </div>
         </div>
