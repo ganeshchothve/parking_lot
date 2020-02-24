@@ -36,6 +36,6 @@ class Crm::Api::Post < Crm::Api
   end
 
   def update_api_log api_log, request, request_url, response, status, message = nil
-    api_log.update_attributes(request: request, request_url: request_url, response: response, status: status)
+    api_log.update_attributes(request: request, request_url: request_url, response: response, status: status, message: message)
   end
 end

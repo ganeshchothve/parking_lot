@@ -6,6 +6,7 @@ class ApiLog
   field :request_url, type: String
   field :response, type: Hash
   field :status, type: String
+  field :message, type: String
 
   belongs_to :crm_api, class_name: 'Crm::Api'
   belongs_to :resource, polymorphic: true

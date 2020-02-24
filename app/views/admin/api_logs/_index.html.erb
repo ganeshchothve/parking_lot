@@ -6,7 +6,7 @@
         <th><%= t('mongoid.attributes.api_log.request_url') %></th>
         <th><%= t('mongoid.attributes.api_log.response') %></th>
         <th><%= t('mongoid.attributes.api_log.status') %></th>
-
+        <th><%= t('mongoid.attributes.api_log.message') %></th>
       </tr>
     </thead>
   </thead>
@@ -17,6 +17,7 @@
         <td><%= api_log.request_url %></td>
         <td><%= api_log.response %></td>
         <td><%= api_log.status %></td>
+        <td><%= api_log.message %></td>
       </tr>
     <% end %>
   </tbody>
