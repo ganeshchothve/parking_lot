@@ -64,6 +64,9 @@ en:
 
   mongoid:
     models:
+      api_log:
+        one: 'API Log'
+        other: 'API Logs'
       crm/base:
         one: 'CRM'
         other: 'CRMs'
@@ -728,6 +731,9 @@ en:
           custom_dates: 'Custom Dates'
 
   controller:
+    api_logs:
+      index:
+        link_name: 'API Logs'
     crms:
       index:
         link_name: 'CRM Integration'

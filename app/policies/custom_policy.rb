@@ -69,8 +69,12 @@ class CustomPolicy < Struct.new(:user, :enable_users)
     "#{user.buyer? ? '' : 'Admin::'}Crm::BasePolicy".constantize.new(user, Crm::Base).index?
   end
 
+  def api_logs?
+    "#{user.buyer? ? '' : 'Admin::'}ApiLogPolicy".constantize.new(user, ApiLog).index?
+  end
+
   def self.custom_methods
-    %w[inventory schemes user_requests channel_partners user_kycs emails smses sync_logs referrals accounts phases erp_models portal_stage_priorities checklists bulk_upload_reports crms]
+    %w[inventory schemes user_requests channel_partners user_kycs emails smses sync_logs referrals accounts phases erp_models portal_stage_priorities checklists bulk_upload_reports crms api_logs]
     # audits
   end
 end

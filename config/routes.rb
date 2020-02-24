@@ -42,6 +42,8 @@ Rails.application.routes.draw do
 
   namespace :admin do
 
+    resources :api_logs, only: [:index]
+
     resources :portal_stage_priorities, only: [:index] do
       patch :reorder, on: :collection
     end

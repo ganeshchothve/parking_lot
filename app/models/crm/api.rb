@@ -34,4 +34,10 @@ class Crm::Api
   rescue URI::InvalidURIError
     self.errors.add(:path, 'has invalid url.')
   end
+
+  def get_request_header record
+    _base_header_erb = ERB.new(base.request_header.gsub("\n\s", '')) rescue ERB.new("{}")
+    _base_request_header = SafeParser.new(_base_request_erb.result(record.get_binding)).safe_load rescue {}
+    _request_header = DEFAULT_REQUEST_HEADER.merge(_base_request_header)
+  end
 end
