@@ -1,4 +1,11 @@
+# for public assets such as app/assets
 asset_sync:
+  FOG_DIRECTORY:
+  AWS_ACCESS_KEY_ID:
+  AWS_SECRET_ACCESS_KEY:
+  FOG_REGION:
+# use for private assets such as client uploads.
+carrierwave:
   FOG_DIRECTORY:
   AWS_ACCESS_KEY_ID:
   AWS_SECRET_ACCESS_KEY:
