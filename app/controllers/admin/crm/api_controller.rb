@@ -4,13 +4,13 @@ class Admin::Crm::ApiController < ApplicationController
   before_action :authorize_resource
   
   def new
-    @api = ::Crm::Api.new(base_id: @crm.id)
+    @api = params[:type].constantize.new(base_id: @crm.id)
     render layout: false
   end
 
   def create
-    @api = params[:crm_api][:_type].constantize.new(base_id: @crm.id)
-    @api.assign_attributes(api_params)
+    @api = params[:type].constantize.new(base_id: @crm.id)
+    @api.assign_attributes(permitted_attributes([current_user_role_group, @api]))
     respond_to do |format|
       if @api.save
         format.html { redirect_to admin_crm_base_path(@crm), notice: 'API configuration is added successfully' }
@@ -27,7 +27,7 @@ class Admin::Crm::ApiController < ApplicationController
   end
 
   def update
-    @api.update_attributes(permitted_attributes([:admin, @api]))
+    @api.update_attributes(permitted_attributes([current_user_role_group, @api]))
     respond_to do |format|
       if @api.save
         format.html { redirect_to admin_crm_base_path(@crm), notice: 'API configuration is updated successfully' }
@@ -64,12 +64,8 @@ class Admin::Crm::ApiController < ApplicationController
 
   private
 
-  def api_params
-    params.require(:crm_api).permit(policy(@api).permitted_attributes)
-  end
-
   def set_api
-    @api = ::Crm::Api.find params[:id]
+    @api = params[:type].constantize.find params[:id]
   end
 
   def set_crm
@@ -80,7 +76,7 @@ class Admin::Crm::ApiController < ApplicationController
     if params[:action] == 'index'
       authorize [current_user_role_group, Crm::Api]
     elsif %w[new create show_response].include?(params[:action])
-      authorize [current_user_role_group, Crm::Api.new()]
+      authorize [current_user_role_group, params[:type].constantize.new()]
     else
       authorize [current_user_role_group, @api]
     end

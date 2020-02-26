@@ -3,36 +3,17 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header bg-gradient-cd white">
-        <h3 class="title"><%= t("helpers.#{action_name}.link_name", model: Crm::Api.model_name.human) %></h3>
+        <h3 class="title"><%= t("helpers.#{action_name}.link_name", model: @api.model_name.human) %></h3>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true" class="white">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <div class = 'row'>
-          <div class = 'col-6'>
+          <div class = 'col-12'>
             <div class="form-group">
               <%= f.label :resource_class, class: 'label-required' %>
               <%= f.select :resource_class, Crm::Api::RESOURCE_CLASS.collect{|x| [x, x]}, {prompt: true, selected: @api.resource_class}, class: 'selectize', required: 'required' %>
-            </div>
-          </div>
-          <% [Crm::Api::Get, Crm::Api::Post] if Rails.env.development? %>
-          <div class = 'col-6'>
-            <div class="form-group">
-              <%= f.label :request_type, class: 'label-required' %>
-              <%= f.select :_type, Crm::Api.descendants.collect{|x| [x.name.demodulize, x]}, {prompt: true, selected: f.object._type.demodulize}, class: 'selectize', required: 'required', id: 'request_type' %>
-            </div>
-          </div>
-          <div class = 'col-6'>
-            <div class="form-group">
-              <%= f.label :response_decryption_key %>
-              <%= f.text_field :response_decryption_key, autofocus: true, class: "form-control", disabled: !policy([:admin, @api]).editable_field?("response_decryption_key") %>
-            </div>
-          </div>
-          <div class = 'col-6'>
-            <div class="form-group">
-              <%= f.label :response_data_location %>
-              <%= f.text_field :response_data_location, autofocus: true, class: "form-control", disabled: !policy([:admin, @api]).editable_field?("response_data_location") %>
             </div>
           </div>
           <div class = 'col-12'>
@@ -47,12 +28,7 @@
               <%= f.text_area :request_payload, autofocus: true, class: "form-control", disabled: !policy([:admin, @api]).editable_field?("request_payload") %>
             </div>
           </div>
-          <div class = 'col-12 d-none' id = 'filter_hash'>
-            <div class="form-group">
-              <%= f.label :filter_hash %>
-              <%= f.text_area :filter_hash, autofocus: true, class: "form-control", disabled: !policy([:admin, @api]).editable_field?("filter_hash") %>
-            </div>
-          </div>
+          <%= render "#{@api.class.to_s.demodulize.downcase}_form", f: f %>
         </div>
       </div>
       <div class="modal-footer">
@@ -65,16 +41,5 @@
 <%= javascript_tag do %>
   $(document).ready(function(){
     FormInitializer.init($("#crm_api_form"));
-    $("#request_type").selectize().on("change", function() {
-      if($(this).val() == 'Crm::Api::Get'){
-        $('#filter_hash').removeClass('d-none')
-      }
-      else{
-        $('#filter_hash').addClass('d-none')
-      }
-    });
-    if($("#request_type").val() != undefined){
-      $("#request_type").trigger('change')
-    }
   });
 <% end %>

@@ -1,5 +1,9 @@
 class Crm::Api::Post < Crm::Api
 
+  field :response_crm_id_location, type: String
+
+  validates :response_crm_id_location, format: {with: /\A[a-zA-Z0-9_..]*\z/}, allow_blank: true
+
   def execute record
     api_log = ApiLog.new(resource: record, crm_api: self)
     _request_payload = set_request_payload(record)
@@ -31,6 +35,13 @@ class Crm::Api::Post < Crm::Api
       response = { error: 'Response is empty'}
     else
       response = JSON.parse(response.body)
+      if response_crm_id_location.present?
+        crm_id = response
+        response_crm_id_location.split('.').each do |location|
+          crm_id = crm_id[location]
+        end
+        record.set(crm_id: crm_id) if crm_id.present?
+      end
     end
     response
   end

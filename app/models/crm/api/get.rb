@@ -1,5 +1,11 @@
 class Crm::Api::Get < Crm::Api
 
+  field :response_data_location, type: String
+  field :filter_hash, type: String
+  field :response_decryption_key, type: String
+
+  validates :response_data_location, format: {with: /\A[a-zA-Z0-9_..]*\z/}, allow_blank: true
+
   def execute resource
     _request_payload = set_request_payload(resource)
     _url = URI.join(base.domain, path)

@@ -73,6 +73,12 @@ en:
       crm/api:
         one: 'API'
         other: 'APIs'
+      crm/api/get:
+        one: 'GET API'
+        other: 'GET APIs'
+      crm/api/post:
+        one: 'POST API'
+        other: 'POST API'
       bulk_upload_report:
         one: Bulk Upload Report
         other: Bulk Upload Reports
@@ -262,6 +268,7 @@ en:
         tasks_completed: 'Tasks Completed'
         tasks_pending: 'Tasks Pending'
         agreement_price: 'Agreement Price'
+        crm_id: 'CRM Id'
       booking_detail/status:
         available: 'Available'
         not_available: 'Not Available'

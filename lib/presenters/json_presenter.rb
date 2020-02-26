@@ -32,7 +32,7 @@ module Presenters
       index = 0
       keys = arr.first.keys[0..4] 
       keys.each do |key|
-        card += "<th>#{key.titleize}</th>"
+        card += "<th>#{key.to_s.titleize}</th>"
       end
       card += "</tr>"
       arr.each do |hash|
@@ -43,7 +43,7 @@ module Presenters
               card += "<td>#{ hash[key].to_sentence }</td>"
             end
           elsif hash[key].is_a?(String)
-            card += "<td>#{ hash[key].titleize }</td>"
+            card += "<td>#{ hash[key].to_s.titleize }</td>"
           else
             card += "<td>#{ hash[key] }</td>"
           end
@@ -67,8 +67,8 @@ module Presenters
     def self.get_column key, value
       "<div class='col-3'>
         <div class='form-group'>
-          <label>#{key.titleize}</label>
-          <div>#{value.is_a?(Array) ? value.to_sentence : (value.is_a?(String) ? value.titleize : value)}</div>
+          <label>#{key.to_s.titleize}</label>
+          <div>#{value.is_a?(Array) ? value.to_sentence : (value.is_a?(String) ? value.to_s.titleize : value)}</div>
         </div>
       </div>"
     end
@@ -81,7 +81,7 @@ module Presenters
       "<div class='col-md-12 pt-3'><div class='box-card'><div class='col-lg-6 col-xs-12 col-md-6 col-sm-12 pt-3 pb-0 pl-0'>
         <div class='table-title pt-1'>
           <h1 class='title'>
-            #{header.titleize}
+            #{header.to_s.titleize}
           </h1>
         </div>
       </div> <div class='box-content br-rd-bl-4 bg-white pl-2'>"

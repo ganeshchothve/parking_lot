@@ -7,11 +7,11 @@ module JsonUtil
     if only = filter_hash[:only]
       only = only.take(5) if is_table
       hash_keys &= Array(only).map(&:to_s)
+      hash_keys = only.sort_by &hash_keys.method(:index)
     elsif except = filter_hash[:except]
       hash_keys -= Array(except).map(&:to_s)
       hash_keys = hash_keys.take(5) if is_table
     end
-
     hash = {}
     hash_keys.each { |n| hash[n] = (original_hash[n].is_a?(Array) ? original_hash[n].to_sentence : original_hash[n] )}
 

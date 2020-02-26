@@ -25,7 +25,7 @@ class Crm::ApiPolicy < ApplicationPolicy
   end
 
   def permitted_attributes
-    attributes = %w[resource_class path request_payload base_id _type response_decryption_key response_data_location filter_hash]
+    attributes = %w[resource_class path request_payload base_id _type]
     attributes
   end
 end

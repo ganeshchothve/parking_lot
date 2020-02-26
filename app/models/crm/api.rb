@@ -8,13 +8,9 @@ class Crm::Api
   field :resource_class, type: String
   field :path, type: String
   field :request_payload, type: String
-  field :response_decryption_key, type: String
-  field :response_data_location, type: String
-  field :filter_hash, type: String
 
   validate :validate_url
   validates :resource_class, inclusion: { in: RESOURCE_CLASS }
-  validates :response_data_location, format: {with: /\A[a-zA-Z0-9_..]*\z/}, allow_blank: true
   validates :_type, uniqueness: {scope: [:resource_class, :base_id]}
   validates :path, :_type, presence: true
 

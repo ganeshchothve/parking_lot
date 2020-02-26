@@ -21,8 +21,8 @@
           <div class="dropdown show text-right">
             <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-              <%= link_to t('helpers.edit.link_name', model: Crm::Api.model_name.human), edit_admin_crm_base_api_path(api.base, api), class: 'modal-remote-form-link dropdown-item' %>
-              <%= link_to t('controller.accounts.destroy.link_name'), admin_crm_base_api_path(api.base, api), class: 'dropdown-item', method: :delete, data: {confirm: "Are you sure?"} %>
+              <%= link_to t('helpers.edit.link_name', model: Crm::Api.model_name.human), edit_admin_crm_base_api_path(api.base, api, type: api._type), class: 'modal-remote-form-link dropdown-item' %>
+              <%= link_to t('controller.accounts.destroy.link_name'), admin_crm_base_api_path(api.base, api, type: api._type), class: 'dropdown-item', method: :delete, data: {confirm: "Are you sure?"} %>
            </div>
         </div>
         </td>
