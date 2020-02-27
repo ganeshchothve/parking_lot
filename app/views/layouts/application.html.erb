@@ -27,7 +27,7 @@
     <% if current_client.selldo_client_id.present? %>
       <% if Rails.env.production? %>
         <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= current_client.selldo_client_id %>.js'></script>
-      <% elsif Rails.env.staging? %>
+      <% else %>
         <script src='http://v2.sell.do:4080/t/<%= current_client.selldo_client_id %>.js'></script>
       <% end %>
     <% end %>
