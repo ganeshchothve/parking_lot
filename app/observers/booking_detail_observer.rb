@@ -9,6 +9,9 @@ class BookingDetailObserver < Mongoid::Observer
 
   # TODO:: Need to move in state machine callback
   def after_create booking_detail
+    Crm::Api::Post.where(resource_class: 'BookingDetail').each do |api|
+      api.execute(booking_detail)
+    end
     if booking_detail.hold?
       booking_detail.project_unit.set(status: 'hold', held_on: DateTime.now)
       ProjectUnitUnholdWorker.perform_in(booking_detail.project_unit.holding_minutes.minutes, booking_detail.project_unit_id.to_s)
