@@ -98,8 +98,8 @@ class Client
     <div class="mt-3"></div>
   </div>'
 
-  mount_uploader :logo, DocUploader
-  mount_uploader :mobile_logo, DocUploader
+  mount_uploader :logo, LogoUploader
+  mount_uploader :mobile_logo, LogoUploader
   mount_uploader :background_image, DocUploader
   mount_uploader :brochure, DocUploader
 
@@ -117,6 +117,7 @@ class Client
   has_many :assets, as: :assetable
   has_many :emails, class_name: 'Email', inverse_of: :booking_portal_client
   has_many :schemes
+  has_many :bulk_upload_reports
   has_one :gallery
   has_one :external_inventory_view_config, inverse_of: :booking_portal_client
   embeds_many :checklists, cascade_callbacks: true

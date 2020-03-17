@@ -3,7 +3,7 @@ module UserRequestStateMachine
   included do
     include AASM
     attr_accessor :event
-    aasm column: :status do
+    aasm column: :status, whiny_transitions: false do
       state :pending, initial: true
       state :processing, :resolved, :rejected
 
@@ -82,15 +82,24 @@ module UserRequestStateMachine
     def update_requestable_to_cancelling
       if requestable
         requestable.cancelling!
-        UserRequests::BookingDetails::CancellationProcess.perform_async(id) if requestable.kind_of?(BookingDetail)
-        UserRequests::Receipts::CancellationProcess.perform_async(id) if requestable.kind_of?(Receipt)
+        if Rails.env.development?
+          UserRequests::BookingDetails::CancellationProcess.new.perform(id) if requestable.kind_of?(BookingDetail)
+          UserRequests::Receipts::CancellationProcess.new.perform(id) if requestable.kind_of?(Receipt)
+        else
+          UserRequests::BookingDetails::CancellationProcess.perform_async(id) if requestable.kind_of?(BookingDetail)
+          UserRequests::Receipts::CancellationProcess.perform_async(id) if requestable.kind_of?(Receipt)
+        end
       end
     end
 
     def update_requestable_to_swapping
       if requestable_type == 'BookingDetail'
         if requestable.swapping!
-          UserRequests::BookingDetails::SwapProcess.perform_async(id)
+          if Rails.env.development?
+            UserRequests::BookingDetails::SwapProcess.new.perform(id)
+          else
+            UserRequests::BookingDetails::SwapProcess.perform_async(id)
+          end
         end
       end
     end

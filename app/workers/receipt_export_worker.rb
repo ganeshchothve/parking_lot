@@ -28,6 +28,9 @@ class ReceiptExportWorker
 
   def self.get_column_names
     [
+      "ID (Used for Bulk Upload)",
+      "Customer ID",
+      "SellDo Lead ID",
       "Receipt ID",
       "Order ID",
       "Token Number",
@@ -56,6 +59,9 @@ class ReceiptExportWorker
 
   def self.get_receipt_row(receipt)
     [
+      receipt.id.to_s,
+      receipt.user.id.to_s,
+      (receipt.user.lead_id.presence || ''),
       receipt.receipt_id,
       receipt.order_id,
       receipt.get_token_number,

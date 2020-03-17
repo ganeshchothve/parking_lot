@@ -68,6 +68,7 @@ en:
         one: Bulk Upload Report
         other: Bulk Upload Reports
       asset:
+        zero: 'Document'
         one: Document
         other: Documents
       address:
@@ -79,6 +80,12 @@ en:
       bank_detail:
         one: Bank
         other: Banks
+      bulk_upload_report:
+        one: Bulk Upload Report
+        other: Bulk Upload Reports
+      upload_error:
+        one: Upload Errors
+        other: Uplaod Errors
       booking_detail:
         one: Booking
         other: Bookings
@@ -706,19 +713,18 @@ en:
         advance_processing_cheque: 'Advance Processing Cheque'
         financial_documents: 'Financial Documents'
       user/help_text:
-        home_loan_application_form_html: 'Application form of the bank duly signed with one passport size photo'
-        photo_identity_proof_html: 'Passport / Driving License /  Voter ID / PAN / Aadhaar card'
-        residence_address_proof_html: 'License / Registered Rent Agreement / Utility Bill/ Aadhar Card'
-        residence_ownership_proof_html: 'Sale deed or Rental agreement'
-        income_proof_html: 'Salary slip, Bank statement and Form 16'
-        job_continuity_proof_html: 'Appointment letter at employment and validation letter from HR'
-        bank_statement_html: 'Past 6 months’ document'
-        advance_processing_cheque_html: 'Upload cheque’s photo for sanction'
-        financial_documents_html: "<ol>
-             <li>For Salaried Individual: 3-month salary slip, Form 16 and bank statement</li>
-             <li>For Self-Employed Individual: IT returns for the last 2 years along with computation of income tax for the past 2 years certified by a Chartered accountant</li>
-             <li>For Self-Employed Non- Professionals: IT returns for the last 3 years along with computation of income tax for the past 2 years certified by a Chartered accountant'</li>
-           </ol>"
+        home_loan_application_form_html: '<ul><li>Application form of the bank duly signed with one passport size photo</li></ul>'
+        photo_identity_proof_html: '<ul><li>Passport / Driving License /  Voter ID / PAN / Aadhaar card</li></ul>'
+        residence_address_proof_html: '<ul><li>License / Registered Rent Agreement / Utility Bill/ Aadhar Card</li></ul>'
+        residence_ownership_proof_html: '<ul><li>Sale deed or Rental agreement</li></ul>'
+        income_proof_html: '<ul><li>Salary slip, Bank statement and Form 16</li></ul>'
+        job_continuity_proof_html: '<ul><li>Appointment letter at employment and validation letter from HR</li></ul>'
+        bank_statement_html: '<ul><li>Past 6 months’ document</li></ul>'
+        advance_processing_cheque_html: '<ul><li>Upload cheque’s photo for sanction</li></ul>'
+        financial_documents_html: "<ul>
+        <li><strong>For Salaried Individual</strong>: 3-month salary slip, Form 16 and bank statement</li>
+        <li><strong>For Self-Employed Individual</strong>: IT returns for the last 2 years along with computation of income tax for the past 2 years certified by a Chartered accountant</li>
+        <li><strong>For Self-Employed Non- Professionals</strong>: IT returns for the last 3 years along with computation of income tax for the past 2 years certified by a Chartered accountant</li></ul>"
 
       client/file_types:
         document: 'Document'
@@ -728,6 +734,17 @@ en:
         document_html: 'Client documents'
         video_html: 'Client videos'
         certificate_html: 'Client certificates'
+
+      bulk_upload_report/file_types:
+        receipts_status_update: 'Receipt Status Bulk Update'
+        user_requests_status_update: 'User Request Status Bulk Update'
+        project_units_update: 'Project Units Bulk Update'
+        inventory_upload: 'Inventory Bulk Upload'
+      bulk_upload_report/help_text:
+        receipts_status_update_html: "<ul><li>Upload file formats: CSV (.csv)</li><li>Download sample file <a href='%{url}' target='_blank'>here</a></li></ul>"
+        user_requests_status_update_html: "<ul><li>Upload file formats: CSV (.csv)</li><li>Download sample file <a href='%{url}' target='_blank'>here</a></li></ul>"
+        project_units_update_html: "<ul><li>Upload file formats: CSV (.csv)</li><li>Download sample file <a href='%{url}' target='_blank'>here</a></li></ul>"
+        inventory_upload_html: "<ul><li>Upload file formats: CSV (.csv)</li><li>Download sample file <a href='%{url}' target='_blank'>here</a></li></ul>"
 
       dashboard/filters:
         payments:
@@ -744,6 +761,8 @@ en:
     bulk_upload_reports:
       index:
         link_name: 'Bulk Uploads'
+      create:
+        success: '%{upload_type} has been scheduled. Will complete shortly.'
     checklists:
       index:
         link_name: 'Tasks'
