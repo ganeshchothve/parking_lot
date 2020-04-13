@@ -172,7 +172,7 @@ class Admin::UsersController < AdminController
     @user = if params[:id].blank?
               current_user
             else
-              User.find(params[:id])
+              User.where(id: params[:id]).first || User.where(lead_id: params[:id]).first
             end
   end
 
