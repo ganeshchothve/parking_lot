@@ -64,3 +64,10 @@
 <% if policy([:admin, user]).asset_create? %>
   <%= link_to Asset.model_name.human(count: 2), admin_user_path(user,'remote-state': assetables_path(assetable_type: user.class.model_name.i18n_key.to_s, assetable_id: user.id) ), class: "dropdown-item" %>
 <% end %>
+
+<% if policy([:admin, user]).show_selldo_links? %>
+  <h6 class="dropdown-header"><%= t("selldo.links.header") %></h6>
+  <% %w(add_note schedule_site_visit schedule_followup).each do |task| %>
+    <%= link_to t("selldo.links.#{task}"), "#{ENV_CONFIG['selldo']['base_url']}/client/0/#{current_client.selldo_default_search_list_id}/#{user.lead_id}/f/#{task.camelcase}", target: '_blank', class: 'dropdown-item' %>
+  <% end %>
+<% end %>

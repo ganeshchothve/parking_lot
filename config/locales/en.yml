@@ -1187,3 +1187,10 @@ en:
         visit_website: 'Visit Website'
       towers:
         header: 'Get Priority Token'
+
+  selldo:
+    links:
+      header: 'Take Action in Sell.Do'
+      add_note: 'View'
+      schedule_site_visit: 'Schedule Site Visit'
+      schedule_followup: 'Schedule Followup'

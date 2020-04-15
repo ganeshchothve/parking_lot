@@ -37,3 +37,6 @@ pusher:
   pusher_api_key: "5dc34608bfcefde0e495"
   pusher_api_secret: "2796b4e60ccae832e378"
   pusher_api_cluster: "ap2"
+selldo:
+  # Used for sell.do link's on user for sitevisit, followups in selldo
+  base_url: 'https://v2.sell.do'
