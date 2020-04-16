@@ -419,6 +419,7 @@ class User
   def send_confirmation_instructions
     generate_confirmation_token! unless @raw_confirmation_token
     # send_devise_notification(:confirmation_instructions, @raw_confirmation_token, opts)
+    devise_mailer.new.send(:devise_sms, self, :confirmation_instructions)
     attrs = {
       booking_portal_client_id: booking_portal_client_id,
       email_template_id: Template::EmailTemplate.find_by(name: "user_confirmation_instructions").id,
