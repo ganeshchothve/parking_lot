@@ -8,6 +8,7 @@ class User
   include ApplicationHelper
   include SyncDetails
   extend FilterByCriteria
+  extend ApplicationHelper
 
   # Constants
   ALLOWED_UTM_KEYS = %i[utm_campaign utm_source utm_sub_source utm_content utm_medium utm_term]
@@ -21,7 +22,7 @@ class User
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, :lockable, :timeoutable, :password_expirable, :password_archivable, :session_limitable, :expirable, authentication_keys: [:login]
+  devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, :lockable, :timeoutable, :password_expirable, :password_archivable, :session_limitable, :expirable, :omniauthable, :omniauth_providers => [:selldo], authentication_keys: [:login]
 
   attr_accessor :temporary_password, :payment_link
 
@@ -100,6 +101,9 @@ class User
   field :paranoid_verification_code, type: String
   field :paranoid_verification_attempt, type: Integer, default: 0
   field :paranoid_verified_at, type: DateTime
+
+  field :selldo_uid, type: String
+  field :selldo_access_token, type: String
 
   ## Security questionable
 
@@ -464,6 +468,10 @@ class User
     }) unless sms_body.blank?
   end
 
+  def update_selldo_credentials(oauth_data)
+    self.selldo_access_token = oauth_data.credentials.token if oauth_data
+  end
+
   # Class Methods
   class << self
 
@@ -535,6 +543,34 @@ class User
         custom_scope = { role: { "$ne": 'superadmin' } }
       end
       custom_scope
+    end
+
+    def find_or_create_for_selldo_oauth(oauth_data)
+      matcher = {}
+      matcher[:email] = oauth_data.info.email
+      client = Client.where(selldo_client_id: oauth_data.extra.client_id).first
+      user = User.find_or_initialize_by(matcher).tap do |user|
+        user.password = Devise.friendly_token[0,15] + %w(! @ # $ % ^ & * ~).fetch(rand(8)) if user.has_no_password?
+        user.selldo_uid ||= oauth_data.uid
+        user.first_name = oauth_data.extra.first_name if user.first_name.blank?
+        user.last_name = oauth_data.extra.last_name if user.last_name.blank?
+        user.phone = oauth_data.extra.phone if user.phone.blank?
+        user.booking_portal_client ||= (client || current_client)
+        user.confirmed_at = Time.now unless user.confirmed?
+        user.role = case oauth_data.extra.role.try(:to_sym)
+        when :sales
+          'sales'
+        when :sales_manager
+          'sales_admin'
+        when :admin, :superadmin
+          'admin'
+        when :support, :support_manager
+          'crm'
+        else
+          'user'
+        end
+      end
+      user
     end
   end
 
