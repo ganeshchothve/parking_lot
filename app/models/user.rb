@@ -16,6 +16,8 @@ class User
   CHANNEL_PARTNER_USERS = %w[cp cp_admin channel_partner]
   SALES_USER = %w[sales sales_admin]
   COMPANY_USERS = %w[employee_user management_user]
+  # Added different types of documents which are uploaded on User
+  DOCUMENT_TYPES = %w[home_loan_application_form photo_identity_proof residence_address_proof residence_ownership_proof income_proof job_continuity_proof bank_statement advance_processing_cheque financial_documents]
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -137,6 +139,7 @@ class User
   has_many :user_kycs
   has_many :searches
   has_many :received_smses, class_name: 'Sms', inverse_of: :recipient
+  has_many :assets, as: :assetable
   has_and_belongs_to_many :received_emails, class_name: 'Email', inverse_of: :recipients
   has_and_belongs_to_many :cced_emails, class_name: 'Email', inverse_of: :cc_recipients
 

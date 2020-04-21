@@ -2,7 +2,7 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header bg-gradient-cd white">
-        <h3 class="title"> <%= Asset.model_name.human(count: 2) %></h3>
+        <h3 class="title"><%= Asset.model_name.human(count: 2) %></h3>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true" class="white">&times;</span>
         </button>
@@ -15,10 +15,3 @@
     </div>
   </div>
 </div>
-
-<%= javascript_tag do %>
-    $('#modal-remote-form-inner').on('hidden.bs.modal', function (e) {
-      var href = Amura.removeParamFromURL(window.location.href, "remote-state");
-      window.location.href = href
-    })
-<% end %>

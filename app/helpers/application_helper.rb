@@ -55,11 +55,11 @@ module ApplicationHelper
       #{active_link_to 'Brochure', download_brochure_path, active: :exclusive, class: 'footer-link' }
       </li>"
     end
-    if current_user
-      html += "<li >
-      #{active_link_to 'Docs', dashboard_documents_path, active: :exclusive, class: 'footer-link'}
-      </li>"
-    end
+    #if current_user
+    #  html += "<li >
+    #  #{active_link_to 'Docs', dashboard_documents_path, active: :exclusive, class: 'footer-link'}
+    #  </li>"
+    #end
     if current_client.gallery.present? && current_client.gallery.assets.select{|x| x.persisted?}.present?
       html += "<li >
         #{active_link_to 'Gallery', dashboard_gallery_path, active: :exclusive, class: 'footer-link'}

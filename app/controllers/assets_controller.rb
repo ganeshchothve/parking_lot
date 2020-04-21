@@ -6,12 +6,12 @@ class AssetsController < ApplicationController
   around_action :apply_policy_scope, only: :index
 
   def index
-    @assets = Asset.where(assetable: @assetable)
+    @assets = Asset.where(assetable: @assetable).build_criteria(params)
     render layout: false
   end
 
   def create
-    asset = Asset.create(assetable: @assetable, file: params[:files][0])
+    asset = Asset.create(assetable: @assetable, file: params[:files][0], document_type: params[:document_type])
     if asset.persisted?
       render partial: "assets/asset.json", locals: {asset: asset}
     else
@@ -38,8 +38,7 @@ class AssetsController < ApplicationController
   end
 
   def authorize_resource
-    return if @assetable.class == ChannelPartner
-    authorize [current_user_role_group, @assetable] unless params[:action] == 'destroy'
+    # authorize [current_user_role_group, @assetable] unless %w[index destroy].include?(params[:action])
     if params[:action] == "index"
     elsif params[:action] == "new" || params[:action] == "create"
       authorize [current_user_role_group, Asset.new(assetable: @assetable)]

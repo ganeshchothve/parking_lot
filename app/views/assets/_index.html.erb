@@ -1,36 +1,21 @@
-<% if assetable.present? %>
+ <% if assetable.present? %>
   <% if assetable.persisted? %>
-    <div class="form-group">
-      <div class="btn btn-primary fileinput-button pull-right">
-        <input type="file" name="files[]" class="btn btn-primary fileupload" data-extensions="<%= allowed_file_extensions('AssetUploader') %>" data-url="<%= assetables_path(assetable_type: assetable.class.model_name.i18n_key.to_s, assetable_id: assetable.id) %>" multiple=true data-target='.files-container' <%= policy([ current_user_role_group, Asset.new(assetable: assetable)]).update? ? "" : "disabled=disabled" %> data-klass = 'Asset' data-field_name = 'file' />
-        </div>
-      <div class="small text-muted" style="margin-top: 12px;"><%= 'Please upload a jpeg, png, pdf or zip' %></div>
-    </div>
-    <div class="clearfix"></div>
-    <hr/>
-    <div class="files-container">
-      <% assetable.assets.each do |asset| %>
-        <%=
-          links = {}
-          if policy([ current_user_role_group, asset]).destroy?
-            links[:destroy] = assetable_path(assetable_type: assetable.class.model_name.i18n_key.to_s, assetable_id: assetable.id, id: asset.id)
-          end
-          if asset.file.file && asset.file.file.exists?
-            render "assets/file_icon", record: {id: asset.id, file_size: asset.file_size, url: asset.file.url, content_type: asset.file.content_type }, links: links
-          end
-        %>
-      <% end %>
-    </div>
+    <% if assetable.class::DOCUMENT_TYPES.present? %>
+      <%= render 'classified_assets', { assetable: assetable } %>
+    <% else %>
+      <%= render 'all_assets', { assetable: assetable } %>
+    <% end %>
   <% else %>
     Please submit your <%= global_labels["#{assetable.model_name.element}"] %> first to upload reference documents.
   <% end %>
 
   <%= javascript_tag do %>
   $(document).ready(function(){
-    $(".fileupload").fileUploader({
-      download_all: false
-    });
     FileIcon.init($(".asset-delete"), $(".asset-icon"));
+    $('.selectize').on("change", function(){
+      var formData = {"document_type": $(this).val()}
+      $('#asset_' + $(this).attr('id')).data('form-data', formData)
+    });
   })
   <% end %>
 <% end %>

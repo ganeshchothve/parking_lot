@@ -7,6 +7,8 @@ class UserKyc
   include SyncDetails
   extend FilterByCriteria
 
+  # Add different types of documents which are uploaded on user_kyc
+  DOCUMENT_TYPES = []
 
   field :salutation, type: String, default: 'Mr.'
   field :first_name, type: String

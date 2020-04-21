@@ -694,6 +694,41 @@ en:
         management_user: 'Management User'
         employee_user: 'Employee'
         direct: Direct
+
+      user/file_types:
+        home_loan_application_form: 'Home Loan Application Form'
+        photo_identity_proof: 'Photo Identity Proof'
+        residence_address_proof: 'Residence Address Proof'
+        residence_ownership_proof: 'Residence Ownership Proof'
+        income_proof: 'Income Proof'
+        job_continuity_proof: 'Job Continuity Proof'
+        bank_statement: 'Bank Statement'
+        advance_processing_cheque: 'Advance Processing Cheque'
+        financial_documents: 'Financial Documents'
+      user/help_text:
+        home_loan_application_form_html: 'Application form of the bank duly signed with one passport size photo'
+        photo_identity_proof_html: 'Passport / Driving License /  Voter ID / PAN / Aadhaar card'
+        residence_address_proof_html: 'License / Registered Rent Agreement / Utility Bill/ Aadhar Card'
+        residence_ownership_proof_html: 'Sale deed or Rental agreement'
+        income_proof_html: 'Salary slip, Bank statement and Form 16'
+        job_continuity_proof_html: 'Appointment letter at employment and validation letter from HR'
+        bank_statement_html: 'Past 6 months’ document'
+        advance_processing_cheque_html: 'Upload cheque’s photo for sanction'
+        financial_documents_html: "<ol>
+             <li>For Salaried Individual: 3-month salary slip, Form 16 and bank statement</li>
+             <li>For Self-Employed Individual: IT returns for the last 2 years along with computation of income tax for the past 2 years certified by a Chartered accountant</li>
+             <li>For Self-Employed Non- Professionals: IT returns for the last 3 years along with computation of income tax for the past 2 years certified by a Chartered accountant'</li>
+           </ol>"
+
+      client/file_types:
+        document: 'Document'
+        video: 'Video'
+        certificate: 'Certificate'
+      client/help_text:
+        document_html: 'Client documents'
+        video_html: 'Client videos'
+        certificate_html: 'Client certificates'
+
       dashboard/filters:
         payments:
           all: 'All'
@@ -1033,7 +1068,6 @@ en:
 
   booking_detail_schemes:
     rejected_scheme: Scheme for this booking is rejected. Please contact administrator.
-
 
   datetime:
     distance_in_words:
