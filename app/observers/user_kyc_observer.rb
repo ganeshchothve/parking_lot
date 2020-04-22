@@ -19,6 +19,7 @@ class UserKycObserver < Mongoid::Observer
         triggered_by_type: user_kyc.class.to_s
       })
       email.sent!
+      PaymentReminderWorker.perform_at(Time.now + 1.hour, user_kyc.user_id) if user.receipts.blank?
     end
 
   end
