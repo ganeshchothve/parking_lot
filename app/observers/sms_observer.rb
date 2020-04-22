@@ -28,7 +28,11 @@ class SmsObserver < Mongoid::Observer
     #      F            |          -           |       F        |         no
     if sms.booking_portal_client.sms_enabled?
       if ( !sms.sms_template || sms.sms_template.try(:is_active?) ) && ( Rails.env.production? || Rails.env.staging? )
-        Communication::Sms::SmsjustWorker.perform_async(sms.id.to_s)
+        if sms.sms_template.name == 'otp'
+          Communication::Sms::SmsjustWorker.set(queue: 'otp').perform_async(sms.id.to_s)
+        else
+          Communication::Sms::SmsjustWorker.perform_async(sms.id.to_s)
+        end
       else
         sms.set(status: "sent")
       end
