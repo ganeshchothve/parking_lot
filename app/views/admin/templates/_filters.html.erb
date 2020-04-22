@@ -6,7 +6,7 @@
   <%= form_tag admin_client_templates_path, method: "get", id: "user_search_form" do %>
     <div class="filter-content">
       <div class="row">
-        <% [::Template::EmailTemplate, ::Template::SmsTemplate, ::Template::CostSheetTemplate, ::Template::CostSheetTemplate, ::Template::AllotmentLetterTemplate, ::Template::PaymentScheduleTemplate, ::Template::ReceiptTemplate] if Rails.env.development? %>
+        <% [::Template::EmailTemplate, ::Template::SmsTemplate, ::Template::CostSheetTemplate, ::Template::CostSheetTemplate, ::Template::AllotmentLetterTemplate, ::Template::PaymentScheduleTemplate, ::Template::ReceiptTemplate, ::Template::BookingDetailFormTemplate] if Rails.env.development? %>
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.template.type'), class: "control-label" %>
           <%= select_tag "fltrs[_type]", options_for_select(::Template.descendants.collect{|x| [x.to_s.split("::").last.gsub("Template", "").titleize, x.to_s]}.sort, (params[:fltrs].present? ? params[:fltrs][:_type] : "")), {prompt: "Select", class: "selectize"} %>

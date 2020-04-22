@@ -52,6 +52,10 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   def status_chart?
     true
   end
+
+  def send_booking_detail_form_notification?
+    true
+  end
   # def block?
   #   valid = enable_actual_inventory? && only_for_confirmed_user! && only_for_kyc_added_users! && ['hold'].include?(record.status)
   #   if !valid

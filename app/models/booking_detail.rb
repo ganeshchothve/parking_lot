@@ -8,6 +8,7 @@ class BookingDetail
   include Tasks
   include ApplicationHelper
   extend FilterByCriteria
+  extend RenderAnywhere
   include PriceCalculator
 
   STATUSES = %w[hold blocked booked_tentative booked_confirmed under_negotiation scheme_rejected scheme_approved swap_requested swapping swapped swap_rejected cancellation_requested cancelling cancelled cancellation_rejected]
@@ -194,6 +195,42 @@ class BookingDetail
       return (self.project_unit.booking_price - receipts_total)
     else
       return self.project_unit.booking_price
+    end
+  end
+
+  def booking_number
+    receipts.asc(:created_at).first.try(:receipt_id) || name
+  end
+
+  def send_booking_detail_form_mail_and_sms
+    if project_unit.booking_portal_client.email_enabled?
+      attachments_attributes = []
+      booking_detail_form = self.class.render_anywhere('templates/booking_detail_form', { booking_detail: self }, 'layouts/pdf')
+      pdf = WickedPdf.new.pdf_from_string(booking_detail_form.presence)
+      File.open("#{Rails.root}/exports/#{booking_number}_booking_form.pdf", "wb") do |file|
+        file << pdf
+      end
+      attachments_attributes << {file: File.open("#{Rails.root}/exports/#{booking_number}_booking_form.pdf")}
+      email = Email.create!({
+        booking_portal_client_id: project_unit.booking_portal_client_id,
+        email_template_id: Template::EmailTemplate.find_by(name: "booking_confirmed").id,
+        recipients: [user],
+        cc_recipients: [],
+        triggered_by_id: self.id,
+        triggered_by_type: self.class.to_s,
+        attachments_attributes: attachments_attributes
+      })
+      email.sent!
+    end
+    if project_unit.booking_portal_client.sms_enabled?
+      template = Template::SmsTemplate.find_by(name: "booking_confirmed")
+      sms = Sms.create!(
+        booking_portal_client_id: project_unit.booking_portal_client_id,
+        recipient_id: user.id,
+        sms_template_id: template.id,
+        triggered_by_id: self.id,
+        triggered_by_type: self.class.to_s
+      )
     end
   end
 

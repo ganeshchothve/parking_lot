@@ -1,0 +1,4 @@
+<% template = ::Template::BookingDetailFormTemplate.where(name: 'booking_detail_form_html').first %>
+<% if template.present? %>
+  <%= ::ERB.new(template.content).result( binding ).html_safe %>
+<% end %>
