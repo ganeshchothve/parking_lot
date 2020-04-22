@@ -114,6 +114,7 @@ Rails.application.routes.draw do
 
       collection do
         get :unit_configuration_chart
+        get :inventory_snapshot
         get :export
       end
     end

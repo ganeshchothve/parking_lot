@@ -44,6 +44,10 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
     true
   end
 
+  def inventory_snapshot?
+    true
+  end
+
   def permitted_attributes(_params = {})
     attributes = %w[crm admin superadmin].include?(user.role) ? %i[auto_release_on booking_price blocking_amount] : []
     attributes += (make_available? ? [:status] : [])

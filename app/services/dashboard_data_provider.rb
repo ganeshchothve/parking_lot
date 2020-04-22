@@ -240,8 +240,92 @@ module DashboardDataProvider
     out
   end
 
+  # Below method creates an inventory snapshot for dashboard
+  # first $group groups on the basis project_tower_name and unit_configuration_name and calculates following for each group
+  # 1. Count of project units in blocked status
+  # 2. Count of project units in available, management blocking an employee status
+  # 3. Sum of agreement_price of blocked units
+  # 4. Ids of blocked units for collection calculation
+  # 5. Total number of units
+  # second $group on the basis of project_tower_name and caculates the following
+  # 1. Total blocked units of the tower
+  # 2. Total available units of the tower
+  # 3. Total Units of the tower
+  # 4. Total agreement price of the tower
+  # 5. Total blocked unit ids in the system
+  # 6. Push configuration wise data (sold and unsold unit count) calculated in first group query
+
+  def self.inventory_snapshot
+    grouping = {
+      project_tower_name: "$project_tower_name",
+      unit_configuration_name: "$unit_configuration_name"
+    }
+    data = ProjectUnit.collection.aggregate([{
+          "$group":
+          {
+            "_id": grouping,
+            blocked:{ "$sum": { "$cond": [ {"$eq": ['$status', {"$literal": 'blocked'}]}, 1, 0 ] } },
+            agreement_price: { "$sum": { "$cond": [ {"$eq": ['$status', {"$literal": 'blocked'}]}, "$agreement_price", 0 ] } },
+            available: { "$sum": { "$cond": [ {"$in": ['$status', ['available', "management_blocking", "employee"]]}, 1, 0 ] } },
+            blocked_project_units:{ "$push": { "$cond": [ {"$eq": ['$status', {"$literal": 'blocked'}]}, "$_id", nil] } },
+            total: { "$sum": 1 }
+          }
+        },{
+          "$group":
+          {
+            "_id": "$_id.project_tower_name",
+            total_blocked: { "$sum": "$blocked" },
+            total_available: { "$sum": "$available" },
+            total: { "$sum": "$total"},
+            total_agreement_price: { "$sum": "$agreement_price" },
+            total_blocked_project_units: { "$push": "$blocked_project_units" },
+            configuration_wise: { "$push": { unit_configuration_name: "$_id.unit_configuration_name", available: "$available", blocked: "$blocked" }}
+          }
+        }]).to_a
+    out = {}
+    out["All Towers"] = {total: 0, sold: 0, unsold: 0, av_sold: 0, collection: 0}
+    out["All Towers"][:configuration_wise] = new_unit_configuration_hash
+    data.each do |_data|
+      out[_data["_id"]] = {total: _data["total"], sold: _data["total_blocked"], unsold: _data["total_available"], av_sold: _data["total_agreement_price"]}
+      _unit_configuration_hash = new_unit_configuration_hash
+      _data["configuration_wise"].each do |uc|
+        _unit_configuration_hash[uc["unit_configuration_name"]] = {sold: uc["blocked"], unsold: uc["available"]}
+
+      end
+      out[_data["_id"]][:configuration_wise] = _unit_configuration_hash
+      _blocked_units = _data["total_blocked_project_units"].flatten.compact.map{|id| id.to_s}
+      _booking_detail_ids = BookingDetail.where(status: {"$in": BookingDetail::BOOKING_STAGES}, project_unit_id: {"$in": _blocked_units}).pluck(:id)
+      out[_data["_id"]][:collection] = Receipt.in(booking_detail_id: _booking_detail_ids).in(status:["success","clearance_pending"]).sum(:total_amount)
+      out["All Towers"] = calculate_all_towers(out["All Towers"], out[_data["_id"]])
+    end
+    out
+  end
+
   protected
+
+  def self.calculate_all_towers all_towers_out, current_tower_data
+    all_towers_out[:total] += current_tower_data[:total]
+    all_towers_out[:sold] += current_tower_data[:sold]
+    all_towers_out[:unsold] += current_tower_data[:unsold]
+    all_towers_out[:av_sold] += current_tower_data[:av_sold]
+    all_towers_out[:collection] += current_tower_data[:collection]
+    ProjectUnit.distinct(:unit_configuration_name).sort.each do |uc|
+      all_towers_out[:configuration_wise][uc][:sold] += current_tower_data[:configuration_wise][uc][:sold]
+      all_towers_out[:configuration_wise][uc][:unsold] += current_tower_data[:configuration_wise][uc][:unsold]
+    end
+    all_towers_out
+  end
+
+  def self.new_unit_configuration_hash
+    _unit_configuration_hash = {}
+    ProjectUnit.distinct(:unit_configuration_name).sort.each do |uc|
+      _unit_configuration_hash[uc] = {sold: 0, unsold: 0}
+    end
+    _unit_configuration_hash
+  end
+
   def get_matcher
     # GENERICTODO
   end
+
 end
