@@ -80,6 +80,37 @@ module DatabaseSeeds
 
       Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "Receipt", name: "daily_payments_report", content: '[<%= Date.current.strftime("%v") %>] Today you received <%= self.class.todays_payments_count %> payments') if Template::SmsTemplate.where(name: "daily_payments_report").blank?
 
+      # reminder templates
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: 'not_confirmed_day_1',
+        content: "Thank you for your interest in Happinest Kalyan. Your MRP generation is not complete. Please visit <a href = 'book.mahindrahappinest.com'> book.mahindrahappinest.com</a> to get a better position in our queue and avail greater benefits. For more information about the project, call <%= self.booking_portal_client.support_number %>")   if ::Template::SmsTemplate.where(name: "not_confirmed_day_1").blank?
+
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: 'not_confirmed_day_3',
+        content: "Don’t be late! Happinest Kalyan is offering rewards on a first come first serve basis. Register today to generate your unique MRP and avail special benefits. Visit <a href = 'book.mahindrahappinest.com'> book.mahindrahappinest.com</a> or call on <%= self.booking_portal_client.support_number %>.")  if ::Template::SmsTemplate.where(name: "not_confirmed_day_3").blank?
+
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: 'not_confirmed_day_5',
+        content: "You are doing your best to build your kids’ dream home. We are doing our best to make it a reality. Register today to generate your Multiplier Rebate Plan and get greater discounts. Visit <a href = 'book.mahindrahappinest.com'> book.mahindrahappinest.com</a> or call on <%= self.booking_portal_client.support_number %>.")  if ::Template::SmsTemplate.where(name: "not_confirmed_day_5").blank?
+
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: 'no_payment_hour_1',
+        content: "Alert: Your MRP registration is not yet complete. Complete payment to lock your spot in the queue and avail unique benefits. Visit <a href = 'book.mahindrahappinest.com'> book.mahindrahappinest.com</a> or call on <%= self.booking_portal_client.support_number %>.")  if ::Template::SmsTemplate.where(name: "no_payment_hour_1").blank?
+
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: 'no_payment_day_1',
+        content: "Reminder: Your MRP registration is not yet complete. Pay Rs. 24,000 (fully refundable) to lock your spot in the queue and avail unique benefits. Visit <a href = 'book.mahindrahappinest.com'> book.mahindrahappinest.com</a> or call on <%= self.booking_portal_client.support_number %>.")  if ::Template::SmsTemplate.where(name: "no_payment_day_1").blank?
+
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: 'no_payment_day_3',
+        content: "Reminder: We have generated <%= Receipt.where(booking_detail_id: nil).count %>. MRPs so far. You are one step away from booking your spot. Visit <a href = 'book.mahindrahappinest.com'> book.mahindrahappinest.com</a> or call on <%= self.booking_portal_client.support_number %>.")  if ::Template::SmsTemplate.where(name: "no_payment_day_3").blank?
+
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: 'no_booking_day_4',
+        content: "In case if you need a home loan, select loan preference in the MRP form and upload KYC so that our loan representative can help you. Login to give your loan preference on <a href = 'book.mahindrahappinest.com'> book.mahindrahappinest.com</a>")  if ::Template::SmsTemplate.where(name: "no_booking_day_4").blank?
+
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: 'no_booking_day_5',
+        content: "Benefits with Multiplier Rebate Plan number <%= self.receipts.where(status: {'$in': %w[pending success clearance_pending]}).first.try(:token_number) %> keeps increasing. Earn additional discount of Rs.5000 at Happinest Kalyan by completing your profile to help us know you better on <a href = 'book.mahindrahappinest.com'> book.mahindrahappinest.com</a>")  if ::Template::SmsTemplate.where(name: "no_booking_day_5").blank?
+
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: 'no_booking_day_6',
+        content: "Thank for showing your preference for the loan requirement for your dream home at Happinest Kalyan. We have a host financial partners who are offering home loans at competitive rates. Login access the details of financial partners on <a href = 'book.mahindrahappinest.com'> book.mahindrahappinest.com</a>")  if ::Template::SmsTemplate.where(name: "no_booking_day_6").blank?
+
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: 'no_booking_day_7',
+        content: "Benefits with Multiplier Rebate Plan number <MRP 01201> keeps increasing. Earn additional discount of Rs.20,000 by referring your 3 friends at Happinest Kalyan and making them your neighbours on <a href = 'book.mahindrahappinest.com'> book.mahindrahappinest.com</a>")  if ::Template::SmsTemplate.where(name: "no_booking_day_7").blank?
+
       return Template::SmsTemplate.where(booking_portal_client_id: client_id).count
     end
   end
