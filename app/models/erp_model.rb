@@ -21,6 +21,7 @@ class ErpModel
   field :request_payload, type: String
   field :is_active, type: Boolean, default: :true
   field :action_name, type: String
+  field :access_token, type: String
 
   # Associations
   has_many :sync_logs
@@ -40,7 +41,8 @@ class ErpModel
   def request_payload_format
     if request_payload.present?
       begin
-        raise StandardError, 'Improper request payload format' unless SafeParser.new(request_payload.gsub("\n\s", '')).safe_load.is_a?(Hash)
+        payload = SafeParser.new(request_payload.gsub("\n\s", '')).safe_load
+        errors.add :request_payload, 'Improper request payload format' unless payload.is_a?(Hash) || payload.is_a?(Array)
       rescue StandardError => e
         errors.add :request_payload, e.message
       end
@@ -49,6 +51,27 @@ class ErpModel
 
   def set_request_payload(record)
     erb = ERB.new(self.request_payload.gsub("\n\s", ''))
-    SafeParser.new(erb.result(binding)).safe_load
+    safe_parse(erb.result(binding))
+  end
+
+  def safe_parse(data)
+    res = SafeParser.new(data).safe_load rescue nil
+
+    case (res ||= data)
+    when Hash
+      res.each do |key, value|
+        value = (SafeParser.new(value).safe_load rescue nil) || value
+        res[key] = ((value.is_a?(Hash) || value.is_a?(Array)) ? safe_parse(value) : value)
+      end
+      res
+    when Array
+      res.map! do |value|
+        value = (SafeParser.new(value).safe_load rescue nil) || value
+        (value.is_a?(Hash) || value.is_a?(Array)) ? safe_parse(value) : value
+      end
+      Array.new.push(*res)
+    else
+      res
+    end
   end
 end

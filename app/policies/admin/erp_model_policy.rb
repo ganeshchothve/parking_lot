@@ -18,7 +18,7 @@ class Admin::ErpModelPolicy < ErpModelPolicy
 
   def permitted_attributes(_params = {})
     attributes = []
-    attributes += %i[resource_class domain url request_type http_verb reference_key_name reference_key_location request_payload is_active action_name] if user.role == 'superadmin'
+    attributes += %i[resource_class domain url request_type http_verb reference_key_name reference_key_location request_payload is_active action_name access_token] if user.role == 'superadmin'
     attributes
   end
 end

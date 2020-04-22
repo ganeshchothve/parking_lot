@@ -60,10 +60,13 @@ class BookingDetail
   validates :status, presence: true
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :kyc_mandate, on: :create
+  validate :validate_content, on: :create
+
   delegate :name, :blocking_amount, to: :project_unit, prefix: true, allow_nil: true
   delegate :name, :email, :phone, to: :user, prefix: true, allow_nil: true
   delegate :name, :email, :phone, :role, :role?, to: :manager, prefix: true, allow_nil: true
 
+  default_scope -> { desc(:created_at) }
 
   scope :filter_by_id, ->(_id) { where(_id: _id) }
   scope :filter_by_name, ->(name) { where(name: ::Regexp.new(::Regexp.escape(name), 'i')) }
@@ -74,12 +77,19 @@ class BookingDetail
   scope :filter_by_tasks_completed, ->(tasks) { where("$and": [{ _id: {"$in": find_completed_tasks(tasks)}}])}
   scope :filter_by_tasks_pending, ->(tasks) { where("$and": [{ _id: {"$in": find_pending_tasks(tasks)}}])}
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(name: regex ) }
-  default_scope -> {desc(:created_at)}
-
 
   accepts_nested_attributes_for :notes, :tasks
 
-  default_scope -> { desc(:created_at) }
+  def validate_content
+    _file = tds_doc.file
+    file_name = _file.try(:original_filename)
+    if file_name.present?
+      self.errors.add(:base, 'Invalid file name/type (The filename should not have more than one dot (.))') if file_name.split('.').length > 2
+      self.errors.add(:base, 'File without name provided') if file_name.split('.')[0].blank?
+      file_meta = MimeMagic.by_magic(open(tds_doc.path)) rescue nil
+      self.errors.add(:base, 'Invalid file (you can only upload jpg|png|jpeg|pdf files)') if ( file_meta.nil? || %w[png jpg jpeg pdf PNG JPG PDF JPEG].exclude?(file_meta.subtype) )
+    end
+  end
 
   def send_notification!
     message = "#{primary_user_kyc.name} just booked apartment #{project_unit.name} in #{project_unit.project_tower_name}"

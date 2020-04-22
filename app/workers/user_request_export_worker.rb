@@ -20,7 +20,9 @@ class UserRequestExportWorker
 
   def self.get_column_names
     [
-      'Sell.do lead id',
+      'Request ID (Used for Bulk Update)',
+      'Customer ID',
+      'SellDo Lead ID',
       'User name',
       'Request Date',
       'Type',
@@ -33,7 +35,9 @@ class UserRequestExportWorker
 
   def self.get_user_request_row(user_request)
     [
-      user_request.user.lead_id,
+      user_request.id.to_s,
+      user_request.user.id.to_s,
+      (user_request.user.lead_id.presence || ''),
       user_request.user.name,
       user_request.created_at.strftime('%Y-%m-%d T %l:%M:%S'),
       user_request._type.split('::')[1],

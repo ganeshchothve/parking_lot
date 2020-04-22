@@ -24,7 +24,12 @@ class SyncLog
   # validates :request, presence: true #ToDo SyncLog attributes
 
   def sync(erp_model, record)
-    self.class.delay._sync(erp_model.id.to_s, record.id.to_s)
+    parent_sync = (self if self.action.present?)
+    if Rails.env.production? || Rails.env.staging?
+      self.class.delay._sync(erp_model.id.to_s, record.id.to_s, parent_sync.try(:id).to_s)
+    else
+      record.sync(erp_model, parent_sync)
+    end
   end
 
   private

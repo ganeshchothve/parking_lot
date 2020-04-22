@@ -1,6 +1,15 @@
 module FileUploaderHelper
-  def allowed_file_extensions uploder_type
-    instance = uploder_type.constantize.new
-    (instance.respond_to?(:extension_white_list) && instance.extension_white_list.present? )? instance.extension_white_list.join(",") : nil
+  def allowed_file_extensions uploder_type, assetable
+    exts = case assetable
+    when BulkUploadReport
+      %w(csv)
+    when User, Receipt
+      %w(PNG png JPEG jpeg JPG jpg PDF pdf)
+    when Client
+      %w(PNG png JPEG jpeg JPG jpg PDF pdf csv)
+    else
+      %w(PNG png JPEG jpeg JPG jpg PDF pdf)
+    end
+    exts.join(',')
   end
 end

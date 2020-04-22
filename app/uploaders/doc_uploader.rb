@@ -1,5 +1,7 @@
 class DocUploader < CarrierWave::Uploader::Base
 
+  include CommonUploader
+
   # Include RMagick or MiniMagick support:
   # include CarrierWave::RMagick
   # include CarrierWave::MiniMagick
@@ -11,22 +13,21 @@ class DocUploader < CarrierWave::Uploader::Base
     storage :file
   end
 
-  # process :save_file_size_in_model
+  process :save_file_size_in_model
 
-  # def save_file_size_in_model
-  #   model.file_size = file.size if model.respond_to?(:file_size)
-  #   model.file_name = file.filename if model.respond_to?(:file_name)
-  # end
-
-  # Override the directory where uploaded files will be stored.
-  # This is a sensible default for uploaders that are meant to be mounted:
-  def store_dir
-    "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
+  def save_file_size_in_model
+    model.file_size = file.size if model.respond_to?(:file_size)
+    model.file_name = file.filename if model.respond_to?(:file_name)
   end
 
-  # def extension_white_list
-  #   %w(JPEG JFIF Exif TIFF BMP GIF PNG PPM PGM PBM PNM WebP HEIF BAT BPG CD5 DEEP ECW FITS FLIF ICO ILBM IMG IMG JPEG Nrrd PAM PCX PGF PLBM SGI SID TGA VICAR XISF CPT PSD PSP XCF CGM SVG AI CDR DrawingML HPGL HVIF MathML NAPLPS ODG PSTricks PGF TikZ ReGIS VML WMF Xar XPS EPS PDF PostScript PICT SWF XAML jpeg jfif exif tiff bmp gif png ppm pgm pbm pnm webp heif bat bpg cd5 deep ecw fits flif ico ilbm img img jpeg nrrd pam pcx pgf plbm sgi sid tga vicar xisf cpt psd psp xcf cgm svg ai cdr drawingml hpgl hvif mathml naplps odg pstricks pgf tikz regis vml wmf xar xps eps pdf postscript pict swf xaml ZIP zip TAR tar PDF pdf jpg JPG odp ODP)
-  # end
+  def extension_white_list
+    %w(PNG png JPEG jpeg JPG jpg PDF pdf)
+    #   %w(JPEG JFIF Exif TIFF BMP GIF PNG PPM PGM PBM PNM WebP HEIF BAT BPG CD5 DEEP ECW FITS FLIF ICO ILBM IMG IMG JPEG Nrrd PAM PCX PGF PLBM SGI SID TGA VICAR XISF CPT PSD PSP XCF CGM SVG AI CDR DrawingML HPGL HVIF MathML NAPLPS ODG PSTricks PGF TikZ ReGIS VML WMF Xar XPS EPS PDF PostScript PICT SWF XAML jpeg jfif exif tiff bmp gif png ppm pgm pbm pnm webp heif bat bpg cd5 deep ecw fits flif ico ilbm img img jpeg nrrd pam pcx pgf plbm sgi sid tga vicar xisf cpt psd psp xcf cgm svg ai cdr drawingml hpgl hvif mathml naplps odg pstricks pgf tikz regis vml wmf xar xps eps pdf postscript pict swf xaml ZIP zip TAR tar PDF pdf jpg JPG odp ODP)
+  end
+
+  def content_type_whitelist
+    ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg']
+  end
 
   # Provide a default URL as a default if there hasn't been a file uploaded:
   # def default_url(*args)

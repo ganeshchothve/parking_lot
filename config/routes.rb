@@ -49,11 +49,9 @@ Rails.application.routes.draw do
     end
     resources :checklists
 
-    resources :bulk_upload_reports, only: [:index, :show] do
+    resources :bulk_upload_reports, except: [:edit, :update, :destroy] do
       get :show_errors, on: :member
     end
-
-    resources :inventory_uploads, only: [:new, :create]
 
     resources :booking_details, only: [:index, :show, :new, :create, :edit, :update] do
       member do

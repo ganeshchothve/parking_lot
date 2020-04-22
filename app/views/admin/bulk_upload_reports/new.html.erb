@@ -1,1 +1,72 @@
-<%= render 'form' %>
+<% assetable = @bulk_upload_report %>
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-gradient-cd white">
+        <h3 class="title"><%= BulkUploadReport.model_name.human(count: 2) %></h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <%= form_for @bulk_upload_report, url: admin_bulk_upload_reports_path, html: {id: 'bulk_upload_report_form', class: 'bulk_upload_report_form'} do |f| %>
+        <div class="modal-body">
+          <%= f.fields_for :asset, @bulk_upload_report.build_asset do |adj| %>
+            <div class="new_asset">
+              <div class="row mb-4">
+                <div class="col-10">
+                  <% options = assetable_document_types(assetable) %>
+                  <%= adj.select :document_type, options_for_select(options, options.first[1]), {}, {prompt: "Select", class: "selectize", required: 'required'} %>
+                  <div class = "text-muted small pb-2"></div>
+                  <div class = "text-muted small"><div class="help_text"></div></div>
+                </div>
+                <% if adj.object.new_record? %>
+                  <div class="col-2">
+                    <div class="form-group">
+                      <div class="btn btn-primary fileinput-button pull-right">
+                        <span>Upload</span>
+                        <%= adj.file_field :file, class: "btn btn-primary fileupload", accept: '.csv' %>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <div class="modal-footer">
+          <%= f.submit "Submit", id: "save", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    var types = <%= raw t("mongoid.attributes.#{assetable.model_name.element}/file_types").to_json %>
+    var helpText = <%= raw t("mongoid.attributes.#{assetable.model_name.element}/help_text").to_json %>
+    var sampleFileUrls = <%= raw current_client.assets.where(asset_type: /_sample\z/).inject({}) {|json, asset| json[asset.asset_type] = asset.file.url; json; }.to_json %>
+
+    if(!$(".selectize").last().hasClass("selectize-dropdown")){
+      $(".selectize").last().selectize();
+    }
+
+    var currentType = $('select.selectize').val();
+    $('select.selectize').on("change", function(){
+      var formData = {"document_type": $(this).val()}
+      $(this).closest('.new_asset').find(".fileupload").data('form-data', formData)
+      currentType = $(this).val();
+      $('.help_text').html("<b>" + types[currentType] + "</b></br>" + helpText[currentType + "_html"].replace('%{url}', sampleFileUrls[currentType + '_sample']))
+    }).trigger('change');
+
+    $('.fileupload').on("click", function(){
+      if($('.' + currentType).length == 0){
+        var html_content = "<div class = 'card m-2'><div class = 'card-header'>" + types[currentType] +"</div><div class = 'car-body'><div class = 'files-container p-3 "+ currentType + "'></div></div></div>"
+        $(".assets").prepend(html_content)
+      }
+      var target = $('.' + currentType)
+      $('.fileupload').last().data('target', target)
+    })
+
+  });
+<% end %>

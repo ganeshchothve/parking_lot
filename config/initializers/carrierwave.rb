@@ -12,6 +12,10 @@ if Rails.env.production? || Rails.env.staging?
     config.fog_public     = true
     config.fog_attributes = { cache_control: "public, max-age=#{365.days.to_i}" }
   end
+else
+  CarrierWave.configure do |config|
+    config.asset_host = ActionController::Base.asset_host
+  end
 end
 if Rails.env.test?
 

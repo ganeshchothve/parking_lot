@@ -20,6 +20,7 @@ class ProjectUnitExportWorker
 
   def self.get_column_names
     [
+      "ID (Used for Bulk Upload)",
       "Unit Name",
       "Unit Type",
       "Type of Apartment",
@@ -49,6 +50,7 @@ class ProjectUnitExportWorker
   def self.get_project_unit_row(project_unit)
     status = project_unit.booking_detail.present? ? project_unit.booking_detail.status : project_unit.status
     [
+      project_unit.id.to_s,
       project_unit.name,
       project_unit.unit_configuration_name,
       project_unit.bedrooms,

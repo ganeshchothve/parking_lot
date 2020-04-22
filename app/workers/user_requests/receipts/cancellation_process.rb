@@ -27,7 +27,7 @@ module UserRequests
         user_request.save(validate: false)
       end
       receipt.try(:cancellation_rejected!)
-    end
+      end
     end
   end
 end
