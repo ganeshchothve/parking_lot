@@ -1,4 +1,5 @@
 class Admin::ProjectUnitsController < AdminController
+
   before_action :set_project_unit, except: %i[index export unit_configuration_chart]
   include ProjectUnitsConcern
   before_action :authorize_resource
