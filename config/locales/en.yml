@@ -1040,6 +1040,7 @@ en:
       show:
         link_name: '%{role} Details'
         header: 'Overview'
+      send_payment_link: 'Payment link sent to user'
     user_kycs:
       index:
         link_name: 'KYCs'

@@ -123,6 +123,7 @@ Rails.application.routes.draw do
 
       member do
         get :resend_confirmation_instructions
+        get :send_payment_link
         get :update_password
         get :resend_password_instructions
         get :print

@@ -23,7 +23,7 @@ class User
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, :lockable, :timeoutable, :password_expirable, :password_archivable, :session_limitable, :expirable, authentication_keys: [:login]
 
-  attr_accessor :temporary_password
+  attr_accessor :temporary_password, :payment_link
 
   ## Database authenticatable
   field :first_name, type: String, default: ''
@@ -435,6 +435,33 @@ class User
 
   def is_payment_done?
     receipts.where('$or' => [{ status: { '$in': %w(success clearance_pending) } }, { payment_mode: {'$ne': 'online'}, status: {'$in': %w(pending clearance_pending success)} }]).present?
+  end
+
+  def send_payment_link
+    url = Rails.application.routes.url_helpers
+    self.payment_link = url.dashboard_url("remote-state": url.new_buyer_receipt_path, user_email: email, user_token: authentication_token)
+    #
+    # Send email with payment link
+    email_template = ::Template::EmailTemplate.find_by(name: "payment_link")
+    email = Email.create!({
+      booking_portal_client_id: booking_portal_client_id,
+      body: ERB.new(self.booking_portal_client.email_header).result( binding) + email_template.parsed_content(self) + ERB.new(self.booking_portal_client.email_footer).result( binding ),
+      subject: email_template.parsed_subject(self),
+      recipients: [ self ],
+      triggered_by_id: id,
+      triggered_by_type: self.class.to_s
+    })
+    email.sent!
+    # Send sms with link for payment
+    sms_template = Template::SmsTemplate.find_by(name: "payment_link")
+    sms_body = sms_template.parsed_content(self)
+    Sms.create!({
+      booking_portal_client_id: booking_portal_client,
+      body: sms_body,
+      recipient: self,
+      triggered_by_id: id,
+      triggered_by_type: self.class.to_s
+    }) unless sms_body.blank?
   end
 
   # Class Methods

@@ -56,6 +56,10 @@ class Admin::UserPolicy < UserPolicy
     %w[admin sales sales_admin crm].include?(user.role)
   end
 
+  def send_payment_link?
+    record.buyer? && !record.is_payment_done?
+  end
+
   def permitted_attributes(params = {})
     attributes = super
     attributes += [:is_active] if record.persisted? && record.id != user.id
