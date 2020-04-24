@@ -1,3 +1,4 @@
+host: 'bookingportal.withamura.com'
 # for public assets such as app/assets
 asset_sync:
   FOG_DIRECTORY:
