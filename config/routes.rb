@@ -13,7 +13,8 @@ Rails.application.routes.draw do
     registrations: 'local_devise/registrations',
     sessions: 'local_devise/sessions',
     unlocks: 'local_devise/unlocks',
-    passwords: 'local_devise/passwords'
+    passwords: 'local_devise/passwords',
+    omniauth_callbacks: "users/omniauth_callbacks"
   }
 
   devise_scope :user do
@@ -123,6 +124,7 @@ Rails.application.routes.draw do
 
       member do
         get :resend_confirmation_instructions
+        get :send_payment_link
         get :update_password
         get :resend_password_instructions
         get :print

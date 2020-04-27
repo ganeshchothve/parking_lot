@@ -56,6 +56,14 @@ class Admin::UserPolicy < UserPolicy
     %w[admin sales sales_admin crm].include?(user.role)
   end
 
+  def send_payment_link?
+    record.buyer? && !record.is_payment_done?
+  end
+
+  def show_selldo_links?
+    ENV_CONFIG['selldo'].try(:[], 'base_url').present? && record.buyer? && record.lead_id? && current_client.selldo_default_search_list_id?
+  end
+
   def permitted_attributes(params = {})
     attributes = super
     attributes += [:is_active] if record.persisted? && record.id != user.id

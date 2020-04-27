@@ -1,4 +1,12 @@
+host: 'bookingportal.withamura.com'
+# for public assets such as app/assets
 asset_sync:
+  FOG_DIRECTORY:
+  AWS_ACCESS_KEY_ID:
+  AWS_SECRET_ACCESS_KEY:
+  FOG_REGION:
+# use for private assets such as client uploads.
+carrierwave:
   FOG_DIRECTORY:
   AWS_ACCESS_KEY_ID:
   AWS_SECRET_ACCESS_KEY:
@@ -38,6 +46,9 @@ pusher:
   pusher_api_secret: "2796b4e60ccae832e378"
   pusher_api_cluster: "ap2"
 selldo:
+  # Used for sell.do link's on user for sitevisit, followups in selldo
+  base_url: 'https://v2.sell.do'
+  # Used for pushing srd & data to sell.do
   api_clients:
     website:
       api_key:

@@ -8,6 +8,7 @@ class User
   include ApplicationHelper
   include SyncDetails
   extend FilterByCriteria
+  extend ApplicationHelper
 
   # Constants
   ALLOWED_UTM_KEYS = %i[utm_campaign utm_source utm_sub_source utm_content utm_medium utm_term]
@@ -21,9 +22,9 @@ class User
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, :lockable, :timeoutable, :password_expirable, :password_archivable, :session_limitable, :expirable, authentication_keys: [:login]
+  devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, :lockable, :timeoutable, :password_expirable, :password_archivable, :session_limitable, :expirable, :omniauthable, :omniauth_providers => [:selldo], authentication_keys: [:login]
 
-  attr_accessor :temporary_password
+  attr_accessor :temporary_password, :payment_link
 
   ## Database authenticatable
   field :first_name, type: String, default: ''
@@ -100,6 +101,9 @@ class User
   field :paranoid_verification_code, type: String
   field :paranoid_verification_attempt, type: Integer, default: 0
   field :paranoid_verified_at, type: DateTime
+
+  field :selldo_uid, type: String
+  field :selldo_access_token, type: String
 
   ## Security questionable
 
@@ -419,6 +423,7 @@ class User
   def send_confirmation_instructions
     generate_confirmation_token! unless @raw_confirmation_token
     # send_devise_notification(:confirmation_instructions, @raw_confirmation_token, opts)
+    devise_mailer.new.send(:devise_sms, self, :confirmation_instructions)
     attrs = {
       booking_portal_client_id: booking_portal_client_id,
       email_template_id: Template::EmailTemplate.find_by(name: "user_confirmation_instructions").id,
@@ -434,6 +439,37 @@ class User
 
   def is_payment_done?
     receipts.where('$or' => [{ status: { '$in': %w(success clearance_pending) } }, { payment_mode: {'$ne': 'online'}, status: {'$in': %w(pending clearance_pending success)} }]).present?
+  end
+
+  def send_payment_link
+    url = Rails.application.routes.url_helpers
+    self.payment_link = url.dashboard_url("remote-state": url.new_buyer_receipt_path, user_email: email, user_token: authentication_token)
+    #
+    # Send email with payment link
+    email_template = ::Template::EmailTemplate.find_by(name: "payment_link")
+    email = Email.create!({
+      booking_portal_client_id: booking_portal_client_id,
+      body: ERB.new(self.booking_portal_client.email_header).result( binding) + email_template.parsed_content(self) + ERB.new(self.booking_portal_client.email_footer).result( binding ),
+      subject: email_template.parsed_subject(self),
+      recipients: [ self ],
+      triggered_by_id: id,
+      triggered_by_type: self.class.to_s
+    })
+    email.sent!
+    # Send sms with link for payment
+    sms_template = Template::SmsTemplate.find_by(name: "payment_link")
+    sms_body = sms_template.parsed_content(self)
+    Sms.create!({
+      booking_portal_client_id: booking_portal_client,
+      body: sms_body,
+      recipient: self,
+      triggered_by_id: id,
+      triggered_by_type: self.class.to_s
+    }) unless sms_body.blank?
+  end
+
+  def update_selldo_credentials(oauth_data)
+    self.selldo_access_token = oauth_data.credentials.token if oauth_data
   end
 
   def push_srd_to_selldo
@@ -521,6 +557,34 @@ class User
         custom_scope = { role: { "$ne": 'superadmin' } }
       end
       custom_scope
+    end
+
+    def find_or_create_for_selldo_oauth(oauth_data)
+      matcher = {}
+      matcher[:email] = oauth_data.info.email
+      client = Client.where(selldo_client_id: oauth_data.extra.client_id).first
+      user = User.find_or_initialize_by(matcher).tap do |user|
+        user.password = Devise.friendly_token[0,15] + %w(! @ # $ % ^ & * ~).fetch(rand(8)) if user.has_no_password?
+        user.selldo_uid ||= oauth_data.uid
+        user.first_name = oauth_data.extra.first_name if user.first_name.blank?
+        user.last_name = oauth_data.extra.last_name if user.last_name.blank?
+        user.phone = oauth_data.extra.phone if user.phone.blank?
+        user.booking_portal_client ||= (client || current_client)
+        user.confirmed_at = Time.now unless user.confirmed?
+        user.role = case oauth_data.extra.role.try(:to_sym)
+        when :sales
+          'sales'
+        when :sales_manager
+          'sales_admin'
+        when :admin, :superadmin
+          'admin'
+        when :support, :support_manager
+          'crm'
+        else
+          'user'
+        end
+      end
+      user
     end
   end
 

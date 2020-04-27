@@ -167,6 +167,15 @@ class Admin::UsersController < AdminController
     @data = DashboardData::AdminDataProvider.user_block
   end
 
+  def send_payment_link
+    respond_to do |format|
+      format.html do
+        @user.send_payment_link
+        redirect_to request.referrer || dashboard_url, notice: t('controller.users.send_payment_link')
+      end
+    end
+  end
+
   private
 
   def set_user

@@ -33,7 +33,7 @@ class ProjectTower
   has_many :project_units
   has_many :schemes
 
-  validates :name, :client_id, :project_id, :total_floors, presence: true
+  validates :name, :project_id, :total_floors, presence: true
   validate :validate_floor_rise
   has_many :assets, as: :assetable
 
