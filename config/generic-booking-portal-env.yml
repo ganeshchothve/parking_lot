@@ -48,3 +48,7 @@ pusher:
 selldo:
   # Used for sell.do link's on user for sitevisit, followups in selldo
   base_url: 'https://v2.sell.do'
+  # Used for pushing srd & data to sell.do
+  api_clients:
+    website:
+      api_key:

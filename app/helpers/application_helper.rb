@@ -143,6 +143,14 @@ module ApplicationHelper
     end
   end
 
+  def system_srd
+    if user_signed_in? && current_user.role?('channel_partner')
+      current_client.selldo_cp_srd
+    else
+      current_client.selldo_default_srd
+    end
+  end
+
   def short_url destination_url
     uri = ShortenedUrl.clean_url(destination_url)
     if shortened_url = ShortenedUrl.where(original_url: uri.to_s).first

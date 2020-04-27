@@ -24,9 +24,10 @@ class ReceiptObserver < Mongoid::Observer
 
   def after_create receipt
     receipt.moved_to_clearance_pending
-    SelldoLeadUpdater.perform_async(receipt.user_id.to_s, 'payment_done', {token_number: receipt.token_number.present?}) if (receipt.payment_mode == 'offline' || (receipt.payment_mode == 'online' && receipt.success? ))
+    SelldoLeadUpdater.perform_async(receipt.user_id.to_s, {stage: 'payment_done', token_number: receipt.token_number.present?}) if (receipt.offline? || (receipt.online? && receipt.success? ))
   end
+
   def after_update receipt
-    SelldoLeadUpdater.perform_async(receipt.user_id.to_s, 'payment_done', {token_number: (receipt.token_number_changed? && receipt.token_number.present?)}) if (receipt.payment_mode == 'offline' || (receipt.payment_mode == 'online' && receipt.success? ))
+    SelldoLeadUpdater.perform_async(receipt.user_id.to_s, {stage: 'payment_done', token_number: (receipt.token_number_changed? && receipt.token_number.present?)}) if (receipt.offline? || (receipt.online? && receipt.success? ))
   end
 end

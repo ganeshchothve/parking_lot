@@ -154,4 +154,8 @@ class Client
       false
     end
   end
+
+  def self.selldo_api_clients
+    ENV_CONFIG.dig(:selldo, :api_clients) || {}
+  end
 end

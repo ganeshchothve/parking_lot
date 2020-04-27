@@ -60,6 +60,7 @@ class Admin::UsersController < AdminController
     respond_to do |format|
       format.html do
         if @user.save
+          SelldoLeadUpdater.perform_async(@user.id, {stage: 'confirmed'})
           email_template = ::Template::EmailTemplate.find_by(name: "account_confirmation")
           email = Email.create!({
             booking_portal_client_id: @user.booking_portal_client_id,
