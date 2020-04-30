@@ -136,6 +136,16 @@ class Admin::BookingDetailsController < AdminController
     @dataset = get_dataset(@data, @statuses)
   end
 
+  #
+  # This method sends booking detail form on email.
+  #
+  # GET /admin/booking_details/send_booking_detail_form_notification/:id
+  #
+  def send_booking_detail_form_notification
+    @booking_detail.send_booking_detail_form_mail_and_sms
+    redirect_to (request.referrer.present? ? request.referrer : admin_booking_details_path), notice: t('controller.booking_details.send_booking_detail_form_notification')
+  end
+
   private
 
   def set_booking_detail

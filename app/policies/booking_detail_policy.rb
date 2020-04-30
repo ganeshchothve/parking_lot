@@ -15,6 +15,10 @@ class BookingDetailPolicy < ApplicationPolicy
     _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && eligible_user? && has_user_on_record? && available_for_user_group?
   end
 
+  def generate_booking_detail_form?
+    true
+  end
+
   private
 
   def only_single_unit_can_hold!

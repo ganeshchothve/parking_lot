@@ -836,6 +836,7 @@ en:
       tasks:
         link_name: 'Tasks'
         header: 'Tasks'
+      send_booking_detail_form_notification: "Booking detail form will be sent to customer shortly."
       set_booking_detail_missing: "Booking detail not found"
       set_project_unit_missing: "Project unit not found"
       booking_successful: "You have completed the booking successfully."

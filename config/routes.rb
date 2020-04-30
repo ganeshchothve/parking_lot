@@ -58,6 +58,8 @@ Rails.application.routes.draw do
       member do
         patch :booking
         patch :send_under_negotiation
+        get :generate_booking_detail_form
+        get :send_booking_detail_form_notification
         get :tasks
         get :cost_sheet
         get :doc, path: 'doc/:type'
@@ -112,6 +114,7 @@ Rails.application.routes.draw do
 
       collection do
         get :unit_configuration_chart
+        get :inventory_snapshot
         get :export
       end
     end
