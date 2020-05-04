@@ -1,5 +1,6 @@
-Utils = {};
-Utils.datepickerOptions = {
+// Creating new namespace for Iris to avoid conflicts with other libraries.
+Iris = { utils:  {} };
+Iris.utils.datepickerOptions = {
   useCurrent: false,
   icons: {
     time: 'mdi mdi-clock',
@@ -14,14 +15,14 @@ Utils.datepickerOptions = {
   },
   format: 'DD/MM/YYYY'
 };
-Utils.autoNumericOptions = {
+Iris.utils.autoNumericOptions = {
   aSep: ',',
   aDec: '.',
   aForm: false,
   mDec: '0',
   dGroup: 2
 };
-Utils.daterangepickerOptions = {
+Iris.utils.daterangepickerOptions = {
   opens: "left",
   parentEl: "body",
   autoUpdateInput: false,
@@ -39,7 +40,7 @@ Utils.daterangepickerOptions = {
   }
 
 };
-Utils.datetimepickerOptions = {
+Iris.utils.datetimepickerOptions = {
   useCurrent: false,
   icons: {
     time: 'mdi mdi-clock',

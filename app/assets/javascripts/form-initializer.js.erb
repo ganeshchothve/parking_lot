@@ -60,7 +60,7 @@ FormInitializer = (function(){
     });
 
     $(selector).find('.datepicker').each(function(){
-      var datepickerOptions = _.clone(Utils.datepickerOptions);
+      var datepickerOptions = _.clone(Iris.utils.datepickerOptions);
       if($(this).data("minDate")){
         datepickerOptions.minDate = moment($(this).data("minDate"), "DD/MM/YYYY")
       }
@@ -76,15 +76,15 @@ FormInitializer = (function(){
     $(selector).find('.money-field').each(function(){
       var value = $(this).val();
       if(!_.isUndefined(value)) {
-        $(this).autoNumeric('init', Utils.autoNumericOptions);
+        $(this).autoNumeric('init', Iris.utils.autoNumericOptions);
         if(_.isNumber(value)){
           $(this).autoNumeric("set", value);
         }
       }
     });
 
-    $(selector).find(".date_validation").datetimepicker(Utils.datepickerOptions);
-    $(selector).find('.datetimepicker').datetimepicker(Utils.datetimepickerOptions);
+    $(selector).find(".date_validation").datetimepicker(Iris.utils.datepickerOptions);
+    $(selector).find('.datetimepicker').datetimepicker(Iris.utils.datetimepickerOptions);
     FileIcon.init($(".asset-delete"), $(".asset-icon"));
     _.each($(selector).find(".fileupload"), function(){
       $(this).fileUploader({
