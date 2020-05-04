@@ -1,8 +1,10 @@
 class ReceiptObserver < Mongoid::Observer
   def before_validation(receipt)
-    if receipt.event.present? && (receipt.aasm.current_state.to_s != receipt.event.to_s)
-      if receipt.send("may_#{receipt.event.to_s}?")
-        receipt.aasm.fire!(receipt.event.to_sym)
+    _event = receipt.event.to_s
+    receipt.event = nil
+    if _event.present? && (receipt.aasm.current_state.to_s != _event.to_s)
+      if receipt.send("may_#{_event.to_s}?")
+        receipt.aasm.fire!(_event.to_sym)
       else
         receipt.errors.add(:status, 'transition is invalid')
       end
@@ -15,12 +17,6 @@ class ReceiptObserver < Mongoid::Observer
       receipt.assign!(:order_id) if receipt.order_id.blank?
     end
   end
-
-  # def after_save(receipt)
-  #   _event = receipt.event
-  #   receipt.event = nil
-  #   receipt.send("#{_event}!") if _event.present?
-  # end
 
   def after_create receipt
     receipt.moved_to_clearance_pending
