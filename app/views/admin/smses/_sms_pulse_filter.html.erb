@@ -1,0 +1,26 @@
+<% labels = t('mongoid.attributes.sms').with_indifferent_access %>
+<div class="filter-inner">
+  <div class="filter-header">
+  <span class="title">Filter</span>
+  <a href="javascript:;" class="close-filter-btn">&times;</a>
+  </div>
+  <%= form_tag url, method: "get", id: "sms_pulse_filter_form" do %>
+    <div class="filter-content">
+      <div class="row">
+        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <%= label_tag "fltrs", labels[:sent_on], class: "control-label" %>
+          <%= text_field_tag "fltrs[sent_on]", (params[:fltrs].present? ? params[:fltrs][:sent_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "down"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
+        </div>
+      </div>
+    </div>
+    <div class="filter-footer">
+      <%= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right" %>
+      <button type="button" class="f-cancel-btn db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
+    </div>
+  <% end %>
+</div>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($("#sms_pulse_filter_form"));
+  });
+<% end %>

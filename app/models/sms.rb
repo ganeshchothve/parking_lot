@@ -32,4 +32,49 @@ class Sms
 
   default_scope -> {desc(:created_at)}
 
+  def self.sms_pulse(range = nil)
+    if range.present?
+      from, to = range.split(' - ')
+      match_params = {sent_on: {"$gte": Time.parse(from), "$lte": Time.parse(to)}}
+    else
+      match_params = {sent_on: {"$ne": nil}}
+    end
+    match_params[:status] = 'sent'
+
+    data = Sms.collection.aggregate([
+      {
+        "$match": match_params
+      },{
+        "$unwind": { path: "$to"}
+      },{
+        "$project":
+        {
+          month: { "$month": "$sent_on"},
+          year: {"$year": "$sent_on"},
+          body: "$body"
+        }
+      },{
+        "$group":
+        {
+          "_id": {year: "$year", month: "$month"},
+          count: { "$sum": {"$ceil": {"$divide": [{ "$strLenCP": "$body" }, 160] }}}
+        }
+      },{
+        "$sort":
+        {
+          "_id.year": -1,
+          "_id.month": -1,
+        }
+      }
+    ]).to_a
+
+    out = data.inject({}) do |hsh, d|
+      _key = "#{d.dig('_id', 'month')}/#{d.dig('_id', 'year')}"
+      hsh[_key] = d['count']
+      hsh
+    end
+    out['Total'] = out.values.inject(:+)
+    out.present? ? out : "No SMS data present."
+  end
+
 end

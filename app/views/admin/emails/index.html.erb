@@ -10,6 +10,9 @@
       </div>
       <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
         <div class="table-btn-set float-right pb-3">
+          <% if policy([:admin, Email]).monthly_count? %>
+            <%= link_to "Monthly Count", monthly_count_admin_emails_path, class: 'db-btn db-small-btn light-blue bg-white fn-400 btn' %>
+          <% end %>
           <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @emails.total_entries %></button>
           <button class="db-filter-btn white fn-500" type="button">
             <i class="icon-set icon-filter-light-blue"></i>
