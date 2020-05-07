@@ -4,6 +4,10 @@ class Admin::EmailPolicy < EmailPolicy
     !user.buyer?
   end
 
+  def monthly_count?
+    user.role?('superadmin')
+  end
+
   def show?
     if !user.buyer?
       if %[admin superadmin].include?(user.role)

@@ -10,6 +10,14 @@ class Admin::EmailsController < AdminController
   # show defined in EmailConcern
   # GET /admin/emails/:id
 
+  def monthly_count
+    if params[:fltrs] && params[:fltrs][:sent_on]
+      @monthly_count = Email.monthly_count(params[:fltrs][:sent_on])
+    else
+      @monthly_count = Email.monthly_count
+    end
+  end
+
   private
 
   def apply_policy_scope
@@ -19,7 +27,7 @@ class Admin::EmailsController < AdminController
   end
 
   def authorize_resource
-    if params[:action] == 'index'
+    if params[:action].in?(%w(index monthly_count))
       authorize [:admin, Email]
     else
       authorize [:admin, @email]

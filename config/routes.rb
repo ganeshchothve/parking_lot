@@ -81,7 +81,12 @@ Rails.application.routes.draw do
     resources :sync_logs, only: %i[index create] do
       patch :resync, on: :member
     end
-    resources :emails, :smses, only: %i[index show]
+    resources :emails, only: %i[index show] do
+      get :monthly_count, on: :collection
+    end
+    resources :smses, only: %i[index show] do
+      get :sms_pulse, on: :collection
+    end
     resource :client, except: [:show, :new, :create] do
       resources :templates, only: [:edit, :update, :index]
     end

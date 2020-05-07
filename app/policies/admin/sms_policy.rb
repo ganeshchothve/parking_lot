@@ -4,6 +4,10 @@ class Admin::SmsPolicy < SmsPolicy
     !user.buyer?
   end
 
+  def sms_pulse?
+    user.role == 'superadmin'
+  end
+
   def show?
     if !user.buyer?
       if %[admin superadmin].include?(user.role)
