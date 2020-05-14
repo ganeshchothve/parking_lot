@@ -48,7 +48,7 @@ module Gamification
         secret: ENV_CONFIG[:pusher]['pusher_api_secret'],
         cluster: ENV_CONFIG[:pusher]['pusher_api_cluster'],
         encrypted: true
-      )
+      ) if ENV_CONFIG[:pusher]['pusher_api_app_id'].present?
     end
 
     def push(message="", channel=nil, event=nil)
@@ -59,7 +59,7 @@ module Gamification
         event = DEFAULT_EVENT
       end
       message = message.to_s
-      if message.present?
+      if message.present? && @pusher_client.present?
         @pusher_client.trigger(channel, event, {
           message: message
         })
