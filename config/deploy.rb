@@ -66,7 +66,7 @@ namespace :deploy do
         upload!(File.expand_path('../sidekiq_manager.yml.example', __FILE__), "#{deploy_to}/shared/config/sidekiq_manager.yml")
       end
       unless test("[ -f #{deploy_to}/shared/config/generic-booking-portal-env.yml ]")
-        upload!(File.expand_path("../deploy/#{fetch(:application)}-booking-portal-env.yml", __FILE__), "#{deploy_to}/shared/config/generic-booking-portal-env.yml")
+        upload!(File.expand_path("../deploy/#{fetch(:application)}-#{fetch(:rails_env)}-booking-portal-env.yml", __FILE__), "#{deploy_to}/shared/config/generic-booking-portal-env.yml")
       end
     end
   end
@@ -82,7 +82,7 @@ namespace :deploy do
     end
   end
 
-  before 'deploy:check:linked_files', 'deploy:upload_configs'
-  after :finished, 'deploy:change_permissions'
+  #before 'deploy:check:linked_files', 'deploy:upload_configs'
+  #after :finished, 'deploy:change_permissions'
   #after :finished, 'deploy:seed'
 end

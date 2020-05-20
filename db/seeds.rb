@@ -6,21 +6,25 @@ client = Client.first || Client.new(name: (ENV['client_name'] || 'Amura'), selld
 if client.new_record?
   client.save
 else
-  client.update({
-    name: (ENV['client_name'].presence || 'Amura'),
-    registration_name: (ENV['client_name'].presence || 'Amura'),
-    booking_portal_domains: [(ENV['booking_portal_domains'].presence)].compact
-  })
+  attrs = {}
+  if ENV['client_name'].present?
+    attrs[:name] = ENV['client_name']
+    attrs[:registration_name] = ENV['client_name']
+  end
+  attrs[:booking_portal_domains] = [(ENV['booking_portal_domains'].presence)].compact if ENV['booking_portal_domains'].present?
+
+  client.update(attrs) if attrs.present?
 end
 
 project = Project.first || Project.new(name: (ENV['project_name'] || 'Amura Towers'), remote_logo_url: "https://image4.owler.com/logo/amura_owler_20160227_194208_large.png", rera_registration_no: (ENV['rera_no'] || "RERA-AMURA-123"), booking_portal_client: client)
 if project.new_record?
   project.save
 else
-  project.update({
-    name: (ENV['project_name'].presence || 'Amura Towers'),
-    rera_registration_no: (ENV['rera_no'].presence || "RERA-AMURA-123")
-  })
+  attrs = {}
+  attrs[:name] = ENV['project_name'] if ENV['project_name'].present?
+  attrs[:rera_registration_no] = ENV['rera_no'] if ENV['rera_no'].present?
+
+  project.update(attrs) if attrs.present?
 end
 
 
@@ -40,7 +44,3 @@ if User.count.zero?
     end
   end
 end
-
-# DatabaseSeeds::ErpModelTemplate.seed
-# DatabaseSeeds::SmsTemplate.seed Client.last.id
-# DatabaseSeeds::EmailTemplates.seed(Client.first.id)
