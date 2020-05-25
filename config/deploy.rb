@@ -27,7 +27,7 @@ append :linked_files, 'config/lead_conflicts_executers.yml', 'config/sidekiq_man
 
 # Default value for linked_dirs is []
 # append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system"
-set :linked_dirs, %w{log tmp vendor/bundle public/uploads exports}
+set :linked_dirs, %w{log tmp/pids vendor/bundle public/uploads exports}
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
@@ -49,9 +49,20 @@ namespace :deploy do
       ask(:client_name, nil)
       ask(:project_name, nil)
       ask(:rera_no, nil)
-      set :booking_portal_domain, `ssh -G #{server.hostname} | awk '/^hostname / { print $2 }'`.strip
+
+      # Get booking_portal_domains -> IP from ssh server details & domain from env. config file if set.
+      set :_domain, `ssh -G #{server.hostname} | awk '/^hostname / { print $2 }'`.strip
+      file_path = File.expand_path("../deploy/#{fetch(:application)}-#{fetch(:rails_env)}-booking-portal-env.yml", __FILE__)
+      if Pathname.new(file_path).exist?
+        env_config = (YAML.load(File.open(file_path).read).symbolize_keys)
+        set :_host, env_config[:host] unless env_config[:host].to_s.length.zero?
+      end
+      booking_portal_domains = ""
+      booking_portal_domains += "#{fetch(:_domain)}" unless fetch(:_domain).to_s.length.zero?
+      booking_portal_domains += ",#{fetch(:_host)}" unless fetch(:_host).to_s.length.zero?
+
       within release_path do
-        execute :bundle, :exec, :"rake db:seed RAILS_ENV=#{fetch(:rails_env)} client_name='#{fetch(:client_name)}' project_name='#{fetch(:project_name)}' rera_no='#{fetch(:rera_no)}' booking_portal_domains='#{fetch(:booking_portal_domain)}'"
+        execute :bundle, :exec, :"rake db:seed RAILS_ENV=#{fetch(:rails_env)} client_name='#{fetch(:client_name)}' project_name='#{fetch(:project_name)}' rera_no='#{fetch(:rera_no)}' booking_portal_domains='#{booking_portal_domains}'"
       end
     end
   end
@@ -76,7 +87,8 @@ namespace :deploy do
     on roles(:app) do
       within release_path do
         if test("[ $(stat -c '%a' \"#{deploy_to}/shared/exports\" \"#{deploy_to}/shared/tmp\" \"#{deploy_to}/shared/log\" \"#{deploy_to}/shared/public/uploads\" | tr -d '\\n') != \"777777777777\" ]")
-          execute :chmod, '-R', '0777', "#{deploy_to}/shared/exports", "#{deploy_to}/shared/tmp", "#{deploy_to}/shared/log", "#{deploy_to}/shared/public/uploads"
+          execute :setfacl, '-Rdm', 'm::rwx', "#{deploy_to}/shared/exports", "#{deploy_to}/shared/tmp", "#{deploy_to}/shared/log", "#{deploy_to}/shared/public/uploads"
+          #execute :chmod, '-R', '0777', "#{deploy_to}/shared/exports", "#{deploy_to}/shared/tmp", "#{deploy_to}/shared/log", "#{deploy_to}/shared/public/uploads"
         end
       end
     end
