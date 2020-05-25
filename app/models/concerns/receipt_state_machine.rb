@@ -123,7 +123,7 @@ module ReceiptStateMachine
     end
 
     def send_booking_detail_to_under_negotiation
-      booking_detail.under_negotiation! if booking_detail
+      change_booking_detail_status
       send_notification if %i[pending clearance_pending cancelled].include?(self.aasm.from_state)
     end
     #
