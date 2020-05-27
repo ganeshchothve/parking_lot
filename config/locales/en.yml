@@ -1118,11 +1118,6 @@ en:
       link:
         pre_text: 'Already have an account?'
         name: 'Login here'
-    titles:
-      heading1_html: 'Welcome to %{project_name}'
-      heading2_html: 'Now is the best time to turn your dream into reality'
-    form:
-      heading_html: '<strong>Login</strong> to Book an Apartment online'
 
   registrations:
     pre_text: 'Don’t have account ?'

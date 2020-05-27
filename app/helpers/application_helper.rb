@@ -18,6 +18,10 @@ module ApplicationHelper
     "#{I18n.t('currency.' + currency.to_s)}#{number}".html_safe
   end
 
+  def get_view_erb(template)
+    ::ERB.new(template.content).result( binding ).html_safe
+  end
+
   def float_to_int (x)
     Float(x)
     i, f = x.to_i, x.to_f

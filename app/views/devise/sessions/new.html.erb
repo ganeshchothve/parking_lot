@@ -9,10 +9,11 @@ end %>
   <div class="container no-pd">
     <div class="col-lg-5 col-xs-12 col-md-12 col-sm-12 no-pd">
       <div class="login-form-wrapper pt-5">
-        <h1 class="mt-0 fn-24"><%= t('sessions.titles.heading1_html', project_name: current_project.name) %></h1>
-        <p class="p-style mt-0"><%= t('sessions.titles.heading2_html') %></p>
-        <p class="p-style"><%= t('sessions.form.heading_html') %></p>
 
+        <% template = ::Template::UITemplate.where(name: 'devise/sessions/new').first %>
+        <% if template.present? %>
+          <%= get_view_erb(template) %>
+        <% end %>
 
         <%= simple_form_for(resource, as: resource_name, url: users_otp_path, method: :post, authenticity_token: true, remote: true, html: { novalidate: false, class: "validate-form #{otp_signin_class}", id: 'otp_user_form', data: { type: :json }, autocomplete: 'off' }) do |f| %>
 
