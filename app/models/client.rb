@@ -115,6 +115,7 @@ class Client
   has_many :templates
   has_many :sms_templates, class_name: 'Template::SmsTemplate'
   has_many :email_templates, class_name: 'Template::EmailTemplate'
+  has_many :ui_templates, class_name: 'Template::UITemplate'
   has_many :smses, class_name: 'Sms'
   has_many :assets, as: :assetable
   has_many :emails, class_name: 'Email', inverse_of: :booking_portal_client
