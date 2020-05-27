@@ -135,7 +135,7 @@ module DatabaseSeeds
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'searches/checkout', content: '<p class="p-style white"> To be fair to other user interested in this apartments, we have held this unit for some time. Please go through the costs and payments schedule before you make a payment of <%= number_to_indian_currency(@project_unit.blocking_amount || current_client.blocking_amount) %></p>' })
       end
 
-      # To change text on show booking detail for user
+      # To change text on show booking detail for user & channel_partner
       # @bd is booking_detail
       if Template::UITemplate.where(name: 'booking_details/_details').blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'booking_details/_details', content: '<ul>
