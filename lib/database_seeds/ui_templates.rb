@@ -88,6 +88,43 @@ module DatabaseSeeds
         <p><strong>Register now</strong> & join our network to explore new opportunities</p>' })
       end
 
+      if Template::UITemplate.where(name: 'layouts/_navbar_footer').blank?
+        Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'layouts/_navbar_footer', content: '
+        <div class="container">
+          <% if defined?(current_user) && current_user %>
+            <div class="row pb-1 footer-tow-cmn">
+              <div class="col-lg-6 col-md-8 col-xs-6 col-sm-4 no-pd">
+                <ul class="footer-menu float-left mb-0">
+                  <%= bottom_navigation %>
+                </ul>
+              </div>
+              <div class="col-lg-6 col-md-4 col-xs-6 col-sm-8 no-pd">
+                <ul class="footer-menu float-right mb-0">
+                  <%= render "layouts/language" %>
+                </ul>
+              </div>
+            </div>
+          <% end %>
+          <div class="row scroll-footer">
+            <% if defined?(current_user) && current_user %>
+              <hr class="w-100 m-0">
+            <% end %>
+            <div class="col-lg-8 no-pd">
+              <div class="footer-top footer-menu">
+                <p class="m-0 pb-1"><%= current_project.name %> is registered via MahaRERA No.: <%= current_project.rera_registration_no %> & is available on <a href="https://maharera.mahaonline.gov.in" target="_blank">https://maharera.mahaonline.gov.in</a>.</p>
+              </div>
+            </div>
+            <% unless defined?(current_user) && current_user %>
+              <div class="col-lg-4 col-md-4 col-xs-12 col-sm-12 no-pd">
+                <ul class="footer-menu float-right mb-0">
+                  <%= render "layouts/language" %>
+                </ul>
+              </div>
+            <% end %>
+          </div>
+        </div>' })
+      end
+
       Template::UITemplate.where(booking_portal_client_id: client_id).count
     end
   end
