@@ -125,6 +125,10 @@ module DatabaseSeeds
         </div>' })
       end
 
+      if Template::UITemplate.where(name: 'searches/checkout').blank?
+        Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'searches/checkout', content: '<p class="p-style white"> To be fair to other user interested in this apartments, we have held this unit for some time. Please go through the costs and payments schedule before you make a payment of <%= number_to_indian_currency(@project_unit.blocking_amount || current_client.blocking_amount) %></p>' })
+      end
+
       Template::UITemplate.where(booking_portal_client_id: client_id).count
     end
   end
