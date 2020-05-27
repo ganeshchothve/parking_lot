@@ -2,8 +2,10 @@
   <div class="container no-pd">
     <div class="col-lg-6 col-xs-12 col-md-12 col-sm-12 p-0">
       <div class="login-form-wrapper pt-5">
-        <h1 class="mt-0 fn-20"><%= t('channel_partner_registration.titles.heading1_html') %></h1>
-        <p><%= t('channel_partner_registration.titles.heading2_html') %></p>
+        <% template = ::Template::UITemplate.where(name: 'channel_partner/new').first %>
+        <% if template.present? %>
+          <%= get_view_erb(template) %>
+        <% end %>
         <div class="box-card">
           <div class="box-header bg-gradient br-rd-tr-4">
             <h2><strong>Basic details</strong></h2>

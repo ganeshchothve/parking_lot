@@ -83,6 +83,11 @@ module DatabaseSeeds
         <p><strong>Register Now</strong> to Book Online</p>' })
       end
 
+      if Template::UITemplate.where(name: 'channel_partner/new').blank?
+        Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'channel_partner/new', content: '<h1 class="mt-0 fn-20">We are a big family of 400+ esteemed partners and we are happy to onboard you</h1>
+        <p><strong>Register now</strong> & join our network to explore new opportunities</p>' })
+      end
+
       Template::UITemplate.where(booking_portal_client_id: client_id).count
     end
   end
