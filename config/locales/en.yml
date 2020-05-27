@@ -1123,15 +1123,9 @@ en:
     pre_text: 'Don’t have account ?'
     new:
       sign_up: 'Sign Up'
-    titles:
-      heading1_html: 'Biggest real estate opportunity in Pune<br> Introducing exclusive %{unit_configs} Bed residences starting from %{start_price} lakhs'
-      heading2_html: Home buying can’t get better than this
-    form:
-      heading_html: '<strong>Register Now</strong> to Book Online'
 
   channel_partner_registration:
     titles:
-      heading1_html: 'We are a big family of 400+ esteemed partners and we are happy to onboard you'
       heading2_html: '<strong>Register now</strong> & join our network to explore new opportunities'
 
   dashboard:
