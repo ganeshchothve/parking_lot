@@ -1,14 +1,10 @@
 <section class="first-sec welcome-box">
   <div class="container">
     <div class="row">
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 bg-gradient">
-        <div class="box-content">
-          <% template = ::Template::UITemplate.where(name: 'users/_welcome').first %>
-          <% if template.present? %>
-            <%= get_view_erb(template) %>
-          <% end %>
-        </div>
-      </div>
+      <% template = ::Template::UITemplate.where(name: 'users/_welcome').first %>
+      <% if template.present? %>
+        <%= get_view_erb(template) %>
+      <% end %>
     </div>
   </div>
 </section>
