@@ -5,7 +5,13 @@ else
   otp_signin_class = "d-none"
   username_signin_class = ""
 end %>
-<section class="auth login-page pb-5">
+
+<% template = ::Template::UITemplate.where(name: 'login_page_image').first %>
+<% if template.present? %>
+  <%= get_view_erb(template) %>
+<% end %>
+
+<section class="auth login-page pb-5"  style="background-image: url('<%= asset_path(@login_image_path) %>')">
   <div class="container no-pd">
     <div class="col-lg-5 col-xs-12 col-md-12 col-sm-12 no-pd">
       <div class="login-form-wrapper pt-5">

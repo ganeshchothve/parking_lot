@@ -158,6 +158,15 @@ module DatabaseSeeds
         ' })
       end
 
+      # To change image on login page
+      if Template::UITemplate.where(name: 'login_page_image').blank?
+        Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'login_page_image', content: '
+          <% image = Asset.where(asset_type: "login_image").first %>
+          <% if image.present? %>
+            <% @login_image_path = image.file_name %>
+          <% end %>' })
+      end
+
       Template::UITemplate.where(booking_portal_client_id: client_id).count
     end
   end
