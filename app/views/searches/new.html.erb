@@ -39,7 +39,10 @@
                   </div>
                 </div>
             <% else %>
-              <%= image_tag 'search-home-img.png', class: 'rounded img-fluid', width: 400, height: 400 %>
+              <% template = ::Template::UITemplate.where(name: 'searches/new').first %>
+              <% if template.present? %>
+                <%= get_view_erb(template) %>
+              <% end %>
             <% end %>
           </div>
 
