@@ -48,5 +48,5 @@ before 'sidekiq:start', 'deploy:make_sidekiq_pids_dir'
 # Make app environment specific configuration file within config/deploy/ folder with necessary details before running below task.
 #
 # before 'deploy:check:linked_files', 'deploy:upload_configs'
-# after :finished, 'deploy:change_permissions'
-# after :finished, 'deploy:seed'
+# after 'deploy:finished', 'deploy:change_permissions'
+# after 'deploy:finished', 'deploy:seed'
