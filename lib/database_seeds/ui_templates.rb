@@ -4,73 +4,51 @@
 module DatabaseSeeds
   module UITemplate
     def self.seed(client_id)
-      # To render card on admin dashboard
-      # if Template::UITemplate.where(name: 'users/_welcome').blank?
-      #   Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'users_pwelcome', content: '
-      #     <div class="box-content">
-      #       <h1 class="wc-title white text-center"> <%= t("dashboard.user.welcome.heading", name: current_user.name) %> </h1>
-      #       <% if current_user.receipts.present? && !current_client.enable_actual_inventory?(current_user) %>
-      #         <p class="white text-center fn-300 fn-18"><%= t("dashboard.user.welcome.sub_heading_1") %></p>
-      #       <% else %>
-      #         <p class="white text-center fn-300 fn-18"><%= t("dashboard.user.welcome.sub_heading_html", project_size: current_project.project_size, blocking_amount: number_to_indian_currency(current_client.blocking_amount)) %></p>
-      #       <% end %>
-      #       <ul class="step-booking">
-      #         <li>
-      #           <%= link_to [:new, current_user_role_group, :user_kyc], class: "modal-remote-form-link" do %>
-      #             <span><%= image_tag "file-invoice.svg", alt: "Invoice" %></span>
-      #             <%= t("controller.user_kycs.new.link_name") %>
-      #           <% end %>
+      # To render card on user dashboard
+      if Template::UITemplate.where(name: 'users/_welcome').blank?
+        Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'users/_welcome', content: '
+        <h1 class="wc-title white text-center">Welcome <%= current_user.name %></h1>
+        <% if current_user.receipts.present? && !current_client.enable_actual_inventory?(current_user) %>
+          <p class="white text-center fn-300 fn-18">Congratulations on generating your Priority Token for allotment day. Make additional payment to get more tokens</p>
+        <% else %>
+          <p class="white text-center fn-300 fn-18">Now get privileged access to <%= current_project.project_size %> spread township and book your dream home by just paying <%= number_to_indian_currency(current_client.blocking_amount) %><br>400+ customers have already paid a token amount and now it\'s your chance to roll the dice by following below steps</p>
+        <% end %>
+        <ul class="step-booking">
+          <li>
+            <span><%= image_tag "file-invoice.svg", alt: "Invoice" %></span>
+            <%= link_to "Fill KYC Form", [:new, current_user_role_group, :user_kyc], class: "modal-remote-form-link" %>
+          </li>
+          <li>
+            <span><%= image_tag "rupee-blue.svg", alt: "Rupee" %></span>
+            <%= link_to_if !current_user.user_kyc_ids.blank?, "Pay Remaining Amount",[:new, current_user_role_group, :receipt ], { class: "modal-remote-form-link"} %>
+          </li>
+          <li>
+            <span><%= image_tag "get-token.svg", alt: "Building", style: "width:40px;" %></span>
+            <%= link_to_if policy([current_user_role_group, ProjectUnit.new(user: current_user, status: "available")]).hold?, "Get Priority Token", new_search_path %>
+          </li>
+        </ul>
 
-      #         </li>
-      #         <li>
-      #           <%= link_to_if !current_user.user_kyc_ids.blank?, [:new, current_user_role_group, :receipt ], { class: "modal-remote-form-link"}, {} do %>
-      #             <span><%= image_tag "rupee-blue.svg", alt: "Rupee" %></span>
-      #             <%= t("controller.receipts.new.link_name") %>
-      #           <% end %>
-      #         </li>
-      #         <li>
-      #           <%= link_to_if policy([current_user_role_group, ProjectUnit.new(user: current_user, status: "available")]).hold?, new_search_path do %>
-      #             <span><%= image_tag "get-token.svg", alt: "Building", style: "width:40px;" %></span>
-      #             <%= t("dashboard.user.towers.header") %>
-      #           <% end %>
-      #         </li>
-      #       </ul>
-
-      #       <div class="row">
-      #         <div class="col lg-3">
-      #         </div>
-      #         <div class="col lg-3">
-      #           <% if current_user.kyc_ready? && current_user.booking_details.in(status: BookingDetail::BOOKING_STAGES).count >= current_user.allowed_bookings %>
-      #               <p class="white text-center fn-14 fn-500">You cannot book any more apartments as you have reached the maximum bookings allowed per customer.</p>
-      #           <% elsif current_user.kyc_ready? && current_client.enable_actual_inventory?(current_user) %>
-      #             <%- booking_detail = current_user.booking_details.hold.first %>
-      #             <% if booking_detail && booking_detail.search %>
-      #               <!-- <p class="white text-center fn-14 fn-500">You already have a unit on hold.</p> -->
-      #               <%= link_to t("controller.booking_details.continue_booking.link_name"), checkout_user_search_path(booking_detail.search), class: "large-btn black-bg display-block fn-500 center-block show-kyc width-250" %>
-      #             <% else %>
-      #               <% if policy([current_user_role_group, ProjectUnit.new(user: current_user, status: "available")]).hold? %>
-      #                 <p class="white text-center fn-14 fn-500"><%= t("controller.searches.towers.header") %></p>
-      #                 <%= link_to t("controller.buyer.dashboard.book_apartment"), new_search_path, class: "large-btn black-bg display-block fn-500 center-block show-kyc" %>
-      #               <% end %>
-      #             <% end %>
-      #           <% elsif current_user.kyc_ready? %>
-      #             <!-- <p class="white text-center fn-14 fn-500">Make Payment to proceed further</p> -->
-      #             <%= link_to t("controller.buyer.dashboard.add_payment"), new_buyer_receipt_path, class: "large-btn black-bg display-block fn-500 center-block show-kyc modal-remote-form-link" %>
-      #           <% else %>
-      #             <!-- <p class="white text-center fn-14 fn-500">Fill your KYC form to proceed further</p> -->
-      #             <%= link_to t("controller.buyer.dashboard.fill_kyc_form"), new_buyer_user_kyc_path, class: "large-btn black-bg display-block fn-500 center-block show-kyc modal-remote-form-link" %>
-      #           <% end%>
-      #         </div>
-      #         <div class="col lg-3">
-      #           <% if policy([current_user_role_group, current_user]).loan_eligibility_details? %>
-      #             <%= link_to "Check Loan Eligibility Details", loan_eligibility_details_buyer_user_path(current_user.id), class: "large-btn black-bg display-block fn-500 center-block show-kyc width-250 modal-remote-form-link" %>
-      #           <% end %>
-      #         </div>
-      #         <div class="col lg-3">
-      #         </div>
-      #       </div>
-      #     </div>' })
-      # end
+        <% if current_user.kyc_ready? && current_user.booking_details.in(status: BookingDetail::BOOKING_STAGES).count >= current_user.allowed_bookings %>
+            <p class="white text-center fn-14 fn-500">You cannot book any more apartments as you have reached the maximum bookings allowed per customer.</p>
+        <% elsif current_user.kyc_ready? && current_client.enable_actual_inventory?(current_user) %>
+          <%= booking_detail = current_user.booking_details.hold.first %>
+          <% if booking_detail && booking_detail.search %>
+            <!-- <p class="white text-center fn-14 fn-500">You already have a unit on hold.</p> -->
+            <%= link_to "Checkout using unit already held", checkout_user_search_path(booking_detail.search), class: "large-btn black-bg display-block fn-500 center-block show-kyc width-250" %>
+          <% else %>
+            <% if policy([current_user_role_group, ProjectUnit.new(user: current_user, status: "available")]).hold? %>
+              <p class="white text-center fn-14 fn-500">Choose Apartment</p>
+              <%= link_to t("controller.buyer.dashboard.book_apartment"), new_search_path, class: "large-btn black-bg display-block fn-500 center-block show-kyc" %>
+            <% end %>
+          <% end %>
+        <% elsif current_user.kyc_ready? %>
+          <!-- <p class="white text-center fn-14 fn-500">Make Payment to proceed further</p> -->
+          <%= link_to t("controller.buyer.dashboard.add_payment"), new_buyer_receipt_path, class: "large-btn black-bg display-block fn-500 center-block show-kyc modal-remote-form-link" %>
+        <% else %>
+          <!-- <p class="white text-center fn-14 fn-500">Fill your KYC form to proceed further</p> -->
+          <%= link_to t("controller.buyer.dashboard.fill_kyc_form"), new_buyer_user_kyc_path, class: "large-btn black-bg display-block fn-500 center-block show-kyc modal-remote-form-link" %>
+        <% end%>' })
+      end
 
       # To change text above login page for admin/sales/user
       if Template::UITemplate.where(name: 'devise/sessions/new').blank?
