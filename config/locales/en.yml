@@ -829,7 +829,7 @@ en:
       release_unit:
         link_name: 'Release Unit'
       continue_booking:
-        link_name: 'Checkout using unit already held'
+        link_name: 'Checkout using already held unit'
       cost_sheet:
         link_name: Cost Sheet
       payment_schedule:
@@ -978,7 +978,7 @@ en:
       project_unit_missing: 'Project Unit Selection step is missing'
       check_project_unit_hold_status: "We've released the unit which was held for %{holding_minutes} minutes. Please re-select the unit and try booking again."
       checkout:
-        non_hold_booking: 'Booking is not yet hold.'
+        non_hold_booking: 'Booking is not held.'
         pending_payments: "We already have collected a payment for this unit from the same customer."
       hold:
         booking_detail_error: 'We cannot process your request at this time. Please retry'

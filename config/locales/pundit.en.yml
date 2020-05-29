@@ -28,6 +28,11 @@ en:
           user_kyc_allowed_bookings: 'Multiple KYC booking is not allowed.'
           not_authorise_to_book_for_this_user: 'You do not have access to book for this buyer.'
           hold_single_unit: 'User already has a unit on hold.'
+          booking_done: 'User has successfully blocked the unit'
+          record_not_held: 'Unit is not held anymore'
+        checkout?:
+          booking_done: 'User has successfully blocked the unit'
+          record_not_held: 'Unit is not held anymore'
 
       project_unit_policy:
         index?: "Only administrator has rights to view this page."
@@ -118,6 +123,11 @@ en:
           user_kyc_allowed_bookings: 'Multiple KYC booking is not allowed.'
           not_authorise_to_book_for_this_user: 'You do not have access to book for this buyer.'
           hold_single_unit: 'User already has a unit on hold.'
+          booking_done: 'User has successfully blocked the unit'
+          record_not_held: 'Unit is not held anymore'
+        checkout?:
+          booking_done: 'User has successfully blocked the unit'
+          record_not_held: 'Unit is not held anymore'
       project_unit_policy:
         index?: "Only buyer has rights to view this page."
         show?: "Only buyer has rights to view this page."
