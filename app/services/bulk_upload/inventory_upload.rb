@@ -124,6 +124,7 @@ module BulkUpload
             project_unit.type = "apartment"
             project_unit.selldo_id = erp_id
             project_unit.floor_rise = floor_rise.to_f
+            project_unit.blocking_amount = booking_portal_client.blocking_amount if booking_portal_client.blocking_amount.present? && !booking_portal_client.blocking_amount.zero?
 
             costs.each do |index, arr|
               project_unit.costs.build(category: arr[0], name: arr[1], absolute_value: row[index], key: arr[1].gsub(/[\W_]+/i, "_").downcase)
