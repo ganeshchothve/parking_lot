@@ -158,6 +158,7 @@ Rails.application.routes.draw do
 
       resources :project_units, only: [:index] do
         get :print, on: :member
+        get :quotation, on: :member
       end
       resources :searches, except: [:destroy], controller: '/searches' do
         get :"3d", on: :collection, action: "three_d", as: "three_d"
