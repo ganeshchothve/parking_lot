@@ -115,6 +115,7 @@ Rails.application.routes.draw do
         get :print
         patch :release_unit
         get :quotation
+        get :send_cost_sheet_and_payment_schedule
       end
 
       collection do

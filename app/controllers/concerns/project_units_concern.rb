@@ -2,8 +2,9 @@ module ProjectUnitsConcern
   extend ActiveSupport::Concern
 
   included do
-    before_action :build_objects, only: %i[quotation show]
-    before_action :modify_params, only: %i[quotation show]
+    before_action :build_objects, only: %i[quotation show send_cost_sheet_and_payment_schedule]
+    before_action :modify_params, only: %i[quotation show send_cost_sheet_and_payment_schedule]
+    before_action :set_user, only: %w[quotation send_cost_sheet_and_payment_schedule]
   end
 
   #
@@ -60,6 +61,12 @@ module ProjectUnitsConcern
   end
 
   private
+
+  def set_user
+    if params[:user_id]
+      @user = User.where(id: params[:user_id]).first
+    end
+  end
 
   def set_project_unit
     @project_unit = ProjectUnit.find(params[:id])
