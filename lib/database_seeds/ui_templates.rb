@@ -130,24 +130,6 @@ module DatabaseSeeds
           </ul>' })
       end
 
-      # To change image on unit selection filters page
-      if Template::UITemplate.where(name: 'searches/new').blank?
-        Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'searches/new', content: '<% image = Asset.where(asset_type: "unit_selection_filter_image").first %>
-          <% if image.present? %>
-            <%= image_tag "#{image.file_name}", class: "rounded img-fluid", width: 400, height: 400 %>
-          <% end %>
-        ' })
-      end
-
-      # To change image on login page
-      if Template::UITemplate.where(name: 'login_page_image').blank?
-        Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'login_page_image', content: '
-          <% image = Asset.where(asset_type: "login_image").first %>
-          <% if image.present? %>
-            <% @login_image_path = image.file_name %>
-          <% end %>' })
-      end
-
       Template::UITemplate.where(booking_portal_client_id: client_id).count
     end
   end

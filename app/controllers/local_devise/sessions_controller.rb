@@ -6,11 +6,6 @@ class LocalDevise::SessionsController < Devise::SessionsController
 
   around_action :reset_unique_session, only: :destroy
 
-  def new
-    @login_image_path = "login.png"
-    super
-  end
-
   def create
     if params[self.resource_name][:login_otp].present?
       user = self.resource_class.find_for_database_authentication(params[resource_name])

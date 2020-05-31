@@ -7,7 +7,7 @@ class Client
 
   PAYMENT_GATEWAYS = %w(Razorpay CCAvenue)
   # Add different types of documents which are uploaded on client
-  DOCUMENT_TYPES = ['document', 'video', 'certificate']
+  DOCUMENT_TYPES = %w[document video certificate login_page_image unit_selection_filter_image].freeze
 
   field :name, type: String
   field :selldo_client_id, type: String

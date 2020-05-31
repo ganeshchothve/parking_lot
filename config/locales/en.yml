@@ -1045,6 +1045,8 @@ en:
     user_kycs:
       index:
         link_name: 'KYCs'
+      new:
+        link_name: 'Fill KYC Form'
       edit:
         link_name: Edit
       show:
@@ -1159,6 +1161,7 @@ en:
         booked_confirmed: 'Confirmed Bookings'
       new_user:
         header: 'Add Customers'
+    user:
       projects:
         sub_heading: 'Best homes to meet your expectations'
       titles:
