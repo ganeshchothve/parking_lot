@@ -89,15 +89,11 @@
             </ul>
           </div>
           <div class="alert alert-primary col-md-12 col-lg-12 col-xs-12 col-sm-12">
-            <ul>
-              <li>You need to pay <%= number_to_indian_currency(booking_detail.project_unit.booking_price) %> to confirm the booking</li>
-              <% unless current_client.cancellation_amount.zero? %>
-                <li>Cancellation charges are <%= number_to_indian_currency(current_client.cancellation_amount) %></li>
-              <% end %>
-              <% if booking_detail.project_unit.auto_release_on %>
-                <li>You have <%= (booking_detail.project_unit.auto_release_on - Date.today).to_i %> days (before <%= I18n.l(booking_detail.project_unit.auto_release_on) %>) remaining to confirm this booking. Please make a remaining payment of <%= number_to_indian_currency(booking_detail.pending_balance.round) %></li>
-              <% end %>
-            </ul>
+            <% template = ::Template::UITemplate.where(name: 'booking_details/_details').first %>
+            <% if template.present? %>
+              <% @bd = booking_detail %>
+              <%= get_view_erb(template) %>
+            <% end %>
           </div>
         <% end %>
       </div>
