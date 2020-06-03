@@ -8,6 +8,8 @@ class Client
   PAYMENT_GATEWAYS = %w(Razorpay CCAvenue)
   # Add different types of documents which are uploaded on client
   DOCUMENT_TYPES = ['document', 'video', 'certificate']
+  # Whatapp integration
+  WHATSAPPVENDOR = %w[twilio haptik]
 
   field :name, type: String
   field :selldo_client_id, type: String
@@ -41,6 +43,9 @@ class Client
   field :mixpanel_token, type: String
   field :sms_provider_username, type: String
   field :sms_provider_password, type: String
+  field :whatsapp_api_key, type: String
+  field :whatsapp_api_secret, type: String
+  field :whatsapp_vendor, type: String, default: 'twilio'
   field :sms_mask, type: String, default: "SellDo"
   field :mailgun_private_api_key, type: String
   field :mailgun_email_domain, type: String
@@ -60,7 +65,7 @@ class Client
   field :tds_process, type: String
   field :ga_code, type: String
   field :gtm_tag, type: String
-  field :enable_communication, type: Hash, default: {"email": true, "sms": true}
+  field :enable_communication, type: Hash, default: { 'email': true, 'sms': true, 'whatsapp': true }
   field :allow_multiple_bookings_per_user_kyc, type: Boolean, default: true
   field :enable_referral_bonus, type: Boolean, default: false
   field :roles_taking_registrations, type: Array, default: %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner]
@@ -116,6 +121,7 @@ class Client
   has_many :sms_templates, class_name: 'Template::SmsTemplate'
   has_many :email_templates, class_name: 'Template::EmailTemplate'
   has_many :smses, class_name: 'Sms'
+  has_many :whatsapps, class_name: 'Whatsapp'
   has_many :assets, as: :assetable
   has_many :emails, class_name: 'Email', inverse_of: :booking_portal_client
   has_many :schemes
@@ -145,6 +151,10 @@ class Client
 
   def email_enabled?
     self.enable_communication["email"]
+  end
+
+  def whatsapp_enabled?
+    self.enable_communication['whatsapp']
   end
 
   def enable_actual_inventory?(user)
