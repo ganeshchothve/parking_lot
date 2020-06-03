@@ -85,6 +85,31 @@ module DatabaseSeeds
         </div>' })
       end
 
+      # To render card on sales & admin dashboard
+      if Template::UITemplate.where(name: 'dashboard/index/_admin').blank?
+        Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'dashboard/index/_admin', content: '
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 bg-gradient">
+          <div class="box-content">
+            <h1 class="wc-title white text-center">Welcome <%= current_user.name %> </h1>
+            <p class="white text-center fn-300 fn-18">Welcome to the Online Booking Portal, Please follow the steps below to complete the project walkthrough with your Customer.</p>
+            <ul class="step-booking">
+              <li>
+                <span><%= image_tag "file-invoice.svg", alt: "Invoice" %></span>
+                <%= link_to "Digital Presenter", current_client.assets.where(asset_type: "digital_presenter").first.try(:file).try(:url), target: "_blank" %>
+              </li>
+              <li>
+                <span><%= image_tag "file-invoice.svg", alt: "Rupee" %></span>
+                <%= link_to "Floor plans", current_client.assets.where(asset_type: "digital_presenter").first.try(:file).try(:url), target: "_blank" %>
+              </li>
+              <li>
+                <span><%= image_tag "file-invoice.svg", alt: "Building", style: "width:40px;" %></span>
+                <%= link_to "Project Walkthrough", "https://d1b2b4oevn2eyz.cloudfront.net/embassy/index.html", target: "_blank" %>
+              </li>
+            </ul>
+          </div>
+        </div>' })
+      end
+
       # To change text above login page for admin/sales/user
       if Template::UITemplate.where(name: 'devise/sessions/new').blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'devise/sessions/new', content: '<h1 class="mt-0 fn-24">Welcome to <%= current_project.name %></h1>
