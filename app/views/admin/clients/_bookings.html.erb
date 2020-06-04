@@ -53,7 +53,7 @@
   <div class="col-md-12">
     <div class="form-group">
       <%= f.label :enable_live_inventory %><br/>
-      <%= f.select :enable_live_inventory, User.available_roles(@client).collect{|x| [ User.human_attribute_name("role.#{x}"), x]}, {}, class: 'selectize', multiple: true, required: 'required', disabled: !policy(f.object).editable_field?("enable_live_inventory") %>
+      <%= f.select :enable_live_inventory, User.available_roles(@client).collect{|x| [ User.human_attribute_name("role.#{x}"), x]}, {}, class: 'selectize', multiple: true, disabled: !policy(f.object).editable_field?("enable_live_inventory") %>
     </div>
   </div>
 </div>
