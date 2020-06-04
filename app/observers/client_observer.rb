@@ -13,6 +13,7 @@ class ClientObserver < Mongoid::Observer
   def after_create client
     DatabaseSeeds::SmsTemplate.seed client.id.to_s
     DatabaseSeeds::EmailTemplates.seed client.id.to_s
+    DatabaseSeeds::UITemplates.seed client.id.to_s
     Template::CostSheetTemplate.create(name: "Default Cost sheet template", content: Template::CostSheetTemplate.default_content, booking_portal_client_id: client.id, default: true)
     Template::PaymentScheduleTemplate.create(name: "Default payment schedule template", content: Template::PaymentScheduleTemplate.default_content, booking_portal_client_id: client.id, default: true)
     Template::ReceiptTemplate.create(content: Template::ReceiptTemplate.default_content, booking_portal_client_id: client.id)

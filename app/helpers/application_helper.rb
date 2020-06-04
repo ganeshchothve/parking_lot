@@ -18,6 +18,23 @@ module ApplicationHelper
     "#{I18n.t('currency.' + currency.to_s)}#{number}".html_safe
   end
 
+  def get_view_erb(template)
+    ::ERB.new(template.content).result( binding ).html_safe
+  end
+
+  def login_image
+    client_asset_image_url('login_page_image') ? ('background-image: url(' + client_asset_image_url('login_page_image') + ')') : ''
+  end
+
+  def client_asset_image_url(document_type = nil)
+    if document_type
+      image = current_client.assets.where(document_type: document_type).first
+      if image
+        image.file.try(:url)
+      end
+    end
+  end
+
   def float_to_int (x)
     Float(x)
     i, f = x.to_i, x.to_f

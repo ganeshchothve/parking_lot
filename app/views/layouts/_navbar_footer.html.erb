@@ -9,7 +9,7 @@
         </div>
         <div class="col-lg-6 col-md-4 col-xs-6 col-sm-8 no-pd">
           <ul class="footer-menu float-right mb-0">
-            <%= render 'layouts/language' %>
+            <%= render "layouts/language" %>
           </ul>
         </div>
       </div>
@@ -20,13 +20,16 @@
       <% end %>
       <div class="col-lg-8 no-pd">
         <div class="footer-top footer-menu">
-          <p class="m-0 pb-1"><%= current_project.name %> is registered via MahaRERA No.: <%= current_project.rera_registration_no %> & is available on <a href="https://maharera.mahaonline.gov.in" target="_blank">https://maharera.mahaonline.gov.in</a>.</p>
+          <% template = ::Template::UITemplate.where(name: 'layouts/_navbar_footer').first %>
+          <% if template.present? %>
+            <%= get_view_erb(template) %>
+          <% end %>
         </div>
       </div>
       <% unless defined?(current_user) && current_user %>
         <div class="col-lg-4 col-md-4 col-xs-12 col-sm-12 no-pd">
           <ul class="footer-menu float-right mb-0">
-            <%= render 'layouts/language' %>
+            <%= render "layouts/language" %>
           </ul>
         </div>
       <% end %>

@@ -45,6 +45,7 @@ en:
       link_name: '%{model} Details'
     edit:
       link_name: 'Edit %{model}'
+      direct_activation_for_cp_label: 'Skip Admin approval for channel partner registration'
     new:
       link_name: 'Add %{model}'
     destroy:
@@ -1118,32 +1119,18 @@ en:
       link:
         pre_text: 'Already have an account?'
         name: 'Login here'
-    titles:
-      heading1_html: 'Welcome to %{project_name}'
-      heading2_html: 'Now is the best time to turn your dream into reality'
-    form:
-      heading_html: '<strong>Login</strong> to Book an Apartment online'
 
   registrations:
     pre_text: 'Don’t have account ?'
     new:
       sign_up: 'Sign Up'
-    titles:
-      heading1_html: 'Biggest real estate opportunity in Pune<br> Introducing exclusive %{unit_configs} Bed residences starting from %{start_price} lakhs'
-      heading2_html: Home buying can’t get better than this
-    form:
-      heading_html: '<strong>Register Now</strong> to Book Online'
 
   channel_partner_registration:
     titles:
-      heading1_html: 'We are a big family of 400+ esteemed partners and we are happy to onboard you'
       heading2_html: '<strong>Register now</strong> & join our network to explore new opportunities'
 
   dashboard:
     channel_partner:
-      welcome:
-        heading: 'Welcome %{name}'
-        sub_heading: 'Follow these quick steps and get your customers to be one of the privileged few to own a home at %{project_name}'
       projects:
         sub_heading: 'Best homes to meet your expectations'
       refer_a_channel_partner:
@@ -1176,18 +1163,12 @@ en:
       new_user:
         header: 'Add Customers'
     user:
-      welcome:
-        heading: 'Welcome %{name}'
-        sub_heading_html: "Now get privileged access to %{project_size} spread township and book your dream home by just paying %{blocking_amount}<br>400+ customers have already paid a token amount and now it's your chance to roll the dice by following below steps"
-        sub_heading_1:  "Congratulations on generating your Priority Token for allotment day. Make additional payment to get more tokens"
       projects:
         sub_heading: 'Best homes to meet your expectations'
       titles:
         available_inventory: 'Available Inventory'
         download_brochure: 'Download Brochure'
         visit_website: 'Visit Website'
-      towers:
-        header: 'Get Priority Token'
 
   selldo:
     links:

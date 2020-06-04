@@ -1,10 +1,11 @@
 <section class="first-sec welcome-box">
   <div class="container">
     <div class="row">
-      <% template = ::Template::UITemplate.where(name: 'users/_welcome').first %>
+      <% template = ::Template::UITemplate.where(name: 'dashboard/index/_admin').first %>
       <% if template.present? %>
         <%= get_view_erb(template) %>
       <% end %>
     </div>
   </div>
 </section>
+<%= render 'dashboard/index/crm' %>

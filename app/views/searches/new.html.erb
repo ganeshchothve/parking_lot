@@ -1,7 +1,6 @@
 <section class="my-customer my-4 mb-5">
   <div class="container">
     <div class="row">
-
       <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
         <div class="table-title">
           <h1 class="title icon-set icon-search-black icon-bs-15">
@@ -39,7 +38,7 @@
                   </div>
                 </div>
             <% else %>
-              <%= image_tag 'search-home-img.png', class: 'rounded img-fluid', width: 400, height: 400 %>
+              <%= image_tag client_asset_image_url('unit_selection_filter_image') || 'search-home-img.png', class: 'rounded img-fluid', width: 400, height: 400 %>
             <% end %>
           </div>
 
