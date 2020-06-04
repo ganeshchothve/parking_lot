@@ -121,14 +121,17 @@ class ApplicationController < ActionController::Base
     policy_name = exception.policy.class.to_s.underscore.split("/").join('.')
     policy_name += "."
     policy_name += exception.query.to_s
-    if exception.policy.condition
+    if exception.policy.try(:condition)
       policy_name += "."
       policy_name += exception.policy.condition.to_s
+      path = after_sign_in_path_for(current_user)
+    else
+      path = root_path
     end
     alert = t policy_name, scope: "pundit", default: :default
     respond_to do |format|
       unless request.referer && request.referer.include?('remote-state') && request.method == 'GET'
-        format.html { redirect_to (user_signed_in? ? after_sign_in_path_for(current_user) : root_path), alert: alert }
+        format.html { redirect_to (user_signed_in? ? path : root_path), alert: alert }
         format.json { render json: { errors: alert }, status: 403 }
       else
         # Handle response for remote-state url requests.
