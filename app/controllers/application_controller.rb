@@ -126,7 +126,7 @@ class ApplicationController < ActionController::Base
       policy_name += exception.policy.condition.to_s
       path = after_sign_in_path_for(current_user)
     else
-      path = root_path
+      path = dashboard_path
     end
     alert = t policy_name, scope: "pundit", default: :default
     respond_to do |format|
