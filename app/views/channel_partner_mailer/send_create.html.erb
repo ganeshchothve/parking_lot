@@ -1,7 +1,10 @@
 <div class="card w-100">
   <div class="card-body">
     <p>
-      A new channel partner has registered for <%= current_project.name %> on your website. Please login on to the portal to approve or reject the registration request.
+      A new channel partner has registered for <%= current_project.name %> on your website.
+      <% if @channel_partner.status != "active" %>
+        Please login on to the portal to approve or reject the registration request.
+      <% end %>
     </p>
   </div>
 </div>
