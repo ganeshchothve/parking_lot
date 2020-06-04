@@ -26,7 +26,7 @@
             <tbody>
               <% @templates.each do |template| %>
                 <tr>
-                  <td><%= template.name.titleize rescue template._type.split("::").last %></td>
+                  <td><%= t("templates.#{template.name}") rescue template._type.split("::").last %></td>
                   <td><%= template.content %></td>
                   <td >
                     <div class = 'dropdown show text-right'>

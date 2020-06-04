@@ -20,10 +20,11 @@ class Admin::TemplatesController < AdminController
 
   def update
     @template.assign_attributes(permitted_attributes([:admin, @template]))
+    _params = Rack::Utils.parse_nested_query(URI(request.referrer).query)
     respond_to do |format|
       if @template.save
         format.html { redirect_to admin_client_templates_path, notice: 'Template was successfully updated.' }
-        format.json { render json: @template }
+        format.json { render json: @template, location: admin_client_templates_path(fltrs: _params['fltrs'] || {}, page: _params['page'] || 1) }
       else
         format.html { render :edit }
         format.json { render json: {errors: @template.errors.full_messages.uniq}, status: :unprocessable_entity }
@@ -33,7 +34,7 @@ class Admin::TemplatesController < AdminController
 
   private
   def set_template
-    @template = Template.find(params[:id])
+    @template = ::Template.find(params[:id])
   end
 
   def authorize_resource

@@ -1176,3 +1176,14 @@ en:
       add_note: 'View'
       schedule_site_visit: 'Schedule Site Visit'
       schedule_followup: 'Schedule Followup'
+
+  templates:
+    users/_welcome: 'Customer Dashboard'
+    index/_channel_partner: 'Channel Partner Dashboard'
+    dashboard/index/_admin: 'Sales Dashboard'
+    devise/sessions/new: 'Landing Page'
+    home/register: 'Customer Registration Page'
+    channel_partner/new: 'Channel Partner Registration'
+    layouts/_navbar_footer: 'Footer Rera Line'
+    searches/checkout: 'Holding minutes Text on Checkout page'
+    booking_details/_details: 'Bottom Text in Booking detail overview section'

@@ -30,7 +30,7 @@ var modal_remote_form_link_click_handler = function(remote_href){
   $.blockUI();
   if(!_.isEmpty(remote_href) && remote_href != "javascript:;" && remote_href != "javascript:void(0);"){
     if(window.history && typeof window.history.pushState === "function"){
-      var href = window.location.href.split('?')[0]
+      var href = window.location.href;
       $('.modal-backdrop').remove()
       var href = Amura.removeParamFromURL(href, "remote-state");
       if(href.indexOf("?") == -1){
