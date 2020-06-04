@@ -7,9 +7,9 @@ class Client
 
   PAYMENT_GATEWAYS = %w(Razorpay CCAvenue)
   # Add different types of documents which are uploaded on client
-  DOCUMENT_TYPES = ['document', 'video', 'certificate']
+  DOCUMENT_TYPES = %w[document video certificate login_page_image unit_selection_filter_image].freeze
   # Whatapp integration
-  WHATSAPPVENDOR = %w[twilio haptik]
+  WHATSAPPVENDOR = %w[twilio haptik].freeze
 
   field :name, type: String
   field :selldo_client_id, type: String
@@ -120,6 +120,7 @@ class Client
   has_many :templates
   has_many :sms_templates, class_name: 'Template::SmsTemplate'
   has_many :email_templates, class_name: 'Template::EmailTemplate'
+  has_many :ui_templates, class_name: 'Template::UITemplate'
   has_many :smses, class_name: 'Sms'
   has_many :whatsapps, class_name: 'Whatsapp'
   has_many :assets, as: :assetable
