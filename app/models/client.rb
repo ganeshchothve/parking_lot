@@ -49,6 +49,7 @@ class Client
   field :enable_direct_payment, type: Boolean, default: false
   field :enable_payment_with_kyc, type: Boolean, default: true
   field :enable_booking_with_kyc, type: Boolean, default: true
+  field :enable_direct_activation_for_cp, type: Boolean, default: false
   field :blocking_amount, type: Integer, default: 30000
   field :blocking_days, type: Integer, default: 10
   field :holding_minutes, type: Integer, default: 15

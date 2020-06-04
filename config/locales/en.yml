@@ -45,6 +45,7 @@ en:
       link_name: '%{model} Details'
     edit:
       link_name: 'Edit %{model}'
+      direct_activation_for_cp_label: 'Skip Admin approval for channel partner registration'
     new:
       link_name: 'Add %{model}'
     destroy:
