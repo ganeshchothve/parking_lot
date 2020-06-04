@@ -2,7 +2,7 @@ class CustomPolicy < Struct.new(:user, :enable_users)
   include ApplicationHelper
 
   def inventory?
-    ['superadmin', 'admin', 'sales_admin', 'sales', 'channel_partner'].include?(user.role) && user.role.in?(current_client.enable_actual_inventory)
+    ['superadmin', 'admin', 'sales_admin', 'sales', 'channel_partner', 'cp', 'cp_admin'].include?(user.role) && (user.role.in?(current_client.enable_actual_inventory) || user.role.in?(current_client.enable_live_inventory))
   end
 
   def emails?

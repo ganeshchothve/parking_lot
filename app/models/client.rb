@@ -45,6 +45,7 @@ class Client
   field :mailgun_private_api_key, type: String
   field :mailgun_email_domain, type: String
   field :enable_actual_inventory, type: Array, default: []
+  field :enable_live_inventory, type: Array, default: []
   field :enable_channel_partners, type: Boolean, default: false
   field :enable_direct_payment, type: Boolean, default: false
   field :enable_payment_with_kyc, type: Boolean, default: true
