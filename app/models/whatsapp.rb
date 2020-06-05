@@ -43,7 +43,7 @@ class Whatsapp
   # validate media_size # up to 5 MB in size (incase of pdf and mp4 and mp3)
   validates :to, :from, presence: true, if: -> { self.vendor == 'WhatsappNotifier::Twilio' }
 
-  enable_audit audit_fields: [:content, :created_at], reference_ids_without_associations: [{field: "sms_template_id", klass: "Template::WhatsappTemplate"}]
+  enable_audit audit_fields: [:content, :created_at], reference_ids_without_associations: [{ field: 'whatsapp_template_id', klass: 'Template::WhatsappTemplate' }]
 
   default_scope -> { desc(:created_at) }
 

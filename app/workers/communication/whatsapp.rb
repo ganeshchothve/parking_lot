@@ -18,8 +18,9 @@ module Communication
           # if whatsapp.vendor == 'WhatsappNotifier::Haptik'
           #   whatsapp.content = resp[:content]
           # end
+          # TODO : : Handle all statuses
           whatsapp.sent_on = DateTime.now
-          whatsapp.status = resp[:status]
+          whatsapp.status = (resp[:status] == 'queued') ? 'sent' : resp[:status]
           whatsapp.message_sid = resp[:message_sid]
           whatsapp.save
         end
