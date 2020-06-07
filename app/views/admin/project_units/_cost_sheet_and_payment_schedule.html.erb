@@ -1,0 +1,16 @@
+<div class="container">
+  <div class="card mt-3 pb_after">
+    <div class="card-body">
+      <div class="table-responsive">
+        <%= @booking_detail.cost_sheet_template.parsed_content(@booking_detail) %>
+      </div>
+    </div>
+  </div>
+  <div class="card mt-3 pb_after">
+    <div class="card-body">
+      <div class="table-responsive">
+        <%= @booking_detail.payment_schedule_template.parsed_content(@booking_detail) %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -898,6 +898,10 @@ en:
         link_name: 'Add Note'
 
     project_units:
+      send_cost_sheet_and_payment_schedule:
+        link_name: 'Send Cost sheet & Payment Schedule to Customer'
+        success: 'Cost sheet & payment schedule will be sent to customer shortly.'
+        failure: 'Cost sheet & payment schedule cannot be sent. Please contact administrator'
       index:
         link_name: 'Apartments'
       show:

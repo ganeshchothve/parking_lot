@@ -33,6 +33,10 @@ class ProjectUnitPolicy < ApplicationPolicy
     false
   end
 
+  def send_cost_sheet_and_payment_schedule?
+    false
+  end
+
   def make_available?
     valid = (record.status == 'hold' && current_client.enable_actual_inventory?(user))
     _role_based_check(valid)
