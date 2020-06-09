@@ -450,7 +450,12 @@ class User
 
   def send_payment_link
     url = Rails.application.routes.url_helpers
-    self.payment_link = url.dashboard_url("remote-state": url.new_buyer_receipt_path, user_email: email, user_token: authentication_token)
+    hold_booking_detail = self.booking_details.where(status: 'hold').first
+    if hold_booking_detail.present? && hold_booking_detail.search
+      self.payment_link = url.checkout_user_search_path(hold_booking_detail.search)
+    else
+      self.payment_link = url.dashboard_url("remote-state": url.new_buyer_receipt_path, user_email: email, user_token: authentication_token)
+    end
     #
     # Send email with payment link
     email_template = ::Template::EmailTemplate.find_by(name: "payment_link")

@@ -57,7 +57,7 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def send_payment_link?
-    record.buyer? && !record.is_payment_done?
+    record.buyer?
   end
 
   def show_selldo_links?

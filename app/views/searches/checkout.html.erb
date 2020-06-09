@@ -68,6 +68,9 @@
                             You do not have access to take a Clearance pending <%= global_labels[:receipt] %> on behalf of <%= @user.name %>.
                           </div>
                         <% end %>
+                        <% if policy([current_user_role_group, @user]).send_payment_link? %>
+                          <%= link_to 'Send Payment link', send_payment_link_admin_user_path(@user), class: "btn submit-payemnt-btn fn-12 fn-500" %>
+                        <% end %>
                         <%= form_for @project_unit, url: make_available_user_search_path(@search), method: 'post', html: {class: 'validate-form float-left'} do |f| %>
                           <%= f.hidden_field :status, value: 'available' %>
                           <%= f.submit 'Cancel', class: 'btn cancel-btn fn-12 fn-500' , data:{event_category: 'Section', event_action: 'Click', event_name: 'Cancel'} %>
