@@ -160,8 +160,9 @@ class User
   validates :first_name, :role, presence: true
   validates :first_name, :last_name, name: true
 
-  validates :phone, uniqueness: true, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile] }, if: proc { |user| user.email.blank? }
-  validates :email, uniqueness: true, if: proc { |user| user.phone.blank? }
+  validate :phone_or_email_required, if: proc { |user| user.phone.blank? && user.email.blank? }
+  validates :phone, :email, uniqueness: { allow_blank: true }
+  validates :phone, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile] }, allow_blank: true
   validates :allowed_bookings, presence: true, if: proc { |user| user.buyer? }
   validates :rera_id, presence: true, if: proc { |user| user.role?('channel_partner') }
   validates :rera_id, uniqueness: true, allow_blank: true
@@ -210,6 +211,10 @@ class User
   end
   ADMIN_ROLES.each do |admin_roles|
     scope admin_roles, ->{ where(role: admin_roles )}
+  end
+
+  def phone_or_email_required
+    errors.add(:base, 'Email or Phone is required')
   end
 
   def password_complexity
