@@ -5,7 +5,7 @@ class ChannelPartnerObserver < Mongoid::Observer
   end
 
   def before_save channel_partner
-    if current_client.enable_direct_activation_for_cp
+    if channel_partner.new_record? && current_client.reload.enable_direct_activation_for_cp
       channel_partner.status = 'active'
     end
     # register user and set the user's id on the channel partner
