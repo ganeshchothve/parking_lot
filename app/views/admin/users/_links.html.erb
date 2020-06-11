@@ -1,4 +1,4 @@
-<% if policy([:admin, BookingDetail.new(user: user, project_unit: ProjectUnit.new(status: 'available', blocking_amount: current_client.blocking_amount))]).hold? %>
+<% if policy([:admin, BookingDetail.new(user: user, project_unit: ProjectUnit.new(status: 'available', blocking_amount: current_client.blocking_amount))]).show_booking_link? %>
   <%= link_to t('controller.searches.new.link_name'), new_admin_user_search_path(user.id), class: "dropdown-item" %>
 <% end %>
 
