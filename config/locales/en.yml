@@ -1152,7 +1152,7 @@ en:
 
       titles:
         lead_details: 'Lead Details'
-        booking_details: 'Booking Details'
+        booking_details: 'Bookings'
         total_leads: 'Total Leads'
         received: 'Added'
         available_inventory: 'Available Inventory'
@@ -1161,9 +1161,15 @@ en:
       confirmed_users: 'Confirmed Leads'
       not_confirmed_users: 'Not Confirmed Leads'
       booking_detail:
-        blocked: 'Blocked Bookings'
-        booked_tentative: 'Tentative Bookings'
-        booked_confirmed: 'Confirmed Bookings'
+        blocked:
+          label: "Blocked"
+          sub_label: " (Paid Rs.%{blocking_amount})"
+        booked_tentative:
+          label: 'Tentative'
+          sub_label: ''
+        booked_confirmed:
+          label: 'Confirmed'
+          sub_label: 'Paid 10% Amount'
       new_user:
         header: 'Add Customers'
     user:
