@@ -109,7 +109,7 @@ class SearchesController < ApplicationController
   def checkout
     authorize [current_user_role_group, @booking_detail]
     @booking_detail_scheme = @booking_detail.booking_detail_schemes.desc(:created_at).last || @booking_detail.booking_detail_schemes.build
-    if !@booking_detail.hold?
+    if @booking_detail.save && !@booking_detail.hold?
       if current_user.buyer?
         redirect_to dashboard_path, alert: t('controller.searches.checkout.non_hold_booking')
       else
@@ -291,7 +291,7 @@ class SearchesController < ApplicationController
       data: @search.project_unit.data,
       manager_id: @search.user_manager_id
     )
-    @booking_detail.save
+    # @booking_detail.save
     # ,  base_rate: @search.project_unit.base_rate, floor_rise: @search.project_unit.floor_rise, saleable: @search.project_unit.saleable, costs: @search.project_unit.costs, data: @search.project_unit.data
     @booking_detail.search = @search
   end
