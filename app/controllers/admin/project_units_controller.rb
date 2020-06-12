@@ -115,6 +115,15 @@ class Admin::ProjectUnitsController < AdminController
     @out = DashboardDataProvider.inventory_snapshot
   end
 
+  def send_cost_sheet_and_payment_schedule
+    if @user
+      render json: {notice: t('controller.project_units.send_cost_sheet_and_payment_schedule.success')}, status: :created
+      @booking_detail.send_cost_sheet_and_payment_schedule(@user)
+    else
+      render json: {alert: t('controller.project_units.send_cost_sheet_and_payment_schedule.failure')}, status: :unprocessable_entity
+    end
+  end
+
   private
 
   # def set_project_unit

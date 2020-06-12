@@ -6,14 +6,31 @@
     <% unless request.format.pdf? %>
       <div class='box-header bg-gradient br-rd-tr-4 p-3'>
         <%= link_to "<u>Get PDF</u>".html_safe, method(:"quotation_#{current_user_role_group}_project_unit_path").call(@project_unit, booking_detail_scheme: params.dig(:booking_detail_scheme).try(:permit, :derived_from_scheme_id, payment_adjustments_attributes: {}), format: :pdf), class: "fn-500 float-right white", target: '_blank' %>
+        <% if @user && policy([current_user_role_group, @project_unit]).send_cost_sheet_and_payment_schedule? %>
+          <%= link_to t("controller.project_units.send_cost_sheet_and_payment_schedule.link_name"), send_cost_sheet_and_payment_schedule_admin_project_unit_url(@project_unit, booking_detail_scheme: params.dig(:booking_detail_scheme).try(:permit, :derived_from_scheme_id, payment_adjustments_attributes: {}), user_id: @user.id), class: 'btn btn-sm btn-primary',id: "send_cost_sheet_and_payment_schedule", remote: true %>
+        <% end %>
       </div>
     <% end %>
     <div class='card-body'>
       <% unless request.format.pdf? %>
-        <%= render 'admin/project_units/booking_detail_scheme_form', {booking_detail: @booking_detail, booking_detail_scheme: @booking_detail_scheme, url: quotation_admin_project_unit_path(@project_unit) } %>
+        <% if @user %>
+          <%= render 'admin/project_units/booking_detail_scheme_form', {booking_detail: @booking_detail, booking_detail_scheme: @booking_detail_scheme, url: quotation_admin_user_project_unit_path(@user, @project_unit) } %>
+        <% else %>
+          <%= render 'admin/project_units/booking_detail_scheme_form', {booking_detail: @booking_detail, booking_detail_scheme: @booking_detail_scheme, url: quotation_admin_project_unit_path(@project_unit) } %>
+        <% end %>
       <% else %>
         <%= render 'admin/project_units/booking_detail_scheme_pdf', { booking_detail: @booking_detail, booking_detail_scheme: @booking_detail_scheme } %>
       <% end %>
     </div>
   </div>
 </div>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    $('#send_cost_sheet_and_payment_schedule').on("ajax:success", function(evt, data, status, xhr){
+      Amura.global_success_handler(evt.detail[0]["notice"])
+    });
+    $('#send_cost_sheet_and_payment_schedule').on("ajax:error" , function(evt, data, status, xhr){
+      Amura.global_error_handler(evt.detail[0].errors)
+    });
+  });
+<% end %>

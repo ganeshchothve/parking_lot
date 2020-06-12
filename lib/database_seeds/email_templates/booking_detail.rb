@@ -2,6 +2,7 @@ module DatabaseSeeds
   module EmailTemplates
     module BookingDetail
       def self.seed client_id
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "BookingDetail", name: "cost_sheet_and_payment_schedule", subject: "Cost sheet and Payment Schedule", content: '<div class="card w-100">PFA cost sheet and payment schedule</div>') if ::Template::EmailTemplate.where(name: "cost_sheet_and_payment_schedule").blank?
         Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "BookingDetail", name: "booking_blocked", subject: "Unit No. <%= self.name %> has been blocked!", content: '<div class="card w-100">
           <div class="card-body">
             <p>Dear <%= self.user.name %>,</p>

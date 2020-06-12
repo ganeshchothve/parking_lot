@@ -45,6 +45,7 @@ en:
       link_name: '%{model} Details'
     edit:
       link_name: 'Edit %{model}'
+      direct_activation_for_cp_label: 'Skip Admin approval for channel partner registration'
     new:
       link_name: 'Add %{model}'
     destroy:
@@ -897,6 +898,10 @@ en:
         link_name: 'Add Note'
 
     project_units:
+      send_cost_sheet_and_payment_schedule:
+        link_name: 'Send Cost sheet & Payment Schedule to Customer'
+        success: 'Cost sheet & payment schedule will be sent to customer shortly.'
+        failure: 'Cost sheet & payment schedule cannot be sent. Please contact administrator'
       index:
         link_name: 'Apartments'
       show:
@@ -1175,3 +1180,14 @@ en:
       add_note: 'View'
       schedule_site_visit: 'Schedule Site Visit'
       schedule_followup: 'Schedule Followup'
+
+  templates:
+    users/_welcome: 'Customer Dashboard'
+    index/_channel_partner: 'Channel Partner Dashboard'
+    dashboard/index/_admin: 'Sales Dashboard'
+    devise/sessions/new: 'Landing Page'
+    home/register: 'Customer Registration Page'
+    channel_partner/new: 'Channel Partner Registration'
+    layouts/_navbar_footer: 'Footer Rera Line'
+    searches/checkout: 'Holding minutes Text on Checkout page'
+    booking_details/_details: 'Bottom Text in Booking detail overview section'

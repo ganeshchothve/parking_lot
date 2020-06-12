@@ -129,6 +129,31 @@ class BookingDetail
     email.sent!
   end
 
+  def send_cost_sheet_and_payment_schedule(search_user)
+    if project_unit.booking_portal_client.email_enabled?
+      attachments_attributes = []
+      cost_details = self.class.render_anywhere('admin/project_units/cost_sheet_and_payment_schedule', { booking_detail: self }, 'layouts/pdf')
+      pdf = WickedPdf.new.pdf_from_string(cost_details.presence)
+      File.open("#{Rails.root}/exports/#{project_unit.name}_cost_sheet.pdf", "wb") do |file|
+        file << pdf
+      end
+      attachments_attributes << {file: File.open("#{Rails.root}/exports/#{project_unit.name}_cost_sheet.pdf")}
+      email_template = Template::EmailTemplate.find_by(name: "cost_sheet_and_payment_schedule")
+      email = Email.create!({
+        booking_portal_client_id: project_unit.booking_portal_client_id,
+        body: ERB.new(project_unit.booking_portal_client.email_header).result(binding) + email_template.parsed_content(self) + ERB.new(project_unit.booking_portal_client.email_footer).result(binding),
+        subject: email_template.parsed_subject(self),
+        cc: [project_unit.booking_portal_client.notification_email],
+        recipients: [search_user],
+        cc_recipients: [],
+        triggered_by_id: self.id,
+        triggered_by_type: self.class.to_s,
+        attachments_attributes: attachments_attributes
+      })
+      email.sent!
+    end
+  end
+
   def ds_name
     "#{name} - #{status}"
   end

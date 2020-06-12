@@ -36,7 +36,7 @@ class HomeController < ApplicationController
         query << {email: params['email']} if params[:email].present?
         query << {phone: params['phone']} if params[:phone].present?
         query << {lead_id: params['lead_id']} if params[:lead_id].present?
-        @user = User.or(query).first #TODO: check if you want to find uniquess on lead id also
+        @user = User.or(query).first if query.present? #TODO: check if you want to find uniquess on lead id also
         if @user.present?
           message = 'A user with these details has already registered.'
           # Checks for when channel_partner adds a new user.
@@ -75,7 +75,7 @@ class HomeController < ApplicationController
           respond_to do |format|
             if @user.save
               SelldoLeadUpdater.perform_async(@user.id, {stage: 'registered'})
-              format.json { render json: {user: @user, success: 'User registration completed'}, status: :created }
+              format.json { render json: {user: @user, success: t('registrations.signed_up_but_unconfirmed', scope: :devise)}, status: :created }
             else
               format.json { render json: {errors: @user.errors.full_messages.uniq}, status: :unprocessable_entity }
             end
