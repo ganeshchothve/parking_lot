@@ -24,6 +24,10 @@ class Buyer::BookingDetailPolicy < BookingDetailPolicy
     true
   end
 
+  def checkout?
+    _role_based_check && only_for_confirmed_user! && eligible_user? && has_user_on_record? && available_for_user_group?
+  end
+
   private
 
   def only_for_hold!
