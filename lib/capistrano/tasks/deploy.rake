@@ -43,9 +43,9 @@ namespace :deploy do
   task :change_permissions do
     on roles(:app) do
       within shared_path do
-        if test("[ $(stat -c '%a' \"#{shared_path.join('exports')}\" \"#{shared_path.join('tmp')}\" \"#{shared_path.join('log')}\" \"#{shared_path.join('public/uploads')}\" | tr -d '\\n') != \"777777777777\" ]")
-          execute :chmod, '-R', '0777', 'exports', 'tmp', 'log', 'public/uploads'
-          execute :setfacl, '-Rdm', 'm::rwx', 'exports', 'tmp', 'log', 'public/uploads'
+        if test("[ $(stat -c '%a' \"#{shared_path.join('exports')}\" \"#{shared_path.join('tmp')}\" \"#{shared_path.join('log')}\" \"#{shared_path.join('uploads')}\" | tr -d '\\n') != \"777777777777\" ]")
+          execute :chmod, '-R', '0777', 'exports', 'tmp', 'log', 'uploads'
+          execute :setfacl, '-Rdm', 'm::rwx', 'exports', 'tmp', 'log', 'uploads'
         end
       end
     end
