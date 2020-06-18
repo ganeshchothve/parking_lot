@@ -20,7 +20,7 @@
                     links[:destroy] = assetable_path(assetable_type: assetable.class.model_name.i18n_key.to_s, assetable_id: assetable.id, id: asset.id)
                   end
                   if asset.file.file && asset.file.file.exists?
-                    render "assets/file_icon", record: {id: asset.id, file_size: asset.file_size, url: asset.file.url, content_type: asset.file.content_type, original_filename: asset.original_filename }, links: links
+                    render "assets/file_icon", record: {id: asset.id, file_size: asset.file_size, url: asset.file.url, content_type: asset.file.content_type, name: asset.file_name }, links: links
                   end
                 %>
               <% end %>
