@@ -15,7 +15,7 @@ class ClientObserver < Mongoid::Observer
     DatabaseSeeds::EmailTemplates.seed client.id.to_s
     DatabaseSeeds::UITemplate.seed client.id.to_s
     # Email and Sms Templates are disabled by default
-    Template.in(_type: ['Template::SmsTemplate', 'Template::EmailTemplate']).each { |t| t.set(is_active: false) }
+    Template.in(_type: ['Template::SmsTemplate', 'Template::EmailTemplate']).update_all(is_active: false)
 
     Template::CostSheetTemplate.create(name: "Default Cost sheet template", content: Template::CostSheetTemplate.default_content, booking_portal_client_id: client.id, default: true)
     Template::PaymentScheduleTemplate.create(name: "Default payment schedule template", content: Template::PaymentScheduleTemplate.default_content, booking_portal_client_id: client.id, default: true)
