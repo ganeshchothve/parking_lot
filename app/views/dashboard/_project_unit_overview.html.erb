@@ -84,7 +84,7 @@
 
               <li>
                 <span><%= Phase.model_name.human %></span>
-                <p><%= project_unit.phase || '-' %></p>
+                <p><%= project_unit.phase.try(:name) || '-' %></p>
               </li>
 
               <li>

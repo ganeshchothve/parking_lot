@@ -60,7 +60,7 @@ class BookingDetail
   # validates :name, presence: true
   validates :status, presence: true
   validates :erp_id, uniqueness: true, allow_blank: true
-  validate :kyc_mandate, on: :create
+  validate :kyc_mandate
   validate :validate_content, on: :create
 
   delegate :name, :blocking_amount, to: :project_unit, prefix: true, allow_nil: true
@@ -160,10 +160,8 @@ class BookingDetail
 
   # validates kyc presence if booking is not allowed without kyc
   def kyc_mandate
-    if project_unit.booking_portal_client.enable_booking_with_kyc
-      primary_user_kyc_id.present?
-    else
-      return true
+    if project_unit.booking_portal_client.enable_booking_with_kyc && !primary_user_kyc_id.present?
+      self.errors.add(:base, "KYC is mandatory for booking.")
     end
   end
 

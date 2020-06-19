@@ -3,7 +3,7 @@ class Template
   include Mongoid::Timestamps
 
   field :content, type: String
-  field :is_active, type: Boolean, default: true
+  field :is_active, type: Boolean, default: false
 
   belongs_to :booking_portal_client, class_name: "Client"
 

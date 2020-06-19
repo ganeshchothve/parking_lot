@@ -109,7 +109,7 @@ class SearchesController < ApplicationController
   def checkout
     authorize [current_user_role_group, @booking_detail]
     @booking_detail_scheme = @booking_detail.booking_detail_schemes.desc(:created_at).last || @booking_detail.booking_detail_schemes.build
-    if !@booking_detail.hold?
+    if @booking_detail.save && !@booking_detail.hold?
       if current_user.buyer?
         redirect_to dashboard_path, alert: t('controller.searches.checkout.non_hold_booking')
       else
@@ -278,22 +278,22 @@ class SearchesController < ApplicationController
   end
 
   def set_booking_detail
-    @booking_detail = BookingDetail.find_or_initialize_by(project_unit_id: @search.project_unit_id, user_id: @search.user_id, status: 'hold')
-    @booking_detail.assign_attributes(
-      base_rate: @search.project_unit.base_rate,
-      project_name: @search.project_unit.project_name,
-      project_tower_name: @search.project_unit.project_tower_name,
-      bedrooms: @search.project_unit.bedrooms,
-      bathrooms: @search.project_unit.bathrooms,
-      floor_rise: @search.project_unit.floor_rise,
-      saleable: @search.project_unit.saleable,
-      costs: @search.project_unit.costs,
-      data: @search.project_unit.data,
-      manager_id: @search.user_manager_id
-    )
-    @booking_detail.save
-    # ,  base_rate: @search.project_unit.base_rate, floor_rise: @search.project_unit.floor_rise, saleable: @search.project_unit.saleable, costs: @search.project_unit.costs, data: @search.project_unit.data
-    @booking_detail.search = @search
+    @booking_detail = BookingDetail.find_or_initialize_by(project_unit_id: @search.project_unit_id, user_id: @search.user_id)
+    if @booking_detail.new_record?
+      @booking_detail.assign_attributes(
+        base_rate: @search.project_unit.base_rate,
+        project_name: @search.project_unit.project_name,
+        project_tower_name: @search.project_unit.project_tower_name,
+        bedrooms: @search.project_unit.bedrooms,
+        bathrooms: @search.project_unit.bathrooms,
+        floor_rise: @search.project_unit.floor_rise,
+        saleable: @search.project_unit.saleable,
+        costs: @search.project_unit.costs,
+        data: @search.project_unit.data,
+        manager_id: @search.user_manager_id
+      )
+      @booking_detail.search = @search
+    end
   end
 
   def check_project_unit_hold_status

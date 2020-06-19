@@ -10,6 +10,8 @@ if Rails.env.production? || Rails.env.staging?
     }
     config.fog_directory  = ENV_CONFIG[:carrierwave]['FOG_DIRECTORY']
     config.fog_public     = false
+    config.root = Rails.root
+    config.directory_permissions = 0777
     #config.fog_attributes = { cache_control: "public, max-age=#{365.days.to_i}" }
   end
 else

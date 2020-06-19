@@ -8,4 +8,6 @@
     </div>
   </div>
 </section>
-<%= render 'dashboard/index/crm' %>
+<% if DashboardPolicy.new(current_user, :dashboard).admin_dashboard? %>
+  <%= render 'dashboard/index/crm' %>
+<% end %>

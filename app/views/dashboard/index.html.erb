@@ -5,7 +5,7 @@
     <%= render 'dashboard/index/channel_partner' %>
   <% elsif ['admin', 'sales'].include?(current_user.role) %>
     <%= render 'dashboard/index/admin' %>
-  <% elsif ['superadmin', 'crm', 'cp_admin', 'sales_admin', 'gre', 'cp'].include?(current_user.role) %>
+  <% elsif DashboardPolicy.new(current_user, :dashboard).admin_dashboard? %>
     <%= render 'dashboard/index/crm' %>
   <% end %>
 </section>

@@ -20,7 +20,7 @@ client = Client.first || Client.new(
   email_domains: ["sell.do"],
   booking_portal_domains: (ENV['booking_portal_domains'].present? ? ENV['booking_portal_domains'].split(',').compact : ["bookingportal.withamura.com"]),
   registration_name: (ENV['client_name'].presence || 'Amura'),
-  website_link: "www.amuratech.com",
+  website_link: "http://www.amuratech.com",
   cp_disclaimer: "CP Disclaimer",
   disclaimer: "End User Disclaimer",
   support_number: "1111111111",
