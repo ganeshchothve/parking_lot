@@ -27,7 +27,7 @@ module WhatsappNotifier
       }
       hash[:media_url] = @params[:media_url].to_s if @params[:media_url].present?
       response = client.api.account.messages.create(hash)
-      { status: response.status, message_sid: response.sid }
+      { status: response.status, message_sid: response.sid, api_version: response.api_version }
     end
   end
 end

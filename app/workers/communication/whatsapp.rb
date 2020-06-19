@@ -22,6 +22,7 @@ module Communication
           whatsapp.sent_on = DateTime.now
           whatsapp.status = (resp[:status] == 'queued') ? 'sent' : resp[:status]
           whatsapp.message_sid = resp[:message_sid]
+          whatsapp.api_version = resp[:api_version]
           whatsapp.save
         end
       end
