@@ -20,6 +20,10 @@
   <%= link_to t('controller.receipts.index.link_name'), buyer_booking_detail_receipts_path(booking_detail), class: 'dropdown-item' %>
 <% end %>
 
+<% if policy([current_user_role_group, booking_detail]).generate_booking_detail_form? %>
+  <%= link_to t('booking_details.links.print_booking_form'), generate_booking_detail_form_buyer_booking_detail_path(booking_detail), class: 'dropdown-item', target: '_blank' %>
+<% end %>
+
 <% [UserRequest::Cancellation, UserRequest::Swap] if Rails.env.development? %>
 <% UserRequest.descendants.each do |klass| %>
   <% if policy([:buyer, klass.new(user_id: booking_detail.user_id, requestable_id: booking_detail.id, requestable_type: 'BookingDetail')]).new? %>

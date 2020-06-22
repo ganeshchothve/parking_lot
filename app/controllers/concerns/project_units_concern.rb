@@ -37,7 +37,7 @@ module ProjectUnitsConcern
   #
   def quotation
     respond_to do |format|
-      format.js
+      format.js{ render template: 'admin/project_units/quotation' }
       format.pdf {
         render pdf: "quotation",
         template: 'admin/project_units/quotation',
@@ -63,8 +63,9 @@ module ProjectUnitsConcern
   private
 
   def set_user
-    if params[:user_id]
-      @user = User.where(id: params[:user_id]).first
+    user_id = current_user.buyer? ? current_user.id : params[:user_id]
+    if user_id
+      @user = User.where(id: user_id).first
     end
   end
 
