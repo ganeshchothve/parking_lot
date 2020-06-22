@@ -82,7 +82,7 @@
                                 end
                               %>
                               <% if unit.present? %>
-                                <span data-jquery-selector="<%= data_selector %>" data-toggle="popover" data-content="<%= unit_tooltip(unit, current_user) %>" data-title="Details for <%= unit.name %>" data-unit-id="<%= unit.present? ? unit.id : '' %>" class="book-box <%= klass %>" ></span>
+                                <span data-jquery-selector="<%= data_selector %>" data-toggle="popover" data-content="<%= unit_tooltip(unit) %>" data-title="Details for <%= unit.name %>" data-unit-id="<%= unit.present? ? unit.id : '' %>" class="book-box <%= klass %>" ></span>
                               <% else %>
                                 <span data-jquery-selector="<%= data_selector %>" class="book-box <%= klass %>">R</span>
                               <% end %>
