@@ -236,8 +236,11 @@ Rails.application.routes.draw do
 
   namespace :buyer do
 
+    resources :schemes, only: [:index]
+
     resources :booking_details, only: [:index, :show, :update] do
       member do
+        get :generate_booking_detail_form
         patch :booking
         get :doc, path: 'doc/:type'
       end

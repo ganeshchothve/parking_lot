@@ -156,6 +156,11 @@
     var unit_assets = _.filter(assets, function(a){return a.assetable_id == unit_id});
     showUnitData(unit, unit_assets);
     let userId = <%= raw @search.user_id.to_json %>
-    $(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/users/"+ userId +"/project_units/" + unit_id + "/quotation?layout=false");
+    let currentUserRoleGroup = <%= raw current_user_role_group.to_json %>
+    if(currentUserRoleGroup == "buyer"){
+      $(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/project_units/"+  unit_id + "/quotation?layout=false");
+    }else{
+      $(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/users/"+ userId +"/project_units/" + unit_id + "/quotation?layout=false");
+    }
   });
 <% end %>

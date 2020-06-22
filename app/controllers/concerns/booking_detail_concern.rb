@@ -2,6 +2,7 @@ module BookingDetailConcern
   extend ActiveSupport::Concern
 
   def generate_booking_detail_form
+    render template: "admin/booking_details/generate_booking_detail_form"
   end
 
   def apply_policy_scope

@@ -5,9 +5,8 @@
     <% _params[:fltrs][:can_be_applied_by_role] = booking_detail.user.manager_role %>
     <% _params[:fltrs][:default_for_user_id] = booking_detail.user.manager_id %>
   <% end %>
-
   <%= f.label :derived_from_scheme_id, class: 'control-label' %>
-  <%= f.select :derived_from_scheme_id, options_from_collection_for_select(Scheme.where(_id: f.object.derived_from_scheme_id), 'id', 'name', f.object.derived_from_scheme_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_schemes_path, params: _params }%>
+  <%= f.select :derived_from_scheme_id, options_from_collection_for_select(Scheme.where(_id: f.object.derived_from_scheme_id), 'id', 'name', f.object.derived_from_scheme_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: current_user.buyer? ? buyer_schemes_path : admin_schemes_path, params: _params }%>
 </div>
 <%= f.hidden_field :booking_detail_id %>
 <%= f.hidden_field :project_unit_id %>
