@@ -94,6 +94,7 @@ gem 'audit', git: 'https://github.com/amuratech/audit.git'
 gem 'aasm'
 gem 'mailgun-ruby'
 gem 'safe_parser'
+gem 'twilio-ruby'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
