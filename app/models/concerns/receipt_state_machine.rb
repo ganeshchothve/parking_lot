@@ -149,6 +149,12 @@ module ReceiptStateMachine
 
     def send_notification
       Notification::Receipt.new(self.id, { status: [self.status_was, self.status] }, { record: self } ).execute
+      if self.user.booking_portal_client.whatsapp_enabled?
+        whatsapp_template = Template::WhatsappTemplate.where(name: 'receipt_success').first
+        if whatsapp_template.present?
+          Whatsapp.create!(to: self.user.phone, triggered_by: self, booking_portal_client: self.user.booking_portal_client, whatsapp_template: whatsapp_template, from: "+16413231111")
+        end
+      end
     end
   end
 end

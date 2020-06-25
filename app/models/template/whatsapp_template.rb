@@ -3,7 +3,7 @@
 #
 # @author Dnyaneshwar Burgute <dnyaneshwar.burgute@sell.do>
 #
-class Template::WhatappTemplate < Template
+class Template::WhatsappTemplate < Template
   include Mongoid::Document
   include Mongoid::Timestamps
 

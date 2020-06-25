@@ -38,10 +38,11 @@ class Whatsapp
 
   # Validations
   validates :content, presence: true, if: Proc.new{ |model| model.whatsapp_template_id.blank? }
-  validates :triggered_by_id, :recipient_id, presence: true
+  validates :triggered_by_id, presence: true
+  validates :recipient_id, presence: true, if: -> { self.to.blank? }
   validates_inclusion_of :status, in: STATUSES
   # validate media_size # up to 5 MB in size (incase of pdf and mp4 and mp3)
-  validates :to, :from, presence: true, if: -> { self.vendor == 'WhatsappNotifier::Twilio' }
+  validates :to, :from, presence: true, if: -> { self.vendor == 'WhatsappNotifier::Twilio' && self.recipient.blank? }
 
   enable_audit audit_fields: [:content, :created_at], reference_ids_without_associations: [{ field: 'whatsapp_template_id', klass: 'Template::WhatsappTemplate' }]
 

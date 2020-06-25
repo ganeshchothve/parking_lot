@@ -23,7 +23,7 @@ module WhatsappNotifier
       hash = {
         from: @params[:from],
         to: @params[:to],
-        body: @params[:message],
+        body: @params[:message]
       }
       hash[:media_url] = @params[:media_url].to_s if @params[:media_url].present?
       response = client.api.account.messages.create(hash)
