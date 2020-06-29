@@ -759,6 +759,9 @@ en:
           custom_dates: 'Custom Dates'
 
   controller:
+    add_booking:
+        index:
+            link_name: 'Add Booking'
     bulk_upload_reports:
       index:
         link_name: 'Bulk Uploads'
@@ -1148,7 +1151,7 @@ en:
             <li>1 to 3 bookings - <strong>2%</strong></li>
             <li>4 to 5 bookings - <strong>2.5%</strong></li>
             <li>6 bookings onwards - <strong>3%</strong></li>
-          </ul>" 
+          </ul>"
 
       titles:
         lead_details: 'Lead Details'
