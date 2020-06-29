@@ -1,4 +1,15 @@
 <div class="container mb-5">
+  <div class='container  bg-white'>
+    <div class='row' align='center'>
+      <div class='col-sm' align='center'>
+        <img src='<%= current_client.logo.url || '' %>' class='img-responsive'>
+      </div>
+    </div>
+  <div class='row' align='center'>
+    <div class='col-sm' align='center'>
+      <h2><%= current_project.name %></h2>
+    </div>
+  </div>
   <div class="row justify-content-center">
     <div class="col-md-12">
       <div id="project-unit-cost-details">
