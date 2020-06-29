@@ -1,1 +1,32 @@
-<%= render 'admin/project_units/quotation' %>
+<div class="container mb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <div id="project-unit-cost-details">
+        <div class="mt-3 pb_after">
+          <%= render 'booking_details/details', booking_detail: @booking_detail, with_actions: false %>
+        </div>
+        <div class='card mt-3'>
+          <div class='card-body'>
+            <%= render 'admin/project_units/booking_detail_scheme_pdf', { booking_detail: @booking_detail, booking_detail_scheme: @booking_detail_scheme } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mt-3 pb_after">
+    <div class="card-body">
+      <div>
+        <%= @booking_detail.cost_sheet_template.parsed_content(@booking_detail) %>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mt-3">
+    <div class="card-body">
+      <div>
+        <%= @booking_detail.payment_schedule_template.parsed_content(@booking_detail) %>
+      </div>
+    </div>
+  </div>
+</div>
