@@ -143,6 +143,7 @@ class User
   has_many :user_kycs
   has_many :searches
   has_many :received_smses, class_name: 'Sms', inverse_of: :recipient
+  has_many :received_whatsapps, class_name: 'Whatsapp', inverse_of: :recipient
   has_many :assets, as: :assetable
   has_and_belongs_to_many :received_emails, class_name: 'Email', inverse_of: :recipients
   has_and_belongs_to_many :cced_emails, class_name: 'Email', inverse_of: :cc_recipients
@@ -151,6 +152,7 @@ class User
 
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :emails, as: :triggered_by, class_name: 'Email'
+  has_many :whatsapps, as: :triggered_by, class_name: 'Whatsapp'
   has_many :referrals, class_name: 'User', foreign_key: :referred_by_id, inverse_of: :referred_by
   has_and_belongs_to_many :schemes
   has_many :logs, class_name: 'SyncLog', inverse_of: :user_reference
