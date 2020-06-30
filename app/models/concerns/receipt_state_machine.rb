@@ -149,6 +149,9 @@ module ReceiptStateMachine
 
     def send_notification
       Notification::Receipt.new(self.id, { status: [self.status_was, self.status] }, { record: self } ).execute
+
+      # TODO - Remove hardcoded from value & save it on client. This is a test entry for whatsapp message.
+      # Actual messages will be added via templates on client requests & triggered appropriately.
       if self.user.booking_portal_client.whatsapp_enabled?
         whatsapp_template = Template::WhatsappTemplate.where(name: 'receipt_success').first
         if whatsapp_template.present?
