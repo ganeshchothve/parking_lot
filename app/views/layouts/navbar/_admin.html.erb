@@ -27,9 +27,9 @@
       </li>
     <% end %>
 
-    <% if current_client.enable_actual_inventory?(current_user) %>
+    <% if policy(:custom).inventory? %>
       <li class="nav-item">
-        <%= link_to t('helpers.new.link_name', model: BookingDetail.model_name.human), new_admin_booking_detail_path, class: 'nav-link pl-0 pr-0 modal-remote-form-link' %>
+        <%= active_link_to t('controller.inventory.index.link_name'), custom_inventory_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
       </li>
     <% end %>
 
