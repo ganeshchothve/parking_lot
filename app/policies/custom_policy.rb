@@ -6,7 +6,11 @@ class CustomPolicy < Struct.new(:user, :enable_users)
   end
 
   def inventory?
-    ['superadmin', 'admin', 'sales_admin', 'sales', 'channel_partner', 'cp', 'cp_admin'].include?(user.role) && (user.role.in?(current_client.enable_actual_inventory) || user.role.in?(current_client.enable_live_inventory))
+    if user.role?(:channel_partner)
+      user.role.in?(current_client.enable_actual_inventory) || (user.role.in?(current_client.enable_live_inventory) && user.enable_live_inventory)
+    else
+      ['superadmin', 'admin', 'sales_admin', 'sales', 'cp', 'cp_admin'].include?(user.role) && (user.role.in?(current_client.enable_actual_inventory) || user.role.in?(current_client.enable_live_inventory))
+    end
   end
 
   def emails?

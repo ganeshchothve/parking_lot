@@ -99,12 +99,28 @@
               </div>
             <% end %>
           </div>
+
           <div class="row">
             <% if policy([current_user_role_group, @user]).editable_field?("premium") %>
               <div class="col-md-6">
                 <div class="form-group">
                   <%= f.check_box :premium, { class: "form-check-label", checked: f.object.premium? }, true %>
                   <%= f.label :premium, :premium, class: "form-check-label ml-1" %>
+                </div>
+              </div>
+            <% end %>
+            <% if policy([current_user_role_group, @user]).editable_field?("enable_live_inventory") %>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :enable_live_inventory %><br/>
+                  <div class="form-check form-check-inline">
+                    <%= f.radio_button :enable_live_inventory, true, class: "form-check-input" %>
+                    <%= f.label :enable_live_inventory, "Yes", class: "form-check-label" %>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <%= f.radio_button :enable_live_inventory, false, class: "form-check-input" %>
+                    <%= f.label :enable_live_inventory, "No", class: "form-check-label" %>
+                  </div>
                 </div>
               </div>
             <% end %>

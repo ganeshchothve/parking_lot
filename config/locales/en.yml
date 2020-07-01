@@ -654,6 +654,7 @@ en:
         company_name: 'Company Name'
         email: 'Email'
         is_active: 'Allow the user to login?'
+        enable_live_inventory: 'Allow live inventory access?'
         kyc_ready: 'Is the Customer KYC Ready?'
         login_otp: 'Verification / Login OTP'
         location: 'Location'
