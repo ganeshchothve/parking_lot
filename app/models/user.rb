@@ -71,6 +71,7 @@ class User
   field :authentication_token
 
   field :is_active, type: Boolean, default: true
+  field :enable_live_inventory, type: Boolean, default: false
 
   ## Lockable
   field :failed_attempts, type: Integer, default: 0 # Only if lock strategy is :failed_attempts
