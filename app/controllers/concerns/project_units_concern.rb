@@ -40,6 +40,7 @@ module ProjectUnitsConcern
       format.js{ render template: 'admin/project_units/quotation' }
       format.pdf {
         render pdf: "quotation",
+        viewport_size: '1280x1024',
         template: 'admin/project_units/quotation',
         layout: 'pdf',
         page_size: 'A4',
