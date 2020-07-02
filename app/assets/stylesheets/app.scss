@@ -234,9 +234,9 @@ figure.wave {
       text-align: left;
     }
   }
-  tfoot tr {
+  tfoot tr, thead tr {
     td { line-height: inherit !important; }
-    &.highlight td {
+    &.highlight td, &.highlight th {
       color: white !important;
       background-color: $primary !important;
     }
