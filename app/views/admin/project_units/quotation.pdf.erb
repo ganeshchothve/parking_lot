@@ -1,7 +1,4 @@
-<div class='text-center'>
-  <img src='<%= current_client.logo.url.try(:gsub, "https", "http") || '' %>' class='mb-3' width=120>
-  <h2><%= current_project.name %></h2>
-</div>
-<%= render 'admin/project_units/project_unit_cost_details', locals: { booking_detail: @booking_detail } %>
-<%= @booking_detail.cost_sheet_template.parsed_content(@booking_detail) %>
-<%= @booking_detail.payment_schedule_template.parsed_content(@booking_detail) %>
+<% template = ::Template::UITemplate.where(name: 'quotation_pdf').first %>
+<% if template.present? %>
+  <%= get_view_erb(template) %>
+<% end %>
