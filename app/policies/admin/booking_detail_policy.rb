@@ -39,7 +39,8 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def show_booking_link?
-    _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed?
+    #_role_based_check && enable_actual_inventory? && only_for_confirmed_user! && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed?
+    user.buyer?
   end
 
   def send_under_negotiation?
