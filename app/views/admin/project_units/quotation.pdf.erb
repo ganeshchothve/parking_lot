@@ -1,1 +1,4 @@
-<%= render 'admin/project_units/quotation' %>
+<% template = ::Template::UITemplate.where(name: 'quotation_pdf').first %>
+<% if template.present? %>
+  <%= get_view_erb(template) %>
+<% end %>

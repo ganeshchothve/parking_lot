@@ -1,4 +1,4 @@
-<label class='control-label'>Scheme</label>
+<label class='form-sec-title p-0'>Scheme</label>
 <p><strong><%= booking_detail_scheme.derived_from_scheme.name %></strong></p>
 <% payment_adjustment = policy([ current_user_role_group, booking_detail_scheme]).editable_field?("payment_adjustments_attributes") %>
 <% if payment_adjustment %>

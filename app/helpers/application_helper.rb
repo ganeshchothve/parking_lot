@@ -19,7 +19,11 @@ module ApplicationHelper
   end
 
   def get_view_erb(template)
-    ::ERB.new(template.content).result( binding ).html_safe
+    begin
+      ::ERB.new(template.content).result( binding ).html_safe
+    rescue StandardError => e
+      ERB.new("<script> Amura.global_error_handler(''); </script>").result(binding).html_safe
+    end
   end
 
   def login_image

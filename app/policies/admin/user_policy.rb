@@ -81,6 +81,8 @@ class Admin::UserPolicy < UserPolicy
     attributes += [:premium] if record.role?('channel_partner') && user.role?('admin')
     attributes += [:role] if %w[superadmin admin].include?(user.role)
     attributes += [:erp_id] if %w[admin sales_admin].include?(user.role)
+    # To give selected channel partner access of live inventory.
+    attributes += [:enable_live_inventory] if user.role?(:superadmin) && record.role?(:channel_partner)
     attributes.uniq
   end
 end

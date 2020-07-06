@@ -196,6 +196,20 @@ module DatabaseSeeds
           </ul>' })
       end
 
+      if Template::UITemplate.where(name: 'quotation_pdf').blank?
+        Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'quotation_pdf',
+ content: <<-'QUOTATION_PDF'
+            <div class='text-center'>
+              <img src='<%= current_client.logo.url.try(:gsub, "https", "http") || '' %>' class='mb-3' width=120>
+              <h2><%= current_project.name %></h2>
+            </div>
+            <%= render 'admin/project_units/project_unit_cost_details', locals: { booking_detail: @booking_detail } %>
+            <%= @booking_detail.cost_sheet_template.parsed_content(@booking_detail) %>
+            <%= @booking_detail.payment_schedule_template.parsed_content(@booking_detail) %>
+          QUOTATION_PDF
+        })
+      end
+
       Template::UITemplate.where(booking_portal_client_id: client_id).count
     end
   end
