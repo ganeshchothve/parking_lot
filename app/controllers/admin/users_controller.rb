@@ -171,7 +171,7 @@ class Admin::UsersController < AdminController
     respond_to do |format|
       format.html do
         @user.send_payment_link
-        redirect_to request.referrer || dashboard_url, notice: t('controller.users.send_payment_link')
+        redirect_to admin_users_url, notice: t('controller.users.send_payment_link')
       end
     end
   end
