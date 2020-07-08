@@ -15,7 +15,11 @@
             form_id = current_client.selldo_gre_form_id
           end
         %>
-        <script src='//trkr.scdn1.secure.raxcdn.com/t/forms/<%= current_client.selldo_client_id %>/<%= form_id %>.js' data-form-id='<%= form_id %>'></script>
+        <% if Rails.env.production? %>
+          <script src='//trkr.scdn1.secure.raxcdn.com/t/forms/<%= current_client.selldo_client_id %>/<%= form_id %>.js' data-form-id='<%= form_id %>'></script>
+        <% else %>
+          <script src='https://v2.sell.do/t/forms/<%= current_client.selldo_client_id %>/<%= form_id %>.js' data-form-id='<%= form_id %>'></script>
+        <% end %>
       </div>
     </div>
   </div>

@@ -35,6 +35,10 @@
               </li>
             <% end %>
             <li>
+              <span><%= BookingDetail.human_attribute_name('crm_id') %></span>
+              <p><%= booking_detail.crm_id %></p>
+            </li>
+            <li>
               <span class='text-wrap'><%= BookingDetail.human_attribute_name('bedrooms')%>/ <%= BookingDetail.human_attribute_name('bathrooms')%></span>
               <p><%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></p>
             </li>

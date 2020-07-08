@@ -7,6 +7,7 @@ class User
   include InsertionStringMethods
   include ApplicationHelper
   include SyncDetails
+  include CrmIntegration
   extend FilterByCriteria
 
   # Constants
@@ -355,6 +356,8 @@ class User
     end
     str
   end
+
+  alias :resource_name :name
 
   def login
     @login || phone || email
