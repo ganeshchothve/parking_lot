@@ -69,6 +69,7 @@ class Client
   field :allow_multiple_bookings_per_user_kyc, type: Boolean, default: true
   field :enable_referral_bonus, type: Boolean, default: false
   field :roles_taking_registrations, type: Array, default: %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner]
+  field :lead_blocking_days, type: Integer
 
   field :external_api_integration, type: Boolean, default: false
   field :enable_daily_reports, type: Hash, default: {"payments_report": false}

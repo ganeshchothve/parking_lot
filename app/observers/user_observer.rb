@@ -16,6 +16,7 @@ class UserObserver < Mongoid::Observer
   end
 
   def before_save user
+    user.assign_attributes(manager_change_reason: 'Blocking the lead', unblock_at: Date.today + user.booking_portal_client.lead_blocking_days) if user.temporarily_blocked == true && user.unblock_at == nil && user.booking_portal_client.lead_blocking_days.present?
     user.generate_referral_code
     if user.phone.present?
       user.phone = Phonelib.parse(user.phone).to_s
@@ -30,11 +31,8 @@ class UserObserver < Mongoid::Observer
       #     mailer.deliver_later
       #   end
       # end
-      user.referenced_manager_ids = [user.manager_id]
     end
     if user.manager_id_changed? && user.manager_id.present?
-      user.referenced_manager_ids << user.manager_id
-      user.referenced_manager_ids.uniq!
       user.push_srd_to_selldo if user.buyer?
     end
     unless user.authentication_token?

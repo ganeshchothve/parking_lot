@@ -23,6 +23,9 @@
             <% else %>
               <%= user.name %>
             <% end %>
+            <% if user.temporarily_blocked? %>
+              <i class="fa fa-circle" aria-hidden="true" style = "color: #8B0000;"></i>
+            <% end %>
           </span>
           <% if user.email.present? %>
             <span class="email-icon">

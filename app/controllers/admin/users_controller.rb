@@ -158,6 +158,23 @@ class Admin::UsersController < AdminController
     end
   end
 
+  def block_lead
+    @referenced_managers = User.in(id: @user.referenced_manager_ids).all
+    render layout: false
+  end
+
+  def unblock_lead
+    respond_to do |format|
+      if @user.unblock_lead!
+        format.html{ redirect_to request.referrer || admin_users_path, notice: "Lead unqualified successfully" }
+        format.json{ render json: {notice: "Lead unqualified successfully"}, status: :created }
+      else
+        format.html{ redirect_to request.referrer || admin_users_path, alert: "Lead cannot be unqualified" }
+        format.json{ render json: {alert: "Lead cannot be unqualified"}, status: :unprocessable_entity }
+      end
+    end
+  end
+
   #
   # GET /admin/users/portal_stage_chart
   #

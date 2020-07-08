@@ -138,6 +138,8 @@ Rails.application.routes.draw do
         get :resend_password_instructions
         get :print
         patch :confirm_user
+        get :block_lead
+        patch :unblock_lead
       end
 
       collection do
@@ -254,6 +256,7 @@ Rails.application.routes.draw do
     end
     resources :users, only: [:show, :update, :edit] do
       member do
+        get :iris_confirm
         get :update_password
       end
 

@@ -13,6 +13,16 @@
   <%= link_to t('controller.booking_details.continue_booking.link_name'), checkout_user_search_path(user.get_search(hold_booking.project_unit_id)), class: "dropdown-item" %>
 <% end %>
 
+<% if policy([:admin, user]).block_lead? %>
+  <%= link_to t('controller.users.block_lead.link_name'), block_lead_admin_user_path(user),
+  class: "dropdown-item modal-remote-form-link" %>
+<% end %>
+
+<% if policy([:admin, user]).unblock_lead? %>
+  <%= link_to t('controller.users.unblock_lead.link_name'), unblock_lead_admin_user_path(user), method: :patch,
+  class: "dropdown-item" %>
+<% end %>
+
 <% if policy([:admin, Receipt.new(user: user)]).new? %>
   <%= link_to t('controller.receipts.new.link_name'), new_admin_user_receipt_path(user), class: "dropdown-item modal-remote-form-link" %>
 <% end %>

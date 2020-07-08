@@ -1021,6 +1021,11 @@ en:
         link_name: Template Detail
 
     users:
+      block_lead:
+        header: 'Qualify Lead'
+        link_name: 'Qualify Lead'
+      unblock_lead:
+        link_name: 'Unqualify Lead'
       account_confirmed: 'Account Confirmed'
       change_password:
         link_name: 'Change Password'

@@ -14,12 +14,12 @@ module ReceiptStateMachine
         transitions from: :pending, to: :pending
       end
 
-      event :clearance_pending, after: %i[moved_to_success_if_online ] do
+      event :clearance_pending, after: %i[moved_to_success_if_online lock_lead] do
         transitions from: :pending, to: :clearance_pending, if: :can_move_to_clearance?
         transitions from: :clearance_pending, to: :clearance_pending
       end
 
-      event :success, after: %i[change_booking_detail_status send_success_notification] do
+      event :success, after: %i[change_booking_detail_status send_success_notification lock_lead] do
         transitions from: :success, to: :success
         # receipt moves from pending to success when online payment is made.
         transitions from: :clearance_pending, to: :success
@@ -65,6 +65,10 @@ module ReceiptStateMachine
         transitions from: :clearance_pending, to: :cancelled, if: :user_request_initiated?
         transitions from: :cancelling, to: :cancelled, success: %i[move_to_available_for_refund]
       end
+    end
+
+    def lock_lead
+      user.unblock_lead!(true)
     end
 
     def swap_request_initiated?

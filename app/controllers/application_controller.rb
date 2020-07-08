@@ -98,6 +98,13 @@ class ApplicationController < ActionController::Base
       cookies[:portal_cp_id] = params[:portal_cp_id]
     end
 
+    if params[:manager_id] && (params[:controller] == 'local_devise/confirmations' && params[:action] == 'show')
+      cookies.signed[:manager_id] = {
+        value: params[:manager_id],
+        expires: (Rails.env.production? ? 1.hour.from_now : 5.minutes.from_now)
+      }
+    end
+
   end
 
   def load_hold_unit

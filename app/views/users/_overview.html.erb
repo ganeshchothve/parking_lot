@@ -17,6 +17,9 @@
               <li>
                 <span><%= t('mongoid.attributes.user.name') %></span>
                 <p class="break-word"><%= user.name || '-' %></p>
+                <% if user.temporarily_blocked? %>
+                  <i class="fa fa-circle" aria-hidden="true" style = "color: #8B0000;"></i>
+                <% end %>
               </li>
               <li>
                 <span><%= t('mongoid.attributes.user.email') %></span>
@@ -134,6 +137,16 @@
                   </li>
                 <% end %>
               <% end %>
+            </ul>
+            <ul class="booking-apart-info clear">
+              <li>
+                <span><%= t("mongoid.attributes.user.temporarily_blocked") %></span>
+                <p><%= user.temporarily_blocked? ? "Yes": "No" %></p>
+              </li>
+              <li>
+                <span><%= t("mongoid.attributes.user.unblock_at") %></span>
+                <p><%= user.unblock_at.try(:strftime, "%d/%m/%Y") %></p>
+              </li>
             </ul>
           </div>
         </div>
