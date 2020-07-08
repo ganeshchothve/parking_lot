@@ -77,10 +77,7 @@ Rails.application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
-  # Use default mailer asset host
-  config.action_mailer.asset_host = "http://bookingportal.withamura.com"
-
-  config.action_mailer.default_url_options = {host: 'bookingportal.withamura.com'}
+  config.action_mailer.default_url_options = {host: ENV_CONFIG[:host]}
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
@@ -105,4 +102,4 @@ Rails.application.configure do
   end
 end
 
-Rails.application.routes.default_url_options = { host: 'bookingportal.withamura.com' }
+Rails.application.routes.default_url_options = { host: ENV_CONFIG[:host] }

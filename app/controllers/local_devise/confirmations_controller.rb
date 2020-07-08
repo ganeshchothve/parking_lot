@@ -62,11 +62,11 @@ class LocalDevise::ConfirmationsController < Devise::ConfirmationsController
     @confirmable.confirm
     if params[:manager_id].present?
       @confirmable.manager_id = params[:manager_id]
-      @confirmable.referenced_manager_ids = ([params[:manager_id]] + @confirmable.referenced_manager_ids).uniq
+      #@confirmable.referenced_manager_ids = ([params[:manager_id]] + @confirmable.referenced_manager_ids).uniq
       @confirmable.manager_change_reason = "Customer confirmed with link sent by #{@confirmable.manager.name}"
       @confirmable.save
     end
-    SelldoLeadUpdater.perform_async(@confirmable.id, 'confirmed')
+    SelldoLeadUpdater.perform_async(@confirmable.id, {stage: 'confirmed'})
     set_flash_message :notice, :confirmed
     sign_in_and_redirect(resource_name, @confirmable)
   end

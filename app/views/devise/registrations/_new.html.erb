@@ -1,20 +1,46 @@
-<%= simple_form_for(resource, url: user_registration_path, html: { novalidate: false, class: 'validate-form' }) do |f| %>
+<%= form_tag check_and_register_path, remote: true, local: true, id: "new_user", class: "validate-form", "data-resource-type": global_labels['user'], "data-type": "json" do |f| %>
 
-  <%= f.input :first_name, autofocus: true, required: true %>
-
-  <%= f.input :last_name, autofocus: true, required: true %>
-
-  <%= f.input :email, autofocus: true, required: true, as: :email %>
-
-  <%= f.input :login, autofocus: true, label: User.human_attribute_name('phone'), placeholder: User.human_attribute_name('phone'), id: 'user_login_phone', autocomplete: 'off' %>
+  <div class="form-group">
+    <%= label_tag :first_name, nil, class: 'label-required' %>
+    <%= text_field_tag :first_name, nil, class: 'form-control', autofocus: true, required: 'required' %>
+  </div>
+  <div class="form-group">
+    <%= label_tag :last_name, nil, class: 'label-required' %>
+    <%= text_field_tag :last_name, nil, class: 'form-control', autofocus: true, required: 'required' %>
+  </div>
+  <div class="form-group">
+    <%= label_tag :email %>
+    <%= email_field_tag :email, nil, class: 'form-control' %>
+  </div>
+  <div class="form-group">
+    <%= label_tag :phone %>
+    <%= text_field_tag :phone, nil, class: 'form-control phone' %>
+  </div>
 
   <div class="signin-btn col-lg-12 pl-0 pr-0 pt-4 pb-3">
-    <%= f.submit "Sign up", class: 'sign-in-btn' %>
+    <%= submit_tag "Sign up", class: 'sign-in-btn' %>
   </div>
 <% end %>
 
 <%= javascript_tag do %>
   $(document).ready(function(){
-    $("#user_login_phone").intlTelInput({initialCountry: 'IN'});
+    FormInitializer.init('#new_user');
+    $(document).on("ajax:success", '#new_user', function(event){
+      var detail = event.detail;
+      var data = detail[0], status = detail[1], xhr = detail[2];
+      if(data && data.success){
+        Amura.global_success_handler(data.success);
+        setTimeout(function() {
+          window.location = "<%= raw root_url %>";
+        }, 6500);
+      }
+    });
+    $(document).on("ajax:error", '#new_user', function(event){
+      var detail = event.detail;
+      var data = detail[0], status = detail[1], xhr = detail[2];
+      if(data && data.errors){
+        Amura.global_error_handler(data.errors);
+      }
+    });
   });
 <% end %>

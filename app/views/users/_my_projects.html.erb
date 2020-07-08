@@ -16,3 +16,11 @@
     </div>
   </div>
 </section>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    var count = <%= current_user.active_bookings.count %>
+    if(count != 0){
+      $('#collapseBookings').collapse('show')
+    }
+  });
+<% end %>

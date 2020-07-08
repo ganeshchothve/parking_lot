@@ -8,6 +8,7 @@ class BookingDetail
   include Tasks
   include ApplicationHelper
   extend FilterByCriteria
+  extend RenderAnywhere
   include PriceCalculator
   include CrmIntegration
 
@@ -60,11 +61,14 @@ class BookingDetail
   # validates :name, presence: true
   validates :status, presence: true
   validates :erp_id, uniqueness: true, allow_blank: true
-  validate :kyc_mandate, on: :create
+  validate :kyc_mandate
+  validate :validate_content, on: :create
+
   delegate :name, :blocking_amount, to: :project_unit, prefix: true, allow_nil: true
   delegate :name, :email, :phone, to: :user, prefix: true, allow_nil: true
   delegate :name, :email, :phone, :role, :role?, to: :manager, prefix: true, allow_nil: true
 
+  default_scope -> { desc(:created_at) }
 
   scope :filter_by_id, ->(_id) { where(_id: _id) }
   scope :filter_by_name, ->(name) { where(name: ::Regexp.new(::Regexp.escape(name), 'i')) }
@@ -75,12 +79,20 @@ class BookingDetail
   scope :filter_by_tasks_completed, ->(tasks) { where("$and": [{ _id: {"$in": find_completed_tasks(tasks)}}])}
   scope :filter_by_tasks_pending, ->(tasks) { where("$and": [{ _id: {"$in": find_pending_tasks(tasks)}}])}
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(name: regex ) }
-  default_scope -> {desc(:created_at)}
-
+  scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: start_date..end_date) }
 
   accepts_nested_attributes_for :notes, :tasks
 
-  default_scope -> { desc(:created_at) }
+  def validate_content
+    _file = tds_doc.file
+    file_name = _file.try(:original_filename)
+    if file_name.present?
+      self.errors.add(:base, 'Invalid file name/type (The filename should not have more than one dot (.))') if file_name.split('.').length > 2
+      self.errors.add(:base, 'File without name provided') if file_name.split('.')[0].blank?
+      file_meta = MimeMagic.by_magic(open(tds_doc.path)) rescue nil
+      self.errors.add(:base, 'Invalid file (you can only upload jpg|png|jpeg|pdf files)') if ( file_meta.nil? || %w[png jpg jpeg pdf PNG JPG PDF JPEG].exclude?(file_meta.subtype) )
+    end
+  end
 
   def send_notification!
     message = "#{primary_user_kyc.name} just booked apartment #{project_unit.name} in #{project_unit.project_tower_name}"
@@ -118,6 +130,31 @@ class BookingDetail
     email.sent!
   end
 
+  def send_cost_sheet_and_payment_schedule(search_user)
+    if project_unit.booking_portal_client.email_enabled?
+      attachments_attributes = []
+      cost_details = self.class.render_anywhere('admin/project_units/cost_sheet_and_payment_schedule', { booking_detail: self }, 'layouts/pdf')
+      pdf = WickedPdf.new.pdf_from_string(cost_details.presence)
+      File.open("#{Rails.root}/exports/#{project_unit.name}_cost_sheet.pdf", "wb") do |file|
+        file << pdf
+      end
+      attachments_attributes << {file: File.open("#{Rails.root}/exports/#{project_unit.name}_cost_sheet.pdf")}
+      email_template = Template::EmailTemplate.find_by(name: "cost_sheet_and_payment_schedule")
+      email = Email.create!({
+        booking_portal_client_id: project_unit.booking_portal_client_id,
+        body: ERB.new(project_unit.booking_portal_client.email_header).result(binding) + email_template.parsed_content(self) + ERB.new(project_unit.booking_portal_client.email_footer).result(binding),
+        subject: email_template.parsed_subject(self),
+        cc: [project_unit.booking_portal_client.notification_email],
+        recipients: [search_user],
+        cc_recipients: [],
+        triggered_by_id: self.id,
+        triggered_by_type: self.class.to_s,
+        attachments_attributes: attachments_attributes
+      })
+      email.sent!
+    end
+  end
+
   def ds_name
     "#{name} - #{status}"
   end
@@ -126,10 +163,8 @@ class BookingDetail
 
   # validates kyc presence if booking is not allowed without kyc
   def kyc_mandate
-    if project_unit.booking_portal_client.enable_booking_with_kyc
-      primary_user_kyc_id.present?
-    else
-      return true
+    if project_unit.booking_portal_client.enable_booking_with_kyc && !primary_user_kyc_id.present?
+      self.errors.add(:base, "KYC is mandatory for booking.")
     end
   end
 
@@ -187,6 +222,42 @@ class BookingDetail
       return (self.project_unit.booking_price - receipts_total)
     else
       return self.project_unit.booking_price
+    end
+  end
+
+  def booking_number
+    receipts.asc(:created_at).first.try(:receipt_id) || name
+  end
+
+  def send_booking_detail_form_mail_and_sms
+    if project_unit.booking_portal_client.email_enabled?
+      attachments_attributes = []
+      booking_detail_form = self.class.render_anywhere('templates/booking_detail_form', { booking_detail: self }, 'layouts/pdf')
+      pdf = WickedPdf.new.pdf_from_string(booking_detail_form.presence)
+      File.open("#{Rails.root}/exports/#{booking_number}_booking_form.pdf", "wb") do |file|
+        file << pdf
+      end
+      attachments_attributes << {file: File.open("#{Rails.root}/exports/#{booking_number}_booking_form.pdf")}
+      email = Email.create!({
+        booking_portal_client_id: project_unit.booking_portal_client_id,
+        email_template_id: Template::EmailTemplate.find_by(name: "booking_confirmed").id,
+        recipients: [user],
+        cc_recipients: [],
+        triggered_by_id: self.id,
+        triggered_by_type: self.class.to_s,
+        attachments_attributes: attachments_attributes
+      })
+      email.sent!
+    end
+    if project_unit.booking_portal_client.sms_enabled?
+      template = Template::SmsTemplate.find_by(name: "booking_confirmed")
+      sms = Sms.create!(
+        booking_portal_client_id: project_unit.booking_portal_client_id,
+        recipient_id: user.id,
+        sms_template_id: template.id,
+        triggered_by_id: self.id,
+        triggered_by_type: self.class.to_s
+      )
     end
   end
 

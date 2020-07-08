@@ -1,4 +1,4 @@
-<% if current_client.enable_actual_inventory?(current_user) %>
+<% if current_client.enable_actual_inventory?(current_user) && ENV_CONFIG[:pusher]['pusher_api_key'].present? %>
   <div id="gamification-container" class="card py-2 bg-gradient text-white d-print-none">
     <div id="gamification-carousel" class="carousel" data-ride="carousel">
       <div class="carousel-inner">

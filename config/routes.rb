@@ -13,7 +13,8 @@ Rails.application.routes.draw do
     registrations: 'local_devise/registrations',
     sessions: 'local_devise/sessions',
     unlocks: 'local_devise/unlocks',
-    passwords: 'local_devise/passwords'
+    passwords: 'local_devise/passwords',
+    omniauth_callbacks: "users/omniauth_callbacks"
   }
 
   devise_scope :user do
@@ -40,6 +41,8 @@ Rails.application.routes.draw do
     get 'export', action: 'export', on: :collection, as: :export
   end
 
+  get '/s/:code', to: 'shortened_urls#redirect_to_url'
+
   namespace :admin do
 
     resources :api_logs, only: [:index]
@@ -49,16 +52,16 @@ Rails.application.routes.draw do
     end
     resources :checklists
 
-    resources :bulk_upload_reports, only: [:index, :show] do
+    resources :bulk_upload_reports, except: [:edit, :update, :destroy] do
       get :show_errors, on: :member
     end
-
-    resources :inventory_uploads, only: [:new, :create]
 
     resources :booking_details, only: [:index, :show, :new, :create, :edit, :update] do
       member do
         patch :booking
         patch :send_under_negotiation
+        get :generate_booking_detail_form
+        get :send_booking_detail_form_notification
         get :tasks
         get :cost_sheet
         get :doc, path: 'doc/:type'
@@ -80,7 +83,12 @@ Rails.application.routes.draw do
     resources :sync_logs, only: %i[index create] do
       patch :resync, on: :member
     end
-    resources :emails, :smses, only: %i[index show]
+    resources :emails, only: %i[index show] do
+      get :monthly_count, on: :collection
+    end
+    resources :smses, only: %i[index show] do
+      get :sms_pulse, on: :collection
+    end
     resource :client, except: [:show, :new, :create] do
       resources :templates, only: [:edit, :update, :index]
     end
@@ -120,10 +128,12 @@ Rails.application.routes.draw do
         get :print
         patch :release_unit
         get :quotation
+        get :send_cost_sheet_and_payment_schedule
       end
 
       collection do
         get :unit_configuration_chart
+        get :inventory_snapshot
         get :export
       end
     end
@@ -136,6 +146,7 @@ Rails.application.routes.draw do
 
       member do
         get :resend_confirmation_instructions
+        get :send_payment_link
         get :update_password
         get :resend_password_instructions
         get :print
@@ -160,6 +171,7 @@ Rails.application.routes.draw do
 
       resources :project_units, only: [:index] do
         get :print, on: :member
+        get :quotation, on: :member
       end
       resources :searches, except: [:destroy], controller: '/searches' do
         get :"3d", on: :collection, action: "three_d", as: "three_d"
@@ -237,8 +249,11 @@ Rails.application.routes.draw do
 
   namespace :buyer do
 
+    resources :schemes, only: [:index]
+
     resources :booking_details, only: [:index, :show, :update] do
       member do
+        get :generate_booking_detail_form
         patch :booking
         get :doc, path: 'doc/:type'
       end

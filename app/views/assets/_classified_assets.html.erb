@@ -1,0 +1,33 @@
+<% if policy([ current_user_role_group, Asset.new(assetable: assetable)]).update? %>
+  <div class = "m-2">
+    <%= render 'form', { assetable: assetable } %>
+  </div>
+<% end %>
+<div class = "assets">
+  <% unless @assets.count.zero? %>
+    <% @assets.group_by(&:document_type).each do |key, value| %>
+      <div class="card m-2">
+        <div class = 'card-header'>
+            <%= t("mongoid.attributes.#{assetable.model_name.element}/file_types.#{key}") %>
+        </div>
+        <div class = 'card-body'>
+          <div class = "row">
+            <div class="files-container <%= key %>">
+              <% value.each do |asset| %>
+                <%=
+                  links = {}
+                  if policy([ current_user_role_group, asset]).destroy?
+                    links[:destroy] = assetable_path(assetable_type: assetable.class.model_name.i18n_key.to_s, assetable_id: assetable.id, id: asset.id)
+                  end
+                  if asset.file.file && asset.file.file.exists?
+                    render "assets/file_icon", record: {id: asset.id, file_size: asset.file_size, url: asset.file.url, content_type: asset.file.content_type, name: asset.file_name }, links: links
+                  end
+                %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>

@@ -9,6 +9,7 @@ class User
   include SyncDetails
   include CrmIntegration
   extend FilterByCriteria
+  extend ApplicationHelper
 
   # Constants
   ALLOWED_UTM_KEYS = %i[utm_campaign utm_source utm_sub_source utm_content utm_medium utm_term]
@@ -17,12 +18,14 @@ class User
   CHANNEL_PARTNER_USERS = %w[cp cp_admin channel_partner]
   SALES_USER = %w[sales sales_admin]
   COMPANY_USERS = %w[employee_user management_user]
+  # Added different types of documents which are uploaded on User
+  DOCUMENT_TYPES = %w[home_loan_application_form photo_identity_proof residence_address_proof residence_ownership_proof income_proof job_continuity_proof bank_statement advance_processing_cheque financial_documents]
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, :lockable, :timeoutable, :password_expirable, :password_archivable, :session_limitable, :expirable, authentication_keys: [:login]
+  devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, :lockable, :timeoutable, :password_expirable, :password_archivable, :session_limitable, :expirable, :omniauthable, :omniauth_providers => [:selldo], authentication_keys: [:login]
 
-  attr_accessor :temporary_password
+  attr_accessor :temporary_password, :payment_link
 
   ## Database authenticatable
   field :first_name, type: String, default: ''
@@ -69,6 +72,7 @@ class User
   field :authentication_token
 
   field :is_active, type: Boolean, default: true
+  field :enable_live_inventory, type: Boolean, default: false
 
   ## Lockable
   field :failed_attempts, type: Integer, default: 0 # Only if lock strategy is :failed_attempts
@@ -99,6 +103,9 @@ class User
   field :paranoid_verification_code, type: String
   field :paranoid_verification_attempt, type: Integer, default: 0
   field :paranoid_verified_at, type: DateTime
+
+  field :selldo_uid, type: String
+  field :selldo_access_token, type: String
 
   ## Security questionable
 
@@ -138,6 +145,8 @@ class User
   has_many :user_kycs
   has_many :searches
   has_many :received_smses, class_name: 'Sms', inverse_of: :recipient
+  has_many :received_whatsapps, class_name: 'Whatsapp', inverse_of: :recipient
+  has_many :assets, as: :assetable
   has_and_belongs_to_many :received_emails, class_name: 'Email', inverse_of: :recipients
   has_and_belongs_to_many :cced_emails, class_name: 'Email', inverse_of: :cc_recipients
 
@@ -145,6 +154,7 @@ class User
 
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :emails, as: :triggered_by, class_name: 'Email'
+  has_many :whatsapps, as: :triggered_by, class_name: 'Whatsapp'
   has_many :referrals, class_name: 'User', foreign_key: :referred_by_id, inverse_of: :referred_by
   has_and_belongs_to_many :schemes
   has_many :logs, class_name: 'SyncLog', inverse_of: :user_reference
@@ -154,8 +164,9 @@ class User
   validates :first_name, :role, presence: true
   validates :first_name, :last_name, name: true
 
-  validates :phone, uniqueness: true, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile] }, if: proc { |user| user.email.blank? }
-  validates :email, uniqueness: true, if: proc { |user| user.phone.blank? }
+  validate :phone_or_email_required, if: proc { |user| user.phone.blank? && user.email.blank? }
+  validates :phone, :email, uniqueness: { allow_blank: true }
+  validates :phone, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile] }, allow_blank: true
   validates :allowed_bookings, presence: true, if: proc { |user| user.buyer? }
   validates :rera_id, presence: true, if: proc { |user| user.role?('channel_partner') }
   validates :rera_id, uniqueness: true, allow_blank: true
@@ -204,6 +215,10 @@ class User
   end
   ADMIN_ROLES.each do |admin_roles|
     scope admin_roles, ->{ where(role: admin_roles )}
+  end
+
+  def phone_or_email_required
+    errors.add(:base, 'Email or Phone is required')
   end
 
   def password_complexity
@@ -419,6 +434,7 @@ class User
   def send_confirmation_instructions
     generate_confirmation_token! unless @raw_confirmation_token
     # send_devise_notification(:confirmation_instructions, @raw_confirmation_token, opts)
+    devise_mailer.new.send(:devise_sms, self, :confirmation_instructions)
     attrs = {
       booking_portal_client_id: booking_portal_client_id,
       email_template_id: Template::EmailTemplate.find_by(name: "user_confirmation_instructions").id,
@@ -434,6 +450,56 @@ class User
 
   def is_payment_done?
     receipts.where('$or' => [{ status: { '$in': %w(success clearance_pending) } }, { payment_mode: {'$ne': 'online'}, status: {'$in': %w(pending clearance_pending success)} }]).present?
+  end
+
+  def send_payment_link
+    url = Rails.application.routes.url_helpers
+    hold_booking_detail = self.booking_details.where(status: 'hold').first
+    if hold_booking_detail.present? && hold_booking_detail.search
+      self.payment_link = url.checkout_user_search_path(hold_booking_detail.search)
+    else
+      self.payment_link = url.dashboard_url("remote-state": url.new_buyer_receipt_path, user_email: email, user_token: authentication_token)
+    end
+    #
+    # Send email with payment link
+    email_template = ::Template::EmailTemplate.find_by(name: "payment_link")
+    email = Email.create!({
+      booking_portal_client_id: booking_portal_client_id,
+      body: ERB.new(self.booking_portal_client.email_header).result( binding) + email_template.parsed_content(self) + ERB.new(self.booking_portal_client.email_footer).result( binding ),
+      subject: email_template.parsed_subject(self),
+      recipients: [ self ],
+      triggered_by_id: id,
+      triggered_by_type: self.class.to_s
+    })
+    email.sent!
+    # Send sms with link for payment
+    sms_template = Template::SmsTemplate.find_by(name: "payment_link")
+    sms_body = sms_template.parsed_content(self)
+    Sms.create!({
+      booking_portal_client_id: booking_portal_client,
+      body: sms_body,
+      recipient: self,
+      triggered_by_id: id,
+      triggered_by_type: self.class.to_s
+    }) unless sms_body.blank?
+  end
+
+  def update_selldo_credentials(oauth_data)
+    self.selldo_access_token = oauth_data.credentials.token if oauth_data
+  end
+
+  def push_srd_to_selldo
+    _selldo_api_key = Client.selldo_api_clients.dig(:website, :api_key)
+
+    if self.manager_id.present? && _selldo_api_key.present?
+      campaign_resp = if self.manager_role?('channel_partner')
+        { srd: self.booking_portal_client.selldo_cp_srd, sub_source: self.manager_name }
+      elsif self.manager.role.in?((ADMIN_ROLES - %w(channel_partner)))
+        { srd: self.booking_portal_client.selldo_default_srd, sub_source: self.manager_name }
+      end
+
+      SelldoLeadUpdater.perform_async(self.id, { action: 'add_campaign_response', api_key: _selldo_api_key }.merge(campaign_resp))
+    end
   end
 
   # Class Methods
@@ -507,6 +573,36 @@ class User
         custom_scope = { role: { "$ne": 'superadmin' } }
       end
       custom_scope
+    end
+
+    def find_or_create_for_selldo_oauth(oauth_data)
+      matcher = {}
+      matcher[:email] = oauth_data.info.email
+      role = case oauth_data.extra.role.try(:to_sym)
+             when :sales, :pre_sales
+               'sales'
+             when :admin
+               'admin'
+             end
+      if role
+        client = Client.where(selldo_client_id: oauth_data.extra.client_id).first
+        user = User.find_or_initialize_by(matcher).tap do |user|
+          user.password = Devise.friendly_token[0,15] + %w(! @ # $ % ^ & * ~).fetch(rand(8)) if user.has_no_password?
+          user.selldo_uid ||= oauth_data.uid
+          user.first_name = oauth_data.extra.first_name if user.first_name.blank?
+          user.last_name = oauth_data.extra.last_name if user.last_name.blank?
+          user.phone = oauth_data.extra.phone if user.phone.blank?
+          user.booking_portal_client ||= (client || current_client)
+          user.confirmed_at = Time.now unless user.confirmed?
+          user.role = role
+        end
+        if user.save
+          user.update_selldo_credentials(oauth_data)
+          user
+        end
+      else
+        User.where(matcher).first
+      end
     end
   end
 

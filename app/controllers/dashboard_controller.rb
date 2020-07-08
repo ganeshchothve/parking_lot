@@ -53,7 +53,7 @@ class DashboardController < ApplicationController
             :type => current_client.brochure.content_type,
             :disposition => 'attachment',
             :url_based_filename => true)
-      SelldoLeadUpdater.perform_async(current_user.id.to_s, 'project_info') if current_user.buyer? && current_user.receipts.count == 0
+      SelldoLeadUpdater.perform_async(current_user.id.to_s, {stage: 'project_info'}) if current_user.buyer? && current_user.receipts.count == 0
     else
       redirect_to dashboard_path, alert: 'Brochure is not available'
     end
@@ -72,7 +72,7 @@ class DashboardController < ApplicationController
   def get_booking_detail_labels
     labels = Array.new
     DashboardDataProvider.booking_detail_group_by(current_user).keys.each do |key|
-      labels << t("dashboard.channel_partner.booking_detail.#{key}")
+      labels << [t("dashboard.channel_partner.booking_detail.#{key}.label"), t("dashboard.channel_partner.booking_detail.#{key}.sub_label", blocking_amount: current_client.blocking_amount)]
     end
     labels
   end

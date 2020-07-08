@@ -2,6 +2,9 @@ class Note
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  # Add different types of documents which are uploaded on note.
+  DOCUMENT_TYPES = []
+
   field :note, type: String
   field :note_type, type: String, default: :internal
 

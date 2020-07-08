@@ -24,7 +24,7 @@ module Communication
           sms.set(status: "fail")
           return {status:"fail", remote_id: response}
         else
-          sms.set(status: "sent")
+          sms.set(status: "sent", sent_on: Time.now)
           return {status:"success", remote_id: response}
         end
       end

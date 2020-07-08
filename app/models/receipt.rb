@@ -17,6 +17,8 @@ class Receipt
   PAYMENT_TYPES = %w[agreement stamp_duty]
   PAYMENT_MODES = %w[cheque rtgs imps card_swipe neft online]
   STATUSES = %w[pending clearance_pending success cancellation_requested cancelling cancelled cancellation_rejected failed available_for_refund refunded]
+  # Add different types of documents which are uploaded on receipt
+  DOCUMENT_TYPES = []
 
   field :receipt_id, type: String
   field :order_id, type: String

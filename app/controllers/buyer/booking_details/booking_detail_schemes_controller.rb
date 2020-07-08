@@ -68,7 +68,7 @@ class Buyer::BookingDetails::BookingDetailSchemesController < BuyerController
 
   def update
     modify_params
-    @scheme.assign_attributes(permitted_attributes(@scheme))
+    @scheme.assign_attributes(permitted_attributes([:buyer, @scheme]))
     respond_to do |format|
       if @scheme.save
         format.html { redirect_to request.referrer || root_path , notice: t('controller.booking_detail_schemes.scheme_approved') }

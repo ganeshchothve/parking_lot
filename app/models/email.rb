@@ -99,6 +99,48 @@ class Email
     end
   end
 
+  def self.monthly_count(range = nil)
+    if range.present?
+      from, to = range.split(' - ')
+      match_params = {sent_on: {"$gte": Time.parse(from), "$lte": Time.parse(to)}}
+    else
+      match_params = {sent_on: {"$ne": nil}}
+    end
+
+    data = Email.collection.aggregate([
+      {
+        "$match": match_params
+      },{
+        "$project":
+        {
+          month: { "$month": "$sent_on"},
+          year: {"$year": "$sent_on"},
+          body: "$body"
+        }
+      },{
+        "$group":
+        {
+          "_id": {year: "$year", month: "$month"},
+          count: { "$sum": 1 }
+        }
+      },{
+        "$sort":
+        {
+          "_id.year": -1,
+          "_id.month": -1,
+        }
+      }
+    ]).to_a
+
+    out = data.inject({}) do |hsh, d|
+      _key = "#{d.dig('_id', 'month')}/#{d.dig('_id', 'year')}"
+      hsh[_key] = d['count']
+      hsh
+    end
+    out['Total'] = out.values.inject(:+)
+    out.present? ? out : "No Email data present."
+  end
+
   private
 
   # for email template we require body or text. Otherwise we won't have any content to send to the sender / reciever

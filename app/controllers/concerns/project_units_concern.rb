@@ -2,8 +2,9 @@ module ProjectUnitsConcern
   extend ActiveSupport::Concern
 
   included do
-    before_action :build_objects, only: %i[quotation show]
-    before_action :modify_params, only: %i[quotation show]
+    before_action :build_objects, only: %i[quotation show send_cost_sheet_and_payment_schedule]
+    before_action :modify_params, only: %i[quotation show send_cost_sheet_and_payment_schedule]
+    before_action :set_user, only: %w[quotation send_cost_sheet_and_payment_schedule]
   end
 
   #
@@ -36,9 +37,10 @@ module ProjectUnitsConcern
   #
   def quotation
     respond_to do |format|
-      format.js
+      format.js{ render template: 'admin/project_units/quotation' }
       format.pdf {
         render pdf: "quotation",
+        viewport_size: '1280x1024',
         template: 'admin/project_units/quotation',
         layout: 'pdf',
         page_size: 'A4',
@@ -60,6 +62,13 @@ module ProjectUnitsConcern
   end
 
   private
+
+  def set_user
+    user_id = current_user.buyer? ? current_user.id : params[:user_id]
+    if user_id
+      @user = User.where(id: user_id).first
+    end
+  end
 
   def set_project_unit
     @project_unit = ProjectUnit.find(params[:id])

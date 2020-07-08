@@ -45,6 +45,7 @@ en:
       link_name: '%{model} Details'
     edit:
       link_name: 'Edit %{model}'
+      direct_activation_for_cp_label: 'Skip Admin approval for channel partner registration'
     new:
       link_name: 'Add %{model}'
     destroy:
@@ -83,6 +84,7 @@ en:
         one: Bulk Upload Report
         other: Bulk Upload Reports
       asset:
+        zero: 'Document'
         one: Document
         other: Documents
       address:
@@ -94,6 +96,12 @@ en:
       bank_detail:
         one: Bank
         other: Banks
+      bulk_upload_report:
+        one: Bulk Upload Report
+        other: Bulk Upload Reports
+      upload_error:
+        one: Upload Errors
+        other: Uplaod Errors
       booking_detail:
         one: Booking
         other: Bookings
@@ -678,6 +686,7 @@ en:
         company_name: 'Company Name'
         email: 'Email'
         is_active: 'Allow the user to login?'
+        enable_live_inventory: 'Allow live inventory access?'
         kyc_ready: 'Is the Customer KYC Ready?'
         login_otp: 'Verification / Login OTP'
         location: 'Location'
@@ -726,6 +735,51 @@ en:
         management_user: 'Management User'
         employee_user: 'Employee'
         direct: Direct
+
+      user/file_types:
+        home_loan_application_form: 'Home Loan Application Form'
+        photo_identity_proof: 'Photo Identity Proof'
+        residence_address_proof: 'Residence Address Proof'
+        residence_ownership_proof: 'Residence Ownership Proof'
+        income_proof: 'Income Proof'
+        job_continuity_proof: 'Job Continuity Proof'
+        bank_statement: 'Bank Statement'
+        advance_processing_cheque: 'Advance Processing Cheque'
+        financial_documents: 'Financial Documents'
+      user/help_text:
+        home_loan_application_form_html: '<ul><li>Application form of the bank duly signed with one passport size photo</li></ul>'
+        photo_identity_proof_html: '<ul><li>Passport / Driving License /  Voter ID / PAN / Aadhaar card</li></ul>'
+        residence_address_proof_html: '<ul><li>License / Registered Rent Agreement / Utility Bill/ Aadhar Card</li></ul>'
+        residence_ownership_proof_html: '<ul><li>Sale deed or Rental agreement</li></ul>'
+        income_proof_html: '<ul><li>Salary slip, Bank statement and Form 16</li></ul>'
+        job_continuity_proof_html: '<ul><li>Appointment letter at employment and validation letter from HR</li></ul>'
+        bank_statement_html: '<ul><li>Past 6 months’ document</li></ul>'
+        advance_processing_cheque_html: '<ul><li>Upload cheque’s photo for sanction</li></ul>'
+        financial_documents_html: "<ul>
+        <li><strong>For Salaried Individual</strong>: 3-month salary slip, Form 16 and bank statement</li>
+        <li><strong>For Self-Employed Individual</strong>: IT returns for the last 2 years along with computation of income tax for the past 2 years certified by a Chartered accountant</li>
+        <li><strong>For Self-Employed Non- Professionals</strong>: IT returns for the last 3 years along with computation of income tax for the past 2 years certified by a Chartered accountant</li></ul>"
+
+      client/file_types:
+        document: 'Document'
+        video: 'Video'
+        certificate: 'Certificate'
+      client/help_text:
+        document_html: 'Client documents'
+        video_html: 'Client videos'
+        certificate_html: 'Client certificates'
+
+      bulk_upload_report/file_types:
+        receipts_status_update: 'Receipt Status Bulk Update'
+        user_requests_status_update: 'User Request Status Bulk Update'
+        project_units_update: 'Project Units Bulk Update'
+        inventory_upload: 'Inventory Bulk Upload'
+      bulk_upload_report/help_text:
+        receipts_status_update_html: "<ul><li>Upload file formats: CSV (.csv)</li><li>Download sample file <a href='%{url}' target='_blank'>here</a></li></ul>"
+        user_requests_status_update_html: "<ul><li>Upload file formats: CSV (.csv)</li><li>Download sample file <a href='%{url}' target='_blank'>here</a></li></ul>"
+        project_units_update_html: "<ul><li>Upload file formats: CSV (.csv)</li><li>Download sample file <a href='%{url}' target='_blank'>here</a></li></ul>"
+        inventory_upload_html: "<ul><li>Upload file formats: CSV (.csv)</li><li>Download sample file <a href='%{url}' target='_blank'>here</a></li></ul>"
+
       dashboard/filters:
         payments:
           all: 'All'
@@ -754,9 +808,14 @@ en:
       destroy:
         success: 'CRM details removed successfully.'
         failure: 'CRM details cannot be removed.'
+    add_booking:
+        index:
+            link_name: 'Add Booking'
     bulk_upload_reports:
       index:
         link_name: 'Bulk Uploads'
+      create:
+        success: '%{upload_type} has been scheduled. Will complete shortly.'
     checklists:
       index:
         link_name: 'Tasks'
@@ -822,7 +881,7 @@ en:
       release_unit:
         link_name: 'Release Unit'
       continue_booking:
-        link_name: 'Checkout using unit already held'
+        link_name: 'Checkout using already held unit'
       cost_sheet:
         link_name: Cost Sheet
       payment_schedule:
@@ -830,6 +889,7 @@ en:
       tasks:
         link_name: 'Tasks'
         header: 'Tasks'
+      send_booking_detail_form_notification: "Booking detail form will be sent to customer shortly."
       set_booking_detail_missing: "Booking detail not found"
       set_project_unit_missing: "Project unit not found"
       booking_successful: "You have completed the booking successfully."
@@ -890,6 +950,10 @@ en:
         link_name: 'Add Note'
 
     project_units:
+      send_cost_sheet_and_payment_schedule:
+        link_name: 'Send Cost sheet & Payment Schedule to Customer'
+        success: 'Cost sheet & payment schedule will be sent to customer shortly.'
+        failure: 'Cost sheet & payment schedule cannot be sent. Please contact administrator'
       index:
         link_name: 'Apartments'
       show:
@@ -966,7 +1030,7 @@ en:
       project_unit_missing: 'Project Unit Selection step is missing'
       check_project_unit_hold_status: "We've released the unit which was held for %{holding_minutes} minutes. Please re-select the unit and try booking again."
       checkout:
-        non_hold_booking: 'Booking is not yet hold.'
+        non_hold_booking: 'Booking is not held.'
         pending_payments: "We already have collected a payment for this unit from the same customer."
       hold:
         booking_detail_error: 'We cannot process your request at this time. Please retry'
@@ -1034,6 +1098,7 @@ en:
       show:
         link_name: '%{role} Details'
         header: 'Overview'
+      send_payment_link: 'Payment link sent to user'
     user_kycs:
       index:
         link_name: 'KYCs'
@@ -1082,7 +1147,6 @@ en:
   booking_detail_schemes:
     rejected_scheme: Scheme for this booking is rejected. Please contact administrator.
 
-
   datetime:
     distance_in_words:
       about_x_years:
@@ -1111,32 +1175,18 @@ en:
       link:
         pre_text: 'Already have an account?'
         name: 'Login here'
-    titles:
-      heading1_html: 'Welcome to %{project_name}'
-      heading2_html: 'Now is the best time to turn your dream into reality'
-    form:
-      heading_html: '<strong>Login</strong> to Book an Apartment online'
 
   registrations:
     pre_text: 'Don’t have account ?'
     new:
       sign_up: 'Sign Up'
-    titles:
-      heading1_html: 'Biggest real estate opportunity in Pune<br> Introducing exclusive %{unit_configs} Bed residences starting from %{start_price} lakhs'
-      heading2_html: Home buying can’t get better than this
-    form:
-      heading_html: '<strong>Register Now</strong> to Book Online'
 
   channel_partner_registration:
     titles:
-      heading1_html: 'We are a big family of 400+ esteemed partners and we are happy to onboard you'
       heading2_html: '<strong>Register now</strong> & join our network to explore new opportunities'
 
   dashboard:
     channel_partner:
-      welcome:
-        heading: 'Welcome %{name}'
-        sub_heading: 'Follow these quick steps and get your customers to be one of the privileged few to own a home at %{project_name}'
       projects:
         sub_heading: 'Best homes to meet your expectations'
       refer_a_channel_partner:
@@ -1150,11 +1200,11 @@ en:
             <li>1 to 3 bookings - <strong>2%</strong></li>
             <li>4 to 5 bookings - <strong>2.5%</strong></li>
             <li>6 bookings onwards - <strong>3%</strong></li>
-          </ul>" 
+          </ul>"
 
       titles:
         lead_details: 'Lead Details'
-        booking_details: 'Booking Details'
+        booking_details: 'Bookings'
         total_leads: 'Total Leads'
         received: 'Added'
         available_inventory: 'Available Inventory'
@@ -1163,21 +1213,39 @@ en:
       confirmed_users: 'Confirmed Leads'
       not_confirmed_users: 'Not Confirmed Leads'
       booking_detail:
-        blocked: 'Blocked Bookings'
-        booked_tentative: 'Tentative Bookings'
-        booked_confirmed: 'Confirmed Bookings'
+        blocked:
+          label: "Blocked"
+          sub_label: " (Paid Rs.%{blocking_amount})"
+        booked_tentative:
+          label: 'Tentative'
+          sub_label: ''
+        booked_confirmed:
+          label: 'Confirmed'
+          sub_label: 'Paid 10% Amount'
       new_user:
         header: 'Add Customers'
     user:
-      welcome:
-        heading: 'Welcome %{name}'
-        sub_heading_html: "Now get privileged access to %{project_size} spread township and book your dream home by just paying %{blocking_amount}<br>400+ customers have already paid a token amount and now it's your chance to roll the dice by following below steps"
-        sub_heading_1:  "Congratulations on generating your Priority Token for allotment day. Make additional payment to get more tokens"
       projects:
         sub_heading: 'Best homes to meet your expectations'
       titles:
         available_inventory: 'Available Inventory'
         download_brochure: 'Download Brochure'
         visit_website: 'Visit Website'
-      towers:
-        header: 'Get Priority Token'
+
+  selldo:
+    links:
+      header: 'Take Action in Sell.Do'
+      add_note: 'View'
+      schedule_site_visit: 'Schedule Site Visit'
+      schedule_followup: 'Schedule Followup'
+
+  templates:
+    users/_welcome: 'Customer Dashboard'
+    index/_channel_partner: 'Channel Partner Dashboard'
+    dashboard/index/_admin: 'Sales Dashboard'
+    devise/sessions/new: 'Landing Page'
+    home/register: 'Customer Registration Page'
+    channel_partner/new: 'Channel Partner Registration'
+    layouts/_navbar_footer: 'Footer Rera Line'
+    searches/checkout: 'Holding minutes Text on Checkout page'
+    booking_details/_details: 'Bottom Text in Booking detail overview section'

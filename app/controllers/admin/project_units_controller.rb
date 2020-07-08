@@ -1,5 +1,6 @@
 class Admin::ProjectUnitsController < AdminController
-  before_action :set_project_unit, except: %i[index export unit_configuration_chart]
+
+  before_action :set_project_unit, except: %i[index export unit_configuration_chart inventory_snapshot]
   include ProjectUnitsConcern
   before_action :authorize_resource
   before_action :set_project_unit_scheme, only: %i[show print]
@@ -110,6 +111,19 @@ class Admin::ProjectUnitsController < AdminController
     @dataset = get_dataset(@data)
   end
 
+  def inventory_snapshot
+    @out = DashboardDataProvider.inventory_snapshot
+  end
+
+  def send_cost_sheet_and_payment_schedule
+    if @user
+      render json: {notice: t('controller.project_units.send_cost_sheet_and_payment_schedule.success')}, status: :created
+      @booking_detail.send_cost_sheet_and_payment_schedule(@user)
+    else
+      render json: {alert: t('controller.project_units.send_cost_sheet_and_payment_schedule.failure')}, status: :unprocessable_entity
+    end
+  end
+
   private
 
   # def set_project_unit
@@ -121,7 +135,7 @@ class Admin::ProjectUnitsController < AdminController
   end
 
   def authorize_resource
-    if %w[unit_configuration_chart index].include?(params[:action])
+    if %w[unit_configuration_chart index inventory_snapshot].include?(params[:action])
       if params[:ds].to_s == 'true'
         authorize([:admin, ProjectUnit], :ds?)
       else

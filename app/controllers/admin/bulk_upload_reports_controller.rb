@@ -18,7 +18,30 @@ class Admin::BulkUploadReportsController < AdminController
     @upload_error = @bulk_upload_report.upload_errors.find(params[:upload_error_id])
   end
 
+  def new
+    @bulk_upload_report = BulkUploadReport.new
+    render layout: false
+  end
+
+  def create
+    @bulk_upload_report = BulkUploadReport.new(client_id: current_client.id, uploaded_by: current_user)
+    @bulk_upload_report.assign_attributes(permitted_attributes([:admin, @bulk_upload_report]))
+    respond_to do |format|
+      if @bulk_upload_report.save
+        if Rails.env.development?
+          BulkUploadWorker.new.perform(@bulk_upload_report.id)
+        else
+          BulkUploadWorker.perform_async(@bulk_upload_report.id)
+        end
+        format.html { redirect_to admin_bulk_upload_reports_path, notice: t('controller.bulk_upload_reports.create.success', upload_type: t("mongoid.attributes.bulk_upload_report/file_types.#{ @bulk_upload_report.asset.try(:document_type) || 'bulk_upload' }")) }
+      else
+        format.html { redirect_to admin_bulk_upload_reports_path, alert: @bulk_upload_report.errors.full_messages.uniq }
+      end
+    end
+  end
+
   private
+
   def authorize_resource
     if params[:action] == 'index'
       authorize [:admin, BulkUploadReport]
@@ -32,6 +55,6 @@ class Admin::BulkUploadReportsController < AdminController
   end
 
   def set_bulk_upload_report
-    @bulk_upload_report = BulkUploadReport.find(params[:id]) 
+    @bulk_upload_report = BulkUploadReport.find(params[:id])
   end
 end

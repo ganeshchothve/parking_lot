@@ -9,6 +9,9 @@ class ChannelPartner
 
   STATUS = %w(active inactive)
 
+  # Add different types of documents which are uploaded on channel_partner
+  DOCUMENT_TYPES = []
+
   field :title, type: String
   field :first_name, type: String
   field :last_name, type: String

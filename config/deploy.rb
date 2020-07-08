@@ -27,7 +27,7 @@ append :linked_files, 'config/lead_conflicts_executers.yml', 'config/sidekiq_man
 
 # Default value for linked_dirs is []
 # append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system"
-set :linked_dirs, %w{log tmp vendor/bundle public/uploads exports}
+set :linked_dirs, %w{log tmp vendor/bundle uploads exports}
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
@@ -41,3 +41,12 @@ set :linked_dirs, %w{log tmp vendor/bundle public/uploads exports}
 # Uncomment the following to require manually verifying the host key before first deploy.
 # set :ssh_options, verify_host_key: :secure
 set :passenger_restart_with_touch, true
+
+before 'sidekiq:start', 'deploy:make_sidekiq_pids_dir'
+
+# Uncomment the following during first deployment on server to initialize the app.
+# Make app environment specific configuration file within config/deploy/ folder with necessary details before running below task.
+#
+# before 'deploy:check:linked_files', 'deploy:upload_configs'
+# after 'deploy:finished', 'deploy:change_permissions'
+# after 'deploy:finished', 'deploy:seed'

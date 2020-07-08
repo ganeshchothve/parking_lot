@@ -18,6 +18,27 @@ module ApplicationHelper
     "#{I18n.t('currency.' + currency.to_s)}#{number}".html_safe
   end
 
+  def get_view_erb(template)
+    begin
+      ::ERB.new(template.content).result( binding ).html_safe
+    rescue StandardError => e
+      ERB.new("<script> Amura.global_error_handler(''); </script>").result(binding).html_safe
+    end
+  end
+
+  def login_image
+    client_asset_image_url('login_page_image') ? ('background-image: url(' + client_asset_image_url('login_page_image') + ')') : ''
+  end
+
+  def client_asset_image_url(document_type = nil)
+    if document_type
+      image = current_client.assets.where(document_type: document_type).first
+      if image
+        image.file.try(:url)
+      end
+    end
+  end
+
   def float_to_int (x)
     Float(x)
     i, f = x.to_i, x.to_f
@@ -55,11 +76,11 @@ module ApplicationHelper
       #{active_link_to 'Brochure', download_brochure_path, active: :exclusive, class: 'footer-link' }
       </li>"
     end
-    if current_user
-      html += "<li >
-      #{active_link_to 'Docs', dashboard_documents_path, active: :exclusive, class: 'footer-link'}
-      </li>"
-    end
+    #if current_user
+    #  html += "<li >
+    #  #{active_link_to 'Docs', dashboard_documents_path, active: :exclusive, class: 'footer-link'}
+    #  </li>"
+    #end
     if current_client.gallery.present? && current_client.gallery.assets.select{|x| x.persisted?}.present?
       html += "<li >
         #{active_link_to 'Gallery', dashboard_gallery_path, active: :exclusive, class: 'footer-link'}
@@ -142,4 +163,26 @@ module ApplicationHelper
       end
     end
   end
+
+  def system_srd
+    if user_signed_in? && current_user.role?('channel_partner')
+      current_client.selldo_cp_srd
+    else
+      current_client.selldo_default_srd
+    end
+  end
+
+  def short_url destination_url
+    uri = ShortenedUrl.clean_url(destination_url)
+    if shortened_url = ShortenedUrl.where(original_url: uri.to_s).first
+      uri.path = "/s/" + shortened_url.code
+    else
+      shortened_url = ShortenedUrl.create(original_url: uri.to_s)
+      uri.path = "/s/" + shortened_url.code
+    end
+    uri.query = nil
+    uri.fragment = nil
+    uri.to_s
+  end
+
 end

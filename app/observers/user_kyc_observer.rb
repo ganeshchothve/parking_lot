@@ -7,11 +7,12 @@ class UserKycObserver < Mongoid::Observer
   end
 
   def after_create user_kyc
-    SelldoLeadUpdater.perform_async(user_kyc.user_id.to_s, 'kyc_done')
+    user = user_kyc.user
+    SelldoLeadUpdater.perform_async(user.id.to_s, {stage: 'kyc_done'})
     template = Template::EmailTemplate.where(name: "user_kyc_added").first
-    if user_kyc.user.booking_portal_client.email_enabled? && template.present?
+    if user.booking_portal_client.email_enabled? && template.present?
       email = Email.create!({
-        booking_portal_client_id: user_kyc.user.booking_portal_client_id,
+        booking_portal_client_id: user.booking_portal_client_id,
         email_template_id: template.id,
         to: [user_kyc.email],
         recipients: [user_kyc],
@@ -19,7 +20,7 @@ class UserKycObserver < Mongoid::Observer
         triggered_by_type: user_kyc.class.to_s
       })
       email.sent!
+      PaymentReminderWorker.perform_at(Time.now + 1.hour, user.id) if user.receipts.blank?
     end
-
   end
 end

@@ -10,6 +10,14 @@ class Admin::SmsesController < AdminController
   # show defined in SmsConcern
   # GET /admin/smses/:id
 
+  def sms_pulse
+    if params[:fltrs] && params[:fltrs][:sent_on]
+      @sms_pulse = Sms.sms_pulse(params[:fltrs][:sent_on])
+    else
+      @sms_pulse = Sms.sms_pulse
+    end
+  end
+
   private
 
 
@@ -20,7 +28,7 @@ class Admin::SmsesController < AdminController
   end
 
   def authorize_resource
-    if params[:action] == 'index'
+    if %w(index sms_pulse).include?(params[:action])
       authorize [:admin, Sms]
     else
       authorize [:admin, @sms]

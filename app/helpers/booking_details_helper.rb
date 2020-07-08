@@ -1,5 +1,9 @@
 module BookingDetailsHelper
 
+  def custom_add_booking_path
+    admin_booking_details_path('remote-state': new_admin_booking_detail_path)
+  end
+
   def searches_bedrooms_names(data)
     if (current_user.role?('channel_partner') || current_user.manager_role?('channel_partner') )
       data.collect{|d| ["#{d.dig('_id', 'bedrooms')} BHK", d.dig('_id', 'bedrooms')]}

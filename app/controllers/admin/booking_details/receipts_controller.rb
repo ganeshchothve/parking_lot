@@ -18,7 +18,8 @@ class Admin::BookingDetails::ReceiptsController < AdminController
   #
   # GET "/admin/users/:user_id/booking_details/:booking_detail_id/receipts/new"
   def new
-    @amount_hash = {agreement: @booking_detail.calculate_agreement_type_cost, stamp_duty: @booking_detail.calculate_stamp_duty_type_cost} if @booking_detail.receipts.empty?
+    @amount_hash = {}
+    PaymentType.in(name: Receipt::PAYMENT_TYPES).map { |x| @amount_hash[x.name.to_sym] = x.value(@project_unit).round }
     @receipt = Receipt.new(
       creator: current_user, user: @user, booking_detail: @booking_detail, total_amount: (@booking_detail.hold? ? @project_unit.blocking_amount : @booking_detail.pending_balance)
     )

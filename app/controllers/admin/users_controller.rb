@@ -60,6 +60,7 @@ class Admin::UsersController < AdminController
     respond_to do |format|
       format.html do
         if @user.save
+          SelldoLeadUpdater.perform_async(@user.id, {stage: 'confirmed'})
           email_template = ::Template::EmailTemplate.find_by(name: "account_confirmation")
           email = Email.create!({
             booking_portal_client_id: @user.booking_portal_client_id,
@@ -166,13 +167,22 @@ class Admin::UsersController < AdminController
     @data = DashboardData::AdminDataProvider.user_block
   end
 
+  def send_payment_link
+    respond_to do |format|
+      format.html do
+        @user.send_payment_link
+        redirect_to admin_users_url, notice: t('controller.users.send_payment_link')
+      end
+    end
+  end
+
   private
 
   def set_user
     @user = if params[:id].blank?
               current_user
             else
-              User.find(params[:id])
+              User.where(id: params[:id]).first || User.where(lead_id: params[:id]).first
             end
   end
 

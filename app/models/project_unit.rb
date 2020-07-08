@@ -9,6 +9,8 @@ class ProjectUnit
   extend FilterByCriteria
 
   STATUS = %w(available employee management not_available hold blocked error)
+  # Add different types of documents which are uploaded on project_unit
+  DOCUMENT_TYPES = []
 
   # These fields are globally utlised on the server side
   field :name, type: String
@@ -108,7 +110,7 @@ class ProjectUnit
     self.status = 'employee' if available_for == 'employee'
     self.status = 'management' if available_for == 'management'
     # GENERICTODO: self.base_rate = upgraded rate based on timely upgrades
-    SelldoLeadUpdater.perform_async(user_id.to_s, 'hold_payment_dropoff')
+    SelldoLeadUpdater.perform_async(user_id.to_s, {stage: 'hold_payment_dropoff'})
   end
 
   def valid_status?

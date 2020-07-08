@@ -1,8 +1,16 @@
 class CustomPolicy < Struct.new(:user, :enable_users)
   include ApplicationHelper
 
+  def add_booking?
+    current_client.enable_actual_inventory?(user)
+  end
+
   def inventory?
-    ['superadmin', 'admin', 'sales_admin', 'sales', 'channel_partner'].include?(user.role) && user.role.in?(current_client.enable_actual_inventory)
+    if user.role?(:channel_partner)
+      user.role.in?(current_client.enable_actual_inventory) || (user.role.in?(current_client.enable_live_inventory) && user.enable_live_inventory)
+    else
+      ['superadmin', 'admin', 'sales_admin', 'sales', 'cp', 'cp_admin'].include?(user.role) && (user.role.in?(current_client.enable_actual_inventory) || user.role.in?(current_client.enable_live_inventory))
+    end
   end
 
   def emails?
@@ -73,8 +81,12 @@ class CustomPolicy < Struct.new(:user, :enable_users)
     "#{user.buyer? ? '' : 'Admin::'}ApiLogPolicy".constantize.new(user, ApiLog).index?
   end
 
+  def assets?
+    "#{user.buyer? ? 'Buyer' : 'Admin'}::AssetPolicy".constantize.new(user, Asset).index?
+  end
+
   def self.custom_methods
-    %w[inventory schemes user_requests channel_partners user_kycs emails smses sync_logs referrals accounts phases erp_models portal_stage_priorities checklists bulk_upload_reports crms api_logs]
+    %w[add_booking schemes user_requests channel_partners user_kycs emails smses sync_logs referrals accounts phases erp_models portal_stage_priorities checklists bulk_upload_reports assets crms api_logs].sort
     # audits
   end
 end

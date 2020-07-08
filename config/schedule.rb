@@ -34,6 +34,7 @@ end
 every 1.day, at: "4:30 am" do
   runner "ProjectUnitRemindersAndAutoRelease::Job.daily_reminder_for_booking_payment"
   runner "ReceiptCleaner.perform_async"
+  runner "ReminderWorker.perform_async"
   # runner "ProjectUnitRemindersAndAutoRelease::Job.release_project_unit"
 end
 

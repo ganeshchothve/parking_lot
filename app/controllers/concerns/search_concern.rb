@@ -10,7 +10,7 @@ module SearchConcern
     parameters[:project_tower_id] = @search.project_tower_id if @search.project_tower_id.present?
     @units = ProjectUnit.build_criteria({fltrs: parameters}).sort_by{|x| [x.floor, x.floor_order]}.to_a
 
-    match = { "$match": { project_tower_id: @project_tower_id } } if @project_tower_id
+    match = { "$match": { project_tower_id: @search.project_tower_id } } if @search.project_tower_id
     @all_units = ProjectUnit.collection.aggregate([match, {
       "$group": {
         "_id": {

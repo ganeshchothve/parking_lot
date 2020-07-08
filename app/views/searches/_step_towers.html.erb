@@ -15,8 +15,7 @@
                 <div class="form-sec-title text-center">Choose Apartment</div>
                 <ul class="book-box-info">
                   <li><span class="book-box available-aprt"></span><span>Available</span></li>
-                  <li><span class="book-box booked-aprt"></span><span>Booked</span></li>
-                  <li><span class="book-box soldout-aprt"></span><span>Sold Out</span></li>
+                  <li><span class="book-box soldout-aprt"></span><span>Sold Out and Filtered</span></li>
                   <li><span class="book-box selected-aprt"></span><span>Selected</span></li>
                 </ul>
                  <div class="booking-list">
@@ -58,7 +57,7 @@
                               end
                             %>
                             <% if unit.present? %>
-                              <span data-jquery-selector="<%= data_selector %>" data-toggle="popover" data-content="<%= unit_tooltip(unit, @user) %>" data-title="Details for <%= unit.name %>" data-unit-id="<%= unit.present? ? unit.id : '' %>" class="book-box <%= klass %>" ></span>
+                              <span data-jquery-selector="<%= data_selector %>" data-toggle="popover" data-content="<%= unit_tooltip(unit) %>" data-title="Details for <%= unit.name %>" data-unit-id="<%= unit.present? ? unit.id : '' %>" class="book-box <%= klass %>" ></span>
                             <% else %>
                               <span data-jquery-selector="<%= data_selector %>" class="book-box <%= klass %>"></span>
                             <% end %>
@@ -156,6 +155,12 @@
     var unit = _.find(units, function(u){ return u._id == unit_id });
     var unit_assets = _.filter(assets, function(a){return a.assetable_id == unit_id});
     showUnitData(unit, unit_assets);
-    $(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/project_units/" + unit_id + "/quotation?layout=false");
+    let userId = <%= raw @search.user_id.to_json %>
+    let currentUserRoleGroup = <%= raw current_user_role_group.to_json %>
+    if(currentUserRoleGroup == "buyer"){
+      $(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/project_units/"+  unit_id + "/quotation?layout=false");
+    }else{
+      $(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/users/"+ userId +"/project_units/" + unit_id + "/quotation?layout=false");
+    }
   });
 <% end %>

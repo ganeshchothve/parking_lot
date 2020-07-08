@@ -80,6 +80,30 @@ module DatabaseSeeds
 
       Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "Receipt", name: "daily_payments_report", content: '[<%= Date.current.strftime("%v") %>] Today you received <%= self.class.todays_payments_count %> payments') if Template::SmsTemplate.where(name: "daily_payments_report").blank?
 
+      # reminder templates
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: 'not_confirmed_day_1', content: "Thank you for your interest in <%= current_project.name %>. Your KYC generation is not complete. For more information about the project, call <%= self.booking_portal_client.support_number %>")   if ::Template::SmsTemplate.where(name: "not_confirmed_day_1").blank?
+
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: 'not_confirmed_day_3', content: "Don’t be late! <%= current_project.name %> is offering rewards on a first come first serve basis. Register today and avail special benefits, call <%= self.booking_portal_client.support_number %> for more information.")  if ::Template::SmsTemplate.where(name: "not_confirmed_day_3").blank?
+
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: 'not_confirmed_day_5', content: "You are doing your best to build your kids’ dream home. We are doing our best to make it a reality. Register today and get greater discounts, call <%= self.booking_portal_client.support_number %> for more information.")  if ::Template::SmsTemplate.where(name: "not_confirmed_day_5").blank?
+
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: 'no_payment_hour_1', content: "Alert: Your KYC registration is not yet complete. Complete payment to lock your spot in the queue and avail unique benefits, call <%= self.booking_portal_client.support_number %> for more information.")  if ::Template::SmsTemplate.where(name: "no_payment_hour_1").blank?
+
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: 'no_payment_day_1', content: "Reminder: Your KYC registration is not yet complete. Lock your spot in the queue and avail unique benefits, call <%= self.booking_portal_client.support_number %> for more information.")  if ::Template::SmsTemplate.where(name: "no_payment_day_1").blank?
+
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: 'no_payment_day_3', content: "Reminder: You are one step away from booking your spot, call on <%= self.booking_portal_client.support_number %> for more information.")  if ::Template::SmsTemplate.where(name: "no_payment_day_3").blank?
+
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: 'no_booking_day_4', content: "In case if you need a home loan, select loan preference and upload KYC so that our loan representative can help you.")  if ::Template::SmsTemplate.where(name: "no_booking_day_4").blank?
+
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: 'no_booking_day_5', content: "Earn additional discounts at <%= current_project.name %> by completing your profile to help us know you better.")  if ::Template::SmsTemplate.where(name: "no_booking_day_5").blank?
+
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: 'no_booking_day_6', content: "Thank for showing your preference for the loan requirement for your dream home at <%= current_project.name %>. We have a host financial partners who are offering home loans at competitive rates.")  if ::Template::SmsTemplate.where(name: "no_booking_day_6").blank?
+
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: 'no_booking_day_7', content: "Earn additional discounts by referring your 3 friends at <%= current_project.name %>.")  if ::Template::SmsTemplate.where(name: "no_booking_day_7").blank?
+
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: 'payment_link', content: ' <% if self.manager.present? && self.manager_role?("channel_partner") %>
+            Thank you for your interest in <%= self.booking_portal_client.name %>. <%= self.manager_name %> has registered you. To make your first payment, please click here: <%= short_url(self.payment_link) %> <% end %>')  if ::Template::SmsTemplate.where(name: "payment_link").blank?
+
       return Template::SmsTemplate.where(booking_portal_client_id: client_id).count
     end
   end

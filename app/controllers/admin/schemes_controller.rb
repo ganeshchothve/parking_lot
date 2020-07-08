@@ -1,4 +1,6 @@
 class Admin::SchemesController < AdminController
+  include SchemesConcern
+
   before_action :set_project
   before_action :set_scheme, except: %i[index new create]
   before_action :authorize_resource
@@ -6,14 +8,6 @@ class Admin::SchemesController < AdminController
 
   layout :set_layout
 
-  def index
-    @schemes = Scheme.build_criteria params
-    @schemes = @schemes.paginate(page: params[:page] || 1, per_page: params[:per_page])
-    respond_to do |format|
-      format.json { render json: @schemes }
-      format.html {}
-    end
-  end
 
   def new
     @scheme = Scheme.new(created_by: current_user, booking_portal_client_id: current_user.booking_portal_client_id)
@@ -87,10 +81,6 @@ class Admin::SchemesController < AdminController
     @scheme = Scheme.find(params[:id])
   end
 
-  def set_project
-    @project = Project.find params[:project_id] if params[:project_id].present?
-  end
-
   def set_project_tower
     @project = ProjectTower.find params[:project_tower_id] if params[:project_tower_id].present?
   end
@@ -102,37 +92,6 @@ class Admin::SchemesController < AdminController
           params[:scheme][:payment_adjustments_attributes].delete key
         end
       end
-    end
-  end
-
-  def authorize_resource
-    if params[:action] == 'index'
-      authorize [:admin, Scheme]
-    elsif params[:action] == 'new' || params[:action] == 'create'
-      authorize [:admin, Scheme.new(created_by: current_user, booking_portal_client_id: current_user.booking_portal_client_id)]
-    else
-      authorize [:admin, @scheme]
-    end
-  end
-
-  def apply_policy_scope
-    custom_scope = if @project_tower.present?
-                     @project_tower.schemes
-                   elsif @project.present?
-                     @project.schemes
-                   else
-                     Scheme.all
-                   end
-    custom_scope = custom_scope.filter_by_can_be_applied_by(current_user.role) unless current_user.role.in?(%w(admin superadmin))
-    _role = if current_user.role?('channel_partner')
-              current_user.role
-            elsif current_user.manager_role?('channel_partner')
-              current_user.manager_role
-            end
-    custom_scope = custom_scope.filter_by_can_be_applied_by_role(_role).filter_by_default_for_user_id(current_user.id) if _role
-
-    Scheme.with_scope(policy_scope(custom_scope)) do
-      yield
     end
   end
 end

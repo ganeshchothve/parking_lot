@@ -85,6 +85,20 @@
 <div class="row">
   <div class="col-md-6">
     <div class="form-group">
+      <%= f.label :whatsapp_api_key %>
+      <%= f.text_field :whatsapp_api_key, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("whatsapp_api_key") ? false : true) %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :whatsapp_api_secret %>
+      <%= f.text_field :whatsapp_api_secret, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("whatsapp_api_secret") ? false : true) %>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <div class="form-group">
       <%= f.label :mailgun_private_api_key, class: 'label-required' %>
       <%= f.text_field :mailgun_private_api_key, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("mailgun_private_api_key") ? false : true) %>
     </div>

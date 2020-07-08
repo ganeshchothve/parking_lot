@@ -86,6 +86,14 @@
           <div class="row">
             <div class="col-md-12">
               <div class="form-group">
+                <%= f.label :access_token %>
+                <%= f.text_field :access_token, class: 'form-control', disabled: !policy([:admin, @erp_model]).editable_field?("access_token") %>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
                 <%= f.label :request_payload %>
                 <%= f.text_area :request_payload, class: 'form-control', disabled: !policy([:admin, @erp_model]).editable_field?("request_payload"), rows: 8 %>
               </div>

@@ -4,7 +4,7 @@ class Buyer::AssetPolicy < AssetPolicy
   end
 
   def update?
-    record.assetable.try(:user_id) == user.id
+    record.assetable.try(:user_id) == user.id || record.assetable.try(:id) == user.id
   end
 
   def destroy?

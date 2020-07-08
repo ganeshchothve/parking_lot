@@ -1,0 +1,13 @@
+<section class="first-sec welcome-box">
+  <div class="container">
+    <div class="row">
+      <% template = ::Template::UITemplate.where(name: 'dashboard/index/_admin').first %>
+      <% if template.present? %>
+        <%= get_view_erb(template) %>
+      <% end %>
+    </div>
+  </div>
+</section>
+<% if DashboardPolicy.new(current_user, :dashboard).admin_dashboard? %>
+  <%= render 'dashboard/index/crm' %>
+<% end %>

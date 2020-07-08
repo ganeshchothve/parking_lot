@@ -62,11 +62,11 @@ class SearchPolicy < ApplicationPolicy
   end
 
   def make_available?
-    record.project_unit_id.present? && ProjectUnitPolicy.new(user, record.project_unit).make_available?
+    record.project_unit_id.present? && "#{current_user_role_group}::ProjectUnitPolicy".constantize.new(user, record.project_unit).make_available?
   end
 
   def update_scheme?(template_klass=nil)
-    valid = record.project_unit_id.present? && ProjectUnitPolicy.new(user, record.project_unit).make_available?
+    valid = record.project_unit_id.present? && "#{current_user_role_group}::ProjectUnitPolicy".constantize.new(user, record.project_unit).make_available?
     if template_klass.present?
       valid = valid && template_klass.where(booking_portal_client_id: user.booking_portal_client_id).count > 1
     end

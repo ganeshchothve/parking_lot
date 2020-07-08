@@ -3,6 +3,9 @@ class UnitConfiguration
   include Mongoid::Timestamps
   include ArrayBlankRejectable
 
+  # Add different types of documents which are uploaded on unit_configuration
+  DOCUMENT_TYPES = []
+
   field :data_attributes, type: Array, default: []
   field :selldo_id, type: String
   field :images, type: Array,default: []

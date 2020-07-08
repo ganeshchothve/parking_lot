@@ -32,6 +32,10 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
     export?
   end
 
+  def send_cost_sheet_and_payment_schedule?
+    true
+  end
+
   def asset_create?
     %w[superadmin admin].include?(user.role)
   end
@@ -41,6 +45,10 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
   end
 
   def unit_configuration_chart?
+    true
+  end
+
+  def inventory_snapshot?
     true
   end
 

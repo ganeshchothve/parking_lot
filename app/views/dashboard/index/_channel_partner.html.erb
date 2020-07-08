@@ -2,34 +2,10 @@
 <section class="first-sec welcome-box">
   <div class="container">
     <div class="row">
-      <div class="col-lg-12 col-xs-12 bg-gradient-cd br-rd-8 col-md-12 col-sm-12">
-        <img src="<%= asset_path 'quality-tag.png' %>" alt="user icon" class="quality-tag">
-      <div class="row">
-        <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12 offset-lg-2">
-          <div class="box-content">
-            <h1 class="wc-title white text-center"><%= t('dashboard.channel_partner.welcome.heading', name: current_user.name) %></h1>
-            <p class="white text-center fn-300 fn-18"><%= t('dashboard.channel_partner.welcome.sub_heading', project_name: current_project.name) %></p>
-            <ul class="step-booking">
-              <li class="light-blue">
-                <span>
-                  <%= image_tag 'file-invoice-lightblue.svg', alt: "Add customer" %>
-                </span>
-                <%= t('dashboard.channel_partner.new_user.header', role: User.model_name.human) %>
-              </li>
-              <li class="light-blue">
-                <span><%= image_tag 'rupee-lightblue.svg' %></span>
-                <%= t('controller.receipts.new.link_name') %>
-              </li>
-              <li class="light-blue">
-                <span><%= image_tag 'building-lightblue.svg' %></span><%= BookingDetail.model_name.human %>
-              </li>
-            </ul>
-            <!-- <p class="white text-center fn-14 fn-500">Fill your KYC form for proceed further</p> -->
-            <%= link_to t('controller.users.new.link_name', role: User.human_attribute_name("role.user")), new_admin_user_path(role: 'user'), class: 'large-btn black-bg display-block fn-500 center-block show-kyc modal-remote-form-link' %>
-          </div>
-        </div>
-      </div>
-      </div>
+      <% template = ::Template::UITemplate.where(name: 'index/_channel_partner').first %>
+      <% if template.present? %>
+        <%= get_view_erb(template) %>
+      <% end %>
     </div>
   </div>
 </section>
@@ -132,9 +108,11 @@
               </div>
             </div>
           </div>
+          <%= render 'dashboard/index/partials/collaterals' %>
+          <!--
           <div class="box-card col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-5">
             <div class="box-header bg-gradient-cd br-rd-tr-4">
-            <h2><img src="<%= asset_path 'rupee-white.svg' %>" alt="Incentives" class="wd-10">My Incentives</h2>
+            <h2><img src="<%# asset_path 'rupee-white.svg' %>" alt="Incentives" class="wd-10">My Incentives</h2>
             </div>
             <div class="box-content br-rd-bl-4 bg-white fix-ht-420">
               <div class="row pd-box">
@@ -147,11 +125,13 @@
               </div>
             </div>
           </div>
+          -->
         </div>
       </div>
     </div>
   </div>
 </section>
+<!--
 <section class="user-db-sec-5 device-pd">
   <div class="container">
     <div class="row">
@@ -159,21 +139,22 @@
         <div class="row">
           <div class="box-card col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-5 referrals">
             <div class="box-header bg-gradient-cd br-rd-tr-4">
-            <h2><img src="<%= asset_path 'users-white.svg' %>"  alt="Refer a Friend" class="wd-20"><%= t('dashboard.channel_partner.refer_a_channel_partner.heading') %></h2>
+            <h2><img src="<%# asset_path 'users-white.svg' %>"  alt="Refer a Friend" class="wd-20"><%# t('dashboard.channel_partner.refer_a_channel_partner.heading') %></h2>
             </div>
             <div class="box-content br-rd-bl-4 bg-white fix-ht">
               <div class="pd-box">
                 <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12">
-                  <p class="fn-14 content-clr"><%= t('dashboard.channel_partner.refer_a_channel_partner.sub_heading', project_name: current_project.name) %></p>
+                  <p class="fn-14 content-clr"><%# t('dashboard.channel_partner.refer_a_channel_partner.sub_heading', project_name: current_project.name) %></p>
                   <a href="javascript:;" class="large-btn bg-light-blue display-block fn-500 text-uppercase">Refer Now&nbsp;&nbsp;></a>
                 </div>
               </div>
             </div>
           </div>
-          <%= render 'dashboard/index/partials/collaterals' %>
+
+
           <div class="box-card col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-5">
             <div class="box-header bg-gradient-cd br-rd-tr-4">
-              <h2><img src="<%= asset_path 'leaderboard-white.svg' %>" alt="Documents" class="wd-16">Leaderboard</h2>
+              <h2><img src="<%# asset_path 'leaderboard-white.svg' %>" alt="Documents" class="wd-16">Leaderboard</h2>
               <a href="javascript:;" class="view-all-btn">View All > </a>
             </div>
             <div class="box-content br-rd-bl-4 bg-white fix-ht pt-0">
@@ -182,7 +163,7 @@
                   <ul class="leaderboard-list">
                     <li class="mt-4">
                       <div class="display-inline user-icon">
-                        <img src="<%= asset_path 'user.jpg' %>" alt="user img">
+                        <img src="<%# asset_path 'user.jpg' %>" alt="user img">
                       </div>
                       <div class="display-inline user-info">
                         <span class="rank-type display-block fn-300 fn-12">Rank: 01</span>
@@ -191,7 +172,7 @@
                     </li>
                     <li class="mt-4">
                       <div class="display-inline user-icon">
-                        <img src="<%= asset_path 'user-2.png' %>" alt="user img">
+                        <img src="<%# asset_path 'user-2.png' %>" alt="user img">
                       </div>
                       <div class="display-inline user-info">
                         <span class="rank-type display-block fn-300 fn-12">Rank: 02</span>
@@ -215,12 +196,12 @@
         <div class="row">
           <div class="box-card col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-5">
             <div class="box-header bg-gradient-cd br-rd-tr-4">
-            <h2><img src="<%= asset_path 'rupee-white.svg' %>" alt="Documents" class="wd-10"><%= t('dashboard.channel_partner.incentive_plan.heading') %></h2>
+            <h2><img src="<%# asset_path 'rupee-white.svg' %>" alt="Documents" class="wd-10"><%# t('dashboard.channel_partner.incentive_plan.heading') %></h2>
             </div>
             <div class="box-content br-rd-bl-4 bg-white">
               <div class="row pd-box">
               <div class="col-lg-6 col-xs-12 col-md-12 col-sm-12">
-                <p class="p-style"><%= t('dashboard.channel_partner.incentive_plan.sub_heading_html') %></p>
+                <p class="p-style"><%# t('dashboard.channel_partner.incentive_plan.sub_heading_html') %></p>
               </div>
               <div class="col-lg-6 col-xs-12 col-md-12 col-sm-12">
                 <textarea placeholder="Need help? Post your query here..." class="form-control"></textarea>
@@ -234,6 +215,7 @@
     </div>
   </div>
 </section>
+-->
 <script type="text/javascript">
 var ctx1 = document.getElementById("myChart");
 var myChart = new Chart(ctx1, {

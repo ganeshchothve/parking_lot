@@ -38,9 +38,14 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && eligible_user? && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed? && buyer_kyc_booking_limit_exceed?
   end
 
-  def send_under_negotiation?
-      hold?
+  def show_booking_link?
+    _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed? && record.try(:user).try(:buyer?)
   end
+
+  def send_under_negotiation?
+    hold?
+  end
+
   def block?
     hold?
   end
@@ -50,6 +55,10 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def status_chart?
+    true
+  end
+
+  def send_booking_detail_form_notification?
     true
   end
   # def block?
@@ -92,7 +101,15 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def _role_based_check
     if %w[cp sales sales_admin cp_admin admin superadmin].include?(user.role)
-      true
+      if record.hold?
+        true
+      elsif record.status.in?(BookingDetail::BOOKING_STAGES)
+        @condition = 'booking_done'
+        false
+      else
+        @condition = 'record_not_held'
+        false
+      end
     elsif (user.role?('channel_partner') && record.status == 'hold')
       return true if record.user.manager_id == user.id
       @condition = 'not_authorise_to_book_for_this_user'

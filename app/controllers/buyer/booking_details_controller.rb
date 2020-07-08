@@ -23,7 +23,6 @@ class Buyer::BookingDetailsController < BuyerController
 
   def booking
     if @receipt.save
-      @booking_detail.under_negotiation!
       if @receipt.status == 'pending' # if we are just tagging an already successful receipt, we dont need to send the user to payment gateway
         if @receipt.payment_gateway_service.present?
           redirect_to @receipt.payment_gateway_service.gateway_url(@booking_detail.search.id)

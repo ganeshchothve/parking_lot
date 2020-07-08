@@ -1,6 +1,14 @@
 class ReceiptObserver < Mongoid::Observer
   def before_validation(receipt)
-    receipt.send(receipt.event) if receipt.event.present? && receipt.aasm.current_state.to_s != receipt.event.to_s
+    _event = receipt.event.to_s
+    receipt.event = nil
+    if _event.present? && (receipt.aasm.current_state.to_s != _event.to_s)
+      if receipt.send("may_#{_event.to_s}?")
+        receipt.aasm.fire!(_event.to_sym)
+      else
+        receipt.errors.add(:status, 'transition is invalid')
+      end
+    end
   end
 
   def before_save(receipt)
@@ -10,17 +18,12 @@ class ReceiptObserver < Mongoid::Observer
     end
   end
 
-  # def after_save(receipt)
-  #   _event = receipt.event
-  #   receipt.event = nil
-  #   receipt.send("#{_event}!") if _event.present?
-  # end
-
   def after_create receipt
     receipt.moved_to_clearance_pending
-    SelldoLeadUpdater.perform_async(receipt.user_id.to_s, 'payment_done', {token_number: receipt.token_number.present?}) if (receipt.payment_mode == 'offline' || (receipt.payment_mode == 'online' && receipt.success? ))
+    SelldoLeadUpdater.perform_async(receipt.user_id.to_s, {stage: 'payment_done', token_number: receipt.token_number.present?}) if (receipt.offline? || (receipt.online? && receipt.success? ))
   end
+
   def after_update receipt
-    SelldoLeadUpdater.perform_async(receipt.user_id.to_s, 'payment_done', {token_number: (receipt.token_number_changed? && receipt.token_number.present?)}) if (receipt.payment_mode == 'offline' || (receipt.payment_mode == 'online' && receipt.success? ))
+    SelldoLeadUpdater.perform_async(receipt.user_id.to_s, {stage: 'payment_done', token_number: (receipt.token_number_changed? && receipt.token_number.present?)}) if (receipt.offline? || (receipt.online? && receipt.success? ))
   end
 end

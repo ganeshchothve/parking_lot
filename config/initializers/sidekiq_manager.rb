@@ -36,8 +36,8 @@ module Amura
           end
           self.kill_quiet_ones
           # Start New queue.
-          (1..queue_meta_data[:min].to_i).each do |tag|
-            self.start_processs( tag, queue_name, queue_meta_data[:conc])
+          (1..queue_meta_data['min'].to_i).each do |tag|
+            self.start_processs( tag, queue_name, queue_meta_data['conc'])
           end
         end
       end

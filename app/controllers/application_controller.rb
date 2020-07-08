@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   include Pundit
   include ApplicationHelper
 
+  before_action :store_user_location!, if: :storable_location?
   before_action :set_locale
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_cache_headers, :set_request_store, :set_cookies
@@ -20,9 +21,9 @@ class ApplicationController < ActionController::Base
   rescue_from ActionController::InvalidAuthenticityToken, with: :invalid_authenticity_token
 
 
-  def after_sign_in_path_for(current_user)
+  def after_sign_in_path_for(resource_or_scope)
     ApplicationLog.user_log(current_user.id, 'sign_in', RequestStore.store[:logging])
-    dashboard_path
+    stored_location_for(resource_or_scope) || dashboard_path
   end
 
   def home_path(current_user)
@@ -47,6 +48,15 @@ class ApplicationController < ActionController::Base
 
   private
   def after_successful_token_authentication
+  end
+
+  def storable_location?
+    request.get? && is_navigational_format? && !devise_controller? && !request.xhr?
+  end
+
+  def store_user_location!
+    # :user is the scope we are authenticating
+    store_location_for(:user, request.fullpath)
   end
 
   def set_request_store
@@ -111,14 +121,14 @@ class ApplicationController < ActionController::Base
     policy_name = exception.policy.class.to_s.underscore.split("/").join('.')
     policy_name += "."
     policy_name += exception.query.to_s
-    if exception.policy.condition
+    if exception.policy.try(:condition)
       policy_name += "."
       policy_name += exception.policy.condition.to_s
     end
     alert = t policy_name, scope: "pundit", default: :default
     respond_to do |format|
       unless request.referer && request.referer.include?('remote-state') && request.method == 'GET'
-        format.html { redirect_to (user_signed_in? ? after_sign_in_path_for(current_user) : root_path), alert: alert }
+        format.html { redirect_to (user_signed_in? ? dashboard_path : root_path), alert: alert }
         format.json { render json: { errors: alert }, status: 403 }
       else
         # Handle response for remote-state url requests.

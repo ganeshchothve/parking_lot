@@ -62,6 +62,7 @@ gem 'rails-observers',  github: 'rails/rails-observers'
 # for file upload
 gem 'fog-aws'
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
+gem 'mimemagic', '0.3.3'
 
 # for simplified HTTP requests
 gem 'httparty', '>= 0.14.0'
@@ -93,6 +94,7 @@ gem 'audit', git: 'https://github.com/amuratech/audit.git'
 gem 'aasm'
 gem 'mailgun-ruby'
 gem 'safe_parser'
+gem 'twilio-ruby'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

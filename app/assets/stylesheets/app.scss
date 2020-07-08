@@ -105,7 +105,6 @@ figure.wave {
   display: block;
   position: absolute;
   right: 6px;
-  top: 15px;
   @media screen and (min-width: 992px){
     display: none;
   }
@@ -122,8 +121,7 @@ figure.wave {
     background-color: #fff;
     width: 100%;
     left: 0px;
-    padding-left: 30px;
-    padding-bottom: 20px;
+    padding: 0 30px 20px;
   }
 }
 .popover{
@@ -236,9 +234,9 @@ figure.wave {
       text-align: left;
     }
   }
-  tfoot tr {
+  tfoot tr, thead tr {
     td { line-height: inherit !important; }
-    &.highlight td {
+    &.highlight td, &.highlight th {
       color: white !important;
       background-color: $primary !important;
     }
@@ -659,4 +657,8 @@ h6{
   width:100%;
   overflow:auto;
   background:#fff;
+}
+
+.db-btn {
+  width: inherit !important;
 }

@@ -6,6 +6,8 @@ class Client
   include ConfigureTimeSlot
 
   PAYMENT_GATEWAYS = %w(Razorpay CCAvenue)
+  # Add different types of documents which are uploaded on client
+  DOCUMENT_TYPES = %w[document video certificate login_page_image unit_selection_filter_image].freeze
 
   field :name, type: String
   field :selldo_client_id, type: String
@@ -39,14 +41,19 @@ class Client
   field :mixpanel_token, type: String
   field :sms_provider_username, type: String
   field :sms_provider_password, type: String
+  field :whatsapp_api_key, type: String
+  field :whatsapp_api_secret, type: String
+  field :whatsapp_vendor, type: String, default: 'twilio'
   field :sms_mask, type: String, default: "SellDo"
   field :mailgun_private_api_key, type: String
   field :mailgun_email_domain, type: String
   field :enable_actual_inventory, type: Array, default: []
+  field :enable_live_inventory, type: Array, default: []
   field :enable_channel_partners, type: Boolean, default: false
   field :enable_direct_payment, type: Boolean, default: false
   field :enable_payment_with_kyc, type: Boolean, default: true
   field :enable_booking_with_kyc, type: Boolean, default: true
+  field :enable_direct_activation_for_cp, type: Boolean, default: false
   field :blocking_amount, type: Integer, default: 30000
   field :blocking_days, type: Integer, default: 10
   field :holding_minutes, type: Integer, default: 15
@@ -58,7 +65,7 @@ class Client
   field :tds_process, type: String
   field :ga_code, type: String
   field :gtm_tag, type: String
-  field :enable_communication, type: Hash, default: {"email": true, "sms": true}
+  field :enable_communication, type: Hash, default: { 'email': true, 'sms': true, 'whatsapp': false }
   field :allow_multiple_bookings_per_user_kyc, type: Boolean, default: true
   field :enable_referral_bonus, type: Boolean, default: false
   field :roles_taking_registrations, type: Array, default: %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner]
@@ -70,6 +77,8 @@ class Client
   # Enabled: If channel_partner tries to add a lead which is already present in the system & tagged to different channel_partner, then system will check if the lead is confirmed or not, if yes, it won't allow the current channel_partner to add it again & trigger an email to admin saying current channel_partner tried to add an existing lead.
   # Disabled: If channel_partner tries to add an already present lead under diff. channel_partner, then system will not allow current channel_partner to add that lead again regardless of its confirmation status & trigger a notification email to admin informing that current channel_partner tried to add existing lead.
   field :enable_lead_conflicts, type: Boolean, default: false
+  # required for sell.do links of sitevisit, followup & add task on user to work.
+  field :selldo_default_search_list_id, type: String
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
@@ -96,8 +105,8 @@ class Client
     <div class="mt-3"></div>
   </div>'
 
-  mount_uploader :logo, DocUploader
-  mount_uploader :mobile_logo, DocUploader
+  mount_uploader :logo, LogoUploader
+  mount_uploader :mobile_logo, LogoUploader
   mount_uploader :background_image, DocUploader
   mount_uploader :brochure, DocUploader
 
@@ -111,10 +120,13 @@ class Client
   has_many :templates
   has_many :sms_templates, class_name: 'Template::SmsTemplate'
   has_many :email_templates, class_name: 'Template::EmailTemplate'
+  has_many :ui_templates, class_name: 'Template::UITemplate'
   has_many :smses, class_name: 'Sms'
+  has_many :whatsapps, class_name: 'Whatsapp'
   has_many :assets, as: :assetable
   has_many :emails, class_name: 'Email', inverse_of: :booking_portal_client
   has_many :schemes
+  has_many :bulk_upload_reports
   has_one :gallery
   has_one :external_inventory_view_config, inverse_of: :booking_portal_client
   embeds_many :checklists, cascade_callbacks: true
@@ -125,6 +137,7 @@ class Client
   validates :preferred_login, inclusion: {in: Proc.new{ Client.available_preferred_logins.collect{|x| x[:id]} } }
   validates :payment_gateway, inclusion: {in: Proc.new{ Client::PAYMENT_GATEWAYS } }, allow_blank: true
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
+  validates :whatsapp_api_key, :whatsapp_api_secret, presence: true, if: :whatsapp_enabled?
   accepts_nested_attributes_for :address, :external_inventory_view_config, :checklists
 
   def self.available_preferred_logins
@@ -142,11 +155,19 @@ class Client
     self.enable_communication["email"]
   end
 
+  def whatsapp_enabled?
+    self.enable_communication['whatsapp']
+  end
+
   def enable_actual_inventory?(user)
     if user.present?
       enable_actual_inventory.include?(user.role)
     else
       false
     end
+  end
+
+  def self.selldo_api_clients
+    ENV_CONFIG.dig(:selldo, :api_clients) || {}
   end
 end

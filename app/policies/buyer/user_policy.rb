@@ -8,4 +8,8 @@ class Buyer::UserPolicy < UserPolicy
   def print?
     show?
   end
+
+  def asset_create?
+    record.id == user.id
+  end
 end

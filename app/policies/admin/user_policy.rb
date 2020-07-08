@@ -52,6 +52,18 @@ class Admin::UserPolicy < UserPolicy
     true
   end
 
+  def asset_create?
+    %w[admin sales sales_admin crm].include?(user.role)
+  end
+
+  def send_payment_link?
+    record.buyer?
+  end
+
+  def show_selldo_links?
+    ENV_CONFIG['selldo'].try(:[], 'base_url').present? && record.buyer? && record.lead_id? && current_client.selldo_default_search_list_id?
+  end
+
   def permitted_attributes(params = {})
     attributes = super
     attributes += [:is_active] if record.persisted? && record.id != user.id
@@ -69,6 +81,8 @@ class Admin::UserPolicy < UserPolicy
     attributes += [:premium] if record.role?('channel_partner') && user.role?('admin')
     attributes += [:role] if %w[superadmin admin].include?(user.role)
     attributes += [:erp_id] if %w[admin sales_admin].include?(user.role)
+    # To give selected channel partner access of live inventory.
+    attributes += [:enable_live_inventory] if user.role?(:superadmin) && record.role?(:channel_partner)
     attributes.uniq
   end
 end

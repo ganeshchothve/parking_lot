@@ -30,4 +30,8 @@ class DashboardPolicy < Struct.new(:user, :dashboard)
   def gamify_unit_selection?
     true
   end
+
+  def admin_dashboard?
+    %w[superadmin admin sales_admin].include?(user.role)
+  end
 end

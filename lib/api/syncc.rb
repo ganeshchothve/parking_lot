@@ -32,7 +32,7 @@ module Api
     def validate_erp_id
       if get_erp_id.blank?
         raise Api::SyncError, "#{erp_model.resource_class} #{erp_model.reference_key_name} is required"
-      elsif request_payload[erp_model.reference_key_name].present? && (request_payload[erp_model.reference_key_name] != get_erp_id)
+      elsif erp_model.http_verb != 'post' && request_payload[erp_model.reference_key_name].present? && (request_payload[erp_model.reference_key_name] != get_erp_id)
         raise Api::SyncError, "#{erp_model.resource_class} #{erp_model.reference_key_name} in request and response must be the same"
       else
         true
@@ -49,7 +49,18 @@ module Api
       else
         response = JSON.parse(response) if response.is_a?(RestClient::Response)
       end
-      synclog.update_attributes(request: request, response: response, response_code: response_code, status: status ? 'successful' : 'failed', message: message, action: erp_model.action_name, resource: record, user_reference: record_user, reference: parent_sync)
+
+      synclog.update_attributes(
+        request: (request.is_a?(Array) ? request.first : request),
+        response: (response.is_a?(Array) ? response.first : response),
+        response_code: response_code,
+        status: (status ? 'successful' : 'failed'),
+        message: message,
+        action: erp_model.action_name,
+        resource: record,
+        user_reference: record_user,
+        reference: parent_sync
+      )
     end
 
     def set_response_payload(response)
@@ -59,25 +70,46 @@ module Api
     end
 
     def get_erp_id
-      _erp_id = response_payload
-      erp_model.reference_key_location.split(',').each do |key|
-        # can be ", " according to format
-        _erp_id = response[key] if _erp_id[key].present?
-      end
-      _erp_id[erp_model.reference_key_name]
+      response_payload.dig(*erp_model.reference_key_location.split(','), erp_model.reference_key_name)
     end
 
     def get_response
-      response = RestClient::Request.execute(method: erp_model.http_verb.to_sym, url: @url, payload: request_payload.to_json, headers: { 'Content-Type' => 'application/json' })
+      headers = { 'Content-Type' => 'application/json' }
+      headers['Authorization'] = "Bearer #{erp_model.access_token}" if erp_model.access_token.present?
+
+      response = RestClient::Request.execute(method: erp_model.http_verb.to_sym, url: @url, payload: request_payload.to_json, headers: headers)
       case response.code
       when 400..511
         raise Api::SyncError, "#{response.try(:code)}: #{response.message}"
       else
-        set_sync_log(request_payload, response, response.code, response_payload['returnCode'].try(:zero?) || true, response_payload['message']) if set_response_payload(response)
+        set_sync_log(
+          request_payload,
+          response,
+          response.code,
+          get_erp_id.present?,
+          response_payload['message']
+        ) if set_response_payload(response)
       end
       get_erp_id
+
+    rescue RestClient::ExceptionWithResponse => e
+      response = e.response
+      set_sync_log(
+        request_payload,
+        response,
+        (response.try(:code) || '404'),
+        false,
+        e.message
+      )
+      puts response
     rescue StandardError, SyncError => e
-      set_sync_log(request_payload, response.as_json, response.try(:code) ? response.code : '404', false, e.message)
+      set_sync_log(
+        request_payload,
+        response.as_json,
+        (response.try(:code) || '404'),
+        false,
+        e.message
+      )
       puts e.message
     end
   end

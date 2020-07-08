@@ -12,7 +12,6 @@ class SmsObserver < Mongoid::Observer
     else
       sms.body = TemplateParser.parse(sms.body, sms.triggered_by)
     end
-    sms.sent_on = Time.now
   end
 
   def after_create sms
@@ -27,8 +26,16 @@ class SmsObserver < Mongoid::Observer
     #      F            |          -           |       T        |        yes
     #      F            |          -           |       F        |         no
     if sms.booking_portal_client.sms_enabled?
-      if ( !sms.sms_template || sms.sms_template.try(:is_active?) ) && ( Rails.env.production? || Rails.env.staging? )
-        Communication::Sms::SmsjustWorker.perform_async(sms.id.to_s)
+      if Rails.env.production? || Rails.env.staging?
+        if sms.sms_template
+          if sms.sms_template.name == 'otp'
+            Communication::Sms::SmsjustWorker.set(queue: 'otp').perform_async(sms.id.to_s)
+          elsif sms.sms_template.is_active?
+            Communication::Sms::SmsjustWorker.perform_async(sms.id.to_s)
+          end
+        else
+          Communication::Sms::SmsjustWorker.perform_async(sms.id.to_s)
+        end
       else
         sms.set(status: "sent")
       end
