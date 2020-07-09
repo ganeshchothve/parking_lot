@@ -12,7 +12,6 @@ class Crm::Api::Post < Crm::Api
     uri = URI(_url)
 
     response = Net::HTTP.post_form(uri, _request_payload.merge({headers: _request_header}))
-
     case response
     when Net::HTTPSuccess
       res = process_response(response, record)
@@ -36,11 +35,11 @@ class Crm::Api::Post < Crm::Api
     else
       response = JSON.parse(response.body)
       if response_crm_id_location.present?
-        crm_id = response
+        reference_id = response
         response_crm_id_location.split('.').each do |location|
-          crm_id = crm_id[location]
+          reference_id = reference_id[location]
         end
-        record.set(crm_id: crm_id) if crm_id.present?
+        record.update_reference_id(reference_id, self.id) if reference_id.present?
       end
     end
     response

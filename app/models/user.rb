@@ -6,7 +6,7 @@ class User
   include ActiveModel::OneTimePassword
   include InsertionStringMethods
   include ApplicationHelper
-  include SyncDetails
+  # include SyncDetails
   include CrmIntegration
   extend FilterByCriteria
   extend ApplicationHelper

@@ -4,7 +4,7 @@ class UserKyc
   include ArrayBlankRejectable
   include InsertionStringMethods
   include ApplicationHelper
-  include SyncDetails
+  # include SyncDetails
   include CrmIntegration
   extend FilterByCriteria
 

@@ -14,7 +14,7 @@
   <%= link_to t('controller.booking_details.tasks.link_name'), tasks_admin_booking_detail_path(booking_detail), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 
-<% if policy([:admin, Crm::Base.new()]).choose_crm? && booking_detail.crm_id.present? && Crm::Api.where(resource_class: 'BookingDetail').present? %>
+<% if policy([:admin, Crm::Base.new()]).choose_crm? && Crm::Api.where(resource_class: 'BookingDetail').present? %>
   <%= link_to t('controller.crms.choose_crm.link_name'), choose_crm_admin_crm_base_index_path(resource_id: booking_detail.id, resource_class: booking_detail.class), class: "dropdown-item " %>
 <% end %>
 

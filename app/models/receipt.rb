@@ -8,7 +8,7 @@ class Receipt
   include InsertionStringMethods
   include ApplicationHelper
   include ReceiptStateMachine
-  include SyncDetails
+  # include SyncDetails
   include TimeSlotGeneration
   include CrmIntegration
   extend FilterByCriteria

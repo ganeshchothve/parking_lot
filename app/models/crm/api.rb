@@ -19,9 +19,31 @@ class Crm::Api
   def set_request_payload record
     _request_erb = ERB.new(request_payload.gsub("\n\s", '')) rescue ERB.new("Hash.new")
     _base_payload_erb = ERB.new(base.request_payload.gsub("\n\s", '')) rescue ERB.new("{}")
-    _request_payload = SafeParser.new((_request_erb.result(record.get_binding))).safe_load rescue {}
-    _base_request_payload = SafeParser.new((_base_payload_erb.result(record.get_binding))).safe_load rescue {}
+    _request_payload = SafeParser.new(_request_erb.result(record.get_binding)).safe_load rescue {}
+    _base_request_payload = SafeParser.new(_base_payload_erb.result(record.get_binding)).safe_load rescue {}
     _request_payload.merge(_base_request_payload)
+    safe_parse(_request_payload)
+  end
+
+  def safe_parse(data)
+    res = data
+
+    case (res ||= data)
+    when Hash
+      res.each do |key, value|
+        value = (SafeParser.new(value).safe_load rescue nil) || value
+        res[key] = ((value.is_a?(Hash) || value.is_a?(Array)) ? safe_parse(value) : value)
+      end
+      res
+    when Array
+      res.map! do |value|
+        value = (SafeParser.new(value).safe_load rescue nil) || value
+        (value.is_a?(Hash) || value.is_a?(Array)) ? safe_parse(value) : value
+      end
+      Array.new.push(*res)
+    else
+      res
+    end
   end
 
   def validate_url

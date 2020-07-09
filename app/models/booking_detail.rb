@@ -4,7 +4,7 @@ class BookingDetail
   include ArrayBlankRejectable
   include InsertionStringMethods
   include BookingDetailStateMachine
-  include SyncDetails
+  # include SyncDetails
   include Tasks
   include ApplicationHelper
   extend FilterByCriteria

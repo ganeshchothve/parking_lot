@@ -3,7 +3,7 @@ class ChannelPartner
   include Mongoid::Timestamps
   include ArrayBlankRejectable
   include InsertionStringMethods
-  include SyncDetails
+  # include SyncDetails
   include CrmIntegration
   extend FilterByCriteria
 
