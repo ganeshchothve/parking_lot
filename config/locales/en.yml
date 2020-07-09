@@ -644,6 +644,8 @@ en:
         budget: 'Budget (Rs.)'
 
       user:
+        temporarily_blocked: 'Qualify lead'
+        iris_confirmation: 'Lead Tagging'
         aadhaar: 'Aadhaar'
         confirmation: 'Confirmation'
         channel_partner: 'Channel Partner'
@@ -686,6 +688,15 @@ en:
       user/confirmed:
         :true: 'Confirmed'
         :false: 'Not Confirmed'
+      user/iris_confirmation:
+        :true:
+          temporarily_blocked:
+            :true: 'Temporarily Blocked'
+            :false: 'Permanently Tagged'
+        :false:
+          temporarily_blocked:
+            :true: 'Unqualified'
+            :false: 'Unqualified'
       user/role:
         superadmin: 'Superadmin'
         admin: 'Administrator'
@@ -1027,6 +1038,7 @@ en:
       unblock_lead:
         link_name: 'Unqualify Lead'
       account_confirmed: 'Account Confirmed'
+      account_confirmed_and_block_lead: 'Account confirmed but not qualified. You can qualify the lead here.'
       change_password:
         link_name: 'Change Password'
       cannot_confirm_user: 'Cannot confirm user'

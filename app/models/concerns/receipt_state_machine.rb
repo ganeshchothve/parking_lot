@@ -68,7 +68,9 @@ module ReceiptStateMachine
     end
 
     def lock_lead
-      user.unblock_lead!(true)
+      if (self.online? && self.status == 'success') || (self.offline? && %w(pending clearance_pending success).include?(self.status))
+        user.unblock_lead!(true)
+      end
     end
 
     def swap_request_initiated?

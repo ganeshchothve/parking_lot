@@ -229,7 +229,7 @@ class User
       self.temporarily_blocked = false
       self.unblock_at = nil
       if tag
-        self.manager_change_reason = "Booking done with #{manager_name} manager"
+        self.manager_change_reason = "Payment done through #{manager_name} manager"
       else
         self.iris_confirmation = false
         self.manager_change_reason = "Lead unblocked"

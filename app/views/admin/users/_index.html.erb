@@ -9,6 +9,7 @@
         <th><%= Receipt.model_name.human %></th>
         <th><%= User.human_attribute_name('role') %></th>
         <th><%= User.human_attribute_name('status') %></th>
+        <th><%= t('mongoid.attributes.user.iris_confirmation') %></th>
         <th class="text-right"><%= t('global.action', count: 3) %></th>
       </tr>
     </thead>
@@ -24,7 +25,7 @@
               <%= user.name %>
             <% end %>
             <% if user.temporarily_blocked? %>
-              <i class="fa fa-circle" aria-hidden="true" style = "color: #8B0000;"></i>
+              <i class="fa fa-circle red" aria-hidden="true"></i>
             <% end %>
           </span>
           <% if user.email.present? %>
@@ -53,6 +54,9 @@
 
         <td data-title="Status">
           <span><%= t("mongoid.attributes.user/confirmed.#{user.confirmed_at.present?}") %></span>
+        </td>
+        <td data-title="<%= t('mongoid.attributes.user.iris_confirmation') %>">
+          <span><%= t("mongoid.attributes.user/iris_confirmation.#{user.iris_confirmation?}.temporarily_blocked.#{user.temporarily_blocked?}") %></span>
         </td>
 
         <td>

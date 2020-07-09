@@ -71,7 +71,11 @@ class Admin::UsersController < AdminController
             triggered_by_type: @user.class.to_s
           })
           email.sent!
-          redirect_to request.referrer || dashboard_url, notice: t('controller.users.account_confirmed')
+          if @user.buyer? && policy([:admin, @user]).block_lead?
+            redirect_to admin_users_path("remote-state": block_lead_admin_user_path(@user , notice: t('controller.users.account_confirmed_and_block_lead')))
+          else
+            redirect_to request.referrer || dashboard_url, notice: t('controller.users.account_confirmed')
+          end
         else
           redirect_to request.referrer || dashboard_url, alert: t('controller.users.cannot_confirm_user')
         end

@@ -34,7 +34,7 @@ class Buyer::UsersController < BuyerController
   def iris_confirm
     @user.assign_attributes(manager_id: params[:manager_id], iris_confirmation: true, temporarily_blocked: true)
     if @user.save
-      redirect_to dashboard_url(@user), notice: 'Confirmation successfull.'
+      redirect_to dashboard_url(@user), notice: 'Confirmation successful'
     else
       redirect_to dashboard_url(@user), notice: 'Cannot confirm with this link. Please contact administrator'
     end
