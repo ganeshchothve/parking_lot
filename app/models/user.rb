@@ -236,7 +236,7 @@ class User
         self.manager_id = nil
       end
     else
-      self.iris_confirmation = true
+      self.iris_confirmation = true if tag
     end
     self.save
   end
