@@ -40,6 +40,7 @@ class UserObserver < Mongoid::Observer
     unless user.authentication_token?
       user.reset_authentication_token!
     end
+    # user.crm_id = user.lead_id if user.lead_id.present?
   end
 
   def after_update user

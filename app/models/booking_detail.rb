@@ -4,12 +4,13 @@ class BookingDetail
   include ArrayBlankRejectable
   include InsertionStringMethods
   include BookingDetailStateMachine
-  include SyncDetails
+  # include SyncDetails
   include Tasks
   include ApplicationHelper
   extend FilterByCriteria
   extend RenderAnywhere
   include PriceCalculator
+  include CrmIntegration
 
   STATUSES = %w[hold blocked booked_tentative booked_confirmed under_negotiation scheme_rejected scheme_approved swap_requested swapping swapped swap_rejected cancellation_requested cancelling cancelled cancellation_rejected]
   BOOKING_STAGES = %w[blocked booked_tentative booked_confirmed under_negotiation scheme_approved]
@@ -157,6 +158,8 @@ class BookingDetail
   def ds_name
     "#{name} - #{status}"
   end
+
+  alias :resource_name :ds_name
 
   # validates kyc presence if booking is not allowed without kyc
   def kyc_mandate

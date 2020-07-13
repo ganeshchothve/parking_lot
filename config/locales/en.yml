@@ -65,6 +65,21 @@ en:
 
   mongoid:
     models:
+      api_log:
+        one: 'API Log'
+        other: 'API Logs'
+      crm/base:
+        one: 'CRM'
+        other: 'CRMs'
+      crm/api:
+        one: 'API'
+        other: 'APIs'
+      crm/api/get:
+        one: 'GET API'
+        other: 'GET APIs'
+      crm/api/post:
+        one: 'POST API'
+        other: 'POST API'
       bulk_upload_report:
         one: Bulk Upload Report
         other: Bulk Upload Reports
@@ -173,6 +188,22 @@ en:
         other: Users & Customers
 
     attributes:
+      crm:
+        base:
+          name: Name
+          domain: Domain
+        api:
+          request_type: 'Request Type'
+          request_types:
+            get: View
+            post: Push
+          resource_classes:
+            User: Customer
+            ChannelPartner: 'Channel Partner'
+            Receipt: Payment
+            UserKyc: 'User KYC'
+            BookingDetail: 'Booking Detail'
+
       bulk_upload_report:
         uploaded_by_id: 'Uploaded By'
         total_rows: 'Total rows'
@@ -760,6 +791,22 @@ en:
           custom_dates: 'Custom Dates'
 
   controller:
+    api_logs:
+      index:
+        link_name: 'API Logs'
+    crms:
+      index:
+        link_name: 'CRM Integration'
+      choose_crm:
+        link_name: "Fetch data from CRM"
+    crm/base:
+      create:
+        success: 'CRM details added successfully.'
+      update:
+        success: 'CRM details updated successfully.'
+      destroy:
+        success: 'CRM details removed successfully.'
+        failure: 'CRM details cannot be removed.'
     add_booking:
         index:
             link_name: 'Add Booking'

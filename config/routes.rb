@@ -45,6 +45,8 @@ Rails.application.routes.draw do
 
   namespace :admin do
 
+    resources :api_logs, only: [:index]
+
     resources :portal_stage_priorities, only: [:index] do
       patch :reorder, on: :collection
     end
@@ -93,6 +95,17 @@ Rails.application.routes.draw do
     namespace :audit do
       resources :records, only: [:index]
       resources :entries, only: [:show]
+    end
+
+    namespace :crm do
+      resources :base do
+        get :choose_crm, on: :collection
+        scope ":type" do
+          resources :api, except: :index do
+            get :show_response
+        end
+        end
+      end
     end
 
     resources :receipts, only: %i[index show] do
