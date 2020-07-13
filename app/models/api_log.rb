@@ -11,4 +11,6 @@ class ApiLog
   belongs_to :crm_api, class_name: 'Crm::Api'
   belongs_to :resource, polymorphic: true
 
+  default_scope -> { desc(:created_at) }
+
 end

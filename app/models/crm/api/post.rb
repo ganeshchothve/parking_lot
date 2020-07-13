@@ -11,10 +11,10 @@ class Crm::Api::Post < Crm::Api
     _request_header = get_request_header(record)
     uri = URI(_url)
 
-    response = Net::HTTP.post_form(uri, _request_payload.merge({headers: _request_header}))
+    response = Net::HTTP.post(uri, _request_payload.to_json, _request_header)
+    res = process_response(response, record)
     case response
     when Net::HTTPSuccess
-      res = process_response(response, record)
       update_api_log(api_log, _request_payload, _url, res, "Success")
       return {notice: "Object successfully pushed on CRM."}
     else
