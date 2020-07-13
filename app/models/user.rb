@@ -235,8 +235,10 @@ class User
         self.manager_change_reason = "Lead unblocked"
         self.manager_id = nil
       end
-      self.save
+    else
+      self.iris_confirmation = true
     end
+    self.save
   end
 
   def password_complexity
