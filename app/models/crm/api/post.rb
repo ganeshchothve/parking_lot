@@ -39,7 +39,7 @@ class Crm::Api::Post < Crm::Api
         response_crm_id_location.split('.').each do |location|
           reference_id = reference_id[location]
         end
-        record.update_reference_id(reference_id, self.id) if reference_id.present?
+        record.update_reference_id(reference_id, self.base_id) if reference_id.present?
       end
     end
     response
