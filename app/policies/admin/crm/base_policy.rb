@@ -1,6 +1,6 @@
 class Admin::Crm::BasePolicy < Crm::BasePolicy
 
   def index?
-    %w[superadmin admin].include?(user.role)
+    %w[superadmin].include?(user.role)
   end
 end
