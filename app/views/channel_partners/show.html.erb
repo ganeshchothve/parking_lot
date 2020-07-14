@@ -51,9 +51,13 @@
         </div>
       </div>
     </div>
-
+    <% if policy([:admin, Crm::Base.new()]).choose_crm? && current_client.external_api_integration? && apis = Crm::Base.active_apis(@channel_partner, current_user.role).presence %>
+      <div class="col-md-12 mt-3">
+        <%= render 'admin/crm/base/crms', { apis: apis, resource: @channel_partner } %>
+      </div>
+    <% end %>
     <div class="col-md-12 mt-3 p-0">
-      <%= render 'sync_logs/sync', { record: @channel_partner } if current_client.external_api_integration? && policy([current_user_role_group, SyncLog.new]).index? %>
+      <%#= render 'sync_logs/sync', { record: @channel_partner } if current_client.external_api_integration? && policy([current_user_role_group, SyncLog.new]).index? %>
     </div>
 
   </div>

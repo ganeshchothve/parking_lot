@@ -8,6 +8,7 @@ class Crm::Api
   field :resource_class, type: String
   field :path, type: String
   field :request_payload, type: String
+  field :is_active, type: Boolean, default: true
 
   validate :validate_url
   validates :resource_class, inclusion: { in: RESOURCE_CLASS }

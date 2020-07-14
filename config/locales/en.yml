@@ -195,8 +195,8 @@ en:
         api:
           request_type: 'Request Type'
           request_types:
-            get: View
-            post: Push
+            get: 'Get Details'
+            post: Sync
           resource_classes:
             User: Customer
             ChannelPartner: 'Channel Partner'

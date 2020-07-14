@@ -40,7 +40,13 @@ class UserObserver < Mongoid::Observer
     unless user.authentication_token?
       user.reset_authentication_token!
     end
-    # user.crm_id = user.lead_id if user.lead_id.present?
+    if user.lead_id.present? && crm = Crm::Base.where(domain: ENV_CONFIG[:selldo][:base_url]).first
+      tpr = user.third_party_references.where(crm_id: crm.id).first
+      if tpr.blank?
+        tpr = user.third_party_references.build(reference_id: user.lead_id, crm_id: crm.id)
+        tpr.save
+      end
+    end
   end
 
   def after_update user

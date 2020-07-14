@@ -21,4 +21,14 @@ class Crm::Base
   rescue URI::InvalidURIError
     self.errors.add(:domain, 'has invalid url.')
   end
+
+  def self.active_apis(resource, current_user_role)
+    _crm_ids = resource.third_party_references.distinct(:crm_id)
+    if current_user_role == 'superadmin'
+      apis = Crm::Api.where(resource_class: resource.class, is_active: true).where({"$or": [{_type: 'Crm::Api::Get', base_id: {"$in": _crm_ids}}, {_type: 'Crm::Api::Post'}]})
+    else
+      apis = Crm::Api.where(resource_class: resource.class, is_active: true).where(_type: 'Crm::Api::Get', base_id: {"$in": _crm_ids})
+    end
+    apis
+  end
 end
