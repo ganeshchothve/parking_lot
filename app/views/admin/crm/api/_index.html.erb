@@ -5,6 +5,7 @@
         <th><%= t('mongoid.attributes.crm.api.resource_class') %></th>
         <th><%= t('mongoid.attributes.crm.api.request_type') %></th>
         <th><%= t('mongoid.attributes.crm.api.path') %></th>
+        <th><%= t('mongoid.attributes.crm.api.is_active') %></th>
         <th><%= t('mongoid.attributes.crm.api.request_payload') %></th>        
         <th class="text-right">Actions</th>
       </tr>
@@ -16,6 +17,7 @@
         <td><%= api.resource_class %></td>
         <td><%= api._type.demodulize %></td>
         <td><%= api.path %></td>
+        <td><%= api.is_active? ? "Yes" : "No" %></td>
         <td><%= api.request_payload %></td>
         <td>
           <div class="dropdown show text-right">
