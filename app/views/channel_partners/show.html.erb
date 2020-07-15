@@ -51,7 +51,7 @@
         </div>
       </div>
     </div>
-    <% if policy([:admin, Crm::Base.new()]).choose_crm? && current_client.external_api_integration? && apis = Crm::Base.active_apis(@channel_partner, current_user.role).presence %>
+    <% if policy([:admin, Crm::Base.new()]).choose_crm? && apis = Crm::Base.active_apis(@channel_partner).presence %>
       <div class="col-md-12 mt-3">
         <%= render 'admin/crm/base/crms', { apis: apis, resource: @channel_partner } %>
       </div>

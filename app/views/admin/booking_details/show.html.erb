@@ -4,7 +4,7 @@
       <%= render 'booking_details/details', booking_detail: @booking_detail, with_actions: true %>
     </div>
 
-    <% if policy([:admin, Crm::Base.new()]).choose_crm? && current_client.external_api_integration? && apis = Crm::Base.active_apis(@booking_detail, current_user.role).presence %>
+    <% if policy([:admin, Crm::Base.new()]).choose_crm? && apis = Crm::Base.active_apis(@booking_detail).presence %>
       <div class="col-md-12 mt-3">
         <%= render 'admin/crm/base/crms', { apis: apis, resource: @booking_detail } %>
       </div>

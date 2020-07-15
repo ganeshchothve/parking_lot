@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="mt-3"></div>
-      <% if policy([:admin, Crm::Base.new()]).choose_crm? && current_client.external_api_integration? && apis = Crm::Base.active_apis(@user_kyc, current_user.role).presence %>
+      <% if policy([:admin, Crm::Base.new()]).choose_crm? && apis = Crm::Base.active_apis(@user_kyc).presence %>
         <div class="col-md-12 mt-3">
           <%= render 'admin/crm/base/crms', { apis: apis, resource: @user_kyc } %>
         </div>

@@ -53,10 +53,8 @@ class Admin::Crm::ApiController < ApplicationController
     @api = Crm::Api.find params[:api_id]
     @resource = @api.resource_class.constantize.find params[:resource_id]
     @response = @api.execute(@resource)
-    if @api._type.demodulize == "Get"
-      if @response.blank? || !@response.respond_to?(:html_safe)
-        redirect_to request.referrer || dashboard_path, notice: 'There was some error. Please contact administrator'
-      end
+    if request.xhr?
+      render layout: false
     else
       redirect_to request.referrer || dashboard_path, @response
     end

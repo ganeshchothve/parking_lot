@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <%= render 'users/overview', user: @user%>
 
-      <% if policy([:admin, Crm::Base.new()]).choose_crm? && current_client.external_api_integration? && apis = Crm::Base.active_apis(@user, current_user.role).presence %>
+      <% if policy([:admin, Crm::Base.new()]).choose_crm? && apis = Crm::Base.active_apis(@user).presence %>
         <div class="col-md-12 my-3 p-0">
           <%= render 'admin/crm/base/crms', { apis: apis, resource: @user } %>
         </div>

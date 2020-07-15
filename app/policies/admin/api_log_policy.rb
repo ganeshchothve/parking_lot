@@ -1,6 +1,6 @@
 class Admin::ApiLogPolicy < AccountPolicy
 
   def index?
-    %w[superadmin].include?(user.role)
+    %w[superadmin admin sales].include?(user.role)
   end
 end
