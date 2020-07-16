@@ -8,8 +8,9 @@ class Receipt
   include InsertionStringMethods
   include ApplicationHelper
   include ReceiptStateMachine
-  include SyncDetails
+  # include SyncDetails
   include TimeSlotGeneration
+  include CrmIntegration
   extend FilterByCriteria
 
   OFFLINE_PAYMENT_MODE = %w[cheque rtgs imps card_swipe neft]
@@ -226,6 +227,8 @@ class Receipt
   def name
     receipt_id
   end
+
+  alias :resource_name :name
 
   def self.todays_payments_count
     filters = {

@@ -18,7 +18,10 @@ class ChannelPartnerObserver < Mongoid::Observer
   end
 
   def after_save channel_partner
-    if channel_partner.status_changed? && channel_partner.status == 'active'
+    if channel_partner.status_changed? && channel_partner.status == 'active' && channel_partner.associated_user.present? && current_client.external_api_integration?
+      Crm::Api::Post.where(resource_class: 'ChannelPartner').each do |api|
+        api.execute(channel_partner)
+      end
     end
   end
 end

@@ -1,0 +1,6 @@
+<div class = 'col-12'>
+  <div class="form-group">
+    <%= f.label :response_crm_id_location %>
+    <%= f.text_field :response_crm_id_location, autofocus: true, class: "form-control", disabled: !policy([:admin, @api]).editable_field?("response_crm_id_location") %>
+  </div>
+</div>

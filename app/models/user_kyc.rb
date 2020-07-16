@@ -4,7 +4,8 @@ class UserKyc
   include ArrayBlankRejectable
   include InsertionStringMethods
   include ApplicationHelper
-  include SyncDetails
+  # include SyncDetails
+  include CrmIntegration
   extend FilterByCriteria
 
   # Add different types of documents which are uploaded on user_kyc
@@ -94,6 +95,8 @@ class UserKyc
     end
     "#{_salutation} #{first_name} #{last_name}"
   end
+
+  alias :resource_name :name
 
   def api_json
     # extract phone and country code from phone field

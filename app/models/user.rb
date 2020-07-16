@@ -6,7 +6,8 @@ class User
   include ActiveModel::OneTimePassword
   include InsertionStringMethods
   include ApplicationHelper
-  include SyncDetails
+  # include SyncDetails
+  include CrmIntegration
   extend FilterByCriteria
   extend ApplicationHelper
 
@@ -396,6 +397,8 @@ class User
     end
     str
   end
+
+  alias :resource_name :name
 
   def login
     @login || phone || email

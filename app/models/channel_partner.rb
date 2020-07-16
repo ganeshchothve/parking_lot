@@ -2,7 +2,9 @@ class ChannelPartner
   include Mongoid::Document
   include Mongoid::Timestamps
   include ArrayBlankRejectable
-  include SyncDetails
+  include InsertionStringMethods
+  # include SyncDetails
+  include CrmIntegration
   extend FilterByCriteria
 
   STATUS = %w(active inactive)
@@ -76,6 +78,8 @@ class ChannelPartner
     str += " (#{company_name})" if company_name.present?
     str
   end
+
+  alias :resource_name :name
 
   def ds_name
     "#{name} - #{email} - #{phone}"

@@ -1,0 +1,51 @@
+<%= form_for([:admin, @crm, @api], url: url, local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": Crm::Api.model_name.human(count: 2), "data-type": "json", id: 'crm_api_form'}) do |f| %>
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-gradient-cd white">
+        <h3 class="title"><%= t("helpers.#{action_name}.link_name", model: @api.model_name.human) %></h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" class="white">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class = 'row'>
+          <div class = 'col-12'>
+            <div class="form-group">
+              <%= f.label :resource_class, class: 'label-required' %>
+              <%= f.select :resource_class, Crm::Api::RESOURCE_CLASS.collect{|x| [x, x]}, {prompt: true, selected: @api.resource_class}, class: 'selectize', required: 'required' %>
+            </div>
+          </div>
+          <div class = 'col-12'>
+            <div class="form-group">
+              <%= f.label :path, class: 'label-required' %>
+              <%= f.text_field :path, autofocus: true, class: "form-control", required: 'required', disabled: !policy([:admin, @api]).editable_field?("path") %>
+            </div>
+          </div>
+          <div class = 'col-12'>
+            <div class="form-group">
+              <%= f.label :request_payload %>
+              <%= f.text_area :request_payload, autofocus: true, class: "form-control", disabled: !policy([:admin, @api]).editable_field?("request_payload") %>
+            </div>
+          </div>
+          <div class = 'col-12'>
+            <div class="form-check">
+              <%= f.check_box :is_active, class: 'form-check-input' %>
+              <%= f.label :is_active, class: 'form-check-label' %>
+            </div>
+          </div>
+          <%= render "#{@api.class.to_s.demodulize.downcase}_form", f: f %>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <%= f.submit "Save", class: "btn btn-primary" %>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($("#crm_api_form"));
+  });
+<% end %>

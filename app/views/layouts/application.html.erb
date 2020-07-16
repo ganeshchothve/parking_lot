@@ -25,7 +25,11 @@
       <% end %>
     <% end %>
     <% if current_client.selldo_client_id.present? %>
-      <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= current_client.selldo_client_id %>.js'></script>
+      <% if Rails.env.production? %>
+        <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= current_client.selldo_client_id %>.js'></script>
+      <% else %>
+        <script src='<%= ENV_CONFIG[:selldo][:base_url] %>/t/<%= current_client.selldo_client_id %>.js'></script>
+      <% end %>
     <% end %>
   </head>
   <body class="<%= controller_name %> <%= params[:controller] == 'custom' && action_name == 'inventory' ? 'pt-0' : '' %>">
@@ -33,6 +37,8 @@
       <div id='inventory'>
         <%= yield %>
       </div>
+    <% elsif action_name == 'generate_booking_detail_form' %>
+      <%= yield %>
     <% else %>
       <%= render "layouts/navbar"%>
       <div class="mt-5">
