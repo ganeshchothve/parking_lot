@@ -4,6 +4,7 @@ class UserObserver < Mongoid::Observer
   def before_validation user
     user.allowed_bookings ||= current_client.allowed_bookings_per_user
     user.booking_portal_client_id ||= current_client.id
+    user.assign_attributes(manager_change_reason: 'Blocking the lead', unblock_at: Date.today + user.booking_portal_client.lead_blocking_days) if user.temporarily_blocked == true && user.unblock_at == nil && user.booking_portal_client.lead_blocking_days.present?
   end
 
   def before_create user
@@ -30,11 +31,8 @@ class UserObserver < Mongoid::Observer
       #     mailer.deliver_later
       #   end
       # end
-      user.referenced_manager_ids = [user.manager_id]
     end
     if user.manager_id_changed? && user.manager_id.present?
-      user.referenced_manager_ids << user.manager_id
-      user.referenced_manager_ids.uniq!
       user.push_srd_to_selldo if user.buyer?
     end
     unless user.authentication_token?

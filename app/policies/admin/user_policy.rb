@@ -56,6 +56,14 @@ class Admin::UserPolicy < UserPolicy
     %w[admin sales sales_admin crm].include?(user.role)
   end
 
+  def block_lead?
+    record.confirmed? && record.buyer? && record.manager_id.blank? && !record.temporarily_blocked? && %w(sales sales_admin admin).include?(user.role) && !record.iris_confirmation? && record.booking_portal_client.lead_blocking_days.present?
+  end
+
+  def unblock_lead?
+    record.buyer? && record.temporarily_blocked? && %w(sales sales_admin admin).include?(user.role)
+  end
+
   def send_payment_link?
     record.buyer?
   end

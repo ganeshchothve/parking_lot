@@ -25,7 +25,7 @@ class User
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, :lockable, :timeoutable, :password_expirable, :password_archivable, :session_limitable, :expirable, :omniauthable, :omniauth_providers => [:selldo], authentication_keys: [:login]
 
-  attr_accessor :temporary_password, :payment_link
+  attr_accessor :temporary_password, :payment_link, :temp_manager_id
 
   ## Database authenticatable
   field :first_name, type: String, default: ''
@@ -66,6 +66,7 @@ class User
   field :confirmed_at,         type: Time
   field :confirmation_sent_at, type: Time
   field :unconfirmed_email,    type: String # Only if using reconfirmable
+  field :iris_confirmation, type: Boolean, default: false
 
   ## Token Authenticatable
   acts_as_token_authenticatable
@@ -106,6 +107,9 @@ class User
 
   field :selldo_uid, type: String
   field :selldo_access_token, type: String
+
+  field :temporarily_blocked, type: Boolean, default: false
+  field :unblock_at, type: Date
 
   ## Security questionable
 
@@ -219,6 +223,23 @@ class User
 
   def phone_or_email_required
     errors.add(:base, 'Email or Phone is required')
+  end
+
+  def unblock_lead!(tag = false)
+    if self.temporarily_blocked
+      self.temporarily_blocked = false
+      self.unblock_at = nil
+      if tag
+        self.manager_change_reason = "Payment done through #{manager_name} manager"
+      else
+        self.iris_confirmation = false
+        self.manager_change_reason = "Lead unblocked"
+        self.manager_id = nil
+      end
+    else
+      self.iris_confirmation = true if tag
+    end
+    self.save
   end
 
   def password_complexity
@@ -360,7 +381,12 @@ class User
     port = Rails.application.config.action_mailer.default_url_options[:port].to_i
     host = (port == 443 ? 'https://' : 'http://') + host
     host += (port == 443 || port == 80 || port == 0 ? '' : ":#{port}")
-    url.user_confirmation_url(confirmation_token: confirmation_token, manager_id: manager_id, host: host)
+    if self.confirmed?
+      url.iris_confirm_buyer_user_url(self, manager_id: temp_manager_id, user_email: email, user_token: authentication_token)
+    else
+      url.user_confirmation_url(confirmation_token: confirmation_token, manager_id: temp_manager_id, host: host)
+    end
+
   end
 
   def name
@@ -435,9 +461,11 @@ class User
     generate_confirmation_token! unless @raw_confirmation_token
     # send_devise_notification(:confirmation_instructions, @raw_confirmation_token, opts)
     devise_mailer.new.send(:devise_sms, self, :confirmation_instructions)
+    email_template = Template::EmailTemplate.find_by(name: "user_confirmation_instructions")
     attrs = {
       booking_portal_client_id: booking_portal_client_id,
-      email_template_id: Template::EmailTemplate.find_by(name: "user_confirmation_instructions").id,
+      subject: email_template.parsed_subject(self),
+      body: ERB.new(self.booking_portal_client.email_header).result( binding) + email_template.parsed_content(self) + ERB.new(self.booking_portal_client.email_footer).result( binding ),
       cc: [ booking_portal_client.notification_email ],
       recipients: [ self ],
       triggered_by_id: id,
@@ -445,11 +473,15 @@ class User
     }
     attrs[:to] = [ unconfirmed_email ] if pending_reconfirmation?
     email = Email.create!(attrs)
-    email.sent!
+    email.sent! if email_template.is_active?
   end
 
   def is_payment_done?
     receipts.where('$or' => [{ status: { '$in': %w(success clearance_pending) } }, { payment_mode: {'$ne': 'online'}, status: {'$in': %w(pending clearance_pending success)} }]).present?
+  end
+
+  def is_booking_done?
+    booking_details.where(status: {"$in": BookingDetail::BOOKING_STAGES}).present?
   end
 
   def send_payment_link
@@ -558,7 +590,8 @@ class User
     def user_based_scope(user, _params = {})
       custom_scope = {}
       if user.role?('channel_partner')
-        custom_scope = {manager_id: user.id, role: {"$in": User.buyer_roles(user.booking_portal_client)} }
+        custom_scope = { role: {"$in": User.buyer_roles(user.booking_portal_client)} }
+        custom_scope[:'$or'] = [{manager_id: user.id}, {manager_id: nil, referenced_manager_ids: user.id, iris_confirmation: false}]
       elsif user.role?('crm')
         custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) + %w(channel_partner) } }
       elsif user.role?('sales_admin')

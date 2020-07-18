@@ -71,7 +71,11 @@ class Admin::UsersController < AdminController
             triggered_by_type: @user.class.to_s
           })
           email.sent!
-          redirect_to request.referrer || dashboard_url, notice: t('controller.users.account_confirmed')
+          if @user.buyer? && policy([:admin, @user]).block_lead?
+            redirect_to admin_users_path("remote-state": block_lead_admin_user_path(@user , notice: t('controller.users.account_confirmed_and_block_lead')))
+          else
+            redirect_to request.referrer || dashboard_url, notice: t('controller.users.account_confirmed')
+          end
         else
           redirect_to request.referrer || dashboard_url, alert: t('controller.users.cannot_confirm_user')
         end
@@ -154,6 +158,23 @@ class Admin::UsersController < AdminController
       else
         format.html { render :edit }
         format.json { render json: { errors: @user.errors.full_messages.uniq }, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def block_lead
+    @referenced_managers = User.in(id: @user.referenced_manager_ids).all
+    render layout: false
+  end
+
+  def unblock_lead
+    respond_to do |format|
+      if @user.unblock_lead!
+        format.html{ redirect_to request.referrer || admin_users_path, notice: "Lead unqualified successfully" }
+        format.json{ render json: {notice: "Lead unqualified successfully"}, status: :created }
+      else
+        format.html{ redirect_to request.referrer || admin_users_path, alert: "Lead cannot be unqualified" }
+        format.json{ render json: {alert: "Lead cannot be unqualified"}, status: :unprocessable_entity }
       end
     end
   end

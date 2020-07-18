@@ -60,12 +60,12 @@ class LocalDevise::ConfirmationsController < Devise::ConfirmationsController
 
   def do_confirm
     @confirmable.confirm
-    if params[:manager_id].present?
-      @confirmable.manager_id = params[:manager_id]
-      #@confirmable.referenced_manager_ids = ([params[:manager_id]] + @confirmable.referenced_manager_ids).uniq
-      @confirmable.manager_change_reason = "Customer confirmed with link sent by #{@confirmable.manager.name}"
-      @confirmable.save
+    @confirmable.iris_confirmation = true
+    if params[:manager_id].present? && @confirmable.booking_portal_client.lead_blocking_days.present?
+      @confirmable.assign_attributes(manager_id: params[:manager_id], temporarily_blocked: true, unblock_at: (DateTime.now + @confirmable.booking_portal_client.lead_blocking_days), referenced_manager_ids: (([params[:manager_id]] + @confirmable.referenced_manager_ids).uniq))
+      @confirmable.assign_attributes(manager_change_reason: "Customer confirmed with link sent by #{@confirmable.manager.name}")
     end
+    @confirmable.save
     SelldoLeadUpdater.perform_async(@confirmable.id, {stage: 'confirmed'})
     set_flash_message :notice, :confirmed
     sign_in_and_redirect(resource_name, @confirmable)

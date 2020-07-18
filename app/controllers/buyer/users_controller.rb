@@ -1,7 +1,7 @@
 class Buyer::UsersController < BuyerController
   include UsersConcern
 
-  before_action :set_user, only: %i[show edit update update_password]
+  before_action :set_user, only: %i[show edit update update_password iris_confirm]
 
   # Show
   # show defined in UsersConcern
@@ -28,6 +28,15 @@ class Buyer::UsersController < BuyerController
         format.html { render :edit }
         format.json { render json: { errors: @user.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
+    end
+  end
+
+  def iris_confirm
+    @user.assign_attributes(manager_id: params[:manager_id], iris_confirmation: true, temporarily_blocked: true)
+    if @user.save
+      redirect_to dashboard_url(@user), notice: 'Confirmation successful'
+    else
+      redirect_to dashboard_url(@user), notice: 'Cannot confirm with this link. Please contact administrator'
     end
   end
 

@@ -41,12 +41,15 @@ class HomeController < ApplicationController
           message = 'A user with these details has already registered.'
           # Checks for when channel_partner adds a new user.
           if @user.role?('user')
-            if !@user.confirmed?
-              if current_user.present? && current_user.role?('channel_partner') && @user.manager_id.present? && current_client.enable_lead_conflicts?
-                @user.update(manager_id: current_user.id)
+            if !@user.iris_confirmation? && !@user.temporarily_blocked?
+              if current_user.present? && current_user.role?('channel_partner') && current_client.enable_lead_conflicts?
+                @user.referenced_manager_ids ||= []
+                (@user.referenced_manager_ids << current_user.id).uniq!
+                @user.temp_manager_id = current_user.id
+                @user.send_confirmation_instructions if @user.email.present?
+                @user.save
                 NotifyAdminWorker.perform_async( @user.id, current_user.id )
                 message = "A user with these details has already registered, but hasn't confirmed their account. We have linked his account to your channel partner login. We have resent the confirmation email to them, which has an account activation link."
-                @user.send_confirmation_instructions if @user.email.present?
               end
             else
               message = "A user with these details has already registered and has confirmed their account."
@@ -64,11 +67,17 @@ class HomeController < ApplicationController
           end
 
           if user_signed_in?
-            @user.manager_id = current_user.id
+            manager_id = current_user.id
           else
-            @user.manager_id = cookies[:portal_cp_id] if(cookies[:portal_cp_id].present?)
+            #@user.manager_id = cookies[:portal_cp_id] if(cookies[:portal_cp_id].present?)
+            manager_id = cookies[:manager_id]
             @user.set_utm_params(cookies)
           end
+          if manager_id.present?
+            @user.temp_manager_id = manager_id
+            @user.referenced_manager_ids = ([manager_id] + @user.referenced_manager_ids).uniq
+          end
+
           # RegistrationMailer.welcome(user, generated_password).deliver #TODO: enable this. We might not need this if we use otp based login
           # RegistrationMailer.welcome(user, generated_password).deliver #TODO: enable this. We might not need this if we are to use otp based login
 

@@ -17,6 +17,9 @@
               <li>
                 <span><%= t('mongoid.attributes.user.name') %></span>
                 <p class="break-word"><%= user.name || '-' %></p>
+                <% if user.temporarily_blocked? %>
+                  <i class="fa fa-circle red" aria-hidden="true"></i>
+                <% end %>
               </li>
               <li>
                 <span><%= t('mongoid.attributes.user.email') %></span>
@@ -105,6 +108,16 @@
                   <% end %>
                 </p>
               </li>
+              <li>
+                <span> <%= t('mongoid.attributes.user.iris_confirmation') %></span>
+                <p><%= t("mongoid.attributes.user/iris_confirmation.#{user.iris_confirmation?}.temporarily_blocked.#{user.temporarily_blocked?}") %></p>
+              </li>
+              <% if user.temporarily_blocked? %>
+                <li>
+                  <span><%= t("mongoid.attributes.user.unblock_at") %></span>
+                  <p><%= user.unblock_at.try(:strftime, "%d/%m/%Y") %></p>
+                </li>
+              <% end %>
             </ul>
 
             <ul class="booking-apart-info clear">
