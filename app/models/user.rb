@@ -381,7 +381,7 @@ class User
     port = Rails.application.config.action_mailer.default_url_options[:port].to_i
     host = (port == 443 ? 'https://' : 'http://') + host
     host += (port == 443 || port == 80 || port == 0 ? '' : ":#{port}")
-    if self.confirmed?
+    if self.confirmed? && self.buyer?
       url.iris_confirm_buyer_user_url(self, manager_id: temp_manager_id, user_email: email, user_token: authentication_token)
     else
       url.user_confirmation_url(confirmation_token: confirmation_token, manager_id: temp_manager_id, host: host)
