@@ -1,6 +1,7 @@
 class ThirdPartyReference
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Attributes::Dynamic
 
   field :reference_id, type: String
 

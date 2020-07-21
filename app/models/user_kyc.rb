@@ -9,6 +9,7 @@ class UserKyc
   extend FilterByCriteria
 
   # Add different types of documents which are uploaded on user_kyc
+  THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   DOCUMENT_TYPES = []
 
   field :salutation, type: String, default: 'Mr.'

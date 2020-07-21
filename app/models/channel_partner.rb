@@ -8,6 +8,7 @@ class ChannelPartner
   extend FilterByCriteria
 
   STATUS = %w(active inactive)
+  THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
 
   # Add different types of documents which are uploaded on channel_partner
   DOCUMENT_TYPES = []

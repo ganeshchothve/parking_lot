@@ -6,6 +6,7 @@ class Crm::Base
   field :name, type: String
   field :request_headers, type: String
   field :request_payload, type: String
+  field :api_key, type: String
 
   validate :validate_url
   validates :domain, uniqueness: true, presence:true
@@ -20,6 +21,16 @@ class Crm::Base
     self.errors.add(:domain, 'has invalid url.') if !uri.is_a?(URI::HTTP) || uri.host.nil?
   rescue URI::InvalidURIError
     self.errors.add(:domain, 'has invalid url.')
+  end
+
+  def generate_api_key!
+    api_key ||= SecureRandom.hex
+    save
+  end
+
+  def regenerate_api_key!
+    api_key = SecureRandom.hex
+    save
   end
 
   def self.active_apis(resource)
