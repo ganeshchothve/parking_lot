@@ -24,12 +24,12 @@ class Crm::Base
   end
 
   def generate_api_key!
-    api_key ||= SecureRandom.hex
+    self.api_key ||= SecureRandom.hex
     save
   end
 
   def regenerate_api_key!
-    api_key = SecureRandom.hex
+    self.api_key = SecureRandom.hex
     save
   end
 
