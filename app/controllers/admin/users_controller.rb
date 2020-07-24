@@ -211,7 +211,7 @@ class Admin::UsersController < AdminController
   end
 
   def find_user_with_reference_id crm_id, reference_id
-    _crm = Crm::Base.find crm_id
+    _crm = Crm::Base.where(id: crm_id).first
     _user = User.where("third_party_references.crm_id": _crm.try(:id), "third_party_references.reference_id": reference_id ).first
     _user
   end
