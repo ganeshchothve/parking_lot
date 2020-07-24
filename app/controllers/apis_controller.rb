@@ -21,6 +21,6 @@ class ApisController < ActionController::API
     else
       message = 'Required parameters missing.'
     end
-    render json: { status: 'error', message: message } unless flag
+    render json: { message: message }, status: :unauthorized unless flag
   end
 end
