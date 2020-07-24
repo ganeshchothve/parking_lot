@@ -156,7 +156,6 @@ Rails.application.routes.draw do
       end
 
       collection do
-        get 'view_user/crm/:crm_id/reference_id/:reference_id', to: "users#show"
         get '/new/:role', action: 'new', as: :new_by_role
         get :export
         get :portal_stage_chart
