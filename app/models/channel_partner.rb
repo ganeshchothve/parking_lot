@@ -50,7 +50,7 @@ class ChannelPartner
   has_one :bank_detail, as: :bankable, validate: false
   has_many :assets, as: :assetable
 
-  validates :first_name, :last_name, :rera_id, :status, :aadhaar, presence: true
+  validates :first_name, :last_name, :rera_id, :status, presence: true
   validates :aadhaar, format: { with: /\A\d{12}\z/i, message: 'is not a valid aadhaar number' }, allow_blank: true
   validates :rera_id, uniqueness: true, allow_blank: true
   validates :phone, uniqueness: true, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile] }, if: proc { |user| user.email.blank? }
@@ -59,7 +59,7 @@ class ChannelPartner
   validates :pan_number, :aadhaar, uniqueness: true, allow_blank: true
   validates :pan_number, format: { with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A' }, allow_blank: true
   validate :cannot_make_inactive
-  validates :first_name, :last_name, format: { with: /\A[a-zA-Z]*\z/ }
+  validates :first_name, :last_name, name: true
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :user_based_uniqueness
 

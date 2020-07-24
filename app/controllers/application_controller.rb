@@ -51,7 +51,16 @@ class ApplicationController < ActionController::Base
   end
 
   def storable_location?
-    request.get? && is_navigational_format? && !devise_controller? && !request.xhr?
+    request.get? && is_navigational_format? && !devise_controller? && !request.xhr? &&
+      (
+        !user_signed_in? &&
+        params[:controller].in?([
+          'buyer/receipts',
+          'buyer/booking_details/receipts',
+          'admin/users'
+        ]) &&
+        params[:action].in?(%w(index show new))
+      )
   end
 
   def store_user_location!
