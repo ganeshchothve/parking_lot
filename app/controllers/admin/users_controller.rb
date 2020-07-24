@@ -200,10 +200,10 @@ class Admin::UsersController < AdminController
   private
 
   def set_user
-    @user = if params[:id].present?
+    @user = if params[:crm_client_id].present? && params[:id].present?
+              find_user_with_reference_id(params[:crm_client_id], params[:id])
+            elsif params[:id].present?
               User.where(id: params[:id]).first || User.where(lead_id: params[:id]).first
-            elsif params[:crm_id].present? && params[:reference_id].present?
-              find_user_with_reference_id(params[:crm_id], params[:reference_id])
             else
               current_user
             end
