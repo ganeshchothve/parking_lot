@@ -1082,6 +1082,7 @@ en:
         link_name: Template Detail
 
     users:
+      set_user_missing: 'User not found'
       block_lead:
         header: 'Qualify Lead'
         link_name: 'Qualify Lead'
