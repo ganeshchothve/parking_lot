@@ -41,7 +41,7 @@ class Api::V1::UsersController < ApisController
 
   # Checks if the erp-id is present. Erp-id is the external api identification id.
   def reference_id_present?
-    render json: { status: :bad_request, message: 'Reference id is required to create User' } unless params.dig(:user, :ids, :reference_id)
+    render json: { message: 'Reference id is required to create User' }, status: :bad_request unless params.dig(:user, :ids, :reference_id)
   end
 
   # Sets the user object
