@@ -104,7 +104,7 @@ class Admin::UsersController < AdminController
   def confirm_via_otp
     @otp_sent_status = {}
     if request.patch?
-      if params[:user].present? && params[:user][:login_otp].present? && @user.authenticate_otp(params[:user][:login_otp], drift: 60)
+      if params[:user].present? && params[:user][:login_otp].present? && @user.authenticate_otp(params[:user][:login_otp], drift: 900)
         @user.confirm unless @user.confirmed?
       end
     else
