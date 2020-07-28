@@ -16,7 +16,7 @@ class Api::V1::ChannelPartnersController < ApisController
       render json: {errors: @channel_partner.errors.full_messages.uniq}, status: :unprocessable_entity
     end
     rescue StandardError => e
-      render json: { errors: [e.message] }, status: :unprocessable_entity
+      create_error_log e
   end
 
   #
@@ -33,7 +33,7 @@ class Api::V1::ChannelPartnersController < ApisController
       render json: {errors: @channel_partner.errors.full_messages.uniq }, status: :unprocessable_entity
     end
     rescue StandardError => e
-      render json: { errors: [e.message] }, status: :unprocessable_entity
+      create_error_log e
   end
 
   private

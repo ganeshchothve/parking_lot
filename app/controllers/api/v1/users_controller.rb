@@ -1,5 +1,4 @@
 class Api::V1::UsersController < ApisController
-  before_action :authenticate_request
   before_action :set_user, except: :create
   before_action :reference_id_present?, only: :create
 
@@ -17,7 +16,7 @@ class Api::V1::UsersController < ApisController
       render json: {errors: @user.errors.full_messages.uniq}, status: :unprocessable_entity
     end
    rescue StandardError => e
-    render json: { errors: [e.message] }, status: :unprocessable_entity
+    create_error_log e
   end
 
   #
@@ -34,7 +33,7 @@ class Api::V1::UsersController < ApisController
       render json: {errors: @user.errors.full_messages.uniq}, status: :unprocessable_entity
     end
     rescue StandardError => e
-      render json: { errors: [e.message] }, status: :unprocessable_entity
+      create_error_log e
   end
 
   private
@@ -45,7 +44,7 @@ class Api::V1::UsersController < ApisController
 
   # Checks if the erp-id is present. Erp-id is the external api identification id.
   def reference_id_present?
-    render json: { message: 'Reference id is required to create User' }, status: :bad_request unless params.dig(:user, :ids, :reference_id)
+    render json: { errors: ['Reference id is required to create User'] }, status: :bad_request unless params.dig(:user, :ids, :reference_id)
   end
 
   # Sets the user object
