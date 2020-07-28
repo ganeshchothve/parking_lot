@@ -1,7 +1,14 @@
 class ApisController < ActionController::API
   before_action :authenticate_request
 
+  def create_error_log e
+    _error_code = SecureRandom.hex(4)
+    Rails.logger.error "-------#{_error_code}-#{e.message} --------"
+    render json: { errors: ["Something went wrong. Please contact support team & share the error code: #{_error_code}"] }, status: :unprocessable_entity
+  end
+
   private
+
 
   def authenticate_request
     flag = false
@@ -21,6 +28,6 @@ class ApisController < ActionController::API
     else
       message = 'Required parameters missing.'
     end
-    render json: { message: message }, status: :unauthorized unless flag
+    render json: { errors: [message] }, status: :unauthorized unless flag
   end
 end
