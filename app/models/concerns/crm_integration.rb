@@ -2,7 +2,7 @@ module CrmIntegration
   extend ActiveSupport::Concern
 
   included do
-    embeds_many :third_party_references, as: :reference
+    embeds_many :third_party_references, as: :reference_model
   end
 
   def resource_name
