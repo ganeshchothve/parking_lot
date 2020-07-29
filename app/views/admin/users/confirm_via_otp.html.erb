@@ -13,7 +13,7 @@
         <div class="modal-body">
           <% if @otp_sent_status[:status] %>
             <div class="alert alert-primary">
-              You are confirming account on behalf of <%= @user.name %>. We have sent an <%= I18n.t("global.otp") %> to the user, you will need to ask for the latest one. <%= I18n.t("global.otp") %>s are valid for not more 60 seconds.
+              You are confirming account on behalf of <%= @user.name %>. We have sent an <%= I18n.t("global.otp") %> to the user, you will need to ask for the latest one. <%= I18n.t("global.otp") %>s are not valid for more than 15 mins.
             </div>
             <div class="form-group">
               <%= f.label :login_otp, class: 'label-required' %>
