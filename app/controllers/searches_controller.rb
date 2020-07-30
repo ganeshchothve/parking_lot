@@ -278,21 +278,24 @@ class SearchesController < ApplicationController
   end
 
   def set_booking_detail
-    @booking_detail = BookingDetail.find_or_initialize_by(project_unit_id: @search.project_unit_id, user_id: @search.user_id)
-    if @booking_detail.new_record?
-      @booking_detail.assign_attributes(
-        base_rate: @search.project_unit.base_rate,
-        project_name: @search.project_unit.project_name,
-        project_tower_name: @search.project_unit.project_tower_name,
-        bedrooms: @search.project_unit.bedrooms,
-        bathrooms: @search.project_unit.bathrooms,
-        floor_rise: @search.project_unit.floor_rise,
-        saleable: @search.project_unit.saleable,
-        costs: @search.project_unit.costs,
-        data: @search.project_unit.data,
-        manager_id: @search.user_manager_id
-      )
-      @booking_detail.search = @search
+    @booking_detail = BookingDetail.where(status: {"$in": BookingDetail::BOOKING_STAGES + [:under_negotiation, :scheme_approved]}, project_unit_id: @search.project_unit_id, user_id: @search.user_id).first
+    if @booking_detail.blank?
+      @booking_detail = BookingDetail.find_or_initialize_by(project_unit_id: @search.project_unit_id, user_id: @search.user_id, status: 'hold')
+      if @booking_detail.new_record?
+        @booking_detail.assign_attributes(
+          base_rate: @search.project_unit.base_rate,
+          project_name: @search.project_unit.project_name,
+          project_tower_name: @search.project_unit.project_tower_name,
+          bedrooms: @search.project_unit.bedrooms,
+          bathrooms: @search.project_unit.bathrooms,
+          floor_rise: @search.project_unit.floor_rise,
+          saleable: @search.project_unit.saleable,
+          costs: @search.project_unit.costs,
+          data: @search.project_unit.data,
+          manager_id: @search.user_manager_id
+        )
+        @booking_detail.search = @search
+      end
     end
   end
 
