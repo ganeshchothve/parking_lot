@@ -72,6 +72,10 @@ class Admin::UserPolicy < UserPolicy
     ENV_CONFIG['selldo'].try(:[], 'base_url').present? && record.buyer? && record.lead_id? && current_client.selldo_default_search_list_id?
   end
 
+  def show_lead_tagging?
+    %w(admin superadmin).include?(user.role)
+  end
+
   def permitted_attributes(params = {})
     attributes = super
     attributes += [:is_active] if record.persisted? && record.id != user.id

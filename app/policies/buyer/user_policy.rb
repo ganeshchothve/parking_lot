@@ -12,4 +12,8 @@ class Buyer::UserPolicy < UserPolicy
   def asset_create?
     record.id == user.id
   end
+
+  def show_lead_tagging?
+    false
+  end
 end

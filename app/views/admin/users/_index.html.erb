@@ -9,7 +9,9 @@
         <th><%= Receipt.model_name.human %></th>
         <th><%= User.human_attribute_name('role') %></th>
         <th><%= User.human_attribute_name('status') %></th>
-        <th><%= t('mongoid.attributes.user.iris_confirmation') %></th>
+        <% if policy([current_user_role_group, User.new]).show_lead_tagging? %>
+          <th><%= t('mongoid.attributes.user.iris_confirmation') %></th>
+        <% end %>
         <th class="text-right"><%= t('global.action', count: 3) %></th>
       </tr>
     </thead>
@@ -55,10 +57,16 @@
         <td data-title="Status">
           <span><%= t("mongoid.attributes.user/confirmed.#{user.confirmed_at.present?}") %></span>
         </td>
-        <td data-title="<%= t('mongoid.attributes.user.iris_confirmation') %>">
-          <span><%= t("mongoid.attributes.user/iris_confirmation.#{user.iris_confirmation?}.temporarily_blocked.#{user.temporarily_blocked?}") %></span>
-        </td>
 
+        <% if policy([current_user_role_group, user]).show_lead_tagging? %>
+          <td data-title="<%= t('mongoid.attributes.user.iris_confirmation') %>">
+            <% if user.buyer? %>
+              <span><%= t("mongoid.attributes.user/iris_confirmation.#{user.iris_confirmation?}.temporarily_blocked.#{user.temporarily_blocked?}") %></span>
+            <% else %>
+              -
+            <% end %>
+          </td>
+        <% end %>
         <td>
           <div class="dropdown show text-right">
             <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
