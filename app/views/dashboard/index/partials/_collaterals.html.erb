@@ -6,7 +6,7 @@
   <div class="box-content br-rd-bl-4 bg-white fix-ht">
     <div class="pd-box">
       <ul class="collaterals-list">
-        <li><%= link_to( "1. Videos (#{current_client.assets.where(document_type: 'video').count})", assetables_path(assetable_type: current_client.class.model_name.i18n_key.to_s, assetable_id: current_client.id, fltrs: {document_type: 'video'}), class: 'modal-remote-form-link') %></li>
+        <li><%= link_to( "1. Videos", assetables_path(assetable_type: current_client.class.model_name.i18n_key.to_s, assetable_id: current_client.id, fltrs: {document_type: 'video'}), class: 'modal-remote-form-link') %></li>
         <li><%= link_to( "2. Documents (#{current_client.assets.where(document_type: 'document').count})", assetables_path(assetable_type: current_client.class.model_name.i18n_key.to_s, assetable_id: current_client.id, fltrs: {document_type: 'document'}), class: 'modal-remote-form-link') %></li>
         <li><%= link_to( "3. Certificates (#{current_client.assets.where(document_type: 'certificate').count})", assetables_path(assetable_type: current_client.class.model_name.i18n_key.to_s, assetable_id: current_client.id, fltrs: {document_type: 'certificate'}), class: 'modal-remote-form-link') %></li>
       </ul>
