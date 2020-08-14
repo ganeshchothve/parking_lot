@@ -108,10 +108,12 @@
                   <% end %>
                 </p>
               </li>
-              <li>
-                <span> <%= t('mongoid.attributes.user.iris_confirmation') %></span>
-                <p><%= t("mongoid.attributes.user/iris_confirmation.#{user.iris_confirmation?}.temporarily_blocked.#{user.temporarily_blocked?}") %></p>
-              </li>
+              <% if policy([current_user_role_group, user]).show_lead_tagging? && user.buyer? %>
+                <li>
+                  <span> <%= t('mongoid.attributes.user.iris_confirmation') %></span>
+                  <p><%= t("mongoid.attributes.user/iris_confirmation.#{user.iris_confirmation?}.temporarily_blocked.#{user.temporarily_blocked?}") %></p>
+                </li>
+              <% end %>
               <% if user.temporarily_blocked? %>
                 <li>
                   <span><%= t("mongoid.attributes.user.unblock_at") %></span>
