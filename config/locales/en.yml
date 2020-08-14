@@ -1268,3 +1268,4 @@ en:
     layouts/_navbar_footer: 'Footer Rera Line'
     searches/checkout: 'Holding minutes Text on Checkout page'
     booking_details/_details: 'Bottom Text in Booking detail overview section'
+    assets/_videos: 'Videos Section on customer dashboard'
