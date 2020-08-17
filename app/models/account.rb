@@ -2,7 +2,7 @@ class Account
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  field :account_number, type: Integer # required true
+  field :account_number, type: String # required true
   field :name, type: String
   field :by_default, type: Boolean, default: false
 

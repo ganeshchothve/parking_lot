@@ -20,7 +20,9 @@ module PaymentGatewayService
         @receipt.failed! if %w[pending clearance_pending].include? @receipt.status
         @receipt.status_message = e.to_s
       end
-      @receipt.save
+      if @receipt.save
+        RazorpayTransferWorker.perform_async(@receipt.id)
+      end
     end
   end
 end
