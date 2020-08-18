@@ -8,13 +8,6 @@ module DatabaseSeeds
       if Template::UITemplate.where(name: 'assets/_videos').blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'assets/_videos', content: '<div class="row">
           <div class="col-12 my-4 text-center">
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/B0NJRlfr68g" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-          </div>
-          <div class="col-12 mb-4 text-center">
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/BQcCuwyIwDs" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-          </div>
-          <div class="col-12 mb-4 text-center">
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/6-EpvQP5G3g" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
           </div>
         </div>' })
       end
