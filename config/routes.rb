@@ -91,6 +91,8 @@ Rails.application.routes.draw do
     end
     resource :client, except: [:show, :new, :create] do
       resources :templates, only: [:edit, :update, :index]
+      get 'document_sign/prompt'
+      get 'document_sign/callback'
     end
     namespace :audit do
       resources :records, only: [:index]
