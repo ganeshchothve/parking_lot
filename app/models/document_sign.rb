@@ -16,7 +16,6 @@ class DocumentSign
   end
 
   def authorization_url
-    # vendor.authorization_url(client.domain) # TODO
     vendor.authorization_url(redirect_url)
   end
 
