@@ -61,8 +61,11 @@ class LocalDevise::ConfirmationsController < Devise::ConfirmationsController
   def do_confirm
     @confirmable.confirm
     @confirmable.iris_confirmation = true
-    if params[:manager_id].present? && current_client.enable_lead_conflicts? && @confirmable.booking_portal_client.lead_blocking_days.present?
-      @confirmable.assign_attributes(manager_id: params[:manager_id], temporarily_blocked: true, unblock_at: (DateTime.now + @confirmable.booking_portal_client.lead_blocking_days), referenced_manager_ids: (([params[:manager_id]] + @confirmable.referenced_manager_ids).uniq))
+    if params[:manager_id].present?
+      if @confirmable.booking_portal_client.enable_lead_conflicts? && @confirmable.booking_portal_client.lead_blocking_days.present?
+        @confirmable.assign_attributes(temporarily_blocked: true, unblock_at: (DateTime.now + @confirmable.booking_portal_client.lead_blocking_days))
+      end
+      @confirmable.assign_attributes(manager_id: params[:manager_id], referenced_manager_ids: (([params[:manager_id]] + @confirmable.referenced_manager_ids).uniq))
       @confirmable.assign_attributes(manager_change_reason: "Customer confirmed with link sent by #{@confirmable.manager.name}")
     end
     @confirmable.save
