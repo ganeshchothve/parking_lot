@@ -106,6 +106,12 @@ class Admin::UsersController < AdminController
     if request.patch?
       if params[:user].present? && params[:user][:login_otp].present? && @user.authenticate_otp(params[:user][:login_otp], drift: 900)
         @user.confirm unless @user.confirmed?
+        @user.iris_confirmation = true
+        if current_user.present? && current_user.role?('channel_partner')
+          @user.manager_id = current_user.id
+          @user.manager_change_reason = "User confirmed using OTP by this channel_partner"
+        end
+        @user.save
       end
     else
       @otp_sent_status = @user.send_otp

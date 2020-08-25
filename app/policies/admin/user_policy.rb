@@ -73,7 +73,7 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def show_lead_tagging?
-    %w(admin superadmin).include?(user.role)
+    %w(admin superadmin).include?(user.role) && user.booking_portal_client.enable_lead_conflicts?
   end
 
   def permitted_attributes(params = {})

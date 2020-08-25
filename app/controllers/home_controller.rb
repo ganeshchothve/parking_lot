@@ -74,8 +74,13 @@ class HomeController < ApplicationController
             @user.set_utm_params(cookies)
           end
           if manager_id.present?
-            @user.temp_manager_id = manager_id
-            @user.referenced_manager_ids = ([manager_id] + @user.referenced_manager_ids).uniq
+            if current_client.enable_lead_conflicts?
+              @user.temp_manager_id = manager_id
+              @user.referenced_manager_ids = ([manager_id] + @user.referenced_manager_ids).uniq
+            else
+              @user.manager_id = manager_id
+              @user.iris_confirmation = true
+            end
           end
 
           # RegistrationMailer.welcome(user, generated_password).deliver #TODO: enable this. We might not need this if we use otp based login
