@@ -4,6 +4,7 @@
   </div>
 <% end %>
 <div class = "assets">
+  <% @assets = @assets.where(document_type: { '$ne': nil}) %>
   <% unless @assets.count.zero? %>
     <% @assets.group_by(&:document_type).each do |key, value| %>
       <div class="card m-2">
