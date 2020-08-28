@@ -52,17 +52,28 @@ module Zoho
       document_sign.save!
     end
 
-    def self.create(document_path, document_sign, options={})
+    def self.create_and_sign(asset, document_sign, options={})
+      document_sign_detail = DocumentSignDetail.find_or_create_by(asset_id: asset.id, document_sign_id: document_sign.id)
+      document_sign_detail.assign_attributes(request_name: options["request_name"], recipient_name: options["recipient_name"], recipient_email: options["recipient_email"])
+      if document_sign_detail.save
+        create(asset, document_sign, document_sign_detail)
+        sign(document_sign, document_sign_detail) if document_sign_detail.status == 'created'
+      else
+        Rails.logger.error "Errors storing document sign_detail - #{document_sign_detail.errors.to_sentence}"
+      end
+    end
+
+    def self.create(asset, document_sign, document_sign_detail)
       data = '{
         "requests":{
-          "request_name":"Hello Ketan",
+          "request_name":"'+ document_sign_detail.request_name + '",
           "is_sequential": false,
           "expiration_days":10,
           "email_reminders":true,
           "reminder_period": 1,
           "actions": [{
-              "recipient_name": "Ketan",
-              "recipient_email": "ketan.sabnis@gmail.com",
+              "recipient_name": "' + document_sign_detail.recipient_name + '",
+              "recipient_email": "' + document_sign_detail.recipient_email + '",
               "action_type": "SIGN"
             }
           ]
@@ -74,36 +85,39 @@ module Zoho
       request = Net::HTTP::Post.new(url)
       request["Authorization"] = "Zoho-oauthtoken #{document_sign.get_access_token}"
       file_data = [
-        ['file', File.open(document_path)],
+        ['file', File.open(asset.file.path)],
         ['data', data]
       ]
       # request.set_form_data form_data, 'multipart/form-data'
       request.set_form file_data, 'multipart/form-data'
       response = nil
       response = http.request(request)
-      j = JSON.parse response.read_body
-      request_id = j['requests']['request_id']
-      action_id = j['requests']['actions'].first['action_id']
-      document_id = j['requests']['document_ids'].first['document_id']
-      {request_id: request_id, action_id: action_id, document_id: document_id}
+      case response.code
+      when "200"
+        j = JSON.parse response.read_body
+        document_sign_detail.assign_attributes(request_id: j['requests']['request_id'], action_id: j['requests']['actions'].first['action_id'], document_id: j['requests']['document_ids'].first['document_id'], status: 'created', response: response.read_body)
+      else
+        document_sign_detail.assign_attributes(status: 'create_failed', response: response.read_body)
+      end
+      document_sign_detail.save
     end
   
-    def self.sign document_sign, request_id, action_id, document_id
+    def self.sign document_sign, document_sign_detail
       data = '{
         "requests":{
-          "request_name":"Hello Ketan",
+          "request_name":"' + document_sign_detail.request_name + '",
           "deleted_actions": [],
           "actions": [{
-              "action_id": "' + action_id + '",
+              "action_id": "' + document_sign_detail.action_id + '",
               "action_type": "SIGN",
               "deleted_fields": [],
               "is_bulk": false,
               recipient_phonenumber: "",
-              "recipient_name": "Ketan",
-              "recipient_email": "ketan.sabnis@gmail.com",
+              "recipient_name": "' + document_sign_detail.recipient_name + '",
+              "recipient_email": "' + document_sign_detail.recipient_email + '",
               "fields": [{
-                  "document_id": "' + document_id + '",
-                  "action_id": "' + action_id + '",
+                  "document_id": "' + document_sign_detail.document_id + '",
+                  "action_id": "' + document_sign_detail.action_id + '",
                   "field_type_name": "Signature",
                   "field_category": "image",
                   "field_label": "Signature",
@@ -122,7 +136,7 @@ module Zoho
         }
       }'
   
-      url = URI("https://sign.zoho.in/api/v1/requests/#{request_id}/submit")
+      url = URI("https://sign.zoho.in/api/v1/requests/#{document_sign_detail.request_id}/submit")
       http = Net::HTTP.new(url.host, url.port)
       http.use_ssl = true
       request = Net::HTTP::Post.new(url)
@@ -134,10 +148,17 @@ module Zoho
       request.set_form file_data, 'multipart/form-data'
       response = nil
       response = http.request(request)
-      JSON.parse response.read_body
+      case response.code
+      when "200"
+        document_sign_detail.assign_attributes(status: 'signed', response: response.read_body)
+      else
+        document_sign_detail.assign_attributes(status: 'sign_failed', response: response.read_body)
+      end
+      document_sign_detail.save
     end
   
-    def self.download document_sign, request_id, document_id
+    def self.download document_sign, request_id, document_id, asset_id
+      asset = Asset.where(id: asset_id).first
       str = "https://sign.zoho.in/api/v1/requests/#{request_id}/documents/#{document_id}/pdf"
       url = URI(str)
       http = Net::HTTP.new(url.host, url.port)
@@ -147,6 +168,7 @@ module Zoho
       response = nil
       response = http.request(request)
       response.read_body
+      Asset.create!(assetable: asset.assetable, file: FileIo.new(response.read_body, "signed-#{asset.file_name}"))
     end
   
     def self.recall document_sign, request_id

@@ -14,6 +14,7 @@ class Asset
   field :document_type, type: String
 
   belongs_to :assetable, polymorphic: true
+  has_one :document_sign_detail
 
   scope :filter_by_document_type, ->(type) { where(document_type: type) }
 

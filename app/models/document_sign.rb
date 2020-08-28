@@ -9,7 +9,7 @@ class DocumentSign
   field :redirect_url, type: String, default: 'http://localhost:3000/'
   field :vendor_class, type: String, default: 'Zoho::Sign'
   
-  belongs_to :client
+  belongs_to :booking_portal_client, class_name: 'Client'
 
   def vendor
     eval(self.vendor_class)
