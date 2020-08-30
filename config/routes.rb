@@ -306,5 +306,6 @@ Rails.application.routes.draw do
   end
   match '/sell_do/lead_created', to: "api/sell_do/leads#lead_created", via: [:get, :post]
   match '/sell_do/pushed_to_sales', to: "api/sell_do/leads#pushed_to_sales", via: [:get, :post]
+  match '/zoho/download', to: "api/zoho/assets#download", via: [:get, :post]
 
 end

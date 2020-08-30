@@ -157,9 +157,9 @@ module Zoho
       document_sign_detail.save
     end
   
-    def self.download document_sign, request_id, document_id, asset_id
-      asset = Asset.where(id: asset_id).first
-      str = "https://sign.zoho.in/api/v1/requests/#{request_id}/documents/#{document_id}/pdf"
+    def self.download document_sign, document_sign_detail
+      asset = document_sign_detail.asset
+      str = "https://sign.zoho.in/api/v1/requests/#{document_sign_detail.request_id}/documents/#{document_sign_detail.document_id}/pdf"
       url = URI(str)
       http = Net::HTTP.new(url.host, url.port)
       http.use_ssl = true
