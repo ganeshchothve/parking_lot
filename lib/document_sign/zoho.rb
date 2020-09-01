@@ -168,7 +168,12 @@ module Zoho
       response = nil
       response = http.request(request)
       response.read_body
-      Asset.create!(assetable: asset.assetable, file: FileIo.new(response.read_body, "signed-#{asset.file_name}"))
+      asset.file = FileIo.new(response.read_body, "signed-#{asset.file_name}")
+      if asset.save
+        asset
+      else
+        {errors: asset.errors.full_messages.uniq}
+      end
     end
   
     def self.recall document_sign, request_id
