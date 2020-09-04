@@ -40,7 +40,7 @@ var showUnitData = function(unit, assets){
     $(".unit_image_container").show();
     $('[data-placeholder="unit_image"]').attr("src", _.first(assets).file.url);
     $('[data-placeholder="unit_image"]').show();
-    var gallery_html = '<div id="unit_gallery" class="carousel slide" data-ride="carousel">'
+    var gallery_html = '<div id="unit_gallery" class="carousel slide" data-ride="carousel" data-interval="false">'
     gallery_html += '<ol class="carousel-indicators">'
     var count = 0;
     _.each(assets, function(asset){
@@ -52,7 +52,7 @@ var showUnitData = function(unit, assets){
     var count = 0;
     _.each(assets, function(asset){
       gallery_html += '<div class="carousel-item ' + (count == 0 ? "active" : "") + '">\
-        <img class="d-block w-100" src="' + asset.file.url + '">\
+        <img class="d-block w-100 zoom" src="' + asset.file.url + '">\
       </div>'
       count += 1;
     });
