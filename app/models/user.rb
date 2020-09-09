@@ -461,19 +461,22 @@ class User
     generate_confirmation_token! unless @raw_confirmation_token
     # send_devise_notification(:confirmation_instructions, @raw_confirmation_token, opts)
     devise_mailer.new.send(:devise_sms, self, :confirmation_instructions)
-    email_template = Template::EmailTemplate.find_by(name: "user_confirmation_instructions")
-    attrs = {
-      booking_portal_client_id: booking_portal_client_id,
-      subject: email_template.parsed_subject(self),
-      body: ERB.new(self.booking_portal_client.email_header).result( binding) + email_template.parsed_content(self) + ERB.new(self.booking_portal_client.email_footer).result( binding ),
-      cc: [ booking_portal_client.notification_email ],
-      recipients: [ self ],
-      triggered_by_id: id,
-      triggered_by_type: self.class.to_s
-    }
-    attrs[:to] = [ unconfirmed_email ] if pending_reconfirmation?
-    email = Email.create!(attrs)
-    email.sent! if email_template.is_active?
+
+    if email.present?
+      email_template = Template::EmailTemplate.find_by(name: "user_confirmation_instructions")
+      attrs = {
+        booking_portal_client_id: booking_portal_client_id,
+        subject: email_template.parsed_subject(self),
+        body: ERB.new(self.booking_portal_client.email_header).result( binding) + email_template.parsed_content(self) + ERB.new(self.booking_portal_client.email_footer).result( binding ),
+        cc: [ booking_portal_client.notification_email ],
+        recipients: [ self ],
+        triggered_by_id: id,
+        triggered_by_type: self.class.to_s
+      }
+      attrs[:to] = [ unconfirmed_email ] if pending_reconfirmation?
+      email = Email.create!(attrs)
+      email.sent! if email_template.is_active?
+    end
   end
 
   def is_payment_done?
@@ -637,6 +640,12 @@ class User
         User.where(matcher).first
       end
     end
+  end
+
+  protected
+
+  def send_confirmation_notification?
+    confirmation_required? && !@skip_confirmation_notification && (self.email.present? || self.phone.present?)
   end
 
   private
