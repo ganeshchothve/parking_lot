@@ -4,3 +4,8 @@
     conc: 3
     queue_size: 1000
     continues_run: true
+
+:restart_workers:
+  otp:
+    min: 1
+    conc: 2

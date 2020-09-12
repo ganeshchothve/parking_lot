@@ -20,6 +20,7 @@ module Amura
 
     # workers set
     WORKERS_SET = DETAILS[:workers] || {}
+    RESTART_WORKERS = DETAILS[:restart_workers] || {}
 
     # initialize rediss object.
     @@redis = Redis.new( ENV_CONFIG[:redis] )
@@ -27,7 +28,7 @@ module Amura
     class << self
       # When need to restart the workers.
       def restart
-        WORKERS_SET.each do |queue_name, queue_meta_data|
+        (WORKERS_SET.merge(RESTART_WORKERS)).each do |queue_name, queue_meta_data|
           # Quiet all running queues.
           Sidekiq::ProcessSet.new.each do |sps|
             if sps['queues'].include?(queue_name.to_s)
