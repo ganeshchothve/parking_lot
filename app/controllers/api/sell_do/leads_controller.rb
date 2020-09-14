@@ -10,6 +10,10 @@ class Api::SellDo::LeadsController < Api::SellDoController
         format.json { render json: {errors: @user.errors.full_messages.uniq} }
       end
     end
+  rescue => e
+    respond_to do |format|
+      format.json { render json: { status: 'error', message: e.message }, status: 200 }
+    end
   end
 
   def pushed_to_sales
@@ -20,6 +24,10 @@ class Api::SellDo::LeadsController < Api::SellDoController
       else
         format.json { render json: {errors: @user.errors.full_messages.uniq} }
       end
+    end
+  rescue => e
+    respond_to do |format|
+      format.json { render json: { status: 'error', message: e.message }, status: 200 }
     end
   end
 
