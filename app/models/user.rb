@@ -166,7 +166,7 @@ class User
   accepts_nested_attributes_for :portal_stages, reject_if: :all_blank
 
   validates :first_name, :role, presence: true
-  validates :first_name, :last_name, name: true
+  validates :first_name, :last_name, name: true, allow_blank: true
 
   validate :phone_or_email_required, if: proc { |user| user.phone.blank? && user.email.blank? }
   validates :phone, :email, uniqueness: { allow_blank: true }

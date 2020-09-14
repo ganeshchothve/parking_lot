@@ -38,6 +38,7 @@ class Api::SellDo::LeadsController < Api::SellDoController
         phone = Phonelib.parse(params[:lead][:phone]).to_s
         @user = User.new(booking_portal_client_id: current_client.id, email: params[:lead][:email], phone: phone, first_name: params[:lead][:first_name], last_name: params[:lead][:last_name], lead_id: params[:lead_id])
         @user.first_name = "Customer" if @user.first_name.blank?
+        @user.last_name = '' if @user.last_name.nil?
         @user[:skip_email_confirmation] = true
       end
     else
