@@ -84,8 +84,11 @@ module Zoho
       http.use_ssl = true
       request = Net::HTTP::Post.new(url)
       request["Authorization"] = "Zoho-oauthtoken #{document_sign.get_access_token}"
+      File.open("#{Rails.root}/exports/#{document_sign_detail.id}_#{asset.assetable.class.to_s.downcase}.pdf", "wb") do |file|
+        file << open(asset.file.url).read
+      end
       file_data = [
-        ['file', File.open(asset.file.path)],
+        ['file', File.open("#{Rails.root}/exports/#{document_sign_detail.id}_#{asset.assetable.class.to_s.downcase}.pdf")],
         ['data', data]
       ]
       # request.set_form_data form_data, 'multipart/form-data'

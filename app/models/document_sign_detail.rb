@@ -4,6 +4,9 @@ class DocumentSignDetail
   include Mongoid::Attributes::Dynamic
 
   field :status, type: String
+  field :request_name, type: String
+  field :recipient_name, type: String
+  field :recipient_email, type: String
   field :document_id, type: String
   field :request_id, type: String
   field :action_id, type: String

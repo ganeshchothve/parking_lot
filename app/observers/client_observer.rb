@@ -24,6 +24,6 @@ class ClientObserver < Mongoid::Observer
     ExternalInventoryViewConfig.create(booking_portal_client_id: client.id)
     DatabaseSeeds::PortalStagePriorities.seed
 
-    DocumentSign.create(client_id: client.id)
+    DocumentSign.create(booking_portal_client_id: client.id)
   end
 end
