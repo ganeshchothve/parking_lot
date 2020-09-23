@@ -41,7 +41,7 @@ module SearchConcern
     @user ||= User.where(id: user_id).first
     parameters = {}
     parameters = @search.params_json if @search.present?
-    project_units = ProjectUnit.build_criteria({fltrs: parameters}).in(status: ProjectUnit.user_based_available_statuses(current_user))
+    project_units = ProjectUnit.build_criteria({fltrs: parameters}).in(status: ProjectUnit.user_based_available_statuses(@user))
     if @user.present? && @user.manager_role?('channel_partner')
       filters = {fltrs: { can_be_applied_by_role: @user.manager_role, user_role: @user.role, user_id: @user.id, status: 'approved', default_for_user_id: @user.manager_id } }
       project_tower_ids_for_channel_partner = Scheme.build_criteria(filters).distinct(:project_tower_id)
@@ -53,7 +53,7 @@ module SearchConcern
       # GENERIC_TODO: handle floor plan url here
       hash[:floors] = x.total_floors
       hash[:total_units] = ProjectUnit.where(project_tower_id: x.id).count
-      hash[:total_units_available] = ProjectUnit.build_criteria({fltrs: parameters}).where(project_tower_id: x.id).in(status: ProjectUnit.user_based_available_statuses(current_user)).count
+      hash[:total_units_available] = ProjectUnit.build_criteria({fltrs: parameters}).where(project_tower_id: x.id).in(status: ProjectUnit.user_based_available_statuses(@user)).count
       hash
     end
     # GENERIC TODO: If no results found we should display alternate towers

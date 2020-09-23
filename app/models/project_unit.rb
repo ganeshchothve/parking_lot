@@ -181,7 +181,7 @@ class ProjectUnit
                    %w[available employee]
                  else
                    ['available']
-                            end
+                 end
                else
                  ['available']
                end
