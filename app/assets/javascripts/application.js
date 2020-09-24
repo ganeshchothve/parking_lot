@@ -28,6 +28,7 @@
 //= require plugins/array_field
 //= require plugins/file_uploader
 //= require daterangepicker
+//= require plugins/smooth_zoom
 //= require fontawesome-all
 //= require bootstrap-datetimepicker.min
 //= require utils

@@ -94,7 +94,7 @@
               <img class="img-fluid" style="width: 100%; display: block;" data-placeholder="unit_image" />
               <div class="float-right">
                 <a data-toggle="modal" data-target="#floorPlanImage" href="javascript:;" class="unit_image_container" style="display:none;">
-                  Click to view details
+                  Click to Zoom
                 </a>
               </div>
             </div>
@@ -163,5 +163,18 @@
     }else{
       $(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/users/"+ userId +"/project_units/" + unit_id + "/quotation?layout=false");
     }
+  });
+  $('#floorPlanImage').on('shown.bs.modal', function(){
+    $('.zoom').smoothZoom({
+      width: '100%',
+      height :'100%',
+      pan_BUTTONS_SHOW: "YES",
+      pan_LIMIT_BOUNDARY: "YES",
+      button_SIZE: 15,
+      button_ALIGN: "top right",
+      zoom_MAX: 300,
+      border_TRANSPARENCY: 0,
+      button_ICON_IMAGE: "<%= asset_path('icons.png') %>"
+    });
   });
 <% end %>
