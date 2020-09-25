@@ -286,7 +286,7 @@ class ProjectUnit
   def scheme
     return @scheme if @scheme.present?
 
-    @scheme = booking_detail.try(:booking_detail_scheme) if self.available?
+    @scheme = booking_detail.try(:booking_detail_scheme) unless self.available?
 
     @scheme = project_tower.default_scheme if @scheme.blank?
     @scheme

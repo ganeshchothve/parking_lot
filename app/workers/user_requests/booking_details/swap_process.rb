@@ -80,6 +80,10 @@ module UserRequests
         new_booking_detail_scheme = current_booking_detail.booking_detail_scheme.dup
         new_booking_detail_scheme.project_unit = alternate_project_unit
         new_booking_detail_scheme.booking_detail = new_booking_detail
+        # Assign derived_from_scheme to tower default scheme in case of new tower selected in swap.
+        unless current_project_unit.project_tower.id == alternate_project_unit.project_tower.id
+          new_booking_detail_scheme.derived_from_scheme = new_booking_detail.project_unit.project_tower.default_scheme
+        end
         new_booking_detail_scheme
       end
 
