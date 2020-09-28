@@ -14,11 +14,6 @@ class AssetsController < ApplicationController
     asset = Asset.create(assetable: @assetable, file: params[:files][0], document_type: params[:document_type])
     if asset.persisted?
       render partial: "assets/asset.json", locals: {asset: asset}
-      if asset.assetable.class == User
-        assetable = asset.assetable
-        options = {request_name: "#{assetable.class.to_s}-#{assetable.id.to_s}", recipient_name: assetable.name, recipient_email: assetable.email}
-        DocumentSignn::ZohoSign::DocumentCreateWorker.perform_async(assetable.booking_portal_client.document_sign.id.to_s, asset.id.to_s, options)
-      end
     else
       render json: {errors: asset.errors.full_messages}, status: 406
     end
