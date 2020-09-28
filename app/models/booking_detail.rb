@@ -229,6 +229,21 @@ class BookingDetail
     receipts.asc(:created_at).first.try(:receipt_id) || name
   end
 
+  def send_booking_form_to_sign
+    user = self.user
+    booking_detail_form = self.class.render_anywhere('templates/booking_detail_form', { booking_detail: self }, 'layouts/pdf')
+    pdf = WickedPdf.new.pdf_from_string(booking_detail_form.presence)
+    asset = user.assets.new(asset_type: 'booking_from_to_sign')
+    File.open("#{Rails.root}/exports/#{booking_number}_booking_form.pdf", "wb") do |file|
+      file << pdf
+      asset.file = file
+    end
+    if asset.save && %w[staging production].include?(Rails.env)
+      options = { request_name: "#{user.class.to_s}-#{user.id.to_s}", recipient_name: user.name, recipient_email: user.email }
+      DocumentSignn::ZohoSign::DocumentCreateWorker.perform_async(user.booking_portal_client.document_sign.id.to_s, asset.id.to_s, options)
+    end
+  end
+
   def send_booking_detail_form_mail_and_sms
     if project_unit.booking_portal_client.email_enabled?
       attachments_attributes = []
