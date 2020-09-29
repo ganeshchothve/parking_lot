@@ -49,8 +49,8 @@
   </div>
   <div class="col-md-6">
     <div class="form-group">
-      <%= f.label :mixpanel_token, class: 'label-required' %>
-      <%= f.text_field :mixpanel_token, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("mixpanel_token") ? false : true) %>
+      <%= f.label :sms_provider, class: 'label-required' %>
+      <%= f.select :sms_provider, options_for_select(Sms::SMS_GATEWAYS.map {|x| [x.titleize, x]}, f.object.sms_provider), {prompt: 'Select'}, class: 'selectize', disabled: !policy([:admin, @client]).editable_field?("sms_provider") %>
     </div>
   </div>
   <div class="col-md-6">
@@ -120,6 +120,12 @@
     <div class="form-group">
       <%= f.label :gtm_tag, class: 'label-required' %>
       <%= f.text_area :gtm_tag, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("gtm_tag") ? false : true) %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :mixpanel_token, class: 'label-required' %>
+      <%= f.text_field :mixpanel_token, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("mixpanel_token") ? false : true) %>
     </div>
   </div>
 </div>

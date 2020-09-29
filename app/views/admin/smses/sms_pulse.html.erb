@@ -23,7 +23,9 @@
                   <thead>
                     <tr class="bg-gradient-cd white">
                       <th>Month</th>
-                      <th>Count</th>
+                      <% Sms::SMS_GATEWAYS.sort.each do |gateway| %>
+                        <th><%= gateway.titleize %></th>
+                      <% end %>
                     </tr>
                   </thead>
               </thead>
@@ -32,10 +34,14 @@
                   <tr>
                     <% unless key == 'Total' %>
                       <td data-title='Month'><%= key %></td>
-                      <td class='non-action-td' data-title='Count'><%= value.try(:to_i) || 0 %></td>
+                      <% Sms::SMS_GATEWAYS.sort.each do |gateway| %>
+                        <td class='non-action-td' data-title='<%= gateway.titleize %>'><%= value[gateway].try(:to_i) || 0 %></td>
+                      <% end %>
                     <% else %>
                       <td data-title='All Time'><strong><%= key %></strong></td>
-                      <td class='non-action-td' data-title='Total'><strong><%= value.try(:to_i) || 0 %></strong></td>
+                      <% Sms::SMS_GATEWAYS.sort.each do |gateway| %>
+                        <td class='non-action-td' data-title='<%= gateway.titleize %> Total'><strong><%= value[gateway].try(:to_i) || 0 %></strong></td>
+                      <% end %>
                     <% end %>
                   </tr>
                 <% end %>
