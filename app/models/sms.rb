@@ -1,6 +1,7 @@
 class Sms
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Attributes::Dynamic
   extend FilterByCriteria
 
   STATUS = %w(received untracked scheduled sent failed)
