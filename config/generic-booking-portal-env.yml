@@ -52,3 +52,7 @@ selldo:
   api_clients:
     website:
       api_key:
+document_sign:
+  zoho:
+    client_id:
+    secret_id:
