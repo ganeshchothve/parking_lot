@@ -4,6 +4,7 @@ class Sms
   extend FilterByCriteria
 
   STATUS = %w(received untracked scheduled sent failed)
+  SMS_GATEWAYS = %w(knowlarity sms_just) #twilio
 
   # Scopes
   scope :filter_by_to, ->(phone) { where(to: phone) }
@@ -16,6 +17,7 @@ class Sms
   field :body, type: String
   field :sent_on, type: DateTime
   field :status, type: String, default: "scheduled"
+  field :sms_gateway, type: String
 
   belongs_to :sms_template, class_name: 'Template::SmsTemplate', optional: true
 
@@ -25,8 +27,11 @@ class Sms
   belongs_to :booking_portal_client, class_name: "Client"
 
   validates :body, presence: true, if: Proc.new{ |model| model.sms_template_id.blank? }
-  validates :triggered_by_id, :recipient_id, presence: true
+  validates :triggered_by_id, presence: true
+  validates :recipient_id, presence: true, if: Proc.new { |sms| sms.to.blank? }
+  validates :to, presence: true, if: Proc.new { |sms| sms.recipient_id.blank? }
   validates_inclusion_of :status, in: STATUS
+  validates_inclusion_of :sms_gateway, in: SMS_GATEWAYS, allow_blank: true
 
   enable_audit audit_fields: [:body, :sent_on], reference_ids_without_associations: [{field: "sms_template_id", klass: "Template::SmsTemplate"}]
 
@@ -51,12 +56,13 @@ class Sms
         {
           month: { "$month": "$sent_on"},
           year: {"$year": "$sent_on"},
+          sms_gateway: "$sms_gateway",
           body: "$body"
         }
       },{
         "$group":
         {
-          "_id": {year: "$year", month: "$month"},
+          "_id": {sms_gateway: "$sms_gateway", year: "$year", month: "$month"},
           count: { "$sum": {"$ceil": {"$divide": [{ "$strLenCP": "$body" }, 160] }}}
         }
       },{
@@ -64,16 +70,21 @@ class Sms
         {
           "_id.year": -1,
           "_id.month": -1,
+          "_id.sms_gateway": 1
         }
       }
     ]).to_a
 
     out = data.inject({}) do |hsh, d|
       _key = "#{d.dig('_id', 'month')}/#{d.dig('_id', 'year')}"
-      hsh[_key] = d['count']
+      hsh[_key] ||= {}
+      hsh[_key][d["_id"]["sms_gateway"]] = d['count'].to_i
       hsh
     end
-    out['Total'] = out.values.inject(:+)
+    SMS_GATEWAYS.each do |gateway|
+      out['Total'] ||= {}
+      out['Total'][gateway] = out.values.sum { |hsh| hsh[gateway.to_s].to_i }
+    end
     out.present? ? out : "No SMS data present."
   end
 
