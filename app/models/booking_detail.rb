@@ -236,7 +236,7 @@ class BookingDetail
     booking_detail_form = self.class.render_anywhere('templates/booking_detail_form', { booking_detail: self }, 'layouts/pdf')
     pdf = WickedPdf.new.pdf_from_string(booking_detail_form.presence)
     asset = self.assets.new(document_type: 'booking_detail_form')
-    File.open("#{Rails.root}/exports/#{booking_number}_signed_booking_form.pdf", "wb") do |file|
+    File.open("#{Rails.root}/exports/#{booking_number}_to_sign_booking_form.pdf", "wb") do |file|
       file << pdf
       asset.file = file
     end
