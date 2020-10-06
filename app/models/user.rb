@@ -170,7 +170,7 @@ class User
 
   validate :phone_or_email_required, if: proc { |user| user.phone.blank? && user.email.blank? }
   validates :phone, :email, uniqueness: { allow_blank: true }
-  validates :phone, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile] }, allow_blank: true
+  validates :phone, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile mobile fixed_line premium_rate] }, allow_blank: true
   validates :allowed_bookings, presence: true, if: proc { |user| user.buyer? }
   validates :rera_id, presence: true, if: proc { |user| user.role?('channel_partner') }
   validates :rera_id, uniqueness: true, allow_blank: true
