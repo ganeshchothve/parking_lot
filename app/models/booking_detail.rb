@@ -14,6 +14,7 @@ class BookingDetail
 
   STATUSES = %w[hold blocked booked_tentative booked_confirmed under_negotiation scheme_rejected scheme_approved swap_requested swapping swapped swap_rejected cancellation_requested cancelling cancelled cancellation_rejected]
   BOOKING_STAGES = %w[blocked booked_tentative booked_confirmed under_negotiation scheme_approved]
+  DOCUMENT_TYPES = %w[booking_detail_form]
 
   field :status, type: String
   field :erp_id, type: String, default: ''
@@ -48,6 +49,7 @@ class BookingDetail
   # When a new booking detail object is created from another object, this field will be set. This happens when the user creates a swap request.
   belongs_to :parent_booking_detail, class_name: 'BookingDetail', optional: true
   belongs_to :primary_user_kyc, class_name: 'UserKyc', optional: true
+  has_many :assets, as: :assetable
   has_many :receipts, dependent: :nullify
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :booking_detail_schemes, dependent: :destroy
@@ -233,13 +235,13 @@ class BookingDetail
     user = self.user
     booking_detail_form = self.class.render_anywhere('templates/booking_detail_form', { booking_detail: self }, 'layouts/pdf')
     pdf = WickedPdf.new.pdf_from_string(booking_detail_form.presence)
-    asset = user.assets.new(asset_type: 'booking_from_to_sign')
-    File.open("#{Rails.root}/exports/#{booking_number}_booking_form.pdf", "wb") do |file|
+    asset = self.assets.new(document_type: 'booking_detail_form')
+    File.open("#{Rails.root}/exports/#{booking_number}_to_sign_booking_form.pdf", "wb") do |file|
       file << pdf
       asset.file = file
     end
     if asset.save && %w[staging production].include?(Rails.env)
-      options = { request_name: "#{user.class.to_s}-#{user.id.to_s}", recipient_name: user.name, recipient_email: user.email }
+      options = { request_name: "#{self.class.to_s}-#{self.id.to_s}", recipient_name: user.name, recipient_email: user.email }
       DocumentSignn::ZohoSign::DocumentCreateWorker.perform_async(user.booking_portal_client.document_sign.id.to_s, asset.id.to_s, options)
     end
   end

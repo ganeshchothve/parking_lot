@@ -5,8 +5,10 @@ require "net/https"
 module Zoho
   class Sign
     SCOPES = ["ZohoSign.documents.ALL"]
-    CLIENT_ID = '1000.9GM9U969TR3W6GZYJU3W5DTFSJR2KS'
-    CLIENT_SECRET = '776c4eb58da81056cc6ec5f5ed9db99a9a6bcefae8'
+    #CLIENT_ID = '1000.9GM9U969TR3W6GZYJU3W5DTFSJR2KS'
+    #CLIENT_SECRET = '776c4eb58da81056cc6ec5f5ed9db99a9a6bcefae8'
+    CLIENT_ID = ENV_CONFIG[:document_sign][:zoho][:client_id]
+    CLIENT_SECRET = ENV_CONFIG[:document_sign][:zoho][:client_secret]
     REDIRECT_PATH = "admin/client/document_sign/callback"
 
     def self.authorization_url base_domain
@@ -104,7 +106,7 @@ module Zoho
       end
       document_sign_detail.save
     end
-  
+
     def self.sign document_sign, document_sign_detail
       data = '{
         "requests":{
@@ -138,7 +140,7 @@ module Zoho
           ]
         }
       }'
-  
+
       url = URI("https://sign.zoho.in/api/v1/requests/#{document_sign_detail.request_id}/submit")
       http = Net::HTTP.new(url.host, url.port)
       http.use_ssl = true
@@ -159,7 +161,7 @@ module Zoho
       end
       document_sign_detail.save
     end
-  
+
     def self.download document_sign, document_sign_detail
       asset = document_sign_detail.asset
       str = "https://sign.zoho.in/api/v1/requests/#{document_sign_detail.request_id}/documents/#{document_sign_detail.document_id}/pdf"
@@ -178,7 +180,7 @@ module Zoho
         {errors: asset.errors.full_messages.uniq}
       end
     end
-  
+
     def self.recall document_sign, request_id
       url = URI("https://sign.zoho.in/api/v1/requests/#{request_id}/recall")
       http = Net::HTTP.new(url.host, url.port)
@@ -189,7 +191,7 @@ module Zoho
       response = http.request(request)
       JSON.parse response.read_body
     end
-  
+
     def self.remind document_sign, request_id
       url = URI("https://sign.zoho.in/api/v1/requests/#{request_id}/remind")
       http = Net::HTTP.new(url.host, url.port)
