@@ -91,6 +91,8 @@ Rails.application.routes.draw do
     end
     resource :client, except: [:show, :new, :create] do
       resources :templates, only: [:edit, :update, :index]
+      get 'document_sign/prompt'
+      get 'document_sign/callback'
     end
     namespace :audit do
       resources :records, only: [:index]
@@ -304,5 +306,6 @@ Rails.application.routes.draw do
   end
   match '/sell_do/lead_created', to: "api/sell_do/leads#lead_created", via: [:get, :post]
   match '/sell_do/pushed_to_sales', to: "api/sell_do/leads#pushed_to_sales", via: [:get, :post]
+  match '/zoho/download', to: "api/zoho/assets#download", via: [:get, :post]
 
 end
