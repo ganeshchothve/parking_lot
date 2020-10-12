@@ -33,7 +33,7 @@ module UserRequestStateMachine
     end
 
     def update_request
-      resolved_at = Time.now
+      self.set(resolved_at: Time.now)
       send_notifications
     end
 
