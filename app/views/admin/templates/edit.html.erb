@@ -1,4 +1,4 @@
-<%= form_for(@template, url: admin_client_template_path(@template), local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['templates'], "data-type": "json", id: 'template_form'}) do |f| %>
+<%= nested_form_for(@template, url: admin_client_template_path(@template), local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['templates'], "data-type": "json", id: 'template_form'}) do |f| %>
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -17,6 +17,48 @@
           <div class="form-group">
             <%= f.label :subject %>
             <%= f.text_field :subject, class: 'form-control' %>
+          </div>
+        <% end %>
+
+        <% if @template.is_a?(::Template::SmsTemplate) %>
+          <div class="form-group">
+            <%= f.label :temp_id %>
+            <%= f.text_field :temp_id, class: 'form-control' %>
+          </div>
+          <div class="form-group">
+            <%= f.label :dlt_entity_id %>
+            <%= f.text_field :dlt_entity_id, class: 'form-control' %>
+          </div>
+          <div class="form-group">
+            <%= f.label :dlt_header_id %>
+            <%= f.text_field :dlt_header_id, class: 'form-control' %>
+          </div>
+          <div class="form-group">
+            <%= f.label :dlt_temp_id %>
+            <%= f.text_field :dlt_temp_id, class: 'form-control' %>
+          </div>
+          <div class="template-variables">
+            <% editable_template_variable = policy([:admin, @template]).editable_field?("template_variables_attributes")%>
+            <% if editable_template_variable %>
+              <%= f.link_to_add "Add", :template_variables, :data => { :target => ".template-variables" } %>
+            <% end %>
+            <%= f.fields_for :template_variables do |adj|%>
+              <%= adj.link_to_remove icon("far", "times-circle") %>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= adj.label :number, class: 'label-required' %>
+                    <%= adj.number_field :number, class: "form-control", required: 'required', disabled: !editable_template_variable %>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= adj.label :content %>
+                    <%= adj.text_field :content, class: "form-control", disabled: !editable_template_variable %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
           </div>
         <% end %>
 

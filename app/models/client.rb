@@ -41,6 +41,7 @@ class Client
   field :mixpanel_token, type: String
   field :sms_provider_username, type: String
   field :sms_provider_password, type: String
+  field :sms_provider_telemarketer_id, type: String
   field :whatsapp_api_key, type: String
   field :whatsapp_api_secret, type: String
   field :whatsapp_vendor, type: String, default: 'twilio'

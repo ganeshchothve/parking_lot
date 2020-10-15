@@ -10,21 +10,39 @@ module Communication
       def perform sms_id
         sms = ::Sms.find sms_id
         client = sms.booking_portal_client
+        template = sms.sms_template
         params = {}
         params[:senderid] = client.sms_mask
-        params[:dest_mobileno] = sms.to.join(",")
-        params[:message] = sms.body
         params[:username] = client.sms_provider_username
         params[:pass] = client.sms_provider_password
         params[:response] = "Y"
-
-        uri = URI("http://www.smsjust.com/blank/sms/user/urlsms.php")
+        params[:dest_mobileno] = sms.to.join(",")
+        sms.variable_list.each do |v|
+          params["F#{v[:id]}".to_sym] = v[:value]
+        end
+        if client.sms_provider_telemarketer_id.present?
+          params[:tempid] = template.temp_id
+          params[:tmid] = client.sms_provider_telemarketer_id
+          params[:dlttempid] = template.dlt_temp_id
+          params[:dltheaderid] = template.dlt_header_id
+          params[:dltentityid] = template.dlt_entity_id
+          uri = URI("http://www.smsjust.com/blank/sms/user/urlsmstemp.php")
+        else
+          params[:message] = sms.body
+          uri = URI("http://www.smsjust.com/blank/sms/user/urlsms.php")
+        end
         uri.query = URI.encode_www_form(params)
         response = Net::HTTP.get_response(uri).body
 
         attrs = { response: response, sms_gateway: "sms_just" }
 
-        attrs[:status] = response.starts_with?("ES") ? 'failed' : 'sent'
+        if response.starts_with?("ES") || response.downcase.gsub(/\s+/, "") == "messageisblank" || response.downcase.gsub(/\s+/, "") == "youhaveexceededyoursmslimit." || response.downcase.gsub(/\s+/, "") == "accountisexpire"
+          sms.set(status: "fail")
+          return {status:"fail", remote_id: response}
+        else
+          sms.set(status: "sent", sent_on: Time.now)
+          return {status:"success", remote_id: response}
+        end
         attrs[:sent_on] = Time.now if attrs[:status] == 'sent'
         sms.set(attrs)
         { status: attrs[:status], remote_id: response }

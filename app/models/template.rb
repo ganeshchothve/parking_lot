@@ -7,7 +7,6 @@ class Template
 
   belongs_to :booking_portal_client, class_name: "Client"
 
-
   validates :content, presence: true
 
   def parsed_content object

@@ -19,6 +19,7 @@ class Sms
   field :sent_on, type: DateTime
   field :status, type: String, default: "scheduled"
   field :sms_gateway, type: String
+  field :variable_list, type: Array
 
   belongs_to :sms_template, class_name: 'Template::SmsTemplate', optional: true
 
