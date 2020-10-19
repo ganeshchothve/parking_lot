@@ -2,12 +2,16 @@ class SmsObserver < Mongoid::Observer
   def before_create sms
     sms.to ||= []
     sms.to += [sms.recipient.phone] if sms.recipient_id.present? && sms.recipient.phone.present?
-    if sms.sms_template_id.present?
+    if sms.sms_template_id.present? && sms_template = Template::SmsTemplate.where(id: sms.sms_template_id).first
       begin
-        sms_template = Template::SmsTemplate.find sms.sms_template_id
         sms.body = sms_template.parsed_content(sms.triggered_by)
       rescue => e
         sms.body = ""
+      end
+      begin
+        sms.variable_list = sms_template.template_variables.map{ |v| {id: v.number, value: v.value(sms.triggered_by)} }.compact
+      rescue => e
+        sms.variable_list = []
       end
     else
       sms.body = TemplateParser.parse(sms.body, sms.triggered_by)

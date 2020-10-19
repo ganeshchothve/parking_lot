@@ -603,7 +603,10 @@ en:
         name: 'Name'
         content: 'Content'
         type: 'Type'
-
+        temp_id: "Template ID"
+        dlt_entity_id: "DLT Entity ID"
+        dlt_header_id: "DLT Header ID"
+        dlt_temp_id: "DLT Template ID"
       user_request:
         request_type: 'Request type'
         _type: 'Request type'
