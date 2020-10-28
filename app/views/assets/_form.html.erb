@@ -1,6 +1,7 @@
 <div class = "new_asset">
   <div class="row mb-4">
     <div class="col-10">
+      <div class="alert alert-danger hidden asset-error-msg" role="alert" style="color:red;background:white"></div>
       <% options = assetable_document_types(assetable) %>
       <%= select_tag "document_type", options_for_select(options, options.first[1]), {prompt: "Select", class: "selectize", required: 'required'} %>
       <div class = "text-muted small pb-2">Upload documents in following formats - jpg, jpeg, png, pdf </div>
