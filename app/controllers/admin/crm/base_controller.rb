@@ -16,6 +16,7 @@ class Admin::Crm::BaseController < ApplicationController
     @crm.assign_attributes(permitted_attributes([:admin, @crm]))
     respond_to do |format|
       if @crm.save
+        @crm.generate_api_key!
         format.html { redirect_to admin_crm_base_index_path, notice: t('controller.crm/base.create.success') }
         format.json { render json: @crm, status: :created }
       else

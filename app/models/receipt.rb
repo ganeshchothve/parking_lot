@@ -13,6 +13,7 @@ class Receipt
   include CrmIntegration
   extend FilterByCriteria
 
+  THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   OFFLINE_PAYMENT_MODE = %w[cheque rtgs imps card_swipe neft]
   PAYMENT_TYPES = %w[agreement stamp_duty]
   PAYMENT_MODES = %w[cheque rtgs imps card_swipe neft online]

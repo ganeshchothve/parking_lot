@@ -18,6 +18,7 @@ module BulkUpload
       costs = {}
       data = {}
       parameters = {}
+      crms = {}
       csv.headers.each_with_index do |value, index|
         if value.match(/^parameters\|/i)
           parameters[index] = value.split("|").last.strip
@@ -25,6 +26,8 @@ module BulkUpload
           costs[index] = value.split("|")[1..2].map(&:strip)
         elsif value.match(/^data\|/i)
           data[index] = value.split("|").last.strip
+        elsif value.strip.match(/^crm\|/i)
+          crms[index] = value.split("|").last.strip
         end
       end
 
@@ -134,6 +137,14 @@ module BulkUpload
             end
             parameters.each do |index, name|
               project_unit.parameters.build(name: name, value: row[index], key: name.gsub(/[\W_]+/i, "_").downcase)
+            end
+            crms.each do |index, crm_id|
+              _crm = Crm::Base.where(id: crm_id).first
+              if _crm
+                project_unit.third_party_references.build(crm_id: _crm.id, reference_id: row[index])
+              else
+                project_unit.errors.add :base, 'Crm not registered with the system.'
+              end
             end
             if project_unit.save
               if floor_plan_urls.present?

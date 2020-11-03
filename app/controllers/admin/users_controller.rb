@@ -206,11 +206,20 @@ class Admin::UsersController < AdminController
   private
 
   def set_user
-    @user = if params[:id].blank?
-              current_user
-            else
+    @user = if params[:crm_client_id].present? && params[:id].present?
+              find_user_with_reference_id(params[:crm_client_id], params[:id])
+            elsif params[:id].present?
               User.where(id: params[:id]).first || User.where(lead_id: params[:id]).first
+            else
+              current_user
             end
+    redirect_to root_path, alert: t('controller.users.set_user_missing') if @user.blank?
+  end
+
+  def find_user_with_reference_id crm_id, reference_id
+    _crm = Crm::Base.where(id: crm_id).first
+    _user = User.where("third_party_references.crm_id": _crm.try(:id), "third_party_references.reference_id": reference_id ).first
+    _user
   end
 
   def authorize_resource

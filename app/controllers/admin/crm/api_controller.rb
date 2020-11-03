@@ -56,7 +56,7 @@ class Admin::Crm::ApiController < ApplicationController
     if request.xhr?
       render layout: false
     else
-      redirect_to request.referrer || dashboard_path, @response
+      redirect_to request.referrer || dashboard_path, notice: 'Request is being processed'
     end
   end
 
