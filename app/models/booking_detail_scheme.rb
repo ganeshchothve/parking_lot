@@ -11,8 +11,10 @@ class BookingDetailScheme
   attr_accessor :created_by_user
 
   belongs_to :project_unit, class_name: 'ProjectUnit'
+  belongs_to :project
   belongs_to :booking_detail, class_name: 'BookingDetail', optional: true
   belongs_to :user, optional: true
+  belongs_to :lead, optional: true
   belongs_to :approved_by, class_name: "User", optional: true
   belongs_to :created_by, class_name: "User"
   belongs_to :booking_portal_client, class_name: "Client"

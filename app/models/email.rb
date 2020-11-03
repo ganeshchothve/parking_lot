@@ -34,6 +34,7 @@ class Email
 
   # Associations
   belongs_to :booking_portal_client, class_name: 'Client', inverse_of: :emails
+  belongs_to :project, optional: true
   belongs_to :email_template, class_name: 'Template::EmailTemplate', optional: true
   has_and_belongs_to_many :recipients, class_name: "User", inverse_of: :received_emails, validate: false
   has_and_belongs_to_many :cc_recipients, class_name: "User", validate: false, inverse_of: :cced_emails

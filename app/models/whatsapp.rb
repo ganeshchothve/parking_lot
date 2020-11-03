@@ -34,6 +34,7 @@ class Whatsapp
   belongs_to :recipient, class_name: 'User', inverse_of: :received_whatsapps, optional: true
   belongs_to :triggered_by, polymorphic: true, optional: true, class_name: 'User'
   belongs_to :booking_portal_client, class_name: 'Client'
+  belongs_to :project, validate: false
   belongs_to :whatsapp_template, class_name: 'Template::WhatsappTemplate', optional: true
 
   # Validations

@@ -43,6 +43,8 @@ class Receipt
   attr_accessor :swap_request_initiated
 
   belongs_to :user
+  belongs_to :lead
+  belongs_to :project
   belongs_to :booking_detail, optional: true
   belongs_to :creator, class_name: 'User'
   belongs_to :account, foreign_key: 'account_number', optional: true

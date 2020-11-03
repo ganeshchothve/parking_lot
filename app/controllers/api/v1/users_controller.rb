@@ -15,8 +15,6 @@ class Api::V1::UsersController < ApisController
     else
       render json: {errors: @user.errors.full_messages.uniq}, status: :unprocessable_entity
     end
-   rescue StandardError => e
-    create_error_log e
   end
 
   #
@@ -32,8 +30,6 @@ class Api::V1::UsersController < ApisController
     else
       render json: {errors: @user.errors.full_messages.uniq}, status: :unprocessable_entity
     end
-    rescue StandardError => e
-      create_error_log e
   end
 
   private

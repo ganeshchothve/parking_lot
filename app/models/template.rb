@@ -6,6 +6,7 @@ class Template
   field :is_active, type: Boolean, default: false
 
   belongs_to :booking_portal_client, class_name: "Client"
+  belongs_to :project
 
   validates :content, presence: true
 

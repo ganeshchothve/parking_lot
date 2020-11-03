@@ -13,6 +13,7 @@ class Search
   field :results_count, type: Integer
   # field :result_ids, type: Array
 
+  belongs_to :lead
   belongs_to :user
   belongs_to :project_unit, optional: true
   belongs_to :project_tower, optional: true

@@ -2,6 +2,7 @@ class Project
   include Mongoid::Document
   include Mongoid::Timestamps
   include ArrayBlankRejectable
+  include CrmIntegration
 
   field :name, type: String
   field :developer_name, type: String
@@ -71,16 +72,93 @@ class Project
   field :foyer_link, type: String
   field :rera_registration_no, type: String
 
+
+  ##
+  # Copied from client for multi project
+  #
+  field :registration_name, type: String
+  field :cin_number, type: String
+  field :website_link, type: String
+  field :selldo_client_id, type: String
+  field :selldo_form_id, type: String
+  field :selldo_channel_partner_form_id, type: String
+  field :selldo_gre_form_id, type: String
+  field :selldo_api_key, type: String
+  field :selldo_default_srd, type: String
+  field :selldo_cp_srd, type: String
+  field :helpdesk_number, type: String
+  field :helpdesk_email, type: String
+  field :notification_email, type: String
+  field :notification_numbers, type: String
+  field :allowed_bookings_per_user, type: Integer, default: 3
+  field :sender_email, type: String
+  field :email_domains, type: Array, default: []
+  field :booking_portal_domains, type: Array, default: []
+  field :cp_disclaimer, type: String
+  field :disclaimer, type: String
+  field :support_number, type: String
+  field :support_email, type: String
+  field :channel_partner_support_number, type: String
+  field :channel_partner_support_email, type: String
+  field :cancellation_amount, type: Float
+  field :area_unit, type: String, default: "sqft"
+  field :enable_actual_inventory, type: Array, default: []
+  field :enable_live_inventory, type: Array, default: []
+  field :blocking_amount, type: Integer, default: 30000
+  field :blocking_days, type: Integer, default: 10
+  field :holding_minutes, type: Integer, default: 15
+  field :terms_and_conditions, type: String
+  field :ga_code, type: String
+  field :gtm_tag, type: String
+
+  field :enable_daily_reports, type: Hash, default: {"payments_report": false}
+
+  field :email_header, type: String, default: '<div class="container">
+    <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
+    <div class="mt-3"></div>'
+  field :email_footer, type: String, default: '<div class="mt-3"></div>
+    <div class="card mb-3">
+      <div class="card-body">
+        Thanks,<br/>
+        <%= current_project.name %>
+      </div>
+    </div>
+    <div style="font-size: 12px;">
+      If you have any queries you can reach us at <%= current_client.support_number %> or write to us at <%= current_client.support_email %>. Please click <a href="<%= current_client.website_link %>">here</a> to visit our website.
+    </div>
+    <hr/>
+    <div class="text-muted text-center" style="font-size: 12px;">
+      © <%= Date.today.year %> <%= current_client.name %>. All Rights Reserved. | MAHARERA ID: <%= current_project.rera_registration_no %>
+    </div>
+    <% if current_client.address.present? %>
+      <div class="text-muted text-center" style="font-size: 12px;">
+        <%= current_client.address.to_sentence %>
+      </div>
+    <% end %>
+    <div class="mt-3"></div>
+  </div>'
+
   mount_uploader :logo, DocUploader
   mount_uploader :mobile_logo, DocUploader
+  mount_uploader :brochure, DocUploader
 
   has_many :project_units
   has_many :schemes
   has_many :project_towers
   has_one :address, as: :addressable
   belongs_to :booking_portal_client, class_name: 'Client'
+  has_many :templates
+  has_many :sms_templates, class_name: 'Template::SmsTemplate'
+  has_many :email_templates, class_name: 'Template::EmailTemplate'
+  has_many :ui_templates, class_name: 'Template::UITemplate'
+  has_many :emails, class_name: 'Email'
+  has_many :smses, class_name: 'Sms'
+  has_many :whatsapps, class_name: 'Whatsapp'
+  has_many :assets, as: :assetable
 
   validates :name, :rera_registration_no, presence: true
+  validates :enable_actual_inventory, array: { inclusion: {allow_blank: true, in: (User::ADMIN_ROLES + User::BUYER_ROLES) } }
+  validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
 
   accepts_nested_attributes_for :address, allow_destroy: true #, :brochure_templates, :price_quote_templates, :images
   index(client_id:1)
@@ -108,5 +186,13 @@ class Project
 
   def default_scheme
     Scheme.where(project_id: self.id, default: true).first
+  end
+
+  def enable_actual_inventory?(user)
+    if user.present?
+      enable_actual_inventory.include?(user.role)
+    else
+      false
+    end
   end
 end

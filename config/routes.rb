@@ -302,6 +302,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :users, only: [:create, :update]
+      resources :leads, only: [:create, :update]
       resources :channel_partners, only: [:create, :update]
     end
   end

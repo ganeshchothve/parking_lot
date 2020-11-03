@@ -17,13 +17,15 @@ class UserRequest
   # belongs_to :booking_detail
   # belongs_to :receipt, optional: true
   belongs_to :requestable, polymorphic: true
+  belongs_to :lead
   belongs_to :user
+  belongs_to :project
   belongs_to :resolved_by, class_name: 'User', optional: true
   belongs_to :created_by, class_name: 'User'
   has_many :assets, as: :assetable
   has_many :notes, as: :notable
 
-  validates :user_id, :requestable_id, :requestable_type, presence: true
+  validates :lead_id, :user_id, :requestable_id, :requestable_type, presence: true
   validates :resolved_by, presence: true, if: proc { |user_request| user_request.status == 'resolved' }
 
   validates :status, inclusion: { in: STATUS }
