@@ -57,14 +57,15 @@ else
   client.update(attrs) if attrs.present?
 end
 
-project = Project.first || Project.new(
-  name: (ENV['project_name'].presence || 'Amura Towers'),
+project_name = ENV['project_name'].presence || 'Amura Towers'
+project = Project.where(name: project_name).first || Project.new(
+  name: project_name,
   remote_logo_url: "https://image4.owler.com/logo/amura_owler_20160227_194208_large.png",
   rera_registration_no: (ENV['rera_no'].presence || "RERA-AMURA-123"),
   booking_portal_client: client
 )
 
-if project.new_record?
+if project && project.new_record?
   project.save
 else
   attrs = {}
