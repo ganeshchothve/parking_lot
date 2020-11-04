@@ -346,6 +346,44 @@ en:
         Razorpay: Razorpay Payment Gateway
         CCAvenue: CCAvenue Payment Gateway
 
+      project:
+        name: 'Project Name'
+        allowed_bookings_per_user: 'Bookings allowed per user'
+        selldo_client_id: 'SellDo Client ID'
+        selldo_form_id: 'SellDo Form ID'
+        selldo_channel_partner_form_id: 'SellDo Form ID - For Channel Partners'
+        selldo_gre_form_id: 'SellDo Form ID - Used by Non Channel Partners'
+        selldo_api_key: 'SellDo API Key (Use generic Api Client)'
+        selldo_default_srd: 'SellDo Default SRD'
+        selldo_cp_srd: 'SellDo Channel Partner SRD'
+        notification_email: 'Notification Email (all emails are sent here)'
+        notification_numbers: 'Notification Numbers (Key SMS Reports are sent here)'
+        sender_email: 'Sender Email Address'
+        email_domains: 'Email Domains (to detect employee users)'
+        booking_portal_domains: 'Booking Portal Domains (where the portal is hosted)'
+        registration_name: 'Registration Name (Used in Payments)'
+        cin_number: 'CIN Number'
+        website_link: 'Website Link (Used in email communication)'
+        cp_disclaimer: 'Channel Partner Disclaimer (to be shown to Channel Partners during registration)'
+        disclaimer: 'Disclaimer'
+        support_number: 'Support Phone'
+        support_email: 'Support Email'
+        helpdesk_number: 'Helpdesk Phone (For after booking CRM Help)'
+        helpdesk_email: 'Helpdesk Email (For after booking CRM Help)'
+        ga_code: "Google Analytics Code (UA-XXXXXXXXX-Y)"
+        gtm_tag: "GTM Tag (Please add a the entire JS code)"
+        channel_partner_support_number: 'Support Number (For Channel Partners)'
+        channel_partner_support_email: 'Support Email (For Channel Partner)'
+        erp: 'ERP'
+        cancellation_amount: 'Cancellation Amount (displayed to Customers)'
+        area_unit: 'Unit of Area (used to display inventory)'
+        enable_actual_inventory: 'Enable Inventory for these user roles'
+        enable_channel_partners: 'Enable Channel Partners'
+        blocking_amount: 'Min. Amount for Blocking an Unit'
+        blocking_days: 'Unit to be blocked for (Days)'
+        holding_minutes: 'Unit to be held for (Minutes)'
+        rera_registration_no: 'RERA Registration Number'
+
       cost:
         name: "Name"
         formula: "Formula"
@@ -964,6 +1002,10 @@ en:
       new:
         header: 'Add Note'
         link_name: 'Add Note'
+
+    projects:
+      index:
+        link_name: 'Projects'
 
     project_units:
       send_cost_sheet_and_payment_schedule:
