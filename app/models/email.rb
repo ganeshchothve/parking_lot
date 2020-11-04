@@ -41,6 +41,8 @@ class Email
   has_many :attachments, as: :assetable, class_name: "Asset"
   accepts_nested_attributes_for :attachments
 
+  index(created_at: 1)
+
   default_scope -> {desc(:created_at)}
 
   # Methods
