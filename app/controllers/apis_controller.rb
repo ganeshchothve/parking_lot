@@ -1,14 +1,8 @@
 class ApisController < ActionController::API
   before_action :authenticate_request
-
-  def create_error_log e
-    _error_code = SecureRandom.hex(4)
-    Rails.logger.error "-------#{_error_code}-#{e.message} --------"
-    render json: { errors: ["Something went wrong. Please contact support team & share the error code: #{_error_code}"] }, status: :unprocessable_entity
-  end
+  around_action :log_standard_errors
 
   private
-
 
   def authenticate_request
     flag = false
@@ -30,4 +24,19 @@ class ApisController < ActionController::API
     end
     render json: { errors: [message] }, status: :unauthorized unless flag
   end
+
+  def log_standard_errors
+    begin
+      yield
+    rescue StandardError => e
+      create_error_log e
+    end
+  end
+
+  def create_error_log e
+    _error_code = SecureRandom.hex(4)
+    Rails.logger.error "[API-V1][ERR] [#{_error_code}] #{e.message} - #{e.backtrace}"
+    render json: { errors: ["Something went wrong. Please contact support team & share the error code: #{_error_code}"] }, status: 500
+  end
+
 end

@@ -43,7 +43,9 @@ class BookingDetail
   embeds_many :costs, as: :costable
   embeds_many :data, as: :data_attributable
   embeds_many :tasks, cascade_callbacks: true
+  belongs_to :project
   belongs_to :project_unit
+  belongs_to :lead
   belongs_to :user
   belongs_to :manager, class_name: 'User', optional: true
   belongs_to :search, optional: true

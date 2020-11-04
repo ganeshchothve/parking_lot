@@ -2,6 +2,7 @@ class ProjectTower
   include Mongoid::Document
   include Mongoid::Timestamps
   include ArrayBlankRejectable
+  include CrmIntegration
   extend FilterByCriteria
 
   # Add different types of documents which are uploaded on project_tower
