@@ -64,7 +64,8 @@
           data.formData = $(this).data("form-data");
           data.submit();
         } else { // display pop up
-          Amura.global_error_handler(errors.join());
+          // TODO move this to a bootstrap alert
+          Amura.global_error_handler(errors)
         }
       },
       done: function (e, data) {
