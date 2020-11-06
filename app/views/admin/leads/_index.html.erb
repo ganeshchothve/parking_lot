@@ -1,0 +1,55 @@
+<table class='table my-customer-table responsive-tbl'>
+  <thead class="th-default">
+    <thead>
+      <tr class="bg-gradient-cd white">
+        <th><%= User.human_attribute_name('name_email_phone') %></th>
+        <th><%= Lead.human_attribute_name('project_id') %></th>
+        <th><%= Receipt.model_name.human %></th>
+        <th class="text-right"><%= t('global.action', count: 3) %></th>
+      </tr>
+    </thead>
+  </thead>
+  <tbody>
+    <% leads.each do |lead| %>
+      <tr>
+        <td data-title="Name">
+          <span>
+            <% if policy([ current_user_role_group, lead]).show? %>
+              <%= link_to lead.name, [current_user_role_group, lead ] %>
+            <% else %>
+              <%= lead.name %>
+            <% end %>
+          </span>
+          <% if lead.email.present? %>
+            <span class="email-icon">
+              <%= lead.email || "" %>
+            </span>
+          <% end %>
+          <% if lead.phone.present? %>
+            <span class="phone-icon">
+              <%= lead.phone || "" %>
+            </span>
+          <% end %>
+        </td>
+
+        <td data-title="<%= Lead.human_attribute_name('project_id') %>"><span><%= lead.project_name %></span></td>
+
+        <td data-title="payments">
+          <span><%= t("global.boolean.#{lead.is_payment_done? }") %></span>
+        </td>
+
+        <td>
+          <div class="dropdown show text-right">
+            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+              <%= render "#{current_user_role_group}/leads/links", lead: lead %>
+            </div>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pt-2">
+  <%= will_paginate leads, list_classes: %w(pagination justify-content-center) %>
+</div>

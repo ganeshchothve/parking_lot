@@ -1,0 +1,6 @@
+<%= f.fields_for :third_party_references do |tpr_form| %>
+  <div class='form-group'>
+    <%= label_tag Crm::Base.where(id: tpr_form.object.crm_id).first.try(:name) || 'CRM' %>
+    <%= tpr_form.text_field :reference_id, class: 'form-control' %>
+  </div>
+<% end %>

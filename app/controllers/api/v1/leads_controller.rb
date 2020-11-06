@@ -75,6 +75,7 @@ class Api::V1::LeadsController < ApisController
       @user = User.new(user_create_params)
       if @user.save
         @user.update_external_ids(user_third_party_reference_params, @crm.id) if user_third_party_reference_params
+        @user.confirm
       else
         render json: {errors: @user.errors.full_messages.uniq}, status: :unprocessable_entity
       end

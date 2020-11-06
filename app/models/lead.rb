@@ -26,4 +26,19 @@ class Lead
   #has_many :received_smses, class_name: 'Sms', inverse_of: :recipient
   #has_many :received_whatsapps, class_name: 'Whatsapp', inverse_of: :recipient
 
+  delegate :name, :email, :phone, to: :user, prefix: false, allow_nil: true
+  delegate :name, to: :project, prefix: true, allow_nil: true
+
+
+  def is_payment_done?
+    receipts.where('$or' => [{ status: { '$in': %w(success clearance_pending) } }, { payment_mode: {'$ne': 'online'}, status: {'$in': %w(pending clearance_pending success)} }]).present?
+  end
+
+  class << self
+
+    def user_based_scope(user, _params = {})
+      custom_scope = {}
+    end
+
+  end
 end

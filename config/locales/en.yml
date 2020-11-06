@@ -184,8 +184,11 @@ en:
         one: KYC
         other: KYCs
       user:
-        one: User & Customer
-        other: Users & Customers
+        one: User Account
+        other: Users Accounts
+      lead:
+        one: Customer
+        other: Customers
 
     attributes:
       crm:
@@ -788,6 +791,9 @@ en:
         employee_user: 'Employee'
         direct: Direct
 
+      lead:
+        project_id: 'Project'
+
       user/file_types:
         home_loan_application_form: 'Home Loan Application Form'
         photo_identity_proof: 'Photo Identity Proof'
@@ -1148,7 +1154,7 @@ en:
         link_name: "Edit %{role}"
         header: 'Edit %{role}'
       index:
-        link_name: 'Users & Customers'
+        link_name: 'Users Accounts'
       new:
         link_name: 'Add %{role}'
         header: 'Add %{role}'
@@ -1164,6 +1170,17 @@ en:
         link_name: '%{role} Details'
         header: 'Overview'
       send_payment_link: 'Payment link sent to user'
+
+    leads:
+      index:
+        link_name: 'Customers'
+      show:
+        link_name: 'Customer Details'
+        header: 'Overview'
+      edit:
+        link_name: "Edit Customer"
+        header: 'Edit Customer'
+
     user_kycs:
       index:
         link_name: 'KYCs'

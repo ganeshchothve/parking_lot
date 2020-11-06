@@ -13,7 +13,7 @@ class ReceiptPolicy < ApplicationPolicy
 
   def permitted_attributes params={}
     attributes = []
-    attributes += [:payment_mode] if record.new_record? || record.status == 'pending'
+    attributes += [:payment_mode, :lead_id, :project_id] if record.new_record? || record.status == 'pending'
     if (record.user_id.present? && record.booking_detail_id.blank?) && %w[pending clearance_pending success available_for_refund].include?(record.status)
       attributes += [:booking_detail_id]
     end

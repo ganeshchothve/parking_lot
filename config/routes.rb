@@ -145,6 +145,7 @@ Rails.application.routes.draw do
       resources :accounts, controller: 'accounts'
     end
 
+    resources :leads, only: [:index, :show]
     resources :users do
 
       member do

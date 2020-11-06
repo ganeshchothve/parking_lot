@@ -33,7 +33,7 @@ class Admin::ReceiptsController < AdminController
   # GET "/admin/users/:user_id/receipts/new"
   def new
     @receipt = Receipt.new(
-      creator: current_user, user_id: @user, payment_mode: 'cheque',
+      creator: current_user, user_id: @user, lead: @lead, payment_mode: 'cheque',
       total_amount: current_client.blocking_amount
     )
     authorize([:admin, @receipt])
@@ -153,7 +153,9 @@ class Admin::ReceiptsController < AdminController
 
   def set_user
     @user = User.where(_id: params[:user_id]).first
+    @lead = @user.leads.where(id: params[:lead_id] || params.dig(:receipt, :lead_id)).first
     redirect_to dashboard_path, alert: 'User Not found', status: 404 if @user.blank?
+    redirect_to dashboard_path, alert: 'Lead Not found', status: 404 if @lead.blank?
   end
 
   def set_receipt
