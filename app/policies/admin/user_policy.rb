@@ -40,6 +40,10 @@ class Admin::UserPolicy < UserPolicy
     end
   end
 
+  def reactivate_account?
+    %w[admin superadmin].include?(user.role) && record.expired?
+  end
+
   def confirm_via_otp?
     !record.confirmed? && record.phone.present? && new? && !user.buyer?
   end
