@@ -37,7 +37,7 @@ class Api::V1::LeadsController < ApisController
         render json: {errors: @lead.errors.full_messages.uniq}, status: :unprocessable_entity
       end
     else
-      render json: {errors: ["Lead with reference_id #{params[:lead][:reference_id]} already exists"]}, status: :unprocessable_entity
+      render json: {errors: ["Lead with reference_id '#{params[:lead][:reference_id]}' already exists"]}, status: :unprocessable_entity
     end
   end
 
@@ -63,7 +63,7 @@ class Api::V1::LeadsController < ApisController
         render json: {errors: @lead.errors.full_messages.uniq}, status: :unprocessable_entity
       end
     else
-      render json: {errors: ["Lead with reference_id #{params[:lead][:reference_id]} already exists"]}, status: :unprocessable_entity
+      render json: {errors: ["Lead with reference_id '#{params[:lead][:reference_id]}' already exists"]}, status: :unprocessable_entity
     end
   end
 
@@ -71,8 +71,8 @@ class Api::V1::LeadsController < ApisController
 
   # Checks if the required reference_id's are present. reference_id is the third party CRM resource id.
   def reference_ids_present?
-    render json: { errors: ['project_id is required to create Lead'] }, status: :bad_request and return unless params.dig(:lead, :project_id)
-    render json: { errors: ['Lead reference_id is required'] }, status: :bad_request and return unless params.dig(:lead, :reference_id)
+    render json: { errors: ['project_id is required to create Lead'] }, status: :bad_request and return unless params.dig(:lead, :project_id).present?
+    render json: { errors: ['Lead reference_id is required'] }, status: :bad_request and return unless params.dig(:lead, :reference_id).present?
   end
 
   # Sets or creates the user object if it doesn't exists.
@@ -107,7 +107,7 @@ class Api::V1::LeadsController < ApisController
     else
       # set project
       @project = Project.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": project_reference_id).first
-      render json: { errors: ["Project with reference id #{project_reference_id} not found"] }, status: :not_found and return unless @project
+      render json: { errors: ["Project with reference id '#{project_reference_id}' not found"] }, status: :not_found and return unless @project
 
       # modify params
       params[:lead][:project_id] = @project.id.to_s
@@ -131,12 +131,12 @@ class Api::V1::LeadsController < ApisController
 
   def set_user
     @user = User.or(check_and_build_query_for_finding_user).first
-    render json: { errors: ["User with this email/phone not found"] }, status: :not_found unless @lead
+    render json: { errors: ["User with this email/phone not found"] }, status: :not_found unless @user
   end
 
   def set_lead
     @lead = @user.leads.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:id]).first
-    render json: { errors: ["Lead with reference_id #{params[:id]} not found"] }, status: :not_found unless @lead
+    render json: { errors: ["Lead with reference_id '#{params[:id]}' not found"] }, status: :not_found unless @lead
   end
 
   # Allows only certain parameters to be saved and updated.
@@ -157,17 +157,17 @@ class Api::V1::LeadsController < ApisController
   end
 
   def user_third_party_reference_params
-    { reference_id: params[:lead][:user_id] } if params.dig(:lead, :user_id)
+    { reference_id: params[:lead][:user_id] } if params.dig(:lead, :user_id).present?
   end
 
   def set_manager_through_reference_id
-    if manager_reference_id = params.dig(:lead, :manager_id)
+    if manager_reference_id = params.dig(:lead, :manager_id).present?
       @manager = User.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": manager_reference_id).first
       if @manager
         # modify params
         params[:lead][:manager_id] = @manager.id.to_s
       else
-        render json: {errors: ["Manager with reference id #{manager_reference_id} not found"]}, status: :not_found and return
+        render json: {errors: ["Manager with reference id '#{manager_reference_id}' not found"]}, status: :not_found and return
       end
     end
   end

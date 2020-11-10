@@ -167,6 +167,7 @@ Rails.application.routes.draw do
 
       match :confirm_via_otp, action: 'confirm_via_otp', as: :confirm_via_otp, on: :member, via: [:get, :patch]
 
+      resources :leads, only: :index
       resources :receipts, only: [:index, :new, :create, :edit, :update ] do
         get :resend_success, on: :member
         get :lost_receipt, on: :collection

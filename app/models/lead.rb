@@ -32,7 +32,7 @@ class Lead
   #has_many :received_smses, class_name: 'Sms', inverse_of: :recipient
   #has_many :received_whatsapps, class_name: 'Whatsapp', inverse_of: :recipient
 
-  validates_uniqueness_of :project_id, scope: :user_id
+  validates_uniqueness_of :user, scope: :project_id, message: 'already exists'
 
   delegate :name, :email, :phone, to: :user, prefix: false, allow_nil: true
   delegate :name, to: :project, prefix: true, allow_nil: true
@@ -56,7 +56,7 @@ class Lead
 
   class << self
 
-    def user_based_scope(user, _params = {})
+    def user_based_scope(user, params = {})
       custom_scope = {}
       case user.role.to_sym
       when :channel_partner
@@ -67,6 +67,8 @@ class Lead
         cp_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
         custom_scope = { manager_id: { "$in": User.where(role: 'channel_partner').in(manager_id: cp_ids).distinct(:id) }  }
       end
+      custom_scope = { user_id: params[:user_id] } if params[:user_id].present?
+      custom_scope = { user_id: user.id } if user.buyer?
       custom_scope
     end
 

@@ -68,28 +68,6 @@
             <% end %>
 
             <ul class="booking-apart-info clear">
-              <% if user.buyer? && current_client.enable_actual_inventory?(current_user) %>
-                <li>
-                  <span><%= t('mongoid.attributes.user.total_amount_paid') %></span>
-                  <small class="text-muted"><%= t('users.total_amount_paid.hint')%></small>
-                  <p>
-                    <%= user.total_amount_paid.present? ? number_to_indian_currency(user.total_amount_paid.round) : '-' %>
-                  </p>
-                </li>
-                <li>
-                  <span><%= t('mongoid.attributes.user.total_balance_pending') %></span>
-                  <small class="text-muted"><%= t('users.total_balance_pending.hint')%></small>
-                  <p><%= user.total_balance_pending.present? ? number_to_indian_currency(user.total_balance_pending.round) : '-' %></p>
-                </li>
-                <li>
-                  <span><%= t('mongoid.attributes.user.total_unattached_balance') %></span>
-                  <small class="text-muted"><%= t('users.total_unattached_balance.hint')%></small>
-                  <p><%= user.total_unattached_balance.present? ? number_to_indian_currency(user.total_unattached_balance.round) : '-' %></p>
-                </li>
-              <% end %>
-            </ul>
-
-            <ul class="booking-apart-info clear">
               <li>
                 <span> <%= t('mongoid.attributes.user.created_at') %></span>
                 <p><%= l(user.created_at.in_time_zone(current_user.time_zone)) %></p>

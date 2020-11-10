@@ -1169,6 +1169,8 @@ en:
       show:
         link_name: '%{role} Details'
         header: 'Overview'
+      leads:
+        link_name: 'Show Deals'
       send_payment_link: 'Payment link sent to user'
 
     leads:
