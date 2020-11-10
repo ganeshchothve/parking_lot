@@ -1,18 +1,3 @@
-<% if policy([:admin, BookingDetail.new(user: user, project_unit: ProjectUnit.new(status: 'available', blocking_amount: current_client.blocking_amount))]).show_booking_link? %>
-  <%= link_to t('controller.searches.new.link_name'), new_admin_user_search_path(user.id), class: "dropdown-item" %>
-<% end %>
-
-<% if policy([:admin, user]).confirm_user? %>
-  <%= link_to t('controller.users.confirm_user.link_name'), confirm_user_admin_user_path(user), method: :patch,
-  class: "dropdown-item" %>
-<% end %>
-
-<% hold_booking = user.booking_details.where(status: 'hold').first %>
-
-<% if hold_booking.present? #&& policy([current_user_role_group, hold_booking]).block? %>
-  <%= link_to t('controller.booking_details.continue_booking.link_name'), checkout_user_search_path(user.get_search(hold_booking.project_unit_id)), class: "dropdown-item" %>
-<% end %>
-
 <% if policy([:admin, user]).block_lead? %>
   <%= link_to t('controller.users.block_lead.link_name'), block_lead_admin_user_path(user),
   class: "dropdown-item modal-remote-form-link" %>
@@ -23,17 +8,9 @@
   class: "dropdown-item" %>
 <% end %>
 
-<% if policy([:admin, Receipt.new(user: user)]).new? %>
-  <%= link_to t('controller.receipts.new.link_name'), new_admin_user_receipt_path(user), class: "dropdown-item modal-remote-form-link" %>
-<% end %>
-
 <%# if policy([:admin, Crm::Base.new()]).choose_crm? && Crm::Api.where(resource_class: 'User').present? %>
   <%#= link_to t('controller.crms.choose_crm.link_name'), choose_crm_admin_crm_base_index_path(resource_id: user.id, resource_class: user.class), class: "dropdown-item " %>
 <%# end %>
-
-<% if !current_user.buyer? && policy([:admin, Receipt.new(user: user)]).lost_receipt? %>
-  <%= link_to t('controller.receipts.lost_receipt.link_name'), lost_receipt_admin_user_receipts_path(user), class: "dropdown-item modal-remote-form-link" %>
-<% end %>
 
 <% if policy([:admin, user]).confirm_via_otp? %>
   <%= link_to t('controller.users.confirm_via_otp.link_name'), confirm_via_otp_admin_user_path(user.id), class: "dropdown-item modal-remote-form-link" %>
@@ -67,7 +44,7 @@
 <% else %>
   <%= link_to t('controller.users.resend_password_instructions.link_name'), resend_password_instructions_admin_user_path(user), class: "dropdown-item" %>
   <% if policy([:admin, user]).send_payment_link? %>
-    <%= link_to 'Send Payment link', send_payment_link_admin_user_path(user), class: "dropdown-item" %>
+    <%# link_to 'Send Payment link', send_payment_link_admin_user_path(user), class: "dropdown-item" %>
   <% end %>
 <% end %>
 

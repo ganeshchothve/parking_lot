@@ -187,8 +187,8 @@ en:
         one: User Account
         other: Users Accounts
       lead:
-        one: Customer
-        other: Customers
+        one: Deal
+        other: Deals
 
     attributes:
       crm:
@@ -1173,9 +1173,9 @@ en:
 
     leads:
       index:
-        link_name: 'Customers'
+        link_name: 'Deals'
       show:
-        link_name: 'Customer Details'
+        link_name: 'Show Details'
         header: 'Overview'
       edit:
         link_name: "Edit Customer"

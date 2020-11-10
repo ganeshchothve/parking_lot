@@ -9,6 +9,12 @@ class Lead
 
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
 
+  field :manager_change_reason, type: String
+  field :referenced_manager_ids, type: Array, default: []
+  field :iris_confirmation, type: Boolean, default: false
+
+  belongs_to :manager, class_name: 'User', optional: true
+
   belongs_to :user
   belongs_to :project
   has_many :receipts
@@ -26,6 +32,8 @@ class Lead
   #has_many :received_smses, class_name: 'Sms', inverse_of: :recipient
   #has_many :received_whatsapps, class_name: 'Whatsapp', inverse_of: :recipient
 
+  validates_uniqueness_of :project_id, scope: :user_id
+
   delegate :name, :email, :phone, to: :user, prefix: false, allow_nil: true
   delegate :name, to: :project, prefix: true, allow_nil: true
 
@@ -38,6 +46,16 @@ class Lead
 
     def user_based_scope(user, _params = {})
       custom_scope = {}
+      case user.role.to_sym
+      when :channel_partner
+        custom_scope[:'$or'] = [{manager_id: user.id}, {manager_id: nil, referenced_manager_ids: user.id, iris_confirmation: false}]
+      when :cp
+        custom_scope = { manager_id: { "$in": User.where(role: 'channel_partner', manager_id: user.id).distinct(:id) } }
+      when :cp_admin
+        cp_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
+        custom_scope = { manager_id: { "$in": User.where(role: 'channel_partner').in(manager_id: cp_ids).distinct(:id) }  }
+      end
+      custom_scope
     end
 
   end
