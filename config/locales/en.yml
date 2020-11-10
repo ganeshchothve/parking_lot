@@ -1175,11 +1175,11 @@ en:
       index:
         link_name: 'Deals'
       show:
-        link_name: 'Show Details'
+        link_name: 'Show Deal Details'
         header: 'Overview'
       edit:
-        link_name: "Edit Customer"
-        header: 'Edit Customer'
+        link_name: "Edit Deal"
+        header: 'Edit Deal'
 
     user_kycs:
       index:
@@ -1240,6 +1240,14 @@ en:
 
   users:
     account_confirmed: 'Account Confirmed'
+    total_amount_paid:
+      hint: '(you might have some payments pending clearance)'
+    total_balance_pending:
+      hint: '(you might have some payments pending clearance)'
+    total_unattached_balance:
+      hint: '(subject to clearance)'
+
+  leads:
     total_amount_paid:
       hint: '(you might have some payments pending clearance)'
     total_balance_pending:

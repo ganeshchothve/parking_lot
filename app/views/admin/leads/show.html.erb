@@ -1,56 +1,22 @@
 <div class="container mb-5">
   <div class="row justify-content-center">
     <div class="col-md-12">
-      <%= render 'users/overview', user: @user%>
-
-      <% if policy([:admin, Crm::Base.new()]).choose_crm? && apis = Crm::Base.active_apis(@user).presence %>
-        <div class="col-md-12 my-3 p-0">
-          <%= render 'admin/crm/base/crms', { apis: apis, resource: @user } %>
-        </div>
-      <% end %>
-
-      <% if @user.role?("channel_partner") || @user.role?("cp") %>
-        <!-- User List -->
-        <% users = User.where(manager_id: @user.id).paginate(page: 1) %>
-        <div class="separate-line container"></div>
-        <%= render 'users/section', users: users, name: User.model_name.human(count: users.total_entries ) %>
-      <% end %>
+      <%= render 'overview', lead: @lead %>
 
       <!-- booking_details -->
-      <% if @user.buyer? && current_client.enable_actual_inventory?(current_user) %>
+      <% if current_client.enable_actual_inventory?(current_user) %>
         <div class="separate-line container"></div>
         <%= render 'booking_details/section', booking_details: @booking_details %>
 
         <!-- receipts -->
         <div class="separate-line container"></div>
         <%= render 'receipts/section', receipts: @receipts %>
-
       <% end %>
 
       <!-- Note Summary -->
       <div class="separate-line container"></div>
-      <%= render 'notes/section', notable: @user %>
+      <%= render 'notes/section', notable: @lead %>
 
-      <!-- My Referrals -->
-      <div class="separate-line container"></div>
-      <%= render 'users/section', users: @referrals, name: Referral.model_name.human(count: @referrals.count) %>
-
-      <% if true #policy([:admin, TimeSlot]).index? %>
-        <div class="separate-line container"></div>
-        <%= render 'receipts/time_slot_section', user: @user %>
-      <% end %>
-
-      <% if current_user.role?('admin') %>
-        <div class="separate-line container"></div>
-        <%= render 'users/utm_params', user: @user %>
-      <% end %>
-
-      <% if current_client.external_api_integration? && policy([current_user_role_group, SyncLog.new]).index? %>
-        <div class="separate-line container"></div>
-        <div class="col-md-12 my-3 p-0">
-          <%#= render 'sync_logs/sync', { record: @user } %>
-        </div>
-      <% end %>
     </div>
   </div>
 </div>

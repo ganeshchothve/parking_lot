@@ -13,6 +13,26 @@ class Admin::LeadsController < AdminController
     end
   end
 
+  def show
+    @booking_details = @lead.booking_details.paginate(page: params[:page], per_page: params[:per_page])
+    @receipts = @lead.receipts.order('created_at DESC').paginate(page: params[:page], per_page: params[:per_page])
+  end
+
+  def edit
+    render layout: false
+  end
+
+  def update
+    respond_to do |format|
+      if @lead.update(permitted_attributes([:admin, @lead]))
+        format.html { redirect_to admin_leads_path, notice: 'Lead successfully updated.' }
+      else
+        format.html { render :edit }
+        format.json { render json: { errors: @lead.errors.full_messages }, status: :unprocessable_entity }
+      end
+    end
+  end
+
   private
 
   def set_lead
@@ -21,7 +41,7 @@ class Admin::LeadsController < AdminController
             elsif params[:id].present?
               Lead.where(id: params[:id]).first
             end
-    redirect_to root_path, alert: t('controller.users.set_user_missing') if @user.blank?
+    redirect_to root_path, alert: t('controller.users.set_user_missing') if @lead.blank?
   end
 
   def find_lead_with_reference_id crm_id, reference_id

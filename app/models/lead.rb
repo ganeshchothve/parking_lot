@@ -42,6 +42,18 @@ class Lead
     receipts.where('$or' => [{ status: { '$in': %w(success clearance_pending) } }, { payment_mode: {'$ne': 'online'}, status: {'$in': %w(pending clearance_pending success)} }]).present?
   end
 
+  def total_amount_paid
+    receipts.where(status: 'success').sum(:total_amount)
+  end
+
+  def total_balance_pending
+    booking_details.in(status: ProjectUnit.booking_stages).sum(&:pending_balance)
+  end
+
+  def total_unattached_balance
+    receipts.in(status: %w[success clearance_pending]).where(booking_detail_id: nil).sum(:total_amount)
+  end
+
   class << self
 
     def user_based_scope(user, _params = {})

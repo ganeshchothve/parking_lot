@@ -20,13 +20,13 @@
   <%#= link_to t('controller.receipts.lost_receipt.link_name'), lost_receipt_admin_user_receipts_path(user), class: "dropdown-item modal-remote-form-link" %>
 <%# end %>
 
-<%# if policy([:admin, lead]).show? && action_name != 'show' %>
-  <%#= link_to t('controller.lead.show.link_name'), admin_lead_path(lead), class: "dropdown-item" %>
-<%# end %>
+<% if policy([:admin, lead]).show? && action_name != 'show' %>
+  <%= link_to t('controller.leads.show.link_name'), admin_lead_path(lead), class: "dropdown-item" %>
+<% end %>
 
-<%# if policy([:admin, lead]).edit? %>
-  <%#= link_to t('controller.leads.edit.link_name'), edit_admin_lead_path(lead.id), class: "dropdown-item modal-remote-form-link" %>
-<%# end %>
+<% if policy([:admin, lead]).edit? %>
+  <%= link_to t('controller.leads.edit.link_name'), edit_admin_lead_path(lead.id), class: "dropdown-item modal-remote-form-link" %>
+<% end %>
 
 <%# if policy([:admin, UserKyc.new]).index?(lead) %>
   <%# link_to t('controller.user_kycs.index.link_name'), admin_user_user_kycs_path(user_id: lead.user_id, lead_id: lead.id), class: "dropdown-item" %>

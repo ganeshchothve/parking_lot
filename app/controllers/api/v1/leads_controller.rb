@@ -1,7 +1,6 @@
 class Api::V1::LeadsController < ApisController
-  before_action :reference_ids_present?, :set_project, :set_manager_through_reference_id, only: :create
-  before_action :create_or_set_user
-  before_action :set_lead, except: :create
+  before_action :reference_ids_present?, :set_project, :create_or_set_user, :set_manager_through_reference_id, only: :create
+  before_action :set_user, :set_lead, except: :create
   before_action :add_third_party_reference_params
 
   #
@@ -78,13 +77,7 @@ class Api::V1::LeadsController < ApisController
 
   # Sets or creates the user object if it doesn't exists.
   def create_or_set_user
-    query = []
-    query << {email: params.dig(:lead, :email)} if params.dig(:lead, :email).present?
-    query << {phone: params.dig(:lead, :phone)} if params.dig(:lead, :phone).present?
-
-    render json: {errors: ["User email & phone doesn't match"]}, status: :bad_request and return if User.or(query).count > 1
-
-    unless @user = User.or(query).first
+    unless @user = User.or(check_and_build_query_for_finding_user).first
       @user = User.new(user_create_params)
       @user.assign_attributes(is_active: false) # Ruwnal Specific. TODO: Remove this for generic
       if @user.save
@@ -94,6 +87,18 @@ class Api::V1::LeadsController < ApisController
         render json: {errors: @user.errors.full_messages.uniq}, status: :unprocessable_entity
       end
     end
+  end
+
+  def check_and_build_query_for_finding_user
+    query = []
+    query << {email: params.dig(:lead, :email)} if params.dig(:lead, :email).present?
+    query << {phone: params.dig(:lead, :phone)} if params.dig(:lead, :phone).present?
+    if query.present?
+      render json: {errors: ["User email & phone doesn't match"]}, status: :bad_request and return if User.or(query).count > 1
+    else
+      render json: { errors: ['User email or phone is required'] }, status: :bad_request and return
+    end
+    query
   end
 
   def set_project
@@ -122,6 +127,11 @@ class Api::V1::LeadsController < ApisController
       end
       params[:lead][:third_party_references_attributes] = [ tpr_attrs ]
     end
+  end
+
+  def set_user
+    @user = User.or(check_and_build_query_for_finding_user).first
+    render json: { errors: ["User with this email/phone not found"] }, status: :not_found unless @lead
   end
 
   def set_lead
