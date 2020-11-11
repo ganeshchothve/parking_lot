@@ -549,6 +549,7 @@ en:
         issuing_bank: "Issuing Bank"
         issuing_bank_branch: "Issuing Bank Branch"
         name_email_phone: 'Name/Email/Phone'
+        project_id: 'Project'
         project_unit_id: "Apartment"
         processed_on: 'Date of Clearance'
         payment_mode: "Mode of Payment"
@@ -793,6 +794,7 @@ en:
 
       lead:
         project_id: 'Project'
+        manager_id: 'Partner / Manager / Added by'
 
       user/file_types:
         home_loan_application_form: 'Home Loan Application Form'

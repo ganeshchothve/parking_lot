@@ -20,7 +20,7 @@
   </div>
 </div>
 <div class="mt-3"></div>
-<%= render 'sync_logs/sync', { record: @receipt } if current_client.external_api_integration? && policy([current_user_role_group, SyncLog.new]).index? %>
+<%# render 'sync_logs/sync', { record: @receipt } if current_client.external_api_integration? && policy([current_user_role_group, SyncLog.new]).index? %>
 <div class="mt-3"></div>
 <div class="row">
   <% if @receipt.primary_user_kyc %>

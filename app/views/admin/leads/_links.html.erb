@@ -9,7 +9,7 @@
 <% end %>
 
 <% if policy([:admin, Receipt.new(user: lead.user, lead: lead)]).new? %>
-  <%= link_to t('controller.receipts.new.link_name'), new_admin_user_receipt_path(lead.user, {lead_id: lead.id}), class: "dropdown-item modal-remote-form-link" %>
+  <%= link_to t('controller.receipts.new.link_name'), new_admin_lead_receipt_path(lead), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 
 <%# if policy([:admin, Crm::Base.new()]).choose_crm? && Crm::Api.where(resource_class: 'User').present? %>

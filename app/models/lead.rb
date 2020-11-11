@@ -13,9 +13,8 @@ class Lead
   field :referenced_manager_ids, type: Array, default: []
   field :iris_confirmation, type: Boolean, default: false
 
-  belongs_to :manager, class_name: 'User', optional: true
-
   belongs_to :user
+  belongs_to :manager, class_name: 'User', optional: true
   belongs_to :project
   has_many :receipts
   has_many :booking_details
@@ -36,6 +35,7 @@ class Lead
 
   delegate :name, :email, :phone, to: :user, prefix: false, allow_nil: true
   delegate :name, to: :project, prefix: true, allow_nil: true
+  delegate :name, to: :manager, prefix: true, allow_nil: true
 
 
   def is_payment_done?
@@ -52,6 +52,14 @@ class Lead
 
   def total_unattached_balance
     receipts.in(status: %w[success clearance_pending]).where(booking_detail_id: nil).sum(:total_amount)
+  end
+
+  def get_search(project_unit_id)
+    search = searches
+    search = search.where(project_unit_id: project_unit_id) if project_unit_id.present?
+    search = search.desc(:created_at).first
+    search = Search.create(lead: self) if search.blank?
+    search
   end
 
   class << self

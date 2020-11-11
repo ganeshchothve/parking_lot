@@ -10,8 +10,6 @@
       <div class="modal-body">
         <div id="offline-form" class="offline-form">
           <%= form_for [:admin, @user, @receipt], local: true, remote: true, html: {id: 'receipt_form', class: 'modal-remote-form validate-form', data: { "resource-type": t('global.receipt'), type: :json} } do |f| %>
-            <%= f.hidden_field :lead_id %>
-            <%= f.hidden_field :project_id, value: @lead.project_id %>
             <%= render 'admin/booking_details/receipts/form', f: f, direct_payment: true %>
           <% end %>
         </div>

@@ -14,7 +14,7 @@ class Search
   # field :result_ids, type: Array
 
   belongs_to :lead
-  belongs_to :user
+  belongs_to :user, optional: true
   belongs_to :project_unit, optional: true
   belongs_to :project_tower, optional: true
 

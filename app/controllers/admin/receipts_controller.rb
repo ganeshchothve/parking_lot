@@ -1,7 +1,7 @@
 class Admin::ReceiptsController < AdminController
   include ReceiptsConcern
 
-  before_action :set_user, except: %w[index show export resend_success edit_token_number update_token_number payment_mode_chart frequency_chart status_chart]
+  before_action :set_lead, except: %w[index show export resend_success edit_token_number update_token_number payment_mode_chart frequency_chart status_chart]
   before_action :set_receipt, only: %w[edit update show resend_success edit_token_number update_token_number]
 
   #
@@ -30,10 +30,10 @@ class Admin::ReceiptsController < AdminController
   #
   # This new action always create a new receipt form for user's project unit rerceipt form.
   #
-  # GET "/admin/users/:user_id/receipts/new"
+  # GET "/admin/leads/:lead_id/receipts/new"
   def new
     @receipt = Receipt.new(
-      creator: current_user, user_id: @user, lead: @lead, payment_mode: 'cheque',
+      creator: current_user, user: @lead.user, lead: @lead, payment_mode: 'cheque',
       total_amount: current_client.blocking_amount
     )
     authorize([:admin, @receipt])
@@ -43,9 +43,9 @@ class Admin::ReceiptsController < AdminController
   #
   # This new action always create a new receipt form for user's project unit rerceipt form.
   #
-  # GET "admin/users/:user_id/receipts/lost_receipt"
+  # GET "admin/leads/:lead_id/receipts/lost_receipt"
   def lost_receipt
-    @receipt = Receipt.new(creator: current_user, user_id: @user, payment_mode: 'online')
+    @receipt = Receipt.new(creator: current_user, user: @lead.user, lead: @lead, payment_mode: 'online')
     authorize([:admin, @receipt])
     render layout: false
   end
@@ -53,9 +53,9 @@ class Admin::ReceiptsController < AdminController
   #
   # This create action always create a new receipt for user's project unit receipt form.
   #
-  # POST /admin/users/:user_id/receipts
+  # POST /admin/leads/:lead_id/receipts
   def create
-    @receipt = Receipt.new(user: @user, creator: current_user, project_unit_id: params.dig(:receipt, :project_unit_id))
+    @receipt = Receipt.new(user: @lead.user, lead: @lead, creator: current_user, project: @lead.project)
     @receipt.assign_attributes(permitted_attributes([:admin, @receipt]))
     @receipt.payment_gateway = current_client.payment_gateway if @receipt.payment_mode == 'online'
     @receipt.account ||= selected_account(current_client.payment_gateway.underscore)
@@ -65,12 +65,12 @@ class Admin::ReceiptsController < AdminController
         flash[:notice] = 'Receipt was successfully updated. Please upload documents'
         if @receipt.payment_mode == 'online'
           if @receipt.payment_identifier.blank?
-            url = @receipt.payment_gateway_service.gateway_url(@user.get_search('').id)
+            url = @receipt.payment_gateway_service.gateway_url(@lead.get_search('').id)
           else
-            url = admin_user_receipts_path(@user)
+            url = admin_lead_receipts_path(@lead)
           end
         else
-          url = admin_user_receipts_path(@user,'remote-state': assetables_path(assetable_type: @receipt.class.model_name.i18n_key.to_s, assetable_id: @receipt.id) )
+          url = admin_lead_receipts_path(@lead,'remote-state': assetables_path(assetable_type: @receipt.class.model_name.i18n_key.to_s, assetable_id: @receipt.id) )
         end
         format.json { render json: @receipt, location: url }
         format.html { redirect_to url }
@@ -97,7 +97,7 @@ class Admin::ReceiptsController < AdminController
     @receipt.assign_attributes(permitted_attributes([:admin, @receipt]))
     respond_to do |format|
       if (params.dig(:receipt, :event).present? ? @receipt.send("#{params.dig(:receipt, :event)}!") : @receipt.save)
-        format.html { redirect_to admin_user_receipts_path(@user), notice: 'Receipt was successfully updated.' }
+        format.html { redirect_to admin_lead_receipts_path(@lead), notice: 'Receipt was successfully updated.' }
       else
         format.html { render :edit }
         format.json { render json: { errors: @receipt.errors.full_messages }, status: :unprocessable_entity }
@@ -129,7 +129,7 @@ class Admin::ReceiptsController < AdminController
   def payment_mode_chart
     @data = DashboardData::AdminDataProvider.receipt_block(params)
     @statuses = params[:status] || %w[pending clearance_pending success available_for_refund]
-    @dataset = get_dataset(@data, @statuses) 
+    @dataset = get_dataset(@data, @statuses)
   end
   #
   # GET /admin/receipts/frequency_chart
@@ -151,10 +151,8 @@ class Admin::ReceiptsController < AdminController
 
   private
 
-  def set_user
-    @user = User.where(_id: params[:user_id]).first
-    @lead = @user.leads.where(id: params[:lead_id] || params.dig(:receipt, :lead_id)).first
-    redirect_to dashboard_path, alert: 'User Not found', status: 404 if @user.blank?
+  def set_lead
+    @lead = Lead.where(_id: params[:lead_id]).first
     redirect_to dashboard_path, alert: 'Lead Not found', status: 404 if @lead.blank?
   end
 

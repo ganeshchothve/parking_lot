@@ -1,14 +1,15 @@
 <tr>
-  <td data-title=<%= User.model_name.human %> >
-    <% if policy([current_user_role_group, receipt.user]).show? %>
-      <%= link_to receipt.user.name, [current_user_role_group, receipt.user] %>
+  <td data-title=<%= Lead.model_name.human %> >
+    <% if policy([current_user_role_group, receipt.lead]).show? %>
+      <%= link_to receipt.lead.name, [current_user_role_group, receipt.lead] %>
     <% else %>
-      <%= receipt.user.name %>
+      <%= receipt.lead.name %>
     <% end %>
     <div class="small">
+      <%= t('mongoid.attributes.receipt.project_id') %>: <%= receipt.project_name %><br/>
       <%= t('mongoid.attributes.receipt.created_by')%>: <%= receipt.creator.name %><br/>
-      <% if receipt.user.role?("user") && receipt.user.manager_id.present? && current_user.role != "channel_partner" %>
-        <%= t('mongoid.attributes.user.manager_id') %>: <%= receipt.user.manager_name %><br/>
+      <% if receipt.lead.manager_id.present? && current_user.role != "channel_partner" %>
+        <%= t('mongoid.attributes.lead.manager_id') %>: <%= receipt.lead.manager_name %><br/>
       <% end %>
     </div>
   </td>
@@ -47,7 +48,7 @@
           <%= link_to t('controller.crms.choose_crm.link_name'), choose_crm_admin_crm_base_index_path(resource_id: receipt.id, resource_class: receipt.class), class: "dropdown-item " %>
         <% end %>
         <% if policy([ current_user_role_group, receipt]).edit? %>
-          <%= link_to t('controller.receipts.edit.link_name'), [:edit, current_user_role_group, receipt.user, receipt], class: 'dropdown-item modal-remote-form-link' %>
+          <%= link_to t('controller.receipts.edit.link_name'), [:edit, current_user_role_group, receipt.lead, receipt], class: 'dropdown-item modal-remote-form-link' %>
         <% end %>
         <% if policy([current_user_role_group, receipt]).edit_token_number? %>
           <%= link_to t('controller.receipts.edit_token_number.link_name'), [:edit_token_number, current_user_role_group, receipt], class: 'modal-remote-form-link dropdown-item' %>
