@@ -162,6 +162,9 @@ en:
       scheme:
         one: Scheme
         other: Schemes
+      incentive_scheme:
+        one: Incentive Scheme
+        other: Incentive Schemes
       sms:
         one: SMS
         other: SMSs
@@ -621,6 +624,11 @@ en:
         draft: Draft
         approved: Approved
         disabled: Disabled
+
+      incentive_scheme:
+        name: 'Name'
+        project_id: 'Project'
+        project_tower_id: 'Project Tower'
 
       sms:
         to: 'To'
@@ -1120,6 +1128,17 @@ en:
       new:
         link_name: Add Scheme
         header: Add Scheme
+    incentive_schemes:
+      index:
+        link_name: Incentive Schemes
+      edit:
+        link_name: Edit Incentive Scheme
+      show:
+        link_name: Incentive Scheme Detail
+        header: Incentive Scheme Detail
+      new:
+        link_name: Add Incentive Scheme
+        header: Add Incentive Scheme
     sync_logs:
       index:
         link_name: 'Sync Logs'

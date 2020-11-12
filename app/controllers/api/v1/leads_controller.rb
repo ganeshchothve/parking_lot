@@ -91,7 +91,7 @@ class Api::V1::LeadsController < ApisController
 
   def check_and_build_query_for_finding_user
     query = []
-    query << {email: params.dig(:lead, :email)} if params.dig(:lead, :email).present?
+    query << {email: params.dig(:lead, :email).to_s.downcase} if params.dig(:lead, :email).present?
     query << {phone: params.dig(:lead, :phone)} if params.dig(:lead, :phone).present?
     if query.present?
       render json: {errors: ["User email & phone doesn't match"]}, status: :bad_request and return if User.or(query).count > 1

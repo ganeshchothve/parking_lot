@@ -1,0 +1,38 @@
+<table class='table my-customer-table responsive-tbl'>
+  <thead class="th-default">
+    <thead>
+      <tr class="bg-gradient-cd white">
+        <th><%= t('mongoid.attributes.incentive_scheme.name') %></th>
+        <th><%= t('mongoid.attributes.incentive_scheme.project_id') %></th>
+        <th class='text-right'><%= t('global.action', count: 3) %></th>
+      </tr>
+    </thead>
+  </thead>
+  <tbody>
+    <% incentive_schemes.each do |incentive_scheme| %>
+      <tr>
+        <td data-title=<%= t('mongoid.attributes.incentive_scheme.name') %> >
+          <%= link_to incentive_scheme.name, [current_user_role_group, incentive_scheme] %>
+          <div class="small">
+          </div>
+        </td>
+        <td>
+          <%= incentive_scheme.project_name %>
+        </td>
+        <td>
+          <div class="dropdown text-right">
+            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+              <% if policy([:admin, incentive_scheme]).edit? %>
+                <%= link_to t('helpers.edit.link_name', model: IncentiveScheme.model_name.human), edit_admin_incentive_scheme_path(incentive_scheme), class: 'dropdown-item modal-remote-form-link' %>
+              <% end %>
+            </div>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pt-2">
+  <%= will_paginate incentive_schemes, list_classes: %w(pagination justify-content-center) %>
+</div>
