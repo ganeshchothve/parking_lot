@@ -697,6 +697,7 @@ en:
         existing_customer: "Are you an existing customer with us?"
         comments: "Please mention any specific notes for our team"
         user_id: "Customer"
+        lead_id: 'Deal'
         creator: "Created By"
         project_units: "Apartments"
         son_daughter_of: 'Son / Daughter Of'

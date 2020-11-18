@@ -7,7 +7,7 @@ module ReceiptsHelper
     if current_user.buyer?
       [:new, :buyer, :user_request, { request_type: UserRequest::Cancellation.model_name.element, requestable_id: receipt.id, requestable_type: 'Receipt'}]
     else
-      [:new, :admin, receipt.user, :user_request, { request_type: UserRequest::Cancellation.model_name.element, requestable_id: receipt.id, requestable_type: 'Receipt'}]
+      [:new, :admin, receipt.lead, :user_request, { request_type: UserRequest::Cancellation.model_name.element, requestable_id: receipt.id, requestable_type: 'Receipt'}]
     end
   end
 

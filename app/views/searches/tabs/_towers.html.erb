@@ -6,7 +6,7 @@
       <p class="p-0 m-0"><%= search.project_unit.try(:name) %></p>
       <p class="p-0 m-0"><%= t('controller.searches.towers.hint')%></p>
       <% if @search.previous_step.present? && @search.crossed_step('towers') %>
-        <%= form_for [:user, @search], html: {class: 'validate-form'} do |f| %>
+        <%= form_for [:lead, @search], html: {class: 'validate-form'} do |f| %>
           <div class="form-group">
             <%= f.hidden_field :step, value: "towers" %>
           </div>

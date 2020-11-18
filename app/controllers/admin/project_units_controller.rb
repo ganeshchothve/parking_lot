@@ -116,9 +116,9 @@ class Admin::ProjectUnitsController < AdminController
   end
 
   def send_cost_sheet_and_payment_schedule
-    if @user
+    if @lead
       render json: {notice: t('controller.project_units.send_cost_sheet_and_payment_schedule.success')}, status: :created
-      @booking_detail.send_cost_sheet_and_payment_schedule(@user)
+      @booking_detail.send_cost_sheet_and_payment_schedule(@lead)
     else
       render json: {alert: t('controller.project_units.send_cost_sheet_and_payment_schedule.failure')}, status: :unprocessable_entity
     end

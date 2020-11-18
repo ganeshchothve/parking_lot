@@ -17,6 +17,7 @@ class Lead
   belongs_to :manager, class_name: 'User', optional: true
   belongs_to :project
   has_many :receipts
+  has_many :searches
   has_many :booking_details
   has_many :user_requests
   has_many :user_kycs
@@ -25,7 +26,7 @@ class Lead
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :emails, as: :triggered_by, class_name: 'Email'
   has_many :whatsapps, as: :triggered_by, class_name: 'Whatsapp'
-  #has_many :project_units
+  has_many :project_units
   #has_and_belongs_to_many :received_emails, class_name: 'Email', inverse_of: :recipients
   #has_and_belongs_to_many :cced_emails, class_name: 'Email', inverse_of: :cc_recipients
   #has_many :received_smses, class_name: 'Sms', inverse_of: :recipient
@@ -33,10 +34,15 @@ class Lead
 
   validates_uniqueness_of :user, scope: :project_id, message: 'already exists'
 
-  delegate :name, :email, :phone, to: :user, prefix: false, allow_nil: true
+  delegate :first_name, :last_name, :name, :email, :phone, to: :user, prefix: false, allow_nil: true
   delegate :name, to: :project, prefix: true, allow_nil: true
-  delegate :name, to: :manager, prefix: true, allow_nil: true
+  delegate :name, :role, :role?, :email, to: :manager, prefix: true, allow_nil: true
+  delegate :role, :role?, to: :user, prefix: true, allow_nil: true
 
+  def unattached_blocking_receipt(blocking_amount = nil)
+    blocking_amount ||= current_client.blocking_amount
+    Receipt.where(lead_id: id).in(status: %w[success clearance_pending]).where(booking_detail_id: nil).where(total_amount: { "$gte": blocking_amount }).asc(:token_number).first
+  end
 
   def is_payment_done?
     receipts.where('$or' => [{ status: { '$in': %w(success clearance_pending) } }, { payment_mode: {'$ne': 'online'}, status: {'$in': %w(pending clearance_pending success)} }]).present?

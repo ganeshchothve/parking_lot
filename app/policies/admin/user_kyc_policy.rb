@@ -8,7 +8,7 @@ class Admin::UserKycPolicy < UserKycPolicy
   end
 
   def new?
-    record.user.buyer?
+    true #record.user.buyer?
   end
 
   def create?
@@ -16,7 +16,7 @@ class Admin::UserKycPolicy < UserKycPolicy
   end
 
   def edit?
-    record.user.buyer?
+    true #record.user.buyer?
   end
 
   def update?
@@ -25,7 +25,7 @@ class Admin::UserKycPolicy < UserKycPolicy
 
   def permitted_attributes(_params = {})
     attributes = super
-    attributes += [:erp_id] if %w[admin sales_admin].include?(user.role)
+    attributes += [third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes] if %w[admin sales_admin].include?(user.role)
     attributes.uniq
   end
 end

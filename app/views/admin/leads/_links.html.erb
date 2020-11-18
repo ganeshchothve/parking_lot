@@ -1,5 +1,5 @@
 <% if policy([:admin, BookingDetail.new(user: lead.user, lead: lead, project_unit: ProjectUnit.new(status: 'available', blocking_amount: current_client.blocking_amount))]).show_booking_link? %>
-  <%= link_to t('controller.searches.new.link_name'), new_admin_user_search_path(lead.user_id), class: "dropdown-item" %>
+  <%= link_to t('controller.searches.new.link_name'), new_admin_lead_search_path(lead.id), class: "dropdown-item" %>
 <% end %>
 
 <% hold_booking = lead.booking_details.where(status: 'hold').first %>
@@ -28,18 +28,19 @@
   <%= link_to t('controller.leads.edit.link_name'), edit_admin_lead_path(lead.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 
-<%# if policy([:admin, UserKyc.new]).index?(lead) %>
-  <%# link_to t('controller.user_kycs.index.link_name'), admin_user_user_kycs_path(user_id: lead.user_id, lead_id: lead.id), class: "dropdown-item" %>
-<%# end %>
+<% if policy([:admin, UserKyc.new]).index?(lead.user) %>
+  <%= link_to t('controller.user_kycs.index.link_name'), admin_lead_user_kycs_path(lead_id: lead.id), class: "dropdown-item" %>
+<% end %>
 
-<%# if policy([:admin, UserKyc.new(user: user)]).new? %>
-  <%#= link_to t('helpers.new.link_name', model: UserKyc.model_name.human), new_admin_user_user_kyc_path(user), class: "dropdown-item modal-remote-form-link" %>
-<%# end %>
-<%# if policy([:admin, Note.new(notable: user)]).new? %>
-  <%#= link_to t('helpers.new.link_name', model: Note.model_name.human), new_notable_path(notable_type: user.class.model_name.i18n_key.to_s, notable_id: user.id), class: "dropdown-item modal-remote-form-link" %>
-<%# end %>
+<% if policy([:admin, UserKyc.new(user: lead.user, lead: lead)]).new? %>
+  <%= link_to t('helpers.new.link_name', model: UserKyc.model_name.human), new_admin_lead_user_kyc_path(lead), class: "dropdown-item modal-remote-form-link" %>
+<% end %>
 
-<%# if policy([:admin, user]).asset_create? %>
-  <%#= link_to Asset.model_name.human(count: 2), admin_user_path(user,'remote-state': assetables_path(assetable_type: user.class.model_name.i18n_key.to_s, assetable_id: user.id) ), class: "dropdown-item" %>
-<%# end %>
+<% if policy([:admin, Note.new(notable: lead)]).new? %>
+  <%= link_to t('helpers.new.link_name', model: Note.model_name.human), new_notable_path(notable_type: lead.class.model_name.i18n_key.to_s, notable_id: lead.id), class: "dropdown-item modal-remote-form-link" %>
+<% end %>
+
+<% if policy([:admin, lead]).asset_create? %>
+  <%= link_to Asset.model_name.human(count: 2), admin_lead_path(user,'remote-state': assetables_path(assetable_type: lead.class.model_name.i18n_key.to_s, assetable_id: lead.id) ), class: "dropdown-item" %>
+<% end %>
 

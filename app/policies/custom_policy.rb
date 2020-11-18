@@ -90,7 +90,7 @@ class CustomPolicy < Struct.new(:user, :enable_users)
   end
 
   def self.custom_methods
-    %w[add_booking schemes incentive_schemes user_requests channel_partners user_kycs emails smses referrals accounts phases portal_stage_priorities checklists bulk_upload_reports assets crms api_logs].sort
-    # audits
+    %w[schemes incentive_schemes user_requests channel_partners emails smses referrals accounts checklists bulk_upload_reports assets crms api_logs].sort
+    # add_booking user_kycs portal_stage_priorities phases audits
   end
 end

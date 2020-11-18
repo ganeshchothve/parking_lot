@@ -57,6 +57,7 @@ class Receipt
   scope :filter_by_receipt_id, ->(_receipt_id) { where(receipt_id: /#{_receipt_id}/i) }
   scope :filter_by_token_number, ->(_token_number) { where(token_number: _token_number) }
   scope :filter_by_user_id, ->(_user_id) { where(user_id: _user_id) }
+  scope :filter_by_lead_id, ->(lead_id){ where(lead_id: lead_id)}
   scope :filter_by_payment_mode, ->(_payment_mode) { where(payment_mode: _payment_mode) }
   scope :filter_by_issued_date, ->(date) { start_date, end_date = date.split(' - '); where(issued_date: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
@@ -191,18 +192,18 @@ class Receipt
 
   def self.user_based_scope(user, params = {})
     custom_scope = {}
-    if params[:user_id].blank? && !user.buyer?
+    if params[:lead_id].blank? && !user.buyer?
       if user.role?('channel_partner')
-        custom_scope = { user_id: { "$in": User.where(referenced_manager_ids: user.id).distinct(:id) } }
+        custom_scope = { lead_id: { "$in": Lead.where(referenced_manager_ids: user.id).distinct(:id) } }
       elsif user.role?('cp_admin')
-        custom_scope = { user_id: { "$in": User.where(role: 'user').nin(manager_id: [nil, '']).distinct(:id) } }
+        custom_scope = { lead_id: { "$in": Lead.nin(manager_id: [nil, '']).distinct(:id) } }
       elsif user.role?('cp')
         channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
-        custom_scope = { user_id: { "$in": User.in(referenced_manager_ids: channel_partner_ids).distinct(:id) } }
+        custom_scope = { lead_id: { "$in": Lead.in(referenced_manager_ids: channel_partner_ids).distinct(:id) } }
       end
     end
 
-    custom_scope = { user_id: params[:user_id] } if params[:user_id].present?
+    custom_scope = { lead_id: params[:lead_id] } if params[:lead_id].present?
     custom_scope = { user_id: user.id } if user.buyer?
 
     custom_scope[:booking_detail_id] = params[:booking_detail_id] if params[:booking_detail_id].present?

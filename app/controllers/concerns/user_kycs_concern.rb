@@ -15,10 +15,10 @@ module UserKycsConcern
   # This is the new action for admin, users where they can fill the details for a user kyc record.
   #
   def new
-    if @user.user_kyc_ids.blank?
-      @user_kyc = UserKyc.new(creator: current_user, user: @user, first_name: @user.first_name, last_name: @user.last_name, email: @user.email, phone: @user.phone)
+    if @lead.user_kyc_ids.blank?
+      @user_kyc = UserKyc.new(creator: current_user, user: @lead.user, lead: @lead, first_name: @lead.first_name, last_name: @lead.last_name, email: @lead.email, phone: @lead.phone)
     else
-      @user_kyc = UserKyc.new(creator: current_user, user: @user)
+      @user_kyc = UserKyc.new(creator: current_user, user: @lead.user, lead: @lead)
     end
     render layout: false
   end
@@ -27,7 +27,7 @@ module UserKycsConcern
   # This is the create action for admin, users, called after new.
   #
   def create
-    @user_kyc = UserKyc.new(permitted_attributes([current_user_role_group, UserKyc.new(user: @user) ]))
+    @user_kyc = UserKyc.new(permitted_attributes([current_user_role_group, UserKyc.new(user: @lead.user, lead: @lead) ]))
     set_user_creator
     authorize [current_user_role_group, @user_kyc]
     respond_to do |format|
@@ -64,8 +64,8 @@ module UserKycsConcern
 
   private
 
-  def set_user
-    @user = (params[:user_id].present? ? User.find(params[:user_id]) : current_user)
+  def set_lead
+    @lead = (params[:lead_id].present? ? Lead.find(params[:lead_id]) : current_user)
   end
 
   def set_user_kyc

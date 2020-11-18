@@ -19,9 +19,12 @@ class Search
   belongs_to :project_tower, optional: true
 
   delegate :manager_id, to: :user, prefix: true, allow_nil: true
+  delegate :manager_id, to: :lead, prefix: true, allow_nil: true
+  delegate :project_id, to: :lead, prefix: false, allow_nil: true
 
   def params_json
     params = {}
+    params[:project_id] = project_id if project_id.present?
     params[:bedrooms] = bedrooms if bedrooms.present?
     params[:carpet] = carpet if carpet.present?
     params[:agreement_price] = agreement_price if agreement_price.present?

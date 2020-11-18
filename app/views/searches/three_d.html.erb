@@ -1,7 +1,7 @@
 <div class="container">
   <% unless current_user.buyer? %>
     <div class="alert alert-danger">
-      You are taking a booking for <%= @user.name %>
+      You are taking a booking for <%= @lead.name %>
     </div>
     <div class="mt-3"></div>
   <% end %>
@@ -13,7 +13,7 @@
       data = ProjectUnit.only(:erp_id, :status, :all_inclusive_price).collect do |x|
         {
           apartment_ID: x.erp_id,
-          status: (x.user_based_status(@user) == "available" ? "open" : "booked"),
+          status: (x.user_based_status(@lead.user) == "available" ? "open" : "booked"),
           price: x.all_inclusive_price,
           id: x.id.to_s
         }
@@ -21,10 +21,10 @@
     %>
     <%
       user = {
-        id: @user.id,
-        name: @user.name,
+        id: @lead.user_id,
+        name: @lead.name,
         buyer: current_user.buyer?,
-        role: @user.role
+        role: @lead.user_role
       }
     %>
     var provider = new <%= current_client.external_inventory_view_config.provider %>(<%= raw user.to_json %>, "<%= current_client.external_inventory_view_config.url %>", "external_inventory_iframe", {hotspots: <%= raw data.to_json %>});

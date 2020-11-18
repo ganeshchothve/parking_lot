@@ -13,11 +13,15 @@
     <% user_requests.each do |user_request| %>
       <tr>
         <td data-title= <%= t('mongoid.attributes.user_request.request_details') %> >
-          <% if Admin::UserPolicy.new(current_user, user_request.user).show? %>
-            <%= link_to user_request.user.name, [current_user_role_group, user_request.user] %>
+          <% if Admin::LeadPolicy.new(current_user, user_request.lead).show? %>
+            <%= link_to user_request.lead.name, [current_user_role_group, user_request.lead] %>
           <% else %>
-            <%= user_request.user.name %>
+            <%= user_request.lead.name %>
           <% end %>
+          <div class="small text-muted">
+            <%= Project.model_name.human %> :
+            <%= user_request.project_name %>
+          </div>
           <div class="small text-muted">
             <%= labels['_type'] %>:  <%= user_request.class.model_name.element.titleize %>
           </div>

@@ -33,7 +33,7 @@ class Admin::ReceiptsController < AdminController
   # GET "/admin/leads/:lead_id/receipts/new"
   def new
     @receipt = Receipt.new(
-      creator: current_user, user: @lead.user, lead: @lead, payment_mode: 'cheque',
+      creator: current_user, user: @lead.user, lead: @lead, project_id: @lead.project_id, payment_mode: 'cheque',
       total_amount: current_client.blocking_amount
     )
     authorize([:admin, @receipt])
@@ -45,7 +45,7 @@ class Admin::ReceiptsController < AdminController
   #
   # GET "admin/leads/:lead_id/receipts/lost_receipt"
   def lost_receipt
-    @receipt = Receipt.new(creator: current_user, user: @lead.user, lead: @lead, payment_mode: 'online')
+    @receipt = Receipt.new(creator: current_user, user: @lead.user, lead: @lead, project_id: @lead.project_id, payment_mode: 'online')
     authorize([:admin, @receipt])
     render layout: false
   end

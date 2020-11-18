@@ -150,10 +150,41 @@ Rails.application.routes.draw do
         get :resend_success, on: :member
         get :lost_receipt, on: :collection
       end
-    end
+
+      resources :searches, except: [:destroy], controller: '/searches' do
+        get :"3d", on: :collection, action: "three_d", as: "three_d"
+        post :hold, on: :member
+        post :update_scheme, on: :member
+        get :checkout, on: :member
+        post :make_available, on: :member
+        get '/gateway-payment/:receipt_id', to: 'searches#gateway_payment', on: :member
+        get :payment, on: :member
+        get ":step", on: :member, to: "searches#show", as: :step
+      end
+
+      resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
+
+      resources :booking_details, only: [:index, :show] do
+        patch :booking, on: :member
+        patch :send_under_negotiation, on: :member
+        resources :booking_detail_schemes, only: [:index], controller: 'booking_details/booking_detail_schemes'
+
+        resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts'
+        # resources :booking_detail_schemes, except: [:destroy]
+        # resources :receipts, only: [:index]
+      end
+
+      scope ":request_type" do
+        resources :user_requests, except: [:destroy], controller: 'user_requests'
+      end
+
+      resources :project_units, only: [:index] do
+        get :print, on: :member
+        get :quotation, on: :member
+      end
+    end # end resources :leads block
 
     resources :users do
-
       member do
         get :resend_confirmation_instructions
         get :send_payment_link
@@ -174,39 +205,7 @@ Rails.application.routes.draw do
       match :confirm_via_otp, action: 'confirm_via_otp', as: :confirm_via_otp, on: :member, via: [:get, :patch]
 
       resources :leads, only: :index
-
-      resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
-
-      resources :project_units, only: [:index] do
-        get :print, on: :member
-        get :quotation, on: :member
-      end
-      resources :searches, except: [:destroy], controller: '/searches' do
-        get :"3d", on: :collection, action: "three_d", as: "three_d"
-        post :hold, on: :member
-        post :update_scheme, on: :member
-        get :checkout, on: :member
-        post :make_available, on: :member
-        get '/gateway-payment/:receipt_id', to: 'searches#gateway_payment', on: :member
-        get :payment, on: :member
-        get ":step", on: :member, to: "searches#show", as: :step
-      end
-
-      scope ":request_type" do
-        resources :user_requests, except: [:destroy], controller: 'user_requests'
-      end
-
-      resources :booking_details, only: [:index, :show] do
-        patch :booking, on: :member
-        patch :send_under_negotiation, on: :member
-        resources :booking_detail_schemes, only: [:index], controller: 'booking_details/booking_detail_schemes'
-
-        resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts'
-        # resources :booking_detail_schemes, except: [:destroy]
-        # resources :receipts, only: [:index]
-      end
-
-    end
+    end # end resources :users block
 
     resources :user_kycs, only: %i[index show], controller: 'user_kycs'
     scope ":request_type" do
@@ -241,7 +240,7 @@ Rails.application.routes.draw do
     get 'terms-and-conditions', to: 'dashboard#terms_and_condition', as: :dashboard_terms_and_condition
     get "gamify-unit-selection", to: "dashboard#gamify_unit_selection"
     get :download_brochure, to: 'dashboard#download_brochure'
-    resource :user do
+    resource :lead do
       resources :searches, except: [:destroy], controller: 'searches' do
         get :"3d", on: :collection, action: "three_d", as: "three_d"
         post :hold, on: :member

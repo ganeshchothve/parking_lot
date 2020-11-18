@@ -18,7 +18,7 @@
                 <% if current_user.buyer? %>
                   <%= f.select :requestable_id, options_from_collection_for_select(current_user.booking_details.where(_id: f.object.requestable_id), :_id, :name), {prompt: true}, class: 'selectize', disabled: !policy([current_user_role_group, (@user_request)]).editable_field?("requestable_id"), required: :required, data: { url: buyer_booking_details_path, params: {fltrs: { status: BookingDetail::BOOKING_STAGES, user_id: current_user.id } } } %>
                 <% else %>
-                  <%= f.select :requestable_id, options_from_collection_for_select(BookingDetail.where(_id: f.object.requestable_id), :_id, :name), {prompt: true}, class: 'selectize', disabled: !policy([current_user_role_group, (@user_request)]).editable_field?("requestable_id"), required: :required, data: { url: admin_booking_details_path, params: {fltrs: { status: BookingDetail::BOOKING_STAGES, user_id: @user_request.user_id } } } %>
+                  <%= f.select :requestable_id, options_from_collection_for_select(BookingDetail.where(_id: f.object.requestable_id), :_id, :name), {prompt: true}, class: 'selectize', disabled: !policy([current_user_role_group, (@user_request)]).editable_field?("requestable_id"), required: :required, data: { url: admin_booking_details_path, params: {fltrs: { status: BookingDetail::BOOKING_STAGES, lead_id: @user_request.lead_id } } } %>
                 <% end %>
               </div>
             <% elsif @user_request.requestable_type == 'Receipt' %>
@@ -26,7 +26,7 @@
                 <% if current_user.buyer? %>
                   <%= f.select :requestable_id, options_from_collection_for_select(current_user.receipts.where(_id: f.object.requestable_id), 'id', 'receipt_id', f.object.requestable_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: buyer_receipts_path, params: {fltrs: { status: 'success', user_id: current_user.id, booking_detail_id: nil } } } %>
                 <% else %>
-                  <%= f.select :requestable_id, options_from_collection_for_select(Receipt.where(_id: f.object.requestable_id), 'id', 'receipt_id', f.object.requestable_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_receipts_path, params: { fltrs: { status: 'success', user_id: @user_request.user_id, booking_detail_id: nil }}} %>
+                  <%= f.select :requestable_id, options_from_collection_for_select(Receipt.where(_id: f.object.requestable_id), 'id', 'receipt_id', f.object.requestable_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_receipts_path, params: { fltrs: { status: 'success', lead_id: @user_request.lead_id, booking_detail_id: nil }}} %>
                 <%end %>
 
             <% end %>
@@ -90,7 +90,7 @@
                 Your unit will be released once the cancellation request is processed. For booking the same unit again, you will have to go through the selection process again which will also be subject to availability.<br/>
                 <div class="form-check mt-3">
                   <input type="checkbox" id="accepted" class="form-check-input" />
-                  <label class="form-check-label">I Agree <%= @user_request.user_id == current_user.id ? "" : " on behalf of #{@user_request.user.name}" %></label>
+                  <label class="form-check-label">I Agree <%= @user_request.user_id == current_user.id ? "" : " on behalf of #{@user_request.lead.name}" %></label>
                 </div>
               </div>
             </div>

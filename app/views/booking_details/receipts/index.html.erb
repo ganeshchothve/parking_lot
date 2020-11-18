@@ -17,8 +17,8 @@
           <% end %>
 
           <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @receipts.total_entries %></button>
-          <% if policy([current_user_role_group, Receipt.new(user: @user, booking_detail: @booking_detail)]).new? %>
-            <%= link_to t('controller.booking_details.receipts.new.link_name'), [:new, current_user_role_group, @user, @booking_detail, :receipt], class: 'nowrap btn db-small-btn light-blue bg-white fn-400 modal-remote-form-link width-200' %>
+          <% if policy([current_user_role_group, Receipt.new(user: @lead.user, booking_detail: @booking_detail)]).new? %>
+            <%= link_to t('controller.booking_details.receipts.new.link_name'), [:new, current_user_role_group, @lead, @booking_detail, :receipt], class: 'nowrap btn db-small-btn light-blue bg-white fn-400 modal-remote-form-link width-200' %>
           <% end %>
         </div>
       </div>

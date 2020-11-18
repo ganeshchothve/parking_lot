@@ -16,6 +16,11 @@ class ReceiptObserver < Mongoid::Observer
     if receipt.status_changed? && receipt.status == "success"
       receipt.assign!(:order_id) if receipt.order_id.blank?
     end
+    if receipt.booking_detail_id_changed? && (booking_detail = receipt.booking_detail.presence)
+      receipt.project = booking_detail.project
+      receipt.lead = booking_detail.lead
+      receipt.user = booking_detail.lead.user
+    end
   end
 
   def after_create receipt

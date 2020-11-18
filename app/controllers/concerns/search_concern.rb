@@ -5,12 +5,20 @@ module SearchConcern
     #
     # Commented for now, can be used if buyer wants to initiate booking process from looking at the inventory.
     #
+    match = {}
     parameters = @search.params_json
-    parameters[:status] = ProjectUnit.user_based_available_statuses(@search.user)
-    parameters[:project_tower_id] = @search.project_tower_id if @search.project_tower_id.present?
+    parameters[:status] = ProjectUnit.user_based_available_statuses(@lead.user)
+    if @search.project_id.present?
+      parameters[:project_id] = @search.project_id
+      match = { "$match": { project_id: @search.project_id } }
+    end
+    if @search.project_tower_id.present?
+      parameters[:project_tower_id] = @search.project_tower_id
+      match["$match"] ||= {}
+      match["$match"][:project_tower_id] = @search.project_tower_id
+    end
     @units = ProjectUnit.build_criteria({fltrs: parameters}).sort_by{|x| [x.floor, x.floor_order]}.to_a
 
-    match = { "$match": { project_tower_id: @search.project_tower_id } } if @search.project_tower_id
     @all_units = ProjectUnit.collection.aggregate([match, {
       "$group": {
         "_id": {
@@ -37,13 +45,13 @@ module SearchConcern
     @all_units = @all_units.collect{|x| x.with_indifferent_access}
   end
 
-  def search_for_towers(user_id = nil)
-    @user ||= User.where(id: user_id).first
+  def search_for_towers(lead_id = nil)
+    @lead ||= Lead.where(id: lead_id).first
     parameters = {}
     parameters = @search.params_json if @search.present?
-    project_units = ProjectUnit.build_criteria({fltrs: parameters}).in(status: ProjectUnit.user_based_available_statuses(@user))
-    if @user.present? && @user.manager_role?('channel_partner')
-      filters = {fltrs: { can_be_applied_by_role: @user.manager_role, user_role: @user.role, user_id: @user.id, status: 'approved', default_for_user_id: @user.manager_id } }
+    project_units = ProjectUnit.build_criteria({fltrs: parameters}).in(status: ProjectUnit.user_based_available_statuses(@lead.user))
+    if @lead.present? && @lead.manager_role?('channel_partner')
+      filters = {fltrs: { can_be_applied_by_role: @lead.manager_role, user_role: @lead.user_role, user_id: @lead.user_id, status: 'approved', default_for_user_id: @lead.manager_id } }
       project_tower_ids_for_channel_partner = Scheme.build_criteria(filters).distinct(:project_tower_id)
       project_units = project_units.in(project_tower_id: project_tower_ids_for_channel_partner)
     end
@@ -53,7 +61,7 @@ module SearchConcern
       # GENERIC_TODO: handle floor plan url here
       hash[:floors] = x.total_floors
       hash[:total_units] = ProjectUnit.where(project_tower_id: x.id).count
-      hash[:total_units_available] = ProjectUnit.build_criteria({fltrs: parameters}).where(project_tower_id: x.id).in(status: ProjectUnit.user_based_available_statuses(@user)).count
+      hash[:total_units_available] = ProjectUnit.build_criteria({fltrs: parameters}).where(project_tower_id: x.id).in(status: ProjectUnit.user_based_available_statuses(@lead.user)).count
       hash
     end
     # GENERIC TODO: If no results found we should display alternate towers

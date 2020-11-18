@@ -39,11 +39,13 @@
       </li>
     <% end %>
 
-    <% if policy(:custom).inventory? %>
+    <!--
+    <%# if policy(:custom).inventory? %>
       <li class="nav-item">
-        <%= active_link_to t('controller.inventory.index.link_name'), custom_inventory_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+        <%#= active_link_to t('controller.inventory.index.link_name'), custom_inventory_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
       </li>
-    <% end %>
+    <%# end %>
+    -->
 
     <% if policy([:admin, Receipt]).index? %>
       <li class="nav-item">

@@ -1,7 +1,11 @@
 class BookingDetailSchemeObserver < Mongoid::Observer
   def before_validation(booking_detail_scheme)
-    booking_detail_scheme.project_unit_id = booking_detail_scheme.booking_detail.project_unit_id if booking_detail_scheme.project_unit_id.blank?
-    booking_detail_scheme.user_id = booking_detail_scheme.booking_detail.user_id if booking_detail_scheme.user_id.blank? && booking_detail_scheme.booking_detail.present?
+    if booking_detail_scheme.booking_detail.present?
+      booking_detail_scheme.project_unit_id = booking_detail_scheme.booking_detail.project_unit_id if booking_detail_scheme.project_unit_id.blank? || booking_detail_scheme.booking_detail_id_changed?
+      booking_detail_scheme.project_id = booking_detail_scheme.booking_detail.project_id if booking_detail_scheme.project_id.blank? || booking_detail_scheme.booking_detail_id_changed?
+      booking_detail_scheme.user_id = booking_detail_scheme.booking_detail.user_id if booking_detail_scheme.user_id.blank? || booking_detail_scheme.booking_detail_id_changed?
+      booking_detail_scheme.lead_id = booking_detail_scheme.booking_detail.lead_id if booking_detail_scheme.lead_id.blank? || booking_detail_scheme.booking_detail_id_changed?
+    end
   end
 
   def after_create(booking_detail_scheme)

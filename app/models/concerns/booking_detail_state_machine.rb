@@ -232,16 +232,16 @@ module BookingDetailStateMachine
     #
     def create_default_scheme
       if booking_detail_scheme.blank?
-        unless user.manager_role?('channel_partner')
+        unless lead.manager_role?('channel_partner')
           scheme = project_unit.project_tower.default_scheme
         else
-          filters = {fltrs: { can_be_applied_by_role: user.manager_role, project_tower: project_unit.project_tower_id, user_role: user.role, user_id: user_id, status: 'approved', default_for_user_id: user.manager_id } }
+          filters = {fltrs: { can_be_applied_by_role: lead.manager_role, project_tower: project_unit.project_tower_id, user_role: lead.user_role, user_id: lead.user_id, status: 'approved', default_for_user_id: lead.manager_id } }
           scheme = Scheme.build_criteria(filters).first
         end
         BookingDetailScheme.create(
           derived_from_scheme_id: scheme.id,
           booking_detail_id: id,
-          created_by_id: user_id,
+          created_by_id: lead.user_id,
           booking_portal_client_id: scheme.booking_portal_client_id,
           cost_sheet_template_id: scheme.cost_sheet_template_id,
           payment_schedule_template_id: scheme.payment_schedule_template_id,
@@ -267,8 +267,8 @@ module BookingDetailStateMachine
             booking_portal_client_id: project_unit.booking_portal_client_id,
             email_template_id: Template::EmailTemplate.find_by(name: "booking_confirmed").id,
             cc: [project_unit.booking_portal_client.notification_email],
-            recipients: [user],
-            cc_recipients: (user.manager_id.present? ? [user.manager] : []),
+            recipients: [lead.user],
+            cc_recipients: (lead.manager_id.present? ? [lead.manager] : []),
             triggered_by_id: self.id,
             triggered_by_type: self.class.to_s,
             attachments_attributes: attachments_attributes
@@ -278,7 +278,7 @@ module BookingDetailStateMachine
       if self.project_unit.booking_portal_client.sms_enabled?
         Sms.create!(
               booking_portal_client_id: user.booking_portal_client_id,
-              recipient_id: user.id,
+              recipient_id: lead.user_id,
               sms_template_id: Template::SmsTemplate.find_by(name: "booking_confirmed").id,
               triggered_by_id: self.id,
               triggered_by_type: self.class.to_s
@@ -296,8 +296,8 @@ module BookingDetailStateMachine
           booking_portal_client_id: project_unit.booking_portal_client_id,
           email_template_id: Template::EmailTemplate.find_by(name: "booking_#{_status}").id,
           cc: [project_unit.booking_portal_client.notification_email],
-          recipients: [user],
-          cc_recipients: (user.manager_id.present? ? [user.manager] : []),
+          recipients: [lead.user],
+          cc_recipients: (lead.manager_id.present? ? [lead.manager] : []),
           triggered_by_id: self.id,
           triggered_by_type: self.class.to_s,
           attachments_attributes: attachments_attributes
@@ -307,7 +307,7 @@ module BookingDetailStateMachine
       if project_unit.booking_portal_client.sms_enabled?
         Sms.create!(
             booking_portal_client_id: project_unit.booking_portal_client_id,
-            recipient_id: user.id,
+            recipient_id: lead.user_id,
             sms_template_id: Template::SmsTemplate.find_by(name: "booking_blocked").id,
             triggered_by_id: self.id,
             triggered_by_type: self.class.to_s

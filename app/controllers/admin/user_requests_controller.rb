@@ -1,6 +1,6 @@
 class Admin::UserRequestsController < AdminController
   include UserRequestsConcern
-  before_action :set_user
+  before_action :set_lead
   before_action :set_user_request, except: %i[index export new create]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: %i[index export]
@@ -33,7 +33,7 @@ class Admin::UserRequestsController < AdminController
   # POST /admin/:request_type/user_requests
   #
   def create
-    @user_request = associated_class.new(user_id: @user.id, created_by: current_user)
+    @user_request = associated_class.new(user_id: @lead.user_id, lead: @lead, project: @lead.project, created_by: current_user)
     @user_request.assign_attributes(permitted_user_request_attributes)
     respond_to do |format|
       if @user_request.save
@@ -83,7 +83,7 @@ class Admin::UserRequestsController < AdminController
 
   private
 
-  def set_user
-    @user = (params[:user_id].present? ? User.find(params[:user_id]) : nil)
+  def set_lead
+    @lead = (params[:lead_id].present? ? Lead.find(params[:lead_id]) : nil)
   end
 end

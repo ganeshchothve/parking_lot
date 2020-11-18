@@ -38,22 +38,23 @@ module UserRequestStateMachine
     end
 
     def send_email
-      Email.create!(
-        booking_portal_client_id: user.booking_portal_client_id,
+      email = Email.new(
+        booking_portal_client_id: lead.user.booking_portal_client_id,
         email_template_id: Template::EmailTemplate.find_by(name: "#{self.class.model_name.element}_request_#{status}").id,
-        recipients: [user],
-        cc_recipients: (user.manager_id.present? ? [user.manager] : []),
+        recipients: [lead.user],
+        cc_recipients: (lead.manager_id.present? ? [lead.manager] : []),
         triggered_by_id: id,
         triggered_by_type: self.class.to_s
       )
+      email.save # Had to save explicitly due to a weird bug in swap which needs debugging.
     end
 
     def send_sms
       template = Template::SmsTemplate.where(name: "#{self.class.model_name.element}_request_#{status}").first
-      if template.present? && user.booking_portal_client.sms_enabled?
+      if template.present? && lead.user.booking_portal_client.sms_enabled?
         Sms.create!(
-          booking_portal_client_id: user.booking_portal_client_id,
-          recipient_id: user_id,
+          booking_portal_client_id: lead.user.booking_portal_client_id,
+          recipient_id: lead.user_id,
           sms_template_id: template.id,
           triggered_by_id: id,
           triggered_by_type: self.class.to_s
@@ -68,8 +69,8 @@ module UserRequestStateMachine
     end
 
     def send_notifications
-      send_email if user.booking_portal_client.email_enabled? && !processing?
-      send_sms if user.booking_portal_client.sms_enabled? && !processing?
+      send_email if lead.user.booking_portal_client.email_enabled? && !processing?
+      send_sms if lead.user.booking_portal_client.sms_enabled? && !processing?
     end
 
     def update_requestable_to_request_rejected

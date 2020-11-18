@@ -61,6 +61,7 @@ class ProjectUnit
   belongs_to :unit_configuration
   belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :user, optional: true
+  belongs_to :lead, optional: true
   belongs_to :phase, optional: true
 
   # remove optional true when all project units are assigned to some phase
@@ -85,6 +86,7 @@ class ProjectUnit
   validates :available_for, inclusion: { in: proc { ProjectUnit.available_available_fors.collect { |x| x[:id] } } }
   validates :saleable, :carpet, :base_rate, :numericality => {:greater_than => 0}, if: :valid_status?
 
+  scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
   scope :filter_by_project_tower_id, ->(project_tower_id) { where(project_tower_id: project_tower_id) }
   scope :filter_by_status, ->(status) { status.is_a?(Array) ? where(status: {"$in" => status}) : where(status: status.as_json)}
   scope :filter_by_unit_facing_direction, ->(unit_facing_direction) { where(unit_facing_direction: unit_facing_direction)}

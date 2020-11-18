@@ -15,7 +15,7 @@ module UserRequestsConcern
   # This is the new action for admin, users where they can fill the details for a new user request.
   #
   def new
-    @user_request = associated_class.new(user_id: @user.id)
+    @user_request = associated_class.new(user_id: @lead.user_id, lead: @lead, project: @lead.project)
     @user_request.requestable_id = params[:requestable_id] if params[:requestable_id].present?
     @user_request.requestable_type = params[:requestable_type] if params[:requestable_type].present?
     render layout: false
@@ -70,7 +70,7 @@ module UserRequestsConcern
     if params[:action] == 'index' || params[:action] == 'export'
       authorize [current_user_role_group, UserRequest]
     elsif params[:action] == 'new' || params[:action] == 'create'
-      authorize [current_user_role_group, associated_class.new(user_id: @user.id)]
+      authorize [current_user_role_group, associated_class.new(user_id: @lead.user_id, lead: @lead, project: @lead.project)]
     else
       authorize [current_user_role_group, @user_request]
     end

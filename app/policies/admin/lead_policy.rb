@@ -12,6 +12,10 @@ class Admin::LeadPolicy < LeadPolicy
     edit?
   end
 
+  def asset_create?
+    %w[admin sales sales_admin crm].include?(user.role)
+  end
+
   def permitted_attributes(params = {})
     attributes = super || []
     if user.role.in?(%w(superadmin admin))
