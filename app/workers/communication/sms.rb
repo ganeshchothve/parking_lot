@@ -17,6 +17,7 @@ module Communication
         params[:pass] = client.sms_provider_password
         params[:response] = "Y"
         params[:dest_mobileno] = sms.to.join(",")
+        params[:dltentityid] = client.sms_provider_dlt_entity_id
         sms.variable_list.each do |v|
           params["F#{v[:id]}".to_sym] = v[:value]
         end
@@ -25,7 +26,7 @@ module Communication
           params[:tmid] = client.sms_provider_telemarketer_id
           params[:dlttempid] = template.dlt_temp_id
           params[:dltheaderid] = template.dlt_header_id
-          params[:dltentityid] = template.dlt_entity_id
+          params[:dltentityid] = client.sms_provider_dlt_entity_id
           uri = URI("http://www.smsjust.com/blank/sms/user/urlsmstemp.php")
         else
           params[:message] = sms.body

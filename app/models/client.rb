@@ -45,6 +45,7 @@ class Client
   field :whatsapp_api_key, type: String
   field :whatsapp_api_secret, type: String
   field :whatsapp_vendor, type: String, default: 'twilio'
+  field :sms_provider_dlt_entity_id, type: String
   field :sms_mask, type: String, default: "SellDo"
   field :sms_provider, type: String, default: 'sms_just'
   field :mailgun_private_api_key, type: String
