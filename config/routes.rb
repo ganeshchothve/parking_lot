@@ -217,7 +217,9 @@ Rails.application.routes.draw do
       get :payment_adjustments_for_unit, on: :member
     end
 
-    resources :incentive_schemes, except: [:destroy]
+    resources :incentive_schemes, except: [:destroy] do
+      get :end_scheme, on: :member
+    end
   end
 
   # home & globally accessible

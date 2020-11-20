@@ -48,6 +48,10 @@ class Admin::IncentiveSchemesController < AdminController
     end
   end
 
+  def end_scheme
+    render layout: false
+  end
+
   private
 
   def set_incentive_scheme

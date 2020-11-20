@@ -7,6 +7,8 @@ class Ladder
   field :stage, type: Integer
   field :start_value, type: Integer
   field :end_value, type: Integer
+  # Build inclusive ladders by default. Not supporting exclusive ladders for now (keep it as future scope)
+  # TODO: Handle exclusive ladders behavior.
   field :inclusive, type: Boolean, default: true
 
   embeds_one :payment_adjustment, as: :payable, autobuild: true

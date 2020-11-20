@@ -51,8 +51,8 @@
       statuses = available_statuses(@receipt)
     %>
     <%= f.select :event, options_for_select(statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, @receipt.status), {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([:admin, @receipt]).editable_field?("event") %>
-  </div>
-<% end %>
+  <% end %>
+</div>
 
 <% if current_client.enable_actual_inventory?(current_user) %>
   <div class="form-group">

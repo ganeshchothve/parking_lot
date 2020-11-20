@@ -3,6 +3,7 @@ class IncentiveScheme
   include Mongoid::Timestamps
   include ArrayBlankRejectable
   include InsertionStringMethods
+  include IncentiveSchemeStateMachine
   extend FilterByCriteria
 
   STRATEGY = %w(number_of_items sum_of_value)
@@ -12,6 +13,7 @@ class IncentiveScheme
   field :ends_on, type: Date
   field :ladder_strategy, type: String, default: 'number_of_items'
   field :default, type: Boolean, default: false
+  field :status, type: String
 
   belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :project, optional: -> { !default }
@@ -20,10 +22,13 @@ class IncentiveScheme
 
   delegate :name, to: :project, prefix: true, allow_nil: true
 
+  scope :approved, ->{ where(status: 'approved' )}
+
   validates :name, :ladder_strategy, presence: true
   validates :starts_on, :ends_on, presence: true, unless: :default?
   validates :ladder_strategy, inclusion: { in: STRATEGY }
   validates :ladders, length: {minimum: 1, message: 'are not present'}
+
   validate do |is|
     # validate date range
     if is.starts_on.present? && is.ends_on.present?
@@ -31,7 +36,7 @@ class IncentiveScheme
     end
 
     # validate non overlapping date ranges between all Incentive Schemes present for a project.
-    if IncentiveScheme.nin(id: is.id).where(project_id: is.project_id.presence, project_tower_id: is.project_tower_id.presence)
+    if IncentiveScheme.nin(id: is.id, status: 'disabled').where(project_id: is.project_id.presence, project_tower_id: is.project_tower_id.presence)
       .lte(starts_on: is.ends_on)
       .gte(ends_on: is.starts_on).present?
 

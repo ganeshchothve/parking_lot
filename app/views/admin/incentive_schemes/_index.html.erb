@@ -4,6 +4,7 @@
       <tr class="bg-gradient-cd white">
         <th><%= t('mongoid.attributes.incentive_scheme.name') %></th>
         <th><%= t('mongoid.attributes.incentive_scheme.project_id') %></th>
+        <th><%= t('mongoid.attributes.incentive_scheme.status') %></th>
         <th class='text-right'><%= t('global.action', count: 3) %></th>
       </tr>
     </thead>
@@ -20,11 +21,17 @@
           <%= incentive_scheme.project_name %>
         </td>
         <td>
+          <%= t("mongoid.attributes.incentive_scheme/status.#{incentive_scheme.status}") %>
+        </td>
+        <td>
           <div class="dropdown text-right">
             <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
               <% if policy([:admin, incentive_scheme]).edit? %>
                 <%= link_to t('helpers.edit.link_name', model: IncentiveScheme.model_name.human), edit_admin_incentive_scheme_path(incentive_scheme), class: 'dropdown-item modal-remote-form-link' %>
+              <% end %>
+              <% if policy([:admin, incentive_scheme]).end_scheme? %>
+                <%= link_to t('controller.incentive_schemes.end_scheme.link_name'), end_scheme_admin_incentive_scheme_path(incentive_scheme), class: 'dropdown-item modal-remote-form-link' %>
               <% end %>
             </div>
           </div>

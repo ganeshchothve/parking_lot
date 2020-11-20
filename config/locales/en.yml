@@ -629,6 +629,11 @@ en:
         name: 'Name'
         project_id: 'Project'
         project_tower_id: 'Project Tower'
+        status: 'Status'
+      incentive_scheme/status:
+        draft: Draft
+        approved: Approved
+        disabled: Disabled
 
       sms:
         to: 'To'
@@ -1134,6 +1139,8 @@ en:
         link_name: Incentive Schemes
       edit:
         link_name: Edit Incentive Scheme
+      end_scheme:
+        link_name: End Scheme
       show:
         link_name: Incentive Scheme Detail
         header: Incentive Scheme Detail
