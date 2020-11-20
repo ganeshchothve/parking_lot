@@ -666,3 +666,8 @@ h6{
 .red{
   color: #8B0000 !important;
 }
+
+.selectize-control.no-search {
+  .selectize-input { height: 35px; }
+  input { display: none !important; }
+}

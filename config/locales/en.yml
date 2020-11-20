@@ -629,6 +629,7 @@ en:
         name: 'Name'
         project_id: 'Project'
         project_tower_id: 'Project Tower'
+        tier_id: 'Channel Partner Tier'
         status: 'Status'
       incentive_scheme/status:
         draft: Draft

@@ -18,6 +18,7 @@ class IncentiveScheme
   belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :project, optional: -> { !default }
   belongs_to :project_tower, optional: true
+  belongs_to :tier, optional: true  # for associating incentive schemes with different channel partner tiers.
   embeds_many :ladders
 
   delegate :name, to: :project, prefix: true, allow_nil: true
@@ -36,7 +37,7 @@ class IncentiveScheme
     end
 
     # validate non overlapping date ranges between all Incentive Schemes present for a project.
-    if IncentiveScheme.nin(id: is.id, status: 'disabled').where(project_id: is.project_id.presence, project_tower_id: is.project_tower_id.presence)
+    if IncentiveScheme.nin(id: is.id, status: 'disabled').where(project_id: is.project_id.presence, project_tower_id: is.project_tower_id.presence, tier_id: is.tier_id.presence)
       .lte(starts_on: is.ends_on)
       .gte(ends_on: is.starts_on).present?
 

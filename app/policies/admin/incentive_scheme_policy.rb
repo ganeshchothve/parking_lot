@@ -18,7 +18,11 @@ class Admin::IncentiveSchemePolicy < IncentiveSchemePolicy
 
   def permitted_attributes(params = {})
     attributes = super
-    attributes += [:event] if user.role.in?(%w(admin superadmin))
-    attributes += [:name, :starts_on, :ends_on, :ladder_strategy, :project_id, :project_tower_id, ladders_attributes: LadderPolicy.new(user, Ladder.new()).permitted_attributes]
+    attributes += [:name]
+    if record.draft?
+      attributes += [:event] if user.role.in?(%w(admin superadmin))
+      attributes += [:starts_on, :ends_on, :ladder_strategy, :project_id, :project_tower_id, :tier_id, ladders_attributes: LadderPolicy.new(user, record.ladders.first).permitted_attributes]
+    end
+    attributes.uniq
   end
 end
