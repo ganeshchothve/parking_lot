@@ -2,7 +2,7 @@ class Admin::UserPolicy < UserPolicy
   # def resend_confirmation_instructions? def resend_password_instructions? def export? def update_password? def update? def create? from UserPolicy
 
   def index?
-    !user.buyer?
+    !(user.buyer? || user.role.in?(%w(channel_partner)))
   end
 
   def new?
@@ -92,7 +92,10 @@ class Admin::UserPolicy < UserPolicy
     attributes += [:rera_id] if record.role?('channel_partner')
     attributes += [:premium] if record.role?('channel_partner') && user.role?('admin')
     attributes += [:role] if %w[superadmin admin].include?(user.role)
-    attributes += [:erp_id] if %w[admin sales_admin].include?(user.role)
+    if %w[superadmin admin sales_admin].include?(user.role)
+      attributes += [:erp_id]
+      attributes += [third_party_references_attributes: [:id, :crm_id, :reference_id]]
+    end
     # To give selected channel partner access of live inventory.
     attributes += [:enable_live_inventory] if user.role?(:superadmin) && record.role?(:channel_partner)
     attributes.uniq

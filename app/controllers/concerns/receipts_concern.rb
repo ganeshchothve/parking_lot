@@ -14,13 +14,14 @@ module ReceiptsConcern
   # GET /admin/receipts/:receipt_id/resend_success
   def resend_success
     authorize([current_user_role_group, @receipt])
-    user = @receipt.user
+    lead = @receipt.lead
+    user = lead.user
     if user.booking_portal_client.email_enabled?
       email = Email.create!(
         booking_portal_client_id: user.booking_portal_client_id,
         email_template_id: Template::EmailTemplate.find_by(name: 'receipt_success').id,
-        recipients: [@receipt.user],
-        cc_recipients: (user.manager_id.present? ? [user.manager] : []),
+        recipients: [user],
+        cc_recipients: (lead.manager_id.present? ? [lead.manager] : []),
         triggered_by_id: @receipt.id,
         triggered_by_type: @receipt.class.to_s
       )

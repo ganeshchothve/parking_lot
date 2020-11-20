@@ -45,12 +45,12 @@
                               data_selector = ''
                               unit = @units.find{|unit| unit.floor == floor_data[:_id] && unit.floor_order == (index + 1) }
                               if unit
-                                if unit.user_based_status(@user) == 'available'
+                                if unit.user_based_status(@lead.user) == 'available'
                                   klass = 'available-aprt'
                                   data_selector = 'unit-card'
-                                elsif unit.user_based_status(@user) == 'booked'
+                                elsif unit.user_based_status(@lead.user) == 'booked'
                                   klass = 'booked-aprt'
-                                elsif unit.user_based_status(@user) == 'hold'
+                                elsif unit.user_based_status(@lead.user) == 'hold'
                                   klass = 'bg-secondary'
                                 else
                                   klass = 'soldout-aprt'
@@ -108,7 +108,7 @@
             <div class="row">
               <div class="col col-lg-6 col-md-6 col-sm-6 py-3">
                 <% if @search.previous_step.present? %>
-                  <%= form_for [:user, @search] do |f| %>
+                  <%= form_for [:lead, @search] do |f| %>
                     <%= f.hidden_field :step, value: @search.previous_step %>
                     <%= f.submit "Previous", class: "previous-btn fn-12 fn-300" %>
                   <% end %>
@@ -116,7 +116,7 @@
               </div>
               <div class="col col-lg-6 col-md-6 col-sm-6 next-btn-chose-apt py-3 d-none">
                 <% if @search.next_step.present? %>
-                  <%= form_for [:user, @search] do |f| %>
+                  <%= form_for [:lead, @search] do |f| %>
                     <%= f.hidden_field :step, value: @search.next_step %>
                     <%= f.hidden_field :project_unit_id, id: 'project_unit_id' %>
                     <%= f.submit "Next", class: "next-btn fn-12 fn-300 float-right", disabled: 'disabled' %>
@@ -156,12 +156,12 @@
     var unit = _.find(units, function(u){ return u._id == unit_id });
     var unit_assets = _.filter(assets, function(a){return a.assetable_id == unit_id});
     showUnitData(unit, unit_assets);
-    let userId = <%= raw @search.user_id.to_json %>
+    let leadId = <%= raw @search.lead_id.to_json %>
     let currentUserRoleGroup = <%= raw current_user_role_group.to_json %>
     if(currentUserRoleGroup == "buyer"){
       $(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/project_units/"+  unit_id + "/quotation?layout=false");
     }else{
-      $(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/users/"+ userId +"/project_units/" + unit_id + "/quotation?layout=false");
+      $(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/leads/"+ leadId +"/project_units/" + unit_id + "/quotation?layout=false");
     }
   });
   $('#floorPlanImage').on('shown.bs.modal', function(){

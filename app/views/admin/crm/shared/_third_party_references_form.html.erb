@@ -1,0 +1,15 @@
+<div class="row">
+  <% resource = f.object %>
+  <% Crm::Base.all.each do |crm| %>
+    <% resource.third_party_references.build(crm_id: crm.id) if resource.third_party_references.where(crm_id: crm.id).blank? %>
+  <% end %>
+  <%= f.fields_for :third_party_references do |tpr_form| %>
+    <%= tpr_form.hidden_field :crm_id %>
+    <div class='col-md-12'>
+      <div class='form-group'>
+        <%= label_tag Crm::Base.where(id: tpr_form.object.crm_id).first.try(:name) || 'CRM' %>
+        <%= tpr_form.text_field :reference_id, class: 'form-control' %>
+      </div>
+    </div>
+  <% end %>
+</div>

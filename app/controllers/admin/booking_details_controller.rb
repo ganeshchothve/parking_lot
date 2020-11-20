@@ -26,7 +26,7 @@ class Admin::BookingDetailsController < AdminController
 
   def create
     _project_unit = ProjectUnit.find(params[:booking_detail][:project_unit_id])
-    _search = Search.create(user_id: params[:booking_detail][:user_id], project_tower_id: params[:project_tower_id] || _project_unit.project_tower.id, project_unit_id: params[:booking_detail][:project_unit_id])
+    _search = Search.create(user_id: params[:booking_detail][:user_id], lead_id: params[:booking_detail][:lead_id], project_tower_id: params[:project_tower_id] || _project_unit.project_tower.id, project_unit_id: params[:booking_detail][:project_unit_id])
     @booking_detail = BookingDetail.new(search: _search)
     @booking_detail.assign_attributes(permitted_attributes([:admin, @booking_detail]))
     @booking_detail.assign_attributes(
@@ -40,9 +40,9 @@ class Admin::BookingDetailsController < AdminController
     authorize [:admin, @booking_detail]
     respond_to do |format|
       if @booking_detail.booking_detail_scheme.present? && @booking_detail.save
-        response.set_header('location', checkout_user_search_path(_search.id, user_id: _search.user_id) )
+        response.set_header('location', checkout_lead_search_path(_search.id, lead_id: _search.lead_id) )
         format.json { render json: {message: "booking_successful"}, status: :ok }
-        format.html { redirect_to checkout_user_search_path(_search.id, user_id: _search.user_id) }
+        format.html { redirect_to checkout_lead_search_path(_search.id, lead_id: _search.lead_id) }
       else
         format.html { redirect_to dashboard_path, alert: t('controller.booking_details.booking_unsuccessful') }
       end
@@ -73,9 +73,9 @@ class Admin::BookingDetailsController < AdminController
     # In before_action set booking_detail project_unit, receipt and redirect_to to dashboard_path when any one of this is missing.
     if @receipt.save
       @receipt.change_booking_detail_status
-      redirect_to admin_user_path(@receipt.user), notice: t('controller.booking_details.booking_successful')
+      redirect_to admin_lead_path(@receipt.lead), notice: t('controller.booking_details.booking_successful')
     else
-      redirect_to checkout_user_search_path(@booking_detail.search), alert: @receipt.errors.full_messages
+      redirect_to checkout_lead_search_path(@booking_detail.search), alert: @receipt.errors.full_messages
     end
   end
 
@@ -87,7 +87,7 @@ class Admin::BookingDetailsController < AdminController
   def send_under_negotiation
     @booking_detail.under_negotiation!
     respond_to do |format|
-      format.html { redirect_to admin_user_path(@booking_detail.user.id) }
+      format.html { redirect_to admin_lead_path(@booking_detail.lead_id) }
     end
   end
 
@@ -109,7 +109,7 @@ class Admin::BookingDetailsController < AdminController
   #
 
   def searching_for_towers
-    towers = search_for_towers(params[:user_id])
+    towers = search_for_towers(params[:lead_id])
     towers.map!{|f| [f[:project_tower_name], f[:project_tower_id]]} if towers.present?
     # GENERIC TODO: If no results found we should display alternate towers
     respond_to do |format|
@@ -163,11 +163,11 @@ class Admin::BookingDetailsController < AdminController
   end
 
   def set_receipt
-    @receipt = @booking_detail.user.unattached_blocking_receipt @project_unit.blocking_amount
+    @receipt = @booking_detail.lead.unattached_blocking_receipt @project_unit.blocking_amount
     if @receipt.present?
       @receipt.booking_detail_id = @booking_detail.id
     else
-      redirect_to new_admin_booking_detail_receipt_path(@booking_detail.user, @booking_detail), notice: t('controller.booking_details.set_receipt_missing')
+      redirect_to new_admin_booking_detail_receipt_path(@booking_detail.lead, @booking_detail), notice: t('controller.booking_details.set_receipt_missing')
     end
   end
 

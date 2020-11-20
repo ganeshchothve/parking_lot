@@ -4,7 +4,7 @@ module ProjectUnitsConcern
   included do
     before_action :build_objects, only: %i[quotation show send_cost_sheet_and_payment_schedule]
     before_action :modify_params, only: %i[quotation show send_cost_sheet_and_payment_schedule]
-    before_action :set_user, only: %w[quotation send_cost_sheet_and_payment_schedule]
+    before_action :set_lead, only: %w[quotation send_cost_sheet_and_payment_schedule]
   end
 
   #
@@ -63,10 +63,10 @@ module ProjectUnitsConcern
 
   private
 
-  def set_user
-    user_id = current_user.buyer? ? current_user.id : params[:user_id]
-    if user_id
-      @user = User.where(id: user_id).first
+  def set_lead
+    lead_id = current_user.buyer? ? current_user.id : params[:lead_id]
+    if lead_id
+      @lead = Lead.where(id: lead_id).first
     end
   end
 

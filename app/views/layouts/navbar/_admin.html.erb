@@ -9,6 +9,12 @@
       </li>
     <% end %>
 
+    <% if policy([:admin, Project]).index? %>
+      <li class="nav-item">
+        <%= active_link_to t('controller.projects.index.link_name'), admin_projects_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+      </li>
+    <% end %>
+
     <% if policy([:admin, ProjectUnit]).index? %>
       <li class="nav-item">
         <%= active_link_to t('controller.project_units.index.link_name'), admin_project_units_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
@@ -21,17 +27,25 @@
       </li>
     <% end %>
 
+    <% if policy([:admin, Lead]).index? %>
+      <li class="nav-item">
+        <%= active_link_to t('controller.leads.index.link_name'), admin_leads_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+      </li>
+    <% end %>
+
     <% if policy([:admin, BookingDetail]).index? %>
       <li class="nav-item">
         <%= active_link_to t('controller.booking_details.index.link_name'), admin_booking_details_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
       </li>
     <% end %>
 
-    <% if policy(:custom).inventory? %>
+    <!--
+    <%# if policy(:custom).inventory? %>
       <li class="nav-item">
-        <%= active_link_to t('controller.inventory.index.link_name'), custom_inventory_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+        <%#= active_link_to t('controller.inventory.index.link_name'), custom_inventory_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
       </li>
-    <% end %>
+    <%# end %>
+    -->
 
     <% if policy([:admin, Receipt]).index? %>
       <li class="nav-item">

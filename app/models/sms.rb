@@ -27,7 +27,7 @@ class Sms
   belongs_to :recipient, class_name: "User", inverse_of: :received_smses, optional: true
   belongs_to :triggered_by, polymorphic: true, optional: true
   belongs_to :booking_portal_client, class_name: "Client"
-  belongs_to :project, validate: false
+  belongs_to :project, optional: true
 
   validates :body, presence: true, if: Proc.new{ |model| model.sms_template_id.blank? }
   validates :triggered_by_id, presence: true

@@ -40,8 +40,6 @@ class Buyer::ProjectUnitPolicy < ProjectUnitPolicy
   def permitted_attributes(_params = {})
     attributes = []
     attributes += (make_available? ? [:status] : [])
-    attributes += %i[user_id selected_scheme_id] if record.user_id.blank? && record.user_based_status(user) == 'available'
-    attributes += [:primary_user_kyc_id, :selected_scheme_id, user_kyc_ids: []] if record.user_id.present?
     attributes.uniq
   end
 

@@ -125,6 +125,10 @@
               </div>
             <% end %>
           </div>
+          <br>
+          <h5>CRM IDs</h5>
+          <hr/>
+          <%= render 'admin/crm/shared/third_party_references_form', f: f %>
         </div>
         <div class="modal-footer">
           <%= f.submit "Save", class: 'btn btn-primary' %>

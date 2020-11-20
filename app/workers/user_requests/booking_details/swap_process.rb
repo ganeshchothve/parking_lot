@@ -55,7 +55,7 @@ module UserRequests
       end
 
       def build_booking_detail
-        search = Search.find_or_create_by(user_id: current_booking_detail.user_id, project_unit_id: alternate_project_unit.id)
+        search = Search.find_or_create_by(lead_id: current_booking_detail.lead_id, user_id: current_booking_detail.user_id, project_unit_id: alternate_project_unit.id)
 
         BookingDetail.new(
           base_rate: alternate_project_unit.base_rate,
@@ -66,19 +66,23 @@ module UserRequests
           floor_rise: alternate_project_unit.floor_rise,
           saleable: alternate_project_unit.saleable,
           project_unit_id: alternate_project_unit.id,
+          project_id: alternate_project_unit.project_id,
           costs: alternate_project_unit.costs, data: alternate_project_unit.data,
           primary_user_kyc_id: current_booking_detail.primary_user_kyc_id,
           status: 'hold', user_id: current_booking_detail.user_id,
           manager: current_booking_detail.try(:manager_id),
           user_kyc_ids: current_booking_detail.user_kyc_ids,
           parent_booking_detail_id: current_booking_detail.id,
-          search: search
+          search: search,
+          lead: search.lead,
+          user: search.lead.user
         )
       end
 
       def build_booking_detail_scheme(new_booking_detail)
         new_booking_detail_scheme = current_booking_detail.booking_detail_scheme.dup
         new_booking_detail_scheme.project_unit = alternate_project_unit
+        new_booking_detail_scheme.project_id = alternate_project_unit.project_id
         new_booking_detail_scheme.booking_detail = new_booking_detail
         # Assign derived_from_scheme to tower default scheme in case of new tower selected in swap.
         unless current_project_unit.project_tower.id == alternate_project_unit.project_tower.id

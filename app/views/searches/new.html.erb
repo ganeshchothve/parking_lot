@@ -7,7 +7,7 @@
             <%= t('controller.searches.new.header')%>
           </h1>
             <% unless current_user.buyer? %>
-              </br><small class="help-text fn-14 fn-500"> <%= t('controller.searches.new.booking_hint', name: @user.name) %> </small>
+              </br><small class="help-text fn-14 fn-500"> <%= t('controller.searches.new.booking_hint', name: @lead.name) %> </small>
             <% end %>
         </div>
       </div>
@@ -23,7 +23,7 @@
       <div class="mt-5 mb-2 col-lg-12 col-xs-12 col-sm-12 col-md-12">
         <div class="row">
           <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12 no-pd text-center">
-            <% if SearchPolicy.new(current_user, Search.new(user_id: @user.id)).three_d? %>
+            <% if SearchPolicy.new(current_user, Search.new(lead_id: @lead.id)).three_d? %>
                 <div class="card h-100">
                   <div class="card-body text-center">
                     <h5 class="mb-3">Book in 3D View</h5>
@@ -31,7 +31,7 @@
                       if current_user.buyer?
                         url = three_d_user_searches_path
                       else
-                        url = three_d_admin_user_searches_path(@user)
+                        url = three_d_admin_lead_searches_path(@lead)
                       end
                     %>
                     <%= link_to (image_tag("3d-building.jpg", class: "img-fluid")).html_safe, url %>

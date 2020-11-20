@@ -1,13 +1,13 @@
 <% if booking_detail.hold? && policy([:admin, booking_detail]).block? && booking_detail.search %>
-  <%= link_to t('controller.booking_details.continue_booking.link_name'), checkout_user_search_path(booking_detail.search), class: 'dropdown-item' %>
+  <%= link_to t('controller.booking_details.continue_booking.link_name'), checkout_lead_search_path(booking_detail.search), class: 'dropdown-item' %>
 <% end %>
 
 <% if policy([:admin, booking_detail]).show? && !(params[:controller] == 'admin/booking_details' && params[:action] == 'show') %>
   <%= link_to t('helpers.show.link_name', model: BookingDetail.model_name.human ), admin_booking_detail_path(booking_detail), class: 'dropdown-item' %>
 <% end %>
 
-<% if policy([:admin, booking_detail.user]).show? %>
-  <%= link_to t('helpers.show.link_name', model: User.human_attribute_name('role.user') ), admin_user_path(booking_detail.user), class: "dropdown-item" %>
+<% if policy([:admin, booking_detail.lead]).show? %>
+  <%= link_to t('helpers.show.link_name', model: Lead.model_name.human), admin_lead_path(booking_detail.lead), class: "dropdown-item" %>
 <% end %>
 
 <% if policy([:admin, booking_detail]).tasks? %>
@@ -40,7 +40,7 @@
 <% end %>
 
 <% if %w[hold blocked booked_tentative booked_confirmed scheme_approved].include?(booking_detail.status) && policy([:admin, Receipt.new(user: booking_detail.user, booking_detail: booking_detail)]).new? %>
-  <%= link_to t('controller.booking_details.receipts.new.link_name'), new_admin_user_booking_detail_receipt_path(booking_detail.user, booking_detail_id: booking_detail.id), class: 'dropdown-item modal-remote-form-link' %>
+  <%= link_to t('controller.booking_details.receipts.new.link_name'), new_admin_lead_booking_detail_receipt_path(booking_detail.lead, booking_detail_id: booking_detail.id), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
 
 <% scheme = booking_detail.project_unit.project_tower.default_scheme %>
@@ -52,12 +52,12 @@
 <% end %>
 
 <% if policy([:admin, Receipt ]).index? %>
-  <%= link_to t('controller.receipts.index.link_name'), admin_user_booking_detail_receipts_path(booking_detail.user, booking_detail), class: 'dropdown-item' %>
+  <%= link_to t('controller.receipts.index.link_name'), admin_lead_booking_detail_receipts_path(booking_detail.lead, booking_detail), class: 'dropdown-item' %>
 <% end %>
 
 <% [UserRequest::Cancellation, UserRequest::Swap] if Rails.env.development? %>
 <% UserRequest.descendants.each do |klass| %>
-  <% if policy([:admin, klass.new(user_id: booking_detail.user_id, requestable_id: booking_detail.id, requestable_type: 'BookingDetail')]).new? %>
-    <%= link_to t("controller.user_requests.#{klass.model_name.element}.new.link_name"), new_admin_user_user_request_path(user_id: booking_detail.user_id, requestable_id: booking_detail.id, requestable_type: 'BookingDetail', request_type: klass.model_name.element), class: "dropdown-item modal-remote-form-link" %>
+  <% if policy([:admin, klass.new(user_id: booking_detail.user_id, lead: booking_detail.lead, requestable_id: booking_detail.id, requestable_type: 'BookingDetail')]).new? %>
+    <%= link_to t("controller.user_requests.#{klass.model_name.element}.new.link_name"), new_admin_lead_user_request_path(lead_id: booking_detail.lead_id, requestable_id: booking_detail.id, requestable_type: 'BookingDetail', request_type: klass.model_name.element), class: "dropdown-item modal-remote-form-link" %>
   <% end %>
 <% end %>

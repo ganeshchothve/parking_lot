@@ -35,6 +35,7 @@ class UserRequest
 
   accepts_nested_attributes_for :notes
   scope :filter_by_user, ->(user_id){ where(user_id: user_id)}
+  scope :filter_by_lead, ->(lead_id){ where(lead_id: lead_id)}
   scope :filter_by__type, ->(request_type){ where(_type: /#{request_type}/i)}
   scope :filter_by_status, ->(_status){ where(status: _status) }
   scope :filter_by_requestable_type, ->(requestable_type){ where(requestable_type: requestable_type) }
@@ -44,6 +45,7 @@ class UserRequest
   default_scope -> { desc(:created_at) }
 
   delegate :project_unit, to: :requestable, prefix: false, allow_nil: true
+  delegate :name, to: :project, prefix: true, allow_nil: true
 
   # TODO: on create send email to CRM team
 
@@ -51,18 +53,18 @@ class UserRequest
     def user_based_scope(user, params = {})
 
       custom_scope = {}
-      if params[:user_id].blank? && !user.buyer?
+      if params[:lead_id].blank? && !user.buyer?
         if user.role?('channel_partner')
-          custom_scope = { user_id: { "$in": User.where(referenced_manager_ids: user.id).distinct(:id) } }
+          custom_scope = { lead_id: { "$in": Lead.where(referenced_manager_ids: user.id).distinct(:id) } }
         elsif user.role?('cp_admin')
-          custom_scope = { user_id: { "$in": User.where(role: 'user').nin(manager_id: [nil, '']).distinct(:id) } }
+          custom_scope = { lead_id: { "$in": Lead.nin(manager_id: [nil, '']).distinct(:id) } }
         elsif user.role?('cp')
           channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
-          custom_scope = { user_id: { "$in": User.in(referenced_manager_ids: channel_partner_ids).distinct(:id) } }
+          custom_scope = { lead_id: { "$in": Lead.in(referenced_manager_ids: channel_partner_ids).distinct(:id) } }
         end
       end
 
-      custom_scope = { user_id: params[:user_id] } if params[:user_id].present?
+      custom_scope = { lead_id: params[:lead_id] } if params[:lead_id].present?
       custom_scope = { user_id: user.id } if user.buyer?
 
       custom_scope[:booking_detail_id] = params[:booking_detail_id] if params[:booking_detail_id].present?

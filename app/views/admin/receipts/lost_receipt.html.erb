@@ -8,7 +8,7 @@
         </button>
       </div>
       <div class="modal-body">
-          <%= form_for [:admin, @user, @receipt], local: true, remote: true, html: {id: 'receipt_form', class: 'modal-remote-form validate-form', data: { "resource-type": t('global.receipt'), type: :json} } do |f| %>
+          <%= form_for [:admin, @lead, @receipt], local: true, remote: true, html: {id: 'receipt_form', class: 'modal-remote-form validate-form', data: { "resource-type": t('global.receipt'), type: :json} } do |f| %>
             <div class="form-group">
               <%= f.label :payment_mode, class: 'label-required' %>
                 <%= f.select :payment_mode, ['online'], {prompt: true, selected: @receipt.payment_mode}, class: 'selectize', required: 'required', autofocus: true, disabled: !policy([:admin, @receipt]).editable_field?("payment_mode") %>

@@ -72,10 +72,10 @@
             %>
           <% end %>
 
-          <% if @user.project_unit_ids.present? && (@user_kyc.persisted? || !current_user.buyer?) %>
+          <% if @lead.project_unit_ids.present? && (@user_kyc.persisted? || !current_user.buyer?) %>
             <div class="form-group position-relative">
               <%= f.label :project_unit_ids %>
-              <%= f.select :project_unit_ids, @user.project_units.collect{|x| [x.name, x.id]}, {prompt: "Select"}, class: 'selectize', multiple: true %>
+              <%= f.select :project_unit_ids, @lead.project_units.collect{|x| [x.name, x.id]}, {prompt: "Select"}, class: 'selectize', multiple: true %>
             </div>
           <% end %>
 

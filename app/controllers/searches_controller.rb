@@ -3,7 +3,7 @@ class SearchesController < ApplicationController
   include ReceiptsConcern
   before_action :authenticate_user!
   before_action :set_search, except: [:index, :export, :new, :create, :tower, :three_d]
-  before_action :set_user, except: [:export]
+  before_action :set_lead, except: [:export]
   before_action :set_form_data, only: [:show, :edit]
   before_action :authorize_resource, except: [:checkout, :hold]
   around_action :apply_policy_scope, only: [:index, :export]
@@ -20,7 +20,7 @@ class SearchesController < ApplicationController
   def show
     if @search.project_unit.present? && @search.project_unit.status == 'hold'
       if @search.user_id == @search.project_unit.user_id
-        redirect_to checkout_user_search_path(@search)
+        redirect_to checkout_lead_search_path(@search)
       end
     end
     # GENERICTODO: Handle current user to be from a user based route path
@@ -34,19 +34,19 @@ class SearchesController < ApplicationController
   end
 
   def new
-    @search = @user.searches.new
+    @search = @lead.searches.new
     set_form_data
     authorize @search
   end
 
   def create
-    @search = @user.searches.new
+    @search = @lead.searches.new
     @search.assign_attributes(permitted_attributes(@search))
 
     respond_to do |format|
       if @search.save
-        format.html { redirect_to step_user_search_path(@search, step: @search.step) }
-        format.json { render json: {model: @search, location: step_user_search_path(@search, step: @search.step)} }
+        format.html { redirect_to step_lead_search_path(@search, step: @search.step) }
+        format.json { render json: {model: @search, location: step_lead_search_path(@search, step: @search.step)} }
       else
         format.html { render :new }
         format.json { render json: {errors: @search.errors.full_messages} }
@@ -73,11 +73,11 @@ class SearchesController < ApplicationController
     location = nil
     if (permitted_attributes(@search).keys.collect{|x| x.to_s} & ['bedrooms', 'agreement_price', 'all_inclusive_price']).present?
       @search.step = 'filter'
-      location = step_user_search_path(@search, step: @search.step)
+      location = step_lead_search_path(@search, step: @search.step)
     end
     respond_to do |format|
       if @search.save
-        format.html { redirect_to step_user_search_path(@search, step: @search.step) }
+        format.html { redirect_to step_lead_search_path(@search, step: @search.step) }
         format.json { render json: @search, location: location }
       else
         format.html { render :edit }
@@ -95,7 +95,7 @@ class SearchesController < ApplicationController
     respond_to do |format|
       if @booking_detail.save
         if @booking_detail.create_default_scheme
-          format.html { redirect_to checkout_user_search_path(@search) }
+          format.html { redirect_to checkout_lead_search_path(@search) }
         else
           ProjectUnitUnholdWorker.new.perform(@search.project_unit_id)
           format.html { redirect_to dashboard_path, alert: t('controller.searches.hold.scheme_for_channel_partner_not_found') }
@@ -113,10 +113,10 @@ class SearchesController < ApplicationController
       if current_user.buyer?
         redirect_to dashboard_path, alert: t('controller.searches.checkout.non_hold_booking')
       else
-        redirect_to admin_user_path(@search.user_id), alert: t('controller.searches.checkout.non_hold_booking')
+        redirect_to admin_lead_path(@search.lead_id), alert: t('controller.searches.checkout.non_hold_booking')
       end
     elsif @search.user && @search.user.receipts.where(project_unit_id: @search.project_unit_id, status: "pending", payment_mode: {"$ne": "online"}).present?
-      redirect_to admin_user_path(@search.user_id), notice: t('controller.searches.checkout.pending_payments')
+      redirect_to admin_lead_path(@search.lead_id), notice: t('controller.searches.checkout.pending_payments')
     else
       # Open checkout page for costsheet selection
     end
@@ -167,7 +167,7 @@ class SearchesController < ApplicationController
         redirect_to [current_user_role_group, @receipt.user], notice: 'Unit is booked successfully.'
       end
     else
-      redirect_to checkout_user_search_path(@booking_detail.search)
+      redirect_to checkout_lead_search_path(@booking_detail.search)
     end
   end
 
@@ -190,17 +190,17 @@ class SearchesController < ApplicationController
     @project_unit = @search.project_unit
     if @project_unit.blank?
       @search.set(step: 'towers')
-      redirect_to step_user_search_path(@search, step: @search.step), alert: t('controller.searches.project_unit_missing')
+      redirect_to step_lead_search_path(@search, step: @search.step), alert: t('controller.searches.project_unit_missing')
     end
   end
 
-  def set_user
-    if current_user.buyer?
-      @user = current_user
-    elsif params[:user_id].present?
-      @user = (params[:user_id].present? ? User.find(params[:user_id]) : nil)
-    elsif @search.present? && @search.user_id.present?
-      @user = @search.user
+  def set_lead
+    #if current_user.buyer?
+    #  @user = current_user
+    if params[:lead_id].present?
+      @lead = Lead.where(id: params[:lead_id]).first
+    elsif @search.present? && @search.lead_id.present?
+      @lead = @search.lead
     else
       redirect_to dashboard_path and return
     end
@@ -210,7 +210,7 @@ class SearchesController < ApplicationController
     if params[:action] == "index" || params[:action] == 'export' || params[:action] == 'tower'
       authorize Search
     elsif params[:action] == "new" || params[:action] == "create" || params[:action] == 'three_d'
-      authorize Search.new(user_id: @user.id)
+      authorize Search.new(lead_id: @lead.id)
     else
       authorize @search
     end
@@ -219,12 +219,12 @@ class SearchesController < ApplicationController
   def apply_policy_scope
     custom_scope = Search.all.criteria
     if current_user.role?('admin') || current_user.role?('superadmin') || current_user.role?('crm') || current_user.role?('sales') || current_user.role?('cp')
-      if params[:user_id].present?
-        custom_scope = custom_scope.where(user_id: params[:user_id])
+      if params[:lead_id].present?
+        custom_scope = custom_scope.where(lead_id: params[:lead_id])
       end
     elsif current_user.role?('channel_partner')
-      user_ids = User.in(referenced_manager_ids: current_user.id).in(role: User.buyer_roles(current_client)).distinct(:id)
-      custom_scope = custom_scope.in(user_id: user_ids)
+      lead_ids = Lead.in(referenced_manager_ids: current_user.id).distinct(:id)
+      custom_scope = custom_scope.in(lead_id: lead_ids)
     else
       custom_scope = custom_scope.where(user_id: current_user.id)
     end
@@ -272,15 +272,15 @@ class SearchesController < ApplicationController
     if @search.next_step.present?
       eval("search_for_#{@search.next_step}")
     elsif @search.project_unit_id.present?
-      @user_kycs = @user.user_kycs.paginate(per_page: 100, page: 1)
+      @user_kycs = @lead.user_kycs.paginate(per_page: 100, page: 1)
       @unit = ProjectUnit.find(@search.project_unit_id)
     end
   end
 
   def set_booking_detail
-    @booking_detail = BookingDetail.where(status: {"$in": BookingDetail::BOOKING_STAGES + [:under_negotiation, :scheme_approved]}, project_unit_id: @search.project_unit_id, user_id: @search.user_id).first
+    @booking_detail = BookingDetail.where(status: {"$in": BookingDetail::BOOKING_STAGES + [:under_negotiation, :scheme_approved]}, project_unit_id: @search.project_unit_id, project_id: @search.project_unit.project_id, user_id: @lead.user_id, lead: @lead).first
     if @booking_detail.blank?
-      @booking_detail = BookingDetail.find_or_initialize_by(project_unit_id: @search.project_unit_id, user_id: @search.user_id, status: 'hold')
+      @booking_detail = BookingDetail.find_or_initialize_by(project_unit_id: @search.project_unit_id, project_id: @search.project_unit.project_id, user_id: @lead.user_id, lead: @lead, status: 'hold')
       if @booking_detail.new_record?
         @booking_detail.assign_attributes(
           base_rate: @search.project_unit.base_rate,
@@ -292,7 +292,7 @@ class SearchesController < ApplicationController
           saleable: @search.project_unit.saleable,
           costs: @search.project_unit.costs,
           data: @search.project_unit.data,
-          manager_id: @search.user_manager_id
+          manager_id: @search.lead_manager_id
         )
         @booking_detail.search = @search
       end
@@ -302,7 +302,7 @@ class SearchesController < ApplicationController
   def check_project_unit_hold_status
     if @project_unit.held_on.present? && (@project_unit.held_on + @project_unit.holding_minutes.minutes) < Time.now
       ProjectUnitUnholdWorker.new.perform(@project_unit.id)
-      redirect_to [:admin, @search.user], alert: t('controller.searches.check_project_unit_hold_status', holding_minutes: @project_unit.holding_minutes)
+      redirect_to [:admin, @lead], alert: t('controller.searches.check_project_unit_hold_status', holding_minutes: @project_unit.holding_minutes)
     end
   end
 

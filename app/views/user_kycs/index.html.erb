@@ -1,16 +1,16 @@
 <div class="container mb-5">
   <div class="row justify-content-center">
     <div class="col-md-12">
-      <%#= render 'breadcrumbs', {user_kyc: @user_kyc, user: @user} %>
+      <%#= render 'breadcrumbs', {user_kyc: @user_kyc, user: @lead.user, lead: @lead} %>
       <div class="card">
         <div class="card-body">
           <div class="row mb-3">
             <div class="col-md-7">
-              <% if UserKycPolicy.new(current_user, UserKyc.new(user: @user)).new? %>
+              <% if UserKycPolicy.new(current_user, UserKyc.new(user: @lead.user, lead: @lead)).new? %>
                 <% if current_user.buyer? %>
                   <%= link_to "Add #{global_labels['user_kyc']}", new_buyer_user_kyc_path, class: 'btn btn-primary modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
                 <% else %>
-                  <%= link_to "Add #{global_labels['user_kyc']}", new_admin_user_user_kyc_path(@user), class: 'btn btn-primary modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
+                  <%= link_to "Add #{global_labels['user_kyc']}", new_admin_lead_user_kyc_path(@lead), class: 'btn btn-primary modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
                 <% end %>
               <% end %>
             </div>

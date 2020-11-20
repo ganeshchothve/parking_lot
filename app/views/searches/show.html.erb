@@ -8,7 +8,7 @@
             <%= t("controller.searches.#{@search.step}.header")%>
           </h1>
           <% unless current_user.buyer? %>
-            <br><small class="help-text fn-14 pr-1 fn-500"> <%= t('controller.searches.new.booking_hint', name: @user.name) %> </small>
+            <br><small class="help-text fn-14 pr-1 fn-500"> <%= t('controller.searches.new.booking_hint', name: @lead.name) %> </small>
           <% end %>
         </div>
       </div>

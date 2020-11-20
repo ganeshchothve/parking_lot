@@ -43,7 +43,7 @@
         </div>
         <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12">
           <% if @search.next_step.present? %>
-            <%= form_for [:user, @search], html: {class: "validate-form edit_search_form"} do |f| %>
+            <%= form_for [:lead, @search], html: {class: "validate-form edit_search_form"} do |f| %>
               <div class="form-group">
                 <%= f.hidden_field :step, value: @search.next_step %>
                 <%= f.hidden_field :project_tower_id, id: 'project_tower_id', require: true %>

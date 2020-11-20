@@ -261,11 +261,6 @@ class User
     end
   end
 
-  def unattached_blocking_receipt(blocking_amount = nil)
-    blocking_amount ||= current_client.blocking_amount
-    Receipt.where(user_id: id).in(status: %w[success clearance_pending]).where(booking_detail_id: nil).where(total_amount: { "$gte": blocking_amount }).asc(:token_number).first
-  end
-
   def set_utm_params(cookies)
     ALLOWED_UTM_KEYS.each do |key|
       utm_params[key] = cookies[key] if cookies[key].present?

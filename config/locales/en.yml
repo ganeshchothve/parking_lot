@@ -162,6 +162,9 @@ en:
       scheme:
         one: Scheme
         other: Schemes
+      incentive_scheme:
+        one: Incentive Scheme
+        other: Incentive Schemes
       sms:
         one: SMS
         other: SMSs
@@ -184,8 +187,11 @@ en:
         one: KYC
         other: KYCs
       user:
-        one: User & Customer
-        other: Users & Customers
+        one: User Account
+        other: Users Accounts
+      lead:
+        one: Deal
+        other: Deals
 
     attributes:
       crm:
@@ -345,6 +351,44 @@ en:
       client/payment_gateways:
         Razorpay: Razorpay Payment Gateway
         CCAvenue: CCAvenue Payment Gateway
+
+      project:
+        name: 'Project Name'
+        allowed_bookings_per_user: 'Bookings allowed per user'
+        selldo_client_id: 'SellDo Client ID'
+        selldo_form_id: 'SellDo Form ID'
+        selldo_channel_partner_form_id: 'SellDo Form ID - For Channel Partners'
+        selldo_gre_form_id: 'SellDo Form ID - Used by Non Channel Partners'
+        selldo_api_key: 'SellDo API Key (Use generic Api Client)'
+        selldo_default_srd: 'SellDo Default SRD'
+        selldo_cp_srd: 'SellDo Channel Partner SRD'
+        notification_email: 'Notification Email (all emails are sent here)'
+        notification_numbers: 'Notification Numbers (Key SMS Reports are sent here)'
+        sender_email: 'Sender Email Address'
+        email_domains: 'Email Domains (to detect employee users)'
+        booking_portal_domains: 'Booking Portal Domains (where the portal is hosted)'
+        registration_name: 'Registration Name (Used in Payments)'
+        cin_number: 'CIN Number'
+        website_link: 'Website Link (Used in email communication)'
+        cp_disclaimer: 'Channel Partner Disclaimer (to be shown to Channel Partners during registration)'
+        disclaimer: 'Disclaimer'
+        support_number: 'Support Phone'
+        support_email: 'Support Email'
+        helpdesk_number: 'Helpdesk Phone (For after booking CRM Help)'
+        helpdesk_email: 'Helpdesk Email (For after booking CRM Help)'
+        ga_code: "Google Analytics Code (UA-XXXXXXXXX-Y)"
+        gtm_tag: "GTM Tag (Please add a the entire JS code)"
+        channel_partner_support_number: 'Support Number (For Channel Partners)'
+        channel_partner_support_email: 'Support Email (For Channel Partner)'
+        erp: 'ERP'
+        cancellation_amount: 'Cancellation Amount (displayed to Customers)'
+        area_unit: 'Unit of Area (used to display inventory)'
+        enable_actual_inventory: 'Enable Inventory for these user roles'
+        enable_channel_partners: 'Enable Channel Partners'
+        blocking_amount: 'Min. Amount for Blocking an Unit'
+        blocking_days: 'Unit to be blocked for (Days)'
+        holding_minutes: 'Unit to be held for (Minutes)'
+        rera_registration_no: 'RERA Registration Number'
 
       cost:
         name: "Name"
@@ -508,6 +552,7 @@ en:
         issuing_bank: "Issuing Bank"
         issuing_bank_branch: "Issuing Bank Branch"
         name_email_phone: 'Name/Email/Phone'
+        project_id: 'Project'
         project_unit_id: "Apartment"
         processed_on: 'Date of Clearance'
         payment_mode: "Mode of Payment"
@@ -580,6 +625,11 @@ en:
         approved: Approved
         disabled: Disabled
 
+      incentive_scheme:
+        name: 'Name'
+        project_id: 'Project'
+        project_tower_id: 'Project Tower'
+
       sms:
         to: 'To'
         cc: 'Cc'
@@ -647,6 +697,7 @@ en:
         existing_customer: "Are you an existing customer with us?"
         comments: "Please mention any specific notes for our team"
         user_id: "Customer"
+        lead_id: 'Deal'
         creator: "Created By"
         project_units: "Apartments"
         son_daughter_of: 'Son / Daughter Of'
@@ -749,6 +800,10 @@ en:
         management_user: 'Management User'
         employee_user: 'Employee'
         direct: Direct
+
+      lead:
+        project_id: 'Project'
+        manager_id: 'Partner / Manager / Added by'
 
       user/file_types:
         home_loan_application_form: 'Home Loan Application Form'
@@ -965,6 +1020,10 @@ en:
         header: 'Add Note'
         link_name: 'Add Note'
 
+    projects:
+      index:
+        link_name: 'Projects'
+
     project_units:
       send_cost_sheet_and_payment_schedule:
         link_name: 'Send Cost sheet & Payment Schedule to Customer'
@@ -1070,6 +1129,17 @@ en:
       new:
         link_name: Add Scheme
         header: Add Scheme
+    incentive_schemes:
+      index:
+        link_name: Incentive Schemes
+      edit:
+        link_name: Edit Incentive Scheme
+      show:
+        link_name: Incentive Scheme Detail
+        header: Incentive Scheme Detail
+      new:
+        link_name: Add Incentive Scheme
+        header: Add Incentive Scheme
     sync_logs:
       index:
         link_name: 'Sync Logs'
@@ -1106,7 +1176,7 @@ en:
         link_name: "Edit %{role}"
         header: 'Edit %{role}'
       index:
-        link_name: 'Users & Customers'
+        link_name: 'Users Accounts'
       new:
         link_name: 'Add %{role}'
         header: 'Add %{role}'
@@ -1121,7 +1191,20 @@ en:
       show:
         link_name: '%{role} Details'
         header: 'Overview'
+      leads:
+        link_name: 'Show Deals'
       send_payment_link: 'Payment link sent to user'
+
+    leads:
+      index:
+        link_name: 'Deals'
+      show:
+        link_name: 'Show Deal Details'
+        header: 'Overview'
+      edit:
+        link_name: "Edit Deal"
+        header: 'Edit Deal'
+
     user_kycs:
       index:
         link_name: 'KYCs'
@@ -1181,6 +1264,14 @@ en:
 
   users:
     account_confirmed: 'Account Confirmed'
+    total_amount_paid:
+      hint: '(you might have some payments pending clearance)'
+    total_balance_pending:
+      hint: '(you might have some payments pending clearance)'
+    total_unattached_balance:
+      hint: '(subject to clearance)'
+
+  leads:
     total_amount_paid:
       hint: '(you might have some payments pending clearance)'
     total_balance_pending:

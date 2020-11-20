@@ -4,8 +4,8 @@ class SearchObserver < Mongoid::Observer
   end
 
   def before_save search
-    if search.project_tower_id.blank? && search.project_unit_id.present?
-      search.project_tower_id = search.project_unit.project_tower_id
+    if search.project_unit_id.present?
+      search.project_tower_id = search.project_unit.project_tower_id if search.project_tower_id.blank?
     end
   end
 

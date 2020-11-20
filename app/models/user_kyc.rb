@@ -57,7 +57,7 @@ class UserKyc
   has_one :bank_detail, as: :bankable, validate: false
   # has_one :correspondence_address, as: :addressable, class_name: "Address", validate: false
   has_one :permanent_address, as: :addressable, class_name: 'Address', validate: false
-  belongs_to :user, validate: false
+  belongs_to :user
   belongs_to :lead
   belongs_to :creator, class_name: 'User'
   has_and_belongs_to_many :project_units
@@ -85,6 +85,7 @@ class UserKyc
   validates :erp_id, uniqueness: true, allow_blank: true
 
   scope :filter_by_user_id, ->(user_id) { where(user_id: user_id) }
+  scope :filter_by_lead_id, ->(lead_id){ where(lead_id: lead_id)}
 
 
   default_scope -> { desc(:created_at) }
@@ -178,18 +179,18 @@ class UserKyc
 
     def user_based_scope(user, params = {})
       custom_scope = {}
-      if params[:user_id].blank? && !user.buyer?
+      if params[:lead_id].blank? && !user.buyer?
         if user.role?('channel_partner')
-          custom_scope = { user_id: { "$in": User.where(referenced_manager_ids: user.id).distinct(:id) } }
+          custom_scope = { lead_id: { "$in": Lead.where(referenced_manager_ids: user.id).distinct(:id) } }
         elsif user.role?('cp_admin')
-          custom_scope = { user_id: { "$in": User.where(role: 'user').where(manager_id: { "$nin": [nil, ''] }).distinct(:id) } }
+          custom_scope = { lead_id: { "$in": Lead.where(manager_id: { "$nin": [nil, ''] }).distinct(:id) } }
         elsif user.role?('cp')
           channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
-          custom_scope = { user_id: { "$in": User.in(referenced_manager_ids: channel_partner_ids).distinct(:id) } }
+          custom_scope = { lead_id: { "$in": Lead.in(referenced_manager_ids: channel_partner_ids).distinct(:id) } }
         end
       end
 
-      custom_scope = { user_id: params[:user_id] } if params[:user_id].present?
+      custom_scope = { lead_id: params[:lead_id] } if params[:lead_id].present?
       custom_scope = { user_id: user.id } if user.buyer?
 
       custom_scope[:project_unit_id] = params[:project_unit_id] if params[:project_unit_id].present?

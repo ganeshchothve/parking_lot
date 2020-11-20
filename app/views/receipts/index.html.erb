@@ -1,20 +1,20 @@
 <div class="container mb-5">
   <div class="row justify-content-center">
-    <div class="<%= @user.blank? ? 'col-md-9' : 'col-md-12' %>">
-      <%= render 'breadcrumbs', {user: @user, project_unit: @project_unit} %>
+    <div class="<%= @lead.blank? ? 'col-md-9' : 'col-md-12' %>">
+      <%= render 'breadcrumbs', {lead: @lead, project_unit: @project_unit} %>
       <% if current_client.cancellation_amount > 0 %>
       <div class="alert alert-danger">
         Refund Payments will be subject to cancellation charges
       </div>
       <% end %>
       <% unless current_user.buyer? %>
-        <% unless policy([ current_user_role_group, Receipt.new(user: @user)]).new? %>
-          <% if @user.present? %>
+        <% unless policy([ current_user_role_group, Receipt.new(user: @lead.user)]).new? %>
+          <% if @lead.user.present? %>
             <div class="alert alert-primary mt-3">
-              <% if @user.confirmed? %>
+              <% if @lead.user.confirmed? %>
               You might need to complete the user's KYC before you can take payments.
-              <% if Admin::UserKycPolicy.new(current_user, UserKyc.new(user: @user)).new? %>
-                <%= link_to "Add #{global_labels['user_kyc_details']}", new_admin_user_user_kyc_path(@user), class: "modal-remote-form-link" %>
+              <% if Admin::UserKycPolicy.new(current_user, UserKyc.new(user: @lead.user)).new? %>
+                <%= link_to "Add #{global_labels['user_kyc_details']}", new_admin_lead_user_kyc_path(@lead), class: "modal-remote-form-link" %>
               <% end %>
               <% else %>
               The <%= global_labels['customer'] %> has not yet confirmed their account via email.
@@ -27,15 +27,15 @@
         <div class="card-body">
           <div class="row mb-3">
             <div class="col-md-7">
-              <% if policy([ current_user_role_group, Receipt.new(user: @user) ]).new? %>
-              <% units_for_payments = @user.project_units.in(status: ["blocked", 'booked_tentative']).all %>
+              <% if policy([ current_user_role_group, Receipt.new(user: @lead.user) ]).new? %>
+              <% units_for_payments = @lead.project_units.in(status: ["blocked", 'booked_tentative']).all %>
               <% if units_for_payments.present? %>
               <% unless current_user.buyer? %>
               <div class="dropdown float-left mr-2">
                 <a class="btn btn-primary dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add <%= global_labels['receipt'] %> to Blocked Units</a>
                 <div class="dropdown-menu dropdown-menu-right">
                   <% units_for_payments.each do |project_unit| %>
-                  <%= link_to "#{project_unit.name}", new_admin_user_booking_detail_receipt_path(@user.id, project_unit.booking_detail.id), class: 'dropdown-item modal-remote-form-link' %>
+                  <%= link_to "#{project_unit.name}", new_admin_lead_booking_detail_receipt_path(@lead.id, project_unit.booking_detail.id), class: 'dropdown-item modal-remote-form-link' %>
                   <% end %>
                 </div>
               </div>
@@ -43,14 +43,14 @@
               <% end %>
               <% end %>
               <%
-                if @user.present? && !current_user.buyer?
+                if @lead.present? && !current_user.buyer?
                 url_for_new_receipt = if @project_unit.booking_detail.present?
-                  new_admin_user_booking_detail_receipt_path(@user, @project_unit.booking_detail)
+                  new_admin_lead_booking_detail_receipt_path(@lead, @project_unit.booking_detail)
                 else
-                  new_admin_user_receipt_path(@user)
+                  new_admin_lead_receipt_path(@lead)
                 end
               %>
-              <% if policy( [ :admin, Receipt.new(user: @user) ]).new? %>
+              <% if policy( [ :admin, Receipt.new(user: @lead.user) ]).new? %>
                 <%= link_to "Make Direct #{global_labels['receipt']}", url_for_new_receipt, class: 'btn btn-primary modal-remote-form-link' %>
               <% end %>
               <% end %>

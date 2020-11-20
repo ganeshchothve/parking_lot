@@ -80,7 +80,8 @@ class BookingDetail
   scope :filter_by_status, ->(status) { where(status: status) }
   scope :filter_by_project_tower_id, ->(project_tower_id) { where(project_unit_id: { "$in": ProjectUnit.where(project_tower_id: project_tower_id).pluck(:_id) })}
   scope :filter_by_user_id, ->(user_id) { where(user_id: user_id)  }
-  scope :filter_by_manager_id, ->(manager_id){ where(user_id: { '$in' => User.buyers.where(manager_id: manager_id).distinct(:_id) } ) }
+  scope :filter_by_lead_id, ->(lead_id){ where(lead_id: lead_id)}
+  scope :filter_by_manager_id, ->(manager_id){ where(lead_id: { '$in' => Lead.where(manager_id: manager_id).distinct(:_id) } ) }
   scope :filter_by_tasks_completed, ->(tasks) { where("$and": [{ _id: {"$in": find_completed_tasks(tasks)}}])}
   scope :filter_by_tasks_pending, ->(tasks) { where("$and": [{ _id: {"$in": find_pending_tasks(tasks)}}])}
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(name: regex ) }
@@ -127,15 +128,15 @@ class BookingDetail
       booking_portal_client_id: project_unit.booking_portal_client_id,
       email_template_id: Template::EmailTemplate.find_by(name: "auto_release_on_extended").id,
       cc: [ project_unit.booking_portal_client.notification_email ],
-      recipients: [ user ],
-      cc_recipients: ( user.manager_id.present? ? [user.manager] : [] ),
+      recipients: [ lead.user ],
+      cc_recipients: ( lead.manager_id.present? ? [lead.manager] : [] ),
       triggered_by_id: self.id,
       triggered_by_type: self.class.to_s
     })
     email.sent!
   end
 
-  def send_cost_sheet_and_payment_schedule(search_user)
+  def send_cost_sheet_and_payment_schedule(lead)
     if project_unit.booking_portal_client.email_enabled?
       attachments_attributes = []
       cost_details = self.class.render_anywhere('admin/project_units/cost_sheet_and_payment_schedule', { booking_detail: self }, 'layouts/pdf')
@@ -150,7 +151,7 @@ class BookingDetail
         body: ERB.new(project_unit.booking_portal_client.email_header).result(binding) + email_template.parsed_content(self) + ERB.new(project_unit.booking_portal_client.email_footer).result(binding),
         subject: email_template.parsed_subject(self),
         cc: [project_unit.booking_portal_client.notification_email],
-        recipients: [search_user],
+        recipients: [lead.user],
         cc_recipients: [],
         triggered_by_id: self.id,
         triggered_by_type: self.class.to_s,
@@ -215,9 +216,9 @@ class BookingDetail
 
   def pending_balance(options={})
     strict = options[:strict] || false
-    user_id = options[:user_id] || self.user_id
-    if user_id.present?
-      receipts_total = Receipt.where(user_id: user_id, booking_detail_id: self.id)
+    lead_id = options[:lead_id] || self.lead_id
+    if lead_id.present?
+      receipts_total = Receipt.where(lead_id: lead_id, booking_detail_id: self.id)
       if strict
         receipts_total = receipts_total.where(status: "success")
       else
@@ -235,7 +236,7 @@ class BookingDetail
   end
 
   def send_booking_form_to_sign
-    user = self.user
+    _user = self.lead.user
     booking_detail_form = self.class.render_anywhere('templates/booking_detail_form', { booking_detail: self }, 'layouts/pdf')
     pdf = WickedPdf.new.pdf_from_string(booking_detail_form.presence)
     asset = self.assets.new(document_type: 'booking_detail_form')
@@ -244,8 +245,8 @@ class BookingDetail
       asset.file = file
     end
     if asset.save && %w[staging production].include?(Rails.env)
-      options = { request_name: "#{self.class.to_s}-#{self.id.to_s}", recipient_name: user.name, recipient_email: user.email }
-      DocumentSignn::ZohoSign::DocumentCreateWorker.perform_async(user.booking_portal_client.document_sign.id.to_s, asset.id.to_s, options)
+      options = { request_name: "#{self.class.to_s}-#{self.id.to_s}", recipient_name: _user.name, recipient_email: _user.email }
+      DocumentSignn::ZohoSign::DocumentCreateWorker.perform_async(_user.booking_portal_client.document_sign.id.to_s, asset.id.to_s, options)
     end
   end
 
@@ -261,7 +262,7 @@ class BookingDetail
       email = Email.create!({
         booking_portal_client_id: project_unit.booking_portal_client_id,
         email_template_id: Template::EmailTemplate.find_by(name: "booking_confirmed").id,
-        recipients: [user],
+        recipients: [lead.user],
         cc_recipients: [],
         triggered_by_id: self.id,
         triggered_by_type: self.class.to_s,
@@ -273,7 +274,7 @@ class BookingDetail
       template = Template::SmsTemplate.find_by(name: "booking_confirmed")
       sms = Sms.create!(
         booking_portal_client_id: project_unit.booking_portal_client_id,
-        recipient_id: user.id,
+        recipient_id: lead.user_id,
         sms_template_id: template.id,
         triggered_by_id: self.id,
         triggered_by_type: self.class.to_s
@@ -302,18 +303,18 @@ class BookingDetail
     def user_based_scope(user, params = {})
 
       custom_scope = {}
-      if params[:user_id].blank? && !user.buyer?
+      if params[:lead_id].blank? && !user.buyer?
         if user.role?('channel_partner')
-          custom_scope = { user_id: { '$in': User.where(role: 'user', manager_id: user.id).distinct(:id) } }
+          custom_scope = { lead_id: { '$in': Lead.where(manager_id: user.id).distinct(:id) } }
         elsif user.role?('cp_admin')
-          custom_scope = { user_id: { "$in": User.where(role: 'user').nin(manager_id: [nil, '']).distinct(:id) } }
+          custom_scope = { lead_id: { "$in": Lead.nin(manager_id: [nil, '']).distinct(:id) } }
         elsif user.role?('cp')
           channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
-          custom_scope = { user_id: { "$in": User.in(referenced_manager_ids: channel_partner_ids).distinct(:id) } }
+          custom_scope = { lead_id: { "$in": Lead.in(referenced_manager_ids: channel_partner_ids).distinct(:id) } }
         end
       end
 
-      custom_scope = { user_id: params[:user_id] } if params[:user_id].present?
+      custom_scope = { lead_id: params[:lead_id] } if params[:lead_id].present?
       custom_scope = { user_id: user.id } if user.buyer?
       custom_scope
     end

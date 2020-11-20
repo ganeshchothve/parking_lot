@@ -2,11 +2,11 @@
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="<%= home_path(current_user) %>">Dashboard</a></li>
-      <% if policy([current_user_role_group, User]).index? %>
-        <li class="breadcrumb-item"><a href="<%= admin_users_path %>">Users</a></li>
+      <% if policy([current_user_role_group, Lead]).index? %>
+        <li class="breadcrumb-item"><a href="<%= admin_leads_path %>">Deals</a></li>
       <% end %>
-      <% if policy([current_user_role_group, User.new]).show? %>
-        <li class="breadcrumb-item"><a href="<%= admin_user_path(@user) %>"><%= @user.name %></a></li>
+      <% if policy([current_user_role_group, Lead.new]).show? %>
+        <li class="breadcrumb-item"><a href="<%= admin_lead_path(@lead) %>"><%= @lead.name %></a></li>
       <% end %>
       <li class="breadcrumb-item active" aria-current="page"><%= global_labels['user_kycs'] %></li>
     </ol>

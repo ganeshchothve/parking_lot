@@ -21,8 +21,8 @@
               <p><%= booking_detail.name %></p>
             </li>
             <li>
-              <span><%= User.human_attribute_name("role.user", count: 1) %></span>
-              <p><%= link_to_if booking_detail.user, booking_detail.user_name, [current_user_role_group, booking_detail.user] %></p>
+              <span><%= Lead.model_name.human %></span>
+              <p><%= link_to_if booking_detail.lead, booking_detail.lead.name, [current_user_role_group, booking_detail.lead] %></p>
             </li>
             <li>
               <span><%= ProjectTower.model_name.human %></span>

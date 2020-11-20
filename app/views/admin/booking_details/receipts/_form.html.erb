@@ -59,12 +59,12 @@
     <% unless( (defined? direct_payment) && direct_payment ) %>
       <%= f.label :project_unit_id, class: 'control-label' %>
         <% if @receipt.booking_detail_id.present? %>
-          <% user_booking_details = [f.object.booking_detail] %>
+          <% lead_booking_details = [f.object.booking_detail] %>
         <% elsif policy([:admin, @receipt]).editable_field?("booking_detail_id") %>
-          <% user_booking_details = @receipt.user.booking_details.ne(status: 'hold') %>
+          <% lead_booking_details = @receipt.lead.booking_details.ne(status: 'hold') %>
         <% end %>
-        <% if user_booking_details.present? %>
-          <%= f.select :booking_detail_id, user_booking_details.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize' %>
+        <% if lead_booking_details.present? %>
+          <%= f.select :booking_detail_id, lead_booking_details.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize' %>
         <% end %>
     <% end %>
   </div>
@@ -125,7 +125,7 @@
     </div>
     <div class="form-check mt-1">
       <%= check_box_tag :agree, true, false, class: "form-check-input" %>
-      <%= label_tag :agree, t("mongoid.models.booking_detail.i_agree_label.#{current_user_role_group}", name: f.object.user.name), class: "form-check-label" %>
+      <%= label_tag :agree, t("mongoid.models.booking_detail.i_agree_label.#{current_user_role_group}", name: f.object.lead.name), class: "form-check-label" %>
     </div>
   </div>
 <% end %>
