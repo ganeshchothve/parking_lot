@@ -11,8 +11,9 @@ class Ladder
   # TODO: Handle exclusive ladders behavior.
   field :inclusive, type: Boolean, default: true
 
-  embeds_one :payment_adjustment, as: :payable, autobuild: true
   embedded_in :incentive_scheme
+  embeds_one :payment_adjustment, as: :payable, autobuild: true
+  has_many :invoices
 
   validates :start_value, :payment_adjustment, presence: true
   validates :stage, uniqueness: true, numericality: { greater_than: 0 }

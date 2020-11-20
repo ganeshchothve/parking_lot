@@ -20,6 +20,7 @@ class IncentiveScheme
   belongs_to :project_tower, optional: true
   belongs_to :tier, optional: true  # for associating incentive schemes with different channel partner tiers.
   embeds_many :ladders
+  has_many :invoices
 
   delegate :name, to: :project, prefix: true, allow_nil: true
 
@@ -28,7 +29,7 @@ class IncentiveScheme
   validates :name, :ladder_strategy, presence: true
   validates :starts_on, :ends_on, presence: true, unless: :default?
   validates :ladder_strategy, inclusion: { in: STRATEGY }
-  validates :ladders, length: {minimum: 1, message: 'are not present'}
+  validate :validate_number_of_ladders
 
   validate do |is|
     # validate date range
@@ -45,7 +46,7 @@ class IncentiveScheme
     end
 
     # Validate last stage ladder to be open ended.
-    if is.ladders?
+    if is.ladders.any? {|l| l.persisted?}
       if is.ladders.asc(:stage).last.try(:end_value).present?
         is.errors.add :base, 'Last ladder should be open ended. Try keeping end value empty.'
       end
@@ -62,4 +63,8 @@ class IncentiveScheme
 
   accepts_nested_attributes_for :ladders, allow_destroy: true
 
+  def validate_number_of_ladders
+    self.errors.add :ladders, 'are not present' if self.ladders.reject(&:marked_for_destruction?).count < 1
+    self.errors.add :ladders, 'cannot be more than 1 in client default incentive scheme' if self.default? && self.ladders.reject(&:marked_for_destruction?).count > 1
+  end
 end

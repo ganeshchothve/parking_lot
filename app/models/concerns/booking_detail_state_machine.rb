@@ -200,6 +200,7 @@ module BookingDetailStateMachine
       _project_unit.auto_release_on = nil
       _project_unit.save
       send_email_and_sms_as_confirmed
+
       # create asset and send to zoho sign
       if self.aasm.from_state == :booked_tentative
         self.send_booking_form_to_sign

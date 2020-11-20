@@ -61,7 +61,7 @@
         <% if @receipt.booking_detail_id.present? %>
           <% lead_booking_details = [f.object.booking_detail] %>
         <% elsif policy([:admin, @receipt]).editable_field?("booking_detail_id") %>
-          <% lead_booking_details = @receipt.lead.booking_details.ne(status: 'hold') %>
+          <% lead_booking_details = @receipt.lead.booking_details.in(status: BookingDetail::BOOKING_STAGES) %>
         <% end %>
         <% if lead_booking_details.present? %>
           <%= f.select :booking_detail_id, lead_booking_details.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize' %>

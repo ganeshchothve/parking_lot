@@ -192,6 +192,10 @@ en:
       lead:
         one: Deal
         other: Deals
+      invoice:
+        zero: Invoice
+        one: Invoice
+        other: Invoices
 
     attributes:
       crm:
@@ -974,7 +978,6 @@ en:
       set_receipt_missing: 'Make new payment'
       documents:
         link_name: 'Documents'
-
       receipts:
         form:
           disclaimer: The %{field} will be generated only after successful processing of payment.
@@ -983,6 +986,10 @@ en:
           link_name: Pay Remaining Amount
         show:
           disclaimer: Payments need to be for individual units, clubbed payments are not allowed. Please collect a cheque for individual units only.
+
+    invoices:
+      index:
+        link_name: 'Incentives'
 
     clients:
       new:

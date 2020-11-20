@@ -90,7 +90,7 @@ class Admin::UserPolicy < UserPolicy
     end
     attributes += [:login_otp] if confirm_via_otp?
     attributes += [:rera_id] if record.role?('channel_partner')
-    attributes += [:premium] if record.role?('channel_partner') && user.role?('admin')
+    attributes += [:premium, :tier_id] if record.role?('channel_partner') && user.role?('admin')
     attributes += [:role] if %w[superadmin admin].include?(user.role)
     if %w[superadmin admin sales_admin].include?(user.role)
       attributes += [:erp_id]

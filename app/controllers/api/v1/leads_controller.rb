@@ -161,7 +161,7 @@ class Api::V1::LeadsController < ApisController
   end
 
   def set_manager_through_reference_id
-    if manager_reference_id = params.dig(:lead, :manager_id).present?
+    if manager_reference_id = params.dig(:lead, :manager_id).presence
       @manager = User.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": manager_reference_id).first
       if @manager
         # modify params

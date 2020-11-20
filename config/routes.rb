@@ -75,6 +75,8 @@ Rails.application.routes.draw do
         get :lost_receipt, on: :collection
       end
       # resources :receipts, only: [:index]
+
+      resources :invoices, only: :index, controller: 'booking_details/invoices'
     end
 
     resources :accounts
