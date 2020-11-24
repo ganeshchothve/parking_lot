@@ -1,9 +1,9 @@
 module DatabaseSeeds
   module EmailTemplates
     module BookingDetail
-      def self.seed client_id
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "BookingDetail", name: "cost_sheet_and_payment_schedule", subject: "Cost sheet and Payment Schedule", content: '<div class="card w-100">PFA cost sheet and payment schedule</div>') if ::Template::EmailTemplate.where(name: "cost_sheet_and_payment_schedule").blank?
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "BookingDetail", name: "booking_blocked", subject: "Unit No. <%= self.name %> has been blocked!", content: '<div class="card w-100">
+      def self.seed(project_id, client_id)
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "BookingDetail", name: "cost_sheet_and_payment_schedule", subject: "Cost sheet and Payment Schedule", content: '<div class="card w-100">PFA cost sheet and payment schedule</div>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "cost_sheet_and_payment_schedule").blank?
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "BookingDetail", name: "booking_blocked", subject: "Unit No. <%= self.name %> has been blocked!", content: '<div class="card w-100">
           <div class="card-body">
             <p>Dear <%= self.user.name %>,</p>
             <p>
@@ -28,9 +28,9 @@ module DatabaseSeeds
             Your KYC details are incomplete, to complete your registration you can update them <a href="<%= Rails.application.routes.url_helpers.buyer_user_kycs_url %>">here</a>.<br/><br/>
             Welcome once again and do share with us your views and feedback.
           </div>
-        </div>') if ::Template::EmailTemplate.where(name: "booking_blocked").blank?
+        </div>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "booking_blocked").blank?
 
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "BookingDetail", name: "booking_tentative", subject: "Unit <%= self.name %> booked tentative", content: '<div class="card w-100">
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "BookingDetail", name: "booking_tentative", subject: "Unit <%= self.name %> booked tentative", content: '<div class="card w-100">
             <div class="card-body">
               <p>Dear <%= self.name %>,</p>
               <p>
@@ -53,9 +53,9 @@ module DatabaseSeeds
               <br/><br/>
               In case your KYC details are incomplete, you can update them <a href="<%= Rails.application.routes.url_helpers.buyer_user_kycs_url %>">here</a>.<br/><br/>
             </div>
-          </div>') if ::Template::EmailTemplate.where(name: "booking_tentative").blank?
+          </div>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "booking_tentative").blank?
 
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "BookingDetail", name: "booking_confirmed", subject: "Congratulations on booking your home!", content: '<div class="card w-100">
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "BookingDetail", name: "booking_confirmed", subject: "Congratulations on booking your home!", content: '<div class="card w-100">
             <div class="card-body">
               <p>Dear <%= self.user.name %>,</p>
               Congratulations!<br/><br/>
@@ -68,9 +68,9 @@ module DatabaseSeeds
           <div class="mt-3"></div>
           ' + DatabaseSeeds::EmailTemplates.project_unit_cost_sheet + '
           <div class="mt-3"></div>
-          ' + DatabaseSeeds::EmailTemplates.project_unit_payment_schedule) if ::Template::EmailTemplate.where(name: "booking_confirmed").blank?
+          ' + DatabaseSeeds::EmailTemplates.project_unit_payment_schedule) if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "booking_confirmed").blank?
 
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "BookingDetail", name: "project_unit_released", subject: "Your Booking for Unit <%= self.name %> has been cancelled", content: '<div class="card w-100">
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "BookingDetail", name: "project_unit_released", subject: "Your Booking for Unit <%= self.name %> has been cancelled", content: '<div class="card w-100">
             <div class="card-body">
               Your Unit - <%= self.name %> has been released.<br/><br/>
               In case you need any assistance, please get in touch with our support team.
@@ -81,9 +81,9 @@ module DatabaseSeeds
           <div class="mt-3"></div>
           ' + DatabaseSeeds::EmailTemplates.project_unit_cost_sheet + '
           <div class="mt-3"></div>
-          ' + DatabaseSeeds::EmailTemplates.project_unit_payment_schedule) if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, name: "project_unit_released").blank?
+          ' + DatabaseSeeds::EmailTemplates.project_unit_payment_schedule) if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "project_unit_released").blank?
 
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "BookingDetail", name: "auto_release_on_extended", subject: "Auto release date for Unit <%= self.name %> has been extended", content: '<div class="card w-100">
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "BookingDetail", name: "auto_release_on_extended", subject: "Auto release date for Unit <%= self.name %> has been extended", content: '<div class="card w-100">
             <div class="card-body">
               <p>Dear <%= self.user.name %>,</p>
               Auto release date for Unit <%= self.name %> has been extended. Please deposit the next installment before the auto_release date i.e. <%= self.project_unit.auto_release_on %> <br/><br/>
@@ -95,20 +95,20 @@ module DatabaseSeeds
           <div class="mt-3"></div>
           ' + DatabaseSeeds::EmailTemplates.project_unit_cost_sheet + '
           <div class="mt-3"></div>
-          ' + DatabaseSeeds::EmailTemplates.project_unit_payment_schedule) if ::Template::EmailTemplate.where(name: "auto_release_on_extended").blank?
+          ' + DatabaseSeeds::EmailTemplates.project_unit_payment_schedule) if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "auto_release_on_extended").blank?
 
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "BookingDetail", name: "daily_reminder_for_booking_payment", subject: "Payment reminder for <%= self.name %>", content: '<div class="card w-100">
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "BookingDetail", name: "daily_reminder_for_booking_payment", subject: "Payment reminder for <%= self.name %>", content: '<div class="card w-100">
           <div class="card-body">
             <p>Dear <%= self.user.name %>,</p>
             <p>
               You have booked your spot among the privileged few in <%= name %> at <%= project_unit.project_name %>. <br/>
               Kindly pay the remaining balance to complete the booking process. The due date is <%= I18n.l(project_unit.auto_release_on) %>.
               <br/><br/>
-              Visit 
+              Visit
               <a href=<%= user.dashboard_url %> target="_blank"><%= user.dashboard_url %></a>.
             </p>
           </div>
-        </div>') if ::Template::EmailTemplate.where(name: "daily_reminder_for_booking_payment").blank?
+        </div>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "daily_reminder_for_booking_payment").blank?
       end
     end
   end
