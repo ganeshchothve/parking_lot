@@ -6,8 +6,9 @@ class ChannelPartner
   # include SyncDetails
   include CrmIntegration
   extend FilterByCriteria
+  include ChannelPartnerStateMachine
 
-  STATUS = %w(active inactive)
+  STATUS = %w(active inactive pending rejected)
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
 
   # Add different types of documents which are uploaded on channel_partner
@@ -25,6 +26,7 @@ class ChannelPartner
   field :pan_number, type: String
   field :gstin_number, type: String
   field :aadhaar, type: String
+  field :status_change_reason, type: String
 
   field :erp_id, type: String, default: ''
 
@@ -51,6 +53,7 @@ class ChannelPartner
   has_many :assets, as: :assetable
 
   validates :first_name, :last_name, :rera_id, :status, presence: true
+  validates :status_change_reason, presence: true, if: proc { |cp| cp.status == 'rejected' }
   validates :aadhaar, format: { with: /\A\d{12}\z/i, message: 'is not a valid aadhaar number' }, allow_blank: true
   validates :rera_id, uniqueness: true, allow_blank: true
   validates :phone, uniqueness: true, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile] }, if: proc { |user| user.email.blank? }
@@ -58,7 +61,6 @@ class ChannelPartner
   validates :status, inclusion: { in: proc { ChannelPartner::STATUS } }
   validates :pan_number, :aadhaar, uniqueness: true, allow_blank: true
   validates :pan_number, format: { with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A' }, allow_blank: true
-  validate :cannot_make_inactive
   validates :first_name, :last_name, name: true, allow_blank: true
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :user_based_uniqueness
@@ -70,7 +72,9 @@ class ChannelPartner
   def self.available_statuses
     [
       { id: 'active', text: 'Active' },
-      { id: 'inactive', text: 'Inactive' }
+      { id: 'inactive', text: 'Inactive' },
+      { id: 'pending', text: 'Pending Approval' },
+      { id: 'rejected', text: 'Rejected Request' }
     ]
   end
 
@@ -109,13 +113,6 @@ class ChannelPartner
   end
 
   private
-
-  def cannot_make_inactive
-    if status_changed? && status == 'inactive' && persisted?
-      errors.add :status, 'cannot be reverted to "inactive" once activated'
-    end
-  end
-
   def user_based_uniqueness
     query = []
     query << { phone: phone } if phone.present?

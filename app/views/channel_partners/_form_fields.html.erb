@@ -52,13 +52,17 @@
   </div>
 </div>
 
-<% if policy([:admin, @channel_partner]).editable_field?("status") %>
-  <div class="row">
-    <div class="col-md-6">
-      <%= form.input :status, collection: ChannelPartner::STATUS.collect{|status| [ ChannelPartner.human_attribute_name("status.#{status}"), status ] }, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("status"), prompt: :translate %>
-    </div>
+<div class="row">
+  <div class="col-md-6">
+    <%
+      statuses = available_chanel_partner_statuses(@channel_partner)
+    %>
+    <%= form.input :event, collection: statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, class: 'selectize', disabled: !policy([:admin, @channel_partner]).editable_field?("event"), as: :select, prompt: :translate %>
   </div>
-<% end %>
+  <div class="col-md-6 status_change_field">
+    <%= form.input :status_change_reason, disabled: !policy([:admin, @channel_partner]).editable_field?("status_change_reason") %>
+  </div>
+</div>
 
 <% if policy([:admin, @channel_partner]).editable_field?("bank_detail_attributes") %>
   <div class="box-card mt-3">
@@ -90,4 +94,17 @@
       </div>
     </div>
   </div>
+<% end %>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    $('#channel_partner_event').change(function(){
+      if($(this).val() == 'reject'){
+        $('.status_change_field').removeClass('hidden');
+        $('#channel_partner_status_change_reason').addClass('required').attr('required', 'required');
+      }else{
+        $('.status_change_field').addClass('hidden');
+        $('#channel_partner_status_change_reason').removeClass('required').removeAttr('required');
+      }
+    }).trigger('change');
+  });
 <% end %>
