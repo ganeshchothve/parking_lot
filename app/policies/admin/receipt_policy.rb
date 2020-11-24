@@ -2,7 +2,8 @@ class Admin::ReceiptPolicy < ReceiptPolicy
   # def edit_token_number? from ReceiptPolicy
 
   def index?
-    !user.buyer?
+    out = !user.buyer?
+    out && user.active_channel_partner?
   end
 
   def export?
@@ -10,19 +11,19 @@ class Admin::ReceiptPolicy < ReceiptPolicy
   end
 
   def new?
-    valid = record.user.buyer? && confirmed_and_ready_user?
+    valid = record.user.buyer? && confirmed_and_ready_user? && user.active_channel_partner?
   end
 
   def create?
     if is_this_lost_receipt?
       lost_receipt?
     else
-      new? && online_account_present?
+      new? && online_account_present? && user.active_channel_partner?
     end
   end
 
   def asset_create?
-    confirmed_and_ready_user?
+    confirmed_and_ready_user? && user.active_channel_partner?
   end
 
   def edit?
@@ -31,7 +32,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
     valid = record.success? && record.booking_detail_id.blank?
     valid ||= (%w[pending clearance_pending available_for_refund].include?(record.status) && %w[admin crm sales_admin].include?(user.role))
     valid ||= (user.role?('channel_partner') && record.pending?)
-    valid
+    valid && user.active_channel_partner?
   end
 
   def update?

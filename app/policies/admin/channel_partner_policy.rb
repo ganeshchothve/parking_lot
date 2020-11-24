@@ -5,7 +5,8 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
   end
 
   def show?
-    %w[superadmin admin sales_admin].include?(user.role)
+    valid = %w[superadmin admin sales_admin].include?(user.role)
+    valid ||= (user.role == 'channel_partner' && user.associated_channel_partner.present? && user.associated_channel_partner.id.to_s == record.id.to_s)
   end
 
   def create?
@@ -13,7 +14,11 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
   end
 
   def update?
-    index?
+    show?
+  end
+
+  def edit?
+    show?
   end
 
   def permitted_attributes(_params = {})

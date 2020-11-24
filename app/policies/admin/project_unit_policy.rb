@@ -1,7 +1,8 @@
 class Admin::ProjectUnitPolicy < ProjectUnitPolicy
   # def new? def print? def create? def update? def block? def update_co_applicants? def update_project_unit? def payment? def process_payment? def checkout? def send_under_negotiation? from ProjectUnitPolicy
   def index?
-    current_client.enable_actual_inventory?(user) && !user.buyer?
+    out = current_client.enable_actual_inventory?(user) && !user.buyer?
+    out && user.active_channel_partner?
   end
 
   def ds?
@@ -33,7 +34,7 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
   end
 
   def send_cost_sheet_and_payment_schedule?
-    true
+    user.active_channel_partner?
   end
 
   def asset_create?
@@ -45,11 +46,11 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
   end
 
   def unit_configuration_chart?
-    true
+    user.active_channel_partner?
   end
 
   def inventory_snapshot?
-    true
+    user.active_channel_partner?
   end
 
   def permitted_attributes(_params = {})
@@ -69,7 +70,7 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
 
   def _role_based_check(valid)
     if user.role?('channel_partner')
-      if ['blocked', 'hold'].include?(record.status)
+      if ['blocked', 'hold'].include?(record.status) && user.active_channel_partner?
         valid = (valid && record.booking_detail.lead.referenced_manager_ids.include?(user.id))
       else
         valid = false

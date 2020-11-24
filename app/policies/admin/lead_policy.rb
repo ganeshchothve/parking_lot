@@ -1,7 +1,8 @@
 class Admin::LeadPolicy < LeadPolicy
 
   def index?
-    !user.buyer?
+    out = !user.buyer?
+    out && user.active_channel_partner?
   end
 
   def edit?

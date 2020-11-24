@@ -46,7 +46,7 @@ class CustomPolicy < Struct.new(:user, :enable_users)
   end
 
   def schemes?
-    current_client.enable_actual_inventory?(user) && %w[superadmin admin sales crm cp channel_partner].include?(user.role)
+    SchemePolicy.new(user, Sms).index?
   end
 
   def incentive_schemes?

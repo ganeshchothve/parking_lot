@@ -639,6 +639,19 @@ class User
     end
   end
 
+  def active_channel_partner?
+    if self.role == 'channel_partner'
+      channel_partner = associated_channel_partner
+      return channel_partner.present? && channel_partner.status == 'active'
+    else
+      return true
+    end
+  end
+
+  def associated_channel_partner
+    ChannelPartner.where(associated_user_id: self.id).first
+  end
+
   protected
 
   def send_confirmation_notification?

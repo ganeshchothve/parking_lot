@@ -19,6 +19,7 @@ en:
       one: Action
       other: Actions
     active_filter: Active Filter
+    channel_partner_application: Application Form
     added_by: Added By
     custom: 'More'
     change: 'Change'
@@ -987,11 +988,11 @@ en:
         link_name: 'Client Detail'
     channel_partners:
       index:
-        link_name: 'Channel Partners'
+        link_name: 'Channel Partner Applications'
       edit:
-        link_name: 'Edit Channel Partner'
+        link_name: 'Edit Application'
       show:
-        link_name: Details
+        link_name: 'Application Details'
 
     dashboard:
       index:
