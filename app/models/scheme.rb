@@ -33,7 +33,7 @@ class Scheme
     where({ '$and' => ['$or' => [{ default_for_user_ids: nil }, { default_for_user_ids: [] }, { default_for_user_ids: [''] }, { default_for_user_ids: user_id }]] })
   end
   scope :filter_by_status, ->(status) { where(status: status) }
-  scope :filter_by_project_tower, ->(project_tower_id) { where(project_tower_id: project_tower_id) }
+  scope :filter_by_project_tower_id, ->(project_tower_id) { where(project_tower_id: project_tower_id) }
 
   enable_audit({
     indexed_fields: [:project_id, :project_tower_id],

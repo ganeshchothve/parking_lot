@@ -39,6 +39,7 @@ class ProjectTower
   has_many :assets, as: :assetable
 
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(name: regex ) }
+  scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
 
   def unit_configurations
     UnitConfiguration.where(data_attributes: { '$elemMatch' => { 'n' => 'project_tower_id', 'v' => selldo_id } })
