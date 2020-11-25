@@ -44,6 +44,8 @@ class Email
 
   default_scope -> {desc(:created_at)}
 
+  scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
+
   # Methods
 
   # returns the boolean status of email entity, whether it is in draft / untracked stage

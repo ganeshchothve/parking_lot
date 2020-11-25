@@ -54,6 +54,7 @@ class Receipt
   has_many :user_requests, as: :requestable
 
   scope :filter_by_status, ->(_status) { where(status: { '$in' => _status }) }
+  scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
   scope :filter_by_receipt_id, ->(_receipt_id) { where(receipt_id: /#{_receipt_id}/i) }
   scope :filter_by_token_number, ->(_token_number) { where(token_number: _token_number) }
   scope :filter_by_user_id, ->(_user_id) { where(user_id: _user_id) }

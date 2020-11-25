@@ -22,6 +22,10 @@
           <%= select_tag "fltrs[_type]", options_for_select(::UserRequest.descendants.collect{|x| [x.to_s.split('::').last, x]}, params.dig(:fltrs, :_type) || " "), {prompt: '', class: "selectize"} %>
         </div>
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <%= label_tag "fltrs[project_id]", t('mongoid.attributes.user_request.project_id'), class: "control-label" %>
+          <%= select_tag "fltrs[project_id]", options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:project_id] : "")), {prompt: "Select", class: "selectize"} %>
+        </div>
+        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.user_request.status'), class: "control-label" %>
           <%= select_tag "fltrs[status]", options_for_select(UserRequest::STATUS.collect{|urs| [t("mongoid.attributes.user_request/status.#{urs}"), urs ]}, params.dig(:fltrs, :status) || " "), {prompt: '', class: "selectize"} %>
         </div>
