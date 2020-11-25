@@ -29,7 +29,7 @@ class Admin::UsersController < AdminController
   end
 
   def reactivate_account
-    @user.last_activity_at = Time.now
+    @user.update_last_activity!
     @user.expired_at = nil
     respond_to do |format|
       if @user.save
