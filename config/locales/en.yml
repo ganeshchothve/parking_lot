@@ -640,6 +640,9 @@ en:
         approved: Approved
         disabled: Disabled
 
+      invoice:
+        amount: Incentive Amount
+
       sms:
         to: 'To'
         cc: 'Cc'

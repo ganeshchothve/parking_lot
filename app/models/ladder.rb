@@ -18,5 +18,7 @@ class Ladder
   validates :start_value, :payment_adjustment, presence: true
   validates :stage, uniqueness: true, numericality: { greater_than: 0 }
 
+  default_scope -> {asc(:stage)}
+
   accepts_nested_attributes_for :payment_adjustment, allow_destroy: true
 end

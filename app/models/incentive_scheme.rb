@@ -34,7 +34,7 @@ class IncentiveScheme
   validate do |is|
     # validate date range
     if is.starts_on.present? && is.ends_on.present?
-      is.errors.add :base, 'starts on should be less than ends on date' unless is.starts_on < is.ends_on
+      is.errors.add :base, 'starts on should be less than ends on date' unless is.starts_on <= is.ends_on
     end
 
     # validate non overlapping date ranges between all Incentive Schemes present for a project.

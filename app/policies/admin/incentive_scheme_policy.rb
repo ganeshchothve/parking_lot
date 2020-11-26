@@ -23,6 +23,8 @@ class Admin::IncentiveSchemePolicy < IncentiveSchemePolicy
       attributes += [:event] if user.role.in?(%w(admin superadmin))
       attributes += [:starts_on, :ends_on, :ladder_strategy, :project_id, :project_tower_id, :tier_id, ladders_attributes: LadderPolicy.new(user, Ladder.new).permitted_attributes]
     end
+    # For disabling approved scheme till they are not started.
+    attributes += [:event] if user.role.in?(%w(admin superadmin)) && record.approved?
     attributes.uniq
   end
 end
