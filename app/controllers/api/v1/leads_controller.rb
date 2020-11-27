@@ -191,7 +191,7 @@ class Api::V1::LeadsController < ApisController
     rescue ArgumentError
       errors << 'Last revisit date format is invalid. Correct date format is - dd/mm/yyyy'
     end
-    errors << "Revisit count should be a number" if !params[:lead][:revisit_count].is_a?(Integer)
+    errors << "Revisit count should be a number" if params[:lead][:revisit_count].present? && !params[:lead][:revisit_count].is_a?(Integer)
     render json: { errors: errors } if errors.present?
   end
 
