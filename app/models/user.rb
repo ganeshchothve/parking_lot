@@ -143,6 +143,7 @@ class User
   belongs_to :manager, class_name: 'User', optional: true
   belongs_to :channel_partner, optional: true
   belongs_to :confirmed_by, class_name: 'User', optional: true
+  belongs_to :tier, optional: true  # for associating channel partner users with different tiers.
   has_many :leads
   has_many :receipts
   has_many :project_units

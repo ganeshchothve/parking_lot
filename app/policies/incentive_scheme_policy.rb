@@ -1,3 +1,2 @@
 class IncentiveSchemePolicy < ApplicationPolicy
-
 end

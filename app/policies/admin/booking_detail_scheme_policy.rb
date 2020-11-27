@@ -3,7 +3,7 @@ class Admin::BookingDetailSchemePolicy < BookingDetailSchemePolicy
   # BOOKING_ALLOWED_USERS = %w(admin sales sales_admin crm channel_partner)
 
   def new?
-    only_for_admin! && enable_actual_inventory?
+    only_for_admin! && enable_actual_inventory? && can_add_new_bd_scheme?
   end
 
   def create?

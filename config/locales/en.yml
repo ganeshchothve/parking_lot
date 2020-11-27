@@ -192,6 +192,10 @@ en:
       lead:
         one: Deal
         other: Deals
+      invoice:
+        zero: Invoice
+        one: Invoice
+        other: Invoices
 
     attributes:
       crm:
@@ -629,6 +633,15 @@ en:
         name: 'Name'
         project_id: 'Project'
         project_tower_id: 'Project Tower'
+        tier_id: 'Channel Partner Tier'
+        status: 'Status'
+      incentive_scheme/status:
+        draft: Draft
+        approved: Approved
+        disabled: Disabled
+
+      invoice:
+        amount: Incentive Amount
 
       sms:
         to: 'To'
@@ -968,7 +981,6 @@ en:
       set_receipt_missing: 'Make new payment'
       documents:
         link_name: 'Documents'
-
       receipts:
         form:
           disclaimer: The %{field} will be generated only after successful processing of payment.
@@ -977,6 +989,10 @@ en:
           link_name: Pay Remaining Amount
         show:
           disclaimer: Payments need to be for individual units, clubbed payments are not allowed. Please collect a cheque for individual units only.
+
+    invoices:
+      index:
+        link_name: 'Incentives'
 
     clients:
       new:
@@ -1134,6 +1150,8 @@ en:
         link_name: Incentive Schemes
       edit:
         link_name: Edit Incentive Scheme
+      end_scheme:
+        link_name: End Scheme
       show:
         link_name: Incentive Scheme Detail
         header: Incentive Scheme Detail

@@ -24,6 +24,10 @@
             <%= f.label :project_tower_id %>
             <%= f.select :project_tower_id, ProjectTower.all.collect{|pt| [pt.name, pt.id ]}, {prompt: true}, class: 'selectize', disabled: !policy([:admin, @incentive_scheme]).editable_field?("project_tower_id") %>
           </div>
+          <div class="form-group">
+            <%= f.label :tier_id %>
+            <%= f.select :tier_id, Tier.all.collect{|tier| [tier.name, tier.id ]}, {prompt: true}, class: 'selectize', disabled: !policy([:admin, @incentive_scheme]).editable_field?("tier_id") %>
+          </div>
           <div class='row'>
             <div class='col-md-6'>
               <div class="form-group">
@@ -43,6 +47,17 @@
           <%= f.label :ladder_strategy, class: 'label-required' %>
           <%= f.select :ladder_strategy, IncentiveScheme::STRATEGY.collect {|x| [x.titleize, x]}, {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([:admin, @incentive_scheme]).editable_field?("ladder_strategy") %>
         </div>
+        <div class="form-group">
+          <% if f.object.new_record? %>
+            <%= f.hidden_field :event, value: 'draft' %>
+          <% else %>
+            <%= f.label :status, class: 'control-label' %>
+            <%
+                statuses = available_statuses(@incentive_scheme)
+              %>
+            <%= f.select :event, options_for_select(statuses.collect{|rec| [t("mongoid.attributes.incentive_scheme/status.#{rec.to_s}"), rec.to_s]}, @incentive_scheme.status), {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([:admin, @incentive_scheme]).editable_field?("event") %>
+          <% end %>
+        </div>
         <div class="ladders">
           <% editable_ladders = policy([:admin, @incentive_scheme]).editable_field?("ladders_attributes")%>
           <% if editable_ladders %>
@@ -60,53 +75,54 @@
             </h4>
             <hr>
             <div class='row'>
-              <div class='col-md-12'>
+              <div class='col-md-2'>
                 <div class="form-group">
                   <%= lad.label :stage, class: 'label-required' %>
-                  <%= lad.select :stage, (1..10).to_a, {prompt: true}, class: 'selectize', required: 'required', disabled: !editable_ladders %>
+                  <%= lad.select :stage, (1..10).to_a, {}, class: 'selectize no-search', required: 'required', disabled: !editable_ladders %>
                 </div>
               </div>
-              <div class='col-md-6'>
+              <div class='col-md-5'>
                 <div class="form-group">
                   <%= lad.label :start_value, class: 'label-required' %>
-                  <%= lad.number_field :start_value, style: "width: 100%;", required: 'required', disabled: !editable_ladders %>
+                  <%= lad.number_field :start_value, class:'form-control', required: 'required', disabled: !editable_ladders %>
                 </div>
               </div>
-              <div class='col-md-6'>
+              <div class='col-md-5'>
                 <div class="form-group">
                   <%= lad.label :end_value, class: '' %>
-                  <%= lad.number_field :end_value, style: "width: 100%;", disabled: !editable_ladders %>
+                  <%= lad.number_field :end_value, class:'form-control', disabled: !editable_ladders %>
                 </div>
               </div>
+              <!--
               <div class='col-md-12'>
                 <div class="form-group">
-                  <%= lad.label :inclusive, class: 'label-required' %>
+                  <%#= lad.label :inclusive, class: 'label-required' %>
                   <div class="form-check form-check-inline">
-                    <%= lad.radio_button :inclusive, true, required: 'required', class: "form-check-input" %>
-                    <%= lad.label :inclusive, "Yes", class: "form-check-label" %>
+                    <%#= lad.radio_button :inclusive, true, required: 'required', class: "form-check-input" %>
+                    <%#= lad.label :inclusive, "Yes", class: "form-check-label" %>
                   </div>
                   <div class="form-check form-check-inline">
-                    <%= lad.radio_button :inclusive, false, required: 'required', class: "form-check-input" %>
-                    <%= lad.label :inclusive, "No", class: "form-check-label" %>
+                    <%#= lad.radio_button :inclusive, false, required: 'required', class: "form-check-input" %>
+                    <%#= lad.label :inclusive, "No", class: "form-check-label" %>
                   </div>
                 </div>
               </div>
+              -->
             </div>
             <div class="payment-adjustment">
-              <% editable_payment_adjustment = policy(lad.object).editable_field?("payment_adjustment_attributes")%>
               <%= lad.fields_for :payment_adjustment do |adj|%>
                 <h5>Incentive Calculation</h5>
                 <div class="row">
                   <div class="col-md-12">
                     <div class="form-group">
                       <%= adj.label :absolute_value, class: '' %>
-                      <%= adj.number_field :absolute_value, class: "form-control", disabled: !editable_payment_adjustment %>
+                      <%= adj.number_field :absolute_value, class: "form-control", disabled: !editable_ladders %>
                     </div>
                   </div>
                   <div class="col-md-12">
                     <div class="form-group">
                       <%= adj.label :formula, class: '' %>
-                      <%= adj.text_field :formula, class: "form-control", disabled: !editable_payment_adjustment %>
+                      <%= adj.text_field :formula, class: "form-control", disabled: !editable_ladders %>
                       <p class="small text-muted">This will be evaluated in the context of resource (which can be a Booking, Payment, etc)</p>
                     </div>
                   </div>

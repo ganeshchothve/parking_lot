@@ -86,7 +86,7 @@
             <% if policy([current_user_role_group, @user]).editable_field?("is_active") %>
               <div class="col-md-6">
                 <div class="form-group">
-                  <%= f.label :is_active %><br/>
+                  <%= f.label :is_active %>
                   <div class="form-check form-check-inline">
                     <%= f.radio_button :is_active, true, class: "form-check-input" %>
                     <%= f.label :is_active, "Yes", class: "form-check-label" %>
@@ -101,18 +101,18 @@
           </div>
 
           <div class="row">
-            <% if policy([current_user_role_group, @user]).editable_field?("premium") %>
-              <div class="col-md-6">
+            <% if policy([current_user_role_group, @user]).editable_field?('tier_id') %>
+              <div class='col-md-6'>
                 <div class="form-group">
-                  <%= f.check_box :premium, { class: "form-check-label", checked: f.object.premium? }, true %>
-                  <%= f.label :premium, :premium, class: "form-check-label ml-1" %>
+                  <%= f.label :tier_id %>
+                  <%= f.select :tier_id, Tier.all.collect{|tier| [tier.name, tier.id ]}, {prompt: true}, class: 'selectize', disabled: !policy([:admin, @user]).editable_field?("tier_id") %>
                 </div>
               </div>
             <% end %>
             <% if policy([current_user_role_group, @user]).editable_field?("enable_live_inventory") %>
               <div class="col-md-6">
                 <div class="form-group">
-                  <%= f.label :enable_live_inventory %><br/>
+                  <%= f.label :enable_live_inventory %>
                   <div class="form-check form-check-inline">
                     <%= f.radio_button :enable_live_inventory, true, class: "form-check-input" %>
                     <%= f.label :enable_live_inventory, "Yes", class: "form-check-label" %>
@@ -121,6 +121,14 @@
                     <%= f.radio_button :enable_live_inventory, false, class: "form-check-input" %>
                     <%= f.label :enable_live_inventory, "No", class: "form-check-label" %>
                   </div>
+                </div>
+              </div>
+            <% end %>
+            <% if policy([current_user_role_group, @user]).editable_field?("premium") %>
+              <div class="col-md-6">
+                <div class="form-group form-check-inline mt-4">
+                  <%= f.check_box :premium, { class: "form-check-label", checked: f.object.premium? }, true %>
+                  <%= f.label :premium, class: "form-check-label ml-2" %>
                 </div>
               </div>
             <% end %>

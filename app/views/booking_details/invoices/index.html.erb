@@ -1,0 +1,56 @@
+<section class="mb-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-5 col-xs-12 col-md-6 col-sm-12 no-pd">
+        <div class="table-title">
+          <h1 class="title icon-rupee-black icon-set">
+            <%= Invoice.model_name.human(count: @invoices.total_entries) %>
+          </h1>
+        </div>
+      </div>
+      <div class="col-lg-7 col-xs-12 col-md-6 col-sm-12 no-pd">
+        <div class="table-btn-set float-right pb-3">
+          <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @invoices.total_entries %></button>
+        </div>
+      </div>
+
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+        <div class="box-card relative">
+          <table class='table my-customer-table responsive-tbl'>
+            <thead class="th-default">
+              <thead>
+                <tr class="bg-gradient-cd white">
+                  <th><%= BookingDetail.model_name.human %></th>
+                  <th><%= IncentiveScheme.model_name.human %></th>
+                  <th><%= Ladder.model_name.human %></th>
+                  <th><%= t('mongoid.attributes.invoice.amount') %></th>
+                  <th class="text-right"> <%= t('global.action', count: 3) %></th>
+                </tr>
+              </thead>
+            </thead>
+            <tbody>
+              <% @invoices.each do |invoice| %>
+                <tr>
+                  <td><%= link_to invoice.booking_detail.name, [current_user_role_group, invoice.booking_detail] %></td>
+                  <td><%= invoice.incentive_scheme.name %></td>
+                  <td>Stage <%= invoice.ladder_stage %></td>
+                  <td><%= number_to_indian_currency(invoice.amount) %></td>
+                  <td>
+                    <div class="dropdown show text-right">
+                      <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+                      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+          <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pt-2">
+            <%= will_paginate @invoices, list_classes: %w(pagination justify-content-center) %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
