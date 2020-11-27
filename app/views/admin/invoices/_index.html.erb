@@ -1,0 +1,48 @@
+<table class='table my-customer-table responsive-tbl'>
+  <thead class="th-default">
+    <thead>
+      <tr class="bg-gradient-cd white">
+        <th><%= Invoice.model_name.human %> Details</th>
+        <th><%= t('mongoid.attributes.invoice.amount') %></th>
+        <th><%= t('mongoid.attributes.invoice.status') %></th>
+        <th class="text-right"> <%= t('global.action', count: 3) %></th>
+      </tr>
+    </thead>
+  </thead>
+  <tbody>
+    <% invoices.each do |invoice| %>
+      <tr>
+        <td>
+          <%= link_to invoice.booking_detail.name, [current_user_role_group, invoice.booking_detail] %>
+          <div class='small'>
+            <span><%= invoice.incentive_scheme.name.try(:titleize) %></span><br>
+            <span><%= Ladder.model_name.human %> - Stage <%= invoice.ladder_stage %></span>
+          </div>
+        </td>
+        <td><%= number_to_indian_currency(invoice.amount) %></td>
+        <td>
+          <%= invoice.status.titleize %>
+          <% if invoice.rejected? %>
+            <div class='small'>
+              <span class='break-word'>Reason: <%= invoice.comments %></span>
+            </div>
+          <% end %>
+        </td>
+        <td>
+          <div class="dropdown show text-right">
+            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+              <%= link_to t('controller.invoices.show.link_name'), admin_invoice_path(invoice), class: 'dropdown-item' %>
+              <% if policy([current_user_role_group, invoice]).change_state? && policy([current_user_role_group, invoice]).editable_field?('event') %>
+                <%= link_to t("controller.invoices.events.raise"), change_state_admin_booking_detail_invoice_path(invoice.booking_detail, invoice, {invoice: {event: 'raise'}}), method: :post, class: 'dropdown-item' %>
+              <% end %>
+              <% if policy([current_user_role_group, invoice]).edit? %>
+                <%= link_to t("controller.invoices.edit.link_name"), edit_admin_invoice_path(invoice), class: 'dropdown-item modal-remote-form-link' %>
+              <% end %>
+            </div>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

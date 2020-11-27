@@ -340,6 +340,8 @@ class BookingDetail
         elsif user.role?('cp')
           channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
           custom_scope = { lead_id: { "$in": Lead.in(referenced_manager_ids: channel_partner_ids).distinct(:id) } }
+        elsif user.role?('billing_team')
+          custom_scope = incentive_eligible.selector
         end
       end
 

@@ -53,6 +53,12 @@
       </li>
     <% end %>
 
+    <% if policy([:admin, Invoice]).index? %>
+      <li class="nav-item">
+        <%= active_link_to t('controller.invoices.index.link_name'), admin_invoices_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+      </li>
+    <% end %>
+
     <%= render 'layouts/navbar/custom_links' %>
 
     <li class="nav-item user-dropdown dropdown">
