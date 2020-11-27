@@ -9,6 +9,14 @@ class Lead
 
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
 
+  field :first_name, type: String, default: ''
+  field :last_name, type: String, default: ''
+  field :email, type: String, default: ''
+  field :phone, type: String, default: ''
+  field :stage, type: String
+  field :sitevisit_date, type: Date
+  field :revisit_count, type: Integer
+  field :last_revisit_date, type: Date
   field :manager_change_reason, type: String
   field :referenced_manager_ids, type: Array, default: []
   field :iris_confirmation, type: Boolean, default: false
@@ -33,11 +41,20 @@ class Lead
   #has_many :received_whatsapps, class_name: 'Whatsapp', inverse_of: :recipient
 
   validates_uniqueness_of :user, scope: :project_id, message: 'already exists'
+  validates :first_name, presence: true
+  validates :first_name, :last_name, name: true, allow_blank: true
+  validate :phone_or_email_required, if: proc { |user| user.phone.blank? && user.email.blank? }
+  validates :phone, :email, uniqueness: { allow_blank: true }
+  validates :phone, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile mobile fixed_line premium_rate] }, allow_blank: true
 
-  delegate :first_name, :last_name, :name, :email, :phone, to: :user, prefix: false, allow_nil: true
+  # delegate :first_name, :last_name, :name, :email, :phone, to: :user, prefix: false, allow_nil: true
   delegate :name, to: :project, prefix: true, allow_nil: true
   delegate :name, :role, :role?, :email, to: :manager, prefix: true, allow_nil: true
   delegate :role, :role?, to: :user, prefix: true, allow_nil: true
+
+  def phone_or_email_required
+    errors.add(:base, 'Email or Phone is required')
+  end
 
   def unattached_blocking_receipt(blocking_amount = nil)
     blocking_amount ||= current_client.blocking_amount
@@ -66,6 +83,10 @@ class Lead
     search = search.desc(:created_at).first
     search = Search.create(lead: self) if search.blank?
     search
+  end
+
+  def name
+    "#{first_name} #{last_name}"
   end
 
   class << self

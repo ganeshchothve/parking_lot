@@ -312,7 +312,10 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :users, only: [:create, :update]
       resources :leads, only: [:create, :update]
+      resources :user_kycs, only: [:create, :update]
       resources :channel_partners, only: [:create, :update]
+      resources :receipts, only: [:create, :update]
+      resources :booking_details, only: [:create, :update]
     end
   end
   match '/sell_do/lead_created', to: "api/sell_do/leads#lead_created", via: [:get, :post]

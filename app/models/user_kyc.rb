@@ -27,8 +27,7 @@ class UserKyc
   field :configurations, type: Array, default: []
   field :number_of_units, type: Integer
   field :preferred_floors, type: Array, default: []
-  field :min_budget, type: Integer
-  field :max_budget, type: Integer
+  field :budget, type: Integer
   field :comments, type: String
 
   field :nri, type: Boolean, default: false
@@ -56,39 +55,46 @@ class UserKyc
   has_many :assets, as: :assetable
   has_one :bank_detail, as: :bankable, validate: false
   # has_one :correspondence_address, as: :addressable, class_name: "Address", validate: false
-  has_one :permanent_address, as: :addressable, class_name: 'Address', validate: false
-  belongs_to :user
+  has_many :addresses, as: :addressable, validate: false
+  belongs_to :user, optional: true
   belongs_to :lead
-  belongs_to :creator, class_name: 'User'
+  belongs_to :creator, class_name: 'User', optional: true
   has_and_belongs_to_many :project_units
   has_and_belongs_to_many :booking_details
 
   delegate :name, to: :bank_detail, prefix: true, allow_nil: true
-  accepts_nested_attributes_for :bank_detail, :permanent_address # , :correspondence_address
+  accepts_nested_attributes_for :bank_detail, :addresses # , :correspondence_address
 
   validates :first_name, :last_name, :email, :phone, presence: true
-  validates :pan_number, presence: true, unless: Proc.new{ |kyc| kyc.nri? }, reduce: true
   validates :oci, presence: true, if: Proc.new{ |kyc| kyc.nri? }
   validates :email, uniqueness: {scope: :user_id}, allow_blank: true
   validates :pan_number, :aadhaar, uniqueness: {scope: :user_id}, allow_blank: true, reduce: true
-  validates :phone, uniqueness: {scope: [:aadhar, :user_id] }
-  # validates :phone, uniqueness: {scope: :aadhar}, phone: true # TODO: we can remove phone validation, as the validation happens in
+  validates :phone, uniqueness: {scope: [:aadhaar, :user_id] }
+  # validates :phone, uniqueness: {scope: :aadhaar}, phone: true # TODO: we can remove phone validation, as the validation happens in
   validates :configurations, array: {inclusion: {allow_blank: true, in: Proc.new{ |kyc| UserKyc.available_configurations.collect{|x| x[:id]} } }}
   validates :preferred_floors, array: {inclusion: {allow_blank: true, in: Proc.new{ |kyc| UserKyc.available_preferred_floors.collect{|x| x[:id]} } }}
-  validate :min_max_budget
-  validates :pan_number, format: { with: /[A-Z]{3}[ABCGFHLJPTE][A-Z][0-9]{4}[A-Z]/i, message: 'is not in a format of AAAAA9999A' }, reduce: true
+  validates :pan_number, format: { with: /[A-Z]{3}[ABCGFHLJPTE][A-Z][0-9]{4}[A-Z]/i, message: 'is not in a format of AAAAA9999A' }, reduce: true, allow_blank: true
   validates :aadhaar, format: { with: /\A\d{12}\z/i, message: 'is not a valid aadhaar number' }, allow_blank: true
   validates :company_name, :gstn, presence: true, if: proc { |kyc| kyc.is_company? }
   validates :poa_details, presence: true, if: proc { |kyc| kyc.poa? }
   validates :existing_customer_name, :existing_customer_project, presence: true, if: proc { |kyc| kyc.existing_customer? }
-  validates :salutation, inclusion: { in: proc { UserKyc.available_salutations.collect { |x| x[:id] } } }
+  validates :salutation, inclusion: { in: proc { UserKyc.available_salutations.collect { |x| x[:id] } } }, allow_blank: true
   validates :erp_id, uniqueness: true, allow_blank: true
+  validate :check_addresses_validity
 
   scope :filter_by_user_id, ->(user_id) { where(user_id: user_id) }
   scope :filter_by_lead_id, ->(lead_id){ where(lead_id: lead_id)}
 
 
   default_scope -> { desc(:created_at) }
+
+  def check_addresses_validity
+    if addresses.pluck(:address_type).count != addresses.entries.count
+      self.errors.add(:base, 'Address types must be present for all addresses')
+    elsif addresses.pluck(:address_type) != addresses.pluck(:address_type).uniq
+      self.errors.add(:base, 'Address types must be distinct')
+    end
+  end
 
   def name
     begin
@@ -195,14 +201,6 @@ class UserKyc
 
       custom_scope[:project_unit_id] = params[:project_unit_id] if params[:project_unit_id].present?
       custom_scope
-    end
-  end
-
-  private
-
-  def min_max_budget
-    if min_budget.present? && max_budget.present?
-      errors.add :min_budget, 'cannot be smaller than max.' if min_budget > max_budget
     end
   end
 end
