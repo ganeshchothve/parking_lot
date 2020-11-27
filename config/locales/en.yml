@@ -642,6 +642,20 @@ en:
 
       invoice:
         amount: Incentive Amount
+        comments: Rejection Reason
+        project_id: 'Project'
+        booking_detail_id: 'Booking Detail'
+        incentive_scheme_id: 'Incentive Scheme'
+        ladder_stage: 'Ladder Stage'
+        raised_date: 'Raised Date'
+        processing_date: 'Processing Date'
+        approved_date: 'Approved Date'
+        status: 'Status'
+      invoice/status:
+        draft: 'Draft'
+        pending_approval: 'Pending Approval'
+        approved: 'Approved'
+        rejected: 'Rejected'
 
       sms:
         to: 'To'
@@ -810,6 +824,7 @@ en:
         cp_admin: 'Channel Partner Head'
         cp: 'Channel Partner Manager'
         channel_partner: 'Channel Partner'
+        billing_team: 'Billing Team'
         management_user: 'Management User'
         employee_user: 'Employee'
         direct: Direct
@@ -993,6 +1008,18 @@ en:
     invoices:
       index:
         link_name: 'Incentives'
+      edit:
+        link_name: 'Edit Invoice'
+      show:
+        link_name: 'Invoice Details'
+      status_message:
+        pending_approval: 'Invoice successfully raised'
+        approved: 'Invoice successfully approved'
+        rejected: 'Invoice rejected'
+      events:
+        raise: 'Raise Invoice'
+        approve: 'Approve Invoice'
+        reject: 'Reject Invoice'
 
     clients:
       new:
