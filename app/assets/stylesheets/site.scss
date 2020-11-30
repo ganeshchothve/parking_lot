@@ -2556,3 +2556,9 @@ table {
 .hidden{
 	display: none;
 }
+.selectize-control.form-control{
+	padding: 0;
+}
+.selectize-dropdown.form-control{
+	height: unset;
+}

@@ -13,6 +13,8 @@ class Address
 
   belongs_to :addressable, polymorphic: true, optional: true
 
+  validates :address1, :city, :state, :country, :zip, presence: true
+
   enable_audit({
     audit_fields: [:city, :state, :country, :address_type, :selldo_id],
     associated_with: ["addressable"]

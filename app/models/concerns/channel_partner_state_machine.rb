@@ -27,7 +27,11 @@ module ChannelPartnerStateMachine
     end
 
     def can_send_for_approval?
-      true
+      valid = self.valid?
+      ChannelPartner::DOCUMENT_TYPES.each do |dt|
+        valid = valid && self.assets.where(document_type: dt).present?
+      end
+      valid
     end
 
     def after_submit_for_approval

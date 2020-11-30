@@ -414,6 +414,24 @@ en:
         aadhaar: "Aadhaar"
         name_email_phone: 'Name/Email/Phone'
         details: 'Details'
+        team_size: 'Team Size'
+        rera_applicable: 'Is RERA Applicable?'
+        gst_applicable: 'IS GST Applicable?'
+        nri: 'Are your NRI'
+        expertise: 'Expertise'
+        experience: 'Experience'
+        average_quarterly_business: 'Average Quarterly Business (₹)'
+        developers_worked_for: 'Developers Worked For (Type any developer name & press enter)'
+        event: 'Application Status'
+      channel_partner/file_types:
+        rera_certificate: 'RERA Certificate'
+        gst_certificate: 'GST Certificate'
+        cheque_scanned_copy: 'Cheque Scanned Copy'
+      channel_partner/help_text:
+        rera_certificate_html: '<ul><li>Self Attested Rera Certificate</li></ul>'
+        gst_certificate_html: '<ul><li>Self Attested GST Certificate</li></ul>'
+        cheque_scanned_copy_html: '<ul><li>A Cancelled Cheque Scanned Copy</li></ul>'
+
       channel_partner/status:
         active: Active
         inactive: Inactive
