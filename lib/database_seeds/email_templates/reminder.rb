@@ -3,7 +3,7 @@
 module DatabaseSeeds
   module EmailTemplates
     module Reminder
-      def self.seed(client_id)
+      def self.client_based_email_templates(client_id)
         if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, name: 'not_confirmed_day_1').blank?
           Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: 'User', name: 'not_confirmed_day_1', subject: '<%= self.booking_portal_client.name %> | Complete your KYC registration today', content:
             "<div class = 'card'>
@@ -39,9 +39,11 @@ module DatabaseSeeds
               </div>
             </div>")
         end
+      end
 
-        if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, name: 'no_payment_hour_1').blank?
-          Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: 'User', name: 'no_payment_hour_1', subject: '<%= self.booking_portal_client.name %> | KYC Not Complete', content:
+      def self.project_based_email_templates(project_id, client_id)
+        if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: 'no_payment_hour_1').blank?
+          Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: 'User', name: 'no_payment_hour_1', subject: '<%= self.booking_portal_client.name %> | KYC Not Complete', content:
             "<div class = 'card'>
               <div class = 'card-body'>
                 Dear <%= self.name %>,<br/>
@@ -52,8 +54,8 @@ module DatabaseSeeds
             </div>")
         end
 
-        if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, name: 'no_payment_day_1').blank?
-          Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: 'User', name: 'no_payment_day_1', subject: '<%= self.booking_portal_client.name %> | KYC Generation Pending', content:
+        if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: 'no_payment_day_1').blank?
+          Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: 'User', name: 'no_payment_day_1', subject: '<%= self.booking_portal_client.name %> | KYC Generation Pending', content:
             "<div class = 'card'>
               <div class = 'card-body'>
                 Dear <%= self.name %>,<br/>
@@ -64,8 +66,8 @@ module DatabaseSeeds
             </div>")
         end
 
-        if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, name: 'not_payment_day_3').blank?
-          Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: 'User', name: 'no_payment_day_3', subject: '<%= self.booking_portal_client.name %> | One step to go', content:
+        if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: 'not_payment_day_3').blank?
+          Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: 'User', name: 'no_payment_day_3', subject: '<%= self.booking_portal_client.name %> | One step to go', content:
             "<div class = 'card'>
               <div class = 'card-body'>
                 Dear <%= self.name %>,<br/>
@@ -76,8 +78,8 @@ module DatabaseSeeds
             </div>")
         end
 
-        if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, name: 'no_booking_day_4').blank?
-          Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: 'User', name: 'no_booking_day_4', subject: '<%= self.booking_portal_client.name %> | Home loan requirement', content:
+        if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: 'no_booking_day_4').blank?
+          Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: 'User', name: 'no_booking_day_4', subject: '<%= self.booking_portal_client.name %> | Home loan requirement', content:
             "<div class = 'card'>
               <div class = 'card-body'>
                 Dear <%= self.name %>,<br/>
@@ -88,8 +90,8 @@ module DatabaseSeeds
             </div>")
         end
 
-        if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, name: 'no_booking_day_5').blank?
-          Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: 'User', name: 'no_booking_day_5', subject: '<%= self.booking_portal_client.name %> | Get additional discount of Rs.5,000 by completing your profile details', content:
+        if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: 'no_booking_day_5').blank?
+          Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: 'User', name: 'no_booking_day_5', subject: '<%= self.booking_portal_client.name %> | Get additional discount of Rs.5,000 by completing your profile details', content:
             "<div class = 'card'>
               <div class = 'card-body'>
                 Dear <%= self.name %>,<br/>
@@ -100,8 +102,8 @@ module DatabaseSeeds
             </div>")
         end
 
-        if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, name: 'no_booking_day_6').blank?
-          Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: 'User', name: 'no_booking_day_6', subject: '<%= self.booking_portal_client.name %> | List of financial partners for home loan requirement', content:
+        if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: 'no_booking_day_6').blank?
+          Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: 'User', name: 'no_booking_day_6', subject: '<%= self.booking_portal_client.name %> | List of financial partners for home loan requirement', content:
             "<div class = 'card'>
               <div class = 'card-body'>
                 Dear <%= self.name %>,<br/>
@@ -114,8 +116,8 @@ module DatabaseSeeds
             </div>")
         end
 
-        if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, name: 'no_booking_day_7').blank?
-          Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: 'User', name: 'no_booking_day_7', subject: '<%= self.booking_portal_client.name %> | Get additional discount of Rs.20,000 by making your friends your neighbour', content:
+        if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: 'no_booking_day_7').blank?
+          Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: 'User', name: 'no_booking_day_7', subject: '<%= self.booking_portal_client.name %> | Get additional discount of Rs.20,000 by making your friends your neighbour', content:
             "<div class = 'card'>
               <div class = 'card-body'>
                 Dear <%= self.name %>,<br/>

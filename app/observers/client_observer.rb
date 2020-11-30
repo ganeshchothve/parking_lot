@@ -12,8 +12,8 @@ class ClientObserver < Mongoid::Observer
   end
 
   def after_create client
-    DatabaseSeeds::EmailTemplates.lead_based_email_templates_seed(client.id.to_s)
-    DatabaseSeeds::SmsTemplate.lead_based_sms_templates_seed(client.id.to_s)
+    DatabaseSeeds::EmailTemplates.client_based_email_templates_seed(client.id.to_s)
+    DatabaseSeeds::SmsTemplate.client_based_sms_templates_seed(client.id.to_s)
     DatabaseSeeds::UITemplate.seed client.id.to_s
     ExternalInventoryViewConfig.create(booking_portal_client_id: client.id)
     DatabaseSeeds::PortalStagePriorities.seed
