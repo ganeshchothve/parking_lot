@@ -39,6 +39,22 @@ class Lead
   delegate :name, :role, :role?, :email, to: :manager, prefix: true, allow_nil: true
   delegate :role, :role?, to: :user, prefix: true, allow_nil: true
 
+  scope :filter_by__id, ->(_id) { where(_id: _id) }
+  scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
+  scope :filter_by_user_id, ->(user_id) { where(user_id: user_id) }
+  scope :filter_by_manager_id, ->(manager_id) {where(manager_id: manager_id) }
+  scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
+  scope :filter_by_receipts, ->(receipts) do
+    lead_ids = Receipt.where('$or' => [{ status: { '$in': %w(success clearance_pending) } }, { payment_mode: {'$ne': 'online'}, status: {'$in': %w(pending clearance_pending success)} }]).distinct(:lead_id)
+    if lead_ids.present?
+      if receipts == 'yes'
+        where(id: { '$in': lead_ids })
+      elsif receipts == 'no'
+        where(id: { '$nin': lead_ids })
+      end
+    end
+  end
+
   def unattached_blocking_receipt(blocking_amount = nil)
     blocking_amount ||= current_client.blocking_amount
     Receipt.where(lead_id: id).in(status: %w[success clearance_pending]).where(booking_detail_id: nil).where(total_amount: { "$gte": blocking_amount }).asc(:token_number).first

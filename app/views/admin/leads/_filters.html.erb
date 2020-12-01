@@ -3,36 +3,26 @@
   <span class="title">Filter</span>
   <a href="javascript:;" class="close-filter-btn">&times;</a>
   </div>
-  <%= form_tag admin_users_path, method: "get", id: "user_search_form" do %>
+  <%= form_tag admin_leads_path, method: "get", id: "lead_search_form" do %>
     <div class="filter-content">
       <div class="row">
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.user.name_email_phone') %>
-          <%= select_tag "fltrs[_id]", (params[:fltrs].present? ? params[:fltrs][:_id] : []), {class: "selectize-remote", data: {url: admin_users_path }} %>
-        </div>
-        <% if current_client.selldo_client_id.present? && current_client.selldo_gre_form_id.present? && current_client.selldo_channel_partner_form_id.present? %>
-          <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-            <%= label_tag "fltrs", t('mongoid.attributes.user.lead_id') %>
-            <%= number_field_tag "fltrs[lead_id]", (params[:fltrs].present? ? params[:fltrs][:lead_id] : ""), class: "form-control" %>
-          </div>
-        <% end %>
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-          <%= label_tag "fltrs", t('mongoid.attributes.user.role') %>
-          <%= select_tag "fltrs[role][]", options_for_select( user_edit_role_options(User.new(role: 'admin') ), params.dig(:fltrs, :role)), {prompt: "Select", class: "selectize", multiple: 'multiple'} %>
+          <%= select_tag "fltrs[user_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(_id: params[:fltrs][:user_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: { url: admin_users_path } } %>
         </div>
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-          <%= label_tag "fltrs", t('mongoid.attributes.user.confirmation') %>
-          <%= select_tag "fltrs[confirmation]", options_for_select(User.available_confirmation_statuses.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:confirmation] : "")), {prompt: "Select", class: "selectize"} %>
+          <%= label_tag "fltrs[project_id]", t('mongoid.attributes.lead.project_id'), class: "control-label" %>
+          <%= select_tag "fltrs[project_id]", options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:project_id] : "")), {prompt: "Select", class: "selectize"} %>
         </div>
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", Receipt.model_name.human, class: "control-label" %>
           <%= select_tag "fltrs[receipts]", options_for_select([['Yes', 'yes'], ['No', 'no']], params.dig(:fltrs, :receipts)), {prompt: "Select", class: "selectize"} %>
         </div>
         <% if current_user.role == 'admin' %>
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-          <%= label_tag "fltrs", ChannelPartner.model_name.human %>
-          <%= select_tag "fltrs[manager_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(_id: params[:fltrs][:manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {role: 'channel_partner'} }} %>
-        </div>
+          <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+            <%= label_tag "fltrs", ChannelPartner.model_name.human %>
+            <%= select_tag "fltrs[manager_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(_id: params[:fltrs][:manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'channel_partner' } } }} %>
+          </div>
         <% end %>
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.user.created_at') %>
