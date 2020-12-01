@@ -12,7 +12,7 @@ class DashboardPolicy < Struct.new(:user, :dashboard)
   end
 
   def documents?
-    true
+    user.active_channel_partner?
   end
 
   def rera?

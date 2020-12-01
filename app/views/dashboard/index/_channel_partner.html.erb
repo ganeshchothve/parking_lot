@@ -1,337 +1,343 @@
-<% channel_partner = ChannelPartner.where(associated_user_id: current_user.id).first %>
-<section class="first-sec welcome-box">
-  <div class="container">
-    <div class="row">
-      <% template = ::Template::UITemplate.where(name: 'index/_channel_partner').first %>
-      <% if template.present? %>
-        <%= get_view_erb(template) %>
-      <% end %>
+<% channel_partner = current_user.associated_channel_partner %>
+<% if current_user.active_channel_partner? %>
+  <section class="first-sec welcome-box">
+    <div class="container">
+      <div class="row">
+        <% template = ::Template::UITemplate.where(name: 'index/_channel_partner').first %>
+        <% if template.present? %>
+          <%= get_view_erb(template) %>
+        <% end %>
+      </div>
     </div>
-  </div>
-</section>
-<section class="projects-list device-pd">
-  <div class="container">
-    <div class="row">
-      <div class="separate-line"></div>
-      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 my-4 no-pd">
-          <div class="box-card">
-            <div class="box-header bg-gradient-cd br-rd-tr-4">
-              <h2>
-                <%= image_tag 'building-white.svg' %>
-                <%= Project.model_name.human %>
-              </h2>
-            </div>
-            <div class="project-slider1">
-              <div>
-                <div class="box-content br-rd-bl-4 bg-white text-center">
-                  <h3 class="title"><%= current_project.name %></h3>
-                  <p class="sort-desc col-lg-6 col-xs-12 col-md-6 col-sm-12 offset-md-3 offset-lg-3"><%= t('dashboard.channel_partner.projects.sub_heading') %></p>
-                  <ul class="prjt-info br-rd-4">
-                    <li><span><%= t('dashboard.channel_partner.titles.available_inventory') %></span><p><%= DashboardDataProvider.available_inventory %></p></li>
-                    <li><span><%= t('mongoid.attributes.search.starting_price') %></span><p><%= number_to_indian_currency(DashboardDataProvider.minimum_agreement_price) %></p></li>
-                    <li><span><%= t('mongoid.attributes.project_unit.configuration') %></span><p><%= DashboardDataProvider.configurations.to_sentence(last_word_connector: ' & ') %></p></li>
-                  </ul>
-                  <ul class="prjt-link">
-                    <% if current_client.brochure.present? %>
-                      <li><%= link_to t('dashboard.channel_partner.titles.download_brochure'), download_brochure_path, class: 'text-uppercase' %></li>
+  </section>
+  <section class="projects-list device-pd">
+    <div class="container">
+      <div class="row">
+        <div class="separate-line"></div>
+        <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 my-4 no-pd">
+            <div class="box-card">
+              <div class="box-header bg-gradient-cd br-rd-tr-4">
+                <h2>
+                  <%= image_tag 'building-white.svg' %>
+                  <%= Project.model_name.human %>
+                </h2>
+              </div>
+              <div class="project-slider1">
+                <div>
+                  <div class="box-content br-rd-bl-4 bg-white text-center">
+                    <h3 class="title"><%= current_project.name %></h3>
+                    <p class="sort-desc col-lg-6 col-xs-12 col-md-6 col-sm-12 offset-md-3 offset-lg-3"><%= t('dashboard.channel_partner.projects.sub_heading') %></p>
+                    <ul class="prjt-info br-rd-4">
+                      <li><span><%= t('dashboard.channel_partner.titles.available_inventory') %></span><p><%= DashboardDataProvider.available_inventory %></p></li>
+                      <li><span><%= t('mongoid.attributes.search.starting_price') %></span><p><%= number_to_indian_currency(DashboardDataProvider.minimum_agreement_price) %></p></li>
+                      <li><span><%= t('mongoid.attributes.project_unit.configuration') %></span><p><%= DashboardDataProvider.configurations.to_sentence(last_word_connector: ' & ') %></p></li>
+                    </ul>
+                    <ul class="prjt-link">
+                      <% if current_client.brochure.present? %>
+                        <li><%= link_to t('dashboard.channel_partner.titles.download_brochure'), download_brochure_path, class: 'text-uppercase' %></li>
+                      <% end %>
+                      <li><%= link_to t('dashboard.channel_partner.titles.visit_website'), current_client.website_link, target: "_blank", class: 'text-uppercase' %></li>
+                    </ul>
+                    <% if current_client.enable_actual_inventory?(current_user) %>
+                      <%= link_to t('helpers.new.link_name', model: BookingDetail.model_name.human), new_admin_booking_detail_path, class: 'large-btn bg-light-blue display-block fn-500 center-block text-uppercase modal-remote-form-link' %>
                     <% end %>
-                    <li><%= link_to t('dashboard.channel_partner.titles.visit_website'), current_client.website_link, target: "_blank", class: 'text-uppercase' %></li>
-                  </ul>
-                  <% if current_client.enable_actual_inventory?(current_user) %>
-                    <%= link_to t('helpers.new.link_name', model: BookingDetail.model_name.human), new_admin_booking_detail_path, class: 'large-btn bg-light-blue display-block fn-500 center-block text-uppercase modal-remote-form-link' %>
-                  <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="user-db-sec-4 device-pd">
+    <div class="container">
+      <div class="row">
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
+            <div class="table-title pt-4">
+              <img src="<%= asset_path 'chart-line.svg' %>" alt="user icon"> <h1 class="title"><%= t('dashboard.channel_partner.titles.leads') %></h1>
+            </div>
+          </div>
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
+            <div class="row no-mg">
+              <div class="box-card col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-4 no-sm-pd">
+                <div class="leads-box">
+                  <div class="leads-box-inner">
+                    <img src="<%= asset_path 'leader-1.png' %>" alt="leads icon">
+                    <span class="numbers"><%= DashboardDataProvider.total_buyers(current_user) %></span>
+                    <p class="title"><%= t('dashboard.channel_partner.titles.total_leads') %><br><%= t('dashboard.channel_partner.titles.received') %></p>
+                    <!-- <p class="desc">Lorem Ipsum is simply dummy text of the printing and typesetting</p> -->
+                  </div>
+                </div>
+              </div>
+              <div class="box-card col-lg-8 col-md-12 col-sm-12 col-xs-12 mt-4 br-rd-4 bg-white">
+                <div class="row">
+                  <div class="col-lg-6 col-md-12 col-xs-12 col-sm-12">
+                    <h2 class="chart-title pt-4 mt-2 mb-5 pb-5 pl-4"><%= t('dashboard.channel_partner.titles.lead_details') %></h2>
+                    <canvas id="myChart" height="300" width="320"></canvas>
+                  </div>
+                  <div class="col-lg-6 col-md-12 col-xs-12 col-sm-12 relative br-lft">
+                    <h2 class="chart-title pt-4 mt-2 pb-5"><%= t('dashboard.channel_partner.titles.booking_details') %></h2>
+                    <canvas id="barChart" height="300" class="pl-3 pr-3"></canvas>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
       </div>
     </div>
-  </div>
-</section>
-<section class="user-db-sec-4 device-pd">
-  <div class="container">
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
-          <div class="table-title pt-4">
-            <img src="<%= asset_path 'chart-line.svg' %>" alt="user icon"> <h1 class="title"><%= t('dashboard.channel_partner.titles.leads') %></h1>
-          </div>
-        </div>
+  </section>
+  <section class="user-db-sec-4 device-pd">
+    <div class="container">
+      <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
-          <div class="row no-mg">
-            <div class="box-card col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-4 no-sm-pd">
-              <div class="leads-box">
-                <div class="leads-box-inner">
-                  <img src="<%= asset_path 'leader-1.png' %>" alt="leads icon">
-                  <span class="numbers"><%= DashboardDataProvider.total_buyers(current_user) %></span>
-                  <p class="title"><%= t('dashboard.channel_partner.titles.total_leads') %><br><%= t('dashboard.channel_partner.titles.received') %></p>
-                  <!-- <p class="desc">Lorem Ipsum is simply dummy text of the printing and typesetting</p> -->
-                </div>
+          <div class="row">
+            <div class="box-card col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-5">
+              <div class="box-header bg-gradient-cd br-rd-tr-4">
+              <h2><img src="<%= asset_path 'rupee-white.svg' %>" alt="<%= Receipt.model_name.human(count: @receipts.total_entries) %>" class="wd-10"><%= Receipt.model_name.human(count: @receipts.total_entries) %></h2>
               </div>
-            </div>
-            <div class="box-card col-lg-8 col-md-12 col-sm-12 col-xs-12 mt-4 br-rd-4 bg-white">
-              <div class="row">
-                <div class="col-lg-6 col-md-12 col-xs-12 col-sm-12">
-                  <h2 class="chart-title pt-4 mt-2 mb-5 pb-5 pl-4"><%= t('dashboard.channel_partner.titles.lead_details') %></h2>
-                  <canvas id="myChart" height="300" width="320"></canvas>
-                </div>
-                <div class="col-lg-6 col-md-12 col-xs-12 col-sm-12 relative br-lft">
-                  <h2 class="chart-title pt-4 mt-2 pb-5"><%= t('dashboard.channel_partner.titles.booking_details') %></h2>
-                  <canvas id="barChart" height="300" class="pl-3 pr-3"></canvas>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-    </div>
-  </div>
-</section>
-
-
-<section class="user-db-sec-4 device-pd">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
-        <div class="row">
-          <div class="box-card col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-5">
-            <div class="box-header bg-gradient-cd br-rd-tr-4">
-            <h2><img src="<%= asset_path 'rupee-white.svg' %>" alt="<%= Receipt.model_name.human(count: @receipts.total_entries) %>" class="wd-10"><%= Receipt.model_name.human(count: @receipts.total_entries) %></h2>
-            </div>
-            <div class="box-content br-rd-bl-4 bg-white fix-ht-420">
-              <div class="row pd-box">
-                <ul class="db-user-no-list pt-5 mt-2">
-                  <% DashboardDataProvider.receipts_group_by(current_user).each do |key, value| %>
-                    <li><span class="number"><%= value %></span><p class="title"><%= t("mongoid.attributes.receipt/status.#{key}")%></p>
-                    <!-- <span class="prjt-no">Total Projects: 05</span><span class="update-info">last updated a week ago</span> -->
-                    </li>
-                  <% end %>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <%= render 'dashboard/index/partials/collaterals' %>
-          <!--
-          <div class="box-card col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-5">
-            <div class="box-header bg-gradient-cd br-rd-tr-4">
-            <h2><img src="<%# asset_path 'rupee-white.svg' %>" alt="Incentives" class="wd-10">My Incentives</h2>
-            </div>
-            <div class="box-content br-rd-bl-4 bg-white fix-ht-420">
-              <div class="row pd-box">
-                <ul class="db-user-no-list pt-3 mt-3">
-                  <li><span class="number">3</span><p class="title">No of bookings<br>in confirm stage</p></li>
-                  <li><span class="number">5 lac</span><p class="title">Incentive<br>paid</p></li>
-                  <li><span class="number">2 lac</span><p class="title">Incentive<br>generated</p></li>
-                  <li><span class="number">5</span><p class="title">No of bookings<br>with pending incentive</p></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          -->
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<!--
-<section class="user-db-sec-5 device-pd">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
-        <div class="row">
-          <div class="box-card col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-5 referrals">
-            <div class="box-header bg-gradient-cd br-rd-tr-4">
-            <h2><img src="<%# asset_path 'users-white.svg' %>"  alt="Refer a Friend" class="wd-20"><%# t('dashboard.channel_partner.refer_a_channel_partner.heading') %></h2>
-            </div>
-            <div class="box-content br-rd-bl-4 bg-white fix-ht">
-              <div class="pd-box">
-                <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12">
-                  <p class="fn-14 content-clr"><%# t('dashboard.channel_partner.refer_a_channel_partner.sub_heading', project_name: current_project.name) %></p>
-                  <a href="javascript:;" class="large-btn bg-light-blue display-block fn-500 text-uppercase">Refer Now&nbsp;&nbsp;></a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-          <div class="box-card col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-5">
-            <div class="box-header bg-gradient-cd br-rd-tr-4">
-              <h2><img src="<%# asset_path 'leaderboard-white.svg' %>" alt="Documents" class="wd-16">Leaderboard</h2>
-              <a href="javascript:;" class="view-all-btn">View All > </a>
-            </div>
-            <div class="box-content br-rd-bl-4 bg-white fix-ht pt-0">
-              <div class="row pd-box">
-                <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
-                  <ul class="leaderboard-list">
-                    <li class="mt-4">
-                      <div class="display-inline user-icon">
-                        <img src="<%# asset_path 'user.jpg' %>" alt="user img">
-                      </div>
-                      <div class="display-inline user-info">
-                        <span class="rank-type display-block fn-300 fn-12">Rank: 01</span>
-                        <span class="name-point display-block fn-500 fn-14">Prathyush Shetty<br>Points: 1002</span>
-                      </div>
-                    </li>
-                    <li class="mt-4">
-                      <div class="display-inline user-icon">
-                        <img src="<%# asset_path 'user-2.png' %>" alt="user img">
-                      </div>
-                      <div class="display-inline user-info">
-                        <span class="rank-type display-block fn-300 fn-12">Rank: 02</span>
-                        <span class="name-point display-block fn-500 fn-14">Akshay Patil<br>Points: 970</span>
-                      </div>
-                    </li>
+              <div class="box-content br-rd-bl-4 bg-white fix-ht-420">
+                <div class="row pd-box">
+                  <ul class="db-user-no-list pt-5 mt-2">
+                    <% DashboardDataProvider.receipts_group_by(current_user).each do |key, value| %>
+                      <li><span class="number"><%= value %></span><p class="title"><%= t("mongoid.attributes.receipt/status.#{key}")%></p>
+                      <!-- <span class="prjt-no">Total Projects: 05</span><span class="update-info">last updated a week ago</span> -->
+                      </li>
+                    <% end %>
                   </ul>
                 </div>
               </div>
             </div>
+            <%= render 'dashboard/index/partials/collaterals' %>
+            <!--
+            <div class="box-card col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-5">
+              <div class="box-header bg-gradient-cd br-rd-tr-4">
+              <h2><img src="<%# asset_path 'rupee-white.svg' %>" alt="Incentives" class="wd-10">My Incentives</h2>
+              </div>
+              <div class="box-content br-rd-bl-4 bg-white fix-ht-420">
+                <div class="row pd-box">
+                  <ul class="db-user-no-list pt-3 mt-3">
+                    <li><span class="number">3</span><p class="title">No of bookings<br>in confirm stage</p></li>
+                    <li><span class="number">5 lac</span><p class="title">Incentive<br>paid</p></li>
+                    <li><span class="number">2 lac</span><p class="title">Incentive<br>generated</p></li>
+                    <li><span class="number">5</span><p class="title">No of bookings<br>with pending incentive</p></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            -->
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
-<section class="user-db-sec-6 mt-5 device-pd">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
-        <div class="row">
-          <div class="box-card col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-5">
-            <div class="box-header bg-gradient-cd br-rd-tr-4">
-            <h2><img src="<%# asset_path 'rupee-white.svg' %>" alt="Documents" class="wd-10"><%# t('dashboard.channel_partner.incentive_plan.heading') %></h2>
+  </section>
+  <!--
+  <section class="user-db-sec-5 device-pd">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
+          <div class="row">
+            <div class="box-card col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-5 referrals">
+              <div class="box-header bg-gradient-cd br-rd-tr-4">
+              <h2><img src="<%# asset_path 'users-white.svg' %>"  alt="Refer a Friend" class="wd-20"><%# t('dashboard.channel_partner.refer_a_channel_partner.heading') %></h2>
+              </div>
+              <div class="box-content br-rd-bl-4 bg-white fix-ht">
+                <div class="pd-box">
+                  <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12">
+                    <p class="fn-14 content-clr"><%# t('dashboard.channel_partner.refer_a_channel_partner.sub_heading', project_name: current_project.name) %></p>
+                    <a href="javascript:;" class="large-btn bg-light-blue display-block fn-500 text-uppercase">Refer Now&nbsp;&nbsp;></a>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="box-content br-rd-bl-4 bg-white">
-              <div class="row pd-box">
-              <div class="col-lg-6 col-xs-12 col-md-12 col-sm-12">
-                <p class="p-style"><%# t('dashboard.channel_partner.incentive_plan.sub_heading_html') %></p>
+
+
+            <div class="box-card col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-5">
+              <div class="box-header bg-gradient-cd br-rd-tr-4">
+                <h2><img src="<%# asset_path 'leaderboard-white.svg' %>" alt="Documents" class="wd-16">Leaderboard</h2>
+                <a href="javascript:;" class="view-all-btn">View All > </a>
               </div>
-              <div class="col-lg-6 col-xs-12 col-md-12 col-sm-12">
-                <textarea placeholder="Need help? Post your query here..." class="form-control"></textarea>
-                <button class="small-btn bg-light-blue display-block fn-500 mt-3" type="button">Submit</button>
-              </div>
+              <div class="box-content br-rd-bl-4 bg-white fix-ht pt-0">
+                <div class="row pd-box">
+                  <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+                    <ul class="leaderboard-list">
+                      <li class="mt-4">
+                        <div class="display-inline user-icon">
+                          <img src="<%# asset_path 'user.jpg' %>" alt="user img">
+                        </div>
+                        <div class="display-inline user-info">
+                          <span class="rank-type display-block fn-300 fn-12">Rank: 01</span>
+                          <span class="name-point display-block fn-500 fn-14">Prathyush Shetty<br>Points: 1002</span>
+                        </div>
+                      </li>
+                      <li class="mt-4">
+                        <div class="display-inline user-icon">
+                          <img src="<%# asset_path 'user-2.png' %>" alt="user img">
+                        </div>
+                        <div class="display-inline user-info">
+                          <span class="rank-type display-block fn-300 fn-12">Rank: 02</span>
+                          <span class="name-point display-block fn-500 fn-14">Akshay Patil<br>Points: 970</span>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
--->
-<script type="text/javascript">
-var ctx1 = document.getElementById("myChart");
-var myChart = new Chart(ctx1, {
-  type: 'doughnut',
-  data: {
-    labels: <%= @lead_details_labels.to_json.html_safe %>,
-    datasets: [{
-      label: '# of Tomatoes',
-      data: <%= DashboardDataProvider.user_group_by(current_user).values.to_json.html_safe %>,
-      backgroundColor: ['#1f3bb3','#fed1c8']
-    }]
-  },
-  options: {
-    cutoutPercentage: 60,
-    responsive: false,
-    legend: {
-        fullWidth: true,
-        position: 'bottom',
-            display: true,
-            labels: {
-                fontColor: '#333d51',
-                padding: 30,
-                boxWidth: 12,
-            }
-        }
-  }
-});
-
-
-
-var canvas = document.getElementById("barChart");
-var ctx = canvas.getContext('2d');
-
-// Global Options:
- Chart.defaults.global.defaultFontColor = 'dodgerblue';
- Chart.defaults.global.defaultFontSize = 10;
-
-// Data with datasets options
-var data = {
-    labels: <%= @booking_detail_labels.to_json.html_safe %>,
-      datasets: [
-        {
-            fill: true,
-            backgroundColor: ['#8ddf8b','#1f3bb3','#5f79ea'],
-            data: <%= DashboardDataProvider.booking_detail_group_by(current_user).values.to_json.html_safe %>
-        }
-    ]
-};
-
-var options = {
-  tooltips: {
-        callbacks: {
-            label: function(tooltipItem) {
-                return Number(tooltipItem.yLabel);
-            }
-        }
+  </section>
+  <section class="user-db-sec-6 mt-5 device-pd">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
+          <div class="row">
+            <div class="box-card col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-5">
+              <div class="box-header bg-gradient-cd br-rd-tr-4">
+              <h2><img src="<%# asset_path 'rupee-white.svg' %>" alt="Documents" class="wd-10"><%# t('dashboard.channel_partner.incentive_plan.heading') %></h2>
+              </div>
+              <div class="box-content br-rd-bl-4 bg-white">
+                <div class="row pd-box">
+                <div class="col-lg-6 col-xs-12 col-md-12 col-sm-12">
+                  <p class="p-style"><%# t('dashboard.channel_partner.incentive_plan.sub_heading_html') %></p>
+                </div>
+                <div class="col-lg-6 col-xs-12 col-md-12 col-sm-12">
+                  <textarea placeholder="Need help? Post your query here..." class="form-control"></textarea>
+                  <button class="small-btn bg-light-blue display-block fn-500 mt-3" type="button">Submit</button>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  -->
+  <script type="text/javascript">
+  var ctx1 = document.getElementById("myChart");
+  var myChart = new Chart(ctx1, {
+    type: 'doughnut',
+    data: {
+      labels: <%= @lead_details_labels.to_json.html_safe %>,
+      datasets: [{
+        label: '# of Tomatoes',
+        data: <%= DashboardDataProvider.user_group_by(current_user).values.to_json.html_safe %>,
+        backgroundColor: ['#1f3bb3','#fed1c8']
+      }]
     },
-    legend:{
-      display: false,
-    },
-    title: {
-              display: false,
-          },
-    scales: {
-        yAxes: [{
-            ticks: {
-              fontColor: "#1f3bb3",
-                beginAtZero:true,
-                stacked: false
-            }
-        }],
-        xAxes: [{
-
-          stacked: true,
-            barPercentage: 1,
-            barThickness: 65,
-            maxBarThickness: 80,
-            minBarLength: 20,
-            gridLines: {
-              offsetGridLines: true,
-                color: "#ffffff"
-            },
-            ticks: {
-              fontColor: "#1f3bb3"
-            }
-        }]
-    },
-     hover: {
-        animationDuration: 1
-    },
-    animation: {
-        duration: 1,
-        onComplete: function () {
-            var chartInstance = this.chart,
-            ctx = chartInstance.ctx;
-            ctx.textAlign = 'center';
-            ctx.fillStyle = "#1f3bb3";
-            ctx.textBaseline = 'bottom';
-
-            this.data.datasets.forEach(function (dataset, i) {
-                var meta = chartInstance.controller.getDatasetMeta(i);
-                meta.data.forEach(function (bar, index) {
-                    var data = dataset.data[index];
-                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
-
-                });
-            });
-        }
+    options: {
+      cutoutPercentage: 60,
+      responsive: false,
+      legend: {
+          fullWidth: true,
+          position: 'bottom',
+              display: true,
+              labels: {
+                  fontColor: '#333d51',
+                  padding: 30,
+                  boxWidth: 12,
+              }
+          }
     }
-};
+  });
+  var canvas = document.getElementById("barChart");
+  var ctx = canvas.getContext('2d');
+  // Global Options:
+  Chart.defaults.global.defaultFontColor = 'dodgerblue';
+  Chart.defaults.global.defaultFontSize = 10;
 
-// Chart declaration:
-var myBarChart = new Chart(ctx, {
-    type: 'bar',
-    data: data,
-    options: options
-});
+  // Data with datasets options
+  var data = {
+      labels: <%= @booking_detail_labels.to_json.html_safe %>,
+        datasets: [
+          {
+              fill: true,
+              backgroundColor: ['#8ddf8b','#1f3bb3','#5f79ea'],
+              data: <%= DashboardDataProvider.booking_detail_group_by(current_user).values.to_json.html_safe %>
+          }
+      ]
+  };
+  var options = {
+    tooltips: {
+          callbacks: {
+              label: function(tooltipItem) {
+                  return Number(tooltipItem.yLabel);
+              }
+          }
+      },
+      legend:{
+        display: false,
+      },
+      title: {
+                display: false,
+            },
+      scales: {
+          yAxes: [{
+              ticks: {
+                fontColor: "#1f3bb3",
+                  beginAtZero:true,
+                  stacked: false
+              }
+          }],
+          xAxes: [{
 
-</script>
+            stacked: true,
+              barPercentage: 1,
+              barThickness: 65,
+              maxBarThickness: 80,
+              minBarLength: 20,
+              gridLines: {
+                offsetGridLines: true,
+                  color: "#ffffff"
+              },
+              ticks: {
+                fontColor: "#1f3bb3"
+              }
+          }]
+      },
+      hover: {
+          animationDuration: 1
+      },
+      animation: {
+          duration: 1,
+          onComplete: function () {
+              var chartInstance = this.chart,
+              ctx = chartInstance.ctx;
+              ctx.textAlign = 'center';
+              ctx.fillStyle = "#1f3bb3";
+              ctx.textBaseline = 'bottom';
+
+              this.data.datasets.forEach(function (dataset, i) {
+                  var meta = chartInstance.controller.getDatasetMeta(i);
+                  meta.data.forEach(function (bar, index) {
+                      var data = dataset.data[index];
+                      ctx.fillText(data, bar._model.x, bar._model.y - 5);
+
+                  });
+              });
+          }
+      }
+  };
+  // Chart declaration:
+  var myBarChart = new Chart(ctx, {
+      type: 'bar',
+      data: data,
+      options: options
+  });
+  </script>
+<% else %>
+  <section class="first-sec welcome-box">
+    <div class="container">
+      <div class="row">
+        <% if Admin::ChannelPartnerPolicy.new(current_user, channel_partner).edit? %>
+          <%= link_to t('helpers.edit.link_name', model: ChannelPartner.model_name.human), edit_channel_partner_path(channel_partner), class: 'modal-remote-form-link' %>
+        <% end %>
+        <% if policy([ current_user_role_group, Asset.new(assetable: channel_partner)]).index? %>
+          <%= link_to t('controller.assets.index.link_name'), assetables_path(assetable_type: channel_partner.class.model_name.i18n_key.to_s, assetable_id: channel_partner.id), class: 'modal-remote-form-link' %>
+        <% end %>
+      </div>
+    </div>
+  </section>
+<% end %>

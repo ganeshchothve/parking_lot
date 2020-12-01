@@ -2,7 +2,8 @@ class Admin::SchemePolicy < SchemePolicy
   # def new? def edit? def update? def approve_via_email? from SchemePolicy
 
   def index?
-    current_client.enable_actual_inventory?(user) && %w[superadmin admin sales crm cp channel_partner].include?(user.role)
+    out = current_client.enable_actual_inventory?(user) && %w[superadmin admin sales crm cp channel_partner].include?(user.role)
+    out && user.active_channel_partner?
   end
 
   def create?
@@ -10,7 +11,7 @@ class Admin::SchemePolicy < SchemePolicy
   end
 
   def payment_adjustments_for_unit?
-    true
+    user.active_channel_partner?
   end
 
   def permitted_attributes(_params = {})

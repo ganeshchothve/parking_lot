@@ -49,13 +49,15 @@ class ChannelPartnersController < ApplicationController
   end
 
   def update
+    authorize([:admin, @channel_partner])
+    @channel_partner.assign_attributes(permitted_attributes([:admin, @channel_partner]))
     respond_to do |format|
-      if @channel_partner.update(permitted_attributes([:admin, @channel_partner]))
-        format.html { redirect_to channel_partners_path, notice: 'Channel partner was successfully updated.' }
+      if (params.dig(:channel_partner, :event).present? ? @channel_partner.send("#{params.dig(:channel_partner, :event)}!") : @channel_partner.save)
+        format.html { redirect_to channel_partners_path, notice: 'Channel Partner was successfully updated.' }
         format.json { render json: @channel_partner }
       else
         format.html { render :edit }
-        format.json { render json: { errors: @channel_partner.errors.full_messages.uniq }, status: :unprocessable_entity }
+        format.json { render json: { errors: @channel_partner.errors.full_messages }, status: :unprocessable_entity }
       end
     end
   end

@@ -5,7 +5,8 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
   end
 
   def show?
-    %w[superadmin admin sales_admin].include?(user.role)
+    valid = %w[superadmin admin sales_admin].include?(user.role)
+    valid ||= (user.role == 'channel_partner' && user.associated_channel_partner.present? && user.associated_channel_partner.id.to_s == record.id.to_s)
   end
 
   def create?
@@ -13,13 +14,23 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
   end
 
   def update?
-    index?
+    valid = show?
+    valid = valid && ['inactive', 'rejected'].include?(record.status) if user.role == 'channel_partner'
+    valid
+  end
+
+  def edit?
+    update?
   end
 
   def permitted_attributes(_params = {})
-    attributes = [:name, :email, :phone, :rera_id, :title, :first_name, :region, :last_name, :street, :house_number, :city, :postal_code, :country, :mobile_phone, :email, :company_name, :pan_number, :gstin_number, :aadhaar, :rera_id, :manager_id, bank_detail_attributes: BankDetailPolicy.new(user, BankDetail.new).permitted_attributes, address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes]
-    attributes += [:status] if user.present? && %w[superadmin admin cp_admin].include?(user.role) && record.status != 'active'
-    attributes += [:status] if user.present? && ['cp'].include?(user.role) && record.status != 'active' && record.manager_id == user.id
+    attributes = [:name, :email, :phone, :rera_id, :title, :first_name, :region, :last_name, :street, :house_number, :city, :postal_code, :country, :mobile_phone, :email, :company_name, :pan_number, :gstin_number, :aadhaar, :rera_id, :manager_id, :team_size, :rera_applicable, :gst_applicable, :nri, :experience, :average_quarterly_business, expertise: [], developers_worked_for: [], address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes]
+    
+    # attributes += [bank_detail_attributes: BankDetailPolicy.new(user, BankDetail.new).permitted_attributes]
+
+    attributes += [:event, :status_change_reason] if user.present? && %w[superadmin admin cp_admin].include?(user.role)
+    attributes += [:event, :status_change_reason] if user.present? && ['cp'].include?(user.role) && record.status != 'active' && record.manager_id == user.id
+    attributes += [:event] if user.present? && ['channel_partner'].include?(user.role) && record.associated_user_id == user.id && ['inactive', 'rejected'].include?(record.status)
     attributes += [:erp_id] if user.present? && %w[admin sales_admin].include?(user.role)
     attributes
   end
