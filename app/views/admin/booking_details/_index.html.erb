@@ -15,11 +15,11 @@
           <%= link_to booking_detail.name, [current_user_role_group, booking_detail] %>
           <div class="small">
             <%= Project.model_name.human %> :
-            <%= booking_detail.project_name %>
+            <%= booking_detail.project.name %>
           </div>
           <div class="small">
             <%= ProjectTower.model_name.human %> :
-            <%= booking_detail.project_tower_name %>
+            <%= booking_detail.project_unit.project_tower_name %>
           </div>
           <% if %w[ hold swapped cancelled ].exclude?(booking_detail.status)  %>
             <div class="small">

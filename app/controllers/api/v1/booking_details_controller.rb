@@ -47,9 +47,13 @@ class Api::V1::BookingDetailsController < ApisController
       render json: { errors: ['Lead_id is required to create Booking'] }, status: :bad_request and return unless params.dig(:booking_detail, :lead_id).present?
     end
     render json: { errors: ['Primary user kyc reference id is required to create Booking'] }, status: :bad_request and return if params.dig(:booking_detail, :primary_user_kyc_attributes).present? && !params.dig(:booking_detail, :primary_user_kyc_attributes, :reference_id).present?
-    params.dig(:booking_detail, :receipts_attributes).each do |receipt_attributes|
-      render json: { errors: ['Receipt reference id is required for all receipts'] }, status: :bad_request and return unless receipt_attributes.dig(:reference_id).present?
-    end if params.dig(:booking_detail, :receipts_attributes).present?
+    if params.dig(:booking_detail, :receipts_attributes).present?
+      params.dig(:booking_detail, :receipts_attributes).each do |receipt_attributes|
+        render json: { errors: ['Receipt reference id is required for all receipts'] }, status: :bad_request and return unless receipt_attributes.dig(:reference_id).present?
+      end
+    else
+      render json: {errors: ['Receipts is/are mandatory to create Booking']} if params[:action] == 'create'
+    end
     params.dig(:booking_detail, :user_kycs_attributes).each do |user_kyc_attributes|
       render json: { errors: ['User KYC reference id is required for all user KYCs'] }, status: :bad_request and return unless user_kyc_attributes.dig(:reference_id).present?
     end if params.dig(:booking_detail, :user_kycs_attributes).present?
@@ -61,8 +65,8 @@ class Api::V1::BookingDetailsController < ApisController
   end
 
   def set_project_unit
-    @project_unit = ProjectUnit.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:booking_detail][:project_unit_id]).first
-    render json: { errors: ["Project Unit with reference_id '#{ params[:booking_detail][:project_unit_id] }' not found"] }, status: :not_found unless @project_unit
+    @project_unit = ProjectUnit.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:booking_detail][:project_unit_id], status: 'available').first
+    render json: { errors: ["Project Unit with reference_id '#{ params[:booking_detail][:project_unit_id] }' not found or is already booked"] }, status: :not_found unless @project_unit
   end
 
   def check_project
@@ -186,6 +190,7 @@ class Api::V1::BookingDetailsController < ApisController
       params[:booking_detail][:receipts_attributes][i][:lead_id] = @lead.id.to_s
       params[:booking_detail][:receipts_attributes][i][:user_id] = @lead.user.id.to_s
       params[:booking_detail][:receipts_attributes][i][:project_id] = @lead.project.id.to_s
+      params[:booking_detail][:receipts_attributes][i][:creator_id] = @crm.user_id.to_s
       # add third party references
       if receipt_reference_id = params.dig(:booking_detail, :receipts_attributes, i, :reference_id).presence
         tpr_attrs = {
@@ -211,7 +216,7 @@ class Api::V1::BookingDetailsController < ApisController
   end
 
   def receipt_params
-    [:project_id, :lead_id, :user_id, :receipt_id, :order_id, :payment_mode, :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, :tracking_id, :total_amount, :status_message, :status, :payment_gateway, :processed_on, :comments, :payment_type, third_party_references_attributes: [:id, :crm_id, :reference_id]]
+    [:project_id, :lead_id, :user_id, :receipt_id, :order_id, :payment_mode, :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, :tracking_id, :total_amount, :status_message, :status, :payment_gateway, :processed_on, :comments, :payment_type, :creator_id, third_party_references_attributes: [:id, :crm_id, :reference_id]]
   end
 
   def user_kyc_params

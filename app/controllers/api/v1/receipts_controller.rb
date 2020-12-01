@@ -7,6 +7,7 @@ class Api::V1::ReceiptsController < ApisController
   def create
     unless Receipt.reference_resource_exists?(@crm.id, params[:receipt][:reference_id])
       @receipt = Receipt.new(receipt_create_params)
+      @receipt.creator_id = @crm.user_id
       if @receipt.save
         response = generate_response
         response[:message] = 'Receipt successfully created'

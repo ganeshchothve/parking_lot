@@ -1121,6 +1121,8 @@ en:
         success: 'Email has been sent again.'
       show:
         link_name: Payment Details
+      show_user_kyc:
+        link_name: 'View KYC'
     referrals:
       index:
         link_name: 'Referrals'
