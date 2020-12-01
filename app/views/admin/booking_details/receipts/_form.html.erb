@@ -51,8 +51,8 @@
       statuses = available_statuses(@receipt)
     %>
     <%= f.select :event, options_for_select(statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, @receipt.status), {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([:admin, @receipt]).editable_field?("event") %>
-  </div>
-<% end %>
+  <% end %>
+</div>
 
 <% if current_client.enable_actual_inventory?(current_user) %>
   <div class="form-group">
@@ -61,7 +61,7 @@
         <% if @receipt.booking_detail_id.present? %>
           <% lead_booking_details = [f.object.booking_detail] %>
         <% elsif policy([:admin, @receipt]).editable_field?("booking_detail_id") %>
-          <% lead_booking_details = @receipt.lead.booking_details.ne(status: 'hold') %>
+          <% lead_booking_details = @receipt.lead.booking_details.in(status: BookingDetail::BOOKING_STAGES) %>
         <% end %>
         <% if lead_booking_details.present? %>
           <%= f.select :booking_detail_id, lead_booking_details.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize' %>

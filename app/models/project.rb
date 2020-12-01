@@ -158,6 +158,7 @@ class Project
   has_many :assets, as: :assetable
 
   validates :name, :rera_registration_no, presence: true
+  validates_uniqueness_of :name, :rera_registration_no
   validates :enable_actual_inventory, array: { inclusion: {allow_blank: true, in: (User::ADMIN_ROLES + User::BUYER_ROLES) } }
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
 

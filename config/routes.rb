@@ -75,7 +75,16 @@ Rails.application.routes.draw do
         get :lost_receipt, on: :collection
       end
       # resources :receipts, only: [:index]
+
+      resources :invoices, only: :index, controller: 'booking_details/invoices' do
+        member do
+          post :change_state
+        end
+      end
     end
+
+    # for Billing Team
+    resources :invoices, only: [:index, :show, :edit, :update], controller: 'booking_details/invoices'
 
     resources :accounts
     resources :phases
@@ -217,7 +226,9 @@ Rails.application.routes.draw do
       get :payment_adjustments_for_unit, on: :member
     end
 
-    resources :incentive_schemes, except: [:destroy]
+    resources :incentive_schemes, except: [:destroy] do
+      get :end_scheme, on: :member
+    end
   end
 
   # home & globally accessible

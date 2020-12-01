@@ -59,6 +59,7 @@ class BookingDetail
   has_many :notes, as: :notable
   has_many :user_requests, as: :requestable
   has_many :related_booking_details, foreign_key: :parent_booking_detail_id, primary_key: :_id, class_name: 'BookingDetail'
+  has_many :invoices
   has_and_belongs_to_many :user_kycs
 
 
@@ -86,6 +87,7 @@ class BookingDetail
   scope :filter_by_tasks_pending, ->(tasks) { where("$and": [{ _id: {"$in": find_pending_tasks(tasks)}}])}
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(name: regex ) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: start_date..end_date) }
+  scope :incentive_eligible, -> { booked_confirmed }
 
   accepts_nested_attributes_for :notes, :tasks
 
@@ -282,6 +284,19 @@ class BookingDetail
     end
   end
 
+  def incentive_eligible?
+    booked_confirmed?
+  end
+
+  def calculate_incentive
+    # Calculate incentives & generate invoices
+    if Rails.env.development?
+      IncentiveCalculatorWorker.new.perform(id.to_s)
+    else
+      IncentiveCalculatorWorker.perform_async(id.to_s)
+    end
+  end
+
   class << self
 
     def find_completed_tasks tasks
@@ -311,6 +326,8 @@ class BookingDetail
         elsif user.role?('cp')
           channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
           custom_scope = { lead_id: { "$in": Lead.in(referenced_manager_ids: channel_partner_ids).distinct(:id) } }
+        elsif user.role?('billing_team')
+          custom_scope = incentive_eligible.selector
         end
       end
 
