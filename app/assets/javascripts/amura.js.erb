@@ -134,30 +134,3 @@ Amura.readCookie = function(name){
 	}
 	return null;
 }
-
-Amura.filter_towers_on_project_change = function(){
-  $("#fltrs_project_id").on("change", function(e){
-    $.ajax({
-      url: "<%= url.admin_project_towers_path %>",
-      data: {
-        fltrs: {
-          project_id: e.target.value
-        }
-      },
-      type: "get",
-      dataType: "json",
-      success: function(data){
-        var $project_tower_select = $("#fltrs_project_tower_id").selectize();
-        var project_tower_selectize = $project_tower_select[0].selectize;
-        project_tower_selectize.setValue('');
-        project_tower_selectize.clearOptions();
-        var options = _.map(data, function(d) { return { value: d._id, text: d.name } });
-        project_tower_selectize.addOption(options)
-        project_tower_selectize.refreshOptions(true);
-      },
-      error: function(){
-        Amura.global_error_handler("Error in fetching the project towers...")
-      }
-    });
-  });
-}

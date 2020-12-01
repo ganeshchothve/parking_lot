@@ -26,6 +26,12 @@ class IncentiveScheme
   delegate :name, to: :project, prefix: true, allow_nil: true
 
   scope :approved, ->{ where(status: 'approved' )}
+  scope :filter_by_name, ->(name) { where(name: ::Regexp.new(::Regexp.escape(name), 'i')) }
+  scope :filter_by_status, ->(status) { where(status: status) }
+  scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
+  scope :filter_by_project_tower_id, ->(project_tower_id) { where(project_tower_id: project_tower_id) }
+  scope :filter_by_tier_id, ->(tier_id) { where(tier_id: tier_id) }
+  scope :filter_by_ladder_strategy, ->(ladder_strategy) { where(ladder_strategy: ladder_strategy) }
 
   validates :name, :ladder_strategy, presence: true
   validates_uniqueness_of :name

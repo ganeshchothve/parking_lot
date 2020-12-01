@@ -14,18 +14,16 @@
           <% if policy([:admin, IncentiveScheme]).new? %>
             <%= link_to t('helpers.new.link_name', model: IncentiveScheme.model_name.human), new_admin_incentive_scheme_path, class: 'db-small-btn light-blue bg-white fn-400 modal-remote-form-link btn unset-width' %>
           <% end %>
-          <!--
           <button class="db-filter-btn white fn-500" type="button">
             <i class="icon-set icon-filter-light-blue"></i>
           </button>
-          -->
         </div>
       </div>
       <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
         <div class="box-card relative">
           <%= render 'index', { incentive_schemes: @incentive_schemes } %>
           <div class="filter-box">
-            <%# render "filters" %>
+            <%= render "filters" %>
           </div>
         </div>
       </div>

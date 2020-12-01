@@ -70,13 +70,14 @@ class IncentiveCalculator
           if options[:test]
             hash[:incentive] = incentive_amount
           else
-            invoice =  Invoice.find_or_initialize_by(project_id: booking_detail.project_id, booking_detail_id: booking_detail.id, incentive_scheme_id: incentive_scheme.id, ladder_id: ladder.id)
-            existing_invoices = Invoice.where(project_id: booking_detail.project_id, booking_detail_id: booking_detail.id, incentive_scheme_id: incentive_scheme.id)
+            invoice =  Invoice.find_or_initialize_by(project_id: booking_detail.project_id, booking_detail_id: booking_detail.id, incentive_scheme_id: incentive_scheme.id, ladder_id: ladder.id, manager_id: channel_partner.id)
+            existing_invoices = Invoice.where(project_id: booking_detail.project_id, booking_detail_id: booking_detail.id, incentive_scheme_id: incentive_scheme.id, manager_id: channel_partner.id)
 
             if invoice.new_record?
               amount = (incentive_amount - existing_invoices.sum(:amount)).round
               invoice.amount = (amount > 0 ? amount : 0)
               invoice.ladder_stage = ladder.stage
+              invoice.manager = channel_partner
               unless invoice.save
                 Rails.logger.error "[IncentiveCalculator][ERR] #{invoice.errors.full_messages}"
               end

@@ -19,6 +19,7 @@ class Invoice
   belongs_to :project
   belongs_to :booking_detail
   belongs_to :incentive_scheme
+  belongs_to :manager, class_name: 'User'
   has_one :receipt
 
   validates :ladder_id, :ladder_stage, presence: true
@@ -26,6 +27,10 @@ class Invoice
   validates :booking_detail_id, uniqueness: { scope: [:incentive_scheme_id, :ladder_id] }
   validates :amount, numericality: { greater_than: 0 }
 
+  scope :filter_by_status, ->(status) { where(status: status) }
+  scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
+  scope :filter_by_booking_detail_id, ->(booking_detail_id) { where(booking_detail_id: booking_detail_id) }
+  scope :filter_by_channel_partner_id, ->(channel_partner_id) { where(manager_id: channel_partner_id) }
 
   class << self
     def user_based_scope(user, params = {})

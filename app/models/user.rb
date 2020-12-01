@@ -150,6 +150,7 @@ class User
   has_many :booking_details
   has_many :user_requests
   has_many :user_kycs
+  has_many :invoices
   has_many :searches
   has_many :received_smses, class_name: 'Sms', inverse_of: :recipient
   has_many :received_whatsapps, class_name: 'Whatsapp', inverse_of: :recipient
