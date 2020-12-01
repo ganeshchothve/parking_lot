@@ -54,8 +54,8 @@ class Crm::Api
   end
 
   def get_request_header record
-    _base_header_erb = ERB.new(base.request_header.gsub("\n\s", '')) rescue ERB.new("{}")
-    _base_request_header = SafeParser.new(_base_request_erb.result(record.get_binding)).safe_load rescue {}
+    _base_header_erb = ERB.new(base.request_headers.gsub("\n\s", '')) rescue ERB.new("{}")
+    _base_request_header = SafeParser.new(_base_header_erb.result(record.get_binding)).safe_load rescue {}
     _request_header = DEFAULT_REQUEST_HEADER.merge(_base_request_header)
   end
 end
