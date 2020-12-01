@@ -14,7 +14,7 @@ class Admin::IncentiveSchemesController < AdminController
 
   def new
     @incentive_scheme = IncentiveScheme.new(booking_portal_client_id: current_user.booking_portal_client_id)
-    ladder = @incentive_scheme.ladders.build
+    ladder = @incentive_scheme.ladders.build(stage: 1)
     authorize [:admin, @incentive_scheme]
     render layout: false
   end

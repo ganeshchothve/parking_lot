@@ -21,6 +21,7 @@ class Ladder
   validates :end_value, numericality: { greater_than: 0, allow_blank: true }
   validates :payment_adjustment, copy_errors_from_child: true
   validate :start_value_lte_end_value
+  validate :start_value_must_start_from_1
 
   default_scope -> {asc(:stage)}
 
@@ -28,6 +29,10 @@ class Ladder
 
   def start_value_lte_end_value
     errors.add :start_value, 'must be <= end value' if end_value? && start_value > end_value
+  end
+
+  def start_value_must_start_from_1
+    errors.add :start_value, 'must start from 1' unless incentive_scheme.ladders.reject(&:marked_for_destruction?).map(&:start_value).min == 1
   end
 
   def name_in_error

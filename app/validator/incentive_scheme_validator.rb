@@ -23,7 +23,7 @@ class IncentiveSchemeValidator < ActiveModel::Validator
     if _ladders.present?
       stages = _ladders.map(&:stage)
 
-      # Validate end vlaue of ladders must be present except for last ladder.
+      # Validate end value of ladders must be present except for last ladder.
       if is.ladders.ne(stage: stages.max).reject(&:marked_for_destruction?).any? {|l| !l.end_value?}
         is.errors.add :base, 'Ladder end value must be present except for last ladder.'
       end
