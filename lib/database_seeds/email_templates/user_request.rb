@@ -1,8 +1,8 @@
 module DatabaseSeeds
   module EmailTemplates
     module UserRequest
-      def self.seed client_id
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "UserRequest::Cancellation", name: "cancellation_request_pending", subject: "Cancellation Requested for Unit: <%= self.project_unit.name %>", content: '<div class="card w-100">
+      def self.seed(project_id, client_id)
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "UserRequest::Cancellation", name: "cancellation_request_pending", subject: "Cancellation Requested for Unit: <%= self.project_unit.name %>", content: '<div class="card w-100">
           <div class="card-body">
             <p>Dear <%= self.user.name %>,</p>
             <% if requestable.kind_of?(BookingDetail) %>
@@ -15,9 +15,9 @@ module DatabaseSeeds
               </p>
             <% end %>
           </div>
-        </div>') if ::Template::EmailTemplate.where(name: "cancellation_request_pending").blank?
+        </div>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "cancellation_request_pending").blank?
 
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "UserRequest::Cancellation", name: "cancellation_request_resolved", subject: "Cancellation Request for Unit: <%= self.project_unit.name %> Resolved", content: '<div class="card w-100">
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "UserRequest::Cancellation", name: "cancellation_request_resolved", subject: "Cancellation Request for Unit: <%= self.project_unit.name %> Resolved", content: '<div class="card w-100">
           <div class="card-body">
             <p>Dear <%= self.user.name %>,</p>
             <% if requestable.kind_of?(BookingDetail) %>
@@ -32,9 +32,9 @@ module DatabaseSeeds
               </p>
             <% end %>
           </div>
-        </div>') if ::Template::EmailTemplate.where(name: "cancellation_request_resolved").blank?
+        </div>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "cancellation_request_resolved").blank?
 
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "UserRequest::Cancellation", name: "cancellation_request_rejected", subject: "Cancellation Request for Unit: <%= self.project_unit.name %> rejected", content: '<div class="card w-100">
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "UserRequest::Cancellation", name: "cancellation_request_rejected", subject: "Cancellation Request for Unit: <%= self.project_unit.name %> rejected", content: '<div class="card w-100">
           <div class="card-body">
             <p>Dear <%= self.user.name %>,</p>
             <% if requestable.kind_of?(BookingDetail) %>
@@ -47,9 +47,9 @@ module DatabaseSeeds
               </p>
             <% end %>
           </div>
-        </div>') if ::Template::EmailTemplate.where(name: "cancellation_request_rejected").blank?
+        </div>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "cancellation_request_rejected").blank?
 
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "UserRequest::Swap", name: "swap_request_pending", subject: "Swap Requested for <%= I18n.t('global.project_unit') %>: <%= self.project_unit.name %>", content: '<div class="card w-100">
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "UserRequest::Swap", name: "swap_request_pending", subject: "Swap Requested for <%= I18n.t('global.project_unit') %>: <%= self.project_unit.name %>", content: '<div class="card w-100">
           <div class="card-body">
             <p>Dear <%= self.user.name %>,</p>
             <% if self.requestable.kind_of?(BookingDetail) %>
@@ -59,9 +59,9 @@ module DatabaseSeeds
             <% elsif self.requestable.kind_of?(Receipt) %>
             <% end %>
           </div>
-        </div>') if ::Template::EmailTemplate.where(name: "swap_request_pending").blank?
+        </div>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "swap_request_pending").blank?
 
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "UserRequest::Swap", name: "swap_request_resolved", subject: "Swap Request for <%= I18n.t('global.project_unit') %>: <%= self.project_unit.name %> Resolved", content: '<div class="card w-100">
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "UserRequest::Swap", name: "swap_request_resolved", subject: "Swap Request for <%= I18n.t('global.project_unit') %>: <%= self.project_unit.name %> Resolved", content: '<div class="card w-100">
           <div class="card-body">
             <p>Dear <%= self.user.name %>,</p>
             <p>
@@ -69,16 +69,16 @@ module DatabaseSeeds
               To view your dashboard click <a href="<%= user.dashboard_url %>">here</a>.
             </p>
           </div>
-        </div>') if ::Template::EmailTemplate.where(name: "swap_request_resolved").blank?
+        </div>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "swap_request_resolved").blank?
 
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "UserRequest::Swap", name: "swap_request_rejected", subject: "Swap Request for <%= I18n.t('global.project_unit') %>: <%= self.project_unit.name %> Rejected", content: '<div class="card w-100">
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "UserRequest::Swap", name: "swap_request_rejected", subject: "Swap Request for <%= I18n.t('global.project_unit') %>: <%= self.project_unit.name %> Rejected", content: '<div class="card w-100">
           <div class="card-body">
             <p>Dear <%= self.user.name %>,</p>
             <p>
               Your Swap request on booking of <%= project_unit.name %> at <%= project_unit.project_name %> has been rejected.
             </p>
           </div>
-        </div>') if ::Template::EmailTemplate.where(name: "swap_request_rejected").blank?
+        </div>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "swap_request_rejected").blank?
       end
     end
   end
