@@ -7,7 +7,7 @@
     <% end %>
     <div class="small">
       <%= t('mongoid.attributes.receipt.project_id') %>: <%= receipt.project_name %><br/>
-      <%= t('mongoid.attributes.receipt.created_by')%>: <%= receipt.creator.name %><br/>
+      <%= t('mongoid.attributes.receipt.created_by')%>: <%= receipt.creator.try(:name) %><br/>
       <% if receipt.lead.manager_id.present? && current_user.role != "channel_partner" %>
         <%= t('mongoid.attributes.lead.manager_id') %>: <%= receipt.lead.manager_name %><br/>
       <% end %>

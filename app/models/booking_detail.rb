@@ -96,13 +96,13 @@ class BookingDetail
   accepts_nested_attributes_for :notes, :tasks, :receipts, :user_kycs, :primary_user_kyc
 
   def validate_primary_user_kyc
-    self.errors.add(:base, "Primary User KYC errors - #{ primary_user_kyc.errors.to_a.to_sentence }") unless primary_user_kyc.valid?
+    self.errors.add(:base, "Primary User KYC errors - #{ primary_user_kyc.errors.to_a.to_sentence }") if primary_user_kyc.present? && !primary_user_kyc.valid?
   end
 
   def validate_receipts
     receipts.each do |r|
       self.errors.add(:base, "Receipt errors (#{r.receipt_id})- " + r.errors.to_a.to_sentence) if !r.valid?
-    end
+    end if receipts.present?
   end
 
   def validate_content

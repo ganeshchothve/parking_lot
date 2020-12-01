@@ -156,7 +156,7 @@ class Api::V1::LeadsController < ApisController
   end
 
   def lead_update_params
-    params.require(:lead).permit(:first_name, :last_name, :email, :phone, :stage, :sitevisit_date, :revisit_count, :last_revisit_date, :project_id, :manager_id, third_party_references_attributes: [:id, :crm_id, :reference_id])
+    params.require(:lead).permit(:first_name, :last_name, :email, :phone, :stage, :sitevisit_date, :revisit_count, :last_revisit_date, third_party_references_attributes: [:id, :reference_id])
   end
 
   def third_party_reference_params

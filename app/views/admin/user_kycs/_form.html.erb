@@ -37,8 +37,7 @@
             </div>
             <div class="col-md-6">
               <div class="row">
-                <%= f.input :min_budget, wrapper_html: { class: "col-md-6" } %>
-                <%= f.input :max_budget, wrapper_html: { class: "col-md-6" } %>
+                <%= f.input :budget, wrapper_html: { class: "col-md-6" } %>
               </div>
             </div>
           </div>
@@ -53,17 +52,7 @@
             </div>
           </div>
 
-          <div class="card">
-            <div class="card-header">
-              Permanent Address
-            </div>
-            <div class="card-body">
-              <% f.object.build_permanent_address if f.object.permanent_address.blank? %>
-              <%= f.fields_for :permanent_address do |permanent_address_form| %>
-                <%= render "addresses/form_fields", f: permanent_address_form %>
-              <% end %>
-            </div>
-          </div>
+          <!-- TO DO - Add addresses input fields - Multiproject phase 2 -->
 
           <% if params[:project_unit_id].present? %>
             <%

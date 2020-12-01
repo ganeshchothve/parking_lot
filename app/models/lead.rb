@@ -43,8 +43,8 @@ class Lead
   validates_uniqueness_of :user, scope: :project_id, message: 'already exists'
   validates :first_name, presence: true
   validates :first_name, :last_name, name: true, allow_blank: true
-  validate :phone_or_email_required, if: proc { |user| user.phone.blank? && user.email.blank? }
-  validates :phone, :email, uniqueness: { allow_blank: true }
+  # validate :phone_or_email_required, if: proc { |user| user.phone.blank? && user.email.blank? }
+  # validates :phone, :email, uniqueness: { allow_blank: true }
   validates :phone, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile mobile fixed_line premium_rate] }, allow_blank: true
 
   # delegate :first_name, :last_name, :name, :email, :phone, to: :user, prefix: false, allow_nil: true

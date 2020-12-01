@@ -53,6 +53,7 @@ class Receipt
   has_many :assets, as: :assetable
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :user_requests, as: :requestable
+  has_one :user_kyc
 
   scope :filter_by_status, ->(_status) { where(status: { '$in' => _status }) }
   scope :filter_by_receipt_id, ->(_receipt_id) { where(receipt_id: /#{_receipt_id}/i) }
@@ -88,12 +89,15 @@ class Receipt
   validate :tracking_id_processed_on_only_on_success, if: proc { |record| record.status != 'cancelled' }
   validate :processed_on_greater_than_issued_date
   validate :issued_date_when_offline_payment, if: proc { |record| %w[online cheque].exclude?(record.payment_mode) && issued_date.present? }
+  validate :validate_user_kyc
 
   increments :order_id, auto: false
 
   delegate :project_unit, to: :booking_detail, prefix: false, allow_nil: true
   delegate :name, to: :booking_detail, prefix: true, allow_nil: true
   delegate :name, to: :project, prefix: true, allow_nil: true
+
+  accepts_nested_attributes_for :user_kyc
 
   enable_audit(
     associated_with: ['user'],
@@ -110,6 +114,10 @@ class Receipt
     define_method "#{_payment_mode}?" do
       _payment_mode.to_s == self.payment_mode.to_s
     end
+  end
+
+  def validate_user_kyc
+    self.errors.add(:base, "User KYC errors - #{ user_kyc.errors.to_a.to_sentence }") if user_kyc.present? && !user_kyc.valid?
   end
 
   #

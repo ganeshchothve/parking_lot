@@ -58,6 +58,7 @@ class UserKyc
   has_many :addresses, as: :addressable, validate: false
   belongs_to :user, optional: true
   belongs_to :lead
+  belongs_to :receipt, optional: true
   belongs_to :creator, class_name: 'User', optional: true
   has_and_belongs_to_many :project_units
   has_and_belongs_to_many :booking_details
@@ -67,9 +68,9 @@ class UserKyc
 
   validates :first_name, :last_name, :email, :phone, presence: true
   validates :oci, presence: true, if: Proc.new{ |kyc| kyc.nri? }
-  validates :email, uniqueness: {scope: :user_id}, allow_blank: true
-  validates :pan_number, :aadhaar, uniqueness: {scope: :user_id}, allow_blank: true, reduce: true
-  validates :phone, uniqueness: {scope: [:aadhaar, :user_id] }
+  validates :email, uniqueness: {scope: :lead_id}, allow_blank: true
+  validates :pan_number, :aadhaar, uniqueness: {scope: :lead_id}, allow_blank: true, reduce: true
+  validates :phone, uniqueness: {scope: [:aadhaar, :lead_id] }
   # validates :phone, uniqueness: {scope: :aadhaar}, phone: true # TODO: we can remove phone validation, as the validation happens in
   validates :configurations, array: {inclusion: {allow_blank: true, in: Proc.new{ |kyc| UserKyc.available_configurations.collect{|x| x[:id]} } }}
   validates :preferred_floors, array: {inclusion: {allow_blank: true, in: Proc.new{ |kyc| UserKyc.available_preferred_floors.collect{|x| x[:id]} } }}
