@@ -14,8 +14,12 @@
           <%= f.text_field :name, autofocus: true, class: "form-control", required: 'required', disabled: !policy([:admin, @scheme]).editable_field?("name") %>
         </div>
         <div class="form-group">
+          <%= f.label :project_id, class: 'label-required' %>
+          <%= f.select :project_id, options_for_select(Project.all.collect{|p| [p.name, p.id ]}, (f.object.new_record? ? Project.first.id : f.object.project_id)) , {prompt: true}, class: 'selectize project_select', required: 'required', disabled: !policy([:admin, @scheme]).editable_field?("project_id") %>
+        </div>
+        <div class="form-group">
           <%= f.label :project_tower_id, class: 'label-required' %>
-          <%= f.select :project_tower_id, ProjectTower.all.collect{|pt| [pt.name, pt.id ]} , {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([:admin, @scheme]).editable_field?("project_tower_id") %>
+          <%= f.select :project_tower_id, ProjectTower.all.collect{|pt| [pt.name, pt.id ]} , {prompt: true}, class: 'selectize project_tower_select', required: 'required', disabled: !policy([:admin, @scheme]).editable_field?("project_tower_id"), data: { url: admin_project_towers_path } %>
         </div>
         <div class="form-group">
           <%= f.label :user_role, class: 'control-label' %>

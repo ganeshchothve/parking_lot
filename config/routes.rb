@@ -32,7 +32,9 @@ Rails.application.routes.draw do
   end
 
   scope "*assetable_type/:assetable_id" do
-    resources :assets, controller: :assets, as: :assetables
+    resources :assets, controller: :assets, as: :assetables do
+      patch :create, on: :collection
+    end
   end
   scope "*notable_type/:notable_id" do
     resources :notes, controller: :notes, as: :notables
@@ -75,6 +77,20 @@ Rails.application.routes.draw do
         get :lost_receipt, on: :collection
       end
       # resources :receipts, only: [:index]
+
+      resources :invoices, only: :index, controller: 'booking_details/invoices' do
+        member do
+          patch :change_state
+          get :re_raise
+        end
+      end
+    end
+
+    # for Billing Team
+    resources :invoices, only: [:index, :show, :edit, :update], controller: 'booking_details/invoices' do
+      resources :incentive_deductions, except: :destroy, controller: 'invoices/incentive_deductions' do
+        post :change_state, on: :member
+      end
     end
 
     resources :accounts
@@ -194,6 +210,7 @@ Rails.application.routes.draw do
         patch :confirm_user
         get :block_lead
         patch :unblock_lead
+        patch :reactivate_account
       end
 
       collection do
@@ -217,7 +234,9 @@ Rails.application.routes.draw do
       get :payment_adjustments_for_unit, on: :member
     end
 
-    resources :incentive_schemes, except: [:destroy]
+    resources :incentive_schemes, except: [:destroy] do
+      get :end_scheme, on: :member
+    end
   end
 
   # home & globally accessible

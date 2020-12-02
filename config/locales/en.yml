@@ -193,6 +193,14 @@ en:
       lead:
         one: Deal
         other: Deals
+      invoice:
+        zero: Invoice
+        one: Invoice
+        other: Invoices
+      incentive_deduction:
+        zero: Incentive Deduction
+        one: Incentive Deduction
+        other: Incentive Deductions
 
     attributes:
       crm:
@@ -648,6 +656,43 @@ en:
         name: 'Name'
         project_id: 'Project'
         project_tower_id: 'Project Tower'
+        tier_id: 'Channel Partner Tier'
+        status: 'Status'
+        date_range: Date Filter
+      incentive_scheme/status:
+        draft: Draft
+        approved: Approved
+        disabled: Disabled
+
+      invoice:
+        amount: Incentive Amount
+        net_amount: Net Amount
+        comments: Comments
+        rejection_reason: Rejection Reason
+        project_id: 'Project'
+        booking_detail_id: 'Booking Detail'
+        incentive_scheme_id: 'Incentive Scheme'
+        ladder_stage: 'Ladder Stage'
+        raised_date: 'Raised Date'
+        processing_date: 'Processing Date'
+        approved_date: 'Approved Date'
+        status: 'Status'
+        cheque_detail: 'Cheque Details'
+      invoice/status:
+        draft: 'Draft'
+        pending_approval: 'Pending Approval'
+        approved: 'Approved'
+        rejected: 'Rejected'
+
+      incentive_deduction:
+        amount: Deduction Amount
+        comments: Reason
+        status: Status
+      incentive_deduction/status:
+        draft: 'Draft'
+        pending_approval: 'Pending Approval'
+        approved: 'Approved'
+        rejected: 'Rejected'
 
       sms:
         to: 'To'
@@ -816,6 +861,7 @@ en:
         cp_admin: 'Channel Partner Head'
         cp: 'Channel Partner Manager'
         channel_partner: 'Channel Partner'
+        billing_team: 'Billing Team'
         management_user: 'Management User'
         employee_user: 'Employee'
         direct: Direct
@@ -987,7 +1033,6 @@ en:
       set_receipt_missing: 'Make new payment'
       documents:
         link_name: 'Documents'
-
       receipts:
         form:
           disclaimer: The %{field} will be generated only after successful processing of payment.
@@ -996,6 +1041,39 @@ en:
           link_name: Pay Remaining Amount
         show:
           disclaimer: Payments need to be for individual units, clubbed payments are not allowed. Please collect a cheque for individual units only.
+
+    invoices:
+      index:
+        link_name: 'Incentives'
+      edit:
+        link_name: 'Edit Invoice'
+      show:
+        link_name: 'Invoice Details'
+      status_message:
+        pending_approval: 'Invoice successfully raised'
+        approved: 'Invoice successfully approved'
+        rejected: 'Invoice rejected'
+      events:
+        raise: 'Raise Invoice'
+        re_raise: 'Re-Raise Invoice'
+        approve: 'Approve Invoice'
+        reject: 'Reject Invoice'
+
+    incentive_deductions:
+      index:
+        link_name: 'Incentive Deductions'
+      new:
+        link_name: 'Add Deduction'
+      edit:
+        link_name: 'Edit Deduction'
+      show:
+        link_name: 'Show Deduction'
+      status_message:
+        approved: 'Incentive deduction approved'
+        rejected: 'Incentive deduction rejected'
+      events:
+        approved: 'Approve'
+        rejected: 'Reject'
 
     clients:
       new:
@@ -1153,6 +1231,8 @@ en:
         link_name: Incentive Schemes
       edit:
         link_name: Edit Incentive Scheme
+      end_scheme:
+        link_name: End Scheme
       show:
         link_name: Incentive Scheme Detail
         header: Incentive Scheme Detail
@@ -1203,6 +1283,8 @@ en:
         link_name: "%{role} Profile"
       print:
         link_name: Print
+      reactivate_account:
+        link_name: Reactivate Account
       resend_confirmation_instructions:
         link_name: Resend Confirmation
       resend_password_instructions:

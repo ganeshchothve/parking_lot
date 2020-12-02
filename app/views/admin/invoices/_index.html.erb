@@ -1,0 +1,54 @@
+<table class='table my-customer-table responsive-tbl'>
+  <thead class="th-default">
+    <thead>
+      <tr class="bg-gradient-cd white">
+        <th><%= Invoice.model_name.human %> Details</th>
+        <th><%= t('mongoid.attributes.invoice.amount') %></th>
+        <th><%= t('mongoid.attributes.invoice.status') %></th>
+        <th class="text-right"> <%= t('global.action', count: 3) %></th>
+      </tr>
+    </thead>
+  </thead>
+  <tbody>
+    <% invoices.each do |invoice| %>
+      <tr>
+        <td>
+          <%= link_to invoice.booking_detail.name, [current_user_role_group, invoice.booking_detail] %>
+          <div class='small'>
+            <span><%= invoice.incentive_scheme.name.try(:titleize) %></span><br>
+            <span><%= Ladder.model_name.human %> - Stage <%= invoice.ladder_stage %></span>
+          </div>
+        </td>
+        <td>
+          <%= number_to_indian_currency(invoice.amount) %><br>
+          <% if invoice.net_amount.present? %>
+            <div class='small'>
+              <span>Net Amount: <%= number_to_indian_currency(invoice.net_amount) %></span>
+            </div>
+          <% end %>
+        </td>
+        <td>
+          <%= invoice.status.titleize %>
+          <% if invoice.rejected? %>
+            <div class='small'>
+              <span class='break-word'>Reason: <%= invoice.rejection_reason %></span>
+            </div>
+          <% end %>
+          <% if deduction = invoice.incentive_deduction.presence %>
+            <div class='small'>
+              <span>Deduction Added: <strong><%= number_to_indian_currency(deduction.amount) %></strong> (<%= t("mongoid.attributes.incentive_deduction/status.#{deduction.status}") %>)</span>
+            </div>
+          <% end %>
+        </td>
+        <td>
+          <div class="dropdown show text-right">
+            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+              <%= render 'admin/invoices/links', invoice: invoice %>
+            </div>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

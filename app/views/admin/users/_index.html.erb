@@ -52,6 +52,10 @@
 
         <td data-title="Role">
           <span><%= User.human_attribute_name("role.#{user.role}") %></span>
+          <% if user.role?('channel_partner') && user.tier_id.present? %>
+            <br/>
+            <span> Tier: <%= user.tier.try(:name) || "" %> </span>
+          <% end %>
         </td>
 
         <td data-title="Status">

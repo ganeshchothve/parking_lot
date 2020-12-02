@@ -1,0 +1,33 @@
+<section class="mb-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-5 col-xs-12 col-md-6 col-sm-12 no-pd">
+        <div class="table-title">
+          <h1 class="title icon-rupee-black icon-set">
+            Incentive <%= Invoice.model_name.human(count: 2) %>
+          </h1>
+        </div>
+      </div>
+      <div class="col-lg-7 col-xs-12 col-md-6 col-sm-12 no-pd">
+        <div class="table-btn-set float-right pb-3">
+          <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @invoices.total_entries %></button>
+          <button class="db-filter-btn white fn-500" type="button">
+            <i class="icon-set icon-filter-light-blue"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+        <div class="box-card relative">
+          <%= render 'admin/invoices/index', invoices: @invoices %>
+          <div class="filter-box">
+            <%= render "admin/invoices/filters" %>
+          </div>
+          <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pt-2">
+            <%= will_paginate @invoices, list_classes: %w(pagination justify-content-center) %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

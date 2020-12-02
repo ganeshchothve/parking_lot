@@ -2,7 +2,7 @@ class Admin::UserPolicy < UserPolicy
   # def resend_confirmation_instructions? def resend_password_instructions? def export? def update_password? def update? def create? from UserPolicy
 
   def index?
-    !(user.buyer? || user.role.in?(%w(channel_partner)))
+    !(user.buyer? || user.role.in?(%w(channel_partner billing_team)))
   end
 
   def new?
@@ -38,6 +38,10 @@ class Admin::UserPolicy < UserPolicy
       @condition = 'cannot_confirm_user'
       false
     end
+  end
+
+  def reactivate_account?
+    %w[admin superadmin].include?(user.role) && record.expired?
   end
 
   def confirm_via_otp?
@@ -90,7 +94,7 @@ class Admin::UserPolicy < UserPolicy
     end
     attributes += [:login_otp] if confirm_via_otp?
     attributes += [:rera_id] if record.role?('channel_partner')
-    attributes += [:premium] if record.role?('channel_partner') && user.role?('admin')
+    attributes += [:premium, :tier_id] if record.role?('channel_partner') && user.role?('admin')
     attributes += [:role] if %w[superadmin admin].include?(user.role)
     if %w[superadmin admin sales_admin].include?(user.role)
       attributes += [:erp_id]

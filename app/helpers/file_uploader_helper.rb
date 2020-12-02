@@ -3,7 +3,7 @@ module FileUploaderHelper
     exts = case assetable
     when BulkUploadReport
       %w(csv)
-    when User, Receipt
+    when User, Receipt, IncentiveDeduction
       %w(PNG png JPEG jpeg JPG jpg PDF pdf)
     when Client
       %w(PNG png JPEG jpeg JPG jpg PDF pdf csv)

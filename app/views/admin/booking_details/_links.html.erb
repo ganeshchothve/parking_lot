@@ -54,6 +54,9 @@
 <% if policy([:admin, Receipt ]).index? %>
   <%= link_to t('controller.receipts.index.link_name'), admin_lead_booking_detail_receipts_path(booking_detail.lead, booking_detail), class: 'dropdown-item' %>
 <% end %>
+<% if booking_detail.incentive_eligible? && policy([:admin, Invoice ]).index? %>
+  <%= link_to t('controller.invoices.index.link_name'), admin_booking_detail_invoices_path(booking_detail), class: 'dropdown-item' %>
+<% end %>
 
 <% [UserRequest::Cancellation, UserRequest::Swap] if Rails.env.development? %>
 <% UserRequest.descendants.each do |klass| %>

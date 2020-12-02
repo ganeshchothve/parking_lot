@@ -39,6 +39,7 @@ class Sms
   enable_audit audit_fields: [:body, :sent_on], reference_ids_without_associations: [{field: "sms_template_id", klass: "Template::SmsTemplate"}]
 
   default_scope -> {desc(:created_at)}
+  scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
 
   def self.sms_pulse(range = nil)
     if range.present?

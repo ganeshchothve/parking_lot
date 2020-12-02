@@ -20,4 +20,8 @@ class BookingDetailObserver < Mongoid::Observer
     #  end
     #end
   end
+
+  def after_save booking_detail
+    booking_detail.calculate_incentive if booking_detail.incentive_eligible?
+  end
 end

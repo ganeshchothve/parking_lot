@@ -1,7 +1,7 @@
 class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def index?
-    out = %w[admin superadmin sales sales_admin cp_admin gre channel_partner].include?(user.role) && enable_actual_inventory?(user)
+    out = %w[admin superadmin sales sales_admin cp_admin gre channel_partner billing_team].include?(user.role) && enable_actual_inventory?(user)
     out && user.active_channel_partner?
   end
 

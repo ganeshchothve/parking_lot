@@ -1,0 +1,70 @@
+<%= nested_form_for([:admin, @invoice], local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['invoices'], "data-type": "json", id: 'invoice_form'}) do |f| %>
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header bg-gradient-cd white">
+        <h3 class="title"><%= t("controller.invoices.#{action_name}.link_name") %></h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" class="white">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <% if (incentive_deduction = @invoice.incentive_deduction.presence) %>
+          <%= render 'admin/invoices/incentive_deduction', incentive_deduction: incentive_deduction %>
+        <% end %>
+
+        <div class="form-group">
+          <%= f.label :amount, class: '' %>
+          <%= f.number_field :amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("amount") %>
+        </div>
+        <div class="form-group">
+          <%= f.label :status, class: 'control-label label-required' %>
+          <% events = (available_events(@invoice) || []) + [@invoice.aasm.current_state.to_s] %>
+          <%= f.select :event, options_for_select(events.collect{|event| [t("controller.invoices.events.#{event.to_s}"), event.to_s]}, @invoice.status), {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([:admin, @invoice]).editable_field?("event") %>
+        </div>
+        <div class="form-group">
+          <%= f.label :comments, class: '' %>
+          <% if policy([:admin, @invoice]).editable_field?("comments") %>
+            <%= f.text_area :comments, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("comments") %>
+          <% else %>
+            <p><%= f.object.comments %></p>
+          <% end%>
+        </div>
+        <div class="form-group">
+          <%= f.label :rejection_reason, class: '' %>
+          <% if policy([:admin, @invoice]).editable_field?("rejection_reason") %>
+            <%= f.text_area :rejection_reason, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("rejection_reason") %>
+          <% else %>
+            <p><%= f.object.rejection_reason %></p>
+          <% end%>
+        </div>
+        <div class="form-group mb-5">
+          <%= f.label :net_amount, class: '' %>
+          <% if policy([:admin, @invoice]).editable_field?("net_amount") %>
+            <%= f.number_field :net_amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("net_amount") %>
+          <% else %>
+            <p><%= number_to_indian_currency(f.object.net_amount) %></p>
+          <% end %>
+        </div>
+
+        <% editable_cheque_detail = policy([:admin, @invoice]).editable_field?('cheque_detail_attributes') %>
+        <%= f.fields_for :cheque_detail, (@invoice.cheque_detail || @invoice.build_cheque_detail) do |cheque_detail_form| %>
+          <%= render 'admin/invoices/cheque_detail', f: cheque_detail_form, editable_cheque_detail: editable_cheque_detail %>
+        <% end %>
+      </div>
+
+      <div class="modal-footer">
+        <%= f.submit "Save", class: "btn btn-primary" %>
+      </div>
+
+    </div>
+  </div>
+</div>
+<% end %>
+<%= javascript_tag do %>
+$(document).ready(function(){
+  FormInitializer.init($("#invoice_form"));
+});
+<% end %>

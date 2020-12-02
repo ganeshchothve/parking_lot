@@ -15,7 +15,7 @@ class User
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   ALLOWED_UTM_KEYS = %i[utm_campaign utm_source utm_sub_source utm_content utm_medium utm_term]
   BUYER_ROLES = %w[user employee_user management_user]
-  ADMIN_ROLES = %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner gre]
+  ADMIN_ROLES = %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner gre billing_team]
   CHANNEL_PARTNER_USERS = %w[cp cp_admin channel_partner]
   SALES_USER = %w[sales sales_admin]
   COMPANY_USERS = %w[employee_user management_user]
@@ -143,12 +143,14 @@ class User
   belongs_to :manager, class_name: 'User', optional: true
   belongs_to :channel_partner, optional: true
   belongs_to :confirmed_by, class_name: 'User', optional: true
+  belongs_to :tier, optional: true  # for associating channel partner users with different tiers.
   has_many :leads
   has_many :receipts
   has_many :project_units
   has_many :booking_details
   has_many :user_requests
   has_many :user_kycs
+  has_many :invoices
   has_many :searches
   has_many :received_smses, class_name: 'Sms', inverse_of: :recipient
   has_many :received_whatsapps, class_name: 'Whatsapp', inverse_of: :recipient

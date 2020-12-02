@@ -34,8 +34,9 @@ class UserRequest
   validates_uniqueness_of :requestable_id, scope: [:requestable_type, :status], if: proc{|record| record.pending? }
 
   accepts_nested_attributes_for :notes
-  scope :filter_by_user, ->(user_id){ where(user_id: user_id)}
-  scope :filter_by_lead, ->(lead_id){ where(lead_id: lead_id)}
+  scope :filter_by_project_id, ->(project_id){ where(project_id: project_id) }
+  scope :filter_by_user_id, ->(user_id){ where(user_id: user_id)}
+  scope :filter_by_lead_id, ->(lead_id){ where(lead_id: lead_id)}
   scope :filter_by__type, ->(request_type){ where(_type: /#{request_type}/i)}
   scope :filter_by_status, ->(_status){ where(status: _status) }
   scope :filter_by_requestable_type, ->(requestable_type){ where(requestable_type: requestable_type) }

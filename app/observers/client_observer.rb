@@ -12,19 +12,11 @@ class ClientObserver < Mongoid::Observer
   end
 
   def after_create client
-    DatabaseSeeds::SmsTemplate.seed client.id.to_s
-    DatabaseSeeds::EmailTemplates.seed client.id.to_s
+    DatabaseSeeds::EmailTemplates.client_based_email_templates_seed(client.id.to_s)
+    DatabaseSeeds::SmsTemplate.client_based_sms_templates_seed(client.id.to_s)
     DatabaseSeeds::UITemplate.seed client.id.to_s
-    # Email and Sms Templates are disabled by default
-    Template.in(_type: ['Template::SmsTemplate', 'Template::EmailTemplate']).update_all(is_active: false)
-
-    Template::CostSheetTemplate.create(name: "Default Cost sheet template", content: Template::CostSheetTemplate.default_content, booking_portal_client_id: client.id, default: true)
-    Template::PaymentScheduleTemplate.create(name: "Default payment schedule template", content: Template::PaymentScheduleTemplate.default_content, booking_portal_client_id: client.id, default: true)
-    Template::ReceiptTemplate.create(content: Template::ReceiptTemplate.default_content, booking_portal_client_id: client.id)
-    Template::AllotmentLetterTemplate.create(content: Template::AllotmentLetterTemplate.default_content, booking_portal_client_id: client.id)
     ExternalInventoryViewConfig.create(booking_portal_client_id: client.id)
     DatabaseSeeds::PortalStagePriorities.seed
-    Template::BookingDetailFormTemplate.seed client.id.to_s
 
     DocumentSign.create(booking_portal_client_id: client.id)
   end

@@ -3,10 +3,11 @@ class Template::BookingDetailFormTemplate < Template
 
   field :name, type: String
 
-  def self.seed client_id
-    Template::BookingDetailFormTemplate.create(booking_portal_client_id: client_id, name: 'booking_detail_form_html', content: Template::BookingDetailFormTemplate.html_content)  if Template::BookingDetailFormTemplate.where(name: 'booking_detail_form_html').blank?
-    Template::BookingDetailFormTemplate.create(booking_portal_client_id: client_id, name: 'booking_detail_form_pdf', content: Template::BookingDetailFormTemplate.pdf_content)  if Template::BookingDetailFormTemplate.where(name: 'booking_detail_form_pdf').blank?
+  def self.seed(project_id, client_id)
+    Template::BookingDetailFormTemplate.create(booking_portal_client_id: client_id, project_id: project_id, name: 'booking_detail_form_html', content: Template::BookingDetailFormTemplate.html_content)  if Template::BookingDetailFormTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: 'booking_detail_form_html').blank?
+    Template::BookingDetailFormTemplate.create(booking_portal_client_id: client_id, project_id: project_id, name: 'booking_detail_form_pdf', content: Template::BookingDetailFormTemplate.pdf_content)  if Template::BookingDetailFormTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: 'booking_detail_form_pdf').blank?
   end
+
   def self.html_content
     "<div class='container pt-3 bg-white'>
     <div class='row' align='center'>
@@ -58,13 +59,13 @@ class Template::BookingDetailFormTemplate < Template
         </div>
         <div class='col-5 border pt-3'>
           AADHAAR Number:
-          <%= 
-            if @booking_detail.primary_user_kyc.present?; 
+          <%=
+            if @booking_detail.primary_user_kyc.present?;
               if @booking_detail.primary_user_kyc.aadhaar.present?;
                 @booking_detail.primary_user_kyc.aadhaar;
               elsif (@booking_detail.primary_user_kyc.additional_id_type.present? && @booking_detail.primary_user_kyc.additional_id_type == 'aadhar_card');
                 @booking_detail.primary_user_kyc.try(:additional_id_number);
-              end; 
+              end;
             end;
           %>
         </div>
@@ -88,7 +89,7 @@ class Template::BookingDetailFormTemplate < Template
           PAN Number: <%= @booking_detail.user_kycs.try(:first).try(:pan_number) %>
         </div>
         <div class='col-5 border pt-3'>
-          AADHAAR Number: 
+          AADHAAR Number:
         </div>
       </div>
     </div>
@@ -361,13 +362,13 @@ class Template::BookingDetailFormTemplate < Template
       </div>
       <ol>
         <li>
-          The Applicants hereby declare and confirm that the Applicants have booked only one Apartment (residential/commercial unit) in entire Happinest Kalyan. The Applicants further declare that spouse and / or minor child / children of the Applicants have not booked / purchased any other Apartment in the said Happinest - Kalyan. The Applicants also confirm that the Applicants and/or spouse and/or minor child / children of the Applicants shall not book / purchase any other Apartment in Happinest - Kalyan. 
+          The Applicants hereby declare and confirm that the Applicants have booked only one Apartment (residential/commercial unit) in entire Happinest Kalyan. The Applicants further declare that spouse and / or minor child / children of the Applicants have not booked / purchased any other Apartment in the said Happinest - Kalyan. The Applicants also confirm that the Applicants and/or spouse and/or minor child / children of the Applicants shall not book / purchase any other Apartment in Happinest - Kalyan.
         </li>
         <li>
-          The Applicants are aware and agreeable that, if my/our application is accepted by you then upon realization of payments  towards the Booking Amount 1, Booking Amount 2 on agreed date, you shall issue me/us an Allotment Letter within 7 days thereof. In case of failure to comply, you may treat this application as automatically cancelled/withdrawn and thereafter, you shall be at liberty to deal with the Apartment and the multi-level covered car parking spaces these as you may deem fit without any recourse to me/us. In such an event all amounts paid by me/us to you shall fully forfeited and I/We will not seek any refund of the same. 
+          The Applicants are aware and agreeable that, if my/our application is accepted by you then upon realization of payments  towards the Booking Amount 1, Booking Amount 2 on agreed date, you shall issue me/us an Allotment Letter within 7 days thereof. In case of failure to comply, you may treat this application as automatically cancelled/withdrawn and thereafter, you shall be at liberty to deal with the Apartment and the multi-level covered car parking spaces these as you may deem fit without any recourse to me/us. In such an event all amounts paid by me/us to you shall fully forfeited and I/We will not seek any refund of the same.
         </li>
         <li>
-          The Applicant(s) shall be treated as the “Allottee(s)” upon issuance of the Allotment Letter by the Promoter and shall make timely payments towards the Apartment and the multi-level car parking space, if any, in the manner indicated in the payment Plan annexed. 
+          The Applicant(s) shall be treated as the “Allottee(s)” upon issuance of the Allotment Letter by the Promoter and shall make timely payments towards the Apartment and the multi-level car parking space, if any, in the manner indicated in the payment Plan annexed.
         </li>
         <li>
           The Applicants authorize the Promoter to make the Stamp Duty and Registration payment to the required authorities on his or her behalf.  On the date of the Stamp Duty & Registration cheque issued by the Applicants, or seven days after the issue of the Allotment Letter if it happens to be later, the Promoter will present to his bank  the said cheque issued by the Applicants at the time of this booking.  The Applicants warrant to ensure sufficient funds in the account to ensure the cheque will be cleared.  The Promoter warrants to furnish a receipt of such payment to the Applicants within 3 days of its issue by the Office of Sub-Registrar of Assurances.
@@ -375,7 +376,7 @@ class Template::BookingDetailFormTemplate < Template
         <li>
          The Applicants shall attend the office of the sub-Registrar Bhiwandi or to an e-registration kiosk at the Promoter’s site within 30 days from the date of the Allotment Letter for execution and registration of Agreement for Sale on the day, date and time that will be communicated to the Applicants by Promoter. In case of any cancellation on a later date, the Applicants will have to seek refund of such Stamp Duty and Registration charges from the Government Authorities directly.
         </li>
-        If for any reason the cheque for Stamp Duty and Registration charges is dishonoured when presented, the Allotment Letter will stand cancelled and the Applicants shall fully forfeit the Token Amount, Booking Amount 1 and Booking Amount 2 paid to the Promoter and no amount will be refunded to the Applicants. 
+        If for any reason the cheque for Stamp Duty and Registration charges is dishonoured when presented, the Allotment Letter will stand cancelled and the Applicants shall fully forfeit the Token Amount, Booking Amount 1 and Booking Amount 2 paid to the Promoter and no amount will be refunded to the Applicants.
         <li>
         This Application is not transferable, and the Promoter shall have right on the said Apartment till all amounts due by the Applicants are paid.
         </li>
@@ -452,7 +453,7 @@ class Template::BookingDetailFormTemplate < Template
           <p>Dear Sir / Madam,</br> We are pleased to confirm allotment of residential Apartment No.<%= @booking_detail.project_unit.name %> of type <%= @booking_detail.project_unit.unit_configuration.try(:name) %> in Happinest Kalyan admeasuring <%= @booking_detail.saleable %> sq. ft. of Carpet area alongwith for exclusive use of the Allottee open balcony of  ______  sq. ft., enclosed balcony of <%= @booking_detail.project_unit.data.where(key: 'enc_balcony_sqft').first.try(:absolute_value) %> sq. ft., Veranda of ______ sq. ft. and exclusive terrace of  ______  sq. ft., on <%= @booking_detail.project_unit.floor %> floor in the _________ Wing of <%= @booking_detail.project_unit.project_tower_name %> building (“the Apartment”) for the consideration of Rs.<%= number_to_indian_currency(@booking_detail.project_unit.agreement_price) %>/-  (Rupees <%= @booking_detail.project_unit.agreement_price.try(:humanize) %> only) including the proportionate price of the common areas and facilities. We are also allotting covered parking space(s) number _______ situated in a separate car park building known as MLCP building being constructed in the layout for the consideration of Parking charges Rs.
 <% if @booking_detail.try(:booking_detail_scheme).try(:car_parking).present? %>
  <%= @booking_detail.booking_detail_scheme.payment_adjustments.collect{|pa| pa.try(:absolute_value)}.sum.round %> (Rupees <%= @booking_detail.booking_detail_scheme.payment_adjustments.collect{|pa| pa.try(:absolute_value)}.sum.round.try(:humanize) %> only)<% else %> ______
-<% end %> 
+<% end %>
   on the terms and conditions and Payment Plan as agreed by you in the Application Form. The Total Consideration as mentioned above excludes Goods and Services Tax (“GST”) and Cess at currently prevailing rates in connection with the construction of and carrying out the Project and/or with respect to the said Apartment and/or Agreement for Sale upto the date of handing over the possession of the said Apartment. Note: At the time of AFS we were informed that Total Consideration is inclusive of GST.
 </br>You are required to pay the requisite stamp duty and registration charges within 7 (seven) days from the date of this allotment letter and the Agreement for Sale should be executed between us and registered within 30 (thirty) days from the date of this Allotment Letter. </br>
 Yours faithfully,</br><strong>For Mahindra Happinest Developers Limited,</strong></br></br></br>_______________</br>Authorized Signature</p>
@@ -661,13 +662,13 @@ Yours faithfully,</br><strong>For Mahindra Happinest Developers Limited,</strong
     <td>
       <ol>
         <li>
-          The Applicants hereby declare and confirm that the Applicants have booked only one Apartment (residential/commercial unit) in entire Happinest Kalyan. The Applicants further declare that spouse and / or minor child / children of the Applicants have not booked / purchased any other Apartment in the said Happinest - Kalyan. The Applicants also confirm that the Applicants and/or spouse and/or minor child / children of the Applicants shall not book / purchase any other Apartment in Happinest - Kalyan. 
+          The Applicants hereby declare and confirm that the Applicants have booked only one Apartment (residential/commercial unit) in entire Happinest Kalyan. The Applicants further declare that spouse and / or minor child / children of the Applicants have not booked / purchased any other Apartment in the said Happinest - Kalyan. The Applicants also confirm that the Applicants and/or spouse and/or minor child / children of the Applicants shall not book / purchase any other Apartment in Happinest - Kalyan.
         </li>
         <li>
-          The Applicants are aware and agreeable that, if my/our application is accepted by you then upon realization of payments  towards the Booking Amount 1, Booking Amount 2 on agreed date, you shall issue me/us an Allotment Letter within 7 days thereof. In case of failure to comply, you may treat this application as automatically cancelled/withdrawn and thereafter, you shall be at liberty to deal with the Apartment and the multi-level covered car parking spaces these as you may deem fit without any recourse to me/us. In such an event all amounts paid by me/us to you shall fully forfeited and I/We will not seek any refund of the same. 
+          The Applicants are aware and agreeable that, if my/our application is accepted by you then upon realization of payments  towards the Booking Amount 1, Booking Amount 2 on agreed date, you shall issue me/us an Allotment Letter within 7 days thereof. In case of failure to comply, you may treat this application as automatically cancelled/withdrawn and thereafter, you shall be at liberty to deal with the Apartment and the multi-level covered car parking spaces these as you may deem fit without any recourse to me/us. In such an event all amounts paid by me/us to you shall fully forfeited and I/We will not seek any refund of the same.
         </li>
         <li>
-          The Applicant(s) shall be treated as the “Allottee(s)” upon issuance of the Allotment Letter by the Promoter and shall make timely payments towards the Apartment and the multi-level car parking space, if any, in the manner indicated in the payment Plan annexed. 
+          The Applicant(s) shall be treated as the “Allottee(s)” upon issuance of the Allotment Letter by the Promoter and shall make timely payments towards the Apartment and the multi-level car parking space, if any, in the manner indicated in the payment Plan annexed.
         </li>
         <li>
           The Applicants authorize the Promoter to make the Stamp Duty and Registration payment to the required authorities on his or her behalf.  On the date of the Stamp Duty & Registration cheque issued by the Applicants, or seven days after the issue of the Allotment Letter if it happens to be later, the Promoter will present to his bank  the said cheque issued by the Applicants at the time of this booking.  The Applicants warrant to ensure sufficient funds in the account to ensure the cheque will be cleared.  The Promoter warrants to furnish a receipt of such payment to the Applicants within 3 days of its issue by the Office of Sub-Registrar of Assurances.
@@ -675,7 +676,7 @@ Yours faithfully,</br><strong>For Mahindra Happinest Developers Limited,</strong
         <li>
          The Applicants shall attend the office of the sub-Registrar Bhiwandi or to an e-registration kiosk at the Promoter’s site within 30 days from the date of the Allotment Letter for execution and registration of Agreement for Sale on the day, date and time that will be communicated to the Applicants by Promoter. In case of any cancellation on a later date, the Applicants will have to seek refund of such Stamp Duty and Registration charges from the Government Authorities directly.
         </li>
-        If for any reason the cheque for Stamp Duty and Registration charges is dishonoured when presented, the Allotment Letter will stand cancelled and the Applicants shall fully forfeit the Token Amount, Booking Amount 1 and Booking Amount 2 paid to the Promoter and no amount will be refunded to the Applicants. 
+        If for any reason the cheque for Stamp Duty and Registration charges is dishonoured when presented, the Allotment Letter will stand cancelled and the Applicants shall fully forfeit the Token Amount, Booking Amount 1 and Booking Amount 2 paid to the Promoter and no amount will be refunded to the Applicants.
         <li>
         This Application is not transferable, and the Promoter shall have right on the said Apartment till all amounts due by the Applicants are paid.
         </li>
@@ -733,7 +734,7 @@ Yours faithfully,</br><strong>For Mahindra Happinest Developers Limited,</strong
         <p>Dear Sir / Madam,</br> We are pleased to confirm allotment of residential Apartment No.<%= @booking_detail.project_unit.name %> of type <%= @booking_detail.project_unit.unit_configuration.try(:name) %> in Happinest Kalyan admeasuring <%= @booking_detail.saleable %> sq. ft. of Carpet area alongwith for exclusive use of the Allottee open balcony of  ______  sq. ft., enclosed balcony of <%= @booking_detail.project_unit.data.where(key: 'enc_balcony_sqft').first.try(:absolute_value) %> sq. ft., Veranda of ______ sq. ft. and exclusive terrace of  ______  sq. ft., on <%= @booking_detail.project_unit.floor %> floor in the _________ Wing of <%= @booking_detail.project_unit.project_tower_name %> building (“the Apartment”) for the consideration of Rs.<%= number_to_indian_currency(@booking_detail.project_unit.agreement_price) %>/-  (Rupees <%= @booking_detail.project_unit.agreement_price.try(:humanize) %> only) including the proportionate price of the common areas and facilities. We are also allotting covered parking space(s) number _______ situated in a separate car park building known as MLCP building being constructed in the layout for the consideration of Parking charges Rs.
       <% if @booking_detail.try(:booking_detail_scheme).try(:car_parking).present? %>
        <%= @booking_detail.booking_detail_scheme.payment_adjustments.collect{|pa| pa.try(:absolute_value)}.sum.round %> (Rupees <%= @booking_detail.booking_detail_scheme.payment_adjustments.collect{|pa| pa.try(:absolute_value)}.sum.round.try(:humanize) %> only)<% else %> ______
-      <% end %> 
+      <% end %>
         on the terms and conditions and Payment Plan as agreed by you in the Application Form. The Total Consideration as mentioned above excludes Goods and Services Tax (“GST”) and Cess at currently prevailing rates in connection with the construction of and carrying out the Project and/or with respect to the said Apartment and/or Agreement for Sale upto the date of handing over the possession of the said Apartment. Note: At the time of AFS we were informed that Total Consideration is inclusive of GST.
       </br>You are required to pay the requisite stamp duty and registration charges within 7 (seven) days from the date of this allotment letter and the Agreement for Sale should be executed between us and registered within 30 (thirty) days from the date of this Allotment Letter. </br>
       Yours faithfully,</br><strong>For Mahindra Happinest Developers Limited,</strong></br></br></br>_______________</br>Authorized Signature</p>
