@@ -210,6 +210,7 @@ Rails.application.routes.draw do
         patch :confirm_user
         get :block_lead
         patch :unblock_lead
+        patch :reactivate_account
       end
 
       collection do
