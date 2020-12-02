@@ -29,7 +29,7 @@ class Receipt
   field :issuing_bank_branch, type: String # Branch of bank
   field :payment_identifier, type: String # cheque / DD number / online transaction reference from gateway
   field :tracking_id, type: String # online transaction reference from gateway or transaction id after the cheque is processed
-  field :total_amount, type: Float, default: 0 # Total amount
+  field :total_amount, type: Float # Total amount
   field :status, type: String, default: 'pending' # pending, success, failed, clearance_pending,cancelled
   field :status_message, type: String # pending, success, failed, clearance_pending
   field :payment_gateway, type: String

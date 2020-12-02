@@ -1,6 +1,6 @@
 class Api::V1::BookingDetailsController < ApisController
   before_action :reference_ids_present?
-  before_action :set_project_unit, :set_lead, :check_project, only: :create
+  before_action :set_project_unit, :set_lead, :check_project, :check_scheme, only: :create
   before_action :set_booking_detail_project_unit_and_lead, only: :update
   before_action :add_third_party_reference_params, :modify_params
 
@@ -71,6 +71,16 @@ class Api::V1::BookingDetailsController < ApisController
 
   def check_project
     render json: { errors: ["Project for project unit - #{ params[:booking_detail][:project_unit_id] } and lead - #{ params[:booking_detail][:lead_id] } does not match"] }, status: :not_found if @lead.project_id != @project_unit.project_id
+  end
+
+  def check_scheme
+    unless @lead.manager_role?('channel_partner')
+      scheme = @project_unit.project_tower.default_scheme
+    else
+      filters = {fltrs: { can_be_applied_by_role: @lead.manager_role, project_tower: @project_unit.project_tower_id, user_role: @lead.user_role, user_id: @lead.user_id, status: 'approved', default_for_user_id: @lead.manager_id } }
+      scheme = Scheme.build_criteria(filters).first
+    end
+    render json: { errors: ["Booking scheme is not found for this project unit. Please contact administrator"] }, status: :not_found unless scheme.present?
   end
 
   def set_booking_detail_project_unit_and_lead
@@ -226,11 +236,11 @@ class Api::V1::BookingDetailsController < ApisController
   end
 
   def booking_detail_create_params
-    params.require(:booking_detail).permit(:agreement_price, :all_inclusive_price, receipts_attributes: receipt_params, primary_user_kyc_attributes: user_kyc_params, user_kycs_attributes: user_kyc_params, third_party_references_attributes: [:id, :reference_id, :crm_id])
+    params.require(:booking_detail).permit( receipts_attributes: receipt_params, primary_user_kyc_attributes: user_kyc_params, user_kycs_attributes: user_kyc_params, third_party_references_attributes: [:id, :reference_id, :crm_id])
   end
 
   def booking_detail_update_params
-    params.require(:booking_detail).permit(:agreement_price, :all_inclusive_price, receipts_attributes: receipt_params, user_kycs_attributes: user_kyc_params, third_party_references_attributes: [:id, :reference_id])
+    params.require(:booking_detail).permit( receipts_attributes: receipt_params, user_kycs_attributes: user_kyc_params, third_party_references_attributes: [:id, :reference_id])
   end
 
   def generate_response
