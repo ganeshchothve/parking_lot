@@ -658,6 +658,7 @@ en:
         processing_date: 'Processing Date'
         approved_date: 'Approved Date'
         status: 'Status'
+        cheque_detail: 'Cheque Details'
       invoice/status:
         draft: 'Draft'
         pending_approval: 'Pending Approval'

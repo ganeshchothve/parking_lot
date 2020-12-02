@@ -40,7 +40,7 @@
             <p><%= f.object.rejection_reason %></p>
           <% end%>
         </div>
-        <div class="form-group">
+        <div class="form-group mb-5">
           <%= f.label :net_amount, class: '' %>
           <% if policy([:admin, @invoice]).editable_field?("net_amount") %>
             <%= f.number_field :net_amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("net_amount") %>
@@ -48,6 +48,11 @@
             <p><%= number_to_indian_currency(f.object.net_amount) %></p>
           <% end %>
         </div>
+
+        <% editable_cheque_detail = policy([:admin, @invoice]).editable_field?('cheque_detail_attributes') %>
+        <%= f.fields_for :cheque_detail, (@invoice.cheque_detail || @invoice.build_cheque_detail) do |cheque_detail_form| %>
+          <%= render 'admin/invoices/cheque_detail', f: cheque_detail_form, editable_cheque_detail: editable_cheque_detail %>
+        <% end %>
       </div>
 
       <div class="modal-footer">

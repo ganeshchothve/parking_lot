@@ -19,6 +19,6 @@ class CopyErrorsFromChildValidator < ActiveModel::EachValidator
   end
 
   def add_error_on_parent(parent, child)
-    parent.errors.add :base, "#{child.model_name.human} #{ child.respond_to?(:name_in_error) ? ('(' + child.try(:name_in_error) + ')') : '' } errors - #{child.errors.to_a.to_sentence}"
+    parent.errors.add :base, "#{child.model_name.human} #{ child.respond_to?(:name_in_error) ? ('(' + child.try(:name_in_error) + ')') : '' } errors - #{child.errors.to_a.uniq.to_sentence}"
   end
 end
