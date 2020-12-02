@@ -1,0 +1,27 @@
+<!-- Show Details Page -->
+<%= link_to t('controller.invoices.show.link_name'), admin_invoice_path(invoice), class: 'dropdown-item' %>
+
+<!-- Raise invoice for channel partner -->
+<% if policy([current_user_role_group, invoice]).change_state? && policy([current_user_role_group, invoice]).editable_field?('event') %>
+  <%= link_to t("controller.invoices.events.raise"), change_state_admin_booking_detail_invoice_path(invoice.booking_detail, invoice, {invoice: {event: 'raise'}}), method: :post, class: 'dropdown-item' %>
+<% end %>
+
+<!-- Edit invoice for Billing Team -->
+<% if policy([current_user_role_group, invoice]).edit? %>
+  <%= link_to t("controller.invoices.edit.link_name"), edit_admin_invoice_path(invoice), class: 'dropdown-item modal-remote-form-link' %>
+<% end %>
+
+<!-- Raise incentive deduction for cp_admin -->
+<% incentive_deduction = IncentiveDeduction.where(invoice_id: invoice.id).first %>
+<% if incentive_deduction.blank? %>
+  <% if policy([current_user_role_group, invoice.build_incentive_deduction]).create? %>
+    <%= link_to t("controller.incentive_deductions.new.link_name"), new_admin_invoice_incentive_deduction_path(invoice), class: 'dropdown-item modal-remote-form-link' %>
+  <% end %>
+<% else %>
+  <% if policy([current_user_role_group, incentive_deduction]).edit? %>
+    <%= link_to t("controller.incentive_deductions.edit.link_name"), edit_admin_invoice_incentive_deduction_path(invoice, incentive_deduction), class: 'dropdown-item modal-remote-form-link' %>
+  <% end %>
+  <% if policy([current_user_role_group, incentive_deduction]).show? %>
+    <%= link_to t("controller.incentive_deductions.show.link_name"), admin_invoice_incentive_deduction_path(invoice, incentive_deduction), class: 'dropdown-item modal-remote-form-link' %>
+  <% end %>
+<% end %>

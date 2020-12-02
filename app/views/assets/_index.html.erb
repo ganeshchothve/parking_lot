@@ -1,4 +1,4 @@
- <% if assetable.present? %>
+<% if assetable.present? %>
   <% if assetable.persisted? %>
     <% if assetable.class::DOCUMENT_TYPES.present? %>
       <%= render 'classified_assets', { assetable: assetable } %>
@@ -10,12 +10,12 @@
   <% end %>
 
   <%= javascript_tag do %>
-  $(document).ready(function(){
-    FileIcon.init($(".asset-delete"), $(".asset-icon"));
-    $('.selectize').on("change", function(){
-      var formData = {"document_type": $(this).val()}
-      $('#asset_' + $(this).attr('id')).data('form-data', formData)
-    });
-  })
+    $(document).ready(function(){
+      FileIcon.init($(".asset-delete"), $(".asset-icon"));
+      $('.selectize').on("change", function(){
+        var formData = {"document_type": $(this).val()}
+        $('#asset_' + $(this).attr('id')).data('form-data', formData)
+      });
+    })
   <% end %>
 <% end %>

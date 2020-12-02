@@ -40,7 +40,7 @@ Amura.global_error_handler = function(errors){
       var message = "<ul style='text-align:left;'>";
       _.each(errors, function(err){(message = message + "<li>" + err + "</li>")});
       message = message + "</ul>";
-      new Noty({text:message, type:"error"}).show();
+      new Noty({text:message, type:"error", timeout: 7000}).show();
     }
   }
 };

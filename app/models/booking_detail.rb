@@ -290,11 +290,7 @@ class BookingDetail
 
   def calculate_incentive
     # Calculate incentives & generate invoices
-    if Rails.env.development?
-      IncentiveCalculatorWorker.new.perform(id.to_s)
-    else
-      IncentiveCalculatorWorker.perform_async(id.to_s)
-    end
+    IncentiveCalculatorWorker.new.perform(id.to_s)
   end
 
   class << self

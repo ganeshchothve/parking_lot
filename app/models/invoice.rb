@@ -12,25 +12,31 @@ class Invoice
   field :processing_date, type: DateTime
   field :approved_date, type: DateTime
   field :cheque_handover_date, type: Date
+  field :rejection_reason, type: String
   field :comments, type: String
   field :ladder_id, type: BSON::ObjectId
   field :ladder_stage, type: Integer
+  field :net_amount, type: Float
 
   belongs_to :project
   belongs_to :booking_detail
   belongs_to :incentive_scheme
   belongs_to :manager, class_name: 'User'
   has_one :receipt
+  has_one :incentive_deduction
 
   validates :ladder_id, :ladder_stage, presence: true
   validates :comments, presence: true, if: :rejected?
   validates :booking_detail_id, uniqueness: { scope: [:incentive_scheme_id, :ladder_id] }
   validates :amount, numericality: { greater_than: 0 }
+  validates :net_amount, numericality: { greater_than: 0 }, if: :approved?
 
   scope :filter_by_status, ->(status) { where(status: status) }
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
   scope :filter_by_booking_detail_id, ->(booking_detail_id) { where(booking_detail_id: booking_detail_id) }
   scope :filter_by_channel_partner_id, ->(channel_partner_id) { where(manager_id: channel_partner_id) }
+
+  accepts_nested_attributes_for :incentive_deduction
 
   class << self
     def user_based_scope(user, params = {})

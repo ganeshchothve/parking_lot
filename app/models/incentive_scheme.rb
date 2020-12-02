@@ -32,6 +32,7 @@ class IncentiveScheme
   scope :filter_by_project_tower_id, ->(project_tower_id) { where(project_tower_id: project_tower_id) }
   scope :filter_by_tier_id, ->(tier_id) { where(tier_id: tier_id) }
   scope :filter_by_ladder_strategy, ->(ladder_strategy) { where(ladder_strategy: ladder_strategy) }
+  scope :filter_by_date_range, ->(date) {start_date, end_date = date.split(' - '); where(starts_on: {'$lte': end_date}, ends_on: {'$gte': start_date})}
 
   validates :name, :ladder_strategy, presence: true
   validates_uniqueness_of :name

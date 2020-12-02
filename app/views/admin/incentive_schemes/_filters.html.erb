@@ -30,6 +30,10 @@
           <%= label_tag "fltrs", t('mongoid.attributes.incentive_scheme.tier_id'), class: "control-label" %>
           <%= select_tag "fltrs[tier_id]", options_for_select(Tier.all.map{|tier| [tier.name, tier.id] }, params.dig(:fltrs, :tier_id)), {prompt: "Select", class: "selectize"} %>
         </div>
+        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.incentive_scheme.date_range') %>
+          <%= text_field_tag "fltrs[date_range]", (params.dig(:fltrs, :date_range).present? ? params[:fltrs][:date_range] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
+        </div>
       </div>
     </div>
     <div class="filter-footer">

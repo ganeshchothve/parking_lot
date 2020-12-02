@@ -11,9 +11,13 @@
       </div>
 
       <div class="modal-body">
+        <% if (incentive_deduction = @invoice.incentive_deduction.presence) %>
+          <%= render 'admin/invoices/incentive_deduction', incentive_deduction: incentive_deduction %>
+        <% end %>
+
         <div class="form-group">
           <%= f.label :amount, class: '' %>
-          <%= f.text_field :amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("amount") %>
+          <%= f.number_field :amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("amount") %>
         </div>
         <div class="form-group">
           <%= f.label :status, class: 'control-label label-required' %>
@@ -24,7 +28,19 @@
           <%= f.label :comments, class: '' %>
           <%= f.text_area :comments, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("comments") %>
         </div>
+        <% if policy([:admin, @invoice]).editable_field?("net_amount") %>
+          <div class="form-group">
+            <%= f.label :net_amount, class: '' %>
+            <%= f.number_field :net_amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("net_amount") %>
+          </div>
+        <% else %>
+          <div class="form-group">
+            <%= f.label :net_amount, class: '' %>
+            <p><%= number_to_indian_currency(f.object.net_amount) %></p>
+          </div>
+        <% end %>
       </div>
+
       <div class="modal-footer">
         <%= f.submit "Save", class: "btn btn-primary" %>
       </div>

@@ -28,9 +28,16 @@ module InvoiceStateMachine
     def after_approved_event
       self.processing_date = Time.now
       self.approved_date = Time.now
+      reject_pending_deductions
     end
     def after_rejected_event
       self.processing_date = Time.now
+      self.net_amount = 0
+      reject_pending_deductions
+    end
+
+    def reject_pending_deductions
+      self.incentive_deduction.rejected! if self.incentive_deduction? && self.incentive_deduction.pending_approval?
     end
 
     def can_approve?

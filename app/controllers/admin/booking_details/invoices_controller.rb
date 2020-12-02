@@ -16,9 +16,9 @@ class Admin::BookingDetails::InvoicesController < AdminController
   def change_state
     respond_to do |format|
       if @invoice.update(permitted_attributes([current_user_role_group, @invoice]))
-        format.html { redirect_to admin_booking_detail_invoices_path(@invoice.booking_detail), notice: t("controller.invoices.status_message.#{@invoice.status}") }
+        format.html { redirect_to request.referer, notice: t("controller.invoices.status_message.#{@invoice.status}") }
       else
-        format.html { redirect_to admin_booking_detail_invoices_path(@invoice.booking_detail), alert: @invoice.errors.full_messages.uniq! }
+        format.html { redirect_to request.referer, alert: @invoice.errors.full_messages.uniq! }
       end
     end
   end

@@ -9,6 +9,13 @@ FileIcon = (function(){
         dataType: "json",
         success: function(one, two, three){
           $(e.target).closest(".asset").remove();
+        },
+        error: function(one, two, three) {
+          var errors;
+          if(one.responseText != undefined) {
+            errors = $.parseJSON(one.responseText).errors
+          }
+          Amura.global_error_handler(errors || "Error while fetching modal remote form");
         }
       })
     })

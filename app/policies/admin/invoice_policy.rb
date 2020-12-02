@@ -1,6 +1,6 @@
 class Admin::InvoicePolicy < InvoicePolicy
   def index?
-    user.role.in?(%w(admin superadmin channel_partner billing_team))
+    user.role.in?(%w(admin superadmin channel_partner billing_team cp_admin))
   end
 
   def edit?
@@ -21,7 +21,7 @@ class Admin::InvoicePolicy < InvoicePolicy
     when 'channel_partner'
       attributes += [:event] if record.draft? && record.may_raise?
     when 'billing_team'
-      attributes += [:comments]
+      attributes += [:net_amount, :comments] unless record.status.in?(%w(approved rejected))
       attributes += [:event] if record.pending_approval?
     end
     attributes.uniq

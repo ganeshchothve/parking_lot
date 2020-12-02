@@ -196,6 +196,10 @@ en:
         zero: Invoice
         one: Invoice
         other: Invoices
+      incentive_deduction:
+        zero: Incentive Deduction
+        one: Incentive Deduction
+        other: Incentive Deductions
 
     attributes:
       crm:
@@ -635,6 +639,7 @@ en:
         project_tower_id: 'Project Tower'
         tier_id: 'Channel Partner Tier'
         status: 'Status'
+        date_range: Date Filter
       incentive_scheme/status:
         draft: Draft
         approved: Approved
@@ -642,6 +647,7 @@ en:
 
       invoice:
         amount: Incentive Amount
+        net_amount: Net Amount
         comments: Rejection Reason
         project_id: 'Project'
         booking_detail_id: 'Booking Detail'
@@ -652,6 +658,16 @@ en:
         approved_date: 'Approved Date'
         status: 'Status'
       invoice/status:
+        draft: 'Draft'
+        pending_approval: 'Pending Approval'
+        approved: 'Approved'
+        rejected: 'Rejected'
+
+      incentive_deduction:
+        amount: Deduction Amount
+        comments: Reason
+        status: Status
+      incentive_deduction/status:
         draft: 'Draft'
         pending_approval: 'Pending Approval'
         approved: 'Approved'
@@ -1020,6 +1036,22 @@ en:
         raise: 'Raise Invoice'
         approve: 'Approve Invoice'
         reject: 'Reject Invoice'
+
+    incentive_deductions:
+      index:
+        link_name: 'Incentive Deductions'
+      new:
+        link_name: 'Add Deduction'
+      edit:
+        link_name: 'Edit Deduction'
+      show:
+        link_name: 'Show Deduction'
+      status_message:
+        approved: 'Incentive deduction approved'
+        rejected: 'Incentive deduction rejected'
+      events:
+        approved: 'Approve'
+        rejected: 'Reject'
 
     clients:
       new:
