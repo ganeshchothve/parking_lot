@@ -1,4 +1,8 @@
-<% template = ::Template::BookingDetailFormTemplate.where(name: 'booking_detail_form_pdf') %>
+<% template = ::Template::BookingDetailFormTemplate.where(name: 'booking_detail_form_pdf').first %>
 <% if template.present? %>
-  <%= ::ERB.new(template.first.content).result( binding ).html_safe %>
+  <% begin %>
+    <%= ::ERB.new(template.content).result( binding ).html_safe %>
+  <% rescue StandardError => e %>
+    <%= Rails.logger.error "-------- #{e.message} --------" %>
+  <% end %>
 <% end %>

@@ -18,9 +18,10 @@ class Asset
 
   scope :filter_by_document_type, ->(type) { where(document_type: type) }
 
-  validates :file_name, uniqueness: { scope: [:assetable_type, :assetable_id] }
+  validates :file_name, uniqueness: { scope: [:document_type, :assetable_id], message: '^File with this name is already uploaded' }
   validates :asset_type, uniqueness: { scope: [:assetable_type, :assetable_id] }, if: proc{|asset| asset.asset_type == 'floor_plan' }
   validate :validate_content, on: :create
+  before_destroy :check_asset_validation
   #before_destroy :check_document_validation_on_receipt
 
   def validate_content
@@ -42,4 +43,14 @@ class Asset
     end
   end
 
+  def check_asset_validation
+    case reload.assetable
+    when IncentiveDeduction
+      unless assetable.draft? || assetable.assets.reject(&:marked_for_destruction?).count > 0
+        errors.add(:base, "Cannot delete last proof unless in Draft state")
+        false
+        throw(:abort)
+      end
+    end
+  end
 end

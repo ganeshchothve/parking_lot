@@ -6,13 +6,13 @@ class IncentiveCalculator
     @unit = booking_detail.project_unit
     @options = options
     # Find channel partner for above booking
-    @channel_partner ||= lead.manager
+    @channel_partner = lead.manager
   end
 
   # Find incentive scheme based on above
   def find_incentive_scheme
     tower_id = unit.project_tower_id
-    tier_id = channel_partner.try(:tier_id)
+    tier_id = channel_partner.tier_id
     blocked_on = unit.blocked_on
     incentive_schemes = IncentiveScheme.approved.where(project_id: lead.project_id).lte(starts_on: blocked_on).gte(ends_on: blocked_on)
     # Find tier level scheme
@@ -33,9 +33,7 @@ class IncentiveCalculator
     project_units = ProjectUnit.where(status: 'blocked', project_id: incentive_scheme.project_id).gte(blocked_on: incentive_scheme.starts_on).lte(blocked_on: incentive_scheme.ends_on)
     project_units = ProjectUnit.where(project_tower_id: incentive_scheme.project_tower_id) if incentive_scheme.project_tower_id.present?
     project_unit_ids = project_units.distinct(:id)
-    leads = Lead.where(project_id: incentive_scheme.project_id)
-    leads = leads.where(manager_id: channel_partner.id) if channel_partner
-    lead_ids = leads.distinct(:id)
+    lead_ids = Lead.where(project_id: incentive_scheme.project_id, manager_id: channel_partner.id).distinct(:id)
     # Find bookings that are already incentivized under different incentive scheme.
     other_scheme_booking_ids = Invoice.where(project_id: incentive_scheme.project_id).ne(incentive_scheme_id: incentive_scheme.id).distinct(:booking_detail_id)
 
@@ -55,7 +53,7 @@ class IncentiveCalculator
 
   # Run incentive calculation
   def calculate
-    if find_incentive_scheme && find_all_bookings_for_current_scheme
+    if channel_partner && find_incentive_scheme && find_all_bookings_for_current_scheme
       # sort on blocked_on & create a hash { 1 => { booking_detail: booking1 }, 2 => { booking_detail: booking2 } }
       bookings_hash = bookings.sort { |x| x.project_unit.blocked_on }.each_with_index.inject({}) { |hash, (bd, idx)| hash[idx+1] = { booking_detail: bd }; hash}
 
@@ -72,13 +70,14 @@ class IncentiveCalculator
           if options[:test]
             hash[:incentive] = incentive_amount
           else
-            invoice =  Invoice.find_or_initialize_by(project_id: booking_detail.project_id, booking_detail_id: booking_detail.id, incentive_scheme_id: incentive_scheme.id, ladder_id: ladder.id)
-            existing_invoices = Invoice.where(project_id: booking_detail.project_id, booking_detail_id: booking_detail.id, incentive_scheme_id: incentive_scheme.id)
+            invoice =  Invoice.find_or_initialize_by(project_id: booking_detail.project_id, booking_detail_id: booking_detail.id, incentive_scheme_id: incentive_scheme.id, ladder_id: ladder.id, manager_id: channel_partner.id)
+            existing_invoices = Invoice.where(project_id: booking_detail.project_id, booking_detail_id: booking_detail.id, incentive_scheme_id: incentive_scheme.id, manager_id: channel_partner.id)
 
             if invoice.new_record?
               amount = (incentive_amount - existing_invoices.sum(:amount)).round
               invoice.amount = (amount > 0 ? amount : 0)
               invoice.ladder_stage = ladder.stage
+              invoice.manager = channel_partner
               unless invoice.save
                 Rails.logger.error "[IncentiveCalculator][ERR] #{invoice.errors.full_messages}"
               end

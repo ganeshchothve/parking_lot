@@ -28,6 +28,20 @@ class Admin::UsersController < AdminController
     end
   end
 
+  def reactivate_account
+    @user.update_last_activity!
+    @user.expired_at = nil
+    respond_to do |format|
+      if @user.save
+        flash[:notice] = 'User Account reactivated successfully.'
+        format.html { redirect_to admin_users_path }
+      else
+        flash[:alert] = "There was some error while reactivating account. Please contact support for assistance"
+        format.html { redirect_to admin_users_path }
+      end
+    end
+  end
+
   def resend_confirmation_instructions
     @user = User.find(params[:id])
     respond_to do |format|

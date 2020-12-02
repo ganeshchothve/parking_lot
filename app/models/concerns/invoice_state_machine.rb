@@ -13,6 +13,10 @@ module InvoiceStateMachine
         transitions from: :draft, to: :pending_approval
       end
 
+      event :re_raise, after: :after_re_raise_event do
+        transitions from: :rejected, to: :pending_approval
+      end
+
       event :approve, after: :after_approved_event do
         transitions from: :pending_approval, to: :approved, if: :can_approve?
       end
@@ -25,12 +29,25 @@ module InvoiceStateMachine
     def after_pending_approval_event
       self.raised_date = Time.now
     end
+
     def after_approved_event
       self.processing_date = Time.now
       self.approved_date = Time.now
+      reject_pending_deductions
     end
+
     def after_rejected_event
       self.processing_date = Time.now
+      self.net_amount = 0
+      reject_pending_deductions
+    end
+
+    def after_re_raise_event
+      self.incentive_deduction.pending_approval! if self.incentive_deduction? && self.incentive_deduction.rejected?
+    end
+
+    def reject_pending_deductions
+      self.incentive_deduction.rejected! if self.incentive_deduction? && self.incentive_deduction.pending_approval?
     end
 
     def can_approve?

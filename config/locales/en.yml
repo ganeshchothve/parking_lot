@@ -196,6 +196,10 @@ en:
         zero: Invoice
         one: Invoice
         other: Invoices
+      incentive_deduction:
+        zero: Incentive Deduction
+        one: Incentive Deduction
+        other: Incentive Deductions
 
     attributes:
       crm:
@@ -635,6 +639,7 @@ en:
         project_tower_id: 'Project Tower'
         tier_id: 'Channel Partner Tier'
         status: 'Status'
+        date_range: Date Filter
       incentive_scheme/status:
         draft: Draft
         approved: Approved
@@ -642,7 +647,9 @@ en:
 
       invoice:
         amount: Incentive Amount
-        comments: Rejection Reason
+        net_amount: Net Amount
+        comments: Comments
+        rejection_reason: Rejection Reason
         project_id: 'Project'
         booking_detail_id: 'Booking Detail'
         incentive_scheme_id: 'Incentive Scheme'
@@ -651,7 +658,18 @@ en:
         processing_date: 'Processing Date'
         approved_date: 'Approved Date'
         status: 'Status'
+        cheque_detail: 'Cheque Details'
       invoice/status:
+        draft: 'Draft'
+        pending_approval: 'Pending Approval'
+        approved: 'Approved'
+        rejected: 'Rejected'
+
+      incentive_deduction:
+        amount: Deduction Amount
+        comments: Reason
+        status: Status
+      incentive_deduction/status:
         draft: 'Draft'
         pending_approval: 'Pending Approval'
         approved: 'Approved'
@@ -1018,8 +1036,25 @@ en:
         rejected: 'Invoice rejected'
       events:
         raise: 'Raise Invoice'
+        re_raise: 'Re-Raise Invoice'
         approve: 'Approve Invoice'
         reject: 'Reject Invoice'
+
+    incentive_deductions:
+      index:
+        link_name: 'Incentive Deductions'
+      new:
+        link_name: 'Add Deduction'
+      edit:
+        link_name: 'Edit Deduction'
+      show:
+        link_name: 'Show Deduction'
+      status_message:
+        approved: 'Incentive deduction approved'
+        rejected: 'Incentive deduction rejected'
+      events:
+        approved: 'Approve'
+        rejected: 'Reject'
 
     clients:
       new:
@@ -1229,6 +1264,8 @@ en:
         link_name: "%{role} Profile"
       print:
         link_name: Print
+      reactivate_account:
+        link_name: Reactivate Account
       resend_confirmation_instructions:
         link_name: Resend Confirmation
       resend_password_instructions:

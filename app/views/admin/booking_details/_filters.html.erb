@@ -4,7 +4,7 @@
     <a href="javascript:;" class="close-filter-btn">&times;</a>
   </div>
 
-  <%= form_tag admin_booking_details_path, method: "get", id: "scheme_search_form" do %>
+  <%= form_tag admin_booking_details_path, method: "get", id: "booking_detail_search_form" do %>
     <div class="filter-content">
       <div class="row">
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
@@ -17,11 +17,11 @@
         </div>
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs[project_id]", t('mongoid.attributes.project_unit.project_id'), class: "control-label" %>
-          <%= select_tag "fltrs[project_id]", options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:project_id] : "")), {prompt: "Select", class: "selectize"} %>
+          <%= select_tag "fltrs[project_id]", options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:project_id] : "")), {class: "selectize project_select"} %>
         </div>
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", ProjectTower.model_name.human, class: "control-label" %>
-          <%= select_tag "fltrs[project_tower_id]", options_for_select(filter_project_tower_options), { prompt: "Select", class: "selectize"} %>
+          <%= select_tag "fltrs[project_tower_id]", options_for_select(filter_project_tower_options), { prompt: "Select", class: "selectize project_tower_select", data: { url: admin_project_towers_path }} %>
         </div>
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", User.model_name.human, class: "control-label" %>
@@ -51,7 +51,6 @@
 </div>
 <%= javascript_tag do %>
   $(document).ready(function(){
-    FormInitializer.init($("#scheme_search_form"));
-    Amura.filter_towers_on_project_change();
+    FormInitializer.init($("#booking_detail_search_form"));
   });
 <% end %>

@@ -3,7 +3,7 @@
 module DatabaseSeeds
   module EmailTemplates
     module Reminder
-      def self.client_based_email_templates(client_id)
+      def self.client_based_email_templates_seed(client_id)
         if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, name: 'not_confirmed_day_1').blank?
           Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: 'User', name: 'not_confirmed_day_1', subject: '<%= self.booking_portal_client.name %> | Complete your KYC registration today', content:
             "<div class = 'card'>
@@ -41,7 +41,7 @@ module DatabaseSeeds
         end
       end
 
-      def self.project_based_email_templates(project_id, client_id)
+      def self.project_based_email_templates_seed(project_id, client_id)
         if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: 'no_payment_hour_1').blank?
           Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: 'User', name: 'no_payment_hour_1', subject: '<%= self.booking_portal_client.name %> | KYC Not Complete', content:
             "<div class = 'card'>

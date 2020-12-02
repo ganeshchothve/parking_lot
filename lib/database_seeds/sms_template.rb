@@ -88,7 +88,7 @@ module DatabaseSeeds
       return Template::SmsTemplate.where(booking_portal_client_id: client_id, project_id: project_id).count
     end
 
-    def self.client_based_email_templates_seed client_id
+    def self.client_based_sms_templates_seed client_id
       Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "User", name: "user_registered_by_channel_partner", content: "<%= manager.name %> has registered you with <%= booking_portal_client.name %>. To confirm your account with this partner, please click <%= confirmation_url %>. You can also confirm your account using your phone & <%= I18n.t('global.otp') %>.") if Template::SmsTemplate.where(booking_portal_client_id: client_id, name: "user_registered_by_channel_partner").blank?
 
       Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "User", name: "channel_partner_user_registered", content: "Dear <%= name %>, thank you for registering as a Channel Partner at <%= booking_portal_client.name %>. To confirm your account, please click <%= confirmation_url %>. You can also confirm your account using your phone & <%= I18n.t('global.otp') %>.") if Template::SmsTemplate.where(booking_portal_client_id: client_id, name: "channel_partner_user_registered").blank?

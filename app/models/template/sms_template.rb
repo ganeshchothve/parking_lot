@@ -6,7 +6,6 @@ class Template::SmsTemplate < Template
   field :subject_class, type: String
   field :content, type: String
   field :temp_id, type: String
-  field :dlt_entity_id, type: String
   field :dlt_header_id, type: String
   field :dlt_temp_id, type: String
 

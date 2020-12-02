@@ -202,7 +202,7 @@ module BookingDetailStateMachine
       send_email_and_sms_as_confirmed
 
       # create asset and send to zoho sign
-      if self.aasm.from_state == :booked_tentative
+      if (self.aasm.from_state == :booked_tentative && self.user.booking_portal_client.document_sign.present?)
         self.send_booking_form_to_sign
       end
     end

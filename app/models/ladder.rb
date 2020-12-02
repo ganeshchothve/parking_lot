@@ -17,8 +17,25 @@ class Ladder
 
   validates :start_value, :payment_adjustment, presence: true
   validates :stage, uniqueness: true, numericality: { greater_than: 0 }
+  validates :start_value, numericality: { greater_than: 0 }
+  validates :end_value, numericality: { greater_than: 0, allow_blank: true }
+  validates :payment_adjustment, copy_errors_from_child: true
+  validate :start_value_lte_end_value
+  validate :start_value_must_start_from_1
 
   default_scope -> {asc(:stage)}
 
   accepts_nested_attributes_for :payment_adjustment, allow_destroy: true
+
+  def start_value_lte_end_value
+    errors.add :start_value, 'must be <= end value' if end_value? && start_value > end_value
+  end
+
+  def start_value_must_start_from_1
+    errors.add :start_value, 'must start from 1' unless incentive_scheme.ladders.reject(&:marked_for_destruction?).map(&:start_value).min == 1
+  end
+
+  def name_in_error
+    "Stage #{stage}"
+  end
 end
