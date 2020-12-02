@@ -11,9 +11,10 @@ class Address
   field :zip, type: String
   field :address_type, type: String #TODO: Must be personal, work etc
   field :selldo_id, type: String
-  field :address_type, type: String
 
   belongs_to :addressable, polymorphic: true, optional: true
+
+  validates :address_type, presence: true
 
   enable_audit({
     audit_fields: [:city, :state, :country, :address_type, :selldo_id],

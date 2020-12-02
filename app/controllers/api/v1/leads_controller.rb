@@ -1,6 +1,6 @@
 class Api::V1::LeadsController < ApisController
   before_action :reference_ids_present?, :set_project, :create_or_set_user, :set_manager_through_reference_id, only: :create
-  before_action :set_user, :set_lead, except: :create
+  before_action :set_lead_and_user, except: :create
   before_action :add_third_party_reference_params, :modify_params
 
   #
@@ -136,14 +136,10 @@ class Api::V1::LeadsController < ApisController
     end
   end
 
-  def set_user
-    @user = User.or(check_and_build_query_for_finding_user).first
-    render json: { errors: ["User with this email/phone not found"] }, status: :not_found unless @user
-  end
-
   def set_lead
     @lead = @user.leads.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:id]).first
     render json: { errors: ["Lead with reference_id '#{params[:id]}' not found"] }, status: :not_found unless @lead
+    @user = @lead.user
   end
 
   # Allows only certain parameters to be saved and updated.
@@ -156,7 +152,7 @@ class Api::V1::LeadsController < ApisController
   end
 
   def lead_update_params
-    params.require(:lead).permit(:first_name, :last_name, :email, :phone, :stage, :sitevisit_date, :revisit_count, :last_revisit_date, third_party_references_attributes: [:id, :reference_id])
+    params.require(:lead).permit(:first_name, :last_name, :stage, :sitevisit_date, :revisit_count, :last_revisit_date, third_party_references_attributes: [:id, :reference_id])
   end
 
   def third_party_reference_params

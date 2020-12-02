@@ -1,7 +1,6 @@
 class Api::V1::UserKycsController < ApisController
-  before_action :reference_ids_present?, only: :create
-  before_action :set_lead
-  before_action :set_user_kyc, only: :update
+  before_action :reference_ids_present?, :set_lead, only: :create
+  before_action :set_user_kyc_and_lead, only: :update
   before_action :add_third_party_reference_params, :modify_params
 
   #
@@ -120,7 +119,7 @@ class Api::V1::UserKycsController < ApisController
 
   # Checks if the required reference_id's are present. reference_id is the third party CRM resource id.
   def reference_ids_present?
-    render json: { errors: ['user kyc reference_id is required'] }, status: :bad_request and return unless params.dig(:user_kyc, :reference_id)
+    render json: { errors: ['user kyc reference_id is required'] }, status: :bad_request and return unless params.dig(:user_kyc, :reference_id).present?
   end
 
   def set_lead
@@ -132,9 +131,10 @@ class Api::V1::UserKycsController < ApisController
     end
   end
 
-  def set_user_kyc
+  def set_user_kyc_and_lead
     @user_kyc = UserKyc.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:id]).first
     render json: { errors: ["User Kyc with reference_id '#{params[:id]}' not found"] }, status: :not_found unless @user_kyc
+    @lead = @user_kyc.lead
   end
 
   def add_third_party_reference_params
@@ -164,12 +164,12 @@ class Api::V1::UserKycsController < ApisController
     rescue ArgumentError
       errors << 'Anniversay date format is invalid. Correct date format is - dd/mm/yyyy'
     end
-    errors << "NRI should be a boolean value - true or false" if !params[:user_kyc][:nri].is_a?(Boolean)
-    errors << "POA should be a boolean value - true or false" if !params[:user_kyc][:poa].is_a?(Boolean)
-    errors << "Is Company should be a boolean value - true or false" if !params[:user_kyc][:is_company].is_a?(Boolean)
-    errors << "Existing customer should be a boolean value - true or false" if !params[:user_kyc][:existing_customer].is_a?(Boolean)
-    errors << "Number of units should be an integer" if !params[:user_kyc][:number_of_units].is_a?(Integer)
-    errors << "Budget should be an integer" if !params[:user_kyc][:budget].is_a?(Integer)
+    errors << "NRI should be a boolean value - true or false" if params[:user_kyc][:nri].present? && !params[:user_kyc][:nri].is_a?(Boolean)
+    errors << "POA should be a boolean value - true or false" if params[:user_kyc][:poa].present? && !params[:user_kyc][:poa].is_a?(Boolean)
+    errors << "Is Company should be a boolean value - true or false" if params[:user_kyc][:is_company].present? && !params[:user_kyc][:is_company].is_a?(Boolean)
+    errors << "Existing customer should be a boolean value - true or false" if params[:user_kyc][:existing_customer].present? && !params[:user_kyc][:existing_customer].is_a?(Boolean)
+    errors << "Number of units should be an integer" if params[:user_kyc][:number_of_units].present? && !params[:user_kyc][:number_of_units].is_a?(Integer)
+    errors << "Budget should be an integer" if params[:user_kyc][:budget].present? && !params[:user_kyc][:budget].is_a?(Integer)
     if @user_kyc
       params[:user_kyc][:addresses_attributes].each_with_index do |addr_attrs, i|
         addr = @user_kyc.addresses.where(address_type: addr_attrs[:address_type]).first

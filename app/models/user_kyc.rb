@@ -64,13 +64,16 @@ class UserKyc
   has_and_belongs_to_many :booking_details
 
   delegate :name, to: :bank_detail, prefix: true, allow_nil: true
-  accepts_nested_attributes_for :bank_detail, :addresses # , :correspondence_address
+  accepts_nested_attributes_for :bank_detail # , :correspondence_address
+  accepts_nested_attributes_for :addresses, reject_if: proc { |attributes| attributes['one_line_address'].blank? }
 
   validates :first_name, :last_name, :email, :phone, presence: true
   validates :oci, presence: true, if: Proc.new{ |kyc| kyc.nri? }
   validates :email, uniqueness: {scope: :lead_id}, allow_blank: true
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP } , allow_blank: true
   validates :pan_number, :aadhaar, uniqueness: {scope: :lead_id}, allow_blank: true, reduce: true
   validates :phone, uniqueness: {scope: [:aadhaar, :lead_id] }
+  validates :phone, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile mobile fixed_line premium_rate] }, allow_blank: true
   # validates :phone, uniqueness: {scope: :aadhaar}, phone: true # TODO: we can remove phone validation, as the validation happens in
   validates :configurations, array: {inclusion: {allow_blank: true, in: Proc.new{ |kyc| UserKyc.available_configurations.collect{|x| x[:id]} } }}
   validates :preferred_floors, array: {inclusion: {allow_blank: true, in: Proc.new{ |kyc| UserKyc.available_preferred_floors.collect{|x| x[:id]} } }}
@@ -81,7 +84,7 @@ class UserKyc
   validates :existing_customer_name, :existing_customer_project, presence: true, if: proc { |kyc| kyc.existing_customer? }
   validates :salutation, inclusion: { in: proc { UserKyc.available_salutations.collect { |x| x[:id] } } }, allow_blank: true
   validates :erp_id, uniqueness: true, allow_blank: true
-  validate :check_addresses_validity
+  validate :validate_address
 
   scope :filter_by_user_id, ->(user_id) { where(user_id: user_id) }
   scope :filter_by_lead_id, ->(lead_id){ where(lead_id: lead_id)}
@@ -89,12 +92,10 @@ class UserKyc
 
   default_scope -> { desc(:created_at) }
 
-  def check_addresses_validity
-    if addresses.pluck(:address_type).count != addresses.entries.count
-      self.errors.add(:base, 'Address types must be present for all addresses')
-    elsif addresses.pluck(:address_type) != addresses.pluck(:address_type).uniq
-      self.errors.add(:base, 'Address types must be distinct')
-    end
+  def validate_address
+    addresses.each do |a|
+      self.errors.add(:base, "Addresses errors (#{a.to_sentence})- " + a.errors.to_a.to_sentence) if !a.valid?
+    end if addresses.present?
   end
 
   def name

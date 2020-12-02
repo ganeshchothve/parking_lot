@@ -112,13 +112,14 @@ class Api::V1::BookingDetailsController < ApisController
       rescue ArgumentError
         errors << 'Anniversay date format is invalid. Correct date format is - dd/mm/yyyy'
       end
-      errors << "NRI should be a boolean value - true or false" if !params[:booking_detail][:primary_user_kyc_attributes][:nri].is_a?(Boolean)
-      errors << "POA should be a boolean value - true or false" if !params[:booking_detail][:primary_user_kyc_attributes][:poa].is_a?(Boolean)
-      errors << "Is Company should be a boolean value - true or false" if !params[:booking_detail][:primary_user_kyc_attributes][:is_company].is_a?(Boolean)
-      errors << "Existing customer should be a boolean value - true or false" if !params[:booking_detail][:primary_user_kyc_attributes][:existing_customer].is_a?(Boolean)
-      errors << "Number of units should be an integer" if !params[:booking_detail][:primary_user_kyc_attributes][:number_of_units].is_a?(Integer)
-      errors << "Budget should be an integer" if !params[:booking_detail][:primary_user_kyc_attributes][:budget].is_a?(Integer)
+      errors << "NRI should be a boolean value - true or false" if params[:booking_detail][:primary_user_kyc_attributes][:nri].present? && !params[:booking_detail][:primary_user_kyc_attributes][:nri].is_a?(Boolean)
+      errors << "POA should be a boolean value - true or false" if params[:booking_detail][:primary_user_kyc_attributes][:nri].present? && !params[:booking_detail][:primary_user_kyc_attributes][:poa].is_a?(Boolean)
+      errors << "Is Company should be a boolean value - true or false" if params[:booking_detail][:primary_user_kyc_attributes][:nri].present? && !params[:booking_detail][:primary_user_kyc_attributes][:is_company].is_a?(Boolean)
+      errors << "Existing customer should be a boolean value - true or false" if params[:booking_detail][:primary_user_kyc_attributes][:nri].present? && !params[:booking_detail][:primary_user_kyc_attributes][:existing_customer].is_a?(Boolean)
+      errors << "Number of units should be an integer" if params[:booking_detail][:primary_user_kyc_attributes][:nri].present? && !params[:booking_detail][:primary_user_kyc_attributes][:number_of_units].is_a?(Integer)
+      errors << "Budget should be an integer" if params[:booking_detail][:primary_user_kyc_attributes][:nri].present? && !params[:booking_detail][:primary_user_kyc_attributes][:budget].is_a?(Integer)
       params[:booking_detail][:primary_user_kyc_attributes][:lead_id] = @lead.id.to_s
+      params[:booking_detail][:primary_user_kyc_attributes][:user_id] = @lead.user.id.to_s
       render json: { errors: errors }, status: :unprocessable_entity and return if errors.present?
       if primary_kyc_reference_id = params.dig(:booking_detail, :primary_user_kyc_attributes, :reference_id).presence
       # add third party references
@@ -187,6 +188,7 @@ class Api::V1::BookingDetailsController < ApisController
       rescue ArgumentError
         errors << "Processed on date format is invalid for receipt - #{params[:booking_detail][:receipts_attributes][i][:reference_id]}. Correct date format is - dd/mm/yyyy"
       end
+      # TO - DO Move this to receipt observer 
       params[:booking_detail][:receipts_attributes][i][:lead_id] = @lead.id.to_s
       params[:booking_detail][:receipts_attributes][i][:user_id] = @lead.user.id.to_s
       params[:booking_detail][:receipts_attributes][i][:project_id] = @lead.project.id.to_s
