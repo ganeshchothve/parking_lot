@@ -1264,6 +1264,8 @@ en:
         link_name: "%{role} Profile"
       print:
         link_name: Print
+      reactivate_account:
+        link_name: Reactivate Account
       resend_confirmation_instructions:
         link_name: Resend Confirmation
       resend_password_instructions:
