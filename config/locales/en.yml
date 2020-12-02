@@ -648,7 +648,8 @@ en:
       invoice:
         amount: Incentive Amount
         net_amount: Net Amount
-        comments: Rejection Reason
+        comments: Comments
+        rejection_reason: Rejection Reason
         project_id: 'Project'
         booking_detail_id: 'Booking Detail'
         incentive_scheme_id: 'Incentive Scheme'
@@ -1034,6 +1035,7 @@ en:
         rejected: 'Invoice rejected'
       events:
         raise: 'Raise Invoice'
+        re_raise: 'Re-Raise Invoice'
         approve: 'Approve Invoice'
         reject: 'Reject Invoice'
 

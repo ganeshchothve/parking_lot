@@ -80,7 +80,8 @@ Rails.application.routes.draw do
 
       resources :invoices, only: :index, controller: 'booking_details/invoices' do
         member do
-          post :change_state
+          patch :change_state
+          get :re_raise
         end
       end
     end

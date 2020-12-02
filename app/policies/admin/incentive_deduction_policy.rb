@@ -32,7 +32,6 @@ class Admin::IncentiveDeductionPolicy < IncentiveDeductionPolicy
     case user.role.to_s
     when 'cp_admin'
       attributes += [:comments]
-      attributes += [:event] unless record.status.in?(%w(approved rejected))
       attributes += [:amount] if record.new_record? && !record.invoice.status.in?(%w(approved rejected))
     when 'billing_team'
       attributes += [:event] if record.pending_approval?

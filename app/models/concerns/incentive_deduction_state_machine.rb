@@ -11,6 +11,7 @@ module IncentiveDeductionStateMachine
 
       event :pending_approval, after: :after_pending_approval_event do
         transitions from: :draft, to: :pending_approval
+        transitions from: :rejected, to: :pending_approval
       end
 
       event :approved, after: :after_approved_event do

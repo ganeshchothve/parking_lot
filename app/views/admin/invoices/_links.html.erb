@@ -3,7 +3,13 @@
 
 <!-- Raise invoice for channel partner -->
 <% if policy([current_user_role_group, invoice]).change_state? && policy([current_user_role_group, invoice]).editable_field?('event') %>
-  <%= link_to t("controller.invoices.events.raise"), change_state_admin_booking_detail_invoice_path(invoice.booking_detail, invoice, {invoice: {event: 'raise'}}), method: :post, class: 'dropdown-item' %>
+  <% invoice.aasm.events(permitted: true).each do |event| %>
+    <% if event.name == :re_raise %>
+      <%= link_to t("controller.invoices.events.#{event.name}"), re_raise_admin_booking_detail_invoice_path(invoice.booking_detail, invoice), class: 'dropdown-item modal-remote-form-link' %>
+    <% else %>
+      <%= link_to t("controller.invoices.events.#{event.name}"), change_state_admin_booking_detail_invoice_path(invoice.booking_detail, invoice, {invoice: {event: event.name}}), method: :patch, class: 'dropdown-item' %>
+    <% end %>
+  <% end %>
 <% end %>
 
 <!-- Edit invoice for Billing Team -->

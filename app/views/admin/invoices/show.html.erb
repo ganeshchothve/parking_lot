@@ -79,6 +79,14 @@
                   </div>
                 </div>
               <% end %>
+              <% if @invoice.rejection_reason.present? %>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="small text-muted"><%= invoice_labels[:rejection_reason] %></label>
+                    <div class='break-word'><%= @invoice.rejection_reason %></div>
+                  </div>
+                </div>
+              <% end %>
               <% if @invoice.comments.present? %>
                 <div class="col-md-4">
                   <div class="form-group">

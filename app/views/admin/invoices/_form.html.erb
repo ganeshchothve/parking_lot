@@ -26,19 +26,28 @@
         </div>
         <div class="form-group">
           <%= f.label :comments, class: '' %>
-          <%= f.text_area :comments, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("comments") %>
+          <% if policy([:admin, @invoice]).editable_field?("comments") %>
+            <%= f.text_area :comments, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("comments") %>
+          <% else %>
+            <p><%= f.object.comments %></p>
+          <% end%>
         </div>
-        <% if policy([:admin, @invoice]).editable_field?("net_amount") %>
-          <div class="form-group">
-            <%= f.label :net_amount, class: '' %>
+        <div class="form-group">
+          <%= f.label :rejection_reason, class: '' %>
+          <% if policy([:admin, @invoice]).editable_field?("rejection_reason") %>
+            <%= f.text_area :rejection_reason, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("rejection_reason") %>
+          <% else %>
+            <p><%= f.object.rejection_reason %></p>
+          <% end%>
+        </div>
+        <div class="form-group">
+          <%= f.label :net_amount, class: '' %>
+          <% if policy([:admin, @invoice]).editable_field?("net_amount") %>
             <%= f.number_field :net_amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("net_amount") %>
-          </div>
-        <% else %>
-          <div class="form-group">
-            <%= f.label :net_amount, class: '' %>
+          <% else %>
             <p><%= number_to_indian_currency(f.object.net_amount) %></p>
-          </div>
-        <% end %>
+          <% end %>
+        </div>
       </div>
 
       <div class="modal-footer">

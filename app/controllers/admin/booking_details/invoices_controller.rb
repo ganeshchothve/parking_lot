@@ -18,9 +18,14 @@ class Admin::BookingDetails::InvoicesController < AdminController
       if @invoice.update(permitted_attributes([current_user_role_group, @invoice]))
         format.html { redirect_to request.referer, notice: t("controller.invoices.status_message.#{@invoice.status}") }
       else
-        format.html { redirect_to request.referer, alert: @invoice.errors.full_messages.uniq! }
+        format.html { redirect_to request.referer, alert: @invoice.errors.full_messages.uniq }
+        format.json { render json: { errors: @invoice.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
     end
+  end
+
+  def re_raise
+    render 'admin/invoices/re_raise', layout: false
   end
 
   def show
@@ -55,7 +60,7 @@ class Admin::BookingDetails::InvoicesController < AdminController
   def authorize_resource
     if params[:action] == 'index'
       authorize [current_user_role_group, Invoice]
-    elsif params[:action].in?(%w(change_state edit update))
+    elsif params[:action].in?(%w(change_state edit update re_raise))
       authorize [current_user_role_group, @invoice]
     else
       authorize [current_user_role_group, @invoice]

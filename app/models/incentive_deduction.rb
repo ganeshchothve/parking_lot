@@ -9,7 +9,7 @@ class IncentiveDeduction
   field :comments, type: String
 
   validates :amount, :comments, presence: true
-  validates :amount, numericality: { less_than_or_equal_to: proc { |deduction| deduction.invoice.amount } }
+  validates :amount, numericality: { less_than_or_equal_to: proc { |deduction| deduction.invoice.amount }, greater_than: 0 }
   validates :assets, presence: true, if: :pending_approval?
 
   belongs_to :invoice

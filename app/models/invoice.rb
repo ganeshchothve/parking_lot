@@ -7,7 +7,6 @@ class Invoice
 
   field :amount, type: Float, default: 0.0
   field :status, type: String, default: 'draft'
-  #field :registration_status, type: String
   field :raised_date, type: DateTime
   field :processing_date, type: DateTime
   field :approved_date, type: DateTime
@@ -26,7 +25,8 @@ class Invoice
   has_one :incentive_deduction
 
   validates :ladder_id, :ladder_stage, presence: true
-  validates :comments, presence: true, if: :rejected?
+  validates :rejection_reason, presence: true, if: :rejected?
+  validates :comments, presence: true, if: proc { pending_approval? && status_was == 'rejected' }
   validates :booking_detail_id, uniqueness: { scope: [:incentive_scheme_id, :ladder_id] }
   validates :amount, numericality: { greater_than: 0 }
   validates :net_amount, numericality: { greater_than: 0 }, if: :approved?
