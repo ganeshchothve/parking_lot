@@ -50,8 +50,8 @@ class Api::V1::ReceiptsController < ApisController
 
   def set_receipt_and_lead
     @receipt = Receipt.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:id]).first
-    render json: { errors: ["Receipt with reference_id '#{ params[:id] }' is already in success"] }, status: :not_found and return if @receipt.success?
     render json: { errors: ["Receipt with reference_id '#{ params[:id] }' not found"] }, status: :not_found and return unless @receipt
+    render json: { errors: ["Receipt with reference_id '#{ params[:id] }' is already in success"] }, status: :not_found and return if @receipt.success?
     @lead = @receipt.lead
   end
 
@@ -123,7 +123,6 @@ class Api::V1::ReceiptsController < ApisController
       errors << "Number of units should be an integer" if params[:receipt][:user_kyc_attributes][:number_of_units] && !params[:receipt][:user_kyc_attributes][:number_of_units].is_a?(Integer)
       errors << "Budget should be an integer" if params[:receipt][:user_kyc_attributes][:budget] && !params[:receipt][:user_kyc_attributes][:budget].is_a?(Integer)
       params[:receipt][:user_kyc_attributes][:lead_id] = @lead.id.to_s
-      render json: { errors: errors }, status: :unprocessable_entity and return if errors.present?
       if kyc_reference_id = params.dig(:receipt, :user_kyc_attributes, :reference_id).presence
       # add third party references
         tpr_attrs = {

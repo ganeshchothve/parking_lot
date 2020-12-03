@@ -6,7 +6,20 @@ class Api::V1::BookingDetailsController < ApisController
 
   def create
     unless BookingDetail.reference_resource_exists?(@crm.id, params[:booking_detail][:reference_id])
-      @booking_detail = BookingDetail.new(name: @project_unit.name, base_rate: @project_unit.base_rate, floor_rise: @project_unit.floor_rise, saleable: @project_unit.saleable, costs: @project_unit.costs, data: @project_unit.data, project_unit_id: @project_unit.id, lead_id: @lead.id, user_id: @lead.user.id, project_id: @project_unit.project_id)
+      @booking_detail = BookingDetail.new(
+                                            name: @project_unit.name,
+                                            base_rate: @project_unit.base_rate,
+                                            project_name:  @project_unit.project_name,
+                                            project_tower_name: @project_unit.project_tower_name,
+                                            bedrooms: @project_unit.bedrooms,
+                                            bathrooms: @project_unit.bathrooms,
+                                            floor_rise: @project_unit.floor_rise,
+                                            saleable: @project_unit.saleable,
+                                            costs: @project_unit.costs,
+                                            data: @project_unit.data,
+                                            project_unit_id: @project_unit.id,
+                                            lead_id: @lead.id, user_id: @lead.user.id,
+                                            project_id: @project_unit.project_id)
       @booking_detail.assign_attributes(booking_detail_create_params)
       if @booking_detail.save
         if @booking_detail.under_negotiation!
@@ -61,16 +74,16 @@ class Api::V1::BookingDetailsController < ApisController
 
   def set_lead
     @lead = Lead.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:booking_detail][:lead_id]).first
-    render json: { errors: ["Lead with reference_id '#{ params[:booking_detail][:lead_id] }' not found"] }, status: :not_found unless @lead
+    render json: { errors: ["Lead with reference_id '#{ params[:booking_detail][:lead_id] }' not found"] }, status: :not_found and return unless @lead
   end
 
   def set_project_unit
     @project_unit = ProjectUnit.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:booking_detail][:project_unit_id], status: 'available').first
-    render json: { errors: ["Project Unit with reference_id '#{ params[:booking_detail][:project_unit_id] }' not found or is already booked"] }, status: :not_found unless @project_unit
+    render json: { errors: ["Project Unit with reference_id '#{ params[:booking_detail][:project_unit_id] }' not found or is already booked"] }, status: :not_found and return unless @project_unit
   end
 
   def check_project
-    render json: { errors: ["Project for project unit - #{ params[:booking_detail][:project_unit_id] } and lead - #{ params[:booking_detail][:lead_id] } does not match"] }, status: :not_found if @lead.project_id != @project_unit.project_id
+    render json: { errors: ["Project for project unit - #{ params[:booking_detail][:project_unit_id] } and lead - #{ params[:booking_detail][:lead_id] } does not match"] }, status: :not_found and return if @lead.project_id != @project_unit.project_id
   end
 
   def check_scheme
@@ -80,12 +93,12 @@ class Api::V1::BookingDetailsController < ApisController
       filters = {fltrs: { can_be_applied_by_role: @lead.manager_role, project_tower: @project_unit.project_tower_id, user_role: @lead.user_role, user_id: @lead.user_id, status: 'approved', default_for_user_id: @lead.manager_id } }
       scheme = Scheme.build_criteria(filters).first
     end
-    render json: { errors: ["Booking scheme is not found for this project unit. Please contact administrator"] }, status: :not_found unless scheme.present?
+    render json: { errors: ["Booking scheme is not found for this project unit. Please contact administrator"] }, status: :not_found and return unless scheme.present?
   end
 
   def set_booking_detail_project_unit_and_lead
     @booking_detail = BookingDetail.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:id]).first
-    render json: { errors: ["Booking Detail with reference_id '#{ params[:id] }' not found"] }, status: :not_found unless @booking_detail.present?
+    render json: { errors: ["Booking Detail with reference_id '#{ params[:id] }' not found"] }, status: :not_found and return unless @booking_detail.present?
     @lead = @booking_detail.lead
     @project_unit = @booking_detail.project_unit
   end
@@ -130,7 +143,6 @@ class Api::V1::BookingDetailsController < ApisController
       errors << "Budget should be an integer" if params[:booking_detail][:primary_user_kyc_attributes][:nri].present? && !params[:booking_detail][:primary_user_kyc_attributes][:budget].is_a?(Integer)
       params[:booking_detail][:primary_user_kyc_attributes][:lead_id] = @lead.id.to_s
       params[:booking_detail][:primary_user_kyc_attributes][:user_id] = @lead.user.id.to_s
-      render json: { errors: errors }, status: :unprocessable_entity and return if errors.present?
       if primary_kyc_reference_id = params.dig(:booking_detail, :primary_user_kyc_attributes, :reference_id).presence
       # add third party references
         tpr_attrs = {
@@ -167,7 +179,6 @@ class Api::V1::BookingDetailsController < ApisController
       errors << "Number of units should be an integer" if !params[:booking_detail][:user_kycs_attributes][i][:number_of_units].is_a?(Integer)
       errors << "Budget should be an integer" if !params[:booking_detail][:user_kycs_attributes][i][:budget].is_a?(Integer)
       params[:booking_detail][:user_kycs_attributes][i][:lead_id] = @lead.id.to_s
-      render json: { errors: errors }, status: :unprocessable_entity and return if errors.present?
       if kyc_reference_id = params.dig(:booking_detail, :user_kycs_attributes, i, :reference_id).presence
       # add third party references
         # tpr_attrs = {
