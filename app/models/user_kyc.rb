@@ -69,10 +69,10 @@ class UserKyc
 
   validates :first_name, :last_name, :email, :phone, presence: true
   validates :oci, presence: true, if: Proc.new{ |kyc| kyc.nri? }
-  validates :email, uniqueness: {scope: :lead_id}, allow_blank: true
+  # validates :email, uniqueness: {scope: :lead_id}, allow_blank: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP } , allow_blank: true
-  validates :pan_number, :aadhaar, uniqueness: {scope: :lead_id}, allow_blank: true, reduce: true
-  validates :phone, uniqueness: {scope: [:aadhaar, :lead_id] }
+  # validates :pan_number, :aadhaar, uniqueness: {scope: :lead_id}, allow_blank: true, reduce: true
+  # validates :phone, uniqueness: {scope: [:aadhaar, :lead_id] }
   validates :phone, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile mobile fixed_line premium_rate] }, allow_blank: true
   # validates :phone, uniqueness: {scope: :aadhaar}, phone: true # TODO: we can remove phone validation, as the validation happens in
   validates :configurations, array: {inclusion: {allow_blank: true, in: Proc.new{ |kyc| UserKyc.available_configurations.collect{|x| x[:id]} } }}

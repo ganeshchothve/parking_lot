@@ -81,6 +81,11 @@ class Api::V1::ReceiptsController < ApisController
     rescue ArgumentError
       errors << "Processed on date format is invalid for receipt. Correct date format is - dd/mm/yyyy"
     end
+    if params[:receipt][:status].present?
+      errors << "Status should be clearance_pending or success" unless %w[clearance_pending success].include?( params[:receipt][:status])
+    else
+      params[:receipt][:status] = "clearance_pending"
+    end
     params[:receipt][:lead_id] = @lead.id.to_s
     params[:receipt][:user_id] = @lead.user.id.to_s
     params[:receipt][:project_id] = @lead.project.id.to_s
@@ -108,12 +113,12 @@ class Api::V1::ReceiptsController < ApisController
       rescue ArgumentError
         errors << 'Anniversay date format is invalid. Correct date format is - dd/mm/yyyy'
       end
-      errors << "NRI should be a boolean value - true or false" if !params[:receipt][:user_kyc_attributes][:nri].is_a?(Boolean)
-      errors << "POA should be a boolean value - true or false" if !params[:receipt][:user_kyc_attributes][:poa].is_a?(Boolean)
-      errors << "Is Company should be a boolean value - true or false" if !params[:receipt][:user_kyc_attributes][:is_company].is_a?(Boolean)
-      errors << "Existing customer should be a boolean value - true or false" if !params[:receipt][:user_kyc_attributes][:existing_customer].is_a?(Boolean)
-      errors << "Number of units should be an integer" if !params[:receipt][:user_kyc_attributes][:number_of_units].is_a?(Integer)
-      errors << "Budget should be an integer" if !params[:receipt][:user_kyc_attributes][:budget].is_a?(Integer)
+      errors << "NRI should be a boolean value - true or false" if params[:receipt][:user_kyc_attributes][:nri] && !params[:receipt][:user_kyc_attributes][:nri].is_a?(Boolean)
+      errors << "POA should be a boolean value - true or false" if params[:receipt][:user_kyc_attributes][:poa] && !params[:receipt][:user_kyc_attributes][:poa].is_a?(Boolean)
+      errors << "Is Company should be a boolean value - true or false" if params[:receipt][:user_kyc_attributes][:is_company] && !params[:receipt][:user_kyc_attributes][:is_company].is_a?(Boolean)
+      errors << "Existing customer should be a boolean value - true or false" if params[:receipt][:user_kyc_attributes][:existing_customer] && !params[:receipt][:user_kyc_attributes][:existing_customer].is_a?(Boolean)
+      errors << "Number of units should be an integer" if params[:receipt][:user_kyc_attributes][:number_of_units] && !params[:receipt][:user_kyc_attributes][:number_of_units].is_a?(Integer)
+      errors << "Budget should be an integer" if params[:receipt][:user_kyc_attributes][:budget] && !params[:receipt][:user_kyc_attributes][:budget].is_a?(Integer)
       params[:receipt][:user_kyc_attributes][:lead_id] = @lead.id.to_s
       render json: { errors: errors }, status: :unprocessable_entity and return if errors.present?
       if kyc_reference_id = params.dig(:receipt, :user_kyc_attributes, :reference_id).presence
@@ -144,15 +149,21 @@ class Api::V1::ReceiptsController < ApisController
   end
 
   def receipt_create_params
-    params.require(:receipt).permit(:project_id, :lead_id, :user_id, :receipt_id, :order_id, :payment_mode, :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, :tracking_id, :total_amount, :status_message, :status, :payment_gateway, :processed_on, :comments, :payment_type, third_party_references_attributes: [:crm_id, :reference_id], user_kyc_attributes: user_kyc_params)
+    params.require(:receipt).permit(:project_id, :lead_id, :user_id, :payment_mode, :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, :tracking_id, :total_amount, :status_message, :status, :payment_gateway, :processed_on, :comments, :payment_type, third_party_references_attributes: [:crm_id, :reference_id], user_kyc_attributes: user_kyc_params)
   end
 
   def receipt_update_params
-    params.require(:receipt).permit(:receipt_id, :order_id, :payment_mode, :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, :tracking_id, :total_amount, :status_message, :status, :payment_gateway, :processed_on, :comments, :payment_type, third_party_references_attributes: [:id, :reference_id], user_kyc_attributes: user_kyc_params)
+    params.require(:receipt).permit( :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, :tracking_id, :total_amount, :status_message, :status, :payment_gateway, :processed_on, :comments, third_party_references_attributes: [:id, :reference_id], user_kyc_attributes: user_kyc_params)
   end
 
   def generate_response
     response = {receipt_id: @receipt.id.to_s}
+    receipts_statuses = %w[clearance_pending success]
+    receipts_statuses.each do |event|
+      @receipt.assign_attributes(event: event)
+      @receipt.state_machine_errors << @receipt.errors unless @receipt.save
+      break if params[:receipt][:status] == event
+    end
     response[:user_kyc_id] = @receipt.user_kyc.id.to_s if params.dig(:receipt, :user_kyc_attributes).present? 
     response
   end

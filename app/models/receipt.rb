@@ -15,7 +15,7 @@ class Receipt
 
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   OFFLINE_PAYMENT_MODE = %w[cheque rtgs imps card_swipe neft]
-  PAYMENT_TYPES = %w[agreement stamp_duty]
+  PAYMENT_TYPES = %w[agreement stamp_duty token]
   PAYMENT_MODES = %w[cheque rtgs imps card_swipe neft online]
   STATUSES = %w[pending clearance_pending success cancellation_requested cancelling cancelled cancellation_rejected failed available_for_refund refunded]
   # Add different types of documents which are uploaded on receipt
@@ -37,8 +37,9 @@ class Receipt
   field :comments, type: String
   field :gateway_response, type: Hash
   field :erp_id, type: String, default: ''
-  field :payment_type, type: String # possible values are :agreement and :stamp_duty
+  field :payment_type, type: String, default: 'agreement' # possible values are :agreement and :stamp_duty
   field :transfer_details, type: Array, default: [] #stores tranfer details for razorpay payment
+  field :state_machine_errors, type: Array, default: []
 
   attr_accessor :swap_request_initiated
 
@@ -72,6 +73,8 @@ class Receipt
 
   scope :direct_payments, ->{ where(booking_detail_id: nil )}
 
+  validates :payment_type, presence: true
+  validates :payment_type, inclusion: { in: Receipt::PAYMENT_TYPES }, if: proc { |receipt| receipt.payment_type.present? }
   validates :issuing_bank, name: true, if: proc { |receipt| receipt.issuing_bank.present? }
   validates :issuing_bank_branch, name: true, if: proc { |receipt| receipt.issuing_bank_branch.present? }
   validates :payment_identifier, length: { in: 3..25 }, format: { without: /[^A-Za-z0-9_-]/, message: "can contain only alpha-numaric with '_' and '-' "}, if: proc { |receipt| receipt.offline? && receipt.payment_identifier.present? }

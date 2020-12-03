@@ -85,7 +85,7 @@ class Api::V1::BookingDetailsController < ApisController
 
   def set_booking_detail_project_unit_and_lead
     @booking_detail = BookingDetail.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:id]).first
-    render json: { errors: ["Booking Detail with reference_id '#{ params[:id] }' not found"] }, status: :not_found unless @booking_detail
+    render json: { errors: ["Booking Detail with reference_id '#{ params[:id] }' not found"] }, status: :not_found unless @booking_detail.present?
     @lead = @booking_detail.lead
     @project_unit = @booking_detail.project_unit
   end
@@ -198,6 +198,11 @@ class Api::V1::BookingDetailsController < ApisController
       rescue ArgumentError
         errors << "Processed on date format is invalid for receipt - #{params[:booking_detail][:receipts_attributes][i][:reference_id]}. Correct date format is - dd/mm/yyyy"
       end
+      if params[:booking_detail][:receipts_attributes][i][:status].present?
+        errors << "Status should be clearance_pending or success" unless %w[clearance_pending success].include?( params[:booking_detail][:receipts_attributes][i][:status])
+      else
+        params[:booking_detail][:receipts_attributes][i][:status] = "clearance_pending"
+      end
       # TO - DO Move this to receipt observer 
       params[:booking_detail][:receipts_attributes][i][:lead_id] = @lead.id.to_s
       params[:booking_detail][:receipts_attributes][i][:user_id] = @lead.user.id.to_s
@@ -228,7 +233,7 @@ class Api::V1::BookingDetailsController < ApisController
   end
 
   def receipt_params
-    [:project_id, :lead_id, :user_id, :receipt_id, :order_id, :payment_mode, :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, :tracking_id, :total_amount, :status_message, :status, :payment_gateway, :processed_on, :comments, :payment_type, :creator_id, third_party_references_attributes: [:id, :crm_id, :reference_id]]
+    [:project_id, :lead_id, :user_id, :receipt_id, :order_id, :payment_mode, :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, :tracking_id, :total_amount, :status_message, :payment_gateway, :processed_on, :comments, :payment_type, :creator_id, third_party_references_attributes: [:id, :crm_id, :reference_id]]
   end
 
   def user_kyc_params
@@ -247,8 +252,16 @@ class Api::V1::BookingDetailsController < ApisController
     response = {booking_detail_id: @booking_detail.id.to_s}
     response[:primary_user_kyc_id] = @booking_detail.primary_user_kyc_id.to_s if params.dig(:booking_detail, :primary_user_kyc_attributes).present?
     receipt_ids = {}
+    receipts_statuses = %w[clearance_pending success]
     params.dig(:booking_detail, :receipts_attributes).each do |receipt_attributes|
-      receipt_ids[receipt_attributes.dig(:reference_id).to_s] =  Receipt.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": receipt_attributes.dig(:reference_id).to_s ).first.id.to_s
+      receipt = Receipt.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": receipt_attributes.dig(:reference_id).to_s ).first
+      receipt.state_machine_errors = []
+      receipts_statuses.each do |event|
+        receipt.assign_attributes(event: event)
+        receipt.state_machine_errors << receipt.errors unless receipt.save
+        break if receipt_attributes[:status] == event
+      end
+      receipt_ids[receipt_attributes.dig(:reference_id).to_s] =  receipt.id.to_s
     end if params.dig(:booking_detail, :receipts_attributes).present?
     response[:receipt_ids] = receipt_ids if receipt_ids.present?
     user_kyc_ids = {}

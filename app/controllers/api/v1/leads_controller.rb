@@ -136,8 +136,8 @@ class Api::V1::LeadsController < ApisController
     end
   end
 
-  def set_lead
-    @lead = @user.leads.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:id]).first
+  def set_lead_and_user
+    @lead = Lead.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:id]).first
     render json: { errors: ["Lead with reference_id '#{params[:id]}' not found"] }, status: :not_found unless @lead
     @user = @lead.user
   end
