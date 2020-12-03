@@ -178,13 +178,13 @@ module DashboardDataProvider
   end
 
   def self.total_buyers(current_user)
-    User.where(role: { "$in": User::BUYER_ROLES}, manager_id: current_user.id).count
+    User.where(User.user_based_scope(current_user)).count
   end
 
   def self.user_group_by(current_user)
     out = {'confirmed_users': 0, 'not_confirmed_users': 0}
     data = User.collection.aggregate([
-      {"$match": {'manager_id': current_user.id } },
+      {"$match": User.user_based_scope(current_user) },
       { "$group": {
         "_id":{
           "$cond": {if: '$confirmed_at', then: 'confirmed_users', else: 'not_confirmed_users'}

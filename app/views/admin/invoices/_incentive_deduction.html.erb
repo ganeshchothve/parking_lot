@@ -1,0 +1,41 @@
+<div class='row'>
+  <div class='col-md-4'>
+    <div class='form-group mb-0'>
+      <%= label_tag 'incentive_deduction', 'Incentive Deduction', class: 'control-label' %>
+    </div>
+  </div>
+</div>
+<div class="card mb-3">
+  <div class="box-content br-rd-bl-4 bg-white px-3 pt-3">
+    <div class='row'>
+      <div class='col-md-4'>
+        <div class='form-group'>
+          <%= label_tag 'amount', 'Amount', class: 'control-label' %>
+          <p><%= number_to_indian_currency(incentive_deduction.amount) %></p>
+        </div>
+      </div>
+      <div class='offset-md-1 col-md-3 col-sm-4'>
+        <div class='form-group'>
+          <%= label_tag 'assets', 'Proof of Approval', class: 'control-label' %>
+          <div class="files-container-single">
+            <% incentive_deduction.assets.each do |asset| %>
+              <% if asset.file.file && asset.file.file.exists? %>
+                <%= render "assets/file_icon", record: {id: asset.id, file_size: asset.file_size, url: asset.file.url, content_type: asset.file.content_type, original_filename: asset.original_filename }, links: {} %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class='col-md-4'>
+        <div class='form-group text-right'>
+          <%= label_tag 'status', 'Status', class: 'control-label' %>
+          <p><%= t("mongoid.attributes.incentive_deduction/status.#{incentive_deduction.status}") %></p>
+          <% if incentive_deduction.pending_approval? %>
+            <%= link_to t('controller.incentive_deductions.events.approved'), change_state_admin_invoice_incentive_deduction_path(@invoice, incentive_deduction, { incentive_deduction: { event: 'approved' } }), method: :post, data: {disable_with: 'Approving..'}, class: 'btn btn-success mr-2' %>
+            <%= link_to t('controller.incentive_deductions.events.rejected'), change_state_admin_invoice_incentive_deduction_path(@invoice, incentive_deduction, { incentive_deduction: { event: 'rejected' } }), method: :post, data: {disable_with: 'Rejecting..'}, class: 'btn btn-danger' %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

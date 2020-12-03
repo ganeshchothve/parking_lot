@@ -65,7 +65,7 @@
           data.submit();
         } else { // display pop up
           // TODO move this to a bootstrap alert
-          alert( errors.join() );
+          Amura.global_error_handler(errors)
         }
       },
       done: function (e, data) {
@@ -92,7 +92,7 @@
       },
       error: function(e, textStatus, errorThrown){
         if( typeof e.responseJSON == 'object'){
-          alert(e.responseJSON.errors)
+          Amura.global_error_handler(e.responseJSON.errors);
         }
         $.unblockUI();
       }

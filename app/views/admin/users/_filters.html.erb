@@ -31,7 +31,7 @@
         <% if current_user.role == 'admin' %>
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", ChannelPartner.model_name.human %>
-          <%= select_tag "fltrs[manager_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(_id: params[:fltrs][:manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {role: 'channel_partner'} }} %>
+          <%= select_tag "fltrs[manager_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(_id: params[:fltrs][:manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: { fltrs: { role: 'channel_partner'} } }} %>
         </div>
         <% end %>
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">

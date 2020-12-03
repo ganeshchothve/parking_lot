@@ -95,6 +95,7 @@ gem 'aasm'
 gem 'mailgun-ruby'
 gem 'safe_parser'
 gem 'twilio-ruby'
+gem 'custom_error_message', '1.1.1'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

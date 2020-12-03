@@ -22,9 +22,12 @@ class AssetsController < ApplicationController
   def show;  end
 
   def destroy
-    @asset.destroy
     respond_to do |format|
-      format.json {render json: {}}
+      if @asset.destroy
+        format.json {render json: {}, status: :ok}
+      else
+        format.json {render json: {errors: @asset.errors.full_messages.to_sentence}, status: :unprocessable_entity}
+      end
     end
   end
 

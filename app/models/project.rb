@@ -143,6 +143,7 @@ class Project
   mount_uploader :brochure, DocUploader
 
   has_many :project_units
+  has_many :booking_details
   has_many :schemes
   has_many :project_towers
   has_one :address, as: :addressable

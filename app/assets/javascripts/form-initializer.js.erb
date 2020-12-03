@@ -132,6 +132,7 @@ FormInitializer = (function(){
     });
 
     add_payment_mode_event();
+    filter_towers(selector);
   };
   var add_payment_mode_event = function(){
     $("#receipt_payment_mode").selectize().on("change", function() {
@@ -184,9 +185,48 @@ FormInitializer = (function(){
     });
   };
 
+  var filter_towers = function(selector){
+    var $project_select = $(selector).find(".project_select");
+    var $project_tower_select = $(selector).find(".project_tower_select");
+    var tower_id = $project_tower_select.val();
+    if($project_tower_select.length > 0) {
+      $project_select.on("change", function(e){
+        var project_id = $(e.currentTarget).val();
+        if(!_.isEmpty(project_id)) {
+          $.ajax({
+            url: $project_tower_select.data("url"),
+            data: {
+              fltrs: {
+                project_id: project_id
+              }
+            },
+            type: "get",
+            dataType: "json",
+            success: function(data){
+              var project_tower_selectize = $project_tower_select[0].selectize;
+              project_tower_selectize.setValue('');
+              project_tower_selectize.clearOptions();
+              project_tower_selectize.renderCache = {};
+              var options = _.map(data, function(d) { return { value: d._id, text: d.name } });
+              project_tower_selectize.addOption(options)
+              project_tower_selectize.refreshOptions(false);
+              if(!_.isEmpty(tower_id)){
+                project_tower_selectize.addItem(tower_id, true);
+              }
+            },
+            error: function(){
+              Amura.global_error_handler("Error in fetching the project towers...")
+            }
+          });
+        }
+      }).trigger('change');
+    }
+  };
+
   return {
     init: init,
-    remoteSelectize: remote_selectize
+    remoteSelectize: remote_selectize,
+    filterTowers: filter_towers
   };
 
 })();

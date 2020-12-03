@@ -4,11 +4,15 @@ require "net/https"
 
 module Zoho
   class Sign
-    SCOPES = ["ZohoSign.documents.ALL"]
-    #CLIENT_ID = '1000.9GM9U969TR3W6GZYJU3W5DTFSJR2KS'
-    #CLIENT_SECRET = '776c4eb58da81056cc6ec5f5ed9db99a9a6bcefae8'
-    CLIENT_ID = ENV_CONFIG[:document_sign][:zoho][:client_id]
-    CLIENT_SECRET = ENV_CONFIG[:document_sign][:zoho][:client_secret]
+    SCOPES = %w[ZohoCRM.modules.ALL ZohoCRM.settings.ALL]
+    if Rails.env.production? || Rails.env.staging?
+      CLIENT_ID = ENV_CONFIG[:document_sign][:zoho][:client_id]
+      CLIENT_SECRET = ENV_CONFIG[:document_sign][:zoho][:client_secret]
+    else
+      CLIENT_ID = "1000.IM2TL09GLCX4ICZ2P19ZO4EK9ZO55V"
+      CLIENT_SECRET = "bfc0080c431e1ea9ce45df34bf74f24d0a464aa70f"
+    end
+
     REDIRECT_PATH = "admin/client/document_sign/callback"
 
     def self.authorization_url base_domain

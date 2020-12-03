@@ -57,14 +57,15 @@
                 ( <%= user_request.created_at.strftime('%A, %d %b %Y %l:%M %p') %>)
               </p>
             </li>
-
             <li>
               <span>Resolved by</span>
               <p>
                 <%- if user_request.resolved_by.present? %>
                   <%= link_to user_request.resolved_by.name, [current_user_role_group, user_request.created_by] %>
                   </br>
-                  ( <%= user_request.updated_at.strftime('%A, %d %b %Y %l:%M %p')%>)
+                  <% if user_request.resolved_at.present? %>
+                    (<%= user_request.resolved_at.in_time_zone(current_user.time_zone).strftime('%A, %d %b %Y %l:%M %p') rescue "" %>)
+                  <% end %>
                 <% end %>
               </p>
             </li>

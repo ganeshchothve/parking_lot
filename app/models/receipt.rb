@@ -57,10 +57,11 @@ class Receipt
   has_one :user_kyc
 
   scope :filter_by_status, ->(_status) { where(status: { '$in' => _status }) }
+  scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
+  scope :filter_by_lead_id, ->(lead_id){ where(lead_id: lead_id)}
   scope :filter_by_receipt_id, ->(_receipt_id) { where(receipt_id: /#{_receipt_id}/i) }
   scope :filter_by_token_number, ->(_token_number) { where(token_number: _token_number) }
   scope :filter_by_user_id, ->(_user_id) { where(user_id: _user_id) }
-  scope :filter_by_lead_id, ->(lead_id){ where(lead_id: lead_id)}
   scope :filter_by_payment_mode, ->(_payment_mode) { where(payment_mode: _payment_mode) }
   scope :filter_by_issued_date, ->(date) { start_date, end_date = date.split(' - '); where(issued_date: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
@@ -249,10 +250,11 @@ class Receipt
 
   alias :resource_name :name
 
-  def self.todays_payments_count
+  def self.todays_payments_count(project_id)
     filters = {
       status: %w(clearance_pending success),
-      created_at: "#{DateTime.current.in_time_zone('Mumbai').beginning_of_day} - #{DateTime.current.in_time_zone('Mumbai')}"
+      created_at: "#{DateTime.current.in_time_zone('Mumbai').beginning_of_day} - #{DateTime.current.in_time_zone('Mumbai')}",
+      project_id: project_id
     }
     Receipt.build_criteria({fltrs: filters}.with_indifferent_access).count
   end

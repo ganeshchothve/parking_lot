@@ -49,6 +49,12 @@
               </div>
             </div>
             <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="small text-muted"><%= invoice_labels[:net_amount] %></label>
+                  <div><%= number_to_indian_currency(@invoice.net_amount) %></div>
+                </div>
+              </div>
               <% if @invoice.raised_date.present? %>
                 <div class="col-md-4">
                   <div class="form-group">
@@ -73,6 +79,14 @@
                   </div>
                 </div>
               <% end %>
+              <% if @invoice.rejection_reason.present? %>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="small text-muted"><%= invoice_labels[:rejection_reason] %></label>
+                    <div class='break-word'><%= @invoice.rejection_reason %></div>
+                  </div>
+                </div>
+              <% end %>
               <% if @invoice.comments.present? %>
                 <div class="col-md-4">
                   <div class="form-group">
@@ -85,12 +99,6 @@
           </div>
         </div>
       </div>
-      <div class="mt-3"></div>
-      <% if policy([:admin, Crm::Base.new()]).choose_crm? && apis = Crm::Base.active_apis(@invoice).presence %>
-        <div class="col-md-12 mt-3">
-          <%= render 'admin/crm/base/crms', { apis: apis, resource: @invoice } %>
-        </div>
-      <% end %>
     </div>
   </div>
 </div>
