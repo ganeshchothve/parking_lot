@@ -45,12 +45,13 @@ class Api::V1::ReceiptsController < ApisController
 
   def set_lead
     @lead = Lead.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:receipt][:lead_id]).first
-    render json: { errors: ["Lead with reference_id '#{ params[:receipt][:lead_id] }' not found"] }, status: :not_found unless @lead
+    render json: { errors: ["Lead with reference_id '#{ params[:receipt][:lead_id] }' not found"] }, status: :not_found and return unless @lead
   end
 
   def set_receipt_and_lead
     @receipt = Receipt.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:id]).first
-    render json: { errors: ["Receipt with reference_id '#{ params[:id] }' not found"] }, status: :not_found unless @receipt
+    render json: { errors: ["Receipt with reference_id '#{ params[:id] }' is already in success"] }, status: :not_found and return if @receipt.success?
+    render json: { errors: ["Receipt with reference_id '#{ params[:id] }' not found"] }, status: :not_found and return unless @receipt
     @lead = @receipt.lead
   end
 
@@ -87,7 +88,7 @@ class Api::V1::ReceiptsController < ApisController
     else
       params[:receipt][:status] = "clearance_pending"
     end
-    errors << "Payment identifier can't be blank" unless params[:receipt][:payment_identifier].present?
+    errors << "Payment identifier can't be blank" if params[:action] == "create" && !params[:receipt][:payment_identifier].present?
     params[:receipt][:lead_id] = @lead.id.to_s
     params[:receipt][:user_id] = @lead.user.id.to_s
     params[:receipt][:project_id] = @lead.project.id.to_s
