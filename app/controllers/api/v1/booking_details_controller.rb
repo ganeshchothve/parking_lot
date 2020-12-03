@@ -270,7 +270,7 @@ class Api::V1::BookingDetailsController < ApisController
       receipts_statuses.each do |event|
         receipt.assign_attributes(event: event)
         unless receipt.save
-          errors = receipt.state_machine_errors + receipt.errors
+          errors = receipt.state_machine_errors + receipt.errors.to_a
           receipt.assign_attributes(state_machine_errors: errors)
           receipt.save
         end
