@@ -24,6 +24,11 @@ module IncentiveDeductionStateMachine
     end
 
     def after_pending_approval_event
+      _invoice = self.invoice
+      # Reject deductions if invoice is already processed.
+      if _invoice.status.in?(%w(approved rejected))
+        self.rejected!
+      end
     end
     def after_approved_event
       _invoice = self.invoice

@@ -334,5 +334,17 @@ class BookingDetail
       custom_scope = { user_id: user.id } if user.buyer?
       custom_scope
     end
+
+    def user_based_available_statuses(user)
+      if user.present?
+        if user.role?('billing_team')
+          %w[booked_confirmed]
+        else
+          BookingDetail.aasm.states.map(&:name)
+        end
+      else
+        BookingDetail.aasm.states.map(&:name)
+      end
+    end
   end
 end
