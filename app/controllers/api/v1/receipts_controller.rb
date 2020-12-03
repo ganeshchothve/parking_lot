@@ -149,11 +149,11 @@ class Api::V1::ReceiptsController < ApisController
   end
 
   def receipt_create_params
-    params.require(:receipt).permit(:project_id, :lead_id, :user_id, :payment_mode, :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, :tracking_id, :total_amount, :status_message, :status, :payment_gateway, :processed_on, :comments, :payment_type, third_party_references_attributes: [:crm_id, :reference_id], user_kyc_attributes: user_kyc_params)
+    params.require(:receipt).permit(:project_id, :lead_id, :user_id, :payment_mode, :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, :tracking_id, :total_amount, :status_message, :payment_gateway, :processed_on, :comments, :payment_type, third_party_references_attributes: [:crm_id, :reference_id], user_kyc_attributes: user_kyc_params)
   end
 
   def receipt_update_params
-    params.require(:receipt).permit( :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, :tracking_id, :total_amount, :status_message, :status, :payment_gateway, :processed_on, :comments, third_party_references_attributes: [:id, :reference_id], user_kyc_attributes: user_kyc_params)
+    params.require(:receipt).permit( :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, :tracking_id, :total_amount, :status_message, :processed_on, :comments, third_party_references_attributes: [:id, :reference_id], user_kyc_attributes: user_kyc_params)
   end
 
   def generate_response
@@ -161,7 +161,11 @@ class Api::V1::ReceiptsController < ApisController
     receipts_statuses = %w[clearance_pending success]
     receipts_statuses.each do |event|
       @receipt.assign_attributes(event: event)
-      @receipt.state_machine_errors << @receipt.errors unless @receipt.save
+      unless @receipt.save
+        errors = @receipt.state_machine_errors + @receipt.errors
+        @receipt.assign_attributes(state_machine_errors: errors)
+        @receipt.save
+      end
       break if params[:receipt][:status] == event
     end
     response[:user_kyc_id] = @receipt.user_kyc.id.to_s if params.dig(:receipt, :user_kyc_attributes).present? 

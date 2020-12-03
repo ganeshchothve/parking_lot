@@ -255,10 +255,13 @@ class Api::V1::BookingDetailsController < ApisController
     receipts_statuses = %w[clearance_pending success]
     params.dig(:booking_detail, :receipts_attributes).each do |receipt_attributes|
       receipt = Receipt.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": receipt_attributes.dig(:reference_id).to_s ).first
-      receipt.state_machine_errors = []
       receipts_statuses.each do |event|
         receipt.assign_attributes(event: event)
-        receipt.state_machine_errors << receipt.errors unless receipt.save
+        unless receipt.save
+          errors = receipt.state_machine_errors + receipt.errors
+          receipt.assign_attributes(state_machine_errors: errors)
+          receipt.save
+        end
         break if receipt_attributes[:status] == event
       end
       receipt_ids[receipt_attributes.dig(:reference_id).to_s] =  receipt.id.to_s
