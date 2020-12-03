@@ -81,11 +81,13 @@ class Api::V1::ReceiptsController < ApisController
     rescue ArgumentError
       errors << "Processed on date format is invalid for receipt. Correct date format is - dd/mm/yyyy"
     end
+
     if params[:receipt][:status].present?
       errors << "Status should be clearance_pending or success" unless %w[clearance_pending success].include?( params[:receipt][:status])
     else
       params[:receipt][:status] = "clearance_pending"
     end
+    errors << "Payment identifier can't be blank" unless params[:receipt][:payment_identifier].present?
     params[:receipt][:lead_id] = @lead.id.to_s
     params[:receipt][:user_id] = @lead.user.id.to_s
     params[:receipt][:project_id] = @lead.project.id.to_s
@@ -168,6 +170,7 @@ class Api::V1::ReceiptsController < ApisController
       end
       break if params[:receipt][:status] == event
     end
+    response[:status_change_errors] = @receipt.state_machine_errors if @receipt.state_machine_errors.present?
     response[:user_kyc_id] = @receipt.user_kyc.id.to_s if params.dig(:receipt, :user_kyc_attributes).present? 
     response
   end

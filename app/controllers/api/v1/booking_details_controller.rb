@@ -203,6 +203,7 @@ class Api::V1::BookingDetailsController < ApisController
       else
         params[:booking_detail][:receipts_attributes][i][:status] = "clearance_pending"
       end
+      errors << "Payment identifier can't be blank" unless params[:booking_detail][:receipts_attributes][i][:payment_identifier].present?
       # TO - DO Move this to receipt observer 
       params[:booking_detail][:receipts_attributes][i][:lead_id] = @lead.id.to_s
       params[:booking_detail][:receipts_attributes][i][:user_id] = @lead.user.id.to_s
@@ -264,7 +265,8 @@ class Api::V1::BookingDetailsController < ApisController
         end
         break if receipt_attributes[:status] == event
       end
-      receipt_ids[receipt_attributes.dig(:reference_id).to_s] =  receipt.id.to_s
+      receipt_ids[receipt_attributes.dig(:reference_id).to_s] =  {id: receipt.id.to_s}
+      receipt_ids[receipt_attributes.dig(:reference_id).to_s][:status_change_errors] = receipt.state_machine_errors
     end if params.dig(:booking_detail, :receipts_attributes).present?
     response[:receipt_ids] = receipt_ids if receipt_ids.present?
     user_kyc_ids = {}
