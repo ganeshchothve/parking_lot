@@ -133,7 +133,7 @@ class Api::V1::UserKycsController < ApisController
 
   def set_user_kyc_and_lead
     @user_kyc = UserKyc.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:id]).first
-    render json: { errors: ["User Kyc with reference_id '#{params[:id]}' not found"] }, status: :not_found unless @user_kyc
+    render json: { errors: ["User Kyc with reference_id '#{params[:id]}' not found"] }, status: :not_found and return unless @user_kyc
     @lead = @user_kyc.lead
   end
 
@@ -176,7 +176,7 @@ class Api::V1::UserKycsController < ApisController
         params[:user_kyc][:addresses_attributes][i][:id] = addr.id.to_s if addr.present?
       end
     end
-    render json: { errors: errors } if errors.present?
+    render json: { errors: errors }, status: :unprocessable_entity and return if errors.present?
   end
 
 end
