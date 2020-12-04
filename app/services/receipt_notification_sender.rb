@@ -5,12 +5,13 @@ module ReceiptNotificationSender
   def send_success_notification
     if self.user.booking_portal_client.email_enabled?
       email = Email.create!({
+        project_id: self.project_id,
         booking_portal_client_id: user.booking_portal_client_id,
-        email_template_id:Template::EmailTemplate.find_by(name: "receipt_success").id,
+        email_template_id:Template::EmailTemplate.find_by(project_id: self.project_id, name: "receipt_success").id,
         recipients: [user],
         cc_recipients: (user.manager_id.present? ? [user.manager] : []),
-        triggered_by_id: receipt.id,
-        triggered_by_type: receipt.class.to_s
+        triggered_by_id: self.id,
+        triggered_by_type: self.class.to_s
       })
       email.sent!
     end
@@ -19,12 +20,13 @@ module ReceiptNotificationSender
   def send_failure_notification
     if self.user.booking_portal_client.email_enabled?
       email = Email.create!({
+        project_id: self.project_id,
         booking_portal_client_id: project_unit.booking_portal_client_id,
-        email_template_id:Template::EmailTemplate.find_by(name: "receipt_failed").id,
+        email_template_id:Template::EmailTemplate.find_by(name: "receipt_failed", project_id: self.project_id).id,
         recipients: [user],
         cc_recipients: (user.manager_id.present? ? [user.manager] : []),
-        triggered_by_id: receipt.id,
-        triggered_by_type: receipt.class.to_s
+        triggered_by_id: self.id,
+        triggered_by_type: self.class.to_s
       })
       email.sent!
     end
@@ -33,12 +35,13 @@ module ReceiptNotificationSender
   def send_clearance_pending_notification
     if self.user.booking_portal_client.email_enabled?
       email = Email.create!({
+        project_id: self.project_id,
         booking_portal_client_id: project_unit.booking_portal_client_id,
-        email_template_id:Template::EmailTemplate.find_by(name: "receipt_clearance_pending").id,
+        email_template_id:Template::EmailTemplate.find_by(name: "receipt_clearance_pending", project_id: self.project_id).id,
         recipients: [user],
         cc_recipients: (user.manager_id.present? ? [user.manager] : []),
-        triggered_by_id: receipt.id,
-        triggered_by_type: receipt.class.to_s
+        triggered_by_id: self.id,
+        triggered_by_type: self.class.to_s
       })
       email.sent!
     end
@@ -47,9 +50,10 @@ module ReceiptNotificationSender
   def send_sms_notification
     if self.user.booking_portal_client.sms_enabled?
       Sms.create!(
+        project_id: self.project_id,
         booking_portal_client_id: user.booking_portal_client_id,
         recipient_id: self.user_id,
-        sms_template_id: Template::SmsTemplate.find_by(name: "receipt_#{self.status}").id,
+        sms_template_id: Template::SmsTemplate.find_by(project_id: self.project_id, name: "receipt_#{self.status}").id,
         triggered_by_id: self.id,
         triggered_by_type: self.class.to_s
       )
@@ -61,20 +65,22 @@ module ReceiptNotificationSender
     if self.status == 'pending' && self.payment_mode != 'online'
       if user.booking_portal_client.email_enabled?
         email = Email.create!({
+          project_id: self.project_id,
           booking_portal_client_id: user.booking_portal_client_id,
-          email_template_id:Template::EmailTemplate.find_by(name: "receipt_pending").id,
+          email_template_id:Template::EmailTemplate.find_by(name: "receipt_pending", project_id: self.project_id).id,
           recipients: [user],
           cc_recipients: (user.manager_id.present? ? [user.manager] : []),
-          triggered_by_id: receipt.id,
-          triggered_by_type: receipt.class.to_s
+          triggered_by_id: self.id,
+          triggered_by_type: self.class.to_s
         })
         email.sent!
       end
       if self.user.booking_portal_client.sms_enabled?
         Sms.create!(
+          project_id: self.project_id,
           booking_portal_client_id: user.booking_portal_client_id,
           recipient_id: self.user_id,
-          sms_template_id: Template::SmsTemplate.find_by(name: "receipt_pending").id,
+          sms_template_id: Template::SmsTemplate.find_by(name: "receipt_pending", project_id: self.project_id).id,
           triggered_by_id: self.id,
           triggered_by_type: self.class.to_s
         )

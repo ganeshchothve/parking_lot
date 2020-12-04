@@ -127,8 +127,9 @@ class BookingDetail
   #
   def auto_released_extended_inform_buyer!
     email = Email.create!({
+      project_id: project_id,
       booking_portal_client_id: project_unit.booking_portal_client_id,
-      email_template_id: Template::EmailTemplate.find_by(name: "auto_release_on_extended").id,
+      email_template_id: Template::EmailTemplate.find_by(project_id: project_id, name: "auto_release_on_extended").id,
       cc: [ project_unit.booking_portal_client.notification_email ],
       recipients: [ lead.user ],
       cc_recipients: ( lead.manager_id.present? ? [lead.manager] : [] ),
@@ -147,8 +148,9 @@ class BookingDetail
         file << pdf
       end
       attachments_attributes << {file: File.open("#{Rails.root}/exports/#{project_unit.name}_cost_sheet.pdf")}
-      email_template = Template::EmailTemplate.find_by(name: "cost_sheet_and_payment_schedule")
+      email_template = Template::EmailTemplate.find_by(project_id: project_id, name: "cost_sheet_and_payment_schedule")
       email = Email.create!({
+        project_id: project_id,
         booking_portal_client_id: project_unit.booking_portal_client_id,
         body: ERB.new(project_unit.booking_portal_client.email_header).result(binding) + email_template.parsed_content(self) + ERB.new(project_unit.booking_portal_client.email_footer).result(binding),
         subject: email_template.parsed_subject(self),
@@ -262,8 +264,9 @@ class BookingDetail
       end
       attachments_attributes << {file: File.open("#{Rails.root}/exports/#{booking_number}_booking_form.pdf")}
       email = Email.create!({
+        project_id: project_id,
         booking_portal_client_id: project_unit.booking_portal_client_id,
-        email_template_id: Template::EmailTemplate.find_by(name: "booking_confirmed").id,
+        email_template_id: Template::EmailTemplate.find_by(project_id: project_id, name: "booking_confirmed").id,
         recipients: [lead.user],
         cc_recipients: [],
         triggered_by_id: self.id,
@@ -273,8 +276,9 @@ class BookingDetail
       email.sent!
     end
     if project_unit.booking_portal_client.sms_enabled?
-      template = Template::SmsTemplate.find_by(name: "booking_confirmed")
+      template = Template::SmsTemplate.find_by(project_id: project_id, name: "booking_confirmed")
       sms = Sms.create!(
+        project_id: project_id,
         booking_portal_client_id: project_unit.booking_portal_client_id,
         recipient_id: lead.user_id,
         sms_template_id: template.id,

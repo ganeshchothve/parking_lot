@@ -18,8 +18,9 @@ module ReceiptsConcern
     user = lead.user
     if user.booking_portal_client.email_enabled?
       email = Email.create!(
+        project_id: @receipt.project_id,
         booking_portal_client_id: user.booking_portal_client_id,
-        email_template_id: Template::EmailTemplate.find_by(name: 'receipt_success').id,
+        email_template_id: Template::EmailTemplate.find_by(project_id: @receipt.project_id, name: 'receipt_success').id,
         recipients: [user],
         cc_recipients: (lead.manager_id.present? ? [lead.manager] : []),
         triggered_by_id: @receipt.id,

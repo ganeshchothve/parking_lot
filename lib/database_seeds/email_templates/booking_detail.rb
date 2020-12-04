@@ -7,10 +7,10 @@ module DatabaseSeeds
           <div class="card-body">
             <p>Dear <%= self.user.name %>,</p>
             <p>
-              Welcome to <%= current_project.name %>, <%= current_project.description %>.
+              Welcome to <%= self.project.name %>, <%= self.project.description %>.
             </p>
             <p>
-              We are pleased to inform that you are among the esteemed circle of customers who have booked an apartment at <%= current_project.name %>
+              We are pleased to inform that you are among the esteemed circle of customers who have booked an apartment at <%= self.project.name %>
             </p>
           </div>
         </div>
@@ -34,7 +34,7 @@ module DatabaseSeeds
             <div class="card-body">
               <p>Dear <%= self.name %>,</p>
               <p>
-                Thank you for the payment towards Unit - <%= self.name %> at <%= current_project.name %>.
+                Thank you for the payment towards Unit - <%= self.name %> at <%= self.project.name %>.
               </p>
             </div>
           </div>
@@ -59,7 +59,7 @@ module DatabaseSeeds
             <div class="card-body">
               <p>Dear <%= self.user.name %>,</p>
               Congratulations!<br/><br/>
-              Welcome to the <%= current_project.name %>! You\'re now the proud owner of Unit - <%= self.name %>.<br/><br/>
+              Welcome to the <%= self.project.name %>! You\'re now the proud owner of Unit - <%= self.name %>.<br/><br/>
               Our executives will be in touch regarding agreement formalities.
             </div>
           </div>

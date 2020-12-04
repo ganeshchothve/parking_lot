@@ -265,8 +265,9 @@ module BookingDetailStateMachine
         end
         attachments_attributes << {file: File.open("#{Rails.root}/exports/allotment_letter-#{project_unit.name}.pdf")}
         email = Email.create!({
+            project_id: project_id,
             booking_portal_client_id: project_unit.booking_portal_client_id,
-            email_template_id: Template::EmailTemplate.find_by(name: "booking_confirmed").id,
+            email_template_id: Template::EmailTemplate.find_by(name: "booking_confirmed", project_id: project_id).id,
             cc: [project_unit.booking_portal_client.notification_email],
             recipients: [lead.user],
             cc_recipients: (lead.manager_id.present? ? [lead.manager] : []),
@@ -278,9 +279,10 @@ module BookingDetailStateMachine
       end
       if self.project_unit.booking_portal_client.sms_enabled?
         Sms.create!(
+              project_id: project_id,
               booking_portal_client_id: user.booking_portal_client_id,
               recipient_id: lead.user_id,
-              sms_template_id: Template::SmsTemplate.find_by(name: "booking_confirmed").id,
+              sms_template_id: Template::SmsTemplate.find_by(project_id: project_id, name: "booking_confirmed").id,
               triggered_by_id: self.id,
               triggered_by_type: self.class.to_s
             )
@@ -294,8 +296,9 @@ module BookingDetailStateMachine
         attachments_attributes = []
         _status = status.sub('booked_', '')
         email = Email.create!(
+          project_id: project_id,
           booking_portal_client_id: project_unit.booking_portal_client_id,
-          email_template_id: Template::EmailTemplate.find_by(name: "booking_#{_status}").id,
+          email_template_id: Template::EmailTemplate.find_by(name: "booking_#{_status}", project_id: project_id).id,
           cc: [project_unit.booking_portal_client.notification_email],
           recipients: [lead.user],
           cc_recipients: (lead.manager_id.present? ? [lead.manager] : []),
@@ -307,9 +310,10 @@ module BookingDetailStateMachine
       end
       if project_unit.booking_portal_client.sms_enabled?
         Sms.create!(
+            project_id: project_id,
             booking_portal_client_id: project_unit.booking_portal_client_id,
             recipient_id: lead.user_id,
-            sms_template_id: Template::SmsTemplate.find_by(name: "booking_blocked").id,
+            sms_template_id: Template::SmsTemplate.find_by(project_id: project_id, name: "booking_blocked").id,
             triggered_by_id: self.id,
             triggered_by_type: self.class.to_s
           )

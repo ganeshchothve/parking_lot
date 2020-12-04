@@ -22,7 +22,7 @@ class ReceiptExportWorker
     else options[:daily_report]
       file_name = "receipt-#{DateTime.current.in_time_zone('Mumbai').strftime('%F-%T')}.xls"
       file.write("#{Rails.root}/exports/#{file_name}")
-      DailyReportMailer.payments_report(file_name, receipts.count).deliver
+      DailyReportMailer.payments_report(file_name, receipts.count, filters[:project_id]).deliver
     end
   end
 
