@@ -22,9 +22,8 @@ class Template
   def self.build_criteria params={}
     selector = {}
     if params[:fltrs].present?
-      if params[:fltrs][:_type].present?
-        selector[:_type] = params[:fltrs][:_type]
-      end
+      selector[:_type] = params[:fltrs][:_type] if params[:fltrs][:_type].present?
+      selector[:project_id] = params[:fltrs][:project_id] if params[:fltrs][:project_id].present?
     end
     self.where(selector)
   end
