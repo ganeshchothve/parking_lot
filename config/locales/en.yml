@@ -1401,15 +1401,15 @@ en:
           </ul>"
 
       titles:
-        lead_details: 'Lead Details'
+        lead_details: 'Customer Details'
         booking_details: 'Bookings'
         total_leads: 'Total Leads'
         received: 'Added'
         available_inventory: 'Available Inventory'
         download_brochure: 'Download Brochure'
         visit_website: 'Visit Website'
-      confirmed_users: 'Confirmed Leads'
-      not_confirmed_users: 'Not Confirmed Leads'
+      confirmed_users: 'Confirmed Customers'
+      not_confirmed_users: 'Not Confirmed Customers'
       booking_detail:
         blocked:
           label: "Blocked"
@@ -1448,3 +1448,17 @@ en:
     searches/checkout: 'Holding minutes Text on Checkout page'
     booking_details/_details: 'Bottom Text in Booking detail overview section'
     assets/_videos: 'Videos Section on customer dashboard'
+
+  number:
+    human:
+      decimal_units:
+        format: '₹%n %u'
+  inr:
+    unit: ''
+    ten: ''
+    hundred: ''
+    thousand: 'K'
+    lakh:
+      one: 'Lac'
+      other: 'Lacs'
+    crore: 'Cr'

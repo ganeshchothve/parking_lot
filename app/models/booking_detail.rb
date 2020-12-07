@@ -91,6 +91,7 @@ class BookingDetail
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(name: regex ) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: start_date..end_date) }
   scope :incentive_eligible, -> { booked_confirmed }
+  scope :booking_stages, -> { all.in(status: BOOKING_STAGES) }
 
   accepts_nested_attributes_for :notes, :tasks, :receipts, :user_kycs, :primary_user_kyc
 

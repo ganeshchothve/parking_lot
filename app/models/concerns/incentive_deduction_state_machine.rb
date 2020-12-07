@@ -9,16 +9,16 @@ module IncentiveDeductionStateMachine
       state :pending_approval
       state :approved, :rejected
 
-      event :pending_approval, after: :after_pending_approval_event do
-        transitions from: :draft, to: :pending_approval
+      event :pending_approval do
+        transitions from: :draft, to: :pending_approval, success: :after_pending_approval_event
         transitions from: :rejected, to: :pending_approval
       end
 
-      event :approved, after: :after_approved_event do
-        transitions from: :pending_approval, to: :approved
+      event :approved do
+        transitions from: :pending_approval, to: :approved, success: :after_approved
       end
 
-      event :rejected, after: :after_rejected_event do
+      event :rejected do
         transitions from: :pending_approval, to: :rejected
       end
     end
@@ -30,12 +30,11 @@ module IncentiveDeductionStateMachine
         self.rejected!
       end
     end
-    def after_approved_event
+
+    def after_approved
       _invoice = self.invoice
       _invoice.net_amount = _invoice.amount - self.amount
       _invoice.save
-    end
-    def after_rejected_event
     end
 
     before_validation do |deduction|
