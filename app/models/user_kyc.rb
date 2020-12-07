@@ -59,7 +59,7 @@ class UserKyc
   belongs_to :user, optional: true
   belongs_to :lead
   belongs_to :receipt, optional: true
-  belongs_to :creator, class_name: 'User', optional: true
+  belongs_to :creator, class_name: 'User'
   has_and_belongs_to_many :project_units
   has_and_belongs_to_many :booking_details
 
@@ -68,6 +68,7 @@ class UserKyc
   accepts_nested_attributes_for :addresses, reject_if: proc { |attributes| attributes['one_line_address'].blank? }
 
   validates :first_name, :last_name, :email, :phone, presence: true
+  # validates :pan_number, presence: true, unless: Proc.new{ |kyc| kyc.nri? }, reduce: true
   validates :oci, presence: true, if: Proc.new{ |kyc| kyc.nri? }
   # validates :email, uniqueness: {scope: :lead_id}, allow_blank: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP } , allow_blank: true

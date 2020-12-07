@@ -1,13 +1,14 @@
 class Api::V1::ReceiptsController < ApisController
+  include Api::UserKycsConcern
+  include Api::ReceiptsConcern
   before_action :reference_ids_present?
   before_action :set_lead, only: :create
   before_action :set_receipt_and_lead, only: :update
-  before_action :add_third_party_reference_params, :modify_params
+  before_action :check_params, :modify_params
 
   def create
-    unless Receipt.reference_resource_exists?(@crm.id, params[:receipt][:reference_id])
+    unless Receipt.reference_resource_exists?(@crm.id, params[:receipt][:reference_id].to_s)
       @receipt = Receipt.new(receipt_create_params)
-      @receipt.creator_id = @crm.user_id
       if @receipt.save
         response = generate_response
         response[:message] = 'Receipt successfully created'
@@ -21,7 +22,7 @@ class Api::V1::ReceiptsController < ApisController
   end
 
   def update
-    unless Receipt.reference_resource_exists?(@crm.id, params[:receipt][:reference_id])
+    unless Receipt.reference_resource_exists?(@crm.id, params[:receipt][:reference_id].to_s)
       @receipt.assign_attributes(receipt_update_params)
       if @receipt.save
         response = generate_response
@@ -51,99 +52,32 @@ class Api::V1::ReceiptsController < ApisController
   def set_receipt_and_lead
     @receipt = Receipt.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:id]).first
     render json: { errors: ["Receipt with reference_id '#{ params[:id] }' not found"] }, status: :not_found and return unless @receipt
-    render json: { errors: ["Receipt with reference_id '#{ params[:id] }' is already in success"] }, status: :not_found and return if @receipt.success?
+    render json: { errors: ["Receipt with reference_id '#{ params[:id] }' is already in success"] }, status: :unprocessable_entity and return if @receipt.success?
     @lead = @receipt.lead
   end
 
-  def add_third_party_reference_params
-    if receipt_reference_id = params.dig(:receipt, :reference_id).presence
-      # add third party references
-      tpr_attrs = {
-        crm_id: @crm.id.to_s,
-        reference_id: receipt_reference_id
-      }
-      if @receipt
-        tpr = @receipt.third_party_references.where(reference_id: params[:id], crm_id: @crm.id).first
-        tpr_attrs[:id] = tpr.id.to_s if tpr
-      end
-      params[:receipt][:third_party_references_attributes] = [ tpr_attrs ]
-    end
-  end
-
-  def modify_receipts_params
+  def check_user_kyc_params
     errors = []
-    begin
-      params[:receipt][:issued_date] = Date.strptime(params[:receipt][:issued_date], "%d/%m/%Y") if params[:receipt][:issued_date].present?
-    rescue ArgumentError
-      errors << "Issued date format is invalid for receipt. Correct date format is - dd/mm/yyyy"
-    end
-    begin
-      params[:receipt][:processed_on] = Date.strptime(params[:receipt][:processed_on], "%d/%m/%Y") if params[:receipt][:processed_on].present?
-    rescue ArgumentError
-      errors << "Processed on date format is invalid for receipt. Correct date format is - dd/mm/yyyy"
-    end
-
-    if params[:receipt][:status].present?
-      errors << "Status should be clearance_pending or success" unless %w[clearance_pending success].include?( params[:receipt][:status])
-    else
-      params[:receipt][:status] = "clearance_pending"
-    end
-    errors << "Payment identifier can't be blank" if params[:action] == "create" && !params[:receipt][:payment_identifier].present?
-    params[:receipt][:lead_id] = @lead.id.to_s
-    params[:receipt][:user_id] = @lead.user.id.to_s
-    params[:receipt][:project_id] = @lead.project.id.to_s
-    if errors.present?
-      "Receipt errors - " + errors.to_sentence
-    else
-      nil
-    end
-  end
-
-  def modify_user_kyc_params
-    errors = []
-    if params[:receipt][:user_kyc_attributes].present?
+    if kyc_attributes = params.dig(:receipt, :user_kyc_attributes)
       if @receipt.present? && @receipt.user_kyc.present?
         errors << "User KYC is already present on receipt"
-        return "User kyc errors - " + errors.to_sentence
+        return { "User kyc errors - ": errors.try(:compact) }
       end
-      begin
-        params[:receipt][:user_kyc_attributes][:dob] = Date.strptime(params[:receipt][:user_kyc_attributes][:dob], "%d/%m/%Y") if params[:receipt][:user_kyc_attributes][:dob].present?
-      rescue ArgumentError
-        errors << 'DOB date format is invalid. Correct date format is - dd/mm/yyyy'
-      end
-      begin
-        params[:receipt][:user_kyc_attributes][:anniversary] = Date.strptime(params[:receipt][:user_kyc_attributes][:anniversary], "%d/%m/%Y") if params[:receipt][:user_kyc_attributes][:anniversary].present?
-      rescue ArgumentError
-        errors << 'Anniversay date format is invalid. Correct date format is - dd/mm/yyyy'
-      end
-      errors << "NRI should be a boolean value - true or false" if params[:receipt][:user_kyc_attributes][:nri] && !params[:receipt][:user_kyc_attributes][:nri].is_a?(Boolean)
-      errors << "POA should be a boolean value - true or false" if params[:receipt][:user_kyc_attributes][:poa] && !params[:receipt][:user_kyc_attributes][:poa].is_a?(Boolean)
-      errors << "Is Company should be a boolean value - true or false" if params[:receipt][:user_kyc_attributes][:is_company] && !params[:receipt][:user_kyc_attributes][:is_company].is_a?(Boolean)
-      errors << "Existing customer should be a boolean value - true or false" if params[:receipt][:user_kyc_attributes][:existing_customer] && !params[:receipt][:user_kyc_attributes][:existing_customer].is_a?(Boolean)
-      errors << "Number of units should be an integer" if params[:receipt][:user_kyc_attributes][:number_of_units] && !params[:receipt][:user_kyc_attributes][:number_of_units].is_a?(Integer)
-      errors << "Budget should be an integer" if params[:receipt][:user_kyc_attributes][:budget] && !params[:receipt][:user_kyc_attributes][:budget].is_a?(Integer)
-      params[:receipt][:user_kyc_attributes][:lead_id] = @lead.id.to_s
-      if kyc_reference_id = params.dig(:receipt, :user_kyc_attributes, :reference_id).presence
-      # add third party references
-        tpr_attrs = {
-          crm_id: @crm.id.to_s,
-          reference_id: kyc_reference_id
-        }
-        params[:receipt][:user_kyc_attributes][:third_party_references_attributes] = [ tpr_attrs ]
-      end
+      errors << check_any_user_kyc_params(kyc_attributes)
     end
-    if errors.present?
-      "User kyc errors - " + errors.to_sentence
-    else
-      nil
-    end
+    { "User kycs errors - ": errors.try(:compact) } if errors.try(:compact).present?
+  end
+
+  def check_params
+    errors = []
+    errors << check_user_kyc_params
+    errors << check_any_receipt_params(params[:receipt])
+    render json: { errors: errors.compact }, status: :unprocessable_entity and return if errors.try(:compact).present?
   end
 
   def modify_params
-    errors = []
-    errors << modify_user_kyc_params
-    errors << modify_receipts_params
-    render json: { errors: errors.flatten.compact }, status: :unprocessable_entity and return if errors.flatten.compact.present?
+    params[:receipt][:user_kyc_attributes] = modify_any_user_kyc_params(params.dig(:receipt, :user_kyc_attributes))
+    params[:receipt] = modify_any_receipt_params(params[:receipt])
   end
 
   def user_kyc_params
@@ -165,8 +99,7 @@ class Api::V1::ReceiptsController < ApisController
       @receipt.assign_attributes(event: event)
       unless @receipt.save
         errors = @receipt.state_machine_errors + @receipt.errors.to_a
-        @receipt.assign_attributes(state_machine_errors: errors)
-        @receipt.save
+        @receipt.set(state_machine_errors: errors)
       end
       break if params[:receipt][:status] == event
     end

@@ -1,7 +1,8 @@
 class Api::V1::UserKycsController < ApisController
+  include Api::UserKycsConcern
   before_action :reference_ids_present?, :set_lead, only: :create
   before_action :set_user_kyc_and_lead, only: :update
-  before_action :add_third_party_reference_params, :modify_params
+  before_action :add_third_party_reference_params, :check_params, :modify_params
 
   #
   # The create action always creates a new user kyc alongwith storing reference ids of third party CRM system.
@@ -45,7 +46,7 @@ class Api::V1::UserKycsController < ApisController
   #   }
   # }
   def create
-    unless @lead.user_kycs.reference_resource_exists?(@crm.id, params[:user_kyc][:reference_id])
+    unless @lead.user_kycs.reference_resource_exists?(@crm.id, params[:user_kyc][:reference_id].to_s)
       @user_kyc = @lead.user_kycs.build(user_kyc_params)
       if @user_kyc.save
         render json: {user_kyc_id: @user_kyc.id, lead_id: @lead.id, message: 'User KYC successfully created.'}, status: :created
@@ -99,7 +100,7 @@ class Api::V1::UserKycsController < ApisController
   #   }
   # }
   def update
-    unless @lead.user_kycs.reference_resource_exists?(@crm.id, params[:user_kyc][:reference_id])
+    unless @lead.user_kycs.reference_resource_exists?(@crm.id, params[:user_kyc][:reference_id].to_s)
       @user_kyc.assign_attributes(user_kyc_params)
       if @user_kyc.save
         render json: {user_kyc_id: @user_kyc.id, message: 'User KYC successfully updated.'}, status: :created
@@ -137,46 +138,14 @@ class Api::V1::UserKycsController < ApisController
     @lead = @user_kyc.lead
   end
 
-  def add_third_party_reference_params
-    if user_kyc_reference_id = params.dig(:user_kyc, :reference_id).presence
-      # add third party references
-      tpr_attrs = {
-        crm_id: @crm.id.to_s,
-        reference_id: user_kyc_reference_id
-      }
-      if @user_kyc
-        tpr = @user_kyc.third_party_references.where(reference_id: params[:id], crm_id: @crm.id).first
-        tpr_attrs[:id] = tpr.id.to_s if tpr
-      end
-      params[:user_kyc][:third_party_references_attributes] = [ tpr_attrs ]
-    end
+  def check_params
+    errors = []
+    errors << check_any_user_kyc_params(params.dig(:user_kyc))
+    render json: { errors: errors.compact }, status: :unprocessable_entity and return if errors.try(:compact).present?
   end
 
   def modify_params
-    errors = []
-    begin
-      params[:user_kyc][:dob] = Date.strptime(params[:user_kyc][:dob], "%d/%m/%Y") if params[:user_kyc][:dob].present?
-    rescue ArgumentError
-      errors << 'DOB date format is invalid. Correct date format is - dd/mm/yyyy'
-    end
-    begin
-      params[:user_kyc][:anniversary] = Date.strptime(params[:user_kyc][:anniversary], "%d/%m/%Y") if params[:user_kyc][:anniversary].present?
-    rescue ArgumentError
-      errors << 'Anniversay date format is invalid. Correct date format is - dd/mm/yyyy'
-    end
-    errors << "NRI should be a boolean value - true or false" if params[:user_kyc][:nri].present? && !params[:user_kyc][:nri].is_a?(Boolean)
-    errors << "POA should be a boolean value - true or false" if params[:user_kyc][:poa].present? && !params[:user_kyc][:poa].is_a?(Boolean)
-    errors << "Is Company should be a boolean value - true or false" if params[:user_kyc][:is_company].present? && !params[:user_kyc][:is_company].is_a?(Boolean)
-    errors << "Existing customer should be a boolean value - true or false" if params[:user_kyc][:existing_customer].present? && !params[:user_kyc][:existing_customer].is_a?(Boolean)
-    errors << "Number of units should be an integer" if params[:user_kyc][:number_of_units].present? && !params[:user_kyc][:number_of_units].is_a?(Integer)
-    errors << "Budget should be an integer" if params[:user_kyc][:budget].present? && !params[:user_kyc][:budget].is_a?(Integer)
-    if @user_kyc
-      params[:user_kyc][:addresses_attributes].each_with_index do |addr_attrs, i|
-        addr = @user_kyc.addresses.where(address_type: addr_attrs[:address_type]).first
-        params[:user_kyc][:addresses_attributes][i][:id] = addr.id.to_s if addr.present?
-      end
-    end
-    render json: { errors: errors }, status: :unprocessable_entity and return if errors.present?
+    params[:user_kyc] = modify_any_user_kyc_params(params.dig(:user_kyc))
   end
 
 end

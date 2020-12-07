@@ -10,9 +10,7 @@ class Api::V1::ChannelPartnersController < ApisController
   def create
     unless ChannelPartner.reference_resource_exists?(@crm.id, params[:channel_partner][:reference_id])
       @channel_partner = ChannelPartner.new(channel_partner_create_params)
-      @channel_partner.assign_attributes(status: 'active')
       if @channel_partner.save
-        @channel_partner.update_external_ids(third_party_reference_params, @crm.id) if third_party_reference_params
         render json: {channel_partner_id: @channel_partner.id, user_id: @channel_partner.associated_user.id ,message: 'Channel Partner successfully created.'}, status: :created
       else
         render json: {errors: @channel_partner.errors.full_messages.uniq}, status: :unprocessable_entity
@@ -31,7 +29,6 @@ class Api::V1::ChannelPartnersController < ApisController
     unless ChannelPartner.reference_resource_exists?(@crm.id, params[:channel_partner][:reference_id])
       @channel_partner.assign_attributes(channel_partner_update_params)
       if @channel_partner.save
-        @channel_partner.update_external_ids(third_party_reference_params, @crm.id) if third_party_reference_params
         render json: {channel_partner_id: @channel_partner.id, user_id: @channel_partner.associated_user.id, message: 'Channel Partner successfully updated'}, status: :ok
       else
         render json: {errors: @channel_partner.errors.full_messages.uniq }, status: :unprocessable_entity
@@ -68,10 +65,6 @@ class Api::V1::ChannelPartnersController < ApisController
       end
       params[:channel_partner][:third_party_references_attributes] = [ tpr_attrs ]
     end
-  end
-
-  def third_party_reference_params
-    params.require(:channel_partner).try(:permit, ChannelPartner::THIRD_PARTY_REFERENCE_IDS)
   end
 
   # Allows only certain parameters to be saved.

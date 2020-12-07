@@ -1,32 +1,20 @@
 class Api::V1::BookingDetailsController < ApisController
+  include Api::UserKycsConcern
+  include Api::ReceiptsConcern
   before_action :reference_ids_present?
   before_action :set_project_unit, :set_lead, :check_project, :check_scheme, only: :create
   before_action :set_booking_detail_project_unit_and_lead, only: :update
-  before_action :add_third_party_reference_params, :modify_params
+  before_action :add_third_party_reference_params, :check_params, :modify_params
 
   def create
-    unless BookingDetail.reference_resource_exists?(@crm.id, params[:booking_detail][:reference_id])
-      @booking_detail = BookingDetail.new(
-                                            name: @project_unit.name,
-                                            base_rate: @project_unit.base_rate,
-                                            project_name:  @project_unit.project_name,
-                                            project_tower_name: @project_unit.project_tower_name,
-                                            bedrooms: @project_unit.bedrooms,
-                                            bathrooms: @project_unit.bathrooms,
-                                            floor_rise: @project_unit.floor_rise,
-                                            saleable: @project_unit.saleable,
-                                            costs: @project_unit.costs,
-                                            data: @project_unit.data,
-                                            project_unit_id: @project_unit.id,
-                                            lead_id: @lead.id, user_id: @lead.user.id,
-                                            project_id: @project_unit.project_id)
+    unless BookingDetail.reference_resource_exists?(@crm.id, params[:booking_detail][:reference_id].to_s)
+      build_booking_detail
       @booking_detail.assign_attributes(booking_detail_create_params)
       if @booking_detail.save
         if @booking_detail.under_negotiation!
-        response = generate_response
-        response[:message] = 'Booking successfully created.'
-        render json: response, status: :created
-          # render json: {generate_response, message: 'Booking successfully created.'}, status: :created
+          response = generate_response
+          response[:message] = 'Booking successfully created.'
+          render json: response, status: :created
         else
           render json: {errors: @booking_detail.errors.full_messages.uniq}, status: :unprocessable_entity
         end
@@ -39,12 +27,12 @@ class Api::V1::BookingDetailsController < ApisController
   end
 
   def update
-    unless BookingDetail.reference_resource_exists?(@crm.id, params[:booking_detail][:reference_id])
+    unless BookingDetail.reference_resource_exists?(@crm.id, params[:booking_detail][:reference_id].to_s)
       @booking_detail.assign_attributes(booking_detail_update_params)
       if @booking_detail.save
         response = generate_response
         response[:message] = 'Booking successfully updated.'
-        render json: response, status: :created
+        render json: response, status: :ok
       else
         render json: {errors: @booking_detail.errors.full_messages.uniq}, status: :unprocessable_entity
       end
@@ -96,6 +84,24 @@ class Api::V1::BookingDetailsController < ApisController
     render json: { errors: ["Booking scheme is not found for this project unit. Please contact administrator"] }, status: :not_found and return unless scheme.present?
   end
 
+  def build_booking_detail
+     @booking_detail = BookingDetail.new(
+                                          name: @project_unit.name,
+                                          base_rate: @project_unit.base_rate,
+                                          project_name:  @project_unit.project_name,
+                                          project_tower_name: @project_unit.project_tower_name,
+                                          bedrooms: @project_unit.bedrooms,
+                                          bathrooms: @project_unit.bathrooms,
+                                          floor_rise: @project_unit.floor_rise,
+                                          saleable: @project_unit.saleable,
+                                          costs: @project_unit.costs,
+                                          data: @project_unit.data,
+                                          project_unit_id: @project_unit.id,
+                                          lead_id: @lead.id, user_id: @lead.user.id,
+                                          project_id: @project_unit.project_id
+                                        )
+  end
+
   def set_booking_detail_project_unit_and_lead
     @booking_detail = BookingDetail.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:id]).first
     render json: { errors: ["Booking Detail with reference_id '#{ params[:id] }' not found"] }, status: :not_found and return unless @booking_detail.present?
@@ -118,130 +124,55 @@ class Api::V1::BookingDetailsController < ApisController
     end
   end
 
-  def modify_primary_user_kyc_params
+  def check_primary_user_kyc_params
     errors = []
-    if params[:booking_detail][:primary_user_kyc_attributes].present?
+    if kyc_attributes = params.dig(:booking_detail, :primary_user_kyc_attributes)
       if @booking_detail.present? && @booking_detail.primary_user_kyc.present?
         errors << "Primary User KYC is already present for booking detail"
-        return "Primary user kycs errors - " + errors.to_sentence
+        return { "Primary user kycs errors - ": errors.try(:compact) }
       end
-      begin
-        params[:booking_detail][:primary_user_kyc_attributes][:dob] = Date.strptime(params[:booking_detail][:primary_user_kyc_attributes][:dob], "%d/%m/%Y") if params[:booking_detail][:primary_user_kyc_attributes][:dob].present?
-      rescue ArgumentError
-        errors << 'DOB date format is invalid. Correct date format is - dd/mm/yyyy'
-      end
-      begin
-        params[:booking_detail][:primary_user_kyc_attributes][:anniversary] = Date.strptime(params[:booking_detail][:primary_user_kyc_attributes][:anniversary], "%d/%m/%Y") if params[:booking_detail][:primary_user_kyc_attributes][:anniversary].present?
-      rescue ArgumentError
-        errors << 'Anniversay date format is invalid. Correct date format is - dd/mm/yyyy'
-      end
-      errors << "NRI should be a boolean value - true or false" if params[:booking_detail][:primary_user_kyc_attributes][:nri].present? && !params[:booking_detail][:primary_user_kyc_attributes][:nri].is_a?(Boolean)
-      errors << "POA should be a boolean value - true or false" if params[:booking_detail][:primary_user_kyc_attributes][:nri].present? && !params[:booking_detail][:primary_user_kyc_attributes][:poa].is_a?(Boolean)
-      errors << "Is Company should be a boolean value - true or false" if params[:booking_detail][:primary_user_kyc_attributes][:nri].present? && !params[:booking_detail][:primary_user_kyc_attributes][:is_company].is_a?(Boolean)
-      errors << "Existing customer should be a boolean value - true or false" if params[:booking_detail][:primary_user_kyc_attributes][:nri].present? && !params[:booking_detail][:primary_user_kyc_attributes][:existing_customer].is_a?(Boolean)
-      errors << "Number of units should be an integer" if params[:booking_detail][:primary_user_kyc_attributes][:nri].present? && !params[:booking_detail][:primary_user_kyc_attributes][:number_of_units].is_a?(Integer)
-      errors << "Budget should be an integer" if params[:booking_detail][:primary_user_kyc_attributes][:nri].present? && !params[:booking_detail][:primary_user_kyc_attributes][:budget].is_a?(Integer)
-      params[:booking_detail][:primary_user_kyc_attributes][:lead_id] = @lead.id.to_s
-      params[:booking_detail][:primary_user_kyc_attributes][:user_id] = @lead.user.id.to_s
-      if primary_kyc_reference_id = params.dig(:booking_detail, :primary_user_kyc_attributes, :reference_id).presence
-      # add third party references
-        tpr_attrs = {
-          crm_id: @crm.id.to_s,
-          reference_id: primary_kyc_reference_id
-        }
-        params[:booking_detail][:primary_user_kyc_attributes][:third_party_references_attributes] = [ tpr_attrs ]
-      end
+      errors << check_any_user_kyc_params(kyc_attributes)
     end
-    if errors.present?
-      "Primary user kycs errors - " + errors.to_sentence
-    else
-      nil
-    end
+    { "Primary user kycs errors - ": errors.try(:compact) } if errors.try(:compact).present?
   end
 
-  def modify_user_kycs_params
+  def check_user_kycs_params
     errors = []
-    params[:booking_detail][:user_kycs_attributes].each_with_index do |kyc_attrs, i|
-      begin
-        params[:booking_detail][:user_kycs_attributes][i][:dob] = Date.strptime(params[:booking_detail][:user_kycs_attributes][i][:dob], "%d/%m/%Y") if params[:booking_detail][:user_kycs_attributes][i][:dob].present?
-      rescue ArgumentError
-        errors << 'DOB date format is invalid. Correct date format is - dd/mm/yyyy'
-      end
-      begin
-        params[:booking_detail][:user_kycs_attributes][i][:anniversary] = Date.strptime(params[:booking_detail][:user_kycs_attributes][i][:anniversary], "%d/%m/%Y") if params[:booking_detail][:user_kycs_attributes][i][:anniversary].present?
-      rescue ArgumentError
-        errors << 'Anniversay date format is invalid. Correct date format is - dd/mm/yyyy'
-      end
-      errors << "NRI should be a boolean value - true or false" if !params[:booking_detail][:user_kycs_attributes][i][:nri].is_a?(Boolean)
-      errors << "POA should be a boolean value - true or false" if !params[:booking_detail][:user_kycs_attributes][i][:poa].is_a?(Boolean)
-      errors << "Is Company should be a boolean value - true or false" if !params[:booking_detail][:user_kycs_attributes][i][:is_company].is_a?(Boolean)
-      errors << "Existing customer should be a boolean value - true or false" if !params[:booking_detail][:user_kycs_attributes][i][:existing_customer].is_a?(Boolean)
-      errors << "Number of units should be an integer" if !params[:booking_detail][:user_kycs_attributes][i][:number_of_units].is_a?(Integer)
-      errors << "Budget should be an integer" if !params[:booking_detail][:user_kycs_attributes][i][:budget].is_a?(Integer)
-      params[:booking_detail][:user_kycs_attributes][i][:lead_id] = @lead.id.to_s
-      if kyc_reference_id = params.dig(:booking_detail, :user_kycs_attributes, i, :reference_id).presence
-      # add third party references
-        # tpr_attrs = {
-        #   crm_id: @crm.id.to_s,
-        #   reference_id: kyc_reference_id
-        # }
-        # params[:booking_detail][:user_kycs_attributes][i][:third_party_references_attributes] = [ tpr_attrs ]
-      end
+    params[:booking_detail][:user_kycs_attributes].each_with_index do |kyc_attributes, i|
+      errors << check_any_user_kyc_params(kyc_attributes)
     end if params[:booking_detail][:user_kycs_attributes].present?
-    if errors.present?
-      "User Kycs errors - " + errors.to_sentence
-    else
-      nil
-    end
+    { "User Kycs errors - ": errors.try(:compact) } if errors.try(:compact).present?
   end
 
-  def modify_receipts_params
+  def check_receipts_params
     errors = []
-    params[:booking_detail][:receipts_attributes].each_with_index do |kyc_attrs, i|
-      errors << "Receipt id is mandatory for receipt - #{params[:booking_detail][:receipts_attributes][i][:reference_id]}" unless params[:booking_detail][:receipts_attributes][i][:reference_id].present?        
-      begin
-        params[:booking_detail][:receipts_attributes][i][:issued_date] = Date.strptime(params[:booking_detail][:receipts_attributes][i][:issued_date], "%d/%m/%Y") if params[:booking_detail][:receipts_attributes][i][:issued_date].present?
-      rescue ArgumentError
-        errors << "Issued date format is invalid for receipt - #{params[:booking_detail][:receipts_attributes][i][:reference_id]}. Correct date format is - dd/mm/yyyy"
-      end
-      begin
-        params[:booking_detail][:receipts_attributes][i][:processed_on] = Date.strptime(params[:booking_detail][:receipts_attributes][i][:processed_on], "%d/%m/%Y") if params[:booking_detail][:receipts_attributes][i][:processed_on].present?
-      rescue ArgumentError
-        errors << "Processed on date format is invalid for receipt - #{params[:booking_detail][:receipts_attributes][i][:reference_id]}. Correct date format is - dd/mm/yyyy"
-      end
-      if params[:booking_detail][:receipts_attributes][i][:status].present?
-        errors << "Status should be clearance_pending or success" unless %w[clearance_pending success].include?( params[:booking_detail][:receipts_attributes][i][:status])
-      else
-        params[:booking_detail][:receipts_attributes][i][:status] = "clearance_pending"
-      end
-      errors << "Payment identifier can't be blank" unless params[:booking_detail][:receipts_attributes][i][:payment_identifier].present?
-      # TO - DO Move this to receipt observer 
-      params[:booking_detail][:receipts_attributes][i][:lead_id] = @lead.id.to_s
-      params[:booking_detail][:receipts_attributes][i][:user_id] = @lead.user.id.to_s
-      params[:booking_detail][:receipts_attributes][i][:project_id] = @lead.project.id.to_s
-      params[:booking_detail][:receipts_attributes][i][:creator_id] = @crm.user_id.to_s
-      # add third party references
-      if receipt_reference_id = params.dig(:booking_detail, :receipts_attributes, i, :reference_id).presence
-        tpr_attrs = {
-          crm_id: @crm.id.to_s,
-          reference_id: receipt_reference_id
-        }
-      end
-      params[:booking_detail][:receipts_attributes][i][:third_party_references_attributes] = [ tpr_attrs ]
+    params[:booking_detail][:receipts_attributes].each_with_index do |receipt_attributes, i|
+      errors << check_any_receipt_params(receipt_attributes)
     end if params[:booking_detail][:receipts_attributes].present?
-    if errors.present?
-      "Receipts errors - " + errors.to_sentence
-    else
-      nil
-    end
+    { "Receipts errors": errors.compact } if errors.try(:compact).present?
+  end
+
+  def check_params
+    errors = []
+    errors << check_primary_user_kyc_params
+    errors << check_user_kycs_params
+    errors << check_receipts_params
+    render json: { errors: errors.compact }, status: :unprocessable_entity and return if errors.try(:compact).present?
   end
 
   def modify_params
-    errors = []
-    errors << modify_primary_user_kyc_params
-    errors << modify_user_kycs_params
-    errors << modify_receipts_params
-    render json: { errors: errors.flatten.compact }, status: :unprocessable_entity and return if errors.flatten.compact.present?
+    #modify primary_user_kyc_params
+    params[:booking_detail][:primary_user_kyc_attributes] = modify_any_user_kyc_params(params.dig(:booking_detail, :primary_user_kyc_attributes))
+
+    # modify user kyc params
+    params[:booking_detail][:user_kycs_attributes].each_with_index do |kyc_attributes, i|
+      params[:booking_detail][:user_kycs_attributes][i] = modify_any_user_kyc_params(kyc_attributes)
+    end if params[:booking_detail][:user_kycs_attributes].present?
+
+    # modify receipts params
+    params[:booking_detail][:receipts_attributes].each_with_index do |receipt_attributes, i|
+      params[:booking_detail][:receipts_attributes][i] = modify_any_receipt_params(receipt_attributes)
+    end if params[:booking_detail][:receipts_attributes].present?
   end
 
   def receipt_params
@@ -260,31 +191,40 @@ class Api::V1::BookingDetailsController < ApisController
     params.require(:booking_detail).permit( receipts_attributes: receipt_params, user_kycs_attributes: user_kyc_params, third_party_references_attributes: [:id, :reference_id])
   end
 
-  def generate_response
-    response = {booking_detail_id: @booking_detail.id.to_s}
-    response[:primary_user_kyc_id] = @booking_detail.primary_user_kyc_id.to_s if params.dig(:booking_detail, :primary_user_kyc_attributes).present?
+  def get_receipts_ids
     receipt_ids = {}
     receipts_statuses = %w[clearance_pending success]
     params.dig(:booking_detail, :receipts_attributes).each do |receipt_attributes|
       receipt = Receipt.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": receipt_attributes.dig(:reference_id).to_s ).first
-      receipts_statuses.each do |event|
-        receipt.assign_attributes(event: event)
-        unless receipt.save
-          errors = receipt.state_machine_errors + receipt.errors.to_a
-          receipt.assign_attributes(state_machine_errors: errors)
-          receipt.save
-        end
-        break if receipt_attributes[:status] == event
+      if receipt.present?
+        receipts_statuses.each do |event|
+          receipt.assign_attributes(event: event)
+          unless receipt.save
+            errors = receipt.state_machine_errors + receipt.errors.to_a
+            receipt.set(state_machine_errors: errors)
+          end
+          break if receipt_attributes[:status] == event
+        end if receipt_attributes[:status].present? && receipt_attributes[:status].to_s.in?(receipts_statuses)
+        receipt_ids[receipt_attributes.dig(:reference_id).to_s][:status_change_errors] = receipt.state_machine_errors if receipt.state_machine_errors.present?
       end
-      receipt_ids[receipt_attributes.dig(:reference_id).to_s] =  {id: receipt.id.to_s}
-      receipt_ids[receipt_attributes.dig(:reference_id).to_s][:status_change_errors] = receipt.state_machine_errors
-    end if params.dig(:booking_detail, :receipts_attributes).present?
-    response[:receipt_ids] = receipt_ids if receipt_ids.present?
+      receipt_ids[receipt_attributes.dig(:reference_id).to_s] =  {id: receipt.try(:id).to_s}
+    end
+    receipt_ids
+  end
+
+  def get_user_kycs_ids
     user_kyc_ids = {}
     params.dig(:booking_detail, :user_kycs_attributes).each do |user_kyc_attributes|
-      user_kyc_ids[user_kyc_attributes.dig(:reference_id).to_s] =  UserKyc.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": user_kyc_attributes.dig(:reference_id).to_s ).first.id.to_s
-    end if params.dig(:booking_detail, :user_kycs_attributes).present?
-    response[:user_kyc_ids] = user_kyc_ids if user_kyc_ids.present?
+      user_kyc_ids[user_kyc_attributes.dig(:reference_id).to_s] =  UserKyc.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": user_kyc_attributes.dig(:reference_id).to_s ).first.try(:id).to_s
+    end
+    user_kyc_ids
+  end
+
+  def generate_response
+    response = {booking_detail_id: @booking_detail.id.to_s}
+    response[:primary_user_kyc_id] = @booking_detail.primary_user_kyc_id.to_s if params.dig(:booking_detail, :primary_user_kyc_attributes).present?
+    response[:receipt_ids] = get_receipts_ids if params.dig(:booking_detail, :receipts_attributes).present?
+    response[:user_kyc_ids] = get_user_kycs_ids if params.dig(:booking_detail, :user_kycs_attributes).present?
     response
   end
 end
