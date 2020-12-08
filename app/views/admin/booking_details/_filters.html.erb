@@ -13,7 +13,7 @@
         </div>
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.status'), class: "control-label" %>
-          <%= select_tag "fltrs[status]", options_for_select(BookingDetail.aasm.states.collect(&:name).collect{|x| [ t("mongoid.attributes.booking_detail/status.#{x}"), x.to_s]}, (params.dig(:fltrs, :status) || "")), {prompt: "Select", class: "selectize"} %>
+          <%= select_tag "fltrs[status]", options_for_select(BookingDetail.user_based_available_statuses(current_user).collect{|x| [ t("mongoid.attributes.booking_detail/status.#{x}"), x.to_s]}, (params.dig(:fltrs, :status) || "")), {prompt: "Select", class: "selectize"} %>
         </div>
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs[project_id]", t('mongoid.attributes.project_unit.project_id'), class: "control-label" %>

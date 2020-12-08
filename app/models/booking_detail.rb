@@ -91,6 +91,7 @@ class BookingDetail
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(name: regex ) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: start_date..end_date) }
   scope :incentive_eligible, -> { booked_confirmed }
+  scope :booking_stages, -> { all.in(status: BOOKING_STAGES) }
 
   accepts_nested_attributes_for :notes, :tasks, :receipts, :user_kycs, :primary_user_kyc
 
@@ -333,6 +334,18 @@ class BookingDetail
       custom_scope = { lead_id: params[:lead_id] } if params[:lead_id].present?
       custom_scope = { user_id: user.id } if user.buyer?
       custom_scope
+    end
+
+    def user_based_available_statuses(user)
+      if user.present?
+        if user.role?('billing_team')
+          %w[booked_confirmed]
+        else
+          BookingDetail.aasm.states.map(&:name)
+        end
+      else
+        BookingDetail.aasm.states.map(&:name)
+      end
     end
   end
 end

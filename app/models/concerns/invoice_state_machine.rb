@@ -9,50 +9,45 @@ module InvoiceStateMachine
       state :pending_approval
       state :approved, :rejected
 
-      event :raise, after: :after_pending_approval_event do
+      event :raise, after: :after_raise_event do
         transitions from: :draft, to: :pending_approval
       end
 
-      event :re_raise, after: :after_re_raise_event do
-        transitions from: :rejected, to: :pending_approval
+      event :re_raise do
+        transitions from: :rejected, to: :pending_approval, success: :after_re_raised
       end
 
-      event :approve, after: :after_approved_event do
-        transitions from: :pending_approval, to: :approved, if: :can_approve?
+      event :approve do
+        transitions from: :pending_approval, to: :approved, success: :after_approved
       end
 
-      event :reject, after: :after_rejected_event do
-        transitions from: :pending_approval, to: :rejected
+      event :reject do
+        transitions from: :pending_approval, to: :rejected, success: :after_rejected
       end
     end
 
-    def after_pending_approval_event
+    def after_raise_event
       self.raised_date = Time.now
     end
 
-    def after_approved_event
+    def after_approved
       self.processing_date = Time.now
       self.approved_date = Time.now
       reject_pending_deductions
     end
 
-    def after_rejected_event
+    def after_rejected
       self.processing_date = Time.now
       self.net_amount = 0
       reject_pending_deductions
     end
 
-    def after_re_raise_event
+    def after_re_raised
       self.incentive_deduction.pending_approval! if self.incentive_deduction? && self.incentive_deduction.rejected?
     end
 
     def reject_pending_deductions
       self.incentive_deduction.rejected! if self.incentive_deduction? && self.incentive_deduction.pending_approval?
-    end
-
-    def can_approve?
-      # TODO: check if cheque details are present
-      true
     end
 
     before_validation do |invoice|

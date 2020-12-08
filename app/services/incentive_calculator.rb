@@ -33,11 +33,10 @@ class IncentiveCalculator
     project_units = ProjectUnit.where(status: 'blocked', project_id: incentive_scheme.project_id).gte(blocked_on: incentive_scheme.starts_on).lte(blocked_on: incentive_scheme.ends_on)
     project_units = ProjectUnit.where(project_tower_id: incentive_scheme.project_tower_id) if incentive_scheme.project_tower_id.present?
     project_unit_ids = project_units.distinct(:id)
-    lead_ids = Lead.where(project_id: incentive_scheme.project_id, manager_id: channel_partner.id).distinct(:id)
     # Find bookings that are already incentivized under different incentive scheme.
     other_scheme_booking_ids = Invoice.where(project_id: incentive_scheme.project_id).ne(incentive_scheme_id: incentive_scheme.id).distinct(:booking_detail_id)
 
-    _bookings = BookingDetail.incentive_eligible.in(project_unit_id: project_unit_ids, lead_id: lead_ids)
+    _bookings = BookingDetail.incentive_eligible.in(project_unit_id: project_unit_ids).where(manager_id: channel_partner.id)
     _bookings = _bookings.nin(id: other_scheme_booking_ids) if other_scheme_booking_ids.present?
     @bookings = _bookings
   end
