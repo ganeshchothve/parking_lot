@@ -15,12 +15,32 @@
           <div class="col-md-12 col-lg-12 col-sm-12">
             <ul class="booking-apart-info clear">
               <li>
+                <span><%= t('mongoid.attributes.lead.name') %></span>
+                <p class="break-word mr-3"><%= lead.name || '-' %></p>
+              </li>
+              <li>
                 <span><%= t('mongoid.attributes.lead.email') %></span>
                 <p class="break-word mr-3"><%= lead.email || '-' %></p>
               </li>
               <li>
                 <span><%= t('mongoid.attributes.lead.phone') %></span>
                 <p><%= lead.phone || '-' %></p>
+              </li>
+              <li>
+                <span><%= t('mongoid.attributes.lead.stage') %></span>
+                <p><%= lead.stage || '-' %></p>
+              </li>
+              <li>
+                <span><%= t('mongoid.attributes.lead.sitevisit_date') %></span>
+                <p><%= lead.sitevisit_date.try(:strftime, "%d/%m/%Y") || '-' %></p>
+              </li>
+              <li>
+                <span><%= t('mongoid.attributes.lead.revisit_count') %></span>
+                <p><%= lead.revisit_count || '-' %></p>
+              </li>
+              <li>
+                <span><%= t('mongoid.attributes.lead.last_revisit_date') %></span>
+                <p><%= lead.last_revisit_date.try(:strftime, "%d/%m/%Y") || '-' %></p>
               </li>
               <li>
                 <span> <%= t('mongoid.attributes.lead.created_at') %></span>

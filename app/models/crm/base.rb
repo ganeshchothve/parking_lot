@@ -13,8 +13,14 @@ class Crm::Base
   validates :name, presence: true
   validates :name, uniqueness: { case_sensitive: false }
   validates_format_of :domain, :with => /\A(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?\z/
+  validate :validate_user_role
 
   has_many :apis, dependent: :destroy
+  belongs_to :user, class_name: 'User'
+
+  def validate_user_role
+    self.errors.add(:base, "User role should be administrator") unless self.user.role?('admin')
+  end
 
   def validate_url
     uri = URI.parse(self.domain)

@@ -50,7 +50,7 @@ class ChannelPartner
   has_one :bank_detail, as: :bankable, validate: false
   has_many :assets, as: :assetable
 
-  validates :first_name, :last_name, :rera_id, :status, presence: true
+  validates :first_name, :last_name, :status, presence: true # :rera_id #TO-DO Done for Runwal to revert for generic
   validates :aadhaar, format: { with: /\A\d{12}\z/i, message: 'is not a valid aadhaar number' }, allow_blank: true
   validates :rera_id, uniqueness: true, allow_blank: true
   validates :phone, uniqueness: true, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile] }, if: proc { |user| user.email.blank? }
