@@ -1,4 +1,7 @@
 class LeadObserver < Mongoid::Observer
+  def before_validation lead
+    lead.email = lead.email.downcase
+  end
 
   def after_create lead
     lead.send_create_notification

@@ -1,6 +1,7 @@
 class BookingDetailObserver < Mongoid::Observer
   def before_create(booking_detail)
     booking_detail.name = booking_detail.project_unit.name
+    booking_detail.manager_id = booking_detail.lead.manager_id if booking_detail.manager_id.blank? && booking_detail.lead.manager_id.present?
   end
 
   def after_create(booking_detail)

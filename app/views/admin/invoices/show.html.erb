@@ -49,12 +49,14 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="small text-muted"><%= invoice_labels[:net_amount] %></label>
-                  <div><%= number_to_indian_currency(@invoice.net_amount) %></div>
+              <% if @invoice.approved? %>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="small text-muted"><%= invoice_labels[:net_amount] %></label>
+                    <div><%= number_to_indian_currency(@invoice.net_amount) %></div>
+                  </div>
                 </div>
-              </div>
+              <% end %>
               <% if @invoice.raised_date.present? %>
                 <div class="col-md-4">
                   <div class="form-group">

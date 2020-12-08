@@ -47,7 +47,7 @@ class Asset
     case reload.assetable
     when IncentiveDeduction
       unless assetable.draft? || assetable.assets.reject(&:marked_for_destruction?).count > 0
-        errors.add(:base, "Cannot delete last proof unless in Draft state")
+        errors.add(:base, "At least 1 proof is required in pending approval.")
         false
         throw(:abort)
       end

@@ -15,7 +15,7 @@ class Receipt
 
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   OFFLINE_PAYMENT_MODE = %w[cheque rtgs imps card_swipe neft]
-  PAYMENT_TYPES = %w[agreement stamp_duty]
+  PAYMENT_TYPES = %w[agreement stamp_duty token]
   PAYMENT_MODES = %w[cheque rtgs imps card_swipe neft online]
   STATUSES = %w[pending clearance_pending success cancellation_requested cancelling cancelled cancellation_rejected failed available_for_refund refunded]
   # Add different types of documents which are uploaded on receipt
@@ -29,7 +29,7 @@ class Receipt
   field :issuing_bank_branch, type: String # Branch of bank
   field :payment_identifier, type: String # cheque / DD number / online transaction reference from gateway
   field :tracking_id, type: String # online transaction reference from gateway or transaction id after the cheque is processed
-  field :total_amount, type: Float, default: 0 # Total amount
+  field :total_amount, type: Float # Total amount
   field :status, type: String, default: 'pending' # pending, success, failed, clearance_pending,cancelled
   field :status_message, type: String # pending, success, failed, clearance_pending
   field :payment_gateway, type: String
@@ -37,8 +37,9 @@ class Receipt
   field :comments, type: String
   field :gateway_response, type: Hash
   field :erp_id, type: String, default: ''
-  field :payment_type, type: String # possible values are :agreement and :stamp_duty
+  field :payment_type, type: String, default: 'agreement' # possible values are :agreement and :stamp_duty
   field :transfer_details, type: Array, default: [] #stores tranfer details for razorpay payment
+  field :state_machine_errors, type: Array, default: []
 
   attr_accessor :swap_request_initiated
 
@@ -53,6 +54,7 @@ class Receipt
   has_many :assets, as: :assetable
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :user_requests, as: :requestable
+  has_one :user_kyc
 
   scope :filter_by_status, ->(_status) { where(status: { '$in' => _status }) }
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
@@ -72,29 +74,34 @@ class Receipt
 
   scope :direct_payments, ->{ where(booking_detail_id: nil )}
 
-  validates :issuing_bank, :issuing_bank_branch, name: true, unless: proc { |receipt| receipt.online? }
-  validates :payment_identifier, length: { in: 3..25 }, format: { without: /[^A-Za-z0-9_-]/, message: "can contain only alpha-numaric with '_' and '-' "}, if: proc { |receipt| receipt.offline? }
+  validates :payment_type, presence: true
+  validates :payment_type, inclusion: { in: Receipt::PAYMENT_TYPES }, if: proc { |receipt| receipt.payment_type.present? }
+  validates :issuing_bank, :issuing_bank_branch, name: true, allow_blank: true
+  # validates :payment_identifier, length: { in: 3..25 }, format: { without: /[^A-Za-z0-9_-]/, message: "can contain only alpha-numaric with '_' and '-' "}, if: proc { |receipt| receipt.offline? && receipt.payment_identifier.present? }
   validates :total_amount, :status, :payment_mode, :user_id, presence: true
   validates :payment_identifier, presence: true, if: proc { |receipt| receipt.payment_mode == 'online' ? receipt.status == 'success' : true }
   validates :status, inclusion: { in: proc { Receipt.aasm.states.collect(&:name).collect(&:to_s) } }
-  validates :payment_mode, inclusion: { in: proc { Receipt.available_payment_modes.collect { |x| x[:id] } } }
-  validate :validate_total_amount
+  validates :payment_mode, inclusion: { in: proc { Receipt.available_payment_modes.collect { |x| x[:id] } } }, allow_blank: true
+  validate :validate_total_amount, if: proc { |receipt| receipt.total_amount.present? }
   validates :issued_date, :issuing_bank, :issuing_bank_branch, presence: true, if: proc { |receipt| receipt.payment_mode != 'online' }
   validates :processed_on, presence: true, if: proc { |receipt| %i[success clearance_pending available_for_refund].include?(receipt.status) }
   validates :payment_gateway, presence: true, if: proc { |receipt| receipt.payment_mode == 'online' }
-  validates :payment_gateway, inclusion: { in: PaymentGatewayService::Default.allowed_payment_gateways }, allow_blank: true
-  validates :tracking_id, length: { in: 5..15 }, presence: true, if: proc { |receipt| receipt.status == 'success' && receipt.payment_mode != 'online' }
+  validates :payment_gateway, inclusion: { in: PaymentGatewayService::Default.allowed_payment_gateways }, allow_blank: true, if: proc { |receipt| receipt.payment_mode == 'online' }
+  # validates :tracking_id, length: { in: 5..15 }, presence: true, if: proc { |receipt| receipt.status == 'success' && receipt.payment_mode != 'online' }
   validates :comments, presence: true, if: proc { |receipt| receipt.status == 'failed' && receipt.payment_mode != 'online' }
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :tracking_id_processed_on_only_on_success, if: proc { |record| record.status != 'cancelled' }
   validate :processed_on_greater_than_issued_date
   validate :issued_date_when_offline_payment, if: proc { |record| %w[online cheque].exclude?(record.payment_mode) && issued_date.present? }
+  validates :user_kyc, copy_errors_from_child: true
 
   increments :order_id, auto: false
 
   delegate :project_unit, to: :booking_detail, prefix: false, allow_nil: true
   delegate :name, to: :booking_detail, prefix: true, allow_nil: true
   delegate :name, to: :project, prefix: true, allow_nil: true
+
+  accepts_nested_attributes_for :user_kyc
 
   enable_audit(
     associated_with: ['user'],
@@ -111,6 +118,10 @@ class Receipt
     define_method "#{_payment_mode}?" do
       _payment_mode.to_s == self.payment_mode.to_s
     end
+  end
+
+  def name_in_error
+    "#{receipt_id}"
   end
 
   #
@@ -250,12 +261,12 @@ class Receipt
   private
 
   def validate_total_amount
-    if total_amount <= 0
+    if (total_amount || 0) <= 0
       errors.add :total_amount, 'cannot be less than or equal to 0'
     else
       blocking_amount = user.booking_portal_client.blocking_amount
       blocking_amount = project_unit.blocking_amount if booking_detail_id.present?
-      if (direct_payment? || blocking_payment?) && total_amount < blocking_amount && new_record? && !booking_detail.swapping?
+      if (direct_payment? || blocking_payment?) && total_amount < blocking_amount && !booking_detail.try(:swapping?)
         errors.add :total_amount, "cannot be less than blocking amount #{blocking_amount}"
       end
     end

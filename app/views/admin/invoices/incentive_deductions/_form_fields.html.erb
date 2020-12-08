@@ -1,6 +1,6 @@
 <div class="form-group">
   <%= f.label :amount, class: 'label-required' %>
-  <%= f.number_field :amount, autofocus: true, class: "form-control", required: 'required', disabled: !policy([:admin, incentive_deduction]).editable_field?("amount") || action_name == 'show', max: incentive_deduction.invoice.amount %>
+  <%= f.number_field :amount, autofocus: true, class: "form-control", required: 'required', disabled: !policy([:admin, incentive_deduction]).editable_field?("amount") || action_name == 'show', max: incentive_deduction.invoice.amount, min: 1 %>
 </div>
 <div class="form-group">
   <%= f.label :comments, class: 'label-required' %>
@@ -8,8 +8,8 @@
 </div>
 <div class="form-group">
   <%= f.label :status, class: 'control-label label-required' %>
-  <% events = (available_events(incentive_deduction) || []) + [incentive_deduction.aasm.current_state.to_s] %>
-  <%= f.select :event, options_for_select(events.collect{|x| [t("mongoid.attributes.incentive_deduction/status.#{x}"), x]}, incentive_deduction.status), {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([:admin, incentive_deduction]).editable_field?("event") || action_name == 'show' %>
+  <% events = available_events(incentive_deduction) %>
+  <%= f.select :event, options_for_select(events.collect{|x| [t("mongoid.attributes.incentive_deduction/status.#{x}"), x]}, incentive_deduction.status), {prompt: t("mongoid.attributes.incentive_deduction/status.#{incentive_deduction.status}")}, class: 'selectize', required: 'required', disabled: !policy([:admin, incentive_deduction]).editable_field?("event") || action_name == 'show' %>
 </div>
 <% if action_name == 'show' %>
   <div class='form-group'>

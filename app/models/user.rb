@@ -175,8 +175,9 @@ class User
   validate :phone_or_email_required, if: proc { |user| user.phone.blank? && user.email.blank? }
   validates :phone, :email, uniqueness: { allow_blank: true }
   validates :phone, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile mobile fixed_line premium_rate] }, allow_blank: true
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP } , allow_blank: true
   validates :allowed_bookings, presence: true, if: proc { |user| user.buyer? }
-  validates :rera_id, presence: true, if: proc { |user| user.role?('channel_partner') }
+  # validates :rera_id, presence: true, if: proc { |user| user.role?('channel_partner') } #TO-DO Done for Runwal to revert for generic
   validates :rera_id, uniqueness: true, allow_blank: true
   validates :role, inclusion: { in: proc { |user| User.available_roles(user.booking_portal_client) } }
   validates :lead_id, uniqueness: true, presence: true, if: proc { |user| user.buyer? }, allow_blank: true

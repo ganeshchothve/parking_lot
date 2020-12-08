@@ -7,7 +7,7 @@
     <% end %>
     <div class="small">
       <%= t('mongoid.attributes.receipt.project_id') %>: <%= receipt.project_name %><br/>
-      <%= t('mongoid.attributes.receipt.created_by')%>: <%= receipt.creator.name %><br/>
+      <%= t('mongoid.attributes.receipt.created_by')%>: <%= receipt.creator.try(:name) %><br/>
       <% if receipt.lead.manager_id.present? && current_user.role != "channel_partner" %>
         <%= t('mongoid.attributes.lead.manager_id') %>: <%= receipt.lead.manager_name %><br/>
       <% end %>
@@ -57,6 +57,9 @@
         <% end %>
         <% if policy([current_user_role_group, Asset.new(assetable: receipt) ]).update? %>
           <%= link_to t('controller.assets.index.link_name'), assetables_path(assetable_type: receipt.class.model_name.i18n_key.to_s, assetable_id: receipt.id), class: 'dropdown-item modal-remote-form-link' %>
+        <% end %>
+        <% if receipt.user_kyc.present? && policy([current_user_role_group, receipt.user_kyc]).show? %>
+          <%= link_to t('controller.receipts.show_user_kyc.link_name'), admin_user_kyc_path(receipt.user_kyc), class: 'dropdown-item' %>
         <% end %>
      </div>
   </div>
