@@ -21,6 +21,10 @@ class Address
     associated_with: ["addressable"]
   })
 
+  def name_in_error
+    "#{address_type}"
+  end
+
   def ui_json
     to_json
   end

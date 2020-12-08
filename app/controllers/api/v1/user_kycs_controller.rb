@@ -2,7 +2,7 @@ class Api::V1::UserKycsController < ApisController
   include Api::UserKycsConcern
   before_action :reference_ids_present?, :set_lead, only: :create
   before_action :set_user_kyc_and_lead, only: :update
-  before_action :add_third_party_reference_params, :check_params, :modify_params
+  before_action :check_params, :modify_params
 
   #
   # The create action always creates a new user kyc alongwith storing reference ids of third party CRM system.
@@ -103,7 +103,7 @@ class Api::V1::UserKycsController < ApisController
     unless @lead.user_kycs.reference_resource_exists?(@crm.id, params[:user_kyc][:reference_id].to_s)
       @user_kyc.assign_attributes(user_kyc_params)
       if @user_kyc.save
-        render json: {user_kyc_id: @user_kyc.id, message: 'User KYC successfully updated.'}, status: :created
+        render json: {user_kyc_id: @user_kyc.id, message: 'User KYC successfully updated.'}, status: :ok
       else
         render json: {errors: @user_kyc.errors.full_messages.uniq}, status: :unprocessable_entity
       end

@@ -71,8 +71,7 @@ class BookingDetail
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :kyc_mandate
   validate :validate_content, on: :create
-  validate :validate_primary_user_kyc
-  validate :validate_receipts
+  validates :primary_user_kyc, :receipts, copy_errors_from_child: true
 
   delegate :name, :blocking_amount, to: :project_unit, prefix: true, allow_nil: true
   delegate :name, :email, :phone, to: :user, prefix: true, allow_nil: true
@@ -94,16 +93,6 @@ class BookingDetail
   scope :incentive_eligible, -> { booked_confirmed }
 
   accepts_nested_attributes_for :notes, :tasks, :receipts, :user_kycs, :primary_user_kyc
-
-  def validate_primary_user_kyc
-    self.errors.add(:base, "Primary User KYC errors - #{ primary_user_kyc.errors.to_a.to_sentence }") if primary_user_kyc.present? && !primary_user_kyc.valid?
-  end
-
-  def validate_receipts
-    receipts.each do |r|
-      self.errors.add(:base, "Receipt errors (#{r.receipt_id})- " + r.errors.to_a.to_sentence) if !r.valid?
-    end if receipts.present?
-  end
 
   def validate_content
     _file = tds_doc.file

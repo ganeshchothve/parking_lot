@@ -56,7 +56,7 @@ class UserKyc
   has_one :bank_detail, as: :bankable, validate: false
   # has_one :correspondence_address, as: :addressable, class_name: "Address", validate: false
   has_many :addresses, as: :addressable, validate: false
-  belongs_to :user, optional: true
+  belongs_to :user
   belongs_to :lead
   belongs_to :receipt, optional: true
   belongs_to :creator, class_name: 'User'
@@ -85,7 +85,7 @@ class UserKyc
   validates :existing_customer_name, :existing_customer_project, presence: true, if: proc { |kyc| kyc.existing_customer? }
   validates :salutation, inclusion: { in: proc { UserKyc.available_salutations.collect { |x| x[:id] } } }, allow_blank: true
   validates :erp_id, uniqueness: true, allow_blank: true
-  validate :validate_address
+  validates :addresses, copy_errors_from_child: true
 
   scope :filter_by_user_id, ->(user_id) { where(user_id: user_id) }
   scope :filter_by_lead_id, ->(lead_id){ where(lead_id: lead_id)}
@@ -93,10 +93,8 @@ class UserKyc
 
   default_scope -> { desc(:created_at) }
 
-  def validate_address
-    addresses.each do |a|
-      self.errors.add(:base, "Addresses errors (#{a.to_sentence})- " + a.errors.to_a.to_sentence) if !a.valid?
-    end if addresses.present?
+  def name_in_error
+    "#{name} - #{email}"
   end
 
   def name

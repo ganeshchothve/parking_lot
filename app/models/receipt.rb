@@ -76,8 +76,7 @@ class Receipt
 
   validates :payment_type, presence: true
   validates :payment_type, inclusion: { in: Receipt::PAYMENT_TYPES }, if: proc { |receipt| receipt.payment_type.present? }
-  validates :issuing_bank, name: true, if: proc { |receipt| receipt.issuing_bank.present? }
-  validates :issuing_bank_branch, name: true, if: proc { |receipt| receipt.issuing_bank_branch.present? }
+  validates :issuing_bank, :issuing_bank_branch, name: true, allow_blank: true
   # validates :payment_identifier, length: { in: 3..25 }, format: { without: /[^A-Za-z0-9_-]/, message: "can contain only alpha-numaric with '_' and '-' "}, if: proc { |receipt| receipt.offline? && receipt.payment_identifier.present? }
   validates :total_amount, :status, :payment_mode, :user_id, presence: true
   validates :payment_identifier, presence: true, if: proc { |receipt| receipt.payment_mode == 'online' ? receipt.status == 'success' : true }
@@ -94,7 +93,7 @@ class Receipt
   validate :tracking_id_processed_on_only_on_success, if: proc { |record| record.status != 'cancelled' }
   validate :processed_on_greater_than_issued_date
   validate :issued_date_when_offline_payment, if: proc { |record| %w[online cheque].exclude?(record.payment_mode) && issued_date.present? }
-  validate :validate_user_kyc
+  validates :user_kyc, copy_errors_from_child: true
 
   increments :order_id, auto: false
 
@@ -121,8 +120,8 @@ class Receipt
     end
   end
 
-  def validate_user_kyc
-    self.errors.add(:base, "User KYC errors - #{ user_kyc.errors.to_a.to_sentence }") if user_kyc.present? && !user_kyc.valid?
+  def name_in_error
+    "#{receipt_id}"
   end
 
   #

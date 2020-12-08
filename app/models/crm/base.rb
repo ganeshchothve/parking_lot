@@ -19,7 +19,7 @@ class Crm::Base
   belongs_to :user, class_name: 'User'
 
   def validate_user_role
-    self.errors.add(:base, "User role should be administrator") if self.user.role != 'admin'
+    self.errors.add(:base, "User role should be administrator") unless self.user.role?('admin')
   end
 
   def validate_url
