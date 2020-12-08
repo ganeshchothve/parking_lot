@@ -4,6 +4,8 @@ class Lead
   include ArrayBlankRejectable
   include ApplicationHelper
   include CrmIntegration
+  include LeadNotifications
+  include InsertionStringMethods
   extend FilterByCriteria
   extend ApplicationHelper
 
