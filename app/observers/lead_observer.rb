@@ -5,6 +5,6 @@ class LeadObserver < Mongoid::Observer
   end
 
   def after_update lead
-    lead.send_update_notification if lead.stage_changed?
+    lead.send_update_notification if lead.stage_changed? && lead.stage.present?
   end
 end
