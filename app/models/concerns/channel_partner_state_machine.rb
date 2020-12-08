@@ -36,16 +36,15 @@ module ChannelPartnerStateMachine
 
     def after_submit_for_approval
       self.set( status_change_reason: nil )
-      send_notification
+      # send_notification
     end
 
     def send_notification
-      template_name = "channel_partner_status_#{self.status_was}_#{self.status}"
+      template_name = "channel_partner_status_#{self.status}"
       template = Template::EmailTemplate.where(name: template_name).first
-      recipients = [self.associated_user.email]
-      if self.status == 'pending'
-        recipients << [self.manager.email] if self.manager.present?
-      end
+      recipients = [self.associated_user]
+      recipients << [self.manager] if self.manager.present?
+      recipients << [self.manager.manager] if self.manager.try(:manager).present?
 
       if template.present?
         email = Email.create!({
