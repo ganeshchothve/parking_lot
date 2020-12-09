@@ -11,7 +11,7 @@ module DatabaseSeeds
               </p>
             </div>
           </div>
-        ') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, name: "invoice_pending_approval").blank?
+        ') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "invoice_pending_approval").blank?
 
         Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "Invoice", name: "invoice_approved", subject: "Invoice for <%= self.booking_detail.name %> has been approved", content: '
           <div class="card w-100">
