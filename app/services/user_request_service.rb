@@ -9,8 +9,9 @@ class UserRequestService
 
   def send_email
     email = Email.create!(
+      project_id: self.project_id,
       booking_portal_client_id: user.booking_portal_client_id,
-      email_template_id: Template::EmailTemplate.find_by(name: "#{user_request.class.model_name.element}_request_pending").id,
+      email_template_id: Template::EmailTemplate.find_by(name: "#{user_request.class.model_name.element}_request_pending", project_id: self.project_id).id,
       recipients: [user],
       cc_recipients: (user.manager.present? ? [user.manager] : []),
       triggered_by_id: user_request.id,
@@ -20,9 +21,10 @@ class UserRequestService
   end
 
   def send_sms
-    template = Template::SmsTemplate.where(name: "#{user_request.class.model_name.element}_request_created").first
+    template = Template::SmsTemplate.where(name: "#{user_request.class.model_name.element}_request_created", project_id: self.project_id).first
     if template.present?
       Sms.create!(
+        project_id: self.project_id,
         booking_portal_client_id: user.booking_portal_client_id,
         recipient_id: user.id,
         sms_template_id: template.id,

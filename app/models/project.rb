@@ -156,6 +156,7 @@ class Project
   has_many :smses, class_name: 'Sms'
   has_many :whatsapps, class_name: 'Whatsapp'
   has_many :assets, as: :assetable
+  has_many :receipts
 
   validates :name, :rera_registration_no, presence: true
   validates_uniqueness_of :name, :rera_registration_no

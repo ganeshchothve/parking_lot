@@ -55,8 +55,9 @@ module BookingDetailSchemeStateMachine
       if booking_detail.project_unit.booking_portal_client.email_enabled?
         begin
           email = Email.create!(
+            project_id: project_id,
             booking_portal_client_id: booking_detail.project_unit.booking_portal_client_id,
-            email_template_id: Template::EmailTemplate.find_by(name: 'booking_detail_scheme_approved').id,
+            email_template_id: Template::EmailTemplate.find_by(name: 'booking_detail_scheme_approved', project_id: project_id).id,
             cc: [booking_detail.project_unit.booking_portal_client.notification_email],
             recipients: [booking_detail_scheme.created_by, booking_detail_scheme.approved_by],
             cc_recipients: (booking_detail_scheme.created_by.manager_id.present? ? [booking_detail_scheme.created_by.manager] : []),
@@ -73,8 +74,9 @@ module BookingDetailSchemeStateMachine
       if self.created_by_user && booking_detail.project_unit.booking_portal_client.email_enabled?
         begin
           email = Email.create!(
+            project_id: project_id,
             booking_portal_client_id: booking_detail.project_unit.booking_portal_client_id,
-            email_template_id: Template::EmailTemplate.find_by(name: 'booking_detail_scheme_draft').id,
+            email_template_id: Template::EmailTemplate.find_by(project_id: project_id, name: 'booking_detail_scheme_draft').id,
             cc: [booking_detail.project_unit.booking_portal_client.notification_email],
             recipients: [booking_detail_scheme.created_by],
             cc_recipients: (booking_detail_scheme.created_by.manager_id.present? ? [booking_detail_scheme.created_by.manager] : []),

@@ -26,11 +26,11 @@ module DatabaseSeeds
         <% end %>
         ") if Template::SmsTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "cancellation_request_rejected").blank?
 
-      Template::SmsTemplate.create(booking_portal_client_id: client_id, project_id: project_id,  subject_class: "Invoice", name: "invoice_pending_approval", content: "Invoice for <%= self.booking_detail.name %> has been raised") if Template::SmsTemplate.where(name: "invoice_pending_approval").blank?
+      Template::SmsTemplate.create(booking_portal_client_id: client_id, project_id: project_id,  subject_class: "Invoice", name: "invoice_pending_approval", content: "Invoice for <%= self.booking_detail.name %> has been raised") if Template::SmsTemplate.where(name: "invoice_pending_approval", project_id: project_id).blank?
 
-      Template::SmsTemplate.create(booking_portal_client_id: client_id, project_id: project_id,  subject_class: "Invoice", name: "invoice_approved", content: "Invoice for <%= self.booking_detail.name %> has been approved") if Template::SmsTemplate.where(name: "invoice_approved").blank?
+      Template::SmsTemplate.create(booking_portal_client_id: client_id, project_id: project_id,  subject_class: "Invoice", name: "invoice_approved", content: "Invoice for <%= self.booking_detail.name %> has been approved") if Template::SmsTemplate.where(name: "invoice_approved", project_id: project_id).blank?
 
-      Template::SmsTemplate.create(booking_portal_client_id: client_id, project_id: project_id,  subject_class: "UserRequest::Swap", name: "swap_request_created", content: "A swap has been requested on your booking of <%= project_unit.name %> at <%= project_unit.project_name %>. Our CRM team is reviewing your request and will get in touch with you shortly.") if Template::SmsTemplate.where(name: "swap_request_created").blank?
+      Template::SmsTemplate.create(booking_portal_client_id: client_id, project_id: project_id,  subject_class: "UserRequest::Swap", name: "swap_request_created", content: "A swap has been requested on your booking of <%= project_unit.name %> at <%= project_unit.project_name %>. Our CRM team is reviewing your request and will get in touch with you shortly.") if Template::SmsTemplate.where(project_id: project_id, name: "swap_request_created").blank?
 
       Template::SmsTemplate.create(booking_portal_client_id: client_id, project_id: project_id,  subject_class: "UserRequest::Swap", name: "swap_request_resolved", content: "Swap request on your booking of <%= project_unit.name %> at <%= project_unit.project_name %> has been processed. We have now blocked <%= I18n.t('global.project_unit') %> <%= alternate_project_unit.name %> for you.") if Template::SmsTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "swap_request_resolved").blank?
 
@@ -38,7 +38,7 @@ module DatabaseSeeds
 
       Template::SmsTemplate.create(booking_portal_client_id: client_id, project_id: project_id,  subject_class: "Receipt", name: "receipt_success", content: "Dear <%= user.name %>, your payment of Rs. <%= total_amount %> was successful (<%= receipt_id %>). To view your receipt visit your Portal Dashboard <%= user.dashboard_url %>") if Template::SmsTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "receipt_success").blank?
 
-      Template::SmsTemplate.create(booking_portal_client_id: client_id, project_id: project_id,  subject_class: "Receipt", name: "receipt_failed", content: "Dear <%= user.name %>, your payment of Rs. <%= total_amount %> has failed (<%= receipt_id %>).") if Template::SmsTemplate.where(name: "receipt_failed").blank?
+      Template::SmsTemplate.create(booking_portal_client_id: client_id, project_id: project_id,  subject_class: "Receipt", name: "receipt_failed", content: "Dear <%= user.name %>, your payment of Rs. <%= total_amount %> has failed (<%= receipt_id %>).") if Template::SmsTemplate.where(project_id: project_id, name: "receipt_failed").blank?
 
       Template::SmsTemplate.create(booking_portal_client_id: client_id, project_id: project_id,  subject_class: "Receipt", name: "receipt_pending", content: "Dear <%= user.name %>, your payment of Rs. <%= total_amount %> has been collected and will be sent to the <%= user.name %> Team for clearance.") if Template::SmsTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "receipt_pending").blank?
 
@@ -112,7 +112,7 @@ module DatabaseSeeds
       Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: 'payment_link', content: ' <% if self.manager.present? && self.manager_role?("channel_partner") %>
             Thank you for your interest in <%= self.booking_portal_client.name %>. <%= self.manager_name %> has registered you. To make your first payment, please click here: <%= short_url(self.payment_link) %> <% end %>')  if ::Template::SmsTemplate.where(booking_portal_client_id: client_id, name: "payment_link").blank?
 
-      Template::SmsTemplate.create(booking_portal_client_id: client_id, project_id: project_id,  subject_class: "Invitation", name: "referral_invitation", content: "Dear <%= self.name %>, You are invited in <%= self.booking_portal_client.booking_portal_domains.join(', ') %> Please click here. <%= Rails.application.routes.url_helpers.register_url(custom_referral_code: self.referred_by.referral_code) %> or user <%= self.referred_by.referral_code %> code for sign up.") if Template::SmsTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "referral_invitation").blank?
+      Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "Invitation", name: "referral_invitation", content: "Dear <%= self.name %>, You are invited in <%= self.booking_portal_client.booking_portal_domains.join(', ') %> Please click here. <%= Rails.application.routes.url_helpers.register_url(custom_referral_code: self.referred_by.referral_code) %> or user <%= self.referred_by.referral_code %> code for sign up.") if Template::SmsTemplate.where(booking_portal_client_id: client_id, name: "referral_invitation").blank?
 
       return Template::SmsTemplate.where(booking_portal_client_id: client_id).count
     end
