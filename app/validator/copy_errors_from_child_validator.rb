@@ -8,7 +8,7 @@ class CopyErrorsFromChildValidator < ActiveModel::EachValidator
           invalid_child = true
         end
       end
-    elsif value.invalid?
+    elsif value.present? && value.invalid?
       add_error_on_parent(parent, value)
       invalid_child = true
     end

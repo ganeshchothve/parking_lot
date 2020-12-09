@@ -39,6 +39,7 @@ module Api
           tpr_attrs[:id] = tpr.id.to_s if tpr
         end
         kyc_attributes[:third_party_references_attributes] = [ tpr_attrs ]
+        kyc_attributes[:creator_id] = @crm.user_id.to_s
       end
       if @user_kyc
         kyc_attributes[:addresses_attributes].each_with_index do |addr_attrs, i|
