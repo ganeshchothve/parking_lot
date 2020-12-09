@@ -53,6 +53,12 @@
       <%= f.number_field :lead_blocking_days, class: 'form-control', disabled: !(policy([:admin, @client]).editable_field?("lead_blocking_days")) %>
     </div>
   </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :invoice_approval_tat %>
+      <%= f.number_field :invoice_approval_tat, class: 'form-control', disabled: !(policy([:admin, @client]).editable_field?("invoice_approval_tat")) %>
+    </div>
+  </div>
 </div>
 <div class="row">
   <div class="col-md-6">

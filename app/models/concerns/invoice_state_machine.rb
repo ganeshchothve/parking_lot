@@ -10,19 +10,68 @@ module InvoiceStateMachine
       state :approved, :rejected
 
       event :raise, after: :after_raise_event do
-        transitions from: :draft, to: :pending_approval
+        transitions from: :draft, to: :pending_approval, success: :send_notification
       end
 
       event :re_raise do
-        transitions from: :rejected, to: :pending_approval, success: :after_re_raised
+        transitions from: :rejected, to: :pending_approval, success: %i[after_re_raised send_notification]
       end
 
       event :approve do
-        transitions from: :pending_approval, to: :approved, success: :after_approved
+        transitions from: :pending_approval, to: :approved, success: %i[after_approved send_notification]
       end
 
       event :reject do
         transitions from: :pending_approval, to: :rejected, success: :after_rejected
+      end
+    end
+
+    def get_pending_approval_recipients_list
+      recipients = []
+      User.where(role: 'billing_team').each do |user|
+        recipients << user
+      end
+      recipients << self.manager.manager.manager if self.manager.try(:manager).try(:manager).present?
+      recipients
+    end
+
+    def get_approved_recipients_list
+      recipients = []
+      recipients << self.manager if self.manager.present?
+      recipients << self.manager.manager if self.manager.try(:manager).present?
+      recipients << self.manager.manager.manager if self.manager.try(:manager).try(:manager).present?
+      recipients
+    end
+
+    def send_notification
+      recipients = self.send("get_#{status}_recipients_list")
+      if recipients.present? && incentive_scheme.booking_portal_client.email_enabled?
+        template_name = "invoice_#{status}"
+        if email_template = Template::EmailTemplate.where(name: template_name).first
+          email = Email.create!(
+            booking_portal_client_id: incentive_scheme.booking_portal_client_id,
+            email_template_id: email_template.id,
+            cc: [],
+            recipients: recipients,
+            cc_recipients: [],
+            triggered_by_id: self.id,
+            triggered_by_type: self.class.to_s
+          )
+          email.sent!
+        end        
+      end
+      if recipients.pluck(:phone).present? && incentive_scheme.booking_portal_client.sms_enabled?
+        if sms_template = Template::SmsTemplate.where(name: template_name).first
+          recipients.each do |recipient|
+            Sms.create!(
+              booking_portal_client_id: incentive_scheme.booking_portal_client_id,
+              recipient_id: recipient.id,
+              sms_template_id: sms_template.id,
+              triggered_by_id: self.id,
+              triggered_by_type: self.class.to_s
+            ) if recipient.phone.present?
+          end
+        end
       end
     end
 
