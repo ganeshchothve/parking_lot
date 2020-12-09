@@ -11,7 +11,7 @@ class DailySmsReportWorker
         template = Template::SmsTemplate.where(project_id: project.id, name: "daily_sms_report").first
         if template.present?
           sms = Sms.create!(
-            project_id: project.id
+            project_id: project.id,
             to: record.notification_numbers.split(","),
             booking_portal_client_id: record.id,
             recipient_id: superadmin.id,

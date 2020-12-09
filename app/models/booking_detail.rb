@@ -28,6 +28,8 @@ class BookingDetail
   field :bedrooms, type: String
   field :bathrooms, type: String
   field :carpet, type: Float
+  field :agreement_price, type: Integer
+  field :all_inclusive_price, type: Integer
 
   mount_uploader :tds_doc, DocUploader
 
@@ -51,7 +53,7 @@ class BookingDetail
   belongs_to :search, optional: true
   # When a new booking detail object is created from another object, this field will be set. This happens when the user creates a swap request.
   belongs_to :parent_booking_detail, class_name: 'BookingDetail', optional: true
-  belongs_to :primary_user_kyc, class_name: 'UserKyc', optional: true
+  belongs_to :primary_user_kyc, class_name: 'UserKyc', optional: true, validate: true
   has_many :assets, as: :assetable
   has_many :receipts, dependent: :nullify
   has_many :smses, as: :triggered_by, class_name: 'Sms'
@@ -60,7 +62,7 @@ class BookingDetail
   has_many :user_requests, as: :requestable
   has_many :related_booking_details, foreign_key: :parent_booking_detail_id, primary_key: :_id, class_name: 'BookingDetail'
   has_many :invoices
-  has_and_belongs_to_many :user_kycs
+  has_and_belongs_to_many :user_kycs, validate: true
 
 
   # TODO: uncomment
@@ -69,6 +71,7 @@ class BookingDetail
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :kyc_mandate
   validate :validate_content, on: :create
+  validates :primary_user_kyc, :receipts, copy_errors_from_child: true
 
   delegate :name, :blocking_amount, to: :project_unit, prefix: true, allow_nil: true
   delegate :name, :email, :phone, to: :user, prefix: true, allow_nil: true
@@ -88,8 +91,9 @@ class BookingDetail
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(name: regex ) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: start_date..end_date) }
   scope :incentive_eligible, -> { booked_confirmed }
+  scope :booking_stages, -> { all.in(status: BOOKING_STAGES) }
 
-  accepts_nested_attributes_for :notes, :tasks
+  accepts_nested_attributes_for :notes, :tasks, :receipts, :user_kycs, :primary_user_kyc
 
   def validate_content
     _file = tds_doc.file
@@ -330,6 +334,18 @@ class BookingDetail
       custom_scope = { lead_id: params[:lead_id] } if params[:lead_id].present?
       custom_scope = { user_id: user.id } if user.buyer?
       custom_scope
+    end
+
+    def user_based_available_statuses(user)
+      if user.present?
+        if user.role?('billing_team')
+          %w[booked_confirmed]
+        else
+          BookingDetail.aasm.states.map(&:name)
+        end
+      else
+        BookingDetail.aasm.states.map(&:name)
+      end
     end
   end
 end

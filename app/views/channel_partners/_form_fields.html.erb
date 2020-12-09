@@ -25,9 +25,8 @@
 
 <div class="row">
   <div class="col-md-6">
-    <%= form.input :aadhaar, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("aadhaar") %>
+    <%= form.input :company_name, disabled: !policy([:admin, @channel_partner]).editable_field?("company_name") %>
   </div>
-
   <div class="col-md-6">
     <%= form.input :pan_number, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("pan_number") %>
   </div>
@@ -35,29 +34,67 @@
 
 <div class="row">
   <div class="col-md-6">
-    <%= form.input :rera_id, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("rera_id") %>
+    <%= form.input :nri, item_wrapper_class: 'form-check form-check-inline', as: :radio_buttons, prompt: :translate, required: true, input_html: { disabled: !policy([:admin, @channel_partner]).editable_field?("nri") } %>
   </div>
-
   <div class="col-md-6">
-    <%= form.input :company_name, disabled: !policy([:admin, @channel_partner]).editable_field?("company_name") %>
+    <%= form.input :team_size, collection: (1..200).to_a.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("team_size"), as: :select, prompt: :translate, required: true %>
   </div>
 </div>
 
 <div class="row">
   <div class="col-md-6">
-    <%= form.input :manager_id, collection: User.in(role: "cp").collect{|x| [x.name, x.id]}, disabled: !policy([:admin, @channel_partner]).editable_field?("manager_id"), as: :select, prompt: :translate %>
+    <%= form.input :rera_applicable, item_wrapper_class: 'form-check form-check-inline', as: :radio_buttons, prompt: :translate, required: true, input_html: { disabled: !policy([:admin, @channel_partner]).editable_field?("rera_applicable") } %>
+  </div>
+  <div class="col-md-6">
+    <%= form.input :rera_id, disabled: !policy([:admin, @channel_partner]).editable_field?("rera_id") %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <%= form.input :gst_applicable, item_wrapper_class: 'form-check form-check-inline', as: :radio_buttons, prompt: :translate, required: true, input_html: { disabled: !policy([:admin, @channel_partner]).editable_field?("gst_applicable") } %>
   </div>
   <div class="col-md-6">
     <%= form.input :gstin_number, disabled: !policy([:admin, @channel_partner]).editable_field?("gstin_number") %>
   </div>
 </div>
 
-<% if policy([:admin, @channel_partner]).editable_field?("status") %>
-  <div class="row">
-    <div class="col-md-6">
-      <%= form.input :status, collection: ChannelPartner::STATUS.collect{|status| [ ChannelPartner.human_attribute_name("status.#{status}"), status ] }, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("status"), prompt: :translate %>
-    </div>
+<div class="row">
+  <div class="col-md-6">
+    <%= form.input :expertise, collection: ChannelPartner::EXPERTISE.collect{|x| [x.titleize, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("expertise"), as: :select, prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
   </div>
+  <div class="col-md-6">
+    <%= form.input :experience, collection: ChannelPartner::EXPERIENCE.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("experience"), as: :select, prompt: :translate %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <%= form.input :average_quarterly_business, required: false, disabled: !policy([:admin, @channel_partner]).editable_field?("average_quarterly_business"), as: :float %>
+  </div>
+  <div class="col-md-6">
+    <%= form.input :manager_id, collection: User.in(role: "cp").collect{|x| [x.name, x.id]}, disabled: !policy([:admin, @channel_partner]).editable_field?("manager_id"), as: :select, prompt: :translate %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <%= form.input :developers_worked_for, collection: @channel_partner.developers_worked_for.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("developers_worked_for"), as: :select, prompt: :translate, input_html: {multiple: true, class: 'selectize-tags'} %>
+  </div>
+</div>
+
+<% if policy([:admin, @channel_partner]).editable_field?("event") %>
+  <% statuses = available_chanel_partner_statuses(@channel_partner) %>
+  <% if statuses.present? %>
+    <div class="row">
+      <div class="col-md-6">
+        <%= form.input :event, collection: statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, as: :select, prompt: :translate, input_html: { class: 'selectize', disabled: !policy([:admin, @channel_partner]).editable_field?("event") } %>
+      </div>
+      <div class="col-md-6 status_change_field">
+        <%= form.input :status_change_reason, disabled: !policy([:admin, @channel_partner]).editable_field?("status_change_reason") %>
+      </div>
+    </div>
+  <% end %>
 <% end %>
 
 <% if policy([:admin, @channel_partner]).editable_field?("bank_detail_attributes") %>
@@ -90,4 +127,18 @@
       </div>
     </div>
   </div>
+<% end %>
+
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    $('#channel_partner_event').change(function(){
+      if($(this).val() == 'reject'){
+        $('.status_change_field').removeClass('hidden');
+        $('#channel_partner_status_change_reason').addClass('required').attr('required', 'required');
+      }else{
+        $('.status_change_field').addClass('hidden');
+        $('#channel_partner_status_change_reason').removeClass('required').removeAttr('required');
+      }
+    }).trigger('change');
+  });
 <% end %>

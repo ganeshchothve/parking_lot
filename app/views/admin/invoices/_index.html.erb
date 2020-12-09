@@ -21,7 +21,7 @@
         </td>
         <td>
           <%= number_to_indian_currency(invoice.amount) %><br>
-          <% if invoice.net_amount.present? %>
+          <% if invoice.approved? && invoice.net_amount.present? %>
             <div class='small'>
               <span>Net Amount: <%= number_to_indian_currency(invoice.net_amount) %></span>
             </div>

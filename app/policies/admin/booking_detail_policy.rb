@@ -1,15 +1,17 @@
 class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def index?
-    %w[admin superadmin sales sales_admin cp_admin gre channel_partner billing_team].include?(user.role) && enable_actual_inventory?(user)
+    out = %w[admin superadmin sales sales_admin cp_admin gre channel_partner billing_team].include?(user.role) && enable_actual_inventory?(user)
+    out && user.active_channel_partner?
   end
 
   def new?
-    %w[admin superadmin sales sales_admin cp_admin gre channel_partner].include?(user.role) && eligible_user? && enable_actual_inventory?(user)
+    out = %w[admin superadmin sales sales_admin cp_admin gre channel_partner].include?(user.role) && eligible_user? && enable_actual_inventory?(user)
+    out && user.active_channel_partner?
   end
 
   def create?
-    return true if  is_buyer_booking_limit_exceed? && eligible_user? && enable_actual_inventory?(user)
+    return true if is_buyer_booking_limit_exceed? && eligible_user? && enable_actual_inventory?(user)
     @condition = 'allowed_bookings'
     false
   end
@@ -51,15 +53,15 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def doc?
-    true
+    user.active_channel_partner?
   end
 
   def status_chart?
-    true
+    user.active_channel_partner?
   end
 
   def send_booking_detail_form_notification?
-    true
+    user.active_channel_partner?
   end
   # def block?
   #   valid = enable_actual_inventory? && only_for_confirmed_user! && only_for_kyc_added_users! && ['hold'].include?(record.status)
@@ -111,7 +113,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
         false
       end
     elsif (user.role?('channel_partner') && record.status == 'hold')
-      return true if record.user.manager_id == user.id
+      return true if record.user.manager_id == user.id && user.active_channel_partner?
       @condition = 'not_authorise_to_book_for_this_user'
       false
     else

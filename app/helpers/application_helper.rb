@@ -18,6 +18,10 @@ module ApplicationHelper
     "#{I18n.t('currency.' + currency.to_s)}#{number}".html_safe
   end
 
+  def number_to_inr(number, options={})
+    CurrencyConverter.convert(number, options.merge(units: :inr))
+  end
+
   def get_view_erb(template)
     begin
       ::ERB.new(template.content).result( binding ).html_safe

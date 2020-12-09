@@ -178,13 +178,19 @@ module DashboardDataProvider
   end
 
   def self.total_buyers(current_user)
-    User.where(User.user_based_scope(current_user)).count
+    Lead.where(Lead.user_based_scope(current_user)).count
+  end
+
+  def self.incentive_pending_bookings(current_user)
+    booking_ids = Invoice.where(manager_id: current_user.id).distinct(:booking_detail_id)
+    BookingDetail.booking_stages.where(manager_id: current_user.id).nin(id: booking_ids).count
   end
 
   def self.user_group_by(current_user)
     out = {'confirmed_users': 0, 'not_confirmed_users': 0}
+    user_ids = Lead.where(Lead.user_based_scope(current_user)).distinct(:user_id)
     data = User.collection.aggregate([
-      {"$match": User.user_based_scope(current_user) },
+      {"$match": { _id: { '$in': user_ids } } },
       { "$group": {
         "_id":{
           "$cond": {if: '$confirmed_at', then: 'confirmed_users', else: 'not_confirmed_users'}
@@ -192,8 +198,8 @@ module DashboardDataProvider
         count: {
           "$sum": 1
         }
-      }
-    }]).to_a
+      }}
+    ]).to_a
     data.each do |d|
       out[(d['_id']).to_sym] = d['count']
     end
@@ -202,9 +208,8 @@ module DashboardDataProvider
 
   def self.booking_detail_group_by(current_user)
     out = {'blocked': 0, 'booked_tentative': 0,'booked_confirmed': 0}
-    user_ids = User.where(manager_id: current_user.id).pluck(:id)
     data = BookingDetail.collection.aggregate([
-      {"$match": {'user_id': {'$in': user_ids }, 'status': {'$in': %w(blocked booked_confirmed booked_tentative)}} },
+      {"$match": {manager_id: current_user.id, 'status': {'$in': %w(blocked booked_confirmed booked_tentative)}} },
       { "$group": {
         "_id":{
           "status": "$status"
@@ -222,9 +227,9 @@ module DashboardDataProvider
 
   def self.receipts_group_by(current_user)
     out = {'pending': 0, 'clearance_pending': 0, 'success': 0, 'refunded': 0}
-    user_ids = User.where(manager_id: current_user.id).pluck(:id)
+    lead_ids = Lead.where(manager_id: current_user.id).pluck(:id)
     data = Receipt.collection.aggregate([
-      {"$match": {'user_id': {'$in': user_ids }, 'status': {'$in': %w(pending clearance_pending success refunded)}} },
+      {"$match": {'lead_id': {'$in': lead_ids }, 'status': {'$in': %w(pending clearance_pending success refunded)}} },
       { "$group": {
         "_id":{
           "status": "$status"
@@ -238,6 +243,40 @@ module DashboardDataProvider
       out[(d['_id']['status']).to_sym] = d['count']
     end
     out
+  end
+
+  def self.project_wise_leads_count(current_user)
+    project_names = Project.all.inject({}) {|names, project| names[project.id] = project.name; names}
+    data = Lead.collection.aggregate([
+      {'$match': { manager_id: current_user.id } },
+      {'$group': {
+        _id: '$project_id',
+        count: {
+          '$sum': 1
+        }
+      } }
+    ]).to_a
+    data.map {|x| { project: project_names[x['_id']], count: x['count'] } }
+  end
+
+  def self.project_wise_total_av(current_user)
+    project_names = Project.all.inject({}) {|names, project| names[project.id] = project.name; names}
+    data = BookingDetail.collection.aggregate([
+      {'$match': { manager_id: current_user.id, status: {'$in': BookingDetail::BOOKING_STAGES}} },
+      {'$group': {
+        _id: '$project_id',
+        av: {
+          '$sum': '$agreement_value'
+        }
+      } }
+    ]).to_a
+  end
+
+  def self.conversion_ratio(current_user)
+    bookings = BookingDetail.booking_stages.where(manager_id: current_user.id).count
+    leads = Lead.where(manager_id: current_user.id).count
+    conv_ratio = leads.zero? ? 0 : bookings/leads.to_f
+    conv_ratio.round(2)
   end
 
   # Below method creates an inventory snapshot for dashboard

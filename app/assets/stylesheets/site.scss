@@ -2259,7 +2259,7 @@ table .dropdown-menu.show{
 			width:100%;
 		}
 		.number{
-			font-size: 54px!important;
+			font-size: 35px!important;
 			font-weight: 500!important;
 			line-height: 53px!important;
 			color: #7471ff!important;
@@ -2551,4 +2551,14 @@ table {
 			position: relative;
 		}
 	}
+}
+
+.hidden{
+	display: none;
+}
+.selectize-control.form-control{
+	padding: 0;
+}
+.selectize-dropdown.form-control{
+	height: unset;
 }

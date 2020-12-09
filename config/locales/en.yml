@@ -19,6 +19,7 @@ en:
       one: Action
       other: Actions
     active_filter: Active Filter
+    channel_partner_application: Application Form
     added_by: Added By
     custom: 'More'
     change: 'Change'
@@ -421,6 +422,24 @@ en:
         aadhaar: "Aadhaar"
         name_email_phone: 'Name/Email/Phone'
         details: 'Details'
+        team_size: 'Team Size'
+        rera_applicable: 'Is RERA Applicable?'
+        gst_applicable: 'IS GST Applicable?'
+        nri: 'Are your NRI'
+        expertise: 'Expertise'
+        experience: 'Experience'
+        average_quarterly_business: 'Average Quarterly Business (₹)'
+        developers_worked_for: 'Developers Worked For (Type any developer name & press enter)'
+        event: 'Application Status'
+      channel_partner/file_types:
+        rera_certificate: 'RERA Certificate'
+        gst_certificate: 'GST Certificate'
+        cheque_scanned_copy: 'Cheque Scanned Copy'
+      channel_partner/help_text:
+        rera_certificate_html: '<ul><li>Self Attested Rera Certificate</li></ul>'
+        gst_certificate_html: '<ul><li>Self Attested GST Certificate</li></ul>'
+        cheque_scanned_copy_html: '<ul><li>A Cancelled Cheque Scanned Copy</li></ul>'
+
       channel_partner/status:
         active: Active
         inactive: Inactive
@@ -1065,11 +1084,11 @@ en:
         link_name: 'Client Detail'
     channel_partners:
       index:
-        link_name: 'Channel Partners'
+        link_name: 'Channel Partner Applications'
       edit:
-        link_name: 'Edit Channel Partner'
+        link_name: 'Edit Application'
       show:
-        link_name: Details
+        link_name: 'Application Details'
 
     dashboard:
       index:
@@ -1156,6 +1175,8 @@ en:
         success: 'Email has been sent again.'
       show:
         link_name: Payment Details
+      show_user_kyc:
+        link_name: 'View KYC'
     referrals:
       index:
         link_name: 'Referrals'
@@ -1399,15 +1420,15 @@ en:
           </ul>"
 
       titles:
-        lead_details: 'Lead Details'
+        lead_details: 'Customer Details'
         booking_details: 'Bookings'
         total_leads: 'Total Leads'
         received: 'Added'
         available_inventory: 'Available Inventory'
         download_brochure: 'Download Brochure'
         visit_website: 'Visit Website'
-      confirmed_users: 'Confirmed Leads'
-      not_confirmed_users: 'Not Confirmed Leads'
+      confirmed_users: 'Confirmed Customers'
+      not_confirmed_users: 'Not Confirmed Customers'
       booking_detail:
         blocked:
           label: "Blocked"
@@ -1446,3 +1467,17 @@ en:
     searches/checkout: 'Holding minutes Text on Checkout page'
     booking_details/_details: 'Bottom Text in Booking detail overview section'
     assets/_videos: 'Videos Section on customer dashboard'
+
+  number:
+    human:
+      decimal_units:
+        format: '₹%n %u'
+  inr:
+    unit: ''
+    ten: ''
+    hundred: ''
+    thousand: 'K'
+    lakh:
+      one: 'Lac'
+      other: 'Lacs'
+    crore: 'Cr'

@@ -9,37 +9,35 @@
   <div class="col-md-4">
     <div class="form-group">
       <label class="small text-muted"><%= kyc_labels[:pan_number] %></label>
-      <div><%= user_kyc.pan_number %></div>
+      <div><%= user_kyc.pan_number || "-" %></div>
     </div>
   </div>
   <div class="col-md-4">
     <div class="form-group">
       <label class="small text-muted"><%= kyc_labels[:aadhaar] %></label>
-      <div><%= user_kyc.aadhaar %></div>
+      <div><%= user_kyc.aadhaar || "-" %></div>
     </div>
   </div>
-</div>
-<div class="row">
-  <div class="col-md-4">
-    <div class="form-group">
-      <label class="small text-muted"><%= kyc_labels[:permanent_address] %></label>
-      <div><%= user_kyc.permanent_address.present? ? user_kyc.permanent_address.to_sentence : "-" %></div>
+  <% user_kyc.addresses.each do |address| %>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="small text-muted"><%= address.address_type.titleize %> Address</label>
+        <div><%= address.to_sentence || "-" %></div>
+      </div>
     </div>
-  </div>
+  <% end %>
   <div class="col-md-4">
     <div class="form-group">
       <label class="small text-muted"><%= kyc_labels[:number_of_units] %></label>
-      <div><%= user_kyc.number_of_units.present? ? user_kyc.number_of_units : "" %></div>
+      <div><%= user_kyc.number_of_units.present? ? user_kyc.number_of_units : "-" %></div>
     </div>
   </div>
   <div class="col-md-4">
     <div class="form-group">
       <label class="small text-muted"><%= kyc_labels[:preferred_floors] %></label>
-      <div><%= user_kyc.preferred_floors.collect{|x| UserKyc.available_preferred_floors.find{|t| t[:id] == x}[:text]}.to_sentence %></div>
+      <div><%= user_kyc.preferred_floors.collect{|x| UserKyc.available_preferred_floors.find{|t| t[:id] == x}[:text]}.to_sentence || "-" %></div>
     </div>
   </div>
-</div>
-<div class="row">
   <div class="col-md-4">
     <div class="form-group">
       <label class="small text-muted"><%= kyc_labels[:configurations] %></label>
@@ -49,11 +47,9 @@
   <div class="col-md-4">
     <div class="form-group">
       <label class="small text-muted"><%= kyc_labels[:budget] %></label>
-      <div><%= user_kyc.min_budget.present? ? "From #{user_kyc.min_budget} " : "" %><%= user_kyc.max_budget.present? ? "To #{user_kyc.max_budget}" : "" %></div>
+      <div><%= user_kyc.budget %></div>
     </div>
   </div>
-</div>
-<div class="row">
   <div class="col-md-4">
     <div class="form-group">
       <label class="small text-muted"><%= kyc_labels[:dob] %></label>
@@ -72,8 +68,6 @@
       <div><%= user_kyc.education_qualification.present? ? user_kyc.education_qualification : "-" %></div>
     </div>
   </div>
-</div>
-<div class="row">
   <div class="col-md-4">
     <div class="form-group">
       <label class="small text-muted"><%= kyc_labels[:designation] %></label>
@@ -92,8 +86,6 @@
       <div><%= user_kyc.nri ? "Yes (#{kyc_labels[:oci]}: #{user_kyc.oci})" : "No" %></div>
     </div>
   </div>
-</div>
-<div class="row">
   <div class="col-md-4">
     <div class="form-group">
       <label class="small text-muted"><%= kyc_labels[:poa] %></label>
@@ -112,8 +104,6 @@
       <div><%= user_kyc.poa_details_phone_no.present? ? user_kyc.poa_details_phone_no : "-" %></div>
     </div>
   </div>
-</div>
-<div class="row">
   <div class="col-md-4">
     <div class="form-group">
       <label class="small text-muted"><%= kyc_labels[:is_company] %></label>
@@ -132,8 +122,6 @@
       <div><%= user_kyc.gstn.present? ? user_kyc.gstn : "-" %></div>
     </div>
   </div>
-</div>
-<div class="row">
   <div class="col-md-4">
     <div class="form-group">
       <label class="small text-muted"><%= kyc_labels[:existing_customer] %></label>
@@ -152,8 +140,6 @@
       <div><%= user_kyc.existing_customer_project.present? ? user_kyc.existing_customer_project : "-" %></div>
     </div>
   </div>
-</div>
-<div class="row">
   <div class="col-md-4">
     <div class="form-group">
       <label class="small text-muted"><%= kyc_labels[:creator] %></label>

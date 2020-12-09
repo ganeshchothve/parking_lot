@@ -1,7 +1,7 @@
 class Api::V1::LeadsController < ApisController
   before_action :reference_ids_present?, :set_project, :create_or_set_user, :set_manager_through_reference_id, only: :create
-  before_action :set_user, :set_lead, except: :create
-  before_action :add_third_party_reference_params
+  before_action :set_lead_and_user, except: :create
+  before_action :add_third_party_reference_params, :modify_params
 
   #
   # The create action always creates a new user account (if does not exist) & new lead alongwith storing reference ids of third party CRM system.
@@ -14,13 +14,16 @@ class Api::V1::LeadsController < ApisController
   #     last_name: 'User',
   #     email: 'test@example.com',
   #     phone: '+919876543210',
+  #     stage: "qualified",
+  #     sitevisit_date: "11/11/2020", #format - dd/mm/yyyy
+  #     revisit_count: 2,
+  #     last_revisit_date: "12/11/2020", #format - dd/mm/yyyy
   #     project_id: <project_reference_id>,
   #     user_id: <user_tpr_id> # optional,
   #     reference_id: <lead_reference_id>,
   #     manager_id: <channel_partner_reference_id>
   #   }
   # }
-  #
   def create
     unless @user.leads.reference_resource_exists?(@crm.id, params[:lead][:reference_id])
       @lead = @user.leads.build(lead_create_params)
@@ -50,6 +53,10 @@ class Api::V1::LeadsController < ApisController
   #   lead: {
   #     email: 'test@example.com',
   #     phone: '+919876543210',
+  #     stage: "qualified",
+  #     sitevisit_date: "11/11/2020", #format - dd/mm/yyyy
+  #     revisit_count: 2,
+  #     last_revisit_date: "12/11/2020", #format - dd/mm/yyyy
   #     reference_id: <lead_reference_id>
   #   }
   # }
@@ -129,19 +136,15 @@ class Api::V1::LeadsController < ApisController
     end
   end
 
-  def set_user
-    @user = User.or(check_and_build_query_for_finding_user).first
-    render json: { errors: ["User with this email/phone not found"] }, status: :not_found unless @user
-  end
-
-  def set_lead
-    @lead = @user.leads.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:id]).first
+  def set_lead_and_user
+    @lead = Lead.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:id]).first
     render json: { errors: ["Lead with reference_id '#{params[:id]}' not found"] }, status: :not_found unless @lead
+    @user = @lead.user
   end
 
   # Allows only certain parameters to be saved and updated.
   def lead_create_params
-    params.require(:lead).permit(:project_id, :manager_id, third_party_references_attributes: [:crm_id, :reference_id])
+    params.require(:lead).permit(:first_name, :last_name, :email, :phone, :stage, :sitevisit_date, :revisit_count, :last_revisit_date, :project_id, :manager_id, third_party_references_attributes: [:crm_id, :reference_id])
   end
 
   def user_create_params
@@ -149,7 +152,7 @@ class Api::V1::LeadsController < ApisController
   end
 
   def lead_update_params
-    params.require(:lead).permit(third_party_references_attributes: [:id, :reference_id])
+    params.require(:lead).permit(:first_name, :last_name, :stage, :sitevisit_date, :revisit_count, :last_revisit_date, third_party_references_attributes: [:id, :reference_id])
   end
 
   def third_party_reference_params
@@ -170,6 +173,22 @@ class Api::V1::LeadsController < ApisController
         render json: {errors: ["Manager with reference id '#{manager_reference_id}' not found"]}, status: :not_found and return
       end
     end
+  end
+
+  def modify_params
+    errors = []
+    begin
+      params[:lead][:sitevisit_date] = Date.strptime(params[:lead][:sitevisit_date], "%d/%m/%Y") if params[:lead][:sitevisit_date].present?
+    rescue ArgumentError
+      errors << 'Sitevisit date format is invalid. Correct date format is - dd/mm/yyyy'
+    end
+    begin
+      params[:lead][:last_revisit_date] = Date.strptime(params[:lead][:last_revisit_date], "%d/%m/%Y") if params[:lead][:last_revisit_date].present?
+    rescue ArgumentError
+      errors << 'Last revisit date format is invalid. Correct date format is - dd/mm/yyyy'
+    end
+    errors << "Revisit count should be a number" if params[:lead][:revisit_count].present? && !params[:lead][:revisit_count].is_a?(Integer)
+    render json: { errors: errors },status: :unprocessable_entity and return if errors.present?
   end
 
 end

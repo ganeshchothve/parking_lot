@@ -62,5 +62,17 @@ class Invoice
       custom_scope = { booking_detail_id: { '$in': user.booking_details.distinct(:id) } } if user.buyer?
       custom_scope
     end
+
+    def user_based_available_statuses(user)
+      if user.present?
+        if user.role?('billing_team')
+          %w[pending_approval approved rejected]
+        else
+          Invoice.aasm.states.map(&:name)
+        end
+      else
+        Invoice.aasm.states.map(&:name)
+      end
+    end
   end
 end

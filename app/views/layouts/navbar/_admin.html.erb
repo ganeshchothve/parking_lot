@@ -59,6 +59,23 @@
       </li>
     <% end %>
 
+    <% if current_user.role == 'channel_partner' %>
+      <% channel_partner = current_user.associated_channel_partner %>
+      <li class="nav-item d-none d-lg-block">
+        <div class="dropdown">
+          <%= active_link_to t('global.channel_partner_application'), "javascript:;", class: "nav-link dropdown-toggle pl-0 pr-0", data: {toggle: 'dropdown'} %>
+          <div class="dropdown-menu dropdown-menu-right menu-top">
+              <% if Admin::ChannelPartnerPolicy.new(current_user, channel_partner).edit? %>
+                <%= link_to t('helpers.edit.link_name', model: ChannelPartner.model_name.human), edit_channel_partner_path(channel_partner), class: 'modal-remote-form-link dropdown-item' %>
+              <% end %>
+              <% if policy([ current_user_role_group, Asset.new(assetable: channel_partner)]).index? %>
+                <%= link_to t('controller.assets.index.link_name'), assetables_path(assetable_type: channel_partner.class.model_name.i18n_key.to_s, assetable_id: channel_partner.id), class: 'modal-remote-form-link dropdown-item' %>
+              <% end %>
+          </div>
+        </div>
+      </li>
+    <% end %>
+
     <%= render 'layouts/navbar/custom_links' %>
 
     <li class="nav-item user-dropdown dropdown">

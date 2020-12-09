@@ -34,6 +34,12 @@
               <%= f.text_area :request_payload, autofocus: true, class: "form-control", disabled: !policy([:admin, @crm]).editable_field?("request_payload") %>
             </div>
           </div>
+          <div class = "col-12">
+            <div class="form-group">
+              <%= f.label :user, class: 'control-label' %>
+              <%= f.select :user_id, options_from_collection_for_select(User.where(role: 'admin'), "id", "ds_name", f.object.user_id), {prompt: 'Select'}, class: "selectize-remote", data: { url: admin_users_path, params: {fltrs: {role: 'admin' } } } %>
+            </div>
+          </div>
         </div>
       </div>
       <div class="modal-footer">

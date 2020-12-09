@@ -278,7 +278,7 @@ class SearchesController < ApplicationController
   end
 
   def set_booking_detail
-    @booking_detail = BookingDetail.where(status: {"$in": BookingDetail::BOOKING_STAGES + [:under_negotiation, :scheme_approved]}, project_unit_id: @search.project_unit_id, project_id: @search.project_unit.project_id, user_id: @lead.user_id, lead: @lead).first
+    @booking_detail = BookingDetail.where(status: {"$in": BookingDetail::BOOKING_STAGES}, project_unit_id: @search.project_unit_id, project_id: @search.project_unit.project_id, user_id: @lead.user_id, lead: @lead).first
     if @booking_detail.blank?
       @booking_detail = BookingDetail.find_or_initialize_by(project_unit_id: @search.project_unit_id, project_id: @search.project_unit.project_id, user_id: @lead.user_id, lead: @lead, status: 'hold')
       if @booking_detail.new_record?

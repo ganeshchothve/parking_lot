@@ -1,7 +1,8 @@
 class Admin::EmailPolicy < EmailPolicy
 
   def index?
-    !user.buyer?
+    out = !user.buyer?
+    out && user.active_channel_partner?
   end
 
   def monthly_count?
@@ -12,7 +13,7 @@ class Admin::EmailPolicy < EmailPolicy
     if !user.buyer?
       if %[admin superadmin].include?(user.role)
         true
-      else 
+      else
        record.recipient_ids.include?(user.id)
       end
     end
