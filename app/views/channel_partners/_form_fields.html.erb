@@ -34,7 +34,7 @@
 
 <div class="row">
   <div class="col-md-6">
-    <%= form.input :nri, item_wrapper_class: 'form-check form-check-inline', disabled: !policy([:admin, @channel_partner]).editable_field?("nri"), as: :radio_buttons, prompt: :translate, required: true %>
+    <%= form.input :nri, item_wrapper_class: 'form-check form-check-inline', as: :radio_buttons, prompt: :translate, required: true, input_html: { disabled: !policy([:admin, @channel_partner]).editable_field?("nri") } %>
   </div>
   <div class="col-md-6">
     <%= form.input :team_size, collection: (1..200).to_a.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("team_size"), as: :select, prompt: :translate, required: true %>
@@ -43,16 +43,16 @@
 
 <div class="row">
   <div class="col-md-6">
-    <%= form.input :rera_applicable, item_wrapper_class: 'form-check form-check-inline', disabled: !policy([:admin, @channel_partner]).editable_field?("rera_applicable"), as: :radio_buttons, prompt: :translate, required: true %>
+    <%= form.input :rera_applicable, item_wrapper_class: 'form-check form-check-inline', as: :radio_buttons, prompt: :translate, required: true, input_html: { disabled: !policy([:admin, @channel_partner]).editable_field?("rera_applicable") } %>
   </div>
   <div class="col-md-6">
-    <%= form.input :rera_id, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("rera_id") %>
+    <%= form.input :rera_id, disabled: !policy([:admin, @channel_partner]).editable_field?("rera_id") %>
   </div>
 </div>
 
 <div class="row">
   <div class="col-md-6">
-    <%= form.input :gst_applicable, item_wrapper_class: 'form-check form-check-inline', disabled: !policy([:admin, @channel_partner]).editable_field?("gst_applicable"), as: :radio_buttons, prompt: :translate, required: true %>
+    <%= form.input :gst_applicable, item_wrapper_class: 'form-check form-check-inline', as: :radio_buttons, prompt: :translate, required: true, input_html: { disabled: !policy([:admin, @channel_partner]).editable_field?("gst_applicable") } %>
   </div>
   <div class="col-md-6">
     <%= form.input :gstin_number, disabled: !policy([:admin, @channel_partner]).editable_field?("gstin_number") %>
@@ -88,7 +88,7 @@
   <% if statuses.present? %>
     <div class="row">
       <div class="col-md-6">
-        <%= form.input :event, collection: statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, class: 'selectize', disabled: !policy([:admin, @channel_partner]).editable_field?("event"), as: :select, prompt: :translate %>
+        <%= form.input :event, collection: statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, as: :select, prompt: :translate, input_html: { class: 'selectize', disabled: !policy([:admin, @channel_partner]).editable_field?("event") } %>
       </div>
       <div class="col-md-6 status_change_field">
         <%= form.input :status_change_reason, disabled: !policy([:admin, @channel_partner]).editable_field?("status_change_reason") %>

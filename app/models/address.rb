@@ -9,13 +9,13 @@ class Address
   field :state, type: String
   field :country, type: String
   field :zip, type: String
-  field :address_type, type: String #TODO: Must be personal, work etc
+  field :address_type, type: String, default: 'work' #TODO: Must be personal, work etc
   field :selldo_id, type: String
 
   belongs_to :addressable, polymorphic: true, optional: true
 
-  #validates :address1, :city, :state, :country, :zip, presence: true
-  validates :address_type, :one_line_address, presence: true
+  validates :address_type, presence: true
+  validate :check_presence
 
   enable_audit({
     audit_fields: [:city, :state, :country, :address_type, :selldo_id],
@@ -40,5 +40,9 @@ class Address
     str += " #{self.zip}," if self.zip.present?
     str.strip!
     str.present? ? str : "-"
+  end
+
+  def check_presence
+    errors.add(:base, 'address is invalid') unless as_json(only: [:address1, :city, :state, :country, :zip]).values.all? || one_line_address.present?
   end
 end
