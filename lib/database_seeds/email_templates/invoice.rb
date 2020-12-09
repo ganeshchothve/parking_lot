@@ -1,8 +1,8 @@
 module DatabaseSeeds
   module EmailTemplates
     module Invoice
-      def self.seed(client_id)
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "Invoice", name: "invoice_pending_approval", subject: "Invoice for <%= self.booking_detail.name %> has been raised", content: '
+      def self.seed(project_id, client_id)
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "Invoice", name: "invoice_pending_approval", subject: "Invoice for <%= self.booking_detail.name %> has been raised", content: '
           <div class="card w-100">
             <div class="card-body">
               <p>
@@ -13,24 +13,25 @@ module DatabaseSeeds
           </div>
         ') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, name: "invoice_pending_approval").blank?
 
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "Invoice", name: "invoice_approved", subject: "Invoice for <%= self.booking_detail.name %> has been approved", content: '
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "Invoice", name: "invoice_approved", subject: "Invoice for <%= self.booking_detail.name %> has been approved", content: '
           <div class="card w-100">
             <div class="card-body">
+            <% url = Rails.application.routes.url_helpers %>
               <p>
-                Invoice for <%= self.booking_detail.name %> is approved - <%= link_to "Invoice",  admin_invoice_path(self) %>
+                Invoice for <%= self.booking_detail.name %> is approved - <%= link_to "Invoice",  url.admin_invoice_path(self) %>
               </p>
             </div>
           </div>
-        ') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, name: "invoice_approved").blank?
+        ') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "invoice_approved").blank?
 
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "Invoice", name: "invoice_pending_approvals_list", subject: "Pending Invoices for approval", content: '
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "Invoice", name: "invoice_pending_approvals_list", subject: "Pending Invoices for approval", content: '
           <div class="card w-100">
             <div class="card-body">
               <p>
                 Following invoices are pending to get approved -
               </p>
               <% url = Rails.application.routes.url_helpers %>
-              <% invoices = Invoice.where(status: "pending_approval") %>
+              <% invoices = Invoice.where(Invoice.user_based_scope(self)).where(status: "pending_approval", raised_date: {"$lt": Date.today-self.booking_portal_client.invoice_approval_tat } ) %>
               <table>
                 <% invoices.each do |invoice| %>
                   <tr>
@@ -41,7 +42,7 @@ module DatabaseSeeds
               </table>
             </div>
           </div>
-          ') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, name: "invoice_pending_approvals_list").blank?
+          ') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "invoice_pending_approvals_list").blank?
       end
     end
   end
