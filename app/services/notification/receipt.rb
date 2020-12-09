@@ -22,6 +22,7 @@ module Notification
 
     def email_params
       params = {
+        project_id: @receipt.project_id,
         booking_portal_client_id: @user.booking_portal_client_id,
         recipient_ids: [@user.id],
         cc_recipient_ids: (@user.manager_id.present? ? [@user.manager_id] : []),
@@ -49,6 +50,7 @@ module Notification
 
     def sms_params
       params = {
+        project_id: @receipt.project_id,
         booking_portal_client_id: @user.booking_portal_client_id,
         recipient_id: @user.id,
         triggered_by_id: @receipt.id,

@@ -3,14 +3,14 @@ module Notification
     def self.execute params={}
       params = params.with_indifferent_access
 
-      keys = ["booking_portal_client_id", "template_name", "recipient_id", "triggered_by_id", "triggered_by_type"].select do |key|
+      keys = ["project_id", "booking_portal_client_id", "template_name", "recipient_id", "triggered_by_id", "triggered_by_type"].select do |key|
         params[key].blank?
       end
 
       fail "#{keys} required to send notification" if keys.present?
 
       template_name = params.delete "template_name"
-      ::Sms.create!(params.merge(sms_template_id: Template::SmsTemplate.find_by(name: template_name).id))
+      ::Sms.create!(params.merge(sms_template_id: Template::SmsTemplate.find_by(project_id: params['project_id'], name: template_name).id))
     end
   end
 
@@ -19,7 +19,7 @@ module Notification
     def self.execute params={}
       params = params.with_indifferent_access
 
-      keys = ["booking_portal_client_id", "template_name", "recipient_ids", "triggered_by_id", "triggered_by_type"].select do |key|
+      keys = ["project_id", "booking_portal_client_id", "template_name", "recipient_ids", "triggered_by_id", "triggered_by_type"].select do |key|
         params[key].blank?
       end
 
@@ -29,7 +29,7 @@ module Notification
       params.delete("triggered_by_id") if params['triggered_by']
       receipt = params[:triggered_by] || ::Receipt.where(id: params[:triggered_by_id]).first
 
-      email = ::Email.new(params.merge(email_template_id: Template::EmailTemplate.find_by(name: template_name).id))
+      email = ::Email.new(params.merge(email_template_id: Template::EmailTemplate.find_by(name: template_name, project_id: params['project_id']).id))
       email.set_content
 
       if !Rails.env.test? && (%w[clearance_pending success].include?(receipt.status) || ( receipt.online? && !receipt.clearance_pending? ) )

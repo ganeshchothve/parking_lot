@@ -7,7 +7,7 @@ module DatabaseSeeds
             <p>Dear <%= self.user.name %>,</p>
             <p>
               <% if self.blocking_payment? %>
-                Welcome to <%= current_project.name %>. Thank you for your payment of <%= number_to_indian_currency(self.total_amount) %>. We will contact you shortly to discuss the next round of formalities.
+                Welcome to <%= self.project.name %>. Thank you for your payment of <%= number_to_indian_currency(self.total_amount) %>. We will contact you shortly to discuss the next round of formalities.
               <% else %>
                 Thank you for your payment of <%= number_to_indian_currency(self.total_amount) %>. We are happy to inform that your payment has cleared. We will contact you shortly to discuss the next round of formalities.
               <% end %>
