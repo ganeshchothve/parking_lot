@@ -2,8 +2,8 @@ module LeadNotifications
 
   def get_recipients
     recipients = []
-    recipients << [self.manager] if self.manager.present?
-    recipients << [self.manager.manager] if self.manager.try(:manager).present?
+    recipients << self.manager if self.manager.present?
+    recipients << self.manager.manager if self.manager.try(:manager).present?
     recipients
   end
 
@@ -24,7 +24,7 @@ module LeadNotifications
        email = Email.create!(
         booking_portal_client_id: self.user.booking_portal_client_id,
         email_template_id: template.id,
-        recipients: recipients,
+        recipients: recipients.flatten,
         cc_recipients: [],
         triggered_by_id: self.id,
         triggered_by_type: self.class.to_s,

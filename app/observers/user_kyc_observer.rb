@@ -3,8 +3,8 @@ class UserKycObserver < Mongoid::Observer
     if user_kyc.lead.user_kyc_ids.blank?
       user_kyc.email ||= user_kyc.user.email
       user_kyc.phone ||= user_kyc.user.phone
-      user_kyc.user_id = user_kyc.lead.user_id unless user_kyc.user.present?
     end
+    user_kyc.user_id = user_kyc.lead.user_id unless user_kyc.user.present?
   end
 
   def after_create user_kyc
