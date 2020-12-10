@@ -9,16 +9,16 @@ module InvoiceStateMachine
       state :pending_approval
       state :approved, :rejected
 
-      event :raise, after: :after_raise_event do
-        transitions from: :draft, to: :pending_approval, success: :send_notification
+      event :raise, after: %w(after_raise_event send_notification) do
+        transitions from: :draft, to: :pending_approval
       end
 
-      event :re_raise do
-        transitions from: :rejected, to: :pending_approval, success: %i[after_re_raised send_notification]
+      event :re_raise, after: :send_notification do
+        transitions from: :rejected, to: :pending_approval, success: %i[after_re_raised]
       end
 
-      event :approve do
-        transitions from: :pending_approval, to: :approved, success: %i[after_approved send_notification]
+      event :approve, after: :send_notification do
+        transitions from: :pending_approval, to: :approved, success: %i[after_approved]
       end
 
       event :reject do

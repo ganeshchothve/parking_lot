@@ -43,14 +43,14 @@ module ChannelPartnerStateMachine
       template_name = "channel_partner_status_#{self.status}"
       template = Template::EmailTemplate.where(name: template_name).first
       recipients = [self.associated_user]
-      recipients << [self.manager] if self.manager.present?
-      recipients << [self.manager.manager] if self.manager.try(:manager).present?
+      recipients << self.manager if self.manager.present?
+      recipients << self.manager.manager if self.manager.try(:manager).present?
 
       if template.present?
         email = Email.create!({
           booking_portal_client_id: self.associated_user.booking_portal_client_id,
           email_template_id: template.id,
-          recipients: recipients,
+          recipients: recipients.flatten,
           triggered_by_id: self.id,
           triggered_by_type: self.class.to_s
         })

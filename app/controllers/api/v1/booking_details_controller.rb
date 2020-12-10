@@ -180,7 +180,7 @@ class Api::V1::BookingDetailsController < ApisController
   end
 
   def user_kyc_params
-    [:lead_id, :salutation, :first_name, :last_name, :email, :phone, :dob, :pan_number, :aadhaar, :anniversary, :education_qualification, :designation, :customer_company_name, :number_of_units, :budget, :comments, :nri, :oci, :poa, :poa_details, :poa_details_phone_no, :is_company, :gstn, :company_name, :existing_customer, :existing_customer_name, :existing_customer_project,  third_party_references_attributes: [:id, :crm_id, :reference_id], preferred_floors: [], configurations: [], addresses_attributes: [:id, :one_line_address, :address1, :address2, :city, :state, :country, :country_code, :zip, :primary, :address_type]]
+    [:lead_id, :salutation, :first_name, :last_name, :email, :phone, :dob, :pan_number, :aadhaar, :anniversary, :education_qualification, :designation, :customer_company_name, :number_of_units, :budget, :comments, :nri, :oci, :poa, :poa_details, :poa_details_phone_no, :is_company, :gstn, :company_name, :existing_customer, :existing_customer_name, :existing_customer_project, :creator_id,  third_party_references_attributes: [:id, :crm_id, :reference_id], preferred_floors: [], configurations: [], addresses_attributes: [:id, :one_line_address, :address1, :address2, :city, :state, :country, :country_code, :zip, :primary, :address_type]]
   end
 
   def booking_detail_create_params
@@ -196,6 +196,7 @@ class Api::V1::BookingDetailsController < ApisController
     receipts_statuses = %w[clearance_pending success]
     params.dig(:booking_detail, :receipts_attributes).each do |receipt_attributes|
       receipt = Receipt.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": receipt_attributes.dig(:reference_id).to_s ).first
+      receipt_ids[receipt_attributes.dig(:reference_id).to_s] =  {id: receipt.try(:id).to_s}
       if receipt.present?
         receipts_statuses.each do |event|
           receipt.assign_attributes(event: event)
@@ -207,7 +208,6 @@ class Api::V1::BookingDetailsController < ApisController
         end if receipt_attributes[:status].present? && receipt_attributes[:status].to_s.in?(receipts_statuses)
         receipt_ids[receipt_attributes.dig(:reference_id).to_s][:status_change_errors] = receipt.state_machine_errors if receipt.state_machine_errors.present?
       end
-      receipt_ids[receipt_attributes.dig(:reference_id).to_s] =  {id: receipt.try(:id).to_s}
     end
     receipt_ids
   end
