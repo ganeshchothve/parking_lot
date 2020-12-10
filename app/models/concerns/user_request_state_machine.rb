@@ -39,8 +39,9 @@ module UserRequestStateMachine
 
     def send_email
       email = Email.new(
+        project_id: self.project_id,
         booking_portal_client_id: lead.user.booking_portal_client_id,
-        email_template_id: Template::EmailTemplate.find_by(name: "#{self.class.model_name.element}_request_#{status}").id,
+        email_template_id: Template::EmailTemplate.find_by(name: "#{self.class.model_name.element}_request_#{status}", project_id: self.project_id).id,
         recipients: [lead.user],
         cc_recipients: (lead.manager_id.present? ? [lead.manager] : []),
         triggered_by_id: id,
@@ -50,9 +51,10 @@ module UserRequestStateMachine
     end
 
     def send_sms
-      template = Template::SmsTemplate.where(name: "#{self.class.model_name.element}_request_#{status}").first
+      template = Template::SmsTemplate.where(name: "#{self.class.model_name.element}_request_#{status}", project_id: self.project_id).first
       if template.present? && lead.user.booking_portal_client.sms_enabled?
         Sms.create!(
+          project_id: self.project_id,
           booking_portal_client_id: lead.user.booking_portal_client_id,
           recipient_id: lead.user_id,
           sms_template_id: template.id,

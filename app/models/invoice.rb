@@ -46,7 +46,9 @@ class Invoice
         if user.role?('channel_partner')
           custom_scope = { booking_detail_id: { '$in': BookingDetail.in(lead_id: Lead.where(manager_id: user.id).distinct(:id)).distinct(:id) } }
         elsif user.role?('cp_admin')
-          custom_scope = { booking_detail_id: { "$in": BookingDetail.in(lead_id: Lead.nin(manager_id: [nil, '']).distinct(:id)).distinct(:id) } }
+          cp_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
+          channel_partner_ids = User.where(role: 'channel_partner', manager_id: {"$in": cp_ids}).distinct(:id)
+          custom_scope = { manager_id: { "$in": channel_partner_ids } }
         elsif user.role?('cp')
           channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
           custom_scope = { booking_detail_id: { "$in": BookingDetail.in(lead_id: Lead.in(referenced_manager_ids: channel_partner_ids).distinct(:id)).distinct(:id) } }

@@ -11,6 +11,7 @@ module DatabaseSeeds
       DatabaseSeeds::EmailTemplates::UserRequest.seed(project_id, client_id)
       DatabaseSeeds::EmailTemplates::Lead.seed(project_id, client_id)
       DatabaseSeeds::EmailTemplates::Reminder.project_based_email_templates_seed(project_id, client_id)
+      DatabaseSeeds::EmailTemplates::Invoice.seed(project_id, client_id)
     end
 
     def self.client_based_email_templates_seed client_id

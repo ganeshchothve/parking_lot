@@ -46,7 +46,7 @@ class CustomPolicy < Struct.new(:user, :enable_users)
   end
 
   def schemes?
-    SchemePolicy.new(user, Scheme).index?
+    "#{user.buyer? ? 'Buyer' : 'Admin'}::SchemePolicy".constantize.new(user, Scheme).index?
   end
 
   def incentive_schemes?

@@ -8,17 +8,17 @@ class Admin::UserPolicy < UserPolicy
   def new?
     if current_client.roles_taking_registrations.include?(user.role)
       if user.role?('superadmin')
-        !record.role?('channel_partner')
+        record.active_channel_partner?
       elsif user.role?('admin')
-        !record.role?('superadmin') && !record.role?('channel_partner')
+        !record.role?('superadmin') && record.active_channel_partner?
       elsif user.role?('channel_partner')
         record.role?('user')
       elsif user.role?('sales_admin')
         record.buyer? || record.role?('sales')
       elsif user.role?('cp_admin')
-        record.buyer? || %w[cp].include?(record.role)
+        record.buyer? || record.role?('cp') || record.active_channel_partner?
       elsif user.role?('cp')
-        record.buyer?
+        record.buyer? || record.active_channel_partner?
       elsif !user.buyer?
         record.buyer?
       end
