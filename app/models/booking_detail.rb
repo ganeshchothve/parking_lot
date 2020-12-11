@@ -71,7 +71,7 @@ class BookingDetail
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :kyc_mandate
   validate :validate_content, on: :create
-  validates :primary_user_kyc, :receipts, copy_errors_from_child: true
+  validates :primary_user_kyc, :receipts, copy_errors_from_child: true, allow_blank: true
 
   delegate :name, :blocking_amount, to: :project_unit, prefix: true, allow_nil: true
   delegate :name, :email, :phone, to: :user, prefix: true, allow_nil: true
@@ -324,12 +324,14 @@ class BookingDetail
       custom_scope = {}
       if params[:lead_id].blank? && !user.buyer?
         if user.role?('channel_partner')
-          custom_scope = { lead_id: { '$in': Lead.where(manager_id: user.id).distinct(:id) } }
+          custom_scope = { manager_id: user.id }
         elsif user.role?('cp_admin')
-          custom_scope = { lead_id: { "$in": Lead.nin(manager_id: [nil, '']).distinct(:id) } }
+          cp_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
+          channel_partner_ids = User.where(role: 'channel_partner', manager_id: {"$in": cp_ids}).distinct(:id)
+          custom_scope = { manager_id: { "$in": channel_partner_ids } }
         elsif user.role?('cp')
           channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
-          custom_scope = { lead_id: { "$in": Lead.in(referenced_manager_ids: channel_partner_ids).distinct(:id) } }
+          custom_scope = { manager_id: { "$in": channel_partner_ids } }
         elsif user.role?('billing_team')
           custom_scope = incentive_eligible.selector
         end

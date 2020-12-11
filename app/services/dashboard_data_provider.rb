@@ -246,7 +246,6 @@ module DashboardDataProvider
   end
 
   def self.project_wise_leads_count(current_user)
-    project_names = Project.all.inject({}) {|names, project| names[project.id] = project.name; names}
     data = Lead.collection.aggregate([
       {'$match': { manager_id: current_user.id } },
       {'$group': {
@@ -256,20 +255,20 @@ module DashboardDataProvider
         }
       } }
     ]).to_a
-    data.map {|x| { project: project_names[x['_id']], count: x['count'] } }
+    data.inject({}) {|hsh, x| hsh[x['_id']] = x['count']; hsh }
   end
 
   def self.project_wise_total_av(current_user)
-    project_names = Project.all.inject({}) {|names, project| names[project.id] = project.name; names}
     data = BookingDetail.collection.aggregate([
-      {'$match': { manager_id: current_user.id, status: {'$in': BookingDetail::BOOKING_STAGES}} },
+      {'$match': { manager_id: current_user.id, status: {'$nin': %w(hold cancelled swapped)}} },
       {'$group': {
         _id: '$project_id',
         av: {
-          '$sum': '$agreement_value'
+          '$sum': '$agreement_price'
         }
       } }
     ]).to_a
+    data.inject({}) {|hsh, x| hsh[x['_id']] = x['av']; hsh }
   end
 
   def self.conversion_ratio(current_user)

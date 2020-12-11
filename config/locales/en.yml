@@ -40,6 +40,7 @@ en:
     boolean:
       :true: 'Yes'
       :false: 'No'
+    agreement_value: 'AV'
 
   helpers:
     show:
@@ -1410,14 +1411,10 @@ en:
         heading: 'Refer a Channel Partner'
         sub_heading: 'Earn additional benefits by referring your friends at %{project_name}.'
       incentive_plan:
-        heading: 'Incentive Plan'
-        sub_heading_html: "We deeply value our channel partner and we want our offerings to be on the top of your list. We are committed to providing you and your clients the best property buying experience possible. Earn incentive for final closure of your client<br>
-          Channel Partner Slabs<br>
-          <ul>
-            <li>1 to 3 bookings - <strong>2%</strong></li>
-            <li>4 to 5 bookings - <strong>2.5%</strong></li>
-            <li>6 bookings onwards - <strong>3%</strong></li>
-          </ul>"
+        heading: 'Incentive Plans'
+      incentive_plan_started:
+        heading: 'Incentive Plans Started'
+        max_ladder_html: '<strong>Max.</strong> Ladder Reached'
 
       titles:
         lead_details: 'Customer Details'
@@ -1481,3 +1478,7 @@ en:
       one: 'Lac'
       other: 'Lacs'
     crore: 'Cr'
+
+  formula:
+    calculate_agreement_price: 'Agreement value'
+    calculate_all_inclusive_price: 'All Inclusive value'

@@ -1,0 +1,98 @@
+<section class="user-db-sec-6 device-pd">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
+        <div class="table-title pt-4">
+          <img src="<%= asset_path 'rupee-black.svg' %>" alt="Documents" class="wd-10"><h1 class="title"><%= t('dashboard.channel_partner.incentive_plan_started.heading') %></h1>
+        </div>
+      </div>
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
+        <div class="box-card relative table-responsive" id="dashboard_project_wise_summary">
+          <table class="table my-customer-table responsive-tbl mb-0">
+            <thead class="th-default">
+              <tr class="bg-gradient-cd white">
+                <th><%= IncentiveScheme.model_name.human %></th>
+                <th>Current Ladder</th>
+                <th>Total Incentives Generated</th>
+                <th>Target Required To Reach Next Ladder</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% Invoice.where(Invoice.user_based_scope(current_user)).group_by{|inv| inv.incentive_scheme}.each do |scheme, invoices| %>
+                <tr>
+                  <td data-title='<%= IncentiveScheme.model_name.human %>'><%= scheme.name.titleize %></td>
+                  <td data-title='Current Ladder'><%= stage = invoices.map(&:ladder_stage).max %></td>
+                  <td data-title='Total Incentives Generated'><%= number_to_indian_currency(invoices.map(&:amount).sum) %></td>
+                  <td class='non-action-td' data-title='Target Required To Reach Next Ladder'>
+                    <% ladder = scheme.ladders.where(stage: stage + 1).first %>
+                    <% if ladder %>
+                      <% if scheme.ladder_strategy == 'number_of_items' %>
+                        <%= "<strong>#{(ladder.start_value - BookingDetail.in(id: invoices.map(&:booking_detail_id).uniq).count)}</strong> #{BookingDetail.model_name.human(count:2)}".html_safe %>
+                      <% elsif scheme.ladder_strategy == 'sum_of_value' %>
+                        <%= "<strong>#{number_to_indian_currency((ladder.start_value - BookingDetail.in(id: invoices.map(&:booking_detail_id).uniq).sum(&:calculate_agreement_price)), :indian)}</strong> #{t('global.agreement_value')}".html_safe %>
+                      <% end %>
+                    <% else %>
+                      <%= t('dashboard.channel_partner.incentive_plan_started.max_ladder_html') %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="user-db-sec-6 device-pd">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
+        <div class="table-title pt-4">
+          <img src="<%= asset_path 'rupee-black.svg' %>" alt="Documents" class="wd-10"><h1 class="title"><%= t('dashboard.channel_partner.incentive_plan.heading') %> (Last 6 months)</h1>
+        </div>
+      </div>
+      <div id="accordion" class='col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd'>
+        <% IncentiveScheme.approved.lte(starts_on: Date.today).gte(ends_on: Date.today - 6.months).in(tier_id: [nil, '', current_user.tier_id]).group_by {|is| is.project_name}.each_with_index do |(project, schemes), pidx| %>
+          <% schemes.sort {|x, y| x.ends_on > y.ends_on ? -1 : 1}.each_with_index do |scheme, idx| %>
+            <div class="card">
+              <div class="box-header bg-gradient-cd br-rd-tr-4 cursor-pointer" id="headingOne" data-toggle="collapse" data-target="#collapse-<%= scheme.id %>" aria-expanded="true" aria-controls="collapse-<%= scheme.id %>">
+                <h5 class="mb-0 white">
+                  <%= scheme.name.titleize %> <span class='ml-3 small'><%= project %></span>
+                  <div class='small float-md-right'><%= "#{scheme.starts_on.strftime('%d %b %Y')} - #{scheme.ends_on.strftime('%d %b %Y')}" %></div>
+                </h5>
+              </div>
+              <div id="collapse-<%= scheme.id %>" class="collapse <%= (pidx.zero? && idx.zero?) ? 'show' : '' %>" aria-labelledby="headingOne" data-parent="#accordion">
+                <div class="box-content br-rd-bl-4 bg-white py-0">
+                  <div class="list-group">
+                    <% scheme.ladders.asc(:stage).each do |ladder| %>
+                      <span class="list-group-item align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1">Ladder #<%= ladder.stage %></h5>
+                          <% adj = ladder.payment_adjustment %>
+                          <p class="mb-1"><%= (adj.absolute_value.blank? && adj.formula.present?) ?
+                            formula_to_human(adj.formula) :
+                            "<strong>#{number_to_indian_currency(adj.absolute_value)}</strong>".html_safe %></p>
+                        </div>
+                        <% if scheme.ladder_strategy == 'number_of_items' %>
+                          <p><%= ladder.end_value? ?
+                            "<strong>#{ladder.start_value}</strong> - <strong>#{ladder.end_value}</strong> #{BookingDetail.model_name.human(count: 2)}".html_safe :
+                            "<strong>#{ladder.start_value.ordinalize}</strong> #{BookingDetail.model_name.human} onwards".html_safe %></p>
+                        <% elsif scheme.ladder_strategy == 'sum_of_value' %>
+                          <p><%= ladder.end_value? ?
+                            "<strong>#{number_to_indian_currency(ladder.start_value, :indian)}</strong> - <strong>#{number_to_indian_currency(ladder.end_value, :indian)}</strong> #{t('global.agreement_value')}".html_safe :
+                            "<strong>#{number_to_indian_currency(ladder.start_value, :indian)}</strong> #{t('global.agreement_value')} onwards".html_safe %></p>
+                        <% end %>
+                      </span>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>
