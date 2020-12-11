@@ -226,31 +226,10 @@
     </div>
   </section>
 -->
-  <section class="user-db-sec-6 mt-5 device-pd">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
-          <div class="row">
-            <div class="box-card col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-5">
-              <div class="box-header bg-gradient-cd br-rd-tr-4">
-              <h2><img src="<%= asset_path 'rupee-white.svg' %>" alt="Documents" class="wd-10"><%= t('dashboard.channel_partner.incentive_plan.heading') %></h2>
-              </div>
-              <div class="box-content br-rd-bl-4 bg-white">
-                <div class="row pd-box">
-                <div class="col-lg-6 col-xs-12 col-md-12 col-sm-12">
-                  <p class="p-style"><%= t('dashboard.channel_partner.incentive_plan.sub_heading_html') %></p>
-                </div>
-                <div class="col-lg-6 col-xs-12 col-md-12 col-sm-12">
-                  <textarea placeholder="Need help? Post your query here..." class="form-control"></textarea>
-                  <button class="small-btn bg-light-blue display-block fn-500 mt-3" type="button">Submit</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <div class='mb-5 pb-5'>
+    <%= render 'dashboard/index/partials/incentive_plans_summary' %>
+  </div>
+
   <script type="text/javascript">
   var ctx1 = document.getElementById("myChart");
   var myChart = new Chart(ctx1, {

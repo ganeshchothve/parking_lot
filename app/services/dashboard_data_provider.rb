@@ -260,7 +260,7 @@ module DashboardDataProvider
 
   def self.project_wise_total_av(current_user)
     data = BookingDetail.collection.aggregate([
-      {'$match': { manager_id: current_user.id, status: {'$in': BookingDetail::BOOKING_STAGES}} },
+      {'$match': { manager_id: current_user.id, status: {'$nin': %w(hold cancelled swapped)}} },
       {'$group': {
         _id: '$project_id',
         av: {
