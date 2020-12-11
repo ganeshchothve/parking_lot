@@ -24,11 +24,15 @@
                   <td data-title='Current Ladder'><%= stage = invoices.map(&:ladder_stage).max %></td>
                   <td data-title='Total Incentives Generated'><%= number_to_indian_currency(invoices.map(&:amount).sum) %></td>
                   <td class='non-action-td' data-title='Target Required To Reach Next Ladder'>
-                    <% ladder = scheme.ladders.where(stage: stage+1).first %>
-                    <% if scheme.ladder_strategy == 'number_of_items' %>
-                      <%= ladder ? "<strong>#{(ladder.start_value - BookingDetail.in(id: invoices.map(&:booking_detail_id).uniq).count)}</strong> #{BookingDetail.model_name.human(count:2)}".html_safe : t('dashboard.channel_partner.incentive_plan_started.max_ladder_html') %>
-                    <% elsif scheme.ladder_strategy == 'sum_of_value' %>
-                      <%= ladder ? "<strong>#{number_to_indian_currency((ladder.start_value - BookingDetail.in(id: invoices.map(&:booking_detail_id).uniq).sum(&:calculate_agreement_price)), :indian)}</strong> #{t('global.agreement_value')}".html_safe : t('dashboard.channel_partner.incentive_plan_started.max_ladder_html') %>
+                    <% ladder = scheme.ladders.where(stage: stage + 1).first %>
+                    <% if ladder %>
+                      <% if scheme.ladder_strategy == 'number_of_items' %>
+                        <%= "<strong>#{(ladder.start_value - BookingDetail.in(id: invoices.map(&:booking_detail_id).uniq).count)}</strong> #{BookingDetail.model_name.human(count:2)}".html_safe %>
+                      <% elsif scheme.ladder_strategy == 'sum_of_value' %>
+                        <%= "<strong>#{number_to_indian_currency((ladder.start_value - BookingDetail.in(id: invoices.map(&:booking_detail_id).uniq).sum(&:calculate_agreement_price)), :indian)}</strong> #{t('global.agreement_value')}".html_safe %>
+                      <% end %>
+                    <% else %>
+                      <%= t('dashboard.channel_partner.incentive_plan_started.max_ladder_html') %>
                     <% end %>
                   </td>
                 </tr>

@@ -4,8 +4,9 @@ class UserObserver < Mongoid::Observer
   def before_validation user
     user.allowed_bookings ||= current_client.allowed_bookings_per_user
     user.booking_portal_client_id ||= current_client.id
-    user.assign_attributes(manager_change_reason: 'Blocking the lead', unblock_at: Date.today + user.booking_portal_client.lead_blocking_days) if user.temporarily_blocked == true && user.unblock_at == nil && user.booking_portal_client.lead_blocking_days.present?
     user.phone = Phonelib.parse(user.phone).to_s if user.phone.present?
+
+    user.assign_attributes(manager_change_reason: 'Blocking the lead', unblock_at: Date.today + user.booking_portal_client.lead_blocking_days) if user.temporarily_blocked == true && user.unblock_at == nil && user.booking_portal_client.lead_blocking_days.present?
   end
 
   def before_create user

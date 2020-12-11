@@ -123,7 +123,7 @@
               </div>
               <div class="box-content br-rd-bl-4 bg-white py-3 text-center fix-ht">
                 <span class='cp-dashboard-box-font'>
-                  <%= DashboardDataProvider.conversion_ratio(current_user) %>
+                  <%= number_to_percentage(DashboardDataProvider.conversion_ratio(current_user), precision: 2) %>
                 </span>
               </div>
             </div>
