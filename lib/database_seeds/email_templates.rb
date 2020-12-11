@@ -12,13 +12,13 @@ module DatabaseSeeds
       DatabaseSeeds::EmailTemplates::Lead.seed(project_id, client_id)
       DatabaseSeeds::EmailTemplates::Reminder.project_based_email_templates_seed(project_id, client_id)
       DatabaseSeeds::EmailTemplates::Invoice.seed(project_id, client_id)
+      Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "UserKyc", name: "user_kyc_added", subject: "User kyc added <%= self.name %>", content: 'test') if ::Template::EmailTemplate.where(name: "user_kyc_added", project_id: project_id).blank?
     end
 
     def self.client_based_email_templates_seed client_id
       DatabaseSeeds::EmailTemplates::User.seed(client_id)
       DatabaseSeeds::EmailTemplates::ChannelPartner.seed(client_id)
       DatabaseSeeds::EmailTemplates::Reminder.client_based_email_templates_seed(client_id)
-      Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "UserKyc", name: "user_kyc_added", subject: "User kyc added <%= self.name %>", content: 'test') if ::Template::EmailTemplate.where(name: "user_kyc_added").blank?
     end
 
     def self.project_unit_overview
