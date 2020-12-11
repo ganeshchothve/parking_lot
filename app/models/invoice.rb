@@ -32,6 +32,9 @@ class Invoice
   validates :cheque_detail, presence: true, if: :approved?
   validates :cheque_detail, copy_errors_from_child: true, if: :cheque_detail?
 
+  delegate :name, to: :project, prefix: true, allow_nil: true
+  delegate :name, to: :incentive_scheme, prefix: true, allow_nil: true
+
   scope :filter_by_status, ->(status) { where(status: status) }
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
   scope :filter_by_booking_detail_id, ->(booking_detail_id) { where(booking_detail_id: booking_detail_id) }
