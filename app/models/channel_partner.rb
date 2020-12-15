@@ -41,6 +41,7 @@ class ChannelPartner
   field :experience, type: String
   field :average_quarterly_business, type: Float
   field :developers_worked_for, type: Array, default: []
+  field :cp_code, type: String
 
   scope :filter_by_rera_id, ->(rera_id) { where(rera_id: rera_id) }
   scope :filter_by_status, ->(status) { where(status: status) }
@@ -60,11 +61,11 @@ class ChannelPartner
   belongs_to :associated_user, class_name: 'User', optional: true
   belongs_to :manager, class_name: 'User', optional: true
   has_many :users
-  has_one :address, as: :addressable, validate: true
+  has_one :address, as: :addressable
   has_one :bank_detail, as: :bankable, validate: false
   has_many :assets, as: :assetable
 
-  validates :first_name, :last_name, :pan_number, :status, :email, :phone, :team_size, :gst_applicable, :rera_applicable, :nri, :address, presence: true
+  validates :first_name, :last_name, :pan_number, :status, :email, :phone, :team_size, :gst_applicable, :rera_applicable, :nri, presence: true
   validates :team_size, :numericality => { :greater_than => 0 }, allow_blank: true
   validates :status_change_reason, presence: true, if: proc { |cp| cp.status == 'rejected' }
   validates :aadhaar, format: { with: /\A\d{12}\z/i, message: 'is not a valid aadhaar number' }, allow_blank: true
@@ -80,7 +81,7 @@ class ChannelPartner
 
   validates :experience, inclusion: { in: proc{ ChannelPartner::EXPERIENCE } }, allow_blank: true
   validates :expertise, array: { inclusion: {allow_blank: true, in: ChannelPartner::EXPERTISE } }
-  validates :address, copy_errors_from_child: true
+  validates :address, copy_errors_from_child: true, allow_blank: true
 
   accepts_nested_attributes_for :bank_detail, :address
 
@@ -138,7 +139,7 @@ class ChannelPartner
     criteria = User.or(query)
     criteria = criteria.ne(id: associated_user_id) if associated_user_id.present?
     if criteria.present?
-      errors.add :base, 'We have a user with similar details already registered'
+      errors.add :base, 'User with phone, email or rera already exists'
     end
   end
 end

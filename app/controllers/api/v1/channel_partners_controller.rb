@@ -86,7 +86,7 @@ class Api::V1::ChannelPartnersController < ApisController
   #     }
   # }
   def channel_partner_create_params
-    params.require(:channel_partner).permit(:first_name, :last_name, :rera_id, :aadhaar, :pan_number, :company_name, :phone, :email)
+    params.require(:channel_partner).permit(:first_name, :last_name, :rera_id, :aadhaar, :pan_number, :company_name, :phone, :email, :cp_code, :team_size)
   end
 
   # Allows only certain parameters to beupdated.
@@ -103,7 +103,7 @@ class Api::V1::ChannelPartnersController < ApisController
   #     }
   # }
   def channel_partner_update_params
-    params.require(:channel_partner).permit(:first_name, :last_name, :rera_id, :aadhaar, :pan_number, :company_name)
+    params.require(:channel_partner).permit(:first_name, :last_name, :rera_id, :aadhaar, :pan_number, :company_name, :cp_code, :team_size)
   end
 
 end
