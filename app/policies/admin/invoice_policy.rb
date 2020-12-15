@@ -8,7 +8,7 @@ class Admin::InvoicePolicy < InvoicePolicy
   end
 
   def update?
-    user.role?('billing_team')
+    user.role?('billing_team') && record.status.in?(%w(pending_approval))
   end
 
   def change_state?

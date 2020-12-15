@@ -214,7 +214,7 @@ en:
             get: 'Get Details'
             post: Sync
           resource_classes:
-            User: Customer
+            User: Customer Account
             ChannelPartner: 'Channel Partner'
             Receipt: Payment
             UserKyc: 'User KYC'
@@ -855,9 +855,9 @@ en:
         sales_admin: 'Sales Head'
         sales: 'Sales User'
         user:
-          zero: 'Customer'
-          one: 'Customer'
-          other: 'Customers'
+          zero: 'Customer Account'
+          one: 'Customer Account'
+          other: 'Customer Accounts'
         gre: 'GRE or Pre-sales'
         cp_admin: 'Channel Partner Head'
         cp: 'Channel Partner Manager'
@@ -1417,15 +1417,15 @@ en:
         max_ladder_html: '<strong>Max.</strong> Ladder Reached'
 
       titles:
-        lead_details: 'Customer Details'
+        lead_details: 'Customer Account Details'
         booking_details: 'Bookings'
         total_leads: 'Total Leads'
         received: 'Added'
         available_inventory: 'Available Inventory'
         download_brochure: 'Download Brochure'
         visit_website: 'Visit Website'
-      confirmed_users: 'Confirmed Customers'
-      not_confirmed_users: 'Not Confirmed Customers'
+      confirmed_users: 'Confirmed Customer Accounts'
+      not_confirmed_users: 'Not Confirmed Customer Accounts'
       booking_detail:
         blocked:
           label: "Blocked"
