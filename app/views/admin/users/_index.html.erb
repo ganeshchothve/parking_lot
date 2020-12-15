@@ -31,12 +31,12 @@
             <% end %>
           </span>
           <% if user.email.present? %>
-            <span class="email-icon">
+            <span class="email-icon small">
               <%= user.email || "" %>
             </span>
           <% end %>
           <% if user.phone.present? %>
-            <span class="phone-icon">
+            <span class="phone-icon small">
               <%= user.phone || "" %>
             </span>
           <% end %>

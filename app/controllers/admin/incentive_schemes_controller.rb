@@ -49,7 +49,18 @@ class Admin::IncentiveSchemesController < AdminController
   end
 
   def end_scheme
-    render layout: false
+    if request.get?
+      render layout: false
+    elsif request.patch?
+      respond_to do |format|
+        if @incentive_scheme.update(ends_on: params.dig(:incentive_scheme, :ends_on))
+          format.html { redirect_to admin_incentive_schemes_path, notice: 'Incentive Scheme was successfully updated.' }
+        else
+          format.html { render :edit }
+          format.json { render json: { errors: @incentive_scheme.errors.full_messages.uniq }, status: :unprocessable_entity }
+        end
+      end
+    end
   end
 
   private

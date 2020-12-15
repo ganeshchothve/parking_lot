@@ -189,6 +189,7 @@ FormInitializer = (function(){
     var $project_select = $(selector).find(".project_select");
     var $project_tower_select = $(selector).find(".project_tower_select");
     var tower_id = $project_tower_select.val();
+
     if($project_tower_select.length > 0) {
       $project_select.on("change", function(e){
         var project_id = $(e.currentTarget).val();
@@ -210,6 +211,8 @@ FormInitializer = (function(){
               var options = _.map(data, function(d) { return { value: d._id, text: d.name } });
               project_tower_selectize.addOption(options)
               project_tower_selectize.refreshOptions(false);
+              project_tower_selectize.settings.placeholder = 'Select';
+              project_tower_selectize.updatePlaceholder();
               if(!_.isEmpty(tower_id)){
                 project_tower_selectize.addItem(tower_id, true);
               }

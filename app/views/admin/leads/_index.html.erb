@@ -21,14 +21,19 @@
             <% end %>
           </span>
           <% if lead.email.present? %>
-            <span class="email-icon">
+            <span class="email-icon small">
               <%= lead.email || "" %>
             </span>
           <% end %>
           <% if lead.phone.present? %>
-            <span class="phone-icon">
+            <span class="phone-icon small">
               <%= lead.phone || "" %>
             </span>
+          <% end %>
+          <% if lead.manager_id? && current_user.role.in?(%w(admin superadmin)) %>
+            <small>
+              <%= "#{t('mongoid.attributes.lead.manager_id')} : #{link_to lead.manager_name, [current_user_role_group, lead.manager]}".html_safe %>
+            </small>
           <% end %>
         </td>
 

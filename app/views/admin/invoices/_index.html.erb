@@ -3,6 +3,7 @@
     <thead>
       <tr class="bg-gradient-cd white">
         <th><%= Invoice.model_name.human %> Details</th>
+        <th><%= t('mongoid.attributes.invoice.project_id') %></th>
         <th><%= t('mongoid.attributes.invoice.amount') %></th>
         <th><%= t('mongoid.attributes.invoice.status') %></th>
         <th class="text-right"> <%= t('global.action', count: 3) %></th>
@@ -19,6 +20,7 @@
             <span><%= Ladder.model_name.human %> - Stage <%= invoice.ladder_stage %></span>
           </div>
         </td>
+        <td><%= invoice.project_name %></td>
         <td>
           <%= number_to_indian_currency(invoice.amount) %><br>
           <% if invoice.approved? && invoice.net_amount.present? %>

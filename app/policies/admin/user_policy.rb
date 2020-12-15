@@ -83,9 +83,8 @@ class Admin::UserPolicy < UserPolicy
   def permitted_attributes(params = {})
     attributes = super
     attributes += [:is_active] if record.persisted? && record.id != user.id
-    if %w[admin superadmin cp_admin].include?(user.role) && record.role?('channel_partner')
+    if %w[admin superadmin].include?(user.role) && record.role.in?(%w(channel_partner cp))
       attributes += [:manager_id]
-      attributes += [:manager_change_reason] if record.persisted?
     end
     if %w[admin superadmin cp_admin sales_admin].include?(user.role) && record.buyer?
       attributes += [:manager_id]
