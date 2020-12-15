@@ -870,6 +870,7 @@ en:
       lead:
         project_id: 'Project'
         manager_id: 'Partner / Manager / Added by'
+        name_email_phone: 'Name/Email/Phone'
 
       user/file_types:
         home_loan_application_form: 'Home Loan Application Form'

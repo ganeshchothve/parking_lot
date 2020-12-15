@@ -7,8 +7,8 @@
     <div class="filter-content">
       <div class="row">
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-          <%= label_tag "fltrs", t('mongoid.attributes.user.name_email_phone') %>
-          <%= select_tag "fltrs[user_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(_id: params[:fltrs][:user_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: { url: admin_users_path } } %>
+          <%= label_tag "fltrs", t('mongoid.attributes.lead.name_email_phone') %>
+          <%= select_tag "fltrs[_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(_id: params[:fltrs][:_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: { url: admin_leads_path } } %>
         </div>
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs[project_id]", t('mongoid.attributes.lead.project_id'), class: "control-label" %>

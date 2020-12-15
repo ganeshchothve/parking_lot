@@ -24,10 +24,6 @@
           <%= label_tag "fltrs", t('mongoid.attributes.user.confirmation') %>
           <%= select_tag "fltrs[confirmation]", options_for_select(User.available_confirmation_statuses.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:confirmation] : "")), {prompt: "Select", class: "selectize"} %>
         </div>
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-          <%= label_tag "fltrs", Receipt.model_name.human, class: "control-label" %>
-          <%= select_tag "fltrs[receipts]", options_for_select([['Yes', 'yes'], ['No', 'no']], params.dig(:fltrs, :receipts)), {prompt: "Select", class: "selectize"} %>
-        </div>
         <% if current_user.role == 'admin' %>
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", ChannelPartner.model_name.human %>

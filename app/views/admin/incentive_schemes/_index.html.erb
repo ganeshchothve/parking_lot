@@ -13,7 +13,7 @@
     <% incentive_schemes.each do |incentive_scheme| %>
       <tr>
         <td data-title=<%= t('mongoid.attributes.incentive_scheme.name') %> >
-          <%= link_to incentive_scheme.name, [current_user_role_group, incentive_scheme] %>
+          <%= incentive_scheme.name %>
           <div class="small">
           </div>
         </td>

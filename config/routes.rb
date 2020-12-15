@@ -235,7 +235,10 @@ Rails.application.routes.draw do
     end
 
     resources :incentive_schemes, except: [:destroy] do
-      get :end_scheme, on: :member
+      member do
+        get :end_scheme
+        patch :end_scheme
+      end
     end
   end
 

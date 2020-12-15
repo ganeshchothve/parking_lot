@@ -25,11 +25,11 @@
           </div>
           <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs[project_id]", t('mongoid.attributes.project_unit.project_id'), class: "control-label" %>
-          <%= select_tag "fltrs[project_id]", options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:project_id] : "")), {class: "selectize project_select"} %>
+          <%= select_tag "fltrs[project_id]", options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:project_id] : "")), {prompt: 'Select', class: "selectize project_select"} %>
         </div>
           <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
             <%= label_tag "fltrs", ProjectTower.model_name.human, class: "control-label" %>
-            <%= select_tag "fltrs[project_tower]", options_for_select(ProjectTower.all.map{|f| [f.name, f.id]}, (params[:fltrs].present? ? params[:fltrs][:project_tower_id] : "")), {prompt: "Select", class: "selectize project_tower_select", data: { url: admin_project_towers_path }} %>
+            <%= select_tag "fltrs[project_tower_id]", options_for_select(filter_project_tower_options, params.dig(:fltrs, :project_tower_id).present? ? params[:fltrs][:project_tower_id] : ''), {prompt: (params.dig(:fltrs, :project_id).present? ? "Select" : 'Select Project first'), class: "selectize project_tower_select", data: { url: admin_project_towers_path }} %>
           </div>
         </div>
       </div>

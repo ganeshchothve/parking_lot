@@ -33,7 +33,11 @@ class PaymentAdjustment
 
   def formula_or_absolute_value
     if self.formula.blank? && self.absolute_value.blank?
-      self.errors.add(:base, "Formula or value is required on payment adjustment")
+      if self.payable.is_a? Ladder
+        self.errors.add(:base, 'Formula or value is required for Incentive calculation')
+      else
+        self.errors.add(:base, "Formula or value is required on payment adjustment")
+      end
     end
   end
 end
