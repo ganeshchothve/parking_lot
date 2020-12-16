@@ -35,39 +35,32 @@
                 <p><%= user.time_zone || '-' %></p>
               </li>
 
-            </ul>
-
-            <% if user.buyer? %>
-              <ul class="booking-apart-info clear">
+              <li>
+                <span><%= t('mongoid.attributes.user.role') %></span>
+                <p><%= User.human_attribute_name("role.#{user.role}") %></p>
+              </li>
+              <% if user.manager_id.present? %>
                 <li>
-                  <span><%= t('mongoid.attributes.user.role') %></span>
-                  <p><%= User.human_attribute_name("role.#{user.role}") %></p>
+                  <span><%= t('mongoid.attributes.user.manager_id') %></span>
+                  <p>
+                    <% manager_user = User.find(user.manager_id) %>
+                    <%= link_to(manager_user.name, admin_user_path(manager_user)) %>
+                  </p>
                 </li>
-                <li>
-                  <span><%= t('mongoid.attributes.user.lead_id') %></span>
-                    <p><%= user.lead_id || '-' %></p>
-                </li>
-
-                <% if !current_user.role?("channel_partner") || user.role?('channel_partner') %>
-                  <li>
-                    <span><%= t('mongoid.attributes.user.manager_id') %></span>
-                    <p>
-                      <% manager_user = user.manager_id.present? ? User.find(user.manager_id) : nil %>
-                      <%= manager_user.present? ? link_to(manager_user.name, admin_user_path(manager_user)) : '-' %>
-                    </p>
-                  </li>
-                <% end %>
-
+              <% end %>
+              <% if user.buyer? %>
                 <% if current_client.enable_channel_partners? %>
                   <li>
                     <span><%= t('mongoid.attributes.user.manager_change_reason') %></span>
                     <p class="break-word"><%= user.manager_change_reason || '-' %></p>
                   </li>
                 <% end %>
-              </ul>
-            <% end %>
+                <li>
+                  <span><%= t('mongoid.attributes.user.lead_id') %></span>
+                  <p><%= user.lead_id || '-' %></p>
+                </li>
+              <% end %>
 
-            <ul class="booking-apart-info clear">
               <li>
                 <span> <%= t('mongoid.attributes.user.created_at') %></span>
                 <p><%= l(user.created_at.in_time_zone(current_user.time_zone)) %></p>
@@ -98,9 +91,6 @@
                   <p><%= user.unblock_at.try(:strftime, "%d/%m/%Y") %></p>
                 </li>
               <% end %>
-            </ul>
-
-            <ul class="booking-apart-info clear">
 
               <% if user.role?('channel_partner') %>
                 <li>

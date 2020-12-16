@@ -4,6 +4,8 @@ class IncentiveDeduction
   include InsertionStringMethods
   include IncentiveDeductionStateMachine
 
+  DOCUMENT_TYPES = []
+
   field :amount, type: Float, default: 0.0
   field :status, type: String, default: 'draft'
   field :comments, type: String

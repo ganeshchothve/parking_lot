@@ -664,7 +664,7 @@ class User
   private
 
   def manager_change_reason_present?
-    if persisted? && manager_id_changed? && manager_change_reason.blank?
+    if role.in?(BUYER_ROLES) && persisted? && manager_id_changed? && manager_change_reason.blank?
       errors.add :manager_change_reason, 'is required'
     end
   end

@@ -37,4 +37,15 @@ module UsersHelper
       filter_user_role_options
     end
   end
+
+  def fetch_manager_role(user)
+    case user.role
+    when *(User::BUYER_ROLES)
+      'channel_partner'
+    when 'channel_partner'
+      'cp'
+    when 'cp'
+      'cp_admin'
+    end
+  end
 end
