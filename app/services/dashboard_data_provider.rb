@@ -370,7 +370,7 @@ module DashboardDataProvider
         }
       }
     ]).to_a
-    data.map {|x| x.merge(x.delete('_id'))}
+    data.map {|x| x.merge(x.delete('_id')).with_indifferent_access}
   end
 
   def self.project_wise_incentive_deduction_data(current_user)
@@ -424,10 +424,10 @@ module DashboardDataProvider
         }
       }
     ]).to_a
-    data.map {|x| x.merge(x.delete('_id'))}
+    data.map {|x| x.merge(x.delete('_id')).with_indifferent_access}
   end
 
-  def project_wise_invoice_ageing_data(current_user)
+  def self.project_wise_invoice_ageing_data(current_user)
     data = Invoice.collection.aggregate([
       { '$match' => Invoice.user_based_scope(current_user).merge(
         {
@@ -474,7 +474,7 @@ module DashboardDataProvider
         }
       }
     ]).to_a
-    data.map {|x| x.merge(x.delete('_id'))}
+    data.map {|x| x.merge(x.delete('_id')).with_indifferent_access}
   end
 
   protected
