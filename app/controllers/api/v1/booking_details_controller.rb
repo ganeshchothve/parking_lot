@@ -184,7 +184,7 @@ class Api::V1::BookingDetailsController < ApisController
   end
 
   def booking_detail_create_params
-    params.require(:booking_detail).permit( receipts_attributes: receipt_params, primary_user_kyc_attributes: user_kyc_params, user_kycs_attributes: user_kyc_params, third_party_references_attributes: [:id, :reference_id, :crm_id])
+    params.require(:booking_detail).permit(:agreement_price, :all_inclusive_price, receipts_attributes: receipt_params, primary_user_kyc_attributes: user_kyc_params, user_kycs_attributes: user_kyc_params, third_party_references_attributes: [:id, :reference_id, :crm_id])
   end
 
   def booking_detail_update_params
