@@ -189,9 +189,15 @@
                 <tr>
                   <td data-title='<%= Project.model_name.human %>' class='text-md-left'><%= project_name %></td>
                   <% (2..5).to_a.each_with_index do |num, idx| %>
-                    <td class="<%= (idx == 3) ? 'non-action-td' : '' %>" data-title='<%= (idx == 3) ? "No. of #{Invoice.model_name.human(count:2)} Raised >#{(num-1).days.inspect.titleize} Ago" : "No. of #{Invoice.model_name.human(count:2)} Raised #{num.days.inspect.titleize} Ago" %>'>
-                      <%= data.find { |x| (idx == 3) ? (x[:age] >= num) : (x[:age] == num) }.try(:[], :count) || 0 %>
-                    </td>
+                    <% if idx < 3 %>
+                      <td data-title='<%= "No. of #{Invoice.model_name.human(count:2)} Raised #{num.days.inspect.titleize} Ago" %>'>
+                        <%= data.find { |x| x[:age] == num }.try(:[], :count) || 0 %>
+                      </td>
+                    <% else %>
+                      <td class='non-action-td' data-title='<%= "No. of #{Invoice.model_name.human(count:2)} Raised >#{(num-1).days.inspect.titleize} Ago" %>'>
+                        <%= data.select { |x| x[:age] > num-1 }.sum { |x| (x[:count] || 0) } || 0 %>
+                      </td>
+                    <% end %>
                   <% end %>
                 </tr>
               <% end %>
