@@ -195,7 +195,7 @@ class Api::V1::BookingDetailsController < ApisController
     receipt_ids = {}
     receipts_statuses = %w[clearance_pending success]
     params.dig(:booking_detail, :receipts_attributes).each do |receipt_attributes|
-      receipt = Receipt.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": receipt_attributes.dig(:reference_id).to_s ).first
+      receipt = @lead.receipts.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": receipt_attributes.dig(:reference_id).to_s ).first
       receipt_ids[receipt_attributes.dig(:reference_id).to_s] =  {id: receipt.try(:id).to_s}
       if receipt.present?
         receipts_statuses.each do |event|
@@ -215,7 +215,7 @@ class Api::V1::BookingDetailsController < ApisController
   def get_user_kycs_ids
     user_kyc_ids = {}
     params.dig(:booking_detail, :user_kycs_attributes).each do |user_kyc_attributes|
-      user_kyc_ids[user_kyc_attributes.dig(:reference_id).to_s] =  UserKyc.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": user_kyc_attributes.dig(:reference_id).to_s ).first.try(:id).to_s
+      user_kyc_ids[user_kyc_attributes.dig(:reference_id).to_s] =  @lead.user_kycs.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": user_kyc_attributes.dig(:reference_id).to_s ).first.try(:id).to_s
     end
     user_kyc_ids
   end

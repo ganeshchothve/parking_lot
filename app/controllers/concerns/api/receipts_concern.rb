@@ -4,6 +4,7 @@ module Api
 
     def check_any_receipt_params receipt_attributes
       errors = []
+      errors << "Receipt with reference id #{receipt_attributes[:reference_id]} is already present" if @lead.receipts.reference_resource_exists?(@crm.id, receipt_attributes[:reference_id].to_s)
       [:issued_date, :processed_on].each do |date_field|
         begin
           Date.strptime( receipt_attributes[date_field], "%d/%m/%Y") if receipt_attributes[date_field].present?
@@ -12,6 +13,7 @@ module Api
         end
       end
       errors << "Payment identifier can't be blank" unless receipt_attributes[:payment_identifier].present?
+      errors << "Payment mode can't be blank" unless receipt_attributes[:payment_mode].present?
       errors << "Status should be clearance_pending or success" if receipt_attributes[:status].present? && %w[clearance_pending success].exclude?( receipt_attributes[:status])
       { "Receipt(#{receipt_attributes[:reference_id]})": errors } if errors.present?
     end

@@ -1,10 +1,10 @@
 class UserKycObserver < Mongoid::Observer
   def before_validation user_kyc
-    if user_kyc.lead.user_kyc_ids.blank?
-      user_kyc.email ||= user_kyc.user.email
-      user_kyc.phone ||= user_kyc.user.phone
-    end
     user_kyc.user_id = user_kyc.lead.user_id unless user_kyc.user.present?
+    if user_kyc.lead.user_kyc_ids.blank?
+      user_kyc.email ||= user_kyc.lead.email
+      user_kyc.phone ||= user_kyc.lead.phone
+    end
   end
 
   def after_create user_kyc

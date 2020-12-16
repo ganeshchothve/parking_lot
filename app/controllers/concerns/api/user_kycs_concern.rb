@@ -5,6 +5,7 @@ module Api
     def check_any_user_kyc_params kyc_attributes
       return if kyc_attributes.blank?
       errors = []
+      errors << "User Kyc with reference id #{kyc_attributes[:reference_id]} is already present" if @lead.user_kycs.reference_resource_exists?(@crm.id, kyc_attributes[:reference_id].to_s)
       [:dob, :anniversary].each do |date_field|
         begin
           Date.strptime( kyc_attributes[date_field], "%d/%m/%Y") if kyc_attributes[date_field].present?
