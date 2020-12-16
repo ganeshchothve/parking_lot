@@ -24,6 +24,7 @@
                 <% if policy([ current_user_role_group, Asset.new(assetable: @project_unit)]).create? %>
                   <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-unit-floor_plan" role="tab">Floor Plan</a>
                 <% end %>
+                <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-unit-crm-ids" role="tab">CRM IDs</a>
               </div>
             </nav>
             <div class="mt-3"></div>
@@ -51,7 +52,7 @@
                   <%= f.link_to_add "Add", :costs, :data => { :target => "#costs_container" } %>
                 </div>
               <% end %>
-              <%  if policy([ current_user_role_group, Asset.new(assetable: @project_unit)]).create? %>
+              <% if policy([ current_user_role_group, Asset.new(assetable: @project_unit)]).create? %>
                 <div class="tab-pane fade" id="nav-project-unit-floor_plan" role="tabpanel">
                   <div id="plan_container">
                     <% if policy([ current_user_role_group, Asset.new(assetable: @project_unit)]).update? %>
@@ -59,10 +60,12 @@
                         <%= render "admin/assets/form_fields", p: p %>
                       <% end %>
                     <% end %>
-                  <% else %>
                   </div>
                 </div>
               <% end %>
+              <div class="tab-pane fade" id="nav-project-unit-crm-ids" role="tabpanel">
+                <%= render 'admin/crm/shared/third_party_references_form', f: f %>
+              </div>
             </div>
           </div>
           <div class="modal-footer">
@@ -76,14 +79,14 @@
 <%= javascript_tag do %>
 $(document).ready(function(){
   FormInitializer.init($('#project_unit_form'));
-    $('#project_unit_comments').attr('disabled', 'disabled')
-    $("#project_unit_status").selectize().on("change", function() {
-      if($(this).val() == 'not_available'){
-        $('#project_unit_comments').removeAttr('disabled')
-      } else {
-        $('#project_unit_comments').attr('disabled', 'disabled')
-      }
-    })
-    $("#project_unit_status").trigger('change')
+  $('#project_unit_comments').attr('disabled', 'disabled')
+  $("#project_unit_status").selectize().on("change", function() {
+    if($(this).val() == 'not_available'){
+      $('#project_unit_comments').removeAttr('disabled')
+    } else {
+      $('#project_unit_comments').attr('disabled', 'disabled')
+    }
+  })
+  $("#project_unit_status").trigger('change')
 });
 <% end %>

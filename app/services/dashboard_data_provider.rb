@@ -275,7 +275,7 @@ module DashboardDataProvider
     bookings = BookingDetail.booking_stages.where(manager_id: current_user.id).count
     leads = Lead.where(manager_id: current_user.id).count
     conv_ratio = leads.zero? ? 0 : bookings/leads.to_f
-    conv_ratio.round(2)
+    (conv_ratio * 100).round
   end
 
   # Below method creates an inventory snapshot for dashboard
