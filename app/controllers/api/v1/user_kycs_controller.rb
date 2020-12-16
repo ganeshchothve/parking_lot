@@ -46,7 +46,7 @@ class Api::V1::UserKycsController < ApisController
   #   }
   # }
   def create
-    unless @lead.user_kycs.reference_resource_exists?(@crm.id, params[:user_kyc][:reference_id].to_s)
+    unless UserKyc.reference_resource_exists?(@crm.id, params[:user_kyc][:reference_id].to_s)
       @user_kyc = @lead.user_kycs.build(user_kyc_params)
       if @user_kyc.save
         render json: {user_kyc_id: @user_kyc.id, lead_id: @lead.id, message: 'User KYC successfully created.'}, status: :created
@@ -100,7 +100,7 @@ class Api::V1::UserKycsController < ApisController
   #   }
   # }
   def update
-    unless @lead.user_kycs.reference_resource_exists?(@crm.id, params[:user_kyc][:reference_id].to_s)
+    unless UserKyc.reference_resource_exists?(@crm.id, params[:user_kyc][:reference_id].to_s)
       @user_kyc.assign_attributes(user_kyc_params)
       if @user_kyc.save
         render json: {user_kyc_id: @user_kyc.id, message: 'User KYC successfully updated.'}, status: :ok

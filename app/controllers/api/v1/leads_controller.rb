@@ -25,7 +25,7 @@ class Api::V1::LeadsController < ApisController
   #   }
   # }
   def create
-    unless @user.leads.reference_resource_exists?(@crm.id, params[:lead][:reference_id])
+    unless Lead.reference_resource_exists?(@crm.id, params[:lead][:reference_id])
       @lead = @user.leads.build(lead_create_params)
 
       # Add manager in referenced_manager_ids array on lead for future reference.
@@ -62,7 +62,7 @@ class Api::V1::LeadsController < ApisController
   # }
   #
   def update
-    unless @user.leads.reference_resource_exists?(@crm.id, params[:lead][:reference_id])
+    unless Lead.reference_resource_exists?(@crm.id, params[:lead][:reference_id])
       @lead.assign_attributes(lead_update_params)
       if @lead.save
         render json: {user_id: @lead.user_id, lead_id: @lead.id, message: 'Lead successfully updated.'}, status: :ok
