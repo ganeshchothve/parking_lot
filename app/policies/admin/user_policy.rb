@@ -80,6 +80,10 @@ class Admin::UserPolicy < UserPolicy
     %w(admin superadmin).include?(user.role) && user.booking_portal_client.enable_lead_conflicts?
   end
 
+  def channel_partner_performance?
+    true
+  end
+
   def permitted_attributes(params = {})
     attributes = super
     attributes += [:is_active] if record.persisted? && record.id != user.id

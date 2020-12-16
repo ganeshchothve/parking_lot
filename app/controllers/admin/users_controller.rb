@@ -1,7 +1,7 @@
 class Admin::UsersController < AdminController
   include UsersConcern
   before_action :authenticate_user!
-  before_action :set_user, except: %i[index export new create portal_stage_chart]
+  before_action :set_user, except: %i[index export new create portal_stage_chart channel_partner_performance]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: %i[index export]
 
@@ -217,6 +217,19 @@ class Admin::UsersController < AdminController
     end
   end
 
+  def channel_partner_performance
+    date = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y")
+    @start_date, @end_date = date.split(' - ')
+    @cp_ids = User.where(manager_id: current_user.id).distinct(:id)
+    if params[:channel_partner_id].present?
+      @user = User.where(id: params[:channel_partner_id]).first
+    else
+      @user = User.where(role: 'channel_partner', manager_id: {"$in": @cp_ids}).first
+    end
+    @walkins = Lead.where(manager_id: @user.id, created_at: (Date.parse(@start_date).beginning_of_day)..(Date.parse(@end_date).end_of_day)).group_by{|p| p.project_id}
+    @bookings = BookingDetail.where(manager_id: @user.id, created_at: (Date.parse(@start_date).beginning_of_day)..(Date.parse(@end_date).end_of_day)).group_by{|p| p.project_id}
+  end
+
   private
 
   def set_user
@@ -237,7 +250,7 @@ class Admin::UsersController < AdminController
   end
 
   def authorize_resource
-    if %w[index export portal_stage_chart].include?(params[:action])
+    if %w[index export portal_stage_chart channel_partner_performance].include?(params[:action])
       authorize [current_user_role_group, User]
     elsif params[:action] == 'new' || params[:action] == 'create'
       if params[:role].present?

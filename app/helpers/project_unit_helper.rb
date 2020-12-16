@@ -19,12 +19,12 @@ module ProjectUnitHelper
     html_content
   end
 
-    def comment(unit)
-    if unit.comments.present?
-      html_content = "<div class='row mb-3' style='width:350px;'>
-                      <div class='col-md-4'><p>#{unit.comments}</p></div>
-                    </div>"
-    end
-    html_content
-    end
+  def comment(unit)
+  if unit.comments.present?
+    html_content = "<div class='row mb-3' style='width:350px;'>
+                    <div class='col-md-4'><p>#{unit.comments}</p></div>
+                  </div>"
+  end
+  html_content
+  end
 end
