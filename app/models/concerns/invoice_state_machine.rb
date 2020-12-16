@@ -58,7 +58,7 @@ module InvoiceStateMachine
             triggered_by_type: self.class.to_s
           )
           email.sent!
-        end        
+        end
       end
       if recipients.pluck(:phone).present? && incentive_scheme.booking_portal_client.sms_enabled?
         if sms_template = Template::SmsTemplate.where(name: template_name, project_id: project_id).first

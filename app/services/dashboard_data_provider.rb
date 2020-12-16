@@ -339,6 +339,144 @@ module DashboardDataProvider
     out
   end
 
+  def self.project_wise_invoice_data(current_user)
+    data = Invoice.collection.aggregate([
+      { '$match' => Invoice.user_based_scope(current_user) },
+      {
+        '$lookup': {
+          from: "projects",
+          let: { project_id: "$project_id" },
+          pipeline: [
+            { '$match': { '$expr': { '$eq': [ "$_id",  "$$project_id" ] } } },
+            { '$project': { project_name: '$name' } }
+          ],
+          as: "projects"
+        }
+      },
+      {
+        '$replaceRoot': {
+          newRoot: {
+            '$mergeObjects': [
+              { '$arrayElemAt': [ "$projects", 0 ] },
+              "$$ROOT"
+            ]
+          }
+        }
+      },
+      { '$project': { project_name: 1, status: 1, amount: 1, net_amount: 1 } },
+      { '$group' => {
+          '_id' => { project_name: '$project_name', status: '$status' },
+          count: { '$sum': 1 }, amount: { '$sum': '$amount' }, net_amount: { '$sum': '$net_amount' }
+        }
+      }
+    ]).to_a
+    data.map {|x| x.merge(x.delete('_id'))}
+  end
+
+  def self.project_wise_incentive_deduction_data(current_user)
+    data = IncentiveDeduction.collection.aggregate([
+      {
+        '$lookup': {
+          from: "invoices",
+          let: { invoice_id: "$invoice_id" },
+          pipeline: [
+            { '$match': { '$expr': { '$eq': [ "$_id",  "$$invoice_id" ] } } },
+            { '$project': { project_id: 1 } },
+            {
+              '$lookup': {
+                from: 'projects',
+                let: { project_id: "$project_id" },
+                pipeline: [
+                  { '$match': { '$expr': { '$eq': [ "$_id",  "$$project_id" ] } } },
+                  { '$project': { project_name: '$name' } }
+                ],
+                as: "projects"
+              }
+            },
+            {
+              '$replaceRoot': {
+                newRoot: {
+                  '$mergeObjects': [
+                    { '$arrayElemAt': [ "$projects", 0 ] },
+                    "$$ROOT"
+                  ]
+                }
+              }
+            },
+          ],
+          as: "invoices"
+        }
+      },
+      {
+        '$replaceRoot': {
+          newRoot: {
+            '$mergeObjects': [
+              { '$arrayElemAt': [ "$invoices", 0 ] },
+              "$$ROOT"
+            ]
+          }
+        }
+      },
+      { '$project': { project_name: 1, amount: 1, status: 1 } },
+      { '$group' => {
+          '_id' => { project_name: '$project_name', status: '$status' },
+          count: { '$sum': 1 }, amount: { '$sum': '$amount' }
+        }
+      }
+    ]).to_a
+    data.map {|x| x.merge(x.delete('_id'))}
+  end
+
+  def project_wise_invoice_ageing_data(current_user)
+    data = Invoice.collection.aggregate([
+      { '$match' => Invoice.user_based_scope(current_user).merge(
+        {
+          status: 'pending_approval',
+          raised_date: {'$lt': Date.current}
+        })
+      },
+      {
+        '$project': {
+          status: 1,
+          project_id: 1,
+          age: {
+            '$trunc': {
+              '$divide': [{ '$subtract': [Date.current, '$raised_date'] }, 1000 * 60 * 60 * 24]
+            }
+          }
+        }
+      },
+      {
+        '$lookup': {
+          from: "projects",
+          let: { project_id: "$project_id" },
+          pipeline: [
+            { '$match': { '$expr': { '$eq': [ "$_id",  "$$project_id" ] } } },
+            { '$project': { project_name: '$name' } }
+          ],
+          as: "projects"
+        }
+      },
+      {
+        '$replaceRoot': {
+          newRoot: {
+            '$mergeObjects': [
+              { '$arrayElemAt': [ "$projects", 0 ] },
+              "$$ROOT"
+            ]
+          }
+        }
+      },
+      {
+        '$group': {
+          '_id': { age: '$age', project_name: '$project_name' },
+          count: { '$sum': 1 }
+        }
+      }
+    ]).to_a
+    data.map {|x| x.merge(x.delete('_id'))}
+  end
+
   protected
 
   def self.calculate_all_towers all_towers_out, current_tower_data
