@@ -176,7 +176,7 @@ class Api::V1::BookingDetailsController < ApisController
   end
 
   def receipt_params
-    [:project_id, :lead_id, :user_id, :receipt_id, :order_id, :payment_mode, :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, :tracking_id, :total_amount, :status_message, :payment_gateway, :processed_on, :comments, :payment_type, :creator_id, third_party_references_attributes: [:id, :crm_id, :reference_id]]
+    [:project_id, :lead_id, :user_id, :payment_mode, :issued_date, :issuing_bank, :issuing_bank_branch, :payment_identifier, :tracking_id, :total_amount, :status_message, :payment_gateway, :processed_on, :comments, :payment_type, :creator_id, third_party_references_attributes: [:id, :crm_id, :reference_id]]
   end
 
   def user_kyc_params

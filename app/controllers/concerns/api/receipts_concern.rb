@@ -12,8 +12,8 @@ module Api
           errors << "#{date_field.to_s} date format is invalid. Correct date format is - dd/mm/yyyy"
         end
       end
-      errors << "Payment identifier can't be blank" unless receipt_attributes[:payment_identifier].present?
-      errors << "Payment mode can't be blank" unless receipt_attributes[:payment_mode].present?
+      errors << "Payment identifier can't be blank" unless receipt_attributes[:payment_identifier].present? || (controller_name == 'receipts' && action_name == 'update')
+      errors << "Payment mode can't be blank" unless receipt_attributes[:payment_mode].present? || (controller_name == 'receipts' && action_name == 'update')
       errors << "Status should be clearance_pending or success" if receipt_attributes[:status].present? && %w[clearance_pending success].exclude?( receipt_attributes[:status])
       { "Receipt(#{receipt_attributes[:reference_id]})": errors } if errors.present?
     end
@@ -23,7 +23,7 @@ module Api
       [:issued_date, :processed_on].each do |date_field|
         receipt_attributes[date_field] = Date.strptime( receipt_attributes[date_field], "%d/%m/%Y") if receipt_attributes[date_field].present?
       end
-      # TO - DO Move this to receipt observer 
+      # TO - DO Move this to receipt observer
       receipt_attributes[:lead_id] = @lead.id.to_s
       receipt_attributes[:user_id] = @lead.user.id.to_s
       receipt_attributes[:project_id] = @lead.project.id.to_s
