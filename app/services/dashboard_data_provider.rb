@@ -70,7 +70,7 @@ module DashboardDataProvider
           },{
             "$project":
             {
-              "lead_id": "$id",
+              "lead_id": "$lead_id",
               "cp_id": "$manager.manager_id",
               "agreement_price": "$agreement_price"
             }

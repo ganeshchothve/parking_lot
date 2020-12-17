@@ -5,11 +5,10 @@
                   starts_on: {"$lte": Time.at(Date.parse(end_date).end_of_day)}, 
                   ends_on: {"$gte": Time.at(Date.parse(start_date).beginning_of_day)},
                   status: "approved",
-                  tier_id: {"$in": [nil, '', current_user.tier_id]}
                 }
               }
 %>
-<%max_ladders = DashboardDataProvider.incetive_scheme_max_ladders(options) %>
+<% max_ladders = DashboardDataProvider.incetive_scheme_max_ladders(options) %>
 <section class="user-db-sec-6 device-pd">
   <div class="container">
     <div class="row">
@@ -19,7 +18,7 @@
         </div>
       </div>
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
-        <div class="box-card relative table-responsive" id="dashboard_project_wise_summary">
+        <div class="box-card relative table-responsive">
           <table class="table my-customer-table responsive-tbl mb-0">
             <thead class="th-default">
               <tr class="bg-gradient-cd white">

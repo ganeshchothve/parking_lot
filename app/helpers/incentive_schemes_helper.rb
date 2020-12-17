@@ -14,7 +14,7 @@ module IncentiveSchemesHelper
   def incentive_scheme_tooltip(scheme)
     html_content = ""
     scheme.ladders.asc(:stage).each do |ladder|
-      html_content = "<span class='list-group-item align-items-start'>
+      html_content += "<span class='list-group-item align-items-start'>
                         <div class='d-flex w-100 justify-content-between'>
                           <h5 class='mb-1'>Ladder ##{ladder.stage}</h5>"
       adj = ladder.payment_adjustment

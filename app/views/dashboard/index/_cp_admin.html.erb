@@ -31,7 +31,7 @@
             </div>
             <div class="box-content br-rd-bl-4 bg-white py-3 text-center fix-ht">
               <span class='cp-dashboard-box-font'>
-                <%= Invoice.where({ "$and": [Invoice.user_based_scope(current_user), created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day), status: 'pending_approval']}).count %>
+                <%= Invoice.where({ "$and": [Invoice.user_based_scope(current_user), status: 'pending_approval']}).count %>
               </span>
             </div>
           </div>
@@ -41,7 +41,7 @@
             </div>
             <div class="box-content br-rd-bl-4 bg-white py-3 text-center fix-ht">
               <span class='cp-dashboard-box-font'>
-                <%= Invoice.where({ "$and": [Invoice.user_based_scope(current_user), created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day), status: 'approved']}).count %>
+                <%= Invoice.where({ "$and": [Invoice.user_based_scope(current_user), status: 'approved']}).count %>
               </span>
             </div>
           </div>
@@ -64,7 +64,7 @@
         </div>
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
           <div class="filter-inner">
-            <%= form_tag channel_partner_performance_admin_users_path, method: "get", remote: true, id: "booking_detail_barchart_filter" do %>
+            <%= form_tag channel_partner_performance_admin_users_path, method: "get", remote: true, id: "channel_partner_performance_form" do %>
               <div class="filter-content">
                 <div class="row">
                   <div class="form-group col-12">
@@ -93,7 +93,7 @@
 
 <%= javascript_tag do %>
   $(document).ready(function(){
-    FormInitializer.init($("#booking_detail_barchart_filter"));
+    FormInitializer.init($("#channel_partner_performance_form"));
     $.ajax({
       url: "<%= channel_partner_performance_admin_users_path %>",
       type: "get",
