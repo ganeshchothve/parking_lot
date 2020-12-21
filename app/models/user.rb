@@ -590,6 +590,16 @@ class User
       where("function() {return this.phone == '#{login}' || this.email == '#{login}'}")
     end
 
+    def role_based_channel_partners_scope(user, _params = {})
+      custom_scope = {}
+      if user.role?('cp_admin')
+        cp_ids = User.where(manager_id: user.id).distinct(:id)
+        custom_scope = {role: 'channel_partner', manager_id: {"$in": cp_ids}}
+      elsif user.role?('cp')
+        custom_scope = {role: 'channel_partner', manager_id: user.id}
+      end
+    end
+
     def user_based_scope(user, _params = {})
       custom_scope = {}
       if user.role?('channel_partner')

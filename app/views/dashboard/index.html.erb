@@ -7,7 +7,7 @@
     <%= render 'dashboard/index/admin' %>
   <% elsif current_user.role?('billing_team') %>
     <%= render 'dashboard/index/billing_team' %>
-  <% elsif ['cp_admin'].include?(current_user.role) %>
+  <% elsif ['cp_admin', 'cp'].include?(current_user.role) %>
     <%= render 'dashboard/index/cp_admin' %>
   <% elsif DashboardPolicy.new(current_user, :dashboard).admin_dashboard? %>
     <%= render 'dashboard/index/crm' %>

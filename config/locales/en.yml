@@ -1405,6 +1405,13 @@ en:
       heading2_html: '<strong>Register now</strong> & join our network to explore new opportunities'
 
   dashboard:
+    cp_admin:
+      channel_partner_performace:
+        heading: "Channel Partner Performance"
+      incentive_scheme_performance:
+        heading: "Incentive Scheme Performance"
+      cp_performance:
+        heading: "Channel Partner Manager Performance"
     channel_partner:
       projects:
         sub_heading: 'Best homes to meet your expectations'

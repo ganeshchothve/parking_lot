@@ -24,24 +24,25 @@ module IncentiveSchemesHelper
       else
         html_content += "<strong>#{number_to_indian_currency(adj.absolute_value)}</strong>"
       end
-        if scheme.ladder_strategy == 'number_of_items'
-          html_content += "<p>"
-          if ladder.end_value?
-            html_content += "<strong>#{ladder.start_value}</strong> - <strong>#{ladder.end_value}</strong> #{BookingDetail.model_name.human(count: 2)}"
-          else
-            html_content += "<strong>#{ladder.start_value.ordinalize}</strong> #{BookingDetail.model_name.human} onwards"
-          end
-          html_content += "</p>"
-        elsif scheme.ladder_strategy == 'sum_of_value'
-          html_content += "<p>"
-          if ladder.end_value?
-            html_content += "<strong>#{number_to_indian_currency(ladder.start_value, :indian)}</strong> - <strong>#{number_to_indian_currency(ladder.end_value, :indian)}</strong> #{t('global.agreement_value')}"
-          else
-            html_content += "<strong>#{number_to_indian_currency(ladder.start_value, :indian)}</strong> #{t('global.agreement_value')} onwards"
-          end
-          html_content += "</p>"
+      html_content += "</p>"
+      if scheme.ladder_strategy == 'number_of_items'
+        html_content += "<p>"
+        if ladder.end_value?
+          html_content += "<strong>#{ladder.start_value}</strong> - <strong>#{ladder.end_value}</strong> #{BookingDetail.model_name.human(count: 2)}"
+        else
+          html_content += "<strong>#{ladder.start_value.ordinalize}</strong> #{BookingDetail.model_name.human} onwards"
         end
-      html_content += "</span>"
+        html_content += "</p>"
+      elsif scheme.ladder_strategy == 'sum_of_value'
+        html_content += "<p>"
+        if ladder.end_value?
+          html_content += "<strong>#{number_to_indian_currency(ladder.start_value, :indian)}</strong> - <strong>#{number_to_indian_currency(ladder.end_value, :indian)}</strong> #{t('global.agreement_value')}"
+        else
+          html_content += "<strong>#{number_to_indian_currency(ladder.start_value, :indian)}</strong> #{t('global.agreement_value')} onwards"
+        end
+        html_content += "</p>"
+      end
+      html_content += "</div></span>"
     end
     html_content
   end

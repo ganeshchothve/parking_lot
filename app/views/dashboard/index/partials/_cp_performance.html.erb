@@ -7,27 +7,27 @@
     <div class="row">
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
         <div class="table-title pt-4">
-          <img src="<%= asset_path 'rupee-black.svg' %>" alt="Documents" class="wd-10"><h1 class="title"><%#= t('dashboard.channel_partner.incentive_plan_started.heading') %>Sourcing Manager Performance</h1>
+          <h1 class="title"><%= t('dashboard.cp_admin.cp_performance.heading') %></h1>
         </div>
       </div>
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
         <div class="box-card relative table-responsive">
           <table class="table my-customer-table responsive-tbl mb-0">
             <thead class="th-default">
-              <tr class="bg-gradient-cd white">
-                <th>Sourcing manager Name</th>
-                <th>No. of Walk ins</th>
-                <th>No. of Bookings</th>
-                <th>No. of Agreement Value</th>
+              <tr class="bg-gradient-cd white text-center">
+                <th><%= t("mongoid.attributes.user/role.cp") %> Name</th>
+                <th>No. of <%= Lead.model_name.human(count: 2) %></th>
+                <th>No. of <% BookingDetail.model_name.human(count: 2) %></th>
+                <th><%= t('mongoid.attributes.booking_detail.agreement_price') %></th>
               </tr>
             </thead>
-            <tbody>
+            <tbody class='text-md-center'>
               <% cps.each do |cp| %>
                 <tr>
                   <td data-title='Sourcing manager Name'><%= cp.name %></td>
                   <td data-title='Walk ins'><%= walkins[cp.id] || 0 %></td>
                   <td data-title='Bookings'><%= bookings.dig(cp.id, :count) || 0 %></td>
-                  <td data-title='Agreement Value'><%= bookings.dig(cp.id, :sales_revenue) || 0 %></td>
+                  <td data-title='Agreement Value'><%= number_to_inr(bookings.dig(cp.id, :sales_revenue) || 0)%></td>
                 </tr>
               <% end %>
             </tbody>

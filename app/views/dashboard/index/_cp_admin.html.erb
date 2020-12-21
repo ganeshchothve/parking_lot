@@ -11,7 +11,7 @@
             </div>
             <div class="box-content br-rd-bl-4 bg-white py-3 text-center fix-ht">
               <span class='cp-dashboard-box-font'>
-                <%= Lead.where({ "$and": [Lead.user_based_scope(current_user), created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)]}).distinct(:manager_id).count %>
+                <%= Lead.where({ "$and": [Lead.user_based_scope(current_user), Lead.filter_by_created_at(date)]}).distinct(:manager_id).count %>
               </span>
             </div>
           </div>
@@ -21,13 +21,13 @@
             </div>
             <div class="box-content br-rd-bl-4 bg-white py-3 text-center fix-ht">
               <span class='cp-dashboard-box-font'>
-                <%= BookingDetail.where({ "$and": [BookingDetail.user_based_scope(current_user), created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)]}).distinct(:manager_id).count %>
+                <%= BookingDetail.where({ "$and": [BookingDetail.user_based_scope(current_user), BookingDetail.filter_by_created_at(date)]}).distinct(:manager_id).count %>
               </span>
             </div>
           </div>
           <div class="box-card col-lg-3 col-md-12 col-sm-12 col-xs-12 mt-5">
             <div class="box-header bg-gradient-cd br-rd-tr-4 text-center">
-              <h2>Raised Invoices</h2>
+              <h2>Raised <%= Invoice.model_name.human(count: 2) %></h2>
             </div>
             <div class="box-content br-rd-bl-4 bg-white py-3 text-center fix-ht">
               <span class='cp-dashboard-box-font'>
@@ -37,7 +37,7 @@
           </div>
           <div class="box-card col-lg-3 col-md-12 col-sm-12 col-xs-12 mt-5">
             <div class="box-header bg-gradient-cd br-rd-tr-4 text-center">
-              <h2>Approved Invoices</h2>
+              <h2>Approved <%= Invoice.model_name.human(count: 2) %></h2>
             </div>
             <div class="box-content br-rd-bl-4 bg-white py-3 text-center fix-ht">
               <span class='cp-dashboard-box-font'>
@@ -59,7 +59,7 @@
       <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
           <div class="table-title pt-4">
-            <img src="<%= asset_path 'rupee-black.svg' %>" alt="Documents" class="wd-10"><h1 class="title"><%#= t('dashboard.channel_partner.incentive_plan_started.heading') %>Channel Partner Performance</h1>
+            <h1 class="title"><%= t('dashboard.cp_admin.channel_partner_performace.heading') %></h1>
           </div>
         </div>
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
@@ -68,9 +68,8 @@
               <div class="filter-content">
                 <div class="row">
                   <div class="form-group col-12">
-                    <% @cp_ids = User.where(manager_id: current_user.id).distinct(:id) %>
                     <%= label_tag "channel_partner_id", "Channel Partner", class: "control-label float-left" %>
-                    <%= select_tag "channel_partner_id", options_for_select(User.where(role: 'channel_partner', manager_id: {"$in": @cp_ids}).map{|u| [u.email, u.id]}), class: "selectize" %>
+                    <%= select_tag "channel_partner_id", options_for_select(User.where(User.role_based_channel_partners_scope(current_user)).map{|u| [u.email, u.id]}), class: "selectize" %>
                   </div>
                 </div>
               </div>
@@ -87,9 +86,11 @@
     </div>
   </section>
 </div>
-<div class='mb-5 pb-5'>
-  <%= render 'dashboard/index/partials/cp_performance', start_date: start_date, end_date: end_date %>
-</div>
+<% if current_user.role? ('cp_admin') %>
+  <div class='mb-5 pb-5'>
+    <%= render 'dashboard/index/partials/cp_performance', start_date: start_date, end_date: end_date %>
+  </div>
+<% end %>
 
 <%= javascript_tag do %>
   $(document).ready(function(){
