@@ -462,7 +462,7 @@ class User
     # send_devise_notification(:confirmation_instructions, @raw_confirmation_token, opts)
     devise_mailer.new.send(:devise_sms, self, :confirmation_instructions)
 
-    if email.present? || unconfirmed_email.present?
+    if !buyer? && email.present? || unconfirmed_email.present?
       email_template = Template::EmailTemplate.find_by(name: "user_confirmation_instructions")
       attrs = {
         booking_portal_client_id: booking_portal_client_id,

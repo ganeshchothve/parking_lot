@@ -36,7 +36,7 @@ module Devise::Mailers::Helpers
         # GENERICTODO : Will work once we get urls to start working in templates
         # template_id = Template::SmsTemplate.find_by(name: "devise_#{action}").id
       end
-      if template_id && record.booking_portal_client.sms_enabled?
+      if !record.buyer? && template_id && record.booking_portal_client.sms_enabled?
         Sms.create!(
           booking_portal_client_id: record.booking_portal_client_id,
           recipient_id: record.id,
