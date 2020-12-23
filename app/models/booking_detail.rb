@@ -235,9 +235,9 @@ class BookingDetail
         receipts_total = receipts_total.in(status: ['clearance_pending', "success"])
       end
       receipts_total = receipts_total.sum(:total_amount)
-      return (self.booking_price - receipts_total)
+      return (self.booking_price.to_f - receipts_total)
     else
-      return self.booking_price
+      return self.booking_price.to_f
     end
   end
 

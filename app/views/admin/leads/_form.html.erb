@@ -11,9 +11,11 @@
           </button>
         </div>
         <div class="modal-body">
-          <h5>CRM IDs</h5>
-          <hr/>
-          <%= render 'admin/crm/shared/third_party_references_form', f: f %>
+          <% if policy(ThirdPartyReference).editable_field?('reference_id') %>
+            <h5>CRM IDs</h5>
+            <hr/>
+            <%= render 'admin/crm/shared/third_party_references_form', f: f %>
+          <% end %>
         </div>
         <div class="modal-footer">
           <%= f.submit "Save", class: 'btn btn-primary' %>

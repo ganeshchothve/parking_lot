@@ -91,8 +91,9 @@ class Admin::UserPolicy < UserPolicy
       attributes += [:manager_id]
     end
     if %w[admin superadmin cp_admin sales_admin].include?(user.role) && record.buyer?
-      attributes += [:manager_id]
-      attributes += [:manager_change_reason] if record.persisted?
+      # TODO: Lead conflict module with multi project
+      #attributes += [:manager_id]
+      #attributes += [:manager_change_reason] if record.persisted?
       attributes += [:allowed_bookings] if current_client.allow_multiple_bookings_per_user_kyc?
     end
     attributes += [:login_otp] if confirm_via_otp?

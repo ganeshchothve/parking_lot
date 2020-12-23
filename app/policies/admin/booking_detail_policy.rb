@@ -1,13 +1,11 @@
 class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def index?
-    out = %w[admin superadmin sales sales_admin cp_admin gre channel_partner billing_team].include?(user.role) && enable_actual_inventory?(user)
-    out && user.active_channel_partner?
+    out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner billing_team].include?(user.role) && (enable_actual_inventory?(user) || enable_incentive_module?(user))
   end
 
   def new?
-    out = %w[admin superadmin sales sales_admin cp_admin gre channel_partner].include?(user.role) && eligible_user? && enable_actual_inventory?(user)
-    out && user.active_channel_partner?
+    out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner].include?(user.role) && eligible_user? && enable_actual_inventory?(user)
   end
 
   def create?
@@ -29,7 +27,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def tasks?
-    eligible_users_for_tasks? && %w[cancelled swapped].exclude?(record.status)
+    %w[cancelled swapped].exclude?(record.status) && (eligible_users_for_tasks? || enable_incentive_module?(user))
   end
 
   def mis_report?
@@ -88,7 +86,8 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   private
 
   def eligible_users_for_tasks?
-    return true if %w[admin channel_partner sales_admin sales].include?(user.role)
+    enable_actual_inventory?(user)
+    #return true if %w[admin channel_partner sales_admin sales].include?(user.role)
   end
 
   def need_unattached_booking_receipts_for_channel_partner

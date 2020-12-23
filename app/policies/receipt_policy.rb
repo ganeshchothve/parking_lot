@@ -39,14 +39,15 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def enable_direct_payment?
-    return true if (current_client.enable_direct_payment?|| user.role?('channel_partner') ) && current_client.payment_gateway.present? && (enable_payment_with_kyc? ? record_user_kyc_ready? : true)
+    return true if current_client.enable_direct_payment? && current_client.payment_gateway.present? && (enable_payment_with_kyc? ? record_user_kyc_ready? : true)
 
     @condition = 'enable_direct_payment'
     false
   end
 
   def enable_attached_payment?
-    ((enable_booking_with_kyc? ? record_user_kyc_ready? : true) && valid_booking_stages?)
+    return false unless enable_actual_inventory?(user)
+    valid = ((enable_booking_with_kyc? ? record_user_kyc_ready? : true) && valid_booking_stages?)
   end
 
   def online_account_present?

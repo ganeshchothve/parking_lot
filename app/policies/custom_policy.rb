@@ -50,7 +50,7 @@ class CustomPolicy < Struct.new(:user, :enable_users)
   end
 
   def incentive_schemes?
-    current_client.enable_actual_inventory?(user) && %w[superadmin admin cp_admin].include?(user.role)
+    "#{user.buyer? ? 'Buyer' : 'Admin'}::IncentiveSchemePolicy".constantize.new(user, IncentiveScheme).index?
   end
 
   def user_kycs?

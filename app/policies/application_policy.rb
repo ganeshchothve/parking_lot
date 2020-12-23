@@ -100,6 +100,13 @@ class ApplicationPolicy
     false
   end
 
+  def enable_incentive_module?(_user=nil)
+    _user ||= user
+    return true if current_client.enable_incentive_module?(_user)
+    @condition = 'enable_incentive_module'
+    false
+  end
+
   def only_for_confirmed_user!
     return true if record.user.confirmed?
     @condition = 'only_for_confirmed_user'

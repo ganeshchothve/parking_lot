@@ -20,7 +20,7 @@ class BookingDetailPolicy < ApplicationPolicy
   end
 
   def generate_booking_detail_form?
-    true
+    Template::BookingDetailFormTemplate.where(booking_portal_client_id: record.project.booking_portal_client_id, project_id: record.project_id, name: 'booking_detail_form_html').first.try(:is_active?)
   end
 
   private

@@ -19,7 +19,9 @@
               <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-integrations" role="tab">Integrations</a>
               <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-pages" role="tab">Content Pages</a>
               <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-logos" role="tab">Images & Documents</a>
-              <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-crm-ids" role="tab">CRM IDs</a>
+              <% if policy(ThirdPartyReference).editable_field?('reference_id') %>
+                <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-crm-ids" role="tab">CRM IDs</a>
+              <% end %>
             </div>
           </nav>
         <div class="mt-3"></div>
@@ -42,9 +44,11 @@
             <div class="tab-pane fade" id="nav-project-logos" role="tabpanel">
               <%= render 'admin/projects/logos', f: f %>
             </div>
-            <div class="tab-pane fade" id="nav-project-crm-ids" role="tabpanel">
-              <%= render 'admin/projects/crm_ids', f: f %>
-            </div>
+            <% if policy(ThirdPartyReference).editable_field?('reference_id') %>
+              <div class="tab-pane fade" id="nav-project-crm-ids" role="tabpanel">
+                <%= render 'admin/projects/crm_ids', f: f %>
+              </div>
+            <% end %>
           </div>
         </div>
         <div class="modal-footer">

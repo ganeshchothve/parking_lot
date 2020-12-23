@@ -4,7 +4,9 @@
       <tr class="bg-gradient-cd white">
         <th><%= t('mongoid.attributes.project.name') %></th>
         <th><%= t('mongoid.attributes.project.rera_registration_no') %></th>
-        <th class="text-right"> <%= t('global.action', count: 2) %></th>
+        <% if policy([current_user_role_group, Project.new]).update? %>
+          <th class="text-right"> <%= t('global.action', count: 2) %></th>
+        <% end %>
       </tr>
     </thead>
   </thead>
@@ -17,16 +19,18 @@
         <td data-title=<%= t('mongoid.attributes.project.rera_registration_no') %> >
           <%= project.rera_registration_no %>
         </td>
-        <td>
-          <div class="dropdown show text-right">
-            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-              <% if policy([:admin, project]).edit? %>
-                <%= link_to t('helpers.edit.link_name', model: Project.model_name.human), edit_admin_project_path(project), class: 'dropdown-item modal-remote-form-link' %>
-              <% end %>
+        <% if policy([current_user_role_group, Project.new]).update? %>
+          <td>
+            <div class="dropdown show text-right">
+              <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                <% if policy([:admin, project]).edit? %>
+                  <%= link_to t('helpers.edit.link_name', model: Project.model_name.human), edit_admin_project_path(project), class: 'dropdown-item modal-remote-form-link' %>
+                <% end %>
+              </div>
             </div>
-          </div>
-        </td>
+          </td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>
