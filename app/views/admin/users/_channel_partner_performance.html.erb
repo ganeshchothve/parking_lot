@@ -15,7 +15,8 @@
             <td data-title='<%= Project.model_name.human %>'><%= p.name.titleize %></td>
             <td data-title='Walk ins'><%= @walkins[p.id].try(:count) || 0 %></td>
             <td data-title='Bookings'><%= @bookings[p.id].try(:count) || 0 %></td>
-            <td data-title='Agreement Value'><%= number_to_indian_currency(@bookings[p.id].try(:pluck, :agreement_price).try(:sum) || 0) %>(<%= number_to_inr(@bookings[p.id].try(:pluck, :agreement_price).try(:sum) || 0, {precision: 2, significant: false}) %>)</td>
+            <% sum_of_av = (@bookings[p.id].try(:pluck, :agreement_price).try(:sum) || 0) %>
+            <td data-title='Agreement Value'><%= number_to_indian_currency(sum_of_av) %>(<%= number_to_inr(sum_of_av, {precision: 2, significant: false}) %>)</td>
           </tr>
         <% end %>
       </tbody>
