@@ -2,7 +2,7 @@ class UserRequestPolicy < ApplicationPolicy
   # def edit? def update? def new? def create? def permitted_attributes from ApplicationPolicy
 
   def index?
-    out = current_client.enable_actual_inventory?(user)
+    out = current_client.enable_actual_inventory?(user) && user.role.in?(%w(superadmin admin))
     out && user.active_channel_partner?
   end
 

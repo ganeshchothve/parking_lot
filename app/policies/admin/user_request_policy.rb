@@ -6,7 +6,7 @@ class Admin::UserRequestPolicy < UserRequestPolicy
   end
 
   def edit?
-    %w[admin crm sales cp superadmin].include?(user.role) && current_client.enable_actual_inventory?(user)
+    %w[admin crm sales superadmin].include?(user.role) && current_client.enable_actual_inventory?(user)
   end
 
   def update?
@@ -34,7 +34,7 @@ class Admin::UserRequestPolicy < UserRequestPolicy
   private
 
   def permitted_user_role_for_new?
-    return true if user.role != 'channel_partner'
+    return true if user.role.in?(%w(superadmin)) #user.role != 'channel_partner'
     @condition = 'do_not_have_access'
     false
   end
