@@ -1,6 +1,119 @@
 module DashboardDataProvider
   # TODO remove not used methods from old methods
   # old methods
+
+  def self.incetive_scheme_max_ladders(options)
+    matcher = {}
+    matcher = options[:matcher] if options[:matcher].present?
+    data = IncentiveScheme.collection.aggregate([{
+            "$match": matcher
+          },{
+            "$unwind": "$ladders"
+          },{
+            "$group":
+            {
+              "_id": "$id",
+              max: {"$max": "$ladders.stage"}
+            }
+          }]).to_a
+    data.dig(0, "max") || 0
+  end
+
+  def self.cp_performance_walkins(user, options={})
+    matcher = {}
+    matcher = options[:matcher] if options[:matcher].present?
+    matcher.merge!(Lead.user_based_scope(user))
+    data = Lead.collection.aggregate([{
+            "$match": matcher
+          },{
+            "$lookup": 
+            {
+              "from": "users",
+              "localField": "manager_id",
+              "foreignField": "_id",
+              "as": "manager"
+            }
+          },{
+            "$project":
+            {
+              "lead_id": "$id",
+              "cp_id": "$manager.manager_id"
+            }
+          },{
+            "$group":
+            {
+              "_id": "$cp_id",
+              "count": {"$sum": 1}
+            }
+          }]).to_a
+    out = {}
+    data.each do |d|
+      out[d["_id"].first] = d["count"]
+    end
+    out
+  end
+
+  def self.cp_performance_bookings(user, options={})
+    matcher = {}
+    matcher = options[:matcher] if options[:matcher].present?
+    matcher.merge!(BookingDetail.user_based_scope(user))
+    data = BookingDetail.collection.aggregate([{
+            "$match": matcher
+          },{
+            "$lookup": 
+            {
+              "from": "users",
+              "localField": "manager_id",
+              "foreignField": "_id",
+              "as": "manager"
+            }
+          },{
+            "$project":
+            {
+              "lead_id": "$lead_id",
+              "cp_id": "$manager.manager_id",
+              "agreement_price": "$agreement_price"
+            }
+          },{
+            "$group":
+            {
+              "_id": "$cp_id",
+              "count": {"$sum": 1},
+              "sales_revenue": {"$sum": "$agreement_price"}
+            }
+          }]).to_a
+    out = {}
+    data.each do |d|
+      out[d["_id"].first] = {count: d["count"], sales_revenue: d["sales_revenue"]}
+    end
+    out
+  end
+
+  def self.inventive_scheme_performance(user)
+    matcher = Invoice.user_based_scope(user)
+    data = Invoice.collection.aggregate([{
+            "$match": matcher
+          }, {
+          "$group": {
+            "_id": {
+              "ladder_id": "$ladder_id",
+              "manager_id": "$manager_id"
+            }
+          }
+        },{
+          "$group": {
+            "_id": "$_id.ladder_id",
+            "count": {"$sum": 1}
+          }
+
+        }]).to_a
+    out = {}
+    data.each do |d|
+      out[d["_id"]] = d["count"]
+    end
+    out
+  end
+
   def self.channel_partners_dashboard(user, options={})
     data = ChannelPartner.collection.aggregate([{
       "$group": {

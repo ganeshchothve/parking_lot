@@ -217,6 +217,7 @@ Rails.application.routes.draw do
         get '/new/:role', action: 'new', as: :new_by_role
         get :export
         get :portal_stage_chart
+        get :channel_partner_performance
       end
 
       match :confirm_via_otp, action: 'confirm_via_otp', as: :confirm_via_otp, on: :member, via: [:get, :patch]

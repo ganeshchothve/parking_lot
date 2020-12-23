@@ -1,0 +1,103 @@
+<% date = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") %>
+<% start_date, end_date = date.split(' - ') %>
+<section class="user-db-sec-5 device-pd">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
+        <div class="row">
+          <div class="box-card col-lg-3 col-md-12 col-sm-12 col-xs-12 mt-5">
+            <div class="box-header bg-gradient-cd br-rd-tr-4 text-center">
+              <h2><%= Lead.model_name.human %> Active Partners</h2>
+            </div>
+            <div class="box-content br-rd-bl-4 bg-white py-3 text-center fix-ht">
+              <span class='cp-dashboard-box-font'>
+                <%= Lead.where({ "$and": [Lead.user_based_scope(current_user), Lead.filter_by_created_at(date)]}).distinct(:manager_id).count %>
+              </span>
+            </div>
+          </div>
+          <div class="box-card col-lg-3 col-md-12 col-sm-12 col-xs-12 mt-5">
+            <div class="box-header bg-gradient-cd br-rd-tr-4 text-center">
+              <h2><%= BookingDetail.model_name.human %> Active Partners</h2>
+            </div>
+            <div class="box-content br-rd-bl-4 bg-white py-3 text-center fix-ht">
+              <span class='cp-dashboard-box-font'>
+                <%= BookingDetail.where({ "$and": [BookingDetail.user_based_scope(current_user), BookingDetail.filter_by_created_at(date)]}).distinct(:manager_id).count %>
+              </span>
+            </div>
+          </div>
+          <div class="box-card col-lg-3 col-md-12 col-sm-12 col-xs-12 mt-5">
+            <div class="box-header bg-gradient-cd br-rd-tr-4 text-center">
+              <h2>Raised <%= Invoice.model_name.human(count: 2) %></h2>
+            </div>
+            <div class="box-content br-rd-bl-4 bg-white py-3 text-center fix-ht">
+              <span class='cp-dashboard-box-font'>
+                <%= Invoice.where({ "$and": [Invoice.user_based_scope(current_user), status: 'pending_approval']}).count %>
+              </span>
+            </div>
+          </div>
+          <div class="box-card col-lg-3 col-md-12 col-sm-12 col-xs-12 mt-5">
+            <div class="box-header bg-gradient-cd br-rd-tr-4 text-center">
+              <h2>Approved <%= Invoice.model_name.human(count: 2) %></h2>
+            </div>
+            <div class="box-content br-rd-bl-4 bg-white py-3 text-center fix-ht">
+              <span class='cp-dashboard-box-font'>
+                <%= Invoice.where({ "$and": [Invoice.user_based_scope(current_user), status: 'approved']}).count %>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class='mb-5 pb-5'>
+  <%= render 'dashboard/index/partials/invoice_summary', start_date: start_date, end_date: end_date %>
+</div>
+<div class='mb-5 pb-5'>
+  <section class="user-db-sec-6 device-pd">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
+          <div class="table-title pt-4">
+            <h1 class="title"><%= t('dashboard.cp_admin.channel_partner_performace.heading') %></h1>
+          </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
+          <div class="filter-inner">
+            <%= form_tag channel_partner_performance_admin_users_path, method: "get", remote: true, id: "channel_partner_performance_form" do %>
+              <div class="filter-content">
+                <div class="row">
+                  <div class="form-group col-12">
+                    <%= label_tag "channel_partner_id", "Channel Partner", class: "control-label float-left" %>
+                    <%= select_tag "channel_partner_id", options_for_select(User.where(User.role_based_channel_partners_scope(current_user)).map{|u| [u.email, u.id]}), class: "selectize" %>
+                  </div>
+                </div>
+              </div>
+              <div class="filter-footer">
+                <%= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right" %>
+                <button type="button" class="f-cancel-btn status_chart_filter_cancel db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
+              </div>
+          <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="row" id = "dashboard_channel_partner_performance">
+      </div>
+    </div>
+  </section>
+</div>
+<% if current_user.role? ('cp_admin') %>
+  <div class='mb-5 pb-5'>
+    <%= render 'dashboard/index/partials/cp_performance', start_date: start_date, end_date: end_date %>
+  </div>
+<% end %>
+
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($("#channel_partner_performance_form"));
+    $.ajax({
+      url: "<%= channel_partner_performance_admin_users_path %>",
+      type: "get",
+    });
+  });
+<% end %>

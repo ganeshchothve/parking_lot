@@ -43,11 +43,11 @@ module Api
         kyc_attributes[:creator_id] = @crm.user_id.to_s
       end
       if @user_kyc
-        kyc_attributes[:addresses_attributes].each_with_index do |addr_attrs, i|
-        addr = @user_kyc.addresses.where(address_type: addr_attrs[:address_type]).first
-        kyc_attributes[:addresses_attributes][i][:id] = addr.id.to_s if addr.present?
+        kyc_attributes.dig(:addresses_attributes).each_with_index do |addr_attrs, i|
+          addr = @user_kyc.addresses.where(address_type: addr_attrs[:address_type]).first
+          kyc_attributes[:addresses_attributes][i][:id] = addr.id.to_s if addr.present?
+        end if kyc_attributes.dig(:addresses_attributes).present?
       end
-    end
       kyc_attributes
     end
   end
