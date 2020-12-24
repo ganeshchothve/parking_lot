@@ -47,7 +47,16 @@ class Admin::BookingDetails::InvoicesController < AdminController
   end
 
   def generate_invoice
-    render template: "admin/invoices/generate_invoice"
+    respond_to do |format|
+      format.html do
+        render template: "admin/invoices/generate_invoice"
+      end
+      format.pdf do
+        pdf_html = render_to_string(template: 'admin/invoices/generate_invoice', layout: 'pdf')
+        pdf = WickedPdf.new.pdf_from_string(pdf_html, viewport_size: '1280x1024', page_size: 'A4', zoom: 1, dpi: 100, lowquality: true)
+        send_data pdf, filename: "invoice-#{DateTime.current.strftime('%d-%m-%Y %T')}.pdf"
+      end
+    end
   end
 
   private

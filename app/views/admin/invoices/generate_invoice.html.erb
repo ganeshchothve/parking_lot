@@ -2,17 +2,10 @@
   <div class = "row py-4">
     <div class = "col-12">
       <button onclick='window.print();' class='btn btn-primary d-print-none'>Print</button>
-      <%# if policy([current_user_role_group, @invoice]).download? %>
-        <%#= link_to t('booking_details.links.send_to_customer'), send_booking_detail_form_notification_admin_booking_detail_path(@booking_detail), class: 'btn btn-primary d-print-none' %>
-      <%# end %>
-    </div>
-  </div>
-  <div class='row mt-4'>
-    <div class='col-12'>
-      <% template = ::Template::InvoiceTemplate.first %>
-      <% if template.present? %>
-        <%= ::ERB.new(template.content).result( binding ).html_safe %>
+      <% if policy([current_user_role_group, @invoice]).generate_invoice? %>
+        <%= link_to 'Download', generate_invoice_admin_invoice_path(@invoice, format: :pdf), class: 'btn btn-primary d-print-none' %>
       <% end %>
     </div>
   </div>
+  <%= render 'admin/invoices/generate_invoice' %>
 </div>

@@ -1,0 +1,8 @@
+<div class='row mt-4'>
+  <div class='col-12'>
+    <% template = ::Template::InvoiceTemplate.first %>
+    <% if template.present? %>
+      <%= ::ERB.new(template.content).result( binding ).html_safe %>
+    <% end %>
+  </div>
+</div>
