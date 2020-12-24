@@ -32,12 +32,12 @@
       <% end %>
     <% end %>
   </head>
-  <body class="<%= controller_name %> <%= params[:controller] == 'custom' && action_name == 'inventory' ? 'pt-0' : '' %>">
+  <body class="<%= controller_name %> <%= (params[:controller] == 'custom' && action_name == 'inventory') || action_name.in?(%w(generate_booking_detail_form generate_invoice)) ? 'pt-0' : '' %>">
     <% if action_name == 'inventory' %>
       <div id='inventory'>
         <%= yield %>
       </div>
-    <% elsif action_name == 'generate_booking_detail_form' %>
+    <% elsif action_name.in?(%w(generate_booking_detail_form generate_invoice)) %>
       <%= yield %>
     <% else %>
       <%= render "layouts/navbar"%>

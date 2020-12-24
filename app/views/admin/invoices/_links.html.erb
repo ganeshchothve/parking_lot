@@ -17,6 +17,10 @@
   <%= link_to t("controller.invoices.edit.link_name"), edit_admin_invoice_path(invoice), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
 
+<% if policy([current_user_role_group, invoice]).generate_invoice? %>
+  <%= link_to t("controller.invoices.generate_invoice.link_name"), generate_invoice_admin_invoice_path(invoice), class: 'dropdown-item', target: '_blank' %>
+<% end %>
+
 <!-- Raise incentive deduction for cp_admin -->
 <% incentive_deduction = IncentiveDeduction.where(invoice_id: invoice.id).first %>
 <% if incentive_deduction.blank? %>

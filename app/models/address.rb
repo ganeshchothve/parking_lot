@@ -37,7 +37,7 @@ class Address
     str += " #{self.city}," if self.city.present?
     str += " #{self.state}," if self.state.present?
     str += " #{self.country}," if self.country.present?
-    str += " #{self.zip}," if self.zip.present?
+    str += " #{self.zip}" if self.zip.present?
     str.strip!
     str.present? ? str : "-"
   end

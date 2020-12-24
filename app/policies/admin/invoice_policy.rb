@@ -1,6 +1,6 @@
 class Admin::InvoicePolicy < InvoicePolicy
   def index?
-    user.role.in?(%w(admin superadmin channel_partner billing_team cp_admin)) && enable_incentive_module?(user)
+    user.role.in?(%w(admin superadmin channel_partner billing_team cp cp_admin)) && enable_incentive_module?(user)
   end
 
   def edit?
@@ -17,6 +17,10 @@ class Admin::InvoicePolicy < InvoicePolicy
 
   def re_raise?
     user.role.in?(%w(channel_partner)) && record.aasm.events(permitted: true).map(&:name).include?(:re_raise)
+  end
+
+  def generate_invoice?
+    index? && record.approved?
   end
 
   def permitted_attributes(params = {})

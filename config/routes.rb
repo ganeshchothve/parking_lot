@@ -88,6 +88,8 @@ Rails.application.routes.draw do
 
     # for Billing Team
     resources :invoices, only: [:index, :show, :edit, :update], controller: 'booking_details/invoices' do
+      get :generate_invoice, on: :member
+
       resources :incentive_deductions, except: :destroy, controller: 'invoices/incentive_deductions' do
         post :change_state, on: :member
       end

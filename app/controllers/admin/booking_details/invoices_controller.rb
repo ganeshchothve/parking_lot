@@ -46,6 +46,10 @@ class Admin::BookingDetails::InvoicesController < AdminController
     end
   end
 
+  def generate_invoice
+    render template: "admin/invoices/generate_invoice"
+  end
+
   private
 
   def set_booking_detail

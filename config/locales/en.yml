@@ -1052,6 +1052,8 @@ en:
         link_name: 'Edit Invoice'
       show:
         link_name: 'Invoice Details'
+      generate_invoice:
+        link_name: 'Print Invoice'
       status_message:
         pending_approval: 'Invoice successfully raised'
         approved: 'Invoice successfully approved'
@@ -1489,5 +1491,5 @@ en:
     crore: 'Cr'
 
   formula:
-    calculate_agreement_price: 'Agreement value'
-    calculate_all_inclusive_price: 'All Inclusive value'
+    calculate_agreement_price: 'Agreement Value'
+    calculate_all_inclusive_price: 'All Inclusive'

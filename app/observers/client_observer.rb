@@ -17,6 +17,7 @@ class ClientObserver < Mongoid::Observer
     DatabaseSeeds::UITemplate.seed client.id.to_s
     ExternalInventoryViewConfig.create(booking_portal_client_id: client.id)
     DatabaseSeeds::PortalStagePriorities.seed
+    Template::InvoiceTemplate.seed(client.id.to_s)
 
     DocumentSign.create(booking_portal_client_id: client.id)
   end
