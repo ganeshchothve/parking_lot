@@ -4,9 +4,7 @@
       <tr class="bg-gradient-cd white">
         <th><%= t('mongoid.attributes.project.name') %></th>
         <th><%= t('mongoid.attributes.project.rera_registration_no') %></th>
-        <% if policy([current_user_role_group, Project.new]).update? %>
-          <th class="text-right"> <%= t('global.action', count: 2) %></th>
-        <% end %>
+        <th class="text-right"> <%= t('global.action', count: 2) %></th>
       </tr>
     </thead>
   </thead>
@@ -19,18 +17,28 @@
         <td data-title=<%= t('mongoid.attributes.project.rera_registration_no') %> >
           <%= project.rera_registration_no %>
         </td>
-        <% if policy([current_user_role_group, Project.new]).update? %>
-          <td>
-            <div class="dropdown show text-right">
-              <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
-              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                <% if policy([:admin, project]).edit? %>
-                  <%= link_to t('helpers.edit.link_name', model: Project.model_name.human), edit_admin_project_path(project), class: 'dropdown-item modal-remote-form-link' %>
-                <% end %>
-              </div>
+        <td>
+          <div class="dropdown show text-right">
+            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+              <% if policy([:admin, project]).edit? %>
+                <%= link_to t('helpers.edit.link_name', model: Project.model_name.human), edit_admin_project_path(project), class: 'dropdown-item modal-remote-form-link' %>
+              <% end %>
+              <% if policy([:admin, IncentiveScheme]).index? %>
+                <%= link_to IncentiveScheme.model_name.human(count: 2), admin_incentive_schemes_path(fltrs: {project_id: project.id.to_s}), class: 'dropdown-item' %>
+              <% end %>
+              <% if policy([:admin, ProjectUnit]).index? %>
+                <%= link_to ProjectUnit.model_name.human(count: 2), admin_project_units_path(fltrs: {project_id: project.id.to_s}), class: 'dropdown-item' %>
+              <% end %>
+              <% if policy([:admin, Lead]).index? %>
+                <%= link_to Lead.model_name.human(count: 2), admin_leads_path(fltrs: {project_id: project.id.to_s}), class: 'dropdown-item' %>
+              <% end %>
+              <% if policy([:admin, BookingDetail]).index? %>
+                <%= link_to BookingDetail.model_name.human(count: 2), admin_booking_details_path(fltrs: {project_id: project.id.to_s}), class: 'dropdown-item' %>
+              <% end %>
             </div>
-          </td>
-        <% end %>
+          </div>
+        </td>
       </tr>
     <% end %>
   </tbody>
