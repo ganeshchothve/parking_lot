@@ -16,7 +16,7 @@ module UserRequestsConcern
   #
   def new
     @user_request = associated_class.new(user_id: @user.id, lead: @lead)
-    @user.project = @lead.project if @lead.present?
+    @user_request.project = @lead.project if @lead.present?
     @user_request.requestable_id = params[:requestable_id] if params[:requestable_id].present?
     @user_request.requestable_type = params[:requestable_type] if params[:requestable_type].present?
     render layout: false

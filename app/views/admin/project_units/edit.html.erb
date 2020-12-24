@@ -24,7 +24,9 @@
                 <% if policy([ current_user_role_group, Asset.new(assetable: @project_unit)]).create? %>
                   <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-unit-floor_plan" role="tab">Floor Plan</a>
                 <% end %>
-                <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-unit-crm-ids" role="tab">CRM IDs</a>
+                <% if policy(ThirdPartyReference).editable_field?('reference_id') %>
+                  <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-unit-crm-ids" role="tab">CRM IDs</a>
+                <% end %>
               </div>
             </nav>
             <div class="mt-3"></div>
@@ -63,9 +65,11 @@
                   </div>
                 </div>
               <% end %>
-              <div class="tab-pane fade" id="nav-project-unit-crm-ids" role="tabpanel">
-                <%= render 'admin/crm/shared/third_party_references_form', f: f %>
-              </div>
+              <% if policy(ThirdPartyReference).editable_field?('reference_id') %>
+                <div class="tab-pane fade" id="nav-project-unit-crm-ids" role="tabpanel">
+                  <%= render 'admin/crm/shared/third_party_references_form', f: f %>
+                </div>
+              <% end %>
             </div>
           </div>
           <div class="modal-footer">

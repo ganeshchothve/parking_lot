@@ -358,6 +358,7 @@ en:
         enable_company_users: 'Allow Company Users & Benefits'
         roles_taking_registrations: 'Allowed roles for taking new registrations'
         external_api_integration: 'Enable External CRM Integration'
+        enable_incentive_module: 'Enable Incentive Module for roles'
       client/payment_gateways:
         Razorpay: Razorpay Payment Gateway
         CCAvenue: CCAvenue Payment Gateway
@@ -1335,6 +1336,15 @@ en:
         link_name: Detail
       new:
         link_name: Add
+      general:
+        index:
+          link_name: 'User Requests'
+        new:
+          link_name: 'User Request'
+          header: 'User Request'
+        edit:
+          link_name: 'Edit User Request'
+          header: 'Edit User Request'
       swap:
         index:
           link_name: 'Swap Requests'

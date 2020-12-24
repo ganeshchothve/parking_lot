@@ -73,6 +73,6 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def quotation?
-    record.available?
+    false #record.available?
   end
 end

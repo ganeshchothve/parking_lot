@@ -5,6 +5,7 @@ class UserRequest
   include InsertionStringMethods
   include UserRequestStateMachine
   extend FilterByCriteria
+  extend ApplicationHelper
 
   STATUS = %w[pending processing resolved rejected failed]
   # Add different types of documents which are uploaded on user_request
@@ -64,7 +65,8 @@ class UserRequest
       custom_scope = { lead_id: params[:lead_id] } if params[:lead_id].present?
       custom_scope = { user_id: user.id } if user.buyer?
 
-      custom_scope[:booking_detail_id] = params[:booking_detail_id] if params[:booking_detail_id].present?
+      custom_scope[:requestable_id] = params[:requestable_id] if params[:requestable_id].present?
+      custom_scope[:_type] = 'UserRequest::General' unless current_client.enable_actual_inventory?(user)
       custom_scope
     end
   end

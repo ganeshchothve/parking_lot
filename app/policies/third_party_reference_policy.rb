@@ -1,6 +1,8 @@
 class ThirdPartyReferencePolicy < ApplicationPolicy
 
   def permitted_attributes(params = {})
-    [:id, :crm_id, :reference_id]
+    attrs = []
+    attrs += [:id, :crm_id, :reference_id] if user.role?('superadmin')
+    attrs
   end
 end

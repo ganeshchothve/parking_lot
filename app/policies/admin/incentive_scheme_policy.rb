@@ -1,7 +1,7 @@
 class Admin::IncentiveSchemePolicy < IncentiveSchemePolicy
 
   def index?
-    user.role.in?(%w(superadmin admin))
+    %w[superadmin admin cp_admin billing_team].include?(user.role) && enable_incentive_module?(user)
   end
 
   def create?

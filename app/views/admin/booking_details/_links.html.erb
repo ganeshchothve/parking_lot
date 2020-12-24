@@ -58,8 +58,8 @@
   <%= link_to t('controller.invoices.index.link_name'), admin_booking_detail_invoices_path(booking_detail), class: 'dropdown-item' %>
 <% end %>
 
-<% [UserRequest::Cancellation, UserRequest::Swap] if Rails.env.development? %>
-<% UserRequest.descendants.each do |klass| %>
+<% booking_requests = [UserRequest::Cancellation, UserRequest::Swap] %>
+<% booking_requests.each do |klass| %>
   <% if policy([:admin, klass.new(user_id: booking_detail.user_id, lead: booking_detail.lead, requestable_id: booking_detail.id, requestable_type: 'BookingDetail')]).new? %>
     <%= link_to t("controller.user_requests.#{klass.model_name.element}.new.link_name"), new_admin_lead_user_request_path(lead_id: booking_detail.lead_id, requestable_id: booking_detail.id, requestable_type: 'BookingDetail', request_type: klass.model_name.element), class: "dropdown-item modal-remote-form-link" %>
   <% end %>

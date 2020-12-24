@@ -24,6 +24,18 @@
               <% if policy([:admin, project]).edit? %>
                 <%= link_to t('helpers.edit.link_name', model: Project.model_name.human), edit_admin_project_path(project), class: 'dropdown-item modal-remote-form-link' %>
               <% end %>
+              <% if policy([:admin, IncentiveScheme]).index? %>
+                <%= link_to IncentiveScheme.model_name.human(count: 2), admin_incentive_schemes_path(fltrs: {project_id: project.id.to_s}), class: 'dropdown-item' %>
+              <% end %>
+              <% if policy([:admin, ProjectUnit]).index? %>
+                <%= link_to ProjectUnit.model_name.human(count: 2), admin_project_units_path(fltrs: {project_id: project.id.to_s}), class: 'dropdown-item' %>
+              <% end %>
+              <% if policy([:admin, Lead]).index? %>
+                <%= link_to Lead.model_name.human(count: 2), admin_leads_path(fltrs: {project_id: project.id.to_s}), class: 'dropdown-item' %>
+              <% end %>
+              <% if policy([:admin, BookingDetail]).index? %>
+                <%= link_to BookingDetail.model_name.human(count: 2), admin_booking_details_path(fltrs: {project_id: project.id.to_s}), class: 'dropdown-item' %>
+              <% end %>
             </div>
           </div>
         </td>

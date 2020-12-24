@@ -10,7 +10,7 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def index?
-    update?
+    !user.buyer? && (current_client.enable_actual_inventory?(user) || enable_incentive_module?(user))
   end
 
   def create?
