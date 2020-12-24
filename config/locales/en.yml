@@ -727,6 +727,13 @@ en:
         _type: 'Request type'
         user_id: 'Customer'
         comments: 'Complain / Request'
+        subject: 'Subject'
+        description: 'Details'
+        department: 'Department'
+        priority: 'Priority'
+        tags: 'Tags'
+        due_date: 'Due Date'
+        details: 'Details'
         status: 'Status'
         project_unit_id: 'Related Apartment'
         receipt_id: 'Related Payment'
@@ -734,7 +741,7 @@ en:
         resolved_at: 'Processed on'
         name_email_phone: 'Name/Email/Phone'
         requestable_type: 'Requestable Type'
-        request_details: 'Request Details'
+        request_details: 'Related to'
       user_request/status:
         pending: Pending
         processing: Processing
@@ -1327,7 +1334,7 @@ en:
       show:
         link_name: Detail
       new:
-        link_name: Add KYC
+        link_name: Add
       swap:
         index:
           link_name: 'Swap Requests'

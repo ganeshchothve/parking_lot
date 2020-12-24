@@ -20,7 +20,7 @@ class Admin::ClientPolicy < ClientPolicy
   def permitted_attributes(params = {})
     attributes = super
     if %w[superadmin].include?(user.role)
-      attributes += [:enable_slot_generation, :token_number_seed, :token_number_prefix]
+      attributes += [:enable_slot_generation, :token_number_seed, :token_number_prefix, general_user_request_categories: []]
       unless record.slot_start_date.present? && Rails.env.production?
         attributes += %w[slot_start_date start_time end_time capacity duration enable_slot_generation]
       end

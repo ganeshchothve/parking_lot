@@ -2,7 +2,7 @@ class Buyer::UserRequestPolicy < UserRequestPolicy
   # def index? from UserRequestPolicy
 
   def new?
-    current_client.enable_actual_inventory?(user) && new_permission_by_requestable_type
+    new_permission_by_requestable_type
   end
 
   def edit?

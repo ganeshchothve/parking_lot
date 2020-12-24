@@ -10,28 +10,24 @@ class UserRequest
   # Add different types of documents which are uploaded on user_request
   DOCUMENT_TYPES = []
 
-  field :status, type: String # default: 'pending'
+  field :status, type: String, default: 'pending'
   field :resolved_at, type: DateTime
   field :reason_for_failure, type: String, default: ''
 
   # belongs_to :booking_detail
   # belongs_to :receipt, optional: true
-  belongs_to :requestable, polymorphic: true
-  belongs_to :lead
+  belongs_to :requestable, polymorphic: true, optional: true
+  belongs_to :lead, optional: true
   belongs_to :user
-  belongs_to :project
+  belongs_to :project, optional: true
   belongs_to :resolved_by, class_name: 'User', optional: true
   belongs_to :created_by, class_name: 'User'
   has_many :assets, as: :assetable
   has_many :notes, as: :notable
 
-  validates :lead_id, :user_id, :requestable_id, :requestable_type, presence: true
+  validates :user_id, presence: true
+  validates :lead_id, :project_id, presence: true, if: proc { |user_request| user_request.user_id.present? && user_request.user.buyer? }
   validates :resolved_by, presence: true, if: proc { |user_request| user_request.status == 'resolved' }
-
-  validates :status, inclusion: { in: STATUS }
-  validates :reason_for_failure, presence: true, if: proc { |record| record.rejected? }
-
-  validates_uniqueness_of :requestable_id, scope: [:requestable_type, :status], if: proc{|record| record.pending? }
 
   accepts_nested_attributes_for :notes
   scope :filter_by_project_id, ->(project_id){ where(project_id: project_id) }
@@ -56,7 +52,7 @@ class UserRequest
       custom_scope = {}
       if params[:lead_id].blank? && !user.buyer?
         if user.role?('channel_partner')
-          custom_scope = { lead_id: { "$in": Lead.where(referenced_manager_ids: user.id).distinct(:id) } }
+          custom_scope = { '$or': [{lead_id: { "$in": Lead.where(referenced_manager_ids: user.id).distinct(:id) }}, {user_id: user.id}] }
         elsif user.role?('cp_admin')
           custom_scope = { lead_id: { "$in": Lead.nin(manager_id: [nil, '']).distinct(:id) } }
         elsif user.role?('cp')

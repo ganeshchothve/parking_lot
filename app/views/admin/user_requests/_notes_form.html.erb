@@ -1,0 +1,22 @@
+<%= simple_form_for @user_request, url: url, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['user_requests'], "data-type": "json"}, data: hash do |f| %>
+  <% if policy([current_user_role_group, (@user_request)]).editable_field?("notes_attributes") %>
+    <% f.object.notes.new(creator_id: current_user.id) %>
+    <%= f.fields_for :notes do |note_field|%>
+      <% if (note_field.object.new_record? && policy([current_user_role_group, note_field.object]).create?) || policy([current_user_role_group, note_field.object]).edit? %>
+        <div class="form-group">
+          <%= note_field.label :comments, 'Add Comments' %>
+          <%= note_field.text_area :note, autofocus: true, class: "form-control" %>
+          <%= note_field.hidden_field :note_type, value: (note_field.object.note_type.present? ? note_field.object.note_type : "user") if note_field.object.creator.role == "user" %>
+          <%= note_field.hidden_field :creator_id %>
+        </div>
+        <%= f.submit "Submit", class: 'btn btn-primary', disabled: ((@user_request.new_record? && @user_request.is_a?(UserRequest::Cancellation)) ? true : false), id: "submit_request", data:{event_category: 'Section', event_action: 'Click', event_name: 'cancel booking - submit'}  %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= javascript_tag do %>
+$(document).ready(function(){
+  FormInitializer.init($('.validate-form'));
+});
+<% end %>
