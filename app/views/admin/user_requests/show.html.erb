@@ -11,5 +11,15 @@
     <% elsif @user_request.requestable.kind_of?(Receipt) %>
       <%= render 'admin/user_requests/show_receipt_user_request', user_request: @user_request%>
     <% end %>
+    <% _hash = {"data-resource-type": global_labels['user_request'], "data-type": "json"} %>
+    <% if @user_request.lead_id.present? %>
+        <% _url = admin_lead_user_request_path(lead_id: @user_request.lead_id, request_type: @user_request.class.model_name.element, id: @user_request.id) %>
+    <% else %>
+        <% _url = admin_user_request_path(@user_request, request_type: @user_request.class.model_name.element) %>
+    <% end %>
+    <%= render 'notes_form', hash: _hash, url: _url %>    
+    <br/>
+    <%= render '/notes/index', notable: @user_request %>
   </div>
 </div>
+<br/><br/><br/>

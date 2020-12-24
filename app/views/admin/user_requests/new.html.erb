@@ -1,3 +1,9 @@
 <% _hash = {"data-resource-type": global_labels['user_request'], "data-type": "json"} %>
-<% _url = admin_lead_user_requests_path(lead_id: @user_request.lead_id, request_type: @user_request.class.model_name.element) %>
+<% 
+  if @user_request.lead_id.present?
+    _url = admin_lead_user_requests_path(lead_id: @user_request.lead_id, request_type: @user_request.class.model_name.element)
+  else
+    _url = admin_user_requests_path(request_type: @user_request.class.model_name.element)
+  end
+%>
 <%= render 'form', hash: _hash, url: _url %>

@@ -1,8 +1,8 @@
-class Admin::UserRequest::SwapPolicy < Admin::UserRequestPolicy
+class Admin::UserRequest::GeneralPolicy < Admin::UserRequestPolicy
   # def index? from Admin::UserRequestPolicy
 
   def edit?
-    super && current_client.enable_actual_inventory?(user)
+    super
   end
 
   def create?
@@ -13,9 +13,14 @@ class Admin::UserRequest::SwapPolicy < Admin::UserRequestPolicy
     edit?
   end
 
+  def note_create?
+    create?
+  end
+
   def permitted_attributes(params = {})
-    attributes = super
-    attributes += [:requestable_id, :requestable_type] if record.new_record? && record.status == 'pending' && %w[admin crm sales superadmin cp].include?(user.role)
+    attributes = super + [:subject, :description, :project_id]
+    attributes += [:category] if record.new_record?
+    attributes += [:department, :priority, :tags, :due_date] if user.role != 'channel_partner'
     attributes += [:alternate_project_unit_id] if %w[admin crm sales superadmin cp channel_partner].include?(user.role) && record.status == 'pending'
     attributes
   end

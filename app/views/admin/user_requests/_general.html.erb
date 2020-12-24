@@ -1,0 +1,52 @@
+<div class="row">
+  <div class="col-md-12">
+    <%= f.input :subject, disabled: !policy([:admin, @user_request]).editable_field?("subject"), prompt: :translate %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <%= f.input :project_id, collection: Project.all.collect{|pt| [pt.name, pt.id ]}, disabled: !policy([:admin, @user_request]).editable_field?("project_id"), prompt: :translate, as: :select, input_html: {class: 'selectize'} %>
+  </div>
+  <% if policy([:admin, @user_request]).editable_field?("category") %>
+    <div class="col-md-6">
+      <%= f.input :category, collection: current_client.general_user_request_categories.collect{|x| [x, x]}, disabled: !policy([:admin, @user_request]).editable_field?("category"), prompt: :translate, as: :select, input_html: {class: 'selectize'} %>
+    </div>
+  <% else %>
+    <div class="form-group">
+      <label class="form-control-label" for="user_request_general_category">Category</label>
+      <div><%= @user_request.category %></div>
+    </div>
+  <% end %>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <%= f.input :description, disabled: !policy([:admin, @user_request]).editable_field?("description"), prompt: :translate, as: :text %>
+  </div>
+</div>
+<div class="row">
+  <% if policy([:admin, @user_request]).editable_field?("department") %>
+    <div class="col-md-6">
+      <%= f.input :department, collection: UserRequest::General::DEPARTMENTS.collect{|x| [x.titleize, x]}, disabled: !policy([:admin, @user_request]).editable_field?("department"), prompt: :translate, as: :select, input_html: {class: 'selectize'} %>
+    </div>
+  <% end %>
+  <% if policy([:admin, @user_request]).editable_field?("priority") %>
+    <div class="col-md-6">
+      <%= f.input :priority, collection: UserRequest::General::PRIORITIES.collect{|x| [x.titleize, x]}, disabled: !policy([:admin, @user_request]).editable_field?("priority"), prompt: :translate, as: :select, input_html: {class: 'selectize'} %>
+    </div>
+  <% end %>
+</div>
+<div class="row">
+  <% if policy([:admin, @user_request]).editable_field?("tags") %>
+    <div class="col-md-6">
+      <%= f.input :tags, collection: @user_request.tags.collect{|x| [x, x]}, disabled: !policy([:admin, @user_request]).editable_field?("tags"), prompt: :translate, as: :select, input_html: {class: 'selectize-tags', multiple: true} %>
+    </div>
+  <% end %>
+  <% if policy([:admin, @user_request]).editable_field?("due_date") %>
+    <div class="col-md-6">
+      <div class="form-group">
+        <%= f.label :due_date, class: 'form-control-label optional' %>
+        <%= f.text_field :due_date, class: 'form-control datepicker', "data-min-date": (f.object.due_date.present? && f.object.due_date < Date.today) ? f.object.due_date.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y"), disabled: !policy([:admin, @user_request]).editable_field?("due_date"), value: f.object.due_date.present? ? f.object.due_date.strftime("%d/%m/%Y") : nil %>
+      </div>
+    </div>
+  <% end %>
+</div>

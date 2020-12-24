@@ -7,6 +7,12 @@
   </div>
   <div class="col-md-6">
     <div class="form-group">
+      <%= f.label :general_user_request_categories, class: 'label-required' %>
+      <%= f.select :general_user_request_categories, @client.general_user_request_categories, {}, class: 'selectize-tags', multiple: true, disabled: !policy([:admin, @client]).editable_field?("general_user_request_categories") %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
       <%= f.label :selldo_client_id %>
       <%= f.text_field :selldo_client_id, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("selldo_client_id") ? false : true) %>
     </div>

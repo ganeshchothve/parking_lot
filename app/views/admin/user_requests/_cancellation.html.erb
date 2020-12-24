@@ -24,14 +24,3 @@
     <div><%= @user_request.requestable.try(:name) %></div>
   </div>
 <% end %>
-<% if policy([current_user_role_group, (@user_request)]).editable_field?("alternate_project_unit_id") %>
-  <div class="form-group">
-    <%= f.label :alternate_project_unit_id, class: 'label-required' %>
-    <%= f.select :alternate_project_unit_id, @user_request.alternate_project_unit.present? ? [[@user_request.alternate_project_unit.name, @user_request.alternate_project_unit_id]] : [], {prompt: true}, class: 'selectize-remote', disabled: (policy([current_user_role_group, (@user_request)]).editable_field?("alternate_project_unit_id") ? false : true), required: "required", data: {url: (current_user.buyer? ? buyer_project_units_path : admin_project_units_path)}, "data-params": {fltrs: {status: {"$in": ProjectUnit.user_based_available_statuses(current_user) }, project_id: @user_request.requestable.try(:project_id).to_s}}.to_json, 'data-ds': 'ds' %>
-  </div>
-<% else %>
-  <div class="form-group">
-    <%= f.label :alternate_project_unit_id, class: 'label-required' %>
-    <div><%= @user_request.alternate_project_unit.name %></div>
-  </div>
-<% end %>

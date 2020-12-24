@@ -5,6 +5,7 @@ class Admin::NotePolicy < NotePolicy
   end
 
   def create?
-    "Admin::#{record.notable_type}Policy".constantize.new(user, record.notable).update?
+    policy = "Admin::#{record.notable_type}Policy".constantize.new(user, record.notable)
+    policy.respond_to?(:note_create?) ? policy.note_create? : policy.update?
   end
 end

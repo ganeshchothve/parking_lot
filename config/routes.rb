@@ -335,6 +335,7 @@ Rails.application.routes.draw do
       resources :channel_partners, only: [:create, :update]
       resources :receipts, only: [:create, :update]
       resources :booking_details, only: [:create, :update]
+      resources :user_requests, only: :create
     end
   end
   match '/sell_do/lead_created', to: "api/sell_do/leads#lead_created", via: [:get, :post]

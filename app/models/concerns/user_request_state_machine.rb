@@ -71,8 +71,8 @@ module UserRequestStateMachine
     end
 
     def send_notifications
-      send_email if lead.user.booking_portal_client.email_enabled? && !processing?
-      send_sms if lead.user.booking_portal_client.sms_enabled? && !processing?
+      send_email if lead.present? && lead.user.booking_portal_client.email_enabled? && !processing?
+      send_sms if lead.present? && lead.user.booking_portal_client.sms_enabled? && !processing?
     end
 
     def update_requestable_to_request_rejected

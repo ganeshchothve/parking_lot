@@ -21,16 +21,18 @@
       <div class="box-content br-rd-bl-4 bg-white row">
         <div class="col-md-12 col-lg-12 col-sm-12">
           <ul class="booking-apart-info clear">
-            <li>
-              <span> Requested For ( <%= t("mongoid.attributes.user_request/requestable_type.#{@user_request.requestable_type}") %> )</span>
-              <p><%= @user_request.requestable.name %></p>
-            </li>
-
-            <%- if @user_request.kind_of?(UserRequest::Swap)%>
+            <% if @user_request.requestable_id.present? %>
               <li>
-                <span> Alternate Project Unit</span>
-                <p><%= @user_request.alternate_project_unit.name %></p>
+                <span> Requested For ( <%= t("mongoid.attributes.user_request/requestable_type.#{@user_request.requestable_type}") %> )</span>
+                <p><%= @user_request.requestable.name %></p>
               </li>
+
+              <%- if @user_request.kind_of?(UserRequest::Swap)%>
+                <li>
+                  <span> Alternate Project Unit</span>
+                  <p><%= @user_request.alternate_project_unit.name %></p>
+                </li>
+              <% end %>
             <% end %>
 
             <li>
@@ -42,13 +44,12 @@
                 <% end %>
               </p>
             </li>
-
-            <li>
-              <span> Requested For (User) </span>
-              <p><%= link_to user_request.lead.name, [current_user_role_group, user_request.lead ] %></p>
-            </li>
-          </ul>
-          <ul class="booking-apart-info clear">
+            <% if user_request.lead_id.present? %>
+              <li>
+                <span> Requested For (User) </span>
+                <p><%= link_to user_request.lead.name, [current_user_role_group, user_request.lead ] %></p>
+              </li>
+            <% end %>
             <li>
               <span> Created by </span>
               <p>
@@ -69,7 +70,35 @@
                 <% end %>
               </p>
             </li>
+            <% if user_request.is_a?(UserRequest::General) %>
+            <li>
+              <span>Category </span>
+              <%= user_request.category || '-' %>
+            </li>
+            <li>
+              <span>Department </span>
+              <%= user_request.department.try(:titleize) || '-' %>
+            </li>
+            <% end %>
+            <% if user_request.is_a?(UserRequest::General) %>
+            <li>
+              <span>Priority </span>
+              <%= user_request.priority.try(:titleize) || '-' %>
+            </li>
+            <% end %>
           </ul>
+          <% if user_request.is_a?(UserRequest::General) %>
+            <ul class="booking-apart-info clear">
+              <li>
+                <span>Tags </span>
+                <%= user_request.tags.join(",") || '-' %>
+              </li>
+              <li>
+                <span>Due Date </span>
+                <%= user_request.due_date.try(:in_time_zone, current_user.time_zone).try(:strftime, '%d/%m/%y') || '-' %>
+              </li>
+            </ul>
+          <% end %>
         </div>
       </div>
     </div>

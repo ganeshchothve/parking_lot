@@ -23,6 +23,7 @@ class Client
   field :notification_numbers, type: String
   field :allowed_bookings_per_user, type: Integer, default: 3
   field :sender_email, type: String
+  field :general_user_request_categories, type: Array, default: []
   field :email_domains, type: Array, default: []
   field :booking_portal_domains, type: Array, default: []
   field :registration_name, type: String
