@@ -612,9 +612,11 @@ class User
       elsif user.role?('sales')
         custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) } }
       elsif user.role?('cp_admin')
-        custom_scope = { "$or": [{ role: { "$in": User.buyer_roles(user.booking_portal_client) } }, { role: 'cp' }, { role: 'channel_partner' }] }
+        # Removing access to customer accounts for cp/cp_admin, as lead conflict will now work on lead's model & they will have access to their leads.
+        cp_ids = User.where(manager_id: user.id).distinct(:id)
+        custom_scope = { "$or": [{ role: 'cp', _id: {"$in": cp_ids} }, { role: 'channel_partner', manager_id: {"$in": cp_ids} }] }
       elsif user.role?('cp')
-        custom_scope = { "$or": [{ role: 'user', referenced_manager_ids: { "$in": User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id) } }, { role: 'channel_partner', manager_id: user.id }] }
+        custom_scope = { role: 'channel_partner', manager_id: user.id }
       elsif user.role?('admin')
         custom_scope = { role: { "$ne": 'superadmin' } }
       end

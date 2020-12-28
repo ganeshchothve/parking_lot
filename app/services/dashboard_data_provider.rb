@@ -56,7 +56,7 @@ module DashboardDataProvider
   def self.cp_performance_bookings(user, options={})
     matcher = {}
     matcher = options[:matcher] if options[:matcher].present?
-    matcher.merge!(BookingDetail.user_based_scope(user))
+    matcher.merge!(BookingDetail.where(BookingDetail.user_based_scope(user)).booking_stages.selector)
     data = BookingDetail.collection.aggregate([{
             "$match": matcher
           },{

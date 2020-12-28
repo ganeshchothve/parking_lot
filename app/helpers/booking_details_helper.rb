@@ -54,6 +54,14 @@ module BookingDetailsHelper
     end
   end
 
+  def filter_lead_options
+    if params.dig(:fltrs, :lead_id).present?
+      Lead.where(_id: params.dig(:fltrs, :lead_id)).map{|lead| [lead.ds_name, lead.id]}
+    else
+      []
+    end
+  end
+
   def filter_manager_options
     if params.dig(:fltrs, :manager_id).present?
       User.nin(role: User::BUYER_ROLES).where(_id: params.dig(:fltrs, :manager_id)).map{|user| [user.ds_name, user.id]}
