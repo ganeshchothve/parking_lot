@@ -17,6 +17,10 @@ class Admin::ProjectPolicy < ProjectPolicy
     update?
   end
 
+  def collaterals?
+    true
+  end
+
   def ds?
     current_client.enable_actual_inventory?(user)
   end

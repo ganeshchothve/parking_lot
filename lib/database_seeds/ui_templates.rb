@@ -3,7 +3,7 @@
 # DatabaseSeeds::UITemplate.seed CLient.last.id
 module DatabaseSeeds
   module UITemplate
-    def self.seed(client_id)
+    def self.client_based_seed(client_id)
       # To add links for videos
       if Template::UITemplate.where(name: 'assets/_videos').blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'assets/_videos', content: '<div class="row">
@@ -219,6 +219,16 @@ module DatabaseSeeds
       end
 
       Template::UITemplate.where(booking_portal_client_id: client_id).count
+    end
+
+    def self.project_based_seed(project_id, client_id)
+      # To add links for videos
+      if Template::UITemplate.where(name: 'assets/_videos', project_id: project_id).blank?
+        Template::UITemplate.create({ booking_portal_client_id: client_id, project_id: project_id, subject_class: 'View', name: 'assets/_videos', content: '<div class="row">
+          <div class="col-12 my-4 text-center">
+          </div>
+        </div>' })
+      end
     end
   end
 end

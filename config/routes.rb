@@ -142,7 +142,10 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :projects, only: [:index, :edit, :update]
+    resources :projects, only: [:index, :edit, :update] do
+      get :collaterals, on: :member
+      get :collaterals, on: :collection
+    end
     resources :project_towers, only: [:index]
     resources :project_units, only: [:index, :show, :edit, :update] do
       member do

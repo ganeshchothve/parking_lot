@@ -23,11 +23,13 @@ module ApplicationHelper
     CurrencyConverter.convert(number, options.merge(units: :inr))
   end
 
-  def get_view_erb(template)
-    begin
-      ::ERB.new(template.content).result( binding ).html_safe
-    rescue StandardError => e
-      ERB.new("<script> Amura.global_error_handler(''); </script>").result(binding).html_safe
+  def get_view_erb(template, options={})
+    unless options[:check_active] && !template.is_active?
+      begin
+        ::ERB.new(template.content).result( binding ).html_safe
+      rescue StandardError => e
+        ERB.new("<script> Amura.global_error_handler(''); </script>").result(binding).html_safe
+      end
     end
   end
 
