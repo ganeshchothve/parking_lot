@@ -10,12 +10,12 @@ module IncentiveDeductionStateMachine
       state :approved, :rejected
 
       event :pending_approval do
-        transitions from: :draft, to: :pending_approval, success: :after_pending_approval_event
+        transitions from: :draft, to: :pending_approval, success: %i[after_pending_approval_event]
         transitions from: :rejected, to: :pending_approval
       end
 
       event :approved do
-        transitions from: :pending_approval, to: :approved, success: :after_approved
+        transitions from: :pending_approval, to: :approved, success: %i[after_approved]
       end
 
       event :rejected do
@@ -42,8 +42,7 @@ module IncentiveDeductionStateMachine
       deduction.event = nil
       if _event.present? && (deduction.aasm.current_state.to_s != _event.to_s)
         if deduction.send("may_#{_event.to_s}?")
-          deduction.aasm.fire(_event.to_sym)
-          deduction.save
+          deduction.aasm.fire!(_event.to_sym)
         else
           deduction.errors.add(:status, 'transition is invalid')
         end

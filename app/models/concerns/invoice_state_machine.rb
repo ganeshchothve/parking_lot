@@ -9,8 +9,8 @@ module InvoiceStateMachine
       state :pending_approval
       state :approved, :rejected
 
-      event :raise, after: %w(after_raise_event send_notification) do
-        transitions from: :draft, to: :pending_approval
+      event :raise, after: :send_notification do
+        transitions from: :draft, to: :pending_approval, success: %i[after_raised]
       end
 
       event :re_raise, after: :send_notification do
@@ -22,7 +22,7 @@ module InvoiceStateMachine
       end
 
       event :reject do
-        transitions from: :pending_approval, to: :rejected, success: :after_rejected
+        transitions from: :pending_approval, to: :rejected, success: %i[after_rejected]
       end
     end
 
@@ -75,7 +75,7 @@ module InvoiceStateMachine
       end
     end
 
-    def after_raise_event
+    def after_raised
       self.raised_date = Time.now
     end
 
@@ -97,19 +97,6 @@ module InvoiceStateMachine
 
     def reject_pending_deductions
       self.incentive_deduction.rejected! if self.incentive_deduction? && self.incentive_deduction.pending_approval?
-    end
-
-    before_validation do |invoice|
-      _event = invoice.event.to_s
-      invoice.event = nil
-      if _event.present? && (invoice.aasm.current_state.to_s != _event.to_s)
-        if invoice.send("may_#{_event.to_s}?")
-          invoice.aasm.fire(_event.to_sym)
-          invoice.save
-        else
-          invoice.errors.add(:status, 'transition is invalid')
-        end
-      end
     end
 
   end

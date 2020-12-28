@@ -23,7 +23,7 @@
             <div class="files-container-single">
               <% incentive_deduction.assets.each do |asset| %>
                 <% if asset.file.file && asset.file.file.exists? %>
-                  <%= render "assets/file_icon", record: {id: asset.id, file_size: asset.file_size, url: asset.file.url, content_type: asset.file.content_type, original_filename: asset.original_filename }, links: {} %>
+                  <%= render "assets/file_icon", record: {id: asset.id, file_size: asset.file_size, url: asset.file.url, content_type: asset.file.content_type, name: asset.file_name }, links: {} %>
                 <% end %>
               <% end %>
             </div>
