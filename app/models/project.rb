@@ -4,6 +4,9 @@ class Project
   include ArrayBlankRejectable
   include CrmIntegration
 
+  # Add different types of documents which are uploaded on client
+  DOCUMENT_TYPES = %w[document brochure certificate unit_selection_filter_image].freeze
+
   field :name, type: String
   field :developer_name, type: String
   field :subtype,type: String
@@ -124,11 +127,11 @@ class Project
       </div>
     </div>
     <div style="font-size: 12px;">
-      If you have any queries you can reach us at <%= current_client.support_number %> or write to us at <%= current_client.support_email %>. Please click <a href="<%= current_client.website_link %>">here</a> to visit our website.
+      If you have any queries you can reach us at <%= current_project.support_number %> or write to us at <%= current_project.support_email %>. Please click <a href="<%= current_client.website_link %>">here</a> to visit our website.
     </div>
     <hr/>
     <div class="text-muted text-center" style="font-size: 12px;">
-      © <%= Date.today.year %> <%= current_client.name %>. All Rights Reserved. | MAHARERA ID: <%= current_project.rera_registration_no %>
+      © <%= Date.today.year %> <%= current_project.name %>. All Rights Reserved. | MAHARERA ID: <%= current_project.rera_registration_no %>
     </div>
     <% if current_client.address.present? %>
       <div class="text-muted text-center" style="font-size: 12px;">
@@ -140,7 +143,6 @@ class Project
 
   mount_uploader :logo, DocUploader
   mount_uploader :mobile_logo, DocUploader
-  mount_uploader :brochure, DocUploader
 
   has_many :project_units
   has_many :booking_details
@@ -163,7 +165,7 @@ class Project
   validates :enable_actual_inventory, array: { inclusion: {allow_blank: true, in: (User::ADMIN_ROLES + User::BUYER_ROLES) } }
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
 
-  accepts_nested_attributes_for :address, allow_destroy: true #, :brochure_templates, :price_quote_templates, :images
+  accepts_nested_attributes_for :address, allow_destroy: true
   index(client_id:1)
 
   default_scope -> { where(is_active: true)}

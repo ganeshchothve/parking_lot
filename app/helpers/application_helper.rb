@@ -23,11 +23,13 @@ module ApplicationHelper
     CurrencyConverter.convert(number, options.merge(units: :inr))
   end
 
-  def get_view_erb(template)
-    begin
-      ::ERB.new(template.content).result( binding ).html_safe
-    rescue StandardError => e
-      ERB.new("<script> Amura.global_error_handler(''); </script>").result(binding).html_safe
+  def get_view_erb(template, options={})
+    unless options[:check_active] && !template.is_active?
+      begin
+        ::ERB.new(template.content).result( binding ).html_safe
+      rescue StandardError => e
+        ERB.new("<script> Amura.global_error_handler(''); </script>").result(binding).html_safe
+      end
     end
   end
 
@@ -76,11 +78,11 @@ module ApplicationHelper
 
   def bottom_navigation(classes='')
     html = ''
-    if current_user && current_client.brochure.present? && current_client.brochure.url.present?
-      html += "<li >
-      #{active_link_to 'Brochure', download_brochure_path, active: :exclusive, class: 'footer-link' }
-      </li>"
-    end
+    #if current_user && current_client.brochure.present? && current_client.brochure.url.present?
+    #  html += "<li >
+    #  #{active_link_to 'Brochure', download_brochure_path, active: :exclusive, class: 'footer-link' }
+    #  </li>"
+    #end
     #if current_user
     #  html += "<li >
     #  #{active_link_to 'Docs', dashboard_documents_path, active: :exclusive, class: 'footer-link'}

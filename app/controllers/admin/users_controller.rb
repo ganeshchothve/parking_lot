@@ -227,7 +227,7 @@ class Admin::UsersController < AdminController
       @user = User.where(User.role_based_channel_partners_scope(current_user)).first
     end
     @walkins = Lead.where(manager_id: @user.id, created_at: (Date.parse(@start_date).beginning_of_day)..(Date.parse(@end_date).end_of_day)).group_by{|p| p.project_id}
-    @bookings = BookingDetail.where(manager_id: @user.id, created_at: (Date.parse(@start_date).beginning_of_day)..(Date.parse(@end_date).end_of_day)).group_by{|p| p.project_id}
+    @bookings = BookingDetail.booking_stages.where(manager_id: @user.id, created_at: (Date.parse(@start_date).beginning_of_day)..(Date.parse(@end_date).end_of_day)).group_by{|p| p.project_id}
   end
 
   private

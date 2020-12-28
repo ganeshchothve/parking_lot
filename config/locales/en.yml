@@ -400,6 +400,7 @@ en:
         blocking_days: 'Unit to be blocked for (Days)'
         holding_minutes: 'Unit to be held for (Minutes)'
         rera_registration_no: 'RERA Registration Number'
+        assets: 'Collaterals'
 
       cost:
         name: "Name"
@@ -723,6 +724,7 @@ en:
         dlt_entity_id: "DLT Entity ID"
         dlt_header_id: "DLT Header ID"
         dlt_temp_id: "DLT Template ID"
+        project_id: 'Project'
       user_request:
         request_type: 'Request type'
         _type: 'Request type'
@@ -878,7 +880,7 @@ en:
       lead:
         project_id: 'Project'
         manager_id: 'Partner / Manager / Added by'
-        name_email_phone: 'Name/Email/Phone'
+        name_email_phone: 'Deal (Project Name)'
 
       user/file_types:
         home_loan_application_form: 'Home Loan Application Form'
@@ -906,12 +908,23 @@ en:
 
       client/file_types:
         document: 'Document'
-        video: 'Video'
         certificate: 'Certificate'
+        login_page_image: 'Login Page Image'
       client/help_text:
         document_html: 'Client documents'
-        video_html: 'Client videos'
         certificate_html: 'Client certificates'
+        login_page_image_html: 'Web compatible landing page image'
+
+      project/file_types:
+        document: 'Document'
+        certificate: 'Certificate'
+        brochure: 'Project Brochure'
+        unit_selection_filter_image: 'Image on Apartment Search Page'
+      project/help_text:
+        document_html: 'Project documents'
+        certificate_html: 'Project certificates'
+        brochure_html: 'Project Brochure preferably in PDF'
+        unit_selection_filter_image_html: 'Web compatible image - to be displayed on apartment search page'
 
       bulk_upload_report/file_types:
         receipts_status_update: 'Receipt Status Bulk Update'
@@ -1490,7 +1503,8 @@ en:
     layouts/_navbar_footer: 'Footer Rera Line'
     searches/checkout: 'Holding minutes Text on Checkout page'
     booking_details/_details: 'Bottom Text in Booking detail overview section'
-    assets/_videos: 'Videos Section on customer dashboard'
+    assets/_videos: 'Videos in Collaterals Section on Dashboard'
+    project_units/_section: 'Projects Section on Dashboard'
 
   number:
     human:

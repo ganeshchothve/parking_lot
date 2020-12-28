@@ -26,7 +26,12 @@
             <tbody>
               <% @templates.each do |template| %>
                 <tr>
-                  <td><%= t("templates.#{template.name}") rescue template._type.split("::").last %></td>
+                  <td>
+                    <%= t("templates.#{template.name}") rescue template._type.split("::").last %>
+                    <div class='small'>
+                      <strong><%= template.project.try(:name) %></strong>
+                    </div>
+                  </td>
                   <td><%= template.content %></td>
                   <td >
                     <div class = 'dropdown show text-right'>

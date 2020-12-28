@@ -1,8 +1,8 @@
 class Admin::ProjectsController < AdminController
 
-  before_action :set_project, except: %i[index]
-  before_action :authorize_resource
-  around_action :apply_policy_scope, only: :index
+  before_action :set_project, except: %i[index collaterals]
+  before_action :authorize_resource, except: %i[collaterals]
+  around_action :apply_policy_scope, only: %i[index collaterals]
   layout :set_layout
 
   #
@@ -50,6 +50,12 @@ class Admin::ProjectsController < AdminController
     end
   end
 
+  def collaterals
+    @project = Project.where(id: params[:id]).first
+    authorize_resource
+    render layout: false
+  end
+
   private
 
   def set_project
@@ -58,7 +64,7 @@ class Admin::ProjectsController < AdminController
   end
 
   def authorize_resource
-    if %w[index].include?(params[:action])
+    if %w[index collaterals].include?(params[:action])
       if params[:ds].to_s == 'true'
         authorize([:admin, Project], :ds?)
       else

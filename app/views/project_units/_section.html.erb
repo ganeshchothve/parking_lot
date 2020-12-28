@@ -4,7 +4,7 @@
       <div class="separate-line"></div>
       <% template = ::Template::UITemplate.where(name: 'project_units/_section').first %>
       <% if template.present? %>
-        <%= get_view_erb(template) %>
+        <%= get_view_erb(template, check_active: true) %>
       <% end %>
     </div>
   </div>

@@ -25,12 +25,12 @@
       <%= render 'users/section', users: @referrals, name: Referral.model_name.human(count: @referrals.count) %>
 
       <% if @user.buyer? %>
-        <% if true #policy([:admin, TimeSlot]).index? %>
+        <% if policy([:admin, TimeSlot]).index? %>
           <div class="separate-line container"></div>
           <%= render 'receipts/time_slot_section', user: @user %>
         <% end %>
       <% end %>
-      
+
       <% if current_user.role?('admin') %>
         <div class="separate-line container"></div>
         <%= render 'users/utm_params', user: @user %>

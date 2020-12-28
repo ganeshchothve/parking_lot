@@ -142,7 +142,10 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :projects, only: [:index, :edit, :update]
+    resources :projects, only: [:index, :edit, :update] do
+      get :collaterals, on: :member
+      get :collaterals, on: :collection
+    end
     resources :project_towers, only: [:index]
     resources :project_units, only: [:index, :show, :edit, :update] do
       member do
@@ -264,7 +267,7 @@ Rails.application.routes.draw do
     get 'tds-process', to: 'dashboard#tds_process', as: :dashboard_tds_process
     get 'terms-and-conditions', to: 'dashboard#terms_and_condition', as: :dashboard_terms_and_condition
     get "gamify-unit-selection", to: "dashboard#gamify_unit_selection"
-    get :download_brochure, to: 'dashboard#download_brochure'
+    #get :download_brochure, to: 'dashboard#download_brochure'
     resource :lead do
       resources :searches, except: [:destroy], controller: 'searches' do
         get :"3d", on: :collection, action: "three_d", as: "three_d"

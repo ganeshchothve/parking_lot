@@ -20,18 +20,3 @@
   <% end %>
   <hr/>
 </div>
-<div class="form-group">
-  <%= f.label :brochure, class: '' %><br/>
-  <%= f.file_field :brochure, class: 'btn pl-0', disabled: !policy([:admin, @project]).editable_field?("brochure") %>
-  <br/>
-  <% if @project.brochure.present? %>
-    <div class="ml-3 image_small_class">
-      <% if @project.brochure.url.split('.')[-1] == 'pdf' %>
-        <embed src="<%= @project.brochure.url %>" class = 'image_small_object'  type="application/pdf">
-      <% else %>
-        <img src="<%= @project.brochure.url %>" class = 'image_small_object' />
-      <% end %>
-    </div>
-  <% end %>
-  <hr/>
-</div>

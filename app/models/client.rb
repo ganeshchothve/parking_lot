@@ -7,7 +7,7 @@ class Client
 
   PAYMENT_GATEWAYS = %w(Razorpay CCAvenue)
   # Add different types of documents which are uploaded on client
-  DOCUMENT_TYPES = %w[document video certificate login_page_image unit_selection_filter_image].freeze
+  DOCUMENT_TYPES = %w[document certificate login_page_image].freeze
 
   field :name, type: String
   field :selldo_client_id, type: String
@@ -94,7 +94,7 @@ class Client
     <div class="card mb-3">
       <div class="card-body">
         Thanks,<br/>
-        <%= current_project.name %>
+        <%= current_client.name %>
       </div>
     </div>
     <div style="font-size: 12px;">
@@ -102,7 +102,7 @@ class Client
     </div>
     <hr/>
     <div class="text-muted text-center" style="font-size: 12px;">
-      © <%= Date.today.year %> <%= current_client.name %>. All Rights Reserved. | MAHARERA ID: <%= current_project.rera_registration_no %>
+      © <%= Date.today.year %> <%= current_client.name %>. All Rights Reserved.
     </div>
     <% if current_client.address.present? %>
       <div class="text-muted text-center" style="font-size: 12px;">
@@ -115,7 +115,6 @@ class Client
   mount_uploader :logo, LogoUploader
   mount_uploader :mobile_logo, LogoUploader
   mount_uploader :background_image, DocUploader
-  mount_uploader :brochure, DocUploader
 
 
   enable_audit track: ["update"]
