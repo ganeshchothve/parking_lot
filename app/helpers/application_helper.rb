@@ -76,11 +76,11 @@ module ApplicationHelper
 
   def bottom_navigation(classes='')
     html = ''
-    if current_user && current_client.brochure.present? && current_client.brochure.url.present?
-      html += "<li >
-      #{active_link_to 'Brochure', download_brochure_path, active: :exclusive, class: 'footer-link' }
-      </li>"
-    end
+    #if current_user && current_client.brochure.present? && current_client.brochure.url.present?
+    #  html += "<li >
+    #  #{active_link_to 'Brochure', download_brochure_path, active: :exclusive, class: 'footer-link' }
+    #  </li>"
+    #end
     #if current_user
     #  html += "<li >
     #  #{active_link_to 'Docs', dashboard_documents_path, active: :exclusive, class: 'footer-link'}

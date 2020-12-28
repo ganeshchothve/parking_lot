@@ -906,12 +906,23 @@ en:
 
       client/file_types:
         document: 'Document'
-        video: 'Video'
         certificate: 'Certificate'
+        login_page_image: 'Login Page Image'
       client/help_text:
         document_html: 'Client documents'
-        video_html: 'Client videos'
         certificate_html: 'Client certificates'
+        login_page_image_html: 'Web compatible landing page image'
+
+      project/file_types:
+        document: 'Document'
+        certificate: 'Certificate'
+        brochure: 'Project Brochure'
+        unit_selection_filter_image: 'Image on Apartment Search Page'
+      project/help_text:
+        document_html: 'Project documents'
+        certificate_html: 'Project certificates'
+        brochure_html: 'Project Brochure preferably in PDF'
+        unit_selection_filter_image_html: 'Web compatible image - to be displayed on apartment search page'
 
       bulk_upload_report/file_types:
         receipts_status_update: 'Receipt Status Bulk Update'

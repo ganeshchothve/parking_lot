@@ -89,9 +89,9 @@ class Email
     if self.body.blank?
       email_template = Template::EmailTemplate.find self.email_template_id
       current_client = self.booking_portal_client
-      current_project = current_client.projects.first
+      current_project = self.project
       begin
-        self.body = ERB.new(self.booking_portal_client.email_header).result( binding ) + email_template.parsed_content(triggered_by) + ERB.new(self.booking_portal_client.email_footer).result( binding )
+        self.body = ERB.new((current_project || current_client).email_header).result( binding ) + email_template.parsed_content(triggered_by) + ERB.new((current_project || current_client).email_footer).result( binding )
       rescue => e
         self.body = ""
       end
