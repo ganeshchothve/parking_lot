@@ -18,11 +18,11 @@
               </li>
               <li>
                 <span><%= t('mongoid.attributes.channel_partner.rera_id') %></span>
-                <p><%= @channel_partner.rera_id %></p>
+                <p><%= @channel_partner.rera_id.presence || '-' %></p>
               </li>
               <li>
                 <span><%= t('mongoid.attributes.channel_partner.gstin_number') %></span>
-                <p><%= @channel_partner.gstin_number %></p>
+                <p><%= @channel_partner.gstin_number.presence || '-' %></p>
               </li>
               <li>
                 <span><%= t('mongoid.attributes.channel_partner.status') %></span>
@@ -35,20 +35,20 @@
 
               <li>
                 <span><%= t('mongoid.attributes.channel_partner.pan_number') %></span>
-                <p><%= @channel_partner.pan_number %></p>
+                <p><%= @channel_partner.pan_number.presence || '-' %></p>
               </li>
               <li>
                 <span><%= t('mongoid.attributes.channel_partner.aadhaar') %></span>
-                <p><%= @channel_partner.aadhaar %></p>
+                <p><%= @channel_partner.aadhaar.presence || '-' %></p>
               </li>
 
               <li>
                 <span><%= t('mongoid.attributes.channel_partner.manager_name') %></span>
-                <p class="break-word"><%= @channel_partner.manager_name || '-' %></p>
+                <p class="break-word"><%= @channel_partner.manager_name.presence || '-' %></p>
               </li>
               <li>
                 <span><%= t('mongoid.attributes.channel_partner.cp_code') %></span>
-                <p class="break-word"><%= @channel_partner.cp_code || '-' %></p>
+                <p class="break-word"><%= @channel_partner.cp_code.presence || '-' %></p>
               </li>
             </ul>
           </div>
