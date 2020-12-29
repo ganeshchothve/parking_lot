@@ -6,7 +6,7 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def asset_create?
-    update?
+    %w[superadmin cp_admin].include?(user.role)
   end
 
   def index?

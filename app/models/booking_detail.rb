@@ -69,6 +69,7 @@ class BookingDetail
   # TODO: uncomment
   # validates :name, presence: true
   validates :status, :agreement_price, :all_inclusive_price, presence: true
+  validates :agreement_price, :all_inclusive_price, numericality: { greater_than: 0 }
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :kyc_mandate
   validate :validate_content, on: :create

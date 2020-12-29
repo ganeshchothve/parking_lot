@@ -434,7 +434,7 @@ en:
         average_quarterly_business: 'Average Quarterly Business (₹)'
         developers_worked_for: 'Developers Worked For (Type any developer name & press enter)'
         event: 'Application Status'
-        cp_code: 'Partner Code'
+        cp_code: 'Vendor Code'
       channel_partner/file_types:
         rera_certificate: 'RERA Certificate'
         gst_certificate: 'GST Certificate'
