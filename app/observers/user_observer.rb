@@ -45,7 +45,7 @@ class UserObserver < Mongoid::Observer
 
   def after_save user
     if user.lead_id.present? && crm = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
-      user.update_reference_id(user.lead_id, crm.id)
+      user.update_external_ids({ reference_id: user.lead_id }, crm.id)
     end
   end
 
