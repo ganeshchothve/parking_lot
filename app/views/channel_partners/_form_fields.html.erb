@@ -129,6 +129,13 @@
   </div>
 <% end %>
 
+<% if action_name == 'edit' && policy(ThirdPartyReference).editable_field?('reference_id') %>
+  <br>
+  <h5>CRM IDs</h5>
+  <hr/>
+  <%= render 'admin/crm/shared/third_party_references_form', f: form %>
+<% end %>
+
 <%= javascript_tag do %>
   $(document).ready(function(){
     $('#channel_partner_event').change(function(){

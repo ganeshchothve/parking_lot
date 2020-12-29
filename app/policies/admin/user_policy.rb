@@ -102,7 +102,7 @@ class Admin::UserPolicy < UserPolicy
     attributes += [:role] if %w[superadmin admin].include?(user.role)
     if %w[superadmin admin sales_admin].include?(user.role)
       attributes += [:erp_id]
-      attributes += [third_party_references_attributes: [:id, :crm_id, :reference_id]]
+      attributes += [third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes]
     end
     # To give selected channel partner access of live inventory.
     attributes += [:enable_live_inventory] if user.role?(:superadmin) && record.role?(:channel_partner)

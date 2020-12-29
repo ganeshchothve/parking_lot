@@ -8,9 +8,16 @@ class ChannelPartnerObserver < Mongoid::Observer
 
   def before_save channel_partner
     # update user's details from channel partner
-    if channel_partner.associated_user_id.present?
-      channel_partner.associated_user.update(first_name: channel_partner.first_name, last_name: channel_partner.last_name, rera_id: channel_partner.rera_id)
+    if cp_user = channel_partner.associated_user.presence
+      cp_user.update(first_name: channel_partner.first_name, last_name: channel_partner.last_name, rera_id: channel_partner.rera_id, manager_id: channel_partner.manager_id)
+      channel_partner.third_party_references.each do |tpr|
+        cp_user.update_external_ids({reference_id: tpr.reference_id}, tpr.crm_id)
+      end
     end
+
+    channel_partner.rera_applicable = true if channel_partner.rera_id.present?
+    channel_partner.gst_applicable = true if channel_partner.gstin_number.present?
+
     # TODO: Handle enable_direct_activation_for_cp setting behavior on client.
     #if channel_partner.new_record? && current_client.reload.enable_direct_activation_for_cp
     #  channel_partner.status = 'active'

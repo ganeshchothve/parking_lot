@@ -14,7 +14,14 @@
   <tbody>
       <% channel_partners.each do |channel_partner| %>
         <tr>
-          <td data-title=<%= t('mongoid.attributes.channel_partner.name') %> ><%= channel_partner.name %></td>
+          <td data-title=<%= t('mongoid.attributes.channel_partner.name') %> >
+            <%= channel_partner.name %>
+            <% if channel_partner.cp_code.present? %>
+              <div class='small'>
+                <%= t('mongoid.attributes.channel_partner.cp_code') %>: <%= channel_partner.cp_code %>
+              </div>
+            <% end %>
+          </td>
           <td data-title= <%= t('mongoid.attributes.channel_partner.details') %> ><i class="far fa-envelope"></i> <%= channel_partner.email %><br/><i class="fas fa-mobile-alt"></i> <%= channel_partner.phone %></td>
           <td data-title=<%= t('mongoid.attributes.channel_partner.rera_id') %> ><%= channel_partner.rera_id %></td>
           <td data-title=<%= t('mongoid.attributes.channel_partner.status') %> ><%= ChannelPartner.human_attribute_name("status.#{channel_partner.status}") %></td>

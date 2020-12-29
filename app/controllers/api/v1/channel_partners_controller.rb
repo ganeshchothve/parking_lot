@@ -60,7 +60,7 @@ class Api::V1::ChannelPartnersController < ApisController
         reference_id: cp_reference_id
       }
       if @channel_partner
-        tpr = @lead.third_party_references.where(reference_id: params[:id], crm_id: @crm.id).first
+        tpr = @channel_partner.third_party_references.where(reference_id: params[:id], crm_id: @crm.id).first
         tpr_attrs[:id] = tpr.id.to_s if tpr
       end
       params[:channel_partner][:third_party_references_attributes] = [ tpr_attrs ]
@@ -86,7 +86,7 @@ class Api::V1::ChannelPartnersController < ApisController
   #     }
   # }
   def channel_partner_create_params
-    params.require(:channel_partner).permit(:first_name, :last_name, :rera_id, :aadhaar, :pan_number, :company_name, :phone, :email, :cp_code, :team_size, third_party_references_attributes: [:crm_id, :reference_id])
+    params.require(:channel_partner).permit(:first_name, :last_name, :rera_id, :gstin_number, :aadhaar, :pan_number, :company_name, :phone, :email, :cp_code, :team_size, third_party_references_attributes: [:crm_id, :reference_id])
   end
 
   # Allows only certain parameters to beupdated.
@@ -103,7 +103,7 @@ class Api::V1::ChannelPartnersController < ApisController
   #     }
   # }
   def channel_partner_update_params
-    params.require(:channel_partner).permit(:first_name, :last_name, :rera_id, :aadhaar, :pan_number, :company_name, :cp_code, :team_size, third_party_references_attributes: [:id, :reference_id])
+    params.require(:channel_partner).permit(:first_name, :last_name, :rera_id, :gstin_number, :aadhaar, :pan_number, :company_name, :cp_code, :team_size, third_party_references_attributes: [:id, :reference_id])
   end
 
 end

@@ -65,7 +65,7 @@ class ChannelPartner
   has_one :bank_detail, as: :bankable, validate: false
   has_many :assets, as: :assetable
 
-  validates :first_name, :last_name, :pan_number, :status, :email, :phone, :team_size, :gst_applicable, :rera_applicable, :nri, presence: true
+  validates :first_name, :last_name, :pan_number, :status, :email, :phone, :team_size, :gst_applicable, :rera_applicable, :nri, :company_name, presence: true
   validates :team_size, :numericality => { :greater_than => 0 }, allow_blank: true
   validates :status_change_reason, presence: true, if: proc { |cp| cp.status == 'rejected' }
   validates :aadhaar, format: { with: /\A\d{12}\z/i, message: 'is not a valid aadhaar number' }, allow_blank: true
