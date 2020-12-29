@@ -73,7 +73,7 @@ class BookingDetail
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :kyc_mandate
   validate :validate_content, on: :create
-  validates :primary_user_kyc, :receipts, copy_errors_from_child: true, allow_blank: true
+  validates :primary_user_kyc, :receipts, :tasks, copy_errors_from_child: true, allow_blank: true
 
   delegate :name, :blocking_amount, to: :project_unit, prefix: true, allow_nil: true
   delegate :name, :email, :phone, to: :user, prefix: true, allow_nil: true
@@ -89,14 +89,15 @@ class BookingDetail
   scope :filter_by_user_id, ->(user_id) { where(user_id: user_id)  }
   scope :filter_by_lead_id, ->(lead_id){ where(lead_id: lead_id)}
   scope :filter_by_manager_id, ->(manager_id){ where(lead_id: { '$in' => Lead.where(manager_id: manager_id).distinct(:_id) } ) }
-  scope :filter_by_tasks_completed, ->(tasks) { where("$and": [{ _id: {"$in": find_completed_tasks(tasks)}}])}
-  scope :filter_by_tasks_pending, ->(tasks) { where("$and": [{ _id: {"$in": find_pending_tasks(tasks)}}])}
+  scope :filter_by_tasks_completed, ->(task) { where(tasks: { '$elemMatch': {key: task, completed: true} }) }
+  scope :filter_by_tasks_pending, ->(task) { where(tasks: { '$elemMatch': { key: task, completed: {'$ne': true} } }) }
+  scope :filter_by_tasks_completed_tracked_by, ->(tracked_by) { where("#{tracked_by}_tasks_completed": true) }
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(name: regex ) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: start_date..end_date) }
-  scope :incentive_eligible, -> { booked_confirmed }
+  scope :incentive_eligible, -> { booked_confirmed.filter_by_tasks_completed_tracked_by('system') }
   scope :booking_stages, -> { all.in(status: BOOKING_STAGES) }
 
-  accepts_nested_attributes_for :notes, :tasks, :receipts, :user_kycs, :primary_user_kyc
+  accepts_nested_attributes_for :notes, :tasks, :receipts, :user_kycs, :primary_user_kyc, reject_if: :all_blank
 
   def validate_content
     _file = tds_doc.file
@@ -296,7 +297,7 @@ class BookingDetail
   end
 
   def incentive_eligible?
-    booked_confirmed?
+    booked_confirmed? && system_tasks_completed?
   end
 
   def calculate_incentive
@@ -306,24 +307,7 @@ class BookingDetail
 
   class << self
 
-    def find_completed_tasks tasks
-      BookingDetail.collection.aggregate([ {"$unwind": "$tasks"},
-                                           {"$match": {"tasks.key": tasks, "tasks.completed": true}},
-                                           {"$project": {id: "$id"}}
-                                          ]).to_a.uniq.collect{|x| x['_id']}
-    end
-
-    def find_pending_tasks tasks
-      booking_detail_ids = BookingDetail.collection.aggregate([ {"$unwind": "$tasks"},
-                                           {"$match": {"tasks.key": tasks, "tasks.completed": false}},
-                                           {"$project": {id: "$id"}}
-                                          ]).to_a.uniq.collect{|x| x['_id']}
-      booking_detail_ids << BookingDetail.where(tasks: nil).pluck(:id)
-      booking_detail_ids.flatten
-    end
-
     def user_based_scope(user, params = {})
-
       custom_scope = {}
       if params[:lead_id].blank? && !user.buyer?
         if user.role?('channel_partner')

@@ -18,7 +18,7 @@ class ChecklistPolicy < ApplicationPolicy
 
   def permitted_attributes
     attributes = %w[name description id order]
-    attributes += %w[key] if record.new_record?
+    attributes += %w[key tracked_by] if record.new_record?
     attributes
   end
 end

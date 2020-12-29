@@ -152,11 +152,33 @@ class Api::V1::BookingDetailsController < ApisController
     { "Receipts errors": errors.compact } if errors.try(:compact).present?
   end
 
+  def check_task_params
+    errors = []
+    if params[:booking_detail][:tasks_attributes].present?
+      if tasks_attributes = params[:booking_detail][:tasks_attributes].try(:permit!).try(:to_h)
+        @client = @lead.user.booking_portal_client
+        tasks_attributes.each do |task, value|
+          errors << check_any_task_params(task.to_s, value)
+        end
+      else
+        errors << 'tasks_attributes should be a key, value pair'
+      end
+    end
+    { "Tasks errors": errors.compact } if errors.try(:compact).present?
+  end
+
+  def check_any_task_params task, value
+    errors = []
+    errors << "No task found" if (@booking_detail.present? && @booking_detail.tasks.where(key: task).blank?) && @client.checklists.where(key: task).blank?
+    { task => errors } if errors.present?
+  end
+
   def check_params
     errors = []
     errors << check_primary_user_kyc_params
     errors << check_user_kycs_params
     errors << check_receipts_params
+    errors << check_task_params
     render json: { errors: errors.compact }, status: :unprocessable_entity and return if errors.try(:compact).present?
   end
 
@@ -173,6 +195,15 @@ class Api::V1::BookingDetailsController < ApisController
     params[:booking_detail][:receipts_attributes].each_with_index do |receipt_attributes, i|
       params[:booking_detail][:receipts_attributes][i] = modify_any_receipt_params(receipt_attributes)
     end if params[:booking_detail][:receipts_attributes].present?
+
+    # modify tasks params
+    params[:booking_detail][:tasks_attributes] = params[:booking_detail][:tasks_attributes].permit!.to_h.map do |task, value|
+      if @booking_detail.present? && booking_task = @booking_detail.tasks.where(key: task).first
+        { id: booking_task.id.to_s, completed: value, completed_by_id: @crm.user_id.to_s }
+      elsif booking_task = @client.checklists.where(key: task).first
+        { name: booking_task.name, key: booking_task.key, tracked_by: booking_task.tracked_by, order: booking_task.order, completed: value, completed_by_id: @crm.user_id.to_s }
+      end
+    end.compact if params[:booking_detail][:tasks_attributes].present?
   end
 
   def receipt_params
@@ -183,12 +214,16 @@ class Api::V1::BookingDetailsController < ApisController
     [:lead_id, :salutation, :first_name, :last_name, :email, :phone, :dob, :pan_number, :aadhaar, :anniversary, :education_qualification, :designation, :customer_company_name, :number_of_units, :budget, :comments, :nri, :oci, :poa, :poa_details, :poa_details_phone_no, :is_company, :gstn, :company_name, :existing_customer, :existing_customer_name, :existing_customer_project, :creator_id,  third_party_references_attributes: [:id, :crm_id, :reference_id], preferred_floors: [], configurations: [], addresses_attributes: [:id, :one_line_address, :address1, :address2, :city, :state, :country, :country_code, :zip, :primary, :address_type]]
   end
 
+  def tasks_params
+    [:id, :name, :key, :tracked_by, :order, :completed, :completed_by_id]
+  end
+
   def booking_detail_create_params
-    params.require(:booking_detail).permit(:agreement_price, :all_inclusive_price, receipts_attributes: receipt_params, primary_user_kyc_attributes: user_kyc_params, user_kycs_attributes: user_kyc_params, third_party_references_attributes: [:id, :reference_id, :crm_id])
+    params.require(:booking_detail).permit(:agreement_price, :all_inclusive_price, receipts_attributes: receipt_params, primary_user_kyc_attributes: user_kyc_params, user_kycs_attributes: user_kyc_params, tasks_attributes: tasks_params, third_party_references_attributes: [:id, :reference_id, :crm_id])
   end
 
   def booking_detail_update_params
-    params.require(:booking_detail).permit( receipts_attributes: receipt_params, user_kycs_attributes: user_kyc_params, third_party_references_attributes: [:id, :reference_id])
+    params.require(:booking_detail).permit( receipts_attributes: receipt_params, user_kycs_attributes: user_kyc_params, tasks_attributes: tasks_params, third_party_references_attributes: [:id, :reference_id])
   end
 
   def get_receipts_ids

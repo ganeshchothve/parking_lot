@@ -291,6 +291,7 @@ en:
         dates: 'Dates'
         tasks_completed: 'Tasks Completed'
         tasks_pending: 'Tasks Pending'
+        tasks_completed_tracked_by: 'All Tasks Completed Tracked by'
         agreement_price: 'Agreement Price'
       booking_detail/status:
         available: 'Available'

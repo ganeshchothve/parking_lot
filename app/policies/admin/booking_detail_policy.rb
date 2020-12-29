@@ -78,7 +78,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     attributes = super
     attributes += [:primary_user_kyc_id, :user_kyc_ids, :project_unit_id, :user_id, :lead_id ]
     if eligible_users_for_tasks?
-      attributes += [tasks_attributes: TaskPolicy.new(user, Task.new).permitted_attributes]
+      attributes += [tasks_attributes: Admin::TaskPolicy.new(user, Task.new).permitted_attributes]
     end
     attributes
   end

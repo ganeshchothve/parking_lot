@@ -37,16 +37,18 @@
           <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.manager_id'), class: "control-label" %>
           <%= select_tag "fltrs[manager_id]", options_for_select(filter_manager_options), { class: "selectize-remote", data: { url: admin_users_path, params: { fltrs: { role_nin: ::User::BUYER_ROLES }} }} %>
         </div>
-        <% if policy([:admin, BookingDetail]).editable_field?("tasks_attributes") %>
-          <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-            <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.tasks_completed'), class: "control-label" %>
-            <%= select_tag "fltrs[tasks_completed]", options_for_select(current_client.checklists.collect{|x| [x.name, x.key]}, params.dig(:fltrs, :tasks_completed)), prompt: '', class: "selectize" %>
-          </div>
-          <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-            <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.tasks_pending'), class: "control-label" %>
-            <%= select_tag "fltrs[tasks_pending]", options_for_select(current_client.checklists.collect{|x| [x.name, x.key]}, params.dig(:fltrs, :tasks_pending)), prompt: '', class: "selectize" %>
-          </div>
-        <% end %>
+        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.tasks_completed'), class: "control-label" %>
+          <%= select_tag "fltrs[tasks_completed]", options_for_select(current_client.checklists.collect{|x| [x.name, x.key]}, params.dig(:fltrs, :tasks_completed)), prompt: '', class: "selectize" %>
+        </div>
+        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.tasks_pending'), class: "control-label" %>
+          <%= select_tag "fltrs[tasks_pending]", options_for_select(current_client.checklists.collect{|x| [x.name, x.key]}, params.dig(:fltrs, :tasks_pending)), prompt: '', class: "selectize" %>
+        </div>
+        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.tasks_completed_tracked_by'), class: "control-label" %>
+          <%= select_tag "fltrs[tasks_completed_tracked_by]", options_for_select(Checklist::TRACKED_BY.collect{|x| [x.titleize, x]}, params.dig(:fltrs, :tasks_completed_tracked_by)), prompt: '', class: "selectize" %>
+        </div>
       </div>
     </div>
     <div class="filter-footer">

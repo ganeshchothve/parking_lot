@@ -21,7 +21,7 @@
           <%= checklist.key %>
         </td>
         <td>
-          <%= checklist.tracked_by %>
+          <%= checklist.tracked_by.try(:titleize) %>
         </td>
         <td>
           <%= checklist.order %>

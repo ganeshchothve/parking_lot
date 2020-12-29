@@ -35,8 +35,16 @@
           </div>
           <div class = 'row'>
             <div class = 'col-6'>
-              <%= checklist.label :order, class: 'label-required' %>
-              <%= checklist.number_field :order, class: 'form-control', required: 'required', disabled: !policy([:admin, @checklist]).editable_field?("order"), min: 1, max: 100 %>
+              <div class="form-group">
+                <%= checklist.label :tracked_by, class: 'label-required' %>
+                <%= checklist.select :tracked_by, options_for_select(Checklist::TRACKED_BY.collect {|x| [x.titleize, x]}, checklist.object.tracked_by), {prompt: 'Select'}, class: 'selectize', required: 'required', disabled: !policy([:admin, @checklist]).editable_field?("tracked_by") %>
+              </div>
+            </div>
+            <div class = 'col-6'>
+              <div class="form-group">
+                <%= checklist.label :order, class: 'label-required' %>
+                <%= checklist.number_field :order, class: 'form-control', required: 'required', disabled: !policy([:admin, @checklist]).editable_field?("order"), min: 1, max: 100 %>
+              </div>
             </div>
           </div>
         <% end %>

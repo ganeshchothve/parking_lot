@@ -13,7 +13,7 @@
           <%= f.fields_for :tasks, @booking_detail.tasks.order('order ASC') do |task| %>
             <%= task.hidden_field :completed_by_id , id: "#{task.object.key}_by"%>
               <div class="radioStyle col-lg-12 mx-4 my-2">
-                <%= task.check_box :completed, autofocus: true, disabled: !policy([current_user_role_group, @booking_detail]).editable_field?('tasks_attributes'), id: "#{task.object.key}", class: 'check-input' %>
+                <%= task.check_box :completed, autofocus: true, disabled: !policy([current_user_role_group, task.object]).editable_field?('completed'), id: "#{task.object.key}", class: 'check-input' %>
                 <%= task.label :completed, "<span class='pre'>#{task.object.name}</span>".html_safe, for: "#{task.object.key}" %>
                 <div id = <%= "#{task.object.key}_div" %> >
                   <% if task.object.completed %>
