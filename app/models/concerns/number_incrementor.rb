@@ -1,8 +1,9 @@
+require 'autoinc'
 module NumberIncrementor
   extend ActiveSupport::Concern
+  include Mongoid::Autoinc
 
   included do
-
     field :number, type: Integer
     increments :number
 
