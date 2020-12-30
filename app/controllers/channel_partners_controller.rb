@@ -81,7 +81,7 @@ class ChannelPartnersController < ApplicationController
   end
 
   def apply_policy_scope
-    custom_scope = ChannelPartner.all.criteria
+    custom_scope = ChannelPartner.where(ChannelPartner.user_based_scope(current_user, params))
     ChannelPartner.with_scope(policy_scope(custom_scope)) do
       yield
     end
