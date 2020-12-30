@@ -185,6 +185,9 @@ en:
       user_request/swap:
         one: Swap
         other: Swaps
+      user_request/general:
+        one: General
+        other: General
       user_kyc:
         one: KYC
         other: KYCs
@@ -1355,13 +1358,13 @@ en:
         link_name: Add
       general:
         index:
-          link_name: 'User Requests'
+          link_name: 'General Requests'
         new:
-          link_name: 'User Request'
-          header: 'User Request'
+          link_name: 'General Request'
+          header: 'General Request'
         edit:
-          link_name: 'Edit User Request'
-          header: 'Edit User Request'
+          link_name: 'Edit General Request'
+          header: 'Edit General Request'
       swap:
         index:
           link_name: 'Swap Requests'
