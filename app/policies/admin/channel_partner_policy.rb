@@ -23,6 +23,10 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
     update?
   end
 
+  def change_state?
+    ['inactive', 'rejected'].include?(record.status) && user.role == 'channel_partner' && record.may_submit_for_approval?
+  end
+
   def permitted_attributes(_params = {})
     attributes = [:name, :email, :phone, :rera_id, :title, :first_name, :region, :last_name, :street, :house_number, :city, :postal_code, :country, :mobile_phone, :email, :company_name, :pan_number, :gstin_number, :aadhaar, :rera_id, :manager_id, :team_size, :rera_applicable, :gst_applicable, :nri, :experience, :average_quarterly_business, expertise: [], developers_worked_for: [], address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes]
 

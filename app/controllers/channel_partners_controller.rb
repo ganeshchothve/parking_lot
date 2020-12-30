@@ -1,6 +1,6 @@
 class ChannelPartnersController < ApplicationController
   before_action :authenticate_user!, except: %i[new create]
-  before_action :set_channel_partner, only: %i[show edit update destroy]
+  before_action :set_channel_partner, only: %i[show edit update destroy change_state]
   around_action :apply_policy_scope, only: :index
   before_action :authorize_resource, except: [:new, :create]
 
@@ -58,6 +58,17 @@ class ChannelPartnersController < ApplicationController
       else
         format.html { render :edit }
         format.json { render json: { errors: @channel_partner.errors.full_messages }, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def change_state
+    respond_to do |format|
+      if params.dig(:channel_partner, :event).present? && @channel_partner.send("#{params.dig(:channel_partner, :event)}!")
+        format.html { redirect_to request.referer, notice: t("controller.channel_partners.status_message.#{@channel_partner.status}") }
+      else
+        format.html { redirect_to request.referer, alert: (@channel_partner.errors.full_messages.uniq.presence || 'Something went wrong') }
+        format.json { render json: { errors: (@channel_partner.errors.full_messages.uniq.presence || 'Something went wrong') }, status: :unprocessable_entity }
       end
     end
   end

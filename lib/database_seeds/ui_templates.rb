@@ -99,7 +99,53 @@ module DatabaseSeeds
         </div>' })
       end
 
-      # To render card on user dashboard
+      if Template::UITemplate.where(name: 'index/inactive_channel_partner').blank?
+        Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'index/inactive_channel_partner', content: <<-'INACTIVE_CP'
+          <div class="col-lg-12 col-xs-12 bg-gradient-cd br-rd-8 col-md-12 col-sm-12">
+            <img src="<%= asset_path 'quality-tag.png' %>" alt="user icon" class="quality-tag">
+            <div class="row">
+              <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12 offset-lg-2">
+                <div class="box-content">
+                  <h1 class="wc-title white text-center">Welcome <%= current_user.name %></h1>
+                  <p class="white text-center fn-300 fn-18">Follow these quick steps and get your account approved to start adding leads<br> and earn amazing benefits</p>
+                  <ul class="step-booking">
+                    <li class="light-blue">
+                      <span> <%= image_tag "file-invoice-lightblue.svg", alt: "Fill Details" %> </span>
+                      <%= link_to_if Admin::ChannelPartnerPolicy.new(current_user, channel_partner).edit?, '<span class="light-blue">Fill Details</span>'.html_safe, edit_channel_partner_path(channel_partner), class: 'modal-remote-form-link' %>
+                    </li>
+                    <li class="light-blue">
+                      <span><%= image_tag "file-kycs-lightblue.svg" %></span>
+                      <%= link_to_if policy([ current_user_role_group, Asset.new(assetable: channel_partner)]).index?, '<span class="light-blue">Upload Documents</span>'.html_safe, assetables_path(assetable_type: channel_partner.class.model_name.i18n_key.to_s, assetable_id: channel_partner.id), class: 'modal-remote-form-link' %>
+                    </li>
+                    <li class="light-blue">
+                      <span><%= image_tag "building-lightblue.svg" %></span>
+                      <% if policy([current_user_role_group, channel_partner]).editable_field?('event') %>
+                        <%= link_to_if policy([current_user_role_group, channel_partner]).change_state?, "<span class='light-blue'>#{channel_partner.rejected? ? 'Re-' : ''}Submit for Approval</span>".html_safe, change_state_channel_partner_path(channel_partner, {channel_partner: {event: 'submit_for_approval'}}), method: :post, class: 'modal-remote-form-link' %>
+                      <% elsif channel_partner.pending? %>
+                          Sent for Approval
+                      <% end %>
+                    </li>
+                  </ul>
+                  <p class="white text-center fn-14 fn-500">
+                  <% if channel_partner.inactive? && !channel_partner.may_submit_for_approval? %>
+                    Upload following documents to submit your application<br>
+                    <%= ChannelPartner::DOCUMENT_TYPES.collect {|x| t("mongoid.attributes.channel_partner/file_types.#{x}")}.to_sentence %>
+                  <% elsif channel_partner.pending? %>
+                    Thank you for choosing us<br>
+                    Please wait while our representative reviews your account and approves
+                  <% elsif  channel_partner.rejected? %>
+                    Your account got rejected for following reason: <%= channel_partner.status_change_reason %><br>
+                    Please resolve the concern and resubmit
+                  <% end %>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          INACTIVE_CP
+        })
+      end
+
       if Template::UITemplate.where(name: 'index/_channel_partner').blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'index/_channel_partner', content: '
         <div class="col-lg-12 col-xs-12 bg-gradient-cd br-rd-8 col-md-12 col-sm-12">

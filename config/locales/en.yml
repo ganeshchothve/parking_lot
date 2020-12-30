@@ -1121,6 +1121,8 @@ en:
         link_name: 'Edit Application'
       show:
         link_name: 'Application Details'
+      status_message:
+        pending: 'Application submitted for approval'
 
     dashboard:
       index:
@@ -1502,6 +1504,7 @@ en:
 
   templates:
     users/_welcome: 'Customer Dashboard'
+    index/inactive_channel_partner: 'Channel Partner Dashboard before Approval'
     index/_channel_partner: 'Channel Partner Dashboard'
     dashboard/index/_admin: 'Sales Dashboard'
     devise/sessions/new: 'Landing Page'

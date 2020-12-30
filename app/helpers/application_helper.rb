@@ -26,7 +26,7 @@ module ApplicationHelper
   def get_view_erb(template, options={})
     unless options[:check_active] && !template.is_active?
       begin
-        ::ERB.new(template.content).result( binding ).html_safe
+        ::ERB.new(template.content).result( options[:binding] || binding ).html_safe
       rescue StandardError => e
         ERB.new("<script> Amura.global_error_handler(''); </script>").result(binding).html_safe
       end
