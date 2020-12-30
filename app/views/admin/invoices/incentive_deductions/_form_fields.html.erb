@@ -1,4 +1,8 @@
 <div class="form-group">
+  <% unless @incentive_deduction.new_record? %>
+    <%= f.label :number %>
+    <p><%= @incentive_deduction.number %></p>
+  <% end %>
   <%= f.label :amount, class: 'label-required' %>
   <%= f.number_field :amount, autofocus: true, class: "form-control", required: 'required', disabled: !policy([:admin, incentive_deduction]).editable_field?("amount") || action_name == 'show', max: incentive_deduction.invoice.amount, min: 1 %>
 </div>

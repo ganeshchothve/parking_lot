@@ -2,6 +2,7 @@
   <thead class="th-default">
     <thead>
       <tr class="bg-gradient-cd white">
+        <th><%= t('mongoid.attributes.invoice.number') %></th>
         <th><%= Invoice.model_name.human %> Details</th>
         <th><%= t('mongoid.attributes.invoice.project_id') %></th>
         <th><%= t('mongoid.attributes.invoice.amount') %></th>
@@ -13,6 +14,7 @@
   <tbody>
     <% invoices.each do |invoice| %>
       <tr>
+        <td><%= invoice.number %></td>
         <td>
           <%= link_to invoice.booking_detail.name, [current_user_role_group, invoice.booking_detail] %>
           <div class='small'>
@@ -38,7 +40,7 @@
           <% end %>
           <% if deduction = invoice.incentive_deduction.presence %>
             <div class='small'>
-              <span>Deduction Added: <strong><%= number_to_indian_currency(deduction.amount) %></strong> (<%= t("mongoid.attributes.incentive_deduction/status.#{deduction.status}") %>)</span>
+              <span><%= IncentiveDeduction.model_name.human %>: <strong><%= number_to_indian_currency(deduction.amount) %></strong> (<%= t("mongoid.attributes.incentive_deduction/status.#{deduction.status}") %>)</span>
             </div>
           <% end %>
         </td>

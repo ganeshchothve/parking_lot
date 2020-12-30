@@ -51,7 +51,7 @@ class Template::InvoiceTemplate < Template
     <div style="position:absolute;left:55.95px;top:138.86px" class="cls_004"><span class="cls_004">Phone: <%= @invoice.manager.phone %></span></div>
     <div style="position:absolute;left:420.73px;top:60.38px" class="cls_003"><span class="cls_003">INVOICE</span></div>
     <div style="position:absolute;left:345px;top:138.41px" class="cls_005"><span class="cls_005">INVOICE #</span></div>
-    <div style="position:absolute;left:335px;top:155.49px" class="cls_004"><span class="cls_004"><%= @invoice.id.to_s %></span></div>
+    <div style="position:absolute;left:335px;top:155.49px" class="cls_004"><span class="cls_004"><%= @invoice.number %></span></div>
     <div style="position:absolute;left:479.57px;top:138.86px" class="cls_005"><span class="cls_005">DATE</span></div>
     <div style="position:absolute;left:468.41px;top:155.93px" class="cls_004"><span class="cls_004"><%= @invoice.raised_date.strftime('%d/%m/%Y') %></span></div>
     <div style="position:absolute;left:345px;top:185.95px" class="cls_005"><span class="cls_005">RERA Number</span></div>
@@ -92,7 +92,7 @@ class Template::InvoiceTemplate < Template
       <% end %>
     <div style="position:absolute;left:460px;top:317.67px" class="cls_006"><span class="cls_006"><%= number_to_indian_currency(@invoice.amount) %></span></div>
     <% if deduction %>
-      <div style="position:absolute;left:55.84px;top:370.91px" class="cls_006"><span class="cls_006"><%= IncentiveDeduction.model_name.human %></span></div>
+      <div style="position:absolute;left:55.84px;top:370.91px" class="cls_006"><span class="cls_006"><%= t('mongoid.attributes.incentive_deduction.number') + deduction.number %></span></div>
       <div style="position:absolute;left:350.31px;top:370.91px" class="cls_006"><span class="cls_006"></span></div>
       <div style="position:absolute;left:415.60px;top:370.91px" class="cls_006"><span class="cls_006"></span></div>
       <div style="position:absolute;left:460px;top:370.91px" class="cls_006"><span class="cls_006"><%= number_to_indian_currency(deduction.amount) %></span></div>

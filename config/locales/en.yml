@@ -673,6 +673,7 @@ en:
         disabled: Disabled
 
       invoice:
+        number: 'Invoice #'
         amount: Incentive Amount
         net_amount: Net Amount
         comments: Comments
@@ -693,6 +694,7 @@ en:
         rejected: 'Rejected'
 
       incentive_deduction:
+        number: 'Incentive Deduction #'
         amount: Deduction Amount
         comments: Reason
         status: Status

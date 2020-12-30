@@ -1,6 +1,8 @@
 class IncentiveDeduction
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Autoinc
+  include NumberIncrementor
   include InsertionStringMethods
   include IncentiveDeductionStateMachine
 
