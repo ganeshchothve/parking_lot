@@ -9,7 +9,7 @@
         </div>
       <% end %>
 
-      <% if @user.role?("channel_partner") || @user.role?("cp") %>
+      <% if @user.role?("cp_admin") || @user.role?("cp") %>
         <!-- User List -->
         <% users = User.where(manager_id: @user.id).paginate(page: 1) %>
         <div class="separate-line container"></div>
