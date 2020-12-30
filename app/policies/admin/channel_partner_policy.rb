@@ -10,7 +10,7 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
   end
 
   def create?
-    current_client.enable_channel_partners? && %w[admin channel_partner].include?(user.role)
+    current_client.enable_channel_partners? && %w[channel_partner].include?(user.role)
   end
 
   def update?
@@ -34,9 +34,11 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
 
     # attributes += [bank_detail_attributes: BankDetailPolicy.new(user, BankDetail.new).permitted_attributes]
 
-    attributes += [:event, :status_change_reason] if user.present? && %w[superadmin admin cp_admin].include?(user.role)
-    attributes += [:event, :status_change_reason] if user.present? && ['cp'].include?(user.role) && record.status != 'active' && record.manager_id == user.id
-    attributes += [:event] if user.present? && ['channel_partner'].include?(user.role) && record.associated_user_id == user.id && ['inactive', 'rejected'].include?(record.status)
+    if record.associated_user && record.associated_user.confirmed?
+      attributes += [:event, :status_change_reason] if user.present? && %w[superadmin admin cp_admin].include?(user.role)
+      attributes += [:event, :status_change_reason] if user.present? && ['cp'].include?(user.role) && record.status != 'active' && record.manager_id == user.id
+      attributes += [:event] if user.present? && ['channel_partner'].include?(user.role) && record.associated_user_id == user.id && ['inactive', 'rejected'].include?(record.status)
+    end
     attributes += [:erp_id] if user.present? && %w[admin sales_admin].include?(user.role)
     attributes
   end

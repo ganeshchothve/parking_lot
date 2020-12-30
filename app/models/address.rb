@@ -43,6 +43,6 @@ class Address
   end
 
   def check_presence
-    errors.add(:base, 'address is invalid') unless as_json(only: [:address1, :city, :state, :country, :zip]).values.all? || one_line_address.present?
+    errors.add(:base, 'address is invalid') unless as_json(only: [:address1, :city, :state, :country, :zip]).values.all?(&:present?) || one_line_address.present?
   end
 end
