@@ -1,7 +1,7 @@
 class ChannelPartnersController < ApplicationController
   before_action :authenticate_user!, except: %i[new create]
   before_action :set_channel_partner, only: %i[show edit update destroy]
-  around_action :apply_policy_scope
+  around_action :apply_policy_scope, only: :index
   before_action :authorize_resource, except: [:new, :create]
 
   def index

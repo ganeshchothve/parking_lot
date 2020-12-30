@@ -31,13 +31,15 @@ class UserObserver < Mongoid::Observer
       #   end
       # end
     end
+
     if user.manager_id_changed? && user.manager_id.present?
       user.push_srd_to_selldo if user.buyer?
-      if user.role?('channel_partner')
-        cp = ChannelPartner.where(associated_user_id: user.id).first
+
+      if user.role?('channel_partner') && user.persisted? && cp = user.associated_channel_partner
         cp.set(manager_id: user.manager_id)
       end
     end
+
     unless user.authentication_token?
       user.reset_authentication_token!
     end
