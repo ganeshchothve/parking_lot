@@ -8,6 +8,7 @@ class IncentiveScheme
   extend FilterByCriteria
 
   STRATEGY = %w(number_of_items sum_of_value)
+  DOCUMENT_TYPES = []
 
   field :name, type: String
   field :starts_on, type: Date
@@ -22,6 +23,7 @@ class IncentiveScheme
   belongs_to :tier, optional: true  # for associating incentive schemes with different channel partner tiers.
   embeds_many :ladders
   has_many :invoices
+  has_many :assets, as: :assetable
 
   delegate :name, to: :project, prefix: true, allow_nil: true
 
