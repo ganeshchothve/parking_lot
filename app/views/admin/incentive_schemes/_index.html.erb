@@ -33,6 +33,9 @@
               <% if policy([:admin, incentive_scheme]).end_scheme? %>
                 <%= link_to t('controller.incentive_schemes.end_scheme.link_name'), end_scheme_admin_incentive_scheme_path(incentive_scheme), class: 'dropdown-item modal-remote-form-link' %>
               <% end %>
+              <% if policy([:admin, IncentiveScheme]).asset_create? %>
+                <%= link_to Asset.model_name.human(count: 2), assetables_path(assetable_type: incentive_scheme.class.model_name.i18n_key.to_s, assetable_id: incentive_scheme.id), class: "dropdown-item modal-remote-form-link" %>
+              <% end %>
             </div>
           </div>
         </td>

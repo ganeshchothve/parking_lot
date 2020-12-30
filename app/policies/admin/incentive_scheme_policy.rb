@@ -16,6 +16,10 @@ class Admin::IncentiveSchemePolicy < IncentiveSchemePolicy
     !record.default? && record.approved? && (record.starts_on <= Date.current && Date.current < record.ends_on) && update?
   end
 
+  def asset_create?
+    index?
+  end
+
   def permitted_attributes(params = {})
     attributes = super
     attributes += [:name]

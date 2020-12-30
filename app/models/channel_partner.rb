@@ -142,4 +142,20 @@ class ChannelPartner
       errors.add :base, 'User with phone, email or rera already exists'
     end
   end
+
+  # Class methods
+  class << self
+
+    def user_based_scope(user, _params = {})
+      custom_scope = {}
+      if user.role?('cp_admin')
+        cp_ids = User.where(manager_id: user.id).distinct(:id)
+        custom_scope = { manager_id: {"$in": cp_ids} }
+      elsif user.role?('cp')
+        custom_scope = { manager_id: user.id }
+      end
+      custom_scope
+    end
+
+  end # end class methods
 end

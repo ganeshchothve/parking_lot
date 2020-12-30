@@ -37,7 +37,9 @@
                   <%#= link_to t('controller.crms.choose_crm.link_name'), choose_crm_admin_crm_base_index_path(resource_id: channel_partner.id, resource_class: channel_partner.class), class: "dropdown-item " %>
                 <%# end %>
 
-                <%= link_to t('helpers.show.link_name', model: ChannelPartner.model_name.human), channel_partner, class: 'dropdown-item' %>
+                <% if Admin::ChannelPartnerPolicy.new(current_user, channel_partner).show? %>
+                  <%= link_to t('helpers.show.link_name', model: ChannelPartner.model_name.human), channel_partner, class: 'dropdown-item' %>
+                <% end %>
                 <% if policy([ current_user_role_group, Asset.new(assetable: channel_partner)]).index? %>
                   <%= link_to t('controller.assets.index.link_name'), assetables_path(assetable_type: channel_partner.class.model_name.i18n_key.to_s, assetable_id: channel_partner.id), class: 'dropdown-item modal-remote-form-link' %>
                 <% end %>

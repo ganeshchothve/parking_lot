@@ -35,10 +35,12 @@
             <%= text_field_tag "fltrs[receipt_id]", params.dig(:fltrs, :receipt_id), class: 'form-control' %>
           </div>
 
+          <!--
           <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-            <%= label_tag "fltrs", t('mongoid.attributes.receipt.token_number'), class: "control-label" %>
-            <%= text_field_tag "fltrs[token_number]", params.dig(:fltrs, :token_number), class: 'form-control' %>
+            <%#= label_tag "fltrs", t('mongoid.attributes.receipt.token_number'), class: "control-label" %>
+            <%#= text_field_tag "fltrs[token_number]", params.dig(:fltrs, :token_number), class: 'form-control' %>
           </div>
+          -->
 
           <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.receipt.status'), class: "control-label" %>
