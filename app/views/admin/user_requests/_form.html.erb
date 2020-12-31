@@ -21,7 +21,7 @@
                <%= t("mongoid.attributes.user_request/status.#{f.object.status}") %>
                <%= f.hidden_field :event, value: @user_request.status %>
               <% else %>
-                <%= f.select :event, @user_request.aasm.events.reject { |event| event.name == :pending }.map(&:name), {prompt: true}, class: 'selectize', required: "required" %>
+                <%= f.select :event, @user_request.aasm.events.reject { |event| event.name.to_s == f.object.status.to_s }.map {|x| [t("mongoid.attributes.user_request/status.#{x.name}"), x.name] }, { prompt: t("mongoid.attributes.user_request/status.#{f.object.status}") }, class: 'selectize', required: "required" %>
               <% end %>
             <% else %>
               <h4><%= t("mongoid.attributes.user_request/status.#{f.object.status}") %></h4>

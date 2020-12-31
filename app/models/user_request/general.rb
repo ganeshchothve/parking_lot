@@ -2,7 +2,7 @@ class UserRequest::General < UserRequest
 
   DEPARTMENTS = %w( billing sourcing sales )
   PRIORITIES = %w( low medium high )
-  
+
   field :subject, type: String
   field :description, type: String
   field :department, type: String
@@ -12,7 +12,7 @@ class UserRequest::General < UserRequest
   field :category, type: String, default: ''
 
   belongs_to :assignee, class_name: 'User', optional: true
-  
+
   validates :priority, :subject, :description, :category, presence: true
   validates :department, inclusion: {in: proc{ UserRequest::General::DEPARTMENTS } }, allow_blank: true
   validates :priority, inclusion: {in: proc{ UserRequest::General::PRIORITIES } }, allow_blank: true

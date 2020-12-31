@@ -6,6 +6,6 @@
   <%= link_to 'Details', admin_user_request_path(request_type: user_request.class.model_name.element, id: user_request.id), class: 'dropdown-item' %>
 <% end %>
 
-<% if Admin::UserRequestPolicy.new(current_user, user_request).edit? %>
-  <%= link_to t("helpers.edit.link_name", model: user_request.model_name.human), edit_admin_user_request_path(user_request, request_type: user_request.class.model_name.element), class: 'modal-remote-form-link dropdown-item' %>
+<% if Object.const_get("Admin::#{user_request.class.model_name.name}Policy").new(current_user, user_request).edit? %>
+  <%= link_to t("controller.user_requests.#{user_request.class.model_name.element}.edit.link_name"), edit_admin_user_request_path(user_request, request_type: user_request.class.model_name.element), class: 'modal-remote-form-link dropdown-item' %>
 <% end %>

@@ -5,7 +5,7 @@
       <% if (note_field.object.new_record? && policy([current_user_role_group, note_field.object]).create?) || policy([current_user_role_group, note_field.object]).edit? %>
         <div class="form-group">
           <%= note_field.label :comments, 'Add Comments' %>
-          <%= note_field.text_area :note, autofocus: true, class: "form-control" %>
+          <%= note_field.text_area :note, class: "form-control" %>
           <%= note_field.hidden_field :note_type, value: (note_field.object.note_type.present? ? note_field.object.note_type : "user") if note_field.object.creator.role == "user" %>
           <%= note_field.hidden_field :creator_id %>
         </div>

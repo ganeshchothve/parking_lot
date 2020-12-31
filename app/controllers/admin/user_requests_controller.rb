@@ -71,7 +71,7 @@ class Admin::UserRequestsController < AdminController
   #
   def update
     @user_request.assign_attributes(permitted_user_request_attributes)
-    @user_request.resolved_by = current_user
+    set_resolved_by
     respond_to do |format|
       if @user_request.save
         format.html { redirect_to admin_user_requests_path(request_type: 'all'), notice: 'User Request was successfully updated.' }
@@ -91,5 +91,15 @@ class Admin::UserRequestsController < AdminController
 
   def set_user
     @user = @lead.present? ? @lead.user : current_user
+  end
+
+  def set_resolved_by
+    if @user_request.status_changed?
+      if @user_request._type == 'UserRequest::General' && @user_request.resolved?
+        @user_request.resolved_by = current_user
+      elsif @user_request.processing?
+        @user_request.resolved_by = current_user
+      end
+    end
   end
 end
