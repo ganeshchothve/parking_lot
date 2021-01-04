@@ -10,9 +10,6 @@ class ChannelPartnerObserver < Mongoid::Observer
     # update user's details from channel partner
     if cp_user = channel_partner.associated_user.presence
       cp_user.update(first_name: channel_partner.first_name, last_name: channel_partner.last_name, rera_id: channel_partner.rera_id, manager_id: channel_partner.manager_id)
-      channel_partner.third_party_references.each do |tpr|
-        cp_user.update_external_ids({reference_id: tpr.reference_id}, tpr.crm_id)
-      end
     end
 
     channel_partner.rera_applicable = true if channel_partner.rera_id.present?
