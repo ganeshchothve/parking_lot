@@ -34,6 +34,14 @@
               <%= f.text_area :request_payload, autofocus: true, class: "form-control", disabled: !policy([:admin, @crm]).editable_field?("request_payload") %>
             </div>
           </div>
+          <div class = 'col-12'>
+            <div class="form-group">
+              <div class="form-check form-check-inline">
+                <%= f.check_box :oauth2_authentication, class: "form-check-label" %>
+                <%= f.label :oauth2_authentication, class: "form-check-label ml-1" %>
+              </div>
+            </div>
+          </div>
           <div class = "col-12">
             <div class="form-group">
               <%= f.label :user, class: 'control-label' %>

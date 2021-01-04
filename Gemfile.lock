@@ -183,6 +183,8 @@ GEM
       railties (>= 3.0.0)
     faraday (0.12.2)
       multipart-post (>= 1.2, < 3)
+    faraday_middleware (0.14.0)
+      faraday (>= 0.7.4, < 1.0)
     ffi (1.9.25)
     fog-aws (3.3.0)
       fog-core (~> 2.1)
@@ -507,6 +509,12 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
+    restforce (4.2.2)
+      faraday (>= 0.9.0, <= 1.0)
+      faraday_middleware (>= 0.8.8, <= 1.0)
+      hashie (>= 1.2.0, < 5.0)
+      json (>= 1.7.5)
+      jwt (>= 1.5.6)
     retriable (3.1.2)
     rly (0.2.3)
     roo (2.7.1)
@@ -711,6 +719,7 @@ DEPENDENCIES
   redis-namespace
   request_store
   rest-client
+  restforce
   roo (~> 2.7.0)
   rspec-rails
   rspec-sidekiq

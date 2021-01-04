@@ -7,12 +7,13 @@ class Crm::Base
   field :request_headers, type: String
   field :request_payload, type: String
   field :api_key, type: String
+  field :oauth2_authentication, type: Boolean
 
   validate :validate_url
   validates :domain, uniqueness: true, presence:true
   validates :name, presence: true
   validates :name, uniqueness: { case_sensitive: false }
-  validates_format_of :domain, :with => /\A(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?\z/
+  validates_format_of :domain, :with => /\A(http|https):\/\/[a-z0-9-]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?\z/
   validate :validate_user_role
 
   has_many :apis, dependent: :destroy

@@ -56,3 +56,7 @@ document_sign:
   zoho:
     client_id:
     secret_id:
+sfdc:
+  client_id:
+  client_secret:
+  refresh_token:

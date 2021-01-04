@@ -3,9 +3,9 @@ class ApiLog
   include Mongoid::Timestamps
   extend FilterByCriteria
 
-  field :request, type: Hash
+  field :request, type: Array
   field :request_url, type: String
-  field :response, type: Hash
+  field :response, type: Array
   field :status, type: String
   field :message, type: String
 

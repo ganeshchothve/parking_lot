@@ -77,6 +77,7 @@ gem 'bootstrap'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'rest-client'
+gem 'restforce'
 
 # phone numbers on users -> model & validation
 gem 'phonelib'
