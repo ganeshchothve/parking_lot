@@ -52,8 +52,6 @@ class Api::V1::BookingDetailsController < ApisController
       params.dig(:booking_detail, :receipts_attributes).each do |receipt_attributes|
         render json: { errors: ['Receipt reference id is required for all receipts'] }, status: :bad_request and return unless receipt_attributes.dig(:reference_id).present?
       end
-    else
-      render json: {errors: ['Receipts is/are mandatory to create Booking']} if params[:action] == 'create'
     end
     params.dig(:booking_detail, :user_kycs_attributes).each do |user_kyc_attributes|
       render json: { errors: ['User KYC reference id is required for all user KYCs'] }, status: :bad_request and return unless user_kyc_attributes.dig(:reference_id).present?
