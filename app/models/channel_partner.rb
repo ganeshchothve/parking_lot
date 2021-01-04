@@ -14,7 +14,7 @@ class ChannelPartner
   EXPERIENCE = ['0-1 yrs', '1-5 yrs', '5-10 yrs', '10-15 yrs', '15-20 yrs', '20+ yrs']
 
   # Add different types of documents which are uploaded on channel_partner
-  DOCUMENT_TYPES = %w[ rera_certificate gst_certificate cheque_scanned_copy]
+  DOCUMENT_TYPES = %w[pan_card rera_certificate gst_certificate cheque_scanned_copy]
 
   field :title, type: String
   field :first_name, type: String
