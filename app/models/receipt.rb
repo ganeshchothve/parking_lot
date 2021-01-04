@@ -21,24 +21,30 @@ class Receipt
   # Add different types of documents which are uploaded on receipt
   DOCUMENT_TYPES = []
 
-  field :receipt_id, type: String
-  field :order_id, type: String
-  field :payment_mode, type: String, default: 'online'
-  field :issued_date, type: Date # Date when cheque / DD etc are issued
-  field :issuing_bank, type: String # Bank which issued cheque / DD etc
-  field :issuing_bank_branch, type: String # Branch of bank
+  # Mandatory fields - mandatory
   field :payment_identifier, type: String # cheque / DD number / online transaction reference from gateway
-  field :tracking_id, type: String # online transaction reference from gateway or transaction id after the cheque is processed
   field :total_amount, type: Float # Total amount
   field :status, type: String, default: 'pending' # pending, success, failed, clearance_pending,cancelled
-  field :status_message, type: String # pending, success, failed, clearance_pending
+  field :issued_date, type: Date # Date when cheque / DD etc are issued
+  #Auto generated fields and mandatory
+  field :receipt_id, type: String
+  #Payment gateway related fields - non mandatory
+  field :order_id, type: String
+  field :tracking_id, type: String # online transaction reference from gateway or transaction id after the cheque is processed
   field :payment_gateway, type: String
-  field :processed_on, type: Date
-  field :comments, type: String
   field :gateway_response, type: Hash
-  field :erp_id, type: String, default: ''
-  field :payment_type, type: String, default: 'agreement' # possible values are :agreement and :stamp_duty
   field :transfer_details, type: Array, default: [] #stores tranfer details for razorpay payment
+  field :status_message, type: String # pending, success, failed, clearance_pending
+  #Offline payment fields - non mandatory
+  field :issuing_bank, type: String # Bank which issued cheque / DD etc
+  field :issuing_bank_branch, type: String # Branch of bank
+  field :processed_on, type: Date
+
+  #Other fields - non mandatory
+  field :payment_mode, type: String, default: 'online'
+  field :payment_type, type: String, default: 'agreement' # possible values are :agreement and :stamp_duty
+  field :comments, type: String
+  field :erp_id, type: String, default: ''
   field :state_machine_errors, type: Array, default: []
 
   attr_accessor :swap_request_initiated
@@ -74,25 +80,28 @@ class Receipt
 
   scope :direct_payments, ->{ where(booking_detail_id: nil )}
 
-  validates :payment_type, presence: true
-  validates :payment_type, inclusion: { in: Receipt::PAYMENT_TYPES }, if: proc { |receipt| receipt.payment_type.present? }
-  validates :issuing_bank, :issuing_bank_branch, name: true, allow_blank: true
-  # validates :payment_identifier, length: { in: 3..25 }, format: { without: /[^A-Za-z0-9_-]/, message: "can contain only alpha-numaric with '_' and '-' "}, if: proc { |receipt| receipt.offline? && receipt.payment_identifier.present? }
-  validates :total_amount, :status, :payment_mode, :user_id, presence: true
-  validates :payment_identifier, presence: true, if: proc { |receipt| receipt.payment_mode == 'online' ? receipt.status == 'success' : true }
+  #validations for fields without default value
+  validates :total_amount, :payment_identifier, presence: true
+  validate :validate_total_amount, if: proc { |receipt| receipt.total_amount.present? }
+  validates :issued_date, presence: true, if: proc { |receipt| receipt.payment_mode != 'online' } # :issuing_bank, :issuing_bank_branch, # Runwal specific changes
+  # validates :payment_identifier, presence: true # , if: proc { |receipt| receipt.payment_mode == 'online' ? receipt.status == 'success' : true } # Runwal specific change
+  #validations for fields with default value
+  validates :status, :payment_mode, :payment_type, presence: true
   validates :status, inclusion: { in: proc { Receipt.aasm.states.collect(&:name).collect(&:to_s) } }
   validates :payment_mode, inclusion: { in: proc { Receipt.available_payment_modes.collect { |x| x[:id] } } }, allow_blank: true
-  validate :validate_total_amount, if: proc { |receipt| receipt.total_amount.present? }
-  validates :issued_date, :issuing_bank, :issuing_bank_branch, presence: true, if: proc { |receipt| receipt.payment_mode != 'online' }
-  validates :processed_on, presence: true, if: proc { |receipt| %i[success clearance_pending available_for_refund].include?(receipt.status) }
-  validates :payment_gateway, presence: true, if: proc { |receipt| receipt.payment_mode == 'online' }
+  validates :payment_type, inclusion: { in: Receipt::PAYMENT_TYPES }, if: proc { |receipt| receipt.payment_type.present? }
+  # non mandatory fields
+  validates :issuing_bank, :issuing_bank_branch, name: true, allow_blank: true
+  # validates :payment_identifier, length: { in: 3..25 }, format: { without: /[^A-Za-z0-9_-]/, message: "can contain only alpha-numaric with '_' and '-' "}, if: proc { |receipt| receipt.offline? && receipt.payment_identifier.present? }
+  # validates :processed_on, presence: true, if: proc { |receipt| %i[success clearance_pending available_for_refund].include?(receipt.status) }
+  # validates :payment_gateway, presence: true, if: proc { |receipt| receipt.payment_mode == 'online' }
   validates :payment_gateway, inclusion: { in: PaymentGatewayService::Default.allowed_payment_gateways }, allow_blank: true, if: proc { |receipt| receipt.payment_mode == 'online' }
   # validates :tracking_id, length: { in: 5..15 }, presence: true, if: proc { |receipt| receipt.status == 'success' && receipt.payment_mode != 'online' }
-  validates :comments, presence: true, if: proc { |receipt| receipt.status == 'failed' && receipt.payment_mode != 'online' }
+  # validates :comments, presence: true, if: proc { |receipt| receipt.status == 'failed' && receipt.payment_mode != 'online' }
   validates :erp_id, uniqueness: true, allow_blank: true
-  validate :tracking_id_processed_on_only_on_success, if: proc { |record| record.status != 'cancelled' }
+  # validate :tracking_id_processed_on_only_on_success, if: proc { |record| record.status != 'cancelled' }
   validate :processed_on_greater_than_issued_date
-  validate :issued_date_when_offline_payment, if: proc { |record| %w[online cheque].exclude?(record.payment_mode) && issued_date.present? }
+  # validate :issued_date_when_offline_payment, if: proc { |record| %w[online cheque].exclude?(record.payment_mode) && issued_date.present? }
   validates :user_kyc, copy_errors_from_child: true
 
   increments :order_id, auto: false

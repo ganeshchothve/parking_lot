@@ -13,13 +13,12 @@ module Api
         end
       end
       errors << "Payment identifier can't be blank" unless receipt_attributes[:payment_identifier].present? || (controller_name == 'receipts' && action_name == 'update')
-      errors << "Payment mode can't be blank" unless receipt_attributes[:payment_mode].present? || (controller_name == 'receipts' && action_name == 'update')
+      errors << "Status should be present" unless receipt_attributes[:status].present?
       errors << "Status should be clearance_pending or success" if receipt_attributes[:status].present? && %w[clearance_pending success].exclude?( receipt_attributes[:status])
       { "Receipt(#{receipt_attributes[:reference_id]})": errors } if errors.present?
     end
 
     def modify_any_receipt_params receipt_attributes
-      receipt_attributes[:status] = "clearance_pending" unless receipt_attributes[:status].present?
       [:issued_date, :processed_on].each do |date_field|
         receipt_attributes[date_field] = Date.strptime( receipt_attributes[date_field], "%d/%m/%Y") if receipt_attributes[date_field].present?
       end
@@ -28,6 +27,7 @@ module Api
       receipt_attributes[:user_id] = @lead.user.id.to_s
       receipt_attributes[:project_id] = @lead.project.id.to_s
       receipt_attributes[:creator_id] = @crm.user_id.to_s
+      receipt_attributes[:payment_mode] = "cheque" if receipt_attributes[:payment_mode].blank?
       # add third party references
       if receipt_reference_id = receipt_attributes.dig(:reference_id).presence
         tpr_attrs = {
