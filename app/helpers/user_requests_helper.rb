@@ -20,6 +20,8 @@ module UserRequestsHelper
       'primary'
     when 'resolved'
       'success'
+    when 'processing'
+      'warning'
     end
   end
 end

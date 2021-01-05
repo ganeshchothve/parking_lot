@@ -94,10 +94,10 @@ class Admin::UserRequestsController < AdminController
   end
 
   def set_resolved_by
-    if @user_request.status_changed?
-      if @user_request._type == 'UserRequest::General' && @user_request.resolved?
+    if @user_request.event.present?
+      if @user_request._type == 'UserRequest::General' && @user_request.event == 'resolved'
         @user_request.resolved_by = current_user
-      elsif @user_request.processing?
+      elsif @user_request.event == 'processing'
         @user_request.resolved_by = current_user
       end
     end
