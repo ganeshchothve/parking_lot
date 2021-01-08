@@ -1,1 +1,5 @@
 $('#invoice_summary').html("<%= j (render partial: 'invoice_summary' ) %>")
+$('[data-toggle="popover"]').popover({
+  trigger: 'hover',
+  html: true
+});
