@@ -36,6 +36,10 @@ class ApplicationPolicy
     false
   end
 
+  def asset_update?
+    update?
+  end
+
   def permitted_attributes params={}
     []
   end
