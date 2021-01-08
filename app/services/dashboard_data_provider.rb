@@ -89,8 +89,10 @@ module DashboardDataProvider
     out
   end
 
-  def self.inventive_scheme_performance(user)
-    matcher = Invoice.user_based_scope(user)
+  def self.inventive_scheme_performance(user, options = {})
+    matcher = {}
+    matcher = options[:matcher] if options[:matcher].present?
+    matcher.merge!(Invoice.user_based_scope(user))
     data = Invoice.collection.aggregate([{
             "$match": matcher
           }, {
@@ -290,20 +292,22 @@ module DashboardDataProvider
     ProjectUnit.distinct(:unit_configuration_name).sample(3)
   end
 
-  def self.total_buyers(current_user)
-    Lead.where(Lead.user_based_scope(current_user)).count
+  def self.total_buyers(current_user, params={})
+    Lead.where(Lead.user_based_scope(current_user)).build_criteria(params).count
   end
 
-  def self.incentive_pending_bookings(current_user)
+  def self.incentive_pending_bookings(current_user, filters={})
     booking_ids = Invoice.where(manager_id: current_user.id).distinct(:booking_detail_id)
-    BookingDetail.booking_stages.where(manager_id: current_user.id).nin(id: booking_ids).count
+    BookingDetail.booking_stages.where(manager_id: current_user.id).build_criteria(filters).nin(id: booking_ids).count
   end
 
-  def self.user_group_by(current_user)
+  def self.user_group_by(current_user, options={})
     out = {'confirmed_users': 0, 'not_confirmed_users': 0}
     user_ids = Lead.where(Lead.user_based_scope(current_user)).distinct(:user_id)
+    matcher = { _id: { '$in': user_ids } }
+    matcher = matcher.merge!(options[:matcher]) if options[:matcher].present?
     data = User.collection.aggregate([
-      {"$match": { _id: { '$in': user_ids } } },
+      {"$match": matcher},
       { "$group": {
         "_id":{
           "$cond": {if: '$confirmed_at', then: 'confirmed_users', else: 'not_confirmed_users'}
@@ -319,10 +323,12 @@ module DashboardDataProvider
     out
   end
 
-  def self.booking_detail_group_by(current_user)
+  def self.booking_detail_group_by(current_user, options={})
     out = {'blocked': 0, 'booked_tentative': 0,'booked_confirmed': 0}
+    matcher = {manager_id: current_user.id, 'status': {'$in': %w(blocked booked_confirmed booked_tentative)}}
+    matcher = matcher.merge!(options[:matcher]) if options[:matcher].present?
     data = BookingDetail.collection.aggregate([
-      {"$match": {manager_id: current_user.id, 'status': {'$in': %w(blocked booked_confirmed booked_tentative)}} },
+      {"$match":  matcher},
       { "$group": {
         "_id":{
           "status": "$status"
@@ -338,11 +344,13 @@ module DashboardDataProvider
     out
   end
 
-  def self.receipts_group_by(current_user)
+  def self.receipts_group_by(current_user, options)
     out = {'pending': 0, 'clearance_pending': 0, 'success': 0, 'refunded': 0}
     lead_ids = Lead.where(manager_id: current_user.id).pluck(:id)
+    matcher = {'lead_id': {'$in': lead_ids }, 'status': {'$in': %w(pending clearance_pending success refunded)}}
+    matcher = matcher.merge!(options[:matcher]) if options[:matcher].present?
     data = Receipt.collection.aggregate([
-      {"$match": {'lead_id': {'$in': lead_ids }, 'status': {'$in': %w(pending clearance_pending success refunded)}} },
+      {"$match":  matcher},
       { "$group": {
         "_id":{
           "status": "$status"
@@ -358,9 +366,11 @@ module DashboardDataProvider
     out
   end
 
-  def self.project_wise_leads_count(current_user)
+  def self.project_wise_leads_count(current_user, options={})
+    matcher = { manager_id: current_user.id }
+    matcher = matcher.merge!(options[:matcher]) if options[:matcher].present?
     data = Lead.collection.aggregate([
-      {'$match': { manager_id: current_user.id } },
+      {'$match':  matcher},
       {'$group': {
         _id: '$project_id',
         count: {
@@ -371,9 +381,11 @@ module DashboardDataProvider
     data.inject({}) {|hsh, x| hsh[x['_id']] = x['count']; hsh }
   end
 
-  def self.project_wise_total_av(current_user)
+  def self.project_wise_total_av(current_user, options={})
+    matcher = { manager_id: current_user.id, status: {'$nin': %w(hold cancelled swapped)}}
+    matcher = matcher.merge!(options[:matcher]) if options[:matcher].present?
     data = BookingDetail.collection.aggregate([
-      {'$match': { manager_id: current_user.id, status: {'$nin': %w(hold cancelled swapped)}} },
+      {'$match':  matcher },
       {'$group': {
         _id: '$project_id',
         av: {
@@ -384,9 +396,9 @@ module DashboardDataProvider
     data.inject({}) {|hsh, x| hsh[x['_id']] = x['av']; hsh }
   end
 
-  def self.conversion_ratio(current_user)
-    bookings = BookingDetail.booking_stages.where(manager_id: current_user.id).count
-    leads = Lead.where(manager_id: current_user.id).count
+  def self.conversion_ratio(current_user, filters={})
+    bookings = BookingDetail.booking_stages.where(manager_id: current_user.id).build_criteria(filters).count
+    leads = Lead.where(manager_id: current_user.id).build_criteria(filters).count
     conv_ratio = leads.zero? ? 0 : bookings/leads.to_f
     (conv_ratio * 100).round
   end
@@ -452,9 +464,12 @@ module DashboardDataProvider
     out
   end
 
-  def self.project_wise_invoice_data(current_user)
+  def self.project_wise_invoice_data(current_user, options={})
+    matcher = {}
+    matcher = options[:matcher] if options[:matcher].present?
+    matcher.merge!(Invoice.user_based_scope(current_user))
     data = Invoice.collection.aggregate([
-      { '$match' => Invoice.user_based_scope(current_user) },
+      { '$match' =>  matcher},
       {
         '$lookup': {
           from: "projects",
@@ -486,8 +501,11 @@ module DashboardDataProvider
     data.map {|x| x.merge(x.delete('_id')).with_indifferent_access}
   end
 
-  def self.project_wise_incentive_deduction_data(current_user)
+  def self.project_wise_incentive_deduction_data(current_user, options={})
+    matcher = {}
+    matcher = options[:matcher] if options[:matcher].present?
     data = IncentiveDeduction.collection.aggregate([
+      {'$match': matcher },
       {
         '$lookup': {
           from: "invoices",
@@ -540,14 +558,15 @@ module DashboardDataProvider
     data.map {|x| x.merge(x.delete('_id')).with_indifferent_access}
   end
 
-  def self.project_wise_invoice_ageing_data(current_user)
+  def self.project_wise_invoice_ageing_data(current_user, options={})
+    matcher = {
+                status: 'pending_approval',
+                raised_date: {'$lt': Date.current}
+              }
+    matcher = matcher.merge!(options[:matcher]) if options[:matcher].present?
+    matcher.merge!(Invoice.user_based_scope(current_user))
     data = Invoice.collection.aggregate([
-      { '$match' => Invoice.user_based_scope(current_user).merge(
-        {
-          status: 'pending_approval',
-          raised_date: {'$lt': Date.current}
-        })
-      },
+      { '$match' => matcher },
       {
         '$project': {
           status: 1,

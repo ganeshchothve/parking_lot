@@ -1,210 +1,43 @@
-<% invoice_data = DashboardDataProvider.project_wise_invoice_data(current_user) %>
+<% date = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") %>
+<% start_date, end_date = date.split(' - ') %>
 <section class="user-db-sec-5 device-pd">
   <div class="container">
     <div class="row">
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
-        <div class="table-title pt-4">
-          <h1 class="title icon-set icon-building-black">Project Wise Invoice Summary</h1>
-        </div>
-      </div>
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
-        <div class="box-card relative table-responsive" id="dashboard_project_wise_invoice_summary">
-          <table class="table my-customer-table responsive-tbl mb-0">
-            <thead class="th-default">
-              <tr class="bg-gradient-cd white">
-                <th rowspan='2' class='th-border-right'><%= Project.model_name.human %></th>
-                <th colspan='3' class='text-center'>No. of <%= Invoice.model_name.human(count:2) %></th>
-              </tr>
-              <tr class="bg-gradient-cd white text-center">
-                <th><%= t('mongoid.attributes.invoice/status.pending_approval') %></th>
-                <th><%= t('mongoid.attributes.invoice/status.approved') %></th>
-                <th><%= t('mongoid.attributes.invoice/status.rejected') %></th>
-              </tr>
-            </thead>
-            <tbody class='text-md-center'>
-              <% invoice_data.sort_by{|x| x[:project_name]}.group_by{|x| x[:project_name]}.each do |project_name, data| %>
-                <tr>
-                  <td data-title='<%= Project.model_name.human %>' class='text-md-left'><%= project_name %></td>
-                  <td data-title='No. of <%= "#{t('mongoid.attributes.invoice/status.pending_approval')} #{Invoice.model_name.human(count:2)}" %>'>
-                    <%= data.find {|x| x[:status] == 'pending_approval'}.try(:[], :count) || 0 %>
-                  </td>
-                  <td data-title='No. of <%= "#{t('mongoid.attributes.invoice/status.approved')} #{Invoice.model_name.human(count:2)}" %>'>
-                    <%= data.find {|x| x[:status] == 'approved'}.try(:[], :count) || 0 %>
-                  </td>
-                  <td class='non-action-td' data-title='No. of <%= "#{t('mongoid.attributes.invoice/status.rejected')} #{Invoice.model_name.human(count:2)}" %>'>
-                    <%= data.find {|x| x[:status] == 'rejected'}.try(:[], :count) || 0 %>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-4 no-pd">
-        <div class="box-card relative table-responsive" id="dashboard_project_wise_invoice_summary">
-          <table class="table my-customer-table responsive-tbl mb-0">
-            <thead class="th-default">
-              <tr class="bg-gradient-cd white">
-                <th rowspan='2' class='th-border-right'><%= Project.model_name.human %></th>
-                <th colspan='2' class='text-center'>Total <%= t('mongoid.attributes.invoice.amount') %></th>
-              </tr>
-              <tr class="bg-gradient-cd white text-center">
-                <th><%= "#{t('mongoid.attributes.invoice/status.pending_approval')} (#{t('mongoid.attributes.invoice.amount')})" %></th>
-                <th><%= "#{t('mongoid.attributes.invoice/status.approved')} (#{t('mongoid.attributes.invoice.net_amount')})" %></th>
-              </tr>
-            </thead>
-            <tbody class='text-md-center'>
-              <% invoice_data.sort_by{|x| x[:project_name]}.group_by{|x| x[:project_name]}.each do |project_name, data| %>
-                <tr>
-                  <td data-title='<%= Project.model_name.human %>' class='text-md-left'><%= project_name %></td>
-                  <td data-title='Total <%= "#{t('mongoid.attributes.invoice.amount')} (#{t('mongoid.attributes.invoice/status.pending_approval')})" %>'>
-                    <%= number_to_indian_currency(data.find {|x| x[:status] == 'pending_approval'}.try(:[], :amount) || 0) %>
-                  </td>
-                  <td class='non-action-td' data-title='Total <%= "#{t('mongoid.attributes.invoice.net_amount')} (#{t('mongoid.attributes.invoice/status.approved')})" %>'>
-                    <%= number_to_indian_currency(data.find {|x| x[:status] == 'approved'}.try(:[], :net_amount) || 0) %>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
+        <div class="filter-inner">
+          <%= form_tag billing_team_dashboard_path, method: "get", remote: true, id: "billing_team_dashboard_filter" do %>
+            <div class="filter-content">
+              <div class="row">
+                <div class="form-group col-12">
+                  <%= label_tag "dates", "Dates", class: "control-label float-left" %>
+                  <%= text_field_tag :dates, "", class: 'form-control daterangefilter', required: 'required',"data-start-date": start_date || '', "data-end-date": end_date || '', "data-opens": 'right', placeholder: 'dd/mm/yyyy - dd/mm/yyyy', id: "dates", auto: false, autocomplete: 'disabled' %>
+                </div>
+              </div>
+            </div>
+            <div class="filter-footer">
+              <%= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right" %>
+              <button type="button" class="f-cancel-btn status_chart_filter_cancel db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
+            </div>
+        <% end %>
         </div>
       </div>
     </div>
   </div>
-</section>
-
-<% deduction_data = DashboardDataProvider.project_wise_incentive_deduction_data(current_user) %>
-<section class="user-db-sec-5 device-pd">
   <div class="container">
-    <div class="row">
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
-        <div class="table-title pt-4">
-          <h1 class="title icon-set icon-building-black">Project Wise Incentive Deduction Summary</h1>
-        </div>
-      </div>
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
-        <div class="box-card relative table-responsive" id="dashboard_project_wise_incentive_deduction_summary">
-          <table class="table my-customer-table responsive-tbl mb-0">
-            <thead class="th-default">
-              <tr class="bg-gradient-cd white">
-                <th rowspan='2' class='th-border-right'><%= Project.model_name.human %></th>
-                <th colspan='4' class='text-center'>No. of <%= IncentiveDeduction.model_name.human(count:2) %></th>
-              </tr>
-              <tr class="bg-gradient-cd white text-center">
-                <th><%= t('mongoid.attributes.incentive_deduction/status.draft') %></th>
-                <th><%= t('mongoid.attributes.incentive_deduction/status.pending_approval') %></th>
-                <th><%= t('mongoid.attributes.incentive_deduction/status.approved') %></th>
-                <th><%= t('mongoid.attributes.incentive_deduction/status.rejected') %></th>
-              </tr>
-            </thead>
-            <tbody class='text-md-center'>
-              <% deduction_data.sort_by{|x| x[:project_name]}.group_by{|x| x[:project_name]}.each do |project_name, data| %>
-                <tr>
-                  <td data-title='<%= Project.model_name.human %>' class='text-md-left'><%= project_name %></td>
-                  <td data-title='No. of <%= "#{IncentiveDeduction.model_name.human(count:2)} (#{t('mongoid.attributes.incentive_deduction/status.draft')})" %>'>
-                    <%= data.find {|x| x[:status] == 'draft'}.try(:[], :count) || 0 %>
-                  </td>
-                  <td data-title='No. of <%= "#{IncentiveDeduction.model_name.human(count:2)} (#{t('mongoid.attributes.incentive_deduction/status.pending_approval')})" %>'>
-                    <%= data.find {|x| x[:status] == 'pending_approval'}.try(:[], :count) || 0 %>
-                  </td>
-                  <td data-title='No. of <%= "#{IncentiveDeduction.model_name.human(count:2)} (#{t('mongoid.attributes.incentive_deduction/status.approved')})" %>'>
-                    <%= data.find {|x| x[:status] == 'approved'}.try(:[], :count) || 0 %>
-                  </td>
-                  <td class='non-action-td' data-title='No. of <%= "#{IncentiveDeduction.model_name.human(count:2)} (#{t('mongoid.attributes.incentive_deduction/status.rejected')})" %>'>
-                    <%= data.find {|x| x[:status] == 'rejected'}.try(:[], :count) || 0 %>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-4 no-pd">
-        <div class="box-card relative table-responsive" id="dashboard_project_wise_invoice_summary">
-          <table class="table my-customer-table responsive-tbl mb-0">
-            <thead class="th-default">
-              <tr class="bg-gradient-cd white">
-                <th rowspan='2' class='th-border-right'><%= Project.model_name.human %></th>
-                <th colspan='4' class='text-center'>Total <%= t('mongoid.attributes.incentive_deduction.amount') %></th>
-              </tr>
-              <tr class="bg-gradient-cd white text-center">
-                <th><%= t('mongoid.attributes.incentive_deduction/status.draft') %></th>
-                <th><%= t('mongoid.attributes.incentive_deduction/status.pending_approval') %></th>
-                <th><%= t('mongoid.attributes.incentive_deduction/status.approved') %></th>
-                <th><%= t('mongoid.attributes.incentive_deduction/status.rejected') %></th>
-              </tr>
-            </thead>
-            <tbody class='text-md-center'>
-              <% deduction_data.sort_by{|x| x[:project_name]}.group_by{|x| x[:project_name]}.each do |project_name, data| %>
-                <tr>
-                  <td data-title='<%= Project.model_name.human %>' class='text-md-left'><%= project_name %></td>
-                  <td data-title='Total <%= "#{t('mongoid.attributes.incentive_deduction.amount')} (#{t('mongoid.attributes.incentive_deduction/status.draft')})" %>'>
-                    <%= number_to_indian_currency(data.find {|x| x[:status] == 'draft'}.try(:[], :amount) || 0) %>
-                  </td>
-                  <td data-title='Total <%= "#{t('mongoid.attributes.incentive_deduction.amount')} (#{t('mongoid.attributes.incentive_deduction/status.pending_approval')})" %>'>
-                    <%= number_to_indian_currency(data.find {|x| x[:status] == 'pending_approval'}.try(:[], :amount) || 0) %>
-                  </td>
-                  <td data-title='Total <%= "#{t('mongoid.attributes.incentive_deduction.amount')} (#{t('mongoid.attributes.incentive_deduction/status.approved')})" %>'>
-                    <%= number_to_indian_currency(data.find {|x| x[:status] == 'approved'}.try(:[], :amount) || 0) %>
-                  </td>
-                  <td class='non-action-td' data-title='Total <%= "#{t('mongoid.attributes.incentive_deduction.amount')} (#{t('mongoid.attributes.incentive_deduction/status.rejected')})" %>'>
-                    <%= number_to_indian_currency(data.find {|x| x[:status] == 'rejected'}.try(:[], :amount) || 0) %>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      </div>
+    <div class="row" id = "project_wise_invoice_summary">
     </div>
   </div>
 </section>
 
-<% invoice_age_data = DashboardDataProvider.project_wise_invoice_ageing_data(current_user) %>
 <section class="user-db-sec-5 device-pd">
   <div class="container">
-    <div class="row">
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
-        <div class="table-title pt-4">
-          <h1 class="title icon-set icon-building-black">Invoice Ageing Report</h1>
-        </div>
-      </div>
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
-        <div class="box-card relative table-responsive" id="dashboard_invoice_ageing_report">
-          <table class="table my-customer-table responsive-tbl mb-0">
-            <thead class="th-default">
-              <tr class="bg-gradient-cd white">
-                <th rowspan='2' class='th-border-right'><%= Project.model_name.human %></th>
-                <th colspan='4' class='text-center'>No. of <%= Invoice.model_name.human(count:2) %> Raised</th>
-              </tr>
-              <tr class="bg-gradient-cd white text-center">
-                <th><%= "#{2.days.inspect} ago".titleize %></th>
-                <th><%= "#{3.days.inspect} ago".titleize %></th>
-                <th><%= "#{4.days.inspect} ago".titleize %></th>
-                <th><%= ">#{4.days.inspect} ago".titleize %></th>
-              </tr>
-            </thead>
-            <tbody class='text-md-center'>
-              <% invoice_age_data.sort_by{|x| x[:project_name]}.group_by{|x| x[:project_name]}.each do |project_name, data| %>
-                <tr>
-                  <td data-title='<%= Project.model_name.human %>' class='text-md-left'><%= project_name %></td>
-                  <% (2..5).to_a.each_with_index do |num, idx| %>
-                    <% if idx < 3 %>
-                      <td data-title='<%= "No. of #{Invoice.model_name.human(count:2)} Raised #{num.days.inspect.titleize} Ago" %>'>
-                        <%= data.find { |x| x[:age] == num }.try(:[], :count) || 0 %>
-                      </td>
-                    <% else %>
-                      <td class='non-action-td' data-title='<%= "No. of #{Invoice.model_name.human(count:2)} Raised >#{(num-1).days.inspect.titleize} Ago" %>'>
-                        <%= data.select { |x| x[:age] > num-1 }.sum { |x| (x[:count] || 0) } || 0 %>
-                      </td>
-                    <% end %>
-                  <% end %>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      </div>
+    <div class="row" id = "project_wise_incentive_deduction_summary">
+    </div>
+  </div>
+</section>
+<section class="user-db-sec-5 device-pd">
+  <div class="container">
+    <div class="row" id = "invoice_ageing_report">
     </div>
   </div>
 </section>
@@ -212,3 +45,20 @@
 <!-- Keeping margin at bottom, so that data can be scrolled up into viewable screen -->
 <div class='mb-5 pb-5'>
 </div>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($("#billing_team_dashboard_filter"));
+    $.ajax({
+      url: "/dashboard/project_wise_invoice_summary",
+      type: "get"
+    });
+    $.ajax({
+      url: "/dashboard/project_wise_incentive_deduction_summary",
+      type: "get"
+    });
+    $.ajax({
+      url: "/dashboard/invoice_ageing_report",
+      type: "get"
+    });
+  });
+<% end %>

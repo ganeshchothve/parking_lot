@@ -268,6 +268,17 @@ Rails.application.routes.draw do
     get 'tds-process', to: 'dashboard#tds_process', as: :dashboard_tds_process
     get 'terms-and-conditions', to: 'dashboard#terms_and_condition', as: :dashboard_terms_and_condition
     get "gamify-unit-selection", to: "dashboard#gamify_unit_selection"
+    get :dashboard_counts, to: "dashboard#dashboard_counts"
+    get :invoice_summary, to: "dashboard#invoice_summary"
+    get :cp_performance, to: "dashboard#cp_performance"
+    get :project_wise_invoice_summary, to: "dashboard#project_wise_invoice_summary"
+    get :project_wise_incentive_deduction_summary, to: "dashboard#project_wise_incentive_deduction_summary"
+    get :invoice_ageing_report, to: "dashboard#invoice_ageing_report"
+    get :billing_team_dashboard, to: "dashboard#billing_team_dashboard"
+    get :project_wise_summary, to: "dashboard#project_wise_summary"
+    get :incentive_plans_started, to: "dashboard#incentive_plans_started"
+    get :incentive_plans_summary, to: "dashboard#incentive_plans_summary"
+    get :channel_partner_dashboard_counts, to: "dashboard#channel_partner_dashboard_counts"
     #get :download_brochure, to: 'dashboard#download_brochure'
     resource :lead do
       resources :searches, except: [:destroy], controller: 'searches' do

@@ -1,0 +1,20 @@
+var dates = <%= @dates.to_json.html_safe %>
+$.ajax({
+  url: "/dashboard/invoice_ageing_report",
+  type: "get",
+  traditional: true,
+  data: {dates: dates}
+});
+$.ajax({
+  url: "/dashboard/project_wise_incentive_deduction_summary",
+  type: "get",
+  traditional: true,
+  data: {dates: dates}
+});
+
+$.ajax({
+  url: "/dashboard/project_wise_invoice_summary",
+  type: "get",
+  traditional: true,
+  data: {dates: dates}
+});

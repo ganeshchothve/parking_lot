@@ -1,4 +1,7 @@
 class DashboardController < ApplicationController
+  include SourcingManagerDashboardConcern
+  include BillingTeamDashboardConcern
+  include ChannelPartnerDashboardConcern
   before_action :authenticate_user!, only: [:index, :documents]
   layout :set_layout
 

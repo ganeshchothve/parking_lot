@@ -1,3 +1,5 @@
+<% date = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") %>
+<% start_date, end_date = date.split(' - ') %>
 <% channel_partner = current_user.associated_channel_partner %>
 <% if current_user.active_channel_partner? %>
   <section class="first-sec welcome-box">
@@ -16,158 +18,65 @@
 
   <!-- Collaterals -->
   <%= render 'dashboard/index/partials/collaterals' %>
-
-  <section class="user-db-sec-4 device-pd">
+  <section class="user-db-sec-5 device-pd">
     <div class="container">
-      <div class="row">
+      <div class = "row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
-          <div class="table-title pt-4">
-            <img src="<%= asset_path 'chart-line.svg' %>" alt="user icon"> <h1 class="title"><%= t('dashboard.channel_partner.titles.leads') %></h1>
-          </div>
-        </div>
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
-          <div class="row no-mg">
-            <div class="box-card col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-4 no-sm-pd">
-              <div class="leads-box">
-                <div class="leads-box-inner">
-                  <img src="<%= asset_path 'leader-1.png' %>" alt="leads icon">
-                  <span class="numbers"><%= DashboardDataProvider.total_buyers(current_user) %></span>
-                  <p class="title"><%= t('dashboard.channel_partner.titles.total_leads') %><br><%= t('dashboard.channel_partner.titles.received') %></p>
-                  <!-- <p class="desc">Lorem Ipsum is simply dummy text of the printing and typesetting</p> -->
+          <div class="filter-inner">
+            <%= form_tag channel_partner_dashboard_counts_path, method: "get", remote: true, id: "channel_partner_dashboard_counts_filter" do %>
+              <div class="filter-content">
+                <div class="row">
+                  <div class="form-group col-12">
+                    <%= label_tag "dates", "Dates", class: "control-label float-left" %>
+                    <%= text_field_tag :dates, "", class: 'form-control daterangefilter', required: 'required',"data-start-date": start_date || '', "data-end-date": end_date || '', "data-opens": 'right', placeholder: 'dd/mm/yyyy - dd/mm/yyyy', id: "dates", auto: false, autocomplete: 'disabled' %>
+                  </div>
+                  <div class="form-group col-12">
+                    <%= label_tag :project_ids, "Projects", class: "control-label float-left" %>
+                    <%= select_tag :project_ids, options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: "Select", class: "selectize", multiple: true} %>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="box-card col-lg-8 col-md-12 col-sm-12 col-xs-12 mt-4 br-rd-4 bg-white">
-              <div class="row">
-                <div class="col-lg-6 col-md-12 col-xs-12 col-sm-12">
-                  <h2 class="chart-title pt-4 mt-2 mb-5 pb-5 pl-4"><%= t('dashboard.channel_partner.titles.lead_details') %></h2>
-                  <canvas id="myChart" height="300" width="320"></canvas>
-                </div>
-                <div class="col-lg-6 col-md-12 col-xs-12 col-sm-12 relative br-lft">
-                  <h2 class="chart-title pt-4 mt-2 pb-5"><%= t('dashboard.channel_partner.titles.booking_details') %></h2>
-                  <canvas id="barChart" height="300" class="pl-3 pr-3"></canvas>
-                </div>
+              <div class="filter-footer">
+                <%= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right" %>
+                <button type="button" class="f-cancel-btn status_chart_filter_cancel db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
               </div>
-            </div>
+          <% end %>
           </div>
         </div>
       </div>
     </div>
   </section>
-  <section class="user-db-sec-4 device-pd">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
-          <div class="row">
-            <div class="box-card col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-5">
-              <div class="box-header bg-gradient-cd br-rd-tr-4">
-              <h2><img src="<%= asset_path 'rupee-white.svg' %>" alt="<%= Receipt.model_name.human(count: @receipts.total_entries) %>" class="wd-10"><%= Receipt.model_name.human(count: @receipts.total_entries) %></h2>
-              </div>
-              <div class="box-content br-rd-bl-4 bg-white fix-ht-420">
-                <div class="row pd-box">
-                  <ul class="db-user-no-list pt-5 mt-2">
-                    <% DashboardDataProvider.receipts_group_by(current_user).each do |key, value| %>
-                      <li><span class="number"><%= value %></span><p class="title"><%= t("mongoid.attributes.receipt/status.#{key}")%></p>
-                      <!-- <span class="prjt-no">Total Projects: 05</span><span class="update-info">last updated a week ago</span> -->
-                      </li>
-                    <% end %>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div class="box-card col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-5">
-              <div class="box-header bg-gradient-cd br-rd-tr-4">
-                <h2><img src="<%= asset_path 'rupee-white.svg' %>" alt="Incentives" class="wd-10">My Incentives</h2>
-              </div>
-              <div class="box-content br-rd-bl-4 bg-white fix-ht-420">
-                <div class="row pd-box">
-                  <ul class="db-user-no-list pt-3 mt-3">
-                    <li><span class="number"><%= Invoice.where(Invoice.user_based_scope(current_user)).distinct(:booking_detail_id).count %></span><p class="title">Bookings with<br>incentive generated</p></li>
-                    <li><span class="number"><%= number_to_inr((Invoice.where(manager_id: current_user.id, status: 'approved').sum(:amount) || 0), {precision: 2, significant: false}) %></span><p class="title">Incentive<br>approved</p></li>
-                    <li><span class="number"><%= number_to_inr((Invoice.where(manager_id: current_user.id, status: {'$ne': 'rejected'}).sum(:amount) || 0), {precision: 2, significant: false}) %></span><p class="title">Incentive<br>generated</p></li>
-                    <li><span class="number"><%= DashboardDataProvider.incentive_pending_bookings(current_user) %></span><p class="title">Bookings with<br>pending incentive</p></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <section class="user-db-sec-5 device-pd">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
-          <div class="row">
-            <div class="box-card col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-5">
-              <div class="box-header bg-gradient-cd br-rd-tr-4 text-center">
-                <h2>Total <%= BookingDetail.model_name.human(count: 2) %></h2>
-              </div>
-              <div class="box-content br-rd-bl-4 bg-white py-3 text-center fix-ht">
-                <span class='cp-dashboard-box-font'>
-                  <%= BookingDetail.where(BookingDetail.user_based_scope(current_user)).booking_stages.count %>
-                </span>
-              </div>
-            </div>
-            <div class="box-card col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-5">
-              <div class="box-header bg-gradient-cd br-rd-tr-4 text-center">
-                <h2>Total <%= UserRequest::Cancellation.model_name.human(count: 2)  %></h2>
-              </div>
-              <div class="box-content br-rd-bl-4 bg-white py-3 text-center fix-ht">
-                <span class='cp-dashboard-box-font'>
-                  <%= BookingDetail.where(BookingDetail.user_based_scope(current_user)).in(status: %w(cancelled swapped)).count %>
-                </span>
-              </div>
-            </div>
-            <div class="box-card col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-5">
-              <div class="box-header bg-gradient-cd br-rd-tr-4 text-center">
-                <h2>Conversion Rate</h2>
-              </div>
-              <div class="box-content br-rd-bl-4 bg-white py-3 text-center fix-ht">
-                <span class='cp-dashboard-box-font'>
-                  <%= number_to_percentage(DashboardDataProvider.conversion_ratio(current_user), precision: 0) %>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <div id = "channel_partner_dashboard_counts">
+  </div>
 
   <section class="user-db-sec-5 device-pd">
     <div class="container">
-      <div class="row">
+      <div class = "row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
           <div class="table-title pt-4">
             <h1 class="title icon-set icon-building-black">Project Wise Summary</h1>
           </div>
         </div>
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
-          <div class="box-card relative table-responsive" id="dashboard_project_wise_summary">
-            <table class="table my-customer-table responsive-tbl mb-0">
-              <thead class="th-default">
-                <tr class="bg-gradient-cd white">
-                  <th><%= Project.model_name.human %></th>
-                  <th>No. of <%= Lead.model_name.human(count:2) %></th>
-                  <th>Total <%= t('global.agreement_value') %></th>
-                </tr>
-              </thead>
-              <tbody>
-                <% projects_leads = DashboardDataProvider.project_wise_leads_count(current_user) %>
-                <% projects_av = DashboardDataProvider.project_wise_total_av(current_user) %>
-                <% Project.all.pluck(:id, :name).each do |project| %>
-                  <tr>
-                    <td data-title='<%= Project.model_name.human %>'><%= project[1] %></td>
-                    <td data-title='No. of <%= Lead.model_name.human(count:2) %>'><%= projects_leads[project[0]] || 0 %></td>
-                    <td class='non-action-td' data-title="Total <%= t('global.agreement_value') %>"><%= projects_av[project[0]].present? ? number_to_indian_currency((projects_av[project[0]])) : '-' %></td>
-                  </tr>
-                <% end %>
-              </tbody>
-            </table>
+          <div class="filter-inner">
+            <%= form_tag project_wise_summary_path, method: "get", remote: true, id: "project_wise_summary_filter" do %>
+              <div class="filter-content">
+                <div class="row">
+                  <div class="form-group col-12">
+                    <%= label_tag "dates", "Dates", class: "control-label float-left" %>
+                    <%= text_field_tag :dates, "", class: 'form-control daterangefilter', required: 'required',"data-start-date": start_date || '', "data-end-date": end_date || '', "data-opens": 'right', placeholder: 'dd/mm/yyyy - dd/mm/yyyy', id: "dates", auto: false, autocomplete: 'disabled' %>
+                  </div>
+                </div>
+              </div>
+              <div class="filter-footer">
+                <%= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right" %>
+                <button type="button" class="f-cancel-btn status_chart_filter_cancel db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
+              </div>
+          <% end %>
           </div>
         </div>
+      </div>
+      <div class="row" id = "project_wise_summary">
       </div>
     </div>
   </section>
@@ -229,121 +138,98 @@
   </section>
 -->
   <div class='mb-5 pb-5'>
-    <%= render 'dashboard/index/partials/incentive_plans_summary' %>
+    <section class="user-db-sec-6 device-pd">
+      <div class="container">
+        <div class = "row">
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
+            <div class="table-title pt-4">
+              <img src="<%= asset_path 'rupee-black.svg' %>" alt="Documents" class="wd-10"><h1 class="title"><%= t('dashboard.channel_partner.incentive_plan_started.heading') %></h1>
+            </div>
+          </div>
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
+            <div class="filter-inner">
+              <%= form_tag incentive_plans_started_path, method: "get", remote: true, id: "incentive_plans_started_filter" do %>
+                <div class="filter-content">
+                  <div class="row">
+                    <div class="form-group col-12">
+                      <%= label_tag :project_ids, "Projects", class: "control-label float-left" %>
+                      <%= select_tag :project_ids, options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: "Select", class: "selectize", multiple: true} %>
+                    </div>
+                  </div>
+                </div>
+                <div class="filter-footer">
+                  <%= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right" %>
+                  <button type="button" class="f-cancel-btn status_chart_filter_cancel db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
+                </div>
+            <% end %>
+            </div>
+          </div>
+        </div>
+        <div class="row" id = "incentive_plans_started">
+        </div>
+      </div>
+    </section>
+    <section class="user-db-sec-6 device-pd">
+      <div class="container">
+        <div class = "row">
+          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3 no-pd">
+            <div class="table-title pt-4">
+              <img src="<%= asset_path 'rupee-black.svg' %>" alt="Documents" class="wd-10"><h1 class="title"><%= t('dashboard.channel_partner.incentive_plan.heading') %> (Last 6 months)</h1>
+            </div>
+          </div>
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
+            <div class="filter-inner">
+              <%= form_tag incentive_plans_summary_path, method: "get", remote: true, id: "incentive_plans_summary_filter" do %>
+                <div class="filter-content">
+                  <div class="row">
+                    <div class="form-group col-12">
+                      <%= label_tag "dates", "Dates", class: "control-label float-left" %>
+                      <%= text_field_tag :dates, "", class: 'form-control daterangefilter', required: 'required',"data-start-date": start_date || '', "data-end-date": end_date || '', "data-opens": 'right', placeholder: 'dd/mm/yyyy - dd/mm/yyyy', id: "dates", auto: false, autocomplete: 'disabled' %>
+                    </div>
+                    <div class="form-group col-12">
+                      <%= label_tag :project_ids, "Projects", class: "control-label float-left" %>
+                      <%= select_tag :project_ids, options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: "Select", class: "selectize", multiple: true} %>
+                    </div>
+                  </div>
+                </div>
+                <div class="filter-footer">
+                  <%= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right" %>
+                  <button type="button" class="f-cancel-btn status_chart_filter_cancel db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
+                </div>
+            <% end %>
+            </div>
+          </div>
+        </div>
+        <div class="row" id = "incentive_plans_summary">
+        </div>
+      </div>
+    </section>
   </div>
 
-  <script type="text/javascript">
-  var ctx1 = document.getElementById("myChart");
-  var myChart = new Chart(ctx1, {
-    type: 'doughnut',
-    data: {
-      labels: <%= @lead_details_labels.to_json.html_safe %>,
-      datasets: [{
-        label: '# of Tomatoes',
-        data: <%= DashboardDataProvider.user_group_by(current_user).values.to_json.html_safe %>,
-        backgroundColor: ['#1f3bb3','#fed1c8']
-      }]
-    },
-    options: {
-      cutoutPercentage: 60,
-      responsive: false,
-      legend: {
-          fullWidth: true,
-          position: 'bottom',
-              display: true,
-              labels: {
-                  fontColor: '#333d51',
-                  padding: 30,
-                  boxWidth: 12,
-              }
-          }
-    }
-  });
-  var canvas = document.getElementById("barChart");
-  var ctx = canvas.getContext('2d');
-  // Global Options:
-  Chart.defaults.global.defaultFontColor = 'dodgerblue';
-  Chart.defaults.global.defaultFontSize = 10;
-
-  // Data with datasets options
-  var data = {
-      labels: <%= @booking_detail_labels.to_json.html_safe %>,
-        datasets: [
-          {
-              fill: true,
-              backgroundColor: ['#8ddf8b','#1f3bb3','#5f79ea'],
-              data: <%= DashboardDataProvider.booking_detail_group_by(current_user).values.to_json.html_safe %>
-          }
-      ]
-  };
-  var options = {
-    tooltips: {
-          callbacks: {
-              label: function(tooltipItem) {
-                  return Number(tooltipItem.yLabel);
-              }
-          }
-      },
-      legend:{
-        display: false,
-      },
-      title: {
-                display: false,
-            },
-      scales: {
-          yAxes: [{
-              ticks: {
-                fontColor: "#1f3bb3",
-                  beginAtZero:true,
-                  stacked: false
-              }
-          }],
-          xAxes: [{
-
-            stacked: true,
-              barPercentage: 1,
-              barThickness: 65,
-              maxBarThickness: 80,
-              minBarLength: 20,
-              gridLines: {
-                offsetGridLines: true,
-                  color: "#ffffff"
-              },
-              ticks: {
-                fontColor: "#1f3bb3"
-              }
-          }]
-      },
-      hover: {
-          animationDuration: 1
-      },
-      animation: {
-          duration: 1,
-          onComplete: function () {
-              var chartInstance = this.chart,
-              ctx = chartInstance.ctx;
-              ctx.textAlign = 'center';
-              ctx.fillStyle = "#1f3bb3";
-              ctx.textBaseline = 'bottom';
-
-              this.data.datasets.forEach(function (dataset, i) {
-                  var meta = chartInstance.controller.getDatasetMeta(i);
-                  meta.data.forEach(function (bar, index) {
-                      var data = dataset.data[index];
-                      ctx.fillText(data, bar._model.x, bar._model.y - 5);
-
-                  });
-              });
-          }
-      }
-  };
-  // Chart declaration:
-  var myBarChart = new Chart(ctx, {
-      type: 'bar',
-      data: data,
-      options: options
-  });
-  </script>
+  <%= javascript_tag do %>
+    $(document).ready(function(){
+      FormInitializer.init($("#project_wise_summary_filter"));
+      FormInitializer.init($("#incentive_plans_started_filter"));
+      FormInitializer.init($("#incentive_plans_summary_filter"));
+      FormInitializer.init($("#channel_partner_dashboard_counts_filter"));
+      $.ajax({
+        url: "/dashboard/project_wise_summary",
+        type: "get"
+      });
+    $.ajax({
+        url: "/dashboard/incentive_plans_started",
+        type: "get"
+      });
+    $.ajax({
+        url: "/dashboard/incentive_plans_summary",
+        type: "get"
+      });
+      $.ajax({
+        url: "/dashboard/channel_partner_dashboard_counts",
+        type: "get"
+      });
+    });
+  <% end %>
 <% else %>
   <section class="first-sec welcome-box">
     <div class="container">

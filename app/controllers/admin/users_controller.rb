@@ -217,17 +217,18 @@ class Admin::UsersController < AdminController
     end
   end
 
+  #TO DO - move to SourcingManagerDashboardConcern
   def channel_partner_performance
-    date = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y")
-    @start_date, @end_date = date.split(' - ')
+    dates = params[:dates]
+    dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
     @cp_ids = User.where(manager_id: current_user.id).distinct(:id)
     if params[:channel_partner_id].present?
       @user = User.where(id: params[:channel_partner_id]).first
     else
       @user = User.where(User.role_based_channel_partners_scope(current_user)).first
     end
-    @walkins = Lead.where(manager_id: @user.id, created_at: (Date.parse(@start_date).beginning_of_day)..(Date.parse(@end_date).end_of_day)).group_by{|p| p.project_id}
-    @bookings = BookingDetail.booking_stages.where(manager_id: @user.id, created_at: (Date.parse(@start_date).beginning_of_day)..(Date.parse(@end_date).end_of_day)).group_by{|p| p.project_id}
+    @walkins = Lead.where(manager_id: @user.id).filter_by_created_at(dates).group_by{|p| p.project_id}
+    @bookings = BookingDetail.booking_stages.where(manager_id: @user.id).filter_by_created_at(dates).group_by{|p| p.project_id}
   end
 
   private

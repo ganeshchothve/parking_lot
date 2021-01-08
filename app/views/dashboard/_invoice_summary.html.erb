@@ -1,0 +1,31 @@
+<!-- TO-DO - Add sourcing manager directory and move this there -->
+<div class="box-card relative table-responsive">
+  <table class="table my-customer-table responsive-tbl mb-0">
+    <thead class="th-default">
+      <tr class="bg-gradient-cd white">
+        <th rowspan='2' class='th-border-right'><%= IncentiveScheme.model_name.human %> Name</th>
+        <th colspan='<%= @max_ladders %>' class='text-center'>No. of <%= ChannelPartner.model_name.human(count:2) %></th>
+      </tr>
+      <tr class="bg-gradient-cd white text-center"> 
+        <% @max_ladders.times do |l| %>
+          <th>Ladder #<%= l + 1 %></th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody class='text-md-center'>
+      <% IncentiveScheme.where(@options[:matcher]).group_by {|is| is.project_name}.each_with_index do |(project, schemes), pidx| %>
+        <% schemes.sort {|x, y| x.ends_on > y.ends_on ? -1 : 1}.each_with_index do |scheme, idx| %>
+          <tr>
+            <td data-toggle="popover" data-content="<%= incentive_scheme_tooltip(scheme) %>" data-title="Details for <%= scheme.name %>" class='text-md-left'><span class='d-none d-md-inline'><%= scheme.name %></span> <span class='small ml-md-3 d-md-inline d-block'><%= project %></span></td>
+            <% scheme.ladders.asc(:stage).each do |ladder| %>
+              <td class='non-action-td' data-title="No. of Partners in Ladder #<%= ladder.stage %>"><%= @invoices[ladder.id] || 0 %></td>
+            <% end %>
+            <% (@max_ladders - scheme.ladders.max(:stage)).times do |td| %>
+              <td class='d-none d-md-table-cell'>-</td>
+            <% end %>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,43 @@
+<!-- TO-DO - Add sourcing manager directory and move this there -->
+<div class="row">
+  <div class="box-card col-lg-3 col-md-12 col-sm-12 col-xs-12 mt-5">
+    <div class="box-header bg-gradient-cd br-rd-tr-4 text-center">
+      <h2><%= Lead.model_name.human %> Active Partners</h2>
+    </div>
+    <div class="box-content br-rd-bl-4 bg-white py-3 text-center fix-ht">
+      <span class='cp-dashboard-box-font'>
+        <%= @active_partners %>
+      </span>
+    </div>
+  </div>
+  <div class="box-card col-lg-3 col-md-12 col-sm-12 col-xs-12 mt-5">
+    <div class="box-header bg-gradient-cd br-rd-tr-4 text-center">
+      <h2><%= BookingDetail.model_name.human %> Active Partners</h2>
+    </div>
+    <div class="box-content br-rd-bl-4 bg-white py-3 text-center fix-ht">
+      <span class='cp-dashboard-box-font' id = "booking_active_partners" >
+        <%= @booking_active_partners %>
+      </span>
+    </div>
+  </div>
+  <div class="box-card col-lg-3 col-md-12 col-sm-12 col-xs-12 mt-5">
+    <div class="box-header bg-gradient-cd br-rd-tr-4 text-center">
+      <h2>Raised <%= Invoice.model_name.human(count: 2) %></h2>
+    </div>
+    <div class="box-content br-rd-bl-4 bg-white py-3 text-center fix-ht">
+      <span class='cp-dashboard-box-font'>
+        <%= @raised_invoices %>
+      </span>
+    </div>
+  </div>
+  <div class="box-card col-lg-3 col-md-12 col-sm-12 col-xs-12 mt-5">
+    <div class="box-header bg-gradient-cd br-rd-tr-4 text-center">
+      <h2>Approved <%= Invoice.model_name.human(count: 2) %></h2>
+    </div>
+    <div class="box-content br-rd-bl-4 bg-white py-3 text-center fix-ht">
+      <span class='cp-dashboard-box-font'>
+        <%= @approved_invoices %>
+      </span>
+    </div>
+  </div>
+</div>
