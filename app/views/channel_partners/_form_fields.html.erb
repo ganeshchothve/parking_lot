@@ -79,7 +79,7 @@
 
 <div class="row">
   <div class="col-md-12">
-    <%= form.input :developers_worked_for, collection: @channel_partner.developers_worked_for.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("developers_worked_for"), as: :select, prompt: :translate, input_html: {multiple: true, class: 'selectize-tags'} %>
+    <%= form.input :developers_worked_for, collection: ChannelPartner::DEVELOPERS.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("developers_worked_for"), prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
   </div>
 </div>
 
