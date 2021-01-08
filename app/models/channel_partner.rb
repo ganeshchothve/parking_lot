@@ -12,6 +12,7 @@ class ChannelPartner
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   EXPERTISE = %w( rentals retail )
   EXPERIENCE = ['0-1 yrs', '1-5 yrs', '5-10 yrs', '10-15 yrs', '15-20 yrs', '20+ yrs']
+  DEVELOPERS = [ "Godrej Properties", "Hiranandani", "Lodha Group", "Piramal Realty", "Kanakia", "Mahindra Lifespaces developers", "Kalpataru", "Runwal Group", "Dosti Group", "Wadhwa Group", "Rustomjee", "Puraniks builders", "Adhiraj construction", "L & T Realty", "Arkade Group", "Paradise group", "Chandak", "Marathon Realty", "Raymond Realty", "Damji Shamji Shah", "Shapoorji Pallonji Real Estate", "SD Corp", "Ornate Universal", "Sethia Infrastructure", "Aadi Properties", "Raheja construction", "Tata Housing", "Ajmera", "Adani", "Oberoi Realty", "Acme", "K Raheja", "Hubtown", "Ekta world", "Akshar group", "Raunak group", "JP Infra", "Sunteck Realty Ltd", "Seth Developers", "Kabra developer", "Koltepatil developer" ]
 
   # Add different types of documents which are uploaded on channel_partner
   DOCUMENT_TYPES = %w[pan_card rera_certificate gst_certificate cheque_scanned_copy]
