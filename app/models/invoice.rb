@@ -34,6 +34,7 @@ class Invoice
   validates :cheque_detail, copy_errors_from_child: true, if: :cheque_detail?
 
   delegate :name, to: :project, prefix: true, allow_nil: true
+  delegate :name, to: :manager, prefix: true, allow_nil: true
   delegate :name, to: :incentive_scheme, prefix: true, allow_nil: true
 
   scope :filter_by_status, ->(status) { where(status: status) }

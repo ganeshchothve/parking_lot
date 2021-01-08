@@ -21,18 +21,35 @@
                   <div><%= link_to @invoice.booking_detail.name, [current_user_role_group, @invoice.booking_detail] %></div>
                 </div>
               </div>
+              <% unless current_user.role?('channel_partner') %>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="small text-muted"><%= ChannelPartner.model_name.human %></label>
+                    <div><%= link_to_if policy([current_user_role_group, @invoice.manager]).index?, @invoice.manager_name, [:admin, @invoice.manager] %></div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+            <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="small text-muted"><%= invoice_labels[:incentive_scheme_id] %></label>
                   <div><%= @invoice.incentive_scheme.name %></div>
                 </div>
               </div>
-            </div>
-            <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="small text-muted"><%= invoice_labels[:ladder_stage] %></label>
-                  <div><%= @invoice.ladder_stage %></div>
+                  <div>
+                    <span class='mr-2'><%= @invoice.ladder_stage %></span>
+                    <% if adj = @invoice.incentive_scheme.ladders.where(stage: @invoice.ladder_stage).first.try(:payment_adjustment).presence %>
+                      <% if adj.absolute_value.blank? && adj.formula.present? %>
+                        <span>(<%= formula_to_human(adj.formula) %>)<span>
+                      <% else %>
+                        <span>(<strong><%= number_to_indian_currency(adj.absolute_value) %></strong>)</span>
+                      <% end %>
+                    <% end %>
+                  </div>
                 </div>
               </div>
               <div class="col-md-4">
@@ -41,14 +58,14 @@
                   <div><%= number_to_indian_currency(@invoice.amount) %></div>
                 </div>
               </div>
+            </div>
+            <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="small text-muted"><%= invoice_labels[:status] %></label>
                   <div><%= t("mongoid.attributes.invoice/status.#{@invoice.status}") %></div>
                 </div>
               </div>
-            </div>
-            <div class="row">
               <% if @invoice.approved? %>
                 <div class="col-md-4">
                   <div class="form-group">

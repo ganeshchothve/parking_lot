@@ -4,7 +4,7 @@
       <tr class="bg-gradient-cd white">
         <th><%= t('mongoid.attributes.invoice.number') %></th>
         <th><%= Invoice.model_name.human %> Details</th>
-        <th><%= t('mongoid.attributes.invoice.project_id') %></th>
+        <th><%= IncentiveScheme.model_name.human %> Details</th>
         <th><%= t('mongoid.attributes.invoice.amount') %></th>
         <th><%= t('mongoid.attributes.invoice.status') %></th>
         <th class="text-right"> <%= t('global.action', count: 3) %></th>
@@ -18,11 +18,25 @@
         <td>
           <%= link_to invoice.booking_detail.name, [current_user_role_group, invoice.booking_detail] %>
           <div class='small'>
-            <span><%= invoice.incentive_scheme.name.try(:titleize) %></span><br>
-            <span><%= Ladder.model_name.human %> - Stage <%= invoice.ladder_stage %></span>
+            <span><%= invoice.project_name %></span>
+            <% unless current_user.role?('channel_partner') %>
+              <br><span><%= link_to_if policy([current_user_role_group, invoice.manager]).index?, invoice.manager_name, [:admin, invoice.manager] %></span>
+            <% end %>
           </div>
         </td>
-        <td><%= invoice.project_name %></td>
+        <td>
+          <%= invoice.incentive_scheme.name.try(:titleize) %>
+          <div class='small'>
+            <span><%= Ladder.model_name.human %> - Stage <%= invoice.ladder_stage %></span><br>
+            <% if adj = invoice.incentive_scheme.ladders.where(stage: invoice.ladder_stage).first.try(:payment_adjustment).presence %>
+              <% if adj.absolute_value.blank? && adj.formula.present? %>
+                <span><%= formula_to_human(adj.formula) %><span>
+              <% else %>
+                <span><strong><%= number_to_indian_currency(adj.absolute_value) %></strong></span>
+              <% end %>
+            <% end %>
+          </div>
+        </td>
         <td>
           <%= number_to_indian_currency(invoice.amount) %><br>
           <% if invoice.approved? && invoice.net_amount.present? %>
