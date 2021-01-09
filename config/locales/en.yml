@@ -246,7 +246,7 @@ en:
         file_name: 'Name'
         asset_type: 'Type'
       address:
-        address1: 'Address'
+        address1: 'House/Flat/Company'
         address2: 'Street'
         city: 'City'
         country: 'Country'
