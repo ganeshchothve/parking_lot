@@ -9,6 +9,10 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
     valid ||= (user.role == 'channel_partner' && user.associated_channel_partner.present? && user.associated_channel_partner.id.to_s == record.id.to_s)
   end
 
+  def new?
+    %w[cp_admin].include?(user.role)
+  end
+
   def create?
     current_client.enable_channel_partners? && %w[channel_partner].include?(user.role)
   end

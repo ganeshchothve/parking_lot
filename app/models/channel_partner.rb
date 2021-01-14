@@ -169,8 +169,7 @@ class ChannelPartner
     def user_based_scope(user, _params = {})
       custom_scope = {}
       if user.role?('cp_admin')
-        cp_ids = User.where(manager_id: user.id).distinct(:id)
-        custom_scope = { manager_id: {"$in": cp_ids} }
+        custom_scope = { manager_id: user.id }
       elsif user.role?('cp')
         custom_scope = { manager_id: user.id }
       end

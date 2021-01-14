@@ -1126,6 +1126,8 @@ en:
       show:
         link_name: 'Client Detail'
     channel_partners:
+      new:
+        link_name: 'Add New ChannelPartner'
       index:
         link_name: 'Channel Partner Applications'
       edit:
