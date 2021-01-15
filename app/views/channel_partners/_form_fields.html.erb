@@ -27,7 +27,7 @@
     <%= form.input :email, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("email"), input_html: { class: 'email'} %>
   </div>
   <div class="col-md-6">
-    <%= form.input :alternate_email, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("alternate_email"), input_html: { class: 'email'} %>
+    <%= form.input :alternate_email, disabled: !policy([:admin, @channel_partner]).editable_field?("alternate_email"), input_html: { class: 'email'} %>
   </div>
 </div>
 
