@@ -4,6 +4,9 @@ if Rails.env.production? || Rails.env.staging?
     config.azure_storage_access_key = ENV_CONFIG[:carrierwave][:AZURE_STORAGE_ACCESS_KEY]
     config.azure_storage_blob_host = ENV_CONFIG[:carrierwave][:AZURE_STORAGE_BLOB_HOST]
     config.azure_container = ENV_CONFIG[:carrierwave][:AZURE_CONTAINER]
+    config.auto_sign_urls = true
+    config.token_expire_after = 3600
+
     config.root = Rails.root
     config.directory_permissions = 0777
 
