@@ -1,5 +1,5 @@
 <% url = Rails.application.routes.url_helpers %>
-var Foyr = (function(user, url, div_id, datajson){
+var Foyr = (function(lead, url, div_id, datajson){
   var proxy;
   var init = function(){
     proxy = new Porthole.WindowProxy(url, div_id);
@@ -15,9 +15,9 @@ var Foyr = (function(user, url, div_id, datajson){
     else if (messageEvent.data["bookedapartment"]) {
       var apartmentdata = messageEvent.data["bookedapartment"];
       var unit = _.find(datajson.hotspots, function(x){ return x.apartment_ID == apartmentdata.apartment_ID });
-      if(unit && user && user.id){
+      if(unit && lead && lead.id){
         $.ajax({
-          url: (user.buyer ? "<%= url.user_searches_path %>" : "/admin/users/" + user.id + "/searches"),
+          url: (lead.buyer ? "<%= url.lead_searches_path %>" : "/admin/leads/" + lead.id + "/searches"),
           data: {
             search: {
               project_unit_id: unit.id,
