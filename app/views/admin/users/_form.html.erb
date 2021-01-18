@@ -60,8 +60,8 @@
           <% end %>
           <% if policy([current_user_role_group, @user]).editable_field?("rera_id") %>
             <div class="form-group">
-              <%= f.label :rera_id, class: "#{@user.role?('channel_partner') ? 'label-required' : ''}" %>
-              <%= f.text_field :rera_id, class: 'form-control', required: @user.role?('channel_partner') ? true : false, disabled: (policy([current_user_role_group, @user]).editable_field?("rera_id") ? false : true) %>
+              <%= f.label :rera_id %>
+              <%= f.text_field :rera_id, class: 'form-control', disabled: (policy([current_user_role_group, @user]).editable_field?("rera_id") ? false : true) %>
             </div>
           <% end %>
           <% if policy([current_user_role_group, @user]).editable_field?("manager_id") %>

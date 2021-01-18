@@ -78,7 +78,7 @@ class ChannelPartner
   has_one :bank_detail, as: :bankable, validate: false
   has_many :assets, as: :assetable
 
-  validates :first_name, :last_name, :pan_number, :status, :email, :phone, :team_size, :gst_applicable, :rera_applicable, :nri, :company_name, :region, :source, :category, presence: true
+  validates :first_name, :last_name, :pan_number, :status, :email, :phone, :gst_applicable, :rera_applicable, :nri, :company_name, :region, :source, :category, presence: true
   validates :rera_id, presence: true, if: :rera_applicable?
   validates :gstin_number, presence: true, if: :gst_applicable?
   validates :team_size, :numericality => { :greater_than => 0 }, allow_blank: true
@@ -88,10 +88,10 @@ class ChannelPartner
   validates :phone, uniqueness: true, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile] }, allow_blank: true
   validates :email, uniqueness: true, allow_blank: true
   validates :status, inclusion: { in: proc { ChannelPartner::STATUS } }
-  validates :company_type, inclusion: { in: proc { ChannelPartner::COMPANY_TYPE } }
-  validates :source, inclusion: { in: proc { ChannelPartner::SOURCE } }
-  validates :category, inclusion: { in: proc { ChannelPartner::CATEGORY } }
-  validates :region, inclusion: { in: proc { ChannelPartner::REGION } }
+  validates :company_type, inclusion: { in: proc { ChannelPartner::COMPANY_TYPE } }, allow_blank: true
+  validates :source, inclusion: { in: proc { ChannelPartner::SOURCE } }, allow_blank: true
+  validates :category, inclusion: { in: proc { ChannelPartner::CATEGORY } }, allow_blank: true
+  validates :region, inclusion: { in: proc { ChannelPartner::REGION } }, allow_blank: true
 
   validates :pan_number, :aadhaar, uniqueness: true, allow_blank: true
   validates :pan_number, format: { with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A' }, allow_blank: true
