@@ -7,10 +7,10 @@ asset_sync:
   FOG_REGION:
 # use for private assets such as client uploads.
 carrierwave:
-  FOG_DIRECTORY:
-  AWS_ACCESS_KEY_ID:
-  AWS_SECRET_ACCESS_KEY:
-  FOG_REGION:
+  AZURE_STORAGE_ACCOUNT_NAME:
+  AZURE_STORAGE_ACCESS_KEY:
+  AZURE_CONTAINER:
+  AZURE_STORAGE_BLOB_HOST:
 redis:
   host: localhost
   port: 6379

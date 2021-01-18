@@ -8,7 +8,7 @@ class LogoUploader < CarrierWave::Uploader::Base
 
   # Choose what kind of storage to use for this uploader:
   if Rails.env.production? || Rails.env.staging?
-    storage :fog
+    storage :azure_rm
   else
     storage :file
   end

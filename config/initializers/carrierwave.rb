@@ -1,17 +1,22 @@
 if Rails.env.production? || Rails.env.staging?
   CarrierWave.configure do |config|
-    config.fog_provider = 'fog/aws'
-    config.fog_credentials = {
-      provider:              'AWS',
-      aws_access_key_id:     ENV_CONFIG[:carrierwave]['AWS_ACCESS_KEY_ID'],
-      aws_secret_access_key: ENV_CONFIG[:carrierwave]['AWS_SECRET_ACCESS_KEY'],
-      use_iam_profile:       true,
-      region:                ENV_CONFIG[:carrierwave]['FOG_REGION']
-    }
-    config.fog_directory  = ENV_CONFIG[:carrierwave]['FOG_DIRECTORY']
-    config.fog_public     = false
+    config.azure_storage_account_name = ENV_CONFIG[:carrierwave][:AZURE_STORAGE_ACCOUNT_NAME]
+    config.azure_storage_access_key = ENV_CONFIG[:carrierwave][:AZURE_STORAGE_ACCESS_KEY]
+    config.azure_storage_blob_host = ENV_CONFIG[:carrierwave][:AZURE_STORAGE_BLOB_HOST]
+    config.azure_container = ENV_CONFIG[:carrierwave][:AZURE_CONTAINER]
     config.root = Rails.root
     config.directory_permissions = 0777
+
+    #config.fog_provider = 'fog/aws'
+    #config.fog_credentials = {
+    #  provider:              'AWS',
+    #  aws_access_key_id:     ENV_CONFIG[:carrierwave]['AWS_ACCESS_KEY_ID'],
+    #  aws_secret_access_key: ENV_CONFIG[:carrierwave]['AWS_SECRET_ACCESS_KEY'],
+    #  use_iam_profile:       true,
+    #  region:                ENV_CONFIG[:carrierwave]['FOG_REGION']
+    #}
+    #config.fog_directory  = ENV_CONFIG[:carrierwave]['FOG_DIRECTORY']
+    #config.fog_public     = false
     #config.fog_attributes = { cache_control: "public, max-age=#{365.days.to_i}" }
   end
 else

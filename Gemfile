@@ -62,6 +62,7 @@ gem 'rails-observers',  github: 'rails/rails-observers'
 # for file upload
 gem 'fog-aws'
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
+gem 'carrierwave-azure_rm'
 gem 'mimemagic', '0.3.3'
 
 # for simplified HTTP requests
@@ -156,6 +157,6 @@ group :production, :staging do
   gem 'newrelic-redis'
   gem 'newrelic_rpm'
 end
-gem 'asset_sync', '>= 2.4.0'
+#gem 'asset_sync', '>= 2.4.0'
 gem 'humanize', require: 'humanize'
 gem 'request_store'
