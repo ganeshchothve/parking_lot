@@ -19,11 +19,31 @@
 </div>
 
 <div class="row">
-  <div class="col-md-6">
-    <%= f.input :city %>
+  <div class="col-md-6 d-none" id="city_field_dropdown">
+    <%= f.input :city, prompt: :translate, collection: Address::CITY  %>
+  </div>
+
+  <div class="col-md-6 d-none" id="city_field_text">
+    <%= f.input :city  %>
   </div>
 
   <div class="col-md-6">
     <%= f.input :zip %>
   </div>
 </div>
+
+
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    $("#channel_partner_address_attributes_country").on("change", function(){
+        if($(this).val() == "India"){
+            $("#city_field_dropdown").removeClass("d-none")
+            $("#city_field_text").addClass("d-none")
+        }else{
+            $("#city_field_text").removeClass("d-none")
+            $("#city_field_dropdown").addClass("d-none")
+        }
+      })
+  });
+<% end %>
+

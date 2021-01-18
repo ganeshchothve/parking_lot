@@ -2,6 +2,8 @@ class Address
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  CITY = ["Gwalior","Jabalpur","Ujjain","Malegaon","Nanded","Kolhapur","Mumbai","Navi Mumbai","Thane","Akola","Nagpur","Pune","Solapur","Bhubaneswar","Cuttack","Chandigarh","Ludhiana","Sangrur","Amritsar","Jalandhar","Ajmer","Kota","Jaipur","Bikaner","Jodhpur","Coimbatore","Erode","Salem","Madurai","Tirunelveli","Agra","Jhansi","Mainpuri","Mathura","Allahabad","Ghazipur","Varanasi","Bareilly","Hardoi","Kheri","Meerut","Moradabad","Saharanpur","Ballia","Gorakhpur","Banda","Kanpur","Faizabad","Ghaziabad","Lucknow","Dehradun","Kolkata","Asansol","Burdwan","Howrah","Midnapore","Guwahati","Hyderabad","Jamnagar","Delhi","Patna","Raipur","Rajkot","Vijayawada","Surat","Vadodara","Faridabad","Gurgaon","Jammu","Dhanbad","Ranchi","Bangalore","Belgaum","Gulbarga","Mangalore","Mysore","Bhopal","Amravati","Nashik","Aligarh","Ahmedabad","Chennai","Visakhapatnam","Indore","Pimpri-Chinchwad","Kalyan-Dombivali","Vasai-Virar","Srinagar","Aurangabad","Thiruvananthapuram","Hubballi-Dharwad","Tiruchirappalli","Tiruppur","Bareily","Mira-Bhayandar","Warangal","Guntur","Bhiwandi","Noida","Jamshedpur","Bhilai","Firozabad","Kochi","Nellore","Bhavnagar","Durgapur","Loni","Siliguri","Ulhasnagar","Sangli-Miraj & Kupwad","Ambattu"]
+
   field :one_line_address, type: String
   field :address1, type: String
   field :address2, type: String
