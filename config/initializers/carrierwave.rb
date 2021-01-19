@@ -6,20 +6,23 @@ if Rails.env.production? || Rails.env.staging?
     config.azure_container = ENV_CONFIG[:carrierwave][:AZURE_CONTAINER]
     config.auto_sign_urls = true
     config.token_expire_after = 3600
-
     config.root = Rails.root
     config.directory_permissions = 0777
-
-    #config.fog_provider = 'fog/aws'
-    #config.fog_credentials = {
-    #  provider:              'AWS',
-    #  aws_access_key_id:     ENV_CONFIG[:carrierwave]['AWS_ACCESS_KEY_ID'],
-    #  aws_secret_access_key: ENV_CONFIG[:carrierwave]['AWS_SECRET_ACCESS_KEY'],
-    #  use_iam_profile:       true,
-    #  region:                ENV_CONFIG[:carrierwave]['FOG_REGION']
-    #}
-    #config.fog_directory  = ENV_CONFIG[:carrierwave]['FOG_DIRECTORY']
-    #config.fog_public     = false
+  end
+elsif Rails.env.staging?
+  CarrierWave.configure do |config|
+    config.fog_provider = 'fog/aws'
+    config.fog_credentials = {
+      provider:              'AWS',
+      aws_access_key_id:     ENV_CONFIG[:carrierwave]['AWS_ACCESS_KEY_ID'],
+      aws_secret_access_key: ENV_CONFIG[:carrierwave]['AWS_SECRET_ACCESS_KEY'],
+      use_iam_profile:       true,
+      region:                ENV_CONFIG[:carrierwave]['FOG_REGION']
+    }
+    config.fog_directory  = ENV_CONFIG[:carrierwave]['FOG_DIRECTORY']
+    config.fog_public     = false
+    config.root = Rails.root
+    config.directory_permissions = 0777
     #config.fog_attributes = { cache_control: "public, max-age=#{365.days.to_i}" }
   end
 else

@@ -157,6 +157,6 @@ group :production, :staging do
   gem 'newrelic-redis'
   gem 'newrelic_rpm'
 end
-#gem 'asset_sync', '>= 2.4.0'
+gem 'asset_sync', '>= 2.4.0'
 gem 'humanize', require: 'humanize'
 gem 'request_store'

@@ -15,24 +15,24 @@ class LogoUploader < CarrierWave::Uploader::Base
 
   process :save_file_size_in_model
 
-  #def initialize(*)
-  #  super
+  def initialize(*)
+    super
 
-  #  if Rails.env.production? || Rails.env.staging?
-  #    self.fog_credentials = {
-  #      provider:              'AWS',
-  #      aws_access_key_id:     ENV_CONFIG[:asset_sync]['AWS_ACCESS_KEY_ID'],
-  #      aws_secret_access_key: ENV_CONFIG[:asset_sync]['AWS_SECRET_ACCESS_KEY'],
-  #      use_iam_profile:       true,
-  #      region:                ENV_CONFIG[:asset_sync]['FOG_REGION']
-  #    }
-  #    self.fog_directory = ENV_CONFIG[:asset_sync]['FOG_DIRECTORY']
-  #  end
-  #end
+    if Rails.env.staging?
+      self.fog_credentials = {
+        provider:              'AWS',
+        aws_access_key_id:     ENV_CONFIG[:asset_sync]['AWS_ACCESS_KEY_ID'],
+        aws_secret_access_key: ENV_CONFIG[:asset_sync]['AWS_SECRET_ACCESS_KEY'],
+        use_iam_profile:       true,
+        region:                ENV_CONFIG[:asset_sync]['FOG_REGION']
+      }
+      self.fog_directory = ENV_CONFIG[:asset_sync]['FOG_DIRECTORY']
+    end
+  end
 
-  #def fog_public
-  #  true
-  #end
+  def fog_public
+    Rails.env.staging?
+  end
 
   def save_file_size_in_model
     model.file_size = file.size if model.respond_to?(:file_size)

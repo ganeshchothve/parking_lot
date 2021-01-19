@@ -1,4 +1,4 @@
-if defined?(AssetSync) && (Rails.env.production? || Rails.env.staging?)
+if defined?(AssetSync) && Rails.env.staging?
   AssetSync.configure do |config|
     config.fog_provider = 'AWS'
     config.fog_region = ENV_CONFIG[:asset_sync]['FOG_REGION']
