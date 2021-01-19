@@ -1,4 +1,4 @@
-if Rails.env.production? || Rails.env.staging?
+if Rails.env.production?
   CarrierWave.configure do |config|
     config.azure_storage_account_name = ENV_CONFIG[:carrierwave][:AZURE_STORAGE_ACCOUNT_NAME]
     config.azure_storage_access_key = ENV_CONFIG[:carrierwave][:AZURE_STORAGE_ACCESS_KEY]
