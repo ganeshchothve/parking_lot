@@ -86,8 +86,8 @@ class ChannelPartner
   validates :expertise, array: { inclusion: {allow_blank: true, in: ChannelPartner::EXPERTISE } }
   validates :address, copy_errors_from_child: true, allow_blank: true
 
-  validates :gstin_number, format: { with: /^([0]{1}[1-9]{1}|[1-2]{1}[0-9]{1}|[3]{1}[0-7]{1})([a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9a-zA-Z]{1}[zZ]{1}[0-9a-zA-Z]{1})+$/i, message: 'is not valid format' }, allow_blank: true
-  validates :rera_id, format: { with: /^([A-Za-z])\d{11}$/i, message: 'is not valid format' }, allow_blank: true
+  validates :gstin_number, format: { with: /\A([0]{1}[1-9]{1}|[1-2]{1}[0-9]{1}|[3]{1}[0-7]{1})([a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9a-zA-Z]{1}[zZ]{1}[0-9a-zA-Z]{1})+\z/i, message: 'is not valid format' }, allow_blank: true
+  validates :rera_id, format: { with: /\A([A-Za-z])\d{11}\z/i, message: 'is not valid format' }, allow_blank: true
 
   accepts_nested_attributes_for :bank_detail, :address
 
