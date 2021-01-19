@@ -86,6 +86,9 @@ class ChannelPartner
   validates :expertise, array: { inclusion: {allow_blank: true, in: ChannelPartner::EXPERTISE } }
   validates :address, copy_errors_from_child: true, allow_blank: true
 
+  validates :gstin_number, format: { with: /^([0]{1}[1-9]{1}|[1-2]{1}[0-9]{1}|[3]{1}[0-7]{1})([a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9a-zA-Z]{1}[zZ]{1}[0-9a-zA-Z]{1})+$/i, message: 'is not valid format' }, allow_blank: true
+  validates :rera_id, format: { with: /^([A-Za-z])\d{11}$/i, message: 'is not valid format' }, allow_blank: true
+
   accepts_nested_attributes_for :bank_detail, :address
 
   delegate :name, :role, :role?, :email, to: :manager, prefix: true, allow_nil: true
@@ -131,6 +134,13 @@ class ChannelPartner
   def update_erp_id(erp_id, domain)
     super
     associated_user.update_erp_id(erp_id, domain) if associated_user
+  end
+
+  def doc_types
+    doc_types = DOCUMENT_TYPES.clone
+    doc_types = doc_types.without 'rera_certificate' unless self.rera_applicable?
+    doc_types = doc_types.without 'gst_certificate' unless self.gst_applicable?
+    doc_types
   end
 
   private

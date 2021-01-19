@@ -129,7 +129,7 @@ module DatabaseSeeds
                   <p class="white text-center fn-14 fn-500">
                   <% if channel_partner.inactive? && !channel_partner.may_submit_for_approval? %>
                     Upload following documents to submit your application<br>
-                    <%= ChannelPartner::DOCUMENT_TYPES.collect {|x| t("mongoid.attributes.channel_partner/file_types.#{x}")}.to_sentence %>
+                    <%= channel_partner.doc_types.collect {|x| t("mongoid.attributes.channel_partner/file_types.#{x}")}.to_sentence %>
                   <% elsif channel_partner.pending? %>
                     Thank you for choosing us<br>
                     Please wait while our representative reviews your account and approves
