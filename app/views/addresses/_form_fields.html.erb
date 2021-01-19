@@ -21,7 +21,7 @@
 <div class="row">
   <div class="col-md-6">
     <%= f.label :city %>
-    <%= f.select :city, [].collect{|x| [x, x] }, {}, class: :selectize, data: {create: true} %>
+    <%= f.select :city, [], {}, class: :selectize, data: {create: true} %>
   </div>
 
   <div class="col-md-6">
@@ -33,20 +33,15 @@
 <%= javascript_tag do %>
   $(document).ready(function(){
     $("#channel_partner_address_attributes_country").on("change", function(){
+        var $select = $("#channel_partner_address_attributes_city").selectize();
+        var selectize = $select[0].selectize;
+        selectize.setValue('');
+        selectize.clearOptions();
         if($(this).val() == "India"){
             var cities = <%= raw Address::CITY.to_json %>
-            var $select = $("#channel_partner_address_attributes_city").selectize();
-            var selectize = $select[0].selectize;
-            selectize.setValue('');
-            selectize.clearOptions();
             var options = _.map(cities, function(d) { return { value: d, text: d } });
             selectize.addOption(options)
             selectize.refreshOptions();
-        }else{
-            var $select = $("#channel_partner_address_attributes_city").selectize();
-            var selectize = $select[0].selectize;
-            selectize.setValue('');
-            selectize.clearOptions();
         }
       })
   });
