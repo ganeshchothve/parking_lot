@@ -11,7 +11,9 @@
       <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
         <div class="table-btn-set float-right pb-3">
           <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @leads.total_entries %></button>
-
+          <% if policy([:admin, Lead]).new? %>
+            <%= link_to t('helpers.new.link_name', model: Lead.model_name.human), new_admin_lead_path, class: 'db-small-btn light-blue bg-white fn-400 modal-remote-form-link btn unset-width' %>
+          <% end %>
           <!--
           <%# if policy([:admin, Lead.new]).export? %>
             <div class="export-menu display-initial">

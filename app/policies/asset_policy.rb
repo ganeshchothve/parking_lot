@@ -8,7 +8,7 @@ class AssetPolicy < ApplicationPolicy
     valid = user.active_channel_partner?
     if record.is_a?(Asset) && user.role == 'channel_partner'
       cp = user.associated_channel_partner
-      valid ||= (record.assetable_id == cp.id && record.assetable_type == cp.class.model_name.name.to_s)
+      valid ||= (record.assetable_id == cp.id && record.assetable_type == cp.class.model_name.name.to_s) if cp
     end
     valid
   end

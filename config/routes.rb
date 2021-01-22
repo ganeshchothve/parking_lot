@@ -49,6 +49,7 @@ Rails.application.routes.draw do
   namespace :admin do
 
     resources :api_logs, only: [:index]
+    resources :cp_lead_activities, only: [:index]
 
     resources :portal_stage_priorities, only: [:index] do
       patch :reorder, on: :collection
@@ -167,7 +168,7 @@ Rails.application.routes.draw do
       resources :accounts, controller: 'accounts'
     end
 
-    resources :leads, only: [:index, :show, :edit, :update] do
+    resources :leads, only: [:index, :show, :edit, :update, :new, :create] do
       resources :receipts, only: [:index, :new, :create, :edit, :update ] do
         get :resend_success, on: :member
         get :lost_receipt, on: :collection

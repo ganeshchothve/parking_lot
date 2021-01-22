@@ -5,6 +5,10 @@ class Admin::LeadPolicy < LeadPolicy
     out && user.active_channel_partner?
   end
 
+  def new?
+    true
+  end
+
   def edit?
     user.role.in?(%w(superadmin admin))
   end
