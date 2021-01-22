@@ -15,13 +15,13 @@ class Lead
   field :last_name, type: String, default: ''
   field :email, type: String, default: ''
   field :phone, type: String, default: ''
-  field :stage, type: String
-  field :sitevisit_date, type: Date
-  field :revisit_count, type: Integer
-  field :last_revisit_date, type: Date
-  field :manager_change_reason, type: String
-  field :referenced_manager_ids, type: Array, default: []
+  field :lead_stage, type: String
+  field :lead_status, type: String
+  field :lead_lost_date, type: String
+  field :sitevisit_status, type: String
+  field :sitevisit_date, type: String
   field :iris_confirmation, type: Boolean, default: false
+  field :lead_id, type: String #TO DO - Change name to selldo_id and use it throughout the system in place of lead_id on user.
 
   belongs_to :user
   belongs_to :manager, class_name: 'User', optional: true
@@ -37,6 +37,7 @@ class Lead
   has_many :emails, as: :triggered_by, class_name: 'Email'
   has_many :whatsapps, as: :triggered_by, class_name: 'Whatsapp'
   has_many :project_units
+  has_many :cp_lead_activities
   #has_and_belongs_to_many :received_emails, class_name: 'Email', inverse_of: :recipients
   #has_and_belongs_to_many :cced_emails, class_name: 'Email', inverse_of: :cc_recipients
   #has_many :received_smses, class_name: 'Sms', inverse_of: :recipient

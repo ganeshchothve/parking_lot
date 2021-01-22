@@ -1,8 +1,13 @@
 class Admin::LeadsController < AdminController
   before_action :authenticate_user!
-  before_action :set_lead, except: %i[index]
+  before_action :set_lead, except: %i[index new]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: %i[index]
+
+  def new
+    @lead = Lead.new()
+    render layout: false
+  end
 
   def index
     @leads = Lead.build_criteria params
@@ -50,7 +55,7 @@ class Admin::LeadsController < AdminController
   end
 
   def authorize_resource
-    if %w[index].include?(params[:action])
+    if %w[index new].include?(params[:action])
       authorize [current_user_role_group, Lead]
     else
       authorize [current_user_role_group, @lead]

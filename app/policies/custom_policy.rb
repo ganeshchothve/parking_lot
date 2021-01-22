@@ -89,8 +89,12 @@ class CustomPolicy < Struct.new(:user, :enable_users)
     "#{user.buyer? ? 'Buyer' : 'Admin'}::AssetPolicy".constantize.new(user, Asset).index?
   end
 
+  def cp_lead_activities?
+    "#{user.buyer? ? '' : 'Admin::'}CpLeadActivityPolicy".constantize.new(user, CpLeadActivity).index?
+  end
+
   def self.custom_methods
-    %w[schemes incentive_schemes user_requests channel_partners emails smses referrals accounts checklists bulk_upload_reports assets crms api_logs].sort
+    %w[schemes incentive_schemes user_requests channel_partners emails smses referrals accounts checklists bulk_upload_reports assets crms api_logs cp_lead_activities].sort
     # add_booking user_kycs portal_stage_priorities phases audits
   end
 end
