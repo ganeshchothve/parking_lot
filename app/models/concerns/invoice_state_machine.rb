@@ -11,9 +11,6 @@ module InvoiceStateMachine
 
       event :raise, after: :send_notification do
         transitions from: :draft, to: :pending_approval, success: %i[after_raised]
-      end
-
-      event :re_raise, after: :send_notification do
         transitions from: :rejected, to: :pending_approval, success: %i[after_re_raised]
       end
 

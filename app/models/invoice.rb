@@ -6,6 +6,8 @@ class Invoice
   include InvoiceStateMachine
   extend FilterByCriteria
 
+  DOCUMENT_TYPES = []
+
   field :amount, type: Float, default: 0.0
   field :status, type: String, default: 'draft'
   field :raised_date, type: DateTime
@@ -15,6 +17,7 @@ class Invoice
   field :comments, type: String
   field :ladder_id, type: BSON::ObjectId
   field :ladder_stage, type: Integer
+  field :gst_amount, type: Float, default: 0.0
   field :net_amount, type: Float
 
   belongs_to :project
@@ -23,12 +26,14 @@ class Invoice
   belongs_to :manager, class_name: 'User'
   has_one :incentive_deduction
   embeds_one :cheque_detail
+  has_many :assets, as: :assetable
 
   validates :ladder_id, :ladder_stage, presence: true
   validates :rejection_reason, presence: true, if: :rejected?
   validates :comments, presence: true, if: proc { pending_approval? && status_was == 'rejected' }
   validates :booking_detail_id, uniqueness: { scope: [:incentive_scheme_id, :ladder_id] }
   validates :amount, numericality: { greater_than: 0 }
+  validates :gst_amount, numericality: { greater_than_or_equal_to: 0 }
   validates :net_amount, numericality: { greater_than: 0 }, if: :approved?
   validates :cheque_detail, presence: true, if: :approved?
   validates :cheque_detail, copy_errors_from_child: true, if: :cheque_detail?

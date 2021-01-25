@@ -54,16 +54,22 @@
               </div>
               <div class="col-md-4">
                 <div class="form-group">
-                  <label class="small text-muted"><%= invoice_labels[:amount] %></label>
-                  <div><%= number_to_indian_currency(@invoice.amount) %></div>
+                  <label class="small text-muted"><%= invoice_labels[:status] %></label>
+                  <div><%= t("mongoid.attributes.invoice/status.#{@invoice.status}") %></div>
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
-                  <label class="small text-muted"><%= invoice_labels[:status] %></label>
-                  <div><%= t("mongoid.attributes.invoice/status.#{@invoice.status}") %></div>
+                  <label class="small text-muted"><%= invoice_labels[:amount] %></label>
+                  <div><%= number_to_indian_currency(@invoice.amount) %></div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="small text-muted"><%= invoice_labels[:gst_amount] %></label>
+                  <div><%= number_to_indian_currency(@invoice.gst_amount) %></div>
                 </div>
               </div>
               <% if @invoice.approved? %>

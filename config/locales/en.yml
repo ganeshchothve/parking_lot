@@ -678,6 +678,7 @@ en:
         number: 'Invoice #'
         amount: Incentive Amount
         net_amount: Net Amount
+        gst_amount: GST Amount
         comments: Comments
         rejection_reason: Rejection Reason
         project_id: 'Project'
@@ -1079,6 +1080,8 @@ en:
         link_name: 'Incentives'
       edit:
         link_name: 'Edit Invoice'
+      update_gst:
+        link_name: 'Update GST'
       show:
         link_name: 'Invoice Details'
       generate_invoice:

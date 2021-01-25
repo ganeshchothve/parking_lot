@@ -82,7 +82,7 @@ Rails.application.routes.draw do
       resources :invoices, only: :index, controller: 'booking_details/invoices' do
         member do
           patch :change_state
-          get :re_raise
+          get :raise
         end
       end
     end
@@ -90,6 +90,7 @@ Rails.application.routes.draw do
     # for Billing Team
     resources :invoices, only: [:index, :show, :edit, :update], controller: 'booking_details/invoices' do
       get :generate_invoice, on: :member
+      get :update_gst, on: :member
 
       resources :incentive_deductions, except: :destroy, controller: 'invoices/incentive_deductions' do
         post :change_state, on: :member
