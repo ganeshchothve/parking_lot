@@ -12,6 +12,7 @@ module ProjectUnitRemindersAndAutoRelease
             email_template_id: Template::EmailTemplate.find_by(name: "daily_reminder_for_booking_payment").id,
             recipients: [project_unit.user],
             cc_recipients: (project_unit.user.manager_id.present? ? [project_unit.user.manager] : []),
+            cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
             triggered_by_id: project_unit.booking_detail.id,
             triggered_by_type: "BookingDetail"
           })

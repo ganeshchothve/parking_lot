@@ -57,7 +57,7 @@ module BookingDetailSchemeStateMachine
           email = Email.create!(
             booking_portal_client_id: booking_detail.project_unit.booking_portal_client_id,
             email_template_id: Template::EmailTemplate.find_by(name: 'booking_detail_scheme_approved').id,
-            cc: [booking_detail.project_unit.booking_portal_client.notification_email],
+            cc: booking_detail.project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
             recipients: [booking_detail_scheme.created_by, booking_detail_scheme.approved_by],
             cc_recipients: (booking_detail_scheme.created_by.manager_id.present? ? [booking_detail_scheme.created_by.manager] : []),
             triggered_by_id: booking_detail_scheme.id,
@@ -75,7 +75,7 @@ module BookingDetailSchemeStateMachine
           email = Email.create!(
             booking_portal_client_id: booking_detail.project_unit.booking_portal_client_id,
             email_template_id: Template::EmailTemplate.find_by(name: 'booking_detail_scheme_draft').id,
-            cc: [booking_detail.project_unit.booking_portal_client.notification_email],
+            cc: booking_detail.project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
             recipients: [booking_detail_scheme.created_by],
             cc_recipients: (booking_detail_scheme.created_by.manager_id.present? ? [booking_detail_scheme.created_by.manager] : []),
             triggered_by_id: booking_detail_scheme.id,

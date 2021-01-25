@@ -31,7 +31,7 @@ class SchemeObserver < Mongoid::Observer
       #   Email.create!({
       #     booking_portal_client_id: scheme.booking_portal_client_id,
       #     email_template_id:Template::EmailTemplate.find_by(name: "scheme_draft").id,
-      #     cc: [scheme.booking_portal_client.notification_email],
+      #     cc: scheme.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
       #     recipients: [scheme.created_by],
       #     triggered_by_id: scheme.id,
       #     triggered_by_type: scheme.class.to_s,
@@ -40,7 +40,7 @@ class SchemeObserver < Mongoid::Observer
       #   Email.create!({
       #     booking_portal_client_id: scheme.booking_portal_client_id,
       #     email_template_id:Template::EmailTemplate.find_by(name: "scheme_approved").id,
-      #     cc: [scheme.booking_portal_client.notification_email],
+      #     cc: scheme.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
       #     recipients: [scheme.created_by],
       #     triggered_by_id: scheme.id,
       #     triggered_by_type: scheme.class.to_s,
@@ -49,7 +49,7 @@ class SchemeObserver < Mongoid::Observer
       #   Email.create!({
       #     booking_portal_client_id: scheme.booking_portal_client_id,
       #     email_template_id:Template::EmailTemplate.find_by(name: "scheme_disabled").id,
-      #     cc: [scheme.booking_portal_client.notification_email],
+      #     cc: scheme.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
       #     recipients: [scheme.created_by],
       #     triggered_by_id: scheme.id,
       #     triggered_by_type: scheme.class.to_s,

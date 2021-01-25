@@ -81,6 +81,7 @@ class Admin::UsersController < AdminController
             body: ERB.new(@user.booking_portal_client.email_header).result( binding) + email_template.parsed_content(@user) + ERB.new(@user.booking_portal_client.email_footer).result( binding ),
             subject: email_template.parsed_subject(@user),
             recipients: [ @user ],
+            cc: @user.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
             triggered_by_id: @user.id,
             triggered_by_type: @user.class.to_s
           })

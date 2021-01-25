@@ -266,7 +266,7 @@ module BookingDetailStateMachine
         email = Email.create!({
             booking_portal_client_id: project_unit.booking_portal_client_id,
             email_template_id: Template::EmailTemplate.find_by(name: "booking_confirmed").id,
-            cc: [project_unit.booking_portal_client.notification_email],
+            cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
             recipients: [user],
             cc_recipients: (user.manager_id.present? ? [user.manager] : []),
             triggered_by_id: self.id,
@@ -295,7 +295,7 @@ module BookingDetailStateMachine
         email = Email.create!(
           booking_portal_client_id: project_unit.booking_portal_client_id,
           email_template_id: Template::EmailTemplate.find_by(name: "booking_#{_status}").id,
-          cc: [project_unit.booking_portal_client.notification_email],
+          cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
           recipients: [user],
           cc_recipients: (user.manager_id.present? ? [user.manager] : []),
           triggered_by_id: self.id,

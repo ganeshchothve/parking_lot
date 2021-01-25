@@ -16,6 +16,7 @@ class UserKycObserver < Mongoid::Observer
         email_template_id: template.id,
         to: [user_kyc.email],
         recipients: [user_kyc],
+        cc: user.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
         triggered_by_id: user_kyc.id,
         triggered_by_type: user_kyc.class.to_s
       })

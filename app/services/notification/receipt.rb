@@ -24,6 +24,7 @@ module Notification
       params = {
         booking_portal_client_id: @user.booking_portal_client_id,
         recipient_ids: [@user.id],
+        cc: @user.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
         cc_recipient_ids: (@user.manager_id.present? ? [@user.manager_id] : []),
         triggered_by_id: @receipt.id,
         triggered_by: @receipt,
