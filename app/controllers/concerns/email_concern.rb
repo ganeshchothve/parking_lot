@@ -9,7 +9,7 @@ module EmailConcern
   #
   def index
     @emails = Email.build_criteria params
-    @emails = @emails.order(created_at: :desc).paginate(page: params[:page] || 1, per_page: params[:per_page])
+    @emails = @emails.order(created_at: :desc).paginate(page: params[:page] || 1, per_page: params[:per_page] || 15)
   end
 
   #

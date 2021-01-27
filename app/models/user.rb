@@ -503,6 +503,7 @@ class User
       body: ERB.new(self.booking_portal_client.email_header).result( binding) + email_template.parsed_content(self) + ERB.new(self.booking_portal_client.email_footer).result( binding ),
       subject: email_template.parsed_subject(self),
       recipients: [ self ],
+      cc: booking_portal_client.notification_email.to_s.split(',').map(&:strip),
       triggered_by_id: id,
       triggered_by_type: self.class.to_s
     })
