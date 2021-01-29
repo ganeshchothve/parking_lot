@@ -9,6 +9,10 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
     valid ||= (user.role == 'channel_partner' && user.associated_channel_partner.present? && user.associated_channel_partner.id.to_s == record.id.to_s)
   end
 
+  def new?
+    %w[cp_admin].include?(user.role)
+  end
+
   def create?
     current_client.enable_channel_partners? && %w[channel_partner].include?(user.role)
   end
@@ -28,7 +32,11 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
   end
 
   def permitted_attributes(_params = {})
-    attributes = [:name, :email, :phone, :rera_id, :title, :first_name, :region, :last_name, :street, :house_number, :city, :postal_code, :country, :mobile_phone, :email, :company_name, :pan_number, :gstin_number, :aadhaar, :rera_id, :manager_id, :team_size, :rera_applicable, :gst_applicable, :nri, :experience, :average_quarterly_business, expertise: [], developers_worked_for: [], address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes]
+    attributes = [:name, :email, :phone, :rera_id, :title, :first_name, :region, :last_name, :street, :house_number, :city, :postal_code, :country, :mobile_phone, :email, :company_name,
+      :additional_name, :alternate_phone, :alternate_email, :company_type, :category, :source,
+      :website, :region, :pan_number, :gstin_number, :aadhaar, :rera_id, :manager_id, :team_size,
+      :rera_applicable, :gst_applicable, :nri, :experience,
+      :average_quarterly_business, expertise: [], developers_worked_for: [], address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes]
 
     attributes += [third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes] if user.present?
 

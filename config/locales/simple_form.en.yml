@@ -45,6 +45,9 @@ en:
         name: Name
         zip: 'eg. 4110045'
         city: 'eg. Pune'
+        alternate_email: 'eg. abc@iris.com'
+        phone: '+91 81234 56789'
+        alternate_phone: '+91 81234 56789'
 
       user:
         login: 'Email / Phone'
