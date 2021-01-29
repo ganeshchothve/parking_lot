@@ -1,7 +1,7 @@
 class ChannelPartnerObserver < Mongoid::Observer
   include ApplicationHelper
   def after_create channel_partner
-    ChannelPartnerMailer.send_create(channel_partner.id)
+    ChannelPartnerMailer.send_create(channel_partner.id).deliver
     user = User.create!(first_name: channel_partner.first_name, last_name: channel_partner.last_name, email: channel_partner.email, phone: channel_partner.phone, rera_id: channel_partner.rera_id, role: 'channel_partner', booking_portal_client_id: current_client.id, manager_id: channel_partner.manager_id)
     channel_partner.set({associated_user_id: user.id})
   end
@@ -11,7 +11,6 @@ class ChannelPartnerObserver < Mongoid::Observer
     if cp_user = channel_partner.associated_user.presence
       cp_user.update(first_name: channel_partner.first_name, last_name: channel_partner.last_name, rera_id: channel_partner.rera_id, manager_id: channel_partner.manager_id)
     end
-
     channel_partner.rera_applicable = true if channel_partner.rera_id.present?
     channel_partner.gst_applicable = true if channel_partner.gstin_number.present?
 

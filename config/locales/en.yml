@@ -267,6 +267,7 @@ en:
         :false: 'No'
 
       bank_detail:
+        zip: 'Zip / Pin Code'
         name: "Bank Name"
         account_holder_name: "Account Holder's Name"
         branch: 'Branch'
@@ -415,16 +416,19 @@ en:
 
       channel_partner:
         name: 'Name'
-        company_name: "Company Name (As per RERA)"
-        address: "Address"
-        bank_detail: "Bank Details"
+        company_name: 'CP Company Name/ CP Name'
+        additional_name: 'Additional Name'
+        address: 'Address'
+        bank_detail: 'Bank Details'
         email: 'Email'
+        alternate_email: 'Alternate Email'
         phone: 'Phone'
+        alternate_phone: 'Alternate Phone'
         rera_id: 'RERA Registration Number'
         city: 'City'
         associated_user_id: 'Associated User'
         status: 'Status'
-        gstin_number: "GSTIN Number"
+        gstin_number: "GST Number"
         pan_number: "PAN Number"
         aadhaar: "Aadhaar"
         name_email_phone: 'Name/Email/Phone'
@@ -439,6 +443,11 @@ en:
         developers_worked_for: 'Developers Worked For (Type any developer name & press enter)'
         event: 'Application Status'
         cp_code: 'Vendor Code'
+        company_type: 'Company Type'
+        category: 'Category'
+        source: 'Source'
+        website: 'Website'
+        region: 'Region'
       channel_partner/file_types:
         rera_certificate: 'RERA Certificate'
         gst_certificate: 'GST Certificate'
@@ -1117,6 +1126,8 @@ en:
       show:
         link_name: 'Client Detail'
     channel_partners:
+      new:
+        link_name: 'Add New ChannelPartner'
       index:
         link_name: 'Channel Partner Applications'
       edit:

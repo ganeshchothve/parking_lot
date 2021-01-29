@@ -42,7 +42,7 @@ class HomeController < ApplicationController
             format.json { render json: {errors: @lead.errors.full_messages.uniq}, status: :unprocessable_entity }
           end
         else
-          format.json { render json: {errors: @project.errors.full_messages.uniq}, status: :unprocessable_entity }
+          format.json { render json: {errors: (@project.errors.full_messages.uniq.map{|e| "Project - "+ e } rescue []) + (@user.errors.full_messages.uniq.map{|e| "User - "+ e } rescue [])}, status: :unprocessable_entity }
         end
       end
     end

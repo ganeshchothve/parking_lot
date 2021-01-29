@@ -6,9 +6,10 @@ class ChannelPartner
   # include SyncDetails
   include CrmIntegration
   extend FilterByCriteria
-  include ChannelPartnerStateMachine
+  #include ChannelPartnerStateMachine
 
-  STATUS = %w(active inactive pending rejected)
+  #STATUS = %w(active inactive pending rejected)
+  STATUS = %w(active inactive)
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   EXPERTISE = %w( rentals retail residential commercial )
   EXPERIENCE = ['0-1 yrs', '1-5 yrs', '5-10 yrs', '10-15 yrs', '15-20 yrs', '20+ yrs']
@@ -16,21 +17,32 @@ class ChannelPartner
 
   # Add different types of documents which are uploaded on channel_partner
   DOCUMENT_TYPES = %w[pan_card rera_certificate gst_certificate cheque_scanned_copy]
+  COMPANY_TYPE = ['Sole Proprietorship', 'Partnership', 'Private Limited', 'Public Limited', 'Others']
+  CATEGORY = ['CP Company', 'Individual CP', 'ROTN', 'IRDA', 'Chartered accountants', 'IT Profession']
+  SOURCE = ['Internal CP', 'External CP']
+  REGION = ['Chennai', 'Bangalore', 'Coimbatore', 'NRI']
 
   field :title, type: String
   field :first_name, type: String
   field :last_name, type: String
+  field :additional_name, type: String
   field :email, type: String
+  field :alternate_email, type: String
   field :phone, type: String
+  field :alternate_phone, type: String
   field :rera_id, type: String
-  field :status, type: String, default: 'inactive'
+  field :status, type: String, default: 'active'
 
   field :company_name, type: String
+  field :company_type, type: String
   field :pan_number, type: String
   field :gstin_number, type: String
   field :aadhaar, type: String
   field :status_change_reason, type: String
-
+  field :category, type: String
+  field :source, type: String
+  field :website, type: String
+  field :region, type: String
   field :erp_id, type: String, default: ''
 
   # Runwal Fields
@@ -66,7 +78,7 @@ class ChannelPartner
   has_one :bank_detail, as: :bankable, validate: false
   has_many :assets, as: :assetable
 
-  validates :first_name, :last_name, :pan_number, :status, :email, :phone, :team_size, :gst_applicable, :rera_applicable, :nri, :company_name, presence: true
+  validates :first_name, :last_name, :pan_number, :status, :email, :phone, :gst_applicable, :rera_applicable, :nri, :company_name, :region, :source, :category, presence: true
   validates :rera_id, presence: true, if: :rera_applicable?
   validates :gstin_number, presence: true, if: :gst_applicable?
   validates :team_size, :numericality => { :greater_than => 0 }, allow_blank: true
@@ -76,6 +88,11 @@ class ChannelPartner
   validates :phone, uniqueness: true, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile] }, allow_blank: true
   validates :email, uniqueness: true, allow_blank: true
   validates :status, inclusion: { in: proc { ChannelPartner::STATUS } }
+  validates :company_type, inclusion: { in: proc { ChannelPartner::COMPANY_TYPE } }, allow_blank: true
+  validates :source, inclusion: { in: proc { ChannelPartner::SOURCE } }, allow_blank: true
+  validates :category, inclusion: { in: proc { ChannelPartner::CATEGORY } }, allow_blank: true
+  validates :region, inclusion: { in: proc { ChannelPartner::REGION } }, allow_blank: true
+
   validates :pan_number, :aadhaar, uniqueness: true, allow_blank: true
   validates :pan_number, format: { with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A' }, allow_blank: true
   validates :first_name, :last_name, name: true, allow_blank: true
@@ -152,8 +169,7 @@ class ChannelPartner
     def user_based_scope(user, _params = {})
       custom_scope = {}
       if user.role?('cp_admin')
-        cp_ids = User.where(manager_id: user.id).distinct(:id)
-        custom_scope = { manager_id: {"$in": cp_ids} }
+        custom_scope = { manager_id: user.id }
       elsif user.role?('cp')
         custom_scope = { manager_id: user.id }
       end

@@ -37,7 +37,6 @@ class ChannelPartnersController < ApplicationController
 
     respond_to do |format|
       if @channel_partner.save
-        ChannelPartnerMailer.send_create(@channel_partner.id).deliver
         format.html { redirect_to (user_signed_in? ? channel_partners_path : root_path), notice: 'Channel partner was successfully created.' }
         format.json { render json: @channel_partner, status: :created }
       else
