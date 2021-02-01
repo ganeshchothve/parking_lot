@@ -29,7 +29,7 @@ module PriceCalculator
   end
 
   def booking_price_percent_of_agreement_price
-    0.1
+    0.099
   end
 
   def total_agreement_costs
