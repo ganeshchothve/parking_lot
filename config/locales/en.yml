@@ -195,8 +195,8 @@ en:
         one: User Account
         other: Users Accounts
       lead:
-        one: Deal
-        other: Deals
+        one: Walk-in
+        other: Walk-ins
       invoice:
         zero: Invoice
         one: Invoice
@@ -552,7 +552,7 @@ en:
         project_tower_name: 'Project Tower'
         project_tower_id: 'Project Tower'
         project_name: 'Project'
-        blocked_on: 'Blocked On'
+        blocked_on: 'Booked On'
         unit_facing_direction: 'Facing'
         agreement_price: 'Agreement Value'
         all_inclusive_price: 'All Inclusive Price'
@@ -569,6 +569,7 @@ en:
         configuration: 'Configuration'
         payment_schedule: 'Payment Schedule'
         cost_sheet: 'Cost Sheet'
+        unit_configuration_name: "Unit Configuration"
       project_unit/status:
         hold: 'Hold'
         available: 'Available'
@@ -599,7 +600,7 @@ en:
         status: "Payment Status"
         user: "Customer"
         user_id: "Customer"
-        total_amount: "Total Amount (Rs.)"
+        total_amount: "Total Amount (Inclusive of GST)"
         token_number: 'Token Number'
         time_slot: Time Slot
         tracking_id: 'Transaction ID (Processed Payment)'
@@ -781,7 +782,7 @@ en:
         existing_customer: "Are you an existing customer with us?"
         comments: "Please mention any specific notes for our team"
         user_id: "Customer"
-        lead_id: 'Deal'
+        lead_id: 'Walk-in'
         creator: "Created By"
         project_units: "Apartments"
         son_daughter_of: 'Son / Daughter Of'
@@ -889,7 +890,7 @@ en:
       lead:
         project_id: 'Project'
         manager_id: 'Partner / Manager / Added by'
-        name_email_phone: 'Deal (Project Name)'
+        name_email_phone: 'Walk-in (Project Name)'
 
       user/file_types:
         home_loan_application_form: 'Home Loan Application Form'
@@ -1331,18 +1332,18 @@ en:
         link_name: '%{role} Details'
         header: 'Overview'
       leads:
-        link_name: 'Show Deals'
+        link_name: 'Show Walk-ins'
       send_payment_link: 'Payment link sent to user'
 
     leads:
       index:
-        link_name: 'Deals'
+        link_name: 'Walk-ins'
       show:
-        link_name: 'Show Deal Details'
+        link_name: 'Show Walk-in Details'
         header: 'Overview'
       edit:
-        link_name: "Edit Deal"
-        header: 'Edit Deal'
+        link_name: "Edit Walk-in"
+        header: 'Edit Walk-in'
 
     user_kycs:
       index:
