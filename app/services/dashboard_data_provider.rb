@@ -301,26 +301,28 @@ module DashboardDataProvider
     BookingDetail.booking_stages.where(manager_id: current_user.id).build_criteria(filters).nin(id: booking_ids).count
   end
 
-  def self.user_group_by(current_user, options={})
-    out = {'confirmed_users': 0, 'not_confirmed_users': 0}
-    user_ids = Lead.where(Lead.user_based_scope(current_user)).distinct(:user_id)
-    matcher = { _id: { '$in': user_ids } }
+  def self.lead_group_by(current_user, options={})
+    matcher = Lead.where(Lead.user_based_scope(current_user)).selector
     matcher = matcher.merge!(options[:matcher]) if options[:matcher].present?
-    data = User.collection.aggregate([
+    data = Lead.collection.aggregate([
       {"$match": matcher},
+      {'$lookup': {
+          from: "booking_details",
+          localField: "_id",
+          foreignField: "lead_id",
+          as: "booking_details"
+        }
+      },
       { "$group": {
         "_id":{
-          "$cond": {if: '$confirmed_at', then: 'confirmed_users', else: 'not_confirmed_users'}
+          "$cond": {if: {'$gte': [{'$size': '$booking_details'}, 1]}, then: 'booked', else: 'not_booked'}
         },
         count: {
           "$sum": 1
         }
       }}
     ]).to_a
-    data.each do |d|
-      out[(d['_id']).to_sym] = d['count']
-    end
-    out
+    data.inject({}) { |hsh, d| hsh[d['_id']] = d['count']; hsh }
   end
 
   def self.booking_detail_group_by(current_user, options={})
@@ -376,24 +378,57 @@ module DashboardDataProvider
         count: {
           '$sum': 1
         }
+      } },
+      {'$group': {
+        _id: nil,
+        total_count: { '$sum': '$count' },
+        project_wise: { '$push': {'project_id': '$_id', count: '$count'} }
       } }
     ]).to_a
-    data.inject({}) {|hsh, x| hsh[x['_id']] = x['count']; hsh }
+    data = data.first
+    data['project_wise'] = data['project_wise'].inject({}) {|hsh, x| hsh[x['project_id']] = x.except('project_id'); hsh}
+    data
   end
 
-  def self.project_wise_total_av(current_user, options={})
+  def self.project_wise_booking_data(current_user, options={})
     matcher = { manager_id: current_user.id, status: {'$nin': %w(hold cancelled swapped)}}
     matcher = matcher.merge!(options[:matcher]) if options[:matcher].present?
     data = BookingDetail.collection.aggregate([
       {'$match':  matcher },
+      {'$project': {
+         tasks: {
+            '$filter': {
+               input: "$tasks",
+               as: "task",
+               cond: {
+                 '$and': [
+                   { '$eq': [ "$$task.key", 'registration_done' ] },
+                   { '$eq': [ "$$task.completed", true ] }
+                 ]
+               }
+            }
+         },
+         project_id: 1,
+         agreement_price: 1,
+         status: 1
+      } },
       {'$group': {
         _id: '$project_id',
-        av: {
-          '$sum': '$agreement_price'
-        }
+        av: { '$sum': '$agreement_price' },
+        confirmed: { '$sum': { "$cond": [ {"$eq": ['$status', {"$literal": 'booked_confirmed'}]}, 1, 0 ] }},
+        registration_done: { '$sum': { "$cond": [ {"$gte": [{"$size": '$tasks'}, 1]}, 1, 0 ] }}
+      } },
+      {'$group': {
+        _id: nil,
+        total_av: {'$sum': '$av'},
+        total_confirmed: {'$sum': '$confirmed'},
+        total_registration_done: {'$sum': '$registration_done'},
+        project_wise: {'$push': {project_id: '$_id', av: '$av', confirmed: '$confirmed', registration_done: '$registration_done'}}
       } }
     ]).to_a
-    data.inject({}) {|hsh, x| hsh[x['_id']] = x['av']; hsh }
+    data = data.first
+    data['project_wise'] = data['project_wise'].inject({}) {|hsh, x| hsh[x['project_id']] = x.except('project_id'); hsh}
+    data
   end
 
   def self.conversion_ratio(current_user, filters={})

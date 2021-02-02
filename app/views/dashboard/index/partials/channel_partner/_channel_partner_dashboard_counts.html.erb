@@ -15,13 +15,9 @@
           </div>
           <div class="box-card col-lg-8 col-md-12 col-sm-12 col-xs-12 mt-4 br-rd-4 bg-white">
             <div class="row">
-              <div class="col-lg-6 col-md-12 col-xs-12 col-sm-12">
-                <h2 class="chart-title pt-4 mt-2 mb-5 pb-5 pl-4"><%= t('dashboard.channel_partner.titles.lead_details') %></h2>
-                <canvas id="myChart" height="300" width="320"></canvas>
-              </div>
-              <div class="col-lg-6 col-md-12 col-xs-12 col-sm-12 relative br-lft">
-                <h2 class="chart-title pt-4 mt-2 pb-5"><%= t('dashboard.channel_partner.titles.booking_details') %></h2>
-                <canvas id="barChart" height="300" class="pl-3 pr-3"></canvas>
+              <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 relative" style='height:350px;'>
+                <h2 class="chart-title pt-4 pb-5 mt-2 ml-2"><%= t('dashboard.channel_partner.titles.booking_details') %></h2>
+                <canvas id="barChart" class="pl-3 pr-3"></canvas>
               </div>
             </div>
           </div>
@@ -37,16 +33,15 @@
         <div class="row">
           <div class="box-card col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-5">
             <div class="box-header bg-gradient-cd br-rd-tr-4">
-            <h2><img src="<%= asset_path 'rupee-white.svg' %>" alt="<%= Receipt.model_name.human(count: @receipts.total_entries) %>" class="wd-10"><%= Receipt.model_name.human(count: @receipts.total_entries) %></h2>
+            <h2><img src="<%= asset_path 'home-white.svg' %>" alt="<%= BookingDetail.model_name.human(count: 2) %>" class="wd-20"><%= BookingDetail.model_name.human(count: 2) %></h2>
             </div>
             <div class="box-content br-rd-bl-4 bg-white fix-ht-420">
               <div class="row pd-box">
                 <ul class="db-user-no-list pt-5 mt-2">
-                  <% @grouped_receipts.each do |key, value| %>
-                    <li><span class="number"><%= value %></span><p class="title"><%= t("mongoid.attributes.receipt/status.#{key}")%></p>
-                    <!-- <span class="prjt-no">Total Projects: 05</span><span class="update-info">last updated a week ago</span> -->
-                    </li>
-                  <% end %>
+                  <li><span class="number"><%= @booking_count %></span><p class="title">Total Bookings</p></li>
+                  <li><span class="number"><%= @confirmed_booking_count %></span><p class="title">Confirmed Bookings</p></li>
+                  <li><span class="number"><%= @registration_done_booking_count %></span><p class="title">Registration Done<br>Bookings</p></li>
+                  <li><span class="number"><%= @cancelled_booking_count %></span><p class="title">Cancellations</p></li>
                 </ul>
               </div>
             </div>
@@ -58,10 +53,10 @@
             <div class="box-content br-rd-bl-4 bg-white fix-ht-420">
               <div class="row pd-box">
                 <ul class="db-user-no-list pt-3 mt-3">
-                  <li><span class="number"><%= @bookings_with_incentive_generated %></span><p class="title">Bookings with<br>incentive generated</p></li>
-                  <li><span class="number"><%= number_to_inr(@incentive_approved, {precision: 2, significant: false}) %></span><p class="title">Incentive<br>approved</p></li>
-                  <li><span class="number"><%= number_to_inr(@incentive_generated, {precision: 2, significant: false}) %></span><p class="title">Incentive<br>generated</p></li>
-                  <li><span class="number"><%= @incentive_pending_bookings %></span><p class="title">Bookings with<br>pending incentive</p></li>
+                  <li><span class="number"><%= @bookings_eligible_for_brokerage %></span><p class="title">Bookings eligible<br>for brokerage</p></li>
+                  <li><span class="number"><%= @incentive_approved %></span><p class="title">Invoice<br>approved</p></li>
+                  <li><span class="number"><%= @incentive_raised %></span><p class="title">Invoice<br>raised</p></li>
+                  <li><span class="number"><%= @bookins_not_eligible_for_brokerage %></span><p class="title">Bookings not eligible<br>for brokerage</p></li>
                 </ul>
               </div>
             </div>
@@ -112,32 +107,6 @@
   </div>
 </section>
 <%= javascript_tag do %>
-  var ctx1 = document.getElementById("myChart");
-  var myChart = new Chart(ctx1, {
-    type: 'doughnut',
-    data: {
-      labels: <%= @lead_details_labels.to_json.html_safe %>,
-      datasets: [{
-        label: '# of Tomatoes',
-        data: <%=  @lead_data.to_json.html_safe %>,
-        backgroundColor: ['#1f3bb3','#fed1c8']
-      }]
-    },
-    options: {
-      cutoutPercentage: 60,
-      responsive: false,
-      legend: {
-          fullWidth: true,
-          position: 'bottom',
-              display: true,
-              labels: {
-                  fontColor: '#333d51',
-                  padding: 30,
-                  boxWidth: 12,
-              }
-          }
-    }
-  });
   var canvas = document.getElementById("barChart");
   var ctx = canvas.getContext('2d');
   // Global Options:
@@ -146,12 +115,12 @@
 
   // Data with datasets options
   var data = {
-      labels: <%= @booking_detail_labels.to_json.html_safe %>,
+      labels: <%= @data_labels.to_json.html_safe %>,
         datasets: [
           {
               fill: true,
-              backgroundColor: ['#8ddf8b','#1f3bb3','#5f79ea'],
-              data: <%= @booking_data.to_json.html_safe %>
+              backgroundColor: ['#5f79ea','#e4e5e7','#fcb1c1','#fee6ad','#8ddf8b'],
+              data: <%= @data.values.to_json.html_safe %>
           }
       ]
   };
@@ -167,37 +136,36 @@
         display: false,
       },
       title: {
-                display: false,
-            },
+        display: false,
+      },
       scales: {
           yAxes: [{
               ticks: {
                 fontColor: "#1f3bb3",
-                  beginAtZero:true,
-                  stacked: false
+                beginAtZero:true,
+                stacked: false
               }
           }],
           xAxes: [{
-
             stacked: true,
-              barPercentage: 1,
-              barThickness: 65,
-              maxBarThickness: 80,
-              minBarLength: 20,
-              gridLines: {
-                offsetGridLines: true,
-                  color: "#ffffff"
-              },
-              ticks: {
-                fontColor: "#1f3bb3"
-              }
+            barPercentage: 1,
+            barThickness: 65,
+            maxBarThickness: 80,
+            minBarLength: 20,
+            gridLines: {
+              offsetGridLines: true,
+              color: "#ffffff"
+            },
+            ticks: {
+              fontColor: "#1f3bb3"
+            }
           }]
       },
       hover: {
           animationDuration: 1
       },
       animation: {
-          duration: 1,
+          duration: 1000,
           onComplete: function () {
               var chartInstance = this.chart,
               ctx = chartInstance.ctx;
@@ -214,7 +182,9 @@
                   });
               });
           }
-      }
+      },
+      responsive: true,
+      maintainAspectRatio: false
   };
   // Chart declaration:
   var myBarChart = new Chart(ctx, {
