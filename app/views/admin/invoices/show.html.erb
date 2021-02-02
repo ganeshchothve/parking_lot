@@ -60,26 +60,6 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="small text-muted"><%= invoice_labels[:amount] %></label>
-                  <div><%= number_to_indian_currency(@invoice.amount) %></div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="small text-muted"><%= invoice_labels[:gst_amount] %></label>
-                  <div><%= number_to_indian_currency(@invoice.gst_amount) %></div>
-                </div>
-              </div>
-              <% if @invoice.approved? %>
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label class="small text-muted"><%= invoice_labels[:net_amount] %></label>
-                    <div><%= number_to_indian_currency(@invoice.net_amount) %></div>
-                  </div>
-                </div>
-              <% end %>
               <% if @invoice.raised_date.present? %>
                 <div class="col-md-4">
                   <div class="form-group">
@@ -117,6 +97,46 @@
                   <div class="form-group">
                     <label class="small text-muted"><%= invoice_labels[:comments] %></label>
                     <div class='break-word'><%= @invoice.comments %></div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+            <hr>
+            <h4>Amount</h4>
+            <div class='row'>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="small text-muted"><%= invoice_labels[:amount] %></label>
+                  <div><%= number_to_indian_currency(@invoice.amount) %></div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="small text-muted"><%= invoice_labels[:gst_amount] %></label>
+                  <div><%= number_to_indian_currency(@invoice.gst_amount) %></div>
+                </div>
+              </div>
+              <% if @invoice.payment_adjustment.present? %>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="small text-muted">Adjustment</label>
+                    <div><%= number_to_indian_currency(@invoice.payment_adjustment.try(:absolute_value).to_f) %></div>
+                  </div>
+                </div>
+              <% end %>
+              <% if @invoice.incentive_deduction.present? && @invoice.incentive_deduction.approved? %>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="small text-muted"><%= t('mongoid.attributes.incentive_deduction.amount') %></label>
+                    <div><%= number_to_indian_currency(@invoice.incentive_deduction.try(:amount).to_f) %></div>
+                  </div>
+                </div>
+              <% end %>
+              <% if @invoice.approved? %>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="small text-muted"><%= invoice_labels[:net_amount] %></label>
+                    <div><%= number_to_indian_currency(@invoice.net_amount) %></div>
                   </div>
                 </div>
               <% end %>

@@ -19,7 +19,7 @@ class Admin::InvoicePolicy < InvoicePolicy
     user.role.in?(%w(channel_partner)) && record.aasm.events(permitted: true).map(&:name).include?(:raise)
   end
 
-  def raise?
+  def raise_invoice?
     change_state?
   end
 
@@ -42,7 +42,7 @@ class Admin::InvoicePolicy < InvoicePolicy
       attributes += [:comments]
       attributes += [:event, :gst_amount] if record.aasm.events(permitted: true).map(&:name).include?(:raise)
     when 'billing_team'
-      attributes += [:net_amount, :rejection_reason, cheque_detail_attributes: [:id, :total_amount, :payment_identifier, :issued_date, :issuing_bank, :issuing_bank_branch, :handover_date, :creator_id]] unless record.status.in?(%w(approved rejected))
+      attributes += [:rejection_reason, cheque_detail_attributes: [:id, :total_amount, :payment_identifier, :issued_date, :issuing_bank, :issuing_bank_branch, :handover_date, :creator_id], payment_adjustment_attributes: [:id, :absolute_value]] unless record.status.in?(%w(approved rejected))
       attributes += [:event, :gst_amount] if record.pending_approval?
     end
     attributes.uniq

@@ -14,14 +14,9 @@ class InvoiceObserver < Mongoid::Observer
   end
 
   def before_save invoice
-    # Adjust net amount according to gst amount input by adding gst in net amount.
-    if invoice.gst_amount_changed?
-      new_gst = invoice.gst_amount.to_f
-      if new_gst > 0
-        invoice.net_amount = invoice.amount.to_f + new_gst
-      elsif new_gst <= 0
-        invoice.net_amount = invoice.amount.to_f
-      end
+    # Adjust net amount according to gst amount & adjustment input by channel partner & billing team.
+    if invoice.gst_amount_changed? || invoice.payment_adjustment.try(:absolute_value_changed?)
+      invoice.net_amount = invoice.calculate_net_amount
     end
   end
 end

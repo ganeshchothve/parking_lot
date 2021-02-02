@@ -33,7 +33,7 @@ module IncentiveDeductionStateMachine
 
     def after_approved
       _invoice = self.invoice
-      _invoice.net_amount = _invoice.amount - self.amount
+      _invoice.net_amount = _invoice.amount_before_deduction - self.amount
       _invoice.save
     end
 

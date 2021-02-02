@@ -23,12 +23,25 @@
           <%= f.label :gst_amount, class: '' %>
           <%= f.number_field :gst_amount, autofocus: true, class: "form-control", disabled: true %>
         </div>
+        <div class="payment-adjustment">
+          <%= f.fields_for :payment_adjustment do |adj|%>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <%= adj.label :absolute_value, 'Adjustment' %>
+                  <%= adj.number_field :absolute_value, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("payment_adjustment_attributes") %>
+                  <p class="small text-muted">Make adjustments here for Kicker & Voucher Incentives. Supports negative amount for deductions from Net amount </p>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
         <div class="form-group">
           <%= f.label :net_amount, class: '' %>
           <% if policy([:admin, @invoice]).editable_field?("net_amount") %>
             <%= f.number_field :net_amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("net_amount") %>
           <% else %>
-            <p><%= number_to_indian_currency(f.object.net_amount) %></p>
+            <p class='net-amount'><%= f.object.net_amount %></p>
           <% end %>
         </div>
         <div class="form-group">
@@ -70,5 +83,16 @@
 <%= javascript_tag do %>
 $(document).ready(function(){
   FormInitializer.init($("#invoice_form"));
+  var netAmountBeforeAdj = <%= @invoice.amount_before_adjustment %>;
+  var netAmt = <%= @invoice.net_amount %>
+  $('#invoice_form').find('.net-amount').html(Amura.formatMoney(netAmt));
+
+  $('#invoice_form').find('input[name="invoice[payment_adjustment_attributes][absolute_value]"]').on('blur', function(event) {
+    if(!_.isEmpty($(this).val())) {
+      $('#invoice_form').find('.net-amount').html(Amura.formatMoney(netAmountBeforeAdj + parseFloat($(this).val())));
+    } else {
+      $('#invoice_form').find('.net-amount').html(Amura.formatMoney(netAmountBeforeAdj));
+    }
+  });
 });
 <% end %>

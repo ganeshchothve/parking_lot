@@ -84,7 +84,7 @@ module InvoiceStateMachine
 
     def after_rejected
       self.processing_date = Time.now
-      self.net_amount = 0
+      #self.net_amount = 0
       reject_pending_deductions
     end
 

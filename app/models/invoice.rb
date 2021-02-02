@@ -25,8 +25,9 @@ class Invoice
   belongs_to :incentive_scheme
   belongs_to :manager, class_name: 'User'
   has_one :incentive_deduction
-  embeds_one :cheque_detail
   has_many :assets, as: :assetable
+  embeds_one :cheque_detail
+  embeds_one :payment_adjustment, as: :payable, autobuild: true
 
   validates :ladder_id, :ladder_stage, presence: true
   validates :rejection_reason, presence: true, if: :rejected?
@@ -50,6 +51,29 @@ class Invoice
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
 
   accepts_nested_attributes_for :cheque_detail, reject_if: proc { |attrs| attrs.except('creator_id').values.all?(&:blank?) }
+  accepts_nested_attributes_for :payment_adjustment
+
+  def amount_before_adjustment
+    _amount = amount + gst_amount.to_f
+    _amount -= incentive_deduction.amount if incentive_deduction.approved?
+    _amount
+  end
+
+  def amount_before_gst
+    _amount = amount + payment_adjustment.try(:absolute_value).to_f
+    _amount -= incentive_deduction.amount if incentive_deduction.approved?
+    _amount
+  end
+
+  def amount_before_deduction
+    amount + gst_amount.to_f + payment_adjustment.try(:absolute_value).to_f
+  end
+
+  def calculate_net_amount
+    _amount = amount + gst_amount.to_f + payment_adjustment.try(:absolute_value).to_f
+    _amount -= incentive_deduction.amount if incentive_deduction.approved?
+    _amount
+  end
 
   class << self
     def user_based_scope(user, params = {})

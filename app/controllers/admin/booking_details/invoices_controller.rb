@@ -24,8 +24,8 @@ class Admin::BookingDetails::InvoicesController < AdminController
     end
   end
 
-  def raise
-    render 'admin/invoices/raise', layout: false
+  def raise_invoice
+    render 'admin/invoices/raise_invoice', layout: false
   end
 
   def show
@@ -77,7 +77,7 @@ class Admin::BookingDetails::InvoicesController < AdminController
   def authorize_resource
     if params[:action] == 'index'
       authorize [current_user_role_group, Invoice]
-    elsif params[:action].in?(%w(change_state edit update raise update_gst))
+    elsif params[:action].in?(%w(change_state edit update raise_invoice update_gst))
       authorize [current_user_role_group, @invoice]
     else
       authorize [current_user_role_group, @invoice]
