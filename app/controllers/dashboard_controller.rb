@@ -9,9 +9,6 @@ class DashboardController < ApplicationController
     authorize :dashboard, :index?
     @project_units = current_user.project_units
     @receipts = current_user.receipts.paginate(page: params[:page] || 1, per_page: params[:per_page])
-    @lead_details_labels = get_lead_detail_labels
-    @booking_detail_labels = get_booking_detail_labels
-
   end
 
   def faqs
@@ -60,23 +57,5 @@ class DashboardController < ApplicationController
     else
       redirect_to dashboard_path, alert: 'Brochure is not available'
     end
-  end
-
-  private
-
-  def get_lead_detail_labels
-    labels = Array.new
-    DashboardDataProvider.user_group_by(current_user).each do |key, value|
-      labels << value.to_s + ' ' + t("dashboard.channel_partner.#{key}")
-    end
-    labels
-  end
-
-  def get_booking_detail_labels
-    labels = Array.new
-    DashboardDataProvider.booking_detail_group_by(current_user).keys.each do |key|
-      labels << [t("dashboard.channel_partner.booking_detail.#{key}.label"), t("dashboard.channel_partner.booking_detail.#{key}.sub_label", blocking_amount: current_client.blocking_amount)]
-    end
-    labels
   end
 end
