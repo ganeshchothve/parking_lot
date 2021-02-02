@@ -45,8 +45,8 @@ module BulkUpload
           base_rate = row.field(9).strip rescue ""
           floor_rise = row.field(10).strip rescue ""
           status = row.field(11).strip rescue ""
-          bedrooms = row.field(12).strip rescue ""
-          bathrooms = row.field(13).strip rescue ""
+          bedrooms = (row.field(12).strip.presence || 2) rescue ""
+          bathrooms = (row.field(13).strip.presence || 2) rescue ""
           unit_facing_direction = row.field(14).strip rescue ""
           erp_id = row.field(15).strip rescue ""
           floor_plan_urls = row.field(16).strip rescue ""
@@ -110,6 +110,8 @@ module BulkUpload
             elsif status == "Employee Blocking"
               project_unit.status = "employee"
               project_unit.available_for = "employee"
+            elsif status == 'Booked'
+              project_unit.status = 'blocked'
             else
               project_unit.status = "error"
               project_unit.available_for = "user"
