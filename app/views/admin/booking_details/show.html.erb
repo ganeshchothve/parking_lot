@@ -55,7 +55,7 @@
         </div>
       </div>
     <% end %>
-    <% if @booking_detail.cost_sheet_template.is_active? %>
+    <% if @booking_detail.cost_sheet_template.try(:is_active?) %>
       <div class="col-md-12 mt-3">
         <div class="card pb_after">
           <div class="card-body">
@@ -66,7 +66,7 @@
         </div>
       </div>
     <% end %>
-    <% if @booking_detail.payment_schedule_template.is_active? %>
+    <% if @booking_detail.payment_schedule_template.try(:is_active?) %>
       <div class="col-md-12 mt-3">
         <div class="card pb_after">
           <div class="card-body">

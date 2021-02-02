@@ -33,12 +33,13 @@ FormInitializer = (function(){
     $(selector).find('.array-field').arrayField();
     var startDate = moment(($(selector).find('.daterangefilter').data("startDate") || moment()), "DD/MM/YYYY");
     var endDate = moment(($(selector).find('.daterangefilter').data("endDate") || moment()), "DD/MM/YYYY");
-    var opens = $(selector).find('.daterangefilter').data("opens") || 'left'
+    var opens = $(selector).find('.daterangefilter').data("opens") || 'left';
+    var autoUpdate = $(selector).find('.daterangefilter').data('autoUpdate') || false;
     $(selector).find('.daterangefilter').each(function(){
       $(this).daterangepicker({
         startDate: startDate,
         endDate: endDate,
-        autoUpdateInput: false,
+        autoUpdateInput: autoUpdate,
         opens: opens,
         locale: {
           format: 'DD/MM/YYYY'

@@ -37,16 +37,15 @@
         <div class="row">
           <div class="box-card col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-5">
             <div class="box-header bg-gradient-cd br-rd-tr-4">
-            <h2><img src="<%= asset_path 'rupee-white.svg' %>" alt="<%= Receipt.model_name.human(count: @receipts.total_entries) %>" class="wd-10"><%= Receipt.model_name.human(count: @receipts.total_entries) %></h2>
+            <h2><img src="<%= asset_path 'home-white.svg' %>" alt="<%= BookingDetail.model_name.human(count: 2) %>" class="wd-20"><%= BookingDetail.model_name.human(count: 2) %></h2>
             </div>
             <div class="box-content br-rd-bl-4 bg-white fix-ht-420">
               <div class="row pd-box">
                 <ul class="db-user-no-list pt-5 mt-2">
-                  <% @grouped_receipts.each do |key, value| %>
-                    <li><span class="number"><%= value %></span><p class="title"><%= t("mongoid.attributes.receipt/status.#{key}")%></p>
-                    <!-- <span class="prjt-no">Total Projects: 05</span><span class="update-info">last updated a week ago</span> -->
-                    </li>
-                  <% end %>
+                  <li><span class="number"><%= @booking_count %></span><p class="title">Total Bookings</p></li>
+                  <li><span class="number"><%= @confirmed_booking_count %></span><p class="title">Confirmed Bookings</p></li>
+                  <li><span class="number"><%= @registration_done_booking_count %></span><p class="title">Registration Done<br>Bookings</p></li>
+                  <li><span class="number"><%= @cancelled_booking_count %></span><p class="title">Cancellations</p></li>
                 </ul>
               </div>
             </div>
@@ -60,7 +59,7 @@
                 <ul class="db-user-no-list pt-3 mt-3">
                   <li><span class="number"><%= @bookings_eligible_for_brokerage %></span><p class="title">Bookings eligible<br>for brokerage</p></li>
                   <li><span class="number"><%= @incentive_approved %></span><p class="title">Invoice<br>approved</p></li>
-                  <li><span class="number"><%= @incentive_generated %></span><p class="title">Invoice<br>raised</p></li>
+                  <li><span class="number"><%= @incentive_raised %></span><p class="title">Invoice<br>raised</p></li>
                   <li><span class="number"><%= @bookins_not_eligible_for_brokerage %></span><p class="title">Bookings not eligible<br>for brokerage</p></li>
                 </ul>
               </div>
