@@ -58,10 +58,10 @@
             <div class="box-content br-rd-bl-4 bg-white fix-ht-420">
               <div class="row pd-box">
                 <ul class="db-user-no-list pt-3 mt-3">
-                  <li><span class="number"><%= @bookings_with_incentive_generated %></span><p class="title">Bookings with<br>incentive generated</p></li>
-                  <li><span class="number"><%= number_to_inr(@incentive_approved, {precision: 2, significant: false}) %></span><p class="title">Incentive<br>approved</p></li>
-                  <li><span class="number"><%= number_to_inr(@incentive_generated, {precision: 2, significant: false}) %></span><p class="title">Incentive<br>generated</p></li>
-                  <li><span class="number"><%= @incentive_pending_bookings %></span><p class="title">Bookings with<br>pending incentive</p></li>
+                  <li><span class="number"><%= @bookings_eligible_for_brokerage %></span><p class="title">Bookings eligible<br>for brokerage</p></li>
+                  <li><span class="number"><%= @incentive_approved %></span><p class="title">Invoice<br>approved</p></li>
+                  <li><span class="number"><%= @incentive_generated %></span><p class="title">Invoice<br>raised</p></li>
+                  <li><span class="number"><%= @bookins_not_eligible_for_brokerage %></span><p class="title">Bookings not eligible<br>for brokerage</p></li>
                 </ul>
               </div>
             </div>

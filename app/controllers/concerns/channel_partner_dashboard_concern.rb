@@ -23,10 +23,12 @@ module ChannelPartnerDashboardConcern
     @booking_detail_labels = get_booking_detail_labels
     @total_buyers = DashboardDataProvider.total_buyers(current_user, filters)
     @grouped_receipts = DashboardDataProvider.receipts_group_by(current_user, options)
-    @bookings_with_incentive_generated = Invoice.where(Invoice.user_based_scope(current_user)).build_criteria(filters).distinct(:booking_detail_id).count
-    @incentive_approved = (Invoice.where(manager_id: current_user.id, status: 'approved').build_criteria(filters).sum(:amount) || 0)
-    @incentive_generated = (Invoice.where(manager_id: current_user.id, status: {'$ne': 'rejected'}).build_criteria(filters).sum(:amount) || 0)
-    @incentive_pending_bookings = DashboardDataProvider.incentive_pending_bookings(current_user, filters)
+    @incentive_approved = (Invoice.where(manager_id: current_user.id, status: 'approved').build_criteria(filters).count)
+    @incentive_generated = (Invoice.where(manager_id: current_user.id, status: {'$ne': 'rejected'}).build_criteria(filters).count)
+    @bookings_eligible_for_brokerage = BookingDetail.nin(id: Invoice.where(manager_id: current_user.id).distinct(:booking_detail_id)).where(status: 'booked_confirmed').filter_by_tasks_completed("registration_done").count
+    @bookins_not_eligible_for_brokerage = BookingDetail.nin(id: Invoice.where(manager_id: current_user.id).distinct(:booking_detail_id)).where(status: {"$ne": 'booked_confirmed'}).filter_by_tasks_pending("registration_done").count
+    # @incentive_pending_bookings = DashboardDataProvider.incentive_pending_bookings(current_user, filters)
+    # @bookings_with_incentive_generated = Invoice.where(Invoice.user_based_scope(current_user)).build_criteria(filters).distinct(:booking_detail_id).count
     @booking_count_booking_stages = BookingDetail.where(BookingDetail.user_based_scope(current_user)).build_criteria(filters).booking_stages.count
     @booking_count_request_stages = BookingDetail.where(BookingDetail.user_based_scope(current_user)).build_criteria(filters).in(status: %w(cancelled swapped)).count
     @conversion_rate = DashboardDataProvider.conversion_ratio(current_user, filters)
