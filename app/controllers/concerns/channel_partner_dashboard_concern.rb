@@ -56,7 +56,6 @@ module ChannelPartnerDashboardConcern
     # @incentive_pending_bookings = DashboardDataProvider.incentive_pending_bookings(current_user, filters)
     # @bookings_with_incentive_generated = Invoice.where(Invoice.user_based_scope(current_user)).build_criteria(filters).distinct(:booking_detail_id).count
     @booking_count_booking_stages = BookingDetail.where(BookingDetail.user_based_scope(current_user)).build_criteria(filters).booking_stages.count
-    @booking_count_request_stages = BookingDetail.where(BookingDetail.user_based_scope(current_user)).build_criteria(filters).in(status: %w(cancelled swapped)).count
     @conversion_rate = DashboardDataProvider.conversion_ratio(current_user, filters)
   end
 
