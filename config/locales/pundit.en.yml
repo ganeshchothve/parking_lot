@@ -14,6 +14,10 @@ en:
 
     admin:
 
+      channel_partner_policy:
+        change_state?:
+          may_submit_for_apporval: "Please upload your documents before submitting application."
+
       booking_detail_policy:
         create?:
           allowed_bookings: "You have booked the permitted number of apartments."

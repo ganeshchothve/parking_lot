@@ -2,7 +2,7 @@
   <thead class="th-default">
     <tr class="bg-gradient-cd white">
       <th><%= t('mongoid.attributes.booking_detail.name') %></th>
-      <th><%= t('mongoid.attributes.booking_detail.bedrooms') %> / <%= t('mongoid.attributes.booking_detail.bathrooms') %></th>
+      <th><%= t('mongoid.attributes.project_unit.unit_configuration_name') %></th>
       <th><%= t('mongoid.attributes.booking_detail.status') %></th>
       <th><%= t('mongoid.attributes.booking_detail.agreement_price') %></th>
       <th class="text-right"> <%= t('global.action', count: 3) %></th>
@@ -13,6 +13,10 @@
       <tr>
         <td data-title= <%= t('mongoid.attributes.booking_detail.name') %> >
           <%= link_to booking_detail.name, [current_user_role_group, booking_detail] %>
+          <div class="small">
+            <%= Lead.model_name.human %> :
+            <%= link_to_if booking_detail.lead, booking_detail.lead.name, [current_user_role_group, booking_detail.lead] %>
+          </div>
           <div class="small">
             <%= Project.model_name.human %> :
             <%= booking_detail.project.name %>
@@ -29,7 +33,7 @@
           <% end %>
         </td>
 
-        <td data-title= <%= "#{t('mongoid.attributes.booking_detail.bedrooms')}/#{t('mongoid.attributes.booking_detail.bathrooms')}" %> ><%= booking_detail.bedrooms %> / <%= booking_detail.bathrooms %></td>
+        <td data-title= <%= "#{t('mongoid.attributes.project_unit.unit_configuration_name')}" %> ><%= booking_detail.project_unit.unit_configuration_name %></td>
 
         <td data-title=<%= t('mongoid.attributes.booking_detail.status') %> ><%= BookingDetail.human_attribute_name("status.#{booking_detail.status}") %></td>
 
@@ -45,10 +49,10 @@
             <%= number_to_indian_currency(booking_detail.total_amount_paid) %>
           </div>
 
-          <div class="small">
-            <%= t('mongoid.attributes.booking_detail.booking_pending_amount') %> :
-            <%= number_to_indian_currency(booking_detail.pending_balance.to_i) %>
-          </div>
+          <!-- <div class="small">
+            <%#= t('mongoid.attributes.booking_detail.booking_pending_amount') %> :
+            <%#= number_to_indian_currency(booking_detail.pending_balance.to_i) %>
+          </div> -->
 
         </td>
 

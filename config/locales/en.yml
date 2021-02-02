@@ -165,8 +165,8 @@ en:
         one: Scheme
         other: Schemes
       incentive_scheme:
-        one: Incentive Scheme
-        other: Incentive Schemes
+        one: Brokerage Scheme
+        other: Brokerage Schemes
       sms:
         one: SMS
         other: SMSs
@@ -195,16 +195,16 @@ en:
         one: User Account
         other: Users Accounts
       lead:
-        one: Deal
-        other: Deals
+        one: Walk-in
+        other: Walk-ins
       invoice:
         zero: Invoice
         one: Invoice
         other: Invoices
       incentive_deduction:
-        zero: Incentive Deduction
-        one: Incentive Deduction
-        other: Incentive Deductions
+        zero: Brokerage Deduction
+        one: Brokerage Deduction
+        other: Brokerage Deductions
 
     attributes:
       crm:
@@ -362,7 +362,7 @@ en:
         enable_company_users: 'Allow Company Users & Benefits'
         roles_taking_registrations: 'Allowed roles for taking new registrations'
         external_api_integration: 'Enable External CRM Integration'
-        enable_incentive_module: 'Enable Incentive Module for roles'
+        enable_incentive_module: 'Enable Brokerage Module for roles'
       client/payment_gateways:
         Razorpay: Razorpay Payment Gateway
         CCAvenue: CCAvenue Payment Gateway
@@ -552,7 +552,7 @@ en:
         project_tower_name: 'Project Tower'
         project_tower_id: 'Project Tower'
         project_name: 'Project'
-        blocked_on: 'Blocked On'
+        blocked_on: 'Booked On'
         unit_facing_direction: 'Facing'
         agreement_price: 'Agreement Value'
         all_inclusive_price: 'All Inclusive Price'
@@ -569,6 +569,7 @@ en:
         configuration: 'Configuration'
         payment_schedule: 'Payment Schedule'
         cost_sheet: 'Cost Sheet'
+        unit_configuration_name: "Unit Configuration"
       project_unit/status:
         hold: 'Hold'
         available: 'Available'
@@ -599,7 +600,7 @@ en:
         status: "Payment Status"
         user: "Customer"
         user_id: "Customer"
-        total_amount: "Total Amount (Rs.)"
+        total_amount: "Total Amount (Inclusive of GST)"
         token_number: 'Token Number'
         time_slot: Time Slot
         tracking_id: 'Transaction ID (Processed Payment)'
@@ -676,14 +677,14 @@ en:
 
       invoice:
         number: 'Invoice #'
-        amount: Incentive Amount
+        amount: Brokerage Amount
         net_amount: Net Amount
         gst_amount: GST Amount
         comments: Comments
         rejection_reason: Rejection Reason
         project_id: 'Project'
         booking_detail_id: 'Booking Detail'
-        incentive_scheme_id: 'Incentive Scheme'
+        incentive_scheme_id: 'Brokerage Scheme'
         ladder_stage: 'Ladder Stage'
         raised_date: 'Raised Date'
         processing_date: 'Processing Date'
@@ -697,7 +698,7 @@ en:
         rejected: 'Rejected'
 
       incentive_deduction:
-        number: 'Incentive Deduction #'
+        number: 'Brokerage Deduction #'
         amount: Deduction Amount
         comments: Reason
         status: Status
@@ -782,7 +783,7 @@ en:
         existing_customer: "Are you an existing customer with us?"
         comments: "Please mention any specific notes for our team"
         user_id: "Customer"
-        lead_id: 'Deal'
+        lead_id: 'Walk-in'
         creator: "Created By"
         project_units: "Apartments"
         son_daughter_of: 'Son / Daughter Of'
@@ -890,7 +891,7 @@ en:
       lead:
         project_id: 'Project'
         manager_id: 'Partner / Manager / Added by'
-        name_email_phone: 'Deal (Project Name)'
+        name_email_phone: 'Walk-in (Project Name)'
 
       user/file_types:
         home_loan_application_form: 'Home Loan Application Form'
@@ -1077,7 +1078,7 @@ en:
 
     invoices:
       index:
-        link_name: 'Incentives'
+        link_name: 'Brokerages'
       edit:
         link_name: 'Edit Invoice'
       update_gst:
@@ -1098,7 +1099,7 @@ en:
 
     incentive_deductions:
       index:
-        link_name: 'Incentive Deductions'
+        link_name: 'Brokerage Deductions'
       new:
         link_name: 'Add Deduction'
       edit:
@@ -1106,8 +1107,8 @@ en:
       show:
         link_name: 'Show Deduction'
       status_message:
-        approved: 'Incentive deduction approved'
-        rejected: 'Incentive deduction rejected'
+        approved: 'Brokerage deduction approved'
+        rejected: 'Brokerage deduction rejected'
       events:
         approved: 'Approve'
         rejected: 'Reject'
@@ -1269,17 +1270,17 @@ en:
         header: Add Scheme
     incentive_schemes:
       index:
-        link_name: Incentive Schemes
+        link_name: Brokerage Schemes
       edit:
-        link_name: Edit Incentive Scheme
+        link_name: Edit Brokerage Scheme
       end_scheme:
         link_name: End Scheme
       show:
-        link_name: Incentive Scheme Detail
-        header: Incentive Scheme Detail
+        link_name: Brokerage Scheme Detail
+        header: Brokerage Scheme Detail
       new:
-        link_name: Add Incentive Scheme
-        header: Add Incentive Scheme
+        link_name: Add Brokerage Scheme
+        header: Add Brokerage Scheme
     sync_logs:
       index:
         link_name: 'Sync Logs'
@@ -1334,18 +1335,18 @@ en:
         link_name: '%{role} Details'
         header: 'Overview'
       leads:
-        link_name: 'Show Deals'
+        link_name: 'Show Walk-ins'
       send_payment_link: 'Payment link sent to user'
 
     leads:
       index:
-        link_name: 'Deals'
+        link_name: 'Walk-ins'
       show:
-        link_name: 'Show Deal Details'
+        link_name: 'Show Walk-in Details'
         header: 'Overview'
       edit:
-        link_name: "Edit Deal"
-        header: 'Edit Deal'
+        link_name: "Edit Walk-in"
+        header: 'Edit Walk-in'
 
     user_kycs:
       index:
@@ -1455,7 +1456,7 @@ en:
       channel_partner_performace:
         heading: "Channel Partner Performance"
       incentive_scheme_performance:
-        heading: "Incentive Scheme Performance"
+        heading: "Brokerage Scheme Performance"
       cp_performance:
         heading: "Channel Partner Manager Performance"
     channel_partner:
@@ -1465,9 +1466,9 @@ en:
         heading: 'Refer a Channel Partner'
         sub_heading: 'Earn additional benefits by referring your friends at %{project_name}.'
       incentive_plan:
-        heading: 'Incentive Plans'
+        heading: 'Brokerage Plans'
       incentive_plan_started:
-        heading: 'Incentive Plans Started'
+        heading: 'Brokerage Plans Started'
         max_ladder_html: '<strong>Max.</strong> Ladder Reached'
 
       titles:
