@@ -27,8 +27,7 @@ module ChannelPartnerDashboardConcern
       options = {}
     end
     @receipts = current_user.receipts.build_criteria(filters).paginate(page: params[:page] || 1, per_page: params[:per_page])
-    @lead_details_labels = get_lead_detail_labels
-    @booking_detail_labels = get_booking_detail_labels
+
     @total_buyers = DashboardDataProvider.total_buyers(current_user, filters)
     #@grouped_receipts = DashboardDataProvider.receipts_group_by(current_user, options)
     #
@@ -37,6 +36,17 @@ module ChannelPartnerDashboardConcern
     @registration_done_booking_count = BookingDetail.where(BookingDetail.user_based_scope(current_user)).build_criteria(filters).filter_by_tasks_completed('registration_done').count
     @cancelled_booking_count = BookingDetail.where(BookingDetail.user_based_scope(current_user)).build_criteria(filters).in(status: %w(cancelled)).count
     @confirmed_booking_count = BookingDetail.build_criteria(filters).where(BookingDetail.user_based_scope(current_user)).booked_confirmed.count
+    #
+    # Graph section
+    @lead_data = DashboardDataProvider.lead_group_by(current_user, options)
+    @data = {
+      booked_leads: @lead_data['booked'],
+      not_booked_leads: @lead_data['not_booked'],
+      total_bookings: @booking_count,
+      confirmed_bookings: @confirmed_booking_count,
+      registration_done_bookings: @registration_done_booking_count
+    }
+    @data_labels = get_labels(@data)
     #
     # Incentives section
     @incentive_approved = Invoice.where(manager_id: current_user.id, status: 'approved').build_criteria(filters).count
@@ -48,8 +58,6 @@ module ChannelPartnerDashboardConcern
     @booking_count_booking_stages = BookingDetail.where(BookingDetail.user_based_scope(current_user)).build_criteria(filters).booking_stages.count
     @booking_count_request_stages = BookingDetail.where(BookingDetail.user_based_scope(current_user)).build_criteria(filters).in(status: %w(cancelled swapped)).count
     @conversion_rate = DashboardDataProvider.conversion_ratio(current_user, filters)
-    @lead_data = DashboardDataProvider.user_group_by(current_user, options).values
-    @booking_data = DashboardDataProvider.booking_detail_group_by(current_user, options).values
   end
 
   def project_wise_summary
@@ -65,7 +73,7 @@ module ChannelPartnerDashboardConcern
       options = {}
     end
     @projects_leads = DashboardDataProvider.project_wise_leads_count(current_user, options)
-    @projects_av = DashboardDataProvider.project_wise_total_av(current_user, options)
+    @projects_booking_data = DashboardDataProvider.project_wise_booking_data(current_user, options)
   end
 
   def incentive_plans_started
@@ -78,5 +86,15 @@ module ChannelPartnerDashboardConcern
     project_ids = params["project_ids"].try(:split, ",").try(:flatten) || []
     project_ids = Project.where(id: {"$in": project_ids}).distinct(:id)
     @all_schemes = IncentiveScheme.build_criteria(fltrs: {date_range: dates, project_ids: project_ids, status: 'approved'}).in(tier_id: [nil, '', current_user.tier_id])
+  end
+
+  private
+
+  def get_labels(data)
+    labels = Array.new
+    data.keys.each do |key|
+      labels << [t("dashboard.channel_partner.data.#{key}.label"), t("dashboard.channel_partner.data.#{key}.sub_label")]
+    end
+    labels
   end
 end

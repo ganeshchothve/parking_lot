@@ -15,13 +15,9 @@
           </div>
           <div class="box-card col-lg-8 col-md-12 col-sm-12 col-xs-12 mt-4 br-rd-4 bg-white">
             <div class="row">
-              <div class="col-lg-6 col-md-12 col-xs-12 col-sm-12">
-                <h2 class="chart-title pt-4 mt-2 mb-5 pb-5 pl-4"><%= t('dashboard.channel_partner.titles.lead_details') %></h2>
-                <canvas id="myChart" height="300" width="320"></canvas>
-              </div>
-              <div class="col-lg-6 col-md-12 col-xs-12 col-sm-12 relative br-lft">
-                <h2 class="chart-title pt-4 mt-2 pb-5"><%= t('dashboard.channel_partner.titles.booking_details') %></h2>
-                <canvas id="barChart" height="300" class="pl-3 pr-3"></canvas>
+              <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 relative" style='height:350px;'>
+                <h2 class="chart-title pt-4 pb-5 mt-2 ml-2"><%= t('dashboard.channel_partner.titles.booking_details') %></h2>
+                <canvas id="barChart" class="pl-3 pr-3"></canvas>
               </div>
             </div>
           </div>
@@ -111,32 +107,6 @@
   </div>
 </section>
 <%= javascript_tag do %>
-  var ctx1 = document.getElementById("myChart");
-  var myChart = new Chart(ctx1, {
-    type: 'doughnut',
-    data: {
-      labels: <%= @lead_details_labels.to_json.html_safe %>,
-      datasets: [{
-        label: '# of Tomatoes',
-        data: <%=  @lead_data.to_json.html_safe %>,
-        backgroundColor: ['#1f3bb3','#fed1c8']
-      }]
-    },
-    options: {
-      cutoutPercentage: 60,
-      responsive: false,
-      legend: {
-          fullWidth: true,
-          position: 'bottom',
-              display: true,
-              labels: {
-                  fontColor: '#333d51',
-                  padding: 30,
-                  boxWidth: 12,
-              }
-          }
-    }
-  });
   var canvas = document.getElementById("barChart");
   var ctx = canvas.getContext('2d');
   // Global Options:
@@ -145,12 +115,12 @@
 
   // Data with datasets options
   var data = {
-      labels: <%= @booking_detail_labels.to_json.html_safe %>,
+      labels: <%= @data_labels.to_json.html_safe %>,
         datasets: [
           {
               fill: true,
-              backgroundColor: ['#8ddf8b','#1f3bb3','#5f79ea'],
-              data: <%= @booking_data.to_json.html_safe %>
+              backgroundColor: ['#5f79ea','#e4e5e7','#fcb1c1','#fee6ad','#8ddf8b'],
+              data: <%= @data.values.to_json.html_safe %>
           }
       ]
   };
@@ -166,37 +136,36 @@
         display: false,
       },
       title: {
-                display: false,
-            },
+        display: false,
+      },
       scales: {
           yAxes: [{
               ticks: {
                 fontColor: "#1f3bb3",
-                  beginAtZero:true,
-                  stacked: false
+                beginAtZero:true,
+                stacked: false
               }
           }],
           xAxes: [{
-
             stacked: true,
-              barPercentage: 1,
-              barThickness: 65,
-              maxBarThickness: 80,
-              minBarLength: 20,
-              gridLines: {
-                offsetGridLines: true,
-                  color: "#ffffff"
-              },
-              ticks: {
-                fontColor: "#1f3bb3"
-              }
+            barPercentage: 1,
+            barThickness: 65,
+            maxBarThickness: 80,
+            minBarLength: 20,
+            gridLines: {
+              offsetGridLines: true,
+              color: "#ffffff"
+            },
+            ticks: {
+              fontColor: "#1f3bb3"
+            }
           }]
       },
       hover: {
           animationDuration: 1
       },
       animation: {
-          duration: 1,
+          duration: 1000,
           onComplete: function () {
               var chartInstance = this.chart,
               ctx = chartInstance.ctx;
@@ -213,7 +182,9 @@
                   });
               });
           }
-      }
+      },
+      responsive: true,
+      maintainAspectRatio: false
   };
   // Chart declaration:
   var myBarChart = new Chart(ctx, {

@@ -1471,7 +1471,7 @@ en:
       titles:
         lead_details: 'Customer Account Details'
         booking_details: 'Bookings'
-        total_leads: 'Total Leads'
+        total_leads: 'Total Walk-ins'
         received: 'Added'
         available_inventory: 'Available Inventory'
         download_brochure: 'Download Brochure'
@@ -1488,6 +1488,22 @@ en:
         booked_confirmed:
           label: 'Confirmed'
           sub_label: 'Paid 10% Amount'
+      data:
+        booked_leads:
+          label: 'Booked'
+          sub_label: 'Walk-ins'
+        not_booked_leads:
+          label: 'Not Booked'
+          sub_label: 'Walk-ins'
+        total_bookings:
+          label: 'Total Bookings'
+          sub_label: ''
+        confirmed_bookings:
+          label: '9.90%'
+          sub_label: 'Payment Received'
+        registration_done_bookings:
+          label: 'Registration Done'
+          sub_label: ''
       new_user:
         header: 'Add Customers'
     user:
