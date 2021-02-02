@@ -21,7 +21,7 @@
                   <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">Ladder #<%= ladder.stage %></h5>
                     <% adj = ladder.payment_adjustment %>
-                    <p class="mb-1"><%= (adj.absolute_value.blank? && adj.formula.present?) ?
+                    <p class="mb-1"><%#= (adj.absolute_value.blank? && adj.formula.present?) ?
                       formula_to_human(adj.formula) :
                       "<strong>#{number_to_indian_currency(adj.absolute_value)}</strong>".html_safe %></p>
                   </div>

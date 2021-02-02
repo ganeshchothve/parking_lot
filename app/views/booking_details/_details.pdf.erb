@@ -35,8 +35,8 @@
               </li>
             <% end %>
             <li>
-              <span><%= BookingDetail.human_attribute_name('bedrooms')%>/<%= BookingDetail.human_attribute_name('bathrooms')%></span>
-              <p><%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></p>
+              <span><%= ProjectUnit.human_attribute_name('unit_configuration_name')%></span>
+              <p><%= project_unit.unit_configuration_name %></p>
             </li>
             <li>
               <span><%= BookingDetail.human_attribute_name('carpet')%></span>

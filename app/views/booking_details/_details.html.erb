@@ -35,8 +35,8 @@
               </li>
             <% end %>
             <li>
-              <span class='text-wrap'><%= BookingDetail.human_attribute_name('bedrooms')%>/ <%= BookingDetail.human_attribute_name('bathrooms')%></span>
-              <p><%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></p>
+              <span><%= ProjectUnit.human_attribute_name('unit_configuration_name')%></span>
+              <p><%= project_unit.unit_configuration_name %></p>
             </li>
             <li>
               <span><%= BookingDetail.human_attribute_name('carpet')%></span>
@@ -82,19 +82,19 @@
                 <span><%= BookingDetail.human_attribute_name('total_amount_paid')%></span>
                 <p><%= number_to_indian_currency(booking_detail.total_amount_paid) %></p><div class="small">* Considers processed <%= Receipt.model_name.human %> only</div>
               </li>
-              <li>
-                <span><%= BookingDetail.human_attribute_name('pending_balance')%></span>
-                <p><%= number_to_indian_currency(booking_detail.pending_balance({strict: true})) %></p>
-              </li>
+              <!-- <li>
+                <span><%#= BookingDetail.human_attribute_name('pending_balance')%></span>
+                <p><%#= number_to_indian_currency(booking_detail.pending_balance({strict: true})) %></p>
+              </li> -->
             </ul>
           </div>
-          <div class="alert alert-primary col-md-12 col-lg-12 col-xs-12 col-sm-12">
-            <% template = ::Template::UITemplate.where(name: 'booking_details/_details').first %>
-            <% if template.present? %>
+          <% template = ::Template::UITemplate.where(name: 'booking_details/_details').first %>
+          <% if template.present? && template.is_active? %>
+            <div class="alert alert-primary col-md-12 col-lg-12 col-xs-12 col-sm-12">
               <% @bd = booking_detail %>
               <%= get_view_erb(template) %>
-            <% end %>
-          </div>
+            </div>
+          <% end %>
         <% end %>
       </div>
     </div>
