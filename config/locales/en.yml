@@ -165,8 +165,8 @@ en:
         one: Scheme
         other: Schemes
       incentive_scheme:
-        one: Incentive Scheme
-        other: Incentive Schemes
+        one: Brokerage Scheme
+        other: Brokerage Schemes
       sms:
         one: SMS
         other: SMSs
@@ -202,9 +202,9 @@ en:
         one: Invoice
         other: Invoices
       incentive_deduction:
-        zero: Incentive Deduction
-        one: Incentive Deduction
-        other: Incentive Deductions
+        zero: Brokerage Deduction
+        one: Brokerage Deduction
+        other: Brokerage Deductions
 
     attributes:
       crm:
@@ -362,7 +362,7 @@ en:
         enable_company_users: 'Allow Company Users & Benefits'
         roles_taking_registrations: 'Allowed roles for taking new registrations'
         external_api_integration: 'Enable External CRM Integration'
-        enable_incentive_module: 'Enable Incentive Module for roles'
+        enable_incentive_module: 'Enable Brokerage Module for roles'
       client/payment_gateways:
         Razorpay: Razorpay Payment Gateway
         CCAvenue: CCAvenue Payment Gateway
@@ -677,13 +677,13 @@ en:
 
       invoice:
         number: 'Invoice #'
-        amount: Incentive Amount
+        amount: Brokerage Amount
         net_amount: Net Amount
         comments: Comments
         rejection_reason: Rejection Reason
         project_id: 'Project'
         booking_detail_id: 'Booking Detail'
-        incentive_scheme_id: 'Incentive Scheme'
+        incentive_scheme_id: 'Brokerage Scheme'
         ladder_stage: 'Ladder Stage'
         raised_date: 'Raised Date'
         processing_date: 'Processing Date'
@@ -697,7 +697,7 @@ en:
         rejected: 'Rejected'
 
       incentive_deduction:
-        number: 'Incentive Deduction #'
+        number: 'Brokerage Deduction #'
         amount: Deduction Amount
         comments: Reason
         status: Status
@@ -1077,7 +1077,7 @@ en:
 
     invoices:
       index:
-        link_name: 'Incentives'
+        link_name: 'Brokerages'
       edit:
         link_name: 'Edit Invoice'
       show:
@@ -1096,7 +1096,7 @@ en:
 
     incentive_deductions:
       index:
-        link_name: 'Incentive Deductions'
+        link_name: 'Brokerage Deductions'
       new:
         link_name: 'Add Deduction'
       edit:
@@ -1104,8 +1104,8 @@ en:
       show:
         link_name: 'Show Deduction'
       status_message:
-        approved: 'Incentive deduction approved'
-        rejected: 'Incentive deduction rejected'
+        approved: 'Brokerage deduction approved'
+        rejected: 'Brokerage deduction rejected'
       events:
         approved: 'Approve'
         rejected: 'Reject'
@@ -1267,17 +1267,17 @@ en:
         header: Add Scheme
     incentive_schemes:
       index:
-        link_name: Incentive Schemes
+        link_name: Brokerage Schemes
       edit:
-        link_name: Edit Incentive Scheme
+        link_name: Edit Brokerage Scheme
       end_scheme:
         link_name: End Scheme
       show:
-        link_name: Incentive Scheme Detail
-        header: Incentive Scheme Detail
+        link_name: Brokerage Scheme Detail
+        header: Brokerage Scheme Detail
       new:
-        link_name: Add Incentive Scheme
-        header: Add Incentive Scheme
+        link_name: Add Brokerage Scheme
+        header: Add Brokerage Scheme
     sync_logs:
       index:
         link_name: 'Sync Logs'
@@ -1453,7 +1453,7 @@ en:
       channel_partner_performace:
         heading: "Channel Partner Performance"
       incentive_scheme_performance:
-        heading: "Incentive Scheme Performance"
+        heading: "Brokerage Scheme Performance"
       cp_performance:
         heading: "Channel Partner Manager Performance"
     channel_partner:
@@ -1463,9 +1463,9 @@ en:
         heading: 'Refer a Channel Partner'
         sub_heading: 'Earn additional benefits by referring your friends at %{project_name}.'
       incentive_plan:
-        heading: 'Incentive Plans'
+        heading: 'Brokerage Plans'
       incentive_plan_started:
-        heading: 'Incentive Plans Started'
+        heading: 'Brokerage Plans Started'
         max_ladder_html: '<strong>Max.</strong> Ladder Reached'
 
       titles:
