@@ -31,7 +31,7 @@ class IncentiveCalculator
   # Find all the bookings for above channel partner that fall under this scheme
   def find_all_bookings_for_current_scheme
     project_units = ProjectUnit.where(status: 'blocked', project_id: incentive_scheme.project_id).gte(blocked_on: incentive_scheme.starts_on).lte(blocked_on: incentive_scheme.ends_on)
-    project_units = ProjectUnit.where(project_tower_id: incentive_scheme.project_tower_id) if incentive_scheme.project_tower_id.present?
+    project_units = project_units.where(project_tower_id: incentive_scheme.project_tower_id) if incentive_scheme.project_tower_id.present?
     project_unit_ids = project_units.distinct(:id)
     # Find bookings that are already incentivized under different incentive scheme.
     other_scheme_booking_ids = Invoice.where(project_id: incentive_scheme.project_id).ne(incentive_scheme_id: incentive_scheme.id).distinct(:booking_detail_id)
