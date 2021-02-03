@@ -132,7 +132,7 @@
                   </div>
                 </div>
               <% end %>
-              <% if @invoice.approved? %>
+              <% if @invoice.net_amount.present? %>
                 <div class="col-md-4">
                   <div class="form-group">
                     <label class="small text-muted"><%= invoice_labels[:net_amount] %></label>

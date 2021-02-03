@@ -33,6 +33,7 @@ class Admin::BookingDetails::InvoicesController < AdminController
   end
 
   def edit
+    @invoice.build_payment_adjustment unless @invoice.payment_adjustment.present?
     render 'admin/invoices/edit', layout: false
   end
 
