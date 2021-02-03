@@ -31,6 +31,8 @@ class BookingDetail
   field :agreement_price, type: Integer
   field :all_inclusive_price, type: Integer
   field :booking_price, type: Integer
+  field :blocking_amount, type: Integer
+  field :booked_on, type: Date
 
   mount_uploader :tds_doc, DocUploader
 
@@ -47,6 +49,7 @@ class BookingDetail
   embeds_many :data, as: :data_attributable
   embeds_many :tasks, cascade_callbacks: true
   belongs_to :project
+  belongs_to :project_tower
   belongs_to :project_unit
   belongs_to :lead
   belongs_to :user
@@ -68,8 +71,8 @@ class BookingDetail
 
   # TODO: uncomment
   # validates :name, presence: true
-  validates :status, :agreement_price, :all_inclusive_price, presence: true
-  validates :agreement_price, :all_inclusive_price, numericality: { greater_than: 0 }
+  validates :status, :agreement_price, :all_inclusive_price, :saleable, :blocking_amount, :booked_on, presence: true
+  validates :agreement_price, :all_inclusive_price, :blocking_amount, :saleable, numericality: { greater_than: 0 }
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :kyc_mandate
   validate :validate_content, on: :create

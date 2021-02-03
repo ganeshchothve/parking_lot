@@ -27,8 +27,8 @@
           </div>
           <% if %w[ hold swapped cancelled ].exclude?(booking_detail.status)  %>
             <div class="small">
-              <%= ProjectUnit.human_attribute_name('blocked_on') %> :
-              <%= booking_detail.project_unit.blocked_on.try(:strftime, '%d/%m/%Y') %>
+              <%= BookingDetail.human_attribute_name('booked_on') %> :
+              <%= booking_detail.booked_on.try(:strftime, '%d/%m/%Y') %>
             </div>
           <% end %>
         </td>

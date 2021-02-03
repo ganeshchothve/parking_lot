@@ -91,7 +91,7 @@ class Api::V1::BookingDetailsController < ApisController
                                           bedrooms: @project_unit.bedrooms,
                                           bathrooms: @project_unit.bathrooms,
                                           floor_rise: @project_unit.floor_rise,
-                                          saleable: @project_unit.saleable,
+                                          #saleable: @project_unit.saleable,
                                           costs: @project_unit.costs,
                                           data: @project_unit.data,
                                           project_unit_id: @project_unit.id,
@@ -120,6 +120,16 @@ class Api::V1::BookingDetailsController < ApisController
       end
       params[:booking_detail][:third_party_references_attributes] = [ tpr_attrs ]
     end
+  end
+
+  def check_booking_detail_params
+    errors = []
+    begin
+      Date.strptime( params.dig(:booking_detail, :booked_on), "%d/%m/%Y") if params.dig(:booking_detail, :booked_on).present?
+    rescue ArgumentError
+      errors << "booked_on date format is invalid. Correct date format is - dd/mm/yyyy"
+    end
+    { "Booking detail errors - ": errors.try(:compact) } if errors.try(:compact).present?
   end
 
   def check_primary_user_kyc_params
@@ -173,6 +183,7 @@ class Api::V1::BookingDetailsController < ApisController
 
   def check_params
     errors = []
+    errors << check_booking_detail_params
     errors << check_primary_user_kyc_params
     errors << check_user_kycs_params
     errors << check_receipts_params
@@ -181,6 +192,8 @@ class Api::V1::BookingDetailsController < ApisController
   end
 
   def modify_params
+    #modify booking_detail params
+    params[:booking_detail][:booked_on] = Date.strptime( params[:booking_detail][:booking_on], "%d/%m/%Y") if params.dig(:booking_detail, :booked_on).present?
     #modify primary_user_kyc_params
     params[:booking_detail][:primary_user_kyc_attributes] = modify_any_user_kyc_params(params.dig(:booking_detail, :primary_user_kyc_attributes))
 
@@ -217,7 +230,7 @@ class Api::V1::BookingDetailsController < ApisController
   end
 
   def booking_detail_create_params
-    params.require(:booking_detail).permit(:agreement_price, :all_inclusive_price, receipts_attributes: receipt_params, primary_user_kyc_attributes: user_kyc_params, user_kycs_attributes: user_kyc_params, tasks_attributes: tasks_params, third_party_references_attributes: [:id, :reference_id, :crm_id])
+    params.require(:booking_detail).permit(:agreement_price, :all_inclusive_price, :saleable, :blocking_amount, :booked_on, receipts_attributes: receipt_params, primary_user_kyc_attributes: user_kyc_params, user_kycs_attributes: user_kyc_params, tasks_attributes: tasks_params, third_party_references_attributes: [:id, :reference_id, :crm_id])
   end
 
   def booking_detail_update_params

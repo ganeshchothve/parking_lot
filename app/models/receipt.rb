@@ -239,8 +239,8 @@ class Receipt
   #
   def first_booking_amount_limit
     if booking_detail.try(:hold?)
-      if total_amount < project_unit.blocking_amount
-        errors.add(:total_amount, "should be greater than blocking amount(#{project_unit.blocking_amount})")
+      if total_amount < booking_detail.blocking_amount
+        errors.add(:total_amount, "should be greater than blocking amount(#{booking_detail.blocking_amount})")
       end
     end
   end
@@ -275,7 +275,7 @@ class Receipt
       errors.add :total_amount, 'cannot be less than or equal to 0'
     else
       blocking_amount = user.booking_portal_client.blocking_amount
-      blocking_amount = project_unit.blocking_amount if booking_detail_id.present?
+      blocking_amount = booking_detail.blocking_amount if booking_detail_id.present?
       if (direct_payment? || blocking_payment?) && total_amount < blocking_amount && !booking_detail.try(:swapping?)
         errors.add :total_amount, "cannot be less than blocking amount #{blocking_amount}"
       end

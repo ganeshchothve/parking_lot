@@ -144,7 +144,7 @@ module BookingDetailStateMachine
     def after_under_negotiation_event
       create_default_scheme
       _project_unit = project_unit
-      _project_unit.assign_attributes(status: 'blocked', held_on: nil, blocked_on: Date.today, auto_release_on: ( Date.today + _project_unit.blocking_days.days) )
+      _project_unit.assign_attributes(status: 'blocked', held_on: nil, blocked_on: self.booked_on, auto_release_on: ( Date.today + _project_unit.blocking_days.days) )
       _project_unit.save
       if under_negotiation? && booking_detail_scheme.approved?
         scheme_approved!
@@ -156,7 +156,7 @@ module BookingDetailStateMachine
     end
 
     def after_scheme_approved_event
-      if scheme_approved? && get_paid_amount >= project_unit.blocking_amount
+      if scheme_approved? && get_paid_amount >= self.blocking_amount
         blocked!
       end
     end
@@ -170,11 +170,11 @@ module BookingDetailStateMachine
     # Updating blocked date of project_unit to today and  auto_release_on will be changed to blocking_days more from current auto_release_on.
     def after_blocked_event
       _project_unit = project_unit
-      _project_unit.blocked_on = Date.today
+      _project_unit.blocked_on = self.booked_on
       _project_unit.auto_release_on ||= Date.today
       _project_unit.auto_release_on +=  _project_unit.blocking_days.days
       _project_unit.save
-      if blocked? && get_paid_amount > project_unit.blocking_amount
+      if blocked? && get_paid_amount > self.blocking_amount
         booked_tentative!
       else
         auto_released_extended_inform_buyer!
