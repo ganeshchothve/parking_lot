@@ -50,7 +50,7 @@ module ChannelPartnerDashboardConcern
     #
     # Incentives section
     @incentive_approved = Invoice.where(manager_id: current_user.id, status: 'approved').build_criteria(filters).count
-    @incentive_raised = Invoice.where(manager_id: current_user.id, status: 'raised').build_criteria(filters).count
+    @incentive_raised = Invoice.where(manager_id: current_user.id, status: 'pending_approval').build_criteria(filters).count
     @bookings_eligible_for_brokerage = BookingDetail.build_criteria(filters).where(BookingDetail.user_based_scope(current_user)).incentive_eligible.count
     @bookins_not_eligible_for_brokerage = BookingDetail.build_criteria(filters).where(BookingDetail.user_based_scope(current_user)).where(status: {"$in": %w(scheme_approved blocked booked_tentative booked_confirmed)}).filter_by_tasks_pending_tracked_by('system').count
     # @incentive_pending_bookings = DashboardDataProvider.incentive_pending_bookings(current_user, filters)
