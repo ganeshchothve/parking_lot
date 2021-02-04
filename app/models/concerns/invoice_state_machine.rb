@@ -11,9 +11,6 @@ module InvoiceStateMachine
 
       event :raise, after: :send_notification do
         transitions from: :draft, to: :pending_approval, success: %i[after_raised]
-      end
-
-      event :re_raise, after: :send_notification do
         transitions from: :rejected, to: :pending_approval, success: %i[after_re_raised]
       end
 
@@ -87,7 +84,7 @@ module InvoiceStateMachine
 
     def after_rejected
       self.processing_date = Time.now
-      self.net_amount = 0
+      #self.net_amount = 0
       reject_pending_deductions
     end
 
