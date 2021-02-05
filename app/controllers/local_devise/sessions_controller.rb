@@ -1,5 +1,7 @@
 class LocalDevise::SessionsController < Devise::SessionsController
   include SessionHelper
+  skip_before_action :verify_authenticity_token, if: -> { params[:method] == 'create' || params[:authenticate_for_mobile].present? }
+
   prepend_before_action :require_no_authentication, only: [:otp]
   before_action :generate_rsa_key, only: :new
   prepend_before_action -> {authenticate_encryptor([:password])}, only: :create
