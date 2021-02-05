@@ -24,7 +24,10 @@ class LocalDevise::SessionsController < Devise::SessionsController
     set_flash_message!(:notice, :signed_in)
     sign_in(resource_name, resource)
     yield resource if block_given?
-    respond_with resource, location: after_sign_in_path_for(resource)
+    respond_to do |format|
+      format.html { respond_with resource, location: after_sign_in_path_for(resource) }
+      format.json { render json: {message: find_message(:signed_in), user: current_user }, status: 200 }
+    end
   end
 
   def otp

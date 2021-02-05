@@ -16,6 +16,8 @@ class ApplicationController < ActionController::Base
 
   helper_method :home_path
   protect_from_forgery with: :exception, prepend: true
+  skip_before_action :verify_authenticity_token, if: -> { params[:user_token].present? || params[:authenticate_for_mobile].present? }
+  
   layout :set_layout
 
   rescue_from ActionController::InvalidAuthenticityToken, with: :invalid_authenticity_token
