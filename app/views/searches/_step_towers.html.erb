@@ -19,7 +19,17 @@
                   <li><span class="book-box soldout-aprt"></span><span>Sold Out and Filtered</span></li>
                   <li><span class="book-box selected-aprt"></span><span>Selected</span></li>
                 </ul>
-                 <div class="booking-list">
+                <br/>
+                <div class="book-directions">
+                  <div style="text-align:left;float:left;width:49%">
+                    <i class="fa fa-chevron-left"></i><span class="pl-2">Amenity Facing</span>
+                  </div>
+                  <div style="text-align:right;float:right;width:49%">
+                    <span class="pr-2">Road Facing</span>
+                    <i class="fa fa-chevron-right"></i>
+                  </div>
+                </div>
+                <div class="booking-list">
                   <div class="apartments-no">
                     <ul class="aprt-no-list">
                       <% max_floor = @all_units.collect{|x| x[:_id]}.max %>
