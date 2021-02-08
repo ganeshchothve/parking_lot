@@ -19,6 +19,7 @@ class Lead
   field :sitevisit_date, type: Date
   field :revisit_count, type: Integer
   field :last_revisit_date, type: Date
+  field :registered_at, type: Date
   field :manager_change_reason, type: String
   field :referenced_manager_ids, type: Array, default: []
   field :iris_confirmation, type: Boolean, default: false
