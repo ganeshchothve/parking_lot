@@ -40,7 +40,9 @@
                 <% end %>
                 <th class="text-right">Count</th>
                 <th class="text-right">Total Agreement Price</th>
+                <!--
                 <th class="text-right">Total All Inclusive Price</th>
+                -->
                 <th class="text-right">Actions</th>
               </tr>
             </thead>
@@ -58,7 +60,9 @@
                 <% end %>
                 <td class="text-right"><%= d[:count] %></td>
                 <td class="text-right"><%= number_to_indian_currency(d[:total_agreement_price]) %></td>
-                <td class="text-right"><%= number_to_indian_currency(d[:total_all_inclusive_price]) %></td>
+                <!--
+                <td class="text-right"><%#= number_to_indian_currency(d[:total_all_inclusive_price]) %></td>
+                -->
                 <td class="text-right">
                   <% if policy([:admin, ProjectUnit]).index? %>
                     <%= link_to "View", admin_project_units_path(fltrs: {status: d[:status], project_tower_id: d[:project_tower_id], bedrooms: d[:bedrooms]}), target: "_blank" %>
