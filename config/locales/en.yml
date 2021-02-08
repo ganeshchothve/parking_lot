@@ -696,7 +696,13 @@ en:
         pending_approval: 'Pending Approval'
         approved: 'Approved'
         rejected: 'Rejected'
-
+      cheque_detail:
+        total_amount: 'Amount'
+        payment_identifier: 'Payment Identifier'
+        issued_date: 'Issued Date'
+        issuing_bank: 'Issuing Bank'
+        issuing_bank_branch: 'Issuing Bank Branch'
+        handover_date: 'HandOver Date'
       incentive_deduction:
         number: 'Brokerage Deduction #'
         amount: Deduction Amount
