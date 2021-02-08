@@ -43,8 +43,8 @@
                 <p><%= lead.last_revisit_date.try(:strftime, "%d/%m/%Y") || '-' %></p>
               </li>
               <li>
-                <span> <%= t('mongoid.attributes.lead.created_at') %></span>
-                <p><%= l(lead.created_at.in_time_zone(current_user.time_zone)) %></p>
+                <span> <%= t('mongoid.attributes.lead.registered_at') %></span>
+                <p><%= lead.registered_at.present? ? l(lead.registered_at.in_time_zone(current_user.time_zone)) : l(lead.created_at.in_time_zone(current_user.time_zone)) %></p>
               </li>
             </ul>
 
