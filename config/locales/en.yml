@@ -1472,6 +1472,7 @@ en:
         max_ladder_html: '<strong>Max.</strong> Ladder Reached'
 
       titles:
+        leads: 'Walk-Ins'
         lead_details: 'Customer Account Details'
         booking_details: 'Bookings'
         total_leads: 'Total Walk-ins'
