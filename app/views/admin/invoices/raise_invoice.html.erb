@@ -1,0 +1,55 @@
+<%= nested_form_for([:change_state, :admin, @invoice.booking_detail, @invoice], local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['invoices'], "data-type": "json", id: 'raise_invoice_form'}) do |f| %>
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header bg-gradient-cd white">
+        <h3 class="title"><%= @invoice.rejected? ? t("controller.invoices.events.re_raise") : t('controller.invoices.events.raise') %></h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" class="white">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <%= f.hidden_field :event, value: :raise %>
+        <div class="form-group">
+          <%= f.label :amount, class: '' %>
+          <%= f.number_field :amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("amount") %>
+        </div>
+        <div class="form-group">
+          <%= f.label :gst_amount, class: '' %>
+          <%= f.number_field :gst_amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("gst_amount") %>
+        </div>
+        <% if @invoice.rejected? %>
+          <div class="form-group">
+            <%= f.label :rejection_reason, class: '' %>
+            <% if policy([:admin, @invoice]).editable_field?("rejection_reason") %>
+              <%= f.text_area :rejection_reason, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("rejection_reason") %>
+            <% else %>
+              <p><%= f.object.rejection_reason %></p>
+            <% end%>
+          </div>
+          <div class="form-group">
+            <%= f.label :comments, class: '' %>
+            <% if policy([:admin, @invoice]).editable_field?("comments") %>
+              <%= f.text_area :comments, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("comments") %>
+            <% else %>
+              <p><%= f.object.comments %></p>
+            <% end%>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="modal-footer">
+        <%= f.submit "Save", class: "btn btn-primary" %>
+      </div>
+
+    </div>
+  </div>
+</div>
+<% end %>
+<%= javascript_tag do %>
+$(document).ready(function(){
+  FormInitializer.init($("#raise_invoice_form"));
+});
+<% end %>

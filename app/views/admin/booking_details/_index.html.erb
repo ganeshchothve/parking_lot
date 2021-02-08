@@ -5,6 +5,7 @@
       <th><%= t('mongoid.attributes.project_unit.unit_configuration_name') %></th>
       <th><%= t('mongoid.attributes.booking_detail.status') %></th>
       <th><%= t('mongoid.attributes.booking_detail.agreement_price') %></th>
+      <th><%= t('mongoid.attributes.booking_detail.registration_done') %></th>
       <th class="text-right"> <%= t('global.action', count: 3) %></th>
     </tr>
   </thead>
@@ -39,10 +40,12 @@
 
         <td data-title="<%= t('mongoid.attributes.booking_detail.agreement_price') %>" >
           <%= number_to_indian_currency(booking_detail.calculate_agreement_price.round) %>
+          <!--
           <div class="small">
-            <%= t('mongoid.attributes.booking_detail.all_inclusive_price') %> :
-            <%= number_to_indian_currency(booking_detail.calculate_all_inclusive_price.round) %>
+            <%#= t('mongoid.attributes.booking_detail.all_inclusive_price') %> :
+            <%#= number_to_indian_currency(booking_detail.calculate_all_inclusive_price.round) %>
           </div>
+          -->
 
           <div class="small">
             <%= t('mongoid.attributes.booking_detail.paid_amount') %> :
@@ -54,6 +57,10 @@
             <%#= number_to_indian_currency(booking_detail.pending_balance.to_i) %>
           </div> -->
 
+        </td>
+
+        <td data-title=<%= t('mongoid.attributes.booking_detail.registration_done') %> >
+          <%= booking_detail.tasks.where(key: 'registration_done').first.try(:completed?) ? 'Yes' : 'No' %>
         </td>
 
         <td>

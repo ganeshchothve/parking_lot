@@ -6,6 +6,8 @@ class Invoice
   include InvoiceStateMachine
   extend FilterByCriteria
 
+  DOCUMENT_TYPES = []
+
   field :amount, type: Float, default: 0.0
   field :status, type: String, default: 'draft'
   field :raised_date, type: DateTime
@@ -15,6 +17,7 @@ class Invoice
   field :comments, type: String
   field :ladder_id, type: BSON::ObjectId
   field :ladder_stage, type: Integer
+  field :gst_amount, type: Float, default: 0.0
   field :net_amount, type: Float
 
   belongs_to :project
@@ -22,13 +25,16 @@ class Invoice
   belongs_to :incentive_scheme
   belongs_to :manager, class_name: 'User'
   has_one :incentive_deduction
+  has_many :assets, as: :assetable
   embeds_one :cheque_detail
+  embeds_one :payment_adjustment, as: :payable
 
   validates :ladder_id, :ladder_stage, presence: true
   validates :rejection_reason, presence: true, if: :rejected?
   validates :comments, presence: true, if: proc { pending_approval? && status_was == 'rejected' }
   validates :booking_detail_id, uniqueness: { scope: [:incentive_scheme_id, :ladder_id] }
   validates :amount, numericality: { greater_than: 0 }
+  validates :gst_amount, numericality: { greater_than_or_equal_to: 0 }
   validates :net_amount, numericality: { greater_than: 0 }, if: :approved?
   validates :cheque_detail, presence: true, if: :approved?
   validates :cheque_detail, copy_errors_from_child: true, if: :cheque_detail?
@@ -45,6 +51,29 @@ class Invoice
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
 
   accepts_nested_attributes_for :cheque_detail, reject_if: proc { |attrs| attrs.except('creator_id').values.all?(&:blank?) }
+  accepts_nested_attributes_for :payment_adjustment, reject_if: proc { |attrs| attrs['absolute_value'].blank? }
+
+  def amount_before_adjustment
+    _amount = amount + gst_amount.to_f
+    _amount -= incentive_deduction.amount if incentive_deduction.try(:approved?)
+    _amount
+  end
+
+  def amount_before_gst
+    _amount = amount + payment_adjustment.try(:absolute_value).to_f
+    _amount -= incentive_deduction.amount if incentive_deduction.try(:approved?)
+    _amount
+  end
+
+  def amount_before_deduction
+    amount + gst_amount.to_f + payment_adjustment.try(:absolute_value).to_f
+  end
+
+  def calculate_net_amount
+    _amount = amount + gst_amount.to_f + payment_adjustment.try(:absolute_value).to_f
+    _amount -= incentive_deduction.amount if incentive_deduction.try(:approved?)
+    _amount
+  end
 
   class << self
     def user_based_scope(user, params = {})

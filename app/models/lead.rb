@@ -19,6 +19,7 @@ class Lead
   field :sitevisit_date, type: Date
   field :revisit_count, type: Integer
   field :last_revisit_date, type: Date
+  field :registered_at, type: Date
   field :manager_change_reason, type: String
   field :referenced_manager_ids, type: Array, default: []
   field :iris_confirmation, type: Boolean, default: false
@@ -42,8 +43,8 @@ class Lead
   #has_many :received_smses, class_name: 'Sms', inverse_of: :recipient
   #has_many :received_whatsapps, class_name: 'Whatsapp', inverse_of: :recipient
 
-  validates_uniqueness_of :user, scope: :project_id, message: 'already exists'
-  validates :first_name, presence: true
+  validates_uniqueness_of :user, scope: [:stage, :project_id], message: 'already exists with same stage'
+  validates :first_name, :stage, presence: true
   validates :first_name, :last_name, name: true, allow_blank: true
   # validate :phone_or_email_required, if: proc { |user| user.phone.blank? && user.email.blank? }
   # validates :phone, :email, uniqueness: { allow_blank: true }

@@ -283,7 +283,8 @@ en:
         bathrooms: 'Bathrooms'
         bedrooms: 'Bedrooms'
         manager: 'Manager'
-        paid_amount: 'Paid Amt.'
+        paid_amount: 'Paid Amt.(Inclusive of GST)'
+        total_amount_paid: "Total Amount Paid (Inclusive of GST)"
         booking_pending_amount: 'Booking Amt. Pending'
         last_sync_status: Last Sync Status
         comments: 'Comments'
@@ -295,8 +296,8 @@ en:
         tasks_completed: 'Tasks Completed'
         tasks_pending: 'Tasks Pending'
         tasks_completed_tracked_by: 'All Tasks Completed Tracked by'
-        agreement_price: 'Agreement Price'
         booked_on: 'Booked On'
+        registration_done: 'Registration Done'
       booking_detail/status:
         available: 'Available'
         not_available: 'Not Available'
@@ -561,7 +562,7 @@ en:
         floor: 'Floor'
         floor_order: 'Floor Order'
         facing: 'Facing'
-        paid_amount: 'Paid Amt.'
+        paid_amount: 'Paid Amt.(Inclusive of GST)'
         booking_pending_amount: 'Booking Amt. Pending'
         last_sync_at: 'Last Sync'
         last_sync_status: Last Sync Status
@@ -679,7 +680,8 @@ en:
       invoice:
         number: 'Invoice #'
         amount: Brokerage Amount
-        net_amount: Net Amount
+        gst_amount: GST Amount
+        net_amount: Approved Brokerage Amount
         comments: Comments
         rejection_reason: Rejection Reason
         project_id: 'Project'
@@ -696,7 +698,13 @@ en:
         pending_approval: 'Pending Approval'
         approved: 'Approved'
         rejected: 'Rejected'
-
+      cheque_detail:
+        total_amount: 'Total Amount'
+        payment_identifier: 'Payment Identifier'
+        issued_date: 'Issued Date'
+        issuing_bank: 'Issuing Bank'
+        issuing_bank_branch: 'Issuing Bank Branch'
+        handover_date: 'Handover Date'
       incentive_deduction:
         number: 'Brokerage Deduction #'
         amount: Deduction Amount
@@ -852,7 +860,7 @@ en:
         referral_code: 'Referral Code'
         status: 'Status'
         selldo_lead_id: 'Sell Do Lead ID'
-        total_amount_paid: "Total Paid"
+        total_amount_paid: "Total Paid (Inclusive of GST)"
         total_balance_pending: "Total Balance Pending"
         total_unattached_balance: "Total Un-attached Balance"
         time_zone: "User's Time Zone"
@@ -892,6 +900,8 @@ en:
         project_id: 'Project'
         manager_id: 'Partner / Manager / Added by'
         name_email_phone: 'Walk-in (Project Name)'
+        total_amount_paid: "Total Amount Paid (Inclusive of GST)"
+        registered_at: 'Registered At'
 
       user/file_types:
         home_loan_application_form: 'Home Loan Application Form'
@@ -919,21 +929,21 @@ en:
 
       client/file_types:
         document: 'Document'
-        certificate: 'Certificate'
+        offer: 'Ongoing Offers'
         login_page_image: 'Login Page Image'
       client/help_text:
         document_html: 'Client documents'
-        certificate_html: 'Client certificates'
+        offer_html: 'Client ongoing offers'
         login_page_image_html: 'Web compatible landing page image'
 
       project/file_types:
         document: 'Document'
-        certificate: 'Certificate'
+        offer: 'Ongoing Offers'
         brochure: 'Project Brochure'
         unit_selection_filter_image: 'Image on Apartment Search Page'
       project/help_text:
         document_html: 'Project documents'
-        certificate_html: 'Project certificates'
+        offer_html: 'Project ongoing offers'
         brochure_html: 'Project Brochure preferably in PDF'
         unit_selection_filter_image_html: 'Web compatible image - to be displayed on apartment search page'
 
@@ -1081,6 +1091,8 @@ en:
         link_name: 'Brokerages'
       edit:
         link_name: 'Edit Invoice'
+      update_gst:
+        link_name: 'Update GST'
       show:
         link_name: 'Invoice Details'
       generate_invoice:

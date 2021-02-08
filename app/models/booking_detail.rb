@@ -71,7 +71,7 @@ class BookingDetail
 
   # TODO: uncomment
   # validates :name, presence: true
-  validates :status, :agreement_price, :all_inclusive_price, :saleable, :blocking_amount, :booked_on, presence: true
+  validates :status, :agreement_price, :saleable, :blocking_amount, :booked_on, presence: true
   validates :agreement_price, :all_inclusive_price, :blocking_amount, :saleable, numericality: { greater_than: 0 }
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :kyc_mandate

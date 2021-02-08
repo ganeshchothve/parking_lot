@@ -397,7 +397,8 @@ module DashboardDataProvider
       {'$match':  matcher },
       {'$project': {
          tasks: {
-            '$filter': {
+           '$ifNull': [{
+             '$filter': {
                input: "$tasks",
                as: "task",
                cond: {
@@ -406,7 +407,8 @@ module DashboardDataProvider
                    { '$eq': [ "$$task.completed", true ] }
                  ]
                }
-            }
+             }
+           }, []]
          },
          project_id: 1,
          agreement_price: 1,

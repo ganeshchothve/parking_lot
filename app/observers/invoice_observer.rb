@@ -1,6 +1,7 @@
 class InvoiceObserver < Mongoid::Observer
   def before_validation invoice
-    invoice.net_amount = invoice.amount if invoice.net_amount.blank?
+    invoice.net_amount = invoice.amount.to_f if invoice.net_amount.blank? || invoice.net_amount.zero?
+
     _event = invoice.event.to_s
     invoice.event = nil
     if _event.present? && (invoice.aasm.current_state.to_s != _event.to_s)
@@ -9,6 +10,13 @@ class InvoiceObserver < Mongoid::Observer
       else
         invoice.errors.add(:status, 'transition is invalid')
       end
+    end
+  end
+
+  def before_save invoice
+    # Adjust net amount according to gst amount & adjustment input by channel partner & billing team.
+    if invoice.gst_amount_changed? || invoice.payment_adjustment.try(:absolute_value_changed?)
+      invoice.net_amount = invoice.calculate_net_amount
     end
   end
 end
