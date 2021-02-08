@@ -23,6 +23,7 @@ class IncentiveScheme
   belongs_to :tier, optional: true  # for associating incentive schemes with different channel partner tiers.
   embeds_many :ladders
   has_many :invoices
+  has_many :booking_details
   has_many :assets, as: :assetable
 
   delegate :name, to: :project, prefix: true, allow_nil: true

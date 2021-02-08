@@ -58,6 +58,7 @@ class BookingDetail
   # When a new booking detail object is created from another object, this field will be set. This happens when the user creates a swap request.
   belongs_to :parent_booking_detail, class_name: 'BookingDetail', optional: true
   belongs_to :primary_user_kyc, class_name: 'UserKyc', optional: true, validate: true
+  belongs_to :incentive_scheme, optional: true
   has_many :assets, as: :assetable
   has_many :receipts, dependent: :nullify
   has_many :smses, as: :triggered_by, class_name: 'Sms'

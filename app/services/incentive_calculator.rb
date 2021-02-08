@@ -31,14 +31,9 @@ class IncentiveCalculator
 
   # Find all the bookings for above channel partner that fall under this scheme
   def find_all_bookings_for_current_scheme
-    booking_details = BookingDetail.incentive_eligible.where(project_id: incentive_scheme.project_id).gte(booked_on: incentive_scheme.starts_on).lte(booked_on: incentive_scheme.ends_on)
+    booking_details = BookingDetail.incentive_eligible.where(project_id: incentive_scheme.project_id, incentive_scheme_id: incentive_scheme.id, manager_id: channel_partner.id).gte(booked_on: incentive_scheme.starts_on).lte(booked_on: incentive_scheme.ends_on)
     booking_details = booking_details.where(project_tower_id: incentive_scheme.project_tower_id) if incentive_scheme.project_tower_id.present?
-    # Find bookings that are already incentivized under different incentive scheme.
-    other_scheme_booking_ids = Invoice.where(project_id: incentive_scheme.project_id).ne(incentive_scheme_id: incentive_scheme.id).distinct(:booking_detail_id)
-
-    _bookings = booking_details.where(manager_id: channel_partner.id)
-    _bookings = _bookings.nin(id: other_scheme_booking_ids) if other_scheme_booking_ids.present?
-    @bookings = _bookings
+    @bookings = booking_details
   end
 
   def find_ladder(value)
@@ -77,7 +72,10 @@ class IncentiveCalculator
               invoice.amount = (amount > 0 ? amount : 0)
               invoice.ladder_stage = ladder.stage
               invoice.manager = channel_partner
-              unless invoice.save
+              if invoice.save
+                # Set incentive scheme id of scheme under which this booking detail is incentivized.
+                _booking_detail.set(incentive_scheme_id: incentive_scheme.id) if _booking_detail.incentive_scheme_id.blank?
+              else
                 Rails.logger.error "[IncentiveCalculator][ERR] #{invoice.errors.full_messages}"
               end
             end
