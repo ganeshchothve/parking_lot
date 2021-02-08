@@ -8,7 +8,10 @@ class DashboardController < ApplicationController
     @receipts = current_user.receipts.paginate(page: params[:page] || 1, per_page: params[:per_page])
     @lead_details_labels = get_lead_detail_labels
     @booking_detail_labels = get_booking_detail_labels
-
+    respond_to do |format|
+      format.json { render json: { message: 'Logged In' }, status: 200 }
+      format.html {}
+    end
   end
 
   def faqs
