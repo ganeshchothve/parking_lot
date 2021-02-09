@@ -33,6 +33,7 @@ class BookingDetail
   field :booking_price, type: Integer
   field :blocking_amount, type: Integer
   field :booked_on, type: Date
+  field :ladder_stage, type: Array
 
   mount_uploader :tds_doc, DocUploader
 
@@ -94,12 +95,16 @@ class BookingDetail
   scope :filter_by_user_id, ->(user_id) { where(user_id: user_id)  }
   scope :filter_by_lead_id, ->(lead_id){ where(lead_id: lead_id)}
   scope :filter_by_manager_id, ->(manager_id){ where(lead_id: { '$in' => Lead.where(manager_id: manager_id).distinct(:_id) } ) }
+  scope :filter_by_incentive_scheme_id, ->(incentive_scheme_id){ where(incentive_scheme_id: incentive_scheme_id) }
+  scope :filter_by_ladder_stage, ->(stage) { where(ladder_stage: stage.to_i) }
   scope :filter_by_tasks_completed, ->(task) { where(tasks: { '$elemMatch': {key: task, completed: true} }) }
   scope :filter_by_tasks_pending, ->(task) { where(tasks: { '$elemMatch': { key: task, completed: {'$ne': true} } }) }
   scope :filter_by_tasks_completed_tracked_by, ->(tracked_by) { where("#{tracked_by}_tasks_completed": true) }
   scope :filter_by_tasks_pending_tracked_by, ->(tracked_by) { where("#{tracked_by}_tasks_completed": false) }
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(name: regex ) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: start_date..end_date) }
+  scope :filter_by_booked_on, ->(date) { start_date, end_date = date.split(' - '); where(booked_on: Date.parse(start_date).beginning_of_day..Date.parse(end_date).end_of_day)
+  }
   scope :incentive_eligible, -> { booked_confirmed.filter_by_tasks_completed_tracked_by('system') }
   scope :booking_stages, -> { all.in(status: BOOKING_STAGES) }
 

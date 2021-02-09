@@ -73,8 +73,10 @@ class IncentiveCalculator
               invoice.ladder_stage = ladder.stage
               invoice.manager = channel_partner
               if invoice.save
-                # Set incentive scheme id of scheme under which this booking detail is incentivized.
-                _booking_detail.set(incentive_scheme_id: incentive_scheme.id) if _booking_detail.incentive_scheme_id.blank?
+                # Set incentive scheme id & ladder stage of scheme under which this booking detail is incentivized.
+                attrs = { ladder_stage: (1..ladder.stage).to_a }
+                attrs[:incentive_scheme_id] = incentive_scheme.id if _booking_detail.incentive_scheme_id.blank?
+                _booking_detail.set(attrs)
               else
                 Rails.logger.error "[IncentiveCalculator][ERR] #{invoice.errors.full_messages}"
               end

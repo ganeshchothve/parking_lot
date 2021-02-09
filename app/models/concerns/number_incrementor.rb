@@ -7,6 +7,8 @@ module NumberIncrementor
     field :number, type: Integer
     increments :number
 
+    scope :filter_by_number, ->(number) { where(number: number) }
+
     alias_method :orig_number, :number
 
     def number
