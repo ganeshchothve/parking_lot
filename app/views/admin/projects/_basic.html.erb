@@ -8,7 +8,7 @@
   <div class="col-md-6">
     <div class="form-group">
       <%= f.label :registration_name, class: '' %>
-      <%= f.text_field :registration_name, class: 'form-control', disabled: !policy([:admin, @project]).editable_field?("registration_name") %>
+      <%= f.text_field :registration_name, class: 'form-control', disabled: !policy([:admin, @project]).editable_field?("registration_name"), value: f.object.registration_name.present? ? f.object.registration_name : current_client.registration_name %>
     </div>
   </div>
   <div class="col-md-6">
@@ -19,20 +19,62 @@
   </div>
   <div class="col-md-6">
     <div class="form-group">
-      <%= f.label :cin_number, class: '' %>
-      <%= f.text_field :cin_number, class: 'form-control', disabled: !policy([:admin, @project]).editable_field?("cin_number") %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="form-group">
       <%= f.label :email_domains, class: '' %>
       <%= f.select :email_domains, @project.email_domains, {}, class: 'selectize-tags domain', multiple: true, disabled: !policy([:admin, @project]).editable_field?("email_domains") %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="form-group">
+      <%= f.label :gst_number, class: '' %>
+      <%= f.text_field :gst_number, class: 'form-control', disabled: !policy([:admin, @project]).editable_field?("gst_number") %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :cin_number, class: '' %>
+      <%= f.text_field :cin_number, class: 'form-control', disabled: !policy([:admin, @project]).editable_field?("cin_number") %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
       <%= f.label :website_link, class: '' %>
       <%= f.url_field :website_link, class: 'form-control', disabled: !policy([:admin, @project]).editable_field?("website_link") %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :configurations, class: '' %>
+      <%= f.select :configurations, @project.configurations, {}, class: 'selectize-tags domain', multiple: true, disabled: !policy([:admin, @project]).editable_field?("configurations") %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :unit_sizes, class: '' %>
+      <%= f.select :unit_sizes, @project.unit_sizes, {}, class: 'selectize-tags domain', multiple: true, disabled: !policy([:admin, @project]).editable_field?("unit_sizes") %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :project_size %>
+      <%= f.text_field :project_size, class: 'form-control', disabled: !policy([:admin, @project]).editable_field?("project_size") %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :total_buildings, class: '' %>
+      <%= f.text_field :total_buildings, class: 'form-control', disabled: !policy([:admin, @project]).editable_field?("total_buildings") %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :internal_amenities, class: '' %>
+      <%= f.select :internal_amenities, @project.internal_amenities, {}, class: 'selectize-tags domain', multiple: true, disabled: !policy([:admin, @project]).editable_field?("internal_amenities") %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :external_amenities, class: '' %>
+      <%= f.select :external_amenities, @project.external_amenities, {}, class: 'selectize-tags domain', multiple: true, disabled: !policy([:admin, @project]).editable_field?("external_amenities") %>
     </div>
   </div>
   <div class="col-md-6">

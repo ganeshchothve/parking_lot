@@ -2,7 +2,7 @@ class Admin::ProjectPolicy < ProjectPolicy
   # def new? def create? def edit? def asset_create? from ClientPolicy
 
   def update?
-    %w[superadmin].include?(user.role)
+    %w[superadmin admin].include?(user.role)
   end
 
   def asset_create?
@@ -15,6 +15,10 @@ class Admin::ProjectPolicy < ProjectPolicy
 
   def index?
     !user.buyer? && (current_client.enable_actual_inventory?(user) || enable_incentive_module?(user))
+  end
+
+  def show?
+    update?
   end
 
   def create?
@@ -38,6 +42,8 @@ class Admin::ProjectPolicy < ProjectPolicy
       :cin_number, :website_link, :cp_disclaimer, :disclaimer, :support_number, :support_email,
       :channel_partner_support_number, :channel_partner_support_email, :cancellation_amount, :blocking_amount,
       :blocking_days, :holding_minutes, :terms_and_conditions, :email_header, :email_footer, :logo, :mobile_logo,
+      :gst_number, :project_size, :locality, :total_buildings,
+      configurations: [], internal_amenities: [], external_amenities: [], unit_sizes: [],
       address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes,
       third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes,
       email_domains: [], booking_portal_domains: [], enable_actual_inventory: [], enable_live_inventory: []
