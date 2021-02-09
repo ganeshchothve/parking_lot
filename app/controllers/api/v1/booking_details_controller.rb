@@ -193,7 +193,7 @@ class Api::V1::BookingDetailsController < ApisController
 
   def modify_params
     #modify booking_detail params
-    params[:booking_detail][:booked_on] = Date.strptime( params[:booking_detail][:booking_on], "%d/%m/%Y") if params.dig(:booking_detail, :booked_on).present?
+    params[:booking_detail][:booked_on] = Date.strptime( params[:booking_detail][:booked_on], "%d/%m/%Y") if params.dig(:booking_detail, :booked_on).present?
     #modify primary_user_kyc_params
     params[:booking_detail][:primary_user_kyc_attributes] = modify_any_user_kyc_params(params.dig(:booking_detail, :primary_user_kyc_attributes))
 

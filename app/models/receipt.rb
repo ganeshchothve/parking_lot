@@ -82,7 +82,7 @@ class Receipt
 
   #validations for fields without default value
   validates :total_amount, :payment_identifier, presence: true
-  validate :validate_total_amount, if: proc { |receipt| receipt.total_amount.present? }
+  #validate :validate_total_amount, if: proc { |receipt| receipt.total_amount.present? } # Runwal specific change
   validates :issued_date, presence: true, if: proc { |receipt| receipt.payment_mode != 'online' } # :issuing_bank, :issuing_bank_branch, # Runwal specific changes
   # validates :payment_identifier, presence: true # , if: proc { |receipt| receipt.payment_mode == 'online' ? receipt.status == 'success' : true } # Runwal specific change
   #validations for fields with default value
