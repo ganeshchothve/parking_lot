@@ -31,6 +31,8 @@ class BookingDetail
   field :agreement_price, type: Integer
   field :all_inclusive_price, type: Integer
   field :booking_price, type: Integer
+  field :blocking_amount, type: Integer
+  field :booked_on, type: Date
 
   mount_uploader :tds_doc, DocUploader
 
@@ -47,6 +49,7 @@ class BookingDetail
   embeds_many :data, as: :data_attributable
   embeds_many :tasks, cascade_callbacks: true
   belongs_to :project
+  belongs_to :project_tower
   belongs_to :project_unit
   belongs_to :lead
   belongs_to :user
@@ -55,6 +58,7 @@ class BookingDetail
   # When a new booking detail object is created from another object, this field will be set. This happens when the user creates a swap request.
   belongs_to :parent_booking_detail, class_name: 'BookingDetail', optional: true
   belongs_to :primary_user_kyc, class_name: 'UserKyc', optional: true, validate: true
+  belongs_to :incentive_scheme, optional: true
   has_many :assets, as: :assetable
   has_many :receipts, dependent: :nullify
   has_many :smses, as: :triggered_by, class_name: 'Sms'
@@ -68,8 +72,8 @@ class BookingDetail
 
   # TODO: uncomment
   # validates :name, presence: true
-  validates :status, :agreement_price, presence: true
-  validates :agreement_price, :all_inclusive_price, numericality: { greater_than: 0 }, allow_blank: true
+  validates :status, :agreement_price, :carpet, :saleable, :blocking_amount, :booked_on, presence: true
+  validates :agreement_price, :all_inclusive_price, :blocking_amount, :carpet, :saleable, numericality: { greater_than: 0 }, allow_blank: true
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :kyc_mandate
   validate :validate_content, on: :create
