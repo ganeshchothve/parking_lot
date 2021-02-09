@@ -298,6 +298,7 @@ en:
         tasks_completed_tracked_by: 'All Tasks Completed Tracked by'
         booked_on: 'Booked On'
         registration_done: 'Registration Done'
+        ladder_stage: 'Ladder Stage'
       booking_detail/status:
         available: 'Available'
         not_available: 'Not Available'

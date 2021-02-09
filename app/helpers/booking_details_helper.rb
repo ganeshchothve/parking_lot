@@ -69,4 +69,13 @@ module BookingDetailsHelper
       []
     end
   end
+
+  def filter_incentive_scheme_options
+    if params.dig(:fltrs, :incentive_scheme_id).present?
+      IncentiveScheme.where(_id: params.dig(:fltrs, :incentive_scheme_id)).map{|incentive_scheme| [incentive_scheme.name, incentive_scheme.id]}
+    else
+      []
+    end
+  end
+
 end
