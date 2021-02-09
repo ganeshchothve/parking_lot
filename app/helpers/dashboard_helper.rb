@@ -7,6 +7,6 @@ module DashboardHelper
     formula.scan(/(\d*\.\d+)\s*\*\s*[self\.]*(.*[agreement_price|all_inclusive_price])/)
       .flatten
       .map
-      .with_index { |x, i| i.zero? ? "<strong>#{number_to_percentage((_x = x.to_f * 100), precision: (_x == _x.to_i ? 0 : 1))}</strong>" : t("formula.#{x}") }.join(' of ').html_safe
+      .with_index { |x, i| i.zero? ? "<strong>#{number_to_percentage((_x = x.to_f * 100), precision: (_x == _x.to_i ? 0 : 2))}</strong>" : t("formula.#{x}") }.join(' of ').html_safe
   end
 end
