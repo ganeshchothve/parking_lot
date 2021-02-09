@@ -25,7 +25,7 @@
           </div>
         </td>
         <td>
-          <%= invoice.incentive_scheme.name.try(:titleize) %>
+          <%= link_to_if policy([current_user_role_group, IncentiveScheme]).index?, invoice.incentive_scheme.name.try(:titleize), [:admin, :invoices, {'remote-state': edit_admin_incentive_scheme_path(invoice.incentive_scheme)}] %>
           <div class='small'>
             <span><%= Ladder.model_name.human %> - Stage <%= invoice.ladder_stage %></span><br>
             <% if adj = invoice.incentive_scheme.ladders.where(stage: invoice.ladder_stage).first.try(:payment_adjustment).presence %>

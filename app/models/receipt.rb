@@ -55,7 +55,6 @@ class Receipt
   belongs_to :booking_detail, optional: true
   belongs_to :creator, class_name: 'User'
   belongs_to :account, foreign_key: 'account_number', optional: true
-  belongs_to :invoice, optional: true  # For CP incentive, attach a receipt to invoice for storing cheque details.
   # remove optional: true when implementing.
   has_many :assets, as: :assetable
   has_many :smses, as: :triggered_by, class_name: 'Sms'
