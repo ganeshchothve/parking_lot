@@ -33,7 +33,7 @@ class IncentiveCalculator
   def find_all_bookings_for_current_scheme
     booking_details = BookingDetail.incentive_eligible.where(project_id: incentive_scheme.project_id, incentive_scheme_id: incentive_scheme.id, manager_id: channel_partner.id).gte(booked_on: incentive_scheme.starts_on).lte(booked_on: incentive_scheme.ends_on)
     booking_details = booking_details.where(project_tower_id: incentive_scheme.project_tower_id) if incentive_scheme.project_tower_id.present?
-    @bookings = booking_details
+    @bookings = BookingDetail.or(booking_details.selector, {id: booking_detail.id})
   end
 
   def find_ladder(value)
