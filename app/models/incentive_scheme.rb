@@ -23,12 +23,13 @@ class IncentiveScheme
   belongs_to :tier, optional: true  # for associating incentive schemes with different channel partner tiers.
   embeds_many :ladders
   has_many :invoices
+  has_many :booking_details
   has_many :assets, as: :assetable
 
   delegate :name, to: :project, prefix: true, allow_nil: true
 
-  scope :approved, ->{ where(status: 'approved' )}
   scope :filter_by_name, ->(name) { where(name: ::Regexp.new(::Regexp.escape(name), 'i')) }
+  scope :filter_by_search, ->(search) { where(name: ::Regexp.new(::Regexp.escape(search), 'i')) }
   scope :filter_by_status, ->(status) { where(status: status) }
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
   scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in": project_ids}) : all }

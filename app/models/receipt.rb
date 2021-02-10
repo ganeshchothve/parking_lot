@@ -55,7 +55,6 @@ class Receipt
   belongs_to :booking_detail, optional: true
   belongs_to :creator, class_name: 'User'
   belongs_to :account, foreign_key: 'account_number', optional: true
-  belongs_to :invoice, optional: true  # For CP incentive, attach a receipt to invoice for storing cheque details.
   # remove optional: true when implementing.
   has_many :assets, as: :assetable
   has_many :smses, as: :triggered_by, class_name: 'Sms'
@@ -83,7 +82,7 @@ class Receipt
 
   #validations for fields without default value
   validates :total_amount, :payment_identifier, presence: true
-  validate :validate_total_amount, if: proc { |receipt| receipt.total_amount.present? }
+  #validate :validate_total_amount, if: proc { |receipt| receipt.total_amount.present? } # Runwal specific change
   validates :issued_date, presence: true, if: proc { |receipt| receipt.payment_mode != 'online' } # :issuing_bank, :issuing_bank_branch, # Runwal specific changes
   # validates :payment_identifier, presence: true # , if: proc { |receipt| receipt.payment_mode == 'online' ? receipt.status == 'success' : true } # Runwal specific change
   #validations for fields with default value
@@ -239,8 +238,8 @@ class Receipt
   #
   def first_booking_amount_limit
     if booking_detail.try(:hold?)
-      if total_amount < project_unit.blocking_amount
-        errors.add(:total_amount, "should be greater than blocking amount(#{project_unit.blocking_amount})")
+      if total_amount < booking_detail.blocking_amount
+        errors.add(:total_amount, "should be greater than blocking amount(#{booking_detail.blocking_amount})")
       end
     end
   end
@@ -275,7 +274,7 @@ class Receipt
       errors.add :total_amount, 'cannot be less than or equal to 0'
     else
       blocking_amount = user.booking_portal_client.blocking_amount
-      blocking_amount = project_unit.blocking_amount if booking_detail_id.present?
+      blocking_amount = booking_detail.blocking_amount if booking_detail_id.present?
       if (direct_payment? || blocking_payment?) && total_amount < blocking_amount && !booking_detail.try(:swapping?)
         errors.add :total_amount, "cannot be less than blocking amount #{blocking_amount}"
       end

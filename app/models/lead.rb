@@ -43,8 +43,8 @@ class Lead
   #has_many :received_smses, class_name: 'Sms', inverse_of: :recipient
   #has_many :received_whatsapps, class_name: 'Whatsapp', inverse_of: :recipient
 
-  validates_uniqueness_of :user, scope: :project_id, message: 'already exists'
-  validates :first_name, presence: true
+  validates_uniqueness_of :user, scope: [:stage, :project_id], message: 'already exists with same stage'
+  validates :first_name, :stage, presence: true
   validates :first_name, :last_name, name: true, allow_blank: true
   # validate :phone_or_email_required, if: proc { |user| user.phone.blank? && user.email.blank? }
   # validates :phone, :email, uniqueness: { allow_blank: true }

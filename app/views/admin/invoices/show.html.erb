@@ -102,6 +102,51 @@
               <% end %>
             </div>
             <hr>
+            <% cheque_detail = @invoice.cheque_detail %>
+            <% if cheque_detail.present?
+              cheque_labels = t("mongoid.attributes.cheque_detail").with_indifferent_access
+            %>
+              <h4><%= invoice_labels[:cheque_detail] %></h4>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="small text-muted"><%= cheque_labels[:total_amount] %></label>
+                    <div class='break-word'><%= number_to_indian_currency(cheque_detail.total_amount) %></div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="small text-muted"><%= cheque_labels[:issuing_bank] %></label>
+                    <div class='break-word'><%= cheque_detail.issuing_bank %></div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="small text-muted"><%= cheque_labels[:issuing_bank_branch] %></label>
+                    <div class='break-word'><%= cheque_detail.issuing_bank_branch %></div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="small text-muted"><%= cheque_labels[:issued_date] %></label>
+                    <div class='break-word'><%= cheque_detail.issued_date.in_time_zone(current_user.time_zone).strftime('%d/%m/%Y %H:%M') rescue '' %></div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="small text-muted"><%= cheque_labels[:handover_date] %></label>
+                    <div class='break-word'><%= cheque_detail.handover_date.in_time_zone(current_user.time_zone).strftime('%d/%m/%Y %H:%M') rescue '' %></div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="small text-muted"><%= cheque_labels[:payment_identifier] %></label>
+                    <div class='break-word'><%= cheque_detail.payment_identifier %></div>
+                  </div>
+                </div>
+              </div>
+              <hr>
+            <% end %>
             <h4>Amount</h4>
             <div class='row'>
               <div class="col-md-4">

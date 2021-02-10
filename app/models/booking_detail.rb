@@ -31,6 +31,9 @@ class BookingDetail
   field :agreement_price, type: Integer
   field :all_inclusive_price, type: Integer
   field :booking_price, type: Integer
+  field :blocking_amount, type: Integer
+  field :booked_on, type: Date
+  field :ladder_stage, type: Array
 
   mount_uploader :tds_doc, DocUploader
 
@@ -47,6 +50,7 @@ class BookingDetail
   embeds_many :data, as: :data_attributable
   embeds_many :tasks, cascade_callbacks: true
   belongs_to :project
+  belongs_to :project_tower
   belongs_to :project_unit
   belongs_to :lead
   belongs_to :user
@@ -55,6 +59,7 @@ class BookingDetail
   # When a new booking detail object is created from another object, this field will be set. This happens when the user creates a swap request.
   belongs_to :parent_booking_detail, class_name: 'BookingDetail', optional: true
   belongs_to :primary_user_kyc, class_name: 'UserKyc', optional: true, validate: true
+  belongs_to :incentive_scheme, optional: true
   has_many :assets, as: :assetable
   has_many :receipts, dependent: :nullify
   has_many :smses, as: :triggered_by, class_name: 'Sms'
@@ -68,8 +73,8 @@ class BookingDetail
 
   # TODO: uncomment
   # validates :name, presence: true
-  validates :status, :agreement_price, presence: true
-  validates :agreement_price, :all_inclusive_price, numericality: { greater_than: 0 }, allow_blank: true
+  validates :status, :agreement_price, :carpet, :saleable, :blocking_amount, :booked_on, presence: true
+  validates :agreement_price, :all_inclusive_price, :blocking_amount, :carpet, :saleable, numericality: { greater_than: 0 }, allow_blank: true
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :kyc_mandate
   validate :validate_content, on: :create
@@ -90,12 +95,16 @@ class BookingDetail
   scope :filter_by_user_id, ->(user_id) { where(user_id: user_id)  }
   scope :filter_by_lead_id, ->(lead_id){ where(lead_id: lead_id)}
   scope :filter_by_manager_id, ->(manager_id){ where(lead_id: { '$in' => Lead.where(manager_id: manager_id).distinct(:_id) } ) }
+  scope :filter_by_incentive_scheme_id, ->(incentive_scheme_id){ where(incentive_scheme_id: incentive_scheme_id) }
+  scope :filter_by_ladder_stage, ->(stage) { where(ladder_stage: stage.to_i) }
   scope :filter_by_tasks_completed, ->(task) { where(tasks: { '$elemMatch': {key: task, completed: true} }) }
   scope :filter_by_tasks_pending, ->(task) { where(tasks: { '$elemMatch': { key: task, completed: {'$ne': true} } }) }
   scope :filter_by_tasks_completed_tracked_by, ->(tracked_by) { where("#{tracked_by}_tasks_completed": true) }
   scope :filter_by_tasks_pending_tracked_by, ->(tracked_by) { where("#{tracked_by}_tasks_completed": false) }
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(name: regex ) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: start_date..end_date) }
+  scope :filter_by_booked_on, ->(date) { start_date, end_date = date.split(' - '); where(booked_on: Date.parse(start_date).beginning_of_day..Date.parse(end_date).end_of_day)
+  }
   scope :incentive_eligible, -> { booked_confirmed.filter_by_tasks_completed_tracked_by('system') }
   scope :booking_stages, -> { all.in(status: BOOKING_STAGES) }
 
