@@ -14,15 +14,15 @@
           <nav>
             <div class="nav nav-tabs" role="tablist">
               <a class="nav-item nav-link active" data-toggle="tab" href="#nav-project-basic" role="tab">Basic Details</a>
-              <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-bookings" role="tab">Bookings</a>
-              <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-contacts" role="tab">Contacts & Notifications</a>
               <% if current_user.role?(:superadmin) %>
                 <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-integrations" role="tab">Integrations</a>
-              <% end %>
-              <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-pages" role="tab">Content Pages</a>
-              <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-logos" role="tab">Images & Documents</a>
-              <% if policy(ThirdPartyReference).editable_field?('reference_id') %>
-                <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-crm-ids" role="tab">CRM IDs</a>
+                <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-bookings" role="tab">Bookings</a>
+                <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-contacts" role="tab">Contacts & Notifications</a>
+                <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-pages" role="tab">Content Pages</a>
+                <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-logos" role="tab">Images & Documents</a>
+                <% if policy(ThirdPartyReference).editable_field?('reference_id') %>
+                  <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-crm-ids" role="tab">CRM IDs</a>
+                <% end %>
               <% end %>
             </div>
           </nav>
@@ -31,27 +31,27 @@
             <div class="tab-pane fade show active" id="nav-project-basic" role="tabpanel">
               <%= render 'admin/projects/basic', f: f %>
             </div>
-            <div class="tab-pane fade" id="nav-project-bookings" role="tabpanel">
-              <%= render 'admin/projects/bookings', f: f %>
-            </div>
-            <div class="tab-pane fade" id="nav-project-contacts" role="tabpanel">
-              <%= render 'admin/projects/contacts', f: f %>
-            </div>
             <% if current_user.role?(:superadmin) %>
+              <div class="tab-pane fade" id="nav-project-bookings" role="tabpanel">
+                <%= render 'admin/projects/bookings', f: f %>
+              </div>
+              <div class="tab-pane fade" id="nav-project-contacts" role="tabpanel">
+                <%= render 'admin/projects/contacts', f: f %>
+              </div>
               <div class="tab-pane fade" id="nav-project-integrations" role="tabpanel">
                 <%= render 'admin/projects/integrations', f: f %>
               </div>
-            <% end %>
-            <div class="tab-pane fade" id="nav-project-pages" role="tabpanel">
-              <%= render 'admin/projects/pages', f: f %>
-            </div>
-            <div class="tab-pane fade" id="nav-project-logos" role="tabpanel">
-              <%= render 'admin/projects/logos', f: f %>
-            </div>
-            <% if policy(ThirdPartyReference).editable_field?('reference_id') %>
-              <div class="tab-pane fade" id="nav-project-crm-ids" role="tabpanel">
-                <%= render 'admin/projects/crm_ids', f: f %>
+              <div class="tab-pane fade" id="nav-project-pages" role="tabpanel">
+                <%= render 'admin/projects/pages', f: f %>
               </div>
+              <div class="tab-pane fade" id="nav-project-logos" role="tabpanel">
+                <%= render 'admin/projects/logos', f: f %>
+              </div>
+              <% if policy(ThirdPartyReference).editable_field?('reference_id') %>
+                <div class="tab-pane fade" id="nav-project-crm-ids" role="tabpanel">
+                  <%= render 'admin/projects/crm_ids', f: f %>
+                </div>
+              <% end %>
             <% end %>
           </div>
         </div>

@@ -55,6 +55,12 @@
   </div>
   <div class="col-md-6">
     <div class="form-group">
+      <%= f.label :locality %>
+      <%= f.text_field :locality, class: 'form-control', disabled: !policy([:admin, @project]).editable_field?("locality") %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
       <%= f.label :project_size %>
       <%= f.text_field :project_size, class: 'form-control', disabled: !policy([:admin, @project]).editable_field?("project_size") %>
     </div>
@@ -77,16 +83,22 @@
       <%= f.select :external_amenities, @project.external_amenities, {}, class: 'selectize-tags domain', multiple: true, disabled: !policy([:admin, @project]).editable_field?("external_amenities") %>
     </div>
   </div>
-  <div class="col-md-6">
-    <div class="form-group">
-      <%= f.label :disclaimer %>
-      <%= f.text_area :disclaimer, class: 'form-control', disabled: !policy([:admin, @project]).editable_field?("disclaimer") %>
-    </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    Address
   </div>
-  <div class="col-md-6">
-    <div class="form-group">
-      <%= f.label :cp_disclaimer %>
-      <%= f.text_area :cp_disclaimer, class: 'form-control', disabled: !policy([:admin, @project]).editable_field?("cp_disclaimer") %>
-    </div>
+  <div class="card-body">
+    <%
+      binding.pry
+      address = f.object.address
+      if (address.blank? || (address.present? && (address.as_json(only: [:address1, :city, :state, :country, :zip]).values.all?(&:blank?))))
+        client_address = current_client.address
+        f.object.build_address(address1: client_address.address1, address2: client_address.address2, country: client_address.country, state: client_address.state, city: client_address.city, zip: client_address.zip, address_type: client_address.address_type)
+      end
+    %>
+    <%= f.fields_for :address do |address_form| %>
+      <%= render "addresses/form_fields", f: address_form %>
+    <% end %>
   </div>
 </div>

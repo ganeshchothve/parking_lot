@@ -23,7 +23,7 @@
           <%= project.gst_number || '-' %>
         </td>
         <td>
-          <%= project.address.to_sentence %>
+          <%= project.address.try(:to_sentence) %>
         </td>
         <td>
           <div class="dropdown show text-right">
