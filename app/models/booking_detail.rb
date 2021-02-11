@@ -138,6 +138,10 @@ class BookingDetail
     Api::BookingDetailsSync.new(erp_model, self, sync_log).execute
   end
 
+  def is_registration_done?
+    self.tasks.where(key: 'registration_done').first.try(:completed?) || false
+  end
+
   #
   # Unit Auto Release is set on when unit moved form hold stage. This Auto release set as Todays date plus client blocking allows date. That time inform client about auto relase date.
   #

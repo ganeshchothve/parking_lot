@@ -60,7 +60,7 @@
         </td>
 
         <td data-title=<%= t('mongoid.attributes.booking_detail.registration_done') %> >
-          <%= booking_detail.tasks.where(key: 'registration_done').first.try(:completed?) ? 'Yes' : 'No' %>
+          <%= booking_detail.is_registration_done? ? 'Yes' : 'No' %>
         </td>
 
         <td>

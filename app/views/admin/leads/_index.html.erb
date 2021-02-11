@@ -3,8 +3,11 @@
     <thead>
       <tr class="bg-gradient-cd white">
         <th><%= User.human_attribute_name('name_email_phone') %></th>
+        <th><%= t('mongoid.attributes.lead.stage') %></th>
         <th><%= Lead.human_attribute_name('project_id') %></th>
-        <th><%= Receipt.model_name.human %></th>
+        <th><%= t('mongoid.attributes.lead.blocking_amount_paid') %></th>
+        <th><%= t('mongoid.attributes.lead.payment_done') %></th>
+        <th><%= t('mongoid.attributes.lead.registration_done') %></th>
         <th class="text-right"><%= t('global.action', count: 3) %></th>
       </tr>
     </thead>
@@ -36,11 +39,20 @@
             </small>
           <% end %>
         </td>
+        <td data-title="Lead current stage"><span><%= lead.stage || '-' %></span></td>
 
         <td data-title="<%= Lead.human_attribute_name('project_id') %>"><span><%= lead.project_name %></span></td>
 
+        <td data-title="Booking blocking amount paid?">
+          <span><%= t("global.boolean.#{lead.is_blocking_amount_paid? }") %></span>
+        </td>
+
+        <td data-title="Booking confirmation amount paid?">
+          <span><%= t("global.boolean.#{lead.is_booking_price_paid? }") %></span>
+        </td>
+
         <td data-title="payments">
-          <span><%= t("global.boolean.#{lead.is_payment_done? }") %></span>
+          <span><%= t("global.boolean.#{lead.is_registration_done? }") %></span>
         </td>
 
         <td>

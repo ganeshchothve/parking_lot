@@ -67,6 +67,7 @@ class Lead
   scope :filter_by_manager_id, ->(manager_id) {where(manager_id: manager_id) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where({ '$and' => ["$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] ] }) }
+  scope :filter_by_stage, ->(stage) { where(stage: stage) }
 
   scope :filter_by_receipts, ->(receipts) do
     lead_ids = Receipt.where('$or' => [{ status: { '$in': %w(success clearance_pending) } }, { payment_mode: {'$ne': 'online'}, status: {'$in': %w(pending clearance_pending success)} }]).distinct(:lead_id)
@@ -79,6 +80,44 @@ class Lead
     end
   end
 
+  scope :filter_by_booking_price, ->(flag) do
+    lead_ids = BookingDetail.where(status: 'booked_confirmed').distinct(:lead_id)
+    if lead_ids.present?
+      if flag == 'yes'
+        where(id: { '$in': lead_ids })
+      elsif flag == 'no'
+        where(id: { '$nin': lead_ids })
+      end
+    end
+  end
+
+  scope :filter_by_blocking_amount, ->(flag) do
+    lead_ids = BookingDetail.where(status: { '$in': BookingDetail::BOOKING_STAGES}).distinct(:lead_id)
+    if lead_ids.present?
+      if flag == 'yes'
+        where(id: { '$in': lead_ids })
+      elsif flag == 'no'
+        where(id: { '$nin': lead_ids })
+      end
+    end
+  end
+
+  scope :filter_by_registration_done, ->(flag) do
+    booking_ids = BookingDetail.where(status: { '$in': BookingDetail::BOOKING_STAGES}).filter_by_tasks_completed('registration_done').distinct(:id)
+    lead_ids = BookingDetail.in(id: booking_ids).distinct(:lead_id)
+    if lead_ids.present?
+      if flag == 'yes'
+        where(id: { '$in': lead_ids })
+      elsif flag == 'no'
+        where(id: { '$nin': lead_ids })
+      end
+    end
+  end
+
+  def first_booking_detail
+    self.booking_details.order(created_at: :asc).first
+  end
+
   def unattached_blocking_receipt(blocking_amount = nil)
     blocking_amount ||= current_client.blocking_amount
     Receipt.where(lead_id: id).in(status: %w[success clearance_pending]).where(booking_detail_id: nil).where(total_amount: { "$gte": blocking_amount }).asc(:token_number).first
@@ -86,6 +125,21 @@ class Lead
 
   def is_payment_done?
     receipts.where('$or' => [{ status: { '$in': %w(success clearance_pending) } }, { payment_mode: {'$ne': 'online'}, status: {'$in': %w(pending clearance_pending success)} }]).present?
+  end
+
+  def is_blocking_amount_paid?
+    booking = self.first_booking_detail
+    booking.present? && booking.status.in?(BookingDetail::BOOKING_STAGES)
+  end
+
+  def is_booking_price_paid?
+    booking = self.first_booking_detail
+    booking.present? && booking.status == 'booked_confirmed'
+  end
+
+  def is_registration_done?
+    booking = self.first_booking_detail
+    booking.present? && booking.is_registration_done?
   end
 
   def total_amount_paid
