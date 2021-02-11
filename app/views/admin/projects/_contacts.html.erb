@@ -62,19 +62,3 @@
     </div>
   </div>
 </div>
-<div class="card">
-  <div class="card-header">
-    Address
-  </div>
-  <div class="card-body">
-    <%
-      if f.object.address.blank?
-        client_address = current_client.address
-        f.object.build_address(address1: client_address.address1, address2: client_address.address2, country: client_address.country, state: client_address.state, city: client_address.city, zip: client_address.zip)
-      end
-    %>
-    <%= f.fields_for :address do |address_form| %>
-      <%= render "addresses/form_fields", f: address_form %>
-    <% end %>
-  </div>
-</div>

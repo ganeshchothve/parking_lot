@@ -90,7 +90,6 @@
   </div>
   <div class="card-body">
     <%
-      binding.pry
       address = f.object.address
       if (address.blank? || (address.present? && (address.as_json(only: [:address1, :city, :state, :country, :zip]).values.all?(&:blank?))))
         client_address = current_client.address
