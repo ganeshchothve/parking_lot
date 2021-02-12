@@ -1,0 +1,102 @@
+<% project_labels = t('mongoid.attributes.project') %>
+<section class="project my-4 mb-4">
+  <div class="container project-overview p-0">
+    <div class="box-card">
+      <div class="box-header bg-gradient br-rd-tr-4">
+        <h2 class="icon-set icon-home-white">
+          <%= Project.model_name.human %>
+        </h2>
+        <div class="dropdown show text-center float-right">
+          <a class="btn dropdown-toggle table-dropdown-btn" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+            <%= render "#{current_user_role_group}/projects/links", project: @project %>
+          </div>
+        </div>
+      </div>
+      <div class="box-content bg-white p-3">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="small text-muted"><%= project_labels[:name] %></label>
+              <div><%= @project.name || '-' %></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="small text-muted"><%= project_labels[:registration_name] %></label>
+              <div><%= @project.registration_name || '-'  %></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="small text-muted"><%= project_labels[:rera_registration_no] %></label>
+              <div><%= @project.rera_registration_no || '-'  %></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="small text-muted"><%= project_labels[:project_size] %></label>
+              <div><%= @project.project_size || '-'  %></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="small text-muted"><%= project_labels[:locality] %></label>
+              <div><%= @project.locality  || '-' %></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="small text-muted"><%= project_labels[:total_buildings] %></label>
+              <div><%= @project.total_buildings || '-'  %></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="small text-muted"><%= project_labels[:configurations] %></label>
+              <div><%= @project.configurations.join(', ') || '-'  %></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="small text-muted"><%= project_labels[:unit_sizes] %></label>
+              <div><%= @project.unit_sizes.join(', ') || '-'  %></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="small text-muted"><%= project_labels[:address] %></label>
+              <div><%= @project.address.try(:to_sentence) %></div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="small text-muted"><%= project_labels[:internal_amenities] %></label>
+              <ul>
+                 <% @project.internal_amenities.each do |type| %>
+                  <li>
+                    <%= type %>
+                  </li>
+                 <% end %>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="small text-muted"><%= project_labels[:external_amenities] %></label>
+              <ul>
+                 <% @project.external_amenities.each do |type| %>
+                  <li>
+                    <%= type %>
+                  </li>
+                 <% end %>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
