@@ -5,13 +5,14 @@ class Project
   include CrmIntegration
 
   # Add different types of documents which are uploaded on client
-  DOCUMENT_TYPES = %w[document brochure offer].freeze
+  DOCUMENT_TYPES = %w[document brochure offer internal_amenities external_amenities].freeze
 
   field :name, type: String
   field :developer_name, type: String
   field :subtype,type: String
   field :advantages, type: Array, default: []
-  field :amenities, type: Hash, default: {}
+  field :internal_amenities, type: Array, default: []
+  field :external_amenities, type: Array, default: []
   field :description, type: String
   field :lat, type: String
   field :lng, type: String
@@ -113,6 +114,9 @@ class Project
   field :terms_and_conditions, type: String
   field :ga_code, type: String
   field :gtm_tag, type: String
+  field :gst_number, type: String
+  field :configurations, type: Array, default: []
+  field :unit_sizes, type: Array, default: []
 
   field :enable_daily_reports, type: Hash, default: {"payments_report": false}
 

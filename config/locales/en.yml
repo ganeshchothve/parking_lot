@@ -387,6 +387,7 @@ en:
         booking_portal_domains: 'Booking Portal Domains (where the portal is hosted)'
         registration_name: 'Registration Name (Used in Payments)'
         cin_number: 'CIN Number'
+        gst_number: 'GST Number'
         website_link: 'Website Link (Used in email communication)'
         cp_disclaimer: 'Channel Partner Disclaimer (to be shown to Channel Partners during registration)'
         disclaimer: 'Disclaimer'
@@ -407,7 +408,15 @@ en:
         blocking_days: 'Unit to be blocked for (Days)'
         holding_minutes: 'Unit to be held for (Minutes)'
         rera_registration_no: 'RERA Registration Number'
+        configurations: 'Configuration Types'
+        unit_sizes: 'Unit Sizes/Carpet Areas'
+        project_size: 'Total Land Area'
+        total_buildings: 'Number Of Ongoing Towers'
+        locality: 'Location'
+        internal_amenities: 'Internal Amenities'
+        external_amenities: 'External Amenities'
         assets: 'Collaterals'
+        address: 'Address'
 
       cost:
         name: "Name"
@@ -936,6 +945,7 @@ en:
         document: 'Document'
         offer: 'Ongoing Offers'
         login_page_image: 'Login Page Image'
+
       client/help_text:
         document_html: 'Client documents'
         offer_html: 'Client ongoing offers'
@@ -946,11 +956,15 @@ en:
         offer: 'Ongoing Offers'
         brochure: 'Project Brochure'
         unit_selection_filter_image: 'Image on Apartment Search Page'
+        internal_amenities: 'Internal Amenities'
+        external_amenities: 'External Amenities'
       project/help_text:
         document_html: 'Project documents'
         offer_html: 'Project ongoing offers'
         brochure_html: 'Project Brochure preferably in PDF'
         unit_selection_filter_image_html: 'Web compatible image - to be displayed on apartment search page'
+        internal_amenities_html: 'Project Internal amenities images'
+        external_amenities_html: 'Project External amenities images'
 
       bulk_upload_report/file_types:
         receipts_status_update: 'Receipt Status Bulk Update'
