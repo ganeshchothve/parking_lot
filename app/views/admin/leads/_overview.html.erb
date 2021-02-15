@@ -47,7 +47,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="small text-muted"><%= t('mongoid.attributes.lead.revisit_count') %></label>
-                  <div><%= lead.revisit_count.try(:strftime, "%d/%m/%Y") || '-' %></div>
+                  <div><%= lead.revisit_count || '-' %></div>
                 </div>
               </div>
               <div class="col-md-4">
@@ -59,7 +59,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="small text-muted"><%= t('mongoid.attributes.lead.registered_at') %></label>
-                  <div><%= lead.registered_at.try(:strftime, "%d/%m/%Y") || '-' %></div>
+                  <div><%= lead.registered_at.present? ? (lead.registered_at.strftime("%d/%m/%Y") rescue '-') : (lead.created_at.strftime("%d/%m/%Y") rescue '-') %></div>
                 </div>
               </div>
               <% if current_client.enable_actual_inventory?(current_user) %>
