@@ -115,7 +115,7 @@ class Lead
   end
 
   def first_booking_detail
-    self.booking_details.order(created_at: :asc).first
+    self.booking_details.in(status: BookingDetail::BOOKING_STAGES).order(created_at: :asc).first
   end
 
   def unattached_blocking_receipt(blocking_amount = nil)
