@@ -63,45 +63,45 @@
                 </div>
               </div>
               <% if current_client.enable_actual_inventory?(current_user) %>
-                <% if lead.first_booking_detail.present? %>
-                  <div class="col-md-4">
-                    <div class="form-group">
-                      <label class="small text-muted"><%= t('mongoid.attributes.lead.blocking_amount_paid') %></label>
-                      <div><%= t("global.boolean.#{lead.is_blocking_amount_paid? }") %></div>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="form-group">
-                      <label class="small text-muted"><%= t('mongoid.attributes.lead.payment_done') %></label>
-                      <div><%= t("global.boolean.#{lead.is_booking_price_paid? }") %></div>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="form-group">
-                      <label class="small text-muted"><%= t('mongoid.attributes.lead.registration_done') %></label>
-                      <div><%= t("global.boolean.#{lead.is_registration_done? }") %></div>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="form-group">
-                      <label class="small text-muted"><%= t('mongoid.attributes.lead.total_amount_paid') %></label>
-                      <small class="text-muted"><%= t('leads.total_amount_paid.hint')%></small>
-                      <div><%= lead.total_amount_paid.present? ? number_to_indian_currency(lead.total_amount_paid.round) : '-' %></div>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="form-group">
-                      <label class="small text-muted"><%= t('mongoid.attributes.lead.total_balance_pending') %></label>
-                      <small class="text-muted"><%= t('leads.total_balance_pending.hint')%></small>
-                      <div><%= lead.total_balance_pending.present? ? number_to_indian_currency(lead.total_balance_pending.round) : '-' %></div>
-                    </div>
-                  </div>
-                <% end %>
                 <div class="col-md-4">
                   <div class="form-group">
                     <label class="small text-muted"><%= t('mongoid.attributes.lead.total_unattached_balance') %></label>
                     <small class="text-muted"><%= t('leads.total_unattached_balance.hint')%></small>
                     <div><%= lead.total_unattached_balance.present? ? number_to_indian_currency(lead.total_unattached_balance.round) : '-' %></div>
+                  </div>
+                </div>
+              <% end %>
+              <% if lead.first_booking_detail.present? %>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="small text-muted"><%= t('mongoid.attributes.lead.blocking_amount_paid') %></label>
+                    <div><%= t("global.boolean.#{lead.is_blocking_amount_paid? }") %></div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="small text-muted"><%= t('mongoid.attributes.lead.payment_done') %></label>
+                    <div><%= t("global.boolean.#{lead.is_booking_price_paid? }") %></div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="small text-muted"><%= t('mongoid.attributes.lead.registration_done') %></label>
+                    <div><%= t("global.boolean.#{lead.is_registration_done? }") %></div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="small text-muted"><%= t('mongoid.attributes.lead.total_amount_paid') %></label>
+                    <small class="text-muted"><%= t('leads.total_amount_paid.hint')%></small>
+                    <div><%= lead.total_amount_paid.present? ? number_to_indian_currency(lead.total_amount_paid.round) : '-' %></div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="small text-muted"><%= t('mongoid.attributes.lead.total_balance_pending') %></label>
+                    <small class="text-muted"><%= t('leads.total_balance_pending.hint')%></small>
+                    <div><%= lead.total_balance_pending.present? ? number_to_indian_currency(lead.total_balance_pending.round) : '-' %></div>
                   </div>
                 </div>
               <% end %>

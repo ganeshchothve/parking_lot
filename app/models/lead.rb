@@ -80,35 +80,34 @@ class Lead
     end
   end
 
-  scope :filter_by_booking_price, ->(flag) do
+  scope :filter_by_booking_price, ->(paid) do
     lead_ids = BookingDetail.where(status: 'booked_confirmed').distinct(:lead_id)
     if lead_ids.present?
-      if flag == 'yes'
+      if paid == 'yes'
         where(id: { '$in': lead_ids })
-      elsif flag == 'no'
+      elsif paid == 'no'
         where(id: { '$nin': lead_ids })
       end
     end
   end
 
-  scope :filter_by_blocking_amount, ->(flag) do
+  scope :filter_by_blocking_amount, ->(paid) do
     lead_ids = BookingDetail.where(status: { '$in': BookingDetail::BOOKING_STAGES}).distinct(:lead_id)
     if lead_ids.present?
-      if flag == 'yes'
+      if paid == 'yes'
         where(id: { '$in': lead_ids })
-      elsif flag == 'no'
+      elsif paid == 'no'
         where(id: { '$nin': lead_ids })
       end
     end
   end
 
-  scope :filter_by_registration_done, ->(flag) do
-    booking_ids = BookingDetail.where(status: { '$in': BookingDetail::BOOKING_STAGES}).filter_by_tasks_completed('registration_done').distinct(:id)
-    lead_ids = BookingDetail.in(id: booking_ids).distinct(:lead_id)
+  scope :filter_by_registration_done, ->(paid) do
+    lead_ids = BookingDetail.where(status: { '$in': BookingDetail::BOOKING_STAGES}).filter_by_tasks_completed('registration_done').distinct(:lead_id)
     if lead_ids.present?
-      if flag == 'yes'
+      if paid == 'yes'
         where(id: { '$in': lead_ids })
-      elsif flag == 'no'
+      elsif paid == 'no'
         where(id: { '$nin': lead_ids })
       end
     end
@@ -129,7 +128,7 @@ class Lead
 
   def is_blocking_amount_paid?
     booking = self.first_booking_detail
-    booking.present? && booking.status.in?(BookingDetail::BOOKING_STAGES)
+    booking.present? && booking.status.in?(%w(blocked booked_tentative booked_confirmed))
   end
 
   def is_booking_price_paid?
