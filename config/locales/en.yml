@@ -912,6 +912,10 @@ en:
         name_email_phone: 'Walk-in (Project Name)'
         total_amount_paid: "Total Amount Paid (Inclusive of GST)"
         registered_at: 'Registered At'
+        payment_done: '9.90% Received'
+        blocking_amount_paid: 'Booking Amount Paid'
+        registration_done: 'Registration Done'
+        stage: 'Stage'
 
       user/file_types:
         home_loan_application_form: 'Home Loan Application Form'

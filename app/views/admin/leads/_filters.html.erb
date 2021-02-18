@@ -17,12 +17,24 @@
           <%= select_tag "fltrs[_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(_id: params[:fltrs][:_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: { url: admin_leads_path } } %>
         </div>
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.lead.stage') %>
+          <%= select_tag "fltrs[stage]", options_for_select(Lead.nin(stage: [nil, '']).distinct(:stage), (params[:fltrs].present? ? params[:fltrs][:stage] : "")), { prompt: 'Select', class: "selectize" } %>
+        </div>
+        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs[project_id]", t('mongoid.attributes.lead.project_id'), class: "control-label" %>
           <%= select_tag "fltrs[project_id]", options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:project_id] : "")), {prompt: "Select", class: "selectize"} %>
         </div>
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-          <%= label_tag "fltrs", Receipt.model_name.human, class: "control-label" %>
-          <%= select_tag "fltrs[receipts]", options_for_select([['Yes', 'yes'], ['No', 'no']], params.dig(:fltrs, :receipts)), {prompt: "Select", class: "selectize"} %>
+          <%= label_tag "fltrs", t('mongoid.attributes.lead.blocking_amount_paid'), class: "control-label" %>
+          <%= select_tag "fltrs[blocking_amount]", options_for_select([['Yes', 'yes'], ['No', 'no']], params.dig(:fltrs, :blocking_amount)), {prompt: "Select", class: "selectize"} %>
+        </div>
+        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.lead.payment_done'), class: "control-label" %>
+          <%= select_tag "fltrs[booking_price]", options_for_select([['Yes', 'yes'], ['No', 'no']], params.dig(:fltrs, :booking_price)), {prompt: "Select", class: "selectize"} %>
+        </div>
+        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.lead.registration_done'), class: "control-label" %>
+          <%= select_tag "fltrs[registration_done]", options_for_select([['Yes', 'yes'], ['No', 'no']], params.dig(:fltrs, :registration_done)), {prompt: "Select", class: "selectize"} %>
         </div>
         <% unless current_user.role?('channel_partner') %>
           <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
