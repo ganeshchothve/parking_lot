@@ -63,8 +63,9 @@ function register_user_with_portal(d, e){
     email: unescape(d['sell_do[form][lead][email]'] ? d['sell_do[form][lead][email]'] : ""),
     phone: unescape(d['sell_do[form][lead][phone]'] ? d['sell_do[form][lead][phone]'].replace(/\+/ig, "") : ""),
     mixpanel_id: unescape(d['sell_do[campaign][mixpanel_id]'] ? d['sell_do[campaign][mixpanel_id]'] : ""),
-    project_id: unescape(d['sell_do[campaign][mixpanel_id]'] ? d['sell_do[campaign][mixpanel_id]'] : ""),
-    project_name: $(e.currentSubmittedForm).find('[name="sell_do[form][lead][project_id]"] option:selected').text()
+    project_id: unescape(d['sell_do[form][lead][project_id]']),
+    project_name: $(e.currentSubmittedForm).find('[name="sell_do[form][lead][project_id]"] option:selected').text(),
+    lead_details: d.sell_do_lead_details
   }
   if(App.client.enable_referral_bonus){
     data.referral_code = unescape(d['sell_do[form][custom][custom_referral_code]'] ? d['sell_do[form][custom][custom_referral_code]'] : '')

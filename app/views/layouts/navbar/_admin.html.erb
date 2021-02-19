@@ -9,6 +9,12 @@
       </li>
     <% end %>
 
+    <% if policy([:admin, CpLeadActivity]).index? %>
+      <li class="nav-item">
+        <%= active_link_to t('controller.cp_lead_activities.index.link_name'), admin_cp_lead_activities_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+      </li>
+    <% end %>
+
     <% if policy([:admin, Project]).index? %>
       <li class="nav-item">
         <%= active_link_to t('controller.projects.index.link_name'), admin_projects_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
