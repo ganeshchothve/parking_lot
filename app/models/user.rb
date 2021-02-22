@@ -163,7 +163,8 @@ class User
   has_and_belongs_to_many :schemes
   has_many :logs, class_name: 'SyncLog', inverse_of: :user_reference
   embeds_many :portal_stages
-  accepts_nested_attributes_for :portal_stages, reject_if: :all_blank
+  embeds_many :user_notification_tokens
+  accepts_nested_attributes_for :portal_stages, :user_notification_tokens, reject_if: :all_blank
 
   validates :first_name, :role, presence: true
   validates :first_name, :last_name, name: true, allow_blank: true
