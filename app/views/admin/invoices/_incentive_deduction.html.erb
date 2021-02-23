@@ -11,7 +11,7 @@
       <div class='col-md-4 col-sm-4 col-xs-12'>
         <div class='form-group'>
           <%= label_tag 'amount', 'Amount', class: 'control-label' %>
-          <p><%= number_to_indian_currency(incentive_deduction.amount) %></p>
+          <p id='deduction-amount' data-amount='<%= incentive_deduction.amount %>'><%= number_to_indian_currency(incentive_deduction.amount) %></p>
         </div>
       </div>
       <div class='offset-md-1 col-md-3 col-sm-4 col-xs-12'>

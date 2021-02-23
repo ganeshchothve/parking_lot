@@ -4,7 +4,7 @@
       <tr class="bg-gradient-cd white">
         <th><%= t('mongoid.attributes.invoice.number') %></th>
         <th><%= Invoice.model_name.human %> Details</th>
-        <th><%= IncentiveScheme.model_name.human %> Details</th>
+        <!--<th><%#= IncentiveScheme.model_name.human %> Details</th> -->
         <th><%= t('mongoid.attributes.invoice.amount') %></th>
         <th><%= t('mongoid.attributes.invoice.status') %></th>
         <th class="text-right"> <%= t('global.action', count: 3) %></th>
@@ -24,19 +24,21 @@
             <% end %>
           </div>
         </td>
+        <!--
         <td>
-          <%= link_to_if policy([current_user_role_group, IncentiveScheme]).index?, invoice.incentive_scheme.name.try(:titleize), [:admin, :invoices, {'remote-state': edit_admin_incentive_scheme_path(invoice.incentive_scheme)}] %>
+          <%#= link_to_if policy([current_user_role_group, IncentiveScheme]).index?, invoice.incentive_scheme.name.try(:titleize), [:admin, :invoices, {'remote-state': edit_admin_incentive_scheme_path(invoice.incentive_scheme)}] %>
           <div class='small'>
-            <span><%= Ladder.model_name.human %> - Stage <%= invoice.ladder_stage %></span><br>
-            <% if adj = invoice.incentive_scheme.ladders.where(stage: invoice.ladder_stage).first.try(:payment_adjustment).presence %>
-              <% if adj.absolute_value.blank? && adj.formula.present? %>
-                <span><%= formula_to_human(adj.formula) %><span>
-              <% else %>
-                <span><strong><%= number_to_indian_currency(adj.absolute_value) %></strong></span>
-              <% end %>
-            <% end %>
+            <span><%#= Ladder.model_name.human %> - Stage <%#= invoice.ladder_stage %></span><br>
+            <%# if adj = invoice.incentive_scheme.ladders.where(stage: invoice.ladder_stage).first.try(:payment_adjustment).presence %>
+              <%# if adj.absolute_value.blank? && adj.formula.present? %>
+                <span><%#= formula_to_human(adj.formula) %><span>
+              <%# else %>
+                <span><strong><%#= number_to_indian_currency(adj.absolute_value) %></strong></span>
+              <%# end %>
+            <%# end %>
           </div>
         </td>
+        -->
         <td>
           <%= number_to_indian_currency(invoice.amount) %><br>
           <% if invoice.approved? && invoice.net_amount.present? %>
@@ -46,7 +48,7 @@
           <% end %>
         </td>
         <td>
-          <%= invoice.status.titleize %>
+          <%= t("mongoid.attributes.invoice/status.#{invoice.status}") %>
           <% if invoice.rejected? %>
             <div class='small'>
               <span class='break-word'>Reason: <%= invoice.rejection_reason %></span>

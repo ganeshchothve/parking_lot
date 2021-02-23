@@ -8,26 +8,35 @@ module InvoiceStateMachine
       state :draft, initial: true
       state :pending_approval
       state :approved, :rejected
+      state :paid
 
-      event :raise, after: :send_notification do
-        transitions from: :draft, to: :pending_approval, success: %i[after_raised]
-        transitions from: :rejected, to: :pending_approval, success: %i[after_re_raised]
+      event :pending_approval, after: :send_notification do
+        transitions from: :draft, to: :pending_approval #, success: %i[after_raised]
       end
 
       event :approve, after: :send_notification do
         transitions from: :pending_approval, to: :approved, success: %i[after_approved]
       end
 
-      event :reject do
+      event :reject, after: :send_notification do
+        transitions from: :draft, to: :rejected, success: %i[after_rejected]
         transitions from: :pending_approval, to: :rejected, success: %i[after_rejected]
+      end
+
+      event :raise do
+        transitions from: :rejected, to: :draft, success: %i[after_re_raised]
+      end
+
+      event :paid, after: :send_notification do
+        transitions from: :approved, to: :paid
       end
     end
 
     def get_pending_approval_recipients_list
       recipients = []
-      User.where(role: 'billing_team').each do |user|
-        recipients << user
-      end
+      #User.where(role: 'billing_team').each do |user|
+      #  recipients << user
+      #end
       recipients << self.manager.manager.manager if self.manager.try(:manager).try(:manager).present?
       recipients
     end
@@ -37,6 +46,16 @@ module InvoiceStateMachine
       recipients << self.manager if self.manager.present?
       recipients << self.manager.manager if self.manager.try(:manager).present?
       recipients << self.manager.manager.manager if self.manager.try(:manager).try(:manager).present?
+      recipients
+    end
+
+    def get_paid_recipients_list
+      get_approved_recipients_list
+    end
+
+    def get_rejected_recipients_list
+      recipients = []
+      recipients << self.manager if self.manager.present?
       recipients
     end
 
@@ -72,9 +91,9 @@ module InvoiceStateMachine
       end
     end
 
-    def after_raised
-      self.raised_date = Time.now
-    end
+    #def after_raised
+    #  self.raised_date = Time.now
+    #end
 
     def after_approved
       self.processing_date = Time.now

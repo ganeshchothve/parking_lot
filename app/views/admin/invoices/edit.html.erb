@@ -1,1 +1,5 @@
-<%= render 'admin/invoices/form' %>
+<% if current_user.role?('channel_partner') %>
+  <%= render 'admin/invoices/draft_form' %>
+<% else %>
+  <%= render 'admin/invoices/form' %>
+<% end %>

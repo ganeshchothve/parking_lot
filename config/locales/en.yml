@@ -688,10 +688,10 @@ en:
         disabled: Disabled
 
       invoice:
-        number: 'Invoice #'
+        number: 'Invoice Number'
         amount: Brokerage Amount
         gst_amount: GST Amount
-        net_amount: Approved Brokerage Amount
+        net_amount: Approved Amount
         comments: Comments
         rejection_reason: Rejection Reason
         project_id: 'Project'
@@ -704,10 +704,11 @@ en:
         status: 'Status'
         cheque_detail: 'Cheque Details'
       invoice/status:
-        draft: 'Draft'
+        draft: 'Raised'
         pending_approval: 'Pending Approval'
         approved: 'Approved'
         rejected: 'Rejected'
+        paid: 'Paid'
       cheque_detail:
         total_amount: 'Total Amount'
         payment_identifier: 'Payment Identifier'
@@ -1088,6 +1089,8 @@ en:
       tasks:
         link_name: 'Tasks'
         header: 'Tasks'
+      invoices:
+        link_name: 'Brokerage Invoices'
       send_booking_detail_form_notification: "Booking detail form will be sent to customer shortly."
       set_booking_detail_missing: "Booking detail not found"
       set_project_unit_missing: "Project unit not found"
@@ -1108,6 +1111,8 @@ en:
     invoices:
       index:
         link_name: 'Brokerages'
+      new:
+        link_name: 'Raise Brokerage Invoice'
       edit:
         link_name: 'Edit Invoice'
       update_gst:
@@ -1116,7 +1121,10 @@ en:
         link_name: 'Invoice Details'
       generate_invoice:
         link_name: 'Print Invoice'
+      asset_create:
+        link_name: 'Upload Invoice Copy'
       status_message:
+        draft: 'Invoice raised successfully'
         pending_approval: 'Invoice successfully raised'
         approved: 'Invoice successfully approved'
         rejected: 'Invoice rejected'

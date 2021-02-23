@@ -79,7 +79,7 @@ Rails.application.routes.draw do
       end
       # resources :receipts, only: [:index]
 
-      resources :invoices, only: :index, controller: 'booking_details/invoices' do
+      resources :invoices, only: [:index, :new, :create, :edit, :update], controller: 'booking_details/invoices' do
         member do
           patch :change_state
           get :raise_invoice
