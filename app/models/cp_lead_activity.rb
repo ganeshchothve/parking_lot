@@ -1,6 +1,10 @@
 class CpLeadActivity
   include Mongoid::Document
   include Mongoid::Timestamps
+  extend FilterByCriteria
+
+  COUNT_STATUS = %w(fresh_lead active_in_same_cp no_count accompanied_credit count_given)
+  LEAD_STATUS = %w(already_exists registered)
 
   field :registered_at, type: Date
   field :count_status, type: String
@@ -9,4 +13,41 @@ class CpLeadActivity
 
   belongs_to :user
   belongs_to :lead
+
+  default_scope -> { desc(:created_at) }
+  scope :filter_by_count_status, ->(status) { where(count_status: status) }
+  scope :filter_by_lead_status, ->(status) { where(lead_status: status) }
+  scope :filter_by_count_status, ->(status) { where(count_status: status) }
+  scope :filter_by_lead_id, ->(lead_id) { where(lead_id: lead_id) }
+  scope :filter_by_expiry_date, ->(date) { start_date, end_date = date.split(' - '); where(expiry_date: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
+  scope :filter_by_registered_at, ->(date) { start_date, end_date = date.split(' - '); where(registered_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
+
+  def self.user_based_scope(user, _params = {})
+    custom_scope = {}
+    custom_scope = { user_id: user.id } if user.role?('channel_partner')
+    custom_scope
+  end
+
+  private
+
+  def authorize_resource
+    if %w[index export portal_stage_chart channel_partner_performance].include?(params[:action])
+      authorize [current_user_role_group, User]
+    elsif params[:action] == 'new' || params[:action] == 'create'
+      if params[:role].present?
+        authorize [current_user_role_group, User.new(role: params[:role], booking_portal_client_id: current_client.id)]
+      else
+        authorize [current_user_role_group, User.new(booking_portal_client_id: current_client.id)]
+      end
+    else
+      authorize [current_user_role_group, @user]
+    end
+  end
+
+  def apply_policy_scope
+    custom_scope = CpLeadActivity.where(CpLeadActivity.user_based_scope(current_user, params))
+    CpLeadActivity.with_scope(policy_scope(custom_scope)) do
+      yield
+    end
+  end
 end

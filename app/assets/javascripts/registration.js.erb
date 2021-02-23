@@ -84,7 +84,11 @@ function register_user_with_portal(d, e){
       }).show();
       setTimeout(function(){
         if(typeof App !== "undefined" && App.current_user){
-          window.location = '<%= url.admin_users_path %>';
+          if (App.current_user.role == 'channel_partner') {
+            window.location = '<%= url.admin_cp_lead_activities_path %>';
+          } else {
+            window.location = '<%= url.admin_leads_path %>';
+          }
         }else{
           if(App.client.preferred_login == "phone" && data.phone){
             window.location = encodeURI('<%= url.new_user_session_path %>?force=true&user[login]=' + encodeURIComponent(data.phone));
