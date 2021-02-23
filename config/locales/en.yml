@@ -967,6 +967,9 @@ en:
           custom_dates: 'Custom Dates'
 
   controller:
+    cp_lead_activities:
+      index:
+        link_name: 'LeadActivities'
     api_logs:
       index:
         link_name: 'API Logs'
