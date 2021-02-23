@@ -29,6 +29,7 @@ gem 'jbuilder', '~> 2.5'
 gem 'razorpay'
 gem 'nested_form'
 gem 'pusher'
+gem 'fcm'
 gem 'active_link_to'
 gem "font-awesome-sass"
 # Use Capistrano for deployment

@@ -183,6 +183,9 @@ GEM
       railties (>= 3.0.0)
     faraday (0.12.2)
       multipart-post (>= 1.2, < 3)
+    fcm (0.0.2)
+      httparty
+      json
     ffi (1.9.25)
     fog-aws (3.3.0)
       fog-core (~> 2.1)
@@ -673,6 +676,7 @@ DEPENDENCIES
   devise-security
   factory_bot_rails
   faker!
+  fcm
   fog-aws
   font-awesome-sass
   honeybadger (~> 3.1)
