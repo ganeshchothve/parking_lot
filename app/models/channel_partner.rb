@@ -15,7 +15,7 @@ class ChannelPartner
   DEVELOPERS = [ "Godrej Properties", "Hiranandani", "Lodha Group", "Piramal Realty", "Kanakia", "Mahindra Lifespaces developers", "Kalpataru", "Runwal Group", "Dosti Group", "Wadhwa Group", "Rustomjee", "Puraniks builders", "Adhiraj construction", "L & T Realty", "Arkade Group", "Paradise group", "Chandak", "Marathon Realty", "Raymond Realty", "Damji Shamji Shah", "Shapoorji Pallonji Real Estate", "SD Corp", "Ornate Universal", "Sethia Infrastructure", "Aadi Properties", "Raheja construction", "Tata Housing", "Ajmera", "Adani", "Oberoi Realty", "Acme", "K Raheja", "Hubtown", "Ekta world", "Akshar group", "Raunak group", "JP Infra", "Sunteck Realty Ltd", "Seth Developers", "Kabra developer", "Koltepatil developer" ]
 
   # Add different types of documents which are uploaded on channel_partner
-  DOCUMENT_TYPES = %w[pan_card rera_certificate gst_certificate cheque_scanned_copy]
+  DOCUMENT_TYPES = %w[pan_card rera_certificate gst_certificate cheque_scanned_copy company_incorporation_certificate form_10f tax_residency_certificate pe_declaration]
 
   field :title, type: String
   field :first_name, type: String
@@ -137,9 +137,9 @@ class ChannelPartner
   end
 
   def doc_types
-    doc_types = DOCUMENT_TYPES.clone
-    doc_types = doc_types.without 'rera_certificate' unless self.rera_applicable?
-    doc_types = doc_types.without 'gst_certificate' unless self.gst_applicable?
+    doc_types = self.nri ? %w[cheque_scanned_copy company_incorporation_certificate form_10f tax_residency_certificate pe_declaration] : %w[pan_card cheque_scanned_copy]
+    doc_types << 'rera_certificate' if self.rera_applicable?
+    doc_types << 'gst_certificate' if self.gst_applicable?
     doc_types
   end
 

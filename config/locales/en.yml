@@ -456,11 +456,19 @@ en:
         gst_certificate: 'GST Certificate'
         cheque_scanned_copy: 'Cheque Scanned Copy'
         pan_card: 'PAN Card'
+        company_incorporation_certificate: 'Company Incorporation Certificate'
+        form_10f: 'Form 10F'
+        tax_residency_certificate: 'Tax Residency Certificate'
+        pe_declaration: 'PE Declaration (No permanent Establishment in India)'
       channel_partner/help_text:
         rera_certificate_html: '<ul><li>Self Attested Rera Certificate</li></ul>'
         gst_certificate_html: '<ul><li>Self Attested GST Certificate</li></ul>'
         cheque_scanned_copy_html: '<ul><li>A Cancelled Cheque Scanned Copy</li></ul>'
         pan_card_html: '<ul><li>PAN Card Scanned Copy</li></ul>'
+        company_incorporation_certificate_html: '<ul><li>Company Incorporation Certificate</li></ul>'
+        form_10f_html: '<ul><li>Form 10F</li></ul>'
+        tax_residency_certificate_html: '<ul><li>Tax Residency Certificate</li></ul>'
+        pe_declaration_html: '<ul><li>PE Declaration (No permanent Establishment in India)</li></ul>'
 
       channel_partner/status:
         active: Active
