@@ -26,7 +26,7 @@ module DashboardDataProvider
     data = Lead.collection.aggregate([{
             "$match": matcher
           },{
-            "$lookup": 
+            "$lookup":
             {
               "from": "users",
               "localField": "manager_id",
@@ -60,7 +60,7 @@ module DashboardDataProvider
     data = BookingDetail.collection.aggregate([{
             "$match": matcher
           },{
-            "$lookup": 
+            "$lookup":
             {
               "from": "users",
               "localField": "manager_id",
@@ -418,14 +418,16 @@ module DashboardDataProvider
         _id: '$project_id',
         av: { '$sum': '$agreement_price' },
         confirmed: { '$sum': { "$cond": [ {"$eq": ['$status', {"$literal": 'booked_confirmed'}]}, 1, 0 ] }},
-        registration_done: { '$sum': { "$cond": [ {"$gte": [{"$size": '$tasks'}, 1]}, 1, 0 ] }}
+        registration_done: { '$sum': { "$cond": [ {"$gte": [{"$size": '$tasks'}, 1]}, 1, 0 ] }},
+        count: { '$sum': 1 }
       } },
       {'$group': {
         _id: nil,
         total_av: {'$sum': '$av'},
         total_confirmed: {'$sum': '$confirmed'},
         total_registration_done: {'$sum': '$registration_done'},
-        project_wise: {'$push': {project_id: '$_id', av: '$av', confirmed: '$confirmed', registration_done: '$registration_done'}}
+        total_count: {'$sum': '$count'},
+        project_wise: {'$push': {project_id: '$_id', av: '$av', confirmed: '$confirmed', registration_done: '$registration_done', count: '$count'}}
       } }
     ]).to_a
     data = data.first
