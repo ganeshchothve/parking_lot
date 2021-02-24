@@ -9,7 +9,7 @@
       <div class="card">
         <div class="box-header bg-gradient-cd br-rd-tr-4 cursor-pointer" id="headingOne" data-toggle="collapse" data-target="#collapse-<%= scheme.id %>" aria-expanded="true" aria-controls="collapse-<%= scheme.id %>">
           <h5 class="mb-0 white">
-            <%= scheme.name.titleize %> <span class='ml-3 small'><%= project %></span>
+            <%= scheme.name.titleize %> <!--<span class='ml-3 small'><%#= project %></span>-->
             <div class='small float-md-right'><%= "#{scheme.starts_on.strftime('%d %b %Y')} - #{scheme.ends_on.strftime('%d %b %Y')}" %></div>
           </h5>
         </div>
@@ -20,10 +20,12 @@
                 <span class="list-group-item align-items-start">
                   <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">Ladder #<%= ladder.stage %></h5>
-                    <% adj = ladder.payment_adjustment %>
-                    <p class="mb-1"><%= (adj.absolute_value.blank? && adj.formula.present?) ?
+                    <!--
+                    <%# adj = ladder.payment_adjustment %>
+                    <p class="mb-1"><%#= (adj.absolute_value.blank? && adj.formula.present?) ?
                       formula_to_human(adj.formula) :
                       "<strong>#{number_to_indian_currency(adj.absolute_value)}</strong>".html_safe %></p>
+                    -->
                   </div>
                   <% if scheme.ladder_strategy == 'number_of_items' %>
                     <p><%= ladder.end_value? ?
