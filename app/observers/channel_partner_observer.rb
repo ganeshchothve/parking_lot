@@ -3,6 +3,21 @@ class ChannelPartnerObserver < Mongoid::Observer
   def after_create channel_partner
     user = User.create!(first_name: channel_partner.first_name, last_name: channel_partner.last_name, email: channel_partner.email, phone: channel_partner.phone, rera_id: channel_partner.rera_id, role: 'channel_partner', booking_portal_client_id: current_client.id, manager_id: channel_partner.manager_id)
     channel_partner.set({associated_user_id: user.id})
+
+    template = Template::EmailTemplate.where(name: "channel_partner_created").first
+    recipients = []
+    recipients << channel_partner.manager if channel_partner.manager.present?
+    recipients << channel_partner.manager.manager if channel_partner.manager.try(:manager).present?
+    if template.present?
+      email = Email.create!({
+        booking_portal_client_id: channel_partner.associated_user.booking_portal_client_id,
+        email_template_id: template.id,
+        recipients: recipients.flatten,
+        triggered_by_id: channel_partner.id,
+        triggered_by_type: channel_partner.class.to_s
+      })
+      email.sent!
+    end
   end
 
   def before_save channel_partner
@@ -24,6 +39,25 @@ class ChannelPartnerObserver < Mongoid::Observer
     if channel_partner.status_changed? && channel_partner.status == 'active' && channel_partner.associated_user.present? && current_client.external_api_integration?
       Crm::Api::Post.where(resource_class: 'ChannelPartner', is_active: true).each do |api|
         api.execute(channel_partner)
+      end
+    end
+  end
+
+  def after_update channel_partner
+    if (channel_partner.changed & %w[rera_applicable gst_applicable rera_id gstin_number]).present?
+      template = Template::EmailTemplate.where(name: "channel_partner_updated").first
+      recipients = []
+      recipients << channel_partner.manager if channel_partner.manager.present?
+      recipients << channel_partner.manager.manager if channel_partner.manager.try(:manager).present?
+      if template.present?
+        email = Email.create!({
+          booking_portal_client_id: channel_partner.associated_user.booking_portal_client_id,
+          email_template_id: template.id,
+          recipients: recipients.flatten,
+          triggered_by_id: channel_partner.id,
+          triggered_by_type: channel_partner.class.to_s
+        })
+        email.sent!
       end
     end
   end

@@ -41,7 +41,7 @@
         -->
         <td>
           <%= number_to_indian_currency(invoice.amount) %><br>
-          <% if invoice.approved? && invoice.net_amount.present? %>
+          <% if invoice.status.in?(%w(approved paid)) && invoice.net_amount.present? %>
             <div class='small'>
               <span><%= t('mongoid.attributes.invoice.net_amount') %>: <strong><%= number_to_indian_currency(invoice.net_amount) %></strong></span>
             </div>
