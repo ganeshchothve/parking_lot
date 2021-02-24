@@ -28,20 +28,20 @@
               </li>
               <li>
                 <span><%= t('mongoid.attributes.lead.stage') %></span>
-                <p><%= lead.stage || '-' %></p>
+                <p><%= lead.lead_stage || '-' %></p>
               </li>
               <li>
                 <span><%= t('mongoid.attributes.lead.sitevisit_date') %></span>
                 <p><%= lead.sitevisit_date.try(:strftime, "%d/%m/%Y") || '-' %></p>
               </li>
-              <li>
-                <span><%= t('mongoid.attributes.lead.revisit_count') %></span>
-                <p><%= lead.revisit_count || '-' %></p>
+              <!-- <li>
+                <span><%#= t('mongoid.attributes.lead.revisit_count') %></span>
+                <p><%#= lead.try(:revisit_count) || '-' %></p>
               </li>
               <li>
-                <span><%= t('mongoid.attributes.lead.last_revisit_date') %></span>
-                <p><%= lead.last_revisit_date.try(:strftime, "%d/%m/%Y") || '-' %></p>
-              </li>
+                <span><%#= t('mongoid.attributes.lead.last_revisit_date') %></span>
+                <p><%#= lead.last_revisit_date.try(:strftime, "%d/%m/%Y") rescue '-' %></p>
+              </li> -->
               <li>
                 <span> <%= t('mongoid.attributes.lead.created_at') %></span>
                 <p><%= l(lead.created_at.in_time_zone(current_user.time_zone)) %></p>

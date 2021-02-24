@@ -122,7 +122,8 @@ class Lead
       custom_scope = {}
       case user.role.to_sym
       when :channel_partner
-        custom_scope[:'$or'] = [{manager_id: user.id}, {manager_id: nil, referenced_manager_ids: user.id, iris_confirmation: false}]
+        lead_ids = CpLeadActivity.where(user_id: user.id).distinct(:lead_id)
+        custom_scope[:'$or'] = [{manager_id: user.id}, {manager_id: nil, referenced_manager_ids: user.id, iris_confirmation: false}, {_id: { '$in': lead_ids } }]
       when :cp
         custom_scope = { manager_id: { "$in": User.where(role: 'channel_partner', manager_id: user.id).distinct(:id) } }
       when :cp_admin

@@ -19,6 +19,7 @@ class CpLeadActivity
   scope :filter_by_lead_status, ->(status) { where(lead_status: status) }
   scope :filter_by_count_status, ->(status) { where(count_status: status) }
   scope :filter_by_lead_id, ->(lead_id) { where(lead_id: lead_id) }
+  scope :filter_by_project_id, ->(project_id) { lead_ids = Lead.where(project_id: project_id).distinct(:id); where(lead_id: { '$in': lead_ids }) }
   scope :filter_by_expiry_date, ->(date) { start_date, end_date = date.split(' - '); where(expiry_date: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_registered_at, ->(date) { start_date, end_date = date.split(' - '); where(registered_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
 

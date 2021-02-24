@@ -3,7 +3,10 @@
     <thead>
       <tr class="bg-gradient-cd white">
         <th><%= t('mongoid.attributes.user.name_email_phone') %></th>
-        <th><%= t('mongoid.attributes.cp_lead_activity.selldo_lead_id') %></th>
+        <% if current_client.selldo_client_id.present? && current_client.selldo_gre_form_id.present? && current_client.selldo_channel_partner_form_id.present? %>
+          <th><%= t('mongoid.attributes.cp_lead_activity.selldo_lead_id') %></th>
+        <% end %>
+        <th><%= t('mongoid.attributes.cp_lead_activity.project_id') %></th>
         <% if !current_user.role?('channel_partner') %>
           <th><%= t('mongoid.attributes.cp_lead_activity.channel_partner') %></th>
         <% end %>
@@ -41,6 +44,7 @@
         <% if current_client.selldo_client_id.present? && current_client.selldo_gre_form_id.present? && current_client.selldo_channel_partner_form_id.present? %>
           <td data-title="Sell.Do Lead Id"><span><%=lead.lead_id %></span></td>
         <% end %>
+        <td><%= lead.project.try(:name) %></td>
         <% if !current_user.role?('channel_partner') %>
           <td><%= channel_partner.name %></td>
         <% end %>
