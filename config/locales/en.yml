@@ -912,7 +912,7 @@ en:
         manager_id: 'Partner / Manager / Added by'
         name_email_phone: 'Walk-in (Project Name)'
         total_amount_paid: "Total Amount Paid (Inclusive of GST)"
-        registered_at: 'Registered At'
+        registered_at: 'Walk-in Creation Date'
         payment_done: '9.90% Received'
         blocking_amount_paid: 'Booking Amount Paid'
         registration_done: 'Registration Done'
