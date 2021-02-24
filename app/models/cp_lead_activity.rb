@@ -26,6 +26,7 @@ class CpLeadActivity
   def self.user_based_scope(user, _params = {})
     custom_scope = {}
     custom_scope = { user_id: user.id } if user.role?('channel_partner')
+    custom_scope = { user_id: { '$in': User.where(role: 'channel_partner', manager_id: user.id).distinct(:id) } } if user.role?(:cp_admin)
     custom_scope
   end
 
