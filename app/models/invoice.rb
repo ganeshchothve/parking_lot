@@ -100,8 +100,8 @@ class Invoice
 
     def user_based_available_statuses(user)
       if user.present?
-        if user.role?('billing_team')
-          %w[pending_approval approved rejected]
+        if user.role?('cp_admin')
+          Invoice.aasm.states.map(&:name) - [:draft]
         else
           Invoice.aasm.states.map(&:name)
         end
