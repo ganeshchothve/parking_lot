@@ -38,7 +38,7 @@ class Admin::InvoicePolicy < InvoicePolicy
   end
 
   def asset_create?
-    user.role?('channel_partner') && !record.approved?
+    user.role?('channel_partner') && !record.status.in?(%w(approved paid))
   end
 
   def asset_update?

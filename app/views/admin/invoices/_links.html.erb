@@ -43,6 +43,6 @@
 <% end %>
 
 <!-- Upload documents for channel partner -->
-<% if policy([:admin, invoice]).asset_create? %>
+<% if policy([:admin, invoice]).index? %>
   <%= link_to t('controller.invoices.asset_create.link_name'), assetables_path(assetable_type: invoice.class.model_name.i18n_key.to_s, assetable_id: invoice.id, asset_header: t('controller.invoices.asset_create.link_name')), class: "dropdown-item modal-remote-form-link" %>
 <% end %>

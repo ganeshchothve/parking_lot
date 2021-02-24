@@ -8,7 +8,7 @@
   <div class="col-md-6">
     <div class="form-group">
       <%= f.label :registration_name, class: '' %>
-      <%= f.text_field :registration_name, class: 'form-control', disabled: !policy([:admin, @project]).editable_field?("registration_name"), value: f.object.registration_name.present? ? f.object.registration_name : current_client.registration_name %>
+      <%= f.text_field :registration_name, class: 'form-control', disabled: !policy([:admin, @project]).editable_field?("registration_name") %>
     </div>
   </div>
   <div class="col-md-6">
