@@ -17,7 +17,7 @@
           <!--
           <%# if policy([:admin, Lead.new]).export? %>
             <div class="export-menu display-initial">
-              <button class="db-small-btn light-blue bg-white fn-400 dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <%= t('controller.leads.exports.link_name', name: nil) %> </button>
+              <button class="db-small-btn light-blue bg-white fn-400 dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <%#= t('controller.leads.exports.link_name', name: nil) %> </button>
               <div class="dropdown-menu dropdown-menu-right">
                 <%# link_to t('controller.leads.exports.link_name', name: t('global.all')), export_admin_leads_path, class: 'dropdown-item' %>
                 <%# link_to t('controller.leads.exports.link_name', name: t('global.active_filter')), export_admin_leads_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>

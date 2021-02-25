@@ -13,6 +13,18 @@
     </div>
   </section>
 
+  <!-- Leads -->
+  <section class="leads-list device-pd">
+  <div class="container">
+    <div class="row">
+      <div class="separate-line"></div>
+      <% cp_lead_activities = CpLeadActivity.where(user_id: current_user.id, expiry_date: { '$gte': Date.today }).paginate(page: 1) %>
+      <div class="box-card relative">
+        <%= render 'admin/cp_lead_activities/index', cp_lead_activities: cp_lead_activities %>
+      </div>
+    </div>
+  </div>
+
   <!-- Projects -->
   <%= render 'project_units/section' %>
 
@@ -304,3 +316,5 @@
     </div>
   </section>
 <% end %>
+
+
