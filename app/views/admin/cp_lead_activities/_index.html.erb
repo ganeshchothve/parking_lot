@@ -14,7 +14,7 @@
         <th><%= t('mongoid.attributes.cp_lead_activity.lead_status') %></th>
         <th><%= t('mongoid.attributes.cp_lead_activity.expiry_date') %></th>
         <th><%= t('mongoid.attributes.cp_lead_activity.registered_at') %></th>
-        <th>Actions</th>
+        <th class="text-right"><%= t('global.action', count: 3) %></th>
       </tr>
     </thead>
   </thead>
@@ -28,7 +28,7 @@
       <tr>
         <td data-title="Name">
           <span>
-            <%= lead.name %>
+            <%= link_to lead.name, admin_cp_lead_activity_path(cp_lead_activity), target: '_blank' %>
           </span>
           <% if lead.email.present? %>
             <span class="email-icon small">
@@ -52,7 +52,14 @@
       <td><%= cp_lead_activity.lead_status.try(:titleize) %></td>
       <td><%= cp_lead_activity.expiry_date.try(:strftime, "%d/%m/%Y") %></td>
       <td><%= cp_lead_activity.registered_at.try(:strftime, "%d/%m/%Y") %></td>
-      <td></td>
+      <td>
+        <div class="dropdown show text-right">
+            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+              <%= render "#{current_user_role_group}/cp_lead_activities/links", cp_lead_activity: cp_lead_activity %>
+            </div>
+          </div>
+      </td>
     </tr>
     <% end %>
   </tbody>

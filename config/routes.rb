@@ -49,7 +49,7 @@ Rails.application.routes.draw do
   namespace :admin do
 
     resources :api_logs, only: [:index]
-    resources :cp_lead_activities, only: [:index]
+    resources :cp_lead_activities
 
     resources :portal_stage_priorities, only: [:index] do
       patch :reorder, on: :collection

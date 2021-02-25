@@ -970,6 +970,8 @@ en:
     cp_lead_activities:
       index:
         link_name: 'LeadActivities'
+      show:
+        link_name: 'Show Lead Activities'
     api_logs:
       index:
         link_name: 'API Logs'

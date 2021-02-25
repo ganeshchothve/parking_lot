@@ -9,31 +9,16 @@
               <div class="dropdown text-center float-right">
                 <a class="btn dropdown-toggle table-dropdown-btn white-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
                 <div class="dropdown-menu dropdown-menu-right">
-                  <%= render "#{current_user_role_group}/leads/links", lead: @lead %>
+                  <%= render "#{current_user_role_group}/cp_lead_activities/links", cp_lead_activity: @cp_lead_activity %>
                 </div>
               </div>
             </div>
-            <%= render 'overview', lead: @lead %>
+            <%= render 'admin/leads/overview', lead: @cp_lead_activity.lead %>
           </div>
         </div>
       </section>
-      <!-- cp lead activities -->
-      <%= render 'cp_lead_activities', cp_lead_activities: @lead.cp_lead_activities.paginate(page: 1) %>
-
-      <!-- booking_details -->
-      <% if current_client.enable_actual_inventory?(current_user) %>
-        <div class="separate-line container"></div>
-        <%= render 'booking_details/section', booking_details: @booking_details %>
-
-        <!-- receipts -->
-        <div class="separate-line container"></div>
-        <%= render 'receipts/section', receipts: @receipts %>
-      <% end %>
-
-      <!-- Note Summary -->
       <div class="separate-line container"></div>
-      <%= render 'notes/section', notable: @lead %>
-
+      <%= render 'admin/leads/cp_lead_activities', cp_lead_activities: @cp_lead_activity.lead.cp_lead_activities.paginate(page: 1) %>
     </div>
   </div>
 </div>

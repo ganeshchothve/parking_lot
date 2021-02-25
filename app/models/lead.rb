@@ -20,6 +20,7 @@ class Lead
   field :lead_lost_date, type: String
   field :sitevisit_status, type: String
   field :sitevisit_date, type: String
+  field :selldo_lead_registration_date, type: String
   field :iris_confirmation, type: Boolean, default: false
   field :lead_id, type: String #TO DO - Change name to selldo_id and use it throughout the system in place of lead_id on user.
 
@@ -114,6 +115,15 @@ class Lead
 
   def ds_name
     "#{name} (#{project_name})"
+  end
+
+  def active_cp_lead_activities
+    self.cp_lead_activities.where(expiry_date: { '$gte': Date.today })
+  end
+
+  def lead_validity_period
+    activity = self.active_cp_lead_activities.first
+    activity.present? ? "#{(activity.expiry_date - Date.today).to_i} Days" : '0 Days'
   end
 
   class << self

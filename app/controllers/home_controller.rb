@@ -34,7 +34,7 @@ class HomeController < ApplicationController
         else
           @project = Project.new(booking_portal_client_id: current_client.id, name: params["project_name"], selldo_id: params["project_id"]) unless @project.present?
           @user = User.new(booking_portal_client_id: current_client.id, email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], lead_id: params[:lead_id], mixpanel_id: params[:mixpanel_id]) unless @user.present?
-          @lead = Lead.new(email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], lead_id: params[:lead_id])
+          @lead = Lead.new(email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], lead_id: params[:lead_id], selldo_lead_registration_date: params['lead_details']['lead_created_at'])
           if @project.save && @user.save
             @lead.assign_attributes(user_id: @user.id, project_id: @project.id)
             CpLeadActivityRegister.create_cp_lead_object(true, @lead, current_user, params[:lead_details]) if current_user.role?("channel_partner")

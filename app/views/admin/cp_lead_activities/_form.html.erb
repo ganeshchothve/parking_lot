@@ -1,0 +1,39 @@
+<%= simple_form_for(@cp_lead_activity, local: true, url: url, remote: true, html: { novalidate: false, class: 'modal-remote-form validate-form', data: { 'resource-type': CpLeadActivity.model_name.human, type: :json }, id: 'cp_lead_activity_form' } ) do |f| %>
+  <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-gradient-cd white">
+          <h3 class="title">
+            <%= t("helpers.#{action_name}.link_name", model: CpLeadActivity.model_name.human) %>
+            </h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true" class="white">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <%= f.label :count_status, class: 'control-label' %>
+              <%= f.select :count_status, CpLeadActivity::COUNT_STATUS.collect{|x| [x.titleize, x] }, {prompt: "Select"}, class: 'selectize' %>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group position-relative">
+                <%= f.label :expiry_date %>
+                <% date = (f.object.expiry_date.present? ? f.object.expiry_date.strftime("%d/%m/%Y") : "") %>
+                <%= f.text_field :expiry_date, class: 'form-control datepicker', type:'text', data: {"default-date": date}, value: date %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <%= f.submit "Save", class: 'btn btn-primary' %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+<script>
+  $(document).ready(function(){
+    FormInitializer.init($("#cp_lead_activity_form"));
+  });
+</script>
