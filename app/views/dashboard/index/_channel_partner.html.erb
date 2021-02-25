@@ -14,17 +14,30 @@
   </section>
 
   <!-- Leads -->
-  <section class="leads-list device-pd">
-  <div class="container">
-    <div class="row">
-      <div class="separate-line"></div>
+  <section class="leads-list device-pd mt-3">
+    <div class="container">
       <% cp_lead_activities = CpLeadActivity.where(user_id: current_user.id, expiry_date: { '$gte': Date.today }).paginate(page: 1) %>
-      <div class="box-card relative">
-        <%= render 'admin/cp_lead_activities/index', cp_lead_activities: cp_lead_activities %>
+      <div class="row">
+        <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
+          <div class="table-title pt-1">
+            <h1 class="title icon-set icon-key-black">
+              Lead Activities
+            </h1>
+          </div>
+        </div>
+        <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
+          <div class="table-btn-set float-right pb-3">
+            <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= cp_lead_activities.total_entries %></button>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="box-card relative">
+          <%= render 'admin/cp_lead_activities/index', cp_lead_activities: cp_lead_activities %>
+        </div>
       </div>
     </div>
-  </div>
-
+  </section>
   <!-- Projects -->
   <%= render 'project_units/section' %>
 
