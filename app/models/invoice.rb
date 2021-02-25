@@ -42,8 +42,9 @@ class Invoice
 
   delegate :name, to: :project, prefix: true, allow_nil: true
   delegate :name, to: :manager, prefix: true, allow_nil: true
-  delegate :name, to: :incentive_scheme, prefix: true, allow_nil: true
+  #delegate :name, to: :incentive_scheme, prefix: true, allow_nil: true
 
+  scope :filter_by_number, ->(number) { where(number: number) }
   scope :filter_by_status, ->(status) { where(status: status) }
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
   scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in": project_ids}) : all }

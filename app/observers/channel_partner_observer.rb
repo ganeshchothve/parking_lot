@@ -8,7 +8,7 @@ class ChannelPartnerObserver < Mongoid::Observer
     recipients = []
     recipients << channel_partner.manager if channel_partner.manager.present?
     recipients << channel_partner.manager.manager if channel_partner.manager.try(:manager).present?
-    if template.present?
+    if template.present? && recipients.present?
       email = Email.create!({
         booking_portal_client_id: channel_partner.associated_user.booking_portal_client_id,
         email_template_id: template.id,
@@ -49,7 +49,7 @@ class ChannelPartnerObserver < Mongoid::Observer
       recipients = []
       recipients << channel_partner.manager if channel_partner.manager.present?
       recipients << channel_partner.manager.manager if channel_partner.manager.try(:manager).present?
-      if template.present?
+      if template.present? && recipients.present?
         email = Email.create!({
           booking_portal_client_id: channel_partner.associated_user.booking_portal_client_id,
           email_template_id: template.id,
