@@ -617,6 +617,8 @@ class User
         custom_scope = { "$or": [{ role: 'cp', _id: {"$in": cp_ids} }, { role: 'channel_partner', manager_id: {"$in": cp_ids} }] }
       elsif user.role?('cp')
         custom_scope = { role: 'channel_partner', manager_id: user.id }
+      elsif user.role?('billing_team')
+        custom_scope = { role: 'channel_partner' }
       elsif user.role?('admin')
         custom_scope = { role: { "$ne": 'superadmin' } }
       end

@@ -22,11 +22,11 @@ class UserPolicy < ApplicationPolicy
   end
 
   def resend_confirmation_instructions?
-    index?
+    edit?
   end
 
   def resend_password_instructions?
-    index?
+    edit?
   end
 
   def export?
