@@ -5,3 +5,7 @@
 <% if policy([:admin, cp_lead_activity]).edit? %>
   <%= link_to t('controller.cp_lead_activities.edit'), edit_admin_cp_lead_activity_path(cp_lead_activity), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
+
+<% if policy([:admin, cp_lead_activity]).asset_create? %>
+  <%= link_to Asset.model_name.human(count: 2), admin_cp_lead_activity_path(cp_lead_activity,'remote-state': assetables_path(assetable_type: cp_lead_activity.class.model_name.i18n_key.to_s, assetable_id: cp_lead_activity.id) ), class: "dropdown-item" %>
+<% end %>

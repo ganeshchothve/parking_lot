@@ -943,6 +943,10 @@ en:
         certificate_html: 'Project certificates'
         brochure_html: 'Project Brochure preferably in PDF'
         unit_selection_filter_image_html: 'Web compatible image - to be displayed on apartment search page'
+      cp_lead_activity/file_types:
+        sitevisit_form: 'Site Visit Form'
+      cp_lead_activity/help_text:
+        sitevisit_form_html: ''
 
       bulk_upload_report/file_types:
         receipts_status_update: 'Receipt Status Bulk Update'

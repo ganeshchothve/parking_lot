@@ -5,6 +5,7 @@ class CpLeadActivity
 
   COUNT_STATUS = %w(fresh_lead active_in_same_cp no_count accompanied_credit accompanied_count_to_cp count_given)
   LEAD_STATUS = %w(already_exists registered)
+  DOCUMENT_TYPES = %w[sitevisit_form]
 
   field :registered_at, type: Date
   field :count_status, type: String
@@ -16,6 +17,7 @@ class CpLeadActivity
 
   belongs_to :user
   belongs_to :lead
+  has_many :assets, as: :assetable
 
   default_scope -> { desc(:created_at) }
   scope :filter_by_count_status, ->(status) { where(count_status: status) }
