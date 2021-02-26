@@ -7,7 +7,7 @@ module DatabaseSeeds
             <div class="card-body">
               <p>
                 <% url = Rails.application.routes.url_helpers %>
-                Invoice #<%= self.number %> - <td><a href="<%= url.admin_invoice_url(self) %>">link</a></td>
+                Invoice #<a href="<%= url.admin_invoice_url(self) %>" target="_blank"><%= self.number %></a>
               </p>
             </div>
           </div>
@@ -18,7 +18,7 @@ module DatabaseSeeds
             <div class="card-body">
             <% url = Rails.application.routes.url_helpers %>
               <p>
-                Invoice #<%= self.number %> for <%= self.booking_detail.name %> is approved - <%= link_to "Invoice", url.admin_invoice_path(self) %>
+                Invoice #<a href="<%= url.admin_invoice_url(self) %>" target="_blank"><%= self.number %></a> for <%= self.booking_detail.name %> is approved.
               </p>
             </div>
           </div>
@@ -29,7 +29,7 @@ module DatabaseSeeds
             <div class="card-body">
             <% url = Rails.application.routes.url_helpers %>
               <p>
-                Invoice #<%= self.number %> for <%= self.booking_detail.name %> is paid - Please find the payment details <%= link_to "here", url.admin_invoice_path(self) %>
+                Invoice #<%= self.number %> for <%= self.booking_detail.name %> is paid - Please find the payment details <a href="<%= url.admin_invoice_url(self) %>" target="_blank">here</a>
               </p>
             </div>
           </div>
@@ -40,7 +40,7 @@ module DatabaseSeeds
             <div class="card-body">
             <% url = Rails.application.routes.url_helpers %>
               <p>
-                Invoice #<%= link_to self.number, url.admin_invoice_path(self) %> for <%= self.booking_detail.name %> has been rejected with following reason:<br>
+                Invoice #<a href="<%= url.admin_invoice_url(self) %>" target="_blank"><%= self.number %></a> for <%= self.booking_detail.name %> has been rejected with following reason:<br>
                 <%= self.rejection_reason %>
               </p>
             </div>
