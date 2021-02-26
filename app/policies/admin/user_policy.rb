@@ -2,7 +2,7 @@ class Admin::UserPolicy < UserPolicy
   # def resend_confirmation_instructions? def resend_password_instructions? def export? def update_password? def update? def create? from UserPolicy
 
   def index?
-    !(user.buyer? || user.role.in?(%w(channel_partner billing_team)))
+    !(user.buyer? || user.role.in?(%w(channel_partner)))
   end
 
   def new?
@@ -19,6 +19,8 @@ class Admin::UserPolicy < UserPolicy
         record.buyer? || record.role?('cp') || record.active_channel_partner?
       elsif user.role?('cp')
         record.buyer? || record.active_channel_partner?
+      elsif user.role?('billing_team')
+        false
       elsif !user.buyer?
         record.buyer?
       end
@@ -28,7 +30,7 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def edit?
-    super || new?
+    super || %w[admin superadmin].include?(user.role) #new?
   end
 
   def confirm_user?

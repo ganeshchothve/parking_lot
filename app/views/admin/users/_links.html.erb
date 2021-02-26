@@ -36,9 +36,9 @@
   <%= link_to t('helpers.new.link_name', model: Note.model_name.human), new_notable_path(notable_type: user.class.model_name.i18n_key.to_s, notable_id: user.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 
-<% if !user.confirmed? && user.confirmation_token.present? %>
+<% if !user.confirmed? && user.confirmation_token.present? && policy([:admin, user]).resend_confirmation_instructions? %>
   <%= link_to t('controller.users.resend_confirmation_instructions.link_name'), resend_confirmation_instructions_admin_user_path(user), class: "dropdown-item" %>
-<% else %>
+<% elsif policy([:admin, user]).resend_password_instructions? %>
   <%= link_to t('controller.users.resend_password_instructions.link_name'), resend_password_instructions_admin_user_path(user), class: "dropdown-item" %>
   <% if policy([:admin, user]).send_payment_link? %>
     <%# link_to 'Send Payment link', send_payment_link_admin_user_path(user), class: "dropdown-item" %>

@@ -2,27 +2,50 @@ module DatabaseSeeds
   module EmailTemplates
     module Invoice
       def self.seed(project_id, client_id)
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "Invoice", name: "invoice_pending_approval", subject: "Invoice for <%= self.booking_detail.name %> has been raised", content: '
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "Invoice", name: "invoice_pending_approval", subject: "Invoice #<%= self.number %> for <%= self.booking_detail.name %> has been sent for approval", content: '
           <div class="card w-100">
             <div class="card-body">
               <p>
                 <% url = Rails.application.routes.url_helpers %>
-                Invoice - <td><a href = "<%= url.admin_invoice_url(self) %>">link</a></td>
+                Invoice #<a href="<%= url.admin_invoice_url(self) %>" target="_blank"><%= self.number %></a>
               </p>
             </div>
           </div>
         ') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "invoice_pending_approval").blank?
 
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "Invoice", name: "invoice_approved", subject: "Invoice for <%= self.booking_detail.name %> has been approved", content: '
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "Invoice", name: "invoice_approved", subject: "Invoice #<%= self.number %> for <%= self.booking_detail.name %> has been approved", content: '
           <div class="card w-100">
             <div class="card-body">
             <% url = Rails.application.routes.url_helpers %>
               <p>
-                Invoice for <%= self.booking_detail.name %> is approved - <%= link_to "Invoice",  url.admin_invoice_path(self) %>
+                Invoice #<a href="<%= url.admin_invoice_url(self) %>" target="_blank"><%= self.number %></a> for <%= self.booking_detail.name %> is approved.
               </p>
             </div>
           </div>
         ') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "invoice_approved").blank?
+
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "Invoice", name: "invoice_paid", subject: "Invoice #<%= self.number %> for <%= self.booking_detail.name %> has been paid", content: '
+          <div class="card w-100">
+            <div class="card-body">
+            <% url = Rails.application.routes.url_helpers %>
+              <p>
+                Invoice #<%= self.number %> for <%= self.booking_detail.name %> is paid - Please find the payment details <a href="<%= url.admin_invoice_url(self) %>" target="_blank">here</a>
+              </p>
+            </div>
+          </div>
+        ') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "invoice_paid").blank?
+
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "Invoice", name: "invoice_rejected", subject: "Invoice #<%= self.number %> for <%= self.booking_detail.name %> has been rejected", content: '
+          <div class="card w-100">
+            <div class="card-body">
+            <% url = Rails.application.routes.url_helpers %>
+              <p>
+                Invoice #<a href="<%= url.admin_invoice_url(self) %>" target="_blank"><%= self.number %></a> for <%= self.booking_detail.name %> has been rejected with following reason:<br>
+                <%= self.rejection_reason %>
+              </p>
+            </div>
+          </div>
+        ') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "invoice_rejected").blank?
 
         Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "Invoice", name: "invoice_pending_approvals_list", subject: "Pending Invoices for approval", content: '
           <div class="card w-100">

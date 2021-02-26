@@ -1,7 +1,7 @@
 class Invoice
   include Mongoid::Document
   include Mongoid::Timestamps
-  include NumberIncrementor
+  #include NumberIncrementor
   include InsertionStringMethods
   include InvoiceStateMachine
   extend FilterByCriteria
@@ -19,30 +19,32 @@ class Invoice
   field :ladder_stage, type: Integer
   field :gst_amount, type: Float, default: 0.0
   field :net_amount, type: Float
+  field :number, type: String
 
   belongs_to :project
   belongs_to :booking_detail
-  belongs_to :incentive_scheme
+  #belongs_to :incentive_scheme
   belongs_to :manager, class_name: 'User'
   has_one :incentive_deduction
   has_many :assets, as: :assetable
   embeds_one :cheque_detail
   embeds_one :payment_adjustment, as: :payable
 
-  validates :ladder_id, :ladder_stage, presence: true
+  #validates :ladder_id, :ladder_stage, presence: true
   validates :rejection_reason, presence: true, if: :rejected?
   validates :comments, presence: true, if: proc { pending_approval? && status_was == 'rejected' }
-  validates :booking_detail_id, uniqueness: { scope: [:incentive_scheme_id, :ladder_id] }
+  #validates :booking_detail_id, uniqueness: { scope: [:incentive_scheme_id, :ladder_id] }
   validates :amount, numericality: { greater_than: 0 }
   validates :gst_amount, numericality: { greater_than_or_equal_to: 0 }
   validates :net_amount, numericality: { greater_than: 0 }, if: :approved?
-  validates :cheque_detail, presence: true, if: :approved?
+  validates :cheque_detail, presence: true, if: :paid?
   validates :cheque_detail, copy_errors_from_child: true, if: :cheque_detail?
 
   delegate :name, to: :project, prefix: true, allow_nil: true
   delegate :name, to: :manager, prefix: true, allow_nil: true
-  delegate :name, to: :incentive_scheme, prefix: true, allow_nil: true
+  #delegate :name, to: :incentive_scheme, prefix: true, allow_nil: true
 
+  scope :filter_by_number, ->(number) { where(number: number) }
   scope :filter_by_status, ->(status) { where(status: status) }
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
   scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in": project_ids}) : all }
@@ -80,21 +82,18 @@ class Invoice
       custom_scope = {}
       if params[:booking_detail_id].blank? && !user.buyer?
         if user.role?('channel_partner')
-          custom_scope = { booking_detail_id: { '$in': BookingDetail.in(lead_id: Lead.where(manager_id: user.id).distinct(:id)).distinct(:id) } }
+          custom_scope = { manager_id: user.id }
         elsif user.role?('cp_admin')
           cp_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
           channel_partner_ids = User.where(role: 'channel_partner', manager_id: {"$in": cp_ids}).distinct(:id)
-          custom_scope = { manager_id: { "$in": channel_partner_ids } }
+          custom_scope = { manager_id: { "$in": channel_partner_ids }, status: { '$nin': %w(draft) } }
         elsif user.role?('cp')
           channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
-          custom_scope = { booking_detail_id: { "$in": BookingDetail.in(lead_id: Lead.in(referenced_manager_ids: channel_partner_ids).distinct(:id)).distinct(:id) } }
-        elsif user.role?('billing_team')
-          custom_scope = { status: { '$ne': 'draft' } }
+          custom_scope = { manager_id: { "$in": channel_partner_ids } }
         end
       end
       if params[:booking_detail_id].present?
         custom_scope = { booking_detail_id: params[:booking_detail_id] }
-        custom_scope[:status] = { '$ne': 'draft' } if user.role?('billing_team')
       end
       custom_scope = { booking_detail_id: { '$in': user.booking_details.distinct(:id) } } if user.buyer?
       custom_scope
@@ -102,8 +101,8 @@ class Invoice
 
     def user_based_available_statuses(user)
       if user.present?
-        if user.role?('billing_team')
-          %w[pending_approval approved rejected]
+        if user.role?('cp_admin')
+          Invoice.aasm.states.map(&:name) - [:draft]
         else
           Invoice.aasm.states.map(&:name)
         end

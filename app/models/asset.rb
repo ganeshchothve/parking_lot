@@ -45,7 +45,7 @@ class Asset
 
   def check_asset_validation
     case reload.assetable
-    when IncentiveDeduction
+    when IncentiveDeduction, Invoice
       unless assetable.draft? || assetable.assets.reject(&:marked_for_destruction?).count > 0
         errors.add(:base, "At least 1 proof is required in pending approval.")
         false

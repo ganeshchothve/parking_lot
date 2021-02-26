@@ -20,7 +20,7 @@ class Admin::IncentiveDeductionPolicy < IncentiveDeductionPolicy
   end
 
   def change_state?
-    user.role.in?(%w(billing_team)) && record.pending_approval?
+    user.role.in?(%w(cp_admin billing_team)) && record.pending_approval?
   end
 
   def asset_create?
@@ -33,6 +33,7 @@ class Admin::IncentiveDeductionPolicy < IncentiveDeductionPolicy
     when 'cp_admin'
       attributes += [:comments]
       attributes += [:amount] if record.new_record? && !record.invoice.status.in?(%w(approved rejected))
+      attributes += [:event] if record.pending_approval?
     when 'billing_team'
       attributes += [:event] if record.pending_approval?
     end

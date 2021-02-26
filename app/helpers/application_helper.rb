@@ -1,10 +1,10 @@
 module ApplicationHelper
   def global_labels
-    t('global').with_indifferent_access
+    I18n.t('global').with_indifferent_access
   end
 
   def global_label(key, params={})
-    t("global.#{key}", params)
+    I18n.t("global.#{key}", params)
   end
 
   def number_to_indian_currency(number, currency = nil)

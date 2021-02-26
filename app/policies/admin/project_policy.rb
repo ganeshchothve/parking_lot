@@ -18,7 +18,7 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def show?
-    update?
+    index?
   end
 
   def create?

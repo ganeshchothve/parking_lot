@@ -1,6 +1,6 @@
 class Admin::BookingDetails::InvoicesController < AdminController
   before_action :set_booking_detail
-  before_action :set_invoice, except: :index
+  before_action :set_invoice, except: [:index, :create]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: [:index]
 
@@ -10,6 +10,24 @@ class Admin::BookingDetails::InvoicesController < AdminController
                        .paginate(page: params[:page] || 1, per_page: params[:per_page])
     respond_to do |format|
       format.html { render template: (@booking_detail.present? ? 'booking_details/invoices/index' : 'admin/invoices/index') }
+    end
+  end
+
+  def new
+    render 'admin/invoices/new', layout: false
+  end
+
+  def create
+    @invoice = @booking_detail.invoices.build(project: @booking_detail.project, manager: @booking_detail.manager, raised_date: Time.now)
+    @invoice.assign_attributes(permitted_attributes([current_user_role_group, @invoice]))
+    respond_to do |format|
+      if @invoice.save
+        format.html { redirect_to request.referer, notice: t("controller.invoices.status_message.#{@invoice.status}") }
+        format.json { render json: @invoice, notice: t("controller.invoices.status_message.#{@invoice.status}"), status: :created, location: admin_invoices_path("remote-state": assetables_path(assetable_type: @invoice.class.model_name.i18n_key.to_s, assetable_id: @invoice.id, asset_header: t('controller.invoices.asset_create.link_name'))) }
+      else
+        format.html { redirect_to request.referer, alert: @invoice.errors.full_messages.uniq }
+        format.json { render json: { errors: @invoice.errors.full_messages.uniq }, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -71,12 +89,16 @@ class Admin::BookingDetails::InvoicesController < AdminController
   end
 
   def set_invoice
-    @invoice = Invoice.where(id: params[:id]).first
+    if params[:action] == 'new'
+      @invoice = @booking_detail.invoices.build
+    else
+      @invoice = Invoice.where(id: params[:id]).first
+    end
     redirect_to dashboard_path, alert: 'Invoice not found' unless @invoice.present?
   end
 
   def authorize_resource
-    if params[:action] == 'index'
+    if params[:action].in?(%w(index create))
       authorize [current_user_role_group, Invoice]
     elsif params[:action].in?(%w(change_state edit update raise_invoice update_gst))
       authorize [current_user_role_group, @invoice]
