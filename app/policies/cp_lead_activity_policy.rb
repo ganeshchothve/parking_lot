@@ -4,4 +4,12 @@ class CpLeadActivityPolicy < ApplicationPolicy
   def index?
     false
   end
+
+  def permitted_attributes(params = {})
+    attributes = super || []
+    attributes += [:sitevisit_status, :sitevisit_date]
+    if user.role.in?(%w(admin cp_admin))
+      attributes += [:count_status, :expiry_date]
+    end
+  end
 end

@@ -14,11 +14,4 @@ class Admin::CpLeadActivityPolicy < CpLeadActivityPolicy
   def show?
     true
   end
-
-  def permitted_attributes(params = {})
-    attributes = super || []
-    if user.role.in?(%w(admin cp_admin))
-      attributes += [:count_status, :expiry_date]
-    end
-  end
 end

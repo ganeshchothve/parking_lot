@@ -18,19 +18,28 @@ class Admin::CpLeadActivitiesController < AdminController
   end
 
   def update
-    @cp_lead_activity.assign_attributes(permitted_attributes([current_user_role_group, @cp_lead_activity]))
     respond_to do |format|
-      if @cp_lead_activity.save
-        format.html { redirect_to request.referrer || admin_cp_lead_activities_path, notice: 'Lead Activity updated successfully.' }
-        format.json { render json: @cp_lead_activity }
+      if validity_check?
+        @cp_lead_activity.assign_attributes(permitted_attributes([current_user_role_group, @cp_lead_activity]))
+        if @cp_lead_activity.save
+          format.html { redirect_to request.referrer || admin_cp_lead_activities_path, notice: 'Lead Activity updated successfully.' }
+          format.json { render json: @cp_lead_activity }
+        else
+          format.html { render :edit }
+          format.json { render json: { errors: @cp_lead_activity.errors.full_messages.uniq }, status: :unprocessable_entity }
+        end
       else
         format.html { render :edit }
-        format.json { render json: { errors: @cp_lead_activity.errors.full_messages.uniq }, status: :unprocessable_entity }
+        format.json { render json: { errors: "Lead validity can not be updated. Lead is active for #{@cp_lead_activity.lead.active_cp_lead_activities.first.try(:user).try(:name)}" }, status: :unprocessable_entity }
       end
     end
   end
 
   private
+
+  def validity_check?
+    @cp_lead_activity.lead.active_cp_lead_activities.blank?
+  end
 
   def set_cp_lead_activity
     @cp_lead_activity = CpLeadActivity.find(params[:id])
