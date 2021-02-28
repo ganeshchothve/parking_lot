@@ -18,7 +18,11 @@
         </div>
       </section>
       <div class="separate-line container"></div>
-      <%= render 'admin/leads/cp_lead_activities', cp_lead_activities: @cp_lead_activity.lead.cp_lead_activities.paginate(page: 1) %>
+      <%
+        matcher = {}
+        matcher = { user_id: current_user.id } if current_user.role?(:channel_partner)
+      %>
+      <%= render 'admin/leads/cp_lead_activities', cp_lead_activities: @cp_lead_activity.lead.cp_lead_activities.where(matcher).paginate(page: 1) %>
     </div>
   </div>
 </div>

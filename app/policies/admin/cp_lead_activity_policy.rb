@@ -16,6 +16,6 @@ class Admin::CpLeadActivityPolicy < CpLeadActivityPolicy
   end
 
   def asset_create?
-    user.role?(:channel_partner)
+    true
   end
 end

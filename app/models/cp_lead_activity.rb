@@ -6,6 +6,7 @@ class CpLeadActivity
   COUNT_STATUS = %w(fresh_lead active_in_same_cp no_count accompanied_credit accompanied_count_to_cp count_given)
   LEAD_STATUS = %w(already_exists registered)
   DOCUMENT_TYPES = %w[sitevisit_form]
+  SITEVISIT_STATUS = %w[cancelled conducted delivered dropped missed pending read scheduled undelivered]
 
   field :registered_at, type: Date
   field :count_status, type: String
@@ -13,6 +14,7 @@ class CpLeadActivity
   field :expiry_date, type: Date
   field :sitevisit_status, type: String
   field :sitevisit_date, type: String
+  field :remarks, type: Hash, default: {}
 
 
   belongs_to :user
@@ -34,6 +36,10 @@ class CpLeadActivity
     custom_scope = { user_id: user.id } if user.role?('channel_partner')
     custom_scope = { user_id: { '$in': User.where(role: 'channel_partner', manager_id: user.id).distinct(:id) } } if user.role?(:cp_admin)
     custom_scope
+  end
+
+  def lead_validity_period
+    (self.expiry_date > Date.today) ? "#{(self.expiry_date - Date.today).to_i} Days" : '0 Days'
   end
 
   private

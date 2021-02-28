@@ -15,19 +15,19 @@
             <%= label_tag "fltrs", ChannelPartner.model_name.human %>
             <%= select_tag "fltrs[user_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(_id: params[:fltrs][:user_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'channel_partner' }}}} %>
           </div>
-          <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-            <%= label_tag "fltrs", t('mongoid.attributes.cp_lead_activity.count_status') %>
-            <%= select_tag "fltrs[count_status]", options_for_select(CpLeadActivity::COUNT_STATUS.collect{|x| [x.titleize, x]}, (params[:fltrs].present? ? params[:fltrs][:count_status] : "")), {prompt: "Select", class: "selectize"} %>
-          </div>
-          <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-            <%= label_tag "fltrs", t('mongoid.attributes.cp_lead_activity.lead_status') %>
-            <%= select_tag "fltrs[lead_status]", options_for_select(CpLeadActivity::LEAD_STATUS.collect{|x| [x.titleize, x]}, (params[:fltrs].present? ? params[:fltrs][:lead_status] : "")), {prompt: "Select", class: "selectize"} %>
-          </div>
-          <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
-            <%= label_tag "fltrs", t('mongoid.attributes.cp_lead_activity.expiry_date') %>
-            <%= text_field_tag "fltrs[expiry_date]", (params.dig(:fltrs, :expiry_date).present? ? params[:fltrs][:expiry_date] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
-          </div>
         <% end %>
+        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.cp_lead_activity.count_status') %>
+          <%= select_tag "fltrs[count_status]", options_for_select(CpLeadActivity::COUNT_STATUS.collect{|x| [x.titleize, x]}, (params[:fltrs].present? ? params[:fltrs][:count_status] : "")), {prompt: "Select", class: "selectize"} %>
+        </div>
+        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.cp_lead_activity.lead_status') %>
+          <%= select_tag "fltrs[lead_status]", options_for_select(CpLeadActivity::LEAD_STATUS.collect{|x| [x.titleize, x]}, (params[:fltrs].present? ? params[:fltrs][:lead_status] : "")), {prompt: "Select", class: "selectize"} %>
+        </div>
+        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.cp_lead_activity.expiry_date') %>
+          <%= text_field_tag "fltrs[expiry_date]", (params.dig(:fltrs, :expiry_date).present? ? params[:fltrs][:expiry_date] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
+        </div>
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs[project_id]", t('mongoid.attributes.lead.project_id'), class: "control-label" %>
           <%= select_tag "fltrs[project_id]", options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:project_id] : "")), {prompt: "Select", class: "selectize"} %>

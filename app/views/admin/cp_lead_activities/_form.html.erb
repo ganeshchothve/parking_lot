@@ -15,7 +15,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <%= f.label :sitevisit_status, class: 'control-label' %>
-                <%= f.text_field :sitevisit_status, class: 'form-control', disabled: !policy(@cp_lead_activity).editable_field?("sitevisit_status") %>
+                <%= f.select :sitevisit_status, CpLeadActivity::SITEVISIT_STATUS.collect{|x| [x.titleize, x] }, {prompt: "Select"}, class: 'selectize', disabled: !policy(@cp_lead_activity).editable_field?("sitevisit_status") %>
               </div>
             </div>
             <div class="col-md-6">

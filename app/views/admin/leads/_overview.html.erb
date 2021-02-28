@@ -24,6 +24,12 @@
         <div><%= lead.email || '-' %></div>
       </div>
     </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="small"><%= t('mongoid.attributes.lead.lead_validity_period') %></label>
+        <div><%= lead.lead_validity_period %></div>
+      </div>
+    </div>
     <% if ((current_user.role?(:channel_partner) && lead.active_cp_lead_activities.where(user_id: current_user.id).present?) || !current_user.role?(:channel_partner))  %>
       <div class="col-md-4">
         <div class="form-group">
@@ -35,12 +41,6 @@
         <div class="form-group">
           <label class="small"><%= t('mongoid.attributes.lead.selldo_lead_registration_date') %></label>
           <div><%= I18n.l(Date.parse(lead.selldo_lead_registration_date)) rescue '-' %></div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="small"><%= t('mongoid.attributes.lead.lead_validity_period') %></label>
-          <div><%= lead.lead_validity_period %></div>
         </div>
       </div>
       <div class="col-md-4">
@@ -61,24 +61,35 @@
           <div><%= lead.sitevisit_status.try(:titleize) || '-' %></div>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="small"><%= t('mongoid.attributes.lead.lead_status') %></label>
-          <div><%= lead.cp_lead_activities.first.try(:lead_status).try(:titleize) || '-' %></div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="small"><%= t('mongoid.attributes.lead.count_status') %></label>
-          <div><%= lead.cp_lead_activities.first.try(:count_status).try(:titleize) || '-' %></div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="small"><%= t('mongoid.attributes.lead.remarks') %></label>
-          <div><%= lead.cp_lead_activities.first.try(:remarks).try(:titleize) || '-' %></div>
-        </div>
-      </div>
     <% end %>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="small"><%= t('mongoid.attributes.lead.lead_status') %></label>
+        <div><%= lead.cp_lead_activities.first.try(:lead_status).try(:titleize) || '-' %></div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="small"><%= t('mongoid.attributes.lead.count_status') %></label>
+        <div><%= lead.cp_lead_activities.first.try(:count_status).try(:titleize) || '-' %></div>
+      </div>
+    </div>
+  </div>
+  <div class="row pd-box">
+    <div class="col-md-12">
+      <div class="form-group">
+        <label class="small"><%= t('mongoid.attributes.lead.remarks') + "/" + t('mongoid.attributes.lead.feedbacks') %></label>
+        <% remarks = lead.cp_lead_activities.first.try(:remarks) %>
+        <% if remarks.present? %>
+          <ol>
+            <% remarks.each do |k, v| %>
+              <li><%= v['content'] %></li>
+            <% end %>
+          </ol>
+        <% else %>
+          -
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>
