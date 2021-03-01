@@ -14,7 +14,7 @@ class Api::V1::UserRequestsController < ApisController
   private
 
   def reference_id_present?
-    if params.dig(:user_request, :booking_detail_id).blank? && params.dig(:user_request, :receipt_id).blank?
+    if params.dig(:user_request, :booking_detail_id).blank? || params.dig(:user_request, :receipt_id).blank?
       render json: { errors: ['Booking detail id or Receipt id is required for cancellation'] }, status: :bad_request and return
     end
   end
