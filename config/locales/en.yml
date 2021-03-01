@@ -1130,7 +1130,7 @@ en:
       generate_invoice:
         link_name: 'Print Invoice'
       asset_create:
-        link_name: 'Upload Invoice Copy'
+        link_name: 'Uploaded Invoice Copy'
       status_message:
         draft: 'Invoice raised successfully'
         pending_approval: 'Invoice successfully raised'
