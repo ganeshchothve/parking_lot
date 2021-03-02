@@ -82,13 +82,13 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
   config.action_mailer.smtp_settings = {
-    user_name: "amuratech",
-    password: "tech0liX",
-    domain: "amuratech.com",
-    address: "smtp.sendgrid.net",
-    port: 587,
-    authentication: :plain,
-    enable_starttls_auto: true
+    user_name: ENV_CONFIG[:smtp][:user_name],
+    password: ENV_CONFIG[:smtp][:password],
+    domain: ENV_CONFIG[:smtp][:domain],
+    address: ENV_CONFIG[:smtp][:address],
+    port: ENV_CONFIG[:smtp][:port],
+    authentication: ENV_CONFIG[:smtp][:authentication],
+    enable_starttls_auto: ENV_CONFIG[:smtp][:enable_starttls_auto]
   }
 
   # Use a different logger for distributed setups.
