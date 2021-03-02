@@ -21,7 +21,7 @@
             <div class="col-md-6">
               <div class="form-group position-relative">
                 <%= f.label :sitevisit_date %>
-                <% date = (f.object.sitevisit_date.present? ? f.object.sitevisit_date.strftime("%d/%m/%Y") : "") %>
+                <% date = (f.object.sitevisit_date.present? ? Date.parse(f.object.sitevisit_date).strftime("%d/%m/%Y") : "") %>
                 <%= f.text_field :sitevisit_date, class: 'form-control datepicker', type:'text', data: {"default-date": date}, value: date, disabled: !policy(@cp_lead_activity).editable_field?("sitevisit_date") %>
               </div>
             </div>

@@ -973,7 +973,7 @@ en:
   controller:
     cp_lead_activities:
       index:
-        link_name: 'LeadActivities'
+        link_name: 'Lead Activities'
       show:
         link_name: 'Show Lead Activities'
     api_logs:

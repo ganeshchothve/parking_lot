@@ -33,14 +33,8 @@ module CpLeadActivityRegister
     lead.lead_status =  lead_details[:lead_already_exists] == 'true' ? "already_exists" : "registered"
     lead.lead_stage = lead_details[:stage]
     lead.lead_lost_date = (Time.zone.parse(lead_details[:stage_changed_on]) rescue nil) if lead.lead_stage.in?(%w(lost unqualified))
-
-    if lead_details[:last_sv_conducted_on].present?
-      lead.sitevisit_status = "conducted"
-      lead.sitevisit_date = (Time.zone.parse(lead_details[:last_sv_conducted_on]) rescue nil)
-    elsif lead_details[:next_site_visit_scheduled_on].present?
-      lead.sitevisit_status = "scheduled"
-      lead.sitevisit_date = (Time.zone.parse(lead_details[:next_site_visit_scheduled_on]) rescue nil)
-    end
+    lead.sitevisit_status = lead_details[:last_sv_status]
+    lead.sitevisit_date = (Time.zone.parse(lead_details[:last_sv_date]) rescue nil)
     lead.save
   end
 end

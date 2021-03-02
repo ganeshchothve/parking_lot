@@ -8,7 +8,7 @@ class Admin::CpLeadActivityPolicy < CpLeadActivityPolicy
   end
 
   def edit?
-    update?
+    update? && can_extend_validity? && record.count_status != 'no_count'
   end
 
   def show?
@@ -17,5 +17,11 @@ class Admin::CpLeadActivityPolicy < CpLeadActivityPolicy
 
   def asset_create?
     true
+  end
+
+  private
+
+  def can_extend_validity?
+    record.lead.active_cp_lead_activities.blank?
   end
 end

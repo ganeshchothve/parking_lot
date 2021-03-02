@@ -19,7 +19,8 @@ class Admin::CpLeadActivitiesController < AdminController
 
   def update
     respond_to do |format|
-      if validity_check?
+      # TODO : : Still time of QA not checking
+      if true#validity_check?
         @cp_lead_activity.assign_attributes(permitted_attributes([current_user_role_group, @cp_lead_activity]))
         if @cp_lead_activity.save
           format.html { redirect_to request.referrer || admin_cp_lead_activities_path, notice: 'Lead Activity updated successfully.' }

@@ -6,7 +6,7 @@ class CpLeadActivity
   COUNT_STATUS = %w(fresh_lead active_in_same_cp no_count accompanied_credit accompanied_count_to_cp count_given)
   LEAD_STATUS = %w(already_exists registered)
   DOCUMENT_TYPES = %w[sitevisit_form]
-  SITEVISIT_STATUS = %w[cancelled conducted delivered dropped missed pending read scheduled undelivered]
+  SITEVISIT_STATUS = %w[scheduled conducted]
 
   field :registered_at, type: Date
   field :count_status, type: String
