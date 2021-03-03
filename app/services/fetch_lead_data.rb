@@ -6,7 +6,7 @@ module FetchLeadData
     if site_visits.blank?
       [nil, nil]
     else
-      site_visit = site_visits.select { |sv| sv['status'] == 'conducted' }[0]
+      site_visit = site_visits.select { |sv| sv['site_visit']['status'] == 'conducted' }[0]
       if site_visit.present?
         [site_visit['site_visit']['conducted_on'], site_visit['site_visit']['status']]
       else

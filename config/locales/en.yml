@@ -1138,7 +1138,7 @@ en:
       new:
         link_name: 'Add New ChannelPartner'
       index:
-        link_name: 'Channel Partner Applications'
+        link_name: 'Channel Partners'
       edit:
         link_name: 'Edit Application'
       show:

@@ -65,6 +65,10 @@
       </li>
     <% end %>
 
+    <% if policy([:admin, ChannelPartner]).index? %>
+      <%= active_link_to t('controller.channel_partners.index.link_name'), channel_partners_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+    <% end %>
+
     <% if current_user.role == 'channel_partner' %>
       <% channel_partner = current_user.associated_channel_partner %>
       <li class="nav-item d-none d-lg-block">

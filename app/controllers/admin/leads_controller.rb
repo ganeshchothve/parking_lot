@@ -38,6 +38,22 @@ class Admin::LeadsController < AdminController
     end
   end
 
+  def sync_notes
+    @lead.remarks = FetchLeadData.fetch_notes(@lead.lead_id, @lead.user.booking_portal_client)
+    @lead.save
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def sync_site_visit
+    @lead.sitevisit_date, @lead.sitevisit_status = FetchLeadData.site_visit_status_and_date(@lead.lead_id, @lead.user.booking_portal_client, @lead.project.selldo_id.to_s)
+    @lead.save
+    respond_to do |format|
+      format.js
+    end
+  end
+
   private
 
   def set_lead

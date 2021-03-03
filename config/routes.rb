@@ -169,6 +169,10 @@ Rails.application.routes.draw do
     end
 
     resources :leads, only: [:index, :show, :edit, :update, :new, :create] do
+      member do
+        get 'sync_notes'
+        get 'sync_site_visit'
+      end
       resources :receipts, only: [:index, :new, :create, :edit, :update ] do
         get :resend_success, on: :member
         get :lost_receipt, on: :collection

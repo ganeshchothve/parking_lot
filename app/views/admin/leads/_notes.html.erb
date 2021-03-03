@@ -1,0 +1,40 @@
+<section class="notes my-4 mb-4">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 p-0 cursor-pointer" data-toggle="collapse" href="#collapseCpLeadNotes" role="button" aria-expanded="false" aria-controls="collapseCpLeadNotes">
+        <div class="table-title pt-1">
+          <h2 class="title text-dark icon-set icon-file-contract-black">
+            Feedbacks/Remarks
+          </h2>
+        </div>
+      </div>
+      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 p-0">
+        <div class="table-btn-set float-right pb-3">
+          <%= link_to "Sync Feedbacks", sync_notes_admin_lead_path(lead), class: "db-small-btn light-blue bg-white fn-400 p-2", remote: true %>
+          <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= lead.remarks.count %></button>
+        </div>
+      </div>
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 p-0 bg-white collapse show" id="collapseCpLeadNotes">
+        <div class="box-card relative">
+          <div class="row m-3">
+            <% if lead.remarks.blank? %>
+              <div class="col-md-12">
+                <div class="form-group">
+                  No records.
+                </div>
+              </div>
+            <% else %>
+              <% lead.remarks.each_with_index do |remark, i| %>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <%= "#{i + 1}. " + remark['note']['content'] %>
+                  </div>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
