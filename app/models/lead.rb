@@ -18,11 +18,12 @@ class Lead
   field :lead_stage, type: String
   field :lead_status, type: String
   field :lead_lost_date, type: String
-  field :sitevisit_status, type: String
-  field :sitevisit_date, type: String
+  field :sitevisit_status, type: String # synced from sell.do
+  field :sitevisit_date, type: String # synced from the sell.do
   field :selldo_lead_registration_date, type: String
   field :iris_confirmation, type: Boolean, default: false
   field :lead_id, type: String #TO DO - Change name to selldo_id and use it throughout the system in place of lead_id on user.
+  field :remarks, type: Array, default: [] # used to store the last five notes
 
   belongs_to :user
   belongs_to :manager, class_name: 'User', optional: true

@@ -36,7 +36,7 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
       :additional_name, :alternate_phone, :alternate_email, :company_type, :category, :source,
       :website, :region, :pan_number, :gstin_number, :aadhaar, :rera_id, :manager_id, :team_size,
       :rera_applicable, :gst_applicable, :nri, :experience,
-      :average_quarterly_business, expertise: [], developers_worked_for: [], address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes]
+      :average_quarterly_business, expertise: [], developers_worked_for: [], address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes, bank_detail_attributes: BankDetailPolicy.new(user, BankDetail.new).permitted_attributes]
 
     attributes += [third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes] if user.present?
 

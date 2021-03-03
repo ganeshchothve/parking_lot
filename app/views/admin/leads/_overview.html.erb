@@ -79,11 +79,11 @@
     <div class="col-md-12">
       <div class="form-group">
         <label class="small"><%= t('mongoid.attributes.lead.remarks') + "/" + t('mongoid.attributes.lead.feedbacks') %></label>
-        <% remarks = lead.cp_lead_activities.first.try(:remarks) %>
+        <% remarks = lead.remarks %>
         <% if remarks.present? %>
           <ol>
-            <% remarks.each do |k, v| %>
-              <li><%= v['content'] %></li>
+            <% remarks.each do |remark| %>
+              <li><%= remark['note']['content'] %></li>
             <% end %>
           </ol>
         <% else %>

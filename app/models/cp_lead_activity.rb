@@ -14,8 +14,6 @@ class CpLeadActivity
   field :expiry_date, type: Date
   field :sitevisit_status, type: String
   field :sitevisit_date, type: String
-  field :remarks, type: Hash, default: {}
-
 
   belongs_to :user
   belongs_to :lead
