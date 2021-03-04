@@ -49,7 +49,14 @@ Rails.application.routes.draw do
   namespace :admin do
 
     resources :api_logs, only: [:index]
-    resources :cp_lead_activities
+    resources :cp_lead_activities do
+      member do
+        get 'extend_validity'
+        patch 'update_extension'
+        get 'accompanied_credit'
+        patch 'update_accompanied_credit'
+      end
+    end
 
     resources :portal_stage_priorities, only: [:index] do
       patch :reorder, on: :collection

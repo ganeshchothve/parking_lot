@@ -43,6 +43,10 @@ en:
     agreement_value: 'AV'
 
   helpers:
+    extend_validity:
+      link_name: '%{model}'
+    accompanied_credit:
+      link_name: '%{model}'
     show:
       link_name: '%{model} Details'
     edit:

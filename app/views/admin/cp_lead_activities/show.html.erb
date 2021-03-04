@@ -18,7 +18,7 @@
         </div>
       </section>
        <!-- site visits data -->
-      <% if ((current_user.role?(:channel_partner) && lead.active_cp_lead_activities.where(user_id: current_user.id).present?) || !current_user.role?(:channel_partner)) %>
+      <% if ((current_user.role?(:channel_partner) && @cp_lead_activity.lead.active_cp_lead_activities.where(user_id: current_user.id).present?) || !current_user.role?(:channel_partner)) %>
         <div class="separate-line container"></div>
         <div class="lead_site_visit_section">
           <%= render 'admin/leads/site_visit', lead: @cp_lead_activity.lead %>

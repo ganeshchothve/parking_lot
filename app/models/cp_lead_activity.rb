@@ -40,6 +40,10 @@ class CpLeadActivity
     (self.expiry_date > Date.today) ? "#{(self.expiry_date - Date.today).to_i} Days" : '0 Days'
   end
 
+  def can_extend_validity?
+    self.lead.active_cp_lead_activities.blank? && self.count_status != 'no_count'
+  end
+
   private
 
   def authorize_resource

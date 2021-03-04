@@ -1,0 +1,36 @@
+<%= simple_form_for(@cp_lead_activity, local: true, url: update_accompanied_credit_admin_cp_lead_activity_path(@cp_lead_activity), remote: true, html: { novalidate: false, class: 'modal-remote-form validate-form', data: { 'resource-type': CpLeadActivity.model_name.human, type: :json }, id: 'cp_lead_activity_accompanied_form' } ) do |f| %>
+  <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-gradient-cd white">
+          <h3 class="title">
+            <%= t("helpers.#{action_name}.link_name", model: 'Accompnied - Count To CP') %>
+            </h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true" class="white">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <%= hidden_field_tag(:validity_period, '30') %>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group position-relative">
+                <label class="label-required">Site Visit Conducted Date</label>
+                <% date = (f.object.sitevisit_date.present? ? Date.parse(f.object.sitevisit_date).strftime("%d/%m/%Y") : "") %>
+                <%= f.text_field :sitevisit_date, class: 'form-control datepicker', type:'text', data: {"default-date": date, "max-date": Date.current.strftime("%d/%m/%Y")}, value: date, disabled: !policy(@cp_lead_activity).editable_field?("sitevisit_date"), required: true %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <%= f.submit "Save", class: 'btn btn-primary' %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+<script>
+  $(document).ready(function(){
+    FormInitializer.init($("#cp_lead_activity_accompanied_form"));
+  });
+</script>

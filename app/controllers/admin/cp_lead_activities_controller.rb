@@ -1,6 +1,6 @@
 class Admin::CpLeadActivitiesController < AdminController
   before_action :authenticate_user!
-  before_action :set_cp_lead_activity, only: %i[show edit update]
+  before_action :set_cp_lead_activity, except: %i[index]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: %i[index]
 
@@ -36,7 +36,66 @@ class Admin::CpLeadActivitiesController < AdminController
     end
   end
 
+  def extend_validity
+    render layout: false
+  end
+
+  def update_extension
+    respond_to do |format|
+      if validity_check?
+        extension_date = get_extension_date
+        params[:cp_lead_activity][:expiry_date] = extension_date
+        @cp_lead_activity.assign_attributes(permitted_attributes([current_user_role_group, @cp_lead_activity]))
+        if @cp_lead_activity.save
+          format.html { redirect_to request.referrer || admin_cp_lead_activities_path, notice: 'Lead Activity updated successfully.' }
+          format.json { render json: @cp_lead_activity }
+        else
+          format.html { render :extend_validity }
+          format.json { render json: { errors: @cp_lead_activity.errors.full_messages.uniq }, status: :unprocessable_entity }
+        end
+      else
+        format.html { render :extend_validity }
+        format.json { render json: { errors: "Lead validity can not be updated. Lead is active for #{@cp_lead_activity.lead.active_cp_lead_activities.first.try(:user).try(:name)}" }, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def accompanied_credit
+    render layout: false
+  end
+
+  def update_accompanied_credit
+    respond_to do |format|
+      if validity_check?
+        extension_date = get_extension_date
+        params[:cp_lead_activity][:expiry_date] = extension_date
+        params[:cp_lead_activity][:count_status] = 'accompanied_count_to_cp'
+        @cp_lead_activity.assign_attributes(permitted_attributes([current_user_role_group, @cp_lead_activity]))
+        if @cp_lead_activity.save
+          format.html { redirect_to request.referrer || admin_cp_lead_activities_path, notice: 'Lead Activity updated successfully.' }
+          format.json { render json: @cp_lead_activity }
+        else
+          format.html { render :edit }
+          format.json { render json: { errors: @cp_lead_activity.errors.full_messages.uniq }, status: :unprocessable_entity }
+        end
+      else
+        format.html { render :extend_validity }
+        format.json { render json: { errors: "Lead validity can not be updated. Lead is active for #{@cp_lead_activity.lead.active_cp_lead_activities.first.try(:user).try(:name)}" }, status: :unprocessable_entity }
+      end
+    end
+  end
+
   private
+
+  def get_extension_date
+    if params[:cp_lead_activity][:sitevisit_date].present?
+      extention_date = (Time.zone.parse(params[:cp_lead_activity][:sitevisit_date]) + params[:validity_period].to_i.days)
+    else
+      extention_date = (@cp_lead_activity.expiry_date + params[:validity_period].to_i.days)
+    end
+    extention_date = Date.current + params[:validity_period].to_i.days if extention_date < Date.current
+    extention_date.strftime('%d/%m/%Y')
+  end
 
   def validity_check?
     @cp_lead_activity.lead.active_cp_lead_activities.blank?
