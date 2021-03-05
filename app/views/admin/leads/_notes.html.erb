@@ -10,7 +10,9 @@
       </div>
       <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 p-0">
         <div class="table-btn-set float-right pb-3">
-          <%= link_to "Sync Feedbacks", sync_notes_admin_lead_path(lead), class: "db-small-btn light-blue bg-white fn-400 p-2", remote: true %>
+          <% if (%w[admin cp_admin].include?(current_user.role)) %>
+            <%= link_to "Sync Feedbacks", sync_notes_admin_lead_path(lead), class: "db-small-btn light-blue bg-white fn-400 p-2", remote: true %>
+          <% end %>
           <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= lead.remarks.count %></button>
         </div>
       </div>
