@@ -18,7 +18,7 @@
           <div class="row m-3">
             <div class="col-md-4">
               <div class="form-group">
-                <label class="small"><%= t('mongoid.attributes.lead.selldo_lead_id') %></label>
+                <label class="small"><%= t('mongoid.attributes.cp_lead_activity.selldo_lead_id') %></label>
                 <div><%= lead.lead_id|| '-' %></div>
               </div>
             </div>
@@ -36,13 +36,13 @@
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label class="small"><%= t('mongoid.attributes.lead.site_visit_date') %></label>
+                <label class="small"><%= t('mongoid.attributes.cp_lead_activity.site_visit_date') %></label>
                 <div><%= I18n.l(Date.parse(lead.sitevisit_date)) rescue '-' %></div>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label class="small"><%= t('mongoid.attributes.lead.site_visit_status') %></label>
+                <label class="small"><%= t('mongoid.attributes.cp_lead_activity.site_visit_status') %></label>
                 <div><%= lead.sitevisit_status.try(:titleize) || '-' %></div>
               </div>
             </div>

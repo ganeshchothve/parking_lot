@@ -900,9 +900,29 @@ en:
         direct: Direct
 
       lead:
+        name: 'Name'
+        phone: 'Phone'
+        email: 'Email'
         project_id: 'Project'
         manager_id: 'Partner / Manager / Added by'
         name_email_phone: 'Deal (Project Name)'
+        lead_validity_period: 'Lead Validity Period'
+        selldo_lead_registration_date: 'Sell Do Lead Registration Date'
+        selldo_lead_stage: 'SellDo Lead Stage'
+
+      cp_lead_activity:
+        lead_id: 'Lead Id'
+        selldo_lead_id: 'SellDo Lead Id'
+        project_id: 'Project'
+        channel_partner: 'Channel Partner'
+        count_status: 'Count Status'
+        lead_status: 'Lead Status'
+        expiry_remaining_days: 'Expiry Remaining Days'
+        registered_at: 'Registered At'
+        can_extend_validity: 'Can Extend Validity?'
+        expiry_date: 'Expiry Date'
+        sitevisit_date: 'Site Visit Date'
+        sitevisit_status: 'Site Visit Status'
 
       user/file_types:
         home_loan_application_form: 'Home Loan Application Form'

@@ -32,13 +32,13 @@
     </div>
     <div class="col-md-4">
       <div class="form-group">
-        <label class="small"><%= t('mongoid.attributes.lead.lead_status') %></label>
+        <label class="small"><%= t('mongoid.attributes.cp_lead_activity.lead_status') %></label>
         <div><%= cp_lead_activity.present? ? cp_lead_activity.lead_status.try(:titleize) : lead.cp_lead_activities.first.try(:lead_status).try(:titleize) || '-' %></div>
       </div>
     </div>
     <div class="col-md-4">
       <div class="form-group">
-        <label class="small"><%= t('mongoid.attributes.lead.count_status') %></label>
+        <label class="small"><%= t('mongoid.attributes.cp_lead_activity.count_status') %></label>
         <div><%= cp_lead_activity.present? ? cp_lead_activity.count_status.try(:titleize) : lead.cp_lead_activities.first.try(:count_status).try(:titleize) || '-' %></div>
       </div>
     </div>
