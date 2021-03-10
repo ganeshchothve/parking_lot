@@ -21,7 +21,7 @@
             <div class="col-md-6">
               <div class="form-group position-relative">
                 <label class="label-required">Site Visit Conducted On</label>
-                <% date = (f.object.sitevisit_date.present? ? Date.parse(f.object.sitevisit_date).strftime("%d/%m/%Y") : "") %>
+                <% date = (f.object.sitevisit_date.present? ? Time.zone.parse(f.object.sitevisit_date).strftime("%d/%m/%Y") : "") %>
                 <%= f.text_field :sitevisit_date, class: 'form-control datepicker', type:'text', data: {"default-date": date, "max-date": Date.current.strftime("%d/%m/%Y")}, value: date, disabled: !policy(@cp_lead_activity).editable_field?("sitevisit_date"), required: params[:validity_period] == '45' %>
               </div>
             </div>
@@ -44,6 +44,7 @@
         $('[name="cp_lead_activity[sitevisit_date]"]').val('');
         $('[name="cp_lead_activity[sitevisit_date]"]').attr("required", false);
       } else {
+        $('[name="cp_lead_activity[sitevisit_date]"]').val(moment(new Date()).format("DD/MM/YYYY"));
         $('[name="cp_lead_activity[sitevisit_date]"]').closest('.form-group').removeClass('hidden');
         $('[name="cp_lead_activity[sitevisit_date]"]').attr("required", true);
       }

@@ -119,12 +119,12 @@ class Lead
   end
 
   def active_cp_lead_activities
-    self.cp_lead_activities.where(expiry_date: { '$gte': Date.today })
+    self.cp_lead_activities.where(expiry_date: { '$gte': Date.current })
   end
 
   def lead_validity_period
     activity = self.active_cp_lead_activities.first
-    activity.present? ? "#{(activity.expiry_date - Date.today).to_i} Days" : '0 Days'
+    activity.present? ? "#{(activity.expiry_date - Date.current).to_i} Days" : '0 Days'
   end
 
   class << self

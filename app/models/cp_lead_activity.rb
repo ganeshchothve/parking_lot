@@ -37,7 +37,7 @@ class CpLeadActivity
   end
 
   def lead_validity_period
-    (self.expiry_date > Date.today) ? "#{(self.expiry_date - Date.today).to_i} Days" : '0 Days'
+    (self.expiry_date > Date.current) ? "#{(self.expiry_date - Date.current).to_i} Days" : '0 Days'
   end
 
   def can_extend_validity?
