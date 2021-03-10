@@ -28,8 +28,12 @@
       <!-- notes -->
       <div class="separate-line container"></div>
       <div class='lead_notes_section'>
-        <%= render 'admin/leads/notes', lead: @cp_lead_activity.lead %>
+        <%= render 'admin/leads/notes', lead: @cp_lead_activity.lead, notes: @notes %>
       </div>
+
+      <!-- Note Summary -->
+      <div class="separate-line container"></div>
+      <%= render 'notes/section', notable: @cp_lead_activity.lead %>
 
       <div class="separate-line container"></div>
       <%

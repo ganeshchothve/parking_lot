@@ -36,6 +36,10 @@ class Admin::CpLeadActivitiesController < AdminController
     end
   end
 
+  def show
+    @notes = FetchLeadData.fetch_notes(@cp_lead_activity.lead.lead_id, @cp_lead_activity.lead.user.booking_portal_client)
+  end
+
   def extend_validity
     render layout: false
   end

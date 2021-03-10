@@ -44,9 +44,10 @@ module FetchLeadData
 
   def self.fetch_notes(selldo_lead_id, client)
     begin
-      url =  ENV_CONFIG['selldo']['base_url'] + "/client/leads/" + selldo_lead_id + "/activities.json?filters[_type]=Note&page=1&per_page=5&api_key=#{client.selldo_api_key}&client_id=#{client.selldo_client_id.to_s}"
+      url =  ENV_CONFIG['selldo']['base_url'] + "/client/leads/" + selldo_lead_id + "/activities.json?filters[_type]=Note&page=1&per_page=15&api_key=#{client.selldo_api_key}&client_id=#{client.selldo_client_id.to_s}"
       uri = URI(url)
-      JSON.parse(Net::HTTP.get(uri))['results']
+      notes = JSON.parse(Net::HTTP.get(uri))['results']
+      notes.map { |remark| remark unless remark['note']['content'].start_with?("Added BY(") }.compact
     rescue => e
       Rails.logger.error("Error while Fetching the site_visits : #{e.inspect}")
       []

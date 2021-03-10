@@ -21,6 +21,7 @@ class Admin::LeadsController < AdminController
   def show
     @booking_details = @lead.booking_details.paginate(page: params[:page], per_page: params[:per_page])
     @receipts = @lead.receipts.order('created_at DESC').paginate(page: params[:page], per_page: params[:per_page])
+    @notes = FetchLeadData.fetch_notes(@lead.lead_id, @lead.user.booking_portal_client)
   end
 
   def edit

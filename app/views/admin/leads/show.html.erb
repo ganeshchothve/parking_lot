@@ -27,11 +27,12 @@
       <!-- notes -->
       <div class="separate-line container"></div>
       <div class='lead_notes_section'>
-        <%= render 'notes', lead: @lead %>
+        <%= render 'notes', lead: @lead, notes: @notes %>
       </div>
 
       <!-- cp lead activities -->
       <%= render 'cp_lead_activities', cp_lead_activities: @lead.cp_lead_activities.paginate(page: 1) %>
+
 
       <!-- booking_details -->
       <% if current_client.enable_actual_inventory?(current_user) %>

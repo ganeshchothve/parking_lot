@@ -25,6 +25,10 @@ class Admin::LeadPolicy < LeadPolicy
     edit?
   end
 
+  def note_create?
+    user.role?(:channel_partner) && record.user.role.in?(User::BUYER_ROLES)
+  end
+
   def asset_create?
     %w[admin sales sales_admin crm].include?(user.role)
   end
