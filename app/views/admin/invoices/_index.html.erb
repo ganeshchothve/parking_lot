@@ -14,7 +14,7 @@
   <tbody>
     <% invoices.each do |invoice| %>
       <tr>
-        <td><%= invoice.number %></td>
+        <td><%= invoice.try(:number) %></td>
         <td>
           <%= link_to invoice.booking_detail.name, [current_user_role_group, invoice.booking_detail] %>
           <div class='small'>

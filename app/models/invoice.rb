@@ -19,7 +19,6 @@ class Invoice
   field :ladder_stage, type: Integer
   field :gst_amount, type: Float, default: 0.0
   field :net_amount, type: Float
-  field :number, type: String
 
   belongs_to :project
   belongs_to :booking_detail
@@ -44,7 +43,6 @@ class Invoice
   delegate :name, to: :manager, prefix: true, allow_nil: true
   #delegate :name, to: :incentive_scheme, prefix: true, allow_nil: true
 
-  scope :filter_by_number, ->(number) { where(number: number) }
   scope :filter_by_status, ->(status) { where(status: status) }
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
   scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in": project_ids}) : all }
@@ -101,7 +99,9 @@ class Invoice
 
     def user_based_available_statuses(user)
       if user.present?
-        if user.role?('cp_admin')
+        if user.role?('billing_team')
+          %w[pending_approval approved rejected]
+        elsif user.role?('cp_admin')
           Invoice.aasm.states.map(&:name) - [:draft]
         else
           Invoice.aasm.states.map(&:name)

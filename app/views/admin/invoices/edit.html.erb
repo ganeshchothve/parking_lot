@@ -1,5 +1,5 @@
 <% if current_user.role?('channel_partner') %>
-  <%= render 'admin/invoices/draft_form' %>
+  <%= render 'admin/invoices/draft_form', url: admin_booking_detail_invoice_path(booking_detail_id: @invoice.booking_detail.id, id: @invoice.id) %>
 <% else %>
-  <%= render 'admin/invoices/form' %>
+  <%= render 'admin/invoices/form', url: admin_booking_detail_invoice_path(booking_detail_id: @invoice.booking_detail.id, id: @invoice.id) %>
 <% end %>

@@ -18,7 +18,7 @@ class Admin::BookingDetails::InvoicesController < AdminController
   end
 
   def create
-    @invoice = @booking_detail.invoices.build(project: @booking_detail.project, manager: @booking_detail.manager, raised_date: Time.now)
+    @invoice = Invoice::Manual.new(project: @booking_detail.project, manager: @booking_detail.manager, raised_date: Time.now, booking_detail_id: @booking_detail.id)
     @invoice.assign_attributes(permitted_attributes([current_user_role_group, @invoice]))
     respond_to do |format|
       if @invoice.save
@@ -90,7 +90,7 @@ class Admin::BookingDetails::InvoicesController < AdminController
 
   def set_invoice
     if params[:action] == 'new'
-      @invoice = @booking_detail.invoices.build
+      @invoice = Invoice::Manual.new(booking_detail_id: @booking_detail.id)
     else
       @invoice = Invoice.where(id: params[:id]).first
     end
