@@ -1,7 +1,7 @@
 module CpLeadActivityRegister
   def self.create_cp_lead_object(new_lead, lead, channel_partner, lead_details = {})
     get_lead_data(lead, lead_details)
-    if new_lead && lead_details[:lead_already_exists] == 'false'
+    if new_lead
       new_cp_lead_activity = CpLeadActivity.new(registered_at: Date.current, count_status: "fresh_lead", lead_status: lead.lead_status, expiry_date: Date.current + 45, lead_id: lead.id, user_id: channel_partner.id, sitevisit_status: lead.sitevisit_status, sitevisit_date: lead.sitevisit_date)
     else
       if cp_lead_activity = CpLeadActivity.where(lead_id: lead.id, user_id: channel_partner.id, expiry_date: {"$gt": Date.current}).first
