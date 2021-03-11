@@ -22,7 +22,6 @@ class CpLeadActivity
   default_scope -> { desc(:created_at) }
   scope :filter_by_count_status, ->(status) { where(count_status: status) }
   scope :filter_by_lead_status, ->(status) { where(lead_status: status) }
-  scope :filter_by_count_status, ->(status) { where(count_status: status) }
   scope :filter_by_lead_id, ->(lead_id) { where(lead_id: lead_id) }
   scope :filter_by_user_id, ->(user_id) { where(user_id: user_id) }
   scope :filter_by_project_id, ->(project_id) { lead_ids = Lead.where(project_id: project_id).distinct(:id); where(lead_id: { '$in': lead_ids }) }
@@ -42,6 +41,14 @@ class CpLeadActivity
 
   def can_extend_validity?
     self.lead.active_cp_lead_activities.blank? && self.count_status != 'no_count'
+  end
+
+  def push_source_to_selldo
+    _selldo_api_key = self.lead.user.booking_portal_client.selldo_api_key
+    if self.user_id.present? && _selldo_api_key.present?
+      campaign_resp = { source: 'Channel Partner', sub_source: self.user.name, project_id: self.lead.project_id.to_s }
+      SelldoLeadUpdater.perform_async(self.lead.user_id.to_s, { action: 'add_campaign_response', api_key: _selldo_api_key }.merge(campaign_resp).with_indifferent_access)
+    end
   end
 
   private

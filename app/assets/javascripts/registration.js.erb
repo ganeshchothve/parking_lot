@@ -122,7 +122,11 @@ function register_user_with_portal(d, e){
       setTimeout(function(){
         if(_.isEmpty(one.responseJSON.url)){
           if(typeof App !== "undefined" && App.current_user){
-            window.location = '<%= url.admin_users_path %>';
+            if (App.current_user.role == 'channel_partner') {
+              window.location = '<%= url.admin_cp_lead_activities_path %>';
+            } else {
+              window.location = '<%= url.admin_leads_path %>';
+            }
           }else if(one.responseJSON.already_exists){
             window.location = '<%= url.new_user_session_path %>';
           }else{
