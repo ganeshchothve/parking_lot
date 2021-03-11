@@ -84,12 +84,13 @@ class Invoice
         if user.role?('channel_partner')
           custom_scope = { manager_id: user.id }
         elsif user.role?('cp_admin')
-          cp_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
-          channel_partner_ids = User.where(role: 'channel_partner', manager_id: {"$in": cp_ids}).distinct(:id)
-          custom_scope = { manager_id: { "$in": channel_partner_ids }, status: { '$nin': %w(draft) } }
-        elsif user.role?('cp')
-          channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
-          custom_scope = { manager_id: { "$in": channel_partner_ids } }
+          #cp_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
+          #channel_partner_ids = User.where(role: 'channel_partner', manager_id: {"$in": cp_ids}).distinct(:id)
+          #custom_scope = { manager_id: { "$in": channel_partner_ids }, status: { '$nin': %w(draft) } }
+          custom_scope = { status: { '$nin': %w(draft) } }
+        #elsif user.role?('cp')
+        #  channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
+        #  custom_scope = { manager_id: { "$in": channel_partner_ids } }
         end
       end
       if params[:booking_detail_id].present?
