@@ -4,6 +4,8 @@ class Search
   include ArrayBlankRejectable
   include ApplicationHelper
 
+  RESTRICTED_STEP = %w[filter towers project_unit]
+
   field :bedrooms, type: Float
   field :carpet, type: String
   field :agreement_price, type: String
