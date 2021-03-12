@@ -91,7 +91,7 @@ Rails.application.routes.draw do
     resources :invoices, only: [:index, :show, :edit, :update], controller: 'booking_details/invoices' do
       get :generate_invoice, on: :member
       get :update_gst, on: :member
-
+      get :export, on: :collection
       resources :incentive_deductions, except: :destroy, controller: 'invoices/incentive_deductions' do
         post :change_state, on: :member
       end
@@ -172,6 +172,10 @@ Rails.application.routes.draw do
       resources :receipts, only: [:index, :new, :create, :edit, :update ] do
         get :resend_success, on: :member
         get :lost_receipt, on: :collection
+      end
+
+      collection do
+        get :export
       end
 
       resources :searches, except: [:destroy], controller: '/searches' do

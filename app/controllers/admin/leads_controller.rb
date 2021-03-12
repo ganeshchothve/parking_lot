@@ -1,6 +1,6 @@
 class Admin::LeadsController < AdminController
   before_action :authenticate_user!
-  before_action :set_lead, except: %i[index]
+  before_action :set_lead, except: %i[index export]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: %i[index]
 
@@ -20,6 +20,16 @@ class Admin::LeadsController < AdminController
 
   def edit
     render layout: false
+  end
+
+  def export
+    if Rails.env.development?
+      LeadExportWorker.new.perform(current_user.id.to_s, params[:fltrs])
+    else
+      LeadExportWorker.perform_async(current_user.id.to_s, params[:fltrs].as_json)
+    end
+    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    redirect_to admin_leads_path(fltrs: params[:fltrs].as_json)
   end
 
   def update
@@ -50,7 +60,7 @@ class Admin::LeadsController < AdminController
   end
 
   def authorize_resource
-    if %w[index].include?(params[:action])
+    if %w[index export].include?(params[:action])
       authorize [current_user_role_group, Lead]
     else
       authorize [current_user_role_group, @lead]

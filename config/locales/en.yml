@@ -1141,6 +1141,8 @@ en:
         re_raise: 'Re-Raise Invoice'
         approve: 'Approve Invoice'
         reject: 'Reject Invoice'
+      exports:
+        link_name: "%{name} Exports"
 
     incentive_deductions:
       index:
@@ -1392,6 +1394,8 @@ en:
       edit:
         link_name: "Edit Walk-in"
         header: 'Edit Walk-in'
+      exports:
+        link_name: '%{name} Exports'
 
     user_kycs:
       index:

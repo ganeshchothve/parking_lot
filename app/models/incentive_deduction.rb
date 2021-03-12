@@ -21,6 +21,21 @@ class IncentiveDeduction
 
   accepts_nested_attributes_for :assets, reject_if: proc { |attrs| attrs['file'].blank? }
 
+  def get_status
+    case status
+    when "draft"
+      "Draft"
+    when "pending_approval"
+      "Pending Approval"
+    when "approved"
+      "Approved"
+    when "rejected"
+      "Rejected"
+    else
+      status
+    end
+  end
+
   class << self
     def user_based_scope(user, params = {})
       custom_scope = {}

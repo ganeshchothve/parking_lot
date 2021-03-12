@@ -5,6 +5,10 @@ class Admin::LeadPolicy < LeadPolicy
     out && user.active_channel_partner?
   end
 
+  def export?
+    %w[superadmin admin sales_admin crm].include?(user.role)
+  end
+
   def edit?
     user.role.in?(%w(superadmin admin))
   end
