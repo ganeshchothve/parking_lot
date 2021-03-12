@@ -68,7 +68,7 @@ class BrokerageExportWorker
       invoice.payment_adjustment.try(:absolute_value).to_f,
       invoice.net_amount,
       invoice.approved_date.try(:strftime, '%d/%m/%Y'),
-      "Total Amount Paid",
+      invoice.cheque_detail.try(:total_amount),
       invoice.cheque_detail.try(:issuing_bank),
       invoice.cheque_detail.try(:issuing_bank_branch),
       invoice.cheque_detail.try(:issued_date).try(:strftime, '%d/%m/%Y'),

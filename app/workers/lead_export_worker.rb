@@ -41,9 +41,10 @@ class LeadExportWorker
       "Booking Amount Paid",
       "9.90% Received",
       "Registration Done",
-      "Opportunity SFDC ID"
-    ]
+    ] + Crm::Base.all.map{|crm| crm.name + " ID"  }
   end
+
+
 
   def self.get_lead_row(lead)
     [
@@ -58,8 +59,10 @@ class LeadExportWorker
       lead.manager.try(:name),
       (lead.booking_details.map(&:total_amount_paid).sum rescue 0.0),
       (lead.is_booking_price_paid? ? "Yes" : "No"),
-      (lead.is_registration_done? ? "Yes" : "No"),
-      "Opportunity SFDC ID"
-    ]
+      (lead.is_registration_done? ? "Yes" : "No")
+    ] + Crm::Base.all.map{|crm| lead.third_party_references.where(crm_id: crm.id).first.try(:reference_id) }
   end
 end
+
+#crm id name/ ref id
+#stuck in column headers
