@@ -28,7 +28,7 @@ class BrokerageExportWorker
   end
 
   def self.get_column_names
-    [
+    brokerage_columns = [
       "Invoice Number",
       "Project Name",
       "Booking Detail",
@@ -50,10 +50,17 @@ class BrokerageExportWorker
       "Handover Date",
       "Payment Identifier"
     ]
+
+    brokerage_columns.append(Crm::Base.all.map{|crm| crm.name + " CP record ID"  }.try(:first))
+    brokerage_columns.append(Crm::Base.all.map{|crm| crm.name + " opportunity ID"  }.try(:first))
+    brokerage_columns.append(Crm::Base.all.map{|crm| crm.name + " Booking ID"  }.try(:first))
+    brokerage_columns.append(Crm::Base.all.map{|crm| crm.name + " Unit ID"  }.try(:first))
+    
+    brokerage_columns.flatten
   end
 
   def self.get_invoice_row(invoice)
-    [
+    invoice_row = [
       invoice.number,
       invoice.project_name,
       invoice.booking_detail.try(:name),
@@ -75,5 +82,12 @@ class BrokerageExportWorker
       invoice.cheque_detail.try(:handover_date).try(:strftime, '%d/%m/%Y'),
       invoice.cheque_detail.try(:payment_identifier),
     ]
+
+    invoice_row.append((Crm::Base.all.map{|crm| invoice.try(:manager).try(:third_party_references).where(crm_id: crm.id).try(:first).try(:reference_id) }.try(:first) rescue ""))
+    invoice_row.append((Crm::Base.all.map{|crm| invoice.try(:booking_detail).try(:lead).try(:third_party_references).where(crm_id: crm.id).try(:first).try(:reference_id) }.try(:first) rescue ""))
+    invoice_row.append((Crm::Base.all.map{|crm| invoice.try(:booking_detail).try(:third_party_references).where(crm_id: crm.id).try(:first).try(:reference_id) }.try(:first) rescue ""))
+    invoice_row.append((Crm::Base.all.map{|crm| invoice.try(:booking_detail).try(:project_unit).try(:third_party_references).where(crm_id: crm.id).try(:first).try(:reference_id) }.try(:first) rescue ""))
+
+    invoice_row.flatten
   end
 end

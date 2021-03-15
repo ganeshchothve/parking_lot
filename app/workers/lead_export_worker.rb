@@ -28,7 +28,7 @@ class LeadExportWorker
   end
 
   def self.get_column_names
-    [
+    lead_columns = [
       "Name",
       "Email Id",
       "Phone",
@@ -41,13 +41,17 @@ class LeadExportWorker
       "Booking Amount Paid",
       "9.90% Received",
       "Registration Done",
+      "Registered/Opportunity Created Date"
     ] + Crm::Base.all.map{|crm| crm.name + " ID"  }
+
+    lead_columns.append(Crm::Base.all.map{|crm| crm.name + " CP record ID"  }.try(:first))
+    lead_columns.flatten
   end
 
 
 
   def self.get_lead_row(lead)
-    [
+    lead_row = [
       lead.name,
       lead.email,
       lead.phone,
@@ -59,8 +63,12 @@ class LeadExportWorker
       lead.manager.try(:name),
       (lead.booking_details.map(&:total_amount_paid).sum rescue 0.0),
       (lead.is_booking_price_paid? ? "Yes" : "No"),
-      (lead.is_registration_done? ? "Yes" : "No")
+      (lead.is_registration_done? ? "Yes" : "No"),
+      (lead.registered_at.try(:strftime, '%d/%m/%Y') || lead.created_at.try(:strftime, '%d/%m/%Y'))
     ] + Crm::Base.all.map{|crm| lead.third_party_references.where(crm_id: crm.id).first.try(:reference_id) }
+
+    lead_row.append((Crm::Base.all.map{|crm| lead.try(:manager).try(:third_party_references).where(crm_id: crm.id).try(:first).try(:reference_id) }.try(:first) rescue ""))
+    lead_row.flatten
   end
 end
 
