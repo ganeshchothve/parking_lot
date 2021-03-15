@@ -1,5 +1,5 @@
-class Admin::NotificationsController < AdminController
-  include NotificationConcern
+class Admin::PushNotificationsController < AdminController
+  include PushNotificationConcern
   before_action :set_notification, only: :show #set_notification written in NotificationConcern
   before_action :authorize_resource
   around_action :apply_policy_scope, only: :index
@@ -14,16 +14,16 @@ class Admin::NotificationsController < AdminController
 
 
   def apply_policy_scope
-    Notification.with_scope(policy_scope([:admin, Notification])) do
+    PushNotification.with_scope(policy_scope([:admin, Notification])) do
       yield
     end
   end
 
   def authorize_resource
     if %w(index).include?(params[:action])
-      authorize [:admin, Notification]
+      authorize [:admin, PushNotification]
     else
-      authorize [:admin, @notification]
+      authorize [:admin, @push_notification]
     end
   end
 end

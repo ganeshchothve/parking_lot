@@ -130,7 +130,7 @@ class Client
   has_many :notification_templates, class_name: 'Template::NotificationTemplate'
   has_many :smses, class_name: 'Sms'
   has_many :whatsapps, class_name: 'Whatsapp'
-  has_many :notifications, class_name: 'Notification'
+  has_many :push_notifications, class_name: 'PushNotification'
   has_many :assets, as: :assetable
   has_many :emails, class_name: 'Email', inverse_of: :booking_portal_client
   has_many :schemes

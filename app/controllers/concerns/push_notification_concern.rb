@@ -1,4 +1,4 @@
-module NotificationConcern
+module PushNotificationConcern
   extend ActiveSupport::Concern
 
   #
@@ -8,8 +8,8 @@ module NotificationConcern
   # @return [{},{}] records with array of Hashes.
   #
   def index
-    @notifications = Notification.build_criteria params
-    @notifications = @notifications.order(created_at: :desc).paginate(page: params[:page] || 1, per_page: params[:per_page])
+    @push_notifications = PushNotification.build_criteria params
+    @push_notifications = @push_notifications.order(created_at: :desc).paginate(page: params[:page] || 1, per_page: params[:per_page])
   end
 
   #
@@ -24,6 +24,6 @@ module NotificationConcern
   private
 
   def set_notification
-    @notification = Notification.find(params[:id])
+    @push_notification = PushNotification.find(params[:id])
   end
 end

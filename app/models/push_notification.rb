@@ -3,7 +3,7 @@
 # will store information for the Notification
 #
 
-class Notification
+class PushNotification
   include Mongoid::Document
   include Mongoid::Timestamps
   extend FilterByCriteria

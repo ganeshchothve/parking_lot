@@ -9,7 +9,7 @@ module Communication
       include Sidekiq::Worker
 
       def perform notification_id
-        notification = ::Notification.find notification_id
+        notification = ::PushNotification.find notification_id
         if %w[staging production].include?(Rails.env)
           resp = NotificationNotifier::Base.send(notification)
           notification.sent_on = DateTime.now
