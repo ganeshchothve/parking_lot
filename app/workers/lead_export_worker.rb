@@ -42,7 +42,7 @@ class LeadExportWorker
       "9.90% Received",
       "Registration Done",
       "Registered/Opportunity Created Date"
-    ] + Crm::Base.all.map{|crm| crm.name + " ID"  }
+    ] + Crm::Base.all.map{|crm| crm.name + " Opportunity ID"  }
 
     lead_columns.append(Crm::Base.all.map{|crm| crm.name + " CP record ID"  }.try(:first))
     lead_columns.flatten
