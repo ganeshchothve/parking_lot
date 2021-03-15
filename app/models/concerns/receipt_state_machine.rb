@@ -164,6 +164,17 @@ module ReceiptStateMachine
           Whatsapp.create!(to: self.user.phone, triggered_by: self, booking_portal_client: self.user.booking_portal_client, whatsapp_template: whatsapp_template, from: "+16413231111")
         end
       end
+
+      template = Template::NotificationTemplate.where(name: "receipt_#{status}").first
+      if template.present? && user.booking_portal_client.notification_enabled?
+        push_notification = PushNotification.new(
+          notification_template_id: template.id,
+          triggered_by: self,
+          recipient: self.user,
+          booking_portal_client_id: self.user.booking_portal_client
+        )
+        push_notification.save
+      end
     end
   end
 end

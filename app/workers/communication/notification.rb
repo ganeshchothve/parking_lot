@@ -13,8 +13,8 @@ module Communication
         if %w[staging production].include?(Rails.env)
           resp = NotificationNotifier::Base.send(notification)
           notification.sent_on = DateTime.now
-          notification.status = (resp[:status] == 'sent') ? 'sent' : resp[:status]
-          notification.message_sid = resp[:message_sid]
+          notification.status = resp[:response]
+          notification.response = resp
           notification.save
         end
       end

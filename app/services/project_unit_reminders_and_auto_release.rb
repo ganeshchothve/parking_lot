@@ -6,27 +6,40 @@ module ProjectUnitRemindersAndAutoRelease
         if project_unit.auto_release_on.present? && project_unit.auto_release_on > Date.today
           days = (project_unit.auto_release_on - Date.today).to_i
         end
-        if days > 0 && project_unit.booking_portal_client.email_enabled?
-          email = Email.create!({
-            booking_portal_client_id: project_unit.booking_portal_client_id,
-            email_template_id: Template::EmailTemplate.find_by(name: "daily_reminder_for_booking_payment").id,
-            recipients: [project_unit.user],
-            cc_recipients: (project_unit.user.manager_id.present? ? [project_unit.user.manager] : []),
-            cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
-            triggered_by_id: project_unit.booking_detail.id,
-            triggered_by_type: "BookingDetail"
-          })
-          email.sent!
-        end
-        if days > 0 && project_unit.booking_portal_client.sms_enabled?
-          template = Template::SmsTemplate.where(name: "daily_reminder_for_booking_payment").first
-          Sms.create!(
-            booking_portal_client_id: project_unit.booking_portal_client_id,
-            recipient_id: project_unit.user_id,
-            sms_template_id: template.id,
-            triggered_by_id: project_unit.booking_detail.id,
-            triggered_by_type: "BookingDetail"
-          )
+        if days > 0
+          if project_unit.booking_portal_client.email_enabled?
+            email = Email.create!({
+              booking_portal_client_id: project_unit.booking_portal_client_id,
+              email_template_id: Template::EmailTemplate.find_by(name: "daily_reminder_for_booking_payment").id,
+              recipients: [project_unit.user],
+              cc_recipients: (project_unit.user.manager_id.present? ? [project_unit.user.manager] : []),
+              cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
+              triggered_by_id: project_unit.booking_detail.id,
+              triggered_by_type: "BookingDetail"
+            })
+            email.sent!
+          end
+          if project_unit.booking_portal_client.sms_enabled?
+            template = Template::SmsTemplate.where(name: "daily_reminder_for_booking_payment").first
+            Sms.create!(
+              booking_portal_client_id: project_unit.booking_portal_client_id,
+              recipient_id: project_unit.user_id,
+              sms_template_id: template.id,
+              triggered_by_id: project_unit.booking_detail.id,
+              triggered_by_type: "BookingDetail"
+            )
+          end
+
+          template = Template::NotificationTemplate.where(name: "daily_reminder_for_booking_payment").first
+          if template.present? && user.booking_portal_client.notification_enabled?
+            push_notification = PushNotification.new(
+              notification_template_id: template.id,
+              triggered_by: self,
+              recipient: self.user,
+              booking_portal_client_id: self.user.booking_portal_client
+            )
+            push_notification.save
+          end
         end
       end
     end

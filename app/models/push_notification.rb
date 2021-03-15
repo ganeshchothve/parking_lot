@@ -16,8 +16,8 @@ class PushNotification
   field :url, type: String
   field :status, type: String, default: 'queued' # queued, failed, sent, delivered, read, received
   field :user_notification_tokens, type: Array, default: []
-  field :message_sid, type: String # for queued, send, delivered, read message
-  field :vendor, type: String, default: 'NotificationNotifier::Firebase'
+  field :response, type: String # for queued, send, delivered, read message
+  field :vendor, type: String, default: 'Firebase'
   field :template_id, type: String
   field :sent_on, type: DateTime
 

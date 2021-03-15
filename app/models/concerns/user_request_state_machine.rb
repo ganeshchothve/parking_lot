@@ -62,6 +62,19 @@ module UserRequestStateMachine
       end
     end
 
+    def send_push_notification
+      template = Template::NotificationTemplate.where(name: "#{self.class.model_name.element}_request_#{status}").first
+      if template.present? && user.booking_portal_client.notification_enabled?
+        push_notification = PushNotification.new(
+          notification_template_id: template.id,
+          triggered_by_id: self.id,
+          recipient_id: self.user.id,
+          booking_portal_client_id: self.user.booking_portal_client.id
+        )
+        push_notification.save
+      end
+    end
+
     def update_requestable_to_request_made
       requestable.cancellation_requested! if is_a?(UserRequest::Cancellation)
       requestable.swap_requested! if is_a?(UserRequest::Swap)
@@ -71,6 +84,7 @@ module UserRequestStateMachine
     def send_notifications
       send_email if user.booking_portal_client.email_enabled? && !processing?
       send_sms if user.booking_portal_client.sms_enabled? && !processing?
+      send_push_notification if user.booking_portal_client.notification_enabled? && !processing?
     end
 
     def update_requestable_to_request_rejected

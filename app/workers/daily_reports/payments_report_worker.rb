@@ -22,6 +22,17 @@ module DailyReports
           triggered_by_id: Receipt.asc(:created_at).last.id,
           triggered_by_type: 'Receipt'
         )
+
+        template = Template::NotificationTemplate.where(name: "daily_payments_report").first
+        if template.present? && user.booking_portal_client.notification_enabled?
+          push_notification = PushNotification.new(
+            notification_template_id: template.id,
+            triggered_by_id: Receipt.asc(:created_at).last.id,
+            recipient_id: User.where(role: 'admin').first.id,
+            booking_portal_client_id: client.id
+          )
+          push_notification.save
+        end
       end
     end
   end
