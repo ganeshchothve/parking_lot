@@ -169,13 +169,14 @@ Rails.application.routes.draw do
     end
 
     resources :leads, only: [:index, :show, :edit, :update] do
-      resources :receipts, only: [:index, :new, :create, :edit, :update ] do
-        get :resend_success, on: :member
-        get :lost_receipt, on: :collection
-      end
 
       collection do
         get :export
+      end
+
+      resources :receipts, only: [:index, :new, :create, :edit, :update ] do
+        get :resend_success, on: :member
+        get :lost_receipt, on: :collection
       end
 
       resources :searches, except: [:destroy], controller: '/searches' do
