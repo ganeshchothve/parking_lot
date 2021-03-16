@@ -35,6 +35,7 @@ module Reminders
           booking_portal_client_id: user.booking_portal_client.id
         )
         push_notification.save
+      end
     end
   end
 end
