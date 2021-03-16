@@ -83,10 +83,10 @@ class BrokerageExportWorker
       invoice.cheque_detail.try(:payment_identifier),
     ]
 
-    invoice_row.append((Crm::Base.all.map{|crm| invoice.try(:manager).try(:third_party_references).where(crm_id: crm.id).try(:first).try(:reference_id) }.try(:first) rescue ""))
-    invoice_row.append((Crm::Base.all.map{|crm| invoice.try(:booking_detail).try(:lead).try(:third_party_references).where(crm_id: crm.id).try(:first).try(:reference_id) }.try(:first) rescue ""))
-    invoice_row.append((Crm::Base.all.map{|crm| invoice.try(:booking_detail).try(:third_party_references).where(crm_id: crm.id).try(:first).try(:reference_id) }.try(:first) rescue ""))
-    invoice_row.append((Crm::Base.all.map{|crm| invoice.try(:booking_detail).try(:project_unit).try(:third_party_references).where(crm_id: crm.id).try(:first).try(:reference_id) }.try(:first) rescue ""))
+    invoice_row.append((Crm::Base.all.map{|crm| invoice.manager.third_party_references.where(crm_id: crm.id).try(:first).try(:reference_id) }.try(:first) rescue ""))
+    invoice_row.append((Crm::Base.all.map{|crm| invoice.booking_detail.lead.third_party_references.where(crm_id: crm.id).first.try(:reference_id) }.try(:first) rescue ""))
+    invoice_row.append((Crm::Base.all.map{|crm| invoice.booking_detail.third_party_references.where(crm_id: crm.id).first.try(:reference_id) }.first rescue ""))
+    invoice_row.append((Crm::Base.all.map{|crm| invoice.booking_detail.project_unit.third_party_references.where(crm_id: crm.id).first.try(:reference_id) }.first rescue ""))
 
     invoice_row.flatten
   end
