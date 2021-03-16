@@ -45,6 +45,10 @@ class Admin::InvoicePolicy < InvoicePolicy
     asset_create?
   end
 
+  def export?
+    %w[superadmin admin sales_admin crm cp_admin billing_team].include?(user.role)
+  end
+
   def permitted_attributes(params = {})
     attributes = super
     #case user.role.to_s
