@@ -24,7 +24,7 @@ class User
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, :lockable, :timeoutable, :password_expirable, :password_archivable, :session_limitable, :expirable, :omniauthable, :omniauth_providers => [:selldo], authentication_keys: [:login]
+  devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, :timeoutable, :password_archivable, :omniauthable, :omniauth_providers => [:selldo], authentication_keys: [:login] #:lockable,:expirable,:session_limitable,:password_expirable
 
   attr_accessor :temporary_password, :payment_link, :temp_manager_id
 
