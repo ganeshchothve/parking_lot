@@ -67,7 +67,7 @@ class LeadExportWorker
       (lead.registered_at.try(:strftime, '%d/%m/%Y') || lead.created_at.try(:strftime, '%d/%m/%Y'))
     ] + Crm::Base.all.map{|crm| lead.third_party_references.where(crm_id: crm.id).first.try(:reference_id) }
 
-    lead_row.append((Crm::Base.all.map{|crm| lead.try(:manager).try(:third_party_references).where(crm_id: crm.id).try(:first).try(:reference_id) }.try(:first) rescue ""))
+    lead_row.append((Crm::Base.all.map{|crm| lead.manager.third_party_references.where(crm_id: crm.id).first.try(:reference_id) }.first rescue ""))
     lead_row.flatten
   end
 end
