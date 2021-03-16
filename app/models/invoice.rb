@@ -77,23 +77,6 @@ class Invoice
     _amount
   end
 
-  def get_status
-    case status
-    when "draft"
-      "Raised"
-    when "pending_approval"
-      "Pending Approval"
-    when "approved"
-      "Approved"
-    when "rejected"
-      "Rejected"
-    when "paid"
-      "Paid"
-    else
-      status
-    end
-  end
-
   class << self
     def user_based_scope(user, params = {})
       custom_scope = {}
