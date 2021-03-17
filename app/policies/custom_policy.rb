@@ -85,8 +85,12 @@ class CustomPolicy < Struct.new(:user, :enable_users)
     "#{user.buyer? ? 'Buyer' : 'Admin'}::AssetPolicy".constantize.new(user, Asset).index?
   end
 
+  def push_notifications?
+    "#{user.buyer? ? '' : 'Admin::'}PushNotificationPolicy".constantize.new(user, PushNotification).index?
+  end
+
   def self.custom_methods
-    %w[add_booking schemes user_requests channel_partners user_kycs emails smses sync_logs referrals accounts phases portal_stage_priorities checklists bulk_upload_reports assets crms api_logs].sort
+    %w[add_booking schemes user_requests channel_partners user_kycs emails smses sync_logs referrals accounts phases portal_stage_priorities checklists bulk_upload_reports assets crms api_logs push_notifications].sort
     # audits
   end
 end

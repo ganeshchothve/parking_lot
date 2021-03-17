@@ -24,6 +24,10 @@ module PushNotificationConcern
   private
 
   def set_notification
-    @push_notification = PushNotification.find(params[:id])
+    if %w(new create).include?(params[:action])
+      @push_notification = PushNotification.new(booking_portal_client_id: current_client.id)
+    else
+      @push_notification = PushNotification.find(params[:id])
+    end
   end
 end

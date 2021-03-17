@@ -20,16 +20,5 @@ class ReferralObserver < Mongoid::Observer
       triggered_by_id: referral.id,
       triggered_by_type: referral.class.to_s
     })
-
-    template = Template::NotificationTemplate.where(name: "referral_invitation").first
-    if template.present? && user.booking_portal_client.notification_enabled?
-      push_notification = PushNotification.new(
-        notification_template_id: template.id,
-        triggered_by_id: referral.id,
-        recipient_id: referral.referred_by.id,
-        booking_portal_client_id: referral.user.booking_portal_client.id
-      )
-      push_notification.save
-    end
   end
 end

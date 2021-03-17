@@ -11,7 +11,7 @@ module Communication
       def perform notification_id
         notification = ::PushNotification.find notification_id
         if %w[staging production].include?(Rails.env)
-          resp = NotificationNotifier::Base.send(notification)
+          resp = NotificationNotifier::Base.send_notification(notification)
           notification.sent_on = DateTime.now
           notification.status = resp[:response]
           notification.response = resp

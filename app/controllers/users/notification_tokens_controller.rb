@@ -23,7 +23,10 @@ class Users::NotificationTokensController < ApplicationController
 
   def subscribe_to_topic
     topic = "#{current_client.id}-#{current_project.id}-#{current_user.role}"
-    fcm = FCM.new("AAAAfNEnBiE:APA91bEHWiF2vFXrS2xWvln525_VjWbLPWx-onirIjEudgqt8FSzUfgI9TARtMu21bDuWFVphfpvnQ0DsgTO5xpD0Y31JxgLBpS1jQoCnu_xdyV4iIO_xXbDbYTxSFPr7f5hGFOO6t9r")
-    response = fcm.batch_topic_subscription(topic, current_user.user_notification_tokens.collect{ |x| x.token } )
+    fcm = FCM.new(current_client.notification_api_key)
+    _request_header = {"Content-Type": "application/json", "Authorization": "key=#{fcm.api_key}"}
+    body = { to: "/topics/#{topic}", registration_tokens: current_user.user_notification_tokens.collect{ |x| x.token } }
+    uri = URI.join('https://iid.googleapis.com' ,"/iid/v1:batchAdd")
+    resp = Net::HTTP.post(uri, body.to_json, _request_header)
   end
 end

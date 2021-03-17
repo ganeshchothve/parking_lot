@@ -14,12 +14,13 @@ class PushNotificationObserver < Mongoid::Observer
       else
         notification.content = TemplateParser.parse(notification.content, notification.triggered_by)
         notification.title = TemplateParser.parse(notification.title, notification.triggered_by)
+        notification.url = TemplateParser.parse(notification.url, notification.triggered_by)
       end
     end
   end
 
   def after_create notification
-    if notification.booking_portal_client.notification_enabled? && notification.new_record?
+    if notification.booking_portal_client.notification_enabled?
       if Rails.env.production? || Rails.env.staging?
         Communication::Notification::NotificationWorker.perform_async(notification.id.to_s)
       else

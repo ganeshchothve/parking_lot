@@ -15,17 +15,6 @@ class DailySmsReportWorker
         triggered_by_id: record.id,
         triggered_by_type: record.class.to_s
       )
-
-      template = Template::NotificationTemplate.where(name: "daily_sms_report").first
-      if template.present? && user.booking_portal_client.notification_enabled?
-        push_notification = PushNotification.new(
-          notification_template_id: template.id,
-          triggered_by_id: record.id,
-          recipient_id: superadmin.id,
-          booking_portal_client_id: record.id
-        )
-        push_notification.save
-      end
     end
   end
 end

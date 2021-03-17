@@ -90,7 +90,7 @@ Rails.application.routes.draw do
     resources :smses, only: %i[index show] do
       get :sms_pulse, on: :collection
     end
-    resources :push_notifications, only: %i[index show]
+    resources :push_notifications, only: %i[index show new create]
     resource :client, except: [:show, :new, :create] do
       resources :templates, only: [:edit, :update, :index]
       get 'document_sign/prompt'

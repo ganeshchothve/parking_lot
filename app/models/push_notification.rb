@@ -1,8 +1,3 @@
-#
-# Class Notification provides model for Notification
-# will store information for the Notification
-#
-
 class PushNotification
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -20,6 +15,7 @@ class PushNotification
   field :vendor, type: String, default: 'Firebase'
   field :template_id, type: String
   field :sent_on, type: DateTime
+  field :role, type: String
 
   scope :filter_by_content, -> (content) { where(content: ::Regexp.new(::Regexp.escape(body), 'i')) }
   scope :filter_by_sent_on, -> (date) { start_date, end_date = date.split(' - '); where(sent_on: start_date..end_date) }
@@ -32,12 +28,20 @@ class PushNotification
   belongs_to :notification_template, class_name: 'Template::NotificationTemplate', optional: true
 
   # Validations
-  validates :content, presence: true, if: Proc.new{ |model| model.notification_template_id.blank? }
-  validates :triggered_by_id, presence: true
+  # validates :content, presence: true
+  validate :role_or_triggered_by_present?
   validates_inclusion_of :status, in: STATUSES
 
   # enable_audit audit_fields: [:title, :content, :created_at], reference_ids_without_associations: [{ field: 'notification_template_id', klass: 'Template::NotificationTemplate' }]
 
   default_scope -> { desc(:created_at) }
+
+  private
+
+  def role_or_triggered_by_present?
+    if self.role.blank? && self.triggered_by_id.blank?
+      self.errors.add(:base,"Either role or triggered_by is required.")
+    end
+  end
 
 end

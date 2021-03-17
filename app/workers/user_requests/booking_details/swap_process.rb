@@ -38,7 +38,7 @@ module UserRequests
             if new_receipt.clearance_pending?
               new_receipt.clearance_pending!
             elsif new_receipt.success?
-              new_receipt.success!
+              new_receipt.after_success_event
             end
 
             unless old_receipt.cancel!

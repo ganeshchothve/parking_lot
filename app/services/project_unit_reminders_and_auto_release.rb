@@ -29,17 +29,6 @@ module ProjectUnitRemindersAndAutoRelease
               triggered_by_type: "BookingDetail"
             )
           end
-
-          template = Template::NotificationTemplate.where(name: "daily_reminder_for_booking_payment").first
-          if template.present? && user.booking_portal_client.notification_enabled?
-            push_notification = PushNotification.new(
-              notification_template_id: template.id,
-              triggered_by: self,
-              recipient: self.user,
-              booking_portal_client_id: self.user.booking_portal_client
-            )
-            push_notification.save
-          end
         end
       end
     end

@@ -11,7 +11,7 @@ class Template::NotificationTemplate < Template
   field :title, type: String
   field :url, type: String
   
-  validates :name, :subject_class, :title, :event_based, :url, presence: true
+  validates :name, :subject_class, :title, :url, presence: true
   # validate :url_format
 
   belongs_to :booking_portal_client, class_name: 'Client', inverse_of: :notification_templates

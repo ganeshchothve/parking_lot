@@ -68,6 +68,7 @@ module UserRequestStateMachine
         push_notification = PushNotification.new(
           notification_template_id: template.id,
           triggered_by_id: self.id,
+          triggered_by_type: self.class.to_s,
           recipient_id: self.user.id,
           booking_portal_client_id: self.user.booking_portal_client.id
         )

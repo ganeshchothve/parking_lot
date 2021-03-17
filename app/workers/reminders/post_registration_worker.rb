@@ -25,17 +25,6 @@ module Reminders
         triggered_by_id: user.id,
         triggered_by_type: user.class.to_s
       ) if sms_template.present?
-
-      template = Template::NotificationTemplate.where(name: "not_confirmed_day_#{day.to_i}").first
-      if template.present? && user.booking_portal_client.notification_enabled?
-        push_notification = PushNotification.new(
-          notification_template_id: template.id,
-          triggered_by_id: user.id,
-          recipient_id: user.id,
-          booking_portal_client_id: user.booking_portal_client.id
-        )
-        push_notification.save
-      end
     end
   end
 end
