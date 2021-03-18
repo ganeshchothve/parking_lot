@@ -41,7 +41,7 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def reactivate_account?
-    %w[admin superadmin].include?(user.role) && record.expired?
+    %w[admin superadmin].include?(user.role)# && record.expired? because of devise expirable disabled
   end
 
   def confirm_via_otp?
