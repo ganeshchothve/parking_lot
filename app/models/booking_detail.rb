@@ -73,7 +73,7 @@ class BookingDetail
 
   # TODO: uncomment
   # validates :name, presence: true
-  validates :status, :agreement_price, :carpet, :saleable, :blocking_amount, :booked_on, presence: true
+  validates :status, :agreement_price, :carpet, :saleable, :blocking_amount, :booking_price, :booked_on, presence: true
   validates :agreement_price, :all_inclusive_price, :blocking_amount, :carpet, :saleable, numericality: { greater_than: 0 }, allow_blank: true
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :kyc_mandate
@@ -327,13 +327,13 @@ class BookingDetail
       if params[:lead_id].blank? && !user.buyer?
         if user.role?('channel_partner')
           custom_scope = { manager_id: user.id }
-        elsif user.role?('cp_admin')
-          cp_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
-          channel_partner_ids = User.where(role: 'channel_partner', manager_id: {"$in": cp_ids}).distinct(:id)
-          custom_scope = { manager_id: { "$in": channel_partner_ids } }
-        elsif user.role?('cp')
-          channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
-          custom_scope = { manager_id: { "$in": channel_partner_ids } }
+        #elsif user.role?('cp_admin')
+        #  cp_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
+        #  channel_partner_ids = User.where(role: 'channel_partner', manager_id: {"$in": cp_ids}).distinct(:id)
+        #  custom_scope = { manager_id: { "$in": channel_partner_ids } }
+        #elsif user.role?('cp')
+        #  channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
+        #  custom_scope = { manager_id: { "$in": channel_partner_ids } }
         elsif user.role?('billing_team')
           custom_scope = incentive_eligible.selector
         end

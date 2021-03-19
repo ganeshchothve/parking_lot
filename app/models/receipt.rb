@@ -217,11 +217,11 @@ class Receipt
     if params[:lead_id].blank? && !user.buyer?
       if user.role?('channel_partner')
         custom_scope = { lead_id: { "$in": Lead.where(referenced_manager_ids: user.id).distinct(:id) } }
-      elsif user.role?('cp_admin')
-        custom_scope = { lead_id: { "$in": Lead.nin(manager_id: [nil, '']).distinct(:id) } }
-      elsif user.role?('cp')
-        channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
-        custom_scope = { lead_id: { "$in": Lead.in(referenced_manager_ids: channel_partner_ids).distinct(:id) } }
+      #elsif user.role?('cp_admin')
+      #  custom_scope = { lead_id: { "$in": Lead.nin(manager_id: [nil, '']).distinct(:id) } }
+      #elsif user.role?('cp')
+      #  channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
+      #  custom_scope = { lead_id: { "$in": Lead.in(referenced_manager_ids: channel_partner_ids).distinct(:id) } }
       end
     end
 

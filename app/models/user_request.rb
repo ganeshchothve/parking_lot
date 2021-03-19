@@ -54,13 +54,13 @@ class UserRequest
       if params[:lead_id].blank? && !user.buyer?
         if user.role?('channel_partner')
           custom_scope = { user_id: user.id }
-        elsif user.role?('cp')
-          channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
-          custom_scope = { '$or': [{ user_id: { "$in": channel_partner_ids } }, {user_id: user.id}] }
-        elsif user.role?('cp_admin')
-          cp_ids = User.where(role: 'cp').where(manager_id: user.id).distinct(:id)
-          channel_partner_ids = User.where(role: 'channel_partner').in(manager_id: cp_ids).distinct(:id)
-          custom_scope = { '$or': [{ user_id: { "$in": channel_partner_ids } }, {user_id: user.id}] }
+        #elsif user.role?('cp')
+        #  channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
+        #  custom_scope = { '$or': [{ user_id: { "$in": channel_partner_ids } }, {user_id: user.id}] }
+        #elsif user.role?('cp_admin')
+        #  cp_ids = User.where(role: 'cp').where(manager_id: user.id).distinct(:id)
+        #  channel_partner_ids = User.where(role: 'channel_partner').in(manager_id: cp_ids).distinct(:id)
+        #  custom_scope = { '$or': [{ user_id: { "$in": channel_partner_ids } }, {user_id: user.id}] }
         end
       end
 
