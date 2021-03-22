@@ -31,7 +31,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def mis_report?
-    true
+    %w[superadmin admin sales_admin crm cp_admin billing_team cp].include?(user.role)
   end
 
   def hold?

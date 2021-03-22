@@ -15,12 +15,13 @@
         <% if policy([:admin, UserRequest.new(user_id: current_user.id)]).new? %>
           <%= link_to t('controller.user_requests.new.link_name'), new_admin_user_request_path(request_type: 'general'), class: 'db-small-btn btn light-blue bg-white fn-400 modal-remote-form-link' %>
         <% end %>
-
-        <a class="db-small-btn light-blue bg-white fn-400 dropdown-toggle btn" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
-        <div class="dropdown-menu">
-          <%= link_to "All #{global_labels['user_requests']}", export_admin_user_requests_path, class: 'dropdown-item' %>
-          <%= link_to "Active filter #{global_labels['user_requests']}", export_admin_user_requests_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
-        </div>
+        <% if policy([:admin, UserRequest.new]).export? %>
+          <a class="db-small-btn light-blue bg-white fn-400 dropdown-toggle btn" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
+          <div class="dropdown-menu">
+            <%= link_to "All #{global_labels['user_requests']}", export_admin_user_requests_path, class: 'dropdown-item' %>
+            <%= link_to "Active filter #{global_labels['user_requests']}", export_admin_user_requests_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
+          </div>
+        <% end %> 
         <button class="db-filter-btn white fn-500" type="button">
           <i class="icon-set icon-filter-light-blue"></i>
         </button>
