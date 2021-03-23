@@ -56,7 +56,7 @@ class SelldoLeadUpdater
       if payload['api_key'].present? && user.buyer?
         params.merge!({ api_key: payload['api_key'] })
         puts params
-        RestClient.post(ENV_CONFIG['selldo']['base_url'] + "/api/leads/create", params)
+        RestClient.post(ENV_CONFIG['selldo']['base_url'] + "/api/leads/create.json", params)
       end
     else
       puts payload

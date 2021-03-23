@@ -12,7 +12,7 @@
           <% if Rails.env.production? %>
             <script src='//trkr.scdn1.secure.raxcdn.com/t/forms/<%= current_client.selldo_client_id %>/<%= current_client.selldo_form_id %>.js' data-form-id='<%= current_client.selldo_form_id %>'></script>
           <% else %>
-            <script src='http://v3c.sell.do/t/forms/<%= current_client.selldo_client_id %>/<%= current_client.selldo_form_id %>.js' data-form-id='<%= current_client.selldo_form_id %>'></script>
+            <script src='https://v3.sell.do/t/forms/<%= current_client.selldo_client_id %>/<%= current_client.selldo_form_id %>.js' data-form-id='<%= current_client.selldo_form_id %>'></script>
           <% end %>
         <% else %>
           <%=render "devise/registrations/new", resource: @resource %>

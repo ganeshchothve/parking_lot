@@ -1,5 +1,20 @@
 require 'net/http'
 module FetchLeadData
+  def self.get(selldo_lead_id, selldo_project_name, client)
+    begin
+      url =  ENV_CONFIG['selldo']['base_url'] + "/api/leads/get_lead.json?api_key=#{client.selldo_api_key}&client_id=#{client.selldo_client_id.to_s}&lead_id=#{selldo_lead_id}&consolidated_lead_data=true"
+      uri = URI(url)
+      response = JSON.parse(Net::HTTP.get(uri))
+      interested_properties = (JWT.decode(response['data'], client.selldo_api_secret.to_s, 'HS256'))[0]['interested_properties'] rescue []
+      interested_properties = interested_properties.map { |ip| ip['project_name']}
+      # If not included send true
+      !(interested_properties.include?(selldo_project_name))
+    rescue => e
+      Rails.logger.error("Error while Fetching the  : #{e.inspect}")
+      'error'
+    end
+  end
+
   def self.site_visit_status_and_date(selldo_lead_id, client, selldo_project_id)
     response = self.fetch_site_visits(selldo_lead_id, client)
     site_visits = response['results'].select { |sv| (sv['site_visit']['project_id'] == selldo_project_id) && (%w[scheduled conducted].include?(sv['site_visit']['status'])) }

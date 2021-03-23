@@ -5,7 +5,7 @@ class ClientPolicy < ApplicationPolicy
     [
       :sms_provider_dlt_entity_id, :sms_provider_telemarketer_id, :name, :selldo_client_id, :selldo_form_id,
       :allowed_bookings_per_user, :selldo_gre_form_id, :selldo_channel_partner_form_id, :selldo_api_key,
-      :selldo_default_srd, :selldo_cp_srd, :helpdesk_number, :helpdesk_email, :ga_code, :gtm_tag,
+      :selldo_api_secret, :selldo_default_srd, :selldo_cp_srd, :helpdesk_number, :helpdesk_email, :ga_code, :gtm_tag,
       :notification_email, :notification_numbers, :sender_email, :registration_name, :cin_number, :website_link,
       :cp_disclaimer, :disclaimer, :support_number, :support_email, :channel_partner_support_number,
       :channel_partner_support_email, :cancellation_amount, :area_unit, :preferred_login, :mixpanel_token,

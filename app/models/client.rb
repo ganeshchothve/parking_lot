@@ -15,6 +15,7 @@ class Client
   field :selldo_channel_partner_form_id, type: String
   field :selldo_gre_form_id, type: String
   field :selldo_api_key, type: String
+  field :selldo_api_secret, type: String
   field :selldo_default_srd, type: String
   field :selldo_cp_srd, type: String
   field :helpdesk_number, type: String

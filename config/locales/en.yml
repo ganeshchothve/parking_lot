@@ -331,6 +331,7 @@ en:
         selldo_channel_partner_form_id: 'SellDo Form ID - For Channel Partners'
         selldo_gre_form_id: 'SellDo Form ID - Used by Non Channel Partners'
         selldo_api_key: 'SellDo API Key (Use generic Api Client)'
+        selldo_api_secret: 'SellDo API Secret'
         selldo_default_srd: 'SellDo Default SRD'
         selldo_cp_srd: 'SellDo Channel Partner SRD'
         notification_email: 'Notification Email (all emails are sent here)'
