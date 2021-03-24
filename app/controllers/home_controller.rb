@@ -2,7 +2,7 @@
 class HomeController < ApplicationController
 
   skip_before_action :set_current_client, only: :welcome
-  before_action :set_project_wise_flag, :set_project, :set_user, :set_lead, only: :check_and_register
+  before_action :set_project, :set_user, :set_lead, only: :check_and_register
 
   def index
   end
@@ -28,7 +28,7 @@ class HomeController < ApplicationController
     else
       respond_to do |format|
         if @lead.present?
-          CpLeadActivityRegister.create_cp_lead_object(false, @is_interested_for_project, @lead, current_user, params[:lead_details]) if current_user.role?("channel_partner")
+          CpLeadActivityRegister.create_cp_lead_object(false, @lead, current_user, params[:lead_details]) if current_user.role?("channel_partner")
           format.json { render json: {lead: @lead, success: "Lead created successfully"}, status: :created }
         else
           @project = Project.new(booking_portal_client_id: current_client.id, name: params["project_name"], selldo_id: params["project_id"]) unless @project.present?
@@ -36,7 +36,7 @@ class HomeController < ApplicationController
           @lead = Lead.new(email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], lead_id: params[:lead_id], selldo_lead_registration_date: params['lead_details']['lead_created_at'])
           if @project.save && @user.save
             @lead.assign_attributes(user_id: @user.id, project_id: @project.id)
-            CpLeadActivityRegister.create_cp_lead_object(true, @is_interested_for_project, @lead, current_user, params[:lead_details]) if current_user.role?("channel_partner")
+            CpLeadActivityRegister.create_cp_lead_object(true, @lead, current_user, params[:lead_details]) if current_user.role?("channel_partner")
             if @lead.save
               format.json { render json: {lead: @lead, success: "Lead created successfully"}, status: :created }
             else
@@ -52,12 +52,12 @@ class HomeController < ApplicationController
 
   private
 
-  def set_project_wise_flag
-    if params[:lead_id].present?
-      @is_interested_for_project = FetchLeadData.get(params[:lead_id], params[:project_name], current_client)
-      format.json { render json: { errors: 'There was some error while fetching lead data from Sell.Do. Please contact administrator.', status: :unprocessable_entity } } && return if @is_interested_for_project == 'error'
-    end
-  end
+  # def set_project_wise_flag
+  #   if params[:lead_id].present?
+  #     @is_interested_for_project = FetchLeadData.get(params[:lead_id], params[:project_name], current_client)
+  #     format.json { render json: { errors: 'There was some error while fetching lead data from Sell.Do. Please contact administrator.', status: :unprocessable_entity } } && return if @is_interested_for_project == 'error'
+  #   end
+  # end
 
   def get_query
     query = []
