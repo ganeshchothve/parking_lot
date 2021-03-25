@@ -918,7 +918,7 @@ en:
         channel_partner: 'Channel Partner'
         count_status: 'Count Status'
         lead_status: 'Lead Status'
-        expiry_remaining_days: 'Expiry Remaining Days'
+        expiry_remaining_days: 'Lead Validity Period'
         registered_at: 'Registered At'
         can_extend_validity: 'Can Extend Validity?'
         expiry_date: 'Expiry Date'

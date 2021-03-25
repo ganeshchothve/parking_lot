@@ -26,12 +26,6 @@
     </div>
     <div class="col-md-4">
       <div class="form-group">
-        <label class="small"><%= t('mongoid.attributes.lead.lead_validity_period') %></label>
-        <div><%= cp_lead_activity.present? ? cp_lead_activity.lead_validity_period : lead.lead_validity_period %></div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="form-group">
         <label class="small"><%= t('mongoid.attributes.cp_lead_activity.lead_status') %></label>
         <div><%= cp_lead_activity.present? ? cp_lead_activity.lead_status.try(:titleize) : lead.cp_lead_activities.first.try(:lead_status).try(:titleize) || '-' %></div>
       </div>
@@ -40,6 +34,24 @@
       <div class="form-group">
         <label class="small"><%= t('mongoid.attributes.cp_lead_activity.count_status') %></label>
         <div><%= cp_lead_activity.present? ? cp_lead_activity.count_status.try(:titleize) : lead.cp_lead_activities.first.try(:count_status).try(:titleize) || '-' %></div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="small"><%= t('mongoid.attributes.lead.registered_at') %></label>
+        <div><%= cp_lead_activity.present? ? cp_lead_activity.registered_at.try(:strftime, "%d/%m/%Y") : lead.created_at.try(:strftime, "%d/%m/%Y") %></div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="small"><%= t('mongoid.attributes.lead.expiry_date') %></label>
+        <div><%= cp_lead_activity.present? ? cp_lead_activity.expiry_date.try(:strftime, "%d/%m/%Y") : '-' %></div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="small"><%= t('mongoid.attributes.lead.lead_validity_period') %></label>
+        <div><%= cp_lead_activity.present? ? cp_lead_activity.lead_validity_period : lead.lead_validity_period %></div>
       </div>
     </div>
   </div>

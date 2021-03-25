@@ -12,8 +12,9 @@
         <% end %>
         <th><%= t('mongoid.attributes.cp_lead_activity.count_status') %></th>
         <th><%= t('mongoid.attributes.cp_lead_activity.lead_status') %></th>
-        <th><%= t('mongoid.attributes.cp_lead_activity.expiry_remaining_days') %></th>
         <th><%= t('mongoid.attributes.cp_lead_activity.registered_at') %></th>
+        <th><%= t('mongoid.attributes.cp_lead_activity.expiry_date') %></th>
+        <th><%= t('mongoid.attributes.cp_lead_activity.expiry_remaining_days') %></th>
         <th><%= t('mongoid.attributes.cp_lead_activity.can_extend_validity') %></th>
         <th class="text-right"><%= t('global.action', count: 3) %></th>
       </tr>
@@ -51,8 +52,9 @@
         <% end %>
       <td><%= cp_lead_activity.count_status.try(:titleize) %></td>
       <td><%= cp_lead_activity.lead_status.try(:titleize) %></td>
-      <td><%= cp_lead_activity.lead_validity_period %></td>
       <td><%= cp_lead_activity.registered_at.try(:strftime, "%d/%m/%Y") %></td>
+      <td><%= cp_lead_activity.expiry_date.try(:strftime, "%d/%m/%Y") %></td>
+      <td><%= cp_lead_activity.lead_validity_period %></td>
       <td class="text-center"><%= cp_lead_activity.can_extend_validity? ? 'Yes' : 'No' %></td>
       <td>
         <div class="dropdown show text-right">
