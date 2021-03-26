@@ -13,7 +13,7 @@ module CpLeadActivityRegister
                                   end
                                   activity
                                 else
-                                  site_visit_conditions_handled(lead, channel_partner)
+                                  site_visit_conditions_handled(lead, channel_partner, true)
                                 end
       elsif cp_lead_activity = CpLeadActivity.where(lead_id: lead.id, expiry_date: {"$gt": Date.current}, user_id: {"$ne": channel_partner.id}).first
         new_cp_lead_activity = CpLeadActivity.new(registered_at: Date.current, count_status: "no_count", lead_status: lead.lead_status, expiry_date: Date.current - 1, lead_id: lead.id, user_id: channel_partner.id, sitevisit_status: lead.sitevisit_status, sitevisit_date: lead.sitevisit_date)
@@ -30,8 +30,8 @@ module CpLeadActivityRegister
     new_cp_lead_activity.try(:save)
   end
 
-  def self.site_visit_conditions_handled(lead, channel_partner)
-    if lead.sitevisit_date.present?
+  def self.site_visit_conditions_handled(lead, channel_partner, is_lead_active = false)
+    if is_lead_active || lead.sitevisit_date.present?
       CpLeadActivity.new(registered_at: Date.current, count_status: "no_count", lead_status: lead.lead_status, expiry_date: Date.current - 1, lead_id: lead.id, user_id: channel_partner.id, sitevisit_status: lead.sitevisit_status, sitevisit_date: lead.sitevisit_date)
     else
       CpLeadActivity.new(registered_at: Date.current, count_status: "accompanied_credit", lead_status: lead.lead_status, expiry_date: Date.current - 1, lead_id: lead.id, user_id: channel_partner.id, sitevisit_status: lead.sitevisit_status, sitevisit_date: lead.sitevisit_date)
