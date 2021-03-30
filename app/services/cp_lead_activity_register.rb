@@ -6,12 +6,13 @@ module CpLeadActivityRegister
     else
       if cp_lead_activity = CpLeadActivity.where(lead_id: lead.id, user_id: channel_partner.id, expiry_date: {"$gt": Date.current}).first || CpLeadActivity.in(lead_id: Lead.nin(id: lead.id).where(lead_id: lead.lead_id).distinct(:id)).where(expiry_date: {"$gt": Date.current}).first
         new_cp_lead_activity =  if cp_lead_activity.user_id == channel_partner.id
-                                  activity = CpLeadActivity.new(registered_at: Date.current, count_status: "active_in_same_cp", lead_status: lead.lead_status, expiry_date: cp_lead_activity.expiry_date , lead_id: lead.id, user_id: channel_partner.id, sitevisit_status: lead.sitevisit_status, sitevisit_date: lead.sitevisit_date)
-                                  if lead.project_id == cp_lead_activity.lead.project_id
-                                    cp_lead_activity.expiry_date = (Date.current - 1)
-                                    cp_lead_activity.save
-                                  end
-                                  activity
+                                  CpLeadActivity.new(registered_at: Date.current, count_status: "active_in_same_cp", lead_status: lead.lead_status, expiry_date: cp_lead_activity.expiry_date , lead_id: lead.id, user_id: channel_partner.id, sitevisit_status: lead.sitevisit_status, sitevisit_date: lead.sitevisit_date)
+                                  # Note : Confirmed from client as it is ok if lead shown two times
+                                  # if lead.project_id == cp_lead_activity.lead.project_id
+                                  #   cp_lead_activity.expiry_date = (Date.current - 1)
+                                  #   cp_lead_activity.save
+                                  # end
+                                  #activity
                                 else
                                   site_visit_conditions_handled(lead, channel_partner, true)
                                 end
