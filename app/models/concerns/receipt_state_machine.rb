@@ -59,7 +59,7 @@ module ReceiptStateMachine
         transitions from: :success, to: :cancellation_requested
       end
 
-      event :cancel do
+      event :cancel, after: :send_booking_detail_back_to_under_negotiation do
         transitions from: :pending, to: :cancelled, if: :user_request_initiated?
         transitions from: :success, to: :cancelled, if: :swap_request_initiated?
         transitions from: :clearance_pending, to: :cancelled, if: :user_request_initiated?
@@ -131,6 +131,10 @@ module ReceiptStateMachine
     def send_booking_detail_to_under_negotiation
       change_booking_detail_status
       send_notification if %i[pending clearance_pending cancelled].include?(self.aasm.from_state)
+    end
+
+    def send_booking_detail_back_to_under_negotiation
+      booking_detail.under_negotiation! if booking_detail
     end
     #
     # When Receipt is created by admin except channel partner then it's direcly moved in clearance pending.
