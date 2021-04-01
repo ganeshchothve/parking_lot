@@ -8,7 +8,7 @@ class Admin::InvoicePolicy < InvoicePolicy
   end
 
   def create?
-    user.role?('channel_partner') && enable_incentive_module?(user)
+    user.role?('channel_partner') && enable_incentive_module?(user) && incentive_calculation_type?("manual")
   end
 
   def edit?
@@ -43,6 +43,11 @@ class Admin::InvoicePolicy < InvoicePolicy
 
   def asset_update?
     asset_create?
+  end
+
+  def incentive_calculation_type?(_type=nil)
+    return true if current_client.incentive_calculation_type?(_type)
+    false
   end
 
   def permitted_attributes(params = {})

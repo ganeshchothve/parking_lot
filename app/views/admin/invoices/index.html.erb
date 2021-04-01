@@ -16,7 +16,13 @@
           </button>
         </div>
       </div>
-
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+        <nav class="nav float-left">
+          <%= active_link_to "All", admin_invoices_path, active: :exclusive, class: "nav-link nav-link-local", id: 'all' %>
+          <%= active_link_to "Calculated Invoices", admin_invoices_path({invoice_type: "calculated"}), active: :exclusive, class: "nav-link nav-link-local", id: 'calculated' %>
+          <%= active_link_to "Manual Invoices", admin_invoices_path({invoice_type: "manual"}), active: :exclusive, class: "nav-link nav-link-local", id: 'manual' %>
+        </nav>
+      </div>
       <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
         <div class="box-card relative">
           <%= render 'admin/invoices/index', invoices: @invoices %>
