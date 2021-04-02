@@ -921,7 +921,7 @@ en:
         expiry_remaining_days: 'Lead Validity Period'
         registered_at: 'Registered At'
         can_extend_validity: 'Can Extend Validity?'
-        expiry_date: 'Expiry Date'
+        expiry_date: 'Lead Expiry Date'
         sitevisit_date: 'Site Visit Date'
         sitevisit_status: 'Site Visit Status'
 

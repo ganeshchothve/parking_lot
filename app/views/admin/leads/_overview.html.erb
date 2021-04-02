@@ -44,7 +44,7 @@
     </div>
     <div class="col-md-4">
       <div class="form-group">
-        <label class="small"><%= t('mongoid.attributes.lead.expiry_date') %></label>
+        <label class="small"><%= t('mongoid.attributes.cp_lead_activity.expiry_date') %></label>
         <div><%= cp_lead_activity.present? ? cp_lead_activity.expiry_date.try(:strftime, "%d/%m/%Y") : '-' %></div>
       </div>
     </div>
