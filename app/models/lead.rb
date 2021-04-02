@@ -176,11 +176,11 @@ class Lead
       case user.role.to_sym
       when :channel_partner
         custom_scope[:'$or'] = [{manager_id: user.id}, {manager_id: nil, referenced_manager_ids: user.id, iris_confirmation: false}]
-      when :cp
-        custom_scope = { manager_id: { "$in": User.where(role: 'channel_partner', manager_id: user.id).distinct(:id) } }
-      when :cp_admin
-        cp_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
-        custom_scope = { manager_id: { "$in": User.where(role: 'channel_partner').in(manager_id: cp_ids).distinct(:id) }  }
+      #when :cp
+      #  custom_scope = { manager_id: { "$in": User.where(role: 'channel_partner', manager_id: user.id).distinct(:id) } }
+      #when :cp_admin
+      #  cp_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
+      #  custom_scope = { manager_id: { "$in": User.where(role: 'channel_partner').in(manager_id: cp_ids).distinct(:id) }  }
       end
       custom_scope = { user_id: params[:user_id] } if params[:user_id].present?
       custom_scope = { user_id: user.id } if user.buyer?

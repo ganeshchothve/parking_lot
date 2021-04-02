@@ -80,7 +80,7 @@ class ProjectUnit
   accepts_nested_attributes_for :data, :parameters, :costs, allow_destroy: true
   accepts_nested_attributes_for :assets, reject_if: proc { |attributes| attributes['file'].blank? }
 
-  validates :saleable, :carpet, :base_rate, :agreement_price, :all_inclusive_price, :booking_price, :project_id, :project_tower_id, :unit_configuration_id, :floor, :floor_order, :bathrooms, :type, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, :bedrooms, presence: true
+  validates :saleable, :carpet, :base_rate, :agreement_price, :all_inclusive_price, :project_id, :project_tower_id, :unit_configuration_id, :floor, :floor_order, :bathrooms, :type, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, :bedrooms, presence: true
   validates :status, :name, :erp_id, presence: true
   validates :status, inclusion: { in: proc { ProjectUnit.available_statuses.collect { |x| x[:id] } } }
   validates :available_for, inclusion: { in: proc { ProjectUnit.available_available_fors.collect { |x| x[:id] } } }

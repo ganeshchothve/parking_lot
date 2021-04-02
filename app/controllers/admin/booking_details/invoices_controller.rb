@@ -1,6 +1,6 @@
 class Admin::BookingDetails::InvoicesController < AdminController
   before_action :set_booking_detail
-  before_action :set_invoice, except: [:index, :create]
+  before_action :set_invoice, except: [:index, :create, :export]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: [:index]
 
@@ -82,6 +82,16 @@ class Admin::BookingDetails::InvoicesController < AdminController
     end
   end
 
+  def export
+    if Rails.env.development?
+      BrokerageExportWorker.new.perform(current_user.id.to_s, params[:fltrs])
+    else
+      BrokerageExportWorker.perform_async(current_user.id.to_s, params[:fltrs].as_json)
+    end
+    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    redirect_to admin_invoices_path(fltrs: params[:fltrs].as_json)
+  end
+
   private
 
   def associated_class
@@ -108,7 +118,7 @@ class Admin::BookingDetails::InvoicesController < AdminController
   end
 
   def authorize_resource
-    if params[:action].in?(%w(index create))
+    if params[:action].in?(%w(index create export))
       authorize [current_user_role_group, Invoice]
     elsif params[:action].in?(%w(change_state edit update raise_invoice update_gst))
       authorize [current_user_role_group, @invoice]

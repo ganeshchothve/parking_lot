@@ -44,5 +44,5 @@
 
 <!-- Upload documents for channel partner -->
 <% if policy([:admin, invoice]).index? %>
-  <%= link_to t('controller.invoices.asset_create.link_name'), assetables_path(assetable_type: invoice.class.model_name.i18n_key.to_s, assetable_id: invoice.id, asset_header: t('controller.invoices.asset_create.link_name')), class: "dropdown-item modal-remote-form-link" %>
+  <%= link_to current_user.role?('channel_partner')  ? "Upload Invoice copy" : t('controller.invoices.asset_create.link_name'), assetables_path(assetable_type: invoice.class.model_name.i18n_key.to_s, assetable_id: invoice.id, asset_header: t('controller.invoices.asset_create.link_name')), class: "dropdown-item modal-remote-form-link" %>
 <% end %>

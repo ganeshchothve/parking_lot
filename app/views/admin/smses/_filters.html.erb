@@ -11,7 +11,7 @@
           <%= label_tag "fltrs[project_id]", t('mongoid.attributes.sms.project_id'), class: "control-label" %>
           <%= select_tag "fltrs[project_id]", options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:project_id] : "")), {prompt: "Select", class: "selectize"} %>
         </div>
-        <% unless current_user.buyer? %>
+        <% unless true #current_user.buyer? %>
           <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
             <%= label_tag "fltrs[to]", labels[:to], class: "control-label" %>
             <%= select_tag "fltrs[to]", options_for_select(policy_scope([:admin, Sms]).pluck(:to).flatten.uniq.each {|x| x}, (params[:fltrs].present? ? params[:fltrs][:to] : "")), {prompt: "Select Contact Number", class: "selectize"} %>
