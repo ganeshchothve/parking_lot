@@ -5,8 +5,7 @@ class Template::SmsTemplate < Template
   field :name, type: String
   field :subject_class, type: String
   field :content, type: String
-  field :temp_id, type: String
-  field :dlt_header_id, type: String
+  field :dlt_tag_id, type: String
   field :dlt_temp_id, type: String
 
   validates :name, :content, :subject_class, presence: true
