@@ -28,7 +28,7 @@ class Api::V1::UserRequestsController < ApisController
     if booking_id = params.dig(:user_request, :booking_detail_id).presence
       @resource = BookingDetail.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": booking_id).first
       render json: { errors: ["Booking Detail with reference_id '#{ booking_id }' not found"] }, status: :not_found and return unless @resource.present?
-      render json: { errors: ["Booking Detail(#{ booking_id }) is not available for cancellation."]}, status: :unprocessable_entity and return unless %w[blocked booked_tentative booked_confirmed].include?(@resource.status)
+      render json: { errors: ["Booking Detail(#{ booking_id }) is not available for cancellation."]}, status: :unprocessable_entity and return unless %w[blocked booked_tentative booked_confirmed scheme_approved].include?(@resource.status)
     elsif receipt_id = params.dig(:user_request, :receipt_id).presence
       @resource = Receipt.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": receipt_id).first
       render json: { errors: ["Receipt with reference_id '#{ receipt_id }' not found"] }, status: :not_found and return unless @resource.present?
