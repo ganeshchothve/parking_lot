@@ -14,39 +14,38 @@ module Communication
         params = {}
         params[:senderid] = client.sms_mask
         params[:username] = client.sms_provider_username
-        params[:pass] = client.sms_provider_password
+        params[:password] = client.sms_provider_password
         params[:response] = "Y"
-        params[:dest_mobileno] = sms.to.join(",")
-        params[:dltentityid] = client.sms_provider_dlt_entity_id
-        sms.variable_list.each do |v|
-          params["F#{v[:id]}".to_sym] = v[:value]
-        end
+
+        #sms.variable_list.each do |v|
+        #  params["F#{v[:id]}".to_sym] = v[:value]
+        #end
+        #
         if client.sms_provider_telemarketer_id.present?
-          params[:tempid] = template.temp_id
-          params[:tmid] = client.sms_provider_telemarketer_id
-          params[:dlttempid] = template.dlt_temp_id
-          params[:dltheaderid] = template.dlt_header_id
-          params[:dltentityid] = client.sms_provider_dlt_entity_id
-          uri = URI("http://www.smsjust.com/blank/sms/user/urlsmstemp.php")
+          params[:mtype]         = 'TXT'
+          params[:subdatatype]   = 'M'
+          params[:tmid]          = client.sms_provider_telemarketer_id
+          params[:dltentityid]   = client.sms_provider_dlt_entity_id
+          params[:dlttempid]     = template.dlt_temp_id
+          params[:dlttagid]      = template.dlt_tag_id
+          params[:msgdata]       = { data: sms.to.map { |phone| {mobile: phone, message: sms.body} } }.to_json
+          uri                    = URI("http://www.smsjust.com/sms/user/urlsms_json.php")
+          response               = Net::HTTP.post_form(uri, params)
+          response               = JSON.parse(response.body)
         else
-          params[:message] = sms.body
-          uri = URI("http://www.smsjust.com/blank/sms/user/urlsms.php")
+          params[:pass]          = client.sms_provider_password
+          params[:dest_mobileno] = sms.to.join(",")
+          params[:message]       = sms.body
+          uri                    = URI("http://www.smsjust.com/blank/sms/user/urlsms.php")
+          uri.query              = URI.encode_www_form(params)
+          response               = Net::HTTP.get_response(uri).body
         end
-        uri.query = URI.encode_www_form(params)
-        response = Net::HTTP.get_response(uri).body
 
         attrs = { response: response, sms_gateway: "sms_just" }
-
-        if response.starts_with?("ES") || response.downcase.gsub(/\s+/, "") == "messageisblank" || response.downcase.gsub(/\s+/, "") == "youhaveexceededyoursmslimit." || response.downcase.gsub(/\s+/, "") == "accountisexpire"
-          sms.set(status: "fail")
-          return {status:"fail", remote_id: response}
-        else
-          sms.set(status: "sent", sent_on: Time.now)
-          return {status:"success", remote_id: response}
-        end
+        attrs[:status] = response['result'] != 'Success' ? 'fail' : 'sent'
         attrs[:sent_on] = Time.now if attrs[:status] == 'sent'
         sms.set(attrs)
-        { status: attrs[:status], remote_id: response }
+        return attrs
       end
     end
 

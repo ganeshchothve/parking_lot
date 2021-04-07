@@ -758,9 +758,7 @@ en:
         name: 'Name'
         content: 'Content'
         type: 'Type'
-        temp_id: "Template ID"
-        dlt_entity_id: "DLT Entity ID"
-        dlt_header_id: "DLT Header ID"
+        dlt_tag_id: "DLT Tag ID"
         dlt_temp_id: "DLT Template ID"
         project_id: 'Project'
       user_request:
