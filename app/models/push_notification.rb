@@ -13,7 +13,6 @@ class PushNotification
   field :user_notification_tokens, type: Array, default: []
   field :response, type: String # for queued, send, delivered, read message
   field :vendor, type: String, default: 'Firebase'
-  field :template_id, type: String
   field :sent_on, type: DateTime
   field :role, type: String
 

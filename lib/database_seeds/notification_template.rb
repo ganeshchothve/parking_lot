@@ -27,7 +27,7 @@ module DatabaseSeeds
         <% end %>
         ") if Template::NotificationTemplate.where(name: "cancellation_request_rejected").blank?
 
-      Template::NotificationTemplate.create(booking_portal_client_id: client_id, subject_class: "UserRequest::Swap", name: "swap_request_created", title: "Swap request pending", url: "/<%= current_user_role_group %>/all/user_requests", content: "A swap has been requested on your booking of <%= project_unit.name %> at <%= project_unit.project_name %>. Our CRM team is reviewing your request and will get in touch with you shortly.") if Template::NotificationTemplate.where(name: "swap_request_created").blank?
+      Template::NotificationTemplate.create(booking_portal_client_id: client_id, subject_class: "UserRequest::Swap", name: "swap_request_pending", title: "Swap request pending", url: "/<%= current_user_role_group %>/all/user_requests", content: "A swap has been requested on your booking of <%= project_unit.name %> at <%= project_unit.project_name %>. Our CRM team is reviewing your request and will get in touch with you shortly.") if Template::NotificationTemplate.where(name: "swap_request_pending").blank?
 
       Template::NotificationTemplate.create(booking_portal_client_id: client_id, subject_class: "UserRequest::Swap", name: "swap_request_resolved",  title: "Swap request resolved", url: "/<%= current_user_role_group %>/all/user_requests", content: "Swap request on your booking of <%= project_unit.name %> at <%= project_unit.project_name %> has been processed. We have now blocked <%= I18n.t('global.project_unit') %> <%= alternate_project_unit.name %> for you.") if Template::NotificationTemplate.where(name: "swap_request_resolved").blank?
 
