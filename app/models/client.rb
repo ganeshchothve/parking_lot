@@ -45,6 +45,8 @@ class Client
   field :whatsapp_api_key, type: String
   field :whatsapp_api_secret, type: String
   field :whatsapp_vendor, type: String, default: 'twilio'
+  field :notification_api_key, type: String
+  field :notification_vendor, type: String, default: 'firebase'
   field :sms_provider_dlt_entity_id, type: String
   field :sms_mask, type: String, default: "SellDo"
   field :sms_provider, type: String, default: 'sms_just'
@@ -68,7 +70,7 @@ class Client
   field :tds_process, type: String
   field :ga_code, type: String
   field :gtm_tag, type: String
-  field :enable_communication, type: Hash, default: { 'email': true, 'sms': true, 'whatsapp': false }
+  field :enable_communication, type: Hash, default: { 'email': true, 'sms': true, 'whatsapp': false, 'notification': false }
   field :allow_multiple_bookings_per_user_kyc, type: Boolean, default: true
   field :enable_referral_bonus, type: Boolean, default: false
   field :roles_taking_registrations, type: Array, default: %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner]
@@ -125,8 +127,10 @@ class Client
   has_many :sms_templates, class_name: 'Template::SmsTemplate'
   has_many :email_templates, class_name: 'Template::EmailTemplate'
   has_many :ui_templates, class_name: 'Template::UITemplate'
+  has_many :notification_templates, class_name: 'Template::NotificationTemplate'
   has_many :smses, class_name: 'Sms'
   has_many :whatsapps, class_name: 'Whatsapp'
+  has_many :push_notifications, class_name: 'PushNotification'
   has_many :assets, as: :assetable
   has_many :emails, class_name: 'Email', inverse_of: :booking_portal_client
   has_many :schemes
@@ -142,6 +146,7 @@ class Client
   validates :payment_gateway, inclusion: {in: Proc.new{ Client::PAYMENT_GATEWAYS } }, allow_blank: true
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
   validates :whatsapp_api_key, :whatsapp_api_secret, presence: true, if: :whatsapp_enabled?
+  validates :notification_api_key, presence: true, if: :notification_enabled?
   accepts_nested_attributes_for :address, :external_inventory_view_config, :checklists
 
   def self.available_preferred_logins
@@ -161,6 +166,10 @@ class Client
 
   def whatsapp_enabled?
     self.enable_communication['whatsapp']
+  end
+
+  def notification_enabled?
+    self.enable_communication['notification']
   end
 
   def enable_actual_inventory?(user)

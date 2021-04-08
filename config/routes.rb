@@ -90,6 +90,7 @@ Rails.application.routes.draw do
     resources :smses, only: %i[index show] do
       get :sms_pulse, on: :collection
     end
+    resources :push_notifications, only: %i[index show new create]
     resource :client, except: [:show, :new, :create] do
       resources :templates, only: [:edit, :update, :index]
       get 'document_sign/prompt'
@@ -267,7 +268,7 @@ Rails.application.routes.draw do
       resources :booking_detail_schemes, except: [:destroy], controller: 'booking_details/booking_detail_schemes'
     end
 
-    resources :emails, :smses, only: %i[index show]
+    resources :emails, :smses, :push_notifications, only: %i[index show]
     resources :project_units, only: [:index, :show, :edit, :update] do
       get :quotation, on: :member
     end

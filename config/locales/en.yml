@@ -65,6 +65,9 @@ en:
 
   mongoid:
     models:
+      push_notification:
+        one: "Notification"
+        other: "Notifications"
       api_log:
         one: 'API Log'
         other: 'API Logs'
@@ -188,6 +191,10 @@ en:
         other: Users & Customers
 
     attributes:
+      push_notification:
+        url: "Redirect url"
+        title: "Title"
+        content: "Content"
       crm:
         base:
           name: Name
@@ -804,6 +811,9 @@ en:
           custom_dates: 'Custom Dates'
 
   controller:
+    push_notifications:
+      index:
+        link_name: "Notifications"
     api_logs:
       index:
         link_name: 'API Logs'

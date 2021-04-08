@@ -19,7 +19,7 @@ module ReceiptStateMachine
         transitions from: :clearance_pending, to: :clearance_pending
       end
 
-      event :success, after: %i[change_booking_detail_status send_success_notification lock_lead] do
+      event :success, after: %i[after_success_event] do
         transitions from: :success, to: :success
         # receipt moves from pending to success when online payment is made.
         transitions from: :clearance_pending, to: :success
@@ -88,6 +88,12 @@ module ReceiptStateMachine
       persisted? || project_unit_id.present?
     end
 
+    def after_success_event
+      change_booking_detail_status
+      send_success_notification
+      lock_lead
+    end
+
     def move_to_available_for_refund
       available_for_refund!
     end
@@ -136,7 +142,7 @@ module ReceiptStateMachine
     # When Receipt is created by admin except channel partner then it's direcly moved in clearance pending.
     #
     def moved_to_clearance_pending
-      if payment_mode != 'online'
+      if payment_mode != 'online' && status != 'clearance_pending'
         unless ((User::BUYER_ROLES).include?(self.creator.role))||(self.creator.role == 'channel_partner' && !self.creator.premium?)
           self.clearance_pending!
         end
@@ -163,6 +169,18 @@ module ReceiptStateMachine
         if whatsapp_template.present?
           Whatsapp.create!(to: self.user.phone, triggered_by: self, booking_portal_client: self.user.booking_portal_client, whatsapp_template: whatsapp_template, from: "+16413231111")
         end
+      end
+
+      template = Template::NotificationTemplate.where(name: "receipt_#{status}").first
+      if template.present? && user.booking_portal_client.notification_enabled?
+        push_notification = PushNotification.new(
+          notification_template_id: template.id,
+          triggered_by_id: self.id,
+          triggered_by_type: self.class.to_s,
+          recipient: self.user,
+          booking_portal_client_id: self.user.booking_portal_client
+        )
+        push_notification.save
       end
     end
   end
