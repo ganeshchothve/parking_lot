@@ -93,6 +93,7 @@ GEM
       unf
     autoprefixer-rails (9.1.4)
       execjs
+    awesome_print (1.9.2)
     azure-core (0.1.15)
       faraday (~> 0.9)
       faraday_middleware (~> 0.10)
@@ -674,6 +675,7 @@ DEPENDENCIES
   active_model_otp
   asset_sync (>= 2.4.0)
   audit!
+  awesome_print
   bootstrap
   bootstrap-email
   byebug
@@ -759,4 +761,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   1.16.6
+   1.17.3

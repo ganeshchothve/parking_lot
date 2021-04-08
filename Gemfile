@@ -167,3 +167,4 @@ end
 
 gem 'humanize', require: 'humanize'
 gem 'request_store'
+gem 'awesome_print'
