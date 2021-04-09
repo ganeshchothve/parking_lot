@@ -572,11 +572,11 @@ class User
       available_roles = available_roles(current_client)
       case current_user.role
       when "superadmin"
-        available_roles & ["superadmin","admin","cp_admin","cp","billing_team"]
+        available_roles & %w[superadmin admin cp_admin cp billing_team]
       when "admin"
-        available_roles & ["admin","cp_admin","cp","billing_team"]
+        available_roles & %w[admin cp_admin cp billing_team]
       when "cp_admin"
-        available_roles & ["cp"] 
+        available_roles & %w[cp]
       else
         available_roles
       end
