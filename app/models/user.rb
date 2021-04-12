@@ -568,6 +568,20 @@ class User
       roles
     end
 
+    def current_user_available_roles(current_client, current_user)
+      available_roles = available_roles(current_client)
+      case current_user.role
+      when "superadmin"
+        available_roles & %w[superadmin admin cp_admin cp billing_team]
+      when "admin"
+        available_roles & %w[admin cp_admin cp billing_team]
+      when "cp_admin"
+        available_roles & %w[cp]
+      else
+        available_roles
+      end
+    end
+
     def find_first_by_auth_conditions(warden_conditions)
       conditions = warden_conditions.dup
       login = conditions.delete(:login)
