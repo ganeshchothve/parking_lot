@@ -594,9 +594,11 @@ class User
       custom_scope = {}
       if user.role?('cp_admin')
         cp_ids = User.where(manager_id: user.id).distinct(:id)
-        custom_scope = {role: 'channel_partner', manager_id: {"$in": cp_ids}}
+        custom_scope = {role: 'channel_partner'} #, manager_id: {"$in": cp_ids}
       elsif user.role?('cp')
-        custom_scope = {role: 'channel_partner', manager_id: user.id}
+        custom_scope = {role: 'channel_partner'} #, manager_id: user.id
+      elsif ["admin","superadmin"].include?(user.role)
+        custom_scope = {role: 'channel_partner'}
       end
     end
 
