@@ -30,15 +30,11 @@ class Admin::IncentiveDeductionPolicy < IncentiveDeductionPolicy
   def permitted_attributes(params = {})
     attributes = super
     case user.role.to_s
-    when 'cp_admin'
+    when 'cp_admin', 'admin'
       attributes += [:comments]
       attributes += [:amount] if record.new_record? && !record.invoice.status.in?(%w(approved rejected))
       attributes += [:event] if record.pending_approval?
     when 'billing_team'
-      attributes += [:event] if record.pending_approval?
-    when 'admin'
-      attributes += [:comments]
-      attributes += [:amount] if record.new_record? && !record.invoice.status.in?(%w(approved rejected))
       attributes += [:event] if record.pending_approval?
     end
     attributes.uniq
