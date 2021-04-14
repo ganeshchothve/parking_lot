@@ -8,7 +8,7 @@ class Admin::IncentiveDeductionPolicy < IncentiveDeductionPolicy
   end
 
   def create?
-    user.role?('cp_admin') && !record.invoice.status.in?(%w(approved rejected)) && IncentiveDeduction.where(invoice_id: record.invoice_id, status: { '$ne': 'rejected' }).blank?
+    user.role.in?(%w(cp_admin admin)) && !record.invoice.status.in?(%w(approved rejected)) && IncentiveDeduction.where(invoice_id: record.invoice_id, status: { '$ne': 'rejected' }).blank?
   end
 
   def edit?
@@ -16,15 +16,15 @@ class Admin::IncentiveDeductionPolicy < IncentiveDeductionPolicy
   end
 
   def update?
-    user.role.in?(%w(cp_admin)) && record.status.in?(%w(draft pending_approval))
+    user.role.in?(%w(cp_admin admin)) && record.status.in?(%w(draft pending_approval))
   end
 
   def change_state?
-    user.role.in?(%w(cp_admin billing_team)) && record.pending_approval?
+    user.role.in?(%w(cp_admin billing_team admin)) && record.pending_approval?
   end
 
   def asset_create?
-    user.role?('cp_admin') && record.status.in?(%w(draft pending_approval))
+    user.role.in?(%w(cp_admin admin)) && record.status.in?(%w(draft pending_approval))
   end
 
   def permitted_attributes(params = {})
@@ -35,6 +35,10 @@ class Admin::IncentiveDeductionPolicy < IncentiveDeductionPolicy
       attributes += [:amount] if record.new_record? && !record.invoice.status.in?(%w(approved rejected))
       attributes += [:event] if record.pending_approval?
     when 'billing_team'
+      attributes += [:event] if record.pending_approval?
+    when 'admin'
+      attributes += [:comments]
+      attributes += [:amount] if record.new_record? && !record.invoice.status.in?(%w(approved rejected))
       attributes += [:event] if record.pending_approval?
     end
     attributes.uniq
