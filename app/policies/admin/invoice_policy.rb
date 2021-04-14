@@ -19,7 +19,7 @@ class Admin::InvoicePolicy < InvoicePolicy
     valid = user.role?('billing_team') && record.status.in?(%w(draft approved))
     valid ||= user.role?('channel_partner') && record.status.in?(%w(draft rejected))
     valid ||= user.role?('cp_admin') && record.pending_approval?
-    valid ||= user.role?('admin') && (record.status.in?(%w(draft rejected approved pending_approval))
+    valid ||= user.role?('admin') && record.status.in?(%w(draft rejected approved pending_approval))
   end
 
   def update_gst?
