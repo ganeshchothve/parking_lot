@@ -1178,6 +1178,8 @@ en:
     dashboard:
       index:
         link_name: 'Dashboard'
+        billing_team_link_name: 'Billing Dashboard'
+        cp_admin_link_name: 'Channel Partner Head Dashboard'
       receipt_frequency: 'Payment Frequency'
     emails:
       index:
