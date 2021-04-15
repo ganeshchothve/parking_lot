@@ -63,7 +63,7 @@ gem 'rails-observers',  github: 'rails/rails-observers'
 # for file upload
 gem 'fog-aws'
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
-gem 'mimemagic', '0.3.3'
+gem 'mimemagic', '~> 0.3.10'
 
 # for simplified HTTP requests
 gem 'httparty', '>= 0.14.0'
