@@ -164,4 +164,10 @@
     </div>
     <% end %>
   </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :incentive_calculation, class: 'label-required' %>
+      <%= f.select :incentive_calculation, Client::INCENTIVE_CALCULATION.collect{|x| [x,x]}, {}, class: 'selectize', multiple: true, required: 'required', disabled: (policy([:admin, @client]).editable_field?("incentive_calculation") ? false : true) %>
+    </div>
+  </div>
 </div>

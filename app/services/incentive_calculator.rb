@@ -15,7 +15,7 @@ class IncentiveCalculator
     tower_id = unit.project_tower_id
     tier_id = channel_partner.tier_id
     booked_on = booking_detail.booked_on
-    incentive_schemes = IncentiveScheme.approved.where(project_id: lead.project_id).lte(starts_on: booked_on).gte(ends_on: booked_on)
+    incentive_schemes = ::IncentiveScheme.approved.where(project_id: lead.project_id).lte(starts_on: booked_on).gte(ends_on: booked_on)
     # Find tier level scheme
     if tier_id
       _incentive_scheme ||= (incentive_schemes.where(project_tower_id: tower_id, tier_id: tier_id).first || incentive_schemes.where(tier_id: tier_id, project_tower_id: nil).first)
@@ -25,7 +25,7 @@ class IncentiveCalculator
     # Find project level scheme
     _incentive_scheme ||= incentive_schemes.where(project_tower_id: nil, tier_id: nil).first
     # Use default scheme if not found any of above
-    _incentive_scheme ||= IncentiveScheme.where(default: true).first
+    _incentive_scheme ||= ::IncentiveScheme.where(default: true).first
     @incentive_scheme = _incentive_scheme
   end
 
@@ -64,14 +64,14 @@ class IncentiveCalculator
           if options[:test]
             hash[:incentive] = incentive_amount
           else
-            invoice = Invoice.find_or_initialize_by(project_id: _booking_detail.project_id, booking_detail_id: _booking_detail.id, incentive_scheme_id: incentive_scheme.id, ladder_id: ladder.id, manager_id: channel_partner.id)
-            existing_invoices = Invoice.where(project_id: _booking_detail.project_id, booking_detail_id: _booking_detail.id, incentive_scheme_id: incentive_scheme.id, manager_id: channel_partner.id)
+            invoice = Invoice::Calculated.find_or_initialize_by(project_id: _booking_detail.project_id, booking_detail_id: _booking_detail.id, incentive_scheme_id: incentive_scheme.id, ladder_id: ladder.id, manager_id: channel_partner.id)
+            existing_invoices = Invoice::Calculated.where(project_id: _booking_detail.project_id, booking_detail_id: _booking_detail.id, incentive_scheme_id: incentive_scheme.id, manager_id: channel_partner.id)
 
             if invoice.new_record?
               amount = (incentive_amount - existing_invoices.sum(:amount)).round
               invoice.amount = (amount > 0 ? amount : 0)
               invoice.ladder_stage = ladder.stage
-              invoice.manager = channel_partner
+              # invoice.manager = channel_partner
               if invoice.save
                 # Set incentive scheme id & ladder stage of scheme under which this booking detail is incentivized.
                 attrs = { ladder_stage: (1..ladder.stage).to_a }

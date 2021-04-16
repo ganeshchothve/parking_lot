@@ -1,4 +1,4 @@
-<%= nested_form_for([:admin, @booking_detail, @invoice], local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['invoices'], "data-type": "json", id: 'invoice_form'}) do |f| %>
+<%= nested_form_for([:admin, @booking_detail, @invoice], url: url, local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['invoices'], "data-type": "json", id: 'invoice_form'}) do |f| %>
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -11,26 +11,30 @@
       </div>
 
       <div class="modal-body">
-        <div class="form-group">
-          <%= f.label :number, class: 'label-required' %>
-          <%= f.text_field :number, autofocus: true, required: 'required', class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("number") %>
+        <% if @invoice.manual? %>
+          <div class="form-group">
+            <%= f.label :number, class: 'label-required' %>
+            <%= f.text_field :number, autofocus: true, required: 'required', class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("number") %>
+          </div>
+          <div class="form-group">
+          <%= f.label :gst_amount, class: 'label-required' %>
+          <%= f.number_field :gst_amount, autofocus: true, required: 'required', class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("gst_amount") %>
         </div>
+        <% end %>
         <div class="form-group">
           <%= f.label :amount, class: 'label-required' %>
           <%= f.number_field :amount, autofocus: true, required: 'required', class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("amount") %>
         </div>
-        <div class="form-group">
-          <%= f.label :gst_amount, class: 'label-required' %>
-          <%= f.number_field :gst_amount, autofocus: true, required: 'required', class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("gst_amount") %>
-        </div>
-        <div class="form-group">
-          <%= f.label :net_amount, 'Total Brokerage Amount' %>
-          <% if policy([:admin, @invoice]).editable_field?("net_amount") %>
-            <%= f.number_field :net_amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("net_amount") %>
-          <% else %>
-            <p class='net-amount'><%= f.object.net_amount %></p>
-          <% end %>
-        </div>
+        <% if @invoice.manual? %>
+          <div class="form-group">
+            <%= f.label :net_amount, 'Total Brokerage Amount' %>
+            <% if policy([:admin, @invoice]).editable_field?("net_amount") %>
+              <%= f.number_field :net_amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("net_amount") %>
+            <% else %>
+              <p class='net-amount'><%= f.object.net_amount %></p>
+            <% end %>
+          </div>
+        <% end %>
         <% if policy([:admin, @invoice]).editable_field?("event") %>
           <div class="form-group">
             <%= f.label :status, class: 'control-label label-required' %>
