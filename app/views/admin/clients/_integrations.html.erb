@@ -43,6 +43,12 @@
   </div>
   <div class="col-md-6">
     <div class="form-group">
+      <%= f.label :selldo_api_secret %>
+      <%= f.text_field :selldo_api_secret, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("selldo_api_secret") ? false : true) %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
       <%= f.label :selldo_default_srd %>
       <%= f.text_field :selldo_default_srd, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("selldo_default_srd") ? false : true) %>
     </div>

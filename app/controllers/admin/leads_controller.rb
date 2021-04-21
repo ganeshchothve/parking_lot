@@ -21,6 +21,7 @@ class Admin::LeadsController < AdminController
   def show
     @booking_details = @lead.booking_details.paginate(page: params[:page], per_page: params[:per_page])
     @receipts = @lead.receipts.order('created_at DESC').paginate(page: params[:page], per_page: params[:per_page])
+    @notes = FetchLeadData.fetch_notes(@lead.lead_id, @lead.user.booking_portal_client)
   end
 
   def edit
@@ -35,6 +36,22 @@ class Admin::LeadsController < AdminController
         format.html { render :edit }
         format.json { render json: { errors: @lead.errors.full_messages }, status: :unprocessable_entity }
       end
+    end
+  end
+
+  def sync_notes
+    @lead.remarks = FetchLeadData.fetch_notes(@lead.lead_id, @lead.user.booking_portal_client)
+    @lead.save
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def sync_site_visit
+    @lead.sitevisit_date, @lead.sitevisit_status = FetchLeadData.site_visit_status_and_date(@lead.lead_id, @lead.user.booking_portal_client, @lead.project.selldo_id.to_s)
+    @lead.save
+    respond_to do |format|
+      format.js
     end
   end
 

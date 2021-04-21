@@ -18,10 +18,12 @@ class Lead
   field :lead_stage, type: String
   field :lead_status, type: String
   field :lead_lost_date, type: String
-  field :sitevisit_status, type: String
-  field :sitevisit_date, type: String
+  field :sitevisit_status, type: String # synced from sell.do
+  field :sitevisit_date, type: String # synced from the sell.do
+  field :selldo_lead_registration_date, type: String
   field :iris_confirmation, type: Boolean, default: false
   field :lead_id, type: String #TO DO - Change name to selldo_id and use it throughout the system in place of lead_id on user.
+  field :remarks, type: Array, default: [] # used to store the last five notes
 
   belongs_to :user
   belongs_to :manager, class_name: 'User', optional: true
@@ -116,18 +118,31 @@ class Lead
     "#{name} (#{project_name})"
   end
 
+  def active_cp_lead_activities
+    self.cp_lead_activities.where(expiry_date: { '$gte': Date.current })
+  end
+
+  def lead_validity_period
+    activity = self.active_cp_lead_activities.first
+    activity.present? ? "#{(activity.expiry_date - Date.current).to_i} Days" : '0 Days'
+  end
+
   class << self
 
     def user_based_scope(user, params = {})
       custom_scope = {}
       case user.role.to_sym
       when :channel_partner
-        custom_scope[:'$or'] = [{manager_id: user.id}, {manager_id: nil, referenced_manager_ids: user.id, iris_confirmation: false}]
-      when :cp
-        custom_scope = { manager_id: { "$in": User.where(role: 'channel_partner', manager_id: user.id).distinct(:id) } }
+        lead_ids = CpLeadActivity.where(user_id: user.id).distinct(:lead_id)
+        # custom_scope[:'$or'] = [{manager_id: user.id}, {manager_id: nil, referenced_manager_ids: user.id, iris_confirmation: false}]
+        custom_scope = {_id: { '$in': lead_ids } }
+      # when :cp
+        #custom_scope = { manager_id: { "$in": User.where(role: 'channel_partner', manager_id: user.id).distinct(:id) } }
       when :cp_admin
-        cp_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
-        custom_scope = { manager_id: { "$in": User.where(role: 'channel_partner').in(manager_id: cp_ids).distinct(:id) }  }
+        channel_partner_ids = User.where(role: 'channel_partner', manager_id: user.id).distinct(:id)
+        lead_ids = CpLeadActivity.in(user_id: channel_partner_ids).distinct(:lead_id)
+        # custom_scope = { manager_id: { "$in": User.where(role: 'channel_partner').in(manager_id: cp_ids).distinct(:id) }  }
+        custom_scope = {_id: { '$in': lead_ids } }
       end
       custom_scope = { user_id: params[:user_id] } if params[:user_id].present?
       custom_scope = { user_id: user.id } if user.buyer?

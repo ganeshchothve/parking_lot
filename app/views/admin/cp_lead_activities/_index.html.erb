@@ -2,22 +2,68 @@
   <thead class="th-default">
     <thead>
       <tr class="bg-gradient-cd white">
-        <th><%= t('mongoid.attributes.cp_lead_activity.registered_at') %></th>
+        <th><%= t('mongoid.attributes.user.name_email_phone') %></th>
+        <% if current_client.selldo_client_id.present? && current_client.selldo_gre_form_id.present? && current_client.selldo_channel_partner_form_id.present? %>
+          <th><%= t('mongoid.attributes.cp_lead_activity.selldo_lead_id') %></th>
+        <% end %>
+        <th><%= t('mongoid.attributes.cp_lead_activity.project_id') %></th>
+        <% if !current_user.role?('channel_partner') %>
+          <th><%= t('mongoid.attributes.cp_lead_activity.channel_partner') %></th>
+        <% end %>
         <th><%= t('mongoid.attributes.cp_lead_activity.count_status') %></th>
         <th><%= t('mongoid.attributes.cp_lead_activity.lead_status') %></th>
+        <th><%= t('mongoid.attributes.cp_lead_activity.registered_at') %></th>
         <th><%= t('mongoid.attributes.cp_lead_activity.expiry_date') %></th>
-        <th>Actions</th>
+        <th><%= t('mongoid.attributes.cp_lead_activity.expiry_remaining_days') %></th>
+        <th><%= t('mongoid.attributes.cp_lead_activity.can_extend_validity') %></th>
+        <th class="text-right"><%= t('global.action', count: 3) %></th>
       </tr>
     </thead>
   </thead>
   <tbody>
     <% cp_lead_activities.each do |cp_lead_activity| %>
     <tr>
+      <%
+        lead = cp_lead_activity.lead
+        channel_partner = cp_lead_activity.user
+      %>
+      <tr>
+        <td data-title="Name">
+          <span>
+            <%= link_to lead.name, admin_cp_lead_activity_path(cp_lead_activity), target: '_blank' %>
+          </span>
+          <% if lead.email.present? %>
+            <span class="email-icon small">
+              <%= lead.email || "" %>
+            </span>
+          <% end %>
+          <% if lead.phone.present? %>
+            <span class="phone-icon small">
+              <%= lead.phone || "" %>
+            </span>
+          <% end %>
+        </td>
+        <% if current_client.selldo_client_id.present? && current_client.selldo_gre_form_id.present? && current_client.selldo_channel_partner_form_id.present? %>
+          <td data-title="Sell.Do Lead Id"><span><%= lead.lead_id %></span></td>
+        <% end %>
+        <td><%= lead.project.try(:name) %></td>
+        <% if !current_user.role?('channel_partner') %>
+          <td><%= channel_partner.name %></td>
+        <% end %>
+      <td><%= cp_lead_activity.count_status.try(:titleize) %></td>
+      <td><%= cp_lead_activity.lead_status.try(:titleize) %></td>
       <td><%= cp_lead_activity.registered_at.try(:strftime, "%d/%m/%Y") %></td>
-      <td><%= cp_lead_activity.count_status %></td>
-      <td><%= cp_lead_activity.lead_status %></td>
       <td><%= cp_lead_activity.expiry_date.try(:strftime, "%d/%m/%Y") %></td>
-      <td></td>
+      <td><%= cp_lead_activity.lead_validity_period %></td>
+      <td class="text-center"><%= cp_lead_activity.can_extend_validity? ? 'Yes' : 'No' %></td>
+      <td>
+        <div class="dropdown show text-right">
+            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+              <%= render "#{current_user_role_group}/cp_lead_activities/links", cp_lead_activity: cp_lead_activity %>
+            </div>
+          </div>
+      </td>
     </tr>
     <% end %>
   </tbody>

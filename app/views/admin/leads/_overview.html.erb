@@ -1,89 +1,58 @@
-<section class="bookings my-4 mb-4">
-  <div class="container p-0">
-    <div class="box-card">
-      <div class="box-header bg-gradient br-rd-tr-4">
-        <h2 class="icon-set icon-users-white"><%= t('controller.leads.show.header') %></h2>
-        <div class="dropdown text-center float-right">
-          <a class="btn dropdown-toggle table-dropdown-btn white-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
-          <div class="dropdown-menu dropdown-menu-right">
-            <%= render "#{current_user_role_group}/leads/links", lead: lead %>
-          </div>
-        </div>
+<div class="box-content br-rd-bl-4 bg-white">
+  <div class="row pd-box">
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="small"><%= t('mongoid.attributes.lead.name') %></label>
+        <div><%= lead.name || '-' %></div>
       </div>
-      <div class="box-content br-rd-bl-4 bg-white">
-        <div class="row pd-box">
-          <div class="col-md-12 col-lg-12 col-sm-12">
-            <ul class="booking-apart-info clear">
-              <li>
-                <span><%= t('mongoid.attributes.lead.name') %></span>
-                <p class="break-word mr-3"><%= lead.name || '-' %></p>
-              </li>
-              <li>
-                <span><%= t('mongoid.attributes.lead.email') %></span>
-                <p class="break-word mr-3"><%= lead.email || '-' %></p>
-              </li>
-              <li>
-                <span><%= t('mongoid.attributes.lead.phone') %></span>
-                <p><%= lead.phone || '-' %></p>
-              </li>
-              <li>
-                <span><%= t('mongoid.attributes.lead.stage') %></span>
-                <p><%= lead.stage || '-' %></p>
-              </li>
-              <li>
-                <span><%= t('mongoid.attributes.lead.sitevisit_date') %></span>
-                <p><%= lead.sitevisit_date.try(:strftime, "%d/%m/%Y") || '-' %></p>
-              </li>
-              <li>
-                <span><%= t('mongoid.attributes.lead.revisit_count') %></span>
-                <p><%= lead.revisit_count || '-' %></p>
-              </li>
-              <li>
-                <span><%= t('mongoid.attributes.lead.last_revisit_date') %></span>
-                <p><%= lead.last_revisit_date.try(:strftime, "%d/%m/%Y") || '-' %></p>
-              </li>
-              <li>
-                <span> <%= t('mongoid.attributes.lead.created_at') %></span>
-                <p><%= l(lead.created_at.in_time_zone(current_user.time_zone)) %></p>
-              </li>
-            </ul>
-
-            <ul class="booking-apart-info clear">
-              <% if current_client.enable_actual_inventory?(current_user) %>
-                <li>
-                  <span><%= t('mongoid.attributes.lead.total_amount_paid') %></span>
-                  <small class="text-muted"><%= t('leads.total_amount_paid.hint')%></small>
-                  <p>
-                    <%= lead.total_amount_paid.present? ? number_to_indian_currency(lead.total_amount_paid.round) : '-' %>
-                  </p>
-                </li>
-                <li>
-                  <span><%= t('mongoid.attributes.lead.total_balance_pending') %></span>
-                  <small class="text-muted"><%= t('leads.total_balance_pending.hint')%></small>
-                  <p><%= lead.total_balance_pending.present? ? number_to_indian_currency(lead.total_balance_pending.round) : '-' %></p>
-                </li>
-                <li>
-                  <span><%= t('mongoid.attributes.lead.total_unattached_balance') %></span>
-                  <small class="text-muted"><%= t('leads.total_unattached_balance.hint')%></small>
-                  <p><%= lead.total_unattached_balance.present? ? number_to_indian_currency(lead.total_unattached_balance.round) : '-' %></p>
-                </li>
-              <% end %>
-            </ul>
-
-            <% if !current_user.role?("channel_partner") %>
-              <ul class="booking-apart-info clear">
-                <li>
-                  <span><%= t('mongoid.attributes.lead.manager_id') %></span>
-                  <p>
-                    <% manager_user = lead.manager_id.present? ? User.find(lead.manager_id) : nil %>
-                    <%= manager_user.present? ? link_to(manager_user.name, admin_user_path(manager_user)) : '-' %>
-                  </p>
-                </li>
-              </ul>
-            <% end %>
-          </div>
-        </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="small"><%= t('mongoid.attributes.lead.phone') %></label>
+        <div><%= lead.phone|| '-' %></div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="small"><%= t('mongoid.attributes.lead.project_id') %></label>
+        <div><%= (lead.project.try(:name) || '-') %></div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="small"><%= t('mongoid.attributes.lead.email') %></label>
+        <div><%= lead.email || '-' %></div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="small"><%= t('mongoid.attributes.cp_lead_activity.lead_status') %></label>
+        <div><%= cp_lead_activity.present? ? cp_lead_activity.lead_status.try(:titleize) : lead.cp_lead_activities.first.try(:lead_status).try(:titleize) || '-' %></div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="small"><%= t('mongoid.attributes.cp_lead_activity.count_status') %></label>
+        <div><%= cp_lead_activity.present? ? cp_lead_activity.count_status.try(:titleize) : lead.cp_lead_activities.first.try(:count_status).try(:titleize) || '-' %></div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="small"><%= t('mongoid.attributes.lead.registered_at') %></label>
+        <div><%= cp_lead_activity.present? ? cp_lead_activity.registered_at.try(:strftime, "%d/%m/%Y") : lead.created_at.try(:strftime, "%d/%m/%Y") %></div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="small"><%= t('mongoid.attributes.cp_lead_activity.expiry_date') %></label>
+        <div><%= cp_lead_activity.present? ? cp_lead_activity.expiry_date.try(:strftime, "%d/%m/%Y") : '-' %></div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="small"><%= t('mongoid.attributes.lead.lead_validity_period') %></label>
+        <div><%= cp_lead_activity.present? ? cp_lead_activity.lead_validity_period : lead.lead_validity_period %></div>
       </div>
     </div>
   </div>
-</section>
+</div>

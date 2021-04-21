@@ -19,7 +19,6 @@ class HomeController < ApplicationController
     else
       store_cookies_for_registration
       render layout: "devise"
-
     end
   end
 
@@ -34,7 +33,7 @@ class HomeController < ApplicationController
         else
           @project = Project.new(booking_portal_client_id: current_client.id, name: params["project_name"], selldo_id: params["project_id"]) unless @project.present?
           @user = User.new(booking_portal_client_id: current_client.id, email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], lead_id: params[:lead_id], mixpanel_id: params[:mixpanel_id]) unless @user.present?
-          @lead = Lead.new(email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], lead_id: params[:lead_id])
+          @lead = Lead.new(email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], lead_id: params[:lead_id], selldo_lead_registration_date: params['lead_details']['lead_created_at'])
           if @project.save && @user.save
             @lead.assign_attributes(user_id: @user.id, project_id: @project.id)
             CpLeadActivityRegister.create_cp_lead_object(true, @lead, current_user, params[:lead_details]) if current_user.role?("channel_partner")
@@ -52,6 +51,13 @@ class HomeController < ApplicationController
   end
 
   private
+
+  # def set_project_wise_flag
+  #   if params[:lead_id].present?
+  #     @is_interested_for_project = FetchLeadData.get(params[:lead_id], params[:project_name], current_client)
+  #     format.json { render json: { errors: 'There was some error while fetching lead data from Sell.Do. Please contact administrator.', status: :unprocessable_entity } } && return if @is_interested_for_project == 'error'
+  #   end
+  # end
 
   def get_query
     query = []

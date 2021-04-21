@@ -17,6 +17,10 @@ document.addEventListener("sell_do_form_submitted_with_error", function(){
 }, false);
 
 document.addEventListener("sell_do_form_rendered", function(){
+  var is_channel_partner = (typeof App !== "undefined" && App.current_user.role == 'channel_partner');;
+  if(is_channel_partner) {
+     $('[name="sell_do[form][lead][project_id]"]').attr('name', 'iris_project_id');
+  }
   var variables = decodeURIComponent(window.location.search.substring(1)).split('&');
   var params = {};
   _.each(variables, function(v){
@@ -37,7 +41,6 @@ document.addEventListener("sell_do_form_rendered", function(){
     $('[name="sell_do[form][lead][last_name]"]').val(params.last_name);
     $('[name="sell_do[form][lead][email]"]').val(params.email);
     $('[name="sell_do[form][lead][phone]"]').val(params.phone);
-
   }
 }, false);
 
@@ -56,6 +59,7 @@ function sell_do_form_submission_failed(e){
 }
 
 function register_user_with_portal(d, e){
+  var is_channel_partner = (typeof App !== "undefined" && App.current_user.role == 'channel_partner');
   var data = {
     lead_id: (d.lead_id ? d.lead_id : ""),
     first_name: unescape(d['sell_do[form][lead][first_name]'] ? (d['sell_do[form][lead][first_name]'].replace("+", " ")) : ""),
@@ -63,8 +67,8 @@ function register_user_with_portal(d, e){
     email: unescape(d['sell_do[form][lead][email]'] ? d['sell_do[form][lead][email]'] : ""),
     phone: unescape(d['sell_do[form][lead][phone]'] ? d['sell_do[form][lead][phone]'].replace(/\+/ig, "") : ""),
     mixpanel_id: unescape(d['sell_do[campaign][mixpanel_id]'] ? d['sell_do[campaign][mixpanel_id]'] : ""),
-    project_id: unescape(d['sell_do[form][lead][project_id]']),
-    project_name: $(e.currentSubmittedForm).find('[name="sell_do[form][lead][project_id]"] option:selected').text(),
+    project_id: is_channel_partner ? $(e.currentSubmittedForm).find('[name="iris_project_id"] option:selected').val() : unescape(d['sell_do[form][lead][project_id]']),
+    project_name: is_channel_partner ? $(e.currentSubmittedForm).find('[name="iris_project_id"] option:selected').text() : $(e.currentSubmittedForm).find('[name="sell_do[form][lead][project_id]"] option:selected').text(),
     lead_details: d.sell_do_lead_details
   }
   if(App.client.enable_referral_bonus){
@@ -84,7 +88,11 @@ function register_user_with_portal(d, e){
       }).show();
       setTimeout(function(){
         if(typeof App !== "undefined" && App.current_user){
-          window.location = '<%= url.admin_users_path %>';
+          if (App.current_user.role == 'channel_partner') {
+            window.location = '<%= url.admin_cp_lead_activities_path %>';
+          } else {
+            window.location = '<%= url.admin_leads_path %>';
+          }
         }else{
           if(App.client.preferred_login == "phone" && data.phone){
             window.location = encodeURI('<%= url.new_user_session_path %>?force=true&user[login]=' + encodeURIComponent(data.phone));
@@ -118,7 +126,11 @@ function register_user_with_portal(d, e){
       setTimeout(function(){
         if(_.isEmpty(one.responseJSON.url)){
           if(typeof App !== "undefined" && App.current_user){
-            window.location = '<%= url.admin_users_path %>';
+            if (App.current_user.role == 'channel_partner') {
+              window.location = '<%= url.admin_cp_lead_activities_path %>';
+            } else {
+              window.location = '<%= url.admin_leads_path %>';
+            }
           }else if(one.responseJSON.already_exists){
             window.location = '<%= url.new_user_session_path %>';
           }else{

@@ -1,0 +1,31 @@
+<section class="notes my-4 mb-4">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 p-0 cursor-pointer" data-toggle="collapse" href="#collapseCpLeadActivities" role="button" aria-expanded="false" aria-controls="collapseCpLeadActivities">
+        <div class="table-title pt-1">
+          <h2 class="title text-dark icon-set icon-file-contract-black">
+            Lead Activities
+          </h2>
+        </div>
+      </div>
+      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 p-0">
+        <div class="table-btn-set float-right pb-3">
+          <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= cp_lead_activities.count %></button>
+        </div>
+      </div>
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 p-0 bg-white collapse" id="collapseCpLeadActivities">
+        <div class="box-card relative">
+          <%= render 'admin/cp_lead_activities/index', cp_lead_activities: cp_lead_activities %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    var count = <%= raw cp_lead_activities.count %>
+    if(count != 0){
+      $('#collapseCpLeadActivities').collapse('show')
+    }
+  });
+<% end %>

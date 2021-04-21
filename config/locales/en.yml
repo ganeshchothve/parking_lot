@@ -43,6 +43,10 @@ en:
     agreement_value: 'AV'
 
   helpers:
+    extend_validity:
+      link_name: '%{model}'
+    accompanied_credit:
+      link_name: '%{model}'
     show:
       link_name: '%{model} Details'
     edit:
@@ -327,6 +331,7 @@ en:
         selldo_channel_partner_form_id: 'SellDo Form ID - For Channel Partners'
         selldo_gre_form_id: 'SellDo Form ID - Used by Non Channel Partners'
         selldo_api_key: 'SellDo API Key (Use generic Api Client)'
+        selldo_api_secret: 'SellDo API Secret'
         selldo_default_srd: 'SellDo Default SRD'
         selldo_cp_srd: 'SellDo Channel Partner SRD'
         notification_email: 'Notification Email (all emails are sent here)'
@@ -896,9 +901,29 @@ en:
         direct: Direct
 
       lead:
+        name: 'Name'
+        phone: 'Phone'
+        email: 'Email'
         project_id: 'Project'
         manager_id: 'Partner / Manager / Added by'
         name_email_phone: 'Deal (Project Name)'
+        lead_validity_period: 'Lead Validity Period'
+        selldo_lead_registration_date: 'Sell Do Lead Registration Date'
+        selldo_lead_stage: 'SellDo Lead Stage'
+
+      cp_lead_activity:
+        lead_id: 'Lead Id'
+        selldo_lead_id: 'SellDo Lead Id'
+        project_id: 'Project'
+        channel_partner: 'Channel Partner'
+        count_status: 'Count Status'
+        lead_status: 'Lead Status'
+        expiry_remaining_days: 'Lead Validity Period'
+        registered_at: 'Registered At'
+        can_extend_validity: 'Can Extend Validity?'
+        expiry_date: 'Lead Expiry Date'
+        sitevisit_date: 'Site Visit Date'
+        sitevisit_status: 'Site Visit Status'
 
       user/file_types:
         home_loan_application_form: 'Home Loan Application Form'
@@ -943,6 +968,10 @@ en:
         certificate_html: 'Project certificates'
         brochure_html: 'Project Brochure preferably in PDF'
         unit_selection_filter_image_html: 'Web compatible image - to be displayed on apartment search page'
+      cp_lead_activity/file_types:
+        sitevisit_form: 'Site Visit Form'
+      cp_lead_activity/help_text:
+        sitevisit_form_html: ''
 
       bulk_upload_report/file_types:
         receipts_status_update: 'Receipt Status Bulk Update'
@@ -969,7 +998,9 @@ en:
   controller:
     cp_lead_activities:
       index:
-        link_name: 'LeadActivities'
+        link_name: 'Lead Activities'
+      show:
+        link_name: 'Show Lead Activities'
     api_logs:
       index:
         link_name: 'API Logs'
@@ -1132,7 +1163,7 @@ en:
       new:
         link_name: 'Add New ChannelPartner'
       index:
-        link_name: 'Channel Partner Applications'
+        link_name: 'Channel Partners'
       edit:
         link_name: 'Edit Application'
       show:
