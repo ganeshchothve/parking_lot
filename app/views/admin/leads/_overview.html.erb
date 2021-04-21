@@ -1,14 +1,9 @@
-<section class="bookings my-4 mb-4">
-  <div class="container p-0">
-    <div class="box-card">
-      <div class="box-header bg-gradient br-rd-tr-4">
-        <h2 class="icon-set icon-users-white"><%= t('controller.leads.show.header') %></h2>
-        <div class="dropdown text-center float-right">
-          <a class="btn dropdown-toggle table-dropdown-btn white-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
-          <div class="dropdown-menu dropdown-menu-right">
-            <%= render "#{current_user_role_group}/leads/links", lead: lead %>
-          </div>
-        </div>
+<div class="box-content br-rd-bl-4 bg-white">
+  <div class="row pd-box">
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="small"><%= t('mongoid.attributes.lead.name') %></label>
+        <div><%= lead.name || '-' %></div>
       </div>
       <div class="box-content br-rd-bl-4 bg-white">
         <div class="row pd-box">
@@ -30,6 +25,12 @@
                 <div class="form-group">
                   <label class="small text-muted"><%= t('mongoid.attributes.lead.phone') %></label>
                   <div><%= lead.phone || '-' %></div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="small"><%= t('mongoid.attributes.lead.project_id') %></label>
+                  <div><%= (lead.project.try(:name) || '-') %></div>
                 </div>
               </div>
               <div class="col-md-4">
@@ -124,4 +125,4 @@
       </div>
     </div>
   </div>
-</section>
+</div>

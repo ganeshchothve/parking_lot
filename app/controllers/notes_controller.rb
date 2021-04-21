@@ -15,6 +15,7 @@ class NotesController < ApplicationController
     authorize [current_user_role_group, @note]
     respond_to do |format|
       if @note.save
+        SelldoNotePushWorker.perform_async(@note.notable.lead_id, current_user.id.to_s, @note.note) if @note.notable.class.to_s == 'Lead' && current_user.role?(:channel_partner)
         format.json { render json: @note, status: :created }
       else
         format.json { render json: {errors: @note.errors.full_messages.uniq}, status: :unprocessable_entity }

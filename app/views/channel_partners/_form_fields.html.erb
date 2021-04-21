@@ -17,9 +17,26 @@
   <div class="col-md-6">
     <%= form.input :phone, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("phone"), as: :tel, input_html: { class: 'phone' } %>
   </div>
+  <div class="col-md-6">
+    <%= form.input :alternate_phone, disabled: !policy([:admin, @channel_partner]).editable_field?("alternate_phone"), as: :tel, input_html: { class: 'phone' } %>
+  </div>
+</div>
 
+<div class="row">
   <div class="col-md-6">
     <%= form.input :email, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("email"), input_html: { class: 'email'} %>
+  </div>
+  <div class="col-md-6">
+    <%= form.input :alternate_email, disabled: !policy([:admin, @channel_partner]).editable_field?("alternate_email"), input_html: { class: 'email'} %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <%= form.input :pan_number, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("pan_number") %>
+  </div>
+  <div class="col-md-6">
+    <%= form.input :website, disabled: !policy([:admin, @channel_partner]).editable_field?("website") %>
   </div>
 </div>
 
@@ -37,7 +54,7 @@
     <%= form.input :nri, item_wrapper_class: 'form-check form-check-inline', as: :radio_buttons, prompt: :translate, required: true, input_html: { disabled: !policy([:admin, @channel_partner]).editable_field?("nri") } %>
   </div>
   <div class="col-md-6">
-    <%= form.input :team_size, collection: (1..200).to_a.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("team_size"), as: :select, prompt: :translate, required: true %>
+    <%= form.input :team_size, collection: (1..200).to_a.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("team_size"), as: :select, prompt: :translate %>
   </div>
 </div>
 
@@ -73,7 +90,11 @@
     <%= form.input :average_quarterly_business, required: false, disabled: !policy([:admin, @channel_partner]).editable_field?("average_quarterly_business"), as: :float %>
   </div>
   <div class="col-md-6">
-    <%= form.input :manager_id, collection: User.in(role: "cp").collect{|x| [x.name, x.id]}, disabled: !policy([:admin, @channel_partner]).editable_field?("manager_id"), as: :select, prompt: :translate %>
+    <% if current_user.present? && current_user.role?(:cp_admin) %>
+      <%= form.hidden_field :manager_id, value: current_user.id %>
+    <% else %>
+      <%= form.input :manager_id, collection: User.in(role: "cp_admin").collect{|x| [x.name, x.id]}, disabled: !policy([:admin, @channel_partner]).editable_field?("manager_id"), as: :select, prompt: :translate %>
+    <% end %>
   </div>
 </div>
 
@@ -83,12 +104,12 @@
   </div>
 </div>
 
-<% if policy([:admin, @channel_partner]).editable_field?("event") %>
+<% if policy([:admin, @channel_partner]).editable_field?("status") %>
   <% statuses = available_chanel_partner_statuses(@channel_partner) %>
   <% if statuses.present? %>
     <div class="row">
       <div class="col-md-6">
-        <%= form.input :event, collection: statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, as: :select, prompt: :translate, input_html: { class: 'selectize', disabled: !policy([:admin, @channel_partner]).editable_field?("event") } %>
+        <%= form.input :status, collection: statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, as: :select, prompt: :translate, input_html: { class: 'selectize', disabled: !policy([:admin, @channel_partner]).editable_field?("status") } %>
       </div>
       <div class="col-md-6 status_change_field">
         <%= form.input :status_change_reason, disabled: !policy([:admin, @channel_partner]).editable_field?("status_change_reason") %>
@@ -138,8 +159,8 @@
 
 <%= javascript_tag do %>
   $(document).ready(function(){
-    $('#channel_partner_event').change(function(){
-      if($(this).val() == 'reject'){
+    $('#channel_partner_status').change(function(){
+      if($(this).val() == 'inactive'){
         $('.status_change_field').removeClass('hidden');
         $('#channel_partner_status_change_reason').addClass('required').attr('required', 'required');
       }else{

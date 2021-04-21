@@ -40,10 +40,9 @@ class SelldoLeadUpdater
   end
 
   def add_campaign_response(user, payload={})
-    if payload.present? && payload['srd'].present?
+    if payload.present?
       params = {
         sell_do: {
-          campaign: { srd: payload['srd'] },
           form: {
             lead: {
               phone: user.phone
@@ -51,12 +50,13 @@ class SelldoLeadUpdater
           }
         }
       }
+      params[:sell_do][:form][:lead][:source] = payload['source'] if payload['source'].present?
       params[:sell_do][:form][:lead][:sub_source] = payload['sub_source'] if payload['sub_source'].present?
-
+      params[:sell_do][:form][:lead][:project_id] = payload['project_id'] if payload['project_id'].present?
       if payload['api_key'].present? && user.buyer?
         params.merge!({ api_key: payload['api_key'] })
         puts params
-        RestClient.post("https://app.sell.do/api/leads/create", params)
+        RestClient.post(ENV_CONFIG['selldo']['base_url'] + "/api/leads/create.json", params)
       end
     else
       puts payload
@@ -76,7 +76,7 @@ class SelldoLeadUpdater
         }
         params = params.merge(data)
         puts params
-        RestClient.post("https://app.sell.do/api/leads/create", params)
+        RestClient.post(ENV_CONFIG['selldo']['base_url'] + "/api/leads/create", params)
       end
     end
   end

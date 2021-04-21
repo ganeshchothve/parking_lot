@@ -49,6 +49,14 @@ Rails.application.routes.draw do
   namespace :admin do
 
     resources :api_logs, only: [:index]
+    resources :cp_lead_activities do
+      member do
+        get 'extend_validity'
+        patch 'update_extension'
+        get 'accompanied_credit'
+        patch 'update_accompanied_credit'
+      end
+    end
 
     resources :portal_stage_priorities, only: [:index] do
       patch :reorder, on: :collection
@@ -168,10 +176,13 @@ Rails.application.routes.draw do
       resources :accounts, controller: 'accounts'
     end
 
-    resources :leads, only: [:index, :show, :edit, :update] do
-
+    resources :leads, only: [:index, :show, :edit, :update, :new, :create] do
       collection do
         get :export
+      end
+      member do
+        get 'sync_notes'
+        get 'sync_site_visit'
       end
 
       resources :receipts, only: [:index, :new, :create, :edit, :update ] do

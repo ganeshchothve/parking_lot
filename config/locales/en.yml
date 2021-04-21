@@ -43,6 +43,10 @@ en:
     agreement_value: 'AV'
 
   helpers:
+    extend_validity:
+      link_name: '%{model}'
+    accompanied_credit:
+      link_name: '%{model}'
     show:
       link_name: '%{model} Details'
     edit:
@@ -267,6 +271,7 @@ en:
         :false: 'No'
 
       bank_detail:
+        zip: 'Zip / Pin Code'
         name: "Bank Name"
         account_holder_name: "Account Holder's Name"
         branch: 'Branch'
@@ -329,6 +334,7 @@ en:
         selldo_channel_partner_form_id: 'SellDo Form ID - For Channel Partners'
         selldo_gre_form_id: 'SellDo Form ID - Used by Non Channel Partners'
         selldo_api_key: 'SellDo API Key (Use generic Api Client)'
+        selldo_api_secret: 'SellDo API Secret'
         selldo_default_srd: 'SellDo Default SRD'
         selldo_cp_srd: 'SellDo Channel Partner SRD'
         notification_email: 'Notification Email (all emails are sent here)'
@@ -427,16 +433,19 @@ en:
 
       channel_partner:
         name: 'Name'
-        company_name: "Company Name (As per RERA)"
-        address: "Address"
-        bank_detail: "Bank Details"
+        company_name: 'CP Company Name/ CP Name'
+        additional_name: 'Additional Name'
+        address: 'Address'
+        bank_detail: 'Bank Details'
         email: 'Email'
+        alternate_email: 'Alternate Email'
         phone: 'Phone'
+        alternate_phone: 'Alternate Phone'
         rera_id: 'RERA Registration Number'
         city: 'City'
         associated_user_id: 'Associated User'
         status: 'Status'
-        gstin_number: "GSTIN Number"
+        gstin_number: "GST Number"
         pan_number: "PAN Number"
         aadhaar: "Aadhaar"
         name_email_phone: 'Name/Email/Phone'
@@ -451,6 +460,11 @@ en:
         developers_worked_for: 'Developers Worked For (Type any developer name & press enter)'
         event: 'Application Status'
         cp_code: 'Vendor Code'
+        company_type: 'Company Type'
+        category: 'Category'
+        source: 'Source'
+        website: 'Website'
+        region: 'Region'
       channel_partner/file_types:
         rera_certificate: 'RERA Certificate'
         gst_certificate: 'GST Certificate'
@@ -916,6 +930,9 @@ en:
         direct: Direct
 
       lead:
+        name: 'Name'
+        phone: 'Phone'
+        email: 'Email'
         project_id: 'Project'
         manager_id: 'Partner / Manager / Added by'
         name_email_phone: 'Walk-in (Project Name)'
@@ -925,6 +942,23 @@ en:
         blocking_amount_paid: 'Booking Amount Paid'
         registration_done: 'Registration Done'
         stage: 'Stage'
+        lead_validity_period: 'Lead Validity Period'
+        selldo_lead_registration_date: 'Sell Do Lead Registration Date'
+        selldo_lead_stage: 'SellDo Lead Stage'
+
+      cp_lead_activity:
+        lead_id: 'Lead Id'
+        selldo_lead_id: 'SellDo Lead Id'
+        project_id: 'Project'
+        channel_partner: 'Channel Partner'
+        count_status: 'Count Status'
+        lead_status: 'Lead Status'
+        expiry_remaining_days: 'Lead Validity Period'
+        registered_at: 'Registered At'
+        can_extend_validity: 'Can Extend Validity?'
+        expiry_date: 'Lead Expiry Date'
+        sitevisit_date: 'Site Visit Date'
+        sitevisit_status: 'Site Visit Status'
 
       user/file_types:
         home_loan_application_form: 'Home Loan Application Form'
@@ -974,6 +1008,10 @@ en:
         unit_selection_filter_image_html: 'Web compatible image - to be displayed on apartment search page'
         internal_amenities_html: 'Project Internal amenities images'
         external_amenities_html: 'Project External amenities images'
+      cp_lead_activity/file_types:
+        sitevisit_form: 'Site Visit Form'
+      cp_lead_activity/help_text:
+        sitevisit_form_html: ''
 
       bulk_upload_report/file_types:
         receipts_status_update: 'Receipt Status Bulk Update'
@@ -998,6 +1036,11 @@ en:
           custom_dates: 'Custom Dates'
 
   controller:
+    cp_lead_activities:
+      index:
+        link_name: 'Lead Activities'
+      show:
+        link_name: 'Show Lead Activities'
     api_logs:
       index:
         link_name: 'API Logs'
@@ -1168,8 +1211,10 @@ en:
       show:
         link_name: 'Client Detail'
     channel_partners:
+      new:
+        link_name: 'Add New ChannelPartner'
       index:
-        link_name: 'Channel Partner Applications'
+        link_name: 'Channel Partners'
       edit:
         link_name: 'Edit Application'
       show:

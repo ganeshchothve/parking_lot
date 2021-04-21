@@ -1,7 +1,38 @@
 <div class="container mb-5">
   <div class="row justify-content-center">
     <div class="col-md-12">
-      <%= render 'overview', lead: @lead %>
+      <section class="bookings my-4 mb-4">
+        <div class="container p-0">
+          <div class="box-card">
+            <div class="box-header bg-gradient br-rd-tr-4">
+              <h2 class="icon-set icon-users-white"><%= t('controller.leads.show.header') %></h2>
+              <div class="dropdown text-center float-right">
+                <a class="btn dropdown-toggle table-dropdown-btn white-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+                <div class="dropdown-menu dropdown-menu-right">
+                  <%= render "#{current_user_role_group}/leads/links", lead: @lead %>
+                </div>
+              </div>
+            </div>
+            <%= render 'overview', lead: @lead, cp_lead_activity: nil %>
+          </div>
+        </div>
+      </section>
+
+      <!-- site visits data -->
+      <% if ((current_user.role?(:channel_partner) && lead.active_cp_lead_activities.where(user_id: current_user.id).present?) || !current_user.role?(:channel_partner)) %>
+        <div class="separate-line container"></div>
+        <%= render 'site_visit', lead: @lead %>
+      <% end %>
+
+      <!-- notes -->
+      <div class="separate-line container"></div>
+      <div class='lead_notes_section'>
+        <%= render 'notes', lead: @lead, notes: @notes %>
+      </div>
+
+      <!-- cp lead activities -->
+      <%= render 'cp_lead_activities', cp_lead_activities: @lead.cp_lead_activities.paginate(page: 1) %>
+
 
       <!-- booking_details -->
       <% if current_client.enable_actual_inventory?(current_user) %>

@@ -1,6 +1,7 @@
 <% if notable.present? && notable.persisted? %>
   <div class="notes-container">
-    <% notable.notes.each do |note| %> <!-- Paginate here -->
+    <% notes = current_user.role?(:channel_partner) ? notable.notes.where(creator_id: current_user.id) : notable.notes %>
+    <% notes.each do |note| %> <!-- Paginate here -->
       <%= render 'notes/show', note: note %>
     <% end %>
   </div>

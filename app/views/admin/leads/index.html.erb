@@ -11,17 +11,20 @@
       <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
         <div class="table-btn-set float-right pb-3">
           <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @leads.total_entries %></button>
+          <% if policy([:admin, Lead]).new? %>
+            <%= link_to t('helpers.new.link_name', model: Lead.model_name.human), new_admin_lead_path, class: 'db-small-btn light-blue bg-white fn-400 modal-remote-form-link btn unset-width' %>
+          <% end %>
 
-          <%if policy([:admin, Lead.new]).export? %>
+          <% if policy([:admin, Lead.new]).export? %>
             <div class="export-menu display-initial">
-              <button class="db-small-btn light-blue bg-white fn-400 dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <%= t('controller.leads.exports.link_name', name: nil) %> </button>
+              <button class="db-small-btn light-blue bg-white fn-400 dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <%#= t('controller.leads.exports.link_name', name: nil) %> </button>
               <div class="dropdown-menu dropdown-menu-right">
                 <%= link_to t('controller.leads.exports.link_name', name: t('global.all')), export_admin_leads_path, class: 'dropdown-item' %>
                 <%= link_to t('controller.leads.exports.link_name', name: t('global.active_filter')), export_admin_leads_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
               </div>
             </div>
           <% end %>
-          
+
           <button class="db-filter-btn white fn-500" type="button">
             <i class="icon-set icon-filter-light-blue"></i>
           </button>
