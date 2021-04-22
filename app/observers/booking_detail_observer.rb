@@ -2,6 +2,7 @@ class BookingDetailObserver < Mongoid::Observer
 
   def before_validation booking_detail
     booking_detail.name = booking_detail.project_unit.name
+    booking_detail.project_tower_id = booking_detail.project_unit.project_tower_id if booking_detail.project_tower_id.blank?
     booking_detail.manager_id = booking_detail.lead.manager_id if booking_detail.manager_id.blank? && booking_detail.lead.manager_id.present?
   end
 

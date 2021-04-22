@@ -157,12 +157,14 @@
                   <div><%= number_to_indian_currency(@invoice.amount) %></div>
                 </div>
               </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="small text-muted"><%= invoice_labels[:gst_amount] %></label>
-                  <div><%= number_to_indian_currency(@invoice.gst_amount) %></div>
+              <% if @invoice.manual? %>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="small text-muted"><%= invoice_labels[:gst_amount] %></label>
+                    <div><%= number_to_indian_currency(@invoice.gst_amount) %></div>
+                  </div>
                 </div>
-              </div>
+              <% end %>
               <% if @invoice.payment_adjustment.present? %>
                 <div class="col-md-4">
                   <div class="form-group">

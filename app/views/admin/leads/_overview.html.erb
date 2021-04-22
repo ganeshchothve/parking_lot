@@ -1,127 +1,117 @@
 <div class="box-content br-rd-bl-4 bg-white">
   <div class="row pd-box">
-    <div class="col-md-4">
-      <div class="form-group">
-        <label class="small"><%= t('mongoid.attributes.lead.name') %></label>
-        <div><%= lead.name || '-' %></div>
-      </div>
-      <div class="box-content br-rd-bl-4 bg-white">
-        <div class="row pd-box">
-          <div class="box-content bg-white p-3">
-            <div class="row">
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="small text-muted"><%= t('mongoid.attributes.lead.name') %></label>
-                  <div><%= lead.name || '-' %></div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="small text-muted"><%= t('mongoid.attributes.lead.email') %></label>
-                  <div><%= lead.email || '-' %></div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="small text-muted"><%= t('mongoid.attributes.lead.phone') %></label>
-                  <div><%= lead.phone || '-' %></div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="small"><%= t('mongoid.attributes.lead.project_id') %></label>
-                  <div><%= (lead.project.try(:name) || '-') %></div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="small text-muted"><%= t('mongoid.attributes.lead.stage') %></label>
-                  <div><%= lead.stage || '-' %></div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="small text-muted"><%= t('mongoid.attributes.lead.sitevisit_date') %></label>
-                  <div><%= lead.sitevisit_date.try(:strftime, "%d/%m/%Y") || '-' %></div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="small text-muted"><%= t('mongoid.attributes.lead.revisit_count') %></label>
-                  <div><%= lead.revisit_count || '-' %></div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="small text-muted"><%= t('mongoid.attributes.lead.last_revisit_date') %></label>
-                  <div><%= lead.last_revisit_date.try(:strftime, "%d/%m/%Y") || '-' %></div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="small text-muted"><%= t('mongoid.attributes.lead.registered_at') %></label>
-                  <div><%= lead.registered_at.present? ? (lead.registered_at.strftime("%d/%m/%Y") rescue '-') : (lead.created_at.strftime("%d/%m/%Y") rescue '-') %></div>
-                </div>
-              </div>
-              <% if current_client.enable_actual_inventory?(current_user) %>
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label class="small text-muted"><%= t('mongoid.attributes.lead.total_unattached_balance') %></label>
-                    <small class="text-muted"><%= t('leads.total_unattached_balance.hint')%></small>
-                    <div><%= lead.total_unattached_balance.present? ? number_to_indian_currency(lead.total_unattached_balance.round) : '-' %></div>
-                  </div>
-                </div>
-              <% end %>
-              <% if lead.first_booking_detail.present? %>
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label class="small text-muted"><%= t('mongoid.attributes.lead.blocking_amount_paid') %></label>
-                    <div><%= t("global.boolean.#{lead.is_blocking_amount_paid? }") %></div>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label class="small text-muted"><%= t('mongoid.attributes.lead.payment_done') %></label>
-                    <div><%= t("global.boolean.#{lead.is_booking_price_paid? }") %></div>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label class="small text-muted"><%= t('mongoid.attributes.lead.registration_done') %></label>
-                    <div><%= t("global.boolean.#{lead.is_registration_done? }") %></div>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label class="small text-muted"><%= t('mongoid.attributes.lead.total_amount_paid') %></label>
-                    <small class="text-muted"><%= t('leads.total_amount_paid.hint')%></small>
-                    <div><%= lead.total_amount_paid.present? ? number_to_indian_currency(lead.total_amount_paid.round) : '-' %></div>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label class="small text-muted"><%= t('mongoid.attributes.lead.total_balance_pending') %></label>
-                    <small class="text-muted"><%= t('leads.total_balance_pending.hint')%></small>
-                    <div><%= lead.total_balance_pending.present? ? number_to_indian_currency(lead.total_balance_pending.round) : '-' %></div>
-                  </div>
-                </div>
-              <% end %>
-              <% if !current_user.role?("channel_partner") %>
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label class="small text-muted"><%= t('mongoid.attributes.lead.manager_id') %></label>
-                    <div>
-                      <p>
-                        <% manager_user = lead.manager_id.present? ? User.find(lead.manager_id) : nil %>
-                        <%= manager_user.present? ? link_to(manager_user.name, admin_user_path(manager_user)) : '-' %>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              <% end %>
-            </div>
+    <div class="box-content bg-white p-3">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="small text-muted"><%= t('mongoid.attributes.lead.name') %></label>
+            <div><%= lead.name || '-' %></div>
           </div>
         </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="small text-muted"><%= t('mongoid.attributes.lead.email') %></label>
+            <div><%= lead.email || '-' %></div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="small text-muted"><%= t('mongoid.attributes.lead.phone') %></label>
+            <div><%= lead.phone || '-' %></div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="small"><%= t('mongoid.attributes.lead.project_id') %></label>
+            <div><%= (lead.project.try(:name) || '-') %></div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="small text-muted"><%= t('mongoid.attributes.lead.stage') %></label>
+            <div><%= lead.lead_stage || '-' %></div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="small text-muted"><%= t('mongoid.attributes.lead.sitevisit_date') %></label>
+            <div><%= lead.sitevisit_date.try(:strftime, "%d/%m/%Y") || '-' %></div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="small text-muted"><%= t('mongoid.attributes.lead.revisit_count') %></label>
+            <div><%= lead.revisit_count || '-' %></div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="small text-muted"><%= t('mongoid.attributes.lead.last_revisit_date') %></label>
+            <div><%= lead.last_revisit_date.try(:strftime, "%d/%m/%Y") || '-' %></div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="small text-muted"><%= t('mongoid.attributes.lead.registered_at') %></label>
+            <div><%= lead.registered_at.present? ? (lead.registered_at.strftime("%d/%m/%Y") rescue '-') : (lead.created_at.strftime("%d/%m/%Y") rescue '-') %></div>
+          </div>
+        </div>
+        <% if current_client.enable_actual_inventory?(current_user) %>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="small text-muted"><%= t('mongoid.attributes.lead.total_unattached_balance') %></label>
+              <small class="text-muted"><%= t('leads.total_unattached_balance.hint')%></small>
+              <div><%= lead.total_unattached_balance.present? ? number_to_indian_currency(lead.total_unattached_balance.round) : '-' %></div>
+            </div>
+          </div>
+        <% end %>
+        <% if lead.first_booking_detail.present? %>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="small text-muted"><%= t('mongoid.attributes.lead.blocking_amount_paid') %></label>
+              <div><%= t("global.boolean.#{lead.is_blocking_amount_paid? }") %></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="small text-muted"><%= t('mongoid.attributes.lead.payment_done') %></label>
+              <div><%= t("global.boolean.#{lead.is_booking_price_paid? }") %></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="small text-muted"><%= t('mongoid.attributes.lead.registration_done') %></label>
+              <div><%= t("global.boolean.#{lead.is_registration_done? }") %></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="small text-muted"><%= t('mongoid.attributes.lead.total_amount_paid') %></label>
+              <small class="text-muted"><%= t('leads.total_amount_paid.hint')%></small>
+              <div><%= lead.total_amount_paid.present? ? number_to_indian_currency(lead.total_amount_paid.round) : '-' %></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="small text-muted"><%= t('mongoid.attributes.lead.total_balance_pending') %></label>
+              <small class="text-muted"><%= t('leads.total_balance_pending.hint')%></small>
+              <div><%= lead.total_balance_pending.present? ? number_to_indian_currency(lead.total_balance_pending.round) : '-' %></div>
+            </div>
+          </div>
+        <% end %>
+        <% if !current_user.role?("channel_partner") %>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="small text-muted"><%= t('mongoid.attributes.lead.manager_id') %></label>
+              <div>
+                <p>
+                <% manager_user = lead.manager_id.present? ? User.find(lead.manager_id) : nil %>
+                <%= manager_user.present? ? link_to(manager_user.name, admin_user_path(manager_user)) : '-' %>
+                </p>
+              </div>
+            </div>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>

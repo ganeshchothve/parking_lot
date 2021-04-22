@@ -36,12 +36,10 @@
 
         <td data-title="<%= t('mongoid.attributes.booking_detail.agreement_price') %>" >
           <%= number_to_indian_currency(booking_detail.calculate_agreement_price.round) %>
-          <!--
           <div class="small">
-            <%#= t('mongoid.attributes.booking_detail.all_inclusive_price') %> :
-            <%#= number_to_indian_currency(booking_detail.calculate_all_inclusive_price.round) %>
+            <%= t('mongoid.attributes.booking_detail.all_inclusive_price') %> :
+            <%= number_to_indian_currency(booking_detail.calculate_all_inclusive_price.round) %>
           </div>
-          -->
 
           <div class="small">
             <%= t('mongoid.attributes.booking_detail.paid_amount') %> :

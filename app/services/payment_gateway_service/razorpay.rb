@@ -1,7 +1,7 @@
 module PaymentGatewayService
   class Razorpay < Default
     def gateway_url(search_id)
-      return "/dashboard/user/searches/#{search_id}/gateway-payment/#{@receipt.receipt_id}"
+      return "/dashboard/lead/searches/#{search_id}/gateway-payment/#{@receipt.receipt_id}"
     end
 
     def response_handler! params
@@ -10,7 +10,7 @@ module PaymentGatewayService
         @receipt.payment_identifier = params[:payment_id]
         @receipt.tracking_id = params[:payment_id]
         if response.status == 'captured'
-          @receipt.clearance_pending! 
+          @receipt.clearance_pending!
           @receipt.status_message = "success"
         else
           @receipt.failed! if %w[pending clearance_pending].include? @receipt.status

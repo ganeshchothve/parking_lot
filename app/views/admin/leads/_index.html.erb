@@ -39,7 +39,7 @@
             </small>
           <% end %>
         </td>
-        <td data-title="<%= t('mongoid.attributes.lead.stage') %>"><span><%= lead.stage || '-' %></span></td>
+        <td data-title="<%= t('mongoid.attributes.lead.stage') %>"><span><%= lead.lead_stage || '-' %></span></td>
 
         <td data-title="<%= Lead.human_attribute_name('project_id') %>"><span><%= lead.project_name %></span></td>
 
@@ -67,6 +67,8 @@
     <% end %>
   </tbody>
 </table>
-<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pt-2">
-  <%= will_paginate leads, list_classes: %w(pagination justify-content-center) %>
-</div>
+<% if leads.is_a?(WillPaginate::Collection) %>
+  <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pt-2">
+    <%= will_paginate leads, list_classes: %w(pagination justify-content-center) %>
+  </div>
+<% end %>

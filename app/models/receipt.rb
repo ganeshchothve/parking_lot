@@ -81,10 +81,10 @@ class Receipt
   scope :direct_payments, ->{ where(booking_detail_id: nil )}
 
   #validations for fields without default value
-  validates :total_amount, :payment_identifier, presence: true
-  #validate :validate_total_amount, if: proc { |receipt| receipt.total_amount.present? } # Runwal specific change
-  validates :issued_date, presence: true, if: proc { |receipt| receipt.payment_mode != 'online' } # :issuing_bank, :issuing_bank_branch, # Runwal specific changes
-  # validates :payment_identifier, presence: true # , if: proc { |receipt| receipt.payment_mode == 'online' ? receipt.status == 'success' : true } # Runwal specific change
+  validates :total_amount, presence: true
+  validate :validate_total_amount, if: proc { |receipt| receipt.total_amount.present? }
+  validates :issued_date, :issuing_bank, :issuing_bank_branch, presence: true, if: proc { |receipt| receipt.payment_mode != 'online' }
+  validates :payment_identifier, presence: true , if: proc { |receipt| receipt.payment_mode == 'online' ? receipt.status == 'success' : true }
   #validations for fields with default value
   validates :status, :payment_mode, :payment_type, presence: true
   validates :status, inclusion: { in: proc { Receipt.aasm.states.collect(&:name).collect(&:to_s) } }

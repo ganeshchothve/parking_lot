@@ -146,6 +146,7 @@ module BookingDetailStateMachine
       _project_unit = project_unit
       _project_unit.assign_attributes(status: 'blocked', held_on: nil, blocked_on: Date.today, auto_release_on: ( Date.today + _project_unit.blocking_days.days) )
       _project_unit.save
+      self.set(booked_on: _project_unit.blocked_on)
       if under_negotiation? && booking_detail_scheme.approved?
         scheme_approved!
       else
@@ -174,6 +175,7 @@ module BookingDetailStateMachine
       _project_unit.auto_release_on ||= Date.today
       _project_unit.auto_release_on +=  _project_unit.blocking_days.days
       _project_unit.save
+      self.set(booked_on: _project_unit.blocked_on)
       if blocked? && get_paid_amount > project_unit.blocking_amount
         booked_tentative!
       else

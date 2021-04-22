@@ -9,6 +9,12 @@
         </div>
       <% end %>
 
+      <% if @user.leads.present? %>
+        <div class="separate-line container"></div>
+        <% leads = @user.leads %>
+        <%= render "admin/leads/section", leads: leads , name: Lead.model_name.human(count: leads.count) %>
+      <% end %>
+
       <% if @user.role?("cp_admin") || @user.role?("cp") %>
         <!-- User List -->
         <% users = User.where(manager_id: @user.id).paginate(page: 1) %>

@@ -30,6 +30,7 @@ class BookingDetail
   field :carpet, type: Float
   field :agreement_price, type: Integer
   field :all_inclusive_price, type: Integer
+  field :booked_on, type: Date
   field :ladder_stage, type: Array
 
   mount_uploader :tds_doc, DocUploader
@@ -47,6 +48,7 @@ class BookingDetail
   embeds_many :data, as: :data_attributable
   embeds_many :tasks, cascade_callbacks: true
   belongs_to :project
+  belongs_to :project_tower
   belongs_to :project_unit
   belongs_to :lead
   belongs_to :user

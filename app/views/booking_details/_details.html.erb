@@ -61,12 +61,10 @@
               <span><%= BookingDetail.human_attribute_name('agreement_price') %></span>
               <p><%= number_to_indian_currency(booking_detail.calculate_agreement_price.round) %></p>
             </li>
-            <!--
             <li>
-              <span><%#= BookingDetail.human_attribute_name('all_inclusive_price') %></span>
-              <p><%#= number_to_indian_currency(booking_detail.calculate_all_inclusive_price.round) %></p>
+              <span><%= BookingDetail.human_attribute_name('all_inclusive_price') %></span>
+              <p><%= number_to_indian_currency(booking_detail.calculate_all_inclusive_price.round) %></p>
             </li>
-            -->
             <li>
               <span><%= BookingDetail.human_attribute_name('phase') %></span>
               <p><%= project_unit.phase.try(:name) || '-' %></p>
@@ -77,8 +75,8 @@
           <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12 no-pd">
             <ul class="booking-apart-info clear">
               <li>
-                <span><%= ProjectUnit.human_attribute_name('blocked_on') %></span>
-                <p><%= project_unit.blocked_on.try(:strftime, '%d/%m/%Y') %></p>
+                <span><%= BookingDetail.human_attribute_name('booked_on') %></span>
+                <p><%= booking_detail.booked_on.try(:strftime, '%d/%m/%Y') %></p>
               </li>
               <li>
                 <span><%= BookingDetail.human_attribute_name('total_amount_paid')%></span>
