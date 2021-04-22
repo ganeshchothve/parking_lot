@@ -55,6 +55,7 @@ class Receipt
   belongs_to :booking_detail, optional: true
   belongs_to :creator, class_name: 'User'
   belongs_to :account, foreign_key: 'account_number', optional: true
+  belongs_to :manager, class_name: 'User', optional: true
   # remove optional: true when implementing.
   has_many :assets, as: :assetable
   has_many :smses, as: :triggered_by, class_name: 'Sms'
@@ -216,7 +217,7 @@ class Receipt
     custom_scope = {}
     if params[:lead_id].blank? && !user.buyer?
       if user.role?('channel_partner')
-        custom_scope = { lead_id: { "$in": Lead.where(referenced_manager_ids: user.id).distinct(:id) } }
+        custom_scope = { manager_id: user.id }
       #elsif user.role?('cp_admin')
       #  custom_scope = { lead_id: { "$in": Lead.nin(manager_id: [nil, '']).distinct(:id) } }
       #elsif user.role?('cp')

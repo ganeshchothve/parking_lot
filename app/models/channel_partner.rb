@@ -10,8 +10,7 @@ class ChannelPartner
   include ApplicationHelper
   extend ApplicationHelper
 
-  #STATUS = %w(active inactive pending rejected)
-  STATUS = %w(active inactive)
+  STATUS = %w(active inactive pending rejected)
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   EXPERTISE = %w( rentals retail residential commercial )
   EXPERIENCE = ['0-1 yrs', '1-5 yrs', '5-10 yrs', '10-15 yrs', '15-20 yrs', '20+ yrs']
@@ -33,7 +32,7 @@ class ChannelPartner
   field :phone, type: String
   field :alternate_phone, type: String
   field :rera_id, type: String
-  field :status, type: String, default: 'active'
+  field :status, type: String, default: 'inactive'
 
   field :company_name, type: String
   field :company_type, type: String

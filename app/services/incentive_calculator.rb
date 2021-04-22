@@ -7,7 +7,7 @@ class IncentiveCalculator
     @unit = booking_detail.project_unit
     @options = options
     # Find channel partner for above booking
-    @channel_partner = lead.manager
+    @channel_partner = booking_detail.manager
   end
 
   # Find incentive scheme based on above

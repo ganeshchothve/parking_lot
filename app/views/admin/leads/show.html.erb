@@ -19,7 +19,7 @@
       </section>
 
       <!-- site visits data -->
-      <% if ((current_user.role?(:channel_partner) && lead.active_cp_lead_activities.where(user_id: current_user.id).present?) || !current_user.role?(:channel_partner)) %>
+      <% if ((current_user.role?(:channel_partner) && @lead.active_cp_lead_activities.where(user_id: current_user.id).present?) || !current_user.role?(:channel_partner)) %>
         <div class="separate-line container"></div>
         <%= render 'site_visit', lead: @lead %>
       <% end %>
@@ -31,7 +31,7 @@
       </div>
 
       <!-- cp lead activities -->
-      <%= render 'cp_lead_activities', cp_lead_activities: @lead.cp_lead_activities.paginate(page: 1) %>
+      <%= render 'cp_lead_activities', cp_lead_activities: @lead.cp_lead_activities.where(CpLeadActivity.user_based_scope(current_user, params)).paginate(page: 1) %>
 
 
       <!-- booking_details -->

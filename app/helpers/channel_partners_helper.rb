@@ -6,9 +6,9 @@ module ChannelPartnersHelper
 
   def available_chanel_partner_statuses channel_partner
     if channel_partner.new_record?
-      [ 'active' ]
+      [ 'inactive' ]
     else
-      statuses = ChannelPartner::STATUS
+      statuses = channel_partner.aasm.events(permitted: true).collect{|x| x.name.to_s}
     end
   end
 end

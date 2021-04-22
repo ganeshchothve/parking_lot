@@ -55,6 +55,7 @@ class Invoice
   def manual?
     _type.match(/manual/i)
   end
+
   class << self
     def user_based_scope(user, params = {})
       custom_scope = {}

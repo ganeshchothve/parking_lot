@@ -17,7 +17,9 @@ class ReceiptObserver < Mongoid::Observer
       receipt.project = booking_detail.project
       receipt.lead = booking_detail.lead
       receipt.user = booking_detail.lead.user
+      receipt.manager_id = booking_detail.manager_id || receipt.lead.active_cp_lead_activities.first.try(:user_id)
     end
+    receipt.manager_id = receipt.lead.active_cp_lead_activities.first.try(:user_id) if receipt.manager_id.blank?
   end
 
   def after_create receipt

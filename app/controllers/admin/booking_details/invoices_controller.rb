@@ -128,8 +128,8 @@ class Admin::BookingDetails::InvoicesController < AdminController
   end
 
   def apply_policy_scope
-    custom_scope = Invoice.where(Invoice.user_based_scope(current_user, params))
-    Invoice.with_scope(policy_scope(custom_scope)) do
+    custom_scope = associated_class.where(Invoice.user_based_scope(current_user, params))
+    associated_class.with_scope(policy_scope(custom_scope)) do
       yield
     end
   end
