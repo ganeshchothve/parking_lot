@@ -30,9 +30,6 @@ class BookingDetail
   field :carpet, type: Float
   field :agreement_price, type: Integer
   field :all_inclusive_price, type: Integer
-  field :booking_price, type: Integer
-  field :blocking_amount, type: Integer
-  field :booked_on, type: Date
   field :ladder_stage, type: Array
 
   mount_uploader :tds_doc, DocUploader
@@ -50,7 +47,6 @@ class BookingDetail
   embeds_many :data, as: :data_attributable
   embeds_many :tasks, cascade_callbacks: true
   belongs_to :project
-  belongs_to :project_tower
   belongs_to :project_unit
   belongs_to :lead
   belongs_to :user
@@ -73,8 +69,7 @@ class BookingDetail
 
   # TODO: uncomment
   # validates :name, presence: true
-  validates :status, :agreement_price, :carpet, :saleable, :blocking_amount, :booking_price, :booked_on, presence: true
-  validates :agreement_price, :all_inclusive_price, :blocking_amount, :carpet, :saleable, numericality: { greater_than: 0 }, allow_blank: true
+  validates :status, presence: true
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :kyc_mandate
   validate :validate_content, on: :create
@@ -252,9 +247,9 @@ class BookingDetail
         receipts_total = receipts_total.in(status: ['clearance_pending', "success"])
       end
       receipts_total = receipts_total.sum(:total_amount)
-      return (self.booking_price.to_f - receipts_total)
+      return (self.project_unit.booking_price - receipts_total)
     else
-      return self.booking_price.to_f
+      return self.project_unit.booking_price
     end
   end
 

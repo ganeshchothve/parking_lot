@@ -301,9 +301,9 @@ en:
         tasks_completed: 'Tasks Completed'
         tasks_pending: 'Tasks Pending'
         tasks_completed_tracked_by: 'All Tasks Completed Tracked by'
-        booked_on: 'Booked On'
         registration_done: 'Registration Done'
         ladder_stage: 'Ladder Stage'
+        agreement_price: 'Agreement Price'
       booking_detail/status:
         available: 'Available'
         not_available: 'Not Available'
@@ -459,7 +459,7 @@ en:
         average_quarterly_business: 'Average Quarterly Business (₹)'
         developers_worked_for: 'Developers Worked For (Type any developer name & press enter)'
         event: 'Application Status'
-        cp_code: 'Vendor Code'
+        cp_code: 'Partner Code'
         company_type: 'Company Type'
         category: 'Category'
         source: 'Source'
@@ -586,7 +586,7 @@ en:
         project_tower_name: 'Project Tower'
         project_tower_id: 'Project Tower'
         project_name: 'Project'
-        blocked_on: 'Booked On'
+        blocked_on: 'Blocked On'
         unit_facing_direction: 'Facing'
         agreement_price: 'Agreement Value'
         all_inclusive_price: 'All Inclusive Price'
@@ -603,7 +603,6 @@ en:
         configuration: 'Configuration'
         payment_schedule: 'Payment Schedule'
         cost_sheet: 'Cost Sheet'
-        unit_configuration_name: "Unit Configuration"
       project_unit/status:
         hold: 'Hold'
         available: 'Available'
@@ -634,7 +633,7 @@ en:
         status: "Payment Status"
         user: "Customer"
         user_id: "Customer"
-        total_amount: "Total Amount (Inclusive of GST)"
+        total_amount: "Total Amount (Rs.)"
         token_number: 'Token Number'
         time_slot: Time Slot
         tracking_id: 'Transaction ID (Processed Payment)'
@@ -937,7 +936,7 @@ en:
         manager_id: 'Partner / Manager / Added by'
         name_email_phone: 'Walk-in (Project Name)'
         total_amount_paid: "Total Amount Paid (Inclusive of GST)"
-        registered_at: 'Walk-in Creation Date'
+        registered_at: 'Registered At'
         payment_done: '9.90% Received'
         blocking_amount_paid: 'Booking Amount Paid'
         registration_done: 'Registration Done'
@@ -1566,7 +1565,6 @@ en:
         max_ladder_html: '<strong>Max.</strong> Ladder Reached'
 
       titles:
-        leads: 'Walk-Ins'
         lead_details: 'Customer Account Details'
         booking_details: 'Bookings'
         total_leads: 'Total Walk-ins'

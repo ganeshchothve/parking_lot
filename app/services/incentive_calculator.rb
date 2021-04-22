@@ -1,8 +1,7 @@
 class IncentiveCalculator
-  attr_reader :booking_detail, :unit, :lead, :channel_partner, :incentive_scheme, :ladder, :bookings, :options
+  attr_reader :unit, :lead, :channel_partner, :incentive_scheme, :ladder, :bookings, :options
 
   def initialize(booking_detail, options={test: false})
-    @booking_detail = booking_detail
     @lead = booking_detail.lead
     @unit = booking_detail.project_unit
     @options = options
@@ -48,8 +47,8 @@ class IncentiveCalculator
   # Run incentive calculation
   def calculate
     if channel_partner && find_incentive_scheme && find_all_bookings_for_current_scheme
-      # sort on booked_on & create a hash { 1 => { booking_detail: booking1 }, 2 => { booking_detail: booking2 } }
-      bookings_hash = bookings.sort { |x| x.booked_on }.each_with_index.inject({}) { |hash, (bd, idx)| hash[idx+1] = { booking_detail: bd }; hash}
+      # sort on blocked_on & create a hash { 1 => { booking_detail: booking1 }, 2 => { booking_detail: booking2 } }
+      bookings_hash = bookings.sort { |x| x.project_unit.blocked_on }.each_with_index.inject({}) { |hash, (bd, idx)| hash[idx+1] = { booking_detail: bd }; hash}
 
       if incentive_scheme.ladder_strategy == 'number_of_items'
         actual_value = bookings.count
@@ -59,8 +58,8 @@ class IncentiveCalculator
 
       if find_ladder(actual_value)
         bookings_hash.each do |idx, hash|
-          _booking_detail = hash[:booking_detail]
-          incentive_amount = ladder.payment_adjustment.value(_booking_detail).try(:to_f).try(:round)
+          booking_detail = hash[:booking_detail]
+          incentive_amount = ladder.payment_adjustment.value(booking_detail).try(:to_f).try(:round)
           if options[:test]
             hash[:incentive] = incentive_amount
           else

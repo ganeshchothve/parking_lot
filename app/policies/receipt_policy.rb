@@ -46,7 +46,7 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def enable_attached_payment?
-    return false #unless enable_actual_inventory?(user)
+    return false unless enable_actual_inventory?(user)
     valid = ((enable_booking_with_kyc? ? record_user_kyc_ready? : true) && valid_booking_stages?)
   end
 

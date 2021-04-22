@@ -35,8 +35,8 @@
               </li>
             <% end %>
             <li>
-              <span><%= ProjectUnit.human_attribute_name('unit_configuration_name')%></span>
-              <p><%= project_unit.unit_configuration_name %></p>
+              <span class='text-wrap'><%= BookingDetail.human_attribute_name('bedrooms')%>/ <%= BookingDetail.human_attribute_name('bathrooms')%></span>
+              <p><%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></p>
             </li>
             <li>
               <span><%= BookingDetail.human_attribute_name('carpet')%></span>
@@ -77,26 +77,26 @@
           <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12 no-pd">
             <ul class="booking-apart-info clear">
               <li>
-                <span><%= BookingDetail.human_attribute_name('booked_on') %></span>
-                <p><%= booking_detail.booked_on.try(:strftime, '%d/%m/%Y') %></p>
+                <span><%= ProjectUnit.human_attribute_name('blocked_on') %></span>
+                <p><%= project_unit.blocked_on.try(:strftime, '%d/%m/%Y') %></p>
               </li>
               <li>
                 <span><%= BookingDetail.human_attribute_name('total_amount_paid')%></span>
                 <p><%= number_to_indian_currency(booking_detail.total_amount_paid) %></p><div class="small">* Considers processed <%= Receipt.model_name.human %> only</div>
               </li>
-              <!-- <li>
-                <span><%#= BookingDetail.human_attribute_name('pending_balance')%></span>
-                <p><%#= number_to_indian_currency(booking_detail.pending_balance({strict: true})) %></p>
-              </li> -->
+              <li>
+                <span><%= BookingDetail.human_attribute_name('pending_balance')%></span>
+                <p><%= number_to_indian_currency(booking_detail.pending_balance({strict: true})) %></p>
+              </li>
             </ul>
           </div>
-          <% template = ::Template::UITemplate.where(name: 'booking_details/_details').first %>
-          <% if template.present? && template.is_active? %>
-            <div class="alert alert-primary col-md-12 col-lg-12 col-xs-12 col-sm-12">
+          <div class="alert alert-primary col-md-12 col-lg-12 col-xs-12 col-sm-12">
+            <% template = ::Template::UITemplate.where(name: 'booking_details/_details').first %>
+            <% if template.present? %>
               <% @bd = booking_detail %>
               <%= get_view_erb(template) %>
-            </div>
-          <% end %>
+            <% end %>
+          </div>
         <% end %>
       </div>
     </div>

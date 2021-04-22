@@ -30,9 +30,9 @@
 
   <%= link_to t('controller.assets.index.link_name'), doc_admin_booking_detail_path(id: booking_detail.id, type: 'documents'), class: "dropdown-item modal-remote-form-link" %>
 
-  <%#= link_to t('controller.booking_details.cost_sheet.link_name'), doc_admin_booking_detail_path(id: booking_detail.id, type: 'cost_sheet'), class: "dropdown-item modal-remote-form-link" %>
+  <%= link_to t('controller.booking_details.cost_sheet.link_name'), doc_admin_booking_detail_path(id: booking_detail.id, type: 'cost_sheet'), class: "dropdown-item modal-remote-form-link" %>
 
-  <%#= link_to t('controller.booking_details.payment_schedule.link_name'), doc_admin_booking_detail_path(id: booking_detail.id, type: 'payment_schedule'), class: "dropdown-item modal-remote-form-link" %>
+  <%= link_to t('controller.booking_details.payment_schedule.link_name'), doc_admin_booking_detail_path(id: booking_detail.id, type: 'payment_schedule'), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 
 <% if  policy([:admin, Receipt.new(user: booking_detail.user)]).lost_receipt? %>
@@ -45,11 +45,11 @@
 
 <% scheme = booking_detail.project_unit.project_tower.default_scheme %>
 
-<%# if booking_detail.booking_detail_scheme && policy([:admin, booking_detail.booking_detail_scheme]).edit? %>
-  <%#= link_to t('helpers.edit.link_name', model: BookingDetailScheme.model_name.human), edit_admin_booking_detail_booking_detail_scheme_path( booking_detail, booking_detail.booking_detail_scheme.id), class: 'dropdown-item modal-remote-form-link' %>
-<%# elsif policy([:admin, BookingDetailScheme.new(booking_detail: booking_detail, derived_from_scheme_id: scheme.id, project_unit_id: booking_detail.project_unit_id)]).new?%>
-  <%#= link_to t('helpers.new.link_name', model: BookingDetailScheme.model_name.human ), new_admin_booking_detail_booking_detail_scheme_path( booking_detail), class: 'dropdown-item modal-remote-form-link' %>
-<%# end %>
+<% if booking_detail.booking_detail_scheme && policy([:admin, booking_detail.booking_detail_scheme]).edit? %>
+  <%= link_to t('helpers.edit.link_name', model: BookingDetailScheme.model_name.human), edit_admin_booking_detail_booking_detail_scheme_path( booking_detail, booking_detail.booking_detail_scheme.id), class: 'dropdown-item modal-remote-form-link' %>
+<% elsif policy([:admin, BookingDetailScheme.new(booking_detail: booking_detail, derived_from_scheme_id: scheme.id, project_unit_id: booking_detail.project_unit_id)]).new?%>
+  <%= link_to t('helpers.new.link_name', model: BookingDetailScheme.model_name.human ), new_admin_booking_detail_booking_detail_scheme_path( booking_detail), class: 'dropdown-item modal-remote-form-link' %>
+<% end %>
 
 <% if policy([:admin, Receipt ]).index? %>
   <%= link_to t('controller.receipts.index.link_name'), admin_lead_booking_detail_receipts_path(booking_detail.lead, booking_detail), class: 'dropdown-item' %>
@@ -61,9 +61,9 @@
   <%= link_to t('controller.booking_details.invoices.link_name'), admin_booking_detail_invoices_path(booking_detail), class: 'dropdown-item' %>
 <% end %>
 
-<%# booking_requests = [UserRequest::Cancellation, UserRequest::Swap] %>
-<%# booking_requests.each do |klass| %>
-  <%# if policy([:admin, klass.new(user_id: booking_detail.user_id, lead: booking_detail.lead, requestable_id: booking_detail.id, requestable_type: 'BookingDetail')]).new? %>
-    <%#= link_to t("controller.user_requests.#{klass.model_name.element}.new.link_name"), new_admin_lead_user_request_path(lead_id: booking_detail.lead_id, requestable_id: booking_detail.id, requestable_type: 'BookingDetail', request_type: klass.model_name.element), class: "dropdown-item modal-remote-form-link" %>
-  <%# end %>
-<%# end %>
+<% booking_requests = [UserRequest::Cancellation, UserRequest::Swap] %>
+<% booking_requests.each do |klass| %>
+  <% if policy([:admin, klass.new(user_id: booking_detail.user_id, lead: booking_detail.lead, requestable_id: booking_detail.id, requestable_type: 'BookingDetail')]).new? %>
+    <%= link_to t("controller.user_requests.#{klass.model_name.element}.new.link_name"), new_admin_lead_user_request_path(lead_id: booking_detail.lead_id, requestable_id: booking_detail.id, requestable_type: 'BookingDetail', request_type: klass.model_name.element), class: "dropdown-item modal-remote-form-link" %>
+  <% end %>
+<% end %>

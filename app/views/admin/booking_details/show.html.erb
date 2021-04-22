@@ -10,79 +10,77 @@
       </div>
     <% end %>
 
-    <!--
-    <%# if @scheme.present? %>
+    <% if @scheme.present? %>
       <div class="col-md-12 mt-3">
         <div class="box-card">
           <div class="box-header br-rd-tr-4 row">
             <div class="col-12 p-0">
-              <h2 class="text-dark icon-set icon-scheme-black"><%#= BookingDetailScheme.model_name.human %></h2>
+              <h2 class="text-dark icon-set icon-scheme-black"><%= BookingDetailScheme.model_name.human %></h2>
             </div>
           </div>
           <div class="box-content br-rd-bl-4 bg-white pt-1 row m-0">
             <div class="col-12">
-              <ul class#="booking-apart-info clear">
+              <ul class="booking-apart-info clear">
                 <li>
                   <span class="font-weight-bold">Derived from scheme </span>
-                  <p><%#= @scheme.derived_from_scheme.name %></p>
+                  <p><%= @scheme.derived_from_scheme.name %></p>
                 </li>
               </ul>
 
-              <%# if @scheme.payment_adjustments.present? %>
+              <% if @scheme.payment_adjustments.present? %>
                 <ul class="booking-apart-info clear">
                   <li>
                     <span class="font-weight-bold">Payment Adjustments</span>
                   </li>
                 </ul>
-                <%# @scheme.payment_adjustments.each do |adjustment| %>
+                <% @scheme.payment_adjustments.each do |adjustment| %>
                   <ul class="booking-apart-info clear">
                     <li>
                       <span>Name</span>
-                      <p><%#= adjustment.name %></p>
+                      <p><%= adjustment.name %></p>
                     </li>
                     <li>
                       <span>Field</span>
-                      <p><%#= adjustment.field.titleize %></p>
+                      <p><%= adjustment.field.titleize %></p>
                     </li>
                     <li>
                       <span>Value</span>
-                      <p><%#= adjustment.value(@booking_detail.project_unit) %></p>
+                      <p><%= adjustment.value(@booking_detail.project_unit) %></p>
                     </li>
                   </ul>
-                <%# end %>
-              <%# end %>
+                <% end %>
+              <% end %>
             </div>
           </div>
         </div>
       </div>
-    <%# end %>
-    <%# if @booking_detail.cost_sheet_template.try(:is_active?) %>
+    <% end %>
+    <% if @booking_detail.cost_sheet_template.try(:is_active?) %>
       <div class="col-md-12 mt-3">
         <div class="card pb_after">
           <div class="card-body">
             <div class="table-responsive">
-              <%#= @booking_detail.cost_sheet_template.try(:parsed_content, @booking_detail) %>
+              <%= @booking_detail.cost_sheet_template.try(:parsed_content, @booking_detail) %>
             </div>
           </div>
         </div>
       </div>
-    <%# end %>
-    <%# if @booking_detail.payment_schedule_template.try(:is_active?) %>
+    <% end %>
+    <% if @booking_detail.payment_schedule_template.try(:is_active?) %>
       <div class="col-md-12 mt-3">
         <div class="card pb_after">
           <div class="card-body">
             <div class="table-responsive">
-              <%#= @booking_detail.payment_schedule_template.try(:parsed_content, @booking_detail)  %>
+              <%= @booking_detail.payment_schedule_template.try(:parsed_content, @booking_detail)  %>
             </div>
           </div>
         </div>
       </div>
-    <%# end %>
+    </div>
 
     <div class="col-md-12 mb-5">
       <div class="mt-3"></div>
       <%#= render 'sync_logs/sync', record: @booking_detail if current_client.external_api_integration? && policy([current_user_role_group, SyncLog.new]).index? %>
     </div>
-    -->
   </div>
 </div>
