@@ -1,1 +1,3 @@
-<%= render 'form' %>
+<%= nested_form_for(@incentive_deduction, url: new_admin_invoice_incentive_deductions_path, local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['incentive_deductions'], "data-type": "json", id: 'incentive_deduction_form'}) do |f| %>
+  <%= render 'form', f: f %>
+<% end %>

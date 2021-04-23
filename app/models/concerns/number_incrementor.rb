@@ -1,11 +1,11 @@
 require 'autoinc'
 module NumberIncrementor
   extend ActiveSupport::Concern
-  include Mongoid::Autoinc
+  #include Mongoid::Autoinc
 
   included do
     field :number, type: Integer
-    increments :number
+    #increments :number
 
     scope :filter_by_number, ->(number) { where(number: number) }
 

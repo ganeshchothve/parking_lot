@@ -29,8 +29,6 @@
                   </div>
                 </div>
               <% end %>
-            </div>
-            <div class="row">
               <!--
               <div class="col-md-4">
                 <div class="form-group">
@@ -60,8 +58,6 @@
                   <div><%= t("mongoid.attributes.invoice/status.#{@invoice.status}") %></div>
                 </div>
               </div>
-            </div>
-            <div class="row">
               <% if @invoice.raised_date.present? %>
                 <div class="col-md-4">
                   <div class="form-group">
@@ -157,14 +153,12 @@
                   <div><%= number_to_indian_currency(@invoice.amount) %></div>
                 </div>
               </div>
-              <% if @invoice.manual? %>
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label class="small text-muted"><%= invoice_labels[:gst_amount] %></label>
-                    <div><%= number_to_indian_currency(@invoice.gst_amount) %></div>
-                  </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="small text-muted"><%= invoice_labels[:gst_amount] %></label>
+                  <div><%= number_to_indian_currency(@invoice.gst_amount) %></div>
                 </div>
-              <% end %>
+              </div>
               <% if @invoice.payment_adjustment.present? %>
                 <div class="col-md-4">
                   <div class="form-group">

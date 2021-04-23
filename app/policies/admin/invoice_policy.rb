@@ -16,13 +16,13 @@ class Admin::InvoicePolicy < InvoicePolicy
   end
 
   def update?
-    valid = user.role?('billing_team') && record.status.in?(%w(draft approved))
+    valid = user.role?('billing_team') && record.status.in?(%w(raised approved))
     valid ||= user.role?('channel_partner') && record.status.in?(%w(draft rejected))
     valid ||= user.role?('cp_admin') && record.pending_approval?
   end
 
   def update_gst?
-    user.role.in?(%w(billing_team admin)) && record.status.in?(%w(draft pending_approval))
+    user.role.in?(%w(billing_team admin)) && record.status.in?(%w(raised pending_approval))
   end
 
   def change_state?
@@ -67,18 +67,19 @@ class Admin::InvoicePolicy < InvoicePolicy
 
     case user.role.to_s
     when 'channel_partner'
-      attributes += [:amount, :gst_amount, :number] if record.status.in?(%w(draft rejected))
-      attributes += [:comments] if record.status.in?(%w(rejected draft))
-      attributes += [:event] if record.rejected?
+      if record.status.in?(%w(draft rejected))
+        attributes += [:number, :gst_amount, :comments, :event]
+        attributes += [:amount] if record.manual?
+      end
     when 'cp_admin'
       attributes += [:amount, :gst_amount, :rejection_reason, payment_adjustment_attributes: [:id, :absolute_value]] if record.status.in?(%w(pending_approval approved))
       attributes += [:rejection_reason] if record.status.in?(%w(pending_approval rejected))
       attributes += [:event]
     when 'billing_team'
-      attributes += [:amount, :gst_amount] if record.status.in?(%w(draft pending_approval))
-      attributes += [:rejection_reason] if record.status.in?(%w(draft pending_approval rejected))
+      attributes += [:amount, :gst_amount] if record.status.in?(%w(raised pending_approval))
+      attributes += [:rejection_reason] if record.status.in?(%w(raised pending_approval rejected))
       attributes += [cheque_detail_attributes: [:id, :total_amount, :payment_identifier, :issued_date, :issuing_bank, :issuing_bank_branch, :handover_date, :creator_id]] if record.status.in?(%w(approved paid))
-      attributes += [:event] if record.status.in?(%w(draft approved))
+      attributes += [:event] if record.status.in?(%w(raised approved))
     end
     attributes.uniq
   end

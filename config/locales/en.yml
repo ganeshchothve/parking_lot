@@ -725,7 +725,8 @@ en:
         status: 'Status'
         cheque_detail: 'Cheque Details'
       invoice/status:
-        draft: 'Raised'
+        draft: 'Draft'
+        raised: 'Raised'
         pending_approval: 'Pending Approval'
         approved: 'Approved'
         rejected: 'Rejected'

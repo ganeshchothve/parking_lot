@@ -6,12 +6,17 @@ module InvoiceStateMachine
 
     aasm column: :status, whiny_transitions: false do
       state :draft, initial: true
-      state :pending_approval
+      state :raised, :pending_approval
       state :approved, :rejected
       state :paid
 
+      event :raise do
+        transitions from: :draft, to: :raised, if: :can_raise?, success: %i[after_raised]
+        transitions from: :rejected, to: :raised, success: %i[after_re_raised]
+      end
+
       event :pending_approval, after: :send_notification do
-        transitions from: :draft, to: :pending_approval #, success: %i[after_raised]
+        transitions from: :raised, to: :pending_approval #, success: %i[after_pending_approval]
       end
 
       event :approve, after: :send_notification do
@@ -19,17 +24,17 @@ module InvoiceStateMachine
       end
 
       event :reject, after: :send_notification do
-        transitions from: :draft, to: :rejected, success: %i[after_rejected]
+        transitions from: :raised, to: :rejected, success: %i[after_rejected]
         transitions from: :pending_approval, to: :rejected, success: %i[after_rejected]
-      end
-
-      event :raise do
-        transitions from: :rejected, to: :draft, success: %i[after_re_raised]
       end
 
       event :paid, after: :send_notification do
         transitions from: :approved, to: :paid
       end
+    end
+
+    def can_raise?
+      self.assets.present? && self.assets.first.file.try(:url).present?
     end
 
     def get_pending_approval_recipients_list
@@ -91,9 +96,9 @@ module InvoiceStateMachine
       end
     end
 
-    #def after_raised
-    #  self.raised_date = Time.now
-    #end
+    def after_raised
+      self.raised_date = Time.now
+    end
 
     def after_approved
       self.processing_date = Time.now

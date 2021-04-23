@@ -1,10 +1,4 @@
 class Invoice::Manual < Invoice
-  include NumberIncrementor
-
-  field :number, type: String
-  field :gst_amount, type: Float, default: 0.0
-
-  scope :filter_by_number, ->(number) { where(number: number) }
 
   validates :gst_amount, numericality: { greater_than_or_equal_to: 0 }
 
