@@ -20,15 +20,15 @@ en:
       unconfirmed: "You have to confirm your email address before continuing."
     mailer:
       confirmation_instructions:
-        subject: "Welcome to Amura IRIS - Validate your account"
+        subject: "Welcome to Runwal Elevate - Validate your account"
       reset_password_instructions:
-        subject: "Amura IRIS - Reset password instructions"
+        subject: "Runwal Elevate - Reset password instructions"
       unlock_instructions:
-        subject: "Amura IRIS - Unlock instructions"
+        subject: "Runwal Elevate - Unlock instructions"
       email_changed:
-        subject: "Amura IRIS - Email Changed"
+        subject: "Runwal Elevate - Email Changed"
       password_change:
-        subject: "Amura IRIS - Password Changed"
+        subject: "Runwal Elevate - Password Changed"
     omniauth_callbacks:
       failure: "Could not authenticate you from %{kind} because \"%{reason}\"."
       success: "Successfully authenticated from %{kind} account."

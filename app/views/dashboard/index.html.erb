@@ -1,15 +1,27 @@
 <section class="mb-5">
-  <% if current_user.buyer? %>
-    <%= render 'dashboard/index/user' %>
-  <% elsif current_user.role?('channel_partner') %>
-    <%= render 'dashboard/index/channel_partner' %>
-  <% elsif ['admin', 'sales'].include?(current_user.role) %>
-    <%= render 'dashboard/index/admin' %>
-  <% elsif current_user.role?('billing_team') %>
-    <%= render 'dashboard/index/billing_team' %>
-  <% elsif ['cp_admin', 'cp'].include?(current_user.role) %>
-    <%= render 'dashboard/index/cp_admin' %>
-  <% elsif DashboardPolicy.new(current_user, :dashboard).admin_dashboard? %>
-    <%= render 'dashboard/index/crm' %>
+  <% if params[:role].present? %>
+    <% if params[:role] == 'admin' %>
+      <%= render 'dashboard/index/admin' %>
+    <% elsif params[:role] == 'superadmin' %>
+      <%= render 'dashboard/index/crm' %>
+    <% elsif params[:role] == 'billing_team' %>
+      <%= render 'dashboard/index/billing_team' %>
+    <% elsif params[:role] == 'cp_admin' %>
+      <%= render 'dashboard/index/cp_admin' %>
+    <% end %>
+  <% else %>
+    <% if current_user.buyer? %>
+      <%= render 'dashboard/index/user' %>
+    <% elsif current_user.role?('channel_partner') %>
+      <%= render 'dashboard/index/channel_partner' %>
+    <% elsif ['admin', 'sales'].include?(current_user.role) %>
+      <%= render 'dashboard/index/admin' %>
+    <% elsif current_user.role?('billing_team') %>
+      <%= render 'dashboard/index/billing_team' %>
+    <% elsif ['cp_admin', 'cp'].include?(current_user.role) %>
+      <%= render 'dashboard/index/cp_admin' %>
+    <% elsif DashboardPolicy.new(current_user, :dashboard).admin_dashboard? %>
+      <%= render 'dashboard/index/crm' %>
+    <% end %>
   <% end %>
 </section>

@@ -74,14 +74,14 @@
   </div>
 </div>
 
-<div class="container mb-5 pb-5 admin-dashboard-charts">
+<!-- <div class="container mb-5 pb-5 admin-dashboard-charts">
   <div class="row mb-3">
     <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 mb-3">
       <div class="box-card">
         <div class="box-header bg-gradient-cd br-rd-tr-4">
           <div class = "row">
             <div class = "col-6">
-              <h4 class="white pre text-center float-left lh-2"><%= Receipt.model_name.human(count: 3) %></h4>
+              <h4 class="white pre text-center float-left lh-2"><%#= Receipt.model_name.human(count: 3) %></h4>
             </div>
             <div class = "col-lg-6 col-xs-12 col-md-6 col-sm-12">
               <div class="table-btn-set float-right">
@@ -104,7 +104,7 @@
         <div class="box-header bg-gradient-cd br-rd-tr-4">
           <div class = "row">
             <div class = "col-6">
-              <h4 class="white pre text-center float-left lh-2"><%= t('controller.dashboard.receipt_frequency') %></h4>
+              <h4 class="white pre text-center float-left lh-2"><%#= t('controller.dashboard.receipt_frequency') %></h4>
             </div>
             <div class = "col-lg-6 col-xs-12 col-md-6 col-sm-12 pb-3">
               <div class="table-btn-set float-right pb-3">
@@ -129,7 +129,7 @@
         <div class="box-header bg-gradient-cd br-rd-tr-4">
           <div class = "row">
             <div class = "col-6">
-              <h4 class="white pre text-center float-left lh-2"><%= ProjectUnit.model_name.human(count: 3) %></h4>
+              <h4 class="white pre text-center float-left lh-2"><%#= ProjectUnit.model_name.human(count: 3) %></h4>
             </div>
           </div>
         </div>
@@ -145,7 +145,7 @@
         <div class="box-header bg-gradient-cd br-rd-tr-4">
           <div class = "row">
             <div class = "col-6">
-              <h4 class="white pre text-center float-left lh-2"><%= BookingDetail.model_name.human(count: 3) %></h4>
+              <h4 class="white pre text-center float-left lh-2"><%#= BookingDetail.model_name.human(count: 3) %></h4>
             </div>
             <div class = "col-lg-6 col-xs-12 col-md-6 col-sm-12">
               <div class="table-btn-set float-right">
@@ -170,7 +170,7 @@
         <div class="box-header bg-gradient-cd br-rd-tr-4">
           <div class = "row">
             <div class = "col-6">
-              <h4 class="white pre text-center float-left lh-2"><%= Receipt.model_name.human(count: 3) %></h4>
+              <h4 class="white pre text-center float-left lh-2"><%#= Receipt.model_name.human(count: 3) %></h4>
             </div>
             <div class = "col-lg-6 col-xs-12 col-md-6 col-sm-12">
               <div class="table-btn-set float-right">
@@ -219,10 +219,10 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 
-<%= javascript_tag do %>
-  $(document).ready(function(){
+<%#= javascript_tag do %>
+  <!-- $(document).ready(function(){
     $.ajax({
       url: "<%= inventory_snapshot_admin_project_units_path %>",
       type: "get",
@@ -254,5 +254,5 @@
     $('.db-filter-btn').click(function(e){
       e.preventDefault();
     });
-  });
-<% end %>
+  }); -->
+<% #end %>

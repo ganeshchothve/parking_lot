@@ -17,8 +17,8 @@ class Admin::UserPolicy < UserPolicy
         record.buyer? || record.role?('sales')
       elsif user.role?('cp_admin')
         record.buyer? || record.role?('cp') || record.active_channel_partner?
-      elsif user.role?('cp')
-        record.buyer? || record.active_channel_partner?
+      # elsif user.role?('cp')
+        # record.buyer? || record.active_channel_partner?
       elsif user.role?('billing_team')
         false
       elsif !user.buyer?
@@ -43,7 +43,7 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def reactivate_account?
-    %w[admin superadmin].include?(user.role) && record.expired?
+    %w[admin superadmin].include?(user.role)# && record.expired? because of devise expirable disabled
   end
 
   def confirm_via_otp?

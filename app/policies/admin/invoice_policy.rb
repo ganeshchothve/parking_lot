@@ -8,7 +8,7 @@ class Admin::InvoicePolicy < InvoicePolicy
   end
 
   def create?
-    user.role?('channel_partner') && enable_incentive_module?(user) && incentive_calculation_type?("manual")
+    user.role.in?(%w(channel_partner admin)) && enable_incentive_module?(user) && incentive_calculation_type?("manual")
   end
 
   def edit?
@@ -19,6 +19,7 @@ class Admin::InvoicePolicy < InvoicePolicy
     valid = user.role?('billing_team') && record.status.in?(%w(draft approved))
     valid ||= user.role?('channel_partner') && record.status.in?(%w(draft rejected))
     valid ||= user.role?('cp_admin') && record.pending_approval?
+    valid ||= user.role?('admin') && record.status.in?(%w(draft rejected approved pending_approval))
   end
 
   def update_gst?
@@ -26,7 +27,7 @@ class Admin::InvoicePolicy < InvoicePolicy
   end
 
   def change_state?
-    user.role.in?(%w(channel_partner)) && record.aasm.events(permitted: true).map(&:name).include?(:raise)
+    user.role.in?(%w(channel_partner admin)) && record.aasm.events(permitted: true).map(&:name).include?(:raise)
   end
 
   def raise_invoice?
@@ -38,7 +39,7 @@ class Admin::InvoicePolicy < InvoicePolicy
   end
 
   def asset_create?
-    user.role?('channel_partner') && !record.status.in?(%w(approved paid))
+    user.role.in?(%w(channel_partner admin)) && !record.status.in?(%w(approved paid))
   end
 
   def asset_update?
@@ -51,7 +52,7 @@ class Admin::InvoicePolicy < InvoicePolicy
   end
 
   def export?
-    %w[superadmin admin sales_admin crm cp_admin billing_team].include?(user.role)
+    %w[superadmin admin sales_admin crm cp_admin billing_team cp].include?(user.role)
   end
 
   def permitted_attributes(params = {})
@@ -64,7 +65,6 @@ class Admin::InvoicePolicy < InvoicePolicy
     #  attributes += [:rejection_reason, cheque_detail_attributes: [:id, :total_amount, :payment_identifier, :issued_date, :issuing_bank, :issuing_bank_branch, :handover_date, :creator_id], payment_adjustment_attributes: [:id, :absolute_value]] unless record.status.in?(%w(approved rejected))
     #  attributes += [:event, :gst_amount] if record.pending_approval?
     #end
-
     case user.role.to_s
     when 'channel_partner'
       attributes += [:amount, :gst_amount, :number] if record.status.in?(%w(draft rejected))
@@ -73,6 +73,11 @@ class Admin::InvoicePolicy < InvoicePolicy
     when 'cp_admin'
       attributes += [:amount, :gst_amount, :rejection_reason, payment_adjustment_attributes: [:id, :absolute_value]] if record.status.in?(%w(pending_approval approved))
       attributes += [:rejection_reason] if record.status.in?(%w(pending_approval rejected))
+      attributes += [:event]
+    when 'admin'
+      attributes += [:amount, :gst_amount, :rejection_reason, payment_adjustment_attributes: [:id, :absolute_value]] if record.status.in?(%w(pending_approval approved draft))
+      attributes += [:rejection_reason] if record.status.in?(%w(pending_approval rejected draft))
+      attributes += [cheque_detail_attributes: [:id, :total_amount, :payment_identifier, :issued_date, :issuing_bank, :issuing_bank_branch, :handover_date, :creator_id]] if record.status.in?(%w(approved paid))
       attributes += [:event]
     when 'billing_team'
       attributes += [:amount, :gst_amount] if record.status.in?(%w(draft pending_approval))
