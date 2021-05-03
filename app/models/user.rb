@@ -24,7 +24,7 @@ class User
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, :lockable, :timeoutable, :password_expirable, :password_archivable, :session_limitable, :expirable, :omniauthable, :omniauth_providers => [:selldo], authentication_keys: [:login]
+  devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, :timeoutable, :password_archivable, :omniauthable, :omniauth_providers => [:selldo], authentication_keys: [:login] #:lockable,:expirable,:session_limitable,:password_expirable
 
   attr_accessor :temporary_password, :payment_link, :temp_manager_id
 
@@ -569,6 +569,20 @@ class User
       roles
     end
 
+    def current_user_available_roles(current_client, current_user)
+      available_roles = available_roles(current_client)
+      case current_user.role
+      when "superadmin"
+        available_roles & %w[superadmin admin cp_admin cp billing_team]
+      when "admin"
+        available_roles & %w[admin cp_admin cp billing_team]
+      when "cp_admin"
+        available_roles & %w[cp]
+      else
+        available_roles
+      end
+    end
+
     def find_first_by_auth_conditions(warden_conditions)
       conditions = warden_conditions.dup
       login = conditions.delete(:login)
@@ -595,9 +609,11 @@ class User
       custom_scope = {}
       if user.role?('cp_admin')
         cp_ids = User.where(manager_id: user.id).distinct(:id)
-        custom_scope = {role: 'channel_partner', manager_id: {"$in": cp_ids}}
+        custom_scope = {role: 'channel_partner'} #, manager_id: {"$in": cp_ids}
       elsif user.role?('cp')
-        custom_scope = {role: 'channel_partner', manager_id: user.id}
+        custom_scope = {role: 'channel_partner'} #, manager_id: user.id
+      elsif ["admin","superadmin"].include?(user.role)
+        custom_scope = {role: 'channel_partner'}
       end
     end
 

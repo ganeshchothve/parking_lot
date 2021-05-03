@@ -12,9 +12,11 @@
         <div class="table-btn-set float-right pb-3">
           <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @users.total_entries %></button>
           <div class="new-menu display-initial" >
-            <button class="db-small-btn white light-blue bg-white fn-400 dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= t('controller.users.new.link_name', role: 'User') %></button>
+            <% if Admin::UserPolicy.new(current_user, current_user).new? %>
+              <button class="db-small-btn white light-blue bg-white fn-400 dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= t('controller.users.new.link_name', role: 'User') %></button>
+            <% end %>
             <div class="dropdown-menu">
-              <% User.available_roles(current_client).each do |role| %>
+              <% User.current_user_available_roles(current_client, current_user).each do |role| %>
                 <% if policy([:admin, User.new(role: role)]).new? %>
                   <%= link_to t('controller.users.new.link_name', role: User.human_attribute_name("role.#{role}")), new_admin_user_path(role: role), class: 'modal-remote-form-link dropdown-item' %>
                 <% end %>

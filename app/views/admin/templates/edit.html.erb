@@ -22,21 +22,17 @@
 
         <% if @template.is_a?(::Template::SmsTemplate) %>
           <div class="form-group">
-            <%= f.label :temp_id %>
-            <%= f.text_field :temp_id, class: 'form-control' %>
-          </div>
-          <div class="form-group">
-            <%= f.label :dlt_header_id %>
-            <%= f.text_field :dlt_header_id, class: 'form-control' %>
-          </div>
-          <div class="form-group">
             <%= f.label :dlt_temp_id %>
             <%= f.text_field :dlt_temp_id, class: 'form-control' %>
+          </div>
+          <div class="form-group">
+            <%= f.label :dlt_tag_id %>
+            <%= f.text_field :dlt_tag_id, class: 'form-control' %>
           </div>
           <div class="template-variables">
             <% editable_template_variable = policy([:admin, @template]).editable_field?("template_variables_attributes")%>
             <% if editable_template_variable %>
-              <%= f.link_to_add "Add", :template_variables, :data => { :target => ".template-variables" } %>
+              <%#= f.link_to_add "Add", :template_variables, :data => { :target => ".template-variables" } %>
             <% end %>
             <%= f.fields_for :template_variables do |adj|%>
               <%= adj.link_to_remove icon("far", "times-circle") %>
@@ -63,7 +59,7 @@
           <%= f.label :is_active, class: 'form-check-label' %>
         </div>
 
-        <div>
+        <div class='form-group'>
           <%= f.label :content %>
           <%= f.text_area :content, class: 'form-control' %>
         </div>

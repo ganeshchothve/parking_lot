@@ -41,7 +41,11 @@ module SourcingManagerDashboardConcern
     project_ids = params["project_ids"].try(:split, ",").try(:flatten) || []
     project_ids = Project.where(id: {"$in": project_ids}).distinct(:id)
     start_date, end_date = dates.split(' - ')
-    @cps = User.where(manager_id: current_user.id)
+    if ["superadmin","admin"].include?(current_user.role) #Channel Partner Manager Performance Dashboard for admin and superadmin
+      @cps = User.in(manager_id: User.filter_by_role("cp_admin").pluck(:id))
+    else
+      @cps = User.where(manager_id: current_user.id)
+    end
     @matcher = {matcher: {created_at: {"$gte": Date.parse(start_date).beginning_of_day, "$lte": Date.parse(end_date).end_of_day }}}
     @matcher[:matcher][:project_id] = {"$in": project_ids} if project_ids.present?
     @walkins = DashboardDataProvider.cp_performance_walkins(current_user, @matcher)

@@ -102,6 +102,7 @@ module BookingDetailStateMachine
         transitions from: :blocked, to: :cancellation_requested
         transitions from: :booked_tentative, to: :cancellation_requested
         transitions from: :booked_confirmed, to: :cancellation_requested
+        transitions from: :scheme_approved, to: :cancellation_requested
       end
 
       event :cancellation_rejected, after: :update_booking_detail_to_blocked do

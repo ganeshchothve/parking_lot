@@ -7,7 +7,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
   end
 
   def export?
-    %w[superadmin admin sales_admin crm].include?(user.role)
+    %w[superadmin admin sales_admin crm cp_admin billing_team cp].include?(user.role)
   end
 
   def new?
