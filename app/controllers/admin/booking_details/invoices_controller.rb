@@ -5,7 +5,7 @@ class Admin::BookingDetails::InvoicesController < AdminController
   around_action :apply_policy_scope, only: [:index]
 
   def index
-    @invoices = Invoice.build_criteria(params)
+    @invoices = associated_class.build_criteria(params)
                        .asc(:ladder_stage)
                        .paginate(page: params[:page] || 1, per_page: params[:per_page])
     respond_to do |format|
@@ -18,7 +18,7 @@ class Admin::BookingDetails::InvoicesController < AdminController
   end
 
   def create
-    @invoice = @booking_detail.invoices.build(project: @booking_detail.project, manager: @booking_detail.manager, raised_date: Time.now)
+    @invoice = Invoice::Manual.new(project: @booking_detail.project, manager: @booking_detail.manager, raised_date: Time.now, booking_detail_id: @booking_detail.id)
     @invoice.assign_attributes(permitted_attributes([current_user_role_group, @invoice]))
     respond_to do |format|
       if @invoice.save
@@ -94,13 +94,23 @@ class Admin::BookingDetails::InvoicesController < AdminController
 
   private
 
+  def associated_class
+    @associated_class = if params[:invoice_type] == 'calculated'
+                          Invoice::Calculated
+                        elsif params[:invoice_type] == 'manual'
+                          Invoice::Manual
+                        else
+                          Invoice
+                        end
+  end
+
   def set_booking_detail
     @booking_detail = BookingDetail.where(id: params[:booking_detail_id]).first if params[:booking_detail_id].present?
   end
 
   def set_invoice
     if params[:action] == 'new'
-      @invoice = @booking_detail.invoices.build
+      @invoice = Invoice::Manual.new(booking_detail_id: @booking_detail.id)
     else
       @invoice = Invoice.where(id: params[:id]).first
     end

@@ -1,7 +1,6 @@
 class Invoice
   include Mongoid::Document
   include Mongoid::Timestamps
-  #include NumberIncrementor
   include InsertionStringMethods
   include InvoiceStateMachine
   extend FilterByCriteria
@@ -15,15 +14,10 @@ class Invoice
   field :approved_date, type: DateTime
   field :rejection_reason, type: String
   field :comments, type: String
-  field :ladder_id, type: BSON::ObjectId
-  field :ladder_stage, type: Integer
-  field :gst_amount, type: Float, default: 0.0
   field :net_amount, type: Float
-  field :number, type: String
 
   belongs_to :project
   belongs_to :booking_detail
-  #belongs_to :incentive_scheme
   belongs_to :manager, class_name: 'User'
   has_one :incentive_deduction
   has_many :assets, as: :assetable
@@ -35,16 +29,15 @@ class Invoice
   validates :comments, presence: true, if: proc { pending_approval? && status_was == 'rejected' }
   #validates :booking_detail_id, uniqueness: { scope: [:incentive_scheme_id, :ladder_id] }
   validates :amount, numericality: { greater_than: 0 }
-  validates :gst_amount, numericality: { greater_than_or_equal_to: 0 }
-  validates :net_amount, numericality: { greater_than: 0 }, if: :approved?
   validates :cheque_detail, presence: true, if: :paid?
   validates :cheque_detail, copy_errors_from_child: true, if: :cheque_detail?
+  validates :net_amount, numericality: { greater_than: 0 }, if: :approved?
 
   delegate :name, to: :project, prefix: true, allow_nil: true
   delegate :name, to: :manager, prefix: true, allow_nil: true
   #delegate :name, to: :incentive_scheme, prefix: true, allow_nil: true
 
-  scope :filter_by_number, ->(number) { where(number: number) }
+  scope :filter_by_invoice_type, ->(request_type){ where(_type: /#{request_type}/i)}
   scope :filter_by_status, ->(status) { where(status: status) }
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
   scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in": project_ids}) : all }
@@ -55,28 +48,13 @@ class Invoice
   accepts_nested_attributes_for :cheque_detail, reject_if: proc { |attrs| attrs.except('creator_id').values.all?(&:blank?) }
   accepts_nested_attributes_for :payment_adjustment, reject_if: proc { |attrs| attrs['absolute_value'].blank? }
 
-  def amount_before_adjustment
-    _amount = amount + gst_amount.to_f
-    _amount -= incentive_deduction.amount if incentive_deduction.try(:approved?)
-    _amount
+  def calculated?
+    _type.match(/calculated/i)
   end
 
-  def amount_before_gst
-    _amount = amount + payment_adjustment.try(:absolute_value).to_f
-    _amount -= incentive_deduction.amount if incentive_deduction.try(:approved?)
-    _amount
+  def manual?
+    _type.match(/manual/i)
   end
-
-  def amount_before_deduction
-    amount + gst_amount.to_f + payment_adjustment.try(:absolute_value).to_f
-  end
-
-  def calculate_net_amount
-    _amount = amount + gst_amount.to_f + payment_adjustment.try(:absolute_value).to_f
-    _amount -= incentive_deduction.amount if incentive_deduction.try(:approved?)
-    _amount
-  end
-
   class << self
     def user_based_scope(user, params = {})
       custom_scope = {}
@@ -102,7 +80,9 @@ class Invoice
 
     def user_based_available_statuses(user)
       if user.present?
-        if user.role?('cp_admin')
+        if user.role?('billing_team')
+          %w[pending_approval approved rejected]
+        elsif user.role?('cp_admin')
           Invoice.aasm.states.map(&:name) - [:draft]
         else
           Invoice.aasm.states.map(&:name)

@@ -8,6 +8,7 @@ class Client
   PAYMENT_GATEWAYS = %w(Razorpay CCAvenue)
   # Add different types of documents which are uploaded on client
   DOCUMENT_TYPES = %w[document offer login_page_image].freeze
+  INCENTIVE_CALCULATION = ["manual", "calculated"]
 
   field :name, type: String
   field :selldo_client_id, type: String
@@ -57,6 +58,7 @@ class Client
   field :enable_direct_payment, type: Boolean, default: false
   field :enable_payment_with_kyc, type: Boolean, default: true
   field :enable_booking_with_kyc, type: Boolean, default: true
+  field :incentive_calculation, type: Array, default: ["manual"]
   field :enable_direct_activation_for_cp, type: Boolean, default: false
   field :blocking_amount, type: Integer, default: 30000
   field :blocking_days, type: Integer, default: 10
@@ -169,6 +171,14 @@ class Client
     if user.present?
       out = enable_actual_inventory.include?(user.role)
       out && user.active_channel_partner?
+    else
+      false
+    end
+  end
+
+  def incentive_calculation_type?(_type)
+    if _type.present?
+      incentive_calculation.include?(_type)
     else
       false
     end
