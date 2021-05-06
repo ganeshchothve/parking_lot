@@ -18,7 +18,11 @@ module SessionHelper
   # @param [Array<string>] user_params_keys An array specifying user parameters to be decrypted
   #
   def authenticate_encryptor(user_params_keys)
-    rsa_key = RsaEncryptor.build_key(session[:rsa_key])
+    if params[:authenticate_for_mobile]
+      rsa_key = RsaEncryptor.build_key(RsaEncryptor.serialized_data_for_mobile)
+    else
+      rsa_key = RsaEncryptor.build_key(session[:rsa_key])
+    end
     user_params_keys.each do |key|
       request.params[:user][key] = rsa_key.private_decrypt(Base64.decode64(request.params[:user][key])) rescue ''
     end

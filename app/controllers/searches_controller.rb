@@ -19,8 +19,8 @@ class SearchesController < ApplicationController
 
   def show
     if @search.project_unit.present? && @search.project_unit.status == 'hold'
-      if @search.user_id == @search.project_unit.user_id
-        redirect_to checkout_lead_search_path(@search)
+      if redirect_to_checkout?
+        redirect_to checkout_user_search_path(@search)
       end
     end
     # GENERICTODO: Handle current user to be from a user based route path
@@ -304,6 +304,11 @@ class SearchesController < ApplicationController
       ProjectUnitUnholdWorker.new.perform(@project_unit.id)
       redirect_to [:admin, @lead], alert: t('controller.searches.check_project_unit_hold_status', holding_minutes: @project_unit.holding_minutes)
     end
+  end
+
+  def redirect_to_checkout?
+    booking_detail  = @lead.booking_details.where(search_id: @search.id).first
+    booking_detail.present? && (Search::RESTRICTED_STEP.include?(params[:step]) && params[:action] == "show")
   end
 
 end

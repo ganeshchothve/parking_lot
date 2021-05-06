@@ -14,6 +14,7 @@ class UserRequestService
       email_template_id: Template::EmailTemplate.find_by(name: "#{user_request.class.model_name.element}_request_pending", project_id: self.project_id).id,
       recipients: [user],
       cc_recipients: (user.manager.present? ? [user.manager] : []),
+      cc: user.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
       triggered_by_id: user_request.id,
       triggered_by_type: user_request.class.to_s
     )

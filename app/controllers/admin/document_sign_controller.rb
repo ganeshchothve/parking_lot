@@ -13,6 +13,6 @@ class Admin::DocumentSignController < AdminController
     rescue StandardError => e
       flash = "Couldn't connect with your #{current_client.document_sign.vendor_class} Account"
     end
-    redirect_to home_path(current_user, notice: flash)
+    redirect_to home_path(current_user), notice: flash
   end
 end

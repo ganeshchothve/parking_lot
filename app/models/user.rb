@@ -168,7 +168,8 @@ class User
   has_and_belongs_to_many :schemes
   has_many :logs, class_name: 'SyncLog', inverse_of: :user_reference
   embeds_many :portal_stages
-  accepts_nested_attributes_for :portal_stages, reject_if: :all_blank
+  embeds_many :user_notification_tokens
+  accepts_nested_attributes_for :portal_stages, :user_notification_tokens, reject_if: :all_blank
 
   validates :first_name, :role, presence: true
   validates :first_name, :last_name, name: true, allow_blank: true
@@ -469,7 +470,7 @@ class User
         booking_portal_client_id: booking_portal_client_id,
         subject: email_template.parsed_subject(self),
         body: ERB.new(self.booking_portal_client.email_header).result( binding) + email_template.parsed_content(self) + ERB.new(self.booking_portal_client.email_footer).result( binding ),
-        cc: [ booking_portal_client.notification_email ],
+        cc: booking_portal_client.notification_email.to_s.split(',').map(&:strip),
         recipients: [ self ],
         triggered_by_id: id,
         triggered_by_type: self.class.to_s
@@ -504,6 +505,7 @@ class User
       body: ERB.new(self.booking_portal_client.email_header).result( binding) + email_template.parsed_content(self) + ERB.new(self.booking_portal_client.email_footer).result( binding ),
       subject: email_template.parsed_subject(self),
       recipients: [ self ],
+      cc: booking_portal_client.notification_email.to_s.split(',').map(&:strip),
       triggered_by_id: id,
       triggered_by_type: self.class.to_s
     })

@@ -271,7 +271,7 @@ module BookingDetailStateMachine
             project_id: project_id,
             booking_portal_client_id: project_unit.booking_portal_client_id,
             email_template_id: Template::EmailTemplate.find_by(name: "booking_confirmed", project_id: project_id).id,
-            cc: [project_unit.booking_portal_client.notification_email],
+            cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
             recipients: [lead.user],
             cc_recipients: (lead.manager_id.present? ? [lead.manager] : []),
             triggered_by_id: self.id,
@@ -290,6 +290,18 @@ module BookingDetailStateMachine
               triggered_by_type: self.class.to_s
             )
       end
+
+      template = Template::NotificationTemplate.where(name: "booking_confirmed").first
+      if template.present? && user.booking_portal_client.notification_enabled?
+        push_notification = PushNotification.new(
+          notification_template_id: template.id,
+          triggered_by_id: self.id,
+          triggered_by_type: self.class.to_s,
+          recipient_id: self.user.id,
+          booking_portal_client_id: self.user.booking_portal_client.id
+        )
+        push_notification.save
+      end
     end
 
     # This method is called after of blocked and booked_tentative event
@@ -302,7 +314,7 @@ module BookingDetailStateMachine
           project_id: project_id,
           booking_portal_client_id: project_unit.booking_portal_client_id,
           email_template_id: Template::EmailTemplate.find_by(name: "booking_#{_status}", project_id: project_id).id,
-          cc: [project_unit.booking_portal_client.notification_email],
+          cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
           recipients: [lead.user],
           cc_recipients: (lead.manager_id.present? ? [lead.manager] : []),
           triggered_by_id: self.id,
@@ -320,6 +332,18 @@ module BookingDetailStateMachine
             triggered_by_id: self.id,
             triggered_by_type: self.class.to_s
           )
+      end
+
+      template = Template::NotificationTemplate.where(name: "booking_blocked").first
+      if template.present? && user.booking_portal_client.notification_enabled?
+        push_notification = PushNotification.new(
+          notification_template_id: template.id,
+          triggered_by_id: self.id,
+          triggered_by_type: self.class.to_s,
+          recipient_id: self.user.id,
+          booking_portal_client_id: self.user.booking_portal_client.id
+        )
+        push_notification.save
       end
     end
 

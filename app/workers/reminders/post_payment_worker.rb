@@ -10,7 +10,7 @@ module Reminders
           project_id: project_id,
           booking_portal_client_id: user.booking_portal_client_id,
           email_template_id: email_template.id,
-          cc: [user.booking_portal_client.notification_email],
+          cc: user.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
           recipients: [user],
           cc_recipients: [],
           triggered_by_id: user.id,

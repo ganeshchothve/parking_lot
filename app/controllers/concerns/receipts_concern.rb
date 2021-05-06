@@ -22,6 +22,7 @@ module ReceiptsConcern
         booking_portal_client_id: user.booking_portal_client_id,
         email_template_id: Template::EmailTemplate.find_by(project_id: @receipt.project_id, name: 'receipt_success').id,
         recipients: [user],
+        cc: user.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
         cc_recipients: (lead.manager_id.present? ? [lead.manager] : []),
         triggered_by_id: @receipt.id,
         triggered_by_type: @receipt.class.to_s
