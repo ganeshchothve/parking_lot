@@ -157,15 +157,7 @@ group :production, :staging do
   gem 'newrelic-redis'
   gem 'newrelic_rpm'
 end
-
-group :production do
-  gem 'carrierwave-azure_rm'
-end
-
-group :staging do
-  gem 'asset_sync', '>= 2.4.0'
-end
-
+gem 'asset_sync', '>= 2.4.0'
 gem 'humanize', require: 'humanize'
 gem 'request_store'
 gem 'awesome_print'
