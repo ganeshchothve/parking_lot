@@ -79,7 +79,7 @@ end
 if User.count.zero?
   number = 1000000000
   i = 1
-  ['abhishek.ghorpade', 'milan.patel', 'aakruti.shitut'].each do |email_name|
+  ['abhishek.ghorpade', 'milan.patel'].each do |email_name|
     %w(superadmin).each do |role|
       user = User.new(first_name: email_name.split('.').first, last_name: email_name.split('.').last, role: role, booking_portal_client: Client.first, email: "#{email_name}@sell.do", phone: (number + i), password: "Amura@123", password_confirmation: 'Amura@123', confirmed_at: DateTime.now )
       user.skip_confirmation_notification!
