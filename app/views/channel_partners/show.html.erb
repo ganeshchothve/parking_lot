@@ -45,6 +45,14 @@
                 <p class="break-word"><%= @channel_partner.company_name.presence || '-' %></p>
               </li>
               <li>
+                <span><%= t('mongoid.attributes.channel_partner.company_owner_name') %></span>
+                <p class="break-word"><%= @channel_partner.company_owner_name.presence || '-' %></p>
+              </li>
+              <li>
+                <span><%= t('mongoid.attributes.channel_partner.company_owner_phone') %></span>
+                <p class="break-word"><%= @channel_partner.company_owner_phone.presence || '-' %></p>
+              </li>
+              <li>
                 <span><%= t('mongoid.attributes.channel_partner.additional_name') %></span>
                 <p class="break-word"><%= @channel_partner.additional_name.presence || '-' %></p>
               </li>
@@ -84,6 +92,10 @@
               <li>
                 <span><%= t('mongoid.attributes.channel_partner.cp_code') %></span>
                 <p class="break-word"><%= @channel_partner.cp_code.presence || '-' %></p>
+              </li>
+              <li>
+                <span><%= t('mongoid.attributes.channel_partner.interested_services') %></span>
+                <p class="break-word"><%= @channel_partner.interested_services.presence.try(:to_sentence) || '-' %></p>
               </li>
             </ul>
           </div>

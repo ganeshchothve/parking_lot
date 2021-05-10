@@ -15,6 +15,7 @@ class ChannelPartner
   EXPERTISE = %w( rentals retail residential commercial )
   EXPERIENCE = ['0-1 yrs', '1-5 yrs', '5-10 yrs', '10-15 yrs', '15-20 yrs', '20+ yrs']
   DEVELOPERS = [ "Godrej Properties", "Hiranandani", "Lodha Group", "Piramal Realty", "Kanakia", "Mahindra Lifespaces developers", "Kalpataru", "Runwal Group", "Dosti Group", "Wadhwa Group", "Rustomjee", "Puraniks builders", "Adhiraj construction", "L & T Realty", "Arkade Group", "Paradise group", "Chandak", "Marathon Realty", "Raymond Realty", "Damji Shamji Shah", "Shapoorji Pallonji Real Estate", "SD Corp", "Ornate Universal", "Sethia Infrastructure", "Aadi Properties", "Raheja construction", "Tata Housing", "Ajmera", "Adani", "Oberoi Realty", "Acme", "K Raheja", "Hubtown", "Ekta world", "Akshar group", "Raunak group", "JP Infra", "Sunteck Realty Ltd", "Seth Developers", "Kabra developer", "Koltepatil developer" ]
+  SERVICES = [ "Media Plan", "Creative", "Execution", "CRM", "Lead Management", "Virtual Presentation Platform" ]
 
   # Add different types of documents which are uploaded on channel_partner
   DOCUMENT_TYPES = %w[pan_card rera_certificate gst_certificate cheque_scanned_copy company_incorporation_certificate form_10f tax_residency_certificate pe_declaration]
@@ -36,6 +37,8 @@ class ChannelPartner
 
   field :company_name, type: String
   field :company_type, type: String
+  field :company_owner_name, type: String
+  field :company_owner_phone, type: String
   field :pan_number, type: String
   field :gstin_number, type: String
   field :aadhaar, type: String
@@ -46,7 +49,6 @@ class ChannelPartner
   field :region, type: String
   field :erp_id, type: String, default: ''
 
-  # Runwal Fields
   field :team_size, type: Integer
   field :rera_applicable, type: Boolean, default: false
   field :gst_applicable, type: Boolean, default: false
@@ -55,6 +57,7 @@ class ChannelPartner
   field :experience, type: String
   field :average_quarterly_business, type: Float
   field :developers_worked_for, type: Array, default: []
+  field :interested_services, type: Array, default: []
   field :cp_code, type: String
 
   scope :filter_by_rera_id, ->(rera_id) { where(rera_id: rera_id) }

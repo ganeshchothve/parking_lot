@@ -5,6 +5,7 @@ class Admin::LeadsController < AdminController
   around_action :apply_policy_scope, only: %i[index]
 
   def new
+    @user = User.where(id: params[:user_id]).first if params[:user_id].present?
     @lead = Lead.new()
     render layout: false
   end

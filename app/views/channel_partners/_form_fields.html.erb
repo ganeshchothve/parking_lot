@@ -26,9 +26,17 @@
   <div class="col-md-6">
     <%= form.input :pan_number, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("pan_number") %>
   </div>
-
   <div class="col-md-6">
     <%= form.input :company_name, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("company_name") %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <%= form.input :company_owner_name, disabled: !policy([:admin, @channel_partner]).editable_field?("company_owner_name") %>
+  </div>
+  <div class="col-md-6">
+    <%= form.input :company_owner_phone, disabled: !policy([:admin, @channel_partner]).editable_field?("company_owner_phone"), as: :tel, input_html: { class: 'phone' } %>
   </div>
 </div>
 
@@ -84,6 +92,9 @@
 <div class="row">
   <div class="col-md-12">
     <%= form.input :developers_worked_for, collection: ChannelPartner::DEVELOPERS.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("developers_worked_for"), prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
+  </div>
+  <div class="col-md-12">
+    <%= form.input :interested_services, collection: ChannelPartner::SERVICES.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("interested_services"), prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
   </div>
 </div>
 
