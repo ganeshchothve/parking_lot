@@ -89,6 +89,7 @@ class ProjectUnit
   validates :erp_id, uniqueness: true
 
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
+  # return empty criteria if project ids not available
   scope :filter_by_project_tower_id, ->(project_tower_id) { where(project_tower_id: project_tower_id) }
   scope :filter_by_status, ->(status) { status.is_a?(Array) ? where(status: {"$in" => status}) : where(status: status.as_json)}
   scope :filter_by_unit_facing_direction, ->(unit_facing_direction) { where(unit_facing_direction: unit_facing_direction)}
@@ -313,6 +314,15 @@ class ProjectUnit
 
   def pending_balance
     booking_detail.try(:pending_balance).to_f
+  end
+
+  def self.user_based_scope(user, params = {})
+    custom_scope = {}
+    if user.project_ids.present?
+      project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
+      custom_scope.merge!({project_id: {"$in": project_ids}})
+    end
+    custom_scope
   end
 
 end

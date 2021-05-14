@@ -149,7 +149,7 @@ class Admin::ProjectUnitsController < AdminController
   end
 
   def apply_policy_scope
-    custom_project_unit_scope = ProjectUnit.all.criteria
+    custom_project_unit_scope = ProjectUnit.all.where(ProjectUnit.user_based_scope(current_user)).criteria
     custom_project_unit_scope = custom_project_unit_scope.or([{ status: 'available' }, { status: { "$in": ProjectUnit.booking_stages }, user_id: { "$in": User.where(referenced_manager_ids: current_user.id).distinct(:id) } }]) if current_user.role == 'channel_partner'
 
     ProjectUnit.with_scope(policy_scope(custom_project_unit_scope)) do

@@ -11,7 +11,7 @@
         </tr>
       </thead>
       <tbody>
-        <% Project.each do |p| %>
+        <% Project.where(Project.user_based_scope(current_user)).each do |p| %>
           <tr>
             <td data-title='<%= Project.model_name.human %>'><%= p.name.titleize %></td>
             <td data-title='Walk ins'><%= @walkins[p.id].try(:count) || 0 %></td>

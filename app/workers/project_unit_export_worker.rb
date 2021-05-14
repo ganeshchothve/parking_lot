@@ -10,7 +10,7 @@ class ProjectUnitExportWorker
     file = Spreadsheet::Workbook.new
     sheet = file.create_worksheet(name: "Receipts")
     sheet.insert_row(0, ProjectUnitExportWorker.get_column_names)
-    ProjectUnit.build_criteria({fltrs: filters}.with_indifferent_access).each_with_index do |project_unit, index|
+    ProjectUnit.where(ProjectUnit.user_based_scope(user)).build_criteria({fltrs: filters}.with_indifferent_access).each_with_index do |project_unit, index|
       sheet.insert_row(index+1, ProjectUnitExportWorker.get_project_unit_row(project_unit))
     end
     file_name = "project_unit-#{SecureRandom.hex}.xls"

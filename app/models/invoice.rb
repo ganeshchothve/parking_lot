@@ -78,6 +78,10 @@ class Invoice
         custom_scope = { booking_detail_id: params[:booking_detail_id] }
       end
       custom_scope = { booking_detail_id: { '$in': user.booking_details.distinct(:id) } } if user.buyer?
+      if user.project_ids.present?
+        project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
+        custom_scope.merge!({project_id: {"$in": project_ids}})
+      end
       custom_scope
     end
 

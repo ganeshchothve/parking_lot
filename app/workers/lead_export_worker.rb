@@ -12,7 +12,7 @@ class LeadExportWorker
     sheet.insert_row(0, LeadExportWorker.get_column_names)
     lead_column_size = LeadExportWorker.get_column_names.size rescue 0
     lead_column_size.times { |x| sheet.row(0).set_format(x, title_format) } #making headers bold
-    Lead.build_criteria({fltrs: filters}.with_indifferent_access).each_with_index do |lead, index|
+    Lead.where(Lead.user_based_scope(user)).build_criteria({fltrs: filters}.with_indifferent_access).each_with_index do |lead, index|
       sheet.insert_row(index+1, LeadExportWorker.get_lead_row(lead))
     end
     file_name = "lead-#{SecureRandom.hex}.xls"

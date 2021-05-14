@@ -102,6 +102,7 @@ class Admin::UserPolicy < UserPolicy
     attributes += [:rera_id] if record.role?('channel_partner')
     attributes += [:premium, :tier_id] if record.role?('channel_partner') && user.role?('admin')
     attributes += [:role] if %w[superadmin admin].include?(user.role)
+    attributes += [project_ids: []] if %w[admin superadmin].include?(user.role) && record.role.in?(%w(channel_partner cp cp_admin billing_team))
     if %w[superadmin admin sales_admin].include?(user.role)
       attributes += [:erp_id]
       attributes += [third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes]

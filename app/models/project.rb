@@ -204,4 +204,13 @@ class Project
       false
     end
   end
+
+  def self.user_based_scope(user, params = {})
+    custom_scope = {}
+    if user.project_ids.present?
+      project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
+      custom_scope.merge!({_id: {"$in": project_ids}})
+    end
+    custom_scope
+  end
 end

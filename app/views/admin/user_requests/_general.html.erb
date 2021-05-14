@@ -5,7 +5,7 @@
 </div>
 <div class="row">
   <div class="col-md-6">
-    <%= f.input :project_id, collection: Project.all.collect{|pt| [pt.name, pt.id ]}, disabled: !policy([:admin, @user_request]).editable_field?("project_id"), prompt: :translate, as: :select, input_html: {class: 'selectize'} %>
+    <%= f.input :project_id, collection: Project.where(Project.user_based_scope(current_user)).collect{|pt| [pt.name, pt.id ]}, disabled: !policy([:admin, @user_request]).editable_field?("project_id"), prompt: :translate, as: :select, input_html: {class: 'selectize'} %>
   </div>
   <% if policy([:admin, @user_request]).editable_field?("category") %>
     <div class="col-md-6">
