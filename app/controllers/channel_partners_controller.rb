@@ -51,7 +51,7 @@ class ChannelPartnersController < ApplicationController
     authorize([:admin, @channel_partner])
     @channel_partner.assign_attributes(permitted_attributes([:admin, @channel_partner]))
     respond_to do |format|
-      if (params.dig(:channel_partner, :event).present? ? @channel_partner.send("#{params.dig(:channel_partner, :event)}!") : @channel_partner.save)
+      if (params.dig(:channel_partner, :event).present? ? @channel_partner.send("#{params.dig(:channel_partner, :event)}!") : @channel_partner.save(context: :submit_for_approval))
         format.html { redirect_to channel_partners_path, notice: 'Channel Partner was successfully updated.' }
         format.json { render json: @channel_partner }
       else

@@ -69,7 +69,7 @@ end %>
         <%=render "devise/shared/links" %>
         <div class="signup-btn-set mt-4">
           <%- if devise_mapping.registerable? && controller_name != 'registrations' %>
-            <div class="p-style opacity-5"><%= t("registrations.pre_text") %></div><%= link_to t("registrations.new.sign_up"), register_path, data:{event_category: 'Section', event_action: 'Click', event_name: 'Sign up'}, class: "p-style fn-500" %><br/>
+            <div class="p-style opacity-5"><%= t("registrations.pre_text") %></div><%= link_to t("registrations.new.sign_up"), new_channel_partner_path, data:{event_category: 'Section', event_action: 'Click', event_name: 'Sign up'}, class: "p-style fn-500" %><br/>
           <% end -%>
         </div>
       </div>

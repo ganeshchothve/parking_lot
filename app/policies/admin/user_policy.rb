@@ -5,20 +5,20 @@ class Admin::UserPolicy < UserPolicy
     !user.buyer?
   end
 
-  def new?
+  def new?(for_edit = false)
     if current_client.roles_taking_registrations.include?(user.role)
       if user.role?('superadmin')
-        !record.buyer? && record.active_channel_partner?
+        !record.buyer? && (!record.role?('channel_partner') || for_edit)
       elsif user.role?('admin')
-        !record.role?('superadmin') && !record.buyer? && record.active_channel_partner?
+        !record.role?('superadmin') && !record.buyer? && (!record.role?('channel_partner') || for_edit)
       elsif user.role?('channel_partner')
         false
       elsif user.role?('sales_admin')
         record.role?('sales')
       elsif user.role?('cp_admin')
-        record.role?('cp') || (record.role?('channel_partner') && record.active_channel_partner?)
+        record.role?('cp') || (record.role?('channel_partner') && for_edit)
       elsif user.role?('cp')
-        record.role?('channel_partner') && record.active_channel_partner?
+        (record.role?('channel_partner') && for_edit)
       elsif user.role?('billing_team')
         false
       elsif !user.buyer?
@@ -30,7 +30,7 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def edit?
-    super || new?
+    super || new?(true)
   end
 
   def confirm_user?

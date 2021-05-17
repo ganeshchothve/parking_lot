@@ -24,6 +24,9 @@ class ChannelPartner
   SOURCE = ['Internal CP', 'External CP']
   REGION = ['Chennai', 'Bangalore', 'Coimbatore', 'NRI']
 
+  SHORT_FORM = %i(first_name last_name email phone company_name rera_applicable status)
+  FULL_FORM = SHORT_FORM.clone + %i(team_size gst_applicable nri)
+
   field :title, type: String
   field :first_name, type: String
   field :last_name, type: String
@@ -82,8 +85,9 @@ class ChannelPartner
   has_one :bank_detail, as: :bankable, validate: false
   has_many :assets, as: :assetable
 
-  validates :first_name, :last_name, :status, :email, :phone, :team_size, :gst_applicable, :rera_applicable, :nri, :company_name, presence: true
-  validates :pan_number, presence: true, unless: :nri?
+  validates *SHORT_FORM, presence: true
+  validates *FULL_FORM, presence: true, on: :submit_for_approval
+  validates :pan_number, presence: true, unless: :nri?, on: :submit_for_approval
   validates :rera_id, presence: true, if: :rera_applicable?
   validates :gstin_number, presence: true, if: :gst_applicable?
   validates :team_size, :numericality => { :greater_than => 0 }, allow_blank: true

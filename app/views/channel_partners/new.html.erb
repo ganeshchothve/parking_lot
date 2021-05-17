@@ -10,7 +10,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <%= render "form_fields", {form: form} %>
+            <%= render "short_form_fields", {form: form} %>
           </div>
           <div class="modal-footer">
             <%= form.submit "Save", class: "btn btn-primary" %>
@@ -35,7 +35,7 @@
             <div class="box-content br-rd-bl-4 bg-white px-3 pt-3">
               <%= simple_form_for(@channel_partner, local: true, html: { id: 'channel_partner_form', class: 'validate-form', multipart: true, novalidate: false }) do |form| %>
 
-                <%= render "form_fields", {form: form} %>
+                <%= render "short_form_fields", {form: form} %>
                 <div class="signin-btn col-lg-12 pl-0 pr-0 pb-4">
                   <%= form.submit "Register", class: "sign-in-btn", data: { disable_with: "Please wait..." } %>
                 </div>
