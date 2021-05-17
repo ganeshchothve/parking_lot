@@ -37,10 +37,10 @@
     $('[name="sell_do[form][lead][first_name]"]').attr('pattern', '[A-Za-z ]{2,20}').attr('title', 'contain only alphabet and space').attr('maxlength', 20)
     $('[name="sell_do[form][lead][last_name]"]').attr('pattern', '[A-Za-z ]{1,20}').attr('title', 'contain only alphabet and space').attr('maxlength', 20)
     if(<%= @user.present? %>) {
-      $('[name="sell_do[form][lead][first_name]"]').val('<%= @user.first_name %>');
-      $('[name="sell_do[form][lead][last_name]"]').val('<%= @user.last_name %>');
-      $('[name="sell_do[form][lead][email]"]').val('<%= @user.email %>');
-      $('[name="sell_do[form][lead][phone]"]').val('<%= @user.phone %>');
+      $('[name="sell_do[form][lead][first_name]"]').val('<%= @user.try(:first_name) %>');
+      $('[name="sell_do[form][lead][last_name]"]').val('<%= @user.try(:last_name) %>');
+      $('[name="sell_do[form][lead][email]"]').val('<%= @user.try(:email) %>');
+      $('[name="sell_do[form][lead][phone]"]').val('<%= @user.try(:phone) %>');
     }
 
     $('select').addClass('selectize').removeClass('form-control');

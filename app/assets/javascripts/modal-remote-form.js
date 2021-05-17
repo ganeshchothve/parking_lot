@@ -22,7 +22,9 @@ var handle_remote_pushstate = function(){
   if(window.history && typeof window.history.pushState === "function"){
     $("#modal-remote-form-inner").off("hide.bs.modal", handle_remote_pushstate);
     var href = Amura.removeParamFromURL(window.location.href, "remote-state");
+    var pageReload = Amura.getParamFromURL(window.location.href, "page_reload");
     window.history.pushState(null, null, href);
+    if(pageReload) { window.location.reload(); }
   }
 }
 
