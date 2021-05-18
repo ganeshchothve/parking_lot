@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Amura Launchpad</title>    
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="images/favicon.png" rel="icon" type="image/png"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="dns-prefetch" href="//trkr.scdn1.secure.raxcdn.com">
+    <link rel="preconnect" href="//trkr.scdn1.secure.raxcdn.com">
+    <link rel="dns-prefetch" href="https://www.google.com">
+    <link rel="preconnect" href="https://www.google.com">
+    <link rel="dns-prefetch" href="https://www.gstatic.com">
+    <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="canonical" href="<%= request.protocol + request.host %><%= request.path%>">
+    
+    <%= stylesheet_link_tag 'application' %>
+    <%= stylesheet_link_tag 'launchpad' %>
+    <%= javascript_include_tag 'application' %>
+
+    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
+    <%= javascript_tag do %>
+      if(typeof App === "undefined"){
+        App = {};
+      }
+      App.client = <%= raw current_client.to_json(only: [:name, :_id, :preferred_login, :enable_referral_bonus]) %>;
+      App.client.enable_actual_inventory = <%= current_client.enable_actual_inventory?(current_user) %>
+      App.project = <%= raw current_project.to_json(only: [:name, :_id]) %>;
+      <% if user_signed_in? %>
+        App.current_user = <%= raw current_user.to_json %>;
+        App.current_user.name = App.current_user.first_name + " " + App.current_user.last_name;
+      <% end %>
+      <% if Rails.env.development? || Rails.env.staging? %>
+        Pusher.logToConsole = true;
+      <% end %>
+    <% end %>
+    <% if current_client.selldo_client_id.present? %>
+      <% if Rails.env.production? %>
+        <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= current_client.selldo_client_id %>.js'></script>
+      <% else %>
+        <script src='<%= ENV_CONFIG[:selldo][:base_url] %>/t/<%= current_client.selldo_client_id %>.js'></script>
+      <% end %>
+    <% end %>
+
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      ga('create', '', 'auto');
+      ga('require', 'displayfeatures');
+      ga('require', 'ecommerce', 'ecommerce.js');
+      ga('send', 'pageview'); 
+    </script>
+  </head>
+<body>
+<header class="col-12 fixed left top">
+    <div class="container">
+        <div class="pull-left left-header nav-links">
+            <a rel="home" class="brand-logo"><img src="<%= asset_path 'launchpad-logo.png' %>" data-event-category="Header" data-event-action="Click" data-event-name="Logo" /></a>
+        </div>
+        <div class="pull-right right-header">
+            <div class="pull-right upper-right-header hidden-xs hidden-portrait">
+              <div class="enquire-now-wrapper pull-right">
+                <a data-event-category="Header" data-event-action="Click" data-event-name="Register on Launchpad" class="enquire-now-btn green-btn register-btn">Register on Launchpad</a>
+              </div>
+              
+              <div class="pull-right callnumber ">
+                <span>Call:&nbsp;&nbsp;</span><span class="sell_do_virtual_numbers"></span>
+              </div>
+              
+            </div>
+            <div class="clearfix"></div>               
+        </div>
+        <div class="clearfix"></div>
+    </div>      
+</header>
+<section class="home-section home-banner slide relative" id="home">
+  <div class="container-launchpad home-container">
+    <div class="col-5 home-left-section">
+        <div class="home-caption">
+          <h1 class="line-1">Become a<br/><span class="cgreen">Power Broker.</span><br/>Grow your Business by 5X.</h1>
+        </div>
+    </div>
+    <div class="col-7 home-right-section relative">
+        <div class="home-points">
+            <div class="home-points_lists points point-1">
+              <img src="<%= asset_path 'home-point-1.svg' %>" />
+            </div>
+            <div class="home-points_lists points point-2">
+              <img src="<%= asset_path 'home-point-2.svg' %>" />
+            </div>
+            <div class="home-points_lists points point-3">
+              <img src="<%= asset_path 'home-point-3.svg' %>" />
+            </div>
+            <div class="home-points_lists points point-4">
+              <img src="<%= asset_path 'home-point-4.png' %>" />
+            </div>
+            <div class="home-points_lists points point-5">
+              <img src="<%= asset_path 'home-point-5.png' %>" />
+            </div>
+        </div>
+        <div class="home-image">
+          <img src="<%= asset_path 'home-image.png' %>" class="img-full"/>
+        </div>
+    </div>
+  </div>
+  <div class="scroll-down-btn" data-event-category="Section" data-event-action="Click" data-event-name="Scroll Down">Scroll Down</div>
+</section>
+<section class="join-broker-network-section section-padding" id="join-broker-network">
+  <div class="container-launchpad">
+    <h2 class="section-heading text-center cgreen">Join The New-age Broker Network</h2>
+    <p class="text-center">Property selling has gone digital and here is the biggest opportunity for you to get ahead in the<br class="hidden-xs hidden-portrait" /> online Real Estate market. Presenting Launchpad - an exclusive new-age broker platform built to<br class="hidden-xs hidden-portrait" /> give you more power to sell properties online.</p>
+    <p class="text-center">Launchpad provides you with the one-of-a-kind opportunity to grow your existing business by<br class="hidden-xs hidden-portrait" /> up to 5X. Get early access to new launches, digital marketing & lead generation support, on-time<br class="hidden-xs hidden-portrait" /> payments, complete transparency and other amazing benefits.</p>
+    <br/>
+    <p class="text-center cbk f500">So, are you ready to become a power broker?</p>
+    <div class="join-broker-network-btn-wrapper text-center">
+      <a href="javascript:;" class="green-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Register on Launchpad">Register on Launchpad</a>
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-12 join-broker-network-statics text-center">
+      <div class="join-statics-item">
+        <div class="join-statics-item-inner text-center">
+          <div class="join-item-number cgreen f800">
+            1000
+          </div>
+          <div class="join-statics-item-desc cbk">
+            Annual Projects<br/> Launched in Pune
+          </div>
+        </div>
+      </div>
+      <div class="join-statics-item">
+        <div class="join-statics-item-inner text-center">
+          <div class="join-item-number cgreen f800">
+            1000
+          </div>
+          <div class="join-statics-item-desc cbk">
+            Current Inventory<br/> Available
+          </div>
+        </div>
+      </div>
+      <div class="join-statics-item">
+        <div class="join-statics-item-inner text-center">
+          <div class="join-item-number cgreen f800">
+            1000
+          </div>
+          <div class="join-statics-item-desc cbk">
+            Brokerage Amount<br/> on Offer
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="exclusive-features-section section-padding" id="exclusive-features">
+  <div class="container-launchpad">
+    <h2 class="section-heading text-center cbk">Exclusive Features</h2>
+    <p class="text-center cbk f500">That will help you grow your business</p>
+    <div class="exclusive-features-wrapper relative">
+      <div class="exclusive-features-slider">
+      <div class="exclusive-features-item col-3 text-center">
+        <div class="exclusive-features-item-inner">
+          <div class="exclusive-features-image">
+            <img data-src="<%= asset_path 'ex-feat-01.svg'%>" class="lazy" />
+          </div>
+          <div class="exclusive-features-desc">
+            Early access to<br/> new launches
+          </div>
+        </div>
+      </div>
+      <div class="exclusive-features-item col-3 text-center">
+        <div class="exclusive-features-item-inner">
+          <div class="exclusive-features-image">
+            <img data-src="<%= asset_path 'ex-feat-02.svg'%>" class="lazy" />
+          </div>
+          <div class="exclusive-features-desc">
+            Chance to work with<br/> Pune’s biggest developers
+          </div>
+        </div>
+      </div>
+      <div class="exclusive-features-item col-3 text-center">
+        <div class="exclusive-features-item-inner">
+          <div class="exclusive-features-image">
+            <img data-src="<%= asset_path 'ex-feat-03.svg'%>" class="lazy"/>
+          </div>
+          <div class="exclusive-features-desc">
+            Leads at discounted<br/> prices
+          </div>
+        </div>
+      </div>
+      <div class="exclusive-features-item col-3 text-center">
+        <div class="exclusive-features-item-inner">
+          <div class="exclusive-features-image">
+            <img data-src="<%= asset_path 'ex-feat-04.svg'%>" class="lazy"/>
+          </div>
+          <div class="exclusive-features-desc">
+            CRM training<br/> &amp; support
+          </div>
+        </div>
+      </div>
+      <div class="exclusive-features-item col-3 text-center">
+        <div class="exclusive-features-item-inner">
+          <div class="exclusive-features-image">
+            <img data-src="<%= asset_path 'ex-feat-05.svg'%>" class="lazy" />
+          </div>
+          <div class="exclusive-features-desc">
+            Marketing support<br/> &amp; assets
+          </div>
+        </div>
+      </div>
+      <div class="exclusive-features-item col-3 text-center">
+        <div class="exclusive-features-item-inner">
+          <div class="exclusive-features-image">
+            <img data-src="<%= asset_path 'ex-feat-06.svg'%>" class="lazy"/>
+          </div>
+          <div class="exclusive-features-desc">
+            Timely payments to<br/> streamline cash flows
+          </div>
+        </div>
+      </div>
+      <div class="exclusive-features-item col-3 text-center">
+        <div class="exclusive-features-item-inner">
+          <div class="exclusive-features-image">
+            <img data-src="<%= asset_path 'ex-feat-07.svg'%>" class="lazy"/>
+          </div>
+          <div class="exclusive-features-desc">
+            Fully automated<br/> EOI process
+          </div>
+        </div>
+      </div>
+      <div class="exclusive-features-item col-3 text-center">
+        <div class="exclusive-features-item-inner">
+          <div class="exclusive-features-image">
+            <img data-src="<%= asset_path 'ex-feat-08.svg'%>" class="lazy"/>
+          </div>
+          <div class="exclusive-features-desc">
+            Online inventory selection,<br/> KYC &amp; bookings
+          </div>
+        </div>
+      </div>
+      <div class="exclusive-features-item col-3 text-center">
+        <div class="exclusive-features-item-inner">
+          <div class="exclusive-features-image">
+            <img data-src="<%= asset_path 'ex-feat-09.svg'%>" class="lazy" />
+          </div>
+          <div class="exclusive-features-desc">
+            Complete<br/> transparency
+          </div>
+        </div>
+      </div>
+      <div class="exclusive-features-item col-3 text-center">
+        <div class="exclusive-features-item-inner">
+          <div class="exclusive-features-image">
+            <img data-src="<%= asset_path 'ex-feat-10.svg'%>" class="lazy"/>
+          </div>
+          <div class="exclusive-features-desc">
+            Unique online<br/> broker profile
+          </div>
+        </div>
+      </div>
+      <div class="exclusive-features-item col-3 text-center">
+        <div class="exclusive-features-item-inner">
+          <div class="exclusive-features-image">
+            <img data-src="<%= asset_path 'ex-feat-11.svg'%>" class="lazy" />
+          </div>
+          <div class="exclusive-features-desc">
+            Performance-based<br/> broker ratings
+          </div>
+        </div>
+      </div>
+      <div class="exclusive-features-item col-3 text-center hidden-xs">
+        <div class="exclusive-features-item-inner exclusive-features-last-item register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Register Now">          
+            Register Now<br/><br/><img src="<%= asset_path 'next-arrow.svg'%>" />          
+        </div>
+      </div>
+    </div>
+    <div id="exct-feat-prev" class="visible-xs"></div>
+    <div id="exct-feat-next" class="visible-xs"></div>
+    </div>
+    <div class="visible-xs text-center mobile-exclusive-feature-btn-wrapper">
+        <a class="green-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Register Now">Register Now</a>
+    </div>
+  </div>
+</section>
+<section class="testimonial-section section-padding" id="testimonial">
+  <div class="container-launchpad">
+    <h2 class="section-heading text-center cgreen">Testimonials</h2>
+    <p class="text-center f500 cbk">What Brokers are saying about Launchpad</p>
+    <br/>
+
+    <div class="testimonial-slider-wrapper relative">
+      <div class="testimonial-slider">
+          <div class="testimonial-slide">
+            <div class="testimonial-video-wrapper">
+              <iframe class="testimonial-video" src="https://www.youtube.com/embed/vi-gnx_icbY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="testimonial-desc">
+              <div class="testimonial-quote-icon">
+                <img src="<%= asset_path 'quote.png' %>" />
+              </div>
+              Lorem ipsum Lorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsum Lorem ipsumLorem ipsum
+            </div>
+            <div class="testimonial-author">John Doe</div>
+
+          </div>
+          <div class="testimonial-slide">
+            <div class="testimonial-video-wrapper">
+              <iframe class="testimonial-video lazy" data-src="https://www.youtube.com/embed/vi-gnx_icbY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="testimonial-desc">
+              <div class="testimonial-quote-icon">
+                <img src="<%= asset_path 'quote.png' %>" />
+              </div>
+              Lorem ipsum Lorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsum Lorem ipsumLorem ipsum
+            </div>
+            <div class="testimonial-author">John Doe</div>
+
+          </div>
+          <div class="testimonial-slide">
+            <div class="testimonial-video-wrapper">
+              <iframe class="testimonial-video lazy" data-src="https://www.youtube.com/embed/vi-gnx_icbY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="testimonial-desc">
+              <div class="testimonial-quote-icon">
+                <img src="<%= asset_path 'quote.png' %>" />
+              </div>
+              Lorem ipsum Lorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsum Lorem ipsumLorem ipsum
+            </div>
+            <div class="testimonial-author">John Doe</div>
+
+          </div>
+      </div>
+      <div id="testimonial-prev"></div>
+      <div id="testimonial-next"></div>
+    </div>
+  </div>
+</section>
+<section class="presented-by-amura-section section-padding" id="presented-by-amura">
+  <div class="container-launchpad">
+    <h2 class="section-heading text-center cgreen">Presented by Amura</h2>
+    <p class="text-center f500">India’s leading PropTech Company</p>
+    <br/><br/>
+    <p class="text-center">Being the industry leader when it comes to Real Estate Digital Marketing in India, Amura is the<br class="hidden-xs hidden-portrait" /> pioneer of Growth Marketing in the country. Over 13 years, Amura has been applying the<br class="hidden-xs hidden-portrait" /> combination of Marketing & Tech solutions to deliver lean growth for top brands.</p>
+
+    <div class="presented-by-amura-items-wrapper">
+      <div class="presented-by-amura-line-image">
+        <img src="<%= asset_path 'presented-by-amura-points-header.svg' %>" class="img-full" />
+      </div>
+      
+      <div class="presented-by-amura-items col-4 col-xs-12">
+        <div class="presented-by-amura-items-inner">
+          <div class="presented-by-amura-items-image">
+            <img data-src="<%= asset_path 'presented-by-amura-icon-01.svg'%>" class="lazy">
+          </div>
+          <div class="presented-by-amura-items-desc cbk f500">
+            Over 13 years of<br/> Proptech experience
+          </div>
+        </div>
+      </div>
+      <div class="presented-by-amura-items col-4 col-xs-12">
+        <div class="presented-by-amura-items-inner">
+          <div class="presented-by-amura-items-image">
+            <img data-src="<%= asset_path 'presented-by-amura-icon-02.svg'%>" class="lazy">
+          </div>
+          <div class="presented-by-amura-items-desc cbk f500">
+            Associations with 600+ reputed<br/> Real Estate brands
+          </div>
+        </div>
+      </div>
+      <div class="presented-by-amura-items col-4 col-xs-12">
+        <div class="presented-by-amura-items-inner">
+          <div class="presented-by-amura-items-image">
+            <img data-src="<%= asset_path 'presented-by-amura-icon-03.svg'%>" class="lazy">
+          </div>
+          <div class="presented-by-amura-items-desc cbk f500">
+            Winner of multiple<br/> Proptech awards
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</section>
+<section class="webinar-section section-padding" id="webinar">
+  <div class="container-launchpad">
+    <h2 class="section-heading cgreen">Webinar</h2>
+    <p class="f500 cwt">Know all about Launchpad and 5X Growth</p>
+    
+    <div class="webinar-wrapper col-12">
+      <div class="webinar-image-wrapper col-4 relative col-xs-12">
+        <div class="webinar-sector-image animated infinite">
+          <img data-src="<%= asset_path 'sector-image.svg' %>" class="img-full lazy"/>
+        </div>
+        <div class="webinar-image-inner">
+          <img src="<%= asset_path 'vikram-photo.png' %>" class="img-full">
+          <div class="webinar-mic-image pulse animated infinite">
+            <img data-src="<%= asset_path 'webinar-mic.svg' %>" class="lazy" />
+          </div>
+        </div>
+        <div class="md-name text-center f800 cwt">Mr. Vikram Kotnis</div>
+        <p class="md-designation text-center cwt">Managing Director</p>
+      </div>
+      <div class="webinar-content-wrapper col-8 col-xs-12">
+        <h3 class="cwt f700">Learn how Launchpad can help you<br/> grow your business significantly.</h3>
+        <br/>
+        <div class="webinar-info-div">
+          <div class="webinar-info-top-div col-12">
+            <div class="col-6 pull-left event-date">
+              <img data-src="<%= asset_path 'calendar-icon.png' %>" class="lazy">&nbsp;&nbsp;May 8th, Saturday
+            </div>
+            <div class="col-6 pull-right text-right event-time">
+              <img data-src="<%= asset_path 'clock-icon.png' %>" class="lazy">&nbsp;&nbsp;4 - 5 PM
+            </div>
+          </div>
+          <div class="webinar-info-bottom-div col-12">
+            <div class="col-6 pull-left event-anchor">
+              <img data-src="<%= asset_path 'mic-icon.png' %>" class="lazy">&nbsp;&nbsp;Mr. Vikram Kotnis
+            </div>
+          </div>
+
+        </div>
+        <br/>
+        <p class="cwt">With an industry experience of over 20 years, Vikram has launched 5 successful ProTech platforms in India. His in-depth understanding of Real Estate business has helped numerous top brands achieve tremendous growth.</p>
+        <br/>
+        <div class="mobile-webinar-btn-wrapper text-center">
+          <a href="javascript:;" class="green-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Register Now">Register Now</a>
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</section>
+<footer class="col-12">
+    <div class="desktop-footer col-12">
+      <div class="container-launchpad">
+        <div class="col-6 col-xs-12">
+          Copyrights &copy; Amura Marketing Technologies. <%= Date.current.year %>.
+        </div>
+        <div class="col-6 col-xs-12">
+          <div class="social-links">
+            <a href="https://www.facebook.com/amuratech/" target="_blank">
+              <img data-src="<%= asset_path 'facebook-icon.png' %>" class="lazy">
+            </a>
+            <a href="https://www.instagram.com/amuratech/" target="_blank">
+              <img data-src="<%= asset_path 'insta-icon.png' %>" class="lazy">
+            </a>
+            <a href="https://twitter.com/amuratech" target="_blank">
+              <img data-src="<%= asset_path 'twitter-icon.png' %>" class="lazy">
+            </a>
+            <a href="https://www.linkedin.com/company/amura-marketing-technologies-pvt-ltd/" target="_blank">
+              <img data-src="<%= asset_path 'linkedin-icon.png' %>" class="lazy">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobile-footer visible-xs visible-portrait fixed text-center col-12">
+        <div class="mob-number col-6">                
+            &nbsp;<span class="sell_do_virtual_numbers"></span>
+        </div>
+        <div class="enquiry col-6">
+            <a class="green-btn mobile-enquire-button relative register-btn" data-event-category="Footer" data-event-action="Click" data-event-name="Register Now">Register Now</a>
+        </div>            
+    </div>
+  </footer>
+
+<div id="overlay" style="display:none;">
+  <div id="popup">
+    <div class="site-visit-wrapper">
+    <div id="close">X</div>
+      <%= simple_form_for(@channel_partner, local: true, html: { id: 'channel_partner_form', class: 'validate-form', multipart: true, novalidate: false }) do |form| %>
+        <%= render "short_form_fields", {form: form} %>
+        <div class="signin-btn pl-0 pr-0 pb-4">
+          <%= form.submit "Register", class: "green-btn sign-in-btn", data: { disable_with: "Please wait..." } %>
+        </div>
+        <hr/>
+        <%= render "devise/shared/links" %>
+      <% end %>
+    </div>              
+   </div>
+</div>
+<%= javascript_include_tag 'script' %>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($("#channel_partner_form"));
+    <% if params[:action] == 'create' && @channel_partner.errors.present? %>
+    $('.register-btn:first').trigger('click');
+    <% end %>
+  });
+<% end %>
+</body>
+</html>
