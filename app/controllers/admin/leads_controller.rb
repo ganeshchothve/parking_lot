@@ -1,8 +1,14 @@
 class Admin::LeadsController < AdminController
   before_action :authenticate_user!
-  before_action :set_lead, except: %i[index export]
+  before_action :set_lead, except: %i[index new export]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: %i[index]
+
+  def new
+    @user = User.where(id: params[:user_id]).first if params[:user_id].present?
+    @lead = Lead.new()
+    render layout: false
+  end
 
   def index
     @leads = Lead.build_criteria params
@@ -16,6 +22,7 @@ class Admin::LeadsController < AdminController
   def show
     @booking_details = @lead.booking_details.paginate(page: params[:page], per_page: params[:per_page])
     @receipts = @lead.receipts.order('created_at DESC').paginate(page: params[:page], per_page: params[:per_page])
+    @notes = FetchLeadData.fetch_notes(@lead.lead_id, @lead.user.booking_portal_client)
   end
 
   def edit
@@ -43,6 +50,22 @@ class Admin::LeadsController < AdminController
     end
   end
 
+  def sync_notes
+    @lead.remarks = FetchLeadData.fetch_notes(@lead.lead_id, @lead.user.booking_portal_client)
+    @lead.save
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def sync_site_visit
+    @lead.sitevisit_date, @lead.sitevisit_status = FetchLeadData.site_visit_status_and_date(@lead.lead_id, @lead.user.booking_portal_client, @lead.project.selldo_id.to_s)
+    @lead.save
+    respond_to do |format|
+      format.js
+    end
+  end
+
   private
 
   def set_lead
@@ -60,7 +83,7 @@ class Admin::LeadsController < AdminController
   end
 
   def authorize_resource
-    if %w[index export].include?(params[:action])
+    if %w[index new export].include?(params[:action])
       authorize [current_user_role_group, Lead]
     else
       authorize [current_user_role_group, @lead]

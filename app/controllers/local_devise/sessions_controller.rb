@@ -1,5 +1,7 @@
 class LocalDevise::SessionsController < Devise::SessionsController
   include SessionHelper
+  skip_before_action :verify_authenticity_token, if: -> { ['create', 'otp'].include?(params[:action].to_s) && params[:authenticate_for_mobile].to_s == 'true' }
+
   prepend_before_action :require_no_authentication, only: [:otp]
   before_action :generate_rsa_key, only: :new
   prepend_before_action -> {authenticate_encryptor([:password])}, only: :create
@@ -24,7 +26,10 @@ class LocalDevise::SessionsController < Devise::SessionsController
     set_flash_message!(:notice, :signed_in)
     sign_in(resource_name, resource)
     yield resource if block_given?
-    respond_with resource, location: after_sign_in_path_for(resource)
+    respond_to do |format|
+      format.html { respond_with resource, location: after_sign_in_path_for(resource) }
+      format.json { render json: {message: find_message(:signed_in), user: current_user }, status: 200 }
+    end
   end
 
   def otp

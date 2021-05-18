@@ -8,8 +8,7 @@ class Admin::UserKycPolicy < UserKycPolicy
   end
 
   def new?
-    false
-    #true #record.user.buyer?
+    true #record.user.buyer?
   end
 
   def create?
@@ -17,8 +16,7 @@ class Admin::UserKycPolicy < UserKycPolicy
   end
 
   def edit?
-    %w[superadmin admin].include?(user.role)
-    #true #record.user.buyer?
+    true #record.user.buyer?
   end
 
   def update?

@@ -1,0 +1,46 @@
+<div class="container mb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <section class="bookings my-4 mb-4">
+        <div class="container p-0">
+          <div class="box-card">
+            <div class="box-header bg-gradient br-rd-tr-4">
+              <h2 class="icon-set icon-users-white"><%= t('controller.leads.show.header') %></h2>
+              <div class="dropdown text-center float-right">
+                <a class="btn dropdown-toggle table-dropdown-btn white-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+                <div class="dropdown-menu dropdown-menu-right">
+                  <%= render "#{current_user_role_group}/cp_lead_activities/links", cp_lead_activity: @cp_lead_activity %>
+                </div>
+              </div>
+            </div>
+            <%= render 'admin/leads/overview', lead: @cp_lead_activity.lead, cp_lead_activity: @cp_lead_activity %>
+          </div>
+        </div>
+      </section>
+      <!-- site visits data -->
+      <% if ((current_user.role?(:channel_partner) && @cp_lead_activity.lead.active_cp_lead_activities.where(user_id: current_user.id).present?) || !current_user.role?(:channel_partner)) %>
+        <div class="separate-line container"></div>
+        <div class="lead_site_visit_section">
+          <%= render 'admin/leads/site_visit', lead: @cp_lead_activity.lead %>
+        </div>
+      <% end %>
+
+      <!-- notes -->
+      <div class="separate-line container"></div>
+      <div class='lead_notes_section'>
+        <%= render 'admin/leads/notes', lead: @cp_lead_activity.lead, notes: @notes %>
+      </div>
+
+      <!-- Note Summary -->
+      <div class="separate-line container"></div>
+      <%= render 'notes/section', notable: @cp_lead_activity.lead %>
+
+      <div class="separate-line container"></div>
+      <%
+        matcher = {}
+        matcher = { user_id: current_user.id } if current_user.role?(:channel_partner)
+      %>
+      <%= render 'admin/leads/cp_lead_activities', cp_lead_activities: @cp_lead_activity.lead.cp_lead_activities.where(matcher).paginate(page: 1) %>
+    </div>
+  </div>
+</div>

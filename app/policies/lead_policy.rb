@@ -4,4 +4,8 @@ class LeadPolicy < ApplicationPolicy
     false
   end
 
+  def new?
+    false
+  end
+
 end

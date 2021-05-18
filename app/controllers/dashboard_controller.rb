@@ -9,6 +9,10 @@ class DashboardController < ApplicationController
     authorize :dashboard, :index?
     @project_units = current_user.project_units
     @receipts = current_user.receipts.paginate(page: params[:page] || 1, per_page: params[:per_page])
+    respond_to do |format|
+      format.json { render json: { message: 'Logged In' }, status: 200 }
+      format.html {}
+    end
   end
 
   def faqs

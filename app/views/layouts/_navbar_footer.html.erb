@@ -21,7 +21,7 @@
       <div class="col-lg-8 no-pd">
         <div class="footer-top footer-menu">
           <% template = ::Template::UITemplate.where(name: 'layouts/_navbar_footer').first %>
-          <% if template.present? && template.is_active? %>
+          <% if template.present? %>
             <%= get_view_erb(template) %>
           <% end %>
         </div>

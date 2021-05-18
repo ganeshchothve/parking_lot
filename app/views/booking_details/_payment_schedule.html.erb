@@ -1,5 +1,5 @@
 <% if booking_detail.booking_detail_scheme %>
-  <%= booking_detail.payment_schedule_template.parsed_content(booking_detail) if booking_detail.payment_schedule_template.is_active? %>
+  <%= booking_detail.payment_schedule_template.parsed_content(booking_detail) %>
 <% else %>
   <p class='text-left'><%= t('booking_detail_schemes.rejected_scheme') %></p>
 <% end %>

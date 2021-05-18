@@ -65,9 +65,9 @@ class CustomPolicy < Struct.new(:user, :enable_users)
     "#{user.buyer? ? '' : 'Admin::'}UserRequestPolicy".constantize.new(user, UserRequest).index?
   end
 
-  def channel_partners?
-    "#{user.buyer? ? '' : 'Admin::'}ChannelPartnerPolicy".constantize.new(user, ChannelPartner).index?
-  end
+  # def channel_partners?
+  #   "#{user.buyer? ? '' : 'Admin::'}ChannelPartnerPolicy".constantize.new(user, ChannelPartner).index?
+  # end
 
   def checklists?
     "#{user.buyer? ? '' : 'Admin::'}ChecklistPolicy".constantize.new(user, Checklist).index?
@@ -89,8 +89,16 @@ class CustomPolicy < Struct.new(:user, :enable_users)
     "#{user.buyer? ? 'Buyer' : 'Admin'}::AssetPolicy".constantize.new(user, Asset).index?
   end
 
+  def push_notifications?
+    "#{user.buyer? ? '' : 'Admin::'}PushNotificationPolicy".constantize.new(user, PushNotification).index?
+  end
+
+  # def cp_lead_activities?
+  #   "#{user.buyer? ? '' : 'Admin::'}CpLeadActivityPolicy".constantize.new(user, CpLeadActivity).index?
+  # end
+
   def self.custom_methods
-    %w[schemes incentive_schemes user_requests channel_partners emails smses referrals accounts checklists bulk_upload_reports assets crms api_logs].sort
+    %w[schemes incentive_schemes user_requests emails smses referrals accounts checklists bulk_upload_reports assets crms api_logs push_notifications].sort
     # add_booking user_kycs portal_stage_priorities phases audits
   end
 end

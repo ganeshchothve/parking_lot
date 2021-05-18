@@ -29,6 +29,7 @@ gem 'jbuilder', '~> 2.5'
 gem 'razorpay'
 gem 'nested_form'
 gem 'pusher'
+gem 'fcm'
 gem 'active_link_to'
 gem "font-awesome-sass"
 # Use Capistrano for deployment
@@ -62,7 +63,7 @@ gem 'rails-observers',  github: 'rails/rails-observers'
 # for file upload
 gem 'fog-aws'
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
-gem 'mimemagic', '0.3.3'
+gem 'mimemagic', '~> 0.3.10'
 
 # for simplified HTTP requests
 gem 'httparty', '>= 0.14.0'
@@ -156,15 +157,7 @@ group :production, :staging do
   gem 'newrelic-redis'
   gem 'newrelic_rpm'
 end
-
-group :production do
-  gem 'carrierwave-azure_rm'
-end
-
-group :staging do
-  gem 'asset_sync', '>= 2.4.0'
-end
-
+gem 'asset_sync', '>= 2.4.0'
 gem 'humanize', require: 'humanize'
 gem 'request_store'
 gem 'awesome_print'

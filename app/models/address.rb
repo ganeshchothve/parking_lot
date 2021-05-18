@@ -16,8 +16,8 @@ class Address
 
   belongs_to :addressable, polymorphic: true, optional: true
 
-  validates :address_type, presence: true
-  validate :check_presence, if: Proc.new{ |address| address.addressable.class.to_s != 'Project' }
+  #validates :address_type, presence: true
+  #validate :check_presence, if: Proc.new{ |address| address.addressable.class.to_s != 'Project' }
 
   enable_audit({
     audit_fields: [:city, :state, :country, :address_type, :selldo_id],

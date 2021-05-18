@@ -58,6 +58,7 @@ class UserObserver < Mongoid::Observer
           booking_portal_client_id: user.booking_portal_client_id,
           email_template_id: Template::EmailTemplate.find_by(name: "user_manager_changed").id,
           recipient_ids: [user.id],
+          cc: user.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
           cc_recipient_ids: [user.manager_id],
           triggered_by_id: user,
           triggered_by_type: user.class.to_s

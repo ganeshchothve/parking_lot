@@ -15,16 +15,14 @@
         <div><%= number_to_indian_currency(booking_detail.calculate_agreement_price.round) %></div>
       </div>
     </div>
-    <!--
     <div class="col-md-4">
       <div class="form-group">
         <label class="small">
-          <%#= t('mongoid.attributes.booking_detail.all_inclusive_price') %>
+          <%= t('mongoid.attributes.booking_detail.all_inclusive_price') %>
         </label>
-        <div><%#= number_to_indian_currency(booking_detail.calculate_all_inclusive_price.round) %></div>
+        <div><%= number_to_indian_currency(booking_detail.calculate_all_inclusive_price.round) %></div>
       </div>
     </div>
-    -->
   </div>
   <div class="row">
     <div class="col-md-6">

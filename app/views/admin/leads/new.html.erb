@@ -1,0 +1,5 @@
+<% if current_client.selldo_client_id.present? && current_client.selldo_form_id.present? %>
+  <%= render 'admin/users/selldo_form' %>
+<% else %>
+  <%= render 'users/non_selldo_form' %>
+<% end %>

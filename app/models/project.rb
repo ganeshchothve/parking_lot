@@ -5,7 +5,7 @@ class Project
   include CrmIntegration
 
   # Add different types of documents which are uploaded on client
-  DOCUMENT_TYPES = %w[document brochure offer internal_amenities external_amenities].freeze
+  DOCUMENT_TYPES = %w[document brochure offer internal_amenities external_amenities certificate unit_selection_filter_image].freeze
 
   field :name, type: String
   field :developer_name, type: String
@@ -148,12 +148,12 @@ class Project
   mount_uploader :logo, DocUploader
   mount_uploader :mobile_logo, DocUploader
 
+  belongs_to :booking_portal_client, class_name: 'Client'
   has_many :project_units
   has_many :booking_details
   has_many :schemes
   has_many :project_towers
   has_one :address, as: :addressable
-  belongs_to :booking_portal_client, class_name: 'Client'
   has_many :templates
   has_many :sms_templates, class_name: 'Template::SmsTemplate'
   has_many :email_templates, class_name: 'Template::EmailTemplate'
@@ -165,7 +165,7 @@ class Project
   has_many :receipts
 
   validates :name, presence: true
-  validates_uniqueness_of :name#, :rera_registration_no
+  validates_uniqueness_of :name, :rera_registration_no, allow_blank: true
   validates :enable_actual_inventory, array: { inclusion: {allow_blank: true, in: (User::ADMIN_ROLES + User::BUYER_ROLES) } }
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
 

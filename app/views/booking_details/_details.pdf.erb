@@ -35,8 +35,8 @@
               </li>
             <% end %>
             <li>
-              <span><%= ProjectUnit.human_attribute_name('unit_configuration_name')%></span>
-              <p><%= project_unit.unit_configuration_name %></p>
+              <span><%= BookingDetail.human_attribute_name('bedrooms')%>/<%= BookingDetail.human_attribute_name('bathrooms')%></span>
+              <p><%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></p>
             </li>
             <li>
               <span><%= BookingDetail.human_attribute_name('carpet')%></span>
@@ -61,12 +61,10 @@
               <span><%= BookingDetail.human_attribute_name('agreement_price') %></span>
               <p><%= number_to_indian_currency(booking_detail.calculate_agreement_price.round) %></p>
             </li>
-            <!--
             <li>
-              <span><%#= BookingDetail.human_attribute_name('all_inclusive_price') %></span>
-              <p><%#= number_to_indian_currency(booking_detail.calculate_all_inclusive_price.round) %></p>
+              <span><%= BookingDetail.human_attribute_name('all_inclusive_price') %></span>
+              <p><%= number_to_indian_currency(booking_detail.calculate_all_inclusive_price.round) %></p>
             </li>
-            -->
             <li>
               <span><%= BookingDetail.human_attribute_name('phase') %></span>
               <p><%= project_unit.phase.try(:name) || '-' %></p>

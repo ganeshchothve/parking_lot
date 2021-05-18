@@ -15,27 +15,40 @@ class ChannelPartner
   EXPERTISE = %w( rentals retail residential commercial )
   EXPERIENCE = ['0-1 yrs', '1-5 yrs', '5-10 yrs', '10-15 yrs', '15-20 yrs', '20+ yrs']
   DEVELOPERS = [ "Godrej Properties", "Hiranandani", "Lodha Group", "Piramal Realty", "Kanakia", "Mahindra Lifespaces developers", "Kalpataru", "Runwal Group", "Dosti Group", "Wadhwa Group", "Rustomjee", "Puraniks builders", "Adhiraj construction", "L & T Realty", "Arkade Group", "Paradise group", "Chandak", "Marathon Realty", "Raymond Realty", "Damji Shamji Shah", "Shapoorji Pallonji Real Estate", "SD Corp", "Ornate Universal", "Sethia Infrastructure", "Aadi Properties", "Raheja construction", "Tata Housing", "Ajmera", "Adani", "Oberoi Realty", "Acme", "K Raheja", "Hubtown", "Ekta world", "Akshar group", "Raunak group", "JP Infra", "Sunteck Realty Ltd", "Seth Developers", "Kabra developer", "Koltepatil developer" ]
+  SERVICES = [ "Media Plan", "Creative", "Execution", "CRM", "Lead Management", "Virtual Presentation Platform" ]
 
   # Add different types of documents which are uploaded on channel_partner
   DOCUMENT_TYPES = %w[pan_card rera_certificate gst_certificate cheque_scanned_copy company_incorporation_certificate form_10f tax_residency_certificate pe_declaration]
+  COMPANY_TYPE = ['Sole Proprietorship', 'Partnership', 'Private Limited', 'Public Limited', 'Others']
+  CATEGORY = ['CP Company', 'Individual CP', 'ROTN', 'IRDA', 'Chartered accountants', 'IT Profession']
+  SOURCE = ['Internal CP', 'External CP']
+  REGION = ['Chennai', 'Bangalore', 'Coimbatore', 'NRI']
 
   field :title, type: String
   field :first_name, type: String
   field :last_name, type: String
+  field :additional_name, type: String
   field :email, type: String
+  field :alternate_email, type: String
   field :phone, type: String
+  field :alternate_phone, type: String
   field :rera_id, type: String
   field :status, type: String, default: 'inactive'
 
   field :company_name, type: String
+  field :company_type, type: String
+  field :company_owner_name, type: String
+  field :company_owner_phone, type: String
   field :pan_number, type: String
   field :gstin_number, type: String
   field :aadhaar, type: String
   field :status_change_reason, type: String
-
+  field :category, type: String
+  field :source, type: String
+  field :website, type: String
+  field :region, type: String
   field :erp_id, type: String, default: ''
 
-  # Runwal Fields
   field :team_size, type: Integer
   field :rera_applicable, type: Boolean, default: false
   field :gst_applicable, type: Boolean, default: false
@@ -44,6 +57,7 @@ class ChannelPartner
   field :experience, type: String
   field :average_quarterly_business, type: Float
   field :developers_worked_for, type: Array, default: []
+  field :interested_services, type: Array, default: []
   field :cp_code, type: String
 
   scope :filter_by_rera_id, ->(rera_id) { where(rera_id: rera_id) }
@@ -79,6 +93,11 @@ class ChannelPartner
   validates :phone, uniqueness: true, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile] }, allow_blank: true
   validates :email, uniqueness: true, allow_blank: true
   validates :status, inclusion: { in: proc { ChannelPartner::STATUS } }
+  validates :company_type, inclusion: { in: proc { ChannelPartner::COMPANY_TYPE } }, allow_blank: true
+  validates :source, inclusion: { in: proc { ChannelPartner::SOURCE } }, allow_blank: true
+  validates :category, inclusion: { in: proc { ChannelPartner::CATEGORY } }, allow_blank: true
+  validates :region, inclusion: { in: proc { ChannelPartner::REGION } }, allow_blank: true
+
   validates :pan_number, :aadhaar, uniqueness: true, allow_blank: true
   validates :pan_number, format: { with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A' }, allow_blank: true
   validates :first_name, :last_name, name: true, allow_blank: true

@@ -4,10 +4,12 @@ class Invoice
   include InsertionStringMethods
   include InvoiceStateMachine
   extend FilterByCriteria
+  include NumberIncrementor
 
   DOCUMENT_TYPES = []
 
   field :amount, type: Float, default: 0.0
+  field :gst_amount, type: Float, default: 0.0
   field :status, type: String, default: 'draft'
   field :raised_date, type: DateTime
   field :processing_date, type: DateTime
@@ -24,10 +26,9 @@ class Invoice
   embeds_one :cheque_detail
   embeds_one :payment_adjustment, as: :payable
 
-  #validates :ladder_id, :ladder_stage, presence: true
+  validates :number, presence: true, if: :raised?
   validates :rejection_reason, presence: true, if: :rejected?
   validates :comments, presence: true, if: proc { pending_approval? && status_was == 'rejected' }
-  #validates :booking_detail_id, uniqueness: { scope: [:incentive_scheme_id, :ladder_id] }
   validates :amount, numericality: { greater_than: 0 }
   validates :cheque_detail, presence: true, if: :paid?
   validates :cheque_detail, copy_errors_from_child: true, if: :cheque_detail?
@@ -35,7 +36,6 @@ class Invoice
 
   delegate :name, to: :project, prefix: true, allow_nil: true
   delegate :name, to: :manager, prefix: true, allow_nil: true
-  #delegate :name, to: :incentive_scheme, prefix: true, allow_nil: true
 
   scope :filter_by_invoice_type, ->(request_type){ where(_type: /#{request_type}/i)}
   scope :filter_by_status, ->(status) { where(status: status) }
@@ -55,17 +55,20 @@ class Invoice
   def manual?
     _type.match(/manual/i)
   end
+
   class << self
     def user_based_scope(user, params = {})
       custom_scope = {}
       if params[:booking_detail_id].blank? && !user.buyer?
         if user.role?('channel_partner')
           custom_scope = { manager_id: user.id }
+        elsif user.role?('billing_team')
+          custom_scope = { status: { '$nin': %w(draft) } }
         elsif user.role?('cp_admin')
           #cp_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
           #channel_partner_ids = User.where(role: 'channel_partner', manager_id: {"$in": cp_ids}).distinct(:id)
           #custom_scope = { manager_id: { "$in": channel_partner_ids }, status: { '$nin': %w(draft) } }
-          custom_scope = { status: { '$nin': %w(draft) } }
+          custom_scope = { status: { '$nin': %w(draft raised) } }
         #elsif user.role?('cp')
         #  channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
         #  custom_scope = { manager_id: { "$in": channel_partner_ids } }
@@ -81,9 +84,9 @@ class Invoice
     def user_based_available_statuses(user)
       if user.present?
         if user.role?('billing_team')
-          %w[pending_approval approved rejected]
+          %w[raised pending_approval approved rejected]
         elsif user.role?('cp_admin')
-          Invoice.aasm.states.map(&:name) - [:draft]
+          Invoice.aasm.states.map(&:name) - [:draft, :raised]
         else
           Invoice.aasm.states.map(&:name)
         end

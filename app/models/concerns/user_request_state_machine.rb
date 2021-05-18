@@ -44,6 +44,7 @@ module UserRequestStateMachine
         email_template_id: Template::EmailTemplate.find_by(name: "#{self.class.model_name.element}_request_#{status}", project_id: self.project_id).id,
         recipients: [lead.user],
         cc_recipients: (lead.manager_id.present? ? [lead.manager] : []),
+        cc: user.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
         triggered_by_id: id,
         triggered_by_type: self.class.to_s
       )
@@ -64,6 +65,20 @@ module UserRequestStateMachine
       end
     end
 
+    def send_push_notification
+      template = Template::NotificationTemplate.where(name: "#{self.class.model_name.element}_request_#{status}").first
+      if template.present? && user.booking_portal_client.notification_enabled?
+        push_notification = PushNotification.new(
+          notification_template_id: template.id,
+          triggered_by_id: self.id,
+          triggered_by_type: self.class.to_s,
+          recipient_id: self.user.id,
+          booking_portal_client_id: self.user.booking_portal_client.id
+        )
+        push_notification.save
+      end
+    end
+
     def update_requestable_to_request_made
       requestable.cancellation_requested! if is_a?(UserRequest::Cancellation)
       requestable.swap_requested! if is_a?(UserRequest::Swap)
@@ -73,6 +88,7 @@ module UserRequestStateMachine
     def send_notifications
       send_email if lead.present? && lead.user.booking_portal_client.email_enabled? && !processing?
       send_sms if lead.present? && lead.user.booking_portal_client.sms_enabled? && !processing?
+      send_push_notification if lead.present? && lead.user.booking_portal_client.notification_enabled? && !processing?
     end
 
     def update_requestable_to_request_rejected

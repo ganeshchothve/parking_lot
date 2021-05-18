@@ -5,13 +5,13 @@
         <tr class="bg-gradient-cd white">
           <th><%= IncentiveScheme.model_name.human %></th>
           <th>Current Ladder</th>
-          <th>Total <%= t("controller.invoices.index.link_name") %> Generated<br>(includes rejected invoices)</th>
+          <th>Total Incentives Generated<br>(includes rejected invoices)</th>
           <th>Target Required To Reach Next Ladder</th>
         </tr>
       </thead>
       <tbody>
         <!-- Add lookup for booking detail and incentive scheme  -->
-        <% Invoice.filter_by_project_ids(@project_ids).where(Invoice.user_based_scope(current_user)).group_by{|inv| inv.incentive_scheme}.each do |scheme, invoices| %>
+        <% Invoice.all.ne(incentive_scheme_id: nil).filter_by_project_ids(@project_ids).where(Invoice.user_based_scope(current_user)).group_by{|inv| inv.incentive_scheme}.each do |scheme, invoices| %>
           <tr>
             <td data-title='<%= IncentiveScheme.model_name.human %>'><%= scheme.name.titleize %></td>
             <td data-title='Current Ladder'><%= stage = invoices.map(&:ladder_stage).max %></td>

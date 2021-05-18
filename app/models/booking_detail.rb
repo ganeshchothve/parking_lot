@@ -30,8 +30,6 @@ class BookingDetail
   field :carpet, type: Float
   field :agreement_price, type: Integer
   field :all_inclusive_price, type: Integer
-  field :booking_price, type: Integer
-  field :blocking_amount, type: Integer
   field :booked_on, type: Date
   field :ladder_stage, type: Array
 
@@ -73,8 +71,7 @@ class BookingDetail
 
   # TODO: uncomment
   # validates :name, presence: true
-  validates :status, :agreement_price, :carpet, :saleable, :blocking_amount, :booking_price, :booked_on, presence: true
-  validates :agreement_price, :all_inclusive_price, :blocking_amount, :carpet, :saleable, numericality: { greater_than: 0 }, allow_blank: true
+  validates :status, presence: true
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :kyc_mandate
   validate :validate_content, on: :create
@@ -153,7 +150,7 @@ class BookingDetail
       project_id: project_id,
       booking_portal_client_id: project_unit.booking_portal_client_id,
       email_template_id: Template::EmailTemplate.find_by(project_id: project_id, name: "auto_release_on_extended").id,
-      cc: [ project_unit.booking_portal_client.notification_email ],
+      cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
       recipients: [ lead.user ],
       cc_recipients: ( lead.manager_id.present? ? [lead.manager] : [] ),
       triggered_by_id: self.id,
@@ -177,7 +174,7 @@ class BookingDetail
         booking_portal_client_id: project_unit.booking_portal_client_id,
         body: ERB.new(project_unit.booking_portal_client.email_header).result(binding) + email_template.parsed_content(self) + ERB.new(project_unit.booking_portal_client.email_footer).result(binding),
         subject: email_template.parsed_subject(self),
-        cc: [project_unit.booking_portal_client.notification_email],
+        cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
         recipients: [lead.user],
         cc_recipients: [],
         triggered_by_id: self.id,
@@ -252,9 +249,9 @@ class BookingDetail
         receipts_total = receipts_total.in(status: ['clearance_pending', "success"])
       end
       receipts_total = receipts_total.sum(:total_amount)
-      return (self.booking_price.to_f - receipts_total)
+      return (self.project_unit.booking_price - receipts_total)
     else
-      return self.booking_price.to_f
+      return self.project_unit.booking_price
     end
   end
 
@@ -291,6 +288,7 @@ class BookingDetail
         booking_portal_client_id: project_unit.booking_portal_client_id,
         email_template_id: Template::EmailTemplate.find_by(project_id: project_id, name: "booking_confirmed").id,
         recipients: [lead.user],
+        cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
         cc_recipients: [],
         triggered_by_id: self.id,
         triggered_by_type: self.class.to_s,

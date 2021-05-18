@@ -29,7 +29,7 @@ module PriceCalculator
   end
 
   def booking_price_percent_of_agreement_price
-    0.099
+    agreement_price > 5000000 ? 0.099 : 0.1
   end
 
   def total_agreement_costs
@@ -39,35 +39,19 @@ module PriceCalculator
   end
 
   def calculate_agreement_price
-    if self.is_a?(BookingDetail)
-      self.agreement_price
-    elsif self.is_a?(ProjectUnit)
-      if self.booking_detail.present?
-        self.booking_detail.agreement_price
-      else
-        agreement_price = base_price + total_agreement_costs
-        if booking_detail_scheme
-          agreement_price += (booking_detail_scheme.payment_adjustments.where(field: "agreement_price").collect{|adj| adj.value(self)}.sum).round
-        end
-        agreement_price
-      end
+    agreement_price = base_price + total_agreement_costs
+    if booking_detail_scheme
+      agreement_price += (booking_detail_scheme.payment_adjustments.where(field: "agreement_price").collect{|adj| adj.value(self)}.sum).round
     end
+    agreement_price
   end
 
   def calculate_all_inclusive_price
-    if self.is_a?(BookingDetail)
-      self.all_inclusive_price
-    elsif self.is_a?(ProjectUnit)
-      if self.booking_detail.present?
-        self.booking_detail.all_inclusive_price
-      else
-        all_incl_price = calculate_agreement_price + total_outside_agreement_costs
-        if booking_detail_scheme
-          all_incl_price += (booking_detail_scheme.payment_adjustments.where(field: "all_inclusive_price").collect{|adj| adj.value(self)}.sum).round
-        end
-        all_incl_price
-      end
+    all_incl_price = calculate_agreement_price + total_outside_agreement_costs
+    if booking_detail_scheme
+      all_incl_price += (booking_detail_scheme.payment_adjustments.where(field: "all_inclusive_price").collect{|adj| adj.value(self)}.sum).round
     end
+    all_incl_price
   end
 
   def base_price

@@ -45,7 +45,7 @@ class UserRequest::Swap < UserRequest
   #
   def alternate_project_unit_blocking_condition
     if requestable.kind_of?(BookingDetail)
-      unless alternate_project_unit.blocking_amount <= requestable.blocking_amount
+      unless alternate_project_unit.blocking_amount <= requestable.project_unit.blocking_amount
         _total_tentative_amount_paid = requestable.total_tentative_amount_paid
         if _total_tentative_amount_paid < alternate_project_unit.blocking_amount
           errors.add(:alternate_project_unit, "has blocking amount #{alternate_project_unit.blocking_amount}, which is higher than your tentative paid amount ( #{_total_tentative_amount_paid} ).")

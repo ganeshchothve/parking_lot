@@ -30,9 +30,7 @@
       <div> <%= t('mongoid.attributes.receipt.payment_mode')%> : <%= t("receipt.payment_mode.#{receipt.payment_mode}")%></div>
     </div>
   </td>
-  <!--
-  <td data-title=<%#= t('mongoid.attributes.receipt.token_number') %> ><%#= receipt.try(:token_number) ? receipt.get_token_number : '--' %></td>
-  -->
+  <td data-title=<%= t('mongoid.attributes.receipt.token_number') %> ><%= receipt.try(:token_number) ? receipt.get_token_number : '--' %></td>
   <td data-title=<%= t('mongoid.attributes.receipt.status') %> ><%= t("mongoid.attributes.receipt/status.#{receipt.status}") %></td>
   <td data-title=<%= t('mongoid.attributes.receipt.total_amount') %> ><%= number_to_indian_currency(receipt.total_amount.round) %></td>
   <td>

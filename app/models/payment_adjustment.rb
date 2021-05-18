@@ -10,7 +10,7 @@ class PaymentAdjustment
 
   embedded_in :payable, polymorphic: true
 
-  validates :name, :field, presence: true, unless: -> { payable.class.to_s.in?(%w(Ladder Invoice)) }
+  validates :name, :field, presence: true, unless: -> { payable.class.to_s.in?(%w(Ladder Invoice::Manual Invoice::Calculated)) }
   validate :formula_or_absolute_value
 
   def value object

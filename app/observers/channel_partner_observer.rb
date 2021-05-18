@@ -25,7 +25,6 @@ class ChannelPartnerObserver < Mongoid::Observer
     if cp_user = channel_partner.associated_user.presence
       cp_user.update(first_name: channel_partner.first_name, last_name: channel_partner.last_name, rera_id: channel_partner.rera_id, manager_id: channel_partner.manager_id)
     end
-
     channel_partner.rera_applicable = true if channel_partner.rera_id.present?
     channel_partner.gst_applicable = true if channel_partner.gstin_number.present?
 

@@ -55,6 +55,7 @@ class Receipt
   belongs_to :booking_detail, optional: true
   belongs_to :creator, class_name: 'User'
   belongs_to :account, foreign_key: 'account_number', optional: true
+  belongs_to :manager, class_name: 'User', optional: true
   # remove optional: true when implementing.
   has_many :assets, as: :assetable
   has_many :smses, as: :triggered_by, class_name: 'Sms'
@@ -81,10 +82,10 @@ class Receipt
   scope :direct_payments, ->{ where(booking_detail_id: nil )}
 
   #validations for fields without default value
-  validates :total_amount, :payment_identifier, presence: true
-  #validate :validate_total_amount, if: proc { |receipt| receipt.total_amount.present? } # Runwal specific change
-  validates :issued_date, presence: true, if: proc { |receipt| receipt.payment_mode != 'online' } # :issuing_bank, :issuing_bank_branch, # Runwal specific changes
-  # validates :payment_identifier, presence: true # , if: proc { |receipt| receipt.payment_mode == 'online' ? receipt.status == 'success' : true } # Runwal specific change
+  validates :total_amount, presence: true
+  validate :validate_total_amount, if: proc { |receipt| receipt.total_amount.present? }
+  validates :issued_date, :issuing_bank, :issuing_bank_branch, presence: true, if: proc { |receipt| receipt.payment_mode != 'online' }
+  validates :payment_identifier, presence: true , if: proc { |receipt| receipt.payment_mode == 'online' ? receipt.status == 'success' : true }
   #validations for fields with default value
   validates :status, :payment_mode, :payment_type, presence: true
   validates :status, inclusion: { in: proc { Receipt.aasm.states.collect(&:name).collect(&:to_s) } }
@@ -216,7 +217,7 @@ class Receipt
     custom_scope = {}
     if params[:lead_id].blank? && !user.buyer?
       if user.role?('channel_partner')
-        custom_scope = { lead_id: { "$in": Lead.where(referenced_manager_ids: user.id).distinct(:id) } }
+        custom_scope = { manager_id: user.id }
       #elsif user.role?('cp_admin')
       #  custom_scope = { lead_id: { "$in": Lead.nin(manager_id: [nil, '']).distinct(:id) } }
       #elsif user.role?('cp')
@@ -238,8 +239,8 @@ class Receipt
   #
   def first_booking_amount_limit
     if booking_detail.try(:hold?)
-      if total_amount < booking_detail.blocking_amount
-        errors.add(:total_amount, "should be greater than blocking amount(#{booking_detail.blocking_amount})")
+      if total_amount < project_unit.blocking_amount
+        errors.add(:total_amount, "should be greater than blocking amount(#{project_unit.blocking_amount})")
       end
     end
   end
@@ -274,7 +275,7 @@ class Receipt
       errors.add :total_amount, 'cannot be less than or equal to 0'
     else
       blocking_amount = user.booking_portal_client.blocking_amount
-      blocking_amount = booking_detail.blocking_amount if booking_detail_id.present?
+      blocking_amount = project_unit.blocking_amount if booking_detail_id.present?
       if (direct_payment? || blocking_payment?) && total_amount < blocking_amount && !booking_detail.try(:swapping?)
         errors.add :total_amount, "cannot be less than blocking amount #{blocking_amount}"
       end

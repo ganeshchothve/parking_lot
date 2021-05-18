@@ -17,6 +17,10 @@ document.addEventListener("sell_do_form_submitted_with_error", function(){
 }, false);
 
 document.addEventListener("sell_do_form_rendered", function(){
+  var is_channel_partner = (typeof App !== "undefined" && App.current_user.role == 'channel_partner');;
+  if(is_channel_partner) {
+     $('[name="sell_do[form][lead][project_id]"]').attr('name', 'iris_project_id');
+  }
   var variables = decodeURIComponent(window.location.search.substring(1)).split('&');
   var params = {};
   _.each(variables, function(v){
@@ -37,35 +41,38 @@ document.addEventListener("sell_do_form_rendered", function(){
     $('[name="sell_do[form][lead][last_name]"]').val(params.last_name);
     $('[name="sell_do[form][lead][email]"]').val(params.email);
     $('[name="sell_do[form][lead][phone]"]').val(params.phone);
-
   }
 }, false);
 
-function sell_do_form_successfully_submitted(e){
+function sell_do_form_successfully_submitted(data, event){
   if(typeof App !== "undefined" && App.current_user){
     $(".sell_do_form_container").html('<div class="alert alert-success">We have registered the user. Please wait while we generate login details & send confirmation email / SMS to the user.</div>');
   }else{
     var message = 'Thank you for registering with us. Please wait while we generate login details & send you confirmation email / SMS.'
     $(".sell_do_form_container").html('<div class="alert alert-success">' + message + '</div>');
   }
-  register_user_with_portal(e);
+  register_user_with_portal(data, event);
 }
 
 function sell_do_form_submission_failed(e){
   $(".sell_do_form_container").html('<div class="alert alert-success">This customer has already registered with us. We cannot register the same customer again.</div>');
 }
 
-function register_user_with_portal(e){
+function register_user_with_portal(d, e){
+  var is_channel_partner = (typeof App !== "undefined" && App.current_user.role == 'channel_partner');
   var data = {
-    lead_id: (e.lead_id ? e.lead_id : ""),
-    first_name: unescape(e['sell_do[form][lead][first_name]'] ? (e['sell_do[form][lead][first_name]'].replace("+", " ")) : ""),
-    last_name: unescape(e['sell_do[form][lead][last_name]'] ? (e['sell_do[form][lead][last_name]'].replace("+", " ")) : ""),
-    email: unescape(e['sell_do[form][lead][email]'] ? e['sell_do[form][lead][email]'] : ""),
-    phone: unescape(e['sell_do[form][lead][phone]'] ? e['sell_do[form][lead][phone]'].replace(/\+/ig, "") : ""),
-    mixpanel_id: unescape(e['sell_do[campaign][mixpanel_id]'] ? e['sell_do[campaign][mixpanel_id]'] : "")
+    lead_id: (d.lead_id ? d.lead_id : ""),
+    first_name: unescape(d['sell_do[form][lead][first_name]'] ? (d['sell_do[form][lead][first_name]'].replace("+", " ")) : ""),
+    last_name: unescape(d['sell_do[form][lead][last_name]'] ? (d['sell_do[form][lead][last_name]'].replace("+", " ")) : ""),
+    email: unescape(d['sell_do[form][lead][email]'] ? d['sell_do[form][lead][email]'] : ""),
+    phone: unescape(d['sell_do[form][lead][phone]'] ? d['sell_do[form][lead][phone]'].replace(/\+/ig, "") : ""),
+    mixpanel_id: unescape(d['sell_do[campaign][mixpanel_id]'] ? d['sell_do[campaign][mixpanel_id]'] : ""),
+    project_id: is_channel_partner ? $(e.currentSubmittedForm).find('[name="iris_project_id"] option:selected').val() : unescape(d['sell_do[form][lead][project_id]']),
+    project_name: is_channel_partner ? $(e.currentSubmittedForm).find('[name="iris_project_id"] option:selected').text() : $(e.currentSubmittedForm).find('[name="sell_do[form][lead][project_id]"] option:selected').text(),
+    lead_details: d.sell_do_lead_details
   }
   if(App.client.enable_referral_bonus){
-    data.referral_code = unescape(e['sell_do[form][custom][custom_referral_code]'] ? e['sell_do[form][custom][custom_referral_code]'] : '')
+    data.referral_code = unescape(d['sell_do[form][custom][custom_referral_code]'] ? d['sell_do[form][custom][custom_referral_code]'] : '')
   }
   $.ajax({
     url: '<%= url.check_and_register_path %>',
@@ -81,7 +88,11 @@ function register_user_with_portal(e){
       }).show();
       setTimeout(function(){
         if(typeof App !== "undefined" && App.current_user){
-          window.location = '<%= url.admin_users_path %>';
+          if (App.current_user.role == 'channel_partner') {
+            window.location = '<%= url.admin_cp_lead_activities_path %>';
+          } else {
+            window.location = '<%= url.admin_leads_path %>';
+          }
         }else{
           if(App.client.preferred_login == "phone" && data.phone){
             window.location = encodeURI('<%= url.new_user_session_path %>?force=true&user[login]=' + encodeURIComponent(data.phone));
@@ -115,7 +126,11 @@ function register_user_with_portal(e){
       setTimeout(function(){
         if(_.isEmpty(one.responseJSON.url)){
           if(typeof App !== "undefined" && App.current_user){
-            window.location = '<%= url.admin_users_path %>';
+            if (App.current_user.role == 'channel_partner') {
+              window.location = '<%= url.admin_cp_lead_activities_path %>';
+            } else {
+              window.location = '<%= url.admin_leads_path %>';
+            }
           }else if(one.responseJSON.already_exists){
             window.location = '<%= url.new_user_session_path %>';
           }else{

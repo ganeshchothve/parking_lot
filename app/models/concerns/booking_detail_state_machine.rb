@@ -145,8 +145,9 @@ module BookingDetailStateMachine
     def after_under_negotiation_event
       create_default_scheme
       _project_unit = project_unit
-      _project_unit.assign_attributes(status: 'blocked', held_on: nil, blocked_on: self.booked_on, auto_release_on: ( Date.today + _project_unit.blocking_days.days) )
+      _project_unit.assign_attributes(status: 'blocked', held_on: nil, blocked_on: Date.today, auto_release_on: ( Date.today + _project_unit.blocking_days.days) )
       _project_unit.save
+      self.set(booked_on: _project_unit.blocked_on)
       if under_negotiation? && booking_detail_scheme.approved?
         scheme_approved!
       else
@@ -157,7 +158,7 @@ module BookingDetailStateMachine
     end
 
     def after_scheme_approved_event
-      if scheme_approved? && get_paid_amount >= self.blocking_amount
+      if scheme_approved? && get_paid_amount >= project_unit.blocking_amount
         blocked!
       end
     end
@@ -171,11 +172,12 @@ module BookingDetailStateMachine
     # Updating blocked date of project_unit to today and  auto_release_on will be changed to blocking_days more from current auto_release_on.
     def after_blocked_event
       _project_unit = project_unit
-      _project_unit.blocked_on = self.booked_on
+      _project_unit.blocked_on = Date.today
       _project_unit.auto_release_on ||= Date.today
       _project_unit.auto_release_on +=  _project_unit.blocking_days.days
       _project_unit.save
-      if blocked? && get_paid_amount > self.blocking_amount
+      self.set(booked_on: _project_unit.blocked_on)
+      if blocked? && get_paid_amount > project_unit.blocking_amount
         booked_tentative!
       else
         auto_released_extended_inform_buyer!
@@ -184,7 +186,7 @@ module BookingDetailStateMachine
     end
     # Updating blocked date of project_unit to today and  auto_release_on will be changed to blocking_days more from current auto_release_on.
     def after_booked_tentative_event
-      if booked_tentative? && (get_paid_amount >= booking_price)
+      if booked_tentative? && (get_paid_amount >= project_unit.booking_price)
         booked_confirmed!
       else
         send_email_and_sms_as_booked
@@ -269,7 +271,7 @@ module BookingDetailStateMachine
             project_id: project_id,
             booking_portal_client_id: project_unit.booking_portal_client_id,
             email_template_id: Template::EmailTemplate.find_by(name: "booking_confirmed", project_id: project_id).id,
-            cc: [project_unit.booking_portal_client.notification_email],
+            cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
             recipients: [lead.user],
             cc_recipients: (lead.manager_id.present? ? [lead.manager] : []),
             triggered_by_id: self.id,
@@ -288,6 +290,18 @@ module BookingDetailStateMachine
               triggered_by_type: self.class.to_s
             )
       end
+
+      template = Template::NotificationTemplate.where(name: "booking_confirmed").first
+      if template.present? && user.booking_portal_client.notification_enabled?
+        push_notification = PushNotification.new(
+          notification_template_id: template.id,
+          triggered_by_id: self.id,
+          triggered_by_type: self.class.to_s,
+          recipient_id: self.user.id,
+          booking_portal_client_id: self.user.booking_portal_client.id
+        )
+        push_notification.save
+      end
     end
 
     # This method is called after of blocked and booked_tentative event
@@ -300,7 +314,7 @@ module BookingDetailStateMachine
           project_id: project_id,
           booking_portal_client_id: project_unit.booking_portal_client_id,
           email_template_id: Template::EmailTemplate.find_by(name: "booking_#{_status}", project_id: project_id).id,
-          cc: [project_unit.booking_portal_client.notification_email],
+          cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
           recipients: [lead.user],
           cc_recipients: (lead.manager_id.present? ? [lead.manager] : []),
           triggered_by_id: self.id,
@@ -318,6 +332,18 @@ module BookingDetailStateMachine
             triggered_by_id: self.id,
             triggered_by_type: self.class.to_s
           )
+      end
+
+      template = Template::NotificationTemplate.where(name: "booking_blocked").first
+      if template.present? && user.booking_portal_client.notification_enabled?
+        push_notification = PushNotification.new(
+          notification_template_id: template.id,
+          triggered_by_id: self.id,
+          triggered_by_type: self.class.to_s,
+          recipient_id: self.user.id,
+          booking_portal_client_id: self.user.booking_portal_client.id
+        )
+        push_notification.save
       end
     end
 

@@ -7,7 +7,7 @@ class IncentiveCalculator
     @unit = booking_detail.project_unit
     @options = options
     # Find channel partner for above booking
-    @channel_partner = lead.manager
+    @channel_partner = booking_detail.manager
   end
 
   # Find incentive scheme based on above
@@ -48,7 +48,7 @@ class IncentiveCalculator
   # Run incentive calculation
   def calculate
     if channel_partner && find_incentive_scheme && find_all_bookings_for_current_scheme
-      # sort on booked_on & create a hash { 1 => { booking_detail: booking1 }, 2 => { booking_detail: booking2 } }
+      # sort on blocked_on & create a hash { 1 => { booking_detail: booking1 }, 2 => { booking_detail: booking2 } }
       bookings_hash = bookings.sort { |x| x.booked_on }.each_with_index.inject({}) { |hash, (bd, idx)| hash[idx+1] = { booking_detail: bd }; hash}
 
       if incentive_scheme.ladder_strategy == 'number_of_items'

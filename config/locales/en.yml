@@ -43,6 +43,10 @@ en:
     agreement_value: 'AV'
 
   helpers:
+    extend_validity:
+      link_name: '%{model}'
+    accompanied_credit:
+      link_name: '%{model}'
     show:
       link_name: '%{model} Details'
     edit:
@@ -67,6 +71,9 @@ en:
 
   mongoid:
     models:
+      push_notification:
+        one: "Notification"
+        other: "Notifications"
       api_log:
         one: 'API Log'
         other: 'API Logs'
@@ -207,6 +214,10 @@ en:
         other: Brokerage Deductions
 
     attributes:
+      push_notification:
+        url: "Redirect url"
+        title: "Title"
+        content: "Content"
       crm:
         base:
           name: Name
@@ -267,6 +278,7 @@ en:
         :false: 'No'
 
       bank_detail:
+        zip: 'Zip / Pin Code'
         name: "Bank Name"
         account_holder_name: "Account Holder's Name"
         branch: 'Branch'
@@ -296,9 +308,9 @@ en:
         tasks_completed: 'Tasks Completed'
         tasks_pending: 'Tasks Pending'
         tasks_completed_tracked_by: 'All Tasks Completed Tracked by'
-        booked_on: 'Booked On'
         registration_done: 'Registration Done'
         ladder_stage: 'Ladder Stage'
+        agreement_price: 'Agreement Price'
       booking_detail/status:
         available: 'Available'
         not_available: 'Not Available'
@@ -329,6 +341,7 @@ en:
         selldo_channel_partner_form_id: 'SellDo Form ID - For Channel Partners'
         selldo_gre_form_id: 'SellDo Form ID - Used by Non Channel Partners'
         selldo_api_key: 'SellDo API Key (Use generic Api Client)'
+        selldo_api_secret: 'SellDo API Secret'
         selldo_default_srd: 'SellDo Default SRD'
         selldo_cp_srd: 'SellDo Channel Partner SRD'
         notification_email: 'Notification Email (all emails are sent here)'
@@ -427,16 +440,21 @@ en:
 
       channel_partner:
         name: 'Name'
-        company_name: "Company Name (As per RERA)"
-        address: "Address"
-        bank_detail: "Bank Details"
+        company_name: CP Company Name/ Organisation Name/ CP Name
+        company_owner_name: Organisation CEO/MD/Owner Name
+        company_owner_phone: Organisation CEO/MD/Owner's Contact No.
+        additional_name: 'Additional Name'
+        address: 'Address'
+        bank_detail: 'Bank Details'
         email: 'Email'
+        alternate_email: 'Alternate Email'
         phone: 'Phone'
+        alternate_phone: 'Alternate Phone'
         rera_id: 'RERA Registration Number'
         city: 'City'
         associated_user_id: 'Associated User'
         status: 'Status'
-        gstin_number: "GSTIN Number"
+        gstin_number: "GST Number"
         pan_number: "PAN Number"
         aadhaar: "Aadhaar"
         name_email_phone: 'Name/Email/Phone'
@@ -450,7 +468,12 @@ en:
         average_quarterly_business: 'Average Quarterly Business (₹)'
         developers_worked_for: 'Developers Worked For (Type any developer name & press enter)'
         event: 'Application Status'
-        cp_code: 'Vendor Code'
+        cp_code: 'Partner Code'
+        company_type: 'Company Type'
+        category: 'Category'
+        source: 'Source'
+        website: 'Website'
+        region: 'Region'
       channel_partner/file_types:
         rera_certificate: 'RERA Certificate'
         gst_certificate: 'GST Certificate'
@@ -572,7 +595,7 @@ en:
         project_tower_name: 'Project Tower'
         project_tower_id: 'Project Tower'
         project_name: 'Project'
-        blocked_on: 'Booked On'
+        blocked_on: 'Blocked On'
         unit_facing_direction: 'Facing'
         agreement_price: 'Agreement Value'
         all_inclusive_price: 'All Inclusive Price'
@@ -589,7 +612,6 @@ en:
         configuration: 'Configuration'
         payment_schedule: 'Payment Schedule'
         cost_sheet: 'Cost Sheet'
-        unit_configuration_name: "Unit Configuration"
       project_unit/status:
         hold: 'Hold'
         available: 'Available'
@@ -620,7 +642,7 @@ en:
         status: "Payment Status"
         user: "Customer"
         user_id: "Customer"
-        total_amount: "Total Amount (Inclusive of GST)"
+        total_amount: "Total Amount (Rs.)"
         token_number: 'Token Number'
         time_slot: Time Slot
         tracking_id: 'Transaction ID (Processed Payment)'
@@ -712,7 +734,8 @@ en:
         status: 'Status'
         cheque_detail: 'Cheque Details'
       invoice/status:
-        draft: 'Raised'
+        draft: 'Draft'
+        raised: 'Raised'
         pending_approval: 'Pending Approval'
         approved: 'Approved'
         rejected: 'Rejected'
@@ -914,15 +937,35 @@ en:
         direct: Direct
 
       lead:
+        name: 'Name'
+        phone: 'Phone'
+        email: 'Email'
         project_id: 'Project'
         manager_id: 'Partner / Manager / Added by'
         name_email_phone: 'Walk-in (Project Name)'
         total_amount_paid: "Total Amount Paid (Inclusive of GST)"
-        registered_at: 'Walk-in Creation Date'
+        registered_at: 'Registered At'
         payment_done: '9.90% Received'
         blocking_amount_paid: 'Booking Amount Paid'
         registration_done: 'Registration Done'
         stage: 'Stage'
+        lead_validity_period: 'Lead Validity Period'
+        selldo_lead_registration_date: 'Sell Do Lead Registration Date'
+        selldo_lead_stage: 'SellDo Lead Stage'
+
+      cp_lead_activity:
+        lead_id: 'Lead Id'
+        selldo_lead_id: 'SellDo Lead Id'
+        project_id: 'Project'
+        channel_partner: 'Channel Partner'
+        count_status: 'Count Status'
+        lead_status: 'Lead Status'
+        expiry_remaining_days: 'Lead Validity Period'
+        registered_at: 'Registered At'
+        can_extend_validity: 'Can Extend Validity?'
+        expiry_date: 'Lead Expiry Date'
+        sitevisit_date: 'Site Visit Date'
+        sitevisit_status: 'Site Visit Status'
 
       user/file_types:
         home_loan_application_form: 'Home Loan Application Form'
@@ -965,6 +1008,7 @@ en:
         unit_selection_filter_image: 'Image on Apartment Search Page'
         internal_amenities: 'Internal Amenities'
         external_amenities: 'External Amenities'
+        certificate: 'Certificate'
       project/help_text:
         document_html: 'Project documents'
         offer_html: 'Project ongoing offers'
@@ -972,6 +1016,11 @@ en:
         unit_selection_filter_image_html: 'Web compatible image - to be displayed on apartment search page'
         internal_amenities_html: 'Project Internal amenities images'
         external_amenities_html: 'Project External amenities images'
+        certificate_html: 'Certificate'
+      cp_lead_activity/file_types:
+        sitevisit_form: 'Site Visit Form'
+      cp_lead_activity/help_text:
+        sitevisit_form_html: ''
 
       bulk_upload_report/file_types:
         receipts_status_update: 'Receipt Status Bulk Update'
@@ -996,6 +1045,14 @@ en:
           custom_dates: 'Custom Dates'
 
   controller:
+    cp_lead_activities:
+      index:
+        link_name: 'Lead Activities'
+      show:
+        link_name: 'Show Lead Activities'
+    push_notifications:
+      index:
+        link_name: "Notifications"
     api_logs:
       index:
         link_name: 'API Logs'
@@ -1166,8 +1223,10 @@ en:
       show:
         link_name: 'Client Detail'
     channel_partners:
+      new:
+        link_name: 'Add New ChannelPartner'
       index:
-        link_name: 'Channel Partner Applications'
+        link_name: 'Channel Partners'
       edit:
         link_name: 'Edit Application'
       show:
@@ -1521,7 +1580,6 @@ en:
         max_ladder_html: '<strong>Max.</strong> Ladder Reached'
 
       titles:
-        leads: 'Walk-Ins'
         lead_details: 'Customer Account Details'
         booking_details: 'Bookings'
         total_leads: 'Total Walk-ins'

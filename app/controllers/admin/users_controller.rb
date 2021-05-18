@@ -81,6 +81,7 @@ class Admin::UsersController < AdminController
             body: ERB.new(@user.booking_portal_client.email_header).result( binding) + email_template.parsed_content(@user) + ERB.new(@user.booking_portal_client.email_footer).result( binding ),
             subject: email_template.parsed_subject(@user),
             recipients: [ @user ],
+            cc: @user.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
             triggered_by_id: @user.id,
             triggered_by_type: @user.class.to_s
           })
@@ -254,8 +255,8 @@ class Admin::UsersController < AdminController
     if %w[index export portal_stage_chart channel_partner_performance].include?(params[:action])
       authorize [current_user_role_group, User]
     elsif params[:action] == 'new' || params[:action] == 'create'
-      if params[:role].present?
-        authorize [current_user_role_group, User.new(role: params[:role], booking_portal_client_id: current_client.id)]
+      if params.dig(:user, :role).present?
+        authorize [current_user_role_group, User.new(role: params.dig(:user, :role), booking_portal_client_id: current_client.id)]
       else
         authorize [current_user_role_group, User.new(booking_portal_client_id: current_client.id)]
       end

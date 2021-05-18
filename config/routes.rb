@@ -19,6 +19,7 @@ Rails.application.routes.draw do
 
   devise_scope :user do
     post 'users/otp', :to => 'local_devise/sessions#otp', :as => :users_otp
+    post 'users/notification_tokens', to: 'users/notification_tokens#update', as: :user_notification_tokens
   end
 
   authenticated :user do
@@ -49,6 +50,14 @@ Rails.application.routes.draw do
   namespace :admin do
 
     resources :api_logs, only: [:index]
+    resources :cp_lead_activities do
+      member do
+        get 'extend_validity'
+        patch 'update_extension'
+        get 'accompanied_credit'
+        patch 'update_accompanied_credit'
+      end
+    end
 
     resources :portal_stage_priorities, only: [:index] do
       patch :reorder, on: :collection
@@ -109,6 +118,7 @@ Rails.application.routes.draw do
     resources :smses, only: %i[index show] do
       get :sms_pulse, on: :collection
     end
+    resources :push_notifications, only: %i[index show new create]
     resource :client, except: [:show, :new, :create] do
       resources :templates, only: [:edit, :update, :index]
       get 'document_sign/prompt'
@@ -168,10 +178,13 @@ Rails.application.routes.draw do
       resources :accounts, controller: 'accounts'
     end
 
-    resources :leads, only: [:index, :show, :edit, :update] do
-
+    resources :leads, only: [:index, :show, :edit, :update, :new, :create] do
       collection do
         get :export
+      end
+      member do
+        get 'sync_notes'
+        get 'sync_site_visit'
       end
 
       resources :receipts, only: [:index, :new, :create, :edit, :update ] do
@@ -316,7 +329,7 @@ Rails.application.routes.draw do
       resources :booking_detail_schemes, except: [:destroy], controller: 'booking_details/booking_detail_schemes'
     end
 
-    resources :emails, :smses, only: %i[index show]
+    resources :emails, :smses, :push_notifications, only: %i[index show]
     resources :project_units, only: [:index, :show, :edit, :update] do
       get :quotation, on: :member
     end
