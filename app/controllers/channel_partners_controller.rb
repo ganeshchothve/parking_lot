@@ -25,7 +25,8 @@ class ChannelPartnersController < ApplicationController
 
   def new
     @channel_partner = ChannelPartner.new
-    render layout: 'devise'
+    layout = (current_user.present? ? 'devise' : false)
+    render layout: layout
   end
 
   def edit
@@ -34,14 +35,15 @@ class ChannelPartnersController < ApplicationController
 
   def create
     @channel_partner = ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))
+    layout = (current_user.present? ? 'devise' : false)
 
     respond_to do |format|
       if @channel_partner.save
-        format.html { redirect_to (user_signed_in? ? channel_partners_path : root_path), notice: 'Channel partner was successfully created.' }
+        format.html { redirect_to (user_signed_in? ? channel_partners_path : new_user_session_path), notice: 'Channel partner was successfully created.' }
         format.json { render json: @channel_partner, status: :created }
       else
         flash.now[:alert] = @channel_partner.errors.full_messages.uniq
-        format.html { render :new, layout: 'devise', status: :unprocessable_entity}
+        format.html { render :new, layout: layout, status: :unprocessable_entity}
         format.json { render json: { errors: @channel_partner.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
     end
