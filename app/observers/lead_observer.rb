@@ -6,9 +6,6 @@ class LeadObserver < Mongoid::Observer
 
   def after_create lead
     lead.send_create_notification
-    Crm::Api::Post.where(resource_class: 'Lead', is_active: true).each do |api|
-      api.execute(lead)
-    end
   end
 
   def after_save lead
