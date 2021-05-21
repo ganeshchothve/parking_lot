@@ -70,6 +70,15 @@ class Admin::LeadsController < AdminController
     end
   end
 
+  def send_payment_link
+    respond_to do |format|
+      format.html do
+        @lead.send_payment_link
+        redirect_to request.referer, notice: t('controller.users.send_payment_link')
+      end
+    end
+  end
+
   private
 
   def set_lead

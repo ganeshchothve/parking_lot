@@ -37,6 +37,10 @@ class Admin::LeadPolicy < LeadPolicy
     %w[admin sales sales_admin crm].include?(user.role)
   end
 
+  def send_payment_link?
+    record.user.confirmed?
+  end
+
   def permitted_attributes(params = {})
     attributes = super || []
     attributes += [:first_name, :last_name, :email, :phone, :project_id] if record.new_record?

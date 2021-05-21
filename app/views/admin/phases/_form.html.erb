@@ -18,6 +18,11 @@
             <%= f.label :account, class: 'label-required' %>
             <%= f.select :account_id, Account.all.collect{|account| [account.ds_name, account.id] }, { prompt: true }, class: 'selectize' %>
           </div>
+
+          <div class="form-group">
+            <%= f.label :project, class: 'label-required' %>
+            <%= f.select :project_id, Project.all.collect{|p| [p.name, p.id] }, { prompt: true }, class: 'selectize' %>
+          </div>
         <div class="modal-footer">
           <%= f.submit "Save", class: "btn btn-primary" %>
         </div>

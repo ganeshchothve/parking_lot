@@ -112,7 +112,7 @@ class Admin::UsersController < AdminController
 
   def new
     @user = User.new(booking_portal_client_id: current_client.id)
-    @user.role = params[:role].blank? ? 'user' : params[:role]
+    @user.role = params.dig(:user, :role).blank? ? 'user' : params.dig(:user, :role)
     render layout: false
   end
 
