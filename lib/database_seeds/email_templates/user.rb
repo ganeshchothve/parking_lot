@@ -81,6 +81,7 @@ module DatabaseSeeds
                 </p>
             </div>
           </div>') if ::Template::EmailTemplate.where(name: "account_confirmation").blank?
+      end
     end
   end
 end

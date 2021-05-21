@@ -45,10 +45,6 @@ class UserPolicy < ApplicationPolicy
     false
   end
 
-  def send_payment_link?
-    false
-  end
-
   def reactivate_account?
     false
   end

@@ -209,15 +209,6 @@ class Admin::UsersController < AdminController
     @data = DashboardData::AdminDataProvider.user_block
   end
 
-  def send_payment_link
-    respond_to do |format|
-      format.html do
-        @user.send_payment_link
-        redirect_to admin_users_url, notice: t('controller.users.send_payment_link')
-      end
-    end
-  end
-
   #TO DO - move to SourcingManagerDashboardConcern
   def channel_partner_performance
     dates = params[:dates]

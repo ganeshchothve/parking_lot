@@ -19,7 +19,6 @@ module DatabaseSeeds
             </div>
           </div>') if ::Template::EmailTemplate.where(name: "payment_link", project_id: project_id, booking_portal_client_id: client_id).blank?
       end
-      end
     end
   end
 end
