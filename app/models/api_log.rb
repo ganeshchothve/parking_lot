@@ -6,6 +6,7 @@ class ApiLog
   field :request, type: Array
   field :request_url, type: String
   field :response, type: Array
+  field :response_type, type: String
   field :status, type: String
   field :message, type: String
 

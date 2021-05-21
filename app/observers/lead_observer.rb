@@ -8,6 +8,12 @@ class LeadObserver < Mongoid::Observer
     lead.send_create_notification
   end
 
+  def after_save lead
+    if lead.lead_id_changed? && lead.lead_id.present? && crm = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
+      lead.update_external_ids({ reference_id: lead.lead_id }, crm.id)
+    end
+  end
+
   def after_update lead
     # lead.send_update_notification if lead.stage_changed? && lead.stage.present?
   end

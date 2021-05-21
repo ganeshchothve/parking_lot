@@ -39,8 +39,10 @@ class Admin::LeadPolicy < LeadPolicy
 
   def permitted_attributes(params = {})
     attributes = super || []
+    attributes += [:first_name, :last_name, :email, :phone, :project_id] if record.new_record?
     if user.role.in?(%w(superadmin admin))
       attributes += [:manager_id, third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes]
     end
+    attributes.uniq
   end
 end

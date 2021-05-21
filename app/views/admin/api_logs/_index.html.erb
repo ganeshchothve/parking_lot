@@ -15,7 +15,12 @@
       <tr>
         <td><%= api_log.request %></td>
         <td><%= api_log.request_url %></td>
-        <td><%= api_log.response %></td>
+        <td>
+          <% if api_log.response_type.present? %>
+            <small><strong>Response Type:</strong> <%= api_log.response_type %></small><br>
+          <% end %>
+          <%= api_log.response %>
+        </td>
         <td><%= api_log.status %></td>
         <td><%= api_log.message %></td>
       </tr>

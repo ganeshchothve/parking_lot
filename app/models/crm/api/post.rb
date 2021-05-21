@@ -68,6 +68,22 @@ class Crm::Api::Post < Crm::Api
   end
 
   def update_api_log api_log, request, request_url, response, status, message = nil
-    api_log.update_attributes(request: (request.is_a?(Hash) ? [request] : request), request_url: request_url, response: (response.is_a?(Hash) ? [response] : response), status: status, message: message)
+    req = request.is_a?(Hash) ? [request] : request
+    resp = if response.is_a?(Hash)
+             response_type = 'Hash'
+             [response]
+           else
+             response_type = 'Array'
+             response
+           end
+
+    api_log.update_attributes(
+      request: req,
+      request_url: request_url,
+      response: resp,
+      response_type: response_type,
+      status: status,
+      message: message
+    )
   end
 end

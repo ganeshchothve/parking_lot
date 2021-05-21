@@ -178,7 +178,7 @@ Rails.application.routes.draw do
       resources :accounts, controller: 'accounts'
     end
 
-    resources :leads, only: [:index, :show, :edit, :update, :new, :create] do
+    resources :leads, only: [:index, :show, :edit, :update, :new] do
       collection do
         get :export
       end

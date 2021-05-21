@@ -5,8 +5,12 @@ class Admin::LeadsController < AdminController
   around_action :apply_policy_scope, only: %i[index]
 
   def new
-    @user = User.where(id: params[:user_id]).first if params[:user_id].present?
-    @lead = Lead.new()
+    attrs = {}
+    if params[:user_id].present?
+      @user = User.where(id: params[:user_id]).first
+      attrs = @user.as_json(only: %w(first_name last_name email phone))
+    end
+    @lead = Lead.new(attrs)
     render layout: false
   end
 

@@ -3,7 +3,7 @@ class Crm::Api
   include Mongoid::Timestamps
 
   DEFAULT_REQUEST_HEADER = { 'Content-Type' => 'application/json' }
-  RESOURCE_CLASS = %w[User UserKyc Receipt BookingDetail ChannelPartner]
+  RESOURCE_CLASS = %w[User UserKyc Receipt BookingDetail ChannelPartner Lead]
 
   field :resource_class, type: String
   field :path, type: String
@@ -57,5 +57,13 @@ class Crm::Api
     _base_header_erb = ERB.new(base.request_headers.gsub("\n\s", '')) rescue ERB.new("{}")
     _base_request_header = SafeParser.new(_base_header_erb.result(record.get_binding)).safe_load rescue {}
     _request_header = DEFAULT_REQUEST_HEADER.merge(_base_request_header)
+  end
+
+  def self.execute(api_id, record_id)
+    api = where(id: api_id).first
+    if api
+      record = Object.const_get(api.resource_class).where(id: record_id).first
+      api.execute(record)
+    end
   end
 end
