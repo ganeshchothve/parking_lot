@@ -26,7 +26,8 @@ class Email
 
   # Validations
   validates :subject, presence: true, if: Proc.new{ |model| model.email_template_id.blank? }
-  validates :recipient_ids, :triggered_by_id, presence: true
+  validates :triggered_by_id, presence: true
+  validates :recipient_ids, presence: true, if: Proc.new { |email| email.to.blank? }
   validate :body_or_text_only_body_present?
   validates_inclusion_of :status, in: STATUS
 

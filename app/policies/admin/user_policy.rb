@@ -8,9 +8,9 @@ class Admin::UserPolicy < UserPolicy
   def new?(for_edit = false)
     if current_client.roles_taking_registrations.include?(user.role)
       if user.role?('superadmin')
-        !record.buyer? && (!record.role?('channel_partner') || for_edit)
+        (!record.buyer? && !record.role?('channel_partner')) || for_edit
       elsif user.role?('admin')
-        !record.role?('superadmin') && !record.buyer? && (!record.role?('channel_partner') || for_edit)
+        !record.role?('superadmin') && ((!record.buyer? && !record.role?('channel_partner')) || for_edit)
       elsif user.role?('channel_partner')
         false
       elsif user.role?('sales_admin')

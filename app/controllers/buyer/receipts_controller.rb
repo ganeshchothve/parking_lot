@@ -1,10 +1,11 @@
 class Buyer::ReceiptsController < BuyerController
   include ReceiptsConcern
+  before_action :set_lead, except: [:index, :show, :resend_success]
   before_action :set_receipt, except: [:index, :new, :create]
 
   layout :set_layout
 
-  # GET /buyer/receipts
+  # GET /buyer/leads/:lead_id/receipts
   def index
     authorize([:buyer, Receipt])
 
@@ -21,32 +22,34 @@ class Buyer::ReceiptsController < BuyerController
   # GET /buyer/receipts/:receipt_id/resend_success
   # Defined in ReceiptsConcern
 
-  # GET /buyer/receipts/new
+  # GET /buyer/leads/lead_id/receipts/new
   def new
-    @receipt = current_user.receipts.build({
+    @receipt = @lead.receipts.build({
+      user: @lead.user, project_id: @lead.project_id,
       creator: current_user, payment_mode: 'online',
-      total_amount: current_client.blocking_amount
+      total_amount: @lead.project.blocking_amount
     })
     authorize([:buyer, @receipt])
     render layout: false
   end
 
-  # POST /buyer/receipts
+  # POST /buyer/leads/lead_id/receipts
   def create
-    @receipt = current_user.receipts.build({
+    @receipt = @lead.receipts.build({
+      user: @lead.user, project_id: @lead.project_id,
       payment_mode: 'online', creator: current_user,
       payment_gateway: current_client.payment_gateway,
-      payment_type: 'agreement'
+      payment_type: 'token'
     })
     @receipt.assign_attributes(permitted_attributes([:buyer, @receipt]))
-    @receipt.account = selected_account(current_client.payment_gateway.underscore)
+    @receipt.account = selected_account(current_client.payment_gateway.underscore, @receipt)
 
     authorize([:buyer, @receipt])
     respond_to do |format|
       if @receipt.save
         url = dashboard_path
         if @receipt.payment_gateway_service.present?
-          url = @receipt.payment_gateway_service.gateway_url(@receipt.user.get_search('').id)
+          url = @receipt.payment_gateway_service.gateway_url(@receipt.lead.get_search('').id)
           format.html{ redirect_to url }
           format.json{ render json: {}, location: url }
         else
@@ -71,9 +74,14 @@ class Buyer::ReceiptsController < BuyerController
 
   private
 
+  def set_lead
+    @lead = Lead.where(_id: params[:lead_id]).first
+    redirect_to dashboard_path, alert: 'Lead Not found', status: 404 if @lead.blank?
+  end
+
   def set_receipt
     @receipt = current_user.receipts.where(_id: params[:id]).first
-    redirect_to dashboard_path, alert: 'No receipts found' if @receipt.blank?
+    redirect_to dashboard_path, alert: 'No receipts found', status: 404 if @receipt.blank?
   end
 
 end
