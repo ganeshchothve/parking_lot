@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Khand:wght@300;400;500;600;700&display=swap');
 html, body { padding: 0; margin: 0; font-size: 16px; line-height: 26px; color: #333333; font-family: 'Poppins', sans-serif; -webkit-font-smoothing: antialiased; overflow-x:hidden;
 -ms-text-size-adjust: 100%; 
     -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape while allowing user zoom */}
@@ -162,7 +162,8 @@ footer p{margin-bottom: 0px;}
 
 
 .slide{ background-size: cover; background-repeat: no-repeat; background-position: center center;}
-.home-banner{background-image: asset-url('home-bg.jpg');background-size: 100% 102%;}
+.home-banner{background-image: url("<%= asset_path 'home-new-banner.jpg' %>");background-size: cover;} 
+
 .home-container{
   display: flex;
   align-items: center;
@@ -173,6 +174,88 @@ footer p{margin-bottom: 0px;}
   margin: 3% auto 0;
 }
 
+.home-new-caption{
+  font-family: 'Khand', sans-serif;
+  padding: 4% 0 0;
+}
+.new-line-1{
+  font-size:52.07px;
+  line-height: 53.2px;
+  letter-spacing: 2.08px;
+}
+.new-line-2{
+  position: relative;
+  font-size:37.45px;
+  line-height: 53.06px;
+  letter-spacing: 1.5px;
+} 
+.new-line-2:before{
+  content: '';
+  position: absolute;
+  left: 0px;
+  top: 39%;
+  width: 40%;
+  height: 8px;
+  border-top: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+}
+.new-line-2:after{
+  content: '';
+  position: absolute;
+  right: 0px;
+  top: 39%;
+  width: 40%;
+  height: 8px;
+  border-top: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+}
+.new-line-3{
+  font-size: 64.61px;
+  line-height: 64.69px;
+  letter-spacing: 2.58px;
+}
+.new-line-4{
+  font-size: 63.36px;
+  line-height: 54.44px;
+  letter-spacing: 2.53px;
+  position: relative;
+  padding-bottom: 20px;
+}
+.new-line-4:before{
+  content: '';
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  border-bottom: 1px solid #fff;
+  width: 100%;
+}
+.new-line-4:after{
+  content: '';
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background-color: #fff;
+  margin: auto;
+  bottom: -8px;
+  left: 0px;
+  right: 0px;
+  transform: rotate(45deg);
+}
+.banner-logo{
+  width: 60%;
+  margin: 5% auto;
+}
+.home-banner-btn {
+  display: inline-block;
+  background-color: #F25A29;
+  font-weight: 500;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 28px;
+  letter-spacing: 1.42px;
+  cursor: pointer;
+}
 
 /*.animpins{-webkit-animation:pinsAnim ease-in 1;-moz-animation:pinsAnim ease-in 1;animation:pinsAnim ease-in 1;-webkit-animation-fill-mode:forwards;-moz-animation-fill-mode:forwards;animation-fill-mode:forwards;-webkit-animation-duration:2s;-moz-animation-duration:2s;animation-duration:2s;}*/
 /*.points{opacity:0;}*/
@@ -632,6 +715,13 @@ section.padding{ padding: 40px 0px;}
   background-color: transparent;
 }
 
+.home-banner{
+  background-image: url(<%= asset_path 'home-new-ipad-banner.jpg' %>);
+}
+.home-new-caption{
+  padding: 20% 0 0;
+}
+
 .section-padding{padding:40px 0px;}
 
 .enquire-form-inner .thankyou{padding: 20% 10%; font-size: 26px; line-height: 26px;}
@@ -716,6 +806,41 @@ header .brand-logo img{/*width: 96px;*/ height: auto;}
 .home-caption{
   padding: 28% 0 0%;
 }
+
+.home-new-caption {
+    padding: 29% 0 0;
+    width: 95%;
+}
+.new-line-1 {
+    font-size: 32px;
+    line-height: 32px;
+    letter-spacing: 1.08px;
+}
+.new-line-2{
+  font-size: 30.45px;
+  width: 90%;
+  margin: auto;
+}
+.new-line-2:before,.new-line-2:after{
+  width: 38%;
+}
+.new-line-3 {
+    font-size: 36px;
+    line-height: 31px;
+}
+.new-line-4 {
+    font-size: 36px;
+    line-height: 43px;
+    padding-bottom: 9px;
+        width: 90%;
+    margin: auto;
+}
+.home-banner-btn{
+  font-size: 24px;
+  padding: 6px 20px;
+}
+
+
 .points img{width: 100%; display: block;}
 .point-1{
   width: 11%;
@@ -832,7 +957,34 @@ header .brand-logo img{/*width: 96px;*/ height: auto;}
 }
 
 @media all and (max-width:320px){
-  
+ .home-new-caption{
+  padding: 35% 0 0;
+  width: 100%;
+ }
+ .new-line-1{
+  font-size: 27px;
+ }
+ .new-line-2{
+  font-size: 23px;
+  line-height: 41px;
+ }
+ .new-line-3 {
+    font-size: 30px;
+    line-height: 31px;
+    letter-spacing: 2px;
+}
+.new-line-4{
+      font-size: 30px;
+    line-height: 38px;
+}
+.banner-logo{
+      width: 50%;
+}
+.home-banner-btn {
+    font-size: 18px;
+    font-weight: 600;
+    padding: 3px 20px;
+}
 }
 
 .sign-in-button {
