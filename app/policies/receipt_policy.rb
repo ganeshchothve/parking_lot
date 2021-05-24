@@ -41,7 +41,7 @@ class ReceiptPolicy < ApplicationPolicy
   def enable_direct_payment?
     return true if current_client.enable_direct_payment? && current_client.payment_gateway.present? && (enable_payment_with_kyc? ? record_user_kyc_ready? : true)
 
-    @condition = 'enable_direct_payment'
+    @condition = 'enable_direct_payment' if @condition.blank?
     false
   end
 
