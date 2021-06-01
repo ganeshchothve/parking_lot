@@ -39,7 +39,7 @@
   <%= link_to t('controller.receipts.lost_receipt.link_name'), lost_receipt_admin_booking_detail_receipts_path(booking_detail), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 
-<% if %w[hold blocked booked_tentative booked_confirmed scheme_approved].include?(booking_detail.status) && policy([:admin, Receipt.new(user: booking_detail.user, booking_detail: booking_detail)]).new? %>
+<% if %w[hold blocked booked_tentative booked_confirmed scheme_approved].include?(booking_detail.status) && policy([:admin, Receipt.new(user: booking_detail.user, booking_detail: booking_detail, lead: booking_detail.lead)]).new? %>
   <%= link_to t('controller.booking_details.receipts.new.link_name'), new_admin_lead_booking_detail_receipt_path(booking_detail.lead, booking_detail_id: booking_detail.id), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
 
