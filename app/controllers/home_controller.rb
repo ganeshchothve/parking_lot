@@ -53,6 +53,11 @@ class HomeController < ApplicationController
               if resp = api_log.response.try(:first).presence
                 @user.lead_id = resp['sell_do_lead_id'] if @user.lead_id.blank?
                 params[:lead_details] = resp['selldo_lead_details']
+                #
+                # Don't create lead if it exists in sell.do when lead conflicts is disabled.
+                unless current_client.enable_lead_conflicts?
+                  format.json { render json: {errors: "Lead already exists"}, status: :unprocessable_entity and return } if params.dig(:lead_details, :lead_already_exists).present?
+                end
               end
             end
 
