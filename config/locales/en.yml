@@ -884,7 +884,7 @@ en:
         manager_name: 'Manager Name'
         manager_role: "Sales Manager / Added by Role"
         manager_id: "Partner / Manager / Added by"
-        project_ids: Project
+        project_ids: Projects
         manager_change_reason: "Reason for changing Partner"
         name: 'Name'
         name_email_phone: 'Name/Email/Phone'
