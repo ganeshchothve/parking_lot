@@ -178,6 +178,7 @@ Rails.application.routes.draw do
       resources :accounts, controller: 'accounts'
     end
 
+    resources :site_visits, only: [:index]
     resources :leads, only: [:index, :show, :edit, :update, :new] do
       collection do
         get :export
