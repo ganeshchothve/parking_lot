@@ -1,3 +1,7 @@
+<% if policy([:admin, SiteVisit.new(lead: lead, project: lead.project)]).new? %>
+  <%= link_to t('controller.site_visits.new.link_name'), new_admin_lead_site_visit_path(lead.id), class: "dropdown-item modal-remote-form-link" %>
+<% end %>
+
 <% if policy([:admin, BookingDetail.new(user: lead.user, lead: lead, project_unit: ProjectUnit.new(status: 'available', blocking_amount: current_client.blocking_amount))]).show_booking_link? %>
   <%= link_to t('controller.searches.new.link_name'), new_admin_lead_search_path(lead.id), class: "dropdown-item" %>
 <% end %>
@@ -44,3 +48,11 @@
   <%= link_to Asset.model_name.human(count: 2), admin_lead_path(lead,'remote-state': assetables_path(assetable_type: lead.class.model_name.i18n_key.to_s, assetable_id: lead.id) ), class: "dropdown-item" %>
 <% end %>
 
+<div class="dropdown-divider"></div>
+
+<% if policy([:admin, lead]).show_selldo_links? %>
+  <h6 class="dropdown-header"><%= t("selldo.links.header") %></h6>
+  <% %w(add_note schedule_site_visit schedule_followup).each do |task| %>
+    <%= link_to t("selldo.links.#{task}"), "#{ENV_CONFIG['selldo']['base_url']}/client/0/#{current_client.selldo_default_search_list_id}/#{lead.lead_id}/f/#{task.camelcase}", target: '_blank', class: 'dropdown-item' %>
+  <% end %>
+<% end %>

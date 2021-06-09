@@ -184,9 +184,8 @@ Rails.application.routes.draw do
       end
       member do
         get 'sync_notes'
-        get 'sync_site_visit'
       end
-
+      resources :site_visits, only: [:new, :create, :index]
       resources :receipts, only: [:index, :new, :create, :edit, :update ] do
         get :resend_success, on: :member
         get :lost_receipt, on: :collection

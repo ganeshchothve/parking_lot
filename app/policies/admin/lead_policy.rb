@@ -25,16 +25,16 @@ class Admin::LeadPolicy < LeadPolicy
     edit?
   end
 
-  def sync_site_visit?
-    edit?
-  end
-
   def note_create?
     user.role?(:channel_partner) && record.user.role.in?(User::BUYER_ROLES)
   end
 
   def asset_create?
     %w[admin sales sales_admin crm].include?(user.role)
+  end
+
+  def show_selldo_links?
+    ENV_CONFIG['selldo'].try(:[], 'base_url').present? && record.lead_id? && current_client.selldo_default_search_list_id?
   end
 
   def permitted_attributes(params = {})

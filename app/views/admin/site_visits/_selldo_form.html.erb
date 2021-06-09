@@ -1,0 +1,128 @@
+<script src='//trkr.scdn1.secure.raxcdn.com/t/<%= project.selldo_client_id %>.js'></script>
+<%= form_for [:admin, @lead, @site_visit], remote: true, local: true, html: { class: "modal-remote-form validate-form", data: { "resource-type" => t('global.site_visit'), type: "json"}, id: 'site_visit_form' } do |f| %>
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-gradient-cd white">
+                <h3 class="title">
+                    <% action_name = @site_visit.new_record? ? 'new' : 'edit' %>
+                    <%= t("helpers.#{action_name}.link_name", model: SiteVisit.model_name.human) %>
+                </h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="availability-container">
+                    <div class="profile-info">
+                    <div class="row">
+                        <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="small text-muted">Lead</label>
+                            <div><%= @lead.name %></div>
+                        </div>
+                        </div>
+                        <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="small text-muted">Project</label>
+                            <div><%= project.name %></div>
+                        </div>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-sm-12 col-xs-12 col-md-12 col-lg-6">
+                            <div class="calendar-booking">
+                                <div class="form-group position-relative">
+                                    <%= f.label :scheduled_on %>
+                                    <% date = (f.object.scheduled_on.present? ? f.object.scheduled_on.strftime("%d/%m/%Y") : "") %>
+                                    <% min_date = f.object.scheduled_on.present? ? f.object.scheduled_on : Date.today %>
+                                    <div class="datepicker" id="site_visit_scheduled_on_calendar" data-default-date="<%= date %>" data-inline=true data-side-by-side=false data-use-current=false data-min-date="<%= min_date.strftime("%d/%m/%Y") %>" data-max-date="<%= (Date.today + 20.days).strftime("%d/%m/%Y") %>"></div>
+                                </div>
+                                <%= f.hidden_field :scheduled_on, class: 'form-control', value: date %>
+                                <%= f.submit "Save", class: "btn btn-primary", id: "submit_site_visit_form", style: "display: none;" %>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-xs-12 col-md-12 col-lg-6">
+                            <h5 class="slot-time"></h5>
+                            <div class="time-list"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<% end %>
+<%= javascript_tag do %>
+$(document).ready(function(){
+    var $form = $("#site_visit_form");
+    FormInitializer.init($form);
+    var date;
+    $('#site_visit_scheduled_on_calendar').on('dp.change', function(e){
+    var date = e.date;
+    if(date){
+        $form.find('.availability-link').show();
+        check_availability(date);
+    }
+    }).trigger('dp.change');
+});
+var check_availability = function(date){
+    if(selldojQuery){
+    url = "<%= ESTATE_SELL_DO_APP_URL %>/api/leads/available_calendar_slots.json?api_key=<%= project.selldo_api_key %>&lead_id=<%= @lead.lead_id %>&date=" + date.format("DD/MM/YYYY");
+    $('.availability-container').find('.time-list').html('Loading Available Time Slots');
+    selldojQuery.getJSON(url).done(function(data) {
+        data.date = date;
+        data.container = '.availability-container';
+        calendar_booking_slots_fetch_success(data);
+    });
+    }else{
+    console.log('Require selldojQuery to work CORS');
+    }
+}
+
+var calendar_booking_slots_fetch_success = function(data){
+    var html = '';
+    if(typeof data.message !== 'undefined' && data.message == 'success' && data.slots.length > 0){
+    var slots = data.slots;
+    var slot_time = data.interval;
+    $(".slot-time").html('Each Slot is of ' + slot_time + ' Min');
+    for(i=0;i<slots.length;i++){
+        var actual_slot = moment(data.date).format("DD/MM/YYYY")  + ' ' + slots[i];
+        var next_slot_time = moment(actual_slot, 'DD/MM/YYYY hh:mm A').add(slot_time, 'minutes');
+
+        // If time for actual slot is gone, set it to current-time + 5 minutes
+        var current_time = moment(moment().format('DD/MM/YYYY hh:mm A'), 'DD/MM/YYYY hh:mm A');
+        var actual_slot_time = moment(actual_slot, 'DD/MM/YYYY hh:mm A');
+        if(current_time > actual_slot_time){
+        actual_slot_time = current_time.add(5, 'minutes');
+        actual_slot = actual_slot_time.format('DD/MM/YYYY hh:mm A');
+        }
+
+        var actual_slot_text = actual_slot_time.format('hh:mm A');
+        var next_slot_text = next_slot_time.format('hh:mm A');
+
+        html += '<div class="time-item"><a href="javascript:;" class="time-item-selector" data-value="' + data.date.format("DD/MM/YYYY")  + ' ' + slots[i] + '">' + actual_slot_text + ' - ' + next_slot_text + '</a><a href="javascript:;" class="time-item-confirm" style="display:none;">Confirm</a></div>';
+    }
+    }else{
+    html += '<div class="title">No slots available.</div>';
+    }
+    $(data.container).find('.time-list').html(html);
+    $(data.container).find(".time-item a.time-item-selector").off("click");
+    $(data.container).find(".time-item a.time-item-confirm").off("click");
+    $(data.container).find(".time-item a.time-item-selector").click(function(event){
+    if(!$(this).hasClass('selected')){
+        $(data.container).find(".time-item a.time-item-selector").removeClass('selected');
+        $(this).addClass('selected');
+        $(this).data("value");
+        $(data.container).find('a.time-item-confirm').hide();
+        $(this).closest('div.time-item').find('a.time-item-confirm').show();
+    }
+    });
+    $(data.container).find(".time-item a.time-item-confirm").click(function(event){
+    var date_time = $(this).closest('.time-item').find('a.time-item-selector').data('value');
+    $('#site_visit_scheduled_on').val(date_time);
+    $('#submit_site_visit_form').trigger("click");
+    });
+}
+<% end %>
