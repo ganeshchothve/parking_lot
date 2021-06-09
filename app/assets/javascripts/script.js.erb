@@ -33,10 +33,17 @@ $(document).ready(function() {
 
 
     if (window_wt < 768) {
+        $('.last-slide-exclusive').remove();
         $('.exclusive-features-slider').bxSlider({
-            auto: true,
-            pager: false,
-            controls: true,
+            mode:"horizontal",
+              auto: true,
+              speed:800,
+              pager: false,
+              controls: true,
+              infiniteLoop:true,
+              touchEnabled:true,
+              pause: 5000,
+              moveSlides: 1,
             prevSelector: '#exct-feat-prev',
             prevText: "<img data-src='<%= asset_path 'left-arrow-new-2.png' %>' class='lazy'>",
             nextSelector: '#exct-feat-next',
