@@ -184,6 +184,7 @@ Rails.application.routes.draw do
       end
       member do
         get 'sync_notes'
+        get :send_payment_link
       end
       resources :site_visits, only: [:new, :create, :index]
       resources :receipts, only: [:index, :new, :create, :edit, :update ] do
@@ -227,7 +228,6 @@ Rails.application.routes.draw do
     resources :users do
       member do
         get :resend_confirmation_instructions
-        get :send_payment_link
         get :update_password
         get :resend_password_instructions
         get :print
@@ -337,27 +337,29 @@ Rails.application.routes.draw do
         get :iris_confirm
         get :update_password
       end
+    end
 
+    resources :receipts, only: [:index, :show] do
+      get :resend_success, on: :member
+    end
+
+    resources :leads, only: [:show] do
       resources :booking_details, only: [:index, :show] do
         resources :booking_detail_schemes, except: [:destroy]
 
         resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts'
       end
 
-    end
+      resources :receipts, only: [:new, :create]
+      resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
 
-    resources :receipts, only: [:index, :new, :create, :show ] do
-      get :resend_success, on: :member
-    end
+      scope ":request_type" do
+        resources :user_requests, except: [:destroy], controller: 'user_requests'
+      end
+    end # end resources :leads
 
     resources :referrals, only: [:index, :create, :new] do
       post :generate_code, on: :collection
-    end
-
-    resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
-
-    scope ":request_type" do
-      resources :user_requests, except: [:destroy], controller: 'user_requests'
     end
 
   end

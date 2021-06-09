@@ -89,6 +89,8 @@ module DatabaseSeeds
 
       Template::SmsTemplate.create(booking_portal_client_id: client_id, project_id: project_id, subject_class: "Project", name: "daily_sms_report", content: 'Daily SMS Report for the project <%= self.name %> => Blocked: <%= self.booking_details.where(status: "blocked").count %>. Tentative: <%= self.booking_details.where(status: "booked_tentative").count %>. Confirmed: <%= self.booking_details.where(status: "booked_confirmed").count %>. Blocked Today: <%= self.project_units.where(blocked_on: Date.today).count %>') if Template::SmsTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "daily_sms_report").blank?
 
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "Lead", name: 'payment_link', content: 'Dear <%= self.name %>, Thank you for your interest in <%= self.project.try(:name) %>. To make your first payment, please click here: <%= short_url(self.payment_link) %>')  if ::Template::SmsTemplate.where(booking_portal_client_id: client_id, name: "payment_link", project_id: project_id).blank?
+
       return Template::SmsTemplate.where(booking_portal_client_id: client_id, project_id: project_id).count
     end
 
@@ -108,9 +110,6 @@ module DatabaseSeeds
       Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: 'not_confirmed_day_3', content: "Don’t be late! <%= current_project.name %> is offering rewards on a first come first serve basis. Register today and avail special benefits, call <%= self.booking_portal_client.support_number %> for more information.")  if ::Template::SmsTemplate.where(booking_portal_client_id: client_id, name: "not_confirmed_day_3").blank?
 
       Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: 'not_confirmed_day_5', content: "You are doing your best to build your kids’ dream home. We are doing our best to make it a reality. Register today and get greater discounts, call <%= self.booking_portal_client.support_number %> for more information.")  if ::Template::SmsTemplate.where(booking_portal_client_id: client_id, name: "not_confirmed_day_5").blank?
-
-      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: 'payment_link', content: ' <% if self.manager.present? && self.manager_role?("channel_partner") %>
-            Thank you for your interest in <%= self.booking_portal_client.name %>. <%= self.manager_name %> has registered you. To make your first payment, please click here: <%= short_url(self.payment_link) %> <% end %>')  if ::Template::SmsTemplate.where(booking_portal_client_id: client_id, name: "payment_link").blank?
 
       Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "Invitation", name: "referral_invitation", content: "Dear <%= self.name %>, You are invited in <%= self.booking_portal_client.booking_portal_domains.join(', ') %> Please click here. <%= Rails.application.routes.url_helpers.register_url(custom_referral_code: self.referred_by.referral_code) %> or user <%= self.referred_by.referral_code %> code for sign up.") if Template::SmsTemplate.where(booking_portal_client_id: client_id, name: "referral_invitation").blank?
 

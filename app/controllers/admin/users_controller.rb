@@ -112,7 +112,7 @@ class Admin::UsersController < AdminController
 
   def new
     @user = User.new(booking_portal_client_id: current_client.id)
-    @user.role = params[:role].blank? ? 'user' : params[:role]
+    @user.role = params.dig(:user, :role).blank? ? 'user' : params.dig(:user, :role)
     render layout: false
   end
 
@@ -207,15 +207,6 @@ class Admin::UsersController < AdminController
   #
   def portal_stage_chart
     @data = DashboardData::AdminDataProvider.user_block
-  end
-
-  def send_payment_link
-    respond_to do |format|
-      format.html do
-        @user.send_payment_link
-        redirect_to admin_users_url, notice: t('controller.users.send_payment_link')
-      end
-    end
   end
 
   #TO DO - move to SourcingManagerDashboardConcern

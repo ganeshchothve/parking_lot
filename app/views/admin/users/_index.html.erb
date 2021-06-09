@@ -3,7 +3,7 @@
     <thead>
       <tr class="bg-gradient-cd white">
         <th><%= User.human_attribute_name('name_email_phone') %></th>
-        <% if current_client.selldo_client_id.present? && current_client.selldo_gre_form_id.present? && current_client.selldo_channel_partner_form_id.present? %>
+        <% if selldo_config_base.present? || Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).present? %>
           <th><%= User.human_attribute_name('lead_id') %></th>
         <% end %>
         <th><%= Receipt.model_name.human %></th>
@@ -42,7 +42,7 @@
           <% end %>
         </td>
 
-        <% if current_client.selldo_client_id.present? && current_client.selldo_gre_form_id.present? && current_client.selldo_channel_partner_form_id.present? %>
+        <% if selldo_config_base.present? || Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).present? %>
           <td data-title="Sell.Do Lead Id"><span><%= user.lead_id %></span></td>
         <% end %>
 

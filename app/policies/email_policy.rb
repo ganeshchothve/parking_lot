@@ -15,7 +15,7 @@ class EmailPolicy < ApplicationPolicy
       # elsif %w[cp channel_partner cp_admin].include?(user.role)
       #   scope.in(recipient_ids: Scope.find_child_ids(user))
       #   scope.in(recipient_ids: user.id)
-      elsif user.buyer? || %w[cp_admin cp channel_partner billing_team sales_admin sales].include?(user.role)
+      elsif %w[cp_admin cp channel_partner billing_team sales_admin sales].include?(user.role)
         if user.active_channel_partner?
           scope.in(recipient_ids: user.id)
         else

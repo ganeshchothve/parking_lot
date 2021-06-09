@@ -36,6 +36,10 @@ class Admin::LeadPolicy < LeadPolicy
   def show_selldo_links?
     ENV_CONFIG['selldo'].try(:[], 'base_url').present? && record.lead_id? && current_client.selldo_default_search_list_id?
   end
+  
+  def send_payment_link?
+    record.user.confirmed?
+  end
 
   def permitted_attributes(params = {})
     attributes = super || []

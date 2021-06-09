@@ -489,39 +489,6 @@ class User
     booking_details.where(status: {"$in": BookingDetail::BOOKING_STAGES}).present?
   end
 
-  def send_payment_link
-    url = Rails.application.routes.url_helpers
-    hold_booking_detail = self.booking_details.where(status: 'hold').first
-    if hold_booking_detail.present? && hold_booking_detail.search
-      self.payment_link = url.checkout_user_search_path(hold_booking_detail.search)
-    else
-      self.payment_link = url.dashboard_url("remote-state": url.new_buyer_receipt_path, user_email: email, user_token: authentication_token)
-    end
-    #
-    # Send email with payment link
-    email_template = ::Template::EmailTemplate.find_by(name: "payment_link")
-    email = Email.create!({
-      booking_portal_client_id: booking_portal_client_id,
-      body: ERB.new(self.booking_portal_client.email_header).result( binding) + email_template.parsed_content(self) + ERB.new(self.booking_portal_client.email_footer).result( binding ),
-      subject: email_template.parsed_subject(self),
-      recipients: [ self ],
-      cc: booking_portal_client.notification_email.to_s.split(',').map(&:strip),
-      triggered_by_id: id,
-      triggered_by_type: self.class.to_s
-    })
-    email.sent!
-    # Send sms with link for payment
-    sms_template = Template::SmsTemplate.find_by(name: "payment_link")
-    sms_body = sms_template.parsed_content(self)
-    Sms.create!({
-      booking_portal_client_id: booking_portal_client,
-      body: sms_body,
-      recipient: self,
-      triggered_by_id: id,
-      triggered_by_type: self.class.to_s
-    }) unless sms_body.blank?
-  end
-
   def update_selldo_credentials(oauth_data)
     self.selldo_access_token = oauth_data.credentials.token if oauth_data
   end

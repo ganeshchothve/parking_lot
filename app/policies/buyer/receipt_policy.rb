@@ -46,7 +46,7 @@ class Buyer::ReceiptPolicy < ReceiptPolicy
 
   def confirmed_and_ready_user?
     return true if user.confirmed? && eligible_user?
-    @condition = 'user_not_confimred'
+    @condition = 'user_not_confimred' if @condition.blank?
     false
   end
 

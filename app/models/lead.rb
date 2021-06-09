@@ -36,6 +36,8 @@ class Lead
   field :lead_id, type: String #TO DO - Change name to selldo_id and use it throughout the system in place of lead_id on user.
   field :remarks, type: Array, default: [] # used to store the last five notes
 
+  attr_accessor :payment_link
+
   belongs_to :user
   belongs_to :manager, class_name: 'User', optional: true
   belongs_to :project
@@ -171,7 +173,7 @@ class Lead
     search = searches
     search = search.where(project_unit_id: project_unit_id) if project_unit_id.present?
     search = search.desc(:created_at).first
-    search = Search.create(lead: self) if search.blank?
+    search = Search.create(lead: self, user: user) if search.blank?
     search
   end
 
@@ -190,6 +192,44 @@ class Lead
   def lead_validity_period
     activity = self.active_cp_lead_activities.first
     activity.present? ? "#{(activity.expiry_date - Date.current).to_i} Days" : '0 Days'
+  end
+
+  def send_payment_link
+    url = Rails.application.routes.url_helpers
+    hold_booking_detail = self.booking_details.where(status: 'hold').first
+    if hold_booking_detail.present? && hold_booking_detail.search
+      self.payment_link = url.checkout_user_search_path(hold_booking_detail.search)
+    else
+      self.payment_link = url.dashboard_url("remote-state": url.new_buyer_lead_receipt_path(self), user_email: user.email, user_token: user.authentication_token)
+    end
+    #
+    # Send email with payment link
+    client = user.booking_portal_client
+    email_template = ::Template::EmailTemplate.find_by(name: "payment_link", project_id: self.project_id)
+    email = Email.create!({
+      booking_portal_client_id: client.id,
+      body: ERB.new(client.email_header).result( binding) + email_template.parsed_content(self) + ERB.new(client.email_footer).result( binding ),
+      subject: email_template.parsed_subject(self),
+      to: [ self.email ],
+      cc: client.notification_email.to_s.split(',').map(&:strip),
+      triggered_by_id: id,
+      triggered_by_type: self.class.to_s
+    })
+    email.sent!
+    # Send sms with link for payment
+    sms_template = Template::SmsTemplate.find_by(name: "payment_link", project_id: self.project_id)
+    sms_body = sms_template.parsed_content(self)
+    Sms.create!({
+      booking_portal_client_id: client.id,
+      body: sms_body,
+      to: [self.phone],
+      triggered_by_id: id,
+      triggered_by_type: self.class.to_s
+    }) unless sms_body.blank?
+  end
+
+  def kyc_ready?
+    user_kyc_ids.present?
   end
 
   class << self

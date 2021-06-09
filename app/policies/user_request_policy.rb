@@ -29,7 +29,7 @@ class UserRequestPolicy < ApplicationPolicy
     when 'BookingDetail'
       enable_actual_inventory?(user) && BookingDetail::BOOKING_STAGES.include?(record.requestable.status)
     when 'Receipt'
-      record.requestable.success? && record.requestable.booking_detail_id.blank?
+      enable_actual_inventory?(user) && record.requestable.success? && record.requestable.booking_detail_id.blank?
     else
       true
     end

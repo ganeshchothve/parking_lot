@@ -21,7 +21,7 @@ class PhasePolicy < ApplicationPolicy
   end
 
   def permitted_attributes(_params = {})
-    %i[name account_id]
+    %i[name account_id project_id]
   end
 
 end

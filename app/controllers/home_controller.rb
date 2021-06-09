@@ -41,8 +41,8 @@ class HomeController < ApplicationController
           end
 
           if @project.present?
-            @user = User.new(booking_portal_client_id: current_client.id, email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], lead_id: params[:lead_id], mixpanel_id: params[:mixpanel_id]) unless @user.present?
-            @lead = @user.leads.new(email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], lead_id: params[:lead_id], project_id: @project.id)
+            @user = User.new(booking_portal_client_id: current_client.id, email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name']) unless @user.present?
+            @lead = @user.leads.new(email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], project_id: @project.id)
 
             # Push lead first to sell.do & upon getting successful response, save it in IRIS. Same flow as when were using sell.do form for lead registration.
             crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
@@ -50,7 +50,15 @@ class HomeController < ApplicationController
             if selldo_api.present?
               selldo_api.execute(@lead)
               api_log = ApiLog.where(resource_id: @lead.id).first
-              params[:lead_details] = api_log.response.try(:first).try(:[], :selldo_lead_details)
+              if resp = api_log.response.try(:first).presence
+                @user.lead_id = resp['sell_do_lead_id'] if @user.lead_id.blank?
+                params[:lead_details] = resp['selldo_lead_details']
+                #
+                # Don't create lead if it exists in sell.do when lead conflicts is disabled.
+                unless current_client.enable_lead_conflicts?
+                  format.json { render json: {errors: "Lead already exists"}, status: :unprocessable_entity and return } if params.dig(:lead_details, :lead_already_exists).present?
+                end
+              end
             end
 
             if selldo_api.blank? || (api_log.present? && api_log.status == 'Success')
@@ -80,7 +88,7 @@ class HomeController < ApplicationController
               format.json { render json: {errors: api_log.message}, status: :unprocessable_entity }
             end
           else
-            format.json { render json: {errors: 'Project not found' }, status: :unprocessable_entity }
+            format.json { render json: {errors: 'Project not found' }, status: :not_found }
           end
         end
       end
@@ -117,6 +125,7 @@ class HomeController < ApplicationController
   def set_user
     _query = get_query
     @user = User.or(_query).first if _query.present?
+    render json: {errors: 'User with these details is already registered with a different role' }, status: :unprocessable_entity and return if @user.present? && !@user.buyer?
   end
 
   def set_lead

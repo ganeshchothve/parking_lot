@@ -1,29 +1,32 @@
-<%= render 'users/welcome' %>
+<%#= render 'users/welcome' %>
 <!-- Projects -->
-<%= render 'project_units/section' %>
+<%#= render 'project_units/section' %>
 <!-- My Projects -->
 <div class='no-pd'>
-  <div class="separate-line container"></div>
-  <%= render 'users/my_projects' %>
+  <!-- <div class="separate-line container"></div> -->
+  <%#= render 'users/my_projects' %>
   <!-- Receipts -->
-  <div class="separate-line container"></div>
+  <!-- <div class="separate-line container"></div> -->
   <%= render 'receipts/section', receipts: @receipts %>
   <!-- Time slots -->
-  <div class="separate-line container"></div>
-  <% if true #policy([:buyer, TimeSlot]).index? %>
-    <%= render 'users/time_slots' %>
+  <!-- <div class="separate-line container"></div> -->
+  <% if false #policy([:buyer, TimeSlot]).index? %>
+    <%#= render 'users/time_slots' %>
   <% end %>
 </div>
+<!--
 <div class="separate-line container"></div>
 <section class="user-db-sec-5 device-pd pb-4">
   <div class="container">
     <div class="row">
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
         <div class="row">
-          <%= render 'dashboard/index/partials/collaterals' %>
+          <%#= render 'dashboard/index/partials/collaterals' %>
         </div>
       </div>
     </div>
   </div>
 </section>
-<div class="separate-line container mb-5"></div>
+<div class="separate-line container"></div>
+-->
+<div class='mb-5 pb-5'></div>

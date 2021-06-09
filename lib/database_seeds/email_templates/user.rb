@@ -81,20 +81,6 @@ module DatabaseSeeds
                 </p>
             </div>
           </div>') if ::Template::EmailTemplate.where(name: "account_confirmation").blank?
-
-        Template::EmailTemplate.create!(booking_portal_client_id: Client.first.id, subject_class: "User", name: "payment_link", subject: "Make your first payment", content: '<div class="card w-100">
-            <div class="card-body">
-              <p>
-                Dear <%= self.name %>,
-              </p>
-              <div class="mb-3"></div>
-              <p>
-                Please make your first payment by clicking the link below.
-              </p>
-              <div class="mb-3"></div>
-              <a href="<%= self.payment_link %>" target="_blank">Make payment</a>
-            </div>
-          </div>') if ::Template::EmailTemplate.where(name: "payment_link").blank?
       end
     end
   end

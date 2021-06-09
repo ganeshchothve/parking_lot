@@ -8,9 +8,9 @@ class Admin::UserPolicy < UserPolicy
   def new?(for_edit = false)
     if current_client.roles_taking_registrations.include?(user.role)
       if user.role?('superadmin')
-        !record.buyer? && (!record.role?('channel_partner') || for_edit)
+        (!record.buyer? && !record.role?('channel_partner')) || for_edit
       elsif user.role?('admin')
-        !record.role?('superadmin') && !record.buyer? && (!record.role?('channel_partner') || for_edit)
+        !record.role?('superadmin') && ((!record.buyer? && !record.role?('channel_partner')) || for_edit)
       elsif user.role?('channel_partner')
         false
       elsif user.role?('sales_admin')
@@ -72,6 +72,10 @@ class Admin::UserPolicy < UserPolicy
 
   def send_payment_link?
     record.buyer?
+  end
+
+  def show_selldo_links?
+    ENV_CONFIG['selldo'].try(:[], 'base_url').present? && record.buyer? && record.lead_id? && current_client.selldo_default_search_list_id?
   end
 
   def show_lead_tagging?
