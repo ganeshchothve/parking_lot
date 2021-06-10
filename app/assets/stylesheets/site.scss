@@ -1,9 +1,9 @@
 $font-family: 'Rubik', sans-serif;
-$blue-color: #0575D2;
+$blue-color: #97B350;
 $cyan-color: #00b9dc;
-$gradient-bg-cyan: linear-gradient(90deg, #0748CB 0%, #00B9DC 100%);
-$gradient-bg-pink: linear-gradient(90deg, #7471ff 0%, #ac6fe8 100%);
-$light-blue: #7471ff;
+$gradient-bg-cyan: linear-gradient(90deg, #97B350 0%, #97B350 100%);
+$gradient-bg-pink: linear-gradient(90deg, #97B350 0%, #97B350 100%);
+$light-blue: #97B350;
 $white-color: #fff;
 $black-color: #404349;
 $content-color: #2e384d;
@@ -369,7 +369,7 @@ a:hover{
 		width: 110px;
 		height: 35px;
 		border-radius: 4px;
-		background-color: #0575d2;
+		background-color: #97B350;
 		text-align: center;
 		padding:7px;
 		color: $white-color;
@@ -1038,8 +1038,8 @@ table .dropdown-menu.show{
 	}
 	.step-change-btn{
 		right: 2px;
-		background-color: #0575d2;
-		border: 1px solid #0575d2;
+		background-color: #97B350;
+		border: 1px solid #97B350;
 		top: 2px;
 		color: #fff;
 		box-shadow: 1px 1px 15px grey;
@@ -1075,7 +1075,7 @@ table .dropdown-menu.show{
 		}
 	}
 	&.active{
-		border: solid 2px #0575d2;
+		border: solid 2px #97B350;
 		span{
 			color: #3e82f7;
 		}
@@ -1953,7 +1953,7 @@ table .dropdown-menu.show{
 			font-size: 26px;
 			font-weight: 500;
 			line-height: 30px;
-			color: #0575d2;
+			color: #97B350;
 			//margin-top: 70px;
 			letter-spacing: 1px;
 			@media screen and (max-width: 992px){
@@ -1977,7 +1977,7 @@ table .dropdown-menu.show{
 		.sign-in-btn{
 			height: 35px;
 			border-radius: 4px;
-			background-color: #0c79d3;
+			background-color: #97B350;
 			border: 0px solid;
 			width: 100%;
 			text-align: center;
@@ -2262,7 +2262,7 @@ table .dropdown-menu.show{
 			font-size: 35px!important;
 			font-weight: 500!important;
 			line-height: 53px!important;
-			color: #7471ff!important;
+			color: #97B350!important;
 		}
 		.title{
 			font-size: 16px!important;
@@ -2341,7 +2341,7 @@ table .dropdown-menu.show{
 .leads-box{
 	height: 485px;
 	border-radius: 4px;
-	background-color: #7471ff;
+	background-color: #97B350;
 	text-align: center;
 	padding: 70px 60px;
 	position: relative;
@@ -2383,7 +2383,7 @@ table .dropdown-menu.show{
 	font-size: 22px;
 	font-weight: 500;
 	line-height: 1.27;
-	color: #7471ff;
+	color: #97B350;
 }
 .br-lft:before{
 	content: '';
