@@ -12,7 +12,7 @@ class SiteVisit
   belongs_to :lead
   belongs_to :user
   belongs_to :creator, class_name: 'User'
-  
+
   field :scheduled_on, type: DateTime
   field :status, type: String, default: 'scheduled'
   field :conducted_on, type: DateTime
@@ -68,12 +68,7 @@ class SiteVisit
     custom_scope = { lead_id: params[:lead_id] } if params[:lead_id].present?
     custom_scope = { user_id: user.id } if user.buyer?
 
-    custom_scope[:booking_detail_id] = params[:booking_detail_id] if params[:booking_detail_id].present?
     custom_scope
-  end
-
-  def sync(erp_model, sync_log)
-    # TODO: Handle
   end
 
   def name

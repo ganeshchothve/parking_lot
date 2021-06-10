@@ -1,5 +1,5 @@
 class Admin::SiteVisitsController < AdminController
-  
+
   before_action :set_lead, except: %w[index show]
   before_action :set_site_visit, only: %w[edit update show]
 
@@ -20,17 +20,13 @@ class Admin::SiteVisitsController < AdminController
     end
   end
 
-  # GET /admin/site_visits/export
-  # Defined in site_visitsConcern
-  
   #
   # This new action always create a new site_visit form for user's project unit rerceipt form.
   #
   # GET "/admin/leads/:lead_id/site_visits/new"
   def new
     @site_visit = SiteVisit.new(
-      creator: current_user, user: @lead.user, lead: @lead, project_id: @lead.project_id, payment_mode: 'cheque',
-      total_amount: current_client.blocking_amount
+      creator: current_user, user: @lead.user, lead: @lead, project_id: @lead.project_id
     )
     authorize([:admin, @site_visit])
     render layout: false

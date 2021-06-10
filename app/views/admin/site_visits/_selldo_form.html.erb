@@ -1,4 +1,8 @@
-<script src='//trkr.scdn1.secure.raxcdn.com/t/<%= project.selldo_client_id %>.js'></script>
+<% if Rails.env.production? %>
+  <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= project.selldo_client_id %>.js'></script>
+<% else %>
+  <script src='<%= ENV_CONFIG[:selldo][:base_url] %>/t/<%= project.selldo_client_id %>.js'></script>
+<% end %>
 <%= form_for [:admin, @lead, @site_visit], remote: true, local: true, html: { class: "modal-remote-form validate-form", data: { "resource-type" => t('global.site_visit'), type: "json"}, id: 'site_visit_form' } do |f| %>
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
     <div class="modal-dialog modal-lg" role="document">
@@ -69,7 +73,7 @@ $(document).ready(function(){
 });
 var check_availability = function(date){
     if(selldojQuery){
-    url = "<%= ESTATE_SELL_DO_APP_URL %>/api/leads/available_calendar_slots.json?api_key=<%= project.selldo_api_key %>&lead_id=<%= @lead.lead_id %>&date=" + date.format("DD/MM/YYYY");
+    url = "<%= ENV_CONFIG.dig(:selldo, :base_url) %>/api/leads/available_calendar_slots.json?api_key=<%= project.selldo_api_key %>&lead_id=<%= @lead.lead_id %>&date=" + date.format("DD/MM/YYYY");
     $('.availability-container').find('.time-list').html('Loading Available Time Slots');
     selldojQuery.getJSON(url).done(function(data) {
         data.date = date;
