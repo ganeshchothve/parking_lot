@@ -1,3 +1,3 @@
-class Crm::Api::PutPolicy < Crm::ApiPolicy::PostPolicy
+class Crm::Api::PutPolicy < Crm::Api::PostPolicy
 
 end
