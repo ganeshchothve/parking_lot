@@ -5,7 +5,7 @@ class Project
   include CrmIntegration
 
   # Add different types of documents which are uploaded on client
-  DOCUMENT_TYPES = %w[document brochure offer internal_amenities external_amenities certificate unit_selection_filter_image].freeze
+  DOCUMENT_TYPES = %w[document brochure certificate unit_selection_filter_image sales_presentation].freeze
 
   field :name, type: String
   field :developer_name, type: String
