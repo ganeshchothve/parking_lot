@@ -89,6 +89,9 @@ en:
       crm/api/post:
         one: 'POST API'
         other: 'POST API'
+      crm/api/put:
+        one: 'PUT API'
+        other: 'PUT API'
       bulk_upload_report:
         one: Bulk Upload Report
         other: Bulk Upload Reports
@@ -195,6 +198,9 @@ en:
       user_request/general:
         one: General
         other: General
+      site_visit:
+        one: Site Visit
+        other: Site Visits
       user_kyc:
         one: KYC
         other: KYCs
@@ -813,7 +819,14 @@ en:
       user_request/requestable_type:
         Receipt: 'Receipt'
         BookingDetail: 'Booking'
-
+      site_visit:
+        project: Project
+        lead: Lead
+        creator: Created By
+        scheduled_on: Scheduled on
+        status: Status
+        conducted_on: Conducted on
+        site_visit_type: Type
       user_kyc:
         name: "Name"
         email: "Email"
@@ -1328,7 +1341,9 @@ en:
         link_name: 'Referrals'
       new:
         link_name: 'Add Referrals'
-
+    site_visits:
+      new:
+        link_name: 'Schedule Site Visit'
     searches:
       filter:
         header: Select Tower
@@ -1628,7 +1643,7 @@ en:
   selldo:
     links:
       header: 'Take Action in Sell.Do'
-      add_note: 'View'
+      add_note: 'View Lead & Add Notes'
       schedule_site_visit: 'Schedule Site Visit'
       schedule_followup: 'Schedule Followup'
 

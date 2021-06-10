@@ -41,17 +41,15 @@ Iris.utils.daterangepickerOptions = {
 
 };
 Iris.utils.datetimepickerOptions = {
-  useCurrent: false,
   icons: {
-    time: 'mdi mdi-clock',
-    date: 'mdi mdi-calendar',
-    up: 'mdi mdi-chevron-up',
-    down: 'mdi mdi-chevron-down',
-    previous: 'mdi mdi-chevron-left',
-    next: 'mdi mdi-chevron-right',
-    today: 'mdi mdi-screenshot',
-    clear: 'mdi mdi-trash',
-    close: 'mdi mdi-remove'
-  },
-  format: 'DD/MM/YYYY h:mm A'
+    time: 'fa fa-clock',
+    date: 'fa fa-calendar',
+    up: 'fa fa-chevron-up',
+    down: 'fa fa-chevron-down',
+    previous: 'fa fa-chevron-left',
+    next: 'fa fa-chevron-right',
+    today: 'fa fa-screenshot',
+    clear: 'fa fa-trash',
+    close: 'fa fa-remove'
+  }
 };

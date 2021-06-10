@@ -1,0 +1,57 @@
+<table class='table my-customer-table responsive-tbl'>
+  <thead class="th-default">
+    <thead>
+      <tr class="bg-gradient-cd white">
+        <th><%= t('mongoid.attributes.site_visit.lead') %></th>
+        <th><%= t('mongoid.attributes.site_visit.project') %></th>
+        <th><%= t('mongoid.attributes.site_visit.status') %></th>
+        <th><%= t('mongoid.attributes.site_visit.scheduled_on') %></th>
+        <th><%= t('mongoid.attributes.site_visit.site_visit_type') %></th>
+        <th class="text-right"><%= t('global.action', count: 3) %></th>
+      </tr>
+    </thead>
+  </thead>
+  <tbody>
+    <% site_visits.each do |site_visit| %>
+      <tr>
+        <td data-title=<%= t('mongoid.attributes.site_visit.lead') %>>
+          <% if policy([:admin, Lead.new()]).show? %>
+            <%= link_to site_visit.lead.name, admin_lead_path(site_visit.lead_id) %>
+          <% else %>
+            <%= site_visit.lead.name %>
+          <% end %>
+        </td>
+        <td data-title=<%= t('mongoid.attributes.site_visit.project') %>>
+          <% if policy([:admin, Project.new]).show? %>
+            <%= link_to site_visit.project.name, admin_project_path(site_visit.project_id) %>
+          <% else %>
+            <%= site_visit.project.name %>
+          <% end %>
+        </td>
+        <td data-title=<%= t('mongoid.attributes.site_visit.status') %>>
+            <%= site_visit.status.titleize %>
+        </td>
+        <td data-title=<%= t('mongoid.attributes.site_visit.scheduled_on') %>>
+            <%= site_visit.scheduled_on.strftime("%d %b %Y %I:%M %p") rescue "" %>
+        </td>
+        <td data-title=<%= t('mongoid.attributes.site_visit.site_visit_type') %>>
+            <%= site_visit.site_visit_type.titleize %>
+        </td>
+        <td>
+          <div class="dropdown show text-right">
+          <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+              
+           </div>
+        </div>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% if site_visits.respond_to?(:total_pages) %>
+<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pt-2 mb-4">
+  <%= will_paginate site_visits, list_classes: %w(pagination justify-content-center) %>
+</div>
+<% end %>
+<br/><br/>

@@ -5,14 +5,22 @@ class Crm::Api::Post < Crm::Api
   validates :response_crm_id_location, format: {with: /\A[a-zA-Z0-9_..]*\z/}, allow_blank: true
 
   def execute record
+    _execute record, 'post'
+  end
+
+  def _execute record, method='post'
     api_log = ApiLog.new(resource: record, crm_api: self)
     _request_payload = set_request_payload(record) || {}
-    _url = URI.join(base.domain, path)
+    
+    _path_erb = ERB.new(path.gsub("\n\s", '')) rescue ERB.new("Hash.new")
+    _path = _path_erb.result(record.get_binding) rescue ''
+
+    _url = URI.join(base.domain, _path)
     _request_header = get_request_header(record) || {}
     _request_header['Authorization'] = "Bearer #{get_access_token}" if base.oauth2_authentication?
     uri = URI(_url)
 
-    response = Net::HTTP.post(uri, _request_payload.to_json, _request_header)
+    response = Net::HTTP.send(method, uri, _request_payload.to_json, _request_header)
     case response
     when Net::HTTPSuccess
       res = process_response(response, record)

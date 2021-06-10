@@ -2562,3 +2562,78 @@ table {
 .selectize-dropdown.form-control{
 	height: unset;
 }
+
+
+
+
+
+
+.availability-container{
+	max-width: 800px;
+	min-height: 650px;
+}
+.availability-container .panel{
+	padding-top: 25px;
+	padding-bottom: 25px;
+	width: 100%;
+}
+.time-list{
+	margin-top: 8px;
+	overflow: hidden;
+	white-space: nowrap;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	overflow: auto;
+	height: 400px;
+	padding-right: 20px;
+}
+.chosen-date{
+	text-transform: capitalize;
+	padding-left: 0;
+}
+.time-list .time-item{
+	padding-top: 10px;
+	font-size: 16px;
+	clear: both;
+}
+.time-list .time-item a{
+	outline: none;
+	width: 100%;
+	padding: 12px;
+	color: #666;
+	border: 1px solid #666;
+	cursor: pointer;
+	display: block;
+	text-align: center;
+	font-size: 14px;
+	font-weight: normal;
+}
+.time-list .time-item a.time-item-selector.selected{
+	width: 48%;
+	margin-right: 1%;
+	background-color: #666;
+	color: #fff;
+	border: 1px solid #666;
+	float: left;
+	display: block;
+}
+.time-list .time-item a.time-item-confirm{
+	width: 48%;
+	margin-left: 1%;
+	color: #fff;
+	background-color: #666;
+	border: 1px solid #666;
+	float: right;
+	display: block;
+}
+.calendar-booking .picker-switch .sell_do_calendar_icon{
+	position: relative;
+}
+.calendar-booking .picker-switch .sell_do_calendar_icon:after{
+	content: ' Today';
+	display: inline-block;
+	left: 24px;
+	position: absolute;
+	top: -8px;
+}

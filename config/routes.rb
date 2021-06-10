@@ -178,16 +178,16 @@ Rails.application.routes.draw do
       resources :accounts, controller: 'accounts'
     end
 
+    resources :site_visits, only: [:index]
     resources :leads, only: [:index, :show, :edit, :update, :new] do
       collection do
         get :export
       end
       member do
         get 'sync_notes'
-        get 'sync_site_visit'
         get :send_payment_link
       end
-
+      resources :site_visits, only: [:new, :create, :index]
       resources :receipts, only: [:index, :new, :create, :edit, :update ] do
         get :resend_success, on: :member
         get :lost_receipt, on: :collection

@@ -3,7 +3,7 @@ class Crm::Api
   include Mongoid::Timestamps
 
   DEFAULT_REQUEST_HEADER = { 'Content-Type' => 'application/json' }
-  RESOURCE_CLASS = %w[User UserKyc Receipt BookingDetail ChannelPartner Lead]
+  RESOURCE_CLASS = %w[User UserKyc Receipt BookingDetail ChannelPartner Lead SiteVisit]
 
   field :resource_class, type: String
   field :path, type: String
@@ -47,7 +47,7 @@ class Crm::Api
   end
 
   def validate_url
-    uri = URI.join(base.domain, path)
+    uri = URI.join(base.domain, path.gsub(/<%.*%>/, ''))
     self.errors.add(:path, 'has invalid url.') if !uri.is_a?(URI::HTTP) || uri.host.nil?
   rescue URI::InvalidURIError
     self.errors.add(:path, 'has invalid url.')

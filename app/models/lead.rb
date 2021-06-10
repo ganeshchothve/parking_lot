@@ -43,6 +43,7 @@ class Lead
   belongs_to :project
   has_many :receipts
   has_many :searches
+  has_many :site_visits
   has_many :booking_details
   has_many :user_requests
   has_many :user_kycs

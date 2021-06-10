@@ -70,6 +70,10 @@ class Admin::UserPolicy < UserPolicy
     record.buyer? && record.temporarily_blocked? && %w(sales sales_admin admin).include?(user.role)
   end
 
+  def send_payment_link?
+    record.buyer?
+  end
+
   def show_selldo_links?
     ENV_CONFIG['selldo'].try(:[], 'base_url').present? && record.buyer? && record.lead_id? && current_client.selldo_default_search_list_id?
   end
