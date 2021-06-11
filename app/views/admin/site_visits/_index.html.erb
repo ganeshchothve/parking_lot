@@ -12,7 +12,7 @@
     </thead>
   </thead>
   <tbody>
-    <% site_visits.each do |site_visit| %>
+    <% site_visits.reject(&:new_record?).each do |site_visit| %>
       <tr>
         <td data-title=<%= t('mongoid.attributes.site_visit.lead') %>>
           <% if policy([:admin, Lead.new()]).show? %>
@@ -41,7 +41,9 @@
           <div class="dropdown show text-right">
           <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-              
+              <% if policy([:admin, site_visit]).sync_with_selldo? %>
+                <%= link_to t('controller.site_visits.sync_with_selldo.link_name'), sync_with_selldo_admin_site_visit_path(site_visit.id), class: "dropdown-item" %>
+              <% end %>
            </div>
         </div>
         </td>
@@ -54,4 +56,3 @@
   <%= will_paginate site_visits, list_classes: %w(pagination justify-content-center) %>
 </div>
 <% end %>
-<br/><br/>

@@ -11,7 +11,7 @@ class Crm::Api::Post < Crm::Api
   def _execute record, method='post'
     api_log = ApiLog.new(resource: record, crm_api: self)
     _request_payload = set_request_payload(record) || {}
-    
+
     _path_erb = ERB.new(path.gsub("\n\s", '')) rescue ERB.new("Hash.new")
     _path = _path_erb.result(record.get_binding) rescue ''
 

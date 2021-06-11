@@ -77,6 +77,14 @@ class SiteVisit
 
   alias :resource_name :name
 
+  def update_data_from_selldo(data)
+    self.status = data.dig('site_visit', 'status')
+    if data.dig('site_visit', 'status') == 'conducted' && data.dig('site_visit', 'conducted_on').present?
+      self.conducted_on = (DateTime.parse(data.dig('site_visit', 'conducted_on')) rescue nil)
+    end
+    self.save
+  end
+
   private
   def existing_scheduled_sv
     self.errors.add :base, 'One Scheduled Site Visit Already Exists' if SiteVisit.where(lead_id: lead_id, status: 'scheduled').present?

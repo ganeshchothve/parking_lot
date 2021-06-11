@@ -1346,6 +1346,8 @@ en:
     site_visits:
       new:
         link_name: 'Schedule Site Visit'
+      sync_with_selldo:
+        link_name: 'Sync with Sell.Do'
     searches:
       filter:
         header: Select Tower

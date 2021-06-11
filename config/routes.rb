@@ -178,7 +178,11 @@ Rails.application.routes.draw do
       resources :accounts, controller: 'accounts'
     end
 
-    resources :site_visits, only: [:index]
+    resources :site_visits, only: [:index] do
+      member do
+        get 'sync_with_selldo'
+      end
+    end
     resources :leads, only: [:index, :show, :edit, :update, :new] do
       collection do
         get :export
