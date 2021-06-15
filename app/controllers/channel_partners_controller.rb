@@ -35,10 +35,12 @@ class ChannelPartnersController < ApplicationController
 
   def create
     @channel_partner = ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))
+    @channel_partner.assign_attributes(srd: cookies[:srd]) if cookies[:srd].present?
     layout = (current_user.present? ? 'devise' : false)
 
     respond_to do |format|
       if @channel_partner.save
+        cookies.delete :srd
         format.html { redirect_to (user_signed_in? ? channel_partners_path : new_user_session_path), notice: 'Channel partner was successfully created.' }
         format.json { render json: @channel_partner, status: :created }
       else

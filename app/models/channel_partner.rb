@@ -63,6 +63,9 @@ class ChannelPartner
   field :interested_services, type: Array, default: []
   field :cp_code, type: String
 
+  # Tracking selldo srd for new channel partner registrations.
+  field :srd, type: String
+
   scope :filter_by_rera_id, ->(rera_id) { where(rera_id: rera_id) }
   scope :filter_by_status, ->(status) { where(status: status) }
   scope :filter_by_city, ->(city) { where(city: city) }
