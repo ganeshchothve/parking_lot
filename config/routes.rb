@@ -26,7 +26,7 @@ Rails.application.routes.draw do
     root 'dashboard#index', as: :authenticated_root
   end
 
-  root to: redirect('channel_partners/new')
+  root 'channel_partners#new'
 
   as :user do
     put '/user/confirmation', to: 'local_devise/confirmations#update', :as => :update_user_confirmation
@@ -48,7 +48,6 @@ Rails.application.routes.draw do
   get '/s/:code', to: 'shortened_urls#redirect_to_url'
 
   namespace :admin do
-
     resources :api_logs, only: [:index]
     resources :cp_lead_activities do
       member do
@@ -320,7 +319,6 @@ Rails.application.routes.draw do
   end
 
   namespace :buyer do
-
     resources :schemes, only: [:index]
 
     resources :booking_details, only: [:index, :show, :update] do
