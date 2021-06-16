@@ -19,6 +19,11 @@ $selected-aprt: #f4667e;
 .light-blue{
 	color: $light-blue!important;
 }
+.light-blue-disabled{
+	color: #000;
+    background: #ddd;
+    cursor: not-allowed;
+}
 .bg-light-blue{
 	background-color: $light-blue!important;
 }

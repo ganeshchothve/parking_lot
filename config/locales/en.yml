@@ -47,6 +47,10 @@ en:
       link_name: '%{model}'
     accompanied_credit:
       link_name: '%{model}'
+    show_interest:
+      link_name: 'I am Interested'
+    not_interested:
+      link_name: 'Mark not Interested'
     show:
       link_name: '%{model} Details'
     edit:
@@ -189,6 +193,9 @@ en:
       user_request:
         one: User Request
         other: User Requests
+      meeting:
+        one: Event
+        other: Events
       user_request/cancellation:
         one: Cancellation
         other: Cancellations
@@ -208,8 +215,8 @@ en:
         one: User Account
         other: Users Accounts
       lead:
-        one: Walk-in
-        other: Walk-ins
+        one: Lead
+        other: Leads
       invoice:
         zero: Invoice
         one: Invoice
@@ -845,7 +852,7 @@ en:
         existing_customer: "Are you an existing customer with us?"
         comments: "Please mention any specific notes for our team"
         user_id: "Customer"
-        lead_id: 'Walk-in'
+        lead_id: 'Lead'
         creator: "Created By"
         project_units: "Apartments"
         son_daughter_of: 'Son / Daughter Of'
@@ -876,7 +883,23 @@ en:
         min_budget: 'Min. Budget (Rs.)'
         max_budget: 'Max. Budget (Rs.)'
         budget: 'Budget (Rs.)'
-
+      meeting:
+        topic: Topic
+        meeting_type: Meeting type
+        provider: Online Provider
+        provider_url: Event URL
+        provider_details: How to Join?
+        scheduled_on: Scheduled on
+        status: Event Status
+        duration: Duration (in minutes)
+        broadcast: Do you want to broadcast this message to all users with these roles?
+        agenda: Agenda
+        participant_ids: Event Attendees
+        participants: Event Attendees
+        project: Project
+        project_id: Project
+        creator: Host
+        creator_id: Host
       user:
         temporarily_blocked: 'Qualify lead'
         iris_confirmation: 'Lead Tagging'
@@ -956,7 +979,7 @@ en:
         email: 'Email'
         project_id: 'Project'
         manager_id: 'Partner / Manager / Added by'
-        name_email_phone: 'Walk-in (Project Name)'
+        name_email_phone: 'Lead (Project Name)'
         total_amount_paid: "Total Amount Paid (Inclusive of GST)"
         registered_at: 'Registered At'
         payment_done: '9.90% Received'
@@ -1072,6 +1095,9 @@ en:
     api_logs:
       index:
         link_name: 'API Logs'
+    meetings:
+      index:
+        link_name: 'Events'
     crms:
       index:
         link_name: 'CRM Integration'
@@ -1461,18 +1487,18 @@ en:
         link_name: '%{role} Details'
         header: 'Overview'
       leads:
-        link_name: 'Show Walk-ins'
+        link_name: 'Show Leads'
       send_payment_link: 'Payment link sent to user'
 
     leads:
       index:
-        link_name: 'Walk-ins'
+        link_name: 'Leads'
       show:
-        link_name: 'Show Walk-in Details'
+        link_name: 'Show Lead Details'
         header: 'Overview'
       edit:
-        link_name: "Edit Walk-in"
-        header: 'Edit Walk-in'
+        link_name: "Edit Lead"
+        header: 'Edit Lead'
       exports:
         link_name: '%{name} Exports'
 
@@ -1602,7 +1628,7 @@ en:
       titles:
         lead_details: 'Customer Account Details'
         booking_details: 'Bookings'
-        total_leads: 'Total Walk-ins'
+        total_leads: 'Total Leads'
         received: 'Added'
         available_inventory: 'Available Inventory'
         download_brochure: 'Download Brochure'
@@ -1622,10 +1648,10 @@ en:
       data:
         booked_leads:
           label: 'Booked'
-          sub_label: 'Walk-ins'
+          sub_label: 'Leads'
         not_booked_leads:
           label: 'Not Booked'
-          sub_label: 'Walk-ins'
+          sub_label: 'Leads'
         total_bookings:
           label: 'Total Bookings'
           sub_label: ''
