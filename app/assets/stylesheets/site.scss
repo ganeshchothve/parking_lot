@@ -1933,20 +1933,16 @@ table .dropdown-menu.show{
 }
 
 /******************************** Login ****************************/
-.auth{
+.auth-image{
 	background-image: asset-url('login.png');
 	background-repeat: no-repeat;
 	background-position: right;
-	background-color: $white-color;
 	background-size: contain;
 	@media screen and (max-width: 1400px) and (min-width: 992px){
 		background-size: 50% 80%;
 	}
-	@media screen and (max-width: 992px){
-		.container{
-			background-color: rgba(255,255,255,0.8);
-		}
-	}
+}
+.auth{
 	.login-form-wrapper{
 
 		h1{
