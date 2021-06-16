@@ -24,7 +24,7 @@ class ChannelPartner
   SOURCE = ['Internal CP', 'External CP']
   REGION = ['Chennai', 'Bangalore', 'Coimbatore', 'NRI']
 
-  SHORT_FORM = %i(first_name last_name email phone company_name rera_applicable status)
+  SHORT_FORM = %i(first_name last_name email phone company_name rera_applicable status interested_services)
   FULL_FORM = SHORT_FORM.clone + %i(team_size gst_applicable nri)
 
   field :title, type: String
