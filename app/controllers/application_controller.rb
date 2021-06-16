@@ -100,13 +100,17 @@ class ApplicationController < ActionController::Base
   end
 
   def set_cookies
-    srds = ["5b2a1de1923d4a2f663ea92c", "5b2a1e33923d4a77ecbaf19a", "5b2a1e94923d4a32e23ea89a", "5b2a1ea6923d4a423473df75", "5b2a1eb7923d4a1cb56df504", "5b2a1f41923d4a3ad670e860", "5b2a1f53923d4a2f663ea96e", "5b2a1f64923d4a55ce69747a", "5b2a1f78923d4a2f663ea979", "5b2a1f9a923d4a5d9fe25fa4", "5b2a1fac923d4a2f8b3ea93d", "5b2a1fbb923d4a423473e135", "5b2a1fe6923d4a2f663ea98f", "5b2a1ff5923d4a423473e14a", "5b2a2005923d4a5d9fe25fc7", "5b2a2019923d4a423473e152", "5b2a202b923d4a33713ea888", "5b2a2046923d4a3ad670e883"]
-    tmp = params[:srd]
-    if tmp.present?
-      if srds.include?(params[:srd])
-        cookies[:srd] =  tmp
-        cookies[:portal_cp_id] =  "5b08fa89f294971c8184aa68"
-      end
+    #srds = ["5b2a1de1923d4a2f663ea92c", "5b2a1e33923d4a77ecbaf19a", "5b2a1e94923d4a32e23ea89a", "5b2a1ea6923d4a423473df75", "5b2a1eb7923d4a1cb56df504", "5b2a1f41923d4a3ad670e860", "5b2a1f53923d4a2f663ea96e", "5b2a1f64923d4a55ce69747a", "5b2a1f78923d4a2f663ea979", "5b2a1f9a923d4a5d9fe25fa4", "5b2a1fac923d4a2f8b3ea93d", "5b2a1fbb923d4a423473e135", "5b2a1fe6923d4a2f663ea98f", "5b2a1ff5923d4a423473e14a", "5b2a2005923d4a5d9fe25fc7", "5b2a2019923d4a423473e152", "5b2a202b923d4a33713ea888", "5b2a2046923d4a3ad670e883"]
+    #tmp = params[:srd]
+    #if tmp.present?
+    #  if srds.include?(params[:srd])
+    #    cookies[:srd] =  tmp
+    #    cookies[:portal_cp_id] =  "5b08fa89f294971c8184aa68"
+    #  end
+    #end
+
+    if current_user.blank? && params[:srd].present?
+      cookies[:srd] = params[:srd]
     end
 
     if params[:portal_cp_id].present?
