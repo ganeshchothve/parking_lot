@@ -48,7 +48,7 @@
       <%= render "layouts/navbar_footer"%>
     <% end %>
     <%= render 'layouts/partials/google_code' %>
-    <% if true || current_user.role == 'channel_partner' %>
+    <% if current_user.role == 'channel_partner' %>
     <script type="text/javascript">var $zoho=$zoho || {};$zoho.salesiq = $zoho.salesiq || {widgetcode:"e99e857f51af828a675650b53ce8b539a35669be1adf404bd931aca27ab9ec43a96f5553404655e03a97fd990c148d7aa81d6b547a35c109951d24f6be71d2d0", values:{},ready:function(){}};var d=document;s=d.createElement("script");s.type="text/javascript";s.id="zsiqscript";s.defer=true;s.src="https://salesiq.zoho.in/widget";t=d.getElementsByTagName("script")[0];t.parentNode.insertBefore(s,t);d.write("<div id='zsiqwidget'></div>");</script>
     <script>
       $zoho.salesiq.ready=function(){
