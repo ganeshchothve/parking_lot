@@ -465,7 +465,8 @@ class User
     devise_mailer.new.send(:devise_sms, self, :confirmation_instructions)
 
     if email.present? || unconfirmed_email.present?
-      email_template = Template::EmailTemplate.find_by(name: "user_confirmation_instructions")
+      email_template = Template::EmailTemplate.where(name: "#{role}_confirmation_instructions").first
+      email_template = Template::EmailTemplate.find_by(name: "user_confirmation_instructions") if email_template.blank?
       attrs = {
         booking_portal_client_id: booking_portal_client_id,
         subject: email_template.parsed_subject(self),

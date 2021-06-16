@@ -17,7 +17,7 @@
                     <p class="card-text">
                       <%= project.developer_name %><br/>
                       <%= project.description %><br/>
-                      <%= project.configurations.to_sentence %> BHK<br/>
+                      <%= project.configurations.to_sentence %><br/>
                     </p>
                     <% brochure = project.assets.where(document_type: 'brochure').first %>
                     <% if brochure.present? %>
