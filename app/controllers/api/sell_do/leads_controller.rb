@@ -1,7 +1,7 @@
 # consumes workflow api for leads from sell.do
 class Api::SellDo::LeadsController < Api::SellDoController
-  before_action :set_user, except: [:site_visit_conducted]
-  before_action :set_crm, :set_lead, :set_site_visit, only: [:site_visit_conducted]
+  before_action :set_user, except: [:site_visit_updated]
+  before_action :set_crm, :set_lead, :set_site_visit, only: [:site_visit_updated]
 
   def lead_created
     respond_to do |format|
@@ -32,17 +32,13 @@ class Api::SellDo::LeadsController < Api::SellDoController
     end
   end
 
-  def site_visit_conducted
+  def site_visit_updated
     respond_to do |format|
-      if params[:event] == 'sitevisit_conducted'
-        @site_visit.assign_attributes(status: 'conducted')
-        if @site_visit.save
-          format.json { render json: @site_visit }
-        else
-          format.json { render json: {errors: @site_visit.errors.full_messages}, status: 200 }
-        end
+      @site_visit.assign_attributes(site_visit_permitted_attributes)
+      if @site_visit.save
+        format.json { render json: @site_visit }
       else
-        format.json { render json: {errors: "Event #{params[:event]} not supported"}, status: 200 }
+        format.json { render json: {errors: @site_visit.errors.full_messages}, status: 200 }
       end
     end
   end
@@ -67,6 +63,17 @@ class Api::SellDo::LeadsController < Api::SellDoController
     else
       render json: { errors: ["SiteVisit id is missing in params"] } and return
     end
+  end
+
+  def site_visit_permitted_attributes
+    attrs = {status: params.dig(:payload, :status)}
+    case params[:event].to_s
+    when 'sitevisit_rescheduled'
+      attrs[:scheduled_on] = DateTime.parse(params.dig(:payload, :scheduled_on)) rescue nil
+    when 'sitevisit_conducted'
+      attrs[:conducted_on] = DateTime.parse(params.dig(:payload, :conducted_on)) rescue nil
+    end
+    attrs
   end
 
   def set_user
