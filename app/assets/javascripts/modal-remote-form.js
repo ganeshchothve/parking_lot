@@ -159,7 +159,6 @@ $(document).on("ajax:success", '.toggle_interest_form', function(event, two, thr
   }else if(two){
     var data = two, status = three
   }
-  debugger;
   if(data.reload){
     window.location = window.location;
   }else{
