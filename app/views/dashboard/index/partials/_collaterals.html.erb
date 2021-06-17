@@ -19,9 +19,12 @@
                       <%= project.description %><br/>
                       <%= project.configurations.to_sentence %><br/>
                     </p>
+                    <% if policy([:admin, Lead]).new? %>
+                      <%= link_to t('helpers.new.link_name', model: Lead.model_name.human), new_admin_lead_path(project_id: project.id), class: 'btn btn-primary btn-sm modal-remote-form-link' %>
+                    <% end %>
                     <% brochure = project.assets.where(document_type: 'brochure').first %>
                     <% if brochure.present? %>
-                      <%= link_to 'Brochure', brochure.file.url, class: 'btn btn-primary btn-sm', target: '_blank' %>
+                      <%= link_to 'Brochure', brochure.file.url, class: 'btn btn-secondary btn-sm', target: '_blank' %>
                     <% end %>
                     <% if project.website_link.present? %>
                       <%= link_to 'Website', project.website_link, class: 'btn btn-secondary btn-sm', target: '_blank' %>

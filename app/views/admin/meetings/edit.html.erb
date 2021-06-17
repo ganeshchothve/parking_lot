@@ -1,0 +1,8 @@
+<%
+  if @meeting.persisted?
+    _url = admin_meeting_path(@meeting)
+  else
+    _url = admin_meetings_path(@meeting)
+  end
+%>
+<%= render 'form', meeting: @meeting, url: _url %>

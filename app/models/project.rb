@@ -89,6 +89,7 @@ class Project
   field :selldo_gre_form_id, type: String
   field :selldo_api_key, type: String
   field :selldo_default_srd, type: String
+  field :selldo_default_search_list_id, type: String
   field :selldo_cp_srd, type: String
   field :helpdesk_number, type: String
   field :helpdesk_email, type: String

@@ -10,6 +10,7 @@ class Admin::LeadsController < AdminController
       @user = User.where(id: params[:user_id]).first
       attrs = @user.as_json(only: %w(first_name last_name email phone))
     end
+    attrs[:project_id] = params[:project_id] if params[:project_id].present?
     @lead = Lead.new(attrs)
     render layout: false
   end

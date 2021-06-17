@@ -1,0 +1,56 @@
+<table class='table my-customer-table responsive-tbl'>
+  <thead class="th-default">
+    <thead>
+      <tr class="bg-gradient-cd white">
+        <th><%= t('mongoid.attributes.meeting.meeting_details') %></th>
+      <th><%= t('mongoid.attributes.meeting.scheduled_on') %></th>
+      <th><%= t('mongoid.attributes.meeting.status') %></th>
+      <th><%= t('mongoid.attributes.meeting.provider_details') %></th>
+      <th class="text-right"><%= t('global.action', count: 3) %></th>
+      </tr>
+    </thead>
+  </thead>
+  <tbody>
+    <% meetings.each do |meeting| %>
+      <tr>
+        <td data-title=<%= t('mongoid.attributes.meeting.topic') %>>
+          <%= t('mongoid.attributes.meeting.topic') %>: <%= meeting.topic %><br/>
+          <%= meeting.project_id.present? ? "#{meeting.project.name} by #{meeting.project.developer_name}" : '' %>
+          <br/><br/>
+          <%= t('mongoid.attributes.meeting.agenda') %>: <%= meeting.agenda %><br/><br/>
+          <%= render 'meetings/toggle_interest_form', meeting: meeting %>
+        </td>
+        <td data-title=<%= t('mongoid.attributes.meeting.scheduled_on') %>><%= meeting.scheduled_on.strftime("%d %b %Y") rescue "" %></td>
+        <td data-title=<%= t('mongoid.attributes.meeting.status') %>><%= Meeting.statuses.select{|x| x[:id] == meeting.status}.first[:text] %></td>
+        <td>
+            <% if meeting.provider.present? %>
+                Join <%= meeting.provider %> event at <%= link_to 'this link', meeting.provider_url, target: '_blank' %><br/>
+                <%= image_tag "#{meeting.provider}.png", style: "width: 150px;" %>
+            <% else %>
+                <%= Meeting.meeting_types.select{|x| x[:id] == meeting.meeting_type}.first[:text] %>
+            <% end %>
+        </td>
+        <td>
+          <div class="dropdown show text-right">
+          <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="javascript:;" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+            <% if current_user.buyer? && Buyer::MeetingPolicy.new(current_user, meeting).edit? %>
+              <%= link_to t('helpers.edit.link_name', model: Meeting.model_name.human), edit_buyer_meeting_path(meeting), class: 'dropdown-item modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit Event'} %>
+            <% elsif Admin::MeetingPolicy.new(current_user, meeting).edit? %>
+              <%= link_to t('helpers.edit.link_name', model: Meeting.model_name.human), edit_admin_meeting_path(meeting), class: 'dropdown-item modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit Event'} %>
+            <% end %>
+            <% if current_user.buyer? && Buyer::MeetingPolicy.new(current_user, meeting).show? %>
+              <%= link_to t('helpers.show.link_name', model: Meeting.model_name.human), buyer_meeting_path(meeting), class: 'dropdown-item modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Event details'} %>
+            <% elsif Admin::MeetingPolicy.new(current_user, meeting).show? %>
+              <%= link_to t('helpers.show.link_name', model: Meeting.model_name.human), admin_meeting_path(meeting), class: 'dropdown-item modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Event details'} %>
+            <% end %>
+           </div>
+        </div>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pt-2">
+  <%= will_paginate meetings, list_classes: %w(pagination justify-content-center) %>
+</div>

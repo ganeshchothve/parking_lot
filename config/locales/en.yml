@@ -406,6 +406,8 @@ en:
         selldo_api_key: 'SellDo API Key (Use generic Api Client)'
         selldo_default_srd: 'SellDo Default SRD'
         selldo_cp_srd: 'SellDo Channel Partner SRD'
+        selldo_id: 'Sell.Do Project ID'
+        selldo_default_search_list_id: 'Sell.Do All Leads Search List ID'
         notification_email: 'Notification Email (all emails are sent here)'
         notification_numbers: 'Notification Numbers (Key SMS Reports are sent here)'
         sender_email: 'Sender Email Address'
@@ -885,6 +887,7 @@ en:
         budget: 'Budget (Rs.)'
       meeting:
         topic: Topic
+        meeting_details: Topic & Agenda
         meeting_type: Meeting type
         provider: Online Provider
         provider_url: Event URL
