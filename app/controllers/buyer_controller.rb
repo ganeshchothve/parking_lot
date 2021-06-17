@@ -9,7 +9,7 @@ class BuyerController < ApplicationController
    #
    #
    def only_buyer_users!
-    if !current_user.buyer?
+    if !current_user || !current_user.buyer?
       redirect_to dashboard_path, alert: t('controller.only_buyer_users')
     end
    end

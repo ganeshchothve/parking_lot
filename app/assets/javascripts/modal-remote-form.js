@@ -150,3 +150,19 @@ $(document).on("ajax:error", '.modal-remote-form', function(event, two, three){
   }
   $("#modal-remote-form-container .modal-body .modal-remote-form-errors").html(html);
 });
+
+$(document).on("ajax:success", '.toggle_interest_form', function(event, two, three){
+  var data;
+  var detail = event.detail;
+  if(event.detail){
+    var data = detail[0], status = detail[1], xhr = detail[2];
+  }else if(two){
+    var data = two, status = three
+  }
+  debugger;
+  if(data.reload){
+    window.location = window.location;
+  }else{
+    $(event.currentTarget).replaceWith(data.html);
+  }
+});

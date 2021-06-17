@@ -1,0 +1,106 @@
+<%= simple_form_for(meeting, local: true, url: url, remote: true, html: { novalidate: false, class: 'modal-remote-form validate-form', data: { 'resource-type': Meeting.model_name.human, type: :json }, id: 'meeting_form' } ) do |f| %>
+  <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-gradient-cd white">
+          <h3 class="title">
+            <%= t("helpers.#{action_name}.link_name", model: Meeting.model_name.human) %>
+            </h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true" class="white">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <%= f.input :topic, required: true, disabled: !policy([current_user_role_group, meeting]).editable_field?("topic") %>
+          </div>
+          
+          <div class="form-group">
+            <%= f.input :agenda, required: true, disabled: !policy([current_user_role_group, meeting]).editable_field?("agenda"), as: :text %>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+              <%= f.label :meeting_type, class: 'label-required' %>
+                <%= f.select :meeting_type, Meeting.meeting_types.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, meeting]).editable_field?("meeting_type") ? false : true) %>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <%= f.label :provider, class: 'label-required' %>
+                <%= f.select :provider, Meeting.providers.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', disabled: (policy([current_user_role_group, meeting]).editable_field?("provider") ? false : true) %>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.input :provider_url, disabled: !policy([current_user_role_group, meeting]).editable_field?("provider_url") %>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :project_id %>
+            <%= f.select :project_id, Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", disabled: (policy([current_user_role_group, meeting]).editable_field?("project_id") ? false : true) %>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <%= f.label :scheduled_on, class: 'label-required' %>
+                <%= f.text_field :scheduled_on, class: 'form-control datepicker', required: true, "data-min-date": (f.object.scheduled_on.present? && f.object.scheduled_on < Date.today) ? f.object.scheduled_on.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y"), disabled: !policy([:admin, meeting]).editable_field?("scheduled_on"), value: f.object.scheduled_on.present? ? f.object.scheduled_on.strftime("%d/%m/%Y") : nil %>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <%= f.label :duration, class: 'label-required' %>
+                <%= f.number_field :duration, required: true, disabled: !policy([current_user_role_group, meeting]).editable_field?("duration"), class: 'form-control' %>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :roles, class: 'label-required' %>
+            <%= f.select :roles, User.available_roles(current_client).collect{ |r| [User.human_attribute_name("role.#{r}"), r] }, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, meeting]).editable_field?("roles") ? false : true), multiple: true %>
+          </div>
+
+          <% if policy([current_user_role_group, @meeting]).editable_field?("event") %>
+            <% statuses = available_meeting_statuses(@meeting) %>
+            <% if statuses.present? %>
+              <div class="form-group">
+                <%= f.label :status %>
+                <%= f.select :event, statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, {prompt: :Select}, class: 'selectize' %>
+              </div>
+            <% end %>
+          <% end %>
+
+          <div class="form-group">
+            <%= f.input :broadcast, disabled: !policy([current_user_role_group, meeting]).editable_field?("broadcast"), as: :boolean %>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <%= f.submit "Save", class: "btn btn-primary" %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<script>
+  $(document).ready(function(){
+    let $form = $("#meeting_form")
+    FormInitializer.init($form);
+    let $meeting_type = $form.find('[name="meeting[meeting_type]"]');
+    let $provider_url = $form.find('[name="meeting[provider_url]"]');
+    let $provider = $form.find('[name="meeting[provider]"]');
+    $meeting_type.change(function(){
+      if($(this).val() == 'offline_event'){
+        $provider_url.removeAttr('required').removeClass('required');
+        $provider.removeAttr('required').removeClass('required');
+      }else{
+        $provider_url.attr('required', 'required').addClass('required');
+        $provider.removeAttr('required').removeClass('required');
+      }
+    }).trigger('change');
+  });
+</script>

@@ -158,6 +158,7 @@ class User
   has_and_belongs_to_many :received_emails, class_name: 'Email', inverse_of: :recipients
   has_and_belongs_to_many :cced_emails, class_name: 'Email', inverse_of: :cc_recipients
   has_many :cp_lead_activities
+  has_and_belongs_to_many :meetings
 
   has_many :notes, as: :notable
 

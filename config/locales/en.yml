@@ -885,6 +885,7 @@ en:
         budget: 'Budget (Rs.)'
       meeting:
         topic: Topic
+        meeting_details: Topic & Agenda
         meeting_type: Meeting type
         provider: Online Provider
         provider_url: Event URL
