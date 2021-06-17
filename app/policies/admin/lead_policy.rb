@@ -34,7 +34,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def show_selldo_links?
-    ENV_CONFIG['selldo'].try(:[], 'base_url').present? && record.lead_id? && current_client.selldo_default_search_list_id?
+    ENV_CONFIG['selldo'].try(:[], 'base_url').present? && record.lead_id? && record.project.selldo_default_search_list_id?
   end
   
   def send_payment_link?
