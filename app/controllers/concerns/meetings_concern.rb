@@ -26,14 +26,17 @@ module MeetingsConcern
   end
 
   def update
-    @meeting.assign_attributes(permitted_attributes([current_user_role_group, @meeting]))
+    attrs = permitted_attributes([current_user_role_group, @meeting])
+    @meeting.assign_attributes(attrs)
     
     respond_to do |format|
       if (params.dig(:meeting, :event).present? ? @meeting.send("#{params.dig(:meeting, :event)}!") : @meeting.save)
-        toggle_interest_form = render_to_string(partial: 'meetings/toggle_interest_form', locals: {meeting: @meeting}, layout: false)
-        json = @meeting.as_json
-        json[:html] = toggle_interest_form
-        json[:reload] = (params[:reload].present? && params[:reload].to_s == "true")
+        if attrs[:toggle_participant_id].present?
+          toggle_interest_form = render_to_string(partial: 'meetings/toggle_interest_form', locals: {meeting: @meeting}, layout: false)
+          json = @meeting.as_json
+          json[:html] = toggle_interest_form
+          json[:reload] = (params[:reload].present? && params[:reload].to_s == "true")
+        end
         format.json { render json: json.to_json }
       else
         format.json { render json: { errors: @meeting.errors.full_messages.uniq }, status: :unprocessable_entity }
