@@ -62,6 +62,7 @@ class Meeting
 
   def self.user_based_scope(user, params = {})
     custom_scope = {}
+    custom_scope[:roles] = {'$in': [user.role] }  unless user.role == 'superadmin' || user.role == 'admin'
     custom_scope[:project_id] = params[:project_id] if params[:project_id].present?
     custom_scope[:status] = {'$in': ['scheduled', 'completed'] } if %w[crm sales_admin sales channel_partner gre billing_team user employee_user management_user].include?(user.role)
     custom_scope
