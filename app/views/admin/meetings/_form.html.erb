@@ -28,7 +28,7 @@
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <%= f.label :provider, class: 'label-required' %>
+                <%= f.label :provider %>
                 <%= f.select :provider, Meeting.providers.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', disabled: (policy([current_user_role_group, meeting]).editable_field?("provider") ? false : true) %>
               </div>
             </div>
@@ -96,8 +96,12 @@
     $meeting_type.change(function(){
       if($(this).val() == 'offline_event'){
         $provider_url.removeAttr('required').removeClass('required');
+        $provider_url.closest('.form-group').hide();
+        $provider.closest('.form-group').hide();
         $provider.removeAttr('required').removeClass('required');
       }else{
+        $provider_url.closest('.form-group').show();
+        $provider.closest('.form-group').show();
         $provider_url.attr('required', 'required').addClass('required');
         $provider.removeAttr('required').removeClass('required');
       }
