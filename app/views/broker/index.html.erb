@@ -1,0 +1,383 @@
+<section class="mt-3">
+    <div class="px-4">
+        <div class="row">
+            <div class="col-lg-9">
+                <div class="row mb-3">
+                    <div class="col-lg-6">
+                        <h2 class="sec-title">Welcome Jamison,</h2>
+                    </div>
+                    <div class="col-lg-6 text-end">
+                        <select class="h3 mb-0 font-weight-medium f-20 form-control d-sm-inline-block">
+                            <option>Quater</option>
+                            <option>Monthly</option>
+                            <option>Year</option>
+                        </select>
+                        <div class="quater-list d-sm-inline-block ms-2">
+                            <a href="#" class="d-sm-inline-block btn btn-sm pull-right bg-white mr-1 font-medium br-gray-1 br-rd-4 txt-light-blue">Q4 (Oct 1 - Dec 31)</a>
+                        </div>
+                        <div class="quater-year d-sm-inline-block ms-2">
+                            <a href="#" class="d-sm-inline-block btn btn-sm pull-right bg-white mr-1 font-medium br-gray-1 br-rd-4 txt-light-blue">2020</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="row">
+
+                        	<!-- Charts ---------->
+                            <div class="col-lg-8">
+                                <div class="card mb-4 br-rd-8 card-shadow no-br">
+                                    <div id="total_brokerage"></div>
+                                </div>
+                            </div>
+
+                            <!-- Payments ---------->
+                            <div class="col-lg-4">
+                                <div class="payment-detls fix-ht">
+                                    <div class="card br-rd-8 card-shadow  no-br">
+                                        <div class="px-3 row">
+                                            <div class="col-md-6 pt-3">
+                                                <h2 class="sec-title mb-0">Payments</h2>
+                                            </div>
+                                            <div class="col-md-6 pt-3 text-end">
+                                                <a href="javascript:;" class="btn-link font-medium">View All</a>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="mt-2 payment-list px-3">
+                                            <h4>October, 2020</h4>
+                                            <ul class="list-unstyled">
+                                                <li>
+                                                    <div class="payment-wrap">
+                                                        <p class="date mb-0">Dec 23rd, 2020</p>
+                                                        <p class="payment-user-name mb-0">Niharika Aswani</p>
+                                                        <p class="devloper-name mb-0">Vedanta Developers</p>
+                                                        <p class="payment-amount mb-0 d-sm-inline-block">₹ 34000</p>
+                                                        <p class="payment-status success-status mb-0 d-sm-inline-block mt-1 float-end">Paid</p>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="payment-wrap">
+                                                        <p class="date mb-0">Dec 23rd, 2020</p>
+                                                        <p class="payment-user-name mb-0">Niharika Aswani</p>
+                                                        <p class="devloper-name mb-0">Vedanta Developers</p>
+                                                        <p class="payment-amount mb-0 d-sm-inline-block">₹ 34000</p>
+                                                        <p class="payment-status pending-status mb-0 d-sm-inline-block mt-1 float-end">Pending</p>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            <h4>November, 2020</h4>
+                                            <ul>
+                                                <li>
+                                                    <div class="payment-wrap">
+                                                        <p class="date mb-0">Dec 23rd, 2020</p>
+                                                        <p class="payment-user-name mb-0">Niharika Aswani</p>
+                                                        <p class="devloper-name mb-0">Vedanta Developers</p>
+                                                        <p class="payment-amount mb-0 d-sm-inline-block">₹ 34000</p>
+                                                        <p class="payment-status cancel-status mb-0 d-sm-inline-block mt-1 float-end">Cancel</p>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="payment-wrap">
+                                                        <p class="date mb-0">Dec 23rd, 2020</p>
+                                                        <p class="payment-user-name mb-0">Niharika Aswani</p>
+                                                        <p class="devloper-name mb-0">Vedanta Developers</p>
+                                                        <p class="payment-amount mb-0 d-sm-inline-block">₹ 34000</p>
+                                                        <p class="payment-status pending-status mb-0 d-sm-inline-block mt-1 float-end">Pending</p>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Newly Launched ---------->
+
+                <div class="row">
+                    <div class="col-lg-12 mt-1 mb-3">
+                        <h2 class="sec-title">Newly Launched</h2>
+                    </div>
+                	<div class="col-lg-4">
+                		<div class="project-wrap br-rd-8 card-shadow">
+                			<div class="project-list row">
+                				<div class="project-img">
+                					<img src="<%= asset_path 'project-item-image.jpg' %>" class="img-fluid">
+                					<p><i class="fa fa-fire fill-white"></i>Just Launch</p>
+                				</div>
+                				<div class="project-info">
+                					<div class="project-info-inner">
+                						<h2 class="prjt-title">34 Park Estate</h2>
+                						<p class="prjt-devlprs">Embassy Developers</p>
+                						<p class="prjt-location"><i class="fa fa-map-marker-alt fill-white"></i>Khar West, Mumbai</p>
+                					</div>
+                                    <div class="project-info-outer px-3">
+                                        <div class="row">
+                                            <div class="col-lg-1 ps-0 pe-0">
+                                                <i class="fa fa-fire fill-danger"></i>
+                                            </div>
+                                            <div class="col-lg-11 pe-2 ps-3">
+                                                <p class="list-txt project-deal mb-2">Hot Deal</p>
+                                                <p class="list-txt project-desc mb-0">2.5% Brokerage incentive on bookings made within the first week of the launch date</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                				</div>
+                			</div>
+                		</div>
+                	</div>
+
+                    <div class="col-lg-4">
+                        <div class="project-wrap br-rd-8 card-shadow">
+                            <div class="project-list row">
+                                <div class="project-img">
+                                    <img src="<%= asset_path 'project-item-image.jpg' %>" class="img-fluid">
+                                    <p><i class="fa fa-fire fill-white"></i>Just Launch</p>
+                                </div>
+                                <div class="project-info">
+                                    <div class="project-info-inner">
+                                        <h2 class="prjt-title">34 Park Estate</h2>
+                                        <p class="prjt-devlprs">Embassy Developers</p>
+                                        <p class="prjt-location"><i class="fa fa-map-marker-alt fill-white"></i>Khar West, Mumbai</p>
+                                    </div>
+                                    <div class="project-info-outer px-3">
+                                        <div class="row">
+                                            <div class="col-lg-1 ps-0 pe-0">
+                                                <i class="fa fa-fire fill-danger"></i>
+                                            </div>
+                                            <div class="col-lg-11 pe-2 ps-3">
+                                                <p class="list-txt project-deal mb-2">Hot Deal</p>
+                                                <p class="list-txt project-desc mb-0">2.5% Brokerage incentive on bookings made within the first week of the launch date</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="project-wrap br-rd-8 card-shadow">
+                            <div class="project-list row">
+                                <div class="project-img">
+                                    <img src="<%= asset_path 'project-item-image.jpg' %>" class="img-fluid">
+                                    <p><i class="fa fa-fire fill-white"></i>Just Launch</p>
+                                </div>
+                                <div class="project-info">
+                                    <div class="project-info-inner">
+                                        <h2 class="prjt-title">34 Park Estate</h2>
+                                        <p class="prjt-devlprs">Embassy Developers</p>
+                                        <p class="prjt-location"><i class="fa fa-map-marker-alt fill-white"></i>Khar West, Mumbai</p>
+                                    </div>
+                                    <div class="project-info-outer px-3">
+                                        <div class="row">
+                                            <div class="col-lg-1 ps-0 pe-0">
+                                                <i class="fa fa-fire fill-warning"></i>
+                                            </div>
+                                            <div class="col-lg-11 pe-2 ps-3">
+                                                <p class="list-txt project-deal mb-2">Deal</p>
+                                                <p class="list-txt project-desc mb-0">1% Brokerage incentive on bookings, post the first launch week up to the 3rd month</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4 mb-5">
+                    <div class="col-lg-12 mt-5 mb-3">
+                        <h2 class="sec-title">Interested Projects</h2>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="project-wrap br-rd-8 card-shadow">
+                            <div class="project-list row">
+                                <div class="project-img">
+                                    <img src="<%= asset_path 'project-item-image.jpg' %>" class="img-fluid">
+                                    <p><i class="fa fa-fire fill-white"></i>Just Launch</p>
+                                </div>
+                                <div class="project-info">
+                                    <div class="project-info-inner">
+                                        <h2 class="prjt-title">34 Park Estate</h2>
+                                        <p class="prjt-devlprs">Embassy Developers</p>
+                                        <p class="prjt-location"><i class="fa fa-map-marker-alt fill-white"></i>Khar West, Mumbai</p>
+                                    </div>
+                                    <div class="project-info-outer px-3">
+                                        <div class="row">
+                                            <div class="col-lg-1 ps-0 pe-0">
+                                                <i class="fa fa-fire fill-danger"></i>
+                                            </div>
+                                            <div class="col-lg-11 pe-2 ps-3">
+                                                <p class="list-txt project-deal mb-2">Hot Deal</p>
+                                                <p class="list-txt project-desc mb-0">2.5% Brokerage incentive on bookings made within the first week of the launch date</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="project-wrap br-rd-8 card-shadow">
+                            <div class="project-list row">
+                                <div class="project-img">
+                                    <img src="<%= asset_path 'project-item-image.jpg' %>" class="img-fluid">
+                                    <p><i class="fa fa-fire fill-white"></i>Just Launch</p>
+                                </div>
+                                <div class="project-info">
+                                    <div class="project-info-inner">
+                                        <h2 class="prjt-title">34 Park Estate</h2>
+                                        <p class="prjt-devlprs">Embassy Developers</p>
+                                        <p class="prjt-location"><i class="fa fa-map-marker-alt fill-white"></i>Khar West, Mumbai</p>
+                                    </div>
+                                    <div class="project-info-outer px-3">
+                                        <div class="row">
+                                            <div class="col-lg-1 ps-0 pe-0">
+                                                <i class="fa fa-fire fill-danger"></i>
+                                            </div>
+                                            <div class="col-lg-11 pe-2 ps-3">
+                                                <p class="list-txt project-deal mb-2">Hot Deal</p>
+                                                <p class="list-txt project-desc mb-0">2.5% Brokerage incentive on bookings made within the first week of the launch date</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="project-wrap br-rd-8 card-shadow">
+                            <div class="project-list row">
+                                <div class="project-img">
+                                    <img src="<%= asset_path 'project-item-image.jpg' %>" class="img-fluid">
+                                    <p><i class="fa fa-fire fill-white"></i>Just Launch</p>
+                                </div>
+                                <div class="project-info">
+                                    <div class="project-info-inner">
+                                        <h2 class="prjt-title">34 Park Estate</h2>
+                                        <p class="prjt-devlprs">Embassy Developers</p>
+                                        <p class="prjt-location"><i class="fa fa-map-marker-alt fill-white"></i>Khar West, Mumbai</p>
+                                    </div>
+                                    <div class="project-info-outer px-3">
+                                        <div class="row">
+                                            <div class="col-lg-1 ps-0 pe-0">
+                                                <i class="fa fa-fire fill-danger"></i>
+                                            </div>
+                                            <div class="col-lg-11 pe-2 ps-3">
+                                                <p class="list-txt project-deal mb-2">Hot Deal</p>
+                                                <p class="list-txt project-desc mb-0">2.5% Brokerage incentive on bookings made within the first week of the launch date</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-3">
+            	<!-- Events ---------->
+            	<div class="card br-rd-8 card-shadow no-br">
+                    <div class="">
+                        <div class="col-md-12 pt-3 px-3">
+                            <h2 class="sec-title mb-0">Upcoming Events</h2>
+                        </div>
+                        <hr>
+                        <ul class="upcoming-events-list list-unstyled cmn-list">
+                        	<li class="px-3">
+                        		<div class="list-wrap row">
+                        			<div class="col-lg-2">
+                        				<i class="fa fa-calendar-alt fill-primary"></i>
+                        			</div>
+                        			<div class="col-lg-10">
+                        				<p class="list-txt event-title mb-0">Pre Launch Event</p>
+                        				<p class="list-txt event-time mb-0">5th May 2020, 12.30 pm IST</p>
+                        			</div>
+                        		</div>
+                        	</li>
+                        	<li class="px-3">
+                        		<div class="list-wrap row">
+                        			<div class="col-lg-2">
+                        				<i class="fa fa-calendar-alt fill-primary"></i>
+                        			</div>
+                        			<div class="col-lg-10">
+                        				<p class="list-txt event-title mb-0">Launch Event</p>
+                        				<p class="list-txt event-time mb-0">31st Dec 2020, 12.30 pm IST</p>
+                        			</div>
+                        		</div>
+                        	</li>
+                        </ul>
+                    </div>
+                </div>
+
+
+				<!----Announcements------------>
+				<div class="card br-rd-8 card-shadow no-br mt-3">
+                    <div class="">
+                        <div class="col-md-12 pt-3 px-3">
+                            <h2 class="sec-title mb-0">Announcements</h2>
+                        </div>
+                        <hr>
+                        <ul class="announcement-list list-unstyled cmn-list">
+                        	<li class="px-3">
+                        		<div class="list-wrap row">
+                        			<div class="col-lg-2">
+                        				<i class="fa fa-rocket fill-warning fa-sm"></i>
+                        			</div>
+                        			<div class="col-lg-10">
+                        				<p class="list-txt event-title mb-0">New Launch</p>
+                        				<p class="list-txt event-info mb-0">Embassy Developers has just launched a new project, Brahma Towers in Lavassa.</p>
+                        				<p class="list-txt event-time mb-0">On May 23rd, 2020</p>
+                        			</div>
+                        		</div>
+                        	</li>
+                        	<li class="px-3">
+                        		<div class="list-wrap row">
+                        			<div class="col-lg-2">
+                        				<i class="fa fa-calendar-week fill-primary fa-sm"></i>
+                        			</div>
+                        			<div class="col-lg-10">
+                        				<p class="list-txt event-title mb-0">Events</p>
+                        				<p class="list-txt event-info mb-0">New plans for projects from Lodha builders in Pune on 24th Dec 2020</p>
+                        				<p class="list-txt event-time mb-0">On May 23rd, 2020</p>
+                        			</div>
+                        		</div>
+                        	</li>
+                        	<li class="px-3">
+                        		<div class="list-wrap row">
+                        			<div class="col-lg-2">
+                        				<i class="fa fa-exclamation-triangle fill-danger fa-sm"></i>
+                        			</div>
+                        			<div class="col-lg-10">
+                        				<p class="list-txt event-title mb-0">Brokerage Alert</p>
+                        				<p class="list-txt event-info mb-0">2.5% Brokerage incentive on bookings made within the first week of the launch date</p>
+                        				<p class="list-txt event-time mb-0">Till May 23rd, 2020</p>
+                        			</div>
+                        		</div>
+                        	</li>
+                        	<li class="px-3">
+                        		<div class="list-wrap row">
+                        			<div class="col-lg-2">
+                        				<i class="fa fa-calendar-week fill-primary fa-sm"></i>
+                        			</div>
+                        			<div class="col-lg-10">
+                        				<p class="list-txt event-title mb-0">Events</p>
+                        				<p class="list-txt event-info mb-0">New plans for projects from Lodha builders in Pune on 24th Dec 2020</p>
+                        				<p class="list-txt event-time mb-0">On May 23rd, 2020</p>
+                        			</div>
+                        		</div>
+                        	</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+</section>
