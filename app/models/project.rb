@@ -40,7 +40,7 @@ class Project
   field :total_buildings, type: Integer, default: 1
   field :total_units, type: Integer, default: 1
   field :rera_registration_no, type: String
-  field :approved_banks, type: Array
+  field :approved_banks, type: Array, default: []
   field :project_size, type: String
 
   # selldo attributes
@@ -136,6 +136,7 @@ class Project
   has_many :receipts
   has_many :specifications
   has_many :offers
+  has_many :incentive_schemes
 
   validates :name, presence: true
   validates_uniqueness_of :name, :rera_registration_no, allow_blank: true

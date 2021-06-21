@@ -92,6 +92,72 @@
         </div>
       </div>
     </div>
+    <div class="box-card mt-3">
+      <div class="box-header bg-gradient br-rd-tr-4">
+        <h4><%= project_labels[:specifications] %></h4>
+      </div>
+      <div class="box-content bg-white p-3">
+        <% @project.specifications.each do |spec| %>
+          <h4><%= spec.category.titleize %></h4>
+          <%= spec.description.html_safe %>
+        <% end %>
+      </div>
+    </div>
+    <div class="box-card mt-3">
+      <div class="box-header bg-gradient br-rd-tr-4">
+        <h4><%= project_labels[:offers] %></h4>
+      </div>
+      <div class="box-content bg-white p-3">
+        <% @project.offers.group_by{|x| x.provided_by}.each do |group, offers| %>
+          <h4><%= project_labels[:offers] %> by <%= group.titleize %></h4>
+          <% offers.each do |offer| %>
+            <div class="row">
+              <div class="col-md-4 mt-3">
+                <div class="form-group">
+                  <label class="small text-muted"><%= project_labels[:offer_category] %></label>
+                  <div><%= offer.category.titleize %></div>
+                </div>
+              </div>
+              <div class="col-md-8 mt-3">
+                <div class="form-group">
+                  <label class="small text-muted"><%= project_labels[:offer_short_description] %></label>
+                  <div><%= offer.short_description %></div>
+                </div>
+              </div>
+              <div class="col-md-12 mt-3">
+                <div class="form-group">
+                  <label class="small text-muted"><%= project_labels[:offer_description] %></label>
+                  <div><%= offer.description.html_safe %></div>
+                </div>
+              </div>
+            </div>
+            <hr />
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="box-card mt-3">
+      <div class="box-header bg-gradient br-rd-tr-4">
+        <h4><%= project_labels[:incentive_schemes] %></h4>
+      </div>
+      <div class="box-content bg-white p-3">
+        <% @project.incentive_schemes.group_by{|x| x.category}.each do |group, incentive_schemes| %>
+          <h4><%= group.titleize %> <%= project_labels[:incentive_schemes] %></h4>
+          <% incentive_schemes.each do |incentive_scheme| %>
+            <div class="form-group">
+              <label class="small text-muted"><%= project_labels[:incentive_scheme_short_description] %></label>
+              <div><%= incentive_scheme.name %></div>
+            </div>
+            <div class="form-group">
+              <label class="small text-muted"><%= project_labels[:incentive_scheme_description] %></label>
+              <div><%= incentive_scheme.description.html_safe %></div>
+            </div>
+            <hr />
+          <% end %>
+        <% end %>
+      </div>
+    </div>
   </div>
 </section>
 <br/><br/><br/>
