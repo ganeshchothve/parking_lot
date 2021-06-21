@@ -165,6 +165,9 @@ en:
       project:
         one: Project
         other: Projects
+      developer:
+        one: Developer
+        other: Developers
       payment_adjustment:
         zero: Payment Adjustment
         one: Payment Adjustment
@@ -395,9 +398,21 @@ en:
       client/payment_gateways:
         Razorpay: Razorpay Payment Gateway
         CCAvenue: CCAvenue Payment Gateway
-
+      developer:
+        name: 'Developer Name'
+        selldo_id: 'Sell.Do Developer ID'
       project:
+        is_active: 'Active?'
         name: 'Project Name'
+        micro_market: 'Location'
+        city: 'City'
+        project_type: Type of Project
+        category: Category
+        project_segment: Segment
+        possession: Possession Date
+        launched_on: Launch Date
+        developer_name: Developer
+        approved_banks: Approved Banks
         allowed_bookings_per_user: 'Bookings allowed per user'
         selldo_client_id: 'SellDo Client ID'
         selldo_form_id: 'SellDo Form ID'
@@ -437,12 +452,9 @@ en:
         holding_minutes: 'Unit to be held for (Minutes)'
         rera_registration_no: 'RERA Registration Number'
         configurations: 'Configuration Types'
-        unit_sizes: 'Unit Sizes/Carpet Areas'
-        project_size: 'Total Land Area'
+        project_size: 'Total Land Area (in Acres)'
         total_buildings: 'Number Of Ongoing Towers'
-        locality: 'Location'
-        internal_amenities: 'Internal Amenities'
-        external_amenities: 'External Amenities'
+        amenities: 'Amenities'
         assets: 'Collaterals'
         address: 'Address'
 
@@ -636,7 +648,8 @@ en:
         error: 'Error'
         employee: 'Employee Reserved'
         management: 'Management Reserved'
-
+      developers:
+        name: Name
       projects:
         name: Name
       receipt:
@@ -1047,8 +1060,7 @@ en:
         brochure: 'Project Brochure'
         sales_presentation: 'Sales Presentation'
         unit_selection_filter_image: 'Image on Apartment Search Page'
-        internal_amenities: 'Internal Amenities'
-        external_amenities: 'External Amenities'
+        amenities: 'Amenities'
         certificate: 'Certificate'
       project/help_text:
         document_html: 'Project documents'
@@ -1056,8 +1068,7 @@ en:
         brochure_html: 'Project Brochure preferably in PDF'
         sales_presentation_html: 'Sales Presentation'
         unit_selection_filter_image_html: 'Web compatible image - to be displayed on apartment search page'
-        internal_amenities_html: 'Project Internal amenities images'
-        external_amenities_html: 'Project External amenities images'
+        amenities_html: 'Project amenities'
         certificate_html: 'Certificate'
       cp_lead_activity/file_types:
         sitevisit_form: 'Site Visit Form'

@@ -15,88 +15,83 @@
       </div>
       <div class="box-content bg-white p-3">
         <div class="row">
-          <div class="col-md-4">
+          <% %w( name micro_market city registration_name rera_registration_no project_size total_buildings total_units gst_number cin_number ).each do |field| %>
+            <div class="col-md-4 mt-3">
+              <div class="form-group">
+                <label class="small text-muted"><%= project_labels[field.to_sym] %></label>
+                <div><%= @project.send(field) || '-' %></div>
+              </div>
+            </div>
+          <% end %>
+          <% %w( project_type category project_segment ).each do |field| %>
+            <div class="col-md-4 mt-3">
+              <div class="form-group">
+                <label class="small text-muted"><%= project_labels[field.to_sym] %></label>
+                <div><%= @project.send(field)&.titleize || '-' %></div>
+              </div>
+            </div>
+          <% end %>
+          <% %w( possession launched_on ).each do |field| %>
+            <div class="col-md-4 mt-3">
+              <div class="form-group">
+                <label class="small text-muted"><%= project_labels[field.to_sym] %></label>
+                <div><%= @project.send(field)&.strftime('%m/%Y') || '-' %></div>
+              </div>
+            </div>
+          <% end %>
+          <div class="col-md-4 mt-3">
             <div class="form-group">
-              <label class="small text-muted"><%= project_labels[:name] %></label>
-              <div><%= @project.name || '-' %></div>
+              <label class="small text-muted"><%= project_labels[:developer_name] %></label>
+              <div><%= @project.developer_name || '-' %></div>
             </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-4 mt-3">
             <div class="form-group">
-              <label class="small text-muted"><%= project_labels[:registration_name] %></label>
-              <div><%= @project.registration_name || '-'  %></div>
+              <label class="small text-muted"><%= project_labels[:is_active] %></label>
+              <div><%= @project.is_active? ? 'Yes' : 'No' %></div>
             </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-4 mt-3">
             <div class="form-group">
-              <label class="small text-muted"><%= project_labels[:rera_registration_no] %></label>
-              <div><%= @project.rera_registration_no || '-'  %></div>
+              <label class="small text-muted"><%= project_labels[:website_link] %></label>
+              <div><%= @project.website_link? ? link_to('Website', @project.website_link, target: '_blank') : '-' %></div>
             </div>
           </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="small text-muted"><%= project_labels[:project_size] %></label>
-              <div><%= @project.project_size || '-'  %></div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="small text-muted"><%= project_labels[:locality] %></label>
-              <div><%= @project.locality  || '-' %></div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="small text-muted"><%= project_labels[:total_buildings] %></label>
-              <div><%= @project.total_buildings || '-'  %></div>
-            </div>
-          </div>
-          <div class="col-md-4">
+          <div class="col-md-4 mt-3">
             <div class="form-group">
               <label class="small text-muted"><%= project_labels[:configurations] %></label>
               <div><%= @project.configurations.join(', ') || '-'  %></div>
             </div>
           </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="small text-muted"><%= project_labels[:unit_sizes] %></label>
-              <div><%= @project.unit_sizes.join(', ') || '-'  %></div>
-            </div>
-          </div>
-          <div class="col-md-4">
+          <div class="col-md-8 mt-3">
             <div class="form-group">
               <label class="small text-muted"><%= project_labels[:address] %></label>
               <div><%= @project.address.try(:to_sentence) %></div>
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-12">
-            <div class="form-group">
-              <label class="small text-muted"><%= project_labels[:internal_amenities] %></label>
-              <ul>
-                 <% @project.internal_amenities.each do |type| %>
-                  <li>
-                    <%= type %>
-                  </li>
-                 <% end %>
-              </ul>
-            </div>
-          </div>
-          <div class="col-md-12">
-            <div class="form-group">
-              <label class="small text-muted"><%= project_labels[:external_amenities] %></label>
-              <ul>
-                 <% @project.external_amenities.each do |type| %>
-                  <li>
-                    <%= type %>
-                  </li>
-                 <% end %>
-              </ul>
-            </div>
-          </div>
+        <div class="form-group mt-3">
+          <label class="small text-muted"><%= project_labels[:amenities] %></label>
+          <ul>
+              <% @project.amenities.each do |type| %>
+              <li class="amenity_<%= type %>">
+                <%= type.titleize %>
+              </li>
+              <% end %>
+          </ul>
+        </div>
+        <div class="form-group mt-5">
+          <label class="small text-muted"><%= project_labels[:approved_banks] %></label>
+          <ul>
+              <% @project.approved_banks.each do |type| %>
+              <li class='approved_bank_<%= type %>'>
+                <%= type.titleize %>
+              </li>
+              <% end %>
+          </ul>
         </div>
       </div>
     </div>
   </div>
 </section>
+<br/><br/><br/>

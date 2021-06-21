@@ -20,3 +20,25 @@
   <% end %>
   <hr/>
 </div>
+<div class="form-group">
+  <%= f.label :cover_photo, class: '' %><br/>
+  <%= f.file_field :cover_photo, class: 'btn pl-0', disabled: !policy([:admin, @project]).editable_field?("cover_photo") %>
+  <br/>
+  <% if @project.cover_photo.present? %>
+    <div style="width:100px;height:100px;overflow:hidden;" class="ml-3">
+      <img src="<%= @project.cover_photo.url %>" style="max-height: 100%; max-width:100%;" />
+    </div>
+  <% end %>
+  <hr/>
+</div>
+<div class="form-group">
+  <%= f.label :mobile_cover_photo, class: '' %><br/>
+  <%= f.file_field :mobile_cover_photo, class: 'btn pl-0', disabled: !policy([:admin, @project]).editable_field?("mobile_cover_photo") %>
+  <br/>
+  <% if @project.mobile_cover_photo.present? %>
+    <div style="width:100px;height:100px;overflow:hidden;" class="ml-3">
+      <img src="<%= @project.mobile_cover_photo.url %>" style="max-height: 100%; max-width:100%;" />
+    </div>
+  <% end %>
+  <hr/>
+</div>

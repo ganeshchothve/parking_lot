@@ -1,6 +1,5 @@
 class Admin::ProjectsController < AdminController
-
-  before_action :set_project, except: %i[index collaterals]
+  before_action :set_project, except: %i[index collaterals new create]
   before_action :authorize_resource, except: %i[collaterals]
   around_action :apply_policy_scope, only: %i[index collaterals]
   layout :set_layout
@@ -25,12 +24,44 @@ class Admin::ProjectsController < AdminController
   end
 
   #
+  # This new action for Admin users is called after new.
+  #
+  # PATCH /admin/projects/:id
+  #
+  def new
+    @project = Project.new
+    render layout: false
+  end
+
+  #
   # This edit action for Admin users is called after edit.
   #
   # PATCH /admin/projects/:id
   #
   def edit
     render layout: false
+  end
+
+  #
+  # This update action for Admin users is called after edit.
+  #
+  # PATCH /admin/projects/:id
+  #
+  def create
+    @project = Project.new
+    @project.assign_attributes(permitted_attributes([current_user_role_group, @project]))
+    @project.creator = current_user
+    @project.booking_portal_client_id = current_user.booking_portal_client_id
+
+    respond_to do |format|
+      if @project.save
+        format.html { redirect_to admin_projects_path, notice: 'Project was successfully created.' }
+        format.json { render json: @project, status: :created }
+      else
+        format.html { render :new }
+        format.json { render json: { errors: @project.errors.full_messages.uniq }, status: :unprocessable_entity }
+      end
+    end
   end
 
   #
@@ -64,12 +95,12 @@ class Admin::ProjectsController < AdminController
   end
 
   def authorize_resource
-    if %w[index collaterals].include?(params[:action])
-      if params[:ds].to_s == 'true'
-        authorize([:admin, Project], :ds?)
-      else
-        authorize [:admin, Project]
-      end
+    if %w[index collaterals export].include?(params[:action])
+      authorize [:admin, Project]
+    elsif params[:action] == 'new'
+      authorize [:admin, Project.new]
+    elsif params[:action] == 'create'
+      authorize [:admin, Project.new(permitted_attributes([:admin, Project.new]))]
     else
       authorize [:admin, @project]
     end

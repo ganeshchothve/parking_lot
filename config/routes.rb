@@ -154,7 +154,8 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :projects, only: [:index, :edit, :update, :show] do
+    resources :developers, except: [:destroy]
+    resources :projects, except: [:destroy] do
       get :collaterals, on: :member
       get :collaterals, on: :collection
     end

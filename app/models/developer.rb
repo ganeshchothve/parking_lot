@@ -4,7 +4,7 @@ class Developer
   include ArrayBlankRejectable
 
   field :name, type: String
-
+  field :developer_rating, type: Integer
   field :selldo_id, type: String
 
   validates :name,:presence => true
