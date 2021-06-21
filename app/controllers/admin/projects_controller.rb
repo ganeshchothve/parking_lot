@@ -58,8 +58,11 @@ class Admin::ProjectsController < AdminController
         format.html { redirect_to admin_projects_path, notice: 'Project was successfully created.' }
         format.json { render json: @project, status: :created }
       else
+        errors = @project.errors.full_messages
+        errors << @project.specifications.collect{|x| x.errors.full_messages}
+        errors.uniq!
         format.html { render :new }
-        format.json { render json: { errors: @project.errors.full_messages.uniq }, status: :unprocessable_entity }
+        format.json { render json: { errors: errors }, status: :unprocessable_entity }
       end
     end
   end
@@ -75,8 +78,11 @@ class Admin::ProjectsController < AdminController
       if @project.update(parameters)
         format.html { redirect_to request.referrer || admin_projects_path, notice: 'Project successfully updated.' }
       else
+        errors = @project.errors.full_messages
+        errors << @project.specifications.collect{|x| x.errors.full_messages}
+        errors.uniq!
         format.html { render :edit }
-        format.json { render json: { errors: @project.errors.full_messages }, status: :unprocessable_entity }
+        format.json { render json: { errors: errors }, status: :unprocessable_entity }
       end
     end
   end

@@ -1,31 +1,47 @@
 <% random_id = "crs_#{11**11}" %>
 <div class="row">
   <div class="col-md-6">
-    <%= f.input :address1 %>
+    <div class="form-group">
+      <%= f.label :address1 %>
+      <%= f.text_field :address1, class: 'form-control' %>
+    </div>
   </div>
   <div class="col-md-6">
-    <%= f.input :address2 %>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-md-6">
-    <%= f.input :country, collection: [], prompt: :translate, input_html: { class: 'crs-country', data: { 'region-id' => random_id, 'default-value' => f.object.present? ? f.object.country : ""} } %>
-  </div>
-
-  <div class="col-md-6">
-    <%= f.input :state, collection: [], prompt: :translate, input_html: { id: random_id, data: { 'default-value': f.object.present? ? f.object.state : "" } }, as: :select %>
+    <div class="form-group">
+      <%= f.label :address2 %>
+      <%= f.text_field :address2, class: 'form-control' %>
+    </div>
   </div>
 </div>
 
 <div class="row">
   <div class="col-md-6">
-    <%= f.label :city %>
-    <%= f.select :city, options_for_select((f.object.country == 'India' ? Address::CITY : [f.object.city]), f.object.try(:city) ? f.object.city : ''), {}, class: :selectize, data: {create: true} %>
+    <div class="form-group">
+      <%= f.label :country %>
+      <%= f.text_field :country, collection: [], prompt: :translate, input_html: { class: 'crs-country', data: { 'region-id' => random_id, 'default-value' => f.object.present? ? f.object.country : ""} }, class: 'form-control' %>
+    </div>
   </div>
 
   <div class="col-md-6">
-    <%= f.input :zip %>
+    <div class="form-group">
+      <%= f.label :state %>
+      <%= f.text_field :state, collection: [], prompt: :translate, input_html: { id: random_id, data: { 'default-value': f.object.present? ? f.object.state : "" } }, as: :select, class: 'form-control' %>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :city %>
+      <%= f.select :city, options_for_select((f.object.country == 'India' ? Address::CITY : [f.object.city]), f.object.try(:city) ? f.object.city : ''), {}, class: :selectize, data: {create: true} %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :zip %>
+      <%= f.text_field :zip, class: 'form-control' %>
+    </div>
   </div>
 </div>
 
