@@ -1,0 +1,2 @@
+class DeveloperPolicy < ApplicationPolicy
+end

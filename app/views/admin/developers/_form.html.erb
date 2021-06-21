@@ -1,0 +1,41 @@
+<%
+  if developer.persisted?
+    _url = admin_developer_path(developer)
+  else
+    _url = admin_developers_path
+  end
+%>
+<%= simple_form_for developer, url: _url, remote: true, local: true, html: { novalidate: false, id: "developer_form", class: "modal-remote-form validate-form", data: { 'resource-type': Developer.model_name.human, type: :json } } do |f| %>
+  <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-gradient-cd white">
+          <h3 class="title">
+            <%= t('helpers.edit.link_name', model: Developer.model_name.human)%>
+          </h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true" class="white">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <%= f.label :name, class: 'label-required' %>
+            <%= f.text_field :name, class: 'form-control', autofocus: true, required: 'required', disabled: !policy([:admin, developer]).editable_field?("name") %>
+          </div>
+          <div class="form-group">
+            <%= f.label :selldo_id, class: 'label-required' %>
+            <%= f.text_field :selldo_id, class: 'form-control', autofocus: true, required: 'required', disabled: !policy([:admin, developer]).editable_field?("selldo_id") %>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <%= f.submit "Save", class: 'btn btn-primary' %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($("#project_form"));
+  });
+<% end %>
