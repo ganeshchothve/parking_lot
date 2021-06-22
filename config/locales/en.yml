@@ -454,9 +454,22 @@ en:
         configurations: 'Configuration Types'
         project_size: 'Total Land Area (in Acres)'
         total_buildings: 'Number Of Ongoing Towers'
-        amenities: 'Amenities'
+        amenities: 'Project Amenities'
+        specifications: 'Project Specifications'
+        offers: 'Customer Offers'
+        timeline_updates: 'Project Timelines'
         assets: 'Collaterals'
         address: 'Address'
+        offer_category: 'Category'
+        offer_short_description: "What's the Offer"
+        offer_description: Full Offer Text
+        timeline_update_name: 'Update'
+        timeline_update_description: "Update Details"
+        timeline_update_date: 'Update Date'
+        incentive_scheme_category: 'Category'
+        incentive_scheme_short_description: "What's the Opportunity"
+        incentive_scheme_description: Full Incentive Scheme Text
+        incentive_schemes: 'Earning Opportunities'
 
       cost:
         name: "Name"

@@ -40,7 +40,7 @@ class Project
   field :total_buildings, type: Integer, default: 1
   field :total_units, type: Integer, default: 1
   field :rera_registration_no, type: String
-  field :approved_banks, type: Array
+  field :approved_banks, type: Array, default: []
   field :project_size, type: String
 
   # selldo attributes
@@ -134,13 +134,17 @@ class Project
   has_many :whatsapps, class_name: 'Whatsapp'
   has_many :assets, as: :assetable
   has_many :receipts
+  has_many :specifications
+  has_many :offers
+  has_many :incentive_schemes
+  has_many :timeline_updates
 
   validates :name, presence: true
   validates_uniqueness_of :name, :rera_registration_no, allow_blank: true
   validates :enable_actual_inventory, array: { inclusion: {allow_blank: true, in: (User::ADMIN_ROLES + User::BUYER_ROLES) } }
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
 
-  accepts_nested_attributes_for :address, allow_destroy: true
+  accepts_nested_attributes_for :specifications, :offers, :timeline_updates, :address, allow_destroy: true
   index(client_id:1)
 
   default_scope -> { where(is_active: true)}

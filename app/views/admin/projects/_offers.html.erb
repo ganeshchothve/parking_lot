@@ -1,0 +1,32 @@
+<div class="offers">
+  <% editable_offers = policy([:admin, project]).editable_field?("offers_attributes")%>
+  <% if editable_offers %>
+    <div class='text-right'>
+      <%= f.link_to_add "Add Offer", :offers, :data => { :target => ".offers" }, class: 'btn btn-secondary' %>
+    </div>
+  <% end %>
+  <%= f.fields_for :offers do |sf|%>
+    <% if editable_offers %>
+      <div class='pl-2 text-right'>
+        <%= sf.link_to_remove icon("far", "times-circle") %>
+      </div>
+    <% end %>
+    <div class="form-group">
+      <%= sf.label :category, class: 'label-required' %>
+      <%= sf.select :category, Offer::CATEGORIES.collect{|x| [x.titleize, x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", required: true, disabled: !editable_offers %>
+    </div>
+    <div class="form-group">
+      <%= sf.label :provided_by, class: 'label-required' %>
+      <%= sf.select :provided_by, Offer::PROVIDED_BY.collect{|x| [x.titleize, x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", required: true, disabled: !editable_offers %>
+    </div>
+    <div class="form-group">
+      <%= sf.label :short_description, class: 'label-required' %>
+      <%= sf.text_field :short_description, class:'form-control', required: 'required', disabled: !editable_offers %>
+    </div>
+    <div class="form-group">
+      <%= sf.label :description, class: 'label-required' %>
+      <%= sf.text_area :description, class:'form-control summernote', required: 'required', disabled: !editable_offers %>
+    </div>
+  <% end %>
+  <hr>
+</div>
