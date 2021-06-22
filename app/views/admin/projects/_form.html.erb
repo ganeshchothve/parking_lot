@@ -21,16 +21,17 @@
           <nav>
             <div class="nav nav-tabs" role="tablist">
               <a class="nav-item nav-link active" data-toggle="tab" href="#nav-project-basic" role="tab">Basic Details</a>
-              <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-specifications" role="tab">Specifications</a>
+              <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-specifications" role="tab">Specs</a>
               <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-offers" role="tab">Offers</a>
+              <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-timeline" role="tab">Timeline</a>
               <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-pages" role="tab">Content Pages</a>
-              <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-logos" role="tab">Images & Documents</a>
+              <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-logos" role="tab">Images & Docs</a>
               <% if current_user.role?(:superadmin) %>
                 <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-integrations" role="tab">Integrations</a>
                 <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-bookings" role="tab">Bookings</a>
-                <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-contacts" role="tab">Contacts & Notifications</a>
+                <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-contacts" role="tab">Notifications</a>
                 <% if policy(ThirdPartyReference).editable_field?('reference_id') %>
-                  <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-crm-ids" role="tab">CRM IDs</a>
+                  <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-crm-ids" role="tab">CRM</a>
                 <% end %>
               <% end %>
             </div>
@@ -45,6 +46,9 @@
             </div>
             <div class="tab-pane fade" id="nav-project-offers" role="tabpanel">
               <%= render 'admin/projects/offers', f: f, project: project %>
+            </div>
+            <div class="tab-pane fade" id="nav-project-timeline" role="tabpanel">
+              <%= render 'admin/projects/timeline-updates', f: f, project: project %>
             </div>
             <div class="tab-pane fade" id="nav-project-pages" role="tabpanel">
                 <%= render 'admin/projects/pages', f: f, project: project %>

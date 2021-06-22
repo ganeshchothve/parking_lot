@@ -136,6 +136,36 @@
         <% end %>
       </div>
     </div>
+    <div class="box-card mt-3">
+      <div class="box-header bg-gradient br-rd-tr-4">
+        <h4><%= project_labels[:timeline_updates] %></h4>
+      </div>
+      <div class="box-content bg-white p-3">
+        <% @project.timeline_updates.each do |timeline_update| %>
+          <div class="row">
+            <div class="col-md-4 mt-3">
+              <div class="form-group">
+                <label class="small text-muted"><%= project_labels[:timeline_update_date] %></label>
+                <div><%= timeline_update.date %></div>
+              </div>
+            </div>
+            <div class="col-md-4 mt-3">
+              <div class="form-group">
+                <label class="small text-muted"><%= project_labels[:timeline_update_name] %></label>
+                <div><%= timeline_update.name %></div>
+              </div>
+            </div>
+            <div class="col-md-4 mt-3">
+              <div class="form-group">
+                <label class="small text-muted"><%= project_labels[:timeline_update_description] %></label>
+                <div><%= timeline_update.description.html_safe %></div>
+              </div>
+            </div>
+          </div>
+          <hr />
+        <% end %>
+      </div>
+    </div>
 
     <div class="box-card mt-3">
       <div class="box-header bg-gradient br-rd-tr-4">
