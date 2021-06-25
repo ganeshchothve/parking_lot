@@ -246,8 +246,8 @@ class Admin::UsersController < AdminController
     if %w[index export portal_stage_chart channel_partner_performance].include?(params[:action])
       authorize [current_user_role_group, User]
     elsif params[:action] == 'new' || params[:action] == 'create'
-      if params[:role].present?
-        authorize [current_user_role_group, User.new(role: params[:role], booking_portal_client_id: current_client.id)]
+      if params.dig(:user, :role).present?
+        authorize [current_user_role_group, User.new(role: params.dig(:user, :role), booking_portal_client_id: current_client.id)]
       else
         authorize [current_user_role_group, User.new(booking_portal_client_id: current_client.id)]
       end
