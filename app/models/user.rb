@@ -111,6 +111,7 @@ class User
 
   field :temporarily_blocked, type: Boolean, default: false
   field :unblock_at, type: Date
+  field :project_ids, type: Array, default: []
 
   ## Security questionable
 
@@ -187,9 +188,9 @@ class User
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :manager_change_reason_present?
   validate :password_complexity
+  validates_length_of :project_ids, maximum: 1, message: "length should be one", if: proc { |user| user.role == 'cp' }
 
   # scopes needed by filter
-  scope :filter_by_lead_id, ->(lead_id) { where(lead_id: lead_id) }
   scope :filter_by_confirmation, ->(confirmation) { confirmation.eql?('not_confirmed') ? where(confirmed_at: nil) : where(confirmed_at: { "$ne": nil }) }
   scope :filter_by_manager_id, ->(manager_id) {where(manager_id: manager_id) }
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where({ '$and' => ["$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] ] }) }
@@ -197,6 +198,9 @@ class User
   scope :filter_by_role, ->(_role) { _role.is_a?(Array) ? where( role: { "$in": _role }) : where(role: _role.as_json) }
 
   scope :filter_by_role_nin, ->(_role) { _role.is_a?(Array) ? where( role: { "$nin": _role } ) : where(role: _role.as_json) }
+  scope :buyers, -> { where(role: {'$in' => BUYER_ROLES } )}
+  scope :filter_by_lead_id, ->(lead_id) { where(lead_id: lead_id) }
+  scope :filter_by_userwise_project_ids, ->(user) { self.in(project_ids: user.project_ids) if user.try(:project_ids).present? }
 
   scope :filter_by_created_by, ->(_created_by) do
     if _created_by == 'direct'
@@ -215,7 +219,28 @@ class User
       end
     end
   end
-  scope :buyers, -> { where(role: {'$in' => BUYER_ROLES } )}
+  scope :filter_by_cp_reference_id, ->(reference_id) do
+    if reference_id.present?
+      third_party_references = []
+      reference_id.each do |key, value|
+        next if (key.blank? || value.blank?)
+        crm_id = (BSON.ObjectId(key) rescue "")
+        third_party_references << {"third_party_references.crm_id": crm_id, "third_party_references.reference_id": value}
+      end
+      if third_party_references.present?
+        where("$or": third_party_references)
+      end
+    end
+  end
+  scope :filter_by_cp_code, ->(cp_code) do
+      channel_partner = ChannelPartner.where(cp_code: cp_code)
+      if channel_partner.present?
+        where(id: {"$in": channel_partner.pluck(:associated_user_id)})
+      else
+        User.none
+      end
+  end
+
 
   # This some additional scope which help to fetch record easily.
   # This following methods are

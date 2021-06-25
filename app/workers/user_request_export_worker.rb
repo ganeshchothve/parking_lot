@@ -8,7 +8,7 @@ class UserRequestExportWorker
     file = Spreadsheet::Workbook.new
     sheet = file.create_worksheet(name: 'Cancellation Report')
     sheet.insert_row(0, UserRequestExportWorker.get_column_names)
-    user_requests = UserRequest.build_criteria({ fltrs: filters }.with_indifferent_access)
+    user_requests = UserRequest.where(UserRequest.user_based_scope(user)).build_criteria({ fltrs: filters }.with_indifferent_access)
     user_requests = user_requests.where(UserRequest.user_based_scope(user))
     user_requests.each_with_index do |user_request, index|
       sheet.insert_row(index + 1, UserRequestExportWorker.get_user_request_row(user_request))

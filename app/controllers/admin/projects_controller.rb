@@ -113,7 +113,7 @@ class Admin::ProjectsController < AdminController
   end
 
   def apply_policy_scope
-    custom_project_scope = Project.all.criteria
+    custom_project_scope = Project.where(Project.user_based_scope(current_user,params)).criteria
     Project.with_scope(policy_scope(custom_project_scope)) do
       yield
     end

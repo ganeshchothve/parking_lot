@@ -99,7 +99,7 @@ class BookingDetail
   scope :filter_by_tasks_completed_tracked_by, ->(tracked_by) { where("#{tracked_by}_tasks_completed": true) }
   scope :filter_by_tasks_pending_tracked_by, ->(tracked_by) { where("#{tracked_by}_tasks_completed": false) }
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(name: regex ) }
-  scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: start_date..end_date) }
+  scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: Date.parse(start_date).beginning_of_day..Date.parse(end_date).end_of_day) }
   scope :filter_by_booked_on, ->(date) { start_date, end_date = date.split(' - '); where(booked_on: Date.parse(start_date).beginning_of_day..Date.parse(end_date).end_of_day)
   }
   scope :incentive_eligible, -> { booked_confirmed.filter_by_tasks_completed_tracked_by('system') }
@@ -339,6 +339,10 @@ class BookingDetail
 
       custom_scope = { lead_id: params[:lead_id] } if params[:lead_id].present?
       custom_scope = { user_id: user.id } if user.buyer?
+      if user.project_ids.present?
+        project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
+        custom_scope.merge!({project_id: {"$in": project_ids}})
+      end
       custom_scope
     end
 

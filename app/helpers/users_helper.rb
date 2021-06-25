@@ -24,6 +24,10 @@ module UsersHelper
     User::ADMIN_ROLES.collect{|role| [ User.human_attribute_name("role.#{role}"), role ]}
   end
 
+  def filter_project_names_options
+    Project.pluck(:name,:id)
+  end
+
   def filter_buyer_role_options
     User.buyer_roles(current_client).collect{|role| [ User.human_attribute_name("role.#{role}"), role ]}
   end

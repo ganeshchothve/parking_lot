@@ -10,7 +10,7 @@ class ReceiptExportWorker
     file = Spreadsheet::Workbook.new
     sheet = file.create_worksheet(name: "Receipts")
     sheet.insert_row(0, ReceiptExportWorker.get_column_names)
-    receipts = Receipt.build_criteria({fltrs: filters}.with_indifferent_access)
+    receipts = Receipt.where(Receipt.user_based_scope(user)).build_criteria({fltrs: filters}.with_indifferent_access)
     receipts = receipts.where(Receipt.user_based_scope(user)) if user_id
     receipts.each_with_index do |receipt, index|
       sheet.insert_row(index+1, ReceiptExportWorker.get_receipt_row(receipt))

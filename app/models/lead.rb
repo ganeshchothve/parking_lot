@@ -262,6 +262,10 @@ class Lead
       end
       custom_scope = { user_id: params[:user_id] } if params[:user_id].present?
       custom_scope = { user_id: user.id } if user.buyer?
+      if user.project_ids.present?
+        project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
+        custom_scope.merge!({project_id: {"$in": project_ids}})
+      end
       custom_scope
     end
 

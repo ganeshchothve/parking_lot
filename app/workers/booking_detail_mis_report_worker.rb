@@ -8,7 +8,7 @@ class BookingDetailMisReportWorker
     sheet = file.create_worksheet(name: "Receipts")
     sheet.insert_row(0, BookingDetailMisReportWorker.get_column_names)
     row = 1
-    BookingDetail.each_with_index do |booking_detail, index|
+    BookingDetail.where(BookingDetail.user_based_scope(user)).each_with_index do |booking_detail, index|
       sheet.insert_row(row, BookingDetailMisReportWorker.get_booking_detail_row(booking_detail))
       row = row + 1
       if (booking_detail.try(:booking_detail_scheme).try(:payment_adjustments).try(:count) || 0) > 1

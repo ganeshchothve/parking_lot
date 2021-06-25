@@ -69,6 +69,10 @@ class UserRequest
 
       custom_scope[:requestable_id] = params[:requestable_id] if params[:requestable_id].present?
       custom_scope[:_type] = 'UserRequest::General' unless current_client.enable_actual_inventory?(user)
+      if user.project_ids.present?
+        project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
+        custom_scope.merge!({project_id: {"$in": project_ids}})
+      end
       custom_scope
     end
   end
