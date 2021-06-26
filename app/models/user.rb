@@ -6,7 +6,6 @@ class User
   include ActiveModel::OneTimePassword
   include InsertionStringMethods
   include ApplicationHelper
-  # include SyncDetails
   include CrmIntegration
   extend FilterByCriteria
   extend ApplicationHelper
@@ -16,6 +15,7 @@ class User
   ALLOWED_UTM_KEYS = %i[utm_campaign utm_source utm_sub_source utm_content utm_medium utm_term]
   BUYER_ROLES = %w[user employee_user management_user]
   ADMIN_ROLES = %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner gre billing_team]
+  ALL_PROJECT_ACCESS = %w[superadmin admin cp cp_admin]
   CHANNEL_PARTNER_USERS = %w[cp cp_admin channel_partner]
   SALES_USER = %w[sales sales_admin]
   COMPANY_USERS = %w[employee_user management_user]
@@ -111,6 +111,9 @@ class User
 
   field :temporarily_blocked, type: Boolean, default: false
   field :unblock_at, type: Date
+
+  # For scoping user with roles: (sales, sales_admin, crm, gre, billing_team) under projects
+  # For channel partner users, using interested projects association for scoping under projects
   field :project_ids, type: Array, default: []
 
   ## Security questionable
@@ -160,6 +163,7 @@ class User
   has_and_belongs_to_many :cced_emails, class_name: 'Email', inverse_of: :cc_recipients
   has_many :cp_lead_activities
   has_and_belongs_to_many :meetings
+  has_many :interested_projects  # Channel partners can subscribe to new projects through this
 
   has_many :notes, as: :notable
 
@@ -188,7 +192,6 @@ class User
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :manager_change_reason_present?
   validate :password_complexity
-  validates_length_of :project_ids, maximum: 1, message: "length should be one", if: proc { |user| user.role == 'cp' }
 
   # scopes needed by filter
   scope :filter_by_confirmation, ->(confirmation) { confirmation.eql?('not_confirmed') ? where(confirmed_at: nil) : where(confirmed_at: { "$ne": nil }) }

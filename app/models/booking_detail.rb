@@ -324,7 +324,7 @@ class BookingDetail
       custom_scope = {}
       if params[:lead_id].blank? && !user.buyer?
         if user.role?('channel_partner')
-          custom_scope = { manager_id: user.id }
+          custom_scope = { manager_id: user.id, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) } }
         #elsif user.role?('cp_admin')
         #  cp_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
         #  channel_partner_ids = User.where(role: 'channel_partner', manager_id: {"$in": cp_ids}).distinct(:id)
@@ -339,7 +339,8 @@ class BookingDetail
 
       custom_scope = { lead_id: params[:lead_id] } if params[:lead_id].present?
       custom_scope = { user_id: user.id } if user.buyer?
-      if user.project_ids.present?
+
+      unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
         project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
         custom_scope.merge!({project_id: {"$in": project_ids}})
       end

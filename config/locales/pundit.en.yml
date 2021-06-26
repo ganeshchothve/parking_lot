@@ -13,6 +13,15 @@ en:
         allowed_bookings: "You have booked the permitted number of apartments."
 
     admin:
+      lead_policy:
+        new?:
+          project_not_subscribed: 'This project is not subscribed'
+        check_and_register?:
+          project_not_subscribed: 'This project is not subscribed'
+
+      project_policy:
+        collaterals?:
+          project_not_subscribed: 'This project is not subscribed'
 
       booking_detail_policy:
         create?:

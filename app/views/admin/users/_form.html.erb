@@ -73,7 +73,7 @@
           <% if policy([current_user_role_group, @user]).editable_field?("project_ids") %>
             <div class="form-group">
               <%= f.label :project_ids, class: "control-label" %>
-              <%= f.select :project_ids, filter_project_names_options, {}, class: 'selectize', multiple: true, required: 'required' , disabled: !(policy([current_user_role_group, f.object]).editable_field?("project_ids")) %>
+              <%= f.select :project_ids, filter_project_names_options, {}, class: 'selectize', multiple: true, disabled: !(policy([current_user_role_group, f.object]).editable_field?("project_ids")) %>
             </div>
           <% end %>
           <% if policy([current_user_role_group, @user]).editable_field?("manager_change_reason") %>

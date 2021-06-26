@@ -254,7 +254,7 @@ class Lead
       #  custom_scope = { manager_id: { "$in": User.where(role: 'channel_partner').in(manager_id: cp_ids).distinct(:id) }  }
       when :channel_partner
         lead_ids = CpLeadActivity.where(user_id: user.id).distinct(:lead_id)
-        custom_scope = {_id: { '$in': lead_ids } }
+        custom_scope = {_id: { '$in': lead_ids }, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) } }
       when :cp_admin
         channel_partner_ids = User.where(role: 'channel_partner', manager_id: user.id).distinct(:id)
         lead_ids = CpLeadActivity.in(user_id: channel_partner_ids).distinct(:lead_id)
@@ -262,7 +262,8 @@ class Lead
       end
       custom_scope = { user_id: params[:user_id] } if params[:user_id].present?
       custom_scope = { user_id: user.id } if user.buyer?
-      if user.project_ids.present?
+
+      unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
         project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
         custom_scope.merge!({project_id: {"$in": project_ids}})
       end

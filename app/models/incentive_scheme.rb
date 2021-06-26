@@ -52,7 +52,7 @@ class IncentiveScheme
 
   def self.user_based_scope(user, params = {})
     custom_scope = {}
-    if user.project_ids.present?
+    unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
       project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
       custom_scope.merge!({project_id: {"$in": project_ids}})
     end

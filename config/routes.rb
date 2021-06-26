@@ -253,6 +253,7 @@ Rails.application.routes.draw do
       match :confirm_via_otp, action: 'confirm_via_otp', as: :confirm_via_otp, on: :member, via: [:get, :patch]
 
       resources :leads, only: :index
+      resources :interested_projects, only: [:index, :create, :edit, :update]
     end # end resources :users block
 
     resources :user_kycs, only: %i[index show], controller: 'user_kycs'

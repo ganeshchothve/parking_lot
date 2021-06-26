@@ -2,7 +2,9 @@ class Admin::LeadPolicy < LeadPolicy
 
   def index?
     out = !user.buyer?
-    out && user.active_channel_partner?
+    out = out && user.active_channel_partner?
+    out = false if user.role?('channel_partner') && !interested_project_present?
+    out
   end
 
   def export?
@@ -10,7 +12,14 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def new?
-    true
+    valid = true
+    valid = false if user.role?('channel_partner') && !interested_project_present?
+    @condition = 'project_not_subscribed' unless valid
+    valid
+  end
+
+  def check_and_register?
+    new?
   end
 
   def edit?
@@ -36,7 +45,7 @@ class Admin::LeadPolicy < LeadPolicy
   def show_selldo_links?
     ENV_CONFIG['selldo'].try(:[], 'base_url').present? && record.lead_id? && record.project.selldo_default_search_list_id?
   end
-  
+
   def send_payment_link?
     record.user.confirmed?
   end
@@ -48,5 +57,15 @@ class Admin::LeadPolicy < LeadPolicy
       attributes += [:manager_id, third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes]
     end
     attributes.uniq
+  end
+
+  private
+
+  def interested_project_present?
+    if record.is_a?(Lead) && record.project_id.present?
+      user.interested_projects.approved.where(project_id: record.project_id).present?
+    else
+      true
+    end
   end
 end

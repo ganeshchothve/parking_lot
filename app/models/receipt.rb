@@ -262,7 +262,7 @@ class Receipt
     custom_scope = {}
     if params[:lead_id].blank? && !user.buyer?
       if user.role?('channel_partner')
-        custom_scope = { manager_id: user.id }
+        custom_scope = { manager_id: user.id, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) } }
       #elsif user.role?('cp_admin')
       #  custom_scope = { lead_id: { "$in": Lead.nin(manager_id: [nil, '']).distinct(:id) } }
       #elsif user.role?('cp')
@@ -275,7 +275,8 @@ class Receipt
     custom_scope = { user_id: user.id } if user.buyer?
 
     custom_scope[:booking_detail_id] = params[:booking_detail_id] if params[:booking_detail_id].present?
-    if user.project_ids.present?
+
+    unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
       project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
       custom_scope.merge!({project_id: {"$in": project_ids}})
     end

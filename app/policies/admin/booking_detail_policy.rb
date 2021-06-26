@@ -2,10 +2,14 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def index?
     out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner billing_team].include?(user.role) && (enable_actual_inventory?(user) || enable_incentive_module?(user))
+    out = false if user.role?('channel_partner') && !interested_project_present?
+    out
   end
 
   def new?
     out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner].include?(user.role) && eligible_user? && enable_actual_inventory?(user)
+    out = false if user.role?('channel_partner') && !interested_project_present?
+    out
   end
 
   def create?
@@ -121,4 +125,11 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     end
   end
 
+  def interested_project_present?
+    if record.is_a?(BookingDetail) && record.project_id.present?
+      user.interested_projects.approved.where(project_id: record.project_id).present?
+    else
+      true
+    end
+  end
 end

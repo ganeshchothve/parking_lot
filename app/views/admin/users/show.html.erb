@@ -22,6 +22,10 @@
         <%= render 'users/section', users: users, name: User.model_name.human(count: users.total_entries ) %>
       <% end %>
 
+      <% if @user.role?('channel_partner') %>
+        <%= render 'users/interested_projects' %>
+      <% end %>
+
       <!-- Note Summary -->
       <div class="separate-line container"></div>
       <%= render 'notes/section', notable: @user %>

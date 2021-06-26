@@ -26,7 +26,10 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def collaterals?
-    true
+    valid = true
+    valid = false if user.role?('channel_partner') && !interested_project_present?
+    @condition = 'project_not_subscribed' unless valid
+    valid
   end
 
   def ds?
@@ -48,5 +51,15 @@ class Admin::ProjectPolicy < ProjectPolicy
       ]
     end
     attributes.uniq
+  end
+
+  private
+
+  def interested_project_present?
+    if record.is_a?(Project)
+      user.interested_projects.approved.where(project_id: record.id).present?
+    else
+      true
+    end
   end
 end
