@@ -379,6 +379,12 @@ Rails.application.routes.draw do
 
   #broker 
   get 'broker/home', to: 'broker#index'
+  get 'broker/project-details', to: 'broker#project_details'
+  get 'broker/project', to: 'broker#project'
+  get 'broker/project', to: 'broker#project'
+  get 'broker/terms-and-conditions', to: 'broker#terms_and_conditions'
+  get 'broker/privacy-policy', to: 'broker#privacy_policy'
+  get 'broker/cp-enquiryform', to: 'broker#cp_enquiryform'
 
 
   match '/sell_do/lead_created', to: "api/sell_do/leads#lead_created", via: [:get, :post]

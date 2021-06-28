@@ -1,5 +1,6 @@
 //= require rails-ujs
 //= require jquery3
+//= require bootstrap/bootstrap
 //= require popper
 //= require bootstrap-sprockets
 //= require noty
@@ -111,4 +112,11 @@ $(document).ready(function(){
 	$('.header-search-icon').click(function(){
 		$('.icon-search').toggleClass('close');
 	});
+  $('.nav-tabs button').click(function(){
+    var curnt_tab = $(this).attr('aria-controls');
+    $('.nav-tabs button').removeClass('active');
+    $('.tab-content .tab-pane').removeClass('show active');
+    $(this).addClass('active');
+    $('#'+curnt_tab).addClass('show active');
+  });
 });
