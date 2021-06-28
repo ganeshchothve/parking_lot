@@ -15,88 +15,179 @@
       </div>
       <div class="box-content bg-white p-3">
         <div class="row">
-          <div class="col-md-4">
+          <% %w( name micro_market city registration_name rera_registration_no project_size total_buildings total_units gst_number cin_number ).each do |field| %>
+            <div class="col-md-4 mt-3">
+              <div class="form-group">
+                <label class="small text-muted"><%= project_labels[field.to_sym] %></label>
+                <div><%= @project.send(field) || '-' %></div>
+              </div>
+            </div>
+          <% end %>
+          <% %w( project_type category project_segment ).each do |field| %>
+            <div class="col-md-4 mt-3">
+              <div class="form-group">
+                <label class="small text-muted"><%= project_labels[field.to_sym] %></label>
+                <div><%= @project.send(field)&.titleize || '-' %></div>
+              </div>
+            </div>
+          <% end %>
+          <% %w( possession launched_on ).each do |field| %>
+            <div class="col-md-4 mt-3">
+              <div class="form-group">
+                <label class="small text-muted"><%= project_labels[field.to_sym] %></label>
+                <div><%= @project.send(field)&.strftime('%m/%Y') || '-' %></div>
+              </div>
+            </div>
+          <% end %>
+          <div class="col-md-4 mt-3">
             <div class="form-group">
-              <label class="small text-muted"><%= project_labels[:name] %></label>
-              <div><%= @project.name || '-' %></div>
+              <label class="small text-muted"><%= project_labels[:developer_name] %></label>
+              <div><%= @project.developer_name || '-' %></div>
             </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-4 mt-3">
             <div class="form-group">
-              <label class="small text-muted"><%= project_labels[:registration_name] %></label>
-              <div><%= @project.registration_name || '-'  %></div>
+              <label class="small text-muted"><%= project_labels[:is_active] %></label>
+              <div><%= @project.is_active? ? 'Yes' : 'No' %></div>
             </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-4 mt-3">
             <div class="form-group">
-              <label class="small text-muted"><%= project_labels[:rera_registration_no] %></label>
-              <div><%= @project.rera_registration_no || '-'  %></div>
+              <label class="small text-muted"><%= project_labels[:website_link] %></label>
+              <div><%= @project.website_link? ? link_to('Website', @project.website_link, target: '_blank') : '-' %></div>
             </div>
           </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="small text-muted"><%= project_labels[:project_size] %></label>
-              <div><%= @project.project_size || '-'  %></div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="small text-muted"><%= project_labels[:locality] %></label>
-              <div><%= @project.locality  || '-' %></div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="small text-muted"><%= project_labels[:total_buildings] %></label>
-              <div><%= @project.total_buildings || '-'  %></div>
-            </div>
-          </div>
-          <div class="col-md-4">
+          <div class="col-md-4 mt-3">
             <div class="form-group">
               <label class="small text-muted"><%= project_labels[:configurations] %></label>
               <div><%= @project.configurations.join(', ') || '-'  %></div>
             </div>
           </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="small text-muted"><%= project_labels[:unit_sizes] %></label>
-              <div><%= @project.unit_sizes.join(', ') || '-'  %></div>
-            </div>
-          </div>
-          <div class="col-md-4">
+          <div class="col-md-8 mt-3">
             <div class="form-group">
               <label class="small text-muted"><%= project_labels[:address] %></label>
               <div><%= @project.address.try(:to_sentence) %></div>
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-12">
-            <div class="form-group">
-              <label class="small text-muted"><%= project_labels[:internal_amenities] %></label>
-              <ul>
-                 <% @project.internal_amenities.each do |type| %>
-                  <li>
-                    <%= type %>
-                  </li>
-                 <% end %>
-              </ul>
-            </div>
-          </div>
-          <div class="col-md-12">
-            <div class="form-group">
-              <label class="small text-muted"><%= project_labels[:external_amenities] %></label>
-              <ul>
-                 <% @project.external_amenities.each do |type| %>
-                  <li>
-                    <%= type %>
-                  </li>
-                 <% end %>
-              </ul>
-            </div>
-          </div>
+        <div class="form-group mt-3">
+          <label class="small text-muted"><%= project_labels[:amenities] %></label>
+          <ul>
+              <% @project.amenities.each do |type| %>
+              <li class="amenity_<%= type %>">
+                <%= type.titleize %>
+              </li>
+              <% end %>
+          </ul>
         </div>
+        <div class="form-group mt-5">
+          <label class="small text-muted"><%= project_labels[:approved_banks] %></label>
+          <ul>
+              <% @project.approved_banks.each do |type| %>
+              <li class='approved_bank_<%= type %>'>
+                <%= type.titleize %>
+              </li>
+              <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="box-card mt-3">
+      <div class="box-header bg-gradient br-rd-tr-4">
+        <h4><%= project_labels[:specifications] %></h4>
+      </div>
+      <div class="box-content bg-white p-3">
+        <% @project.specifications.each do |spec| %>
+          <h4><%= spec.category.titleize %></h4>
+          <%= spec.description.html_safe %>
+        <% end %>
+      </div>
+    </div>
+    <div class="box-card mt-3">
+      <div class="box-header bg-gradient br-rd-tr-4">
+        <h4><%= project_labels[:offers] %></h4>
+      </div>
+      <div class="box-content bg-white p-3">
+        <% @project.offers.group_by{|x| x.provided_by}.each do |group, offers| %>
+          <h4><%= project_labels[:offers] %> by <%= group.titleize %></h4>
+          <% offers.each do |offer| %>
+            <div class="row">
+              <div class="col-md-4 mt-3">
+                <div class="form-group">
+                  <label class="small text-muted"><%= project_labels[:offer_category] %></label>
+                  <div><%= offer.category.titleize %></div>
+                </div>
+              </div>
+              <div class="col-md-8 mt-3">
+                <div class="form-group">
+                  <label class="small text-muted"><%= project_labels[:offer_short_description] %></label>
+                  <div><%= offer.short_description %></div>
+                </div>
+              </div>
+              <div class="col-md-12 mt-3">
+                <div class="form-group">
+                  <label class="small text-muted"><%= project_labels[:offer_description] %></label>
+                  <div><%= offer.description.html_safe %></div>
+                </div>
+              </div>
+            </div>
+            <hr />
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+    <div class="box-card mt-3">
+      <div class="box-header bg-gradient br-rd-tr-4">
+        <h4><%= project_labels[:timeline_updates] %></h4>
+      </div>
+      <div class="box-content bg-white p-3">
+        <% @project.timeline_updates.each do |timeline_update| %>
+          <div class="row">
+            <div class="col-md-4 mt-3">
+              <div class="form-group">
+                <label class="small text-muted"><%= project_labels[:timeline_update_date] %></label>
+                <div><%= timeline_update.date %></div>
+              </div>
+            </div>
+            <div class="col-md-4 mt-3">
+              <div class="form-group">
+                <label class="small text-muted"><%= project_labels[:timeline_update_name] %></label>
+                <div><%= timeline_update.name %></div>
+              </div>
+            </div>
+            <div class="col-md-4 mt-3">
+              <div class="form-group">
+                <label class="small text-muted"><%= project_labels[:timeline_update_description] %></label>
+                <div><%= timeline_update.description.html_safe %></div>
+              </div>
+            </div>
+          </div>
+          <hr />
+        <% end %>
+      </div>
+    </div>
+
+    <div class="box-card mt-3">
+      <div class="box-header bg-gradient br-rd-tr-4">
+        <h4><%= project_labels[:incentive_schemes] %></h4>
+      </div>
+      <div class="box-content bg-white p-3">
+        <% @project.incentive_schemes.group_by{|x| x.category}.each do |group, incentive_schemes| %>
+          <h4><%= group.titleize %> <%= project_labels[:incentive_schemes] %></h4>
+          <% incentive_schemes.each do |incentive_scheme| %>
+            <div class="form-group">
+              <label class="small text-muted"><%= project_labels[:incentive_scheme_short_description] %></label>
+              <div><%= incentive_scheme.name %></div>
+            </div>
+            <div class="form-group">
+              <label class="small text-muted"><%= project_labels[:incentive_scheme_description] %></label>
+              <div><%= incentive_scheme.description.html_safe %></div>
+            </div>
+            <hr />
+          <% end %>
+        <% end %>
       </div>
     </div>
   </div>
 </section>
+<br/><br/><br/>

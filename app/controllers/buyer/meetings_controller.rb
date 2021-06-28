@@ -1,0 +1,10 @@
+class Buyer::MeetingsController < BuyerController
+  include MeetingsConcern
+
+  before_action :authenticate_user!
+  before_action :set_meeting, only: %i[show edit update]
+  before_action :authorize_resource
+  around_action :apply_policy_scope, only: %i[index]
+
+  layout :set_layout
+end

@@ -8,16 +8,16 @@ module ChannelPartnerStateMachine
       state :inactive, initial: true
       state :active, :pending, :rejected
 
-      event :submit_for_approval, after: %i[after_submit_for_approval] do
+      event :submit_for_approval, after: %i[after_submit_for_approval update_selldo!] do
         transitions from: :inactive, to: :pending, if: :can_send_for_approval?
         transitions from: :rejected, to: :pending, if: :can_send_for_approval?
       end
 
-      event :approve, after: %i[send_notification] do
+      event :approve, after: %i[send_notification update_selldo!] do
         transitions from: :pending, to: :active
       end
 
-      event :reject, after: %i[send_notification] do
+      event :reject, after: %i[send_notification update_selldo!] do
         transitions from: :pending, to: :rejected
       end
 
@@ -55,6 +55,12 @@ module ChannelPartnerStateMachine
           triggered_by_type: self.class.to_s
         })
         email.sent!
+      end
+    end
+
+    def update_selldo!
+      if self.associated_user&.booking_portal_client&.selldo_api_key.present?
+        SelldoLeadUpdater.perform_async(self.associated_user_id.to_s, {stage: self.status})
       end
     end
   end

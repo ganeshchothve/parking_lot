@@ -1,0 +1,55 @@
+<%= form_for [:admin, @lead, @site_visit], remote: true, local: true, html: { class: "modal-remote-form validate-form", data: { "resource-type" => t('global.site_visit'), type: "json"}, id: 'site_visit_form' } do |f| %>
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header bg-gradient-cd white">
+            <h3 class="title">
+                <% action_name = @site_visit.new_record? ? 'new' : 'edit' %>
+                <%= t("helpers.#{action_name}.link_name", model: SiteVisit.model_name.human) %>
+            </h3>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true" class="white">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group position-relative">
+                <div class="row">
+                    <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="small text-muted">Lead</label>
+                        <div><%= @lead.name %></div>
+                    </div>
+                    </div>
+                    <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="small text-muted">Project</label>
+                        <div><%= project.name %></div>
+                    </div>
+                    </div>
+                </div>
+                <hr/>
+                <%= f.label :scheduled_on %>
+                <% date = (f.object.scheduled_on.present? ? f.object.scheduled_on : Date.today) %>
+                <% min_date = f.object.scheduled_on.present? ? f.object.scheduled_on : Date.today %>
+                
+                <div class="datetimepicker" id="site_visit_scheduled_on_calendar" data-default-date="<%= date.strftime("%d/%m/%Y ") %>" data-inline=true data-side-by-side=true data-use-current=true data-min-date="<%= min_date.strftime("%d/%m/%Y ") %>" data-max-date="<%= (Date.today + 20.days).strftime("%d/%m/%Y ") %>" data-stepping='30'></div>
+
+                <%= f.hidden_field :scheduled_on, class: 'form-control', value: date %>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <%= f.submit "Save", class: "btn btn-primary" %>
+        </div>
+    </div>
+</div>
+<% end %>
+<%= javascript_tag do %>
+$(document).ready(function(){
+    var $form = $("#site_visit_form");
+    FormInitializer.init($form);
+    $('#site_visit_scheduled_on_calendar').on('dp.change', function(e){
+        $('#site_visit_scheduled_on').val(e.date.format())
+    });
+});
+<% end %>

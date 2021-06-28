@@ -13,6 +13,18 @@
   </div>
   <div class="col-md-6">
     <div class="form-group">
+      <%= f.label :selldo_id %>
+      <%= f.text_field :selldo_id, class: 'form-control', disabled: !policy([:admin, @project]).editable_field?("selldo_id") %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :selldo_default_search_list_id %>
+      <%= f.text_field :selldo_default_search_list_id, class: 'form-control', disabled: !policy([:admin, @project]).editable_field?("selldo_default_search_list_id") %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
       <%= f.label :selldo_form_id %>
       <%= f.text_field :selldo_form_id, class: 'form-control', disabled: !policy([:admin, @project]).editable_field?("selldo_form_id") %>
     </div>

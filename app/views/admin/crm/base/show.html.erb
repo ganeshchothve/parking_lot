@@ -8,7 +8,7 @@
         <div class="dropdown text-right col-1">
           <div class="dropdown show text-center float-right">
             <a class="btn dropdown-toggle table-dropdown-btn" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
-            <% [Crm::Api::Get, Crm::Api::Post] if Rails.env.development? %>
+            <% [Crm::Api::Get, Crm::Api::Post, Crm::Api::Put] if Rails.env.development? %>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
               <% Crm::Api.descendants.each do |type| %>
                 <%= link_to t('helpers.new.link_name', model: type.model_name.human), new_admin_crm_base_api_path(@crm, type: type), class: 'modal-remote-form-link dropdown-item' %>

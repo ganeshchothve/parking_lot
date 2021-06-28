@@ -47,6 +47,10 @@ en:
       link_name: '%{model}'
     accompanied_credit:
       link_name: '%{model}'
+    show_interest:
+      link_name: 'I am Interested'
+    not_interested:
+      link_name: 'Mark not Interested'
     show:
       link_name: '%{model} Details'
     edit:
@@ -89,6 +93,9 @@ en:
       crm/api/post:
         one: 'POST API'
         other: 'POST API'
+      crm/api/put:
+        one: 'PUT API'
+        other: 'PUT API'
       bulk_upload_report:
         one: Bulk Upload Report
         other: Bulk Upload Reports
@@ -158,6 +165,9 @@ en:
       project:
         one: Project
         other: Projects
+      developer:
+        one: Developer
+        other: Developers
       payment_adjustment:
         zero: Payment Adjustment
         one: Payment Adjustment
@@ -186,6 +196,9 @@ en:
       user_request:
         one: User Request
         other: User Requests
+      meeting:
+        one: Event
+        other: Events
       user_request/cancellation:
         one: Cancellation
         other: Cancellations
@@ -195,6 +208,9 @@ en:
       user_request/general:
         one: General
         other: General
+      site_visit:
+        one: Site Visit
+        other: Site Visits
       user_kyc:
         one: KYC
         other: KYCs
@@ -202,8 +218,8 @@ en:
         one: User Account
         other: Users Accounts
       lead:
-        one: Walk-in
-        other: Walk-ins
+        one: Lead
+        other: Leads
       invoice:
         zero: Invoice
         one: Invoice
@@ -382,9 +398,21 @@ en:
       client/payment_gateways:
         Razorpay: Razorpay Payment Gateway
         CCAvenue: CCAvenue Payment Gateway
-
+      developer:
+        name: 'Developer Name'
+        selldo_id: 'Sell.Do Developer ID'
       project:
+        is_active: 'Active?'
         name: 'Project Name'
+        micro_market: 'Location'
+        city: 'City'
+        project_type: Type of Project
+        category: Category
+        project_segment: Segment
+        possession: Possession Date
+        launched_on: Launch Date
+        developer_name: Developer
+        approved_banks: Approved Banks
         allowed_bookings_per_user: 'Bookings allowed per user'
         selldo_client_id: 'SellDo Client ID'
         selldo_form_id: 'SellDo Form ID'
@@ -393,6 +421,8 @@ en:
         selldo_api_key: 'SellDo API Key (Use generic Api Client)'
         selldo_default_srd: 'SellDo Default SRD'
         selldo_cp_srd: 'SellDo Channel Partner SRD'
+        selldo_id: 'Sell.Do Project ID'
+        selldo_default_search_list_id: 'Sell.Do All Leads Search List ID'
         notification_email: 'Notification Email (all emails are sent here)'
         notification_numbers: 'Notification Numbers (Key SMS Reports are sent here)'
         sender_email: 'Sender Email Address'
@@ -422,14 +452,24 @@ en:
         holding_minutes: 'Unit to be held for (Minutes)'
         rera_registration_no: 'RERA Registration Number'
         configurations: 'Configuration Types'
-        unit_sizes: 'Unit Sizes/Carpet Areas'
-        project_size: 'Total Land Area'
+        project_size: 'Total Land Area (in Acres)'
         total_buildings: 'Number Of Ongoing Towers'
-        locality: 'Location'
-        internal_amenities: 'Internal Amenities'
-        external_amenities: 'External Amenities'
+        amenities: 'Project Amenities'
+        specifications: 'Project Specifications'
+        offers: 'Customer Offers'
+        timeline_updates: 'Project Timelines'
         assets: 'Collaterals'
         address: 'Address'
+        offer_category: 'Category'
+        offer_short_description: "What's the Offer"
+        offer_description: Full Offer Text
+        timeline_update_name: 'Update'
+        timeline_update_description: "Update Details"
+        timeline_update_date: 'Update Date'
+        incentive_scheme_category: 'Category'
+        incentive_scheme_short_description: "What's the Opportunity"
+        incentive_scheme_description: Full Incentive Scheme Text
+        incentive_schemes: 'Earning Opportunities'
 
       cost:
         name: "Name"
@@ -474,6 +514,7 @@ en:
         source: 'Source'
         website: 'Website'
         region: 'Region'
+        interested_services: 'Services Interested In'
       channel_partner/file_types:
         rera_certificate: 'RERA Certificate'
         gst_certificate: 'GST Certificate'
@@ -620,7 +661,8 @@ en:
         error: 'Error'
         employee: 'Employee Reserved'
         management: 'Management Reserved'
-
+      developers:
+        name: Name
       projects:
         name: Name
       receipt:
@@ -813,7 +855,14 @@ en:
       user_request/requestable_type:
         Receipt: 'Receipt'
         BookingDetail: 'Booking'
-
+      site_visit:
+        project: Project
+        lead: Lead
+        creator: Created By
+        scheduled_on: Scheduled on
+        status: Status
+        conducted_on: Conducted on
+        site_visit_type: Type
       user_kyc:
         name: "Name"
         email: "Email"
@@ -831,7 +880,7 @@ en:
         existing_customer: "Are you an existing customer with us?"
         comments: "Please mention any specific notes for our team"
         user_id: "Customer"
-        lead_id: 'Walk-in'
+        lead_id: 'Lead'
         creator: "Created By"
         project_units: "Apartments"
         son_daughter_of: 'Son / Daughter Of'
@@ -862,7 +911,24 @@ en:
         min_budget: 'Min. Budget (Rs.)'
         max_budget: 'Max. Budget (Rs.)'
         budget: 'Budget (Rs.)'
-
+      meeting:
+        topic: Topic
+        meeting_details: Topic & Agenda
+        meeting_type: Meeting type
+        provider: Online Provider
+        provider_url: Event URL
+        provider_details: How to Join?
+        scheduled_on: Scheduled on
+        status: Event Status
+        duration: Duration (in minutes)
+        broadcast: Do you want to broadcast this message to all users with these roles?
+        agenda: Agenda
+        participant_ids: Event Attendees
+        participants: Event Attendees
+        project: Project
+        project_id: Project
+        creator: Host
+        creator_id: Host
       user:
         temporarily_blocked: 'Qualify lead'
         iris_confirmation: 'Lead Tagging'
@@ -942,7 +1008,7 @@ en:
         email: 'Email'
         project_id: 'Project'
         manager_id: 'Partner / Manager / Added by'
-        name_email_phone: 'Walk-in (Project Name)'
+        name_email_phone: 'Lead (Project Name)'
         total_amount_paid: "Total Amount Paid (Inclusive of GST)"
         registered_at: 'Registered At'
         payment_done: '9.90% Received'
@@ -1005,17 +1071,17 @@ en:
         document: 'Document'
         offer: 'Ongoing Offers'
         brochure: 'Project Brochure'
+        sales_presentation: 'Sales Presentation'
         unit_selection_filter_image: 'Image on Apartment Search Page'
-        internal_amenities: 'Internal Amenities'
-        external_amenities: 'External Amenities'
+        amenities: 'Amenities'
         certificate: 'Certificate'
       project/help_text:
         document_html: 'Project documents'
         offer_html: 'Project ongoing offers'
         brochure_html: 'Project Brochure preferably in PDF'
+        sales_presentation_html: 'Sales Presentation'
         unit_selection_filter_image_html: 'Web compatible image - to be displayed on apartment search page'
-        internal_amenities_html: 'Project Internal amenities images'
-        external_amenities_html: 'Project External amenities images'
+        amenities_html: 'Project amenities'
         certificate_html: 'Certificate'
       cp_lead_activity/file_types:
         sitevisit_form: 'Site Visit Form'
@@ -1056,6 +1122,9 @@ en:
     api_logs:
       index:
         link_name: 'API Logs'
+    meetings:
+      index:
+        link_name: 'Events'
     crms:
       index:
         link_name: 'CRM Integration'
@@ -1328,7 +1397,11 @@ en:
         link_name: 'Referrals'
       new:
         link_name: 'Add Referrals'
-
+    site_visits:
+      new:
+        link_name: 'Schedule Site Visit'
+      sync_with_selldo:
+        link_name: 'Sync with Sell.Do'
     searches:
       filter:
         header: Select Tower
@@ -1441,18 +1514,18 @@ en:
         link_name: '%{role} Details'
         header: 'Overview'
       leads:
-        link_name: 'Show Walk-ins'
+        link_name: 'Show Leads'
       send_payment_link: 'Payment link sent to user'
 
     leads:
       index:
-        link_name: 'Walk-ins'
+        link_name: 'Leads'
       show:
-        link_name: 'Show Walk-in Details'
+        link_name: 'Show Lead Details'
         header: 'Overview'
       edit:
-        link_name: "Edit Walk-in"
-        header: 'Edit Walk-in'
+        link_name: "Edit Lead"
+        header: 'Edit Lead'
       exports:
         link_name: '%{name} Exports'
 
@@ -1582,7 +1655,7 @@ en:
       titles:
         lead_details: 'Customer Account Details'
         booking_details: 'Bookings'
-        total_leads: 'Total Walk-ins'
+        total_leads: 'Total Leads'
         received: 'Added'
         available_inventory: 'Available Inventory'
         download_brochure: 'Download Brochure'
@@ -1602,10 +1675,10 @@ en:
       data:
         booked_leads:
           label: 'Booked'
-          sub_label: 'Walk-ins'
+          sub_label: 'Leads'
         not_booked_leads:
           label: 'Not Booked'
-          sub_label: 'Walk-ins'
+          sub_label: 'Leads'
         total_bookings:
           label: 'Total Bookings'
           sub_label: ''
@@ -1628,7 +1701,7 @@ en:
   selldo:
     links:
       header: 'Take Action in Sell.Do'
-      add_note: 'View'
+      add_note: 'View Lead & Add Notes'
       schedule_site_visit: 'Schedule Site Visit'
       schedule_followup: 'Schedule Followup'
 

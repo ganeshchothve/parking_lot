@@ -26,7 +26,7 @@ Rails.application.routes.draw do
     root 'dashboard#index', as: :authenticated_root
   end
 
-  root to: redirect('channel_partners/new')
+  root 'channel_partners#new'
 
   as :user do
     put '/user/confirmation', to: 'local_devise/confirmations#update', :as => :update_user_confirmation
@@ -48,7 +48,7 @@ Rails.application.routes.draw do
   get '/s/:code', to: 'shortened_urls#redirect_to_url'
 
   namespace :admin do
-
+    resources :meetings, except: [:destroy]
     resources :api_logs, only: [:index]
     resources :cp_lead_activities do
       member do
@@ -154,7 +154,8 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :projects, only: [:index, :edit, :update, :show] do
+    resources :developers, except: [:destroy]
+    resources :projects, except: [:destroy] do
       get :collaterals, on: :member
       get :collaterals, on: :collection
     end
@@ -178,16 +179,20 @@ Rails.application.routes.draw do
       resources :accounts, controller: 'accounts'
     end
 
+    resources :site_visits, only: [:index] do
+      member do
+        get 'sync_with_selldo'
+      end
+    end
     resources :leads, only: [:index, :show, :edit, :update, :new] do
       collection do
         get :export
       end
       member do
         get 'sync_notes'
-        get 'sync_site_visit'
         get :send_payment_link
       end
-
+      resources :site_visits, only: [:new, :create, :index]
       resources :receipts, only: [:index, :new, :create, :edit, :update ] do
         get :resend_success, on: :member
         get :lost_receipt, on: :collection
@@ -319,7 +324,7 @@ Rails.application.routes.draw do
   end
 
   namespace :buyer do
-
+    resources :meetings, only: [:index, :update, :show]
     resources :schemes, only: [:index]
 
     resources :booking_details, only: [:index, :show, :update] do

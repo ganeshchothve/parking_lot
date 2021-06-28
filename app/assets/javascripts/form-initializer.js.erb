@@ -71,6 +71,15 @@ FormInitializer = (function(){
       if($(this).data("defaultDate")){
         datepickerOptions.defaultDate = moment($(this).data("defaultDate"), "DD/MM/YYYY");
       }
+      if($(this).data("inline")){
+        datepickerOptions.inline = $(this).data("inline");
+      }
+      if($(this).data("sideBySide")){
+        datepickerOptions.sideBySide = $(this).data("sideBySide");
+      }
+      if($(this).data("useCurrent")){
+        datepickerOptions.useCurrent = $(this).data("useCurrent");
+      }
       $(this).datetimepicker(datepickerOptions);
     });
 
@@ -85,7 +94,35 @@ FormInitializer = (function(){
     });
 
     $(selector).find(".date_validation").datetimepicker(Iris.utils.datepickerOptions);
-    $(selector).find('.datetimepicker').datetimepicker(Iris.utils.datetimepickerOptions);
+    $(selector).find('.datetimepicker').each(function(){
+      var datepickerOptions = _.clone(Iris.utils.datetimepickerOptions);
+      if($(this).data("minDate")){
+        datepickerOptions.minDate = moment($(this).data("minDate"), "DD/MM/YYYY")
+      }
+      if($(this).data("maxDate")){
+        datepickerOptions.maxDate = moment($(this).data("maxDate"), "DD/MM/YYYY")
+      }
+      if($(this).data("defaultDate")){
+        datepickerOptions.defaultDate = moment($(this).data("defaultDate"), "DD/MM/YYYY");
+      }
+      if($(this).data("inline")){
+        datepickerOptions.inline = $(this).data("inline");
+      }
+      if($(this).data("sideBySide")){
+        datepickerOptions.sideBySide = $(this).data("sideBySide");
+      }
+      if($(this).data("useCurrent")){
+        datepickerOptions.useCurrent = $(this).data("useCurrent");
+      }
+      if($(this).data("format")){
+        datepickerOptions.format = $(this).data("format");
+      }
+      if($(this).data("stepping")){
+        datepickerOptions.stepping = $(this).data("stepping");
+      }
+      $(this).datetimepicker(datepickerOptions);
+    });
+
     FileIcon.init($(".asset-delete"), $(".asset-icon"));
     _.each($(selector).find(".fileupload"), function(){
       $(this).fileUploader({

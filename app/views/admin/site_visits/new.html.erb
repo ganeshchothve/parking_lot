@@ -1,0 +1,7 @@
+<% project = @lead.project %>
+<% check_availability = project.selldo_api_key.present? && @lead.lead_id.present? && project.selldo_client_id.present? && ENV_CONFIG.dig(:selldo, :base_url).present? %>
+<% if check_availability %>
+  <%= render 'selldo_form', project: project %>
+<% else %>
+  <%= render 'form', project: project %>
+<% end %>

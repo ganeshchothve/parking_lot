@@ -43,6 +43,7 @@ class Lead
   belongs_to :project
   has_many :receipts
   has_many :searches
+  has_many :site_visits
   has_many :booking_details
   has_many :user_requests
   has_many :user_kycs
@@ -229,6 +230,14 @@ class Lead
 
   def kyc_ready?
     user_kyc_ids.present?
+  end
+
+  def sync_with_selldo params={}
+    if lead.update_attributes(params)
+      @crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
+      selldo_api = Crm::Api::Put.where(resource_class: 'Lead', base_id: @crm_base.id, is_active: true).first if @crm_base.present?
+      selldo_api.execute(self)
+    end
   end
 
   class << self

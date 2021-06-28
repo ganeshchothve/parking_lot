@@ -25,10 +25,6 @@ class Admin::LeadPolicy < LeadPolicy
     edit?
   end
 
-  def sync_site_visit?
-    edit?
-  end
-
   def note_create?
     user.role?(:channel_partner) && record.user.role.in?(User::BUYER_ROLES)
   end
@@ -37,6 +33,10 @@ class Admin::LeadPolicy < LeadPolicy
     %w[admin sales sales_admin crm].include?(user.role)
   end
 
+  def show_selldo_links?
+    ENV_CONFIG['selldo'].try(:[], 'base_url').present? && record.lead_id? && record.project.selldo_default_search_list_id?
+  end
+  
   def send_payment_link?
     record.user.confirmed?
   end

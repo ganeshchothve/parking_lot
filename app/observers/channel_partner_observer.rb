@@ -11,6 +11,8 @@ class ChannelPartnerObserver < Mongoid::Observer
       end
     end
 
+    SelldoLeadUpdater.perform_async(user.id.to_s, {stage: channel_partner.status})
+
     template = Template::EmailTemplate.where(name: "channel_partner_created").first
     recipients = []
     recipients << channel_partner.manager if channel_partner.manager.present?

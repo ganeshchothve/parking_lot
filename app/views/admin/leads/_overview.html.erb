@@ -28,6 +28,12 @@
         </div>
         <div class="col-md-4">
           <div class="form-group">
+            <label class="small text-muted"><%= t('mongoid.attributes.lead.lead_id') %></label>
+            <div><%= lead.lead_id || '-' %></div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
             <label class="small text-muted"><%= t('mongoid.attributes.lead.stage') %></label>
             <div><%= lead.lead_stage || '-' %></div>
           </div>

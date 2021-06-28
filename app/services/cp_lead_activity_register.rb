@@ -48,8 +48,6 @@ module CpLeadActivityRegister
     lead.lead_stage = lead_details[:stage]
     lead.lead_lost_date = (Time.zone.parse(lead_details[:stage_changed_on]) rescue nil) if lead.lead_stage.in?(%w(lost unqualified))
     client = lead.user.booking_portal_client
-    #lead.sitevisit_date, lead.sitevisit_status = FetchLeadData.site_visit_status_and_date(lead.lead_id, client, lead.project.selldo_id.to_s) if lead.project.selldo_id.present?
-    #lead.remarks = FetchLeadData.fetch_notes(lead.lead_id, client)
     lead
   end
 end

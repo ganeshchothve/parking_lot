@@ -1,23 +1,25 @@
-<section class="auth login-page" style="<%= login_image() %>">
-  <div class="container no-pd">
-    <div class="col-lg-5 col-xs-12 col-md-12 col-sm-12 p-0">
-      <div class="login-form-wrapper pt-5">
-
-        <% template = ::Template::UITemplate.where(name: 'home/register').first %>
-        <% if template.present? %>
-          <%= get_view_erb(template) %>
-        <% end %>
-
-        <% if current_client.selldo_client_id.present? && current_client.selldo_form_id.present? %>
-          <% if Rails.env.production? %>
-            <script src='//trkr.scdn1.secure.raxcdn.com/t/forms/<%= current_client.selldo_client_id %>/<%= current_client.selldo_form_id %>.js' data-form-id='<%= current_client.selldo_form_id %>'></script>
-          <% else %>
-            <script src='https://v3.sell.do/t/forms/<%= current_client.selldo_client_id %>/<%= current_client.selldo_form_id %>.js' data-form-id='<%= current_client.selldo_form_id %>'></script>
+<section class="auth login-page">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="login-form-wrapper pt-5">
+          <% template = ::Template::UITemplate.where(name: 'home/register').first %>
+          <% if template.present? %>
+            <%= get_view_erb(template) %>
           <% end %>
-        <% else %>
-          <%=render "devise/registrations/new", resource: @resource %>
-        <% end %>
-        <%=render "devise/shared/links" %>
+          <% if current_client.selldo_client_id.present? && current_client.selldo_form_id.present? %>
+            <% if Rails.env.production? %>
+              <script src='//trkr.scdn1.secure.raxcdn.com/t/forms/<%= current_client.selldo_client_id %>/<%= current_client.selldo_form_id %>.js' data-form-id='<%= current_client.selldo_form_id %>'></script>
+            <% else %>
+              <script src='https://v3.sell.do/t/forms/<%= current_client.selldo_client_id %>/<%= current_client.selldo_form_id %>.js' data-form-id='<%= current_client.selldo_form_id %>'></script>
+            <% end %>
+          <% else %>
+            <%=render "devise/registrations/new", resource: @resource %>
+          <% end %>
+          <%=render "devise/shared/links" %>
+        </div>
+      </div>
+      <div class="col-md-6 auth-image" style="<%= login_image %>">
       </div>
     </div>
   </div>

@@ -20,29 +20,33 @@
     </div>
   <% end %>
 <% else %>
-  <section class="auth login-page" style="<%= login_image() %>">
-    <div class="container no-pd">
-      <div class="col-lg-6 col-xs-12 col-md-12 col-sm-12 p-0">
-        <div class="login-form-wrapper pt-5">
-          <% template = ::Template::UITemplate.where(name: 'channel_partner/new').first %>
-          <% if template.present? %>
-            <%= get_view_erb(template) %>
-          <% end %>
-          <div class="box-card">
-            <div class="box-header bg-gradient br-rd-tr-4">
-              <h2><strong>Basic details</strong></h2>
-            </div>
-            <div class="box-content br-rd-bl-4 bg-white px-3 pt-3">
-              <%= simple_form_for(@channel_partner, local: true, html: { id: 'channel_partner_form', class: 'validate-form', multipart: true, novalidate: false }) do |form| %>
+  <section class="auth login-page">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="login-form-wrapper pt-5">
+            <% template = ::Template::UITemplate.where(name: 'channel_partner/new').first %>
+            <% if template.present? %>
+              <%= get_view_erb(template) %>
+            <% end %>
+            <div class="box-card">
+              <div class="box-header bg-gradient br-rd-tr-4">
+                <h2><strong>Basic details</strong></h2>
+              </div>
+              <div class="box-content br-rd-bl-4 bg-white px-3 pt-3">
+                <%= simple_form_for(@channel_partner, local: true, html: { id: 'channel_partner_form', class: 'validate-form', multipart: true, novalidate: false }) do |form| %>
 
-                <%= render "short_form_fields", {form: form} %>
-                <div class="signin-btn col-lg-12 pl-0 pr-0 pb-4">
-                  <%= form.submit "Register", class: "sign-in-btn", data: { disable_with: "Please wait..." } %>
-                </div>
-                <%= render "devise/shared/links" %>
-              <% end %>
+                  <%= render "short_form_fields", {form: form} %>
+                  <div class="signin-btn col-lg-12 pl-0 pr-0 pb-4">
+                    <%= form.submit "Register", class: "sign-in-btn", data: { disable_with: "Please wait..." } %>
+                  </div>
+                  <%= render "devise/shared/links" %>
+                <% end %>
+              </div>
             </div>
           </div>
+        </div>
+        <div class="col-md-6 auth-image" style="<%= login_image %>">
         </div>
       </div>
     </div>

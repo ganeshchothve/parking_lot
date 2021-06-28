@@ -92,7 +92,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def need_unattached_booking_receipts_for_channel_partner
     if user.role?('channel_partner')
-      return true if record.user.unattached_blocking_receipt(record.project_unit.blocking_amount).present?
+      return true if record.lead.unattached_blocking_receipt(record.project_unit.blocking_amount).present?
       @condition = "blocking_amount_receipt"
       false
     else
@@ -112,7 +112,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
         false
       end
     elsif (user.role?('channel_partner') && record.status == 'hold')
-      return true if record.user.manager_id == user.id && user.active_channel_partner?
+      return true if record.lead.cp_lead_activities.where(user_id: user.id).present? && user.active_channel_partner?
       @condition = 'not_authorise_to_book_for_this_user'
       false
     else

@@ -5,93 +5,62 @@ class Project
   include CrmIntegration
 
   # Add different types of documents which are uploaded on client
-  DOCUMENT_TYPES = %w[document brochure offer internal_amenities external_amenities certificate unit_selection_filter_image].freeze
+  DOCUMENT_TYPES = %w[document brochure certificate unit_selection_filter_image sales_presentation images].freeze
+  CATEGORIES = %w( pre_launch launch ongoing completed)
+  SEGMENTS = %w( affordable value luxury ultra_luxury )
+  PROJECT_TYPES = %w( commercial residential )
+  DEFAULT_AMENITIES = %w( swimming_pool table_tennis_court movie_theatre gym auditorium playschool sewage_treatment_plant internal_roads )
+  DEFAULT_CONFIGURATIONS = %w( 1RK 1BHK 2BHK 2.5BHK 3BHK 3.5BHK 4BHK 5BHK 6BHK )
+  ALLOWED_BANKS = %w( sbi hdfc bob bajaj_finance )
 
+  # filters
   field :name, type: String
   field :developer_name, type: String
-  field :subtype,type: String
-  field :advantages, type: Array, default: []
-  field :internal_amenities, type: Array, default: []
-  field :external_amenities, type: Array, default: []
-  field :description, type: String
+  field :developer_rating, type: Integer
+  field :category, type: String
+  field :project_segment, type: String
+  field :possession, type: Date
   field :lat, type: String
   field :lng, type: String
-  field :sales_pitches, type: Array, default: []
-  field :possession, type: Date
   field :is_active,type: Boolean, default: true
-  field :is_whitelabelled, type: Boolean, default: false
-  field :whitelabel_name, type: String
-  field :owner_ids,type: Array,default: []
-
-  #new fields for inventory module
-  field :construction_status, type: String  # na,plinth, excavation, 3th floor, 5th floor, 8th floor etc
-  field :available_for_transaction, type: String #sell, lease, either
-  field :launched_on, type: Date
-  field :expected_completion, type: Date
-  field :total_buildings, type: Integer, default: 1
-  field :type, type: String, default: "residential" #commercial / residential / either
-  field :commencement_certificate, type: Boolean
-  field :approved_banks, type: Array
-  field :suitable_for, type: String # IT/ manufacturing / investors
-  field :parking, type: Array #na, closed garage, stilt, podium, open
-  field :association_type, type: String
-  field :security, type: Array
-  field :fire_fighting, type: Boolean
-  field :comments,type: String
-  field :usp,type: Array,default: []
-  field :external_report,type: String
-  field :vastu,type: String
-  field :loading,type: Float
-  field :lock_in_period,type: String
-  field :micro_market, type: String
-  field :specifications,type: Hash ,default: {}
-  field :approval,type: String
-
-  # newly added fields to store data from json
-  field :selldo_id, type: String
-  field :client_id, type: String
-  field :developer_id, type: String
-  field :project_pre_sale_ids, type: Array,default: []
-  field :project_sale_ids, type: Array,default: []
-  field :images, type: Array,default: []
-  field :administration, type: String
-  field :locality, type: String
-  field :project_segment, type: String
-  field :project_size, type: String
-  field :project_status, type: String
-  field :zone, type: String
-  field :pitch, type: String
-  field :promoted, type: String
-  field :total_units, type: Integer
-  field :apartment_size, type: String
-  field :sync_data, type: Boolean
   field :area_price_data, type: Array, default: []
-  field :hide_cost_on_portal, type: String, default: "no"
-  field :dedicated_project_phone, type: String
+  field :configurations, type: Array, default: []
+  field :micro_market, type: String
   field :city, type: String
-  field :price_type_on_portal, type: String
-  field :video, type: String
-  field :secondary_developer_ids, type: Array, default: []
-  field :secondary_developer_names, type: Array, default: []
-  field :foyer_link, type: String
+  field :project_type, type: String, default: "residential"
+
+  # descriptive fields
+  field :description, type: String
+  field :advantages, type: String
+  field :video_link, type: String
+
+  # attributes
+  field :launched_on, type: Date
+  field :our_expected_possession, type: Date
+  field :total_buildings, type: Integer, default: 1
+  field :total_units, type: Integer, default: 1
   field :rera_registration_no, type: String
+  field :approved_banks, type: Array, default: []
+  field :project_size, type: String
 
-
-  ##
-  # Copied from client for multi project
-  #
-  field :registration_name, type: String
-  field :cin_number, type: String
-  field :website_link, type: String
+  # selldo attributes
+  field :selldo_id, type: String
+  field :selldo_developer_id, type: String
   field :selldo_client_id, type: String
   field :selldo_form_id, type: String
   field :selldo_channel_partner_form_id, type: String
   field :selldo_gre_form_id, type: String
   field :selldo_api_key, type: String
   field :selldo_default_srd, type: String
+  field :selldo_default_search_list_id, type: String
   field :selldo_cp_srd, type: String
-  field :helpdesk_number, type: String
-  field :helpdesk_email, type: String
+  field :amenities, type: Array, default: []
+
+  # meta attributes
+  field :foyer_link, type: String
+  field :registration_name, type: String
+  field :cin_number, type: String
+  field :website_link, type: String
   field :notification_email, type: String
   field :notification_numbers, type: String
   field :allowed_bookings_per_user, type: Integer, default: 3
@@ -100,6 +69,8 @@ class Project
   field :booking_portal_domains, type: Array, default: []
   field :cp_disclaimer, type: String
   field :disclaimer, type: String
+  field :helpdesk_number, type: String
+  field :helpdesk_email, type: String
   field :support_number, type: String
   field :support_email, type: String
   field :channel_partner_support_number, type: String
@@ -115,11 +86,7 @@ class Project
   field :ga_code, type: String
   field :gtm_tag, type: String
   field :gst_number, type: String
-  field :configurations, type: Array, default: []
-  field :unit_sizes, type: Array, default: []
-
   field :enable_daily_reports, type: Hash, default: {"payments_report": false}
-
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
     <div class="mt-3"></div>'
@@ -143,12 +110,16 @@ class Project
       </div>
     <% end %>
     <div class="mt-3"></div>
-  </div>'
+  </div>'  
 
   mount_uploader :logo, DocUploader
   mount_uploader :mobile_logo, DocUploader
+  mount_uploader :cover_photo, DocUploader
+  mount_uploader :mobile_cover_photo, DocUploader
 
   belongs_to :booking_portal_client, class_name: 'Client'
+  belongs_to :developer
+  belongs_to :creator, class_name: 'User'
   has_many :project_units
   has_many :booking_details
   has_many :schemes
@@ -163,13 +134,17 @@ class Project
   has_many :whatsapps, class_name: 'Whatsapp'
   has_many :assets, as: :assetable
   has_many :receipts
+  has_many :specifications
+  has_many :offers
+  has_many :incentive_schemes
+  has_many :timeline_updates
 
   validates :name, presence: true
   validates_uniqueness_of :name, :rera_registration_no, allow_blank: true
   validates :enable_actual_inventory, array: { inclusion: {allow_blank: true, in: (User::ADMIN_ROLES + User::BUYER_ROLES) } }
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
 
-  accepts_nested_attributes_for :address, allow_destroy: true
+  accepts_nested_attributes_for :specifications, :offers, :timeline_updates, :address, allow_destroy: true
   index(client_id:1)
 
   default_scope -> { where(is_active: true)}

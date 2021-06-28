@@ -158,6 +158,7 @@ class User
   has_and_belongs_to_many :received_emails, class_name: 'Email', inverse_of: :recipients
   has_and_belongs_to_many :cced_emails, class_name: 'Email', inverse_of: :cc_recipients
   has_many :cp_lead_activities
+  has_and_belongs_to_many :meetings
 
   has_many :notes, as: :notable
 
@@ -465,7 +466,8 @@ class User
     devise_mailer.new.send(:devise_sms, self, :confirmation_instructions)
 
     if email.present? || unconfirmed_email.present?
-      email_template = Template::EmailTemplate.find_by(name: "user_confirmation_instructions")
+      email_template = Template::EmailTemplate.where(name: "#{role}_confirmation_instructions").first
+      email_template = Template::EmailTemplate.find_by(name: "user_confirmation_instructions") if email_template.blank?
       attrs = {
         booking_portal_client_id: booking_portal_client_id,
         subject: email_template.parsed_subject(self),
