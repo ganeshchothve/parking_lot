@@ -607,7 +607,9 @@ footer p {
 .desktop-footer a {
     display: inline-block;
 }
-
+.desktop-footer a.footer-link {
+    color: #333333;
+}
 .social-links {
     text-align: right;
 }
@@ -620,7 +622,7 @@ footer p {
 .slide {
     background-size: cover;
     background-repeat: no-repeat;
-    background-position: center center;
+    background-position: top;
 }
 
 .home-banner {
@@ -1181,6 +1183,9 @@ footer p {
     position: relative;
     z-index: 9;
 }
+.webinar-image-inner > img{
+    padding: 30px 40px 40px 30px;
+}
 
 .animated.infinite {
     -webkit-animation-iteration-count: infinite;
@@ -1385,6 +1390,7 @@ footer p {
     cursor: pointer;
     font-weight: 700;
     border-radius: 5px;
+    margin-top: 40px;
 }
 
 .load-more-btn:hover,
@@ -1394,7 +1400,7 @@ footer p {
 }
 
 .property-hide {
-    height: 535px;
+    height: 505px;
     overflow-y: hidden;
 }
 
@@ -1409,7 +1415,7 @@ footer p {
 }
 
 .property-item {
-    padding: 15px;
+    margin-top: 15px;
 }
 
 .property-item-inner {
@@ -1418,7 +1424,9 @@ footer p {
     border: 1px solid #ccc;
     position: relative;
 }
-
+.property-item-image img{
+    border-radius: 12px 12px 0 0;    
+}
 .property-item-details {
     padding: 20px 20px;
     height: 260px;
@@ -1444,7 +1452,7 @@ footer p {
     padding: 8px 0px;
 }
 
-.property-enquiry-btn {
+.property-enquiry-btn, .property-enquiry-btn:hover {
     background-color: #97B350;
     color: #fff;
     position: relative;
@@ -1629,7 +1637,18 @@ footer p {
     text-align: center;
     margin-bottom: 5px;
 }
-
+.contact-us h2{
+    margin-bottom: 20px;
+}
+.contact-us .mg-bt-10{
+    margin-bottom: 10px;
+}
+.contact-us a{
+    color: #333333;
+}
+.privacy-policy-sec{
+    padding-top: 120px;
+}
 @media only screen and (min-width:1440px) and (max-width:1920px) {}
 
 /*@media only screen and (min-width:1024px) and (max-width:1365px){  
@@ -2038,6 +2057,9 @@ footer p {
 
     .col-app-xs-12 {
         width: 100%;
+    width: 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
     }
 
     .col-app-xs-12-5 {
@@ -2308,6 +2330,8 @@ footer p {
     .property-item {
         width: 100%;
         padding: 10px 0px;
+        flex: 0 0 100%;
+        max-width: 100%;
     }
 
     .launchpad-edge-item {
@@ -2329,7 +2353,7 @@ footer p {
     }
 
     .property-hide {
-        height: 508px;
+        height: 530px;
     }
 
     .existing-projects-head-left h3,
@@ -2423,4 +2447,5 @@ footer p {
 .sign-in-button {
     width: 100px;
     color: inherit;
+    margin-left: 10px;
 }

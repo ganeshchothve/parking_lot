@@ -278,6 +278,9 @@ Rails.application.routes.draw do
   get :register, to: 'home#register', as: :register
   post :check_and_register, to: 'home#check_and_register', as: :check_and_register
   get :welcome, as: :welcome, to: 'home#welcome'
+  get :terms_and_conditions, as: :terms_and_conditions, to: 'home#terms_and_conditions'
+  get :privacy_policy, as: :privacy_policy, to: 'home#privacy_policy'
+  
   scope :custom do
     match :inventory, to: 'custom#inventory', as: :custom_inventory, via: [:get]
   end
@@ -381,6 +384,7 @@ Rails.application.routes.draw do
       resources :user_requests, only: :create
     end
   end
+
   match '/sell_do/lead_created', to: "api/sell_do/leads#lead_created", via: [:get, :post]
   match '/sell_do/pushed_to_sales', to: "api/sell_do/leads#pushed_to_sales", via: [:get, :post]
   match '/zoho/download', to: "api/zoho/assets#download", via: [:get, :post]
