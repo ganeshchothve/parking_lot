@@ -1,86 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title><%= current_client.name %></title>
-    <meta name="description" content="">
-    <meta name="keywords" content="">
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link href="images/favicon.png" rel="icon" type="image/png"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=0">
-    <link rel="dns-prefetch" href="//trkr.scdn1.secure.raxcdn.com">
-    <link rel="preconnect" href="//trkr.scdn1.secure.raxcdn.com">
-    <link rel="dns-prefetch" href="https://www.google.com">
-    <link rel="preconnect" href="https://www.google.com">
-    <link rel="dns-prefetch" href="https://www.gstatic.com">
-    <link rel="preconnect" href="https://www.gstatic.com">
-    <link rel="canonical" href="<%= request.protocol + request.host %><%= request.path%>">
-
-    <%= stylesheet_link_tag 'application' %>
-    <%= stylesheet_link_tag 'launchpad' %>
-    <%= javascript_include_tag 'application' %>
-
-    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
-    <%= javascript_tag do %>
-      if(typeof App === "undefined"){
-        App = {};
-      }
-      App.client = <%= raw current_client.to_json(only: [:name, :_id, :preferred_login, :enable_referral_bonus]) %>;
-      App.client.enable_actual_inventory = <%= current_client.enable_actual_inventory?(current_user) %>
-      App.project = <%= raw current_project.to_json(only: [:name, :_id]) %>;
-      <% if user_signed_in? %>
-        App.current_user = <%= raw current_user.to_json %>;
-        App.current_user.name = App.current_user.first_name + " " + App.current_user.last_name;
-      <% end %>
-      <% if Rails.env.development? || Rails.env.staging? %>
-        Pusher.logToConsole = true;
-      <% end %>
-    <% end %>
-    <% if current_client.selldo_client_id.present? %>
-      <% if Rails.env.production? %>
-        <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= current_client.selldo_client_id %>.js'></script>
-      <% else %>
-        <script src='<%= ENV_CONFIG[:selldo][:base_url] %>/t/<%= current_client.selldo_client_id %>.js'></script>
-      <% end %>
-    <% end %>
-
-
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-      ga('create', 'UA-198536912-1', 'auto');
-      ga('require', 'displayfeatures');
-      ga('require', 'ecommerce', 'ecommerce.js');
-      ga('send', 'pageview');
-    </script>
-  </head>
-<body>
-<header class="col-app-12 fixed left top">
-    <div class="container">
-        <div class="pull-left left-header nav-links">
-            <a rel="home" class="brand-logo"><img src="<%= asset_path 'launchpad-logo.png' %>" data-event-category="Header" data-event-action="Click" data-event-name="Logo" /></a>
-        </div>
-        <div class="pull-right right-header">
-            <div class="pull-right upper-right-header hidden-xs hidden-portrait">
-              <div class="pull-right ml-2">
-                <%= link_to 'Sign in', new_user_session_path, class: 'green-btn sign-in-button' %>
-              </div>
-              <div class="enquire-now-wrapper pull-right">
-                <a data-event-category="Header" data-event-action="Click" data-event-name="Register on Launchpad" class="enquire-now-btn green-btn register-btn">Register on Launchpad</a>
-              </div>
-
-              <div class="pull-right callnumber ">
-                <span>Call:&nbsp;&nbsp;</span><span>020 6708 2786</span>
-              </div>
-
-            </div>
-            <div class="clearfix"></div>
-        </div>
-        <div class="clearfix"></div>
-    </div>
-</header>
 <section class="home-section home-banner slide relative" id="home">
   <div class="container-launchpad home-container">
       <div class="home-new-caption cwt text-center">
@@ -188,7 +105,7 @@
             <img data-src="<%= asset_path 'ex-feat-02.svg'%>" class="lazy" />
           </div>
           <div class="exclusive-features-desc">
-            Chance to work with<br/> Pune’s biggest developers
+            Extensive nurturing and<br> calling during launches
           </div>
         </div>
       </div>
@@ -296,16 +213,511 @@
     </div>
   </div>
 </section>
+<section class="projects-section">
+  <section class="existing-projects-section section-padding" id="existing-projects">
+    <div class="container">
+      <h2 class="section-heading cgreen ps-2">Projects</h2>
+      <div class="existing-projects-content col-12">
+        <div class="existing-projects-head-wrapper col-12 row">
+          <div class="existing-projects-head-left col-6 col-app-xs-12 ps-4">
+            <h3>Existing Projects (10)</h3>
+          </div>
+          <div class="existing-projects-head-right col-6 filter-wrapper col-app-xs-12 row">
+            <div class="col-6 col-app-xs-12">
+              <div class="filter-category">Location</div>
+              <select class="city">
+                <option value="all">Select..</option>
+                <option value="chinchwad">Chinchwad</option>
+                <option value="wakad">Wakad</option>
+                <option value="ravet">Ravet</option>
+                <option value="Manaslake">manaslake</option>
+                <option value="akurdi">Akurdi</option>
+                <option value="spine-road">Spine road</option>
+                <option value="nibm">NIBM</option>
+                <option value="wagholi">Wagholi</option>
+                <option value="chakan">Chakan</option>
+              </select>
+            </div>
+            <div class="col-6 col-app-xs-12">
+              <div class="filter-category">Configuration</div>
+              <select class="type">
+                <option value="all">Select..</option>
+                <option value="1bhk">1 BHK</option>
+                <option value="2bhk">2 BHK</option>
+                <option value="3bhk">3 BHK</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="property-load-section property-hide row">
+          <div class="property-item col-4" data-city="chinchwad" data-type="2bhk">
+            <div class="property-item-inner">
+              <div class="property-item-image">
+                <img src="<%= asset_path 'empire-square.jpg' %>" class="img-full lazy">
+              </div>
+              <div class="property-item-details">
+                <div class="property-name cgreen f700">Empire Square</div>
+                <div class="property-configuration">2 bhk from 99 lakhs (All incl.)</div>
+                <div class="property-location">Location: Chinchwad</div>
+                <div class="property-btn-wrapper">
+                  <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
+                </div>
+              </div>              
+            </div>
+          </div>
+          <div class="property-item col-4" data-city="chinchwad" data-type="3bhk">
+            <div class="property-item-inner">
+              <div class="property-item-image">
+                <img src="<%= asset_path 'empire-square.jpg' %>" class="img-full lazy">
+              </div>
+              <div class="property-item-details">
+                <div class="property-name cgreen f700">Empire Square</div>
+                <div class="property-configuration">3 bhk from 1.5 cr (All incl.)</div>
+                <div class="property-location">Location: Chinchwad</div>
+                <div class="property-btn-wrapper">
+                  <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
+                </div>
+              </div>              
+            </div>
+          </div>
+          <div class="property-item col-4" data-city="wakad" data-type="2bhk">
+            <div class="property-item-inner">
+              <div class="property-item-image">
+                <img src="<%= asset_path 'Sukhwani-skylines.jpg' %>" class="img-full lazy">
+              </div>
+              <div class="property-item-details">
+                <div class="property-name cgreen f700">Sukhwani Skylines</div>
+                <div class="property-configuration">2 bhk from 65 lakhs (All incl.)</div>
+                <div class="property-location">Location: Wakad</div>
+                <div class="property-btn-wrapper">
+                  <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
+                </div>
+              </div>              
+            </div>
+          </div>
+          <div class="property-item col-4" data-city="ravet" data-type="2bhk">
+            <div class="property-item-inner">
+              <div class="property-item-image">
+                <img src="<%= asset_path 'Celestial-City.jpg' %>" class="img-full lazy">
+              </div>
+              <div class="property-item-details">
+                <div class="property-name cgreen f700">Celestial City</div>
+                <div class="property-configuration">2 bhk from 65 lakhs (All incl.)</div>
+                <div class="property-location">Location: Ravet</div>
+                <div class="property-btn-wrapper">
+                  <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
+                </div>
+              </div>              
+            </div>
+          </div>
+          <div class="property-item col-4" data-city="ravet" data-type="3bhk">
+            <div class="property-item-inner">
+              <div class="property-item-image">
+                <img src="<%= asset_path 'Celestial-City.jpg' %>" class="img-full lazy">
+              </div>
+              <div class="property-item-details">
+                <div class="property-name cgreen f700">Celestial City</div>
+                <div class="property-configuration">3 from bhk 85 lakhs (All incl.)</div>
+                <div class="property-location">Location: Ravet</div>
+                <div class="property-btn-wrapper">
+                  <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
+                </div>
+              </div>              
+            </div>
+          </div>
+          <div class="property-item col-4" data-city="ravet" data-type="2bhk">
+            <div class="property-item-inner">
+              <div class="property-item-image">
+                <img src="<%= asset_path 'Sukhwani-artize.jpg' %>" class="img-full lazy">
+              </div>
+              <div class="property-item-details">
+                <div class="property-name cgreen f700">Sukhwani Artize</div>
+                <div class="property-configuration">2 bhk from 54.9 lakhs (All incl.)</div>
+                <div class="property-location">Location: Ravet</div>
+                <div class="property-btn-wrapper">
+                  <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
+                </div>
+              </div>              
+            </div>
+          </div>
+          <div class="property-item col-4" data-city="manaslake" data-type="2bhk">
+            <div class="property-item-inner">
+              <div class="property-item-image">
+                <img src="<%= asset_path 'Sommet.jpg' %>" class="img-full lazy">
+              </div>
+              <div class="property-item-details">
+                <div class="property-name cgreen f700">Sommet</div>
+                <div class="property-configuration">2 bhk from 50.99 lakhs (All incl.)</div>
+                <div class="property-location">Location: Manaslake</div>
+                <div class="property-btn-wrapper">
+                  <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
+                </div>
+              </div>              
+            </div>
+          </div>
+          <div class="property-item col-4" data-city="manaslake" data-type="3bhk">
+            <div class="property-item-inner">
+              <div class="property-item-image">
+                <img src="<%= asset_path 'Sommet.jpg' %>" class="img-full lazy">
+              </div>
+              <div class="property-item-details">
+                <div class="property-name cgreen f700">Sommet</div>
+                <div class="property-configuration">3 bhk from 70.99 lakhs (All incl.)</div>
+                <div class="property-location">Location: Manaslake</div>
+                <div class="property-btn-wrapper">
+                  <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
+                </div>
+              </div>              
+            </div>
+          </div>
+          <div class="property-item col-4" data-city="akurdi" data-type="2bhk">
+            <div class="property-item-inner">
+              <div class="property-item-image">
+                <img src="<%= asset_path 'Aishwaryam.jpg' %>" class="img-full lazy">
+              </div>
+              <div class="property-item-details">
+                <div class="property-name cgreen f700">Aishwaryam Comfort Gold</div>
+                <div class="property-configuration">2 bhk from 73.8 lakhs (All incl.)</div>
+                <div class="property-location">Location: Akurdi</div>
+                <div class="property-btn-wrapper">
+                  <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
+                </div>
+              </div>              
+            </div>
+          </div>
+          <div class="property-item col-4" data-city="akurdi" data-type="3bhk">
+            <div class="property-item-inner">
+              <div class="property-item-image">
+                <img src="<%= asset_path 'Aishwaryam.jpg' %>" class="img-full lazy">
+              </div>
+              <div class="property-item-details">
+                <div class="property-name cgreen f700">Aishwaryam Comfort Gold</div>
+                <div class="property-configuration">3 bhk from 83.15 lakhs (All incl.)</div>
+                <div class="property-location">Location: Akurdi</div>
+                <div class="property-btn-wrapper">
+                  <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
+                </div>
+              </div>              
+            </div>
+          </div>
+          <div class="property-item col-4" data-city="spine-road" data-type="2bhk">
+            <div class="property-item-inner">
+              <div class="property-item-image">
+                <img src="<%= asset_path 'Vission-exotica.jpg' %>" class="img-full lazy">
+              </div>
+              <div class="property-item-details">
+                <div class="property-name cgreen f700">Vission Exotica / Codename Exotica</div>
+                <div class="property-configuration">2 bhk from 63 lakhs (All incl.)</div>
+                <div class="property-location">Location: Spine road</div>
+                <div class="property-btn-wrapper">
+                  <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
+                </div>
+              </div>              
+            </div>
+          </div>
+          <div class="property-item col-4" data-city="spine-road" data-type="3bhk">
+            <div class="property-item-inner">
+              <div class="property-item-image">
+                <img src="<%= asset_path 'Vission-exotica.jpg' %>" class="img-full lazy">
+              </div>
+              <div class="property-item-details">
+                <div class="property-name cgreen f700">Vission Exotica / Codename Exotica</div>
+                <div class="property-configuration">3 bhk from 86 lakhs (All incl.)</div>
+                <div class="property-location">Location: Spine road</div>
+                <div class="property-btn-wrapper">
+                  <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
+                </div>
+              </div>              
+            </div>
+          </div>
+          <div class="property-item col-4" data-city="nibm" data-type="2bhk">
+            <div class="property-item-inner">
+              <div class="property-item-image">
+                <img src="<%= asset_path 'Vertical-Alcinia.jpg' %>" class="img-full lazy">
+              </div>
+              <div class="property-item-details">
+                <div class="property-name cgreen f700">Vertical Alcinia</div>
+                <div class="property-configuration">2 bhk from 49.90 lakhs (All incl.)</div>
+                <div class="property-location">Location: NIBM</div>
+                <div class="property-btn-wrapper">
+                  <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
+                  <a href="javascript:;" class="property-share-btn" data-event-category="Section" data-event-action="Click" data-event-name="Share">
+                    <img data-src="<%= asset_path 'share.svg'%>" class="lazy" data-event-category="Section" data-event-action="Click" data-event-name="Share"/>
+                  </a>
+                </div>
+              </div>              
+            </div>
+          </div>
+          <div class="property-item col-4" data-city="wagholi" data-type="2bhk">
+            <div class="property-item-inner">
+              <div class="property-item-image">
+                <img src="<%= asset_path 'periwinkle.jpg' %>" class="img-full lazy">
+              </div>
+              <div class="property-item-details">
+                <div class="property-name cgreen f700">Periwinkle</div>
+                <div class="property-configuration">2 bhk from 27 lakhs (All incl.)</div>
+                <div class="property-location">Location: Wagholi</div>
+                <div class="property-btn-wrapper">
+                  <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
+                </div>
+              </div>              
+            </div>
+          </div>   
+          <div class="property-item col-4" data-city="wagholi" data-type="3bhk">
+            <div class="property-item-inner">
+              <div class="property-item-image">
+                <img src="<%= asset_path 'periwinkle.jpg' %>" class="img-full lazy">
+              </div>
+              <div class="property-item-details">
+                <div class="property-name cgreen f700">Periwinkle</div>
+                <div class="property-configuration">3 bhk from Rs. 67 Lacs (All Incl.)</div>
+                <div class="property-location">Location: Wagholi</div>
+                <div class="property-btn-wrapper">
+                  <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
+                </div>
+              </div>              
+            </div>
+          </div>  
+          <div class="property-item col-4" data-city="wagholi" data-type="1bhk">
+            <div class="property-item-inner">
+              <div class="property-item-image">
+                <img src="<%= asset_path 'periwinkle.jpg' %>" class="img-full lazy">
+              </div>
+              <div class="property-item-details">
+                <div class="property-name cgreen f700">Periwinkle</div>
+                <div class="property-configuration">1 bhk from Rs. 32 Lacs (All Incl.)</div>
+                <div class="property-location">Location: Wagholi</div>
+                <div class="property-btn-wrapper">
+                  <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
+                </div>
+              </div>              
+            </div>
+          </div>         
+          <div class="property-item col-4" data-city="chakan" data-type="2bhk">
+            <div class="property-item-inner">
+              <div class="property-item-image">
+                <img src="<%= asset_path 'JMBliss.jpg' %>" class="img-full lazy">
+              </div>
+              <div class="property-item-details">
+                <div class="property-name cgreen f700">JM Bliss</div>
+                <div class="property-configuration">2 bhk from 41.5 lakhs (All incl.)</div>
+                <div class="property-location">Location: Chakan</div>
+                <div class="property-btn-wrapper">
+                  <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
+                </div>
+              </div>              
+            </div>
+          </div>   
+          <div class="property-item col-4" data-city="chakan" data-type="1bhk">
+            <div class="property-item-inner">
+              <div class="property-item-image">
+                <img src="<%= asset_path 'JMBliss.jpg' %>" class="img-full lazy">
+              </div>
+              <div class="property-item-details">
+                <div class="property-name cgreen f700">JM Bliss</div>
+                <div class="property-configuration">1 bhk from 26.6 lakhs (All incl.)</div>
+                <div class="property-location">Location: Chakan</div>
+                <div class="property-btn-wrapper">
+                  <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
+                </div>
+              </div>              
+            </div>
+          </div>   
+
+        </div>
+        <div class="load-more-btn-wrapper text-center">
+          <a href="javascript:;" class="load-more-btn" data-event-category="Section" data-event-action="Click" data-event-name="Load More - Existing Projects">Load More</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--<section class="newprojects-section section-padding" id="newprojects-projects">
+    <div class="container">
+        <div class="newprojects-content col-12">
+          <div class="newprojects-head-wrapper col-12">
+            <div class="newprojects-head-left col-6 col-xs-12">
+              <h3>New Projects (7)</h3>
+            </div>
+            <div class="newprojects-head-right col-6 filter-wrapper col-xs-12">
+              <div class="col-6 col-xs-12">
+                <div class="filter-category">Location</div>
+                <select class="city2">
+                  <option value="all">Select..</option>
+                  <option value="gurugram">Gurugram</option>
+                  <option value="mohali">mohali</option>
+                  <option value="jaipur">Jaipur</option>
+                </select>
+              </div>
+              <div class="col-6 col-xs-12">
+                <div class="filter-category">Configuration</div>
+                <select class="type2">
+                  <option value="all">Select..</option>
+                  <option value="2bhk">2 BHK</option>
+                  <option value="3bhk">3 BHK</option>
+                  <option value="4bhk">4 BHK</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="property-load-section2 col-12 newproject-property-load property-hide2">
+            <div class="property-item col-4" data-citynew="gurugram" data-typenew="2bhk">
+              <div class="property-item-inner">
+                <div class="newproject-badge">
+                  <img data-src="<%= asset_path 'newproject-badge.svg'%>" class="lazy img-full">  
+                </div>
+                
+                <div class="property-item-details">
+                  <div class="property-name cgreen f700">Codename Exotica</div>
+                  <div class="property-configuration">2 &amp; 3 BHK Exotic Homes</div>
+                  <div class="property-location">Location: In Pradhikaran Off Spine Road, PCMC</div>
+                  <div class="property-btn-wrapper">
+                    <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
+                    <a href="javascript:;" class="property-share-btn" data-event-category="Section" data-event-action="Click" data-event-name="Share">
+                      <img data-src="<%= asset_path 'share.svg'%>" class="lazy" data-event-category="Section" data-event-action="Click" data-event-name="Share"/>
+                    </a>
+                  </div>
+                </div>              
+              </div>
+            </div>
+
+            <div class="property-item col-4" data-citynew="jaipur" data-typenew="2bhk">
+              <div class="property-item-inner">
+                <div class="newproject-badge">
+                  <img data-src="<%= asset_path 'newproject-badge.svg'%>" class="lazy img-full">  
+                </div>
+                
+                <div class="property-item-details">
+                  <div class="property-name cgreen f700">Codename Exotica</div>
+                  <div class="property-configuration">2 &amp; 3 BHK Exotic Homes</div>
+                  <div class="property-location">Location: In Pradhikaran Off Spine Road, PCMC</div>
+                  <div class="property-btn-wrapper">
+                    <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
+                    <a href="javascript:;" class="property-share-btn" data-event-category="Section" data-event-action="Click" data-event-name="Share">
+                      <img data-src="<%= asset_path 'share.svg'%>" class="lazy" data-event-category="Section" data-event-action="Click" data-event-name="Share"/>
+                    </a>
+                  </div>
+                </div>              
+              </div>
+            </div>
+
+            <div class="property-item col-4" data-citynew="mohali" data-typenew="2bhk">
+              <div class="property-item-inner">
+                <div class="newproject-badge">
+                  <img data-src="<%= asset_path 'newproject-badge.svg'%>" class="lazy img-full">  
+                </div>
+                
+                <div class="property-item-details">
+                  <div class="property-name cgreen f700">Codename Exotica</div>
+                  <div class="property-configuration">2 &amp; 3 BHK Exotic Homes</div>
+                  <div class="property-location">Location: In Pradhikaran Off Spine Road, PCMC</div>
+                  <div class="property-btn-wrapper">
+                    <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
+                    <a href="javascript:;" class="property-share-btn" data-event-category="Section" data-event-action="Click" data-event-name="Share">
+                      <img data-src="<%= asset_path 'share.svg'%>" class="lazy" data-event-category="Section" data-event-action="Click" data-event-name="Share"/>
+                    </a>
+                  </div>
+                </div>              
+              </div>
+            </div>
+
+            <div class="property-item col-4" data-citynew="gurugram" data-typenew="3bhk">
+              <div class="property-item-inner">
+                <div class="newproject-badge">
+                  <img data-src="<%= asset_path 'newproject-badge.svg'%>" class="lazy img-full">  
+                </div>
+                
+                <div class="property-item-details">
+                  <div class="property-name cgreen f700">Codename Exotica</div>
+                  <div class="property-configuration">2 &amp; 3 BHK Exotic Homes</div>
+                  <div class="property-location">Location: In Pradhikaran Off Spine Road, PCMC</div>
+                  <div class="property-btn-wrapper">
+                    <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
+                    <a href="javascript:;" class="property-share-btn" data-event-category="Section" data-event-action="Click" data-event-name="Share">
+                      <img data-src="<%= asset_path 'share.svg'%>" class="lazy" data-event-category="Section" data-event-action="Click" data-event-name="Share"/>
+                    </a>
+                  </div>
+                </div>              
+              </div>
+            </div>
+
+            <div class="property-item col-4" data-citynew="jaipur" data-typenew="3bhk">
+              <div class="property-item-inner">
+                <div class="newproject-badge">
+                  <img data-src="<%= asset_path 'newproject-badge.svg'%>" class="lazy img-full">  
+                </div>
+                
+                <div class="property-item-details">
+                  <div class="property-name cgreen f700">Codename Exotica</div>
+                  <div class="property-configuration">2 &amp; 3 BHK Exotic Homes</div>
+                  <div class="property-location">Location: In Pradhikaran Off Spine Road, PCMC</div>
+                  <div class="property-btn-wrapper">
+                    <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
+                    <a href="javascript:;" class="property-share-btn" data-event-category="Section" data-event-action="Click" data-event-name="Share">
+                      <img data-src="<%= asset_path 'share.svg'%>" class="lazy" data-event-category="Section" data-event-action="Click" data-event-name="Share"/>
+                    </a>
+                  </div>
+                </div>              
+              </div>
+            </div>
+
+            <div class="property-item col-4" data-citynew="mohali" data-typenew="3bhk">
+              <div class="property-item-inner">
+                <div class="newproject-badge">
+                  <img data-src="<%= asset_path 'newproject-badge.svg'%>" class="lazy img-full">  
+                </div>
+                
+                <div class="property-item-details">
+                  <div class="property-name cgreen f700">Codename Exotica</div>
+                  <div class="property-configuration">2 &amp; 3 BHK Exotic Homes</div>
+                  <div class="property-location">Location: In Pradhikaran Off Spine Road, PCMC</div>
+                  <div class="property-btn-wrapper">
+                    <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
+                    <a href="javascript:;" class="property-share-btn" data-event-category="Section" data-event-action="Click" data-event-name="Share">
+                      <img data-src="<%= asset_path 'share.svg'%>" class="lazy" data-event-category="Section" data-event-action="Click" data-event-name="Share"/>
+                    </a>
+                  </div>
+                </div>              
+              </div>
+            </div>
+
+            <div class="property-item col-4" data-citynew="gurugram" data-typenew="2bhk">
+              <div class="property-item-inner">
+                <div class="newproject-badge">
+                  <img data-src="<%= asset_path 'newproject-badge.svg'%>" class="lazy img-full">  
+                </div>
+                
+                <div class="property-item-details">
+                  <div class="property-name cgreen f700">Codename Exotica</div>
+                  <div class="property-configuration">2 &amp; 3 BHK Exotic Homes</div>
+                  <div class="property-location">Location: In Pradhikaran Off Spine Road, PCMC</div>
+                  <div class="property-btn-wrapper">
+                    <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
+                    <a href="javascript:;" class="property-share-btn" data-event-category="Section" data-event-action="Click" data-event-name="Share">
+                      <img data-src="<%= asset_path 'share.svg'%>" class="lazy" data-event-category="Section" data-event-action="Click" data-event-name="Share"/>
+                    </a>
+                  </div>
+                </div>              
+              </div>
+            </div>
+
+          </div>
+          <div class="load-more-btn-wrapper2 text-center">
+            <a href="javascript:;" class="load-more-btn2" data-event-category="Section" data-event-action="Click" data-event-name="Load More - New Projects">Load More</a>
+          </div>
+        </div>
+    </div>
+  </section>-->
+</section>
 <section class="existingnew-projects-section section-padding" id="existingnew-projects">
     <div class="container">
-      <h2 class="section-heading text-center cgreen">Chance to work with Pune’s biggest developers</h2>
+      <h2 class="section-heading text-center cgreen">Chance to work with Pune's hottest selling properties</h2>
       <br/>
       <div class="existingnew-projects-items-wrapper">
         <div class="existingnew-projects-item col-app-6 col-app-xs-12">
           <div class="existingnew-projects-item-inner">
             <h2 class="sub-heading text-center cgreen">Existing Projects</h2>
             <br/>
-            <h4 class="text-center projects-number">12</h4>  
+            <h4 class="text-center projects-number">10</h4>  
           </div>
         </div>
         <div class="existingnew-projects-item col-app-6 col-app-xs-12">
@@ -319,7 +731,7 @@
       </div>
     </div>
 </section>
-<section class="presented-by-amura-section section-padding" id="presented-by-amura">
+<section class="presented-by-amura-section section-padding" id="about-us">
   <div class="container-launchpad">
     <h2 class="section-heading text-center cgreen">Presented by Amura</h2>
     <p class="text-center f500">India’s leading PropTech Company</p>
@@ -482,79 +894,12 @@
     </div>
   </div>
 </section>
-<footer class="col-app-12">
-    <div class="desktop-footer col-app-12">
-      <div class="container-launchpad">
-        <div class="col-app-6 col-app-xs-12">
-          Copyrights &copy; Amura Marketing Technologies. <%= Date.current.year %>.
-        </div>
-        <div class="col-app-6 col-app-xs-12">
-          <div class="social-links">
-            <a href="https://www.facebook.com/amuratech/" target="_blank">
-              <img data-src="<%= asset_path 'facebook-icon.png' %>" class="lazy">
-            </a>
-            <a href="https://www.instagram.com/amuratech/" target="_blank">
-              <img data-src="<%= asset_path 'insta-icon.png' %>" class="lazy">
-            </a>
-            <a href="https://twitter.com/amuratech" target="_blank">
-              <img data-src="<%= asset_path 'twitter-icon.png' %>" class="lazy">
-            </a>
-            <a href="https://www.linkedin.com/company/amura-marketing-technologies-pvt-ltd/" target="_blank">
-              <img data-src="<%= asset_path 'linkedin-icon.png' %>" class="lazy">
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="mobile-footer visible-xs visible-portrait fixed text-center col-app-12">
-        <div class="mob-number col-app-6">
-            &nbsp;<a href="tel:02067082786" style="font-weight: 700; color: #000;">020 6708 2786</span>
-        </div>
-        <div class="enquiry col-app-6">
-            <a class="green-btn mobile-enquire-button relative register-btn" data-event-category="Footer" data-event-action="Click" data-event-name="Register Now">Register Now</a>
-        </div>
-    </div>
-  </footer>
-
-<div id="overlay" style="display:none;">
-  <div id="popup">
-    <div class="site-visit-wrapper">
-    <div id="close"  data-event-category="Section" data-event-action="Click" data-event-name="Close">&times;</div>
-      <%= simple_form_for(@channel_partner, local: true, html: { id: 'channel_partner_form', class: 'validate-form', multipart: true, novalidate: false }) do |form| %>
-        <%= render "short_form_fields", {form: form} %>
-        <div class="signin-btn pl-0 pr-0 pb-4">
-          <%= form.submit "Register", class: "green-btn sign-in-btn", data: { disable_with: "Please wait..." } %>
-        </div>
-        <hr/>
-        <%= render "devise/shared/links" %>
-      <% end %>
-    </div>
-   </div>
-</div>
-<%= javascript_include_tag 'script' %>
-<%= javascript_tag do %>
-  $(document).ready(function(){
-    FormInitializer.init($("#channel_partner_form"));
-    <% if params[:action] == 'create' && @channel_partner.errors.present? %>
-    $('.register-btn:first').trigger('click');
-    <% end %>
-  });
-<% end %>
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5BK66NQ"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<script>setTimeout(function(){(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-5BK66NQ');}, 2000);</script>
-
-<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-M32LFR"
- height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <script>setTimeout(function(){(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-M32LFR');}, 2000);</script>
-</body>
-</html>
+<section class="section-padding contact-us" id="contact-us">
+  <div class="container-launchpad">
+    <h2 class="section-heading text-center cgreen">Contact Us</h2>
+    <p class="text-center mg-bt-10"><strong>Address</strong></p>
+    <p class="text-center">3rd Floor, Sr. No. 9, H.No:1/2,<br> Near Ramada Plaza, Mahalunge,<br> Pune, Maharashtra 411045</p>
+    <p class="text-center mg-bt-10"><strong>Contact No</strong></p>
+    <p class="text-center"><a href="tel:020 67082786">020 6708 2786</a></p>
+  </div>
+</section>

@@ -12,6 +12,16 @@ class HomeController < ApplicationController
     render layout: 'welcome'
   end
 
+  def privacy_policy
+    @channel_partner = ChannelPartner.new
+    render layout: 'landing_page'
+  end
+
+  def terms_and_conditions
+    @channel_partner = ChannelPartner.new
+    render layout: 'landing_page'
+  end
+
   def register
     @resource = User.new
     if user_signed_in?
