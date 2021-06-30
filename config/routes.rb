@@ -385,6 +385,7 @@ Rails.application.routes.draw do
   get 'broker/terms-and-conditions', to: 'broker#terms_and_conditions'
   get 'broker/privacy-policy', to: 'broker#privacy_policy'
   get 'broker/cp-enquiryform', to: 'broker#cp_enquiryform'
+  get 'broker/cp-page', to: 'broker#cp_page'
 
 
   match '/sell_do/lead_created', to: "api/sell_do/leads#lead_created", via: [:get, :post]

@@ -30,18 +30,31 @@
                                 </div>
                             </div>
                             <div class="prjt-tab col-lg-12">
-                                <nav>
-                                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                                        <button class="nav-link active" id="nav-overview-tab" data-bs-toggle="tab" data-bs-target="#nav-overview" type="button" role="tab" aria-controls="nav-overview" aria-selected="true">Overview</button>
-                                        <button class="nav-link" id="nav-towers-tab" data-bs-toggle="tab" data-bs-target="#nav-towers" type="button" role="tab" aria-controls="nav-towers" aria-selected="false">Towers</button>
-                                        <button class="nav-link" id="nav-collaterals-tab" data-bs-toggle="tab" data-bs-target="#nav-collaterals" type="button" role="tab" aria-controls="nav-collaterals" aria-selected="false">Collaterals</button>
-                                        <button class="nav-link" id="nav-amenities-tab" data-bs-toggle="tab" data-bs-target="#nav-amenities" type="button" role="tab" aria-controls="nav-amenities" aria-selected="false">Amenities</button>
-                                        <button class="nav-link" id="nav-specifications-tab" data-bs-toggle="tab" data-bs-target="#nav-specifications" type="button" role="tab" aria-controls="nav-specifications" aria-selected="false">Specifications</button>
-                                        <button class="nav-link" id="nav-timeline-tab" data-bs-toggle="tab" data-bs-target="#nav-timeline" type="button" role="tab" aria-controls="nav-timeline" aria-selected="false">Project Timeline</button>
+                                <nav id="prjt-menu">
+                                    <ul class="nav nav-tabs" id="nav-tab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="nav-overview-tab" href="javascript:;" rel="nav-overview">Overview</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="nav-towers-tab" href="javascript:;" rel="nav-towers">Towers</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="nav-collaterals-tab" href="javascript:;" rel="nav-collaterals">Collaterals</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="nav-amenities-tab" href="javascript:;" rel="nav-amenities">Amenities</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="nav-specifications-tab" href="javascript:;" rel="nav-specifications">Specifications</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="nav-timeline-tab" href="javascript:;" rel="nav-timeline">Project Timeline</a>
+                                        </li>
+                                    </ul>
                                     </div>
                                 </nav>
-                                <div class="tab-content col-lg-12" id="nav-tabContent">
-                                  <div class="tab-pane fade  show active" id="nav-overview" role="tabpanel" aria-labelledby="nav-overview-tab">
+                                <div class="prjt-content-list col-lg-12" id="nav-tabContent">
+                                  <div class="tab-pane" id="nav-overview">
                                       <div class="tab-inner px-3 py-3 active">
                                         <h3 class="tab-title">About Project</h3>
                                         <ul class="project-list list-unstyled row">
@@ -68,7 +81,7 @@
                                         </ul>
                                       </div>
                                   </div>
-                                  <div class="tab-pane fade " id="nav-towers" role="tabpanel" aria-labelledby="nav-towers-tab">
+                                  <div class="tab-pane" id="nav-towers">
                                     <div class="towers-tab-wrap">
                                         <div class="left-tower-tab">
                                             <ul class="list-unstyled">
@@ -209,7 +222,7 @@
                                         </div>
                                     </div>
                                   </div>
-                                  <div class="tab-pane fade " id="nav-collaterals" role="tabpanel" aria-labelledby="nav-collaterals-tab">
+                                  <div class="tab-pane" id="nav-collaterals">
                                       <div class="collaterals-tab-wrap tab-inner-wrap">
                                         <h2>Images <a href="javascript:;" class="ms-2"><i class="fa fa-share-alt fill-theme"></i></a></h2>
                                         <ul class="collaterals-list">
@@ -260,7 +273,7 @@
                                         </ul>
                                       </div>
                                   </div>
-                                  <div class="tab-pane fade" id="nav-amenities" role="tabpanel" aria-labelledby="nav-amenities-tab">
+                                  <div class="tab-pane" id="nav-amenities">
                                       <div class="amenities-tab-wrap tab-inner-wrap">
                                         <h2>Customer Favorite</h2>
                                         <ul class="amenities-list">
@@ -321,7 +334,7 @@
                                         </ul>
                                     </div>
                                   </div>
-                                  <div class="tab-pane fade" id="nav-specifications" role="tabpanel" aria-labelledby="nav-specifications-tab">
+                                  <div class="tab-pane" id="nav-specifications">
                                       <div class="specifications-tab-wrap">
                                         <p>Your desire to stand apart, is closer than you think! Live in trendy homes that have been smartly designed; just for you! Smaller passages and larger rooms. Because we know you spend 98% more time in your rooms than in the passages.</p>
                                         <div class="row mt-4">
@@ -354,7 +367,7 @@
                                         </div>
                                       </div>
                                   </div>
-                                  <div class="tab-pane fade" id="nav-timeline" role="tabpanel" aria-labelledby="nav-timeline-tab">
+                                  <div class="tab-pane" id="nav-timeline">
                                     <div class="timeline-wrap">
                                         <div class="single-timeline">
                                             <h2>December 2020</h2>

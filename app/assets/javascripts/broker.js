@@ -107,16 +107,73 @@
 //     data: [2, 2, 3, 2, 1]
 //   }]
 // });
-
+var window_wt = $(window).width();
+var window_ht = $(window).height();
 $(document).ready(function(){
-	$('.header-search-icon').click(function(){
-		$('.icon-search').toggleClass('close');
-	});
-  $('.nav-tabs button').click(function(){
-    var curnt_tab = $(this).attr('aria-controls');
-    $('.nav-tabs button').removeClass('active');
-    $('.tab-content .tab-pane').removeClass('show active');
-    $(this).addClass('active');
-    $('#'+curnt_tab).addClass('show active');
+  $('.header-search-icon').click(function(){
+    $('.icon-search').toggleClass('close');
+  });
+  // $('.prjt-content-list').scrollspy({ target: '#prjt-menu' })
+  // $('.nav-tabs button').click(function(){
+  //   var curnt_tab = $(this).attr('aria-controls');
+  //   $('.nav-tabs button').removeClass('active');
+  //   $('.tab-content .tab-pane').removeClass('show active');
+  //   $(this).addClass('active');
+  //   $('#'+curnt_tab).addClass('show active');
+  // });
+  $('.pwd-btn').click(function () {
+    if($(this).hasClass('show-pwd')){
+      $(this).removeClass('show-pwd').addClass('hide-pwd')
+      $(this).children().removeClass('fa-eye-slash').addClass('fa-eye');
+      $('.pwd-field').attr('type','text');
+    }else{
+      $('.pwd-field').attr('type','password');
+      $(this).removeClass('hide-pwd').addClass('show-pwd')
+      $(this).children().removeClass('fa-eye').addClass('fa-eye-slash');
+    }
   });
 });
+
+   var childrenSelector = $(".nav-tabs a");
+    var aChildren = $(".nav-tabs a"); // find the a children of the list items
+    if (window_wt <= 700)
+        var gap = 60; // $(".header-wrapper").outerHeight(); //Navigation height
+    else
+        var gap = 70;
+    var aArray = []; // create the empty aArray
+    for (var i = 0; i < childrenSelector.length; i++) {
+        var aChild = aChildren[i];
+        if (!$(aChild).hasClass('extLink')) {
+            if ($(aChild).attr('rel')) {
+                var ahref = $(aChild).attr('rel');
+                aArray.push(ahref);
+            }
+        }
+    }
+    //On Scroll - Add class active to active tab
+    $(window).scroll(function() {
+        var windowPos = $(window).scrollTop(); // get the offset of the window from the top of page
+        var windowHeight = $(window).height(); // get the height of the window
+        var docHeight = $(document).height();
+        for (i = 0; i < aArray.length; i++) {
+            var theID = aArray[i];
+            var divPos = $("#" + theID).offset().top; // get the offset of the div from the top of page
+            var divHeight = $("#" + theID).outerHeight(); // get the height of the div in question
+            if (windowPos >= (divPos - gap) && windowPos < ((divPos - gap) + divHeight)) {
+                if (!$("a[rel='" + theID + "']").hasClass("active")) {
+                    $("a[rel='" + theID + "']").addClass("active");
+                }
+            } else {
+                $("a[rel='" + theID + "']").removeClass("active");
+            }
+        }
+
+        //If document has scrolled to the end. Add active class to the last navigation menu
+        if (windowPos + windowHeight == docHeight) {
+            if (!$(".nav-tabs a:not(.extLink):last-child").hasClass("active")) {
+                var navActiveCurrent = $(".active").attr("rel");
+                $("a[rel='" + navActiveCurrent + "']").removeClass("active");
+                $(".nav-tabs a:not(.extLink):last-child").addClass("active");
+            }
+        }
+    });
