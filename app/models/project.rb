@@ -185,6 +185,10 @@ class Project
 
   def self.user_based_scope(user, params = {})
     custom_scope = {}
+    if user.role?('channel_partner')
+      custom_scope = { _id: { '$in': user.interested_projects.approved.distinct(:project_id) } } unless params[:controller] == 'admin/projects'
+    end
+
     unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
       if user.project_ids.present?
         project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
