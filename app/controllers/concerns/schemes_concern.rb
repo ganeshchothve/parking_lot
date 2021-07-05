@@ -40,6 +40,7 @@ module SchemesConcern
               current_user.manager_role
             end
     custom_scope = custom_scope.filter_by_can_be_applied_by_role(_role).filter_by_default_for_user_id(current_user.id) if _role
+    custom_scope = custom_scope.where(Scheme.user_based_scope(current_user,params))
 
     Scheme.with_scope(policy_scope(custom_scope)) do
       yield

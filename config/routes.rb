@@ -253,6 +253,7 @@ Rails.application.routes.draw do
       match :confirm_via_otp, action: 'confirm_via_otp', as: :confirm_via_otp, on: :member, via: [:get, :patch]
 
       resources :leads, only: :index
+      resources :interested_projects, only: [:index, :create, :edit, :update]
     end # end resources :users block
 
     resources :user_kycs, only: %i[index show], controller: 'user_kycs'
@@ -386,6 +387,7 @@ Rails.application.routes.draw do
   end
 
   match '/sell_do/lead_created', to: "api/sell_do/leads#lead_created", via: [:get, :post]
+  match '/sell_do/site_visit_updated', to: "api/sell_do/leads#site_visit_updated", via: [:get, :post]
   match '/sell_do/pushed_to_sales', to: "api/sell_do/leads#pushed_to_sales", via: [:get, :post]
   match '/zoho/download', to: "api/zoho/assets#download", via: [:get, :post]
 

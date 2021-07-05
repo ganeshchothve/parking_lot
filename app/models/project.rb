@@ -1,8 +1,11 @@
 class Project
   include Mongoid::Document
   include Mongoid::Timestamps
+  include InsertionStringMethods
   include ArrayBlankRejectable
   include CrmIntegration
+  include ApplicationHelper
+  extend ApplicationHelper
 
   # Add different types of documents which are uploaded on client
   DOCUMENT_TYPES = %w[document brochure certificate unit_selection_filter_image sales_presentation images].freeze
@@ -178,5 +181,20 @@ class Project
     else
       false
     end
+  end
+
+  def self.user_based_scope(user, params = {})
+    custom_scope = {}
+    if user.role?('channel_partner')
+      custom_scope = { _id: { '$in': user.interested_projects.approved.distinct(:project_id) } } unless params[:controller] == 'admin/projects'
+    end
+
+    unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
+      if user.project_ids.present?
+        project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
+        custom_scope.merge!({_id: {"$in": project_ids}})
+      end
+    end
+    custom_scope
   end
 end

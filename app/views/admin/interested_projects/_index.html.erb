@@ -1,0 +1,37 @@
+<table class='table my-customer-table responsive-tbl'>
+  <thead class="th-default">
+    <thead>
+      <tr class="bg-gradient-cd white">
+        <th><%= t('mongoid.attributes.interested_project.project_id') %></th>
+        <th><%= t('mongoid.attributes.interested_project.status') %></th>
+        <th class="text-right"><%= t('global.action', count: 3) %></th>
+      </tr>
+    </thead>
+  </thead>
+  <tbody>
+    <% interested_projects.each do |ip| %>
+      <tr>
+        <td data-title="<%= t('mongoid.attributes.interested_project.project_id') %>">
+          <span><%= ip.project.name %></span>
+        </td>
+        <td data-title="<%= t('mongoid.attributes.interested_project.status') %>"><span><%= t("mongoid.attributes.interested_project/status.#{ip.status}") %></span></td>
+
+        <td>
+          <div class="dropdown show text-right">
+            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+              <% if policy([:admin, ip]).edit? %>
+                <%= link_to t('controller.interested_projects.edit.link_name'), edit_admin_user_interested_project_path(ip.user, ip), class: "dropdown-item modal-remote-form-link" %>
+              <% end %>
+            </div>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% if interested_projects.is_a?(WillPaginate::Collection) %>
+  <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pt-2">
+    <%= will_paginate interested_projects, list_classes: %w(pagination justify-content-center) %>
+  </div>
+<% end %>

@@ -73,13 +73,58 @@ class Receipt
   scope :filter_by_issued_date, ->(date) { start_date, end_date = date.split(' - '); where(issued_date: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_processed_on, ->(date) { start_date, end_date = date.split(' - '); where(processed_on: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
+  scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(receipt_id: regex ) }
+  scope :direct_payments, ->{ where(booking_detail_id: nil )}
   scope :filter_by_booking_detail_id, ->(_booking_detail_id) do
     _booking_detail_id = _booking_detail_id == '' ? { '$in' => ['', nil] } : _booking_detail_id
     where(booking_detail_id: _booking_detail_id)
   end
-  scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(receipt_id: regex ) }
 
-  scope :direct_payments, ->{ where(booking_detail_id: nil )}
+  scope :filter_by_reference_id, ->(reference_id) {
+    if reference_id.present?
+      third_party_references = []
+      reference_id.each do |key, value|
+        next if (key.blank? || value.blank?)
+        crm_id = (BSON.ObjectId(key) rescue "")
+        third_party_references << {"third_party_references.crm_id": crm_id, "third_party_references.reference_id": value}
+      end
+      if third_party_references.present?
+        where("$or": third_party_references)
+      end
+    end
+  }
+
+  scope :filter_by_cp_reference_id, ->(cp_reference_id) {
+      if cp_reference_id.present?
+        third_party_references = []
+        cp_reference_id.each do |key, value|
+          next if (key.blank? || value.blank?)
+          crm_id = (BSON.ObjectId(key) rescue "")
+          third_party_references << {"third_party_references.crm_id": crm_id, "third_party_references.reference_id": value}
+        end
+        if third_party_references.present?
+          channel_partner_users = User.filter_by_role("channel_partner").where("$or": third_party_references)
+          leads = Lead.where(manager_id: {"$in": channel_partner_users.pluck(:id)}) if channel_partner_users.present?
+          if leads.present?
+            where(lead_id: {"$in": leads.pluck(:id)})
+          else
+            Receipt.none
+          end
+        end
+      end
+  }
+
+  scope :filter_by_cp_code, ->(cp_code) {
+      channel_partner = ChannelPartner.where(cp_code: cp_code)
+      associated_users = User.filter_by_role("channel_partner").in(id: channel_partner.pluck(:associated_user_id)) if channel_partner.present?
+      leads = Lead.in(manager_id: associated_users.pluck(:id)) if associated_users.present?
+      if channel_partner.present? && leads.present?
+        where(lead_id: {"$in": leads.pluck(:id)})
+      else
+        Receipt.none #for get Mongoid::Criteria object with no records if channel partner not found
+      end
+  }
+
 
   #validations for fields without default value
   validates :total_amount, presence: true
@@ -217,7 +262,7 @@ class Receipt
     custom_scope = {}
     if params[:lead_id].blank? && !user.buyer?
       if user.role?('channel_partner')
-        custom_scope = { manager_id: user.id }
+        custom_scope = { manager_id: user.id, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) } }
       #elsif user.role?('cp_admin')
       #  custom_scope = { lead_id: { "$in": Lead.nin(manager_id: [nil, '']).distinct(:id) } }
       #elsif user.role?('cp')
@@ -230,6 +275,11 @@ class Receipt
     custom_scope = { user_id: user.id } if user.buyer?
 
     custom_scope[:booking_detail_id] = params[:booking_detail_id] if params[:booking_detail_id].present?
+
+    unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
+      project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
+      custom_scope.merge!({project_id: {"$in": project_ids}})
+    end
     custom_scope
   end
 

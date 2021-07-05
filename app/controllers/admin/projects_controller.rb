@@ -89,7 +89,7 @@ class Admin::ProjectsController < AdminController
 
   def collaterals
     @project = Project.where(id: params[:id]).first
-    authorize_resource
+    @project ? authorize([:admin, @project]) : authorize([:admin, Project])
     render layout: false
   end
 
@@ -101,7 +101,7 @@ class Admin::ProjectsController < AdminController
   end
 
   def authorize_resource
-    if %w[index collaterals export].include?(params[:action])
+    if %w[index export].include?(params[:action])
       authorize [:admin, Project]
     elsif params[:action] == 'new'
       authorize [:admin, Project.new]
@@ -113,7 +113,7 @@ class Admin::ProjectsController < AdminController
   end
 
   def apply_policy_scope
-    custom_project_scope = Project.all.criteria
+    custom_project_scope = Project.where(Project.user_based_scope(current_user,params)).criteria
     Project.with_scope(policy_scope(custom_project_scope)) do
       yield
     end

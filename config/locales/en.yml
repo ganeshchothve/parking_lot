@@ -140,6 +140,9 @@ en:
       channel_partner:
         one: Channel Partner
         other: Channel Partners
+      interested_project:
+        one: Interested Project
+        other: Interested Projects
 
       data_attribute:
         one: Date
@@ -230,6 +233,16 @@ en:
         other: Brokerage Deductions
 
     attributes:
+      interested_project:
+        project_id: Project
+        user_id: User
+        status: Status
+      interested_project/status:
+        subscribed: 'Subscribed'
+        approved: 'Approved'
+        rejected: 'Rejected'
+        blocked: 'Blocked'
+
       push_notification:
         url: "Redirect url"
         title: "Title"
@@ -950,6 +963,7 @@ en:
         manager_name: 'Manager Name'
         manager_role: "Sales Manager / Added by Role"
         manager_id: "Partner / Manager / Added by"
+        project_ids: Projects
         manager_change_reason: "Reason for changing Partner"
         name: 'Name'
         name_email_phone: 'Name/Email/Phone'
@@ -1075,6 +1089,7 @@ en:
         unit_selection_filter_image: 'Image on Apartment Search Page'
         amenities: 'Amenities'
         certificate: 'Certificate'
+        images: 'Images'
       project/help_text:
         document_html: 'Project documents'
         offer_html: 'Project ongoing offers'
@@ -1083,6 +1098,7 @@ en:
         unit_selection_filter_image_html: 'Web compatible image - to be displayed on apartment search page'
         amenities_html: 'Project amenities'
         certificate_html: 'Certificate'
+        images_html: 'Images'
       cp_lead_activity/file_types:
         sitevisit_form: 'Site Visit Form'
       cp_lead_activity/help_text:
@@ -1516,6 +1532,11 @@ en:
       leads:
         link_name: 'Show Leads'
       send_payment_link: 'Payment link sent to user'
+
+    interested_projects:
+      set_interested_project_missing: 'Interested Project not found'
+      edit:
+        link_name: 'Edit Interested Project'
 
     leads:
       index:

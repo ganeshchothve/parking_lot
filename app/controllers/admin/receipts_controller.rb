@@ -3,6 +3,7 @@ class Admin::ReceiptsController < AdminController
 
   before_action :set_lead, except: %w[index show export resend_success edit_token_number update_token_number payment_mode_chart frequency_chart status_chart]
   before_action :set_receipt, only: %w[edit update show resend_success edit_token_number update_token_number]
+  around_action :apply_policy_scope, only: :index
 
   #
   # This index action for Admin users where Admin can view all receipts.
@@ -12,9 +13,7 @@ class Admin::ReceiptsController < AdminController
   # GET /admin/receipts
   def index
     authorize([:admin, Receipt])
-    @receipts = Receipt.where(Receipt.user_based_scope(current_user, params))
-                       .build_criteria(params)
-                       .paginate(page: params[:page] || 1, per_page: params[:per_page])
+    @receipts = Receipt.build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page])
     respond_to do |format|
       format.json { render json: @receipts.as_json(methods: [:name]) }
       format.html
@@ -156,6 +155,13 @@ class Admin::ReceiptsController < AdminController
     redirect_to dashboard_path, alert: 'Lead Not found', status: 404 if @lead.blank?
   end
 
+  def apply_policy_scope
+    custom_scope = Receipt.all.where(Receipt.user_based_scope(current_user))
+    Receipt.with_scope(policy_scope(custom_scope)) do
+      yield
+    end
+  end
+
   def set_receipt
     @receipt = Receipt.where(_id: params[:id]).first
     redirect_to dashboard_path, alert: 'Receipt Not found', status: 404 if @receipt.blank?
@@ -174,10 +180,10 @@ class Admin::ReceiptsController < AdminController
         end
       end
       dataset << { label: t("mongoid.attributes.receipt/status.#{status}"),
-                    borderColor: '#ffffff',
-                    borderWidth: 1,
-                    data: d
-                  }
+        borderColor: '#ffffff',
+        borderWidth: 1,
+        data: d
+      }
     end
     dataset
   end
@@ -196,10 +202,10 @@ class Admin::ReceiptsController < AdminController
         end
       end
       dataset << { label: t("mongoid.attributes.receipt/payment_mode.#{payment_mode}"),
-                    borderColor: '#ffffff',
-                    borderWidth: 1,
-                    data: d
-                  }
+        borderColor: '#ffffff',
+        borderWidth: 1,
+        data: d
+      }
     end
     dataset
   end

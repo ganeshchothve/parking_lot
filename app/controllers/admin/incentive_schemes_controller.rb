@@ -81,7 +81,7 @@ class Admin::IncentiveSchemesController < AdminController
   end
 
   def apply_policy_scope
-    custom_scope = IncentiveScheme.all
+    custom_scope = IncentiveScheme.all.where(IncentiveScheme.user_based_scope(current_user))
     IncentiveScheme.with_scope(policy_scope(custom_scope)) do
       yield
     end
