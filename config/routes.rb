@@ -380,6 +380,7 @@ Rails.application.routes.draw do
   #broker 
   get 'broker/home', to: 'broker#index'
   get 'broker/project-details', to: 'broker#project_details'
+  get 'broker/project-details-new', to: 'broker#project_details_new'
   get 'broker/project', to: 'broker#project'
   get 'broker/project', to: 'broker#project'
   get 'broker/terms-and-conditions', to: 'broker#terms_and_conditions'
