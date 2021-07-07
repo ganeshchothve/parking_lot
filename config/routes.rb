@@ -280,6 +280,7 @@ Rails.application.routes.draw do
   get :welcome, as: :welcome, to: 'home#welcome'
   get :terms_and_conditions, as: :terms_and_conditions, to: 'home#terms_and_conditions'
   get :privacy_policy, as: :privacy_policy, to: 'home#privacy_policy'
+  get :"cp-enquiryform", as: :cp_enquiryform, to: 'home#cp_enquiryform'
   
   scope :custom do
     match :inventory, to: 'custom#inventory', as: :custom_inventory, via: [:get]

@@ -22,6 +22,12 @@ class HomeController < ApplicationController
     render layout: 'landing_page'
   end
 
+  def cp_enquiryform
+    @channel_partner = ChannelPartner.new
+    render layout: 'landing_page'
+  end
+
+
   def register
     @resource = User.new
     if user_signed_in?
