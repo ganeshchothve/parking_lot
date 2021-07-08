@@ -31,7 +31,7 @@ gem 'nested_form'
 gem 'pusher'
 gem 'fcm'
 gem 'active_link_to'
-gem "font-awesome-sass"
+gem "font-awesome-sass", '~> 5.15.1'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
@@ -74,7 +74,7 @@ gem 'whenever', :require => false
 
 gem 'sprockets-rails', '>= 2.3.2' # force this version for bootstrap 4 gem
 # Bootstrap lib gem for rails. #TODO: upgrade this when B4 is out of beta
-gem 'bootstrap'
+gem 'bootstrap', '~> 5.0.1'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'rest-client'

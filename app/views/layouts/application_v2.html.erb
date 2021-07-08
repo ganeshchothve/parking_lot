@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= current_client.name %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <%= csrf_meta_tags %>
+    <%= stylesheet_link_tag 'dashboard_v2', media: 'all' %>
+    <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,700,900&amp;display=swap" rel="stylesheet">
+    <%= javascript_include_tag 'dashboard' %>
+
+    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
+    <%= javascript_tag do %>
+      if(typeof App === "undefined"){
+        App = {};
+      }
+      App.client = <%= raw current_client.to_json(only: [:name, :_id, :preferred_login]) %>;
+      App.client.enable_actual_inventory = <%= current_client.enable_actual_inventory?(current_user) %>
+      App.project = <%= raw current_project.to_json(only: [:name, :_id]) %>;
+      <% if user_signed_in? %>
+        App.current_user = <%= raw current_user.to_json %>;
+        App.current_user.name = App.current_user.first_name + " " + App.current_user.last_name;
+      <% end %>
+      <% if Rails.env.development? || Rails.env.staging? %>
+        Pusher.logToConsole = true;
+      <% end %>
+    <% end %>
+    <% if false && current_client.selldo_client_id.present? %>
+      <% if Rails.env.production? %>
+        <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= current_client.selldo_client_id %>.js'></script>
+      <% else %>
+        <script src='<%= ENV_CONFIG[:selldo][:base_url] %>/t/<%= current_client.selldo_client_id %>.js'></script>
+      <% end %>
+    <% end %>
+  </head>
+  <body class="<%= controller_name %> <%= (params[:controller] == 'custom' && action_name == 'inventory') || action_name.in?(%w(generate_booking_detail_form generate_invoice)) ? 'pt-0' : '' %>">
+    <% if action_name == 'inventory' %>
+      <div id='inventory'>
+        <%= yield %>
+      </div>
+    <% elsif action_name.in?(%w(generate_booking_detail_form generate_invoice)) %>
+      <%= yield %>
+    <% else %>
+      <%= render "layouts/navbar_v2"%>
+      <div class="mt-5">
+        <%= yield %>
+      </div>
+      <%= render "layouts/gamification_v2" %>
+      <%= render "layouts/navbar_footer_v2"%>
+    <% end %>
+    <%= render 'layouts/partials/google_code' %>
+    <% if current_user.role == 'channel_partner' %>
+    <script type="text/javascript">var $zoho=$zoho || {};$zoho.salesiq = $zoho.salesiq || {widgetcode:"e99e857f51af828a675650b53ce8b539a35669be1adf404bd931aca27ab9ec43a96f5553404655e03a97fd990c148d7aa81d6b547a35c109951d24f6be71d2d0", values:{},ready:function(){}};var d=document;s=d.createElement("script");s.type="text/javascript";s.id="zsiqscript";s.defer=true;s.src="https://salesiq.zoho.in/widget";t=d.getElementsByTagName("script")[0];t.parentNode.insertBefore(s,t);d.write("<div id='zsiqwidget'></div>");</script>
+    <script>
+      $zoho.salesiq.ready=function(){
+        $zoho.salesiq.floatbutton.position("bottomleft");
+      }
+    </script>
+    <% end %>
+  </body>
+</html>
