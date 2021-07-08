@@ -387,6 +387,17 @@ Rails.application.routes.draw do
     end
   end
 
+  #broker routes for New HTML design
+  get 'broker/home', to: 'broker#index'
+  get 'broker/project-details', to: 'broker#project_details'
+  get 'broker/project-details-new', to: 'broker#project_details_new'
+  get 'broker/project', to: 'broker#project'
+  get 'broker/project', to: 'broker#project'
+  get 'broker/terms-and-conditions', to: 'broker#terms_and_conditions'
+  get 'broker/privacy-policy', to: 'broker#privacy_policy'
+  get 'broker/cp-enquiryform', to: 'broker#cp_enquiryform'
+  get 'broker/cp-page', to: 'broker#cp_page'
+
   match '/sell_do/lead_created', to: "api/sell_do/leads#lead_created", via: [:get, :post]
   match '/sell_do/site_visit_updated', to: "api/sell_do/leads#site_visit_updated", via: [:get, :post]
   match '/sell_do/pushed_to_sales', to: "api/sell_do/leads#pushed_to_sales", via: [:get, :post]

@@ -319,7 +319,7 @@ section {
 
 .green-btn {
     background-color: #97B350;
-    color: #fff;
+    color: #fff!important;
     position: relative;
     padding: 10px 20px !important;
     display: inline-block;
@@ -1149,7 +1149,9 @@ footer p {
     font-weight: 800;
     color: #172341;
 }
-
+.existingnew-projects-section{
+    /* padding: 70px 0 0; */
+}
 .existingnew-projects-section .sub-heading,
 .upcoming-projects-section .sub-heading {
     font-weight: 700;
@@ -1162,7 +1164,7 @@ footer p {
 
 .existingnew-projects-items-wrapper {
     width: 80%;
-    margin: auto;
+    margin: 0 auto 50px;
 }
 
 .existingnew-projects-item-inner {
@@ -1175,6 +1177,9 @@ footer p {
     flex-direction: column;
     border-radius: 12px;
     box-shadow: 0px 0px 9px #ccc;
+}
+.existingnew-btn{
+    width: 242px;
 }
 
 .webinar-image-inner {
@@ -1646,6 +1651,7 @@ footer p {
 .contact-us a{
     color: #333333;
 }
+
 .privacy-policy-sec{
     padding-top: 120px;
 }
@@ -1663,6 +1669,7 @@ footer p {
 .privacy-policy-sec ul li ul li{
     list-style: square;
 }
+                   
 @media only screen and (min-width:1440px) and (max-width:1920px) {}
 
 /*@media only screen and (min-width:1024px) and (max-width:1365px){  
@@ -2375,15 +2382,10 @@ footer p {
     }
 
     .existing-projects-head-left h3,
-    .newprojects-head-left h3 {
-        text-align: center;
-    }
-
+    .newprojects-head-left h3,
+    .property-btn-wrapper,
+    .presenting-launchpad-section,
     .existing-projects-section h2 {
-        text-align: center;
-    }
-
-    .property-btn-wrapper {
         text-align: center;
     }
 
@@ -2398,6 +2400,7 @@ footer p {
 
     .existingnew-projects-items-wrapper {
         width: 100%;
+        margin: 0 auto 20px;
     }
 
     .existingnew-projects-item-inner {
