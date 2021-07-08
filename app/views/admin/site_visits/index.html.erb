@@ -1,0 +1,24 @@
+<section class="mb-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
+        <div class="table-title pt-1 pb-3">
+          <h1 class="title icon-set icon-file-kycs-black">
+            <%= SiteVisit.model_name.human(count: @site_visits.total_entries ) %>
+          </h1>
+        </div>
+      </div>
+      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
+        <div class="table-btn-set float-right pb-3">
+          <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @site_visits.total_entries %></button>
+        </div>
+      </div>
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+        <div class="box-card relative">
+          <%= render 'index', {site_visits: @site_visits} %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<br/><br/>

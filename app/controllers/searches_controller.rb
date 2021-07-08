@@ -144,7 +144,7 @@ class SearchesController < ApplicationController
       @project_unit = ProjectUnit.find(@search.project_unit_id)
       @receipt.total_amount = @project_unit.blocking_amount
       authorize [current_user_role_group, @project_unit]
-      unattached_blocking_receipt = @search.user.unattached_blocking_receipt @search.project_unit.blocking_amount
+      unattached_blocking_receipt = @search.lead.unattached_blocking_receipt @search.project_unit.blocking_amount
       if unattached_blocking_receipt.present?
         @receipt = unattached_blocking_receipt
       end

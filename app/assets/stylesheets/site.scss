@@ -1,9 +1,9 @@
 $font-family: 'Rubik', sans-serif;
-$blue-color: #0575D2;
+$blue-color: #97B350;
 $cyan-color: #00b9dc;
-$gradient-bg-cyan: linear-gradient(90deg, #0748CB 0%, #00B9DC 100%);
-$gradient-bg-pink: linear-gradient(90deg, #7471ff 0%, #ac6fe8 100%);
-$light-blue: #7471ff;
+$gradient-bg-cyan: linear-gradient(90deg, #97B350 0%, #97B350 100%);
+$gradient-bg-pink: linear-gradient(90deg, #97B350 0%, #97B350 100%);
+$light-blue: #97B350;
 $white-color: #fff;
 $black-color: #404349;
 $content-color: #2e384d;
@@ -18,6 +18,11 @@ $selected-aprt: #f4667e;
 }
 .light-blue{
 	color: $light-blue!important;
+}
+.light-blue-disabled{
+	color: #000;
+    background: #ddd;
+    cursor: not-allowed;
 }
 .bg-light-blue{
 	background-color: $light-blue!important;
@@ -369,7 +374,7 @@ a:hover{
 		width: 110px;
 		height: 35px;
 		border-radius: 4px;
-		background-color: #0575d2;
+		background-color: #97B350;
 		text-align: center;
 		padding:7px;
 		color: $white-color;
@@ -1038,8 +1043,8 @@ table .dropdown-menu.show{
 	}
 	.step-change-btn{
 		right: 2px;
-		background-color: #0575d2;
-		border: 1px solid #0575d2;
+		background-color: #97B350;
+		border: 1px solid #97B350;
 		top: 2px;
 		color: #fff;
 		box-shadow: 1px 1px 15px grey;
@@ -1075,7 +1080,7 @@ table .dropdown-menu.show{
 		}
 	}
 	&.active{
-		border: solid 2px #0575d2;
+		border: solid 2px #97B350;
 		span{
 			color: #3e82f7;
 		}
@@ -1933,27 +1938,27 @@ table .dropdown-menu.show{
 }
 
 /******************************** Login ****************************/
-.auth{
+.auth-image{
 	background-image: asset-url('login.png');
 	background-repeat: no-repeat;
 	background-position: right;
-	background-color: $white-color;
 	background-size: contain;
 	@media screen and (max-width: 1400px) and (min-width: 992px){
-		background-size: 50% 80%;
+		background-size: 100% 87%;
 	}
-	@media screen and (max-width: 992px){
-		.container{
-			background-color: rgba(255,255,255,0.8);
-		}
+	@media screen and (max-width: 1024px) and (min-width: 768px){
+		background-position: 100% 10%;
 	}
+
+}
+.auth{
 	.login-form-wrapper{
 
 		h1{
 			font-size: 26px;
 			font-weight: 500;
 			line-height: 30px;
-			color: #0575d2;
+			color: #97B350;
 			//margin-top: 70px;
 			letter-spacing: 1px;
 			@media screen and (max-width: 992px){
@@ -1977,7 +1982,7 @@ table .dropdown-menu.show{
 		.sign-in-btn{
 			height: 35px;
 			border-radius: 4px;
-			background-color: #0c79d3;
+			background-color: #97B350;
 			border: 0px solid;
 			width: 100%;
 			text-align: center;
@@ -2262,7 +2267,7 @@ table .dropdown-menu.show{
 			font-size: 35px!important;
 			font-weight: 500!important;
 			line-height: 53px!important;
-			color: #7471ff!important;
+			color: #97B350!important;
 		}
 		.title{
 			font-size: 16px!important;
@@ -2341,7 +2346,7 @@ table .dropdown-menu.show{
 .leads-box{
 	height: 485px;
 	border-radius: 4px;
-	background-color: #7471ff;
+	background-color: #97B350;
 	text-align: center;
 	padding: 70px 60px;
 	position: relative;
@@ -2383,7 +2388,7 @@ table .dropdown-menu.show{
 	font-size: 22px;
 	font-weight: 500;
 	line-height: 1.27;
-	color: #7471ff;
+	color: #97B350;
 }
 .br-lft:before{
 	content: '';
@@ -2561,4 +2566,82 @@ table {
 }
 .selectize-dropdown.form-control{
 	height: unset;
+}
+
+
+
+
+
+
+.availability-container{
+	max-width: 800px;
+	min-height: 650px;
+}
+.availability-container .panel{
+	padding-top: 25px;
+	padding-bottom: 25px;
+	width: 100%;
+}
+.time-list{
+	margin-top: 8px;
+	overflow: hidden;
+	white-space: nowrap;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	overflow: auto;
+	height: 400px;
+	padding-right: 20px;
+}
+.chosen-date{
+	text-transform: capitalize;
+	padding-left: 0;
+}
+.time-list .time-item{
+	padding-top: 10px;
+	font-size: 16px;
+	clear: both;
+}
+.time-list .time-item a{
+	outline: none;
+	width: 100%;
+	padding: 12px;
+	color: #666;
+	border: 1px solid #666;
+	cursor: pointer;
+	display: block;
+	text-align: center;
+	font-size: 14px;
+	font-weight: normal;
+}
+.time-list .time-item a.time-item-selector.selected{
+	width: 48%;
+	margin-right: 1%;
+	background-color: #666;
+	color: #fff;
+	border: 1px solid #666;
+	float: left;
+	display: block;
+}
+.time-list .time-item a.time-item-confirm{
+	width: 48%;
+	margin-left: 1%;
+	color: #fff;
+	background-color: #666;
+	border: 1px solid #666;
+	float: right;
+	display: block;
+}
+.calendar-booking .picker-switch .sell_do_calendar_icon{
+	position: relative;
+}
+.calendar-booking .picker-switch .sell_do_calendar_icon:after{
+	content: ' Today';
+	display: inline-block;
+	left: 24px;
+	position: absolute;
+	top: -8px;
+}
+.siq_bL{
+    bottom: 100px !important;
 }

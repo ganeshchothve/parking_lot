@@ -2,10 +2,14 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def index?
     out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner billing_team].include?(user.role) && (enable_actual_inventory?(user) || enable_incentive_module?(user))
+    out = false if user.role?('channel_partner') && !interested_project_present?
+    out
   end
 
   def new?
     out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner].include?(user.role) && eligible_user? && enable_actual_inventory?(user)
+    out = false if user.role?('channel_partner') && !interested_project_present?
+    out
   end
 
   def create?
@@ -92,7 +96,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def need_unattached_booking_receipts_for_channel_partner
     if user.role?('channel_partner')
-      return true if record.user.unattached_blocking_receipt(record.project_unit.blocking_amount).present?
+      return true if record.lead.unattached_blocking_receipt(record.project_unit.blocking_amount).present?
       @condition = "blocking_amount_receipt"
       false
     else
@@ -112,7 +116,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
         false
       end
     elsif (user.role?('channel_partner') && record.status == 'hold')
-      return true if record.user.manager_id == user.id && user.active_channel_partner?
+      return true if record.lead.cp_lead_activities.where(user_id: user.id).present? && user.active_channel_partner?
       @condition = 'not_authorise_to_book_for_this_user'
       false
     else
@@ -121,4 +125,11 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     end
   end
 
+  def interested_project_present?
+    if record.is_a?(BookingDetail) && record.project_id.present?
+      user.interested_projects.approved.where(project_id: record.project_id).present?
+    else
+      true
+    end
+  end
 end

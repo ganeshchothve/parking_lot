@@ -6,7 +6,6 @@ class User
   include ActiveModel::OneTimePassword
   include InsertionStringMethods
   include ApplicationHelper
-  # include SyncDetails
   include CrmIntegration
   extend FilterByCriteria
   extend ApplicationHelper
@@ -16,6 +15,7 @@ class User
   ALLOWED_UTM_KEYS = %i[utm_campaign utm_source utm_sub_source utm_content utm_medium utm_term]
   BUYER_ROLES = %w[user employee_user management_user]
   ADMIN_ROLES = %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner gre billing_team]
+  ALL_PROJECT_ACCESS = %w[superadmin admin cp cp_admin]
   CHANNEL_PARTNER_USERS = %w[cp cp_admin channel_partner]
   SALES_USER = %w[sales sales_admin]
   COMPANY_USERS = %w[employee_user management_user]
@@ -112,6 +112,10 @@ class User
   field :temporarily_blocked, type: Boolean, default: false
   field :unblock_at, type: Date
 
+  # For scoping user with roles: (sales, sales_admin, crm, gre, billing_team) under projects
+  # For channel partner users, using interested projects association for scoping under projects
+  field :project_ids, type: Array, default: []
+
   ## Security questionable
 
 
@@ -158,6 +162,8 @@ class User
   has_and_belongs_to_many :received_emails, class_name: 'Email', inverse_of: :recipients
   has_and_belongs_to_many :cced_emails, class_name: 'Email', inverse_of: :cc_recipients
   has_many :cp_lead_activities
+  has_and_belongs_to_many :meetings
+  has_many :interested_projects  # Channel partners can subscribe to new projects through this
 
   has_many :notes, as: :notable
 
@@ -188,7 +194,6 @@ class User
   validate :password_complexity
 
   # scopes needed by filter
-  scope :filter_by_lead_id, ->(lead_id) { where(lead_id: lead_id) }
   scope :filter_by_confirmation, ->(confirmation) { confirmation.eql?('not_confirmed') ? where(confirmed_at: nil) : where(confirmed_at: { "$ne": nil }) }
   scope :filter_by_manager_id, ->(manager_id) {where(manager_id: manager_id) }
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where({ '$and' => ["$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] ] }) }
@@ -196,6 +201,9 @@ class User
   scope :filter_by_role, ->(_role) { _role.is_a?(Array) ? where( role: { "$in": _role }) : where(role: _role.as_json) }
 
   scope :filter_by_role_nin, ->(_role) { _role.is_a?(Array) ? where( role: { "$nin": _role } ) : where(role: _role.as_json) }
+  scope :buyers, -> { where(role: {'$in' => BUYER_ROLES } )}
+  scope :filter_by_lead_id, ->(lead_id) { where(lead_id: lead_id) }
+  scope :filter_by_userwise_project_ids, ->(user) { self.in(project_ids: user.project_ids) if user.try(:project_ids).present? }
 
   scope :filter_by_created_by, ->(_created_by) do
     if _created_by == 'direct'
@@ -214,7 +222,28 @@ class User
       end
     end
   end
-  scope :buyers, -> { where(role: {'$in' => BUYER_ROLES } )}
+  scope :filter_by_cp_reference_id, ->(reference_id) do
+    if reference_id.present?
+      third_party_references = []
+      reference_id.each do |key, value|
+        next if (key.blank? || value.blank?)
+        crm_id = (BSON.ObjectId(key) rescue "")
+        third_party_references << {"third_party_references.crm_id": crm_id, "third_party_references.reference_id": value}
+      end
+      if third_party_references.present?
+        where("$or": third_party_references)
+      end
+    end
+  end
+  scope :filter_by_cp_code, ->(cp_code) do
+      channel_partner = ChannelPartner.where(cp_code: cp_code)
+      if channel_partner.present?
+        where(id: {"$in": channel_partner.pluck(:associated_user_id)})
+      else
+        User.none
+      end
+  end
+
 
   # This some additional scope which help to fetch record easily.
   # This following methods are
@@ -465,7 +494,8 @@ class User
     devise_mailer.new.send(:devise_sms, self, :confirmation_instructions)
 
     if email.present? || unconfirmed_email.present?
-      email_template = Template::EmailTemplate.find_by(name: "user_confirmation_instructions")
+      email_template = Template::EmailTemplate.where(name: "#{role}_confirmation_instructions").first
+      email_template = Template::EmailTemplate.find_by(name: "user_confirmation_instructions") if email_template.blank?
       attrs = {
         booking_portal_client_id: booking_portal_client_id,
         subject: email_template.parsed_subject(self),

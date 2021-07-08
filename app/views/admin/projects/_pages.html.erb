@@ -1,4 +1,16 @@
 <div class="form-group">
+  <%= f.label :video_link, class: '' %>
+  <%= f.text_field :video_link, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("video_link") %>
+</div>
+<div class="form-group">
+  <%= f.label :description, class: '' %>
+  <%= f.text_area :description, class: 'form-control summernote', disabled: !policy([:admin, project]).editable_field?("description") %>
+</div>
+<div class="form-group">
+  <%= f.label :advantages, class: '' %>
+  <%= f.text_area :advantages, class: 'form-control summernote', disabled: !policy([:admin, project]).editable_field?("advantages") %>
+</div>
+<div class="form-group">
   <%= f.label :terms_and_conditions %>
   <%= f.text_area :terms_and_conditions, class: 'form-control summernote', disabled: !policy([:admin, @project]).editable_field?("terms_and_conditions") %>
 </div>

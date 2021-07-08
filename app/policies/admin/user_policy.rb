@@ -70,6 +70,10 @@ class Admin::UserPolicy < UserPolicy
     record.buyer? && record.temporarily_blocked? && %w(sales sales_admin admin).include?(user.role)
   end
 
+  def send_payment_link?
+    record.buyer?
+  end
+
   def show_selldo_links?
     ENV_CONFIG['selldo'].try(:[], 'base_url').present? && record.buyer? && record.lead_id? && current_client.selldo_default_search_list_id?
   end
@@ -98,6 +102,7 @@ class Admin::UserPolicy < UserPolicy
     attributes += [:rera_id] if record.role?('channel_partner')
     attributes += [:premium, :tier_id] if record.role?('channel_partner') && user.role?('admin')
     attributes += [:role] if %w[superadmin admin].include?(user.role)
+    attributes += [project_ids: []] if %w[admin superadmin].include?(user.role) && record.role.in?(%w(billing_team sales sales_admin gre crm))
     if %w[superadmin admin sales_admin].include?(user.role)
       attributes += [:erp_id]
       attributes += [third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes]

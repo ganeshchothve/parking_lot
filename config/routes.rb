@@ -26,7 +26,7 @@ Rails.application.routes.draw do
     root 'dashboard#index', as: :authenticated_root
   end
 
-  root to: redirect('channel_partners/new')
+  root 'channel_partners#new'
 
   as :user do
     put '/user/confirmation', to: 'local_devise/confirmations#update', :as => :update_user_confirmation
@@ -48,7 +48,7 @@ Rails.application.routes.draw do
   get '/s/:code', to: 'shortened_urls#redirect_to_url'
 
   namespace :admin do
-
+    resources :meetings, except: [:destroy]
     resources :api_logs, only: [:index]
     resources :cp_lead_activities do
       member do
@@ -154,7 +154,8 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :projects, only: [:index, :edit, :update, :show] do
+    resources :developers, except: [:destroy]
+    resources :projects, except: [:destroy] do
       get :collaterals, on: :member
       get :collaterals, on: :collection
     end
@@ -178,16 +179,20 @@ Rails.application.routes.draw do
       resources :accounts, controller: 'accounts'
     end
 
+    resources :site_visits, only: [:index] do
+      member do
+        get 'sync_with_selldo'
+      end
+    end
     resources :leads, only: [:index, :show, :edit, :update, :new] do
       collection do
         get :export
       end
       member do
         get 'sync_notes'
-        get 'sync_site_visit'
         get :send_payment_link
       end
-
+      resources :site_visits, only: [:new, :create, :index]
       resources :receipts, only: [:index, :new, :create, :edit, :update ] do
         get :resend_success, on: :member
         get :lost_receipt, on: :collection
@@ -248,6 +253,7 @@ Rails.application.routes.draw do
       match :confirm_via_otp, action: 'confirm_via_otp', as: :confirm_via_otp, on: :member, via: [:get, :patch]
 
       resources :leads, only: :index
+      resources :interested_projects, only: [:index, :create, :edit, :update]
     end # end resources :users block
 
     resources :user_kycs, only: %i[index show], controller: 'user_kycs'
@@ -273,6 +279,10 @@ Rails.application.routes.draw do
   get :register, to: 'home#register', as: :register
   post :check_and_register, to: 'home#check_and_register', as: :check_and_register
   get :welcome, as: :welcome, to: 'home#welcome'
+  get :terms_and_conditions, as: :terms_and_conditions, to: 'home#terms_and_conditions'
+  get :privacy_policy, as: :privacy_policy, to: 'home#privacy_policy'
+  get :"cp-enquiryform", as: :cp_enquiryform, to: 'home#cp_enquiryform'
+  
   scope :custom do
     match :inventory, to: 'custom#inventory', as: :custom_inventory, via: [:get]
   end
@@ -316,7 +326,7 @@ Rails.application.routes.draw do
   end
 
   namespace :buyer do
-
+    resources :meetings, only: [:index, :update, :show]
     resources :schemes, only: [:index]
 
     resources :booking_details, only: [:index, :show, :update] do
@@ -377,7 +387,7 @@ Rails.application.routes.draw do
     end
   end
 
-  #broker 
+  #broker routes for New HTML design
   get 'broker/home', to: 'broker#index'
   get 'broker/project-details', to: 'broker#project_details'
   get 'broker/project-details-new', to: 'broker#project_details_new'
@@ -388,8 +398,8 @@ Rails.application.routes.draw do
   get 'broker/cp-enquiryform', to: 'broker#cp_enquiryform'
   get 'broker/cp-page', to: 'broker#cp_page'
 
-
   match '/sell_do/lead_created', to: "api/sell_do/leads#lead_created", via: [:get, :post]
+  match '/sell_do/site_visit_updated', to: "api/sell_do/leads#site_visit_updated", via: [:get, :post]
   match '/sell_do/pushed_to_sales', to: "api/sell_do/leads#pushed_to_sales", via: [:get, :post]
   match '/zoho/download', to: "api/zoho/assets#download", via: [:get, :post]
 

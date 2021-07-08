@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title><%= current_client.name %></title>    
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="images/favicon.png" rel="icon" type="image/png"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="dns-prefetch" href="//trkr.scdn1.secure.raxcdn.com">
+    <link rel="preconnect" href="//trkr.scdn1.secure.raxcdn.com">
+    <link rel="dns-prefetch" href="https://www.google.com">
+    <link rel="preconnect" href="https://www.google.com">
+    <link rel="dns-prefetch" href="https://www.gstatic.com">
+    <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="canonical" href="<%= request.protocol + request.host %><%= request.path%>">
+    
+    <%= stylesheet_link_tag 'application' %>
+    <%= stylesheet_link_tag 'launchpad' %>
+    <%= javascript_include_tag 'application' %>
+
+    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
+    <%= javascript_tag do %>
+      if(typeof App === "undefined"){
+        App = {};
+      }
+      App.client = <%= raw current_client.to_json(only: [:name, :_id, :preferred_login, :enable_referral_bonus]) %>;
+      App.client.enable_actual_inventory = <%= current_client.enable_actual_inventory?(current_user) %>
+      App.project = <%= raw current_project.to_json(only: [:name, :_id]) %>;
+      <% if user_signed_in? %>
+        App.current_user = <%= raw current_user.to_json %>;
+        App.current_user.name = App.current_user.first_name + " " + App.current_user.last_name;
+      <% end %>
+      <% if Rails.env.development? || Rails.env.staging? %>
+        Pusher.logToConsole = true;
+      <% end %>
+    <% end %>
+    <% if current_client.selldo_client_id.present? %>
+      <% if Rails.env.production? %>
+        <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= current_client.selldo_client_id %>.js'></script>
+      <% else %>
+        <script src='<%= ENV_CONFIG[:selldo][:base_url] %>/t/<%= current_client.selldo_client_id %>.js'></script>
+      <% end %>
+    <% end %>
+
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-198536912-1', 'auto');
+      ga('require', 'displayfeatures');
+      ga('require', 'ecommerce', 'ecommerce.js');
+      ga('send', 'pageview'); 
+    </script>
+  </head>
+<body>
+<% if params[:controller] == 'channel_partners' %>
+  <%= render 'layouts/partials/landing_page_header' %>
+<% else %>
+  <%= render 'layouts/partials/landing_page_default_header' %>
+<% end %>
+
+
+<%= yield %>
+
+<footer class="col-app-12">
+    <div class="desktop-footer col-app-12">
+      <div class="container-launchpad">
+        <div class="col-app-8 col-app-xs-12">
+          Copyrights &copy; Amura Marketing Technologies. <%= Date.current.year %>. <%= link_to 'Privacy Policy', privacy_policy_path, class: 'footer-link' %> <span> | </span> <%= link_to 'Terms and Conditions', terms_and_conditions_path, class: 'footer-link' %>
+        </div>
+        <div class="col-app-4 col-app-xs-12">
+          <div class="social-links">
+            <a href="https://www.facebook.com/amuratech/" target="_blank">
+              <img data-src="<%= asset_path 'facebook-icon.png' %>" class="lazy">
+            </a>
+            <a href="https://www.instagram.com/amuratech/" target="_blank">
+              <img data-src="<%= asset_path 'insta-icon.png' %>" class="lazy">
+            </a>
+            <a href="https://twitter.com/amuratech" target="_blank">
+              <img data-src="<%= asset_path 'twitter-icon.png' %>" class="lazy">
+            </a>
+            <a href="https://www.linkedin.com/company/amura-marketing-technologies-pvt-ltd/" target="_blank">
+              <img data-src="<%= asset_path 'linkedin-icon.png' %>" class="lazy">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobile-footer visible-xs visible-portrait fixed text-center col-app-12">
+        <div class="mob-number col-app-6">                
+            &nbsp;<a href="tel:02067082786" style="font-weight: 700; color: #000;">020 6708 2786</span>
+        </div>
+        <div class="enquiry col-app-6">
+            <a class="green-btn mobile-enquire-button relative register-btn" data-event-category="Footer" data-event-action="Click" data-event-name="Register Now">Register Now</a>
+        </div>            
+    </div>
+  </footer>
+
+<div id="overlay" style="display:none;">
+  <div id="popup">
+    <div class="site-visit-wrapper">
+    <div id="close"  data-event-category="Section" data-event-action="Click" data-event-name="Close">&times;</div>
+      <%= simple_form_for(@channel_partner, local: true, html: { id: 'channel_partner_form', class: 'validate-form', multipart: true, novalidate: false }) do |form| %>
+        <%= render "channel_partners/short_form_fields", {form: form} %>
+        <div class="signin-btn pl-0 pr-0 pb-4">
+          <%= form.submit "Register", class: "green-btn sign-in-btn", data: { disable_with: "Please wait..." } %>
+        </div>
+        <hr/>
+        <%= render "devise/shared/links" %>
+      <% end %>
+    </div>              
+   </div>
+</div>
+<%= javascript_include_tag 'script' %>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($("#channel_partner_form"));
+    <% if params[:action] == 'create' && @channel_partner.errors.present? %>
+    $('.register-btn:first').trigger('click');
+    <% end %>
+  });
+<% end %>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5BK66NQ"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>setTimeout(function(){(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5BK66NQ');}, 2000);</script>
+
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-M32LFR"
+ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <script>setTimeout(function(){(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-M32LFR');}, 2000);</script>
+</body>
+</html>

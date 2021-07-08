@@ -24,7 +24,7 @@ class ChannelPartner
   SOURCE = ['Internal CP', 'External CP']
   REGION = ['Chennai', 'Bangalore', 'Coimbatore', 'NRI']
 
-  SHORT_FORM = %i(first_name last_name email phone company_name rera_applicable status)
+  SHORT_FORM = %i(first_name last_name email phone company_name rera_applicable status interested_services)
   FULL_FORM = SHORT_FORM.clone + %i(team_size gst_applicable nri)
 
   field :title, type: String
@@ -62,6 +62,9 @@ class ChannelPartner
   field :developers_worked_for, type: Array, default: []
   field :interested_services, type: Array, default: []
   field :cp_code, type: String
+
+  # Tracking selldo srd for new channel partner registrations.
+  field :srd, type: String
 
   scope :filter_by_rera_id, ->(rera_id) { where(rera_id: rera_id) }
   scope :filter_by_status, ->(status) { where(status: status) }

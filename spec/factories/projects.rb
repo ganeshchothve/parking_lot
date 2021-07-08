@@ -29,7 +29,7 @@ FactoryBot.define do
     selldo_id { Faker::String.random(3..12) }
     project_pre_sale_ids { [Faker::IDNumber.valid, Faker::IDNumber.valid] }
     project_sale_ids { [Faker::IDNumber.valid, Faker::IDNumber.valid] }
-    locality { Faker::Address.street_name }
+    micro_market { Faker::Address.street_name }
     total_units { Faker::Number.number }
     apartment_size { Faker::Number.number(4).to_s }
     sync_data { Faker::Boolean.boolean }

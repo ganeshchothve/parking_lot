@@ -79,17 +79,23 @@ var modal_remote_form_link_click_handler = function(remote_href){
 }
 $(document).on("ajax:beforeSend", '.modal-remote-form', function(event){
   $("#modal-remote-form-container .modal-body .modal-remote-form-errors").html('');
+  $.blockUI();
 });
-$(document).on("ajax:success", '.modal-remote-form', function(event){
+$(document).on("ajax:success", '.modal-remote-form', function(event, two, three){
+  $.unblockUI();
   var detail = event.detail;
-  var data = detail[0], status = detail[1], xhr = detail[2];
+  if(event.detail){
+    var data = detail[0], status = detail[1], xhr = detail[2];
+  }else if(two){
+    var data = two, status = three
+  }
 
   var message = "";
   var resource = $(event.currentTarget).attr("data-resource-type");
   if(resource){
     message += resource + " ";
   }
-  if(xhr.status == 201){
+  if(xhr && xhr.status == 201){
     message += "created successfully";
   }else{
     message += "updated successfully";
@@ -106,16 +112,22 @@ $(document).on("ajax:success", '.modal-remote-form', function(event){
       $("#modal-remote-form-container").html("");
     }, 2500);
     // handle location on JSON response
-    if(xhr.getResponseHeader('location')){
+    if(xhr && xhr.getResponseHeader('location')){
       window.location = xhr.getResponseHeader('location')
     }else{
       window.location = window.location;
     }
   }
 });
-$(document).on("ajax:error", '.modal-remote-form', function(event){
+$(document).on("ajax:error", '.modal-remote-form', function(event, two, three){
+  $.unblockUI();
   var detail = event.detail;
-  var data = detail[0], status = detail[1], xhr = detail[2];
+  if(event.detail){
+    var data = detail[0];
+  }else if(two){
+    var data = two.responseJSON;
+  }
+
   var resource = $(event.currentTarget).attr("data-resource-type");
   if($("#modal-remote-form-container .modal-body .modal-remote-form-errors").length == 0){
     $("#modal-remote-form-container .modal-body").prepend("<div class='modal-remote-form-errors'></div>");
@@ -137,4 +149,19 @@ $(document).on("ajax:error", '.modal-remote-form', function(event){
     html = "We could not update the " + (resource ? resource : "record");
   }
   $("#modal-remote-form-container .modal-body .modal-remote-form-errors").html(html);
+});
+
+$(document).on("ajax:success", '.toggle_interest_form', function(event, two, three){
+  var data;
+  var detail = event.detail;
+  if(event.detail){
+    var data = detail[0], status = detail[1], xhr = detail[2];
+  }else if(two){
+    var data = two, status = three
+  }
+  if(data.reload){
+    window.location = window.location;
+  }else{
+    $(event.currentTarget).replaceWith(data.html);
+  }
 });

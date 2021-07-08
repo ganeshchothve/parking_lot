@@ -543,6 +543,10 @@ module DashboardDataProvider
   def self.project_wise_incentive_deduction_data(current_user, options={})
     matcher = {}
     matcher = options[:matcher] if options[:matcher].present?
+    if options[:matcher].present? && current_user.project_ids.present?
+      invoice_ids = Invoice.where(Invoice.user_based_scope(current_user)).distinct(:id)
+      options[:matcher][:invoice_id] = {"$in": invoice_ids} if invoice_ids.present?
+    end
     data = IncentiveDeduction.collection.aggregate([
       {'$match': matcher },
       {

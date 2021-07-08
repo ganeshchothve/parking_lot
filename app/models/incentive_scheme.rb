@@ -9,8 +9,11 @@ class IncentiveScheme
 
   STRATEGY = %w(number_of_items sum_of_value)
   DOCUMENT_TYPES = []
+  CATEGORIES = %w( hot normal )
 
   field :name, type: String
+  field :description, type: String
+  field :category, type: String
   field :starts_on, type: Date
   field :ends_on, type: Date
   field :ladder_strategy, type: String, default: 'number_of_items'
@@ -38,7 +41,7 @@ class IncentiveScheme
   scope :filter_by_ladder_strategy, ->(ladder_strategy) { where(ladder_strategy: ladder_strategy) }
   scope :filter_by_date_range, ->(date) {start_date, end_date = date.split(' - '); where(starts_on: {'$lte': end_date}, ends_on: {'$gte': start_date})}
 
-  validates :name, :ladder_strategy, presence: true
+  validates :name, :category, :description, :ladder_strategy, presence: true
   validates_uniqueness_of :name
   validates :starts_on, :ends_on, presence: true, unless: :default?
   validates :ladder_strategy, inclusion: { in: STRATEGY }
@@ -46,4 +49,14 @@ class IncentiveScheme
   validates_with IncentiveSchemeValidator
 
   accepts_nested_attributes_for :ladders, allow_destroy: true
+
+  def self.user_based_scope(user, params = {})
+    custom_scope = {}
+    unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
+      project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
+      custom_scope.merge!({project_id: {"$in": project_ids}})
+    end
+    custom_scope
+  end
+
 end

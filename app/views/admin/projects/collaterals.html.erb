@@ -21,7 +21,7 @@
           <% Project::DOCUMENT_TYPES.reject {|x| x == 'unit_selection_filter_image'}.each_with_index do |doc_type, idx| %>
             <div class="tab-pane fade <%= idx.zero? ? 'show active' : '' %>" id="nav-project-<%= doc_type %>" role="tabpanel">
               <div class="files-container-single">
-                <% Asset.in(assetable_id: (@project.present? ? [@project.id] : Project.all.pluck(:id))).where(document_type: doc_type).each do |asset| %>
+                <% Asset.in(assetable_id: (@project.present? ? [@project.id] : current_user.interested_projects.approved.pluck(:project_id))).where(document_type: doc_type).each do |asset| %>
                   <%=
                     links = {}
                     if asset.file.file && asset.file.file.exists?

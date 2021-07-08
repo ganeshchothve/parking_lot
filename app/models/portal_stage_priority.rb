@@ -4,7 +4,8 @@ class PortalStagePriority
 
   field :stage, type: String
   field :priority, type: Integer
+  field :role, type: String, default: 'user'
 
-  validates :stage, :priority, presence: true
+  validates :stage, :priority, :role, presence: true
 
 end

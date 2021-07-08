@@ -25,10 +25,9 @@ module Devise::Mailers::Helpers
       if action.to_s == "confirmation_instructions"
         if record.buyer? && record.manager_role?("channel_partner")
           template_id = Template::SmsTemplate.find_by(name: "user_registered_by_channel_partner").id
-        elsif record.role?("channel_partner")
-          template_id = Template::SmsTemplate.find_by(name: "channel_partner_user_registered").id
         else
-          template_id = Template::SmsTemplate.find_by(name: "user_registered").id
+          template_id = Template::SmsTemplate.where(name: "#{record.role}_user_registered").first&.id
+          template_id = Template::SmsTemplate.find_by(name: "user_registered").id if template_id.blank?
         end
       elsif action.to_s == "resend_confirmation_instructions"
         template_id = Template::SmsTemplate.find_by(name: "user_registered").id

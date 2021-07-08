@@ -1,86 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title><%= current_client.name %></title>    
-    <meta name="description" content="">
-    <meta name="keywords" content="">
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link href="images/favicon.png" rel="icon" type="image/png"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=0">
-    <link rel="dns-prefetch" href="//trkr.scdn1.secure.raxcdn.com">
-    <link rel="preconnect" href="//trkr.scdn1.secure.raxcdn.com">
-    <link rel="dns-prefetch" href="https://www.google.com">
-    <link rel="preconnect" href="https://www.google.com">
-    <link rel="dns-prefetch" href="https://www.gstatic.com">
-    <link rel="preconnect" href="https://www.gstatic.com">
-    <link rel="canonical" href="<%= request.protocol + request.host %><%= request.path%>">
-    
-    <%= stylesheet_link_tag 'application' %>
-    <%= stylesheet_link_tag 'launchpad' %>
-    <%= javascript_include_tag 'application' %>
-
-    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
-    <%= javascript_tag do %>
-      if(typeof App === "undefined"){
-        App = {};
-      }
-      App.client = <%= raw current_client.to_json(only: [:name, :_id, :preferred_login, :enable_referral_bonus]) %>;
-      App.client.enable_actual_inventory = <%= current_client.enable_actual_inventory?(current_user) %>
-      App.project = <%= raw current_project.to_json(only: [:name, :_id]) %>;
-      <% if user_signed_in? %>
-        App.current_user = <%= raw current_user.to_json %>;
-        App.current_user.name = App.current_user.first_name + " " + App.current_user.last_name;
-      <% end %>
-      <% if Rails.env.development? || Rails.env.staging? %>
-        Pusher.logToConsole = true;
-      <% end %>
-    <% end %>
-    <% if current_client.selldo_client_id.present? %>
-      <% if Rails.env.production? %>
-        <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= current_client.selldo_client_id %>.js'></script>
-      <% else %>
-        <script src='<%= ENV_CONFIG[:selldo][:base_url] %>/t/<%= current_client.selldo_client_id %>.js'></script>
-      <% end %>
-    <% end %>
-
-
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-      ga('create', 'UA-198536912-1', 'auto');
-      ga('require', 'displayfeatures');
-      ga('require', 'ecommerce', 'ecommerce.js');
-      ga('send', 'pageview'); 
-    </script>
-  </head>
-<body>
-<header class="col-app-12 fixed left top">
-    <div class="container">
-        <div class="pull-left left-header nav-links">
-            <a rel="home" class="brand-logo"><img src="<%= asset_path 'launchpad-logo.png' %>" data-event-category="Header" data-event-action="Click" data-event-name="Logo" /></a>
-        </div>
-        <div class="pull-right right-header">
-            <div class="pull-right upper-right-header hidden-xs hidden-portrait">
-              <div class="pull-right ml-2">
-                <%= link_to 'Sign in', new_user_session_path, class: 'green-btn sign-in-button' %>
-              </div>
-              <div class="enquire-now-wrapper pull-right">
-                <a data-event-category="Header" data-event-action="Click" data-event-name="Register on Launchpad" class="enquire-now-btn green-btn register-btn">Register on Launchpad</a>
-              </div>
-              
-              <div class="pull-right callnumber ">
-                <span>Call:&nbsp;&nbsp;</span><span>020 6708 2786</span>
-              </div>
-              
-            </div>
-            <div class="clearfix"></div>               
-        </div>
-        <div class="clearfix"></div>
-    </div>      
-</header>
 <section class="home-section home-banner slide relative" id="home">
   <div class="container-launchpad home-container">
       <div class="home-new-caption cwt text-center">
@@ -101,7 +18,7 @@
     <section class="join-broker-network-section section-padding" id="join-broker-network">
       <div class="container">
         <h2 class="section-heading text-center cgreen">Get ahead in the online Real Estate market</h2>
-        <p class="text-center">Property selling has gone digital. Buyers are searching for homes online and builders have<br class="hidden-xs hidden-portrait" /> shifted to Martech & Proptech solutions to sell Real Estate. With tremendous opportunities<br class="hidden-xs hidden-portrait" /> currently available in the Pune Real Estate market, it’s time to go digital and enjoy numerous<br class="hidden-xs hidden-portrait" /> benefits - from expanding your sales territory to networking with leading developers.</p>        
+        <p class="text-center">Amura India’s largest real estate marketing and technology company brings to you a revolutionary platform to grow your business faster. Launchpad is a unique platform where Amura ties up with developers for project launches and deploys a complete transparent platform for real estate consultants to efficiently participate in a launch. Not only that, we work with the real estate consultant to solve some of the biggest hindrances in business growth. We will get the best digital marketing resources to get you leads at a discounted price we will also help you with Lead management , CRM, sales training and how to leverage technology to get more closures. Additionally we also ensure that as a platform we are able to track your lead visits, booking and payments transparently with the developers. This ensures timely payments and higher payout in a short time. So do not miss this opportunity where you get the best of resources and a team which is dedicated to your success and growth.</p>
         <br/>
         <p class="text-center cbk f500">Pune Residential Market Opportunity</p>
         <div class="join-broker-network-btn-wrapper text-center">
@@ -140,6 +57,32 @@
             </div>
           </div>
         </div>
+
+        <div class="clearfix"></div>
+        <div class="col-app-12 join-broker-network-statics text-center snd-jbns">
+
+          <div class="join-statics-item">
+            <div class="join-statics-item-inner text-center">
+              <div class="join-item-number cgreen f700">
+                3000+
+              </div>
+              <div class="join-statics-item-desc cbk">
+                Lined Up <br/> Launches
+              </div>
+            </div>
+          </div>
+          <div class="join-statics-item">
+            <div class="join-statics-item-inner text-center">
+              <div class="join-item-number cgreen f700">
+                Rs. 200 Cr. 
+              </div>
+              <div class="join-statics-item-desc cbk">
+                Brokerage to be paid out <br/>within the next 6 months
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -326,11 +269,11 @@
 <section class="projects-section">
   <section class="existing-projects-section section-padding" id="existing-projects">
     <div class="container">
-      <h2 class="section-heading cgreen ps-2">Projects</h2>
-      <div class="existing-projects-content col-12">
+      <h2 class="section-heading cgreen ps-4">Projects</h2>
+      <div class="existing-projects-content">
         <div class="existing-projects-head-wrapper col-12 row">
           <div class="existing-projects-head-left col-6 col-app-xs-12 ps-4">
-            <h3>Existing Projects (10)</h3>
+            <h3>Existing Projects (12)</h3>
           </div>
           <div class="existing-projects-head-right col-6 filter-wrapper col-app-xs-12 row">
             <div class="col-6 col-app-xs-12">
@@ -647,8 +590,7 @@
     <h2 class="section-heading text-center cgreen">Presented by Amura</h2>
     <p class="text-center f500">India’s leading PropTech Company</p>
     <br/><br/>
-    <p class="text-center">Amura India’s largest real estate marketing and technology company brings to you a revolutionary platform to grow your business faster. Launchpad is a unique platform where Amura ties up with developers for project launches and deploys a complete transparent platform for real estate consultants to efficiently participate in a launch. Not only that, we work with the real estate consultant to solve some of the biggest hindrances in business growth. We will get the best digital marketing resources to get you leads at a discounted price we will also help you with Lead management , CRM, sales training and how to leverage technology to get more closures. Additionally we also ensure that as a platform we are able to track your lead visits, booking and payments transparently with the developers. This ensures timely payments and higher payout in a short time. So do not miss this opportunity where you get the best of resources and a team which is dedicated to your success and growth.
-    </p>
+    <p class="text-center">Being the industry leader when it comes to Real Estate Digital Marketing in India, Amura is the<br class="hidden-xs hidden-portrait"> pioneer of Growth Marketing in the country. Over 13 years, Amura has been applying the<br class="hidden-xs hidden-portrait"> combination of Marketing &amp; Tech solutions to deliver lean growth for top brands.</p>
 
     <div class="presented-by-amura-items-wrapper">
       <div class="presented-by-amura-line-image">
@@ -815,79 +757,3 @@
     <p class="text-center"><a href="tel:020 67082786">020 6708 2786</a></p>
   </div>
 </section>
-<footer class="col-app-12">
-    <div class="desktop-footer col-app-12">
-      <div class="container-launchpad">
-        <div class="col-app-8 col-app-xs-12">
-          Copyrights &copy; Amura Marketing Technologies. <%= Date.current.year %>. <a href="javascript:;" class="footer-link">Privacy Policy</a> <span> | </span> <a href="javascript:;" class="footer-link">Terms and Conditions</a>
-        </div>
-        <div class="col-app-4 col-app-xs-12">
-          <div class="social-links">
-            <a href="https://www.facebook.com/amuratech/" target="_blank">
-              <img data-src="<%= asset_path 'facebook-icon.png' %>" class="lazy">
-            </a>
-            <a href="https://www.instagram.com/amuratech/" target="_blank">
-              <img data-src="<%= asset_path 'insta-icon.png' %>" class="lazy">
-            </a>
-            <a href="https://twitter.com/amuratech" target="_blank">
-              <img data-src="<%= asset_path 'twitter-icon.png' %>" class="lazy">
-            </a>
-            <a href="https://www.linkedin.com/company/amura-marketing-technologies-pvt-ltd/" target="_blank">
-              <img data-src="<%= asset_path 'linkedin-icon.png' %>" class="lazy">
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="mobile-footer visible-xs visible-portrait fixed text-center col-app-12">
-        <div class="mob-number col-app-6">                
-            &nbsp;<a href="tel:02067082786" style="font-weight: 700; color: #000;">020 6708 2786</span>
-        </div>
-        <div class="enquiry col-app-6">
-            <a class="green-btn mobile-enquire-button relative register-btn" data-event-category="Footer" data-event-action="Click" data-event-name="Register Now">Register Now</a>
-        </div>            
-    </div>
-  </footer>
-
-<div id="overlay" style="display:none;">
-  <div id="popup">
-    <div class="site-visit-wrapper">
-    <div id="close"  data-event-category="Section" data-event-action="Click" data-event-name="Close">&times;</div>
-      <%= simple_form_for(@channel_partner, local: true, html: { id: 'channel_partner_form', class: 'validate-form', multipart: true, novalidate: false }) do |form| %>
-        <%= render "short_form_fields", {form: form} %>
-        <div class="signin-btn pl-0 pr-0 pb-4">
-          <%= form.submit "Register", class: "green-btn sign-in-btn", data: { disable_with: "Please wait..." } %>
-        </div>
-        <hr/>
-        <%= render "devise/shared/links" %>
-      <% end %>
-    </div>              
-   </div>
-</div>
-<%= javascript_include_tag 'script' %>
-<%= javascript_tag do %>
-  $(document).ready(function(){
-    FormInitializer.init($("#channel_partner_form"));
-    <% if params[:action] == 'create' && @channel_partner.errors.present? %>
-    $('.register-btn:first').trigger('click');
-    <% end %>
-  });
-<% end %>
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5BK66NQ"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<script>setTimeout(function(){(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-5BK66NQ');}, 2000);</script>
-
-<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-M32LFR"
- height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <script>setTimeout(function(){(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-M32LFR');}, 2000);</script>
-</body>
-</html>

@@ -56,7 +56,7 @@ class Buyer::BookingDetailsController < BuyerController
   end
 
   def set_receipt
-    unattached_blocking_receipt = @booking_detail.user.unattached_blocking_receipt @project_unit.blocking_amount
+    unattached_blocking_receipt = @booking_detail.lead.unattached_blocking_receipt @project_unit.blocking_amount
     if unattached_blocking_receipt.present?
       @receipt = unattached_blocking_receipt
       @receipt.booking_detail_id = @booking_detail.id

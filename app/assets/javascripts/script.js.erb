@@ -177,11 +177,19 @@ $(document).ready(function() {
 
         if (window_wt > 768) {
             if ($(document).scrollTop() > 50) {
-                $('header').addClass('shrink');
-                $(".brand-logo img").attr("src", "<%= asset_path 'launchpad-blue-logo.png' %>")
+                if($('header').hasClass('sticky-header')){
+
+                }else{
+                    $('header').addClass('shrink');
+                    $(".brand-logo img").attr("src", "<%= asset_path 'launchpad-blue-logo.png' %>")
+                }
             } else {
-                $('header').removeClass('shrink');
-                $(".brand-logo img").attr("src", "<%= asset_path 'launchpad-logo.png' %>")
+                if($('header').hasClass('sticky-header')){
+
+                }else{
+                    $('header').removeClass('shrink');
+                    $(".brand-logo img").attr("src", "<%= asset_path 'launchpad-logo.png' %>")
+                }
             }
         } else {
             $(".brand-logo img").attr("src", "<%= asset_path 'launchpad-blue-logo.png' %>");

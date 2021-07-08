@@ -12,6 +12,22 @@ class HomeController < ApplicationController
     render layout: 'welcome'
   end
 
+  def privacy_policy
+    @channel_partner = ChannelPartner.new
+    render layout: 'landing_page'
+  end
+
+  def terms_and_conditions
+    @channel_partner = ChannelPartner.new
+    render layout: 'landing_page'
+  end
+
+  def cp_enquiryform
+    @channel_partner = ChannelPartner.new
+    render layout: 'landing_page'
+  end
+
+
   def register
     @resource = User.new
     if user_signed_in?
@@ -24,6 +40,7 @@ class HomeController < ApplicationController
   end
 
   def check_and_register
+    authorize [:admin, Lead.new(project_id: @project.id)]
     unless request.xhr?
       redirect_to (user_signed_in? ? after_sign_in_path : root_path)
     else

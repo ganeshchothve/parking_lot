@@ -10,6 +10,7 @@ class Admin::LeadsController < AdminController
       @user = User.where(id: params[:user_id]).first
       attrs = @user.as_json(only: %w(first_name last_name email phone))
     end
+    attrs[:project_id] = params[:project_id] if params[:project_id].present?
     @lead = Lead.new(attrs)
     render layout: false
   end
@@ -62,14 +63,6 @@ class Admin::LeadsController < AdminController
     end
   end
 
-  def sync_site_visit
-    @lead.sitevisit_date, @lead.sitevisit_status = FetchLeadData.site_visit_status_and_date(@lead.lead_id, @lead.user.booking_portal_client, @lead.project.selldo_id.to_s)
-    @lead.save
-    respond_to do |format|
-      format.js
-    end
-  end
-
   def send_payment_link
     respond_to do |format|
       format.html do
@@ -78,9 +71,8 @@ class Admin::LeadsController < AdminController
       end
     end
   end
-
+  
   private
-
   def set_lead
     @lead = if params[:crm_client_id].present? && params[:id].present?
               find_lead_with_reference_id(params[:crm_client_id], params[:id])

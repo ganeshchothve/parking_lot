@@ -43,6 +43,7 @@ class Lead
   belongs_to :project
   has_many :receipts
   has_many :searches
+  has_many :site_visits
   has_many :booking_details
   has_many :user_requests
   has_many :user_kycs
@@ -231,6 +232,14 @@ class Lead
     user_kyc_ids.present?
   end
 
+  def sync_with_selldo params={}
+    if lead.update_attributes(params)
+      @crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
+      selldo_api = Crm::Api::Put.where(resource_class: 'Lead', base_id: @crm_base.id, is_active: true).first if @crm_base.present?
+      selldo_api.execute(self)
+    end
+  end
+
   class << self
 
     def user_based_scope(user, params = {})
@@ -245,7 +254,7 @@ class Lead
       #  custom_scope = { manager_id: { "$in": User.where(role: 'channel_partner').in(manager_id: cp_ids).distinct(:id) }  }
       when :channel_partner
         lead_ids = CpLeadActivity.where(user_id: user.id).distinct(:lead_id)
-        custom_scope = {_id: { '$in': lead_ids } }
+        custom_scope = {_id: { '$in': lead_ids }, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) } }
       when :cp_admin
         channel_partner_ids = User.where(role: 'channel_partner', manager_id: user.id).distinct(:id)
         lead_ids = CpLeadActivity.in(user_id: channel_partner_ids).distinct(:lead_id)
@@ -253,6 +262,11 @@ class Lead
       end
       custom_scope = { user_id: params[:user_id] } if params[:user_id].present?
       custom_scope = { user_id: user.id } if user.buyer?
+
+      unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
+        project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
+        custom_scope.merge!({project_id: {"$in": project_ids}})
+      end
       custom_scope
     end
 
