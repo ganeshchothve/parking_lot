@@ -1,0 +1,49 @@
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#iris_menu" aria-controls="iris_menu" aria-expanded="false" aria-label="MENU">
+  <span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse float-right" id="iris_menu">
+  <ul class="navbar-nav ml-auto">
+    <% if policy(:dashboard).index? %>
+      <li class="nav-item">
+        <%= active_link_to t('controller.dashboard.index.link_name'), dashboard_path, active: :exclusive, class: "nav-link" %>
+      </li>
+    <% end %>
+
+    <% if policy([:buyer, BookingDetail.new(user: current_user, project_unit: ProjectUnit.new(status: 'available', user: current_user))]).hold? %>
+      <li class="nav-item">
+        <%= active_link_to t('controller.searches.towers.link_name'), new_search_path, active: :inclusive, class: "nav-link" %>
+      </li>
+    <% end %>
+
+    <% if false #policy([:buyer, Receipt.new(user: current_user)]).new? %>
+      <li class="nav-item">
+        <%= active_link_to t('controller.receipts.new.link_name'), new_buyer_receipt_path, active: :inclusive, class: 'nav-link modal-remote-form-link' %>
+      </li>
+    <% end %>
+
+    <% if false #policy([:buyer, BookingDetail]).index? %>
+      <li class="nav-item">
+        <%= active_link_to t('controller.booking_details.index.link_name'), buyer_booking_details_path, active: :inclusive, class: "nav-link" %>
+      </li>
+    <% end %>
+
+    <% if false #policy([:buyer, Receipt]).index? %>
+      <li class="nav-item">
+        <%= active_link_to t('controller.receipts.index.link_name'), buyer_receipts_path, active: :inclusive, class: "nav-link" %>
+      </li>
+    <% end %>
+
+    <%= render 'layouts/navbar/custom_links' %>
+
+    <li class="nav-item dropdown">
+      <a href="javascript:;" class="nav-link dropdown-toggle last-drop-down py-0" data-toggle="dropdown">
+        <%= icon "far", "user-circle", class: "text-muted fa-2x" %>
+      </a>
+      <div class="dropdown-menu dropdown-menu-right">
+        <%= link_to t('controller.users.profile.link_name', role: User.human_attribute_name("role.#{current_user.role}")), edit_buyer_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
+        <%= link_to t('controller.users.change_password.link_name'), update_password_buyer_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
+        <%= link_to t('sign_out', scope: "devise"), destroy_session_path(current_user), class: "dropdown-item", method: :delete %>
+      </div>
+    </li>
+  </ul>
+</div>

@@ -1,6 +1,5 @@
 //= require rails-ujs
 //= require jquery3
-//= require bootstrap/bootstrap
 //= require popper
 //= require bootstrap-sprockets
 //= require noty
@@ -18,7 +17,7 @@
 //= require plugins/file_uploader
 //= require daterangepicker
 //= require plugins/smooth_zoom
-//= require fontawesome-all
+//= require font-awesome/js/all
 //= require bootstrap-datetimepicker.min
 //= require utils
 //= require file-icon

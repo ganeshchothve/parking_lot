@@ -11,4 +11,4 @@ Rails.application.config.assets.paths << Rails.root.join('node_modules')
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in the app/assets
 # folder are already added.
-Rails.application.config.assets.precompile += %w(broker.scss broker.js admin.css admin.js dashboard.css dashboard.js mailer.css pdf.scss launchpad.css script.js)
+Rails.application.config.assets.precompile += %w(broker.scss broker.js admin.css admin.js dashboard.css dashboard.js mailer.css pdf.scss launchpad.css script.js application_v2.scss dashboard_v2.scss)
