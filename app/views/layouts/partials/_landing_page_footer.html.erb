@@ -1,0 +1,34 @@
+<footer class="col-app-12">
+    <div class="desktop-footer col-app-12">
+      <div class="container-launchpad">
+        <div class="col-app-8 col-app-xs-12">
+          Copyrights &copy; Amura Marketing Technologies. <%= Date.current.year %>. <a href="javascript:;" rel="about-us" class="footer-link scroll-sec">About Us</a><span> | </span> <%= link_to 'Privacy Policy', privacy_policy_path, class: 'footer-link' %> <span> | </span> <%= link_to 'Terms and Conditions', terms_and_conditions_path, class: 'footer-link' %>
+        </div>
+        <div class="col-app-4 col-app-xs-12">
+          <div class="social-links">
+            <a href="https://www.facebook.com/amuratech/" target="_blank">
+              <img data-src="<%= asset_path 'facebook-icon.png' %>" class="lazy">
+            </a>
+            <a href="https://www.instagram.com/amuratech/" target="_blank">
+              <img data-src="<%= asset_path 'insta-icon.png' %>" class="lazy">
+            </a>
+            <a href="https://twitter.com/amuratech" target="_blank">
+              <img data-src="<%= asset_path 'twitter-icon.png' %>" class="lazy">
+            </a>
+            <a href="https://www.linkedin.com/company/amura-marketing-technologies-pvt-ltd/" target="_blank">
+              <img data-src="<%= asset_path 'linkedin-icon.png' %>" class="lazy">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobile-footer visible-xs visible-portrait fixed text-center col-app-12">
+        <div class="mob-number col-app-6">                
+            &nbsp;<a href="tel:02067082786" style="font-weight: 700; color: #000;">020 6708 2786</span>
+        </div>
+        <div class="enquiry col-app-6">
+            <a class="green-btn mobile-enquire-button relative register-btn" data-event-category="Footer" data-event-action="Click" data-event-name="Register Now">Register Now</a>
+        </div>            
+    </div>
+  </footer>
