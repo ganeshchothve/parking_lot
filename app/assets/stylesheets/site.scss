@@ -1944,8 +1944,12 @@ table .dropdown-menu.show{
 	background-position: right;
 	background-size: contain;
 	@media screen and (max-width: 1400px) and (min-width: 992px){
-		background-size: 50% 80%;
+		background-size: 100% 87%;
 	}
+	@media screen and (max-width: 1024px) and (min-width: 768px){
+		background-position: 100% 10%;
+	}
+
 }
 .auth{
 	.login-form-wrapper{
