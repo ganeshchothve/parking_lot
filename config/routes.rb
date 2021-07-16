@@ -282,7 +282,11 @@ Rails.application.routes.draw do
   get :terms_and_conditions, as: :terms_and_conditions, to: 'home#terms_and_conditions'
   get :privacy_policy, as: :privacy_policy, to: 'home#privacy_policy'
   get :"cp-enquiryform", as: :cp_enquiryform, to: 'home#cp_enquiryform'
-  
+
+  # Lead selection while login for buyers
+  get 'buyer/projects', to: 'home#select_project', as: :buyer_select_project
+  post 'select_project', to: 'home#select_project', as: :select_project
+
   scope :custom do
     match :inventory, to: 'custom#inventory', as: :custom_inventory, via: [:get]
   end
@@ -350,24 +354,15 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :receipts, only: [:index, :show] do
+    resources :receipts, only: [:index, :show, :new, :create] do
       get :resend_success, on: :member
     end
 
-    resources :leads, only: [:show] do
-      resources :booking_details, only: [:index, :show] do
-        resources :booking_detail_schemes, except: [:destroy]
+    scope ":request_type" do
+      resources :user_requests, except: [:destroy], controller: 'user_requests'
+    end
 
-        resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts'
-      end
-
-      resources :receipts, only: [:new, :create]
-      resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
-
-      scope ":request_type" do
-        resources :user_requests, except: [:destroy], controller: 'user_requests'
-      end
-    end # end resources :leads
+    resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
 
     resources :referrals, only: [:index, :create, :new] do
       post :generate_code, on: :collection

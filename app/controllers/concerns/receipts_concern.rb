@@ -1,6 +1,21 @@
 module ReceiptsConcern
   extend ActiveSupport::Concern
 
+  #
+  # This index action for Admin users where Admin can view all receipts.
+  #
+  #
+  # @return [{},{}] records with array of Hashes.
+  # GET /admin/receipts
+  def index
+    authorize([current_user_role_group, Receipt])
+    @receipts = Receipt.build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page])
+    respond_to do |format|
+      format.json { render json: @receipts.as_json(methods: [:name]) }
+      format.html
+    end
+  end
+
   # GET /buyer/receipts/export
   # GET /admin/receipts/export
   def export
@@ -32,4 +47,14 @@ module ReceiptsConcern
     flash[:notice] = t('controller.receipts.resend_email.success')
     redirect_to (request.referrer.present? ? request.referrer : dashboard_path)
   end
+
+  private
+
+  def apply_policy_scope
+    custom_scope = Receipt.all.where(Receipt.user_based_scope(current_user))
+    Receipt.with_scope(policy_scope(custom_scope)) do
+      yield
+    end
+  end
+
 end

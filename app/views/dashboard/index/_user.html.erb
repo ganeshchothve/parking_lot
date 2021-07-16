@@ -7,7 +7,7 @@
   <%#= render 'users/my_projects' %>
   <!-- Receipts -->
   <!-- <div class="separate-line container"></div> -->
-  <%= render 'receipts/section', receipts: @receipts %>
+  <%= render 'receipts/section', receipts: @lead.receipts.paginate(page: params[:page] || 1, per_page: params[:per_page]) %>
   <!-- Time slots -->
   <!-- <div class="separate-line container"></div> -->
   <% if false #policy([:buyer, TimeSlot]).index? %>

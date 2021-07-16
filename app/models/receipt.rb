@@ -272,11 +272,11 @@ class Receipt
     end
 
     custom_scope = { lead_id: params[:lead_id] } if params[:lead_id].present?
-    custom_scope = { user_id: user.id } if user.buyer?
+    custom_scope = { user_id: user.id, lead_id: user.selected_lead_id } if user.buyer?
 
     custom_scope[:booking_detail_id] = params[:booking_detail_id] if params[:booking_detail_id].present?
 
-    unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
+    unless user.role.in?(User::ALL_PROJECT_ACCESS + User::BUYER_ROLES + %w(channel_partner))
       project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
       custom_scope.merge!({project_id: {"$in": project_ids}})
     end

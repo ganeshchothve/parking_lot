@@ -27,6 +27,21 @@ class HomeController < ApplicationController
     render layout: 'landing_page'
   end
 
+  def select_project
+    if current_user.leads.count == 1
+      current_user.update(selected_lead: current_user.leads.first)
+      redirect_to home_path(current_user)
+    else
+      if request.method == 'POST'
+        current_user.selected_lead_id = params[:selected_lead_id]
+        current_user.save
+        redirect_to home_path(current_user)
+      else
+        @leads = current_user.leads.all
+        render layout: 'devise'
+      end
+    end
+  end
 
   def register
     @resource = User.new

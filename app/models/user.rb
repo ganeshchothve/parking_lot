@@ -148,6 +148,7 @@ class User
   belongs_to :channel_partner, optional: true
   belongs_to :confirmed_by, class_name: 'User', optional: true
   belongs_to :tier, optional: true  # for associating channel partner users with different tiers.
+  belongs_to :selected_lead, class_name: 'Lead', optional: true
   has_many :leads
   has_many :receipts
   has_many :project_units
@@ -255,6 +256,11 @@ class User
   end
   ADMIN_ROLES.each do |admin_roles|
     scope admin_roles, ->{ where(role: admin_roles )}
+  end
+
+
+  def selected_project
+    self.selected_lead.try(:project)
   end
 
   def phone_or_email_required

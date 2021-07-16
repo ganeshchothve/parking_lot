@@ -9,25 +9,25 @@
       </li>
     <% end %>
 
-    <% if policy([:buyer, BookingDetail.new(user: current_user, project_unit: ProjectUnit.new(status: 'available', user: current_user))]).hold? %>
+    <% if policy([:buyer, BookingDetail.new(user: current_user, lead: current_user.selected_lead, project_unit: ProjectUnit.new(status: 'available', user: current_user))]).hold? %>
       <li class="nav-item">
-        <%= active_link_to t('controller.searches.towers.link_name'), new_search_path, active: :inclusive, class: "nav-link" %>
+        <%= active_link_to t('controller.searches.towers.link_name'), new_search_path(lead_id: current_user.selected_lead_id), active: :inclusive, class: "nav-link" %>
       </li>
     <% end %>
 
-    <% if false #policy([:buyer, Receipt.new(user: current_user)]).new? %>
+    <% if policy([:buyer, Receipt.new(user: current_user)]).new? %>
       <li class="nav-item">
-        <%= active_link_to t('controller.receipts.new.link_name'), new_buyer_receipt_path, active: :inclusive, class: 'nav-link modal-remote-form-link' %>
+        <%= active_link_to t('controller.receipts.new.link_name'), new_buyer_receipt_path(lead_id: current_user.selected_lead_id), active: :inclusive, class: 'nav-link modal-remote-form-link' %>
       </li>
     <% end %>
 
-    <% if false #policy([:buyer, BookingDetail]).index? %>
+    <% if policy([:buyer, BookingDetail]).index? %>
       <li class="nav-item">
         <%= active_link_to t('controller.booking_details.index.link_name'), buyer_booking_details_path, active: :inclusive, class: "nav-link" %>
       </li>
     <% end %>
 
-    <% if false #policy([:buyer, Receipt]).index? %>
+    <% if policy([:buyer, Receipt]).index? %>
       <li class="nav-item">
         <%= active_link_to t('controller.receipts.index.link_name'), buyer_receipts_path, active: :inclusive, class: "nav-link" %>
       </li>
@@ -41,6 +41,7 @@
       </a>
       <div class="dropdown-menu dropdown-menu-right">
         <%= link_to t('controller.users.profile.link_name', role: User.human_attribute_name("role.#{current_user.role}")), edit_buyer_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
+        <%= link_to t('controller.home.select_project.link_name'), buyer_select_project_path, class: "dropdown-item" %>
         <%= link_to t('controller.users.change_password.link_name'), update_password_buyer_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
         <%= link_to t('sign_out', scope: "devise"), destroy_session_path(current_user), class: "dropdown-item", method: :delete %>
       </div>
