@@ -5,28 +5,28 @@
       <% if user_signed_in? %>
         <%= render "layouts/navbar_v2/#{current_user_role_group}" %>
       <% else %>
-        <div class="text-right">
-          <div class="user-info float-right hide-xs">
-            <div class="display-inline">
+        <div class="text-end">
+          <div class="user-info float-end hide-xs">
+            <div class="d-inline-block">
               <%= link_to 'T & C', dashboard_terms_and_condition_path, active: :exclusive, class: 'p-style', target: "_blank" %>
             </div>
           </div>
-          <div class="user-info login-btn float-right hide-xs">
-            <div class="display-inline">
+          <div class="user-info login-btn float-end hide-xs">
+            <div class="d-inline-block">
               <img src="<%= asset_path 'lock-black.svg' %>" alt="User Info">
               <%= link_to "Log in", new_session_path("user"), class: "p-style" %>
             </div>
           </div>
-          <div class="dropdown hide-xs float-right register-dropdown">
-            <div class="display-inline">
+          <div class="dropdown hide-xs float-end register-dropdown">
+            <div class="d-inline-block">
               <a class="dropdown-toggle p-style" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Register</a>
               <div class="dropdown-menu menu-top mobile-home-menu" aria-labelledby="navbarDropdown">
-                <%= link_to "Register as Channel Partner", new_channel_partner_path, class: "dropdown-item btn-as-channel-partner text-left" %>
-                <%#= link_to "Register as Customer", register_path, class: "btn btn-primary btn-as-customer-partner text-left" %>
+                <%= link_to "Register as Channel Partner", new_channel_partner_path, class: "dropdown-item btn-as-channel-partner text-start" %>
+                <%#= link_to "Register as Customer", register_path, class: "btn btn-primary btn-as-customer-partner text-start" %>
               </div>
             </div>
           </div>
-          <div class="display-inline">
+          <div class="d-inline-block">
             <%= link_to new_channel_partner_path, class: "reg-chnl-prtnr-btn show-xs p-style" do %>
               <%= image_tag 'user-alt-black.svg', alt: "User Info" %>
               Register as Channel Partner
@@ -34,15 +34,15 @@
 
           </div>
           <!--
-          <div class="display-inline ml-2">
+          <div class="d-inline-block ml-2">
             <%#= link_to "Register Now", register_path, class: "register-btn show-xs" %>
           </div>
           -->
 
-          <div class="user-info login-btn float-right show-xs mt-2">
-            <div class="display-inline">
+          <div class="user-info login-btn float-end show-xs mt-2">
+            <div class="d-inline-block">
               <img src="<%= asset_path 'lock-black.svg' %>" alt="User Info">
-              <%= link_to "Log in", new_session_path("user"), class: "p-style" %>
+              <%= link_to "Log in", new_session_path("user"), class: "p-style primary" %>
             </div>
           </div>
         </div>

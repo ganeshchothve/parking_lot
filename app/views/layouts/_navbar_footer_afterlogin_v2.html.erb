@@ -1,0 +1,54 @@
+<footer class="bg-white footer fixed-bottom p-0 pt-1 cmn-inner-footer">
+  <div class="container">
+    <% if defined?(current_user) && current_user %>
+      <div class="row pb-1 footer-tow-cmn">
+        <div class="col-lg-6 col-md-8 col-xs-6 col-sm-4 no-pd">
+          <ul class="footer-menu float-left mb-0">
+            <%= bottom_navigation %>
+          </ul>
+        </div>
+        <div class="col-lg-6 col-md-4 col-xs-6 col-sm-8 no-pd">
+          <ul class="footer-menu float-right mb-0">
+            <%= render "layouts/language" %>
+          </ul>
+        </div>
+      </div>
+    <% end %>
+    <div class="row scroll-footer">
+      <% if defined?(current_user) && current_user %>
+        <hr class="w-100 m-0">
+      <% end %>
+      <div class="col-lg-8 no-pd">
+        <div class="footer-top footer-menu">
+          <% template = ::Template::UITemplate.where(name: 'layouts/_navbar_footer').first %>
+          <% if template.present? %>
+            <%= get_view_erb(template) %>
+          <% end %>
+        </div>
+      </div>
+      <% unless defined?(current_user) && current_user %>
+        <div class="col-lg-4 col-md-4 col-xs-12 col-sm-12 no-pd">
+          <ul class="footer-menu float-right mb-0">
+            <%= render "layouts/language" %>
+          </ul>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</footer>
+
+<%= javascript_tag do %>
+  <% if defined?(current_user) && current_user %>
+    $(window).scroll(function(){
+      if($(window).scrollTop() > 100){
+        $('.scroll-footer').hide(600);
+        $('#gamification-container').css('bottom','2.5rem');
+      }
+      // Only show disclamer bar when scroll in top position
+      if ( $(window).scrollTop() == 0 ) { //|| $(window).scrollTop() == $(document).height() - $(window).height()) {
+        $('.scroll-footer').show(600);
+        $('#gamification-container').css('bottom','5rem');
+      }
+    });
+  <% end %>
+<% end %>

@@ -52,12 +52,11 @@ var modal_remote_form_link_click_handler = function(remote_href){
           $('body').append('<div id="modal-remote-form-container"></div>');
         }
         $("#modal-remote-form-container").html(one);
-        $("#modal-remote-form-inner").modal({
+        var myModal = new bootstrap.Modal(document.getElementById('modal-remote-form-inner'), {
           backdrop: 'static',
-          show: true,
           keyboard: false,
           focus: true
-        });
+        }).show();
         $("#modal-remote-form-container [data-toggle='tooltip']").tooltip();
         if(window.history && typeof window.history.pushState === "function"){
           $("#modal-remote-form-inner").on("hide.bs.modal", handle_remote_pushstate);

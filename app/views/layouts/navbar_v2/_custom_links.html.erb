@@ -12,8 +12,8 @@
 <% if links.present? %>
   <li class="nav-item d-none d-lg-block">
     <div class="dropdown">
-      <%= active_link_to t('global.custom'), "javascript:;", active: [CustomPolicy.custom_methods.map{|x| 'admin/'+x}, ['index']], class: "nav-link dropdown-toggle pl-0 pr-0", data: {toggle: 'dropdown'} %>
-      <div class="dropdown-menu dropdown-menu-right menu-top">
+      <%= active_link_to t('global.custom'), "javascript:;", active: [CustomPolicy.custom_methods.map{|x| 'admin/'+x}, ['index']], class: "nav-link dropdown-toggle", data: {toggle: 'dropdown'},  id: "dropdownMenuLeft3", "data-bs-toggle": "dropdown", "aria-expanded": "false" %>
+      <div class="dropdown-menu dropdown-menu-right menu-top" aria-labelledby="dropdownMenuLeft3">
         <% links.each do |link| %>
           <%= link_to link[:name], link[:link], class: "dropdown-item" %>
         <% end %>

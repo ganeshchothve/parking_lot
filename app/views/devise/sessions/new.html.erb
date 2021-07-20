@@ -5,7 +5,42 @@ else
   otp_signin_class = "d-none"
   username_signin_class = ""
 end %>
+<section class="cp-login-otp-sec mt-5">
+  <div class="cp-login-otp-wrap">
+    <h2 class="px-3 pt-3 pb-3">Log In</h2>
+    <p class="pt-4 pb-4 px-3">Sign in using OTP (One Time Password)</p>
+    <div class="cp-signup-form-wrap px-3 cp-form-wrap">
+      <% template = ::Template::UITemplate.where(name: 'devise/sessions/new').first %>
+          <% if template.present? %>
+            <%= get_view_erb(template) %>
+          <% end %>
+          <%= simple_form_for(resource, as: resource_name, url: users_otp_path, method: :post, authenticity_token: true, remote: true, html: { novalidate: false, class: "validate-form #{otp_signin_class}", id: 'otp_user_form', data: { type: :json }, autocomplete: 'off' }) do |f| %>
+            <div class="form-group">
+              <!-- <%= f.label :Phone_Number %> -->
+              <%= f.phone_field :login, autofocus: true, class: 'form-control', placeholder: t('mongoid.attributes.user.phone'), id: 'user_login_phone', autocomplete: false %>
+            </div>
 
+            <div class="form-group" hidden>
+              <%= f.label :login_otp %>
+              <%= f.number_field :login_otp, class: 'form-control', maxlength: resource_class.otp_length, minlength: resource_class.otp_length, autocomplete: false %>
+            </div>
+        <!-- <span class="or-note"><span>OR</span></span>
+        <div class="form-group">
+          <label>Email ID</label>
+          <input type="texts" name="">
+        </div> -->
+        <div class="form-group pt-3 pb-3">
+          <%= f.submit t('sessions.new.otp_submit'), class: 'sign-in-btn cp-btn btn',  data:{event_category: 'Section', event_action: 'Click', event_name: t('sessions.new.otp_submit') } %>
+          <!-- <input type="submit" name="" class="cp-btn btn" value="Get OTP"> -->
+        </div>
+      <% end %>
+    </div>
+    <div class="signin-footer text-center">
+      <a href="javascript:;" class="a-style opacity-5 toggle_signin_form d-block d-md-inline pr-0" data-target="#standard_login_form"><%= t('sessions.new.login_with_password_link') %></a>
+      <!-- <a href="javascript:;">Sign in using email and password</a> -->
+    </div>
+  </div>
+</section>
 <section class="auth login-page pb-5">
   <div class="container">
     <div class="row">
@@ -17,7 +52,7 @@ end %>
             <%= get_view_erb(template) %>
           <% end %>
 
-          <%= simple_form_for(resource, as: resource_name, url: users_otp_path, method: :post, authenticity_token: true, remote: true, html: { novalidate: false, class: "validate-form #{otp_signin_class}", id: 'otp_user_form', data: { type: :json }, autocomplete: 'off' }) do |f| %>
+<!--           <%= simple_form_for(resource, as: resource_name, url: users_otp_path, method: :post, authenticity_token: true, remote: true, html: { novalidate: false, class: "validate-form #{otp_signin_class}", id: 'otp_user_form', data: { type: :json }, autocomplete: 'off' }) do |f| %>
 
             <div class="form-group">
               <%= f.phone_field :login, autofocus: true, class: 'form-control', placeholder: t('mongoid.attributes.user.phone'), id: 'user_login_phone', autocomplete: false %>
@@ -35,7 +70,7 @@ end %>
               <a href="javascript:;" class="a-style opacity-5 resend-otp small pt-3" data-resend-time="<%= User.otp_resend_wait_time %>", data-max-limit="<%= User.otp_resend_max_limit %>" data-counter=0><%= t('sessions.new.otp_resend') %></a>
             </div>
             <a href="javascript:;" class="a-style opacity-5 toggle_signin_form d-block d-md-inline pr-0" data-target="#standard_login_form"><%= t('sessions.new.login_with_password_link') %></a>
-          <% end %>
+          <% end %> -->
 
 
           <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: {class: 'validate-form ' + username_signin_class, id: "standard_login_form", autocomplete: 'off' }) do |f| %>
