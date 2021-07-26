@@ -1,6 +1,6 @@
 <% labels = I18n.t("mongoid.attributes.upload_error").with_indifferent_access %>
 <div class="table-responsive">
-  <table class='table my-customer-table responsive-tbl bg-white' width="100%" cellpadding="10" cellspacing="0">
+<table class='table my-customer-table responsive-tbl caption-top rounded mt-3 mb-0'>
     <thead class="th-default">
       <tr class="bg-gradient-cd white">
         <th><%= labels["row"] %></th>
@@ -10,20 +10,24 @@
     <tbody>
       <% upload_errors.each do |upload_error| %>
       <tr>
-        <td>
+        <td data-title="<%= labels["row"] %>">
           <%= upload_error.row %>
         </td>
-        <td>
+        <td data-title="<%= labels["errors"] %>">
           <%= upload_error.messages.try(:join, '<br/>').html_safe %>
         </td>
       </tr>
       <% end %>
-      <tr>
-        <td colspan=2>
-      </tr>
     </tbody>
   </table>
 </div>
-<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pt-2">
-  <%= will_paginate upload_errors, list_classes: %w(pagination justify-content-center) %>
+<div class="col-lg-12 py-3 white mb-2 px-2">
+  <div class="row">
+    <div class="col-lg-6">
+      <p class="table-entry">Showing 1 - 5 of <%= @bulk_upload_report.upload_errors.count %> items</p>
+    </div>
+    <div class="col-lg-6 table-pagination">
+      <%= will_paginate upload_errors, list_classes: %w(pagination justify-content-center) %>
+    </div>
+  </div>
 </div>

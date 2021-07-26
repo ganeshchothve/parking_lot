@@ -3,6 +3,7 @@
 
 // override bootstrap varialbes start
 // $font-size-base: 1.125rem;
+$bg-white: #fff;
 $body-bg: #fefefe;
 $body-color: #495057;
 $primary: #97B350;
@@ -21,3 +22,6 @@ $breadcrumb-divider: "\f3d3";
 $modal-backdrop-opacity: 0.9 !default;
 $modal-backdrop-bg: #5a6775;
 // override bootstrap varialbes end
+
+$table-bg: #fff;
+$table-th-font-weight: 500;

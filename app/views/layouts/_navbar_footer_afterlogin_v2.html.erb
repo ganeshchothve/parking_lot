@@ -7,11 +7,6 @@
             <%= bottom_navigation %>
           </ul>
         </div>
-        <div class="col-lg-6 col-md-4 col-xs-6 col-sm-8 no-pd">
-          <ul class="footer-menu float-right mb-0">
-            <%= render "layouts/language" %>
-          </ul>
-        </div>
       </div>
     <% end %>
     <div class="row scroll-footer">
@@ -26,13 +21,7 @@
           <% end %>
         </div>
       </div>
-      <% unless defined?(current_user) && current_user %>
-        <div class="col-lg-4 col-md-4 col-xs-12 col-sm-12 no-pd">
-          <ul class="footer-menu float-right mb-0">
-            <%= render "layouts/language" %>
-          </ul>
-        </div>
-      <% end %>
+      
     </div>
   </div>
 </footer>

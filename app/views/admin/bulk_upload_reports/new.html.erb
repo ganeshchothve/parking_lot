@@ -4,9 +4,7 @@
     <div class="modal-content">
       <div class="modal-header bg-gradient-cd white">
         <h3 class="title"><%= BulkUploadReport.model_name.human(count: 2) %></h3>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <%= form_for @bulk_upload_report, url: admin_bulk_upload_reports_path, html: {id: 'bulk_upload_report_form', class: 'bulk_upload_report_form'} do |f| %>
         <div class="modal-body">
@@ -33,7 +31,7 @@
             </div>
           <% end %>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer text-end">
           <%= f.submit "Submit", id: "save", class: "btn btn-primary" %>
         </div>
       <% end %>

@@ -3,25 +3,29 @@
     <div class="row">
     <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
       <div class="table-title pt-1">
-        <h1 class="title icon-user-friends-black icon-set">
+        <!-- <h1 class="title icon-user-friends-black icon-set">
           <%= ChannelPartner.model_name.human(count: @channel_partners.total_entries) %>
-        </h1>
+        </h1> -->
+        <div class="filter-search">
+          <input type="text" name="" placeholder="Search Channel Partners">
+        </div>
+        <div class="filter-popup">
+          <a class="db-filter-btn fn-500" href="javascript:;">
+            <i class="fa fa-filter fill-theme"></i>
+          </a>
+        </div>
       </div>
     </div>
     <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
-      <div class="table-btn-set float-right pb-3">
-        <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @channel_partners.total_entries %></button>
+      <div class="table-btn-set float-end pb-3 text-end">
         <% if policy([:admin, ChannelPartner.new]).new? %>
-          <%= link_to 'Add New', new_channel_partner_path(from_cp_admin: true), class: 'db-small-btn light-blue bg-white btn modal-remote-form-link' %>
+          <%= link_to 'Add New', new_channel_partner_path(from_cp_admin: true), class: 'btn btn-primary modal-remote-form-link d-inline me-3' %>
         <% end %>
-        <a class="db-small-btn light-blue bg-white fn-400 dropdown-toggle btn" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
+        <a class="select-btn fn-400 dropdown-toggle btn d-inline" href="javascript:;" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
         <div class="dropdown-menu">
           <%= link_to "All #{global_labels['channel_partners']}", export_channel_partners_path, class: 'dropdown-item' %>
           <%= link_to "Active filter #{global_labels['channel_partners']}", export_channel_partners_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
         </div>
-        <button class="db-filter-btn white fn-500" type="button">
-          <i class="icon-set icon-filter-light-blue"></i>
-        </button>
       </div>
     </div>
       <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">

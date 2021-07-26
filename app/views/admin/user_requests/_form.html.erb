@@ -4,9 +4,7 @@
       <div class="modal-content">
         <div class="modal-header bg-gradient-cd white">
           <h3 class="title"><%= t("controller.user_requests.#{@user_request.class.model_name.element}.#{action_name}.header") %></h3>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true" class="white">&times;</span>
-          </button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <% begin %>

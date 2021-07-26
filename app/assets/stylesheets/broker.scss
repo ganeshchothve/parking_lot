@@ -18,7 +18,7 @@ $font-normal: 400;
 $font-medium: 500;
 $font-bold: 700;
 .primary{
-	color: $primary;
+	color: $primary!important;
 }
 .warning{
 	color: $warning;
@@ -440,6 +440,19 @@ select.form-control{
 						background-color: #3E485C;
 						border-left: 4px solid #006DEE;
 					}
+				}
+				&.lang-menu{
+					position: absolute;
+				    bottom: 0;
+				    width: 100%;
+				    .dropdown-menu.menu-top{
+				    	top: inherit;
+				    	bottom: 0px;
+				    }
+				}
+				.bottom-menu{
+					top: inherit;
+				    	bottom: 0px
 				}
 			}
 		}
@@ -1480,7 +1493,7 @@ select.form-control{
 		}
 	}
 }
-.googleMeet-modal{
+/* .googleMeet-modal{ */
 	.modal-dialog{
 		width: 636px;
 		min-width: 636px;
@@ -1508,7 +1521,7 @@ select.form-control{
 	    width: 100%;
 	    display: block;
 		.btn{
-			width: 78px;
+			width: auto;
 			height: 30px;
 			font-size: 12px;
 			line-height: 14px;
@@ -1521,7 +1534,7 @@ select.form-control{
 			color: $theme-txt-color;
 		}
 	}
-}
+/* } */
 
 /*************** CP **************/
 .cp-signup-sec{
@@ -2102,6 +2115,9 @@ select.form-control{
 		    top: 50%;
 		    transform: translateY(-50%);
 		}
+	}
+	.intl-tel-input{
+		width: 100%;
 	}
 }
 
@@ -2766,8 +2782,11 @@ body.fixed-subheader .prjt-menu{
 			left: 159px;
 			background-color: #2e384d;
     		margin-top: 0;
+		    width: 100%;
+			height: auto;
     		a{
     			padding: 13px 15px 12px 15px;
+    			white-space: break-spaces;
     		}
     		a:hover,a:focus{
     			background-color: #3E485C;
@@ -2853,6 +2872,107 @@ table .dropdown-menu.show{
 	}
 }
 
+/********************** Apartment Filter Popup *******************/
+.filter-box {
+    position: fixed;
+    right: 0;
+    top: 80px;
+    background-color: #fff;
+    padding: 7px 11px;
+    width: 50%;
+    height: 100%;
+    z-index: 1000;
+}
+.select-btn{
+	background-color: transparent;
+    border: none;
+}
+@mixin tableLightTitle{
+	font-size: 12px;
+	line-height: 23px;
+	color: #687790;
+	letter-spacing: 0.33px;
+}
+
+.table{
+	th{
+		@include tableLightTitle;
+		line-height: 23px;
+	}
+	tbody{
+		td{
+			font-size: 12px;
+			color: $theme-txt-color;
+			letter-spacing: 0.33px;
+			line-height: 18px;
+			.title{
+				@include tableLightTitle;
+				line-height: 14px;
+				display: block;
+			}
+			.col-title{
+				font-size: 14px;
+				line-height: 20px;
+				letter-spacing: 0.39px;
+				color: $theme-txt-color;
+			}
+		}
+	}
+}
+.dropdown-menu{
+	.dropdown-item{
+		@include tableLightTitle;
+	}
+}
+@mixin LightTitle14{
+	font-size: 14px;
+	line-height: 20px;
+	color: #687790;
+	letter-spacing: 0.39px;
+}
+.table-entry{
+	@include LightTitle14;
+}
+.white{
+	background-color: $bg-white;
+}
+.table-pagination{
+	ul{
+		margin-bottom: 0px;
+	}
+	.page-item{
+		.page-link{
+			border: 0px;
+			font-size: 15px;
+			font-weight: 500;
+			color: $theme-txt-color;
+			letter-spacing: 0.42px;
+			line-height: 20px;
+		}
+		&.active{
+			a{
+				color: $primary;
+				background-color: transparent;
+				border-color: transparent;
+			}
+		}
+	}
+}
+@mixin filterLabel{
+	font-size: 12px;
+	line-height: 16px;
+	color: $theme-txt-color;
+	letter-spacing: 0.33px;
+	font-weight: 500;
+	display: block;
+	margin-bottom: 5px;
+}
+.filter-inner{
+	label{
+		@include filterLabel;
+	}
+}
+
 /******************************** Footer ***************************/
 .footer{
 	padding: 25px 0px 20px;
@@ -2908,6 +3028,9 @@ table .dropdown-menu.show{
 				margin-left: 25px;
 			}
 		}
+	}
+	&.fixed-bottom{
+		z-index: 99;
 	}
 }
 

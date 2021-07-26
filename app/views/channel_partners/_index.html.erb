@@ -1,4 +1,4 @@
-<table class='table my-customer-table responsive-tbl'>
+<table class='table my-customer-table responsive-tbl caption-top rounded mt-3 mb-0'>
   <thead class="th-default">
     <thead>
       <tr class="bg-gradient-cd white">
@@ -15,20 +15,24 @@
       <% channel_partners.each do |channel_partner| %>
         <tr>
           <td data-title=<%= t('mongoid.attributes.channel_partner.name') %> >
-            <%= channel_partner.name %>
+            <span class="col-title"><%= channel_partner.name %></span>
             <% if channel_partner.cp_code.present? %>
               <div class='small'>
-                <%= t('mongoid.attributes.channel_partner.cp_code') %>: <%= channel_partner.cp_code %>
+                <span class="title"><%= t('mongoid.attributes.channel_partner.cp_code') %>:</span> <%= channel_partner.cp_code %>
               </div>
             <% end %>
           </td>
-          <td data-title= <%= t('mongoid.attributes.channel_partner.details') %> ><i class="far fa-envelope"></i> <%= channel_partner.email %><br/><i class="fas fa-mobile-alt"></i> <%= channel_partner.phone %></td>
-          <td data-title=<%= t('mongoid.attributes.channel_partner.rera_id') %> ><%= channel_partner.rera_id %></td>
-          <td data-title=<%= t('mongoid.attributes.channel_partner.status') %> ><%= ChannelPartner.human_attribute_name("status.#{channel_partner.status}") %></td>
-          <td data-title=<%= t('mongoid.attributes.channel_partner.associated_user_id') %> ><%= channel_partner.associated_user_id.present? ? link_to(channel_partner.associated_user.name, admin_user_path(channel_partner.associated_user_id)) : '-' %></td>
+          <td data-title= <%= t('mongoid.attributes.channel_partner.details') %> >
+            <span class="d-block"><i class="far fa-envelope fill-theme"></i> <%= channel_partner.email %></span>
+            <span class="d-block mt-2"><i class="fas fa-mobile-alt fill-theme"></i> <%= channel_partner.phone %></span></td>
+          <td data-title=<%= t('mongoid.attributes.channel_partner.rera_id') %> >
+            <span class="col-title"><%= channel_partner.rera_id %></span>
+            </td>
+          <td data-title=<%= t('mongoid.attributes.channel_partner.status') %> ><span class="col-title"><%= ChannelPartner.human_attribute_name("status.#{channel_partner.status}") %></span></td>
+          <td data-title=<%= t('mongoid.attributes.channel_partner.associated_user_id') %> ><%= channel_partner.associated_user_id.present? ? link_to(channel_partner.associated_user.name, admin_user_path(channel_partner.associated_user_id), class: "primary col-title") : '-' %></td>
           <td>
             <div class="dropdown show text-center">
-            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+            <a class="btn table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
               <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                 <% if Admin::ChannelPartnerPolicy.new(current_user, channel_partner).edit? %>
                   <%= link_to t('helpers.edit.link_name', model: ChannelPartner.model_name.human), edit_channel_partner_path(channel_partner), class: 'dropdown-item modal-remote-form-link' %>
@@ -50,6 +54,13 @@
       <% end %>
   </tbody>
 </table>
-<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pt-2">
-  <%= will_paginate channel_partners, list_classes: %w(pagination justify-content-center) %>
+<div class="col-lg-12 py-3 white mb-2 px-2">
+  <div class="row">
+    <div class="col-lg-6">
+      <p class="table-entry">Showing 1 - 5 of <%= @channel_partners.total_entries %> items</p>
+    </div>
+    <div class="col-lg-6 table-pagination">
+       <%= will_paginate channel_partners, list_classes: %w(pagination justify-content-end) %>
+    </div>
+  </div>
 </div>

@@ -3,16 +3,16 @@
     <div class="row">
       <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
         <div class="table-title pt-1">
-          <h1 class="title">
+          <!-- <h1 class="title">
             <%= BulkUploadReport.model_name.human(count: @bulk_upload_reports.total_entries) %>
-          </h1>
+          </h1> -->
+
         </div>
       </div>
       <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
-        <div class="table-btn-set float-right pb-3">
-          <button disabled="disabled" class="db-small-btn db-btn-200 light-blue bg-white fn-400 "><%= t('global.total')%> : <%= @bulk_upload_reports.total_entries %></button>
+        <div class="table-btn-set float-end pb-2 text-end">
           <% if (Admin::BulkUploadReportPolicy.new(current_user, BulkUploadReport.new)).bulk_upload? %>
-            <%= link_to "New Bulk Upload", admin_bulk_upload_reports_path('remote-state': new_admin_bulk_upload_report_path), class: 'db-small-btn db-btn light-blue bg-white fn-400 btn' %>
+            <%= link_to "New Bulk Upload", admin_bulk_upload_reports_path('remote-state': new_admin_bulk_upload_report_path), class: 'btn-primary fn-400 btn' %>
           <% end %>
         </div>
       </div>

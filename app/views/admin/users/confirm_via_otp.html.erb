@@ -6,9 +6,7 @@
           <h3 class="title">
             Confirm Account Via <%= I18n.t("global.otp") %>
           </h3>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true" class="white">&times;</span>
-          </button>
+         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <% if @otp_sent_status[:status] %>

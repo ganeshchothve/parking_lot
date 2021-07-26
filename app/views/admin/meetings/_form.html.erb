@@ -1,16 +1,14 @@
 <%= simple_form_for(meeting, local: true, url: url, remote: true, html: { novalidate: false, class: 'modal-remote-form validate-form', data: { 'resource-type': Meeting.model_name.human, type: :json }, id: 'meeting_form' } ) do |f| %>
   <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
         <div class="modal-header bg-gradient-cd white">
           <h3 class="title">
             <%= t("helpers.#{action_name}.link_name", model: Meeting.model_name.human) %>
             </h3>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true" class="white">&times;</span>
-          </button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body theme-form">
           <div class="form-group">
             <%= f.input :topic, required: true, disabled: !policy([current_user_role_group, meeting]).editable_field?("topic") %>
           </div>
@@ -78,7 +76,7 @@
           </div>
         </div>
 
-        <div class="modal-footer">
+        <div class="modal-footer text-end">
           <%= f.submit "Save", class: "btn btn-primary" %>
         </div>
       </div>

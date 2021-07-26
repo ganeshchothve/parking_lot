@@ -1,4 +1,4 @@
-<table class='table my-customer-table responsive-tbl'>
+<table class='table my-customer-table responsive-tbl caption-top rounded mt-3 mb-0'>
   <thead class="th-default">
     <% labels = t('mongoid.attributes.checklist').with_indifferent_access %>
       <thead>
@@ -14,21 +14,21 @@
   <tbody>
     <% checklists.each do |checklist| %>
       <tr>
-        <td>
+        <td data-title="Name">
           <%= checklist.name %>
         </td>
-        <td>
+        <td data-title="Key">
           <%= checklist.key %>
         </td>
-        <td>
+        <td data-title="Tracked By">
           <%= checklist.tracked_by.try(:titleize) %>
         </td>
-        <td>
+        <td data-title="Order">
           <%= checklist.order %>
         </td>
         <td>
           <div class="dropdown show text-right">
-          <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+          <a class="btn table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
               <% if policy([:admin, checklist]).edit? %>
                 <%= link_to 'Edit', edit_admin_checklist_path(checklist), class: 'dropdown-item modal-remote-form-link' %>
@@ -40,6 +40,13 @@
     <% end %>
   </tbody>
 </table>
-<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pt-2">
-  <%= will_paginate checklists, list_classes: %w(pagination justify-content-center) %>
+<div class="col-lg-12 py-3 white mb-2 px-2">
+  <div class="row">
+    <div class="col-lg-6">
+      <p class="table-entry">Showing 1 - 5 of <%= @checklists.total_entries %> items</p>
+    </div>
+    <div class="col-lg-6 table-pagination">
+      <%= will_paginate checklists, list_classes: %w(pagination justify-content-center) %>
+    </div>
+  </div>
 </div>

@@ -3,9 +3,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title"> Edit <%= t('global.booking_detail') %></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <%= form_for [:admin, @booking_detail], local: true, remote: true, html: {id: 'booking_detail_form', class: 'modal-remote-form validate-form', data: { "resource-type": t('global.booking_detail'), type: :json} } do |f| %>

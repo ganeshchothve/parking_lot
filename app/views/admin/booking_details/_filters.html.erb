@@ -1,11 +1,11 @@
-<div class="filter-inner">
-  <div class="filter-header">
-    <span class="title">Filter</span>
-    <a href="javascript:;" class="close-filter-btn">&times;</a>
+<div class="filter-inner modal-content ps-2 pe-2 fixed-header-footer">
+  <div class="modal-header filter-header">  
+  <h5 class="modal-title title">Filter</h5>
+    <a href="javascript:;" class="close-filter-btn btn-close"></a>
   </div>
 
   <%= form_tag admin_booking_details_path, method: "get", id: "booking_detail_search_form" do %>
-    <div class="filter-content">
+    <div class="filter-content modal-body ps-0 pe-0">
       <div class="row">
         <% if !current_user.role.in?(User::CHANNEL_PARTNER_USERS) && policy([current_user_role_group, User]).index? %>
           <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
@@ -67,9 +67,9 @@
         </div>
       </div>
     </div>
-    <div class="filter-footer">
-      <%= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right" %>
-      <button type="button" class="f-cancel-btn db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
+    <div class="filter-footer modal-footer text-end">
+      <%= submit_tag :Apply, class: "btn btn-primary f-save-btn db-small-btn bg-light-blue fn-500 float-end" %>
+      <button type="button" class="btn btn-secondary f-cancel-btn float-end">Cancel</button>
     </div>
   <% end %>
 </div>

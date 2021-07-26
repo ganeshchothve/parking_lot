@@ -1,16 +1,14 @@
 <%= nested_form_for([:admin, @incentive_scheme], local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['incentive_schemes'], "data-type": "json", id: 'incentive_scheme_form'}) do |f| %>
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
 
       <div class="modal-header bg-gradient-cd white">
         <h3 class="title"><%= t("controller.incentive_schemes.#{action_name}.link_name") %></h3>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true" class="white">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
-      <div class="modal-body">
+      <div class="modal-body theme-form">
         <div class="form-group">
           <%= f.label :name, class: 'label-required' %>
           <%= f.text_field :name, autofocus: true, class: "form-control", required: 'required', disabled: !policy([:admin, @incentive_scheme]).editable_field?("name") %>
@@ -66,7 +64,7 @@
             <%= f.select :event, options_for_select(statuses.collect{|rec| [t("mongoid.attributes.incentive_scheme/status.#{rec.to_s}"), rec.to_s]}, @incentive_scheme.status), {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([:admin, @incentive_scheme]).editable_field?("event") %>
           <% end %>
         </div>
-        <div class="ladders">
+        <div class="ladders mt-3">
           <% editable_ladders = policy([:admin, @incentive_scheme]).editable_field?("ladders_attributes")%>
           <% if editable_ladders %>
             <div class='text-right'>
@@ -74,13 +72,13 @@
             </div>
           <% end %>
           <%= f.fields_for :ladders do |lad|%>
-            <h4>Ladder - Stage <span class='stage'><%= lad.object.stage %></span>
+            <h5 class="mt-3">Ladder - Stage <span class='stage'><%= lad.object.stage %></span>
               <% if editable_ladders %>
                 <span class='pl-2 text-right'>
                   <%= lad.link_to_remove icon("far", "times-circle") %>
                 </span>
               <% end %>
-            </h4>
+            </h6>
             <hr>
             <div class='row'>
               <%= lad.hidden_field :stage, class: 'stage' %>
@@ -114,7 +112,7 @@
             </div>
             <div class="payment-adjustment">
               <%= lad.fields_for :payment_adjustment do |adj|%>
-                <h5>Incentive Calculation</h5>
+                <h6 class="mt-3">Incentive Calculation</h6>
                 <div class="row">
                   <div class="col-md-12">
                     <div class="form-group">
@@ -137,7 +135,7 @@
         </div>
       </div>
 
-      <div class="modal-footer">
+      <div class="modal-footer text-end">
         <%= f.submit "Save", class: "btn btn-primary" %>
       </div>
 
