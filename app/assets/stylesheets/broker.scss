@@ -118,7 +118,7 @@ select.form-control{
     display: block;
     width: auto;
     height: auto;
-    padding: 0px 12px 0px 0;
+    padding: 0px 20px 0px 0;
     line-height: 1.5;
     background-color: #fff;
     background-clip: padding-box;
@@ -131,7 +131,7 @@ select.form-control{
     background: transparent;
     background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
     background-repeat: no-repeat;
-    background-position-x: 110%;
+    background-position-x: 106%;
     background-position-y: 0px;
 }
 .btn-link{
@@ -1167,7 +1167,6 @@ select.form-control{
 	}
 }
 .specifications-tab-wrap{
-	padding: 20px;
 	p{
 		color: $theme-txt-color;
 		font-size: 14px;
@@ -1182,6 +1181,23 @@ select.form-control{
 		letter-spacing: 0.44px;	
 		font-weight: 500;
 		margin-bottom: 10px;
+	}
+	.specification-list{
+		p{
+			padding-left: 25px;
+			position: relative;
+			&:before{
+				content: '\f058';
+				margin-right: 10px;
+				width: 10px;
+				height: 10px;
+				display: inline-block;
+				font-family: 'Font Awesome 5 Pro';
+				font-weight: 900;
+				position: absolute;
+				left: 0;
+			}
+		}
 	}
 }
 .timeline-wrap{
@@ -2580,9 +2596,10 @@ select.form-control{
 							}
 							.current-status-tooltip{
 							    position: absolute;
-							    left: 40%;
+							    left: 50%;
+							    transform: translateX(-50%);
 							    top: -35px;
-							    background-color: #000063;
+							    background-color: $theme-txt-color;
 							    color: #fff;
 							    border-radius: 4px;
 							    width: 155px;
@@ -2592,11 +2609,23 @@ select.form-control{
 							    	margin-bottom: 0px;
 							    	font-size: 12px;
 							    }
+							    &:after{
+						    	    content: '';
+								    width: 2px;
+								    height: 2px;
+								    border-top: 7px solid $theme-txt-color;
+								    border-left: 7px solid transparent;
+								    border-right: 7px solid transparent;
+								    position: absolute;
+								    left: 50%;
+								    transform: translateX(-50%);
+								    bottom: -7px;
+							    }
 							}
 							.prjt-start, .prjt-status, .prjt-end{
 								p{
 									span:first-child{
-										color: $theme-txt-color;
+										color: c;
 									    font-size: 14px;
 									    line-height: 20px;
 									    letter-spacing: 0.44px;

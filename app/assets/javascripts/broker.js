@@ -112,14 +112,14 @@ $(document).ready(function(){
   $('.header-search-icon').click(function(){
     $('.icon-search').toggleClass('close');
   });
-  $('.prjt-content-list').scrollspy({ target: '#prjt-menu' })
-  $('.tab-link a').click(function(){
-    var curnt_tab = $(this).attr('rel');
-    $('.tab-link a').removeClass('active');
-    $('.tab-content .tab-inner').removeClass('show active');
-    $(this).addClass('active');
-    $('#'+curnt_tab).addClass('show active');
-  });
+  // $('.prjt-content-list').scrollspy({ target: '#prjt-menu' })
+  // $('.tab-link a').click(function(){
+  //   var curnt_tab = $(this).attr('rel');
+  //   $('.tab-link a').removeClass('active');
+  //   $('.tab-content .tab-inner').removeClass('show active');
+  //   $(this).addClass('active');
+  //   $('#'+curnt_tab).addClass('show active');
+  // });
   $('.pwd-btn').click(function () {
     if($(this).hasClass('show-pwd')){
       $(this).removeClass('show-pwd').addClass('hide-pwd')
@@ -133,6 +133,7 @@ $(document).ready(function(){
   });
 
   $('.prjt-menu a').on("click", function () {
+    console.log('click');
     // if (!$(this).hasClass('extLink')) {
       var href = $(this).attr("rel");
         var gap = 110;
